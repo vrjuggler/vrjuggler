@@ -1141,11 +1141,52 @@
                                gadget::InputMixer&lt;gadget::Digital,
                                                   gadget::Analog&gt; &gt;</programlisting>
 
-          <para>Using the type <classname>ButtonDevice</classname> declared,
-          we will proceed with the implementation of the driver class. First,
-          there are four inherited pure virtual member functions that must be
-          implemented and a single static member function that must be
-          implemented.</para>
+          <para>Using the type <classname>ButtonDevice</classname> as declared
+          above, we will proceed with the implementation of the driver class.
+          There are six member functions that must be implemented by every
+          driver class:</para>
+
+          <orderedlist>
+            <listitem>
+              <para><methodname>startSampling()</methodname>: A pure virtual
+              member function declared by
+              <classname>gadget::Input</classname></para>
+            </listitem>
+
+            <listitem>
+              <para><methodname>stopSampling()</methodname>: A pure virtual
+              member function declared by
+              <classname>gadget::Input</classname></para>
+            </listitem>
+
+            <listitem>
+              <para><methodname>sample()</methodname>: A pure virtual member
+              function declared by <classname>gadget::Input</classname></para>
+            </listitem>
+
+            <listitem>
+              <para><methodname>updateData()</methodname>: A pure virtual
+              member function declared by
+              <classname>gadget::Input</classname></para>
+            </listitem>
+
+            <listitem>
+              <para><methodname>getElementType()</methodname>: A static member
+              function</para>
+            </listitem>
+
+            <listitem>
+              <para><methodname>config()</methodname>: A virtual member
+              function declared by <classname>gadget::Input</classname>,
+              <classname>gadget::Analog</classname>,
+              <classname>gadget::Digital</classname>, etc., that must be
+              overridden</para>
+            </listitem>
+          </orderedlist>
+
+          <para>In this section, we will examine the first four of these. The
+          remaining two will be addressed in <xref
+          linkend="section.driver.config" />.</para>
 
           <section>
             <title><methodname>startSampling()</methodname></title>
@@ -1491,57 +1532,6 @@ void ButtonDevice::memberSampleFunction(void* arg)
               <methodname>ButtonDevice::sample()</methodname> empty.</para>
             </note>
           </section>
-
-          <section>
-            <title><methodname>getElementType()</methodname></title>
-
-            <highlights>
-              <itemizedlist>
-                <listitem>
-                  <para>Method synopsis: <methodsynopsis>
-                      <modifier>static</modifier>
-
-                      <type>std::string</type>
-
-                      <methodname>getElementType</methodname>
-
-                      <void />
-                    </methodsynopsis></para>
-                </listitem>
-
-                <listitem>
-                  <para>Overrides the pure virtual function
-                  <methodname>gadget::Input::updateData()</methodname>
-                  declared in <filename>gadget/Type/Input.h</filename></para>
-                </listitem>
-              </itemizedlist>
-            </highlights>
-
-            <para>In the <methodname>getElementType()</methodname> function,
-            the <firstterm>element type</firstterm> of the device must be
-            returned. Its name must be as it appears in the configuration
-            definition file for the driver (explained later in <xref
-            linkend="section.driver.config" />). For example, the
-            implementation for the simple button driver would appear
-            as:</para>
-
-            <example>
-              <title>Implementation of <function>getElementType()</function>
-              Member Function</title>
-
-              <programlisting>std::string ButtonDevice::getElementType()
-{
-   return std:string("button_device");
-}</programlisting>
-            </example>
-
-            <para>At this time, it is useful to point out that every Gadgeteer
-            device needs an element type associated with it. An element type
-            is similar to a struct in C or C++. The data structure is defined
-            in an configuration definition file (which usually has the
-            extension <filename>.jdef</filename>). Once defined, the type for
-            a new driver can be used in JCCL configuration files.</para>
-          </section>
         </section>
 
         <section>
@@ -1673,60 +1663,70 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
             </example>
           </section>
         </section>
+      </section>
+    </chapter>
 
-        <section>
-          <title>Compiling the Driver Plug-in</title>
+    <chapter>
+      <title>Compiling the Driver Plug-in</title>
 
-          <para>The new device driver can be compiled into a standalone
-          library (<filename>.so</filename>, <filename>.dll</filename>, or
-          <filename>.dylib</filename> are the usual suffix choices for
-          plug-ins). This library will act as the Input Manager plug-in. In
-          this way, there is no need to modify the Gadgeteer source code to
-          add a new driver. Thus, the driver code is collected into a cohesive
-          unit that can be distributed as a plug-in (in other words, a
-          component) for Gadgeteer.</para>
+      <para>At this point, our device driver is not yet complete because it
+      cannot be configured. Nevertheless, there will be nothing for the Input
+      Manager to load—and hence no driver to configure—until we are able to
+      compile the driver plug-in. In this chapter, we explain how to compile
+      the driver as a dynamically loadable component. We present this from the
+      perspective of a driver that exists outside the Gadgeteer driver source
+      tree. For drivers that are integrated into the Gadgeteer driver source
+      tree, refer to <xref linkend="makefile.templates.section" />.</para>
 
-          <para>Compiling device driver plug-ins for use with Gadgeteer is a
-          relatively simple process that can use either GNU Make or a Visual
-          C++ project file. To compile a driver plug-in on Windows, a Visual
-          C++ project file must be used; using GNU Make on Windows is not
-          supported by Gadgeteer 1.0.</para>
+      <para>The device driver must be compiled into a standalone dynamically
+      loadable component. The usual file extension names for plug-ins
+      are<filename>.so</filename>, <filename>.dll</filename>, or
+      <filename>.dylib</filename> depending on the host operating system. This
+      component will act as the Input Manager plug-in. In this way, there is
+      no need to modify the Gadgeteer source code to add a new driver. Thus,
+      the driver code is collected into a cohesive unit that can be
+      distributed as a plug-in for Gadgeteer.</para>
 
-          <para>In either case, the name of the compiled driver plug-in must
-          follow certain conventions. A debug version of the driver must be
-          named as <filename>&lt;device&gt;_drv_d.&lt;ext&gt;</filename>.
-          Here, <filename>&lt;device&gt;</filename> provides a meaningful,
-          unique name for the driver plug-in, and
-          <filename>&lt;ext&gt;</filename> is the platform-specific file
-          extension for plug-ins. The <filename>_d</filename> part indicates
-          that the driver is debug-enabled and on Windows that it is linked
-          against the Visual C++ debug runtime. Examples are
-          <filename>IS900_drv_d.so</filename> and
-          <filename>MotionStar_drv_d.dll</filename>. On Mac OS X, the
-          extension <filename>.dylib</filename> is used rather than
-          <filename>.bundle</filename>. An optimized (<quote>release</quote>
-          in Visual C++ terminology) version of the driver uses the same
-          convention but drops the <filename>_d</filename> part.</para>
+      <para>Compiling device driver plug-ins for use with Gadgeteer is a
+      relatively simple process that can use either GNU Make or a Visual C++
+      project file. To compile a driver plug-in on Windows, a Visual C++
+      project file must be used; using GNU Make on Windows is not supported by
+      Gadgeteer 1.0.</para>
 
-          <para>When using GNU Make, a very short makefile is all that is
-          required. An example for our button driver is shown in <xref
-          linkend="example.driver.makefile" />. The makefile allows either a
-          debug or an optimized version of the driver to be compiled depending
-          on the value assigned to the <varname>$(BUILD_TYPE)</varname>
-          variable. The <varname>$(SRCS)</varname> variable must contain the
-          complete list of source files for the driver plug-in. The file
-          extensions <filename>.c</filename>, <filename>.C</filename>,
-          <filename>.CC</filename>, <filename>.cc</filename>,
-          <filename>.cxx</filename>, <filename>.cpp</filename>, and
-          <filename>.c++</filename> are recognized. The environment variable
-          <envar>GADGET_BASE_DIR</envar> must be set for use by this makefile.
-          It would usually be set to the same value as
-          <envar>VJ_BASE_DIR</envar>.</para>
+      <para>In either case, the name of the compiled driver plug-in must
+      follow certain conventions. A debug version of the driver must be named
+      as <filename>&lt;device&gt;_drv_d.&lt;ext&gt;</filename>. Here,
+      <filename>&lt;device&gt;</filename> provides a meaningful, unique name
+      for the driver plug-in, and <filename>&lt;ext&gt;</filename> is the
+      platform-specific file extension for plug-ins. The
+      <filename>_d</filename> part indicates that the driver is debug-enabled
+      and on Windows that it is linked against the Visual C++ debug runtime.
+      Examples are <filename>IS900_drv_d.so</filename> and
+      <filename>MotionStar_drv_d.dll</filename>. On Mac OS X, the extension
+      <filename>.dylib</filename> is used rather than
+      <filename>.bundle</filename>. An optimized (<quote>release</quote> in
+      Visual C++ terminology) version of the driver uses the same convention
+      but drops the <filename>_d</filename> part.</para>
 
-          <example id="example.driver.makefile">
-            <title>Example Makefile for Device Driver Plug-in</title>
+      <para>When using GNU Make, a very short makefile is all that is
+      required. An example for our button driver is shown in <xref
+      linkend="example.driver.makefile" />. The makefile allows either a debug
+      or an optimized version of the driver to be compiled depending on the
+      value assigned to the <varname>$(BUILD_TYPE)</varname> variable. The
+      <varname>$(SRCS)</varname> variable must contain the complete list of
+      source files for the driver plug-in. The file extensions
+      <filename>.c</filename>, <filename>.C</filename>,
+      <filename>.CC</filename>, <filename>.cc</filename>,
+      <filename>.cxx</filename>, <filename>.cpp</filename>, and
+      <filename>.c++</filename> are recognized. The environment variable
+      <envar>GADGET_BASE_DIR</envar> must be set for use by this makefile. It
+      would usually be set to the same value as
+      <envar>VJ_BASE_DIR</envar>.</para>
 
-            <programlisting>srcdir=         .
+      <example id="example.driver.makefile">
+        <title>Example Makefile for Device Driver Plug-in</title>
+
+        <programlisting>srcdir=         .
 BUILD_TYPE=     dbg
 #BUILD_TYPE=    opt
 
@@ -1734,40 +1734,58 @@ DRIVER_NAME=    button
 SRCS=           buttondevice.cpp
 
 include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
-          </example>
+      </example>
 
-          <para>To use a Visual C++ project file, the example provided in
-          <filename>$GADGET_BASE_DIR/share/gadgeteer/samples/tutorials/device.driver</filename>
-          can be used as a starting point. It sets all the compiler and linker
-          options. Users must change the list of source and header files and
-          the names of the output files. It is also recommended that users
-          edit the <filename>.vcproj</filename> file with a text editor to
-          remove the <literal>ProjectGUID</literal> setting on line 6 before
-          loading the project file into Visual Studio. This will ensure that
-          the new Visual C++ project file has a unique identifier.</para>
-        </section>
+      <para>To use a Visual C++ project file, the example provided in
+      <filename>$GADGET_BASE_DIR/share/gadgeteer/samples/tutorials/device.driver</filename>
+      can be used as a starting point. It sets all the compiler and linker
+      options. Users must change the list of source and header files and the
+      names of the output files. It is also recommended that users edit the
+      <filename>.vcproj</filename> file with a text editor to remove the
+      <literal>ProjectGUID</literal> setting on line 6 before loading the
+      project file into Visual Studio. This will ensure that the new Visual
+      C++ project file has a unique identifier.</para>
+    </chapter>
 
-        <section>
-          <title>Configuring the Input Manager</title>
+    <chapter>
+      <title>Driver Configuration</title>
 
-          <para>Run-time driver registration depends on the Input Manager
-          configuration. For our button device driver, the Input Manager would
-          be configured to load our driver plug-in using the configuration
-          file shown in <xref linkend="example.input.mgr.config" />. Here, the
-          driver plug-in is named <filename>button_drv.so</filename> (or some
-          other platform-specific name), and it is found in the user's home
-          directory. Never include the <filename>_d</filename> part of the
-          driver plug-in name or the platform-specific file extension. The
-          Input Manager determines these details automatically, thus making
-          the configuration files highly portable across different operating
-          systems. For more details about how to configure the Input Manager,
-          refer to the VR Juggler <emphasis>Configuration
-          Guide</emphasis>.</para>
+      <indexterm>
+        <primary>device drivers</primary>
 
-          <example id="example.input.mgr.config">
-            <title>Example Input Manager Configuration</title>
+        <secondary>configuring</secondary>
+      </indexterm>
 
-            <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+      <para>In Gadgeteer, device drivers should be parameterized. This means
+      that aspects of the driver that can vary should be configurable rather
+      than hard-coded values. This is in line with the general Juggler
+      philosophy of making software components flexible to provide a high
+      degree of adaptability. In this chapter, we explain how to configure the
+      Input Manager to load a device driver plug-in and how to make a device
+      driver configurable. For a more detailed explanation of the Juggler
+      configuration system, refer to the VR Juggler <emphasis>Configuration
+      Guide</emphasis>.</para>
+
+      <section>
+        <title>Configuring the Input Manager</title>
+
+        <para>Run-time driver registration depends on the Input Manager
+        configuration. For our button device driver, the Input Manager would
+        be configured to load our driver plug-in using the configuration file
+        shown in <xref linkend="example.input.mgr.config" />. Here, the driver
+        plug-in is named <filename>button_drv.so</filename> (or some other
+        platform-specific name), and it is found in the user's home directory.
+        Never include the <filename>_d</filename> part of the driver plug-in
+        name or the platform-specific file extension. The Input Manager
+        determines these details automatically, thus making the configuration
+        files highly portable across different operating systems. For more
+        details about how to configure the Input Manager, refer to the VR
+        Juggler <emphasis>Configuration Guide</emphasis>.</para>
+
+        <example id="example.input.mgr.config">
+          <title>Example Input Manager Configuration</title>
+
+          <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;?org-vrjuggler-jccl-settings configuration.version="3.0"?&gt;
 &lt;configuration
   xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration"
@@ -1781,37 +1799,22 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
       &lt;/input_manager&gt;
    &lt;/elements&gt;
 &lt;/configuration&gt;</programlisting>
-          </example>
-        </section>
+        </example>
       </section>
-    </chapter>
 
-    <chapter>
-      <title>Driver Configuration</title>
+      <section condition="" id="section.driver.config.def">
+        <title>Driver Configuration Definition File</title>
 
-      <indexterm>
-        <primary>device drivers</primary>
+        <para>Every Gadgeteer device needs a unique <firstterm>element
+        type</firstterm> associated with it. An element type is similar to a
+        struct in C or C++. The data structure is defined in an configuration
+        definition file (which usually has the extension
+        <filename>.jdef</filename>). Once defined, the type for a new driver
+        can be used in JCCL configuration files.</para>
 
-        <secondary>configuring</secondary>
-      </indexterm>
-
-      <para>To configure a device, two things are needed:</para>
-
-      <orderedlist>
-        <listitem>
-          <para>Configuration files</para>
-        </listitem>
-
-        <listitem>
-          <para>Driver code that accepts the configuration</para>
-        </listitem>
-      </orderedlist>
-
-      <section condition="" id="section.driver.config">
-        <title>Configuration Files</title>
-
-        <para>Before configuring a device, a new configuration definition must
-        be created. We recommend that this be done using the VRJConfig Config
+        <para>Therefore, a new driver-specific configuration definition must
+        be created before a driver can be configured. We recommend that this
+        be done using the <application>VRJConfig</application> Config
         Definition Editor. For the button device, the definition file is shown
         in <xref linkend="example.buttondevice.jdef" />.</para>
 
@@ -1824,22 +1827,24 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
 &lt;definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd"
-            name="button_device"&gt;                                    <co
+            name="button_device"&gt;                               <co
               id="buttondevice.jdef.token.decl"
               linkends="buttondevice.jdef.token.decl.co" />
    &lt;definition_version version="1" label="My Button Device"&gt;
       &lt;help&gt;Configuration for simple one-button device.&lt;/help&gt;
-      &lt;parent&gt;digital_device&lt;/parent&gt;                                <co
+      &lt;parent&gt;digital_device&lt;/parent&gt;                           <co
               id="buttondevice.jdef.parent.decl"
               linkends="buttondevice.jdef.parent.decl.co" />
       &lt;category&gt;/Devices/Digital&lt;/category&gt;
-      &lt;property valuetype="string" variable="false" name="port"&gt;     <co
+      &lt;property valuetype="string" variable="false"
+                name="port"&gt;                                    <co
               id="buttondevice.jdef.port.decl"
               linkends="buttondevice.jdef.port.decl.co" />
-         &lt;help&gt;Serial port to which this device is connected.&lt;/help&gt;
+         &lt;help&gt;Serial port the device is connected to.&lt;/help&gt;
          &lt;value label="Port" defaultvalue="/dev/ttyd1"/&gt;
       &lt;/property&gt;
-      &lt;property valuetype="integer" variable="false" name="baud"&gt;    <co
+      &lt;property valuetype="integer" variable="false"
+                name="baud"&gt;                                    <co
               id="buttondevice.jdef.baud.decl"
               linkends="buttondevice.jdef.baud.decl.co" />
          &lt;help&gt;Serial port speed.&lt;/help&gt;
@@ -1854,11 +1859,12 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
                      id="buttondevice.jdef.token.decl.co">
               <para>This begins the definition for our device type. The
               <literal>name</literal> attribute must be named as a valid XML
-              tag because it will be used as such in a configuration file. A
-              free-form, human-friendly string may be specified in the
-              <literal>label</literal> attribute of the
+              tag (a CNAME in XML terminology) because it will be used as such
+              in a configuration file. A free-form, human-friendly string may
+              be specified in the <literal>label</literal> attribute of the
               <sgmltag>definition_version</sgmltag> element. This string will
-              be presented to the user of VRJConfig, and as such, it should be
+              be presented to the user of
+              <application>VRJConfig</application>, and as such, it should be
               a meaningful identifier.</para>
             </callout>
 
@@ -1867,9 +1873,10 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
               <para>The parent (or base type) for this config definition. Zero
               or more of these are allowed. In this case, we must indicate
               that <literal>digital_device</literal> is a parent type so that
-              VRJConfig will know that digital proxies can be pointed at
-              config elements for our driver. We also inherit property
-              definitions from <literal>digital_device</literal> including
+              <application>VRJConfig</application> will know that digital
+              proxies can be pointed at config elements for our driver. We
+              also inherit property definitions from
+              <literal>digital_device</literal> including
               <quote>device_host</quote>, which is needed for cluster
               configurations.</para>
             </callout>
@@ -1911,13 +1918,36 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
         </note>
 
         <para>For a more complex device, a more complex configuration
-        definition may be needed. Again, the VRJConfig Configuration
-        Definition Editor simplifies the creation of this definition.</para>
+        definition may be needed. Again, the
+        <application>VRJConfig</application> Configuration Definition Editor
+        simplifies the creation of this definition.</para>
+      </section>
+
+      <section id="section.driver.config.file">
+        <title>Driver Configuration File</title>
 
         <para>Once the configuration definition is in place, a new
-        configuration element can be created. Once again, VRJConfig makes the
-        step easier. The following is an example configuration file that
-        configures the one-button device we have been using thus far:</para>
+        configuration element can be created. Once again,
+        <application>VRJConfig</application> makes the step easier. In <xref
+        linkend="example.buttondevice.jconf" />, we see a configuration file
+        that configures the one-button device we have been using thus
+        far.</para>
+
+        <important>
+          <para>In order for <application>VRJConfig</application> and the JCCL
+          Configuration Manager to find the driver-specific
+          <filename>.jdef</filename> file at run time, it may be necessary to
+          extend the <filename>.jdef</filename> search path using the
+          environment variable <envar>JCCL_DEFINITION_PATH</envar>. This
+          environment variable is set in the same manner as the
+          <envar>PATH</envar> environment variable, meaning that it uses
+          platform-specific conventions. On UNIX-based platforms, the
+          directories to search are separated with the colon (:) character; on
+          Windows, the path separator character is the semi-colon (;). If the
+          .jdef file is installed in the default search path
+          (<filename>$VJ_BASE_DIR/share/vrjuggler/data/definitions</filename>),
+          there is no need to set <envar>JCCL_DEFINITION_PATH</envar>.</para>
+        </important>
 
         <example id="example.buttondevice.jconf">
           <title><filename>button_device.jconf</filename>: Configuration File
@@ -1961,129 +1991,238 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
       &lt;/alias&gt;
    &lt;/elements&gt;
 &lt;/configuration&gt;</programlisting>
-
-          <calloutlist>
-            <callout arearefs="buttondevice.jconf.InputManager"
-                     id="buttondevice.jconf.driver.co">
-              <para>The <sgmltag>input_manager</sgmltag> element configures
-              the Gadgeteer Input Manager. In this case, we are telling the
-              Input Manager about a driver plug-in, found at
-              <filename>${HOME}/button_drv.so</filename>, that should be
-              loaded at runtime.</para>
-            </callout>
-
-            <callout arearefs="buttondevice.jconf.ButtonDevice"
-                     id="buttondevice.jconf.ButtonDevice.co">
-              <para>Next, we have an instance of the configuration definition
-              shown in <xref linkend="example.buttondevice.jdef" />. As
-              described above, <sgmltag>&lt;button_device&gt;</sgmltag> is
-              named based on the <literal>name</literal> attribute of the
-              <sgmltag>definition</sgmltag> element in our configuration
-              definition file. The <literal>name</literal> attribute here
-              gives this <emphasis>instance</emphasis> a unique
-              identifier.</para>
-            </callout>
-
-            <callout arearefs="buttondevice.jconf.port.value"
-                     id="buttondevice.jconf.port.value.co">
-              <para>Now, we set the value for the serial port name. As noted
-              above, our simple button device does not actually use the serial
-              port, but this demonstrates how the property value is used in a
-              configuration file. If no value were given here, the default
-              value set in b<filename>utton_device.jdef</filename> would be
-              used.</para>
-            </callout>
-
-            <callout arearefs="buttondevice.jconf.baud.value"
-                     id="buttondevice.jconf.baud.value.co">
-              <para>This provides a value for the serial port baud setting.
-              Again, this will not actually be used by our simple device, but
-              we show it here to give a complete example.</para>
-            </callout>
-
-            <callout arearefs="buttondevice.jconf.hostelement.value"
-                     id="buttondevice.jconf.hostelement.value.co">
-              <para>For our example, we will not fill in a value for
-              <literal>device_host</literal> because we are not dealing with
-              the Remote Input Manager. Refer to the VR Juggler
-              <emphasis>Configuration Guide</emphasis> for more information
-              about this.</para>
-            </callout>
-
-            <callout arearefs="buttondevice.jconf.proxy"
-                     id="buttondevice.jconf.proxy.co">
-              <para>Finally, we point a digital proxy at our device. Since the
-              device has only one input source, we have to use 0 for the unit
-              value.</para>
-            </callout>
-          </calloutlist>
         </example>
+
+        <calloutlist>
+          <callout arearefs="buttondevice.jconf.InputManager"
+                   id="buttondevice.jconf.driver.co">
+            <para>The <sgmltag>input_manager</sgmltag> element configures the
+            Gadgeteer Input Manager. In this case, we are telling the Input
+            Manager about a driver plug-in, found at
+            <filename>${HOME}/button_drv.so</filename>, that should be loaded
+            at run time.</para>
+
+            <tip>
+              <para>Earlier, we introduced the Input Manager configuration in
+              a separate configuration file. In general, we recommend
+              configuring a given device entirely within one
+              <filename>.jconf</filename> file—including the
+              <literal>input_manager</literal> config element that loads the
+              driver plug-in. That is precisely what we are showing in this
+              example.</para>
+            </tip>
+          </callout>
+
+          <callout arearefs="buttondevice.jconf.ButtonDevice"
+                   id="buttondevice.jconf.ButtonDevice.co">
+            <para>Next, we have an instance of the configuration definition
+            shown in <xref linkend="example.buttondevice.jdef" />. As
+            described above, <sgmltag>&lt;button_device&gt;</sgmltag> is named
+            based on the <literal>name</literal> attribute of the
+            <sgmltag>definition</sgmltag> element in our configuration
+            definition file. The <literal>name</literal> attribute here gives
+            this <emphasis>instance</emphasis> a unique identifier.</para>
+          </callout>
+
+          <callout arearefs="buttondevice.jconf.port.value"
+                   id="buttondevice.jconf.port.value.co">
+            <para>Now, we set the value for the serial port name. As noted
+            above, our simple button device does not actually use the serial
+            port, but this demonstrates how the property value is used in a
+            configuration file. If no value were given here, the default value
+            set in b<filename>utton_device.jdef</filename> would be
+            used.</para>
+          </callout>
+
+          <callout arearefs="buttondevice.jconf.baud.value"
+                   id="buttondevice.jconf.baud.value.co">
+            <para>This provides a value for the serial port baud setting.
+            Again, this will not actually be used by our simple device, but we
+            show it here to give a complete example.</para>
+          </callout>
+
+          <callout arearefs="buttondevice.jconf.hostelement.value"
+                   id="buttondevice.jconf.hostelement.value.co">
+            <para>For our example, we will not fill in a value for
+            <literal>device_host</literal> because we are not dealing with the
+            Remote Input Manager. Refer to the VR Juggler
+            <emphasis>Configuration Guide</emphasis> for more information
+            about this.</para>
+          </callout>
+
+          <callout arearefs="buttondevice.jconf.proxy"
+                   id="buttondevice.jconf.proxy.co">
+            <para>Finally, we point a digital proxy at our device. Since the
+            device has only one input source, we have to use 0 for the unit
+            value.</para>
+          </callout>
+        </calloutlist>
       </section>
 
       <section>
         <title>Writing Code that Accepts the Configuration</title>
 
-        <para>In the driver, there are two methods that must be implemented in
-        order to handle config elements:</para>
+        <para>In the driver, recall that there are two methods that must be
+        implemented in order to handle config elements:</para>
 
         <orderedlist>
           <listitem>
-            <methodsynopsis>
-              <modifier>static</modifier>
-
-              <type>std::string</type>
-
-              <methodname>ButtonDevice::getElementType</methodname>
-
-              <void />
-            </methodsynopsis>
-
-            <para>When the configuration changes, the JCCL Configuration
-            Manager asks every registered configuration handler for their
-            respective configuration element types. If the type matches the
-            type of the newly received configuration element, then the
-            handler's <methodname>config()</methodname> method is invoked. All
-            device drivers are configuration handlers and thus need to
-            indicate the configuration element type they accept. The type
-            value is returned by this method, and the implementation for our
-            simple driver is the following:</para>
-
-            <programlisting>std::string ButtonDevice::getElementType()
-{
-   return std::string("button_device");
-}</programlisting>
-
-            <para>Note that the string returned matches the token we defined
-            in <xref linkend="example.buttondevice.jdef" />.</para>
+            <para><methodname>getElementType()</methodname></para>
           </listitem>
 
           <listitem>
-            <methodsynopsis>
-              <modifier>virtual</modifier>
+            <para><methodname>config()</methodname></para>
+          </listitem>
+        </orderedlist>
 
-              <type>bool</type>
+        <para>We now present these two methods, thereby completing the
+        interface of the driver as far as the Input Manager is
+        concerned.</para>
 
-              <methodname>gadget::Input::config</methodname>
+        <section>
+          <title><methodname>getElementType()</methodname></title>
 
-              <methodparam>
-                <type>jccl::ConfigElementPtr</type>
+          <highlights>
+            <itemizedlist>
+              <listitem>
+                <para>Method synopsis: <methodsynopsis>
+                    <modifier>static</modifier>
 
-                <parameter>e</parameter>
-              </methodparam>
-            </methodsynopsis>
+                    <type>std::string</type>
 
-            <para>When the Configuration Manager detects a configuration
-            change for a given driver, it will pass the new
-            <classname>jccl::ConfigElementPtr</classname> object as the
-            parameter to this method. For more information about how to use
-            instances of <classname>jccl::ConfigElementPtr</classname>, refer
-            to the <emphasis>JCCL Programmer's Reference</emphasis>. The
-            following is a simple example for the basic button device we have
-            used thus far:</para>
+                    <methodname>getElementType</methodname>
+
+                    <void />
+                  </methodsynopsis></para>
+              </listitem>
+
+              <listitem>
+                <para>Overrides the pure virtual function
+                <methodname>gadget::Input::updateData()</methodname> declared
+                in <filename>gadget/Type/Input.h</filename></para>
+              </listitem>
+            </itemizedlist>
+          </highlights>
+
+          <para>When the configuration changes, the JCCL Configuration Manager
+          asks every registered configuration handler for their respective
+          configuration element types. If the type matches the type of the
+          newly received configuration element, then the handler's
+          <methodname>config()</methodname> method is invoked. All device
+          drivers are configuration handlers and thus need to indicate the
+          configuration element type they accept<footnote>
+              <para>A comprehensive explanation of the full functionality of
+              the Juggler run-time (re-)configuration system is beyond the
+              scope of this document. Here, we present only the basic
+              information about config definitions and config elements that is
+              needed for writing a complete device driver. For more details,
+              see the VR Juggler <emphasis>Configuration
+              Guide</emphasis>.</para>
+            </footnote>. The type value is returned by the member function
+          <methodname>getElementType()</methodname>.</para>
+
+          <para>In this function, the element type of the device must be
+          returned. The string returned by
+          <methodname>getElementType()</methodname> must be
+          <emphasis>exactly</emphasis> the same as the <literal>name</literal>
+          attribute for the driver configuration definition that we saw above
+          in <xref linkend="section.driver.config.def" />. For example, the
+          implementation for the simple button driver would appear as shown in
+          <xref linkend="example.getElementType.impl" />.</para>
+
+          <example id="example.getElementType.impl">
+            <title>Implementation of <function>getElementType()</function>
+            Member Function</title>
+
+            <programlisting>std::string ButtonDevice::getElementType()
+{
+   return std:string("button_device");
+}</programlisting>
+          </example>
+
+          <important>
+            <para>Returning the correct string from
+            <methodname>getElementType()</methodname> is very important.
+            Failing to do so will result in the config element for the device
+            driver ending up in the JCCL Configuration Manager's pending list
+            at run time. For device driver authors, this can be a serious
+            point of confusion. The driver plug-in will load correctly, but if
+            the string returned by <methodname>getElementType()</methodname>
+            is incorrect, the driver will never be configured or
+            started.</para>
+          </important>
+        </section>
+
+        <section>
+          <title><methodname>config()</methodname></title>
+
+          <highlights>
+            <itemizedlist>
+              <listitem>
+                <para>Method synopsis: <methodsynopsis>
+                    <modifier>virtual</modifier>
+
+                    <type>bool</type>
+
+                    <methodname>updateData</methodname>
+
+                    <methodparam>
+                      <type>jccl::ConfigElementPtr</type>
+
+                      <parameter>element</parameter>
+                    </methodparam>
+                  </methodsynopsis></para>
+              </listitem>
+
+              <listitem>
+                <para>Overrides the virtual function
+                <methodname>gadget::Input::config()</methodname> declared in
+                <filename>gadget/Type/Input.h</filename> as well as the
+                virtual functions
+                <methodname>gadget::Analog::config()</methodname>,
+                <methodname>gadget::Position::config()</methodname>, etc.,
+                depending on the type parameters used in the base class
+                declaration</para>
+              </listitem>
+            </itemizedlist>
+          </highlights>
+
+          <para>When the Configuration Manager detects a configuration change
+          for a given driver, it will pass the new
+          <classname>jccl::ConfigElementPtr</classname> object as the
+          parameter to this method. This is when the driver must handle its
+          configuration and store the information for use when the Input
+          Manager tells the device to start up. For more information about how
+          to use instances of <classname>jccl::ConfigElementPtr</classname>,
+          refer to the <emphasis>JCCL C++ Programmer's Reference</emphasis>.
+          The implementation of <methodname>config()</methodname> for our
+          simple button device driver is shown in <xref
+          linkend="example.config.impl" />.</para>
+
+          <important>
+            <para>The override of
+            <methodname>gadget::Input::config()</methodname> must invoke the
+            implementations of <methodname>config()</methodname> that it
+            overrides from its base classes. All the base classes defined by
+            Gadgeteer for different input device types have a
+            <methodname>config()</methodname> method, though some of them have
+            an empty method body. Nevertheless, <emphasis>all</emphasis>
+            inherited <methodname>config()</methodname> methods must be
+            invoked by the driver in order to ensure that the driver is fully
+            configured. In general, this should be done first before reading
+            any of the device-specific properties from the config element.
+            This is demonstrated in the example below.</para>
+          </important>
+
+          <example id="example.config.impl">
+            <title>Implementation of <methodname>config()</methodname> Member
+            Function</title>
 
             <programlisting>bool ButtonDevice::config(jccl::ConfigElementPtr e)
 {
-   if ( ! gadget::Digital::config(e) )
+   // Configure all our base classes first.  If any of those fail,
+   // we cannot finish configuring ourself.
+   if ( ! gadget::Input::config(e) &amp;&amp; ! gadget::Digital::config(e) )
    {
       return false;
    }
@@ -2093,8 +2232,8 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
 
    return true;
 }</programlisting>
-          </listitem>
-        </orderedlist>
+          </example>
+        </section>
       </section>
     </chapter>
   </part>
@@ -2285,7 +2424,7 @@ std::string ButtonDevice::getElementType()
 // how to access them.
 bool ButtonDevice::config(jccl::ConfigElementPtr e)
 {
-  if (!Digital::config(e))
+  if ( ! Input::config(e) &amp;&amp; ! Digital::config(e) )
   {
      return false;
   }
