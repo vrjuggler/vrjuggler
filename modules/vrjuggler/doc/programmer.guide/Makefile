@@ -2,6 +2,8 @@
 
 .SUFFIXES: .html .xml .pdf
 
+default: html
+
 FOP		= /home/users/allenb/Software/fop/fop.sh
 RM		= rm -f
 XSLTPROC	= /usr/bin/xsltproc
@@ -10,6 +12,13 @@ DOCBOOK_ROOT	= /home/users/allenb/Docs/vj_docs/docbook
 XSL_DIR		= $(DOCBOOK_ROOT)/xsl
 #DOCBOOK_ROOT	= /usr/share/sgml/docbook
 #XSL_DIR		= $(DOCBOOK_ROOT)/xsl-stylesheets-1.29
+
+HTML_FILES	= guide.html
+PDF_FILES	= guide.pdf
+
+html: $(HTML_FILES)
+
+pdf: $(PDF_FILES)
 
 guide.html: guide.xml
 guide.pdf: guide.xml
@@ -27,4 +36,5 @@ clean:
 	$(RM) *.fo *~
 
 clobber:
+	@$(MAKE) clean
 	$(RM) *.html *.pdf
