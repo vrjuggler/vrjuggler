@@ -108,7 +108,7 @@ STARTTIME	:= $(shell LC_TIME=C date)
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR = common config net vjcontrol editorgui perfmonitor
+SUBDIR = common config net rtrc vjcontrol editorgui perfmonitor
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.
