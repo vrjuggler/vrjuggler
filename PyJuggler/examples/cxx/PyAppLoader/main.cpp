@@ -44,16 +44,14 @@ namespace python = boost::python;
 class AppHolder
 {
 public:
-   AppHolder(vrj::App* app, python::object srcObj, PyObject* module,
-             PyObject* initFunc)
+   AppHolder(vrj::App* app, python::object srcObj, python::handle<> module,
+             python::handle<> initFunc)
       : mApp(app), mSrcObj(srcObj), mModule(module), mInitFunc(initFunc)
    {
    }
 
    ~AppHolder()
    {
-      Py_DECREF(mInitFunc);
-      Py_DECREF(mModule);
    }
 
    vrj::App* getApp()
@@ -62,10 +60,10 @@ public:
    }
 
 private:
-   vrj::App*      mApp;
-   python::object mSrcObj;
-   PyObject*      mModule;
-   PyObject*      mInitFunc;
+   vrj::App*        mApp;
+   python::object   mSrcObj;
+   python::handle<> mModule;
+   python::handle<> mInitFunc;
 };
 
 
@@ -110,86 +108,73 @@ int main(int argc, char* argv[])
    {
       std::cout << "Working on module named '" << *i << "'" << std::endl;
 
-      PyObject* cur_name = PyString_FromString((*i).c_str());
-
-      if ( NULL != cur_name )
+      try
       {
+         python::handle<> cur_name(PyString_FromString((*i).c_str()));
+
          std::cout << "--- Attempting to import module" << std::endl;
+         python::handle<> cur_module(PyImport_Import(cur_name.get()));
 
-         PyObject* cur_module = PyImport_Import(cur_name);
+         std::cout << "--- Getting dictionary" << std::endl;
+         python::handle<> dict(python::borrowed(PyModule_GetDict(cur_module.get())));
 
-         if ( NULL != cur_module )
+         std::cout << "--- Looking up vrjInit in dictionary" << std::endl;
+         python::handle<> init_func(python::borrowed(PyDict_GetItemString(dict.get(), "vrjInit")));
+
+         if ( PyCallable_Check(init_func.get()) )
          {
-            std::cout << "--- Getting dictionary" << std::endl;
+            std::cout << "--- Calling vrjInit" << std::endl;
 
-            PyObject* dict = PyModule_GetDict(cur_module);
-
-            std::cout << "--- Looking up vrjInit in dictionary" << std::endl;
-
-            PyObject* init_func = PyDict_GetItemString(dict, "vrjInit");
-
-            if ( NULL != init_func && PyCallable_Check(init_func) )
+            try
             {
-               std::cout << "--- Calling vrjInit" << std::endl;
+               python::object app_obj =
+                  python::call<python::object>(init_func.get());
+               vrj::App* cur_app = python::extract<vrj::App*>(app_obj);
 
-               try
+               if ( NULL != cur_app )
                {
-                  python::object app_obj =
-                     python::call<python::object>(init_func);
-                  vrj::App* cur_app = python::extract<vrj::App*>(app_obj);
+                  std::cout << "--- Storing object reference" << std::endl;
 
-                  if ( NULL != cur_app )
-                  {
-                     std::cout << "--- Storing object reference" << std::endl;
-
-                     apps.push_back(AppHolder(cur_app, app_obj, cur_module,
-                                              init_func));
-                  }
-                  else
-                  {
-                     PyErr_Print();
-                     std::cerr << "ERROR: Could not get application reference\n";
-                     Py_DECREF(init_func);
-                     Py_DECREF(cur_module);
-                  }
+                  apps.push_back(AppHolder(cur_app, app_obj, cur_module,
+                                           init_func));
                }
-               catch (...)
+               else
                {
                   PyErr_Print();
-                  std::cerr << "ERROR: Caught exception trying to execute vrjInit()\n";
-                  Py_DECREF(init_func);
-                  Py_DECREF(cur_module);
+                  std::cerr << "ERROR: Could not get application reference\n";
                }
             }
-            else
+            catch (...)
             {
                PyErr_Print();
-               std::cerr << "ERROR: Did not find function vrjInit\n";
-               Py_DECREF(cur_module);
+               std::cerr << "ERROR: Caught exception trying to execute vrjInit()\n";
             }
          }
          else
          {
             PyErr_Print();
-            std::cerr << "WARNING: Could not import module named '" << *i
-                      << "'\n";
+            std::cerr << "ERROR: Did not find function vrjInit\n";
          }
-
-         Py_DECREF(cur_name);
       }
-      else
+      catch(python::error_already_set)
       {
          PyErr_Print();
-         std::cerr << "Danger!\n";
       }
    }
 
    for ( unsigned int i = 0; i < apps.size() * 5; ++i )
    {
       vrj::Kernel::instance()->setApplication(apps[i].getApp());
-      vpr::System::sleep(10);
+      Py_BEGIN_ALLOW_THREADS;
+         vpr::System::sleep(10);
+      Py_END_ALLOW_THREADS;
    }
-//   vrj::Kernel::instance()->waitForKernelStop();
+
+/*
+   Py_BEGIN_ALLOW_THREADS;
+      vrj::Kernel::instance()->waitForKernelStop();
+   Py_END_ALLOW_THREADS;
+*/
 
 //- CLEAN UP ------------------------------------------------------------//
 
