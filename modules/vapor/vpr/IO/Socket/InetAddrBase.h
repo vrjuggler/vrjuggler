@@ -72,7 +72,7 @@ public:
     * @pre None.
     * @post Zero out the address and set everything to wildcard values.
     */
-   InetAddr ()
+   InetAddr()
    {
       vprASSERT(false && "Implement me");
    }
@@ -85,7 +85,7 @@ public:
     *
     * @param addr The vpr::InetAddr object to be copied into this object.
     */
-   InetAddr (const InetAddr& addr)
+   InetAddr(const InetAddr& addr)
    {
       vprASSERT(false && "Implement me");
    }
@@ -93,7 +93,7 @@ public:
    /**
     * Returns the local host's address.
     */
-   static vpr::ReturnStatus getLocalHost (vpr::InterAddr& host_addr)
+   static vpr::ReturnStatus getLocalHost(vpr::InterAddr& host_addr)
    {
       vprASSERT(false && "Implement me");
    }
@@ -109,9 +109,10 @@ public:
     * @return A vpr::SocketTypes::Domain value representing this object's
     *         protocol family.
     */
-   vpr::SocketTypes::Domain getFamily (void) const
+   vpr::SocketTypes::Domain getFamily() const
    {
-      vprASSERT(false && "Implement me");  return vpr::SocketTypes::LOCAL;
+      vprASSERT(false && "Implement me");
+      return vpr::SocketTypes::LOCAL;
    }
 
    /**
@@ -124,7 +125,7 @@ public:
     *
     * @param family The protocol family value.
     */
-   void setFamily (const vpr::SocketTypes::Domain family)
+   void setFamily(const vpr::SocketTypes::Domain family)
    {
       vprASSERT(false && "Implement me");
    }
@@ -139,9 +140,10 @@ public:
     * @return An integer giving the port for this address structure in host
     *         byte order.
     */
-   vpr::Uint16 getPort (void) const
+   vpr::Uint16 getPort() const
    {
-      vprASSERT(false && "Implement me"); return 0;
+      vprASSERT(false && "Implement me");
+      return 0;
    }
 
    /**
@@ -152,7 +154,7 @@ public:
     *
     * @param port A port number for this address in host byte order.
     */
-   void setPort (const vpr::Uint16 port)
+   void setPort(const vpr::Uint16 port)
    {
       vprASSERT(false && "Implement me");
    }
@@ -168,9 +170,10 @@ public:
     * @return An unsigned 32-bit integer giving the IP address for this
     *         object in host byte order.
     */
-   vpr::Uint32 getAddressValue (void) const
+   vpr::Uint32 getAddressValue() const
    {
-      vprASSERT(false && "Implement me"); return 0;
+      vprASSERT(false && "Implement me");
+      return 0;
    }
 
    /**
@@ -184,26 +187,29 @@ public:
     * @return A std::string object containing this structure's IP address
     *         in the human-readable "dotted-decimal" notation.
     */
-   std::string getAddressString (void) const
+   std::string getAddressString() const
    {
-      vprASSERT(false && "Implement me"); return std::string("");
+      vprASSERT(false && "Implement me");
+      return std::string("");
    }
 
    /**
     * Returns the fully qualified hostname for this address.
     */
-   std::string getHostname (void) const
+   std::string getHostname() const
    {
-      vprASSERT(false && "Implement me"); return std::string("");
+      vprASSERT(false && "Implement me");
+      return std::string("");
    }
 
    /**
     * Returns the fully qualified primary hostname for this address and all
     * known aliases.
     */
-   std::vector<std::string> getHostnames (void) const
+   std::vector<std::string> getHostnames() const
    {
-      vprASSERT(false && "Implement me"); return std::vector<std::string>();
+      vprASSERT(false && "Implement me");
+      return std::vector<std::string>();
    }
 
    /**
@@ -220,9 +226,10 @@ public:
     *         <code>vpr::ReturnStatus::Fail</code> is returned if the address
     *         could not be looked up.
     */
-   const vpr::ReturnStatus setAddress (const std::string& addr)
+   const vpr::ReturnStatus setAddress(const std::string& addr)
    {
-      vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+      vprASSERT(false && "Implement me");
+      return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
    /**
@@ -237,9 +244,10 @@ public:
     *         <code>vpr::ReturnStatus::Fail</code> is returned if the address
     *         could not be looked up.
     */
-   vpr::ReturnStatus setAddress (const std::string& addr, const Uint16 port)
+   vpr::ReturnStatus setAddress(const std::string& addr, const Uint16 port)
    {
-      vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+      vprASSERT(false && "Implement me");
+      return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
    /**
@@ -252,9 +260,11 @@ public:
     * @param address A 32-bit integer IP address.
     * @param port    The port to associate with the IP address.
     */
-   vpr::ReturnStatus setAddress (const vpr::Uint32 address, const vpr::Uint16 port)
+   vpr::ReturnStatus setAddress(const vpr::Uint32 address,
+                                const vpr::Uint16 port)
    {
-      vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+      vprASSERT(false && "Implement me");
+      return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
    /**
@@ -270,9 +280,10 @@ public:
     * @return A reference to this object.
     */
    /*
-   inline InetAddr&
-   operator= (const InetAddr& addr)
-   {vprASSERT(false && "Implement me");}
+   InetAddr& operator= (const InetAddr& addr)
+   {
+      vprASSERT(false && "Implement me");
+   }
 
    bool operator==(const InetAddr& addr)
    */
