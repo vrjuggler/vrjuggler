@@ -298,8 +298,8 @@ void OpenALSoundImplementation::setListenerPosition( const gmtl::Matrix44f& mat 
    snx::SoundImplementation::setListenerPosition( mat );
 
    // extract position from the matrix
-   ALfloat position[3];
-   gmtl::setTrans( position[0], position[1], position[2], mat );
+   gmtl::Vec3f position;
+   gmtl::setTrans( position, mat );
 
    // extract orientation from the matrix
    const gmtl::Vec3f forward( 0.0f, 0.0f, -1.0f );
@@ -313,7 +313,7 @@ void OpenALSoundImplementation::setListenerPosition( const gmtl::Matrix44f& mat 
                              up_modified[0], up_modified[1], up_modified[2] };
 
    // set position
-   alListenerfv( AL_POSITION, position );
+   alListenerfv( AL_POSITION, position.getData() );
 
    // set orientation
    alListenerfv( AL_ORIENTATION, orientation );
