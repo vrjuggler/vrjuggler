@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-30-2004 patrickh    Updated to take advantage of .jdef file format
+                        extensions added in JCCL 0.24.0.
+                        NEW VERSION: 1.1.163
 Nov-26-2004 patrickh    Renamed the config element type sound_manager to
                         sound_manager_sonix.
 Nov-18-2004 patrickh    Updated to require Sonix 0.5.0.

@@ -2,6 +2,7 @@
 <?org-vrjuggler-jccl-settings definition.version="3.1"?>
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="motion_star" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/motionstar.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="MotionStar">
+      <abstract>false</abstract>
       <help>Ascension MotionStar server chassis configuration</help>
       <parent>positional_device</parent>
       <category>/Devices/Positional</category>
@@ -79,6 +80,7 @@
       <upgrade_transform/>
    </definition_version>
    <definition_version version="2" label="MotionStar">
+      <abstract>false</abstract>
       <help>Ascension MotionStar server chassis configuration</help>
       <parent>positional_device</parent>
       <category>/Devices/Positional</category>
