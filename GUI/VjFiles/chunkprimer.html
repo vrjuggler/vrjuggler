@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+<title>VR Juggler Configuration Files and ConfigChunks</title>
+
+<body bgcolor="#ffffcc">
+
+<!--NewPage-->
+<h1>VR Juggler Configuration Files and ConfigChunks</h1>
+
+This page provides a very basic introduction to ConfigChunks, the building
+blocks of VR Juggler configuration files.
+
+<p>
+The first part of this page is essential to understanding how to modify
+Juggler configurations and how to use the vjcontrol program.
+The later sections, discussing Chunk Descriptions, are primarily of interest
+to developers attempting to expand VR Juggler's configuration system to support
+new devices or adding dynamic reconfiguration capabilities to application code.
+
+<!-- install-web book-ignore-begin -->
+<h2>Contents</h2>
+<ul>
+<li><a href="#chunks">What are ConfigChunks?</a>
+<li><a href="#descfiles">Chunk Description Files</a>
+<li><a href="#descs">What are ChunkDescs?</a>
+<li><a href="#next">Where should I go from here?</a>
+</ul>
+<!-- install-web book-ignore-end -->
+
+<h2><a name="chunks">What are ConfigChunks?</a></h2>
+
+The building blocks of Juggler config files are pieces of data called
+<i>ConfigChunks</i>, or <i>Chunks</i> for short.  There are many different
+kinds of Chunks, and each one contains the complete configuration
+information for a particular component of Juggler.  These components
+can be things like display windows, input device drivers, the Juggler
+performance measurement system, and so on.  To give you a better feel
+for the concept, here's a list of some of the kinds of 
+chunks used by Juggler 1.0:
+
+<ul>
+<li><b>Sim Display</b> - Simulator-mode display window
+<li><b>Surface Display</b> - Projection surface display window
+<li><b>IBox</b> - Config for Immersive Ibox driver
+<li><b>Flock</b> - Config for Ascension Flock of Birds tracking system driver
+<li><b>Position Proxy</b> - Proxy for a positional device (e.g. the Flock)
+<li><b>Performer API</b> - Setup info for Iris Performer-based apps
+</ul>
+
+When Juggler reads a configuration file, it compiles a list of all the 
+ConfigChunks in the file and then tries to find a Juggler component
+that knows how to deal with it.  For example, a Flock of Birds Chunk
+would be passed to the Input Manager, which would create and activate
+an instance of Juggler's Flock driver.
+
+<p>
+So what's inside a ConfigChunk?  Lots of stuff - and lots of 
+<i>different</i> stuff, depending on what kind of Chunk it is.  After all,
+the information the Input Manager needs to set up an input device doesn't
+have a lot in common with what the Display Manager needs to open up
+a display window.
+
+<p>
+The one thing that all Chunks have in common is that they all have names.
+Names are used to distinguish between multiple Chunks of the same type.
+For example, a configuration file for a CAVE-like device might define
+several Surface Display Chunks, with names like "Front Wall", "Left Wall",
+"Floor", and so on.  It's important that Chunks have unique names.  If
+Juggler reads two ConfigChunks that have the same name, it will assume
+that the second one is a redefinition or reconfiguration of the first
+one, and it will forget the first one and just use the second definition.
+
+<p>
+The rest of the Chunk consists of a list of Properties.  Properties are
+individual pieces  information.  Continuing our example with a Flock of
+Birds tracking system, the Properties would include things like
+the name of the serial port to connect to, the baud rate to use, the
+positional offset, and so on.  To illustrate, here's what it looks like when
+you view a single ConfigChunk in the vjcontrol program:
+
+<center>
+<p>
+<img alt="ConfigChunk Demo Pic" src="./gfx/ConfigChunkPic.png"></img>
+</center>
+
+<p>
+"Instance Name" is the name of the Chunk - in this case, "flock_o_birds", 
+while its type is "Flock" (the 
+type is usually show in the window's title bar).  Below that are the
+various properties - "Baud Rate", "Port", etc.  Different properties take
+different kinds of values - Port takes a string, while Baud Rate takes an
+integer.  The Translation property is interesting because it takes 
+three separate floating point numbers.  There are also Boolean properties
+and properties whose values are the names of other Chunks (so that
+you can have Chunks that refer to other Chunks).
+ 
+
+
+<h2><a name="descfiles"></a>Chunk Description Files</h2>
+
+If you've read this far, you know what Juggler's config files are, and
+you know what they're made of - lists of ConfigChunks.  You also know that
+there are a lot of different kinds of ConfigChunks.  Where do these
+different kinds of Chunks come from?  How does Juggler know how to make
+a "Surface Display" Chunk that's different from a "Position Proxy" Chunk?
+
+<p>
+For every kind of ConfigChunk there's an object called a <i>ChunkDesc</i> - 
+short for "Chunk Description".  ChunkDescs live in ChunkDesc files - and
+where are they?  The primary Juggler ChunkDesc file is 
+<tt>$VJ_BASE_DIR/share/Data/chunksDesc</tt> - it defines all the different kinds 
+of chunks that Juggler beta1 knows about and needs.  When a Juggler
+program starts up, one of the first things it does - even before it reads
+its config files - is to read the primary chunksDesc file.
+
+<p>
+Later in the beta series, Juggler will have the ability to load
+user-specific ChunkDesc files.  These might include ChunkDescs for
+application-specific ConfigChunks.
+
+
+
+<h2><a name="descs"></a>What is a Chunk Description?</h2>
+
+So, a particular kind of ConfigChunk is defined by a ChunkDesc.  So what's
+in a ChunkDesc?  Information about all the properties in the Chunk,
+with their names, and types, and number of allowed values.  There's also
+help strings and other information used to make the vjcontrol program 
+a little more user-friendly.
+<p>
+Here's a breakdown of the contents of a ChunkDesc:
+
+<p>
+<ul>
+<li><b>Name</b> - This string is the name of the type of ConfigChunk this
+description defines.  In the examples we've used on this page, this would
+be something like "Surface Display" or "Flock".
+<p>
+<li><b>Token</b> - Usually this is a short form of the name - no whitespace
+allowed.  The token
+is used by the Juggler library to refer to the Chunk type.  This means
+that it's fairly safe to change the Name in a ChunkDesc - this will
+just change the way things are labeled in the vjcontrol GUI - but
+changing the token is a bad idea - Juggler could get confused and be
+unable to recognize or load Chunks.  So, once you define a token, don't
+change it unless you're prepared for the consequences.
+<p>
+<li><b>Help</b> - This is a short (one-line) help text, that should 
+contain a description of what Chunks using this ChunkDesc are used for.
+<p>
+<li>A list of property descriptions.  This list always contains one
+entry - Name.  That's the instance name property of a Chunk using this
+description, as opposed to the name of the description itself.
+<p>Other than that, the properties described will completely depend on
+what Chunks using this description are trying to do.  Here's what's
+in the description of a property:
+
+<p>
+<ul>
+<li><b>Name</b> - The name of a property is simply a text string used to refer to it by the GUI, like "Serial Port" or "X Display Name". 
+<p>
+<li><b>Token</b> - The token is a lot like the name, and they are often the same string. The difference is that the token is used internally, in the config
+  file format, and in the library itself when querying the configuration database. The token is restricted in a way similar to C/C++
+  variable names: no whitespace is permitted, and it may not begin with a number. 
+<p>
+<li><b>Type</b> - There are four primitive types for properties: strings, integers, floating-point numbers, and booleans. In addition to these four
+  types, Property values can also refer to other ConfigChunks. Example: The ConfigChunk for "general setup" might have a
+  Property that lists the active Displays. The type for this Property could just be a string (matching the name of a Display
+  ConfigChunk), but we can also make the Property type be "name of a Display ConfigChunk". This lets the GUI be a little smarter
+  and easier to use when editing that property - but more on that later. 
+<p>
+<li><b>Number</b> - Most Properties have single values. Other times, as with our "Position Offset" example, a Property may need a fixed number of
+  values. It is also possible for a Property to have a variable number of values; the list of active Displays mentioned above would be a
+  good example. There may be no active displays, there may be 6, or 2, or just 1. 
+<p>
+<li><b>Value Lists (optional)</b> - Sometimes a Property might have a certain number of appropriate choices. For example, the handedness of a glove is either "Left"
+  or "Right", and it would be nice if our GUI could display those as choices to the user, instead of requiring them to type in a string.
+  The configuration system supports this with enumerations, which are simply lists of the appropriate values for a Property.
+  Enumerations for string Properties are just lists of string values, while enumerations for integer and float Properties map
+  descriptive strings to numeric values.
+<p>
+<li><b>Value Labels (optional)</b> - Some properties need to have several
+values - for example three floating point numbers to define a point in 
+space.  In this case, we can include value labels - short strings, one
+for each of the values, such as "X coord", "Y coord", and "Z coord", or
+"Length" and "Height".
+
+</ul>
+</ul>
+
+
+<h2><a name="next"></a>Where should I go from here?</h2>
+
+The next chapters of this book describe how to use VjControl, VR Juggler's
+config file editing tool.
+
+
+</body>
+
+
+</html>
+
+
+
