@@ -41,49 +41,76 @@
 
 #include <vpr/vprConfig.h>
 #include <vpr/Sync/Barrier.h>
+#include <vpr/Sync/Guard.h>
 
 
 namespace vpr
 {
+Barrier::Barrier(unsigned count)
+   : mThreshold(count), mCount(count), mGeneration(0)
+{;}
 
-/**
+Barrier::~Barrier()
+{;}
+
+   /**
  * Block the caller until all <count> threads have called <wait> and then
  * allow all the caller threads to continue in parallel.
  */
-int Barrier::wait (void)
+bool Barrier::wait (void)
 {
-   Guard<Mutex> guard(mutex);
+Guard<CondVar> guard(mCond);
 
-   SubBarrier* curvprSubBarrier = this->subBarrier[currentGeneration];
+   unsigned gen_temp = mGeneration;
 
-   // Check for shutdown...
-   if ( curvprSubBarrier == NULL )
+   if (--mCount == 0)   // If last thread to sync
    {
-      return -1;
+      mGeneration++;          // Next generation
+      mCount = mThreshold;    // Reset the count
+      mCond.broadcast();      // Wake up all threads
+      return true;
    }
 
-   if ( curvprSubBarrier->runningThreads == 1 )
+   while(gen_temp == mGeneration)      // While generation has not increased...
+   { mCond.wait(); }
+
+   return true;
+}
+
+void Barrier::addProcess()
+{
+   if(mCount != mThreshold)
    {
-      // We're the last running thread, so swap generations and tell
-      // all the threads waiting on the barrier to continue on their
-      // way.
-
-      curvprSubBarrier->runningThreads = this->count;
-
-      // Swap generations.
-      currentGeneration = 1 - this->currentGeneration;        // Cycles between 0 and 1
-      curvprSubBarrier->barrierFinished.broadcast();
+      std::cerr << "vpr::Barrier: Attempt to add process while in use."
+                << std::endl;
    }
    else
    {
-      --curvprSubBarrier->runningThreads;
-
-      // Block until all the other threads wait().
-      while ( curvprSubBarrier->runningThreads != count )
-         curvprSubBarrier->barrierFinished.wait ();
+      mThreshold++;
+      mCount = mThreshold;
    }
+}
 
-   return 0;
+/**
+ * Tells the barrier to decrease the count of the number of threads to
+ * syncronize.
+ */
+void Barrier::removeProcess()
+{
+   if(mCount != mThreshold)
+   {
+      std::cerr << "vpr::Barrier: Attempt to remove process while in use."
+                << std::endl;
+   }
+   else if(1 == mCount)
+   {
+      std::cerr << "vpr::Barrier: Attempt to reduce barrier to 0." << std::endl;
+   }
+   else
+   {
+      mThreshold++;
+      mCount = mThreshold;
+   }
 }
 
 } // End of vpr namespace

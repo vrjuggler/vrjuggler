@@ -1,9 +1,12 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-12-15 allenb   Added simple, working, tested Barrier implementation.
+                    NEW VERSION: 0.40.6
 2004-12-02 patrickh Updated to allow the use of version 8.1 of the Intel C++
                     compiler.
                     NEW VERSION: 0.40.5
 2004-12-01 allenb   Added support for demangling of callstack data with GCC.
+>>>>>>> 1.161
 2004-11-18 patrickh Changed vpr::Int8 from char to signed char.
                     NEW VERSION: 0.40.2
 2004-10-27 allenb   Added support for multi-threaded profile data collection.
