@@ -10,15 +10,6 @@ GMTL
    Path: .;
 };
 
-Boost
-{
-   CVSROOT: :pserver:anonymous@cvs.boost.sourceforge.net:/cvsroot/boost;
-#   CVSROOT: :pserver:anonymous@boost-consulting.com:/boost;
-   Module: boost;
-   Tag: Version_1_30_2;
-   Path: external;
-};
-
 Doozer      // Get Doozer for makefiles
 {
    CVSROOT: :pserver:anonymous@cvs.doozer.sourceforge.net:/cvsroot/doozer;
