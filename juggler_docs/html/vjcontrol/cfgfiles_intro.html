@@ -18,8 +18,10 @@
 </ul>
 <!-- install-web book-ignore-end -->
 
-<h2><a name="basic">Basic information</h2>
 
+<h2><a name="basic">Basic information</a></h2>
+
+<p>
 Configuring VR software for a particular hardware system can be a 
 daunting task due to the complexity and diversity of the environments 
 and hardware in use. In addition to this, many users will need to 
@@ -49,7 +51,7 @@ valid arguments, help information, and so on.
 
 
 
-<h2><a name="loading">Loading configuration files</h2>
+<h2><a name="loading">Loading configuration files</a></h2>
 
 When a VR Juggler application is initialized, it creates an internal
 database of configuration information.  This database will contain information
@@ -87,7 +89,7 @@ hardware.  For example, VRAC keeps local configurations in the directory <tt>/ho
 
 
 
-<h2><a name="modular">Using modular configuration files</h2>
+<h2><a name="modular">Using modular configuration files</a></h2>
 
 <p>
 One of the difficulties of managing a VR system is the rapid 
@@ -116,7 +118,12 @@ on, these files could be freely mixed and matched, eliminating the
 need to have a separate file for every possible combination.
 
 <p>
-The VR Juggler distribution includes several examples of modular configuration files in the directory <tt>$VJ_BASE_DIR/Data/configFiles</tt>.  The <tt>sim.*.config</tt> files can be used in various combinations to run an application with various kinds of simulator devices.  For example, a basic simulator configuration with one display window and a wand would use these files:
+The VR Juggler distribution includes several examples of modular 
+configuration files in the directory 
+<tt>$VJ_BASE_DIR/Data/configFiles</tt>.  The <tt>sim.*.config</tt> files 
+can be used in various combinations to run an application with various 
+kinds of simulator devices.  For example, a basic simulator configuration 
+with one display window and a wand would use these files:
 
 <ul><tt>
 <li>sim.base.config
@@ -124,11 +131,14 @@ The VR Juggler distribution includes several examples of modular configuration f
 <li>sim.wand.mixin.config
 </tt></ul>
 
-Other files could be used to change the basic configuration.  For example, to use a simulated glove instead of a wand, the user would replace <tt>sim.wand.mixin.config</tt> with <tt>sim.glove.mixin.config</tt>.
+Other files could be used to change the basic configuration.  For 
+example, to use a simulated glove instead of a wand, the user would 
+replace <tt>sim.wand.mixin.config</tt> with 
+<tt>sim.glove.mixin.config</tt>.
 
 
 
-<h2><a name="includes">Referencing other configuration files</h2>
+<h2><a name="includes">Referencing other configuration files</a></h2>
 
 <p>
 While modular configuration files provide a lot of flexibility, users
@@ -151,7 +161,7 @@ automatically sees the changes.
 
 
 
-<h2><a name="next">Where should I go from here?</h2>
+<h2><a name="next">Where should I go from here?</a></h2>
 
 <p>
 To find out what's inside a VR Juggler configuration file, proceed 
