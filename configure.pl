@@ -822,8 +822,9 @@ Print a list of the available modules.
 
 Name the configuration file to be used by this script.  If not specified,
 it defaults to F<juggler.cfg>.  This file is discovered based on the
-run-time path to this script, and thus the script and the configuration
-file must be in the same directory.  For example, if this script is run as:
+run-time path to this script, and thus the script and the default
+configuration file must be in the same directory.  For example, if this
+script is run as:
 
 =over 4
 
@@ -837,7 +838,7 @@ then F<juggler.cfg> will be searched for as F<../juggler.cfg>.
 
 Limit the work done by this script to what is required by the named
 module.  The given name must correspond to one listed in the aforementioned
-configuration file.  This can be specified in conjunction with B<--help>
+configuration file.  This can be specified in conjunction with B<--all-help>
 to limit the output to only what is appropriate for the named module.
 
 =item B<--regen>
