@@ -42,6 +42,8 @@
 void vjSurfaceViewport::config(vjConfigChunk *chunk)
 {
    vjASSERT(chunk != NULL);
+   vjASSERT((std::string)chunk->getType() == std::string("surfaceViewport"));
+
    vjViewport::config(chunk);     // Call base class config
 
    mType = SURFACE;
@@ -97,8 +99,6 @@ void vjSurfaceViewport::config(vjConfigChunk *chunk)
                                     mxLRCorner[VJ_X],-mxLLCorner[VJ_X],
                                     mxURCorner[VJ_Y],-mxLRCorner[VJ_Y],
                                                mTrackerProxyName);
-
-
    }
    // Configure the projections
    mLeftProj->config(chunk);

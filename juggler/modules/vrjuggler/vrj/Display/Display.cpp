@@ -31,10 +31,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <Kernel/vjDisplay.h>
+#include <Kernel/vjViewport.h>
+#include <Kernel/vjSimViewport.h>
+#include <Kernel/vjSurfaceViewport.h>
 
 void vjDisplay::updateProjections()
 {
-   for(int i=0;i<mViewports.size();i++)
+   for(unsigned i=0;i<mViewports.size();i++)
    {
       mViewports[i]->updateProjections();
    }
@@ -42,6 +45,14 @@ void vjDisplay::updateProjections()
 
 
 void vjDisplay::config(vjConfigChunk* chunk)
+{
+   vjASSERT(chunk != NULL);
+
+   configDisplayWindow(chunk);
+   configViewports(chunk);
+}
+
+void vjDisplay::configDisplayWindow(vjConfigChunk* chunk)
 {
    vjASSERT(chunk != NULL);
 
@@ -86,6 +97,38 @@ void vjDisplay::config(vjConfigChunk* chunk)
     setPipe(pipe);
 
     mDisplayChunk = chunk;        // Save the chunk for later use
+}
+
+void vjDisplay::configViewports(vjConfigChunk* chunk)
+{
+   vjASSERT(chunk != NULL);
+
+   unsigned num_sim_vps = chunk->getNum("sim_viewports");
+   unsigned num_surface_vps = chunk->getNum("surface_viewports");
+
+   vjConfigChunk* vp_chunk(NULL);
+   vjSimViewport* sim_vp(NULL);
+   vjSurfaceViewport* surf_vp(NULL);
+
+   unsigned i(0);
+
+   // Create sim viewports
+   for(i=0;i<num_sim_vps;i++)
+   {
+      vp_chunk = chunk->getProperty("sim_viewports",i);
+      sim_vp = new vjSimViewport;
+      sim_vp->config(vp_chunk);
+      mViewports.push_back(sim_vp);
+   }
+
+   // Create sim viewports
+   for(i=0;i<num_surface_vps;i++)
+   {
+      vp_chunk = chunk->getProperty("surface_viewports",i);
+      surf_vp = new vjSurfaceViewport;
+      surf_vp->config(vp_chunk);
+      mViewports.push_back(surf_vp);
+   }
 }
 
 

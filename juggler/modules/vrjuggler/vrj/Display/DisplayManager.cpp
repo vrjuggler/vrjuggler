@@ -82,6 +82,11 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
    if(   (chunk_type == std::string("surfaceDisplay"))
       || (chunk_type == std::string("simDisplay")) )
    {
+      vjDEBUG(vjDBG_ALL,0) << "Haven't implemented loading for surfaceDisplay and simDisplay yet...\n" << vjDEBUG_FLUSH;
+      return false;
+   }
+   else if( (chunk_type == std::string("displayWindow")))
+   {
       return configAddDisplay(chunk);
    }
    else if(chunk_type == std::string("displaySystem"))
@@ -91,8 +96,8 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
       return true;                     // We successfully configured.
                                        // This tell processPending to add it to the active config
    }
-   else
-   { return false; }
+
+   return false;
 }
 
 //: Remove the chunk from the current configuration
@@ -128,7 +133,9 @@ bool vjDisplayManager::configCanHandle(vjConfigChunk* chunk)
 {
    return (    ((std::string)chunk->getType() == std::string("surfaceDisplay"))
             || ((std::string)chunk->getType() == std::string("simDisplay"))
-            || ((std::string)chunk->getType() == std::string("displaySystem")) );
+            || ((std::string)chunk->getType() == std::string("displaySystem"))
+            || ((std::string)chunk->getType() == std::string("displayWindow"))
+           );
 }
 
 
@@ -156,8 +163,19 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
    }
 
    // --- Add a display (of the correct type) ---- //
+   if((std::string)chunk->getType() == std::string("displayWindow"))       // Display window
+   {
+      vjDisplay* newDisp = new vjDisplay();        // Create the display
+      newDisp->config(chunk);
+      addDisplay(newDisp,true);                    // Add it
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "Adding display: "
+                                                << newDisp->getName().c_str()
+                                                << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "Display: "  << newDisp
+                                             << std::endl << vjDEBUG_FLUSH;
+   }
 
-   /* XXX: Display code
+   /*
    if((std::string)chunk->getType() == std::string("surfaceDisplay"))      // Surface DISPLAY
    {
       vjDisplay* newDisp = new vjSurfaceDisplay();    // Create display
@@ -200,7 +218,8 @@ bool vjDisplayManager::configRemoveDisplay(vjConfigChunk* chunk)
    bool success_flag(false);
 
    if((std::string)chunk->getType() == std::string("surfaceDisplay") ||
-      (std::string)chunk->getType() == std::string("simDisplay"))      // It is a display
+      (std::string)chunk->getType() == std::string("simDisplay")     ||
+      (std::string)chunk->getType() == std::string("displayWindow"))      // It is a display
    {
       vjDisplay* remove_disp = findDisplayNamed(chunk->getProperty("name"));
       if(remove_disp != NULL)

@@ -5,6 +5,7 @@ Begin "Zelda"
         "Simulator Display"
         "Surface Display"
         "Display System"
+        "Display Window"
     End
     Begin "Input"
         "Input Manager"

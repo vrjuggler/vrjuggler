@@ -73,6 +73,9 @@ public:
       //+       after doing local configuration.
    virtual void config(vjConfigChunk* chunk);
 
+   void configDisplayWindow(vjConfigChunk* chunk);
+   void configViewports(vjConfigChunk* chunk);
+
    //: Updates the projection data for each contained viewport
    void updateProjections();
 
