@@ -84,16 +84,9 @@ namespace vpr {
 
 
 // --- HASH Functions ---- //
-#if defined(HAVE_HASH_MAP) || defined(HAVE_EXT_HASH_MAP) || \
-    defined(HAVE_HASH_MAP_H)
+#ifdef VPR_HASH_MAP_INCLUDE
 
-#if defined(HAVE_HASH_MAP)
-#   include <hash_map>
-#elif defined(HAVE_EXT_HASH_MAP)
-#   include <ext/hash_map>
-#else
-#   include <hash_map.h>
-#endif
+#include VPR_HASH_MAP_INCLUDE
 
 namespace std
 {
@@ -121,7 +114,7 @@ struct hash<vpr::Uint64>
 
 } // End of std namespace
 
-#endif
+#endif   /* ifdef VPR_HASH_MAP_INCLUDE */
 
 
 
