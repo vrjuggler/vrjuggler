@@ -42,11 +42,11 @@
 
 #define vjSingletonHeader( TYPE )                    \
 public:                                              \
-   static TYPE* instance( void );
+   static TYPE* instance( void )
 
 #define vjSingletonHeaderWithInitFunc( TYPE, INIT_FUNC_NAME ) \
 public:                                                       \
-   static TYPE* instance( void );
+   static TYPE* instance( void )
 
 #define vjSingletonImp( TYPE )                       \
    TYPE* TYPE::instance( void )                      \
