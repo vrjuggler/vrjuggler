@@ -91,6 +91,10 @@ Table of contents:
 
     A. Steps
 
+       NOTE: If you are reading this file, then you probably already have
+       the VR Juggler source code and can skip to step iv (Compile VR
+       Juggler).
+
           i. Choose a directory to put the VR Juggler source code
              (referred to as <JUGGLER_DIR> from now on).
 
@@ -108,7 +112,7 @@ Table of contents:
 
         iii. Enter the newly checked out Juggler source directory
 
-                cd <JUGGLER_DIR>/juggler
+                cd <JUGGLER_DIR>/modules/vrjuggler
 
          iv. Compile VR Juggler (using the Autoconf system and GNU make)
 
@@ -142,7 +146,7 @@ Table of contents:
                     line your $HOME/.tcshrc or $HOME/.cshrc file (assuming
                     the use of tcsh for your shell):
 
-                        setenv VJ_BASE_DIR [JUGGLER_DIR]/juggler/instlinks
+                        setenv VJ_BASE_DIR [JUGGLER_DIR]/modules/vrjuggler/instlinks
 
                     Use whatever is appropriate for your shell (BASH, ksh,
                     DOS, etc.)
@@ -159,8 +163,8 @@ Table of contents:
        the directory that will contain the object files and libraries.  It
        can be called whatever you want.
 
-           mkdir <JUGGLER_DIR>/juggler/<BUILD_DIR>
-           cd <JUGGLER_DIR>/juggler/<BUILD_DIR>
-           <JUGGLER_DIR>/juggler/configure
+           mkdir <JUGGLER_DIR>/modules/vrjuggler/<BUILD_DIR>
+           cd <JUGGLER_DIR>/modules/vrjuggler/<BUILD_DIR>
+           <JUGGLER_DIR>/modules/vrjuggler/configure
 
 $Id$
