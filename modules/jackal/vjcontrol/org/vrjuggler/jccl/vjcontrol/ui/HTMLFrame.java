@@ -45,7 +45,7 @@ import javax.swing.text.*;
 import javax.swing.text.html.*;
 
 import org.vrjuggler.jccl.vjcontrol.Core;
-import org.vrjuggler.jccl.vjcontrol.ui.Widgets.ChildFrame;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.ChildFrame;
 
 /**
  * A frame for displaying a URL with active hyperlinks, eg for help info.
