@@ -38,6 +38,7 @@
 #include <Kernel/vjDebug.h>
 #include <Config/vjChunkFactory.h>
 #include <Config/vjChunkDesc.h>
+#include <Config/vjConfigTokens.h>
 
 #include <stdlib.h>
 #include <ctype.h>
@@ -277,7 +278,7 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
      * Incidentally, this is also where string values get
      * mangled into enumeration entries when assigning strings
      * to T_INTs.
-     */  
+     */
     char* endval;
     int i;
     float f;
@@ -290,7 +291,7 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
             return true;
         }
     }
-    
+
     switch (p->type) {
     case T_INT:
         i = strtol (val, &endval, 0);
@@ -308,9 +309,9 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
         return true;
     case T_BOOL:
         b = false;
-        if (!strcasecmp (val, "true"))
+        if (!strcasecmp (val, true_TOKEN))
             b = true;
-        else if (!strcasecmp (val, "false"))
+        else if (!strcasecmp (val, false_TOKEN))
             b = false;
         else { // we'll try to accept a numeric value
             b = strtol (val, &endval, 0);
@@ -355,7 +356,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
 
     while (readString (in, buf, buflen, NULL)) {
 
-        if (!strcasecmp (buf, "end"))
+        if (!strcasecmp (buf, end_TOKEN))
             break;
 
         // We have a string token; assumably a property name.
@@ -364,7 +365,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
                                    << " Chunk " << self.desc->name.c_str() << std::endl << vjDEBUG_FLUSH;
             continue;
         }
-        
+
         // We're reading a line of input for a valid Property.
         readString (in, buf, buflen, &quoted);
 
@@ -392,7 +393,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
                                                << p->getName().c_str() << std::endl << vjDEBUG_FLUSH;
                 }
             }
-            
+
             if ((p->num != -1) && (p->num != i))
                 vjDEBUG(vjDBG_ERROR,1) << "ERROR: vjProperty " << p->getName().c_str() << " should have "
                                        << p->num << " values; " << i << " found" << std::endl << vjDEBUG_FLUSH;
@@ -413,7 +414,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
             }
         }
     }
-    
+
     return in;
 }
 
@@ -442,7 +443,7 @@ const vjVarValue& vjConfigChunk::getType () const {
 const vjVarValue& vjConfigChunk::getProperty (const std::string& property_token, int ind) const {
     assertValid();
 
-    if (!vjstrcasecmp(property_token,"type")) {
+    if (!vjstrcasecmp(property_token,type_TOKEN)) {
         return type_as_varvalue;
     }
 

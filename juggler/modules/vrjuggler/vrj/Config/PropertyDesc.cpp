@@ -36,7 +36,7 @@
 #include <Config/vjParseUtil.h>
 #include <Config/vjChunkDesc.h>
 #include <Kernel/vjDebug.h>
-
+#include <Config/vjConfigTokens.h>
 
 
 vjPropertyDesc::vjPropertyDesc () : valuelabels(), enumv() {
@@ -54,7 +54,7 @@ vjPropertyDesc::vjPropertyDesc (vjPropertyDesc& d): valuelabels(), enumv() {
 
 
 
-vjPropertyDesc::vjPropertyDesc (const std::string& n, int i, VarType t, 
+vjPropertyDesc::vjPropertyDesc (const std::string& n, int i, VarType t,
             const std::string& h): valuelabels(), enumv() {
     name = n;
     token = n;
@@ -145,33 +145,35 @@ std::istream& operator >> (std::istream& in, vjPropertyDesc& self) {
     const int size = 512;
     char str[size];
 
+    const char equal_TOKEN[] = "=";
+
     /* format of line is: name type size { enums/chunktypes } token. */
 
     readString (in, str, size);
     //cout << "read propertydesc token " << str << endl;
     self.token = str;
-    if (!strcasecmp (str, "end"))
+    if (!strcasecmp (str, end_TOKEN))
         return in;
 
     self.type = readType(in);
     in >> self.num;
     readString (in,str,size);
-    
+
     self.name = str;
 
     readString (in, str, size);
 
     /* parsing value labels, if there are any */
-    if (!strcasecmp (str, "vj_valuelabels")) {
+    if (!strcasecmp (str, vj_valuelabels_TOKEN)) {
         //cout << "reading valuelabels" << endl;
         readString (in,str,size);
-        if (strcasecmp (str, "{"))
+        if (strcasecmp (str, lbrace_TOKEN))
             vjDEBUG(vjDBG_ERROR,1) << "ERROR: expected '{'" << std::endl
                                    << vjDEBUG_FLUSH;
-   
+
         vjEnumEntry *e;
         readString (in, str, size);
-        while (strcasecmp (str, "}") && !in.eof()) {
+        while (strcasecmp (str, rbrace_TOKEN) && !in.eof()) {
             e = new vjEnumEntry (str, T_STRING);
             self.valuelabels.push_back (e);
             readString (in, str, size);
@@ -180,13 +182,13 @@ std::istream& operator >> (std::istream& in, vjPropertyDesc& self) {
     }
 
     /* parsing enumerations, if there are any */
-    if (!strcasecmp (str, "vj_enumeration"))
+    if (!strcasecmp (str, vj_enumeration_TOKEN))
         readString (in, str, size);
-    if (!strcasecmp (str, "{")) {
+    if (!strcasecmp (str, lbrace_TOKEN)) {
         //cout << "parsing enumerations" << endl;
         int i = 0;
         readString (in, str, size);
-        while (strcmp (str, "}") && !in.eof()) {
+        while (strcmp (str, rbrace_TOKEN) && !in.eof()) {
             vjVarValue *v;
             // this is slightly kludgey.  We make a varvalue to store the enumeration
             // value... except for T_CHUNK and T_EMBEDDEDCHUNK where we store a chunk
@@ -195,14 +197,14 @@ std::istream& operator >> (std::istream& in, vjPropertyDesc& self) {
                 v = new vjVarValue (T_STRING);
             else
                 v = new vjVarValue (self.type);
-            
-            char* c = strstr (str, "=");
+
+            char* c = strstr (str, equal_TOKEN);
             if (c) {
                 *c = '\0';
                 *v = (c+1);
             }
             else {
-                if (self.type == T_STRING || self.type == T_CHUNK || 
+                if (self.type == T_STRING || self.type == T_CHUNK ||
                     self.type == T_EMBEDDEDCHUNK)
                     *v = str;
                 else
@@ -215,7 +217,7 @@ std::istream& operator >> (std::istream& in, vjPropertyDesc& self) {
         readString (in, str, size);
     }
     self.help = str;
-    
+
     return in;
 }
 

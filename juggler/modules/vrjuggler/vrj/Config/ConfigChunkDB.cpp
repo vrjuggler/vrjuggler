@@ -41,6 +41,7 @@
 #include <Config/vjChunkFactory.h>
 #include <Config/vjParseUtil.h>
 #include <Kernel/vjDebug.h>
+#include <Config/vjConfigTokens.h>
 
 #include <sys/types.h>
 
@@ -117,7 +118,7 @@ void vjConfigChunkDB::addChunks(vjConfigChunkDB *db) {
 
 
 void vjConfigChunkDB::addChunk(vjConfigChunk* new_chunk) {
-    removeNamed (new_chunk->getProperty("Name")); 
+    removeNamed (new_chunk->getProperty("Name"));
     chunks.push_back (new_chunk);
 }
 
@@ -214,7 +215,7 @@ int vjConfigChunkDB::removeMatching (const std::string& property, float value) {
 
 int vjConfigChunkDB::removeMatching (const std::string& property, const std::string& value) {
 
-    int i = 0;   
+    int i = 0;
     std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
     while (begin != chunks.end()) {
         vjVarValue v = ((*begin)->getProperty(property));
@@ -274,14 +275,14 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
     // Kinda like an insertion sort
     std::vector<vjConfigChunk*> src_chunks = chunks;
     chunks = std::vector<vjConfigChunk*>(0);        // Chunks is the local data - Zero it out to start
-    
+
     bool dep_pass(true);             // Flag for Pass dependency check
     std::vector<std::string> deps;   // Dependencies of current item
     std::vector<vjConfigChunk*>::iterator cur_item = src_chunks.begin();          // The current src item to look at
-    
+
     while (cur_item != src_chunks.end()) {          // While not at end of src list
         vjDEBUG(vjDBG_CONFIG,4) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vjDEBUG_FLUSH;
-        
+
         deps = (*cur_item)->getChunkPtrDependencies();             // Get src dependencies
         for (unsigned int dep_num=0;dep_num<deps.size();dep_num++) {  // For each dependency
             bool dep_not_found = (getChunk(deps[dep_num]) == NULL);
@@ -325,7 +326,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
             vjDEBUG(vjDBG_ERROR,0) << "Check for undefined devices that others depend upon.\n" << vjDEBUG_FLUSH;
         }
         chunks.insert(chunks.end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest anyway
-        
+
         return -1;
     } else {
         // Print out sorted dependancies
@@ -345,7 +346,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
         }
         vjDEBUG_END(vjDBG_CONFIG,4) << "-----------------\n" << vjDEBUG_FLUSH;
 #endif
-        
+
         return 0;      // Success
     }
 }
@@ -373,7 +374,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunkDB& self) {
     do {
         if (!readString (in, str, bufsize))
             break; /* eof */
-        if (!strcasecmp (str, "end"))
+        if (!strcasecmp (str, end_TOKEN))
             break;
 
         std::string newstr = str;
@@ -382,7 +383,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunkDB& self) {
             vjDEBUG(vjDBG_ERROR,0) << "ERROR!: Unknown Chunk type: " << str << std::endl
                                    << vjDEBUG_FLUSH;
             // skip to end of chunk
-            while (strcasecmp (str, "end")) {
+            while (strcasecmp (str, end_TOKEN)) {
                 if (0 == readString (in, str, bufsize))
                     break;
                 //std::cerr << "read " << str << std::endl;
@@ -392,7 +393,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunkDB& self) {
             in >> *ch;
 
             //std::cerr << "read chunk: " << *ch << std::endl;
-            
+
             if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
                 // this is another one of those bits of code where we need to make some
                 // real decisions about memory management of ConfigChunks
@@ -419,7 +420,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunkDB& self) {
     vjDEBUG(vjDBG_CONFIG,3) << "vjConfigChunkDB::>> : Finished - "
                             << self.chunks.size() << " chunks read."
                             << std::endl << vjDEBUG_FLUSH;
-    
+
     return in;
 }
 
