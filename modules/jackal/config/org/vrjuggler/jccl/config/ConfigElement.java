@@ -35,6 +35,7 @@ import java.util.*;
 import javax.swing.event.EventListenerList;
 
 import org.vrjuggler.jccl.config.event.*;
+import org.vrjuggler.jccl.config.undo.ConfigElementNameEdit;
 import org.vrjuggler.jccl.config.undo.ConfigElementPropertyEdit;
 import org.vrjuggler.jccl.config.undo.ConfigElementPropertyValueAddEdit;
 import org.vrjuggler.jccl.config.undo.ConfigElementPropertyValueRemoveEdit;
@@ -160,6 +161,27 @@ public class ConfigElement implements ConfigElementPointerListener
    }
 
    /**
+    * Sets the name of this configuration element.  Then, a
+    * ConfigElementNameEdit is automatically created and registered with the
+    * UndoManager associated with the given ConfigContext.
+    *
+    * @param name       the new name for the configuration element
+    * @param ctx        the context
+    *
+    * @see #setName(String)
+    *
+    * @since 0.92.6
+    */
+   public synchronized void setName(String name, ConfigContext ctx)
+   {
+      String old_name = mName;
+      ConfigElementNameEdit new_edit = 
+         new ConfigElementNameEdit(this, old_name, name);
+      setName(name);
+      ctx.postEdit(new_edit);
+   }
+
+   /**
     * Gets the full name of this configuration element.
     *
     * NOTE:Currently this is not implemented!!!!
@@ -221,7 +243,8 @@ public class ConfigElement implements ConfigElementPointerListener
     * Sets the value for the property with the given name at the given index
     * only after first ensuring that the new value is different from the
     * current value.  Then, a ConfigElementPropertyEdit is automatically
-    * created and registered with the UndoManager.
+    * created and registered with the UndoManager associated with the given
+    * context.
     *
     * @param name    the name of the property to set
     * @param index   the index of the property value to set
@@ -322,7 +345,7 @@ public class ConfigElement implements ConfigElementPointerListener
     * Appends the given value to the list of values for this property. This
     * only applies if the property supports a variable number of values.
     * Then, a ConfigElementPropertyValueAddEdit is automatically created and
-    * registered with the UndoManager.
+    * registered with the UndoManager associated with the given context.
     *
     * @param name    the name of the property to set
     * @param value   the enw value for the property index
@@ -345,7 +368,7 @@ public class ConfigElement implements ConfigElementPointerListener
     * values, the new value is simply appended to the list of values.  This
     * only applies if the property supports a variable number of values.
     * Then, a ConfigElementPropertyValueAddEdit is automatically created and
-    * registered with the UndoManager.
+    * registered with the UndoManager associated with the given context.
     *
     * @param name    the name of the property to set
     * @param index   the index in the property list where this value will be
@@ -447,7 +470,7 @@ public class ConfigElement implements ConfigElementPointerListener
     * Removes the value at the given index for the given property. This only
     * applies if the property supports a variable number of values.  Then, a
     * ConfigElementPropertyValueRemoveEdit is automatically created and
-    * registered with the UndoManager.
+    * registered with the UndoManager associated with the given context.
     *
     * @param name    the name of the property to set
     * @param index   the index of the property value to set
@@ -480,7 +503,7 @@ public class ConfigElement implements ConfigElementPointerListener
     * it exists in the list of values for the named property.  This only
     * applies if the property supports a variable number of values.  Then, a
     * ConfigElementPropertyValueRemoveEdit is automatically created and
-    * registered with the UndoManager.
+    * registered with the UndoManager associated with the given context.
     *
     * @param name     the name of the property to modify
     * @param oldValue the value to remove
