@@ -54,6 +54,27 @@ class EnvironmentServiceImpl
    public EnvironmentServiceImpl(BeanAttributes attrs)
    {
       super(attrs);
+
+      String prefs_dir_name;
+
+      // Mac OS X preferences location.
+      if ( System.getProperty("mrj.version") != null )
+      {
+         prefs_dir_name = getUserHome() + java.io.File.separator + "Library";
+      }
+      // Windows.
+      else if ( System.getProperty("os.name").indexOf("Windows") != -1 )
+      {
+         prefs_dir_name = getUserHome() + java.io.File.separator +
+                          "Application Data";
+      }
+      // UNIX.
+      else
+      {
+         prefs_dir_name = getUserHome();
+      }
+
+      prefsDir = (new java.io.File(prefs_dir_name)).getAbsolutePath();
    }
 
    /**
@@ -146,5 +167,15 @@ class EnvironmentServiceImpl
       return System.getProperty("user.home");
    }
 
+   /**
+    * Returns the absolute path to the platfom-specific directory where
+    * preferences files and other application data should be stored.
+    */
+   public String getAppDataDir()
+   {
+      return prefsDir;
+   }
+
    private String[] commandLineArgs = null;
+   private String   prefsDir        = null;
 }
