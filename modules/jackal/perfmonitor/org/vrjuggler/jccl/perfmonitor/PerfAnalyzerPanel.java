@@ -667,6 +667,10 @@ public class PerfAnalyzerPanel
             throw new VjComponentException (component_name + ": Instantiated with unmet dependencies.");
 
 	perf_module.addPerformanceModuleListener (this);
+        // get all the alread-added perf modules...
+        for (int i = 0; i < perf_module.getSize(); i++) {
+            addDataPanelElem (perf_module.getCollector(i));
+        }
 
         perf_filter = new SuffixFilter ("Perf Data Files (*.perf)", ".perf");
         ui_module.getEasyFileDialog().addFilter (perf_filter, "PerfData");
