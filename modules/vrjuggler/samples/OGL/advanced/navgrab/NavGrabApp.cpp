@@ -405,7 +405,7 @@ void NavGrabApp::drawFloor()
    glPushMatrix();
       glPolygonMode(GL_FRONT, GL_LINE);
       glLineWidth(2);
-      glColor3f(0.0f, 0.0f, 0.6f);
+      glColor3f(0.0f, 0.9f, 0.3f);
 
       glBegin(GL_LINES);
          for ( int z = -25; z < 25; ++z )
