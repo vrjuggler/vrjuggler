@@ -314,7 +314,7 @@ endif
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N install-libs
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N do-post-install
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/CHANGELOG $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/ChangeLog $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/COPYING.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
