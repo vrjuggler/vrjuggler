@@ -1,5 +1,14 @@
+/*
+ * NetControl.java
+ *
+ * Wrapper around the networking of vjController.  Responsible for
+ * taking care of sockets and connections.  Adds a thread to deal
+ * with reading from the socket.
+ *
+ * Author: Christopher Just
+ *
+ */
 
-/* NetControl - wrapper around the networking structure of this thang */
 
 package VjGUI;
 
@@ -8,69 +17,79 @@ import java.net.*;
 import VjGUI.ClientGlobals;
 import VjConfig.ConfigStreamTokenizer;
 import VjConfig.ChunkDesc;
+import VjConfig.ConfigChunk;
+
 
 public class NetControl implements Runnable {
 
-  public String remoteName;
-  private Socket sock;
-  //  private DataInputStream in;
-  private ConfigStreamTokenizer instream;
-  private DataOutputStream out;
-  public int port;
-  ClientGlobals core;
-  private boolean connected;
-  private Thread thread;
+    public String                   remoteName;
+    private Socket                  sock;
+    private ConfigStreamTokenizer   instream;
+    private DataOutputStream        out;
+    public int                      port;
+    ClientGlobals                   core;
+    private boolean                 connected;
+    private Thread                  thread;
 
-  public NetControl(ClientGlobals c) {
-    remoteName = new String ("localhost");
-    core = c;
-    port = 4450;
-    connected = false;
-  }
 
-  public void run() {
-    for (;;) {
-      System.out.println ("a");
-      if (!core.net.read())
-	break;
+
+    public NetControl(ClientGlobals c) {
+	remoteName = new String ("localhost");
+	core = c;
+	port = 4450;
+	connected = false;
     }
-  }
-
-  public boolean connect (String connectsource, int portnum) {
-    port = portnum;
-    return connect (connectsource);
-  }
 
 
 
-  public boolean connect (String connectsource) {
-    if (connected)
-      return true;
-    try {
-      remoteName = new String (connectsource);
-      System.out.println ("Attempting to open socket to " + remoteName +
-			  " port " + port);
-      sock = new Socket (remoteName, port);
-      out = new DataOutputStream (sock.getOutputStream());
-      //in = new DataInputStream (sock.getInputStream());
-      instream = new ConfigStreamTokenizer(new BufferedReader 
-					   (new InputStreamReader 
-					    (sock.getInputStream())));
-      connected = true;
-      thread = new Thread(this);
-      thread.start();
-      return true;
+    public void run() {
+	for (;;) {
+	    System.out.println ("a");
+	    if (!core.net.read())
+		break;
+	}
     }
-    catch (UnknownHostException u) {
-      System.err.println ("Unknown host - " + remoteName);
-      return false;
+
+
+
+    public boolean connect (String connectsource) {
+	return connect (connectsource, port);
     }
-    catch (IOException i) {
-      System.err.println ("IO error in socket: " + i.getMessage());
-      i.printStackTrace();
-      return false;
+
+
+
+    public boolean connect (String connectsource, int portnum) {
+	if (connected)
+	    return true;
+	port = portnum;
+	try {
+	    remoteName = new String (connectsource);
+	    System.out.println ("Attempting to open socket to " 
+				+ remoteName + ":" + port);
+	    sock = new Socket (remoteName, port);
+	    out = new DataOutputStream (sock.getOutputStream());
+	    instream = 
+		/*		new ConfigStreamTokenizer(new BufferedReader 
+					  (new InputStreamReader 
+					   (sock.getInputStream()))
+					  );
+		*/
+		new ConfigStreamTokenizer (new InputStreamReader(sock.getInputStream()));
+	    connected = true;
+	    thread = new Thread(this);
+	    thread.start();
+	    return true;
+	}
+	catch (UnknownHostException u) {
+	    System.err.println ("Unknown host - " + remoteName);
+	    return false;
+	}
+	catch (IOException i) {
+	    System.err.println ("IO error in socket: " + i.getMessage());
+	    i.printStackTrace();
+	    return false;
+	}
     }
-  }
 
 
 
@@ -106,6 +125,12 @@ public class NetControl implements Runnable {
 	}
     }
 
+
+
+    public boolean sendChunk (ConfigChunk ch) {
+	System.out.println ("not tested");
+	return false;
+    }
 
 
     public boolean isConnected() {

@@ -1,3 +1,9 @@
+/*
+ * ClientUI.java
+ *
+ * Author: Christopher Just
+ */
+
 
 package VjGUI;
 
@@ -10,7 +16,7 @@ import VjGUI.ProcessFrame;
 import VjGUI.DataDisplayFrame;
 
 public class ClientUI extends Frame 
-implements ActionListener, WindowListener, ItemListener {
+    implements ActionListener, WindowListener, ItemListener {
 
     ClientGlobals         core;
     Panel                 cardpanel,
@@ -27,15 +33,24 @@ implements ActionListener, WindowListener, ItemListener {
                           activepanel;
     List                  panellist; // list of panels in the cardlayout
     public MenuBar        menubar;
+    public Dialog         waitdialog;
+
 
     public ClientUI (ClientGlobals c) {
 	super("VR Juggler Configuration Editor");
 	core = c;
 
-windowfont = new Font ("Courier", Font.PLAIN, 12);
-	//	windowfont = new Font ("Courier", Font.PLAIN, 16);
+	windowfont = new Font ("Courier", Font.PLAIN, 12);
+	//windowfont = new Font ("Courier", Font.PLAIN, 16);
        	windowfontbold = new Font ("Courier", Font.BOLD, 16);
 	setFont (windowfont);
+
+	/* we use this when we're opening a window that may take a while
+	 * to layout,so the user has some immediate feedback
+	 */
+	waitdialog = new Dialog (this, "Laying out window...", false);
+	waitdialog.add (new Label ("Laying out this window..."));
+	waitdialog.pack();
 
 	datadisplayframes = new Vector();
 	Menu hmen = new Menu ("Help");
@@ -54,10 +69,13 @@ windowfont = new Font ("Courier", Font.PLAIN, 12);
 
 	listpanel.add(new Label ("Panels:", Label.LEFT), "North");
 	panellist = new List (10,false);
-	panellist.addItem ("Connection");
+
+	if (core.mode == core.APP_GUI)
+	    panellist.addItem ("Connection");
 	panellist.addItem ("Descriptions");
 	panellist.addItem ("Chunks");
-	panellist.addItem ("Processes");
+	if (core.mode == core.APP_GUI)
+	    panellist.addItem ("Processes");
 	panellist.addItemListener(this);
 	listpanel.add(panellist,"Center");
 	mp.add (listpanel, "West");
@@ -66,19 +84,31 @@ windowfont = new Font ("Courier", Font.PLAIN, 12);
 	layout = new CardLayout();
 	descspanel = new ChunkDescDBPanel(core);
 	chunkspanel = new ConfigChunkDBPanel(core);
-	connectpanel = new ConnectionPanel(core);
+	if (core.mode == core.APP_GUI) {
+	    connectpanel = new ConnectionPanel(core);
+	    cardpanel.add(connectpanel,"Connection");
+	}
+	else {
+	    connectpanel = null;
+	}
 	cardpanel.setLayout(layout);
 	cardpanel.add(descspanel,"Descriptions");
 	cardpanel.add(chunkspanel,"Chunks");
-	cardpanel.add(connectpanel,"Connection");
 
 	layout.layoutContainer(cardpanel);
 	mp.add (cardpanel, "Center");
 
 	add(mp);
 	addWindowListener(this);
-	layout.show(cardpanel, "Connection");
-	activepanel = connectpanel;
+
+	if (core.mode == core.APP_GUI) {
+	    layout.show(cardpanel, "Connection");
+	    activepanel = connectpanel;
+	}
+	else {
+	    layout.show(cardpanel, "Chunks");
+	    activepanel = chunkspanel;
+	}
 
 	procframe = new ProcessFrame (core, windowfont);
 
@@ -136,35 +166,41 @@ windowfont = new Font ("Courier", Font.PLAIN, 12);
 
 
     public boolean update () {
-	/* for starters, we need to go thru all the datadisplay chunks &
-	 * add frames for any new ones.
+	/* for starters, we need to go thru all the datadisplay 
+	 * chunks & add frames for any new ones.
 	 */
-	int                 i, 
-                            j;
+	int                 i, j;
 	boolean             found;
 	Vector              v;
 	ChunkDesc           d;
 	DataDisplayFrame    f;
 
-	v = core.descs.getTokenBegins ("vj_timedupdate");
-	for (i = 0; i < v.size(); i++) {
-	    d = (ChunkDesc)v.elementAt(i);
-	    for (j = 0, found = false; j < datadisplayframes.size(); j++) {
-		f = (DataDisplayFrame)datadisplayframes.elementAt(j);
-		if (d.name.equalsIgnoreCase(f.getName())) {
-		    found = true;
-		    break;
+	/* If we're running as a GUI to a running application,
+	 * we need to check for all the defined timedupdates
+	 * and add them to the list of panels 
+	 */
+	if (core.mode == core.APP_GUI) {
+	    v = core.descs.getTokenBegins ("vj_timedupdate");
+	    for (i = 0; i < v.size(); i++) {
+		d = (ChunkDesc)v.elementAt(i);
+		for (j = 0, found = false; j < datadisplayframes.size(); j++) {
+		    f = (DataDisplayFrame)datadisplayframes.elementAt(j);
+		    if (d.name.equalsIgnoreCase(f.getName())) {
+			found = true;
+			break;
+		    }
 		}
-	    }
-	    if (!found) {
-		f = new DataDisplayFrame (core, d);
-		datadisplayframes.addElement(f);
-		panellist.addItem(f.getName());
+		if (!found) {
+		    f = new DataDisplayFrame (core, d);
+		    datadisplayframes.addElement(f);
+		    panellist.addItem(f.getName());
+		}
 	    }
 	}
 
 	/* Well _that_ was fun :(
-	 * Now we just have to call update of everything else that's visible
+	 * Now we just have to call update of everything else 
+	 * that's visible
 	 */
 	for (j = 0; j < datadisplayframes.size(); j++) {
 	    f = (DataDisplayFrame)datadisplayframes.elementAt(j);
@@ -223,10 +259,5 @@ windowfont = new Font ("Courier", Font.PLAIN, 12);
 
 
 }
-
-
-
-
-
 
 

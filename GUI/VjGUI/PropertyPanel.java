@@ -1,3 +1,9 @@
+/*
+ * PropertyPanel.java
+ *
+ * Author: Christopher Just
+ *
+ */
 
 package VjGUI;
 
@@ -63,7 +69,7 @@ public class PropertyPanel extends BorderedPanel implements ActionListener {
 	    
 	    TextArea helparea;
 	    if (pr.desc.help.length() < 50)
-		helparea = new TextArea(pr.desc.help,2,10,
+		helparea = new TextArea(pr.desc.help,1,10,
 					TextArea.SCROLLBARS_NONE);
 	    else
 		helparea = new TextArea(pr.desc.help,1,10,
