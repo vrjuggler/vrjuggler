@@ -35,6 +35,9 @@ struct _thread_args {
 	vpr::SocketStream* mSock;
 };
 
+
+   
+   
 typedef struct _thread_args thread_args_t;
 
 }
@@ -59,11 +62,15 @@ public:
    // use this within your threads (CppUnit doesn't catch the assertTest there)
    // then test mThreadAssertTest with assertTest in your parent func.
    // then reset it to true.
-   inline void threadAssertTest( bool testcase )
-   {
-      mThreadAssertTest = testcase;
-      //assertTest( testcase );
+   #define threadAssertTest( testcase )          \
+   {                                          \
+      if (testcase == false)                 \
+      {                                        \
+         mThreadAssertTest = false;           \
+      }                                      \
+      assertTest( testcase );                   \
    }
+   
    bool mThreadAssertTest; // true for no error
 
    virtual ~SocketTest()
@@ -98,6 +105,9 @@ public:
          result = connector_socket.connect();
          threadAssertTest( result != false && "Socket::connect() failed" );
 
+         // let acceptor accept it before closing
+         vpr::System::msleep( 50 );
+         
          // close the socket
          result = connector_socket.close();
          threadAssertTest( result != false && "Socket::close() failed" );
@@ -225,7 +235,6 @@ public:
          result = connector_socket.connect();
          threadAssertTest( result != false && "Socket::connect() failed" );
 
-         
             // find out how much data is coming...
             int size_of_data;
             int amount_read;
