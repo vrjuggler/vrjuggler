@@ -59,10 +59,10 @@
 namespace vpr
 {
 
+class SocketImplSIM;
+
 namespace sim
 {
-
-class vpr::SocketImplSIM;
 
 /**
  * Container class used to transmit messages between simulated network nodes.
