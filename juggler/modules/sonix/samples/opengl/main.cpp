@@ -149,7 +149,7 @@ static void OnIdle()
    // tell glut to call redisplay (which then calls OnRedisplay)
    glutPostRedisplay();
    
-   sonix::instance()->step( stopWatch.timeDelta() );
+   snx::sonix::instance()->step( stopWatch.timeDelta() );
    stopWatch.pulse();
 }
 
@@ -186,43 +186,43 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       break;
    case '1':
    {
-      sonix::instance()->changeAPI( "Stub" );
+      snx::sonix::instance()->changeAPI( "Stub" );
       snx::SoundInfo si;
       si.filename = "sol.wav";
       si.ambient = false;
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
 
-      sonix::instance()->changeAPI( "Audiere" );
+      snx::sonix::instance()->changeAPI( "Audiere" );
    }
    break;
    case '2':
    {
-      sonix::instance()->changeAPI( "Stub" );
+      snx::sonix::instance()->changeAPI( "Stub" );
       snx::SoundInfo si;
       si.filename = "sep.wav";
       si.ambient = false;
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
 
-      sonix::instance()->changeAPI( "Audiere" );
+      snx::sonix::instance()->changeAPI( "Audiere" );
    }
    break;
    case '3':
    {
-      sonix::instance()->changeAPI( "Stub" );
+      snx::sonix::instance()->changeAPI( "Stub" );
       snx::SoundInfo si;
       si.filename = "attack.wav";
       si.ambient = false;
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
 
-      sonix::instance()->changeAPI( "Subsynth" );
+      snx::sonix::instance()->changeAPI( "Subsynth" );
    }
    break;
    case '4':
    {
-      sonix::instance()->changeAPI( "Stub" );
+      snx::sonix::instance()->changeAPI( "Stub" );
    }
    break;
    

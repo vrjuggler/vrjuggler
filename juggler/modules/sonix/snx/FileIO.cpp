@@ -48,7 +48,10 @@
 
 #include <snx/FileIO.h>
 
-namespace snxFileIO
+namespace snx
+{
+
+namespace FileIO
 {
 
 bool fileExists(const char* name)
@@ -175,4 +178,6 @@ void getAll( std::ifstream& f, std::string& buffer )
    //cout << "Gcount == " << f.gcount() << "\n"<<flush;
 }
 
-} // End of snxFileIO namespace
+} // End of FileIO namespace
+
+} // End of snx namespace

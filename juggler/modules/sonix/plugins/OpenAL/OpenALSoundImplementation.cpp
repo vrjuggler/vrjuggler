@@ -564,7 +564,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          ALuint sourceID( 0 );
 
          // open the file as readonly binary
-         if (!snxFileIO::fileExists( soundInfo.filename.c_str() )) 
+         if (!snx::FileIO::fileExists( soundInfo.filename.c_str() )) 
          {
             vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
                << clrOutNORM(clrYELLOW, "ERROR:") <<" OpenAL| alias '"
@@ -601,7 +601,8 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          memcpy(&mBindLookup[alias].data[0], data, size);
 #else
          format = AL_FORMAT_WAVE_EXT;
-         snxFileIO::fileLoad( soundInfo.filename.c_str(), mBindLookup[alias].data );
+         snx::FileIO::fileLoad(soundInfo.filename.c_str(),
+                               mBindLookup[alias].data);
 #endif
 
          // create a new buffer to put our loaded data into...

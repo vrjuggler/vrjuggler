@@ -58,13 +58,13 @@
             </imageobject>
          </mediaobject>
       </figure>
-      <para>In <xref linkend="simplesonixinterface"/> we see the API for Sonix (see <xref linkend="completesonixinterface"/> for the complete software architecture). The main parts that a sound programmer will use are shown, namely the <classname>snx::SoundHandle</classname> class, and the <classname>sonix</classname> singleton class. The <classname>sonix</classname> singleton class is used to start, stop and reconfigure the sound system. The <classname>snx::SoundHandle</classname> class is used to manipulate individual sounds. Both classes must be used for any sound to be heard. </para>
+      <para>In <xref linkend="simplesonixinterface"/> we see the API for Sonix (see <xref linkend="completesonixinterface"/> for the complete software architecture). The main parts that a sound programmer will use are shown, namely the <classname>snx::SoundHandle</classname> class, and the <classname>snx::sonix</classname> singleton class. The <classname>snx::sonix</classname> singleton class is used to start, stop and reconfigure the sound system. The <classname>snx::SoundHandle</classname> class is used to manipulate individual sounds. Both classes must be used for any sound to be heard. </para>
       <para>Starting the Sonix system is easy (see <xref linkend="startupCode"/>). Basically the only call needed to start the system is <methodname>changeAPI()</methodname>. Currently only OpenAL and AudioWorks are supported by Sonix, so you would pass one of these two strings to <methodname>changeAPI()</methodname>.</para>
       <example
         id = "startupCode"
       >
          <title>Code to startup and initialize Sonix to use the OpenAL audio subsystem</title>
-         <programlisting>sonix::instance()-&gt;changeAPI( "OpenAL" );</programlisting>
+         <programlisting>snx::sonix::instance()-&gt;changeAPI( "OpenAL" );</programlisting>
       </example>
       <para>To setup a sound is also straightforward as seen in <xref linkend="soundHandleSetup"/>. Here we use a <classname>snx::SoundInfo</classname> to configure the sound object, which is accessed by a <classname>snx::SoundHandle</classname>. </para>
       <example
@@ -82,12 +82,12 @@ crack_sound.configure( info );</programlisting>
       <example
         id = "stepCode"
       >
-         <title>Call sonix::step() in your frame function</title>
+         <title>Call snx::sonix::step() in your frame function</title>
          <programlisting>void frame()
 {
    time_delta = getTimeChangeInSeconds(); // use a system call, or 
                                           // other API to get your time delta
-   sonix::instance()-&gt;step( time_delta );
+   snx::sonix::instance()-&gt;step( time_delta );
 }</programlisting>
       </example>
       <para></para>
@@ -102,14 +102,14 @@ int main( int argc, char* argv[] )
 {
    std::string filename( "808kick.wav" ), api( "OpenAL" );
    
-   if (!snxFileIO::fileExists( filename.c_str() ))
+   if (!snx::FileIO::fileExists( filename.c_str() ))
    {
       std::cout &lt;&lt; "File not found: " &lt;&lt; filename &lt;&lt; "\n" &lt;&lt; std::flush;
       return 0;
    }
 
    // start sonix using OpenAL
-   sonix::instance()-&gt;changeAPI( api );
+   snx::sonix::instance()-&gt;changeAPI( api );
       
    // fill out a description for the sound we want to play
    snx::SoundInfo sound_info;
@@ -133,7 +133,7 @@ int main( int argc, char* argv[] )
    // this simulates a running application...
    while (1)
    {
-      sonix::instance()-&gt;step( time_delta );    
+      snx::sonix::instance()-&gt;step( time_delta );    
    }
 
    return 1;
@@ -150,7 +150,7 @@ int main( int argc, char* argv[] )
       >
          <title>How to reconfigure Sonix at runtime</title>
          <programlisting>   // start sonix using OpenAL
-   sonix::instance()-&gt;changeAPI( "OpenAL" );
+   snx::sonix::instance()-&gt;changeAPI( "OpenAL" );
       
    // fill out a description for the sound we want to play
    snx::SoundInfo sound_info;
@@ -167,7 +167,7 @@ int main( int argc, char* argv[] )
    sleep( 1 );
 
    // trigger the sound using a different audio system...
-   sonix::instance()-&gt;changeAPI( "AudioWorks" );
+   snx::sonix::instance()-&gt;changeAPI( "AudioWorks" );
    sound_handle.trigger();
    sleep( 1 );
 
@@ -213,7 +213,7 @@ int main( int argc, char* argv[] )
                <para>Abstract Factory (<classname>snx::SoundFactory</classname>). The Store can create new instances of the requested sound implementation. The Abstract Factory consults its Store of registered objects, and if found, makes a clone of that object (Prototype pattern). The Abstract Factory is used in Sonix to configure the Bridge. </para>
             </listitem>
             <listitem>
-               <para>Bridge (<classname>sonix</classname> interface class and <classname>snx::SoundImplementation</classname>). The <classname>sonix</classname> class is the audio system abstraction which is decoupled from its implementation <classname>snx::SoundImplementation</classname>. This way the two can vary independently. Bridge also facilitates run-time configuration of the sound API.</para>
+               <para>Bridge (<classname>snx::sonix</classname> interface class and <classname>snx::SoundImplementation</classname>). The <classname>snx::sonix</classname> class is the audio system abstraction which is decoupled from its implementation <classname>snx::SoundImplementation</classname>. This way the two can vary independently. Bridge also facilitates run-time configuration of the sound API.</para>
             </listitem>
             <listitem>
                <para>Proxy (<classname>std::string</classname> and <classname>snx::SoundHandle</classname>). <classname>snx::SoundHandle</classname> is how users manipulate their sound object. <classname>snx::SoundHandle</classname> is actually a proxy to a <classname>std::string</classname> proxy. The <classname>std::string</classname> Proxy is what allows Sonix reconfiguration of resources. Rather than using pointers which can easily be left to dangle, the <classname>std::string</classname> serves as a lookup for a protected sound resource located internally to the Sonix tool. The <classname>snx::SoundHandle</classname> wraps this <classname>std::string</classname> to provide a simple and familiar C++ object to use as the sound handle. The Sonix class acts as Mediator between every Proxy method and the actual audio system Adapter.</para>
