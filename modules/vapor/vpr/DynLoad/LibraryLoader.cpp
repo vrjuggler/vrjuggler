@@ -75,6 +75,14 @@ static const std::string DSO_FILE_EXT(".so");
 #  endif
 #endif
 
+LibraryLoader::~LibraryLoader()
+{
+   for ( dso_list_t::iterator i = mLoadedLibs.begin(); i != mLoadedLibs.end(); ++i )
+   {
+      (*i)->unload();
+   }
+}
+
 vpr::ReturnStatus LibraryLoader::findAndInitDSO(const std::string& dsoBaseName,
                                                 const std::vector<std::string>& searchPath,
                                                 const std::string& initFuncName,
