@@ -139,10 +139,10 @@ public:
      */
     inline int
     getMcastInterface (InetAddr& mcast_if) {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         int retval;
 
-        reval = m_socket_imp->getOption(SocketTypes::McastInterface, option);
+        reval = m_socket_imp->getOption(SocketOptions::McastInterface, option);
 
         if ( retval == 0 ) {
             mcast_if = option.mcast_if;
@@ -156,9 +156,9 @@ public:
      */
     inline int
     setMcastInterface (const InetAddr& mcast_if) {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         option.mcast_if = mcast_if;
-        return m_socket_imp->setOption(SocketTypes::McastInterface, option);
+        return m_socket_imp->setOption(SocketOptions::McastInterface, option);
     }
 
     /**
@@ -166,10 +166,10 @@ public:
      */
     inline int
     getMcastTimeToLive (Uint8& ttl) {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         int retval;
 
-        reval = m_socket_imp->getOption(SocketTypes::McastTimeToLive, option);
+        reval = m_socket_imp->getOption(SocketOptions::McastTimeToLive, option);
 
         if ( retval == 0 ) {
             ttl = option.mcast_ttl;
@@ -183,9 +183,9 @@ public:
      */
     inline int
     setMcastTimeToLive (const Uint8 ttl) {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         option.mcast_ttl = ttl;
-        return m_socket_imp->setOption(SocketTypes::McastTimeToLive, option);
+        return m_socket_imp->setOption(SocketOptions::McastTimeToLive, option);
     }
 
     /**
@@ -193,10 +193,10 @@ public:
      */
     inline int
     getMcastLoopback (Uint8& ttl) {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         int retval;
 
-        reval = m_socket_imp->getOption(SocketTypes::McastLoopback, option);
+        reval = m_socket_imp->getOption(SocketOptions::McastLoopback, option);
 
         if ( retval == 0 ) {
             loop = option.mcast_loopback;
@@ -210,9 +210,9 @@ public:
      */
     inline int
     setMcastLoopback (const Uint8 loop) {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         option.mcast_loopback = loop;
-        return m_socket_imp->setOption(SocketTypes::McastLoopback, option);
+        return m_socket_imp->setOption(SocketOptions::McastLoopback, option);
     }
 
     /**
@@ -220,9 +220,9 @@ public:
      */
     inline int
     addMcastMember (const McastReq& request) {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         option.mcast_add_member = request;
-        return m_socket_imp->setOption(SocketTypes::AddMember, option);
+        return m_socket_imp->setOption(SocketOptions::AddMember, option);
     }
 
     /**
@@ -230,9 +230,9 @@ public:
      */
     inline int
     dropMcastMember (const McastReq& request) {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         option.mcast_drop_member = request;
-        return m_socket_imp->setOption(SocketTypes::DropMember, option);
+        return m_socket_imp->setOption(SocketOptions::DropMember, option);
     }
 
 protected:
