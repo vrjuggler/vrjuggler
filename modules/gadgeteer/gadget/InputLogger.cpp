@@ -143,22 +143,29 @@ void InputLogger::stopRecording()
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "\n--- LOGGER: stopRecording ---\n" << vprDEBUG_FLUSH;
 
-   mRootNode->save(std::cout);
+   //mRootNode->save(std::cout);
 
    std::cout << "---- Done recording ----\n"
              << "Saving data to: " << mRecordingFilename << std::endl;
+   std::ofstream out_file;
+   out_file.exceptions(std::ofstream::badbit | std::ofstream::failbit);
    try
    {
-      std::fstream out_file(mRecordingFilename.c_str());
+      std::ofstream out_file(mRecordingFilename.c_str());
       mRootNode->save(out_file);
       out_file.flush();
       out_file.close();
    }
+   catch(std::ofstream::failure& se)
+   {
+      std::cerr << "IOS failure saving file: desc:" << se.what() << std::endl;
+      if(out_file.is_open())
+      {  out_file.close(); }
+   }
    catch(...)
    {
-      std::cerr << "Error saving file." << std::endl;
+      std::cerr << "Unknown error saving file." << std::endl;
    }
-
 
    mCurState = Inactive;
 }
