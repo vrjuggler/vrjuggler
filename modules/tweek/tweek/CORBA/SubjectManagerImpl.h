@@ -199,7 +199,7 @@ protected:
    // vpr::Mutex objects is not allowed.
    SubjectManagerImpl(const SubjectManagerImpl& sm);
 
-   void operator=(const SubjectManagerImpl& sm)
+   void operator=(const SubjectManagerImpl&)
    {
       /* Do nothing. */ ;
    }

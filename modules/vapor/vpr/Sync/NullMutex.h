@@ -43,8 +43,8 @@
 #define _vprNullMutex_h_
 
 #include <vpr/vprConfig.h>
+#include <stdio.h>
 #include <vpr/Util/ReturnStatus.h>
-
 
 
 namespace vpr
@@ -131,9 +131,10 @@ public:
    }
 
    /// Dumps the mutex debug stuff and current state.
-   void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
+   void dump(FILE* dest = stderr,
+             const char* message = "\n------ Mutex Dump -----\n") const
    {
-      std::cerr << message << "NULL Mutex\n";
+      fprintf(dest, "%sNULL Mutex", message);
    }
 
 protected:

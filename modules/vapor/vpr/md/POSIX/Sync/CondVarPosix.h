@@ -319,10 +319,10 @@ private:
 
    // = Prevent assignment and initialization.
    void operator= (const CondVarPosix&) {;}
-   CondVarPosix (const CondVarPosix &c) {;}
+   CondVarPosix(const CondVarPosix&) {;}
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif  /* _VPR_COND_POSIX_H_ */

@@ -75,7 +75,7 @@ public:
 protected:
    SubjectImpl(const SubjectImpl& s);
 
-   SubjectImpl& operator=(const SubjectImpl& subj)
+   SubjectImpl& operator=(const SubjectImpl&)
    {
       return *this;
    }
