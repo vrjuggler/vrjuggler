@@ -427,6 +427,7 @@ public:
     send (const std::string& buffer, const size_t length,
           ssize_t& bytes_written)
     {
+       assert( length <= buffer.size() && "length was bigger than the data given" );
        return write(buffer, buf_len, bytes_written);
     }
 
@@ -448,6 +449,7 @@ public:
     send (const std::vector<char>& buffer, const size_t length,
           ssize_t& bytes_written)
     {
+       assert( length <= buffer.size() && "length was bigger than the data given" );
        return write(buffer, buf_len, bytes_written);
     }
 
@@ -534,15 +536,16 @@ public:
      */
     inline Status
     setRecvBufferSize (const Int32 size) {
-        return m_socket_imp->getRecvBufferSize(size);
+        return m_socket_imp->setRecvBufferSize(size);
     }
 
     /**
-     *
+     *  the default max size that you can send using this socket
+     *  you can change the max size with setSendBufferSize
      */
     inline Status
     getSendBufferSize (int& size) const {
-        return m_socket_imp->getSecvBufferSize(size);
+        return m_socket_imp->getSendBufferSize(size);
     }
 
     /**
@@ -550,7 +553,7 @@ public:
      */
     inline Status
     setSendBufferSize (const Int32 size) {
-        return m_socket_imp->getSecvBufferSize(size);
+        return m_socket_imp->setSendBufferSize(size);
     }
 
     /**
