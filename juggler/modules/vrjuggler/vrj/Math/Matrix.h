@@ -46,6 +46,7 @@ class vjCoord;
 //
 // This is VERY important!!!
 //--------------------------------------------------------------------------------
+//!PUBLIC_API
 class vjMatrix
 {
 public:

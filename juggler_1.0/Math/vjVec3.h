@@ -14,6 +14,7 @@ class vjMatrix;
 // The class is a representation of a vector with 3 float values.
 // It defines several operators that can be used on the vectors.
 //-----------------------------------------------------------------
+//!PUBLIC_API
 class vjVec3
 {
 public:

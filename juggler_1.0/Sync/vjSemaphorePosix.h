@@ -25,6 +25,7 @@
 
 //: Semaphore wrapper for POSIX.4-compliant systems.
 
+//!PUBLIC_API
 class vjSemaphorePosix {
 public:
     // -----------------------------------------------------------------------

@@ -4,7 +4,7 @@
 // vjGuard
 //
 // Purpose:
-//    Guard wrapper 
+//    Guard wrapper
 //
 //
 // Author:
@@ -17,6 +17,7 @@
 #include <Sync/vjSemaphore.h>
 #include <Sync/vjMutex.h>
 
+//!PUBLIC_API
 template <class LOCK>
 class vjGuard
 {

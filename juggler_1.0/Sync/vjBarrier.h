@@ -14,8 +14,8 @@
 #include <Sync/vjGuard.h>
 
 //: Helper class for vjBarrier
-class vjSubBarrier 
-{ 
+class vjSubBarrier
+{
 public:
     //: Initialization.
     vjSubBarrier (int count, vjMutex* lock) : runningThreads(count), barrierFinished(lock)
@@ -42,8 +42,9 @@ public:
 //     the barrier correct.  This code is based on an article from
 //     SunOpsis Vol. 4, No. 1 by Richard Marejka
 //     (Richard.Marejka@canada.sun.com).
+//!PUBLIC_API
 //---------------------------------------------------------------------
-class vjBarrier 
+class vjBarrier
 {
 public:
     // Initialize the barrier to synchronize <count> threads.
@@ -54,30 +55,30 @@ public:
     {
         //cerr << "vjBarrier::vjBarrier: Entering." << endl;
         subBarrier[0] = &subBarrier1;
-        subBarrier[1] = &subBarrier2;    
+        subBarrier[1] = &subBarrier2;
     }
-      
+
     // Block the caller until all <count> threads have called <wait> and
     // then allow all the caller threads to continue in parallel.
-    int wait (void)  
+    int wait (void)
     {
         vjGuard<vjMutex> guard(mutex);
-      
+
         vjSubBarrier* curvjSubBarrier = this->subBarrier[currentGeneration];
-    
+
         // Check for shutdown...
         if (curvjSubBarrier == NULL) {
             return -1;
         }
-    
+
         if (curvjSubBarrier->runningThreads == 1)
         {
             // We're the last running thread, so swap generations and tell
             // all the threads waiting on the barrier to continue on their
             // way.
-    
+
             curvjSubBarrier->runningThreads = this->count;
-	  
+	
             // Swap generations.
             currentGeneration = 1 - this->currentGeneration;	    // Cycles between 0 and 1
             curvjSubBarrier->barrierFinished.broadcast();
@@ -85,19 +86,19 @@ public:
         else
         {
             --curvjSubBarrier->runningThreads;
-    
+
             // Block until all the other threads wait().
             while (curvjSubBarrier->runningThreads != count)
                 curvjSubBarrier->barrierFinished.wait ();
         }
-    
-        return 0;  
+
+        return 0;
     }
 
 
     //-----------------------------------------------------------
     // addProcess/removeProcess
-    // PURPOSE: 
+    // PURPOSE:
     //	    Tell the barrier to increase/decrease the count of the number
     //	    of threads to syncronize
     //-----------------------------------------------------------
@@ -105,12 +106,12 @@ public:
   {
     cerr << "vjBarrier::addProcess: Not implemented yet." << endl;
   }
-  
+
   void removeProcess()
   {
     cerr << "vjBarrier::removeProcess: Not implemented yet." << endl;
   }
-  
+
     void dump (void) const {}
     // Dump the state of an object.
 
@@ -120,10 +121,10 @@ private:
     // Either 0 or 1, depending on whether we are the first generation
     // of waiters or the next generation of waiters.
     int currentGeneration;
-  
+
 
     int count; // Total number of threads that can be waiting at any one time.
-  
+
     vjSubBarrier subBarrier1;
     vjSubBarrier subBarrier2;
     vjSubBarrier* subBarrier[2];

@@ -11,6 +11,7 @@ class vjMatrix;
 //
 // Position is XYZ <br>
 // Orientation is XYZ Euler angles <br>
+//!PUBLIC_API
 //---------------------------------------------------
 class vjCoord
 {

@@ -10,7 +10,7 @@
 // vjRWMutex
 //
 // Purpose:
-//:    vjRWMutex wrapper 
+//:    vjRWMutex wrapper
 //
 //
 // Author:
@@ -18,19 +18,20 @@
 //
 // Date: 1-31-97
 //-----------------------------------------------
+//!PUBLIC_API
 class vjRWMutex
 {
 public:
-    vjRWMutex () : waitingReaders(&lock), 
+    vjRWMutex () : waitingReaders(&lock),
         waitingWriters(&lock),
-        refCount(0), 
-        numWaitingWriters(0), 
+        refCount(0),
+        numWaitingWriters(0),
         numWaitingReaders(0)
     {}
 
     ~vjRWMutex(void)
     {}
-  
+
     //---------------------------------------------------------
     // int aquire()
     //
@@ -43,7 +44,7 @@ public:
     {
         return aquireWrite();
     }
-  
+
     //----------------------------------------------------------
     //:  Aquire a read mutex
     //----------------------------------------------------------
@@ -62,13 +63,13 @@ public:
                 numWaitingReaders--;	    //
             }
         }
-    
+
         if (retVal == 0) {
             refCount++;
             stateLock.release();
         }
-    
-        return retVal;  
+
+        return retVal;
     }
 
     //----------------------------------------------------------
@@ -88,16 +89,16 @@ public:
                 numWaitingWriters--;	// Not waiting any more
             }
         }
-    
+
         if(retVal == 0)
         {
             refCount = -1;		// Tell everyone that there is a writer
             stateLock.release();
         }
-    
+
         return retVal;
     }
-  
+
     //---------------------------------------------------------
     // int tryAquire()
     //
@@ -121,7 +122,7 @@ public:
     int tryAcquireRead () const
     {
         int retVal = -1;
-      
+
         if (stateLock.acquire() != -1)
         {
             if(refCount == -1 || numWaitingWriters >0)
@@ -135,14 +136,14 @@ public:
         }
         return retVal;
     }
-  
+
     //----------------------------------------------------------
     //:  Try to aquire a write mutex
     //----------------------------------------------------------
     int tryAcquireWrite () const
     {
         int retVal = -1;
-      
+
         if (stateLock.acquire() != -1)
         {
             if(refCount != 0)
@@ -161,7 +162,7 @@ public:
     // int release()
     //
     // PURPOSE:
-    //:   Release the mutex. 
+    //:   Release the mutex.
     // RETURNS:
     //!RETVAL:   0 - Success
     //!RETVAL:  -1 - Error
@@ -170,7 +171,7 @@ public:
     {
         if (stateLock.acquire() == -1)
             return -1;
-    
+
         if(refCount > 0)	    // We have a reader to release
             refCount--;
         else if (refCount == -1)	// We have writer
@@ -179,7 +180,7 @@ public:
             cerr << "vjRWMutex::release: Should not have refCount of 0!!!" << endl;
 	
         int retVal = 0;
-    
+
 	// Preference to writers
         if (numWaitingWriters > 0)
         {
@@ -193,7 +194,7 @@ public:
             retVal = 0;
 	
         stateLock.release();
-    
+
         return retVal;	
     }
 
@@ -211,7 +212,7 @@ public:
         return ustestlock(mutex);
     }
 
-  
+
     //---------------------------------------------------------
     // void dump()
     //
@@ -220,25 +221,25 @@ public:
     //---------------------------------------------------------
     void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
     {
-        usdumplock(mutex, dest, message);  
+        usdumplock(mutex, dest, message);
     }
-  
+
 
 protected:
     vjMutex stateLock;        //: Serialize access to internal state.
     vjCond waitingReaders;    //: Reader threads waiting to acquire the lock.
     int numWaitingReaders;    //: Number of waiting readers.
-  
+
     vjCond waitingWriters;    //: Writer threads waiting to acquire the lock.
     int numWaitingWriters;    //: Number of waiting writers.
- 
+
     // Value is -1 if writer has the lock, else this keeps track of the
     // number of readers holding the lock.
     int refCount;
 
     // = Prevent assignment and initialization.
     void operator= (const vjRWMutex &) {}
-    vjRWMutex (const vjRWMutex &) {}  
+    vjRWMutex (const vjRWMutex &) {}
 };
 
 #endif

@@ -18,6 +18,7 @@
 //
 // Date: 1-20-97
 //-----------------------------------------------
+//!PUBLIC_API
 class vjSemaphoreSGI
 {
 public:

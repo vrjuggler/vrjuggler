@@ -18,6 +18,7 @@
 #include <Kernel/vjDebug.h>
 #include <Threads/vjThread.h>
 
+//!PUBLIC_API
 class vjSemaphoreWin32
 {
 public:
@@ -28,7 +29,7 @@ public:
       {
          semaphorePool = new vjMemPoolWin32(65536, 32, "memSemaphorePoolWin32XXXXXX");
          attachedCounter = static_cast<int*>(semaphorePool->allocate(sizeof(int)));
-         *attachedCounter = 0; 
+         *attachedCounter = 0;
       }
       *attachedCounter = *attachedCounter + 1;      // Track how many semaphores are allocated
 
@@ -46,7 +47,7 @@ public:
       CloseHandle(sema);
 
       // ---- Deal with the pool --- //
-      *attachedCounter = *attachedCounter - 1;     // Track how many Semaphore are allocated  
+      *attachedCounter = *attachedCounter - 1;     // Track how many Semaphore are allocated
 
       DebugLock.acquire();
       cerr << vjThread::self() << " vjSemaphoreWin32::~vjSemaphoreWin32: attachedCounter: " << *attachedCounter << endl;
@@ -113,7 +114,7 @@ public:
       {
          return 1;
       }
-      return 0;       
+      return 0;
    }
 
 //----------------------------------------------------------
@@ -136,21 +137,21 @@ public:
 // int release()
 //
 // PURPOSE:
-//   Release the Semaphore. 
+//   Release the Semaphore.
 //! RETURNS:
 //   0 - Success
 //  -1 - Error
 //---------------------------------------------------------
    int release() const
    {
-      return ReleaseSemaphore(sema,1,NULL);   
+      return ReleaseSemaphore(sema,1,NULL);
    }
 
 //---------------------------------------------------------
 // int reset(int val)
 //
 // PURPOSE:
-//:  Reset the Semaphore. 
+//:  Reset the Semaphore.
 //! RETURNS:
 //   0 - Success
 //  -1 - Error
@@ -173,7 +174,7 @@ public:
 //---------------------------------------------------------
    void dump (FILE* dest = stderr, const char* message = "\n------ Semaphore Dump -----\n") const
    {
-      cout << "vjSemaphoreWin32::dump() " << endl; 
+      cout << "vjSemaphoreWin32::dump() " << endl;
    }
 
 
@@ -183,7 +184,7 @@ protected:
 
    // = Prevent assignment and initialization.
    void operator= (const vjSemaphoreWin32 &) {}
-   vjSemaphoreWin32 (const vjSemaphoreWin32 &) {}  
+   vjSemaphoreWin32 (const vjSemaphoreWin32 &) {}
 
    // Problem here.  Fork will not like these.
    static vjMemPoolWin32* semaphorePool;

@@ -8,7 +8,7 @@
 
 #include <sys/types.h>
 #include <unistd.h>
-     
+
 //----------------------------------------------
 //  vjCondGeneric
 //
@@ -27,13 +27,14 @@
 //	Allen Bierbaum
 //
 // Date: 1-29-97
+//!PUBLIC_API
 //-----------------------------------------------
 class  vjCondGeneric
 {
 public:
    //: Constructor
    //! ARGS: mutex - a pointer to a user specified mutex
-   //+               if not specified, uses internal mutex   
+   //+               if not specified, uses internal mutex
    vjCondGeneric(vjMutex* mutex = NULL)
    {
       if (mutex == NULL)
@@ -64,7 +65,7 @@ public:
 
       sema.acquire();         // Wait for a while
       sema.dump();
-            
+
       // We must now regain the lock so that the condition can be re checked upon exit
       // We also need it to decrement waiters
       condMutex->acquire();
@@ -104,14 +105,14 @@ public:
       for (int i = waiters;i>0;i--)
          sema.release();
 
-      return 0; 
+      return 0;
    }
 
    //:  Aquire the condition lock
    int acquire()
    {
       return condMutex->acquire();
-   }  
+   }
 
    //: Try to acquire the condition lock
    int tryAcquire()
@@ -152,7 +153,7 @@ private:
 
    // = Prevent assignment and initialization.
    void operator= (const  vjCondGeneric&) {}
-   vjCondGeneric (const  vjCondGeneric &c) {;}    
+   vjCondGeneric (const  vjCondGeneric &c) {;}
 };
 
 #endif

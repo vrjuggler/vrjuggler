@@ -41,6 +41,7 @@ ostream& operator<< (ostream&, vjOneThread&);
 //
 // Date: 2-5-97
 //-----------------------------------------------
+//!PUBLIC_API
 class vjThreadPool : public vjMemory
 {
 public:
