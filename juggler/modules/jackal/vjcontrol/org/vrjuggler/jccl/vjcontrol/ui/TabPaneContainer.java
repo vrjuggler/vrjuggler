@@ -35,7 +35,7 @@ package VjComponents.UI;
 
 import javax.swing.*;
 
-import VjControl.Core;
+import VjControl.*;
 import VjControl.VjComponentException;
 import VjComponents.UI.PlugPanel;
 import VjComponents.UI.PlugPanelContainer;
@@ -117,8 +117,8 @@ public class TabPaneContainer
     }
 
 
-    public boolean addConfig (ConfigChunk ch) {
-        return false;
+    public VjComponent addConfig (ConfigChunk ch) throws VjComponentException {
+        throw new VjComponentException (component_name + " does not support child component: " + ch.getName());
     }
 
 
