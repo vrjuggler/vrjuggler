@@ -20,11 +20,11 @@
 #include <termios.h>
 #include <math.h>
 
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/CyberGlove.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_types.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_globals.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_glove-types.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_error.h>
+#include <drivers/VirtualTechnologies/CyberGlove/CyberGlove.h>
+#include <drivers/VirtualTechnologies/CyberGlove/vt_types.h>
+#include <drivers/VirtualTechnologies/CyberGlove/vt_globals.h>
+#include <drivers/VirtualTechnologies/CyberGlove/vt_glove-types.h>
+#include <drivers/VirtualTechnologies/CyberGlove/vt_error.h>
 
 #define delay(t) (usleep(t*100)) /* t is in milliseconds */
 

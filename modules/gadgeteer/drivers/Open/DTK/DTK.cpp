@@ -41,7 +41,7 @@
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
-#include <gadget/Devices/Open/DTK/DTK.h>
+#include <drivers/Open/DTK/DTK.h>
 
 
 void initDevice(gadget::InputManager* inputMgr)

@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/Devices/DriverConfig.h>
-#include <gadget/Devices/VRCO/TrackdAPI/TrackdAPIController.h>
-#include <gadget/Devices/VRCO/TrackdAPI/TrackdAPISensor.h>
+#include <drivers/VRCO/TrackdAPI/TrackdAPIController.h>
+#include <drivers/VRCO/TrackdAPI/TrackdAPISensor.h>
 #include <jccl/Config/ConfigElement.h>
 #include <vpr/Util/Debug.h>
 

@@ -34,9 +34,9 @@
 #include <vpr/Util/Debug.h>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
-#include <gadget/Devices/Open/Trackd/TrackdControllerStandalone.h>
-#include <gadget/Devices/Open/Trackd/TrackdController.h>
-#include <gadget/Devices/Open/Trackd/TrackdSensor.h>
+#include <drivers/Open/Trackd/TrackdControllerStandalone.h>
+#include <drivers/Open/Trackd/TrackdController.h>
+#include <drivers/Open/Trackd/TrackdSensor.h>
 
 
 void initDevice(gadget::InputManager* inputMgr)

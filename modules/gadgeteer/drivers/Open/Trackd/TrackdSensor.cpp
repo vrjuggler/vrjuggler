@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/Devices/DriverConfig.h>
-#include <gadget/Devices/Open/Trackd/TrackdSensorStandalone.h>
-#include <gadget/Devices/Open/Trackd/TrackdSensor.h>
+#include <drivers/Open/Trackd/TrackdSensorStandalone.h>
+#include <drivers/Open/Trackd/TrackdSensor.h>
 #include <jccl/Config/ConfigElement.h>
 
 #include <vpr/Util/Debug.h>

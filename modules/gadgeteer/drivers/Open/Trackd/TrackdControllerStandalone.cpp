@@ -1,4 +1,4 @@
-#include <gadget/Devices/Open/Trackd/TrackdControllerStandalone.h>
+#include <drivers/Open/Trackd/TrackdControllerStandalone.h>
 
 #include <assert.h>
 

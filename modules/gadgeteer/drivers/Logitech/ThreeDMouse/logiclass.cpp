@@ -63,7 +63,7 @@
 #include <vpr/System.h>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
-#include <gadget/Devices/Logitech/ThreeDMouse/logiclass.h>   /* classprototypes and data types */
+#include <drivers/Logitech/ThreeDMouse/logiclass.h>   /* classprototypes and data types */
 
 
 void initDevice(gadget::InputManager* inputMgr)

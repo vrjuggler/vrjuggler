@@ -12,7 +12,7 @@
 /*  ==============================================================  */
 
 #include <gadget/Devices/DriverConfig.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_math3d.h>
+#include <drivers/VirtualTechnologies/CyberGlove/vt_math3d.h>
 
 #ifndef NULL
 #define NULL 0
