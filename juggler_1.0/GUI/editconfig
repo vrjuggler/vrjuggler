@@ -1,7 +1,0 @@
-#!/bin/sh
-
-#setenv PATH /usr/java/bin:$PATH
-#setenv JDK_HOME /usr/java
-
-
-${JDK_HOME}/bin/java -DVJ_BASE_DIR=${VJ_BASE_DIR} -classpath ${VJ_BASE_DIR}/bin/VjCfg.jar:${JDK_HOME}/lib/classes.zip VjGUI.AppCore fileeditor $1 $2 $3 $4 $5 $6
