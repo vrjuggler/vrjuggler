@@ -44,13 +44,12 @@
 
 #include <fstream.h>
 
-// Helper to return the index for theData array
-// given the birdNum we are dealing with and the bufferIndex
-// to get
-//! ARGS: birdNum - The number of the bird we care about
-//! ARGS:bufferIndex - the value of current, progress, or valid (it is an offset in the array)
+// ----------------------------------------------------------------------------
+// Helper to return the index for theData array given the birdNum we are
+// dealing with and the bufferIndex to read.
+//
 // XXX: We are going to say the birds are 0 based
-
+// ----------------------------------------------------------------------------
 int vjMotionStar::getBirdIndex(int birdNum, int bufferIndex)
 {
    int ret_val = (birdNum*3)+bufferIndex;
@@ -59,25 +58,22 @@ int vjMotionStar::getBirdIndex(int birdNum, int bufferIndex)
    return ret_val;
 }
 
-vjMotionStar::vjMotionStar(char* ipAddress,
-                int hemisphere,
-                unsigned int birdFormat,
-                unsigned int birdsRequired,
-                int runMode,
-                double birdRate
-//              unsigned char reportRate
-                ) : mMotionStar(ipAddress,
-                                hemisphere,
-                                birdFormat,
-                                birdsRequired,
-                                runMode,
-                                birdRate,
-                                1 // reportRate
-                                )
+// ----------------------------------------------------------------------------
+// Constructor.  This invokes the aMotionStar constructor and initializes
+// member variables.
+// ----------------------------------------------------------------------------
+vjMotionStar::vjMotionStar(char* address, int hemisphere,
+                           unsigned int birdFormat, unsigned int birdsRequired,
+                           int runMode, double birdRate)
+    : mMotionStar(address, hemisphere, birdFormat, birdsRequired, runMode,
+                  birdRate, 1)
 {
    myThread = NULL;
 }
 
+// ----------------------------------------------------------------------------
+// Configure the MotionStar with the given config chunk.
+// ----------------------------------------------------------------------------
 bool vjMotionStar::config(vjConfigChunk *c)
 {
 
@@ -99,6 +95,9 @@ bool vjMotionStar::config(vjConfigChunk *c)
    return true;
 }
 
+// ----------------------------------------------------------------------------
+// Destructor.  Sampling is stopped, and the data pool is deallocated.
+// ----------------------------------------------------------------------------
 vjMotionStar::~vjMotionStar()
 {
    this->stopSampling();
@@ -118,6 +117,9 @@ static void sampleBirds(void* pointer)
    }
 }
 
+// ----------------------------------------------------------------------------
+// Begin sampling.
+// ----------------------------------------------------------------------------
 int vjMotionStar::startSampling()
 {
    // make sure birds aren't already started
@@ -173,6 +175,9 @@ int vjMotionStar::startSampling()
       return 0; // already sampling
 }
 
+// ----------------------------------------------------------------------------
+// Sample data.
+// ----------------------------------------------------------------------------
 int vjMotionStar::sample()
 {
    if (this->isActive() == false)
@@ -226,6 +231,9 @@ int vjMotionStar::sample()
    return 1;
 }
 
+// ----------------------------------------------------------------------------
+// Stop sampling.
+// ----------------------------------------------------------------------------
 int vjMotionStar::stopSampling()
 {
    if (this->isActive() == false)
@@ -256,6 +264,9 @@ int vjMotionStar::stopSampling()
    return 1;
 }
 
+// ----------------------------------------------------------------------------
+// Get the reciever transform for the given bird number.
+// ----------------------------------------------------------------------------
 vjMatrix* vjMotionStar::getPosData( int d ) // d is 0 based
 {
     if (this->isActive() == false)
@@ -266,11 +277,17 @@ vjMatrix* vjMotionStar::getPosData( int d ) // d is 0 based
     return (&theData[getBirdIndex(d,current)]);
 }
 
+// ----------------------------------------------------------------------------
+// Not used currently -- needed for interface.
+// ----------------------------------------------------------------------------
 vjTimeStamp* vjMotionStar::getPosUpdateTime (int d)
 {
     return (&mDataTimes[getBirdIndex(d,current)]);
 }
 
+// ----------------------------------------------------------------------------
+// Update to the sampled data.
+// ----------------------------------------------------------------------------
 void vjMotionStar::updateData()
 {
    if (this->isActive() == false)
@@ -290,8 +307,9 @@ void vjMotionStar::updateData()
    return;
 }
 
-
-
+// ----------------------------------------------------------------------------
+// Change the hemisphere of the transmitter.
+// ----------------------------------------------------------------------------
 void vjMotionStar::setHemisphere ( int i)
 {
     if (this->isActive())
@@ -302,7 +320,9 @@ void vjMotionStar::setHemisphere ( int i)
     mMotionStar.setHemisphere ( i );
 }
 
-
+// ----------------------------------------------------------------------------
+// Set the bird format to the given value.
+// ----------------------------------------------------------------------------
 void vjMotionStar::setBirdFormat (unsigned int i)
 {
     if (this->isActive())
@@ -313,7 +333,9 @@ void vjMotionStar::setBirdFormat (unsigned int i)
     mMotionStar.setBirdFormat ( i );
 }
 
-
+// ----------------------------------------------------------------------------
+// Set the number of birds connected to the flock.
+// ----------------------------------------------------------------------------
 void vjMotionStar::setNumBirds (unsigned int i)
 {
     if (this->isActive())
@@ -324,7 +346,9 @@ void vjMotionStar::setNumBirds (unsigned int i)
     mMotionStar.setNumBirds ( i );
 }
 
-
+// ----------------------------------------------------------------------------
+// Set the bird rate to the given value.
+// ----------------------------------------------------------------------------
 void vjMotionStar::setBirdRate (double d)
 {
     if (this->isActive())
@@ -335,7 +359,9 @@ void vjMotionStar::setBirdRate (double d)
     mMotionStar.setBirdRate ( d );
 }
 
-
+// ----------------------------------------------------------------------------
+// Set the run mode for the device.
+// ----------------------------------------------------------------------------
 void vjMotionStar::setRunMode (int i)
 {
     if (this->isActive())
@@ -346,7 +372,9 @@ void vjMotionStar::setRunMode (int i)
     mMotionStar.setRunMode ( i );
 }
 
-
+// ----------------------------------------------------------------------------
+// Set the report rate for the device.
+// ----------------------------------------------------------------------------
 void vjMotionStar::setReportRate (unsigned char ch)
 {
     if (this->isActive())
@@ -357,6 +385,9 @@ void vjMotionStar::setReportRate (unsigned char ch)
     mMotionStar.setReportRate ( ch );
 }
 
+// ----------------------------------------------------------------------------
+// Set the address (either IP address or hostname) for the server.
+// ----------------------------------------------------------------------------
 void vjMotionStar::setAddress (const char* n)    
 {
     if (this->isActive())
