@@ -1115,7 +1115,7 @@ vpr::SerializableObjectMixin&#60;MyType&#62;::readObject(vpr::ObjectReader* read
     <title>SwapLockPlugin</title>
 
     <para>Synchronizing multiple displays is one of the biggest challenges in
-    creating inversive VR on PCs. This is because a single PC does not have
+    creating immersive VR on PCs. This is because a single PC does not have
     enough processing power to generate the graphics for multiple displays in
     VR systems such as a CAVE. Now that graphics hardware is becoming
     available to synchronize multiple active stereo PCs or show passive
