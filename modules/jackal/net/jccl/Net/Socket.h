@@ -29,8 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 #ifndef _JCCL_SOCKET_H_
 #define _JCCL_SOCKET_H_
 

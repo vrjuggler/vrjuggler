@@ -29,7 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef _JCCL_NETCOMMUNICATOR_H_
 #define _JCCL_NETCOMMUNICATOR_H_
 

@@ -29,7 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include <jccl/jcclConfig.h>
 #include <vpr/vpr.h>
 
@@ -40,7 +39,7 @@
 #include <sys/socket.h>
 #endif
 
-#include <jccl/JackalServer/SockStream.h>
+#include <jccl/Net/SockStream.h>
 
 namespace jccl {
 
