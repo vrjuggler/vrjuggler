@@ -309,6 +309,24 @@ NetworkGraph::VertexListPtr NetworkGraph::reversePath (NetworkGraph::VertexListP
    return new_path;
 }
 
+vpr::ReturnStatus NetworkGraph::getAllAddresses (NetworkGraph::AddressList& list)
+{
+   vpr::ReturnStatus status;
+   boost::graph_traits<net_graph_t>::vertex_iterator vi, vi_end;
+   NetworkNode node_prop;
+
+   boost::tie(vi, vi_end) = boost::vertices(mGraph);
+
+   for ( ; vi != vi_end; vi++ )
+   {
+      node_prop = getNodeProperty(*vi);
+      list.push_back(std::pair<net_vertex_t, vpr::Uint32>(*vi,
+                                                          node_prop.getIpAddress()));
+   }
+
+   return status;
+}
+
 } // End of sim namespace
 
 } // End of vpr namespace
