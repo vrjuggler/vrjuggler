@@ -33,6 +33,13 @@
 #ifndef _JCCL_PLUGIN_CONFIG_H_
 #define _JCCL_PLUGIN_CONFIG_H_
 
+/* Get rid of symbols added by Autoconf 2.5x. */
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
+ 
 #include <jccl/jcclConfig.h>
 
 /*
