@@ -48,18 +48,15 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(VRJUGGLER_PATH,
 [
     dnl Get the cflags and libraries from the vrjuggler-config script
-    AC_ARG_WITH(vrj-prefix,
-                [  --with-vrj-prefix=<PATH> Prefix where VR Juggler is
-                          installed (optional)            [No default]],
+    AC_ARG_WITH(vrjuggler,
+                [  --with-vrjuggler=<PATH> Directory where VR Juggler is
+                          installed                       [No default]],
                 vrj_config_prefix="$withval", vrj_config_prefix="")
-    AC_ARG_WITH(vrj-exec-prefix,
-                [  --with-vrj-exec-prefix=<PATH>
+    AC_ARG_WITH(vrjuggler-exec-prefix,
+                [  --with-vrjuggler-exec-prefix=<PATH>
                           Exec prefix where VR Juggler is
                           installed (optional)            [No default]],
                 vrj_config_exec_prefix="$withval", vrj_config_exec_prefix="")
-dnl    AC_ARG_ENABLE(vrjtest,
-dnl                  [  --disable-vrjtest       Do not try to compile and run a
-dnl                          test VR Juggler program], , enable_vrjtest=yes)
 
     if test "x$vrj_config_exec_prefix" != "x" ; then
         vrj_config_args="$vrj_config_args --exec-prefix=$vrj_config_exec_prefix"
