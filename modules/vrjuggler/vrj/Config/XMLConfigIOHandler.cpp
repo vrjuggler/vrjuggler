@@ -625,7 +625,7 @@ bool vjXMLConfigIOHandler::writeChunkDesc (XMLFormatter* f, const vjChunkDesc& d
 bool vjXMLConfigIOHandler::writePropertyDesc (XMLFormatter* f, const vjPropertyDesc& p, const std::string& pad) {
     std::string newpad = pad + "  ";
     bool retval = true;
-    int n;
+    int n, i;
     vjEnumEntry* e;
     VarType t = p.getVarType();
 
@@ -656,7 +656,7 @@ bool vjXMLConfigIOHandler::writePropertyDesc (XMLFormatter* f, const vjPropertyD
     }
 
     n = p.getValueLabelsSize();
-    for (int i = 0; i < n; i++) {
+    for (i = 0; i < n; i++) {
         writeBuf (f, newpad);
         writeBuf (f, "<label name=\"");
         writeBuf (f, p.getValueLabel(i), XMLFormatter::AttrEscapes);
@@ -664,7 +664,7 @@ bool vjXMLConfigIOHandler::writePropertyDesc (XMLFormatter* f, const vjPropertyD
     }
 
     n = p.getEnumerationsSize();
-    for (int i = 0; i < n; i++) {
+    for (i = 0; i < n; i++) {
         e = p.getEnumEntryAtIndex(i);
         writeBuf (f, newpad);
         writeBuf (f, "<enumeration name=\"");
