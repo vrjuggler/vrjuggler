@@ -66,6 +66,8 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
      mDesktopWandIsect(false), mDesktopGrabbed(false),
      mTextureData(NULL)
 {
+   mSelectState = Nothing;
+
    mVncWidth = mVncIf.getWidth();
    mVncHeight = mVncIf.getHeight();
 
@@ -134,8 +136,8 @@ void VNCDesktop::init(const std::string& wandName,
 */
 void VNCDesktop::updateDesktopParameters()
 {
-   const float BorderSize(0.25f);
-   const float CornerSize(BorderSize+0.07f);
+   const float BorderSize(0.50f);
+   const float CornerSize(BorderSize+0.2f);
 
    // --- Update scales and bounds. --- //
    mDesktopToVncWidthScale  = mVncWidth / mDesktopWidth;
@@ -281,62 +283,99 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
          << "VNC: Isect point: " << isect_point << std::endl << vprDEBUG_FLUSH;
 
-   // Check for selecting the main desktop box
-   if ( gmtl::isInVolume(mDesktopBox, isect_point) )
+   // Get button states
+   bool select_button_state = mLeftButton->getData();
+   bool things_grabbed = ((mSelectState > GrabBegin) && (mSelectState < GrabEnd));
+
+   if(!things_grabbed)    // If nothing grabbed then check for input
    {
-      focus_val = IN_FOCUS;
-
-      // Compute VNC button masks
-      int button_mask(0);
-
-      if ( mLeftButton->getData() )
-      {  button_mask |= rfbButton1Mask; }
-      if ( mMiddleButton->getData())
-      {  button_mask |= rfbButton2Mask; }
-      if ( mRightButton->getData() )
-      {  button_mask |= rfbButton3Mask; }
-
-      // Translate that point into the coordinates VNC wants to see.
-      //
-      // vnc x,y desktop point just like x desktop.  origin upper left, y increases going down
-      //     The valid range is [0,mVncWidth or mVncHeight]
-      float vnc_x = isect_point[gmtl::Xelt] * mDesktopToVncWidthScale;                          // Scale
-      float vnc_y = -(isect_point[gmtl::Yelt] - mDesktopHeight) * mDesktopToVncHeightScale;     // Flip and scale
-
-      mVncIf.pointerEvent(int(vnc_x), int(vnc_y), button_mask);
-
-      if ( mHaveKeyboard )
+      // Check for selecting the main desktop box
+      if ( gmtl::isInVolume(mDesktopBox, isect_point) )
       {
-         // Handle keyboard input.
+         focus_val = IN_FOCUS;
+
+         // Compute VNC button masks
+         int button_mask(0);
+
+         if ( mLeftButton->getData() )
+         {  button_mask |= rfbButton1Mask; }
+         if ( mMiddleButton->getData())
+         {  button_mask |= rfbButton2Mask; }
+         if ( mRightButton->getData() )
+         {  button_mask |= rfbButton3Mask; }
+
+         // Translate that point into the coordinates VNC wants to see.
+         //
+         // vnc x,y desktop point just like x desktop.  origin upper left, y increases going down
+         //     The valid range is [0,mVncWidth or mVncHeight]
+         float vnc_x = isect_point[gmtl::Xelt] * mDesktopToVncWidthScale;                          // Scale
+         float vnc_y = -(isect_point[gmtl::Yelt] - mDesktopHeight) * mDesktopToVncHeightScale;     // Flip and scale
+
+         mVncIf.pointerEvent(int(vnc_x), int(vnc_y), button_mask);
+
+         if ( mHaveKeyboard )
+         {
+            // Handle keyboard input.
+         }
       }
+      // ---- Check corner selection --- //
+      else if( gmtl::isInVolume(mURCorner, isect_point))
+      {
+         if(select_button_state)
+         {
+         }
+         else     // Just select it
+         {
+            mSelectState = URCornerSelect;
+            std:: cout << "State: URCornerSelect" << std::endl;
+         }
+      }
+      else if( gmtl::isInVolume(mULCorner, isect_point))
+      {
+         if(select_button_state)
+         {
+         }
+         else     // Just select it
+         {
+            mSelectState = ULCornerSelect;
+            std:: cout << "State: ULCornerSelect" << std::endl;
+         }
+      }
+      else if( gmtl::isInVolume(mLLCorner, isect_point))
+      {
+         if(select_button_state)
+         {
+         }
+         else     // Just select it
+         {
+            mSelectState = LLCornerSelect;
+            std:: cout << "State: LLCornerSelect" << std::endl;
+         }
+      }
+      else if( gmtl::isInVolume(mLRCorner, isect_point))
+      {
+         if(select_button_state)
+         {
+         }
+         else     // Just select it
+         {
+            mSelectState = LRCornerSelect;
+            std:: cout << "State: LRCornerSelect" << std::endl;
+         }
+      }
+      else     // Default to resetting to nothing
+      {
+         mSelectState = Nothing;
+      }
+   } // nothing selected
+   else if(URCornerGrab == mSelectState)
+   {
+
    }
 
-   /*    Grabbing
-   mDesktopWandIsect = gmtl::isInVolume(desktop_box_trans, wand_point);
-
-   // If the wand intersects the desktop, button operations will affect
-   // the position rather than perform desktop interaction.
-   if ( mDesktopWandIsect )
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-         << "Wand and desktop intersection\n" << vprDEBUG_FLUSH;
-
-      focus_val = IN_FOCUS;
-
-      mDesktopWandIsect = true;
-
-      if ( mLeftButton->getData() )
-      {
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Desktop grabbed!\n"
-                                                << vprDEBUG_FLUSH;
-
-         mDesktopGrabbed = true;
-      }
-   }
-   */
 
    // Resize it
-   ///*
+   /*
    mDesktopWidth += mIncSize;
    if(mDesktopWidth > mMaxSize)
    {
@@ -350,7 +389,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    }
    mDesktopHeight = mDesktopWidth;
    //std::cout << "Height: " << mDesktopHeight << std::endl;
-   //*/
+   */
    updateDesktopParameters();
 
 
@@ -361,7 +400,12 @@ void VNCDesktop::draw()
 {
    const gmtl::Vec3f micro_gui_blue(0.39f,0.51f,0.77f);
    const gmtl::Vec3f micro_gui_yellow(0.97f,0.92f,0.22f);
+   const gmtl::Vec3f micro_gui_yellow_selected(0.97f,0.4f,0.22f);
    const gmtl::Vec3f ximian_orange(0.98f,0.70f,0.098f);
+
+   const gmtl::Vec3f corner_color(micro_gui_yellow);
+   const gmtl::Vec3f corner_color_selected(micro_gui_yellow_selected);
+
 
    // XXX: Should probably use an attribute stack or something here.
    glDisable(GL_BLEND);
@@ -372,10 +416,13 @@ void VNCDesktop::draw()
    drawSphere(0.25f, mDebug_IsectPoint);
 
    // Draw the desktop corners and borders
-   glColor3fv( micro_gui_yellow.mData );
+   setColorIfState(corner_color_selected, corner_color, LLCornerSelect, LLCornerGrab);
    drawBox(mLLCorner);
+   setColorIfState(corner_color_selected, corner_color, LRCornerSelect, LRCornerGrab);
    drawBox(mLRCorner);
+   setColorIfState(corner_color_selected, corner_color, URCornerSelect, URCornerGrab);
    drawBox(mURCorner);
+   setColorIfState(corner_color_selected, corner_color, ULCornerSelect, ULCornerGrab);
    drawBox(mULCorner);
 
    glColor3fv( micro_gui_blue.mData );

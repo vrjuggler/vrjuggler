@@ -77,6 +77,17 @@ public:
    void draw();
 
 protected:     // Helpers
+   /** Current state of selection */
+   enum Selection
+   {
+      Nothing,
+      LRCornerSelect, URCornerSelect, LLCornerSelect, ULCornerSelect,
+      TopBorderSelect, BottomBorderSelect, LeftBorderSelect, RightBorderSelect,
+      GrabBegin,
+      LRCornerGrab, URCornerGrab, LLCornerGrab, ULCornerGrab,
+      TopBorderGrab, BottomBorderGrab, LeftBorderGrab, RightBorderGrab,
+      GrabEnd
+   };
 
    /** Updates the desktop parameters
    * @pre mDesktopWidth, mDesktopHeight, and pos matrix are update
@@ -88,6 +99,14 @@ protected:     // Helpers
    void drawSphere(float radius, gmtl::Point3f offset, int parts=4);
 
    void drawBox(const gmtl::AABoxf& box);
+
+   inline void setColorIfState(gmtl::Vec3f true_color, gmtl::Vec3f false_color, Selection state1, Selection state2)
+   {
+      if((mSelectState == state1) || (mSelectState == state2))
+         glColor3fv( true_color.mData );
+      else
+         glColor3fv( false_color.mData);
+   }
 
 
 private:
@@ -104,8 +123,6 @@ private:
    bool mHaveKeyboard;
 
 private:
-   enum Corner
-   { LL = 0, LR = 1, UR = 2, UL=3 };
 
    /** @name Desktop parameters
    * The desktop window (ie. the texture of the desktop) is assumed to be
@@ -122,6 +139,8 @@ private:
    */
    float          mDesktopToVncWidthScale;
    float          mDesktopToVncHeightScale;
+
+   Selection        mSelectState;      /**< State of selection */
 
    gmtl::Matrix44f  mDesktopMatrix;    /**< vnc_T_world */
    gmtl::AABoxf     mDesktopBox;
