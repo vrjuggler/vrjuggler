@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-31-2003 patrickh    Removed unneeded functions jccl::stringToVar(),
+                        jccl::hasSeparator(), jccl::getRemainder(), and
+                        jccl::getFirstNameComponent().
+                        NEW VERSION: 0.15.1
 Nov-17-2003 patrickh    The factory function for remote run-time
                         reconfiguration plug-ins now take a parameter that is
                         of type jccl::ConfigManager*.
