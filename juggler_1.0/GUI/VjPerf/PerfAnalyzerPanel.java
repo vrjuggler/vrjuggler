@@ -60,7 +60,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 	// reformats f to a string w/ 3 places after decimal
 	String s = Double.toString(f);
 	int i = s.lastIndexOf('.');
-	if (i >= 0)
+	if ((i >= 0) && (i+3 < s.length()))
 	    s = s.substring (0, i + 3);
 	return s;
     }

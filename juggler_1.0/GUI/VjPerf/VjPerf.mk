@@ -12,9 +12,9 @@
 
 VJPERF_SOURCES =   VjPerf/PerfAnalyzerPanel.java       	\
 		   VjPerf/GraphFrame.java		\
-		   VjPerf/SummaryGraphPanel.java        \
 		   VjPerf/PerfDataCollection.java	\
 		   VjPerf/PerfDataCollector.java       	\
-		   VjPerf/DataLine.java
+		   VjPerf/DataLine.java                 \
+		   VjPerf/SummaryGraphPanel.java
 
 VJPERF_OBJS = ${VJPERF_SOURCES:.java=.class}
