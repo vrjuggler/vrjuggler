@@ -545,6 +545,38 @@ public:
         return (m_open_mode == READ_WRITE);
     }
 
+    // ------------------------------------------------------------------------
+    //: Test if reading from this I/O device will block.
+    //
+    //! PRE: getHandle() returns a valid IOSys::Handle object.
+    //! POST:
+    //
+    //! ARGS: timeout - Give a timeout period to wait for the device to
+    //+                 unblock for reading.  This is optional and defaults to
+    //+                 vpr::Interval::NoWait which will simply poll the
+    //+                 device and return immediately.
+    //
+    //! RETURNS: true  - Reading will block.
+    //! RETURNS: false - Reading will not block.
+    // ------------------------------------------------------------------------
+    bool isReadBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait);
+
+    // ------------------------------------------------------------------------
+    //: Test if writing to this I/O device will block.
+    //
+    //! PRE: getHandle() returns a valid IOSys::Handle object.
+    //! POST:
+    //
+    //! ARGS: timeout - Give a timeout period to wait for the device to
+    //+                 unblock for writing.  This is optional and defaults to
+    //+                 vpr::Interval::NoWait which will simply poll the
+    //+                 device and return immediately.
+    //
+    //! RETURNS: true  - Writing will block.
+    //! RETURNS: false - Writing will not block.
+    // ------------------------------------------------------------------------
+    bool isWriteBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait);
+
 protected:
     // ------------------------------------------------------------------------
     //: Constructor.
