@@ -70,12 +70,15 @@ public class VrjConfig
       // Parsing command line arguments
       try
       {
-         EnvironmentServiceProxy env_service = new EnvironmentServiceProxy();
-         
+         EnvironmentService env_service = new EnvironmentServiceProxy();
+
          String[] args = env_service.getCommandLineArgs();
-         for (int i = 0; i < args.length; i++)
+         if ( null != args )
          {
-            System.out.println(args[i]);
+            for (int i = 0; i < args.length; i++)
+            {
+               System.out.println(args[i]);
+            }
          }
          ConfigContext ctx = new ConfigContext();
          mToolbar.doOpenCmdArgs(ctx);
