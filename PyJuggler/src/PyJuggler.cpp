@@ -372,7 +372,7 @@ struct PositionInterfaceWrap
 
    gmtl::Matrix44f getData()
    {
-      return *(mIf->getData());
+      return mIf->getData();
    }
 
    gadget::PositionInterface mIf;
