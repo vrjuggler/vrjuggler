@@ -157,6 +157,9 @@
 /* Define if you have the asinf function.  */
 #undef HAVE_ASINF
 
+/* Define if you have the acosf function.  */
+#undef HAVE_ACOSF
+
 /* Define if you have the atan2f function.  */
 #undef HAVE_ATAN2F
 
