@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -37,14 +37,11 @@ using System.Reflection;
 namespace vrj
 {
 
-public class Kernel
+public sealed class Kernel
    : jccl.ConfigElementHandler
 {
    private void allocDelegates()
    {
-      m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement = new configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement(configCanHandle);
-      m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement = new configAddDelegate_boost_shared_ptr_jccl__ConfigElement(configAdd);
-      m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement = new configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement(configRemove);
    }
 
    // Constructors.
@@ -64,17 +61,6 @@ public class Kernel
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    private extern static void delete_vrj_Kernel(IntPtr obj);
-
-   // Destructor.
-   ~Kernel()
-   {
-      if ( mWeOwnMemory && IntPtr.Zero != mRawObject )
-      {
-         delete_vrj_Kernel(mRawObject);
-         mWeOwnMemory = false;
-         mRawObject   = IntPtr.Zero;
-      }
-   }
 
    // Operator overloads.
 
@@ -166,88 +152,6 @@ public class Kernel
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_Kernel_addUser__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
-
-   protected  bool addUser(jccl.ConfigElement p0)
-   {
-      bool result;
-      result = vrj_Kernel_addUser__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
-      return result;
-   }
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_Kernel_removeUser__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
-
-   protected  bool removeUser(jccl.ConfigElement p0)
-   {
-      bool result;
-      result = vrj_Kernel_removeUser__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
-      return result;
-   }
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_updateFrameData__(IntPtr obj);
-
-   protected  void updateFrameData()
-   {
-      vrj_Kernel_updateFrameData__(mRawObject);
-   }
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_checkForReconfig__(IntPtr obj);
-
-   protected  void checkForReconfig()
-   {
-      vrj_Kernel_checkForReconfig__(mRawObject);
-   }
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_changeApplication__vrj_App(IntPtr obj,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.AppMarshaler))] vrj.App p0);
-
-   protected  void changeApplication(vrj.App p0)
-   {
-      
-      vrj_Kernel_changeApplication__vrj_App(mRawObject, p0);
-      
-   }
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_initSignalButtons__(IntPtr obj);
-
-   protected  void initSignalButtons()
-   {
-      vrj_Kernel_initSignalButtons__(mRawObject);
-   }
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_checkSignalButtons__(IntPtr obj);
-
-   protected  void checkSignalButtons()
-   {
-      vrj_Kernel_checkSignalButtons__(mRawObject);
-   }
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_startDrawManager__bool(IntPtr obj,
-	bool p0);
-
-   protected  void startDrawManager(bool p0)
-   {
-      vrj_Kernel_startDrawManager__bool(mRawObject, p0);
-   }
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_stopDrawManager__(IntPtr obj);
-
-   protected  void stopDrawManager()
-   {
-      vrj_Kernel_stopDrawManager__(mRawObject);
-   }
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.InputManagerMarshaler))]
    private extern static gadget.InputManager vrj_Kernel_getInputManager__(IntPtr obj);
@@ -275,39 +179,24 @@ public class Kernel
    // End of non-virtual methods.
 
    // Start of virtual methods.
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_Kernel_configCanHandle__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
-
    public override bool configCanHandle(jccl.ConfigElement p0)
    {
-      bool result;
-      result = vrj_Kernel_configCanHandle__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
-      return result;
+      return false;
    }
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_Kernel_configAdd__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool configAdd(jccl.ConfigElement p0)
    {
-      bool result;
-      result = vrj_Kernel_configAdd__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
-      return result;
+      return false;
    }
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_Kernel_configRemove__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool configRemove(jccl.ConfigElement p0)
    {
-      bool result;
-      result = vrj_Kernel_configRemove__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
-      return result;
+      return false;
    }
 
+   // End of virtual methods.
+
+   // Start of virtual methods.
    // End of virtual methods.
 
    // Start of static methods.

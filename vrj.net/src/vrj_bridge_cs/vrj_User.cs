@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -37,7 +37,7 @@ using System.Reflection;
 namespace vrj
 {
 
-public class User
+public sealed class User
 {
    protected internal IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
@@ -50,7 +50,6 @@ public class User
 
    private void allocDelegates()
    {
-      m_configDelegate_boost_shared_ptr_jccl__ConfigElement = new configDelegate_boost_shared_ptr_jccl__ConfigElement(config);
    }
 
    // Constructors.
@@ -60,12 +59,12 @@ public class User
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vrj_User_User__([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d0);
+   private extern static IntPtr vrj_User_User__();
 
    public User()
    {
       allocDelegates();
-      mRawObject   = vrj_User_User__(m_configDelegate_boost_shared_ptr_jccl__ConfigElement);
+      mRawObject   = vrj_User_User__();
       mWeOwnMemory = true;
    }
 
@@ -152,15 +151,14 @@ public class User
    // End of non-virtual methods.
 
    // Start of virtual methods.
-   // Delegate for the config() callback.
-   public delegate bool configDelegate_boost_shared_ptr_jccl__ConfigElement(jccl.ConfigElement p0);
-   protected configDelegate_boost_shared_ptr_jccl__ConfigElement m_configDelegate_boost_shared_ptr_jccl__ConfigElement;
+   // End of virtual methods.
 
+   // Start of virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    private extern static bool vrj_User_config__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
-   public virtual bool config(jccl.ConfigElement p0)
+   public  bool config(jccl.ConfigElement p0)
    {
       bool result;
       result = vrj_User_config__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.66 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -37,7 +37,7 @@ using System.Reflection;
 namespace gmtl
 {
 
-public class Quatf
+public sealed class Quatf
 {
    protected internal IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
@@ -108,6 +108,7 @@ public class Quatf
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
@@ -153,6 +154,9 @@ public class Quatf
    }
 
    // End of non-virtual methods.
+
+   // Start of virtual methods.
+   // End of virtual methods.
 
    // Nested enumeration gmtl.Quat<float>.Params.
    public enum Params

@@ -25,31 +25,29 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.56 of RCSfile: class_cxx.tmpl,v
 
 
 
 #include "sharppy.h"
 #include <vrj/Kernel/User.h>
-#include <vrj_User_Adapter.h>
 
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API vrj_User_Adapter* vrj_User_User__(vrj_User_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0)
+   SHARPPY_API vrj::User* vrj_User_User__()
    {
-      vrj_User_Adapter* obj = new vrj_User_Adapter();
-      obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb0;
+      vrj::User* obj = new vrj::User();
       return obj;
    }
 
-   SHARPPY_API void delete_vrj_User(vrj_User_Adapter* self_)
+   SHARPPY_API void delete_vrj_User(vrj::User* self_)
    {
       delete self_;
    }
 
    // Wrapper for non-virtual method vrj::User::getId()
-   SHARPPY_API int vrj_User_getId__(vrj_User_Adapter* self_)
+   SHARPPY_API int vrj_User_getId__(vrj::User* self_)
    {
       int result;
       result = self_->getId();
@@ -58,7 +56,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vrj::User::getName()
-   SHARPPY_API char* vrj_User_getName__(vrj_User_Adapter* self_)
+   SHARPPY_API char* vrj_User_getName__(vrj::User* self_)
    {
       char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
@@ -69,7 +67,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vrj::User::getHeadPosProxy()
-   SHARPPY_API gadget::PositionProxy* vrj_User_getHeadPosProxy__(vrj_User_Adapter* self_)
+   SHARPPY_API gadget::PositionProxy* vrj_User_getHeadPosProxy__(vrj::User* self_)
    {
       gadget::PositionProxy* result;
       result = self_->getHeadPosProxy();
@@ -78,7 +76,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vrj::User::getHeadUpdateTime()
-   SHARPPY_API vpr::Interval* vrj_User_getHeadUpdateTime__(vrj_User_Adapter* self_)
+   SHARPPY_API vpr::Interval* vrj_User_getHeadUpdateTime__(vrj::User* self_)
    {
       vpr::Interval* result;
       result = new vpr::Interval(self_->getHeadUpdateTime());
@@ -87,7 +85,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vrj::User::getInterocularDistance()
-   SHARPPY_API float vrj_User_getInterocularDistance__(vrj_User_Adapter* self_)
+   SHARPPY_API float vrj_User_getInterocularDistance__(vrj::User* self_)
    {
       float result;
       result = self_->getInterocularDistance();
@@ -96,11 +94,12 @@ extern "C"
    }
 
 
+
    // Wrapper for virtual method vrj::User::config()
-   SHARPPY_API bool vrj_User_config__boost_shared_ptr_jccl__ConfigElement(vrj_User_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_User_config__boost_shared_ptr_jccl__ConfigElement(vrj::User* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
-      result = self_->vrj::User::config(p0);
+      result = self_->config(p0);
 
       return result;
    }

@@ -25,83 +25,70 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.56 of RCSfile: class_cxx.tmpl,v
 
 
 
 #include "sharppy.h"
 #include <vpr/Util/GUID.h>
-#include <vpr_GUID_Adapter.h>
 
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API vpr_GUID_Adapter* vpr_GUID_GUID__vpr_GUID_GenerateTag(const vpr::GUID::GenerateTag* p0, vpr_GUID_Adapter::writeObject_callback_vpr_ObjectWriter_t cb0, vpr_GUID_Adapter::readObject_callback_vpr_ObjectReader_t cb1)
+   SHARPPY_API vpr::GUID* vpr_GUID_GUID__vpr_GUID_GenerateTag(const vpr::GUID::GenerateTag* p0)
    {
       const vpr::GUID::GenerateTag& marshal_p0 = *p0; // Pre-call marshaling for p0
-      vpr_GUID_Adapter* obj = new vpr_GUID_Adapter(marshal_p0);
-      obj->writeObject_callback_vpr_ObjectWriter = cb0;
-      obj->readObject_callback_vpr_ObjectReader = cb1;
+      vpr::GUID* obj = new vpr::GUID(marshal_p0);
       ; // Post-call marshaling for p0
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API vpr_GUID_Adapter* vpr_GUID_GUID__(vpr_GUID_Adapter::writeObject_callback_vpr_ObjectWriter_t cb0, vpr_GUID_Adapter::readObject_callback_vpr_ObjectReader_t cb1)
+   SHARPPY_API vpr::GUID* vpr_GUID_GUID__()
    {
-      vpr_GUID_Adapter* obj = new vpr_GUID_Adapter();
-      obj->writeObject_callback_vpr_ObjectWriter = cb0;
-      obj->readObject_callback_vpr_ObjectReader = cb1;
+      vpr::GUID* obj = new vpr::GUID();
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API vpr_GUID_Adapter* vpr_GUID_GUID__vpr_GUID_StdGUID(const vpr::GUID::StdGUID* p0, vpr_GUID_Adapter::writeObject_callback_vpr_ObjectWriter_t cb0, vpr_GUID_Adapter::readObject_callback_vpr_ObjectReader_t cb1)
+   SHARPPY_API vpr::GUID* vpr_GUID_GUID__vpr_GUID_StdGUID(const vpr::GUID::StdGUID* p0)
    {
       const vpr::GUID::StdGUID& marshal_p0 = *p0; // Pre-call marshaling for p0
-      vpr_GUID_Adapter* obj = new vpr_GUID_Adapter(marshal_p0);
-      obj->writeObject_callback_vpr_ObjectWriter = cb0;
-      obj->readObject_callback_vpr_ObjectReader = cb1;
+      vpr::GUID* obj = new vpr::GUID(marshal_p0);
       ; // Post-call marshaling for p0
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API vpr_GUID_Adapter* vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__(const char* p0, vpr_GUID_Adapter::writeObject_callback_vpr_ObjectWriter_t cb0, vpr_GUID_Adapter::readObject_callback_vpr_ObjectReader_t cb1)
+   SHARPPY_API vpr::GUID* vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__(const char* p0)
    {
-      vpr_GUID_Adapter* obj = new vpr_GUID_Adapter(p0);
-      obj->writeObject_callback_vpr_ObjectWriter = cb0;
-      obj->readObject_callback_vpr_ObjectReader = cb1;
+      vpr::GUID* obj = new vpr::GUID(p0);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API vpr_GUID_Adapter* vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__(const vpr::GUID* p0, const char* p1, vpr_GUID_Adapter::writeObject_callback_vpr_ObjectWriter_t cb0, vpr_GUID_Adapter::readObject_callback_vpr_ObjectReader_t cb1)
+   SHARPPY_API vpr::GUID* vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__(const vpr::GUID* p0, const char* p1)
    {
       const vpr::GUID& marshal_p0 = *p0; // Pre-call marshaling for p0
-      vpr_GUID_Adapter* obj = new vpr_GUID_Adapter(marshal_p0, p1);
-      obj->writeObject_callback_vpr_ObjectWriter = cb0;
-      obj->readObject_callback_vpr_ObjectReader = cb1;
+      vpr::GUID* obj = new vpr::GUID(marshal_p0, p1);
       ; // Post-call marshaling for p0
       return obj;
    }
 
    // Copy constructor wrapper.
-   SHARPPY_API vpr::GUID* vpr_GUID_GUID__vpr_GUID(const vpr_GUID_Adapter* p)
+   SHARPPY_API vpr::GUID* vpr_GUID_GUID__vpr_GUID(const vpr::GUID* p)
    {
-      vpr_GUID_Adapter* obj = new vpr_GUID_Adapter(*p);
-      obj->writeObject_callback_vpr_ObjectWriter = p->writeObject_callback_vpr_ObjectWriter;
-      obj->readObject_callback_vpr_ObjectReader = p->readObject_callback_vpr_ObjectReader;
+      vpr::GUID* obj = new vpr::GUID(*p);
       return obj;
    }
 
-   SHARPPY_API void delete_vpr_GUID(vpr_GUID_Adapter* self_)
+   SHARPPY_API void delete_vpr_GUID(vpr::GUID* self_)
    {
       delete self_;
    }
 
    // Wrapper for non-virtual method vpr::GUID::toString()
-   SHARPPY_API char* vpr_GUID_toString__(vpr_GUID_Adapter* self_)
+   SHARPPY_API char* vpr_GUID_toString__(vpr::GUID* self_)
    {
       char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
@@ -112,13 +99,13 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vpr::GUID::generate()
-   SHARPPY_API void vpr_GUID_generate__(vpr_GUID_Adapter* self_)
+   SHARPPY_API void vpr_GUID_generate__(vpr::GUID* self_)
    {
       self_->generate();
    }
 
    // Wrapper for non-virtual method vpr::GUID::generate()
-   SHARPPY_API void vpr_GUID_generate__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__(vpr_GUID_Adapter* self_, const vpr::GUID* p0, const char* p1)
+   SHARPPY_API void vpr_GUID_generate__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__(vpr::GUID* self_, const vpr::GUID* p0, const char* p1)
    {
       const vpr::GUID& marshal_p0 = *p0; // Pre-call marshaling for p0
       self_->generate(marshal_p0, p1);
@@ -126,20 +113,21 @@ extern "C"
    }
 
 
+
    // Wrapper for virtual method vpr::GUID::writeObject()
-   SHARPPY_API vpr::ReturnStatus* vpr_GUID_writeObject__vpr_ObjectWriter(vpr_GUID_Adapter* self_, vpr::ObjectWriter* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_GUID_writeObject__vpr_ObjectWriter(vpr::GUID* self_, vpr::ObjectWriter* p0)
    {
       vpr::ReturnStatus* result;
-      result = new vpr::ReturnStatus(self_->vpr::GUID::writeObject(p0));
+      result = new vpr::ReturnStatus(self_->writeObject(p0));
 
       return result;
    }
 
    // Wrapper for virtual method vpr::GUID::readObject()
-   SHARPPY_API vpr::ReturnStatus* vpr_GUID_readObject__vpr_ObjectReader(vpr_GUID_Adapter* self_, vpr::ObjectReader* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_GUID_readObject__vpr_ObjectReader(vpr::GUID* self_, vpr::ObjectReader* p0)
    {
       vpr::ReturnStatus* result;
-      result = new vpr::ReturnStatus(self_->vpr::GUID::readObject(p0));
+      result = new vpr::ReturnStatus(self_->readObject(p0));
 
       return result;
    }
@@ -166,7 +154,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method vpr::GUID::operator ==()
-   SHARPPY_API bool vpr_GUID_equal__vpr_GUID(vpr_GUID_Adapter* self_, const vpr::GUID* p0)
+   SHARPPY_API bool vpr_GUID_equal__vpr_GUID(vpr::GUID* self_, const vpr::GUID* p0)
    {
       const vpr::GUID& marshal_p0 = *p0; // Pre-call marshaling for p0
       bool result;
@@ -177,7 +165,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vpr::GUID::operator !=()
-   SHARPPY_API bool vpr_GUID_not_equal__vpr_GUID(vpr_GUID_Adapter* self_, const vpr::GUID* p0)
+   SHARPPY_API bool vpr_GUID_not_equal__vpr_GUID(vpr::GUID* self_, const vpr::GUID* p0)
    {
       const vpr::GUID& marshal_p0 = *p0; // Pre-call marshaling for p0
       bool result;
@@ -188,7 +176,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vpr::GUID::operator <()
-   SHARPPY_API bool vpr_GUID_less_than__vpr_GUID(vpr_GUID_Adapter* self_, const vpr::GUID* p0)
+   SHARPPY_API bool vpr_GUID_less_than__vpr_GUID(vpr::GUID* self_, const vpr::GUID* p0)
    {
       const vpr::GUID& marshal_p0 = *p0; // Pre-call marshaling for p0
       bool result;
@@ -227,6 +215,7 @@ extern "C"
 
 
 
+
 } // extern "C" for vpr::GUID::GenerateTag
 
 
@@ -256,6 +245,7 @@ extern "C"
 
 
 
+
 } // extern "C" for vpr::GUID::StdGUID
 
 
@@ -280,6 +270,7 @@ extern "C"
    {
       delete self_;
    }
+
 
 
 

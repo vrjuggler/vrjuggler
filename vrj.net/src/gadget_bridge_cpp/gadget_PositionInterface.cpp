@@ -25,14 +25,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.56 of RCSfile: class_cxx.tmpl,v
 
 
 
 #include "sharppy.h"
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DeviceInterface.h>
-#include <gadget_PositionInterface_Adapter.h>
 
 struct gadget_PositionInterface_Holder
 {
@@ -49,7 +48,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget_PositionInterface_Holder* gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__gadget_PositionInterface(const gadget::PositionInterface* p0, gadget_PositionInterface_Adapter::refresh_callback_t cb0)
+   SHARPPY_API gadget_PositionInterface_Holder* gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__gadget_PositionInterface(const gadget::PositionInterface* p0)
    {
       const gadget::PositionInterface& marshal_p0 = *p0; // Pre-call marshaling for p0
       gadget_PositionInterface_Holder* obj = new gadget_PositionInterface_Holder;
@@ -59,7 +58,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget_PositionInterface_Holder* gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__(gadget_PositionInterface_Adapter::refresh_callback_t cb0)
+   SHARPPY_API gadget_PositionInterface_Holder* gadget_DeviceInterface_gadget_PositionProxy__DeviceInterface__()
    {
       gadget_PositionInterface_Holder* obj = new gadget_PositionInterface_Holder;
       obj->mPtr = gadget::PositionInterface();
@@ -81,10 +80,11 @@ extern "C"
    }
 
 
+
    // Wrapper for virtual method gadget::DeviceInterface<gadget::PositionProxy>::refresh()
    SHARPPY_API void gadget_DeviceInterface_gadget_PositionProxy__refresh__(gadget_PositionInterface_Holder* self_)
    {
-      self_->mPtr.gadget::DeviceInterface<gadget::PositionProxy>::refresh();
+      self_->mPtr.refresh();
    }
 
 

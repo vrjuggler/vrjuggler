@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -37,14 +37,11 @@ using System.Reflection;
 namespace gadget
 {
 
-public class InputManager
+public sealed class InputManager
    : jccl.ConfigElementHandler
 {
    private void allocDelegates()
    {
-      m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement = new configAddDelegate_boost_shared_ptr_jccl__ConfigElement(configAdd);
-      m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement = new configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement(configRemove);
-      m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement = new configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement(configCanHandle);
    }
 
    // Constructors.
@@ -67,16 +64,13 @@ public class InputManager
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_InputManager_InputManager__([MarshalAs(UnmanagedType.FunctionPtr)] configAddDelegate_boost_shared_ptr_jccl__ConfigElement d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement d1,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement d2,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configProcessPendingDelegate d3);
+   private extern static IntPtr gadget_InputManager_InputManager__();
 
    public InputManager()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      mRawObject   = gadget_InputManager_InputManager__(m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement, m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement, m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement, m_configProcessPendingDelegate);
+      mRawObject   = gadget_InputManager_InputManager__();
       mWeOwnMemory = true;
    }
 
@@ -236,29 +230,10 @@ public class InputManager
       gadget_InputManager_refreshAllProxies__(mRawObject);
    }
 
-   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_InputManager_removeProxy__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
-	string p0);
-
-   protected  bool removeProxy(string p0)
-   {
-      bool result;
-      result = gadget_InputManager_removeProxy__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
-      return result;
-   }
-
-   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_InputManager_removeProxy__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
-	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
-
-   protected  bool removeProxy(jccl.ConfigElement p0)
-   {
-      bool result;
-      result = gadget_InputManager_removeProxy__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
-      return result;
-   }
-
    // End of non-virtual methods.
+
+   // Start of virtual methods.
+   // End of virtual methods.
 
    // Start of virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -37,14 +37,11 @@ using System.Reflection;
 namespace gadget
 {
 
-public class DigitalProxy
+public sealed class DigitalProxy
    : gadget.TypedProxy_gadget__Digital
 {
    private void allocDelegates()
    {
-      m_updateDataDelegate = new updateDataDelegate(updateData);
-      m_configDelegate_boost_shared_ptr_jccl__ConfigElement = new configDelegate_boost_shared_ptr_jccl__ConfigElement(config);
-      m_getProxiedInputDeviceDelegate = new getProxiedInputDeviceDelegate(getProxiedInputDeviceAdapter);
    }
 
    // Constructors.
@@ -67,17 +64,13 @@ public class DigitalProxy
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_DigitalProxy_DigitalProxy__([MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d1,
-	[MarshalAs(UnmanagedType.FunctionPtr)] getProxiedInputDeviceDelegate d2,
-	[MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d3,
-	[MarshalAs(UnmanagedType.FunctionPtr)] getDeviceNameDelegate d4);
+   private extern static IntPtr gadget_DigitalProxy_DigitalProxy__();
 
    public DigitalProxy()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      mRawObject   = gadget_DigitalProxy_DigitalProxy__(m_updateDataDelegate, m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_getProxiedInputDeviceDelegate, m_refreshDelegate, m_getDeviceNameDelegate);
+      mRawObject   = gadget_DigitalProxy_DigitalProxy__();
       mWeOwnMemory = true;
    }
 
@@ -165,6 +158,9 @@ public class DigitalProxy
    }
 
    // End of non-virtual methods.
+
+   // Start of virtual methods.
+   // End of virtual methods.
 
    // Start of virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]

@@ -25,47 +25,36 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.56 of RCSfile: class_cxx.tmpl,v
 
 
 
 #include "sharppy.h"
 #include <gadget/Type/DigitalProxy.h>
-#include <gadget_DigitalProxy_Adapter.h>
 
 extern "C"
 {
    // Copy constructor wrapper.
-   SHARPPY_API gadget::DigitalProxy* gadget_DigitalProxy_DigitalProxy__gadget_DigitalProxy(const gadget_DigitalProxy_Adapter* p)
+   SHARPPY_API gadget::DigitalProxy* gadget_DigitalProxy_DigitalProxy__gadget_DigitalProxy(const gadget::DigitalProxy* p)
    {
-      gadget_DigitalProxy_Adapter* obj = new gadget_DigitalProxy_Adapter(*p);
-      obj->updateData_callback = p->updateData_callback;
-      obj->config_callback_boost_shared_ptr_jccl__ConfigElement = p->config_callback_boost_shared_ptr_jccl__ConfigElement;
-      obj->getProxiedInputDevice_callback = p->getProxiedInputDevice_callback;
-      obj->refresh_callback = p->refresh_callback;
-      obj->getDeviceName_callback = p->getDeviceName_callback;
+      gadget::DigitalProxy* obj = new gadget::DigitalProxy(*p);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget_DigitalProxy_Adapter* gadget_DigitalProxy_DigitalProxy__(gadget_DigitalProxy_Adapter::updateData_callback_t cb0, gadget_DigitalProxy_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb1, gadget_DigitalProxy_Adapter::getProxiedInputDevice_callback_t cb2, gadget_DigitalProxy_Adapter::refresh_callback_t cb3, gadget_DigitalProxy_Adapter::getDeviceName_callback_t cb4)
+   SHARPPY_API gadget::DigitalProxy* gadget_DigitalProxy_DigitalProxy__()
    {
-      gadget_DigitalProxy_Adapter* obj = new gadget_DigitalProxy_Adapter();
-      obj->updateData_callback = cb0;
-      obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb1;
-      obj->getProxiedInputDevice_callback = cb2;
-      obj->refresh_callback = cb3;
-      obj->getDeviceName_callback = cb4;
+      gadget::DigitalProxy* obj = new gadget::DigitalProxy();
       return obj;
    }
 
-   SHARPPY_API void delete_gadget_DigitalProxy(gadget_DigitalProxy_Adapter* self_)
+   SHARPPY_API void delete_gadget_DigitalProxy(gadget::DigitalProxy* self_)
    {
       delete self_;
    }
 
    // Wrapper for non-virtual method gadget::DigitalProxy::getTimeStamp()
-   SHARPPY_API vpr::Interval* gadget_DigitalProxy_getTimeStamp__(gadget_DigitalProxy_Adapter* self_)
+   SHARPPY_API vpr::Interval* gadget_DigitalProxy_getTimeStamp__(gadget::DigitalProxy* self_)
    {
       vpr::Interval* result;
       result = new vpr::Interval(self_->getTimeStamp());
@@ -74,7 +63,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::DigitalProxy::getData()
-   SHARPPY_API int gadget_DigitalProxy_getData__(gadget_DigitalProxy_Adapter* self_)
+   SHARPPY_API int gadget_DigitalProxy_getData__(gadget::DigitalProxy* self_)
    {
       int result;
       result = self_->getData();
@@ -83,7 +72,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::DigitalProxy::getDigitalData()
-   SHARPPY_API gadget::DigitalData* gadget_DigitalProxy_getDigitalData__(gadget_DigitalProxy_Adapter* self_)
+   SHARPPY_API gadget::DigitalData* gadget_DigitalProxy_getDigitalData__(gadget::DigitalProxy* self_)
    {
       gadget::DigitalData* result;
       result = self_->getDigitalData();
@@ -92,7 +81,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::DigitalProxy::getDigitalPtr()
-   SHARPPY_API gadget::Digital* gadget_DigitalProxy_getDigitalPtr__(gadget_DigitalProxy_Adapter* self_)
+   SHARPPY_API gadget::Digital* gadget_DigitalProxy_getDigitalPtr__(gadget::DigitalProxy* self_)
    {
       gadget::Digital* result;
       result = self_->getDigitalPtr();
@@ -101,7 +90,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::DigitalProxy::getUnit()
-   SHARPPY_API int gadget_DigitalProxy_getUnit__(gadget_DigitalProxy_Adapter* self_)
+   SHARPPY_API int gadget_DigitalProxy_getUnit__(gadget::DigitalProxy* self_)
    {
       int result;
       result = self_->getUnit();
@@ -110,26 +99,27 @@ extern "C"
    }
 
 
+
    // Wrapper for virtual method gadget::DigitalProxy::updateData()
-   SHARPPY_API void gadget_DigitalProxy_updateData__(gadget_DigitalProxy_Adapter* self_)
+   SHARPPY_API void gadget_DigitalProxy_updateData__(gadget::DigitalProxy* self_)
    {
-      self_->gadget::DigitalProxy::updateData();
+      self_->updateData();
    }
 
    // Wrapper for virtual method gadget::DigitalProxy::config()
-   SHARPPY_API bool gadget_DigitalProxy_config__boost_shared_ptr_jccl__ConfigElement(gadget_DigitalProxy_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_DigitalProxy_config__boost_shared_ptr_jccl__ConfigElement(gadget::DigitalProxy* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
-      result = self_->gadget::DigitalProxy::config(p0);
+      result = self_->config(p0);
 
       return result;
    }
 
    // Wrapper for virtual method gadget::DigitalProxy::getProxiedInputDevice()
-   SHARPPY_API gadget::Input* gadget_DigitalProxy_getProxiedInputDevice__(gadget_DigitalProxy_Adapter* self_)
+   SHARPPY_API gadget::Input* gadget_DigitalProxy_getProxiedInputDevice__(gadget::DigitalProxy* self_)
    {
       gadget::Input* result;
-      result = self_->gadget::DigitalProxy::getProxiedInputDevice();
+      result = self_->getProxiedInputDevice();
 
       return result;
    }

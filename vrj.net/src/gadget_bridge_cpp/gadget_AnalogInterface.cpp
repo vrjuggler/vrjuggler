@@ -25,14 +25,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.56 of RCSfile: class_cxx.tmpl,v
 
 
 
 #include "sharppy.h"
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DeviceInterface.h>
-#include <gadget_AnalogInterface_Adapter.h>
 
 struct gadget_AnalogInterface_Holder
 {
@@ -49,7 +48,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget_AnalogInterface_Holder* gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__gadget_AnalogInterface(const gadget::AnalogInterface* p0, gadget_AnalogInterface_Adapter::refresh_callback_t cb0)
+   SHARPPY_API gadget_AnalogInterface_Holder* gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__gadget_AnalogInterface(const gadget::AnalogInterface* p0)
    {
       const gadget::AnalogInterface& marshal_p0 = *p0; // Pre-call marshaling for p0
       gadget_AnalogInterface_Holder* obj = new gadget_AnalogInterface_Holder;
@@ -59,7 +58,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget_AnalogInterface_Holder* gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__(gadget_AnalogInterface_Adapter::refresh_callback_t cb0)
+   SHARPPY_API gadget_AnalogInterface_Holder* gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__()
    {
       gadget_AnalogInterface_Holder* obj = new gadget_AnalogInterface_Holder;
       obj->mPtr = gadget::AnalogInterface();
@@ -81,10 +80,11 @@ extern "C"
    }
 
 
+
    // Wrapper for virtual method gadget::DeviceInterface<gadget::AnalogProxy>::refresh()
    SHARPPY_API void gadget_DeviceInterface_gadget_AnalogProxy__refresh__(gadget_AnalogInterface_Holder* self_)
    {
-      self_->mPtr.gadget::DeviceInterface<gadget::AnalogProxy>::refresh();
+      self_->mPtr.refresh();
    }
 
 

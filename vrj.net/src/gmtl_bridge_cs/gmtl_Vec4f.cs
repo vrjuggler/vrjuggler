@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.66 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -37,7 +37,7 @@ using System.Reflection;
 namespace gmtl
 {
 
-public class Vec4f
+public sealed class Vec4f
    : gmtl.VecBase_float_4
 {
    // Constructors.
@@ -158,6 +158,10 @@ public class Vec4f
 
    // Operator overloads.
 
+   // Converter operators.
+
+   // Start of virtual methods.
+   // End of virtual methods.
 
    // Nested enumeration gmtl.Vec<float,4>.Params.
    public enum Params

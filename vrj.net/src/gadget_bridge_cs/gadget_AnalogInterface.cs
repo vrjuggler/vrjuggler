@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -37,12 +37,11 @@ using System.Reflection;
 namespace gadget
 {
 
-public class AnalogInterface
+public sealed class AnalogInterface
    : gadget.BaseDeviceInterface
 {
    private void allocDelegates()
    {
-      m_refreshDelegate = new refreshDelegate(refresh);
    }
 
    // Constructors.
@@ -53,27 +52,26 @@ public class AnalogInterface
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__gadget_AnalogInterface([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.AnalogInterfaceMarshaler))] gadget.AnalogInterface p0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d0);
+   private extern static IntPtr gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__gadget_AnalogInterface([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.AnalogInterfaceMarshaler))] gadget.AnalogInterface p0);
 
    public AnalogInterface(gadget.AnalogInterface p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
       
-      mRawObject   = gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__gadget_AnalogInterface(p0, m_refreshDelegate);
+      mRawObject   = gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__gadget_AnalogInterface(p0);
       mWeOwnMemory = true;
       
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__([MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d0);
+   private extern static IntPtr gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__();
 
    public AnalogInterface()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      mRawObject   = gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__(m_refreshDelegate);
+      mRawObject   = gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__();
       mWeOwnMemory = true;
    }
 
@@ -117,6 +115,9 @@ public class AnalogInterface
    }
 
    // End of non-virtual methods.
+
+   // Start of virtual methods.
+   // End of virtual methods.
 
    // Start of virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]

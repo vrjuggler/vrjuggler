@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.66 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -37,7 +37,7 @@ using System.Reflection;
 namespace gmtl
 {
 
-public class Matrix44f
+public sealed class Matrix44f
 {
    protected internal IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
@@ -237,6 +237,9 @@ public class Matrix44f
    }
 
    // End of non-virtual methods.
+
+   // Start of virtual methods.
+   // End of virtual methods.
 
    // Nested enumeration gmtl.Matrix<float,4,4>.Params.
    public enum Params

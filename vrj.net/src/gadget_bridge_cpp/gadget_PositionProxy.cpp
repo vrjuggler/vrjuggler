@@ -25,47 +25,36 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.56 of RCSfile: class_cxx.tmpl,v
 
 
 
 #include "sharppy.h"
 #include <gadget/Type/PositionProxy.h>
-#include <gadget_PositionProxy_Adapter.h>
 
 extern "C"
 {
    // Copy constructor wrapper.
-   SHARPPY_API gadget::PositionProxy* gadget_PositionProxy_PositionProxy__gadget_PositionProxy(const gadget_PositionProxy_Adapter* p)
+   SHARPPY_API gadget::PositionProxy* gadget_PositionProxy_PositionProxy__gadget_PositionProxy(const gadget::PositionProxy* p)
    {
-      gadget_PositionProxy_Adapter* obj = new gadget_PositionProxy_Adapter(*p);
-      obj->updateData_callback = p->updateData_callback;
-      obj->config_callback_boost_shared_ptr_jccl__ConfigElement = p->config_callback_boost_shared_ptr_jccl__ConfigElement;
-      obj->getProxiedInputDevice_callback = p->getProxiedInputDevice_callback;
-      obj->refresh_callback = p->refresh_callback;
-      obj->getDeviceName_callback = p->getDeviceName_callback;
+      gadget::PositionProxy* obj = new gadget::PositionProxy(*p);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget_PositionProxy_Adapter* gadget_PositionProxy_PositionProxy__(gadget_PositionProxy_Adapter::updateData_callback_t cb0, gadget_PositionProxy_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb1, gadget_PositionProxy_Adapter::getProxiedInputDevice_callback_t cb2, gadget_PositionProxy_Adapter::refresh_callback_t cb3, gadget_PositionProxy_Adapter::getDeviceName_callback_t cb4)
+   SHARPPY_API gadget::PositionProxy* gadget_PositionProxy_PositionProxy__()
    {
-      gadget_PositionProxy_Adapter* obj = new gadget_PositionProxy_Adapter();
-      obj->updateData_callback = cb0;
-      obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb1;
-      obj->getProxiedInputDevice_callback = cb2;
-      obj->refresh_callback = cb3;
-      obj->getDeviceName_callback = cb4;
+      gadget::PositionProxy* obj = new gadget::PositionProxy();
       return obj;
    }
 
-   SHARPPY_API void delete_gadget_PositionProxy(gadget_PositionProxy_Adapter* self_)
+   SHARPPY_API void delete_gadget_PositionProxy(gadget::PositionProxy* self_)
    {
       delete self_;
    }
 
    // Wrapper for non-virtual method gadget::PositionProxy::getTimeStamp()
-   SHARPPY_API vpr::Interval* gadget_PositionProxy_getTimeStamp__(gadget_PositionProxy_Adapter* self_)
+   SHARPPY_API vpr::Interval* gadget_PositionProxy_getTimeStamp__(gadget::PositionProxy* self_)
    {
       vpr::Interval* result;
       result = new vpr::Interval(self_->getTimeStamp());
@@ -74,7 +63,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::PositionProxy::getData()
-   SHARPPY_API gmtl::Matrix44f* gadget_PositionProxy_getData__float(gadget_PositionProxy_Adapter* self_, float p0)
+   SHARPPY_API gmtl::Matrix44f* gadget_PositionProxy_getData__float(gadget::PositionProxy* self_, float p0)
    {
       gmtl::Matrix44f* result;
       result = new gmtl::Matrix44f(self_->getData(p0));
@@ -83,7 +72,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::PositionProxy::getUnit()
-   SHARPPY_API int gadget_PositionProxy_getUnit__(gadget_PositionProxy_Adapter* self_)
+   SHARPPY_API int gadget_PositionProxy_getUnit__(gadget::PositionProxy* self_)
    {
       int result;
       result = self_->getUnit();
@@ -92,26 +81,27 @@ extern "C"
    }
 
 
+
    // Wrapper for virtual method gadget::PositionProxy::updateData()
-   SHARPPY_API void gadget_PositionProxy_updateData__(gadget_PositionProxy_Adapter* self_)
+   SHARPPY_API void gadget_PositionProxy_updateData__(gadget::PositionProxy* self_)
    {
-      self_->gadget::PositionProxy::updateData();
+      self_->updateData();
    }
 
    // Wrapper for virtual method gadget::PositionProxy::config()
-   SHARPPY_API bool gadget_PositionProxy_config__boost_shared_ptr_jccl__ConfigElement(gadget_PositionProxy_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_PositionProxy_config__boost_shared_ptr_jccl__ConfigElement(gadget::PositionProxy* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
-      result = self_->gadget::PositionProxy::config(p0);
+      result = self_->config(p0);
 
       return result;
    }
 
    // Wrapper for virtual method gadget::PositionProxy::getProxiedInputDevice()
-   SHARPPY_API gadget::Input* gadget_PositionProxy_getProxiedInputDevice__(gadget_PositionProxy_Adapter* self_)
+   SHARPPY_API gadget::Input* gadget_PositionProxy_getProxiedInputDevice__(gadget::PositionProxy* self_)
    {
       gadget::Input* result;
-      result = self_->gadget::PositionProxy::getProxiedInputDevice();
+      result = self_->getProxiedInputDevice();
 
       return result;
    }

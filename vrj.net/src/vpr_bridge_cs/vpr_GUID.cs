@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -37,7 +37,7 @@ using System.Reflection;
 namespace vpr
 {
 
-public class GUID
+public sealed class GUID
    : vpr.SerializableObject
 {
    protected internal IntPtr mRawObject = IntPtr.Zero;
@@ -51,8 +51,6 @@ public class GUID
 
    private void allocDelegates()
    {
-      m_writeObjectDelegate_vpr_ObjectWriter = new writeObjectDelegate_vpr_ObjectWriter(writeObjectAdapter);
-      m_readObjectDelegate_vpr_ObjectReader = new readObjectDelegate_vpr_ObjectReader(readObjectAdapter);
    }
 
    // Constructors.
@@ -62,67 +60,58 @@ public class GUID
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_GenerateTag([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.GenerateTagMarshaler))] vpr.GUID.GenerateTag p0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d1);
+   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_GenerateTag([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.GenerateTagMarshaler))] vpr.GUID.GenerateTag p0);
 
    public GUID(vpr.GUID.GenerateTag p0)
    {
       allocDelegates();
       
-      mRawObject   = vpr_GUID_GUID__vpr_GUID_GenerateTag(p0, m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader);
+      mRawObject   = vpr_GUID_GUID__vpr_GUID_GenerateTag(p0);
       mWeOwnMemory = true;
       
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__([MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d1);
+   private extern static IntPtr vpr_GUID_GUID__();
 
    public GUID()
    {
       allocDelegates();
-      mRawObject   = vpr_GUID_GUID__(m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader);
+      mRawObject   = vpr_GUID_GUID__();
       mWeOwnMemory = true;
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_StdGUID([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.StdGUIDMarshaler))] vpr.GUID.StdGUID p0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d1);
+   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_StdGUID([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUID.StdGUIDMarshaler))] vpr.GUID.StdGUID p0);
 
    public GUID(vpr.GUID.StdGUID p0)
    {
       allocDelegates();
       
-      mRawObject   = vpr_GUID_GUID__vpr_GUID_StdGUID(p0, m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader);
+      mRawObject   = vpr_GUID_GUID__vpr_GUID_StdGUID(p0);
       mWeOwnMemory = true;
       
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__(string p0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d1);
+   private extern static IntPtr vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__(string p0);
 
    public GUID(string p0)
    {
       allocDelegates();
-      mRawObject   = vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__(p0, m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader);
+      mRawObject   = vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__(p0);
       mWeOwnMemory = true;
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
    private extern static IntPtr vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUIDMarshaler))] vpr.GUID p0,
-	string p1,
-	[MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d0,
-	[MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d1);
+	string p1);
 
    public GUID(vpr.GUID p0, string p1)
    {
       allocDelegates();
       
-      mRawObject   = vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__(p0, p1, m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader);
+      mRawObject   = vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__(p0, p1);
       mWeOwnMemory = true;
       
    }
@@ -209,6 +198,7 @@ public class GUID
       return result;
    }
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
@@ -244,22 +234,16 @@ public class GUID
    // End of non-virtual methods.
 
    // Start of virtual methods.
-   // Delegate for the writeObject() callback.
-   protected IntPtr writeObjectAdapter(vpr.ObjectWriter p0)
-   {
-      return writeObject(p0).mRawObject;
-   }
+   // End of virtual methods.
 
-   public delegate IntPtr writeObjectDelegate_vpr_ObjectWriter([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectWriterMarshaler))] vpr.ObjectWriter p0);
-   protected writeObjectDelegate_vpr_ObjectWriter m_writeObjectDelegate_vpr_ObjectWriter;
-
+   // Start of virtual methods.
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
    private extern static vpr.ReturnStatus vpr_GUID_writeObject__vpr_ObjectWriter(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectWriterMarshaler))] vpr.ObjectWriter p0);
 
-   public virtual vpr.ReturnStatus writeObject(vpr.ObjectWriter p0)
+   public  vpr.ReturnStatus writeObject(vpr.ObjectWriter p0)
    {
       
       vpr.ReturnStatus result;
@@ -268,22 +252,13 @@ public class GUID
       return result;
    }
 
-   // Delegate for the readObject() callback.
-   protected IntPtr readObjectAdapter(vpr.ObjectReader p0)
-   {
-      return readObject(p0).mRawObject;
-   }
-
-   public delegate IntPtr readObjectDelegate_vpr_ObjectReader([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectReaderMarshaler))] vpr.ObjectReader p0);
-   protected readObjectDelegate_vpr_ObjectReader m_readObjectDelegate_vpr_ObjectReader;
-
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
    private extern static vpr.ReturnStatus vpr_GUID_readObject__vpr_ObjectReader(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectReaderMarshaler))] vpr.ObjectReader p0);
 
-   public virtual vpr.ReturnStatus readObject(vpr.ObjectReader p0)
+   public  vpr.ReturnStatus readObject(vpr.ObjectReader p0)
    {
       
       vpr.ReturnStatus result;
@@ -384,6 +359,7 @@ public class GenerateTag
 
    // Operator overloads.
 
+   // Converter operators.
 
 
 } // class vpr.GUID.GenerateTag
@@ -489,6 +465,7 @@ public class StdGUID
 
    // Operator overloads.
 
+   // Converter operators.
 
 
 } // class vpr.GUID.StdGUID
@@ -594,6 +571,7 @@ public class hash
 
    // Operator overloads.
 
+   // Converter operators.
 
 
 } // class vpr.GUID.hash

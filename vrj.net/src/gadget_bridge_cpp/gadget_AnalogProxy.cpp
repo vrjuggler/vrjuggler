@@ -25,47 +25,36 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.56 of RCSfile: class_cxx.tmpl,v
 
 
 
 #include "sharppy.h"
 #include <gadget/Type/AnalogProxy.h>
-#include <gadget_AnalogProxy_Adapter.h>
 
 extern "C"
 {
    // Copy constructor wrapper.
-   SHARPPY_API gadget::AnalogProxy* gadget_AnalogProxy_AnalogProxy__gadget_AnalogProxy(const gadget_AnalogProxy_Adapter* p)
+   SHARPPY_API gadget::AnalogProxy* gadget_AnalogProxy_AnalogProxy__gadget_AnalogProxy(const gadget::AnalogProxy* p)
    {
-      gadget_AnalogProxy_Adapter* obj = new gadget_AnalogProxy_Adapter(*p);
-      obj->updateData_callback = p->updateData_callback;
-      obj->config_callback_boost_shared_ptr_jccl__ConfigElement = p->config_callback_boost_shared_ptr_jccl__ConfigElement;
-      obj->getProxiedInputDevice_callback = p->getProxiedInputDevice_callback;
-      obj->refresh_callback = p->refresh_callback;
-      obj->getDeviceName_callback = p->getDeviceName_callback;
+      gadget::AnalogProxy* obj = new gadget::AnalogProxy(*p);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gadget_AnalogProxy_Adapter* gadget_AnalogProxy_AnalogProxy__(gadget_AnalogProxy_Adapter::updateData_callback_t cb0, gadget_AnalogProxy_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb1, gadget_AnalogProxy_Adapter::getProxiedInputDevice_callback_t cb2, gadget_AnalogProxy_Adapter::refresh_callback_t cb3, gadget_AnalogProxy_Adapter::getDeviceName_callback_t cb4)
+   SHARPPY_API gadget::AnalogProxy* gadget_AnalogProxy_AnalogProxy__()
    {
-      gadget_AnalogProxy_Adapter* obj = new gadget_AnalogProxy_Adapter();
-      obj->updateData_callback = cb0;
-      obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb1;
-      obj->getProxiedInputDevice_callback = cb2;
-      obj->refresh_callback = cb3;
-      obj->getDeviceName_callback = cb4;
+      gadget::AnalogProxy* obj = new gadget::AnalogProxy();
       return obj;
    }
 
-   SHARPPY_API void delete_gadget_AnalogProxy(gadget_AnalogProxy_Adapter* self_)
+   SHARPPY_API void delete_gadget_AnalogProxy(gadget::AnalogProxy* self_)
    {
       delete self_;
    }
 
    // Wrapper for non-virtual method gadget::AnalogProxy::getTimeStamp()
-   SHARPPY_API vpr::Interval* gadget_AnalogProxy_getTimeStamp__(gadget_AnalogProxy_Adapter* self_)
+   SHARPPY_API vpr::Interval* gadget_AnalogProxy_getTimeStamp__(gadget::AnalogProxy* self_)
    {
       vpr::Interval* result;
       result = new vpr::Interval(self_->getTimeStamp());
@@ -74,7 +63,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::AnalogProxy::getData()
-   SHARPPY_API float gadget_AnalogProxy_getData__(gadget_AnalogProxy_Adapter* self_)
+   SHARPPY_API float gadget_AnalogProxy_getData__(gadget::AnalogProxy* self_)
    {
       float result;
       result = self_->getData();
@@ -83,7 +72,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::AnalogProxy::getAnalogPtr()
-   SHARPPY_API gadget::Analog* gadget_AnalogProxy_getAnalogPtr__(gadget_AnalogProxy_Adapter* self_)
+   SHARPPY_API gadget::Analog* gadget_AnalogProxy_getAnalogPtr__(gadget::AnalogProxy* self_)
    {
       gadget::Analog* result;
       result = self_->getAnalogPtr();
@@ -92,7 +81,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::AnalogProxy::getUnit()
-   SHARPPY_API int gadget_AnalogProxy_getUnit__(gadget_AnalogProxy_Adapter* self_)
+   SHARPPY_API int gadget_AnalogProxy_getUnit__(gadget::AnalogProxy* self_)
    {
       int result;
       result = self_->getUnit();
@@ -101,26 +90,27 @@ extern "C"
    }
 
 
+
    // Wrapper for virtual method gadget::AnalogProxy::updateData()
-   SHARPPY_API void gadget_AnalogProxy_updateData__(gadget_AnalogProxy_Adapter* self_)
+   SHARPPY_API void gadget_AnalogProxy_updateData__(gadget::AnalogProxy* self_)
    {
-      self_->gadget::AnalogProxy::updateData();
+      self_->updateData();
    }
 
    // Wrapper for virtual method gadget::AnalogProxy::config()
-   SHARPPY_API bool gadget_AnalogProxy_config__boost_shared_ptr_jccl__ConfigElement(gadget_AnalogProxy_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_AnalogProxy_config__boost_shared_ptr_jccl__ConfigElement(gadget::AnalogProxy* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
-      result = self_->gadget::AnalogProxy::config(p0);
+      result = self_->config(p0);
 
       return result;
    }
 
    // Wrapper for virtual method gadget::AnalogProxy::getProxiedInputDevice()
-   SHARPPY_API gadget::Input* gadget_AnalogProxy_getProxiedInputDevice__(gadget_AnalogProxy_Adapter* self_)
+   SHARPPY_API gadget::Input* gadget_AnalogProxy_getProxiedInputDevice__(gadget::AnalogProxy* self_)
    {
       gadget::Input* result;
-      result = self_->gadget::AnalogProxy::getProxiedInputDevice();
+      result = self_->getProxiedInputDevice();
 
       return result;
    }

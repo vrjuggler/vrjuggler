@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.66 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -37,7 +37,7 @@ using System.Reflection;
 namespace vpr
 {
 
-public class ReturnStatus
+public sealed class ReturnStatus
 {
    protected internal IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
@@ -162,6 +162,7 @@ public class ReturnStatus
       return result;
    }
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
@@ -245,6 +246,9 @@ public class ReturnStatus
    }
 
    // End of non-virtual methods.
+
+   // Start of virtual methods.
+   // End of virtual methods.
 
    // Nested enumeration vpr.ReturnStatus.Code.
    public enum Code
