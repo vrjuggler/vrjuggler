@@ -12,8 +12,8 @@
     </PropertyDesc>
     <PropertyDesc token="serverType" name="Server Type" type="bool" num="1">
         <help>The type of this server chassis.</help>
-        <enumeration name="Master" value="1"/>
-        <enumeration name="Slave" value="0"/>
+        <enumeration name="Master" value="true"/>
+        <enumeration name="Slave" value="false"/>
     </PropertyDesc>
     <PropertyDesc token="hemisphere" name="Hemisphere" type="int" num="1">
         <help>Transmitter hemisphere to use.</help>

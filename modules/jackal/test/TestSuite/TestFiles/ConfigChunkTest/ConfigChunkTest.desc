@@ -19,7 +19,7 @@
       <item label="I'm a string too" defaultvalue="woodchuck" />
     </PropertyDesc>
     <PropertyDesc name="test_prop_bool" token="test_prop_bool" num="1" type="bool">
-      <item label="Am I Chuck?" defaultvalue="1" />
+      <item label="Am I Chuck?" defaultvalue="true" />
       <help>boolean beaver</help>
     </PropertyDesc>
   </ChunkDesc>
