@@ -161,7 +161,9 @@ protected:
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
          soundNode->sound().trigger();
-         vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrYELLOW,"[SoundTrigger] ")<<"Setting the "<<soundNode->sound().getName()<<" sound node to on\n"<<vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundTrigger] ")
+            << "Setting the " << soundNode->sound().getName().c_str()
+            << " sound node to on\n" << vjDEBUG_FLUSH;
       }
       else
       {
@@ -179,7 +181,9 @@ protected:
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
          soundNode->sound().stop();
-         vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrYELLOW,"[SoundStop] ")<<"Setting the "<<soundNode->sound().getName()<<" sound node to off\n"<<vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundStop] ")
+            << "Setting the " << soundNode->sound().getName().c_str()
+            << " sound node to off\n" << vjDEBUG_FLUSH;
       }
       else
       {
@@ -197,7 +201,9 @@ protected:
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
          soundNode->sound().enable( true );
-         vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrYELLOW,"[SoundEnable] ")<<"Setting the "<<soundNode->sound().getName()<<" sound node to enabled\n"<<vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundEnable] ")
+            << "Setting the " << soundNode->sound().getName().c_str()
+            << " sound node to enabled\n" << vjDEBUG_FLUSH;
       }
       else
       {
@@ -215,7 +221,9 @@ protected:
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
          soundNode->sound().enable( false );
-         vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrYELLOW,"[SoundDisable] ")<<"Setting the "<<soundNode->sound().getName()<<" sound node to disabled\n"<<vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundDisable] ")
+            << "Setting the " << soundNode->sound().getName().c_str()
+            << " sound node to disabled\n" << vjDEBUG_FLUSH;
       }
       else
       {
@@ -252,12 +260,14 @@ protected:
       if (isThisOurKeyWord == keyName)   // If node is not a Geode
       {
          vjDEBUG( vjDBG_ALL, vjDBG_STATE_LVL )<<"[SoundReplacer] Found node in graph named \""<<nodeName.c_str()<<"\":\n"<<vjDEBUG_FLUSH;
-         vjDEBUG( vjDBG_ALL, vjDBG_STATE_LVL )<<"[SoundReplacer]     Substring "<<keyName<<" matched, "<<vjDEBUG_FLUSH;
+         vjDEBUG( vjDBG_ALL, vjDBG_STATE_LVL )<<"[SoundReplacer]     Substring "<<keyName.c_str()<<" matched, "<<vjDEBUG_FLUSH;
          pfGroup* parent = currentNode->getParent( 0 ); // FIXME?? will 0 work for all cases (instanced nodes?)
          if (parent != NULL)
          {
             std::string soundName = nodeName.substr( 0, startOfKeyWord );
-            vjDEBUG_CONT( vjDBG_ALL, vjDBG_STATE_LVL )<<"extracted sound named \""<<soundName<<"\"\n"<<vjDEBUG_FLUSH;
+            vjDEBUG_CONT( vjDBG_ALL, vjDBG_STATE_LVL )
+               << "extracted sound named \"" << soundName.c_str()
+               << "\"\n" << vjDEBUG_FLUSH;
             vjSound* sound = vjSoundManager::instance()->getHandle( soundName.c_str() );
 
             // replace the found node with a sound node.
@@ -277,7 +287,11 @@ protected:
                }
                parent->addChild( sn );
                sound->trigger();
-               vjDEBUG( vjDBG_ALL, vjDBG_CONFIG_LVL )<<clrOutNORM( clrGREEN,"[SoundReplacer]     " )<<"Replaced "<<clrOutNORM(clrGREEN, sn->getName())<<" node with a pfSoundNode referencing the "<<soundName<<" sound."<<vjDEBUG_FLUSH;
+               vjDEBUG( vjDBG_ALL, vjDBG_CONFIG_LVL )
+                   << clrOutNORM( clrGREEN,"[SoundReplacer]     " )
+                   << "Replaced " << clrOutNORM(clrGREEN, sn->getName())
+                   << " node with a pfSoundNode referencing the "
+                   << soundName.c_str() << " sound." << vjDEBUG_FLUSH;
             }
             else
             {
@@ -294,7 +308,10 @@ protected:
       // for very verbose output...
       else
       {
-         vjDEBUG( vjDBG_ALL,vjDBG_STATE_LVL )<<"[SoundReplacer]     Substring not matched: \""<<isThisOurKeyWord.c_str()<<"\" != \""<<keyName<<"\"\n"<<vjDEBUG_FLUSH;
+         vjDEBUG( vjDBG_ALL,vjDBG_STATE_LVL )
+            << "[SoundReplacer]     Substring not matched: \""
+            << isThisOurKeyWord.c_str() << "\" != \"" << keyName.c_str()
+            << "\"\n" << vjDEBUG_FLUSH;
       }
 
       return PFTRAV_CONT;      // Return continue

@@ -92,7 +92,9 @@ public:
    void setToggleButton(std::string button_name)
    {
       mStatsButton.init(button_name);
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"vjPfAppStats::toggleButton set to:") << button_name << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0)
+         << clrOutNORM(clrCYAN,"vjPfAppStats::toggleButton set to:")
+         << button_name.c_str() << endl << vjDEBUG_FLUSH;
    }
 
 protected:  // -- Helper functions --- //
