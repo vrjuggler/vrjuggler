@@ -36,7 +36,6 @@
 #include <gmtl/Quat.h>
 #include <gmtl/QuatOps.h>
 #include <gmtl/Vec.h>
-#include <gmtl/Convert.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Output.h>
 
@@ -77,12 +76,12 @@ void UserData::updateNavigation()
    vprDEBUG(vprDBG_ALL,6) << "Wand XYZ: " << xyzAngles << std::endl
                         << vprDEBUG_FLUSH;
 
-   gmtl::convert(goal_rot, *wand_matrix); // Create the goal rotation quaternion
+   gmtl::set(goal_rot, *wand_matrix); // Create the goal rotation quaternion
 
    if(transformIdent != *wand_matrix)  // If we don't have two identity matrices
    {
       gmtl::slerp(slerp_rot, 0.05f, source_rot, goal_rot); // Transform part way there
-      gmtl::convert(slerp_rot, transform);      // Create the transform matrix to use
+      gmtl::set(slerp_rot, transform);      // Create the transform matrix to use
    }
    else
    {

@@ -5,7 +5,6 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
-#include <gmtl/Convert.h>
 
 
 int TrackdSensorStandalone::numSensors()

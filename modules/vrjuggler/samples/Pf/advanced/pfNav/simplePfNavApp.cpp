@@ -248,7 +248,7 @@ void simplePfNavApp::preFrame()
          gmtl::Vec3f cur_pos;
          gmtl::getTrans(mat, cur_pos[0], cur_pos[1], cur_pos[2]);
          gmtl::Quatf quat;
-         gmtl::convert(quat, mat);
+         gmtl::set(quat, mat);
 
          std::cout << mKeyFramer.time() << ": "<<cur_pos << " :|: " << quat
                    << std::endl;
@@ -273,7 +273,7 @@ void simplePfNavApp::preFrame()
             gmtl::getTrans( mNavigationDCS->getNavigator()->getCurPos(),
                             cur_pos[0], cur_pos[1], cur_pos[2] );
             gmtl::Quatf quat;
-            gmtl::convert( quat, mNavigationDCS->getNavigator()->getCurPos() );
+            gmtl::set( quat, mNavigationDCS->getNavigator()->getCurPos() );
 
             std::cout << "You: " << cur_pos << " :|: " << quat << std::endl;
 

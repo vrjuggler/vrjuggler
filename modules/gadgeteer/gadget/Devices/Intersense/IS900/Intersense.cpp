@@ -56,7 +56,6 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
-#include <gmtl/Convert.h>
 
 
 namespace gadget
@@ -268,7 +267,7 @@ int Intersense::sample()
                              mTracker.yQuat( stationIndex ),
                              mTracker.zQuat( stationIndex ),
                              mTracker.wQuat( stationIndex ));
-         gmtl::convert( *(cur_pos_samples[i].getPosition()), quatValue );
+         gmtl::set( *(cur_pos_samples[i].getPosition()), quatValue );
       }
 
       cur_pos_samples[i].setTime (cur_pos_samples[0].getTime());

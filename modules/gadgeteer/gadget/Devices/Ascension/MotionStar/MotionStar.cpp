@@ -40,7 +40,6 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
-#include <gmtl/Convert.h>
 
 
 namespace gadget
@@ -377,7 +376,7 @@ int MotionStar::sample ()
                break;
             case FLOCK::QUATERNION:
                m_motion_star.getQuaternion(i, quat);
-               gmtl::convert( transmitter_T_receiver, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
+               gmtl::set( transmitter_T_receiver, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
                break;
             case FLOCK::POSITION_QUATERNION:
                gmtl::setTrans( trans_mat, gmtl::Vec3f(m_motion_star.getXPos(i),
@@ -385,7 +384,7 @@ int MotionStar::sample ()
                                                       m_motion_star.getZPos(i)) );
 
                m_motion_star.getQuaternion(i, quat);
-               gmtl::convert( rot_mat, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
+               gmtl::set( rot_mat, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
 
                transmitter_T_receiver = trans_mat * rot_mat;
                break;

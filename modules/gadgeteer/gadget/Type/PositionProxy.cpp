@@ -41,7 +41,6 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
-#include <gmtl/Convert.h>
 
 #include <gadget/Type/PositionProxy.h>
 

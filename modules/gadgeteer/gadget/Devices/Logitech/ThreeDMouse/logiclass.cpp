@@ -63,7 +63,6 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
-#include <gmtl/Convert.h>
 
 
 // uncommenting the following will produce debug print statements */
