@@ -68,10 +68,10 @@ public:
      * Default constructor.
      */
     SocketDatagram_t (void)
-        : m_socket_dgram_imp()
+        : mSocketDgramImpl()
     {
-       m_socket_dgram_imp = boost::shared_ptr<SocketDatagramImpl>( new SocketDatagramImpl );
-       m_socket_imp = m_socket_dgram_imp;
+       mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>( new SocketDatagramImpl );
+       mSocketImpl = mSocketDgramImpl;
     }
 
     /**
@@ -88,8 +88,8 @@ public:
                       const vpr::InetAddr& remote_addr)
         : Socket_t<Config>()
     {
-       m_socket_dgram_imp = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl(local_addr, remote_addr));
-       m_socket_imp = m_socket_dgram_imp;
+       mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl(local_addr, remote_addr));
+       mSocketImpl = mSocketDgramImpl;
     }
 
     /**
@@ -98,9 +98,9 @@ public:
      * @param sock The source socket object to be copied.
      */
     SocketDatagram_t (const SocketDatagram_t& sock)
-        : m_socket_dgram_imp(sock.m_socket_dgram_imp)
+        : mSocketDgramImpl(sock.mSocketDgramImpl)
     {
-        m_socket_imp = m_socket_dgram_imp;
+        mSocketImpl = mSocketDgramImpl;
     }
 
     /**
@@ -123,7 +123,7 @@ public:
               vpr::InetAddr& from, vpr::Uint32& bytes_read,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_dgram_imp->recvfrom(msg, len, flags, from, bytes_read,
+        return mSocketDgramImpl->recvfrom(msg, len, flags, from, bytes_read,
                                            timeout);
     }
 
@@ -177,7 +177,7 @@ public:
             const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_dgram_imp->sendto(msg, len, flags, to, bytes_sent,
+        return mSocketDgramImpl->sendto(msg, len, flags, to, bytes_sent,
                                           timeout);
     }
 
@@ -211,14 +211,14 @@ protected:
     getOption (const vpr::SocketOptions::Types option,
                struct vpr::SocketOptions::Data& data)
     {
-        return m_socket_dgram_imp->getOption(option, data);
+        return mSocketDgramImpl->getOption(option, data);
     }
 
     virtual vpr::ReturnStatus
     setOption (const vpr::SocketOptions::Types option,
                const struct vpr::SocketOptions::Data& data)
     {
-        return m_socket_dgram_imp->setOption(option, data);
+        return mSocketDgramImpl->setOption(option, data);
     }
 
 // Put in back door for simulator
@@ -226,8 +226,8 @@ protected:
 public:
 #endif
     /// Platform-specific datagram socket implementation object
-    //SocketDatagramImpl m_socket_dgram_imp;
-    boost::shared_ptr<SocketDatagramImpl> m_socket_dgram_imp;
+    //SocketDatagramImpl mSocketDgramImpl;
+    boost::shared_ptr<SocketDatagramImpl> mSocketDgramImpl;
 
 };
 

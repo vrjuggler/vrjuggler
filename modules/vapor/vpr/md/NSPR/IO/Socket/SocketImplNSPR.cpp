@@ -66,16 +66,16 @@ vpr::ReturnStatus SocketImplNSPR::open ()
    vpr::ReturnStatus retval;
    PRFileDesc* new_sock = NULL;
 
-   if(NULL != m_handle)
+   if(NULL != mHandle)
    {
       retval.setCode(vpr::ReturnStatus::Fail);
    }
    else
    {
       // NSPR has not concept of domain in socket creation
-      // switch (m_local_addr.getFamily())
+      // switch (mLocalAddr.getFamily())
 
-      switch (m_type)
+      switch (mType)
       {
         case vpr::SocketTypes::STREAM:
           new_sock = PR_NewTCPSocket();
@@ -86,7 +86,7 @@ vpr::ReturnStatus SocketImplNSPR::open ()
         default:
           fprintf(stderr,
                   "[vpr::SocketImplNSPR] ERROR: Unknown socket type value %d\n",
-                  m_local_addr.getFamily());
+                  mLocalAddr.getFamily());
           break;
       }
 
@@ -99,10 +99,10 @@ vpr::ReturnStatus SocketImplNSPR::open ()
       // Otherwise, return success.
       else
       {
-         m_handle = new_sock;
-         m_open = true;
+         mHandle = new_sock;
+         mOpen = true;
 
-         if ( ! m_open_blocking )
+         if ( ! mOpenBlocking )
          {
             enableNonBlocking();
          }
@@ -120,20 +120,20 @@ vpr::ReturnStatus SocketImplNSPR::close ()
    vpr::ReturnStatus retval(vpr::ReturnStatus::Succeed);      // Default to success
    PRStatus status;
 
-   if(NULL != m_handle)
+   if(NULL != mHandle)
    {
-      status = PR_Close(m_handle);
+      status = PR_Close(mHandle);
 
-      m_handle = NULL;                // m_handle points to shrapnel now, so write over it
-      m_open = false;                 // Even if failed, we must scrap the socket and start over
-      m_bound = false;
-      m_connected = false;
-      m_blocking_fixed = false;
+      mHandle = NULL;                // mHandle points to shrapnel now, so write over it
+      mOpen = false;                 // Even if failed, we must scrap the socket and start over
+      mBound = false;
+      mConnected = false;
+      mBlockingFixed = false;
 
       if (status == PR_SUCCESS)
       {
-         //m_open = false;
-         //m_bound = false;
+         //mOpen = false;
+         //mBound = false;
          retval.setCode(vpr::ReturnStatus::Succeed);
       }
       else
@@ -153,11 +153,11 @@ vpr::ReturnStatus SocketImplNSPR::bind ()
    vpr::ReturnStatus retval;
    PRStatus status;
 
-   vprASSERT((true == m_open) && "Trying to bind an un-opened socket");
-   vprASSERT((m_handle != NULL) && "Trying to bind with NULL handle");
+   vprASSERT((true == mOpen) && "Trying to bind an un-opened socket");
+   vprASSERT((mHandle != NULL) && "Trying to bind with NULL handle");
 
-   // Bind the socket to the address in m_local_addr.
-   status = PR_Bind(m_handle, m_local_addr.getPRNetAddr());
+   // Bind the socket to the address in mLocalAddr.
+   status = PR_Bind(mHandle, mLocalAddr.getPRNetAddr());
 
    // If that fails, print an error and return error status.
    if ( status == PR_FAILURE )
@@ -168,7 +168,7 @@ vpr::ReturnStatus SocketImplNSPR::bind ()
    // Otherwise, return success.
    else
    {
-       m_bound = true;
+       mBound = true;
    }
 
    return retval;
@@ -178,8 +178,8 @@ vpr::ReturnStatus SocketImplNSPR::bind ()
 // ------------------------------------------------------------------------
 vpr::ReturnStatus SocketImplNSPR::enableBlocking ()
 {
-   vprASSERT( m_open && "precondition says you must open() the socket first" );
-   vprASSERT(! m_blocking_fixed && "Can't enable blocking after blocking call");
+   vprASSERT( mOpen && "precondition says you must open() the socket first" );
+   vprASSERT(! mBlockingFixed && "Can't enable blocking after blocking call");
 
    vpr::ReturnStatus retval;
 
@@ -188,7 +188,7 @@ vpr::ReturnStatus SocketImplNSPR::enableBlocking ()
    option_data.option = PR_SockOpt_Nonblocking;
    option_data.value.non_blocking = false;
 
-   status = PR_SetSocketOption(m_handle, &option_data);
+   status = PR_SetSocketOption(mHandle, &option_data);
 
    // If that fails, print an error and return error status.
    if ( status == PR_FAILURE )
@@ -198,7 +198,7 @@ vpr::ReturnStatus SocketImplNSPR::enableBlocking ()
    }
    else
    {
-      m_blocking = true;
+      mBlocking = true;
    }
 
    return retval;
@@ -210,15 +210,15 @@ vpr::ReturnStatus SocketImplNSPR::enableNonBlocking ()
 {
    vpr::ReturnStatus retval;
 
-   vprASSERT( m_open && "precondition says you must open() the socket first" );
-   vprASSERT(! m_blocking_fixed && "Can't diable blocking after blocking call");
+   vprASSERT( mOpen && "precondition says you must open() the socket first" );
+   vprASSERT(! mBlockingFixed && "Can't diable blocking after blocking call");
 
    PRStatus status;
    PRSocketOptionData option_data;
    option_data.option = PR_SockOpt_Nonblocking;
    option_data.value.non_blocking = true;
 
-   status = PR_SetSocketOption(m_handle, &option_data);
+   status = PR_SetSocketOption(mHandle, &option_data);
 
    // If that fails, print an error and return error status.
    if ( status == PR_FAILURE )
@@ -228,7 +228,7 @@ vpr::ReturnStatus SocketImplNSPR::enableNonBlocking ()
    }
    else
    {
-      m_blocking = false;
+      mBlocking = false;
    }
 
    return retval;
@@ -245,10 +245,10 @@ vpr::ReturnStatus SocketImplNSPR::connect (vpr::Interval timeout)
    vpr::ReturnStatus retval;
    PRStatus status;
 
-   vprASSERT((true == m_open) && "Trying to connect an un-opened socket");
-   vprASSERT((m_handle != NULL) && "Trying to connect with NULL handle");
+   vprASSERT((true == mOpen) && "Trying to connect an un-opened socket");
+   vprASSERT((mHandle != NULL) && "Trying to connect with NULL handle");
 
-   if(m_connected)
+   if(mConnected)
    {
       vprDEBUG(vprDBG_ALL,0) << "SocketImplNSPR::connect: Socket already connected.  Can't connect again"
                     << vprDEBUG_FLUSH;
@@ -256,8 +256,8 @@ vpr::ReturnStatus SocketImplNSPR::connect (vpr::Interval timeout)
    }
    else
    {
-      // Attempt to connect to the address in m_addr.
-      status = PR_Connect(m_handle, m_remote_addr.getPRNetAddr(),
+      // Attempt to connect to the address in mAddr.
+      status = PR_Connect(mHandle, mRemoteAddr.getPRNetAddr(),
                           NSPR_getInterval(timeout) );
 
       if ( status == PR_FAILURE )
@@ -278,7 +278,7 @@ vpr::ReturnStatus SocketImplNSPR::connect (vpr::Interval timeout)
             {
                PRPollDesc poll_desc;
 
-               poll_desc.fd       = m_handle;
+               poll_desc.fd       = mHandle;
                poll_desc.in_flags = PR_POLL_WRITE | PR_POLL_EXCEPT;
 
                PR_Poll(&poll_desc, 1, NSPR_getInterval(timeout));
@@ -292,9 +292,9 @@ vpr::ReturnStatus SocketImplNSPR::connect (vpr::Interval timeout)
                }
             }
 
-            m_bound          = true;
-            m_connected      = true;
-            m_blocking_fixed = true;
+            mBound          = true;
+            mConnected      = true;
+            mBlockingFixed = true;
          }
          else if ( err == PR_IO_TIMEOUT_ERROR )
          {
@@ -309,24 +309,24 @@ vpr::ReturnStatus SocketImplNSPR::connect (vpr::Interval timeout)
       // Otherwise, return success.
       else
       {
-         m_bound = true;
-         m_connected = true;
-         m_blocking_fixed = true;
+         mBound = true;
+         mConnected = true;
+         mBlockingFixed = true;
       }
    }
 
    // Fill in the local address if has not already been assigned.
-   if ( m_connected && vpr::InetAddr::AnyAddr == m_local_addr )
+   if ( mConnected && vpr::InetAddr::AnyAddr == mLocalAddr )
    {
       PRStatus status;
 
-      status = PR_GetSockName(m_handle, m_local_addr.getPRNetAddr());
+      status = PR_GetSockName(mHandle, mLocalAddr.getPRNetAddr());
 
       if ( status == PR_SUCCESS )
       {
 /* XXX: This doesn't compile on IRIX, and I don't know why.
           vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Connected, local address is "
-                                        << m_local_addr << std::endl
+                                        << mLocalAddr << std::endl
                                         << vprDEBUG_FLUSH;
 */
       }
@@ -347,15 +347,15 @@ vpr::ReturnStatus SocketImplNSPR::read_i (void* buffer,
                                           vpr::Uint32& bytes_read,
                                           const vpr::Interval timeout)
 {
-   if(m_handle == NULL)
+   if(mHandle == NULL)
       return vpr::ReturnStatus::Fail;
 
    vpr::ReturnStatus retval;
    PRInt32 bytes;
 
-   m_blocking_fixed = true;
+   mBlockingFixed = true;
 
-   bytes = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
+   bytes = PR_Recv(mHandle, buffer, length, 0, NSPR_getInterval(timeout));
 
    if( bytes > 0)     // Successful read
    {
@@ -403,15 +403,15 @@ vpr::ReturnStatus SocketImplNSPR::readn_i (void* buffer,
                                            vpr::Uint32& bytes_read,
                                            const vpr::Interval timeout)
 {
-   if(m_handle == NULL)
+   if(mHandle == NULL)
       return vpr::ReturnStatus::Fail;
 
    vpr::ReturnStatus retval;
    PRInt32 bytes;
 
-   m_blocking_fixed = true;
+   mBlockingFixed = true;
 
-   bytes = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
+   bytes = PR_Recv(mHandle, buffer, length, 0, NSPR_getInterval(timeout));
 
 
    if ( bytes > 0 )     // Successfull read
@@ -459,15 +459,15 @@ vpr::ReturnStatus SocketImplNSPR::write_i (const void* buffer,
                                            vpr::Uint32& bytes_written,
                                            const vpr::Interval timeout)
 {
-   if(m_handle == NULL)
+   if(mHandle == NULL)
       return vpr::ReturnStatus::Fail;
 
    vpr::ReturnStatus retval;
    PRInt32 bytes;
 
-   m_blocking_fixed = true;
+   mBlockingFixed = true;
 
-   bytes = PR_Send(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
+   bytes = PR_Send(mHandle, buffer, length, 0, NSPR_getInterval(timeout));
 
    if ( bytes == -1 )
    {
@@ -568,7 +568,7 @@ vpr::ReturnStatus SocketImplNSPR::getOption (const vpr::SocketOptions::Types opt
    {
       PRStatus status;
 
-      status = PR_GetSocketOption(m_handle, &opt_data);
+      status = PR_GetSocketOption(mHandle, &opt_data);
 
       if ( status == PR_SUCCESS )
       {
@@ -744,14 +744,14 @@ vpr::ReturnStatus SocketImplNSPR::setOption (const vpr::SocketOptions::Types opt
          break;
    }
 
-   vprASSERT((m_handle != NULL) && "Trying to set option on NULL handle");
-   if(m_handle == NULL)
+   vprASSERT((mHandle != NULL) && "Trying to set option on NULL handle");
+   if(mHandle == NULL)
    {
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
    else
    {
-      if ( PR_SetSocketOption(m_handle, &opt_data) == PR_SUCCESS )
+      if ( PR_SetSocketOption(mHandle, &opt_data) == PR_SUCCESS )
       {
          return vpr::ReturnStatus();
       }
@@ -771,9 +771,9 @@ vpr::ReturnStatus SocketImplNSPR::setOption (const vpr::SocketOptions::Types opt
 // defaults.
 // ----------------------------------------------------------------------------
 SocketImplNSPR::SocketImplNSPR (const vpr::SocketTypes::Type sock_type)
-   : m_handle(NULL), m_type(sock_type), m_open(false), m_open_blocking(true),
-     m_bound(false), m_connected(false), m_blocking(true),
-     m_blocking_fixed(false)
+   : mHandle(NULL), mType(sock_type), mOpen(false), mOpenBlocking(true),
+     mBound(false), mConnected(false), mBlocking(true),
+     mBlockingFixed(false)
 {
    /* Do nothing. */ ;
 }
@@ -787,11 +787,11 @@ SocketImplNSPR::SocketImplNSPR (const vpr::SocketTypes::Type sock_type)
 SocketImplNSPR::SocketImplNSPR (const vpr::InetAddr& local_addr,
                                 const vpr::InetAddr& remote_addr,
                                 const vpr::SocketTypes::Type sock_type)
-   : m_handle(NULL), m_local_addr(local_addr), m_remote_addr(remote_addr),
-     m_type(sock_type), m_open(false), m_open_blocking(true), m_bound(false),
-     m_connected(false), m_blocking(true), m_blocking_fixed(false)
+   : mHandle(NULL), mLocalAddr(local_addr), mRemoteAddr(remote_addr),
+     mType(sock_type), mOpen(false), mOpenBlocking(true), mBound(false),
+     mConnected(false), mBlocking(true), mBlockingFixed(false)
 {
-   m_name = m_local_addr.getAddressString();
+   mName = mLocalAddr.getAddressString();
 }
 
 // ----------------------------------------------------------------------------
@@ -799,11 +799,11 @@ SocketImplNSPR::SocketImplNSPR (const vpr::InetAddr& local_addr,
 // ----------------------------------------------------------------------------
 SocketImplNSPR::~SocketImplNSPR ()
 {
-   if ( m_handle != NULL )
+   if ( mHandle != NULL )
    {
       vpr::ReturnStatus status = close();      // Close the socket
       vprASSERT(status.success() && "Failed to close socket in SocketImplNSPR destructor");
-      m_handle = NULL;
+      mHandle = NULL;
    }
 }
 

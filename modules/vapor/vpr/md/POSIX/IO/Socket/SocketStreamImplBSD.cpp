@@ -68,7 +68,7 @@ vpr::ReturnStatus SocketStreamImplBSD::listen (const int backlog)
 
    // Put the socket into listning mode.  If that fails, print an error and
    // return error status.
-   if ( ::listen(m_handle->m_fdesc, backlog) == -1 )
+   if ( ::listen(mHandle->mFdesc, backlog) == -1 )
    {
       fprintf(stderr,
               "[vpr::SocketStreamImplBSD] Cannot listen on socket: %s\n",
@@ -89,16 +89,16 @@ vpr::ReturnStatus SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::In
    InetAddr addr;
    socklen_t addrlen;
 
-   retval = m_handle->isReadable(timeout);
+   retval = mHandle->isReadable(timeout);
 
    if ( retval.success() )
    {
-      m_blocking_fixed = true;
+      mBlockingFixed = true;
 
       // Accept an incoming connection request.
       addrlen = addr.size();
-      accept_sock = ::accept(m_handle->m_fdesc,
-                             (struct sockaddr*) &addr.m_addr, &addrlen);
+      accept_sock = ::accept(mHandle->mFdesc,
+                             (struct sockaddr*) &addr.mAddr, &addrlen);
 
       // If accept(2) failed, print an error message and return error stauts.
       if ( accept_sock == -1 )
@@ -119,21 +119,21 @@ vpr::ReturnStatus SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::In
       else
       {
          sock.setRemoteAddr(addr);
-         sock.m_handle          = new FileHandleImplUNIX(addr.getAddressString());
-         sock.m_handle->m_fdesc = accept_sock;
-         sock.m_open            = true;
+         sock.mHandle          = new FileHandleImplUNIX(addr.getAddressString());
+         sock.mHandle->mFdesc = accept_sock;
+         sock.mOpen            = true;
 
          // Inherit the blocking state from the accepting socket.  This
-         // must be done after m_open is set to true to satisfy the
+         // must be done after mOpen is set to true to satisfy the
          // pre-condition.
          if ( getNonBlocking() )
          {
             sock.enableNonBlocking();
          }
 
-         sock.m_bound          = true;
-         sock.m_connected      = true;
-         sock.m_blocking_fixed = true;
+         sock.mBound          = true;
+         sock.mConnected      = true;
+         sock.mBlockingFixed = true;
       }
    }
 

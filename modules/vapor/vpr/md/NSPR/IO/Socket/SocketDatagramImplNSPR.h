@@ -92,8 +92,8 @@ public:
     SocketDatagramImplNSPR (const SocketDatagramImplNSPR& sock)
         : SocketImplNSPR(SocketTypes::DATAGRAM)
     {
-        m_local_addr      = sock.m_local_addr;
-        m_remote_addr     = sock.m_remote_addr;
+        mLocalAddr  = sock.mLocalAddr;
+        mRemoteAddr = sock.mRemoteAddr;
     }
 
     // ------------------------------------------------------------------------
@@ -113,4 +113,4 @@ public:
 }; // End of namespace
 
 
-#endif	/* _VPR_SOCKET_DATAGRAM_IMPL_NSPR_H_ */
+#endif  /* _VPR_SOCKET_DATAGRAM_IMPL_NSPR_H_ */

@@ -71,14 +71,14 @@ public:
     * on the specific device type.
     *
     * @pre None.
-    * @post A constant reference to the <code>m_name</code> object is
+    * @post A constant reference to the <code>mName</code> object is
     *       returned to the caller.
     *
     * @return An object containing the name of this device.
     */
    virtual const std::string& getName (void)
    {
-      return m_name;
+      return mName;
    }
 
    /**
@@ -92,7 +92,7 @@ public:
     */
    virtual void setOpenBlocking (void)
    {
-      m_open_blocking = true;
+      mOpenBlocking = true;
    }
 
    /**
@@ -106,7 +106,7 @@ public:
     */
    virtual void setOpenNonBlocking (void)
    {
-      m_open_blocking = false;
+      mOpenBlocking = false;
    }
 
    /**
@@ -115,7 +115,7 @@ public:
     * @pre The device is not already open.
     * @post An attempt is made to open the I/O device.  The resulting status
     *       is returned to the caller.  If the I/O device is opened,
-    *       <code>m_open</code> is set to true.
+    *       <code>mOpen</code> is set to true.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the device is opened
     *         successfully.<br>
@@ -129,7 +129,7 @@ public:
     * @pre The device is open.
     * @post An attempt is made to close the I/O device.  The resulting status
     *       is returned to the caller.  If the I/O device is closed,
-    *       <code>m_open</code> is set to false.
+    *       <code>mOpen</code> is set to false.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the device is closed
     *         successfully.<br>
@@ -141,14 +141,14 @@ public:
     * Gets the open state of this I/O device.
     *
     * @pre None.
-    * @post The boolean value in m_open is returned to the caller.
+    * @post The boolean value in mOpen is returned to the caller.
     *
     * @return <code>true</code> is returned if the device is open;
     *         <code>false</code> otherwise.
     */
    virtual bool isOpen (void)
    {
-      return m_open;
+      return mOpen;
    }
 
    /**
@@ -178,7 +178,7 @@ public:
    /**
     * Gets the current blocking state for the I/O device.
     *
-    * @pre <code>m_blocking</code> is set correctly.
+    * @pre <code>mBlocking</code> is set correctly.
     * @post
     *
     * @return <code>true</code> is returned if the device is in blocking mode.
@@ -186,13 +186,13 @@ public:
     */
    virtual bool getBlocking (void) const
    {
-      return m_blocking;
+      return mBlocking;
    }
 
    /**
     * Gets the current non-blocking state for the I/O device.
     *
-    * @pre m_blocking is set correctly.
+    * @pre mBlocking is set correctly.
     * @post
     *
     * @return <code>true</code> is returned if the device is in non-blocking
@@ -200,7 +200,7 @@ public:
     */
    virtual bool getNonBlocking (void) const
    {
-      return (!m_blocking);
+      return (!mBlocking);
    }
 
    /**
@@ -661,7 +661,7 @@ protected:
     *       and the blocking mode for reads and writes is set to true.
     */
    BlockIO (void)
-      : m_open_blocking(true), m_open(false), m_blocking(true),
+      : mOpenBlocking(true), mOpen(false), mBlocking(true),
         mStatsStrategy(NULL)
    {
       /* Do nothing. */ ;
@@ -671,14 +671,14 @@ protected:
     * Constructor.
     *
     * @pre None.
-    * @post The name object is copied into m_name; the open mode is set to
+    * @post The name object is copied into mName; the open mode is set to
     *       blocking; the open state is set to <code>false</code>; and the
     *       blocking mode for reads and writes is set to <code>true</code>.
     *
     * @param name The name for this device.
     */
    BlockIO (const std::string& name)
-      : m_name(name), m_open_blocking(true), m_open(false), m_blocking(true),
+      : mName(name), mOpenBlocking(true), mOpen(false), mBlocking(true),
         mStatsStrategy(NULL)
    {
       /* Do nothing. */ ;
@@ -692,11 +692,11 @@ protected:
     */
    BlockIO (const BlockIO& other)
    {
-      m_name          = other.m_name;
-      m_open_blocking = other.m_open_blocking;
-      m_open          = other.m_open;
-      m_blocking      = other.m_blocking;
-      mStatsStrategy  = NULL;
+      mName          = other.mName;
+      mOpenBlocking  = other.mOpenBlocking;
+      mOpen          = other.mOpen;
+      mBlocking      = other.mBlocking;
+      mStatsStrategy = NULL;
    }
 
    /**
@@ -861,16 +861,16 @@ protected:
 
 protected:
    /// The name of the I/O device.
-   std::string m_name;
+   std::string mName;
 
    /// Flag telling if blocking is enabled when opening the device
-   bool m_open_blocking;
+   bool mOpenBlocking;
 
    /// Flag telling if the device is open
-   bool m_open;
+   bool mOpen;
 
    /// Flag telling if blocking for reads and writes is enabled
-   bool m_blocking;
+   bool mBlocking;
 
    /// Perf monitor
    vpr::BaseIOStatsStrategy*   mStatsStrategy;

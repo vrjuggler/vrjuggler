@@ -66,7 +66,7 @@ public:
     *                  object.
     */
    SerialPort_t (const std::string& port_name)
-      : Port(port_name), m_sio_imp(port_name)
+      : Port(port_name), mSioImpl(port_name)
    {
       /* Do nothing. */ ;
    }
@@ -90,14 +90,14 @@ public:
     * Gets the name of the encapsulated serial port.
     *
     * @pre None.
-    * @post A constant reference to the m_name object is returned to the
+    * @post A constant reference to the mName object is returned to the
     *       caller.
     *
     * @return An object containing the name of this serial port.
     */
    virtual const std::string& getName (void)
    {
-      return m_sio_imp.getName();
+      return mSioImpl.getName();
    }
 
    /**
@@ -111,7 +111,7 @@ public:
     */
    void setOpenBlocking (void)
    {
-      m_sio_imp.setOpenBlocking();
+      mSioImpl.setOpenBlocking();
    }
 
    /**
@@ -125,7 +125,7 @@ public:
     */
    void setOpenNonBlocking (void)
    {
-      m_sio_imp.setOpenNonBlocking();
+      mSioImpl.setOpenNonBlocking();
    }
 
    /**
@@ -141,7 +141,7 @@ public:
     */
    vpr::ReturnStatus open (void)
    {
-      return m_sio_imp.open();
+      return mSioImpl.open();
    }
 
    /**
@@ -157,7 +157,7 @@ public:
     */
    vpr::ReturnStatus close (void)
    {
-      return m_sio_imp.close();
+      return mSioImpl.close();
    }
 
    /**
@@ -172,7 +172,7 @@ public:
     */
    vpr::ReturnStatus enableBlocking (void)
    {
-      return m_sio_imp.enableBlocking();
+      return mSioImpl.enableBlocking();
    }
 
    /**
@@ -187,33 +187,33 @@ public:
     */
    virtual vpr::ReturnStatus enableNonBlocking (void)
    {
-      return m_sio_imp.enableNonBlocking();
+      return mSioImpl.enableNonBlocking();
    }
 
    /**
     * Get the current blocking state for the serial port.
     *
-    * @pre m_blocking is set correctly
+    * @pre mBlocking is set correctly
     *
     * @return true is returned if the port is in blocking mode.<br>
     *         false is returned if the port is in non-blocking mode.
     */
    bool getBlocking (void) const
    {
-      return m_sio_imp.getBlocking();
+      return mSioImpl.getBlocking();
    }
 
    /**
     * Gets the current non-blocking state for the serial port.
     *
-    * @pre <code>m_blocking</code> is set correctly<br>
+    * @pre <code>mBlocking</code> is set correctly<br>
     *
     * @return <code>true</code> is returned if the port is in non-blocking
     *         mode.   Otherwise, <code>false</code> is returned.
     */
    bool getNonBlocking (void) const
    {
-      return m_sio_imp.getNonBlocking();
+      return mSioImpl.getNonBlocking();
    }
 
    /**
@@ -224,7 +224,7 @@ public:
     */
    virtual IOSys::Handle getHandle (void)
    {
-      return m_sio_imp.getHandle();
+      return mSioImpl.getHandle();
    }
 
    // ========================================================================
@@ -241,7 +241,7 @@ public:
     */
    void setOpenReadOnly (void)
    {
-      m_sio_imp.setOpenReadOnly();
+      mSioImpl.setOpenReadOnly();
    }
 
    /**
@@ -255,7 +255,7 @@ public:
     */
    void setOpenWriteOnly (void)
    {
-      m_sio_imp.setOpenWriteOnly();
+      mSioImpl.setOpenWriteOnly();
    }
 
    /**
@@ -269,7 +269,7 @@ public:
     */
    void setOpenReadWrite (void)
    {
-      m_sio_imp.setOpenReadWrite();
+      mSioImpl.setOpenReadWrite();
    }
 
    /**
@@ -286,7 +286,7 @@ public:
     */
    vpr::SerialTypes::UpdateActionOption getUpdateAction (void)
    {
-      return m_sio_imp.getUpdateAction();
+      return mSioImpl.getUpdateAction();
    }
 
    /**
@@ -303,7 +303,7 @@ public:
     */
    void setUpdateAction (vpr::SerialTypes::UpdateActionOption action)
    {
-      m_sio_imp.setUpdateAction(action);
+      mSioImpl.setUpdateAction(action);
    }
 
    /**
@@ -323,7 +323,7 @@ public:
     */
    vpr::ReturnStatus getBufferSize (vpr::Uint16& size)
    {
-      return m_sio_imp.getBufferSize(size);
+      return mSioImpl.getBufferSize(size);
    }
 
    /**
@@ -342,7 +342,7 @@ public:
     */
    vpr::ReturnStatus setBufferSize (const vpr::Uint8 size)
    {
-      return m_sio_imp.setBufferSize(size);
+      return mSioImpl.setBufferSize(size);
    }
 
    /**
@@ -362,7 +362,7 @@ public:
     */
    vpr::ReturnStatus getTimeout (vpr::Uint8& timeout)
    {
-      return m_sio_imp.getTimeout(timeout);
+      return mSioImpl.getTimeout(timeout);
    }
 
    /**
@@ -382,7 +382,7 @@ public:
     */
    vpr::ReturnStatus setTimeout (const vpr::Uint8 timeout_val)
    {
-      return m_sio_imp.setTimeout(timeout_val);
+      return mSioImpl.setTimeout(timeout_val);
    }
 
    /**
@@ -403,7 +403,7 @@ public:
     */
    vpr::ReturnStatus getCharacterSize (vpr::SerialTypes::CharacterSizeOption& size)
    {
-      return m_sio_imp.getCharacterSize(size);
+      return mSioImpl.getCharacterSize(size);
    }
 
    /**
@@ -424,7 +424,7 @@ public:
     */
    vpr::ReturnStatus setCharacterSize (const vpr::SerialTypes::CharacterSizeOption bpb)
    {
-      return m_sio_imp.setCharacterSize(bpb);
+      return mSioImpl.setCharacterSize(bpb);
    }
 
    /**
@@ -439,7 +439,7 @@ public:
     */
    bool getReadState (void)
    {
-      return m_sio_imp.getReadState();
+      return mSioImpl.getReadState();
    }
 
    /**
@@ -453,7 +453,7 @@ public:
     */
    vpr::ReturnStatus enableRead (void)
    {
-      return m_sio_imp.enableRead();
+      return mSioImpl.enableRead();
    }
 
    /**
@@ -467,7 +467,7 @@ public:
     */
    vpr::ReturnStatus disableRead (void)
    {
-      return m_sio_imp.disableRead();
+      return mSioImpl.disableRead();
    }
 
    /**
@@ -486,7 +486,7 @@ public:
     */
    vpr::ReturnStatus getStopBits (vpr::Uint8& num_bits)
    {
-      return m_sio_imp.getStopBits(num_bits);
+      return mSioImpl.getStopBits(num_bits);
    }
 
    /**
@@ -504,7 +504,7 @@ public:
     */
    vpr::ReturnStatus setStopBits (const vpr::Uint8 num_bits)
    {
-      return m_sio_imp.setStopBits(num_bits);
+      return mSioImpl.setStopBits(num_bits);
    }
 
    /**
@@ -528,7 +528,7 @@ public:
     */
    bool getCanonicalState (void)
    {
-      return m_sio_imp.getCanonicalState();
+      return mSioImpl.getCanonicalState();
    }
 
    /**
@@ -545,7 +545,7 @@ public:
     */
    vpr::ReturnStatus enableCanonicalInput (void)
    {
-      return m_sio_imp.enableCanonicalInput();
+      return mSioImpl.enableCanonicalInput();
    }
 
    /**
@@ -562,7 +562,7 @@ public:
     */
    vpr::ReturnStatus disableCanonicalInput (void)
    {
-      return m_sio_imp.disableCanonicalInput();
+      return mSioImpl.disableCanonicalInput();
    }
 
    /**
@@ -577,7 +577,7 @@ public:
     */
    bool getBadByteIgnoreState (void)
    {
-      return m_sio_imp.getBadByteIgnoreState();
+      return mSioImpl.getBadByteIgnoreState();
    }
 
    /**
@@ -593,7 +593,7 @@ public:
     */
    vpr::ReturnStatus enableBadByteIgnore (void)
    {
-      return m_sio_imp.enableBadByteIgnore();
+      return mSioImpl.enableBadByteIgnore();
    }
 
    // ------------------------------------------------------------------------
@@ -607,7 +607,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus disableBadByteIgnore (void)
    {
-      return m_sio_imp.disableBadByteIgnore();
+      return mSioImpl.disableBadByteIgnore();
    }
 
    // ------------------------------------------------------------------------
@@ -621,7 +621,7 @@ public:
    // ------------------------------------------------------------------------
    bool getInputParityCheckState (void)
    {
-      return m_sio_imp.getInputParityCheckState();
+      return mSioImpl.getInputParityCheckState();
    }
 
    // ------------------------------------------------------------------------
@@ -634,7 +634,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus enableInputParityCheck (void)
    {
-      return m_sio_imp.enableInputParityCheck();
+      return mSioImpl.enableInputParityCheck();
    }
 
    // ------------------------------------------------------------------------
@@ -647,7 +647,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus disableInputParityCheck (void)
    {
-      return m_sio_imp.disableInputParityCheck();
+      return mSioImpl.disableInputParityCheck();
    }
 
    // ------------------------------------------------------------------------
@@ -662,7 +662,7 @@ public:
    // ------------------------------------------------------------------------
    bool getBitStripState (void)
    {
-      return m_sio_imp.getBitStripState();
+      return mSioImpl.getBitStripState();
    }
 
    // ------------------------------------------------------------------------
@@ -675,7 +675,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus enableBitStripping (void)
    {
-      return m_sio_imp.enableBitStripping();
+      return mSioImpl.enableBitStripping();
    }
 
    // ------------------------------------------------------------------------
@@ -688,7 +688,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus disableBitStripping (void)
    {
-      return m_sio_imp.disableBitStripping();
+      return mSioImpl.disableBitStripping();
    }
 
    // ------------------------------------------------------------------------
@@ -708,7 +708,7 @@ public:
    // ------------------------------------------------------------------------
    bool getStartStopInputState (void)
    {
-      return m_sio_imp.getStartStopInputState();
+      return mSioImpl.getStartStopInputState();
    }
 
    // ------------------------------------------------------------------------
@@ -722,7 +722,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus enableStartStopInput (void)
    {
-      return m_sio_imp.enableStartStopInput();
+      return mSioImpl.enableStartStopInput();
    }
 
    // ------------------------------------------------------------------------
@@ -736,7 +736,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus disableStartStopInput (void)
    {
-      return m_sio_imp.disableStartStopInput();
+      return mSioImpl.disableStartStopInput();
    }
 
    // ------------------------------------------------------------------------
@@ -754,7 +754,7 @@ public:
    // ------------------------------------------------------------------------
    bool getStartStopOutputState (void)
    {
-      return m_sio_imp.getStartStopOutputState();
+      return mSioImpl.getStartStopOutputState();
    }
 
    // ------------------------------------------------------------------------
@@ -768,7 +768,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus enableStartStopOutput (void)
    {
-      return m_sio_imp.enableStartStopOutput();
+      return mSioImpl.enableStartStopOutput();
    }
 
    // ------------------------------------------------------------------------
@@ -782,7 +782,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus disableStartStopOutput (void)
    {
-      return m_sio_imp.disableStartStopOutput();
+      return mSioImpl.disableStartStopOutput();
    }
 
    // ------------------------------------------------------------------------
@@ -799,7 +799,7 @@ public:
    // ------------------------------------------------------------------------
    bool getParityGenerationState (void)
    {
-      return m_sio_imp.getParityGenerationState();
+      return mSioImpl.getParityGenerationState();
    }
 
    // ------------------------------------------------------------------------
@@ -813,7 +813,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus enableParityGeneration (void)
    {
-      return m_sio_imp.enableParityGeneration();
+      return mSioImpl.enableParityGeneration();
    }
 
    // ------------------------------------------------------------------------
@@ -827,7 +827,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus disableParityGeneration (void)
    {
-      return m_sio_imp.disableParityGeneration();
+      return mSioImpl.disableParityGeneration();
    }
 
    // ------------------------------------------------------------------------
@@ -846,7 +846,7 @@ public:
    // ------------------------------------------------------------------------
    bool getParityErrorMarkingState (void)
    {
-      return m_sio_imp.getParityErrorMarkingState();
+      return mSioImpl.getParityErrorMarkingState();
    }
 
    // ------------------------------------------------------------------------
@@ -859,7 +859,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus enableParityErrorMarking (void)
    {
-      return m_sio_imp.enableParityErrorMarking();
+      return mSioImpl.enableParityErrorMarking();
    }
 
    // ------------------------------------------------------------------------
@@ -872,7 +872,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus disableParityErrorMarking (void)
    {
-      return m_sio_imp.disableParityErrorMarking();
+      return mSioImpl.disableParityErrorMarking();
    }
 
    // ------------------------------------------------------------------------
@@ -886,7 +886,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::SerialTypes::ParityType getParity (void)
    {
-      return m_sio_imp.getParity();
+      return mSioImpl.getParity();
    }
 
    // ------------------------------------------------------------------------
@@ -899,7 +899,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus setOddParity (void)
    {
-      return m_sio_imp.setOddParity();
+      return mSioImpl.setOddParity();
    }
 
    // ------------------------------------------------------------------------
@@ -912,7 +912,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus setEvenParity (void)
    {
-      return m_sio_imp.setEvenParity();
+      return mSioImpl.setEvenParity();
    }
 
    // ------------------------------------------------------------------------
@@ -929,7 +929,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus getInputBaudRate (vpr::Uint32& rate)
    {
-      return m_sio_imp.getInputBaudRate(rate);
+      return mSioImpl.getInputBaudRate(rate);
    }
 
    // ------------------------------------------------------------------------
@@ -944,7 +944,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus setInputBaudRate (const vpr::Uint32 baud)
    {
-      return m_sio_imp.setInputBaudRate(baud);
+      return mSioImpl.setInputBaudRate(baud);
    }
 
    // ------------------------------------------------------------------------
@@ -961,7 +961,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus getOutputBaudRate (vpr::Uint32& rate)
    {
-      return m_sio_imp.getOutputBaudRate(rate);
+      return mSioImpl.getOutputBaudRate(rate);
    }
 
    // ------------------------------------------------------------------------
@@ -976,7 +976,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus setOutputBaudRate (const vpr::Uint32 baud)
    {
-      return m_sio_imp.setOutputBaudRate(baud);
+      return mSioImpl.setOutputBaudRate(baud);
    }
 
    // ------------------------------------------------------------------------
@@ -986,7 +986,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus drainOutput (void)
    {
-      return m_sio_imp.drainOutput();
+      return mSioImpl.drainOutput();
    }
 
    // ------------------------------------------------------------------------
@@ -1005,7 +1005,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus controlFlow (SerialTypes::FlowActionOption opt)
    {
-      return m_sio_imp.controlFlow(opt);
+      return mSioImpl.controlFlow(opt);
    }
 
    // ------------------------------------------------------------------------
@@ -1024,7 +1024,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus flushQueue (SerialTypes::FlushQueueOption queue)
    {
-      return m_sio_imp.flushQueue(queue);
+      return mSioImpl.flushQueue(queue);
    }
 
    // ------------------------------------------------------------------------
@@ -1044,7 +1044,7 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus sendBreak (const int duration)
    {
-      return m_sio_imp.sendBreak(duration);
+      return mSioImpl.sendBreak(duration);
    }
 
 protected:
@@ -1080,7 +1080,7 @@ protected:
                                      vpr::Uint32& bytes_read,
                                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return m_sio_imp.read_i(buffer, length, bytes_read, timeout);
+      return mSioImpl.read_i(buffer, length, bytes_read, timeout);
    }
 
    /**
@@ -1115,7 +1115,7 @@ protected:
                                       vpr::Uint32& bytes_read,
                                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return m_sio_imp.readn_i(buffer, length, bytes_read, timeout);
+      return mSioImpl.readn_i(buffer, length, bytes_read, timeout);
    }
 
    /**
@@ -1149,14 +1149,14 @@ protected:
                                       vpr::Uint32& bytes_written,
                                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return m_sio_imp.write_i(buffer, length, bytes_written, timeout);
+      return mSioImpl.write_i(buffer, length, bytes_written, timeout);
    }
 
    /// Platform-specific serial port implementation object
-   RealSerialPortImpl m_sio_imp;
+   RealSerialPortImpl mSioImpl;
 };
 
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_SERIAL_PORT_T_H_ */
+#endif  /* _VPR_SERIAL_PORT_T_H_ */

@@ -67,7 +67,7 @@ public:
      * Constructor.  This creates a file handle object connected to the given
      * port name and sets the update action to happen immediately.
      *
-     * @post m_handle is assigned a value and connected to port_name, and the
+     * @post mHandle is assigned a value and connected to port_name, and the
      *       update action is set to vpr::SerialTypes::NOW.
      *
      * @param port_name The name of the serial port that will be accessed.
@@ -94,7 +94,7 @@ public:
      */
     const std::string&
     getName (void) {
-        return m_name;
+        return mName;
     }
 
     /**
@@ -107,7 +107,7 @@ public:
      */
     inline void
     setOpenReadOnly (void) {
-        openFlag = GENERIC_READ;
+        mOpenFlag = GENERIC_READ;
     }
 
     /**
@@ -120,7 +120,7 @@ public:
      */
     inline void
     setOpenWriteOnly (void) {
-        openFlag = GENERIC_WRITE;
+        mOpenFlag = GENERIC_WRITE;
     }
 
     /**
@@ -133,7 +133,7 @@ public:
      */
     inline void
     setOpenReadWrite (void) {
-        openFlag = GENERIC_READ | GENERIC_WRITE;
+        mOpenFlag = GENERIC_READ | GENERIC_WRITE;
     }
 
     /**
@@ -168,7 +168,7 @@ public:
      * @pre The serial port is not already open.
      * @post An attempt is made to open the port.  If it is successful, the
      *       port's flags are initaialized to 0.  The resulting status is
-     *       returned to the caller.  If the port is opened, m_open is set to
+     *       returned to the caller.  If the port is opened, mOpen is set to
      *       true.
      *
      * @return vpr::ReturnStatus::Succeed is returned if the serial port was opened
@@ -182,7 +182,7 @@ public:
      *
      * @pre The serial port is open.
      * @post An attempt is made to close the port.  The resulting status is
-     *       returned to the caller.  If the port is closed, m_open is set to
+     *       returned to the caller.  If the port is closed, mOpen is set to
      *       false.
      *
      * @return vpr::ReturnStatus::Succeed is returned if the serial port was closed
@@ -193,7 +193,7 @@ public:
     close (void) {
         vpr::ReturnStatus retval;
 
-        if(!CloseHandle(m_handle)){
+        if(!CloseHandle(mHandle)){
             retval.setCode(vpr::ReturnStatus::Fail);
         }
         return retval;
@@ -234,27 +234,27 @@ public:
     /**
      * Get the current blocking state for the serial port.
      *
-     * @pre m_blocking is set correctly
+     * @pre mBlocking is set correctly
      *
      * @return true is returned if the port is in blocking mode.<br>
      *         false is returned if the port is in non-blocking mode.
      */
     inline bool
     getBlocking (void) const {
-        return m_blocking;
+        return mBlocking;
     }
 
     /**
      * Gets the current non-blocking state for the serial port.
      *
-     * @pre <code>m_blocking</code> is set correctly<br>
+     * @pre <code>mBlocking</code> is set correctly<br>
      *
      * @return <code>true</code> is returned if the port is in non-blocking
      *         mode.   Otherwise, <code>false</code> is returned.
      */
     inline bool
     getNonBlocking (void) const {
-        return ! m_blocking;
+        return ! mBlocking;
     }
 
     /**
@@ -267,7 +267,7 @@ public:
            << "ERROR: Cannot get handle for Win32 file descriptor with NSPR!\n";
        return vpr::IOSys::NullHandle;
 #else
-       return m_handle;
+       return mHandle;
 #endif
     }
 
@@ -283,7 +283,7 @@ public:
      */
     inline bool
     isReadOnly (void) {
-        return GENERIC_READ == openFlag;
+        return GENERIC_READ == mOpenFlag;
     }
 
     /**
@@ -298,7 +298,7 @@ public:
      */
     inline bool
     isWriteOnly (void) {
-        return GENERIC_WRITE == openFlag;
+        return GENERIC_WRITE == mOpenFlag;
     }
 
     /**
@@ -313,7 +313,7 @@ public:
      */
     inline bool
     isReadWrite (void) {
-        return (GENERIC_READ | GENERIC_WRITE) == openFlag;
+        return (GENERIC_READ | GENERIC_WRITE) == mOpenFlag;
     }
 
     // ========================================================================
@@ -1032,15 +1032,15 @@ public:
              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
-    HANDLE m_handle;    /**< handle to communication file */
-    DWORD openFlag;     /**< flag to specify how to open comm port */
-    std::string m_name; /**< name of communication device */
-    bool m_open;
-    bool m_blocking;    /**< flag for blocking I/O */
-    bool parityMark;    /**< flag for parity marking */
+    HANDLE mHandle;    /**< handle to communication file */
+    DWORD mOpenFlag;     /**< flag to specify how to open comm port */
+    std::string mName; /**< name of communication device */
+    bool mOpen;
+    bool mBlocking;    /**< flag for blocking I/O */
+    bool mParityMark;    /**< flag for parity marking */
 };
 
 
 };
 
-#endif	/* _SERIAL_PORT_IMPL_WIN32_H_ */
+#endif  /* _SERIAL_PORT_IMPL_WIN32_H_ */

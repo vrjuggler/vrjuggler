@@ -301,7 +301,7 @@ protected:
    }
 
    /**
-    * Looks up the address in m_name and store the address in m_remote_addr.
+    * Looks up the address in mName and store the address in mAddr.
     */
    vpr::ReturnStatus lookupAddress(const std::string& address);
 

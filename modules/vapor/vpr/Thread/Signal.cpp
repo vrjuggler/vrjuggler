@@ -60,12 +60,12 @@ vpr::ReturnStatus SignalSet::emptySet ()
    vpr::ReturnStatus status;
 
 #ifdef HAVE_SIGEMPTYSET
-   if ( sigemptyset(&m_sigset) != 0 )
+   if ( sigemptyset(&mSigSet) != 0 )
    {
       status.setCode(vpr::ReturnStatus::Fail);
    }
 #else
-   m_sigset = 0;
+   mSigSet = 0;
 #endif
 
    return status;
@@ -76,11 +76,11 @@ vpr::ReturnStatus SignalSet::fillSet ()
    vpr::ReturnStatus status;
 
 #ifdef HAVE_SIGFILLSET
-   if ( sigfillset(&m_sigset) != 0 ) {
+   if ( sigfillset(&mSigSet) != 0 ) {
       status.setCode(vpr::ReturnStatus::Fail);
    }
 #else
-   m_sigset = ~(sigset_t) 0;
+   mSigSet = ~(sigset_t) 0;
 #endif
 
    return status;
@@ -93,12 +93,12 @@ vpr::ReturnStatus SignalSet::addSignal (const int sig_num)
    vprASSERT(sig_num >= 1 && "Invalid signal number");
 
 #ifdef HAVE_SIGADDSET
-   if ( sigaddset(&m_sigset, sig_num) != 0 )
+   if ( sigaddset(&mSigSet, sig_num) != 0 )
    {
       status.setCode(vpr::ReturnStatus::Fail);
    }
 #else
-   m_sigset |= (1 << (sig_num - 1));
+   mSigSet |= (1 << (sig_num - 1));
 #endif
 
    return status;
@@ -111,11 +111,11 @@ vpr::ReturnStatus SignalSet::removeSignal (const int sig_num)
    vprASSERT(sig_num >= 1 && "Invalid signal number");
 
 #ifdef HAVE_SIGDELSET
-   if ( sigdelset(&m_sigset, sig_num) != 0 ) {
+   if ( sigdelset(&mSigSet, sig_num) != 0 ) {
       status.setCode(vpr::ReturnStatus::Fail);
    }
 #else
-   m_sigset &= ~(1 << (sig_num - 1)) ;
+   mSigSet &= ~(1 << (sig_num - 1)) ;
 #endif
 
    return status;
@@ -128,9 +128,9 @@ bool SignalSet::isMember (const int sig_num) const
    vprASSERT(sig_num >= 1 && "Invalid signal number");
 
 #ifdef HAVE_SIGISMEMBER
-   is_member = (sigismember(&m_sigset, sig_num) == 1);
+   is_member = (sigismember(&mSigSet, sig_num) == 1);
 #else
-   is_member = ((m_sigset & (1 << (sig_num - 1))) != 0);
+   is_member = ((mSigSet & (1 << (sig_num - 1))) != 0);
 #endif
 
    return is_member;
@@ -177,11 +177,11 @@ vpr::ReturnStatus SigHandler::registerHandler (const int sig_num,
 #ifdef SA_RESTART
    if ( sig_num != SIGALRM && restart )
    {
-      action.m_sa.sa_flags |= SA_RESTART;
+      action.mSA.sa_flags |= SA_RESTART;
    }
 #endif
 
-   if ( vpr::SigHandler::sigaction(sig_num, &action.m_sa) != 0 )
+   if ( vpr::SigHandler::sigaction(sig_num, &action.mSA) != 0 )
    {
       status.setCode(vpr::ReturnStatus::Fail);
    }

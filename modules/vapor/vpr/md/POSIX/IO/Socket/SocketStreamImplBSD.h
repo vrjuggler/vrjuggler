@@ -67,7 +67,7 @@ public:
      * member variables of the object.
      *
      * @pre None.
-     * @post The member variables are initialized with the m_type variable in
+     * @post The member variables are initialized with the mType variable in
      *       particular set to vpr::SocketTypes::SOCK_STREAM.
      */
     SocketStreamImplBSD (void)
@@ -103,10 +103,10 @@ public:
     SocketStreamImplBSD (const SocketStreamImplBSD& sock)
         : SocketImplBSD(SocketTypes::STREAM)
     {
-        m_local_addr      = sock.m_local_addr;
-        m_remote_addr     = sock.m_remote_addr;
-        m_handle          = new FileHandleImplUNIX(sock.m_handle->getName());
-        m_handle->m_fdesc = sock.m_handle->m_fdesc;
+        mLocalAddr      = sock.mLocalAddr;
+        mRemoteAddr     = sock.mRemoteAddr;
+        mHandle          = new FileHandleImplUNIX(sock.mHandle->getName());
+        mHandle->mFdesc = sock.mHandle->mFdesc;
     }
 
     /**
@@ -114,7 +114,7 @@ public:
      * incoming connection requests.
      *
      * @pre The socket has been opened and bound to the address in
-     *      m_host_addr.
+     *      mLocalAddr.
      * @post The socket is in a listening state waiting for incoming
      *       connection requests.
      *
@@ -156,4 +156,4 @@ public:
 }; // End of vpr namespace
 
 
-#endif	/* _VJ_SOCKET_STREAM_IMPL_BSD_H_ */
+#endif  /* _VJ_SOCKET_STREAM_IMPL_BSD_H_ */

@@ -293,8 +293,8 @@ protected:
     * Make a copy of the given vpr::InetAddrSIM object in this object.
     *
     * @pre None.
-    * @post The memory in m_addr is overwritten with that of the given
-    *       object's m_addr structure.
+    * @post The memory in mAddr is overwritten with that of the given
+    *       object's mAddr structure.
     *
     * @param addr The vpr::InetAddrSIM object to be copied into this object.
     */
@@ -314,7 +314,7 @@ protected:
    void setDebugData()
    {
 #ifdef _DEBUG
-      m_debugStringAddress = getAddressString();
+      mDebugStringAddress = getAddressString();
 #endif
 
    }
@@ -324,7 +324,7 @@ protected:
    vpr::SocketTypes::Domain mFamily;
 
 #ifdef _DEBUG
-   std::string m_debugStringAddress;
+   std::string mDebugStringAddress;
 #endif
 };
 
