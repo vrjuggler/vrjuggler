@@ -75,15 +75,15 @@ class vjPerfDataBuffer: public vjTimedUpdate {
 
     struct buf_entry {
 
-   //: an index for the point in the proc. that we're at
-   int              phase;
-
-   //: time stamp associated with this point.
-   vjTimeStamp      ts;
-
-   buf_entry() {
-       phase = 0;
-   }
+        //: an index for the point in the proc. that we're at
+        int              phase;
+        
+        //: time stamp associated with this point.
+        vjTimeStamp      ts;
+        
+        buf_entry() {
+            phase = 0;
+        }
     };
 
 
@@ -110,9 +110,13 @@ public:
     //! POST: self is created and has _numbufs buffers
     //! ARGS: _numbufs - number of buffers to allocate
     //+       (default 50)
-    vjPerfDataBuffer (char* _name, int _numbufs, int _nindex);
+    vjPerfDataBuffer (char* _name, int _numbufs, int _nindex) {
+        init (_name, _numbufs, _nindex);
+    }
 
-
+    vjPerfDataBuffer (const std::string& _name, int _numbufs, int _nindex) {
+        init (_name.c_str(), _numbufs, _nindex);
+    }
 
     //: destructor
     //: POST: all memory & buffers have been freed.
@@ -121,7 +125,7 @@ public:
 
 
     virtual std::string getName() {
-   return (std::string)name;
+        return (std::string)name;
     }
 
     //: activates the buffer
@@ -158,7 +162,7 @@ public:
     //+       right after.
     void set(int _phase);
 
-
+    void set (int _phase, vjTimeStamp& _value);
 
     // for below: need a version w/ max # buffers to write
 
@@ -187,6 +191,9 @@ public:
 
     //: just empties out the buffer & throws away the data.
     void dumpData();
+
+    private:
+    void init (const char* _name, int _numbufs, int _nindex);
    
 };
 
