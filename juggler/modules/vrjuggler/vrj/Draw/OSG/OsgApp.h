@@ -97,7 +97,7 @@ public:
    virtual void configSceneView(osgUtil::SceneView* newSceneViewer)
    {
       newSceneViewer->setDefaults();
-      newSceneViewer->setBackgroundColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
+      newSceneViewer->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
    }
 
    /**
