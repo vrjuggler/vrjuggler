@@ -8,7 +8,7 @@
 
 AC_REVISION($Revision$)
 AC_INIT(Config/vjChunkDesc.C)
-AC_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADER(vjDefines.h)
 
 # -----------------------------------------------------------------------------
 # Command-line arguments (--enable-option, --with-pkg=package_name).

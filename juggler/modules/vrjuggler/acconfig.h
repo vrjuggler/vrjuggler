@@ -1,5 +1,5 @@
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+#ifndef _VJ_DEFINES_H_
+#define _VJ_DEFINES_H_
 
 /*
  * --------------------------------------------------------------------------
@@ -69,4 +69,4 @@
 #   define sginap(x) (usleep(x * 333333))
 #endif
 
-#endif	/* _CONFIG_H_ */
+#endif	/* _VJ_DEFINES_H_ */
