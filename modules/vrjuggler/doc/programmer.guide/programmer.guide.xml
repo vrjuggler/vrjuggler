@@ -6425,6 +6425,17 @@ private:
 }</programlisting>
           </example>
 
+          <important>
+            <para>Do not use the member function
+            <methodname>vpr::GUID::generate()</methodname> to initialize the
+            type-specific GUID objects. This will result in every cluster node
+            always having a different GUID value every time the application is
+            run (because GUIDs are unique by definition). If this happens, the
+            Application Data Manager plug-in will never be able to complete
+            its initialization, and the application frame loop will not be
+            able to start on all the cluster nodes.</para>
+          </important>
+
           <para>In conjunction with this, two config elements need to be
           created. These will be used by the Application Data Manager plug-in
           to identify which cluster node will be the writer node. The
@@ -6464,6 +6475,17 @@ private:
    &lt;/elements&gt;
 &lt;/configuration&gt;</programlisting>
           </example>
+
+          <caution>
+            <para>Be very careful to ensure that the GUID strings match
+            correctly. This means matching the strings in the
+            <literal>application_data</literal> config element
+            <quote>guid</quote> property with the use in the application code.
+            If the GUID strings are not matched correctly, the Application
+            Data Manager will not be able to match the objects initialized in
+            the application object <methodname>init()</methodname>
+            method.</para>
+          </caution>
 
           <para>Now that the shared data is initialized and ready to use, we
           can write to and read from it—the Application Data Manager plug-in
@@ -6729,6 +6751,37 @@ last_frame = current_frame; // You can get the delta in microseconds from
                   they can be used to compute the time deltas between frames.
                   More details can be found in <xref
                   linkend="section.cluster.time.deltas" />.</para>
+                </answer>
+              </qandaentry>
+
+              <qandaentry>
+                <question>
+                  <para>Why does my application hang at startup on all the
+                  nodes?</para>
+                </question>
+
+                <answer>
+                  <para>When using the Start Barrier Plug-in, the application
+                  object frame loop methods
+                  (<methodname>preFrame()</methodname>,
+                  <methodname>postFrame()</methodname>,
+                  <methodname>draw()</methodname>,
+                  <methodname>getScene()</methodname>, etc.) will not be
+                  invoked until all the cluster nodes are ready to run. The
+                  <quote>ready to run</quote> determination is made by waiting
+                  for all the cluster nodes to be connected and for all the
+                  cluster plug-ins to complete their initialization. If all of
+                  the cluster nodes are running and connected, then there is
+                  probably a problem with a cluster plug-in.</para>
+
+                  <para>For example, the Application Data Manager will not
+                  initialize correctly on all nodes if the type-specific GUIDs
+                  do not match on all nodes. In this case, disabling the Start
+                  Barrier Plug-in will result in the data-local cluster node
+                  being the only one that starts correctly. All the others
+                  will fail to open any display windows. See <xref
+                  linkend="section.cluster.UserData" /> for more information
+                  on this topic.</para>
                 </answer>
               </qandaentry>
             </qandadiv>
