@@ -21,7 +21,7 @@
 # repository.
 
 # Do not do message processing of any form in the CVSROOT directory.
-#^CVSROOT echo
+^CVSROOT echo
 
 # Otherwise, run log_verify.
-#DEFAULT /cvsroot/vrjuggler/CVSROOT/log_verify
+DEFAULT /cvsroot/vrjuggler/CVSROOT/log_verify
