@@ -52,7 +52,8 @@ DIRPRFX=	cluster/Plugins/
 
 # Subdirectories to compile.
 SUBDIR=		ApplicationDataManager	\
-		RemoteInputManager
+		RemoteInputManager	\
+		SwapLockPlugin
 
 #SRCS=		ClusterManager.cpp		\
 		ClusterPlugin.cpp		\

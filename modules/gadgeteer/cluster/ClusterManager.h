@@ -61,6 +61,8 @@ public:
 
    bool isClusterReady();
 
+   void createBarrier();
+
    bool recognizeClusterManagerConfig(jccl::ConfigChunkPtr chunk);
    
    /** Add the pending chunk to the configuration.
@@ -88,6 +90,9 @@ public:
    void removePlugin(ClusterPlugin* old_manager);
    bool doesPluginExist(ClusterPlugin* old_manager);
    void sendEndBlocksAndSignalUpdate();
+
+   jccl::ConfigChunkPtr getConfigChunkPointer(std::string& name);
+   bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
 
 private:      
    /**

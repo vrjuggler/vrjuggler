@@ -48,6 +48,7 @@
 // ClusterNetwork
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
+#include <cluster/ClusterManager.h>
 
 // IO Packets
 #include <cluster/Packets/PacketFactory.h>
@@ -361,7 +362,7 @@ namespace cluster
     */
    bool RemoteInputManager::configAdd(jccl::ConfigChunkPtr chunk)
    {
-     if (recognizeRemoteDeviceConfig(chunk))
+     if (ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk))
      {
         std::string device_host = chunk->getProperty<std::string>("deviceHost");
         ClusterNode* node = cluster::ClusterNetwork::instance()->getClusterNodeByName(device_host);
@@ -412,7 +413,7 @@ namespace cluster
     */
    bool RemoteInputManager::configRemove(jccl::ConfigChunkPtr chunk)
    {
-      if (recognizeRemoteDeviceConfig(chunk))
+      if (ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk))
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[RemoteInputManager] ")
             << "Removing the Remote Device: " << chunk->getName() 
@@ -442,57 +443,8 @@ namespace cluster
     */
    bool RemoteInputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
    {
-       return( recognizeRemoteDeviceConfig(chunk) );
+       return( ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk) );
 
-   }
-
-
-// ---- Configuration Helper Functions ----   
-   bool RemoteInputManager::recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk)
-   {  
-     if ( gadget::DeviceFactory::instance()->recognizeDevice(chunk) &&  chunk->getNum("deviceHost") > 0 )
-     {
-        std::string device_host = chunk->getProperty<std::string>("deviceHost");
-        //std::cout << "Checking: " << chunk->getName() << std::endl;
-        if ( !device_host.empty() )
-        {
-           // THIS IS A HACK: find a better way to do this
-           jccl::ConfigChunkPtr device_host_ptr = getConfigChunkPointer(device_host);
-           if (device_host_ptr.get() != NULL)
-           {
-              std::string host_name = device_host_ptr->getProperty<std::string>("host_name");
-              std::string local_host_name = cluster::ClusterNetwork::instance()->getLocalHostname();
-              //std::cout << "Host Name: " << host_name << std::endl;
-              //std::cout << "Local Host Name: " << local_host_name << std::endl;
-              if (host_name != local_host_name)
-              {
-                 return(true);
-              }// Device is on the local machine
-           }// Could not find the deviceHost in the configuration
-        }// Device is not a remote device since there is no name in the deviceHost field
-     }// Else it is not a device, or does not have a deviceHost property
-     return false;
-   }
-
-   jccl::ConfigChunkPtr RemoteInputManager::getConfigChunkPointer(std::string& name)
-   {
-      jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
-      //cfg_mgr->lockPending();
-      //cfg_mgr->unlockPending();
-      for (std::list<jccl::ConfigManager::PendingChunk>::iterator i = cfg_mgr->getPendingBegin();
-           i != cfg_mgr->getPendingEnd() ; i++)
-      {
-         if ((*i).mChunk->getName() == name)
-         {
-            return((*i).mChunk);
-         }
-      }
-      cfg_mgr->lockActive();
-      jccl::ConfigChunkPtr temp = cfg_mgr->getActiveConfig()->get(name);
-      cfg_mgr->unlockActive();
-      return(temp);
-
-      //return(NULL); //HOW DO I DO THIS WITH BOOST SHARED POINTERS 
    }
 
    vpr::Uint16 RemoteInputManager::getNumberPendingDeviceRequests()

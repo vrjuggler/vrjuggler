@@ -42,7 +42,7 @@ namespace cluster
       recv(packet_head,stream);
       parse();
    }
-   SyncAck::SyncAck(std::string& host_name, vpr::Uint16& port, std::string& manager_id, bool& ack)
+   SyncAck::SyncAck(std::string& host_name, vpr::Uint16& port, std::string& manager_id, bool ack)
    {
       // Given the input, create the packet and then serialize the packet(which includes the header)
       // - Set member variables
