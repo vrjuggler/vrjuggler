@@ -243,7 +243,7 @@ public class GlobalPreferencesService
 
    private String getUserHome ()
    {
-      Object o = org.vrjuggler.tweek.ServiceRegistry.instance().getService("Environment");
+      Object o = ServiceRegistry.instance().getService("Environment");
       String path = null;
 
       if ( o != null )

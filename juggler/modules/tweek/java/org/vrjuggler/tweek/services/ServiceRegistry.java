@@ -34,7 +34,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-package org.vrjuggler.tweek;
+package org.vrjuggler.tweek.services;
 
 import java.util.HashMap;
 import java.util.Vector;
