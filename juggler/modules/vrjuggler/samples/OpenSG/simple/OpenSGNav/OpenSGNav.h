@@ -108,8 +108,6 @@ private:
 private:
    std::string mFileToLoad;      /**< Filename of the file to load */
 
-   //   mRootNode:[mSceneScale]
-   //         |
    //   mSceneRoot:[mSceneTransform]
    //         |
    //   mLightNode:[DirectionalLight]
@@ -118,7 +116,6 @@ private:
    //         |
    //     mModelRoot
    OSG::NodePtr        mRootNode;        /**< The root node of the entire tree */
-   OSG::TransformPtr   mSceneScale;      /**< Scaling of the scene */
    OSG::NodePtr        mSceneRoot;       /**< The root of the scene */
    OSG::TransformPtr   mSceneTransform;  /**< Transform core */
    OSG::NodePtr        mModelRoot;       /**< Root of the loaded model */
