@@ -48,13 +48,11 @@ private:
     VarType    type;
 
     // these are the possible storage areas.
-    struct {
-	int          intval;
-	float        floatval;
-	std::string  strval;
-	bool         boolval;
-	vjConfigChunk *embeddedchunkval;
-    } val;
+    int          intval;
+    float        floatval;
+    std::string  strval;
+    bool         boolval;
+    vjConfigChunk *embeddedchunkval;
 
     static vjVarValue* invalid_instance;
     static std::string using_invalid_msg;
@@ -174,7 +172,7 @@ public:
     //+      in a reasonable way.  ints & floats are printed as numbers,
     //+      bools as the strings "true" and "false", strings and 
     //+      chunks as their string reps, etc.
-    friend ostream& operator << (ostream& out, vjVarValue& v);
+    friend ostream& operator << (ostream& out, const vjVarValue& v);
     
 };
 

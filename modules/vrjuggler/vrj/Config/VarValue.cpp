@@ -8,73 +8,60 @@
 vjVarValue* vjVarValue::invalid_instance = NULL;
 std::string vjVarValue::using_invalid_msg = "Using T_INVALID VarValue - something's messed up";
 
-vjVarValue::vjVarValue (vjVarValue &v) {
+vjVarValue::vjVarValue (vjVarValue &v):strval("") {
+    intval = 0;
+    floatval = 0.0;
+    embeddedchunkval = NULL;
+    boolval = false;
     *this = v;
 }
 
 
-vjVarValue::vjVarValue (vjConfigChunk* ch) {
+vjVarValue::vjVarValue (vjConfigChunk* ch):strval("") {
+    intval = 0;
+    floatval = 0.0;
+    embeddedchunkval = NULL;
+    boolval = false;
     type = T_EMBEDDEDCHUNK;
-    val.embeddedchunkval = ch;
+    if (ch)
+	embeddedchunkval = new vjConfigChunk(*ch);
 }
 
 
-vjVarValue::vjVarValue ( VarType t ) {
+vjVarValue::vjVarValue ( VarType t ):strval("") {
     type = t;
-    switch (type) {
-    case T_INT:
-	val.intval = 0;
-	break;
-    case T_EMBEDDEDCHUNK:
-	val.embeddedchunkval = NULL;
-	break;
-    case T_BOOL:
-	val.boolval = false;
-	break;
-    case T_FLOAT:
-	val.floatval = 0.0;
-	break;
-    case T_STRING:
-    case T_CHUNK:
-	val.strval = "";
-	break;
-    }
+    intval = 0;
+    floatval = 0.0;
+    embeddedchunkval = NULL;
+    boolval = false;
 }
 
 
 
 vjVarValue::~vjVarValue() {
-    if ((type == T_EMBEDDEDCHUNK) && val.embeddedchunkval)
-	delete val.embeddedchunkval;
+    if (embeddedchunkval)
+	delete embeddedchunkval;
 }
 
 
 
 vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
+    if (&v == this)
+	return *this;
+
     type = v.type;
-    switch (type) {
-	case T_INVALID:
-	break;
-	case T_INT:
-	val.intval = v.val.intval;
-	break;
-	case T_FLOAT:
-	val.floatval = v.val.floatval;
-	break;
-	case T_BOOL:
-	val.boolval = v.val.boolval;
-	break;
-	case T_EMBEDDEDCHUNK:
-	val.embeddedchunkval = new vjConfigChunk (*v.val.embeddedchunkval);
-	break;
-	case T_STRING:
-	case T_CHUNK:
-	val.strval = v.val.strval;
-	break;
-	default:
-	//cout << "something's wrong with varvalue assign\n" << vjDEBUG_FLUSH;
-	break;
+
+    if (embeddedchunkval) {
+	delete embeddedchunkval;
+	embeddedchunkval = NULL;
     }
+    intval = v.intval;
+    floatval = v.floatval;
+    boolval = v.boolval;
+    strval = v.strval;
+    if (v.embeddedchunkval)
+	embeddedchunkval = new vjConfigChunk (*v.embeddedchunkval);
+
     return *this;
 }
 
@@ -86,16 +73,23 @@ bool vjVarValue::operator == (const vjVarValue& v) {
         return false;
     switch (type) {
     case T_INT:
-	return (val.intval == v.val.intval);
+	return (intval == v.intval);
     case T_FLOAT:
-	return (val.floatval == v.val.floatval);
+	return (floatval == v.floatval);
     case T_STRING:
     case T_CHUNK:
-	return (val.strval == v.val.strval);
+	return (strval == v.strval);
     case T_BOOL:
-	return (val.boolval == v.val.boolval);
+	return (boolval == v.boolval);
     case T_EMBEDDEDCHUNK:
-	return (*(val.embeddedchunkval) == *(v.val.embeddedchunkval));
+	if (embeddedchunkval) {
+	    if (v.embeddedchunkval)
+		return (*embeddedchunkval == *(v.embeddedchunkval));
+	    else
+		return false;
+	}
+	else
+	    return (!v.embeddedchunkval);
     default:
 	return false;
     }
@@ -107,11 +101,11 @@ bool vjVarValue::operator == (const vjVarValue& v) {
 vjVarValue::operator int() {
     switch (type) {
     case T_INT:
-	return val.intval;
+	return intval;
     case T_BOOL:
-	return val.boolval;
+	return boolval;
     case T_FLOAT:
-	return (int)val.floatval;
+	return (int)floatval;
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 1 
 			       << endl << vjDEBUG_FLUSH;
@@ -130,7 +124,7 @@ vjVarValue::operator vjConfigChunk*() {
     case T_EMBEDDEDCHUNK:
 	// we need to make a copy because if the value is deleted, it deletes
 	// its embeddedchunk
-	return new vjConfigChunk (*val.embeddedchunkval);
+	return new vjConfigChunk (*embeddedchunkval);
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 2 
 			       << endl << vjDEBUG_FLUSH;
@@ -145,14 +139,14 @@ vjVarValue::operator vjConfigChunk*() {
 
 vjVarValue::operator bool() {
     if ((type == T_BOOL))
-	return val.boolval;
+	return boolval;
     switch (type) {
     case T_BOOL:
-	return val.boolval;
+	return boolval;
     case T_INT:
-	return (bool)val.intval;
+	return (bool)intval;
     case T_FLOAT:
-	return (bool)val.floatval;
+	return (bool)floatval;
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 3 
 			       << endl << vjDEBUG_FLUSH;
@@ -169,11 +163,11 @@ vjVarValue::operator bool() {
 vjVarValue::operator float () {
     switch (type) {
     case T_FLOAT:
-	return val.floatval;
+	return floatval;
     case T_INT:
-	return (float)val.floatval;
+	return (float)floatval;
     case T_BOOL:
-	return (float)val.boolval;
+	return (float)boolval;
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 4 
 			       << endl << vjDEBUG_FLUSH;
@@ -190,7 +184,7 @@ char* vjVarValue::cstring () {
     switch (type) {
     case T_STRING:
     case T_CHUNK:
-	return strdup (val.strval.c_str());
+	return strdup (strval.c_str());
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 5 
 			       << endl << vjDEBUG_FLUSH;
@@ -207,7 +201,7 @@ vjVarValue::operator std::string () {
     switch (type) {
     case T_STRING:
     case T_CHUNK:
-	return val.strval;
+	return strval;
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 6 
 			       << endl << vjDEBUG_FLUSH;
@@ -223,13 +217,13 @@ vjVarValue::operator std::string () {
 vjVarValue &vjVarValue::operator = (int i) {
     switch (type) {
     case T_INT:
-	val.intval = i;
+	intval = i;
 	break;
     case T_FLOAT:
-	val.floatval = (float)i;
+	floatval = (float)i;
 	break;
     case T_BOOL:
-	val.boolval = (bool)i;
+	boolval = (bool)i;
 	break;
     default:
 	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
@@ -242,10 +236,10 @@ vjVarValue &vjVarValue::operator = (int i) {
 vjVarValue& vjVarValue::operator = (bool i) {
     switch (type) {
     case T_INT:
-	val.intval = (int)i;
+	intval = (int)i;
 	break;
     case T_BOOL:
-	val.boolval = i;
+	boolval = i;
 	break;
     default:
 	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
@@ -259,7 +253,7 @@ vjVarValue &vjVarValue::operator = (float i) {
     switch (type) {
     case T_FLOAT:
     case T_DISTANCE:
-	val.floatval = i;
+	floatval = i;
 	break;
     default:
 	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
@@ -273,7 +267,7 @@ vjVarValue &vjVarValue::operator = (std::string s) {
     switch (type) {
     case T_STRING:
     case T_CHUNK:
-	val.strval = s;
+	strval = s;
 	break;
     default:
 	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
@@ -287,7 +281,7 @@ vjVarValue &vjVarValue::operator = (char *s) {
     switch (type) {
     case T_STRING:
     case T_CHUNK:
-	val.strval = s;
+	strval = s;
 	break;
     default:
 	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
@@ -299,12 +293,12 @@ vjVarValue &vjVarValue::operator = (char *s) {
 vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
     switch (type) {
     case T_EMBEDDEDCHUNK:
-	if (val.embeddedchunkval)
-	    delete val.embeddedchunkval;
+	if (embeddedchunkval)
+	    delete embeddedchunkval;
 	if (s)
-	    val.embeddedchunkval = new vjConfigChunk (*s);
+	    embeddedchunkval = new vjConfigChunk (*s);
 	else
-	    val.embeddedchunkval = NULL;
+	    embeddedchunkval = NULL;
 	break;
     default:
 	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
@@ -314,27 +308,27 @@ vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
 
 
 
-ostream& operator << (ostream& out, vjVarValue& v) {
+ostream& operator << (ostream& out, const vjVarValue& v) {
     //      vjDEBUG(vjDBG_ERROR,0) << "in << func" <<flush;
 
     switch (v.type) {
     case T_INT:
-	out << v.val.intval;
+	out << v.intval;
 	return out;
     case T_FLOAT:
     case T_DISTANCE:
-	out << v.val.floatval;
+	out << v.floatval;
 	return out;
     case T_BOOL:
-	out << ((v.val.boolval)?"true":"false");
+	out << ((v.boolval)?"true":"false");
 	return out;
     case T_STRING:
     case T_CHUNK:
-	out << v.val.strval;
+	out << v.strval;
 	return out;
     case T_EMBEDDEDCHUNK:
-	if (v.val.embeddedchunkval)
-	    out << *(v.val.embeddedchunkval);
+	if (v.embeddedchunkval)
+	    out << *(v.embeddedchunkval);
 	return out;
     default:
 	out << "[can't print value for type " << v.type << " ]";
