@@ -6,42 +6,40 @@
 #include <config.h>
 #define LOCK_DEBUG_STREAM
 
-#ifdef VJ_DEBUG
-   #define vjDEBUG(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val)
-   #define vjDEBUG_BEGIN(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, 1)
-   #define vjDEBUG_END(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, -1)
-#else
-   #define vjDEBUG(val) if (1) ; else cout
-   #define vjDEBUG_BEGIN(val) if (1) ; else cout
-   #define vjDEBUG_END(val) if (1) ; else cout
-#endif
-
-#ifdef LOCK_DEBUG_STREAM
-   #define vjDEBUG_STREAM_LOCK vjStreamLock(vjDebug::instance()->debugLock())
-   #define vjDEBUG_STREAM_UNLOCK vjStreamUnLock(vjDebug::instance()->debugLock())
-   #define vjDEBUG_FLUSH vjDEBUG_STREAM_UNLOCK << flush
-#else
-   #define vjDEBUG_STREAM_LOCK flush
-   #define vjDEBUG_STREAM_UNLOCK flush
-   #define vjDEBUG_FLUSH flush
-#endif
-
-// -- ASSERT -- //
-#ifdef VJ_DEBUG
-   #define vjASSERT(val) assert((val))
-#else
-   #define vjASSERT(val) ((void)0)
-#endif
-
 // --------------- //
 // --- Headers --- //
 // --------------- //
 #include <iostream.h>
 #include <iomanip.h>
-
 #include <stdlib.h>
-
 #include <assert.h>
+
+#ifdef VJ_DEBUG
+#   define vjDEBUG(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val)
+#   define vjDEBUG_BEGIN(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, 1)
+#   define vjDEBUG_END(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, -1)
+#else
+#   define vjDEBUG(val) if (1) ; else cout
+#   define vjDEBUG_BEGIN(val) if (1) ; else cout
+#   define vjDEBUG_END(val) if (1) ; else cout
+#endif
+
+#ifdef LOCK_DEBUG_STREAM
+#   define vjDEBUG_STREAM_LOCK vjStreamLock(vjDebug::instance()->debugLock())
+#   define vjDEBUG_STREAM_UNLOCK vjStreamUnLock(vjDebug::instance()->debugLock())
+#   define vjDEBUG_FLUSH vjDEBUG_STREAM_UNLOCK << flush
+#else
+#   define vjDEBUG_STREAM_LOCK flush
+#   define vjDEBUG_STREAM_UNLOCK flush
+#   define vjDEBUG_FLUSH flush
+#endif
+
+// -- ASSERT -- //
+#ifdef VJ_DEBUG
+#   define vjASSERT(val) assert((val))
+#else
+#   define vjASSERT(val) ((void)0)
+#endif
 
 #include <Sync/vjMutex.h>
 #include <Threads/vjThread.h>
