@@ -425,13 +425,6 @@ AC_CONFIG_FILES([
    cluster/Makefile
    cluster/ClusterNetwork/Makefile
    cluster/Packets/Makefile
-   cluster/Plugins/Makefile
-   cluster/Plugins/plugin.defs.mk
-   cluster/Plugins/ApplicationDataManager/Makefile
-   cluster/Plugins/RemoteInputManager/Makefile
-   cluster/Plugins/StartBarrierPlugin/Makefile
-   cluster/Plugins/SwapLockTCPPlugin/Makefile
-   cluster/Plugins/SwapLockWiredPlugin/Makefile
    gadget/Makefile
    gadget/Devices/Makefile
    gadget/Devices/EventWindow/Makefile
