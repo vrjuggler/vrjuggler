@@ -35,7 +35,7 @@
 package VjControl;
 
 import java.io.*;
-import java.util.Vector;
+import java.util.*;
 
 
 /** File utility functions.
@@ -47,22 +47,38 @@ import java.util.Vector;
  */
 public class FileControl {
 
-    private String vjbasedir;
-    private String homedir;
-    private String vjsharedir;
+//     private String vjbasedir;
+//     private String homedir;
+//     private String vjsharedir;
+
+    Map env_vars; 
 
     public FileControl () {
-        homedir = System.getProperty ("user.home");
+        env_vars = Collections.synchronizedMap(new HashMap());
+        String homedir = System.getProperty ("user.home");
         if (homedir == null)
             homedir = ".";
-        vjbasedir = System.getProperty ("VJ_BASE_DIR");
-        if (vjbasedir == null)
-            vjbasedir = ".";
-        vjsharedir = System.getProperty ("VJ_SHARE_DIR");
-        if (vjsharedir == null)
-            vjsharedir = vjbasedir + "/share";
+        env_vars.put ("HOME", homedir);
+
+//         vjbasedir = System.getProperty ("VJ_BASE_DIR");
+//         if (vjbasedir == null)
+//             vjbasedir = ".";
+//         vjsharedir = System.getProperty ("VJ_SHARE_DIR");
+//         if (vjsharedir == null)
+//             vjsharedir = vjbasedir + "/share";
     }
 
+
+    String getEnvVar (String name) {
+        String val = (String)env_vars.get (name);
+        if (val == null) {
+            val = System.getProperty (name);
+            if (val == null)
+                val = "";
+            env_vars.put (name, val);
+        }
+        return val;
+    }
 
 
     /** Performs substitution on file name strings.
@@ -74,35 +90,42 @@ public class FileControl {
 	// replace "HOME" and "VJ_BASE_DIR" in the string buffer w/
 	// proper values i hope..........
 
-// 	if (vjbasedir == null) {
-// 	    homedir = System.getProperty ("user.home");
-// 	    if (homedir == null)
-// 		homedir = ".";
-// 	    vjbasedir = System.getProperty ("VJ_BASE_DIR");
-// 	    if (vjbasedir == null)
-// 		vjbasedir = ".";
-// 	    vjsharedir = System.getProperty ("VJ_SHARE_DIR");
-// 	    if (vjsharedir == null)
-// 		vjsharedir = ".";
-// 	}
 
 	if (s == null)
 	    return "";
 
-	if (s.startsWith ("$VJ_BASE_DIR"))
-	    s = vjbasedir + s.substring (12);
-	else if (s.startsWith ("VJ_BASE_DIR"))
-	    s = vjbasedir + s.substring (11);
-	else if (s.startsWith ("$HOME"))
-	    s = homedir + s.substring (5);
-	else if (s.startsWith ("HOME"))
-	    s = homedir + s.substring (4);
-	else if (s.startsWith ("$VJ_SHARE_DIR"))
-	    s = vjsharedir + s.substring (13);
-	else if (s.startsWith ("VJ_SHARE_DIR"))
-	    s = vjsharedir + s.substring (12);
+        if (s.startsWith ("${")) {
+            int i = s.indexOf ("}");
+            if (i != -1) {
+                String var_name = s.substring (2, i);
+                s = getEnvVar (var_name) + s.substring (i+1);
+            }
+        }
+        else if (s.startsWith ("$")) {
+            // variable of form $VARNAME/whatever
+            int i = s.indexOf ("/");
+            if (i != -1) {
+                String var_name = s.substring (1, i);
+                s = getEnvVar (var_name) + s.substring (i);
+            }
+            else
+                s = getEnvVar (s.substring(1));
+        }
 
-	//System.out.println ("stringReplacement: '" + s + "'");
+// 	if (s.startsWith ("$VJ_BASE_DIR"))
+// 	    s = vjbasedir + s.substring (12);
+// 	else if (s.startsWith ("VJ_BASE_DIR"))
+// 	    s = vjbasedir + s.substring (11);
+// 	else if (s.startsWith ("$HOME"))
+// 	    s = homedir + s.substring (5);
+// 	else if (s.startsWith ("HOME"))
+// 	    s = homedir + s.substring (4);
+// 	else if (s.startsWith ("$VJ_SHARE_DIR"))
+// 	    s = vjsharedir + s.substring (13);
+// 	else if (s.startsWith ("VJ_SHARE_DIR"))
+// 	    s = vjsharedir + s.substring (12);
+
+	System.out.println ("stringReplacement: '" + s + "'");
 	return s;
     }
 

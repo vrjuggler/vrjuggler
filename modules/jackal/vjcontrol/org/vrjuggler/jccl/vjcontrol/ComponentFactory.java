@@ -36,6 +36,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
+import java.beans.Beans;
 
 import VjConfig.*;
 import VjControl.VjComponent;
@@ -250,22 +251,35 @@ public class ComponentFactory {
      *          error occurred.
      */
     public VjComponent createComponent (String class_name) {
-        VjComponent c = null;
 
         try {
-            CEntry ce = (CEntry)registered_classes.get(class_name);
-            if (ce != null) {
-                c = ce.createNewComponent();//(VjComponent)ce.class_obj.newInstance();
-            }
-            else
-                Core.consoleErrorMessage ("Create Component", "No Registration for class " + class_name);
+            Object o = Beans.instantiate (loader, class_name);
+            return (VjComponent)Beans.getInstanceOf (o, VjControl.VjComponent.class);
         }
         catch (Exception e) {
             Core.consoleErrorMessage ("CreateComponent", "Failed: " + e.toString());
             e.printStackTrace();
+            return null;
         }
-        return c;
     }
+
+
+//         VjComponent c = null;
+
+//         try {
+//             CEntry ce = (CEntry)registered_classes.get(class_name);
+//             if (ce != null) {
+//                 c = ce.createNewComponent();//(VjComponent)ce.class_obj.newInstance();
+//             }
+//             else
+//                 Core.consoleErrorMessage ("Create Component", "No Registration for class " + class_name);
+//         }
+//         catch (Exception e) {
+//             Core.consoleErrorMessage ("CreateComponent", "Failed: " + e.toString());
+//             e.printStackTrace();
+//         }
+//         return c;
+//     }
 
 
 
