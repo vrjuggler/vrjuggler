@@ -5,9 +5,11 @@
 
 default: all
 
-# Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
-# '_clean' target to be run besides the standard 'clean' target.
+# Define ${_LOCAL_CLEAN} and ${_LOCAL_CLEANDEP} to inform the shared 'clean'
+# target and shared 'cleandepend' target that there are local '_clean' and
+# '_cleandepend' targets to be run besides the standard targets.
 _LOCAL_CLEAN	= 1
+_LOCAL_CLEANDEP	= 1
 
 # Include common definitions.
 include @topdir@/Makefile.base
@@ -34,7 +36,7 @@ include ${MKPATH}/vj.rec.mk
 # -----------------------------------------------------------------------------
 all: dbg opt dso ddso
 
-dbg opt dso ddso obj depend newdepend install:
+dbg opt dso ddso obj install:
 	@${MAKE} RECTARGET="$@" OPTIMIZER="${OPTIMIZER}"		\
             BASE_OBJDIR="${BASE_OBJDIR}" recursive
 
@@ -44,3 +46,6 @@ dbg opt dso ddso obj depend newdepend install:
 _clean:
 	@${MAKE} RECTARGET="clean" OPTIMIZER="${OPTIMIZER}"	\
             DIRPRFX="Input/" OBJDIR="${OBJDIR}" recursive
+
+_cleandepend:
+	@${MAKE} DO_CLEANDEPEND=1 RECTARGET="cleandepend" recursive
