@@ -182,9 +182,7 @@ public class TweekCore
          }
       }
 
-
-
-      m_gui = new TweekFrame(mMsgDocument);
+      m_gui = new TweekFrame(messageDocument);
 
       // Now we need to register the TweekFrame instance as a listener for
       // BeanFocusChangeEvents.
@@ -200,17 +198,18 @@ public class TweekCore
       // Now select the default bean if necessary
       if (defaultBean != null)
       {
-         mMsgDocument.printStatusnl("Trying to focus default bean: " + defaultBean);
+         messageDocument.printStatusnl("Trying to focus default bean: " +
+                                       defaultBean);
          TweekBean bean = BeanRegistry.instance().getBean(defaultBean);
 
          // Valid the bean registered under the default bean's name
          if (bean == null)
          {
-            mMsgDocument.printWarningnl("WARNING: Default Bean doesn't exist");
+            messageDocument.printWarningnl("WARNING: Default Bean doesn't exist");
          }
          else if (! (bean instanceof PanelBean))
          {
-            mMsgDocument.printWarningnl("WARNING: Default Bean is not a Panel Bean");
+            messageDocument.printWarningnl("WARNING: Default Bean is not a Panel Bean");
          }
          else
          {
@@ -336,9 +335,9 @@ public class TweekCore
          }
          catch(BeanInstantiationException e)
          {
-            mMsgDocument.printWarningnl("WARNING: Failed to instantiate Bean'" +
-                                       bean.getName() + "': " +
-                                       e.getMessage());
+            messageDocument.printWarningnl("WARNING: Failed to instantiate Bean '" +
+                                           bean.getName() + "': " +
+                                           e.getMessage());
          }
          catch(RuntimeException ex)
          {
@@ -361,6 +360,17 @@ public class TweekCore
    public String getDefaultBean()
    {
       return defaultBean;
+   }
+
+   /**
+    * Gets the message document used for displaying run-time informational
+    * messages in the Tweek Java GUI.
+    *
+    * @since 0.92.2
+    */
+   public MessageDocument getMessageDocument()
+   {
+      return messageDocument;
    }
 
    /**
@@ -499,8 +509,8 @@ public class TweekCore
       }
       catch (Exception e)
       {
-         this.mMsgDocument.printWarningnl("Failed to set look and feel to " +
-                                          prefs.getLookAndFeel());
+         messageDocument.printWarningnl("Failed to set look and feel to " +
+                                        prefs.getLookAndFeel());
       }
    }
 
@@ -521,7 +531,7 @@ public class TweekCore
    private boolean mValidateXML = false;
    private List    mBeanDirs    = new ArrayList();
 
-   private MessageDocument mMsgDocument = new MessageDocument();
+   private MessageDocument messageDocument = new MessageDocument();
    private TweekFrame m_gui = null;
 
    private BeanTreeModel panelTreeModel =
