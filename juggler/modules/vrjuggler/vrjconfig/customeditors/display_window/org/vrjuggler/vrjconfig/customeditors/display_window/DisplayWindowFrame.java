@@ -40,7 +40,6 @@ import org.vrjuggler.jccl.config.ConfigElement;
 
 public class DisplayWindowFrame extends JInternalFrame
 {
-   private static String mBaseResourcePath;
    private static Cursor mInverseCursor;
 
    /**
@@ -50,11 +49,10 @@ public class DisplayWindowFrame extends JInternalFrame
     */
    static
    {
-      mBaseResourcePath = "org/vrjuggler/vrjconfig/customeditors/display_window";
       Toolkit tk = Toolkit.getDefaultToolkit();
       ClassLoader loader = DisplayWindowFrame.class.getClassLoader();
       Image cursor_img =
-         new ImageIcon(loader.getResource(mBaseResourcePath + "/images/inverse-cursor.png")).getImage();
+         new ImageIcon(loader.getResource(EditorConstants.imageBase + "/inverse-cursor.png")).getImage();
       mInverseCursor = tk.createCustomCursor(cursor_img, new Point(8, 6),
                                              "inverse");
    }
@@ -72,6 +70,9 @@ public class DisplayWindowFrame extends JInternalFrame
       {
          jbInit();
          placeMyself();
+
+//         mViewportEditor = new ViewportPlacer(this.getSize(), mElement);
+//         mMainPanel.add(mViewportEditor, BorderLayout.CENTER);
 
          boolean active = ((Boolean) mElement.getProperty("active", 0)).booleanValue();
          mActiveItem.setSelected(active);
@@ -162,6 +163,7 @@ public class DisplayWindowFrame extends JInternalFrame
       mEventSrcItem.addActionListener(new DisplayWindowFrame_mEventSrcItem_actionAdapter(this));
       this.addMouseMotionListener(new DisplayWindowFrame_this_mouseMotionAdapter(this));
       this.addComponentListener(new DisplayWindowFrame_this_componentAdapter(this));
+      mMainPanel.setLayout(mMainPanelLayout);
       mContextMenu.add(mActiveItem);
       mContextMenu.add(mBorderItem);
       mContextMenu.add(mPointerItem);
@@ -214,6 +216,7 @@ public class DisplayWindowFrame extends JInternalFrame
    private ConfigElement mElement = null;
    private boolean mHideMouse = false;
    private boolean mMousePressed = false;
+//   private ViewportPlacer mViewportEditor = null;
 
    private JPopupMenu mContextMenu = new JPopupMenu();
    private JCheckBoxMenuItem mActiveItem = new JCheckBoxMenuItem();
@@ -222,6 +225,7 @@ public class DisplayWindowFrame extends JInternalFrame
    private JCheckBoxMenuItem mStereoItem = new JCheckBoxMenuItem();
    private JCheckBoxMenuItem mEventSrcItem = new JCheckBoxMenuItem();
    private JPanel mMainPanel = new JPanel();
+   private BorderLayout mMainPanelLayout = new BorderLayout();
 
    void this_mouseEntered(MouseEvent e)
    {

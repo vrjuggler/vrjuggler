@@ -47,10 +47,12 @@ import javax.swing.border.*;
 public class DisplayWindowStartDialog
    extends JDialog
 {
-   public DisplayWindowStartDialog(Frame owner, Dimension resolution)
+   public DisplayWindowStartDialog(Dimension resolution)
       throws HeadlessException
    {
-      super(owner, "Basic Display Window Parameters", true);
+      super();
+      this.setTitle("Basic Display Window Parameters");
+      this.setModal(true);
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
       mResolution = resolution;
