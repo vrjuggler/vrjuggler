@@ -35,6 +35,8 @@ EXTRA_LDFLAGS=	$(UTIL_LIB) @CLI_LDFLAGS@ @CLI_LIBS@ @VRJ_LIBS_CC@	\
 		$(NULL)
 MOD_NAME=	vrj
 
+DLL_DEPS=	$(topdir)/lib/@LIB_PREFIX@vrjnet_util.@STATICLIB_EXT@
+
 SRCS=		vrj_App.cpp		\
 		vrj_GlApp.cpp		\
 		vrj_Kernel.cpp		\
