@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -46,7 +46,7 @@
 #define AUDIOJUGGLER_ENDIAN_FUNCS
 
 
-namespace ajEndian
+namespace snxEndian
 {
    //: Swap the bytes in any data type.
    // Motorola and Intel store their bytes in reversed formats <BR>
@@ -93,7 +93,7 @@ namespace ajEndian
    //: check the system for endianess
    inline bool isBig()
    {
-      return !ajEndian::isLittle();
+      return !snxEndian::isLittle();
    }   
 
 }; // end namespace.

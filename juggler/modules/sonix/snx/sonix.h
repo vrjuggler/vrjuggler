@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -47,25 +47,25 @@
 #ifndef AUDIOJUGGLER_H
 #define AUDIOJUGGLER_H
 #include <string>
-#include "aj/SoundInfo.h"
-#include "aj/IAudioJuggler.h"
-#include "aj/SoundFactory.h"
-#include "aj/SoundImplementation.h"
-#include "aj/SoundAPIInfo.h"
-#include "aj/Singleton.h"
+#include "snx/SoundInfo.h"
+#include "snx/Isonix.h"
+#include "snx/SoundFactory.h"
+#include "snx/SoundImplementation.h"
+#include "snx/SoundAPIInfo.h"
+#include "snx/Singleton.h"
 
-class AudioJuggler : public IAudioJuggler, public aj::Singleton<AudioJuggler>
+class sonix : public Isonix, public snx::Singleton<sonix>
 {
 protected:
-   friend class aj::Singleton<AudioJuggler>;
+   friend class snx::Singleton<sonix>;
 
    //: default constructor
-   AudioJuggler() : IAudioJuggler(), mImplementation( NULL )
+   sonix() : ISonix(), mImplementation( NULL )
    {
    }
 
    //: virtual destructor
-   virtual ~AudioJuggler()
+   virtual ~sonix()
    {
       // release the implementation
       if (mImplementation != NULL)
@@ -177,7 +177,7 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const aj::Matrix44& mat )
+   virtual void setListenerPosition( const snx::Matrix44& mat )
    {
       this->impl().setListenerPosition( mat );
    }
@@ -185,7 +185,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( aj::Matrix44& mat )
+   virtual void getListenerPosition( snx::Matrix44& mat )
    {
       this->impl().getListenerPosition( mat );
    }
@@ -202,13 +202,13 @@ public:
     */
    virtual void changeAPI( const std::string& apiName )
    {
-      aj::SoundImplementation& oldImpl = this->impl();
+      snx::SoundImplementation& oldImpl = this->impl();
       assert( &oldImpl != NULL && "this->impl() should ensure that oldImpl is non-NULL" );
       
       std::cout<<"NOTIFY: Changing API from "<<oldImpl.name();
       
       // change the current api to the newly requested one.
-      aj::SoundFactory::instance().createImplementation( apiName, mImplementation );
+      snx::SoundFactory::instance().createImplementation( apiName, mImplementation );
 
       std::cout<<" to "<<mImplementation->name()<<".\n"<<std::flush;
       
@@ -235,7 +235,7 @@ public:
    /*
     * configure the sound API global settings
     */
-   virtual void configure( const aj::SoundAPIInfo& sai )
+   virtual void configure( const snx::SoundAPIInfo& sai )
    {
       this->impl().configure( sai );
    }   
@@ -248,7 +248,7 @@ public:
      * @postconditions alias will point to loaded sound data
      * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
      */
-   virtual void configure( const std::string& alias, const aj::SoundInfo& description )
+   virtual void configure( const std::string& alias, const snx::SoundInfo& description )
    {
       this->impl().configure( alias, description );
    }   
@@ -272,11 +272,11 @@ public:
    }
    
 protected:
-   aj::SoundImplementation& impl()
+   snx::SoundImplementation& impl()
    {
       if (mImplementation == NULL)
       {
-         aj::SoundFactory::instance().createImplementation( "stub", mImplementation );
+         snx::SoundFactory::instance().createImplementation( "stub", mImplementation );
          mImplementation->startAPI();
          mImplementation->bindAll();
       }
@@ -284,18 +284,18 @@ protected:
    }
 private:
    /** @link dependency */
-   /*#  aj::SoundFactory lnkSoundFactory; */
+   /*#  snx::SoundFactory lnkSoundFactory; */
 
    /** @link aggregation 
     * @clientCardinality 1
     * @supplierCardinality 1*/
-   aj::SoundImplementation* mImplementation;
+   snx::SoundImplementation* mImplementation;
         
-   /** AudioJuggler API includes objects of this type
+   /** sonix API includes objects of this type
     * @link dependency */
-   /*#  aj::SoundInfo lnkSoundInfo; */
+   /*#  snx::SoundInfo lnkSoundInfo; */
 
    /** @link dependency */
-   /*#  aj::SoundAPIInfo lnkaj::SoundAPIInfo; */
+   /*#  snx::SoundAPIInfo lnksnx::SoundAPIInfo; */
 };
 #endif //AUDIOJUGGLER_H

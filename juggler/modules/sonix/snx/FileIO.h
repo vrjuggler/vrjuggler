@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -80,9 +80,9 @@
 #include <fstream.h>
 #include <stdio.h> // for FILE
 
-#include "aj/Endian.h" //needed for ajEndian::isBig, ajEndian::isLittle funcs
+#include "snx/Endian.h" //needed for snxEndian::isBig, snxEndian::isLittle funcs
 
-namespace ajFileIO
+namespace snxFileIO
 {
 	//: true - 
 	inline bool fileExists( const char* const name )
@@ -164,10 +164,10 @@ namespace ajFileIO
 		int size = ::fread( &data, sizeof(typeT), 1, fp );
 
 		// if we're not on a little endian machine (intel is little endian) then reverse the bytes.
-		if (fileByteOrdering == ajFileIO::LITTLE && ajEndian::isBig() ||
-         fileByteOrdering == ajFileIO::BIG && ajEndian::isLittle())
+		if (fileByteOrdering == snxFileIO::LITTLE && snxEndian::isBig() ||
+         fileByteOrdering == snxFileIO::BIG && snxEndian::isLittle())
       {
-         ajEndian::byteReverse( data );
+         snxEndian::byteReverse( data );
 		}
 
 		return size;
@@ -182,10 +182,10 @@ namespace ajFileIO
 
 		// if we're not on a little endian machine (i.e. intel is little endian, mips is big) 
       // then reverse the bytes.
-		if (fileByteOrdering == LITTLE && ajEndian::isBig() ||
-         fileByteOrdering == BIG && ajEndian::isLittle())
+		if (fileByteOrdering == LITTLE && snxEndian::isBig() ||
+         fileByteOrdering == BIG && snxEndian::isLittle())
       {
-			ajEndian::byteReverse( tempData );
+			snxEndian::byteReverse( tempData );
 		}
 			
 		int size = ::fwrite( &tempData, 1, sizeof(typeT), fp );

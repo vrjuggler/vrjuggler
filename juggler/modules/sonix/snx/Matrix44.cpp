@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -43,10 +43,10 @@
 
 
 
-#include "aj/Math.h"
-#include "aj/Matrix44.h"
+#include "snx/Math.h"
+#include "snx/Matrix44.h"
 
-namespace aj
+namespace snx
 {
 
 //: Default Constructor
@@ -146,7 +146,7 @@ bool Matrix44::invertFull( const Matrix44& mat )
                   for (j = 0; j < n; j++ )
                   {
                         if (col[ j] )        continue;
-                        tmpmData = ajMath::abs( m[ i][ j]);
+                        tmpmData = snxMath::abs( m[ i][ j]);
                         if (tmpmData > maxmData)
                         {
                               maxmData = tmpmData;
@@ -159,7 +159,7 @@ bool Matrix44::invertFull( const Matrix44& mat )
             pivot = m[ r[ k] ][ c[ k] ];
 
 
-            if (ajMath::abs( pivot) <= 1e-20)
+            if (snxMath::abs( pivot) <= 1e-20)
             {
                   //cerr << "*** pivot = %f in mat_inv. ***\n";
                   //exit( 0);
@@ -208,10 +208,10 @@ void Matrix44::getEulerXYZ( float& xRot, float& yRot, float& zRot ) const
 {
    float cz;
 
-   zRot = ajMath::atan2(-mData[4], mData[0]);     // -(-cy*sz)/(cy*cz) - cy falls out
-   xRot = ajMath::atan2(-mData[9], mData[10]);     // -(sx*cy)/(cx*cy) - cy falls out
-   cz   = ajMath::cos( zRot );
-   yRot = ajMath::atan2(mData[8], mData[0]/cz);   // (sy)/((cy*cz)/cz)
+   zRot = snxMath::atan2(-mData[4], mData[0]);     // -(-cy*sz)/(cy*cz) - cy falls out
+   xRot = snxMath::atan2(-mData[9], mData[10]);     // -(sx*cy)/(cx*cy) - cy falls out
+   cz   = snxMath::cos( zRot );
+   yRot = snxMath::atan2(mData[8], mData[0]/cz);   // (sy)/((cy*cz)/cz)
 }   
 
 // takes angles in radians..
@@ -219,18 +219,18 @@ void Matrix44::getEulerZYX(  float& zRot, float& yRot, float& xRot ) const
 {
    float sx;
 
-   zRot = ajMath::atan2( mData[1], mData[0]);      // (cy*sz)/(cy*cz) - cy falls out
-   xRot = ajMath::atan2( mData[6], mData[10]);      // (sx*cy)/(cx*cy) - cy falls out
-   sx   = ajMath::sin( xRot );
-   yRot = ajMath::atan2( -mData[2],(mData[6]/sx) );   // -(-sy)/((sx*cy)/sx)
+   zRot = snxMath::atan2( mData[1], mData[0]);      // (cy*sz)/(cy*cz) - cy falls out
+   xRot = snxMath::atan2( mData[6], mData[10]);      // (sx*cy)/(cx*cy) - cy falls out
+   sx   = snxMath::sin( xRot );
+   yRot = snxMath::atan2( -mData[2],(mData[6]/sx) );   // -(-sy)/((sx*cy)/sx)
 }  
 
 // takes angles in radians..
 void Matrix44::makeEulerXYZ( const float& xRot, const float& yRot, const float& zRot )
 {
-   float sx = ajMath::sin( xRot );  float cx = ajMath::cos( xRot );
-   float sy = ajMath::sin( yRot );  float cy = ajMath::cos( yRot );
-   float sz = ajMath::sin( zRot );  float cz = ajMath::cos( zRot );
+   float sx = snxMath::sin( xRot );  float cx = snxMath::cos( xRot );
+   float sy = snxMath::sin( yRot );  float cy = snxMath::cos( yRot );
+   float sz = snxMath::sin( zRot );  float cz = snxMath::cos( zRot );
 
    // Derived by multiplying the matrices by hand
    // X*Y*Z
@@ -243,9 +243,9 @@ void Matrix44::makeEulerXYZ( const float& xRot, const float& yRot, const float& 
 // takes angles in radians..
 void Matrix44::makeEulerZYX( const float& zRot, const float& yRot, const float& xRot )
 {
-   float sz = ajMath::sin( zRot);  float cz = ajMath::cos( zRot );
-   float sy = ajMath::sin( yRot);  float cy = ajMath::cos( yRot );
-   float sx = ajMath::sin( xRot);  float cx = ajMath::cos( xRot );
+   float sz = snxMath::sin( zRot);  float cz = snxMath::cos( zRot );
+   float sy = snxMath::sin( yRot);  float cy = snxMath::cos( yRot );
+   float sx = snxMath::sin( xRot);  float cx = snxMath::cos( xRot );
 
    // Derived by multiplying the matrices by hand
    // Z*Y*Z
@@ -326,8 +326,8 @@ void Matrix44::postMult( const Matrix44& mat )
 // NOTE: this erases any translation in this matrix
 void Matrix44::makeRot( const float& rad, const float& x, const float& y, const float& z )
 {
-   float cosine = ajMath::cos( rad );
-   float sine = ajMath::sin( rad );
+   float cosine = snxMath::cos( rad );
+   float sine = snxMath::sin( rad );
    float one_minus_cosine = 1 - cosine;
 
    // rotation part   

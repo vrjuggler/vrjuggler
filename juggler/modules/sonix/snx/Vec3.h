@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -46,9 +46,9 @@
 #ifndef VEC3__INCLUDED
 #define VEC3__INCLUDED
 
-#include "aj/Math.h"
+#include "snx/Math.h"
 
-namespace aj
+namespace snx
 {
 
 class Vec3
@@ -155,10 +155,10 @@ inline float Vec3::lengthSquared() const
           mData[2] * mData[2];
 }
 
-//  Return the length. (ajMath::SQRT of dot product)
+//  Return the length. (snxMath::SQRT of dot product)
 inline float Vec3::length() const
 {
-   return ajMath::sqrt( this->lengthSquared() );
+   return snxMath::sqrt( this->lengthSquared() );
 }
 
 //  Normalize
