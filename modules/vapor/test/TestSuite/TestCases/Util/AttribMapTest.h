@@ -36,7 +36,7 @@ public:
    template<typename TYPE>
    void testFundamentalGetSet()
    {
-      TYPE test_val, ret_val, default_val;
+      TYPE test_val, ret_val; //, default_val;
       test_val = (TYPE)12.2175f;
 
       vpr::AttributeMapBase  attrib_map;
