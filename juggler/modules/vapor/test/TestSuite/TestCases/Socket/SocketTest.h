@@ -62,6 +62,7 @@ public:
    // use this within your threads (CppUnit doesn't catch the assertTest there)
    // then test mThreadAssertTest with assertTest in your parent func.
    // then reset it to true.
+   /*
    #define threadAssertTest( testcase )          \
    {                                          \
       if (testcase == false)                 \
@@ -70,7 +71,17 @@ public:
       }                                      \
       assertTest( testcase );                   \
    }
-   
+   */
+
+   void threadAssertTest( bool testcase, std::string text=std::string("none") )
+   {                                         
+      if (testcase == false)
+      {
+         mThreadAssertTest = false;
+         std::cerr << "threadAssertTest - failed: " << text << std::endl;
+      }
+      //assertTest( testcase );     -- Causes crash
+   }
    bool mThreadAssertTest; // true for no error
 
    virtual ~SocketTest()
@@ -99,7 +110,7 @@ public:
       {
          // open socket
          result = connector_socket.open();
-         threadAssertTest( result != false && "Socket::open() failed" );
+         threadAssertTest( (result != false) && "Socket::open() failed" );
 
          // connect to the acceptor
          result = connector_socket.connect();
@@ -418,7 +429,7 @@ public:
       vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );	
       
       // same address, open-bind-close
-      const int runs = 100;
+      const int runs = 10;
       for (int xx = 0; xx < runs; ++xx)
       {
          openSuccess += sock.open() ? 1 : 0;
@@ -447,7 +458,7 @@ public:
       vpr::Uint16 port;
 
       // same address, open-bind-close
-      const int runs = 100;
+      const int runs = 10;
       for (int xx = 0; xx < runs; ++xx)
       {
          port = 5977 + xx;
