@@ -1306,7 +1306,7 @@ if test "x${_with_sl}" != "xno" ; then
         _vjsave_LIBS="$LIBS"
 
         CPPFLAGS="$CPPFLAGS -I${_with_sl}/include/sl"
-        LDFLAGS="$LDFLAGS -L${_with_sl}/lib/sl"
+        LDFLAGS="$LDFLAGS -L${_with_sl}/lib"
         LIBS="$LIBS -lsl -laudio -lm"
 
         AC_CACHE_CHECK(for slScheduler::getCurrent in -lsl,
@@ -1324,7 +1324,7 @@ if test "x${_with_sl}" != "xno" ; then
 
         if test "$SL" = "Y" ; then
             SL_INC="-I${_with_sl}/include/sl"
-            SL_LIB="-L${_with_sl}/lib/sl"
+            SL_LIB="-L${_with_sl}/lib"
         fi
 
         AC_LANG_RESTORE
