@@ -120,6 +120,8 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
       }
       catch (CORBA::ORB::InvalidName& ex)
       {
+         boost::ignore_unused_variable_warning(ex);
+
          // This should not happen!
          vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
             << "NameService name invalid in CorbaService::init!\n"
@@ -167,6 +169,8 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
    }
    catch (omniORB::fatalException& fe)
    {
+      boost::ignore_unused_variable_warning(fe);
+
       status.setCode(vpr::ReturnStatus::Fail);
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught omniORB::fatalException:\n" << vprDEBUG_FLUSH;
@@ -244,11 +248,11 @@ PortableServer::ObjectId_var CorbaService::registerObject(PortableServer::Servan
    }
    catch (PortableServer::POA::ServantAlreadyActive& activeEx)
    {
-
+      boost::ignore_unused_variable_warning(activeEx);
    }
    catch (PortableServer::POA::WrongPolicy& policyEx)
    {
-
+      boost::ignore_unused_variable_warning(policyEx);
    }
 
    return obj_id;
@@ -265,16 +269,17 @@ void CorbaService::unregisterObject(PortableServer::ObjectId_var id)
       }
       catch (PortableServer::POA::ObjectNotActive& activeEx)
       {
+         boost::ignore_unused_variable_warning(activeEx);
          vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
             << "CorbaService::unregisterObject: Tried to deactivate an inactive object\n"
             << vprDEBUG_FLUSH;
       }
       catch (PortableServer::POA::WrongPolicy& policyEx)
       {
+         boost::ignore_unused_variable_warning(policyEx);
          vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
             << "CorbaService::unregisterObject: Wrong POA policy\n"
             << vprDEBUG_FLUSH;
-
       }
 //   }
 //   else
@@ -363,6 +368,7 @@ void CorbaService::addSubjectManagers(const CosNaming::BindingList& bindingList,
                // if they are also thrown here, but we might as well be safe.
                catch (CORBA::TRANSIENT ex)
                {
+                  boost::ignore_unused_variable_warning(ex);
                   vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
                      << "addSubjectManagers(): Caught CORBA::TRANSIENT "
                      << "exception thrown by _non_existent\n"
@@ -380,6 +386,7 @@ void CorbaService::addSubjectManagers(const CosNaming::BindingList& bindingList,
             }
             catch (CosNaming::NamingContext::InvalidName& nameEx)
             {
+               boost::ignore_unused_variable_warning(nameEx);
                vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
                   << "addSubjectManagers(): Tried to resolve invalid name\n"
                   << vprDEBUG_FLUSH;

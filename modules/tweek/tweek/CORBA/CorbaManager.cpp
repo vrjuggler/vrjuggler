@@ -134,6 +134,8 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
       }
       catch (CORBA::ORB::InvalidName& ex)
       {
+         boost::ignore_unused_variable_warning(ex);
+
          // This should not happen!
          vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
             << "NameService name invalid in CorbaManager::init!\n"
@@ -260,12 +262,14 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
    // to UNIQUE_ID.
    catch (PortableServer::POA::ServantAlreadyActive& active_ex)
    {
+      boost::ignore_unused_variable_warning(active_ex);
       vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
          << "WARNING: Servant already active within our POA\n"
          << vprDEBUG_FLUSH;
    }
    catch (PortableServer::POA::WrongPolicy& policy_ex)
    {
+      boost::ignore_unused_variable_warning(policy_ex);
       status.setCode(vpr::ReturnStatus::Fail);
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Invalid policy used when activating Subject Manager object\n"
@@ -332,6 +336,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
          }
          catch (CosNaming::NamingContext::AlreadyBound& ex)
          {
+            boost::ignore_unused_variable_warning(ex);
             vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
                << "WARNING: Subject manager reference already bound!\n"
                << vprDEBUG_FLUSH;
@@ -339,6 +344,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
       }
       catch (CORBA::COMM_FAILURE& ex)
       {
+         boost::ignore_unused_variable_warning(ex);
          status.setCode(vpr::ReturnStatus::Fail);
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "Unable to contact the naming service\n" << vprDEBUG_FLUSH;
@@ -379,12 +385,14 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager()
          }
          catch (CORBA::ORB::InvalidName& ex)
          {
+            boost::ignore_unused_variable_warning(ex);
             vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
                << "WARNING: Invalid name used when trying to unbind "
                << "Subject Manager!\n" << vprDEBUG_FLUSH;
          }
          catch (CosNaming::NamingContext::CannotProceed& ex)
          {
+            boost::ignore_unused_variable_warning(ex);
             vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
                << "WARNING: Could not unbind Subject Manager!\n"
                << vprDEBUG_FLUSH;
@@ -396,6 +404,8 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager()
       }
       catch (PortableServer::POA::ObjectNotActive& policy_ex)
       {
+         boost::ignore_unused_variable_warning(policy_ex);
+
          // If the servant is not active in the POA, something may have gone
          // wrong in createSubjectManager().  In that case, the memory should
          // still be deleted since there is no active object to worry about
@@ -409,6 +419,8 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager()
       }
       catch (PortableServer::POA::WrongPolicy& policy_ex)
       {
+         boost::ignore_unused_variable_warning(policy_ex);
+
          status.setCode(vpr::ReturnStatus::Fail);
          vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
             << "WARNING: Coult not deactive Subject Manager: wrong POA policy\n"
@@ -475,6 +487,7 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
    }
    catch (PortableServer::POA::AdapterAlreadyExists& ex)
    {
+      boost::ignore_unused_variable_warning(ex);
       status.setCode(vpr::ReturnStatus::Fail);
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "WARNING: Child POA named '" << poa_name << "' already exists!\n"
@@ -482,6 +495,7 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
    }
    catch (PortableServer::POA::InvalidPolicy& ex)
    {
+      boost::ignore_unused_variable_warning(ex);
       status.setCode(vpr::ReturnStatus::Fail);
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "WARNING: Failed to set IdUniquenessPolicy for child POA\n"
