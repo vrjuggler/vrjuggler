@@ -93,7 +93,7 @@ private:
 
    vpr::Thread* m_my_thread;
 
-   CORBA::ORB_var orb;
+   CORBA::ORB_var m_orb;
 
    CosNaming::NamingContext_var m_naming_context;
 };
