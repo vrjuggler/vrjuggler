@@ -109,6 +109,7 @@ public class ContextToolbar
    public void undoableEditHappened(UndoableEditEvent e)
    {
       undoBtn.setEnabled(true);
+      saveBtn.setEnabled(true);
       redoBtn.setEnabled(false);
       mConfigIFrame.setTitle("Configuration Editor < Unsaved >");
    }
@@ -133,6 +134,7 @@ public class ContextToolbar
       expandBtn.setEnabled(nonempty_context);
       undoBtn.setEnabled(false);
       redoBtn.setEnabled(false);
+      saveBtn.setEnabled(false);
       context.addConfigContextListener(contextListener);
       context.addUndoableEditListener(this);
    }
@@ -345,10 +347,12 @@ public class ContextToolbar
          if (context.getConfigUndoManager().getUnsavedChanges())
          {
             mConfigIFrame.setTitle("Configuration Editor < Unsaved >");
+            saveBtn.setEnabled(true);
          }
          else
          {
             mConfigIFrame.setTitle("Configuration Editor");
+            saveBtn.setEnabled(false);
          }
       }
    }
