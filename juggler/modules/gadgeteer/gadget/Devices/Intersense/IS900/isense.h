@@ -18,7 +18,8 @@
 #ifndef _ISD_isenseh
 #define _ISD_isenseh
 
-#if !defined(WIN32)
+/* if not Win32 then it must be UNIX, no other OS is supported  */
+#if !defined __WIN32__ && !defined WIN32 && !defined _Windows && !defined _WIN32
 #define UNIX
 #endif
 
