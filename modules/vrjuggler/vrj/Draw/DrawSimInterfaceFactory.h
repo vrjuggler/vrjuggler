@@ -67,7 +67,7 @@ class SimIfType; \
 const bool reg_ctr_ ## SimIfType = \
    vrj::DrawSimInterfaceFactory::instance()-> \
       registerCreator(SimIfType::getChunkType(), \
-                      vpr::CreateProduct<DrawSimInterface, SimIfType>);
+                      vpr::CreateProduct<vrj::DrawSimInterface, SimIfType>);
 
 namespace vrj
 {
