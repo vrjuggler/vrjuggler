@@ -558,9 +558,6 @@ Kernel::Kernel()
      mExitFlag(false), mControlThread(NULL), mInputManager(NULL),
      mDrawManager(NULL), mSoundManager(NULL), mDisplayManager(NULL), mClusterManager(NULL)
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-      << "[Constructor] vrj::Kernel::mControlThread == 0x" << std::hex
-      << (void*) mControlThread << std::dec << std::endl << vprDEBUG_FLUSH;
    // Print out the Juggler version number when the kernel is created.
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << std::string(strlen(VJ_VERSION) + 12, '=')
                                              << std::endl << vprDEBUG_FLUSH;
