@@ -76,6 +76,12 @@ AC_ARG_ENABLE(tweek,
 
 builtin(include, modules/tweek/cfgargs.m4)
 
+AC_ARG_ENABLE(plexus,
+              [--enable-plexus           Enable building Plexus          [default=no]],
+              build_plexus="$enableval", build_plexus='no')
+
+builtin(include, modules/plexus/cfgargs.m4)
+
 DPP_ABI_SETUP
 
 # -----------------------------------------------------------------------------
@@ -93,7 +99,9 @@ if test "x$build_jccl" = "xyes" ; then
    BUILD_JCCL='YES'
    JUGGLER_PROJECTS="$JUGGLER_PROJECTS modules/jackal"
    JCCL_BASE_DIR="$builddir/modules/jackal"
+   JCCL_CONFIG="$JCCL_BASE_DIR/jccl-config --basedir --no-includedir"
    export JCCL_BASE_DIR
+   export JCCL_CONFIG
 fi
 
 BUILD_TWEEK='NO'
@@ -102,7 +110,20 @@ if test "x$build_tweek" = "xyes" ; then
    BUILD_TWEEK='YES'
    JUGGLER_PROJECTS="$JUGGLER_PROJECTS modules/tweek"
    TWEEK_BASE_DIR="$builddir/modules/tweek"
+   TWEEK_CONFIG="$TWEEK_BASE_DIR/tweek-config --basedir --no-includedir"
    export TWEEK_BASE_DIR
+   export TWEEK_CONFIG
+fi
+
+BUILD_PLEXUS='NO'
+
+if test "x$build_plexus" = "xyes" ; then
+   BUILD_PLEXUS='YES'
+   JUGGLER_PROJECTS="$JUGGLER_PROJECTS modules/plexus"
+   PLX_BASE_DIR="$builddir/modules/plexus"
+   PLEXUS_CONFIG="$PLX_BASE_DIR/plexus-config --basedir --no-includedir"
+   export PLX_BASE_DIR
+   export PLX_CONFIG
 fi
 
 # List the sub-projects where a local configure script needs to be run.
