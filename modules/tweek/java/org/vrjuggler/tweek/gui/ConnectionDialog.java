@@ -659,6 +659,7 @@ public class ConnectionDialog extends JDialog
                }
 
                mSubjectMgrInfo.setModel(table_model);
+               mSubjectMgrInfo.setEnabled(false);
                mOkayButton.setEnabled(true);
             }
             catch (org.omg.CORBA.COMM_FAILURE commEx)
