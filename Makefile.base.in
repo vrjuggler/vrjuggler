@@ -232,9 +232,9 @@ endif
 # -----------------------------------------------------------------------------
 # Library names.
 # -----------------------------------------------------------------------------
-VJ_LIBRARY	= libJuggler
-GL_LIBRARY	= libJuggler_ogl
-PF_LIBRARY	= libJuggler_pf
+VJ_LIBRARY	= @LIB_PREFIX@Juggler
+GL_LIBRARY	= @LIB_PREFIX@Juggler_ogl
+PF_LIBRARY	= @LIB_PREFIX@Juggler_pf
 
 @SET_MAKE@
 
