@@ -407,7 +407,7 @@ case $target_os in
 
         dnl # We have to use POSIX threads on HP-UX.
         if test "x${_thread_pkg}" != "xPOSIX" ; then
-            AC_MSG_WARN(*** POSIX threads must be used on $host ***)
+            AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
             _thread_pkg='POSIX'
         fi
 
@@ -457,7 +457,7 @@ case $target_os in
 
         dnl # We have to use POSIX threads on FreeBSD.
         if test "x${_thread_pkg}" != "xPOSIX" ; then
-            AC_MSG_WARN(*** POSIX threads must be used on $host ***)
+            AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
             _thread_pkg='POSIX'
         fi
 
@@ -484,7 +484,7 @@ case $target_os in
 
         dnl # We have to use POSIX threads on Linux.
         if test "x${_thread_pkg}" != "xPOSIX" ; then
-            AC_MSG_WARN(*** POSIX threads must be used on $host ***)
+            AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
             _thread_pkg='POSIX'
         fi
 
@@ -512,7 +512,7 @@ case $target_os in
 
         dnl # We have to use POSIX threads on Solaris.
         if test "x${_thread_pkg}" != "xPOSIX" ; then
-            AC_MSG_WARN(*** POSIX threads must be used on $host ***)
+            AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
             _thread_pkg='POSIX'
         fi
 
@@ -524,7 +524,7 @@ case $target_os in
     aix*)
         dnl # We have to use POSIX threads on AIX.
         if test "x${_thread_pkg}" != "xPOSIX" ; then
-            AC_MSG_WARN(*** POSIX threads must be used on $host ***)
+            AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
             _thread_pkg='POSIX'
         fi
 
