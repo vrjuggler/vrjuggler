@@ -112,12 +112,12 @@ namespace jcclTest
          }
       }
 
-      void PropertyValueTests ()
+      void PropertyValueTests()
       {
          // start fresh and new (and shiny!!!)
          jccl::ChunkFactory::instance()->getChunkDescDB()->removeAll();
          
-         std::string file_path(TESTFILES_PATH);
+         std::string file_path( TESTFILES_PATH );
 
          // Load the test configuration file
          jccl::ConfigChunkDB chunkdb;
