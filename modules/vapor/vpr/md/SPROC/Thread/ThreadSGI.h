@@ -130,8 +130,6 @@ public:
    //
    //! RETURNS:  0 - Successful completion
    //! RETURNS: -1 - Error
-   //
-   //! NOTE:  Not implemented.
    // -----------------------------------------------------------------------
    virtual int
    join (void** = 0);
