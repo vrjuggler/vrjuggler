@@ -121,13 +121,18 @@ vpr::ReturnStatus ThreadSGI::start()
                                                        &ThreadSGI::startThread,
                                                        NULL);
 
-      // START THREAD
-      // NOTE: Automagically registers UNLESS failure
+      // Spawn the thread.
       status = spawn(start_functor);
 
       if ( status.success() )
       {
          mRunning = true;
+
+         ThreadManager::instance()->lock();
+         {
+            registerThread(true);
+         }
+         ThreadManager::instance()->unlock();
       }
       else
       {
@@ -166,7 +171,6 @@ void ThreadSGI::startThread(void* null_param)
    ThreadManager::instance()->lock();      // Lock manager
    {
       setLocalThreadPtr(this);               // Store the pointer to me
-      registerThread(true);
    }
    ThreadManager::instance()->unlock();
 
