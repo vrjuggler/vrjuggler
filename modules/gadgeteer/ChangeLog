@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-01-2004 patrickh    Fixed MotionStar crashing bugs on Windows and array
+            aronb       initialization problems in gadget::EventWindow on all
+                        platforms.
+                        NEW VERSION: 0.12.4
 Jun-25-2003 patrickh    Allow the use of X11 on Mac OS X instead of the Carbon
                         UI classes.
                         NEW VERSION: 0.12.3
