@@ -109,7 +109,7 @@ void _Export_Position()
          "derive.  This is in addition to gadget.Input.  gadget.Input\n"
          "provides pure virtual function constraints in the following\n"
          "functions: startSampling(), stopSampling(), sample(), and\n"
-         "updateData()\.n\n"
+         "updateData()\n\n"
          "gadget.Position adds the function getPositionDdta() for retrieving\n"
          "the received positional data.  This is similar to the additions\n"
          "made by gadget.Analog and gadget.Digital."
@@ -135,7 +135,7 @@ void _Export_Position()
          )
         .def("readObject",
              (vpr::ReturnStatus (gadget::Position::*)(vpr::ObjectReader*) )&gadget::Position::readObject,
-             (vpr::ReturnStatus (pyj::gadget_Position_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_Position_Wrapper::default_readObject
+             (vpr::ReturnStatus (pyj::gadget_Position_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_Position_Wrapper::default_readObject,
              "readObject(reader) -> vpr.ReturnStatus object\n"
              "De-serializes this object."
          )
