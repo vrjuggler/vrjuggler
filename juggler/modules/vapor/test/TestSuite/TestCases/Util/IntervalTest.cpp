@@ -47,6 +47,20 @@ void IntervalTest::testSetf()
    CppUnit::TestAssert::assertEquals<long>(val.usec(), 20);
 }
 
+void IntervalTest::testSetd()
+{
+   vpr::Interval val;
+
+   val.setd(12.75f, vpr::Interval::Sec);
+   CppUnit::TestAssert::assertEquals<long>(val.msec(), 12750);
+
+   val.setd(12.75f, vpr::Interval::Msec);
+   CppUnit::TestAssert::assertEquals<long>(val.usec(), 12750);
+
+   val.setd(20.75f, vpr::Interval::Usec);
+   CppUnit::TestAssert::assertEquals<long>(val.usec(), 20);
+}
+
 void IntervalTest::testSec()
 {
    vpr::Interval val;
@@ -70,6 +84,17 @@ void IntervalTest::testSecf()
    CPPUNIT_ASSERT_DOUBLES_EQUAL(val.secf() , 12.34567f, 0.00001f);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(val.msecf(), 12345.67f, 0.01f);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecf(), 12345678.0f, 100.0f);
+}
+
+void IntervalTest::testSecd()
+{
+   vpr::Interval val;
+
+   val.secd(12.34567);
+
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(val.secd() , 12.34567f, 0.00001f);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(val.msecd(), 12345.67f, 0.01f);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecd(), 12345678.0f, 100.0f);
 }
 
 void IntervalTest::testMsec()
@@ -97,6 +122,17 @@ void IntervalTest::testMsecf()
    CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecf(), 12345678.0f, 10.0f);
 }
 
+void IntervalTest::testMsecd()
+{
+   vpr::Interval val;
+
+   val.msecd(12345.678f);
+
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(val.secd() , 12.345678f, 0.0001f);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(val.msecd(), 12345.678f, 0.01f);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecd(), 12345678.0f, 10.0f);
+}
+
 void IntervalTest::testUsec()
 {
    vpr::Interval val;
@@ -120,6 +156,17 @@ void IntervalTest::testUsecf()
    CPPUNIT_ASSERT_DOUBLES_EQUAL(val.secf() , 12.345678f, 0.00001f);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(val.msecf(), 12345.678f, 0.01f);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecf(), 12345678.0f, 10.0f);
+}
+
+void IntervalTest::testUsecd()
+{
+   vpr::Interval val;
+
+   val.usecd(12345678.0f);
+
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(val.secd() , 12.345678f, 0.00001f);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(val.msecd(), 12345.678f, 0.01f);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecd(), 12345678.0f, 10.0f);
 }
 
 void IntervalTest::testSubtract()
@@ -157,7 +204,7 @@ void IntervalTest::testLessThen()
    vpr::Interval offset(10, vpr::Interval::Msec);
    val1 = (vpr::Interval::HalfPeriod - offset);
    val2 = (vpr::Interval::HalfPeriod + offset);
-      
+
    CPPUNIT_ASSERT(val1 < val2);
    CPPUNIT_ASSERT(! (val2 < val1));
    CPPUNIT_ASSERT(val1 <= val2);
@@ -198,12 +245,16 @@ CppUnit::Test* IntervalTest::suite()
    test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("construction", &IntervalTest::construction));
    test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSet", &IntervalTest::testSet));
    test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSetf", &IntervalTest::testSetf));
+   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSetd", &IntervalTest::testSetd));
    test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSec", &IntervalTest::testSec));
    test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSecf", &IntervalTest::testSecf));
+   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSecd", &IntervalTest::testSecd));
    test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsec", &IntervalTest::testMsec));
    test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsecf", &IntervalTest::testMsecf));
+   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsecd", &IntervalTest::testMsecd));
    test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsec", &IntervalTest::testUsec));
    test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsecf", &IntervalTest::testUsecf));
+   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsecd", &IntervalTest::testUsecd));
    test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSubtract", &IntervalTest::testSubtract));
    test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testLessThen", &IntervalTest::testLessThen));
 

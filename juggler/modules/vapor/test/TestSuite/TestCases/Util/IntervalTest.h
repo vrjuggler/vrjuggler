@@ -35,17 +35,25 @@ public:
 
    void testSetf();
 
+   void testSetd();
+
    void testSec();
 
    void testSecf();
+
+   void testSecd();
 
    void testMsec();
 
    void testMsecf();
 
+   void testMsecd();
+
    void testUsec();
 
    void testUsecf();
+
+   void testUsecd();
 
    void testSubtract();
 

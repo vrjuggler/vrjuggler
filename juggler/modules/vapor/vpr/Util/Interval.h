@@ -134,6 +134,29 @@ public:
       }
    }
 
+   void setd(const double num, const Unit timeUnit)
+   {
+      switch(timeUnit)
+      {
+      case Interval::Sec:
+         mMicroSeconds = vpr::Uint64(1000000.0f * num);
+         break;
+      case Interval::Msec:
+         mMicroSeconds = vpr::Uint64(1000.0f * num);
+         break;
+      case Interval::Usec:
+         mMicroSeconds = vpr::Uint64(num);
+         //mTensOfUsecs = num;
+         break;
+      case Interval::Base:
+         mMicroSeconds = vpr::Uint64(num);
+         break;
+      default:
+         vprASSERT(false && "vpr::Interval::setd: Invalid Units used");
+         break;
+      }
+   }
+
    /**
     * Set the interval to the current time.  This can them be used to compute a time
     * interval by subtracting two intervals from each other.
@@ -157,6 +180,16 @@ public:
       return (float(mMicroSeconds)/1000000.0f);
 #endif
    }
+   void secd(const double num)
+   { setd(num, Interval::Sec); }
+   double secd() const
+   {
+#ifdef VPR_OS_Win32
+      return (double((vpr::Int64) mMicroSeconds)/1000000.0f);
+#else
+      return (double(mMicroSeconds)/1000000.0f);
+#endif
+   }
 
    void msec(const vpr::Uint64 num)
    { set(num, Interval::Msec); }
@@ -172,6 +205,16 @@ public:
       return (float(mMicroSeconds)/1000.0f);
 #endif
    }
+   void msecd(const double num)
+   { setd(num, Interval::Msec); }
+   double msecd() const
+   {
+#ifdef VPR_OS_Win32
+      return (double((vpr::Int64) mMicroSeconds)/1000.0f);
+#else
+      return (double(mMicroSeconds)/1000.0f);
+#endif
+   }
 
    void usec(const vpr::Uint64 num)
    { set(num, Interval::Usec); }
@@ -180,6 +223,16 @@ public:
    void usecf(const float num)
    { setf(num, Interval::Usec); }
    float usecf() const
+   {
+#ifdef VPR_OS_Win32
+      return ((vpr::Int64) mMicroSeconds);
+#else
+      return (mMicroSeconds);
+#endif
+   }
+   void usecd(const double num)
+   { setd(num, Interval::Usec); }
+   double usecd() const
    {
 #ifdef VPR_OS_Win32
       return ((vpr::Int64) mMicroSeconds);
@@ -275,10 +328,10 @@ public:
 
 private:
    static const bool mInitialized;       /**< Forces counter initialization. */
-   
+
 #endif // VPR_OS_IRIX cycle counter stuff
 
-   
+
 }; // class Interval
 
 

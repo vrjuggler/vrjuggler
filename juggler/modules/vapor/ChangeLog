@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-04-09 patrickh Extended vpr::Interval to include methods for converting
+                    the interval value to double-precision floating-point
+                    values.
+                    NEW VERSION: 0.13.1
 2002-04-06 allenb   Removed template template from generic factory class,
                     since Irix can't handle template templates.
 2002-04-06 allenb   Smarter testing for invalid char* passed to GUID.
