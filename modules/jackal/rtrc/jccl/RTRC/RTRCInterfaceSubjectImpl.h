@@ -28,10 +28,10 @@ namespace jccl
  *  management plugin. Use these functions to view and modify the chunks in
  *  the config manager.
  *
- *  Created: July-31-2002
+ *  @date July 31, 2002
  */
 
-class JCCL_CLASS_API RTRCInterfaceSubjectImpl : public POA_RTRCInterface::RTRCInterfaceSubject,
+class JCCL_CLASS_API RTRCInterfaceSubjectImpl : public POA_jccl::RTRCInterfaceSubject,
                                                 public tweek::SubjectImpl
 {
 public:
