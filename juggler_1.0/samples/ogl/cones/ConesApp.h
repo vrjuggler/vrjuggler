@@ -50,12 +50,12 @@
 class ContextData {
 public:
     ContextData (void) {
-        firstTime   = true;
-        coneDLIndex = -1;
+        dlIndex  = -1;
+        maxIndex = -1;
     }
 
-    bool  firstTime;
-    int   coneDLIndex;
+    int   dlIndex;
+    int   maxIndex;     // For debugging purposes only!
 };
 
 // ----------------------------------------------------------------------------
@@ -92,6 +92,12 @@ public:
     // allocation here.
     // ------------------------------------------------------------------------
     virtual void contextInit(void);
+
+    // ------------------------------------------------------------------------
+    // Called immediately upon closing an OpenGL context.  This is called for
+    // every display window that is closed.  Put OpenGL deallocation here.
+    // ------------------------------------------------------------------------
+    virtual void contextClose(void);
 
     /**   name Drawing Loop Functions
      *
@@ -142,8 +148,9 @@ public:
     // ------------------------------------------------------------------------
     virtual bool depSatisfied(void);
 
-    vjGlContextData<ContextData>  mDlData;     // Data for display lists
-    std::vector<UserData*>        mUserData;   // All the users in the program
+    vjGlContextData<ContextData>  mDlData;      // Data for display lists
+    vjGlContextData<ContextData>  mDlDebugData; // Data for debugging display lists
+    std::vector<UserData*>        mUserData;    // All the users in the program
 
 private:
     // ------------------------------------------------------------------------
@@ -158,7 +165,7 @@ private:
     // ------------------------------------------------------------------------
     inline void
     drawCone (void) {
-        glCallList(mDlData->coneDLIndex);
+        glCallList(mDlData->dlIndex);
 //        drawCone(1.5, 2.0, 20, 10);
     }
 
