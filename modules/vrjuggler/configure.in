@@ -717,7 +717,6 @@ AC_CONFIG_FILES([
    samples/OGL/simple/ConfigApp/Makefile
    samples/OGL/simple/MPApp/Makefile
    samples/OGL/simple/SimpleApp/Makefile
-   samples/OGL/simple/WallTest/Makefile
    samples/OGL/simple/collideApp/Makefile
    samples/OGL/simple/contextApp/Makefile
    samples/OGL/simple/simpleInput/Makefile
@@ -754,6 +753,7 @@ AC_CONFIG_FILES([
    test/Draw/OGL/simpleGlove/Makefile
    test/Draw/OGL/texture/Makefile
    test/Draw/OGL/torus/Makefile
+   test/Draw/OGL/WallTest/Makefile
    test/Draw/OGL/wand/Makefile
    test/RTRC/Makefile
    test/TestSuite/Makefile
