@@ -70,6 +70,9 @@
 #define M_PI_2 1.57079632679489661923
 #define M_PI_4 0.78539816339744830962
 
+typedef int int32_t;
+typedef __int64 int64_t;
+
 /* extern HINSTANCE g_hInst = NULL; */
 #endif   /* WIN32 */
 

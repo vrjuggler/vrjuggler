@@ -1317,46 +1317,69 @@ dnl # Test for the Performer library if the Performer API was enabled.
 if test "x${_enable_pf_api}" = "xyes" ; then
     _vjsave_CFLAGS="$CFLAGS"
     _vjsave_CPPFLAGS="$CPPFLAGS"
-    _vjsave_INCLUDES="$INCLUDES"
     _vjsave_LDFLAGS="$LDFLAGS"
     _vjsave_LIBS="$LIBS"
 
-    dnl # Ensure that /usr/include and /usr/lib are not included multiple
-    dnl # times if $PFROOT is "/usr".
-    if test "x${PFROOT}" != "x/usr" ; then
-        CPPFLAGS="$CPPFLAGS -I${PFROOT}/include"
-        INCLUDES="$INCLUDES -I${PFROOT}/include"
-        LDFLAGS="-L${PFROOT}/lib${LIBBITSUF} $LDFLAGS"
-    fi
+    if test "x$OS_TYPE" = "xWin32" ; then
+        win32_pfinc="-I$PFROOT/include -I$PFROOT/include/Performer"
+        CPPFLAGS="$CPPFLAGS $win32_pfinc"
+        win32_libpath="/libpath:${PFROOT}/lib"
+        LDFLAGS="/link $win32_libpath $LDFLAGS"
+        LIBPERFORMER="libpf.lib libpfdu.lib libpfui.lib libpfutil.lib"
+        LIBS="$LIBS $LIBPERFORMER"
 
-    CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
+        AC_CACHE_CHECK([for pfInit in libpf],
+            [ac_cv_pfInit_in_libpf],
+            [AC_TRY_COMPILE([#include <Performer/pf.h> ],
+                         [ pfInit(); ],
+                         [ac_cv_pfInit_in_libpf='yes'],
+                         [ac_cv_pfInit_in_libpf='no'])])
 
-    dnl # We are using Performer 2.[23] as defined by the --with-pfver
-    dnl # command-line argument.
-    if test "x$PF_VER" = "x2.2" -o "x$PF_VER" = "x2.3" ; then
-        pf_ext='_ogl'
-    dnl # We are using Performer 2.4 or newer.
+        if test "x$ac_cv_pfInit_in_libpf" = "xyes" ; then
+            PERFORMER_API='Y'
+            INCLUDES="$INCLUDES $win32_pfinc"
+            LDFLAGS="$LDFLAGS $win32_libpath"
+            AC_DEFINE(VJ_API_PERFORMER,)
+        else
+            AC_MSG_WARN([*** Performer API will not be used (library not found) ***])
+        fi
     else
-        pf_ext=''
-    fi
+        dnl # Ensure that /usr/include and /usr/lib are not included multiple
+        dnl # times if $PFROOT is "/usr".
+        if test "x${PFROOT}" != "x/usr" ; then
+            CPPFLAGS="$CPPFLAGS -I${PFROOT}/include"
+            LDFLAGS="-L${PFROOT}/lib${LIBBITSUF} $LDFLAGS"
+        fi
 
-    dnl # On Linux, we have to link all the Performer libraries AND libdl to
-    dnl # get the check for pfInit() in libpf to compile.
-    if test "$PLATFORM" = "Linux" ; then
-        LIBS="$LIBS -lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext -ldl"
+        CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+
+        dnl # We are using Performer 2.[23] as defined by the --with-pfver
+        dnl # command-line argument.
+        if test "x$PF_VER" = "x2.2" -o "x$PF_VER" = "x2.3" ; then
+            pf_ext='_ogl'
+        dnl # We are using Performer 2.4 or newer.
+        else
+            pf_ext=''
+        fi
+
+        dnl # On Linux, we have to link all the Performer libraries AND libdl to
+        dnl # get the check for pfInit() in libpf to compile.
+        if test "$PLATFORM" = "Linux" ; then
+            LIBS="$LIBS -lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext -ldl"
+        fi
+
+        AC_CHECK_LIB([pf], [pfInit],
+            [AC_CHECK_HEADER([Performer/pf.h],
+                [ PERFORMER_API="Y";
+                  LIBPERFORMER="-lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext";
+                  AC_DEFINE(VJ_API_PERFORMER,) ],
+                [AC_MSG_WARN([*** Performer API will not be used (pf.h not found) ***])])],
+            [AC_MSG_WARN([*** Performer API will not be used (library not found) ***])])
     fi
 
     dnl # If the Performer library was found, add the API object files to the
     dnl # files to be compiled and enable the Performer API compile-time
     dnl # option.
-    AC_CHECK_LIB([pf], [pfInit],
-        [AC_CHECK_HEADER([Performer/pf.h],
-            [ PERFORMER_API="Y";
-              LIBPERFORMER="-lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext";
-              AC_DEFINE(VJ_API_PERFORMER,) ],
-            [AC_MSG_WARN([*** Performer API will not be used (pf.h not found) ***])])],
-        [AC_MSG_WARN([*** Performer API will not be used (library not found) ***])])
-
     if test "x$PERFORMER_API" != "x" ; then
         case $PLATFORM in
             dnl # Under IRIX users will need -limage to load .flt files 
@@ -1369,10 +1392,9 @@ if test "x${_enable_pf_api}" = "xyes" ; then
                 LIBPERFORMER="$LIBPERFORMER -ldl"
                 ;;
         esac
-    dnl # No Performer API files were added, so restore $INCLUDES and $LDFLAGS
-    dnl # so that no OpenGL stuff in included in them.
+    dnl # No Performer API files were added, so restore $LDFLAGS so that no
+    dnl # OpenGL stuff is included in it.
     else
-        INCLUDES="${_vjsave_INCLUDES}"
         LDFLAGS="${_vjsave_LDFLAGS}"
     fi
 
@@ -1527,13 +1549,10 @@ fi
 
 if test "$OS_TYPE" = "Win32" ; then
     AC_DEFINE(u_int, UINT)
-    AC_DEFINE(int32_t, __int32)
-    AC_DEFINE(int64_t, __int64)
 else
     AC_CHECK_TYPE(u_int, unsigned int)
+    AC_CHECK_TYPE(caddr_t, char*)
 fi
-
-AC_CHECK_TYPE(caddr_t, char*)
 
 dnl # -------------------------------------------------------------------------
 dnl # Checks for library functions.
