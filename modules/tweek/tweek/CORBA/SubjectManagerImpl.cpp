@@ -76,13 +76,29 @@ SubjectManagerImpl::~SubjectManagerImpl()
 void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
                                          const char* name)
 {
-   std::string name_str(name);
+   const std::string name_str(name);
+
+   const std::string begin_str =
+      std::string("[tweek::SubjectManagerImpl::registerSubject()] Registering subject named '") +
+      name_str + std::string("'\n");
+   vpr::DebugOutputGuard g1(tweekDBG_CORBA, vprDBG_STATE_LVL,
+                            begin_str,
+                            "[tweek::SubjectManagerImpl::registerSubject()] Exiting.\n");
 
    mSubjectIdsMutex.acquire();
    {
+      vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
+         << "Activating servant with the POA.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(tweekDBG_CORBA, vprDBG_HEX_LVL)
+         << "Servant: " << std::hex << subjectServant << std::dec
+         << std::endl << vprDEBUG_FLUSH;
+
       // We have to register servant with POA first.
       mSubjectIds[name_str] =
          mCorbaMgr.getChildPOA()->activate_object(subjectServant);
+
+      vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
+         << "Servant activated.\n" << vprDEBUG_FLUSH;
    }
    mSubjectIdsMutex.release();
 
@@ -126,7 +142,8 @@ void SubjectManagerImpl::registerSubject(Subject_ptr subject,
    vpr::Guard<vpr::Mutex> guard(mSubjectsMutex);
 
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
-      << "Registering subject named '" << name << "'\n" << vprDEBUG_FLUSH;
+      << "Adding subject named '" << name << "' to collection.\n"
+      << vprDEBUG_FLUSH;
 
    mSubjects[name] = Subject::_duplicate(subject);
 }
