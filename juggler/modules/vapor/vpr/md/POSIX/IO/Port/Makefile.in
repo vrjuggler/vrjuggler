@@ -50,15 +50,15 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/md/POSIX/IO/Port
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VPR_LIBRARY)
+includedir=	@includedir@/vpr/md/POSIX/IO/Port
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
 
 ifneq (@SIMULATOR@, Y)
 ifeq (@SERIAL_PORT_ABS@, TERMIOS)
-    SRCS	= SerialPortImplTermios.cpp
+   SRCS=	SerialPortImplTermios.cpp
 endif
 endif
 
@@ -69,6 +69,6 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
