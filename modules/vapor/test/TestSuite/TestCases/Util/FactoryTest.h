@@ -11,14 +11,6 @@
 #include <vpr/Util/Singleton.h>
 
 
-/*****************************************************************
- Test any functionality that we require from BOOST in order for
- our libraries to work right.
-
- This way, if boost is broken we detect it here instead of seeing
- our stuff breaking.
- *******************************************************************/
-
 namespace vprTest
 {
    class ftBase
@@ -70,47 +62,13 @@ public:
 
    // ---------------------------- //
 
-   void testCreateObject()
-   {
-      ftBase* cur_obj(NULL);
-      cur_obj = TestFactory::instance()->createObject(ftBase::id());
-      CPPUNIT_ASSERT(ftBase::id() == cur_obj->getVal());
+   void testCreateObject();
 
-      cur_obj = TestFactory::instance()->createObject(ftDerivedA::id());
-      CPPUNIT_ASSERT(ftDerivedA::id() == cur_obj->getVal());
+   void testIsRegistered();
 
-      cur_obj = TestFactory::instance()->createObject(ftDerivedB::id());
-      CPPUNIT_ASSERT(ftDerivedB::id() == cur_obj->getVal());
-   }
+   void testError();
 
-   void testIsRegistered()
-   {
-      CPPUNIT_ASSERT(TestFactory::instance()->isRegistered( ftBase::id()));
-      CPPUNIT_ASSERT(TestFactory::instance()->isRegistered( ftDerivedA::id()));
-      CPPUNIT_ASSERT(TestFactory::instance()->isRegistered( ftDerivedB::id()));
-   }
-
-
-   void testError()
-   {
-      ftBase* cur_obj(NULL);
-      cur_obj = TestFactory::instance()->createObject(1221);      // Should fail
-      CPPUNIT_ASSERT(cur_obj == NULL);
-   }
-
-   void testUnregister()
-   {
-      ftBase* cur_obj(NULL);
-      cur_obj = TestFactory::instance()->createObject(ftBase::id());
-      CPPUNIT_ASSERT(cur_obj != NULL);
-      CPPUNIT_ASSERT(ftBase::id() == cur_obj->getVal());
-
-      bool ret_val = TestFactory::instance()->unregisterCreator(ftBase::id());
-      CPPUNIT_ASSERT(ret_val);
-
-      cur_obj = TestFactory::instance()->createObject(ftBase::id());;
-      CPPUNIT_ASSERT(cur_obj == NULL);       // Should ahve failed
-   }
+   void testUnregister();
 
    static CppUnit::Test* suite()
    {
