@@ -168,7 +168,9 @@ links:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/jccl
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
-	@$(MAKE) -C jccl instlinks=$(instlinks) links           
+	for dir in $(SUBDIR); do \
+		$(MAKE) -C $$dir instlinks=$(instlinks) links; \
+	done
 ifeq (@OS_TYPE@, Win32)
 	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
 else
@@ -183,12 +185,6 @@ endif
           ln -s $(JCCLROOT_ABS)/data ./data
 	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./samples &&		\
           ln -s $(JCCLROOT_ABS)/samples ./samples
-	cd $(instlinks)/include/jccl && $(RM_LN) ./*.h &&		\
-          $(LN_S) $(JCCLROOT_ABS)/jccl/*.h ./
-	cd $(instlinks)/include/jccl && $(RM_LN) ./jcclDefines.h &&	\
-          $(LN_S) $(topdir)/jccl/jcclDefines.h ./jcclDefines.h
-	cd $(instlinks)/include/jccl && $(RM_LN) ./jcclParam.h &&	\
-          $(LN_S) $(topdir)/jccl/jcclParam.h ./jcclParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 ifndef NO_JAVA_GUI
 ifeq ($(BUILD_VJCONTROL), Y)

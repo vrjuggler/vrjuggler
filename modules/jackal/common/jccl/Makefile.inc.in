@@ -31,7 +31,12 @@
 # =============================================================================
 links:
 	cd $(instlinks)/include/jccl && \
-          for dir in $(SUBDIR) ; do \
-              $(RM_LN) ./$$dir ; \
-              $(LN_S) $(JCCLROOT_ABS)/config/jccl/$$dir ./$$dir ; \
+          for dir in $(SUBDIR) jcclConfig.h; do \
+              $(RM_LN) ./$$dir && \
+              $(LN_S) $(JCCLROOT_ABS)/common/jccl/$$dir ./$$dir ; \
           done
+	cd $(instlinks)/include/jccl && \
+		for hdr in jcclDefines.h jcclParam.h; do \
+			$(RM_LN) ./$$hdr && \
+			$(LN_S) $(topdir)/common/jccl/$$hdr ./$$hdr; \
+		done

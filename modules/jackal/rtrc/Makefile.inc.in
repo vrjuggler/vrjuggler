@@ -28,3 +28,6 @@ rtrc-pkg-links:
 
 rtrc-pkg-install:
 	@$(MAKE) rtrc-install
+
+links:
+	@$(MAKE) -C jccl instlinks="$(instlinks)" links
