@@ -39,6 +39,7 @@
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Devices/Sim/SimInput.h>
+#include <gadget/Type/InputMixer.h>
 #include <gadget/Devices/Open/Trackd/TrackdControllerStandalone.h>
 
 namespace gadget
@@ -57,7 +58,8 @@ namespace gadget
 // See also: Digital, Analog
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class TrackdController : public Input, public Digital, public Analog
+//class TrackdController : public Input, public Digital, public Analog
+class TrackdController : public InputMixer<InputMixer<Input,Digital>,Analog>
 {
 public:
 

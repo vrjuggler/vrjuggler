@@ -44,6 +44,7 @@
 #include <gadget/Type/Position.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
+#include <gadget/Type/InputMixer.h>
 #include <gadget/Devices/Intersense/IntersenseStandalone.h>
 
 // maximum number of digital and analog buttons possible on a IS interface
@@ -107,7 +108,8 @@ typedef struct {
 // See also: Position
 //---------------------------------------------------------------------------
 //!PUBLIC_API:
-class Intersense :  public Input, public Position,  public Digital,  public Analog
+//class Intersense :  public Input, public Position,  public Digital,  public Analog
+class Intersense : public InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
 {
 protected:
    struct IsenseData

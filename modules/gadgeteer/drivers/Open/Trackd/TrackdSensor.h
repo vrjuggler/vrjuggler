@@ -37,6 +37,7 @@
 #include <vector>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
+#include <gadget/Type/InputMixer.h>
 #include <gadget/Devices/Open/Trackd/TrackdSensorStandalone.h>
 
 
@@ -55,7 +56,8 @@ namespace gadget
 // See also: Position
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class TrackdSensor : public Input, public Position
+//class TrackdSensor : public Input, public Position
+class TrackdSensor : public InputMixer<Input,Position>
 {
 public:
 

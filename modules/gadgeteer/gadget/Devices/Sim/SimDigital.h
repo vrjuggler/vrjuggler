@@ -38,10 +38,10 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Devices/Sim/SimInput.h>
+#include <gadget/Type/InputMixer.h>
 
 namespace gadget
 {
-
 /**
  * Simulated digital device.
  * Simulates a digital device from a keyboard device.
@@ -52,7 +52,8 @@ namespace gadget
  *
  * This class should not be used directly by the user.
  */
-class SimDigital : public Input, public Digital, public SimInput
+//class SimDigital : public Input, public Digital, public SimInput
+class SimDigital : public InputMixer<InputMixer<SimInput,Input>,Digital>
 {
 public:
    SimDigital();
