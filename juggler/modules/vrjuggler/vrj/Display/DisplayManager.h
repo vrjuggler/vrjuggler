@@ -23,18 +23,19 @@ class vjDisplay;
 #include <Kernel/vjDebug.h>
 #include <Input/InputManager/vjPosInterface.h>
 
-//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //: Singleton Container class for all vjDisplays.
 // 
 // PURPOSE:
-//	This class is responsible for holding the data about display aspects of
-//  the application.  The displays themselves may be machine/OS specific,  but this
-//  class should be able to run for all configurations.  This includes all machine/OS 
-//  specific aspects.  For now that basically means simply tracking window data. 
+//	This class is responsible for holding the data about display aspects
+//  of the application.  The displays themselves may be machine/OS specific,
+//  but this class should be able to run for all configurations.  This
+//  includes all machine/OS specific aspects.  For now that basically means
+//  simply tracking window data. 
 //
 // @author Allen Bierbaum
 //  Date: 9-7-97
-//------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class vjDisplayManager
 {
 public:
