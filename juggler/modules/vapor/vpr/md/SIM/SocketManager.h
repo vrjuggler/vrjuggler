@@ -230,7 +230,8 @@ protected:
     * Used to track which sockets are currently in a listening state
     * XXX: Could move this into the actually socket as a socket state instead.
    */
-   std::map<vpr::InetAddrSIM, std::pair<vpr::SocketStreamImplSIM*, int> > mListenerList;
+   typedef std::map<vpr::InetAddrSIM, vpr::SocketStreamImplSIM* > listener_map_t;
+   listener_map_t mListenerList;
    vpr::Mutex mListenerListMutex;
 
 
