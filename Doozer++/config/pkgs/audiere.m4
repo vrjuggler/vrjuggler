@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          audiere.m4,v
-dnl Date modified: 2004/04/22 20:58:36
-dnl Version:       1.3
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.4
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -46,7 +46,7 @@ dnl     AUDIERE_INCLUDES - Extra include path for the Audiere header directory.
 dnl     AUDIERE_LDFLAGS  - Extra linker flags for the Audiere library directory.
 dnl ===========================================================================
 
-dnl audiere.m4,v 1.3 2004/04/22 20:58:36 patrickh Exp
+dnl audiere.m4,v 1.4 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has Audiere installed.  This adds the
@@ -68,7 +68,7 @@ dnl                           argument is optional.
 dnl     action-if-not-found - The action to take if Audiere is not found.
 dnl                           This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_AUDIERE,
+AC_DEFUN([DPP_HAVE_AUDIERE],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
 
