@@ -189,7 +189,7 @@ vjMatrix vjGlove::getGlovePos(vjGloveData::vjGloveComponent component, int devNu
       }
 
       // Compute return value: retVal = TIPw = wTb bTd dTt
-      ret_val = *(mGlovePos[devNum]->GetData());      // wTb
+      ret_val = *(mGlovePos[devNum]->getData());      // wTb
       ret_val.postMult(baseTdij);                     // bTd
       ret_val.postMult(dijTtip);                      // dTt
 

@@ -43,16 +43,16 @@ public:
    { return vjInput::config(c); }
 
    /* Pure virtual functions required from vjInput */
-   virtual int StartSampling() = 0;
-   virtual int StopSampling() = 0;
-   virtual int Sample() = 0;
-   virtual void UpdateData() = 0;
+   virtual int startSampling() = 0;
+   virtual int stopSampling() = 0;
+   virtual int sample() = 0;
+   virtual void updateData() = 0;
 
    //: Get the name of the digital device
-   char* GetDeviceName() { return "vjDigital";}
+   char* getDeviceName() { return "vjDigital";}
 
    //: Get the digital data for the given devNum
-   virtual int GetDigitalData(int devNum = 0) = 0;
+   virtual int getDigitalData(int devNum = 0) = 0;
 };
 
 #endif	/* _VJ_DIGITAL_H_ */

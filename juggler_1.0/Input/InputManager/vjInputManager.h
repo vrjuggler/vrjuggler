@@ -55,7 +55,7 @@ public:
  //---------------------------//
    //: Initial configuration for InputManager
    //! PRE: MUST be called before any config is added to input manager
-   void ConfigureInitial(vjConfigChunkDB* cdb);
+   void configureInitial(vjConfigChunkDB* cdb);
 
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
@@ -95,7 +95,7 @@ private:
 public:
    //: Function to get an index to the proxy/alias given in str
    //! RETURNS: -1 - Not Found
-   int  GetProxyIndex(std::string proxyName);
+   int  getProxyIndex(std::string proxyName);
 
 
    /* ------------------------------- //
@@ -108,7 +108,7 @@ public:
    // Also updates all proxies.
    //
    //! MODIFIES: instances pointed to by devArray
-   void UpdateAllData();
+   void updateAllData();
 
 private:
    //: Add a device to vjInputManager.
@@ -120,7 +120,7 @@ private:
    //! POST: m_devVector' = m_devVector \/ devPtr
    //+       return = devNum (position in the array)
    //                or -1 for fail
-   int FAddDevice(vjInput* devPtr);
+   int fAddDevice(vjInput* devPtr);
 
    //: Remove a device from the vjInputManager.
    // Remove the device at position devNum from the
@@ -128,21 +128,21 @@ private:
    //
    //! MODIFIES: self
    //! POST: m_devVector[devNum]' = NULL
-   bool RemoveDevice(int devNum);
-   bool RemoveDevice(char* instName);
+   bool removeDevice(int devNum);
+   bool removeDevice(char* instName);
 
    //: Get the device number from its Instance Name.
    //
    //  Find the devNum of the device whose name is instName
    //
    //! RETURNS: -1 if fails
-   int FindDeviceNum(const char* instName);
+   int findDeviceNum(const char* instName);
 
    //: Get a pointer to the instance at devNum.
    // return the pointer at the devNum position in the array. <br>
    //
    //!POST: return = m_devVector[devNum]  (this can be NULL)
-   vjInput* GetDevice(int devNum);
+   vjInput* getDevice(int devNum);
 
    /*********************************************************
     *          PROXIES                                      *
@@ -156,10 +156,10 @@ public:
    //! MODIFIES: self <br>
    //! POST: m_posProxyArray[proxyNum]' = new Proxy at DevNum/subNum
    //       return = 0 for fail, other for success
-   int SetPosProxy(int ProxyNum, int DevNum, int subNum);
+   int setPosProxy(int ProxyNum, int DevNum, int subNum);
 
    //: Get the proxy at the given index
-   vjPosProxy* GetPosProxy(int posProxyIndex)
+   vjPosProxy* getPosProxy(int posProxyIndex)
    {
       vjASSERT(m_posProxyVector.size() > posProxyIndex);    // Check array bounds
       return m_posProxyVector[posProxyIndex];
@@ -169,14 +169,14 @@ public:
    //! POST: pos proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddPosProxy(std::string devName, int subNum, std::string proxyName, vjPosProxy* posProxy);
+   int addPosProxy(std::string devName, int subNum, std::string proxyName, vjPosProxy* posProxy);
 
    //: Turn the position proxy at index ProxyNum to point back
    // to the default dummy proxy. <br>
    // <br>
    //! MODIFIES: self <br>
    //! POST:  m_posProxyArray[proxyNum]' = m_dummyPos
-   void StupifyPos(int ProxyNum);
+   void stupifyPos(int ProxyNum);
 
 
 /***********       DIGITAL PROXY   * ******************/
@@ -186,10 +186,10 @@ public:
    // modifies: self <br>
    // post: m_digProxyArray[proxyNum]' = new Proxy at DevNum/subNum
    //       return = 0 for fail, other for success
-   int SetDigProxy(int ProxyNum, int DevNum, int subNum);
+   int setDigProxy(int ProxyNum, int DevNum, int subNum);
 
    //: Get the proxy at the given index
-   vjDigitalProxy* GetDigProxy(int digProxyIndex)
+   vjDigitalProxy* getDigProxy(int digProxyIndex)
    {
       vjASSERT(m_digProxyVector.size() > digProxyIndex);    // Check array bounds
       return m_digProxyVector[digProxyIndex];
@@ -199,14 +199,14 @@ public:
    //! POST: dig proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddDigProxy(std::string devName, int subNum, std::string proxyName, vjDigitalProxy* digitalProxy);
+   int addDigProxy(std::string devName, int subNum, std::string proxyName, vjDigitalProxy* digitalProxy);
 
    //: Turn the digital proxy at index ProxyNum to point back
    // to the default dummy proxy.<br>
    // <br>
    //! MODIFIES: self<br>
    //! POST:  m_digProxyArray[proxyNum]' = m_dummyDig
-   void StupifyDig(int ProxyNum);
+   void stupifyDig(int ProxyNum);
 
 
 /*************** ANALOG PROXY *******************************/
@@ -216,10 +216,10 @@ public:
    // modifies: self<br>
    // post: m_anaProxyArray[proxyNum]' = new Proxy at DevNum/subNum
    //       return = 0 for fail, other for success
-   int SetAnaProxy(int ProxyNum, int DevNum, int subNum);
+   int setAnaProxy(int ProxyNum, int DevNum, int subNum);
 
    //: Get the proxy at the given index
-   vjAnalogProxy* GetAnaProxy(int anaProxyIndex)
+   vjAnalogProxy* getAnaProxy(int anaProxyIndex)
    {
       vjASSERT(m_anaProxyVector.size() > anaProxyIndex);    // Check array bounds
       return m_anaProxyVector[anaProxyIndex];
@@ -229,14 +229,14 @@ public:
    //! POST: analog proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddAnaProxy(std::string devName, int subNum, std::string proxyName, vjAnalogProxy* anaProxy);
+   int addAnaProxy(std::string devName, int subNum, std::string proxyName, vjAnalogProxy* anaProxy);
 
    //: Turn the analog proxy at index ProxyNum to point back
    // to the default dummy proxy.<br>
    //<br>
    //!MODIFIES: self<br>
    //!POST:  m_anaProxyArray[proxyNum]' = m_dummyAna
-   void StupifyAna(int ProxyNum);
+   void stupifyAna(int ProxyNum);
 
 
 /******************     GLOVE PROXY   ************************/
@@ -246,9 +246,9 @@ public:
    //!MODIFIES: self <br>
    //!POST: m_gloveProxyArray[proxyNum]' = new Proxy at DevNum/subNum
    //       return = 0 for fail, other for success
-   int SetGloveProxy(int ProxyNum, int DevNum, int subNum);
+   int setGloveProxy(int ProxyNum, int DevNum, int subNum);
 
-   //: Get the proxy at the given index
+   //: get the proxy at the given index
    vjGloveProxy* GetGloveProxy(int gloveProxyIndex)
    {
       vjASSERT(m_gloveProxyVector.size() > gloveProxyIndex);    // Check array bounds
@@ -259,14 +259,14 @@ public:
    //! POST: glove proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddGloveProxy(std::string devName, int subNum, std::string proxyName, vjGloveProxy* gloveProxy);
+   int addGloveProxy(std::string devName, int subNum, std::string proxyName, vjGloveProxy* gloveProxy);
 
    //: Turn the glove proxy at index ProxyNum to point back
    // to the default dummy glove proxy. <br>
    // <br>
    //!MODIFIES: self <br>
    //!POST:  m_gloveProxyArray[proxyNum]' = m_dummyGlove
-   void StupifyGlove(int ProxyNum);
+   void stupifyGlove(int ProxyNum);
 
    //: Find out how many glove proxies are in the system currently
    // XXX: Experimental, needed to draw the glove objects
@@ -280,10 +280,10 @@ public:
    //! MODIFIES: self <br>
    //! POST: m_keyboardProxyArray[proxyNum]' = new Proxy at DevNum/subNum
    //       return = 0 for fail, other for success
-   int SetKeyboardProxy(int ProxyNum, int DevNum);
+   int setKeyboardProxy(int ProxyNum, int DevNum);
 
    //: Get the keyboard proxy at the given index
-   vjKeyboardProxy* GetKeyboardProxy(int keyboardProxyIndex)
+   vjKeyboardProxy* getKeyboardProxy(int keyboardProxyIndex)
    {
       vjASSERT(m_keyboardProxyVector.size() > keyboardProxyIndex);    // Check array bounds
       return m_keyboardProxyVector[keyboardProxyIndex];
@@ -293,14 +293,14 @@ public:
    //! POST: keyboard proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddKeyboardProxy(std::string devName, int subNum, std::string proxyName, vjKeyboardProxy* kbProxy);
+   int addKeyboardProxy(std::string devName, int subNum, std::string proxyName, vjKeyboardProxy* kbProxy);
 
    //: Turn the keyboard proxy at index ProxyNum to point back
    // to the default dummy keyboard proxy. <br>
    // <br>
    //! MODIFIES: self <br>
    //! POST:  m_keyboardProxyArray[proxyNum]' = m_dummyKeyboard
-   void StupifyKeyboard(int ProxyNum);
+   void stupifyKeyboard(int ProxyNum);
 
 /*******************       GESTURE PROXY    ***************************/
    //: Set the index ProxyNum in the gestureProxy array to proxy
@@ -309,10 +309,10 @@ public:
    //! MODIFIES: self <br>
    //! POST: m_gestureProxyArray[proxyNum]' = new Proxy at DevNum
    //       return = 0 for fail, other for success
-   int SetGestureProxy(int ProxyNum, int DevNum);
+   int setGestureProxy(int ProxyNum, int DevNum);
 
    //: Get the gesture proxy at the given index
-   vjGestureProxy* GetGestureProxy(int gestureProxyIndex)
+   vjGestureProxy* getGestureProxy(int gestureProxyIndex)
    {
       vjASSERT(m_gestureProxyVector.size() > gestureProxyIndex);    // Check array bounds
       return m_gestureProxyVector[gestureProxyIndex];
@@ -322,14 +322,14 @@ public:
    //! POST: gesture proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
-   int AddGestureProxy(std::string devName, int subNum, std::string proxyName, vjGestureProxy* gestureProxy);
+   int addGestureProxy(std::string devName, int subNum, std::string proxyName, vjGestureProxy* gestureProxy);
 
    //: Turn the gesture proxy at index ProxyNum to point back
    // to the default dummy gesture proxy. <br>
    // <br>
    //! MODIFIES: self <br>
    //! POST:  m_gestureProxyArray[proxyNum]' = m_gestureKeyboard
-   void StupifyGesture(int ProxyNum);
+   void stupifyGesture(int ProxyNum);
 
 
 protected:

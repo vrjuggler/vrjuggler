@@ -37,9 +37,9 @@ public:
    //: Set the gloveProxy to point to another device and subUnit number.
    //! PRE: gesturePtr must point to a valid gesture device
    //! POST: this now proxies the given gesture device
-   void Set(vjGesture* gesturePtr)
+   void set(vjGesture* gesturePtr)
    {
-      vjASSERT( gesturePtr->FDeviceSupport(DEVICE_GESTURE) );
+      vjASSERT( gesturePtr->fDeviceSupport(DEVICE_GESTURE) );
       mGesturePtr = gesturePtr;
    }
 

@@ -119,54 +119,54 @@ class vjWin32Keyboard : public vjPosition, public vjDigital, public vjAnalog
    ~vjWin32Keyboard() { StopSampling();}
 
    /* Pure Virtuals required by vjInput */
-   int StartSampling();
-   int StopSampling();
-   int Sample() { return 1;}
-   void UpdateData();
+   int startSampling();
+   int stopSampling();
+   int sample() { return 1;}
+   void updateData();
 
    /* vjInput virtual functions
     *
     *  virtual functions that inherited members should
     *  override but are not required to
     */
-   char* GetDeviceName() { return "vjKeyboard";}
+   char* getDeviceName() { return "vjKeyboard";}
 
    /* vjAnalog pure virtual functions */
-   int GetAnalogData(int devNum = 0) { return m_anadata[devNum];}
+   int getAnalogData(int devNum = 0) { return m_anadata[devNum];}
 
    /* vjDigital pure virtual functions */
-   int GetDigitalData(int devNum = 0) { return m_digdata[devNum];}
+   int getDigitalData(int devNum = 0) { return m_digdata[devNum];}
 
    /* vjPosition pure virtual functions */
-   vjMatrix* GetPosData(int devNum = 0) { return &(m_posdata[devNum]);}
+   vjMatrix* getPosData(int devNum = 0) { return &(m_posdata[devNum]);}
 
    // returns the number of times the key was pressed during the
    // last frame, so you can put this in an if to check if was
    // pressed at all, or if you are doing processing based on this
    // catch the actual number..
-   int IsKeyPressed(int vjKey)
+   int isKeyPressed(int vjKey)
    {  return m_keys[vjKey];}
 
-      void CreateWindowWin32 ();
-	  void UpdKeys(	UINT message,	UINT wParam, LONG lParam);
+      void createWindowWin32 ();
+	  void updKeys(	UINT message,	UINT wParam, LONG lParam);
   private:
    /** @name Private functions for processing input data */
    /* Private functions for processing input data */
  	  //@{
-   int OnlyModifier(int);
+   int onlyModifier(int);
 
-   void MoveFor(float, int);
-   void MoveLeft(float, int);
-   void MoveUp(float, int);
-   void RotUp(float, int);
-   void RotLeft(float, int);
-   void RotRollCCW(float amt, int n);
+   void moveFor(float, int);
+   void moveLeft(float, int);
+   void moveUp(float, int);
+   void rotUp(float, int);
+   void rotLeft(float, int);
+   void rotRollCCW(float amt, int n);
    //@}
 
    /** @name Windows utility functions */
    //@{
    int VKKeyTovjKey(int vkKey);
-   char* CheckArgs(char* look_for);
+   char* checkArgs(char* look_for);
 
 	BOOL MenuInit (HINSTANCE hInstance);
    //@}

@@ -17,12 +17,12 @@ public:
    ~vjDummyGesture() {}
 
    /* Dummies do nothing */
-   int StartSampling() { return 1; }
-	int StopSampling() { return 0; }
-	int Sample() { return 1;}
-	void UpdateData() { return ; }
+   int startSampling() { return 1; }
+	int stopSampling() { return 0; }
+	int sample() { return 1;}
+	void updateData() { return ; }
 
-   char* GetDeviceName()  {return "vjDummyGesture"; }
+   char* getDeviceName()  {return "vjDummyGesture"; }
 
    //: Retuns the id of the named gesture.
    //! RETURNS: -1 - Gesture name Not found.

@@ -30,15 +30,15 @@ public:
    // Loads the file for trained data
    void loadTrainedFile(std::string fileName);
 
-   int StartSampling() { return 1; }
-   int StopSampling() { return 1; }
-   int Sample() { return 1; }
+   int startSampling() { return 1; }
+   int stopSampling() { return 1; }
+   int sample() { return 1; }
 
    //: Update the device data
-   void UpdateData ();
+   void updateData ();
 
    //: Return our name
-   char* GetDeviceName() { return "vjSimGloveGesture"; }
+   char* getDeviceName() { return "vjSimGloveGesture"; }
    static std::string getChunkType() { return std::string("SimGloveGesture");}
 
    /*** These are not supported in sim ***/

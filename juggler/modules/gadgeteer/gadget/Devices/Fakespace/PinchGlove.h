@@ -18,13 +18,13 @@ public:
 
    virtual bool config(vjConfigChunk* c);
 
-   virtual char* GetDeviceName() { return "vjPinchGlove";}
+   virtual char* getDeviceName() { return "vjPinchGlove";}
    static string getChunkType() { return string("PinchGlove");}
 
-   virtual int StartSampling();
-   virtual int StopSampling();
-   virtual int Sample();
-   virtual void UpdateData ();
+   virtual int startSampling();
+   virtual int stopSampling();
+   virtual int sample();
+   virtual void updateData ();
 
 protected:
 	//: The main control loop for the object

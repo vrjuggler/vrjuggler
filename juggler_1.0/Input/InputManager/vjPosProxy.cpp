@@ -9,7 +9,7 @@
 //! NOTE: This means that to set transform, you specific the translation
 //+       followed by rotation that takes the device from where it physically
 //+       is in space to where you want it to be.
-void vjPosProxy::SetTransform( float xoff, float yoff, float zoff,    // Translate
+void vjPosProxy::setTransform( float xoff, float yoff, float zoff,    // Translate
                    float xrot, float yrot, float zrot)   // Rotate
 {
    etrans = true;
@@ -26,9 +26,9 @@ void vjPosProxy::SetTransform( float xoff, float yoff, float zoff,    // Transla
 }
 
 //: Set the vjPosProxy to now point to another device and subDevicenumber
-void vjPosProxy::Set(vjPosition* posPtr, int unitNum)
+void vjPosProxy::set(vjPosition* posPtr, int unitNum)
 {
-   vjASSERT( posPtr->FDeviceSupport(DEVICE_POSITION) );
+   vjASSERT( posPtr->fDeviceSupport(DEVICE_POSITION) );
    vjDEBUG(vjDBG_ALL,0) << "posPtr: " << posPtr << endl
               << "unit  : " << unitNum << endl << endl << vjDEBUG_FLUSH;
    m_posPtr = posPtr;
@@ -49,17 +49,17 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
    if (true == (bool)chunk->getProperty("etrans") )
    {
       vjDEBUG(vjDBG_ALL,1) << "Position Transform enabled..." << endl << vjDEBUG_FLUSH;
-      SetTransform
+      setTransform
       ( chunk->getProperty("translate",0) , // xtrans
         chunk->getProperty("translate",1) , // ytrans
         chunk->getProperty("translate",2) , // ztrans
         chunk->getProperty("rotate",0) , // xrot
         chunk->getProperty("rotate",1) , // yrot
         chunk->getProperty("rotate",2) );// zrot
-      vjDEBUG(vjDBG_ALL,1) << "Transform Matrix: " << endl << GetTransform() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,1) << "Transform Matrix: " << endl << getTransform() << endl << vjDEBUG_FLUSH;
    }
 
-   int proxy_num = vjKernel::instance()->getInputManager()->AddPosProxy(dev_name,unitNum,proxy_name,this);
+   int proxy_num = vjKernel::instance()->getInputManager()->addPosProxy(dev_name,unitNum,proxy_name,this);
 
    if ( proxy_num != -1)
    {

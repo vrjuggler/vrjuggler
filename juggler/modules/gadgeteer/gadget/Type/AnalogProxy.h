@@ -38,26 +38,26 @@ public:
    //! POST: The proxy now references the analog device
    //! ARGS: anaPtr - Pointer to the analog device
    //! ARGS: subNum - The subunit number of the analog device
-   void Set(vjAnalog* anaPtr, int subNum)
+   void set(vjAnalog* anaPtr, int subNum)
    {
-      assert( anaPtr->FDeviceSupport(DEVICE_ANALOG) );
+      assert( anaPtr->fDeviceSupport(DEVICE_ANALOG) );
       m_anaPtr = anaPtr;
       m_unitNum = subNum;
    }
 
    //: Update the cached data copy from the device
-   void UpdateData()
-   { m_data = m_anaPtr->GetAnalogData(m_unitNum);}
+   void updateData()
+   { m_data = m_anaPtr->getAnalogData(m_unitNum);}
 
    //: Get the current analog data value
    //! RETURNS: The analog data from the device
-   int GetData()
+   int getData()
    { return m_data;}
 
-   vjAnalog* GetAnalogPtr()
+   vjAnalog* getAnalogPtr()
    { return m_anaPtr;}
 
-   int GetUnit()
+   int getUnit()
    { return m_unitNum;}
 
    static std::string getChunkType() { return "AnaProxy";}

@@ -37,15 +37,15 @@ public:
    //@}
 
 
-   void Set(vjDigital* digPtr, int subNum)
+   void set(vjDigital* digPtr, int subNum)
    {
-      assert( digPtr->FDeviceSupport(DEVICE_DIGITAL) );
+      assert( digPtr->fDeviceSupport(DEVICE_DIGITAL) );
       m_digPtr = digPtr;
       m_unitNum = subNum;
-      m_data = m_digPtr->GetDigitalData(m_unitNum);
+      m_data = m_digPtr->getDigitalData(m_unitNum);
    }
 
-   void UpdateData();
+   void updateData();
 
 
    //: Get the digital data
@@ -57,17 +57,17 @@ public:
    // The identifiers are defined so that a simple test for non-zero means the button is
    // pressed in some way.  NOTE: Because of how TOGGLE_OFF is defined, testing for non-zero
    // will result in a one update lag in detecting the button not being pressed
-   int GetData()
+   int getData()
    {
       return m_data;
    }
 
-   vjDigital* GetDigitalPtr()
+   vjDigital* getDigitalPtr()
    {
       return m_digPtr;
    }
 
-   int GetUnit()
+   int getUnit()
    {
       return m_unitNum;
    }

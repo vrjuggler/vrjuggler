@@ -13,9 +13,9 @@ public:
    vjKeyboardProxy()
    { mKeyboard = NULL; }
 
-   void Set(vjKeyboard* keyboard)
+   void set(vjKeyboard* keyboard)
    {
-      vjASSERT(keyboard->FDeviceSupport(DEVICE_KEYBOARD));
+      vjASSERT(keyboard->fDeviceSupport(DEVICE_KEYBOARD));
       mKeyboard = keyboard;
    }
 

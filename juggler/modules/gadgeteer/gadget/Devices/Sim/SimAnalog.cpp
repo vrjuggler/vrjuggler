@@ -20,7 +20,7 @@ bool vjSimAnalog::config(vjConfigChunk* chunk)
    return true;
 }
 
-void vjSimAnalog::UpdateData()
+void vjSimAnalog::updateData()
 {
    // -- Update analog data --- //
    for (int i = 0; i < mSimKeysUp.size(); i++)

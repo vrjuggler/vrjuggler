@@ -19,7 +19,7 @@ bool vjSimDigital::config(vjConfigChunk* chunk)
 //
 // NOTE: Digital is on when key is held down
 //+     When key is release, digital goes to off state
-void vjSimDigital::UpdateData()
+void vjSimDigital::updateData()
 {
    // -- Update digital data --- //
    for (int i = 0; i < mSimKeys.size(); i++)

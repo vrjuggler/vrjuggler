@@ -109,7 +109,7 @@ public:
    //  Every input device should have a sample function, after which the
    //  device has been sampled to have new data.  (This new data is not
    //  accessable until UpdateData is called, however)
-   virtual int Sample() = 0;
+   virtual int sample() = 0;
 
    //: Start a device sampling.
    //
@@ -117,24 +117,24 @@ public:
    //  just repeatedly call Sample().
    //  This function should return true when it sucessfully starts,
    //      false otherwise.
-   virtual int StartSampling() = 0;
+   virtual int startSampling() = 0;
 
    //: StopSampling.
    //
    //  Reverse the effects of StartSampling()
-   virtual int StopSampling() = 0;
+   virtual int stopSampling() = 0;
 
-   //: UpdateData()
+   //: updateData()
    //
    //  After this function is called subsequent calls to GetData(d) will
    //  return the most recent data at the time of THIS function call.  Data is
    //  guaranteed to be valid and static until the next call to UpdateData.
-   virtual void UpdateData() = 0;
+   virtual void updateData() = 0;
 
-   //: GetDevicename()
+   //: getDevicename()
    //
    //  Returns the name identifying the TYPE of Input Device
-   virtual char* GetDeviceName() { return "vjInputBase";}
+   virtual char* getDeviceName() { return "vjInputBase";}
 
    //: Returns the string rep of the chunk type used to config this device
    // Used by input manager to find chunks that construct devices
@@ -145,27 +145,27 @@ public:
      * It hasn't been resolved as to whether these functions should be removed
      */
    //@{
-   void SetPort(const char* serialPort);
-   char* GetPort();
-   void SetBaudRate(int baud);
-   int  GetBaudRate() { return baudRate;}
+   void setPort(const char* serialPort);
+   char* getPort();
+   void setBaudRate(int baud);
+   int  getBaudRate() { return baudRate;}
    //@}
 
-   //: GetInstanceName()
+   //: getInstanceName()
    //
    //  Returns the name identifying the INSTANCE of this InputDevice
-   char* GetInstanceName() {
+   char* getInstanceName() {
       if (instName == NULL) return "Undefined";
       return instName;
    }
 
-   //: FDeviceSupport(ability)
+   //: fDeviceSupport(ability)
    //
    //  Returns true/false does this input device support the ability passed in
-   int  FDeviceSupport(int devAbility);
+   int  fDeviceSupport(int devAbility);
 
    //: Is this input device active?.
-   int IsActive() { return active;}
+   int isActive() { return active;}
 
 protected:  // Helpers
    //: Reset the Index Holders

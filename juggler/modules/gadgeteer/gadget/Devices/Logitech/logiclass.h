@@ -64,59 +64,59 @@ public:
    virtual bool config(vjConfigChunk* c);
 
 	/** vjInput pure virtual functions **/
-	int StartSampling();
-	int StopSampling();
-	void UpdateData();
-	int Sample()
-	    { return GetRecord(&theData[current]); }
+	int startSampling();
+	int stopSampling();
+	void updateData();
+	int sample()
+	    { return getRecord(&theData[current]); }
 
 	/** vjInput virtual functions **/
-	char* GetDeviceName() { return "vjThreeDMouse"; }
+	char* getDeviceName() { return "vjThreeDMouse"; }
 	static std::string getChunkType() { return std::string("ThreeDMouse");}
 
 	/** vjPosition pure virtual functions **/
-	vjMatrix* GetPosData(int devNum = 0);
-	void GetPosData(vjPOS_DATA* &data);
+	vjMatrix* getPosData(int devNum = 0);
+	void getPosData(vjPOS_DATA* &data);
 
 	/** @name Internal functions from original implementation
 	 *
 	 *  not to be used on the outside
 	 */
 	//@{
-	int OpenMouse(char* portName);
-	int CloseMouse();
+	int openMouse(char* portName);
+	int closeMouse();
 
-	void CuDemandReporting ();
-	void CuEulerMode ();
-	void CuHeadtrackerMode ();
-	void CuMouseMode ();
-	void CuRequestDiagnostics ();
-	void CuRequestReport ()	    // Inline, most called function in package
+	void cuDemandReporting ();
+	void cuEulerMode ();
+	void cuHeadtrackerMode ();
+	void cuMouseMode ();
+	void cuRequestDiagnostics ();
+	void cuRequestReport ()	    // Inline, most called function in package
 		// Demand a single report
 	    {write (mouseFD, "*d", 2); }
 
-	void CuResetControlUnit ();
+	void cuResetControlUnit ();
 
-	void GetDiagnostics (char data[]);
-	int  GetRecord (vjPOS_DATA *data);
-	void ResetControlUnit ();
+	void getDiagnostics (char data[]);
+	int  getRecord (vjPOS_DATA *data);
+	void resetControlUnit ();
 
 
-	void SetBaseOrigin();
+	void setBaseOrigin();
 	    // PURPOSE: Sets the current mouse X,Y,Z position to be the base origin
 
-	float GetX()
+	float getX()
 	{ return theData[current].pos[0] + baseVector[0]; }
-	float GetY()
+	float getY()
 	{ return theData[current].pos[1] + baseVector[1]; }
-	float GetZ()
+	float getZ()
 	{ return theData[current].pos[2] + baseVector[2]; }
-	float GetPitch()    { return theData[current].orient[0]; }
-	float GetYaw()	    { return theData[current].orient[1]; }
-	float GetRoll()	    { return theData[current].orient[2]; }
-//	vjVec3 GetLocation() { return SbVec3f(GetX(), GetY(), GetZ()); }
+	float getPitch()    { return theData[current].orient[0]; }
+	float getYaw()	    { return theData[current].orient[1]; }
+	float getRoll()	    { return theData[current].orient[2]; }
+//	vjVec3 getLocation() { return SbVec3f(GetX(), GetY(), GetZ()); }
 
-//	int ButtonPressed() { return currentMouseReadings.buttons; }
+//	int buttonPressed() { return currentMouseReadings.buttons; }
 	    // PURPOSE: Examine what buttons are pressed
 	    // Returns packed int,
 	    // EX:  if(ButtonPressed() & logitech_LEFTBUTTON) then
@@ -131,10 +131,10 @@ public:
 	vjVec3      baseVector;	// Used to store the base location tooffset from
 				// Originally set to 0,0,0
 
-	int  LogitechOpen (char *port_name);
+	int  logitechOpen (char *port_name);
 
-	void EulerToAbsolute (byte record[], vjPOS_DATA * data);
-	void PrintBin (char a);
+	void eulerToAbsolute (byte record[], vjPOS_DATA * data);
+	void printBin (char a);
 };
 
 

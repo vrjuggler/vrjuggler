@@ -37,11 +37,11 @@ bool vjIBox::config(vjConfigChunk *c)
 *********************************************** ahimberg */
 vjIBox::~vjIBox()
 {
-  StopSampling();
+  stopSampling();
 }
 
 /**********************************************************
-  int vjIBox::StartSampling()
+  int vjIBox::startSampling()
 
   Starts the Ibox sampling, spawns a thread to query for
   data.
@@ -49,7 +49,7 @@ vjIBox::~vjIBox()
   returns 1 if successful, 0 if it failed or was already sampling
 
 *********************************************** ahimberg */
-int vjIBox::StartSampling()
+int vjIBox::startSampling()
 {
   ibox_result result;
 
@@ -76,8 +76,8 @@ int vjIBox::StartSampling()
 
 
       vjIBox* devicePtr = this;
-      void SampleBox(void*);
-      myThread = new vjThread(SampleBox, (void*)devicePtr, 0);
+      void sampleBox(void*);
+      myThread = new vjThread(sampleBox, (void*)devicePtr, 0);
       if (!myThread->valid())
 	      return 0; //fail
       else {
@@ -89,22 +89,22 @@ int vjIBox::StartSampling()
 }
 
 /**********************************************************
-  void SampleBox(void*)
+  void sampleBox(void*)
 
   The spawned thread just loops from here
 
 *********************************************** ahimberg */
-void SampleBox(void* pointer)
+void sampleBox(void* pointer)
 {
    vjIBox* devPointer = (vjIBox*) pointer;
 
    for (;;)
-     devPointer->Sample();
+     devPointer->sample();
 
 }
 
 /**********************************************************
-  int vjIBox::Sample()
+  int vjIBox::sample()
 
   IBox Sampler function, tries to get a packet of new stuff,
   when it does it fills up the data and swaps swaps the
@@ -113,7 +113,7 @@ void SampleBox(void* pointer)
   Each call to this function is not guaranteed to result in new data.
 
 *********************************************** ahimberg */
-int vjIBox::Sample()
+int vjIBox::sample()
 {
      //struct timeval tv;
      // double start_time, stop_time;
@@ -155,13 +155,13 @@ int vjIBox::Sample()
 }
 
 /**********************************************************
-  int vjIBox::StopSampling()
+  int vjIBox::stopSampling()
 
   Kill the sampling thread if it exists, disconnect from
   the ibox.
 
 *********************************************** ahimberg */
-int vjIBox::StopSampling()
+int vjIBox::stopSampling()
 {
   if (myThread != NULL)
   {
@@ -179,30 +179,30 @@ int vjIBox::StopSampling()
 }
 
 /**********************************************************
-  int vjIBox::GetAnalogData(int)
+  int vjIBox::getAnalogData(int)
 
 *********************************************** ahimberg */
-int vjIBox::GetAnalogData(int d)
+int vjIBox::getAnalogData(int d)
 {
     return theData[current].button[d];
 }
 
 /**********************************************************
-  int vjIBox::GetDigitalData(int)
+  int vjIBox::getDigitalData(int)
 
 *********************************************** ahimberg */
-int vjIBox::GetDigitalData(int d)
+int vjIBox::getDigitalData(int d)
 {
     return theData[current].button[d];
 }
 
 /**********************************************************
-  void vjIBox::UpdateData()
+  void vjIBox::updateData()
 
   Swap the current/valid array indicies
 
 *********************************************** ahimberg */
-void vjIBox::UpdateData()
+void vjIBox::updateData()
 {
 vjGuard<vjMutex> updateGuard(lock);
 

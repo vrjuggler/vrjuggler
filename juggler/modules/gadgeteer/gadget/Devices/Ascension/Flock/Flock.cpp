@@ -85,8 +85,8 @@ bool vjFlock::config(vjConfigChunk *c)
       return false;
 
    // keep aFlock's port and baud members in sync with vjInput's port and baud members.
-   mFlockOfBirds.setPort( vjInput::GetPort() );
-   mFlockOfBirds.setBaudRate( vjInput::GetBaudRate() );
+   mFlockOfBirds.setPort( vjInput::getPort() );
+   mFlockOfBirds.setBaudRate( vjInput::getBaudRate() );
 
    // set mFlockOfBirds with the config info.
    mFlockOfBirds.setSync( static_cast<int>(c->getProperty("sync")) );
@@ -126,25 +126,25 @@ bool vjFlock::config(vjConfigChunk *c)
 vjFlock::~vjFlock()
 {
     vjDEBUG(vjDBG_ALL,0)  << "	vjFlock::~vjFlock()" << endl << vjDEBUG_FLUSH;
-    this->StopSampling();
+    this->stopSampling();
     if (theData != NULL)
        getMyMemPool()->deallocate((void*)theData);
     if (mDataTimes != NULL)
 	delete mDataTimes;
 }
 
-static void SampleBirds(void* pointer)
+static void sampleBirds(void* pointer)
 {
    vjDEBUG(vjDBG_ALL,0) << "vjFlock: Spawned SampleBirds starting" << endl << vjDEBUG_FLUSH;
 
    vjFlock* devPointer = (vjFlock*) pointer;
    for (;;)
    {
-      devPointer->Sample();
+      devPointer->sample();
    }
 }
 
-int vjFlock::StartSampling()
+int vjFlock::startSampling()
 {
    // make sure birds aren't already started
    if (this->isActive() == true)
@@ -185,7 +185,7 @@ int vjFlock::StartSampling()
 
       vjFlock* devicePtr = this;
 
-      myThread = new vjThread(SampleBirds, (void*) devicePtr, 0);
+      myThread = new vjThread(sampleBirds, (void*) devicePtr, 0);
 
       if ( myThread == NULL )
       {
@@ -200,7 +200,7 @@ int vjFlock::StartSampling()
       return 0; // already sampling
 }
 
-int vjFlock::Sample()
+int vjFlock::sample()
 {
    if (this->isActive() == false)
       return 0;
@@ -267,7 +267,7 @@ int vjFlock::Sample()
    return 1;
 }
 
-int vjFlock::StopSampling()
+int vjFlock::stopSampling()
 {
    if (this->isActive() == false)
       return 0;
@@ -297,7 +297,7 @@ int vjFlock::StopSampling()
    return 1;
 }
 
-vjMatrix* vjFlock::GetPosData( int d ) // d is 0 based
+vjMatrix* vjFlock::getPosData( int d ) // d is 0 based
 {
     if (this->isActive() == false)
 	return NULL;
@@ -312,7 +312,7 @@ vjTimeStamp* vjFlock::getPosUpdateTime (int d) {
     return (&mDataTimes[getBirdIndex(d,current)]);
 }
 
-void vjFlock::UpdateData()
+void vjFlock::updateData()
 {
    int new_index, old_index, tmp;
 
@@ -372,6 +372,8 @@ void vjFlock::setTransmitter(const int& Transmit)
   }
   mFlockOfBirds.setTransmitter( Transmit );
 }
+
+
 void vjFlock::setNumBirds(const int& n)
 {
   if (this->isActive())
@@ -381,6 +383,8 @@ void vjFlock::setNumBirds(const int& n)
   }
   mFlockOfBirds.setNumBirds( n );
 }
+
+
 void vjFlock::setSync(const int& sync)
 {
   if (this->isActive())
@@ -391,6 +395,7 @@ void vjFlock::setSync(const int& sync)
   mFlockOfBirds.setSync( sync );
 }
 
+
 void vjFlock::setBlocking(const int& blVal)
 {
   if (this->isActive())
@@ -400,6 +405,7 @@ void vjFlock::setBlocking(const int& blVal)
   }
   mFlockOfBirds.setBlocking( blVal );
 }
+
 
 //: set the port to use
 //  this will be a string in the form of the native OS descriptor <BR>
@@ -416,7 +422,7 @@ void vjFlock::setPort( const char* const serialPort )
 
     // keep vjInput's port and baud members in sync
     // with aFlock's port and baud members.
-    vjInput::SetPort( serialPort );
+    vjInput::setPort( serialPort );
 }
 
 //: set the baud rate
@@ -433,5 +439,5 @@ void vjFlock::setBaudRate( const int& baud )
 
     // keep vjInput's port and baud members in sync
     // with aFlock's port and baud members.
-    vjInput::SetBaudRate( baud );
+    vjInput::setBaudRate( baud );
 }

@@ -28,12 +28,12 @@ public:
 		int id;
 	};
 	
-	virtual char* GetDeviceName() { return "vjDragon";}
+	virtual char* getDeviceName() { return "vjDragon";}
 
-       virtual int StartSampling();
-       virtual int StopSampling();
-       virtual int Sample();
-       virtual void UpdateData();
+       virtual int startSampling();
+       virtual int stopSampling();
+       virtual int sample();
+       virtual void updateData();
 
 protected:
 	std::list<asdfjlk>	_wordQueue;
@@ -50,22 +50,22 @@ protected:
 	static void			controlLoop(vjDragon& currentInstance);
 };
 
-inline int vjDragon::StartSampling()
+inline int vjDragon::startSampling()
 {
     //todo: tell dragon to begin.
 }
 
-inline int vjDragon::StopSampling()
+inline int vjDragon::stopSampling()
 {
     //todo: tell dragon to stop sending data.
 }
 
-inline int vjDragon::Sample()
+inline int vjDragon::sample()
 {
     //todo: recieve all words that dragon has to offer this frame.
 }
 
-inline void vjDragon::UpdateData()
+inline void vjDragon::updateData()
 {
     //TODO: find out what the difference between this and Sample() is
 }

@@ -93,7 +93,7 @@ public:
    //! RETURNS: true - key pressed exclusively
    virtual bool modifierOnly(int modKey) =0;
 
-   virtual char* GetDeviceName()
+   virtual char* getDeviceName()
    { return "vjKeyboard"; }
 };
 

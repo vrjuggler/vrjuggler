@@ -26,12 +26,12 @@ public:
    ~vjDummyGlove ()
    {;}
 
-   virtual char* GetDeviceName() { return "vjDummyGlove";}
+   virtual char* getDeviceName() { return "vjDummyGlove";}
 
-   virtual int StartSampling() { return 1; }
-   virtual int StopSampling() { return 1; }
-   virtual int Sample() { return 1; }
-   virtual void UpdateData () {}
+   virtual int startSampling() { return 1; }
+   virtual int stopSampling() { return 1; }
+   virtual int sample() { return 1; }
+   virtual void updateData () {}
 
    void setGlovePosProxy(vjPosProxy* posProxy)
    { mGlovePos[0] = posProxy; }

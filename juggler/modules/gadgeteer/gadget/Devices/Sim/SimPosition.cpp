@@ -46,7 +46,7 @@ bool vjSimPosition::config(vjConfigChunk* chunk)
 }
 
 
-void vjSimPosition::UpdateData()
+void vjSimPosition::updateData()
 {
    int amt = 0;      // Number of times key pressed
                      // Used to keep from calling checkKey twice on success
@@ -56,41 +56,41 @@ void vjSimPosition::UpdateData()
 
    amt = checkKeyPair(mSimKeys[FORWARD]);
    if(amt)
-      MoveFor( 1 * amt);
+      moveFor( 1 * amt);
    amt = checkKeyPair(mSimKeys[BACK]);
    if(amt)
-      MoveFor( -1 * amt);
+      moveFor( -1 * amt);
    amt = checkKeyPair(mSimKeys[LEFT]);
    if(amt)
-      MoveLeft( 1 * amt);
+      moveLeft( 1 * amt);
    amt = checkKeyPair(mSimKeys[RIGHT]);
    if(amt)
-      MoveLeft( -1 * amt);
+      moveLeft( -1 * amt);
    amt = checkKeyPair(mSimKeys[UP]);
    if(amt)
-      MoveUp ( 1 * amt);
+      moveUp ( 1 * amt);
    amt = checkKeyPair(mSimKeys[DOWN]);
    if(amt)
-      MoveUp (-1 * amt);
+      moveUp (-1 * amt);
 
    amt = checkKeyPair(mSimKeys[ROTR]);
    if(amt)
-      RotLeft( -1 *amt);
+      rotLeft( -1 *amt);
    amt = checkKeyPair(mSimKeys[ROTL]);
    if(amt)
-      RotLeft( 1  * amt);
+      rotLeft( 1  * amt);
    amt = checkKeyPair(mSimKeys[ROTU]);
    if(amt)
-      RotUp( 1 * amt);
+      rotUp( 1 * amt);
    amt = checkKeyPair(mSimKeys[ROTD]);
    if(amt)
-      RotUp( -1 * amt);
+      rotUp( -1 * amt);
    amt = checkKeyPair(mSimKeys[ROT_ROLL_CCW]);
    if(amt)
-      RotRollCCW( 1 * amt);
+      rotRollCCW( 1 * amt);
    amt = checkKeyPair(mSimKeys[ROT_ROLL_CW]);
    if(amt)
-      RotRollCCW( -1 * amt);
+      rotRollCCW( -1 * amt);
 
    // Debug output
    //vjCoord pos_data(mPos);
@@ -100,7 +100,7 @@ void vjSimPosition::UpdateData()
 
 // Move forward the given amount on position data n
 // Forward is in th -Z direction
-void vjSimPosition::MoveFor(const float amt)
+void vjSimPosition::moveFor(const float amt)
 {
    vjVec3 move_forward(0.0,0.0,-1.0);  // Base movement
    move_forward *= (amt*mDTrans);
@@ -118,7 +118,7 @@ void vjSimPosition::MoveFor(const float amt)
 
 // Move left the given amount on position data n
 // Left is -X dir
-void vjSimPosition::MoveLeft(const float amt)
+void vjSimPosition::moveLeft(const float amt)
 {
    vjVec3 move_left(-1.0,0.0,0.0);  // Base movement
    move_left *= (amt*mDTrans);
@@ -136,7 +136,7 @@ void vjSimPosition::MoveLeft(const float amt)
 
 // Move up the given amount on position data n
 // Up is in th +Y dir
-void vjSimPosition::MoveUp(const float amt)
+void vjSimPosition::moveUp(const float amt)
 {
    vjVec3 move_up(0.0,1.0,0.0);  // Base movement
    move_up *= (amt*mDTrans);
@@ -153,7 +153,7 @@ void vjSimPosition::MoveUp(const float amt)
 }
 
 // Pitch up - rot +x axis
-void vjSimPosition::RotUp(const float amt)
+void vjSimPosition::rotUp(const float amt)
 {
    static vjVec3 x_axis(1.0,0.0,0.0);
    if(mRotCoordSystem == LOCAL)
@@ -177,7 +177,7 @@ void vjSimPosition::RotUp(const float amt)
 }
 
 // Yaw left - rot +Y axis
-void vjSimPosition::RotLeft(const float amt)
+void vjSimPosition::rotLeft(const float amt)
 {
    static vjVec3 y_axis(0.0, 1.0, 0.0);
 
@@ -202,7 +202,7 @@ void vjSimPosition::RotLeft(const float amt)
 }
 
 // Roll Left - rot -z axis
-void vjSimPosition::RotRollCCW(const float amt)
+void vjSimPosition::rotRollCCW(const float amt)
 {
    static vjVec3 neg_z_axis(0.0, 0.0, -1.0);
 

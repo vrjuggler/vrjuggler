@@ -42,23 +42,23 @@ public:
 
    /** @name vjInput Pure Virtual Functions */
    //@{
-   int StartSampling();
-   int StopSampling();
-   int Sample();
-   void UpdateData();
-   char* GetDeviceName() { return "IBox";}
+   int startSampling();
+   int stopSampling();
+   int sample();
+   void updateData();
+   char* getDeviceName() { return "IBox";}
    //@}
 
    static std::string getChunkType() { return std::string("IBox");}
 
    /** @name vjDigital Pure Virtual Functions */
    //@{
-   int GetDigitalData(int d = 0);
+   int getDigitalData(int d = 0);
    //@}
 
    /** @name vjAnalog Pure Virtual Functions */
    //@{
-   int GetAnalogData(int d = 0);
+   int getAnalogData(int d = 0);
    //@}
 
 

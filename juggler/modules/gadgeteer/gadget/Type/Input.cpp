@@ -42,7 +42,7 @@ bool vjInput::config( vjConfigChunk *c)
 }
 
 
-void vjInput::SetPort(const char* serialPort)
+void vjInput::setPort(const char* serialPort)
 {
 if (myThread != NULL) {
      cerr << "Cannot change the serial Port while active\n";
@@ -51,19 +51,19 @@ if (myThread != NULL) {
   strncpy(sPort,serialPort,(size_t)30);
 }
 
-char* vjInput::GetPort()
+char* vjInput::getPort()
 {
   if (sPort == NULL) return "No port";
   return sPort;
 }
 
-void vjInput::SetBaudRate(int baud)
+void vjInput::setBaudRate(int baud)
 {
   if (myThread != NULL)
      baudRate = baud;
 }
 
-int vjInput::FDeviceSupport(int devAbility)
+int vjInput::fDeviceSupport(int devAbility)
 {
     return (deviceAbilities & devAbility);
 }

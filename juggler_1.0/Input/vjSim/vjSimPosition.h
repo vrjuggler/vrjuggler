@@ -44,7 +44,7 @@ public:
    virtual bool config(vjConfigChunk* chunk);
 
    //: Return position data
-   vjMatrix* GetPosData(int devNum=0)
+   vjMatrix* getPosData(int devNum=0)
    {
       vjASSERT(devNum == 0);    // Make sure we have a valid dev
       return &mPos;
@@ -55,36 +55,36 @@ public:
     }
 
    /* These functions don't do anything */
-   int StartSampling() { return 1; }
-   int StopSampling() { return 1; }
-   int Sample() { return 1; }
+   int startSampling() { return 1; }
+   int stopSampling() { return 1; }
+   int sample() { return 1; }
 
    //: Update the data
-   virtual void UpdateData();
+   virtual void updateData();
 
    //: Get the name of the digital device
-   char* GetDeviceName() { return "vjSimPosition";}
+   char* getDeviceName() { return "vjSimPosition";}
 
    static std::string getChunkType() { return std::string("SimPosition"); }
 
 private:
    //: Move forward (-z) the given amount on position data n
-   void MoveFor(const float amt);
+   void moveFor(const float amt);
 
    //: Move left (-X) the given amount
-   void MoveLeft(const float amt);
+   void moveLeft(const float amt);
 
    //: Move up (+y) the given amount
-   void MoveUp(const float amt);
+   void moveUp(const float amt);
 
    //: Pitch up - rot +x axis
-   void RotUp(const float amt);
+   void rotUp(const float amt);
 
    //: Yaw left - rot +Y axis
-   void RotLeft(const float amt);
+   void rotLeft(const float amt);
 
    //: Roll Left - rot -z axis
-   void RotRollCCW(const float amt);
+   void rotRollCCW(const float amt);
 
    //: Check if movement is allowed
    //! NOTE: It is not allowed if it hits a simulated wall, etc.

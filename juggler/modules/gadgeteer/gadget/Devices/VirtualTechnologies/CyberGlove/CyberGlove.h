@@ -22,12 +22,12 @@ public:
 
    virtual bool config(vjConfigChunk* c);
 
-   virtual char* GetDeviceName() { return "vjCyberGlove";}
+   virtual char* getDeviceName() { return "vjCyberGlove";}
 
-   virtual int StartSampling();
-   virtual int StopSampling();
-   virtual int Sample();
-   virtual void UpdateData ();
+   virtual int startSampling();
+   virtual int stopSampling();
+   virtual int sample();
+   virtual void updateData ();
 
    static std::string getChunkType() { return std::string("CyberGlove");}
 

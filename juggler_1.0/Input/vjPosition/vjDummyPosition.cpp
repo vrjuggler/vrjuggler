@@ -35,16 +35,16 @@ vjDummyPosition::~vjDummyPosition() {
 
 }
 
-int vjDummyPosition::StartSampling() {
+int vjDummyPosition::startSampling() {
     return 1;
 }
 
-int vjDummyPosition::StopSampling() {
+int vjDummyPosition::stopSampling() {
     return 1;
 }
 
 
-vjMatrix* vjDummyPosition::GetPosData (int d) {
+vjMatrix* vjDummyPosition::getPosData (int d) {
     return (&mydata);
 }
 
@@ -54,10 +54,10 @@ vjTimeStamp* vjDummyPosition::getPosUpdateTime(int d) {
 }
 
 
-void vjDummyPosition::UpdateData () {
+void vjDummyPosition::updateData () {
 
 }
 
-int vjDummyPosition::Sample() {
+int vjDummyPosition::sample() {
     return 1;
 }
