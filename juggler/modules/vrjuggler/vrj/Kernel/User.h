@@ -106,8 +106,8 @@ private:
 private:
    static int mNextUserId;     /**< the next user id to assign */
 
-   User(const User& u) {;}
-   void operator=(const User& u) {;}
+   User(const User&) {;}
+   void operator=(const User&) {;}
 };
 
 }
