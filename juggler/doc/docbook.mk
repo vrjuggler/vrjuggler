@@ -32,8 +32,9 @@
 
 .SUFFIXES: .html .xml .pdf .tex .fo .txt
 
-XALAN_VERSION?=	20020214
-SAXON_VERSION?=	6.5.2
+DOCBOOK_XSL_VERSION?=	1.53.0
+XALAN_VERSION?=		20020214
+SAXON_VERSION?=		6.5.2
 
 DVIPDF?=	dvipdf
 DVIPS?=		dvips
@@ -49,11 +50,13 @@ PDFTEX?=	$(TEX_BINDIR)/pdftex
 PDFXMLTEX?=	$(TEX_BINDIR)/pdfxmltex
 RASTERIZER?=	$(DOCBOOK_ROOT)/batik-1.5/svgrasterizer
 RM=		rm -f
-SAXON?=		$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)/saxon.sh
+SAXON_DIR?=	$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)
+SAXON?=		$(SAXON_DIR)/saxon.sh
 TEX_DIR?=	$(DOCBOOK_ROOT)/TeX
 TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
 TEX_ENV?=	PATH=$(TEX_BINDIR):$(PATH) VARTEXMF=$(TEX_DIR)/texmf-var
-XALAN?=		$(DOCBOOK_ROOT)/xalan-j_$(XALAN_VERSION)/bin/xalan.sh
+XALAN_DIR?=	$(DOCBOOK_ROOT)/xalan-j_$(XALAN_VERSION)
+XALAN?=		$(XALAN_DIR)/bin/xalan.sh
 XEP?=		sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC?=	/usr/bin/xsltproc
 
@@ -93,7 +96,12 @@ SGML_ROOT?=	/usr/share/sgml/docbook
 
 DB_SGML_DTD?=	$(DOCBOOK_ROOT)/docbook-sgml-4.1.dtd
 DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.76
-XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.53.0
+XSL_DIR=	$(DOCBOOK_ROOT)/docbook-xsl-$(DOCBOOK_XSL_VERSION)
+
+ENV=		DOCBOOK_XSL=$(XSL_DIR) DOCBOOK_ROOT=$(DOCBOOK_ROOT)	\
+		SAXON_DIR=$(SAXON_DIR) XALAN_DIR=$(XALAN_DIR)		\
+		DOCBOOK_XSL_VERSION=$(DOCBOOK_XSL_VERSION)		\
+		SAXON_VERSION=$(SAXON_VERSION)
 
 ifdef NEED_DB_IMAGES
 LINK_DEPS=	images
@@ -104,7 +112,7 @@ txt: $(TXT_FILES)
 html: $(LINK_DEPS) $(HTML_FILES)
 
 chunk-html:
-	for file in $(XML_FILES) ; do \
+	$(ENV) for file in $(XML_FILES) ; do \
             dir=`echo $$file | sed -e 's/\.xml//'` ; \
             if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
             cur_dir=`pwd` ; \
@@ -118,7 +126,7 @@ chunk-html:
             if [ ! -z "$(INSTALL_DIRS)" ]; then \
                 cp -r $(INSTALL_DIRS) $$dir ; \
             fi ; \
-        done
+          done
 
 pdf: $(LINK_DEPS) $(PDF_FILES)
 
@@ -198,19 +206,19 @@ install install-all:
 
 .xml.html:
 ifeq ($(XSLT_TOOL), Xalan)
-	$(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@	\
+	$(ENV) $(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@	\
           $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)
 else
-	$(SAXON) -i $< -xsl $(XSL_DIR)/html/docbook.xsl -o $@		\
+	$(ENV) $(SAXON) -i $< -xsl $(XSL_DIR)/html/docbook.xsl -o $@	\
           $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS)
 endif
 
 .xml.fo:
 ifeq ($(XSLT_TOOL), Xalan)
-	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@		\
+	$(ENV) $(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@	\
           $(XALAN_FO_PARAMS) $(EXTRA_XALAN_FO_PARAMS)
 else
-	$(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@		\
+	$(ENV) $(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@	\
           $(SAXON_FO_PARAMS) $(EXTRA_SAXON_FO_PARAMS)
 endif
 
@@ -219,10 +227,10 @@ endif
 
 #.xml.txt:
 #ifeq ($(XSLT_TOOL), Xalan)
-#	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@		\
+#	$(ENV) $(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@	\
 #          $(XALAN_TXT_PARAMS) $(EXTRA_XALAN_TXT_PARAMS)
 #else
-#	$(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@		\
+#	$(ENV) $(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@	\
 #          $(SAXON_TXT_PARAMS) $(EXTRA_SAXON_TXT_PARAMS)
 #endif
 #	$(FOP) -fo $< -txt $@
