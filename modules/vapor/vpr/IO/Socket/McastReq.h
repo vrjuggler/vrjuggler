@@ -33,12 +33,13 @@
 #ifndef _VPR_MCAST_REQ_H_
 #define _VPR_MCAST_REQ_H_
 
+#include <vpr/vprConfig.h>
 #include <vpr/IO/Socket/InetAddr.h>
 
 
 namespace vpr {
 
-class McastReq {
+class VPR_CLASS_API McastReq {
 public:
     /**
      * Default constructor.

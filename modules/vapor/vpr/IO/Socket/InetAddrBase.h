@@ -46,7 +46,7 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 //: Cross-platform abstraction to Internet address structures.
 // ----------------------------------------------------------------------------
-class InetAddrBase {
+class VPR_CLASS_API InetAddrBase {
 public:
     //static const InetAddr AnyAddr;  -- NEED An AnyAddr defined
 /*
