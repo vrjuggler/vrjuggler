@@ -89,6 +89,16 @@ public:
       return *this;
    }
 
+   bool operator== (const StringData& o) const
+   {
+      return mStringData == o.mStringData && mTimeStamp == o.mTimeStamp;
+   }
+
+   bool operator!= (const StringData& o) const
+   {
+      return ! (*this == o);
+   }
+
 protected:
    std::string mStringData;
 }; // class StringData
