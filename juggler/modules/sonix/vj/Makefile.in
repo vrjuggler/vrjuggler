@@ -1,4 +1,54 @@
 default: all
 
-all:
-	echo "nothing to do"
+include @topdir@/make.defs.mk
+
+SRCS = 
+
+# ABI            - Application Binary Interface type.  This may be used for
+#                  other binary types when supported by the operating system
+#                  (e.g., "ELF", "N32" or "64").
+# ABI_LIST       - List of all possible ABI/ISA combinations that can be built
+#                  on the target system.
+# ISA            - Instruction Set Architecture.  This may be used for other
+#                  binary types when supported by the operating system (e.g.,
+#                  "mips3" or "i386").
+# LIBBITSUF      - Suffix for the library path used by the linker on IRIX
+#                  only.  For n32 binaries, it will be 32.  For 64-bit
+#                  binaries, it will be 64.
+# PLATFORM       - The operating system abbreviation on which the library is
+#                  being built.
+#
+# DYNAMICLIB_EXT - File extension for dynamic libraries.
+# STATICLIB_EXT  - File extension for shared libraries.
+
+
+# the include path directory to install to ...
+includedir	= @includedir@/vj
+
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+INSTALL		= @INSTALL@
+
+EXTRA_SRCS_PATH =
+EXTRA_INCLUDES = ${VJ_BASE_DIR}/include
+LIBS = ${LIBS} -lm
+
+
+##################################################################
+
+# lib specific: (where to dump the .o files)
+SUBOBJDIR       = $(AJ_LIBRARY)
+
+include $(MKPATH)/dpp.obj.mk
+
+kevin: ${OBJECTS}
+	${AR} ${ARFLAGS} libvjsm.a ${OBJECTS}
+
+# -----------------------------------------------------------------------------
+# Include dependencies generated automatically.
+# -----------------------------------------------------------------------------
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+    include $(DEPEND_FILES)
+endif
+endif
