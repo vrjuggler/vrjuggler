@@ -41,7 +41,7 @@
 #include <jccl/ConfigManager/XMLConfigCommunicator.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Singleton.h>
 

@@ -40,7 +40,8 @@ SUBDIR		= Config		\
                   XMLUtil		\
                   JackalServer		\
                   Performance 		\
-		  ConfigManager
+		  ConfigManager		\
+		  Util
 
 $(RECTARGET): recursive
 

@@ -37,7 +37,7 @@
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkDescDB.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Singleton.h>
 

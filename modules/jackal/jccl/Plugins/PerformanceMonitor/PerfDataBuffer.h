@@ -39,7 +39,7 @@
 #include <jccl/jcclConfig.h>
 #include <jccl/Performance/TimeStamp.h>
 #include <vpr/Sync/Mutex.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 
 namespace jccl {
 

@@ -35,7 +35,7 @@
 #include <jccl/jcclConfig.h>
 #include <sys/types.h>
 
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ParseUtil.h>
@@ -159,7 +159,7 @@ std::istream& operator >> (std::istream& in, ChunkDescDB& self) {
                        << str <<"'"<< std::endl << vprDEBUG_FLUSH;
         }
     }
-    vprDEBUG(vprDBG_CONFIG,3) << "ChunkDescDB::>> : Finished - " << self.descs.size()
+    vprDEBUG(jcclDBG_CONFIG,3) << "ChunkDescDB::>> : Finished - " << self.descs.size()
                << " descriptions read." << std::endl << vprDEBUG_FLUSH;
     return in;
 }

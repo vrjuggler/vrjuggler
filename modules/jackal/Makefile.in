@@ -130,7 +130,8 @@ SUBDIR		= jccl/Config        \
 		  jccl/JackalServer  \
 		  jccl/ConfigManager \
 		  jccl/Performance   \
-		  jccl/XMLUtil
+		  jccl/XMLUtil	     \
+		  jccl/Util
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 

@@ -32,7 +32,7 @@
 
 
 #include <jccl/Performance/PerfDataBuffer.h>
-#include <vpr/Util/Debug.h>
+//#include <vpr/Util/Debug.h>
 
 namespace jccl {
 
@@ -65,7 +65,7 @@ PerfDataBuffer::~PerfDataBuffer () {
 //+       writing available data when requested.
 void PerfDataBuffer::activate() {
     active = 1;
-    vprDEBUG(vprDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
+    vprDEBUG(jcclDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
 	" activated.\n" << vprDEBUG_FLUSH;
 }
 
@@ -84,7 +84,7 @@ void PerfDataBuffer::deactivate() {
     read_begin = 0;
     write_pos = 1;
     lost = 0;
-    vprDEBUG(vprDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
+    vprDEBUG(jcclDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
 	" deactivated.\n" << vprDEBUG_FLUSH;
 
 }

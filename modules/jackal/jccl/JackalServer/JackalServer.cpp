@@ -183,7 +183,7 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
         if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
             // it's new to us
             Connect* vn = new Connect (chunk);
-            vprDEBUG (vprDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
+            vprDEBUG (jcclDBG_SERVER, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
                                        << vprDEBUG_FLUSH;
             connections_mutex.acquire();
             connections.push_back (vn);
@@ -214,7 +214,7 @@ bool JackalServer::configRemove(ConfigChunk* chunk) {
         return true;
     }
     else if (!vjstrcasecmp (s, "FileConnect")) {
-        vprDEBUG (vprDBG_ENV_MGR,1) << "EM Removing connection: "
+        vprDEBUG (jcclDBG_SERVER,1) << "EM Removing connection: "
                                   << chunk->getProperty ("Name") << '\n' << vprDEBUG_FLUSH;
         connections_mutex.acquire();
         Connect* c = getConnect (chunk->getProperty ("Name"));
@@ -222,7 +222,7 @@ bool JackalServer::configRemove(ConfigChunk* chunk) {
             removeConnect (c);
         }
         connections_mutex.release();
-        vprDEBUG (vprDBG_ENV_MGR,4) << "EM completed connection removal\n" << vprDEBUG_FLUSH;
+        vprDEBUG (jcclDBG_SERVER,4) << "EM completed connection removal\n" << vprDEBUG_FLUSH;
         return true;
     }
 
@@ -277,14 +277,14 @@ void JackalServer::controlLoop (void* nullParam) {
     //int len;
     Connect* connection;
 
-    vprDEBUG(vprDBG_ENV_MGR,4) << "JackalServer started control loop.\n"
+    vprDEBUG(jcclDBG_SERVER,4) << "JackalServer started control loop.\n"
           << vprDEBUG_FLUSH;
 
     for (;;) {
         servsock = listen_socket->accept();
         char name[128];
         //sprintf (name, "Network Connect %d", servsock->getID());
-        vprDEBUG(vprDBG_ENV_MGR,vprDBG_CONFIG_LVL) << "JackalServer: Accepted connection: id: "
+        vprDEBUG(jcclDBG_SERVER,vprDBG_CONFIG_LVL) << "JackalServer: Accepted connection: id: "
                                                 << servsock->getID() << " on port: N/A\n" << vprDEBUG_FLUSH;
         connection = new Connect (servsock, (std::string)name);
         connections_mutex.acquire();

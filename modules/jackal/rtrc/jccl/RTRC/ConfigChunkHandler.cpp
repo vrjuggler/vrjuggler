@@ -35,7 +35,7 @@
 #include <jccl/ConfigManager/ConfigManager.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/ConfigManager/DependencyManager.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 #include <typeinfo>
 
 namespace jccl {

@@ -38,7 +38,7 @@
 #include <jccl/ConfigManager/ConfigChunkHandler.h>
 #include <jccl/JackalServer/JackalServer.h>
 #include <jccl/JackalServer/Connect.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 
 
 
