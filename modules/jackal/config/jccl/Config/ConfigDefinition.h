@@ -66,15 +66,10 @@ public:
    /** Destructor. */
    ~ConfigDefinition();
 
-#ifdef JCCL_DEBUG
    void assertValid() const
    {
       vprASSERT(mIsValid == true && "Trying to use deleted ConfigDefinition");
    }
-#else
-   inline void assertValid() const
-   {;}
-#endif
 
    /** Equality operator. */
    bool operator== (const ConfigDefinition& d) const;
