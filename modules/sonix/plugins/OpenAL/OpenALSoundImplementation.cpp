@@ -65,7 +65,7 @@
 #include "snx/SoundImplementation.h"
 #include "snx/SoundInfo.h"
 #include "snx/SoundFactory.h"
-#include "snx/plugins/OpenALSoundImplementation.h"
+#include "snx/plugins/OpenAL/OpenALSoundImplementation.h"
 
 /////////////////////////
 // plugin API:

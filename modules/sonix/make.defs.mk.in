@@ -128,6 +128,9 @@ endif
 # -----------------------------------------------------------------------------
 # Library names.
 # -----------------------------------------------------------------------------
-SNX_LIBRARY=	@LIB_PREFIX@sonix
+SNX_LIBRARY=		@LIB_PREFIX@sonix
+AUDIOWORKS_LIBRARY=	@LIB_PREFIX@AudioWorks
+OPENAL_LIBRARY=		@LIB_PREFIX@OpenAL
+SUBSYNTH_LIBRARY=	@LIB_PREFIX@Subsynth
 
 include $(topdir)/common.defs.mk
