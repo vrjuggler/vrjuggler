@@ -30,7 +30,10 @@
 #include <boost/cstdint.hpp>
 
 // Includes ====================================================================
-#include <vpr/Util/GUID.h>
+#include <vpr/IO/SerializableObject.h>
+#include <vpr/IO/ObjectReader.h>
+#include <pyjutil/InterpreterGuard.h>
+#include <pyjutil/Debug.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -38,23 +41,23 @@ using namespace boost::python;
 // Declarations ================================================================
 namespace pyj {
 
-struct vpr_GUID_Wrapper: vpr::GUID
+struct vpr_ReadableObject_Wrapper: vpr::ReadableObject
 {
-    vpr_GUID_Wrapper(PyObject* self_, const vpr::GUID::GenerateTag& p0):
-        vpr::GUID(p0), self(self_) {}
+    vpr::ReturnStatus readObject(vpr::ObjectReader* p0) {
+        vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
+                                 "vpr_ReadableObject_Wrapper::readObject()\n",
+                                 "vpr_ReadableObject_Wrapper::readObject() done.\n");
+        PyJuggler::InterpreterGuard guard;
 
-    vpr_GUID_Wrapper(PyObject* self_):
-        vpr::GUID(), self(self_) {}
-
-    vpr_GUID_Wrapper(PyObject* self_, const std::string& p0):
-        vpr::GUID(p0), self(self_) {}
-
-    vpr_GUID_Wrapper(PyObject* self_, const vpr::GUID& p0, const std::string& p1):
-        vpr::GUID(p0, p1), self(self_) {}
-
-    vpr_GUID_Wrapper(PyObject* self_, const vpr::GUID& p0):
-        vpr::GUID(p0), self(self_) {}
-
+        try
+        {
+            return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+    }
 
     PyObject* self;
 };
@@ -64,34 +67,10 @@ struct vpr_GUID_Wrapper: vpr::GUID
 
 
 // Module ======================================================================
-void _Export_GUID()
+void _Export_ReadableObject()
 {
-    scope* vpr_GUID_scope = new scope(
-    class_< vpr::GUID, bases< vpr::SerializableObject > , pyj::vpr_GUID_Wrapper >("GUID", init<  >())
-        .def(init< const vpr::GUID::GenerateTag& >())
-        .def(init< const std::string& >())
-        .def(init< const vpr::GUID&, const std::string& >())
-        .def(init< const vpr::GUID& >())
-        .def_readwrite("generateTag", &vpr::GUID::generateTag)
-        .def_readonly("NullGUID", &vpr::GUID::NullGUID)
-        .def("toString", &vpr::GUID::toString)
-        .def("generate", (void (vpr::GUID::*)() )&vpr::GUID::generate)
-        .def("generate", (void (vpr::GUID::*)(const vpr::GUID &, const std::string&) )&vpr::GUID::generate)
-        .def(self_ns::str(self))
-        .def( self == self )
-        .def( self != self )
-        .def( self < self )
-    );
-
-    class_< vpr::GUID::GenerateTag >("GenerateTag", init<  >())
-        .def(init< const vpr::GUID::GenerateTag& >())
+    class_< vpr::ReadableObject, boost::noncopyable, pyj::vpr_ReadableObject_Wrapper >("ReadableObject", no_init)
+        .def("readObject", pure_virtual(&vpr::ReadableObject::readObject))
     ;
-
-    class_< vpr::GUID::hash >("hash", init<  >())
-        .def(init< const vpr::GUID::hash& >())
-        .def("__call__", &vpr::GUID::hash::operator ())
-    ;
-
-    delete vpr_GUID_scope;
 
 }

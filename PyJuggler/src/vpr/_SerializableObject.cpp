@@ -25,28 +25,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Include =====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
 
-// Exports =====================================================================
-void _Export_Interval();
-void _Export_ReturnStatus();
-void _Export_ObjectReader();
-void _Export_ObjectWriter();
-void _Export_ReadableObject();
-void _Export_WriteableObject();
-void _Export_SerializableObject();
-void _Export_GUID();
+// Includes ====================================================================
+#include <vpr/IO/SerializableObject.h>
+
+// Using =======================================================================
+using namespace boost::python;
+
 
 // Module ======================================================================
-BOOST_PYTHON_MODULE(vpr)
+void _Export_SerializableObject()
 {
-    _Export_Interval();
-    _Export_ReturnStatus();
-    _Export_ObjectReader();
-    _Export_ObjectWriter();
-    _Export_ReadableObject();
-    _Export_WriteableObject();
-    _Export_SerializableObject();
-    _Export_GUID();
+    class_< vpr::SerializableObject, bases< vpr::WriteableObject, vpr::ReadableObject > , boost::noncopyable >("SerializableObject", no_init)
+    ;
+
 }

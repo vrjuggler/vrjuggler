@@ -31,13 +31,18 @@ VPR_LIBS=	$(shell vpr-config --libs)
 VPR_EXTRA_LIBS=	$(shell vpr-config --extra-libs)
 
 EXTRA_CXXFLAGS=	$(shell vpr-config --cxxflags)
-EXTRA_LDFLAGS=	$(VPR_LIBS) $(VPR_EXTRA_LIBS)
+EXTRA_LDFLAGS=	$(PYJUTIL_LIB) $(VPR_LIBS) $(VPR_EXTRA_LIBS)
 MOD_NAME=	vpr
 
 SRCS= \
 	_GUID.cpp		\
 	_Interval.cpp		\
+	_ObjectReader.cpp	\
+	_ObjectWriter.cpp	\
+	_ReadableObject.cpp	\
 	_ReturnStatus.cpp	\
+	_SerializableObject.cpp	\
+	_WriteableObject.cpp	\
 	vpr.cpp
 
 include ../common-targets.mk
