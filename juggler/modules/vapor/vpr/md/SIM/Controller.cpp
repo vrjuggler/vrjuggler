@@ -125,6 +125,7 @@ void Controller::processNextEvent ()
       // ----------------------------------------------------------------------
 
       status = line.getArrivedMessage(event_time, msg, dir);
+      mGraph.setLineProperty(event_edge, line);
       vprASSERT(status.success() && "No arrived message at this time");
 
       vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
@@ -196,7 +197,7 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
       next_line_prop.calculateMessageEventTimes(msg, cur_time, dir);
 
       vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "New message times: "
+         << "Controller::moveMessage(): New message times: "
          << "starts = " << msg->whenStartOnWire().getBaseVal() << ", "
          << "transmits = " << msg->whenFullyOnWire().getBaseVal() << ", "
          << "arrives = " << msg->whenArrivesFully().getBaseVal()
@@ -209,6 +210,13 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
    // End of the path--we have reached our destination.
    else
    {
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "Controller::moveMessage() [time = "
+         << mClock.getCurrentTime().getBaseVal()
+         << "]: Delivering message to destination "
+         << msg->getDestinationSocket()->getLocalAddr() << std::endl
+         << vprDEBUG_FLUSH;
+
       msg->getDestinationSocket()->addArrivedMessage(msg);
 
       // The above should be the last use of the memory held by msg, so the
