@@ -178,6 +178,8 @@ private:
     */
    void run(void* args);
 
+   std::string mAppName;
+
    vpr::Thread* m_my_thread;
 
    CORBA::ORB_var m_orb;
