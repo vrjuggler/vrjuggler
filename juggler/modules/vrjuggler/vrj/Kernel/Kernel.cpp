@@ -612,10 +612,13 @@ Kernel::Kernel()
    if (vpr::System::getenv("JCCL_DEFINITION_PATH", def_path) != vpr::ReturnStatus::Succeed)
    {
       def_path = "${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/definitions";
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "JCCL_DEFINITION_PATH environment variable not set.\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "Defaulting to " << def_path << std::endl << vprDEBUG_FLUSH;
    }
    jccl::ElementFactory::instance()->loadDefs(def_path);
-//   jccl::ElementFactory::instance()->loadDefs
-//       ("${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/vrj-chunks.desc");
 }
 
 }
