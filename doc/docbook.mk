@@ -64,8 +64,8 @@ XSLT_TOOL?=	Xalan
 # FO.  The default is to use FOP.  XEP or Passive TeX can be used instead by
 # defining $(USE_XEP) or $(USE_PASSIVE_TEX) respectively.
 ifeq ($(FO_VERSION), FOP)
-   XALAN_FO_PARAMS=	-PARAM fop.extensions "1"
-   SAXON_FO_PARAMS=	fop.extensions=1
+   XALAN_FO_PARAMS=	-PARAM fop.extensions "1" -PARAM alignment "start"
+   SAXON_FO_PARAMS=	fop.extensions=1 alignment="start"
 else
 ifeq ($(FO_VERSION), XEP)
    XALAN_FO_PARAMS=	-PARAM xep.extensions "1"
@@ -93,7 +93,7 @@ SGML_ROOT?=	/usr/share/sgml/docbook
 
 DB_SGML_DTD?=	$(DOCBOOK_ROOT)/docbook-sgml-4.1.dtd
 DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.76
-XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.49
+XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.53.0
 
 ifdef NEED_DB_IMAGES
 LINK_DEPS=	images
