@@ -65,28 +65,28 @@
 #endif   /* VPR_IRIX_SPROC */
 
 
-/** @example "Example of using a CondVar"
- * \code
+/** @example "Example of using a vpr::CondVar"
  *
+ * \code
  * vpr::CondVar mCondVar;   // The condition variable to use
  *
  * // --- Set a state and signal everyone else about it --- //
  * mCondVar.acquire();
  * {
- *     mState = NEW_STATE;
- *     mCondVar.signal();
+ *    mState = NEW_STATE;
+ *    mCondVar.signal();
  * }
  * mCondVar.release();
  *
- *
  * // -- Wait for a condition -- //
- *   mCondVar.acquire();
- *   {
- *      while ( mState != DESIRED_STATE ) {
- *         mCondVar.wait();
- *      }
- *   }
- *   mCondVar.release();
+ * mCondVar.acquire();
+ * {
+ *    while ( mState != DESIRED_STATE )
+ *    {
+ *       mCondVar.wait();
+ *    }
+ * }
+ * mCondVar.release();
  * \endcode
  */
 
