@@ -105,6 +105,8 @@ public:
       mButton5.init("VJButton5");
 
       mLoggerPlayButton.init("LoggerPlayButton");
+
+      mPrevFrameStartTime.setNow();
    }
 
    // Execute any initialization needed after API is started
@@ -206,7 +208,9 @@ public:
 
    gmtl::Matrix44f              mNavMat;              // Navigation matrix
 
-   vpr::Uint64                  mFrameCount;          // Count of the current frame
+   vpr::Uint64                      mFrameCount;          // Count of the current frame
+   vpr::StatCollector<float,false>  mFrameRate;           // Frame rate stats. (time per frame)
+   vpr::Interval                    mPrevFrameStartTime;    // Start time of the previous frame
 
    // VNC Client info
    VNCDesktop*    mDesktop;         /**< The actual desktop object */
