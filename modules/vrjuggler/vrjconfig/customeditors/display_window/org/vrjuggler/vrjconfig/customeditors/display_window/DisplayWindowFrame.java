@@ -69,7 +69,8 @@ public class DisplayWindowFrame
                                              "inverse");
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      ConfigDefinition vp_def = broker.getRepository().get("surface_viewport");
+      ConfigDefinition vp_def =
+         broker.getRepository().get(EditorConstants.surfaceViewportType);
       java.util.Map views = vp_def.getPropertyDefinition("view").getEnums();
 
       LEFT_EYE  = ((Integer) views.get("Left Eye")).intValue();
@@ -101,20 +102,7 @@ public class DisplayWindowFrame
          mViewButtonGroup.add(mViewportRightEyeItem);
          mViewButtonGroup.add(mViewportStereoItem);
 
-         boolean active = ((Boolean) mElement.getProperty("active", 0)).booleanValue();
-         mWinActiveItem.setSelected(active);
-
-         boolean border = ((Boolean) mElement.getProperty("border", 0)).booleanValue();
-         mBorderItem.setSelected(border);
-
-         boolean pointer = ((Boolean) mElement.getProperty("hide_mouse", 0)).booleanValue();
-         mPointerItem.setSelected(pointer);
-
-         boolean stereo = ((Boolean) mElement.getProperty("stereo", 0)).booleanValue();
-         mWinStereoItem.setSelected(stereo);
-
-         boolean event_src = ((Boolean) mElement.getProperty("act_as_event_source", 0)).booleanValue();
-         mEventSrcItem.setSelected(event_src);
+         updateContextMenuItems();
       }
       catch(Exception e)
       {
@@ -215,10 +203,11 @@ public class DisplayWindowFrame
 
    private void jbInit() throws Exception
    {
-      mWinPropsItem.setText("Edit Window Properties ...");
-      mWinActiveItem.setText("Active");
+      mWinPropsItem.setText("Display Window Properties ...");
+      mWinPropsItem.addActionListener(new DisplayWindowFrame_mWinPropsItem_actionAdapter(this));
+      mWinActiveItem.setText("Is window active?");
       mWinActiveItem.addActionListener(new DisplayWindowFrame_mActiveItem_actionAdapter(this));
-      mBorderItem.setText("Has border");
+      mBorderItem.setText("Window has border");
       mBorderItem.addActionListener(new DisplayWindowFrame_mBorderItem_actionAdapter(this));
       mPointerItem.setText("Hide mouse pointer");
       mPointerItem.addActionListener(new DisplayWindowFrame_mPointerItem_actionAdapter(this));
@@ -227,37 +216,39 @@ public class DisplayWindowFrame
       mEventSrcItem.setText("Acts as an event source");
       mEventSrcItem.addActionListener(new DisplayWindowFrame_mEventSrcItem_actionAdapter(this));
       mViewportPropsItem.setEnabled(false);
-      mViewportPropsItem.setText("Edit Viewport Properties ...");
+      mViewportPropsItem.setText("Viewport Properties ...");
+      mViewportPropsItem.addActionListener(new DisplayWindowFrame_mViewportPropsItem_actionAdapter(this));
       mViewportActiveItem.setEnabled(false);
-      mViewportActiveItem.setText("Is Viewport Active?");
+      mViewportActiveItem.setText("Is viewport active?");
       mViewportActiveItem.addActionListener(new DisplayWindowFrame_mViewportActiveItem_actionAdapter(this));
       mViewportLeftEyeItem.setEnabled(false);
-      mViewportLeftEyeItem.setText("Left Eye");
+      mViewportLeftEyeItem.setText("Left eye");
       mViewportLeftEyeItem.addActionListener(new DisplayWindowFrame_mViewportLeftEyeItem_actionAdapter(this));
       mViewportRightEyeItem.setEnabled(false);
-      mViewportRightEyeItem.setText("Right Eye");
+      mViewportRightEyeItem.setText("Right eye");
       mViewportRightEyeItem.addActionListener(new DisplayWindowFrame_mViewportRightEyeItem_actionAdapter(this));
       mViewportStereoItem.setEnabled(false);
       mViewportStereoItem.setText("Stereo");
       mViewportStereoItem.addActionListener(new DisplayWindowFrame_mViewportStereoItem_actionAdapter(this));
       this.addComponentListener(new DisplayWindowFrame_this_componentAdapter(this));
       mViewportRemoveItem.setEnabled(false);
-      mViewportRemoveItem.setText("Delete Viewport");
+      mViewportRemoveItem.setText("Delete viewport");
       mViewportRemoveItem.addActionListener(new DisplayWindowFrame_mViewportRemoveItem_actionAdapter(this));
       this.addInternalFrameListener(new DisplayWindowFrame_this_internalFrameAdapter(this));
-      mContextMenu.add(mWinPropsItem);
       mContextMenu.add(mWinActiveItem);
       mContextMenu.add(mBorderItem);
       mContextMenu.add(mPointerItem);
       mContextMenu.add(mWinStereoItem);
       mContextMenu.add(mEventSrcItem);
       mContextMenu.addSeparator();
-      mContextMenu.add(mViewportPropsItem);
       mContextMenu.add(mViewportActiveItem);
       mContextMenu.add(mViewportLeftEyeItem);
       mContextMenu.add(mViewportRightEyeItem);
       mContextMenu.add(mViewportStereoItem);
       mContextMenu.add(mViewportRemoveItem);
+      mContextMenu.addSeparator();
+      mContextMenu.add(mWinPropsItem);
+      mContextMenu.add(mViewportPropsItem);
       this.getContentPane().add(mViewportEditor, BorderLayout.CENTER);
    }
 
@@ -298,6 +289,39 @@ public class DisplayWindowFrame
                                                    cfg_origin_y));
       System.out.println("Setting my origin to " + origin);
       this.setLocation(origin.x, origin.y);
+   }
+
+   private void updateContextMenuItems()
+   {
+      boolean active = ((Boolean) mElement.getProperty("active", 0)).booleanValue();
+      mWinActiveItem.setSelected(active);
+
+      boolean border = ((Boolean) mElement.getProperty("border", 0)).booleanValue();
+      mBorderItem.setSelected(border);
+
+      boolean pointer = ((Boolean) mElement.getProperty("hide_mouse", 0)).booleanValue();
+      mPointerItem.setSelected(pointer);
+
+      boolean stereo = ((Boolean) mElement.getProperty("stereo", 0)).booleanValue();
+      mWinStereoItem.setSelected(stereo);
+
+      boolean event_src = ((Boolean) mElement.getProperty("act_as_event_source", 0)).booleanValue();
+      mEventSrcItem.setSelected(event_src);
+   }
+
+   /**
+    * Positions the given Dialog object relative to this window frame.
+    */
+   private void positionDialog(Dialog dialog, Container parent)
+   {
+      Dimension dlg_size   = dialog.getPreferredSize();
+      Dimension frame_size = parent.getSize();
+      Point loc            = parent.getLocation();
+
+      // Set the location of the dialog so that it is centered with respect
+      // to this frame.
+      dialog.setLocation((frame_size.width - dlg_size.width) / 2 + loc.x,
+                         (frame_size.height - dlg_size.height) / 2 + loc.y);
    }
 
    private Dimension mResolution = null;
@@ -433,6 +457,40 @@ public class DisplayWindowFrame
       }
    }
 
+   void windowPropsEditSelected(ActionEvent e)
+   {
+      DisplayWindowStartDialog dlg =
+         new DisplayWindowStartDialog(mElement, mDesktopSize);
+      positionDialog(dlg, (Container) SwingUtilities.getRoot(this));
+      dlg.show();
+
+      if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
+      {
+
+         Rectangle bounds  = dlg.getDisplayWindowBounds();
+         mElement.setProperty("origin", 0, new Integer(bounds.x));
+         mElement.setProperty("origin", 1, new Integer(bounds.y));
+         mElement.setProperty("size", 0, new Integer(bounds.width));
+         mElement.setProperty("size", 1, new Integer(bounds.height));
+
+         ConfigElement fb_cfg =
+            (ConfigElement) mElement.getProperty("frame_buffer_config", 0);
+         fb_cfg.setProperty("visual_id", 0, dlg.getVisualID());
+         fb_cfg.setProperty("red_size", 0, dlg.getRedDepth());
+         fb_cfg.setProperty("green_size", 0, dlg.getGreenDepth());
+         fb_cfg.setProperty("blue_size", 0, dlg.getBlueDepth());
+         fb_cfg.setProperty("alpha_size", 0, dlg.getAlphaDepth());
+         fb_cfg.setProperty("depth_buffer_size", 0, dlg.getDepthBufferSize());
+         fb_cfg.setProperty("fsaa_enable", 0, dlg.getFSAAEnable());
+
+         mElement.setProperty("stereo", 0, dlg.inStereo());
+         mElement.setProperty("border", 0, dlg.hasBorder());
+         mElement.setProperty("act_as_event_source", 0, dlg.isEventSource());
+
+         updateContextMenuItems();
+      }
+   }
+
    void windowActiveItemActionPerformed(ActionEvent e)
    {
       mElement.setProperty("active", 0,
@@ -464,6 +522,100 @@ public class DisplayWindowFrame
                            Boolean.valueOf(mEventSrcItem.isSelected()));
    }
 
+   void viewportPropsSelected(ActionEvent e)
+   {
+      Container owner = (Container) SwingUtilities.getRoot(this);
+
+      if ( mSelectedViewport.getDefinition().getToken().equals(EditorConstants.surfaceViewportType) )
+      {
+         SurfaceViewportCreateDialog dlg =
+            new SurfaceViewportCreateDialog(mSelectedViewport);
+         positionDialog(dlg, owner);
+         dlg.show();
+
+         if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
+         {
+            Rectangle bounds = dlg.getViewportBounds();
+            float origin_x = (float) bounds.x / 100.0f;
+            float origin_y = (float) bounds.y / 100.0f;
+            float width    = (float) bounds.width / 100.0f;
+            float height   = (float) bounds.height / 100.0f;
+
+            mSelectedViewport.setProperty("origin", 0, new Float(origin_x));
+            mSelectedViewport.setProperty("origin", 1, new Float(origin_y));
+            mSelectedViewport.setProperty("size", 0, new Float(width));
+            mSelectedViewport.setProperty("size", 1, new Float(height));
+            mSelectedViewport.setProperty("view", 0, dlg.getViewpoint());
+            mSelectedViewport.setProperty("user", 0, dlg.getUser());
+
+            Point3D[] corners = dlg.getCorners();
+            mSelectedViewport.setProperty("lower_left_corner", 0,
+                                          new Double(corners[0].x));
+            mSelectedViewport.setProperty("lower_left_corner", 1,
+                                          new Double(corners[0].y));
+            mSelectedViewport.setProperty("lower_left_corner", 2,
+                                          new Double(corners[0].z));
+            mSelectedViewport.setProperty("lower_right_corner", 0,
+                                          new Double(corners[1].x));
+            mSelectedViewport.setProperty("lower_right_corner", 1,
+                                          new Double(corners[1].y));
+            mSelectedViewport.setProperty("lower_right_corner", 2,
+                                          new Double(corners[1].z));
+            mSelectedViewport.setProperty("upper_right_corner", 0,
+                                          new Double(corners[2].x));
+            mSelectedViewport.setProperty("upper_right_corner", 1,
+                                          new Double(corners[2].y));
+            mSelectedViewport.setProperty("upper_right_corner", 2,
+                                          new Double(corners[2].z));
+            mSelectedViewport.setProperty("upper_left_corner", 0,
+                                          new Double(corners[3].x));
+            mSelectedViewport.setProperty("upper_left_corner", 1,
+                                          new Double(corners[3].y));
+            mSelectedViewport.setProperty("upper_left_corner", 2,
+                                          new Double(corners[3].z));
+
+            mSelectedViewport.setProperty("tracked", 0, dlg.isTracked());
+
+            if ( dlg.isTracked() == Boolean.TRUE )
+            {
+               mSelectedViewport.setProperty("tracker_proxy", 0,
+                                             dlg.getTrackerProxy());
+            }
+         }
+      }
+      else
+      {
+         SimulatorViewportCreateDialog dlg =
+            new SimulatorViewportCreateDialog(mSelectedViewport);
+         positionDialog(dlg, owner);
+         dlg.show();
+
+         if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
+         {
+            Rectangle bounds = dlg.getViewportBounds();
+            float origin_x = (float) bounds.x / 100.0f;
+            float origin_y = (float) bounds.y / 100.0f;
+            float width    = (float) bounds.width / 100.0f;
+            float height   = (float) bounds.height / 100.0f;
+
+            mSelectedViewport.setProperty("origin", 0, new Float(origin_x));
+            mSelectedViewport.setProperty("origin", 1, new Float(origin_y));
+            mSelectedViewport.setProperty("size", 0, new Float(width));
+            mSelectedViewport.setProperty("size", 1, new Float(height));
+            mSelectedViewport.setProperty("view", 0, dlg.getViewpoint());
+            mSelectedViewport.setProperty("user", 0, dlg.getUser());
+            mSelectedViewport.setProperty("vertical_fov", 0,
+                                          dlg.getVertialFOV());
+
+            ConfigElement sim_elt =
+               (ConfigElement) mSelectedViewport.getProperty("simulator_plugin", 0);
+
+            sim_elt.setProperty("camera_pos", 0, dlg.getCameraPosition());
+            sim_elt.setProperty("wand_pos", 0, dlg.getWandPosition());
+         }
+      }
+   }
+
    void viewportActiveItemSelected(ActionEvent e)
    {
       mSelectedViewport.setProperty("active", 0,
@@ -488,7 +640,7 @@ public class DisplayWindowFrame
    void viewportRemoveItemSelected(ActionEvent e)
    {
       String prop;
-      if ( mSelectedViewport.getDefinition().getToken().equals("surface_viewport") )
+      if ( mSelectedViewport.getDefinition().getToken().equals(EditorConstants.surfaceViewportType) )
       {
          prop = "surface_viewports";
       }
@@ -506,8 +658,6 @@ public class DisplayWindowFrame
 
    void this_mouseMoved(MouseEvent e)
    {
-      // XXX: Is it really necessary to change the cursor for every mouse
-      // motion event?
       if ( mHideMouse )
       {
          this.setCursor(mInverseCursor);
@@ -771,5 +921,33 @@ class DisplayWindowFrame_this_internalFrameAdapter extends javax.swing.event.Int
    public void internalFrameActivated(InternalFrameEvent e)
    {
       adaptee.frameActivated(e);
+   }
+}
+
+class DisplayWindowFrame_mWinPropsItem_actionAdapter implements java.awt.event.ActionListener
+{
+   private DisplayWindowFrame adaptee;
+
+   DisplayWindowFrame_mWinPropsItem_actionAdapter(DisplayWindowFrame adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.windowPropsEditSelected(e);
+   }
+}
+
+class DisplayWindowFrame_mViewportPropsItem_actionAdapter implements java.awt.event.ActionListener
+{
+   private DisplayWindowFrame adaptee;
+
+   DisplayWindowFrame_mViewportPropsItem_actionAdapter(DisplayWindowFrame adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.viewportPropsSelected(e);
    }
 }
