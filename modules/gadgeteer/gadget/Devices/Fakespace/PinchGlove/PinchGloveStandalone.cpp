@@ -28,6 +28,7 @@
 #include <sys/times.h>
 #include <sys/param.h>
 #include <sys/stat.h>
+#include <iostream.h>
 
 #include "fsPinchGlove.h"
 
@@ -59,13 +60,16 @@ fsPinchGlove::fsPinchGlove()
 // Connect to the pinch glove hardware
 bool fsPinchGlove::connectToHardware(const char* const ttyPort)
 {
-    printf( "[vrj] Before _connectToHardware()\n" );
+    cout<<"[vrj] Connecting To Fakespace Hardware\n"<<flush;
     
     int result = _connectToHardware( ttyPort );    
-    printf( "[vrj] Connected to pinch glove hardware on port %s\n",  ttyPort);
-    printf( "[vrj] _connectToHardware() = %d\n", result );
     
-    return (result == 1) ? true:false;
+    if (result == 1)
+	cout<<"[vrj] Connected to pinch glove hardware on port "<<ttyPort<<"\n"<<flush;
+    else
+	cout<<"[vrj] connectToHardware(\""<<ttyPort<<"\") returned "<<(result == 1 ? "true":"false")<<"\n"<<flush;
+	
+    return result == 1 ? true:false;
 }
 
 // get the last sampled string, 
@@ -125,19 +129,19 @@ int fsPinchGlove::_connectToHardware(const char* const ttyPort)
     _sendCommandToHardware("T1", buf);
     if (buf[1] != '1') 
     {
-	printf("[vj] could not turn time stamps on\n");
+	cout<<"[vrj] could not turn time stamps on, buf[1] != '1'.  (buf[1]=='"<<buf[1]<<"')\n";
 	return 0;	
     }
     /* Version compatability */
     _sendCommandToHardware("V1", buf);
     if (buf[1] != '1') 
     {
-	printf("[vj] could not set to version 1 formatting\n");
+	printf("[vrj] could not set to version 1 formatting\n");
 	return 0;	
     }
 
     /* Get the configuration information and print it */
-    printf("[vj] Configuration:\n");
+    printf("[vrj] Configuration:\n");
     
     cnt = _sendCommandToHardware("CP", buf); 
     buf[cnt-1] = 0; /* get rid of 0x8F */
