@@ -579,11 +579,9 @@ void InputManager::updateAllData()
    }
 }
 
-
-
 // Return a Input ptr to a deviced named
 // RETURNS: NULL - Not found
-Input* InputManager::getDevice(std::string deviceName)
+Input* InputManager::getDevice(const std::string& deviceName)
 {
    // Look up in Input Manager
    tDevTableType::iterator ret_dev;
@@ -612,16 +610,16 @@ bool InputManager::removeDevice(const Input* devPtr)
 
 
 /**********************************************************
-  InputManager::removeDevice(char* mInstName)
+  InputManager::removeDevice(char* instName)
 
-  InputManager remove mInstName from the InputManager,
+  InputManager remove instName from the InputManager,
   currently stupifies all the proxies connected to it.
 
 *********************************************** ahimberg */
-bool InputManager::removeDevice(std::string mInstName)
+bool InputManager::removeDevice(const std::string& instName)
 {
    tDevTableType::iterator dev_found;
-   dev_found = mDevTable.find(mInstName);
+   dev_found = mDevTable.find(instName);
    if(dev_found == mDevTable.end())
       return false;
 
@@ -736,15 +734,16 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
  * @pre none - BUT: Preferable if proxyName is for a valid proxy.
  * @post Alias list has alias str refering to proxyName.
  */
-void InputManager::addProxyAlias(std::string alias_name, std::string proxy_name)
+void InputManager::addProxyAlias(const std::string& aliasName,
+                                 const std::string& proxyName)
 {
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "Proxy alias [" << alias_name << "] added.\n"
+      << "Proxy alias [" << aliasName << "] added.\n"
       << vprDEBUG_FLUSH;
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL)
-      << "   proxy:" << proxy_name << std::endl << vprDEBUG_FLUSH;
+      << "   proxy:" << proxyName << std::endl << vprDEBUG_FLUSH;
 
-   mProxyAliases[alias_name] = proxy_name;
+   mProxyAliases[aliasName] = proxyName;
 }
 
 
@@ -772,7 +771,7 @@ bool InputManager::addProxy(Proxy* proxy)
 /**
  * Gets index to the proxy/alias named by str.
  */
-Proxy* InputManager::getProxy(std::string proxyName)
+Proxy* InputManager::getProxy(const std::string& proxyName)
 {
    // Is it in table
    if(mProxyTable.end() != mProxyTable.find(proxyName))     // proxy name
@@ -805,7 +804,7 @@ void InputManager::refreshAllProxies()
    }
 }
 
-bool InputManager::removeProxy(std::string proxyName)
+bool InputManager::removeProxy(const std::string& proxyName)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                   std::string("vjInputManager::removeProxy\n"),

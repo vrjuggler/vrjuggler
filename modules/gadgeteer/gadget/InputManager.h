@@ -153,7 +153,7 @@ public:
     *
     * @return NULL if the device is not found.
     */
-   Input* getDevice(std::string deviceName);
+   Input* getDevice(const std::string& deviceName);
 
    DeviceFactory* getDeviceFactory();
 
@@ -191,7 +191,7 @@ public:
     *
     * @return true on success.
     */
-   bool removeDevice(std::string mInstName);
+   bool removeDevice(const std::string& mInstName);
 
    /** Remove a device given a pointer to the device.
    * Internally this just uses removeDevice(dev_name)
@@ -215,7 +215,7 @@ public:
     *
     * @return NULL if the proxy was not found.
     */
-   Proxy* getProxy(std::string proxyName);
+   Proxy* getProxy(const std::string& proxyName);
 
    /**
     * Refreshes all the proxies to have them update the device at which they
@@ -224,7 +224,7 @@ public:
    void refreshAllProxies();
 
 protected:
-   bool removeProxy(std::string proxyName);
+   bool removeProxy(const std::string& proxyName);
    bool removeProxy(jccl::ConfigElementPtr element);
 
 public:
@@ -261,7 +261,8 @@ private:
    bool removeProxyAlias(jccl::ConfigElementPtr element);
 
    /** Adds a proxy alias. */
-   void addProxyAlias(std::string alias_name, std::string proxy_name);
+   void addProxyAlias(const std::string& aliasName,
+                      const std::string& proxyName);
 
    /** Configure/create a logger for the system. */
    bool configureInputLogger(jccl::ConfigElementPtr element);
