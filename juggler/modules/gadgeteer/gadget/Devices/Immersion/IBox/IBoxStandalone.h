@@ -58,19 +58,19 @@
  *   actually a string, so it can be directly printed as well.
  */
 
-typedef char*   ibox2_result;
+typedef const char*   ibox2_result;
 
 /* Result Codes for which there are error handlers
  */
-static char    TIMED_OUT[29] = "Timed out waiting for packet";
-static char    BAD_PORT_NUM[25] = "Port number out of range";
-static char    BAD_PACKET[17] = "Corrupted packet";
-static char    NO_HCI[19] = "Unable to find HCI";
-static char    CANT_BEGIN[34] = "Found HCI but can't begin session";
-static char    CANT_OPEN_PORT[27] = "Unable to open serial port";
-static char    BAD_PASSWORD[40] = "Password rejected during config command";
-static char    BAD_VERSION[47] = "Firmware version does not support this feature";
-static char    BAD_FORMAT[34] = "Unknown firmware parameter format";
+const static char    TIMED_OUT[29] = "Timed out waiting for packet";
+const static char    BAD_PORT_NUM[25] = "Port number out of range";
+const static char    BAD_PACKET[17] = "Corrupted packet";
+const static char    NO_HCI[19] = "Unable to find HCI";
+const static char    CANT_BEGIN[34] = "Found HCI but can't begin session";
+const static char    CANT_OPEN_PORT[27] = "Unable to open serial port";
+const static char    BAD_PASSWORD[40] = "Password rejected during config command";
+const static char    BAD_VERSION[47] = "Firmware version does not support this feature";
+const static char    BAD_FORMAT[34] = "Unknown firmware parameter format";
 
 /* Shorthand for a byte */
 typedef unsigned char   byte;
@@ -643,8 +643,8 @@ public:
 private:
 /* Serial Port declaration */
     vpr::SerialPort  *port;
-    float            slow_timeout;    /* slow timeout setting */
-    float            fast_timeout;    /* fast timeout setting */
+    vpr::Uint8       slow_timeout;    /* slow timeout setting (in tenths of seconds) */
+    vpr::Uint8       fast_timeout;    /* fast timeout setting (in tenths of seconds) */
     std::string      name;            /* name of serial port */
     int              rate;            /* baud rate of ibox */
     int overlap;     /* keeps track of how many reads and writes are

@@ -146,7 +146,7 @@ private:
    //
    //! MODIFIES: self
    //! POST: mDevTable[devNum]' = NULL
-   bool removeDevice(std::string instName);
+   bool removeDevice(std::string mInstName);
    bool removeDevice(const Input* devPtr);
 
    /*********************************************************

@@ -259,7 +259,7 @@ private:
 
     int getBirdIndex(int birdNum, int bufferIndex);
 
-    vpr::Thread*   myThread;      // The thread doing the flock sampling
+    vpr::Thread*   mThread;      // The thread doing the flock sampling
 
     PositionData* mData;
 

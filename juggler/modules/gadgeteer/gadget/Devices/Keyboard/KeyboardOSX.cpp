@@ -51,7 +51,7 @@ bool KeyboardOSX::config(jccl::ConfigChunkPtr c)
    if(! (Input::config(c) && Keyboard::config(c)))
       return false;
 
-   // Done in Input --- myThread = NULL;
+   // Done in Input --- mThread = NULL;
    int i;
    for (i =0; i < 256; i++)
       m_realkeys[i] = m_keys[i] = 0;
@@ -148,7 +148,7 @@ void KeyboardOSX::controlLoop(void* nullParam)
 
 int KeyboardOSX::startSampling()
 {
-   if(myThread != NULL)
+   if(mThread != NULL)
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
                                               << "vjKeyboardOSX: startSampling called, when already sampling.\n" << vprDEBUG_FLUSH;
@@ -163,7 +163,7 @@ int KeyboardOSX::startSampling()
 
    vpr::Thread* new_thread;
    new_thread = new vpr::Thread(memberFunctor);
-   myThread = new_thread;
+   mThread = new_thread;
 
    return 1;
 }
@@ -334,7 +334,7 @@ void KeyboardOSX::HandleEvents()
 
 int KeyboardOSX::stopSampling()
 {
-  if (myThread != NULL)
+  if (mThread != NULL)
   {
     mExitFlag = true;
     vpr::System::sleep(1);

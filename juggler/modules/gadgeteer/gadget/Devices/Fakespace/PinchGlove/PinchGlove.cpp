@@ -51,7 +51,7 @@ bool PinchGlove::config(jccl::ConfigChunkPtr c)
    if(! (Input::config(c) && Glove::config(c) ))
       return false;
 
-    vprASSERT(myThread == NULL);      // This should have been set by Input(c)
+    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
 
     /*
     char* home_dir = c->getProperty("calDir").cstring();
@@ -63,7 +63,7 @@ bool PinchGlove::config(jccl::ConfigChunkPtr c)
     */
 
     // already set in base interface.
-    //std::string sPort = c->getProperty("port");
+    //std::string mPort = c->getProperty("port");
     std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
     if(glove_pos_proxy == std::string(""))
     {
@@ -100,7 +100,7 @@ int PinchGlove::startSampling()
    vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Begin sampling\n"
                                << vprDEBUG_FLUSH;
 
-   if (myThread == NULL)
+   if (mThread == NULL)
    {
       resetIndexes();
 
@@ -110,9 +110,9 @@ int PinchGlove::startSampling()
       vpr::ThreadMemberFunctor<PinchGlove>* memberFunctor =
          new vpr::ThreadMemberFunctor<PinchGlove>(this, &PinchGlove::controlLoop, NULL);
 
-      myThread = new vpr::Thread(memberFunctor);
+      mThread = new vpr::Thread(memberFunctor);
 
-      if (!myThread->valid())
+      if (!mThread->valid())
       {
          return 0;
       }
@@ -120,7 +120,7 @@ int PinchGlove::startSampling()
       {
          vprDEBUG(vrjDBG_INPUT_MGR,1) << "[Pinch] PinchGlove is active "
                                     << std::endl << vprDEBUG_FLUSH;
-         active = 1;
+         mActive = true;
          return 1;
       }
   }
@@ -137,9 +137,9 @@ void PinchGlove::controlLoop(void* nullParam)
    while (result == false)
    {
       vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Connecting to "
-                                            << sPort << "...\n"
+                                            << mPort << "...\n"
                                             << vprDEBUG_FLUSH;
-      result = mGlove->connectToHardware( sPort );
+      result = mGlove->connectToHardware( mPort );
       if (result == false)
       {
          vprDEBUG(vrjDBG_INPUT_MGR,0) << "[Pinch] ERROR: Can't open or it is already opened." << vprDEBUG_FLUSH;
@@ -227,11 +227,11 @@ vpr::Guard<vpr::Mutex> updateGuard(lock);
 
 int PinchGlove::stopSampling()
 {
-   if (myThread != NULL)
+   if (mThread != NULL)
    {
-      myThread->kill();
-      delete myThread;
-      myThread = NULL;
+      mThread->kill();
+      delete mThread;
+      mThread = NULL;
       vpr::System::usleep(100);
 
       // XXX: there is no "close"

@@ -47,7 +47,7 @@ extern InterSenseTrackerType ISD_tracker[ISD_MAX_TRACKERS];
 *
 *   Comments:   MODIFIED 14/09/00 Chris Johanson
 *
-*               baudRate is now a userdefined variable.
+*               mBaudRate is now a userdefined variable.
 *
 *               no longer does ISD_detectTracker attempt to force the maximum
 *               baud rate, MAX_BAUD_RATE (defined in isense.h), and write the
@@ -59,7 +59,7 @@ BOOL ISD_detectTracker(InterSenseTrackerType *tracker, const char* commPort, DWO
     char   *systemName[MAX_HARDWARE_VERSIONS] =
               {"IS-300 Series", "IS-600 Series", "IS-900 Series", "InterTrax", "Unknown"};
     char   *message[4] = {"first", "second", "third", "fourth"};
-    DWORD  baudRate = baud; /* set from fcn argument *//* {115200L, 57600L, 38400L, 19200L, 9600L}; */
+    DWORD  mBaudRate = baud; /* set from fcn argument *//* {115200L, 57600L, 38400L, 19200L, 9600L}; */
     /* mugsy -> adjusted rates to allow only one option...
      baudrate now represents the actual baudrate (e.g., 115200L)*/
     WORD   numTracker;
@@ -96,7 +96,7 @@ BOOL ISD_detectTracker(InterSenseTrackerType *tracker, const char* commPort, DWO
          } 
 */
 
-            if(baudRate > MAX_BAUD_RATE) {
+            if(mBaudRate > MAX_BAUD_RATE) {
                 ISD_printf(tracker, "\nInterSense tracker not present\n");
                 return FAIL;
             }
@@ -105,8 +105,8 @@ BOOL ISD_detectTracker(InterSenseTrackerType *tracker, const char* commPort, DWO
             ISD_printf(tracker, ".");
 #endif
 
-	    printf("\nBaud Rates:%d\n", baudRate);
-            if(rs232InitCommunications(&(tracker->CommPort), commPort, baudRate))
+	    printf("\nBaud Rates:%d\n", mBaudRate);
+            if(rs232InitCommunications(&(tracker->CommPort), commPort, mBaudRate))
             {
                 itSendCommand(tracker, "c");
 
@@ -114,13 +114,13 @@ BOOL ISD_detectTracker(InterSenseTrackerType *tracker, const char* commPort, DWO
                 {
                     /* change baud rate to the maximum supported, defined in isense.h */
 /*                    
-                    if(baudRate != MAX_BAUD_RATE)
+                    if(mBaudRate != MAX_BAUD_RATE)
                     {
 		                 printf("\nWARNING: call should be eliminated\nChange to max baud rate: %d\n", MAX_BAUD_RATE);
-	           	         // mugsy -> Interface box now defaults to baudRate.
+	           	         // mugsy -> Interface box now defaults to mBaudRate.
                          itSendCommand(tracker, "o%d,N,8,0\r\n", MAX_BAUD_RATE/100); 
                          tdelay(0.1f);
-                         rs232InitCommunications(&(tracker->CommPort), commPort, baudRate);
+                         rs232InitCommunications(&(tracker->CommPort), commPort, mBaudRate);
                     }         */
 
                     ISD_printf(tracker, "\n\n%s device detected on port %s\n",

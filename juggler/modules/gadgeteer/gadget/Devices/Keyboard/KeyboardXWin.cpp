@@ -52,7 +52,7 @@ bool KeyboardXWin::config(jccl::ConfigChunkPtr c)
 
    const char neg_one_STRING[] = "-1";
 
-   // Done in Input --- myThread = NULL;
+   // Done in Input --- mThread = NULL;
    int i;
    for (i =0; i < 256; i++)
       m_realkeys[i] = m_keys[i] = 0;
@@ -121,7 +121,7 @@ void KeyboardXWin::controlLoop(void* nullParam)
          << "gadget::KeyboardXWin: Waiting for (thread::self() != NULL)\n"
          << vprDEBUG_FLUSH;
    }
-   myThread = (vpr::Thread*) vpr::Thread::self();
+   mThread = (vpr::Thread*) vpr::Thread::self();
 
    // Open the x-window
    if(mWeOwnTheWindow)
@@ -165,7 +165,7 @@ void KeyboardXWin::controlLoop(void* nullParam)
 
 int KeyboardXWin::startSampling()
 {
-   if(myThread != NULL)
+   if(mThread != NULL)
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:")
@@ -182,7 +182,7 @@ int KeyboardXWin::startSampling()
 
    vpr::Thread* new_thread;
    new_thread = new vpr::Thread(memberFunctor);
-   myThread = new_thread;
+   mThread = new_thread;
 
    return 1;
 }
@@ -218,7 +218,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
       m_keys[VJMOUSE_NEGY] = int(float(m_keys[VJMOUSE_NEGY]) * m_mouse_sensitivity);
 
       /*
-      vprDEBUG(vprDBG_ALL,0)   << "gadget::KeyboardXWin::updateData:" << instName << " -- "
+      vprDEBUG(vprDBG_ALL,0)   << "gadget::KeyboardXWin::updateData:" << mInstName << " -- "
                              << "mouse_keys: px:" << m_keys[VJMOUSE_POSX]
                                         << " nx:" << m_keys[VJMOUSE_NEGX]
                                         << " py:" << m_keys[VJMOUSE_POSY]
@@ -482,7 +482,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
 
 int KeyboardXWin::stopSampling()
 {
-  if (myThread != NULL)
+  if (mThread != NULL)
   {
     mExitFlag = true;
     vpr::System::sleep(1);
@@ -661,7 +661,7 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
                              WhitePixel(m_display, m_screen),
                              event_mask );
 
-   setHints(m_window, const_cast<char*>(instName.c_str()) , "VJm_keys" , "VJKeyboard2", "VJInputD" );
+   setHints(m_window, const_cast<char*>(mInstName.c_str()) , "VJm_keys" , "VJKeyboard2", "VJInputD" );
 
    XSelectInput(m_display, m_window,
                 event_mask );

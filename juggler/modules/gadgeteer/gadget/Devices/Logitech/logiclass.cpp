@@ -65,15 +65,15 @@
 
 int ThreeDMouse::startSampling()
 {
-  if (myThreadID == NULL) {
+  if (mThreadID == NULL) {
    //int i;
    current = 0; valid = 1; progress = 2;
-   openMouse(sPort);
+   openMouse(mPort);
    ThreeDMouse* devicePtr = this;
    void sampleMouse(void*);
 
-   myThread = new vpr::Thread(sampleMouse, (void *) devicePtr);
-   if ( !myThread->valid() ) {
+   mThread = new vpr::Thread(sampleMouse, (void *) devicePtr);
+   if ( !mThread->valid() ) {
       return -1;
    } else {
       std::cout << "going " << std::endl;
@@ -105,10 +105,10 @@ void sampleMouse(void* pointer) {
 
 int ThreeDMouse::stopSampling()
 {
-  if (myThread != NULL) {
-    myThread->kill();
+  if (mThread != NULL) {
+    mThread->kill();
 
-    myThreadID = NULL;
+    mThreadID = NULL;
 //    sginap(1);
     std::cout << "stopping the ThreeDMouse.." << std::endl;
    }
@@ -135,7 +135,7 @@ gadget::PositionData* ThreeDMouse::getPositionData (int dev) {
 bool ThreeDMouse::config(jccl::ConfigChunkPtr c)
     // PURPOSE: Constructor - Setup all vars
 {
-//   strncpy(sPort,"/dev/ttyd2",11);
+//   strncpy(mPort,"/dev/ttyd2",11);
 //    baseVector.setValue(0, 0, 0);   // Setup base offest as origin
    if(! (gadget::Input::config(c) && gadget::Position::config(c)))
       return false;
