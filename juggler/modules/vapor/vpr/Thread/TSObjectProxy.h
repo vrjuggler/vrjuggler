@@ -54,6 +54,29 @@
 namespace vpr
 {
 
+
+/** Base class for all TS Object proxies.
+* Handles ts key allocation
+* Allows for friendship (if needed)
+*/
+class TSObjectProxyBase
+{
+public:
+   TSObjectProxyBase()
+   {;}
+
+protected:
+   /**
+    * Generates a unique key for Thread Specific data.
+    * This value will be used locally by each thread in the system.
+    */
+   static long generateNewTSKey();
+
+   static Mutex     mTSKeyMutex;       /**< Mutex to protect allocate of TS keys */
+   static long      mNextTSObjectKey;  /**< The next available object key */
+
+};
+
 /**
  * This is a smart pointer to a thread specific object.
  *
@@ -71,14 +94,14 @@ namespace vpr
  *          (*var).method();
  */
 template <class T>
-class TSObjectProxy
+class TSObjectProxy : public TSObjectProxyBase
 {
 public:
    /** Constructor for proxy. */
    TSObjectProxy() : mObjectKey(-1)
    {
       // Get a TS key for the object(s) that this will proxy
-      mObjectKey = ThreadManager::instance()->generateNewTSKey();
+      mObjectKey = TSObjectProxyBase::generateNewTSKey();
    }
 
    /** Destructor.  This does nothing. */
@@ -130,9 +153,10 @@ private:
          object = new_object;                                                       // Reference the new one
       }
 
-     vprASSERT((object != NULL) && "Bad object ptr.  It is NULL.");    // We should not have NULL objects
+      vprASSERT((object != NULL) && "Bad object ptr.  It is NULL.");    // We should not have NULL objects
 
-      TSObject<T>* real_object = dynamic_cast< TSObject<T>* >(object);    // try dynamic casting it
+      // --- Dynamic cast to "real" type wrapper
+      TSObject<T>* real_object = dynamic_cast< TSObject<T>* >(object);
 
 #ifdef VPR_DEBUG
       if(real_object == NULL)    // Failed cast
@@ -157,7 +181,7 @@ private:
    {;}
 
 private:
-   long  mObjectKey;    //! The key to find the object
+   long  mObjectKey;    /**< The key to find the object */
 };
 
 } // End of vpr namespace

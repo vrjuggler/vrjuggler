@@ -39,53 +39,26 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_TS_OBJECT_H_
-#define _VPR_TS_OBJECT_H_
-
 #include <vpr/vprConfig.h>
-
+#include <vpr/Thread/TSObjectProxy.h>
 
 namespace vpr
 {
 
-/**
- * Base Thread Specific object.
- *
- * Used so that we can have an array of heterogenous TS objects.
- * (ie. We get some type safety)
- * Also defines some members that all TS Objects need.
- */
-class TSBaseObject
-{
-public:
-   virtual ~TSBaseObject()
-   {;}
-};
 
-/**
- * Wrapper template for storing TS Objects.
- * Used so we can stay type safe with a dynamic cast
- * up from Base object to this type wrapper.
- *
- * @see vpr::TSTable
- * @see vpr::TSObjectProxy
- */
-template <class T>
-class TSObject : public TSBaseObject
-{
-public:
-   virtual ~TSObject()
-   {;}
+   /**
+    * Generates a unique key for Thread Specific data.
+    * This value will be used locally by each thread in the system.
+    */
+   long TSObjectProxyBase::generateNewTSKey()
+   {
+      Guard<Mutex> guard(mTSKeyMutex);
+      return mNextTSObjectKey++;
+   }
 
-   /// Returns the address of our object.
-   T* getObject()
-   { return &mLocalObj; }
+   // Static data
+   Mutex     TSObjectProxyBase::mTSKeyMutex;
+   long      TSObjectProxyBase::mNextTSObjectKey = 0;
 
-private:
-   T mLocalObj;
-};
+}
 
-} // End of vpr namespace
-
-
-#endif

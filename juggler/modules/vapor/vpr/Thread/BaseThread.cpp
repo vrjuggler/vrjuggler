@@ -44,12 +44,16 @@
 #include <vpr/Thread/BaseThread.h>
 #include <vpr/Thread/ThreadManager.h>
 
-vpr::Int32 vpr::BaseThread::mNextThreadId = 0;
-vpr::TSTable vpr::BaseThread::gTSTable;
+
+namespace vpr
+{
+
+vpr::Int32 BaseThread::mNextThreadId = 0;
+vpr::TSTable BaseThread::gTSTable;
 
 
 	// ---- Ouput operator ---- //
-std::ostream& vpr::operator<<(std::ostream& out, vpr::BaseThread* threadPtr)
+std::ostream& operator<<(std::ostream& out, vpr::BaseThread* threadPtr)
 {
    if (threadPtr != NULL)
    {
@@ -70,7 +74,7 @@ std::ostream& vpr::operator<<(std::ostream& out, vpr::BaseThread* threadPtr)
  *
  * This means that this can NOT be in the base constructor
  */
-void vpr::BaseThread::registerThread(bool succesfulCreation)
+void BaseThread::registerThread(bool succesfulCreation)
 {
    if(succesfulCreation)   // Succeed
    {
@@ -82,3 +86,7 @@ void vpr::BaseThread::registerThread(bool succesfulCreation)
       mThreadId = -1;      // We have an invalid thread
    }
 }
+
+}
+
+
