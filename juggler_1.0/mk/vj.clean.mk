@@ -21,7 +21,7 @@ CLEAN_FILES	= Makedepend core so_locations
 
 clean:
 	rm -f ${CLEAN_FILES}
-	if [ test -d "ii_files" ] ; then rm -r ii_files ; fi
+	if [ -d "ii_files" ] ; then rm -r ii_files ; fi
 ifdef _LOCAL_CLEAN
 	${MAKE} _clean
 endif
