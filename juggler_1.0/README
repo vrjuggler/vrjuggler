@@ -5,7 +5,8 @@
 #
 # Contributors (Alphabetically): 
 #               Al Baker, Allen Bierbaum, Carolina Cruz-Neira, 
-#               Jesse Coats, Patrick Hartling, Chris Just, Kevin Meinert
+#               Jesse Coats, Patrick Hartling, Chris Johanson, Chris Just,
+#               Kevin Meinert, Ben Thompson
 #
 # This File's Intent: Describe what to do with this source tree - 
 #                     How to compile, build and test VR Juggler
