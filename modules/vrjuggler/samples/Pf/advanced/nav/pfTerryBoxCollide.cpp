@@ -36,14 +36,14 @@ const int pfTerryBoxCollide::COLLIDE_SEGMENTS( 8 );
 
 pfTerryBoxCollide::pfTerryBoxCollide( int isectMask )
 {
-   mUnitBox[0] = pfVec3(0.57735, 0.57735, 0.57735);
-   mUnitBox[1] = pfVec3(0.57735, 0.57735, -0.57735);
-   mUnitBox[2] = pfVec3(0.57735, -0.57735, 0.57735);
-   mUnitBox[3] = pfVec3(0.57735, -0.57735, -0.57735);
-   mUnitBox[4] = pfVec3(-0.57735, 0.57735, 0.57735);
-   mUnitBox[5] = pfVec3(-0.57735, 0.57735, -0.57735);
-   mUnitBox[6] = pfVec3(-0.57735, -0.57735, 0.57735);
-   mUnitBox[7] = pfVec3(-0.57735, -0.57735, -0.57735);
+   mUnitBox[0] = pfVec3(0.57735f, 0.57735f, 0.57735f);
+   mUnitBox[1] = pfVec3(0.57735f, 0.57735f, -0.57735f);
+   mUnitBox[2] = pfVec3(0.57735f, -0.57735f, 0.57735f);
+   mUnitBox[3] = pfVec3(0.57735f, -0.57735f, -0.57735f);
+   mUnitBox[4] = pfVec3(-0.57735f, 0.57735f, 0.57735f);
+   mUnitBox[5] = pfVec3(-0.57735f, 0.57735f, -0.57735f);
+   mUnitBox[6] = pfVec3(-0.57735f, -0.57735f, 0.57735f);
+   mUnitBox[7] = pfVec3(-0.57735f, -0.57735f, -0.57735f);
    
     mCollideVolume.mode = PFTRAV_IS_PRIM|PFTRAV_IS_NORM|PFTRAV_IS_CULL_BACK;
     mCollideVolume.userData = NULL;

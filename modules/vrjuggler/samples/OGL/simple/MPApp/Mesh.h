@@ -212,7 +212,7 @@ float Mesh::getHeight(float x, float y, float curTime)
 
    const float phase2(20.6f);
    const float offset2(0.3f);
-   const float amp2(0.015);
+   const float amp2(0.015f);
    const float var2 = y+curTime;
 
    const float phase3(20.0f);
