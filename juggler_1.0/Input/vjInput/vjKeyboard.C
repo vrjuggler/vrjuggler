@@ -337,14 +337,14 @@ void vjKeyboard::UpdKeys()
          key = XLookupKeysym((XKeyEvent*)&event,0);
          m_realkeys[XKeyTovjKey(key)] = 1;
          m_keys[XKeyTovjKey(key)] += 1;
-         cout << "KeyPress:  " << hex << key 
-         << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl;
+         vjDEBUG(1) << "KeyPress:  " << hex << key 
+         << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
       case KeyRelease:
          key = XLookupKeysym((XKeyEvent*)&event,0);
          m_realkeys[XKeyTovjKey(key)] = 0;
-         cout << "KeyRelease:" << hex << key 
-         << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl;
+         vjDEBUG(1) << "KeyRelease:" << hex << key 
+         << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
       }
    }
