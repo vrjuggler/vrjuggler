@@ -1,0 +1,755 @@
+<head>
+<title>Build System</title>
+</head>
+
+<body>
+<H2><img border=0 src="${IMAGES}/Icons/24x24_Images/Battery.gif"> Juggler Build System </H2>
+
+<H3> Table Of Contents: </H3>
+<ul>
+	<li><a href="#intro">Introduction</a></li>
+	<li><a href="#required">Required Reading</a></li>
+	<li><A href="#beginner">Step by step build of the Juggler distribution (for beginners)</a> </li>
+	<li><A href="#advanced">Working with <tt>configure.in</tt> and <tt>Makefile.in</tt> (for advanced users)</a></li>
+</ul>
+
+<a name="intro">
+<H3> Introduction </H3>
+</a>
+Of particular interest, The VR Juggler project uses the autoconf utility to stay portable across platforms.  
+This means you will have to 'configure' the project before you make it..<BR>
+To make sense of this documentation, please understand the concepts listed in <a href="#required">Required Reading</a>.  
+Posting about these subjects to the mailing list will probably be ignored.<BR>
+<BR>
+
+<a name="required">
+<H3>Required Reading:</H3>
+</a>
+<ul>
+<li><a href="http://www.gnu.org/software/autoconf/autoconf.html">autoconf</a> Documentation. (Try doing a 'man' or 'info' on autoconf)</a>.</li>
+<li><a href="http://www.gnu.org/software/make/make.html">make</a> documentation. (Try doing a 'man' or 'info' on make, there also is a good book by O'Reilly)</a>.</li>
+</ul>
+
+<a name="beginner">
+<H3> Step by step build of the Juggler distribution (for beginners) </H3>
+</a>
+<H4>Table of contents:</H4>
+<ol>
+<li><a href"#one"> Choose a directory to put Juggler.</a></li>
+<li><a href"#two"> Goto that directory and checkout juggler using CVS</a></li>
+<li><a href"#three"> Enter the newly checked out Juggler source directory</a></li>
+<li><a href"#four"> Set the environment variable VJ_BASE_DIR</a></li>
+<li><a href"#five"> Compile juggler (using the autoconf system, and gnu-make):</a></li>
+	<ol>
+	    <li> Auto-Generate Headers</li>
+	    <li> Auto-Generate the configuration script "configure"</li>
+	    <li> Probe the system for capabilities, generate Makefiles, etc...<BR>
+        	     this "configures" the source tree for the current system</li>
+	    <li> "Make" the distribution using gnu-make. </li>
+	</ol>
+<li><a href"#six"> Popular build hacks</a></li>
+	<ol>
+	    <li> Send compiler output to a different directory than the source tree.</li>
+	</ol>
+</ol>
+
+<HR>
+
+
+<ol>
+<a name="one">
+<li> Choose a directory to put Juggler.</a> <BR>
+	setenv source_code_dir /home/users/joeuser/src<BR>
+<BR>
+</li>
+
+<a name="two">
+<li> Goto that directory and checkout juggler using CVS</a><BR>
+    <B>NOTE: make sure CVS is set up, and pointing to the Juggler repository.</b><BR>
+cd "$source_code_dir"<BR>
+cvs checkout juggler<BR>
+<BR>
+</li>
+
+<a name="three">
+<li> Enter the newly checked out Juggler source directory</a><BR>
+cd "$source_code_dir"/juggler
+<BR>
+</li>
+
+<a name="four">
+<li> Set the environment variable VJ_BASE_DIR </a> <BR>
+    NOTE: This is required by Juggler's build system (makefiles, etc..) 
+    NOTE: 1.) The directory "instlinks" is semi-important. 
+              What does the word "instlinks" mean? 
+	      It is a working distribution of the Juggler library.
+	      After "gmake" is done, you'll be able to use this directory 
+	      to compile your code against.
+          2.) It also determines where juggler files will be created:
+	      Juggler files will be created in (some-directory)/instlinks/..
+	      (in other words, files are created one dir back from instlinks)
+    NOTE: Make sure this line is in your .tcshrc or .cshrc file.
+setenv VJ_BASE_DIR "$source_code_dir"/juggler/instlinks
+<BR>
+</li>
+
+<a name="five">
+<li> Compile juggler (using the autoconf system, and gnu-make):</a><BR>
+	<ol>
+		<li> Auto-Generate Headers<BR>
+		autoheader
+		</li>
+		
+		<li> Auto-Generate the configuration script "configure"<BR>
+		autoconf
+		</li>
+
+		<li> Probe the system for capabilities, generate Makefiles, etc...<BR>
+        		this "configures" the source tree for the current system<BR>
+		"$source_code_dir"/juggler/configure
+		</li>
+
+		<li> "Make" the distribution using gnu-make.<BR>
+        		This compiles, links, and creates the final distribution tree <BR>
+        		(in the form of sym-links).<BR>
+		gmake
+		</li>
+	</ol>
+<BR>
+</li>
+
+<a name="six">
+<li> Build hacks</a><BR>
+    a.) Send compiler output to a different directory than the source tree.<BR>
+        Run this in the directory you want compiler output to go to.<BR>
+	NOTE: You can change the word "myBuildDirectory" to a name of
+	      your choice. <BR> <BR>
+setenv a_different_build_dir myBuildDirectory <BR>
+mkdir "$source_code_dir"/juggler/"$a_different_build_dir" <BR>
+cd "$source_code_dir"/juggler/"$a_different_build_dir" <BR>
+"$source_code_dir"/juggler/configure <BR>
+<BR>
+</li>
+<HR>
+
+
+
+
+<div ALIGN="CENTER">
+	<A name="advanced">
+	<h3>Working with <tt>configure.in</tt> and <tt>Makefile.in</tt> (for advanced users)</h3>
+	</a>
+</div>
+
+<hr>
+
+<h2>Basics</h2>
+
+<dl>
+  <dt><b>Comments in <tt>configure.in</tt></b>
+    <dd>
+      <p>
+
+      Two types of comments can be used in <tt>configure.in</tt>.  The first
+      is the relatively standard ``<tt>#</tt>'' comment.  Lines beginning
+      with this character are copied into the final <i>configure</i> script
+      generated by <i>autoconf</i>(1).  The other type is the <i>m4</i>(1)
+      comment.  Lines commented in this way begin with ``<tt>dnl</tt>'' and
+      are <i>not</i> copied into the <i>configure</i> script.
+
+      <p>
+  <dt><b>Language used in <tt>configure.in</tt></b>
+    <dd>
+      <p>
+
+      The scripting language used in <tt>configure.in</tt> is <i>sh</i>(1).
+      All conditional statements must use the form:
+
+<pre>
+    if test &quot;$some_var&quot; = &quot;some_val&quot; ; then
+        ...
+    fi
+</pre>
+
+      rather than:
+
+<pre>
+    if [ &quot;$some_var&quot; = &quot;some_val&quot; ] ; then
+        ...
+    fi
+</pre>
+
+      The brackets are recognized as special characters by <i>m4</i>(1) and
+      may not be copied into <i>configure</i> properly.
+
+      <p>
+  <dt><b>Multi-line parameters to Autoconf macros</b>
+    <dd>
+      <p>
+
+      Parameters spanning multiple lines may be passed to Autoconf macros
+      without using backslashes through a special block recognized by
+      <i>m4</i>(1).  Simply enclose the parameter in <tt>[]</tt>'s and it
+      will be parsed as one parameter.  Remember to be careful about the use
+      of semi-colons for separating <i>sh</i>(1) statements within these
+      blocks.
+
+      <p>
+  <dt><b>Custom preprocessor information</b>
+    <dd>
+      <p>
+
+      Anything that defines preprocessor macros other than those generated
+      by the Autoconf macros must be defined in <tt>acconfig.h</tt>.  If they
+      are not defined in this file, <i>autoheader</i>(1) will complain as it
+      parses <tt>configure.in</tt> and finds these customizations.  Follow
+      the existing syntax and layout of <tt>acconfig.h</tt> when making
+      additions to it.  In general, additions only have to be made when a new
+      <i>AC_DEFINE</i>, <i>AC_CHECK_TYPE</i>, etc. line is added to
+      <tt>configure.in</tt>.
+
+      <p>
+  <dt><b>Including a common, external <tt>Makefile</tt></b>
+    <dd>
+      <p>
+
+      Due to inconsistencies in the way various operating systems implement
+      some sort of ``include'' directive in their <i>make</i>(1), there is no
+      easy method for including a common, external <tt>Makefile</tt>
+      containing variable assignments common to all <tt>Makefile</tt>s in the
+      source tree such that it would be platform independent.  The result of
+      this is a lot of redundancy in the <tt>Makefile.in</tt> files.  The use
+      of GNU's version of <i>make</i>(1) on all build platforms may or may
+      not simplify this issue.
+</dl>
+
+<hr>
+<p>
+
+<h2>Layout of <tt>configure.in</tt></h2>
+
+<dl>
+  <dt><b>Initialization</b>
+    <dd>
+      <p>
+
+      The first short block of <tt>configure.in</tt> performs some very basic
+      initialization tasks.  The RCS revision number of the script is
+      maintained here so that the user can verify that s/he has the most
+      recent version of the actual <i>configure</i> script.  A check for one
+      file in the source tree is also made to perform a very general, inexact
+      verification that things are where they are supposed to be.  Currently,
+      <i>configure</i> will check for the existence of
+      <tt>Config/ChunkDesc.C</tt>.  Finally, the header file created when
+      done with the configuration process is named.  This will most likely
+      always be <tt>config.h</tt>.
+
+      <p>
+  <dt><b>Custom arguments</b>
+    <dd>
+      <p>
+
+      In this block, the custom arguments for the <i>configure</i> script are
+      defined.  The first set defines the
+      <tt>--with-<i>package</i>[=<i>arg</i>]</tt> and
+      <tt>--without-<i>package</i></tt> arguments.  These are intended to be
+      used for choosing some external software package to use at compile
+      time.  They are also used for providing a small level of customization
+      to how the external software is found and/or used.
+
+      <p>
+
+      The second set define the <tt>--enable-<i>feature</i>[=<i>arg</i>]</tt>
+      and <tt>--disable-<i>feature</i></tt> arguments that allow the user
+      to choose which optional features can be built.  From the Autoconf
+      2.12 documentation, ``These options should never make a feature behave
+      differently or cause one feature to replace another.''
+
+      <p>
+
+      For both sets of options, the <i>AC_ARG_WITH</i> and
+      <i>AC_ARG_ENABLE</i> macros behave the same way.  The first argument is
+      the package/feature, the second is the description printed when the
+      user runs <i>configure</i> with the ``<tt>--help</tt>'' option.  The
+      third argument sets a user-defined variable in the script to the
+      contents of <tt>$withval</tt> or <tt>$enableval</tt> respectively.  If
+      no argument is given (e.g., the user specified
+      ``<tt>--enable-opengl</tt>''), the variable will get either ``yes'' or
+      ``no'' as its value depending upon whether the user used the positive
+      or negative form of the argument.
+
+      <p>
+  <dt><b>System-dependent setup</b>
+    <dd>
+      <p>
+
+      Here, a common set of script variables are given values that are
+      usually dependent upon the system on which the script is being run.
+      The new variables used are all set to have no value before the
+      conditional <tt>case</tt> block begins.  The subsequent conditional
+      block compares the value in <tt>$host</tt> (obtained from the
+      <i>AC_CANONICAL_HOST</i> macro) with known systems and sets values for
+      the variables appropriately.
+
+      <p>
+
+      Some existing variables are modified here as well.  These include
+      <tt>$CFLAGS</tt>, <tt>$CXXFLAGS</tt> and <tt>$INCLUDES</tt>.  Each of
+      these could have been set as part of the user's environment variables
+      or previously in the script as part of executing a macro.  Thus, they
+      should be treated carefully so as not to destroy any existing values
+      that may be stored in them.
+
+      <p>
+
+      Besides setting values in variables, custom pre-processor macros are
+      defined here using the <i>AC_DEFINE</i> macro.  This macro takes two
+      parameters:
+
+      <p>
+      <ol>
+	<li>The name of the macro to define.
+	<li>The value to which the macro is set by the pre-processor.
+      </ol>
+      <p>
+
+      To do something similar to:
+
+<pre>
+  #define C2_DEF
+</pre>
+
+      use the following syntax:
+
+<pre>
+  AC_DEFINE(C2_DEF,)
+</pre>
+
+      Defining macros that take parameters cannot be done with
+      <i>AC_DEFINE</i>.  However, based on a check made for something (such
+      as <i>sginap</i>(2)), such a macro can be defined at the bottom of
+      <tt>acconfig.h</tt>.  Refer to this file to see how a macro for
+      <i>sginap</i>() is defined using <i>usleep</i>(2) in this manner.
+
+      <p>
+  <dt><b>External program checks</b>
+    <dd>
+      <p>
+
+      This block is for standard program checks that <i>configure</i> does
+      to ensure that software needed for compiling the package works.  Using
+      the values in several preset variables (including <tt>$CC</tt> for the
+      C compiler and <tt>$CXX</tt> for the C++ compiler), it runs tests on
+      the software and reports any problems it finds.
+
+      <p>
+  <dt><b>External library checks</b>
+    <dd>
+      <p>
+
+      Checks for needed external libraries are made here.  In this
+      <i>configure</i> script, a great deal of processing is done in order
+      to ensure that the source can be properly compiled and linked using
+      certain external libraries.  The basic process of checking for a
+      library (say, the OpenGL library) involves first checking to see if
+      the library can be linked, and if so, a check is then made for a
+      standard header file associated with the library (in this case,
+      <tt>GL/gl.h</tt>).  In some cases, if a library cannot be found, a
+      fallback check is provided.  In the case of the POSIX threads library,
+      an attempt to link against <tt>libpthread</tt> is made.  If that fails
+      (as it will on HP-UX 10.20), a check is made to link against
+      <tt>libcma</tt>.
+
+      <p>
+
+      Upon successfully finding a library and a needed header file, various
+      variables are usually set that are used later in the Makefile
+      generation phase.  This process tends to get complicated with the VR
+      Juggler configuration process because some source is conditionally
+      compiled in depending upon what is determined in this phase of
+      processing.  This is addressed in more detail in the section about
+      <tt>Makefile.in</tt> files.  If a library is not found, the script may
+      simply issue a warning about the problem or it may exit altogether if
+      the library's existence is crucial to the compiling process.
+
+      <p>
+
+      Adding new library checks can be complicated.  The best method is to
+      refer to the Autoconf 2.12 documentation and the existing checks.  All
+      follow basically the same structure.
+
+      <p>
+  <dt><b>Header file checks</b>
+    <dd>
+      <p>
+
+      Checks for standard header files and user-specified header files are
+      made here.  The user-specified list is a space-separated list of
+      header files that may not exist on all systems.  If a header file is
+      found, <tt>HAVE_<i>FILENAME</i>_H</tt> is defined in <tt>config.h</tt>
+      when it is generated.
+
+      <p>
+  <dt><b><tt>typedef</tt>, <tt>struct</tt> and compiler characteristic
+      checks</b>
+    <dd>
+      <p>
+
+      Here, checks are made to determine if the host system has various
+      types and structures defined or not.  There are a few existing macros
+      that check for specific examples of these, and it is possible to have
+      user-defined checks.  Currently, little is done in this block, and in
+      fact the only user-specified check is to see if the host system has
+      <tt>u_int</tt> defined.  If not, it defines it (via the preprocessor,
+      not <tt><b>typedef</b></tt>) to be <tt>unsigned int</tt> through the
+      <i>AC_CHECK_TYPE</i> macro.  To check for <tt>struct</tt>s, use
+      <i>AC_TRY_COMPILE</i> or <i>AC_EGREP_CPP</i>.  Refer to the Autoconf
+      2.12 documentation section on ``Existing Tests'' for more detailed
+      information.
+
+      <p>
+  <dt><b>Library function checks</b>
+    <dd>
+      <p>
+
+      Here, checks are made for any library and system functions (e.g.,
+      <i>gettimeofday</i>(2), <i>socket</i>(2), <i>sginap</i>(2)) that may
+      not exist on all systems.  As with other sections, the user-specified
+      list of functions to check is the space-separated parameter passed to
+      the <i>AC_CHECK_FUNCS</i> macro.  If found, <tt>HAVE_<i>FUNCNAME</i></tt>
+      will be defined in <tt>config.h</tt>.
+
+      <p>
+  <dt><b>Makefile substitution</b>
+    <dd>
+      <p>
+
+      Within this block of <tt>configure.in</tt>, special symbols in the
+      <tt>Makefile.in</tt> files are slated for replacement with variable
+      values.  This is done through the <i>AC_SUBST</i> macro, and it simply
+      replaces a ``tag'' in a <tt>Makefile.in</tt> with the value stored in
+      the corresponding <i>configure</i> script variable.  The following
+      example illustrates what happens during the file generation phase
+      (discussed next).
+
+      Say that some <tt>Makefile.in</tt> contains the following line:
+
+<pre>
+  CUSTOM_VAR = @CUSTOM_VAR@
+</pre>
+
+      The string enclosed by <tt>@</tt>'s is the tag that will be replaced
+      when <tt>Makefile</tt> is generated.  In <tt>configure.in</tt>, there
+      following line must be present:
+
+<pre>
+  AC_SUBST(CUSTOM_VAR)
+</pre>
+
+      Note that the variable is not prepended by a `<tt>$</tt>' because
+      variable interpolation should not be done here.  Of course,
+      <tt>$CUSTOM_VAR</tt> will generally have had some value set prior to
+      this point.  That is not required however.
+
+      <p>
+
+      It is in this phase of configuration that most of the system-dependent
+      build work is done.  This is similar to what Imake template files do.
+      Virtually everything preceding this point set variables to have values
+      appropriate to the host machine, and now they are put into the
+      <tt>Makefile</tt>s to be used for compiling the code.  There are
+      several pre-defined variables that <i>configure</i> will substitute in
+      the input template files.  Refer to the section titled ``Preset Output
+      Variables'' in the Autuconf 2.12 documentation for a list of these.
+
+      <p>
+  <dt><b>File generation</b>
+    <dd>
+      <p>
+
+      In this last block, file generation is performed using the
+      <i>AC_OUTPUT</i> macro.  It iterates through its space-separated list
+      of files and finds the associated <tt>.in</tt> template file.  In
+      general, this step is only used for generating Makefiles
+      (<tt>config.h</tt> is defined automatically due to the
+      <i>AC_CONFIG_HEADER</i> call at the top of <tt>configure.in</tt>).
+      When a new directory and corresponding <tt>Makefile.in</tt> are added
+      to the source tree, an entry for it must be added to this list.
+</dl>
+
+<hr>
+<p>
+
+<h2>General Layout of a <tt>Makefile.in</tt> file</h2>
+
+<dl>
+  <dt><b>Preset variables and variables local to the current file</b>
+    <dd>
+      <p>
+
+      The first set of assignments is for preset variables (that is, those
+      that are preset by <i>configure</i>) and for variables that are closely
+      related to the preset variety.  In general, many of these variables will
+      have values that are specific to the current <tt>Makefile</tt> being
+      generated.  In other words, they cannot be shared via a common file
+      that would be somehow included by the current <tt>Makefile</tt>.
+
+      <p>
+  <dt><b>System-dependent variables</b>
+    <dd>
+      <p>
+
+      These variables are those that are dependent upon the host build system.
+      They include paths to external programs, options passed to those
+      programs, which C and C++ compilers to use, etc.  For the most part,
+      these variables will have the same values among all <tt>Makefile</tt>s.
+
+      <p>
+
+      In every <tt>Makefile.in</tt>, <tt>$OBJDIR</tt> is set to ``<tt>.</tt>'',
+      but this is overridden at compile time with a value set by the top-level
+      <tt>Makefile</tt> that is passed as an argument to recursive
+      <i>make</i>(1) calls.  Thus, the result is that when doing a full
+      library build, all the object files are built in a common location.
+      However, if a developer only wishes to compile files in a specific
+      directory in the tree, the object files will be put in the current
+      directory.
+
+      <p>
+
+      The <tt>${OPTIMIZER}</tt> variable is one that is set outside the
+      generated <tt>Makefile</tt> by the top-level <tt>Makefile</tt> in its
+      recursive calls to <i>make</i>(1).  It is used for compiling debugging
+      and optimized versions of the library, and this is decided in the
+      top-level <tt>Makefile</tt>.  When compiling only in a specific source
+      directory, it can be overridden (as can all variables) on the command
+      line.
+
+      <p>
+
+      The <tt>${VPATH}</tt> variable is a special one that tells <i>make</i>(1)
+      where to find dependencies for object files when the source is in
+      another directory.  This allows easy compiling of common source for
+      multiple platforms independently.  This variable should be ``set'' to
+      <tt>@srcdir@</tt> in <tt>Makefile.in</tt> rather than to
+      <tt>${srcdir}</tt> because some implementations of <i>make</i>(1) may
+      not handle the latter properly.
+
+      <p>
+  <dt><b>Compiler, source and object variables</b>
+    <dd>
+      <p>
+
+      The first set in this group combines all the system-dependent variables
+      related to the C and C++ compilers into <tt>${C_COMPILE}</tt> and
+      <tt>${CXX_COMPILE}</tt> respectively.  These are then used in the build
+      targets for compiling C and C++ code.
+
+      <p>
+
+      Next, the source files that <i>makedepend</i>(1) will parse are
+      listed.  They are passed as arguments to this program when the
+      <b>depend</b> target is built.  The file names should not have any path
+      prepended to them because this will interfere with the output from
+      <i>makedepend</i>(1).  When the <b>depend</b> target is built, it knows
+      which directory contains the files to parse from the <tt>${srcdir}</tt>
+      variable.
+
+      <p>
+
+      Finally, the object files to be built are listed.  Each object file
+      should have <tt>${OBJDIR}</tt> prepended to it.  This is part of being
+      able to build object files in a common directory or in the current
+      directory depending on the context of the build.  The variable
+      containing the list of object files is used as the dependency for the
+      <b>all</b>, <b>dbg</b>, <b>opt</b>, <b>dso</b>, <b>ddso</b> and
+      <b>obj</b> targets.
+
+      <p>
+
+      This is the first occurrence of conditionally compiled files.  Depending
+      upon which platform the library is being built on and upon other factors
+      (threading package, API, etc.), some files may need to be compiled while
+      other do not (or cannot).  This is decided by <i>configure</i> when it
+      is run, and then the Makefile substitution phase takes care of it in
+      the generated <tt>Makefile</tt>s.  A simple example of how this is used
+      can be found in <tt>SharedMem/Makefile.in</tt>.  For the dependency
+      sources and the object files, the following is done:
+
+<pre>
+  DEPEND_SRCS = C2Memory.C @SHAREDMEM_DEPEND_SRCS@
+
+  SHM_OBJECTS = ${OBJDIR}/C2Memory.o @SHAREDMEM_OBJS@
+</pre>
+
+      Any extra platform- or implementation-specific files are defined when
+      <tt>@SHAREDMEM_DEPEND_SRCS@</tt> and <tt>@SHAREDMEM_OBJS@</tt> are
+      expanded by <i>configure</i>.  Because these tags may sometimes be
+      expanded to nothing, they should never be put on a separate line if
+      the list is spanned across multiple lines with backslashes.  In such a
+      case, it is usually easiest to append the tag to the last line.
+
+      <p>
+  <dt><b>Miscellaneous variables</b>
+    <dd>
+      <p>
+
+      Depending on which <tt>Makefile.in</tt> is being examined, any extra
+      variables needed are set here.  For example, in the top-level
+      <tt>Makefile.in</tt>, the variables for the common build directory are
+      set.  For the most part, everything set here is local to the current
+      file.
+
+      <p>
+
+      One special variable set in the top-level <tt>Makefile.in</tt> is
+      <tt>${SUBDIRS}</tt>.  This is the list of all subdirectories of the
+      top source tree directory where compiling needs to be done.  It is used
+      in doing recursive calls to <i>make</i>(1).  These recursive calls to
+      <i>make</i>(1) are handled wherever other subdirectories exist--not
+      just at the top level.  Presently, the other locations where similar
+      code exists are in the <tt>Input</tt>, <tt>test</tt> and
+      <tt>test/ogl</tt> directories.
+
+      <p>
+
+      A final special tag is <tt>@SET_MAKE@</tt>.  This is inserted here in
+      case <i>make</i>(1) does not set <tt>${MAKE}</tt> when it runs.  This
+      check is performed by <i>configure</i>, and a macro telling it to do
+      this check is in <tt>configure.in</tt>.
+
+      <p>
+  <dt><b>Library targets</b>
+    <dd>
+      <p>
+
+      These build targets are where the bulk of the work in compiling the
+      library is done.  In the case when recursive calls to <i>make</i>(1)
+      are not necessary, the structure in all <tt>Makefile.in</tt> files is
+      the same.  First, the <b>default</b> target is set and then any
+      remaining targets are defined.  Each file listed in the object file
+      list defined prior to this point (including all files that may be
+      compiled conditionally) must have a separate line giving the compile
+      line for it.  The only dependency needed is the C/C++ source file
+      associated with the object file.  Because <tt>${VPATH}</tt> is being
+      used, the path to that source file is not needed.  However, in the
+      compile line, a path must be given.  The <tt>${C2_SRCDIR}</tt> variable
+      is used so that some flexibility is available at configuration time.
+      Though it is not currently implemented, it could be possible to use
+      either an absolute path (using <tt>${C2ROOT_ABS}</tt>) or a relative
+      path (using <tt>${srcdir}</tt>).  This would be implemented in
+      <tt>configure.in</tt>, and <tt>${C2_SRCDIR}</tt> would simply have the
+      current value substituted by <i>configure</i>.  Obviously, these
+      targets are specific to the given <tt>Makefile</tt>.
+
+      <p>
+
+      Standard suffix rules for compiling <tt>.c</tt> and <tt>.C</tt> source
+      files into object files are given, but they are not currently used
+      because they do not work.  They fail because <i>make</i>(1) looks in
+      the current directory for source files to compile, and when the source
+      files are found in another directory (<tt>${srcdir}</tt> to be exact),
+      the suffix rules cannot find them, even when <tt>${VPATH}</tt> is set.
+      Why <i>make</i>(1) is implemented in this way is unclear.
+
+      <p>
+
+      For those cases when recursive calls to <i>make</i>(1) are required,
+      a standard model is used.  The recursive targets are named in such a
+      way that they have ``-recursive'' appended to the non-recursive name.
+      For example, if the user entered <tt><b>make ddso</b></tt> and a
+      recursive ddso build was necessary, the <tt>Makefile.in</tt> would have
+      the following:
+
+<pre>
+  ddso-recursive:
+	<i>Some iterative shell code that recursively calls `<tt>${MAKE} ddso</tt>'</i>
+
+  ddso: ddso-recursive
+</pre>
+
+      The ``iterative shell code'' is the same in all files where it is used.
+      The only difference is which targets use it.  The code loops over each
+      directory name listed in <tt>${SUBDIRS}</tt>, changes into it, and runs
+      whichever target was called.  This is where <tt>${OPTIMIZER}</tt> and
+      <tt>${OBJDIR}</tt> are overridden to use the value appropriate to the
+      build being done.
+
+      <p>
+
+      Finally, the <b>depend</b> and <b>newdepend</b> targets are defined for
+      generating dependencies for all the source files given.  The
+      <b>depend</b> target is built every time the user runs <i>make</i>(1)
+      from the top-level directory, and thus it is dependent upon a file
+      called <tt>.depend_done</tt> existing in the current subdirectory.  If
+      it is necessary to regenerate the dependency list, <b>newdepend</b>
+      can be run.  It removes <tt>.depend_done</tt> and then does a
+      <tt><b>make depend</b></tt> in the current subdirectory.  These are
+      exactly the same in all <tt>Makefile.in</tt> files (where they are
+      needed) through the use of the <tt>${srcdir}</tt> and
+      <tt>${WORKDIR}</tt> variables defined at the top of the file.
+
+      <p>
+  <dt><b>Local targets</b>
+    <dd>
+      <p>
+
+      These targets are for any source files that are not compiled into the
+      library but are (for example) used as test code.  This is one example
+      of a time when it may be convenient to compile code in the current
+      directory rather than in a common object file directory.  Generally,
+      these targets will be similar to the library targets.  However,
+      <i>makedepend</i>(1) is not run on these files.  A local target for
+      doing this could be defined in the same manner as the common
+      <b>depend</b> and <b>newdepend</b> targets though.
+
+      <p>
+  <dt><b>Clean-up targets</b>
+    <dd>
+      <p>
+
+      A simple <b>clean</b> target is defined here in most
+      <tt>Makefile.in</tt> files.  In those where recursive calls to
+      <i>make</i>(1) are made, a recursive version is implemented.  As usual,
+      these targets just remove any files that are not needed when done
+      compiling.
+
+      <p>
+  <dt><b>Dependencies</b>
+    <dd>
+      <p>
+
+      Most <tt>Makefile.in</tt> files end with an area where all the source
+      dependencies are appended when the <b>depend</b> and <b>newdepend</b>
+      targets are built.  The line marking this section must remain intact
+      so that <i>makedepend</i>(1) will know where it is safe to begin
+      overwriting the dependencies should it be run again.  This line is:
+
+<pre>
+  # DO NOT DELETE THIS LINE -- make depend depends on it.
+</pre>
+
+      It is the default string recognized by <i>makedepend</i>(1), but it can
+      be changed by specifying an alternate string as an argument to
+      <i>makedepend</i>(1).
+</dl>
+
+<hr>
+<p>
+
+<h2>References</h2>
+
+<dl>
+  <dt><b>GNU Autoconf 2.12 Documentation</b>
+    <dd>
+      <p>
+
+      The documentation comes with the Autoconf distribution and can be
+      converted into HTML format.  It is very comprehensive but also very
+      long.  On the ICEMT SGI workstations, the <tt>autoconf.info</tt> file
+      is located in <tt>/usr/local/info</tt>.  The documentation in HTML
+      format is in <tt>~patrick/docs/autoconf</tt>.
+</dl>
+
+<hr>
+<p></body>
