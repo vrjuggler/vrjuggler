@@ -85,14 +85,22 @@ public:
    }
 
 public:     // Thread specific data caching
-   //: Get the Thread specific data table
-   // NOTE: Users should NOT access the table directly
-   // instead, use vpr::TSObjectProxies
+   /** Get the Thread specific data table.
+    * NOTE: Users should NOT access the table directly
+    * instead, use vpr::TSObjectProxies
+    */
    TSTable* getTSTable()
    { return &mTSTable; }
 
+   /** Get the Thread the global thread specific data table.
+    * This table is shared by all threads that were not created by vpr.
+    */
+   static TSTable* getGlobalTSTable()
+   { return &gTSTable; }
+
 private:
-   TSTable  mTSTable;      // Thread specific data for the thread
+   TSTable        mTSTable;      // Thread specific data for the thread
+   static TSTable gTSTable;      // Global thread specific data.  Used in all threads NOT created by vpr.  (ie. the primordial thread)
 
 protected:
    //: After the object has been created, call this routine to complete
