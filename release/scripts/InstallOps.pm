@@ -205,14 +205,17 @@ sub newDir($$)
 #          $gid: The ID of the group that will own the file.
 #         $mode: The mode bits for the file.
 #     $dest_dir: The destination directory for the file.
+#    $make_link: Use a symlink instead of a file copy.  This argument is
+#                optional, and it defaults to 0 (false) if not specified.
 # -----------------------------------------------------------------------------
-sub installFile($$$$$)
+sub installFile($$$$$;$)
 {
-   my $filename = shift;
-   my $uid = shift;
-   my $gid = shift;
-   my $mode = shift;
-   my $dest_dir = shift;
+   my $filename  = shift;
+   my $uid       = shift;
+   my $gid       = shift;
+   my $mode      = shift;
+   my $dest_dir  = shift;
+   my $make_link = shift || 0;
 
    my $src_file = "$filename";
 
@@ -231,7 +234,26 @@ sub installFile($$$$$)
       mkpath("$inst_dir", 0, 0755) or warn "mkpath: $!\n";
    }
 
-   copy("$src_file", "$inst_dir") or warn "copy: $!\n";
+   # If we are not on Win32 and a symlink was requested, use symlink() instead
+   # of copy().
+   if ( ! $Win32 && $make_link )
+   {
+      my $dest = "$inst_dir/$src_file";
+
+      if ( $src_file !~ /^\// )
+      {
+         my $cur_dir = getcwd();
+         $src_file   = "$cur_dir/$src_file";
+      }
+
+      unlink("$dest") if -e "$dest";
+      symlink("$src_file", "$dest")
+         or warn "WARNING: Failed to make symlink from $src_file to $dest: $!\n";
+   }
+   else
+   {
+      copy("$src_file", "$inst_dir") or warn "copy: $!\n";
+   }
 
    if ( ! $Win32 )
    {
