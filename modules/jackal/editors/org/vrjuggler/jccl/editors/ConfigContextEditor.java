@@ -46,6 +46,21 @@ public class ConfigContextEditor
 
             ConfigElement elt = (ConfigElement)value;
             mElementPropSheet.setElement(elt);
+         
+            if (mConfigElementCustomEditor != null)
+            {
+               mTabPane.remove(mTabPane.indexOfTab(mConfigElementCustomEditor.getTitle()));
+               mConfigElementCustomEditor = null;
+            }
+
+            mConfigElementCustomEditor = CustomEditorRegistry.findEditor(elt.getDefinition().getToken());
+ 
+            if (mConfigElementCustomEditor != null)
+            {
+               mConfigElementCustomEditor.setConfigElement(elt);
+               
+               mTabPane.add(mConfigElementCustomEditor.getPanel(), mConfigElementCustomEditor.getTitle());
+            } 
          }
       });
    }
@@ -113,14 +128,16 @@ public class ConfigContextEditor
       mElementTree.setShowsRootHandles(true);
       mBaseSplitPane.setOneTouchExpandable(true);
       this.add(mBaseSplitPane, BorderLayout.CENTER);
-      //mBaseSplitPane.add(mElementTreeScrollPane, JSplitPane.LEFT);
       mBaseSplitPane.add(treePane, JSplitPane.LEFT);
+      mBaseSplitPane.add(mTabPane, JSplitPane.RIGHT);
+      mTabPane.add(mElementPropSheetScrollPane, "DefaultEditor");
       
-      
-      mBaseSplitPane.add(mElementPropSheetScrollPane, JSplitPane.RIGHT);
       mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
       mElementTreeScrollPane.getViewport().add(mElementTree, null);
 
+      
+      
+      
       treeToolbar.setFloatable(false);
 
       addBtn.setText("Add");
@@ -216,9 +233,15 @@ public class ConfigContextEditor
 
    private BorderLayout mBaseLayout = new BorderLayout();
    private JSplitPane mBaseSplitPane = new JSplitPane();
+   private JTabbedPane mTabPane = new JTabbedPane();
    private JScrollPane mElementTreeScrollPane = new JScrollPane();
    private JTree mElementTree = new JTree();
    private JScrollPane mElementPropSheetScrollPane = new JScrollPane();
+
+   // CustomEditor stuff
+   private JScrollPane mCustomConfigElementEditorScrollPane = new JScrollPane();
+   private CustomEditor mConfigElementCustomEditor = null;
+   
    private ConfigElementPropertySheet mElementPropSheet = new ConfigElementPropertySheet();
    
    private BorderLayout treeLayout = new BorderLayout();
