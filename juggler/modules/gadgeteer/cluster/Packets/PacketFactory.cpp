@@ -45,6 +45,7 @@
 #include <cluster/Packets/ApplicationDataAck.h>
 #include <cluster/Packets/DataPacket.h>
 #include <cluster/Packets/EndBlock.h>
+#include <cluster/Packets/StartBlock.h>
 #include <gadget/Util/Debug.h>
 
 
@@ -97,6 +98,9 @@ void PacketFactory::loadKnownPackets()
    PacketConstructor<EndBlock>* end_block
       = new PacketConstructor<EndBlock>;
 
+   PacketConstructor<StartBlock>* start_block
+   = new PacketConstructor<StartBlock>;
+
 
    if( (NULL == device_request)     ||
        (NULL == device_ack)         ||
@@ -107,7 +111,8 @@ void PacketFactory::loadKnownPackets()
        (NULL == appdata_request)   ||
        (NULL == appdata_ack)       ||
        (NULL == data_packet)        ||
-       (NULL == end_block) )
+       (NULL == end_block)          ||
+       (NULL == start_block) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }

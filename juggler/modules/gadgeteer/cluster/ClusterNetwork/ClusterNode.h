@@ -179,6 +179,17 @@ namespace cluster
       { mUpdated = update; }
       
       /**
+       * Return if this node is running or not.
+       */
+      bool isRunning() { return mRunning; }
+
+      /**
+       * Set the running status for this node.
+       */
+      void setRunning(bool started)
+      { mRunning = started; }
+
+      /**
        * Attempt to connect to this node.
        */
       vpr::ReturnStatus attemptConnect();
@@ -276,6 +287,7 @@ private:
       
       vpr::Semaphore    mClusterNodeDoneSema;   /**< Semaphore trigger for completion */
       vpr::Uint64       mDelta;
+      bool              mRunning;
    };
 
 } // end namespace gadget
