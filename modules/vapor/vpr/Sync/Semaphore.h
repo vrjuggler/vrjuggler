@@ -35,14 +35,14 @@
 
 #include <vprConfig.h>
 
-#if defined(VPR_IRIX_SPROC)
+#if defined(VPR_USE_IRIX_SPROC)
 #   include <ulocks.h>
 #   include <md/SPROC/SemaphoreSGI.h>
     
 namespace vpr {
     typedef SemaphoreSGI Semaphore;
 };
-#elif defined(VPR_OS_Win32)
+#elif defined(VPR_USE_WIN32)
 #  include <md/WIN32/SemaphoreWin32.h>
 
 namespace vpr {
@@ -64,7 +64,7 @@ namespace vpr {
 namespace vpr {
    typedef SemaphoreNSPR Semaphore;
 };
-#endif	/* VPR_IRIX_SPROC */
+#endif	/* VPR_USE_IRIX_SPROC */
 
 
 #endif	/* _VPR_Sempahore_h_ */

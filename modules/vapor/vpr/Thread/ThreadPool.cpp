@@ -42,7 +42,7 @@
 #   include <sys/time.h>
 #endif
 
-#ifndef VPR_OS_Win32
+#ifndef VPR_USE_WIN32
 #   include <sys/resource.h>
 #endif
 
@@ -107,7 +107,7 @@ ThreadPool::threadLoop(void* theThreadAsVoid) {
 
    OneThread* myThread = (OneThread*)theThreadAsVoid;
 
-#ifdef VPR_IRIX_SPROC
+#ifdef VPR_USE_IRIX_SPROC
    // --- SIGNAL Handlers ---- //
    prctl(PR_TERMCHILD);       // What should I do with. FIX - Allen
 #endif

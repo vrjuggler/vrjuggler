@@ -504,7 +504,7 @@ protected:
 namespace vpr {
   typedef Socket_t<SocketImpNSPR> Socket;
 };
-#elif defined(VPR_OS_Win32)
+#elif defined(VPR_USE_WIN32)
 #   include <md/WIN32/SocketImpWinSock.h>
 
 namespace vpr {

@@ -61,10 +61,13 @@
 #undef VPR_POSIX_SEMAPHORES
 
 /* Define to use the IRIX sproc(2) threading model instead of POSIX threads. */
-#undef VPR_IRIX_SPROC
+#undef VPR_USE_IRIX_SPROC
 
 /* Define to use the NSPR subsystem. */
 #undef VPR_USE_NSPR
+
+/* Define to use the NSPR subsystem. */
+#undef VPR_USE_WIN32
 
 /* Define to use System V semaphores. */
 #undef VPR_SYSV_SEMAPHORES

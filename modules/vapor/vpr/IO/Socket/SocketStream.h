@@ -195,7 +195,7 @@ protected:
 namespace vpr {
     typedef SocketStream_t<SocketStreamImpNSPR, SocketImpNSPR> SocketStream;
 };
-#elif defined(VPR_OS_Win32)
+#elif defined(VPR_USE_WIN32)
 #   include <md/WIN32/SocketStreamImpWinSock.h>
 
 namespace vpr {

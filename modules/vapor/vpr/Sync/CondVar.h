@@ -35,7 +35,7 @@
 
 #include <vprConfig.h>
 
-#if defined(VPR_IRIX_SPROC)
+#if defined(VPR_USE_IRIX_SPROC)
 #    include <ulocks.h>
 #    include <Sync/CondGeneric.h>
 
@@ -52,7 +52,7 @@ namespace vpr {
 namespace vpr {
     typedef CondPosix Cond;
 };
-#elif defined(VPR_OS_Win32)
+#elif defined(VPR_USE_WIN32)
 #    include <Sync/CondGeneric.h>
  
 namespace vpr {

@@ -41,10 +41,10 @@ namespace vpr {
 #if defined(VRP_USE_NSPR)
 #   include <md/NSPR/IOSysNSPR.h>
     typedef IOSysNSPR IOSys;
-#if defined(VPR_IRIX_SPROC) || defined(VPR_USE_PTHREADS)
+#if defined(VPR_USE_IRIX_SPROC) || defined(VPR_USE_PTHREADS)
 #   include <md/POSIX/IOSysUnix.h>
     typedef IOSysUnix IOSys;
-#elif defined(VPR_OS_Win32)
+#elif defined(VPR_USE_WIN32)
 #   include <md/WIN32/IOSysWin32.h>
     typedef IOSysWin32 IOSys;
 #endif

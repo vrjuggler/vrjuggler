@@ -35,7 +35,7 @@
 
 #include <vprConfig.h>
 
-#ifdef VPR_IRIX_SPROC    // ---- SGI IPC Barrier ------ //
+#ifdef VPR_USE_IRIX_SPROC    // ---- SGI IPC Barrier ------ //
 #   include <ulocks.h>
 #   include <md/SPROC/BarrierSGI.h>
 
@@ -167,6 +167,6 @@ private:
 
 }; // End of vpr namespace
 
-#endif	/* ! VPR_IRIX_SPROC */
+#endif	/* ! VPR_USE_IRIX_SPROC */
 
 #endif	/* _VPR_Barrier_h_ */

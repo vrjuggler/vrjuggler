@@ -37,13 +37,13 @@
 //#include <SystemBase.h>
 
 // determine which implementation of vprSystem to include.
-#if defined(VPR_IRIX_SPROC) || defined(VPR_USE_PTHREADS)
+#if defined(VPR_USE_IRIX_SPROC) || defined(VPR_USE_PTHREADS)
 #   include <md/POSIX/SystemPosix.h>
 
 namespace vpr {
     typedef SystemPosix System;
 };
-#elif defined(VPR_OS_Win32)
+#elif defined(VPR_USE_WIN32)
 #   include <md/WIN32/SystemWin32.h>
 
 namespace vpr {
