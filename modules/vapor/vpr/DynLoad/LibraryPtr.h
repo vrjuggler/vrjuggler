@@ -39,29 +39,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_LIBRARY_H_
-#define _VPR_LIBRARY_H_
+#ifndef _VPR_LIBRARY_PTR_H_
+#define _VPR_LIBRARY_PTR_H_
 
-#include <vpr/vprConfig.h>
+#include <boost/smart_ptr.hpp>
 
-#ifdef VPR_USE_NSPR
-#include <vpr/md/NSPR/DynLoad/LibraryNSPR.h>
 
 namespace vpr
 {
-   typedef LibraryNSPR Library;
-}
-
-#else
-#include <vpr/md/POSIX/DynLoad/LibraryUNIX.h>
-
-namespace vpr
-{
-   typedef LibraryUNIX Library;
+   typedef boost::shared_ptr<Library> LibraryPtr;
 }
 
 #endif
-
-#include <vpr/DynLoad/LibraryPtr.h>
-
-#endif /* _VPR_LIBRARY_H_ */
