@@ -227,8 +227,9 @@ protected:
    // --- MP Stuff -- //
    vpr::Semaphore    drawTriggerSema;  /**< Semaphore for draw trigger */
    vpr::Semaphore    drawDoneSema;     /**< Semaphore for drawing done */
-   vpr::Semaphore    mRuntimeConfigSema;  /**< Protects run-time config.  Only when this semaphore
-                                        *  is acquired can run-time config occur */
+   //vpr::Semaphore    mRuntimeConfigSema;  /**< Protects run-time config.  Only when this semaphore
+   //                                     *  is acquired can run-time config occur */
+   bool              mRunning;         /**< Used to stop the drawing thread. */
 
 protected:
    GlDrawManager();

@@ -61,10 +61,9 @@
 namespace vrj
 {
 
-//vjGlDrawManager* GlDrawManager::_instance = NULL;
 vprSingletonImp(GlDrawManager);
 
-GlDrawManager::GlDrawManager() : drawTriggerSema(0), drawDoneSema(0), mRuntimeConfigSema(0)
+GlDrawManager::GlDrawManager() : drawTriggerSema(0), drawDoneSema(0), /*mRuntimeConfigSema(0),*/ mRunning(false)
 {
 }
 
@@ -103,6 +102,8 @@ void GlDrawManager::start()
    // Create a new thread to handle the control
    vpr::Thread* control_thread;
 
+   mRunning = true;
+
    // XXX: Memory leak.
    vpr::ThreadMemberFunctor<GlDrawManager>* memberFunctor =
       new vpr::ThreadMemberFunctor<GlDrawManager>(this, &GlDrawManager::main, NULL);
@@ -137,8 +138,7 @@ void GlDrawManager::sync()
 /** This is the control loop for the manager. */
 void GlDrawManager::main(void* nullParam)
 {
-   //while(!Exit)
-   while (1)
+   while(mRunning)
    {
       //**// Runtime config will happen here
       // Because the kernel is the only one that can trigger it
@@ -147,8 +147,14 @@ void GlDrawManager::main(void* nullParam)
       // Wait for trigger
       drawTriggerSema.acquire();
 
-      // THEN --- Do Rendering --- //
-      drawAllPipes();
+      // While closing the GlDrawManager this thread will be waiting at 
+      // drawTriggerSema.acquire(). To properly stop this thread we must 
+      // allow it to fall through the semaphore and not execute drawAllPipes()
+      if (mRunning)
+      {
+         // THEN --- Do Rendering --- //
+         drawAllPipes();
+      }              
 
       // -- Done rendering --- //
       drawDoneSema.release();
@@ -299,12 +305,18 @@ void GlDrawManager::removeDisplay(Display* disp)
 /** Shutdown the drawing API */
 void GlDrawManager::closeAPI()
 {
-   vprDEBUG(vrjDBG_DRAW_MGR,0) << "vrj::GlDrawManager::closeAPI: NOT IMPLEMENTED.\n" << vprDEBUG_FLUSH;
-    // Stop all pipes
-   ;
-    // Delete all pipes
+   vprDEBUG(vrjDBG_DRAW_MGR,0) << "vrj::GlDrawManager::closeAPI\n" << vprDEBUG_FLUSH;
+   
+   mRunning = false;
+   
+   drawTriggerSema.release();
+   drawDoneSema.acquire();
+   
+   // TODO: Must shutdown and delete all pipes.
+   // Stop and delete all pipes
 
-    // Close and delete all glWindows
+   // TODO: We must fix the closing of EventWindows and GlWindows before we can do this.
+   // Close and delete all glWindows
 }
 
 /////// CHUNK HANDLERS ////////////////////
