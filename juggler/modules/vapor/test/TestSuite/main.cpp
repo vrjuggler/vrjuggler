@@ -138,6 +138,7 @@ int main (int ac, char **av)
 //   noninteractive_suite->addTest(vprTest::SocketCopyConstructorTest::suite());
    noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
    noninteractive_suite->addTest(vprTest::SelectorTest::suite());
+   noninteractive_suite->addTest(vprTest::ThreadTest::suite());
 
    // Add the test suite to the runner
    runner.addTest( noninteractive_suite );
@@ -161,7 +162,7 @@ int main (int ac, char **av)
    // -------------------------------
    CppUnit::TestSuite* interactive_suite = new CppUnit::TestSuite("interactive");
 
-//   interactive_suite->addTest(vprTest::ThreadTest::suite());
+//   interactive_suite->addTest(vprTest::ThreadTest::interactiveSuite());
 
 #ifndef VPR_SIMULATOR
    interactive_suite->addTest(vprTest::SerialPortTest::suite());

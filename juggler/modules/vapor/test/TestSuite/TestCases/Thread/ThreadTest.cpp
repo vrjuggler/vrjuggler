@@ -10,6 +10,8 @@
 #include <vpr/Thread/TSObjectProxy.h>
 #include <vpr/Thread/ThreadManager.h>
 
+#include <cppunit/extensions/MetricRegistry.h>
+
 #include <ThreadTest.h>
 
 
@@ -58,7 +60,7 @@ void ThreadTest::testCreateJoin()
 
 void ThreadTest::incCounter(void* arg)
 {
-   for(int i=0;i<ThreadTest_INC_COUNT;i++)
+   for(vpr::Uint32 i=0;i<ThreadTest_INC_COUNT;i++)
    {
       mItemProtectionMutex->acquire();
       {
@@ -317,5 +319,76 @@ void ThreadTest::recurseConsumeResources(void* arg)
    else
       return;
 }
+
+
+// ------------------------------------ //
+// ---- Thread specific data stuff ---- //
+// ------------------------------------ //
+void ThreadTest::testThreadSpecificData()
+{
+   // Spawn off a bunch of threads (m)
+   // Have each one increment counter n times
+   // join all threads
+   // Make sure counter is of valid value
+
+   const int num_threads(10);
+   std::vector<vpr::ThreadMemberFunctor<ThreadTest>*> functors(num_threads);
+   std::vector<vpr::Thread*> threads(num_threads);
+   std::vector<std::string*> thread_names(num_threads);
+
+   for(int t=0;t<num_threads;t++)
+   {
+      char buffer[256];
+      sprintf(buffer, "%d", t);
+      thread_names[t] = new std::string(buffer);
+
+      functors[t] = new vpr::ThreadMemberFunctor<ThreadTest>(this,&ThreadTest::tsIncCounter, thread_names[t]);
+
+      // Spawns thread here
+      threads[t] = new vpr::Thread(functors[t]);
+   }
+
+   for(int t=0;t<num_threads;t++)
+   {
+      /*
+      if(threads[t]->join() == false)
+      {
+         CPPUNIT_ASSERT(false && "Thread was not able to be joined");
+      }
+      */
+      threads[t]->join();
+      delete threads[t];
+      delete functors[t];
+      delete thread_names[t];
+   }   
+}
+
+/**
+* @param arg - ptr to std::string id of thread
+*/
+void ThreadTest::tsIncCounter(void* arg)
+{
+   std::string* thread_name = static_cast<std::string*>(arg);
+   std::string test_name("TSDataOverhead");
+   test_name += (*thread_name);
+
+   const unsigned long IncCount(100000);
+   
+   (*mTSCounter) = 0;
+   
+   CPPUNIT_METRIC_START_TIMING();
+
+   for(unsigned long i=0;i<IncCount;i++)
+   {
+      (*mTSCounter) = (*mTSCounter) + 1;
+      vpr::System::msleep(0);    // Sleep for 20 micro seconds      
+   }
+
+   CPPUNIT_ASSERT((*mTSCounter) == IncCount);
+
+   CPPUNIT_METRIC_STOP_TIMING();
+   CPPUNIT_ASSERT_METRIC_TIMING_LE(test_name, IncCount, 0.075f, 0.1f);  // warn at 7.5%, error at 10%
+}
+
 
 } // End of vprTest namespace
