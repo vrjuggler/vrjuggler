@@ -62,6 +62,8 @@ public:
 
    virtual Subject_ptr getSubject(const char* name);
 
+   virtual tweek::SubjectManager::SubjectList* getAllSubjects(void);
+
 protected:
    // Only this class can instantiate me.
    friend class tweek::CorbaManager;
