@@ -36,8 +36,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.jccl.ui.ControlUIModule;
-import org.vrjuggler.jccl.ui.PlugPanel;
+import org.vrjuggler.jccl.vjcontrol.ui.ControlUIModule;
+import org.vrjuggler.jccl.vjcontrol.ui.PlugPanel;
 import org.vrjuggler.jccl.vjcontrol.*;
 
 /** PlugPanel for managing connections to VR Juggler apps.
