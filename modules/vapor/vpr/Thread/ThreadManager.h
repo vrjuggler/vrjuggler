@@ -44,7 +44,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <vpr/Thread/BaseThread.h>
+//#include <vpr/Thread/Thread.h>
 #include <vpr/Thread/TSTable.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
@@ -68,14 +68,14 @@ public:
     *
     * @pre Manager must be locked.
     */
-   void addThread(BaseThread* thread);
+   void addThread(Thread* thread);
 
    /**
     * Called when a thread has been removed from the system.
     *
     * @pre Manager must be locked.
     */
-   void removeThread(BaseThread* thread);
+   void removeThread(Thread* thread);
 
    /**
     * Locks the manager so that we have complete control to do stuff.
@@ -93,12 +93,24 @@ public:
       mThreadVectorMutex.release();
    }
 
+   /** Get list of all threads in system.
+    * @note WARNING: This method is for advanced usage only.  Use at your own risk.
+    */
+   std::vector<Thread*> getThreads()
+   { return mThreads; }
+
+   unsigned getNumThreads()
+   { return mThreads.size(); }
+
+   Thread* getThread(unsigned i)
+   { return mThreads[i]; }
+
    /// Dumps the state of the manager to debug.
    void debugDump();
 
 private:
-   Mutex                    mThreadVectorMutex;  //! Mutex to protect the threads vector
-   std::vector<BaseThread*> mThreads;            //! List of all threads in system
+   Mutex                mThreadVectorMutex;  //! Mutex to protect the threads vector
+   std::vector<Thread*> mThreads;            //! List of all threads in system
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //

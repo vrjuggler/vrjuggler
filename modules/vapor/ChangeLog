@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-10-27 allenb   Refactored BaseThread handling and usage.
+                    This cleans up some crufty corners of this code that
+                    still has the flavor of polymorphic threads.
 2004-10-27 allenb   Refactored API of ProfileNode and ProfileManager.
                     Removed redundant code, simplified API, and fixed bugs.
                     Added XML output of profile data.

@@ -42,8 +42,9 @@
 #include <vpr/vprConfig.h>
 
 #include <vpr/Thread/BaseThread.h>
+#include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadManager.h>
-
+#include <iomanip>
 
 namespace vpr
 {
@@ -51,9 +52,20 @@ namespace vpr
 vpr::Int32 BaseThread::mNextThreadId = 0;
 vpr::TSTable BaseThread::gTSTable;
 
+/**
+ * Ouputs the state of the object.
+ */
+std::ostream& BaseThread::outStream(std::ostream& out)
+{
+   out.setf(std::ios::right);
+   out << std::setw(3) << mThreadId;
+   out.unsetf(std::ios::right);
+   return out;
+}
 
-	// ---- Ouput operator ---- //
-std::ostream& operator<<(std::ostream& out, vpr::BaseThread* threadPtr)
+
+   // ---- Ouput operator ---- //
+std::ostream& operator<<(std::ostream& out, vpr::Thread* threadPtr)
 {
    if (threadPtr != NULL)
    {
@@ -67,19 +79,14 @@ std::ostream& operator<<(std::ostream& out, vpr::BaseThread* threadPtr)
    return out;
 }
 
-/**
- * After the object has been created, call this routine to complete
- * initialization.  Done this way, because I need to call this based on stuff
- * that happens in derived class's constructor... and that means what???
- *
- * This means that this can NOT be in the base constructor
- */
 void BaseThread::registerThread(bool succesfulCreation)
 {
    if(succesfulCreation)   // Succeed
    {
       createThreadId();
-      ThreadManager::instance()->addThread(this); // Add the thread to the table
+      Thread* thread_ptr = dynamic_cast<Thread*>(this);
+      vprASSERT(NULL != thread_ptr);
+      ThreadManager::instance()->addThread(thread_ptr); // Add the thread to the table
    }
    else
    {

@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <string.h>
+#include <iomanip>
 #include <sys/types.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -388,11 +389,11 @@ int ThreadPosix::kill(int signum)
    return pthread_kill(mThread, signum);
 }
 
-BaseThread* ThreadPosix::self()
+Thread* ThreadPosix::self()
 {
    vprASSERT((statics.mStaticsInitialized==1221) && "Trying to call vpr::ThreadPosix::self before statics are initialized. Don't do that");
 
-   BaseThread* my_thread;
+   Thread* my_thread;
    threadIdKey().getspecific((void**)&my_thread);
 
    return my_thread;
@@ -567,5 +568,6 @@ BaseThread::VPRThreadState ThreadPosix::posixThreadStateToVPR(const int state)
 
    return vpr_state;
 }
+
 
 } // End of vpr namespace
