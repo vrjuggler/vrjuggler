@@ -172,10 +172,14 @@ links:
           done
 	cd $(instlinks)/include && $(RM_LN) ./boost &&			\
           $(LN_S) $(JUGGLERROOT_ABS)/external/boost/boost ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(instlinks) && rm -rf $(LIBDIR_NAME) && cp -r $(LIBDIR_BASE) .
+else
 	for lib in $(LIBS) ; do 					\
-            cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
+            cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
+endif
 	cd $(instlinks)/include/vpr && $(RM_LN) ./*.h &&		\
           $(LN_S) $(VPRROOT_ABS)/vpr/*.h ./
 	cd $(instlinks)/include/vpr && $(RM_LN) ./vprDefines.h &&	\
