@@ -119,6 +119,13 @@ public:
    {
    }
 
+   // Test reading and writing of data
+   void testReaderWriter();
+
+   // Test reading and writing data from many memory offsets
+   void testDataOffsets();
+
+
    void testReadWriteSimple();
 
    void testReadWriteNested();

@@ -111,7 +111,7 @@ inline vpr::ReturnStatus ObjectWriter::writeUint16(vpr::Uint16 val)
 {
    vpr::Uint16 nw_val = vpr::System::Htons(val);
 
-   adjust(2);
+//   adjust(2);
    return writeRaw((vpr::Uint8*)&nw_val, 2);
 }
 
@@ -119,7 +119,7 @@ inline vpr::ReturnStatus ObjectWriter::writeUint32(vpr::Uint32 val)
 {
    vpr::Uint32 nw_val = vpr::System::Htonl(val);
    
-   adjust(4);
+//   adjust(4);
    return writeRaw((vpr::Uint8*)&nw_val, 4);
 }
 
@@ -127,7 +127,7 @@ inline vpr::ReturnStatus ObjectWriter::writeUint64(vpr::Uint64 val)
 {
    vpr::Uint64 nw_val = vpr::System::Htonll(val);
    
-   adjust(8);
+//   adjust(8);
    return writeRaw((vpr::Uint8*)&nw_val, 8);
 }
 
@@ -137,7 +137,7 @@ inline vpr::ReturnStatus ObjectWriter::writeFloat(float val)
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
    vpr::Uint32 nw_val = vpr::System::Htonl(*((vpr::Uint32*)&val));
    
-   adjust(4);
+   //adjust(4);
    return writeRaw((vpr::Uint8*)&nw_val, 4);
 }
 
@@ -147,7 +147,7 @@ inline vpr::ReturnStatus ObjectWriter::writeDouble(double val)
    BOOST_STATIC_ASSERT(sizeof(double) == 8);   
    vpr::Uint64 nw_val = vpr::System::Htonll(*((vpr::Uint64*)&val));
    
-   adjust(8);
+   //adjust(8);
    return writeRaw((vpr::Uint8*)&nw_val, 8);
 }
 

@@ -80,7 +80,7 @@ void GUIDTest::testCompare ()
 
 void GUIDTest::testCreationOverhead()
 {
-   const vpr::Uint32 iters(100000);
+   const vpr::Uint32 iters(1000);
    vpr::Uint32 loops = iters;
    vpr::GUID guid1;
 

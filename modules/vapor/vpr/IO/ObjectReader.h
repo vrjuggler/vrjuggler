@@ -109,29 +109,34 @@ public:
 */
 inline vpr::Uint8 ObjectReader::readUint8()
 {
-   return *(readRaw(1));
+   vpr::Uint8 temp_data;
+   memcpy(&temp_data, readRaw(1), 1); 
+   return temp_data;
 }
 
 inline vpr::Uint16 ObjectReader::readUint16()
 {
-   adjust(2);
-   vpr::Uint16 nw_val = *((vpr::Uint16*)readRaw(2));
+   //adjust(2);
+   vpr::Uint16 nw_val;
+   memcpy(&nw_val, readRaw(2), 2);
    
    return vpr::System::Ntohs(nw_val);
 }
 
 inline vpr::Uint32 ObjectReader::readUint32()
 {
-   adjust(4);
-   vpr::Uint32 nw_val = *((vpr::Uint32*)readRaw(4));
+   //adjust(4);
+   vpr::Uint32 nw_val;
+   memcpy(&nw_val, readRaw(4), 4);
    
    return vpr::System::Ntohl(nw_val);
 }
 
 inline vpr::Uint64 ObjectReader::readUint64()
 {
-   adjust(8);
-   vpr::Uint64 nw_val = *((vpr::Uint64*)readRaw(8));
+   //adjust(8);
+   vpr::Uint64 nw_val;
+   memcpy(&nw_val, readRaw(8), 8);
    vpr::Uint64 h_val = vpr::System::Ntohll(nw_val);
 
    return h_val;
@@ -139,11 +144,12 @@ inline vpr::Uint64 ObjectReader::readUint64()
 
 inline float ObjectReader::readFloat()
 {
-   adjust(4);
+   //adjust(4);
    // We are reading the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
 
-   vpr::Uint32 nw_val = *((vpr::Uint32*)readRaw(4));
+   vpr::Uint32 nw_val;
+   memcpy(&nw_val, readRaw(4), 4);
    vpr::Uint32 h_val = vpr::System::Ntohl(nw_val);
 
    return *((float*)&h_val);
@@ -151,11 +157,12 @@ inline float ObjectReader::readFloat()
 
 inline double ObjectReader::readDouble()
 {
-   adjust(8);
+   //adjust(8);
    // We are reading the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
 
-   vpr::Uint64 nw_val = *((vpr::Uint64*)readRaw(8));
+   vpr::Uint64 nw_val;
+   memcpy(&nw_val, readRaw(8), 8);
    vpr::Uint64 h_val = vpr::System::Ntohll(nw_val);
    double d_val = *((double*)&h_val);
    
