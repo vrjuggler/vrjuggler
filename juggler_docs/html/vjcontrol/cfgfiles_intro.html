@@ -18,13 +18,32 @@
 <a name="basic">
 <h2>Basic information</h2>
 
-Configuring VR software for a particular hardware system can be a daunting task due to the complexity and diversity of the environments and hardware in use. In addition to this, many users will need to switch between immersive VR hardware and desktop simulators during development, or between one hardware system or another.
+Configuring VR software for a particular hardware system can be a 
+daunting task due to the complexity and diversity of the environments 
+and hardware in use. In addition to this, many users will need to 
+switch between immersive VR hardware and desktop simulators during 
+development, or between one hardware system and another.
 
 <p>
-VR Juggler's inherent flexibility increases this complexity. Juggler components such as displays and device drivers can be combined in many ways.  For example, a configuration could mix simulated and real input devices.  Or, hardware permitting, VR Juggler could use two separate head-mounted displays (HMDs) simultaneously.  Input devices can be chained together, manipulated in a variety of ways, and mapped to different names.  The possibilities are endless - but so are the potential pitfalls.
+VR Juggler's inherent flexibility increases this complexity. Juggler 
+components such as displays and device drivers can be combined in 
+many ways.  For example, a configuration could mix simulated and real 
+input devices.  Or, hardware permitting, VR Juggler could use two 
+separate head-mounted displays (HMDs) simultaneously.  Input devices 
+can be chained together, manipulated in a variety of ways, and 
+mapped to different names.  The possibilities are endless - but so 
+are the potential pitfalls.
 
 <p>
-VR Juggler's configuration system was designed to simplify this task as much as possible.  While Juggler uses plain text configuration files, these files are heavily structured and organized.  Juggler's config files can be written in a modular fashion, so that different components or hardware features can be easily mixed together.  Finally, VR Juggler provides a GUI tool, VjControl, for editing configuration files.  The GUI can prevent many kinds of errors and make the user's task easier by presenting the available options, valid arguments, help information, and so on.
+VR Juggler's configuration system was designed to simplify this task 
+as much as possible.  While Juggler uses plain text configuration 
+files, these files are structured and organized.  Juggler's 
+config files can be written in a modular fashion, so that different 
+components or hardware features can be easily mixed together.  
+Finally, VR Juggler provides a GUI tool, VjControl, for editing 
+configuration files.  The GUI can prevent many kinds of errors and 
+make the user's task easier by presenting the available options, 
+valid arguments, help information, and so on.
 
 <a name="loading">
 <h2>Loading configuration files</h2>
@@ -43,7 +62,10 @@ are given as command-line arguments when the program is run.  For example:
        cubes ~/.vjconfig/simstandalone.config
 </pre>
 
-runs the <tt>cubes</tt> demo program and tells it to load a configuration file called <tt>simstandalone.config</tt>, which provides a basic simulator-mode configuration for running applications.
+runs the <tt>cubes</tt> demo program and tells it to load a 
+configuration file called <tt>simstandalone.config</tt>, which 
+provides a basic simulator-mode configuration for running 
+applications.
 
 <p>
 Configuration files can be stored in serveral places:
@@ -79,7 +101,7 @@ up-to-date can become a full-time job.
 VR Juggler sidesteps this problem with the concept of <i>modular 
 configuration files</i>. Instead of listing a single configuration 
 file on the application's command line, we list several.  Each file 
-contains config file contains configuration information relevant to 
+contains configuration information relevant to 
 a particular part of the system. For example, one could define all 
 the displays to be used, while another could define the input 
 devices, and a third could describe how those inputs are mapped 
@@ -108,17 +130,33 @@ Other files could be used to change the basic configuration.  For example, to us
 <h2> Referencing other configuration files</h2>
 
 <p>
-If used properly, the modular configuration file concept can provide maximum flexibility while keeping the number of different configuration files at a manageable level.  However, users do not always want to list the names of four or five separate config files on the command line every time they run a program.  Also, a small set of combinations will see the majority of use - a fully simulator configuration, for example, is likely to be used heavily by most developers (but each developer is likely to have a slightly different idea of the <I>preferred</I> simulator configuration).
+While modular configuration files provide a lot of flexibility, users
+will not want to list four or five separate config files on the 
+command line every time they run a program.  Typically, a small set 
+of combinations will see the majority of use.  For example, a fully 
+simulator configuration will be used heavily (but each developer is 
+likely to have a slightly different idea of the <I>preferred</I> 
+simulator configuration).
 
 <p>
-To provide ease of use - referencing a complete configuration with a single name - without falling into the trap of config file proliferation, VR Juggler config files feature an include directive, similar to the #include preprocessor directive of C or C++.  Thus, a user can create a config file which simply references several files in the system repository.  He only needs to keep track of the single file's name, but when any of the included files are updated, he automatically sees the changes.
+To provide ease of use - referencing a complete configuration with a 
+single name, while avoiding proliferation -
+VR Juggler config files feature an include directive, 
+similar to the #include preprocessor directive of C or C++.  Thus, a 
+user can create a config file which simply references several files 
+in the system repository.  He only needs to keep track of the single 
+file's name, but when any of the included files are updated, he 
+automatically sees the changes.
 
 <a name="next">
-<h2>Where to go next?</h2>
+<h2>Where should I go from here?</h2>
 
 <p>
-To find out what's inside a VR Juggler configuration file, proceed to the <a href="chunkprimer.html">ConfigChunk Primer</a>.
-
+To find out what's inside a VR Juggler configuration file, proceed to the <a href="chunkprimer.html">Introduction to ConfigChunks</a>.
+<p>
+To try running a sample application and learn how the default 
+simulator configuration works, check out the Getting Started section
+of the VR Juggler Programmer's Guide.
 </body>
 
 </html>
