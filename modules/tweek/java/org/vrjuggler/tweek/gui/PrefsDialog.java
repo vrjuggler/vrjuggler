@@ -40,6 +40,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.TableModelEvent;
@@ -110,12 +111,101 @@ public class PrefsDialog extends JDialog implements TableModelListener
       this.setVisible(true);
    }
 
+   /**
+    * Returns the current user level choice.  This may be different than
+    * what is currently available through the Global Preferences Service,
+    * depending on whether or not the user has chosen to apply changes.
+    */
+   public int getUserLevel()
+   {
+      return userLevel;
+   }
+
+   /**
+    * Returns the current look and feel choice.  This may be different than
+    * what is currently available through the Global Preferences Service,
+    * depending on whether or not the user has chosen to apply changes.
+    */
+   public String getLookAndFeel()
+   {
+      return lookAndFeel;
+   }
+
+   /**
+    * Returns the current Bean Viewer choice.  This may be different than
+    * what is currently available through the Global Preferences Service,
+    * depending on whether or not the user has chosen to apply changes.
+    */
+   public String getBeanViewer()
+   {
+      return beanViewer;
+   }
+
    public void setBeanViewer (String v)
    {
       mPrefs.setBeanViewer(v);
    }
 
-   public int getStatus ()
+   /**
+    * Returns the current GUI window size choice.  This may be different than
+    * what is currently available through the Global Preferences Service,
+    * depending on whether or not the user has chosen to apply changes.
+    */
+   public Dimension getWindowSize()
+   {
+      return new Dimension(windowWidth.intValue(), windowHeight.intValue());
+   }
+
+   /**
+    * Returns the current file chooser starting directory.  This may be
+    * different than what is currently available through the Global
+    * Preferences Service, depending on whether or not the user has chosen to
+    * apply changes.
+    */
+   public String getChooserStartDir()
+   {
+      return chooserStartDir;
+   }
+
+   /**
+    * Returns the current open style behavior choice.  This may be different
+    * than what is currently available through the Global Preferences Service,
+    * depending on whether or not the user has chosen to apply changes.
+    */
+   public int getChooserOpenStyle()
+   {
+      return chooserOpenStyle;
+   }
+
+   /**
+    * Returns the current default CORBA host choice.  This may be different
+    * than what is currently available through the Global Preferences Service,
+    * depending on whether or not the user has chosen to apply changes.
+    */
+   public String getDefaultCorbaHost()
+   {
+      return defaultCorbaHost;
+   }
+
+   /**
+    * Returns the current default CORBA port choice.  This may be different
+    * than what is currently available through the Global Preferences Service,
+    * depending on whether or not the user has chosen to apply changes.
+    */
+   public int getDefaultCorbaPort()
+   {
+      return defaultCorbaPort;
+   }
+
+   /**
+    * Returns the "close status" of the window.  That is, it informs the
+    * caller of the mechnism used to close the dialog.  There are three
+    * possible ways this dialog may be closed: using the "OK" button, using
+    * the "Cancel" button, or using the window manager.  These are reflected
+    * through the integer constants OK_OPTION, CANCEL_OPTION, and CLOSE_OPTION
+    * respectively.
+    */
+   public int getStatus()
    {
       return status;
    }
@@ -134,6 +224,18 @@ public class PrefsDialog extends JDialog implements TableModelListener
             windowHeight = (Integer) model.getValueAt(0, 1);
             break;
       }
+
+      fireGlobalPrefsModified(GlobalPrefsUpdateEvent.WINDOW_SIZE);
+   }
+
+   public synchronized void addGlobalPrefsUpdateListener(GlobalPrefsUpdateListener l)
+   {
+      mUpdateListeners.add(l);
+   }
+
+   public synchronized void removeGlobalPrefsUpdateListener(GlobalPrefsUpdateListener l)
+   {
+      mUpdateListeners.remove(l);
    }
 
    public static final int OK_OPTION     = JOptionPane.OK_OPTION;
@@ -164,6 +266,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
       mApplyButton.setMnemonic('A');
       mApplyButton.setText("Apply");
+      mApplyButton.setEnabled(false);
       mApplyButton.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -379,9 +482,10 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mViewerBox.setSelectedItem(mPrefs.getBeanViewer());
       mViewerBox.addActionListener(new ActionListener()
          {
-            public void actionPerformed (ActionEvent e)
+            public void actionPerformed(ActionEvent e)
             {
                beanViewer = (String) mViewerBox.getSelectedItem();
+               fireGlobalPrefsModified(GlobalPrefsUpdateEvent.BEAN_VIEWER);
             }
          });
       // ----------------------------------------------------------------------
@@ -398,9 +502,10 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mLevelBox.setSelectedIndex(mPrefs.getUserLevel() - 1);
       mLevelBox.addActionListener(new ActionListener()
          {
-            public void actionPerformed (ActionEvent e)
+            public void actionPerformed(ActionEvent e)
             {
                userLevel = mLevelBox.getSelectedIndex() + 1;
+               fireGlobalPrefsModified(GlobalPrefsUpdateEvent.USER_LEVEL);
             }
          });
       // ----------------------------------------------------------------------
@@ -426,11 +531,12 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mLafBox.setRenderer(new LAFBoxRenderer());
       mLafBox.addActionListener(new ActionListener()
          {
-            public void actionPerformed (ActionEvent e)
+            public void actionPerformed(ActionEvent e)
             {
                UIManager.LookAndFeelInfo val =
                   (UIManager.LookAndFeelInfo) mLafBox.getSelectedItem();
                lookAndFeel = val.getClassName();
+               fireGlobalPrefsModified(GlobalPrefsUpdateEvent.LOOK_AND_FEEL);
             }
          });
       // ----------------------------------------------------------------------
@@ -459,12 +565,12 @@ public class PrefsDialog extends JDialog implements TableModelListener
       }
 
       mFcStartDirBox.setSelectedItem(chooserStartDir);
-
       mFcStartDirBox.addActionListener(new ActionListener()
          {
-            public void actionPerformed (ActionEvent e)
+            public void actionPerformed(ActionEvent e)
             {
                chooserStartDir = (String) mFcStartDirBox.getSelectedItem();
+               fireGlobalPrefsModified(GlobalPrefsUpdateEvent.CHOOSER_START_DIR);
             }
          });
       // ----------------------------------------------------------------------
@@ -473,15 +579,14 @@ public class PrefsDialog extends JDialog implements TableModelListener
    private void okButtonAction (ActionEvent e)
    {
       status = OK_OPTION;
-      commit();
-      mPrefs.save();
+      commitAndSave();
       setVisible(false);
    }
 
    private void applyButtonAction(ActionEvent e)
    {
-      commit();
-      mPrefs.save();
+      commitAndSave();
+      mApplyButton.setEnabled(false);
    }
 
    private void cancelButtonAction (ActionEvent e)
@@ -504,6 +609,61 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mPrefs.setDefaultCorbaPort(defaultCorbaPort);
    }
 
+   private void commitAndSave()
+   {
+      commit();
+      mPrefs.save();
+      fireGlobalPrefsSaved();
+   }
+
+   /**
+    * Informs any objects implementing GlobalPrefsUpdateListener that one
+    * element of the global preferences has been modified.  The element
+    * modified is indicated by the given integer argument.
+    *
+    * @param updateType An identifier that defines which part of the global
+    *                   preferences was changed.  This value must come from
+    *                   the constants defined in GlobalPrefsUpdateEvent.
+    */
+   private void fireGlobalPrefsModified(int updateType)
+   {
+      mApplyButton.setEnabled(true);
+      Vector listeners = null;
+
+      synchronized (this)
+      {
+         listeners = (Vector) mUpdateListeners.clone();
+      }
+
+      GlobalPrefsUpdateEvent e = new GlobalPrefsUpdateEvent(this, updateType);
+      GlobalPrefsUpdateListener l;
+
+      for ( Iterator i = listeners.iterator(); i.hasNext(); )
+      {
+         l = (GlobalPrefsUpdateListener) i.next();
+         l.globalPrefsModified(e);
+      }
+   }
+
+   private void fireGlobalPrefsSaved()
+   {
+      Vector listeners = null;
+
+      synchronized (this)
+      {
+         listeners = (Vector) mUpdateListeners.clone();
+      }
+
+      GlobalPrefsUpdateEvent e = new GlobalPrefsUpdateEvent(this);
+      GlobalPrefsUpdateListener l;
+
+      for ( Iterator i = listeners.iterator(); i.hasNext(); )
+      {
+         l = (GlobalPrefsUpdateListener) i.next();
+         l.globalPrefsSaved(e);
+      }
+   }
+
    /**
     * Action taken when the user changes the text field containing the default
     * CORBA port.  This validates the entered port number to ensure that it is
@@ -512,6 +672,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
    private void corbaHostFieldChanged()
    {
       defaultCorbaHost = mCorbaHostField.getText();
+      fireGlobalPrefsModified(GlobalPrefsUpdateEvent.DEFAULT_CORBA_HOST);
    }
 
    /**
@@ -528,6 +689,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
          if ( port > 0 && port < 65536 )
          {
             defaultCorbaPort = port;
+            fireGlobalPrefsModified(GlobalPrefsUpdateEvent.DEFAULT_CORBA_PORT);
          }
          else
          {
@@ -648,6 +810,8 @@ public class PrefsDialog extends JDialog implements TableModelListener
    private int     defaultCorbaPort = 0;
 
    private GlobalPreferencesService mPrefs = null;
+
+   private Vector mUpdateListeners = new Vector();
 
    private JPanel       mFileChooserPanel = new JPanel();
    private BorderLayout mFileChooserLayout = new BorderLayout();
