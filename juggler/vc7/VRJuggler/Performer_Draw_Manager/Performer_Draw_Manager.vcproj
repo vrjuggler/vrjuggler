@@ -38,7 +38,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vrj_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_pf_d.dll"
-				Version="1.1.150"
+				Version="1.1.153"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\DebugDLL;..\..\VPR\DebugDLL;..\..\JCCL\DebugDLL;..\..\Gadgeteer\DebugDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(PFROOT)\Lib\Debug&quot;"
 				GenerateDebugInformation="TRUE"
@@ -92,7 +92,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vrj.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_pf.dll"
-				Version="1.1.150"
+				Version="1.1.153"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\ReleaseDLL;..\..\VPR\ReleaseDLL;..\..\JCCL\ReleaseDLL;..\..\Gadgeteer\ReleaseDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(PFROOT)\Lib&quot;"
 				GenerateDebugInformation="FALSE"
@@ -133,9 +133,6 @@
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfUtil.cpp">
 			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Sound\pf\pfSoundNode.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -157,12 +154,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfUtil.h">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Sound\pf\pfSoundNode.h">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Sound\pf\pfSoundTraverser.h">
 			</File>
 		</Filter>
 		<Filter
