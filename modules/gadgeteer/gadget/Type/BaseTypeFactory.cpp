@@ -124,16 +124,16 @@ void BaseTypeFactory::hackLoadKnownDevices()
 
 
    if( (NULL == input_digital) ||
-         (NULL == input_analog) ||
-         (NULL == input_position) ||
-         (NULL == input_digital_analog) ||
-         (NULL == input_digital_position) ||
-         (NULL == input_analog_position) ||
-         (NULL == input_digital_analog_position) ||
-         (NULL == siminput_input_position) ||
-         (NULL == siminput_input_digital) ||
-         (NULL == siminput_input_analog) ||
-         (NULL == input_keyboard) )
+       (NULL == input_analog) ||
+       (NULL == input_position) ||
+       (NULL == input_digital_analog) ||
+       (NULL == input_digital_position) ||
+       (NULL == input_analog_position) ||
+       (NULL == input_digital_analog_position) ||
+       (NULL == siminput_input_position) ||
+       (NULL == siminput_input_digital) ||
+       (NULL == siminput_input_analog) ||
+       (NULL == input_keyboard) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
@@ -213,8 +213,8 @@ void BaseTypeFactory::debugDump()
       std::string("------ END DUMP ------\n"));
 
    vprDEBUG(gadgetDBG_RIM,0) << "num constructors:"
-                                   << mConstructors.size() << "\n"
-                                   << vprDEBUG_FLUSH;
+                             << mConstructors.size() << "\n"
+                             << vprDEBUG_FLUSH;
 
    for(unsigned int cNum=0;cNum<mConstructors.size();cNum++)
    {
@@ -223,8 +223,8 @@ void BaseTypeFactory::debugDump()
          << cNum << ": Constructor:" << (void*)dev_constr
          << "   type:" << typeid(*dev_constr).name() << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,0) << "   recog:"
-                                      << dev_constr->getBaseType() << "\n"
-                                      << vprDEBUG_FLUSH;
+                                << dev_constr->getBaseType() << "\n"
+                                << vprDEBUG_FLUSH;
    }
 }
 

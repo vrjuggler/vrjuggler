@@ -48,174 +48,174 @@ namespace gadget
 // Set up the transformation information
 bool Position::config(jccl::ConfigChunkPtr c)
 {
-  //vprDEBUG(vprDBG_ALL,0) << "vjPosition::config(jccl::ConfigChunkPtr)" << vprDEBUG_FLUSH;
-  if ((c->getNum("translate") == 3) && (c->getNum("rotate") == 3))
-  {
-    // These are the transforms from the base tracker coord system
+   //vprDEBUG(vprDBG_ALL,0) << "vjPosition::config(jccl::ConfigChunkPtr)" << vprDEBUG_FLUSH;
+   if ( (c->getNum("translate") == 3) && (c->getNum("rotate") == 3) )
+   {
+      // These are the transforms from the base tracker coord system
 
-    float xt, yt, zt;
-    xt = c->getProperty<float>("translate",0);
-    yt = c->getProperty<float>("translate",1);
-    zt = c->getProperty<float>("translate",2);
+      float xt, yt, zt;
+      xt = c->getProperty<float>("translate",0);
+      yt = c->getProperty<float>("translate",1);
+      zt = c->getProperty<float>("translate",2);
 
-    // These values are specified in human-friendly degrees but must be passed
-    // to GMTL as radians.
-    float xr, yr, zr;
-    xr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",0));
-    yr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",1));
-    zr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",2));
+      // These values are specified in human-friendly degrees but must be passed
+      // to GMTL as radians.
+      float xr, yr, zr;
+      xr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",0));
+      yr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",1));
+      zr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",2));
 
       // This makes a rotation matrix that moves a pt in
       // the device's coord system to the vj coord system.
       // ==> world_M_transmitter
-    gmtl::EulerAngleXYZf euler( xr,yr,zr );
-    rotMat = gmtl::makeRot<gmtl::Matrix44f>( euler );
+      gmtl::EulerAngleXYZf euler( xr,yr,zr );
+      rotMat = gmtl::makeRot<gmtl::Matrix44f>( euler );
 
-    gmtl::identity(xformMat);
-    gmtl::setTrans(xformMat, gmtl::Vec3f(xt, yt, zt) );
-    gmtl::postMult(xformMat, rotMat);         // xformMat = T*R
-  }
+      gmtl::identity(xformMat);
+      gmtl::setTrans(xformMat, gmtl::Vec3f(xt, yt, zt) );
+      gmtl::postMult(xformMat, rotMat);         // xformMat = T*R
+   }
 
-  return true;
+   return true;
 }
 
-    vpr::ReturnStatus Position::writeObject(vpr::ObjectWriter* writer)
-    {
-        //std::cout << "[Remote Input Manager] In Position write" << std::endl;
-       static long iteration=0;
+vpr::ReturnStatus Position::writeObject(vpr::ObjectWriter* writer)
+{
+   //std::cout << "[Remote Input Manager] In Position write" << std::endl;
+   static long iteration=0;
 
-        SampleBuffer_t::buffer_t& stable_buffer = mPosSamples.stableBuffer();
-        writer->writeUint16(MSG_DATA_POS);                               // Write out the data type so that we can assert if reading in wrong place
+   SampleBuffer_t::buffer_t& stable_buffer = mPosSamples.stableBuffer();
+   writer->writeUint16(MSG_DATA_POS);                               // Write out the data type so that we can assert if reading in wrong place
 
-        if(!stable_buffer.empty())
-        {
-           mPosSamples.lock();
-           writer->writeUint16(stable_buffer.size());
-            for(unsigned j=0;j<stable_buffer.size();j++)
-            {
-               writer->writeUint16(stable_buffer[j].size());
-               //std::cout << std::endl;
-               for(unsigned i=0;i<stable_buffer[j].size();i++)
-               {
-                  //RIP MATRIX
-                  gmtl::Matrix44f* PosMatrix = stable_buffer[j][i].getPosition();
-                  //float pos_data[16];
-                  const float* pos_data = PosMatrix->getData();
-                  //std::cout << "WRITE " << "Iteration: " << iteration << std::endl;
-                  iteration++;
-                  //std::cout << "WRITE " << pos_data[0] << pos_data[1] << pos_data[4] << pos_data[5] << std::endl;
-                  //std::cout << "WRITE " << pos_data[4] << pos_data[5] << pos_data[6] << pos_data[7] << std::endl;
-                  //std::cout << "WRITE " << pos_data[8] << pos_data[9] << pos_data[10] << pos_data[11] << std::endl;
-                  //std::cout << "WRITE " << pos_data[12] << pos_data[13] << pos_data[14] << pos_data[15] << std::endl;
+   if ( !stable_buffer.empty() )
+   {
+      mPosSamples.lock();
+      writer->writeUint16(stable_buffer.size());
+      for ( unsigned j=0;j<stable_buffer.size();j++ )
+      {
+         writer->writeUint16(stable_buffer[j].size());
+         //std::cout << std::endl;
+         for ( unsigned i=0;i<stable_buffer[j].size();i++ )
+         {
+            //RIP MATRIX
+            gmtl::Matrix44f* PosMatrix = stable_buffer[j][i].getPosition();
+            //float pos_data[16];
+            const float* pos_data = PosMatrix->getData();
+            //std::cout << "WRITE " << "Iteration: " << iteration << std::endl;
+            iteration++;
+            //std::cout << "WRITE " << pos_data[0] << pos_data[1] << pos_data[4] << pos_data[5] << std::endl;
+            //std::cout << "WRITE " << pos_data[4] << pos_data[5] << pos_data[6] << pos_data[7] << std::endl;
+            //std::cout << "WRITE " << pos_data[8] << pos_data[9] << pos_data[10] << pos_data[11] << std::endl;
+            //std::cout << "WRITE " << pos_data[12] << pos_data[13] << pos_data[14] << pos_data[15] << std::endl;
 
-                  //NOTE: This uses the value 16 because we are using a 4x4 matrix
-                  //for the position dataAt this point there is not a good
-                  //way to get the row and column value of any given size matrix
-                  for(int n=0;n<16;n++)
-                  {
-                     writer->writeFloat(pos_data[n]);
-                  }
-                  writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
-                  //std::cout << "j: " << j << "i: " << i << std::endl;
-                  //std::cout << "WRITE " << "TimeStamp: " << stable_buffer[j][i].getTime().usec()  << std::endl;
-               }
-               //std::cout << std::endl;
-            }
-            mPosSamples.unlock();
-        }
-        else        // No data or request out of range, return default value
-        {
-            if(stable_buffer.empty())
-            {
-                vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Warning: Position::writeObject: Stable buffer is empty. If this is not the first write, then this is a problem.\n" << vprDEBUG_FLUSH;
-            }
-            writer->writeUint16(0);
-        }
-
-      return vpr::ReturnStatus::Succeed;
-    }
-
-
-    vpr::ReturnStatus Position::readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
-    {
-       //std::cout << "[Remote Input Manager] In Position Read" << std::endl;
-       //SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
-       static long iteration=0;
-
-       vpr::Uint16 temp = reader->readUint16();
-       vprASSERT(temp==MSG_DATA_POS && "[Remote Input Manager]Not Positional Data");
-       std::vector<PositionData> dataSample;
-
-       unsigned numPosDatas;
-       vpr::Uint64 timeStamp;
-       PositionData temp_pos_data;
-       float pos_data[16];
-       gmtl::Matrix44f PosMatrix;
-
-       unsigned numVectors = reader->readUint16();
-       mPosSamples.lock();
-       for(unsigned i=0;i<numVectors;i++)
-       {
-          numPosDatas = reader->readUint16();
-          dataSample.clear();
-          //std::cout << std::endl;
-          for (unsigned j=0;j<numPosDatas;j++)
-          {
             //NOTE: This uses the value 16 because we are using a 4x4 matrix
             //for the position dataAt this point there is not a good
             //way to get the row and column value of any given size matrix
-            for(unsigned n=0;n<16;n++)
+            for ( int n=0;n<16;n++ )
             {
-                pos_data[n] = reader->readFloat();
+               writer->writeFloat(pos_data[n]);
             }
-            //PosMatrix.set(pos_data[0], pos_data[1], pos_data[2], pos_data[3],
-            //              pos_data[4], pos_data[5], pos_data[6], pos_data[7],
-            //              pos_data[8], pos_data[9], pos_data[10], pos_data[11],
-            //              pos_data[12], pos_data[13], pos_data[14], pos_data[15]);
-            PosMatrix.set(pos_data);
-            //std::cout << "READ " << "Iteration: " << iteration << std::endl;
-            iteration++;
-            //std::cout << "READ " << pos_data[0] << pos_data[1] << pos_data[4] << pos_data[5] << std::endl;
-            //std::cout << "READ " << pos_data[4] << pos_data[5] << pos_data[6] << pos_data[7] << std::endl;
-            //std::cout << "READ " << pos_data[8] << pos_data[9] << pos_data[10] << pos_data[11] << std::endl;
-            //std::cout << "READ " << pos_data[12] << pos_data[13] << pos_data[14] << pos_data[15] << std::endl;
+            writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
+            //std::cout << "j: " << j << "i: " << i << std::endl;
+            //std::cout << "WRITE " << "TimeStamp: " << stable_buffer[j][i].getTime().usec()  << std::endl;
+         }
+         //std::cout << std::endl;
+      }
+      mPosSamples.unlock();
+   }
+   else        // No data or request out of range, return default value
+   {
+      if ( stable_buffer.empty() )
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Warning: Position::writeObject: Stable buffer is empty. If this is not the first write, then this is a problem.\n" << vprDEBUG_FLUSH;
+      }
+      writer->writeUint16(0);
+   }
 
-            timeStamp = reader->readUint64();
-            //std::cout << "READ " << "TimeStamp: " << timeStamp  << std::endl;
-            //std::cout << "READ " << "    Delta: " << *delta  << std::endl;
-            //std::cout << "READ " << "    After:" << (timeStamp + *delta) << std::endl;
-
-            temp_pos_data.setPosition(PosMatrix);
-            temp_pos_data.setTime(vpr::Interval(timeStamp + *delta,vpr::Interval::Usec));
-                              //RIP MATRIX
-            //gmtl::Matrix44f* TestMatrix = temp_pos_data.getPosition();
-            //const float* tpos_data = TestMatrix->getData();
-            //std::cout << tpos_data[0] << tpos_data[1] << tpos_data[4] << tpos_data[5] << std::endl;
-            //std::cout << tpos_data[4] << tpos_data[5] << tpos_data[6] << tpos_data[7] << std::endl;
-            //std::cout << tpos_data[8] << tpos_data[9] << tpos_data[10] << tpos_data[11] << std::endl;
-            //std::cout << tpos_data[12] << tpos_data[13] << tpos_data[14] << tpos_data[15] << std::endl;
-
-            dataSample.push_back(temp_pos_data);
-          }
-          //std::cout << std::endl;
-          mPosSamples.addSample(dataSample);
-       }
-       mPosSamples.unlock();
-       mPosSamples.swapBuffers();
-       return(vpr::ReturnStatus::Succeed);
+   return vpr::ReturnStatus::Succeed;
+}
 
 
-    }
+vpr::ReturnStatus Position::readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
+{
+   //std::cout << "[Remote Input Manager] In Position Read" << std::endl;
+   //SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
+   static long iteration=0;
+
+   vpr::Uint16 temp = reader->readUint16();
+   vprASSERT(temp==MSG_DATA_POS && "[Remote Input Manager]Not Positional Data");
+   std::vector<PositionData> dataSample;
+
+   unsigned numPosDatas;
+   vpr::Uint64 timeStamp;
+   PositionData temp_pos_data;
+   float pos_data[16];
+   gmtl::Matrix44f PosMatrix;
+
+   unsigned numVectors = reader->readUint16();
+   mPosSamples.lock();
+   for ( unsigned i=0;i<numVectors;i++ )
+   {
+      numPosDatas = reader->readUint16();
+      dataSample.clear();
+      //std::cout << std::endl;
+      for ( unsigned j=0;j<numPosDatas;j++ )
+      {
+         //NOTE: This uses the value 16 because we are using a 4x4 matrix
+         //for the position dataAt this point there is not a good
+         //way to get the row and column value of any given size matrix
+         for ( unsigned n=0;n<16;n++ )
+         {
+            pos_data[n] = reader->readFloat();
+         }
+         //PosMatrix.set(pos_data[0], pos_data[1], pos_data[2], pos_data[3],
+         //              pos_data[4], pos_data[5], pos_data[6], pos_data[7],
+         //              pos_data[8], pos_data[9], pos_data[10], pos_data[11],
+         //              pos_data[12], pos_data[13], pos_data[14], pos_data[15]);
+         PosMatrix.set(pos_data);
+         //std::cout << "READ " << "Iteration: " << iteration << std::endl;
+         iteration++;
+         //std::cout << "READ " << pos_data[0] << pos_data[1] << pos_data[4] << pos_data[5] << std::endl;
+         //std::cout << "READ " << pos_data[4] << pos_data[5] << pos_data[6] << pos_data[7] << std::endl;
+         //std::cout << "READ " << pos_data[8] << pos_data[9] << pos_data[10] << pos_data[11] << std::endl;
+         //std::cout << "READ " << pos_data[12] << pos_data[13] << pos_data[14] << pos_data[15] << std::endl;
+
+         timeStamp = reader->readUint64();
+         //std::cout << "READ " << "TimeStamp: " << timeStamp  << std::endl;
+         //std::cout << "READ " << "    Delta: " << *delta  << std::endl;
+         //std::cout << "READ " << "    After:" << (timeStamp + *delta) << std::endl;
+
+         temp_pos_data.setPosition(PosMatrix);
+         temp_pos_data.setTime(vpr::Interval(timeStamp + *delta,vpr::Interval::Usec));
+         //RIP MATRIX
+         //gmtl::Matrix44f* TestMatrix = temp_pos_data.getPosition();
+         //const float* tpos_data = TestMatrix->getData();
+         //std::cout << tpos_data[0] << tpos_data[1] << tpos_data[4] << tpos_data[5] << std::endl;
+         //std::cout << tpos_data[4] << tpos_data[5] << tpos_data[6] << tpos_data[7] << std::endl;
+         //std::cout << tpos_data[8] << tpos_data[9] << tpos_data[10] << tpos_data[11] << std::endl;
+         //std::cout << tpos_data[12] << tpos_data[13] << tpos_data[14] << tpos_data[15] << std::endl;
+
+         dataSample.push_back(temp_pos_data);
+      }
+      //std::cout << std::endl;
+      mPosSamples.addSample(dataSample);
+   }
+   mPosSamples.unlock();
+   mPosSamples.swapBuffers();
+   return(vpr::ReturnStatus::Succeed);
+
+
+}
 
 Position::Position()
 {
-  //vprDEBUG(vprDBG_ALL,0) << "vjPosition::Position()" << vprDEBUG_FLUSH;
-  gmtl::identity(xformMat);
+   //vprDEBUG(vprDBG_ALL,0) << "vjPosition::Position()" << vprDEBUG_FLUSH;
+   gmtl::identity(xformMat);
 }
 
 Position::~Position()
 {
-    ;
+   ;
 }
 
 } // End of gadget namespace
