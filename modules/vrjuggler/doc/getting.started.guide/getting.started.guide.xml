@@ -242,53 +242,33 @@ value</screen>
       <title>VR Juggler Sample Applications</title>
       <para>VR Juggler comes with several sample applications in its <filename>samples</filename> directory tree. Many of them are very simple and are designed to demonstrate a specific feature of VR Juggler or a technique to use when writing your own applications. This chapter lists the current sample applications as of this writing and gives a quick description of what you as a potential developer might find interesting in the code. Those users who just want to run applications can safely skip this chapter.</para>
       <section>
-         <title>OpenGL Applications</title>
-         <para>The OpenGL sample applications are in <filename>$VJ_BASE_DIR/share/samples/OGL</filename>. They are as follows:</para>
+         <title>Tutorial Applications</title>
+         <para>Some sample applications are in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials</filename>. All of these applications were designed to be used as part of courses teaching people how to write VR Juggler applications. They contain clear comments explaining what the code is doing, and they are intended to be as simple as possible. These tutorials are as follows:</para>
          <itemizedlist>
             <listitem>
-               <para>Analog: A very simple demo that allows you to test out analog input to VR Juggler. Use an analog simulator, or a real analog device (like a potentiometer hooked up to an IBOX, etc), you can move a cube from the floor to 6 feet above the floor.</para>
-               <note>
-                  <para>This demo is well documented within the header comments. Thus, it would also be a good application for you to learn VR Juggler. It is, however, a very basic application without any interesting features.</para>
-               </note>
+               <para>simpleInput: An application that demonstrates how to get input from devices. No graphics are rendered with this application. It is intended to be a starting point for getting an understanding of how user input is queried.</para>
             </listitem>
             <listitem>
-               <para>Cones: A 10&times;10&times;10 array of cones in space. The cones are created using GLU quadrics. Navigation is done using quaternions and is not recommended as a basis for navigation in most applications.</para>
+               <para>SimpleApp: A very simple OpenGL application that draws a small cube in space and draws the coordinate axes for the cube.</para>
             </listitem>
             <listitem>
-               <para>Cubes: A 10&times;10&times;10 array of cubes in space. The cubes are created using OpenGL display lists. This is the best example of using display in VR Juggler and should be studied carefully. Navigation is done using quaternions and is not recommended as a basis for navigation in most applications.</para>
+               <para>contextApp: An application demonstrating how to use OpenGL display lists in VR Juggler applications. This extends SimpleApp by using a display list to draw a cube and by moving the cube with the wand.</para>
             </listitem>
             <listitem>
-               <para>Torus: A very, very simple that renders a purple torus at a key point in space. That is, the torus is positioned such that in a CAVE-like device, the center of the torus is at the lower left corner of the device where the front wall, left wall, and floor meet. It is designed specifically to test VR Juggler's handling of multiple walls and projection alignment (in an extremely crude manner). Lighting of the torus is done with a flashlight on the wand but should not be used as an example of doing lighting in VR Juggler. The behavior of the flashlight is very hard to predict.</para>
+               <para>MPApp: A more complex OpenGL application that demonstrates how to do multi-processing in VR Juggler applications. As it exists in its distributed form, no multi-processing is done. A more detailed lesson is available that explains how to extend the application to employ multi-processing techniques.</para>
             </listitem>
             <listitem>
-               <para>Wand: A trivial program showing how to get input from a wand using digital inputs (buttons). This application is designed primarily as a tool to test wand tracking and button input in a VR system.</para>
-            </listitem>
-            <listitem>
-               <para>Texture: An application demonstrating the use of OpenGL texture objects (and display lists). It includes code for loading many different texture formats: SGI RGB and RGBA, BMP, TGA (24 and 32 bit), and PCX.</para>
-               <note>
-                  <para>This demo is well documented within the header comments. This is a good example for you to start learning VR Juggler.</para>
-               </note>
-            </listitem>
-            <listitem>
-               <para>Combo: A collection of Cubes, Torus, and Wand that demonstrates how to cycle between three VR Juggler OpenGL applications.</para>
-            </listitem>
-            <listitem>
-               <para>Glove: An example of picking up objects with a glove and navigating through an environment.</para>
-            </listitem>
-            <listitem>
-               <para>Simple Glove: A very simple application that shows how to use the VR Juggler glove interface with a gesture interface.</para>
-            </listitem>
-            <listitem>
-               <para>Digital Glove: Based on Simple Glove, this is another simple application that shows how to use the VR Juggler glove interface but this time with digital interfaces for each finger.</para>
+               <para>simplePf: An introductory OpenGL Performer application that demonstrates how to load a model into the Performer scenegraph. No navigation or collision detection is provided in this tutorial.</para>
             </listitem>
          </itemizedlist>
+         <para>For a step-by-step lesson how to use these applications to learn VR Juggler application programming, please refer to the <emphasis>Programmer's Guide</emphasis>. It contains sections explaining each of the above applications in great detail. Each lesson ends with an exercise where the reader extends the application to include some new functionality.</para>
       </section>
       <section>
-         <title>OpenGL Performer Applications </title>
-         <para>Examples of OpenGL Performer applications can be found in <filename>$VJ_BASE_DIR/share/samples/Pf</filename>. These are for more advanced developers who are familiar with Performer and some of the more complicated aspects of VR Juggler. There are two main programs there:</para>
+         <title>Advanced OpenGL Performer Applications </title>
+         <para>Examples of OpenGL Performer applications can be found in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/Pf/advanced</filename>. These are for more advanced developers who are familiar with Performer and some of the more complicated aspects of VR Juggler. There are two main programs to be found there:</para>
          <itemizedlist>
             <listitem>
-               <para>pfNav: A starting point for basic VR Juggler Performer applications that need to load a model and navigate through it. Users implement their application by inheriting from a provided class, <classname>simplePfNav</classname>. This is a good place for Performer beginners to start because <classname>simplePfNav</classname> hides many of the complicated details (which actually makes that class far from simple).</para>
+               <para>pfNav: A starting point for basic VR Juggler Performer applications that need to load a model and navigate through it. Users implement their application by inheriting from a provided class, <classname>simplePfNav</classname>. This may be a good place for intermediate-level users of OpenGL Performer to start because <classname>simplePfNav</classname> hides many of the complicated details (which actually makes that class far from simple).</para>
             </listitem>
             <listitem>
                <para>pfConfigNav: A more advanced example of a VR Juggler Performer application that can be given its model through a VR Juggler configuration chunk.</para>
@@ -298,7 +278,7 @@ value</screen>
    </chapter>
    <chapter id="app.compile.chapter">
       <title>Compiling a VR Juggler Sample Program</title>
-      <para>Now that you have VR Juggler installed and you have your environment all configured, it is time for the fun to begin. No, seriously. You are now ready to compile and run VR Juggler applications, and that is the whole point, right? This chapter explains how to compile the applications provided in the directory <filename>$VJ_BASE_DIR/share/samples</filename>.</para>
+      <para>Now that you have VR Juggler installed and you have your environment all configured, it is time for the fun to begin. No, seriously. You are now ready to compile and run VR Juggler applications, and that is the whole point, right? This chapter explains how to compile the applications provided in the directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials</filename>.</para>
       <section>
          <title>Required Reading </title>
          <para>Before reading any further, make sure you have already read the instructions on how to install VR Juggler (in <xref linkend="install.vrj.chapter"/>) and on how to configure your environment (in <xref linkend="envvar.chapter"/>). That information will not be repeated, and it is assumed that you already know what we mean by <varname>VJ_BASE_DIR</varname>. You should also have a basic understanding of how <command>make</command>(1) works, but in these examples, nothing more will be necessary than typing <literal>make</literal> on the command line. Refer to the <command>make</command>(1) manual page for more information about it.</para>
@@ -308,16 +288,19 @@ value</screen>
          <para>There are two ways to compile VR Juggler applications: from the command line or with Microsoft Visual Studio. Compiling an application at the command line will work on all supported platforms including Win32. Using Microsoft Visual Studio will only work on Win32.</para>
          <section>
             <title>Compiling from the Command Line</title>
-            <para>All the sample programs in <filename>$VJ_BASE_DIR/share/samples</filename> use the same basic steps to compile unless otherwise noted. Always refer to the top of the sample application's <filename>Makefile</filename> for information that may be specific to building that application. In general, though, all applications' makefiles are compatible with the standard version of the <command>make</command>(1) utility. This includes the <command>nmake</command> command provided with Visual C++.</para>
-            <para>The example used here will be the Torus application found in <filename>$VJ_BASE_DIR/share/test/Draw/OGL/torus</filename>. It is an OpenGL-based application that will compile and run on all platforms supported by VR Juggler. Begin by changing into the directory <filename>$VJ_BASE_DIR/share/test/Draw/OGL/torus</filename> in a command shell.</para>
-            <para>To compile Torus, simply enter the following:</para>
+            <para>All the sample programs in <filename>$VJ_BASE_DIR/share/samples/tutorials/simpleApp</filename> use the same basic steps to compile unless otherwise noted. Always refer to the top of the sample application's <filename>Makefile</filename> for information that may be specific to building that application. In general, though, all applications' makefiles are compatible with the standard version of the <command>make</command>(1) utility. This includes the <command>nmake</command> command provided with Visual C++.</para>
+            <para>The example used here will be the Torus application found in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials/simpleApp</filename>. It is an OpenGL-based application that will compile and run on all platforms supported by VR Juggler. Begin by changing into the directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials/simpleApp</filename> in a command shell.</para>
+            <para>To compile simpleApp, simply enter the following:</para>
             <screen>% make</screen>
             <para>or on Win32 without Cygwin, enter:</para>
             <screen>% nmake</screen>
-            <para>The compile process will then begin. If you have your system set up properly, it will complete with an executable <filename>torus</filename> file (or <filename>torus.exe</filename> on Win32) in the directory. Now that you have a program compiled, it is time to learn how to run it. Readers who are not using Visual Studio can skip ahead to <xref linkend="running.app.chapter"/>.</para>
+            <para>The compile process will then begin. If you have your system set up properly, it will complete with an executable <filename>simpleApp</filename> file (or <filename>simpleApp.exe</filename> on Win32) in the directory. Now that you have a program compiled, it is time to learn how to run it. Readers who are not using Visual Studio can skip ahead to <xref linkend="running.app.chapter"/>.</para>
          </section>
          <section>
             <title>Compiling Using Microsoft Visual Studio </title>
+            <note>
+               <para>This section has not been updated for VR Juggler 1.1/2.0 yet. Until it is updated, Win32 users must complie from the command line or create Visual C++ workspaces themselves.</para>
+            </note>
             <para>All OpenGL sample applications are shipped with pre-configured Microsoft Visual C++ workspaces. This is done to help new users get started with compiling VR Juggler applications and to give experienced Visual Studio users a starting place for their application development. To use the workspace for the Torus application, begin by opening the folder containing the source code and double-clicking on <filename>torus.dsw</filename>.</para>
             <figure float="1">
                <title>Selecting the Workspace File</title>
@@ -382,7 +365,7 @@ value</screen>
    </chapter>
    <chapter id="running.app.chapter">
       <title>Running a VR Juggler Sample Program</title>
-      <para>It is important to note that the same VR Juggler application can be run in simulator mode or in a full-scale VR system with no modifications. What does change is the configuration files used when starting the program. In <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>, you can find many basic configuration files including those for running in simulator using a mouse and keyboard to simulate VR input devices and some example files based on those used for the VRAC C2 systems. In the directory, you will see some files with names containing <quote>mixin</quote>. These are special files that provide a specific capability not necessarily needed by all applications. They can be mixed in (hence the name) with other configuration files as needed. The configuration files found in the <filename>configFiles</filename> directory will be referenced in the examples provided, so be sure you know where they are.</para>
+      <para>It is important to note that the same VR Juggler application can be run in simulator mode or in a full-scale VR system with no modifications. What does change is the configuration files used when starting the program. In <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>, you can find many basic configuration files including those for running in simulator using a mouse and keyboard to simulate VR input devices and some example files based on those used for the VRAC C2 system. In the directory, you will see some files with names containing <quote>mixin</quote>. These are special files that provide a specific capability not necessarily needed by all applications. They can be mixed in (hence the name) with other configuration files as needed. The configuration files found in the <filename>configFiles</filename> directory will be referenced in the examples provided, so be sure you know where they are.</para>
       <section>
          <title><anchor id="reading"/>Required Reading </title>
          <para>Before reading any further, make sure you have already read the instructions on how to install VR Juggler (see <xref linkend="install.vrj.chapter"/>) and on how to configure your environment (see <xref linkend="envvar.chapter"/>). That information will not be repeated, and it is assumed that you already know what we mean by <varname>VJ_BASE_DIR</varname> and <varname>LD_LIBRARY_PATH</varname> to name two environment variables. At this point, it is also assumed that you already have compiled an application (Torus in the case of the examples provided), so you should be sure to have read about how to compile a sample VR Juggler application (in <xref linkend="app.compile.chapter"/>) before proceeding.</para>
@@ -417,9 +400,9 @@ value</screen>
                <para><filename>sim.wand.mixin.config</filename> - A <quote>mix-in</quote> configuration file that defines simulated wand input using the mouse. This is only required for applications where wand input is used and needs to be simulated when in simulator mode.</para>
             </listitem>
          </itemizedlist>
-         <para>For the Torus application, we only need the base configuration file, the displays configuration file and the wand mix-in configuration file.</para>
+         <para>For the simpleApp application, we need the base configuration file, the displays configuration file, and the wand mix-in configuration file.</para>
          <para>Now it is time to run the application&mdash;finally! Make sure that all your environment variables are set properly before trying to start the application. Once you are ready, specify the name of the application and all the configuration files it needs. An example of this is:</para>
-         <screen>% torus sim.base.config sim.displays.config sim.wand.mixin.config</screen>
+         <screen>% simpleApp sim.base.config sim.displays.config sim.wand.mixin.config</screen>
          <para>You will notice that no paths are specified for finding the three configuration files. This is intentional to shorten the command line given in the example. In general, you always have to give the full path to the files. VR Juggler 1.0 does not have any logic for defining a path that would contain configuration files<footnote>
                <para>This has been fixed for VR Juggler 1.1 and beyond.</para>
             </footnote>. Beginning users will typically want to reference the example configuration files in <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>. As you get more comfortable with VR Juggler and its configuration system, you may want to make your own modified files and put them in the directory <filename>$HOME/.vjconfig</filename>. To simplify running applications, you may want to make a shell script (or batch file as appropriate) that does all the work of passing configuration files and common command-line arguments. For now, though, use the path <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename> for each of the configuration files you pass on the command line.</para>
