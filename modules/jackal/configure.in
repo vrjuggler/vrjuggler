@@ -323,7 +323,7 @@ if test "x$ac_cv_has_socklen_t" = "xno" ; then
     AC_DEFINE(socklen_t, int)
 fi
 
-DPP_CHECK_TYPE_POSIX
+#DPP_CHECK_TYPE_POSIX
 
 # -----------------------------------------------------------------------------
 # Checks for library functions.
@@ -422,7 +422,6 @@ VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
                 JCCL_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, JCCL_BASE_DIR,
               jccl, $APP_EXTRA_LIBS)
-#echo APP_EXTRA_LIBS is "$APP_EXTRA_LIBS"
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(JCCL_BASE_DIR)'
@@ -536,8 +535,6 @@ AC_SUBST(DYLIB_DEPS_JCCL)
 AC_SUBST(APP_BASIC_LIBS)
 AC_SUBST(APP_EXTRA_LIBS)
 
-#AC_SUBST(subsystem_cxxflags)
-#AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(jccl_ldflags_compiler)
