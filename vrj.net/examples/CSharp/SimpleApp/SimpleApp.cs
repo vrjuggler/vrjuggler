@@ -32,6 +32,7 @@
 
 using System;
 using Tao.OpenGl;
+using gmtl;
 
 
 /// <summary>
@@ -62,6 +63,7 @@ public class SimpleApp : vrj.GlApp
       Console.WriteLine("SimpleApp.init()");
       mButton0.init("VJButton0");
       mButton1.init("VJButton1");
+      mWand.init("VJWand");
    }
 
    public override void contextInit()
@@ -101,18 +103,16 @@ public class SimpleApp : vrj.GlApp
       Gl.glMatrixMode(Gl.GL_MODELVIEW);
 
       // -- Get Wand matrix --- //
-      //         Matrix44f wand_matrix;
-      //         wand_matrix = *(mWand->getData());
+      gmtl.Matrix44f wand_matrix = mWand.getProxy().getData();
 
       // -- Create box offset matrix -- //
-/*
-      Matrix44f box_offset;
-      const EulerAngleXYZf euler_ang(Math::deg2Rad(-90.0f),
-                                     Math::deg2Rad(0.0f),
-                                     Math::deg2Rad(0.0f));
-      box_offset = makeRot<Matrix44f>(euler_ang);
-      setTrans(box_offset, Vec3f(0.0f, 1.0f, 0.0f));
-*/
+      gmtl.EulerAngleXYZf euler_ang =
+         new gmtl.EulerAngleXYZf(gmtl.Math.deg2Rad(-90.0f),
+                                 gmtl.Math.deg2Rad(0.0f),
+                                 gmtl.Math.deg2Rad(0.0f));
+
+      gmtl.Matrix44f box_offset = Gmtl.makeRotMatrix44(euler_ang);
+      Gmtl.setTrans(box_offset, new gmtl.Vec3f(0.0f, 1.0f, 0.0f));
 
       // --- Create a color for the wand --- //
       float[] wand_color = { 0.7f, 0.7f, 0.7f };
@@ -133,10 +133,10 @@ public class SimpleApp : vrj.GlApp
       Gl.glPushMatrix();
       /*
          Gl.glMultMatrixf(box_offset.mData);    // Goto wand position
-         Vec3f x_axis(7.0f,0.0f,0.0f);
-         Vec3f y_axis(0.0f, 7.0f, 0.0f);
-         Vec3f z_axis(0.0f, 0.0f, 7.0f);
-         Vec3f origin(0.0f, 0.0f, 0.0f);
+         gmtl.Vec3f x_axis = new gmtl.Vec3f(7.0f,0.0f,0.0f);
+         gmtl.Vec3f y_axis = new gmtl.Vec3f(0.0f, 7.0f, 0.0f);
+         gmtl.Vec3f z_axis = new gmtl.Vec3f(0.0f, 0.0f, 7.0f);
+         gmtl.Vec3f origin = new gmtl.Vec3f(0.0f, 0.0f, 0.0f);
 
          Gl.glBegin(Gl.GL_LINES);
             Gl.glColor3f(1.0f, 0.0f, 0.0f);
@@ -248,4 +248,5 @@ public class SimpleApp : vrj.GlApp
 
    private gadget.DigitalInterface mButton0 = new gadget.DigitalInterface();
    private gadget.DigitalInterface mButton1 = new gadget.DigitalInterface();
+   private gadget.PositionInterface mWand = new gadget.PositionInterface();
 }
