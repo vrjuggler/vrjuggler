@@ -111,13 +111,9 @@ LOCAL_BOOST	= @LOCAL_BOOST@
 # -----------------------------------------------------------------------------
 EXTRA_CFLAGS		= $(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB)
-EXTRA_DEPEND_FLAGS	= -I$(VPRROOT_ABS) @BOOST_INCLUDES@		\
-                          -I$(JUGGLERROOT_ABS)/external/leach-uuid	\
-                          -I$(JUGGLERROOT_ABS)/external/md5-c
+EXTRA_DEPEND_FLAGS	= -I$(VPRROOT_ABS) @BOOST_INCLUDES@
 EXTRA_DEFS		+= -D_VPR_BUILD_
-EXTRA_INCLUDES		= -I$(top_srcdir) @BOOST_INCLUDES@		\
-                          -I$(JUGGLERROOT_ABS)/external/leach-uuid	\
-                          -I$(JUGGLERROOT_ABS)/external/md5-c
+EXTRA_INCLUDES		= -I$(top_srcdir) @BOOST_INCLUDES@
 EXTRA_LDFLAGS		= @EXTRA_LINK_FLAGS@
 
 # -----------------------------------------------------------------------------

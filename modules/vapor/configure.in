@@ -466,7 +466,8 @@ AC_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS([bstring.h fcntl.h limits.h signal.h strings.h sys/file.h \
                  sys/filio.h sys/ioctl.h sys/sysinfo.h sys/time.h \
-                 termios.h unistd.h sys/capability.h sys/stdsyms.h])
+                 termios.h unistd.h sys/capability.h sys/stdsyms.h \
+                 uuid/uuid.h])
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
@@ -491,6 +492,18 @@ AC_CHECK_FUNCS([gettimeofday sigaction sigemptyset sigfillset sigaddset \
 _vpr_save_LIBS="$LIBS"
 AC_CHECK_FUNC([gethostbyname], [SOCKET_LIB=''],
     [AC_CHECK_LIB([socket], [gethostbyname], [SOCKET_LIB='-lsocket'])])
+LIBS="${_vpr_save_LIBS}"
+
+_vpr_save_LIBS="$LIBS"
+USE_LEACH_UUID='Y'
+AC_CHECK_FUNC([uuid_generate],
+   [AC_DEFINE(HAVE_UUID_GENERATE)
+    UUID_LIB=''
+    USE_LEACH_UUID='N'],
+   [AC_CHECK_LIB([uuid], [uuid_generate],
+      [AC_DEFINE(HAVE_UUID_GENERATE)
+       UUID_LIB='-luuid'
+       USE_LEACH_UUID='N'])])
 LIBS="${_vpr_save_LIBS}"
 
 # Ensure that we have sched_yield(3).  On Solaris, sched_yield(3) and its
@@ -584,7 +597,7 @@ UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $DL_LOAD_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DL_LOAD_LIB"
 fi
 
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
@@ -632,7 +645,7 @@ fi
 case $SUBSYSTEM in
     SPROC)
         subsystem_cxxflags="$INCLUDES"
-        subsystem_libs="$SEM_LIB $SOCKET_LIB $DL_LOAD_LIB"
+        subsystem_libs="$SEM_LIB $SOCKET_LIB $UUID_LIB $DL_LOAD_LIB"
         static_begin="-B static"
         static_end="-B dynamic"
         vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
@@ -644,7 +657,7 @@ case $SUBSYSTEM in
         ;;
     POSIX)
         subsystem_cxxflags="$INCLUDES"
-        subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB $DL_LOAD_LIB"
+        subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DL_LOAD_LIB"
 
         if test "x$PLATFORM" != "xDarwin" ; then
             if test "x$GXX" = "xyes" ; then
@@ -675,7 +688,7 @@ case $SUBSYSTEM in
             vpr_prof_libs='vpr.lib'
         else
             subsystem_cxxflags="$INCLUDES"
-            subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $DL_LOAD_LIB"
+            subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DL_LOAD_LIB"
             vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
             vpr_ldflags_linker="$vpr_ldflags_compiler"
             vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS"
@@ -738,6 +751,7 @@ AC_SUBST(LOCAL_BOOST)
 AC_SUBST(DYLIB_DEPS)
 
 AC_SUBST(UUID_DEFS)
+AC_SUBST(USE_LEACH_UUID)
 
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
