@@ -3,6 +3,7 @@
 import serial
 import Command
 import time
+import sys
 
 class Flock(object):
    def __init__(self):
@@ -28,7 +29,26 @@ class Flock(object):
      
       # Open the port and get started
       #port.open()
-      self.port.setRTS(0)            # Don't reset the bird
+      
+      print "Resetting flock",
+      sys.stdout.flush()
+      self.port.setRTS(1)       # Reset the flock
+#      while(self.port.getCTS()):
+#         print "x",
+      for i in range(5):       # Wait 1 second
+         time.sleep(0.2)
+         sys.stdout.write(".")
+         sys.stdout.flush()
+      
+      self.port.setRTS(0)       # Set back to working
+#      while(not self.port.getCTS()):
+#         print ".",
+      for i in range(5):       # Wait 1 second
+         time.sleep(0.2)
+         sys.stdout.write(".")
+         sys.stdout.flush()
+         
+      print "complete."
     
    def setCmdAddr(self, addr):
       """ Set destination addr for next command """
