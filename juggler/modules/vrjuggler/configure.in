@@ -328,6 +328,8 @@ fi
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
+vrj_cxxflags="$STDFLAGS"
+vrj_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -339,6 +341,7 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
     DBG_FLAGS="$DBG_FLAGS /MDd"
     OPT_FLAGS="$OPT_FLAGS /MD"
+    vrj_cxxflags="$CXXFLAGS"
 fi
 
 DPP_SYSTEM_SUBST
@@ -366,10 +369,12 @@ cd "$topdir"
 UNIX_VJROOT_ABS="$VJROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
+# $APP_EXTRA_LIBS must list all the libraries need to link a VR Juggler-based
+# application.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $JCCL_LIBS_LD $GADGET_LIBS_LD $SNX_LIBS_LD $LIBS comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $JCCL_LIBS_LD $GADGET_LIBS_LD $SNX_LIBS_LD $LIBS $JCCL_EXTRA_LIBS $VPR_EXTRA_LIBS"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $JCCL_LIBS_CC $GADGET_LIBS_CC $SNX_LIBS_CC $LIBS -lm"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $JCCL_LIBS_CC $GADGET_LIBS_CC $SNX_LIBS_CC $LIBS $JCCL_EXTRA_LIBS $VPR_EXTRA_LIBS -lm"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -485,6 +490,10 @@ VJ_SHARE_DIR=`echo "$datadir" | sed -e 's|^${prefix}/||'`
 VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
 
 # Information needed to generate vrjuggler-config.
+# $vrj_extra_libs only lists the external (non-Juggler) libraries needed by
+# VR Juggler.
+# $vrj_extra_libs_juggler lists the Juggler Project libraries needed by VR
+# Juggler.
 case $OS_TYPE in
     UNIX)
         if test "x$GXX" = "xyes" ; then
@@ -495,9 +504,11 @@ case $OS_TYPE in
             static_end="-B dynamic"
         fi
 
-        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
+        vrj_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
+        vrj_ldflags_linker="$vrj_ldflags_compiler"
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
-
+        vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $LIBS"
+        vrj_extra_libs_juggler="$GADGET_LIBS_CC $SNX_LIBS_CC $JCCL_LIBS_CC $JCCL_EXTRA_LIBS $VPR_LIBS_CC $VPR_EXTRA_LIBS"
         Juggler_lib='-lJuggler'
         Juggler_utils_lib='-lJuggler_utils'
         Juggler_ogl_lib='-lJuggler_ogl'
@@ -508,8 +519,11 @@ case $OS_TYPE in
 
         ;;
     WIN32)
-        vrj_ldflags="/link /libpath:\$prefix/lib/debug "
+        vrj_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
+        vrj_ldflags_linker="/libpath:\$prefix/lib/debug "
         vrj_libs='Juggler.lib Juggler_utils.lib Juggler_ogl.lib'
+        vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $LIBS"
+        vrj_extra_libs_juggler="$GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_EXTRA_LIBS $VPR_LIBS_LD $VPR_EXTRA_LIBS"
 
         Juggler_lib='Juggler.lib'
         Juggler_utils_lib='Juggler_utils.lib'
@@ -518,7 +532,6 @@ case $OS_TYPE in
 esac
 
 vrj_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
-vrj_extra_libs="$APP_EXTRA_LIBS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_END"
 
 if test "x$PLATFORM" = "xIRIX" ; then
     vrj_n32_flags='-n32'
@@ -562,7 +575,11 @@ AC_SUBST(APP_EXTRA_LIBS_OSG)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
-AC_SUBST(vrj_ldflags)
+AC_SUBST(vrj_cxxflags)
+AC_SUBST(vrj_cxxflags_all)
+AC_SUBST(vrj_extra_cxxflags)
+AC_SUBST(vrj_ldflags_compiler)
+AC_SUBST(vrj_ldflags_linker)
 AC_SUBST(vrj_libs)
 AC_SUBST(Juggler_lib)
 AC_SUBST(Juggler_utils_lib)
@@ -570,6 +587,7 @@ AC_SUBST(Juggler_ogl_lib)
 AC_SUBST(Juggler_pf_lib)
 AC_SUBST(vrj_extra_ldflags)
 AC_SUBST(vrj_extra_libs)
+AC_SUBST(vrj_extra_libs_juggler)
 AC_SUBST(vrj_n32_flags)
 AC_SUBST(vrj_64_flags)
 

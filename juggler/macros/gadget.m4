@@ -33,8 +33,22 @@ dnl ************* <auto-copyright.pl END do not edit this line> *************
 dnl ---------------------------------------------------------------------------
 dnl GADGETEER_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
 dnl
-dnl Test for Gadgeteer and then define GADGET_CXXFLAGS, GADGET_LIBS_LD,
-dnl GADGET_LIBS_STATIC_LD, GADGET_LIBS_CC, and GADGET_LIBS_STATIC_CC.
+dnl Test for Gadgeteer and then define the following variables:
+dnl     GADGET_CXXFLAGS
+dnl     GADGET_CXXFLAGS_ALL
+dnl     GADGET_LIBS_LD
+dnl     GADGET_LIBS_LD_ALL
+dnl     GADGET_LIBS_STATIC_LD
+dnl     GADGET_LIBS_STATIC_LD_ALL
+dnl     GADGET_LIBS_CC
+dnl     GADGET_LIBS_CC_ALL
+dnl     GADGET_LIBS_STATIC_CC
+dnl     GADGET_LIBS_STATIC_CC_ALL
+dnl     GADGET_CXX_IDL_OPTS
+dnl     GADGET_CXX_IDL_GENDIR_OPT
+dnl     GADGET_JAVA_IDL_OPTS
+dnl     GADGET_JAVA_IDL_GENDIR_OPT
+dnl     GADGET_JARS
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(GADGETEER_PATH,
 [
@@ -91,11 +105,13 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
         no_gadgeteer=yes
     else
         GADGET_CXXFLAGS=`$GADGETEER_CONFIG $gadget_config_args --cxxflags $ABI`
+        GADGET_CXXFLAGS_ALL=`$GADGETEER_CONFIG $gadget_config_args --cxxflags $ABI --all`
+        GADGET_LIBS_LD="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI`"
+        GADGET_LIBS_STATIC_LD="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI --static`"
+        GADGET_LIBS_CC="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI`"
+        GADGET_LIBS_STATIC_CC="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI --static`"
         GADGET_EXTRA_LIBS=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI`
-        GADGET_LIBS_LD="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI` $GADGET_EXTRA_LIBS"
-        GADGET_LIBS_STATIC_LD="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI --static` $GADGET_EXTRA_LIBS"
-        GADGET_LIBS_CC="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI` $GADGET_EXTRA_LIBS"
-        GADGET_LIBS_STATIC_CC="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI --static` $GADGET_EXTRA_LIBS"
+        GADGET_EXTRA_LIBS_ALL=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI --all`
         GADGET_VERSION=`$GADGETEER_CONFIG --version`
         DPP_VERSION_CHECK_MSG(Gadgeteer, $GADGET_VERSION, $min_gadget_version,
                               gadget_cv_gadget_version, $2, $3)
@@ -109,14 +125,24 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
             echo "*** full path to gadgeteer-config."
         fi
         GADGET_CXXFLAGS=""
-        GADGET_LIBS=""
-        GADGET_LIBS_STATIC=""
+        GADGET_CXXFLAGS_ALL=""
+        GADGET_LIBS_LD=""
+        GADGET_LIBS_STATIC_LD=""
+        GADGET_LIBS_CC=""
+        GADGET_LIBS_STATIC_CC=""
+        GADGET_EXTRA_LIBS=""
+        GADGET_EXTRA_LIBS_ALL=""
+        GADGET_VERSION="-1"
         ifelse([$3], , :, [$3])
     fi
 
     AC_SUBST(GADGET_CXXFLAGS)
+    AC_SUBST(GADGET_CXXFLAGS_ALL)
     AC_SUBST(GADGET_LIBS_LD)
     AC_SUBST(GADGET_LIBS_STATIC_LD)
     AC_SUBST(GADGET_LIBS_CC)
     AC_SUBST(GADGET_LIBS_STATIC_CC)
+    AC_SUBST(GADGET_EXTRA_LIBS)
+    AC_SUBST(GADGET_EXTRA_LIBS_ALL)
+    AC_SUBST(GADGET_VERSION)
 ])

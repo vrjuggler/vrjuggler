@@ -35,6 +35,7 @@
 %{
 %}
 
+vrj_extra_cxxflags="@vrj_extra_cxxflags@"
 Juggler_lib="@Juggler_lib@"
 Juggler_utils_lib="@Juggler_utils_lib@"
 Juggler_ogl_lib="@Juggler_ogl_lib@"
@@ -62,10 +63,17 @@ fi
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
-exec_prefix_set=no
+prefix_set='no'
+exec_prefix_set='no'
+print_all='no'
+use_linker='no'
 
 usage()
 {
+    if test "x$2" != "x" ; then
+       echo "Unrecognized option '$2'"
+    fi
+
     cat <<EOF
 Usage: vrjuggler-config [OPTIONS] [LIBRARIES]
 Options:
@@ -74,11 +82,17 @@ Options:
                                 alternate prefix to use when printing paths
         [--exec-prefix[=DIR]]   Print the executable prefix or set an alternate
                                 executable prefix to use when printing paths
-        [--libs [N32|64]]       Print the basic VR Juggler libraries
+        [--version]             Print the installed VR Juggler's version number
+        [--cxxflags [N32|64]]   Print the flags for the VR Juggler-specific
+                                C++ compiler
+        [--libs [N32|64]]       Print the basic VR Juggler-specific libraries
         [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
-        [--cxxflags [N32|64]]   Print the flags for the C++ compiler
-        [--subsystem]           Print the OS abstraction layer being used
+        [--all]                 Print all the flags used for compiling or
+                                linking (depending on other options)
+        [--linker]              Print libraries as direct arguments to the
+                                linker rather than to the compiler
+        [--subsystem]           Print the VPR OS abstraction layer being used
 
 Libraries (prints the linker options for one or more of these libraries):
         vrj (all basic libraries)
@@ -107,11 +121,16 @@ while test $# -gt 0; do
     esac
 
     case $1 in
+        --all)
+            print_all='yes'
+            ;;
         --basedir)
             use_base_dir=yes
             ;;
         --prefix=*)
             prefix=$optarg
+            prefix_set='yes'
+
             if test $exec_prefix_set = no ; then
                 exec_prefix=$optarg
             fi
@@ -152,7 +171,7 @@ while test $# -gt 0; do
             esac
             ;;
         --subsystem)
-            echo @SUBSYSTEM@
+            echo @VPR_SUBSYSTEM@
             ;;
         --libs)
             echo_libs=yes
@@ -199,6 +218,9 @@ while test $# -gt 0; do
                     ;;
             esac
             ;;
+        --linker)
+            use_linker='yes'
+            ;;
         --static)
             echo_static=yes
             ;;
@@ -232,28 +254,34 @@ if test "x$lib_Juggler_all" = "x" ; then
     lib_Juggler_all=yes
 fi
 
-if test "$echo_prefix" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo $VJ_BASE_DIR
-    else
-        echo $prefix
+# If we are using $VJ_BASE_DIR, overwrite $prefix and $exec_prefix unless they
+# were set explicitly on the command line.
+if test "$use_base_dir" = "yes" ; then
+    if test "$prefix_set" = "no" ; then
+        prefix="$VJ_BASE_DIR"
     fi
+
+    if test "$exec_prefix_set" = "no" ; then
+        exec_prefix="$VJ_BASE_DIR"
+    fi
+fi
+
+if test "$echo_prefix" = "yes"; then
+    echo $prefix
 fi
 
 if test "$echo_exec_prefix" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo $VJ_BASE_DIR
-    else
-        echo $exec_prefix
-    fi
+    echo $exec_prefix
 fi
 
 if test "$echo_cxxflags" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo @CXXFLAGS@ $vrj_extra_cxxflags -I$VJ_BASE_DIR/include
+    if test "x$print_all" = "xyes" ; then
+        vrj_cxxflags_addtl="@vrj_cxxflags_all@"
     else
-        echo @CXXFLAGS@ $vrj_extra_cxxflags -I@includedir@
+        vrj_cxxflags_addtl=''
     fi
+
+    echo @vrj_cxxflags@ $vrj_cxxflags_addtl $vrj_extra_cxxflags -I$prefix/include $vrj_extra_includes
 fi
 
 if test "$echo_static" = "yes" ; then
@@ -265,7 +293,11 @@ if test "$echo_libs" = "yes"; then
     if test "$use_base_dir" = "yes"; then
         ldflags="-L$VJ_BASE_DIR/lib$LIBBITSUF"
     else
-        ldflags="@vrj_ldflags@"
+        if test "$use_linker" = "yes" ; then
+            ldflags="$ldflags @vrj_ldflags_linker@"
+        else
+            ldflags="$ldflags @vrj_ldflags_compiler@"
+        fi
     fi
 
     if test "x$lib_Juggler_all" = "xyes" ; then
@@ -292,7 +324,13 @@ if test "$echo_libs" = "yes"; then
 fi      
 
 if test "x$echo_extra_libs" = "xyes"; then
+    if test "x$print_all" = "xyes" ; then
+        vrj_extra_libs_addtl="@vrj_extra_libs_juggler@"
+    else
+        vrj_extra_libs_addtl=''
+    fi
+
     vrj_extra_ldflags="@vrj_extra_ldflags@"
     vrj_extra_libs="@vrj_extra_libs@"
-    echo $vrj_extra_ldflags $vrj_extra_libs
+    echo $vrj_extra_ldflags $vrj_extra_libs $vrj_extra_libs_addtl
 fi
