@@ -979,7 +979,11 @@ std::string FlockStandalone::queryModelIdString()
    return model_id;
 }
 
-/** Gets the model id string. */
+/** Gets the model id string.
+ *
+ * NOTE: This requires firmware version 3.67
+ */
+
 Flock::AddressingMode FlockStandalone::queryAddressingMode()
 {
    std::vector<vpr::Uint8> resp(1);
@@ -988,6 +992,9 @@ Flock::AddressingMode FlockStandalone::queryAddressingMode()
    return amode;
 }
 
+/**
+ * NOTE: This requires firmware version 3.67
+ */
 vpr::Uint8 FlockStandalone::queryAddress()
 {
    std::vector<vpr::Uint8> resp(1);
@@ -1523,7 +1530,7 @@ void FlockStandalone::readInitialFlockConfiguration()
 
    vprASSERT(( mSerialPort != NULL ) && (FlockStandalone::CLOSED != mStatus));
    vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
-      << "Asking the flock for it's configuration.\n" << vprDEBUG_FLUSH;
+      << "Asking the flock for its configuration.\n" << vprDEBUG_FLUSH;
 
    try
    {
@@ -1541,21 +1548,18 @@ void FlockStandalone::readInitialFlockConfiguration()
 
       if(mSwRevision < 3.67f)
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "Flock has old firmware, defaulting to: NormalAddressing, Master at address 1\n"
-            << vprDEBUG_FLUSH;
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "   IMPORTANT: Make sure serial port is connected to box with address 1.\n"
-            << vprDEBUG_FLUSH;
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "   NOTE: This means that standalone mode is NOT supported.\n"
-            << vprDEBUG_FLUSH;
-         
-         mAddrMode = Flock::AddressingMode(Flock::NormalAddressing);
-         mMasterAddr = 1;
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+            << "Flock firmware older than 3.67: Using configured addressing mode "
+            << Flock::getAddressingModeString(mAddrMode) << " and master address "
+            << mMasterAddr << std::endl << vprDEBUG_FLUSH;
+//         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+//            << "   NOTE: This means that standalone mode is NOT supported.\n"
+//            << vprDEBUG_FLUSH;
       }
       else
       {
+         // NOTE: Both queryAddressingMode() and queryAddress() require firmware version 3.67
+
          // Get the addressing mode
          mAddrMode = queryAddressingMode();
          vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "   addr mode: "

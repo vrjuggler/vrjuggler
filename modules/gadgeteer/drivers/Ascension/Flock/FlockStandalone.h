@@ -534,7 +534,7 @@ public:
    /**
     * Gets the number of birds to use in the Flock.
     */
-   inline unsigned getNumSensors() const
+   unsigned getNumSensors() const
    { return mNumSensors; }
 
    /**
@@ -650,14 +650,27 @@ public:  // ---- Query methods for flock state ---- //
    /** Print the information we have about the status of all units in the flock. */
    void printFlockStatus();
 
+   void setAddressingMode(const Flock::AddressingMode mode)
+   {
+      mAddrMode = mode;
+   }
+
+   void setMasterAddress(const unsigned addr)
+   {
+      mMasterAddr = addr;
+   }
+
    // ---- Attribute getters ------ //
    // These methods are only valid after the initial open command completes
    Flock::AddressingMode getAddressingMode() const
    {  return mAddrMode; }
+
    float getSoftwareRevision() const
    {  return mSwRevision; }
+
    std::string getModelId() const
    {  return mModelId; }
+
    Status getStatus() const
    { return mStatus; }
 
