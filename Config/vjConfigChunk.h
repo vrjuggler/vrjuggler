@@ -133,6 +133,22 @@ public:
     vjVarValue& getProperty (char *property, int ind = 0);
 
 
+    //: Return all the values for a given property
+    // This is just a simple helper function
+    //! NOTE: The vector has COPIES of the var values.
+    vector<vjVarValue*> getAllProperties(char* property)
+    {
+       int num_properties = getNum(property);
+       vector<vjVarValue*> ret_val;
+       for(int i=0;i<num_properties;i++)
+       {
+         vjVarValue* new_var_val = new vjVarValue(T_INT);
+         *new_var_val = getProperty(property,i);
+         ret_val.push_back(new_var_val);
+       }
+
+       return ret_val;
+    }
 
     //: Sets a value for the given property.
     //!PRE:  property is a non-null string, ind >= 0.
