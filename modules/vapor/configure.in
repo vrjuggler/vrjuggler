@@ -667,9 +667,10 @@ case $SUBSYSTEM in
 esac
 
 vpr_extra_cxxflags=''
+vpr_extra_include_dirs=''
 
 if test "x$PLATFORM" = "xIRIX" ; then
-    vpr_extra_cxxflags='-I$VPR_BASE_DIR/include/boost/compatibility/cpp_c_headers'
+    vpr_extra_include_dirs='boost/compatibility/cpp_c_headers'
 fi
 
 vpr_extra_ldflags="$EXTRA_LDFLAGS"
@@ -716,6 +717,7 @@ AC_SUBST(static_end)
 AC_SUBST(vpr_ldflags)
 AC_SUBST(vpr_libs)
 AC_SUBST(vpr_extra_cxxflags)
+AC_SUBST(vpr_extra_include_dirs)
 AC_SUBST(vpr_extra_ldflags)
 AC_SUBST(vpr_extra_libs)
 
