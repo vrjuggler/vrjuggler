@@ -201,7 +201,7 @@ public class ConfigElement implements ConfigElementPointerListener
     * @param name    the name of the property to set
     * @param index   the index of the property value to set
     */
-   public synchronized ConfigElementPropertyEdit setProperty(String name, int index, Object value)
+   public synchronized void setProperty(String name, int index, Object value)
       throws IllegalArgumentException,
              ArrayIndexOutOfBoundsException
    {
@@ -217,11 +217,6 @@ public class ConfigElement implements ConfigElementPointerListener
       // Notify listeners of the change
       firePropertyValueChanged(name, index, old_value);
       System.out.println("setProperty("+name+","+index+","+value+")");
-      
-      //TODO:  This will only work if we make sure we do not skip over a
-      //       propertyAdd/remove event. Otherwise the index value could be
-      //       wrong.
-      return(new ConfigElementPropertyEdit(this, name, index, old_value, value));
    }
              
    /**
