@@ -239,10 +239,10 @@ SocketImplBSD::connect (vpr::Interval timeout) {
     // If connect(2) failed, print an error message explaining why and return
     // error status.
     if ( status == -1 ) {
-        // If this is a non-blocking connection, return vpr::ReturnStatus::InProgress
-        // to indicate that the connection will complete later.  I'm not sure
-        // if it's safe to set m_connected and m_blocking_fixed at this
-        // point, but they have to be set sometime.
+        // If this is a non-blocking connection, return
+        // vpr::ReturnStatus::InProgress to indicate that the connection will
+        // complete later.  I'm not sure if it's safe to set m_connected and
+        // m_blocking_fixed at this point, but they have to be set sometime.
         if ( errno == EINPROGRESS && getNonBlocking() ) {
             if ( vpr::Interval::NoWait == timeout ) {
                 retval.setCode(vpr::ReturnStatus::InProgress);
@@ -254,6 +254,7 @@ SocketImplBSD::connect (vpr::Interval timeout) {
                 retval.setCode(vpr::ReturnStatus::InProgress);
             }
 
+            m_bound          = true;
             m_connected      = true;
             m_blocking_fixed = true;
         }
