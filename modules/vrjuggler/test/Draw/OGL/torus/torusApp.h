@@ -84,6 +84,9 @@ public:
    // calculations and state modifications here.
    virtual void preFrame()
    {
+      static vpr::Interval last_time;
+      static long iteration=0;
+
       //static long count=0;
       //count++;
       
@@ -94,6 +97,22 @@ public:
          vprDEBUG(vprDBG_ALL, 0) << "APP EXIT KEY PRESSED: Stopping kernel and exiting.\n" << vprDEBUG_FLUSH;
          mKernel->stop();     // trigger a kernel stop
       }
+
+      // Rotate the torus
+      const float rot_inc(0.05f);
+      mTorusRotation += rot_inc;
+      if(mTorusRotation >= 360.0f)
+         mTorusRotation = rot_inc;
+
+      iteration++;
+      vpr::Interval cur_time = mWand->getTimeStamp();
+      vpr::Interval diff_time(cur_time-last_time);
+      
+      std::cout << "\nREADANDWRITE Iteration: " << iteration << "  Delta: " << diff_time.getBaseVal() << std::endl;
+      std::cout << "READANDWRITE Current: " << cur_time.getBaseVal() << "Last: " << last_time.getBaseVal() << "\n" << std::endl;
+      
+      last_time = cur_time;
+      
    }
 
    virtual void bufferPreDraw();
