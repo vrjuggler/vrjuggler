@@ -78,6 +78,9 @@ int vjGlxWindow::open() {
     XEvent fooevent;
     XSetWindowAttributes w_attrib;
     int screen;
+    char* foo;
+    XSizeHints *sizehints;
+    XClassHint *classhint;
 
     vjDEBUG(vjDBG_DRAW_MGR,3) << "glxWindow: Open window\n" << vjDEBUG_FLUSH;
 
@@ -136,7 +139,7 @@ int vjGlxWindow::open() {
     /* Before we map the window, we need a name for it (this is also useful for
      * the resource cruft that'll get rid of the borders).
      */
-    XClassHint *classhint = XAllocClassHint();
+    classhint = XAllocClassHint();
     classhint->res_name = (char*)window_name.c_str();
     classhint->res_class = "vj GLX";
     //XSetClassHint (x_display, x_window, classhint);
@@ -144,7 +147,7 @@ int vjGlxWindow::open() {
     // InSoc makes things simple
     // X makes things complicated
     XTextProperty w_name;
-    char* foo = (char*)window_name.c_str();
+    foo = (char*)window_name.c_str();
     XStringListToTextProperty(&foo, 1, &w_name);
 
     /* The next few lines of crud are needed to get it through the window
@@ -153,7 +156,7 @@ int vjGlxWindow::open() {
      * go, thank you very much, I'M the APPLICATION so stop $%^*&%#@! SECOND
      * GUESSING ME!
      */
-    XSizeHints *sizehints = XAllocSizeHints();
+    sizehints = XAllocSizeHints();
     sizehints->flags = USPosition;
 
     XSetWMProperties (x_display, x_window, &w_name, &w_name, 
