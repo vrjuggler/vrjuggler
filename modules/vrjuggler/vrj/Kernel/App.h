@@ -126,7 +126,17 @@ public:
    virtual void preFrame()
    {;}
 
-   /** Function called <b>during</b> the application's drawing time. */
+   /** Function called after preFrame and ApplicationData syncronization, but
+    * before draw function.
+    *
+    * NOTE: This is required because we can not update data in the draw function
+    * since it might be called more than once.
+    */
+   virtual void latePreFrame()
+   {;}
+
+   /** Function called <b>during</b> the application's drawing time
+    */
    virtual void intraFrame()
    {;}
 
