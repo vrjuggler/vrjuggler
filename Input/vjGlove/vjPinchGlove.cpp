@@ -149,7 +149,7 @@ int vjPinchGlove::getDigitalData(int devNum)
    mGlove->getSampledString( gesture );
       
    // make sure the passed value is within range.
-   if (devNum >= 0 && devNum <= gesture.size())
+   if ((devNum >= 0) && ((unsigned)devNum <= gesture.size()))
    {
       // get the requested digital data from the "gesture" string
       char character[2];
