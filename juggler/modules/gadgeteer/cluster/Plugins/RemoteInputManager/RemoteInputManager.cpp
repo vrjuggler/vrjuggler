@@ -68,6 +68,12 @@
 
 #include <map>
 
+cluster::ClusterPlugin* initPlugin()
+{
+   return cluster::RemoteInputManager::instance();
+}
+
+
 namespace cluster
 {
    vprSingletonImp( RemoteInputManager );

@@ -52,8 +52,9 @@ DIRPRFX=	cluster/
 
 # Subdirectories to compile.
 SUBDIR=		ClusterNetwork	\
-		Packets		\
-		Plugins
+		Packets		#\
+# Not needed anymore since we are building the plugins dynamically.		
+#		Plugins
 
 SRCS=		ClusterManager.cpp \
 		ClusterDepChecker.cpp	\
