@@ -54,26 +54,26 @@ public class ChunkDescDB {
     public boolean need_to_save;
 
     public ChunkDescDB () {
-	name = "Unnamed";
-	file = new File ("");
-	targets = new ArrayList();
-	descs = new ArrayList();
+        name = "Unnamed";
+        file = new File ("");
+        targets = new ArrayList();
+        descs = new ArrayList();
         need_to_save = false;
     }
 
 
     public final void setName(String _name) {
-	name = _name;
+        name = _name;
     }
 
 
     public final String getName () {
-	return name;
+        return name;
     }
 
 
     public final void setFile (File _file) {
-	file = _file;
+        file = _file;
     }
 
 
@@ -83,22 +83,22 @@ public class ChunkDescDB {
 
 
     public final synchronized int size () {
-	return descs.size();
+        return descs.size();
     }
 
 
     public final synchronized ChunkDesc get (int i) {
-	return (ChunkDesc)descs.get(i);
+        return (ChunkDesc)descs.get(i);
     }
 
 
 //      public synchronized ChunkDescDB diff (ChunkDescDB d) {
-//  	/* builds a new ChunkDescDB that's sort of the difference of its
-//  	 * arguments - the returned db contains every chunk in d that isn't
-//  	 * in self or differs from the same-named chunk in self 
-//  	 */
-//  	ChunkDesc c1, c2;
-//  	ChunkDescDB newdb = new ChunkDescDB();
+//      /* builds a new ChunkDescDB that's sort of the difference of its
+//       * arguments - the returned db contains every chunk in d that isn't
+//       * in self or differs from the same-named chunk in self
+//       */
+//      ChunkDesc c1, c2;
+//      ChunkDescDB newdb = new ChunkDescDB();
 //          synchronized (d) {
 //              int n = d.descs.size();
 //              for (int i = 0; i < n; i++) {
@@ -108,7 +108,7 @@ public class ChunkDescDB {
 //                      newdb.descs.add(c1);
 //              }
 //          }
-//  	return newdb;
+//      return newdb;
 //      }
 
 
@@ -123,18 +123,18 @@ public class ChunkDescDB {
             }
         }
         if (e == null)
-	    add (newc);
+            add (newc);
         else
             notifyDescDBTargets (e);
     }
-    
+
 
 
     public void clear () {
         synchronized (this) {
             descs.clear();
         }
-	notifyDescDBTargets (new DescDBEvent (this, DescDBEvent.REMOVEALL, null, null));
+        notifyDescDBTargets (new DescDBEvent (this, DescDBEvent.REMOVEALL, null, null));
     }
 
 
@@ -158,7 +158,7 @@ public class ChunkDescDB {
             }
         }
         if (retval != null) {
-            DescDBEvent e = new DescDBEvent (this, DescDBEvent.REMOVE, 
+            DescDBEvent e = new DescDBEvent (this, DescDBEvent.REMOVE,
                                              retval, null);
             notifyDescDBTargets(e);
         }
@@ -181,18 +181,18 @@ public class ChunkDescDB {
             }
         }
         if (retval != null) {
-            DescDBEvent e = new DescDBEvent (this, DescDBEvent.REMOVE, 
+            DescDBEvent e = new DescDBEvent (this, DescDBEvent.REMOVE,
                                              retval, null);
             notifyDescDBTargets (e);
         }
         return retval;
     }
-    
+
 
 
     public List getTokenBegins (String tok) {
-	ChunkDesc d;
-	ArrayList v = new ArrayList();
+        ChunkDesc d;
+        ArrayList v = new ArrayList();
         ChunkDesc[] da;
         synchronized (this) {
             da = new ChunkDesc[descs.size()];
@@ -203,7 +203,7 @@ public class ChunkDescDB {
             if (da[i].token.startsWith (tok))
                 v.add(da[i]);
         }
-	return v;
+        return v;
     }
 
 
@@ -217,43 +217,43 @@ public class ChunkDescDB {
                 }
             }
         }
-	return null;
+        return null;
     }
-    
+
 
 
     public final synchronized ChunkDesc getByName (String tok) {
         int n = descs.size();
-	for (int i = 0; i < n; i++)
-	    if (((ChunkDesc)descs.get(i)).name.equalsIgnoreCase(tok))
-		return (ChunkDesc)descs.get(i);
-	return null;
+        for (int i = 0; i < n; i++)
+            if (((ChunkDesc)descs.get(i)).name.equalsIgnoreCase(tok))
+                return (ChunkDesc)descs.get(i);
+        return null;
     }
 
 
 
     public final synchronized String getTokenFromName (String _name) {
         int n = descs.size();
-	for (int i = 0; i < n; i++)
-	    if (((ChunkDesc)descs.get(i)).name.equalsIgnoreCase(_name))
-		return ((ChunkDesc)descs.get(i)).token;
-	return null;
+        for (int i = 0; i < n; i++)
+            if (((ChunkDesc)descs.get(i)).name.equalsIgnoreCase(_name))
+                return ((ChunkDesc)descs.get(i)).token;
+        return null;
     }
 
 
 
     public final synchronized String getNameFromToken (String tok) {
         int n = descs.size();
-	for (int i = 0; i < n; i++)
-	    if (((ChunkDesc)descs.get(i)).token.equalsIgnoreCase(tok))
-		return ((ChunkDesc)descs.get(i)).name;
-	return null;
+        for (int i = 0; i < n; i++)
+            if (((ChunkDesc)descs.get(i)).token.equalsIgnoreCase(tok))
+                return ((ChunkDesc)descs.get(i)).name;
+            return null;
     }
 
 
 
     /** Adds d to self.
-     *  Note: addElement may alter the name of d in order to avoid 
+     *  Note: addElement may alter the name of d in order to avoid
      *  conflicts with ChunkDescs already in self.
      */
     public void add (ChunkDesc d) {
@@ -277,8 +277,8 @@ public class ChunkDescDB {
             // do the deed
             descs.add(d);
         }
-	DescDBEvent e = new DescDBEvent (this, DescDBEvent.INSERT, null, d);
-	notifyDescDBTargets (e);
+        DescDBEvent e = new DescDBEvent (this, DescDBEvent.INSERT, null, d);
+        notifyDescDBTargets (e);
     }
 
 
@@ -296,8 +296,8 @@ public class ChunkDescDB {
 
     public void addAll (List v) {
         int n = v.size();
-	for (int i = 0; i < n; i++)
-	    add ((ChunkDesc)v.get(i));
+        for (int i = 0; i < n; i++)
+           add ((ChunkDesc)v.get(i));
     }
 
 
@@ -333,40 +333,35 @@ public class ChunkDescDB {
     /******************** DescDB Target Stuff *********************/
 
     public synchronized void addDescDBListener (DescDBListener l) {
-	synchronized (targets) {
-	    targets.add (l);
-	}
+        synchronized (targets) {
+            targets.add (l);
+        }
     }
 
 
     public void removeDescDBListener (DescDBListener l) {
-	synchronized (targets) {
-	    targets.remove (targets.indexOf(l));
-	}
+        synchronized (targets) {
+            targets.remove (targets.indexOf(l));
+        }
     }
 
 
     protected void notifyDescDBTargets (DescDBEvent e) {
-	DescDBListener[] l = new DescDBListener[20];
+        DescDBListener[] l = new DescDBListener[20];
         need_to_save = true;
-	synchronized (targets) {
-	    l = (DescDBListener[]) targets.toArray(l);
-	}
+        synchronized (targets) {
+            l = (DescDBListener[]) targets.toArray(l);
+        }
         int a = e.getAction();
-	for (int i = 0; (i < l.length) && (l[i] != null); i++) {
-	    if (a == e.INSERT)
-		l[i].chunkDescAdded (e);
-	    else if (a == e.REMOVE)
-		l[i].chunkDescRemoved (e);
-	    else if (a == e.REPLACE)
-		l[i].chunkDescReplaced (e);
-	    else if (a == e.REMOVEALL)
-		l[i].chunkDescsCleared (e);
-	}
+        for (int i = 0; (i < l.length) && (l[i] != null); i++) {
+            if (a == e.INSERT)
+                l[i].chunkDescAdded (e);
+            else if (a == e.REMOVE)
+                l[i].chunkDescRemoved (e);
+            else if (a == e.REPLACE)
+                l[i].chunkDescReplaced (e);
+            else if (a == e.REMOVEALL)
+                l[i].chunkDescsCleared (e);
+        }
     }
-
 }
-
-
-
-
