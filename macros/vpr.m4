@@ -46,7 +46,7 @@ AC_DEFUN(VPR_PATH,
                 [  --with-vpr-exec-prefix=PFX Exec prefix where VPR is installed (optional)],
                 vpr_config_exec_prefix="$withval", vpr_config_exec_prefix="")
     AC_ARG_ENABLE(vprtest, [  --disable-vprtest       Do not try to compile and run a test VPR program],
-		    , enable_vprtest=yes)
+                    , enable_vprtest=yes)
 
 dnl    for module in . $4
 dnl    do
@@ -83,7 +83,7 @@ dnl    done
 
     AC_PATH_PROG(VPR_CONFIG, vpr-config, no)
     min_vpr_version=ifelse([$1], ,0.0.1,$1)
-dnl    AC_MSG_CHECKING(for VPR - version >= $min_vpr_version)
+
     no_vpr=''
     if test "x$VPR_CONFIG" = "xno" ; then
         no_vpr=yes
@@ -92,12 +92,9 @@ dnl    AC_MSG_CHECKING(for VPR - version >= $min_vpr_version)
         VPR_CXXFLAGS=`$VPR_CONFIG $vpr_config_args --cxxflags`
         VPR_LIBS=`$VPR_CONFIG $vpr_config_args --libs`
         VPR_LIBS_STATIC=`$VPR_CONFIG $vpr_config_args --libs --static`
-dnl        vpr_config_major_version=`$VPR_CONFIG $vpr_config_args --version | \
-dnl               sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
-dnl        vpr_config_minor_version=`$VPR_CONFIG $vpr_config_args --version | \
-dnl               sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
-dnl        vpr_config_micro_version=`$VPR_CONFIG $vpr_config_args --version | \
-dnl               sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+        VPR_VERSION=`$VPR_CONFIG --version`
+        DPP_VERSION_CHECK_MSG(VPR, $VPR_VERSION, $min_vpr_version,
+                              vpr_cv_vpr_version, $2, $3)
     fi
 
     if test "x$no_vpr" != x ; then
