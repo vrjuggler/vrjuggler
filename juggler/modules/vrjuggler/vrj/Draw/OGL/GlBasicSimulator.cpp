@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/Draw/OGL/GlBasicSimulator.h>
+#include <vrj/vrjConfig.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>
@@ -50,10 +50,15 @@
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
 
+#include <vrj/Draw/DrawSimInterfaceFactory.h>
+#include <vrj/Draw/OGL/GlBasicSimulator.h>
+
 
 namespace vrj
 {
-   
+
+VRJ_REGISTER_SIM_INTERFACE_CREATOR(GlBasicSimulator);
+
 GlBasicSimulator::GlBasicSimulator()
 {
    mQuadObj = NULL;

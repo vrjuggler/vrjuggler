@@ -32,14 +32,13 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Kernel/User.h>
+#include <vpr/Util/Assert.h>
 
 #include <vrj/Display/CameraProjection.h>
 #include <vrj/Display/Projection.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
 
-// XXX: Circular dependency between libJuggler and libJuggler_ogl
-#include <vrj/Draw/OGL/GlBasicSimulator.h>
+#include <vrj/Draw/DrawSimInterfaceFactory.h>
 
 #include <vrj/Display/SimViewport.h>
 
@@ -74,22 +73,25 @@ void SimViewport::config(jccl::ConfigChunkPtr chunk)
    // Create the simulator stuff
    if(has_simulator)
    {
-      jccl::ConfigChunkPtr sim_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
+      jccl::ConfigChunkPtr sim_chunk =
+         chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
 
-      // XXX: Use factory to create the correct type of simulator
-      // XXX: Circular dependency between libJuggler and libJuggler_ogl
-      mSimulator = new GlBasicSimulator;
+      mSimulator = DrawSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
+
+      // XXX: Change this to an error once the new simulator loading code is
+      // more robust.  -PH (4/13/2003)
+      vprASSERT(NULL != mSimulator && "Failed to create draw simulator");
       mSimulator->initialize(this);
       mSimulator->config(sim_chunk);
    }
-
 }
 
 void SimViewport::updateProjections(const float positionScale)
 {
    if(mSimulator != NULL)
+   {
       mSimulator->updateProjectionData(positionScale, mLeftProj, mRightProj);
+   }
 }
 
 }
-
