@@ -40,16 +40,14 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= vrj/
+DIRPRFX=	vrj/
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= \
-                  Display	\
-                  Draw		\
-                  Environment	\
-                  Kernel	\
-                  Sound		\
-                  Util
+SUBDIR=		Display	\
+		Draw	\
+		Kernel	\
+		Sound	\
+		Util
 
 $(RECTARGET): recursive
 

@@ -640,7 +640,6 @@ AC_OUTPUT(vrjuggler-config
           vrj/Draw/OSG/Makefile
           vrj/Draw/OpenSG/Makefile
           vrj/Draw/Pf/Makefile
-          vrj/Environment/Makefile
           vrj/Kernel/Makefile
           vrj/Sound/Makefile
           vrj/Sound/pf/Makefile
