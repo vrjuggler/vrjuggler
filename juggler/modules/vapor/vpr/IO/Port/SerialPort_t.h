@@ -916,8 +916,10 @@ protected:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     virtual vpr::Status
-    read_i (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return m_sio_imp.read(buffer, length, bytes_read);
+    read_i (void* buffer, const size_t length,
+            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+        return m_sio_imp.read(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -938,8 +940,10 @@ protected:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     virtual vpr::Status
-    readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return m_sio_imp.readn(buffer, length, bytes_read);
+    readn_i (void* buffer, const size_t length,
+             ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+        return m_sio_imp.readn(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -956,8 +960,9 @@ protected:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     virtual vpr::Status
-    write_i (const void* buffer, const size_t length, ssize_t& bytes_written) {
-        return m_sio_imp.write(buffer, length, bytes_written);
+    write_i (const void* buffer, const size_t length,
+             ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return m_sio_imp.write(buffer, length, bytes_written, timeout);
     }
 
     RealSerialPortImpl m_sio_imp;    //: Platform-specific serial port

@@ -41,6 +41,8 @@
 #include <vpr/IO/BlockIO.h> // base class.
 #include <vpr/IO/IOSys.h>
 
+#include <vpr/Util/Interval.h>
+
 
 namespace vpr {
 
@@ -253,8 +255,8 @@ public:
     //+                  printed explaining what happened.
     // ------------------------------------------------------------------------
     inline vpr::Status
-    connect (void) {
-        return m_socket_imp->connect();
+    connect (const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return m_socket_imp->connect(timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -275,8 +277,8 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     inline Status
-    recv (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return read(buffer, length, bytes_read);
+    recv (void* buffer, const size_t length, ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return read(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -297,8 +299,8 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     inline Status
-    recv (std::string& buffer, const size_t length, ssize_t& bytes_read) {
-       return read(buffer, length, bytes_read);
+    recv (std::string& buffer, const size_t length, ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+       return read(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -319,9 +321,9 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     inline Status
-    recv (std::vector<vpr::Uint8>& buffer, const size_t length, ssize_t& bytes_read)
+    recv (std::vector<vpr::Uint8>& buffer, const size_t length, ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-       return read(buffer, length, bytes_read);
+       return read(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -342,8 +344,8 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     inline Status
-    recvn (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return readn(buffer, length, bytes_read);
+    recvn (void* buffer, const size_t length, ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return readn(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -364,8 +366,8 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     inline Status
-    recvn (std::string& buffer, const size_t length, ssize_t& bytes_read) {
-        return readn(buffer, length, bytes_read);
+    recvn (std::string& buffer, const size_t length, ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return readn(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -386,9 +388,9 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     inline Status
-    recvn (std::vector<vpr::Uint8>& buffer, const size_t length, ssize_t& bytes_read)
+    recvn (std::vector<vpr::Uint8>& buffer, const size_t length, ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return readn(buffer, length, bytes_read);
+        return readn(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -405,8 +407,8 @@ public:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     inline Status
-    send (const void* buffer, const size_t length, ssize_t& bytes_written) {
-        return write(buffer, length, bytes_written);
+    send (const void* buffer, const size_t length, ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return write(buffer, length, bytes_written, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -425,10 +427,10 @@ public:
     // ------------------------------------------------------------------------
     inline Status
     send (const std::string& buffer, const size_t length,
-          ssize_t& bytes_written)
+          ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        assert( length <= buffer.size() && "length was bigger than the data given" );
-       return write(buffer, buf_len, bytes_written);
+       return write(buffer, buf_len, bytes_written, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -447,10 +449,10 @@ public:
     // ------------------------------------------------------------------------
     inline Status
     send (const std::vector<vpr::Uint8>& buffer, const size_t length,
-          ssize_t& bytes_written)
+          ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        assert( length <= buffer.size() && "length was bigger than the data given" );
-       return write(buffer, buf_len, bytes_written);
+       return write(buffer, buf_len, bytes_written,timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -668,8 +670,10 @@ protected:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual Status
-    read_i (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return m_socket_imp->read(buffer, length, bytes_read);
+    read_i (void* buffer, const size_t length,
+            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+        return m_socket_imp->read(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -690,8 +694,9 @@ protected:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual Status
-    readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return m_socket_imp->readn(buffer, length, bytes_read);
+    readn_i (void* buffer, const size_t length,
+             ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return m_socket_imp->readn(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -708,8 +713,9 @@ protected:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     virtual Status
-    write_i (const void* buffer, const size_t length, ssize_t& bytes_written) {
-        return m_socket_imp->write(buffer, length, bytes_written);
+    write_i (const void* buffer, const size_t length,
+             ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return m_socket_imp->write(buffer, length, bytes_written, timeout);
     }
 
     RealSocketImpl* m_socket_imp; //: Platform-specific socket implementation

@@ -133,10 +133,10 @@ public:
     //+       established.
     // ------------------------------------------------------------------------
     inline Status
-    accept (SocketStream_t& sock) {
+    accept (SocketStream_t& sock, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
         Status status;
 
-        status = m_socket_stream_imp.accept(sock.m_socket_stream_imp);
+        status = m_socket_stream_imp.accept(sock.m_socket_stream_imp, timeout);
         vprASSERT((! status.failure()) && "Impll:accept: failed.  This may be non-blocking accept");
 
         return status;

@@ -71,7 +71,7 @@ public:
      *         NULL - Failed to accept
      * NOTE: This call is blocking.  It blocks until there is a connection to accept
      */
-    Status accept(SocketStream& sock);
+    Status accept(SocketStream& sock, vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // Close the accepting socket
     Status close()

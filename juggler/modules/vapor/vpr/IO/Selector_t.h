@@ -39,6 +39,7 @@
 #include <string>
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/SelectorBase.h>
+#include <vpr/Util/Interval.h>
 
 
 namespace vpr {
@@ -46,7 +47,7 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 //: Cross-platform selection interface.
 //
-// A selector is used to wait on a set of Handles untils any of the 
+// A selector is used to wait on a set of Handles untils any of the
 // events occur that the user is interested in.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
@@ -91,7 +92,7 @@ public:
    //: Select
    //! ARGS: numWithEvents - Upon completion, this holds the number of items that have events
    //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
-   Status select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
+   Status select(vpr::Uint16& numWithEvents,  const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mSelectorImp.select(numWithEvents, timeout);
    }
@@ -105,7 +106,7 @@ public:
    {
       return mSelectorImp.getHandle(index);
    }
-   
+
    // Does the selector contain the handle
    bool containsHandle(IOSys::Handle handle)
    {
@@ -114,7 +115,7 @@ public:
 
 
 protected:
-    RealSelectorImp mSelectorImp;     // Platform specific implementation                                 
+    RealSelectorImp mSelectorImp;     // Platform specific implementation
 };
 
 }; // End of vpr namespace

@@ -45,6 +45,7 @@
 
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Status.h>
+#include <vpr/Util/Interval.h>
 
 
 namespace vpr {
@@ -207,8 +208,8 @@ public:
     // ------------------------------------------------------------------------
     //: Get the current blocking state for the I/O device.
     //
-    //! PRE: m_blocking is set correctly to 
-    //! POST: 
+    //! PRE: m_blocking is set correctly to
+    //! POST:
     //
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
@@ -235,8 +236,10 @@ public:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
-    read (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return this->read_i(buffer, length, bytes_read);
+    read (void* buffer, const size_t length,
+          ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+        return this->read_i(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -258,14 +261,16 @@ public:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
-    read (std::string& buffer, const size_t length, ssize_t& bytes_read) {
+    read (std::string& buffer, const size_t length,
+          ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
        Status status;
-       
+
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
        buffer.resize( length );
        memset( &buffer[0], '\0', buffer.size() );
-       status = this->read( &buffer[0], buffer.size(), bytes_read );
+       status = this->read( &buffer[0], buffer.size(), bytes_read, timeout);
 
        return status;
     }
@@ -289,23 +294,23 @@ public:
     // ------------------------------------------------------------------------
     Status
     read (std::vector<vpr::Uint8>& buffer, const size_t length,
-          ssize_t& bytes_read)
+          ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        Status status;
        buffer.resize( length );
-       
+
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
        memset( &buffer[0], '\0', buffer.size() );
-       status = this->read( &buffer[0], buffer.size(), bytes_read );
+       status = this->read( &buffer[0], buffer.size(), bytes_read, timeout);
 
-       // size it down if needed, if (bytes_read==length), 
+       // size it down if needed, if (bytes_read==length),
        // then resize does nothing...
        if (bytes_read >= 0)
        {
           buffer.resize( bytes_read );
        }
-             
+
        return status;
     }
 
@@ -327,8 +332,10 @@ public:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
-    readn (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return this->readn_i(buffer, length, bytes_read);
+    readn (void* buffer, const size_t length,
+           ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+        return this->readn_i(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -350,15 +357,17 @@ public:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
-    readn (std::string& buffer, const size_t length, ssize_t& bytes_read) {
+    readn (std::string& buffer, const size_t length,
+           ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
        Status status;
-       
+
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
        buffer.resize( length );
        memset( &buffer[0], '\0', buffer.size() );
-       status = this->readn( &buffer[0], buffer.size(), bytes_read);
-       
+       status = this->readn( &buffer[0], buffer.size(), bytes_read, timeout);
+
        // If anything was read into temp_buf, copy it into buffer.
        if ( bytes_read >= 0 ) {
            buffer.resize( bytes_read );
@@ -388,15 +397,15 @@ public:
     // ------------------------------------------------------------------------
     Status
     readn (std::vector<vpr::Uint8>& buffer, const size_t length,
-           ssize_t& bytes_read)
+           ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         Status status;
-        
+
         // Allocate the temporary buffer, zero it, and read in the current
         // buffer from the device.
         buffer.resize( length );
         memset( &buffer[0], '\0', buffer.size() );
-        status = this->readn( &buffer[0], buffer.size(), bytes_read );
+        status = this->readn( &buffer[0], buffer.size(), bytes_read, timeout );
 
         // If anything was read into temp_buf, copy it into buffer.
         if ( bytes_read >= 0 ) {
@@ -420,8 +429,10 @@ public:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
-    write (const void* buffer, const size_t length, ssize_t& bytes_written) {
-        return this->write_i(buffer, length, bytes_written);
+    write (const void* buffer, const size_t length,
+           ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+        return this->write_i(buffer, length, bytes_written,timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -440,10 +451,10 @@ public:
     // ------------------------------------------------------------------------
     Status
     write (const std::string& buffer, const size_t length,
-           ssize_t& bytes_written)
+           ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
-       return this->write(buffer.c_str(), length, bytes_written);
+       return this->write(buffer.c_str(), length, bytes_written,timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -462,10 +473,10 @@ public:
     // ------------------------------------------------------------------------
     Status
     write (const std::vector<vpr::Uint8>& buffer, const size_t length,
-           ssize_t& bytes_written)
+           ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
-        return this->write(&buffer[0], length, bytes_written);
+        return this->write(&buffer[0], length, bytes_written,timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -534,9 +545,9 @@ protected:
     //: Copy constructor
     BlockIO (const BlockIO& other)
     {
-        m_name          = other.m_name;          
-        m_open_mode     = other.m_open_mode;     
-        m_open_blocking = other.m_open_blocking; 
+        m_name          = other.m_name;
+        m_open_mode     = other.m_open_mode;
+        m_open_blocking = other.m_open_blocking;
         m_open          = other.m_open;
         m_blocking      = other.m_blocking;
     }
@@ -571,7 +582,7 @@ protected:
      * ------------------------------------------------------------------------
      */
     virtual Status read_i(void* buffer, const size_t length,
-                          ssize_t& bytes_read) = 0;
+                          ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
     /**
      * ------------------------------------------------------------------------
@@ -594,7 +605,7 @@ protected:
      * ------------------------------------------------------------------------
      */
     virtual Status readn_i(void* buffer, const size_t length,
-                           ssize_t& bytes_read) = 0;
+                           ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
     /**
      * ------------------------------------------------------------------------
@@ -612,7 +623,7 @@ protected:
      * ------------------------------------------------------------------------
      */
     virtual Status write_i(const void* buffer, const size_t length,
-                           ssize_t& bytes_written) = 0;
+                           ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
     std::string m_name;          //: The name of the I/O device
     _open_mode  m_open_mode;     //: The open mode of the device
