@@ -46,7 +46,7 @@ namespace jccl
 {
 
 
-ConfigChunkDB::ConfigChunkDB (ConfigChunkDB& db)
+ConfigChunkDB::ConfigChunkDB(ConfigChunkDB& db)
 {
    *this = db;
 }
@@ -164,7 +164,7 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
       {
          vprASSERT(dep_pass == true);
 
-         if ( jccl::hasSeparator (deps[dep_num]) )      // If it is an embedded chunk
+         if ( jccl::hasSeparator(deps[dep_num]) )      // If it is an embedded chunk
          {
             std::string chunkname = jccl::getFirstNameComponent(deps[dep_num]);
             std::string child_chunkname = jccl::getRemainder(deps[dep_num]);
@@ -277,7 +277,7 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 
 /* IO functions: */
 
-std::ostream& operator << (std::ostream& out, const ConfigChunkDB& self)
+std::ostream& operator<<(std::ostream& out, const ConfigChunkDB& self)
 {
    cppdom::XMLNodePtr chunk_db_node;
    self.createChunkDBNode(chunk_db_node);
@@ -285,7 +285,7 @@ std::ostream& operator << (std::ostream& out, const ConfigChunkDB& self)
    return out;
 }
 
-std::istream& operator >> (std::istream& in, ConfigChunkDB& self)
+std::istream& operator>>(std::istream& in, ConfigChunkDB& self)
 {
    cppdom::XMLNodePtr chunk_db_node = ChunkFactory::instance()->createXMLNode();
    cppdom::XMLContextPtr context_ptr = chunk_db_node->getContext();
@@ -295,9 +295,10 @@ std::istream& operator >> (std::istream& in, ConfigChunkDB& self)
    return in;
 }
 
-bool ConfigChunkDB::load (const std::string& filename, const std::string& parentfile)
+bool ConfigChunkDB::load(const std::string& filename, const std::string& parentfile)
 {
-   mFileName = demangleFileName (filename, parentfile);
+   mFileName = demangleFileName(filename, parentfile);
+
    vprDEBUG(jcclDBG_CONFIG,3) << "ConfigChunkDB::load(): opening file "
                               << mFileName.c_str() << " -- " << vprDEBUG_FLUSH;
 
@@ -330,7 +331,7 @@ bool ConfigChunkDB::load (const std::string& filename, const std::string& parent
    return status;
 }
 
-bool ConfigChunkDB::save (const std::string& fname) const
+bool ConfigChunkDB::save(const std::string& fname) const
 {
    cppdom::XMLNodePtr chunk_db_node;
    createChunkDBNode(chunk_db_node);                              // Get base db element
@@ -345,12 +346,12 @@ bool ConfigChunkDB::save (const std::string& fname) const
  */
 struct ChunkNamePred
 {
-   ChunkNamePred (const std::string& name) : mName(name)
+   ChunkNamePred(const std::string& name) : mName(name)
    {
       ;
    }
 
-   bool operator() (jccl::ConfigChunkPtr chunk)
+   bool operator()(jccl::ConfigChunkPtr chunk)
    {
       return (chunk->getName() == mName);
    }
