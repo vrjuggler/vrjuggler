@@ -47,6 +47,7 @@ srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 INSTALL_FILES=	
+SUBOBJDIR=	$(DRIVER_NAME)
 
 ifeq (@HAVE_DTK@, Y)
 C_AFTERBUILD=	driver-dso
