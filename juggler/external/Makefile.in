@@ -143,7 +143,10 @@ links-boost:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
 	-$(RM_LN) $(instlinks)/include/boost
 	$(LN_S) $(BOOST_INCLUDES)/boost $(instlinks)/include
-	$(INSTALL) -l $(BOOST_ROOT)/lib/libboost* $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(BOOST_ROOT)/lib/libboost_filesystem*.so*	\
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(BOOST_ROOT)/lib/libboost_python*.so*		\
+          $(instlinks)/lib$(LIBBITSUF)
 
 links-cppdom:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
@@ -238,10 +241,12 @@ install-boost:
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h,.hpp -i $(BOOST_INCLUDES)/boost	\
           -o $(deps_prefix)/include/boost
-	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
-          $(BOOST_ROOT)/lib/libboost*.a $(deps_prefix)/lib$(LIBBITSUF)
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(BOOST_ROOT)/lib/libboost*.so* $(deps_prefix)/lib$(LIBBITSUF)
+          $(BOOST_ROOT)/lib/libboost_filesystem*.so*			\
+          $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(BOOST_ROOT)/lib/libboost_python*.so*			\
+          $(deps_prefix)/lib$(LIBBITSUF)
 
 install-cppdom:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/cppdom
