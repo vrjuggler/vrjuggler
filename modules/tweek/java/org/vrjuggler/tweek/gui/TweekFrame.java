@@ -64,7 +64,7 @@ import org.vrjuggler.tweek.text.*;
  *
  * @version $Revision$
  *
- * @see org.vrjuggler.tweek.BeanContainer
+ * @see BeanContainer
  */
 public class TweekFrame
    extends JFrame
@@ -74,6 +74,7 @@ public class TweekFrame
             , GlobalPrefsUpdateListener
             , WindowListener
             , RegistrationListener
+            , FileActionListener
 {
    public TweekFrame(MessageDocument msgDocument)
    {
@@ -279,14 +280,23 @@ public class TweekFrame
          {
             FileLoader loader = (FileLoader) panel_bean;
             mMenuFileOpen.setText("Open " + loader.getFileType() + " ...");
-            mMenuFileClose.setText("Close " + loader.getFileType() + " ...");
+            mMenuFileClose.setText("Close " + loader.getFileType());
             mMenuFileOpen.setEnabled(true);
-            mMenuFileSave.setEnabled(loader.canSave());
-            mMenuFileSaveAs.setEnabled(loader.canSave());
+            boolean save_enabled = (loader.canSave() &&
+                                    loader.hasUnsavedChanges());
+
+            mMenuFileSave.setEnabled(save_enabled);
+            mMenuFileSaveAll.setEnabled(save_enabled);
 
             if ( loader.getOpenFileCount() > 0 )
             {
+               mMenuFileSaveAs.setEnabled(loader.canSave());
                mMenuFileClose.setEnabled(true);
+            }
+            else
+            {
+               mMenuFileSaveAs.setEnabled(false);
+               mMenuFileClose.setEnabled(false);
             }
 
             mFileLoader = loader;
@@ -585,6 +595,52 @@ public class TweekFrame
       fireFrameOpened(new TweekFrameEvent(e.getWindow(), e.getID()));
    }
 
+   public void fileOpenPerformed(FileActionEvent e)
+   {
+      mMenuFileClose.setEnabled(true);
+      mMenuFileOpen.setEnabled(e.getFileLoader().canOpenMultiple());
+      mMenuFileSaveAs.setEnabled(e.getFileLoader().canSave());
+   }
+
+   public void fileChangePerformed(FileActionEvent e)
+   {
+      if ( e.getFileLoader().hasUnsavedChanges() )
+      {
+         mMenuFileSave.setEnabled(true);
+         mMenuFileSaveAll.setEnabled(true);
+      }
+   }
+
+   public void fileSavePerformed(FileActionEvent e)
+   {
+      mMenuFileSave.setEnabled(false);
+      mMenuFileSaveAll.setEnabled(e.getFileLoader().hasUnsavedChanges());
+   }
+
+   public void fileSaveAsPerformed(FileActionEvent e)
+   {
+      fileSavePerformed(e);
+   }
+
+   public void fileSaveAllPerformed(FileActionEvent e)
+   {
+      mMenuFileSave.setEnabled(false);
+      mMenuFileSaveAll.setEnabled(false);
+   }
+
+   public void fileClosePerformed(FileActionEvent e)
+   {
+      mMenuFileOpen.setEnabled(true);
+
+      if ( e.getFileLoader().getOpenFileCount() == 0 )
+      {
+         mMenuFileSave.setEnabled(false);
+         mMenuFileSaveAs.setEnabled(false);
+         mMenuFileSaveAll.setEnabled(false);
+         mMenuFileClose.setEnabled(false);
+      }
+   }
+
    // =========================================================================
    // Private methods.
    // =========================================================================
@@ -847,7 +903,7 @@ public class TweekFrame
       });
 
       mMenuFileClose.setEnabled(false);
-      mMenuFileClose.setText("Close ...");
+      mMenuFileClose.setText("Close");
       mMenuFileClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(87, shortcut_mask, false));
       mMenuFileClose.addActionListener(new ActionListener()
       {
@@ -893,9 +949,19 @@ public class TweekFrame
             fileSaveAsAction(e);
          }
       });
+      mMenuFileSaveAll.setEnabled(false);
+      mMenuFileSaveAll.setText("Save All");
+      mMenuFileSaveAll.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            fileSaveAllAction(e);
+         }
+      });
       mMenuFile.add(mMenuFileOpen);
       mMenuFile.add(mMenuFileSave);
       mMenuFile.add(mMenuFileSaveAs);
+      mMenuFile.add(mMenuFileSaveAll);
       mMenuFile.add(mMenuFileClose);
 
       if ( ! mMacOS )
@@ -1031,17 +1097,11 @@ public class TweekFrame
     */
    private void fileOpenAction(ActionEvent e)
    {
-      System.out.println("TweekFrame.fileOpenAction() called");
       if ( null != mFileLoader )
       {
          if ( mFileLoader.openRequested() )
          {
-            mMenuFileClose.setEnabled(true);
-
-            if ( ! mFileLoader.canOpenMultiple() )
-            {
-               mMenuFileOpen.setEnabled(false);
-            }
+            fileOpenPerformed(new FileActionEvent(mFileLoader));
          }
       }
    }
@@ -1049,9 +1109,12 @@ public class TweekFrame
    /**
     * File | Save action performed.
     */
-   private void fileSaveAction (ActionEvent e)
+   private void fileSaveAction(ActionEvent e)
    {
-      mFileLoader.saveRequested();
+      if ( mFileLoader.saveRequested() )
+      {
+         fileSavePerformed(new FileActionEvent(mFileLoader));
+      }
    }
 
    /**
@@ -1059,22 +1122,31 @@ public class TweekFrame
     */
    private void fileSaveAsAction(ActionEvent e)
    {
-      mFileLoader.saveAsRequested();
+      if ( mFileLoader.saveAsRequested() )
+      {
+         fileSaveAsPerformed(new FileActionEvent(mFileLoader));
+      }
+   }
+
+   /**
+    * File | Save All action performed.
+    */
+   private void fileSaveAllAction(ActionEvent e)
+   {
+      if ( mFileLoader.saveAllRequested() )
+      {
+         fileSaveAllPerformed(new FileActionEvent(mFileLoader));
+      }
    }
 
    /**
     * File | Close action performed.
     */
-   private void fileCloseAction (ActionEvent e)
+   private void fileCloseAction(ActionEvent e)
    {
       if ( mFileLoader.closeRequested() )
       {
-         mMenuFileOpen.setEnabled(true);
-
-         if ( mFileLoader.getOpenFileCount() == 0 )
-         {
-            mMenuFileClose.setEnabled(false);
-         }
+         fileClosePerformed(new FileActionEvent(mFileLoader));
       }
    }
 
@@ -1297,7 +1369,7 @@ public class TweekFrame
       mMenuFileOpen.setText("Open ...");
       mMenuFileOpen.setEnabled(false);
       mMenuFileSave.setEnabled(false);
-      mMenuFileClose.setText("Close ...");
+      mMenuFileClose.setText("Close");
       mMenuFileClose.setEnabled(false);
    }
 
@@ -1343,6 +1415,7 @@ public class TweekFrame
    private JMenuItem mMenuFileOpen        = new JMenuItem();
    private JMenuItem mMenuFileSave        = new JMenuItem();
    private JMenuItem mMenuFileSaveAs      = new JMenuItem();
+   private JMenuItem mMenuFileSaveAll     = new JMenuItem();
    private JMenuItem mMenuFileClose       = new JMenuItem();
    private JMenuItem mMenuFileQuit        = new JMenuItem();
    private JMenu mMenuNetwork             = new JMenu();

@@ -51,6 +51,8 @@ import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.beans.loader.BeanInstantiationException;
+import org.vrjuggler.tweek.event.FileActionGenerator;
+import org.vrjuggler.tweek.event.FileActionListener;
 import org.vrjuggler.tweek.gui.TweekFrame;
 import org.vrjuggler.tweek.services.*;
 import org.vrjuggler.tweek.text.MessageDocument;
@@ -371,6 +373,49 @@ public class TweekCore
    public MessageDocument getMessageDocument()
    {
       return messageDocument;
+   }
+
+   /**
+    * Registers all the objects interested in file action events with the
+    * given file action generator.
+    *
+    * @param gen        the file action generator associated with a Tweek
+    *                   Bean that implements the FileLoader interface.
+    *
+    * @see org.vrjuggler.tweek.beans.FileLoader
+    *
+    * @since 0.92.3
+    */
+   public void registerFileActionGenerator(FileActionGenerator gen)
+   {
+     gen.addFileActionListener(m_gui);
+   }
+
+   /**
+    * Un-registers all the objects interested in file action events with the
+    * given file action generator.
+    *
+    * @param gen        the file action generator associated with a Tweek
+    *                   Bean that implements the FileLoader interface.
+    *
+    * @see org.vrjuggler.tweek.beans.FileLoader
+    *
+    *
+    * @since 0.92.3
+    */
+   public void unregisterFileActionGenerator(FileActionGenerator gen)
+   {
+     gen.removeFileActionListener(m_gui);
+   }
+
+   /**
+    * Returns all the FileActionListener objects known to the Tweek Java GUI.
+    *
+    * @since 0.92.3
+    */
+   public FileActionListener[] getFileActionListeners()
+   {
+      return new FileActionListener[]{m_gui};
    }
 
    /**
