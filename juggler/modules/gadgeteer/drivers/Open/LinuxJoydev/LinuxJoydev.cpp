@@ -132,15 +132,23 @@ bool LinuxJoydev::startSampling()
 
    ioctl(mJsFD, JSIOCGVERSION, &version);
 
-   // Check to see if the version is high enough.
-   if (version < 1)
+   const unsigned int version_major(version >> 16);
+   const unsigned int version_minor((version >> 8) & 0xff);
+   const unsigned int version_patch(version & 0xff);
+   char version_str[256];
+   snprintf(version_str, sizeof(version_str), "%d.%d.%d", version_major,
+            version_minor, version_patch);
+
+   // Verify that the version is new enough.
+   if ( version_major < 1 )
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-         << "ERROR: Linux Joystick API Version is too low.  The LinuxJoydev "
-         << "driver requires version 1.0 or greater, but found version \""
-         << version << "\"\n" << vprDEBUG_FLUSH;
-         return false;
+         << "ERROR: Linux Joystick API Version is too old.  The LinuxJoydev "
+         << "driver requires version 1.0 or greater, but found version "
+         << version_str << std::endl << vprDEBUG_FLUSH;
+      return false;
    }
+
    ioctl(mJsFD, JSIOCGAXES, &num_axes);
    ioctl(mJsFD, JSIOCGBUTTONS, &num_buttons);
 
@@ -163,7 +171,7 @@ bool LinuxJoydev::startSampling()
          << "   Joystick Name: " << mPhysicalJsName << std::endl
          << "            Axes: " << mNumAxes << std::endl
          << "         Buttons: " << mNumButtons << std::endl
-         << "  Driver version: " << version << std::endl
+         << "  Driver version: " << version_str << std::endl
          << "    Axis buttons: ";
 
    for ( unsigned int i = 0; i < mAxisButtonIndices.size(); ++i )
