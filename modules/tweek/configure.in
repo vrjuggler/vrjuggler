@@ -565,6 +565,7 @@ AC_OUTPUT(tweek-config
           tweek/Makefile
           tweek/Makefile.inc
           tweek/CORBA/Makefile
+          tweek/Util/Makefile
           test/Makefile
           test/corba/Makefile
           mtree/TWEEK.include.dist
