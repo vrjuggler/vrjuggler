@@ -186,6 +186,7 @@ int DataGloveStandalone::mConnectToHardware(const char* const ttyPort, int baud)
    else
    {
       std::cout<<"[dataGlove] Port ("<<ttyPort<<") open success\n"<<std::flush;
+      port->clearAll();      
       baud = 9600;
       port->enableRead();
       port->setBufferSize(1);
