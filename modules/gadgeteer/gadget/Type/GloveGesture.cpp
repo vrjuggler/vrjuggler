@@ -42,7 +42,7 @@ std::string vjGloveGesture::getGestureString(int gestureId)
 {
    if(gestureId < 0)
       return getGestureString(this->getGesture());    // Get string of current gesture
-   else if(gestureId < mGestureNames.size())
+   else if((unsigned)gestureId < mGestureNames.size())
       return mGestureNames[gestureId];
    else
       return std::string("");
@@ -130,7 +130,7 @@ void vjGloveGesture::saveFileHeader(ofstream& outFile)
 //: Return the gesture identifier of the gesture.
 int vjGloveGesture::getGestureIndex(std::string gestureName)
 {
-   int i = 0;
+   unsigned i = 0;
    int found = -1;
    while((found <0) && (i<mGestureNames.size()))
    {

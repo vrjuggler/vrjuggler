@@ -111,7 +111,7 @@ int vjProxyFactory::findConstructor(vjConfigChunk* chunk)
 {
    std::string chunk_type;
    chunk_type = (std::string)chunk->getType();
-   for(int i=0;i<mConstructors.size();i++)
+   for(unsigned i=0;i<mConstructors.size();i++)
    {
       if(mConstructors[i]->getChunkType() == chunk_type)
          return i;
