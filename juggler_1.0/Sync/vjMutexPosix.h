@@ -95,14 +95,7 @@ public:
     //! RETURNS:  1 - Lock acquired
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    inline int
-    acquire (void) const {
-        if ( pthread_mutex_lock(mMutex) == 0 ) {
-            return 1;
-        } else {
-            return -1;
-        }
-    }
+    int acquire(void) const;
 
     // -----------------------------------------------------------------------
     //: Acquire a read mutex lock.

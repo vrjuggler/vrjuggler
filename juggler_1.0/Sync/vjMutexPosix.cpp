@@ -20,8 +20,45 @@
 
 #include <vjConfig.h>
 
-#include <Sync/vjMutexPosix.h>
+#include <errno.h>
 
+#include <Sync/vjMutexPosix.h>
+#include <Kernel/vjDebug.h>
+
+
+// ---------------------------------------------------------------------------
+// Lock the mutex.
+//
+// PRE: None.
+// POST: A lock on the mutex variable is acquired by the caller.  If a lock
+//       has already been acquired by another process/thread, the caller
+//       blocks until the mutex has been freed.
+//
+// RETURNS:  1 - Lock acquired
+// RETURNS: -1 - Error
+// ---------------------------------------------------------------------------
+int
+vjMutexPosix::acquire (void) const {
+    int retval;
+
+    retval = pthread_mutex_lock(mMutex) ;
+
+    if ( retval == 0 ) {
+        return 1;
+    }
+#ifdef _DEBUG
+    else if ( retval == EDEADLK ) {
+        vjDEBUG(vjDBG_ALL, vjDBG_CRITICAL_LVL)
+            << "Tried to lock mutex twice (vjMutexPosix.cpp:52)!\n"
+            << vjDEBUG_FLUSH;
+
+        return -1;
+    }
+#endif
+    else {
+        return -1;
+    }
+}
 
 // ---------------------------------------------------------------------------
 // Test the current lock status.
