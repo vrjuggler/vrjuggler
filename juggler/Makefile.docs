@@ -66,6 +66,7 @@ all:
             $(MAKE) -C $$dir docs || exit 1;	\
           done
 	$(MAKE) -C modules/tweek/java -f Makefile.docs docs
+	$(MAKE) -C modules/jackal -f Makefile.docs docs
 
 install:
 	for dir in $(SUBDIR) ; do					\
