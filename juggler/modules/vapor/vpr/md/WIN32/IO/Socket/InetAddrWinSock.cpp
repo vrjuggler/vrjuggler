@@ -156,7 +156,7 @@ InetAddrWinSock::getAddressString (void) const {
 }
 
 // ----------------------------------------------------------------------------
-// Look up the address in m_name and store the address in m_remote_addr.
+// Look up the given address and store the value in m_addr.
 // ----------------------------------------------------------------------------
 bool
 InetAddrWinSock::lookupAddress (const std::string& address) {
