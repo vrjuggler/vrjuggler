@@ -98,32 +98,6 @@ bool EventWindowXWin::config(jccl::ConfigElementPtr e)
       mUseOwnDisplay = false;
       mRemoteDisplayName = remote_display_name;
 
-      jccl::ConfigElementPtr rem_display_config;
-      rem_display_config = jccl::ConfigManager::instance()->getElementNamed(mRemoteDisplayName);
-
-      if(rem_display_config)
-      {
-         // Get size and position
-         mWidth  = rem_display_config->getProperty<int>("size", 0);
-         mHeight = rem_display_config->getProperty<int>("size", 1);
-
-         // Sanity checks.
-         if (mWidth == 0) mWidth = 400;
-         if (mHeight == 0) mHeight = 400;
-
-         mX = rem_display_config->getProperty<int>("origin", 0);
-         mY = rem_display_config->getProperty<int>("origin", 1);
-      }
-      else
-      {
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Could not find remote window element named: '"
-            << mRemoteDisplayName << "'. Failed to properly configure EventWindowX.\n"
-            << vprDEBUG_FLUSH;
-         return false;
-      }
-
-
       WindowRegistry::WindowInfo remote_win_info;
       bool found_window = WindowRegistry::instance()->getWindow(mRemoteDisplayName, remote_win_info);
       if(!found_window)
@@ -226,8 +200,19 @@ void EventWindowXWin::controlLoop(void* nullParam)
    }
    mThread = (vpr::Thread*) vpr::Thread::self();
 
-   // Open the x-window
-   openTheWindow();
+   if(mUseOwnDisplay)
+   {
+      // Open the local X window
+      openLocalWindow();
+   }
+   else
+   {
+      // Set up connection to remote X window
+      setupRemoteWindow();
+   }
+
+   // Obtain width and height info from windows
+   setupWindowWidthAndHeight();
 
    // Sync up with window
    XSync(mDisplay, 0);
@@ -970,113 +955,123 @@ gadget::Keys EventWindowXWin::xKeyToKey(KeySym xKey)
 /*****************************************************************/
 /*****************************************************************/
 // Open the X window to sample from
-int EventWindowXWin::openTheWindow()
+bool EventWindowXWin::openLocalWindow()
 {
-   if(mUseOwnDisplay)
+   int i;
+
+   mDisplay = XOpenDisplay(mXDisplayString.c_str());    // Open display on given XDisplay
+   if (NULL == mDisplay)
    {
-      int i;
+      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+         <<  clrOutNORM(clrRED,"ERROR")
+         << ": [gadget::EventWindow::openTheWindow()] failed to open display"
+         << mXDisplayString << std::endl << vprDEBUG_FLUSH;
+      return 0;
+   }
 
-      mDisplay = XOpenDisplay(mXDisplayString.c_str());    // Open display on given XDisplay
-      if (NULL == mDisplay)
-      {
-         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-            <<  clrOutNORM(clrRED,"ERROR")
-            << ": [gadget::EventWindow::openTheWindow()] failed to open display"
-            << mXDisplayString << std::endl << vprDEBUG_FLUSH;
-         return 0;
-      }
+   mScreen = DefaultScreen(mDisplay);
 
-      mScreen = DefaultScreen(mDisplay);
+   XVisualInfo vTemplate, *vis_infos;
+   long vMask = VisualScreenMask;
+   vTemplate.screen = mScreen;
+   int nVisuals;
 
-      XVisualInfo vTemplate, *vis_infos;
-      long vMask = VisualScreenMask;
-      vTemplate.screen = mScreen;
-      int nVisuals;
+   vis_infos = XGetVisualInfo(mDisplay, vMask, &vTemplate, &nVisuals);
 
-      vis_infos = XGetVisualInfo(mDisplay, vMask, &vTemplate, &nVisuals);
+   // Verify that we got at least one visual from XGetVisualInfo(3).
+   if ( vis_infos != NULL && nVisuals >= 1 ) {
+      XVisualInfo* p_visinfo;
 
-      // Verify that we got at least one visual from XGetVisualInfo(3).
-      if ( vis_infos != NULL && nVisuals >= 1 ) {
-         XVisualInfo* p_visinfo;
-
-         // Try to find a visual with color depth of at least 8 bits.  Having
-         // such a visual ensures that the event windows at least have a
-         // black background.
-         for ( i = 0, p_visinfo = vis_infos; i < nVisuals; i++, p_visinfo++ ) {
-            if ( p_visinfo->depth >= 8 ) {
-               mVisual = p_visinfo;
-               break;
-            }
-         }
-
-         // If we couldn't find a visual with at least 8-bit color, just use the
-         // first one in the list.
-         if ( i == nVisuals ) {
-             mVisual = vis_infos;
+      // Try to find a visual with color depth of at least 8 bits.  Having
+      // such a visual ensures that the event windows at least have a
+      // black background.
+      for ( i = 0, p_visinfo = vis_infos; i < nVisuals; i++, p_visinfo++ ) {
+         if ( p_visinfo->depth >= 8 ) {
+            mVisual = p_visinfo;
+            break;
          }
       }
-      // If we didn't get a matching visual, we're in trouble.
-      else {
-         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-            <<  clrOutNORM(clrRED,"ERROR")
-            << ": [gadget::EventWindow::openTheWindow()] find visual failed"
-            << std::endl << vprDEBUG_FLUSH;
-         return 0;
+
+      // If we couldn't find a visual with at least 8-bit color, just use the
+      // first one in the list.
+      if ( i == nVisuals ) {
+          mVisual = vis_infos;
       }
+   }
+   // If we didn't get a matching visual, we're in trouble.
+   else {
+      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+         <<  clrOutNORM(clrRED,"ERROR")
+         << ": [gadget::EventWindow::openTheWindow()] find visual failed"
+         << std::endl << vprDEBUG_FLUSH;
+      return 0;
+   }
 
-      mSWA.colormap = XCreateColormap(mDisplay,
-                                      RootWindow(mDisplay, mVisual->screen),
-                                      mVisual->visual, AllocNone);
-      mSWA.background_pixel = BlackPixel(mDisplay, mScreen);
-      mSWA.border_pixel = WhitePixel(mDisplay, mScreen);
-      const unsigned int event_mask =
-         ExposureMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask |
-         ButtonPressMask | ButtonReleaseMask | ButtonMotionMask |
-         PointerMotionMask | StructureNotifyMask;
-      mSWA.event_mask = event_mask;
+   mSWA.colormap = XCreateColormap(mDisplay,
+                                   RootWindow(mDisplay, mVisual->screen),
+                                   mVisual->visual, AllocNone);
+   mSWA.background_pixel = BlackPixel(mDisplay, mScreen);
+   mSWA.border_pixel = WhitePixel(mDisplay, mScreen);
+   const unsigned int event_mask =
+      ExposureMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask |
+      ButtonPressMask | ButtonReleaseMask | ButtonMotionMask |
+      PointerMotionMask | StructureNotifyMask;
+   mSWA.event_mask = event_mask;
 
-      mWindow = createWindow(DefaultRootWindow(mDisplay), 1);
+   mWindow = createWindow(DefaultRootWindow(mDisplay), 1);
 
-      setHints(mWindow, const_cast<char*>(mInstName.c_str()),
-               "VJm_keys" , "VJEventWindow2", "VJInputD");
+   setHints(mWindow, const_cast<char*>(mInstName.c_str()),
+            "VJm_keys" , "VJEventWindow2", "VJInputD");
 
-      XSelectInput(mDisplay, mWindow, event_mask);
-      XMapWindow(mDisplay, mWindow);
-      XFlush(mDisplay);
-      XRaiseWindow(mDisplay, mWindow);
-      XClearWindow(mDisplay, mWindow);    // Try to clear the background
+   XSelectInput(mDisplay, mWindow, event_mask);
+   XMapWindow(mDisplay, mWindow);
+   XFlush(mDisplay);
+   XRaiseWindow(mDisplay, mWindow);
+   XClearWindow(mDisplay, mWindow);    // Try to clear the background
 
 //      createEmptyCursor(mDisplay, mWindow);
 
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-         << "[gadget::EventWindowXWin::openTheWindow()] done." << std::endl
-         << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "[gadget::EventWindowXWin::openTheWindow()] done." << std::endl
+      << vprDEBUG_FLUSH;
 
-      XFree(vis_infos);
-   }
-   else  // --- Using a remote display ---- //
-   {
-      // - Open the display
-      // - Setup up input selection so we get events from that display.
-
-      mDisplay = XOpenDisplay(mRemoteWinInfo.displayName.c_str());   // Open display on the remote server
-      if (NULL == mDisplay)
-      {
-         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-            <<  clrOutNORM(clrRED,"ERROR")
-            << ": [gadget::EventWindowXWin::open()] failed to open display "
-            << mRemoteWinInfo.displayName << std::endl << vprDEBUG_FLUSH;
-         return 0;
-      }
-
-      unsigned long event_mask = StructureNotifyMask | KeyPressMask | KeyReleaseMask
-                                 | ButtonPressMask | ButtonReleaseMask
-                                 | ButtonMotionMask | PointerMotionMask ;
-      mWindow = mRemoteWinInfo.xWindow;
-      XSelectInput(mDisplay, mWindow, event_mask);
-   }
+   XFree(vis_infos);
 
    return 1;
+}
+
+bool EventWindowXWin::setupRemoteWindow()
+{
+   // - Open the display connection
+   // - Setup up input selection so we get events from that display.
+
+   mDisplay = XOpenDisplay(mRemoteWinInfo.displayName.c_str());   // Open display connection to remote server
+   if (NULL == mDisplay)
+   {
+      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+         <<  clrOutNORM(clrRED,"ERROR")
+         << ": [gadget::EventWindowXWin::open()] failed to open display "
+         << mRemoteWinInfo.displayName << std::endl << vprDEBUG_FLUSH;
+      return 0;
+   }
+
+   unsigned long event_mask = StructureNotifyMask | KeyPressMask | KeyReleaseMask
+                              | ButtonPressMask | ButtonReleaseMask
+                              | ButtonMotionMask | PointerMotionMask ;
+   mWindow = mRemoteWinInfo.xWindow;
+   XSelectInput(mDisplay, mWindow, event_mask);
+
+   return true;
+}
+
+void EventWindowXWin::setupWindowWidthAndHeight()
+{
+   ::XWindowAttributes x_attr;
+   ::XGetWindowAttributes(mDisplay, mWindow, &x_attr);
+   mWidth = x_attr.width;
+   mHeight = x_attr.height;
+   mX = x_attr.x;
+   mY = x_attr.y;
 }
 
 void EventWindowXWin::createEmptyCursor(Display* display, Window root)
