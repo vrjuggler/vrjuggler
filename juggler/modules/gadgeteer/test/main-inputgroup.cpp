@@ -17,46 +17,46 @@ int main()
    vjDummyPosition* myDummy = new(shared_pool) vjDummyPosition;
    myDummy->SetX(5.0);
 
-      // -- Get default pos data -- //
-   cout << "Get the position data for proxy 0:" << endl;
-   data = input_manager->GetPosData(pos_data, 0);
+      // -- get default pos data -- //
+   cout << "get the position data for proxy 0:" << endl;
+   data = input_manager->getPosData(pos_data, 0);
    cout  << "  x:" << data->x 
          << "  y:" << data->y 
          << "  z:" << data->z << endl;
 
       // --- Add dummy to input group -- //
    cout << "\nAdding myDummy to InputGroup" << endl;
-   int devNum = input_manager->FAddDevice(myDummy);
+   int devNum = input_manager->fAddDevice(myDummy);
    cout << "Device added as devNum: " << devNum << endl;
    cout << "\nSet proxy 0 to devNum, subnumber 0" << endl;
-   input_manager->SetPosProxy(0,devNum,0);
+   input_manager->setPosProxy(0,devNum,0);
 
       // --- Now get Dummy's data -- //
    cout << "Now get the positional data from posproxy0:" << endl;
-   data = input_manager->GetPosData(0);
+   data = input_manager->getPosData(0);
    cout  << "  x:" << data->x 
          << "  y:" << data->y 
          << "  z:" << data->z << endl;
 
 
-   cout << "\nGetDevice(devNum):" << (input_manager->GetDevice(devNum)) << endl;
-   (input_manager->GetDevice(devNum))->UpdateData();
-   cout << "\nGet the devicename: " << (input_manager->GetDevice(devNum))->GetDeviceName() << endl;
+   cout << "\ngetDevice(devNum):" << (input_manager->getDevice(devNum)) << endl;
+   (input_manager->getDevice(devNum))->UpdateData();
+   cout << "\nget the devicename: " << (input_manager->getDevice(devNum))->getDeviceName() << endl;
 
    cout << "Doing UpdateAllData:" << flush;
-   input_manager->UpdateAllData();
+   input_manager->updateAllData();
    cout << "..Done" << endl;
 
 //  cout << "get an invalid device: ";
-//  cout << (input_manager->GetDevice(3)) << endl;
+//  cout << (input_manager->getDevice(3)) << endl;
 
    cout << "\ntype something: " << flush ;
    cin.get();
 
 #ifdef TRACKERS
    vjFlock* aFlock = new (shared_pool) vjFlock;
-   aFlock->StartSampling();
-   devNum = input_manager->FAddDevice(aFlock);
+   aFlock->startSampling();
+   devNum = input_manager->fAddDevice(aFlock);
    input_manager->SetPosProxy(1,devNum,0);
    input_manager->SetPosProxy(2,devNum,1);
 
@@ -68,9 +68,9 @@ int main()
    for (int i = 0; i < 5; i++)
    {
       input_manager->UpdateAllData();
-      data0 = input_manager->GetPosData(0);
-      data1 = input_manager->GetPosData(1);
-      data2 = input_manager->GetPosData(2);
+      data0 = input_manager->getPosData(0);
+      data1 = input_manager->getPosData(1);
+      data2 = input_manager->getPosData(2);
       cout << endl;
       cout << "X: " << data0->x << "  " << data1->x << "  " << data2->x << endl
       << "Y: " << data0->y << "  " << data1->y << "  " << data2->y << endl
@@ -79,12 +79,12 @@ int main()
       sleep(1);
    }
 
-   aFlock->StopSampling();
+   aFlock->stopSampling();
 #endif
    
    vjIBox *myibox = new (shared_pool) vjIBox;
    myibox->StartSampling();
-   cout << "ibox is: " << myibox->GetDeviceName();
+   cout << "ibox is: " << myibox->getDeviceName();
    C2Dinput_manageritalProxy dp1(myibox,0);
    devNum = input_manager->FAddDevice(myibox);
    input_manager->SetDinput_managerProxy(0,devNum,0);
@@ -94,14 +94,14 @@ int main()
    for (int i = 0; i < 20; i++)
    {
       input_manager->UpdateAllData();
-      cout << "dinput_managerital0: " << input_manager->GetDinput_managerData(0);
-      cout << " dinput_managerital1: " << input_manager->GetDinput_managerData(1);
-      cout << " dinput_managerital2: " << input_manager->GetDinput_managerData(2) << endl;
+      cout << "dinput_managerital0: " << input_manager->getDinput_managerData(0);
+      cout << " dinput_managerital1: " << input_manager->getDinput_managerData(1);
+      cout << " dinput_managerital2: " << input_manager->getDinput_managerData(2) << endl;
       sleep(1);
    }
 
 
-   myibox->StopSampling();
+   myibox->stopSampling();
    delete myibox;
    // delete aFlock;
    delete myDummy;

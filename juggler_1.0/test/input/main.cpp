@@ -2,6 +2,7 @@
 
 #include <SharedMem/vjMemPool.h>
 #include <Config/vjChunkDescDB.h>
+#include <Config/vjChunkFactory.h>
 #include <Input/InputManager/vjInputManager.h>
 #include <Input/InputManager/vjPosInterface.h>
 #include <Math/vjCoord.h>
@@ -16,13 +17,15 @@ int main()
    vjMemPool* shared_pool = new vjSharedPool(1024*1024);
    vjChunkDescDB desc;
    bool load_worked = desc.load(CHUNK_DESC_LOCATION);
+   vjChunkFactory::setChunkDescDB(&desc);
+
    if(!load_worked)
       cerr << "Could not load chunkDesc's\n" << flush;
 
    cout << desc << "\n----------------------------------------" << endl;
 
    // -- Load config -- //
-   vjConfigChunkDB *chunkdb = new vjConfigChunkDB(&desc);
+   vjConfigChunkDB *chunkdb = new vjConfigChunkDB();
    load_worked = chunkdb->load(CONFIG_LOCATION);
    if(!load_worked)
       cerr << "Could not load config file\n" << flush;
@@ -35,7 +38,7 @@ int main()
    cout << "vjInputManager created" << endl;
 
    // --- configure the input manager -- //
-   input_manager->ConfigureInitial(chunkdb);
+   input_manager->configureInitial(chunkdb);
    cout << "new devices have been added.." << endl << endl;
 
    cout << input_manager << endl;
@@ -44,19 +47,19 @@ int main()
    sleep(2);
    cout << "awake." << endl << flush;
 
-      // Get the indices for the devices
-   int head_index = input_manager->GetProxyIndex("VJHead");
-   int wand_index = input_manager->GetProxyIndex("VJWand");
+      // get the indices for the devices
+   int head_index = input_manager->getProxyIndex("VJHead");
+   int wand_index = input_manager->getProxyIndex("VJWand");
 
    for (int l = 0; l <30; l++)
    {
       sleep (1);
       cout << "Updating All Data .. " << endl;
-      input_manager->UpdateAllData();
+      input_manager->updateAllData();
 
 
-      vjMatrix* pd_head = input_manager->GetPosProxy(head_index)->GetData();
-      vjMatrix* pd_wand = input_manager->GetPosProxy(wand_index)->GetData();
+      vjMatrix* pd_head = input_manager->getPosProxy(head_index)->getData();
+      vjMatrix* pd_wand = input_manager->getPosProxy(wand_index)->getData();
 
       cout << "-------------------------------------\n";
       cout << "head:\n" << *pd_head << endl;

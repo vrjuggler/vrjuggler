@@ -27,18 +27,18 @@ int main()
 
    cout << flush;
    switch(achar) {
-     case 'u':case 'U': t1->UpdateData(); break;
-     case 's':case 'S': t1->StartSampling(); break;
-     case 'x':case 'X': t1->StopSampling(); break;
+     case 'u':case 'U': t1->updateData(); break;
+     case 's':case 'S': t1->startSampling(); break;
+     case 'x':case 'X': t1->stopSampling(); break;
      case 'o':case 'O': 
      for(int z = 0; z < 10; z++){
-         t1->UpdateData();
+         t1->updateData();
          
 	
-	cout << t1->GetDigitalData(0);
-	cout << t1->GetDigitalData(1);
-	cout << t1->GetDigitalData(2);
-	cout << t1->GetDigitalData(3);        
+	cout << t1->getDigitalData(0);
+	cout << t1->getDigitalData(1);
+	cout << t1->getDigitalData(2);
+	cout << t1->getDigitalData(3);        
          cout << endl; 
          sleep(2);
     }
@@ -46,7 +46,7 @@ int main()
    }
    cout << achar;
   } while ((achar != 'q') && (achar != 'Q'));
-  t1->StopSampling();
+  t1->stopSampling();
   delete t1;
   delete anSgiPool;
   return 0;
