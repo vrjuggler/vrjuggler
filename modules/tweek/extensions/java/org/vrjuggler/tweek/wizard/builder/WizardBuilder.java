@@ -125,15 +125,15 @@ public class WizardBuilder
         WizardStepFactory.registerWizardStep(
                Class.forName("org.vrjuggler.vrjconfig.wizard.cluster.NewClusterFileStep",
                              true,
-                             BeanJarClassLoader.instance()));
+                             this.getClass().getClassLoader()));
         WizardStepFactory.registerWizardStep(
                Class.forName("org.vrjuggler.vrjconfig.wizard.cluster.NodeSettingsStep",
                              true,
-                             BeanJarClassLoader.instance()));
+                             this.getClass().getClassLoader()));
         WizardStepFactory.registerWizardStep(
                Class.forName("org.vrjuggler.vrjconfig.wizard.cluster.CreateClusteredSimDevicesStep",
                              true,
-                             BeanJarClassLoader.instance()));
+                             this.getClass().getClassLoader()));
       }
       catch (ClassNotFoundException cnfe)
       {
@@ -146,7 +146,7 @@ public class WizardBuilder
         WizardStepFactory.registerWizardStep(
                Class.forName("org.vrjuggler.vrjconfig.wizard.devices.PinchGloveStep",
                              true,
-                             BeanJarClassLoader.instance()));
+                             this.getClass().getClassLoader()));
       }
       catch (ClassNotFoundException cnfe)
       {
