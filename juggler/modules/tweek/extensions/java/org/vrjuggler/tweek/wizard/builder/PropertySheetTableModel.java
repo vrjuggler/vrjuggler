@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.jccl.wizard.builder;
+package org.vrjuggler.tweek.wizard.builder;
 
 import java.beans.*;
 import java.lang.reflect.*;
