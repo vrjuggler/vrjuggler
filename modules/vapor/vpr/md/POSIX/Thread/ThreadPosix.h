@@ -265,28 +265,7 @@ public:  // ----- Various other thread functions ------
     *
     * @note This is currently only available on IRIX 6.5 and is non-portable.
     */
-   virtual int setRunOn (int cpu)
-   {
-#ifdef VPR_OS_IRIX
-      int ret_val;
-
-      if ( mScope == PTHREAD_SCOPE_SYSTEM )
-      {
-         ret_val = pthread_setrunon_np(cpu);
-      }
-      else
-      {
-         std::cerr << "This thread is not a system-scope thread!\n";
-         ret_val = -1;
-      }
-
-      return ret_val;
-#else
-      std::cerr << "vpr::ThreadPosix::setRunOn(): Not available on this system.\n";
-
-      return -1;
-#endif
-   }
+   virtual int setRunOn(int cpu);
 
    /**
     * Gets the CPU affinity for this thread (the CPU on which this thread
@@ -306,28 +285,7 @@ public:  // ----- Various other thread functions ------
     * @note This is currently only available on IRIX 6.5 and is
     *       non-portable.
     */
-   virtual int getRunOn (int* cur_cpu)
-   {
-#ifdef VPR_OS_IRIX
-      int ret_val;
-
-      if ( mScope == PTHREAD_SCOPE_SYSTEM )
-      {
-         ret_val = pthread_getrunon_np(cur_cpu);
-      }
-      else
-      {
-         std::cerr << "This thread is not a system-scope thread!\n";
-         ret_val = -1;
-      }
-
-      return ret_val;
-#else
-      std::cerr << "vpr::ThreadPosix::getRunOn(): Not available on this system.\n";
-
-      return -1;
-#endif
-   }
+   virtual int getRunOn(int* cur_cpu);
 
    /**
     * Yields execution of the calling thread to allow a different blocked
@@ -337,7 +295,7 @@ public:  // ----- Various other thread functions ------
     * @post The caller yields its execution control to another thread or
     *       process.
     */
-   static void yield (void)
+   static void yield()
    {
       sched_yield();
    }
@@ -347,15 +305,7 @@ public:  // ----- Various other thread functions ------
     *
     * @param micro The number of microseconds to sleep.
     */
-   static int usleep (Uint32 micro)
-   {
-#ifdef VPR_OS_Linux
-      ::usleep(micro);
-      return 0;  // usleep can't report failure, so assume success.
-#else
-      return ::usleep(micro);
-#endif
-   }
+   static int usleep(vpr::Uint32 micro);
 
    /**
     * Causes the calling thread to sleep for the given number of milliseconds.
@@ -398,17 +348,7 @@ public:  // ----- Various other thread functions ------
     *
     * @note This is not currently supported with Pthreads Draft 4.
     */
-   virtual int kill (int signum)
-   {
-#ifdef _PTHREADS_DRAFT_4
-      std::cerr << "vpr::ThreadPosix::kill(): Signals cannot be sent to threads "
-      << "with this POSIX threads implementation.\n";
-
-      return -1;
-#else
-      return pthread_kill(mThread, signum);
-#endif
-   }
+   virtual int kill(int signum);
 
    /**
     * Kills (cancels) this thread.
@@ -437,18 +377,10 @@ public:  // ----- Various other thread functions ------
     *         A non-NULL pointer is returned that points to the thread in
     *         which we are currently running.
     */
-   static BaseThread* self(void);
+   static BaseThread* self();
 
    /// Provides a way of printing the process ID neatly.
-   std::ostream& outStream (std::ostream& out)
-   {
-      out.setf(std::ios::right);
-      out << std::setw(7) << std::setfill('0') << getpid() << "/";
-      out.unsetf(std::ios::right);
-      BaseThread::outStream(out);
-      out << std::setfill(' ');
-      return out;
-   }
+   std::ostream& outStream(std::ostream& out);
 
 // All private member variables and functions.
 private:
@@ -485,16 +417,7 @@ private:
     * @return A non-zero value is returned giving the hash index of this
     *         thread.
     */
-   thread_id_t hash (void)
-   {
-#if defined(VPR_OS_IRIX)
-      return mThread;
-#else
-
-      // This works on Linux, Solaris and FreeBSD.
-      return(thread_id_t) mThread;
-#endif    /* VPR_OS_IRIX */
-   }
+   thread_id_t hash();
 
    /**
     * Gets a hash index for the given thread.  This will always be a non-zero
@@ -509,16 +432,7 @@ private:
     * @return A non-zero value is returned giving the hash index of the given
     *         thread.
     */
-   static thread_id_t hash (pthread_t thread)
-   {
-#ifdef VPR_OS_IRIX
-      return thread;
-#else
-
-      // This works on Linux, Solaris and FreeBSD.
-      return(thread_id_t) thread;
-#endif
-   }
+   static thread_id_t hash(pthread_t thread);
 
    /**
     * Gets this thread's ID (i.e., its hash index for the thread table).  It
@@ -530,7 +444,7 @@ private:
     * @return A non-zero value is returned giving the hash index of this
     *         thread.
     */
-   static thread_id_t gettid (void)
+   static thread_id_t gettid()
    {
       pthread_t me;
 
