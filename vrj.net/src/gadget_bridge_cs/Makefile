@@ -25,10 +25,11 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+LIBDIR=		../lib
 MOD_NAME=	gadgetnet
-DLL_DEPS=	/r:../vpr_bridge_cs/vprnet.dll		\
-		/r:../jccl_bridge_cs/jcclnet.dll	\
-		/r:../gmtl_bridge_cs/gmtlnet.dll
+DLL_DEPS=	/r:$(LIBDIR)/vprnet.dll		\
+		/r:$(LIBDIR)/jcclnet.dll	\
+		/r:$(LIBDIR)/gmtlnet.dll
 
 SRCS=		gadget_Analog.cs			\
 		gadget_AnalogData.cs			\

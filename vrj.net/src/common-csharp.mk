@@ -26,7 +26,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 CSC=		mcs
-ASSEMBLY=	$(MOD_NAME).dll
+ASSEMBLY=	$(LIBDIR)/$(MOD_NAME).dll
 
 all: $(ASSEMBLY)
 
