@@ -629,7 +629,7 @@ public:
     *
     * @return An unsigned short integer containing the server port number.
     */
-   const vpr::Uint16 getServerPort (void) const
+   vpr::Uint16 getServerPort (void) const
    {
       return m_address.getPort();
    }
