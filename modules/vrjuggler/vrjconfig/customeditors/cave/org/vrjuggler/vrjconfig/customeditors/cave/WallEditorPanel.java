@@ -60,6 +60,7 @@ public class WallEditorPanel extends JPanel
    //public WallEditorPanel(ConfigContext ctx, ConfigElement elt)
    public WallEditorPanel(CaveWall cw)
    {
+      System.out.println("XXX:");
       if ( cw == null )
       {
          cw = new CaveWall();
@@ -112,15 +113,15 @@ public class WallEditorPanel extends JPanel
       // If we were given nothing for default input values, then we set up
       // the physical units to be in feet for general convenience (at least
       // for those of us in the United States).
-      //if ( elt == null )
-      //{
-      //   mUnitsComboBox.setSelectedIndex(2);
-      //}
+      if ( mCaveWall == null )
+      {
+         mUnitsComboBox.setSelectedIndex(2);
+      }
       // For input coming in through a config element, all units will be in
       // meters.  We will not attempt to guess what units the user would
       // prefer.
-      //else
-      //{
+      else
+      {
          mUnitsComboBox.setSelectedIndex(0);
 
          float[] ll_corner = new float[3], lr_corner = new float[3],
@@ -145,6 +146,17 @@ public class WallEditorPanel extends JPanel
          ul_corner[0] = mCaveWall.getUL()[0];
          ul_corner[1] = mCaveWall.getUL()[1];
          ul_corner[2] = mCaveWall.getUL()[2];
+         
+         System.out.println("Corners:");
+         System.out.println(ll_corner[0]);
+         System.out.println(ll_corner[1]);
+         System.out.println(ll_corner[2]);
+         System.out.println(lr_corner[0]);
+         System.out.println(lr_corner[1]);
+         System.out.println(lr_corner[2]);
+         System.out.println(ul_corner[0]);
+         System.out.println(ul_corner[1]);
+         System.out.println(ul_corner[2]);
 
          float wall_width, wall_height;
 
@@ -212,7 +224,7 @@ public class WallEditorPanel extends JPanel
             // XXX: At this point, there needs to be code that figures out the
             // rotational angles for the custom-defined plane.  Those angles
             // then need to go into the text fields.
-         //}
+         }
 
          mCornerXField.setValue(new Float(ll_corner[0]));
          mCornerYField.setValue(new Float(ll_corner[1]));
@@ -221,7 +233,7 @@ public class WallEditorPanel extends JPanel
          mWallHeightField.setValue(new Float(wall_height));
       }
 
-      //validateUserInput();
+      validateUserInput();
       //this.pack();
    }
    
@@ -231,7 +243,7 @@ public class WallEditorPanel extends JPanel
 
    public void propertyValueChanged(ConfigElementEvent e)
    {
-      //validateUserInput();
+      validateUserInput();
    }
 
    public void propertyValueAdded(ConfigElementEvent e)
@@ -310,7 +322,7 @@ public class WallEditorPanel extends JPanel
       {
          scaled_corners[i] = new Point3D(corners[i]);
          scaled_corners[i].scale(getUnitConversionFactor());
-//         System.out.println(corners[i]);
+         System.out.println(corners[i]);
       }
 
       return scaled_corners;
@@ -640,7 +652,24 @@ public class WallEditorPanel extends JPanel
       mDimensionsPanel.add(mDimensionsXLabel, null);
       mDimensionsPanel.add(mWallHeightField, null);
    }
+   
+   protected final void validateUserInput()
+   {
+      boolean user_set, size_set, custom_valid;
+      boolean enabled;
 
+      //Rectangle bounds = mBoundsPanel.getViewportBounds();
+
+      //user_set = (((ConfigElementPointer) mUserPanel.getUser()).getTarget() != null);
+      //size_set = bounds.width > 0 && bounds.height > 0;
+      custom_valid = validateCustomInput();
+
+      // All of the above conditions must be true in order for the OK button
+      // to be enabled.
+      //enabled = user_set && size_set && custom_valid;
+      //mOkButton.setEnabled(enabled);
+   }
+   
    protected boolean validateCustomInput()
    {
       boolean wall_width_set = false, wall_height_set = false, tracker_set;
@@ -815,7 +844,7 @@ public class WallEditorPanel extends JPanel
       // is true.
       //mTrackerProxyLabel.setEnabled(mTracked);
       //mTrackerProxyEditor.setEnabled(mTracked);
-      //validateUserInput();
+      validateUserInput();
    }
 
    void wallWidthPropertyChanged(PropertyChangeEvent e)
@@ -825,7 +854,7 @@ public class WallEditorPanel extends JPanel
       // formatted input is committed.
       if ( e.getPropertyName().equals("value") && e.getNewValue() != null )
       {
-         //validateUserInput();
+         validateUserInput();
       }
    }
 
@@ -836,7 +865,7 @@ public class WallEditorPanel extends JPanel
       // formatted input is committed.
       if ( e.getPropertyName().equals("value") && e.getNewValue() != null )
       {
-         //validateUserInput();
+         validateUserInput();
       }
    }
 
