@@ -336,15 +336,21 @@ _lib_links:
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in ${_LIB_LINK_DIR}"
 	@echo "------------------------------------------------"
-	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
+	cd ${_LIB_LINK_DIR} && rm -f ./${VJ_LIB_STATIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
+	cd ${_LIB_LINK_DIR} && rm -f ./${VJ_LIB_DYNAMIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
-	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
+	cd ${_LIB_LINK_DIR} && rm -f ./${GL_LIB_STATIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
+	cd ${_LIB_LINK_DIR} && rm -f ./${GL_LIB_DYNAMIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
-	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
+	cd ${_LIB_LINK_DIR} && rm -f ./${PF_LIB_STATIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
+	cd ${_LIB_LINK_DIR} && rm -f ./${PF_LIB_DYNAMIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 
 # ----------------------------------------------------------------------------
@@ -568,7 +574,7 @@ ${LIBDIR}/${GL_LIB_STATIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	@${SHELL} ${scriptdir}/mkinstalldirs ${LIBDIR}
 	${AR} ${AR_NAME_FLAG}$@ ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	${RANLIB} $@
-	cd ${_LIBDIR_BASE} && ln -sf $@ ./
+	cd ${_LIBDIR_BASE} && rm -f ${notdir $@} && ${LN_S} $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -585,7 +591,7 @@ ${LIBDIR}/${GL_LIB_DYNAMIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	@echo "------------------------------------------------"
 	@${SHELL} ${scriptdir}/mkinstalldirs ${LIBDIR}
 	${LD} ${LDOPTS} -o $@ ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
-	cd ${_LIBDIR_BASE} && ln -sf $@ ./
+	cd ${_LIBDIR_BASE} && rm -f ${notdir $@} && ${LN_S} $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -632,13 +638,18 @@ links:
 	cd ${instlinks} && rm -f ./${_LIBDIR_NAME} &&			\
           ln -s ${_LIBDIR_BASE} ./${_LIBDIR_NAME}
 	cd ${instlinks} && rm -f ./Data && ln -s ${VJROOT_ABS}/Data ./Data
-	cd ${instlinks}/include && ln -sf ${VJROOT_ABS}/vjConfig.h ./vjConfig.h
-	cd ${instlinks}/include && ln -sf ${topdir}/vjDefines.h ./vjDefines.h
+	cd ${instlinks}/include && rm -f ./vjConfig.h &&		\
+          ${LN_S} ${VJROOT_ABS}/vjConfig.h ./vjConfig.h
+	cd ${instlinks}/include && rm -f ./vjDefines.h &&		\
+	  ${LN_S} ${topdir}/vjDefines.h ./vjDefines.h
 	${SHELL} ${scriptdir}/mkinstalldirs ${instlinks}/bin
 ifndef NO_JAVA_GUI
-	cd ${instlinks}/bin && ln -sf ${topdir}/GUI/VjControl.jar ./
-	cd ${instlinks}/bin && ln -sf ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
-	cd ${instlinks}/bin && ln -sf ${VJROOT_ABS}/GUI/vjcontrol1.1 ./vjcontrol1.1
+	cd ${instlinks}/bin && rm -f ./VjControl.jar &&			\
+          ${LN_S} ${topdir}/GUI/VjControl.jar ./
+	cd ${instlinks}/bin && rm -f ./vjcontrol &&			\
+          ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
+	cd ${instlinks}/bin && rm -f ./vjcontrol1.1 &&			\
+          ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol1.1 ./vjcontrol1.1
 endif
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
@@ -866,39 +877,51 @@ ifndef NOLINK
 	@echo "Creating symlinks in ${libdir}${LIBBITSUF}"
 	@echo "------------------------------------------------"
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
+          rm -f ./${VJ_LIB_STATIC} &&					\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
+          rm -f ./${VJ_LIB_DYNAMIC} &&					\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
+          rm -f ./${GL_LIB_STATIC} &&					\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
+          rm -f ./${GL_LIB_DYNAMIC} &&					\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
+          rm -f ./${PF_LIB_STATIC} &&					\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
+          rm -f ./${PF_LIB_DYNAMIC} &&					\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in ${_install_libdir_abs}"
 	@echo "------------------------------------------------"
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          ln -sf ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
+          rm -f ./${VJ_LIB_STATIC} &&					\
+          ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          ln -sf ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
+          rm -f ${VJ_LIB_DYNAMIC} &&					\
+          ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          ln -sf ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
+	  rm -f ${GL_LIB_STATIC} &&					\
+          ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          ln -sf ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
+	  rm -f ${GL_LIB_DYNAMIC} &&					\
+          ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          ln -sf ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
+          rm -f ${PF_LIB_STATIC} &&					\
+          ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          ln -sf ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
+          rm -f ${PF_LIB_DYNAMIC} &&					\
+          ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 endif	# ifndef NOLINK
 
