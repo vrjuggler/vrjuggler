@@ -116,13 +116,15 @@ Debug::Debug()
 void Debug::init()
 {
    // --- Register primitive categories --- //
+   /*
    addCategory(vprDBG_ALL, "DBG_ALL", "DBG:");
    addCategory(vprDBG_ERROR, "DBG_ERROR", "ERR:");
    addCategory(vprDBG_SIM, "DBG_SIM", "I'm a little simulator:");
    addCategory(vprDBG_VPR, "DBG_VPR", "VPR:");
+   */
 }
 
-std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool show_thread_info,
+std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level, const bool show_thread_info,
                                const bool use_indent, const int indentChange,
                                const bool lockStream)
 {
@@ -149,13 +151,19 @@ std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool
          std::cout << clrSetBOLD((*gVprDebugCurColor).back());
    }
 
+   // Autoregister
+   if(mCategories.find(cat.mGuid) == mCategories.end())
+   {
+      addCategory(cat);
+   }
+
+   vprASSERT(mCategories.find(cat.mGuid) != mCategories.end() && "Failed to auto-register");
+
    // Ouput thread info
    // If not, then output space if we are also using indent (assume this means
    // new line used)
-   vprASSERT(mCategories.find(cat) != mCategories.end());
-
    if(show_thread_info)
-      std::cout << "[" << vpr::Thread::self() << "] " << (*mCategories.find(cat)).second.mPrefix;
+      std::cout << "[" << vpr::Thread::self() << "] " << (*mCategories.find(cat.mGuid)).second.mPrefix;
    else if(use_indent)
       std::cout << "                  ";
 
@@ -185,11 +193,12 @@ std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool
    return std::cout;
 }
 
-void Debug::addCategory(const vpr::GUID& catId, std::string name, std::string prefix)
+void Debug::addCategory(const vpr::DebugCategory& catId)
 {
-   std::cout << "\nAdding category named '" << name << "'  -- prefix: " << prefix <<  " -- guid: " << catId
+   std::cout << "\nAdding category named '" << catId.mName << "'  -- prefix: " << catId.mPrefix <<  " -- guid: " << catId.mGuid
              << " to debug categories:" << &mCategories << " size: " << mCategories.size() << std::endl;
-   mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId, CategoryInfo(name, prefix, false, false)));
+   mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId.mGuid, 
+                                                         CategoryInfo(catId.mName, catId.mPrefix, false, false)));
    std::cout << "new size: " << mCategories.size() << std::endl;
    debugDump();
    updateAllowedCategories();
@@ -198,20 +207,28 @@ void Debug::addCategory(const vpr::GUID& catId, std::string name, std::string pr
 
 
 // Are we allowed to print this category??
-bool Debug::isCategoryAllowed(const vpr::GUID& catId)
+bool Debug::isCategoryAllowed(const vpr::DebugCategory& catId)
 {
    bool allow_category(false);
    
    // Make sure category is in the vector
-   Debug::category_map_t::iterator cat = mCategories.find(catId);
-   vprASSERT(cat != mCategories.end());    // ASSERT: We have a valid category 
+   Debug::category_map_t::iterator cat = mCategories.find(catId.mGuid);
 
-   Debug::category_map_t::iterator cat_all = mCategories.find(vprDBG_ALL);
+   if(cat == mCategories.end())
+   {
+      // Autoregister
+      addCategory(catId);
+      cat = mCategories.find(catId.mGuid);
+   }
+
+   vprASSERT(cat != mCategories.end() && "Auto-register failed");    // ASSERT: We have a valid category 
+
+   Debug::category_map_t::iterator cat_all = mCategories.find(vprDBG_ALL.mGuid);
    vprASSERT(cat_all != mCategories.end());    // ASSERT: We have a valid category 
       
    // If I specified to listen to all OR
    // If it has category of ALL
-   bool cat_is_all = (catId == vprDBG_ALL);
+   bool cat_is_all = (catId.mGuid == vprDBG_ALL.mGuid);
    bool allow_all = ((*cat_all).second.mAllowed == true);
 
    if(cat_is_all || allow_all)
@@ -244,14 +261,26 @@ void Debug::updateAllowedCategories()
    char* dbg_disallow_cats_env = getenv("VPR_DEBUG_DISALLOW_CATEGORIES");
 
    std::cout << "updateAllowedCategories" << std::endl;
-   std::cout << "   updateAllowedCat: Trying to find vprDBG_ALL. guid [" << vprDBG_ALL << "] " << std::endl;
+   std::cout << "   updateAllowedCat: Trying to find vprDBG_ALL. guid [" << vprDBG_ALL.mGuid << "] " << std::endl;
 
-   Debug::category_map_t::iterator cat_all = mCategories.find(vprDBG_ALL);
+   // Get cat info for vprDBG_ALL
+   // Auto-register vprDBG_ALL if needed
+   Debug::category_map_t::iterator cat_all = mCategories.find(vprDBG_ALL.mGuid);
+
+   if(cat_all == mCategories.end())
+   { 
+      addCategory(vprDBG_ALL);
+      cat_all = mCategories.find(vprDBG_ALL.mGuid);
+   }
    vprASSERT(!mCategories.empty() && "Empty category list");
    vprASSERT((cat_all != mCategories.end()) && "Could not find vprDBG_ALL in category list");    // ASSERT: We have a valid category 
 
    // --- Setup allowed categories --- //
-   if(dbg_allow_cats_env != NULL)
+   // - If we have categories env var
+   //    - Disable auto-showing of all
+   //    - For each current category
+   //       - Check if it should be enabled
+   if(dbg_allow_cats_env != NULL)               
    {
      (*cat_all).second.mAllowed = false;       // Disable the showing of all for now
 

@@ -189,6 +189,21 @@
 namespace vpr
 {
 
+   struct DebugCategory
+   {
+      DebugCategory(vpr::GUID guid, std::string name, std::string prefix)
+      {
+         mGuid = guid;
+         mName = name;
+         mPrefix = prefix;
+      }
+
+      vpr::GUID   mGuid;
+      std::string mName;
+      std::string mPrefix;
+   };
+
+
 /**
  * Class to support debug output
  */
@@ -211,7 +226,7 @@ namespace vpr
 
    public:
       // Get the debug stream to use
-      std::ostream& getStream(const vpr::GUID& cat, const int level, const bool show_thread_info = true,
+      std::ostream& getStream(const vpr::DebugCategory& cat, const int level, const bool show_thread_info = true,
                               const bool use_indent = true, const int indentChange = 0,
                               const bool lockStream = true);
 
@@ -226,10 +241,10 @@ namespace vpr
       }
 
       /// Adds a category name.
-      void addCategory(const vpr::GUID& catId, std::string name, std::string prefix);
+      void addCategory(const vpr::DebugCategory& catId);
 
       /// Are we allowed to print this category??
-      bool isCategoryAllowed(const vpr::GUID& catId);
+      bool isCategoryAllowed(const vpr::DebugCategory& catId);
 
       /// Sets up the default categories.
       void setDefaultCategoryNames();
@@ -331,7 +346,7 @@ namespace vpr
    /** Helper class that outputs debug information at creation and destruction of the object */
    struct DebugOutputGuard
    {
-      DebugOutputGuard(const vpr::GUID& cat, const int level,
+      DebugOutputGuard(const vpr::DebugCategory& cat, const int level,
                       std::string entryText, std::string exitText,
                       bool indent = true)
          : mCat(cat), mLevel(level), mEntryText(entryText), mExitText(exitText), mIndent(indent)
@@ -358,11 +373,11 @@ namespace vpr
          }
       }
 
-      vpr::GUID   mCat;
-      int         mLevel;
-      std::string mEntryText;
-      std::string mExitText;
-      bool        mIndent;
+      const vpr::DebugCategory& mCat;
+      int                       mLevel;
+      std::string               mEntryText;
+      std::string               mExitText;
+      bool                      mIndent;
    };
 
 
@@ -372,7 +387,8 @@ namespace vpr
 
 namespace vpr
 {
-
+   
+/*
    struct DebugCatRegistrator
    {
       DebugCatRegistrator(vpr::GUID catGuid, std::string catName, std::string catPrefix)
@@ -380,6 +396,7 @@ namespace vpr
          vpr::Debug::instance()->addCategory(catGuid, catName, catPrefix);
       }
    };
+   */
 }; // namespace
 
 /** Helper macro for registering category
@@ -389,12 +406,12 @@ namespace vpr
 * Use this in the .cpp files to register the actually token with vpr::Debug.
 * @see Debug.cpp
 */
-#define vprREGISTER_DBG_CATEGORY(CAT, NAME, PREFIX ) vpr::DebugCatRegistrator NAME ## _registrator (CAT, #NAME, PREFIX);
+//#define vprREGISTER_DBG_CATEGORY(CAT, NAME, PREFIX ) vpr::DebugCatRegistrator NAME ## _registrator (CAT, #NAME, PREFIX);
 
 // Debug output categories
-const vpr::GUID vprDBG_ALL("660b4b06-1f5b-4e4b-abb8-d44229ce1319");
-const vpr::GUID vprDBG_ERROR("b081eb68-0a61-4a65-a0a1-dd3ccc90a82b");   /* Error output */
-const vpr::GUID vprDBG_SIM("64872313-a5b7-4d1d-b7a3-5f269b4adde4");   /* Sim output */
-const vpr::GUID vprDBG_VPR("28648014-ec63-4707-90e3-76a3ea450036");
-
+const vpr::DebugCategory vprDBG_ALL("660b4b06-1f5b-4e4b-abb8-d44229ce1319", "DBG_ALL", "DBG:");
+const vpr::DebugCategory vprDBG_ERROR("b081eb68-0a61-4a65-a0a1-dd3ccc90a82b", "DBG_ERROR", "ERR:");   /* Error output */
+const vpr::DebugCategory vprDBG_SIM("64872313-a5b7-4d1d-b7a3-5f269b4adde4", "DBG_SIM", "I'm a little simulator:");   /* Sim output */
+const vpr::DebugCategory vprDBG_VPR("28648014-ec63-4707-90e3-76a3ea450036", "DBG_VPR", "VPR:");
+                                     
 #endif
