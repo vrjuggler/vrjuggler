@@ -34,7 +34,7 @@ public:
    // Execute any initialization needed before the API is started
    virtual void init()
    {
-      cout << "---------- App:init() ---------------" << endl;
+      //cout << "---------- App:init() ---------------" << endl;
          // Initialize devices
       mWand.init("VJWand");
    }
@@ -72,19 +72,19 @@ public:
    /// Function called before updating trackers but after the frame is drawn
    virtual void postSync()
    {
-      cout << "cubesApp::postSync\n";
+     // cout << "cubesApp::postSync\n";
    }
    
    /// Function called after tracker update but before start of drawing
    virtual void preDraw()
    {
-       cout << "cubesApp::preDraw()\n";
+       //cout << "cubesApp::preDraw()\n";
    }
    
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void postDraw()
    {
-       cout << "cubesApp::postDraw()\n";
+       //cout << "cubesApp::postDraw()\n";
    }
 
 private:
@@ -94,7 +94,7 @@ private:
    
    void myDraw()
    {
-      cout << "\n--- myDraw() ---\n";
+      //cout << "\n--- myDraw() ---\n";
       
    
       glClearColor(0.0, 0.0, 0.0, 0.0);
