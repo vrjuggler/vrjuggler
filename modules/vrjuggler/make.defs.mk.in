@@ -89,6 +89,7 @@ mtreedir	= $(topdir)/mtree
 releasedir	= @SAFE_JUGGLERROOT_ABS@/release
 scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@
+top_srcdir	= @top_srcdir@
 MAKEFLAGS	+= --no-print-directory
 MKDEPS_CC	= @CC@
 MKDEPS_CXX	= @CXX@
@@ -106,7 +107,7 @@ EXTRA_CFLAGS		= $(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB)
 EXTRA_DEFS		= -DVJ_SHARE_DIR=\"$(VJ_SHARE_DIR)\" -D_VRJ_BUILD_
 EXTRA_DEPEND_FLAGS	= -I$(VJROOT_ABS)
-EXTRA_INCLUDES		= -I$(VJROOT)
+EXTRA_INCLUDES		= -I$(top_srcdir)
 
 # -----------------------------------------------------------------------------
 # Makedepend commands
