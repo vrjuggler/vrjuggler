@@ -14,14 +14,6 @@
    <section>
       <title>Introduction</title>
       <para>This document explains how to build the modules of the Juggler project from the source code.</para>
-   </section>
-   <section>
-      <title>Compiling</title>
-      <para>In this section, we describe how to compile the Juggler project. As of this writing, the explanation focuses on VR Juggler itself.</para>
-      <section>
-         <title>Important Note Regarding Compiling</title>
-         <para>Please note: you have downloaded <emphasis>developmental</emphasis> code. It may not be stable, and it may not even compile. Compiling Juggler itself can be a little complicated for anyone who does not have some background in Autoconf, C++, and make.</para>
-      </section>
       <section>
          <title>Important Note for IRIX Users</title>
          <para>There are many Perl scripts used as part of getting, configuring, and building the Juggler tools. The version of Perl that ships with IRIX 6.5 is very old (circa 1997) and does not work with many Perl scripts we have written. SGI provides a much newer version of Perl (5.6.1) with their freeware tools (<ulink url="http://freeware.sgi.com/">http://freeware.sgi.com/</ulink>). It will be necessary to install that version for our scripts to work. This version is typically installed as <filename>/usr/freeware/bin/perl</filename>.</para>
@@ -31,56 +23,61 @@
          <screen>Perl 5.005 required--this is only version 5.00404, stopped at ./configure.pl line 35.
 BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       </section>
+   </section>
+   <section>
+      <title>Getting the Source Code</title>
+      <para>This section is for those users who want to get the Juggler source code from the CVS repository on SourceForge. Those users who have downloaded a pre-packaged version of the source can skip ahead to <xref linkend="config.section"/>.</para>
+      <para>Getting the source code takes a few steps. You have to first download or check out Juggler and some external packages such as GMTL, Xerces-C, and possibly NSPR. The steps are listed in the following sections.</para>
+      <section>
+         <title>How to get Juggler and external package dependencies</title>
+         <para>You can optionally get Juggler as a source code tarball from the website (www.vrjuggler.org) or you can follow these steps to get the code from our CVS repository.</para>
+         <orderedlist>
+            <listitem>
+               <para>Check out the 'juggler' module using CVS.</para>
+               <screen>cvs -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login
+cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler co juggler</screen>
+            </listitem>
+            <listitem>
+               <para>Get external packages that Juggler depends on. Typically you will run cvs-gather.pl, found in the top-level <filename>juggler</filename> directory.</para>
+               <para>The syntax will be similar to the following (you may have to edit the file <filename>deps.esrc</filename>, see also <xref linkend="aquire"/>):</para>
+               <screen>./cvs-gather.pl --verbose --cfg=deps.esrc</screen>
+               <para>You can use the <command>cvs-gather</command> tool, or you can read the file <filename>deps.esrc</filename> and get the packages manually. For more details about this, see <xref linkend="aquire"/>.</para>
+            </listitem>
+         </orderedlist>
+      </section>
+      <section id="aquire">
+         <title>Aquire third-party packages</title>
+         <para><command>cvs-gather</command> is a utility we include in the root directory of Juggler to help you collect third-party (external) source code that Juggler needs in order to build. In short, <command>cvs-gather</command> makes it easier to acquire the packages that Juggler needs.</para>
+         <para>To get help on using this tool, use one of the following (the second version gives much more detailed output):</para>
+         <screen>./cvs-gather.pl --help
+./cvs-gather.pl --manual
+</screen>
+         <para>Use of <command>cvs-gather</command> is not required. You can skip <command>cvs-gather</command> if you already have the needed packages in your system or if you feel like getting these packages manually. <command>cvs-gather</command> is provided primarily for developer convenience.</para>
+         <para>For a list of these package dependencies, you can look in the file <filename>deps.esrc</filename> to determine what packages you need to download manually.</para>
+         <para>For <command>cvs-gather</command> to work, it uses a <filename>.gatherrc</filename> file. The <filename>.gatherrc</filename> file is used to specify the external project CVS locations. <command>cvs-gather</command> reads these CVS locations and then checks each one out locally for Juggler to build.</para>
+         <para>The following shows how to run <command>cvs-gather</command> with a <filename>.gatherrc</filename> file. As of this writing, such a file is provide that allows anonymous-only CVS access. To use it, enter the following:</para>
+         <screen>./cvs-gather.pl --verbose --cfg=deps.gatherrc</screen>
+         <para>To simplify shared use of a single configuration file, the contents of the file may be overridden on the command line or using an <quote>overrides</quote> file. The following shows such a file that overrides the CVSROOT settings in <filename>deps.esrc</filename>:</para>
+         <programlisting>      #JugglerBaseStuff.CVSROOT=patrickh@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler 
+      Doozer.CVSROOT = patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
+      Doozer++.CVSROOT = patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
+      GMTL.CVSROOT = patrickh@cvs.ggt.sourceforge.net:/cvsroot/ggt                  </programlisting>
+         <para>The current <filename>deps.esrc</filename> only allows anonymous CVS access. To override that, we suggest making per-user override files. To use the override file, just add the argument <option>--override=&lt;filename&gt;</option> when running <command>cvs-gather</command>.</para>
+         <para>The following shows how to run <command>cvs-gather</command> with your own overrides file (called <filename>my_gatheroverride</filename>):</para>
+         <screen>cvs-gather.pl --cfg=deps.gatherrc --override=my_gatheroverride</screen>
+         <para>If all goes well, you'll get everything you need to compile.</para>
+      </section>
+   </section>
+   <section>
+      <title>Compiling</title>
+      <para>In this section, we describe how to compile the Juggler project. As of this writing, the explanation focuses on VR Juggler as a whole.</para>
+      <section>
+         <title>Important Note Regarding Compiling</title>
+         <para>Please note: you have downloaded <emphasis>developmental</emphasis> code. It may not be stable, and it may not even compile. Compiling Juggler itself can be a little complicated for anyone who does not have some background in Autoconf, C++, and make.</para>
+      </section>
       <section>
          <title>Compiling the Juggler suite of tools</title>
          <para>This section explains how to get, configure, and compile all of the Juggler tools at once. Each tool compiles to its own library, and can be installed individually. (Refer to the <filename>README</filename> file in this directory for more information about the specific modules.)</para>
-         <para>Getting the source code takes a few steps. You have to first download or check out Juggler and some external packages such as GGT, Xerces, and possibly NSPR. The steps are listed in the following sections.</para>
-         <section>
-            <title>How to get Juggler and external package dependencies</title>
-            <para>This section is for those users who want to get the Juggler source code from the CVS repository on SourceForge. Those users who have downloaded a pre-packaged version of the source can skip ahead to <xref linkend="config.section"/>.</para>
-            <orderedlist>
-               <listitem>
-                  <para>You can optionally get Juggler as a source code tarball from the website (www.vrjuggler.org) or...</para>
-               </listitem>
-               <listitem>
-                  <para>Check out the 'juggler' module using CVS.</para>
-                  <screen>cvs -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login
-cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler co juggler</screen>
-               </listitem>
-               <listitem>
-                  <para>Get external packages that Juggler depends on. Typically you will run cvs-gather.pl, found in the top-level <filename>juggler</filename> directory.</para>
-                  <para>The syntax will be similar to the following (you may have to edit the file <filename>deps.esrc</filename>, see also <xref linkend="aquire"/>):</para>
-                  <screen>./cvs-gather.pl --verbose --cfg=deps.esrc</screen>
-                  <itemizedlist>
-                     <listitem>
-                        <para>See <xref linkend="aquire"/>, you can use <command>cvs-gather</command>, or read the file <filename>deps.esrc</filename> and then manually get the packages yourself.</para>
-                     </listitem>
-                  </itemizedlist>
-               </listitem>
-            </orderedlist>
-            <section id="aquire">
-               <title>Aquire third party packages</title>
-               <para><command>cvs-gather</command> is a utility we include in the root directory of Juggler to help you collect third party (external) source code that Juggler needs in order to build. In short, <command>cvs-gather</command> makes it easier to acquire the packages that Juggler needs.</para>
-               <para>To get help on using this tool, use one of the following (the second version gives much more detailed output):</para>
-               <screen>./cvs-gather.pl --help
-./cvs-gather.pl --manual
-</screen>
-               <para>Use of <command>cvs-gather</command> is not required. You can skip <command>cvs-gather</command> if you already have the needed packages in your system or if you feel like getting these packages manually. <command>cvs-gather</command> is provided primarily for developer convenience.</para>
-               <para>For a list of these package dependencies, you can look in the file <filename>deps.esrc</filename> to determine what packages you need to download manually.</para>
-               <para>For <command>cvs-gather</command> to work, it uses a <filename>.gatherrc</filename> file. The <filename>.gatherrc</filename> file is used to specify the external project CVS locations. <command>cvs-gather</command> reads these CVS locations and then checks each one out locally for Juggler to build.</para>
-               <para>The following shows how to run <command>cvs-gather</command> with a <filename>.gatherrc</filename> file. As of this writing, such a file is provide that allows anonymous-only CVS access. To use it, enter the following:</para>
-               <screen>./cvs-gather.pl --verbose --cfg=deps.gatherrc</screen>
-               <para>To simplify shared use of a single configuration file, the contents of the file may be overridden on the command line or using an <quote>overrides</quote> file. The following shows such a file that overrides the CVSROOT settings in <filename>deps.esrc</filename>:</para>
-               <programlisting>      #JugglerBaseStuff.CVSROOT=patrickh@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler 
-      Doozer.CVSROOT=patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
-      Doozer++.CVSROOT=patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
-      GMTL.CVSROOT=patrickh@cvs.ggt.sourceforge.net:/cvsroot/ggt                  </programlisting>
-               <para>The current <filename>deps.esrc</filename> only allows anonymous CVS access. To override that, we suggest making per-user override files. To use the override file, just add the argument <option>--override=&lt;filename&gt;</option> when running <command>cvs-gather</command>.</para>
-               <para>The following shows how to run <command>cvs-gather</command> with your own overrides file (called <filename>my_gatheroverride</filename>):</para>
-               <screen>cvs-gather.pl --cfg=deps.gatherrc --override=my_gatheroverride</screen>
-               <para>If all goes well, you'll get everything you need to compile.</para>
-            </section>
-         </section>
          <section id="config.section">
             <title>Configuring and compiling all Juggler tools at once</title>
             <para>Every time you have newly updated source code acquired from CVS or <command>cvs-gather</command>, it is recommended that you run <command>autogen.sh</command>, found in the top-level <filename>juggler</filename> directory:</para>
@@ -103,90 +100,96 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                </listitem>
                <listitem>
                   <para>Configure all the Juggler modules. This is when you must tell the module configure scripts where all the package dependencies are found.</para>
-                  <screen>../configure.pl --cfg=../juggler.cfg --with-xercesroot=/home/users/allenb/Linux/xerces-c-src1_5_1 --with-xerceslib=xerces-c1_5_1</screen>
+                  <screen>../configure.pl --cfg=../juggler.cfg --prefix=$HOME/vrjuggler-2.0 --with-xercesroot=/home/users/allenb/Linux/xerces-c-src1_5_1 --with-xerceslib=xerces-c1_5_1</screen>
                   <para>In this case, the interesting configuration options are the path to the Xerces-C installation directory and the basic name of the Xerces-C library. The basic library name comes from the actual library name. For example, on UNIX-based systems, the Xerces-C 1.5.1 library is called <filename>libxerces-c1_5_1.so</filename>; on Win32, it is <filename>xerces-c_1.lib</filename>. The configure script only needs the <emphasis>unique</emphasis> part of the name: <filename>xerces-c1_5_1</filename> or <filename>xerces-c_1</filename>.</para>
                </listitem>
                <listitem>
                   <para>Compile the source tree using GNU make.</para>
-                  <screen>gmake</screen>
+                  <screen>gmake build</screen>
                </listitem>
             </orderedlist>
+            <para>Once this completes, you will have a full build of VR Juggler. For those who are not interested in developing VR Juggler or its component modules, it is recommended that you install the software and use the installed version for application development.</para>
          </section>
          <section>
             <title>Compiling individual tools in the Juggler suite</title>
             <para>Sometimes you do not want to build everything in the Juggler suite. Here are steps for configuring/building each package individually.</para>
             <section>
-               <title>Sonix (individual)</title>
-               <para>Sonix requires a third-party software package called GMTL (ggt.sf.net). Sonix wraps other audio subsystems such as OpenAL (www.openal.org) or AudioWorks (multigen.com). One of these subsystems are required in order to hear sound. Here is how you build sonix:</para>
+               <title>VPR (individual)</title>
+               <para>VPR can be configured a number of ways. Except when building on Win32, no external packages are required. For Win32, NSPR (<ulink url="http://www.mozilla.org/">www.mozilla.org</ulink>) is required. To build VPR, do the following from the top-level <filename>juggler</filename> directory:</para>
                <orderedlist>
                   <listitem>
-                     <para><command>cd modules/sonix</command></para>
+                     <para><screen>mkdir build.vpr
+cd build.vpr</screen></para>
                   </listitem>
                   <listitem>
-                     <para><emphasis>Choose one of the following depending on which subsystem (or both) you want to enable in sonix...</emphasis></para>
-                     <para><command>./configure --prefix=$HOME/vrjuggler-2.0 --with-gmtl-include=/yourhomedir/juggler/modules/GMTL --enable-openal --with-oalroot=/usr/local</command></para>
-                     <para><command>./configure --prefix=$HOME/vrjuggler-2.0 --with-gmtl-include=/yourhomedir/juggler/modules/GMTL --enable-audioworks</command></para>
+                     <para><screen>../configure.pl --cfg=../juggler.cfg --module=VPR --prefix=$HOME/vpr-inst</screen></para>
                   </listitem>
                   <listitem>
-                     <para><command>gmake debug install</command></para>
+                     <para><screen>gmake debug install</screen></para>
                   </listitem>
                   <listitem>
-                     <para><command>setenv SNX_BASE_DIR $HOME/vrjuggler-2.0</command></para>
+                     <para><screen>setenv VPR_BASE_DIR $HOME/vpr-inst</screen></para>
+                  </listitem>
+               </orderedlist>
+               <para>If you want to use NSPR, make sure a binary version is installed. In step 2, add the arguments <option>--enable-subsystem=NSPR</option> and <option>--with-nspr=&lt;path to NSPR&gt;</option>. Once that is done, proceed with steps 3 and 4 as normal.</para>
+            </section>
+            <section>
+               <title>Sonix (individual)</title>
+               <para>Sonix requires a third-party software package called GMTL (<ulink url="http://ggt.sf.net/">ggt.sf.net)</ulink>. Sonix wraps other audio subsystems such as OpenAL (<ulink url="http://www.openal.org/">www.openal.org</ulink>) or AudioWorks (<ulink url="http://www.multigen.com/">multigen.com</ulink>). One of these subsystems are required in order to hear sound. Once you have all the necessary source code and third-party package installations, to the following from the top-level <filename>juggler</filename> directory:</para>
+               <orderedlist>
+                  <listitem>
+                     <para><screen>mkdir build.sonix
+cd build.sonix</screen></para>
+                  </listitem>
+                  <listitem>
+                     <para>Choose one of the following depending on which subsystem (or both) you want to enable in sonix...</para>
+                     <para><screen>../configure.pl --cfg=../juggler.cfg --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
+../configure.pl --cfg=../juggler.cfg --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks</screen></para>
+                  </listitem>
+                  <listitem>
+                     <para><screen>gmake debug install</screen></para>
+                  </listitem>
+                  <listitem>
+                     <para><screen>setenv SNX_BASE_DIR $HOME/sonix-inst</screen></para>
                   </listitem>
                </orderedlist>
             </section>
             <section>
                <title>JCCL (individual)</title>
-               <para>JCCL requires VPR, and a third-party software package called Xerces C++. Xerces can be downloaded from <ulink url="http://xml.apache.org/xerces-c/index.html">the Apache XML site</ulink>. Once Xerces C++ is built and installed, the JCCL configure script can find it:</para>
+               <para>JCCL requires VPR and a third-party software package called Xerces C++. Xerces can be downloaded from <ulink url="http://xml.apache.org/xerces-c/index.html">the Apache XML site</ulink>. Once Xerces C++ is built and installed, the JCCL configure script can find it. To build JCCL, do the following from the top-level <filename>juggler</filename> directory:</para>
                <orderedlist>
                   <listitem>
-                     <para><command>cd modules/jackal</command></para>
+                     <para><screen>mkdir build.jccl
+cd build.jccl</screen></para>
                   </listitem>
                   <listitem>
-                     <para><command>./configure --prefix=$HOME/vrjuggler-2.0 --with-xercesroot=&lt;Xerces C++ dir&gt;</command></para>
+                     <para><screen>../configure.pl --cfg=../juggler.cfg --module=JCCL --prefix=$HOME/jccl-inst --with-xercesroot=&lt;Xerces C++ dir&gt;</screen></para>
                   </listitem>
                   <listitem>
-                     <para><command>gmake debug install</command></para>
+                     <para><screen>gmake debug install</screen></para>
                   </listitem>
                   <listitem>
-                     <para><command>setenv JCCL_BASE_DIR $HOME/vrjuggler-2.0</command></para>
+                     <para><screen>setenv JCCL_BASE_DIR $HOME/jccl-inst</screen></para>
                   </listitem>
                </orderedlist>
                <para>Depending on the version of Xerces C++ available, an extra argument may be required to find the actual library. For example, if Xerces C++ 1.6.0 is installed, add <option>--with-xerceslib=xerces-c1_6_0</option> to the command line for running <command>configure</command>. Check the Xerces C++ <filename>lib</filename> directory for the exact name (without <filename>.so</filename> or <filename>.a</filename>).</para>
             </section>
             <section>
                <title>Gadgeteer (individual)</title>
-               <para>Gadgeteer depends on JCCL, and VPR. Make sure these are compiled first. Gadgeteer uses <varname>JCCL_BASE_DIR</varname> and <varname>VPR_BASE_DIR</varname> environment variables to find these, so be sure you have them set.</para>
+               <para>Gadgeteer depends on JCCL and on VPR. It also needs the third-party math lib GMTL. Assuming you have all the source code, do the following from the top-level <filename>juggler</filename> directory:</para>
                <orderedlist>
                   <listitem>
-                     <para><command>cd modules/gadgeteer</command></para>
+                     <para><screen>mkdir build.gadgeteer
+cd build.gadgeteer</screen></para>
                   </listitem>
                   <listitem>
-                     <para><command>./configure --prefix=$HOME/vrjuggler-2.0</command></para>
+                     <para><screen>../configure.pl --cfg=../juggler.cfg --module=Gadgeteer --prefix=$HOME/gadgeteer-inst</screen></para>
                   </listitem>
                   <listitem>
-                     <para><command>gmake debug install</command></para>
+                     <para><screen>gmake debug install</screen></para>
                   </listitem>
                   <listitem>
-                     <para><command>setenv GADGET_BASE_DIR $HOME/vrjuggler-2.0</command></para>
-                  </listitem>
-               </orderedlist>
-            </section>
-            <section>
-               <title>VR Juggler (individual)</title>
-               <para>VR Juggler depends on JCCL, VPR, and Gadgeteer. It also needs the 3rd party math lib GMTL. VR Juggler uses <varname>JCCL_BASE_DIR</varname>, <varname>GADGET_BASE_DIR</varname>, and <varname>VPR_BASE_DIR</varname> environment variables to find these, so be sure you have them set.</para>
-               <orderedlist>
-                  <listitem>
-                     <para><command>cd modules/vrjuggler</command></para>
-                  </listitem>
-                  <listitem>
-                     <para><command>./configure --prefix=$HOME/vrjuggler-2.0</command></para>
-                  </listitem>
-                  <listitem>
-                     <para><command>gmake debug install</command></para>
-                  </listitem>
-                  <listitem>
-                     <para><command>setenv VJ_BASE_DIR $HOME/vrjuggler-2.0</command></para>
+                     <para><screen>setenv GADGET_BASE_DIR $HOME/gadgeteer-inst</screen></para>
                   </listitem>
                </orderedlist>
             </section>
