@@ -198,10 +198,14 @@ public:
    }
 
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
-   {;}
+   {
+      return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+   }
 
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
-   {;}
+   {
+      return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+   }
 
    /** Is this input device active?. */
    int isActive()
