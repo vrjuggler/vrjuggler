@@ -41,6 +41,7 @@ public:
       assert( digPtr->FDeviceSupport(DEVICE_DIGITAL) );
       m_digPtr = digPtr;
       m_unitNum = subNum;
+      m_data = m_digPtr->GetDigitalData(m_unitNum);
    }
 
    void UpdateData();
