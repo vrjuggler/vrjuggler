@@ -303,6 +303,10 @@ public class ConfigDefinitionRepositoryEditor
                System.out.println("Property Definition Changed..." +
                      " " + mConfigDef.getToken());
             }
+            public void enumEditableChanged(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+            }
             public void enumAdded(PropertyDefinitionEvent evt)
             {
                mDefinitionChanged = true;
