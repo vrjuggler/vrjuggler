@@ -16,6 +16,11 @@ class reference4 {
 @__modelType reference 
 */
 class reference5 {
+}/**
+@__ref <oiref:cpp#Class#userOpenSGApp:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
 }}/**
 @__tags
 @shapeType ClassDiagram 
