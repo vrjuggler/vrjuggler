@@ -145,7 +145,7 @@ Status
 SocketImplNSPR::enableBlocking () {
 
    assert( m_open && "precondition says you must open() the socket first" );
-       
+
    Status retval;
 
    if (m_bound) {
@@ -179,7 +179,7 @@ SocketImplNSPR::enableNonBlocking () {
    Status retval;
 
    assert( m_open && "precondition says you must open() the socket first" );
-   
+
    if(m_bound)
    {
       vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't diable blocking after socket is bound\n"
@@ -212,20 +212,20 @@ SocketImplNSPR::enableNonBlocking () {
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
 Status
-SocketImplNSPR::connect () {
+SocketImplNSPR::connect (vpr::Interval timeout) {
    Status retval;
    PRStatus status;
 
    if(m_bound)
    {
       vprDEBUG(0,0) << "SocketImplNSPR::connect: Socket alreay bound.  Can't connect"
-                    << vprDEBUG_FLUSH; 
+                    << vprDEBUG_FLUSH;
       retval.setCode(Status::Failure);
    }
    else {
       // Attempt to connect to the address in m_addr.
       status = PR_Connect(m_handle, m_remote_addr.getPRNetAddr(),
-                          PR_INTERVAL_NO_TIMEOUT);
+                          NSPR_getInterval(timeout) );
 
       if ( status == PR_FAILURE )
       {

@@ -51,7 +51,7 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 //: NSPR Implementation of ---> Cross-platform selection interface.
 //
-// A selector is used to wait on a set of Handles untils any of the 
+// A selector is used to wait on a set of Handles untils any of the
 // events occur that the user is interested in.
 //
 // Implementation site of the Selector_t bridge.
@@ -60,13 +60,13 @@ namespace vpr {
 class VPR_CLASS_API SelectorImplNSPR : public SelectorBase
 {
 public:
-   
+
 
    // XXX: What should we do when we are adding a handler while
    //    also iterating through the current handles.  Bad things "may" happend
    // This happens ALL the time with acceptors because they add to the reactor as they
    // are executing an handleEvent themselves
-   
+
    //: Add the given handle to the selector
    //! PRE: handle is a valid handle
    //! POST: handle is added to the handle set, and initialized to a mask of no-events
@@ -89,7 +89,7 @@ public:
    //: Select
    //! ARGS: numWithEvents - Upon completion, this holds the number of items that have events
    //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
-   vpr::Status select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout);
+   vpr::Status select(vpr::Uint16& numWithEvents, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    //: Get the number of handles
    vpr::Uint16 getNumHandles()
@@ -115,7 +115,7 @@ protected:
 
    PRUint16 convertMaskVprToNspr(vpr::Uint16 mask);
    vpr::Uint16 convertMaskNsprToVpr(PRUint16 mask);
-   
+
 protected:
 
    std::vector<PRPollDesc>                  mPollDescs;    // List of Poll Descriptions to pass to PR_Poll()
