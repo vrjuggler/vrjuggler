@@ -42,8 +42,6 @@
  * ----------------------------------------------------------------------------
  */
 
-#include <vpr/vprConfig.h>
-
 /* This should always be included first. */
 #include <jccl/jcclDefines.h>
 
@@ -75,25 +73,13 @@
 
 #endif   /* WIN32 */
 
-
-/* Common C++ includes. */
-/* Put here for pre-compiled headers. */
-#ifdef __cplusplus
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <vector>
-#include <string>
-
-#endif   /* __cplusplus */
-
 /*
  * ----------------------------------------------------------------------------
  * DLL-related macros.  These are based on the macros used by NSPR.  Use
  * JCCL_EXTERN for the prototype and JCCL_IMPLEMENT for the implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef VPR_OS_Win32
+#ifdef WIN32
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -134,7 +120,7 @@
 #   define JCCL_CALLBACK_DECL
 #   define JCCL_STATIC_CALLBACK(__x) static __x
 
-#endif	/* VPR_OS_Win32 */
+#endif	/* WIN32 */
 
 #ifdef _JCCL_BUILD_
 #   define JCCL_API(__type)	JCCL_EXPORT(__type)
