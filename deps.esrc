@@ -5,7 +5,7 @@ GMTL
 {
    Source
    {
-      CVSROOT: allenb@cvs.ggt.sourceforge.net:/cvsroot/ggt;
+      CVSROOT: :pserver:anonymous@cvs.ggt.sourceforge.net:/cvsroot/ggt;
       Module: GGT/modules/GMTL   [modules/GMTL];
       Tag: HEAD;
       Path: .;
@@ -13,7 +13,7 @@ GMTL
 
    Macros
    {
-      CVSROOT: allenb@cvs.ggt.sourceforge.net:/cvsroot/ggt;
+      CVSROOT: :pserver:anonymous@cvs.ggt.sourceforge.net:/cvsroot/ggt;
       Module: GGT/macros   [macros.GGT];
       Tag: HEAD;
       Path: .;
@@ -22,7 +22,7 @@ GMTL
 
 Doozer      // Get Doozer for makefiles
 {
-   CVSROOT: allenb@cvs.doozer.sourceforge.net:/cvsroot/doozer;
+   CVSROOT: :pserver:anonymous@cvs.doozer.sourceforge.net:/cvsroot/doozer;
    Module: Doozer;
    Tag: HEAD;
    Path: .;
