@@ -70,9 +70,9 @@ DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
 EXTRA_FLAGS	= 
 INCLUDES	= @INCLUDES@ -I$(topdir) \
                  -I$(srcdir) -I$(srcdir)/TestCases			\
-                 -I$(CPP_UNIT)/CppUnit.old				\
-                 -I$(CPP_UNIT)/CppUnit.old/framework			\
-                 -I$(CPP_UNIT)/CppUnit.old/textui
+                 -I$(CPP_UNIT)/cppunit/CppUnit				\
+                 -I$(CPP_UNIT)/cppunit/CppUnit/framework			\
+                 -I$(CPP_UNIT)/cppunit/CppUnit/textui
 OPTIMIZER	= @DBG_FLAGS@ -D_DEBUG
 LD		= @LD@
 LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF)
@@ -116,7 +116,7 @@ DEPDIR =
 
 INCLUDE_PATHS = 
 PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases 				\
-               $(CPP_UNIT)/CppUnit.old/framework $(CPP_UNIT)/CppUnit.old/textui
+               $(CPP_UNIT)/cppunit/CppUnit/framework $(CPP_UNIT)/cppunit/CppUnit/textui
 MK_DIR = $(srcdir)/mk
 
 include ${MK_DIR}/mk.objs
