@@ -56,21 +56,23 @@ main (int argc, char* argv[]) {
         char recv_buf[32];
         char send_buf[] = "Hello there!";
         ssize_t bytes;
+        vpr::Status sock_stat;
 
         // Loop forever reading messages from clients.
         while ( 1 ) {
             vpr::InetAddr addr;
 
             // Read a message from a client.
-            bytes = sock.recvfrom(recv_buf, sizeof(recv_buf), 0, addr);
+            sock_stat = sock.recvfrom(recv_buf, sizeof(recv_buf), 0, addr,
+                                      bytes);
 
             // If we read anything, print it and send a response.
-            if ( bytes != -1 ) {
+            if ( sock_stat.success() ) {
                 std::cout << "Read '" << recv_buf << "' (" << bytes
                           << " bytes) from " << addr.getAddressString()
                           << std::endl;
 
-                sock.sendto(send_buf, sizeof(send_buf), 0, addr);
+                sock.sendto(send_buf, sizeof(send_buf), 0, addr, bytes);
             }
         }
 

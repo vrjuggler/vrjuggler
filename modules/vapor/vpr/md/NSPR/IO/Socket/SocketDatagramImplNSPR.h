@@ -97,35 +97,38 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status recvfrom(void* msg, const size_t len, const int flags,
+    virtual Status recvfrom(void* msg, const size_t length, const int flags,
                             InetAddr& from, ssize_t& bytes_read);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status recvfrom(std::vector<char>& msg, const int flags,
-                            InetAddr& from, ssize_t& bytes_read);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual Status recvfrom(std::vector<char>& msg, const size_t len,
+    virtual Status recvfrom(std::string& msg, const size_t length,
                             const int flags, InetAddr& from,
                             ssize_t& bytes_read);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status sendto(const void* msg, const size_t len, const int flags,
-                          const InetAddr& to, ssize_t& bytes_sent);
+    virtual Status recvfrom(std::vector<vpr::Uint8>& msg, const size_t length,
+                            const int flags, InetAddr& from,
+                            ssize_t& bytes_read);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status sendto(const std::vector<char>& msg, const int flags,
-                          const InetAddr& to, ssize_t& bytes_sent);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual Status sendto(const std::vector<char>& msg, const size_t len,
+    virtual Status sendto(const void* msg, const size_t length,
                           const int flags, const InetAddr& to,
                           ssize_t& bytes_sent);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual Status sendto(const std::string& msg, const size_t length,
+                          const int flags, const InetAddr& to,
+                          ssize_t& bytes_sent);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual Status sendto(const std::vector<vpr::Uint8>& msg,
+                          const size_t length, const int flags,
+                          const InetAddr& to, ssize_t& bytes_sent);
 
 protected:
     // ------------------------------------------------------------------------

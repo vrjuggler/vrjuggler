@@ -37,6 +37,7 @@
 #include <sys/socket.h>
 #include <errno.h>
 
+#include <Utils/Assert.h>
 #include <md/POSIX/SocketDatagramImpBSD.h>
 
 
@@ -53,113 +54,109 @@ namespace vpr {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpBSD::recvfrom (void* msg, const size_t len,
-                                const int flags, InetAddr& from)
+Status
+SocketDatagramImpBSD::recvfrom (void* msg, const size_t length,
+                                const int flags, InetAddr& from,
+                                ssize_t& bytes_read)
 {
     socklen_t fromlen;
-    ssize_t bytes;
+    Status retval;
 
-    fromlen = from.size();
-    bytes   = ::recvfrom(m_handle->m_fdesc, msg, len, flags,
-                         (struct sockaddr*) &from.m_addr, &fromlen);
+    fromlen    = from.size();
+    bytes_read = ::recvfrom(m_handle->m_fdesc, msg, length, flags,
+                            (struct sockaddr*) &from.m_addr, &fromlen);
 
-    if ( bytes == -1 ) {
+    if ( bytes_read == -1 ) {
         fprintf(stderr,
                 "[vpr::SocketDatagramImpBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
                 m_remote_addr.getAddressString().c_str(),
                 m_remote_addr.getPort(), strerror(errno));
+        retval.setCode(Status::Failure);
     }
 
-    return bytes;
+    return retval;
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpBSD::recvfrom (std::vector<char>& msg, const int flags,
-                                InetAddr& from)
+Status
+SocketDatagramImpBSD::recvfrom (std::string& msg, const size_t length,
+                                const int flags, InetAddr& from,
+                                ssize_t& bytes_read)
 {
-    return recvfrom(msg, msg.size(), flags, from);
+    msg.resize(length);
+    memset(&msg[0], '\0', msg.size());
+
+    return recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read);
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpBSD::recvfrom (std::vector<char>& msg, const size_t len,
-                                const int flags, InetAddr& from)
+Status
+SocketDatagramImpBSD::recvfrom (std::vector<vpr::Uint8>& msg,
+                                const size_t length, const int flags,
+                                InetAddr& from, ssize_t& bytes_read)
 {
-    ssize_t bytes;
-    char* temp_buf;
+    Status retval;
 
-    temp_buf = (char*) malloc(len);
-    bytes    = recvfrom(temp_buf, len, flags, from);
+    msg.resize(length);
 
-    // If anything was read into temp_buf, copy it into msg.
-    if ( bytes > -1 ) {
-        for ( ssize_t i = 0; i < bytes; i++ ) {
-            msg[i] = temp_buf[i];
-        }
+    memset(&msg[0], '\0', msg.size());
+    retval = recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read);
+
+    // Size it down if needed, if (bytes_read==length), then resize does
+    // nothing.
+    if ( bytes_read >= 0 ) {
+        msg.resize(bytes_read);
     }
 
-    free(temp_buf);
-
-    return bytes;
+    return retval;
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpBSD::sendto (const void* msg, const size_t len,
-                              const int flags, const InetAddr& to)
+Status
+SocketDatagramImpBSD::sendto (const void* msg, const size_t length,
+                              const int flags, const InetAddr& to,
+                              ssize_t& bytes_sent)
 {
-    ssize_t bytes;
+    Status retval;
 
-    bytes = ::sendto(m_handle->m_fdesc, msg, len, flags,
-                     (struct sockaddr*) &to.m_addr, to.size());
+    bytes_sent = ::sendto(m_handle->m_fdesc, msg, length, flags,
+                          (struct sockaddr*) &to.m_addr, to.size());
 
-    if ( bytes == -1 ) {
+    if ( bytes_sent == -1 ) {
         fprintf(stderr,
                 "[vpr::SocketDatagramImpBSD] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
                 to.getAddressString().c_str(), to.getPort(),
                 m_remote_addr.getAddressString().c_str(),
                 m_remote_addr.getPort(), strerror(errno));
+        retval.setCode(Status::Failure);
     }
 
-    return bytes;
+    return retval;
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpBSD::sendto (const std::vector<char>& msg,
-                              const int flags, const InetAddr& to)
+Status
+SocketDatagramImpBSD::sendto (const std::string& msg, const size_t length,
+                              const int flags, const InetAddr& to,
+                              ssize_t& bytes_sent)
 {
-    return sendto(msg, msg.size(), flags, to);
+    vprASSERT(length <= msg.size() && "Length is bigger than data given");
+    return sendto(msg.c_str(), length, flags, to, bytes_sent);
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-ssize_t
-SocketDatagramImpBSD::sendto (const std::vector<char>& msg, const size_t len,
-                              const int flags, const InetAddr& to)
+Status
+SocketDatagramImpBSD::sendto (const std::vector<vpr::Uint8>& msg,
+                              const size_t length, const int flags,
+                              const InetAddr& to, ssize_t& bytes_sent)
 {
-    ssize_t bytes;
-    char* temp_buf;
-
-    temp_buf = (char*) malloc(len);
-
-    // Copy the contents of msg into temp_buf.
-    for ( size_t i = 0; i < len; i++ ) {
-        temp_buf[i] = msg[i];
-    }
-
-    // Write temp_buf to the file handle.
-    bytes = sendto(temp_buf, len, flags, to);
-
-    free(temp_buf);
-
-    return bytes;
+    vprASSERT(length <= msg.size() && "Length is bigger than data given");
+    return sendto((const void*) &msg[0], length, flags, to, bytes_sent);
 }
 
 }; // End of vpr namespace
