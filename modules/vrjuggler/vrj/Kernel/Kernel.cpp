@@ -140,12 +140,8 @@ void Kernel::controlLoop(void* nullParam)
 {
    vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::controlLoop: Started.\n" << vprDEBUG_FLUSH;
 
-   while (0 == vpr::Thread::self())
-   {
-      vprDEBUG(vprDBG_ALL,1) << "vjKernel: Waiting for (thread::self() != NULL)\n" << vprDEBUG_FLUSH;
-      vpr::System::usleep(50);
-   }
-   mControlThread = (vpr::Thread*) vpr::Thread::self();
+   vprASSERT (NULL != vpr::Thread::self());
+   mControlThread = vpr::Thread::self();
 
    // Do any initial configuration
    initConfig();
