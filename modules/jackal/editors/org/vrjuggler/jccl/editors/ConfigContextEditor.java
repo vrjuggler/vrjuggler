@@ -55,10 +55,10 @@ public class ConfigContextEditor
                if(null == node)
                {
                   // Empty the property sheet.
-                  mElementPropSheet.removeAll();
+                  mElementPropSheet.finalize();
                   mElementPropSheet.revalidate();
                   mElementPropSheet.repaint();
-
+                  
                   return;
                }
 
@@ -85,6 +85,11 @@ public class ConfigContextEditor
                
                // Create a new PropertySheet for the given ConfigElement.
                ConfigElement elt = (ConfigElement)value;
+               
+               if (null != mElementPropSheet)
+               {
+                  mElementPropSheet.finalize();
+               }
                
                mElementPropSheet =
                   PropertySheetFactory.instance().makeSheet(elt, start_color);
@@ -121,6 +126,10 @@ public class ConfigContextEditor
          }
          
          // Create a new PropertySheet for the given ConfigElement.
+         if (null != mElementPropSheet)
+         {
+            mElementPropSheet.finalize();
+         }
          mElementPropSheet =
             PropertySheetFactory.instance().makeSheet(elt, start_color);
                

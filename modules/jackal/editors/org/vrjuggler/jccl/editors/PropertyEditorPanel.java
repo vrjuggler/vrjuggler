@@ -1,3 +1,34 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.editors;
 
 import java.awt.BorderLayout;
@@ -7,6 +38,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.Font;
 import java.awt.Insets;
 import java.beans.PropertyEditor;
@@ -18,7 +50,46 @@ import org.vrjuggler.jccl.config.event.*;
 
 public class PropertyEditorPanel extends PropertyComponent 
                                  implements ConfigElementListener
-{   
+{
+   public void finalize()
+   {
+      mConfigElement.removeConfigElementListener(this);
+
+      if (mEditorComponent instanceof JComboBox)
+      {
+         JComboBox combo = (JComboBox)mEditorComponent;
+         ActionListener[] listeners = combo.getActionListeners();
+         for (int i = 0 ; i < listeners.length ; ++i)
+         {
+            combo.removeActionListener(listeners[i]);
+         }
+         
+         FocusListener[] focus_listeners = combo.getFocusListeners();
+         for (int i = 0 ; i < focus_listeners.length ; ++i)
+         {
+            combo.removeFocusListener(focus_listeners[i]);
+         }
+      }
+      else if (mEditorComponent instanceof JTextField)
+      {
+         JTextField txt_field = (JTextField)mEditorComponent;
+         ActionListener[] listeners = txt_field.getActionListeners();
+         for (int i = 0 ; i < listeners.length ; ++i)
+         {
+            txt_field.removeActionListener(listeners[i]);
+         }
+         
+         FocusListener[] focus_listeners = txt_field.getFocusListeners();
+         for (int i = 0 ; i < focus_listeners.length ; ++i)
+         {
+            txt_field.removeFocusListener(focus_listeners[i]);
+         }
+      }
+         
+
+      super.finalize();
+   }
+
    public PropertyEditorPanel(Object value, PropertyDefinition prop_def, ConfigElement elm, 
                               int prop_num, Color color)
    {
@@ -116,7 +187,8 @@ public class PropertyEditorPanel extends PropertyComponent
    protected Component createComboBox()
    {
       // Populate the box with the tags
-      final JComboBox box = new JComboBox(mEditor.getTags());
+      JComboBox box = new JComboBox(mEditor.getTags());
+      mEditorComponent = box;
       //box.setBorder(BorderFactory.createLoweredBevelBorder());
       box.setEditable(mPropDef.enumIsEditable());
       box.setSelectedItem(mEditor.getAsText());
@@ -135,14 +207,14 @@ public class PropertyEditorPanel extends PropertyComponent
             // Set the help text.
             ConfigContextEditor context_editor =
                (ConfigContextEditor)SwingUtilities.getAncestorOfClass(ConfigContextEditor.class,
-                                                                      box);
+                                                                      mEditorComponent);
             if (null != context_editor)
             {
                context_editor.getHelpPane().setText(mPropDef.getHelp());
             }
          }
       });
-      return box;
+      return mEditorComponent;
    }
 
    /**
@@ -153,6 +225,7 @@ public class PropertyEditorPanel extends PropertyComponent
    {
       // Populate the text field with the object's string value
       final JTextField txtField = new JTextField(mEditor.getAsText());
+      mEditorComponent = txtField;
       txtField.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
       txtField.addActionListener(new ActionListener()
       {
@@ -160,9 +233,9 @@ public class PropertyEditorPanel extends PropertyComponent
          {
             txtField.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
             // Force the focus to be lost.
-            txtField.transferFocusUpCycle();
+            mEditorComponent.transferFocusUpCycle();
             // Force the focus to be transfered to the next component.
-            //txtField.transferFocus();
+            //mEditorComponent.transferFocus();
 
             // This is no longer needed since the above line will force a
             // focusLostEvent. But I have choosen to leave this line here in
@@ -179,7 +252,7 @@ public class PropertyEditorPanel extends PropertyComponent
             // Set the help text.
             ConfigContextEditor context_editor =
                (ConfigContextEditor)SwingUtilities.getAncestorOfClass(ConfigContextEditor.class,
-                                                                      txtField);
+                                                                      mEditorComponent);
             if (null != context_editor)
             {
                context_editor.getHelpPane().setText(mPropDef.getHelp());
@@ -191,7 +264,7 @@ public class PropertyEditorPanel extends PropertyComponent
             stopCellEditing();
          }
       });
-      return txtField;
+      return mEditorComponent;
    }
 
    /**

@@ -2,11 +2,25 @@ package org.vrjuggler.jccl.editors;
 
 import javax.swing.JPanel;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import info.clearthought.layout.*;
 
 public class PropertyComponent extends JPanel
 {
+   public void finalize()
+   {
+      for (int i = 0 ; i < getComponentCount() ; i++)
+      {
+         Component c = getComponent(i);
+         if (c instanceof PropertyComponent)
+         {
+            ((PropertyComponent)c).finalize();
+         }
+      }
+      removeAll();
+   }
+
    public Color getNextColor()
    {
       boolean inc = false;
@@ -15,7 +29,7 @@ public class PropertyComponent extends JPanel
       int g = mColor.getGreen();
       int b = mColor.getBlue();
       float hsb[] = {0.0f,0.0f,0.0f};
-      
+
       Color.RGBtoHSB(r,g,b,hsb);
 
       if(hsb[1] > 0.7)
@@ -38,7 +52,7 @@ public class PropertyComponent extends JPanel
 
       Color new_color = Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
       return new_color;
-      
+
       /*
       int red_val = mColor.getRed();
       if(red_val == 85)
