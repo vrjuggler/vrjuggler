@@ -210,7 +210,7 @@ if test "x$OPENAL_ENABLED" = "xyes" ; then
       INCLUDES="$INCLUDES $AL_INCLUDES"
       LDFLAGS="$LDFLAGS $AL_LDFLAGS"
       LIBS="$LIBS $LIBOPENAL"
-      echo "+ added OpenAL to your compile-time paths"
+      echo "+ added OpenAL to the compile and link paths"
    else
       AC_MSG_ERROR(*** you've requested to use OpenAL as one of your audio subsystems, but it was not found ***)
    fi
@@ -227,7 +227,7 @@ if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
       INCLUDES="$INCLUDES $AW_INCLUDES"
       LDFLAGS="$LDFLAGS $AW_LDFLAGS"
       LIBS="$LIBS $LIBAUDIOWORKS"
-      echo "+ added AudioWorks to your compile-time paths"
+      echo "+ added AudioWorks to the compile and link paths"
    else
       AC_MSG_ERROR(*** you've requested to use AudioWorks as one of your audio subsystems, but it was not found ***)
    fi
@@ -238,7 +238,7 @@ dnl echo "+ setting CPPFLAGS == $CPPFLAGS"
 dnl echo "+ setting INCLUDES == $INCLUDES"
 dnl echo "+ setting LDFLAGS == $LDFLAGS"
 dnl echo "+ setting LIBS == $LIBS"
-
+dnl echo "+ al_ldflags == $AL_LDFLAGS"
 
 DPP_SUBST
 DPP_GET_SRCDIR_ABSOLUTE

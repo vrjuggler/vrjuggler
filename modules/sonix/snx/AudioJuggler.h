@@ -153,7 +153,7 @@ public:
    virtual void changeAPI( const std::string& apiName )
    {
       ajSoundImplementation* oldImpl = mImplementation;
-      ajSoundFactory::createImplementation( apiName, mImplementation );
+      ajSoundFactory::instance().createImplementation( apiName, mImplementation );
 
       // copy sound state (doesn't do binding here)
       mImplementation->copy( *oldImpl );
@@ -220,7 +220,7 @@ protected:
    {
       if (mImplementation == NULL)
       {
-         ajSoundFactory::createImplementation( "stub", mImplementation );
+         ajSoundFactory::instance().createImplementation( "stub", mImplementation );
          mImplementation->startAPI();
          mImplementation->bindAll();
       }

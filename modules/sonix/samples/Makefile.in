@@ -37,7 +37,7 @@ USE_MAKEDEPEND	= @USE_MAKEDEPEND@
 LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
                   $(EXTRA_FLAGS)
 
-EXTRA_LIBS	= 
+EXTRA_LIBS	= -L${topdir}/aj -lAudioJuggler
 
 # -----------------------------------------------------------------------------
 # Compiler command lines.

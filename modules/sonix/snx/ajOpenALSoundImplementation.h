@@ -3,6 +3,7 @@
 #ifndef AJOPENALSOUNDIMPLEMENTATION_H
 #define AJOPENALSOUNDIMPLEMENTATION_H
 
+#include <map>
 #include <string>
 #include <vector>
 #include "aj/ajSoundImplementation.h"
@@ -193,7 +194,10 @@ private:
    
    struct ajAlSoundInfo
    {
-      ajAlSoundInfo() : data(), source( 0 ), buffer( 0 ) {}
+      ajAlSoundInfo() : data(), source( 0 ), buffer( 0 ) 
+      {
+      }
+
       ALuint source, buffer;
       std::vector<unsigned char> data; // TODO: use the source ajSoundInfo
                                        // instead of this separate copy of the data...
