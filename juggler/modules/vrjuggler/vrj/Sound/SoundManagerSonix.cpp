@@ -44,9 +44,12 @@ namespace vrj
     */
    bool SoundManagerSonix::configAdd( jccl::ConfigChunkPtr chunk )
    {
+      vprDEBUG(vprDBG_ALL, 2) << "======================================" << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, 2) << "SoundManagerSonix is being configured..." << "\n" << vprDEBUG_FLUSH;
+      
       if (!configCanHandle( chunk ))
       {
-         std::cerr << "ERROR: Wrong chunk type\n" << std::flush;
+         std::cerr << "ERROR: Wrong chunk type in SoundManagerSonix\n" << std::flush;
          return false;
       }
 
@@ -65,10 +68,11 @@ namespace vrj
       sonix::instance()->setListenerPosition( mat );
 
       // read the list of sounds
-      int size = chunk->getNum( "Sound" );
+      int size = chunk->getNum( "Sounds" );
+      vprDEBUG(vprDBG_ALL, 2) << "Configuring " << size << " sounds" << "\n" << vprDEBUG_FLUSH;
       for (int x = 0; x < size; ++x)
       {
-         jccl::ConfigChunkPtr sound_chunk = chunk->getProperty<jccl::ConfigChunkPtr>( "Sound", x );
+         jccl::ConfigChunkPtr sound_chunk = chunk->getProperty<jccl::ConfigChunkPtr>( "Sounds", x );
          std::string alias = (std::string)sound_chunk->getName();
          std::string filename = (std::string)sound_chunk->getProperty<std::string>( "filename" );
          bool ambient = (bool)sound_chunk->getProperty<bool>( "ambient" );
@@ -90,7 +94,9 @@ namespace vrj
          si.position[1] = position[1];
          si.position[2] = position[2];
          sonix::instance()->configure( alias, si );
+         vprDEBUG(vprDBG_ALL, 2) << "- Configuring " << alias << " to file " << filename << " at pos:" << position[0] << "," << position[1] << "," << position[2] << "\n" << vprDEBUG_FLUSH;
       }
+      vprDEBUG(vprDBG_ALL, 2) << "======================================" << "\n" << vprDEBUG_FLUSH;
 
       return true;
    }
