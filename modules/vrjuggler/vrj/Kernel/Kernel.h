@@ -213,7 +213,7 @@ public:      // Global "get" interface
    /** Get the user associated with given name.
     * @return NULL if not found.
     */
-   vrj::User*  getUser(std::string userName);
+   vrj::User* getUser(const std::string& userName);
 
    /** Get a list of the users back. */
    std::vector<vrj::User*> getUsers()
