@@ -282,7 +282,7 @@ void vjInputManager::DumpStatus()
 
       // Dump Alias list
   cout << "   Alias List:" << endl;
-  for(map<std::string, int>::iterator cur_alias = proxyAliases.begin(); cur_alias != proxyAliases.end(); cur_alias++)
+  for(std::map<std::string, int>::iterator cur_alias = proxyAliases.begin(); cur_alias != proxyAliases.end(); cur_alias++)
      cout << "      Alias:" << (*cur_alias).first << "  index:" << (*cur_alias).second << endl;
 	
   cout << "  vjInputManager Status**" << endl << flush;
