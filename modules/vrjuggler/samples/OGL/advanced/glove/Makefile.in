@@ -37,8 +37,8 @@ all: glove
 glove: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-main.o: main.cpp application.h
-navigation.o: navigation.cxx navigation.h
+main.o: application.h
+navigation.o: navigation.h
 
 .cpp.o:
 	${COMPILE} -c $<

@@ -33,12 +33,8 @@ all: ${MATH_PROGS}
 testPlane: testPlane.o
 	${COMPILE} -o $@ testPlane.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-testPlane.o: testPlane.cpp
-
 testSeg: testSeg.o
 	${COMPILE} -o $@ testSeg.o ${VJ_LIBS} ${EXTRA_LIBS}
-
-testSeg.o: testSeg.cpp
 
 .cpp.o:
 	${COMPILE} -c $<
