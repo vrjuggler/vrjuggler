@@ -47,6 +47,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+
+// Enable BSD compatibility in sys/ioctl.h on Solaris.
+#ifdef VPR_OS_Solaris
+#  define BSD_COMP
+#endif
+
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <unistd.h>
