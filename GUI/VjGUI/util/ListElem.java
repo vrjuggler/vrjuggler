@@ -1,5 +1,5 @@
 /*
- *  File:	    $Name$
+ *  File:	    $RCSfile$
  *  Date modified:  $Date$
  *  Version:	    $Revision$
  *
