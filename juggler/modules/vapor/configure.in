@@ -50,7 +50,7 @@ AC_REVISION($Revision$)
 AC_INIT([vpr/vprConfig.h])
 AC_CONFIG_AUX_DIR([../../share/config])
 AC_CONFIG_HEADER([vpr/vprDefines.h])
-DPP_PREREQ([1.4.103])
+DPP_PREREQ([1.4.104])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -452,7 +452,7 @@ DPP_LANG_CPLUSPLUS
 AC_CHECK_HEADERS([hash_map ext/hash_map hash_map.h])
 DPP_LANG_RESTORE
 
-DPP_HAVE_BOOST([$JUGGLERROOT_ABS/external/boost],
+DPP_HAVE_BOOST(1.28, [$JUGGLERROOT_ABS/external/boost],
                [$JUGGLERROOT_ABS/external/boost], ,
                [AC_MSG_ERROR([*** Boost is required for VPR ***])])
 
