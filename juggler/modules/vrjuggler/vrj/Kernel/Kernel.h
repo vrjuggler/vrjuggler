@@ -34,14 +34,14 @@
 // @author  Allen Bierbaum
 //
 // Date: 9-7-97
-//------------------------------------------------------- 
+//-------------------------------------------------------
 class vjKernel
 {
 public:
 
    //: Start the Kernel running
    int start();
-      
+
    //: Setup all the managers and load the config information
    void initConfig();
 
@@ -50,7 +50,7 @@ public:
 
    // Set the application object for the Kernel to deal with
    //  If there is another app active, it has to stop that
-   //  application first then restart all API specific Managers. 
+   //  application first then restart all API specific Managers.
    void setApplication(vjApp* _app)
    { app = _app; }
 
@@ -102,23 +102,23 @@ public:
    vjSystemData    data;   //: Global system data
 
 protected:
-   
+
    vjApp* app;                         //: The app object
-   vjThreadId* controlPid;             //: The pid for the thread in control of me.
-   
+   vjThread*   mControlThread;             //: The thread in control of me.
+
    /// Factories and Managers
    vjAPIFactory*     apiFactory;          //: The Current API Factory
    vjSystemFactory*  sysFactory;          //: The current System factory
    vjDrawManager*    drawManager;         //: The Draw Manager we are currently using
    vjDisplayManager* displayManager;      //: The Display Manager we are currently using
-   
+
    /// Config Stuff
    vjChunkDescDB*    configDesc;
    vjConfigChunkDB*  chunkDB;
    string            mProgramConfigFile;  //: Config file specified by program
 
    /// Shared Memory stuff
-   vjMemPool*       sharedMemPool;   
+   vjMemPool*       sharedMemPool;
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //
@@ -126,7 +126,7 @@ protected:
 protected:
    //: Constructor:  Hidden, so no instantiation is allowed
    vjKernel() : mProgramConfigFile("")
-   { app = NULL;}   
+   { app = NULL;}
 
 public:
    //: Get instance of singleton object
@@ -137,7 +137,7 @@ public:
       return _instance;
    }
 
-private:  
+private:
    static vjKernel* _instance;   //: The instance
 };
 
