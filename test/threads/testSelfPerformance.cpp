@@ -47,7 +47,7 @@ vjMutex thread_count_mutex;        // Protect the count of number of threads run
 
 vjTimer timers[MAX_NUM_THREADS];        // Timers to get the times to call self()
 
-const long num_reps = 100000;          // Number of times to call
+const long num_reps = 10000;          // Number of times to call
 
 void doFunc(void*);
 
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
    double total_avg(0.0f);
    for(int x=0;x<num_threads;x++)
    {
-      total_avg += timers[x].getTiming();
+      total_avg += timers[x].getTiming()/(double)num_reps;
    }
 
    total_avg /= (double)num_threads;
@@ -97,16 +97,15 @@ void doFunc(void* void_thread_num)
          
    vjBaseThread* my_thread;
 
+   timers[thread_num].startTiming();      
    for(long rep=0;rep<num_reps;rep++)
    {
-      timers[thread_num].startTiming();
       my_thread = vjThread::self();
-      timers[thread_num].stopTiming();
-      my_thread->yield();
    }
+   timers[thread_num].stopTiming();     
    
    vjDEBUG(vjDBG_ALL, 0) << "Thread: " << thread_num << ": Exiting: Avg Time of: "
-                         << (timers[thread_num].getTiming()*1000.0f) << "ms" << endl << vjDEBUG_FLUSH;
+                         << ((timers[thread_num].getTiming()/(double)num_reps)*1000.0f) << "ms" << endl << vjDEBUG_FLUSH;
    thread_count_mutex.acquire();
       thread_count--;               // Removing us from the number there
    thread_count_mutex.release();
