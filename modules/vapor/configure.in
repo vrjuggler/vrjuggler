@@ -213,6 +213,11 @@ esac
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
 
+if test "x$DPP_USING_MSVCCC" = "xyes" ; then
+    AR='$(CXX) /link /lib'
+    LD='$(CXX) /link /dll'
+fi
+
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
 DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** The library requires C++ namesapce support ***))
@@ -582,7 +587,7 @@ elif test "$OS_TYPE" = "Win32" ; then
     APP_LIBS_BASIC="$NSPR_LIB comctl32.lib user32.lib gdi32.lib ws2_32.lib"
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
 
-    DYLIB_DEPS="$NSPR_LIB ws2_32.lib"
+    DYLIB_DEPS="$NSPR_LDFLAGS $NSPR_LIB ws2_32.lib"
 fi
 
 # Translate paths from UNIX-style to Win32.
