@@ -91,6 +91,9 @@ DSOVERSIONOPTS	= @DSOVERSIONOPTS@
 # will be used by ${LD}.
 LDOPTS		:= ${LDOPTS} ${DSOVERSIONOPTS}
 
+# State whether or not to build the configuration editor GUI.
+BUILD_GUI	= @BUILD_GUI@
+
 # Include library building and recursive target code.
 include ${MKPATH}/vj.lib.mk
 include ${MKPATH}/vj.rec.mk
@@ -403,7 +406,7 @@ _check_gui:
 
 # Build the Java-based configuration GUI.
 gui:
-ifeq (@BUILD_GUI@, yes)
+ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Building GUI"
 	@echo "------------------------------------------------"
@@ -667,7 +670,7 @@ install-data:
 
 # Install the Java-based config editor if possible.
 install-gui: _check_gui
-ifeq (@BUILD_GUI@, yes)
+ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Installing vjConfig"
 	@echo "------------------------------------------------"
