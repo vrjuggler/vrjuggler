@@ -32,8 +32,8 @@
 
 #include <stdlib.h>
 
-#include <Kernel/vjKernel.h>
-#include <Kernel/vjProjection.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Display/Projection.h>
 #include <vpr/System.h>
 
 #include <ConesApp.h>
@@ -41,12 +41,12 @@
 
 int
 main (int argc, char* argv[]) {
-    Projection::setNearFar(0.01, 10000.0f);
+    vrj::Projection::setNearFar(0.01, 10000.0f);
 
-    Kernel* kernel;
+    vrj::Kernel* kernel;
     ConesApp* application;
 
-    kernel      = Kernel::instance();   // Get the kernel
+    kernel = vrj::Kernel::instance();   // Get the kernel
 
     if ( argc <= 1 ) {
         // Display some usage info (holding the user by the hand stuff).
@@ -70,7 +70,7 @@ main (int argc, char* argv[]) {
       //- Load user local config
 
     application = new ConesApp();         // Declare an instance of the app
-    kernel->setApplication(application);         // Set application
+    kernel->setApplication(application);  // Set application
 
     while (1) {
        vpr::System::usleep(250000);

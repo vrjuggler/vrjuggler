@@ -33,7 +33,7 @@
 #ifndef _ANALOG_APP_
 #define _ANALOG_APP_
 
-#include <vjConfig.h>          // needed by other juggler classes
+#include <vrj/vjConfig.h>          // needed by other juggler classes
 
 // C++ and STL (standard template library - http://www.sgi.com/Technology/STL)
 #include <iostream> // for std::cout
@@ -47,12 +47,12 @@
 #include <GL/glu.h> // GLU functions (extended opengl stuff)
 
 // VR juggler
-#include <Kernel/GL/vjGlApp.h>     // base OpenGL application API
-#include <Kernel/GL/vjGlContextData.h> // for OpenGL resource IDs
-#include <Utils/vjTimer.h> // so that the cube always spins the same speed
+#include <vrj/Draw/OGL/GlApp.h>     // base OpenGL application API
+#include <vrj/Draw/OGL/GlContextData.h> // for OpenGL resource IDs
+#include <vrj/Util/Timer.h> // so that the cube always spins the same speed
 
 // VR Juggler Input devices:
-#include <Input/InputManager/vjAnalogInterface.h>
+#include <vrj/Input/Type/AnalogInterface.h>
 
 // texture application objects
 #include "renderGeometry.h"  // render interleaved vertex array data 
@@ -60,11 +60,11 @@
 
 //: VR Juggler application demonstration to show you 
 //  how to do texturing in an OpenGL juggler application
-class AnalogDemoApplication : public GlApp
+class AnalogDemoApplication : public vrj::GlApp
 {
 public:
    //: Constructor
-   AnalogDemoApplication( Kernel* kern );
+   AnalogDemoApplication( vrj::Kernel* kern );
 
    //: destructor
    virtual ~AnalogDemoApplication();
@@ -108,14 +108,14 @@ private:
       int id;
    };
    
-   cubeGeometry                  mCubeGeometry;
-   GlContextData<ResourceID>   mCubeDisplayList;
+   cubeGeometry                   mCubeGeometry;
+   vrj::GlContextData<ResourceID> mCubeDisplayList;
 
    // interface to analog input.
-   AnalogInterface             mAnalog0;
+   vrj::AnalogInterface           mAnalog0;
 
    // timer
-   Timer timer;
+   vrj::Timer timer;
 };   
 
 

@@ -30,14 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <math.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <Math/vjVec3.h>
-#include <Math/vjCoord.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Coord.h>
 
 #include <wandApp.h>
 
@@ -55,15 +56,15 @@ void wandApp::bufferPreDraw()
 
 void wandApp::myDraw()
 {
-   //cout << "\n--- myDraw() ---\n";
+   //std::cout << "\n--- myDraw() ---\n";
 
-   //cout << "HeadPos:" << Coord(*mHead->getData()).pos << "\t"
-   //     << "WandPos:" << Coord(*mWand->getData()).pos << endl;
+   //std::cout << "HeadPos:" << vrj::Coord(*mHead->getData()).pos << "\t"
+   //          << "WandPos:" << vrj::Coord(*mWand->getData()).pos << std::endl;
 
    glMatrixMode(GL_MODELVIEW);
 
       // -- Draw box on wand --- //
-   Matrix* wandMatrix;
+   vrj::Matrix* wandMatrix;
    wandMatrix = mWand->getData();      // Get the wand matrix
 
    glPushMatrix();
@@ -73,17 +74,17 @@ void wandApp::myDraw()
          //glColor3f(1.0f, 0.0f, 1.0f);
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
-         if(mButton0->getData() == Digital::ON)
+         if(mButton0->getData() == vrj::Digital::ON)
             wand_color[0] += 0.5f;
-         if(mButton1->getData() == Digital::ON)
+         if(mButton1->getData() == vrj::Digital::ON)
             wand_color[1] += 0.5f;
-         if(mButton2->getData() == Digital::ON)
+         if(mButton2->getData() == vrj::Digital::ON)
             wand_color[2] += 0.5f;
-         if(mButton3->getData() == Digital::ON)
+         if(mButton3->getData() == vrj::Digital::ON)
             wand_color[0] += 0.5f;
-         if(mButton4->getData() == Digital::ON)
+         if(mButton4->getData() == vrj::Digital::ON)
             wand_color[1] += 0.5f;
-         if(mButton5->getData() == Digital::ON)
+         if(mButton5->getData() == vrj::Digital::ON)
             wand_color[2] += 0.5f;
          glColor3fv(wand_color);
          glScalef(0.25f, 0.25f, 0.25f);
@@ -100,10 +101,10 @@ void wandApp::myDraw()
       glPushMatrix();
          glMultMatrixf(wandMatrix->getFloatPtr());    // Goto wand position
 
-         Vec3 x_axis(7.0f,0.0f,0.0f);
-         Vec3 y_axis(0.0f, 7.0f, 0.0f);
-         Vec3 z_axis(0.0f, 0.0f, 7.0f);
-         Vec3 origin(0.0f, 0.0f, 0.0f);
+         vrj::Vec3 x_axis(7.0f,0.0f,0.0f);
+         vrj::Vec3 y_axis(0.0f, 7.0f, 0.0f);
+         vrj::Vec3 z_axis(0.0f, 0.0f, 7.0f);
+         vrj::Vec3 origin(0.0f, 0.0f, 0.0f);
 
          glBegin(GL_LINES);
             glColor3f(1.0f, 0.0f, 0.0f);

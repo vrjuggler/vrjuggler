@@ -32,10 +32,10 @@
 
 #include <iostream>
 
-#include <Math/vjVec3.h>
-#include <Math/vjMatrix.h>
-#include <Math/vjQuat.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Math/Quat.h>
+#include <vrj/Util/Debug.h>
 
 #include <UserData.h>
 
@@ -43,7 +43,7 @@
 // ----------------------------------------------------------------------------
 // Constructor.  Takes the string names of the devices to use.
 // ----------------------------------------------------------------------------
-UserData::UserData(User* user, std::string wandName, std::string incButton,
+UserData::UserData(vrj::User* user, std::string wandName, std::string incButton,
                    std::string decButton, std::string stopButton)
 {
     mCurVelocity = 0.0;
@@ -64,13 +64,13 @@ UserData::UserData(User* user, std::string wandName, std::string incButton,
 // ----------------------------------------------------------------------------
 void
 UserData::updateNavigation (void) {
-    Vec3 xyzAngles;
-    Vec3 xyzTrans;
-    Matrix* wand_matrix;
+    vrj::Vec3 xyzAngles;
+    vrj::Vec3 xyzTrans;
+    vrj::Matrix* wand_matrix;
 
     // Cur*Transform = New Location
-    Matrix transform, transformIdent;
-    Quat   source_rot, goal_rot, slerp_rot;
+    vrj::Matrix transform, transformIdent;
+    vrj::Quat   source_rot, goal_rot, slerp_rot;
 
     transformIdent.makeIdent();   // Create an identity matrix to rotate from
     source_rot.makeRot(transformIdent);
@@ -128,29 +128,29 @@ UserData::updateNavigation (void) {
                               << vjDEBUG_FLUSH;
     }
 
-    if ( mIncVelocityButton->getData() == Digital::TOGGLE_ON ) {
+    if ( mIncVelocityButton->getData() == vrj::Digital::TOGGLE_ON ) {
         vjDEBUG(vjDBG_ALL, 2) << "-- Toggle ON --" << std::endl
                               << vjDEBUG_FLUSH;
     }
 
-    if(mIncVelocityButton->getData() == Digital::TOGGLE_OFF ) {
+    if(mIncVelocityButton->getData() == vrj::Digital::TOGGLE_OFF ) {
         vjDEBUG(vjDBG_ALL, 2) << "-- Toggle OFF --" << std::endl
                               << vjDEBUG_FLUSH;
     }
 
-    if ( mIncVelocityButton->getData() == Digital::ON ) {
+    if ( mIncVelocityButton->getData() == vrj::Digital::ON ) {
         vjDEBUG(vjDBG_ALL, 2) << "-- ON --" << std::endl << vjDEBUG_FLUSH;
     }
 
-    if ( mIncVelocityButton->getData() == Digital::OFF ) {
+    if ( mIncVelocityButton->getData() == vrj::Digital::OFF ) {
         vjDEBUG(vjDBG_ALL, 2) << "-- OFF --" << std::endl << vjDEBUG_FLUSH;
     }
 
     // Find direction vector.
-    Vec3 forward(0.0f, 0.0f, -1.0f);
+    vrj::Vec3 forward(0.0f, 0.0f, -1.0f);
     forward *= mCurVelocity;
 
-    Matrix rot_mat, local_xform;
+    vrj::Matrix rot_mat, local_xform;
     rot_mat.invert(transform);
 
     local_xform.makeTrans(0, 0, mCurVelocity);

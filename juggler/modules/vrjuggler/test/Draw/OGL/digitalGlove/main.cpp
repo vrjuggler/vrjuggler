@@ -38,12 +38,12 @@
 #include <digitalGloveApp.h>
 
       // --- Lib Stuff --- //
-#include <Kernel/vjKernel.h>
+#include <vrj/Kernel/Kernel.h>
 #include <vpr/System.h>
 
 int main(int argc, char* argv[])
 {
-   Kernel* kernel = Kernel::instance();           // Get the kernel
+   vrj::Kernel* kernel = vrj::Kernel::instance();           // Get the kernel
    digitalGloveApp* application = new digitalGloveApp(kernel);       // Declare an instance of the app
 
    if (argc <= 1)

@@ -34,8 +34,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <Math/vjMatrix.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
 #include <ConesApp.h>
@@ -70,7 +70,7 @@ ConesApp::init () {
     vjDEBUG(vjDBG_ALL, 0) << "---------- Cones:App:init() ---------------"
                           << std::endl << vjDEBUG_FLUSH;
 
-    std::vector<User*> users = kernel->getUsers();
+    std::vector<vrj::User*> users = kernel->getUsers();
     int num_users = users.size();
 
     // Make sure that we actually have users defined.
@@ -179,7 +179,7 @@ void
 ConesApp::draw () {
     initGLState();    // This should really be in another function
 
-    myDraw(GlDrawManager::instance()->currentUserData()->getUser());
+    myDraw(vrj::GlDrawManager::instance()->currentUserData()->getUser());
 }
 
 // ----------------------------------------------------------------------------
@@ -209,7 +209,7 @@ bool
 ConesApp::depSatisfied () {
     // We can't start until there are users registered wth the system.
     // We rely upon users to keep track of the multi-user data structure.
-    int num_users = Kernel::instance()->getUsers().size();
+    int num_users = vrj::Kernel::instance()->getUsers().size();
     return (num_users > 0);
 }
 
@@ -221,7 +221,7 @@ ConesApp::depSatisfied () {
 // Draw the scene.  A bunch of cones of differing color and stuff.
 // ----------------------------------------------------------------------------
 void
-ConesApp::myDraw (User* user) {
+ConesApp::myDraw (vrj::User* user) {
     vjDEBUG(vjDBG_ALL, 2) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
 
     static const float SCALE = 100;
@@ -233,7 +233,7 @@ ConesApp::myDraw (User* user) {
 
     glPushMatrix();
         // Push on Navigation matrix for the user.
-        Matrix nav_matrix = mUserData[user->getId()]->mNavMatrix;
+        vrj::Matrix nav_matrix = mUserData[user->getId()]->mNavMatrix;
         glMultMatrixf(nav_matrix.getFloatPtr());
 
         // Main cone loop.

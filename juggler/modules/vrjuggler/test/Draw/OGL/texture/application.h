@@ -33,7 +33,7 @@
 #ifndef _TEXTURE_APP_
 #define _TEXTURE_APP_
 
-#include <vjConfig.h>          // needed by other juggler classes
+#include <vrj/vjConfig.h>          // needed by other juggler classes
 
 // C++ and STL (standard template library - http://www.sgi.com/Technology/STL)
 #include <iostream> // for std::cout
@@ -47,9 +47,9 @@
 #include <GL/glu.h> // GLU functions (extended opengl stuff)
 
 // VR juggler
-#include <Kernel/GL/vjGlApp.h>     // base OpenGL application API
-#include <Kernel/GL/vjGlContextData.h> // for OpenGL resource IDs
-#include <Utils/vjTimer.h> // so that the cube always spins the same speed
+#include <vrj/Draw/OGL/GlApp.h>     // base OpenGL application API
+#include <vrj/Draw/OGL/GlContextData.h> // for OpenGL resource IDs
+#include <vrj/Util/Timer.h> // so that the cube always spins the same speed
 
 // texture application objects
 #include "renderGeometry.h"  // render interleaved vertex array data 
@@ -62,11 +62,11 @@
 
 //: VR Juggler application demonstration to show you 
 //  how to do texturing in an OpenGL juggler application
-class TextureDemoApplication : public GlApp
+class TextureDemoApplication : public vrj::GlApp
 {
 public:
    //: Constructor
-   TextureDemoApplication( Kernel* kern );
+   TextureDemoApplication( vrj::Kernel* kern );
 
    //: destructor
    virtual ~TextureDemoApplication();
@@ -109,29 +109,30 @@ private:
    
    // helper functions to make your code easier to read
    // i.e. hides all the static_cast and template lengthyness
-   static void setTexObjID( Texture& t, GlContextData<ResourceID>& texObjectID )
+   static void setTexObjID( Texture& t,
+                            vrj::GlContextData<ResourceID>& texObjectID )
    {
       void* data = reinterpret_cast<void*>( &texObjectID );
       t.setUserData( data );
    }   
    static int& getTexObjID( Texture& t ) 
    { 
-      GlContextData<ResourceID>* texObject = static_cast<GlContextData<ResourceID>* >( t.userData() );
+      vrj::GlContextData<ResourceID>* texObject = static_cast<vrj::GlContextData<ResourceID>* >( t.userData() );
       return (*texObject)->id;
    }
    
    // Cube objects:
-   Texture                       mCubeTexture;
-   GlContextData<ResourceID>   mCubeTextureObj;
-   cubeGeometry                  mCubeGeometry;
-   GlContextData<ResourceID>   mCubeDisplayList;
+   Texture                        mCubeTexture;
+   vrj::GlContextData<ResourceID> mCubeTextureObj;
+   cubeGeometry                   mCubeGeometry;
+   vrj::GlContextData<ResourceID> mCubeDisplayList;
    
    // Floor:
-   Texture                       mFloorTexture;
-   GlContextData<ResourceID>   mFloorTextureObj;
+   Texture                        mFloorTexture;
+   vrj::GlContextData<ResourceID> mFloorTextureObj;
    
    // timer
-   Timer timer;
+   vrj::Timer timer;
 };
 
 

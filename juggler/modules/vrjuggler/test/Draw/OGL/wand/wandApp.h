@@ -33,17 +33,15 @@
 #ifndef _WAND_APP_
 #define _WAND_APP_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <iostream>
 #include <iomanip.h>
 
-#include <Kernel/GL/vjGlApp.h>
-#include <Math/vjMatrix.h>
+#include <vrj/Draw/OGL/GlApp.h>
 
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjAnalogInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Input/Type/DigitalInterface.h>
 
 // Utility function to draw a cube
 void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
@@ -54,12 +52,12 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 //
 // This application simply renders a box on the wand
 //----------------------------------------------------
-class wandApp : public GlApp
+class wandApp : public vrj::GlApp
 {
 public:
    // Constructor.
-   wandApp(Kernel* kern)
-      : GlApp(kern)         // Initialize base class
+   wandApp(vrj::Kernel* kern)
+      : vrj::GlApp(kern)         // Initialize base class
    {;}
 
    // Destructor.
@@ -180,14 +178,14 @@ private:
    }
 
 public:
-   PosInterface    mWand;      // the Wand
-   PosInterface    mHead;      // the head
-   DigitalInterface   mButton0;
-   DigitalInterface   mButton1;
-   DigitalInterface   mButton2;
-   DigitalInterface   mButton3;
-   DigitalInterface   mButton4;
-   DigitalInterface   mButton5;
+   vrj::PosInterface    mWand;      // the Wand
+   vrj::PosInterface    mHead;      // the head
+   vrj::DigitalInterface   mButton0;
+   vrj::DigitalInterface   mButton1;
+   vrj::DigitalInterface   mButton2;
+   vrj::DigitalInterface   mButton3;
+   vrj::DigitalInterface   mButton4;
+   vrj::DigitalInterface   mButton5;
 };
 
 
