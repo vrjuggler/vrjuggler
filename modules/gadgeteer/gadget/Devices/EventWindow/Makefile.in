@@ -47,17 +47,20 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GADGET_LIBRARY)
 
+xwin_srcs=	EventWindowDepCheckerXWin.cpp	\
+		EventWindowXWin.cpp
+
 ifeq (@OS_TYPE@, Win32)
    SRCS=	EventWindowWin32.cpp
 else
    ifeq (@PLATFORM@, Darwin)
       ifeq (@gadget_use_x11@, yes)
-         SRCS=	EventWindowXWin.cpp
+         SRCS=	$(xwin_srcs)
       else
          SRCS=	EventWindowOSX.cpp
       endif
    else
-      SRCS=	EventWindowXWin.cpp
+      SRCS=	$(xwin_srcs)
    endif
 endif
 
