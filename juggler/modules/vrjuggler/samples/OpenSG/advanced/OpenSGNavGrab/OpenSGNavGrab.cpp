@@ -119,7 +119,7 @@ void OpenSGNavGrab::initScene()
 
       // Box geometry: 2.5x2.5x2.5 (units are in feet)
       // Center point: (0,0,0)
-      osg::NodePtr geom_node = osg::makeBox(-2.5f, 2.5f, -2.5f, 2, 2, 2);
+      osg::NodePtr geom_node = osg::makeBox(2.5f, 2.5f, 2.5f, 1, 1, 1);
       osg::addRefCP(geom_node);
 
       // Move it so that it would butt up against a wall five feet in front
