@@ -155,7 +155,7 @@ public class ConfigChunkPropertySheet
                for (int i=0; i<prop_desc.getNumEnums(); ++i)
                {
                   final DescEnum de = prop_desc.getEnumAt(i);
-                  if (de.getValue().get().equals(value))
+                  if (de.getValue().equals(value))
                   {
                      return new DefaultTableCellRenderer()
                      {
