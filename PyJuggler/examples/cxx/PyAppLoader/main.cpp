@@ -27,7 +27,13 @@
 
 #include <iostream>
 #include <stdlib.h>
-#include <unistd.h>
+
+#ifdef WIN32
+#  include <string.h>
+#else
+#  include <unistd.h>
+#endif
+
 #include <string>
 #include <vector>
 #include <boost/python.hpp>
@@ -85,11 +91,37 @@ int main(int argc, char* argv[])
    // Initialize the interpreter.
    Py_Initialize();
 
+   std::vector<std::string> module_names;
+   bool cfg_file_given(false), module_given(false);
+
+#ifdef WIN32
+   int i, optind;
+
+   for ( i = 1; i < argc; ++i )
+   {
+      if ( strcmp(argv[i], "-c") == 0 )
+      {
+         vrj::Kernel::instance()->loadConfigFile(argv[i + i]);
+         cfg_file_given = true;
+         ++i;
+      }
+      else if ( strcmp(argv[i], "-h") == 0 )
+      {
+         usage(argv[0]);
+      }
+      else if ( strcmp(argv[i], "-m") == 0 )
+      {
+         module_names.push_back(std::string(argv[i + i]));
+         module_given = true;
+         ++i;
+      }
+   }
+
+   optind = i;
+#else
    extern char* optarg;
    extern int optind;
    int ch;
-   std::vector<std::string> module_names;
-   bool cfg_file_given(false), module_given(false);
 
    while ( (ch = getopt(argc, argv, "c:hm:")) != -1 )
    {
@@ -109,6 +141,7 @@ int main(int argc, char* argv[])
             break;
       }
    }
+#endif
 
    if ( argc < 5 || ! (cfg_file_given && module_given) )
    {
