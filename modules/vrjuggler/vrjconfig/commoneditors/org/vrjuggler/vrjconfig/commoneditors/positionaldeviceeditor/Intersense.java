@@ -9,86 +9,6 @@ import net.java.games.jogl.util.GLUT;
     and aligned with the X, Y, and Z axes. */
 public class Intersense extends MovableObject
 {
-   private static final Vec3f[] vertices = {
-      // Front side
-      new Vec3f(-1.8288f, 0.03f, 1.2192f+0.03f),
-      new Vec3f(-1.8288f, -0.03f, 1.2192f+0.03f),
-      new Vec3f(0f, -0.03f, 1.2192f+0.03f),
-      new Vec3f(0f, 0.03f, 1.2192f+0.03f),
-      // Back side
-      new Vec3f(-1.8288f, 0.03f, 1.2192f-0.03f),
-      new Vec3f(-1.8288f, -0.03f, 1.2192f-0.03f),
-      new Vec3f(0f, -0.03f, 1.2192f-0.03f),
-      new Vec3f(0f, 0.03f, 1.2192f-0.03f)
-   };
-
-   private static final int[] vertexIndices = {
-      // Front face
-      0, 1, 2, 3,
-      // Right face
-      3, 2, 6, 7,
-      // Back face
-      7, 6, 5, 4,
-      // Left face
-      4, 5, 1, 0,
-      // Top face
-      4, 0, 3, 7,
-      // Bottom face
-      1, 5, 6, 2
-   };
-
-   private static final Vec2f[] textureCoords = {
-      // Front side
-      new Vec2f(0, 0),
-      new Vec2f(0, 1),
-      new Vec2f(1, 1),
-      new Vec2f(1, 0)
-   };
-
-   private static final int[] textureIndices = {
-      // Front face
-      0, 1, 2, 3,
-      // Right face
-      0, 1, 2, 3,
-      // Back face
-      0, 1, 2, 3,
-      // Left face
-      0, 1, 2, 3,
-      // Top face
-      0, 1, 2, 3,
-      // Bottom face
-      0, 1, 2, 3
-   };
-
-   private static Vec3f[] normals = {
-      // Front face
-      new Vec3f(0, 0, 1),
-      // Right face
-      new Vec3f(1, 0, 0),
-      // Back face
-      new Vec3f(0, 0, -1),
-      // Left face
-      new Vec3f(-1, 0, 0),
-      // Top face
-      new Vec3f(0, 1, 0),
-      // Bottom face
-      new Vec3f(0, -1, 0)
-   };
-   private static int[] normalIndices = {
-      // Front face
-      0, 0, 0, 0,
-      // Right face
-      1, 1, 1, 1,
-      // Back face
-      2, 2, 2, 2,
-      // Left face
-      3, 3, 3, 3,
-      // Top face
-      4, 4, 4, 4,
-      // Bottom face
-      5, 5, 5, 5
-   };
-  
    /** Texture to be displaed as the background. */
    private Texture mTexture = null;
    private GLUT glut = new GLUT();
@@ -121,55 +41,101 @@ public class Intersense extends MovableObject
          float[] data = new float[16];
          mTransform.getColumnMajorData(data);
          gl.glMultMatrixf(data);
+
+         // Draw Axis
+         gl.glLineWidth(2.0f);
+         gl.glDisable(gl.GL_LIGHTING);
+         Vec3f x_axis = new Vec3f(1.0f, 0.0f, 0.0f);
+         Vec3f y_axis = new Vec3f(0.0f, 1.0f, 0.0f);
+         Vec3f z_axis = new Vec3f(0.0f, 0.0f, 1.0f);
+         Vec3f origin = new Vec3f(0.0f, 0.0f, 0.0f);
+
+         gl.glBegin(gl.GL_LINES);
+            gl.glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+            gl.glVertex3f(origin.x(), origin.y(), origin.z());
+            gl.glVertex3f(x_axis.x(), x_axis.y(), x_axis.z());
+
+            gl.glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+            gl.glVertex3f(origin.x(), origin.y(), origin.z());
+            gl.glVertex3f(y_axis.x(), y_axis.y(), y_axis.z());
+
+            gl.glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+            gl.glVertex3f(origin.x(), origin.y(), origin.z());
+            gl.glVertex3f(z_axis.x(), z_axis.y(), z_axis.z());
+         gl.glEnd();
+         gl.glEnable(gl.GL_LIGHTING);
          
          //gl.glEnable(gl.GL_LIGHTING);
          
          mTexture.bind(gl);
-         gl.glBegin(GL.GL_QUADS);
-            gl.glColor3f(1.0f, 1.0f, 1.0f);
-            int i = 0;
-            while (i < vertexIndices.length)
-            {
-               Vec3f n0 = normals[normalIndices[i]];
-               Vec3f v0 = vertices[vertexIndices[i]];
-               Vec2f t0 = textureCoords[textureIndices[i]];
-               gl.glNormal3f(n0.x(), n0.y(), n0.z());
-               if (i < 4)
-                  gl.glTexCoord2d(t0.x(), t0.y());
-               gl.glVertex3f(v0.x(), v0.y(), v0.z());
-               i++;
 
-               Vec3f n1 = normals[normalIndices[i]];
-               Vec3f v1 = vertices[vertexIndices[i]];
-               Vec2f t1 = textureCoords[textureIndices[i]];
-               gl.glNormal3f(n1.x(), n1.y(), n1.z());
-               if (i < 4)
-                  gl.glTexCoord2d(t1.x(), t1.y());
-               gl.glVertex3f(v1.x(), v1.y(), v1.z());
-               i++;
-
-               Vec3f n2 = normals[normalIndices[i]];
-               Vec3f v2 = vertices[vertexIndices[i]];
-               Vec2f t2 = textureCoords[textureIndices[i]];
-               gl.glNormal3f(n2.x(), n2.y(), n2.z());
-               if (i < 4)
-                  gl.glTexCoord2d(t2.x(), t2.y());
-               gl.glVertex3f(v2.x(), v2.y(), v2.z());
-               i++;
-
-               Vec3f n3 = normals[normalIndices[i]];
-               Vec3f v3 = vertices[vertexIndices[i]];
-               Vec2f t3 = textureCoords[textureIndices[i]];
-               gl.glNormal3f(n3.x(), n3.y(), n3.z());
-               if (i < 4)
-                  gl.glTexCoord2d(t3.x(), t3.y());
-               gl.glVertex3f(v3.x(), v3.y(), v3.z());
-               i++;
-            }
-         gl.glEnd();
+         /** Standard 6ft 4ft 6ft Fixed Frame
+          * MCC
+          * MCF1,0.0000,1.2192,0.0000,0.00,0.00,1.00,215
+          * MCF2,-0.9144,1.2192,0.0000,0.00,0.00,1.00,216
+          * MCF3,-1.8288,1.2192,0.0000,0.00,0.00,1.00,217
+          *
+          * MCF4,0.0000,0.0000,0.0000,0.00,0.00,1.00,209
+          * MCF5,-0.9144,0.0000,0.0000,0.00,0.00,1.00,210
+          * MCF6,-1.8288,0.0000,0.0000,0.00,0.00,1.00,211
+          *
+          * MCF7,-0.3048,0.6096,0.0000,0.00,0.00,1.00,527
+          * MCF8,-0.9144,0.6096,0.0000,0.00,0.00,1.00,528
+          * MCF9,-1.5240,0.6096,0.0000,0.00,0.00,1.00,529
+          * MCe
+          */
+         drawBox(gl, new Vec3f(-1.8288f,1.2192f-0.03f,-0.03f), new Vec3f(-0.0f,1.2192f+0.03f,0.03f), gl.GL_QUADS);
+         drawBox(gl, new Vec3f(-1.8288f,-0.03f,-0.03f), new Vec3f(-0.0f,0.03f,0.03f), gl.GL_QUADS);
+         drawBox(gl, new Vec3f(-1.5240f,0.6096f-0.03f,-0.03f), new Vec3f(-0.3048f,0.6096f+0.03f,0.03f), gl.GL_QUADS);
          mTexture.unbind(gl);
          if (lightingOn)
             gl.glDisable(GL.GL_COLOR_MATERIAL);
       gl.glPopMatrix();
+   }
+
+   private static final float[][] boxNormals = {
+      {-1.0f, 0.0f, 0.0f},
+      {0.0f, 1.0f, 0.0f},
+      {1.0f, 0.0f, 0.0f},
+      {0.0f, -1.0f, 0.0f},
+      {0.0f, 0.0f, 1.0f},
+      {0.0f, 0.0f, -1.0f}
+   };
+   private static final int[][] boxFaces = {
+      {0, 1, 2, 3},
+      {3, 2, 6, 7},
+      {7, 6, 5, 4},
+      {4, 5, 1, 0},
+      {5, 6, 2, 1},
+      {7, 4, 0, 3}
+   };
+   
+   private float[][] boxVertices = null;
+   private void drawBox(GL gl, Vec3f start, Vec3f end, int type)
+   {
+      float[][] v = new float[8][];
+      for (int i = 0; i < 8; i++)
+      {
+         v[i] = new float[3];
+      }
+      v[0][0] = v[1][0] = v[2][0] = v[3][0] = start.x();
+      v[4][0] = v[5][0] = v[6][0] = v[7][0] = end.x();
+      v[0][1] = v[1][1] = v[4][1] = v[5][1] = start.y();
+      v[2][1] = v[3][1] = v[6][1] = v[7][1] = end.y();
+      v[0][2] = v[3][2] = v[4][2] = v[7][2] = start.z();
+      v[1][2] = v[2][2] = v[5][2] = v[6][2] = end.z();
+      
+      float[][] n = boxNormals;
+      int[][] faces = boxFaces;
+      for (int i = 5; i >= 0; i--)
+      {
+         gl.glBegin(type);
+         gl.glNormal3fv(n[i]);
+         gl.glVertex3fv(v[faces[i][0]]);
+         gl.glVertex3fv(v[faces[i][1]]);
+         gl.glVertex3fv(v[faces[i][2]]);
+         gl.glVertex3fv(v[faces[i][3]]);
+         gl.glEnd();
+      }
    }
 }
