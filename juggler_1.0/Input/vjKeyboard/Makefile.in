@@ -27,7 +27,11 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 
-VJKEYBOARD_SRCS		:= vjXWinKeyboard.cpp
+ifeq (@OS_TYPE@, Win32)
+    VJKEYBOARD_SRCS	:= vjKeyboardWin32.cpp
+else
+    VJKEYBOARD_SRCS	:= vjXWinKeyboard.cpp
+endif
 
 VJKEYBOARD_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJKEYBOARD_SRCS:.cpp=.o}}
 DEPEND_FILES		:= ${VJKEYBOARD_SRCS:.cpp=.d}
