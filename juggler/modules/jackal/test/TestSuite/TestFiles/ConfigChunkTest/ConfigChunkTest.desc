@@ -23,6 +23,10 @@
     <PropertyDesc token="single_chunk" name="single_chunk" type="Chunk" num="1">
         <enumeration name="chunk_type_2"/>
     </PropertyDesc>
+    <PropertyDesc token="embedded_chunk" name="embedded_chunk" type="EmbeddedChunk" num="1">
+        <help>Embedded Chunk</help>
+        <enumeration name="chunk_type_2"/>
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="chunk_type_2" name="ChunkType2">
     <help>Chunk type 2</help>
