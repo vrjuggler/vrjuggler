@@ -164,7 +164,14 @@ public class TweekCore
          // Use System.err here because the GUI has not been displayed yet.
          System.err.println("WARNING: Failed to register command-line arguments");
       }
-      
+
+      // We need our TweekFrame instance before any dynamically discovered
+      // Beans are loaded (or instantiated) because TweekFrame needs to know
+      // about Bean instantiations.  Furthermore, any given Bean may register
+      // information (directly or indirectly) with TweekFrame in its
+      // constructor, so TweekFrame needs to exist first.
+      m_gui = new TweekFrame(messageDocument);
+
       // Loop over all the known Bean directories to search for and load any
       // Beans that are found.  This must occur after the global preferences
       // have been loaded so that the user can enable or disable lazy Panel
@@ -183,8 +190,6 @@ public class TweekCore
             System.out.println("WARNING: Invalid path " + path);
          }
       }
-
-      m_gui = new TweekFrame(messageDocument);
 
       // Now we need to register the TweekFrame instance as a listener for
       // BeanFocusChangeEvents.
