@@ -50,8 +50,9 @@ SUBOBJDIR	= $(GADGET_LIBRARY)
 SRCS		=
 
 ifneq (@OS_TYPE@, Win32)
-SRCS		+= PinchGloveStandalone.cpp	\
-                   PinchGlove.cpp
+#SRCS		+= PinchGloveStandalone.cpp	\
+#                   PinchGlove.cpp
+SRCS        +=
 endif
 
 include $(MKPATH)/dpp.obj.mk
