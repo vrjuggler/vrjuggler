@@ -211,6 +211,7 @@ public class ConfigDefinitionRepositoryEditor
          categories.add(node.getUserObject());
          ConfigDefinition def = new ConfigDefinition("Untitled",
                                                      "untitled",
+                                                     "",
                                                      1,
                                                      "",
                                                      categories,
