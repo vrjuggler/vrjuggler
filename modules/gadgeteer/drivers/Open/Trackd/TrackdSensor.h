@@ -87,13 +87,13 @@ public:
    virtual bool config(jccl::ConfigElementPtr e);
 
    /** Begins sampling. */
-   int startSampling() { return 1; }
+   bool startSampling() { return 1; }
 
    /** Stops sampling. */
-   int stopSampling() { return 1; }
+   bool stopSampling() { return 1; }
 
    /** Samples a value. */
-   int sample() { return 1; }
+   bool sample() { return 1; }
 
    /**
     * Updates to the sampled data.

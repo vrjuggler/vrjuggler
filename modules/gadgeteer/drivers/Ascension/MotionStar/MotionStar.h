@@ -187,7 +187,7 @@ public:
     *
     * @return 0 if sampling was unable to begin for some reason; 1 otherwise.
     */
-   virtual int startSampling();
+   virtual bool startSampling();
 
    /**
     * Stops sampling.
@@ -202,7 +202,7 @@ public:
     *         device is not active or the stop attempt failed.  1 is returned
     *         if sampling was stopped successfully.
     */
-   virtual int stopSampling();
+   virtual bool stopSampling();
 
    /**
     * Samples data.
@@ -216,7 +216,7 @@ public:
     *
     * @return 0 if no sample could be made.
     */
-   virtual int sample();
+   virtual bool sample();
 
    /**
     * Updates the sampled data.

@@ -110,7 +110,7 @@ public:
 
    int close();
 
-   int sample();
+   bool sample();
 
    CYBER_GLOVE_DATA* getData();
 

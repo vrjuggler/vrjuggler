@@ -76,16 +76,16 @@ public:
    virtual bool config(jccl::ConfigChunkPtr c);
 
    /** Begins sampling. */
-   int startSampling();
+   bool startSampling();
 
    /** Main thread of control for this active object. */
    void controlLoop(void* nullParam);
 
    /** Stops sampling. */
-   int stopSampling();
+   bool stopSampling();
 
    /** Samples data. */
-   int sample();
+   bool sample();
 
    /** Updates the sampled data. */
    void updateData();

@@ -173,7 +173,7 @@ void Intersense::controlLoop(void* nullParam)
     }
 }
 
-int Intersense::startSampling()
+bool Intersense::startSampling()
 {
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
@@ -222,7 +222,7 @@ int Intersense::startSampling()
     return 0;
 }
 
-int Intersense::sample()
+bool Intersense::sample()
 {
     if (this->isActive() == false)
         return 0;
@@ -314,7 +314,7 @@ int Intersense::sample()
     return 1;
 }
 
-int Intersense::stopSampling()
+bool Intersense::stopSampling()
 {
    if (this->isActive() == false)
       return 0;

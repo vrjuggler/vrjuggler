@@ -110,7 +110,7 @@ int CyberGloveBasic::close()
 
 
 
-int CyberGloveBasic::sample()
+bool CyberGloveBasic::sample()
 {
    //struct timeval tv;
    //double start_time, stop_time;

@@ -227,8 +227,8 @@ std::string Analog::getBaseType()
    return std::string("Analog");
 }
 
-// Gives a value that will range from [min() <= n <= max()].
-// This returns a value that is normalized to the range of mMin <= n <= mMax
+// Given a value that will range from [min() <= n <= max()].
+// This returns a value that is normalized to [0,1]
 // if n < mMin or n > mMax, then result = mMin or mMax respectively.
 void Analog::normalizeMinToMax(const float& plainJaneValue,
                                float& normedFromMinToMax)
@@ -242,7 +242,7 @@ void Analog::normalizeMinToMax(const float& plainJaneValue,
    // slide everything to 0.0 (subtract all by mMin)
    // Then divide by max to get normalized value
    float tmax( mMax - mMin),
-      tvalue(value - mMin);
+         tvalue(value - mMin);
 
    // since [tmin/tmax...tmax/tmax] == [0.0f...1.0f], the normalized value will be value/tmax
    normedFromMinToMax = tvalue / tmax;

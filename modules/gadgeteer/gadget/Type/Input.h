@@ -138,11 +138,11 @@ public:
 
    /** Sample the device.
     *
-    *  Every input device should have a sample function, after which the
-    *  device has been sampled to have new data.  (This new data is not
-    *  accessable until UpdateData is called, however.)
+    *  Read the next set of input.  This method is normally used internally
+    *  by threaded drivers to repetively sample data in a separate thread.
+    *  (This new data is not accessable until UpdateData is called)
     */
-   virtual int sample() = 0;
+   virtual bool sample() = 0;
 
    /** Start a device sampling.
     *
@@ -151,13 +151,13 @@ public:
     *  This function should return true when it sucessfully starts,
     *  false otherwise.
     */
-   virtual int startSampling() = 0;
+   virtual bool startSampling() = 0;
 
    /* StopSampling.
     *
     *  Reverse the effects of StartSampling().
     */
-   virtual int stopSampling() = 0;
+   virtual bool stopSampling() = 0;
 
    /** Update the data.
     *

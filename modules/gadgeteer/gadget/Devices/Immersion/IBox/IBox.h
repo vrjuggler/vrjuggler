@@ -107,9 +107,9 @@ public:
    virtual bool config(jccl::ConfigElementPtr e);
 
    // Input Pure Virtual Functions
-   int startSampling();
-   int stopSampling();
-   int sample();
+   bool startSampling();
+   bool stopSampling();
+   bool sample();
    void updateData();
 
    static std::string getElementType();

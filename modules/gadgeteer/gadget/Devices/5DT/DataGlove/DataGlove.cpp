@@ -76,7 +76,7 @@ DataGlove::~DataGlove ()
    delete mGlove;       // Delete the glove
 }
 
-int DataGlove::startSampling()
+bool DataGlove::startSampling()
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
          << "[dataglove] Begin sampling\n"
@@ -115,7 +115,7 @@ int DataGlove::startSampling()
 
       if ( ! mThread->valid() )
       {
-         return 0;
+         return false;
       }
       else
       {
@@ -123,12 +123,12 @@ int DataGlove::startSampling()
             << "[dataglove] DataGlove is active " << std::endl
             << vprDEBUG_FLUSH;
          mActive = true;
-         return 1;
+         return true;
       }
    }
    else
    {
-      return 0; // already sampling
+      return false; // already sampling
    }
 }
 
@@ -147,7 +147,7 @@ void DataGlove::controlLoop(void* nullParam)
    }
 }
 
-int DataGlove::sample()
+bool DataGlove::sample()
 {
 
     std::string gesture;
@@ -166,7 +166,7 @@ int DataGlove::sample()
                              // AnalogData is being used instead of DigitalData.
 
     addAnalogSample(mAnalogData);
-    return 1;
+    return true;
 }
 
 void DataGlove::updateData()
@@ -176,7 +176,7 @@ void DataGlove::updateData()
     return;
 }
 
-int DataGlove::stopSampling()
+bool DataGlove::stopSampling()
 {
    if (mThread != NULL)
    {
@@ -188,7 +188,7 @@ int DataGlove::stopSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "[dataglove] stopping DataGlove.." << std::endl << vprDEBUG_FLUSH;
    }
-   return 1;
+   return true;
 }
 
 } // End of gadget namespace

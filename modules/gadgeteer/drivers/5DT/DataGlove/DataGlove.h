@@ -61,7 +61,7 @@ namespace gadget
  *
  * @note The 5DT wireless DataGlove is a transmit-only device.
  * @note The glove continuously emits a glove data packet.
- * @note The packet has total 10 data including header.       
+ * @note The packet has total 10 data including header.
  *
  * @date 4-25-02
  */
@@ -78,9 +78,9 @@ public:
    virtual ~DataGlove();
    virtual bool config(jccl::ConfigElementPtr e);
    static std::string getElementType();
-   virtual int startSampling();
-   virtual int stopSampling();
-   virtual int sample();
+   virtual bool startSampling();
+   virtual bool stopSampling();
+   virtual bool sample();
    virtual void updateData ();
 
    /**
@@ -117,7 +117,7 @@ protected:
    // Hand left, right;
    std::vector<AnalogData> mAnalogData;   /**< analogs for each finger */
    //std::vector<DigitalData> mDigitalData; /**< digital for gesture */
-                                          
+
 };
 
 } // End of gadget namespace

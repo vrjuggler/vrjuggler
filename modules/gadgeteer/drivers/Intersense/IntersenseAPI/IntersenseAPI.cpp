@@ -76,7 +76,7 @@ int IntersenseAPI::getStationIndex(int stationNum, int bufferIndex)
 
 
 
-IntersenseAPI::IntersenseAPI() : stations(NULL), 
+IntersenseAPI::IntersenseAPI() : stations(NULL),
                                  mDone(false)
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
@@ -95,7 +95,7 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
    << std::endl << vprDEBUG_FLUSH;
 
    // Configure the subclasses
-   if( ! (Input::config(e) && Position::config(e) 
+   if( ! (Input::config(e) && Position::config(e)
             && Digital::config(e) && Analog::config(e)) )
    {
       return false;
@@ -119,7 +119,7 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
    // Create a new array of StationConfigs
    stations = new ISStationConfig[mTracker.getNumStations()];
 
-   vprASSERT(mTracker.getNumStations() == e->getNum("stations") 
+   vprASSERT(mTracker.getNumStations() == e->getNum("stations")
    && "ERROR: IntersenseAPI is configured incorrectly. "
    && "The number of stations specified does not match the number of embedded elements.");
 
@@ -182,14 +182,14 @@ void IntersenseAPI::controlLoop(void* nullParam)
    {
       this->sample();
       //TODO: Find a way to eliminate this sleep. If I rememeber correctly it
-      //      was added because the CPU was getting pegged too fast with samples 
+      //      was added because the CPU was getting pegged too fast with samples
       //      since there was no I/O wait because we are simply querying the
       //      ISense library.
       vpr::System::msleep(50);
    }
 }
 
-int IntersenseAPI::startSampling()
+bool IntersenseAPI::startSampling()
 {
    // Configure the stations used by the configuration
    for( int i = 0; i < mTracker.getNumStations(); i++ )
@@ -223,7 +223,7 @@ int IntersenseAPI::startSampling()
       << "gadget::IntersenseAPI: startSampling called, when already sampling.\n"
       << vprDEBUG_FLUSH;
       return 0;
-   } 
+   }
 
    // Open the connection to the tracker
    mTracker.open(mISenseDriverLocation);
@@ -238,7 +238,7 @@ int IntersenseAPI::startSampling()
 
    // Set flag that will later allow us to stop the control loop.
    mDone = false;
-   
+
    // Create a new thread to handle the control
    vpr::ThreadMemberFunctor<IntersenseAPI>* memberFunctor =
    new vpr::ThreadMemberFunctor<IntersenseAPI>(this, &IntersenseAPI::controlLoop, NULL);
@@ -254,14 +254,14 @@ int IntersenseAPI::startSampling()
    }
 }
 
-int IntersenseAPI::sample()
+bool IntersenseAPI::sample()
 {
    // If we are not active, then don't try to sample.
    if (!isActive())
    {
       return 0;
    }
-   
+
    // Create the data buffers to put the new data into.
    std::vector<gadget::PositionData>   cur_pos_samples( mTracker.getNumStations() );
    std::vector<gadget::DigitalData>    cur_digital_samples;
@@ -274,7 +274,7 @@ int IntersenseAPI::sample()
    {
       cur_pos_samples[0].setTime();
    }
-   
+
    mTracker.updateData();
 
    vpr::Thread::yield();
@@ -284,10 +284,10 @@ int IntersenseAPI::sample()
    {
       // Get the station index for the given station.
       int stationIndex = stations[i].stationIndex;
-      
+
       // Set the time of each PositionData to match the first.
       cur_pos_samples[i].setTime( cur_pos_samples[0].getTime() );
-      
+
       // If the Intersense is returning data in Euler format. Otherwise we
       // assume that it is returning data in quaternion format.
       if ( mTracker.getAngleFormat(stationIndex) == ISD_EULER )
@@ -312,7 +312,7 @@ int IntersenseAPI::sample()
 
       // We start at the index of the first digital item (set in the config files)
       // and we copy the digital data from this station to the Intersense device for range (min -> min+count-1)
-      
+
       // Get the miniumum and maximum index that we should write data into.
       int min_digital = stations[i].dig_min;
       int max_digital = min_digital + stations[i].dig_num;
@@ -352,7 +352,7 @@ int IntersenseAPI::sample()
    return 1;
 }
 
-int IntersenseAPI::stopSampling()
+bool IntersenseAPI::stopSampling()
 {
    // Make sure that we are sampling in the first place.
    if (this->isActive() == false)
@@ -365,10 +365,10 @@ int IntersenseAPI::stopSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "gadget::IntersenseAPI::stopSampling(): Stopping the intersense thread... "
          << vprDEBUG_FLUSH;
-      
+
       // Set the done flag to attempt to cause the control loop to exit naturally.
       mDone = true;
-      
+
       // XXX: This is not a valid way to kill a thread, we must allow it to die
       // naturally.
       // mThread->kill();

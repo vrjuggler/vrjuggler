@@ -82,17 +82,17 @@ public:
 
    /**
     */
-   virtual int startSampling();
+   virtual bool startSampling();
 
    /**
     */
-   virtual int stopSampling();
+   virtual bool stopSampling();
 
    /**
     * Samples each of the known "devices" (Tweek subjects).  This requires
     * that the Tweek initialization steps completed correctly.
     */
-   virtual int sample();
+   virtual bool sample();
 
    virtual void updateData();
 

@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-12-2003 allenb      Refactored Input interface methods startSampling,
+                        stopSampling, and sample to return bools.
+                        NEW VERSION: 0.14.0
 Sep-18-2003 patrickh    Updated to VPR 0.28.
                         NEW VERSION: 0.13.2
 Aug-16-2003 patrickh    Updated to Tweek 0.15.

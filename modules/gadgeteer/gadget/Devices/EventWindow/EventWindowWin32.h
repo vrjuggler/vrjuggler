@@ -103,14 +103,14 @@ public:
    void controlLoop( void* nullParam );
 
    /* Pure Virtuals required by gadget::Input. */
-   int startSampling();
-   int stopSampling();
+   bool startSampling();
+   bool stopSampling();
 
    /**
     * Processes the current events.
     * Called repetatively by the controlLoop.
     */
-   int sample();
+   bool sample();
    void updateData();
    static std::string getElementType();
 
