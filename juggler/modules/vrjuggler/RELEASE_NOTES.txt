@@ -10,6 +10,270 @@ For all versions:
 
 ===============================================================================
 
+Version: 2.0 Alpha 4 (1.1.150-0)
+Released: April 28, 2004
+    
+    Please refer to the following to get started with VR Juggler 2.0 Alpha 4:
+
+       http://www.vrjuggler.org/vrjuggler/2.0-alpha4/migration.guide/porting.guide.html
+    
+    Required application and configuration changes for upgrading from all
+    previous versions (including 2.0 Alpha 1 up through 2.0 Alpha 3):
+
+        * XSLT has been added to allow upgrading from old configuration 
+          files easier. The following directory contains a collection of
+          XSLT stylesheets that can be used for updating XML-based 
+          VR Juggler/JCCL configuration files.  The update process is
+          iterative with each step corresponding to one release of VR Juggler.
+
+               $VJ_BASE_DIR/share/vrjuggler/data/xslt/
+
+        * After you have performed the update, you should load the generated
+          configuration file using VRJConfig and review your configuration.
+          Some additions to the XML content may be made, and generic 
+          identifiers are often used for these additions.  Using VRJConfig,
+          you can make customizations for your specific configuration.
+
+
+                            Performance Monitoring
+                            ======================
+
+     Added the ability to acquire performance statistics in order to analyze
+     the different parts of your application and VR Juggler. The interface
+     is very clean and easy to use. There are three macros that can be used:
+
+
+         * VPR_PROFILE("MyDraw")
+         
+            - Creates a guard that adds a timesample to the entry in the
+              profile tree with the given name.
+         
+         * VPR_PROFILE_HISTORY("MyDraw", num)
+            
+            - Creates a guard that adds a timesample to the entry in the
+              profile tree with the given name and also keep a record
+              of the past num samples.
+         
+         * VPR_PROFILE_RESULTS()
+            
+            - Prints the profile tree: giving the number of calls, total time,
+              average time, and last num samples.
+
+                           
+                           Run Time Reconfiguration
+                           ========================
+
+     Implemented the CORBA-based remote run-time reconfiguration feature of
+     VRJConfig which had been missing for quite a while.  VR Juggler now has
+     an exceptionally robust, multi-language architecture for reconfiguring
+     running applications with external tools. The C++/CORBA part of the
+     remote reconfiguration feature is loaded as a plug-in at run time. 
+     This allows us to distribute pre-compiled code without requiring that
+     everyone have omniORB installed just to be able to try out VR Juggler.
+     Improved the ability of various parts of the C++ code to be reconfigurable.
+     Most notably ensuring that device drivers can be reconfigured correctly.
+
+                                  VRJConfig
+                                  =========
+
+     Replaced the old JTreeTable with a much better looking TableLayout that
+     visualizes the structure of the configuration in a more useful manner.
+     Implemented are the much-desired features of drag & drop, copy & paste,
+     and undo/redo. You can now drag configuration elements between configuration
+     contexts.
+
+
+                          Config Element Versioning
+                          =========================
+
+     Automatic updating of out-of-date configuration elements has been added.
+     VRJConfig can detect when a configuration element is out of date with
+     respect to its definition. Through the magic of XSLT, the configuration
+     element can be transformed into the new version automatically.  This means
+     that manual updating of configuration files will be a thing of the past
+     for about 99% of the cases.  (XSLT is not perfect, but it works pretty 
+     darn well.)  With the addition of XML Schema support for structural
+     validation of XML input, we are now reaching a point where the full 
+     potential of XML is being realized for VR Juggler.
+
+
+                    Config Element Definition Inheritance
+                    =====================================
+
+     Work has been completed for adding inheritance to configuration definitions.
+     VRJConfig can now handle configuration elements in a more abstract manner.
+     For example, consider the following snippets of configuration definition
+     files (input_device.jdef, positional_device.jdef, and flock.jdef):
+
+         <definition name="input_device" ...>
+           <definition_version version="1" ...>
+             <property name="device_host" ...>
+               ...
+             </property>
+           </definition_version>
+         </deinition>
+
+         <definition name="positional_device" ...>
+           <definition_version version="1" ...>
+             <parent>input_device</parent>
+             <property name="position_filters" ...>
+               ...
+             </property>
+           </definition_version>
+         </definition>
+
+         <definition name="flock" ...>
+           <definition_version version="1" ...>
+             <parent>positional_device</parent>
+               ...
+           </definition_version>
+         </definition>
+
+     The configuration element for the Ascension Flock of Birds inherits from
+     'positional_device' which in turn inherits from 'input_device'.  Thus,
+     it gets the properties of device_host (needed for the cluster support)
+     and position_filters (needed for all positional devices) automatically
+     without having to redefine them.  VRJConfig can now handle instances of
+     the 'flock' element type as instances of 'positional_device' or
+     'input_device'.  There are a lot of benefits of this capability,
+     although the most useful one for many users is that custom configuration
+     elements can now be integrated into the configuration editing process
+     seamlessly.  For example, if you are writing your own device driver,
+     you can make its configuration definition inherit from the appropriate
+     base types, and then proxy pointers, custom editors, etc. can handle
+     your definition type without requiring modification to the "core" files
+     that come with a VR Juggler distribution.
+
+
+                          VRJConfig - Custom Editors
+                          ==========================
+
+     Much work has been put into the design of high-level editors for
+     complex tasks such as device configuration including proxies, aliases,
+     and screen placement for projection VR systems.  These pieces
+     are still being worked on and represent some of the most cutting-edge
+     features of VRJConfig.  In the case of device configuration, the first
+     custom editor developed was for the Intersense tracking system. You
+     can create a VR Juggler configuration from the ground up using a very
+     intuitive interface that greatly simplifies the complexity of this task.
+
+
+                             VRJConfig - Wizards
+                             ===================
+
+     Wizards have been added into VRJConfig to simplify the creation of
+     general purpose configurations. These include a wizard that steps
+     the user through all steps necessary to create a clustered simulator
+     configuration. This is a rather new feature and will be expanded
+     in the future.
+
+
+                           Building Device Drivers
+                           =======================
+
+     Related to people writing their own device drivers, the Gadgeteer
+     build system has been revamped to make it much, much easier for users to
+     compile their device driver plug-ins with all the correct options.  It
+     is now possible for developers to write a *four-line* makefile that will
+     build a device driver correctly on all supported platforms.
+
+
+                VR Juggler dynamic application loader/launcher
+                ==============================================
+
+     The basic idea with this application is to allow remote launching of
+     dynamically loaded VR Juggler application objects.  In other words, it
+     realizes a goal we have had for a long time: a VR Juggler daemon.  If 
+     you would like to check it out, it is in the VR Juggler Toolbox CVS
+     repository in the module 'vrjugglerd' (go to http://vrjtoolbox.sf.net/ 
+     if you're not familiar with the VR Juggler Toolbox).
+     
+     The vrjugglerd application is quite simple--surprisingly so.  At this
+     time, it loads application objects written in C++, but it has been designed
+     to allow loading of code from other languages.  In particular, Python and
+     .NET are the two primary non-C++ language options, and support for
+     dynamically loading application objects written in those language
+     platforms will be added very soon.
+     
+     Below is an example configuration element that shows how to dynamically
+     load an application using vrjugglerd.
+
+
+         <vrjuggler_app_loader name="Cubes Loader" version="1">
+           <app_object>
+             <vrj_cpp_app name="Cubes App" version="1">
+               <search_path>${VJ_BASE_DIR}/share/vrjuggler/test/Draw/OGL/cubes</search_path>
+               <application>cubes</application>
+             </vrj_cpp_app>
+           </app_object>
+         </vrjuggler_app_loader>
+
+
+     This configuration element indicates that a shared library containing
+     the code for the cubes application will be loaded. This version of 
+     cubes has no main() function whatsoever--it is simply a shared 
+     library (DLL) with a well-defined entry point that returns a
+     vrj::App*. With this configuration file, it is assumed that vrjugglerd
+     has already loaded a configuration for displays and input devices, but
+     the vrjugglerd configuration can specify additional files to be loaded
+     for use with the application object.  (Among other things, this allows
+     dynamic inclusion of application-specific config elements to allow the
+     newly loaded application object to be configured as necessary.)
+     
+     VRJConfig connects to a running vrjugglerd and sends the config element
+     in the attached file to vrjugglerd.  As a result, the code for cubes is
+     loaded dynamically from disk, a new GL window is opened, and the VR
+     Juggler kernel control loop starts executing the dynamically loaded
+     code.  (All of this can be done from the command line instead, but
+     that's not nearly as interesting.)
+
+
+                                 Build System
+                                 ============
+
+     There have been a few major changes to the build system of VR Juggler 
+     in order to try to make the process easier for the end user.
+
+         * External Dependencies
+
+             - The cvs-gather script is no longer being used to pull anything
+               from different CVS repositories into a checked out copy of the
+               Juggler Project source.  
+             
+             - Doozer and Doozer++ come with the VR Juggler source during a
+               CVS checkout.  Both are on vendor branches that will be updated
+               as the need presents itself.
+             
+             - GMTL, on the other hand, must now be installed externally prior
+               to building VR Juggler.  Similar to CppDOM, GMTL requires SCons
+               to be installed, but since the GMTL C++ interface is entirely
+               in headers, there is nothing to build.
+
+         * Windows Build
+
+             - Cygwin is no longer required for any part of building the Juggler
+               Project--including VR Juggler applications.
+             
+             - The code is built now using a Visual Studio solution that ties
+               together a bunch of Visual C++ projects.
+             
+             - Unlike the Cygwin build, the Visual Studio build supports both
+               debug and release binaries.
+
+
+
+Version: 2.0 Alpha 3 (1.1.143-1)
+Released: September 22, 2003
+    
+    Please refer to the following to get started with VR Juggler 2.0 Alpha 3:
+
+       http://www.vrjuggler.org/vrjuggler/2.0-alpha3/migration.guide/porting.guide.html
+
+    VR Juggler Alpha 3 is being released in order to allow the VR Juggler user
+    community access to a stabilized snapshot of the current code base. There
+    have been no additional features added to VR Juggler since VR Juggler
+    Alpha 2. Also there have been no API changes since the Alpha 2 release.
+
 Version: 2.0 Alpha 2 (1.1.143)
 Released: July 1, 2003
 

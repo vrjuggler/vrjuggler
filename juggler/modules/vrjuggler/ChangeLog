@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+
+[2.0 Alpha 4 released - 4.28.2004]=============================================
+Apr-28-2004 aronb       NEW VERSION: 1.1.150
 Apr-11-2004 patrickh    VR Juggler now depends on an installed version of GMTL.
 Apr-05-2004 patrickh    Updated to JCCL 0.17.0.
 Mar-19-2004 patrickh    Restored the ability to specify a search path for
@@ -30,6 +33,15 @@ Jul-10-2003 nonchocoboy Updated to JCCL 0.12.0 API for both Java and C++.
                         files for each configuration definition.
                         NEW VERSION: 1.1.144
 
+[2.0 Alpha 2 released - 9.22.2003]==============================================
+Sep-22-2003 aronb       NEW VERSION: 1.1.143-1
+                        This version was chosen rather than 1.1.144 since we are
+                        making the VR Juggler 2.0 Alpha 3 from the
+                        VRJ_2_0_ALPHA_2_BRANCH branch.
+Aug-25-1003 aronb       Fixed a bug in PfDrawManager which was causing the
+                        optimized build to go into an endless loop while running
+                        a Performer application.
+                        
 [2.0 Alpha 2 released - 7.1.2003]==============================================
 Jul-01-2003 aronb       NEW VERSION: 1.1.143
 Jun-25-2003 patrickh    Allow the use of X11 and GLX on Mac OS X instead of
