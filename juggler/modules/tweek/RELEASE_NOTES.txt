@@ -1,0 +1,21 @@
+                              Tweek Release Notes
+                              -------------------
+
+For all versions:
+
+    - See the ChangeLog for more system-level changes that do not directly
+      affect applications.
+
+===============================================================================
+
+ Version: 0.11.0
+Released: September 10, 2002
+   Required changes when upgrading from all previous versions:
+       * The interface org.vrjuggler.tweek.net.CommunicationListener has
+         changed.  The method connectionStateChanged() has been replaced by
+         two methods: connectionOpened() and connectionClosed().  To update,
+         simply move the code in connectionStateChanged() used to handle
+         newly opened connections into connectionOpened().  Similarly, move
+         the code used to handle disconnections into connectionClosed().
+
+===============================================================================
