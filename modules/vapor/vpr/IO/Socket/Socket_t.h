@@ -45,6 +45,10 @@
 #include <vpr/Util/Status.h>
 #include <vpr/Util/Assert.h>
 
+#include <vpr/IO/Stats/BaseIOStatsStrategy.h>
+
+#include <typeinfo>
+
 
 namespace vpr {
 
@@ -60,7 +64,7 @@ namespace vpr {
  * @see vpr::SocketStream_t
  * @see vpr::SocketDatagram_t
  */
-template<class RealSocketImpl>
+template<class RealSocketImpl, class IO_STATS_STRATEGY = NullIOStatsStrategy>
 class Socket_t : public vpr::BlockIO {
 public:
     // ========================================================================
@@ -74,8 +78,7 @@ public:
      * @pre None.
      * @post
      *
-     * @return An object containing the "name" of this socket.
-     */
+     * @return An object containing the "name" of this socket.*/
     virtual const std::string&
     getName (void) {
         return m_socket_imp->getName();
@@ -292,15 +295,6 @@ public:
      *       the socket, and the number of bytes read successfully is returned
      *       to the caller via the <code>bytes_read</code> argument.
      *
-     * @param buffer     A pointer to the buffer where the socket's buffer
-     *                   contents are to be stored.
-     * @param length     The number of bytes to be read.
-     * @param bytes_read The number of bytes read into the buffer.
-     * @param timeout    The maximum amount of time to wait for data to be
-     *                   available for reading.  This argument is optional
-     *                   and defaults to
-     *                   <code>vpr::Interval::NoTimeout</code>.
-     *
      * @return <code>vpr::Status::Success</code> is returned if the read
      *         operation completed successfully.<br>
      *         <code>vpr::Status::Success</code> is returned if the read
@@ -309,6 +303,13 @@ public:
      *         non-blocking mode, and the read operation is in progress.<br>
      *         <code>vpr::Status::Timeout</code> is returned if the read
      *         could not begin within the timeout interval.
+     * @param buffer     A pointer to the buffer where the socket's buffer
+     * contents are to be stored.
+     * @param length     The number of bytes to be read.
+     * @param bytes_read The number of bytes read into the buffer.
+     * @param timeout    The maximum amount of time to wait for data to be
+     * available for reading.  This argument is optional and defaults to
+     * <code>vpr::Interval::NoTimeout</code>.
      */
     inline vpr::Status
     recv (void* buffer, const size_t length, ssize_t& bytes_read,
@@ -780,7 +781,7 @@ protected:
     Socket_t (void)
         : vpr::BlockIO(std::string("INADDR_ANY")), m_socket_imp(NULL)
     {
-        /* Do nothing. */ ;
+       initSocket_t();
     }
 
     /**
@@ -796,7 +797,7 @@ protected:
     Socket_t (const std::string& address)
         : vpr::BlockIO(address), m_socket_imp(NULL)
     {
-        /* Do nothing. */ ;
+       initSocket_t();
     }
 
     /**
@@ -807,7 +808,23 @@ protected:
      * @post If m_socket_imp is non-NULL, its memory is released.
      */
     virtual ~Socket_t (void) {
-        /* Do nothing. */ ;
+        ;
+    }
+
+    /**
+     * Helper function to capture code common between constructors
+     */
+    void initSocket_t()
+    {
+        // Allocate stats stategy object
+       // First, use template programming magic.  If the stategy is the null one, then don't allocate one
+       // NOTE: Because all the info is static the compiler "should" optimize the following if statement away
+       if( IO_STATS_STRATEGY::IS_NULL == 0)     // If we have a real one
+       {
+          //std::cout << "Allocating strategy: " << typeid(IO_STATS_STRATEGY).name() << std::endl;
+          BaseIOStatsStrategy* new_strategy = new IO_STATS_STRATEGY;
+          this->setIOStatStrategy(new_strategy);
+       }
     }
 
     /**
@@ -864,13 +881,12 @@ protected:
      *                   available for reading.  This argument is optional and
      *                   defaults to <code>vpr::Interval::NoTimeout</code>
      *
-     * @return vpr::Status::Success is returned if the read operation
-     *         completed successfully.<br>
-     *         vpr::Status::InProgress if the device is in non-blocking mode,
-     *         and the read operation is in progress.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
-     *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     * @return vpr::Status::Success is returned if the read operation completed successfully.
+     * @return vpr::Status::InProgress if the device is in
+     *         non-blocking mode, and the read operation is in progress.
+     * @return vpr::Status::Timeout is returned if the read
+     *         could not begin within the timeout interval.
+     * @return vpr::Status::Failure is returned if the read operation failed.     
      */
     virtual vpr::Status
     readn_i (void* buffer, const size_t length, ssize_t& bytes_read,

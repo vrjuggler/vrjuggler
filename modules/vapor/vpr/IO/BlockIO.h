@@ -47,8 +47,11 @@
 #include <vpr/Util/Interval.h>
 #include <vpr/IO/IOSys.h>
 
+#include <vpr/IO/Stats/BaseIOStatsStrategy.h>
+
 
 namespace vpr {
+
 
 /**
  * Block-style (as opposed to streaming) I/O interface.
@@ -236,7 +239,7 @@ public:
     read (void* buffer, const size_t length, ssize_t& bytes_read,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return this->read_i(buffer, length, bytes_read, timeout);
+        return this->read_s(buffer, length, bytes_read, timeout);
     }
 
     /**
@@ -362,7 +365,7 @@ public:
     readn (void* buffer, const size_t length, ssize_t& bytes_read,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return this->readn_i(buffer, length, bytes_read, timeout);
+        return this->readn_s(buffer, length, bytes_read, timeout);
     }
 
     /**
@@ -490,7 +493,7 @@ public:
     write (const void* buffer, const size_t length, ssize_t& bytes_written,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return this->write_i(buffer, length, bytes_written,timeout);
+        return this->write_s(buffer, length, bytes_written,timeout);
     }
 
     /**
@@ -599,6 +602,22 @@ public:
      */
     bool isWriteBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait);
 
+    /**
+     * Set the IO stats strategy to use
+     */
+    void setIOStatStrategy(vpr::BaseIOStatsStrategy* strat)
+    {
+        mStatsStrategy = strat;
+        if(mStatsStrategy != NULL)                      // If we have a non-NULL strategy
+            mStatsStrategy->setRealObject(this);        // Tell it about us
+    }
+
+    /**
+     * Get the current IO stats strategy
+     */
+    vpr::BaseIOStatsStrategy* getIOStatStrategy()
+    { return mStatsStrategy; }    
+
 protected:
     /**
      * Constructor.
@@ -611,7 +630,7 @@ protected:
      * @param name The name for this device.
      */
     BlockIO (const std::string& name)
-        : m_name(name), m_open_blocking(true), m_open(false), m_blocking(true)
+        : m_name(name), m_open_blocking(true), m_open(false), m_blocking(true), mStatsStrategy(NULL)
     {
         /* Do nothing. */ ;
     }
@@ -628,6 +647,7 @@ protected:
         m_open_blocking = other.m_open_blocking;
         m_open          = other.m_open;
         m_blocking      = other.m_blocking;
+        mStatsStrategy  = NULL;
     }
 
 
@@ -642,7 +662,59 @@ protected:
     }
 
     /**
-     * Implementation of the <code>read</code> template method.  This reads
+     * read strategy
+     */
+    virtual Status read_s(void* buffer, const size_t length,
+                          ssize_t& bytes_read,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+       Status status;
+
+       if(mStatsStrategy != NULL)
+          mStatsStrategy->read_s(status, buffer, length, bytes_read, timeout);
+       else
+         status = read_i(buffer, length, bytes_read, timeout);
+
+       return status;
+    }
+    
+    /**
+     * read strategy
+     */
+    virtual Status readn_s(void* buffer, const size_t length,
+                           ssize_t& bytes_read,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+       Status status;
+
+       if(mStatsStrategy != NULL)
+         mStatsStrategy->readn_s(status, buffer, length, bytes_read, timeout);
+       else
+         status = readn_i(buffer, length, bytes_read, timeout);
+
+       return status;
+    }
+
+    /**
+     * write strategy
+     */
+    virtual Status write_s(const void* buffer, const size_t length,
+                           ssize_t& bytes_written,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+       Status status;
+
+       if(mStatsStrategy != NULL)
+         mStatsStrategy->write_s(status, buffer, length, bytes_written, timeout);          
+       else
+          status = write_i(buffer, length, bytes_written, timeout);
+
+       return status;
+    }
+
+
+    /**
+     * Implementation of the read template method.  This reads
      * at most the specified number of bytes from the I/O device into the
      * given buffer.
      *
@@ -692,13 +764,14 @@ protected:
      *                   available for reading.  This argument is optional and
      *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read operation
-     *         completed successfully.<br>
-     *         vpr::Status::InProgress if the device is in non-blocking mode,
-     *         and the read operation is in progress.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
-     *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     * @return vpr::Status::Success is returned if the read
+     *         operation completed successfully.<br>
+     *         vpr::Status::Failure is returned if the read
+     *         operation failed.<br>
+     *         vpr::Status::InProgress if the device is in
+     *         non-blocking mode, and the read operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the read
+     *         could not begin within the timeoBaseIOStatsStrategyut interval.
      */
     virtual Status readn_i(void* buffer, const size_t length,
                            ssize_t& bytes_read,
@@ -732,7 +805,11 @@ protected:
                            ssize_t& bytes_written,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
-    /// The name of the I/O device.
+   // Friends
+   friend vpr::BaseIOStatsStrategy;    // Need it to be able to call the protected read_i, readn_i, and write_i memebers
+
+protected:
+        /// The name of the I/O device.
     std::string m_name; 
 
     /// Flag telling if blocking is enabled when opening the device
@@ -743,6 +820,9 @@ protected:
 
     /// Flag telling if blocking for reads and writes is enabled
     bool m_blocking;
+
+    // Perf monitor
+    vpr::BaseIOStatsStrategy*   mStatsStrategy;
 };
 
 }; // End of vpr namespace
