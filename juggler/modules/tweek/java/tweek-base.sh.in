@@ -61,7 +61,7 @@ else
    # Java classpath separator character.
    JCPS="@JCPS@"
 
-   CLASSPATH="${JDOM_JAR}${JCPS}${ORB_JAR}${JCPS}${TWEEK_BASE_DIR}/bin/Tweek.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekBeans.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekNet.jar${JCPS}${CLASSPATH}"
+   CLASSPATH="${JDOM_JAR}${JCPS}${ORB_JAR}${JCPS}${TWEEK_BASE_DIR}/bin/Tweek.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekBeans.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekNet.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekServices.jar${JCPS}${CLASSPATH}"
    export CLASSPATH
 
    # If using an ORB other than that distributed with the JDK, these must be
