@@ -78,22 +78,12 @@ set_policy(Matrix_invert, return_internal_reference())
 # ============================================================== gmtl::Matrix<>
 
 # gmtl::Vec<> =================================================================
-VecBase = Template('gmtl::VecBase', 'gmtl/Vec.h')
+VecBase = Template('gmtl::VecBase', 'gmtl/VecBase.h')
 
-VecBase3f = VecBase('float 3')
-rename(VecBase3f, 'VecBase3f')
-exclude(VecBase3f.getData)
-exclude(VecBase3f.mData)
-
-VecBase4f = VecBase('float 4')
-rename(VecBase4f, 'VecBase4f')
-exclude(VecBase4f.getData)
-exclude(VecBase4f.mData)
-
-VecBase3i = VecBase('int 3')
-rename(VecBase3i, 'VecBase3i')
-exclude(VecBase3i.getData)
-exclude(VecBase3i.mData)
+VecBase2d = VecBase('double 2')
+rename(VecBase2d, 'VecBase2d')
+exclude(VecBase2d.getData)
+exclude(VecBase2d.mData)
 
 VecBase2f = VecBase('float 2')
 rename(VecBase2f, 'VecBase2f')
@@ -104,6 +94,36 @@ VecBase2i = VecBase('int 2')
 rename(VecBase2i, 'VecBase2i')
 exclude(VecBase2i.getData)
 exclude(VecBase2i.mData)
+
+VecBase3d = VecBase('double 3')
+rename(VecBase3d, 'VecBase3d')
+exclude(VecBase3d.getData)
+exclude(VecBase3d.mData)
+
+VecBase3f = VecBase('float 3')
+rename(VecBase3f, 'VecBase3f')
+exclude(VecBase3f.getData)
+exclude(VecBase3f.mData)
+
+VecBase3i = VecBase('int 3')
+rename(VecBase3i, 'VecBase3i')
+exclude(VecBase3i.getData)
+exclude(VecBase3i.mData)
+
+VecBase4d = VecBase('double 4')
+rename(VecBase4d, 'VecBase4d')
+exclude(VecBase4d.getData)
+exclude(VecBase4d.mData)
+
+VecBase4f = VecBase('float 4')
+rename(VecBase4f, 'VecBase4f')
+exclude(VecBase4f.getData)
+exclude(VecBase4f.mData)
+
+VecBase4i = VecBase('int 4')
+rename(VecBase4i, 'VecBase4i')
+exclude(VecBase4i.getData)
+exclude(VecBase4i.mData)
 
 Vec = Template('gmtl::Vec', 'gmtl/Vec.h')
 
@@ -286,22 +306,22 @@ Function('gmtl::center', 'gmtl-functions.h')
 # ================================================================= gmtl::Tri<>
 
 # Generator operations ========================================================
-Function('gmtlWrapper::makeRotMatrix33', 'gmtl-functions.h')
-Function('gmtlWrapper::makeRotMatrix44', 'gmtl-functions.h')
-Function('gmtlWrapper::makeRotQuat', 'gmtl-functions.h')
-Function('gmtlWrapper::makeRotEulerAngleXYZ', 'gmtl-functions.h')
-Function('gmtlWrapper::makeRotEulerAngleZYX', 'gmtl-functions.h')
-Function('gmtlWrapper::makeRotEulerAngleZXY', 'gmtl-functions.h')
+Function('gmtlWrapper::makeRotMatrix33', 'gmtl-wrappers.h')
+Function('gmtlWrapper::makeRotMatrix44', 'gmtl-wrappers.h')
+Function('gmtlWrapper::makeRotQuat', 'gmtl-wrappers.h')
+Function('gmtlWrapper::makeRotEulerAngleXYZ', 'gmtl-wrappers.h')
+Function('gmtlWrapper::makeRotEulerAngleZYX', 'gmtl-wrappers.h')
+Function('gmtlWrapper::makeRotEulerAngleZXY', 'gmtl-wrappers.h')
 
-Function('gmtlWrapper::makeDirCosMatrix33', 'gmtl-functions.h')
-Function('gmtlWrapper::makeDirCosMatrix44', 'gmtl-functions.h')
+Function('gmtlWrapper::makeDirCosMatrix33', 'gmtl-wrappers.h')
+Function('gmtlWrapper::makeDirCosMatrix44', 'gmtl-wrappers.h')
 
-Function('gmtlWrapper::makeTransMatrix44', 'gmtl-functions.h')
-Function('gmtlWrapper::makeTransVec3', 'gmtl-functions.h')
+Function('gmtlWrapper::makeTransMatrix44', 'gmtl-wrappers.h')
+Function('gmtlWrapper::makeTransVec3', 'gmtl-wrappers.h')
 
-Function('gmtlWrapper::makeScaleMatrix44', 'gmtl-functions.h')
+Function('gmtlWrapper::makeScaleMatrix44', 'gmtl-wrappers.h')
 
-Function('gmtlWrapper::makeAxesMatrix44', 'gmtl-functions.h')
+Function('gmtlWrapper::makeAxesMatrix44', 'gmtl-wrappers.h')
 
 set_policy(Function('gmtl::setRot', 'gmtl-functions.h'),
                     return_internal_reference())

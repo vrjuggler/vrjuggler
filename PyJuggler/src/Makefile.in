@@ -50,13 +50,57 @@ DLLEXT=		@DYNAMICLIB_EXT@
 
 PYSTE_FILES=	vpr.pyste	\
 		jccl.pyste	\
-		gmtl.pyste	\
 		gadget.pyste	\
 		vrj.pyste
 
 SRCS=		$(PYSTE_FILES:.pyste=.cpp) PyJuggler.cpp
 OBJS=		$(SRCS:.cpp=.$(OBJEXT))
-MODS=		$(OBJS:.$(OBJEXT)=.$(DLLEXT))
+MODS=		$(OBJS:.$(OBJEXT)=.$(DLLEXT)) gmtl.$(DLLEXT)
+
+GMTL_SRCS=	\
+	gmtl/gmtl.cpp				\
+	gmtl/_AABox_double.cpp			\
+	gmtl/_AABox_float.cpp			\
+	gmtl/_AxisAngle_double.cpp		\
+	gmtl/_AxisAngle_float.cpp		\
+	gmtl/_EulerAngle_float_gmtl_XYZ.cpp	\
+	gmtl/_EulerAngle_float_gmtl_ZXY.cpp	\
+	gmtl/_EulerAngle_float_gmtl_ZYX.cpp	\
+	gmtl/_gmtl_Defines_h.cpp		\
+	gmtl/_gmtl_functions_h.cpp		\
+	gmtl/_gmtl_wrappers_h.cpp		\
+	gmtl/_LineSeg_double.cpp		\
+	gmtl/_LineSeg_float.cpp			\
+	gmtl/_Matrix_float_3_3.cpp		\
+	gmtl/_Matrix_float_4_4.cpp		\
+	gmtl/_Plane_double.cpp			\
+	gmtl/_Plane_float.cpp			\
+	gmtl/_Point_float_2.cpp			\
+	gmtl/_Point_float_3.cpp			\
+	gmtl/_Point_int_2.cpp			\
+	gmtl/_Point_int_3.cpp			\
+	gmtl/_Quat_double.cpp			\
+	gmtl/_Quat_float.cpp			\
+	gmtl/_Ray_double.cpp			\
+	gmtl/_Ray_float.cpp			\
+	gmtl/_Sphere_double.cpp			\
+	gmtl/_Sphere_float.cpp			\
+	gmtl/_Tri_double.cpp			\
+	gmtl/_Tri_float.cpp			\
+	gmtl/_Tri_int.cpp			\
+	gmtl/_VecBase_int_2.cpp			\
+	gmtl/_VecBase_double_2.cpp		\
+	gmtl/_VecBase_float_2.cpp		\
+	gmtl/_VecBase_double_3.cpp		\
+	gmtl/_VecBase_float_3.cpp		\
+	gmtl/_VecBase_int_3.cpp			\
+	gmtl/_VecBase_double_4.cpp		\
+	gmtl/_VecBase_float_4.cpp		\
+	gmtl/_VecBase_int_4.cpp			\
+	gmtl/_Vec_float_3.cpp			\
+	gmtl/_Vec_float_4.cpp
+
+GMTL_OBJS=	$(GMTL_SRCS:.cpp=.$(OBJEXT))
 
 vpath %.cpp $(srcdir)
 vpath %.pyste $(srcdir)/../pyste
@@ -70,11 +114,15 @@ vpath %.pyste $(srcdir)/../pyste
 # It might also be good to do static linking against Boost.Python to simplify
 # distribution issues.
 
-all: $(MODS)
+all:
+	-[ ! -d gmtl ] && mkdir gmtl
+	$(MAKE) modules
 	$(MAKE) prefix="$(topdir)" install
 
+modules: $(MODS)
+
 install:
-	mkdir -p $(PYTHON_PACKAGES)
+	-[ ! -d $(PYTHON_PACKAGES) ] && mkdir -p $(PYTHON_PACKAGES)
 	for mod in $(MODS) ; do			\
             cp -p $$mod $(PYTHON_PACKAGES) ;	\
           done
@@ -84,14 +132,18 @@ install:
 	$(PYSTE) --module=$(basename $(@F)) $<
 
 %.$(OBJEXT): %.cpp
-	$(CXX) $(CXXFLAGS) -c $<
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 %.$(DLLEXT): %.$(OBJEXT)
 	$(CXX) -shared -o $@ $< $(BOOST_PYTHON_LDFLAGS)			\
           $(PYTHON_LDFLAGS) $(LIBS) $(EXTRA_LIBS)
 
+gmtl.$(DLLEXT): $(GMTL_OBJS)
+	$(CXX) -shared -o $@ $(GMTL_OBJS) $(BOOST_PYTHON_LDFLAGS)	\
+          $(PYTHON_LDFLAGS)
+
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(GMTL_OBJS)
 
 clobber:
 	$(MAKE) clean
