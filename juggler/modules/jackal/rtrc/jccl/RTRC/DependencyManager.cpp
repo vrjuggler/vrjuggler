@@ -101,8 +101,8 @@ vprSingletonImp(DependencyManager);
 
     void DependencyManager::debugDump()
     {
-        //vprDEBUG_BEGIN(jcclDBG_RECONFIGURATION, jcclDBG_CONFIG_LVL) << "DepChecker::debugDump\n" << vprDEBUG_FLUSH;
-        vprDEBUG_NEXT(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL) 
+        //vprDEBUG_BEGIN(jcclDBG_RECONFIGURATION, jcclDBG_CONFIG_LVL) << "DependencyManager::debugDump\n" << vprDEBUG_FLUSH;
+        vprDEBUG_BEGIN(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL) 
             << "----- Current dependency checkers -----\n" << vprDEBUG_FLUSH;
         vprDEBUG_NEXT(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL) 
             << "num checkers:" << mDepCheckers.size() << "\n" 
