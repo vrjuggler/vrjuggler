@@ -43,6 +43,7 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
+#include <gmtl/EulerAngle.h>
 
 #include <gadget/Devices/Ascension/Bird.h>
 #include <jccl/Config/ConfigChunk.h>
@@ -401,9 +402,10 @@ inline int getReading(gmtl::Matrix44f *data, int port)
   */
 
   gmtl::identity(*data);
-  gmtl::setRot(*data, gmtl::Math::deg2Rad(or_data[0]),
-                      gmtl::Math::deg2Rad(or_data[1]),
-                      gmtl::Math::deg2Rad(or_data[2]), gmtl::ZYX );
+  gmtl::EulerAngleZYXf euler( gmtl::Math::deg2Rad(or_data[0]),
+                              gmtl::Math::deg2Rad(or_data[1]),
+                              gmtl::Math::deg2Rad(or_data[2]) );
+  gmtl::setRot(*data, euler );
   gmtl::setTrans(*data, pos_data);
 
   return 0;  //addr;

@@ -86,7 +86,7 @@ public:
    {
       // Do nothing
    }
-
+   virtual ~gloveApp(){}
    //: Initialize
    // Executes any initialization needed before the API is started.
    // Initialize VR Juggler device interfaces here.

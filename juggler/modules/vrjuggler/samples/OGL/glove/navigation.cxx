@@ -59,8 +59,11 @@ void TrackedInfo::updateWithMatrix( const gmtl::Matrix44f& matrix )
     _vec = wandForward - wandPos;
 
     // get the x,y,z rotations of the tracker.
-    gmtl::setRot( _rot.mData[0], _rot.mData[1], _rot.mData[2],
-                  gmtl::XYZ, matrix );
+    gmtl::EulerAngleXYZf euler;
+    gmtl::setRot( euler, matrix );
+    _rot.mData[0] = euler[0];
+    _rot.mData[1] = euler[1];
+    _rot.mData[2] = euler[2];
 
     // calculate the new rotational delta
     _rotDelta = _rot - _rotOld;
@@ -91,7 +94,8 @@ void UserInfo::_updateWithTracker( const TrackedInfo& tracker )
     //: get the scene's rotation for use in computing tracker vector
     gmtl::Matrix44f sceneRotation;
     gmtl::identity(sceneRotation);
-    sceneRotation = gmtl::makeRot<gmtl::Matrix44f>( _rot[0], _rot[1], _rot[2], gmtl::XYZ );
+    gmtl::EulerAngleXYZf euler( _rot[0], _rot[1], _rot[2] );
+    sceneRotation = gmtl::makeRot<gmtl::Matrix44f>( euler );
 
     //: transform the tracker vector from cave space to model space.
     gmtl::Vec3f trackerVec;
@@ -151,8 +155,8 @@ void  UserInfo::getSceneTransform( gmtl::Matrix44f& sceneMatrix ) const
     //: set the rotation of the scene
     //  if we want to move clockwise in the scene,
     //   then we need to move the scene counter-clockwise.
-    sceneRotation = gmtl::makeRot<gmtl::Matrix44f>( -_rot[0], -_rot[1],
-                                                    -_rot[2], gmtl::XYZ );
+    gmtl::EulerAngleXYZf euler( -_rot[0], -_rot[1], -_rot[2] );
+    sceneRotation = gmtl::makeRot<gmtl::Matrix44f>( euler );
 
     //: translate to your position, then rotate the scene.
     sceneMatrix = sceneRotation * sceneTranslation;

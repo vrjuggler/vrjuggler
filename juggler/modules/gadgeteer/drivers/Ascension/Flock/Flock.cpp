@@ -43,6 +43,7 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
+#include <gmtl/EulerAngle.h>
 
 namespace gadget
 {
@@ -244,13 +245,13 @@ int Flock::sample()
                                                mFlockOfBirds.zPos( i+1 ));
       */
       gmtl::identity(transmitter_T_reciever);
-      gmtl::setRot(transmitter_T_reciever,
-                       gmtl::Math::deg2Rad(mFlockOfBirds.zRot( i+1 )),
-                       gmtl::Math::deg2Rad(mFlockOfBirds.yRot( i+1 )),
-                       gmtl::Math::deg2Rad(mFlockOfBirds.xRot( i+1 )), gmtl::ZYX );
-      gmtl::setTrans(transmitter_T_reciever, gmtl::Vec3f( mFlockOfBirds.xPos( i+1 ),
-                                                          mFlockOfBirds.yPos( i+1 ),
-                                                          mFlockOfBirds.zPos( i+1 )) );
+      gmtl::EulerAngleZYXf euler( gmtl::Math::deg2Rad(mFlockOfBirds.zRot( i+1 )),
+                                  gmtl::Math::deg2Rad(mFlockOfBirds.yRot( i+1 )),
+                                  gmtl::Math::deg2Rad(mFlockOfBirds.xRot( i+1 )) );
+      gmtl::setRot( transmitter_T_reciever, euler );
+      gmtl::setTrans( transmitter_T_reciever, gmtl::Vec3f( mFlockOfBirds.xPos( i+1 ),
+                                                           mFlockOfBirds.yPos( i+1 ),
+                                                           mFlockOfBirds.zPos( i+1 )) );
 
       //if (i==1)
          //vprDEBUG(vprDBG_ALL,2) << "Flock: bird1:    orig:" << Coord(theData[index]).pos << std::endl << vprDEBUG_FLUSH;

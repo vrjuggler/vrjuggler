@@ -5,6 +5,7 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
+#include <gmtl/EulerAngle.h>
 
 
 int TrackdSensorStandalone::numSensors()
@@ -26,9 +27,10 @@ gmtl::Matrix44f TrackdSensorStandalone::getSensorPos(int sensorNum)
    // XXX: This is untested and is probably wrong. :(
    gmtl::Matrix44f ret_val;
 
-   gmtl::setRot( ret_val, gmtl::Math::deg2Rad(sensor_val->elev),
-                          gmtl::Math::deg2Rad(sensor_val->azim),
-                          gmtl::Math::deg2Rad(sensor_val->roll), gmtl::XYZ );
+   gmtl::EulerAngleXYZf euler( gmtl::Math::deg2Rad(sensor_val->elev),
+                               gmtl::Math::deg2Rad(sensor_val->azim),
+                               gmtl::Math::deg2Rad(sensor_val->roll) );
+   gmtl::setRot( ret_val, euler );
    gmtl::setTrans( ret_val, gmtl::Vec3f( sensor_val->x, sensor_val->y, sensor_val->z) );
 
    return ret_val;
