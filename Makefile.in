@@ -235,6 +235,16 @@ ifeq (${PLATFORM}, Linux)
     _PF_EXTRA_LDOPTS = -O
 endif
 
+# Version information.
+BRANCH		= RELENG_1_0
+VER_ARGS	= -f ${VJROOT_ABS}/VERSION -s @THREAD_SYS@ -b ${BRANCH}	\
+                  -i ${VJROOT_ABS}/vjParam.h.in -o vjParam.h		\
+                  -d "`date '+%b %e, %Y %H:%M:%S'`"
+
+ifdef VERSION
+    VER_ARGS	+= -v ${VERSION}
+endif
+
 # =============================================================================
 # Lists used for various types of recursion.
 # =============================================================================
@@ -394,6 +404,7 @@ all-abi:
 
 # Things to do before the object files and library are built.
 beforebuild:
+	@${SHELL} ${scriptdir}/make-ver.sh ${VER_ARGS}
 
 # Things to do after the object files and library are built.
 afterbuild:
