@@ -58,9 +58,9 @@
 #include <fstream>
 #include <string>
 
-extern "C" {
+//extern "C" {
 #include <gadget/Devices/Intersense/isense.h>
-}
+//}
 
 struct isConfig {
     bool State;
@@ -148,7 +148,7 @@ public:
 // returns number of station
     int getConfigState(int d)
     {
-       ISD_GetStationState( mHandle, &mConfigData[d], d+1, mVerbose );
+       ISD_GetStationConfig( mHandle, &mConfigData[d], d+1, mVerbose );
 
        // WARNING: the following lines should be removed.  For now this is a convenient way
        // to see what the default tracker data is (as specified by the IS interface box).
@@ -162,7 +162,7 @@ public:
        mLocalConfigData[d].GetButtons = mConfigData[d].GetButtons;
        mLocalConfigData[d].GetAnalogData = mConfigData[d].GetAnalogData;
        mLocalConfigData[d].State = mConfigData[d].State;
-
+       
        return d;
     }
 
@@ -178,14 +178,14 @@ public:
        mConfigData[d].GetButtons = mLocalConfigData[d].GetButtons;
        mConfigData[d].GetAnalogData = mLocalConfigData[d].GetAnalogData;
 
-       ISD_SetStationState( mHandle, &mConfigData[d], d+1, mVerbose );
+       ISD_SetStationConfig( mHandle, &mConfigData[d], d+1, mVerbose );
        return d;
     } // d  i'th station of tracker
 
 //: sendScript
 //+ filename: the name of a file containing an intersense protocol script
     bool sendScript() {
-       return ((ISD_SendScript(mHandle, (char*) script) == 1) ? true : false);
+       //return ((ISD_SendScript(mHandle, (char*) script) == 1) ? true : false);
     }
 
     bool setScript(const char* inscript) {
@@ -239,7 +239,7 @@ private:
 
 //Tracker level data
     ISD_TRACKER_HANDLE mHandle;
-    ISD_TRACKER_TYPE mType;
+//    ISD_TRACKER_TYPE mType;
     int mBaudRate; //fix was implemented in all c drivers to user defined baudrate
     int mPort;
     bool mVerbose;
@@ -248,7 +248,7 @@ private:
     char* script;
 //Station level data
     int mCurrentStation; //0-3 for current 9/2000 IS900
-    ISD_STATION_CONFIG_TYPE mConfigData[ISD_MAX_STATIONS];
+    ISD_STATION_INFO_TYPE mConfigData[ISD_MAX_STATIONS];
     isConfig mLocalConfigData[ISD_MAX_STATIONS];
 
     ISD_DATA_TYPE mData;
