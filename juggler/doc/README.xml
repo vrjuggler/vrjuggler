@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="http://www.vrjuggler.org/docbook_ab.css" type="text/css"?>
+<?morphon-document-settings
+  morphon.document.settings.whitespaces.amount="3"
+  morphon.document.settings.print.fixed.attributes="true"
+  morphon.document.settings.stylesheetpi.autoupdate="true"
+  morphon.document.settings.print.defaultvalues.attributes="false"
+  morphon.document.settings.relative.systemids="0"
+  morphon.document.settings.endofline.type="2"
+  morphon.document.settings.whitespaces.type="indent"
+  morphon.document.settings.maxlinelength="0"
+?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article lang="en">
    <articleinfo>
@@ -68,9 +78,9 @@
          </section>
          <section>
             <title>Description</title>
-            <para>JCCL provides the configuration layer for VR Juggler and other modules. The config chunks and configuration editor VjControl come from JCCL. In essence, JCCL is the VR Juggler 1.0 Config directory with many new features including XML-based config files.</para>
-            <para>To build the JCCL C++ library, Xerces-C is required for parsing XML. As of this writing, version 1.5.1 has been used for testing. Newer versions may work. Xerces-C can be downloaded from <ulink url="http://xml.apache.org/xerces-c/">http://xml.apache.org/xerces-c/</ulink>.</para>
-            <para>To build VjControl, the Java API for XML Parsing (JAXP) is required. JAXP is distributed with JDK 1.4, and it is available for earlier versions as a separately distributed library. More information and downloads can be found at <ulink url="http://java.sun.com/xml/jaxp/index.html">http://java.sun.com/xml/jaxp/index.html</ulink>.</para>
+            <para>JCCL provides the configuration layer for VR Juggler and other modules. The config chunks and reusable configuration editor JavaBeans come from JCCL. These JavaBeans are used by the VR Juggler configuration editor tool, VRJConfig. In essence, JCCL is the VR Juggler 1.0 Config directory with many new features including XML-based config files.</para>
+            <para>To build the JCCL C++ library, CppDOM is required for parsing XML. CppDOM is a lightweight XML parser written in C++ and designed to provide an interface similar to JDOM. More information can be found at <ulink url="http://xml-cppdom.sourceforge.net/">http://xml-cppdom.sourceforge.net/</ulink>.</para>
+            <para>To build the configuration editor JavaBeans, JDOM and the Tweek Java API are required. JDOM can be downloaded from <ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink>. We require version B7 or newer, and we recommend version B8. Tweek is another module in the Juggler Project, and it will be built automatically as a dependency of JCCL.</para>
          </section>
       </section>
       <section>
@@ -126,7 +136,7 @@
          </section>
          <section>
             <title>Description</title>
-            <para>Tweek is a cross-platform, cross-language library consisting of a C++ API and a Java API. Its purpose is to provide a convenient mechanism for a Java-based GUI to interact with a complex C++ library or application. The Tweek GUI can be run in virtual environments, external on a palm top, or on the desktop next to a running application. Each of these methods gives a familier 2D widget set that can control applications flexibly. To provide this capability, it uses CORBA.</para>
+            <para>Tweek is a cross-platform, cross-language library consisting of a C++ API and a Java API. Its purpose is to provide a convenient mechanism for a Java-based GUI to interact with a complex C++ library or application. The Tweek GUI can be run in virtual environments, external on a palm top, or on the desktop next to a running application. Each of these methods gives a familiar 2D widget set that can control applications flexibly. To provide this capability, it uses CORBA.</para>
             <para>The Java code in Tweek includes the Tweek Java API and the Tweek JavaBean loader application. The Java API is provided to make the use of JavaBeans and CORBA simpler for programmers. The JavaBean loader application simply loads the Beans it finds and presents them to the user in some sort of structured manner (for example, a collection of icons with web-style navigation).</para>
          </section>
       </section>
