@@ -134,23 +134,22 @@ endif
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR=	5DT/DataGlove		 \
-	Ascension/Flock       \
-	Ascension/MotionStar	 \
-	Fakespace/PinchGlove	 \
-	Immersion/IBox		 \
-	Intersense/IS900	 \
-	Intersense/IntersenseAPI \
-	Logitech/ThreeDMouse	 \
-	Open/DTK		 \
-        Open/LinuxJoydev         \
-	Open/Trackd		 \
-	Open/Tweek		 \
-	Open/VRPN		 \
-	Polhemus/Fastrak	 \
-	VRCO/TrackdAPI		 \
+SUBDIR=	5DT/DataGlove			\
+	Ascension/Flock			\
+	Ascension/MotionStar		\
+	Fakespace/PinchGlove		\
+	Immersion/IBox			\
+	Intersense/IS900		\
+	Intersense/IntersenseAPI	\
+	Logitech/ThreeDMouse		\
+	Open/DTK			\
+	Open/LinuxJoydev		\
+	Open/Trackd			\
+	Open/Tweek			\
+	Open/VRPN			\
+	Polhemus/Fastrak		\
+	VRCO/TrackdAPI			\
 	VirtualTechnologies/CyberGlove
-
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
@@ -202,7 +201,7 @@ endif
             echo "------------------------------------------------" ;	\
             echo "Building libraries using $$abi" ;			\
             echo "------------------------------------------------" ;	\
-            $(MAKE) gadgetABI=$$abi libs ;				\
+            $(MAKE) driverABI=$$abi libs ;				\
           done
 	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
@@ -213,7 +212,7 @@ endif
             echo "------------------------------------------------" ;	\
             echo "Installing $$abi version of libraries" ;		\
             echo "------------------------------------------------" ;	\
-            $(MAKE) gadgetABI=$$abi install-libs ;			\
+            $(MAKE) driverABI=$$abi install-libs ;			\
           done
 	@$(MAKE) do-post-install
 	@echo "==============================================================="
@@ -244,8 +243,6 @@ endif
 	@$(MAKE) beforeinstall
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N install-libs
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N do-post-install
-	@$(MAKE) BUILD_TYPE=opt afterinstall
-	@$(MAKE) BUILD_TYPE=dbg afterinstall
 	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> Gadgeteer Driver make release started on $(STARTTIME)"
@@ -262,17 +259,6 @@ buildworld: all
 # files.
 # ------------------------------------------------------------------------
 installworld: install-all
-
-# =============================================================================
-# Automatically generated documentation.
-# =============================================================================
-docs: doc-internal doc-public
-
-doc-internal:
-	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
-
-doc-public:
-	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
 
 # =============================================================================
 # Human-readable information about the build system.
