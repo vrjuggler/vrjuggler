@@ -88,6 +88,7 @@ public class PrefsDialog extends JDialog
 
       this.setModal(true);
       this.pack();
+      this.setLocationRelativeTo(owner);
    }
 
    /**

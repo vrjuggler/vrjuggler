@@ -82,6 +82,7 @@ public class BeanStatusDialog extends JDialog
 
       this.setModal(true);
       this.pack();
+      this.setLocationRelativeTo(owner);
    }
 
    private void init()
