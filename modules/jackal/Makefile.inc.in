@@ -409,6 +409,7 @@ _clean:
 CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
 
 _clobber:
+	@$(MAKE) cleandepend
 	@$(MAKE) clean-links
 
 # Define $(_LOCAL_CLEAN) and $(_LOCAL_CLOBBER) to inform the shared 'clean'
