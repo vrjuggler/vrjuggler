@@ -158,7 +158,7 @@ public:
     */
    virtual int resume()
    {
-//        return kill(SIGCONT);
+//      return kill(SIGCONT);
       return -1;
    }
 
@@ -174,7 +174,7 @@ public:
     */
    virtual int suspend()
    {
-//        return kill(SIGSTOP);
+//      return kill(SIGSTOP);
       return -1;
    }
 
@@ -256,7 +256,7 @@ public:
     * @return NULL - Thread is not in global table
     * @return NonNull - Ptr to the thread that we are running within
     */
-   static Thread* self (void);
+   static Thread* self();
 
    /**
     * Yields execution of the calling thread to allow a different blocked
@@ -266,7 +266,7 @@ public:
     * @post The caller yields its execution control to another thread or
     *        process.
     */
-   static void yield (void)
+   static void yield()
    {
       PR_Sleep(PR_INTERVAL_NO_WAIT);
    }
@@ -314,7 +314,9 @@ private:
    // ---- STATICS --- //
    struct staticWrapper
    {
-      staticWrapper() : mStaticsInitialized(1221), mThreadIdKey(NULL)
+      staticWrapper()
+         : mStaticsInitialized(1221)
+         , mThreadIdKey(NULL)
       {;}
 
       unsigned       mStaticsInitialized;    // Just a debug helper to help find when called before initialized
@@ -322,10 +324,11 @@ private:
    };
 
    static ThreadKeyNSPR& threadIdKey()
-   {  return statics.mThreadIdKey;  }
+   {
+      return statics.mThreadIdKey;
+   }
 
    static staticWrapper statics;
-
 };
 
 } // End of vpr namespace
