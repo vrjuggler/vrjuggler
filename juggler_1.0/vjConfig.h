@@ -90,8 +90,8 @@
 #include <math.h>
 
 //: Linear Interpolation
-inline void VJ_LERP( const float& lerp, const float& a, 
-                  const float& b, float& result )
+inline void VJ_LERP( float& result, const float& lerp, const float& a, 
+                  const float& b )
 {
     float size = b - a;
     result = a + (size * lerp);

@@ -84,14 +84,18 @@ public:
       float sin_halfrad = vjSystem::sin( halfrad );
       float oneOverSinHalfRad;
       
-      if (sin_halfrad != 0)
+      if (sin_halfrad != 0.0f)
+      {
          oneOverSinHalfRad = 1.0f / sin_halfrad;
+      }
       
       // avoid NAN
       // if rad == 0, then the vector is undefined anyway, 
       // since there is no twist, there is no need for a vector (set to 0)
       else 
+      {
          oneOverSinHalfRad = 0.0f;
+      }
       
 	   rad = halfrad * 2.0f;
       vjVec3 t;
@@ -102,17 +106,31 @@ public:
       x = t[0];
       y = t[1];
       z = t[2];
+      
+      // avoid 0,0,0,0 when deg is 0.  make it 0,1,0,0
+      if (oneOverSinHalfRad == 0.0f)
+      {
+         x = 1.0f;
+      }
    }
 
    //: make a quat from a twist (radians) about a vector (normalized)
    void makeRot( const float& rad, const float& x, const float& y, const float& z )
    {
       float halfRad = rad * 0.5f;
-	   float sinHalfRad = vjSystem::sin( halfRad );
-	   vjVec3 vecNormalized( x, y, z );
-	   vecNormalized.normalize();
-
-	   vec[VJ_W] = vjSystem::cos( halfRad );
+	   float sinHalfRad = sinf( halfRad );
+	   vjVec3 vecNormalized;
+         
+      if (rad == 0.0f || (x == 0.0f && y == 0.0f && z == 0.0f))
+      {
+         vecNormalized.set( 1.0f, 0.0f, 0.0f );
+      }
+      else
+      {
+         vecNormalized.set( x, y, z );
+	      vecNormalized.normalize();
+      }
+	   vec[VJ_W] = cosf( halfRad );
 	   vec[VJ_X] = sinHalfRad * vecNormalized[0];
 	   vec[VJ_Y] = sinHalfRad * vecNormalized[1];
 	   vec[VJ_Z] = sinHalfRad * vecNormalized[2];
