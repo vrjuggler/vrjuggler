@@ -30,44 +30,51 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
-#include <cluster/Plugins/RemoteInputManager/VirtualDevice.h> // my header...
+#ifndef _CLUSTER_APPLICATION_DATA_H
+#define _CLUSTER_APPLICATION_DATA_H
 
+#include <gadget/gadgetConfig.h>
+#include <vpr/IO/SerializableObject.h>
+
+#include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
 
 namespace cluster
 {
-   VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id, const std::string& base_type, 
-                                const std::string& hostname, gadget::Input* device)
-   {
-      mName = name;
-      mId = id;
-      mBaseType = base_type;
-      mRemoteHostname = hostname;
-      mDevice = device;
-//      mBufferObjectReader = NULL;
-   }
 
-   VirtualDevice::~VirtualDevice()
+class ApplicationData : public vpr::SerializableObject
+{
+public:
+   ApplicationData(const vpr::GUID& guid, const std::string& host)
    {
-/*      if (mBufferObjectReader != NULL)
-      {
-         delete mBufferObjectReader;
-      }
-*/      
-      if (mDevice != NULL)
-      {
-         delete mDevice;
-      }
+      mId = guid;
+      mHostname = host;
+      cluster::ApplicationDataManager::instance()->addApplicationData(this);
    }
-
-   void VirtualDevice::debugDump(int debug_level)
+   virtual ~ApplicationData()
    {
-      vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
-                                 std::string("-------------- VirtualDevice --------------\n"),
-                                 std::string("-----------------------------------------\n"));
-
-      vprDEBUG(gadgetDBG_RIM,debug_level) << "Local ID: " << mId.toString() << std::endl << vprDEBUG_FLUSH; 
-      vprDEBUG(gadgetDBG_RIM,debug_level) << "Name:     " << mName << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) << "BaseType: " << mBaseType << std::endl << vprDEBUG_FLUSH;
+      ;
    }
-} // End of gadget namespace
+   bool isLocal()
+   {
+      return mIsLocal;
+   }
+   void setIsLocal(bool local)
+   { mIsLocal = local; }
+   
+   vpr::GUID getId()
+   {
+      return mId;
+   }
+   std::string getHostname()
+   {
+      return mHostname;
+   }
+private:
+   bool        mIsLocal;
+   vpr::GUID   mId;
+   std::string mHostname;
+};
+
+} // end namespace gadget
+
+#endif

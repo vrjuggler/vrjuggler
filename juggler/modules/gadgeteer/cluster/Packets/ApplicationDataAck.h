@@ -39,8 +39,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_USER_DATA_REQUEST_H
-#define _GADGET_USER_DATA_REQUEST_H
+#ifndef _GADGET_USER_DATA_ACK_H
+#define _GADGET_USER_DATA_ACK_H
 
 #include <vpr/vprTypes.h>
 #include <vpr/IO/BufferObjectReader.h>
@@ -51,29 +51,33 @@
 #include <cluster/Packets/Header.h>                                                       
 #include <cluster/Packets/Packet.h>
 
-//#define RIM_PACKET_HEAD_SIZE 8
-
 namespace cluster
 {
 
-class UserDataRequest : public Packet
+class ApplicationDataAck : public Packet
 {
 public:
    /**
     * packet_head: Given a packet that has been parsed, and found to be a device request
     * stream: A socket that the connection is on
     * 
-    * Create a UserDataRequest packet
+    * Create a deviceRequest packet
     */
-   UserDataRequest(Header* packet_head, vpr::SocketStream* stream);
+   ApplicationDataAck(Header* packet_head, vpr::SocketStream* stream);
+
+   // =============== Packet Specific =================
+   //
 
    /**
     * Given a sender ID(self) and a requested device name
     *
     * Create a device request to be sent
     */
-   UserDataRequest(vpr::Uint16 sender_id, std::string user_data_name);
+   ApplicationDataAck(vpr::GUID id, bool ack);
    
+   //
+   // =============== Packet Specific =================
+
    /**
     * Helper for the above creation of a device request to be sent
     */
@@ -87,16 +91,30 @@ public:
    virtual void printData(int debug_level);
    static vpr::Uint16 getBaseType()
    {
-       return(Header::RIM_USERDATA_REQ);
+       return(Header::RIM_APPDATA_ACK);
    }
-   vpr::Uint16 getSenderId() { return mSenderId; }
-   std::string getUserDataName() { return mUserDataName; }
+   
+   // =============== Packet Specific =================
+   //
+   
+   vpr::GUID getId() { return mId; }
+   bool getAck() { return mAck; }
+   
+   //
+   // =============== Packet Specific =================
 
    virtual bool action(ClusterNode* node);
 
 private:
-   vpr::Uint16 mSenderId;
-   std::string mUserDataName;
+   // =============== Packet Specific =================
+   //
+   
+   vpr::GUID mId;
+   // true = ACK  & false = NACK
+   bool        mAck;    
+   //
+   // =============== Packet Specific =================
+
 };
 }
 

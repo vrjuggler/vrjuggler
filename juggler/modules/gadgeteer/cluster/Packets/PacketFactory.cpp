@@ -41,8 +41,8 @@
 #include <cluster/Packets/ConnectionAck.h>
 #include <cluster/Packets/SyncRequest.h>
 #include <cluster/Packets/SyncAck.h>
-#include <cluster/Packets/UserDataRequest.h>
-#include <cluster/Packets/UserDataAck.h>
+#include <cluster/Packets/ApplicationDataRequest.h>
+#include <cluster/Packets/ApplicationDataAck.h>
 #include <cluster/Packets/DataPacket.h>
 #include <cluster/Packets/EndBlock.h>
 #include <gadget/Util/Debug.h>
@@ -88,11 +88,11 @@ void PacketFactory::loadKnownPackets()
    PacketConstructor<DataPacket>* data_packet
       = new PacketConstructor<DataPacket>;
    
-   PacketConstructor<UserDataRequest>* userdata_request
-      = new PacketConstructor<UserDataRequest>;
+   PacketConstructor<ApplicationDataRequest>* appdata_request
+      = new PacketConstructor<ApplicationDataRequest>;
 
-   PacketConstructor<UserDataAck>* userdata_ack
-      = new PacketConstructor<UserDataAck>;
+   PacketConstructor<ApplicationDataAck>* appdata_ack
+      = new PacketConstructor<ApplicationDataAck>;
    
    PacketConstructor<EndBlock>* end_block
       = new PacketConstructor<EndBlock>;
@@ -104,8 +104,8 @@ void PacketFactory::loadKnownPackets()
        (NULL == connection_ack)     ||
        (NULL == sync_request)       ||
        (NULL == sync_ack)           ||
-       (NULL == userdata_request)   ||
-       (NULL == userdata_ack)       ||
+       (NULL == appdata_request)   ||
+       (NULL == appdata_ack)       ||
        (NULL == data_packet)        ||
        (NULL == end_block) )
    {

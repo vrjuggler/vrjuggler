@@ -30,14 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef CLUSTER_DEVICE_SERVER_H
-#define CLUSTER_DEVICE_SERVER_H
+#ifndef CLUSTER_ApplicationData_SERVER_H
+#define CLUSTER_ApplicationData_SERVER_H
 
 #include <gadget/gadgetConfig.h>
 #include <cluster/Packets/DataPacket.h>
-#include <gadget/Type/Input.h>
-#include <vpr/Sync/Semaphore.h>
-#include <vpr/Thread/Thread.h>
+
+//#include <gadget/Type/Input.h>
 
 
 // TODO: Remove this header by moving all needed data to a new location
@@ -51,22 +50,23 @@
 namespace cluster
 {
    class ClusterNode;
+   class ApplicationData;
 
-   class GADGET_CLASS_API DeviceServer
+   class GADGET_CLASS_API ApplicationDataServer
    {
    public:
-      DeviceServer(const std::string& name, gadget::Input* device);
-      ~DeviceServer();
+      ApplicationDataServer(vpr::GUID guid, ApplicationData* user_data);
+      ~ApplicationDataServer();
 
       void send();
       void updateLocalData();
 
-      void addClient(ClusterNode* new_client_node, vpr::GUID& remote_id);
+      void addClient(ClusterNode* new_client_node);
       void removeClient(const std::string& host_name);
 
       void debugDump(int debug_level);
 
-      std::string getName() { return mName; }
+      vpr::GUID getId() { return mId; }
       /** Locks the active list.
        *
        *  This function blocks until it can lock the std::map of active
@@ -88,29 +88,15 @@ namespace cluster
       void unlockClients()
       { mClientsLock.release(); }
 
-      void start();
-      void controlLoop(void* nullParam);
-
-      void go();
-
-      void sync();
-
-      void shutdown();
-
    private:
-      std::string                                  mName;   /**< DeviceServer name */
-      std::map<cluster::ClusterNode*,vpr::GUID>  mClients;
+      vpr::GUID                                    mId;   /**< ApplicationDataServer name */
+      std::vector<cluster::ClusterNode*>           mClients;
       vpr::Mutex                                   mClientsLock;   /**< Lock on active config list.*/   
       
-      gadget::Input*                               mDevice;
+      ApplicationData*                             mApplicationData;
       DataPacket*                                  mDataPacket;
-      vpr::BufferObjectWriter*                           mBufferObjectWriter;
+      vpr::BufferObjectWriter*                     mBufferObjectWriter;
       std::vector<vpr::Uint8>*                     mDeviceData;
-
-      vpr::Semaphore    deviceServerTriggerSema;  /**< Semaphore for draw trigger */
-      vpr::Semaphore    deviceServerDoneSema;     /**< Semaphore for drawing done */
-      vpr::Thread*                                 mControlThread;
-      bool                                         mThreadActive;
    };
 
 } // end namespace gadget

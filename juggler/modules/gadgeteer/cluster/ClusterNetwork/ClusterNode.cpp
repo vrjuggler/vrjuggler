@@ -44,7 +44,7 @@
 #include <cluster/Packets/Packet.h>
 #include <cluster/Packets/ConnectionRequest.h>
 #include <cluster/Packets/DeviceRequest.h>
-#include <cluster/Packets/UserDataRequest.h>
+#include <cluster/Packets/ApplicationDataRequest.h>
 #include <cluster/Packets/EndBlock.h>
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
