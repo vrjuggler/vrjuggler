@@ -152,56 +152,56 @@ Keyboard
   end
 DigProxy
   Name "PinchLeftThumb"
-  device { "SimPinchFingers" }
+  device { "SimPinchGlove" }
   unit { "0" }
   end
 DigProxy
   Name "PinchLeftIndex"
-  device { "SimPinchFingers" }
+  device { "SimPinchGlove" }
   unit { "1" }
   end
 DigProxy
   Name "PinchLeftMiddle"
-  device { "SimPinchFingers" }
+  device { "SimPinchGlove" }
   unit { "2" }
   end
 DigProxy
   Name "PinchLeftRing"
-  device { "SimPinchFingers" }
+  device { "SimPinchGlove" }
   unit { "3" }
   end
 DigProxy
   Name "PinchLeftPinky"
-  device { "SimPinchFingers" }
+  device { "SimPinchGlove" }
   unit { "4" }
   end
 DigProxy
   Name "PinchRightThumb"
-  device { "SimPinchFingers" }
+  device { "SimPinchGlove" }
   unit { "6" }
   end
 DigProxy
   Name "PinchRightIndex"
-  device { "SimPinchFingers" }
+  device { "SimPinchGlove" }
   unit { "7" }
   end
 DigProxy
   Name "PinchRightMiddle"
-  device { "SimPinchFingers" }
+  device { "SimPinchGlove" }
   unit { "8" }
   end
 DigProxy
   Name "PinchRightRing"
-  device { "SimPinchFingers" }
+  device { "SimPinchGlove" }
   unit { "9" }
   end
 DigProxy
   Name "PinchRightPinky"
-  device { "SimPinchFingers" }
+  device { "SimPinchGlove" }
   unit { "10" }
   end
 SimDigital
-  Name "SimPinchFingers"
+  Name "SimPinchGlove"
   keyboardProxy { "GloveKeyProxy" }
   keyPairs { 
       KeyModPair
