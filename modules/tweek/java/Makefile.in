@@ -55,6 +55,7 @@ JAVA_IDL_OPTS		= -emitAll -td $(srcdir)
 JAVA_IDL_INCLUDES	= -i $(top_srcdir)
 
 JDOM_JAR	= @JDOM_JAR@
+OPENORB_JAR	= @OPENORB_JAR@
 CLASSPATH	= $(JDOM_JAR)
 
 IDL_JAVA_FILES	= SubjectManager.java	\
@@ -142,6 +143,11 @@ links:
           do								\
               $(LN_S) $$jar ./ ;					\
           done
+	cd $(instlinks)/bin &&						\
+          for jar in `echo "$(OPENORB_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          do								\
+              $(LN_S) $$jar ./ ;					\
+          done
 	cd $(instlinks)/bin && rm -f ./tweek &&				\
           $(LN_S) $(TWEEKROOT_ABS)/java/tweek.sh ./tweek
 	cd $(instlinks)/bin && rm -f ./java.security.policy.txt &&	\
@@ -175,7 +181,12 @@ endif	# if OS_TYPE == UNIX
           done
 	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
           do								\
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIT)		\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $$jar $(bindir) ;					\
+          done
+	for jar in `echo "$(OPENORB_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $$jar $(bindir) ;					\
           done
 
