@@ -53,11 +53,11 @@ DataGloveStandalone::DataGloveStandalone()
 // Destructor
 DataGloveStandalone::~DataGloveStandalone()
 {
-    if ( port != NULL )
+    if ( mPort != NULL )
     {
-        port->close();
-        delete port;
-        port = NULL;
+        mPort->close();
+        delete mPort;
+        mPort = NULL;
     }
 }
 
@@ -117,13 +117,13 @@ int DataGloveStandalone::ReadRecordsFromHardware( float *ch0, float *ch1, float 
    unsigned char packet[10];   // Define packet
    vpr::Uint32 written;
 
-   port->read(buf, 1, written);
+   mPort->read(buf, 1, written);
    while(buf[0]!=0x80) // Read data untill read the header.
    {
-      port->read(buf, 1, written);
+      mPort->read(buf, 1, written);
    }
    // If read the start buffer, read the rest 9 data.
-   port->read(&packet, 9, written);
+   mPort->read(&packet, 9, written);
 
    // Decode the report and store the values 
    *ch0 = float(packet[0])/255.0;   // Thumb
@@ -142,17 +142,17 @@ int DataGloveStandalone::ReadRecordsFromHardware( float *ch0, float *ch1, float 
 }
 
 // Connect to the DataGlove hardware
-bool DataGloveStandalone::connectToHardware(const std::string& ttyPort, int mBaudRate)
+bool DataGloveStandalone::connectToHardware(const std::string& tty_port, int baud_rate)
 {
     std::cout<<"\n[dataglove] Connecting To DataGlove Hardware\n"<<std::flush;
-    int result = mConnectToHardware( ttyPort , mBaudRate);
+    int result = mConnectToHardware( tty_port , baud_rate);
     if (result == 1)
     {
-        std::cout<<"[dataglove] Connected to DataGlove hardware on port "<<ttyPort<<"\n"<<std::flush;
+        std::cout<<"[dataglove] Connected to DataGlove hardware on port "<<tty_port<<"\n"<<std::flush;
     }
     else
     {
-        std::cout<<"[dataglove] connectToHardware(\""<<ttyPort<<"\") returned "<<(result == 1 ? "true":"false")<<"\n"<<std::flush;
+        std::cout<<"[dataglove] connectToHardware(\""<<tty_port<<"\") returned "<<(result == 1 ? "true":"false")<<"\n"<<std::flush;
     }
     std::cout<<"\n"<<std::flush;
     return result == 1 ? true:false;
@@ -161,7 +161,7 @@ bool DataGloveStandalone::connectToHardware(const std::string& ttyPort, int mBau
 ///////////////////////////////////////////////////////////
 // Private methods
 ///////////////////////////////////////////////////////////
-int DataGloveStandalone::mConnectToHardware(const std::string& ttyPort, int baud)
+int DataGloveStandalone::mConnectToHardware(const std::string& tty_port, int baud)
 {
    //const int BUFFER_LEN = 100;
    //char buf[BUFFER_LEN];
@@ -169,26 +169,26 @@ int DataGloveStandalone::mConnectToHardware(const std::string& ttyPort, int baud
    //vpr::Uint32 written;
 
    // Create new serial port
-   port = new vpr::SerialPort(ttyPort);
-   port->setOpenReadWrite();
+   mPort = new vpr::SerialPort(tty_port);
+   mPort->setOpenReadWrite();
 
-   if (!port->open().success()) 
+   if (!mPort->open().success()) 
    {
-      std::cout<<"[dataGlove] Port ("<<ttyPort<<") open failed\n"<<std::flush;
-      port->close();
+      std::cout<<"[dataGlove] Port ("<<tty_port<<") open failed\n"<<std::flush;
+      mPort->close();
       return 0;
 	}
    else
    {
-      std::cout<<"[dataGlove] Port ("<<ttyPort<<") open success\n"<<std::flush;
-      port->clearAll();      
+      std::cout<<"[dataGlove] Port ("<<tty_port<<") open success\n"<<std::flush;
+      mPort->clearAll();      
       baud = 9600;
-      port->setRead(true);
-      port->setMinInputSize(1);
-      port->setOutputBaudRate(baud); // Put me before input to be safe
-      port->setInputBaudRate(baud);
-      port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-      std::cout<<"[dataGlove] Port ("<<ttyPort<<") successfully changed the port settings\n"<<std::flush;
+      mPort->setRead(true);
+      mPort->setMinInputSize(1);
+      mPort->setOutputBaudRate(baud); // Put me before input to be safe
+      mPort->setInputBaudRate(baud);
+      mPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+      std::cout<<"[dataGlove] Port ("<<tty_port<<") successfully changed the port settings\n"<<std::flush;
    }
 
    return 1;
