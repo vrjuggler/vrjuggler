@@ -36,8 +36,9 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Coord.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Coord.h>
+#include <gmtl/Xforms.h>
 
 #include <OsgNav.h>
 
@@ -77,12 +78,12 @@ cout  << "Wand Buttons:"
     mModelTrans->setMatrix(cur_xform);
 
    // -- Get wand info -- //
-    vrj::Matrix* wandMatrix;
+    gmtl::Matrix44f* wandMatrix;
     wandMatrix = mWand->getData();      // Get the wand matrix
 
     osg::Matrix osgWandMat;
     //float * fPtr;
-    osgWandMat.set(wandMatrix->getFloatPtr());
+    osgWandMat.set(wandMatrix->getData());
 
 
    if(mButton0->getData() == gadget::Digital::ON)
@@ -105,9 +106,9 @@ cout  << "Wand Buttons:"
 
 
     //Navigation
-    vrj::Vec3 direction;
-    vrj::Vec3 Zdir = vrj::Vec3(0.0f, 0.0f, speed);
-    direction.xformVec(*wandMatrix, Zdir);
+    gmtl::Vec3f direction;
+    gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, speed);
+    gmtl::xform(direction, *wandMatrix, Zdir);
     //mNavTrans->preTranslate(direction[0], direction[1], direction[2]);
      mNavTrans->preMult(osg::Matrix::translate(direction[0], direction[1], direction[2]));
 }

@@ -41,7 +41,6 @@
 #include <iomanip>
 
 #include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Math/Matrix.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/AnalogInterface.h>
