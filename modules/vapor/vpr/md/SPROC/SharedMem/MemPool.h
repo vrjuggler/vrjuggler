@@ -37,7 +37,8 @@
 #include <vprConfig.h>
 #include <stdlib.h>
 
-namespace vpr {
+namespace vpr 
+{
 
 //: Shared memory pool.
 //
@@ -64,7 +65,7 @@ public:
 
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 #if defined(VPR_USE_IRIX_SPROC)
 #   include <md/SPROC/MemPoolSGI.h>

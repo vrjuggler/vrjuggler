@@ -49,6 +49,7 @@ class SelectorBase
 public:
    enum EventType
       { READ = 1,           // Read - 
+        ACCEPT = 1,        //  Accept - Same as READ 
         WRITE = 2,          // Write -
         EXCEPT = 4,         // Exception -
         ERR = 8,            // Error -
@@ -109,17 +110,20 @@ public:
       return mSelectorImp.select(numWithEvents, timeout);
    }
 
-
    // For iteration
-
    vpr::Uint16 getNumHandles()
    {
       return mSelectorImp.getNumHandles();
    }
-
    IOSys::Handle getHandle(vpr::Uint16 index)
    {
       return mSelectorImp.getHandle(index);
+   }
+   
+   // Does the selector contain the handle
+   bool containsHandle(IOSys::Handle handle)
+   {
+      return mSelectorImp.containsHandle(handle);
    }
 
 
