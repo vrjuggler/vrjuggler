@@ -30,16 +30,16 @@
   <property category="sys" name="Libraries" value="JDOM B7;Xerces;OpenORB"/>
   <property category="sys" name="MakeStable" value="0"/>
   <property category="sys" name="OutPath" value="classes"/>
-  <property category="sys" name="SourcePath" value=".;test"/>
-  <property category="sys" name="TestPath" value="test"/>
+  <property category="sys" name="SourcePath" value=".;../test/TestSuite/java"/>
+  <property category="sys" name="TestPath" value="../test/TestSuite/java"/>
   <property category="sys" name="Title" value="Tweek JavaBean Loader"/>
   <property category="sys" name="TitleLabel" value="Title:"/>
   <property category="sys" name="Version" value="1.0"/>
   <property category="sys" name="VersionLabel" value="@since"/>
   <property category="sys" name="WorkingDirectory" value="."/>
-  <file path="org/vrjuggler/tweek/AboutBox.java"/>
+  <file path="org/vrjuggler/tweek/gui/AboutBox.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanAttributes.java"/>
-  <file path="org/vrjuggler/tweek/BeanContainer.java"/>
+  <file path="org/vrjuggler/tweek/gui/BeanContainer.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanDependency.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanFocusChangeEvent.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanFocusChangeListener.java"/>
@@ -62,7 +62,7 @@
   <file path="org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java"/>
   <file path="org/vrjuggler/tweek/net/CommunicationEvent.java"/>
   <file path="org/vrjuggler/tweek/net/CommunicationListener.java"/>
-  <file path="org/vrjuggler/tweek/ConnectionDialog.java"/>
+  <file path="org/vrjuggler/tweek/gui/ConnectionDialog.java"/>
   <file path="org/vrjuggler/tweek/net/corba/CorbaService.java"/>
   <file path="org/vrjuggler/tweek/beans/DefaultBeanModelViewer.java"/>
   <file path="org/vrjuggler/tweek/services/EnvironmentService.java"/>
@@ -70,16 +70,16 @@
   <file path="org/vrjuggler/tweek/beans/FileFinder.java"/>
   <file path="org/vrjuggler/tweek/beans/GenericBean.java"/>
   <file path="org/vrjuggler/tweek/services/GlobalPreferencesService.java"/>
-  <file path="org/vrjuggler/tweek/MessageAdditionEvent.java"/>
-  <file path="org/vrjuggler/tweek/MessageAdditionListener.java"/>
-  <file path="org/vrjuggler/tweek/MessagePanel.java"/>
+  <file path="org/vrjuggler/tweek/gui/MessageAdditionEvent.java"/>
+  <file path="org/vrjuggler/tweek/gui/MessageAdditionListener.java"/>
+  <file path="org/vrjuggler/tweek/gui/MessagePanel.java"/>
   <file path="org/vrjuggler/tweek/beans/PanelBean.java"/>
-  <file path="org/vrjuggler/tweek/PrefsDialog.java"/>
+  <file path="org/vrjuggler/tweek/gui/PrefsDialog.java"/>
   <file path="org/vrjuggler/tweek/beans/ServiceBean.java"/>
   <file path="org/vrjuggler/tweek/Tweek.java"/>
   <file path="org/vrjuggler/tweek/beans/TweekBean.java"/>
   <file path="org/vrjuggler/tweek/TweekCore.java"/>
-  <file path="org/vrjuggler/tweek/TweekFrame.java"/>
+  <file path="org/vrjuggler/tweek/gui/TweekFrame.java"/>
   <file path="org/vrjuggler/tweek/event/TweekFrameEvent.java"/>
   <file path="org/vrjuggler/tweek/event/TweekFrameListener.java"/>
   <file path="org/vrjuggler/tweek/event/UserLevelChangeEvent.java"/>
