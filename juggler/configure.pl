@@ -47,7 +47,6 @@ use Pod::Usage;
 
 # Subroutine prototypes.
 sub parseConfigFile($);
-sub hasDependency($$);
 sub configureModule($);
 sub regenModuleInfo($);
 sub generateMakefile(;$);
@@ -199,6 +198,8 @@ sub parseConfigFile ($)
          my $deps  = "$2";
          $cfg_file = $';
 
+         $MODULES{"$mod"} = new JugglerModule("$mod");
+
          while ( $deps !~ /^\s*$/ )
          {
             if ( $deps =~ /^\s*depend\s+(\S+);/ )
@@ -209,14 +210,7 @@ sub parseConfigFile ($)
                die "ERROR: No such module $module_name for $mod dependency\n"
                   unless defined($MODULES{"$module_name"});
 
-               # The $MODULES entry for $module_name contains an array of
-               # hash references.  We just copy those references into the
-               # array for the current module ($mod).  Simple, no?
-               foreach ( @{$MODULES{"$module_name"}} )
-               {
-                  push(@{$MODULES{"$mod"}}, $_)
-                     unless hasDependency(\@{$MODULES{"$mod"}}, $_);
-               }
+               $MODULES{"$mod"}->addDependencies($MODULES{"$module_name"}->getDependencies());
             }
             elsif ( $deps =~ /\s*(\S.+?):\s+(.+?);/ )
             {
@@ -233,8 +227,8 @@ sub parseConfigFile ($)
                   $vars{"$1"} = "$2";
                }
 
-               push(@{$MODULES{"$mod"}},
-                    {'path' => "$dep_path", 'env' => \%vars});
+               $MODULES{"$mod"}->addDependency(new ModuleDependency("$dep_path",
+                                                                    \%vars));
             }
             else
             {
@@ -251,29 +245,6 @@ sub parseConfigFile ($)
 
       $cfg_file =~ s/^\s*//;
    }
-}
-
-# Checks to see if the given array of dependencies already contains the new
-# dependency.  If the new dependency already exists, 0 is returned.  Otherwise,
-# 1 is returned.
-sub hasDependency ($$)
-{
-   my $cur_array_ref = shift;
-   my $new_dep_ref   = shift;
-
-   my $has_dependency = 0;
-
-   my $dep;
-   foreach $dep ( @$cur_array_ref )
-   {
-      if ( ${$dep}{'path'} eq ${$new_dep_ref}{'path'} )
-      {
-         $has_dependency = 1;
-         last;
-      }
-   }
-
-   return $has_dependency;
 }
 
 sub configureModule ($)
@@ -297,10 +268,10 @@ sub configureModule ($)
    die "ERROR: No module $module_name defined\n"
       unless defined($MODULES{"$module_name"});
 
-   my $modref;
-   foreach $modref ( @{$MODULES{"$module_name"}} )
+   my $depencency;
+   foreach $depencency ( $MODULES{"$module_name"}->getDependencies() )
    {
-      my $mod_path = $$modref{'path'};
+      my $mod_path = $depencency->getPath();
 
       mkpath("$mod_path", 1, 0755) unless -d "$mod_path";
       chdir("$mod_path")
@@ -322,26 +293,29 @@ sub configureModule ($)
          or die "Configuration of $module_name in $ENV{'PWD'} failed\n" .
                 "Check $ENV{'PWD'}/config.log for details\n";
 
-      foreach ( keys(%{$$modref{'env'}}) )
+      my %mod_env = $depencency->getEnvironment();
+      foreach ( keys(%mod_env) )
       {
+         my $env_val = $depencency->getEnvironmentValue($_);
+
          if ( /_CONFIG$/ )
          {
-            $ENV{"$_"} = "$cwd/$mod_path/${$$modref{'env'}}{$_}";
+            $ENV{"$_"} = "$cwd/$mod_path/$env_val";
          }
          elsif ( /_BASE_DIR$/ )
          {
-            if ( "${$$modref{'env'}}{$_}" eq "instlinks" )
+            if ( "$env_val" eq "instlinks" )
             {
                $ENV{"$_"} = "$safe_cwd/instlinks";
             }
             else
             {
-               $ENV{"$_"} = "${$$modref{'env'}}{$_}";
+               $ENV{"$_"} = "$env_val";
             }
          }
          else
          {
-            $ENV{"$_"} = "${$$modref{'env'}}{$_}";
+            $ENV{"$_"} = "$env_val";
          }
       }
 
@@ -360,10 +334,10 @@ sub regenModuleInfo ($)
    die "ERROR: No module $module_name defined\n"
       unless defined($MODULES{"$module_name"});
 
-   my $modref;
-   foreach $modref ( @{$MODULES{"$module_name"}} )
+   my $depencency;
+   foreach $depencency ( $MODULES{"$module_name"}->getDependencies() )
    {
-      my $mod_path = $$modref{'path'};
+      my $mod_path = $depencency->getPath();
 
       chdir("$mod_path")
          or die "WARNING: Could not chdir to $mod_path\n";
@@ -393,9 +367,9 @@ sub generateMakefile (;$)
 
    if ( $gen_module )
    {
-      foreach ( @{$MODULES{"$gen_module"}} )
+      foreach ( $MODULES{"$gen_module"}->getDependencies() )
       {
-         $modules .= "${$_}{'path'} ";
+         $modules .= $_->getPath() . " ";
       }
    }
    else
@@ -404,9 +378,9 @@ sub generateMakefile (;$)
       foreach $mod_name ( keys(%MODULES) )
       {
          my $temp_mod;
-         foreach $temp_mod ( @{$MODULES{"$mod_name"}} )
+         foreach $temp_mod ( $MODULES{"$mod_name"}->getDependencies() )
          {
-            $modules .= "${$temp_mod}{'path'} ";
+            $modules .= $temp_mod->getPath() . " ";
          }
       }
    }
@@ -457,9 +431,9 @@ sub generateReconfig ($@)
 
    if ( $gen_module )
    {
-      foreach ( @{$MODULES{"$gen_module"}} )
+      foreach ( $MODULES{"$gen_module"}->getDependencies() )
       {
-         print RECONFIG "(cd ${$_}{'path'} && rm -f config.status " .
+         print RECONFIG "(cd " . $_->getPath() . " && rm -f config.status " .
                         "config.cache config.log)\n"
       }
    }
@@ -468,9 +442,9 @@ sub generateReconfig ($@)
       my $mod_name;
       foreach $mod_name ( keys(%MODULES) )
       {
-         foreach ( @{$MODULES{"$mod_name"}} )
+         foreach ( $MODULES{"$mod_name"}->getDependencies() )
          {
-            print RECONFIG "(cd ${$_}{'path'} && rm -f config.status " .
+            print RECONFIG "(cd " . $_->getPath() . " && rm -f config.status " .
                            "config.cache config.log)\n"
          }
       }
@@ -594,7 +568,7 @@ sub getConfigureHelp ($$)
    my $mod_name    = shift;
    my $arg_arr_ref = shift;
 
-   foreach ( @{$MODULES{"$mod_name"}} )
+   foreach ( $MODULES{"$mod_name"}->getDependencies() )
    {
       next unless -x "$base_dir/$$_{'path'}/configure";
 
@@ -677,6 +651,108 @@ sub parseOutput ($$)
 
       $string =~ s/^\s*//s;
    }
+}
+
+package JugglerModule;
+
+sub new ($$)
+{
+   my $class = shift;
+   my $name  = shift;
+
+   return bless
+   {
+      'name' => $name,          # Name of this module
+      'deps' => []              # Array of ModuleDependecy objects
+   }, $class;
+}
+
+sub getName ($)
+{
+   my $this = shift;
+   return $this->{'name'};
+}
+
+sub getDependencies ($)
+{
+   my $this = shift;
+   return @{$this->{'deps'}};
+}
+
+sub addDependency ($$)
+{
+   my $this = shift;
+   my $dep  = shift;
+   push(@{$this->{'deps'}}, $dep);
+}
+
+sub addDependencies ($@)
+{
+   my $this = shift;
+
+   # The $MODULES entry for $module_name contains an array of hash references.
+   # We just copy those references into the array for the current module
+   # ($this).  Simple, no?
+   my $dep;
+   foreach $dep ( @_ )
+   {
+      $this->addDependency($dep) unless $this->hasDependency($dep);
+   }
+}
+
+sub hasDependency ($$)
+{
+   my $this    = shift;
+   my $new_dep = shift;
+
+   my $has_dependency = 0;
+
+   my $cur_dep;
+   foreach $cur_dep ( $this->getDependencies() )
+   {
+      if ( $cur_dep->getPath() eq $new_dep->getPath() )
+      {
+         $has_dependency = 1;
+         last;
+      }
+   }
+
+   return $has_dependency;
+}
+
+package ModuleDependency;
+
+sub new ($$;$)
+{
+   my $class = shift;
+   my $path  = shift;
+   my $env   = shift || {};
+   
+   return bless
+   {
+      'path' => $path,          # Path to this dependency
+      'env'  => $env            # Reference to environment variable hash
+   }, $class;
+}
+
+sub getPath ($)
+{
+   my $this = shift;
+   return $this->{'path'};
+}
+
+sub getEnvironment ($)
+{
+   my $this = shift;
+   return %{$this->{'env'}};
+}
+
+sub getEnvironmentValue ($$)
+{
+   my $this = shift;
+   my $key  = shift;
+
+   return ${$this->{'env'}}{"$key"};
 }
 
 __END__
