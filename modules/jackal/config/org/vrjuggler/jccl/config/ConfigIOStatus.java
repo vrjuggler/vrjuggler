@@ -1,12 +1,12 @@
 
-package VjControl.VjConfig;
+package VjConfig;
 
 import java.util.List;
 import java.util.ArrayList;
 
 public class ConfigIOStatus {
 
-    List messages;
+    List messages;  // either Strings or Throwables.
     int status;
     
     public static final int SUCCESS = 1;
@@ -36,23 +36,38 @@ public class ConfigIOStatus {
         return status;
     }
     
-    public void addMessage (String msg) {
-        messages.add (msg);
-    }
+//     public void addMessage (String msg) {
+//         messages.add (msg);
+//     }
 
     public void addWarning (String msg) {
         setStatus (WARNINGS);
-        addMessage (msg);
+        messages.add (msg);
     }
 
     public void addError (String msg) {
         setStatus (ERRORS);
-        addMessage (msg);
+        messages.add (msg);
     }
 
     public void addFailure (String msg) {
         setStatus (FAILURE);
-        addMessage (msg);
+        messages.add (msg);
+    }
+
+    public void addWarning (Throwable msg) {
+        setStatus (WARNINGS);
+        messages.add (msg);
+    }
+
+    public void addError (Throwable msg) {
+        setStatus (ERRORS);
+        messages.add (msg);
+    }
+
+    public void addFailure (Throwable msg) {
+        setStatus (FAILURE);
+        messages.add (msg);
     }
 
     public String toString () {
@@ -72,10 +87,12 @@ public class ConfigIOStatus {
             break;
         }
         for (int i = 0; i < messages.size(); i++) {
-            s.append ((String)messages.get(i));
+            Object o = messages.get(i);
+            s.append (o.toString());
         }
 
         return new String(s);
     }
 
 }
+
