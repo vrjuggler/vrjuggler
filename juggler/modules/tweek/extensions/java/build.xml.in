@@ -34,7 +34,7 @@
          <include name="org/vrjuggler/tweek/wizard/**" />
          <exclude name="org/vrjuggler/tweek/wizard/builder/**" />
          <fileset dir="${srcdir}"
-                  includes="org/vrjuggler/jccl/wizard/images/*" />
+                  includes="org/vrjuggler/tweek/wizard/images/*" />
       </jar>
       <jar destfile="WizardBuilder.jar" basedir=".">
          <include name="org/vrjuggler/tweek/wizard/builder/**" />
