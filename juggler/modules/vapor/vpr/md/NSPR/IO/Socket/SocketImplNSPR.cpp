@@ -156,33 +156,27 @@ SocketImplNSPR::bind () {
 // ------------------------------------------------------------------------
 vpr::Status
 SocketImplNSPR::enableBlocking () {
-
-   assert( m_open && "precondition says you must open() the socket first" );
+   vprASSERT( m_open && "precondition says you must open() the socket first" );
+   vprASSERT(! m_blocking_fixed && "Can't enable blocking after blocking call");
 
    vpr::Status retval;
 
-   if (m_blocking_fixed) {
-       vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't enable blocking after blocking call\n"
-                     << vprDEBUG_FLUSH;
-       retval.setCode(vpr::Status::Failure);
+   PRStatus status;
+   PRSocketOptionData option_data;
+   option_data.option = PR_SockOpt_Nonblocking;
+   option_data.value.non_blocking = false;
+
+   status = PR_SetSocketOption(m_handle, &option_data);
+
+   // If that fails, print an error and return error status.
+   if ( status == PR_FAILURE )
+   {
+      NSPR_PrintError("SocketImplNSPR::enableBlocking: Failed to set.");
+      retval.setCode(vpr::Status::Failure);
    }
-   else {
-      PRStatus status;
-      PRSocketOptionData option_data;
-      option_data.option = PR_SockOpt_Nonblocking;
-      option_data.value.non_blocking = false;
-
-      status = PR_SetSocketOption(m_handle, &option_data);
-
-      // If that fails, print an error and return error status.
-      if ( status == PR_FAILURE )
-      {
-         NSPR_PrintError("SocketImplNSPR::enableBlocking: Failed to set.");
-         retval.setCode(vpr::Status::Failure);
-      }
-      else {
-         m_blocking = true;
-      }
+   else
+   {
+      m_blocking = true;
    }
 
    return retval;
@@ -194,31 +188,25 @@ vpr::Status
 SocketImplNSPR::enableNonBlocking () {
    vpr::Status retval;
 
-   assert( m_open && "precondition says you must open() the socket first" );
+   vprASSERT( m_open && "precondition says you must open() the socket first" );
+   vprASSERT(! m_blocking_fixed && "Can't diable blocking after blocking call");
 
-   if(m_blocking_fixed)
+   PRStatus status;
+   PRSocketOptionData option_data;
+   option_data.option = PR_SockOpt_Nonblocking;
+   option_data.value.non_blocking = true;
+
+   status = PR_SetSocketOption(m_handle, &option_data);
+
+   // If that fails, print an error and return error status.
+   if ( status == PR_FAILURE )
    {
-      vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't diable blocking after blocking call\n"
-                    << vprDEBUG_FLUSH;
+      NSPR_PrintError("SocketImplNSPR::enableNonBlocking: Failed to set.");
       retval.setCode(vpr::Status::Failure);
    }
-   else {
-      PRStatus status;
-      PRSocketOptionData option_data;
-      option_data.option = PR_SockOpt_Nonblocking;
-      option_data.value.non_blocking = true;
-
-      status = PR_SetSocketOption(m_handle, &option_data);
-
-      // If that fails, print an error and return error status.
-      if ( status == PR_FAILURE )
-      {
-         NSPR_PrintError("SocketImplNSPR::enableNonBlocking: Failed to set.");
-         retval.setCode(vpr::Status::Failure);
-      }
-      else {
-         m_blocking = false;
-      }
+   else
+   {
+      m_blocking = false;
    }
 
    return retval;
