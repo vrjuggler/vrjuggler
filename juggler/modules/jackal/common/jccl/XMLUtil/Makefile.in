@@ -43,7 +43,7 @@ include @topdir@/make.defs.mk
 # There is nothing to install from this directory.
 INSTALL_FILES	=
 
-srcdir		= @CPPDOM_ROOT@/cppdom
+srcdir		= @UNIX_CPPDOM_ROOT@/cppdom
 top_srcdir	= @top_srcdir@
 SUBOBJDIR	= $(JCCL_COMMON_LIBRARY)
 
