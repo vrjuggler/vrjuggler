@@ -3,7 +3,7 @@
 #include <sys/time.h>
 
 // need stdio for sprintf
-#include <stdio.h> 
+#include <stdio.h>
 
 #include <Input/vjGlove/vt_types.h>
 #include <Input/vjGlove/vjCyberGlove.h>
@@ -25,13 +25,13 @@ vjCyberGlove::vjCyberGlove(vjConfigChunk *c) : vjInput(c) {
 	strcpy(home,t);
     }
 
-    myThreadID = 0;
+    myThread = NULL;
 };
 
 int
 vjCyberGlove::StartSampling() {
-   AppDataStruct app; 
-   if (myThreadID == 0) {
+   AppDataStruct app;
+   if (myThread == NULL) {
    //int i;
    current = 0; valid = 1; progress = 2;
 
@@ -44,7 +44,9 @@ vjCyberGlove::StartSampling() {
    vjCyberGlove* devicePtr = this;
    void SampleGlove(void*);
 
-   if ( (myThreadID = vjThread::spawn(SampleGlove, (void *) devicePtr, 0)) ) {
+   myThread = new vjThread(SampleGlove, (void *) devicePtr, 0);
+   if (!myThread->valid())
+   {
       return 0;
    } else {
       cout << "     vjCyberGlove is active " << endl;
@@ -60,7 +62,7 @@ vjCyberGlove::StartSampling() {
 void SampleGlove(void* pointer) {
 
     vjCyberGlove* devPointer = (vjCyberGlove*)pointer;
-    for(;;) 
+    for(;;)
  	devPointer->Sample();
 
 }
@@ -69,7 +71,7 @@ int vjCyberGlove::Sample() {
    struct timeval tv;
   double start_time, stop_time;
  static int c = 0;
- 
+
     if (hand->read_glove) {
        if (c == 0) {
      gettimeofday(&tv,0);
@@ -87,10 +89,10 @@ int vjCyberGlove::Sample() {
 
   int i,j;
   for(i=0; i < MAX_SENSOR_GROUPS; i++)
-     for(j = 0; j < MAX_GROUP_VALUES; j++) 
+     for(j = 0; j < MAX_GROUP_VALUES; j++)
         theData[progress].joints[i][j] = hand->joint_angle[i][j];
 /*  for(i=0; i < MAX_SENSOR_GROUPS; i++)
-     for(j = 0; j < MAX_GROUP_VALUES; j++) 
+     for(j = 0; j < MAX_GROUP_VALUES; j++)
        for(int k = 0; k <= 4; k++)
           for(int l = 0; l <= 4; l++)
 	(theData[progress].xforms[i][j])[k][l] = (hand->digit_xform[i][j])[k][l];
@@ -102,15 +104,15 @@ int vjCyberGlove::Sample() {
   progress = tmp;
   lock.release();
   return 1;
-  
+
 }
 
 
 int vjCyberGlove::StopSampling() {
-  if (myThreadID != 0) {
-    vjThread::kill(myThreadID,SIGKILL);
-    delete(myThreadID);
-    myThreadID = 0;
+  if (myThread != NULL) {
+    myThread->kill();
+    delete myThread;
+    myThread = NULL;
     sginap(1);
       vt_destroy_VirtualHand(hand);
     cout << "stopping vjCyberGlove.." << endl;
@@ -138,12 +140,12 @@ void vjCyberGlove::UpdateData () {
     }
 
 void vjCyberGlove::GetData(vjGLOVE_DATA* &data)
-{  
+{
    data = &theData[current];
 }
 
 volatile float** vjCyberGlove::GetData () {
-	/* I always find multidimensional arrays confusing to pass 
+	/* I always find multidimensional arrays confusing to pass
 	 * and return.  For the record, the glove code defines the
  	 * type of joint angle as:
 	 * volatile float (*joint_angle)[MAX_GROUP_VALUES]
@@ -189,8 +191,8 @@ int vjCyberGlove::GetFingerState (int finger) {
      /* Still need to double check these values...
         I'm taking a hint from the other gesture recognition code &
         using mainly the metacarpal(?) joints to figure out finger
-        positions.  Makes it easier for those of us with screwy 
-        figures, and the 3rd knuckle reading isn't likely to be 
+        positions.  Makes it easier for those of us with screwy
+        figures, and the 3rd knuckle reading isn't likely to be
         to accurate (just because of the way the glove fits)
       */
       if (hand->joint_angle[finger][0] > -0.75 &&

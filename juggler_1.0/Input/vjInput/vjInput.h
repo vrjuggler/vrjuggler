@@ -3,7 +3,7 @@
 //
 // Base class for all vj Input devices
 //
-// History:  
+// History:
 //
 // Andy Himberger:    v0.1 (10/12/97) - Integeration to new libraries,
 //                                      support for
@@ -76,7 +76,7 @@ class vjInput : public vjMemory
 {
 public:
    //: vjConfigChunk constructor,
-   //  
+   //
    //  This baselevel constructor will fill the base datamembers
    //  when found in the vjConfigChunk, such as serial port, instance name
    //  and baud rate.
@@ -95,7 +95,7 @@ public:
    ~vjInput();
 
    //: Sample the device
-   //  
+   //
    //  Every input device should have a sample function, after which the
    //  device has been sampled to have new data.  (This new data is not
    //  accessable until UpdateData is called, however)
@@ -105,7 +105,7 @@ public:
    //
    //  Start the device sampling, normally this will spawn a thread which will
    //  just repeatedly call Sample().
-   //  This function should return true when it sucessfully starts, 
+   //  This function should return true when it sucessfully starts,
    //      false otherwise.
    virtual int StartSampling() = 0;
 
@@ -124,11 +124,11 @@ public:
    //: GetDevicename()
    //
    //  Returns the name identifying the TYPE of Input Device
-   virtual char* GetDeviceName() { return "vjInputBase";}  
+   virtual char* GetDeviceName() { return "vjInputBase";}
 
    /** @name Functions to remove (?)
      *
-     * It hasn't been resolved as to whether these functions should be removed 
+     * It hasn't been resolved as to whether these functions should be removed
      */
    //@{
    void SetPort(char* serialPort);
@@ -140,9 +140,9 @@ public:
    //: GetInstanceName()
    //
    //  Returns the name identifying the INSTANCE of this InputDevice
-   char* GetInstanceName() { 
+   char* GetInstanceName() {
       if (instName == NULL) return "Undefined";
-      return instName; 
+      return instName;
    }
 
    //: FDeviceSupport(ability)
@@ -157,9 +157,9 @@ protected:
    char *sPort;
    char *instName;
    int port_id;
-   vjThreadId* samplePID;
+   vjThread* myThread;
    int active;
-   
+
    //: Index holders
    // Current is the index to the current data being returned by GetData
    // Progress is the index to the data being filled by Sample() at any given
