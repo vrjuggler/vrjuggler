@@ -68,6 +68,9 @@ public class ConfigChunkDBEditor
     */
    final static String CUSTOM          = "CustomPane";
 
+   private final static String ADD_VALUE_ACTION       = "Add Value";
+   private final static String REMOVE_VALUE_ACTION    = "Remove Value";
+
    /**
     * Creates a new ConfigChunkDBEditor with no chunk to edit.
     */
@@ -93,13 +96,68 @@ public class ConfigChunkDBEditor
          }
       });
 
-      // Init the generic config chunk editor pane
+      // Display the help for properties as they get selected
       genericEditor.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
             ConfigChunkPropertySheet ps = (ConfigChunkPropertySheet)evt.getSource();
-            displayHelp(ps.getSelectedProperty());
+            PropertyDesc prop_desc = ps.getSelectedProperty();
+            if (prop_desc != null)
+            {
+               displayHelp(ps.getSelectedProperty());
+            }
+         }
+      });
+      // Update the action panel as things get selected
+      genericEditor.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            ConfigChunkPropertySheet ps = (ConfigChunkPropertySheet)evt.getSource();
+            PropertyDesc prop_desc = ps.getSelectedProperty();
+            Object sel_object = ps.getSelectedObject();
+
+            // Initially make the pane invisible ...
+            propActionPane.setVisible(false);
+            if (prop_desc != null)
+            {
+               // Only tell the user they can add/remove values when it is
+               // actually possible to do so.
+               if (prop_desc.hasVariableNumberOfValues())
+               {
+                  // If the selected object is actually a property desc, we want to
+                  // provide the user with the add action.
+                  if (sel_object instanceof PropertyDesc)
+                  {
+                     propActionBtn.setActionCommand(ADD_VALUE_ACTION);
+                     if (prop_desc.getValType() == ValType.EMBEDDEDCHUNK)
+                     {
+                        propActionBtn.setText("Add New Embedded Chunk");
+                     }
+                     else
+                     {
+                        propActionBtn.setText("Add New Value");
+                     }
+                     propActionPane.setVisible(true);
+                  }
+                  // Otherwise, we want to provide the remove action
+                  else
+                  {
+                     propActionBtn.setActionCommand(REMOVE_VALUE_ACTION);
+                     if (prop_desc.getValType() == ValType.EMBEDDEDCHUNK)
+                     {
+                        propActionBtn.setText("Remove Embedded Chunk");
+                     }
+                     else
+                     {
+                        propActionBtn.setText("Remove Value");
+                     }
+                     propActionPane.setVisible(true);
+                  }
+               }
+            }
+            propActionPane.getParent().invalidate();
          }
       });
       genericEditor.addChunkSelectionListener(new ChunkSelectionListener()
@@ -780,6 +838,46 @@ public class ConfigChunkDBEditor
    }
 
    /**
+    * The generic action that applies to the currently selected property value.
+    */
+   protected void propertyValueAction(ActionEvent evt)
+   {
+      String cmd = evt.getActionCommand();
+      ConfigChunkTreeTableModel model =
+            (ConfigChunkTreeTableModel)genericEditor.getTreeTableModel();
+
+      if (cmd.equals(ADD_VALUE_ACTION))
+      {
+         // The currently selected object MUST be a PropertyDesc
+         PropertyDesc prop_desc = (PropertyDesc)genericEditor.getSelectedObject();
+         DefaultMutableTreeNode node = model.getNodeFor(prop_desc);
+         DefaultMutableTreeNode parent_node = (DefaultMutableTreeNode)node.getParent();
+         ConfigChunk parent_chunk = (ConfigChunk)parent_node.getUserObject();
+
+         // Append a new value into the property
+         int insert_idx = parent_chunk.getNumPropertyValues(prop_desc.getToken());
+         VarValue default_value = prop_desc.getDefaultValue(insert_idx);
+         parent_chunk.setProperty(prop_desc.getToken(), insert_idx, default_value);
+      }
+      else if (cmd.equals(REMOVE_VALUE_ACTION))
+      {
+         // The parent to the currently selected object MUST be a PropertyDesc
+         Object sel_value = genericEditor.getSelectedObject();
+         DefaultMutableTreeNode node = model.getNodeFor(sel_value);
+         DefaultMutableTreeNode parent_node = (DefaultMutableTreeNode)node.getParent();
+         PropertyDesc prop_desc = (PropertyDesc)parent_node.getUserObject();
+
+         // The parent to the PropertyDesc MUST be a ConfigChunk
+         DefaultMutableTreeNode chunk_node = (DefaultMutableTreeNode)parent_node.getParent();
+         ConfigChunk chunk = (ConfigChunk)chunk_node.getUserObject();
+
+         // Remove the currently selected value from the property
+         int remove_idx = parent_node.getIndex(node);
+         chunk.removeProperty(prop_desc.getToken(), remove_idx);
+      }
+   }
+
+   /**
     * Gets the cached config broker proxy instance.
     */
    private ConfigBroker getConfigBroker()
@@ -817,6 +915,9 @@ public class ConfigChunkDBEditor
       locationLbl.setBorder(BorderFactory.createRaisedBevelBorder());
       locationLbl.setMinimumSize(new Dimension(0, 0));
       editorPane.setLayout(editorPaneLayout);
+      propActionPane.setLayout(new BoxLayout(propActionPane, BoxLayout.X_AXIS));
+      propActionPane.setVisible(false);
+      propActionBtn.setText("Add Embedded Chunk");
       addBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -831,6 +932,13 @@ public class ConfigChunkDBEditor
             removeAction(evt);
          }
       });
+      propActionBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            propertyValueAction(evt);
+         }
+      });
       this.add(baseSplitPane, BorderLayout.CENTER);
       baseSplitPane.add(treePane, JSplitPane.LEFT);
       baseSplitPane.add(propsSplitPane, JSplitPane.RIGHT);
@@ -843,6 +951,9 @@ public class ConfigChunkDBEditor
       propsSplitPane.add(propsPane, JSplitPane.TOP);
       propsPane.add(locationLbl, BorderLayout.NORTH);
       propsPane.add(editorPane, BorderLayout.CENTER);
+      propsPane.add(propActionPane, BorderLayout.SOUTH);
+      propActionPane.add(Box.createHorizontalGlue(), null);
+      propActionPane.add(propActionBtn, null);
    }
 
    /**
@@ -895,6 +1006,8 @@ public class ConfigChunkDBEditor
    private JPanel propsPane = new JPanel();
    private JLabel locationLbl = new JLabel();
    private JPanel editorPane = new JPanel();
+   private JPanel propActionPane = new JPanel();
+   private JButton propActionBtn = new JButton();
    private BorderLayout propsLayout = new BorderLayout();
    private CardLayout editorPaneLayout = new CardLayout();
 
