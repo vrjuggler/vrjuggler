@@ -42,6 +42,9 @@
 
 @TOP@
 
+/* Define if compiling on Linux. */
+#undef _GNU_SOURCE
+
 /* Define all of the following to use POSIX threads. */
 #undef VPR_USE_PTHREADS
 #undef VPR_THREAD_SCOPE
