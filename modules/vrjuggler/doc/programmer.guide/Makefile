@@ -22,6 +22,7 @@ SVG_IMAGES= \
 	figures/sonix_system_view.svg		\
 	figures/userOglApp_hierarchy.svg	\
 	figures/userOpenSGApp_hierarchy.svg	\
+	figures/userOsgApp_hierarchy.svg	\
 	figures/userPfApp_hierarchy.svg
 IMAGES=		$(SVG_IMAGES:%.svg=%.png)
 

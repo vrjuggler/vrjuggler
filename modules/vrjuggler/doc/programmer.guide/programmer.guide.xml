@@ -5253,7 +5253,7 @@ pfDraw();</programlisting>
           <methodname>vrj::OpenSGApp::getScene()</methodname> will be called
           by the OpenSG application class wrapper so that it can get access to
           the currently active scene graph whenever the wrapper needs to use
-          it (ex. rendering, updating). Since the job of
+          it (for example when rendering or updating). Since the job of
           <methodname>getScene()</methodname> is straightforward, its
           implementation can be very simple. A typical implementation will
           have a single statement that returns a member variable that holds a
@@ -5273,7 +5273,7 @@ pfDraw();</programlisting>
    return mSceneRoot;  // Return the root of the graph
 }</programlisting>
 
-            <para>If you need to update the scene graph, you should use either
+            <para>To update the scene graph, use either
             <methodname>preFrame()</methodname>,
             <methodname>intraFrame()</methodname>, or
             <methodname>postFrame()</methodname>.</para>
@@ -5548,10 +5548,11 @@ public:
             <title>The <methodname>getScene()</methodname> Member
             Function</title>
 
-            <para>The Performer Draw Manager will call the application's
-            <methodname>getScene()</methodname> method to get the root of the
-            scene graph. The implementation of this method can be found in
-            <filename>OpenSGNav.h</filename>. The code is as follows:</para>
+            <para>The method <methodname>vrj::OpenSGApp::draw()</methodname>
+            will call the application's <methodname>getScene()</methodname>
+            method to get the root of the scene graph. The implementation of
+            this method can be found in <filename>OpenSGNav.h</filename>. The
+            code is as follows:</para>
 
             <programlisting>OSG::NodePtr OpenSGNav::getScene()
 {
@@ -5576,7 +5577,430 @@ public:
           <secondary>Open Scene Graph (OSG)</secondary>
         </indexterm>
 
-        <para></para>
+        <para>This section explains how to use the Open Scene Graph (OSG) in a
+        VR Juggler application. OSG is an open source scene graph that is
+        available at <ulink
+        url="http://www.opensg.org/">www.openscenegraph.org</ulink>.</para>
+
+        <para>An OSG-based VR Juggler application must derive from
+        <classname>vrj::OsgApp</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vrj::OsgApp</secondary>
+          </indexterm>. The <classname>vrj::OsgApp</classname> class is
+        derived from the <classname>vrj::GlApp</classname> presented
+        previously, which in turn derives from
+        <classname>vrj::App</classname>. <classname>vrj::OsgApp</classname>
+        extends <classname>vrj::GlApp</classname> by adding methods that deal
+        with scene graph initialization and access. <xref
+        linkend="figure.class.vrj.OsgApp" /> shows how
+        <classname>vrj::OsgApp</classname> fits into the class hierarchy of an
+        OSG-based VR Juggler application.</para>
+
+        <figure id="figure.class.vrj.OsgApp">
+          <title><classname>vrj::OsgApp</classname> application class</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+                         fileref="figures/userOsgApp_hierarchy.png"
+                         format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>The two main application methods for
+        <classname>vrj::OsgApp</classname> VR Juggler applications are
+        <methodname>initScene()</methodname> and
+        <methodname>getScene()</methodname><indexterm>
+            <primary>vrj::OsgApp</primary>
+
+            <secondary>extensions to vrj::GlApp</secondary>
+          </indexterm>. These are called by the OSG application class wrapper
+        to initialize the application scene graph and to get the root of the
+        scene graph respectively. They must be implemented by the application
+        (they are pure virtual methods within
+        <classname>vrj::OsgApp</classname>). The rest of this section gives a
+        more detailed description of these methods and some sample code to
+        illustrate the concepts presented.</para>
+
+        <section>
+          <title>Scene Graph Initialization:
+          <methodname>vrj::OsgApp::initScene()</methodname></title>
+
+          <indexterm>
+            <primary>vrj::OsgApp</primary>
+
+            <secondary>initScene() method</secondary>
+          </indexterm>
+
+          <indexterm>
+            <primary>application programming</primary>
+
+            <secondary>Open Scene Graph</secondary>
+
+            <tertiary>scene graph initialization</tertiary>
+          </indexterm>
+
+          <para>In an application using OSG, the scene graph must be
+          initialized before it can be used. The method
+          <methodname>vrj::OsgApp::initScene()</methodname> is provided for
+          that purpose. Within this method, the root of the application scene
+          graph should be created, and any required models should be loaded
+          and attached to the root in some way. The exact mechanisms for
+          accomplishing this will vary depending on what the application will
+          do.</para>
+
+          <important>
+            <para>During the application initialization,
+            <methodname>vrj::OsgApp::initScene()</methodname> is invoked. This
+            method is invoked in <methodname>vrj::OsgApp::init()</methodname>.
+            Therefore, user application objects that derive from
+            <classname>vrj::OsgApp</classname> should be sure to invoke
+            <methodname>vrj::OsgApp::init()</methodname> in their overriding
+            <methodname>init()</methodname> method, or the contents of the
+            overriding <methodname>init()</methodname> method should be moved
+            into the implementation of
+            <methodname>initScene()</methodname>.</para>
+          </important>
+        </section>
+
+        <section>
+          <title>Scene Graph Access:
+          <methodname>vrj::OsgApp::getScene()</methodname></title>
+
+          <indexterm>
+            <primary>vrj::OsgApp</primary>
+
+            <secondary>getScene() method</secondary>
+          </indexterm>
+
+          <indexterm>
+            <primary>application programming</primary>
+
+            <secondary>Open Scene Graph</secondary>
+
+            <tertiary>scene graph access</tertiary>
+          </indexterm>
+
+          <para>In order for OSG to render the application scene graph, it
+          must get access to the scene graph root. The method
+          <methodname>vrj::OsgApp::getScene()</methodname> will be called by
+          the OSG application class wrapper so that it can get access to the
+          currently active scene graph whenever the wrapper needs to use it
+          (for example when rendering or updating). Since the job of
+          <methodname>getScene()</methodname> is straightforward, its
+          implementation can be very simple. A typical implementation will
+          have a single statement that returns a member variable that holds a
+          pointer to the current scene graph root node.</para>
+
+          <section>
+            <title>Possible Misuses</title>
+
+            <para>Do not do any CPU-heavy processing in this method. Because
+            it is called frequently, it should only do the minimum amount of
+            processing necessary to return the root scene graph node. In most
+            cases, this method should only be one line of code. See the
+            following code for an example.</para>
+
+            <programlisting>virtual osg::Group* getScene()
+{
+   return mSceneRoot;  // Return the root of the graph
+}</programlisting>
+
+            <para>To update the scene graph, use either
+            <methodname>preFrame()</methodname>,
+            <methodname>intraFrame()</methodname>, or
+            <methodname>postFrame()</methodname>.</para>
+          </section>
+        </section>
+
+        <section>
+          <title>Tutorial: Loading a Model with Open Scene Graph</title>
+
+          <indexterm>
+            <primary>tutorial</primary>
+
+            <secondary>loading a model with Open Scene Graph</secondary>
+          </indexterm>
+
+          <table>
+            <title>Tutorial Overview</title>
+
+            <tgroup cols="2">
+              <tbody>
+                <row>
+                  <entry>Description</entry>
+
+                  <entry>Simple OSG application that loads a model and allows
+                  navigation</entry>
+                </row>
+
+                <row>
+                  <entry>Objectives</entry>
+
+                  <entry>Understand how to load a model, add it to a scene
+                  graph, and return the root to VR Juggler</entry>
+                </row>
+
+                <row>
+                  <entry>Member functions</entry>
+
+                  <entry><itemizedlist>
+                      <listitem>
+                        <para><methodname>vrj::OsgApp::initScene()</methodname></para>
+                      </listitem>
+
+                      <listitem>
+                        <para><methodname>vrj::OsgApp::getScene()</methodname></para>
+                      </listitem>
+                    </itemizedlist></entry>
+                </row>
+
+                <row>
+                  <entry>Directory</entry>
+
+                  <entry><filename>$VJ_BASE_DIR/share/vrjuggler/samples/OSG/simple/osgNav</filename></entry>
+                </row>
+
+                <row>
+                  <entry>Files</entry>
+
+                  <entry><itemizedlist>
+                      <listitem>
+                        <para><filename>OsgNav.h</filename></para>
+                      </listitem>
+
+                      <listitem>
+                        <para><filename>OsgNav.cpp</filename></para>
+                      </listitem>
+                    </itemizedlist></entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+
+          <section>
+            <title>Class Declaration</title>
+
+            <para>The following application class is called
+            <classname>osgNav</classname>. It is derived from
+            <classname>vrj::OsgApp</classname> and has custom
+            <methodname>initScene()</methodname>,
+            <methodname>getScene()</methodname>,
+            <methodname>configSceneView()</methodname>,
+            <methodname>preFrame()</methodname>, and
+            <methodname>latePreFrame()</methodname> methods declared. Refer to
+            <filename>OsgNav.h</filename> for the implementation of
+            <methodname>setModelFileName()</methodname>. Note that we will
+            ignore the code for remote navigation via a Tweek-based GUI in
+            this description.</para>
+
+            <programlisting linenumbering="numbered">class OsgNav : public vrj::OpenSGApp
+{
+public:
+   OsgNav(vrj::Kernel* kern, int&amp; argc, char** argv);
+   virtual ~OsgNav();
+
+   virtual void configSceneView();
+
+   virtual void initScene();
+   void myInit();
+   virtual osg::Group* getScene();
+
+   virtual void preFrame();
+   virtual void latePreFrame();
+
+   void setModelFileName(std::string filename);
+
+private:
+   osg::Group*             mRootNode;
+   osg::Group*             mNoNav;
+   osg::MatrixTransform*   mNavTrans;
+   osg::MatrixTransform*   mModelTrans;
+   osg::Node*              mModel;
+
+   OsgNavigator  mNavigator;
+
+   std::string   mFileToLoad;
+
+   vpr::Interval mLastPreFrameTime;
+
+public:
+   gadget::PositionInterface  mWand;
+   gadget::PositionInterface  mHead;
+   gadget::DigitalInterface   mButton0;
+   gadget::DigitalInterface   mButton1;
+   gadget::DigitalInterface   mButton2;
+   gadget::DigitalInterface   mButton3;
+   gadget::DigitalInterface   mButton4;
+   gadget::DigitalInterface   mButton5;
+};
+</programlisting>
+          </section>
+
+          <section>
+            <title>The <methodname>initScene()</methodname> Member
+            Function</title>
+
+            <para>The implementation of <methodname>initScene()</methodname>
+            is in <filename>OsgNav.cpp</filename>. This method looks very
+            similar to the usual implementation of init() in other application
+            object examples. The important thing to note is the last line of
+            the method body where myInit() is invoked.</para>
+
+            <programlisting linenumbering="numbered">void OsgNav::initScene()
+{
+   mWand.init("VJWand");
+   mHead.init("VJHead");
+   mButton0.init("VJButton0");
+   mButton1.init("VJButton1");
+   mButton2.init("VJButton2");
+   mButton3.init("VJButton3");
+   mButton4.init("VJButton4");
+   mButton5.init("VJButton5");
+
+   myInit();
+}</programlisting>
+
+            <para> Within the <methodname>myInit()</methodname> method, we see
+            the real work for initializing the scene. In this method, we
+            create the scene graph root node, the lighting node, and load a
+            user-specified model. The implementation, found in
+            <filename>OsgNav.cpp</filename>, follows:</para>
+
+            <programlisting>void OsgNav::myInit()
+{
+   //
+   //          /-- mNoNav
+   // mRootNode
+   //         \-- mNavTrans -- mModelTrans -- mModel
+
+   //The top level nodes of the tree
+   mRootNode = new osg::Group();                                 <co
+                id="OsgNav.create.graph.co"
+                linkends="OsgNav.create.graph.desc" />
+   mNoNav    = new osg::Group();
+   mNavTrans = new osg::MatrixTransform();
+
+   mNavigator.init();
+
+   mRootNode-&gt;addChild(mNoNav);
+   mRootNode-&gt;addChild(mNavTrans);
+
+   //Load the model
+   std::cout &lt;&lt; "Attempting to load file: "
+             &lt;&lt; mFileToLoad &lt;&lt; "... " &lt;&lt; std::flush;
+   mModel = osgDB::readNodeFile(mFileToLoad);                    <co
+                id="OsgNav.load.model.co" linkends="OsgNav.load.model.desc" />
+   std::cout &lt;&lt; "done." &lt;&lt; std::endl;
+
+   // Transform node for the model
+   mModelTrans  = new osg::MatrixTransform();                    <co
+                id="OsgNav.model.xform.co" linkends="OsgNav.model.xform.desc" />
+   //This can be used if the model orientation needs to change
+   mModelTrans-&gt;preMult(
+      osg::Matrix::rotate(gmtl::Math::deg2Rad(-90.0f),
+                          1.0f, 0.0f, 0.0f)
+   );
+
+   if(NULL == mModel)                                            <co
+                id="OsgNav.test.model.co" linkends="OsgNav.attach.model.desc" />
+   {
+      std::cout &lt;&lt; "ERROR: Could not load file: "
+                &lt;&lt; mFileToLoad &lt;&lt; std::endl;
+   }
+   else
+   {
+      // Add model to the transform
+      mModelTrans-&gt;addChild(mModel);                             <co
+                id="OsgNav.attach.model.co"
+                linkends="OsgNav.attach.model.desc" />
+   }
+   
+   // Add the transform to the tree
+   mNavTrans-&gt;addChild(mModelTrans);                             <co
+                id="OsgNav.attach.xform.co"
+                linkends="OsgNav.attach.xform.desc" />
+
+   // run optimization over the scene graph
+   osgUtil::Optimizer optimizer;
+   optimizer.optimize(mRootNode);                                <co
+                id="OsgNav.optimize.co" linkends="OsgNav.optimize.desc" />
+}</programlisting>
+
+            <calloutlist>
+              <callout arearefs="OsgNav.create.graph.co"
+                       id="OsgNav.create.graph.desc">
+                <para>We begin by creating the nodes that will make up the
+                application scene graph. Note that this scene graph will
+                contain two branches: one for nodes that will be affected by
+                user navigation and one for nodes that will not.</para>
+              </callout>
+
+              <callout arearefs="OsgNav.load.model.co"
+                       id="OsgNav.load.model.desc">
+                <para>Next, we attempt to load the model provided through an
+                earlier call to <methodname>setModelFileName()</methodname>.
+                In this application, the user must identify the model to load
+                on the command line when running the application. The code for
+                handling this can be found in the <function>main()</function>
+                function.</para>
+              </callout>
+
+              <callout arearefs="OsgNav.model.xform.co"
+                       id="OsgNav.model.xform.desc">
+                <para>The model will be attached to the scene graph under a
+                transform node, so we must create that node next.</para>
+              </callout>
+
+              <callout arearefs="OsgNav.test.model.co OsgNav.attach.model.co"
+                       id="OsgNav.attach.model.desc">
+                <para>If the model was loaded successfully
+                (<varname>mModel</varname> is not <literal>NULL</literal>),
+                then we attach it to the scene graph under the freshly created
+                model transform node.</para>
+              </callout>
+
+              <callout arearefs="OsgNav.attach.xform.co"
+                       id="OsgNav.attach.xform.desc">
+                <para>Whether the named model was loaded successfully or not,
+                we attach the model transform to the scene graph under the
+                navigation-enabled branch. When the model is loaded
+                successfully, this allows the user to fly around the
+                model.</para>
+              </callout>
+
+              <callout arearefs="OsgNav.optimize.co" id="OsgNav.optimize.desc">
+                <para>Finally, we use
+                <classname>osgUtil::Optimizer</classname> to optimize the
+                scene graph that we have built up.</para>
+              </callout>
+            </calloutlist>
+          </section>
+
+          <section>
+            <title>The <methodname>getScene()</methodname> Member
+            Function</title>
+
+            <para>The method <methodname>vrj::OsgApp::draw()</methodname> will
+            call the application's <methodname>getScene()</methodname> method
+            to get the root of the scene graph. The implementation of this
+            method can be found in <filename>OsgNav.h</filename>. The code is
+            as follows:</para>
+
+            <programlisting>osg::Group* OsgNav::getScene()
+{
+   return mRootNode;
+}</programlisting>
+
+            <para>The simplicity of this method implementation is not limited
+            to the simple tutorial from which it is taken. All OSG-based VR
+            Juggler applications can take advantage of this idiom where the
+            root node is a member variable returned in
+            <methodname>getScene()</methodname>.</para>
+          </section>
+        </section>
       </section>
 
       <section id="section.vtk.apps">
