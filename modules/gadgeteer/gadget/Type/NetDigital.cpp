@@ -69,7 +69,7 @@ void NetDigital::updateFromLocalSource(){
    }
 
    for(unsigned int k = 0; k < mNetworkShortDigitalValues.size(); k++){
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_VERB_LVL) << "NetDigitalData: src_name: " << mSrcName << ",  DeviceName" << mDeviceName << ".  Sending : __________________________ : " << digital_data_sample[k].getDigital() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_VERB_LVL) << "NetDigital: src_name: " << mSrcName << ",  DeviceName" << mDeviceName << ".  Sending : __________________________ : " << digital_data_sample[k].getDigital() << std::endl << vprDEBUG_FLUSH;
       mNetworkShortDigitalValues[k] = htons( (short)digital_data_sample[k].getDigital());           // convert to network format
    }
 
@@ -106,7 +106,7 @@ void NetDigital::updateFromRemoteSource(char* recv_buffer, int recv_buff_len){
       // convert network data to local data
       // mDigitalData = (short) ntohs(mNetworkShortDigitalValue);
       digital_data_sample[k] = (short) ntohs(mNetworkShortDigitalValues[k]);
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_VERB_LVL) << "NetDigitalData: src_name: " << mSrcName << ",  DeviceName" << mDeviceName << ".  Receiving : __________________________ : " << digital_data_sample[k].getDigital() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_VERB_LVL) << "NetDigital: src_name: " << mSrcName << ",  DeviceName" << mDeviceName << ".  Receiving : __________________________ : " << digital_data_sample[k].getDigital() << std::endl << vprDEBUG_FLUSH;
    }
 
    mDigitalSamples.lock();

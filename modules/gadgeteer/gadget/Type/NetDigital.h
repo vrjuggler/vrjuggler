@@ -4,7 +4,6 @@
 #include <gadget/gadgetConfig.h>
 #include <gadget/RemoteInputManager/NetUtils.h>
 #include <gadget/Type/NetInput.h>
-#include <gadget/Type/NetDigitalData.h>
 #include <gadget/Type/DigitalData.h>
 
 namespace gadget{
@@ -17,7 +16,6 @@ protected:
 public:
    // the following constructor determines what kind of data is passed across the network.
    // In this case, mData will knows how to handle digital data since we allocate
-   // a NetData object (NetDigitalData) that knows how to handle digital data.
 
    // constructor for a transmitting network device
    NetDigital(const std::string& src_device_name, Input* input_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id);
