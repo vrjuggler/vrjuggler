@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-11-2003 allenb      Refactored proxy registration (and API) as part of the 
+                        vrj module simulator refactoring.
+                        NEW VERSION: 0.9.0
 Feb-26-2003 patrickh    Version bump after Aron's changes.
                         NEW VERSION: 0.8.0
 Feb-25-2003 aronb       Merged in the new Cluster code from the
