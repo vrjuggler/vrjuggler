@@ -143,11 +143,13 @@ namespace jccl {
 
     void PerformanceCategories::writeAllBuffers (std::ostream& out, 
                                                  const std::string& pad /*=""*/) {
+        out << pad << "<jcclstream>\n";
         mBuffersLock.acquire();
         for (unsigned int i = 0; i < mBuffers.size(); i++) {
             mBuffers[i]->write (out, pad);
         }
         mBuffersLock.release();
+        out << pad << "</jcclstream>\n";
     }
 
 
