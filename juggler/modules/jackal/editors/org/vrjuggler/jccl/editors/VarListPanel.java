@@ -42,31 +42,36 @@ import org.vrjuggler.jccl.config.event.*;
 /**
  * Provides a panel that contains a variable number of property values.
  */
-public class VarListPanel extends ExpandablePanel implements ConfigElementListener
+public class VarListPanel
+   extends ExpandablePanel
+   implements ConfigElementListener
 {
    public void finalize()
    {
       mConfigElement.removeConfigElementListener(this);
       super.finalize();
    }
-   
+
    /**
     * Construct a panel to hold the sheet that actually contains the list of
     * properties.
     */
-   public VarListPanel(ConfigContext ctx, ConfigElement elm, PropertyDefinition prop_def, Color color)
+   public VarListPanel(ConfigContext ctx, ConfigElement elm,
+                       PropertyDefinition prop_def, Color color)
    {
       super(color);
 
       mConfigElement = elm;
       mConfigContext = ctx;
-   
+
       mConfigElement.addConfigElementListener(this);
-            
+
       // Create the new property list which is actually just a variable list of
       // property values.
-      PropertySheet new_sheet 
-         = PropertySheetFactory.instance().makeVarSheet(mConfigElement, ctx, prop_def, getNextColor());
+      PropertySheet new_sheet =
+         PropertySheetFactory.instance().makeVarSheet(mConfigElement, ctx,
+                                                      prop_def,
+                                                      getNextColor());
 
       mComponent = new_sheet;
       mPropDef = prop_def;
@@ -77,7 +82,9 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
       // Add title for the list.
       String title = prop_def.getToken();
       JLabel name = new JLabel(title);
-      TableLayoutConstraints c2 = new TableLayoutConstraints(2, 0, 2, 0, TableLayout.LEFT, TableLayout.TOP);
+      TableLayoutConstraints c2 = new TableLayoutConstraints(2, 0, 2, 0,
+                                                             TableLayout.LEFT,
+                                                             TableLayout.TOP);
       add(name, c2);
    }
 
@@ -90,32 +97,34 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
       ConfigElement elm = (ConfigElement)evt.getSource();
       PropertyDefinition prop_def =
          elm.getDefinition().getPropertyDefinition(evt.getProperty());
-      
+
       if(!prop_def.equals(mPropDef))
       {
-         return;      
+         return;
       }
-      
+
       System.out.println("Property value added...");
-      
+      PropertySheetFactory f = PropertySheetFactory.instance();
+
       if(ConfigElement.class == prop_def.getType())
       {
          // Use the PropertySheetFactory to add an additional embedded element.
-         PropertySheetFactory.instance().addEmbeddedElement((PropertySheet)mComponent, mConfigContext, elm, evt.getValue(), prop_def, 2);
+         f.addEmbeddedElement((PropertySheet) mComponent, mConfigContext,
+                              elm, evt.getValue(), prop_def, 2);
       }
       else
       {
          // Use the PropertySheetFactory to add an aditional normal editor.
          String label = prop_def.getPropertyValueDefinition(0).getLabel();
-         PropertySheetFactory.instance().addNormalEditor((PropertySheet)mComponent, mConfigContext,
-                                                         elm, evt.getValue(), prop_def, label, 2,
-                                                         elm.getPropertyValueCount(prop_def.getToken()) - 1);
+         f.addNormalEditor((PropertySheet) mComponent, mConfigContext, elm,
+                           evt.getValue(), prop_def, label, 2,
+                           elm.getPropertyValueCount(prop_def.getToken()) - 1);
       }
 
       revalidate();
       repaint();
    }
-   
+
    public void nameChanged(ConfigElementEvent evt)
    {
       revalidate();
@@ -123,14 +132,15 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
    }
 
    public void propertyValueChanged(ConfigElementEvent evt)
-   { 
+   {
       revalidate();
       repaint();
    }
 
    public void propertyValueRemoved(ConfigElementEvent evt)
    {
-      System.out.println("Property value removed...");
+      System.out.println("[VarListPanel.propertyValueRemoved()] " +
+                         "Property value removed...");
 
       revalidate();
       repaint();
