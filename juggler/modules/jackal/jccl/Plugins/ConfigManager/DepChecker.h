@@ -101,9 +101,10 @@ public:
    // Write out the dependencies to the vjDEBUG macro
    virtual void debugOutDependencies(vjConfigChunk* chunk,int dbg_lvl=vjDBG_WARNING_LVL)
    {
-      vjDEBUG_NEXT_BEGIN(vjDBG_ALL,dbg_lvl) << "\n------------ Dependencies for: item: " << chunk->getProperty("name")
+      vjDEBUG_NEXT_BEGIN(vjDBG_ALL,dbg_lvl) << "---- Dependencies for: item: "
+                                            << chunk->getProperty("name")
                                             << " type: " << ((std::string)chunk->getType()).c_str()
-                                            << "------------\n" << vjDEBUG_FLUSH;
+                                            << "-------\n" << vjDEBUG_FLUSH;
 
       vjConfigManager* cfg_mgr = vjConfigManager::instance();
 
@@ -118,7 +119,7 @@ public:
                                          << " ==> " << vjDEBUG_FLUSH;
          if(!cfg_mgr->isChunkInActiveList(dependencies[i]))
          {
-            vjDEBUG_CONT(vjDBG_ALL,dbg_lvl) << "FAILED!!!\n" << vjDEBUG_FLUSH;
+            vjDEBUG_CONT(vjDBG_ALL,dbg_lvl) << "not available.\n" << vjDEBUG_FLUSH;
          }
          else
          {

@@ -37,7 +37,7 @@
 
 bool vjDigitalProxy::config(vjConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "----------- DIG PROXY config() ----------------------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "vjDigitalProxy::config() ----\n" << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "DigProxy");
 
 
@@ -49,14 +49,18 @@ bool vjDigitalProxy::config(vjConfigChunk* chunk)
 
    if ( proxy_num != -1)
    {
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "   DigProxy config()'ed" << std::endl
+      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "DigProxy config()'ed" << std::endl
                                      << vjDEBUG_FLUSH;
       return true;
    }
    else
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "   DigProxy config() failed" << std::endl
-                                 << vjDEBUG_FLUSH;
+      vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "DigProxy config() failed" << std::endl;
+      vjDEBUG_NEXTnl(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "dev_name: " << dev_name << std::endl;
+      vjDEBUG_NEXTnl(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "unitNum: " << unitNum << std::endl;
+      vjDEBUG_NEXTnl(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "chunk:\n" << *chunk << std::endl;
+      vjDEBUG_CONT_ENDnl(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << vjDEBUG_FLUSH;
+
       vjDEBUG_END(vjDBG_INPUT_MGR,3) << std::endl << vjDEBUG_FLUSH;
       return false;
    }
@@ -68,31 +72,31 @@ void vjDigitalProxy::updateData()
     int new_state = m_digPtr->getDigitalData(m_unitNum);
     int old_state = m_data;
     if(vjDigital::OFF == old_state)
-	{
-	    if(new_state)     // Button now pressed
-		m_data = vjDigital::TOGGLE_ON;
-	    else              // Button now released
-		m_data = vjDigital::OFF;
-	}
+   {
+       if(new_state)     // Button now pressed
+      m_data = vjDigital::TOGGLE_ON;
+       else              // Button now released
+      m_data = vjDigital::OFF;
+   }
     else if(vjDigital::ON == old_state)
-	{
-	    if(new_state)     // Button now pressed
-		m_data = vjDigital::ON;
-	    else              // Button now released
-		m_data = vjDigital::TOGGLE_OFF;
-	}
+   {
+       if(new_state)     // Button now pressed
+      m_data = vjDigital::ON;
+       else              // Button now released
+      m_data = vjDigital::TOGGLE_OFF;
+   }
     else if(vjDigital::TOGGLE_ON == old_state)
-	{
-	    if(new_state)     // Button now pressed
-		m_data = vjDigital::ON;
-	    else              // Button now released
-		m_data = vjDigital::TOGGLE_OFF;
-	}
+   {
+       if(new_state)     // Button now pressed
+      m_data = vjDigital::ON;
+       else              // Button now released
+      m_data = vjDigital::TOGGLE_OFF;
+   }
     else if(vjDigital::TOGGLE_OFF == old_state)
-	{
-	    if(new_state)     // Button now pressed
-		m_data = vjDigital::TOGGLE_ON;
-	    else              // Button now released
-		m_data = vjDigital::OFF;
-	}
+   {
+       if(new_state)     // Button now pressed
+      m_data = vjDigital::TOGGLE_ON;
+       else              // Button now released
+      m_data = vjDigital::OFF;
+   }
 }
