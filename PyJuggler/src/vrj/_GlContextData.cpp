@@ -108,7 +108,32 @@ private:
 // Module ======================================================================
 void _Export_GlContextData()
 {
-   class_<pyj::ContextDict, boost::noncopyable>("GlContextData", init<>())
+   class_<pyj::ContextDict, boost::noncopyable>("GlContextData",
+       "OpenGL helper class that stores context-specific data.\n\n"
+       "This class allows the user to store Python objects or data in a\n"
+       "context-specific manner.  In other words, there will be one\n"
+       "instance of a given Python type per OpenGL context.  Juggler will\n"
+       "take care of the data management transparently for the user so that\n"
+       "s/he never has to know about the current configuration.\n\n"
+       "An example use would be a Python class full of display list IDs.  The\n"
+       "user stores instances of the class in an instance of this class.\n"
+       "A simple example would be the following:\n\n"
+       "class Data:\n"
+       "   def __init__(self, v0, v1):\n"
+       "      self.data0 = v0\n"
+       "      self.data1 = v1\n\n"
+       "class AppObj(vrj.GlApp):\n"
+       "   def __init__(self):\n"
+       "      vrj.GlApp.__init__(self)\n"
+       "      self.context_data = vrj.GlContextData()\n\n"
+       "   def contextInit(self):\n"
+       "      self.context_data.obj = Data(1, 2)\n\n"
+       "   def draw(self):\n"
+       "      # Read data from self_context_data.obj ...\n\n"
+       "More details can be found in the PyJuggler Getting Started Guide."
+       ,
+       init<>()
+      )
       .def("__getattr__", &pyj::ContextDict::getAttr)
       .def("__setattr__", &pyj::ContextDict::setAttr)
    ;

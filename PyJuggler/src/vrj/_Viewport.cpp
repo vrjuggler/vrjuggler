@@ -58,21 +58,76 @@ inline tuple vrj_Viewport_getOriginAndSize_wrapper(vrj::Viewport* vp)
 void _Export_Viewport()
 {
     scope* vrj_Viewport_scope = new scope(
-    class_< vrj::Viewport, boost::noncopyable, pyj::vrj_Viewport_Wrapper >("Viewport", init<  >())
-        .def("updateProjections", pure_virtual(&vrj::Viewport::updateProjections))
-        .def("getType", &vrj::Viewport::getType)
-        .def("isSimulator", &vrj::Viewport::isSimulator)
-        .def("isSurface", &vrj::Viewport::isSurface)
-        .def("isActive", &vrj::Viewport::isActive)
-        .def("getName", &vrj::Viewport::getName, return_internal_reference< 1 >())
-        .def("inStereo", &vrj::Viewport::inStereo)
-        .def("getView", &vrj::Viewport::getView)
-        .def("getOriginAndSize", pyj::vrj_Viewport_getOriginAndSize_wrapper)
-        .def("getConfigElement", &vrj::Viewport::getConfigElement)
-        .def("getUser", &vrj::Viewport::getUser, return_internal_reference< 1 >())
-        .def("getDisplay", &vrj::Viewport::getDisplay, return_internal_reference< 1 >())
-        .def("getLeftProj", &vrj::Viewport::getLeftProj, return_internal_reference< 1 >())
-        .def("getRightProj", &vrj::Viewport::getRightProj, return_internal_reference< 1 >())
+    class_< vrj::Viewport, boost::noncopyable, pyj::vrj_Viewport_Wrapper >("Viewport",
+         "Base class for window viewports and all viewport data.  This\n"
+         "stores projection data, viewport info, and relevant user."
+         ,
+         init<  >()
+        )
+        .def("updateProjections",
+             pure_virtual(&vrj::Viewport::updateProjections),
+             "updateProjections(positionScale)\n"
+             "Updates the projection data for this viewport.  This uses the\n"
+             "data from the head position for this viewport."
+         )
+        .def("getType", &vrj::Viewport::getType,
+             "getType() -> vrj.Viewport.Type value\n"
+             "Gets the type of this viewport."
+         )
+        .def("isSimulator", &vrj::Viewport::isSimulator,
+             "isSimulator() -> Boolean\n"
+             "Determines if this is a simulator viewport."
+         )
+        .def("isSurface", &vrj::Viewport::isSurface,
+             "isSurface() -> Boolean\n"
+             "Determines if this is a surface viewport."
+         )
+        .def("isActive", &vrj::Viewport::isActive,
+             "isActive() -> Boolean\n"
+             "Determines if this viewport is active."
+         )
+        .def("getName", &vrj::Viewport::getName,
+             return_internal_reference< 1 >(),
+             "getName() -> string object\n"
+             "Gets the name of this viewport."
+         )
+        .def("inStereo", &vrj::Viewport::inStereo,
+             "inStereo() -> Boolean\n"
+             "Determines if this viewport is rendering in stereo."
+         )
+        .def("getView", &vrj::Viewport::getView,
+             "getView() -> vrj.Viewport.View value\n"
+             "Which view are we supposed to render?"
+         )
+        .def("getOriginAndSize", pyj::vrj_Viewport_getOriginAndSize_wrapper,
+             "getOriginAndSize() -> (float, float, float, float)\n"
+             "Returns the origin and size of this viewport as a tuple of\n"
+             "floating-point values (xOrigin, yOrigin, width, height)."
+         )
+        .def("getConfigElement", &vrj::Viewport::getConfigElement,
+             "getConfigElement() -> jccl.ConfigElement object\n"
+             "gets the config element that configured this viewport."
+         )
+        .def("getUser", &vrj::Viewport::getUser,
+             return_internal_reference< 1 >(),
+             "getUser() -> vrj.User object\n"
+             "Gets the user associated with this viewport."
+         )
+        .def("getDisplay", &vrj::Viewport::getDisplay,
+             return_internal_reference< 1 >(),
+             "getDisplay() -> vrj.Display object\n"
+             "Gets the display contaning this viewprot."
+         )
+        .def("getLeftProj", &vrj::Viewport::getLeftProj,
+             return_internal_reference< 1 >(),
+             "getLeftProj() -> vrj.Projection object\n"
+             "Gets the left projection."
+         )
+        .def("getRightProj", &vrj::Viewport::getRightProj,
+             return_internal_reference< 1 >(),
+             "getRightProj() -> vrj.Projection object\n"
+             "Gets the right projection."
+         )
 //        .def(self_ns::str(self))
     );
 

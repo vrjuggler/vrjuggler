@@ -377,26 +377,156 @@ struct vrj_App_Wrapper: vrj::App
 // Module ======================================================================
 void _Export_App()
 {
-    class_< vrj::App, boost::noncopyable, pyj::vrj_App_Wrapper >("App", init<  >())
+    class_< vrj::App, boost::noncopyable, pyj::vrj_App_Wrapper >("App",
+         "Encapsulates the actual application.\n\n"
+         "This class defines the base class for all API-specific application\n"
+         "object types.  The interface given is what the VR Juggler kernel\n"
+         "expects in order to communicate with the application.  Most of\n"
+         "the application's interface will be defined in the derived\n"
+         "API-specific classes.\n\n"
+         "Users should write their application objects as subclasses of the\n"
+         "API-specific classes.  Overriding the methods in this class and in\n"
+         "the API-specific subclasses is the method by which the application\n"
+         "programmer interfaces with VR Juggler.\n\n"
+         "The VR Juggler kernel control loop will look similar to this:\n\n"
+         "while drawing:\n"
+         "   app_obj.preFrame()\n"
+         "   app_obj.latePreFrame()\n"
+         "   draw()\n"
+         "   app_obj.intraFrame()\n"
+         "   sync()\n"
+         "   app_obj.postFrame()\n\n"
+         "   updateAllDeices()\n\n"
+         "One time through this loop is a \"Juggler Frame.\"\n\n"
+         "See also: vrj.Kernel"
+         ,
+         init<  >(
+            "__init__()\n"
+            "Default constructor.  Uses vrj.Kernel.instance().\n\n"
+            "__init__(kernel)\n"
+            "Arguments:\n"
+            "kernel -- The vrj.Kernel instance that is active (so the\n"
+            "          application has easy access to the kernel)."
+         )
+        )
         .def(init< vrj::Kernel* >())
         .def_readwrite("mKernel", &vrj::App::mKernel)
         .def_readwrite("mHaveFocus", &vrj::App::mHaveFocus)
-        .def("init", &vrj::App::init, &pyj::vrj_App_Wrapper::default_init)
-        .def("apiInit", &vrj::App::apiInit, &pyj::vrj_App_Wrapper::default_apiInit)
-        .def("exit", &vrj::App::exit, &pyj::vrj_App_Wrapper::default_exit)
-        .def("preFrame", &vrj::App::preFrame, &pyj::vrj_App_Wrapper::default_preFrame)
-        .def("latePreFrame", &vrj::App::latePreFrame, &pyj::vrj_App_Wrapper::default_latePreFrame)
-        .def("intraFrame", &vrj::App::intraFrame, &pyj::vrj_App_Wrapper::default_intraFrame)
-        .def("postFrame", &vrj::App::postFrame, &pyj::vrj_App_Wrapper::default_postFrame)
-        .def("reset", &vrj::App::reset, &pyj::vrj_App_Wrapper::default_reset)
-        .def("focusChanged", &vrj::App::focusChanged, &pyj::vrj_App_Wrapper::default_focusChanged)
-        .def("getDrawScaleFactor", &vrj::App::getDrawScaleFactor, &pyj::vrj_App_Wrapper::default_getDrawScaleFactor)
-        .def("configCanHandle", (bool (vrj::App::*)(jccl::ConfigElementPtr) )&vrj::App::configCanHandle, &pyj::vrj_App_Wrapper::default_configCanHandle)
-        .def("depSatisfied", &vrj::App::depSatisfied, &pyj::vrj_App_Wrapper::default_depSatisfied)
+        .def("init", &vrj::App::init, &pyj::vrj_App_Wrapper::default_init,
+             "init()\n"
+             "Application initialization function.  Execute any\n"
+             "initialization needed before the graphics API is started.\n\n"
+             "Note:\n"
+             "Derived classes MUST call the base class version of this\n"
+             "method."
+         )
+        .def("apiInit", &vrj::App::apiInit,
+             &pyj::vrj_App_Wrapper::default_apiInit,
+             "apiInit()\n"
+             "Application graphics API initialization function.  Execute any\n"
+             "initialization needed after the graphics API is started but\n"
+             "before the Draw Manager starts the rendering loop(s)."
+         )
+        .def("exit", &vrj::App::exit, &pyj::vrj_App_Wrapper::default_exit,
+             "exit()\n"
+             "Executes any final clean-up needed for the application before\n"
+             "exiting."
+         )
+        .def("preFrame", &vrj::App::preFrame,
+             &pyj::vrj_App_Wrapper::default_preFrame,
+             "preFrame()\n"
+             "Function called before the Juggler frame starts.  This is\n"
+             "called after input device updates but before the start of a\n"
+             "new frame."
+         )
+        .def("latePreFrame", &vrj::App::latePreFrame,
+             &pyj::vrj_App_Wrapper::default_latePreFrame,
+             "latePreFrame()\n"
+             "Function called after preFrame() and application-specific data\n"
+             "synchronization (in a cluster conifguration) but before the\n"
+             "start of a new frame.\n\n"
+             "Note:\n"
+             "This is required because we cannot update data during the\n"
+             "rendering process since it might be using multiple threads."
+         )
+        .def("intraFrame", &vrj::App::intraFrame,
+             &pyj::vrj_App_Wrapper::default_intraFrame,
+             "intraFrame()\n"
+             "Function called during the application's drawing time."
+         )
+        .def("postFrame", &vrj::App::postFrame,
+             &pyj::vrj_App_Wrapper::default_postFrame,
+             "postFrame()\n"
+             "Function alled before updating input devices but after the\n"
+             "frame is complete."
+         )
+        .def("reset", &vrj::App::reset, &pyj::vrj_App_Wrapper::default_reset,
+             "reset()\n"
+             "Resets the application.  This is used when the kernel (or\n"
+             "applications would like this application to reset to its\n"
+             "initial state."
+         )
+        .def("focusChanged", &vrj::App::focusChanged,
+             &pyj::vrj_App_Wrapper::default_focusChanged,
+             "focusChanged()\n"
+             "Called when the focus state changes."
+         )
+        .def("getDrawScaleFactor", &vrj::App::getDrawScaleFactor,
+             &pyj::vrj_App_Wrapper::default_getDrawScaleFactor,
+             "getDrawScaleFactor() -> float\n"
+             "Returns the scale factor to convert from Juggler units\n"
+             "(meters) to application units.  Internally, VR Juggler stores\n"
+             "and processes all position values in meterrs.  The scale\n"
+             "factor returned by this method is used by VR Juggler to scale\n"
+             "the rendering state from meters to whatever units this\n"
+             "application wants to use.  For example, to render in feet,\n"
+             "return 3.28 (gadget.PositionUnitConversion.ConvertToFeet)."
+         )
+        .def("configCanHandle",
+             (bool (vrj::App::*)(jccl::ConfigElementPtr) )&vrj::App::configCanHandle,
+             &pyj::vrj_App_Wrapper::default_configCanHandle,
+             "configCanHandle(element) -> Boolean\n"
+             "Defaults to handling nothing.\n\n"
+             "Arguments:\n"
+             "element -- An instance of jccl.ConfigElement."
+         )
+        .def("depSatisfied", &vrj::App::depSatisfied,
+             &pyj::vrj_App_Wrapper::default_depSatisfied,
+             "depSatisfied() -> Boolean\n"
+             "Are any application dependencies satisified?  If this\n"
+             "application requires anything special of the system for\n"
+             "successful initialization, check it here.  If the return value\n"
+             "is False, then this application will not be started yet.  If\n"
+             "the return value is True, this application will be allowed to\n"
+             "enter the system."
+         )
 //        .def("getDrawManager", pure_virtual(&vrj::App::getDrawManager))
-        .def("configProcessPending", (int (jccl::ConfigElementHandler::*)() )&jccl::ConfigElementHandler::configProcessPending, (int (pyj::vrj_App_Wrapper::*)())&pyj::vrj_App_Wrapper::default_configProcessPending)
-        .def("haveFocus", &vrj::App::haveFocus)
-        .def("setFocus", &vrj::App::setFocus)
+        .def("configProcessPending",
+             (int (jccl::ConfigElementHandler::*)() )&jccl::ConfigElementHandler::configProcessPending,
+             (int (pyj::vrj_App_Wrapper::*)())&pyj::vrj_App_Wrapper::default_configProcessPending,
+             "configProcessPending() -> int\n"
+             "Inherited from jccl.ConfigElementHandler and not overridden."
+         )
+        .def("haveFocus", &vrj::App::haveFocus,
+             "haveFocus() -> Boolean\n"
+             "Does this application currently have focus?  If an application\n"
+             "has focus, the user may be attempting to interact with it, so\n"
+             "the application should process input.  If not, the user is\n"
+             "not interacting with it, so ignore all input.  However, the\n"
+             "user may still be viewing the application, so render, update\n"
+             "animations, etc.  This is akin to the way that a user can only\n"
+             "interact with a GUI window that has focus."
+         )
+        .def("setFocus", &vrj::App::setFocus,
+             "setFocus(newState)\n"
+             "Sets the focus state.\n\n"
+             "Post-condition:\n"
+             "If the focus state has changed, then focusChanged() is\n"
+             "called.\n\n"
+             "Arguments:\n"
+             "newState -- A Boolean value indicating whether this application\n"
+             "            now has focus."
+         )
     ;
 
 }

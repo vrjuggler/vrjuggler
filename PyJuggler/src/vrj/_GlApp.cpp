@@ -494,28 +494,208 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
 // Module ======================================================================
 void _Export_GlApp()
 {
-    class_< vrj::GlApp, bases< vrj::App >, boost::noncopyable, pyj::vrj_GlApp_Wrapper >("GlApp", init<  >())
+    class_< vrj::GlApp, bases< vrj::App >, boost::noncopyable, pyj::vrj_GlApp_Wrapper >("GlApp",
+         "vrj.GlApp encapsulates an actual OpenGL application object.\n"
+         "This class defines the class from which OpenGL-based application\n"
+         "objects should be derived.  The interface given what the kernel\n"
+         "and the OpenGL Draw Manager expect in order to interact with the\n"
+         "application object.\n\n"
+         "The control loop will look similar to this:\n\n"
+         "glapp_obj.contextInit()        # called for each context\n"
+         "while drawing:\n"
+         "   glapp_obj.preFrame()\n"
+         "   glapp_obj.latePreFrame()\n"
+         "   glapp_obj.bufferPreDraw()   # called for each draw buffer\n"
+         "   glapp_obj.contextPreDraw()  # called for each context\n"
+         "   glapp_obj.draw()            # called for each viewport\n"
+         "   glapp_obj.contextPostDraw() # called for each context\n"
+         "   glapp_obj.intraFrame()      # called in parallel to the draw functions\n"
+         "   sync()\n"
+         "   glapp_obj.postFrame()\n\n"
+         "   updateAllDevices()\n"
+         "glapp_obj.contextClose()       # called for each context\n\n"
+         "Note: One time through the loop is a Juggler Frame.\n\n"
+         "See also: vrj.App, vrj.Kernel"
+         ,
+         init<  >()
+        )
         .def(init< vrj::Kernel* >())
-        .def("draw", pure_virtual(&vrj::GlApp::draw))
-        .def("contextInit", &vrj::GlApp::contextInit, &pyj::vrj_GlApp_Wrapper::default_contextInit)
-        .def("contextClose", &vrj::GlApp::contextClose, &pyj::vrj_GlApp_Wrapper::default_contextClose)
-        .def("contextPreDraw", &vrj::GlApp::contextPreDraw, &pyj::vrj_GlApp_Wrapper::default_contextPreDraw)
-        .def("contextPostDraw", &vrj::GlApp::contextPostDraw, &pyj::vrj_GlApp_Wrapper::default_contextPostDraw)
-        .def("bufferPreDraw", &vrj::GlApp::bufferPreDraw, &pyj::vrj_GlApp_Wrapper::default_bufferPreDraw)
-        .def("pipePreDraw", &vrj::GlApp::pipePreDraw, &pyj::vrj_GlApp_Wrapper::default_pipePreDraw)
-        .def("init", &vrj::App::init, &pyj::vrj_GlApp_Wrapper::default_init)
-        .def("apiInit", &vrj::App::apiInit, &pyj::vrj_GlApp_Wrapper::default_apiInit)
-        .def("exit", &vrj::App::exit, &pyj::vrj_GlApp_Wrapper::default_exit)
-        .def("preFrame", &vrj::App::preFrame, &pyj::vrj_GlApp_Wrapper::default_preFrame)
-        .def("latePreFrame", &vrj::App::latePreFrame, &pyj::vrj_GlApp_Wrapper::default_latePreFrame)
-        .def("intraFrame", &vrj::App::intraFrame, &pyj::vrj_GlApp_Wrapper::default_intraFrame)
-        .def("postFrame", &vrj::App::postFrame, &pyj::vrj_GlApp_Wrapper::default_postFrame)
-        .def("reset", &vrj::App::reset, &pyj::vrj_GlApp_Wrapper::default_reset)
-        .def("focusChanged", &vrj::App::focusChanged, &pyj::vrj_GlApp_Wrapper::default_focusChanged)
-        .def("getDrawScaleFactor", &vrj::App::getDrawScaleFactor, &pyj::vrj_GlApp_Wrapper::default_getDrawScaleFactor)
-        .def("configCanHandle", (bool (vrj::App::*)(jccl::ConfigElementPtr) )&vrj::App::configCanHandle, (bool (pyj::vrj_GlApp_Wrapper::*)(jccl::ConfigElementPtr))&pyj::vrj_GlApp_Wrapper::default_configCanHandle)
-        .def("depSatisfied", &vrj::App::depSatisfied, &pyj::vrj_GlApp_Wrapper::default_depSatisfied)
-        .def("configProcessPending", &jccl::ConfigElementHandler::configProcessPending, &pyj::vrj_GlApp_Wrapper::default_configProcessPending)
+        .def("draw", pure_virtual(&vrj::GlApp::draw),
+             "draw()\n"
+             "Function that renders the scene.  Override this function with\n"
+             "the application-specific rendering routine.\n\n"
+             "Pre-condition:\n"
+             "OpenGL state has transformation and buffer selected.\n\n"
+             "Post-condition:\n"
+             "The current scene has been drawn."
+         )
+        .def("contextInit", &vrj::GlApp::contextInit,
+             &pyj::vrj_GlApp_Wrapper::default_contextInit,
+             "contextInit()\n"
+             "Function that is called immediately after a new context is\n"
+             "created.  Use this function to create context-specific data\n"
+             "structures such as display lists and texture objects that are\n"
+             "known to be required when the context is created.\n\n"
+             "Pre-condition:\n"
+             "The OpenGL context has been set to the new context.\n\n"
+             "Post-condition:\n"
+             "The application has completed context-specific initialization."
+         )
+        .def("contextClose", &vrj::GlApp::contextClose,
+             &pyj::vrj_GlApp_Wrapper::default_contextClose,
+             "contextClose()\n"
+             "Function that is called immediately before a context is closed.\n"
+             "Use this function to clean up any context-specific data\n"
+             "structures."
+         )
+        .def("contextPreDraw", &vrj::GlApp::contextPreDraw,
+             &pyj::vrj_GlApp_Wrapper::default_contextPreDraw,
+             "contextPreDraw()\n"
+             "Function that is called upon entry into the context before\n"
+             "rendering begins.  This can be used to allocate\n"
+             "context-specific data dynamically.\n\n"
+             "Pre-conditions:\n"
+             "The OpenGL context has been set to the context for drawing.\n\n"
+             "Post-conditins:\n"
+             "The application object has executed any commands that need to\n"
+             "be executed only once per context, per frame.\n\n"
+             "This function can be used for things that need to happen every\n"
+             "frame but only once per context."
+         )
+        .def("contextPostDraw", &vrj::GlApp::contextPostDraw,
+             &pyj::vrj_GlApp_Wrapper::default_contextPostDraw,
+             "contextPostDraw()\n"
+             "Function that is called upon exit of the context after\n"
+             "rendering\n\n"
+             "Pre-conditions:\n"
+             "The OpenGL context has been set to the context for drawing."
+         )
+        .def("bufferPreDraw", &vrj::GlApp::bufferPreDraw,
+             &pyj::vrj_GlApp_Wrapper::default_bufferPreDraw,
+             "bufferPreDraw()\n"
+             "Function that is called once for each frame buffer of an\n"
+             "OpenGL context.  This function is executed after contextInit()\n"
+             "(if neede) but before contextPreDraw().  It is called once\n"
+             "per frame buffer (see note below).\n\n"
+             "Pre-conditions:\n"
+             "The OpenGL context has been set to the context for drawing.\n\n"
+             "Post-conditions:\n"
+             "The application object has executed any commands that need to\n"
+             "be executed once per context, per buffer, per frame.\n\n"
+             "Note:\n"
+             "This function is designed to be used when some task must be\n"
+             "performed only once per frame buffer (i.e., once for the left\n"
+             "tbuffer, once for the right buffer).  For example, the OpenGL\n"
+             "clear color should be defined and glClear(GL_COLOR_BUFFER_BIT)\n"
+             "should be called in this method."
+         )
+        .def("pipePreDraw", &vrj::GlApp::pipePreDraw,
+             &pyj::vrj_GlApp_Wrapper::default_pipePreDraw,
+             "Function that is called at the beginning of the drawing of eacn\n"
+             "pipe.\n\n"
+             "Pre-conditions:\n"
+             "The library is preparing to render all windows on a given\n"
+             "pipe.\n\n"
+             "Post-conditions:\n"
+             "Any pre-pipe user calls have been done.\n\n"
+             "Note:\n"
+             "Currently the OpenGL context is not set when this function is\n"
+             "called.  This is a TEST function.  USE AT YOUR OWN RISK!"
+         )
+        .def("init", &vrj::App::init, &pyj::vrj_GlApp_Wrapper::default_init,
+             "init()\n"
+             "Application initialization function.  Execute any\n"
+             "initialization needed before the graphics API is started.\n\n"
+             "Note:\n"
+             "Derived classes MUST call the base class version of this\n"
+             "method."
+         )
+        .def("apiInit", &vrj::App::apiInit,
+             &pyj::vrj_GlApp_Wrapper::default_apiInit,
+             "apiInit()\n"
+             "Application graphics API initialization function.  Execute any\n"
+             "initialization needed after the graphics API is started but\n"
+             "before the Draw Manager starts the rendering loop(s)."
+         )
+        .def("exit", &vrj::App::exit, &pyj::vrj_GlApp_Wrapper::default_exit,
+             "exit()\n"
+             "Executes any final clean-up needed for the application before\n"
+             "exiting."
+         )
+        .def("preFrame", &vrj::App::preFrame,
+             &pyj::vrj_GlApp_Wrapper::default_preFrame,
+             "preFrame()\n"
+             "Function called before the Juggler frame starts.  This is\n"
+             "called after input device updates but before the start of a\n"
+             "new frame."
+         )
+        .def("latePreFrame", &vrj::App::latePreFrame,
+             &pyj::vrj_GlApp_Wrapper::default_latePreFrame,
+             "latePreFrame()\n"
+             "Function called after preFrame() and application-specific data\n"
+             "synchronization (in a cluster conifguration) but before the\n"
+             "start of a new frame.\n\n"
+             "Note:\n"
+             "This is required because we cannot update data during the\n"
+             "rendering process since it might be using multiple threads."
+         )
+        .def("intraFrame", &vrj::App::intraFrame,
+             &pyj::vrj_GlApp_Wrapper::default_intraFrame,
+             "intraFrame()\n"
+             "Function called during the application's drawing time."
+         )
+        .def("postFrame", &vrj::App::postFrame,
+             &pyj::vrj_GlApp_Wrapper::default_postFrame,
+             "postFrame()\n"
+             "Function alled before updating input devices but after the\n"
+             "frame is complete."
+         )
+        .def("reset", &vrj::App::reset, &pyj::vrj_GlApp_Wrapper::default_reset,
+             "reset()\n"
+             "Resets the application.  This is used when the kernel (or\n"
+             "applications would like this application to reset to its\n"
+             "initial state."
+         )
+        .def("focusChanged", &vrj::App::focusChanged,
+             &pyj::vrj_GlApp_Wrapper::default_focusChanged,
+             "focusChanged()\n"
+             "Called when the focus state changes."
+         )
+        .def("getDrawScaleFactor", &vrj::App::getDrawScaleFactor,
+             &pyj::vrj_GlApp_Wrapper::default_getDrawScaleFactor,
+             "getDrawScaleFactor() -> float\n"
+             "Returns the scale factor to convert from Juggler units\n"
+             "(meters) to application units.  Internally, VR Juggler stores\n"
+             "and processes all position values in meterrs.  The scale\n"
+             "factor returned by this method is used by VR Juggler to scale\n"
+             "the rendering state from meters to whatever units this\n"
+             "application wants to use.  For example, to render in feet,\n"
+             "return 3.28 (gadget.PositionUnitConversion.ConvertToFeet)."
+         )
+        .def("configCanHandle",
+             (bool (vrj::App::*)(jccl::ConfigElementPtr) )&vrj::App::configCanHandle,
+             (bool (pyj::vrj_GlApp_Wrapper::*)(jccl::ConfigElementPtr))&pyj::vrj_GlApp_Wrapper::default_configCanHandle,
+             "configCanHandle(element) -> Boolean\n"
+             "Defaults to handling nothing.\n\n"
+             "Arguments:\n"
+             "element -- An instance of jccl.ConfigElement."
+         )
+        .def("depSatisfied", &vrj::App::depSatisfied,
+             &pyj::vrj_GlApp_Wrapper::default_depSatisfied,
+             "depSatisfied() -> Boolean\n"
+             "Are any application dependencies satisified?  If this\n"
+             "application requires anything special of the system for\n"
+             "successful initialization, check it here.  If the return value\n"
+             "is False, then this application will not be started yet.  If\n"
+             "the return value is True, this application will be allowed to\n"
+             "enter the system."
+         )
+        .def("configProcessPending",
+             &jccl::ConfigElementHandler::configProcessPending,
+             &pyj::vrj_GlApp_Wrapper::default_configProcessPending,
+             "configProcessPending() -> int\n"
+             "Inherited from jccl.ConfigElementHandler and not overridden."
+         )
     ;
 
 }

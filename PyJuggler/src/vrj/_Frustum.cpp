@@ -28,7 +28,10 @@ namespace vrjHelpers
 void _Export_Frustum()
 {
     scope* vrj_Frustum_scope = new scope(
-    class_< vrj::Frustum >("Frustum", init<  >())
+    class_< vrj::Frustum >("Frustum",
+         "A frustum object.  This is a frustum.",
+         init<  >()
+        )
         .def(init< const vrj::Frustum& >())
         .def("setBottomLeftTopRight", &vrj::Frustum::setBottomLeftTopRight)
         .def("setNearFar", &vrj::Frustum::setNearFar)
