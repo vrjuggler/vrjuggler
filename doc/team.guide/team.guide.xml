@@ -619,19 +619,19 @@
               repository. Afterward, the login setting is saved in your
               <filename>$HOME/.cvspass</filename> file.</para>
 
-              <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login</screen>
+              <screen>% cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler login</screen>
             </listitem>
 
             <listitem>
               <para>Check out a copy of the current VR Juggler source tree:</para>
 
-              <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</screen>
+              <screen>% cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler checkout juggler</screen>
 
               <para>If what you really want is the VR Juggler 1.0 release
               branch instead of the developmental main branch, use the
               following command:</para>
 
-              <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout -rRELENG_1_0 juggler_1.0</screen>
+              <screen>% cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler checkout -rRELENG_1_0 juggler_1.0</screen>
 
               <para>(The string <literal>RELENG_1_0</literal> is the name of
               the branch in the CVS repository containing the VR Juggler 1.0
@@ -691,7 +691,7 @@
             <listitem>
               <para>Check out the source using your SourceForge login name.</para>
 
-              <screen>% cvs -dlogin_name@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</screen>
+              <screen>% cvs -dlogin_name@cvs.sourceforge.net:/cvsroot/vrjuggler checkout juggler</screen>
 
               <para>Be sure to use the appropriate branch name.</para>
             </listitem>
