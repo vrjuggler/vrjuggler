@@ -58,41 +58,44 @@ bool CyberGlove::config(jccl::ConfigChunkPtr c)
 
    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
 
-    char* home_dir = c->getProperty("calDir").cstring();
-    if (home_dir != NULL)
-    {
-        mCalDir = new char [strlen(home_dir) + 1];
-        strcpy(mCalDir,home_dir);
-    }
+   mPortName = c->getProperty<std::string>("port");
+   mBaudRate = c->getProperty<int>("baud");
 
-    std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
-    if(glove_pos_proxy == std::string(""))
-    {
-       vprDEBUG(gadgetDBG_INPUT_MGR,0)
-          << clrOutNORM(clrRED, "ERROR:") << " Cyberglove has no posProxy."
-          << std::endl << vprDEBUG_FLUSH;
-       return false;
-    }
+   char* home_dir = c->getProperty("calDir").cstring();
+   if (home_dir != NULL)
+   {
+       mCalDir = new char [strlen(home_dir) + 1];
+       strcpy(mCalDir,home_dir);
+   }
 
-    // init glove proxy interface
-    /* XXX: Doesn't appear to be used
-    int proxy_index = gadget::InputManager::instance()->getProxyIndex(glove_pos_proxy);
-    if(proxy_index != -1)
-    {
-       mGlovePos[0] = gadget::InputManager::instance()->->getPosProxy(proxy_index);
-    }
-    else
-    {
-       vprDEBUG(gadgetDBG_INPUT_MGR,0)
-          << clrOutNORM(clrRED, "ERROR:")
-          << " CyberGlove::CyberGlove: Can't find posProxy."
-          << std::endl << std::endl << vprDEBUG_FLUSH;
-    }
-    */
+   std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
+   if(glove_pos_proxy == std::string(""))
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+         << clrOutNORM(clrRED, "ERROR:") << " Cyberglove has no posProxy."
+         << std::endl << vprDEBUG_FLUSH;
+      return false;
+   }
 
-    mGlove = new CyberGloveBasic( mCalDir, mPort, mBaudRate );
+   // init glove proxy interface
+   /* XXX: Doesn't appear to be used
+   int proxy_index = gadget::InputManager::instance()->getProxyIndex(glove_pos_proxy);
+   if(proxy_index != -1)
+   {
+      mGlovePos[0] = gadget::InputManager::instance()->->getPosProxy(proxy_index);
+   }
+   else
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+         << clrOutNORM(clrRED, "ERROR:")
+         << " CyberGlove::CyberGlove: Can't find posProxy."
+         << std::endl << std::endl << vprDEBUG_FLUSH;
+   }
+   */
 
-    return true;
+   mGlove = new CyberGloveBasic( mCalDir, mPortName, mBaudRate );
+
+   return true;
 };
 
 int

@@ -327,8 +327,11 @@ private:
 
    int getBirdIndex(int birdNum, int bufferIndex);
 
-   vpr::Thread*     mThread;      /**< The thread doing the flock sampling */
-   FlockStandalone  mFlockOfBirds; /**< The actual Flock device object */
+   vpr::Thread*      mThread;      /**< The thread doing the flock sampling */
+   FlockStandalone   mFlockOfBirds; /**< The actual Flock device object */
+   
+   std::string       mPortName;
+   int               mBaudRate; 
 };
 
 } // End of gadget namespace

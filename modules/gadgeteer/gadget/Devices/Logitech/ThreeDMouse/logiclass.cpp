@@ -76,7 +76,7 @@ int ThreeDMouse::startSampling()
 {
   if (mThreadID == NULL) {
 
-   openMouse(mPort);
+   openMouse(mPortName);
    ThreeDMouse* devicePtr = this;
    void sampleMouse(void*);
 
@@ -137,6 +137,8 @@ bool ThreeDMouse::config(jccl::ConfigChunkPtr c)
    if(! (gadget::Input::config(c) && gadget::Position::config(c)))
       return false;
 
+   mPortName = c->getProperty<std::string>("port");
+   
    baseVector[0] = baseVector[1] = baseVector[2] = 0;
 
    return true;

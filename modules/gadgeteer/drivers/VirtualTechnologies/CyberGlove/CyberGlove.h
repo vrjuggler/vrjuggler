@@ -73,6 +73,8 @@ protected:
 protected:
    CyberGloveBasic*  mGlove;              // The actual glove
    char*             mCalDir;             // Calibration file directory
+   std::string       mPortName;
+   int               mBaudRate;
 };
 
 };

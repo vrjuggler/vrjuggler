@@ -168,17 +168,6 @@ public:
    */
    static std::string getChunkType() { return std::string("Undefined"); }
 
-   /** @name Functions to remove (?)
-     *
-     * It hasn't been resolved as to whether these functions should be removed
-     */
-   //@{
-   void setPort(const std::string& serialPort);
-   std::string getPort();
-   void setBaudRate(int baud);
-   int  getBaudRate() { return mBaudRate;}
-   //@}
-
    /** getInstanceName()
    *
    *  Returns the name identifying this instance of the device.
@@ -217,7 +206,6 @@ public:
 protected:
    std::string    mPort;
    std::string    mInstName;
-   int            mPortId;
    vpr::Thread*   mThread;       /**< The thread being used by the driver */
    int            mActive;       /**< Is the driver active? */
    int            mBaudRate;     /**< Baud rate of the device (if it is serial device) */

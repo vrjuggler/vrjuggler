@@ -220,6 +220,9 @@ private:
 // the digital IO as well. Therefore what is needed with four wands is a digital device that allows
 // access to subsets of digital buttons.
 
+    std::string  mPortName;
+    int           mBaudRate;
+
 };
 
 };
