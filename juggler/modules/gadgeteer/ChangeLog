@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-21-2004 aronb       Refactored event input to allow more code reuse and
+                        flexibility. As an effect EventWindow and
+                        EventWindowProxy were renamed to KeyboardMouse and
+                        KeyboardMouseProxy respectively.
+                        NEW VERSION 0.22.0
 Dec-01-2004 patrickh    Renamed the config element type loaded by
                         gadget::AbstractNetworkManager from machine_specific to
                         cluster_node.
