@@ -1,4 +1,4 @@
-default: kevin
+default: all
 
 include @topdir@/make.defs.mk
 
@@ -29,6 +29,8 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 ROOT_DIR        = $(top_srcdir)
 
+
+
 EXTRA_SRCS_PATH = $(srcdir)/plugins
 EXTRA_INCLUDES = -I$(top_srcdir) -I$(srcdir)
 # -I$(AJ_BASE_DIR)
@@ -37,8 +39,20 @@ LIBS = ${LIBS} -lm
 
 ##################################################################
 
+# lib specific: (where to dump the .o files)
+SUBOBJDIR       = $(AJ_LIBRARY)
+
 include $(MKPATH)/dpp.obj.mk
 
 kevin: ${OBJECTS}
 	${AR} ${ARFLAGS} libAudioJuggler.a ${OBJECTS}
 #	${CXX} ${CXXFLAGS} ${OBJECTS} -o audiojuggler.a ${LIBS}
+
+# -----------------------------------------------------------------------------
+# Include dependencies generated automatically.
+# -----------------------------------------------------------------------------
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+    include $(DEPEND_FILES)
+endif
+endif
