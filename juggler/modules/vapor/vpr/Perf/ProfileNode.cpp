@@ -49,32 +49,16 @@
 namespace vpr
 {
 
-   ProfileNode::ProfileNode( const char * name, ProfileNode * parent ) :
+   ProfileNode::ProfileNode( const char * name, const unsigned int queue_size) :
    mName( name ),
       mTotalCalls( 0 ),
       mRecursionCounter( 0 ),
-      mParent( parent ),
+      mParent( NULL ),
       mChild( NULL ),
       mSibling( NULL )
    {
       mTotalTime.secf(0.0f);
-      mHistorySize = 1;
-      mHistory.resize(mHistorySize);
-      mStartTime.secf(0);
-      reset();
-   }
-
-   ProfileNode::ProfileNode( const char * name, ProfileNode * parent, const unsigned int queue_size) :
-   mName( name ),
-      mTotalCalls( 0 ),
-      mRecursionCounter( 0 ),
-      mParent( parent ),
-      mChild( NULL ),
-      mSibling( NULL )
-   {
-      mTotalTime.secf(0.0f);
-      mHistorySize = queue_size;
-      mHistory.resize(mHistorySize);
+      mMaxHistorySize = queue_size;
       mStartTime.secf(0);
       reset();
    }
@@ -85,35 +69,64 @@ namespace vpr
       delete mSibling;
    }
 
-   ProfileNode* ProfileNode::getSubNode( const char* profileName )
+   // - Set parent to us
+   // - If we don't have a child yet, set that
+   // - If we do, then add to end of sibling list
+   void ProfileNode::addChild(ProfileNode* newNode)
    {
-      // Try to find this sub node
+      vprASSERT(NULL != newNode);
+      newNode->mParent = this;
+
+      if(NULL == mChild)
+      {
+         mChild = newNode;
+         newNode->mSibling = NULL;
+      }
+      else
+      {
+         ProfileNode* last_child = mChild;
+         while(last_child->mSibling)   // Iterate down the list
+         {
+            last_child = last_child->mSibling;
+         }
+         last_child->mSibling = newNode;
+         newNode->mSibling = NULL;
+      }
+   }
+
+   ProfileNode* ProfileNode::getChild( const char* nodeName )
+   {
+      // Try to find this sub node by iterating through children
       ProfileNode* child = mChild;
       while ( child )
       {
-         if ( child->mName == profileName )
+         if ( child->mName == nodeName )
          {
             return child;
          }
          child = child->mSibling;
       }
 
-      // We didn't find it, so add it to end
-      ProfileNode* node = new ProfileNode( profileName, this );
-      if(NULL == mChild)
+      return NULL;
+   }
+
+   ProfileNode* ProfileNode::getNamedChild( const char* nodeName)
+   {
+      std::string needed_name(nodeName);
+
+      // Try to find this sub node by iterating through children
+      ProfileNode* child = mChild;
+      while ( child )
       {
-         mChild = node;
-         node->mSibling = NULL;
+         std::string cur_name(child->mName);
+         if(needed_name == cur_name)
+         {
+            return child;
+         }
+         child = child->mSibling;
       }
-      else
-      {
-         ProfileNode* last_child = mChild;
-         while(last_child->mSibling)
-         { last_child = last_child->mSibling; }
-         last_child->mSibling = node;
-         node->mSibling = NULL;
-      }
-      return node;
+
+      return NULL;
    }
 
    ProfileNode* ProfileNode::getSubNode( const char* profileName, const unsigned int queueSize )
@@ -130,69 +143,44 @@ namespace vpr
       }
 
       // We didn't find it, so add it at end
-      ProfileNode* node = new ProfileNode( profileName, this, queueSize);
-      if(NULL == mChild)
-      {
-         mChild = node;
-         node->mSibling = NULL;
-      }
-      else
-      {
-         ProfileNode* last_child = mChild;
-         while(last_child->mSibling)
-         { last_child = last_child->mSibling; }
-         last_child->mSibling = node;
-         node->mSibling = NULL;
-      }
+      ProfileNode* node = new ProfileNode( profileName, queueSize);
+      addChild(node);
       return node;
    }
 
-   ProfileNode* ProfileNode::getNamedNode( const char* nodeName )
+
+   // Print us, then our children, then our siblings
+   void ProfileNode::printTree(unsigned depth)
    {
-      // Try to find this sub node
-      ProfileNode* child = mChild;
-      while ( child )
+      std::string indent_str(depth*3,' ');
+      if(0 == depth)
       {
-         if ( child->mName == nodeName )
-         {
-            return child;
-         }
-         child = child->mSibling;
+         vprDEBUG(vprDBG_ALL, 0) << clrSetBOLD(clrGREEN) << "--- [PROFILE STATS] ---" << clrRESET << std::endl << vprDEBUG_FLUSH;
       }
 
-      return NULL;
-   }
-
-
-
-   void ProfileNode::printTree(ProfileNode* node)
-   {
-      if ( node == NULL )
-      {  return; }
-
-      ProfileNode::printTree(node->getSibling());
-
-      mNodeLock.acquire();
-      vprDEBUG(vprDBG_ALL, 0) << clrSetBOLD(clrGREEN) << "[PROFILE STATS] " << clrRESET
-         << clrSetBOLD(clrRED) << node->getName() << clrRESET
-         << clrSetBOLD(clrYELLOW) << " total calls: " << clrRESET << node->getTotalCalls()
-         << clrSetBOLD(clrYELLOW) << " total time: " << clrRESET << node->getTotalTime().msecf()
+      vprDEBUG(vprDBG_ALL, 0) << indent_str
+         << clrSetBOLD(clrRED) << getName() << clrRESET
+         << clrSetBOLD(clrYELLOW) << " total calls: " << clrRESET << getTotalCalls()
+         << clrSetBOLD(clrYELLOW) << " total time: " << clrRESET << getTotalTime().msecf()
          << clrSetBOLD(clrYELLOW) << " ave: " << clrRESET
-         << node->getTotalTime().msecf() / node->getTotalCalls() << std::endl << vprDEBUG_FLUSH;
+         << getTotalTime().msecf() / getTotalCalls() << std::endl << vprDEBUG_FLUSH;
 
       std::stringstream s;
-      NodeHistoryRange p = node->getNodeHistoryRange();
+      NodeHistoryRange p = getNodeHistoryRange();
       for ( ; p.first != p.second; p.first++ )
       {
          s << p.first->msecf() << " ";
       }
 
-      vprDEBUG(vprDBG_ALL, 0)  << clrOutBOLD(clrYELLOW, " history: ")
-      << s.str() << std::endl << vprDEBUG_FLUSH;
-      mNodeLock.release();
+      vprDEBUG(vprDBG_ALL, 0)  << indent_str << "  "
+         << clrOutBOLD(clrYELLOW, " history: ")
+         << s.str() << std::endl << vprDEBUG_FLUSH;
 
-      ProfileNode::printTree(node->getChild());
+      if(getChild() != NULL)
+      { getChild()->printTree(depth+1); }
 
+      if(getSibling() != NULL)
+      { getSibling()->printTree(depth); }
    }
 
 
@@ -200,7 +188,9 @@ namespace vpr
    {
    Guard<Mutex> guard(mNodeLock);
       mTotalCalls = 0;
-      mTotalTime.secf(0.0f);
+      mTotalTime.set(0,vpr::Interval::Base);
+      mLastSample.set(0,vpr::Interval::Base);
+      mHistory.clear();
 
       if ( mChild )
       {
@@ -213,27 +203,30 @@ namespace vpr
       }
    }
 
-   void  ProfileNode::call( void )
+   void  ProfileNode::startSample( void )
    {
    Guard<Mutex> guard(mNodeLock);
       mTotalCalls++;
       if ( mRecursionCounter++ == 0 )
       {
-         profileGetTicks(&mStartTime);
+         mStartTime.setNow();
       }
    }
 
-   bool  ProfileNode::Return( void )
+   bool  ProfileNode::stopSample( void )
    {
    Guard<Mutex> guard(mNodeLock);
       if ( --mRecursionCounter == 0 && mTotalCalls != 0 )
       {
-         vpr::Interval time;
-         profileGetTicks(&time);
-         time -= mStartTime;
-         mHistory.push_front(time);
-         mHistory.resize(mHistorySize);
-         mTotalTime += time;
+         mLastSample.setNow();
+         mLastSample -= mStartTime;
+         if(0 != mMaxHistorySize)
+         {
+            mHistory.push_front(mLastSample);
+            if(mHistory.size() > mMaxHistorySize)
+            { mHistory.resize(mMaxHistorySize); }
+         }
+         mTotalTime += mLastSample;
       }
 
       return( mRecursionCounter == 0 );
@@ -241,11 +234,19 @@ namespace vpr
 
    vpr::Interval ProfileNode::getSTA()
    {
-      vpr::Interval sta_interval;
-      for(std::deque<vpr::Interval>::iterator i=mHistory.begin(); i!=mHistory.end(); ++i)
-      { sta_interval += *i; }
-      sta_interval.set(sta_interval.getBaseVal()/mHistory.size(), vpr::Interval::Base);
-      return sta_interval;
+      // If we are making no history or have no history yet
+      if((0 == mMaxHistorySize) || mHistory.empty())
+      {
+         return mLastSample;
+      }
+      else
+      {
+         vpr::Interval sta_interval;
+         for(std::deque<vpr::Interval>::iterator i=mHistory.begin(); i!=mHistory.end(); ++i)
+         { sta_interval += *i; }
+         sta_interval.set(sta_interval.getBaseVal()/mHistory.size(), vpr::Interval::Base);
+         return sta_interval;
+      }
    }
 
 

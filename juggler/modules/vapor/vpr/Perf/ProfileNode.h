@@ -51,66 +51,75 @@
 
 #include <vpr/vprConfig.h>
 #include <deque>
-#include <map>
 #include <vpr/Util/Interval.h>
 #include <vpr/vprTypes.h>
 #include <vpr/Sync/Mutex.h>
 
 namespace vpr
 {
-
-   inline void profileGetTicks(vpr::Interval* ticks)
-   {
-      ticks->setNowReal();
-   }
-
 /**
- * A node in the Profile Hierarchy Tree
+ * A node in the Profile Hierarchy Tree.
+ *
+ * This is the main class for performance profiling.
+ * The performance profile is built out of a tree of these nodes.  They are
+ * connected in a standard parent child relationship.  Each node can have one
+ * parent and 0 or more children.
  */
    class VPR_CLASS_API ProfileNode
    {
-
    public:
-
       /**
        * constructor for a profile node
-       * Takes a static string pointer for the name and a reference to a parent
+       * Takes a static string pointer for the name and a reference to a parent.
+       * Parent and children default to NULL
+       * @param name   Static string pointer and name for this node.
        */
-      ProfileNode( const char * name, ProfileNode * parent );
-
-      ProfileNode( const char * name, ProfileNode * parent, const unsigned int queueSize);
+      ProfileNode( const char * name, const unsigned int queueSize=0 );
 
       /**
        * destructor
        */
       ~ProfileNode( void );
 
-      /**
-       * Returns a pointer to a subnode of this node given the name of the subnode
-       * If the name doesn't exist it creates the new node and adds it as a child
-       * to this node and returns this new node.
+      /** Adds a new node as a child.
+       * @param newChild - New child to add.  It will have it's parent set to us.
        */
-      ProfileNode*  getSubNode( const char * name );
-
-      ProfileNode*  getSubNode( const char * name, const unsigned int queueSize);
+      void addChild(ProfileNode* newChild);
 
       /** Return pointer to sub-node (child) with the given name.
        * NOTE: Currently requires the char* to be same as used to create.
        */
-      ProfileNode*  getNamedNode( const char* nodeName );
+      ProfileNode* getChild( const char* nodeName );
+
+      /** Find a child using string name instead of pointer comparison.
+       */
+      ProfileNode* getNamedChild( const char* nodeName);
+
+      /** Returns named node or creates new child.
+      * Returns a pointer to a subnode of this node given the name of the subnode
+      * If the name doesn't exist it creates the new node and adds it as a child
+      * to this node and returns this new node.
+       */
+      ProfileNode* getSubNode( const char * name, const unsigned int queueSize=0);
+
+      /** Get the static string name associated with this node. */
+      const char* getName()
+      {
+         return mName;
+      }
 
       /**
        * return This nodes parent.
        */
-      ProfileNode*  getParent( void )
+      ProfileNode* getParent()
       {
          return mParent;
       }
 
       /**
-       * @return A pointer to a sibling node.
+       * @return A pointer to next sibling node in line.
        */
-      ProfileNode*  getSibling( void )
+      ProfileNode* getSibling()
       {
          return mSibling;
       }
@@ -118,27 +127,49 @@ namespace vpr
       /**
        * @returns A pointer to its child.
        */
-      ProfileNode*  getChild( void )
+      ProfileNode* getChild()
       {
          return mChild;
       }
 
-      void           printTree(ProfileNode* node);
-      void           reset( void );
-      void           call( void );
-      bool           Return( void );
+      /** Print tree rooted at this node.
+       * @param depth Depth in the traversal. Used for indentation and the like.
+       */
+      void printTree(unsigned depth=0);
 
-      const char*    getName( void )
+      /** Recursively resets the metric values for all nodes rooted here.
+       * Resets total calls and total times.  Also resets the history.
+       */
+      void reset();
+
+      /** Starts a sampling period for this profile node.
+       * Starts the time running for us.
+       */
+      void startSample();
+
+      /** Stops the sampling period for this profile node.
+       */
+      bool stopSample();
+
+
+      // -------------------------------------
+      /// @name Metric getters.
+      // -------------------------------------
+      //@{
+      /** Return the last sample taken. */
+      vpr::Interval getLastSample()
       {
-         return mName;
+         return mLastSample;
       }
 
-      int            getTotalCalls( void )
+      /** Return the total number of samples made on this node. */
+      int getTotalCalls()
       {
          return mTotalCalls;
       }
 
-      vpr::Interval          getTotalTime( void )
+      /** Return the total sampled time for this node. */
+      vpr::Interval getTotalTime()
       {
          return mTotalTime;
       }
@@ -150,32 +181,32 @@ namespace vpr
          return std::make_pair(mHistory.begin(), mHistory.end());
       }
 
-      void           clearHistory()
-      {
-         mHistory.clear();
-      }
-
       /** Get the average time sample.
        * Returns total time sampled/total calls.
        */
       vpr::Interval getAverage()
       {
-         return vpr::Interval(getTotalTime().getBaseVal()/getTotalCalls(), vpr::Interval::Base);
+         if(getTotalCalls() == 0)
+         { return vpr::Interval(); }
+         else
+         { return vpr::Interval(getTotalTime().getBaseVal()/getTotalCalls(), vpr::Interval::Base); }
       }
 
       /** Get the short term average.
        * Computed as the average of the history.
        */
       vpr::Interval getSTA();
+      //@}
 
    protected:
 
       const char*    mName;         /**< Pointer to the name for this node.  Must be a static string. */
       int            mTotalCalls;   /**< Total number of times called since last reset. */
-      vpr::Interval          mTotalTime;    /**< Total summed time over mTotalCalls. */
+      vpr::Interval  mTotalTime;    /**< Total summed time over mTotalCalls. */
+      vpr::Interval  mLastSample;   /**< The last sample taken. */
 
-      std::deque<vpr::Interval> mHistory;      /**< History of samples. */
-      unsigned int      mHistorySize;  /**< Max size allowed for history. */
+      std::deque<vpr::Interval>  mHistory;         /**< History of samples. */
+      unsigned int               mMaxHistorySize;  /**< Max size allowed for history. If 0, then ignore history. */
 
       vpr::Interval  mStartTime;       /**< The time that this sample started. */
       int            mRecursionCounter;/**< The number of calls without a return. tracks recursion. */
