@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-14-2002 nonchocoboy Introduced the concept of a configuration context which
+                        provides a view into a subset of the open files which
+                        together make up a configuration.
 Aug-09-2002 patrickh    Made compilation of the C++ remote reconfiguration code
                         optional.
 Aug-06-2002 patrickh    Developer installations are now constructed using the
