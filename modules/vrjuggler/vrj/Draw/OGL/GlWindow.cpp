@@ -99,8 +99,8 @@ void GlWindow::finishSetup()
    vprASSERT(mWindowIsOpen && "Pre-condition of being open failed");
 
    // --- Setup any attached simulator that is needed --- //
-   Viewport* viewport = NULL;
-   SimViewport* sim_vp = NULL;
+//   Viewport* viewport(NULL);
+//   SimViewport* sim_vp(NULL);
    unsigned num_vps = mVrjDisplay->getNumViewports();
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
