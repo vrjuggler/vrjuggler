@@ -9,11 +9,11 @@
 namespace vprTest
 {
 
-class InetAddrTest : public TestCase
+class InetAddrTest : public CppUnit::TestCase
 {
 public:
-   InetAddrTest( std::string name )
-   : TestCase (name)
+   InetAddrTest()
+   : CppUnit::TestCase ()
    {;}
 
    virtual ~InetAddrTest()
@@ -29,9 +29,9 @@ public:
    void testCreation()
    {
       vpr::InetAddr any_addr;
-      assertTest(any_addr.getPort() == 0);
-      assertTest(any_addr.getAddressValue() == vpr::InetAddr::AnyAddr.getAddressValue());
-      //assertTest(any_addr == vpr::InetAddr::AnyAddr);
+      CPPUNIT_ASSERT(any_addr.getPort() == 0);
+      CPPUNIT_ASSERT(any_addr.getAddressValue() == vpr::InetAddr::AnyAddr.getAddressValue());
+      //CPPUNIT_ASSERT(any_addr == vpr::InetAddr::AnyAddr);
    }
 
    void testEqual()
@@ -40,17 +40,17 @@ public:
       vpr::InetAddr addr2(21);
       vpr::InetAddr addr3(80);
 
-      assertTest(addr1 != addr2);
-      assertTest(addr1 == addr3);
+      CPPUNIT_ASSERT(addr1 != addr2);
+      CPPUNIT_ASSERT(addr1 == addr3);
 
       addr1.setAddress(23, addr1.getPort());
       addr3.setAddress(23, addr3.getPort());
 
-      assertTest(addr1 == addr3);
+      CPPUNIT_ASSERT(addr1 == addr3);
 
       addr3.setAddress(17, addr3.getPort());
 
-      assertTest(addr1 != addr3);
+      CPPUNIT_ASSERT(addr1 != addr3);
    }
 
    void testSets()
@@ -59,11 +59,11 @@ public:
 
       addr1.setPort(23);
 
-      assertTest(23 == addr1.getPort());
+      CPPUNIT_ASSERT(23 == addr1.getPort());
 
       addr1.setAddress(1221, addr1.getPort());
 
-      assertTest(1221 == addr1.getAddressValue());
+      CPPUNIT_ASSERT(1221 == addr1.getAddressValue());
    }
 
    void testAddressLookup () {
@@ -74,38 +74,35 @@ public:
       vpr::InetAddr addr5;
       vpr::InetAddr local_addr;
 
-      assertTest(addr1.setAddress("192.49.3.2", 13768).success());
-      assertTest(addr2.setAddress((vpr::Uint32)3224437506u, 13768).success());
-      assertTest(addr3.setAddress("cruncher.vrac.iastate.edu", 13768).success());
-      assertTest(addr4.setAddress("129.186.232.58", 13768).success());
-      assertTest(addr5.setAddress("cruncher.vrac.iastate.edu:13768").success());
-      assertTest(local_addr.setAddress("localhost", 0).success());
+      CPPUNIT_ASSERT(addr1.setAddress("192.49.3.2", 13768).success());
+      CPPUNIT_ASSERT(addr2.setAddress((vpr::Uint32)3224437506u, 13768).success());
+      CPPUNIT_ASSERT(addr3.setAddress("cruncher.vrac.iastate.edu", 13768).success());
+      CPPUNIT_ASSERT(addr4.setAddress("129.186.232.58", 13768).success());
+      CPPUNIT_ASSERT(addr5.setAddress("cruncher.vrac.iastate.edu:13768").success());
+      CPPUNIT_ASSERT(local_addr.setAddress("localhost", 0).success());
 
-      assertTest(local_addr.getAddressValue() > 0);
-      assertTest(addr1.getAddressValue() == 3224437506u);
-      assertTest(addr1 == addr2);
-      assertTest(addr3.getAddressValue() == addr4.getAddressValue());
-      assertTest(addr3.getAddressString() == addr4.getAddressString());
-      assertTest(addr3 == addr4);
-      assertTest(addr3 == addr5);
+      CPPUNIT_ASSERT(local_addr.getAddressValue() > 0);
+      CPPUNIT_ASSERT(addr1.getAddressValue() == 3224437506u);
+      CPPUNIT_ASSERT(addr1 == addr2);
+      CPPUNIT_ASSERT(addr3.getAddressValue() == addr4.getAddressValue());
+      CPPUNIT_ASSERT(addr3.getAddressString() == addr4.getAddressString());
+      CPPUNIT_ASSERT(addr3 == addr4);
+      CPPUNIT_ASSERT(addr3 == addr5);
    }
 
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite* test_suite = new TestSuite ("InetAddrTest");
-      test_suite->addTest( new TestCaller<InetAddrTest>("testCreation", &InetAddrTest::testCreation));
-      test_suite->addTest( new TestCaller<InetAddrTest>("testEqual", &InetAddrTest::testEqual));
-      test_suite->addTest( new TestCaller<InetAddrTest>("testSets", &InetAddrTest::testSets));
-      test_suite->addTest( new TestCaller<InetAddrTest>("testAddressLookup",
+      suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testCreation", &InetAddrTest::testCreation));
+      suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testEqual", &InetAddrTest::testEqual));
+      suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testSets", &InetAddrTest::testSets));
+      suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testAddressLookup",
                                                         &InetAddrTest::testAddressLookup));
-
-      return test_suite;
    }
 
-   static Test* interactiveSuite()
+   static CppUnit::Test* interactiveSuite()
    {
-      TestSuite* test_suite = new TestSuite ("InteractiveInetAddrTest");
-      //test_suite->addTest( new TestCaller<ThreadTest>("interactiveCPUGrind", &ThreadTest::interactiveTestCPUGrind));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("InteractiveInetAddrTest");
+      //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("interactiveCPUGrind", &ThreadTest::interactiveTestCPUGrind));
       return test_suite;
    }
 

@@ -1,5 +1,6 @@
-#include <framework/TestSuite.h>
-#include <textui/TestRunner.h>
+#include <string.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TextTestResult.h>
 
 #include <TestCases/Socket/SocketTest.h>
 #include <TestCases/Socket/NonBlockingSocketsTest.h>
@@ -7,6 +8,7 @@
 #include <TestCases/Socket/SocketConnectorAcceptorTest.h>
 
 #include <TestCases/Thread/ThreadTest.h>
+#include <TestCases/Thread/SignalTest.h>
 
 #include <TestCases/IO/Socket/InetAddrTest.h>
 #include <TestCases/IO/SelectorTest.h>
@@ -26,6 +28,54 @@
 //#define vprtest_RANDOM_SEED 1
 
 //using namespace vpr;
+
+static void addNoninteractive (CppUnit::TestSuite* suite)
+{
+   static vprTest::ReturnStatusTest return_test;
+   static vprTest::BoostTest boost_test;
+   static vprTest::SystemTest system_test;
+   static vprTest::IntervalTest interval_test;
+   static vprTest::GUIDTest guid_test;
+   static vprTest::InetAddrTest inet_addr_test;
+   static vprTest::SocketTest sock_test;
+   static vprTest::NonBlockingSocketTest non_block_test;
+   static vprTest::SocketCopyConstructorTest sock_copy_test;
+   static vprTest::SocketConnectorAcceptorTest sock_conn_accept_test;
+   static vprTest::SelectorTest selector_test;
+//   static vprTest::SignalTest signal_test;
+
+   // add tests to the suite
+   return_test.registerTests(suite);
+   boost_test.registerTests(suite);
+   system_test.registerTests(suite);
+   interval_test.registerTests(suite);
+   guid_test.registerTests(suite);
+   inet_addr_test.registerTests(suite);
+   sock_test.registerTests(suite);
+   non_block_test.registerTests(suite);
+//   sock_copy_test.registerTests(suite);
+   sock_conn_accept_test.registerTests(suite);
+   selector_test.registerTests(suite);
+//   signal_test.registerTests(suite);
+}
+
+static void addMetrics (CppUnit::TestSuite* suite)
+{
+   static vprTest::IntervalTest interval_test;
+   static vprTest::GUIDTest guid_test;
+   static vprTest::SocketBandwidthIOStatsTest sock_bw_test;
+
+   interval_test.registerMetricsTests(suite);
+   guid_test.registerMetricsTests(suite);
+   sock_bw_test.registerMetricsTests(suite);
+}
+
+static void addInteractive (CppUnit::TestSuite* suite)
+{
+   static vprTest::ThreadTest thread_test;
+
+   thread_test.registerTests(suite);
+}
 
 int main (int ac, char **av)
 {
@@ -49,56 +99,43 @@ int main (int ac, char **av)
     srandom(random_seed);
     srand(random_seed);
 
-    TestRunner runner;
+   CppUnit::TestSuite suite;
 
-   //------------------------------------
-   //  noninteractive
-   //------------------------------------	
-   // create non-interactive test suite
-   TestSuite* noninteractive_suite = new TestSuite("NonInteractive");
+   if ( ac > 1 && strcmp(av[1], "all") != 0 ) {
+      for ( int i = 1; i < ac; i++ ) {
+         //------------------------------------
+         //  noninteractive
+         //------------------------------------	
+         // create non-interactive test suite
+         if ( strcmp(av[i], "noninteractive") == 0 ) {
+            addNoninteractive(&suite);
+         }
+         // ------------------------------
+         // METRICS
+         // ------------------------------
+         else if ( strcmp(av[i], "metrics") == 0 ) {
+            addMetrics(&suite);
+         }
+         // -------------------------------
+         // INTERACTIVE
+         // -------------------------------
+         else if ( strcmp(av[i], "noninteractive") == 0 ) {
+            addInteractive(&suite);
+         }
+         else {
+            std::cerr << "WARNING: Unknown suite name " << av[i] << std::endl;
+         }
+      }
+   }
+   else {
+      addNoninteractive(&suite);
+      addMetrics(&suite);
+      addInteractive(&suite);
+   }
 
-   // add tests to the suite
-   noninteractive_suite->addTest(vprTest::ReturnStatusTest::suite());
-   noninteractive_suite->addTest(vprTest::BoostTest::suite());
-   noninteractive_suite->addTest(vprTest::SystemTest::suite());
-   noninteractive_suite->addTest(vprTest::IntervalTest::suite());
-   noninteractive_suite->addTest(vprTest::GUIDTest::suite());
-   noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
-   noninteractive_suite->addTest(vprTest::SocketTest::suite());
-   noninteractive_suite->addTest(vprTest::NonBlockingSocketTest::suite());
-//   noninteractive_suite->addTest(vprTest::SocketCopyConstructorTest::suite());
-   noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
-   noninteractive_suite->addTest(vprTest::SelectorTest::suite());   
-
-   // Add the test suite to the runner
-   runner.addTest( "noninteractive", noninteractive_suite );
-
-   // ------------------------------
-   // METRICS
-   // ------------------------------
-   TestSuite* metrics_suite = new TestSuite("metrics");
-
-   metrics_suite->addTest(vprTest::IntervalTest::metric_suite());
-   metrics_suite->addTest(vprTest::GUIDTest::metric_suite());
-   metrics_suite->addTest(vprTest::SocketBandwidthIOStatsTest::metric_suite());
-
-   runner.addTest("metrics", metrics_suite);
-
-   //noninteractive_suite->addTest(metrics_suite);
-
-
-   // -------------------------------
-   // INTERACTIVE
-   // -------------------------------
-   TestSuite* interactive_suite = new TestSuite("interactive");
-
-   interactive_suite->addTest(ThreadTest::suite());
-
-   runner.addTest("interactive", interactive_suite);
-
-   // run all test suites
-   runner.run( ac, av );
-
+   CppUnit::TextTestResult result;
+   suite.run(&result);
+   result.print(std::cout);
 
    return 0;
 }

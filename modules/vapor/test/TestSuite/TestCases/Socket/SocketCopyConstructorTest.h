@@ -26,11 +26,11 @@
 namespace vprTest
 {
 
-class SocketCopyConstructorTest : public ThreadTestCase
+class SocketCopyConstructorTest : public CppUnit::ThreadTestCase
 {
 public:
-   SocketCopyConstructorTest(std::string name)
-   : ThreadTestCase (name)
+   SocketCopyConstructorTest()
+   : CppUnit::ThreadTestCase ()
    {;}
 
    virtual ~SocketCopyConstructorTest()
@@ -58,20 +58,20 @@ public:
 
        newSock1= new vpr::SocketStream (*sock);
        newSock2= new vpr::SocketStream (*sock);
-       assertTest(sock->getType() == newSock1->getType());
-       assertTest(sock->getRemoteAddr() == newSock1->getRemoteAddr());
-       assertTest(sock->getLocalAddr() == newSock1->getLocalAddr());
+       CPPUNIT_ASSERT(sock->getType() == newSock1->getType());
+       CPPUNIT_ASSERT(sock->getRemoteAddr() == newSock1->getRemoteAddr());
+       CPPUNIT_ASSERT(sock->getLocalAddr() == newSock1->getLocalAddr());
 
        delete sock;
-       assertTest(newSock1->open().success() && "Can not open copied socket1");
-       assertTest(newSock2->open().success() && "Can not open copied socket2");
+       CPPUNIT_ASSERT(newSock1->open().success() && "Can not open copied socket1");
+       CPPUNIT_ASSERT(newSock2->open().success() && "Can not open copied socket2");
 
-       assertTest(newSock2->getType() == newSock1->getType());
-       assertTest(newSock2->getRemoteAddr() == newSock1->getRemoteAddr());
-       assertTest(newSock2->getLocalAddr() == newSock1->getLocalAddr());
+       CPPUNIT_ASSERT(newSock2->getType() == newSock1->getType());
+       CPPUNIT_ASSERT(newSock2->getRemoteAddr() == newSock1->getRemoteAddr());
+       CPPUNIT_ASSERT(newSock2->getLocalAddr() == newSock1->getLocalAddr());
 
-       assertTest(newSock1->close().success() && "Can not close copied socket1");
-       assertTest(newSock2->close().success() && "Can not close copied socket2");
+       CPPUNIT_ASSERT(newSock1->close().success() && "Can not close copied socket1");
+       CPPUNIT_ASSERT(newSock2->close().success() && "Can not close copied socket2");
 
        delete newSock1;
        delete newSock2;
@@ -223,11 +223,11 @@ public:
       if (copy_child != NULL) delete copy_child;
    }
 
-   static Test* suite()
+   static CppUnit::Test* suite()
    {
-      TestSuite *test_suite = new TestSuite ("SocketCopyConstructorTest");
-      test_suite->addTest( new TestCaller<SocketCopyConstructorTest>("simpleTest", &SocketCopyConstructorTest::simpleTest));
-      test_suite->addTest( new TestCaller<SocketCopyConstructorTest>("testCopyConnectedSocket", &SocketCopyConstructorTest::testCopyConnectedSocket));
+      CppUnit::TestSuite *test_suite = new CppUnit::TestSuite ("SocketCopyConstructorTest");
+      test_suite->addTest( new CppUnit::TestCaller<SocketCopyConstructorTest>("simpleTest", &SocketCopyConstructorTest::simpleTest));
+      test_suite->addTest( new CppUnit::TestCaller<SocketCopyConstructorTest>("testCopyConnectedSocket", &SocketCopyConstructorTest::testCopyConnectedSocket));
       return test_suite;
    }
 

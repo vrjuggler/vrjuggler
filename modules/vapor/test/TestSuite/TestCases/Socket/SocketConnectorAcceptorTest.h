@@ -31,11 +31,11 @@
 namespace vprTest
 {
 
-class SocketConnectorAcceptorTest : public ThreadTestCase
+class SocketConnectorAcceptorTest : public CppUnit::ThreadTestCase
 {
 public:
-   SocketConnectorAcceptorTest( std::string name )
-   : ThreadTestCase (name)
+   SocketConnectorAcceptorTest()
+   : CppUnit::ThreadTestCase ()
    {;}
 
    virtual ~SocketConnectorAcceptorTest()
@@ -62,31 +62,31 @@ public:
 
        // Test address in constructor
        test_acceptor = new vpr::SocketAcceptor(local_addr);
-       assertTest(test_acceptor != NULL);
-       assertTest(test_acceptor->getSocket().isOpen());
+       CPPUNIT_ASSERT(test_acceptor != NULL);
+       CPPUNIT_ASSERT(test_acceptor->getSocket().isOpen());
        test_acceptor->close();
        delete(test_acceptor);
 
        // Test address in constructor (with backlog)
        test_acceptor = new vpr::SocketAcceptor(local_addr,7);
-       assertTest(test_acceptor != NULL);
-       assertTest(test_acceptor->getSocket().isOpen());
+       CPPUNIT_ASSERT(test_acceptor != NULL);
+       CPPUNIT_ASSERT(test_acceptor->getSocket().isOpen());
        test_acceptor->close();
        delete(test_acceptor);
 
        // Test default constructor
        test_acceptor = new vpr::SocketAcceptor();
-       assertTest(test_acceptor != NULL);
+       CPPUNIT_ASSERT(test_acceptor != NULL);
        test_acceptor->open(local_addr);
-       assertTest(test_acceptor->getSocket().isOpen());
+       CPPUNIT_ASSERT(test_acceptor->getSocket().isOpen());
        test_acceptor->close();
        delete(test_acceptor);
 
        // Test default constructor (with backlog)
        test_acceptor = new vpr::SocketAcceptor();
-       assertTest(test_acceptor != NULL);
+       CPPUNIT_ASSERT(test_acceptor != NULL);
        test_acceptor->open(local_addr,7);
-       assertTest(test_acceptor->getSocket().isOpen());
+       CPPUNIT_ASSERT(test_acceptor->getSocket().isOpen());
        test_acceptor->close();
        delete(test_acceptor);
    }
@@ -115,8 +115,8 @@ public:
            connector_functor( this, &SocketConnectorAcceptorTest::testSpawnedAcceptor_connector );
        vpr::Thread connector_thread( &connector_functor);
 
-       assertTest( acceptor_thread.valid() && "Invalid acceptor thread");
-       assertTest( connector_thread.valid() && "Invalid connector thread");
+       CPPUNIT_ASSERT( acceptor_thread.valid() && "Invalid acceptor thread");
+       CPPUNIT_ASSERT( connector_thread.valid() && "Invalid connector thread");
 
        if(!acceptor_thread.valid())
           std::cerr << "Invalid acceptor thread\n";
@@ -219,13 +219,10 @@ public:
       }
    }
 
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite ("SocketConnectorAcceptorTest");
-
-      test_suite->addTest( new TestCaller<SocketConnectorAcceptorTest>("testAcceptorConstruction", &SocketConnectorAcceptorTest::testAcceptorConstruction));
-      test_suite->addTest( new TestCaller<SocketConnectorAcceptorTest>("testSpawnedAcceptor", &SocketConnectorAcceptorTest::testSpawnedAcceptor));
-      return test_suite;
+      suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testAcceptorConstruction", &SocketConnectorAcceptorTest::testAcceptorConstruction));
+      suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testSpawnedAcceptor", &SocketConnectorAcceptorTest::testSpawnedAcceptor));
    }
 
 protected:

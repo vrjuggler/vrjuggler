@@ -17,10 +17,10 @@
 namespace vprTest
 {
 
-class SystemTest : public TestCase
+class SystemTest : public CppUnit::TestCase
 {
 public:
-   SystemTest( std::string name ) : TestCase (name)
+   SystemTest() : CppUnit::TestCase ()
    {
    }
 
@@ -38,9 +38,9 @@ public:
       start_val = 0xF7C2;
       net_val = vpr::System::Htons(start_val);
       new_val = vpr::System::Ntohs(net_val);
-      assertTest(new_val == start_val);
+      CPPUNIT_ASSERT(new_val == start_val);
 
-      assertTest(0xFACE == vpr::System::Ntohs(vpr::System::Htons(0xFACE)));
+      CPPUNIT_ASSERT(0xFACE == vpr::System::Ntohs(vpr::System::Htons(0xFACE)));
    }
 
    void LongConversions()
@@ -52,10 +52,10 @@ public:
       start_val = 0xDEAD1234;
       net_val = vpr::System::Htonl(start_val);
       new_val = vpr::System::Ntohl(net_val);
-      assertTest(new_val == start_val);
+      CPPUNIT_ASSERT(new_val == start_val);
 
-      assertTest(0xCAFEBEEF == vpr::System::Ntohl(vpr::System::Htonl(0xCAFEBEEF)));
-      assertTest(0x12345678 == vpr::System::Ntohl(vpr::System::Htonl(0x12345678)));
+      CPPUNIT_ASSERT(0xCAFEBEEF == vpr::System::Ntohl(vpr::System::Htonl(0xCAFEBEEF)));
+      CPPUNIT_ASSERT(0x12345678 == vpr::System::Ntohl(vpr::System::Htonl(0x12345678)));
    }
 
    void LongLongConversions()
@@ -67,21 +67,18 @@ public:
       start_val = 0xDEAD1234BEEF5678;
       net_val = vpr::System::Htonll(start_val);
       new_val = vpr::System::Ntohll(net_val);
-      assertTest(new_val == start_val);
+      CPPUNIT_ASSERT(new_val == start_val);
 
-      assertTest(0xFACE1234CAFE5678 == vpr::System::Ntohll(vpr::System::Htonll(0xFACE1234CAFE5678)));
-      assertTest(0xADB0BD0DEC211975 == vpr::System::Ntohll(vpr::System::Htonll(0xADB0BD0DEC211975)));
+      CPPUNIT_ASSERT(0xFACE1234CAFE5678 == vpr::System::Ntohll(vpr::System::Htonll(0xFACE1234CAFE5678)));
+      CPPUNIT_ASSERT(0xADB0BD0DEC211975 == vpr::System::Ntohll(vpr::System::Htonll(0xADB0BD0DEC211975)));
    }
 
 
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite ("SystemTest");
-
-      test_suite->addTest( new TestCaller<SystemTest>("ShortConversions", &SystemTest::ShortConversions));
-      test_suite->addTest( new TestCaller<SystemTest>("LongConversions", &SystemTest::LongConversions));
-      test_suite->addTest( new TestCaller<SystemTest>("LongLongConversions", &SystemTest::LongLongConversions));
-      return test_suite;
+      suite->addTest( new CppUnit::TestCaller<SystemTest>("ShortConversions", &SystemTest::ShortConversions));
+      suite->addTest( new CppUnit::TestCaller<SystemTest>("LongConversions", &SystemTest::LongConversions));
+      suite->addTest( new CppUnit::TestCaller<SystemTest>("LongLongConversions", &SystemTest::LongLongConversions));
    }
 };
 
