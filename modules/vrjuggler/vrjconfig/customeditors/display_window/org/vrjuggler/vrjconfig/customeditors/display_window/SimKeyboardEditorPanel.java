@@ -146,12 +146,12 @@ public class SimKeyboardEditorPanel
       // The amount of looping that happens in here is insane...
       else
       {
-         if ( ! kbdElt.getDefinition().getToken().equals(KEYBOARD_MOUSE_TYPE) )
+         if ( ! kbdElt.getDefinition().getToken().equals(KEYBOARD_MOUSE_DEVICE_TYPE) )
          {
             throw new IllegalArgumentException("Element named '" +
                                                kbdElt.getName() +
                                                "' is not of type " +
-                                               KEYBOARD_MOUSE_TYPE);
+                                               KEYBOARD_MOUSE_DEVICE_TYPE);
          }
 
          keyboardDeviceElement = kbdElt;
@@ -324,15 +324,17 @@ public class SimKeyboardEditorPanel
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition kbd_def =
-            broker.getRepository().get(KEYBOARD_MOUSE_TYPE);
+            broker.getRepository().get(KEYBOARD_MOUSE_DEVICE_TYPE);
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
 
-         // Create the new KEYBOARD_MOUSE_TYPE config element.  We won't bother
-         // to ask the user for a name since they probably won't care anyway.
+         // Create the new KEYBOARD_MOUSE_DEVICE_TYPE config element.  We won't
+         // bother to ask the user for a name since they probably won't care
+         // anyway.
          keyboardDeviceElement = factory.createUnique(kbd_def, mContext);
 
-         // Create a proxy to the new KEYBOARD_MOUSE_TYPE config element.
+         // Create a proxy to the new KEYBOARD_MOUSE_DEVICE_TYPE config
+         // element.
          ConfigDefinition kbd_proxy_def =
             broker.getRepository().get(KEYBOARD_MOUSE_PROXY_TYPE);
          keyboardProxyElement =
