@@ -73,7 +73,7 @@ ThreadPosix::ThreadPosix(VPRThreadPriority priority, VPRThreadScope scope,
                          VPRThreadState state, size_t stackSize)
    : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
      mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
-     mThreadStartCompleted(false)
+     mThreadStartCompleted(false), mStartFunctor(NULL)
 {
    /* Do nothing. */ ;
 }
@@ -85,7 +85,7 @@ ThreadPosix::ThreadPosix(thread_func_t func, void* arg,
                          VPRThreadState state, size_t stackSize)
    : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
      mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
-     mThreadStartCompleted(false)
+     mThreadStartCompleted(false), mStartFunctor(NULL)
 {
    // Create the thread functor to start.  This will be deleted in the
    // destructor.
@@ -101,7 +101,7 @@ ThreadPosix::ThreadPosix(BaseThreadFunctor* functorPtr,
                          VPRThreadState state, size_t stackSize)
    : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
      mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
-     mThreadStartCompleted(false)
+     mThreadStartCompleted(false), mStartFunctor(NULL)
 {
    setFunctor(functorPtr);
    start();
@@ -113,6 +113,11 @@ ThreadPosix::~ThreadPosix()
    if ( mDeleteThreadFunctor )
    {
       delete mUserThreadFunctor;
+   }
+
+   if ( NULL != mStartFunctor )
+   {
+      delete mStartFunctor;
    }
 }
 
@@ -140,15 +145,14 @@ vpr::ReturnStatus ThreadPosix::start()
    }
    else
    {
-      // XXX: Memory leak.
-      ThreadMemberFunctor<ThreadPosix>* start_functor =
+      mStartFunctor =
          new ThreadMemberFunctor<ThreadPosix>(this, &ThreadPosix::startThread,
                                               NULL);
 
       // Spawn the thread.  If the thread is spawned successfully, the method
       // startThread() will register the actual thread info.
       mThreadStartCompleted = false;  // Make sure this is set correctly
-      status = spawn(start_functor);
+      status = spawn(mStartFunctor);
 
       // Thread spawned successfully.
       if ( status.success() )
