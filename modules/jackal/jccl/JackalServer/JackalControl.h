@@ -45,8 +45,6 @@ namespace jccl {
         
     public:
         
-        virtual void setJackalServer (JackalServer* js) {;}
-        
         //: Notification from JackalServer for a new connection.
         virtual void addConnect (Connect* c) {;}
         
