@@ -36,9 +36,9 @@
       For example, a name might be ``<TT>$HOME/.vjconfig/simulator.config</TT>''
       or ``<TT>$VJ_BASE_DIR/Data/configFile/C2.config</TT>''.
       <p>
-      In the current release, all file names used in include chunks must
-      be absolute paths.  A future release will correctly support relative
-      include file names.
+      File names in include chunks may be relative pathnames (e.g. 
+      ``../foo.config'').  <i>The name is relative to the location of the 
+      file that contains the vjIncludeFile chunk</i>.
     </TD>
   </TR>
 </TABLE>
@@ -54,3 +54,4 @@ chunk vjIncludeFile "Include File" "File that should be loaded along with this o
 
 </BODY>
 </HTML>
+
