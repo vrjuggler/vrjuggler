@@ -29,7 +29,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_PF@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= pfNav.@OBJ_FILE_SUFFIX@ ../nav/pfTerryCollide.@OBJ_FILE_SUFFIX@ ../nav/pfTerryPogoCollide.@OBJ_FILE_SUFFIX@ ../nav/pfTerryBoxCollide.@OBJ_FILE_SUFFIX@
+OBJECTS		= pfFileIO.@OBJ_FILE_SUFFIX@ pfNav.@OBJ_FILE_SUFFIX@ ../nav/pfTerryCollide.@OBJ_FILE_SUFFIX@ ../nav/pfTerryPogoCollide.@OBJ_FILE_SUFFIX@ ../nav/pfTerryBoxCollide.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
 # Targets.

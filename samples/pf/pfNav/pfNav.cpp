@@ -65,6 +65,7 @@
 
 char* filename = NULL;
 
+#include "pfFileIO.h" // handy fileloading/caching functions
 
 // Declare my application class
 class pfNavJugglerApplication : public vjPfApp
@@ -151,10 +152,10 @@ public:
 
             /// Load SIMPLE geometry
       ///*
-      pfFilePath(".:/usr/share/Performer/data");
-      //pfNode* obj = new pfGroup;
-      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/klingon.flt");
-      pfNode* obj = pfdLoadFile( filename );
+      pfFileIO::setFilePath(".:/usr/share/Performer/data");
+      
+      // calls pfdLoadFile on the .flt, or the .pfb if available
+      pfNode* obj = autoloadFltData( filename );
       rootNode->addChild( mNavigationDCS );
 
       pfDCS* world_model = new pfDCS;    // The node with the world under it
@@ -190,8 +191,8 @@ public:
 
       // load these files into perfly to see just what your scenegraph 
       // looked like. . . . .useful for debugging.
-      pfuTravPrintNodes( rootNode, "nodes.out" );
-      pfdStoreFile( rootNode, "nodes.pfb" );
+      pfuTravPrintNodes( rootNode, "lastscene.out" );
+      pfdStoreFile( rootNode, "lastscene.pfb" );
    }
 
    /// Return the current scene graph
