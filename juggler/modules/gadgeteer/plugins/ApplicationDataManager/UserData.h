@@ -79,9 +79,8 @@ template<class BASE>
 class AppDataMixin : public BASE, public ApplicationData
 {
 public:
-   AppDataMixin(vpr::GUID id, std::string host_name) : ApplicationData::ApplicationData(id, host_name)
-   {;
-   }
+   AppDataMixin(const vpr::GUID& id, const std::string& host_name) : ApplicationData(id, host_name)
+   {;}
    
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
    {
@@ -95,7 +94,9 @@ public:
 
 private:      
    // Make sure that we are not already deriving from ApplicationData
-   BOOST_STATIC_ASSERT(!(::boost::is_base_and_derived<cluster::ApplicationData,BASE>::value));
+   BOOST_STATIC_ASSERT(::boost::type_traits::ice_not< 
+                        (::boost::is_base_and_derived<cluster::ApplicationData,BASE>::value) 
+                        >::value);
    
    // Make sure that we are deriving from a SerializableObject class
    BOOST_STATIC_ASSERT((::boost::is_base_and_derived<vpr::SerializableObject,BASE>::value));
