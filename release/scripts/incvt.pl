@@ -36,7 +36,7 @@ use Getopt::Std;
 use strict 'vars';
 use vars qw(%opts);
 
-getopts('i:o:t:', \%opts);
+getopts('i:o:p:t:', \%opts);
 
 die "ERROR: No input file given!\n" unless defined($opts{'i'});
 die "ERROR: No tempalte file given!\n" unless defined($opts{'t'});
@@ -86,6 +86,11 @@ else {
         my $key = '';
         foreach $key ( keys(%vars) ) {
             $input =~ s/\@${key}\@/$vars{$key}/g;
+        }
+
+        # If a preamble was given, substitute its contents appropriately.
+        if ( defined($opts{'p'}) ) {
+            $input =~ s/\%\{.*?\%\}/$opts{'p'}/s;
         }
 
         print $output_handle "$input";
