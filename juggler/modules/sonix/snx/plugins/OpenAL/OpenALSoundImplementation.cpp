@@ -1,4 +1,3 @@
-
 /****************** <SNX heading BEGIN do not edit this line> *****************
  *
  * sonix
@@ -60,6 +59,7 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/VecOps.h>
+#include <gmtl/Generate.h>
 #include <gmtl/Xforms.h>
 
 #include <vpr/Util/Debug.h>
