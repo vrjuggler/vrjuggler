@@ -88,11 +88,6 @@ AC_DEFUN(EQUIP_PATH,
     dnl -- Try to find eqidl program --
     AC_PATH_PROG(EQIDL, eqidl, no)
 
-    dnl Do a sanity check to ensure that $EQIDL actually works.
-    if ! (eval $EQIDL >/dev/null 2>&1) 2>&1 ; then
-        EQIDL='no'
-    fi
-
     if test "$EQIDL" = "no" ; then
         echo "*** The eqidl program was not found."
         echo "*** Make sure to set --with-eqidl path"
