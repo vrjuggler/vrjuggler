@@ -974,7 +974,7 @@ UNIX_VJROOT_ABS="$VJROOT_ABS"
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $DTK_LDFLAGS $NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $DTK_LDFLAGS $NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -1032,7 +1032,7 @@ if test "$SL" = "Y" ; then
 fi
 
 if test "$OS_TYPE" = "UNIX" ; then
-    DYLIB_DEPS_VJ="$APP_EXTRA_LIBS -lm"
+    DYLIB_DEPS_VJ="$APP_EXTRA_LIBS"
     DYLIB_DEPS_GL="$OGL_LDFLAGS $LIBOPENGL -lm"
     DYLIB_DEPS_PF="$PF_LDFLAGS $LIBPERFORMER -lm"
 
@@ -1044,10 +1044,10 @@ if test "$OS_TYPE" = "UNIX" ; then
         if test "x$PLATFORM" = "xDarwin" ; then
             APP_EXTRA_LIBS_GL="$OGL_LDFLAGS -framework AGL -framework DrawSprocket -framework Carbon -framework ApplicationServices"
         else
-            APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL -lm"
+            APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"
         fi
     else
-        APP_EXTRA_LIBS_GL="$LIBOPENGL -lm"
+        APP_EXTRA_LIBS_GL="$LIBOPENGL"
     fi
 
     if test "x$PF_LDFLAGS" != "x" ; then
