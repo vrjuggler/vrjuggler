@@ -21,11 +21,6 @@ namespace snx
  */
 typedef snx::ISoundImplementation* (*newPluginFunc)(void);
 
-/** delete the plugin
- * symbol name to lookup from the shared lib is "deletePlugin"
- */
-typedef void (*deletePluginFunc)( snx::ISoundImplementation* &p );
-
 /** get the name of the plugin
  * symbol name to lookup from the shared lib is "getName"
  */

@@ -41,14 +41,12 @@
 
 #ifndef SNXSOUNDIMPLEMENTATION_INTERFACE_H
 #define SNXSOUNDIMPLEMENTATION_INTERFACE_H
+
+#include <snx/snxConfig.h>
+
 #include <string>
-#include <map>
-#include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
-#include <gmtl/MatrixOps.h>
-#include <gmtl/VecOps.h>
-#include <gmtl/Xforms.h>
+#include <vpr/vpr.h>
 
 #include "snx/SoundInfo.h"
 #include "snx/SoundAPIInfo.h"
@@ -249,6 +247,30 @@ public:
    virtual void setName( const std::string& name ) = 0;
    
    virtual std::string& name() = 0;
+
+#ifdef VPR_OS_Win32
+   /**
+    * Overlaod delete so that we can delete our memory correctly.  This is
+    * necessary for DLLs on Win32 to release memory from the correct memory
+    * space.  All subclasses must overload delete similarly.
+    */
+   void operator delete(void* p)
+   {
+      if ( NULL != p )
+      {
+         Input* input_ptr = static_cast<Input*>(p);
+         input_ptr->destroy();
+      }
+   }
+#endif
+
+protected:
+   /**
+    * Subclasses must implement this so that dynamically loaded plug-ins
+    * delete themselves in the correct memory space.  This uses a template
+    * method pattern.
+    */
+   virtual void destroy() = 0;
 };
 
 } // end namespace
