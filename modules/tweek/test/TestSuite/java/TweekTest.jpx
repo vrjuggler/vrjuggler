@@ -35,8 +35,10 @@
   <property category="sys" name="VersionLabel" value="@version"/>
   <property category="sys" name="WorkingDirectory" value="."/>
   <file path="AllTests.java"/>
+  <file path="tweektest/BeanAttributesTest.java"/>
   <file path="tweektest/BeanLoaderTest.java"/>
   <file path="tweektest/BeanRegistryTest.java"/>
   <file path="tweektest/beans/GenericBean.java"/>
   <file path="tweektest/GlobalPreferencesServiceTest.java"/>
+  <file path="tweektest/JarClassLoaderTest.java"/>
 </project>
