@@ -21,7 +21,7 @@ class InputLogger
 {
 public:
    InputLogger()
-      : mCurState(Inactive)
+      : mCurState(Inactive), mSleepFramesLeft(0)
    {;}
 
    /** Destructor */
@@ -100,8 +100,13 @@ public:
    };
 
 private:
-   State       mCurState;     /**< The current state of the logger */
-   std::string mActiveStamp;  /**< The active stamp for this frame */
+   State       mCurState;        /**< The current state of the logger */
+   
+   /** When the state becomes inactive, this is the number of frames that
+   * we wait before processing any input.
+   */
+   unsigned    mSleepFramesLeft; 
+   std::string mActiveStamp;     /**< The active stamp for this frame */
 
    cppdom::NodePtr   mRootNode;           /**< Root node of the data */
    std::string       mRecordingFilename;  /**< Filename to use for the recording */
