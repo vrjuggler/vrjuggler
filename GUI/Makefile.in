@@ -14,7 +14,11 @@ srcdir	= @srcdir@
 GUI_CLASSPATH	= ${srcdir}:${JDK_HOME}/lib/classes.zip
 JAR		= @JAR@
 JAVAC		= @JAVAC@
-JAVAC_CMD	= ${JAVAC} -d . -classpath ${GUI_CLASSPATH}
+ifeq (@OS_TYPE@, Win32)
+    JAVAC_CMD	= ${JAVAC} -d . -sourcepath ${srcdir}
+else
+    JAVAC_CMD	= ${JAVAC} -d . -classpath ${GUI_CLASSPATH}
+endif
 JDK_HOME	= @JDK_HOME@
 
 # If the user defined ${CLASSPATH} (either as an environment variable or a
