@@ -178,7 +178,7 @@ namespace vrj
    /** Enables a frame to be drawn. */
    void SoundManagerSonix::update()
    {
-      float time_delta = 0.1; // TODO: get real time since last frame...
+      float time_delta = 0.1f; // TODO: get real time since last frame...
       sonix::instance()->step( time_delta );
    }
 
