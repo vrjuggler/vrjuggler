@@ -476,7 +476,7 @@ void SubsynthSoundImplementation::bind( const std::string& alias )
          // open the file as readonly binary
          if (!snxFileIO::fileExists( soundInfo.filename.c_str() )) 
          {
-            std::cerr<<"[snx]Subsynth| file '"<<soundInfo.filename<<"' doesn't exist\n" << std::flush;
+            std::cerr<<"[snx]Subsynth| alias '" << alias << "', file '"<<soundInfo.filename<<"' doesn't exist\n" << std::flush;
             break;
          }
 
