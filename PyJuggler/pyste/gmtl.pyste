@@ -25,27 +25,66 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+# gmtl::Matrix<> ==============================================================
 Matrix = Template('gmtl::Matrix', 'gmtl/Matrix.h')
 Matrix44f = Matrix('float 4 4')
-Matrix44i = Matrix('int 4 4')
 rename(Matrix44f, 'Matrix44f')
-rename(Matrix44i, 'Matrix44i')
 set_policy(Matrix44f.getData, return_internal_reference())
-set_policy(Matrix44i.getData, return_internal_reference())
 
-#Matrix_identity = Template('gmtl::identity', 'gmtl/MatrixOps.h')
-#Matrix44f_identity = Matrix_identity('float 4 4')
-#rename(Matrix44f_identity, 'identityMatrix44f')
+Matrix33f = Matrix('float 3 3')
+rename(Matrix33f, 'Matrix33f')
+set_policy(Matrix33f.getData, return_internal_reference())
 
+Matrix_identity = Function('gmtl::identity', 'gmtl-functions.h')
+set_policy(Matrix_identity, return_internal_reference())
+
+Matrix_zero = Function('gmtl::zero', 'gmtl-functions.h')
+set_policy(Matrix_zero, return_internal_reference())
+
+Matrix_mult = Function('gmtl::mult', 'gmtl-functions.h')
+set_policy(Matrix_mult, return_internal_reference())
+
+Matrix_sub = Function('gmtl::sub', 'gmtl-functions.h')
+set_policy(Matrix_sub, return_internal_reference())
+
+Matrix_add = Function('gmtl::add', 'gmtl-functions.h')
+set_policy(Matrix_add, return_internal_reference())
+
+Matrix_postMult = Function('gmtl::postMult', 'gmtl-functions.h')
+set_policy(Matrix_postMult, return_internal_reference())
+
+Matrix_preMult = Function('gmtl::preMult', 'gmtl-functions.h')
+set_policy(Matrix_preMult, return_internal_reference())
+
+Matrix_transpose = Function('gmtl::transpose', 'gmtl-functions.h')
+set_policy(Matrix_transpose, return_internal_reference())
+
+Matrix_invertFull = Function('gmtl::invertFull', 'gmtl-functions.h')
+set_policy(Matrix_invertFull, return_internal_reference())
+
+Matrix_invert = Function('gmtl::invert', 'gmtl-functions.h')
+set_policy(Matrix_invert, return_internal_reference())
+
+Matrix_mult_op = Function('gmtl::operator*', 'gmtl-functions.h')
+Matrix_eq_op = Function('gmtl::operator==', 'gmtl-functions.h')
+Matrix_ineq_op = Function('gmtl::operator!=', 'gmtl-functions.h')
+
+Matrix_isEqual = Function('gmtl::isEqual', 'gmtl-functions.h')
+# ============================================================== gmtl::Matrix<>
+
+# gmtl::Vec<> =================================================================
 Vec = Template('gmtl::Vec', 'gmtl/Vec.h')
 Vec3f = Vec('float 3')
 rename(Vec3f, 'Vec3f')
 set_policy(Vec3f.getData, return_internal_reference())
+# ================================================================= gmtl::Vec<>
 
+# gmtl::Quat<> ================================================================
 Quat = Template('gmtl::Quat', 'gmtl/Quat.h')
 Quatf = Quat('float')
 rename(Quatf, 'Quatf')
 set_policy(Quatf.getData, return_internal_reference())
+# ================================================================ gmtl::Quat<>
 
 Point = Template('gmtl::Point', 'gmtl/Point.h')
 Point3f = Point('float 3')
