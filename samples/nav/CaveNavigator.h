@@ -42,10 +42,10 @@
 #include <velocityNav.h>
 
 //: This is a "cave style" navigation matrix
-//  Provided that you call update once per frame, it should 
+//  Provided that you call update once per frame, it should
 //  give back to you a matrix that can be used to navigate a scene.
-//  The matrix is in the OpenGL form, 
-//  For performer, convert this matrix, 
+//  The matrix is in the OpenGL form,
+//  For performer, convert this matrix,
 //  and copy it to a DCS node once per frame as well.
 class CaveNavigator : public vjMatrix
 {
@@ -54,68 +54,66 @@ public:
 
    velocityNav* getNavigator()
    { return &mVNav; }
-   
+
    //: call once per frame (pre or post frame, not intra frame)
    virtual int update();
-   
+
    //: tell the navigator to rotate
    //  Rotation is based on the current setMatrix call
    virtual void rotate( const bool& state = true )
    {
       mNowRotating = state;
-   }   
-   
+   }
+
    //: tell the navigator to accelerate forward
    virtual void accelerate( const bool& state = true )
    {
       mNowAccelerating = state;
    }
-   
+
    //: tell the navigator to stop
    virtual void stop( const bool& state = true )
    {
        mNowStopping = state;
    }
-   
+
    //: tell the navigator to reverse acceleration
    virtual void reverse( const bool& state = true )
    {
       mNowReversing = state;
    }
-   
+
    //: tell the navigator to brake (or decelerate)
    virtual void brake( const bool& state = true )
    {
        mNowBraking = state;
    }
-   
+
    //: tell the navigator to reset its matrix to origin
    virtual void reset( const bool& state = true )
    {
       mNowResetting = state;
    }
-   
+
    //: tell the navigator the matrix that reset() uses as it's origin.
    virtual void setOrigin( const vjMatrix& matrix )
    {
       mVNav.setOrigin( matrix );
    }
-   
-   const float& speed() const
-   {
-      return mVNav.speed();
-   }   
-   
+
+   float speed() const
+   { return mVNav.getSpeed(); }
+
    virtual void heading( float& pitch, float& yaw, float& roll )
    {
       mVNav.heading( pitch, yaw, roll );
-   }   
-   
+   }
+
    enum Gravity
    {
       ON, OFF
-   };   
-   
+   };
+
    void setGravity( Gravity mode )
    {
       switch (mode)
@@ -126,17 +124,17 @@ public:
          case ON:
             mVNav.setMode( velocityNav::GROUND );
             break;
-      }      
-   }   
-   
+      }
+   }
+
    //: tell the navigator what the pointing device's matrix is.
    //  you can usually do this to get that matrix
    //  vjMatrix* wand_mat = mWand->getData();
    virtual void setMatrix( const vjMatrix& matrix )
    {
       mDeviceMatrix = matrix;
-   }   
-   
+   }
+
 private:
    velocityNav          mVNav;      // My navigator
 
@@ -169,35 +167,35 @@ int CaveNavigator::update()
       // magic number!  acceleration of 10 units per second
       mVNav.accelerateForward( 10.0f );
    }
-   
+
    if (true == mNowStopping)
    {
       mVNav.stop();
-   }   
-   
+   }
+
    if (true == mNowBraking)
    {
       // magic number!  i tweaked it to work well. (dampened stop)
       mVNav.setDamping( 0.85 );
    }
-   
+
    if (false == mNowStopping && false == mNowBraking)
    {
       // magic number!  total damping (instant stop.)
       mVNav.setDamping( 1.0f );
    }
-   
+
    if (true == mNowReversing)
    {
       // magic number!  decceleration of .9 units per second
       mVNav.accelerateBackward( 0.9f );
    }
-   
+
    if (true == mNowResetting)
    {
       mVNav.reset();
-   }   
-   
+   }
+
    // Set the matrix to the navigation matrix
    vjMatrix cur_pos,world_pos;
    cur_pos = mVNav.getCurPos();  // Invert because we want to move the world
