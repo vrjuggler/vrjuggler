@@ -100,6 +100,8 @@ protected:
    //: Constructor.
    vjSoundManager();
 
+   void printAlert(void);
+
 vjSingletonHeader(vjSoundManager);
 };
 
