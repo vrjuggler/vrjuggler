@@ -40,7 +40,11 @@
 
 
 namespace vpr {
-    // Typedef to help with cross-platform abilities.
+    /**
+     * Typedef to help with cross-platform abilities.  This type is the basic
+     * function pointer type for all functions initially passed as code to
+     * execute within a separate thread of control.
+     */
     typedef void (*thread_func_t)(void *);
 };
 
