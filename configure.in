@@ -1526,9 +1526,9 @@ if test "x$ac_cv_has_socklen_t" = "xno" ; then
 fi
 
 if test "$OS_TYPE" = "Win32" ; then
-    AC_CHECK_TYPE(u_int, UINT)
-    AC_CHECK_TYPE(int32_t, __int32)
-    AC_CHECK_TYPE(int64_t, __int64)
+    AC_DEFINE(u_int, UINT)
+    AC_DEFINE(int32_t, __int32)
+    AC_DEFINE(int64_t, __int64)
 else
     AC_CHECK_TYPE(u_int, unsigned int)
 fi
