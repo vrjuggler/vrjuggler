@@ -125,7 +125,8 @@ install-gmtl:
 
 install-doozer:
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -e .mk -i $(EXTROOT_ABS)/Doozer -o $(datadir)
+          $(GROUP_OPT_UNIX) -e .mk -i $(EXTROOT_ABS)/Doozer		\
+          -o $(datadir)/Doozer
 
 generic-header-install:
 ifneq ($(DIRS), )
