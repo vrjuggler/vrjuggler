@@ -476,4 +476,77 @@ public class CaveEditorPanel
          return mCaveModel.getWalls().size();
       }
    }
+
+   public class PlaneRenderer
+      extends JLabel
+      implements ListCellRenderer
+   {
+      private String[]    mPlaneLabels = {"Front", "Back", "Left", "Right", "Bottom", "Top", "Custom"};
+      private Integer[]   mIntArray    = new Integer[mPlaneLabels.length];
+      private ImageIcon[] mPlaneImages = new ImageIcon[mPlaneLabels.length];
+
+      public PlaneRenderer()
+      {
+         setOpaque(true);
+         setHorizontalAlignment(LEFT);
+         setVerticalAlignment(CENTER);
+         initUI();
+      }
+      
+      protected void initUI()
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         
+         String resourceBase = "org/vrjuggler/vrjconfig/customeditors/cave";
+         String img_base = resourceBase + "/images";
+
+         try
+         {
+            mPlaneImages[0] = new ImageIcon(loader.getResource(img_base + "/front-plane-icon.png"));
+            mPlaneImages[1] = new ImageIcon(loader.getResource(img_base + "/back-plane-icon.png"));
+            mPlaneImages[2] = new ImageIcon(loader.getResource(img_base + "/left-plane-icon.png"));
+            mPlaneImages[3] = new ImageIcon(loader.getResource(img_base + "/right-plane-icon.png"));
+            mPlaneImages[4] = new ImageIcon(loader.getResource(img_base + "/bottom-plane-icon.png"));
+            mPlaneImages[5] = new ImageIcon(loader.getResource(img_base + "/top-plane-icon.png"));
+            mPlaneImages[6] = new ImageIcon(loader.getResource(img_base + "/custom-plane-icon.png"));
+         }
+         catch (NullPointerException ex)
+         {
+            System.out.println("mPlaneLabels: " + mPlaneLabels);
+            for ( int i = 0; i < mPlaneLabels.length; ++i )
+            {
+               mPlaneImages[i] = null;
+            }
+         }
+      }
+
+      public Component getListCellRendererComponent(JList list, Object value,
+                                                    int index,
+                                                    boolean isSelected,
+                                                    boolean cellHasFocus)
+      {
+         //int selected_index = ((Integer) value).intValue();
+         CaveWall wall = (CaveWall)value;
+         int selected_index = wall.getPlane();
+
+         if ( isSelected )
+         {
+            setBackground(list.getSelectionBackground());
+            setForeground(list.getSelectionForeground());
+         }
+         else
+         {
+            setBackground(list.getBackground());
+            setForeground(list.getForeground());
+         }
+
+         ImageIcon icon = mPlaneImages[selected_index];
+         String name   = wall.getName();
+         setIcon(icon);
+         setText(name);
+         setFont(list.getFont());
+
+         return this;
+      }
+   }
 }
