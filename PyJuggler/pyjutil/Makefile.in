@@ -22,6 +22,7 @@ AR=		@AR@ $(ARFLAGS)
 AR_NAME_FLAG=	@AR_NAME_FLAG@
 ARFLAGS=	@ARFLAGS@
 CXX=		@CXX@
+RANLIB=		@RANLIB@
 
 ifeq (@OS_TYPE@, Win32)
    ARFLAGS+=	$(LDFLAGS)
@@ -123,6 +124,7 @@ $(OBJDIR)/%.$(OBJEXT): %.cpp
 
 $(PYJUTIL_ARC): $(OBJS)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJS)
+	$(RANLIB) $@
 
 #%.$(ARCEXT): %.$(OBJEXT)
 #	$(CXX) -shared -o $@ $< $(BOOST_PYTHON_LDFLAGS)			\

@@ -168,16 +168,23 @@ if test "x$OS_TYPE" = "xWin32" ; then
    PYTHON_LDFLAGS="-L$PYTHON_ROOT/libs"
    PYTHON_LIB="python$py_ver"
 else
-   PYTHON_INCLUDES="-I$PYTHON_ROOT/include/python$PYTHON_VERSION"
-   PYTHON_LDFLAGS="-L$PYTHON_ROOT/lib/python$PYTHON_VERSION/config"
-   PYTHON_LIB="python$PYTHON_VERSION"
+   python_incdir=`$PYTHON -c "import distutils.sysconfig; print distutils.sysconfig.get_config_var('INCLUDEDIR')"`
+   PYTHON_INCLUDES="-I$python_incdir/python$PYTHON_VERSION"
+
+   if test "x$PLATFORM" = "xDarwin" ; then
+      PYTHON_LDFLAGS=''
+      PYTHON_LIB=''
+   else
+      PYTHON_LDFLAGS="-L$PYTHON_ROOT/lib/python$PYTHON_VERSION/config"
+      PYTHON_LIB="python$PYTHON_VERSION"
+   fi
 fi
 
 _pyj_save_CPPFLAGS="$CPPFLAGS"
 _pyj_save_LIBS="$LIBS"
 _pyj_save_LDFLAGS="$LDFLAGS"
-CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES"
 
+CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES"
 PYTHON_LIB_DEPS="$PTHREAD_ARG $DL_LOAD_LIB $PTHREAD_LIB"
 
 if test "x$OS_TYPE" = "xUNIX" ; then
@@ -189,11 +196,26 @@ LDFLAGS="$LDFLAGS $PYTHON_LDFLAGS"
 DPP_LANG_SAVE
 DPP_LANG_C
 
-AC_CHECK_LIB([$PYTHON_LIB], [Py_Initialize],
-   [AC_CHECK_HEADER([Python.h], ,
-      [AC_MSG_ERROR([*** Python is required for PyJuggler ***])])],
-   [AC_MSG_ERROR([*** Python is required for PyJuggler ***])],
-   [$UTIL_LIB $PYTHON_LIB_DEPS])
+if test "x$PLATFORM" = "xDarwin" ; then
+   LDFLAGS="$LDFLAGS -framework Python"
+
+   AC_CACHE_CHECK([for Py_Initialize in Python framework],
+      [pyj_cv_have_python_framework],
+      [AC_TRY_LINK([#include <Python.h>],
+                   [Py_Initialize();],
+                   [pyj_cv_have_python_framework='yes'],
+                   [pyj_cv_have_python_framework='no'])])
+
+   if test "x$pyj_cv_have_python_framework" = "xno" ; then
+      AC_MSG_ERROR([*** Python is required for PyJuggler ***])
+   fi
+else
+   AC_CHECK_LIB([$PYTHON_LIB], [Py_Initialize],
+      [AC_CHECK_HEADER([Python.h], ,
+         [AC_MSG_ERROR([*** Python is required for PyJuggler ***])])],
+      [AC_MSG_ERROR([*** Python is required for PyJuggler ***])],
+      [$UTIL_LIB $PYTHON_LIB_DEPS])
+fi
 
 DPP_LANG_RESTORE
 
@@ -203,6 +225,10 @@ if test "x$OS_TYPE" = "xWin32" ; then
    PYTHON_LIB="$PYTHON_LIB.lib"
    PYTHON_LIB_OPT="$PYTHON_LIB.lib"
    PYTHON_LIB_DBG="${PYTHON_LIB}_d.lib"
+elif test "x$PLATFORM" = "xDarwin" ; then
+   PYTHON_LIB="-framework Python"
+   PYTHON_LIB_OPT="$PYTHON_LIB"
+   PYTHON_LIB_DBG="$PYTHON_LIB_OPT"
 else
    PYTHON_LIB="-l$PYTHON_LIB"
    PYTHON_LIB_OPT="$PYTHON_LIB"
@@ -231,34 +257,39 @@ if test "x$bp_libname" = "x" ; then
    if test $boost_minor_ver -ge 31; then
       case $CC in
          gcc)
-            toolset='gcc'
+            toolset='-gcc'
             ;;
          cygcl|msvccc|cl*|CL*)
-            toolset=${BOOST_TOOL:='vc7'}
+            toolset="-${BOOST_TOOL:='vc7'}"
             ;;
          cc)
             if test "x$GCC" = "xyes" ; then
-               toolset='gcc'
+               toolset='-gcc'
             else
                case $PLATFORM in
                   IRIX)
-                     toolset='mp'
+                     toolset='-mp'
                      ;;
                   Solaris)
-                     toolset='sw'
+                     toolset='-sw'
                      ;;
                esac
             fi
             ;;
       esac
 
-      # We can only use multi-threading versions of Boost libraries if we are
-      # not using SPROC threads.  Boost does not support SPROC.
-      if test "x$VPR_SUBSYSTEM" != "xSPROC" ; then
-         threading='-mt'
+      if test "x$PLATFORM" = "xDarwin" ; then
+         toolset=''
+         threading=''
+      else
+         # We can only use multi-threading versions of Boost libraries if we
+         # are not using SPROC threads.  Boost does not support SPROC.
+         if test "x$VPR_SUBSYSTEM" != "xSPROC" ; then
+            threading='-mt'
+         fi
       fi
 
-      BASE_BP_LIBNAME="boost_python-$toolset$threading"
+      BASE_BP_LIBNAME="boost_python$toolset$threading"
       BPL_VER_SUFFIX="-$boost_ver_str"
       BOOST_PYTHON_LIB="$BASE_BP_LIBNAME$BPL_VER_SUFFIX"
    else
@@ -315,6 +346,14 @@ LIBS="${_pyj_save_LIBS}"
 LDFLAGS="${_pyj_save_LDFLAGS}"
 
 if test "x$ac_cv_boost__python__handle_in_boost_python" = "xyes" ; then
+   if test "x$GXX" = "xyes" ; then
+      BOOST_PYTHON_CXXFLAGS="-ftemplate-depth-256"
+   fi
+
+   if test "x$PLATFORM" = "xDarwin" ; then
+      BOOST_PYTHON_CXXFLAGS="$BOOST_PYTHON_CXXFLAGS -Wno-long-double -no-cpp-precomp -fcoalesce-templates"
+   fi
+
    BOOST_PYTHON_INCLUDES="-I$BOOST_PYTHON_DIR/include$boost_extra_inc_dir"
 
    if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
@@ -443,6 +482,7 @@ AC_SUBST(PYTHON_VERSION)
 
 AC_SUBST(PYSTE)
 
+AC_SUBST(BOOST_PYTHON_CXXFLAGS)
 AC_SUBST(BOOST_PYTHON_INCLUDES)
 AC_SUBST(BOOST_PYTHON_LDFLAGS_OPT)
 AC_SUBST(BOOST_PYTHON_LDFLAGS_DBG)

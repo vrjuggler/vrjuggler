@@ -16,7 +16,8 @@ include @topdir@/src/common.mk
 MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 
 CXX=		@CXX@
-CXXFLAGS=	@BOOST_PYTHON_INCLUDES@ @CXXFLAGS_DYNLIB@ $(EXTRA_CXXFLAGS)
+CXXFLAGS=	@BOOST_PYTHON_CXXFLAGS@ @BOOST_PYTHON_INCLUDES@		\
+		@CXXFLAGS_DYNLIB@ $(EXTRA_CXXFLAGS)
 
 ifeq (@OS_TYPE@, Win32)
    CXXFLAGS+=	/Zm800 /GX /GR /Op /DBOOST_PYTHON_DYNAMIC_LIB		\
@@ -28,6 +29,7 @@ ifeq (@OS_TYPE@, Win32)
    MODEXT_DBG=	_d
    MODEXT_OPT=	
 else
+   CXXFLAGS+=	-DBOOST_PYTHON_DYNAMIC_LIB
    CXXFLAGS_DBG=-D_DEBUG -g
    CXXFLAGS_OPT=-D_OPT -DNDEBUG -O2
    LDFLAGS_DBG=	-g
@@ -57,6 +59,9 @@ LDFLAGS=		@EXTRA_LINK_FLAGS@ $(BOOST_PYTHON_LDFLAGS)	\
 
 ifeq (@OS_TYPE@, Win32)
    LDFLAGS+=		/nologo /subsystem:console /INCREMENTAL:NO
+endif
+ifeq (@PLATFORM@, Darwin)
+   LDFLAGS+=		-framework Python
 endif
 
 ifeq ($(BUILD_TYPE), DEBUG)
