@@ -187,8 +187,8 @@ void OpenSGViewer::initScene(void)
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "OpenSGViewer::initScene finished\n" << vprDEBUG_FLUSH;
 }
 
-//! NOTE: Inherited from jccl::ConfigChunkHandler
-bool OpenSGViewer::configAdd(jccl::ConfigChunkPtr chunk)
+//! NOTE: Inherited from jccl::ConfigElementHandler
+bool OpenSGViewer::configAdd(jccl::ConfigELementPtr element)
 {
    return true;
 }

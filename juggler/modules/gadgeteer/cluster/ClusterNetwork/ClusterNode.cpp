@@ -37,7 +37,7 @@
 //#include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/Util/ReturnStatus.h>
-//#include <jccl/Config/ConfigChunk.h>
+//#include <jccl/Config/ConfigElement.h>
 //#include <vpr/Util/Error.h>
 
 #include <cluster/ClusterNetwork/ClusterNode.h>
@@ -188,10 +188,10 @@ namespace cluster
 
       ////////////////////////////////////////////////////
 
-      // We might want to send the listen port on this machine to the remote machine just in
-      // case they for some reason want to re-connect back to us. This should be taken care
-      // of in configuration but in all reality the remote machine does not have to have the
-      // machine specific chunk for this machine
+      // We might want to send the listen port on this machine to the remote machine just in 
+      // case they for some reason want to re-connect back to us. This should be taken care 
+      // of in configuration but in all reality the remote machine does not have to have the 
+      // machine specific element for this machine.
       ConnectionRequest request(ClusterNetwork::instance()->getLocalHostname(),0/*Might be needed, look above*/);
 
       send(&request);

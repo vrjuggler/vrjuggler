@@ -36,9 +36,8 @@
 
 // Dependency checker includes
 #include <jccl/RTRC/DepChecker.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <vpr/Util/Debug.h>
-#include <jccl/Config/ConfigChunk.h>
 
 namespace cluster
 {
@@ -62,18 +61,19 @@ public:
    { return std::string("Cluster Dependency Checker"); }
 
    /** We can handle only remote device configuration information. */
-   virtual bool canHandle(jccl::ConfigChunkPtr chunk);
+   virtual bool canHandle(jccl::ConfigElementPtr element);
 
    /**
     * Are the dependencies satisfied?
-    * Check whether the display system chunk is in the active config.
+    * Check whether the display system element is in the active config.
     * @return true if default dependencies are satisfied and the Input Manager
-    *         has Remote Input Manager chunk.
+    *         has Remote Input Manager element.
     */
-   virtual bool depSatisfied(jccl::ConfigChunkPtr chunk);
+   virtual bool depSatisfied(jccl::ConfigElementPtr element);
 
    /** Write out the dependencies to the vprDEBUG macro. */
-   virtual void debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_lvl=vprDBG_WARNING_LVL);
+   virtual void debugOutDependencies(jccl::ConfigElementPtr element,
+                                     int dbg_lvl=vprDBG_WARNING_LVL);
 
 };
 

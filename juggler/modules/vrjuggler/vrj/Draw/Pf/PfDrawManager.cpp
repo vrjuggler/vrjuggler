@@ -68,7 +68,7 @@
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <boost/concept_check.hpp>
 
@@ -93,16 +93,16 @@ vprSingletonImp(PfDrawManager);
 // Configure the Performer display settings that are needed
 // - Number of pipes to allow
 // - The xpipe strings to use
-bool PfDrawManager::configDisplaySystem(jccl::ConfigChunkPtr chunk)
+bool PfDrawManager::configDisplaySystem(jccl::ConfigElementPtr element)
 {
-   vprASSERT(chunk.get() != NULL);
-   vprASSERT(chunk->getDescToken() == std::string("displaySystem"));
+   vprASSERT(element.get() != NULL);
+   vprASSERT(element->getID() == std::string("display_system"));
 
    // ---- SETUP PipeStr's ---- //
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
       << "------------- PfDrawManager::config ----------------" << std::endl
       << vprDEBUG_FLUSH;
-   mNumPipes = chunk->getProperty<unsigned int>("numpipes");
+   mNumPipes = element->getProperty<unsigned int>("number_of_pipes");
 
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "NumPipes: " << mNumPipes
                                             << std::endl << vprDEBUG_FLUSH;
@@ -110,7 +110,7 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigChunkPtr chunk)
    {
       std::string cur_disp_name = "-1";
 
-      mPipeStrs.push_back(chunk->getProperty<std::string>("xpipes", i));
+      mPipeStrs.push_back(element->getProperty<std::string>("x11_pipes", i));
 
       if(mPipeStrs[i] == cur_disp_name)    // Use display env
       {
@@ -195,7 +195,7 @@ void PfDrawManager::initAPI()
 
    // XXX: This call should really be triggered by a change in draw manager or something
    vprASSERT(mDisplayManager != NULL);
-   configDisplaySystem(mDisplayManager->getDisplaySystemChunk());    // Configure all the display system stuff
+   configDisplaySystem(mDisplayManager->getDisplaySystemElement());    // Configure all the display system stuff
 
    mApp->preForkInit();
 
@@ -452,7 +452,7 @@ void PfDrawManager::addDisplay(Display* disp)
          else if(viewport->isSimulator())
          {
             // -- Finish Simulator setup
-            jccl::ConfigChunkPtr vp_chunk = viewport->getConfigChunk();
+            jccl::ConfigElementPtr vp_element = viewport->getConfigElement();
 
             SimViewport* sim_vp(NULL);
             sim_vp = dynamic_cast<SimViewport*>(viewport);
@@ -461,24 +461,24 @@ void PfDrawManager::addDisplay(Display* disp)
             sim_vp->setDrawSimInterface(NULL);
 
             // Create the simulator stuff
-            vprASSERT(1 == vp_chunk->getNum("simPlugIn") && "You must supply a simulator plugin.");
+            vprASSERT(1 == vp_element->getNum("simulator_plugin") && "You must supply a simulator plugin.");
 
-            jccl::ConfigChunkPtr sim_chunk =
-               vp_chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
+            jccl::ConfigElementPtr sim_element =
+               vp_element->getProperty<jccl::ConfigElementPtr>("simulator_plugin");
 
             vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
                << "PfDrawManager::addDisplay() creating simulator of type '"
-               << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
+               << sim_element->getID() << "'\n" << vprDEBUG_FLUSH;
 
             DrawSimInterface* new_sim_i =
-               PfSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
+               PfSimInterfaceFactory::instance()->createObject(sim_element->getID());
 
             // XXX: Change this to an error once the new simulator loading code is
             // more robust.  -PH (4/13/2003)
             vprASSERT(NULL != new_sim_i && "Failed to create draw simulator");
             sim_vp->setDrawSimInterface(new_sim_i);
             new_sim_i->initialize(sim_vp);
-            new_sim_i->config(sim_chunk);
+            new_sim_i->config(sim_element);
 
 
             vprASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
@@ -763,15 +763,15 @@ void PfDrawManager::configFrameBuffer(vrj::Display* disp,
 {
    int red_size(8), green_size(8), blue_size(8), alpha_size(8), db_size(16);
 
-   jccl::ConfigChunkPtr fb_chunk = disp->getGlFrameBufferConfig();
+   jccl::ConfigElementPtr fb_element = disp->getGlFrameBufferConfig();
 
-   if ( fb_chunk.get() != NULL )
+   if ( fb_element.get() != NULL )
    {
-      red_size   = fb_chunk->getProperty<int>("redSize");
-      green_size = fb_chunk->getProperty<int>("greenSize");
-      blue_size  = fb_chunk->getProperty<int>("blueSize");
-      alpha_size = fb_chunk->getProperty<int>("alphaSize");
-      db_size    = fb_chunk->getProperty<int>("depthBufferSize");
+      red_size   = fb_element->getProperty<int>("red_size");
+      green_size = fb_element->getProperty<int>("green_size");
+      blue_size  = fb_element->getProperty<int>("blue_size");
+      alpha_size = fb_element->getProperty<int>("alpha_size");
+      db_size    = fb_element->getProperty<int>("depth_buffer_size");
 
       if ( red_size < 0 )
       {

@@ -32,14 +32,16 @@
 
 package org.vrjuggler.vrjconfig.ui;
 
-import java.awt.Component;
-import java.awt.event.*;
-import java.beans.*;
 import java.util.*;
+import java.util.List;
+
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
+
 import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.tweek.beans.BeanRegistry;
+import org.vrjuggler.jccl.config.event.*;
 
 /**
  * A component suitable for editing a analog simulator device.
@@ -48,7 +50,7 @@ public class SimAnalogDeviceEditor
    extends JPanel
 {
    /**
-    * Creates a new sim device editor with no chunk to edit.
+    * Creates a new sim device editor with no config element to edit.
     */
    public SimAnalogDeviceEditor(ConfigContext context)
    {
@@ -64,14 +66,13 @@ public class SimAnalogDeviceEditor
       this.context = context;
 
       // setup the keyboard proxy combo box
-      List chunks = getConfigBroker().getChunks(context);
-      if (chunks.size() > 0)
+      List elts = getBroker().getElements(context);
+      if (elts.size() > 0)
       {
-         List proxies = ConfigUtilities.getChunksWithDescToken(
-                                                      chunks, "KeyboardProxy");
+         List proxies = ConfigUtilities.getElementsWithDefinition(elts, "KeyboardProxy");
          for (Iterator itr = proxies.iterator(); itr.hasNext(); )
          {
-            ConfigChunk proxy = (ConfigChunk)itr.next();
+            ConfigElement proxy = (ConfigElement)itr.next();
             keyProxyCombo.addItem(proxy.getName());
          }
          keyProxyCombo.setSelectedIndex(0);
@@ -86,30 +87,30 @@ public class SimAnalogDeviceEditor
    }
 
    /**
-    * Makes the SimAnalogDevice chunk active.
+    * Makes the SimAnalogDevice element active.
     */
-   public void setDevice(ConfigChunk device)
+   public void setDevice(ConfigElement device)
    {
-      // Make sure the chunk is a SimAnalog chunk.
-      if (device != null && (!device.getDesc().getToken().equals("SimAnalog")))
+      // Make sure the element is a SimAnalog element
+      if (device != null && (!device.getDefinition().getToken().equals("simulated_analog_device")))
       {
-         throw new IllegalArgumentException("device must be a SimAnalog chunk");
+         throw new IllegalArgumentException("device must be a simulated_analog_device element");
       }
 
       // Change the device
-      ConfigChunk old = this.device;
+      ConfigElement old = this.device;
       if (this.device != null)
       {
-         this.device.removeConfigChunkListener(deviceListener);
+         this.device.removeConfigElementListener(deviceListener);
       }
       this.device = device;
       if (this.device != null)
       {
-         this.device.addConfigChunkListener(deviceListener);
+         this.device.addConfigElementListener(deviceListener);
       }
 
       // Let the model know
-      actionModel.setChunk(this.device);
+      actionModel.setElement(this.device);
       firePropertyChange("device", old, this.device);
    }
 
@@ -132,9 +133,9 @@ public class SimAnalogDeviceEditor
    }
 
    /**
-    * Helper class for getting the config broker.
+    * Gets a handle to the configuration broker.
     */
-   private ConfigBroker getConfigBroker()
+   private ConfigBroker getBroker()
    {
       return new ConfigBrokerProxy();
    }
@@ -144,9 +145,9 @@ public class SimAnalogDeviceEditor
     */
    protected String getKeyModPairText(int modKey, int key)
    {
-      ConfigChunk key_mod_pair_chunk = (ConfigChunk)device.getProperty("keyPairsInc", 0);
-      String mod_str = getModString(key_mod_pair_chunk, modKey);
-      String key_str = getKeyString(key_mod_pair_chunk, key);
+      ConfigElement key_mod_pair_elt = (ConfigElement)device.getProperty("increment_keypress", 0);
+      String mod_str = getModString(key_mod_pair_elt, modKey);
+      String key_str = getKeyString(key_mod_pair_elt, key);
 
       // Filter the text given to us so that it looks sane
       StringBuffer text = new StringBuffer();
@@ -167,29 +168,29 @@ public class SimAnalogDeviceEditor
       return text.toString();
    }
 
-   protected String getModString(ConfigChunk chunk, int mod)
+   protected String getModString(ConfigElement elt, int mod)
    {
-      java.util.List enums = chunk.getPropertyDesc("modKey").getEnums();
-      for (Iterator itr=enums.iterator(); itr.hasNext(); )
+      Map enums = elt.getDefinition().getPropertyDefinition("modifier_key").getEnums();
+      for (Iterator itr=enums.keySet().iterator(); itr.hasNext(); )
       {
-         DescEnum de = (DescEnum)itr.next();
-         if (de.getValue().equals(new Integer(mod)))
+         String label = (String)itr.next();
+         if (enums.get(label).equals(new Integer(mod)))
          {
-            return de.getName();
+            return label;
          }
       }
       return "";
    }
 
-   protected String getKeyString(ConfigChunk chunk, int key)
+   protected String getKeyString(ConfigElement elt, int key)
    {
-      java.util.List enums = chunk.getPropertyDesc("key").getEnums();
-      for (Iterator itr=enums.iterator(); itr.hasNext(); )
+      Map enums = elt.getDefinition().getPropertyDefinition("key").getEnums();
+      for (Iterator itr=enums.keySet().iterator(); itr.hasNext(); )
       {
-         DescEnum de = (DescEnum)itr.next();
-         if (de.getValue().equals(new Integer(key)))
+         String label = (String)itr.next();
+         if (enums.get(label).equals(new Integer(key)))
          {
-            return de.getName();
+            return label;
          }
       }
       return "";
@@ -202,40 +203,32 @@ public class SimAnalogDeviceEditor
    private JScrollPane actionScrollPane = new JScrollPane();
    private JTable actionTable = new JTable();
 
-   /**
-    * The config chunk of the device we are currently editing.
-    */
-   private ConfigChunk device;
+   /** The config element of the device we are currently editing. */
+   private ConfigElement device;
 
-   /**
-    * Our view into the configuration.
-    */
+   /** Our view into the configuration. */
    private ConfigContext context;
 
-   /**
-    * Table model for the actions table.
-    */
+   /** Table model for the actions table. */
    private ActionTableModel actionModel = new ActionTableModel();
 
-   /**
-    * Listener for the edited ConfigChunk.
-    */
+   /** Listener for the edited config element. */
    private DeviceListener deviceListener = new DeviceListener();
 
    /**
-    * Specialized listener on the ConfigChunk.
+    * Specialized listener on the config element.
     */
    private class DeviceListener
-      implements ConfigChunkListener
+      implements ConfigElementListener
    {
-      public void nameChanged(ConfigChunkEvent evt)
+      public void nameChanged(ConfigElementEvent evt)
       {
          System.err.println("SimAnalogDeviceEditor.deviceListener: Device changed!");
       }
 
-      public void propertyValueChanged(ConfigChunkEvent evt) { nameChanged(evt); }
-      public void propertyValueAdded(ConfigChunkEvent evt) { nameChanged(evt); }
-      public void propertyValueRemoved(ConfigChunkEvent evt) { nameChanged(evt); }
+      public void propertyValueChanged(ConfigElementEvent evt) { nameChanged(evt); }
+      public void propertyValueAdded(ConfigElementEvent evt) { nameChanged(evt); }
+      public void propertyValueRemoved(ConfigElementEvent evt) { nameChanged(evt); }
    }
 
    /**
@@ -244,20 +237,20 @@ public class SimAnalogDeviceEditor
    private class ActionTableModel
       extends AbstractTableModel
    {
-      public void setChunk(ConfigChunk chunk)
+      public void setElement(ConfigElement elt)
       {
-         this.chunk = chunk;
+         mElement = elt;
          fireTableDataChanged();
       }
 
-      public ConfigChunk getChunk()
+      public ConfigElement getElement()
       {
-         return this.chunk;
+         return mElement;
       }
 
       public int getRowCount()
       {
-         if (chunk != null)
+         if (mElement != null)
          {
             return 2;
          }
@@ -282,28 +275,28 @@ public class SimAnalogDeviceEditor
 
       public Object getValueAt(int row, int col)
       {
-         if (chunk != null)
+         if (mElement != null)
          {
             if (col == 0)
             {
                if (row == 0)
                {
-                  return chunk.getPropertyDesc("keyPairsInc").getValueLabel(0);
+                  return mElement.getDefinition().getPropertyDefinition("increment_keypress").getPropertyValueDefinition(0);
                }
                else
                {
-                  return chunk.getPropertyDesc("keyPairsDec").getValueLabel(0);
+                  return mElement.getDefinition().getPropertyDefinition("decrement_keypress").getPropertyValueDefinition(0);
                }
             }
             else
             {
                if (row == 0)
                {
-                  return chunk.getProperty("keyPairsInc", 0);
+                  return mElement.getProperty("increment_keypress", 0);
                }
                else
                {
-                  return chunk.getProperty("keyPairsDec", 0);
+                  return mElement.getProperty("decrement_keypress", 0);
                }
             }
          }
@@ -314,21 +307,21 @@ public class SimAnalogDeviceEditor
       {
          if (row == 0)
          {
-            chunk.setProperty("keyPairsInc", 0, value);
+            mElement.setProperty("increment_keypress", 0, value);
          }
          else
          {
-            chunk.setProperty("keyPairsDec", 0, value);
+            mElement.setProperty("decrement_keypress", 0, value);
          }
          fireTableCellUpdated(row, col);
       }
 
-      private ConfigChunk chunk;
+      private ConfigElement mElement;
       private String[] columnNames = { "Action", "Key Combo" };
    }
 
    /**
-    * Customized table cell renderer for keymod pair config chunks.
+    * Customized table cell renderer for keymod pair config elements.
     */
    private class KeyModPairCellRenderer
       extends DefaultTableCellRenderer
@@ -343,14 +336,14 @@ public class SimAnalogDeviceEditor
          super.getTableCellRendererComponent(table, value, selected, focused,
                                              row, col);
 
-         if (value instanceof ConfigChunk)
+         if (value instanceof ConfigElement)
          {
-            ConfigChunk chunk = (ConfigChunk)value;
-            if (chunk.getDesc().getToken().equals("KeyModPair"))
+            ConfigElement elt = (ConfigElement)value;
+            if (elt.getDefinition().getToken().equals("key_modifier_pair"))
             {
                String text = getKeyModPairText(
-                                 ((Integer)chunk.getProperty("modKey")).intValue(),
-                                 ((Integer)chunk.getProperty("key")).intValue());
+                                 ((Integer)elt.getProperty("modifier_key", 0)).intValue(),
+                                 ((Integer)elt.getProperty("key", 0)).intValue());
                setText(text);
             }
          }
@@ -373,20 +366,20 @@ public class SimAnalogDeviceEditor
                                                    int col)
       {
          System.out.println("Getting a cell editor");
-         keyChunk = (ConfigChunk)value;
-         catcher = new KeyCatcher();
-         catcher.requestFocus();
-         return catcher;
+         mKeyElement = (ConfigElement)value;
+         mCatcher = new KeyCatcher();
+         mCatcher.requestFocus();
+         return mCatcher;
       }
 
       public Object getCellEditorValue()
       {
          // Update the chunk with the new keys
-         keyChunk.setProperty("modKey", 0,
-                              getJavaToVRJMod(catcher.getLastModKey()));
-         keyChunk.setProperty("key", 0,
-                              getJavaToVRJKey(catcher.getLastKey()));
-         return keyChunk;
+         mKeyElement.setProperty("modifier_key", 0,
+                              getJavaToVRJMod(mCatcher.getLastModKey()));
+         mKeyElement.setProperty("key", 0,
+                              getJavaToVRJKey(mCatcher.getLastKey()));
+         return mKeyElement;
       }
 
       private class KeyCatcher
@@ -456,19 +449,19 @@ public class SimAnalogDeviceEditor
        */
       private Integer getJavaToVRJMod(int javaKey)
       {
-         PropertyDesc desc = keyChunk.getPropertyDesc("modKey");
+         PropertyDefinition prop_def = mKeyElement.getDefinition().getPropertyDefinition("modifier_key");
          Object key;
 
          switch (javaKey)
          {
          case KeyEvent.VK_ALT:
-            key = desc.getEnumValue("ALT");
+            key = prop_def.getEnums().get("ALT");
          case KeyEvent.VK_SHIFT:
-            key = desc.getEnumValue("SHIFT");
+            key = prop_def.getEnums().get("SHIFT");
          case KeyEvent.VK_CONTROL:
-            key = desc.getEnumValue("CTRL");
+            key = prop_def.getEnums().get("CTRL");
          default:
-            key = desc.getEnumValue("NONE");
+            key = prop_def.getEnums().get("NONE");
          }
 
          return (Integer)key;
@@ -479,107 +472,107 @@ public class SimAnalogDeviceEditor
        */
       private Integer getJavaToVRJKey(int javaKey)
       {
-         PropertyDesc desc = keyChunk.getPropertyDesc("key");
+         PropertyDefinition prop_def = mKeyElement.getDefinition().getPropertyDefinition("key");
          Object key;
 
          switch (javaKey)
          {
          case KeyEvent.VK_UP:
-            key = desc.getEnumValue("KEY_UP");
+            key = prop_def.getEnums().get("KEY_UP");
          case KeyEvent.VK_DOWN:
-            key = desc.getEnumValue("KEY_DOWN");
+            key = prop_def.getEnums().get("KEY_DOWN");
          case KeyEvent.VK_LEFT:
-            key = desc.getEnumValue("KEY_LEFT");
+            key = prop_def.getEnums().get("KEY_LEFT");
          case KeyEvent.VK_RIGHT:
-            key = desc.getEnumValue("KEY_RIGHT");
+            key = prop_def.getEnums().get("KEY_RIGHT");
          case KeyEvent.VK_CONTROL:
-            key = desc.getEnumValue("KEY_CTRL");
+            key = prop_def.getEnums().get("KEY_CTRL");
          case KeyEvent.VK_SHIFT:
-            key = desc.getEnumValue("KEY_SHIFT");
+            key = prop_def.getEnums().get("KEY_SHIFT");
          case KeyEvent.VK_ALT:
-            key = desc.getEnumValue("KEY_ALT");
+            key = prop_def.getEnums().get("KEY_ALT");
          case KeyEvent.VK_1:
-            key = desc.getEnumValue("KEY_1");
+            key = prop_def.getEnums().get("KEY_1");
          case KeyEvent.VK_2:
-            key = desc.getEnumValue("KEY_2");
+            key = prop_def.getEnums().get("KEY_2");
          case KeyEvent.VK_3:
-            key = desc.getEnumValue("KEY_3");
+            key = prop_def.getEnums().get("KEY_3");
          case KeyEvent.VK_4:
-            key = desc.getEnumValue("KEY_4");
+            key = prop_def.getEnums().get("KEY_4");
          case KeyEvent.VK_5:
-            key = desc.getEnumValue("KEY_5");
+            key = prop_def.getEnums().get("KEY_5");
          case KeyEvent.VK_6:
-            key = desc.getEnumValue("KEY_6");
+            key = prop_def.getEnums().get("KEY_6");
          case KeyEvent.VK_7:
-            key = desc.getEnumValue("KEY_7");
+            key = prop_def.getEnums().get("KEY_7");
          case KeyEvent.VK_8:
-            key = desc.getEnumValue("KEY_8");
+            key = prop_def.getEnums().get("KEY_8");
          case KeyEvent.VK_9:
-            key = desc.getEnumValue("KEY_9");
+            key = prop_def.getEnums().get("KEY_9");
          case KeyEvent.VK_0:
-            key = desc.getEnumValue("KEY_0");
+            key = prop_def.getEnums().get("KEY_0");
          case KeyEvent.VK_A:
-            key = desc.getEnumValue("KEY_A");
+            key = prop_def.getEnums().get("KEY_A");
          case KeyEvent.VK_B:
-            key = desc.getEnumValue("KEY_B");
+            key = prop_def.getEnums().get("KEY_B");
          case KeyEvent.VK_C:
-            key = desc.getEnumValue("KEY_C");
+            key = prop_def.getEnums().get("KEY_C");
          case KeyEvent.VK_D:
-            key = desc.getEnumValue("KEY_D");
+            key = prop_def.getEnums().get("KEY_D");
          case KeyEvent.VK_E:
-            key = desc.getEnumValue("KEY_E");
+            key = prop_def.getEnums().get("KEY_E");
          case KeyEvent.VK_F:
-            key = desc.getEnumValue("KEY_F");
+            key = prop_def.getEnums().get("KEY_F");
          case KeyEvent.VK_G:
-            key = desc.getEnumValue("KEY_G");
+            key = prop_def.getEnums().get("KEY_G");
          case KeyEvent.VK_H:
-            key = desc.getEnumValue("KEY_H");
+            key = prop_def.getEnums().get("KEY_H");
          case KeyEvent.VK_I:
-            key = desc.getEnumValue("KEY_I");
+            key = prop_def.getEnums().get("KEY_I");
          case KeyEvent.VK_J:
-            key = desc.getEnumValue("KEY_K");
+            key = prop_def.getEnums().get("KEY_K");
          case KeyEvent.VK_K:
-            key = desc.getEnumValue("KEY_J");
+            key = prop_def.getEnums().get("KEY_J");
          case KeyEvent.VK_L:
-            key = desc.getEnumValue("KEY_L");
+            key = prop_def.getEnums().get("KEY_L");
          case KeyEvent.VK_M:
-            key = desc.getEnumValue("KEY_M");
+            key = prop_def.getEnums().get("KEY_M");
          case KeyEvent.VK_N:
-            key = desc.getEnumValue("KEY_N");
+            key = prop_def.getEnums().get("KEY_N");
          case KeyEvent.VK_O:
-            key = desc.getEnumValue("KEY_O");
+            key = prop_def.getEnums().get("KEY_O");
          case KeyEvent.VK_P:
-            key = desc.getEnumValue("KEY_P");
+            key = prop_def.getEnums().get("KEY_P");
          case KeyEvent.VK_Q:
-            key = desc.getEnumValue("KEY_Q");
+            key = prop_def.getEnums().get("KEY_Q");
          case KeyEvent.VK_R:
-            key = desc.getEnumValue("KEY_R");
+            key = prop_def.getEnums().get("KEY_R");
          case KeyEvent.VK_S:
-            key = desc.getEnumValue("KEY_S");
+            key = prop_def.getEnums().get("KEY_S");
          case KeyEvent.VK_T:
-            key = desc.getEnumValue("KEY_T");
+            key = prop_def.getEnums().get("KEY_T");
          case KeyEvent.VK_U:
-            key = desc.getEnumValue("KEY_U");
+            key = prop_def.getEnums().get("KEY_U");
          case KeyEvent.VK_V:
-            key = desc.getEnumValue("KEY_V");
+            key = prop_def.getEnums().get("KEY_V");
          case KeyEvent.VK_W:
-            key = desc.getEnumValue("KEY_W");
+            key = prop_def.getEnums().get("KEY_W");
          case KeyEvent.VK_X:
-            key = desc.getEnumValue("KEY_X");
+            key = prop_def.getEnums().get("KEY_X");
          case KeyEvent.VK_Y:
-            key = desc.getEnumValue("KEY_Y");
+            key = prop_def.getEnums().get("KEY_Y");
          case KeyEvent.VK_Z:
-            key = desc.getEnumValue("KEY_Z");
+            key = prop_def.getEnums().get("KEY_Z");
          case KeyEvent.VK_ESCAPE:
-            key = desc.getEnumValue("KEY_ESC");
+            key = prop_def.getEnums().get("KEY_ESC");
          default:
-            key = desc.getEnumValue("KEY_NONE");
+            key = prop_def.getEnums().get("KEY_NONE");
          }
 
          return (Integer)key;
       }
 
-      private ConfigChunk keyChunk;
-      private KeyCatcher catcher;
+      private ConfigElement mKeyElement;
+      private KeyCatcher mCatcher;
    }
 }

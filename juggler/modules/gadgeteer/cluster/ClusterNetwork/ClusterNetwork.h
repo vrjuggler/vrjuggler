@@ -37,8 +37,8 @@
 #include <vpr/Util/Singleton.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/IO/Socket/InetAddr.h>
-#include <jccl/RTRC/ConfigChunkHandler.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 #include <vpr/IO/Socket/SocketStream.h>
 //#include <list>
@@ -47,10 +47,6 @@ namespace vpr
 {
    class ReturnStatus;
 }
-namespace jccl
-{
-   class ConfigChunk;
-}
 
 namespace cluster
 {
@@ -58,7 +54,7 @@ namespace cluster
 class ClusterNode;
 class Packet;
 
-class GADGET_CLASS_API ClusterNetwork : public jccl::ConfigChunkHandler
+class GADGET_CLASS_API ClusterNetwork : public jccl::ConfigElementHandler
 {
    vprSingletonHeader( ClusterNetwork );
 public:
@@ -239,31 +235,31 @@ private:
    //////////////////////////
 public:
    /**
-    * Determine if the given ConfigChunk is a MachineSpecific chunk.
+    * Determine if the given jccl::ConfigElement is a MachineSpecific element.
     */
-   bool recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk);
+   bool recognizeClusterMachineConfig(jccl::ConfigElementPtr element);
 
    /**
-    * Determine if we can handle the given ConfigChunk.
+    * Determine if we can handle the given jccl::ConfigElement.
     */
-   bool configCanHandle(jccl::ConfigChunkPtr chunk);
+   bool configCanHandle(jccl::ConfigElementPtr element);
 
    /**
-    * Configure the given ConfigChunk because it was just added to
+    * Configure the given jccl::ConfigElement because it was just added to
     * the active configuration.
     * 
-    * @return true  If we successfully configured the given MachineSpecific Chunk.
-    * @return false If we failed to configure the given MachineSpecific Chunk.
+    * @return true  If we successfully configured the given MachineSpecific element.
+    * @return false If we failed to configure the given MachineSpecific element.
     */
-   bool configAdd(jccl::ConfigChunkPtr chunk);
+   bool configAdd(jccl::ConfigElementPtr element);
 
    /**
-    * Remove the given ConfigChunk from the active configuration .
+    * Remove the given jccl::ConfigElement from the active configuration .
     * 
-    * @return true  If we successfully removed the given MachineSpecific Chunk.
-    * @return false If we failed to removed the given MachineSpecific Chunk.
+    * @return true  If we successfully removed the given MachineSpecific element.
+    * @return false If we failed to removed the given MachineSpecific element.
     */
-   bool configRemove(jccl::ConfigChunkPtr chunk);
+   bool configRemove(jccl::ConfigElementPtr element);
    
    /**
     * Return the hostname of the local machine.
@@ -271,9 +267,10 @@ public:
    std::string getLocalHostname() { return mLocalHostnameShort; }
 
    /**
-    * Return the chunk type for MachineSpecific chunks that we configure here.
+    * Return the element type for MachineSpecific element that we configure
+    * here.
     */
-   static std::string getMachineSpecificChunkType() { return std::string( "MachineSpecific" ); }
+   static std::string getMachineSpecificElementType();
 
 private:   
    std::vector<cluster::ClusterNode*>     mClusterNodes;       /**< Current configuration.     */

@@ -44,7 +44,7 @@ public class BooleanEditor
     */
    public String getAsText()
    {
-      return (value != null && value.booleanValue()) ? "true" : "false";
+      return (mValue != null && mValue.booleanValue()) ? "true" : "false";
    }
 
    /**
@@ -86,7 +86,7 @@ public class BooleanEditor
     */
    public Object getValue()
    {
-      return value;
+      return mValue;
    }
 
    /**
@@ -94,12 +94,12 @@ public class BooleanEditor
     */
    public void setValue(Object value)
    {
-      this.value = (Boolean)value;
+      this.mValue = (Boolean)value;
       firePropertyChange();
    }
 
    /**
     * The boolean being edited.
     */
-   private Boolean value = null;
+   private Boolean mValue = null;
 }

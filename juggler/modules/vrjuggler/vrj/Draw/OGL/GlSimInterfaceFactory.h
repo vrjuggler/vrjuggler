@@ -42,7 +42,7 @@
 /**
  * Registers a creator for the DrawSimInterface implementation classes.
  *
- * @pre Requires that the method std::string getChunkType() be defined for
+ * @pre Requires that the method std::string getElementType() be defined for
  *      class SimIfType.
  *
  * Ex: VRJ_REGISTER_GL_SIM_INTERFACE_CREATOR(simulators::PySim)
@@ -51,7 +51,7 @@
 class SimIfType; \
 const bool reg_ctr_ ## SimIfType = \
    vrj::GlSimInterfaceFactory::instance()-> \
-      registerCreator(SimIfType::getChunkType(), \
+      registerCreator(SimIfType::getElementType(), \
                       vpr::CreateProduct<vrj::DrawSimInterface, SimIfType>);
 
 namespace vrj

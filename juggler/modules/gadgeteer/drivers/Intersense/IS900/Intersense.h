@@ -94,9 +94,9 @@ typedef struct {
  * Wraps the IntersenseStandalone driver.
  *
  * Intersense is a positional device driver for the Flock of Birds, the config
- * chunk in the constructor should set up all the settings, for these to be
+ * element in the constructor should set up all the settings, for these to be
  * changed the Flock has to be deleted and a new instance created with an
- * updated configchunk.
+ * updated config element.
  *
  * @note Intersense inherits from Digital and Analog.  These base classes,
  *       however, can not handle multiple receivers in the same way as
@@ -106,7 +106,7 @@ typedef struct {
  * @note Some functions still remain for changing the options of
  *       the flock when its not in Sampling mode, but in order to stay
  *       consistent with the Input/vjPosition functionality these
- *       are only left for building apps without jccl::ConfigChunks
+ *       are only left for building apps without jccl::ConfigElement objects.
  * @note A note on receiver access:
  *   Clients of juggler should access tracker recievers as [0-n]
  *   For example, if you have recievers 1,2, and 4 with transmitter on 3,
@@ -148,8 +148,8 @@ public:
    Intersense();
    virtual ~Intersense();
 
-   /** Configures the device with a config chunk. */
-   virtual bool config(jccl::ConfigChunkPtr c);
+   /** Configures the device with a config element. */
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /** Begins sampling. */
    int startSampling();
@@ -166,8 +166,8 @@ public:
    /** Updates to the sampled data. */
    void updateData();
 
-   /** Returns what chunk type is associated with this class. */
-   static std::string getChunkType() { return std::string("Intersense");}
+   /** Returns what element type is associated with this class. */
+   static std::string getElementType();
 
    /** Gets current data from the receiver.
     *  @arg dev The receiver number.  Clients of juggler should access

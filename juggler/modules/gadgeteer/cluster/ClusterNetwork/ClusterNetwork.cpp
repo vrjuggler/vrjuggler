@@ -50,8 +50,7 @@
 #include <cluster/Packets/Packet.h>
 #include <cluster/ClusterDelta.h>
 
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 
 namespace cluster
@@ -553,39 +552,39 @@ namespace cluster
 
 
    ////////////////// Config Functions ///////////////
-   bool ClusterNetwork::recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk)
+   bool ClusterNetwork::recognizeClusterMachineConfig(jccl::ConfigElementPtr element)
    {
-      return(chunk->getDescToken() == ClusterNetwork::getMachineSpecificChunkType());
+      return(element->getID() == ClusterNetwork::getMachineSpecificElementType());
    }
    
-   bool ClusterNetwork::configCanHandle(jccl::ConfigChunkPtr chunk)
+   bool ClusterNetwork::configCanHandle(jccl::ConfigElementPtr element)
    {
-       return( recognizeClusterMachineConfig(chunk) );
+       return( recognizeClusterMachineConfig(element) );
    }
 
-   bool ClusterNetwork::configAdd(jccl::ConfigChunkPtr chunk)
+   bool ClusterNetwork::configAdd(jccl::ConfigElementPtr element)
    {
-      if (recognizeClusterMachineConfig(chunk))
+      if (recognizeClusterMachineConfig(element))
       {
-         // -If local machine chunk
+         // -If local machine element
          //   -Start Listening thread
          // -Else
          //   -Add Node to ClusterNetwork
 
-         if (chunk->getProperty<std::string>("host_name") == getLocalHostname())
+         if (element->getProperty<std::string>("host_name") == getLocalHostname())
          {
-            const int listen_port = chunk->getProperty<int>("listen_port");
+            const int listen_port = element->getProperty<int>("listen_port");
             startListening(listen_port);
          }
          else
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterNetwork] ")
-               << "Adding Node: " << chunk->getName() 
+               << "Adding Node: " << element->getName() 
                << " to the Cluster Network\n" << vprDEBUG_FLUSH;
 
-            std::string    name        = chunk->getName();
-            std::string    host_name   = chunk->getProperty<std::string>("host_name");
-            vpr::Uint16    listen_port = chunk->getProperty<int>("listen_port");
+            std::string    name        = element->getName();
+            std::string    host_name   = element->getProperty<std::string>("host_name");
+            vpr::Uint16    listen_port = element->getProperty<int>("listen_port");
             
             addClusterNode(name, host_name, listen_port);
          }
@@ -594,12 +593,13 @@ namespace cluster
       return false;
    }
 
-   bool ClusterNetwork::configRemove(jccl::ConfigChunkPtr chunk)
+   bool ClusterNetwork::configRemove(jccl::ConfigElementPtr element)
    {
-     if (recognizeClusterMachineConfig(chunk))
+     if (recognizeClusterMachineConfig(element))
      {
-        vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[ClusterNetwork] Removing the Node: " << chunk->getName() 
-        << " from the Cluster Network\n" << vprDEBUG_FLUSH;
+        vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+           << "[ClusterNetwork] Removing the Node: " << element->getName() 
+           << " from the Cluster Network\n" << vprDEBUG_FLUSH;
         return(true);
      }
      else
@@ -609,6 +609,12 @@ namespace cluster
          return(false);
      }
    }
+
+   std::string ClusterNetwork::getMachineSpecificElementType()
+   {
+      return "machine_specific";
+   }
+
    void ClusterNetwork::updateNewConnections()
    {
       if (getNumPendingNodes() > 0)

@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/SurfaceViewport.h>
@@ -55,30 +55,30 @@ std::vector<Display*> DisplayManager::getAllDisplays()
    return ret_val;
 }
 
-jccl::ConfigChunkPtr DisplayManager::getDisplaySystemChunk()
+jccl::ConfigElementPtr DisplayManager::getDisplaySystemElement()
 {
-   if ( mDisplaySystemChunk.get() == NULL )
+   if ( mDisplaySystemElement.get() == NULL )
    {
       jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
 
       cfg_mgr->lockActive();
       {
-         std::vector<jccl::ConfigChunkPtr>::iterator i;
+         std::vector<jccl::ConfigElementPtr>::iterator i;
          for(i=cfg_mgr->getActiveBegin(); i != cfg_mgr->getActiveEnd();++i)
          {
-            if((*i)->getDescToken() == std::string("displaySystem"))
+            if( (*i)->getID() == std::string("display_system") )
             {
-               mDisplaySystemChunk = *i;
-               break;         // This guarantees that we get the first displaySystem chunk.
+               mDisplaySystemElement = *i;
+               break;         // This guarantees that we get the first displaySystem element.
             }
          }
       }
       cfg_mgr->unlockActive();
 
-//      vprASSERT(mDisplaySystemChunk.get() != NULL && "No Display Manager chunk found!");
+//      vprASSERT(mDisplaySystemElement.get() != NULL && "No Display Manager config element found!");
    }
 
-   return mDisplaySystemChunk;
+   return mDisplaySystemElement;
 }
 
 void DisplayManager::setDrawManager(DrawManager* drawMgr)
@@ -99,29 +99,32 @@ void DisplayManager::setDrawManager(DrawManager* drawMgr)
 }
 
 /**
- * Adds the chunk to the configuration.
- * @pre configCanHandle(chunk) == true
+ * Adds the element to the configuration.
+ * @pre configCanHandle(element) == true.
  */
-bool DisplayManager::configAdd(jccl::ConfigChunkPtr chunk)
+bool DisplayManager::configAdd(jccl::ConfigElementPtr element)
 {
-   vprASSERT(configCanHandle(chunk));
+   vprASSERT(configCanHandle(element));
 
-   std::string chunk_type = chunk->getDescToken();
+   const std::string element_type(element->getID());
 
-   if(   (chunk_type == std::string("surfaceDisplay"))
-      || (chunk_type == std::string("simDisplay")) )
+   if(   (element_type == std::string("surfaceDisplay"))
+      || (element_type == std::string("simDisplay")) )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Chunk of type: " << chunk_type << " is no longer supported.  Use displayWindow type instead.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "Element of type: " << element_type
+         << " is no longer supported.  Use display_window type instead.\n"
+         << vprDEBUG_FLUSH;
       return false;
    }
-   else if( (chunk_type == std::string("displayWindow")))
+   else if( (element_type == std::string("display_window")))
    {
-      return configAddDisplay(chunk);
+      return configAddDisplay(element);
    }
-   else if(chunk_type == std::string("displaySystem"))
+   else if(element_type == std::string("display_system"))
    {
       // XXX: Put signal here to tell draw manager to lookup new stuff
-      mDisplaySystemChunk = chunk;     // Keep track of the display system chunk
+      mDisplaySystemElement = element; // Keep track of the display system element
       return true;                     // We successfully configured.
                                        // This tell processPending to add it to the active config
    }
@@ -130,29 +133,32 @@ bool DisplayManager::configAdd(jccl::ConfigChunkPtr chunk)
 }
 
 /**
- * Removes the chunk from the current configuration.
- * @pre configCanHandle(chunk) == true
+ * Removes the element from the current configuration.
+ * @pre configCanHandle(element) == true
  */
-bool DisplayManager::configRemove(jccl::ConfigChunkPtr chunk)
+bool DisplayManager::configRemove(jccl::ConfigElementPtr element)
 {
-   vprASSERT(configCanHandle(chunk));
+   vprASSERT(configCanHandle(element));
 
-   std::string chunk_type = chunk->getDescToken();
+   const std::string element_type(element->getID());
 
-   if(  (chunk_type == std::string("surfaceDisplay"))
-     || (chunk_type == std::string("simDisplay")) )
+   if(  (element_type == std::string("surfaceDisplay"))
+     || (element_type == std::string("simDisplay")) )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Chunk of type: " << chunk_type << " is no longer supported.  Use displayWindow type instead.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "Element of type: " << element_type
+         << " is no longer supported.  Use display_window type instead.\n"
+         << vprDEBUG_FLUSH;
       return false;
    }
-   else if(chunk_type == std::string("displayWindow"))
+   else if(element_type == std::string("display_window"))
    {
-      return configRemoveDisplay(chunk);
+      return configRemoveDisplay(element);
    }
-   else if(chunk_type == std::string("displaySystem"))
+   else if(element_type == std::string("display_system"))
    {
       // XXX: Put signal here to tell draw manager to lookup new stuff
-      mDisplaySystemChunk.reset();     // Keep track of the display system chunk
+      mDisplaySystemElement.reset();   // Keep track of the display system element
       return true;                     // We successfully configured.
                                        // This tell processPending to remove it to the active config
    }
@@ -163,40 +169,37 @@ bool DisplayManager::configRemove(jccl::ConfigChunkPtr chunk)
 
 
 /**
- * Is it a display chunk?
+ * Is it a display configuration element?
  *
- * @return true if we have a display chunk; false if we don't.
+ * @return true if we have a display config element; false if we don't.
  */
-bool DisplayManager::configCanHandle(jccl::ConfigChunkPtr chunk)
+bool DisplayManager::configCanHandle(jccl::ConfigElementPtr element)
 {
-   return (    (chunk->getDescToken() == std::string("surfaceDisplay"))
-            || (chunk->getDescToken() == std::string("simDisplay"))
-            || (chunk->getDescToken() == std::string("displaySystem"))
-            || (chunk->getDescToken() == std::string("displayWindow"))
+   return (    (element->getID() == std::string("surfaceDisplay"))
+            || (element->getID() == std::string("simDisplay"))
+            || (element->getID() == std::string("display_system"))
+            || (element->getID() == std::string("display_window"))
            );
 }
 
-
-
-
 /**
- * Adds the chunk to the configuration.
+ * Adds the element to the configuration.
  *
- * @pre configCanHandle(chunk) == true
+ * @pre configCanHandle(element) == true
  * @post (display of same name already loaded) ==> old display closed, new one opened<br>
  *       (display is new) ==> (new display is added)<br>
  *       Draw Manager is notified of the display change.
  */
-bool DisplayManager::configAddDisplay(jccl::ConfigChunkPtr chunk)
+bool DisplayManager::configAddDisplay(jccl::ConfigElementPtr element)
 {
-   vprASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
+   vprASSERT(configCanHandle(element)); // We must be able to handle it first of all
 
    vprDEBUG_BEGIN(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "------- DisplayManager::configAddDisplay -------\n" << vprDEBUG_FLUSH;
 
    // Find out if we already have a window of this name
    // If so, then close it before we open a new one of the same name
    // This basically allows re-configuration of a window
-   Display* cur_disp = findDisplayNamed(chunk->getName());
+   Display* cur_disp = findDisplayNamed(element->getName());
    if(cur_disp != NULL)                         // We have an old display
    {
       vprDEBUG(vrjDBG_DISP_MGR,vprDBG_CONFIG_LVL) << "Removing old window: " << cur_disp->getName().c_str() << vprDEBUG_FLUSH;
@@ -204,10 +207,10 @@ bool DisplayManager::configAddDisplay(jccl::ConfigChunkPtr chunk)
    }
 
    // --- Add a display (of the correct type) ---- //
-   if(chunk->getDescToken() == std::string("displayWindow"))       // Display window
+   if(element->getID() == std::string("display_window"))       // Display window
    {
       Display* newDisp = new Display();        // Create the display
-      newDisp->config(chunk);
+      newDisp->config(element);
       addDisplay(newDisp,true);                    // Add it
       vprDEBUG(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "Adding display: " << newDisp->getName().c_str() << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "Display: "  << newDisp << std::endl << vprDEBUG_FLUSH;
@@ -218,22 +221,22 @@ bool DisplayManager::configAddDisplay(jccl::ConfigChunkPtr chunk)
 }
 
 /**
- * Removes the chunk from the current configuration.
+ * Removes the element from the current configuration.
  *
- * @pre configCanHandle(chunk) == true
+ * @pre configCanHandle(element) == true
  * @return success
  */
-bool DisplayManager::configRemoveDisplay(jccl::ConfigChunkPtr chunk)
+bool DisplayManager::configRemoveDisplay(jccl::ConfigElementPtr element)
 {
-   vprASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
+   vprASSERT(configCanHandle(element)); // We must be able to handle it first of all
 
    vprDEBUG_BEGIN(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "------- DisplayManager::configRemoveDisplay -------\n" << vprDEBUG_FLUSH;
 
    bool success_flag(false);
 
-   if(chunk->getDescToken() == std::string("displayWindow"))      // It is a display
+   if(element->getID() == std::string("display_window"))      // It is a display
    {
-      Display* remove_disp = findDisplayNamed(chunk->getName());
+      Display* remove_disp = findDisplayNamed(element->getName());
       if(remove_disp != NULL)
       {
          closeDisplay(remove_disp, true);                            // Remove it

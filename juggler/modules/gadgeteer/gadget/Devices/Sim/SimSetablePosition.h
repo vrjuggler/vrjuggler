@@ -39,7 +39,7 @@
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
 #include <gadget/Type/PositionInterface.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 
 namespace gadget
@@ -61,7 +61,7 @@ public:
    SimSetablePosition() {;}
    virtual ~SimSetablePosition() {;}
 
-   virtual bool config(jccl::ConfigChunkPtr chunk);
+   virtual bool config(jccl::ConfigElementPtr element);
 
    /** These functions don't do anything. */
    int startSampling() { return 1; }
@@ -74,7 +74,7 @@ public:
    void setData(const std::vector<PositionData> &pos_data_vec);
    void setData(const PositionData &pos_data);
 
-   static std::string getChunkType() { return std::string( "SimSetablePosition" ); }
+   static std::string getElementType();
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

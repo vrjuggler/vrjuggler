@@ -63,63 +63,62 @@ DTKMemorySegment::~DTKMemorySegment()
 
 bool DTKMemorySegment::config(jccl::ConfigChunkPtr c)
 {
-   _type = (DTK_dataType) c->getProperty<int>("dataType");
+   _type = (DTK_dataType) c->getProperty<int>("data_type");
 
-   _numItems = c->getProperty<int>("itemCount");
-   _segmentType = (DTK_memoryType) c->getProperty<int>("inputType");
+   _numItems = c->getProperty<int>("item_count");
+   _segmentType = (DTK_memoryType) c->getProperty<int>("input_type");
 
-   _segmentName = c->getProperty<std::string>("segmentName").c_str();
-   _remotehost = c->getProperty<std::string>("remoteHost").c_str();
-   if ( _remotehost[0] == '\0' )
+   _segmentName = c->getProperty<std::string>("segment_name").c_str();
+   _remotehost = c->getProperty<std::string>("host_name").c_str();
+   if(_remotehost[0] == '\0')
    {
       delete [] _remotehost;
       _remotehost = NULL;
    }
 
-   switch ( _segmentType )
+   switch(_segmentType)
    {
-      case dtk_pos_ZYXEuler:
-      case dtk_pos_XYZEuler:
-         _numItems = 6; // Positional Euler data has to be 6 floats;
-         _type = DTK_FLOAT;
-         break;
-      case dtk_pos_QUAT:
-         _numItems = 4; // Quaternians have to be 4 floats;
-         _type = DTK_FLOAT;
-         break;
-      case dtk_digital:
-         _numItems = 1; // Assuming digital data is passes as single integers... STill must be tested and confirmed.
-         _type = DTK_INT;
-         break;
-      case dtk_analog:
-         _numItems = 1; // Same as digital, only we are assuming floats.  Both digital and analog need to be refined
-         _type = DTK_FLOAT;
-         break;
-      case dtk_custom:
-         break; // The dataType and itemCount must be specified earlier for this option
+   case dtk_pos_ZYXEuler:
+   case dtk_pos_XYZEuler:
+      _numItems = 6; // Positional Euler data has to be 6 floats;
+      _type = DTK_FLOAT;
+      break;
+   case dtk_pos_QUAT:
+      _numItems = 4; // Quaternians have to be 4 floats;
+      _type = DTK_FLOAT;
+      break;
+   case dtk_digital:
+      _numItems = 1; // Assuming digital data is passes as single integers... STill must be tested and confirmed.
+      _type = DTK_INT;
+      break;
+   case dtk_analog:
+      _numItems = 1; // Same as digital, only we are assuming floats.  Both digital and analog need to be refined
+      _type = DTK_FLOAT;
+      break;
+   case dtk_custom:
+      break; // The dataType and itemCount must be specified earlier for this option
    }
 
-   switch ( _type )
+   switch(_type)
    {
-      case DTK_INVALID:
-         break; // Don't allocate any data... just continue on.
-      case DTK_INT:
-         _segmentSize = sizeof(int)*_numItems;
-         intData = (int*)malloc(_segmentSize);
-         break;
-      case DTK_FLOAT:
-         _segmentSize = sizeof(float)*_numItems;
-         floatData = (float*)malloc(_segmentSize);
-         break;
-      case DTK_BYTES:
-      case DTK_CSTRING:
-         _segmentSize = sizeof(char)*_numItems;
-         charData = (char*)malloc(_segmentSize);
-         break;
-      default:
-         break;
+   case DTK_INVALID:
+      break; // Don't allocate any data... just continue on.
+   case DTK_INT:
+      _segmentSize = sizeof(int)*_numItems;
+      intData = (int*)malloc(_segmentSize);
+      break;
+   case DTK_FLOAT:
+      _segmentSize = sizeof(float)*_numItems;
+      floatData = (float*)malloc(_segmentSize);
+      break;
+   case DTK_BYTES:
+   case DTK_CSTRING:
+      _segmentSize = sizeof(char)*_numItems;
+      charData = (char*)malloc(_segmentSize);
+      break;
+   default:
+      break;
    }
-
 
    return true;
 }

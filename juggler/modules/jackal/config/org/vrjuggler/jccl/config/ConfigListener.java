@@ -35,41 +35,25 @@ import java.util.EventListener;
 
 /**
  * Interface for an observer to receive notifications of additions and removals
- * of <code>ChunkDesc</code>s and <code>ConfigChunk</code>s from a
- * <code>ConfigBroker</code>.
+ * of configuration elements from a ConfigBroker.
  *
  * @see ConfigBroker
- * @see ChunkDesc
- * @see ConfigChunk
+ * @see ConfigElement
  */
 public interface ConfigListener
    extends EventListener
 {
    /**
-    * Gives notification that a chunk desc was added to the broker.
+    * Gives notification that a configuration element was added to the broker.
     *
     * @param evt     the config event
     */
-   public void chunkDescAdded(ConfigEvent evt);
+   public void configElementAdded(ConfigEvent evt);
 
    /**
-    * Gives notification that a chunk desc was removed from the broker.
+    * Gives notification that a config element was removed from the broker.
     *
     * @param evt     the config event
     */
-   public void chunkDescRemoved(ConfigEvent evt);
-
-   /**
-    * Gives notification that a config chunk was added to the broker.
-    *
-    * @param evt     the config event
-    */
-   public void configChunkAdded(ConfigEvent evt);
-
-   /**
-    * Gives notification that a config chunk was removed from the broker.
-    *
-    * @param evt     the config event
-    */
-   public void configChunkRemoved(ConfigEvent evt);
+   public void configElementRemoved(ConfigEvent evt);
 }

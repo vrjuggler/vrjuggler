@@ -120,9 +120,9 @@ public:
          return mTypedDevice;
    }
 
-   static std::string getChunkType() { return "GestureProxy"; }
+   static std::string getElementType();
 
-   bool config(jccl::ConfigChunkPtr chunk);
+   bool config(jccl::ConfigElementPtr element);
 
    virtual Input* getProxiedInputDevice()
    {

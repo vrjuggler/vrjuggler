@@ -56,8 +56,8 @@ public class CreateClusteredSimDevicesPanel extends JPanel
   private DefaultComboBoxModel lstCameraNodes = new DefaultComboBoxModel();
   // Contains all sim display windows and the display system after
   // copying the config files and before writing all machine specific details
-  private java.util.List mDisplayChunkList = new java.util.ArrayList();
-  private java.util.List mDisplaySystemChunkList = new java.util.ArrayList();
+  private java.util.List mDisplayElementList = new java.util.ArrayList();
+  private java.util.List mDisplaySystemElementList = new java.util.ArrayList();
 
   private String mFileSourceName = null;
 
@@ -237,13 +237,11 @@ public class CreateClusteredSimDevicesPanel extends JPanel
       wand_path = EnvironmentService.expandEnvVars(wand_path);
 
       // Load sim.base.config
-      FileDataSource base_filesource =
-          new FileDataSource(base_path,FileDataSource.ELEMENTS);
+      FileDataSource base_filesource = FileDataSource.open(base_path, mBroker.getRepository());
       mBroker.add("sim.base.config", base_filesource);
 
       // Load sim.wand.minxin.config
-      FileDataSource wand_filesource =
-          new FileDataSource(wand_path,FileDataSource.ELEMENTS);
+      FileDataSource wand_filesource = FileDataSource.open(wand_path, mBroker.getRepository());
       mBroker.add("sim.wand.mixin.config", wand_filesource);
 
       // Create a new context and add both file sources to it
@@ -251,23 +249,23 @@ public class CreateClusteredSimDevicesPanel extends JPanel
       ctx.add("sim.base.config");
       ctx.add("sim.wand.mixin.config");
 
-      // Get all chunks from the two files
-      java.util.List temp_list = mBroker.getChunks(ctx);
+      // Get all elements from the two files
+      java.util.List temp_list = mBroker.getElements(ctx);
 
       for(int i = 0 ; i < temp_list.size() ; i++)
       {
-        ConfigChunk chunk = (ConfigChunk)temp_list.get(i);
-        if(chunk.getDescToken().equals("displayWindow"))
+        ConfigElement elt = (ConfigElement)temp_list.get(i);
+        if(elt.getDefinition().getToken().equals("display_window"))
         {
-          mDisplayChunkList.add(new ConfigChunk(chunk));
+          mDisplayElementList.add(elt);
         }
-        else if(chunk.getDescToken().equals("displaySystem"))
+        else if(elt.getDefinition().getToken().equals("display_system"))
         {
-          mDisplaySystemChunkList.add(new ConfigChunk(chunk));
+          mDisplaySystemElementList.add(elt);
         }
         else
         {
-          replaceAllConfigFilesNamed(mContext, chunk);
+          replaceAllConfigFilesNamed(mContext, elt);
           //mBroker.add(mContext, new ConfigChunk(chunk));
         }
       }
@@ -282,52 +280,52 @@ public class CreateClusteredSimDevicesPanel extends JPanel
   public void createDisplayChunks()
   {
     //Add Simulator Display Systems and Display Windows to each Node
-    java.util.List chunks_list = mBroker.getChunks(mContext);
-    java.util.List matches = ConfigUtilities.getChunksWithDescToken(chunks_list, "MachineSpecific");
+    java.util.List chunks_list = mBroker.getElements(mContext);
+    java.util.List matches = ConfigUtilities.getElementsWithDefinition(chunks_list, "machine_specific");
     for(int i = 0; i < matches.size() ; i++)
     {
-      ConfigChunk node = (ConfigChunk)matches.get(i);
+      ConfigElement node = (ConfigElement)matches.get(i);
 
       // Remove all old display_systems
-      int num_systems = node.getNumPropertyValues("display_system");
+      int num_systems = node.getPropertyValueCount("display_system");
       for (int n=0;n<num_systems;n++)
       {
         node.removeProperty("display_system",n);
       }
       // Remove all old display_windows
-      int num_displays = node.getNumPropertyValues("display_windows");
+      int num_displays = node.getPropertyValueCount("display_windows");
       for (int n=0;n<num_displays;n++)
       {
         node.removeProperty("display_windows",n);
       }
       // Add every display_system chunk
-      for(int j = 0; j < mDisplaySystemChunkList.size() ; j++)
+      for(int j = 0; j < mDisplaySystemElementList.size() ; j++)
       {
-        ConfigChunk display_sys_chunk = (ConfigChunk)mDisplaySystemChunkList.get(j);
-        node.setProperty("display_system",j,new ConfigChunk(display_sys_chunk));
+        ConfigElement display_sys_elt = (ConfigElement)mDisplaySystemElementList.get(j);
+        node.setProperty("display_system",j,display_sys_elt);
       }
       // Add every display_window chunk
-      for(int j = 0; j < mDisplayChunkList.size() ; j++)
+      for(int j = 0; j < mDisplayElementList.size() ; j++)
       {
-        ConfigChunk display_chunk = (ConfigChunk)mDisplayChunkList.get(j);
-        node.setProperty("display_windows",j,new ConfigChunk(display_chunk));
+        ConfigElement display_elt = (ConfigElement)mDisplayElementList.get(j);
+        node.setProperty("display_windows",j,display_elt);
       }
     }
   }
 
-  private void replaceAllConfigFilesNamed(ConfigContext ctx, ConfigChunk chunk)
+  private void replaceAllConfigFilesNamed(ConfigContext ctx, ConfigElement elt)
   {
     ConfigBroker broker = new ConfigBrokerProxy();
 
     java.util.List old_list =
-        ConfigUtilities.getChunksWithName(mBroker.getChunks(ctx), chunk.getName());
+        ConfigUtilities.getElementsWithName(mBroker.getElements(ctx), elt.getName());
 
     for(int i=0;i<old_list.size();i++)
     {
-      broker.remove(ctx,(ConfigChunk)old_list.get(i));
+      broker.remove(ctx,(ConfigElement)old_list.get(i));
     }
 
-    broker.add(mContext, new ConfigChunk(chunk));
+    broker.add(mContext, elt);
   }
   public boolean saveFile()
   {
@@ -350,13 +348,13 @@ public class CreateClusteredSimDevicesPanel extends JPanel
     lstWandNodes.removeAllElements();
     lstCameraNodes.removeAllElements();
 
-    java.util.List chunks_list = mBroker.getChunks(mContext);
-    java.util.List matches = ConfigUtilities.getChunksWithDescToken(chunks_list, "MachineSpecific");
+    java.util.List chunks_list = mBroker.getElements(mContext);
+    java.util.List matches = ConfigUtilities.getElementsWithDefinition(chunks_list, "machine_specific");
     for(int i = 0; i < matches.size() ; i++)
     {
-      lstHeadNodes.addElement(((ConfigChunk)matches.get(i)).getName());
-      lstWandNodes.addElement(((ConfigChunk)matches.get(i)).getName());
-      lstCameraNodes.addElement(((ConfigChunk)matches.get(i)).getName());
+      lstHeadNodes.addElement(((ConfigElement)matches.get(i)).getName());
+      lstWandNodes.addElement(((ConfigElement)matches.get(i)).getName());
+      lstCameraNodes.addElement(((ConfigElement)matches.get(i)).getName());
     }
 
   }
@@ -368,11 +366,11 @@ public class CreateClusteredSimDevicesPanel extends JPanel
 
     if(e.getActionCommand().equals("headChanged"))
     {
-      java.util.List chunk_list = ConfigUtilities.getChunksWithName(mBroker.getChunks(mContext),"Head Keyboard");
+      java.util.List chunk_list = ConfigUtilities.getElementsWithName(mBroker.getElements(mContext),"Head Keyboard");
       if (chunk_list.size() == 1)
       {
         String device_host = (String)cbHeadKeyboard.getSelectedItem();
-        ((ConfigChunk)chunk_list.get(0)).setProperty("deviceHost",0,device_host);
+        ((ConfigElement)chunk_list.get(0)).setProperty("device_host",0,device_host);
       }
       else
       {
@@ -382,11 +380,11 @@ public class CreateClusteredSimDevicesPanel extends JPanel
     }
     else if(e.getActionCommand().equals("cameraChanged"))
     {
-      java.util.List chunk_list = ConfigUtilities.getChunksWithName(mBroker.getChunks(mContext),"Sim View Cameras Control");
+      java.util.List chunk_list = ConfigUtilities.getElementsWithName(mBroker.getElements(mContext),"Sim View Cameras Control");
       if (chunk_list.size() == 1)
       {
         String device_host = (String)cbSimCameraKeyboard.getSelectedItem();
-        ((ConfigChunk)chunk_list.get(0)).setProperty("deviceHost",0,device_host);
+        ((ConfigElement)chunk_list.get(0)).setProperty("device_host",0,device_host);
       }
       else
       {
@@ -396,11 +394,11 @@ public class CreateClusteredSimDevicesPanel extends JPanel
     }
     else if(e.getActionCommand().equals("wandChanged"))
     {
-      java.util.List chunk_list = ConfigUtilities.getChunksWithName(mBroker.getChunks(mContext),"Wand Keyboard");
+      java.util.List chunk_list = ConfigUtilities.getElementsWithName(mBroker.getElements(mContext),"Wand Keyboard");
       if (chunk_list.size() == 1)
       {
         String device_host = (String)cbWandKeyboard.getSelectedItem();
-        ((ConfigChunk)chunk_list.get(0)).setProperty("deviceHost",0,device_host);
+        ((ConfigElement)chunk_list.get(0)).setProperty("device_host",0,device_host);
       }
       else
       {

@@ -34,7 +34,7 @@
 
 #include <sys/types.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/EventWindow/KeyEvent.h>
 #include <gadget/Type/EventWindow/MouseEvent.h>
@@ -51,20 +51,19 @@
 namespace gadget
 {
 
-bool EventWindowWin32::config(jccl::ConfigChunkPtr c)
+bool EventWindowWin32::config(jccl::ConfigElementPtr e)
 {
    vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                     std::string("gadget::EventWindowWin32::config() entered\n"),
                                     std::string("gadget::EventWindowWin32::config() done\n"));
 
    // Call base class config function first
-   if ( ! (Input::config(c) && EventWindow::config(c)) )
+   if ( ! (Input::config(e) && EventWindow::config(e)) )
    {
       return false;
    }
 
-   int i;
-   for ( i =0; i < gadget::LAST_KEY; ++i )
+   for ( int i =0; i < gadget::LAST_KEY; ++i )
    {
       mCurKeys[i] = mRealkeys[i] = mKeys[i] = 0;
    }
@@ -72,26 +71,26 @@ bool EventWindowWin32::config(jccl::ConfigChunkPtr c)
    mCurKeys[0] = mRealkeys[0] = mKeys[0] = 1;
 
    // Get size and position
-   mWidth  = c->getProperty<int>("width");
-   mHeight = c->getProperty<int>("height");
+   mWidth  = e->getProperty<int>("width");
+   mHeight = e->getProperty<int>("height");
 
    // default to something "sane" if too small
    if ( mWidth == 0 ) mWidth = 400;
    if ( mHeight == 0 ) mHeight = 400;
 
-   mX = c->getProperty<int>("origin", 0);
-   mY = c->getProperty<int>("origin", 1);
+   mX = e->getProperty<int>("origin", 0);
+   mY = e->getProperty<int>("origin", 1);
 
    // Get the lock information
-   mLockToggleKey    = c->getProperty<int>("lock_key");
-   bool start_locked = c->getProperty<bool>("start_locked");
+   mLockToggleKey    = e->getProperty<int>("lock_key");
+   bool start_locked = e->getProperty<bool>("start_locked");
 
    if ( start_locked )
    {
       mLockState = Lock_LockKey;     // Initialize to the locked state
    }
 
-   mMouseSensitivity = c->getProperty<float>("msens");
+   mMouseSensitivity = e->getProperty<float>("mouse_sensitivity");
 
    // Sanity check.
    if ( 0.0f == mMouseSensitivity )
@@ -103,7 +102,7 @@ bool EventWindowWin32::config(jccl::ConfigChunkPtr c)
       << "Mouse Sensititivty: " << mMouseSensitivity << std::endl
       << vprDEBUG_FLUSH;
 
-   mSleepTimeMS = c->getProperty<int>("sleep_time");
+   mSleepTimeMS = e->getProperty<int>("sleep_time");
 
    // Sanity check.
    if ( mSleepTimeMS == 0 )
@@ -875,9 +874,9 @@ int EventWindowWin32::sample()
    return 1;
 }
 
-std::string EventWindowWin32::getChunkType()
+std::string EventWindowWin32::getElementType()
 {
-   return std::string("EventWindow");
+   return "event_window";
 }
 
 // returns the number of times the key was pressed during the

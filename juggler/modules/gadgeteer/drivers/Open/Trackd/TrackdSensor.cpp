@@ -33,7 +33,7 @@
 #include <gadget/Devices/DriverConfig.h>
 #include <gadget/Devices/Open/Trackd/TrackdSensorStandalone.h>
 #include <gadget/Devices/Open/Trackd/TrackdSensor.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <vpr/Util/Debug.h>
 
@@ -58,6 +58,11 @@ TrackdSensor::~TrackdSensor()
    delete mTrackdSensors;
 }
 
+std::string TrackdSensor::getElementType()
+{
+   return "trackd_sensor";
+}
+
  /**
   * Configures the trackd sensor with the given configuration element.
   *
@@ -65,13 +70,15 @@ TrackdSensor::~TrackdSensor()
   * -set to active<br>
   * -grow the vector to however many values we need
   */
- bool TrackdSensor::config(jccl::ConfigChunkPtr c)
+ bool TrackdSensor::config(jccl::ConfigElementPtr e)
  {
-    if(! (Input::config(c) && Position::config(c)))
-       return false;
+   if(! (Input::config(e) && Position::config(e)))
+   {
+      return false;
+   }
 
     // Create sensor
-    int shm_key = c->getProperty<int>("shm_key");
+    int shm_key = e->getProperty<int>("shared_memory_key");
     if(shm_key == 0)
     {
        vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "vjTrackdSensor::config: Bad shm_key sent: Had value of 0.\n" << vprDEBUG_FLUSH;

@@ -31,25 +31,32 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/AnalogProxy.h>
 
 namespace gadget
 {
 
-bool AnalogProxy::config(jccl::ConfigChunkPtr chunk)
+std::string AnalogProxy::getElementType()
+{
+   return "analog_proxy";
+}
+
+bool AnalogProxy::config(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                  std::string("----------- configuring ANALOG PROXY -----------------\n"),
                                  std::string("----------- exit: configuring analog proxy -----------\n"));
-   vprASSERT(chunk->getDescToken() == "AnaProxy");
-   bool base_config = Proxy::config(chunk);
-   if(!base_config)
-      return false;
+   vprASSERT(element->getID() == getElementType());
 
-   mUnitNum = chunk->getProperty<int>("unit");
-   mDeviceName = chunk->getProperty<std::string>("device");
+   if ( ! Proxy::config(element) )
+   {
+      return false;
+   }
+
+   mUnitNum = element->getProperty<int>("unit");
+   mDeviceName = element->getProperty<std::string>("device");
 
    refresh();     // Refresh the device now that we have something to point at
 

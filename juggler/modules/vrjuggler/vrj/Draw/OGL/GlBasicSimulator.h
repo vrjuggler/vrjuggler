@@ -66,14 +66,14 @@ public:
 
    virtual ~GlBasicSimulator() {}
 
-   /*
-   * Configure the basic simulator config
-   * @pre chunk is a valid chunk.
-   * @post It should be configured
-   */
-   virtual bool config(jccl::ConfigChunkPtr chunk);
+   /**
+    * Configures the basic OpenGL simulator.
+    * @pre element is a valid configuration element.
+    * @post It should be configured
+    */
+   virtual bool config(jccl::ConfigElementPtr element);
 
-   static std::string getChunkType()
+   static std::string getElementType()
    {
       return std::string("default_simulator");
    }

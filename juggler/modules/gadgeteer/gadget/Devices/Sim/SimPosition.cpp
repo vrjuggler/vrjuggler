@@ -32,7 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Devices/Sim/SimPosition.h>
 
 #include <gmtl/Plane.h>
@@ -48,22 +48,30 @@
 namespace gadget
 {
 
-bool SimPosition::config(jccl::ConfigChunkPtr chunk)
+std::string SimPosition::getElementType()
 {
-   if(! (Input::config(chunk) && Position::config(chunk) && SimInput::config(chunk) ))
+   return "simulated_positional_device";
+}
+
+bool SimPosition::config(jccl::ConfigElementPtr element)
+{
+   if (! (Input::config(element) && Position::config(element) &&
+          SimInput::config(element)) )
+   {
       return false;
+   }
 
-   mDTrans = chunk->getProperty<float>("dtrans");
-   mDRot   = chunk->getProperty<float>("drot");
+   mDTrans = element->getProperty<float>("translation_delta");
+   mDRot   = element->getProperty<float>("rotation_delta");
 
-   mTransCoordSystem = chunk->getProperty<int>("transCoordSystem");
-   mRotCoordSystem = chunk->getProperty<int>("rotCoordSystem");
+   mTransCoordSystem = element->getProperty<int>("translation_coordinate_system");
+   mRotCoordSystem   = element->getProperty<int>("rotation_coordinate_system");
 
-   std::vector<jccl::ConfigChunkPtr> key_list;
-   int key_count = chunk->getNum("keyPairs");
+   std::vector<jccl::ConfigElementPtr> key_list;
+   int key_count = element->getNum("key_pair");
    for ( int i = 0; i < key_count; ++i )
    {
-      key_list.push_back(chunk->getProperty<jccl::ConfigChunkPtr>("keyPairs", i));
+      key_list.push_back(element->getProperty<jccl::ConfigElementPtr>("key_pair", i));
    }
    std::vector<KeyModPair> key_pairs = readKeyList(key_list);
 
@@ -75,12 +83,12 @@ bool SimPosition::config(jccl::ConfigChunkPtr chunk)
    }
 
    // Set initial position
-   float x_pos = chunk->getProperty<float>("initialPos",0);
-   float y_pos = chunk->getProperty<float>("initialPos",1);
-   float z_pos = chunk->getProperty<float>("initialPos",2);
-   float x_rot = chunk->getProperty<float>("initialRot",0);
-   float y_rot = chunk->getProperty<float>("initialRot",1);
-   float z_rot = chunk->getProperty<float>("initialRot",2);
+   float x_pos = element->getProperty<float>("initial_position",0);
+   float y_pos = element->getProperty<float>("initial_position",1);
+   float z_pos = element->getProperty<float>("initial_position",2);
+   float x_rot = element->getProperty<float>("initial_rotation",0);
+   float y_rot = element->getProperty<float>("initial_rotation",1);
+   float z_rot = element->getProperty<float>("initial_rotation",2);
 
    gmtl::identity( mPos.mPosData );
 

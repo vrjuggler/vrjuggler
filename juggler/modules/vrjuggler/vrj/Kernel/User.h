@@ -34,13 +34,9 @@
 #define _VRJ_USER_H_
 
 #include <vrj/vrjConfig.h>
-//#include <vrj/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/PositionInterface.h>
 #include <vpr/Util/Interval.h>
-
-namespace jccl {
-    class ConfigChunk;
-};
 
 
 namespace vrj
@@ -50,7 +46,7 @@ namespace vrj
 /** Representation for Juggler user in multi-user environments.
  *
  * Each user has a system assigned id as well
- * as a string name from the user config chunk
+ * as a string name from the user config element
  * the created the user.  These ids can be
  * used to identify a user at set points in
  * a juggler application where user information
@@ -84,7 +80,7 @@ public:
     * @post User has valid ids (int and string)
     * @posr Positional device for user location has been set
     */
-   virtual bool config(jccl::ConfigChunkPtr chunk);
+   virtual bool config(jccl::ConfigElementPtr element);
 
    gadget::PositionProxy* getHeadPosProxy()
    { return mHead.getProxy(); }
@@ -108,7 +104,6 @@ private:
    void operator=(const User& u) {;}
 };
 
-
-};
+}
 
 #endif

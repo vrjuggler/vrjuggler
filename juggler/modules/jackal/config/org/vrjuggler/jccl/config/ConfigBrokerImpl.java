@@ -34,98 +34,26 @@ package org.vrjuggler.jccl.config;
 import java.io.*;
 import java.util.*;
 import javax.swing.event.EventListenerList;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-
-import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.jccl.config.io.*;
 
 /**
- * Implementation of the ConfigBroker interface for the server side. This
- * particular implementation will try to load in the default VRJuggler Chunk
- * description if they are available.
+ * Implementation of the ConfigBroker interface for the server side.
  *
  * @see ConfigBroker
  */
 public class ConfigBrokerImpl
    implements ConfigBroker
 {
-//   /**
-//    * Creates a new ConfigBroker service. This will try to load the VRJuggler
-//    * chunk desc file by default upon initialization.
-//    *
-//    * <b>TODO: This is the wrong place to be auto-loading the VRJuggler chunk
-//    * desc file. Look to put this elsewhere.</b>
-//    */
-//   public ConfigBrokerImpl()
-//   {
-//      String desc_filename = EnvironmentService.expandEnvVars("${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc");
-//      File desc_file = new File(desc_filename);
-//
-//      try
-//      {
-//         if (desc_file.exists() && desc_file.canRead())
-//         {
-//            // File exists and is readable. Lets see if we can load it.
-//            System.out.println("Trying to load "+desc_filename);
-//            InputStream in = new BufferedInputStream(new FileInputStream(desc_file));
-//
-////            String res_name = "VRJuggler Configuration Definitions";
-//            String res_name = desc_file.getAbsolutePath();
-//            open(new ConfigContext(), res_name, in);
-//         }
-//      }
-//      catch (IOException ioe)
-//      {
-//         System.err.println("Failed to load base VRJuggler Chunk Descriptions: "+ioe.getMessage());
-//      }
-//   }
-//
-//   /**
-//    * Opens a new configuration resource using the given unique name from the
-//    * given input stream.
-//    *
-//    * @param context    the context in which to open the resource
-//    * @param name       the unique name to assign to the resource
-//    * @param input      the stream from which to retrieve the resource data
-//    *
-//    * @throws IOException  if there is an error opening the resource
-//    */
-//   public void open(ConfigContext context, String name, InputStream input)
-//     throws IOException
-//   {
-//      // Check if a resource is already open under that name
-//      if (resources.containsKey(name))
-//      {
-//         throw new IllegalArgumentException(name + " already in use");
-//      }
-//
-//      // Try to load in the resource
-//      Document resource_doc = loadResource(input);
-//      if (resource_doc.getRootElement().getName().equals("ChunkDescDB"))
-//      {
-//         // We just loaded a ChunkDescDB
-//         ChunkDescDB desc_db = new ChunkDescDB();
-//         desc_db.build(resource_doc);
-//         resources.put(name, desc_db);
-//      }
-//      else if (resource_doc.getRootElement().getName().equals("ConfigChunkDB"))
-//      {
-//         // We just loaded a ConfigChunkDB
-//         ChunkFactory.setDescs(getDescs(context));
-//         ConfigChunkDB chunk_db = new ConfigChunkDB();
-//         chunk_db.build(resource_doc);
-//         resources.put(name, chunk_db);
-//      }
-//      else
-//      {
-//         throw new IOException("Invalid file");
-//      }
-//
-//      // Let listeners know the resource was opened
-//      fireResourceOpened(name);
-//   }
+   /**
+    * Creates a new configuration broker implementation. All definitions found
+    * in the configuration definition search path will be loaded and stored in
+    * the repository.
+    */
+   public ConfigBrokerImpl()
+   {
+      initRepository();
+   }
 
    /**
     * Adds the given resources in the given data source to this broker.
@@ -137,10 +65,10 @@ public class ConfigBrokerImpl
    {
       System.out.println("Adding data source: "+name);
       // Check if a resource is already open under that name
-      if (resources.containsKey(name))
+      if (mResources.containsKey(name))
       {
          // The key is in use ... is it the same datasource?
-         if (resources.get(name).equals(dataSource))
+         if (mResources.get(name).equals(dataSource))
          {
             // Same data source, increment the reference
             addReference(name);
@@ -153,7 +81,7 @@ public class ConfigBrokerImpl
       else
       {
          // This is a new data source, add it in to this broker
-         resources.put(name, dataSource);
+         mResources.put(name, dataSource);
          addReference(name);
          fireResourceAdded(name, dataSource);
       }
@@ -171,7 +99,7 @@ public class ConfigBrokerImpl
    {
       System.out.println("Removing data source: "+name);
       // Check if a resource is open under that name
-      if (! resources.containsKey(name))
+      if (! mResources.containsKey(name))
       {
          throw new IllegalArgumentException(name + " is not open");
       }
@@ -180,7 +108,7 @@ public class ConfigBrokerImpl
       if (getReferenceCount(name) == 1)
       {
          // Hey, nobody wants this baby anymore. Remove it
-         DataSource data_source = (DataSource)resources.remove(name);
+         DataSource data_source = (DataSource)mResources.remove(name);
          removeReference(name);
          fireResourceRemoved(name, data_source);
          return data_source;
@@ -204,94 +132,8 @@ public class ConfigBrokerImpl
     */
    public DataSource get(String name)
    {
-      return (DataSource)resources.get(name);
+      return (DataSource)mResources.get(name);
    }
-
-   /**
-    * Loads the DOM document from the given input stream.
-    *
-    * @param input      the stream to read from
-    *
-    * @return  the DOM document corresponding to the resource's data
-    *
-    * @throws IOException     if there was an error loading the resource
-    */
-   private Document loadResource(InputStream input)
-      throws IOException
-   {
-      Document doc = null;
-
-      try
-      {
-         SAXBuilder builder = new SAXBuilder();
-         doc = builder.build(input);
-      }
-      catch (JDOMException e)
-      {
-         throw new IOException(e.getMessage());
-      }
-
-      return doc;
-   }
-
-//   /**
-//    * Closes the configuration resource associated with the given name.
-//    *
-//    * @param name    the name of the resource to close
-//    *
-//    * @throws IOException  if there is an error closing the resource
-//    */
-//   public void close(String name)
-//     throws IOException
-//   {
-//      // Check if a resource is actually open under that name
-//      if (resources.containsKey(name))
-//      {
-//         throw new IllegalArgumentException(name + " is not open");
-//      }
-//
-//      // Close the resource
-//      resources.remove(name);
-//
-//      // Let listeners know the resource was closed
-//      fireResourceClosed(name);
-//   }
-//
-//   /**
-//    * Saves the configuration resource associated with the given name.
-//    *
-//    * @param name    the name of the resource to save
-//    *
-//    * @throws IOException  if there is an error saving the resource
-//    */
-//   public void save(String name)
-//     throws IOException
-//   {
-//      // Check if a resource is actually open under that name
-//      if (! resources.containsKey(name))
-//      {
-//         throw new IllegalArgumentException(name + " is not open");
-//      }
-//
-//      System.out.println("Saving resource: "+name);
-//
-//      // Try to save the resource
-//      OutputStream out = new BufferedOutputStream(new FileOutputStream(name));
-//      Object resource = resources.get(name);
-//      if (resource instanceof ChunkDescDB)
-//      {
-//         ((ChunkDescDB)resource).write(out);
-//      }
-//      else if (resource instanceof ConfigChunkDB)
-//      {
-//         ((ConfigChunkDB)resource).write(out);
-//      }
-//      else
-//      {
-//         throw new IOException("Unkown resource type");
-//      }
-//      fireResourceSaved(name);
-//   }
 
    /**
     * Tests if the data source with the given name is being managed by this
@@ -304,40 +146,40 @@ public class ConfigBrokerImpl
     */
    public boolean containsDataSource(String name)
    {
-      return resources.containsKey(name);
+      return mResources.containsKey(name);
    }
 
    /**
-    * Adds the given config chunk to the current context. If the context
-    * contains more than one resource, a dialog will prompt the user for which
-    * resource they wish to add the chunk to.
+    * Adds the given configuration element to the current context. If the
+    * context contains more than one resource, a dialog will prompt the user for
+    * which resource they wish to add the element to.
     *
     * @param context    the context in which to add the chunk
-    * @param chunk      the chunk to add
+    * @param elt        the element to add
     *
     * @return  true if the addition was successful, false otherwise
     */
-   public boolean add(ConfigContext context, ConfigChunk chunk)
+   public boolean add(ConfigContext context, ConfigElement elt)
    {
       // Get a list of the resources in this context that can handle ConfigChunks
-      List chunk_res = getElementResources(context);
+      List resources = context.getResources();
       DataSource target = null;
 
       // Check if this context has nothing to add to
-      if (chunk_res.size() == 0)
+      if (resources.size() == 0)
       {
          return false;
       }
 
       // If there is more than one file to add to, ask the user which one they
       // want to add it to.
-      if (chunk_res.size() > 1)
+      if (resources.size() > 1)
       {
          // Present the user with a dialog from which to choose a resource
          ResourceChooser chooser = new ResourceChooser();
          chooser.setDialogTitle("Choose a Configuration resource");
          List res_names = new ArrayList();
-         for (Iterator itr = chunk_res.iterator(); itr.hasNext(); )
+         for (Iterator itr = resources.iterator(); itr.hasNext(); )
          {
             res_names.add(getNameFor(itr.next()));
          }
@@ -345,7 +187,7 @@ public class ConfigBrokerImpl
          int result = chooser.showDialog(null);
          if (result == ResourceChooser.APPROVE_OPTION)
          {
-            target = (DataSource)resources.get(chooser.getSelectedResource());
+            target = (DataSource)mResources.get(chooser.getSelectedResource());
          }
          else
          {
@@ -355,195 +197,61 @@ public class ConfigBrokerImpl
       }
       else
       {
-         target = (DataSource)chunk_res.get(0);
+         target = (DataSource)resources.get(0);
       }
 
-      target.add(chunk);
-      fireConfigChunkAdded(getNameFor(target), chunk);
+      target.add(elt);
+      fireConfigElementAdded(getNameFor(target), elt);
       return true;
    }
 
    /**
-    * Removes the given config chunk from the current context. If the chunk
-    * appears in more than one resource in the context, a dialog will prompt the
-    * user for which resource they wish to remove the chunk from. If the chunk
-    * does not appear in any resource in the context, this method will return
-    * false.
+    * Removes the given configuration element from the current context. If the
+    * element appears in more than one resource in the context, a dialog will
+    * prompt the user for which resource they wish to remove the element from.
+    * If the element does not appear in any resource in the context, this method
+    * will return false.
     *
     * @param context    the context from which to remove the chunk
-    * @param chunk      the chunk to remove
+    * @param elt        the element to remove
     *
     * @return  true if the removal was successful, false if the user cancelled
-    *          the removal or the chunk does not exist in any resource
+    *          the removal or the element does not exist in any resource
     */
-   public boolean remove(ConfigContext context, ConfigChunk chunk)
+   public boolean remove(ConfigContext context, ConfigElement elt)
    {
-      // Get a list of the resources in this context that can handle ConfigChunks
-      List chunk_res = getElementResources(context);
-
-      for (Iterator itr = chunk_res.iterator(); itr.hasNext(); )
+      List resources = context.getResources();
+      for (Iterator itr = resources.iterator(); itr.hasNext(); )
       {
          DataSource data_source = (DataSource)itr.next();
-         if (data_source.contains(chunk))
+         if (data_source.contains(elt))
          {
-            data_source.remove(chunk);
-            fireConfigChunkRemoved(getNameFor(data_source), chunk);
+            data_source.remove(elt);
+            fireConfigElementRemoved(getNameFor(data_source), elt);
             return true;
          }
       }
       return false;
-   }
-
-   /**
-    * Adds the given chunk description to the current context. If the context
-    * contains more than one resource, a dialog will prompt the user for which
-    * resource they wish to add the description to.
-    *
-    * @param context    the context in which to add the description
-    * @param desc       the description to add
-    *
-    * @return  true if the addition was successful, false otherwise
-    */
-   public boolean add(ConfigContext context, ChunkDesc desc)
-   {
-      // Get a list of the resources in this context that can handle ChunkDescs
-      List desc_res = getDefinitionResources(context);
-      DataSource target = null;
-
-      // Check if this context has nothing to add to
-      if (desc_res.size() == 0)
-      {
-         return false;
-      }
-
-      // If there is more than one file to add to, ask the user which one they
-      // want to add it to.
-      if (desc_res.size() > 1)
-      {
-         // Present the user with a dialog from which to choose a resource
-         ResourceChooser chooser = new ResourceChooser();
-         chooser.setDialogTitle("Choose a Configuration Definition resource");
-         List res_names = new ArrayList();
-         for (Iterator itr = desc_res.iterator(); itr.hasNext(); )
-         {
-            res_names.add(getNameFor(itr.next()));
-         }
-         chooser.setResources(res_names);
-         int result = chooser.showDialog(null);
-         if (result == ResourceChooser.APPROVE_OPTION)
-         {
-            target = (DataSource)resources.get(chooser.getSelectedResource());
-         }
-         else
-         {
-            // The user cancelled the action
-            return false;
-         }
-      }
-      else
-      {
-         target = (DataSource)desc_res.get(0);
-      }
-
-      target.add(desc);
-      fireChunkDescAdded(getNameFor(target), desc);
-      return true;
-   }
-
-   /**
-    * Removes the given chunk description from the current context. If the
-    * description appears in more than one resource in the context, a dialog
-    * will prompt the user for which resource they wish to remove the
-    * description from. If the description does not appear in any resource in
-    * the context, this method will return false.
-    *
-    * @param context    the context from which to remove the description
-    * @param desc       the description to remove
-    *
-    * @return  true if the removal was successful, false if the user cancelled
-    *          the removal or the description does not exist in any resource
-    */
-   public boolean remove(ConfigContext context, ChunkDesc desc)
-   {
-      // Get a list of the resources in this context that can handle ChunkDescs
-      List desc_res = getDefinitionResources(context);
-
-      for (Iterator itr = desc_res.iterator(); itr.hasNext(); )
-      {
-         DataSource data_source = (DataSource)itr.next();
-         if (data_source.contains(desc))
-         {
-            data_source.remove(desc);
-            fireChunkDescRemoved(getNameFor(data_source), desc);
-            return true;
-         }
-      }
-      return false;
-   }
-
-   /**
-    * Gets a list of all the configuration descriptions within the given
-    * context.
-    *
-    * @param context    the context from which to retrieve chunk descs
-    *
-    * @return  a list of the chunk descs
-    */
-   public List getDescs(ConfigContext context)
-   {
-      List all_descs = new ArrayList();
-      for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
-      {
-         String name = (String)itr.next();
-         DataSource data_source = (DataSource)resources.get(name);
-         if (data_source.acceptsDefinitions())
-         {
-            all_descs.addAll(data_source.getDefinitions());
-         }
-      }
-
-      return all_descs;
    }
 
    /**
     * Gets a list of all the configuration elements within the given context.
     *
-    * @param context    the context from which to retrieve config chunks
+    * @param context    the context from which to retrieve elements
     *
-    * @return  a list of the config chunks
+    * @return  a list of the configuration elements
     */
-   public List getChunks(ConfigContext context)
+   public List getElements(ConfigContext context)
    {
-      List all_chunks = new ArrayList();
+      List all_elts = new ArrayList();
       for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
       {
          String name = (String)itr.next();
-         DataSource data_source = (DataSource)resources.get(name);
-         if (data_source.acceptsElements())
-         {
-            all_chunks.addAll(data_source.getElements());
-         }
+         DataSource data_source = (DataSource)mResources.get(name);
+         all_elts.addAll(data_source.getElements());
       }
 
-      return all_chunks;
-   }
-
-   /**
-    * Gets a list of all the configuration descriptions within the given
-    * resource.
-    *
-    * @param resource   the name of the resource in which to get descriptions
-    *
-    * @return  a list of the chunk descs in the resource if it has any
-    */
-   public List getDescsIn(String resource)
-   {
-      DataSource data_source = (DataSource)resources.get(resource);
-      if (data_source != null && data_source.acceptsDefinitions())
-      {
-         return data_source.getDefinitions();
-      }
-      return new ArrayList();
+      return all_elts;
    }
 
    /**
@@ -552,12 +260,12 @@ public class ConfigBrokerImpl
     *
     * @param resource   the name of the resource in which to get elements
     *
-    * @return  a list of the config chunks in the resource if it has any
+    * @return  a list of the ConfigElements in the resource
     */
-   public List getChunksIn(String resource)
+   public List getElementsIn(String resource)
    {
-      DataSource data_source = (DataSource)resources.get(resource);
-      if (data_source != null && data_source.acceptsElements())
+      DataSource data_source = (DataSource)mResources.get(resource);
+      if (data_source != null)
       {
          return data_source.getElements();
       }
@@ -573,8 +281,18 @@ public class ConfigBrokerImpl
    public List getResourceNames()
    {
       List result = new ArrayList();
-      result.addAll(resources.keySet());
+      result.addAll(mResources.keySet());
       return result;
+   }
+
+   /**
+    * Gets the repository in which configuration definitions are stored.
+    *
+    * @return  the repository of config definitions
+    */
+   public ConfigDefinitionRepository getRepository()
+   {
+      return mRepos;
    }
 
    /**
@@ -582,7 +300,7 @@ public class ConfigBrokerImpl
     */
    public void addConfigListener(ConfigListener listener)
    {
-      listeners.add(ConfigListener.class, listener);
+      mListeners.add(ConfigListener.class, listener);
    }
 
    /**
@@ -590,7 +308,7 @@ public class ConfigBrokerImpl
     */
    public void removeConfigListener(ConfigListener listener)
    {
-      listeners.remove(ConfigListener.class, listener);
+      mListeners.remove(ConfigListener.class, listener);
    }
 
    /**
@@ -598,7 +316,7 @@ public class ConfigBrokerImpl
     */
    public void addConfigBrokerListener(ConfigBrokerListener listener)
    {
-      listeners.add(ConfigBrokerListener.class, listener);
+      mListeners.add(ConfigBrokerListener.class, listener);
    }
 
    /**
@@ -607,7 +325,7 @@ public class ConfigBrokerImpl
     */
    public void removeConfigBrokerListener(ConfigBrokerListener listener)
    {
-      listeners.remove(ConfigBrokerListener.class, listener);
+      mListeners.remove(ConfigBrokerListener.class, listener);
    }
 
    /**
@@ -616,7 +334,7 @@ public class ConfigBrokerImpl
    protected void fireResourceAdded(String resource, DataSource dataSource)
    {
       ConfigBrokerEvent evt = null;
-      Object[] listener_list = listeners.getListenerList();
+      Object[] listener_list = mListeners.getListenerList();
       for (int i=listener_list.length-2; i>=0; i-=2)
       {
          if (listener_list[i] == ConfigBrokerListener.class)
@@ -636,7 +354,7 @@ public class ConfigBrokerImpl
    protected void fireResourceRemoved(String resource, DataSource dataSource)
    {
       ConfigBrokerEvent evt = null;
-      Object[] listener_list = listeners.getListenerList();
+      Object[] listener_list = mListeners.getListenerList();
       for (int i=listener_list.length-2; i>=0; i-=2)
       {
          if (listener_list[i] == ConfigBrokerListener.class)
@@ -651,141 +369,45 @@ public class ConfigBrokerImpl
    }
 
    /**
-    * Notifies all listeners that the given chunk desc has been added to the
-    * given resource.
+    * Notifies all listeners that the given configuration element has been added
+    * to the given resource.
     */
-   protected void fireChunkDescAdded(String resource, ChunkDesc desc)
+   protected void fireConfigElementAdded(String resource, ConfigElement elt)
    {
       ConfigEvent evt = null;
-      Object[] listener_list = listeners.getListenerList();
+      Object[] listener_list = mListeners.getListenerList();
       for (int i=listener_list.length-2; i>=0; i-=2)
       {
          if (listener_list[i] == ConfigListener.class)
          {
             if (evt == null)
             {
-               evt = new ConfigEvent(this, resource, desc);
+               evt = new ConfigEvent(this, resource, elt);
             }
-            ((ConfigListener)listener_list[i+1]).chunkDescAdded(evt);
+            ((ConfigListener)listener_list[i+1]).configElementAdded(evt);
          }
       }
    }
 
    /**
-    * Notifies all listeners that the given chunk desc has been removed from the
-    * given resource.
+    * Notifies all listeners that the given configuration element has been
+    * removed from the given resource.
     */
-   protected void fireChunkDescRemoved(String resource, ChunkDesc desc)
+   protected void fireConfigElementRemoved(String resource, ConfigElement elt)
    {
       ConfigEvent evt = null;
-      Object[] listener_list = listeners.getListenerList();
+      Object[] listener_list = mListeners.getListenerList();
       for (int i=listener_list.length-2; i>=0; i-=2)
       {
          if (listener_list[i] == ConfigListener.class)
          {
             if (evt == null)
             {
-               evt = new ConfigEvent(this, resource, desc);
+               evt = new ConfigEvent(this, resource, elt);
             }
-            ((ConfigListener)listener_list[i+1]).chunkDescRemoved(evt);
+            ((ConfigListener)listener_list[i+1]).configElementRemoved(evt);
          }
       }
-   }
-
-   /**
-    * Notifies all listeners that the given config chunk has been added to the
-    * given resource.
-    */
-   protected void fireConfigChunkAdded(String resource, ConfigChunk chunk)
-   {
-      ConfigEvent evt = null;
-      Object[] listener_list = listeners.getListenerList();
-      for (int i=listener_list.length-2; i>=0; i-=2)
-      {
-         if (listener_list[i] == ConfigListener.class)
-         {
-            if (evt == null)
-            {
-               evt = new ConfigEvent(this, resource, chunk);
-            }
-            ((ConfigListener)listener_list[i+1]).configChunkAdded(evt);
-         }
-      }
-   }
-
-   /**
-    * Notifies all listeners that the given config chunk has been removed from
-    * the given resource.
-    */
-   protected void fireConfigChunkRemoved(String resource, ConfigChunk chunk)
-   {
-      ConfigEvent evt = null;
-      Object[] listener_list = listeners.getListenerList();
-      for (int i=listener_list.length-2; i>=0; i-=2)
-      {
-         if (listener_list[i] == ConfigListener.class)
-         {
-            if (evt == null)
-            {
-               evt = new ConfigEvent(this, resource, chunk);
-            }
-            ((ConfigListener)listener_list[i+1]).configChunkRemoved(evt);
-         }
-      }
-   }
-
-   /**
-    * Gets a list of all the resources that can handle ConfigChunks.
-    *
-    * @param context       the context in which to search
-    *
-    * @return  a list of the matching resources
-    */
-   protected List getElementResources(ConfigContext context)
-   {
-      List results = new ArrayList();
-
-      for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
-      {
-         String name = (String)itr.next();
-         DataSource data_source = (DataSource)resources.get(name);
-         if (data_source != null)
-         {
-            if (data_source.acceptsElements())
-            {
-               results.add(data_source);
-            }
-         }
-      }
-
-      return results;
-   }
-
-   /**
-    * Gets a list of all the resources that can handle ChunkDescs.
-    *
-    * @param context       the context in which to search
-    *
-    * @return  a list of the matching resources
-    */
-   protected List getDefinitionResources(ConfigContext context)
-   {
-      List results = new ArrayList();
-
-      for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
-      {
-         String name = (String)itr.next();
-         DataSource data_source = (DataSource)resources.get(name);
-         if (data_source != null)
-         {
-            if (data_source.acceptsDefinitions())
-            {
-               results.add(data_source);
-            }
-         }
-      }
-
-      return results;
    }
 
    /**
@@ -796,10 +418,10 @@ public class ConfigBrokerImpl
     */
    private String getNameFor(Object resource)
    {
-      for (Iterator itr = resources.keySet().iterator(); itr.hasNext(); )
+      for (Iterator itr = mResources.keySet().iterator(); itr.hasNext(); )
       {
          String name = (String)itr.next();
-         Object res = resources.get(name);
+         Object res = mResources.get(name);
          if (res != null)
          {
             if (res == resource)
@@ -814,11 +436,11 @@ public class ConfigBrokerImpl
    private synchronized int getReferenceCount(String name)
    {
       // Ensure that the reference is valid
-      if (! references.containsKey(name))
+      if (! mReferences.containsKey(name))
       {
          return 0;
       }
-      return ((Integer)references.get(name)).intValue();
+      return ((Integer)mReferences.get(name)).intValue();
    }
 
    private synchronized void addReference(String name)
@@ -826,7 +448,7 @@ public class ConfigBrokerImpl
       // Increment the ref count and put it in the references map
       int refcount = getReferenceCount(name);
       ++refcount;
-      references.put(name, new Integer(refcount));
+      mReferences.put(name, new Integer(refcount));
       System.out.println("addReference: Data Source '"+name+"' now has "+refcount+" references");
    }
 
@@ -841,22 +463,112 @@ public class ConfigBrokerImpl
 
       // Decrement the refcount and put it back in the references map
       --refcount;
-      references.put(name, new Integer(refcount));
+      mReferences.put(name, new Integer(refcount));
       System.out.println("removeReference: Data Source '"+name+"' now has "+refcount+" references");
    }
 
    /**
-    * The mapping of resource names to the resources it refers to.
+    * Fills the repository with all the definitions it can find in the
+    * configuration definition search path.
     */
-   private Map resources = new HashMap();
+   private void initRepository()
+   {
+      mRepos = new ConfigDefinitionRepository();
+
+      // Get a list of the definition files to load
+      List def_file_list = new ArrayList();
+      List def_path = getDefinitionPath();
+      for (Iterator itr = def_path.iterator(); itr.hasNext(); )
+      {
+         // Check if this part of the path is a valid directory we can read
+         String dir_name = (String)itr.next();
+         File dir = new File(dir_name);
+         if (dir.exists() && dir.isDirectory() && dir.canRead())
+         {
+            // Get a list of all the config definition files in the directory
+            File[] def_files = dir.listFiles(new FilenameFilter()
+            {
+               public boolean accept(File dir, String file)
+               {
+                  // Only accept files with a .jdef extension
+                  if (file.endsWith(".jdef"))
+                  {
+                     File def_file = new File(dir, file);
+                     if (def_file.canRead())
+                     {
+                        return true;
+                     }
+                  }
+                  return false;
+               }
+            });
+
+            // Add the files to the list of files to load
+            for (int i=0; i<def_files.length; ++i)
+            {
+               def_file_list.add(def_files[i]);
+            }
+         }
+      }
+
+      // Load in the definitions for each file and place them in the repository
+      for (Iterator itr = def_file_list.iterator(); itr.hasNext(); )
+      {
+         try
+         {
+            // Attempt to load in the definitions in the file
+            File def_file = (File)itr.next();
+            ConfigDefinitionReader reader = new ConfigDefinitionReader(def_file);
+            List defs = reader.readDefinition();
+            for (Iterator def_itr = defs.iterator(); def_itr.hasNext(); )
+            {
+               ConfigDefinition def = (ConfigDefinition)def_itr.next();
+               mRepos.add(def);
+            }
+         }
+         catch (ParseException pe)
+         {
+            pe.printStackTrace();
+         }
+         catch (IOException ioe)
+         {
+            ioe.printStackTrace();
+         }
+      }
+   }
 
    /**
-    * The mapping of data source names to their reference count.
+    * Gets a list of the directories in which to look for configuration
+    * definitions.
     */
-   private Map references = new HashMap();
+   private List getDefinitionPath()
+   {
+      List dirs = new ArrayList();
 
-   /**
-    * All listeners interested in this broker.
-    */
-   private EventListenerList listeners = new EventListenerList();
+      // Get the path from the environment
+      String default_path = "${VJ_BASE_DIR}/share/vrjuggler/data/definitions";
+      String path = System.getProperty("JCCL_DEFINITION_PATH", default_path);
+      path = EnvironmentService.expandEnvVars(path);
+
+      // Split the path on the path separator
+      StringTokenizer tokenizer = new StringTokenizer(path, File.pathSeparator);
+      while (tokenizer.hasMoreTokens())
+      {
+         dirs.add(tokenizer.nextToken());
+      }
+
+      return dirs;
+   }
+
+   /** The mapping of resource names to the resources it refers to. */
+   private Map mResources = new HashMap();
+
+   /** The repository in which configuration definitions are stored. */
+   private ConfigDefinitionRepository mRepos = new ConfigDefinitionRepository();
+
+   /** The mapping of data source names to their reference count. */
+   private Map mReferences = new HashMap();
+
+   /** All listeners interested in this broker. */
+   private EventListenerList mListeners = new EventListenerList();
 }

@@ -120,9 +120,9 @@ public:
    bool isVisible()
    { return mVisible; }
 
-   static std::string getChunkType() { return "GloveProxy"; }
+   static std::string getElementType();
 
-   bool config(jccl::ConfigChunkPtr chunk);
+   bool config(jccl::ConfigElementPtr element);
 
    virtual Input* getProxiedInputDevice()
    {

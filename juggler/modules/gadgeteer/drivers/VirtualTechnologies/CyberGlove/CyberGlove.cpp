@@ -38,7 +38,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_types.h>
@@ -56,7 +56,7 @@ void initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-bool CyberGlove::config(jccl::ConfigChunkPtr c)
+bool CyberGlove::config(jccl::ConfigElementPtr e)
 {
    if(! (Input::config(c) && Glove::config(c) ))
       return false;
@@ -64,17 +64,17 @@ bool CyberGlove::config(jccl::ConfigChunkPtr c)
 
    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
 
-   mPortName = c->getProperty<std::string>("port");
-   mBaudRate = c->getProperty<int>("baud");
+   mPortName = e->getProperty<std::string>("port");
+   mBaudRate = e->getProperty<int>("baud");
 
-   char* home_dir = c->getProperty("calDir").cstring();
+   char* home_dir = e->getProperty("calibration_dir").cstring();
    if (home_dir != NULL)
    {
        mCalDir = new char [strlen(home_dir) + 1];
        strcpy(mCalDir,home_dir);
    }
 
-   std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
+   std::string glove_pos_proxy = e->getProperty("glove_position");    // Get the name of the pos_proxy
    if(glove_pos_proxy == std::string(""))
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
@@ -102,7 +102,13 @@ bool CyberGlove::config(jccl::ConfigChunkPtr c)
    mGlove = new CyberGloveBasic( mCalDir, mPortName, mBaudRate );
 
    return true;
-};
+}
+
+std::string
+CyberGlove::getElementType()
+{
+   return "cyber_glove";
+}
 
 int
 CyberGlove::startSampling()

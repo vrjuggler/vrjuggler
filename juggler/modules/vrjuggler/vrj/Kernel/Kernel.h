@@ -75,7 +75,7 @@ class App;
  * This class is the only class that MUST be instantiated
  * for all applications.
  */
-class VJ_CLASS_API Kernel : public jccl::ConfigChunkHandler
+class VJ_CLASS_API Kernel : public jccl::ConfigElementHandler
 {
 public:
 
@@ -127,18 +127,20 @@ public:
    */
    void loadConfigFile(std::string filename);
 
-   /** Load a chunk description file
-   * @post The chunk factory can now manage chunks with the given types
-   */
-   void loadChunkDescFile(std::string filename);
+   /**
+    * Loads an element definition file.
+    * @post The config element factory can now manage elements with the given
+    *       types.
+    */
+   void loadConfigDefinitionFile(std::string filename);
 
 
-protected:  // -- CHUNK HANDLER
-   /** Can the handler handle the given chunk?
-   * @return true - Can handle it
-   *          false - Can't handle it
-   */
-   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
+protected:  // -- CONFIG ELEMENT HANDLER
+   /** Can the handler handle the given element?
+    * @return true - Can handle it
+    *          false - Can't handle it
+    */
+   virtual bool configCanHandle(jccl::ConfigElementPtr element);
 
    /** Process any pending reconfiguration that we can deal with
    *
@@ -150,27 +152,30 @@ protected:  // -- CHUNK HANDLER
    *     virtual int configProcessPending(bool lockIt = true);
    */
 
-protected:  // -- CHUNK HANDLER
-   /** Add the chunk to the configuration
-   * @pre    configCanHandle(chunk) == true
-   * @return success
-   */
-   virtual bool configAdd(jccl::ConfigChunkPtr chunk);
+protected:  // -- CONFIG ELEMENT HANDLER
+   /**
+    * Adds the element to the configuration.
+    * @pre    configCanHandle(element) == true.
+    * @return Success.
+    */
+   virtual bool configAdd(jccl::ConfigElementPtr element);
 
-   /** Remove the chunk from the current configuration
-   * @pre    configCanHandle(chunk) == true
-   * @return success
-   */
-   virtual bool configRemove(jccl::ConfigChunkPtr chunk);
+   /**
+    * Removes the element from the current configuration.
+    * @pre    configCanHandle(element) == true.
+    * @return success.
+    */
+   virtual bool configRemove(jccl::ConfigElementPtr element);
 
 protected:  // Local config functions
-   /** Add a User to the system */
-   bool addUser(jccl::ConfigChunkPtr chunk);
+   /** Adds a User to the system. */
+   bool addUser(jccl::ConfigElementPtr element);
 
-   /** Remove a User from the system
-   * @note Currently not implemented
-   */
-   bool removeUser(jccl::ConfigChunkPtr chunk);
+   /**
+    * Removes a User from the system.
+    * @note Currently not implemented.
+    */
+   bool removeUser(jccl::ConfigElementPtr element);
 
 protected:
    /** Updates any data that needs updated once a frame (Trackers, etc.)
@@ -258,7 +263,7 @@ protected:
    /** Constructor:  Hidden, so no instantiation is allowed. */
    Kernel();
 
-   Kernel(const vrj::Kernel& k) : jccl::ConfigChunkHandler() {;}
+   Kernel(const vrj::Kernel& k) : jccl::ConfigElementHandler() {;}
    void operator=(const vrj::Kernel& k) {;}
 
    virtual ~Kernel()

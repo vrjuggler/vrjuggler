@@ -53,7 +53,7 @@ class PinchGloveAdaptor : public BaseAdaptor
 {
 public:
    /// Default constructor.
-   PinchGloveAdaptor(const std::string& devName = "PinchGlove");
+   PinchGloveAdaptor(const std::string& devName = "pinch_glove");
    ~PinchGloveAdaptor();
 
    /** Connects to the pinch glove hardware. */

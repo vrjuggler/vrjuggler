@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/EventWindowProxy.h>
 
@@ -39,17 +39,24 @@
 namespace gadget
 {
 
-bool EventWindowProxy::config(jccl::ConfigChunkPtr chunk)
+std::string EventWindowProxy::getElementType()
+{
+   return "event_window_proxy";
+}
+
+bool EventWindowProxy::config(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       std::string("------------------ EventWindow PROXY config() -----------------\n"),
       std::string("\n"));
-   vprASSERT(chunk->getDescToken() == "EventWindowProxy");
-   bool base_config = Proxy::config(chunk);
-   if(!base_config)
-      return false;
+   vprASSERT(element->getID() == getElementType());
 
-   mDeviceName = chunk->getProperty<std::string>("device");
+   if( ! Proxy::config(element) )
+   {
+      return false;
+   }
+
+   mDeviceName = element->getProperty<std::string>("device");
 
    refresh();
 

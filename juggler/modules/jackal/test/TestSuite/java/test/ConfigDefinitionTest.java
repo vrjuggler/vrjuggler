@@ -62,7 +62,7 @@ import org.vrjuggler.jccl.config.event.*;
    private ConfigDefinition makeConfigDef()
    {
       List categories = new ArrayList();
-      categories.add("VRAC");
+      categories.add(new Category("/VRAC"));
 
       List prop_defs = new ArrayList();
       prop_defs.add(mNamePropDef);
@@ -80,7 +80,7 @@ import org.vrjuggler.jccl.config.event.*;
    public void testConstructor()
    {
       List categories = new ArrayList();
-      categories.add("VRAC");
+      categories.add(new Category("/VRAC"));
 
       List prop_defs = new ArrayList();
       prop_defs.add(mNamePropDef);
@@ -184,9 +184,9 @@ import org.vrjuggler.jccl.config.event.*;
 
       ConfigDefinition def = makeConfigDef();
       def.addConfigDefinitionListener(l);
-      def.addCategory("Personnel");
+      def.addCategory(new Category("/Personnel"));
       // Make sure the category was actually added
-      assertEquals(def.getCategories().get(1), "Personnel");
+      assertEquals(def.getCategories().get(1), new Category("/Personnel"));
 
       // Make sure an event was posted
       assertTrue(l.fired);
@@ -208,7 +208,7 @@ import org.vrjuggler.jccl.config.event.*;
 
       ConfigDefinition def = makeConfigDef();
       def.addConfigDefinitionListener(l);
-      def.removeCategory("VRAC");
+      def.removeCategory(new Category("/VRAC"));
       // Make sure the category was actually removed
       assertEquals(def.getCategories().size(), 0);
 

@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <vrj/Display/Projection.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
@@ -55,7 +55,7 @@ public:
       //mType = Projection::SIM;
    }
 
-   virtual void config(jccl::ConfigChunkPtr chunk);
+   virtual void config(jccl::ConfigElementPtr element);
 
    void setVerticalFOV(const float fov)
    {

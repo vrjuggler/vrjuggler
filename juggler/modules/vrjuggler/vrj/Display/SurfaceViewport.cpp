@@ -36,7 +36,7 @@
 #include <gmtl/Math.h>
 //#include <vrj/Math/Coord.h>
 #include <gmtl/Vec.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <vrj/Kernel/User.h>
 
 #include <gadget/Type/Position/PositionUnitConversion.h>
@@ -53,42 +53,46 @@
 namespace vrj
 {
 
-void SurfaceViewport::config(jccl::ConfigChunkPtr chunk)
+void SurfaceViewport::config(jccl::ConfigElementPtr element)
 {
-   vprASSERT(chunk.get() != NULL);
-   vprASSERT(chunk->getDescToken() == std::string("surfaceViewport"));
+   vprASSERT(element.get() != NULL);
+   vprASSERT(element->getID() == "surface_viewport");
 
-   Viewport::config(chunk);     // Call base class config
+   Viewport::config(element);     // Call base class config
 
    mType = SURFACE;
 
    // Read in the corners
-   jccl::ConfigChunkPtr ll_corner_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("corners",0);
-   jccl::ConfigChunkPtr lr_corner_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("corners",1);
-   jccl::ConfigChunkPtr ur_corner_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("corners",2);
-   jccl::ConfigChunkPtr ul_corner_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("corners",3);
-   mLLCorner.set(ll_corner_chunk->getProperty<float>("x"),
-                 ll_corner_chunk->getProperty<float>("y"),
-                 ll_corner_chunk->getProperty<float>("z"));
-   mLRCorner.set(lr_corner_chunk->getProperty<float>("x"),
-                 lr_corner_chunk->getProperty<float>("y"),
-                 lr_corner_chunk->getProperty<float>("z"));
-   mURCorner.set(ur_corner_chunk->getProperty<float>("x"),
-                 ur_corner_chunk->getProperty<float>("y"),
-                 ur_corner_chunk->getProperty<float>("z"));
-   mULCorner.set(ul_corner_chunk->getProperty<float>("x"),
-                 ul_corner_chunk->getProperty<float>("y"),
-                 ul_corner_chunk->getProperty<float>("z"));
+   jccl::ConfigElementPtr ll_corner_elt =
+      element->getProperty<jccl::ConfigElementPtr>("corners",0);
+   jccl::ConfigElementPtr lr_corner_elt =
+      element->getProperty<jccl::ConfigElementPtr>("corners",1);
+   jccl::ConfigElementPtr ur_corner_elt =
+      element->getProperty<jccl::ConfigElementPtr>("corners",2);
+   jccl::ConfigElementPtr ul_corner_elt =
+      element->getProperty<jccl::ConfigElementPtr>("corners",3);
+   mLLCorner.set(ll_corner_elt->getProperty<float>("x"),
+                 ll_corner_elt->getProperty<float>("y"),
+                 ll_corner_elt->getProperty<float>("z"));
+   mLRCorner.set(lr_corner_elt->getProperty<float>("x"),
+                 lr_corner_elt->getProperty<float>("y"),
+                 lr_corner_elt->getProperty<float>("z"));
+   mURCorner.set(ur_corner_elt->getProperty<float>("x"),
+                 ur_corner_elt->getProperty<float>("y"),
+                 ur_corner_elt->getProperty<float>("z"));
+   mULCorner.set(ul_corner_elt->getProperty<float>("x"),
+                 ul_corner_elt->getProperty<float>("y"),
+                 ul_corner_elt->getProperty<float>("z"));
 
    // Calculate the rotation and the pts
    calculateSurfaceRotation();
    calculateCornersInBaseFrame();
 
    // Get info about being tracked
-   mTracked = chunk->getProperty<bool>("tracked");
+   mTracked = element->getProperty<bool>("tracked");
    if(mTracked)
    {
-      mTrackerProxyName = chunk->getProperty<std::string>("trackerproxy");
+      mTrackerProxyName = element->getProperty<std::string>("tracker_proxy");
    }
 
    // Create Projection objects
@@ -117,11 +121,11 @@ void SurfaceViewport::config(jccl::ConfigChunkPtr chunk)
                                                mTrackerProxyName);
    }
    // Configure the projections
-   mLeftProj->config(chunk);
+   mLeftProj->config(element);
    mLeftProj->setEye(Projection::LEFT);
    mLeftProj->setViewport(this);
 
-   mRightProj->config(chunk);
+   mRightProj->config(element);
    mRightProj->setEye(Projection::RIGHT);
    mRightProj->setViewport(this);
 }

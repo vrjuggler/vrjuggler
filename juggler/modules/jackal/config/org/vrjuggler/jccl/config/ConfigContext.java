@@ -54,8 +54,8 @@ public class ConfigContext
     */
    public ConfigContext()
    {
-      resources = new ArrayList();
-      listenerList = new EventListenerList();
+      mResources = new ArrayList();
+      mListenerList = new EventListenerList();
    }
 
    /**
@@ -67,7 +67,7 @@ public class ConfigContext
    {
       if (! contains(name))
       {
-         resources.add(name);
+         mResources.add(name);
          fireResourceAdded(name);
       }
    }
@@ -81,7 +81,7 @@ public class ConfigContext
    {
       if (contains(name))
       {
-         resources.remove(name);
+         mResources.remove(name);
          fireResourceRemoved(name);
       }
    }
@@ -93,7 +93,7 @@ public class ConfigContext
     */
    public boolean contains(String name)
    {
-      return resources.contains(name);
+      return mResources.contains(name);
    }
 
    /**
@@ -101,7 +101,7 @@ public class ConfigContext
     */
    public List getResources()
    {
-      return resources;
+      return mResources;
    }
 
    /**
@@ -112,7 +112,7 @@ public class ConfigContext
     */
    public void addContextListener(ContextListener listener)
    {
-      listenerList.add(ContextListener.class, listener);
+      mListenerList.add(ContextListener.class, listener);
    }
 
    /**
@@ -123,7 +123,7 @@ public class ConfigContext
     */
    public void removeContextListener(ContextListener listener)
    {
-      listenerList.remove(ContextListener.class, listener);
+      mListenerList.remove(ContextListener.class, listener);
    }
 
    /**
@@ -135,7 +135,7 @@ public class ConfigContext
    protected void fireResourceAdded(String resource)
    {
       ContextEvent evt = null;
-      Object[] listeners = listenerList.getListenerList();
+      Object[] listeners = mListenerList.getListenerList();
       for (int i=listeners.length-2; i>=0; i-=2)
       {
          if (listeners[i] == ContextListener.class)
@@ -158,7 +158,7 @@ public class ConfigContext
    protected void fireResourceRemoved(String resource)
    {
       ContextEvent evt = null;
-      Object[] listeners = listenerList.getListenerList();
+      Object[] listeners = mListenerList.getListenerList();
       for (int i=listeners.length-2; i>=0; i-=2)
       {
          if (listeners[i] == ContextListener.class)
@@ -177,10 +177,10 @@ public class ConfigContext
     * @link aggregation
     *      @associates <{ContextListener}>
     */
-   private List resources;
+   private List mResources;
 
    /**
     * All of the listeners interested in this context.
     */
-   private EventListenerList listenerList;
+   private EventListenerList mListenerList;
 }

@@ -38,7 +38,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/DeviceConstructor.h>
 
@@ -54,11 +54,16 @@ void initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-bool PinchGlove::config(jccl::ConfigChunkPtr c)
+std::string PinchGlove::getElementType()
 {
-   Input::config(c);
-   mPortName = c->getProperty<std::string>("port");
-   mBaudRate = c->getProperty<int>("baud");
+   return "pinch_glove";
+}
+
+bool PinchGlove::config(jccl::ConfigElementPtr e)
+{
+   Input::config(e);
+   mPortName = e->getProperty<std::string>("port");
+   mBaudRate = e->getProperty<int>("baud");
    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
 
    mGlove = new PinchGloveStandalone();

@@ -39,7 +39,7 @@
 #include <gadget/Type/AnalogData.h>
 #include <gadget/Type/SampleBuffer.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <vpr/IO/SerializableObject.h>
 
 
@@ -84,7 +84,7 @@ public:
     * Just call base class config.
     * @note Let constructor set device abilities.
     */
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /**
     * Returns "analog data".

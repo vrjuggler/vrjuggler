@@ -45,7 +45,7 @@
 #include <vpr/DynLoad/Library.h>
 
 #include <vpr/Util/Singleton.h>
-#include <jccl/RTRC/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
 #include <gadget/InputLoggerPtr.h>
 #include <map>
 #include <vector>
@@ -66,15 +66,15 @@ class DeviceFactory;
  *
  * The Input Manager, handles all the details behind organizing the input
  * devices in the library.  It provides an API for adding devices by their
- * JCCL config chunk and deleting them by their chunk (or just their string
+ * JCCL config element and deleting them by their element (or just their string
  * name).
  *
  * Proxies are used to abstract away from the devices so any type and number
  * of devices may be accessed in the same way.  These proxies are also
- * set up by configChunks and should be accessed by number, rather than name
+ * set up by config elements and should be accessed by number, rather than name
  * (for speed).
  */
-class GADGET_CLASS_API InputManager : public jccl::ConfigChunkHandler
+class GADGET_CLASS_API InputManager : public jccl::ConfigElementHandler
 {
    vprSingletonHeader( InputManager );    // Make it a singleton
 public:
@@ -88,50 +88,50 @@ public:
  //      CONFIG               //
  //---------------------------//
    /**
-    * Adds the chunk to the configuration.
-    * @pre configCanHandle(chunk) == true
+    * Adds the element to the configuration.
+    * @pre configCanHandle(element) == true
     * @return success
     */
-   bool configAdd(jccl::ConfigChunkPtr chunk);
+   bool configAdd(jccl::ConfigElementPtr element);
 
    /**
-    * Removes the chunk from the current configuration.
-    * @pre configCanHandle(chunk) == true
-    * @post (chunk is proxy) ==> (returns == false)<br>
-    *       (chunk is device) ==> (devices is removed && proxies are stupified)<br>
-    *       (chunk is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
+    * Removes the element from the current configuration.
+    * @pre configCanHandle(element) == true
+    * @post (element is proxy) ==> (returns == false)<br>
+    *       (element is device) ==> (devices is removed && proxies are stupified)<br>
+    *       (element is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
     * @return success
     */
-   bool configRemove(jccl::ConfigChunkPtr chunk);
+   bool configRemove(jccl::ConfigElementPtr element);
 
    /**
-    * Can the handler handle the given chunk?
+    * Can the handler handle the given element?
     *
     * @return true if the handler can handle it, false otherwise.
     */
-   bool configCanHandle(jccl::ConfigChunkPtr chunk);
+   bool configCanHandle(jccl::ConfigElementPtr element);
 
-   jccl::ConfigChunkPtr getDisplaySystemChunk();
+   jccl::ConfigElementPtr getDisplaySystemElement();
 
 // MOVE FOR RIM's USE private:
    /**
-    * Loads the device for the given chunk.
-    * @return true if the device was configured and added
+    * Loads the device for the given element.
+    * @return true if the device was configured and added.
     */
-   bool configureDevice(jccl::ConfigChunkPtr chunk);
+   bool configureDevice(jccl::ConfigElementPtr element);
 
 private:
    /**
-    * Loads the Proxy for the given chunk.
+    * Loads the Proxy for the given element.
     * @return true if the proxy was configured and added.
     */
-   bool configureProxy(jccl::ConfigChunkPtr chunk);
+   bool configureProxy(jccl::ConfigElementPtr element);
 
    /**
-    * Removes the device associated with the given chunk.
+    * Removes the device associated with the given element.
     * @return true if the device was removed.
     */
-   bool removeDevice(jccl::ConfigChunkPtr chunk);
+   bool removeDevice(jccl::ConfigElementPtr element);
 
 
    // ------------------------------- //
@@ -223,7 +223,7 @@ public:
 
 protected:
    bool removeProxy(std::string proxyName);
-   bool removeProxy(jccl::ConfigChunkPtr chunk);
+   bool removeProxy(jccl::ConfigElementPtr element);
 
    /**
     * Loads the Gadgeteer driver from the given vpr::LibraryPtr object.
@@ -254,22 +254,22 @@ protected:
    */
    std::map<std::string, std::string>   mProxyAliases;
 
-   jccl::ConfigChunkPtr          mDisplaySystemChunk;    /**< Config chunk for the displaySystem */
+   jccl::ConfigElementPtr mDisplaySystemElement; /**< Config element for the displaySystem */
 
-   gadget::InputLoggerPtr        mInputLogger;           /**< The input logger for the system. Constructed on demand. */
+   gadget::InputLoggerPtr mInputLogger;          /**< The input logger for the system. Constructed on demand. */
 
 private:
    /** Function to configure the proxy Alias array. */
-   bool configureProxyAlias(jccl::ConfigChunkPtr chunk);
+   bool configureProxyAlias(jccl::ConfigElementPtr element);
 
    /** Removes a proxy alias. */
-   bool removeProxyAlias(jccl::ConfigChunkPtr chunk);
+   bool removeProxyAlias(jccl::ConfigElementPtr element);
 
    /** Adds a proxy alias. */
    void addProxyAlias(std::string alias_name, std::string proxy_name);
 
    /** Configure/create a logger for the system */
-   bool configureInputLogger(jccl::ConfigChunkPtr chunk);
+   bool configureInputLogger(jccl::ConfigElementPtr element);
 
 };
 

@@ -37,7 +37,7 @@
 #include <gadget/gadgetConfig.h>
 #include <boost/concept_check.hpp>
 #include <string>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 #include <vpr/Util/Debug.h>
 
@@ -62,17 +62,17 @@ public:
    DeviceConstructorBase() {;}
 
    /** Creates the device. */
-   virtual Input* createDevice(jccl::ConfigChunkPtr chunk)
+   virtual Input* createDevice(jccl::ConfigElementPtr element)
    {
-      boost::ignore_unused_variable_warning(chunk);
+      boost::ignore_unused_variable_warning(element);
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "ERROR: DeviceConstructorBase::createDevice: Should never be called\n"
          << vprDEBUG_FLUSH;
       return NULL;
    }
 
-   /** Gets the string desc of the type of chunk we can create. */
-   virtual std::string getChunkType()
+   /** Gets the string desc of the type of element we can create. */
+   virtual std::string getElementType()
    {
       return std::string("BaseConstructor: Invalid type");
    }

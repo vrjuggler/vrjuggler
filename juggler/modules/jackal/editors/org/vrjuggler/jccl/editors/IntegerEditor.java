@@ -44,7 +44,7 @@ public class IntegerEditor
     */
    public String getAsText()
    {
-      return value.toString();
+      return mValue.toString();
    }
 
    /**
@@ -91,7 +91,7 @@ public class IntegerEditor
     */
    public Object getValue()
    {
-      return value;
+      return mValue;
    }
 
    /**
@@ -99,12 +99,12 @@ public class IntegerEditor
     */
    public void setValue(Object value)
    {
-      this.value = (Integer)value;
+      this.mValue = (Integer)value;
       firePropertyChange();
    }
 
    /**
     * The Integer being edited.
     */
-   private Integer value = null;
+   private Integer mValue = null;
 }

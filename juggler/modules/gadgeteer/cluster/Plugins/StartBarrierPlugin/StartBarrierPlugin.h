@@ -44,9 +44,7 @@
 #include <cluster/Packets/Packet.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ConfigChunkPtr.h>
-#include <jccl/RTRC/ConfigChunkHandler.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 #include <map>
 
@@ -87,28 +85,28 @@ public:
       return(std::string("StartBarrierPlugin"));
    }
 
-   /** Add the pending chunk to the configuration.
-    *  PRE: configCanHandle (chunk) == true.
-    *  @return true iff chunk was successfully added to configuration.
+   /** Add the pending element to the configuration.
+    *  @pre configCanHandle (element) == true.
+    *  @return true iff element was successfully added to configuration.
     */
-   bool configAdd(jccl::ConfigChunkPtr chunk);
+   bool configAdd(jccl::ConfigElementPtr element);
    
-   /** Remove the pending chunk from the current configuration.
-    *  PRE: configCanHandle (chunk) == true.
-    *  @return true iff the chunk (and any objects it represented)
+   /** Remove the pending element from the current configuration.
+    *  @pre configCanHandle (element) == true.
+    *  @return true iff the element (and any objects it represented)
     *          were successfully removed.
     */
-   bool configRemove(jccl::ConfigChunkPtr chunk);
+   bool configRemove(jccl::ConfigElementPtr element);
 
-   /** Checks if this handler can process chunk.
-    *  Typically, an implementation of handler will check the chunk's
+   /** Checks if this handler can process element.
+    *  Typically, an implementation of handler will check the element's
     *  description name/token to decide if it knows how to deal with
     *  it.
-    *  @return true iff this handler can process chunk.
+    *  @return true iff this handler can process element.
     */
-   bool configCanHandle(jccl::ConfigChunkPtr chunk);
+   bool configCanHandle(jccl::ConfigElementPtr element);
 
-   bool recognizeStartBarrierPluginConfig(jccl::ConfigChunkPtr chunk);
+   bool recognizeStartBarrierPluginConfig(jccl::ConfigElementPtr element);
 
    bool isBarrierMaster()
    { return mBarrierMaster; }
@@ -134,9 +132,13 @@ public:
 
 private:      
    /**
-    * Returns the string representation of the chunk type used for the StartBarrierPlugin
+    * Returns the string representation of the element type used for the
+    * StartBarrierPlugin.
     */   
-   static std::string getChunkType() { return std::string( "StartBarrierPlugin" ); }
+   static std::string getElementType()
+   {
+      return std::string("StartBarrierPlugin");
+   }
 
 private:
    // Barrier Variables

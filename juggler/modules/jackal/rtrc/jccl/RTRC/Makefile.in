@@ -49,7 +49,7 @@ SUBOBJDIR=	$(JCCL_RTRC_LIBRARY)
 HAVE_TWEEK_CXX=	@HAVE_TWEEK_CXX@
 
 SRCS= \
-	ConfigChunkHandler.cpp \
+	ConfigElementHandler.cpp \
 	ConfigManager.cpp \
 	DepChecker.cpp \
 	DependencyManager.cpp

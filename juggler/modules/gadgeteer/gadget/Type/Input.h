@@ -37,7 +37,7 @@
 //
 // Andy Himberger:    v0.1 (10/12/97) - Integeration to new libraries,
 //                                      support for
-//              Abilities, Instance Names, Device Names, Config Chunk
+//              Abilities, Instance Names, Device Names, Config element
 //              constructors
 // Andy Himberger:    v0.0  - Inital version
 ////////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 //#include <vpr/IO/ObjectReader.h>
 //#include <vpr/IO/ObjectWriter.h>
@@ -90,8 +90,8 @@ namespace gadget
 *  StartSampling, StopSampling, and UpdateData. <br> <br>
 *
 *  Dummy devices can use a default constructor, but physical devices should
-*  have a Constructor which takes a config chunk and calls the Input
-*  constructor taking a ConfigChunkPtr <br> <br>
+*  have a Constructor which takes a config element and calls the Input
+*  constructor taking a jccl::ConfigElementPtr. <br> <br>
 *
 *  All Physical devices will inherit from not Input but another abstract
 *  class which inherits from Input, currently there is support for
@@ -132,9 +132,9 @@ public:
    /** Config method.
     *
     *  This baselevel config will fill the base datamembers
-    *  when found in the jccl::ConfigChunkPtr such as instance name.
+    *  when found in the jccl::ConfigElementPtr such as instance name.
     */
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /** Sample the device.
     *
@@ -167,11 +167,11 @@ public:
     */
    virtual void updateData() = 0;
 
-   /** Returns the string rep of the chunk type used to config this device.
+   /** Returns the string rep of the element type used to config this device.
     * This string is used by the device factory to look up device drivers
-    * based up the type of chunk it is trying to load.
+    * based up the type of element it is trying to load.
     */
-   static std::string getChunkType() { return std::string("Undefined"); }
+   static std::string getElementType() { return std::string("Undefined"); }
 
    /**
     * Returns the name identifying this instance of the device.

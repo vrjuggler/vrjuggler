@@ -45,7 +45,7 @@ class IboxAdaptor : public BaseAdaptor
 {
 public:
    /// Default constructor.
-   IboxAdaptor(const std::string& devName = "IBox");
+   IboxAdaptor(const std::string& devName = "ibox");
    ~IboxAdaptor();
 
    /** Connects to the pinch glove hardware. */

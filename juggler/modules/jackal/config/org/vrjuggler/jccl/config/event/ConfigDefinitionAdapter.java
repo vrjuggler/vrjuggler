@@ -37,7 +37,7 @@ import java.util.EventListener;
  * Default implementation of the ConfigDefinitionListener that does nothing in
  * order to make the creating of ConfigDefinition listeners easier.
  */
-public class ConfigDefinitionAdapter
+public abstract class ConfigDefinitionAdapter
    implements ConfigDefinitionListener
 {
    public void nameChanged(ConfigDefinitionEvent evt) {}

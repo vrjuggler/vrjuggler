@@ -6417,7 +6417,7 @@ Unlock Working Copy Mutex</programlisting>
 
           <para>The next step is to implement the dynamic reconfiguration
           interface for the application object. This interface is defined by
-          the <classname>jccl::ConfigChunkHandler</classname><indexterm><primary>classes</primary><secondary>jccl::ConfigChunkHandler</secondary></indexterm>
+          the <classname>jccl::ConfigElementHandler</classname><indexterm><primary>classes</primary><secondary>jccl::ConfigElementHandler</secondary></indexterm>
           class and consists of three methods:</para>
 
           <orderedlist>
@@ -6430,7 +6430,7 @@ Unlock Working Copy Mutex</programlisting>
                 <methodname>configCanHandle</methodname>
 
                 <methodparam>
-                  <type>jccl::ConfigChunkPtr</type>
+                  <type>jccl::ConfigElementPtr</type>
 
                   <parameter>element</parameter>
                 </methodparam>
@@ -6465,7 +6465,7 @@ if ( !jccl::strcasecmp(s, &#34;my_custom_element_type&#34;) )
                 <methodname>configAdd</methodname>
 
                 <methodparam>
-                  <type>jccl::ConfigChunkPtr</type>
+                  <type>jccl::ConfigElementPtr</type>
 
                   <parameter>element</parameter>
                 </methodparam>
@@ -6503,7 +6503,7 @@ if ( !jccl::strcasecmp(s, &#34;my_custom_element_type&#34;) )
                 <methodname>configRemove</methodname>
 
                 <methodparam>
-                  <type>jccl::ConfigChunkPtr</type>
+                  <type>jccl::ConfigElementPtr</type>
 
                   <parameter>element</parameter>
                 </methodparam>
@@ -6538,7 +6538,7 @@ if ( !jccl::strcasecmp(s, &#34;my_custom_element_type&#34;) )
           data in that element in order to decide what to do. Configuration
           elements can be very complex, but the interface has been designed to
           be as simple as possible. We now describe a few of the most
-          important methods in the <classname>jccl::ConfigChunk</classname>
+          important methods in the <classname>jccl::ConfigElement</classname>
           API.</para>
 
           <itemizedlist>
@@ -6546,7 +6546,7 @@ if ( !jccl::strcasecmp(s, &#34;my_custom_element_type&#34;) )
               <methodsynopsis>
                 <type>std::string</type>
 
-                <methodname>jccl::ConfigChunk::getDescToken</methodname>
+                <methodname>jccl::ConfigElement::getID</methodname>
 
                 <void />
 
@@ -6554,9 +6554,9 @@ if ( !jccl::strcasecmp(s, &#34;my_custom_element_type&#34;) )
               </methodsynopsis>
 
               <indexterm>
-                <primary>jccl::ConfigChunk</primary>
+                <primary>jccl::ConfigElement</primary>
 
-                <secondary>getDescToken() method</secondary>
+                <secondary>getID() method</secondary>
               </indexterm>
 
               <para>This method returns the token of the configuration
@@ -6569,7 +6569,7 @@ if ( !jccl::strcasecmp(s, &#34;my_custom_element_type&#34;) )
               <methodsynopsis>
                 <type>T</type>
 
-                <methodname>jccl::ConfigChunk::getProperty&#60;T&#62;</methodname>
+                <methodname>jccl::ConfigElement::getProperty&#60;T&#62;</methodname>
 
                 <methodparam>
                   <type>std::string&#38;</type>
@@ -6585,7 +6585,7 @@ if ( !jccl::strcasecmp(s, &#34;my_custom_element_type&#34;) )
               </methodsynopsis>
 
               <indexterm>
-                <primary>jccl::ConfigChunk</primary>
+                <primary>jccl::ConfigElement</primary>
 
                 <secondary>getProperty&#60;T&#62;() method</secondary>
               </indexterm>
@@ -6613,14 +6613,14 @@ bool b = element-&#62;getProperty&#60;bool&#62;(&#34;enabled&#34;);
 std::string s3 = element-&#62;getProperty&#60;std::string&#62;(&#34;enabled&#34;);
 // s3 will be one of the strings &#34;0&#34; or &#34;1&#34;
 
-jccl::ConfigChunkPtr ch = element-&#62;getProperty&#60;jccl::ConfigChunkPtr&#62;(&#34;embedded_element&#34;, 2);</programlisting>
+jccl::ConfigElementPtr elt = element-&#62;getProperty&#60;jccl::ConfigElementPtr&#62;(&#34;child_element&#34;, 2);</programlisting>
             </listitem>
 
             <listitem>
               <methodsynopsis>
                 <type>int</type>
 
-                <methodname>jccl::ConfigChunk::getNum</methodname>
+                <methodname>jccl::ConfigElement::getNum</methodname>
 
                 <methodparam>
                   <modifier>const</modifier>
@@ -6634,7 +6634,7 @@ jccl::ConfigChunkPtr ch = element-&#62;getProperty&#60;jccl::ConfigChunkPtr&#62;
               </methodsynopsis>
 
               <indexterm>
-                <primary>jccl::ConfigChunk</primary>
+                <primary>jccl::ConfigElement</primary>
 
                 <secondary>getNum() method</secondary>
               </indexterm>
@@ -6647,7 +6647,7 @@ jccl::ConfigChunkPtr ch = element-&#62;getProperty&#60;jccl::ConfigChunkPtr&#62;
             </listitem>
           </itemizedlist>
 
-          <para>For definitive information about the <classname>jccl::ConfigChunk</classname>
+          <para>For definitive information about the <classname>jccl::ConfigElement</classname>
           API, refer to the JCCL <emphasis>Programmer&#39;s Reference</emphasis>.</para>
         </section>
 
@@ -6684,14 +6684,14 @@ jccl::ConfigChunkPtr ch = element-&#62;getProperty&#60;jccl::ConfigChunkPtr&#62;
 
                 <entry>Understand how the <methodname>configCanHandle()</methodname>
                 and <methodname>configAdd()</methodname> member functions in
-                <classname>jccl::ConfigChunkHandler</classname> work; create
+                <classname>jccl::ConfigElementHandler</classname> work; create
                 application-specific configurations using JCCL</entry>
               </row>
 
               <row>
                 <entry>Member functions</entry>
 
-                <entry><itemizedlist><listitem><para><methodname>jccl::ConfigChunkHandler::configCanHandle()</methodname></para></listitem><listitem><para><methodname>jccl::ConfigChunkHandler::configAdd()</methodname></para></listitem><listitem><para><methodname>vrj::GlApp::draw()</methodname></para></listitem></itemizedlist></entry>
+                <entry><itemizedlist><listitem><para><methodname>jccl::ConfigElementHandler::configCanHandle()</methodname></para></listitem><listitem><para><methodname>jccl::ConfigElementHandler::configAdd()</methodname></para></listitem><listitem><para><methodname>vrj::GlApp::draw()</methodname></para></listitem></itemizedlist></entry>
               </row>
 
               <row>
@@ -6728,8 +6728,8 @@ class simpleApp : public GlApp
 {
 public:
    simpleApp();
-   virtual bool configCanHandle(jccl::ConfigChunkPtr element);
-   virtual bool configAdd(jccl::ConfigChunkPtr element);
+   virtual bool configCanHandle(jccl::ConfigElementPtr element);
+   virtual bool configAdd(jccl::ConfigElementPtr element);
    virtual void init();
    virtual void draw();
 
@@ -6791,7 +6791,7 @@ public:
       &#60;help&#62;Specifies the RGB values for the lower left corner color.&#60;/help&#62;
     &#60;/PropertyDesc&#62;
    &#60;!-- Property definitions for the remaining three corners follow. --&#62;
-&#60;/ChunkDesc&#62;</programlisting>
+&#60;/ChunkDescDB&#62;</programlisting>
           </example>
 
           <para>Using this configuration definition, we can create an instance
@@ -6840,11 +6840,11 @@ public:
           tell the JCCL Configuration Manager if it can be handled or not. The
           full implementation is as follows:</para>
 
-          <programlisting>bool ConfigApp::configCanHandle(ConfigChunkPtr element)
+          <programlisting>bool ConfigApp::configCanHandle(jccl::ConfigElementPtr element)
 {
    const std::string my_type(&#34;ConfigApp&#34;);
 
-   return (my_type == element-&#62;getDescToken());
+   return (my_type == element-&#62;getID());
 }
 </programlisting>
 
@@ -6867,7 +6867,7 @@ public:
           scene. A partial implementation of <methodname>ConfigApp::configAdd()</methodname>
           follows:</para>
 
-          <programlisting>bool ConfigApp::configAdd(jccl::ConfigChunkPtr element)
+          <programlisting>bool ConfigApp::configAdd(jccl::ConfigElementPtr element)
 {
    const std::string ll_color(&#34;lowerLeftColor&#34;);
 

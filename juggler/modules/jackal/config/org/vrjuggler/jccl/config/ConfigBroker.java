@@ -38,7 +38,8 @@ import java.util.*;
  * The configuration broker acts as an intermediary between the view of a
  * configuration and the configuration resources that make up that
  * configuration. By interacting with the broker using a configuration context,
- * multiple view may act on both the same and different configuration resources.
+ * multiple views may act on both the same and different configuration
+ * resources.
  *
  * @see ConfigContext
  */
@@ -86,87 +87,40 @@ public interface ConfigBroker
    public boolean containsDataSource(String name);
 
    /**
-    * Adds the given config chunk to the current context. If the context
-    * contains more than one resource, a dialog will prompt the user for which
-    * resource they wish to add the chunk to.
+    * Adds the given configuration element to the current context. If the
+    * context contains more than one resource, a dialog will prompt the user
+    * for which resource they wish to add the element to.
     *
     * @param context    the context in which to add the chunk
-    * @param chunk      the chunk to add
+    * @param elt        the configuration element to add
     *
     * @return  true if the addition was successful, false otherwise
     */
-   public boolean add(ConfigContext context, ConfigChunk chunk);
+   public boolean add(ConfigContext context, ConfigElement elt);
 
    /**
-    * Removes the given config chunk from the current context. If the chunk
-    * appears in more than one resource in the context, a dialog will prompt the
-    * user for which resource they wish to remove the chunk from. If the chunk
-    * does not appear in any resource in the context, this method will return
-    * false.
+    * Removes the given configuration element from the current context. If the
+    * element appears in more than one resource in the context, a dialog will
+    * prompt the user for which resource they wish to remove the element from.
+    * If the element does not appear in any resource in the context, this method
+    * will return false.
     *
     * @param context    the context from which to remove the chunk
-    * @param chunk      the chunk to remove
+    * @param elt        the element to remove
     *
     * @return  true if the removal was successful, false if the user cancelled
-    *          the removal or the chunk does not exist in any resource
+    *          the removal or the element does not exist in any resource
     */
-   public boolean remove(ConfigContext context, ConfigChunk chunk);
-
-   /**
-    * Adds the given chunk description to the current context. If the context
-    * contains more than one resource, a dialog will prompt the user for which
-    * resource they wish to add the description to.
-    *
-    * @param context    the context in which to add the description
-    * @param desc       the description to add
-    *
-    * @return  true if the addition was successful, false otherwise
-    */
-   public boolean add(ConfigContext context, ChunkDesc desc);
-
-   /**
-    * Removes the given chunk description from the current context. If the
-    * description appears in more than one resource in the context, a dialog
-    * will prompt the user for which resource they wish to remove the
-    * description from. If the description does not appear in any resource in
-    * the context, this method will return false.
-    *
-    * @param context    the context from which to remove the description
-    * @param desc       the description to remove
-    *
-    * @return  true if the removal was successful, false if the user cancelled
-    *          the removal or the description does not exist in any resource
-    */
-   public boolean remove(ConfigContext context, ChunkDesc desc);
-
-   /**
-    * Gets a list of all the configuration descriptions within the given
-    * context.
-    *
-    * @param context    the context from which to retrieve chunk descs
-    *
-    * @return  a list of the chunk descs
-    */
-   public List getDescs(ConfigContext context);
+   public boolean remove(ConfigContext context, ConfigElement elt);
 
    /**
     * Gets a list of all the configuration elements within the given context.
     *
-    * @param context    the context from which to retrieve config chunks
+    * @param context    the context from which to retrieve elements
     *
-    * @return  a list of the config chunks
+    * @return  a list of the elements
     */
-   public List getChunks(ConfigContext context);
-
-   /**
-    * Gets a list of all the configuration descriptions within the given
-    * resource.
-    *
-    * @param resource   the name of the resource in which to get descriptions
-    *
-    * @return  a list of the chunk descs in the resource if it has any
-    */
-   public List getDescsIn(String resource);
+   public List getElements(ConfigContext context);
 
    /**
     * Gets a list of all the configuration elements within the given
@@ -174,9 +128,9 @@ public interface ConfigBroker
     *
     * @param resource   the name of the resource in which to get elements
     *
-    * @return  a list of the config chunks in the resource if it has any
+    * @return  a list of the elements in the resource if it has any
     */
-   public List getChunksIn(String resource);
+   public List getElementsIn(String resource);
 
    /**
     * Gets a list of the names all the resources currently being managed by this
@@ -185,6 +139,13 @@ public interface ConfigBroker
     * @return  a list of the resource names
     */
    public List getResourceNames();
+
+   /**
+    * Gets the repository in which configuration definitions are stored.
+    *
+    * @return  the repository of config definitions
+    */
+   public ConfigDefinitionRepository getRepository();
 
    /**
     * Adds the given listener to receive config events from this broker.

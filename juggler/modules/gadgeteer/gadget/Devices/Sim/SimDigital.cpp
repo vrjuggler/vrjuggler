@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Devices/Sim/SimDigital.h>
 
 namespace gadget
@@ -49,17 +49,25 @@ SimDigital::~SimDigital()
    //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigital::~SimDigital()\n"<< vprDEBUG_FLUSH;
 }
 
-bool SimDigital::config(jccl::ConfigChunkPtr chunk)
+std::string SimDigital::getElementType()
+{
+   return "simulated_digital_device";
+}
+
+bool SimDigital::config(jccl::ConfigElementPtr element)
 {
    //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigital::config()\n"<< vprDEBUG_FLUSH;
-   if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk)))
+   if (! (Input::config(element) && Digital::config(element) &&
+          SimInput::config(element)) )
+   {
       return false;
+   }
 
-   std::vector<jccl::ConfigChunkPtr> key_list;
-   int key_count = chunk->getNum("keyPairs");
+   std::vector<jccl::ConfigElementPtr> key_list;
+   int key_count = element->getNum("key_pair");
    for ( int i = 0; i < key_count; ++i )
    {
-      key_list.push_back(chunk->getProperty<jccl::ConfigChunkPtr>("keyPairs", i));
+      key_list.push_back(element->getProperty<jccl::ConfigElementPtr>("key_pair", i));
    }
    mSimKeys = readKeyList(key_list);
 

@@ -92,7 +92,6 @@ public class NewConfigDialog
       // Init the includes list
       includesList.setModel(includesTableModel);
       includesList.getColumnModel().getColumn(0).setCellEditor(new FileCellEditor(fileChooser));
-      includesTableModel.add(expandEnvVars(DEFAULT_DEFINITION_FILE));
 
       // Default to the user's home dir
       directoryTxt.setText(expandEnvVars("${HOME}"));

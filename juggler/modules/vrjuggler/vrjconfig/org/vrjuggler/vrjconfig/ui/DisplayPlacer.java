@@ -45,8 +45,7 @@ import java.util.*;
 import javax.swing.*;
 
 import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.tweek.beans.BeanRegistry;
-import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.tweek.ui.PropertySheet;
 import org.vrjuggler.vrjconfig.ui.placer.*;
 
@@ -70,7 +69,7 @@ public class DisplayPlacer
       // get the icons
       try
       {
-         ClassLoader loader = BeanJarClassLoader.instance();
+         ClassLoader loader = getClass().getClassLoader();
          addBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/ui/images/add24.gif")));
          removeBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/ui/images/remove24.gif")));
       }
@@ -82,22 +81,19 @@ public class DisplayPlacer
       }
 
       // Setup the display placer
-//      List chunks = getConfigBroker().getChunks();
-//      model.setChunks(chunks);
-//      model.setConfigChunkDB(getConfigManager().getActiveConfig());
       wndPlacer.setModel(model);
       wndPlacer.setRenderer(new DisplayRenderer());
    }
 
-   public void setConfigContext(ConfigContext context)
+   public void setContext(ConfigContext context)
    {
-      this.context = context;
-      model.setChunks(getConfigBroker().getChunks(context));
+      mContext = context;
+      model.setElements(getBroker().getElements(mContext));
    }
 
-   public ConfigContext getConfigContext()
+   public ConfigContext getContext()
    {
-      return context;
+      return mContext;
    }
 
    public void setDesktopSize(Dimension desktopSize)
@@ -111,14 +107,14 @@ public class DisplayPlacer
    }
 
    /**
-    * Gets the currently selected displayWindow config chunk.
+    * Gets the currently selected displayWindow configuration element.
     *
-    * @return  the config chunk for the currently selected display window;
+    * @return  the config element for the currently selected display window;
     *          null if nothing is selected
     */
-   public ConfigChunk getSelectedDisplay()
+   public ConfigElement getSelectedDisplay()
    {
-      return (ConfigChunk)wndPlacer.getSelectedValue();
+      return (ConfigElement)wndPlacer.getSelectedValue();
    }
 
    /**
@@ -134,18 +130,16 @@ public class DisplayPlacer
     */
    protected void addNewDisplay()
    {
+      ConfigDefinition display_def = getBroker().getRepository().get("display_window");
+      // TODO: Compute a new, unique name for the new element
+      String name = display_def.getToken();
+
       // Create the new window
-      List all_descs = getConfigBroker().getDescs(context);
-//      ChunkDescDB all_descs = getConfigManager().getAllChunkDescs();
-      ChunkDesc display_desc = (ChunkDesc)ConfigUtilities.getDescsWithToken(
-                                    all_descs, "displayWindow").get(0);
-      ConfigChunk display_chunk = new ConfigChunk(display_desc);
+      ConfigElementFactory factory = new ConfigElementFactory(getBroker().getRepository().getAllLatest());
+      ConfigElement display_elt = factory.create(name, display_def);
 
       // Add the window to the database
-      // TODO: Compute a new, unique name for the new chunk
-      String name = display_desc.getToken();
-      display_chunk.setName(name);
-      getConfigBroker().add(context, display_chunk);
+      getBroker().add(mContext, display_elt);
    }
 
    /**
@@ -156,12 +150,12 @@ public class DisplayPlacer
       int idx = wndPlacer.getSelectedIndex();
       if (idx != -1)
       {
-         ConfigChunk display_chunk = (ConfigChunk)wndPlacer.getModel().getElement(idx);
-         getConfigBroker().remove(context, display_chunk);
+         ConfigElement display_elt = (ConfigElement)wndPlacer.getModel().getElement(idx);
+         getBroker().remove(mContext, display_elt);
       }
    }
 
-   private ConfigBroker getConfigBroker()
+   private ConfigBroker getBroker()
    {
       return new ConfigBrokerProxy();
    }
@@ -220,7 +214,7 @@ public class DisplayPlacer
    /**
     * Our view into the configuration.
     */
-   private ConfigContext context = new ConfigContext();
+   private ConfigContext mContext = new ConfigContext();
 
    /**
     * A specialized renderer for displays in the placer component.
@@ -237,7 +231,7 @@ public class DisplayPlacer
 
       public DisplayRenderer()
       {
-         ClassLoader loader = BeanJarClassLoader.instance();
+         ClassLoader loader = getClass().getClassLoader();
          icon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/ui/images/graphics_window.png"));
          scaledIcon = new ImageIcon();
       }
@@ -309,20 +303,19 @@ public class DisplayPlacer
  */
 class DisplayPlacerModel
    extends AbstractPlacerModel
-   implements ConfigListener, ConfigChunkListener
 {
    public void DisplayPlacerModel()
    {
       mDesktopSize = new Dimension(1600, 1200);
    }
 
-   public void setChunks(List chunks)
+   public void setElements(List elements)
    {
-      windows = ConfigUtilities.getChunksWithDescToken(chunks, "displayWindow");
-      for (Iterator itr = windows.iterator(); itr.hasNext(); )
+      mWindows = ConfigUtilities.getElementsWithDefinition(elements, "display_window");
+      for (Iterator itr = mWindows.iterator(); itr.hasNext(); )
       {
-         ConfigChunk chunk = (ConfigChunk)itr.next();
-         chunk.addConfigChunkListener(this);
+         ConfigElement elt = (ConfigElement)itr.next();
+         elt.addConfigElementListener(mChangeListener);
       }
 //      chunkDB.addChunkDBListener(this);
 //    fireTableContentsChanged();
@@ -330,12 +323,12 @@ class DisplayPlacerModel
 
    public Object getElement(int idx)
    {
-      return windows.get(idx);
+      return mWindows.get(idx);
    }
 
    public int getIndexOf(Object obj)
    {
-      return windows.indexOf(obj);
+      return mWindows.indexOf(obj);
    }
 
    public Object getElementAt(Point pt)
@@ -350,7 +343,7 @@ class DisplayPlacerModel
 
    public int getIndexOfElementAt(Point pt)
    {
-      for (int i=0; i<windows.size(); ++i)
+      for (int i=0; i<mWindows.size(); ++i)
       {
          Point pos = getLocationOf(i);
          Dimension dim = getSizeOf(i);
@@ -365,54 +358,54 @@ class DisplayPlacerModel
 
    public Dimension getSizeOf(int idx)
    {
-      ConfigChunk window_chunk = (ConfigChunk)getElement(idx);
-      int width = ((Integer)window_chunk.getProperty("size", 0)).intValue();
-      int height = ((Integer)window_chunk.getProperty("size", 1)).intValue();
+      ConfigElement window_elt = (ConfigElement)getElement(idx);
+      int width = ((Integer)window_elt.getProperty("size", 0)).intValue();
+      int height = ((Integer)window_elt.getProperty("size", 1)).intValue();
       return new Dimension(width, height);
    }
 
    public void setSizeOf(int idx, Dimension size)
    {
-      ConfigChunk window_chunk = (ConfigChunk)getElement(idx);
-      System.out.println("--- Chunk "+window_chunk.getName()+" new size=("+size.width+", "+size.height+")");
-      System.out.println("\thashcode="+window_chunk.hashCode());
-      window_chunk.setProperty("size", 0, new Integer(size.width));
-      window_chunk.setProperty("size", 1, new Integer(size.height));
+      ConfigElement window_elt = (ConfigElement)getElement(idx);
+      System.out.println("--- Chunk "+window_elt.getName()+" new size=("+size.width+", "+size.height+")");
+      System.out.println("\thashcode="+window_elt.hashCode());
+      window_elt.setProperty("size", 0, new Integer(size.width));
+      window_elt.setProperty("size", 1, new Integer(size.height));
    }
 
    public Point getLocationOf(int idx)
    {
-      ConfigChunk window_chunk = (ConfigChunk)getElement(idx);
-      int x = ((Integer)window_chunk.getProperty("origin", 0)).intValue();
-      int y = ((Integer)window_chunk.getProperty("origin", 1)).intValue();
+      ConfigElement window_elt = (ConfigElement)getElement(idx);
+      int x = ((Integer)window_elt.getProperty("origin", 0)).intValue();
+      int y = ((Integer)window_elt.getProperty("origin", 1)).intValue();
 
       // Convert y from Juggler coords (bottom left is origin)
-      int height = ((Integer)window_chunk.getProperty("size", 1)).intValue();
+      int height = ((Integer)window_elt.getProperty("size", 1)).intValue();
       y = mDesktopSize.height - y - height;
       return new Point(x, y);
    }
 
    public void setLocationOf(int idx, Point pt)
    {
-      ConfigChunk window_chunk = (ConfigChunk)getElement(idx);
+      ConfigElement window_elt = (ConfigElement)getElement(idx);
 
       // Convert y to Juggler coords (bottom left is origin)
-      int height = ((Integer)window_chunk.getProperty("size", 1)).intValue();
+      int height = ((Integer)window_elt.getProperty("size", 1)).intValue();
       int y = mDesktopSize.height - pt.y - height;
-      
-      window_chunk.setProperty("origin", 0, new Integer(pt.x));
-      window_chunk.setProperty("origin", 1, new Integer(y));
+
+      window_elt.setProperty("origin", 0, new Integer(pt.x));
+      window_elt.setProperty("origin", 1, new Integer(y));
    }
 
    public void moveToFront(int idx)
    {
       // remove and reinsert at the front.
-      windows.add(0, windows.remove(idx));
+      mWindows.add(0, mWindows.remove(idx));
    }
 
    public int getSize()
    {
-      return windows.size();
+      return mWindows.size();
    }
 
    public Dimension getDesktopSize()
@@ -426,65 +419,61 @@ class DisplayPlacerModel
       fireDesktopSizeChanged();
    }
 
-   public void configChunkAdded(ConfigEvent evt)
-   {
-      ConfigChunk chunk = evt.getConfigChunk();
-      if (chunk.getDesc().getToken().equals("displayWindow"))
-      {
-         System.out.println("Adding a new displayWindow.");
-         chunk.addConfigChunkListener(this);
-         windows.add(0, chunk);
-         fireItemsInserted(new int[] { 0 });
-      }
-   }
+   /** The list of windows in the active db. */
+   private List mWindows;
 
-   public void configChunkRemoved(ConfigEvent evt)
+   /** The size of the desktop in this model. */
+   private Dimension mDesktopSize;
+
+   /** The custom listener for changes to the displays. */
+   private ChangeListener mChangeListener = new ChangeListener();
+
+   /**
+    * Custom listener for changes to the broker and the elements in the context.
+    */
+   private class ChangeListener
+      extends ConfigElementAdapter
+      implements ConfigListener
    {
-      ConfigChunk chunk = evt.getConfigChunk();
-      if (chunk.getDesc().getToken().equals("displayWindow"))
+      public void configElementAdded(ConfigEvent evt)
       {
-         int idx = getIndexOf(chunk);
-         if (idx != -1)
+         ConfigElement elt = evt.getElement();
+         if (elt.getDefinition().getToken().equals("display_window"))
          {
-            System.out.println("Removed a displayWindow.");
-            chunk.removeConfigChunkListener(this);
-            windows.remove(idx);
-            fireItemsRemoved(new int[] { 0 }, new Object[] { chunk });
+            System.out.println("Adding a new displayWindow.");
+            elt.addConfigElementListener(this);
+            mWindows.add(0, elt);
+            fireItemsInserted(new int[] { 0 });
          }
       }
-   }
 
-   public void chunkDescAdded(ConfigEvent evt)
-   {
-   }
-
-   public void chunkDescRemoved(ConfigEvent evt)
-   {
-   }
-
-   /**
-    * Called whenever one of the displays contained within the model changes.
-    */
-   public void nameChanged(ConfigChunkEvent evt)
-   {
-      int idx = getIndexOf(evt.getSource());
-      if (idx != -1)
+      public void configElementRemoved(ConfigEvent evt)
       {
-         fireItemsChanged(new int[] { idx });
+         ConfigElement elt = evt.getElement();
+         if (elt.getDefinition().getToken().equals("display_window"))
+         {
+            int idx = getIndexOf(elt);
+            if (idx != -1)
+            {
+               System.out.println("Removed a displayWindow.");
+               elt.removeConfigElementListener(this);
+               mWindows.remove(idx);
+               fireItemsRemoved(new int[] { 0 }, new Object[] { elt });
+            }
+         }
       }
+
+      /**
+       * Called whenever one of the displays contained within the model changes.
+       */
+      public void nameChanged(ConfigElementEvent evt)
+      {
+         int idx = getIndexOf(evt.getSource());
+         if (idx != -1)
+         {
+            fireItemsChanged(new int[] { idx });
+         }
+      }
+
    }
-
-   public void propertyValueChanged(ConfigChunkEvent evt) { nameChanged(evt); }
-   public void propertyValueAdded(ConfigChunkEvent evt) { nameChanged(evt); }
-   public void propertyValueRemoved(ConfigChunkEvent evt) { nameChanged(evt); }
-
-   /**
-    * The list of windows in the active db.
-    */
-   private List windows;
-
-   /**
-    * The size of the desktop in this model.
-    */
-   private Dimension mDesktopSize;
 }

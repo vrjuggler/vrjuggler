@@ -40,7 +40,7 @@
 #include <gadget/Type/Gesture.h>
 #include <gadget/Type/Glove.h>
 #include <gadget/Type/GloveProxy.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 namespace gadget
 {
@@ -51,12 +51,15 @@ namespace gadget
 class GloveGesture : public Gesture
 {
 public:
-   GloveGesture() {
+   GloveGesture()
+   {
       mGloveProxy = NULL;
    }
 
-   virtual bool config(jccl::ConfigChunkPtr c)
-   { return Gesture::config(c);}
+   virtual bool config(jccl::ConfigElementPtr e)
+   {
+      return Gesture::config(e);
+   }
 
 public:
    /**

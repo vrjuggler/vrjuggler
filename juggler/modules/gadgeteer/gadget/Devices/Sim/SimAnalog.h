@@ -37,7 +37,7 @@
 #include <gadget/gadgetConfig.h>
 #include <vector>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Devices/Sim/SimInput.h>
@@ -61,7 +61,7 @@ public:
 
    virtual ~SimAnalog();
 
-   virtual bool config(jccl::ConfigChunkPtr chunk);
+   virtual bool config(jccl::ConfigElementPtr element);
 
    /** These functions don't do anything. */
    int startSampling() { return 1; }
@@ -71,7 +71,7 @@ public:
    /** Updates the data. */
    virtual void updateData();
 
-   static std::string getChunkType() { return std::string("SimAnalog");}
+   static std::string getElementType();
 
    virtual std::vector<KeyModPair> getUpKeys() { return mSimKeysUp; }
    virtual std::vector<KeyModPair> getDownKeys() { return mSimKeysDown; }

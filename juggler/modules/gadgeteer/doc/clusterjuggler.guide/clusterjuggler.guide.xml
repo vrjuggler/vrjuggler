@@ -339,21 +339,21 @@
 
       <titleabbrev>Step-by-Step Directions (Using vrjconfig)</titleabbrev>
 
-      <para>Step 1) Create a new ClusterManager <indexterm><primary>ConfigChunk</primary><secondary>ClusterManager</secondary></indexterm>config
-      chunk.</para>
+      <para>Step 1) Create a new ClusterManager <indexterm><primary>ConfigElement</primary><secondary>ClusterManager</secondary></indexterm>config
+      element.</para>
 
       <note>
         <para>Please consult VRJConfig manual for directions on adding a new
-        config chunk.</para>
+        config element.</para>
       </note>
 
       <tip>
-        <para>If you start typing the name of the config chunk that you want,
-        VRJConfig will try to find a chunk that starts with what are typing.</para>
+        <para>If you start typing the name of the config element that you want,
+        VRJConfig will try to find a element that starts with what are typing.</para>
       </tip>
 
       <figure>
-        <title>Create ClusterManager Chunk</title>
+        <title>Create ClusterManager Element</title>
 
         <mediaobject>
           <imageobject>
@@ -363,12 +363,12 @@
         </mediaobject>
       </figure>
 
-      <para>Step 2) Give the new ClusterManager chunk a unique name.</para>
+      <para>Step 2) Give the new ClusterManager element a unique name.</para>
 
       <note>
-        <para>Cluster Juggler often references config chunks by their name
+        <para>Cluster Juggler often references config elements by their name
         directly. This means that we must always have unique names for our
-        config chunks.</para>
+        config elements.</para>
       </note>
 
       <figure>
@@ -415,10 +415,10 @@
       <para>Step 5) Select the first node that will be in your cluster.</para>
 
       <note>
-        <para>Nodes are represented by MachineSpecific config chunks.
+        <para>Nodes are represented by MachineSpecific config elements.
         VRJConfig will only let you select cluster nodes that have been
         created for this configuration. This means that you must first create
-        these MachineSpecific config chunks while configuring the
+        these MachineSpecific config elements while configuring the
         ClusterNetwork. You can refer to <xref linkend="ClusterNetwork.Config" />
         for help configuring the ClusterNetwork.</para>
       </note>
@@ -451,10 +451,10 @@
       created.</para>
 
       <note>
-        <para>Nodes are represented by MachineSpecific config chunks.
+        <para>Nodes are represented by MachineSpecific config elements.
         VRJConfig will only let you select cluster nodes that have been
         created for this configuration. This means that you must first create
-        these MachineSpecific config chunks while configuring the
+        these MachineSpecific config elements while configuring the
         ClusterNetwork. You can refer to <xref linkend="ClusterNetwork.Config" />
         for help configuring the ClusterNetwork.</para>
       </note>
@@ -574,21 +574,21 @@
     <section id="ClusterNetwork.Config">
       <title>Configuring the ClusterNetwork</title>
 
-      <para>A machine specific config chunk contains information about a
+      <para>A machine specific config element contains information about a
       particular node in the cluster. Fields include, but are not limited to,
       the local display system, display windows, host name, and accepting
       socket port.</para>
 
-      <para>Step 1) Create a new Machine Specific Config chunk for each
+      <para>Step 1) Create a new Machine Specific Config element for each
       cluster node.</para>
 
       <note>
         <para>Please consult VRJConfig manual for directions on adding a new
-        config chunk.</para>
+        config element.</para>
       </note>
 
       <figure id="RIM.MachineSpecific">
-        <title>Create New Machine Specific Chunk</title>
+        <title>Create New Machine-Specific Element</title>
 
         <mediaobject>
           <imageobject>
@@ -614,7 +614,7 @@
         </mediaobject>
       </figure>
 
-      <para>Step 3) Create an embedded display system chunk</para>
+      <para>Step 3) Create an embedded display system element</para>
 
       <itemizedlist>
         <listitem>
@@ -727,7 +727,8 @@
         <para>As new configuration information is added to the system it is
         delivered to the correct layer or plugin by the ClusterManager. In
         order to accomplish this we require that all cluster plugins and the
-        ClusterNetwork implement the ConfigChunkHandler abstract base class.</para>
+        ClusterNetwork implement the
+        <classname>jccl::ConfigElementHandler</classname> abstract base class.</para>
       </note>
 
       <figure id="ClusterPlugin.Interface">
@@ -858,7 +859,7 @@
       <title>Configuring the RemoteInputManager</title>
 
       <para>Step 1) Find the device(s) that you want to share by browsing
-      through the list of Config Chunks under the Devices heading.</para>
+      through the list of Config Elements under the Devices heading.</para>
 
       <figure>
         <title>Find Device</title>
@@ -1165,25 +1166,25 @@ vpr::SerializableObjectMixin&#60;MyType&#62;::readObject(vpr::ObjectReader* read
     <section>
       <title>Configuring SwapLockPlugin</title>
 
-      <para>Step 1) Create a new SwapLockPlugin Config Chunk.</para>
+      <para>Step 1) Create a new SwapLockPlugin Config Element.</para>
 
       <note>
         <para>Please consult VRJConfig manual for directions on adding a new
-        config chunk.</para>
+        config element.</para>
       </note>
 
       <note>
-        <para>Nodes are represented by MachineSpecific config chunks.
+        <para>Nodes are represented by MachineSpecific config elements.
         VRJConfig will only let you select cluster nodes that have been
         created for this configuration. This means that you must first create
-        these MachineSpecific config chunks while configuring the
+        these MachineSpecific config elements while configuring the
         ClusterNetwork. You can refer to <xref linkend="ClusterNetwork.Config" />
         for help configuring the ClusterNetwork.</para>
       </note>
 
       <tip>
-        <para>If you start typing the name of the config chunk that you want,
-        VRJConfig will try to find a chunk that starts with what are typing.</para>
+        <para>If you start typing the name of the config element that you want,
+        VRJConfig will try to find a element that starts with what are typing.</para>
       </tip>
 
       <figure>

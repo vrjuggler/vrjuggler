@@ -37,6 +37,7 @@
 #include <gmtl/Generate.h>
 
 #include <vpr/Util/Debug.h>
+#include <jccl/Config/ConfigElement.h>
 #include <navigation.h>
 #include <ConfigApp.h>
 
@@ -76,15 +77,15 @@ ConfigApp::ConfigApp()
 // Determines if the given configuration element is one this application
 // object can use.  This is deterined based on the type of the element.  We
 // are only interested in those elements of type ConfigApp.
-bool ConfigApp::configCanHandle(ConfigChunkPtr chunk)
+bool ConfigApp::configCanHandle(ConfigElementPtr element)
 {
    const std::string my_type("ConfigApp");
 
-   return (my_type == chunk->getDescToken());
+   return (my_type == element->getID());
 }
 
 // Handles addition of a new configuration element that we can use.
-bool ConfigApp::configAdd(ConfigChunkPtr chunk)
+bool ConfigApp::configAdd(ConfigElementPtr element)
 {
    const std::string ll_color("lowerLeftColor");
    const std::string lr_color("lowerRightColor");
@@ -92,27 +93,27 @@ bool ConfigApp::configAdd(ConfigChunkPtr chunk)
    const std::string ul_color("upperLeftColor");
 
    // Get the color settings for the lower left corner (ll).
-   for ( int i = 0; i < chunk->getNum(ll_color); ++i )
+   for ( int i = 0; i < element->getNum(ll_color); ++i )
    {
-      mSurfaceColor_ll[i] = chunk->getProperty<float>(ll_color, i);
+      mSurfaceColor_ll[i] = element->getProperty<float>(ll_color, i);
    }
 
    // Get the color settings for the lower right corner (lr).
-   for ( int i = 0; i < chunk->getNum(lr_color); ++i )
+   for ( int i = 0; i < element->getNum(lr_color); ++i )
    {
-      mSurfaceColor_lr[i] = chunk->getProperty<float>(lr_color, i);
+      mSurfaceColor_lr[i] = element->getProperty<float>(lr_color, i);
    }
 
    // Get the color settings for the upper right corner (ur).
-   for ( int i = 0; i < chunk->getNum(ur_color); ++i )
+   for ( int i = 0; i < element->getNum(ur_color); ++i )
    {
-      mSurfaceColor_ur[i] = chunk->getProperty<float>(ur_color, i);
+      mSurfaceColor_ur[i] = element->getProperty<float>(ur_color, i);
    }
 
    // Get the color settings for the upper left corner (ul).
-   for ( int i = 0; i < chunk->getNum(ul_color); ++i )
+   for ( int i = 0; i < element->getNum(ul_color); ++i )
    {
-      mSurfaceColor_ul[i] = chunk->getProperty<float>(ul_color, i);
+      mSurfaceColor_ul[i] = element->getProperty<float>(ul_color, i);
    }
 
    return true;

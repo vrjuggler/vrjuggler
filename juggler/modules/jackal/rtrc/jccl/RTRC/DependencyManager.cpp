@@ -34,7 +34,7 @@
 #include <iomanip>
 #include <jccl/RTRC/DependencyManager.h>
 #include <jccl/Util/Debug.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 
 namespace jccl
@@ -51,7 +51,7 @@ DependencyManager::DependencyManager(): mDepCheckers(), mDefaultChecker()
 }
 
 
-void DependencyManager::registerChecker (DepChecker* checker)
+void DependencyManager::registerChecker(DepChecker* checker)
 {
    vprASSERT(checker != NULL);
    mDepCheckers.push_back(checker);       // Add the checker to the list
@@ -66,29 +66,29 @@ void DependencyManager::registerChecker (DepChecker* checker)
 }
 
 
-bool DependencyManager::isSatisfied (ConfigChunkPtr chunk)
+bool DependencyManager::isSatisfied(ConfigElementPtr element)
 {
-   vprASSERT(NULL != chunk.get());
-   DepChecker* checker = findDepChecker(chunk);
-   return checker->depSatisfied(chunk);
+   vprASSERT(NULL != element.get());
+   DepChecker* checker = findDepChecker(element);
+   return checker->depSatisfied(element);
 }
 
 
-void DependencyManager::debugOutDependencies (ConfigChunkPtr chunk,
-                                              int dbg_lvl)
+void DependencyManager::debugOutDependencies(ConfigElementPtr element,
+                                             int dbg_lvl)
 {
-   vprASSERT(NULL != chunk.get());
-   DepChecker* checker = findDepChecker(chunk);
-   checker->debugOutDependencies(chunk,dbg_lvl);
+   vprASSERT(NULL != element.get());
+   DepChecker* checker = findDepChecker(element);
+   checker->debugOutDependencies(element,dbg_lvl);
 }
 
 
-DepChecker* DependencyManager::findDepChecker (ConfigChunkPtr chunk)
+DepChecker* DependencyManager::findDepChecker(ConfigElementPtr element)
 {
-   vprASSERT(NULL != chunk.get());
+   vprASSERT(NULL != element.get());
 
-   //std::string chunk_type;
-   //chunk_type = (std::string)chunk->getType();
+   //std::string element_type;
+   //element_type = (std::string)element->getType();
 
    for(unsigned int i=0;i<mDepCheckers.size();i++)
    {
@@ -96,7 +96,7 @@ DepChecker* DependencyManager::findDepChecker (ConfigChunkPtr chunk)
       DepChecker* checker = mDepCheckers[i];
       vprASSERT(checker != NULL);
 
-      if(checker->canHandle(chunk))
+      if(checker->canHandle(element))
       {
          return checker;
       }

@@ -34,6 +34,7 @@
 
 #include <boost/concept_check.hpp>
 
+#include <jccl/Config/ConfigElement.h>
 #include <cluster/Plugins/StartBarrierPlugin/StartBarrierPlugin.h> // my header...
 
 #include <gadget/Util/Debug.h>
@@ -108,11 +109,11 @@ namespace cluster
       }
    }
    
-   /** Add the pending chunk to the configuration.
-   *  PRE: configCanHandle (chunk) == true.
-   *  @return true iff chunk was successfully added to configuration.
+   /** Add the pending element to the configuration.
+   *  @pre configCanHandle (element) == true.
+   *  @return true iff element was successfully added to configuration.
    */
-   bool StartBarrierPlugin::configAdd(jccl::ConfigChunkPtr chunk)
+   bool StartBarrierPlugin::configAdd(jccl::ConfigElementPtr element)
    {
       // -If the cluster manager has been configured.
 
@@ -130,19 +131,25 @@ namespace cluster
       //  Starting Barrier Stuff
       //
       // -Set flag we have started configuring the cluster
-      // -Get Sync Machine Chunk Name
-      // -Get ChunkPtr to this chunk
+      // -Get Sync Machine element Name
+      // -Get ElementPtr to this element
       // -Get the Hostname of this node
 
-      std::string barrier_machine_chunk_name = chunk->getProperty<std::string>(std::string("start_master"));
-      jccl::ConfigChunkPtr barrier_machine_chunk = ClusterManager::instance()->getConfigChunkPointer(barrier_machine_chunk_name);
-      vprASSERT(NULL != barrier_machine_chunk.get() && "ConfigManager Chunk MUST have a barrier_master.");
-      mBarrierMasterHostname = barrier_machine_chunk->getProperty<std::string>(std::string("host_name"));
+      std::string barrier_machine_element_name =
+         element->getProperty<std::string>(std::string("start_master"));
+      jccl::ConfigElementPtr barrier_machine_element =
+         ClusterManager::instance()->getConfigElementPointer(barrier_machine_element_name);
+      vprASSERT(NULL != barrier_machine_element.get() && "ConfigManager element MUST have a barrier_master.");
+      mBarrierMasterHostname = barrier_machine_element->getProperty<std::string>(std::string("host_name"));
 
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
-         << "Start Master Chunk Name is: " << barrier_machine_chunk_name << std::endl << vprDEBUG_FLUSH;         
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
-         << "Start Master Hostname is: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;         
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+         << "Start Master element Name is: "
+         << barrier_machine_element_name << std::endl << vprDEBUG_FLUSH;         
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+         << "Start Master Hostname is: " << mBarrierMasterHostname
+         << std::endl << vprDEBUG_FLUSH;         
       // Starting Barrier Stuff
       /////////////////////////////////////         
 
@@ -159,31 +166,31 @@ namespace cluster
    }
    
    
-   /** Remove the pending chunk from the current configuration.
-   *  PRE: configCanHandle (chunk) == true.
-   *  @return true iff the chunk (and any objects it represented)
+   /** Remove the pending element from the current configuration.
+   *  @pre configCanHandle (element) == true.
+   *  @return true iff the element (and any objects it represented)
    *          were successfully removed.
    */
-   bool StartBarrierPlugin::configRemove(jccl::ConfigChunkPtr chunk)
+   bool StartBarrierPlugin::configRemove(jccl::ConfigElementPtr element)
    {
-      boost::ignore_unused_variable_warning(chunk);
+      boost::ignore_unused_variable_warning(element);
       return false;
    }
    
-   /** Checks if this handler can process chunk.
-   *  Typically, an implementation of handler will check the chunk's
+   /** Checks if this handler can process element.
+   *  Typically, an implementation of handler will check the element's
    *  description name/token to decide if it knows how to deal with
    *  it.
-   *  @return true iff this handler can process chunk.
+   *  @return true iff this handler can process element.
    */
-   bool StartBarrierPlugin::configCanHandle(jccl::ConfigChunkPtr chunk)
+   bool StartBarrierPlugin::configCanHandle(jccl::ConfigElementPtr element)
    {
-      return( recognizeStartBarrierPluginConfig(chunk) );   
+      return recognizeStartBarrierPluginConfig(element);
    }
       
-   bool StartBarrierPlugin::recognizeStartBarrierPluginConfig(jccl::ConfigChunkPtr chunk)
+   bool StartBarrierPlugin::recognizeStartBarrierPluginConfig(jccl::ConfigElementPtr element)
    {
-      return(chunk->getDescToken() == getChunkType());
+      return element->getID() == getElementType();
    }
 
    void StartBarrierPlugin::preDraw()
@@ -214,7 +221,7 @@ namespace cluster
                if (NULL == barrier_master)
                {
                   vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
-                     << clrOutBOLD(clrRED,"[StartBarrierPlugin] Barrier machine configuration chunk not yet loaded.")
+                     << clrOutBOLD(clrRED,"[StartBarrierPlugin] Barrier machine configuration element not yet loaded.")
                      << std::endl << vprDEBUG_FLUSH;
                }
                else if (barrier_master->isConnected())

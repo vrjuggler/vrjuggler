@@ -75,6 +75,16 @@ public class ConfigElement
    }
 
    /**
+    * Gets the full name of this configuration element.
+    *
+    * NOTE:Currently this is not implemented!!!!
+    */
+   public String getFullName()
+   {
+      return mName;
+   }
+
+   /**
     * Gets the object that defines the contents of this element.
     */
    public ConfigDefinition getDefinition()

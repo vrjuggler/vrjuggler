@@ -40,11 +40,12 @@ module jccl
 
    interface RTRCInterfaceSubject : tweek::Subject
    {
-      void add( in string chunkDBString );
-      void remove( in string chunkDBString );
-      void swap( in string addChunkDBString, in string removeChunkDBString );
-      string getChunks();
-      string getChunkDescs();
+      void add( in string configurationString );
+      void remove( in string configurationString );
+      void swap( in string addConfigurationString,
+                 in string removeConfigurationString );
+      string getElements();
+      string getDefinitions();
 
    };
 

@@ -37,7 +37,7 @@
 namespace gadget_test
 {
 // Constructor
-PinchGloveAdaptor::PinchGloveAdaptor(const std::string& devName = "PinchGlove")
+PinchGloveAdaptor::PinchGloveAdaptor(const std::string& devName)
 {
     mName=devName;
     mPinchGlove = new PinchGloveStandalone();

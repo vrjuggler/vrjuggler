@@ -91,16 +91,10 @@ public:
    void updateData();
 
    /** Returns the device name. */
-   char* getDeviceName()
-   {
-      return "vjDTK";
-   }
+   char* getDeviceName();
 
    /** Returns what chunk type is associated with this class. */
-   static std::string getChunkType()
-   {
-      return std::string("DTK");
-   }
+   static std::string getElementType();
 
    /**
     * Returns the receiver transform.
@@ -136,7 +130,7 @@ public:
    bool isActive()
    {
       return active;
-   };
+   }
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

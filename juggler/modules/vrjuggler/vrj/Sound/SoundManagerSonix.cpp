@@ -33,44 +33,46 @@
 #include <vrj/vrjConfig.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>
-#include <vpr/Util/FileUtils.h> // for replaceEnvVars...
 #include <snx/sonix.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/FileUtils.h> // for replaceEnvVars...
+#include <jccl/Config/ConfigElement.h>
 #include <vrj/Sound/SoundManagerSonix.h>
 
 namespace vrj
 {
    /**
-    * Adds the chunk to the configuration.
-    * @pre configCanHandle(chunk) == true
+    * Adds the element to the configuration.
+    * @pre configCanHandle(element) == true
     */
-   bool SoundManagerSonix::configAdd( jccl::ConfigChunkPtr chunk )
+   bool SoundManagerSonix::configAdd(jccl::ConfigElementPtr element)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "======================================\n" << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "SoundManagerSonix is being configured...\n" << vprDEBUG_FLUSH;
 
-      if (!configCanHandle( chunk ))
+      if (!configCanHandle( element ))
       {
-         std::cerr << "ERROR: Wrong chunk type in SoundManagerSonix\n" << std::flush;
+         std::cerr << "ERROR: Wrong element type in SoundManagerSonix\n"
+                   << std::flush;
          return false;
       }
 
-      std::string manager_name = chunk->getName();
+      std::string manager_name = element->getName();
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "My Name: " << manager_name
                                               << "\n" << vprDEBUG_FLUSH;
-      std::string api_to_use = chunk->getProperty<std::string>( "api" );
+      std::string api_to_use = element->getProperty<std::string>( "api" );
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Use API: " << api_to_use
                                               << "\n" << vprDEBUG_FLUSH;
       float listener_position[3];
-      listener_position[0] = (float)chunk->getProperty<float>( "listener_position", 0 );
-      listener_position[1] = (float)chunk->getProperty<float>( "listener_position", 1 );
-      listener_position[2] = (float)chunk->getProperty<float>( "listener_position", 2 );
+      listener_position[0] = (float)element->getProperty<float>( "listener_position", 0 );
+      listener_position[1] = (float)element->getProperty<float>( "listener_position", 1 );
+      listener_position[2] = (float)element->getProperty<float>( "listener_position", 2 );
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "Listener Position: " << listener_position[0] << ","
          << listener_position[1] << "," << listener_position[2] << "\n" << vprDEBUG_FLUSH;
-      std::string file_search_path = chunk->getProperty<std::string>( "file_search_path" );
+      std::string file_search_path = element->getProperty<std::string>( "file_search_path" );
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "Search path: " << file_search_path << "\n" << vprDEBUG_FLUSH;
 
@@ -81,25 +83,26 @@ namespace vrj
       sonix::instance()->setListenerPosition( mat );
 
       // read the list of sounds
-      int size = chunk->getNum( "Sounds" );
+      int size = element->getNum( "sound" );
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Configuring " << size
                                               << " sounds.\n" << vprDEBUG_FLUSH;
       for (int x = 0; x < size; ++x)
       {
-         jccl::ConfigChunkPtr sound_chunk = chunk->getProperty<jccl::ConfigChunkPtr>( "Sounds", x );
-         std::string alias = sound_chunk->getName();
-         std::string filename = sound_chunk->getProperty<std::string>( "filename" );
+         jccl::ConfigElementPtr sound_element =
+            element->getProperty<jccl::ConfigElementPtr>("sound", x);
+         std::string alias = sound_element->getName();
+         std::string filename = sound_element->getProperty<std::string>("filename");
          filename = vpr::replaceEnvVars( filename );
-         bool ambient = sound_chunk->getProperty<bool>( "ambient" );
-         bool retriggerable = sound_chunk->getProperty<bool>( "retriggerable" );
-         int loop = sound_chunk->getProperty<int>( "loop" );
-         float cutoff = sound_chunk->getProperty<float>( "cutoff" );
-         float volume = sound_chunk->getProperty<float>( "volume" );
-         float pitchbend = sound_chunk->getProperty<float>( "pitchbend" );
+         bool ambient = sound_element->getProperty<bool>("ambient");
+         bool retriggerable = sound_element->getProperty<bool>("retriggerable");
+         int loop = sound_element->getProperty<int>("loop");
+         float cutoff = sound_element->getProperty<float>("cutoff");
+         float volume = sound_element->getProperty<float>("volume");
+         float pitchbend = sound_element->getProperty<float>("pitch_bend");
          float position[3];
-         position[0] = sound_chunk->getProperty<float>( "position", 0 );
-         position[1] = sound_chunk->getProperty<float>( "position", 1 );
-         position[2] = sound_chunk->getProperty<float>( "position", 2 );
+         position[0] = sound_element->getProperty<float>("position", 0);
+         position[1] = sound_element->getProperty<float>("position", 1);
+         position[2] = sound_element->getProperty<float>("position", 2);
 
          // configure the sound...
          snx::SoundInfo si;
@@ -137,34 +140,39 @@ namespace vrj
    }
 
    /**
-    * Removes the chunk from the current configuration.
-    * @pre configCanHandle(chunk) == true
+    * Removes the element from the current configuration.
+    * @pre configCanHandle(element) == true
     */
-   bool SoundManagerSonix::configRemove(jccl::ConfigChunkPtr chunk)
+   bool SoundManagerSonix::configRemove(jccl::ConfigElementPtr element)
    {
       // remove any specified sounds...
-      int size = chunk->getNum( "Sound" );
+      int size = element->getNum("sound");
       for (int x = 0; x < size; ++x)
       {
-         jccl::ConfigChunkPtr sound_chunk = chunk->getProperty<jccl::ConfigChunkPtr>( "Sound", x );
-         std::string alias = (std::string)sound_chunk->getName();
-         sonix::instance()->remove( alias );
+         jccl::ConfigElementPtr sound_element =
+            element->getProperty<jccl::ConfigElementPtr>("sound", x);
+         std::string alias(sound_element->getName());
+         sonix::instance()->remove(alias);
       }
 
       return true;
    }
 
    /**
-    * Can the handler handle the given chunk?
+    * Can the handler handle the given element?
     * @return true if we can handle it; false if not.
     */
-   bool SoundManagerSonix::configCanHandle( jccl::ConfigChunkPtr chunk )
+   bool SoundManagerSonix::configCanHandle(jccl::ConfigElementPtr element)
    {
-      std::string chunk_type = (std::string)chunk->getDescToken();
-      if(std::string("juggler_audio_manager") == chunk_type)
+      const std::string element_type(element->getID());
+      if(std::string("sound_manager") == element_type)
+      {
          return true;
+      }
       else
+      {
          return false;
+      }
    }
 
    /** Enables a frame to be drawn. */

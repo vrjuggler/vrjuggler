@@ -142,7 +142,7 @@ void BaseTypeFactory::registerNetDevice(BaseTypeConstructorBase* constructor)
    //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
    //   << "gadget::DeviceFactory: Registered: "
    //   << std::setiosflags(std::ios::right) << std::setw(25)
-   //   << std::setfill(' ') << constructor->getChunkType()
+   //   << std::setfill(' ') << constructor->getElementType()
    //   << std::setiosflags(std::ios::right)
       //<< "   :" << (void*)constructor
    //   << "  type: " << typeid(*constructor).name() << std::endl
@@ -173,7 +173,7 @@ Input* BaseTypeFactory::loadNetDevice(std::string base_type)
 
    //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
    //   << "gadget::BaseType::loadDevice: Loading device: "
-   //   << chunk->getDescToken() << "  with: " << typeid(*constructor).name()
+   //   << element->getID() << "  with: " << typeid(*constructor).name()
    //   << std::endl << vprDEBUG_FLUSH;
 
    new_dev = constructor->createNetDevice(base_type);
@@ -186,8 +186,7 @@ Input* BaseTypeFactory::loadNetDevice(std::string base_type)
 
 int BaseTypeFactory::findConstructor(std::string base_type)
 {
-   //std::string chunk_type;
-   //chunk_type = chunk->getDescToken();
+   //std::string element_type(element->getID());
 
    for(unsigned int i=0;i<mConstructors.size();i++)
    {

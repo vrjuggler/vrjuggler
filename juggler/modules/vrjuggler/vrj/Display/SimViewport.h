@@ -38,7 +38,7 @@
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Viewport.h>
 
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <vrj/Draw/DrawSimInterface.h>
 
 
@@ -63,7 +63,7 @@ public:
 
 public:
    /**  Configure the simulator */
-   virtual void config(jccl::ConfigChunkPtr chunk);
+   virtual void config(jccl::ConfigElementPtr element);
 
    /** Update the projections
    * @param positionScale - Scale value for converting from Juggler units (meters) to the display units

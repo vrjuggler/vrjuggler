@@ -33,7 +33,7 @@
 #include <gadget/Devices/DriverConfig.h>
 #include <gadget/Devices/VRCO/TrackdAPI/TrackdAPIController.h>
 #include <gadget/Devices/VRCO/TrackdAPI/TrackdAPISensor.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <vpr/Util/Debug.h>
 
 #include <gadget/Type/DeviceConstructor.h>
@@ -67,24 +67,31 @@ TrackdAPIController::~TrackdAPIController()
    delete mControllerReader;
 }
 
+std::string TrackdAPIController::getElementType()
+{
+   return "trackd_api_controller";
+}
+
 /**
- * Configures the trackd sensor with the given config chunk.
+ * Configures the trackd sensor with the given config element.
  *
  * -Create the trackdSensor based on config info.
  * -set to active.
  * -grow the vector to however many values we need.
  */
-bool TrackdAPIController::config(jccl::ConfigChunkPtr c)
+bool TrackdAPIController::config(jccl::ConfigElementPtr e)
 {
-   if(! (Input::config(c) && Digital::config(c) && Analog::config(c)))
+   if(! (Input::config(e) && Digital::config(e) && Analog::config(e)))
+   {
       return false;
+   }
 
    // Create sensor
-   int shm_key = c->getProperty<int>("shm_key");
+   int shm_key = e->getProperty<int>("shared_memory_key");
    vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "TrackdAPIController::config: shared mem key:" << shm_key << std::endl << vprDEBUG_FLUSH;
    if (shm_key == 0)
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "vjTrackdSensor::config: Bad shm_key sent: Had value of 0.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "TrackdAPIController::config: Bad shm_key sent: Had value of 0.\n" << vprDEBUG_FLUSH;
       return false;
    }
    mControllerReader = new ControllerReader(shm_key);

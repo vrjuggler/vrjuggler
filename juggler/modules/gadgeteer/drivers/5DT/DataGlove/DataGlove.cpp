@@ -36,7 +36,7 @@
 #include <boost/concept_check.hpp>
 #include <vpr/System.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Devices/5DT/DataGlove/DataGloveStandalone.h> /* standalone dataglove driver */
 #include <gadget/Devices/5DT/DataGlove/DataGlove.h> /* Gadgeteer dataglove driver */
@@ -50,17 +50,24 @@ void initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-bool DataGlove::config(jccl::ConfigChunkPtr c)
+bool DataGlove::config(jccl::ConfigElementPtr e)
 {
-   if(! (Input::config(c) /*&& Glove::config(c)*/ ))
+   if(! (Input::config(e) /*&& Glove::config(e)*/ ))
+   {
       return false;
+   }
 
-   mPortName = c->getProperty<std::string>("port");
-   mBaudRate = c->getProperty<int>("baud");
+   mPortName = e->getProperty<std::string>("port");
+   mBaudRate = e->getProperty<int>("baud");
 
    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
    mGlove = new DataGloveStandalone();
    return true;
+}
+
+std::string DataGlove::getElementType()
+{
+   return "data_glove";
 }
 
 DataGlove::~DataGlove ()

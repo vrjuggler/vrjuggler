@@ -62,15 +62,15 @@ namespace gadget
  *  MotionStar adds to the MotionStarStandalone class shared memory and
  *  threading.<br>
  *  MotionStar is a positional device driver for the Flock of Birds.  The
- *  config chunk in the constructor should set up all the settings.  For these
- *  to be changed, the MotionStar has to be deleted and a new instance created
- *  with an updated configchunk.
+ *  config element in the constructor should set up all the settings.  For
+ *  these to be changed, the MotionStar has to be deleted and a new instance
+ *  created with an updated config element.
  *  <br>
  *
  * @note Some functions still remain for changing the options of the
  *        MotionStar when its not in Sampling mode, but in order to stay
  *        consistent with the Input/vjPosition functionality these are only
- *        left for building apps without jccl::ConfigChunks.
+ *        left for building apps without jccl::ConfigElement objects.
  * @note A note on reciever access:
  *   Clients of Juggler should access tracker recievers as [0-n].  For
  *   example, if you have recievers 1,2, and 4 with transmitter on 3, then
@@ -133,18 +133,15 @@ public:
    // ========================================================================
 
    /**
-    * Returns what chunk type is associated with this class.
+    * Returns what element type is associated with this class.
     *
     * @pre None.
     * @post A std::string constructed from a static constant string is
     *       returned to the caller.
     *
-    * @return A std::string containing the chunk type for this device.
+    * @return A std::string containing the element type for this device.
     */
-   static std::string getChunkType()
-   {
-      return std::string("MotionStar");
-   }
+   static std::string getElementType();
 
    /**
     * Checks to see if the device is active or not.
@@ -165,18 +162,18 @@ public:
    // ========================================================================
 
    /**
-    * Configures the MotionStar with the given config chunk.
+    * Configures the MotionStar with the given config element.
     *
     * @pre None.
-    * @post If c is a valid config chunk, the device is configured using its
+    * @post If e is a valid config element, the device is configured using its
     *        contents.  Otherwise, configuration fails and false is returned
     *        to the caller.
     *
-    * @param c A pointer to a MotionStar config chunk.
+    * @param e A pointer to a MotionStar config element.
     *
     * @return true if the device was configured succesfully; false otherwise.
     */
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /**
     * Begins sampling.

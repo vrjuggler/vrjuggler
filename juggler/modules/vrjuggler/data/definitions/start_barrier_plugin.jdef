@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="start_barrier_plugin"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+   <definition_version version="1" label="Start Barrier Plugin">
+      <help />
+      <parent/>
+      <category>/Cluster Juggler</category>
+      <property valuetype="configelementpointer" variable="false" name="start_master">
+         <help>Cluster Node that is responsible for starting the cluster at the right time.</help>
+         <value label="Start Master Machine"/>
+         <allowed_type>machine_specific</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

@@ -37,7 +37,7 @@
 
 #include <string>
 #include <gmtl/Vec.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 namespace vrj
 {
@@ -67,7 +67,7 @@ public:
    Viewport(const Viewport& v)
       : mName(v.mName), mUser(v.mUser), mType(v.mType), mView(v.mView),
         mActive(v.mActive), mDisplay(v.mDisplay),
-        mViewportChunk(v.mViewportChunk), mXorigin(v.mXorigin),
+        mViewportElement(v.mViewportElement), mXorigin(v.mXorigin),
         mYorigin(v.mYorigin), mXsize(v.mXsize), mYsize(v.mYsize),
         mLeftProj(v.mLeftProj), mRightProj(v.mRightProj)
    {
@@ -95,8 +95,8 @@ public:
 
 public:
    /**
-    * Takes a viewport chunk and configures the display based one it.
-    * @pre chunk is a valid chunk.
+    * Takes a viewport element and configures the display based one it.
+    * @pre element is a valid configuration element.
     * @post viewport is configured.
     *        If there is an error is the specified config, we output error
     *        and "fix" the error.
@@ -104,7 +104,7 @@ public:
     * @note All derived viewport classes MUST call this function
     *        after doing local configuration.
     */
-   virtual void config(jccl::ConfigChunkPtr chunk);
+   virtual void config(jccl::ConfigElementPtr element);
 
    /**
     * Updates the projection data for this display.
@@ -154,9 +154,11 @@ public:
       xo = mXorigin; yo = mYorigin; xs = mXsize; ys = mYsize;
    }
 
-   /** Gets the config chunk that configured this display. */
-   jccl::ConfigChunkPtr getConfigChunk()
-   { return mViewportChunk; }
+   /** Gets the config element that configured this viewport. */
+   jccl::ConfigElementPtr getConfigElement()
+   {
+      return mViewportElement;
+   }
 
    /** Gets the user associated with this display. */
    User*  getUser()
@@ -187,7 +189,7 @@ protected:
 
    Display*          mDisplay;            /**< The parent display */
 
-   jccl::ConfigChunkPtr          mViewportChunk;        /**< The chunk data for this display */
+   jccl::ConfigElementPtr mViewportElement; /**< The config data for this display */
 
    /** @name Location and size of viewport
    * ASSERT: all values are >= 0.0 and <= 1.0

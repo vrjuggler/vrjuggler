@@ -33,20 +33,27 @@
 #include <gadget/gadgetConfig.h>
 
 #include <gadget/Devices/Sim/SimRelativePosition.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
 
 namespace gadget
 {
 
-bool SimRelativePosition::config(jccl::ConfigChunkPtr chunk)
+std::string SimRelativePosition::getElementType()
 {
-    if(! (Input::config(chunk) && Position::config(chunk)))
+   return "simulated_relative_position";
+}
+
+bool SimRelativePosition::config(jccl::ConfigElementPtr element)
+{
+   if(! (Input::config(element) && Position::config(element)))
+   {
       return false;
+   }
 
    // Initialize the positional devices
-   std::string base_frame_proxy = chunk->getProperty<std::string>("base_frame_proxy");
-   std::string relative_pos_proxy = chunk->getProperty<std::string>("relative_proxy");
+   std::string base_frame_proxy = element->getProperty<std::string>("base_frame_proxy");
+   std::string relative_pos_proxy = element->getProperty<std::string>("relative_proxy");
 
    mBaseFrame.init(base_frame_proxy);
    mRelativePos.init(relative_pos_proxy);

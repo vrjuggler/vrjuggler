@@ -24,6 +24,7 @@
    <target name="dist" depends="compile">
       <jar destfile="jccl_config.jar" basedir=".">
          <include name="org/vrjuggler/jccl/config/**"/>
+         <fileset dir="${srcdir}" includes="org/vrjuggler/jccl/config/xslt/*.xsl" />
       </jar>
    </target>
 

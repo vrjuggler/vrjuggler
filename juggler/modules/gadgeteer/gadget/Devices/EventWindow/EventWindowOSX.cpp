@@ -34,7 +34,7 @@
 
 #include <boost/concept_check.hpp>
 //#include <vpr/Thread/Thread.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/EventWindow/KeyEvent.h>
@@ -64,8 +64,13 @@ EventWindowOSX::EventWindowOSX()
    //mShared = false;                         // False by default
 }
 
+std::string EventWindowOSX::getElementType()
+{
+   return "event_window";
+}
+
 /** Constructor. */
-bool EventWindowOSX::config(jccl::ConfigChunkPtr c)
+bool EventWindowOSX::config(jccl::ConfigElementPtr e)
 {
    if ( ! (Input::config(c) && EventWindow::config(c)) )
    {
@@ -94,8 +99,8 @@ bool EventWindowOSX::config(jccl::ConfigChunkPtr c)
       m_height = 400;
    }
 
-   m_x = c->getProperty<int>("origin", 0);
-   m_y = c->getProperty<int>("origin", 1);
+   m_x = e->getProperty<int>("origin", 0);
+   m_y = e->getProperty<int>("origin", 1);
 
    // Get the lock information
    mLockToggleKey = c->getProperty<int>("lock_key");
@@ -105,7 +110,7 @@ bool EventWindowOSX::config(jccl::ConfigChunkPtr c)
       mLockState = Lock_LockKey;      // Initialize to the locked state
    }
 
-   m_mouse_sensitivity = c->getProperty<float>("msens");
+   m_mouse_sensitivity = e->getProperty<float>("mouse_sensitivity");
    if ( 0.0f == m_mouse_sensitivity )
    {
       m_mouse_sensitivity = 0.5;

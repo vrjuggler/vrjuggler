@@ -61,7 +61,7 @@
 #include <gmtl/Generate.h>
 
 #include <vpr/System.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Devices/Logitech/ThreeDMouse/logiclass.h>   /* classprototypes and data types */
 
@@ -139,19 +139,26 @@ void ThreeDMouse::updateData()
 }
 
 
-bool ThreeDMouse::config(jccl::ConfigChunkPtr c)
+bool ThreeDMouse::config(jccl::ConfigElementPtr e)
     // PURPOSE: Constructor - Setup all vars
 {
 //   strncpy(mPort,"/dev/ttyd2",11);
 //    baseVector.setValue(0, 0, 0);   // Setup base offest as origin
-   if(! (gadget::Input::config(c) && gadget::Position::config(c)))
+   if(! (gadget::Input::config(e) && gadget::Position::config(e)))
+   {
       return false;
+   }
 
-   mPortName = c->getProperty<std::string>("port");
+   mPortName = e->getProperty<std::string>("port");
    
    baseVector[0] = baseVector[1] = baseVector[2] = 0;
 
    return true;
+}
+
+std::string ThreeDMouse::getElementType()
+{
+   return "three_d_mouse";
 }
 
 

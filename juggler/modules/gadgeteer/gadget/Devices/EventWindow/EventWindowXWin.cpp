@@ -37,7 +37,7 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/Thread/Thread.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <gadget/Util/Debug.h>
 #include <gadget/InputManager.h>
@@ -50,10 +50,15 @@
 namespace gadget
 {
 
-/** Constructor. */
-bool EventWindowXWin::config(jccl::ConfigChunkPtr c)
+std::string EventWindowXWin::getElementType()
 {
-   if ( ! (Input::config(c) && EventWindow::config(c)) )
+   return "event_window";
+}
+
+/** Constructor. */
+bool EventWindowXWin::config(jccl::ConfigElementPtr e)
+{
+   if ( ! (Input::config(e) && EventWindow::config(e)) )
    {
       return false;
    }
@@ -69,25 +74,25 @@ bool EventWindowXWin::config(jccl::ConfigChunkPtr c)
    mCurKeys[0] = mRealkeys[0] = mKeys[0] = 1;
 
    // Get size and position
-   mWidth = c->getProperty<int>("width");
-   mHeight = c->getProperty<int>("height");
+   mWidth  = e->getProperty<int>("width");
+   mHeight = e->getProperty<int>("height");
 
    // Sanity checks.
    if (mWidth == 0) mWidth = 400;
    if (mHeight == 0) mHeight = 400;
 
-   mX = c->getProperty<int>("origin", 0);
-   mY = c->getProperty<int>("origin", 1);
+   mX = e->getProperty<int>("origin", 0);
+   mY = e->getProperty<int>("origin", 1);
 
    // Get the X display string
-   int x_disp_num = c->getProperty<int>("display_number");
-   jccl::ConfigChunkPtr dispSysChunk = gadget::InputManager::instance()->getDisplaySystemChunk();
+   int x_disp_num = e->getProperty<int>("display_number");
+   jccl::ConfigElementPtr disp_sys_elt =
+      gadget::InputManager::instance()->getDisplaySystemElement();
 
-   if ((x_disp_num >= 0) && (dispSysChunk.get() != NULL) )
+   if ((x_disp_num >= 0) && (disp_sys_elt.get() != NULL) )
    {
-      std::string xpipe_str;
-      xpipe_str = dispSysChunk->getProperty<std::string>("xpipes", x_disp_num);
-      mXDisplayString = xpipe_str;
+      mXDisplayString = disp_sys_elt->getProperty<std::string>("x11_pipes",
+                                                               x_disp_num);
    }
    else
    {
@@ -101,15 +106,15 @@ bool EventWindowXWin::config(jccl::ConfigChunkPtr c)
    }
 
    // Get the lock information
-   mLockToggleKey = c->getProperty<int>("lock_key");
-   bool start_locked = c->getProperty<bool>("start_locked");
+   mLockToggleKey = e->getProperty<int>("lock_key");
+   bool start_locked = e->getProperty<bool>("start_locked");
 
    if (start_locked)
    {
       mLockState = Lock_LockKey;      // Initialize to the locked state
    }
 
-   mMouseSensitivity = c->getProperty<float>("msens");
+   mMouseSensitivity = e->getProperty<float>("mouse_sensitivity");
    if (0.0f == mMouseSensitivity)
    {
       mMouseSensitivity = 0.5;
@@ -119,7 +124,7 @@ bool EventWindowXWin::config(jccl::ConfigChunkPtr c)
       << "Mouse Sensititivty: " << mMouseSensitivity << std::endl
       << vprDEBUG_FLUSH;
 
-   mSleepTimeMS = c->getProperty<int>("sleep_time");
+   mSleepTimeMS = e->getProperty<int>("sleep_time");
 
    // Sanity check.
    if (mSleepTimeMS == 0)

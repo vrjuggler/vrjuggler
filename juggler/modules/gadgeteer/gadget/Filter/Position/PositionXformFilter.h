@@ -36,7 +36,7 @@
 #include <typeinfo>
 #include <vector>
 
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Filter/Position/PositionFilter.h>
 #include <gadget/Type/PositionData.h>
 
@@ -65,7 +65,7 @@ public:
    /** Configuration for the filter
    * @return Returns truee if configured correctly
    */
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /** Apply the pos filter.
    * Apply the filter to the posSample in place.
@@ -74,7 +74,7 @@ public:
    */
    virtual void apply(std::vector< PositionData >& posSample);
 
-   static std::string getChunkType() { return std::string("PosXformFilter"); }
+   static std::string getElementType();
 
 protected:
    /** Given Sensor pos xform in sensor coordinate system: Sensor

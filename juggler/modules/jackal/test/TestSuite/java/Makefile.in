@@ -23,16 +23,10 @@ RUNNER= \
 	AllTests
 
 TESTCASES = \
-	test.ChunkDescTest \
-	test.ChunkDescEventTest \
-	test.ConfigChunkTest \
-	test.DescEnumTest \
-	test.PropertyDescTest \
-	test.ValTypeTest \
-	\
+	test.CategoryTest		     \
 	test.ConfigurationReaderTest	     \
 	test.ConfigDefinitionTest	     \
-	test.ConfigDefinitionBuilderTest     \
+	test.ConfigDefinitionReaderTest      \
 	test.ConfigDefinitionRepositoryTest  \
 	test.ConfigElementTest		     \
 	test.ConfigElementFactoryTest	     \

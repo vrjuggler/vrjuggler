@@ -74,6 +74,16 @@ DTK::DTK()
    port = NULL;
 }
 
+char* DTK::getDeviceName()
+{
+   return "vjDTK";
+}
+
+std::string DTK::getElementType()
+{
+   return "dtk";
+}
+
 bool DTK::config(jccl::ConfigChunkPtr c)
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)

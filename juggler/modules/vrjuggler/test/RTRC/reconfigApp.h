@@ -39,7 +39,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
+#include <jccl/Config/Configuration.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/AnalogInterface.h>
@@ -97,16 +98,16 @@ public:
 //UTILITIES
 
    void setPath( std::string path );
-   bool addChunkFile( std::string filename );
-   bool removeChunkFile( std::string filename );
-   bool swapChunkFiles( std::string remove_file, std::string add_file );
-   bool removeRecentChunkDB();
+   bool addElementFile( std::string filename );
+   bool removeElementFile( std::string filename );
+   bool swapElementFiles( std::string remove_file, std::string add_file );
+   bool removeRecentConfiguration();
 
    bool checkTime();
 
    bool verifyProxy( std::string proxyName, std::string deviceName );
-   bool verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr viewportChunk);
-   bool verifyAllViewports( vrj::Display* display, jccl::ConfigChunkPtr viewportChunk);
+   bool verifyViewport( vrj::Viewport* viewport, jccl::ConfigElementPtr viewportElement);
+   bool verifyAllViewports( vrj::Display* display, jccl::ConfigElementPtr viewportElement);
 
    vrj::Display* getDisplay( std::string name );
    bool verifyDisplayFile( std::string filename );
@@ -258,9 +259,9 @@ private:
    bool mTesting;
    bool mFinished;
 
-   //Chunk loading items
+   //Element loading items
    std::string mPath;
-   jccl::ConfigChunkDB* mNewChunkDB;
+   jccl::Configuration* mNewCfg;
 
    void initGLState();
 

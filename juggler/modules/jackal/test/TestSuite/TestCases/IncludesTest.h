@@ -7,13 +7,6 @@
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
-// #include <jccl/Config/VarValue.h>
-// #include <jccl/Config/ConfigChunk.h>
-// #include <jccl/Config/ChunkDesc.h>
-// #include <jccl/Config/ChunkDescDB.h>
-// #include <jccl/Config/ConfigChunkDB.h>
-// #include <jccl/Config/ChunkFactory.h>
-
 /*****************************************************************
  tests out the functionality expected of desc & config file
  includes in config files.
@@ -32,9 +25,9 @@ public:
 
     virtual ~IncludesTest();
 
-    void XMLDescIncludeTest ();
+    void XMLDefinitionIncludeTest();
 
-    void XMLChunkIncludeTest ();
+    void XMLElementIncludeTest();
 
     static CppUnit::Test* suite();
 

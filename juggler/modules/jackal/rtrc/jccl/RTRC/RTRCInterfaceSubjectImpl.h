@@ -44,13 +44,13 @@ namespace jccl
 {
 
 /** CORBA interface subject implementation to the dynamic reconfiguration 
- *  management plugin. Use these functions to view and modify the chunks in
+ *  management plugin. Use these functions to view and modify the elements in
  *  the config manager.
  *
  *  @date July 31, 2002
  */
-class JCCL_CLASS_API RTRCInterfaceSubjectImpl : public POA_jccl::RTRCInterfaceSubject,
-                                                public tweek::SubjectImpl
+class JCCL_CLASS_API RTRCInterfaceSubjectImpl
+   : public POA_jccl::RTRCInterfaceSubject, public tweek::SubjectImpl
 {
 public:
 
@@ -61,29 +61,30 @@ public:
    {;}
 
    /**
-    * Add a string containing an XML definition of a config chunk DB
+    * Adds a string containing an XML definition of a configuration.
     */
-   virtual void add( const char* chunkDBString );
+   virtual void add(const char* configurationString);
 
    /**
-    * Remove a string containing an XML definition of a config chunk DB
+    * Removes a string containing an XML definition of a configuration.
     */
-   virtual void remove( const char* chunkDBString );
+   virtual void remove(const char* configurationString);
 
    /** 
-    * Swap in/out a string containing XML definitions of config chunk DBs
+    * Swap in/out a string containing XML definitions of configurations.
     */
-   virtual void swap( const char* addChunkDBString, const char* removeChunkDBString );
+   virtual void swap(const char* addConfigurationString,
+                     const char* removeConfigurationString);
 
    /**
-    * Get the current chunks in the config system
+    * Gets the current elements in the config system.
     */
-   virtual char* getChunks();
+   virtual char* getElements();
 
    /**
-    * Get the current chunk descs in the config system
+    * Get the current configuration definitions in the config system.
     */
-   virtual char* getChunkDescs();
+   virtual char* getDefinitions();
 
    /**
     * This overriding method is needed so that the correct type is returned

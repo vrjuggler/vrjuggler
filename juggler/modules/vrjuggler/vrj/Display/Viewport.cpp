@@ -32,7 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Kernel/User.h>
@@ -42,18 +42,18 @@
 namespace vrj
 {
 
-void Viewport::config(jccl::ConfigChunkPtr chunk)
+void Viewport::config(jccl::ConfigElementPtr element)
 {
-   vprASSERT(chunk.get() != NULL);
+   vprASSERT(element.get() != NULL);
 
-   // -- Get config info from chunk -- //
-    float originX = chunk->getProperty<float>("origin", 0);
-    float originY = chunk->getProperty<float>("origin", 1);
-    float sizeX   = chunk->getProperty<float>("size", 0);
-    float sizeY   = chunk->getProperty<float>("size", 1);
-    std::string name  = chunk->getName();
-    mView    = (Viewport::View)chunk->getProperty<int>("view");
-    mActive  = chunk->getProperty<bool>("active");
+   // -- Get config info from element -- //
+    float originX = element->getProperty<float>("origin", 0);
+    float originY = element->getProperty<float>("origin", 1);
+    float sizeX   = element->getProperty<float>("size", 0);
+    float sizeY   = element->getProperty<float>("size", 1);
+    std::string name  = element->getName();
+    mView    = (Viewport::View) element->getProperty<int>("view");
+    mActive  = element->getProperty<bool>("active");
 
    // -- Check for error in configuration -- //
    // NOTE: If there are errors, set them to some default value
@@ -77,7 +77,7 @@ void Viewport::config(jccl::ConfigChunkPtr chunk)
     setOriginAndSize(originX, originY, sizeX, sizeY);
 
     // Get the user for this display
-    std::string user_name = chunk->getProperty<std::string>("user");
+    std::string user_name = element->getProperty<std::string>("user");
     mUser = Kernel::instance()->getUser(user_name);
 
     if(NULL == mUser)
@@ -89,7 +89,7 @@ void Viewport::config(jccl::ConfigChunkPtr chunk)
     }
 
     setName(name);
-    mViewportChunk = chunk;        // Save the chunk for later use
+    mViewportElement = element;        // Save the element for later use
 
     std::string bufname = "Head Latency " + name;
 }

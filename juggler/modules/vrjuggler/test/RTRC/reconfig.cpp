@@ -60,14 +60,14 @@ int main(int argc, char* argv[])
       std::cout<<"\n"<<std::flush;
       std::cout<<"\n"<<std::flush;
       std::cout<<"Usage: "<<argv[0]
-               <<" [path to Chunks]\n"
+               <<" [path to Elements]\n"
                <<std::flush;
       std::cout<<"\n"<<std::flush;
       std::cout<<"\n"<<std::flush;
       exit(1);
    }
 
-   //Get the path to the chunks
+   //Get the path to the elements
    std::string path(argv[1]);
 
    //Tack on a slash if it isn't there already
