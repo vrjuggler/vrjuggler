@@ -25,7 +25,7 @@
    </guipanel>
    <guipanel name="ControlPanel">
       <file name="${TWEEK_BASE_DIR}/bin/beans/VRJConfig.jar"
-            class="org.vrjuggler.vrjconfig.ControlPanelView" />
+            class="org.vrjuggler.vrjconfig.controlpanel.ControlPanelView" />
       <dependencies>
          <bean>ConfigBroker</bean>
          <bean>RTRCDataSourceBroker</bean>
