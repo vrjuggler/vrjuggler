@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-08-2004 dshipton    Split EventWindowXWin::openTheWindow() into
+                        openLocalWindow and setupRemoteWindow and
+                        added code to get size into getWindowWidthAndHeight().
 Oct-18-2004 allenb      Major refactoring of EventWindow handling on X.
                         Now the X event window device can sample events
                         from "remote" windows that it did not open.
