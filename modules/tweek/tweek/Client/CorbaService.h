@@ -93,6 +93,8 @@ public:
       {
          delete mOrbThread;
          mOrbThread = NULL;
+         delete mOrbFunctor;
+         mOrbFunctor = NULL;
       }
    }
 
@@ -191,6 +193,12 @@ public:
     */
    void unregisterObject(PortableServer::ObjectId_var id);
 
+   /**
+    * Runs the ORB thread.  This should not be invoked by user code.  It is
+    * for use with the internally managed ORB thread.
+    */
+   void run();
+
 private:
    vpr::ReturnStatus initRootPOA();
 
@@ -206,11 +214,7 @@ private:
    void addSubjectManagers(const CosNaming::BindingList& bindingList,
                            std::list<tweek::SubjectManager_var>& mgrList);
 
-   /**
-    * Runs the server.
-    */
-   void run(void* args);
-
+   vpr::ThreadRunFunctor<tweek::CorbaService>* mOrbFunctor;
    vpr::Thread* mOrbThread;
 
    std::string mNsHost;

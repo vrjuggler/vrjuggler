@@ -56,8 +56,8 @@ namespace tweek
 const std::string CorbaManager::DELIVERY_SUBJECT_NAME("TweekBeanPusher");
 
 CorbaManager::CorbaManager()
-   : mAppName("unknown"), mOrbThread(NULL), mSubjectManager(NULL),
-     mBeanDeliverySubject(NULL)
+   : mAppName("unknown"), mOrbFunctor(NULL), mOrbThread(NULL),
+     mSubjectManager(NULL), mBeanDeliverySubject(NULL)
 {
    std::string tweek_ver = getVersionString();
 
@@ -142,10 +142,8 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
 
       vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Starting ORB thread\n"
                                                  << vprDEBUG_FLUSH;
-      vpr::ThreadMemberFunctor<CorbaManager>* corba_run =
-         new vpr::ThreadMemberFunctor<CorbaManager>(this, &CorbaManager::run);
-
-      mOrbThread = new vpr::Thread(corba_run);
+      mOrbFunctor = new vpr::ThreadRunFunctor<tweek::CorbaManager>(this);
+      mOrbThread  = new vpr::Thread(mOrbFunctor);
    }
    catch (CORBA::SystemException& sysEx)
    {
@@ -495,7 +493,7 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
    return status;
 }
 
-void CorbaManager::run(void* args)
+void CorbaManager::run()
 {
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Server is running!\n"
                                               << vprDEBUG_FLUSH;
