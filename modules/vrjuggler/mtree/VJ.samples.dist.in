@@ -54,13 +54,13 @@
                 ..
                 SimpleApp
                 ..
-                contextApp
-                ..
-                simpleInput
-                ..
                 WallTest
                 ..
                 collideApp
+                ..
+                contextApp
+                ..
+                simpleInput
                 ..
            ..
         ..
