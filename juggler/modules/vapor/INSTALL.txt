@@ -1,0 +1,158 @@
+==============================================================================
+This file contains instructions on how to build the VR Juggler Portable
+Runtime (VPR) from the source code.
+==============================================================================
+
+------------------
+Table of contents:
+------------------
+
+    1. Getting started
+        A. Supported platforms
+        B. Minimum requirements (compiler, libraries, etc.)
+    2. Compiling the VR Juggler Portable Runtime
+        A. Steps
+        B. Options for the configure script
+        C. Advanced topics
+
+==============================================================================
+1. Getting started
+==============================================================================
+
+    A. Supported platforms
+
+        VR Juggler is officially supported on the following platforms:
+
+            IRIX 6.5
+            RedHat Linux 6.1 and newer
+            Windows NT 4.0 and 2000
+            Windows 98/Me
+
+        VR Juggler is known to work on the following platforms (but is
+        not officially supported):
+
+            HP-UX 10.20 and 11.00
+            FreeBSD 4.2 and 5.0-CURRENT (x86)
+            Sun Solaris 7 (x86)
+            Mac OS X
+
+    B. Minimum requirements (by operating system)
+
+        * All
+            GNU make 3.78 or newer
+            GNU Autoconf 2.13
+            GNU Automake 1.4
+
+        * IRIX 6.5.3 or newer
+            MIPSpro Compilers 7.3.1.1m or newer
+
+        * RedHat Linux 6.x
+            GCC 2.91
+
+        * RedHat Linux 7.0
+            GCC 2.96.69
+
+        * Windows NT 4.0 or newer
+            Microsoft Visual Studio 6.0 (SP4 or SP5)
+            Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools.zip)
+            Cygwin 1.1.x including the latest Cygwin build of Perl
+
+        * HP-UX
+            aCC A.03.30
+
+        * Solaris 7
+            GCC 2.95.2 or newer
+            GNU binutils 2.9 or newer
+            Mesa3D 3.2 or newer
+
+        * FreeBSD 4.3 or newer
+            GCC 2.95.3 or newer
+
+        * Mac OS 10.0.3
+            Developer package
+
+==============================================================================
+2. Compiling the VR Juggler Portable Runtime
+==============================================================================
+
+    A. Steps
+
+          i. Choose a directory to put the VR Juggler Portable Runtime source
+             code (referred to as <VPR_DIR> from now on).
+
+         ii. Go to that directory and checkout VR Juggler Portable Runtime
+             using CVS
+             NOTE: make sure CVS is set up, and pointing to the VR Juggler
+             Portable Runtime repository.
+
+            The simple version is:
+
+                cd <VPR_DIR>
+                cvs checkout vapor
+
+        iii. Enter the newly checked out VPR source directory
+
+                cd <VPR_DIR>/vapor
+
+         iv. Compile the VR Juggler Portable Runtime (using the Autoconf
+             system and GNU make)
+
+              a. Generate aclocal.m4, header template (vprDefines.h.in), and
+                 the configure script
+
+                    ./autogen.sh
+    
+              b. Probe the system for capabilities, generate Makefiles, etc.
+                 (this configures the source tree for the current system)
+
+                    ./configure
+
+              c. Make the distribution using GNU make.  This compiles, links,
+                 and creates the final distribution tree (in the form of
+                 symlinks)
+
+                    gmake
+
+          v. Set the environment variable $VPR_BASE_DIR.  This is *required*
+             by VPR's application makefiles and runtime environment.
+
+             NOTES:
+                 1. The directory "instlinks" is semi-important. 
+                    It is a working distribution of the VR Juggler Portable
+                    Runtime library.  After "gmake" is done, you'll be able
+                    to use this directory to compile and link your
+                    application code.  This will not work on Win32, so a
+                    full installation must be performed.
+                 2. It is helpful to have something similar to the following
+                    line your $HOME/.tcshrc or $HOME/.cshrc file (assuming
+                    the use of tcsh for your shell):
+
+                        setenv VPR_BASE_DIR [VPR_DIR]/vapor/instlinks
+
+                    Use whatever is appropriate for your shell (BASH, ksh,
+                    DOS, etc.)
+
+    B. Options for the configure script
+
+       To get a list of options that can be passed to the configure script,
+       execute the following in <VPR_DIR>/vapor:
+
+           ./configure --help
+
+    C. Advanced topics
+
+       Sending compiler output to a different directory than the source
+       tree can be helpful for debugging and development.  This is done
+       by making a directory to put the object files and compiled
+       libraries before building.
+
+       The following steps set up a build directory within your VR Juggler
+       Portable Runtime source directory.  Here, we use the name <BUILD_DIR>
+       to refer to the directory that will contain the object files and
+       libraries.  It can be called whatever you want.
+
+           mkdir <VPR_DIR>/vapor/<BUILD_DIR>
+           cd <VPR_DIR>/vapor/<BUILD_DIR>
+           <VPR_DIR>/vapor/configure
+
+$Id$
