@@ -101,16 +101,16 @@
 
    <!-- Clean up -->
    <target name="clean">
-      <delete>
+      <delete failonerror="false">
          <fileset dir="com" includes="**/*.class" />
          <fileset dir="org" includes="**/*.class" />
       </delete>
-      <delete file="Tweek.jar" />
-      <delete file="TweekBeans.jar" />
-      <delete file="TweekEvents.jar" />
-      <delete file="TweekNet.jar" />
-      <delete file="TweekServices.jar" />
-      <delete file="Viewers.jar" />
-      <delete file="kunststoff-mod.jar" />
+      <delete file="Tweek.jar" failonerror="false" />
+      <delete file="TweekBeans.jar" failonerror="false" />
+      <delete file="TweekEvents.jar" failonerror="false" />
+      <delete file="TweekNet.jar" failonerror="false" />
+      <delete file="TweekServices.jar" failonerror="false" />
+      <delete file="Viewers.jar" failonerror="false" />
+      <delete file="kunststoff-mod.jar" failonerror="false" />
    </target>
 </project>

@@ -51,9 +51,9 @@
 
    <!-- Clean up -->
    <target name="clean">
-      <delete>
+      <delete failonerror="false">
          <fileset dir="org" includes="**/*.class" />
       </delete>
-      <delete file="TweekGadget.jar" />
+      <delete file="TweekGadget.jar" failonerror="false" />
    </target>
 </project>

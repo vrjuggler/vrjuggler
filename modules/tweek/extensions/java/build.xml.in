@@ -47,11 +47,11 @@
 
    <!-- Clean up -->
    <target name="clean">
-      <delete>
+      <delete failonerror="false">
          <fileset dir="org" includes="**/*.class" />
       </delete>
-      <delete file="ui.jar" />
-      <delete file="wizard.jar" />
-      <delete file="WizardBuilder.jar" />
+      <delete file="ui.jar" failonerror="false" />
+      <delete file="wizard.jar" failonerror="false" />
+      <delete file="WizardBuilder.jar" failonerror="false" />
    </target>
 </project>
