@@ -50,71 +50,71 @@
 # -----------------------------------------------------------------------------
 
 # Variables whose values are specific to this file.
-includedir	= @includedir@/vpr
-instlinks	= $(topdir)/instlinks
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
+includedir=	@includedir@/vpr
+instlinks=	$(topdir)/instlinks
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
 
 # Extra compiler and linker options needed only by this file.
-DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
-OPT_FLAGS	= -D_OPT @OPT_FLAGS@
+DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
+OPT_FLAGS=	-D_OPT @OPT_FLAGS@
 
 # =============================================================================
 # Build and installation directory naming and ownership information.
 # =============================================================================
-DEFAULT_DIR	= $(OPT_DIR)
+DEFAULT_DIR=	$(OPT_DIR)
 
 # If we have a name for the install group, define group-setting options for
 # UNIX commands (chown(1), chgrp(1)) and for local Perl scripts
 # (makefiles-gen.pl in particular).
 ifdef GROUP_NAME
-    _GROUP_OPT_PL	= --gname="$(GROUP_NAME)"
+   _GROUP_OPT_PL=	--gname="$(GROUP_NAME)"
 endif
 
 # --------------------------------------------
 # Library build information.
 # --------------------------------------------
 
-SHLIB_MAJOR	= @MAJOR_VERSION@
-SHLIB_MINOR	= @MINOR_VERSION@
-SHLIB_MICRO	= @MICRO_VERSION@
+SHLIB_MAJOR=	@MAJOR_VERSION@
+SHLIB_MINOR=	@MINOR_VERSION@
+SHLIB_MICRO=	@MICRO_VERSION@
 
 ifneq (@OS_TYPE@, Win32)
-DYNAMICLIB_VER	= .$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+DYNAMICLIB_VER=	.$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
 endif
 
-STATICLIB_EXT	= @STATICLIB_EXT@
-DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
+STATICLIB_EXT=	@STATICLIB_EXT@
+DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
 
 # Full list of the libraries to build.
-LIBS		= $(VPR_LIBRARY)
-STATIC_LIBS	= $(LIBS)
-DYNAMIC_LIBS	= $(LIBS)
+LIBS=		$(VPR_LIBRARY)
+STATIC_LIBS=	$(LIBS)
+DYNAMIC_LIBS=	$(LIBS)
 
-DYLIB_DEPS	= @DYLIB_DEPS@
+DYLIB_DEPS=	@DYLIB_DEPS@
 
-VPR_LIB_STATIC		= $(VPR_LIBRARY).$(STATICLIB_EXT)
-VPR_LIB_DYNAMIC		= $(VPR_LIBRARY).$(DYNAMICLIB_EXT)
-VPR_PROF_LIB_STATIC	= $(VPR_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
-VPR_PROF_LIB_DYNAMIC	= $(VPR_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
+VPR_LIB_STATIC=		$(VPR_LIBRARY).$(STATICLIB_EXT)
+VPR_LIB_DYNAMIC=	$(VPR_LIBRARY).$(DYNAMICLIB_EXT)
+VPR_PROF_LIB_STATIC=	$(VPR_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+VPR_PROF_LIB_DYNAMIC=	$(VPR_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # Version information.
-PARAM_HEADER	= vpr/vprParam.h
-BRANCH		= HEAD
-VER_ARGS	= -f $(VPRROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-                  -i $(VPRROOT_ABS)/vpr/vprParam.h.in -o $(PARAM_HEADER) \
-                  -d "`date '+%b %e, %Y %H:%M:%S'`"
+PARAM_HEADER=	vpr/vprParam.h
+BRANCH=		HEAD
+VER_ARGS=	-f $(VPRROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
+		-i $(VPRROOT_ABS)/vpr/vprParam.h.in -o $(PARAM_HEADER)	\
+		-d "`date '+%b %e, %Y %H:%M:%S'`"
 
 ifdef VERSION
-    VER_ARGS	+= -v $(VERSION)
+   VER_ARGS+=	-v $(VERSION)
 endif
 
 # =============================================================================
 # Library targets.
 # =============================================================================
 
-BEFOREBUILD	= beforebuild
-AFTERBUILD	= afterbuild
+BEFOREBUILD=	beforebuild
+AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
 beforebuild: $(PARAM_HEADER)
@@ -216,8 +216,8 @@ endif
 #     6) Install the Java-based config editor (if possible).
 # =============================================================================
 
-BEFOREINSTALL	= beforeinstall
-AFTERINSTALL	= afterinstall
+BEFOREINSTALL=	beforeinstall
+AFTERINSTALL=	afterinstall
 
 # Steps to take before beginning the installation process.  This target is
 # independent of the current ABI.
@@ -243,8 +243,8 @@ afterinstall:
 	@echo "VPR installation complete"
 	@echo "==============================================================="
 
-PREINSTALL	= pre-install
-POSTINSTALL	= post-install
+PREINSTALL=	pre-install
+POSTINSTALL=	post-install
 
 pre-install:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VPR.lib.dist -p $(prefix)
@@ -256,8 +256,8 @@ post-install:
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/vpr-config $(bindir)
 
-PREINSTALL_HEADERS	= pre-install-headers
-POSTINSTALL_HEADERS	= post-install-headers
+PREINSTALL_HEADERS=	pre-install-headers
+POSTINSTALL_HEADERS=	post-install-headers
 
 pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VPR.include.dist -p $(prefix)
@@ -311,11 +311,11 @@ _clobber:
 
 # Define $(_LOCAL_CLOBBER) to inform the shared 'clobber' target that there is
 # a '_clobber' target to be run besides the standard targets.
-_LOCAL_CLOBBER	= 1
+_LOCAL_CLOBBER=	1
 
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
 
-CLEAN_FILES	+= $(PARAM_HEADER)
-CLEAN_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
-CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLEAN_FILES+=	$(PARAM_HEADER)
+CLEAN_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
