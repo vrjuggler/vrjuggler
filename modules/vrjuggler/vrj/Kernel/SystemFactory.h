@@ -35,7 +35,6 @@
 #define _VJ_SYSTEM_FACTORY_
 
 #include <vjConfig.h>
-class vjGlWindow;
 
 //------------------------------------------------------------
 //: Abstract base class for system specific Factory.
@@ -49,9 +48,7 @@ class vjGlWindow;
 class vjSystemFactory
 {
 public:
-	//: Get system specific OpenGL window
-	//! POST: Returns an OpenGL window for the current system
-    virtual vjGlWindow* getGLWindow() = 0;
+	
 };
 
 #endif

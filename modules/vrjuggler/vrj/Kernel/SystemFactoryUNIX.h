@@ -38,8 +38,6 @@
 #include <Kernel/vjSystemFactory.h>
 #include <Utils/vjSingleton.h>
 
-class vjDisplayManager;
-
 //---------------------------------------------------
 //: Concrete class for SGI System specific Factory.
 //
@@ -52,12 +50,6 @@ class vjSGISystemFactory : public vjSystemFactory
 {
 public:
 
-   /**
-	 * POST: Returns an SGI OpenGL window
-    */
-    virtual vjGlWindow* getGLWindow();
-
-
       // --- Singleton stuff --- //
 protected:
    /// Constructor:  Hidden, so no instantiation is allowed
@@ -65,21 +57,6 @@ protected:
    {;}
 
    vjSingletonHeader(vjSGISystemFactory);
-/*
-public:
-   /// Get instance of singleton object
-   static vjSGISystemFactory* instance()
-   {
-      if (_instance == NULL)
-         _instance = new vjSGISystemFactory;
-      return _instance;
-   }
-
-private:
-   /// The instance
-   static vjSGISystemFactory* _instance;
-   */
-
 };
 
 #endif

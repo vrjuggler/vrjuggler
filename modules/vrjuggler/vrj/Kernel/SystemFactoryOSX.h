@@ -56,13 +56,8 @@ class vjOSXSystemFactory : public vjSystemFactory
 {
 public:
 
-   /**
-	 * POST: Returns an OS X OpenGL window
-    */
-    virtual vjGlWindow* getGLWindow();
+   void CarbonApplicationThread(void* nullParam);
 
-    void CarbonApplicationThread(void* nullParam);
-   
       // --- Singleton stuff --- //
 protected:
    /// Constructor:  Hidden, so no instantiation is allowed
@@ -70,17 +65,17 @@ protected:
 
    vjSingletonHeader(vjOSXSystemFactory);
 
-    
-    
+
+
 protected:
     Boolean		gQuitFlag;
     Boolean		InitComplete;
-    
+
     void Initialize(void);
     void EventLoop(void);
     void DoEvent(EventRecord *event);
     void DoMenuCommand(long menuResult);
-    
+
 public:
     void setQuitFlag(Boolean value) { gQuitFlag = value; }
 };

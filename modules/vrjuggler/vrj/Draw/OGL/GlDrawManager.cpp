@@ -197,8 +197,8 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
 
    // -- Create a window for new display
    // -- Store the window in the wins vector
-      // Create the gl window object.  NOTE: The glPipe actually "creates" the opengl window and context later
-   vjGlWindow* new_win = vjKernel::instance()->getSysFactory()->getGLWindow();
+   // Create the gl window object.  NOTE: The glPipe actually "creates" the opengl window and context later
+   vjGlWindow* new_win = getGLWindow();
    new_win->config(disp);                                            // Configure it
    mWins.push_back(new_win);                                         // Add to our local window list
 
@@ -765,6 +765,26 @@ void vjGlDrawManager::drawGlove(vjGloveProxy* gloveProxy)
       glPopMatrix();
    }
    //glPopAttrib();
+}
+
+#if  defined(VJ_OS_Win32)
+#  include <Kernel/GL/vjGlWinWin32.h>
+#elif defined(VJ_OS_Darwin)
+#  include <Kernel/GL/vjGlOSXWindow.h>
+#else
+#  include <Kernel/GL/vjGlxWindow.h>
+#endif
+
+vjGlWindow* vjGlDrawManager::getGLWindow()
+{
+#if  defined(VJ_OS_Win32)
+   return new vjGlWinWin32;
+#elif defined(VJ_OS_Darwin)
+   return new vjGlOSXWindow
+#else
+   return new vjGlxWindow;
+#endif
+
 }
 
 
