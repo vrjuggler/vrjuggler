@@ -53,9 +53,10 @@ IDL_PYTHON_FILES=	SubjectManager_idl.py	\
 
 UI_FILES=		pytweek/aboutbox.ui		\
 			pytweek/globalprefsdialog.ui	\
-			pytweek/orbdisconnectbox.ui	\
-			pytweek/orbconnectbox.ui	\
-			pytweek/tweekframe.ui
+			pytweek/orbdisconnectboxbase.ui	\
+			pytweek/orbconnectboxbase.ui	\
+			pytweek/treeviewerbase.ui	\
+			pytweek/tweekframebase.ui
 PY_FILES=		$(UI_FILES:.ui=.py)
 
 include $(MKPATH)/dpp.idl.mk
@@ -76,20 +77,6 @@ vpath %.py.in $(srcdir)/pytweek
 
 pytweek/%.py: %.ui
 	$(PYUIC) $< > $@
-
-fix-pyuic-mess:
-	$(PYUIC) $(UI_FILE) > $(UI_FILE)-temp
-	cat $(UI_FILE)-temp | sed -e 's/^Extracting.*$$//' > $(PY_FILE)
-	rm -f $(UI_FILE)-temp
-
-pytweek/tweekframe.py: tweekframe.ui tweekframe.ui.h
-	@$(MAKE) UI_FILE=$< PY_FILE=$@ fix-pyuic-mess
-
-pytweek/orbconnectbox.py: orbconnectbox.ui orbconnectbox.ui.h
-	@$(MAKE) UI_FILE=$< PY_FILE=$@ fix-pyuic-mess
-
-pytweek/orbdisconnectbox.py: orbdisconnectbox.ui orbdisconnectbox.ui.h
-	@$(MAKE) UI_FILE=$< PY_FILE=$@ fix-pyuic-mess
 
 pytweek/net.py: net.py.in
 	cat $< | sed -e 's/=PYTHON_ORB_MODULE=/@PYTHON_ORB_MODULE@/' > $@

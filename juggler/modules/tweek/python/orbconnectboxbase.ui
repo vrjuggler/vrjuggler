@@ -1,17 +1,15 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
-<class>OrbConnectBox</class>
-<comment>Python:from qt import QStringList
-Python:from net import *</comment>
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>OrbConnectBoxBase</class>
 <widget class="QDialog">
     <property name="name">
-        <cstring>OrbConnectBox</cstring>
+        <cstring>OrbConnectBoxBase</cstring>
     </property>
     <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
             <width>427</width>
-            <height>492</height>
+            <height>498</height>
         </rect>
     </property>
     <property name="caption">
@@ -292,9 +290,6 @@ Python:from net import *</comment>
                         <property name="text">
                             <string>Properties</string>
                         </property>
-                        <property name="pixmap">
-                            <pixmap></pixmap>
-                        </property>
                     </column>
                     <property name="name">
                         <cstring>subjMgrInfoTable</cstring>
@@ -389,73 +384,70 @@ Python:from net import *</comment>
     <connection>
         <sender>cancelPushButton</sender>
         <signal>clicked()</signal>
-        <receiver>OrbConnectBox</receiver>
+        <receiver>OrbConnectBoxBase</receiver>
         <slot>reject()</slot>
     </connection>
     <connection>
         <sender>portLineEdit</sender>
         <signal>lostFocus()</signal>
-        <receiver>OrbConnectBox</receiver>
+        <receiver>OrbConnectBoxBase</receiver>
         <slot>verifyInput()</slot>
     </connection>
     <connection>
         <sender>iiopVersionLineEdit</sender>
         <signal>lostFocus()</signal>
-        <receiver>OrbConnectBox</receiver>
+        <receiver>OrbConnectBoxBase</receiver>
         <slot>verifyInput()</slot>
     </connection>
     <connection>
         <sender>hostLineEdit</sender>
         <signal>lostFocus()</signal>
-        <receiver>OrbConnectBox</receiver>
+        <receiver>OrbConnectBoxBase</receiver>
         <slot>verifyInput()</slot>
     </connection>
     <connection>
         <sender>portLineEdit</sender>
         <signal>returnPressed()</signal>
-        <receiver>OrbConnectBox</receiver>
+        <receiver>OrbConnectBoxBase</receiver>
         <slot>verifyInput()</slot>
     </connection>
     <connection>
         <sender>iiopVersionLineEdit</sender>
         <signal>returnPressed()</signal>
-        <receiver>OrbConnectBox</receiver>
+        <receiver>OrbConnectBoxBase</receiver>
         <slot>verifyInput()</slot>
     </connection>
     <connection>
         <sender>hostLineEdit</sender>
         <signal>returnPressed()</signal>
-        <receiver>OrbConnectBox</receiver>
+        <receiver>OrbConnectBoxBase</receiver>
         <slot>verifyInput()</slot>
     </connection>
     <connection>
         <sender>okPushButton</sender>
         <signal>clicked()</signal>
-        <receiver>OrbConnectBox</receiver>
+        <receiver>OrbConnectBoxBase</receiver>
         <slot>accept()</slot>
     </connection>
     <connection>
         <sender>connectPushButton</sender>
         <signal>clicked()</signal>
-        <receiver>OrbConnectBox</receiver>
+        <receiver>OrbConnectBoxBase</receiver>
         <slot>tryConnect()</slot>
     </connection>
     <connection>
         <sender>subjMgrListBox</sender>
         <signal>clicked(QListBoxItem*)</signal>
-        <receiver>OrbConnectBox</receiver>
+        <receiver>OrbConnectBoxBase</receiver>
         <slot>subjMgrSelected()</slot>
     </connection>
     <connection>
         <sender>subjMgrListBox</sender>
         <signal>doubleClicked(QListBoxItem*)</signal>
-        <receiver>OrbConnectBox</receiver>
+        <receiver>OrbConnectBoxBase</receiver>
         <slot>accept()</slot>
     </connection>
 </connections>
-<includes>
-    <include location="local" impldecl="in implementation">orbconnectbox.ui.h</include>
-</includes>
 <slots>
     <slot>verifyInput()</slot>
     <slot>tryConnect()</slot>
