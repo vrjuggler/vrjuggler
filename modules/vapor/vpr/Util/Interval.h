@@ -58,8 +58,9 @@ namespace vpr
  * This class captures an high resolution interval
  *
  * This interval is based off an unsigned always increasing
- * counter.  This means the interval is only accurate for about 3 hours
- *
+ * counter.  This means the interval is only accurate for about 12 hours which
+ * means that it is able to be useful for about a range of 6 hours
+ * (This is because internally everything is stored as 10's of usecs)
  *
  * The interval overflows whenever the counter maxes out.
  * The operator- will take care of the overflow automatically
@@ -72,18 +73,20 @@ public:
    enum Unit {
       Sec,     /**< Seconds */
       Msec,    /**< Millieconds */
-      Usec     /**< Microeconds */
+      Usec,    /**< Microeconds */
+      Base     /**< The base units */
    };
 
 public:
    static const Interval NoWait;     /**< Do not wait at all */
    static const Interval NoTimeout;  /**< Wait indefinitely */
+   static const Interval HalfPeriod;   /**< Half of the roll over period */
 
 public:
-   Interval() : mUsecs(0)
+   Interval() : mTensOfUsecs(0)
    { }
 
-   Interval(const vpr::Uint32 num, const Unit timeUnit) : mUsecs(0)
+   Interval(const vpr::Uint32 num, const Unit timeUnit) : mTensOfUsecs(0)
    { set(num, timeUnit); }
 
    void set(const vpr::Uint32 num, const Unit timeUnit)
@@ -91,13 +94,16 @@ public:
       switch(timeUnit)
       {
       case Interval::Sec:
-         mUsecs = (1000000) * num;
+         mTensOfUsecs = (100000) * num;
          break;
       case Interval::Msec:
-         mUsecs = 1000 * num;
+         mTensOfUsecs = 100 * num;
          break;
       case Interval::Usec:
-         mUsecs = num;
+         mTensOfUsecs = num/10;
+         break;
+      case Interval::Base:
+         mTensOfUsecs = num;
          break;
       default:
          vprASSERT(false && "vpr::Interval::set: Invalid Units used");
@@ -110,14 +116,17 @@ public:
       switch(timeUnit)
       {
       case Interval::Sec:
-         mUsecs = vpr::Uint32(1000000.0f * num);
+         mTensOfUsecs = vpr::Uint32(100000.0f * num);
          break;
       case Interval::Msec:
-         mUsecs = vpr::Uint32(1000.0f * num);
+         mTensOfUsecs = vpr::Uint32(100.0f * num);
          break;
       case Interval::Usec:
-         mUsecs = vpr::Uint32(num);
-         //mUsecs = num;
+         mTensOfUsecs = vpr::Uint32(num / 10.0f);
+         //mTensOfUsecs = num;
+         break;
+      case Interval::Base:
+         mTensOfUsecs = vpr::Uint32(num);
          break;
       default:
          vprASSERT(false && "vpr::Interval::setf: Invalid Units used");
@@ -134,47 +143,52 @@ public:
    void sec(const vpr::Uint32 num)
    { set(num, Interval::Sec); }
    vpr::Uint32 sec() const
-   { return (mUsecs/1000000); }
+   { return (mTensOfUsecs/100000); }
    void secf(const float num)
    { setf(num, Interval::Sec); }
    float secf() const
-   { return (float(mUsecs)/1000000.0f); }
+   { return (float(mTensOfUsecs)/100000.0f); }
 
    void msec(const vpr::Uint32 num)
    { set(num, Interval::Msec); }
    vpr::Uint32 msec() const
-   { return (mUsecs/1000); }
+   { return (mTensOfUsecs/100); }
    void msecf(const float num)
    { setf(num, Interval::Msec); }
    float msecf() const
-   { return (float(mUsecs)/1000.0f); }
+   { return (float(mTensOfUsecs)/100.0f); }
 
    void usec(const vpr::Uint32 num)
-   { mUsecs = num; }
+   { set(num, Interval::Usec); }
    vpr::Uint32 usec() const
-   { return mUsecs; }
+   { return mTensOfUsecs*10; }
    void usecf(const float num)
    { setf(num, Interval::Usec); }
    float usecf() const
-   { return mUsecs; }
+   { return (mTensOfUsecs*10.0f); }
 
    bool operator ==(const Interval& r) const
-   { return (mUsecs == r.mUsecs); }
+   { return (mTensOfUsecs == r.mTensOfUsecs); }
 
    bool operator !=(const Interval& r) const
    { return ! (*this == r); }
 
+   /** Operator <
+   * Must handle the roll over condition
+   */
    bool operator <(const Interval& r) const
-   { return (mUsecs < r.mUsecs); }
+   {
+      return ( (mTensOfUsecs+(0xffffffffUL/2)) < (r.mTensOfUsecs+(0xffffffffUL/2)) );
+   }
 
    Interval& operator+=(const Interval& r)
-   { mUsecs += r.mUsecs; return *this; }
+   { mTensOfUsecs += r.mTensOfUsecs; return *this; }
 
-   const Interval operator +(const Interval& r) const
+   Interval operator +(const Interval& r) const
    { return (Interval(*this) += r);  }
 
    Interval& operator-=(const Interval& r)
-   { mUsecs -= r.mUsecs; return *this; }
+   { mTensOfUsecs -= r.mTensOfUsecs; return *this; }
 
    /**
     * Return the difference of two interval values
@@ -187,7 +201,6 @@ public:
    Interval operator -(const Interval& r) const
    { return (Interval(*this) -= r); }
 
-
    /** Helper function that returns an interval representing the current time */
    static vpr::Interval now()
    {
@@ -198,7 +211,7 @@ public:
 
 
 private:
-   vpr::Uint32 mUsecs;
+   vpr::Uint32 mTensOfUsecs;
 }; // class Interval
 
 inline void Interval::setNow()
@@ -210,12 +223,12 @@ inline void Interval::setNow()
       ticks_per_sec = PR_TicksPerSecond();
    */
 
-   mUsecs = PR_IntervalToMicroseconds( PR_IntervalNow() );
+   mTensOfUsecs = PR_IntervalToMicroseconds( PR_IntervalNow() ) / 10;
 #else
 
    timeval cur_time;
    vpr::System::gettimeofday(&cur_time);
-   mUsecs = cur_time.tv_usec + (1000000 * cur_time.tv_sec);
+   mTensOfUsecs = (cur_time.tv_usec + (1000000 * cur_time.tv_sec)) / 10;
 #endif
 }
 
