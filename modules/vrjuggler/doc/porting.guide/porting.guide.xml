@@ -1,74 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="file://localhost/home9/users/jahare/packages/XMLEditor/examples/docbook/docbook.css" type="text/css"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
-<article>
-   <title>VR Juggler Porting Guide</title>
-   <section>
-      <title>Introduction</title>
-      <para>First, please note that VR Juggler 1.1 is a development only version. All odd-numbered minor version numbers are development-only versions. There will never be a non-developer VR Juggler 1.1 release. VR Juggler 1.1 is only for VR Juggler development. The next non-developer release will be VR Juggler 2.0. It will be released when our development goals for VR Juggler 1.1 have been completed and the code has stabilized.</para>
-   </section>
-   <section>
-      <title>Porting from 1.0 to 1.1</title>
-      <para>Much has changed from VR Juggler 1.0 to 1.1. Why? Within the last 6 months, our user base has been increasing steadily, and we wanted to put in changes that would make Juggler last for years to come. Many of the warts and bugs in the old version have been fixed, and the interface to everything has been changed to support some of our future plans. Don't worry, this change has been made for the best, and a change this big will not happen again. Our system is more modular and reusable than before. Thanks for your patience, and let us know if you have any porting questions not answered here.</para>
-      <itemizedlist>
-         <title>Summary of Changes</title>
-         <listitem>
-            <para>Separation of subsystems into modules with namespaces</para>
-            <para>To help make VR Juggler more modular, each of the major subsystems of VR Juggler has been split into a separate module. Each of these modules has an associated namespace for all of the symbols in the module. For example the new Vapor module has the namespace <literal>vpr</literal>. Thus all symbols in Vapor must be accessed using the <literal>vpr::</literal> scoping prefix.</para>
-            <para>Because of the move to namespaces, the <quote>vj</quote> prefix from all VR Juggler 1.0 class names has been removed and replaced with the namespace of the module that contains the given class. For example <classname>vjKernel</classname> has moved to the VR Juggler module which defines the <literal>vrj</literal> namespace. So <classname>vjKernel</classname> is now <classname>vrj::Kernel</classname>.</para>
-         </listitem>
-         <listitem>
-            <para>Cross-platform system abstraction</para>
-            <para>VR Juggler now has a common module called VPR (VR Juggler Portable Runtime) that captures all platform-specific system abstractions. This includes programming constructs such as threads and semaphores and system access methods such as serial ports and sockets. This common abstraction makes it possible for VR Juggler code to run on all supported platforms with little or no platform-specific code.</para>
-         </listitem>
-         <listitem>
-            <para>New math library</para>
-            <para>VR Juggler 1.1 introduces the use of a new common math library called GMTL.</para>
-         </listitem>
-      </itemizedlist>
-   </section>
-   <section>
-      <title>Interface Changes at a Glance</title>
-      <para>If you've looked at the new VR Juggler 1.1, you'll notice that much has changed since 1.0. Of particular note is the directory structure. In the source code, you'll see many standalone modules where before they were mixed. The installation of Juggler has more directories in the <filename>include</filename> directory (<filename>vrj</filename>, <filename>snx</filename>, <filename>plx</filename>, <filename>vpr</filename>, <filename>gadget</filename>, and <filename>jccl</filename>). Below is a step-by-step list of the things you will need to port and how to do it.</para>
-      <section>
-         <title>Base Application Object</title>
-         <orderedlist>
-            <listitem>
-               <para>In writing applications, the names of the application object parent classes have changed. For example, VR Juggler 1.0 applications that derived from <classname>vjPfApp</classname> now derive from <classname>vrj::PfApp</classname>. This is shown in the following:</para>
-               <programlisting>#include &lt;vrj/Kernel/Kernel.h&gt;
+<article><title>VR Juggler Porting Guide</title><section><title>Introduction</title><para>First, please note that VR Juggler 1.1 is a development only version. All odd-numbered minor version numbers are development-only versions. There will never be a non-developer VR Juggler 1.1 release. VR Juggler 1.1 is only for VR Juggler development. The next non-developer release will be VR Juggler 2.0. It will be released when our development goals for VR Juggler 1.1 have been completed and the code has stabilized.</para></section><section><title>Porting from 1.0 to 1.1</title><para>Much has changed from VR Juggler 1.0 to 1.1. Why? Within the last 6 months, our user base has been increasing steadily, and we wanted to put in changes that would make Juggler last for years to come. Many of the warts and bugs in the old version have been fixed, and the interface to everything has been changed to support some of our future plans. Don't worry, this change has been made for the best, and a change this big will not happen again. Our system is more modular and reusable than before. Thanks for your patience, and let us know if you have any porting questions not answered here.</para><itemizedlist><title>Summary of Changes</title><listitem><para>Separation of subsystems into modules with namespaces</para><para>To help make VR Juggler more modular, each of the major subsystems of VR Juggler has been split into a separate module. Each of these modules has an associated namespace for all of the symbols in the module. For example the new Vapor module has the namespace <literal>vpr</literal>. Thus all symbols in Vapor must be accessed using the <literal>vpr::</literal> scoping prefix.</para><para>Because of the move to namespaces, the <quote>vj</quote> prefix from all VR Juggler 1.0 class names has been removed and replaced with the namespace of the module that contains the given class. For example <classname>vjKernel</classname> has moved to the VR Juggler module which defines the <literal>vrj</literal> namespace. So <classname>vjKernel</classname> is now <classname>vrj::Kernel</classname>.</para></listitem><listitem><para>Cross-platform system abstraction</para><para>VR Juggler now has a common module called VPR (VR Juggler Portable Runtime) that captures all platform-specific system abstractions. This includes programming constructs such as threads and semaphores and system access methods such as serial ports and sockets. This common abstraction makes it possible for VR Juggler code to run on all supported platforms with little or no platform-specific code.</para></listitem><listitem><para>New math library</para><para>VR Juggler 1.1 introduces the use of a new common math library called GMTL.</para></listitem></itemizedlist></section><section><title>Interface Changes at a Glance</title><para>If you've looked at the new VR Juggler 1.1, you'll notice that much has changed since 1.0. Of particular note is the directory structure. In the source code, you'll see many standalone modules where before they were mixed. The installation of Juggler has more directories in the <filename>include</filename> directory (<filename>vrj</filename>, <filename>snx</filename>, <filename>plx</filename>, <filename>vpr</filename>, <filename>gadget</filename>, and <filename>jccl</filename>). Below is a step-by-step list of the things you will need to port and how to do it.</para><section><title>Base Application Object</title><orderedlist><listitem><para>In writing applications, the names of the application object parent classes have changed. For example, VR Juggler 1.0 applications that derived from <classname>vjPfApp</classname> now derive from <classname>vrj::PfApp</classname>. This is shown in the following:</para><programlisting>#include &lt;vrj/Kernel/Kernel.h&gt;
 #include &lt;vrj/Draw/OGL/PfApp.h&gt;
 
 // my OpenGL Performer VR Juggler application object
-class myApplication : public vrj::PfApp</programlisting>
-               <para>Similarly, OpenGL applications that derived from <classname>vjGlApp</classname> now derive from <classname>vrj::GlApp</classname>:</para>
-               <programlisting>#include &lt;vrj/Kernel/Kernel.h&gt;
+class myApplication : public vrj::PfApp</programlisting><para>Similarly, OpenGL applications that derived from <classname>vjGlApp</classname> now derive from <classname>vrj::GlApp</classname>:</para><programlisting>#include &lt;vrj/Kernel/Kernel.h&gt;
 #include &lt;vrj/Draw/OGL/GlApp.h&gt;
 
 // my OpenGL VR Juggler application object
-class myApplication : public vrj::GlApp</programlisting>
-            </listitem>
-            <listitem>
-               <para>The basic VR Juggler libraries that must be linked still have the same names on all platforms. There are other libraries that must be linked in addition to the VR Juggler libraries, however. On UNIX, linker commands must be updated to include the options <option>-lgadget</option>, <option>-ljccl</option>, and <option>-lvpr</option>. These link in the Gadgeteer, JCCL, and VPR libraries respectively. For a simpler makefile, the following can be done:</para>
-               <programlisting>app: $(OBJECTS)
+class myApplication : public vrj::GlApp</programlisting></listitem><listitem><para>The basic VR Juggler libraries that must be linked still have the same names on all platforms. There are other libraries that must be linked in addition to the VR Juggler libraries, however. On UNIX, linker commands must be updated to include the options <option>-lgadget</option>, <option>-ljccl</option>, and <option>-lvpr</option>. These link in the Gadgeteer, JCCL, and VPR libraries respectively. For a simpler makefile, the following can be done:</para><programlisting>app: $(OBJECTS)
 	$(LINK) app $(OBJECTS) \
            `$(VJ_BASE_DIR)/bin/vrjuggler-config --libs` \
-           `$(VJ_BASE_DIR)/bin/vrjuggler-config --extra-libs --all`</programlisting>
-               <para>The most important aspect of the above is the use of the <command>vrjuggler-config</command> script. The <option>--libs</option> argument prints out the basic VR Juggler libraries including paths. The combination of <option>--extra-libs</option> and <option>--all</option> prints out all the dependencies of VR Juggler.</para>
-               <para>For Win32 users, we have not yet developed a similar solution that will work with the Visual C++ command <command>nmake</command>. The above will work using GNU make in a Cygwin environment.</para>
-            </listitem>
-            <listitem>
-               <para>For much more detailed information, interested developers can refer to the headers <filename>vrj/Draw/Pf/PfApp.h</filename>, <filename>vrj/Draw/OGL/GlApp.h</filename>, <filename>vrj/Draw/OSG/OsgApp.h</filename>, <filename>gadget/Type/PositionInterface.h</filename>, <filename>gadget/Type/DigitalInterface.h</filename>, and <filename>vrj/Kernel/Kernel.h</filename>.</para>
-            </listitem>
-         </orderedlist>
-      </section>
-      <section>
-         <title>Math Library</title>
-         <orderedlist>
-            <listitem>
-               <para>VR Juggler now uses the GMTL math library (<ulink url="http://ggt.sf.net/">http://ggt.sf.net/</ulink>). The old <filename>vrj/Math</filename> library is no longer available. There are some very fundamental changes between GMTL and Math from VR Juggler 1.0. You should definitely read the GMTL Programmer's Guide available from the <ulink url="http://ggt.sf.net/">ggt.sf.net</ulink> website. This helps you understand how the toolkit is structured, which is pretty simple.</para>
-               <para>The main difference between GMTL and VRJ 1.0 Math is the way you use methods. GMTL is similar to object-oriented C programming where the object is always the first parameter in the function. This difference from VRJ 1.0 Math will affect all application code using math.</para>
-               <para>The <classname>vjMatrix</classname>, <classname>vjVec3</classname>, and <classname>vjQuat</classname> that you're used to has been changed to <classname>gmtl::Matrix44f</classname>, <classname>gmtl::Vec3f</classname>, <classname>gmtl::Point3f</classname>, and <classname>gmtl::Quatf</classname> respectively. The following shows an example of using the math classes.</para>
-               <programlisting>#include &lt;gmtl/Matrix.h&gt;
+           `$(VJ_BASE_DIR)/bin/vrjuggler-config --extra-libs --all`</programlisting><para>The most important aspect of the above is the use of the <command>vrjuggler-config</command> script. The <option>--libs</option> argument prints out the basic VR Juggler libraries including paths. The combination of <option>--extra-libs</option> and <option>--all</option> prints out all the dependencies of VR Juggler.</para><para>For Win32 users, we have not yet developed a similar solution that will work with the Visual C++ command <command>nmake</command>. The above will work using GNU make in a Cygwin environment.</para></listitem><listitem><para>For much more detailed information, interested developers can refer to the headers <filename>vrj/Draw/Pf/PfApp.h</filename>, <filename>vrj/Draw/OGL/GlApp.h</filename>, <filename>vrj/Draw/OSG/OsgApp.h</filename>, <filename>gadget/Type/PositionInterface.h</filename>, <filename>gadget/Type/DigitalInterface.h</filename>, and <filename>vrj/Kernel/Kernel.h</filename>.</para></listitem></orderedlist></section><section><title>Math Library</title><orderedlist><listitem><para>VR Juggler now uses the GMTL math library (<ulink url="http://ggt.sf.net/">http://ggt.sf.net/</ulink>). The old <filename>vrj/Math</filename> library is no longer available. There are some very fundamental changes between GMTL and Math from VR Juggler 1.0. You should definitely read the GMTL Programmer's Guide available from the <ulink url="http://ggt.sf.net/">ggt.sf.net</ulink> website. This helps you understand how the toolkit is structured, which is pretty simple.</para><para>The main difference between GMTL and VRJ 1.0 Math is the way you use methods. GMTL is similar to object-oriented C programming where the object is always the first parameter in the function. This difference from VRJ 1.0 Math will affect all application code using math.</para><para>The <classname>vjMatrix</classname>, <classname>vjVec3</classname>, and <classname>vjQuat</classname> that you're used to has been changed to <classname>gmtl::Matrix44f</classname>, <classname>gmtl::Vec3f</classname>, <classname>gmtl::Point3f</classname>, and <classname>gmtl::Quatf</classname> respectively. The following shows an example of using the math classes.</para><programlisting>#include &lt;gmtl/Matrix.h&gt;
 #include &lt;gmtl/Quat.h&gt;
 #include &lt;gmtl/Vec.h&gt;
 #include &lt;gmtl/Generate.h&gt;
@@ -105,139 +49,24 @@ gmtl::Matrix44f rot_mat( gmtl::make&lt;gmtl::Matrix44f&gt;( q ) );
 float length = gmtl::length( vec );
 
 // get the cross product
-gmtl::Vec3f result_cross = gmtl::cross( vec1, vec2 );</programlisting>
-            </listitem>
-            <listitem>
-               <para>Common C preprocessor symbols such as <symbol>VJ_DEG2RAD</symbol>, <symbol>VJ_RAD2DEG</symbol> found in <filename>vjConfig.h</filename> are now located as inline functions in <filename>gmtl/Math.h</filename>. These are listed in the <classname>gmtl::Math</classname> namespace. For example, <symbol>VJ_DEG2RAD</symbol> is now <function>gmtl::Math::deg2Rad()</function>. The following illustrates the new use:</para>
-               <programlisting>#include &lt;gmtl/Math.h&gt;
+gmtl::Vec3f result_cross = gmtl::cross( vec1, vec2 );</programlisting></listitem><listitem><para>Common C preprocessor symbols such as <symbol>VJ_DEG2RAD</symbol>, <symbol>VJ_RAD2DEG</symbol> found in <filename>vjConfig.h</filename> are now located as inline functions in <filename>gmtl/Math.h</filename>. These are listed in the <classname>gmtl::Math</classname> namespace. For example, <symbol>VJ_DEG2RAD</symbol> is now <function>gmtl::Math::deg2Rad()</function>. The following illustrates the new use:</para><programlisting>#include &lt;gmtl/Math.h&gt;
 
 // convert degrees to radians...
-float radians = gmtl::Math::deg2Rad( degrees );</programlisting>
-            </listitem>
-            <listitem>
-               <para>While porting applications to GMTL there is one critical thing to keep in mind. All GMTL functions take angles in <emphasis>radians</emphasis> while 1.0 Math took <emphasis>degrees</emphasis> for most of its functions. You may need to use <function>gmtl::Math::deg2Rad()</function> to convert some values.</para>
-            </listitem>
-            <listitem>
-               <para>The headers are in the directory <filename>gmtl/</filename>. Typically you will type your <token>#include</token>s in the following format:</para>
-               <programlisting>#include &lt;gmtl/somefile.h&gt;</programlisting>
-            </listitem>
-            <listitem>
-               <para>For more information, refer to the <ulink url="http://ggt.sf.net/">http://ggt.sf.net/</ulink> website. It has excellent online reference guide, and a programming guide that is more in depth than this short porting tutorial. If you don't have a web connection, see also the headers in the gmtl/ directory, it has all the docs in the headers. Typically the headers you'll use are these: <filename>gmtl/Vec.h</filename>, <filename>gmtl/Point.h</filename>, <filename>gmtl/Matrix.h</filename>, and <filename>gmtl/Quat.h</filename>.</para>
-            </listitem>
-         </orderedlist>
-      </section>
-      <section>
-         <title>Threads and Synchronization</title>
-         <para>One major change to VR Juggler 1.1 is the operating system abstraction in Juggler. It has been separated into a standalone, decoupled portable runtime called the VR Juggler Portable Runtime (VPR, pronounced "vapor"). VPR is a C++ abstraction the following:</para>
-         <itemizedlist>
-            <listitem>
-               <para>Threads</para>
-            </listitem>
-            <listitem>
-               <para>Synchronization primitives</para>
-            </listitem>
-            <listitem>
-               <para>Sockets</para>
-            </listitem>
-            <listitem>
-               <para>Serial I/O</para>
-            </listitem>
-            <listitem>
-               <para>High-precision timers</para>
-            </listitem>
-            <listitem>
-               <para>GUIDs</para>
-            </listitem>
-            <listitem>
-               <para>I/O statistics collection</para>
-            </listitem>
-            <listitem>
-               <para>Thread-safe ostreams with levels, categories, colors, and thread IDs</para>
-            </listitem>
-         </itemizedlist>
-         <para>It even has simulated sockets (using a discrete-event simulator for sockets). What does this mean for you? What will you need to port? </para>
-         <orderedlist>
-            <listitem>
-               <para>Every place you used a thread in your VR Juggler 1.0 application, you'll need to replace <classname>vjThread</classname> with <classname>vpr::Thread</classname>.</para>
-            </listitem>
-            <listitem>
-               <para>Replace <classname>vjMutex</classname> with <classname>vpr::Mutex</classname>.</para>
-            </listitem>
-            <listitem>
-               <para>Condition variables are now called <classname>vpr::CondVar</classname> instead of <classname>vjCond</classname>.</para>
-            </listitem>
-            <listitem>
-               <para>Replace <classname>vjSemaphore</classname> with <classname>vpr::Semaphore</classname></para>
-            </listitem>
-            <listitem>
-               <para><symbol>vjDEBUG</symbol> is now <symbol>vprDEBUG</symbol>. Related output symbols (e.g.,<symbol>vjDEBUG_FLUSH</symbol>, <symbol>vjDEBUG_BEGIN</symbol>, etc.) have been renamed similarly. When calling <symbol>vprDEBUG</symbol>, the category is now required. Previously, an integer constant could be used in place of a category symbol. For example: </para>
-               <programlisting>vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) &lt;&lt; "hello world!" &lt;&lt; vprDEBUG_FLUSH;</programlisting>
-               <para>Here, the category is <symbol>vprDBG_ALL</symbol>. The order of the category and level arguments has not changed.</para>
-               <para>Related to this change is the location of the debugging output headers. In VR Juggler 1.0, the only debugging header was <filename>Kernel/vjDebug.h</filename>. Now, the basic header that is always needed is <filename>vpr/Util/Debug.h</filename>. Project-specific extensions are named similarly. For example, the JCCL debugging header is <filename>jccl/Util/Debug.h</filename>. In VR Juggler proper, the header is <filename>vrj/Util/Debug.h</filename>.</para>
-            </listitem>
-            <listitem>
-               <para> The VPR C++ portable runtime library is located in <filename>libvpr</filename>, and the headers can be found in <filename>include/vpr</filename>.</para>
-            </listitem>
-            <listitem>
-               <para>For more detailed information, refer to the header files <filename>vpr/Thread/Thread.h</filename>, <filename>vpr/Sync/Mutex.h</filename>, <filename>vpr/Sync/Semaphore.h</filename>, <filename>vpr/Sync/CondVar.h</filename>, and <filename>vpr/Util/Debug.h</filename>.</para>
-            </listitem>
-         </orderedlist>
-      </section>
-      <section>
-         <title>Sound</title>
-         <orderedlist>
-            <listitem>
-               <para> Your interface to sound is <classname>snx::SoundHandle</classname>, found in <filename>snx/SoundHandle.h</filename>.</para>
-            </listitem>
-            <listitem>
-               <para> To select your sound API, configure the VR Juggler Sound Manager with config chunks or directly call the sonix API as in the following example:</para>
-               <programlisting>sonix::instance()-&gt;changeAPI( "OpenAL" );</programlisting>
-               <para>Here, the string "OpenAL" can be "AudioWorks" or "OpenAL" depending on how sonix was compiled.</para>
-            </listitem>
-            <listitem>
-               <para>If you want to disable sound, then do the following:</para>
-               <programlisting>sonix::instance()-&gt;changeAPI( "Stub" );</programlisting>
-            </listitem>
-            <listitem>
-               <para>The new sound library is located in <filename>libsonix</filename>, and the headers can be found in <filename>include/snx</filename>.</para>
-            </listitem>
-            <listitem>
-               <para> See also: include/snx/SoundHandle.h, include/snx/sonix.h.</para>
-            </listitem>
-         </orderedlist>
-      </section>
-      <section>
-         <title>Device Input</title>
-         <orderedlist>
-            <listitem>
-               <para>Header file includes for access to devices in Gadgeteer: </para>
-               <programlisting>#include &lt;gadget/Type/PositionInterface.h&gt;
-#include &lt;gadget/Type/DigitalInterface.h&gt;</programlisting>
-            </listitem>
-            <listitem>
-               <para>Gadgeteer has its own namespace that is separate from VR Juggler. The namespace is <classname>gadget</classname>, and classes such as <classname>vjAnalogInterface</classname> are now <classname>gadget::AnalogInterface</classname>.</para>
-            </listitem>
-            <listitem>
-               <para>As before, use <methodname>init()</methodname> on the interface class to tell it which device to use (this is specified in your config files). For example, to test for a button down event, you will use this code:</para>
-               <programlisting>gadget::DigitalInterface mAccelerateButton;
+float radians = gmtl::Math::deg2Rad( degrees );</programlisting></listitem><listitem><para>While porting applications to GMTL there is one critical thing to keep in mind. All GMTL functions take angles in <emphasis>radians</emphasis> while 1.0 Math took <emphasis>degrees</emphasis> for most of its functions. You may need to use <function>gmtl::Math::deg2Rad()</function> to convert some values.</para></listitem><listitem><para>The headers are in the directory <filename>gmtl/</filename>. Typically you will type your <token>#include</token>s in the following format:</para><programlisting>#include &lt;gmtl/somefile.h&gt;</programlisting></listitem><listitem><para>For more information, refer to the <ulink url="http://ggt.sf.net/">http://ggt.sf.net/</ulink> website. It has excellent online reference guide, and a programming guide that is more in depth than this short porting tutorial. If you don't have a web connection, see also the headers in the gmtl/ directory, it has all the docs in the headers. Typically the headers you'll use are these: <filename>gmtl/Vec.h</filename>, <filename>gmtl/Point.h</filename>, <filename>gmtl/Matrix.h</filename>, and <filename>gmtl/Quat.h</filename>.</para></listitem><listitem><para> Porting math code from the 1.0 Juggler math classes to GMTL can be a big task. In order to aid in quick migration from 1.0 to the most recent version of VR Juggler, we have provided several optional math classes that have the same syntax from Juggler 1.0. These include the vrj::Vec3, vrj::Matrix, and vrj::Quat classes (which act exactly as vjVec3, vjMatrix, and vjQuat do). The class header files are located in your Juggler source tree in modules/vrjuggler/deprecated/Math. The file names are Vec3.h, Matrix.h, and Quat.h.</para><para>Using these helper classes makes porting your code much easier. Instead of having to convert all of your math code to GMTL, all you have to do is #include the header files and make namespace changes to all of your math code. For instance, if you have the following line of Juggler 1.0 code:</para><para><programlisting>vjVec3 vec = v1.cross(v2);
+vjMatrix mat;
+mat.makeTrans(vec);
+vjQuat q;
+q.makeRot(q);</programlisting></para><para>Then it would change to this with the math helper classes:</para><para><programlisting>vrj::Vec3 vec = v1.cross(v2);
+vrj::Matrix mat;
+mat.makeTrans(vec);
+vrj::Quat q;
+q.makeRot(q);</programlisting></para><para>Note the only thing that changed is that the vrj:: namespace has replaced the old 'vj' prefix. It's also important to note that although GMTL uses radians for rotations, these math helper classes use degrees just as in Juggler 1.0. Every math function in these classes that was available in 1.0 is also available here.</para></listitem></orderedlist></section><section><title>Threads and Synchronization</title><para>One major change to VR Juggler 1.1 is the operating system abstraction in Juggler. It has been separated into a standalone, decoupled portable runtime called the VR Juggler Portable Runtime (VPR, pronounced "vapor"). VPR is a C++ abstraction the following:</para><itemizedlist><listitem><para>Threads</para></listitem><listitem><para>Synchronization primitives</para></listitem><listitem><para>Sockets</para></listitem><listitem><para>Serial I/O</para></listitem><listitem><para>High-precision timers</para></listitem><listitem><para>GUIDs</para></listitem><listitem><para>I/O statistics collection</para></listitem><listitem><para>Thread-safe ostreams with levels, categories, colors, and thread IDs</para></listitem></itemizedlist><para>It even has simulated sockets (using a discrete-event simulator for sockets). What does this mean for you? What will you need to port? </para><orderedlist><listitem><para>Every place you used a thread in your VR Juggler 1.0 application, you'll need to replace <classname>vjThread</classname> with <classname>vpr::Thread</classname>.</para></listitem><listitem><para>Replace <classname>vjMutex</classname> with <classname>vpr::Mutex</classname>.</para></listitem><listitem><para>Condition variables are now called <classname>vpr::CondVar</classname> instead of <classname>vjCond</classname>.</para></listitem><listitem><para>Replace <classname>vjSemaphore</classname> with <classname>vpr::Semaphore</classname></para></listitem><listitem><para><symbol>vjDEBUG</symbol> is now <symbol>vprDEBUG</symbol>. Related output symbols (e.g.,<symbol>vjDEBUG_FLUSH</symbol>, <symbol>vjDEBUG_BEGIN</symbol>, etc.) have been renamed similarly. When calling <symbol>vprDEBUG</symbol>, the category is now required. Previously, an integer constant could be used in place of a category symbol. For example: </para><programlisting>vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) &lt;&lt; "hello world!" &lt;&lt; vprDEBUG_FLUSH;</programlisting><para>Here, the category is <symbol>vprDBG_ALL</symbol>. The order of the category and level arguments has not changed.</para><para>Related to this change is the location of the debugging output headers. In VR Juggler 1.0, the only debugging header was <filename>Kernel/vjDebug.h</filename>. Now, the basic header that is always needed is <filename>vpr/Util/Debug.h</filename>. Project-specific extensions are named similarly. For example, the JCCL debugging header is <filename>jccl/Util/Debug.h</filename>. In VR Juggler proper, the header is <filename>vrj/Util/Debug.h</filename>.</para></listitem><listitem><para> The VPR C++ portable runtime library is located in <filename>libvpr</filename>, and the headers can be found in <filename>include/vpr</filename>.</para></listitem><listitem><para>For more detailed information, refer to the header files <filename>vpr/Thread/Thread.h</filename>, <filename>vpr/Sync/Mutex.h</filename>, <filename>vpr/Sync/Semaphore.h</filename>, <filename>vpr/Sync/CondVar.h</filename>, and <filename>vpr/Util/Debug.h</filename>.</para></listitem></orderedlist></section><section><title>Sound</title><orderedlist><listitem><para> Your interface to sound is <classname>snx::SoundHandle</classname>, found in <filename>snx/SoundHandle.h</filename>.</para></listitem><listitem><para> To select your sound API, configure the VR Juggler Sound Manager with config chunks or directly call the sonix API as in the following example:</para><programlisting>sonix::instance()-&gt;changeAPI( "OpenAL" );</programlisting><para>Here, the string "OpenAL" can be "AudioWorks" or "OpenAL" depending on how sonix was compiled.</para></listitem><listitem><para>If you want to disable sound, then do the following:</para><programlisting>sonix::instance()-&gt;changeAPI( "Stub" );</programlisting></listitem><listitem><para>The new sound library is located in <filename>libsonix</filename>, and the headers can be found in <filename>include/snx</filename>.</para></listitem><listitem><para> See also: include/snx/SoundHandle.h, include/snx/sonix.h.</para></listitem></orderedlist></section><section><title>Device Input</title><orderedlist><listitem><para>Header file includes for access to devices in Gadgeteer: </para><programlisting>#include &lt;gadget/Type/PositionInterface.h&gt;
+#include &lt;gadget/Type/DigitalInterface.h&gt;</programlisting></listitem><listitem><para>Gadgeteer has its own namespace that is separate from VR Juggler. The namespace is <classname>gadget</classname>, and classes such as <classname>vjAnalogInterface</classname> are now <classname>gadget::AnalogInterface</classname>.</para></listitem><listitem><para>As before, use <methodname>init()</methodname> on the interface class to tell it which device to use (this is specified in your config files). For example, to test for a button down event, you will use this code:</para><programlisting>gadget::DigitalInterface mAccelerateButton;
 mAccelerateButton.init();
 if (mAccelerateButton-&gt;getData() == gadget::Digital::TOGGLE_ON)
 {
    ... do stuff ...
-}</programlisting>
-            </listitem>
-            <listitem>
-               <para> Gadgeteer is located in <filename>libgadget</filename> and <filename>include/gadget</filename>.</para>
-            </listitem>
-         </orderedlist>
-      </section>
-      <section>
-         <title>Configuration</title>
-         <para>The configuration system in VR Juggler has been separated into a standalone library. This library gives exactly the same features as before. This library has its own namespace: <classname>jccl</classname>. The library is called JCCL, short for Juggler Configuration and Control Library </para>
-         <orderedlist>
-            <listitem>
-               <para>The first place you configure VR Juggler applications is in the <function>main()</function> function. JCCL config file are loaded by the kernel. This is exactly the same as before: </para>
-               <programlisting>int main(int argc, char* argv[])
+}</programlisting></listitem><listitem><para> Gadgeteer is located in <filename>libgadget</filename> and <filename>include/gadget</filename>.</para></listitem></orderedlist></section><section><title>Configuration</title><para>The configuration system in VR Juggler has been separated into a standalone library. This library gives exactly the same features as before. This library has its own namespace: <classname>jccl</classname>. The library is called JCCL, short for Juggler Configuration and Control Library </para><orderedlist><listitem><para>The first place you configure VR Juggler applications is in the <function>main()</function> function. JCCL config file are loaded by the kernel. This is exactly the same as before: </para><programlisting>int main(int argc, char* argv[])
 {
    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
    for ( int i = 1; i &lt; argc; ++i )
@@ -247,33 +76,4 @@ if (mAccelerateButton-&gt;getData() == gadget::Digital::TOGGLE_ON)
    }
 
    // other init stuff...
-}</programlisting>
-            </listitem>
-            <listitem>
-               <para>Your configuration file formats have changed to XML. This allows you to use standard XML editors as well as the included VjControl configuration editor. We have included a converter from VR Juggler 1.0 format to 1.1/2.0 format. You can find the source in <filename>juggler/modules/jackal/tools/ConfigUpdater</filename>. If you have a binary distribution of VR Juggler, a compiled version can be run using the script <command>cfgupdater</command>, found in <filename>$VJ_BASE_DIR/bin</filename>. It is run as follows:</para>
-               <screen>cfgupdater file1 file2 ...</screen>
-               <para>The listed files can be config chunks (those with the extension <filename>.cfg</filename> or <filename>.config</filename>) or chunk descriptions (<filename>.desc</filename>). The utility figures out the file type and makes the appropriate conversions.</para>
-            </listitem>
-            <listitem>
-               <para>In application configuration, the VR Juggler 1.0 use of <classname>vjConfigChunk*</classname> is shown below:</para>
-               <programlisting>bool myapp::configAdd( vjConfigChunk* chunk )</programlisting>
-               <para>For VR juggler 1.1, you'll change the "vj" to <classname>jccl::</classname>, and the * to a <classname>Ptr</classname>:</para>
-               <programlisting>bool myapp::configAdd( jccl::ConfigChunkPtr chunk )</programlisting>
-               <para>The above illustrates the changes with the VR Juggler configuration system that affect application programmers. To summarize, everything is now in the <classname>jccl::</classname> namespace, and a special "smart-pointer" type is used instead of C/C++ pointers. Porting your config code should be very straight forward: just search and replace <classname>vjConfigChunk*</classname> with <classname>jccl::ConfigChunkPtr</classname>.</para>
-            </listitem>
-            <listitem>
-               <para>Once you have a <classname>jccl::ConfigChunkPtr</classname> object, the signature of the <methodname>getProperty()</methodname> method has changed. In VR Juggler 1.0 code, a property value of type <type>int</type> would have been requested as follows:</para>
-               <programlisting>int prop_value = static_cast&lt;int&gt;(chunk-&gt;getProperty("someInt"));</programlisting>
-               <para>or as:</para>
-               <programlisting>int prop_value = (int) chunk-&gt;getProperty("someInt");</programlisting>
-               <para>In the new API, the desired type is passed as a template parameter, as shown below:</para>
-               <programlisting>int prop_value = chunk-&gt;getProperty&lt;int&gt;("someInt");</programlisting>
-               <para>All the types you would have used with the cast operator including <classname>std::string</classname> and <classname>jccl::ConfigChunkPtr</classname> (formerly <classname>vjConfigChunk*</classname>) can be used for the template parameter. Other types such as <type>unsigned int</type>, <type>short</type>, etc. that were not directly supported by the old <classname>vjVarValue</classname> class can be used as well.</para>
-            </listitem>
-            <listitem>
-               <para>The JCCL library is located in <filename>libjccl</filename>, and the headers are in <filename>include/jccl</filename>.</para>
-            </listitem>
-         </orderedlist>
-      </section>
-   </section>
-</article>
+}</programlisting></listitem><listitem><para>Your configuration file formats have changed to XML. This allows you to use standard XML editors as well as the included VjControl configuration editor. We have included a converter from VR Juggler 1.0 format to 1.1/2.0 format. You can find the source in <filename>juggler/modules/jackal/tools/ConfigUpdater</filename>. If you have a binary distribution of VR Juggler, a compiled version can be run using the script <command>cfgupdater</command>, found in <filename>$VJ_BASE_DIR/bin</filename>. It is run as follows:</para><screen>cfgupdater file1 file2 ...</screen><para>The listed files can be config chunks (those with the extension <filename>.cfg</filename> or <filename>.config</filename>) or chunk descriptions (<filename>.desc</filename>). The utility figures out the file type and makes the appropriate conversions.</para></listitem><listitem><para>In application configuration, the VR Juggler 1.0 use of <classname>vjConfigChunk*</classname> is shown below:</para><programlisting>bool myapp::configAdd( vjConfigChunk* chunk )</programlisting><para>For VR juggler 1.1, you'll change the "vj" to <classname>jccl::</classname>, and the * to a <classname>Ptr</classname>:</para><programlisting>bool myapp::configAdd( jccl::ConfigChunkPtr chunk )</programlisting><para>The above illustrates the changes with the VR Juggler configuration system that affect application programmers. To summarize, everything is now in the <classname>jccl::</classname> namespace, and a special "smart-pointer" type is used instead of C/C++ pointers. Porting your config code should be very straight forward: just search and replace <classname>vjConfigChunk*</classname> with <classname>jccl::ConfigChunkPtr</classname>.</para></listitem><listitem><para>Once you have a <classname>jccl::ConfigChunkPtr</classname> object, the signature of the <methodname>getProperty()</methodname> method has changed. In VR Juggler 1.0 code, a property value of type <type>int</type> would have been requested as follows:</para><programlisting>int prop_value = static_cast&lt;int&gt;(chunk-&gt;getProperty("someInt"));</programlisting><para>or as:</para><programlisting>int prop_value = (int) chunk-&gt;getProperty("someInt");</programlisting><para>In the new API, the desired type is passed as a template parameter, as shown below:</para><programlisting>int prop_value = chunk-&gt;getProperty&lt;int&gt;("someInt");</programlisting><para>All the types you would have used with the cast operator including <classname>std::string</classname> and <classname>jccl::ConfigChunkPtr</classname> (formerly <classname>vjConfigChunk*</classname>) can be used for the template parameter. Other types such as <type>unsigned int</type>, <type>short</type>, etc. that were not directly supported by the old <classname>vjVarValue</classname> class can be used as well.</para></listitem><listitem><para>The JCCL library is located in <filename>libjccl</filename>, and the headers are in <filename>include/jccl</filename>.</para></listitem></orderedlist></section></section></article>
