@@ -200,7 +200,7 @@ if test "x$HAVE_TWEEK_JAVA" = "xY"; then
          AC_MSG_WARN([*** Can't find the java build tool ant. TweekGadget.jar will not be built. ***])
          HAVE_TWEEK_JAVA='N'
       else
-         ANT="JAVA_HOME=$JDK_HOME $ANT"
+         ANT="JAVA_HOME=\"$JDK_HOME\" \"$ANT\""
       fi
    fi
 fi
