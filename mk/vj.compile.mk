@@ -5,13 +5,13 @@
 # -----------------------------------------------------------------------------
 # The Makefile including this file should define the following variables:
 #
-# OBJDIR        - The directory where the object file will be created.
-# C_COMPILE     - The C compiler command line (without -c or -o <outfile>
-#                 options).
-# CXX_COMPILE   - The C++ compiler command line (without -c or -o <outfile>
-#                 options).
-# OBJ_NAME_FLAG - Flag (with any extra options) used for naming the object
-#                 file being compiled here.
+# OBJDIR          - The directory where the object file will be created.
+# C_COMPILE       - The C compiler command line (without -c or -o <outfile>
+#                   options).
+# CXX_COMPILE     - The C++ compiler command line (without -c or -o <outfile>
+#                   options).
+# OBJ_NAME_FLAG   - Flag (with any extra options) used for naming the object
+#                   file being compiled here.
 # -----------------------------------------------------------------------------
 
 ${OBJDIR}/%.o : %.c
