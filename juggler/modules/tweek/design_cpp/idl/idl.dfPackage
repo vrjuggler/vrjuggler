@@ -42,10 +42,10 @@ class __tags {
 class __options {
 }/**
 @__positions <oigroup:<oiref:idl#Class#tweek::SubjectManager:oiref>=40,180,220,227,0:oigroup>
-<oigroup:<oiref:idl#Class#tweek::Subject:oiref>=360,10,113,167,1:oigroup>
+<oigroup:<oiref:idl#Class#tweek::Subject:oiref>=360,10,101,132,1:oigroup>
 <oigroup:<oiref:idl#Class#tweek::BeanInfo:oiref>=580,230,200,180,0:oigroup>
-<oigroup:<oiref:idl#Extends#tweek::BeanDeliverySubject#tweek::Subject:oiref>=416,220,416,177:oigroup>
-<oigroup:<oiref:idl#Class#tweek::Observer:oiref>=79,10,125,123,1:oigroup>
+<oigroup:<oiref:idl#Extends#tweek::BeanDeliverySubject#tweek::Subject:oiref>=410,220,410,142:oigroup>
+<oigroup:<oiref:idl#Class#tweek::Observer:oiref>=79,10,112,102,1:oigroup>
 <oigroup:<oiref:idl#Class#tweek::BeanDeliverySubject:oiref>=310,220,230,190,0:oigroup>
 */
 class __positions {

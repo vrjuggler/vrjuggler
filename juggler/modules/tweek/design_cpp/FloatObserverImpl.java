@@ -1,6 +1,6 @@
 public class FloatObserverImpl implements tweek.ObserverPOA
 {
-   public FloatObserverImpl(example.FloatObserverSubject subj)
+   public FloatObserverImpl(example.FloatSubject subj)
    {
       this.mSubject = subj;
    }
@@ -10,5 +10,5 @@ public class FloatObserverImpl implements tweek.ObserverPOA
       float value = mSubject.getValue();
    }
 
-   private example.FloatObserverSubject mSubject;
+   private example.FloatSubject mSubject;
 }
