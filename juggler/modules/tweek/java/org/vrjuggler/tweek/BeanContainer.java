@@ -140,7 +140,7 @@ public class BeanContainer extends JScrollPane
       for ( int i = 0; i < listeners.size(); i++ )
       {
          l = (CommunicationListener) listeners.elementAt(i);
-         l.communication(e);
+         l.connectionStateChanged(e);
       }
    }
 
@@ -161,7 +161,7 @@ public class BeanContainer extends JScrollPane
       for ( int i = 0; i < listeners.size(); i++ )
       {
          l = (CommunicationListener) listeners.elementAt(i);
-         l.communication(e);
+         l.connectionStateChanged(e);
       }
    }
 
