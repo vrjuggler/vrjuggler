@@ -131,11 +131,11 @@ namespace vpr
       ProfileNode::printTree(node->getSibling());
 
       vprDEBUG(vprDBG_ALL, 0) << clrSetBOLD(clrGREEN) << "[PROFILE STATS] " << clrRESET 
-      << clrSetBOLD(clrRED) << node->getName() << clrRESET << clrSetBOLD(clrYELLOW)  
+         << clrSetBOLD(clrRED) << node->getName() << clrRESET << clrSetBOLD(clrYELLOW)  
       << " total calls: " << clrRESET << node->getTotalCalls()
       << clrSetBOLD(clrYELLOW) << " total time: " << clrRESET << node->getTotalTime()
       << clrSetBOLD(clrYELLOW) << " ave: " << clrRESET 
-      << node->getTotalTime() / node->getTotalCalls() << std::endl << vprDEBUG_FLUSH;
+         << node->getTotalTime() / node->getTotalCalls() << std::endl << vprDEBUG_FLUSH;
 
       std::stringstream s;
       NodeHistoryRange p = node->getNodeHistoryRange();
@@ -195,6 +195,7 @@ namespace vpr
    ProfileNode*   ProfileManager::mCurrentNode = &ProfileManager::mRoot;
    int            ProfileManager::mFrameCounter = 0;
    vpr::Interval* ProfileManager::mResetTime = 0;
+   vpr::Mutex     ProfileManager::mSampleLock;
 
 
 
