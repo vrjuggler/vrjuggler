@@ -125,6 +125,9 @@ vpr::SocketTypes::Domain InetAddrBSD::getFamily (void) const
          family = SocketTypes::LINK;
          break;
 #endif
+      default:
+         family = SocketTypes::INET;
+         break;
    }
 
    return family;
@@ -200,8 +203,8 @@ std::string InetAddrBSD::getHostname () const
    std::string hostname;
    struct hostent* entry;
 
-   entry = gethostbyaddr(&m_addr.sin_addr, sizeof(m_addr.sin_addr),
-                         m_addr.sin_family);
+   entry = gethostbyaddr((const char*) &m_addr.sin_addr,
+                         sizeof(m_addr.sin_addr), m_addr.sin_family);
 
    if ( NULL == entry )
    {
@@ -220,8 +223,8 @@ std::vector<std::string> InetAddrBSD::getHostnames () const
    std::vector<std::string> names;
    struct hostent* entry;
 
-   entry = gethostbyaddr(&m_addr.sin_addr, sizeof(m_addr.sin_addr),
-                         m_addr.sin_family);
+   entry = gethostbyaddr((const char*) &m_addr.sin_addr,
+                         sizeof(m_addr.sin_addr), m_addr.sin_family);
 
    if ( NULL != entry )
    {
