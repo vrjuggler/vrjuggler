@@ -58,8 +58,6 @@ public class ContextToolbar
 {
    public ContextToolbar(File curDir, ConfigContext ctx)
    {
-      this.setConfigContext(ctx);
-
       try
       {
          jbInit();
@@ -68,6 +66,10 @@ public class ContextToolbar
       {
          e.printStackTrace();
       }
+      
+      // This must happen after we initialize the GUI in jbInit
+      // to ensure that buttons are enabled if appropriate.
+      this.setConfigContext(ctx);
 
       fileChooser.setCurrentDirectory(curDir);
 
