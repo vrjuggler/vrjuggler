@@ -42,11 +42,7 @@
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjProjection.h>
-//#include <unistd.h>
-
-#ifndef WIN32
-#include <sched.h>
-#endif
+#include <VPR/vjSystem.h>
 
 
 int main(int argc, char* argv[])
@@ -84,13 +80,13 @@ int main(int argc, char* argv[])
 
    while(1)
    {   
-      usleep(250000);
       /*
-      sleep(2);
+      vjSystem::sleep(2);
       kernel->stopApplication();
-      sleep(2);
+      vjSystem::sleep(2);
       kernel->setApplication(application);
       */
+      vjThread::yield();
    }
 
    return 1;

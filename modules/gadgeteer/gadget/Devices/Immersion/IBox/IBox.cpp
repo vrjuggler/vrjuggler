@@ -35,9 +35,10 @@
 #include <sys/time.h>
 
 #include <Input/vjInput/vjIbox.h>
-#include <Threads/vjThread.h>
-#include <Kernel/vjDebug.h>
+#include <VPR/Threads/vjThread.h>
+#include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
+#include <VPR/vjSystem.h>
 
 //: Config function
 // Configures the ibox
@@ -115,7 +116,7 @@ int vjIBox::startSampling()
 
       vjIBox* devicePtr = this;
       void sampleBox(void*);
-      myThread = new vjThread(sampleBox, (void*)devicePtr, 0);
+      myThread = new vjThread(sampleBox, (void*)devicePtr);
       if (!myThread->valid())
          return 0; //fail
       else
@@ -208,8 +209,7 @@ int vjIBox::stopSampling()
     delete(myThread);
     myThread = NULL;
 
-    //sginap(1);
-    usleep(100);        // 100 uSec pause
+    vjSystem::usleep(100);        // 100 uSec pause
 
     hci_disconnect(&thingie);
     std::cout << "stopping the ibox.." << std::endl;

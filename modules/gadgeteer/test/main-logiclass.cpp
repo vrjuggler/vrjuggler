@@ -32,10 +32,11 @@
 
 #include <iostream>
 #include <iomanip>
-#include <SharedMem/vjMemPool.h>
-//#include <SharedMem/vjSharedType.h>
+#include <VPR/SharedMem/vjMemPool.h>
+//#include <VPR/SharedMem/vjSharedType.h>
 #include <Input/vjPosition/logiclass.h>
 //#include <Input/ibox/ibox.h>
+#include <VPR/vjSystem.h>
 
 int main()
 {
@@ -73,7 +74,7 @@ int main()
                    << "   roll:" << std::setw(10) <<data->orient.vec[2] << std::endl
                    << std::endl;
          std::cout << std::endl;
-         sleep(2);
+         vjSystem::sleep(2);
     }
      break;
    }

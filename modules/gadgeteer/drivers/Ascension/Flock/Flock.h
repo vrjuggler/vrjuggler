@@ -48,7 +48,7 @@
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
 #include <Input/vjPosition/vjPosition.h>
-#include <Threads/vjThread.h>
+#include <VPR/Threads/vjThread.h>
 #include <Input/vjPosition/aFlock.h>
 
 //----------------------------------------------------------------------------

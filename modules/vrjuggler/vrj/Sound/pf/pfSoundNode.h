@@ -36,7 +36,7 @@
 #include <Performer/pr/pfLinMath.h>
 
 #include <Math/vjCoord.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/Pf/vjPfUtil.h>
 #include <Sound/vjSound.h> //juggler sound
 #include <Performer/pf/pfDCS.h>

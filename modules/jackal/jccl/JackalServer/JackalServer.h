@@ -36,9 +36,9 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjConfigChunkHandler.h>
-#include <Threads/vjThread.h>
+#include <VPR/Threads/vjThread.h>
 #include <Environment/vjSocket.h>
-#include <Sync/vjMutex.h>
+#include <VPR/Sync/vjMutex.h>
 
 class vjConnect;
 class vjPerfDataBuffer;

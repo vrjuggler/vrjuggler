@@ -33,7 +33,7 @@
 
 #include <vjConfig.h>
 #include <Kernel/GL/vjGlDrawManager.h>
-#include <Threads/vjThread.h>
+#include <VPR/Threads/vjThread.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjKernel.h>
 
@@ -87,7 +87,7 @@ void vjGlDrawManager::start()
    vjThreadMemberFunctor<vjGlDrawManager>* memberFunctor =
       new vjThreadMemberFunctor<vjGlDrawManager>(this, &vjGlDrawManager::main, NULL);
 
-   control_thread = new vjThread(memberFunctor, 0);
+   control_thread = new vjThread(memberFunctor);
 
    vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlDrawManager started. thread: "
                              << control_thread << std::endl << vjDEBUG_FLUSH;

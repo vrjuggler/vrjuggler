@@ -44,7 +44,7 @@
 
 #include <Kernel/Pf/vjPfDrawManager.h>
 #include <Kernel/Pf/vjPfApp.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjProjection.h>
 #include <Kernel/vjCameraProjection.h>

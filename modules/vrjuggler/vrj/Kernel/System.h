@@ -35,7 +35,7 @@
 #define _VJ_SYSTEM_H_
 
 #include <vjConfig.h>
-#include <Sync/vjMutex.h>
+#include <VPR/Sync/vjMutex.h>
 
 //------------------------------------------------------
 //:  This class holds the state of the library system

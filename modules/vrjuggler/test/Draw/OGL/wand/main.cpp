@@ -39,10 +39,8 @@
 
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
+#include <VPR/vjSystem.h>
 
-#ifndef WIN32
-#include <sched.h>
-#endif
 
 int main(int argc, char* argv[])
 {
@@ -71,7 +69,7 @@ int main(int argc, char* argv[])
    /*
    for(int i=0;i<20;i++)
    {
-      usleep(50000);
+      vjSystem::usleep(50000);
       cout << i << "." << flush;
    }
    */
@@ -80,6 +78,6 @@ int main(int argc, char* argv[])
 
    while(1)
    {
-      usleep(250000);
+      vjThread::yield();
    }
 }

@@ -40,7 +40,7 @@
 #include <Config/vjConfigChunk.h>
 #include <Utils/vjSingleton.h>
 
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/vjAssert.h>
 
 //: Base class for virtual construction of devices

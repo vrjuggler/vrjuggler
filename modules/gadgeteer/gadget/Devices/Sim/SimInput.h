@@ -57,6 +57,20 @@ protected:
       vjKeyModPair() : mKey(-1), mModifier(-1)
       {;}
 
+      vjKeyModPair (const vjKeyModPair& in) {
+         copy(in);
+      }
+
+      inline const vjKeyModPair& operator= (const vjKeyModPair& in) {
+         copy(in);
+         return *this;
+      }
+
+      inline void copy (const vjKeyModPair& in) {
+         mKey      = in.mKey;
+         mModifier = in.mModifier;
+      }
+
    public:
       int mKey;
       int mModifier;

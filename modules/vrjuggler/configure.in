@@ -53,6 +53,14 @@ dnl # ------------------------------------------------------ #
 
 DPP_STD_CPP(yes)
 
+dnl # Define which threading model to use.  Possible values are "SPROC",
+dnl # "POSIX", "WIN32", or "NSPR".
+dnl # The default is "SPROC".
+AC_ARG_ENABLE(subsystem,
+              [  --with-subsystem=<SPROC|POSIX|WIN32|NSPR>
+                          Define threading implementation],
+              SUBSYSTEM="$enableval", SUBSYSTEM='none')
+
 dnl # Enable compilation of the OpenGL API.  Possible values are "yes" or
 dnl # "no".  "yes" is set with --enable-gl-api and "no" is set with
 dnl # --disable-gl-api.
@@ -89,6 +97,9 @@ AC_ARG_ENABLE(performance,
                 fi
               ], _enable_perf='SGI')
 
+dnl # 
+DPP_ENABLE_NSPR_THREADS(no)
+
 dnl # -------------------------------------------- #
 dnl # --with-pkg[=arg] and --without-pkg arguments #
 dnl # -------------------------------------------- #
@@ -105,14 +116,6 @@ dnl # Force the use of GCC as the compiler.
 dnl # NOTE: This is not fully implemented yet for any platform, but it is
 dnl # partially usable on Windows.
 DPP_WITH_GCC(no)
-
-dnl # Define which threading model to use.  Possible values are "IRIX_SPROC"
-dnl # or "POSIX".
-dnl # The default is "IRIX_SPROC".
-AC_ARG_WITH(threads,
-            [  --with-threads=<IRIX_SPROC|POSIX|WIN32>
-                          Define threading implementation [default=IRIX_SPROC]],
-            _thread_pkg="$withval", _thread_pkg='IRIX_SPROC')
 
 dnl # Build the DTK wrapper using the DTK installation found at the given
 dnl # path.  There is default path.
@@ -179,15 +182,20 @@ case $target_os in
     irix6*)
         DBG_FLAGS="$DBG_FLAGS -gslim"
 
+        if test "x$SUBSYSTEM" = "xnone" ; then
+            AC_MSG_WARN(*** Forcing the use of SPROC subsystem ***)
+            SUBSYSTEM='SPROC'
+        fi
+
         AC_DEFINE(VJ_OS_IRIX,)
         AC_DEFINE(_BSD_TYPES,)
         ;;
     dnl # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
-        dnl # We have to use POSIX threads on HP-UX.
-        if test "x${_thread_pkg}" != "xPOSIX" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
-            _thread_pkg='POSIX'
+        dnl # We have to use the NSPR subsystem on HP-UX 10.20.
+        if test "x$SUBSYSTEM" != "xNSPR" ; then
+            AC_MSG_WARN(*** Forcing the use of NSPR subsystem ***)
+            SUBSYSTEM='NSPR'
         fi
 
         AC_DEFINE(VJ_OS_HPUX,)
@@ -202,10 +210,9 @@ case $target_os in
     freebsd*)
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
-        dnl # We have to use POSIX threads on FreeBSD.
-        if test "x${_thread_pkg}" != "xPOSIX" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
-            _thread_pkg='POSIX'
+        if test "x$SUBSYSTEM" = "xnone" ; then
+            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
+            SUBSYSTEM='POSIX'
         fi
 
         AC_DEFINE(VJ_OS_FreeBSD,)
@@ -213,12 +220,11 @@ case $target_os in
     dnl # A machine running Linux.  Currently only i386 is known to work.
     linux*)
         dnl # CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
-		CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
-        dnl # We have to use POSIX threads on Linux.
-        if test "x${_thread_pkg}" != "xPOSIX" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
-            _thread_pkg='POSIX'
+        if test "x$SUBSYSTEM" = "xnone" ; then
+            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
+            SUBSYSTEM='POSIX'
         fi
 
         AC_DEFINE(VJ_OS_Linux,)
@@ -228,20 +234,18 @@ case $target_os in
     solaris*)
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
-        dnl # We have to use POSIX threads on Solaris.
-        if test "x${_thread_pkg}" != "xPOSIX" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
-            _thread_pkg='POSIX'
+        if test "x$SUBSYSTEM" = "xnone" ; then
+            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
+            SUBSYSTEM='POSIX'
         fi
 
         AC_DEFINE(VJ_OS_Solaris,)
         ;;
     dnl # IBM RS/6000 running AIX.
     aix*)
-        dnl # We have to use POSIX threads on AIX.
-        if test "x${_thread_pkg}" != "xPOSIX" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
-            _thread_pkg='POSIX'
+        if test "x$SUBSYSTEM" = "xnone" ; then
+            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
+            SUBSYSTEM='POSIX'
         fi
 
         AC_DEFINE(VJ_OS_AIX)
@@ -254,10 +258,10 @@ case $target_os in
             _enable_perf='NONE'
         fi
 
-        dnl # We have to use Win32 threads on Win32.
-        if test "x${_thread_pkg}" != "xWIN32" ; then
-            AC_MSG_WARN(*** WIN32 threads must be used on $host ***)
-            _thread_pkg='WIN32'
+        dnl # We have to use Win32 subsystem on Win32.
+        if test "x$SUBSYSTEM" = "xnone" ; then
+            AC_MSG_WARN(*** Forcing the use of WIN32 subsystem ***)
+            SUBSYSTEM='WIN32'
         fi
 
         AC_DEFINE(VJ_OS_Win32,)
@@ -300,6 +304,9 @@ dnl # Checks for programs.
 dnl # -------------------------------------------------------------------------
 CC_ERR=''
 CXX_ERR=''
+
+_vjsave_CFLAGS="$CFLAGS"
+_vjsave_CXXFLAGS="$CXXFLAGS"
 
 dnl # If no alternate C compiler was specified, check to see if it is
 dnl # necessary to force the use of a specific compiler on a given platform.
@@ -351,10 +358,10 @@ if test "x$GXX" = "xyes" ; then
             AC_MSG_ERROR(*** The library requires the eg++ C++ compiler ***)))
 fi
 
-dnl # At this point, we know what threading package we will be using and what
-dnl # C compiler we have available.  Now check to see if the compiler accepts
-dnl # the -pthread option.
-if test "x${_thread_pkg}" = "xPOSIX" ; then
+dnl # Now check to see if the compiler accepts the -pthread option.
+if test "x$SUBSYSTEM" != "xSPROC" -a "x$SUBSYSTEM" != "WIN32" -a \
+        "x$NSPR_THREADS_ENABLED" = "xno"
+then
     DPP_CC_PTHREAD_ARG
 
     if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
@@ -390,13 +397,17 @@ dnl # -------------------------------------------------------------------------
 dnl # Checks for libraries.
 dnl # -------------------------------------------------------------------------
 
-THREADS=''
+dnl # Shared memory and synchronization primitives.
+SEMAPHORE_SYS=''		# POSIX, SPROC, WIN32, NSPR
+MUTEX_SYS=''			# POSIX, SPROC, WIN32, NSPR
+SHMEM_SYS=''			# POSIX, SPROC, WIN32, NSPR
+THREAD_SYS=''			# POSIX, SPROC, WIN32, NSPR
 
 dnl # Test for libpthread or for libcma if libpthread is not present.
 dnl # If the library is found, check for pthread_kill().  If it is present,
 dnl # Draft 10 (the "final" draft) of the POSIX threads standard is in place.
 dnl # If not, Draft 4 is available.
-if test "x${_thread_pkg}" = "xPOSIX" ; then
+if test "x$SUBSYSTEM" = "xPOSIX" ; then
     DPP_GET_PTHREAD_LIB
 
     dnl # If $PTHREAD_LIB has a value at this point, then the pthread
@@ -405,7 +416,6 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
     dnl # is in the library.  If it is, Draft 10 is in use.  Otherwise, assume
     dnl # it is Draft 4.
     if test "$xPTHREAD_LIB" != "x" ; then
-        THREADS='POSIX'
         DPP_GET_PTHREAD_VER($PLATFORM, VJ_POSIX_C_SOURCE)
 
         dnl # Define the default thread scope depending on the platform.  On
@@ -416,43 +426,23 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
         else
             AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
         fi
+
+        USE_PTHREADS='yes'
+        DPP_GET_POSIX_SEMAPHORE_LIB( ,
+            AC_MSG_ERROR(*** POSIX semaphores are required for POSIX subsystem ***))
     else
         AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***)
     fi
-dnl # We are using WIN32 threads.
-elif test "x${_thread_pkg}" = "xWIN32" ; then
-    THREADS='WIN32'
 
-dnl # If we are not using POSIX threads, we must be using the IRIX sproc(2)
-dnl # model, but we test ${_thread_pkg} just to be sure it is set right.
-elif test "x${_thread_pkg}" = "xIRIX_SPROC" ; then
-    AC_CHECK_HEADERS(sys/prctl.h,
-        THREADS='IRIX_SPROC',
-        AC_MSG_WARN(*** IRIX sproc(2) threading will not be used (no headers found) ***))
-fi
-
-dnl # Shared memory and synchronization primitives.
-SEMAPHORE_SYS=''		# POSIX, IRIX_SPROC, WIN32
-MUTEX_SYS=''			# POSIX, IRIX_SPROC, WIN32
-SHMEM_SYS=''			# POSIX, IRIX_SPROC, WIN32
-THREAD_SYS=''			# POSIX, IRIX_SPROC, WIN32
-
-dnl # Define various CPP macros depending on which threads implementation will
-dnl # be used.  If no implementation was defined above, exit configure.
-if test "x$THREADS" = "xPOSIX" ; then
     dnl # Do not define _POSIX_C_SOURCE here because it will cause problems
     dnl # when compiling on IRIX.  Instead, define that in the source files
     dnl # where appropriate.
     AC_DEFINE(VJ_USE_PTHREADS,)
+    AC_DEFINE(VJ_POSIX_SEMAPHORES,)
     AC_DEFINE(RWSTD_MULTI_THREAD,)
     AC_DEFINE(RW_MULTI_THREAD,)
-
-    dnl # On AIX, it is redundant to define _THREAD_SAFE.
-    if test "x$PLATFORM" != "xAIX" ; then
-        AC_DEFINE(_THREAD_SAFE,)
-    fi
-
     AC_DEFINE(_THREAD_SAFE,)
+
     dnl # On Linux, defining _THREAD_SAFE is the same as defining _REENTRANT,
     dnl # so we will not define both.
     if test "x$PLATFORM" != "xLinux" ; then
@@ -463,40 +453,51 @@ if test "x$THREADS" = "xPOSIX" ; then
     MUTEX_SYS='POSIX'
     SHMEM_SYS='POSIX'
     THREAD_SYS='POSIX'
-
-    _vjsave_CFLAGS="$CFLAGS"
-    _vjsave_LIBS="$LIBS"
-
-    dnl # This step and the following addition to $LIBS are necessary for
-    dnl # properly testing for working POSIX semaphores.
-    LDFLAGS="$LDFLAGS $PTHREAD_ARG"
-    LIBS="$LIBS $PTHREAD_LIB"
-
-    dnl # If we have sem_init(3), we can use POSIX semaphores.  If not, exit
-    dnl # with a fatal error.  If we are using POSIX threads, we need to have
-    dnl # working POSIX semaphores too.
-    DPP_GET_POSIX_SEMAPHORE_LIB([ SEMAPHORE_SYS='POSIX' ; AC_DEFINE(VJ_POSIX_SEMAPHORES,) ],
-        AC_MSG_ERROR(*** POSIX semaphores are required for POSIX threads ***))
-
-    CFLAGS="${_vjsave_CFLAGS}"
-    LIBS="${_vjsave_LIBS}"
-elif test "x$THREADS" = "xWIN32" ; then
+    SEMPANORE_SYS='POSIX'
+dnl # We are using WIN32 threads.
+elif test "x$SUBSYSTEM" = "xWIN32" ; then
     dnl # Set to Win32 threading, synchronization and shared memory.
     SEMPANORE_SYS='WIN32'
     THREAD_SYS='WIN32'
     MUTEX_SYS='WIN32'
     SHMEM_SYS='WIN32'
-elif test "x$THREADS" = "xIRIX_SPROC" ; then
+dnl # If we are not using POSIX threads, we must be using the IRIX sproc(2)
+dnl # model, but we test $SUBSYSTEM just to be sure it is set right.
+elif test "x$SUBSYSTEM" = "xSPROC" ; then
+    AC_CHECK_HEADERS(sys/prctl.h, ,
+        AC_MSG_ERROR(*** IRIX sproc(2) threading will not be used (no headers found) ***))
+
     AC_DEFINE(VJ_IRIX_SPROC,)
 
-    dnl # Set to IRIX_SPROC threading
-    THREAD_SYS='IRIX_SPROC'
+    dnl # Set to IRIX sproc threading, synchronization and shared memory.
+    THREAD_SYS='SPROC'
+    SEMAPHORE_SYS='SPROC'
+    SHMEM_SYS='SPROC'
+    MUTEX_SYS='SPROC'
+dnl # NSPR subsystem.
+else
+    if test "x$NSPR_THREADS_ENABLED" = "xno" -a "x$OS_TYPE" = "xUNIX" ; then
+        DPP_GET_PTHREAD_LIB
+        DPP_GET_POSIX_SEMAPHORE_LIB( ,
+            AC_MSG_ERROR(*** POSIX semaphores are required for NSPR subsystem ***))
+        USE_PTHREADS='yes'
+    else
+        USE_PTHREADS='no'
+    fi
 
-    SEMAPHORE_SYS='IRIX_SPROC'
-    SHMEM_SYS='IRIX_SPROC'
-    MUTEX_SYS='IRIX_SPROC'
-elif test "x$THREADS" = "x" ; then
-    AC_MSG_ERROR(No threading package defined!)
+    DPP_HAVE_NSPR(4.0, "$USE_PTHREADS",
+        AC_MSG_ERROR(*** NSPR requried for compiling ***))
+
+    AC_DEFINE(VJ_USE_NSPR,)
+
+    dnl # Set to NSPR threading, synchronization and shared memory.
+    SEMPANORE_SYS='NSPR'
+    THREAD_SYS='NSPR'
+    MUTEX_SYS='NSPR'
+    SHMEM_SYS='NSPR'
+
+    NSPR_INCLUDES="-I$NSPR_ROOT/include"
+    NSPR_LIBS="-L$NSPR_ROOT/lib -lnspr$NSPR_VER $UCB_LIB"
 fi
 
 dnl # Get the path to the X-Window libraries and header files.  We will need
@@ -532,7 +533,27 @@ fi
 dnl # ----
 dnl # DTK
 dnl # ----
-if test "x${_with_dtk}" != "xno" -a "x$THREAD_SYS" = "xPOSIX" ; then
+try_dtk='no'
+
+dnl # We can use DTK in one of the following two situations:
+dnl #     1) If the NSPR subsystem is enabled, the target platform is
+dnl #        UNIX-based, and NSPR threads are not being used.
+dnl #     2) If the POSIX subsystem is enabled.
+case $SUBSYSTEM in
+    NSPR)
+        if test "x$OS_TYPE" = "xUNIX" -a "x$NSPR_THREADS_ENABLED" != "xyes"
+        then
+            try_dtk='yes'
+        fi
+        ;;
+    POSIX)
+        try_dtk='yes'
+        ;;
+esac
+
+dnl # The user requested that the DTK wrapper be built, and the subsystem
+dnl # configuration is right for use with DTK.
+if test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xyes" ; then
     dnl # Try to find dtk-config unless the user has already set a value for
     dnl # $DTK_CONFIG in their environment.
     if test "x$DTK_CONFIG" = "x" ; then
@@ -595,6 +616,11 @@ void dtkMath_matrixPrint(FILE *file, dtkMath_matrix* m); ],
 
         AC_LANG_RESTORE
     fi
+dnl # If the user wanted to compile the DTK wrapper but this script
+dnl # determined that the subsystem configuation would not allow its use,
+dnl # warn the user.
+elif test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xno" ; then
+    AC_MSG_WARN(*** DTK cannot be used with this subsystem ***)
 fi
 
 dnl # -----------
@@ -747,8 +773,12 @@ DPP_CHECK_TYPE_POSIX
 dnl # -------------------------------------------------------------------------
 dnl # Checks for library functions.
 dnl # -------------------------------------------------------------------------
-AC_CHECK_FUNCS(gettimeofday sleep socket strcasecmp strdup strerror	\
-               strtod usleep)
+AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod)
+
+_vjsave_LIBS="$LIBS"
+AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',
+    AC_CHECK_LIB(socket, gethostbyname, SOCKET_LIB='-lsocket'))
+LIBS="${_vjsave_LIBS}"
 
 dnl # Ensure that we have sched_yield(3).  On Solaris, sched_yield(3) and its
 dnl # synchronization friends are in libposix4.
@@ -761,10 +791,11 @@ LIBS="${_vjsave_LIBS}"
 dnl # In a Win32 environment with MS Visual C++ as the compiler, these math
 dnl # functions are not in any special library.  Test for them normally.
 if test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
-    AC_CHECK_FUNCS(sinf sqrtf asinf acosf atan2f fabsf)
+    AC_CHECK_FUNCS(sinf cosf sqrtf asinf acosf atan2f fabsf)
 dnl # Otherwise, they are in libmath if they are anywhere.
 else
     AC_CHECK_LIB(m, sinf, AC_DEFINE(HAVE_SINF))
+    AC_CHECK_LIB(m, cosf, AC_DEFINE(HAVE_COSF))
     AC_CHECK_LIB(m, sqrtf, AC_DEFINE(HAVE_SQRTF))
     AC_CHECK_LIB(m, asinf, AC_DEFINE(HAVE_ASINF))
     AC_CHECK_LIB(m, acosf, AC_DEFINE(HAVE_ACOSF))
@@ -788,7 +819,7 @@ dnl # XXX: Get this to work without Perl!
 if test "x${_vj_version}" != "xno" ; then
     if test "x$PERL" != "xno" ; then
         _recversion="$PERL $srcdir/release/scripts/record-version.pl"
-        _param_h_args="-i $srcdir/vjParam.h.in -o vjParam.h"
+        _param_h_args="-i $srcdir/vjParam.h.in -o vjParam.h -s -NSPR"
 
         dnl # If no version number is given, try to extract the current
         dnl # value from $srcdir/VERSION.
@@ -839,25 +870,15 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
 fi
 
 DPP_SYSTEM_SUBST
-DPP_PTHREAD_FINISH
 
 dnl # If we are using pthreads, add the library containing the pthread calls to
 dnl # $LIBS.  This must be done here because the $APP_VJ_LIBS* stuff below
 dnl # uses $LIBS.
-if test "x$THREADS" = "xPOSIX" ; then
-    LIBS="$LIBS $PTHREAD_LIB"
+if test "x$USE_PTHREADS" = "xyes" ; then
+    DPP_PTHREAD_FINISH
 fi
 
-dnl # Do the same if we are using POSIX semaphores.
-if test "x$SEMAPHORE_SYS" = "xPOSIX" ; then
-    LIBS="$LIBS $SEM_LIB"
-fi
-
-dnl # And do the same again if sched_yield(3) is in a special library (that
-dnl # is not the same as $SEM_LIB).
-if test "x${_sched_lib}" = "x" -a "x$SEM_LIB" != "x${_sched_lib}" ; then
-    LIBS="$LIBS ${_sched_lib}"
-fi
+INCLUDES="$INCLUDES $NSPR_INCLUDES"
 
 dnl # For makedepend(1) to work properly on HP-UX with aCC, we have to
 dnl # include these extra paths.
@@ -944,42 +965,42 @@ fi
 if test "$OS_TYPE" = "UNIX" ; then
     if test "$PLATFORM" = "IRIX" ; then
         APP_VJ_LIBS_BEGIN="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END=''
-        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
+        APP_VJ_LIBS_END='-lJuggler_utils'
+        APP_VJ_LIBS_BASIC='-lJuggler'
 
         APP_VJ_LIBS_BEGIN_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END_INST="-Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
-        APP_VJ_LIBS_BASIC_INST='-lJuggler -lJuggler_utils'
+        APP_VJ_LIBS_END_INST="-lJuggler_utils -Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
+        APP_VJ_LIBS_BASIC_INST='-lJuggler'
 
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
-        APP_EXTRA_LIBS_END='-lm'
+        APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
     elif test "x$GXX" = "xyes" ; then
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
         dnl # is only the case on non-IRIX platforms.
         APP_VJ_LIBS_BEGIN="-Wl,-Bstatic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END=''
-        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
+        APP_VJ_LIBS_END='-lJuggler_utils'
+        APP_VJ_LIBS_BASIC='-lJuggler'
 
         APP_VJ_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END_INST="-Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
+        APP_VJ_LIBS_END_INST="-lJuggler_utils -Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
         APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
 
         APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
-        APP_EXTRA_LIBS_END="-lm"
+        APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
         dnl # is only the case on non-IRIX platforms.
         APP_VJ_LIBS_BEGIN="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END=''
-        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
+        APP_VJ_LIBS_END='-lJuggler_utils'
+        APP_VJ_LIBS_BASIC='-lJuggler'
 
         APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
         APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
         APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
 
-        APP_EXTRA_LIBS_END="-lm"
+        APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
     fi
 
     dnl # FreeBSD needs to use libcompat for linking.
@@ -990,7 +1011,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     APP_VJ_LIBS_GL="-lJuggler_ogl"
     APP_VJ_LIBS_PF="-lJuggler_pf"
     APP_VJ_LIBS_UTILS="-lJuggler_utils"
-    APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS $DTK_LDFLAGS"
+    APP_EXTRA_LIBS_BASIC="$LDFLAGS $PTHREAD_ARG $LIBS $DTK_LDFLAGS"
 
     if test "x$OGL_LDFLAGS" != "x" ; then
         APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"
@@ -1009,8 +1030,8 @@ if test "$OS_TYPE" = "UNIX" ; then
     fi
 elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_BEGIN="-link -libpath:\$(VJ_BASE_DIR)/lib/debug"
-    APP_VJ_LIBS_END=''
-    APP_VJ_LIBS_BASIC='Juggler.lib Juggler_utils.lib'
+    APP_VJ_LIBS_END='Juggler_utils.lib'
+    APP_VJ_LIBS_BASIC='Juggler.lib'
     APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
     APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
     APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
@@ -1078,6 +1099,7 @@ AC_SUBST(PERFORMER_API)
 AC_SUBST(DTK_CONFIG)
 AC_SUBST(HAVE_DTK)
 
+AC_SUBST(SUBSYSTEM)
 AC_SUBST(SEMAPHORE_SYS)
 AC_SUBST(SHMEM_SYS)
 AC_SUBST(MUTEX_SYS)
@@ -1240,6 +1262,15 @@ AC_OUTPUT(Makefile
           Utils/Makefile
           Utils/Port/Makefile
           Utils/Socket/Makefile
+          VPR/Makefile
+          VPR/SharedMem/Makefile
+          VPR/Sync/Makefile
+          VPR/Threads/Makefile
+          VPR/md/Makefile
+          VPR/md/NSPR/Makefile
+          VPR/md/POSIX/Makefile
+          VPR/md/SPROC/Makefile
+          VPR/md/WIN32/Makefile
           samples/Makefile
           samples/ogl/Makefile
           samples/ogl/combo/Makefile

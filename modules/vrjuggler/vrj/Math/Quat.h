@@ -39,6 +39,7 @@
 #include <Math/vjVec4.h>
 #include <Math/vjVec3.h>
 #include <Math/vjMatrix.h>
+#include <VPR/vjSystem.h>
 
 #define VJ_QUAT_EPSILON     0.00001f
 
@@ -79,8 +80,8 @@ public:
    //: get the quat's twist (radians) and vector
    void getRot( float& rad, float& x, float& y, float& z ) const
    {
-      float halfrad = acosf(vec[VJ_W]);
-      float sin_halfrad = sinf( halfrad );
+      float halfrad = vjSystem::acos(vec[VJ_W]);
+      float sin_halfrad = vjSystem::sin( halfrad );
       float oneOverSinHalfRad;
       
       if (sin_halfrad != 0)
@@ -107,11 +108,11 @@ public:
    void makeRot( const float& rad, const float& x, const float& y, const float& z )
    {
       float halfRad = rad * 0.5f;
-	   float sinHalfRad = sinf( halfRad );
+	   float sinHalfRad = vjSystem::sin( halfRad );
 	   vjVec3 vecNormalized( x, y, z );
 	   vecNormalized.normalize();
 
-	   vec[VJ_W] = cosf( halfRad );
+	   vec[VJ_W] = vjSystem::cos( halfRad );
 	   vec[VJ_X] = sinHalfRad * vecNormalized[0];
 	   vec[VJ_Y] = sinHalfRad * vecNormalized[1];
 	   vec[VJ_Z] = sinHalfRad * vecNormalized[2];

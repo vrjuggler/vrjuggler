@@ -39,8 +39,8 @@
 #include <vjConfig.h>
 #include <Environment/vjTimedUpdate.h>
 #include <Performance/vjTimeStamp.h>
-#include <Sync/vjMutex.h>
-#include <Kernel/vjDebug.h>
+#include <VPR/Sync/vjMutex.h>
+#include <Utils/vjDebug.h>
 
 //---------------------------------------------------------------
 //: temporary storage for performance data

@@ -93,10 +93,10 @@ public:
 
    float length() const
    {
-      return sqrtf((vec[0]*vec[0])+
-                   (vec[1]*vec[1])+
-                   (vec[2]*vec[2])+
-                   (vec[3]*vec[3]));
+      return vjSystem::sqrt((vec[0]*vec[0])+
+                            (vec[1]*vec[1])+
+                            (vec[2]*vec[2])+
+                            (vec[3]*vec[3]));
    }
 
 

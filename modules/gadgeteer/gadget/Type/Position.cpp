@@ -34,7 +34,7 @@
 #include <vjConfig.h>
 #include <float.h>
 #include <Input/vjPosition/vjPosition.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
 
 // Set up the transformation information

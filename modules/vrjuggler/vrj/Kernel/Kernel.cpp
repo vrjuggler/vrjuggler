@@ -35,16 +35,17 @@
 #include <string.h>
 #include <vjParam.h>
 #include <Kernel/vjKernel.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/vjConfigManager.h>
 #include <Kernel/vjDrawManager.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjApp.h>
 #include <Kernel/vjUser.h>
 
-#include <Threads/vjThread.h>
+#include <VPR/Threads/vjThread.h>
 #include <Environment/vjEnvironmentManager.h>
-#include <SharedMem/vjMemPool.h>
+#include <VPR/SharedMem/vjMemPool.h>
+#include <VPR/vjSystem.h>
 
 #include <Input/InputManager/vjInputManager.h>
 
@@ -80,7 +81,7 @@ int vjKernel::start()
    new vjThreadMemberFunctor<vjKernel>(this, &vjKernel::controlLoop, NULL);
 
    vjThread* new_thread;   // I set mControlThread in vjKernel::controlLoop
-   new_thread = new vjThread(memberFunctor, 0);
+   new_thread = new vjThread(memberFunctor);
 
    vjDEBUG(vjDBG_KERNEL,vjDBG_STATE_LVL) << "vjKernel::start: Just started control loop.  "
                                          << std::endl << vjDEBUG_FLUSH;
@@ -96,7 +97,7 @@ void vjKernel::controlLoop(void* nullParam)
    while (0 == vjThread::self())
    {
       vjDEBUG(vjDBG_ALL,1) << "vjKernel: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
-      usleep(50);
+      vjSystem::usleep(50);
    }
    mControlThread = (vjThread*) vjThread::self();
 
@@ -124,7 +125,7 @@ void vjKernel::controlLoop(void* nullParam)
             perfBuffer->set (1);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vjDEBUG_FLUSH;
          mApp->intraFrame();        // INTRA FRAME: Do computations that can be done while drawing.  This should be for next frame.
-         //usleep(15000);              // Generate a wait in critical section
+         //vjSystem::usleep(15000);              // Generate a wait in critical section
             perfBuffer->set (2);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vjDEBUG_FLUSH;
          mSoundManager->sync();
@@ -138,10 +139,10 @@ void vjKernel::controlLoop(void* nullParam)
       {
          // ??? Should we do this, or just grind up the CPU as fast as possible
          vjASSERT(NULL != mControlThread);      // If control thread is not set correctly, it will seg fault here
-         mControlThread->yield();   // Give up CPU
+         vjThread::yield();   // Give up CPU
       }
 
-      //usleep(10000);
+      //vjSystem::usleep(10000);
       checkForReconfig();        // Check for any reconfiguration that needs done
 
       perfBuffer->set(5);

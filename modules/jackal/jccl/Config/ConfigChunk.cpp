@@ -34,7 +34,7 @@
 #include <vjConfig.h>
 #include <Config/vjConfigChunk.h>
 #include <Config/vjParseUtil.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Config/vjChunkFactory.h>
 #include <Config/vjChunkDesc.h>
 #include <Config/vjConfigTokens.h>

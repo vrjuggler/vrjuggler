@@ -34,7 +34,7 @@
 #include <vjConfig.h>
 
 #include <Kernel/vjUser.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
 
 

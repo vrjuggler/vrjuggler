@@ -35,7 +35,7 @@
 #define _VJ_APP_
 
 #include <vjConfig.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/vjConfigChunkHandler.h>
 class vjDrawManager;
 class vjKernel;

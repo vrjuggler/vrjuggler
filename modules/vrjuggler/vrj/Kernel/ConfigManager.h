@@ -35,15 +35,15 @@
 #define _VJ_CONFIG_MANGER_H_
 
 #include <vjConfig.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 //#include <Config/vjConfigChunk.h>
 class vjConfigChunk;
 
 #include <Config/vjConfigChunkDB.h>
 #include <Config/vjChunkDescDB.h>
 //#include <Config/vjChunkFactory.h>
-#include <Sync/vjMutex.h>
-#include <Sync/vjGuard.h>
+#include <VPR/Sync/vjMutex.h>
+#include <VPR/Sync/vjGuard.h>
 #include <list>
 
 #include <Utils/vjSingleton.h>

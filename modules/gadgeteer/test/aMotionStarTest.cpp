@@ -32,9 +32,10 @@
 
 #include <iostream>
 #include <iomanip>
-#include <SharedMem/vjMemPool.h>
-//#include <SharedMem/vjSharedType.h>
+#include <VPR/SharedMem/vjMemPool.h>
+//#include <VPR/SharedMem/vjSharedType.h>
 #include <Input/vjPosition/aMotionStar.h>
+//#include <VPR/vjSystem.h>
 
 
 int
@@ -151,7 +152,7 @@ main () {
 		            << std::endl;
             }
             std::cout << std::endl;
-            //sleep(2);
+            //vjSystem::sleep(2);
          }
          break;
       }

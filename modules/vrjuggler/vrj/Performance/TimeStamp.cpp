@@ -57,7 +57,7 @@
 
 #include <sys/syssgi.h>
 #include <sys/errno.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 
 void vjTimeStampSGI::initialize() {
     int cyclevalue;
