@@ -1262,7 +1262,7 @@ def installOmniORB(prefix):
    if root == '':
       return
 
-   print 'Installing omniORB headers, libraries, and executables'
+   printStatus('Installing omniORB headers, libraries, and executables')
 
    # Install all header files.
    srcdir = os.path.join(root, 'include')
