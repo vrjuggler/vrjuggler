@@ -28,8 +28,8 @@
 #
 # -----------------------------------------------------------------
 # File:          dzr.app.mk,v
-# Date modified: 2003/10/11 07:27:13
-# Version:       1.18
+# Date modified: 2005/02/24 15:41:29
+# Version:       1.19
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
@@ -37,7 +37,7 @@
 # Basic application mk file.  This sets all the general variables that will be
 # needed to compile and link applications.
 #
-# dzr.app.mk,v 1.18 2003/10/11 07:27:13 patrickh Exp
+# dzr.app.mk,v 1.19 2005/02/24 15:41:29 patrickh Exp
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 # The following is the list of variables that users can set in their makefiles
@@ -74,10 +74,12 @@ endif
 ifeq ($(BUILD_TYPE), dbg)
    EXTRA_CFLAGS+=	$(DEBUG_FLAGS)
    EXTRA_CXXFLAGS+=	$(DEBUG_FLAGS)
+   EXTRA_F77FLAGS+=	$(DEBUG_FLAGS)
    EXTRA_LDFLAGS+=	$(DEBUG_LINK_FLAGS)
 else
    EXTRA_CFLAGS+=	$(OPTIM_FLAGS)
    EXTRA_CXXFLAGS+=	$(OPTIM_FLAGS)
+   EXTRA_F77FLAGS+=	$(OPTIM_FLAGS)
    EXTRA_LDFLAGS+=	$(OPTIM_LINK_FLAGS)
 endif
 
@@ -89,6 +91,7 @@ endif
 #
 CFLAGS=		$(OS_ABI_FLAGS) $(OS_CFLAGS) $(INCLUDES) $(EXTRA_CFLAGS)
 CXXFLAGS=	$(OS_ABI_FLAGS) $(OS_CXXFLAGS) $(INCLUDES) $(EXTRA_CXXFLAGS)
+F77FLAGS=	$(OS_ABI_FLAGS) $(OS_F77FLAGS) $(INCLUDES) $(EXTRA_F77FLAGS)
 LDFLAGS=	$(OS_ABI_FLAGS) $(OS_LDFLAGS) $(EXTRA_LDFLAGS)
 
 # The default include path.  We assume that the users will have .h files in
@@ -117,6 +120,7 @@ endif
 # The compilers and the linker with all their flags.
 C_COMPILE=	$(CC) $(CFLAGS)
 CXX_COMPILE=	$(CXX) $(CXXFLAGS) 
+F77_COMPILE=	$(F77) $(F77FLAGS) 
 LINK=		$(LD) $(LDFLAGS)
 LINK_OUT=	$(OS_LD_NAME_FLAG)
 EXE_EXT=	$(OS_EXE_EXT)

@@ -28,8 +28,8 @@
 #
 # -----------------------------------------------------------------
 # File:          dzr.obj.mk,v
-# Date modified: 2002/12/27 19:50:06
-# Version:       1.13
+# Date modified: 2005/02/24 15:41:29
+# Version:       1.14
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
@@ -39,7 +39,7 @@
 # being compiled.  Currently, the following source file types are supported:
 # .c, .C, .CC, .cc, .cxx, .c++ and .cpp.
 #
-# dzr.obj.mk,v 1.13 2002/12/27 19:50:06 allenb Exp
+# dzr.obj.mk,v 1.14 2005/02/24 15:41:29 patrickh Exp
 # -----------------------------------------------------------------------------
 # The makefile that includes this file directly must define the following
 # variables:
@@ -69,7 +69,7 @@ OBJ_BUILD_FLAG?=	-c
 OBJDIR?=	.
 
 # Define the list of supported source file suffixes.
-_suffix_list=	c C CC cc cpp c++ cxx
+_suffix_list=	c C CC cc cpp c++ cxx f
 
 # Loop over the suffixes, translate them to $(OBJ_EXT) and store the
 # result in $(OBJS).
@@ -81,6 +81,7 @@ OBJS=		$(addprefix $(OBJDIR)/, $(BASIC_OBJS))
 
 C_COMPILE_LINE=		$(C_COMPILE) $(OBJ_NAME_FLAG) $(OBJ_BUILD_FLAG) $<
 CXX_COMPILE_LINE=	$(CXX_COMPILE) $(OBJ_NAME_FLAG) $(OBJ_BUILD_FLAG) $<
+F77_COMPILE_LINE=	$(F77_COMPILE) $(OBJ_NAME_FLAG) $(OBJ_BUILD_FLAG) $<
 
 MAKE_THE_OBJDIR=	@if [ ! -d $(OBJDIR) ]; then mkdir $(OBJDIR) ; fi
 
@@ -140,6 +141,14 @@ endif
 	-$(MAKE_THE_OBJDIR)
 	$(CXX_COMPILE_LINE)
 
+# Pattern rule for compiling $(OBJ_EXT) files from .f files.
+$(OBJDIR)/%$(OBJ_EXT): %.f
+ifdef WARN_MSG
+	$(warning $(WARN_MSG))
+endif
+	-$(MAKE_THE_OBJDIR)
+	$(F77_COMPILE_LINE)
+
 # Set up the vpath stuff for finding the source files.  The default is to
 # check the source directory.  Users can extend this by setting a value for
 # $(EXTRA_PATH_FOR_SOURCES) to some list of directories.
@@ -152,6 +161,7 @@ vpath %.cc $(PATH_FOR_SOURCES) $(EXTRA_PATH_FOR_SOURCES)
 vpath %.cpp $(PATH_FOR_SOURCES) $(EXTRA_PATH_FOR_SOURCES)
 vpath %.c++ $(PATH_FOR_SOURCES) $(EXTRA_PATH_FOR_SOURCES)
 vpath %.cxx $(PATH_FOR_SOURCES) $(EXTRA_PATH_FOR_SOURCES)
+vpath %.f $(PATH_FOR_SOURCES) $(EXTRA_PATH_FOR_SOURCES)
 
 define DZR_OBJ_echo_vars
 @echo "Doozer OBJ settings"

@@ -28,8 +28,8 @@
 #
 # -----------------------------------------------------------------
 # File:          dzr.gcc.mk,v
-# Date modified: 2002/08/08 15:36:33
-# Version:       1.16
+# Date modified: 2005/02/24 15:41:29
+# Version:       1.17
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
@@ -37,7 +37,7 @@
 # GCC-specfic settings for variables such as the C and C++ compilers and any
 # compiler-specfic options needed by various commands.
 #
-# dzr.gcc.mk,v 1.16 2002/08/08 15:36:33 subatomic Exp
+# dzr.gcc.mk,v 1.17 2005/02/24 15:41:29 patrickh Exp
 # -----------------------------------------------------------------------------
 # This file sets values for the following variables:
 #
@@ -70,6 +70,7 @@
 # Use GCC as the compiler and linker.
 CC?=		gcc
 CXX?=		g++
+F77?=		g77
 AR?=		ar
 
 ifdef LANGUAGE
@@ -85,6 +86,7 @@ endif
 # Basic compiler flags.
 OS_CFLAGS=		
 OS_CXXFLAGS=		
+OS_F77FLAGS=
 OS_ARFLAGS=		-ruv
 OS_LDFLAGS=		
 OS_INCLUDES=		
