@@ -5,6 +5,8 @@ default: html
 docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
 
+XSLT_TOOL=	Saxon
+
 NAME=		configuration.guide
 
 XML_FILES=	$(NAME).xml
