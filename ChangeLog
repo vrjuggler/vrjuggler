@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-17-2001 kevn      Fixed bug where vjGetVjMatrix returns the wrong 
+                      conversion.
 Aug-29-2001 patrick   We build shared libraries on HP-UX 11.x now (submitted by
                       Daniel Heath <DHeath@fueltechnv.com>).
 
