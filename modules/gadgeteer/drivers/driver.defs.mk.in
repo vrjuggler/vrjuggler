@@ -30,9 +30,35 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gadget/Devices/Intersense.  It requires GNU make.
+# =============================================================================
+# This file <driver.defs.mk> provides variable information shared by all
+# makefiles in the Gadgeteer Devices source tree.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
+# Variables defined here are:
+#
+# =============================================================================
 
+# -----------------------------------------------------------------------------
+# Common code for driver DSOs.
+# -----------------------------------------------------------------------------
+ifeq ($(BUILD_TYPE), dbg)
+   BUILD_TYPE_EXT=	_d
+endif
+
+LIBDIR_NAME?=	lib$(LIBBITSUF)
+
+# $(LIBDIR_BASE) is the base directory where the libraries will be built.
+LIBDIR_BASE?=	$(topdir)/$(LIBDIR_NAME)
+
+DSO_DRIVER_SUBDIR=	gadgeteer/drivers
+DSO_DRIVER_DIR=		$(LIBDIR_BASE)/$(DSO_DRIVER_SUBDIR)
+
+DRIVER_DSO=	$(DRIVER_NAME)_drv$(BUILD_TYPE_EXT).$(DYNAMICLIB_EXT)
+DYLIB_DEPS=	$(PRE_DSO_DRIVER_DEPS) @DSO_DRIVER_DEPS@ $(POST_DSO_DRIVER_DEPS)
+
+driver-dso: $(DSO_DRIVER_DIR)/$(DRIVER_DSO)
+
+$(DSO_DRIVER_DIR)/$(DRIVER_DSO): $(OBJECTS)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJECTS) $(DYLIB_DEPS)

@@ -405,11 +405,12 @@ namespace cluster
       // --- Setup Multi-Process stuff --- //
       // Create a new thread to handle the control
 
-      if (NULL == mControlThread || !mControlThread->valid())
+      if (NULL != mControlThread && mControlThread->valid())
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                << "ClusterNode " << getName() << " already running..."
-               << std::endl << vprDEBUG_FLUSH;         
+               << std::endl << vprDEBUG_FLUSH;
+         return;
       }
 
       vpr::ThreadMemberFunctor<ClusterNode>* memberFunctor =

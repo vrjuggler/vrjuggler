@@ -74,21 +74,6 @@ DPP_STD_CPP(yes)
 # usable on Windows.
 DPP_WITH_GCC(no)
 
-AC_ARG_WITH(trackdroot,
-            [  --with-trackdroot=<PATH> Trackd API installation root   [default=/usr/local]],
-            [trackdapi_root="$withval"], [trackdapi_root='/usr/local'])
-
-# Build the DTK wrapper using the DTK installation found at the given path.
-# There is default path.
-AC_ARG_WITH(dtk,
-            [  --with-dtk=<PATH>       DTK installation],
-            _with_dtk="$withval", _with_dtk='no')
-
-#Build the VRPN wrapper using the VRPN installation found at the given path.
-# There is default path.
-AC_ARG_WITH(vrpn, [  --with-vrpn=<PATH>      VRPN installation],
-            _with_vrpn="$withval", _with_vrpn='no')
-
 # Define the binary format.
 DPP_ABI_SETUP
 
@@ -103,7 +88,6 @@ AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
 
 # Templates for Autoheader.
-AH_TEMPLATE([_INCLUDE_TERMIO], [Define if building on HP-UX.])
 AH_TEMPLATE([_CMA_NOWRAPPERS_], [Define if building on HP-UX.])
 
 # Depending on the target operating system, set various command options and
@@ -117,12 +101,10 @@ case $target_os in
       ;;
    # HP PA-RISC machine running HP-UX 10.20.
    hpux10.20)
-      AC_DEFINE(_INCLUDE_TERMIO,)
       AC_DEFINE(_CMA_NOWRAPPERS_,)
       ;;
    # HP PA-RISC machine running HP-UX 11.x.
    hpux11*)
-      AC_DEFINE(_INCLUDE_TERMIO,)
       AC_DEFINE(_CMA_NOWRAPPERS_,)
       ;;
 esac
@@ -179,42 +161,6 @@ VPR_PATH([0.28], , [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
 JCCL_PATH_CXX([0.12.3], ,
               [AC_MSG_ERROR([*** JCCL C++ API required for Gadgeteer ***])])
 
-min_tweek_ver='0.15.0'
-
-TWEEK_PATH_CXX([$min_tweek_ver], [HAVE_TWEEK_CXX='Y'],
-   [AC_MSG_WARN([*** Tweek C++ required for gadget::TweekGadget ***])
-    HAVE_TWEEK_CXX='N'
-   ])
-
-TWEEK_PATH_JAVA([$min_tweek_ver],
-   [JCCL_PATH_JAVA([0.12.0], [HAVE_TWEEK_JAVA='Y'],
-      [AC_MSG_WARN([*** JCCL Java required for TweekGadget.jar ***])
-       HAVE_TWEEK_JAVA='N'
-      ])],
-   [AC_MSG_WARN([*** Tweek Java required for TweekGadget.jar ***])
-    HAVE_TWEEK_JAVA='N'
-   ])
-
-# Check for the ant build program
-if test "x$HAVE_TWEEK_JAVA" = "xY"; then
-   DPP_JDK_VERSION([$JDK_HOME], [1.3], ,
-      [BUILD_JAVA='N'
-       AC_MSG_WARN([*** JDK 1.3 or newer required for TweekGadget.jar ***])
-      ])
-
-   if test "x$BUILD_JAVA" != "xN" ; then
-      ANT_HOME=$UNIX_JUGGLERROOT_ABS/external/ant
-      AC_PATH_PROG([ANT], [ant], [no], [${ANT_HOME}/bin])
-
-      if test "x$ANT" == "xno"; then
-         AC_MSG_WARN([*** Can't find the java build tool ant. TweekGadget.jar will not be built. ***])
-         HAVE_TWEEK_JAVA='N'
-      else
-         ANT="JAVA_HOME=\"$JDK_HOME\" \"$ANT\""
-      fi
-   fi
-fi
-
 gadsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"
 GMTL_PATH(0.1.9, [$JUGGLERROOT_ABS/external/GMTL],
@@ -246,258 +192,11 @@ if test "x$have_x" = "xyes" ; then
    fi
 fi
 
-# -----------
-# Trackd API
-# -----------
-DPP_LANG_SAVE
-DPP_LANG_C
-
-gadget_save_CFLAGS="$CFLAGS"
-gadget_save_CPPFLAGS="$CPPFLAGS"
-
-if test "x$trackdapi_root" != "x/usr" ; then
-   TRACKD_API_INCLUDES="-I$trackdapi_root/include"
-
-if test "x$OS_TYPE" = "xUNIX" ; then
-    TRACKD_API_LIB_FLAGS="-L$trackdapi_root/lib -ltrackdAPI"
-elif test "x$OS_TYPE" = "xWin32" ; then
-    TRACKD_API_LIB_FLAGS="/libpath:$trackdapi_root/lib trackdAPI_MT.lib"
-fi
-
-fi
-
-CFLAGS="$CFLAGS $TRACKD_API_INCLUDES"
-CPPFLAGS="$CPPFLAGS $TRACKD_API_INCLUDES"
-
-# Test to see if trackdAPI.h is available.  If so, we leave
-# $TRACKD_API_INCLUDES alone so that it may be used again later.  If it is
-# not there, we clear $TRACKD_API_INCLUDES to avoid polluting the compile
-# line.
-AC_CHECK_HEADER([trackdAPI.h], [gadget_have_trackdapi='yes'],
-                [gadget_have_trackdapi='no'
-                 TRACKD_API_INCLUDES=''])
-
-CFLAGS="$gadget_save_CFLAGS"
-CPPFLAGS="$gadget_save_CPPFLAGS"
-
-DPP_LANG_RESTORE
-
-# ----
-# DTK
-# ----
-try_dtk='no'
-vpr_subsystem=`$VPR_CONFIG --subsystem`
-VPR_SUBSYSTEM="$vpr_subsystem"
-
-# We can use DTK in one of the following two situations:
-#     1) If the NSPR subsystem is enabled, the target platform is UNIX-based,
-#        and NSPR threads are not being used.
-#     2) If the POSIX subsystem is enabled.
-case $vpr_subsystem in
-    NSPR)
-        if test "x$OS_TYPE" = "xUNIX"; then
-            try_dtk='yes'
-        fi
-        ;;
-    POSIX)
-        try_dtk='yes'
-        ;;
-esac
-
-# The user requested that the DTK wrapper be built, and the subsystem
-# configuration is right for use with DTK.
-if test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xyes" ; then
-    # Try to find dtk-config unless the user has already set a value for
-    # $DTK_CONFIG in their environment.
-    if test "x$DTK_CONFIG" = "x" ; then
-        AC_PATH_PROG(DTK_CONFIG, dtk-config, no, "${_with_dtk}/bin")
-    fi
-
-    # If dtk-config was not found, we cannot proceed with the DTK checks.
-    if test "x$DTK_CONFIG" = "xno" ; then
-        AC_MSG_WARN(*** Cannot build DTK wrapper without dtk-config ***)
-    # If dtk-config was found, $DTK_CONFIG has the path to it, so we can
-    # set things up to compile with DTK.
-    else
-        DPP_LANG_SAVE
-        DPP_LANG_CPLUSPLUS
-
-        _vjsave_CXXFLAGS="$CXXFLAGS"
-        _vjsave_CPPFLAGS="$CPPFLAGS"
-        _vjsave_LDFLAGS="$LDFLAGS"
-        _vjsave_LIBS="$LIBS"
-
-        # Based on the default ABI, tell $DTK_CONFIG 
-        if test "x$ABI" = "xN32" ; then
-            bits='n32'
-        elif test "x$ABI" = "x64" ; then
-            bits='64'
-        fi
-
-        DTK_ROOT=`$DTK_CONFIG --root`
-        CXXFLAGS="$CXXFLAGS `$DTK_CONFIG --cflags $bits`"
-        CPPFLAGS="$CPPFLAGS `$DTK_CONFIG --include`"
-        LDFLAGS="$LDFLAGS -L`$DTK_CONFIG --lib-dir $bits`"
-        LIBS="$LIBS -ldtk"
-
-        HAVE_DTK='N'
-
-        # Determine if the installed DTK library is usable.
-        AC_CACHE_CHECK(for dtkMath_matrixPrint in -ldtk,
-            ac_cv_dtkMath_matrixPrint_in_dtk,
-            AC_TRY_LINK([
-#include <dtk.h>
-void dtkMath_matrixPrint(FILE *file, dtkMath_matrix* m); ],
-                        [ dtkMath_matrixPrint(0, 0); ],
-                        [ ac_cv_dtkMath_matrixPrint_in_dtk='yes'
-                          rm -rf ./ii_files ],
-                        ac_cv_dtkMath_matrixPrint_in_dtk='no'))
-
-        if test "x$ac_cv_dtkMath_matrixPrint_in_dtk" = "xyes" ; then
-            HAVE_DTK='Y'
-            DTK_INCLUDES=`$DTK_CONFIG --include`
-            DTK_LDFLAGS=`$DTK_CONFIG --libs $bits`
-        else
-            AC_MSG_WARN(*** Cannot find DTK ***)
-        fi
-
-        CXXFLAGS="${_vjsave_CXXFLAGS}"
-        CPPFLAGS="${_vjsave_CPPFLAGS}"
-        LDFLAGS="${_vjsave_LDFLAGS}"
-        LIBS="${_vjsave_LIBS}"
-
-        DPP_LANG_RESTORE
-    fi
-# If the user wanted to compile the DTK wrapper but this script determined that
-# the subsystem configuation would not allow its use, warn the user.
-elif test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xno" ; then
-    AC_MSG_WARN(*** DTK cannot be used with this subsystem ***)
-fi
-
-
-# -----------------------------------------------------------------------------
-# VRPN 
-# -----------------------------------------------------------------------------
-
-# Test for the Vrpn library if the Vrpn API was enabled.
-if test "x${_with_vrpn}" != "xno" ; then
-   if test "x${_with_vrpn}" = "xyes" ; then
-      VRPNROOT="/usr/local"
-   else
-      VRPNROOT="$_with_vrpn"
-   fi
-
-   _vjsave_CFLAGS="$CFLAGS"
-   _vjsave_CPPFLAGS="$CPPFLAGS"
-   _vjsave_LDFLAGS="$LDFLAGS"
-   _vjsave_LIBS="$LIBS"
-
-   VRPN_INCLUDES="-I$VRPNROOT/quat -I$VRPNROOT/vrpn"
-#   VRPN_INCLUDES="-I$VRPNROOT/vrpn"  
-
-   if test "x$OS_TYPE" = "xWin32" ; then
-      VRPNLIBDIR='pc_win32/Debug'
-   elif test "x$PLATFORM" = "xLinux" ; then
-      VRPNLIBDIR='pc_linux'
-   elif test "x$PLATFORM" = "xFreeBSD" ; then
-      VRPNLIBDIR='pc_FreeBSD'
-   elif test "x$PLATFORM" = "xAIX" ; then
-      VRPNLIBDIR='powerpc_aix'
-   elif test "x$PLATFORM" = "xDarwin" ; then
-      VRPNLIBDIR='powerpc_macosx'
-   elif test "x$PLATFORM" = "xSolaris" ; then
-      case $target_cpu in
-         *86)
-            # Not supported by VRPN yet
-            ;;
-         *)
-            VRPNLIBDIR='sparc_solaris'
-            ;;
-      esac
-   elif test "x$PLATFORM" = "xIRIX" ; then
-      VRPNLIBDIR='sgi_irix'
-      if test "x$ABI" = "xN32" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.n32"	
-      elif test "x$ABI" = "x64" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.64"	
-      fi
-
-      if test "x$ISA" = "xmips3" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.mips3"	
-      elif test "x$ISA" = "xmips4" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.mips4"	
-      fi
-   fi
-
-   if test "x$OS_TYPE" = "xWin32" ; then
-      TEST_VRPN_LDFLAGS="/libpath:\"$VRPNROOT/quat/$VRPNLIBDIR\" /libpath:\"$VRPNROOT/vrpn/$VRPNLIBDIR\" vrpn.lib quat.lib"
-   else
-      # SGI link order seems to clash with default rule VRPN_LDFLAGS
-      # reset below to proper value for subsequent builds.
-      if test "x$PLATFORM" = "xIRIX" ; then
-         TEST_VRPN_LDFLAGS="-L$VRPNROOT/quat/$VRPNLIBDIR -L$VRPNROOT/vrpn/$VRPNLIBDIR -all -lvrpn -lquat -lm"
-      else
-         TEST_VRPN_LDFLAGS="-L$VRPNROOT/quat/$VRPNLIBDIR -L$VRPNROOT/vrpn/$VRPNLIBDIR -lvrpn -lquat -lm"
-      fi
-   fi
-
-    CPPFLAGS="$VRPN_INCLUDES $CPPFLAGS"
-    LDFLAGS="$TEST_VRPN_LDFLAGS $LDFLAGS"
-
-    vj_have_vrpn='no'
-
-    DPP_LANG_SAVE
-    DPP_LANG_CPLUSPLUS
-
-    CPPFLAGS="$CPPFLAGS $STDFLAGS"
-
-    # Try to link
-#     AC_TRY_LINK([
-# include <stdlib.h>
-# include <stdio.h>
-# include <signal.h>
-# include <string.h>
-
-# ifndef _WIN32
-# include <strings.h>
-# endif
-
-# include <vrpn_Shared.h>
-# include <vrpn_Button.h>
-# ],
-# [vrpn_Button_Remote * b = new vrpn_Button_Remote("");], 
-#                        [ vj_have_vrpn='yes'
-#                          rm -rf ./ii_files ],
-#                        vj_have_vrpn='no')
-   AC_CHECK_HEADER([vrpn_Button.h], [vj_have_vrpn='yes'], [vj_have_vrpn='no'])
-
-#   AC_CHECK_LIB(vrpn, [vrpn_Button_Remote], [vj_have_vrpn='yes'],
-#   [vj_have_vrpn='no'])
-    CPPFLAGS="${_vjsave_CPPFLAGS}"
-
-    DPP_LANG_RESTORE
-
-    if test "x$vj_have_vrpn" = "xyes" ; then
-       HAVE_VRPN='Y'
-       VRPN_LDFLAGS="$TEST_VRPN_LDFLAGS"
-    else
-       HAVE_VRPN='N'
-       AC_MSG_WARN([*** Did not find VRPN in $VRPNROOT ***])
-    fi
-
-    CFLAGS="${_vjsave_CFLAGS}"
-    CPPFLAGS="${_vjsave_CPPFLAGS}"
-    LDFLAGS="${_vjsave_LDFLAGS}"
-    LIBS="${_vjsave_LIBS}"
-fi
-
-
 # -----------------------------------------------------------------------------
 # Checks for header files.
 # -----------------------------------------------------------------------------
 AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h sys/ioctl.h sys/time.h termios.h unistd.h      \
-                  sys/z8530.h sys/stdsyms.h])
+AC_CHECK_HEADERS([sys/time.h unistd.h])
 
 # -----------------------------------------------------------------------------
 # Checks for typedefs, structures, and compiler characteristics.
@@ -532,17 +231,6 @@ gadget_cxxflags="$STDFLAGS"
 # in the order used for linking.  That means the dependencies are satisfied
 # right to left.
 gadget_dep_scripts='jccl-config vpr-config'
-
-# Note that we do not have to add to $gadget_cxxflags because user code
-# would never need to know where the Trackd API headers live.
-if test "x$TRACKD_API_INCLUDES" != "x" ; then
-   INCLUDES="$INCLUDES $TRACKD_API_INCLUDES"
-fi
-
-# The same is true for DTK headers WRT $gadget_cxxflags.
-if test "x$DTK_INCLUDES" != "x" ; then
-   INCLUDES="$INCLUDES $DTK_INCLUDES"
-fi
 
 if test "x$LOCAL_GMTL" = "xY" ; then
    gadget_cxxflags="$gadget_cxxflags $GMTL_INCLUDES"
@@ -615,19 +303,15 @@ DYLIB_PROF_DEPS="$APP_EXTRA_PROF_LIBS"
 
 if test "x$OS_TYPE" = "xUNIX" ; then
     DSO_DRIVER_DEPS="-L\$(LIBDIR) -lgadget $DYLIB_DEPS"
-    TWEEK_DRIVER_DEPS="$TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN"
-
     if test "x$gadget_use_x11" = "xyes" ; then
         if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
             INCLUDES="$INCLUDES -I$x_includes"
             gadget_cxxflags="$gadget_cxxflags -I$x_includes"
         fi
-
         APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11"
     fi
 elif test "x$OS_TYPE" = "xWin32" ; then
     DSO_DRIVER_DEPS="-libpath:\$(LIBDIR) gadget.lib $DYLIB_DEPS"
-    TWEEK_DRIVER_DEPS="$TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN"
 fi
 
 # Translate paths from UNIX-style to Win32.
@@ -641,8 +325,6 @@ if test "x$OS_TYPE" = "xWin32" ; then
     LN_S='cp -r'
     RM_LN='rm -rf'
     MTREE_CMD=`dospath "$MTREE_CMD"`
-
-    JDK_HOME=`dospath -p "$JDK_HOME"`
 
 #    APP_EXTRA_LIBS=`dospath "$APP_EXTRA_LIBS"`
     APP_EXTRA_LIBS_GL=`dospath "$APP_EXTRA_LIBS_GL"`
@@ -709,27 +391,15 @@ AC_SUBST(VPR_SUBSYSTEM)
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
 
-AC_SUBST(HAVE_TWEEK_CXX)
-AC_SUBST(HAVE_TWEEK_JAVA)
-
-AC_SUBST(DTK_CONFIG)
-AC_SUBST(HAVE_DTK)
-
-AC_SUBST(HAVE_VRPN)
-AC_SUBST(VRPNROOT)
-AC_SUBST(VRPN_LDFLAGS)
-
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
 
 AC_SUBST(DYLIB_DEPS)
 AC_SUBST(DYLIB_PROF_DEPS)
+
 AC_SUBST(DSO_DRIVER_DEPS)
-AC_SUBST(TWEEK_DRIVER_DEPS)
 
 AC_SUBST(APP_EXTRA_LIBS_X11)
-
-AC_SUBST(TRACKD_API_LIB_FLAGS)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
@@ -772,36 +442,8 @@ AC_CONFIG_FILES([
    cluster/Plugins/SwapLockWiredPlugin/Makefile
    gadget/Makefile
    gadget/Devices/Makefile
-   gadget/Devices/driver.defs.mk
-   gadget/Devices/5DT/Makefile
-   gadget/Devices/5DT/DataGlove/Makefile
-   gadget/Devices/Ascension/Makefile
-   gadget/Devices/Ascension/Flock/Makefile
-   gadget/Devices/Ascension/MotionStar/Makefile
    gadget/Devices/EventWindow/Makefile
-   gadget/Devices/Fakespace/Makefile
-   gadget/Devices/Fakespace/PinchGlove/Makefile
-   gadget/Devices/Immersion/Makefile
-   gadget/Devices/Immersion/IBox/Makefile
-   gadget/Devices/Intersense/Makefile
-   gadget/Devices/Intersense/IS900/Makefile
-   gadget/Devices/Intersense/IntersenseAPI/Makefile
-   gadget/Devices/Logitech/Makefile
-   gadget/Devices/Logitech/ThreeDMouse/Makefile
-   gadget/Devices/Open/Makefile
-   gadget/Devices/Open/DTK/Makefile
-   gadget/Devices/Open/Trackd/Makefile
-   gadget/Devices/Open/VRPN/Makefile
-   gadget/Devices/Polhemus/Makefile
-   gadget/Devices/Polhemus/Fastrak/Makefile
    gadget/Devices/Sim/Makefile
-   gadget/Devices/Tweek/Makefile
-   gadget/Devices/Tweek/Makefile.inc
-   gadget/Devices/Tweek/build.xml
-   gadget/Devices/VRCO/Makefile
-   gadget/Devices/VRCO/TrackdAPI/Makefile
-   gadget/Devices/VirtualTechnologies/Makefile
-   gadget/Devices/VirtualTechnologies/CyberGlove/Makefile
    gadget/Filter/Makefile
    gadget/Filter/Position/Makefile
    gadget/Type/Makefile
