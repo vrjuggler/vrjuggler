@@ -211,13 +211,23 @@ public class ConfigDefinitionParser
          allowed_types.add(elt.getTextTrim());
       }
 
+      // Get the enumeration list.
+      Map enum_map = new TreeMap();
+      for (Iterator itr = root.getChildren(ENUM, DEF_NS).iterator(); itr.hasNext(); )
+      {
+         Element elt = (Element) itr.next();
+         String value_str = elt.getAttributeValue(VALUE);
+         Object value = convertTo(value_str, valuetype);
+         enum_map.put(elt.getAttributeValue(LABEL), value);
+      }
+
       // Create the new property definition
       return new PropertyDefinition(name,
                                     name,
                                     valuetype,
                                     help,
                                     values,
-                                    new TreeMap(),
+                                    enum_map,
                                     allowed_types,
                                     variable);
    }
@@ -335,7 +345,8 @@ public class ConfigDefinitionParser
       }
       catch (NumberFormatException nfe)
       {
-         throw new ParseException("Invalid default value: "+valueStr);
+         throw new ParseException("Invalid default value '" + valueStr +
+                                  "' for type " + type);
       }
    }
 
