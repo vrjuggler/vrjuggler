@@ -227,39 +227,6 @@ ifndef GLOBAL_BUILD
 	rm -rf $(instlinks)
 endif
 
-DSO_DRIVER_SUBDIR=	gadgeteer/drivers
-DSO_DRIVER_DIR=		$(LIBDIR_BASE)/$(DSO_DRIVER_SUBDIR)
-
-# XXX: There is no directory hierarchy in place to separate optimized and
-# debugging drivers.  See SF Bug #704190.
-drivers:
-ifdef BUILD_TYPE
-	$(MAKE) drivers-$(BUILD_TYPE)
-else
-	$(MAKE) drivers-dbg
-endif
-
-drivers-all drivers-opt:
-	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)
-	$(MAKE) -C gadget/Devices RECTARGET="$(BUILD_TYPE)"		\
-          DSO_DRIVER_DIR="$(DSO_DRIVER_DIR)" OPTIMIZER="$(OPT_FLAGS)"	\
-          BASE_OBJDIR="$(OPT_BUILDDIR)" LIBDIR="$(LIBDIR)" recursive
-
-drivers-dbg:
-	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)
-	$(MAKE) -C gadget/Devices RECTARGET="$(BUILD_TYPE)"		\
-          DSO_DRIVER_DIR="$(DSO_DRIVER_DIR)" OPTIMIZER="$(DBG_FLAGS)"	\
-          BASE_OBJDIR="$(DBG_BUILDDIR)" LIBDIR="$(LIBDIR)" recursive
-
-drivers-prof:
-	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)
-	$(MAKE) -C gadget/Devices RECTARGET="$(BUILD_TYPE)"		\
-          DSO_DRIVER_DIR="$(DSO_DRIVER_DIR)" LIBDIR="$(LIBDIR)"		\
-          BASE_OBJDIR="$(PROF_BUILDDIR)" OPTIMIZER="$(PROF_OPT_FLAGS)"	\
-          recursive
-
-
-## TEST
 DSO_PLUGIN_SUBDIR=	gadgeteer/plugins
 DSO_PLUGIN_DIR=		$(LIBDIR_BASE)/$(DSO_PLUGIN_SUBDIR)
 
@@ -269,10 +236,6 @@ ifdef BUILD_TYPE
 else
 	$(MAKE) plugins-dbg
 endif
-
-# XXX: DSO_DRIVER_DIR="$(DSO_PLUGIN_DIR)" needs to be changed to DSO_PLUGIN_DIR="$(DSO_PLUGIN_DIR)".
-#	 It is currently only like this since we are using the same build files
-#	 as we use for the driver build.
 
 plugins-all plugins-opt:
 	$(MKINSTALLDIRS) $(DSO_PLUGIN_DIR)
@@ -292,7 +255,6 @@ plugins-prof:
           DSO_PLUGIN_DIR="$(DSO_PLUGIN_DIR)" LIBDIR="$(LIBDIR)"		\
           BASE_OBJDIR="$(PROF_BUILDDIR)" OPTIMIZER="$(PROF_OPT_FLAGS)"	\
           recursive
-## END TEST
 
 
 # =============================================================================
@@ -337,11 +299,6 @@ afterinstall:
 	@echo "==============================================================="
 	@echo "ClusterJuggler $(BUILD_TYPE) plug-in installation complete"
 	@echo "==============================================================="
-	@$(MAKE) drivers
-	@$(MAKE) install-drivers
-	@echo "==============================================================="
-	@echo "Gadgeteer $(BUILD_TYPE) driver plug-in installation complete"
-	@echo "==============================================================="
 
 PREINSTALL=	pre-install
 POSTINSTALL=	post-install
@@ -382,16 +339,6 @@ post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/gadget/gadgetParam.h		\
           $(includedir)/gadget
-
-# Install dynamically loadable drivers (if any exist in $(DSO_DRIVER_DIR)).
-install-drivers install-drivers-dbg install-drivers-opt install-drivers-prof:
-	if [ -d $(DSO_DRIVER_DIR) ] ; then				\
-          $(PERL) $(scriptdir)/install-dir.pl -m $(EXEC_PERMS)		\
-            $(GROUP_OPT_UNIX) -e .so,.dll,.dylib $(EXTRA_INSTALL_ARGS)	\
-            -o $(libdir)$(LIBBITSUF)/$(DSO_DRIVER_SUBDIR) -i		\
-            $(DSO_DRIVER_DIR) ;						\
-        fi
-	$(MAKE) -C gadget/Devices $@
 
 # Install dynamically loadable plugins (if any exist in $(DSO_PLUGIN_DIR)).
 install-plugins install-plugins-dbg install-plugins-opt install-plugins-prof:
@@ -454,7 +401,6 @@ install-m4:
 # directories.
 # =============================================================================
 _cleandepend:
-	@$(MAKE) -C gadget/Devices DO_CLEANDEPEND=1 cleandepend
 	@$(MAKE) -C cluster/Plugins DO_CLEANDEPEND=1 cleandepend
 
 _clobber:

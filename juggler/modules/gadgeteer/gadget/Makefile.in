@@ -51,8 +51,7 @@ SUBOBJDIR=	$(GADGET_LIBRARY)
 DIRPRFX=	gadget/
 
 # Subdirectories to compile.
-SUBDIR=		Devices/EventWindow	\
-		Devices/Sim		\
+SUBDIR=		Devices		        \
 		Filter                  \
 		Type			\
 		Util
