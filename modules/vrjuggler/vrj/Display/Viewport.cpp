@@ -76,25 +76,25 @@ void Viewport::config(jccl::ConfigElementPtr element)
       sizeY = 1.0f;
    }
 
-    // -- Set local window attributes --- //
-    setOriginAndSize(originX, originY, sizeX, sizeY);
+   // -- Set local window attributes --- //
+   setOriginAndSize(originX, originY, sizeX, sizeY);
 
-    // Get the user for this display
-    std::string user_name = element->getProperty<std::string>("user");
-    mUser = Kernel::instance()->getUser(user_name);
+   // Get the user for this display
+   std::string user_name = element->getProperty<std::string>("user");
+   mUser = Kernel::instance()->getUser(user_name);
 
-    if(NULL == mUser)
-    {
-       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-          << clrOutNORM(clrRED, "ERROR:") << " User not found named: '"
-          << user_name << "'" << std::endl << vprDEBUG_FLUSH;
-       vprASSERT(false && "User not found in Viewport::config");
-    }
+   if(NULL == mUser)
+   {
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ERROR:") << " User not found named: '"
+         << user_name << "'" << std::endl << vprDEBUG_FLUSH;
+      vprASSERT(false && "User not found in Viewport::config");
+   }
 
-    setName(name);
-    mViewportElement = element;        // Save the element for later use
+   setName(name);
+   mViewportElement = element;        // Save the element for later use
 
-    std::string bufname = "Head Latency " + name;
+   std::string bufname = "Head Latency " + name;
 }
 
 std::ostream& operator<<(std::ostream& out, Viewport& viewport)
