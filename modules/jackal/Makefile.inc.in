@@ -186,8 +186,8 @@ ifneq (@OS_TYPE@, Win32)
           ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
 	cd $(instlinks) && rm -rf ./$(JCCL_SHARE_DIR) &&		\
           $(SHELL) $(MKINSTALLDIRS) ./$(JCCL_SHARE_DIR)
-	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./Data &&		\
-          ln -s $(JCCLROOT_ABS)/Data ./Data
+	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./data &&		\
+          ln -s $(JCCLROOT_ABS)/data ./data
 	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./samples &&		\
           ln -s $(JCCLROOT_ABS)/samples ./samples
 	cd $(instlinks)/include/jccl && rm -f ./jcclConfig.h &&		\
@@ -236,7 +236,7 @@ clean-links:
 #     2) Install the libraries.
 #     3) Install the header files.
 #     4) Install the test programs.
-#     5) Install the contents of the Data directory.
+#     5) Install the contents of the data directory.
 #     6) Install the Java-based config editor (if possible).
 # =============================================================================
 
@@ -348,8 +348,8 @@ install-data:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.data.dist -p $(datadir)
-	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/Data	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/Data		\
+	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/data		\
           -v "$(topdir)/VARS.pl"
 
 # Install the Java-based config editor if possible.
