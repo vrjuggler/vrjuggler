@@ -37,6 +37,8 @@
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/RTRC/ConfigChunkHandler.h>
 
+#include <boost/concept_check.hpp>
+
 namespace vrj
 {
    /**
@@ -51,6 +53,7 @@ namespace vrj
        */
       virtual bool configAdd(jccl::ConfigChunkPtr chunk)
       {
+         boost::ignore_unused_variable_warning(chunk);
          return false;
       }
 
@@ -60,6 +63,7 @@ namespace vrj
        */
       virtual bool configRemove(jccl::ConfigChunkPtr chunk)
       {
+         boost::ignore_unused_variable_warning(chunk);
          return false;
       }
 
@@ -69,6 +73,7 @@ namespace vrj
        */
       virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
       {
+         boost::ignore_unused_variable_warning(chunk);
          return false;
       }
 

@@ -65,6 +65,8 @@
 #include <vrj/Draw/Pf/PfSimInterfaceFactory.h>
 #include <vrj/Draw/Pf/PfBasicSimulator.h>
 
+#include <boost/concept_check.hpp>
+
 
 namespace vrj
 {
@@ -118,7 +120,9 @@ bool PfBasicSimulator::config(jccl::ConfigChunkPtr chunk)
  * Sets the event window the simulator can use to get input from the user.
  */
 void PfBasicSimulator::setEventWindow(gadget::EventWindowInterface ewInterface)
-{;}
+{
+   boost::ignore_unused_variable_warning(ewInterface);
+}
 
 
 void PfBasicSimulator::updateProjectionData(const float positionScale,
@@ -187,7 +191,7 @@ bool PfBasicSimulator::configPerformerAPI(jccl::ConfigChunkPtr chunk)
 
    mHeadModel = vpr::replaceEnvVars(head_file);
    mWandModel = vpr::replaceEnvVars(wand_file);
-   
+
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
       << "Head Model: " << mHeadModel.c_str() << std::endl
       << "Wand Model: " << mWandModel.c_str() << std::endl << vprDEBUG_FLUSH;

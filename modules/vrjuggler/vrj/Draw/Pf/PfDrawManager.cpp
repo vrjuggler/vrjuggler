@@ -70,6 +70,8 @@
 
 #include <jccl/Config/ConfigChunk.h>
 
+#include <boost/concept_check.hpp>
+
 #include <gmtl/Output.h>
 
 namespace vrj
@@ -450,7 +452,7 @@ void PfDrawManager::addDisplay(Display* disp)
                   << "SimViewport::config() creating simulator of type '"
                   << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
 
-               DrawSimInterface* new_sim_i = 
+               DrawSimInterface* new_sim_i =
                   PfSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
 
                // XXX: Change this to an error once the new simulator loading code is
@@ -459,7 +461,7 @@ void PfDrawManager::addDisplay(Display* disp)
                sim_vp->setDrawSimInterface(new_sim_i);
                new_sim_i->initialize(sim_vp);
                new_sim_i->config(sim_chunk);
-            }   
+            }
 
 
             vprASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
@@ -900,13 +902,13 @@ void PfDrawManager::updatePfProjections()
 
             sim_vp = dynamic_cast<SimViewport*>(pf_vp->viewport);
             vprASSERT(sim_vp != NULL && "Could not cast supposed simulator display to SimDisplay.");
-            
+
             draw_sim_i = dynamic_cast<PfSimInterface*>(sim_vp->getDrawSimInterface());
             vprASSERT(draw_sim_i != NULL && "Could not cast supposed simulator interface to PfSimInterface.");
-            
+
             draw_sim_i->updateSimulatorSceneGraph();
          }
-         
+
       }
    }
 }
@@ -1123,11 +1125,13 @@ void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, b
          glDrawBuffer(GL_BACK_LEFT);
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "vjPfDrawFunc: Set to BACK_LEFT\n" << vprDEBUG_FLUSH;
       }
-      else
+      else if(right_eye)
       {
          glDrawBuffer(GL_BACK_RIGHT);
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "vjPfDrawFunc: Set to BACK_RIGHT\n" << vprDEBUG_FLUSH;
       }
+      else
+         vprASSERT(false);
    }
    else                                // No Stereo or have sim, so just go to back buffer
    {
@@ -1180,6 +1184,7 @@ void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata)
 ********************************/
 void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw)
 {
+   boost::ignore_unused_variable_warning(p);
     PfDrawManager* pf_draw_mgr = PfDrawManager::instance();     // get the draw manager
 
     // If "first pw", then sync
