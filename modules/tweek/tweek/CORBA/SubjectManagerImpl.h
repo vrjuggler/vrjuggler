@@ -197,12 +197,7 @@ protected:
    // These two have to be here because Visual C++ will try to make them
    // exported public symbols.  This causes problems because copying
    // vpr::Mutex objects is not allowed.
-   SubjectManagerImpl(const SubjectManagerImpl& sm)
-      : POA_tweek::SubjectManager(sm), PortableServer::RefCountServantBase(sm),
-        mCorbaMgr(sm.mCorbaMgr), mInfoMap(sm.mInfoMap)
-   {
-      /* Do nothing. */ ;
-   }
+   SubjectManagerImpl(const SubjectManagerImpl& sm);
 
    void operator=(const SubjectManagerImpl& sm)
    {

@@ -106,4 +106,22 @@ void SubjectImpl::notify ()
                                               << vprDEBUG_FLUSH;
 }
 
+// ============================================================================
+// Protected methods follow.
+// ============================================================================
+
+SubjectImpl::SubjectImpl(const SubjectImpl& s)
+   :
+#ifdef OMNIORB_VER
+     omniServant(s)
+   , tweek::_impl_Subject(s)
+   ,
+#endif
+     PortableServer::ServantBase(s)
+   , POA_tweek::Subject(s)
+   , PortableServer::RefCountServantBase(s)
+{
+   /* Do nothing. */ ;
+}
+
 } // End of tweek namespace
