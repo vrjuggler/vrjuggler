@@ -476,6 +476,7 @@ _SYSTEM_OPENGL=''
 if test "x$enable_opengl" = "xyes" ; then
     # Save these values in case they need to be restored later.
     vjsave_CFLAGS="$CFLAGS"
+    vjsave_CPPFLAGS="$CPPFLAGS"
     vjsave_INCLUDES="$INCLUDES"
     vjsave_LDFLAGS="$LDFLAGS"
 
@@ -483,16 +484,12 @@ if test "x$enable_opengl" = "xyes" ; then
     # Ensure that /usr/include and /usr/lib are not included multiple times
     # if $OGLROOT is "/usr".
     if test "x${OGLROOT}" != "x/usr" ; then
-        INCLUDES="$INCLUDES -I\${OGLROOT}/include"
-
-        if test "$PLATFORM" = "SGI" ; then
-            LDFLAGS="-L\${OGLROOT}/lib\${LIBBITSUF} $LDFLAGS"
-        else
-            LDFLAGS="-L\${OGLROOT}/lib $LDFLAGS"
-        fi
+        CPPFLAGS="$CPPFLAGS -I${OGLROOT}/include"
+        INCLUDES="$INCLUDES -I${OGLROOT}/include"
+        LDFLAGS="-L${OGLROOT}/lib${LIBBITSUF} $LDFLAGS"
     fi
 
-    CFLAGS="$CFLAGS $INCLUDES $_EXTRA_FLAGS"
+    CFLAGS="$CFLAGS $_EXTRA_FLAGS"
 
     # On HP-UX, we have to compile the test code with aCC (which is required
     # by an above test) because the HP-UX OpenGL 1.1 implementation mandates
@@ -532,8 +529,9 @@ if test "x$enable_opengl" = "xyes" ; then
             AC_MSG_ERROR(*** OpenGL API will not be used (library not found) ***))
     fi
 
-    # Restore $CFLAGS now that we are done testing.
+    # Restore $CFLAGS and $CPPFLAGS now that we are done testing.
     CFLAGS="$vjsave_CFLAGS"
+    CPPFLAGS="$vjsave_CPPFLAGS"
 
     # If OpenGL API files were added, define this extra stuff that is used
     # in some Makefiles.
