@@ -178,7 +178,7 @@ TWEEK_PATH_CXX([$min_tweek_ver], [HAVE_TWEEK_CXX='Y'],
    ])
 
 TWEEK_PATH_JAVA([$min_tweek_ver],
-   [JCCL_PATH_JAVA([0.9.2], [HAVE_TWEEK_JAVA='Y'],
+   [JCCL_PATH_JAVA([0.10.0], [HAVE_TWEEK_JAVA='Y'],
       [AC_MSG_WARN([*** JCCL Java required for TweekGadget.jar ***])
        HAVE_TWEEK_JAVA='N'
       ])],
