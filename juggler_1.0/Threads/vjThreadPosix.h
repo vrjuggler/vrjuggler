@@ -24,9 +24,11 @@
 #include <signal.h>
 #include <sched.h>
 
-
+#ifdef VJ_OS_Linux
+typedef u_int32_t thread_id_t;
+#else
 typedef uint32_t	thread_id_t;
-
+#endif
 
 //: Threads implementation using POSIX threads (both Draft 4 and the "final"
 //+ draft of the standard are supported).
