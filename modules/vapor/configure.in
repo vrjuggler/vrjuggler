@@ -617,7 +617,6 @@ fi
 # Information needed to generate vpr-config.
 case $SUBSYSTEM in
     SPROC)
-        subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$SEM_LIB $SOCKET_LIB"
         static_begin="-B static"
@@ -626,7 +625,6 @@ case $SUBSYSTEM in
         vpr_libs='-lvpr'
         ;;
     POSIX)
-        subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 
@@ -645,13 +643,11 @@ case $SUBSYSTEM in
         ;;
     NSPR)
         if test "x$OS_TYPE" = "xWin32" ; then
-            subsystem_cflags="$INCLUDES"
             subsystem_cxxflags="$INCLUDES"
             subsystem_libs="$NSPR_LIB comctl32.lib user32.lib gdi32.lib ws2_32.lib"
             vpr_ldflags="/link /libpath:\$prefix/lib/debug $NSPR_LDFLAGS"
             vpr_libs='vpr.lib'
         else
-            subsystem_cflags="$INCLUDES"
             subsystem_cxxflags="$INCLUDES"
             subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
             vpr_ldflags="-L\$prefix/lib$LIBBITSUF"
@@ -707,7 +703,6 @@ AC_SUBST(APP_EXTRA_LIBS_BASIC)
 
 AC_SUBST(DYLIB_DEPS)
 
-AC_SUBST(subsystem_cflags)
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
