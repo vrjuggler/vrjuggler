@@ -632,6 +632,7 @@ AC_CONFIG_FILES([
    Logitech/ThreeDMouse/Makefile
    Open/Makefile
    Open/DTK/Makefile
+   Open/LinuxJoydev/Makefile
    Open/Trackd/Makefile
    Open/VRPN/Makefile
    Polhemus/Makefile

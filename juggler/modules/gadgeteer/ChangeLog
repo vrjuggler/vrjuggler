@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-12-2003 allenb      Added driver for Linux joystick devices.
 Oct-12-2003 allenb      Refactored Input interface methods startSampling,
                         stopSampling, and sample to return bools.
                         NEW VERSION: 0.14.0
