@@ -71,9 +71,9 @@ vjInputManager::~vjInputManager()
          delete m_devVector[i];
 
    // Delete all the proxies
-   for(std::map<std::string, vjProxy*>::iterator i = mProxyTable.begin(); i != mProxyTable.end(); i++)
+   for(std::map<std::string, vjProxy*>::iterator j = mProxyTable.begin(); j != mProxyTable.end(); j++)
    {
-      delete (*i).second;
+      delete (*j).second;
    }
 }
 
@@ -341,7 +341,7 @@ vjInput* vjInputManager::getDevice(unsigned int devNum)
 // RETURNS: NULL - Not found
 vjInput* vjInputManager::getDevice(std::string deviceName)
 {
-   vjInput* ret_dev(NULL);
+   vjInput* ret_dev = NULL;
    int dev_num = findDeviceNum(deviceName.c_str());
    if(dev_num != -1)
    {
