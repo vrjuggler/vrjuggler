@@ -87,7 +87,7 @@ int ConfigChunkHandler::configProcessPending()
             switch ((*current).mType)
             {
             case ConfigManager::PendingChunk::ADD:         // -- CONFIG ADD -- //
-               if(dep_mgr->depSatisfied(cur_chunk))            // Are all the dependencies satisfied
+               if(dep_mgr->isSatisfied(cur_chunk))            // Are all the dependencies satisfied
                {
                   bool added = this->configAdd(cur_chunk);
                   if(added)                                 // SUCCESS adding
