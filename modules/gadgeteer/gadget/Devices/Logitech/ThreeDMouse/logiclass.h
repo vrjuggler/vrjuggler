@@ -54,25 +54,27 @@ class vjThreeDMouse : public vjPosition
 {
 public:
 	//: Default constructor
-	vjThreeDMouse() {;}
-	
+	vjThreeDMouse() {
+	   myThreadID = NULL;
+	}
+
    virtual bool config(vjConfigChunk* c);
 
 	/** vjInput pure virtual functions **/
 	int StartSampling();
 	int StopSampling();
 	void UpdateData();
-	int Sample()	
+	int Sample()
 	    { return GetRecord(&theData[current]); }
-	
+
 	/** vjInput virtual functions **/
 	char* GetDeviceName() { return "vjThreeDMouse"; }
 	static std::string getChunkType() { return std::string("ThreeDMouse");}
-	
+
 	/** vjPosition pure virtual functions **/
 	vjMatrix* GetPosData(int devNum = 0);
 	void GetPosData(vjPOS_DATA* &data);
-	
+
 	/** @name Internal functions from original implementation
 	 *
 	 *  not to be used on the outside
@@ -80,7 +82,7 @@ public:
 	//@{
 	int OpenMouse(char* portName);
 	int CloseMouse();
-	
+
 	void CuDemandReporting ();
 	void CuEulerMode ();
 	void CuHeadtrackerMode ();
@@ -89,34 +91,34 @@ public:
 	void CuRequestReport ()	    // Inline, most called function in package
 		// Demand a single report
 	    {write (mouseFD, "*d", 2); }
-	
+
 	void CuResetControlUnit ();
 
 	void GetDiagnostics (char data[]);
 	int  GetRecord (vjPOS_DATA *data);
 	void ResetControlUnit ();
-	
-		
+
+
 	void SetBaseOrigin();
 	    // PURPOSE: Sets the current mouse X,Y,Z position to be the base origin
-	
-	float GetX()	
+
+	float GetX()
 	{ return theData[current].pos[0] + baseVector[0]; }
-	float GetY()	
+	float GetY()
 	{ return theData[current].pos[1] + baseVector[1]; }
-	float GetZ()	
+	float GetZ()
 	{ return theData[current].pos[2] + baseVector[2]; }
 	float GetPitch()    { return theData[current].orient[0]; }
 	float GetYaw()	    { return theData[current].orient[1]; }
 	float GetRoll()	    { return theData[current].orient[2]; }
 //	vjVec3 GetLocation() { return SbVec3f(GetX(), GetY(), GetZ()); }
-	
+
 //	int ButtonPressed() { return currentMouseReadings.buttons; }
 	    // PURPOSE: Examine what buttons are pressed
 	    // Returns packed int,
 	    // EX:  if(ButtonPressed() & logitech_LEFTBUTTON) then
 	    //		    Button was pressed.
-	
+
 	//@}
     private:
 	int mouseFD;
@@ -125,9 +127,9 @@ public:
    vjThread*   myThreadID;	// Ptr to the thread object
 	vjVec3      baseVector;	// Used to store the base location tooffset from
 				// Originally set to 0,0,0
-	
+
 	int  LogitechOpen (char *port_name);
-	
+
 	void EulerToAbsolute (byte record[], vjPOS_DATA * data);
 	void PrintBin (char a);
 };
