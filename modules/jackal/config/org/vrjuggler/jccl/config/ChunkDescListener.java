@@ -41,6 +41,8 @@ public interface ChunkDescListener
    extends EventListener
 {
    public void nameChanged(ChunkDescEvent evt);
+   public void tokenChanged(ChunkDescEvent evt);
+   public void helpChanged(ChunkDescEvent evt);
 
    public void categoryAdded(ChunkDescEvent evt);
    public void categoryRemoved(ChunkDescEvent evt);

@@ -691,6 +691,40 @@ public class ChunkDescDB
     * Forwards the given event from the contained chunk descs to listeners of
     * this database.
     */
+   public void tokenChanged(ChunkDescEvent evt)
+   {
+      System.out.println("ChunkDescDB.tokenChanged");
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            ((ChunkDescListener)listeners[i+1]).tokenChanged(evt);
+         }
+      }
+   }
+
+   /**
+    * Forwards the given event from the contained chunk descs to listeners of
+    * this database.
+    */
+   public void helpChanged(ChunkDescEvent evt)
+   {
+      System.out.println("ChunkDescDB.helpChanged");
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            ((ChunkDescListener)listeners[i+1]).helpChanged(evt);
+         }
+      }
+   }
+
+   /**
+    * Forwards the given event from the contained chunk descs to listeners of
+    * this database.
+    */
    public void categoryAdded(ChunkDescEvent evt)
    {
       System.out.println("ChunkDescDB.categoryAdded");
