@@ -387,7 +387,7 @@ private:
     pthread_t   mThread;        //: pthread_t data structure for this thread
     int         mScope;         //: Scope (process or system) of this thread
 
-    void checkRegister(int status);
+    //void checkRegister(int status);
 
     // -----------------------------------------------------------------------
     //: Get a hash index for this thread.  This will always be a nonzero
@@ -453,7 +453,6 @@ private:
     }
 
     static vjThreadKeyPosix            mThreadIdKey;     // Key for the id of the local thread
-    static vjThreadTable<thread_id_t>  mThreadTable;
 };
 
 
