@@ -32,6 +32,9 @@ SHM_SRCS	:= vjMemory.cpp
 ifeq (@SHMEM_SYS@,SGI_IPC)
     SHM_SRCS	+= vjMemPoolSGI.cpp
 endif
+ifeq (@SHMEM_SYS@,WIN32)
+    SHM_SRCS	+= vjMemPoolWin32.cpp
+endif
 
 SHM_OBJECTS	:= ${addprefix ${OBJDIR}/, ${SHM_SRCS:.cpp=.o}}
 DEPEND_FILES	:= ${SHM_SRCS:.cpp=.d}
