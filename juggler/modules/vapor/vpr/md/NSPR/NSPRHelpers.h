@@ -34,15 +34,16 @@
 #define _VPR_NSPR_HELPER_H_
 
 #include <string>
+#include <prerror.h>
 
 namespace vpr
 {
 
 // Print out the current NSPR error message to stderr
-void NSPR_PrintError(std::string& error_prefix_string )
+void NSPR_PrintError(const std::string error_prefix_string )
 {
    PRInt32 textLength = PR_GetErrorTextLength();
-   char *text = (char*)PR_MALLOC(textLength);
+   char *text = (char*)malloc(textLength);
    (void)PR_GetErrorText(text);
    fprintf(
             stderr, "%s (%d, %d, %s)\n",

@@ -30,17 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vprConfig.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <prinrval.h>
+#include <prio.h>
 
-#include <md/POSIX/SocketImpNSPR.h>
-
-
-// ============================================================================
-// External global variables.
-// ============================================================================
-extern int errno;
+#include <md/NSPR/SocketImpNSPR.h>
+#include <md/NSPR/NSPRHelpers.h>
 
 namespace vpr {
 
@@ -77,8 +75,7 @@ SocketImpNSPR::open () {
     // If socket(2) failed, print an error message and return error status.
     if ( new_sock == NULL ) {
         fprintf(stderr,
-                "[vpr::SocketImpNSPR] Could not create socket: err %d \n",
-                , strerror(errno));
+                "[vpr::SocketImpNSPR] Could not create socket: \n");
         retval = false;
     }
     // Otherwise, return success.
@@ -152,7 +149,7 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
 {
     PRStatus retval;
     socklen_t opt_size;
-    PRSockOptionData opt_data;
+    PRSocketOptionData opt_data;
     bool get_opt;
 
     // If this is true, PR_GetSocketOption() will be called.
@@ -233,6 +230,7 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
                 data.ip_ttl = opt_data.value.ip_ttl;
                 break;
               case SocketOptions::IpTypeOfService:
+             /*
                 switch (opt_data.value.ip_tos) {
                   case IPTOS_LOWDELAY:
                     data.type_of_service = SocketOptions::LowDelay;
@@ -249,6 +247,7 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
                     break;
 #endif
                 }
+                */
 
                 break;
               case SocketOptions::McastInterface:
@@ -258,7 +257,7 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
                 data.mcast_ttl = opt_data.value.mcast_ttl;
                 break;
               case SocketOptions::McastLoopback:
-                data.mcast_loopback = opt_data.value.mcast_loop;
+                data.mcast_loopback = opt_data.value.mcast_loopback;
                 break;
               case SocketOptions::NoDelay:
                 data.no_delay = (opt_data.value.no_delay != 0 ? true : false);
@@ -271,12 +270,11 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
         else {
             fprintf(stderr,
                     "[vpr::SocketImpNSPR] ERROR: Could not get socket option "
-                    "for socket %s: %s\n",
-                    m_handle->getName().c_str(), strerror(errno));
+                    "for socket");
         }
     }
     else {
-        retval = -1;
+        retval = PR_FAILURE;
     }
 
     return retval;

@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <md/NSPR/InetAddrNSPR.h>
 #include <md/NSPR/NSPRHelpers.h>
+#include <prio.h>
 
 namespace vpr {
 
@@ -49,15 +50,15 @@ InetAddrNSPR::getFamily (void) const
 {
     SocketTypes::Domain family;
 
-    switch ( PR_NetAddrFamily(mAddr))
+    switch ( PR_NetAddrFamily(&mAddr))
     {
-    case: PR_AF_INET
+    case PR_AF_INET:
         family = SocketTypes::INET;
         break;
-    case: PR_AF_LOCAL:
+    case PR_AF_LOCAL:
        family = SocketTypes::LOCAL;
        break;
-    case: PR_AF_INET6:
+    case PR_AF_INET6:
        family = SocketTypes::INET6;
        break;
     }
@@ -73,13 +74,13 @@ void
 InetAddrNSPR::setFamily (const SocketTypes::Domain family) {
     switch (family) {
       case SocketTypes::LOCAL:
-         PR_NetAddrFamily(mAddr) = PR_AF_LOCAL;
+         PR_NetAddrFamily(&mAddr) = PR_AF_LOCAL;
          break;
       case SocketTypes::INET:
-        PR_NetAddrFamily(mAddr) = PR_AF_INET;
+        PR_NetAddrFamily(&mAddr) = PR_AF_INET;
         break;
       case SocketTypes::INET6:
-        PR_NetAddrFamily(mAddr) = PR_AF_INET6;
+        PR_NetAddrFamily(&mAddr) = PR_AF_INET6;
         break;
       default:
         fprintf(stderr,
@@ -96,7 +97,7 @@ InetAddrNSPR::setFamily (const SocketTypes::Domain family) {
 // ----------------------------------------------------------------------------
 std::string
 InetAddrNSPR::getAddressString (void) const {
-    char* ip_str;
+    char* ip_str(NULL);
     PR_NetAddrToString(&mAddr, ip_str, sizeof(PRNetAddr));
     return std::string(ip_str);
 }
@@ -106,8 +107,9 @@ InetAddrNSPR::getAddressString (void) const {
 // ----------------------------------------------------------------------------
 bool
 InetAddrNSPR::setAddress (const std::string& address) {
+   bool retval;
    PRStatus ret_status;
-   PRHostEnt* host_entry;
+   PRHostEnt* host_entry(NULL);
    char buffer[1200];
 
    ret_status = PR_GetHostByName(address.c_str(), buffer, 1200, host_entry);

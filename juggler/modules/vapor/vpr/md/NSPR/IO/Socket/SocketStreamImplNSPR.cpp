@@ -38,6 +38,7 @@
 #include <errno.h>
 
 #include <md/NSPR/SocketStreamImpNSPR.h>
+#include <md/NSPR/NSPRHelpers.h>
 
 
 namespace vpr {
@@ -52,7 +53,7 @@ namespace vpr {
 // variables of the object.
 // ----------------------------------------------------------------------------
 SocketStreamImpNSPR::SocketStreamImpNSPR (void)
-    : SocketStreamNSPR()
+   : SocketImpNSPR()
 {
     /* Do nothing. */ ;
 }
@@ -92,16 +93,16 @@ SocketStreamImpNSPR::listen (const int backlog)
 // ----------------------------------------------------------------------------
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
-SocketStreamImpBSD*
-SocketStreamImpBSD::accept () {
+SocketStreamImpNSPR*
+SocketStreamImpNSPR::accept () {
     PRFileDesc* accept_sock;
     InetAddr addr;
     SocketStreamImpNSPR* new_sock;
 
     // Accept an incoming connection request.
-    accept_sock = PR_Accept(m_handle, addr->getPRNetAddr(), PR_INTERVAL_NO_TIMEOUT);
+    accept_sock = PR_Accept(m_handle, addr.getPRNetAddr(), PR_INTERVAL_NO_TIMEOUT);
 
-    if (NULL == accept_socks) {
+    if (NULL == accept_sock) {
        NSPR_PrintError("SocketStreamImpNSPR::accept: Cannot accept on socket: ");
        return NULL;
     }

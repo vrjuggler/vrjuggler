@@ -33,11 +33,17 @@
 #ifndef _VPR_SOCKET_IMP_NSPR_H_
 #define _VPR_SOCKET_IMP_NSPR_H_
 
+#include <vprConfig.h>
+
 #include <string>
 #include <vector>
 
 #include <IO/BlockIO.h>
 #include <IO/Socket/InetAddr.h>
+#include <md/NSPR/NSPRHelpers.h>
+
+#include <prio.h>
+
 #include <IO/Socket/SocketTypes.h>
 #include <IO/Socket/SocketOptions.h>
 
@@ -80,7 +86,7 @@ public:
         bool retval(false);
         PRStatus status;
 
-        status == PRClose(m_handle);
+        status = PR_Close(m_handle);
 
         if(status == PR_SUCCESS)
         {
@@ -141,7 +147,7 @@ public:
        if ( status == PR_FAILURE )
        {
           NSPR_PrintError("SocketImpNSPR::bind: Failed to bind.");
-          return fale;
+          return false;
        }
        return true;
     }
@@ -161,7 +167,7 @@ public:
        if ( status == PR_FAILURE )
        {
           NSPR_PrintError("SocketImpNSPR::bind: Failed to bind.");
-          return fale;
+          return false;
        }
        return true;
     }

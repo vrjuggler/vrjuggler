@@ -34,10 +34,13 @@
 #ifndef _VPR_INET_ADDR_NSPR_H_
 #define _VPR_INET_ADDR_NSPR_H_
 
+#include <vprConfig.h>
+
 #include <IO/Socket/SocketTypes.h>
-#include <Utils/Assert.h>
+#include <IO/Socket/InetAddrBase.h>
 
 #include <prio.h>
+#include <prnetdb.h>
 
 namespace vpr {
 
@@ -47,7 +50,7 @@ namespace vpr {
 class InetAddrNSPR : public InetAddrBase
 {
 public:
-    static const InetAddr AnyAddr;     // constructor defaults to any addr
+    static const InetAddrNSPR AnyAddr;     // constructor defaults to any addr
 
     // ------------------------------------------------------------------------
     //: Default constructor.  This initializes the memory for the encapsulated
@@ -146,7 +149,7 @@ public:
     Uint16
     getPort (void) const
     {
-       return PR_ntohs(PR_NetAddrInetPort(mAddr.inet.port));
+       return PR_ntohs(PR_NetAddrInetPort(&mAddr));
     }
 
     // ------------------------------------------------------------------------
@@ -161,7 +164,7 @@ public:
     // ------------------------------------------------------------------------
     inline void
     setPort (const Uint16 port)
-    { PR_NetAddrInetPort(mAddr) = PR_htons(port); }
+    { PR_NetAddrInetPort(&mAddr) = PR_htons(port); }
 
     // ------------------------------------------------------------------------
     //: Get this address structure's Internet address in host byte order.
@@ -235,7 +238,10 @@ public:
     // ------------------------------------------------------------------------
     InetAddrNSPR&
     operator= (const InetAddrNSPR& addr)
-    { mAddr = addr.mAddr;}
+    {
+       mAddr = addr.mAddr;
+       return *this;
+    }
 
     // --- Impl specific --- //
 

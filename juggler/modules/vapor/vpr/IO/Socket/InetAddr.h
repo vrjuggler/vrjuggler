@@ -33,6 +33,7 @@
 #ifndef _VPR_INET_ADDR_H_
 #define _VPR_INET_ADDR_H_
 
+#include <vprConfig.h>
 
 #if defined(VPR_USE_NSPR)
 #   include <md/NSPR/InetAddrNSPR.h>
