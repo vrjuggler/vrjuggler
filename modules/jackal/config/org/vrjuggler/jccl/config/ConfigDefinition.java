@@ -45,11 +45,12 @@ public class ConfigDefinition
    /**
     * Creates a new configuration definition using the given metadata.
     */
-   public ConfigDefinition(String name, String token, int version,
-                           String help, List categories, List propDefs)
+   public ConfigDefinition(String name, String token, String icon_location, 
+                           int version, String help, List categories, List propDefs)
    {
       mName = name;
       mToken = token;
+      mIconLocation = icon_location;
       mVersion = version;
       mHelp = help;
       mCategories = categories;
@@ -94,6 +95,15 @@ public class ConfigDefinition
       String old_token = mToken;
       mToken = token;
       fireTokenChanged(old_token);
+   }
+
+   /**
+    * Gets the location of the icon that is associated with this
+    * ConfigDefinition.
+    */
+   public String getIconLocation()
+   {
+      return mIconLocation;
    }
 
    /**
@@ -263,6 +273,7 @@ public class ConfigDefinition
          ConfigDefinition d = (ConfigDefinition)obj;
          if (mName.equals(d.mName) &&
              mToken.equals(d.mToken) &&
+             mIconLocation.equals(d.mIconLocation) &&
              mVersion == d.mVersion &&
              mCategories.equals(d.mCategories) &&
              mHelp.equals(d.mHelp) &&
@@ -441,6 +452,9 @@ public class ConfigDefinition
    /** The unique token for this definition. */
    private String mToken;
 
+   /** The location of the icon that will be used for the definition */
+   private String mIconLocation;
+   
    /** The version string for this definition. */
    private int mVersion;
 

@@ -71,6 +71,7 @@ public class ConfigDefinitionParser
       {
          throw new MissingAttributeException(NAME);
       }
+      
 
       List defs = new ArrayList();
       // Parse the various versions of this definition
@@ -142,9 +143,27 @@ public class ConfigDefinitionParser
          prop_defs.add(parsePropertyDefinition(elt));
       }
 
+      // Get the parent and the icon location.
+      Element parent = root.getParent();
+      String icon_location;
+      if(null == parent)
+      {
+         throw new ParseException("Elment must have a parent node");
+      }
+      else
+      {
+         // Verify that this definition has a name
+         icon_location = parent.getAttributeValue(ICON_PATH);
+         if (icon_location == null)
+         {
+            throw new MissingAttributeException(ICON_PATH);
+         }
+      }
+
       // Create the new configuration definition
       return new ConfigDefinition(label,
                                   name,
+                                  icon_location,
                                   version,
                                   help,
                                   categories,
@@ -361,6 +380,7 @@ public class ConfigDefinitionParser
    private static final String HELP                   = "help";
    private static final String LABEL                  = "label";
    private static final String NAME                   = "name";
+   private static final String ICON_PATH              = "icon_path";
    private static final String PARENT                 = "parent";
    private static final String PROPERTY               = "property";
    private static final String VALUE                  = "value";
