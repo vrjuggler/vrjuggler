@@ -220,7 +220,7 @@ void PfDrawManager::callAppChanFuncs()
          for(unsigned ch=0;ch<2;ch++)
          {
             if(mDisplays[dispIndex].viewports[vp].chans[ch] != NULL)
-               app->appChanFunc(mDisplays[dispIndex].viewports[vp].chans[ch]);
+               mApp->appChanFunc(mDisplays[dispIndex].viewports[vp].chans[ch]);
          }
       }
    }
@@ -235,7 +235,7 @@ void PfDrawManager::callAppChanFuncs()
 void PfDrawManager::setApp(App* _app)
 {
    //vprASSERT(app != NULL);
-   app = dynamic_cast<PfApp*>(_app);
+   mApp = dynamic_cast<PfApp*>(_app);
    if(mPfHasForked)
       initAppGraph();         // If pf is already started, then intialize the app scene graph
 
@@ -255,7 +255,7 @@ void PfDrawManager::initAPI()
    vprASSERT(mDisplayManager != NULL);
    configDisplaySystem(mDisplayManager->getDisplaySystemChunk());    // Configure all the display system stuff
 
-   app->preForkInit();
+   mApp->preForkInit();
 
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_STATE_LVL) << "vjPfDrawManager::initAPI: Entering." << std::endl << vprDEBUG_FLUSH;
 
@@ -278,7 +278,7 @@ void PfDrawManager::initAPI()
 
    initSimulatorGraph();        // Create the simulator scene graph nodes
    initPerformerGraph();        // Create the other scene graph nodes
-   if(app != NULL)
+   if(mApp != NULL)
       initAppGraph();           // App was already set, but pf was not loaded.  So load graph now
 
 
@@ -725,7 +725,7 @@ std::vector<int> PfDrawManager::getMonoFBConfig(vrj::Display* disp)
    configFrameBuffer(disp, mono_fb);
 
    // Add application requests
-   std::vector<int> app_fb = app->getFrameBufferAttrs();
+   std::vector<int> app_fb = mApp->getFrameBufferAttrs();
    mono_fb.insert(mono_fb.end(), app_fb.begin(), app_fb.end());
 
 #ifdef VPR_OS_Win32
@@ -747,7 +747,7 @@ std::vector<int> PfDrawManager::getStereoFBConfig(vrj::Display* disp)
    configFrameBuffer(disp, stereo_fb);
 
    // Add application requests
-   std::vector<int> app_fb = app->getFrameBufferAttrs();
+   std::vector<int> app_fb = mApp->getFrameBufferAttrs();
    stereo_fb.insert(stereo_fb.end(), app_fb.begin(), app_fb.end());
 
 #ifdef VPR_OS_Win32
@@ -857,11 +857,11 @@ void PfDrawManager::initPerformerGraph()
 // - replace with new app scene child
 void PfDrawManager::initAppGraph()
 {
-   app->initScene();
+   mApp->initScene();
    if(mSceneRoot != NULL)
       mSceneGroup->removeChild(mSceneRoot);
 
-   mSceneRoot = app->getScene();
+   mSceneRoot = mApp->getScene();
    mSceneGroup->addChild(mSceneRoot);
 }
 
@@ -927,6 +927,10 @@ void PfDrawManager::closeAPI()
 void PfDrawManager::updatePfProjections()
 {
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "vjPfDrawManager::updatePfProjections: Entering." << std::endl << vprDEBUG_FLUSH;
+
+   // Update display projections
+   float scale_factor = mApp->getDrawScaleFactor();
+   mDisplayManager->updateProjections(scale_factor);
 
    // --- Update the channel projections --- //
    //for(each pfDisp)
@@ -1076,7 +1080,7 @@ PfDrawManager::pfDisp* PfDrawManager::getPfDisp(pfChannel* chan)
 void PfDrawManager::debugDump(int debugLevel)
 {
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,debugLevel) << "-- DEBUG DUMP --------- " << clrOutNORM(clrCYAN,"vjPfDrawManager:") << (void*)this << " ------------" << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)       << "app:" << (void*)app << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)       << "app:" << (void*)mApp << std::endl << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)       << "scene:" << (void*)mRoot << std::endl << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)       << "sim scene:" << (void*)mRootWithSim << std::endl << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)       << "Disps:" << mDisplays.size() << std::endl << vprDEBUG_FLUSH;
@@ -1134,7 +1138,7 @@ void PFconfigPWin(pfPipeWindow* pWin)
    pfInitGfx();
 
    // Call user config function
-   dm->app->configPWin(pWin);
+   dm->mApp->configPWin(pWin);
 
    // Ouput the visual id
    int fb_id = pWin->getFBConfigId();
@@ -1205,7 +1209,7 @@ void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, b
    }
 
    // -- Configure buffers for correct eye/stereo etc -- //
-   PfDrawManager::instance()->app->drawChan(chan, chandata);     // Draw the channel
+   PfDrawManager::instance()->mApp->drawChan(chan, chandata);     // Draw the channel
                                           // Note: This function calls pfDraw and clears
 
    // How should we draw the simulator
