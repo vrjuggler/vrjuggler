@@ -50,8 +50,8 @@ namespace jccl
 namespace vrj
 {
 
-class PerformanceMonitorSubjectImpl;
-class PerformanceMediator;
+   class PerformanceMonitorSubjectImpl;
+   class PerformanceMediator;
 
 /**
  * CORBA remote performance monitor implementation. Handles
@@ -60,86 +60,86 @@ class PerformanceMediator;
  *
  * @date July 31, 2002
  */
-class CorbaPerfPlugin
-   : public vrj::PerfPlugin
-   , public jccl::ConfigElementHandler
-{
-
-public:
-   CorbaPerfPlugin(vrj::PerformanceMediator* mediator, jccl::ConfigManager* configMgr);
-
-   virtual ~CorbaPerfPlugin();
-
-   bool configCanHandle(jccl::ConfigElementPtr e);
-
-   bool configAdd(jccl::ConfigElementPtr e);
-
-   bool configRemove(jccl::ConfigElementPtr e);
-
-   /** Stubbed out function required by the vrj::PerfPlugin interface. */
-   vpr::ReturnStatus init();
-
-   /** Stubbed out function required by the vrj::PerfPlugin interface. */
-   vpr::ReturnStatus enable();
-
-   bool isEnabled() const;
-
-   /**
-    * Turns off the interface to RTRC (disallow incoming connections).
-    */
-   void disable();
-
-   /**
-    * Invokes the global scope delete operator.  This is required for proper
-    * releasing of memory in DLLs on Win32.
-    */
-   void operator delete(void* p)
+   class CorbaPerfPlugin
+      : public vrj::PerfPlugin
+      , public jccl::ConfigElementHandler
    {
-      ::operator delete(p);
-   }
 
-protected:
-   virtual void destroy()
-   {
-      delete this;
-   }
+   public:
+      CorbaPerfPlugin(vrj::PerformanceMediator* mediator, jccl::ConfigManager* configMgr);
 
-private:
-   /**
-    * Initializes and activates the local CORBA instance that we need for
-    * handling remote reconfiguration requests.
-    *
-    * @param nsHost  The name of the host computer where the CORBA Naming
-    *                Service is running.
-    * @param nsport  The port number on which the CORBA Naming Service is
-    *                listening for incoming connections.
-    * @param iiopVer The version of IIOP the Naming Service is using.  This
-    *                is normally 1.0 or 1.2.
-    */
-   vpr::ReturnStatus startCorba(const std::string& nsHost,
-                                const vpr::Uint16 nsPort,
-                                const std::string& iiopVer);
+      virtual ~CorbaPerfPlugin();
 
-   /**
-    * Disables the local CORBA instance and releases the resources allocated
-    * in startCorba().  The CORBA instance is only disabled if isEnabled()
-    * returns true.
-    *
-    * @post The local CORBA instance is running, and the memory allocated for
-    *       it (held in mCorbaManager and mInterface) is released.
-    */
-   void stopCorba();
+      bool configCanHandle(jccl::ConfigElementPtr e);
 
-   vrj::PerformanceMediator* mMediator;
-   // XXX: We hold a pointer to the Config Manager because we can get into a
-   // deadlock state by trying to access the Config Manager through its
-   // singleton interface.
-   jccl::ConfigManager* mConfigManager;
-   tweek::CorbaManager* mCorbaManager;
-   PerformanceMonitorSubjectImpl* mInterface;
-   bool mEnabled;
-   std::string mInterfaceName;
-};
+      bool configAdd(jccl::ConfigElementPtr e);
+
+      bool configRemove(jccl::ConfigElementPtr e);
+
+      /** Stubbed out function required by the vrj::PerfPlugin interface. */
+      vpr::ReturnStatus init();
+
+      /** Stubbed out function required by the vrj::PerfPlugin interface. */
+      vpr::ReturnStatus enable();
+
+      bool isEnabled() const;
+
+      /**
+       * Turns off the interface to RTRC (disallow incoming connections).
+       */
+      void disable();
+
+      /**
+       * Invokes the global scope delete operator.  This is required for proper
+       * releasing of memory in DLLs on Win32.
+       */
+      void operator delete(void* p)
+      {
+         ::operator delete(p);
+      }
+
+   protected:
+      virtual void destroy()
+      {
+         delete this;
+      }
+
+   private:
+      /**
+       * Initializes and activates the local CORBA instance that we need for
+       * handling remote reconfiguration requests.
+       *
+       * @param nsHost  The name of the host computer where the CORBA Naming
+       *                Service is running.
+       * @param nsport  The port number on which the CORBA Naming Service is
+       *                listening for incoming connections.
+       * @param iiopVer The version of IIOP the Naming Service is using.  This
+       *                is normally 1.0 or 1.2.
+       */
+      vpr::ReturnStatus startCorba(const std::string& nsHost,
+                                   const vpr::Uint16 nsPort,
+                                   const std::string& iiopVer);
+
+      /**
+       * Disables the local CORBA instance and releases the resources allocated
+       * in startCorba().  The CORBA instance is only disabled if isEnabled()
+       * returns true.
+       *
+       * @post The local CORBA instance is running, and the memory allocated for
+       *       it (held in mCorbaManager and mInterface) is released.
+       */
+      void stopCorba();
+
+      vrj::PerformanceMediator* mMediator;
+      // XXX: We hold a pointer to the Config Manager because we can get into a
+      // deadlock state by trying to access the Config Manager through its
+      // singleton interface.
+      jccl::ConfigManager* mConfigManager;
+      tweek::CorbaManager* mCorbaManager;
+      PerformanceMonitorSubjectImpl* mInterface;
+      bool mEnabled;
+      std::string mInterfaceName;
+   };
 
 } // namespace vrj
 
