@@ -23,7 +23,7 @@ import VjGUI.*;
 import VjGUI.configchunk.*;
 import VjGUI.util.*;
 
-public class VarValueBigChunkPanel extends VarValuePanel implements ActionListener, ConfigChunkFrame.ConfigChunkFrameParent {
+public class VarValueBigChunkPanel extends VarValuePanel implements ActionListener, JFrameParent {
 
     VarValuePanelParent     parent; // the parent is a listener on the remove button
     Property      prop;
@@ -85,28 +85,22 @@ public class VarValueBigChunkPanel extends VarValuePanel implements ActionListen
 	if (e.getSource() == removebutton)
 	    parent.removePanel(this);
 	else if (e.getSource() == editbutton) {
-	    chunkframe = new ConfigChunkFrame (this, chunk);
+	    if (chunkframe == null)
+		chunkframe = new ConfigChunkFrame (this, chunk);
 	}
     }
 
 
-    public void closedChunkFrame (ConfigChunkFrame f, boolean ok) {
-	if (chunkframe != f) {
+    public void closedChild (JFrame frame, boolean ok) {
+	if (chunkframe != frame) {
 	    Core.consoleErrorMessage ("VarValueBigChunkPanel", 
 				      "Got a closedChunkFrame for a ChunkFrame I never made!!! EEEK!");
 	}
 	else if (ok) {
-	    chunk = f.getValue();
-	    //ConfigChunk newc, oldc;
-	    //oldc = f.getOldValue();
-	    //newc = f.getValue();
-	    //current_treemodel.replaceNode (oldc, newc);
-	    //if (current_treemodel == Core.active_treemodel) {
-	    //System.out.println ("ought to send chunk across network...");
-	    //VjControl.net.sendChunk(newc);
-	    //}
+	    chunk = chunkframe.getValue();
 	}
-	//chunk_frames.removeElement(f);
+	chunkframe.dispose();
+	chunkframe = null;
     }
 
 }

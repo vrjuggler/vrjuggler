@@ -17,18 +17,13 @@ import javax.swing.border.*;
 import VjConfig.*;
 import VjGUI.chunkdesc.*;
 import VjGUI.Core;
+import VjGUI.util.JFrameParent;
 
 public class ChunkDescFrame 
     extends JFrame 
     implements ActionListener, WindowListener { 
 
-
-    public interface ChunkDescFrameParent {
-	public void closedDescFrame (ChunkDescFrame f, boolean ok);
-    };
-
-
-    ChunkDescFrameParent parent;
+    JFrameParent parent;
     ChunkDesc desc;
     Vector proppanels; // property description panels.
     JPanel properties;
@@ -43,7 +38,7 @@ public class ChunkDescFrame
     JPanel mainpanel, buttonspanel, northpanel;
 
 
-    public ChunkDescFrame (ChunkDescFrameParent p, 
+    public ChunkDescFrame (JFrameParent p, 
 			   ChunkDesc _desc,
 			   boolean _editable) {
 	super("Edit ChunkDesc: "+_desc.name);
@@ -187,9 +182,8 @@ public class ChunkDescFrame
 	for (int i = 0; i < proppanels.size(); i++) {
 	    ((PropertyDescPanel)proppanels.elementAt(i)).closeFrames();
 	}
-	parent.closedDescFrame(this, ok);
+	parent.closedChild(this, ok);
 	/* tell our parent ChunkDescDBPanel we're going away */
-	dispose();
     }
 
 

@@ -9,11 +9,11 @@ import java.util.Vector;
 
 import VjConfig.*;
 import VjGUI.*;
+import VjGUI.util.JFrameParent;
 import VjGUI.configchunk.ConfigChunkFrame;
 
 public class ChunkDBPanel extends JPanel 
-    implements ActionListener, MouseListener,
-	     ConfigChunkFrame.ConfigChunkFrameParent {
+    implements ActionListener, MouseListener, JFrameParent {
 
 
     int controls_on_side; // 0 for left, 1 for right;
@@ -31,6 +31,7 @@ public class ChunkDBPanel extends JPanel
     JButton close_button;
     JButton duplicate_button;
     JButton chunkhelp_button;
+    JButton checkdepend_button;
     JComboBox db_combobox;
     JComboBox insert_type;
     JScrollPane scroll_pane;
@@ -76,7 +77,7 @@ public class ChunkDBPanel extends JPanel
 	close_button.setMargin (ins);
 
 	side_panel = new JPanel();
-	side_panel.setLayout (new GridLayout (11, 1));
+	side_panel.setLayout (new GridLayout (12, 1));
 
 	side_panel.add (new JLabel ("File"));
 
@@ -84,6 +85,8 @@ public class ChunkDBPanel extends JPanel
 	side_panel.add (load_button);
 	side_panel.add (save_button);
 	side_panel.add (close_button);
+
+	side_panel.add (checkdepend_button = new JButton ("Verify"));
 
 	side_panel.add (new JLabel ("Chunk"));
 	if (controls_on_side == 0) {
@@ -142,6 +145,7 @@ public class ChunkDBPanel extends JPanel
 	db_combobox.addActionListener (this);
 	load_button.addActionListener (this);
 	save_button.addActionListener (this);
+	checkdepend_button.addActionListener (this);
 	insert_button.addActionListener (this);
 	duplicate_button.addActionListener (this);
 	remove_button.addActionListener (this);
@@ -286,6 +290,12 @@ public class ChunkDBPanel extends JPanel
 	}
 	else if (source == close_button) {
 	    Core.closeChunkDB (current_treemodel);
+	}
+	else if (source == checkdepend_button) {
+	    Vector vec = current_treemodel.chunkdb.getDependencies();
+	    System.out.println ("Dependencies for foo:\n" + vec);
+	    DependencyFrame depf = new DependencyFrame(vec);
+	    depf.show();
 	}
 	else if (source == remove_button) {
 	    System.out.println ("Remove button pressed");
@@ -460,42 +470,23 @@ if (e.getClickCount() == 1) {
 
 
 
-  public void closedChunkFrame (ConfigChunkFrame f, boolean ok) {
-    if (ok) {
-      ConfigChunk newc, oldc;
-      oldc = f.getOldValue();
-      newc = f.getValue();
-      current_treemodel.replaceNode (oldc, newc);
-      if (current_treemodel == Core.active_treemodel) {
-	System.out.println ("ought to send chunk across network...");
-	//VjControl.net.sendChunk(newc);
-      }
+    public void closedChild (JFrame frame, boolean ok) {
+	ConfigChunkFrame f = (ConfigChunkFrame)frame;
+	if (ok) {
+	    ConfigChunk newc, oldc;
+	    oldc = f.getOldValue();
+	    newc = f.getValue();
+	    current_treemodel.replaceNode (oldc, newc);
+	    if (current_treemodel == Core.active_treemodel) {
+		System.out.println ("sending chunk across network...");
+		Core.net.sendChunk(newc);
+	    }
+	}
+	chunk_frames.removeElement(f);
+	f.dispose();
     }
-    chunk_frames.removeElement(f);
-  }
 
 
-//     public void mouseClicked(MouseEvent e) {}
-//     public void mouseEntered(MouseEvent e) {}
-//     public void mouseExited(MouseEvent e) {}
-//     public void mouseReleased(MouseEvent e) {}
-
-//     public void mousePressed(MouseEvent e) {
-// 	int mod = e.getModifiers();
-// 	if ((mod == MouseEvent.BUTTON2_MASK) || (mod == MouseEvent.BUTTON3_MASK)) {
-// 	    //System.out.println ("RightButtonClick");
-// 	    treeitem_menu_path = current_treemodel.tree.getPathForLocation (e.getX(), e.getY());
-// 	    //System.out.println (tp);
-// 	    if (treeitem_menu_path != null) {
-// 		DefaultMutableTreeNode n = (DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent();
-// 		ChunkTreeNodeInfo info = (ChunkTreeNodeInfo)n.getUserObject();
-// 		if (info.isDescNode())
-// 		    desctreeitem_menu.show (current_treemodel.tree, e.getX(), e.getY());
-// 		if (info.isChunkNode())
-// 		    chunktreeitem_menu.show (current_treemodel.tree, e.getX(), e.getY());
-// 	    }
-// 	}
-//     }
 
 }
 

@@ -185,6 +185,7 @@ public class FileControl {
 	    chooser.setSelectedFile (file);
 	}
 	chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+	chooser.setFileHidingEnabled (false);
 	chooser.setApproveButtonText("Save");
 	chooser.setDialogTitle("Save File...");
 

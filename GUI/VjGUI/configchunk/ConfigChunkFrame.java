@@ -14,7 +14,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import VjConfig.*;
 import VjGUI.*;
-import VjGUI.configchunk.*;
+//import VjGUI.configchunk.*;
 import VjGUI.util.*;
 
 public class ConfigChunkFrame extends JFrame 
@@ -25,26 +25,24 @@ public class ConfigChunkFrame extends JFrame
     JPanel properties;
     JButton cancelbutton;
     JButton okbutton;
+    JButton helpbutton;
     JTextField namef;
     JTextField helpfield;
     JScrollPane sp;
-    ConfigChunkFrameParent parent;
+    JFrameParent parent;
 
     GridBagLayout playout;
     GridBagConstraints pconstraints;
 
-  public interface ConfigChunkFrameParent {
-    public void closedChunkFrame (ConfigChunkFrame f, boolean ok);
-  };
 
-    public ConfigChunkFrame ( 
-			     ConfigChunkFrameParent par, 
+
+    public ConfigChunkFrame (JFrameParent par, 
 			     ConfigChunk ch) {
 	super("Edit " + ch.getDescName() + ": " + ch.getName());
 
 	Core.consoleTempMessage ("Opening ConfigChunk Window: " + ch.getName());
 
-	//	Point p = c.ui.getLocation();
+	//Point p = c.ui.getLocation();
 	//c.ui.waitdialog.setLocation(p.x + 100,p.y + 100);
 	//c.ui.waitdialog.show();
 
@@ -99,6 +97,9 @@ public class ConfigChunkFrame extends JFrame
 	cancelbutton = new JButton ("Cancel");
 	cancelbutton.addActionListener (this);
 	southpanel.add (cancelbutton);
+	helpbutton = new JButton ("Help");
+	helpbutton.addActionListener (this);
+	southpanel.add (helpbutton);
 	mainp.add(southpanel, "South");
 
 	addWindowListener(this);
@@ -123,7 +124,7 @@ public class ConfigChunkFrame extends JFrame
 	setVisible(true);
 
 	Core.consoleTempMessage ("");
-  }
+    }
 
 
 
@@ -133,9 +134,11 @@ public class ConfigChunkFrame extends JFrame
 
 
 
-  public ConfigChunk getOldValue() {
-    return chunk;
-  }
+    public ConfigChunk getOldValue() {
+	return chunk;
+    }
+
+
 
     public ConfigChunk getValue() {
 	/* returns a configchunk based on the values current 
@@ -151,20 +154,16 @@ public class ConfigChunkFrame extends JFrame
 
 
 
-    public void closeFrame(boolean ok) {
-	parent.closedChunkFrame(this, ok);
-	dispose();
-    }
-
-
-
     public void actionPerformed (ActionEvent e) {
 	ConfigChunk newc;
 	if (e.getSource() == cancelbutton) {
-	    closeFrame(false);
+	    parent.closedChild (this, false);
 	}
 	else if (e.getSource() == okbutton) {
-	    closeFrame(true);
+	    parent.closedChild (this, true);
+	}
+	else if (e.getSource() == helpbutton) {
+	    Core.ui.loadDescHelp (chunk.desc.getToken());
 	}
     }
 
@@ -174,7 +173,7 @@ public class ConfigChunkFrame extends JFrame
     public void windowActivated(WindowEvent e) {}
     public void windowClosed(WindowEvent e) {}
     public void windowClosing(WindowEvent e) {
-	closeFrame(false);
+	parent.closedChild (this, false);
     }
     public void windowDeactivated(WindowEvent e) {}
     public void windowDeiconified(WindowEvent e) {}

@@ -27,6 +27,7 @@ VJGUI_SOURCES = VjGUI/VjControl.java		\
 		VjGUI/Core.java			\
 		VjGUI/DescDBPanel.java		\
 		VjGUI/HTMLFrame.java		\
-		VjGUI/SuffixFilter.java
+		VjGUI/SuffixFilter.java         \
+		VjGUI/DependencyFrame.java      
 
 VJGUI_OBJS = ${VJGUI_SOURCES:.java=.class}
