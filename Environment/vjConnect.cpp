@@ -17,11 +17,12 @@
 
 
 
-vjConnect::vjConnect(int s, const std::string& _name): output(), commands_mutex() {
+vjConnect::vjConnect(int s, const std::string& _name,
+		     vjConnectMode _mode): output(), commands_mutex() {
     vjDEBUG(2) << "EM: Creating vjConnect to file or socket\n"
 	       << vjDEBUG_FLUSH;
     fd = s;
-    readable = true;
+    mode = _mode;
 
     filename = "no_file_name";
     name = _name;
@@ -35,7 +36,8 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
 
     filename = (std::string)c->getProperty ("FileName");
     name = (std::string)c->getProperty ("Name");
-    readable = c->getProperty ("Readable");
+    //readable = c->getProperty ("Readable");
+    mode = (vjConnectMode)(int)c->getProperty ("Mode");
 
     connect_thread = NULL;
     fd = open (filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0660 );
@@ -44,8 +46,10 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
 		   << vjDEBUG_FLUSH;
     }
     output.attach (fd);
-    output << "VR Juggler FileConnect output " << name << endl;
-    output << flush;
+
+    // logging information to output file...
+    if (mode == VJC_OUTPUT)
+	output << "VR Juggler FileConnect output " << name << endl;
     //vjDEBUG(0) << "Created vjConnect for " << name << endl << vjDEBUG_FLUSH;
 }
 
@@ -85,17 +89,20 @@ bool vjConnect::stopProcess() {
 
 
 void vjConnect::sendDescDB (vjChunkDescDB* db) {
-    commands.push (new vjCommandSendDescDB (db));
+    if (mode != VJC_INPUT)
+	commands.push (new vjCommandSendDescDB (db));
 }
 
 
 void vjConnect::sendChunkDB (vjConfigChunkDB* db, bool all) {
-    commands.push (new vjCommandSendChunkDB (db, all));
+    if (mode != VJC_INPUT)
+	commands.push (new vjCommandSendChunkDB (db, all));
 }
 
 
 void vjConnect::sendRefresh () {
-    commands.push (new vjCommandRefresh);
+    if (mode == VJC_INTERACTIVE)
+	commands.push (new vjCommandRefresh);
 }
 
 
@@ -103,9 +110,11 @@ void vjConnect::sendRefresh () {
 //! ARGS: _tu - a vjTimedUpdate* 
 //! ARGS: _refresh_time - time between refreshes, in milliseconds
 void vjConnect::addTimedUpdate (vjTimedUpdate* _tu, float _refresh_time) {
-    commands_mutex.acquire();
-    timed_commands.push (new vjCommandTimedUpdate (_tu, _refresh_time));
-    commands_mutex.release();
+    if (mode != VJC_INPUT) {
+	commands_mutex.acquire();
+	timed_commands.push (new vjCommandTimedUpdate (_tu, _refresh_time));
+	commands_mutex.release();
+    }
 }
 
 
@@ -151,20 +160,24 @@ void vjConnect::controlLoop(void* nullParam) {
    ifstream fin(fd);
 
    while (!shutdown) {
-       pollfdstruct.revents = 0;
-       poll (&pollfdstruct, 1, 500); // check 2x/sec responsive enough?
-       
-       //cout << "connect loop " << name << " finished poll, revents = " << pollfdstruct.revents << endl;
+       if (mode != VJC_OUTPUT) {
+	   pollfdstruct.revents = 0;
+	   poll (&pollfdstruct, 1, 500); // check 2x/sec responsive enough?
+	   
+	   //cout << "connect loop " << name << " finished poll, revents = " << pollfdstruct.revents << endl;
 
-       if ((pollfdstruct.revents & POLLHUP) || (pollfdstruct.revents & POLLNVAL)) {
-	   vjDEBUG(0) << "vjConnect to file " << fd << " exiting\n"
-		      << vjDEBUG_FLUSH;
-	   break;
-       }
-       //else if ((pollfdstruct.revents & POLLIN) || (pollfdstruct.revents & POLLPRI)) {
-       if (readable)
+	   if ((pollfdstruct.revents & POLLHUP) || (pollfdstruct.revents & POLLNVAL)) {
+	       vjDEBUG(0) << "vjConnect to file " << fd << " exiting\n"
+			  << vjDEBUG_FLUSH;
+	       break;
+	   }
+	   //else if ((pollfdstruct.revents & POLLIN) || (pollfdstruct.revents & POLLPRI)) {
 	   readCommand(fin);
 	   //}
+       }
+       else {
+	   usleep (500000); // half a sec
+       }
 
        commands_mutex.acquire();
 
@@ -176,15 +189,13 @@ void vjConnect::controlLoop(void* nullParam) {
        }
 
        current_time.set();
-       //cout << "timed commands have " << timed_commands.size() << " entries\n";
+
        //cout << "current time is " << current_time.usecs()/1000 << " msecs" << endl;
        while (!timed_commands.empty()) {
 	   cmd = timed_commands.top();
-	   //cout << "examing timed command; next fire time is " << cmd->next_fire_time << endl;
 	   if (current_time.usecs() < (cmd->next_fire_time * 1000))
 	       break;
 	   timed_commands.pop();
-	   //cout << cmd->getName() << " - fire!!" << endl;
 	   cmd->call (output);
 	   cmd->resetFireTime (current_time);
 	   timed_commands.push (cmd);
