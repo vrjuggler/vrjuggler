@@ -321,12 +321,17 @@ public class ConfigChunk
          {
             String prop_type = prop_desc.getToken();
             int prop_count = this.getPropertyCount(prop_type);
+            ConfigChunk emb_chunk;
 
             for ( int j = 0; j < prop_count; ++j )
             {
-               ConfigChunk emb_chunk =
-                  this.getProperty(prop_type, j).getEmbeddedChunk();
-               chunks.add(emb_chunk);
+               emb_chunk = this.getProperty(prop_type, j).getEmbeddedChunk();
+
+               // Do not return null child chunks.
+               if ( null != emb_chunk )
+               {
+                  chunks.add(emb_chunk);
+               }
             }
          }
       }
