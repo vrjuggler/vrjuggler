@@ -92,10 +92,10 @@ AC_DEFUN(VPR_PATH,
     if test "x$VPR_CONFIG" = "xno" ; then
         no_vpr=yes
     else
-        VPR_CXXFLAGS=`$VPR_CONFIG $vpr_config_args --cxxflags`
-        VPR_EXTRA_LIBS=`$VPR_CONFIG $vpr_config_args --extra-libs`
-        VPR_LIBS="`$VPR_CONFIG $vpr_config_args --libs` $VPR_EXTRA_LIBS"
-        VPR_LIBS_STATIC="`$VPR_CONFIG $vpr_config_args --libs --static` $VPR_EXTRA_LIBS"
+        VPR_CXXFLAGS=`$VPR_CONFIG $vpr_config_args --cxxflags $ABI`
+        VPR_EXTRA_LIBS=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI`
+        VPR_LIBS="`$VPR_CONFIG $vpr_config_args --libs $ABI` $VPR_EXTRA_LIBS"
+        VPR_LIBS_STATIC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static` $VPR_EXTRA_LIBS"
         VPR_VERSION=`$VPR_CONFIG --version`
         DPP_VERSION_CHECK_MSG(VPR, $VPR_VERSION, $min_vpr_version,
                               vpr_cv_vpr_version, $2, $3)
