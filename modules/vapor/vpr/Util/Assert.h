@@ -53,7 +53,7 @@
 #   include <assert.h>
 #   include <iostream>
 #   include <vpr/SystemBase.h>
-#   define vprASSERT(val) if(!(val)) { std::cout << vpr::SystemBase::getCallStack(); }  assert((val))
+#   define vprASSERT(val) { if(!(val)) { std::cout << vpr::SystemBase::getCallStack(); assert((val)); } }
 #else
 #   define vprASSERT(val) ((void)0)
 #endif
