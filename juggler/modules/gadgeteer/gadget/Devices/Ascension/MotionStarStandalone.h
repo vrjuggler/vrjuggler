@@ -719,7 +719,7 @@ private:
     //! RETURNS: The z-axis rotation as a floating-point value in degrees.
     // ------------------------------------------------------------------------
     inline float
-    getRoll (const int offset) {
+    getZRot (const int offset) {
       return (m_xmtr_rot_scale *
                (float) toShort(response.buffer[8 + offset],
                                response.buffer[9 + offset]) /
@@ -739,7 +739,7 @@ private:
     //! RETURNS: The y-axis rotation as a floating-point value in degrees.
     // ------------------------------------------------------------------------
     inline float
-    getAzimuth (const int offset) {
+    getYRot (const int offset) {
         return (m_xmtr_rot_scale *
                    (float) toShort(response.buffer[10 + offset],
                                    response.buffer[11 + offset]) /
@@ -759,7 +759,7 @@ private:
     //! RETURNS: The x-axis rotation as a floating-point value in degrees.
     // ------------------------------------------------------------------------
     inline float
-    getElevation (const int offset) {
+    getXRot (const int offset) {
         return (m_xmtr_rot_scale *
                    (float) toShort(response.buffer[12 + offset],
                                    response.buffer[13 + offset]) /
