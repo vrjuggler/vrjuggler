@@ -153,11 +153,6 @@ bool SoundFactory::isPlugin(vpr::LibraryPtr lib)
       errorOutput(lib, "newPlugin");
       return false;
    }
-   if (lib->findSymbol( "deletePlugin" ) == NULL)
-   {
-      errorOutput(lib, "deletePlugin");
-      return false;
-   }
    if (lib->findSymbol( "getVersion" ) == NULL)
    {
       errorOutput(lib, "getVersion");
@@ -255,10 +250,9 @@ void SoundFactory::unloadPlugins()
       }
 
       // delete the memory using the delete func that comes with the library...
-      deletePluginFunc deletePlugin = (deletePluginFunc)mPlugins[x]->findSymbol("deletePlugin" );
-      if (NULL != deletePlugin && NULL != impl)
+      if ( NULL != impl )
       {
-         deletePlugin( impl );
+         delete impl;
       }
 
       // close the library
