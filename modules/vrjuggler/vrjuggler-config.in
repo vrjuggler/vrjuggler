@@ -51,6 +51,7 @@ sub make_EXTRA_LDFLAGS($;$$$);
 sub handleOptArg($$);
 sub stripDuplicateCompilerArgs($);
 sub stripDuplicateLibraryArgs($);
+sub groupLibdirArgs($);
 
 # TODO: Do not use @prefix@ if possible.  Make use of @LOCAL_BOOST@.
 
@@ -367,7 +368,7 @@ sub make_LDFLAGS ($;$$$)
    my $full_ldflags = "$ldflags $static_begin $vrj_libs $static_end";
    $full_ldflags    =~ s/\s{2,}/ /g;
 
-   return stripDuplicateLibraryArgs("$full_ldflags");
+   return groupLibdirArgs(stripDuplicateLibraryArgs("$full_ldflags"));
 }
 
 sub make_EXTRA_LDFLAGS ($;$$$)
@@ -459,7 +460,7 @@ sub make_EXTRA_LDFLAGS ($;$$$)
 
    $full_extra_ldflags =~ s/\s{2,}/ /g;
 
-   return stripDuplicateLibraryArgs("$full_extra_ldflags");
+   return groupLibdirArgs(stripDuplicateLibraryArgs("$full_extra_ldflags"));
 }
 
 # Subroutine for handling command-line parameters that have an optional
@@ -583,4 +584,39 @@ sub stripDuplicateLibraryArgs($)
    }
 
    return join(" ", @new_args);
+}
+
+# This function processes the given list of linker arguments and does two
+# things:
+#
+#    1. Removes duplicate paths to library directories.
+#    2. Groups all paths to library directories so that they are at the
+#       beginning of the link line.
+#
+# All other arguments are retained exactly as they came in.
+sub groupLibdirArgs($)
+{
+   my @arg_list    = split(/\s+/, "$_[0]");
+   my %known_args  = ();
+   my @libdir_args = ();
+   my @new_args    = ();
+
+   my $arg;
+   foreach $arg ( @arg_list )
+   {
+      # Only look at arguments that name library directories.  All others
+      # will be retained no matter what.
+      if ( $arg =~ /^-L/ || $arg =~ /^[-\/]libpath/i )
+      {
+         next if exists($known_args{"$arg"});
+         $known_args{"$arg"} = 1;
+         push(@libdir_args, "$arg");
+      }
+      else
+      {
+         push(@new_args, "$arg");
+      }
+   }
+
+   return join(" ", @libdir_args, @new_args);
 }
