@@ -39,6 +39,7 @@
 
 
 void StringObserverImpl::update()
+   throw(CORBA::SystemException)
 {
    char* cur_value = mSubject->getValue();
 

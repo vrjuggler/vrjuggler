@@ -56,7 +56,7 @@ public:
    {
    }
 
-   virtual void update();
+   virtual void update() throw(CORBA::SystemException);
 
    void detach()
    {

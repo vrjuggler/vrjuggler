@@ -43,6 +43,7 @@ namespace CxxClientTest
 {
 
 void StringSubjectImpl::setValue(const char* value)
+   throw(CORBA::SystemException)
 {
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -58,6 +59,7 @@ void StringSubjectImpl::setValue(const char* value)
 }
 
 char* StringSubjectImpl::getValue()
+   throw(CORBA::SystemException)
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
