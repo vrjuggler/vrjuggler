@@ -32,7 +32,7 @@ int vjKernel::start()
 void vjKernel::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::controlLoop: Entered.\n" << vjDEBUG_FLUSH;
-
+   vjTimeStamp::initialize();
    // Do any initial configuration
    initConfig();
 
@@ -458,7 +458,7 @@ void vjKernel::stopDrawManager()
 void vjKernel::setupEnvironmentManager() {
    vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::setupEnvironmentManager\n"
               << vjDEBUG_FLUSH;
-   vjTimeStamp::initialize();
+   //   vjTimeStamp::initialize();
    environmentManager = new vjEnvironmentManager();
    vjDEBUG(vjDBG_KERNEL,1) << "      Environment Manager running\n" << vjDEBUG_FLUSH;
 }
