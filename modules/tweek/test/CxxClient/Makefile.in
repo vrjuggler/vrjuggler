@@ -60,11 +60,13 @@ CLIENT_OBJS=	StringObserverImpl.o StringSubject.o client.o
 
 include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
 
-CXX_GEN_DIR=		$(srcdir)
+CXX_GEN_DIR=		.
 CXX_IDL=		$(TWEEK_IDL_CXX)
 CXX_IDL_OPTS=		$(TWEEK_IDLFLAGS_CXX)			\
 			$(TWEEK_IDL_GENDIR_CXX)$(CXX_GEN_DIR)
 CXX_IDL_INCLUDES=	
+
+EXTRA_INCLUDES+=	-I$(CXX_GEN_DIR)
 
 vpath %.idl $(srcdir)
 vpath %.cpp $(CXX_GEN_DIR)
@@ -86,4 +88,4 @@ client@EXEEXT@: $(CLIENT_OBJS)
 server@EXEEXT@: $(SERVER_OBJS)
 	$(LINK) $(LINK_OUT)$@ $(SERVER_OBJS) $(TWEEK_LIBS) $(EXTRA_LIBS) $(LIBS)
 
-CLEAN_FILES+=	$(addprefix $(srcdir)/, $(IDL_CXX_FILES))
+CLEAN_FILES+=	$(addprefix $(CXX_GEN_DIR)/, $(IDL_CXX_FILES))
