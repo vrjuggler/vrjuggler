@@ -44,7 +44,7 @@
 #include <Input/vjSim/vjSimRelativePosition.h>
 #include <Input/vjSim/vjSimDigitalGlove.h>
 
-// Physical devices
+/* Physical devices */
 #ifndef WIN32
 #include <Input/vjPosition/vjFlock.h>
 #include <Input/vjInput/vjIbox.h>
