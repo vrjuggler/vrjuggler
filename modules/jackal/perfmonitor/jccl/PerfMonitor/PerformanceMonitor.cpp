@@ -96,7 +96,7 @@ bool PerformanceMonitor::configAdd(ConfigChunkPtr chunk)
    {
       mCurrentPerfConfig = chunk;//new ConfigChunk (*chunk);
 
-      mPerfTargetName = chunk->getProperty<std::string>("PerformanceTarget");
+      mPerfTargetName = chunk->template getProperty<std::string>("PerformanceTarget");
 /*
       if ((mPerfTarget == 0) || mPerfTarget->getName() == mPerfTargetName)
       {
@@ -205,15 +205,15 @@ void PerformanceMonitor::activatePerfBuffers ()
 
    for ( int i = 0; i < category_count; i++ )
    {
-      ch = mCurrentPerfConfig->getProperty<ConfigChunkPtr>("PerfCategories", i);
+      ch = mCurrentPerfConfig->template getProperty<ConfigChunkPtr>("PerfCategories", i);
 
-      if ( ch->getProperty<bool>("Enabled") )
+      if ( ch->template getProperty<bool>("Enabled") )
       {
-         PerformanceCategories::instance()->activateCategory(ch->getProperty<std::string>("Prefix"));
+         PerformanceCategories::instance()->activateCategory(ch->template getProperty<std::string>("Prefix"));
       }
       else
       {
-         PerformanceCategories::instance()->deactivateCategory(ch->getProperty<std::string>("Prefix"));
+         PerformanceCategories::instance()->deactivateCategory(ch->template getProperty<std::string>("Prefix"));
       }
    }
 

@@ -105,8 +105,8 @@ void ConfigManager::addPendingAdds(ConfigChunkDB* db)
       // Begin Machine Specific Code
       if ( (*i)->getDescToken() == std::string("MachineSpecific") )
       {
-         if ( (*i)->getProperty<std::string>("host_name") == mCachedLocalHostName ||
-              (*i)->getProperty<std::string>("host_name") == "localhost")
+         if ( (*i)->template getProperty<std::string>("host_name") == mCachedLocalHostName ||
+              (*i)->template getProperty<std::string>("host_name") == "localhost")
          {
             // NOTE: Add all machine dependent ConfigChunkPtr's here
             vprASSERT((*i)->getNum("display_system") == 1 && "A Cluster System Chunk must have exactly 1 display_system chunk");
@@ -280,7 +280,7 @@ int ConfigManager::scanForLostDependencies()
       if ( !dep_mgr->isSatisfied(chunks[i]) )     // We are not satisfied
       {
          vprDEBUG_NEXT(vprDBG_ALL,1)
-            << chunks[i]->getProperty<std::string>("name")
+            << chunks[i]->template getProperty<std::string>("name")
             << " type: " << chunks[i]->getDescToken()
             << " has lost dependencies.\n" << vprDEBUG_FLUSH;
 

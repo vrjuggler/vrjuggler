@@ -204,7 +204,7 @@ bool ChunkDescDB::loadFromChunkDescDBNode(cppdom::XMLNodePtr chunkDescDBNode)
         cur_child != chunkDescDBNode->getChildren().end(); cur_child++)
    {
       ChunkDescPtr new_desc(new ChunkDesc( *cur_child ) );     // New desc
-      mDescs[(*cur_child)->getAttribute(token_TOKEN).getValue<std::string>()] = new_desc;
+      mDescs[(*cur_child)->getAttribute(token_TOKEN).template getValue<std::string>()] = new_desc;
    }
 
    return true;
