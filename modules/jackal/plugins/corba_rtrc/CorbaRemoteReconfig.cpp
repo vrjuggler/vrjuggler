@@ -23,8 +23,10 @@ void RTRCInterface::init()
    }
    catch (...)
    {
-      //TODO:: Add in VPR debugging statements
-      std::cout << "Caught an unknown exception!\n" << std::flush ;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "RTRCInterface::init: Caught an unknown exception while initializing CorbaManager\n" 
+         << vprDEBUG_FLUSH ;
+
       delete mCorbaManager; 
       mCorbaManager = NULL;
       return;
@@ -33,7 +35,10 @@ void RTRCInterface::init()
    //Test to see if init succeeded
    if ( !status.success() )
    {
-      std::cout << "CorbaManager did not initialize\n" << std::flush ;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "RTRCInterface::init: Could not initialize CorbaManager\n" 
+         << vprDEBUG_FLUSH ;
+
       delete mCorbaManager; 
       mCorbaManager = NULL;
       return;
@@ -46,14 +51,17 @@ void RTRCInterface::init()
    }
    catch (CORBA::Exception& ex)
    {
-      //TODO:: Add in VPR debugging statements
-      std::cout << "Caught an unknown CORBA exception when trying to create the subject manager!\n" << std::flush ;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "RTRCInterface::init: Caught an unknown CORBA exception while creating the subject manager\n" 
+         << vprDEBUG_FLUSH ;
    }
       
    if ( !status.success() )
    {
-      //TODO:: Add in VPR debugging statements
-      std::cout << "CORBA failed to initialize\n" << std::flush ;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "RTRCInterface::init: CORBA subject manager failed to initialize\n" 
+         << vprDEBUG_FLUSH ;
+
       delete mCorbaManager; 
       mCorbaManager = NULL;
       return;
@@ -74,14 +82,17 @@ void RTRCInterface::enable()
    }
    catch (...)
    {
-      //TODO:: Add in VPR debugging statements
-      std::cout << "Caught an exception while trying to register subject\n" << std::flush;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "RTRCInterface::enable: Caught an exception while trying to register subject\n" 
+         << vprDEBUG_FLUSH ;
    }
 
    if ( !status.success() )
    {
-      //TODO:: Add in VPR debugging statements
-      std::cout << "Failed to register Subject Manager instance\n" << std::flush ;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "RTRCInterface::enable: Failed to register subject\n" 
+         << vprDEBUG_FLUSH ;
+
       delete mInterface;
       mInterface = NULL;
       return;
@@ -101,13 +112,16 @@ void RTRCInterface::disable()
    }
    catch (...)
    {
-      //TODO:: Add in VPR debugging statements
-      std::cout << "Caught an exception while trying to unregister subject\n" << std::flush;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "RTRCInterface::disable: Caught an exception while trying to unregister subject\n" 
+         << vprDEBUG_FLUSH ;
    }
 
    if (!status.success())
    {
-      std::cout << "Could not unregister subject\n" << std::flush;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "RTRCInterface::disable: Could not unregister subject\n" 
+         << vprDEBUG_FLUSH ;
    }
 
 }
