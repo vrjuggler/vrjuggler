@@ -73,7 +73,7 @@ const unsigned int DEVICE_GESTURE  = 2;
 const unsigned int DEVICE_DIGITAL  = 4;
 const unsigned int DEVICE_ANALOG   = 8;
 const unsigned int DEVICE_GLOVE    = 16;
-const unsigned int DEVICE_KEYBOARD = 32;
+const unsigned int DEVICE_EVENT_WINDOW = 32;
 const unsigned int DEVICE_GROW1    = 64;
 const unsigned int DEVICE_GROW2    = 128;
 */

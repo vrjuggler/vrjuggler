@@ -69,8 +69,8 @@ std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::Config
  */
 bool SimInput::config(jccl::ConfigChunkPtr chunk)
 {
-   std::string keyboardName = chunk->getProperty<std::string>("keyboardProxy");    // Get the event source
-   mKeyboard.init(keyboardName);
+   // Get the event source.
+   mEventWin.init(chunk->getProperty<std::string>("eventWindowProxy"));
 
    return true;
 }
@@ -79,11 +79,11 @@ int SimInput::checkKeyPair(KeyModPair& pair)
 {
    if (pair.mModifier == -1)      // ANY modifier
    {
-      return mKeyboard->keyPressed(pair.mKey);
+      return mEventWin->keyPressed(pair.mKey);
    }
-   if (mKeyboard->modifierOnly(pair.mModifier))
+   if (mEventWin->modifierOnly(pair.mModifier))
    {
-      return mKeyboard->keyPressed(pair.mKey);
+      return mEventWin->keyPressed(pair.mKey);
    }
    else                 // Mod not pressed
       return 0;
@@ -91,7 +91,7 @@ int SimInput::checkKeyPair(KeyModPair& pair)
 
 int SimInput::checkKey(int keyId)
 {
-   return mKeyboard->keyPressed(keyId);
+   return mEventWin->keyPressed(keyId);
 }
 
 } // End of gadget namespace

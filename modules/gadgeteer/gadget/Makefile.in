@@ -51,16 +51,16 @@ SUBOBJDIR=	$(GADGET_LIBRARY)
 DIRPRFX=	gadget/
 
 # Subdirectories to compile.
-SUBDIR=		Devices/Keyboard	\
+SUBDIR=		Devices/EventWindow	\
 		Devices/Sim		\
 		Filter                  \
 		Type			\
 		Util
 
-SRCS=		InputLogger.cpp \
-            InputManager.cpp	\
-            ProxyDepChecker.cpp	\
-            ProxyFactory.cpp
+SRCS=		InputLogger.cpp		\
+		InputManager.cpp	\
+       		ProxyDepChecker.cpp	\
+		ProxyFactory.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

@@ -48,12 +48,12 @@
 #include <gadget/Devices/Sim/SimDigitalGlove.h>
 
 #if defined(VPR_OS_Win32)
-#  include <gadget/Devices/Keyboard/KeyboardWin32.h>
+#  include <gadget/Devices/EventWindow/EventWindowWin32.h>
 #elif defined(VPR_OS_Darwin)
-#  include <gadget/Devices/Keyboard/KeyboardOSX.h>
+#  include <gadget/Devices/EventWindow/EventWindowOSX.h>
 #else
-#  include <gadget/Devices/Keyboard/KeyboardXWin.h>
-#  include <gadget/Devices/Keyboard/KeyboardDepCheckerXWin.h>
+#  include <gadget/Devices/EventWindow/EventWindowXWin.h>
+#  include <gadget/Devices/EventWindow/EventWindowDepCheckerXWin.h>
 #endif
 
 /* Physical devices */
@@ -117,7 +117,8 @@ void DeviceFactory::loadKnownDevices()
    }
 
 #if defined(VPR_OS_Win32)
-   DeviceConstructor<KeyboardWin32>* key_win32 = new DeviceConstructor<KeyboardWin32>(input_mgr);
+   DeviceConstructor<EventWindowWin32>* key_win32 =
+      new DeviceConstructor<EventWindowWin32>(input_mgr);
    if( (NULL == key_win32))
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
@@ -125,7 +126,8 @@ void DeviceFactory::loadKnownDevices()
          << vprDEBUG_FLUSH;
    }
 #elif defined(VPR_OS_Darwin)
-   DeviceConstructor<KeyboardOSX>* osx_keyboard = new DeviceConstructor<KeyboardOSX>(input_mgr);
+   DeviceConstructor<EventWindowOSX>* osx_keyboard =
+      new DeviceConstructor<EventWindowOSX>(input_mgr);
    if( (NULL == osx_keyboard) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
@@ -133,8 +135,9 @@ void DeviceFactory::loadKnownDevices()
          << vprDEBUG_FLUSH;
    }
 #else
-   DeviceConstructor<KeyboardXWin>* xwin_key = new DeviceConstructor<KeyboardXWin>(input_mgr);
-   jccl::DependencyManager::instance()->registerChecker(new KeyboardDepCheckerXWin());
+   DeviceConstructor<EventWindowXWin>* xwin_key =
+      new DeviceConstructor<EventWindowXWin>(input_mgr);
+   jccl::DependencyManager::instance()->registerChecker(new EventWindowDepCheckerXWin());
    if( (NULL == xwin_key) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)

@@ -37,7 +37,7 @@
 #include <gadget/Type/PositionProxy.h>
 #include <gadget/Type/GloveProxy.h>
 #include <gadget/Type/GestureProxy.h>
-#include <gadget/Type/KeyboardProxy.h>
+#include <gadget/Type/EventWindowProxy.h>
 #include <gadget/ProxyDepChecker.h>
 #include <gadget/ProxyFactory.h>
 #include <gadget/Util/Debug.h>
@@ -69,14 +69,14 @@ void ProxyFactory::loadKnownProxies()
    ProxyConstructor<PositionProxy>* pos_proxy = new ProxyConstructor<PositionProxy>;
    ProxyConstructor<GloveProxy>* glove_proxy = new ProxyConstructor<GloveProxy>;
 //   ProxyConstructor<GestureProxy>* gesture_proxy = new ProxyConstructor<GestureProxy>;
-   ProxyConstructor<KeyboardProxy>* keyboard_proxy = new ProxyConstructor<KeyboardProxy>;
+   ProxyConstructor<EventWindowProxy>* event_win_proxy = new ProxyConstructor<EventWindowProxy>;
 
    if( (NULL == analog_proxy) ||
        (NULL == digital_proxy) ||
        (NULL == pos_proxy) ||
        (NULL == glove_proxy) ||
 //       (NULL == gesture_proxy) ||
-       (NULL == keyboard_proxy) )
+       (NULL == event_win_proxy) )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Error allocating proxy constructor.\n" << vprDEBUG_FLUSH;
    }

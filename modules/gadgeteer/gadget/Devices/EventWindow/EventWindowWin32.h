@@ -32,9 +32,9 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// KeyboardWin32.h
+// EventWindowWin32.h
 //
-// Keyboard input device for win32
+// Event window input device for win32
 //
 // History:
 //
@@ -42,8 +42,8 @@
 // Allen Bierbaum:    v1.0 -  7-23-99 - Refactored to use new keyboard method
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef _GADGET_KEYBOARD_WIN32_H_
-#define _GADGET_KEYBOARD_WIN32_H_
+#ifndef _GADGET_EVENT_WINDOW_WIN32_H_
+#define _GADGET_EVENT_WINDOW_WIN32_H_
 
 // Get windows stuff
 #include <windows.h>
@@ -55,7 +55,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Input.h>
-#include <gadget/Type/Keyboard.h>
+#include <gadget/Type/EventWindow.h>
 #include <gadget/Type/InputMixer.h>
 
 #include <gadget/Util/Debug.h>
@@ -65,7 +65,7 @@
 namespace gadget
 {
 
-class GADGET_CLASS_API KeyboardWin32 : public Input, public Keyboard
+class GADGET_CLASS_API EventWindowWin32 : public Input, public EventWindow
 {
 public:
    /**< Enum to keep track of current lock state for state machine. */
@@ -76,26 +76,27 @@ public:
       Lock_KeyDown  /**< The mouse is locked due to a key being held down. */
    };
 
-   KeyboardWin32() : mControlLoopDone( false ),
-                     mPrevX( 0 ),
-                     mPrevY( 0 ),
-                     mLockState( Unlocked ),
-                     mExitFlag( false ),
-                     mWeOwnTheWindow( true )
+   EventWindowWin32()
+      : mControlLoopDone(false),
+        mPrevX(0),
+        mPrevY(0),
+        mLockState(Unlocked),
+        mExitFlag(false),
+        mWeOwnTheWindow(true)
    {
    }
-   virtual ~KeyboardWin32()
+
+   virtual ~EventWindowWin32()
    {
       stopSampling();
    }
-
 
    virtual bool config(jccl::ConfigChunkPtr c);
 
    /** Main thread of control for this active object. */
    void controlLoop( void* nullParam );
 
-   /* Pure Virtuals required by Input. */
+   /* Pure Virtuals required by gadget::Input. */
    int startSampling();
    int stopSampling();
 
@@ -108,12 +109,11 @@ public:
    static std::string getChunkType();
 
    /**
-    * Returns the number of times the key was pressed during the
-    * last frame, so you can put this in an if to check if was
-    * pressed at all, or if you are doing processing based on this
-    * catch the actual number..
+    * Returns the number of times the key was pressed during the last frame.
+    * You can put this in an if to check if was pressed at all, or if you are
+    * doing processing based on this catch the actual number.
     */
-   int isKeyPressed( int Key );
+   int isKeyPressed(int Key);
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -134,54 +134,57 @@ protected:
       delete this;
    }
 
-   virtual void processEvent( UINT message, UINT wParam, LONG lParam ){}
+   virtual void processEvent(UINT message, UINT wParam, LONG lParam)
+   {
+   }
+
    void lockMouse();
    void unlockMouse();
-   friend LONG APIENTRY MenuWndProc( HWND hWnd, UINT message, UINT wParam, LONG lParam );
+   friend LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam);
 
    HINSTANCE   m_hInst;
    HWND        m_hWnd;
    void createWindowWin32();
-   void updKeys( UINT message,  UINT wParam, LONG lParam );
+   void updKeys(UINT message,  UINT wParam, LONG lParam);
 
    /**
     * Handles any events in the system.
-    * Copies m_keys to m_curKeys.
+    * Copies mKeys to mCurKeys.
     */
    void handleEvents();
 
    /** @name Private functions for processing input data */
    /* Private functions for processing input data */
    //@{
-   int onlyModifier( int );
+   int onlyModifier(int);
    //@}
 
    /** @name Windows utility functions */
    //@{
-   int VKKeyToKey( int vkKey );
-   char* checkArgs( char* look_for );
+   int VKKeyToKey(int vkKey);
+   char* checkArgs(char* look_for);
 
-   BOOL MenuInit( HINSTANCE hInstance );
+   BOOL MenuInit(HINSTANCE hInstance);
    //@}
 
-   bool         mWeOwnTheWindow;       /**< True if this class owns the window (is reposible for opening, closing, and event processing). */
-   int          m_screen, m_x, m_y;    /**< screen id, x_origin, y_origin. */
-   unsigned int m_width,m_height;
+   bool         mWeOwnTheWindow; /**< True if this class owns the window (is reposible for opening, closing, and event processing). */
+   int          mScreen, mX, mY; /**< screen id, x-origin, y-origin. */
+   unsigned int mWidth,mHeight;
 
-      /* Keyboard state holders */
+      /* Event window state holders */
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.
-   int      m_keys[256];         /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
-   int      m_realkeys[256];     /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
+   int      mKeys[256];         /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
+   int      mRealkeys[256];     /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
 
-   vpr::Mutex  mKeysLock;        /**< Must hold this lock when accessing m_keys. */
+   vpr::Mutex  mKeysLock;        /**< Must hold this lock when accessing mKeys. */
    bool     mExitFlag;           /**< Should we exit? */
 
    lockState   mLockState;       /**< The current state of locking. */
    int         mLockStoredKey;   /**< The key that was pressed down. */
    int         mLockToggleKey;   /**< The key that toggles the locking. */
 
-   float m_mouse_sensitivity;
+   float mMouseSensitivity;
    int   mSleepTimeMS;            /**< Amount of time to sleep in milliseconds between updates. */
    int   mPrevX, mPrevY;          /**< Previous mouse location. */
    bool  mControlLoopDone;
