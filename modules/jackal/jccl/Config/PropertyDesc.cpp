@@ -43,121 +43,133 @@ vjPropertyDesc::~vjPropertyDesc () {
 }
 
 
+
+vjEnumEntry* vjPropertyDesc::getEnumEntryAt (int index) {
+    if (enumv.size() > index)
+	return enumv[index];
+    else
+	return NULL;
+}
+
+
+
 ostream& operator << (ostream& out, vjPropertyDesc& self) {
-  out << self.token << " " << typeString(self.type) << " "
-      << self.num << " \"" << self.name << "\"";
+    out << self.token << " " << typeString(self.type) << " "
+	<< self.num << " \"" << self.name << "\"";
 
-  if (self.valuelabels.size() > 0) {
-    vjEnumEntry *e;
-    out << " vj_valuelabels { ";
-    for (int i = 0; i < self.valuelabels.size(); i++) {
-      e = self.valuelabels[i];
-      out << '"' << e->getName();
-      out << "\" ";
+    if (self.valuelabels.size() > 0) {
+	vjEnumEntry *e;
+	out << " vj_valuelabels { ";
+	for (int i = 0; i < self.valuelabels.size(); i++) {
+	    e = self.valuelabels[i];
+	    out << '"' << e->getName() << "\" ";
+	}
+	out << "}";
     }
-    out << "}";
-  }
 
-  /* print enumeration only if we have values. */
-  if (self.enumv.size() > 0) {
-    vjEnumEntry *e;
-    out << " { ";
-    for (int i = 0; i < self.enumv.size(); i++) {
-      e = self.enumv[i];
-      out << '"' << e->getName();
-      if ((self.type != T_STRING) && (self.type != T_CHUNK))
-	out << "=" << e->getVal();
-      out << "\" ";
+    /* print enumeration only if we have values. */
+    if (self.enumv.size() > 0) {
+	vjEnumEntry *e;
+	out << " { ";
+	for (int i = 0; i < self.enumv.size(); i++) {
+	    e = self.enumv[i];
+	    out << '"' << e->getName();
+	    if ((self.type != T_STRING) && (self.type != T_CHUNK) &&
+		(self.type != T_EMBEDDEDCHUNK))
+		out << "=" << e->getVal();
+	    out << "\" ";
+	}
+	out << "}";
     }
-    out << "}";
-  }
 
-  /* print help string - always quoted. */
-  out << " \"" << self.help << '"';
-  return out;
+    /* print help string - always quoted. */
+    out << " \"" << self.help << '"';
+    return out;
 }
 
 
 
 istream& operator >> (istream& in, vjPropertyDesc& self) {
 
-  char str[512];
-  int size;
+    char str[512];
+    int size;
 
-  /* format of line is: name type size { enums/chunktypes } token. */
+    /* format of line is: name type size { enums/chunktypes } token. */
 
-  readString (in, str, 512);
-  //cout << "read propertydesc token " << str << endl;
-  if (self.token)
-    delete self.token;
-  if (!(self.token = new char[strlen(str)+1]))
-    vjDEBUG(1) << "Unable to allocate ram" << endl << vjDEBUG_FLUSH;
-  strcpy (self.token, str);
-  if (!strcasecmp (self.token, "end"))
-    return in;
+    readString (in, str, 512);
+    //cout << "read propertydesc token " << str << endl;
+    if (self.token)
+	delete self.token;
+    if (!(self.token = new char[strlen(str)+1]))
+	vjDEBUG(1) << "Unable to allocate ram" << endl << vjDEBUG_FLUSH;
+    strcpy (self.token, str);
+    if (!strcasecmp (self.token, "end"))
+	return in;
 
-  self.type = readType(in);
-  in >> self.num;
-  readString (in,str,512);
-  //cout << "read propertydesc name " << str << endl;
-  if (self.name)
-    delete self.name;
-  self.name = new char[strlen(str)+1];
-  strcpy (self.name, str);
-
-  readString (in, str, 512);
-
-  /* parsing value labels, if there are any */
-  if (!strcasecmp (str, "vj_valuelabels")) {
+    self.type = readType(in);
+    in >> self.num;
     readString (in,str,512);
-    if (strcasecmp (str, "{"))
-      vjDEBUG(1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
+    cout << "read propertydesc name " << str << endl;
+    if (self.name)
+	delete self.name;
+    self.name = strdup (str);
 
-    vjEnumEntry *e;
     readString (in, str, 512);
-    while (strcasecmp (str, "}") && !in.eof()) {
-      e = new vjEnumEntry (str, 0);
-      self.valuelabels.push_back (e);
-      readString (in, str, 512);
-    }
-    readString (in, str, 512);
-  }
-
-  /* parsing enumerations, if there are any */
-  if (!strcasecmp (str, "vj_enumeration"))
-      readString (in, str, 512);
-  if (!strcasecmp (str, "{")) {
-    if (self.type == T_BOOL) {
-      vjDEBUG(1) << "ERROR: " << self.name << ": Enumerations not supported for "
-	"boolean types.\n" << vjDEBUG_FLUSH;
-      do {
+    
+    /* parsing value labels, if there are any */
+    if (!strcasecmp (str, "vj_valuelabels")) {
+	//cout << "reading valuelabels" << endl;
+	readString (in,str,512);
+	if (strcasecmp (str, "{"))
+	    vjDEBUG(1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
+	
+	vjEnumEntry *e;
 	readString (in, str, 512);
-      } while (!strcasecmp (str, "}") && !in.eof());
+	while (strcasecmp (str, "}") && !in.eof()) {
+	    e = new vjEnumEntry (str, 0);
+	    self.valuelabels.push_back (e);
+	    readString (in, str, 512);
+	}
+	readString (in, str, 512);
     }
-    else {
-      int j, i = 0;
-      vjEnumEntry *e;
-      readString (in, str, 512);
-      while (strcasecmp (str, "}") && !in.eof()) {
-	if (self.type == T_INT)
-	  for (j = 0; j < strlen(str); j++) {
-	    if (str[j] == '=') {
-	      i = atoi (str+j+1);
-	      str[j] = '\0';
-	      break;
+    
+    /* parsing enumerations, if there are any */
+    if (!strcasecmp (str, "vj_enumeration"))
+	readString (in, str, 512);
+    if (!strcasecmp (str, "{")) {
+	//cout << "parsing enumerations" << endl;
+	if (self.type == T_BOOL) {
+	    vjDEBUG(1) << "ERROR: " << self.name << ": Enumerations not supported for "
+		"boolean types.\n" << vjDEBUG_FLUSH;
+	    do {
+		readString (in, str, 512);
+	    } while (!strcasecmp (str, "}") && !in.eof());
+	}
+	else {
+	    int j, i = 0;
+	    vjEnumEntry *e;
+	    readString (in, str, 512);
+	    while (strcasecmp (str, "}") && !in.eof()) {
+		//cout << "reading enumentry: " << str << endl;
+		if (self.type == T_INT)
+		    for (j = 0; j < strlen(str); j++) {
+			if (str[j] == '=') {
+			    i = atoi (str+j+1);
+			    str[j] = '\0';
+			    break;
+			}
+		    }
+		e = new vjEnumEntry (str, i++);
+		self.enumv.push_back (e);
+		readString (in, str, 512);
 	    }
-	  }
-	e = new vjEnumEntry (str, i++);
-	self.enumv.push_back (e);
+	}
 	readString (in, str, 512);
-      }
     }
-    readString (in, str, 512);
-  }
 
-  self.help = new char [strlen(str) +1];
-  strcpy (self.help, str);
+    self.help = new char [strlen(str) +1];
+    strcpy (self.help, str);
 
-  return in;
+    return in;
 }
 

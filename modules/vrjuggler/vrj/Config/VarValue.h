@@ -7,12 +7,13 @@
 #include <string.h>
 #include <iostream.h>
 
-
-typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE, T_CHUNK,
-               T_INVALID } VarType;
+typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE, 
+	       T_CHUNK, T_EMBEDDEDCHUNK, T_INVALID } VarType;
 
 typedef enum {U_Feet, U_Inches, U_Meters, U_Centimeters, U_BadUnit}
               CfgUnit;
+
+class vjConfigChunk;
 
 /* note for myself as I'm adding T_DISTANCE - everything gets stored
  * internally as feet.
@@ -52,83 +53,37 @@ private:
 
   VarType    type;
 
-  // these are the possible storage areas.
-  struct {
-    int        intval;
-    float      floatval;
-    char       *strval;
-    bool       boolval;
-  } val;
+    // these are the possible storage areas.
+    struct {
+	int          intval;
+	float        floatval;
+	char        *strval;
+	bool         boolval;
+	vjConfigChunk *embeddedchunkval;
+    } val;
 
 public:
 
-  //: Copy constructor.
-  vjVarValue (vjVarValue &v) {
-    *this = v;
-  }
+    //: Copy constructor.
+    vjVarValue (vjVarValue &v);
 
 
-    vjVarValue& operator= (vjVarValue &v) {
-	if ((type == T_STRING) || (type == T_CHUNK))
-	    if (val.strval) {
-		delete val.strval;
-		val.strval = NULL;
-	    }
-	type = v.type;
-	switch (type) {
-	case T_INVALID:
-	    break;
-	case T_INT:
-	    val.intval = v.val.intval;
-	    break;
-	case T_FLOAT:
-	    val.floatval = v.val.floatval;
-	    break;
-	case T_BOOL:
-	    val.boolval = v.val.boolval;
-	    break;
-	case T_STRING:
-	case T_CHUNK:
-	    if (v.val.strval == NULL)
-		val.strval = NULL;
-	    else
-		val.strval = strdup (v.val.strval);
-	    break;
-	default:
-	    //cout << "something's wrong with varvalue assign" << endl;
-	    break;
-	}
-	return *this;
-    }
+    vjVarValue (vjConfigChunk* ch);
 
 
-  //: Creates a new vjVarValue of type t.
-  //! NOTE: Note that once a vjVarValue object has been created, the type
-  //+ cannot be changed.
-  vjVarValue ( VarType t ) {
-    type = t;
-    switch (type) {
-    case T_INT:
-      val.intval = 0;
-      break;
-    case T_BOOL:
-      val.boolval = false;
-      break;
-    case T_FLOAT:
-      val.floatval = 0.0;
-      break;
-    case T_STRING:
-    case T_CHUNK:
-      val.strval = NULL;
-      break;
-    }
-  }
+    vjVarValue& operator= (vjVarValue &v);
 
-  //: Destroys self and all associated memory.
-  ~vjVarValue() {
-    if (((type == T_STRING) || (type == T_CHUNK)) && val.strval)
-      delete val.strval;
-  }
+
+    //: Creates a new vjVarValue of type t.
+    //! NOTE: Note that once a vjVarValue object has been created, the type
+    //+ cannot be changed.
+    vjVarValue ( VarType t );
+
+
+
+    //: Destroys self and all associated memory.
+    ~vjVarValue();
+
 
 
   /** @name Cast Operators
@@ -140,116 +95,50 @@ public:
    */
   //@{
   /// handles T_INT and T_BOOLs
-  operator int() {
-    if ((type == T_INT) || (type == T_BOOL))
-      return val.intval;
-    if (type != T_INVALID)
-      cerr << "Type error in cast!\n";
-    return 0;
-  }
+  operator int();
 
-  /*
-   * it'd be nice to have a real bool, but we don't.
-   */
-  operator bool() {
-    if ((type == T_BOOL))
-      return val.boolval;
-    if (type != T_INVALID)
-      cerr << "Type error in cast!\n";
-    return 0;
-  }
+    //: cast to ConfigChunk
+    //!NOTE: Returns a copy of the contained chunk which must be
+    //+      freed.
+    // problem - will that work for nonprimitive types? 
+    // I doubt that i'm that lucky.
+    operator vjConfigChunk*();
 
-  /// handles T_FLOAT and T_DISTANCE
-  operator float () {
-    if ((type == T_FLOAT) || (type == T_DISTANCE))
-      return val.floatval;
-    if (type != T_INVALID)
-      cerr << "Type error in cast!\n";
-    return 0.0;
-  }
+
+    //: Cast to bool
+    operator bool();
+
+
+    //: Cast to float (for T_FLOAT or T_DISTANCE)
+    operator float ();
+
+
   /** handles T_STRING.  Note that the char array returned is a freshly
    *  allocated copy, which you're responsible for freeing when you're
    *  done with.  Also note that it's perfectly possible for this string
    *  to be NULL.
    */
-  operator char* () {
-    if ((type == T_STRING) || (type == T_CHUNK)) {
-      if (val.strval) {
-	  return strdup (val.strval);
-      }
-      else
-	return strdup("");
-    }
-    if (type != T_INVALID)
-      cerr << "Type error in cast to char*!\n";
-    return NULL;
-  }
-  //@}
+  operator char* ();
+
 
   /** @name Assignment Operators.
    *  This is the flip side of the cast: when data is assigned into
    *  a vjVarValue, we do some type checking (at this point only
    *  writing to cerr if an error occurs)
    */
-  //@{
-  ///
-  vjVarValue &operator = (int i) {
-    if (type == T_INT) {
-      val.intval = i;
-      return *this;
-    }
-    else if (type == T_BOOL) {
-      val.boolval = i;
-      return *this;
-    }
-    else {
-      cerr << "Type error in assignment!\n";
-      return *this;
-    }
-  }
-  vjVarValue& operator = (bool i) {
-    if (type == T_BOOL) {
-      val.boolval = i;
-      return *this;
-    }
-    else if (type == T_INT) {
-      val.intval = i;
-      return *this;
-    }
-    else {
-      cerr << "Type error in assignment!\n";
-      return *this;
-    }
-  }
-  ///
-  vjVarValue &operator = (float i) {
-    if ((type == T_FLOAT) || (type == T_DISTANCE)) {
-      val.floatval = i;
-      return *this;
-    } else {
-      cerr << "Type error in assignment!\n";
-      return *this;
-    }
-  }
+  vjVarValue &operator = (int i);
+  vjVarValue& operator = (bool i);
+  vjVarValue &operator = (float i);
+
+
   /** Note that the string assignment makes a copy of the string that
    *  belongs to the vjVarValue - you can do with the original string
    *  what you want.
    */
-  vjVarValue &operator = (char *s) {
-    if ((type == T_STRING) || (type == T_CHUNK)) {
-      if (val.strval)
-	delete val.strval;
-      if (s)
-	  val.strval = strdup(s);
-      else
-	  val.strval = NULL;
-      return *this;
-    } else {
-      cerr << "Type error in assignment!\n";
-      return *this;
-    }
-  }
-  //@}
+  vjVarValue &operator = (char *s);
+
+    vjVarValue &operator = (vjConfigChunk *s);
+
 
 
   /** Writes the value of self to out.  Note that self knows what type
@@ -258,31 +147,8 @@ public:
    *  bools are printed as the strings "true" and "false", and
    *  strings are printed as strings.
    */
-  friend ostream& operator << (ostream& out, vjVarValue& v) {
-//      cerr << "in << func" <<flush;
-
-    switch (v.type) {
-    case T_INT:
-      out << v.val.intval;
-      return out;
-    case T_FLOAT:
-    case T_DISTANCE:
-      out << v.val.floatval;
-      return out;
-    case T_BOOL:
-      out << ((v.val.boolval)?"true":"false");
-      return out;
-    case T_STRING:
-    case T_CHUNK:
-      if (v.val.strval)
-	out << v.val.strval;
-      return out;
-    default:
-      out << "[can't print value for type " << v.type << " ]";
-      return out;
-    }
-  }
-
+    friend ostream& operator << (ostream& out, vjVarValue& v);
+    
 };
 
 #endif

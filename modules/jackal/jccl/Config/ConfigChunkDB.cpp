@@ -321,7 +321,7 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
 	//cerr << "read " << str << endl;
       }
     } else {
-      ch = new vjConfigChunk(cd);
+      ch = new vjConfigChunk(cd, self.descs);
       in >> *ch;
       /* OK.  If this chunk has the same instancename as a chunk
        * already in self, we want to remove the old one

@@ -32,8 +32,10 @@ DEPEND_SRCS	:= vjChunkDesc.cpp	\
                    vjConfigChunkDB.cpp	\
                    vjPropertyDesc.cpp	\
                    vjParseUtil.cpp	\
+		   vjVarValue.cpp       \
                    vjProperty.cpp	\
-                   vjPropertyDesc.cpp
+                   vjPropertyDesc.cpp   \
+		   vjChunkFactory.cpp
 
 CONFIG_OBJECTS	:= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 

@@ -29,10 +29,10 @@ public:
 
   ~vjChunkDescDB ();
 
-  vjChunkDesc *getChunkDesc (char *name);
+  vjChunkDesc *getChunkDesc (char *token);
   /* PRE:  name is a non-null string.
-   * POST: returns a pointer to an entry in self named name, if such
-   *       exists.  Returns NULL if no such entry is found.
+   * POST: returns a pointer to an entry in self with the given token.
+   *       Returns NULL if no such entry is found.
    */
 
   bool insert (vjChunkDesc *d);
