@@ -56,7 +56,7 @@
 namespace
 {
    OSG::UInt32 OSG_MAIN_ASPECT_ID;     /**< Local scope variable */
-};
+}
 
 namespace vrj
 {
@@ -208,17 +208,17 @@ inline void OpenSGApp::contextInit()
 
    // Setup the viewport
    OSG::beginEditCP(c_data->mViewport);
-   	c_data->mViewport->setLeft(0);
-   	c_data->mViewport->setRight(1);
-   	c_data->mViewport->setBottom(0);
-   	c_data->mViewport->setTop(1);
-   	c_data->mViewport->setCamera(c_data->mCamera);
-   	c_data->mViewport->setBackground(c_data->mBackground);
+      c_data->mViewport->setLeft(0);
+      c_data->mViewport->setRight(1);
+      c_data->mViewport->setBottom(0);
+      c_data->mViewport->setTop(1);
+      c_data->mViewport->setCamera(c_data->mCamera);
+      c_data->mViewport->setBackground(c_data->mBackground);
    OSG::endEditCP  (c_data->mViewport);
    
    // Setup the Window
    OSG::beginEditCP(c_data->mWin);
-   	c_data->mWin->addPort(c_data->mViewport);
+      c_data->mWin->addPort(c_data->mViewport);
    OSG::endEditCP  (c_data->mWin);
 
    // Setup the camera
@@ -283,7 +283,7 @@ inline void OpenSGApp::draw()
 
    // Setup the viewport
    OSG::beginEditCP(c_data->mViewport);
-   	c_data->mViewport->setRoot(getSceneRoot());
+      c_data->mViewport->setRoot(getSceneRoot());
    OSG::endEditCP  (c_data->mViewport);
 
    // --- Trigger the draw --- //  
@@ -293,7 +293,7 @@ inline void OpenSGApp::draw()
    glPushMatrix();
    glMatrixMode(GL_MODELVIEW);
    glPushMatrix();   
-	c_data->mWin->render(c_data->mRenderAction);
+      c_data->mWin->render(c_data->mRenderAction);
    glPopMatrix();
    glMatrixMode(GL_PROJECTION);
    glPopMatrix();
@@ -302,6 +302,6 @@ inline void OpenSGApp::draw()
    FINFO(("Frame done on Window %lx.\n", c_data->mWin.getCPtr() ));
 }
 
-};
+} // End of vrj namespace
 
 #endif
