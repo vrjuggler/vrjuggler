@@ -33,17 +33,42 @@
 package org.vrjuggler.jccl.editors;
 
 import java.awt.Container;
+import java.awt.event.ActionListener;
 import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
 
 
 /**
- * Defines an interface for objects who are custom editors.
+ * Defines an interface for objects who are custom editors.  Custom editors
+ * operate within a single configuration context.  Initially, they are given
+ * a single config element to edit, but they can access all elements within
+ * their context.
  */
 public interface CustomEditor
 {
+   /**
+    * Sets the config context and ocnfig element that will be used by the
+    * editor.
+    *
+    * @param ctx The configuration context in which this editor will operate.
+    * @param elm The config element that will be edited by thiis editor.
+    */
    public void setConfig(ConfigContext ctx, ConfigElement elm);
 
+   /**
+    * Returns the GUI commponent that is this editor's user interface.
+    */
    public Container getPanel();
+
+   /**
+    * Returns the title (or name) for this custom editor.
+    */
    public String getTitle();
+
+   /**
+    * Returns the java.awt.event.ActionListener object that will be used to
+    * handle requests for help by the user.  The editor may return null to
+    * indicate that it does not respond to help requests.
+    */
+   public ActionListener getHelpActionListener();
 }
