@@ -85,8 +85,8 @@ void SurfaceViewport::config(jccl::ConfigElementPtr element)
                  ul_corner_elt->getProperty<float>("z"));
 
    // Calculate the rotation and the pts
-   calculateSurfaceRotation();
-   calculateCornersInBaseFrame();
+//   calculateSurfaceRotation();
+//   calculateCornersInBaseFrame();
 
    // Get info about being tracked
    mTracked = element->getProperty<bool>("tracked");
@@ -102,23 +102,13 @@ void SurfaceViewport::config(jccl::ConfigElementPtr element)
    //rot_inv.invert(mSurfaceRotation);
    if(!mTracked)
    {
-      mLeftProj = new SurfaceProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
-                                    mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
-                                    mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt]);
-      mRightProj = new SurfaceProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
-                                    mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
-                                    mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt]);
+      mLeftProj = new SurfaceProjection(mLLCorner,mLRCorner,mURCorner,mULCorner);
+      mRightProj = new SurfaceProjection(mLLCorner,mLRCorner,mURCorner,mULCorner);
    }
    else
    {
-      mLeftProj = new TrackedSurfaceProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
-                                    mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
-                                    mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt],
-                                              mTrackerProxyName);
-      mRightProj = new TrackedSurfaceProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
-                                    mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
-                                    mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt],
-                                               mTrackerProxyName);
+      mLeftProj = new TrackedSurfaceProjection(mLLCorner,mLRCorner,mURCorner,mULCorner,mTrackerProxyName);
+      mRightProj = new TrackedSurfaceProjection(mLLCorner,mLRCorner,mURCorner,mULCorner,mTrackerProxyName);
    }
    // Configure the projections
    mLeftProj->config(element);
@@ -186,50 +176,6 @@ std::ostream& SurfaceViewport::outStream(std::ostream& out,
    }
 
    return out;
-}
-
-void SurfaceViewport::calculateSurfaceRotation()
-{
-   assertPtsLegal();
-
-   // Find the base vectors for the surface axiis (in terms of the base coord system)
-   // With z out, x to the right, and y up
-   gmtl::Vec3f x_base, y_base, z_base;
-   x_base = (mLRCorner-mLLCorner);
-   y_base = (mURCorner-mLRCorner);
-   gmtl::cross( z_base, x_base, y_base);
-
-   // They must be normalized
-   gmtl::normalize(x_base); gmtl::normalize(y_base); gmtl::normalize(z_base);
-
-   // Calculate the surfaceRotMat using law of cosines
-   mSurfaceRotation = gmtl::makeDirCos<gmtl::Matrix44f>(x_base, y_base, z_base );
-}
-
-void SurfaceViewport::calculateCornersInBaseFrame()
-{
-   // Convert the coordinates over to surface coordinate system
-   gmtl::Matrix44f surf_M_base;
-   gmtl::invert(surf_M_base, mSurfaceRotation);
-
-   mxLLCorner = surf_M_base * mLLCorner;
-   mxLRCorner = surf_M_base * mLRCorner;
-   mxURCorner = surf_M_base * mURCorner;
-   mxULCorner = surf_M_base * mULCorner;
-
-   // Verify that they are all in the same x,y plane
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << std::setprecision(10)
-                                          << mxLLCorner[gmtl::Zelt] << " "
-                                          << mxLRCorner[gmtl::Zelt] << " "
-                                          << mxURCorner[gmtl::Zelt] << " "
-                                          << mxULCorner[gmtl::Zelt] << "\n"
-                                          << vprDEBUG_FLUSH;
-#ifdef VJ_DEBUG
-   const float epsilon = 1e-6;
-   vprASSERT(gmtl::Math::isEqual(mxLLCorner[gmtl::Zelt], mxLRCorner[gmtl::Zelt], epsilon) &&
-             gmtl::Math::isEqual(mxURCorner[gmtl::Zelt], mxULCorner[gmtl::Zelt], epsilon) &&
-             gmtl::Math::isEqual(mxLLCorner[gmtl::Zelt], mxULCorner[gmtl::Zelt], epsilon));
-#endif
 }
 
 }
