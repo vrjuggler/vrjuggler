@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-24-2003 browner     Added the audiere plugin.  this required the
+                        modification of the SoundInfo struct for a streaming
+                        flag - which means we now support streaming apis
+                        NEW VERSION: 0.2.2
 Oct-25-2002 patrickh    Replaced use of snx::Singleton<T> with the thread-safe
                         vpr::Singleton<T>.  The header snx/Singleton.h has
                         been removed from the source tree.
