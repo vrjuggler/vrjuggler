@@ -44,7 +44,7 @@ import org.vrjuggler.jccl.config.io.*;
 import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.net.*;
 import org.vrjuggler.tweek.net.corba.*;
-import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.tweek.services.ExtensionFileFilter;
 import tweek.Subject;
 import gadget.*;
@@ -149,7 +149,7 @@ public class TweekGadgetGUI
       // Get the path from the environment
       String default_path = "${VJ_BASE_DIR}/share/vrjuggler/data/definitions";
       String path = System.getProperty("JCCL_DEFINITION_PATH", default_path);
-      path = EnvironmentService.expandEnvVars(path);
+      path = (new EnvironmentServiceProxy()).expandEnvVars(path);
 
       // Split the path on the path separator
       StringTokenizer tokenizer = new StringTokenizer(path, File.pathSeparator);
