@@ -1,5 +1,11 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-11-2004 patrickh    Implemented version checking for device driver and
+                        cluster plug-ins.  All Gadgeteer plug-ins must now
+                        have an exported function called getGadgeteerVersion().
+                        See the information in RELEASE_NOTES.txt for more
+                        details.
+                        NEW VERSION: 0.18.0
 Oct-11-2004 aronb       Added support for BaseTypes InputGlove & 
                         InputGloveDigital in order to allow glove
                         devices to work properly on the cluster.

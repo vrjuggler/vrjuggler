@@ -33,6 +33,7 @@
 #include <gadget/Devices/DriverConfig.h>
 #include <vpr/Util/Debug.h>
 #include <jccl/Config/ConfigElement.h>
+#include <gadget/gadgetParam.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <drivers/Open/Trackd/TrackdControllerStandalone.h>
 #include <drivers/Open/Trackd/TrackdController.h>
@@ -41,6 +42,11 @@
 
 extern "C"
 {
+
+GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+{
+   return __GADGET_version;
+}
 
 GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {

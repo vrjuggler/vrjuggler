@@ -32,6 +32,7 @@
 
 #include <cluster/PluginConfig.h>
 #include <gadget/Util/Debug.h>
+#include <gadget/gadgetParam.h>
 
 #include <plugins/RIMPlugin/RIMPlugin.h>
 
@@ -67,6 +68,11 @@
 
 extern "C"
 {
+   GADGET_CLUSTER_PLUGIN_EXPORT(vpr::Uint32) getGadgeteerVersion()
+   {
+      return __GADGET_version;
+   }
+
    GADGET_CLUSTER_PLUGIN_EXPORT(void) initPlugin(cluster::ClusterManager* mgr)
    {
       mgr->addPlugin(new cluster::RIMPlugin());

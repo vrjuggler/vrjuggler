@@ -64,11 +64,17 @@
 #include <boost/concept_check.hpp>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
+#include <gadget/gadgetParam.h>
 #include <drivers/Logitech/ThreeDMouse/logiclass.h>   /* classprototypes and data types */
 
 
 extern "C"
 {
+
+GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+{
+   return __GADGET_version;
+}
 
 GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {

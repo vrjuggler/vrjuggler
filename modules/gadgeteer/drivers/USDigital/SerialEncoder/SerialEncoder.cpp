@@ -32,13 +32,25 @@
 
 #include <boost/concept_check.hpp>
 #include <gmtl/Generate.h>
+#include <gadget/gadgetParam.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
 
 #include "SerialEncoder.h"
 
-void initDevice(gadget::InputManager* inputMgr)
+
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+{
+   return __GADGET_version;
+}
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<SerialEncoder>(inputMgr);
+}
+
 }
 
 SerialEncoder::SerialEncoder()   
