@@ -168,10 +168,6 @@ ifneq (@OS_TYPE@, Win32)
           done
 	cd $(instlinks)/include && rm -f ./boost &&			\
           $(LN_S) $(JUGGLERROOT_ABS)/external/boost/boost ./
-	cd $(instlinks)/include && rm -f ./uuid &&			\
-          $(LN_S) $(JUGGLERROOT_ABS)/external/leach-uuid/uuid ./
-	cd $(instlinks)/include && rm -f ./md5-c &&			\
-          $(LN_S) $(JUGGLERROOT_ABS)/external/md5-c ./
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
           $(LN_S) $(LIBDIR_BASE) ./$(LIBDIR_NAME)
 	cd $(instlinks)/include/vpr && rm -f ./*.h &&			\
