@@ -240,6 +240,11 @@ _pyj_save_LIBS="$LIBS"
 _pyj_save_LDFLAGS="$LDFLAGS"
 
 CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES -I$BOOST_PYTHON_DIR/include"
+
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
+   CPPFLAGS="$CPPFLAGS -I$BOOST_PYTHON_DIR/include/boost/compatibility/cpp_c_headers"
+fi
+
 LIBS="$LIBS $bpl_link_option $PYTHON_LIB $UTIL_LIB $PYTHON_LIB_DEPS"
 LDFLAGS="$LDFLAGS -L$BOOST_PYTHON_DIR/lib $PYTHON_LDFLAGS"
 
@@ -262,12 +267,16 @@ LDFLAGS="${_pyj_save_LDFLAGS}"
 if test "x$ac_cv_boost__python__handle_in_boost_python" = "xyes" ; then
    BOOST_PYTHON_INCLUDES="-I$BOOST_PYTHON_DIR/include"
 
+   if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
+      BOOST_PYTHON_INCLUDES="$BOOST_PYTHON_INCLUDES -I$BOOST_PYTHON_DIR/include/boost/compatibility/cpp_c_headers"
+   fi
+
    if test "x$OS_TYPE" = "xWin32" ; then
       bpl_dir="/libpath:$PYTHON_ROOT/libs /libpath:$BOOST_PYTHON_DIR/lib"
       BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir boost_python.lib"
       BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir boost_python_debug.lib"
    else
-      bpl_dir="-L$BOOST_PYTHON_LIBDIR"
+      bpl_dir="-L$BOOST_PYTHON_DIR/lib"
       BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir -lboost_python"
       BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir -lboost_python_debug"
    fi
