@@ -48,10 +48,10 @@
 #ifndef _GADGET_RIM_DATA_PACKET_H
 #define _GADGET_RIM_DATA_PACKET_H
 
+#include <gadget/gadgetConfig.h>
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <gadget/gadgetConfig.h>
 #include <cluster/Packets/Header.h>                                                       
 #include <cluster/Packets/Packet.h>
 
@@ -60,7 +60,7 @@
 namespace cluster
 {
 
-class DataPacket : public Packet
+class GADGET_CLASS_API DataPacket : public Packet
 {
 public:
    /**

@@ -48,12 +48,12 @@
 #ifndef _GADGET_USER_DATA_REQUEST_H
 #define _GADGET_USER_DATA_REQUEST_H
 
+#include <gadget/gadgetConfig.h>
 #include <vpr/vprTypes.h>
 #include <vpr/IO/BufferObjectReader.h>
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <gadget/gadgetConfig.h>
 #include <cluster/Packets/Header.h>                                                       
 #include <cluster/Packets/Packet.h>
 
@@ -62,7 +62,7 @@
 namespace cluster
 {
 
-class ApplicationDataRequest : public Packet
+class GADGET_CLASS_API ApplicationDataRequest : public Packet
 {
 public:
    /**

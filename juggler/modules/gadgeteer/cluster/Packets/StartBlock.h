@@ -42,12 +42,13 @@
 #ifndef _GADGET_RIM_START_BLOCK_H
 #define _GADGET_RIM_START_BLOCK_H
 
+#include <gadget/gadgetConfig.h>
+
 #include <vpr/vprTypes.h>
 #include <vpr/IO/BufferObjectReader.h>
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <gadget/gadgetConfig.h>
 #include <gadget/Util/Debug.h>
 #include <cluster/Packets/Header.h>                                                       
 #include <cluster/Packets/Packet.h>
@@ -60,7 +61,7 @@
 namespace cluster
 {
 
-class StartBlock : public Packet
+class GADGET_CLASS_API StartBlock : public Packet
 {
 public:
    /**
