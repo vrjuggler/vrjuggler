@@ -227,12 +227,16 @@ LIBS="$LIBS -l$XERCES_LIB `$VPR_CONFIG --extra-libs`"
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 
-AC_CHECK_HEADER(util/XercesDefs.hpp, ,
-    AC_MSG_ERROR(*** Xerces-C headers not found ***))
+AC_CHECK_HEADER(util/XercesDefs.hpp, xerces_include="$XERCESROOT/include",
+    [ CPPFLAGS="-I$XERCESROOT/include/xercesc $CPPFLAGS"
+      AC_CHECK_HEADER(xercesc/util/XercesDefs.hpp,
+          xerces_include="$XERCESROOT/include/xercesc",
+          AC_MSG_ERROR(*** Xerces-C headers not found ***))
+    ])
 
 # Extract the full Xerces version number and transform it into the form x.y.z.
 changequote(<<, >>)
-xerces_ver_str=`grep gXercesFullVersionStr $XERCESROOT/include/util/XercesDefs.hpp | sed -e 's/.*"\([1-9][0-9_]*\)".*/\1/' | sed -e 's/_/./g'`
+xerces_ver_str=`grep gXercesFullVersionStr $xerces_include/util/XercesDefs.hpp | sed -e 's/.*"\([1-9][0-9_]*\)".*/\1/' | sed -e 's/_/./g'`
 changequote([, ])
 
 DPP_VERSION_CHECK_MSG(Xerces C++, $xerces_ver_str, 1.5.1,
@@ -249,7 +253,7 @@ AC_CACHE_CHECK(for XMLPlatformUtils::Initialize in $XERCES_LIB,
 
 DPP_LANG_RESTORE
 
-XERCES_INCLUDES="-I$XERCESROOT/include"
+XERCES_INCLUDES="-I$xerces_include"
 
 if test "x$OS_TYPE" = "xWin32" ; then
     XERCES_LDFLAGS="/libpath:$XERCESROOT/lib"
