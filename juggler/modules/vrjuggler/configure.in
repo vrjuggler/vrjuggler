@@ -220,8 +220,7 @@ OPENGL_API=''			# 'Y' then we are using OpenGL
 # Test for the OpenGL library if the OpenGL API was enabled.
 if test "x${_enable_gl_api}" = "xyes" ; then
     DPP_HAVE_OPENGL(/usr, no,
-        [OPENGL_API='Y'
-         AC_DEFINE(VJ_API_OPENGL, , [Define to enable the OpenGL API.])],
+        [OPENGL_API='Y'],
         [AC_MSG_ERROR(*** OpenGL API will not be used (GL files not found) ***)])
 fi
 
@@ -282,8 +281,7 @@ PERFORMER_API=''		# 'Y' then we are using Performer
 # Test for the Performer library if the Performer API was enabled.
 if test "x${_enable_pf_api}" = "xyes" ; then
     DPP_HAVE_PERFORMER(/usr, 2.4,
-        [PERFORMER_API='Y'
-         AC_DEFINE(VJ_API_PERFORMER, , [Define to enable the Performer API.])],
+        [PERFORMER_API='Y'],
         [AC_MSG_WARN(*** Performer API will not be used (files not found) ***)])
 fi
 
