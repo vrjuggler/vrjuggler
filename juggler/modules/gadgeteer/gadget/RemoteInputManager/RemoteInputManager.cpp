@@ -808,7 +808,11 @@ namespace gadget
             else
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Receiving data for: " << net_device_recvr->getSourceName() << "\n" << vprDEBUG_FLUSH;
-               msg_package->recieveDeviceDataPacket(data_reader,net_device_recvr->getRealDevice());
+
+               std::cout << "READ: " << net_device_recvr->getSourceName() << std::endl;
+               msg_package->recieveDeviceDataPacket(data_reader,
+                                                    net_device_recvr->getRealDevice(),
+                                                    net_connection->getDelta());
             }
          }
          vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] END DEVICE_DATA\n") << vprDEBUG_FLUSH;         
@@ -1023,7 +1027,6 @@ namespace gadget
             addReceivingNetDevice(recv_net_device);                     // Add NetDevice to mReceivingNetDevices
             net_connection->addReceivingNetDevice(recv_net_device);     // Add NetDevice to NetConnection
             net_connection->sendDeviceRequest(recv_net_device);         // Send a request to the device server
-            recv_net_device->getRealDevice()->setDelta(net_connection->getDelta());
             return true;
          }
          else

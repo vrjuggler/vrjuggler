@@ -207,7 +207,7 @@ namespace gadget
       * @param object_reader  The object that contains the incoming packet.
       * @param virtual_device pointer to the local "virtual" device
       */
-      bool  recieveDeviceDataPacket(vpr::ObjectReader* object_reader, Input* virtual_device);
+      bool  recieveDeviceDataPacket(vpr::ObjectReader* object_reader, Input* virtual_device, vpr::Uint64* delta);
       
      /**
       * Creates a marker for the end of a given update cycle.

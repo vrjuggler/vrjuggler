@@ -47,24 +47,21 @@
 namespace gadget
 {
                               
-class SerializableDevice : public vpr::SerializableObject
+class SerializableDevice //: public vpr::SerializableObject
 {
 public:
    SerializableDevice()
    {
-      mDelta = 0;
+     
    }
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer) = 0;
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta) = 0;
    /*
    * Template method for reading object.
    * POST: All object data is read from the reader
    */
-   virtual void setDelta(vpr::Uint64 delta)
-   {
-      mDelta = delta;
-   }
 protected:
-   vpr::Uint64 mDelta;
-
+   
    /** @link dependency 
     * @stereotype use*/
    /*#  ObjectReader lnkObjectReader; */

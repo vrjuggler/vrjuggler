@@ -92,6 +92,7 @@ namespace gadget
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[RIM] Sending data for device: " << (*i)->getSourceName() << "\n" << vprDEBUG_FLUSH;
                (*i)->updateFromLocalSource();
+               std::cout << "WRITE: " << (*i)->getSourceName() << std::endl;
                mMsgPackage.createDeviceDataPacket(*i);
                mMsgPackage.sendAndClearDeviceData(mSockStream,(*i));
             }
