@@ -151,17 +151,15 @@ public:
 
    virtual void bufferPreDraw();
 
+   virtual void contextPreDraw();
+
    // Function to draw the scene.  Put OpenGL draw functions here.
    //
    // PRE: OpenGL state has correct transformation and buffer selected
    // POST: The current scene has been drawn<BR><BR>
    //
    // called [once * number of displays] per frame
-   virtual void draw()
-   {
-      //call your openGL drawing code here.
-      myDraw();
-   }
+   virtual void draw();
 
    // Function called after drawing has been triggered but BEFORE it
    // completes<BR><BR>
@@ -185,7 +183,6 @@ private:
    //------------------------------------------------
    // Draw the scene.  A box on the end of the wand.
    //------------------------------------------------
-   void myDraw();
    void initGLState();
 
    void drawCube()
