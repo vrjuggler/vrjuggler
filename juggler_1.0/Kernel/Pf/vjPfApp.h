@@ -82,7 +82,7 @@ public:
    //: Return the needed parameters for the performer framebuffer
    //! NOTE: Stereo, doublebuffer, depth buffer, and rgba are all requested by default
    virtual std::vector<int> getFrameBufferAttrs()
-   {;}
+   { return std::vector<int>();}
 
    //: Function called in the channel draw function to do the actual drawing
    //
