@@ -47,11 +47,13 @@
 #include <snx/snxConfig.h>
 
 #include <string>
+#include <map>
+
 #include <vpr/Util/Singleton.h>
 #include <vpr/DynLoad/Library.h>
 #include <vpr/DynLoad/LibraryFinder.h>
-
 #include <vpr/DynLoad/Library.h>
+
 #include "snx/ISoundImplementation.h"
 
 namespace snx
