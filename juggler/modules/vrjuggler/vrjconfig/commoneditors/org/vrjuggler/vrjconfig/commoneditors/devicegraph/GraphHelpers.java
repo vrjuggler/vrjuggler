@@ -106,6 +106,26 @@ import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 public abstract class GraphHelpers
    implements EditorConstants
 {
+   private static Map mDevCellCreatorMap = new HashMap();
+
+   /**
+    * Registers the given device graph cell creator as the creator for the
+    * given config definition.  Subsequent calls to 
+    * <code>createDeviceCell(ConfigElement,ConfigContext,Map)</code> will be
+    * able to create device graph cells for the given config definition.
+    *
+    * @param def        the config definition that uniquely identifies which
+    *                   creator to be used
+    * @param c          the device graph cell creator
+    *
+    * @see #createDeviceCell(ConfigElement,ConfigContext,Map)
+    */
+   public static void registerGraphCellCreator(ConfigDefinition def,
+                                               DeviceGraphCellCreator c)
+   {
+      mDevCellCreatorMap.put(def, c);
+   }
+
    /**
     * Changes the size of the given <code>CellView</code> reference to be the
     * given dimensions.  The graph cell associated with the given view must be
@@ -166,141 +186,45 @@ public abstract class GraphHelpers
 
    /**
     * Creates a new graph cell for the given config element that is used to
-    * configure an input device.  The parameters to use for creating the
-    * appropriate <code>DefaultGraphCell</code> (with its ports) are
-    * determined based on the type of the config element passed in.  This
-    * method is intended to be used for ensuring correct and easy graph cell
-    * creation for config elements used to configure devices.  However, the
-    * config element type must be known <i>a priori</i> in order for this
-    * method to be able to do its job.
+    * configure an input device.  Pluggable "creators" are used to construct
+    * the appropriate <code>DefaultGraphCell</code> instance (with its ports)
+    * that is returned.  The creator to use is determined using the config
+    * definition of the given config element.  This method is intended to be
+    * used for ensuring correct and easy graph cell creation for config
+    * elements used to configure devices.  Creators must be registered prior
+    * to calling this function.
     *
-    * @param devElt             the config element for the device being
-    *                           represented by the vertex cell to be created
-    * @param context            the config context where <code>devElt</code>
-    *                           exists
-    * @param attributes         the attribute map where the vertex cell's
-    *                           default attribute map will be stored by this
-    *                           function
+    * @param devElt     the config element for the device being represented by
+    *                   the vertex cell to be created
+    * @param context    the config context where <code>devElt</code> exists
+    * @param attributes the attribute map where the vertex cell's default
+    *                   attribute map will be stored by this function
     *
     * @throws IllegalArgumentException
-    *   thrown when the type of <code>devElt</code> is unknown to this method,
-    *   thus preventing correct creation of a <code>DefaultGraphCell</code>
-    *   instance.
+    *   thrown when the type of <code>devElt</code> is unknown to this method
+    *   and the device graph cell creator registry, thus preventing correct
+    *   creation of a <code>DefaultGraphCell</code> instance.
+    *
+    * @see #registerGraphCellCreator(ConfigDefinition,DeviceGraphCellCreator)
     */
    public static DefaultGraphCell createDeviceCell(ConfigElement devElt,
                                                    ConfigContext context,
                                                    Map attributes)
    {
-      ConfigDefinition def = devElt.getDefinition();
       DefaultGraphCell cell = null;
 
-      // XXX: Come up with a better system for setting the x and y values.
-      int x = 120, y = 20;
+      ConfigDefinition def = devElt.getDefinition();
+      DeviceGraphCellCreator creator =
+         (DeviceGraphCellCreator) mDevCellCreatorMap.get(def);
 
-      String token = def.getToken();
+      if ( creator != null )
+      {
+         cell = creator.createDeviceGraphCell(devElt, context, attributes);
+      }
 
-      // XXX: This should use functors to allow for more dynamic addition of
-      // cell creators.
-
-      // These device types all have exactly one unit.  In this case, the
-      // unit type is irrelevant.
-      if ( token.equals(SIM_POS_DEVICE_TYPE) ||
-           token.equals(KEYBOARD_MOUSE_DEVICE_TYPE) ||
-           token.equals(TRACKD_CONTROLLER_TYPE) ||
-           token.equals(TRACKD_SENSOR_TYPE) ||
-           token.equals(TRACKD_API_CONTROLLER_TYPE) ||
-           token.equals(TRACKD_API_SENSOR_TYPE) )
-      {
-         cell = createDeviceCell(devElt, context, 1, attributes, x, y, true);
-      }
-      // A simulated digital device has a variable number of digital inputs
-      // based on a variable-valued property.
-      else if ( token.equals(SIM_DIGITAL_DEVICE_TYPE) )
-      {
-         cell = createDeviceCell(devElt, context, KEY_PAIR_PROPERTY,
-                                 attributes, x, y, false);
-      }
-      // The Flock of Birds and MotionStar Wireless have a variable number of
-      // positional units that are determined at run time by the respective
-      // drivers.
-      else if ( token.equals(FLOCK_TYPE) || token.equals(MOTION_STAR_TYPE) )
-      {
-         List proxy_types = new ArrayList(1);
-         proxy_types.add(0, POSITION_PROXY_TYPE);
-         cell = createDeviceCell(devElt, context, proxy_types, attributes,
-                                 x, y, false);
-      }
-      // The IS-900 and IntersenseAPI drivers have a variable number of
-      // properties...
-      // XXX: This is not complete because it does not take into account hte
-      // untis types.  Adding and removing units with an Intersense is hard...
-      else if ( token.equals(INTERSENSE_TYPE) ||
-                token.equals(INTERSENSE_API_TYPE) )
-      {
-         cell = createDeviceCell(devElt, context, STATIONS_PROPERTY,
-                                 attributes, x, y, false);
-      }
-      // The Linux and Direct Input game controllers have a variable number of
-      // analog and digital units.  The number is dependent upon the game
-      // controller and is determined at run-time by the driver.
-      else if ( token.equals(DIRECTX_JOYSTICK_TYPE) ||
-                token.equals(LINUX_JOYDEV_TYPE) )
-      {
-         List proxy_types = new ArrayList(2);
-         proxy_types.add(0, ANALOG_PROXY_TYPE);
-         proxy_types.add(1, DIGITAL_PROXY_TYPE);
-         cell = createDeviceCell(devElt, context, proxy_types, attributes,
-                                 x, y, false);
-      }
-      else if ( token.equals(PUCK_DEVICE_TYPE) )
-      {
-      }
-      // The Ibox has a fixed number of analog and digital units (4 of both).
-      else if ( token.equals(IBOX_TYPE) )
-      {
-         List unit_list = new ArrayList(2);
-         unit_list.add(0, UnitConstants.ANALOG);
-         unit_list.add(1, UnitConstants.DIGITAL);
-         cell = createBaseDeviceCell(new DeviceInfo(devElt, context, unit_list),
-                                     attributes, x, y, false);
-         addDevicePorts(cell, UnitConstants.ANALOG, 4);
-         addDevicePorts(cell, UnitConstants.DIGITAL, 4);
-      }
-      else if ( token.equals(DATA_GLOVE_TYPE) )
-      {
-      }
-      // The Pinch Gloves have a fixed numbmer of digital untis (11).
-      else if ( token.equals(PINCH_GLOVE_TYPE) )
-      {
-         List unit_list = new ArrayList(1);
-         unit_list.add(0, UnitConstants.DIGITAL);
-         cell = createBaseDeviceCell(new DeviceInfo(devElt, context, unit_list),
-                                     attributes, x, y, false);
-         addDevicePorts(cell, UnitConstants.DIGITAL, 11);
-      }
-      // VRPN has a variable number of digital and positional units defined
-      // by two property values.
-      else if ( token.equals(VRPN_TYPE) )
-      {
-         Integer b_count =
-            (Integer) devElt.getProperty(BUTTON_COUNT_PROPERTY, 0);
-         Integer t_count =
-            (Integer) devElt.getProperty(TRACKER_COUNT_PROPERTY, 0);
-
-         PropertyDefinition b_prop_def =
-            devElt.getDefinition().getPropertyDefinition(BUTTON_COUNT_PROPERTY);
-         PropertyDefinition t_prop_def =
-            devElt.getDefinition().getPropertyDefinition(TRACKER_COUNT_PROPERTY);
-
-         Map unit_map = new HashMap();
-         unit_map.put(UnitConstants.DIGITAL, b_prop_def);
-         unit_map.put(UnitConstants.POSITION, t_prop_def);
-         cell = createBaseDeviceCell(new DeviceInfo(devElt, context, unit_map),
-                                     attributes, x, y, false);
-         addDevicePorts(cell, UnitConstants.DIGITAL, b_count.intValue());
-         addDevicePorts(cell, UnitConstants.POSITION, t_count.intValue());
-      }
-      else
+      // If creator is null, cell will be null.  If the creator failed, cell
+      // will be null.
+      if ( cell == null )
       {
          throw new IllegalArgumentException("Unexpected definition " +
                                             def.getToken());
@@ -312,11 +236,8 @@ public abstract class GraphHelpers
    /**
     * Creates a new graph cell for the given config element that is used to
     * configure an input device, which has exactly one input source (unit)
-    * at all times.  The numbmer of units indicates how many ports the new
-    * graph cell should have initially.  The initial attribute map used for
-    * the graph cell is created using
-    * <code>org.vrjuggler.vrjconfig.commoneditors.DeviceGraph.createDeviceAttributes()</code>,
-    * and it is stored in the given attribute map.
+    * at all times.  The number of units indicates how many ports the new
+    * graph cell should have initially.
     *
     * @param devElt             the config element for the device being
     *                           represented by the vertex cell to be created
@@ -332,8 +253,8 @@ public abstract class GraphHelpers
     * @param autoSize           flag indicating whether the new cell should be
     *                           auto-sized
     *
-    * @see org.vrjuggler.vrjconfig.commoneditors.DeviceGraph#createDeviceAttributes(int,int,boolean)
     * @see #createDeviceCell(ConfigElement,ConfigContext,int,Map,int,int,boolean)
+    * @see #createBaseDeviceCell(DeviceInfo,Map,int,int,boolean)
     */
    public static DefaultGraphCell createDeviceCell(ConfigElement devElt,
                                                    ConfigContext context,
@@ -347,14 +268,12 @@ public abstract class GraphHelpers
     * Creates a new graph cell for the given config element that is used to
     * configure an input device.  The number of units is determined based on
     * the value of <code>unitPropName</code>.  If it is non-null, then
-    * <code>devElt</code> is queried for the number of values of thet named
-    * property, indicating that the number of values is variable.  If
+    * <code>devElt</code> is queried for the number of values of the named
+    * property.  Further, a non-null value for <code>unitPropName</code>
+    * indicates that the number of values is variable.  If
     * <code>unitPropName</code> is null, then the number of units is set to 1
-    * and is treated as non-variable.  The numbmer of units indicates how many
-    * ports the new graph cell should have initially.  The initial attribute
-    * map used for the graph cell is created using
-    * <code>org.vrjuggler.vrjconfig.commoneditors.DeviceGraph.createDeviceAttributes()</code>,
-    * and it is stored in the given attribute map.
+    * and is treated as non-variable.  The number of units indicates how many
+    * ports the new graph cell should have initially.
     *
     * @param devElt             the config element for the device being
     *                           represented by the vertex cell to be created
@@ -373,7 +292,7 @@ public abstract class GraphHelpers
     * @param autoSize           flag indicating whether the new cell should be
     *                           auto-sized
     *
-    * @see org.vrjuggler.vrjconfig.commoneditors.DeviceGraph#createDeviceAttributes(int,int,boolean)
+    * @see #createBaseDeviceCell(DeviceInfo,Map,int,int,boolean)
     */
    public static DefaultGraphCell createDeviceCell(ConfigElement devElt,
                                                    ConfigContext context,
@@ -403,10 +322,7 @@ public abstract class GraphHelpers
     * Creates a new graph cell for the given config element that is used to
     * configure an input device.  The number of units (specified by the
     * <code>numUnits</code> parameter) indicates the fixed number of ports
-    * the new graph cell has.  The initial attribute map used for the graph
-    * cell is created using
-    * <code>org.vrjuggler.vrjconfig.commoneditors.DeviceGraph.createDeviceAttributes()</code>,
-    * and it is stored in the given attribute map.
+    * the new graph cell has.
     *
     * @param devElt             the config element for the device being
     *                           represented by the vertex cell to be created
@@ -423,7 +339,7 @@ public abstract class GraphHelpers
     * @param autoSize           flag indicating whether the new cell should be
     *                           auto-sized
     *
-    * @see org.vrjuggler.vrjconfig.commoneditors.DeviceGraph#createDeviceAttributes(int,int,boolean)
+    * @see #createBaseDeviceCell(DeviceInfo,Map,int,int,boolean)
     */
    public static DefaultGraphCell createDeviceCell(ConfigElement devElt,
                                                    ConfigContext context,
@@ -459,7 +375,7 @@ public abstract class GraphHelpers
     * @param autoSize   flag indicating whether the new cell should be
     *                   auto-sized
     *
-    * @see org.vrjuggler.vrjconfig.commoneditors.DeviceGraph#createDeviceAttributes(int,int,boolean)
+    * @see #createBaseDeviceCell(DeviceInfo,Map,int,int,boolean)
     */
    public static DefaultGraphCell createDeviceCell(ConfigElement devElt,
                                                    ConfigContext context,
@@ -532,15 +448,61 @@ public abstract class GraphHelpers
       return cell;
    }
 
-   private static DefaultGraphCell createBaseDeviceCell(DeviceInfo devInfo,
-                                                        Map attributes,
-                                                        int x, int y,
-                                                        boolean autoSize)
+   /**
+    * Creates a basic device graph cell by creating an attribute map using
+    * <code>org.vrjuggler.vrjconfig.commoneditors.DeviceGraph.createDeviceAttributes()</code>
+    * and the given parameters.  The freshly created attribute map is stored
+    * in the given attribute map using the new <code>DefaultGraphCell</code>
+    * instance as its key.  In general, user code should not be using this
+    * method directly, but it is made public so that instances of
+    * <code>DeviceGraphCellCreator</code> can utilize it when necessary.
+    *
+    * @param devInfo    the informational object describing the device
+    * @param attributes the attribute map where the vertex cell's default
+    *                   attribute map will be stored by this function
+    * @param x          the X coordinate for the initial positionaing of the
+    *                   new vertex
+    * @param y          the Y coordinate for the initial positionaing of the
+    *                   new vertex
+    * @param autoSize   flag indicating whether the new cell should be
+    *                   auto-sized
+    *
+    * @see org.vrjuggler.vrjconfig.commoneditors.DeviceGraph#createDeviceAttributes(int,int,boolean)
+    * @see DeviceGraphCellCreator
+    * @see org.jgraph.graph.GraphConstants
+    * @see org.jgraph.graph.AttributeMap
+    */
+   public static DefaultGraphCell createBaseDeviceCell(DeviceInfo devInfo,
+                                                       Map attributes,
+                                                       int x, int y,
+                                                       boolean autoSize)
    {
       DefaultGraphCell dev_cell = new DefaultGraphCell(devInfo);
       attributes.put(dev_cell, DeviceGraph.createDeviceAttributes(x, y,
                                                                   autoSize));
       return dev_cell;
+   }
+
+   /**
+    * Adds the given number of ports to the given graph cell as children.
+    * The ports are all created using
+    * <code>createDevicePort(Integer,int)</code>.
+    *
+    * @param cell       the device graph cell to which the ports will be
+    *                   added
+    * @param unitType   the type of the input source (unit) for the new
+    *                   ports
+    * @param numUnits   the number of ports that will be addded
+    *
+    * @see #createDevicePort(Integer,int)
+    */
+   public static void addDevicePorts(DefaultGraphCell cell, Integer unitType,
+                                     int numUnits)
+   {
+      for ( int i = 0; i < numUnits; ++i )
+      {
+         cell.add(createDevicePort(unitType, i));
+      }
    }
 
    /**
@@ -745,19 +707,6 @@ public abstract class GraphHelpers
    public static DefaultPort createDevicePort(UnitInfo unitInfo)
    {
       return new DefaultPort(unitInfo);
-   }
-
-   /**
-    * Adds the given number of ports to the given graph cell as children.
-    * The ports are all instances of <code>org.jgraph.graph.DefaultPort</code>.
-    */
-   private static void addDevicePorts(DefaultGraphCell cell, Integer unitType,
-                                      int numUnits)
-   {
-      for ( int i = 0; i < numUnits; ++i )
-      {
-         cell.add(createDevicePort(unitType, i));
-      }
    }
 
    private static ProxyPointerEdge connectPorts(DefaultPort proxyPort,
