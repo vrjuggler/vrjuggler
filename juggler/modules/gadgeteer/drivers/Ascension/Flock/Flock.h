@@ -38,7 +38,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/Ascension/Flock/FlockStandalone.h>
+#include <drivers/Ascension/Flock/FlockStandalone.h>
 
 
 namespace gadget

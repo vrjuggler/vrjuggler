@@ -32,6 +32,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
+#include <vector>
 #include <boost/concept_check.hpp>
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
@@ -42,9 +43,7 @@
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
 
-#include <gadget/Devices/Ascension/MotionStar/MotionStar.h>
-
-#include <vector>
+#include <drivers/Ascension/MotionStar/MotionStar.h>
 
 
 void initDevice(gadget::InputManager* inputMgr)
