@@ -46,7 +46,7 @@ import VjConfig.ConfigStreamTokenizer;
 /** Class for storing performance data from a single source.
  *  A source is, for example, a jccl::PerfDataBuffer.
  *
- *  PerfDataCollector is a source for ActionEvents, with the following
+ *  PerfDataCollector is a source of ActionEvents, with the following
  *  ActionCommands:
  *      "Update" - when data is appended to the Collector.
  *      "Clear" - when the Collector clears out all its data.
@@ -56,10 +56,22 @@ public interface PerfDataCollector {
     public void write (DataOutputStream out) throws IOException;
 
 
+    /** Set the maximum number of samples to store.
+     *  When new samples are added, self will remove the oldest samples
+     *  to make room.
+     *  @param n Maximum number of samples to allow.  If n = -1, no
+     *           purging will be done and the collector will add new
+     *           samples so long as memory is available.
+     */
     public void setMaxSamples (int n);
 
 //     public int getNumPhases();
 
+
+    /** Returns the name of this collector.
+     *  The name is generally the same as the name used for the 
+     *  jccl::PerfDataBuffer it was created to read data from.
+     */
     public String getName();
 
 
@@ -76,9 +88,6 @@ public interface PerfDataCollector {
     public void generateAverages (int preskip, int postskip);
 
     public String dumpAverages (int preskip, int postskip, boolean doanomaly, double cutoff);
-
-
-//     public void read (ConfigStreamTokenizer st);
 
 
     public void addActionListener (ActionListener l);
