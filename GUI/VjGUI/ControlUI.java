@@ -433,26 +433,43 @@ public class ControlUI
 	    f.destroy();
 	}
 	else if (frame instanceof ConfigChunkFrame) {
+	    child_frames.removeElement(frame);
+	    frame.destroy();
+	}
+    }
+
+
+    //: Callback when one of ControlUI's children is closed (this sucks)
+    public void applyChild (ChildFrame frame) {
+	if (frame instanceof HTMLFrame) {
+            ;
+	}
+	else if (frame instanceof ChunkDescFrame) {
+	    ChunkDescFrame f = (ChunkDescFrame)frame;
+            ChunkDesc oldc = f.getOldValue();
+            ChunkDesc newc = f.getNewValue();
+            ChunkDescDB descdb = f.getDescDB();
+            if (oldc != null) {
+                descdb.replace (oldc, newc);
+            }
+	}
+	else if (frame instanceof ConfigChunkFrame) {
 	    ConfigChunkFrame f = (ConfigChunkFrame)frame;
-	    if (ok) {
-		ConfigChunk newc, oldc;
-		oldc = f.getOldValue();
-		newc = f.getNewValue();
-		ConfigChunkDB chunkdb = f.getChunkDB();
-		if (chunkdb == Core.active_chunkdb) {
-		    if (oldc.getName().equals (newc.getName()))
-			Core.net.sendChunk(newc);
-		    else {
-			Core.net.removeChunk (oldc);
-			Core.net.sendChunk (newc);
-		    }
-		}
-		else {
-		    chunkdb.replace (oldc, newc);
-		}
-	    }
-	    child_frames.removeElement(f);
-	    f.destroy();
+            ConfigChunk newc, oldc;
+            oldc = f.getOldValue();
+            newc = f.getNewValue();
+            ConfigChunkDB chunkdb = f.getChunkDB();
+            if (chunkdb == Core.active_chunkdb) {
+                if (oldc.getName().equals (newc.getName()))
+                    Core.net.sendChunk(newc);
+                else {
+                    Core.net.removeChunk (oldc);
+                    Core.net.sendChunk (newc);
+                }
+            }
+            else {
+                chunkdb.replace (oldc, newc);
+            }
 	}
     }
 

@@ -77,7 +77,7 @@ public class ChunkDBTreeCellRenderer extends JLabel implements TreeCellRenderer 
 	    ChunkTreeNodeInfo info = (ChunkTreeNodeInfo)node.getUserObject();
 
 	    setText (info.toString());
-	    if (info.ch != null || info.childchunks > 0)
+	    if (info.isChunkNode() || info.childchunks > 0)
 		disabled = false;
 	    else
 		disabled = true;

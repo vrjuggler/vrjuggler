@@ -39,60 +39,45 @@ import VjConfig.*;
 public class ChunkTreeNodeInfo {
 
     public ConfigChunkDB db;
-    public ConfigChunk ch;
-    public String s;
-    public boolean isdesc;
+    public String name;
+    public int kind;
     public int childchunks;
 
+    public static final int CHUNK = 1;
+    public static final int DESC_FOLDER = 2;
+    public static final int FOLDER = 3;
 
-    public ChunkTreeNodeInfo (ConfigChunkDB _db, ConfigChunk _ch) {
-	db = _db;
-	ch = _ch;
-	s = null;
-	isdesc = false;
-	childchunks = 1;
-    }
 
-    public ChunkTreeNodeInfo (ConfigChunkDB _db) {
-	db = _db;
-	ch = null;
-	s = null;
-	isdesc = false;
-	childchunks = 0;
-    }
-
-    public ChunkTreeNodeInfo (ConfigChunkDB _db, String _s) {
-	this(_db, _s, false);
-	childchunks = 0;
-    }
-
-    public ChunkTreeNodeInfo (ConfigChunkDB _db, String _s, boolean _isdesc) {
-	/* for orgtree label nodes and chunkdescs(maybe) */
-	db = _db;
-	ch = null;
-	s = _s;
-	isdesc = _isdesc;
-	childchunks = 0;
+    public ChunkTreeNodeInfo (int _kind, ConfigChunkDB _db, String _name) {
+        kind = _kind;
+        name = _name;
+        db = _db;
+        childchunks = (kind == CHUNK)? 1:0;
     }
 
 
     public boolean isDescNode() {
-	return isdesc;
-    }
-    public boolean isChunkNode() {
-	return (ch != null);
+	return (kind == DESC_FOLDER);
     }
 
+
+    public boolean isChunkNode() {
+	return (kind == CHUNK);
+    }
+
+
+    public ConfigChunk getChunk() {
+        if (kind == CHUNK)
+            return db.get (name);
+        else
+            return null;
+    }
 
     public String toString () {
-	if (s != null)
-	    return s;
-	else if (ch != null)
-	    return ch.getName();
-	else if (db != null)
-	    return db.name;
-	else
-	    return "empty";
+        if (name == null)
+            return "empty";
+        else
+            return name;
     }
     
 }

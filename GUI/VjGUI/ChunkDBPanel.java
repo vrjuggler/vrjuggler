@@ -365,8 +365,8 @@ public class ChunkDBPanel extends JPanel
 	    if (tp != null) {
 		for (i = 0; i < tp.length; i++) {
 		    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
-		    if (ni.ch != null)
-			v.addElement (ni.ch);
+		    if (ni.isChunkNode())
+			v.addElement (ni.getChunk());
 		}
 	    }
 	    if (sendacross_target != null)
@@ -406,8 +406,8 @@ public class ChunkDBPanel extends JPanel
 		ConfigChunkDB db = new ConfigChunkDB ();
 		for (i = 0; i < tp.length; i++) {
 		    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
-		    if (ni.ch != null) {
-			db.addElement (ni.ch);
+		    if (ni.isChunkNode()) {
+			db.addElement (ni.getChunk());
 		    }
 		}
 		Core.net.removeChunks (db);
@@ -415,8 +415,8 @@ public class ChunkDBPanel extends JPanel
 	    else {
 		for (i = 0; i < tp.length; i++) {
 		    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
-		    if (ni.ch != null) {
-			chunkdb.remove(ni.ch.getName());
+		    if (ni.isChunkNode()) {
+			chunkdb.remove(ni.name);
 		    }
 		}
 	    }
@@ -439,9 +439,9 @@ public class ChunkDBPanel extends JPanel
 		return;
 	    for (i = 0; i < tp.length; i++) {
 		ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
-		if (ni.ch != null) {
+		if (ni.isChunkNode()) {
 		    // create a copy of this node...
-		    ch = new ConfigChunk (ni.ch);
+		    ch = new ConfigChunk (ni.getChunk());
 		    ch.name = "copy of " + ch.name;
 		    chunkdb.addElement (ch);
 		}
@@ -470,7 +470,7 @@ public class ChunkDBPanel extends JPanel
 		    Core.ui.loadDescHelp (d.getToken());
 	    }
 	    else if (ni.isChunkNode()){
-		Core.ui.loadDescHelp (ni.ch.desc.getToken());
+		Core.ui.loadDescHelp (ni.getChunk().desc.getToken());
 	    }
 	}
 	else if (source == remove_mi) {
@@ -478,11 +478,11 @@ public class ChunkDBPanel extends JPanel
 	    if (ni.isChunkNode()) {
 		if (chunkdb == Core.active_chunkdb) {
 		    ConfigChunkDB db = new ConfigChunkDB();
-		    db.addElement (ni.ch);
+		    db.addElement (ni.getChunk());
 		    Core.net.removeChunks (db);
 		} 
 		else
-		    chunkdb.remove (ni.ch.getName());
+		    chunkdb.remove (ni.name);
 	    }
 	}
 	else if (source == insert_mi) {
@@ -513,10 +513,11 @@ public class ChunkDBPanel extends JPanel
 
 	int mod = e.getModifiers();
 	if (e.getClickCount() == 1) {
-	    if (ni.ch != null) {
-		String h = (ni.ch.desc.help.equals(""))?"No help available"
-		    :ni.ch.desc.help;
-		Core.consoleTempMessage (ni.ch.desc.getName(), h);
+	    if (ni.isChunkNode()) {
+                ConfigChunk ch = ni.getChunk();
+		String h = (ch.desc.help.equals(""))?"No help available"
+		    :ch.desc.help;
+		Core.consoleTempMessage (ch.desc.getName(), h);
 	    }
 	    else if (ni.isDescNode()) {
 		ChunkDesc d = Core.descdb.getByName (ni.toString());
@@ -525,7 +526,7 @@ public class ChunkDBPanel extends JPanel
 	    }
 	}
 	else if(e.getClickCount() == 2) {
-	    openChunkFrame (ni.ch);
+	    openChunkFrame (ni.getChunk());
 	}
     }
 
