@@ -129,8 +129,8 @@ bool MyButtonDevice::config( ConfigChunk *c )
   if (!Digital::config(c))
      return false;
 
-  mPortId = c->getProperty( "port" );
-  mBaud = c->getProperty( "baud" );
+  mPortId = c->getProperty<int>( "port" );
+  mBaud = c->getProperty<int>( "baud" );
 
   return true;
 }

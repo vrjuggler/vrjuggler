@@ -62,7 +62,12 @@ bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
    //if ((!Digital::config( chunk )) || (!SimInput::config( chunk )))
    //   return false;
 
-   std::vector< jccl::VarValue* > key_list = chunk->getAllProperties( "keyPairs" );
+   std::vector<jccl::ConfigChunkPtr> key_list;
+   int key_count = chunk->getNum("keyPairs");
+   for ( int i = 0; i < key_count; ++i )
+   {
+      key_list.push_back(chunk->getProperty<jccl::ConfigChunkPtr>("keyPairs", i));
+   }
    mSimKeys = readKeyList( key_list );
 
    int num_pairs = mSimKeys.size();
@@ -73,7 +78,7 @@ bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
    const int LEFT_INDEX = 0, RIGHT_INDEX = 1;
    if (LEFT_INDEX < GADGET_MAX_GLOVE_DEVS)
    {
-      std::string glove_pos_proxy = chunk->getProperty( "glovePos" );    // Get the name of the pos_proxy
+      std::string glove_pos_proxy = chunk->getProperty<std::string>( "glovePos" );    // Get the name of the pos_proxy
       if (glove_pos_proxy == std::string(""))
       {
          vprDEBUG( gadgetDBG_INPUT_MGR, 0 )
@@ -99,7 +104,7 @@ bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
 
    if (RIGHT_INDEX < GADGET_MAX_GLOVE_DEVS)
    {
-      std::string glove_pos_proxy = chunk->getProperty( "rightGlovePos" );    // Get the name of the pos_proxy
+      std::string glove_pos_proxy = chunk->getProperty<std::string>( "rightGlovePos" );    // Get the name of the pos_proxy
       if (glove_pos_proxy == std::string(""))
       {
          vprDEBUG( gadgetDBG_INPUT_MGR, 0 )

@@ -56,24 +56,24 @@ bool KeyboardOSX::config(jccl::ConfigChunkPtr c)
       m_realkeys[i] = m_keys[i] = 0;
    m_realkeys[0] = m_keys[0] = 0;
 
-   window_title = CFStringCreateWithCString(NULL, static_cast<std::string>(c->getProperty("name")).c_str(), kCFStringEncodingMacRoman);
+   window_title = CFStringCreateWithCString(NULL, c->getName().c_str(), kCFStringEncodingMacRoman);
 
    // Get size and position
-   m_width = (int)c->getProperty("width");
-   m_height = (int)c->getProperty("height");
+   m_width = c->getProperty<int>("width");
+   m_height = c->getProperty<int>("height");
    if (m_width == 0) m_width = 400;
    if (m_height == 0) m_height = 400;
 
-   m_x = c->getProperty("origin", 0);
-   m_y = c->getProperty("origin", 1);
+   m_x = c->getProperty<int>("origin", 0);
+   m_y = c->getProperty<int>("origin", 1);
 
    // Get the lock information
-   mLockToggleKey = c->getProperty("lock_key");
-   bool start_locked = c->getProperty("start_locked");
+   mLockToggleKey = c->getProperty<int>("lock_key");
+   bool start_locked = c->getProperty<bool>("start_locked");
    if (start_locked)
       mLockState = Lock_LockKey;      // Initialize to the locked state
 
-   m_mouse_sensitivity = c->getProperty("msens");
+   m_mouse_sensitivity = c->getProperty<float>("msens");
    if (0.0f == m_mouse_sensitivity)
       m_mouse_sensitivity = 0.5;
 
@@ -81,7 +81,7 @@ bool KeyboardOSX::config(jccl::ConfigChunkPtr c)
       << "Mouse Sensititivty: " << m_mouse_sensitivity << std::endl
       << vprDEBUG_FLUSH;
 
-   mSleepTimeMS = c->getProperty("sleep_time");
+   mSleepTimeMS = c->getProperty<int>("sleep_time");
 
    // HACK: Use a default time until config file has defaults
    if (mSleepTimeMS == 0)

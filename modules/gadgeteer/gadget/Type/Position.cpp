@@ -55,16 +55,16 @@ bool Position::config(jccl::ConfigChunkPtr c)
     // These are the transforms from the base tracker coord system
 
     float xt, yt, zt;
-    xt = c->getProperty("translate",0);
-    yt = c->getProperty("translate",1);
-    zt = c->getProperty("translate",2);
+    xt = c->getProperty<float>("translate",0);
+    yt = c->getProperty<float>("translate",1);
+    zt = c->getProperty<float>("translate",2);
 
     // These values are specified in human-friendly degrees but must be passed
     // to GMTL as radians.
     float xr, yr, zr;
-    xr = gmtl::Math::deg2Rad(c->getProperty("rotate",0));
-    yr = gmtl::Math::deg2Rad(c->getProperty("rotate",1));
-    zr = gmtl::Math::deg2Rad(c->getProperty("rotate",2));
+    xr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",0));
+    yr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",1));
+    zr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",2));
 
       // This makes a rotation matrix that moves a pt in
       // the device's coord system to the vj coord system.

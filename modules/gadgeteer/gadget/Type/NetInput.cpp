@@ -31,7 +31,7 @@ NetInput::NetInput(jccl::ConfigChunkPtr chunk, VJ_NETID_TYPE local_device_id, ui
    mRemoteId = 0;
    mAckInitialization = false;
    mNeedToResendRequest = false;
-   mSrcName = (std::string) chunk->getProperty("name");
+   mSrcName = chunk->getFullName();
    mInstName = mSrcName;
    mInstName += "_NET_";
 }

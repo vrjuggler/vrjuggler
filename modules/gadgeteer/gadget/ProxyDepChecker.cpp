@@ -45,7 +45,7 @@ namespace gadget
 
 bool ProxyDepChecker::canHandle(jccl::ConfigChunkPtr chunk)
 {
-   std::string chunk_type = (std::string)chunk->getType();
+   std::string chunk_type = chunk->getDescToken();
 
    bool ret_val;
    ret_val = ((chunk_type == AnalogProxy::getChunkType()) ||

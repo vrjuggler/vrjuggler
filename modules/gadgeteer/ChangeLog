@@ -1,6 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
-May-22-2002 allenb   Updated to work with Boost 0.1.28.
+May-23-2002 patrickh  Updated to use JCCL 0.2.0 API.
+                      NEW VERSION: 0.2.3
+May-22-2002 allenb    Updated to work with Boost 0.1.28.
 May-17-2002 patrickh  Fixed a math bug causing bad tracking information from
                       positional devices.
                       NEW VERSION: 0.2.2

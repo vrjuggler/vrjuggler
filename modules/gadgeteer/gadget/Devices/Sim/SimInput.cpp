@@ -32,40 +32,35 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Devices/Sim/SimInput.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <gadget/Devices/Sim/SimInput.h>
 
 namespace gadget
 {
 
 //: Construct the mod pair from a mod pair chunk
-std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::VarValue*>& keyList)
+std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::ConfigChunkPtr>& keyList)
 {
-   if(keyList.size() > 0)
+   std::vector<KeyModPair> key_vec;
+
+   if ( ! keyList.empty() )
    {
 #ifdef GADGET_DEBUG
-      jccl::ConfigChunkPtr first_chunk = (jccl::ConfigChunkPtr)(*(keyList[0]));
-      std::string chunk_type = first_chunk->getType();
+      jccl::ConfigChunkPtr first_chunk = keyList[0];
+      std::string chunk_type = first_chunk->getDescToken();
       vprASSERT(chunk_type == std::string("KeyModPair"));
 #endif
 
-      std::vector<KeyModPair> keys;
-      int num_keys = keyList.size();
-
-      for(int i=0;i<num_keys;i++)
+      for ( std::vector<jccl::ConfigChunkPtr>::iterator i = keyList.begin();
+            i != keyList.end();
+            ++i )
       {
-         KeyModPair key_pair;
-         jccl::VarValue* var_val = keyList[i];
-         jccl::ConfigChunkPtr chunk = (jccl::ConfigChunkPtr)(*var_val);
-         key_pair.mKey = chunk->getProperty("key");
-         key_pair.mModifier = chunk->getProperty("modKey");
-         keys.push_back(key_pair);
+         key_vec.push_back(KeyModPair((*i)->getProperty<int>("key"),
+                                      (*i)->getProperty<int>("modKey")));
       }
-
-      return keys;
    }
-   else
-      return std::vector<KeyModPair>();
+
+   return key_vec;
 }
 
 
@@ -73,7 +68,7 @@ std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::VarVal
 // Grabs it out of the given config chunk
 bool SimInput::config(jccl::ConfigChunkPtr chunk)
 {
-   std::string keyboardName = chunk->getProperty("keyboardProxy");    // Get the event source
+   std::string keyboardName = chunk->getProperty<std::string>("keyboardProxy");    // Get the event source
    mKeyboard.init(keyboardName);
 
    return true;

@@ -63,13 +63,13 @@ DTKMemorySegment::~DTKMemorySegment()
 
 bool DTKMemorySegment::config(jccl::ConfigChunkPtr c)
 {
-    _type = (DTK_dataType)static_cast<int>(c->getProperty("dataType"));
+    _type = (DTK_dataType) c->getProperty<int>("dataType");
 
-    _numItems = static_cast<int>(c->getProperty("itemCount"));
-    _segmentType = (DTK_memoryType)static_cast<int>(c->getProperty("inputType"));
+    _numItems = c->getProperty<int>("itemCount");
+    _segmentType = (DTK_memoryType) c->getProperty<int>("inputType");
 
-    _segmentName = c->getProperty("segmentName").cstring();
-    _remotehost = c->getProperty("remoteHost").cstring();
+    _segmentName = c->getProperty<std::string>("segmentName").c_str();
+    _remotehost = c->getProperty<std::string>("remoteHost").c_str();
     if(_remotehost[0] == '\0')
     {
     delete [] _remotehost;

@@ -44,10 +44,10 @@ bool GloveProxy::config(jccl::ConfigChunkPtr chunk)
    vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,3)
       << "------------------ GLOVE PROXY config() -----------------\n"
       << vprDEBUG_FLUSH;
-   vprASSERT(((std::string)chunk->getType()) == "GloveProxy");
+   vprASSERT(chunk->getDescToken() == "GloveProxy");
 
-   mUnitNum = chunk->getProperty("unit");
-   mDeviceName = (std::string)chunk->getProperty("device");
+   mUnitNum = chunk->getProperty<int>("unit");
+   mDeviceName = chunk->getProperty<std::string>("device");
 
    refresh();
 
