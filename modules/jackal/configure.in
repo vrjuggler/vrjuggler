@@ -277,6 +277,8 @@ CPPFLAGS="${_vjsave_CPPFLAGS}"
 INCLUDES="${_vjsave_INCLUDES}"
 LDFLAGS="${_vjsave_LDFLAGS}"
 
+DPP_HAVE_CPPUNIT
+
 # -----------------------------------------------------------------------------
 # Checks for header files.
 # -----------------------------------------------------------------------------
