@@ -148,7 +148,7 @@ namespace gadget
       }
 
       /**
-       * Sets the proxy to point to the given type specific device.
+       * Sets the proxy to point to the given type-specific device.
        *
        * @pre devPtr must be a valid device of type DEV_TYPE.
        * @post The proxy now references the given device.  The device name we
@@ -208,16 +208,16 @@ namespace gadget
          return true;
       }
 
-   /** Get the name of the device that we are proxying. */
-   virtual std::string getDeviceName() const
-   {
-      return mDeviceName;
-   }
+      /** Get the name of the device that we are proxying. */
+      virtual std::string getDeviceName() const
+      {
+         return mDeviceName;
+      }
 
-protected:
-   std::string    mDeviceName;   /**< Name of the device to link up with */
-   DEV_TYPE*      mTypedDevice;  /**< The device (type specific pointer) */
-};
+   protected:
+      std::string mDeviceName;   /**< Name of the device to link up with */
+      DEV_TYPE*   mTypedDevice;  /**< The device (type-specific pointer) */
+   };
 
 } // end namespace
 
