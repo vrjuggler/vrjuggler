@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings desc.db.version="2.0"?>
 <ChunkDescDB>
   <ChunkDesc token="EnvironmentManager" name="Environment Manager">
     <help>Application-side of connection to vjcontrol GUI</help>
