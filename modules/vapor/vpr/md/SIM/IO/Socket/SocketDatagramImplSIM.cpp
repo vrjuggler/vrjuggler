@@ -114,4 +114,62 @@ vpr::ReturnStatus SocketDatagramImplSIM::sendto (const void* msg,
    return status;
 }
 
+vpr::ReturnStatus SocketDatagramImplSIM::isReadReady (const vpr::Interval timeout)
+   const
+{
+   vpr::ReturnStatus status;
+
+   if ( vpr::Interval::NoWait == timeout )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "SocketDatagramImplSIM::isReadReady(): Timeouts not supported "
+         << "with sim sockets--yet\n" << vprDEBUG_FLUSH;
+   }
+
+//   if ( vpr::Interval::NoWait == timeout )
+//   {
+      if ( ! mOpen || mArrivedQueue.size() == 0 )
+      {
+         status.setCode(vpr::ReturnStatus::Fail);
+      }
+//   }
+/*
+   XXX: Will there be a way to handle waiting until the timeout expires?
+   else
+   {
+   }
+*/
+
+   return status;
+}
+
+vpr::ReturnStatus SocketDatagramImplSIM::isWriteReady (const vpr::Interval timeout)
+   const
+{
+   vpr::ReturnStatus status;
+
+   if ( vpr::Interval::NoWait == timeout )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "SocketDatagramImplSIM::isWriteReady(): Timeouts not supported with "
+         << "sim sockets--yet\n" << vprDEBUG_FLUSH;
+   }
+
+//   if ( vpr::Interval::NoWait == timeout )
+//   {
+      if ( ! mOpen )
+      {
+         status.setCode(vpr::ReturnStatus::Fail);
+      }
+//   }
+/*
+   XXX: Will there be a way to handle waiting until the timeout expires?
+   else
+   {
+   }
+*/
+
+   return status;
+}
+
 } // End of vpr namespace
