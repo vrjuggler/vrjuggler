@@ -39,15 +39,16 @@ package org.vrjuggler.tweek;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.InetAddress;
+import java.util.Vector;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.vrjuggler.tweek.beans.*;
-import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.net.CommunicationEvent;
 import org.vrjuggler.tweek.net.CommunicationListener;
 import org.vrjuggler.tweek.net.corba.*;
 import org.vrjuggler.tweek.services.GlobalPreferencesService;
+import org.vrjuggler.tweek.services.EnvironmentService;
 
 
 /**
@@ -128,8 +129,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
    public void treeModelRefresh (TreeModelRefreshEvent e)
    {
       BeanTreeModel data_model = BeanCollectionBuilder.instance().getPanelTree();
-
-      java.util.Vector viewers = ViewerRegistry.instance().getAllViewers();
+      Vector viewers           = ViewerRegistry.instance().getAllViewers();
 
       for ( int i = 0; i < viewers.size(); i++ )
       {
@@ -348,17 +348,25 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
             Object service = ServiceRegistry.instance().getService("Environment");
 
-            if ( service != null )
+            try
             {
-               EnvironmentService env_service = (EnvironmentService) service;
-               new_orb.init(env_service.getCommandLineArgs());
-            }
-            else
-            {
-               new_orb.init(null);
-            }
+               if ( service != null )
+               {
+                  EnvironmentService env_service = (EnvironmentService) service;
+                  new_orb.init(env_service.getCommandLineArgs());
+               }
+               else
+               {
+                  new_orb.init(null);
+               }
 
-            m_bean_container.fireConnectionEvent(new_orb);
+               m_bean_container.fireConnectionEvent(new_orb);
+               m_orbs.add(new_orb);
+            }
+            catch (org.omg.CORBA.SystemException sys_ex)
+            {
+               sys_ex.printStackTrace();
+            }
          }
       }
    }
@@ -497,4 +505,5 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
    private JMenuItem m_menu_help_about     = new JMenuItem();
 
    // Networking stuff.
+   private Vector m_orbs = new Vector();
 }
