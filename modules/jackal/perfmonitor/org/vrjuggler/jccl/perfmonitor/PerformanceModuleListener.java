@@ -41,7 +41,6 @@ package org.vrjuggler.jccl.perfmonitor;
  *  SwingUtilities.invokeLater or something similar to ensure correct
  *  synchronization.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public interface PerformanceModuleListener extends java.util.EventListener {

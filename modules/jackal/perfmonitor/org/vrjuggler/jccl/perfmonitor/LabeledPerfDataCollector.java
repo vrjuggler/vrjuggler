@@ -41,7 +41,7 @@ import java.util.*;
 import org.w3c.dom.*;
 
 import org.vrjuggler.jccl.config.*;
-import VjControl.Core;
+import org.vrjuggler.jccl.vjcontrol.Core;
 
 /** Class for storing performance data from a single source.
  *  A source is, for example, a jccl::PerfDataBuffer.

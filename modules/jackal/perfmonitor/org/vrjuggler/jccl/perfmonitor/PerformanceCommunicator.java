@@ -33,9 +33,9 @@ package org.vrjuggler.jccl.perfmonitor;
 
 import java.io.*;
 import org.vrjuggler.jccl.config.*;
-import VjComponents.Network.DefaultNetCommunicator;
-import VjControl.*;
-import VjComponents.Network.NetworkModule;
+import org.vrjuggler.jccl.net.DefaultNetCommunicator;
+import org.vrjuggler.jccl.net.NetworkModule;
+import org.vrjuggler.jccl.vjcontrol.*;
 
 /** NetControl Communicator for VR Juggler performance data.
  *  This Communicator reads performance data written about by
