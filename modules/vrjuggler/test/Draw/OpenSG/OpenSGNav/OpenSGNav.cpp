@@ -22,132 +22,31 @@
 #include <OpenSG/OSGMPBase.h>
 #include <OpenSG/OSGMatrixUtility.h>
 #include <OpenSG/OSGGeometry.h>
+#include <OpenSG/OSGSimpleGeometry.h>
+#include <OpenSG/OSGSceneFileHandler.h>
 
-OSG::UInt32 OpenSGNav::OSG_MAIN_ASPECT_ID=0;
+
 
 // Handle any initialization needed before API
 void OpenSGNav::init()
 {
-   vrj::OpenSGApp::init();      // Call base class init
-
-   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::init: Called.\n" << vprDEBUG_FLUSH;
-
-   // XXX: Complete initialization
-   // if(!osgInitAlreadyCalled())
-   OSG::osgInit(0,0);                  // Binds to primordial thread
-
-   OSG::FieldContainerPtr pProto = OSG::Geometry::getClassType().getPrototype();
-
-   OSG::GeometryPtr pGeoProto = OSG::GeometryPtr::dcast(pProto);
-
-   if(pGeoProto != OSG::NullFC)
-   {
-       pGeoProto->setDlistCache(false);
-   }
-
-   OpenSGNav::OSG_MAIN_ASPECT_ID = OSG::Thread::getAspect();   // Gets the base aspect id to use
+   OpenSGApp::init();      // Call base class init
 }
 
 /** Called once per context at context creation */
 void OpenSGNav::contextInit()
 {
-   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::contextInit: Called.\n" << vprDEBUG_FLUSH;
-
-   context_data* c_data = &(*mContextData);  // Context specific data. Should be one copy per context
-
-   // Check for thread initialized
-   // This will only happen for the first initialized context per pipe
-   if(!c_data->mContextThreadInitialized)
-   {
-      c_data->mContextThreadInitialized = true;
-
-      char thread_name_buffer[255];
-      sprintf(thread_name_buffer, "vprThread:%d", vpr::Thread::self()->getTID());
-      c_data->mOsgThread = OSG::ExternalThread::get(thread_name_buffer);
-      if(!(c_data->mOsgThread->isInitialized()))
-      {
-         c_data->mOsgThread->initialize(OSG_MAIN_ASPECT_ID);     // XXX: In future this might need to be different thread
-      }
-   }
-
-   // Allocate OpenSG stuff
-   c_data->mWin = OSG::PassiveWindow::create();
-   c_data->mCameraCartNode = OSG::Node::create();
-   c_data->mCameraCartTransform = OSG::Transform::create();
-   c_data->mCamera = OSG::MatrixCamera::create();
-
-   // Setup the cart, set internal transform node
-   OSG::beginEditCP(c_data->mCameraCartNode);
-      c_data->mCameraCartNode->setCore(c_data->mCameraCartTransform);
-   OSG::endEditCP(c_data->mCameraCartNode);
-
-   // Setup the camera
-   OSG::beginEditCP(c_data->mCamera);
-      c_data->mCamera->setBeacon (c_data->mCameraCartNode);
-      c_data->mCamera->setNear   (0.1);
-      c_data->mCamera->setFar    (10000);
-   OSG::endEditCP(c_data->mCamera);
-
-   // Could actually make one of these per thread instead of context.
-   c_data->mRenderAction = OSG::RenderAction::create();
-   c_data->mRenderAction->setAutoFrustum(false);         // Turn off auto frustum
-
-   //vjOSGApp::contextInit();
+   OpenSGApp::contextInit();
    initGLState();
 }
 
-void OpenSGNav::contextPreDraw()
-{
-   context_data* c_data = &(*mContextData);
-   c_data->mWin->frameInit();
-}
-
-void OpenSGNav::contextPostDraw()
-{
-   context_data* c_data = &(*mContextData);
-   c_data->mWin->frameExit();
-}
-
-
 void OpenSGNav::draw()
 {
-   context_data* c_data = &(*mContextData);
+   // Call parent class first to render the scene graph
+   OpenSGApp::draw();
 
-   vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*> ( this->getDrawManager() );
-   vprASSERT(drawMan != NULL);
-   vrj::GlUserData* userData = drawMan->currentUserData();
-
-   // Copy the matrix
-   vrj::Projection* project = userData->getProjection();
-   vrj::Frustum vrj_frustum = userData->getProjection()->mFrustum;
-
-   float* vj_proj_view_mat = project->mViewMat.getFloatPtr();
-   OSG::Matrix frustum_matrix, view_xform_mat;
-   view_xform_mat.setValue(vj_proj_view_mat);
-
-   osg::MatrixFrustum(frustum_matrix, vrj_frustum[vrj::Frustum::VJ_LEFT], vrj_frustum[vrj::Frustum::VJ_RIGHT],
-                                      vrj_frustum[vrj::Frustum::VJ_BOTTOM], vrj_frustum[vrj::Frustum::VJ_TOP],
-                                      vrj_frustum[vrj::Frustum::VJ_NEAR], vrj_frustum[vrj::Frustum::VJ_FAR]);
-
-   OSG::Matrix full_view_matrix = frustum_matrix;
-   full_view_matrix.mult(view_xform_mat);   // Compute complete projection matrix
-
-   // Setup the camera
-   OSG::beginEditCP(c_data->mCamera);
-      c_data->mCamera->setNear(vrj_frustum[vrj::Frustum::VJ_NEAR]);
-      c_data->mCamera->setFar(vrj_frustum[vrj::Frustum::VJ_FAR]);
-      c_data->mCamera->setProjectionMatrix( full_view_matrix );         // Set view matrix
-      c_data->mCamera->setModelviewMatrix( OSG::Matrix::identity() );   // Set projection matrix
-   OSG::endEditCP(c_data->mCamera);
-
-   // --- Trigger the draw --- //
-   c_data->mRenderAction->setWindow(c_data->mWin.getCPtr());
-   c_data->mRenderAction->setViewport(NULL);                   // Don't know why a matrix camera needs a viewport
-   c_data->mRenderAction->setCamera(c_data->mCamera.getCPtr());
-   c_data->mRenderAction->setFrustumCulling(false);    // Turn off culling for now because I don't yet trust the frustum setup
-
-   c_data->mRenderAction->apply(getSceneRoot());       // Actually do the rendering
-
+   // --- DEBUGGING CODE ------------- //
+   // - Draws a little white triangle on the screen - //
    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
      // Set material color
    float onyx_red = 59.0f/255.0f;
@@ -176,15 +75,45 @@ void OpenSGNav::draw()
 
 void OpenSGNav::preFrame()
 {
-    //std::cout << "OpenSGNav::preFrame called\n";
-    //move the model around
-}
+   const float inc_vel(0.005f);
+   const float max_vel(0.5f);
 
-/* Called once per frame, per buffer (basically context) need so that we can use subviewports */
-void OpenSGNav::bufferPreDraw()
-{
-   glClearColor(0.0, 0.0, 0.0, 0.0);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   // Update velocity
+   if(mButton0->getData() == gadget::Digital::ON)
+   {
+     velocity += inc_vel;
+     cout << "vel: " << velocity << std::endl;
+   }
+   else if(velocity > 0)
+   {
+      cout << "vel: " << velocity << std::endl;
+      velocity -= inc_vel;
+   }
+
+   // Restrict range
+   if(velocity < 0)
+      { velocity = 0;}
+   if(velocity > max_vel)
+      { velocity = max_vel; }
+
+   if(mButton1->getData() == gadget::Digital::ON)
+   { velocity = 0; }
+
+   // Travel in model
+   // -- Get wand info -- //
+   vrj::Matrix wandMatrix;
+   wandMatrix = (*mWand->getData());      // Get the wand matrix
+   vrj::Vec3 direction;
+   vrj::Vec3 Zdir = vrj::Vec3(0.0f, 0.0f, velocity);
+   direction.xformVec(wandMatrix, Zdir);
+
+   osg::Matrix osg_trans_mat( osg::Matrix::identity());
+   osg_trans_mat.setTranslate(direction[0], direction[1], direction[2]);
+   //mNavTrans->preMult(osg::Matrix::translate(direction[0], direction[1], direction[2]));
+
+   osg::beginEditCP(mSceneTransform);
+      mSceneTransform->getMatrix().multLeft(osg_trans_mat);
+   osg::endEditCP(mSceneTransform);
 }
 
 /** Initialize GL state. Hold over from regular OGL apps */
@@ -221,20 +150,27 @@ void OpenSGNav::initScene(void)
 {
    vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::initScene: Called.\n" << vprDEBUG_FLUSH;
 
+   // --- Initialize wand --- //
    std::string wand("VJWand");
+   std::string but0("VJButton0");
+   std::string but1("VJButton1");
+   std::string but2("VJButton2");
    mWand.init(wand);
+   mButton0.init(but0);
+   mButton1.init(but1);
+   mButton2.init(but2);
 
    // Load a graph
    if (mFileToLoad ==  std::string("none"))
     {
         std::cout << "OpenSGNav::initScene beforetorusmake\n";
-        mSceneRoot = OSG::makeTorus(.5, 2, 16, 16);
+        mModelRoot = OSG::makeTorus(.5, 2, 16, 16);
         std::cout << "OpenSGNav::myInit aftertorusmake\n";
     }
     else
     {
        std::cout << "OpenSGNav::initScene: Loading [" << mFileToLoad.c_str() << "]\n";
-       mSceneRoot = OSG::SceneFileHandler::the().read((OSG::Char8 *)(mFileToLoad.c_str()));
+       mModelRoot = OSG::SceneFileHandler::the().read((OSG::Char8 *)(mFileToLoad.c_str()));
     }
     std::cout << "OpenSGNav::initScene before RenderAction::create()\n";
 
@@ -273,13 +209,21 @@ void OpenSGNav::initScene(void)
       light_core->setBeacon    (mLightNode);
     osg::endEditCP(light_core);
 
-    osg::addRefCP(mSceneRoot);
+    // --- Setup Scene -- //
+    osg::addRefCP(mModelRoot);
+    osg::beginEditCP(mModelRoot);
+      mModelRoot->addChild(mLightNode);
+    osg::endEditCP(mModelRoot);
+
+    mSceneRoot = OSG::Node::create();
+    mSceneTransform = OSG::Transform::create();
+
     osg::beginEditCP(mSceneRoot);
-      mSceneRoot->addChild(mLightNode);
+       mSceneRoot->setCore(mSceneTransform);
+       mSceneRoot->addChild(mModelRoot);
     osg::endEditCP(mSceneRoot);
 
     // --- Add scene to root node --- //
-
     std::cout << "OpenSGNav::initScene finished\n";
 }
 
