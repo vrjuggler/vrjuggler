@@ -143,6 +143,13 @@ namespace gadget
     
     mButtonNumber = c->getProperty<int>("numButtons");
 
+    mPositions.resize(mTrackerNumber);
+    mQuats.resize(mTrackerNumber);
+    mButtons.resize(mButtonNumber);
+
+    mCurPositions.resize(mTrackerNumber);
+    mCurButtons.resize(mButtonNumber);
+
     return true;
   }
 
@@ -175,13 +182,7 @@ namespace gadget
     else {
 	std::cout << "Not null\n";
     }
-    
-    mPositions.resize(mTrackerNumber);
-    mQuats.resize(mTrackerNumber);
-    mButtons.resize(mButtonNumber);
-    
-    mCurPositions.resize(mTrackerNumber);
-    mCurButtons.resize(mButtonNumber);
+
     return status;
   }
 
