@@ -71,10 +71,10 @@ public:
    /**
     * Default constructor.
     */
-   SocketStream_t (void)
+   SocketStream_t()
    {
       mSocketStreamImpl = boost::shared_ptr<SocketStreamImpl>( new SocketStreamImpl );
-      mSocketImpl = mSocketStreamImpl;
+      this->mSocketImpl = mSocketStreamImpl;
    }
 
    /**
@@ -90,10 +90,10 @@ public:
     * @param remote_addr A reference to a vpr::InetAddr object for the
     *                     remote socket address.
     */
-   SocketStream_t (vpr::InetAddr local_addr, vpr::InetAddr remote_addr)
+   SocketStream_t(vpr::InetAddr local_addr, vpr::InetAddr remote_addr)
    {
       mSocketStreamImpl = boost::shared_ptr<SocketStreamImpl>(new SocketStreamImpl(local_addr, remote_addr));
-      mSocketImpl = mSocketStreamImpl;
+      this->mSocketImpl = mSocketStreamImpl;
    }
 
    /**
@@ -101,10 +101,10 @@ public:
     *
     * @param sock The source stream socket to be copied into this object.
     */
-   SocketStream_t (const SocketStream_t& sock)
+   SocketStream_t(const SocketStream_t& sock)
       : mSocketStreamImpl(sock.mSocketStreamImpl)
    {
-      mSocketImpl = mSocketStreamImpl;
+      this->mSocketImpl = mSocketStreamImpl;
    }
 
    /**
@@ -113,7 +113,7 @@ public:
     * @pre None.
     * @post Delete impl
     */
-   virtual ~SocketStream_t (void)
+   virtual ~SocketStream_t()
    {
       ;  // When obj is destroyed, then member mSocketStreamImpl will be destroyed
    }
@@ -227,7 +227,7 @@ protected:
    SocketStream_t (SocketStreamImpl* sock_imp)
       : Socket_t<Config>(), mSocketStreamImpl(sock_imp)
    {
-      mSocketImpl = mSocketStreamImpl;
+      this->mSocketImpl = mSocketStreamImpl;
    }
 
    virtual vpr::ReturnStatus getOption (const vpr::SocketOptions::Types option,
