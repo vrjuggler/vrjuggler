@@ -4,9 +4,16 @@ DOXYGEN?=		doxygen
 HTML_OUTPUT_DIR?=	html
 LATEX_OUTPUT_DIR?=	latex
 MAN_OUTPUT_DIR?=	man
+RTF_OUTPUT_DIR?=	rtf
 
 html: $(HTML_OUTPUT_DIR)
-	$(DOXYGEN) $(DOXYGEN_FILE)
+	$(DOXYGEN) $(HTML_DOXYGEN_FILE)
+
+man:
+	$(DOXYGEN) $(MAN_DOXYGEN_FILE)
+
+latex:
+	$(DOXYGEN) $(LATEX_DOXYGEN_FILE)
 
 ps: $(LATEX_OUTPUT_DIR)
 	$(MAKE) -C $(LATEX_OUTPUT_DIR) ps
@@ -14,8 +21,8 @@ ps: $(LATEX_OUTPUT_DIR)
 pdf: $(LATEX_OUTPUT_DIR)
 	$(MAKE) -C $(LATEX_OUTPUT_DIR) pdf
 
-$(HTML_OUTPUT_DIR) $(LATEX_OUTPUT_DIR) $(MAN_OUTPUT_DIR):
-	$(DOXYGEN) $(DOXYGEN_FILE)
+rtf:
+	$(DOXYGEN) $(RTF_DOXYGEN_FILE)
 
 install-html:
 	if [ ! -d $(prefix) ]; then mkdir -p $(prefix); fi
