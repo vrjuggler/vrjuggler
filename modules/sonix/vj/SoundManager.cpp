@@ -31,17 +31,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vjConfig.h>
+#include <Config/vjConfigChunk.h>
 #include <Sound/SoundManager.h>
 #include <aj/AudioJuggler.h>
+#include <aj/Matrix44.h>
 
 namespace vrj
 {
-   SoundManager::SoundManager()
-   {
-
-   }
-
-
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    bool SoundManager::configAdd( vjConfigChunk* chunk )
@@ -62,13 +58,13 @@ namespace vrj
 
       // configure audiojuggler
       AudioJuggler::instance().changeAPI( api_to_use );
-      aj::Matrix mat;
+      aj::Matrix44 mat;
       mat.setTrans( listener_position[0], listener_position[1], listener_position[2] );
       AudioJuggler::instance().setListenerPosition( mat );
 
       // read the list of sounds
       int size = chunk->getNum( "Sound" );
-      for (x = 0; x < size; ++x)
+      for (int x = 0; x < size; ++x)
       {
          vjConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
          std::string alias = (std::string)sound_chunk->getProperty( "Name" );
@@ -103,7 +99,7 @@ namespace vrj
    {
       // remove any specified sounds...
       int size = chunk->getNum( "Sound" );
-      for (x = 0; x < size; ++x)
+      for (int x = 0; x < size; ++x)
       {
          vjConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
          std::string alias = (std::string)sound_chunk->getProperty( "Name" );
@@ -129,8 +125,8 @@ namespace vrj
    //: Enable a frame to be drawn
    void SoundManager::update()
    {
-      float time_elapsed += 0.1; // TODO: get real time since last frame...
-      AudioJuggler::instance().step( time_elapsed );
+      float time_delta = 0.1; // TODO: get real time since last frame...
+      AudioJuggler::instance().step( time_delta );
    }
 
    //: Blocks until the end of the frame

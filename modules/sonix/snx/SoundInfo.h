@@ -13,9 +13,20 @@ namespace aj
  */
 struct SoundInfo
 {
-   SoundInfo() : retriggerable( false ), ambient( true ), triggerOnNextBind( false ), datasource( FILESYSTEM ), repeat( 1 ), repeatCountdown( 0 ), data(), filename()
+   SoundInfo() : alias(), 
+                 datasource( FILESYSTEM ), 
+                 filename(), 
+                 data(), 
+                 ambient( true ), 
+                 retriggerable( false ), 
+                 repeat( 1 ), 
+                 triggerOnNextBind( false ), 
+                 repeatCountdown( 0 )
    {
       //position.makeIdent();
+      position[0] = 0.0f;
+      position[1] = 0.0f;
+      position[2] = 0.0f;
    }
    std::string alias;
 

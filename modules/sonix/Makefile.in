@@ -15,7 +15,7 @@ STATIC_LIBS    = $(LIBS)
 DYNAMIC_LIBS   = $(LIBS)
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR          = aj 
+SUBDIR          = aj vj
 
 # needed for compiling the DSO
 EXTRA_LIBS      = @LIBS@ -lm
@@ -134,6 +134,7 @@ hier:
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
 	$(SHELL) $(MKINSTALLDIRS) $(bindir)
 	$(SHELL) $(MKINSTALLDIRS) $(includedir)/aj
+	$(SHELL) $(MKINSTALLDIRS) $(includedir)/vj
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/AudioJuggler/src
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/AudioJuggler/data
 	$(SHELL) $(MKINSTALLDIRS) $(includedir)/share/AudioJuggler/data
