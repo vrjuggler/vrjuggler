@@ -272,7 +272,22 @@ public class PropertyPanel extends JPanel implements ActionListener {
                         break;
                     }
                 }
-            }    
+            }
+            else if (e.getActionCommand().equals ("Rename")) {
+                VarValuePanel p = (VarValuePanel)e.getSource();
+
+                Component comps[] = eastpanel.getComponents();
+                for (int i = 0; i < comps.length; i++) {
+                    if (comps[i] == p) {
+                        JLabel l = (JLabel)(comps[i-1]);
+                        l.setText (valuelabelpad + p.getValue().getEmbeddedChunk().getLastNameComponent());
+                        //eastpanel.remove (comps[i-1]);
+                        //eastpanel.remove(p);
+                        eastpanel.revalidate(); // forces resize of container
+                        break;
+                    }
+                }
+            }
         } 
     } // actionPerformed()
 

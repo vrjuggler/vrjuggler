@@ -32,20 +32,6 @@
 
 
 
-/* VarValuePanel is just a little panel that we'll stick several of 
- * in a PropertyPanel.
- *
- *     -----------------------------------------------------
- *     |                                                   |
- *     | Type(optional) valuegadget  remove_button(optional)|
- *     |                                                   |
- *     -----------------------------------------------------
- *
- * the value gadget is going to be either a TextArea or a multisetSelectedItem
- * with the acceptable values in it.  remove_button will be there if the
- * associated property has var numbers of values.
- */
-
 package VjComponents.ConfigEditor.ConfigChunkUI;
 
 import java.awt.*;
@@ -59,6 +45,11 @@ import VjComponents.ConfigEditor.*;
 import VjComponents.UI.Widgets.*;
 
 
+/** Subclass of VarValuePanel for displaying large embedded chunks.
+ *  This panel simply uses an "edit" button which brings up the 
+ *  embedded chunk in a separate window.  As such, it can be used to
+ *  display any embedded ConfigChunk, no matter how complex.
+ */
 public class VarValueBigChunkPanel 
     extends VarValuePanel 
     implements ActionListener {
@@ -167,7 +158,10 @@ public class VarValueBigChunkPanel
             else if (e.getActionCommand().equals ("Apply")) {
                 ConfigChunkPanel p = 
                     (ConfigChunkPanel)chunkframe.getEditorPanel();
+                ConfigChunk oldchunk = chunk;
                 chunk = p.getNewValue();
+                if (!chunk.getName().equals(oldchunk.getName()))
+                    notifyActionListenersRename();
             }
         }
     }
@@ -190,6 +184,17 @@ public class VarValueBigChunkPanel
     private void notifyActionListenersRemove () {
         ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
                                          "Remove");
+        notifyActionListeners (e);
+    }
+
+    private void notifyActionListenersRename () {
+        ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
+                                         "Rename");
+        notifyActionListeners (e);
+    }
+
+
+    private void notifyActionListeners (ActionEvent e) {
         ActionListener l;
         int i, n;
         synchronized (action_listeners) {
@@ -201,25 +206,6 @@ public class VarValueBigChunkPanel
         }
     }
 
-
-//     /******************** JFrameParent Stuff *****************************/
-
-//     public void closeChild (ChildFrame frame) {
-// 	if (chunkframe != frame) {
-// 	    Core.consoleErrorMessage ("VarValueBigChunkPanel", 
-// 				      "Got a closedChunkFrame for a ChunkFrame I never made!!! EEEK!");
-// 	}
-//         chunkframe.destroy();
-// 	chunkframe.dispose();
-// 	chunkframe = null;
-//     }
-
-
-//     public void applyChild (ChildFrame frame) {
-//         ConfigChunkPanel p = (ConfigChunkPanel)chunkframe.getEditorPanel();
-//         chunk = p.getNewValue();
-//         //edit_button.setText ("Edit " + chunk.getLastNameComponent());
-//     }
 
 }
 
