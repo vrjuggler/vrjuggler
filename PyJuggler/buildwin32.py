@@ -88,6 +88,7 @@ def setVars():
 def doInstall(prefix):
    makeTree(prefix)
    installDist(prefix)
+   installLibs(prefix)
    installMods(prefix)
    installExamples(prefix)
 
@@ -155,6 +156,25 @@ def installDist(prefix):
    mkinstalldirs(destdir)
    for f in files:
       shutil.copy2(f, destdir)
+
+def installLibs(prefix):
+   print "Installing PyJuggler DLLs ..."
+
+   destdir = os.path.join(prefix, 'lib')
+
+   for d in ['Release', 'Debug']:
+      srcdir = os.path.join(pyj_dir, 'vc7', 'pyjutil', d)
+      files  = glob.glob(os.path.join(srcdir, '*.lib'))
+
+      mkinstalldirs(destdir)
+      for f in files:
+         shutil.copy2(f, destdir)
+
+      files = glob.glob(os.path.join(srcdir, '*.dll'))
+
+      mkinstalldirs(destdir)
+      for f in files:
+         shutil.copy2(f, destdir)
 
 def installMods(prefix):
    print "Installing Python extension modules ..."

@@ -14,6 +14,59 @@
 #include <vpr/vpr.h>
 #include <vpr/Thread/TSObjectProxy.h>
 
+// DLL-related macros.  These are based on the macros used by NSPR.
+#ifdef VPR_OS_Win32
+
+#   if defined(__GNUC__)
+#       undef _declspec
+#       define _declspec(x) __declspec(x)
+#   endif
+
+#   define PYJUTIL_EXPORT(__type)      _declspec(dllexport) __type
+#   define PYJUTIL_EXPORT_CLASS        _declspec(dllexport)
+#   define PYJUTIL_EXPORT_DATA(__type) _declspec(dllexport) __type
+#   define PYJUTIL_IMPORT(__type)      _declspec(dllimport) __type
+#   define PYJUTIL_IMPORT_DATA(__type) _declspec(dllimport) __type
+#   define PYJUTIL_IMPORT_CLASS        _declspec(dllimport)
+
+#   define PYJUTIL_EXTERN(__type)         extern _declspec(dllexport) __type
+#   define PYJUTIL_IMPLEMENT(__type)      _declspec(dllexport) __type
+#   define PYJUTIL_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
+#   define PYJUTIL_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
+
+#   define PYJUTIL_CALLBACK
+#   define PYJUTIL_CALLBACK_DECL
+#   define PYJUTIL_STATIC_CALLBACK(__x) static __x
+
+#else
+
+#   define PYJUTIL_EXPORT(__type)      __type
+#   define PYJUTIL_EXPORT_CLASS
+#   define PYJUTIL_EXPORT_DATA(__type) __type
+#   define PYJUTIL_IMPORT(__type)      __type
+#   define PYJUTIL_IMPORT_DATA(__type) __type
+#   define PYJUTIL_IMPORT_CLASS
+
+#   define PYJUTIL_EXTERN(__type)         extern __type
+#   define PYJUTIL_IMPLEMENT(__type)      __type
+#   define PYJUTIL_EXTERN_DATA(__type)    extern __type
+#   define PYJUTIL_IMPLEMENT_DATA(__type) __type
+
+#   define PYJUTIL_CALLBACK
+#   define PYJUTIL_CALLBACK_DECL
+#   define PYJUTIL_STATIC_CALLBACK(__x) static __x
+
+#endif  /* VPR_OS_Win32 */
+
+#ifdef _PYJUTIL_BUILD_
+#   define PYJUTIL_API(__type)      PYJUTIL_EXPORT(__type)
+#   define PYJUTIL_CLASS_API        PYJUTIL_EXPORT_CLASS
+#   define PYJUTIL_DATA_API(__type) PYJUTIL_EXPORT_DATA(__type)
+#else
+#   define PYJUTIL_API(__type)      PYJUTIL_IMPORT(__type)
+#   define PYJUTIL_CLASS_API        PYJUTIL_IMPORT_CLASS
+#   define PYJUTIL_DATA_API(__type) PYJUTIL_IMPORT_DATA(__type)
+#endif
 
 namespace PyJuggler
 {
@@ -29,7 +82,7 @@ namespace PyJuggler
  * acquire the Global Interpreter Lock twice and in so doing prevents
  * deadlock.
  */
-class InterpreterGuard
+class PYJUTIL_CLASS_API InterpreterGuard
 {
 private:
    /**

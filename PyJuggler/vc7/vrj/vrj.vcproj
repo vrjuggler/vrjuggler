@@ -174,18 +174,12 @@
 			<File
 				RelativePath="..\..\src\vrj\_Viewport.cpp">
 			</File>
-			<File
-				RelativePath="..\..\pyjutil\InterpreterGuard.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
 				RelativePath="..\..\pyjutil\Debug.h">
-			</File>
-			<File
-				RelativePath="..\..\pyjutil\InterpreterGuard.h">
 			</File>
 			<File
 				RelativePath="..\..\src\vrj-helpers.h">

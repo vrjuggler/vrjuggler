@@ -175,6 +175,9 @@
 				RelativePath="..\..\src\gadget\_gadget_Type_EventWindow_Keys_h.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\gadget\_InputManager.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\gadget\_KeyEvent.cpp">
 			</File>
 			<File

@@ -43,7 +43,7 @@
 				OutputFile="$(OutDir)/vpr_d.pyd"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(PYTHON_ROOT)\libs&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(PYTHON_ROOT)\libs&quot;;..\pyjutil\Debug;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/vpr_d.pdb"
 				SubSystem="1"
@@ -99,11 +99,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr.lib cppdom.lib boost_python-vc71-mt-1_31.lib $(NOINHERIT)"
+				AdditionalDependencies="pyjutil.lib vpr.lib cppdom.lib boost_python-vc71-mt-1_31.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr.pyd"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(PYTHON_ROOT)\libs&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(PYTHON_ROOT)\libs&quot;;..\pyjutil\Release;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="0"
@@ -163,9 +163,6 @@
 				RelativePath="..\..\src\vpr\_WriteableObject.cpp">
 			</File>
 			<File
-				RelativePath="..\..\pyjutil\InterpreterGuard.cpp">
-			</File>
-			<File
 				RelativePath="..\..\src\vpr\vpr.cpp">
 			</File>
 		</Filter>
@@ -174,9 +171,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
 				RelativePath="..\..\pyjutil\Debug.h">
-			</File>
-			<File
-				RelativePath="..\..\pyjutil\InterpreterGuard.h">
 			</File>
 		</Filter>
 		<Filter
