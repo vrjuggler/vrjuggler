@@ -44,5 +44,5 @@ const float VJ_PI_2 = 1.57079632679489661923f;
 //: PI * 0.25
 const float VJ_PI_4 = 0.78539816339744830962f;
 
-//: default epsillon used by some juggler math routines...
-const float VJ_EPSILLON_DEFAULT = 1e-6f;
+//: default epsilon used by some juggler math routines...
+const float VJ_EPSILON_DEFAULT = 1e-6f;
