@@ -218,7 +218,6 @@ inline void OsgApp::contextInit()
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
     glShadeModel(GL_SMOOTH);
-
 }
 
 
@@ -257,8 +256,8 @@ inline void OsgApp::draw()
    // Copy the matrix
    Projection* project = userData->getProjection();
    float* vj_proj_view_mat = project->mViewMat.mData;
-   osg::Matrix osg_proj_xform_mat;
-   osg_proj_xform_mat.set( vj_proj_view_mat );
+   osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
+   osg_proj_xform_mat->set( vj_proj_view_mat );
 
    //Get the frustrum
    Frustum frustum = project->mFrustum;
@@ -278,7 +277,7 @@ inline void OsgApp::draw()
 
    //Set the look at
    // NOTE: This is on the wrong stack !!!!
-   the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, &osg_proj_xform_mat);
+   the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, osg_proj_xform_mat);
 
    //Draw the scene
    sv->update();
