@@ -208,7 +208,7 @@ namespace cluster
             if ((*i)->getId() == guid)
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-                  << "[ApplicationDataManager::ConfigAdd()] "
+                  << "[ApplicationDataManager::configAdd()] "
                   << "Configuring ApplicationData object " << guid.toString()
                   << " on host: " << hostname << std::endl << vprDEBUG_FLUSH;
 
@@ -246,12 +246,17 @@ namespace cluster
             return true;
          }
 
+         vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL)
+            << "[ApplicationDataManager::configAdd()] "
+            << "No unconfigured ApplicationData object found"
+            << std::endl << vprDEBUG_FLUSH;
+
          return false;
       }
       else
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
-            << "[ApplicationDataManager::ConfigAdd()] "
+            << "[ApplicationDataManager::configAdd()] "
             << clrOutBOLD(clrRED, "WARNING: ")
             << "Don't know how to handle the configuration element: "
             << element->getName() << std::endl << vprDEBUG_FLUSH;
