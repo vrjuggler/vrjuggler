@@ -238,7 +238,7 @@ Keyboard
   Name "Glove Keyboard"
   width { "200" }
   height { "200" }
-  origin { "600" "720" }
+  origin { "800" "320" }
   msens { "2.0" }
   end
 DigProxy
