@@ -306,7 +306,7 @@ public class PropertyDesc
    /**
     * Sets the allowed type at the given index to the given token.
     */
-   public void setAllowedTypes(int index, String token)
+   public void setAllowedType(int index, String token)
    {
       Element elt = (Element)mDomElement.getChildren(allowed_type_TOKEN).get(index);
       elt.setText(token);
