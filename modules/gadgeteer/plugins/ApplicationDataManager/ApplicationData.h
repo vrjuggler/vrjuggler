@@ -55,6 +55,9 @@ public:
       cluster::ApplicationDataManager::instance()->addApplicationData(this);
    }
 
+   ApplicationData()
+   {;}
+
    virtual ~ApplicationData()
    {
       ;
