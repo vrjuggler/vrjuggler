@@ -33,8 +33,11 @@
 #include <application.h>
 
 //: Constructor
-TextureDemoApplication::TextureDemoApplication( vjKernel* kern ) : vjGlApp( kern ), x( 0.0f )
+TextureDemoApplication::TextureDemoApplication( vjKernel* kern ) : timer(), vjGlApp( kern ), x( 0.0f )
 {
+   // associate the textureObj ID with the actual texture.
+   TextureDemoApplication::setTexObjID( mCubeTexture, mCubeTextureObj );
+   TextureDemoApplication::setTexObjID( mFloorTexture, mFloorTextureObj );     
 }
 
 //: destructor
@@ -43,15 +46,18 @@ TextureDemoApplication::~TextureDemoApplication()
 }
 
 //: Called immediately upon opening a new OpenGL context
+// (called for every window that is opened)
 //
-// put your opengl initialization here...
+// put your opengl resource allocation here...
 void TextureDemoApplication::contextInit()
 {
+   // make sure there is no dangling resources
+   this->contextClose();
+   
    //: Initialize the cube GL state (texture objext and display list)
       
       // create cube texture object
       mCubeTexture.image() = squareImage;
-      TextureDemoApplication::setTexObjID( mCubeTexture, mCubeTextureObj );
       tex::bind( mCubeTexture, TextureDemoApplication::getTexObjID( mCubeTexture ) );
 
       // create cube geometry displaylist
@@ -64,8 +70,32 @@ void TextureDemoApplication::contextInit()
 
       // create cube texture object
       mFloorTexture.image() = hexImage;
-      TextureDemoApplication::setTexObjID( mFloorTexture, mFloorTextureObj );
       tex::bind( mFloorTexture, TextureDemoApplication::getTexObjID( mFloorTexture ) );
+}
+
+//: Called immediately upon closing an OpenGL context 
+// (called for every window that is closed)
+//
+// put your opengl deallocation here...
+void TextureDemoApplication::contextClose()
+{
+   // deallocate the cube texture data from the video hardware
+   if (tex::isBound( mCubeTexture, TextureDemoApplication::getTexObjID( mCubeTexture ) ))
+   {
+      tex::unbind( mCubeTexture, TextureDemoApplication::getTexObjID( mCubeTexture ) );
+   }   
+   
+   // deallocate the cube geometry data from the video hardware
+   if (::glIsList( mCubeDisplayList->id ))
+   {
+      ::glDeleteLists( mCubeDisplayList->id, 1 );
+   }
+   
+   // deallocate the floor texture data from the video hardware
+   if (tex::isBound( mFloorTexture, TextureDemoApplication::getTexObjID( mFloorTexture ) ))
+   {
+      tex::unbind( mFloorTexture, TextureDemoApplication::getTexObjID( mFloorTexture ) );
+   }
 }
 
 //: Function to "draw" the scene 
@@ -138,5 +168,10 @@ void TextureDemoApplication::draw()
 // do calculations here...
 void TextureDemoApplication::postFrame()
 {
-   x += 5;
+   float revs_per_second = 0.5f;
+   float degs_per_revolution = 360.0f;
+   float degs_per_second = degs_per_revolution * revs_per_second;
+   timer.stopTiming();
+   timer.startTiming();
+   x += timer.getLastTiming() * degs_per_second;
 }

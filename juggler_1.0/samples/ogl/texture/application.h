@@ -48,6 +48,7 @@
 #include <vjConfig.h>          // needed by other juggler classes
 #include <Kernel/GL/vjGlApp.h>     // base OpenGL application API
 #include <Kernel/GL/vjGlContextData.h> // for OpenGL resource IDs
+#include <Utils/vjTimer.h> // so that the cube always spins the same speed
 
 // texture application objects
 #include "renderGeometry.h"  // render interleaved vertex array data 
@@ -70,8 +71,14 @@ public:
    virtual ~TextureDemoApplication();
 
    //: Called immediately upon opening a new OpenGL context
-   //  put your opengl initialization here...
+   // (called for every window that is opened)
+   // put your opengl resource allocation here...
    virtual void contextInit();
+   
+   //: Called immediately upon closing an OpenGL context 
+   // (called for every window that is closed)
+   // put your opengl deallocation here...
+   virtual void contextClose();
 
    //: Function to "draw" the scene 
    //  put your opengl draw functions here...
@@ -121,6 +128,9 @@ private:
    // Floor:
    Texture                       mFloorTexture;
    vjGlContextData<ResourceID>   mFloorTextureObj;
+   
+   // timer
+   vjTimer timer;
 };
 
 

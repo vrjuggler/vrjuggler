@@ -48,6 +48,7 @@
 #include <vjConfig.h>          // needed by other juggler classes
 #include <Kernel/GL/vjGlApp.h>     // base OpenGL application API
 #include <Kernel/GL/vjGlContextData.h> // for OpenGL resource IDs
+#include <Utils/vjTimer.h> // so that the cube always spins the same speed
 
 // VR Juggler Input devices:
 #include <Input/InputManager/vjAnalogInterface.h>
@@ -68,8 +69,14 @@ public:
    virtual ~AnalogDemoApplication();
 
    //: Called immediately upon opening a new OpenGL context
-   //  put your opengl initialization here...
+   // (called for every window that is opened)
+   // put your opengl resource allocation here...
    virtual void contextInit();
+   
+   //: Called immediately upon closing an OpenGL context 
+   // (called for every window that is closed)
+   // put your opengl deallocation here...
+   virtual void contextClose();
 
    //: put vrj device inits here
    virtual void init();
@@ -105,6 +112,9 @@ private:
 
    // interface to analog input.
    vjAnalogInterface             mAnalog0;
+
+   // timer
+   vjTimer timer;
 };   
 
 

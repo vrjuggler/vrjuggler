@@ -54,6 +54,9 @@ void AnalogDemoApplication::init()
 // put your opengl initialization here...
 void AnalogDemoApplication::contextInit()
 {
+   // make sure there is no dangling resources
+   this->contextClose();
+   
    //: Initialize the cube GL state (display list)
       
       // create cube geometry displaylist
@@ -61,6 +64,18 @@ void AnalogDemoApplication::contextInit()
       ::glNewList( mCubeDisplayList->id, GL_COMPILE );
          geom::renderVertexArray( mCubeGeometry.data(), mCubeGeometry.size() );
       ::glEndList();
+}
+
+//: Called immediately upon closing an OpenGL context 
+// (called for every window that is closed)
+//
+// put your opengl deallocation here...
+void AnalogDemoApplication::contextClose()
+{
+   if (::glIsList( mCubeDisplayList->id ))
+   {
+      ::glDeleteLists( mCubeDisplayList->id, 1 );
+   }
 }
 
 //: Function to "draw" the scene 
@@ -130,5 +145,10 @@ void AnalogDemoApplication::draw()
 // do calculations here...
 void AnalogDemoApplication::postFrame()
 {
-   x += 5;
+   float revs_per_second = 0.5f;
+   float degs_per_revolution = 360.0f;
+   float degs_per_second = degs_per_revolution * revs_per_second;
+   timer.stopTiming();
+   timer.startTiming();
+   x += timer.getLastTiming() * degs_per_second;
 }
