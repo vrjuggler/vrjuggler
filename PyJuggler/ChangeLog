@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[1.0 Beta 1 released - 12.24.2004]=============================================
+Dec-24-2004 patrickh    NEW VERSION: 0.91.0
 Dec-22-2004 patrickh    Updated to Gadgeteer 0.22.0.
                         NEW VERSION: 0.17.0
 Nov-20-2004 patrickh    Removed PyJuggler.snx.SoundFactory.
