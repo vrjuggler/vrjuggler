@@ -65,15 +65,9 @@ class myApplication : public vrj::GlApp</programlisting>
          <title>Math Library</title>
          <orderedlist numeration="lowerroman">
             <listitem>
-               <para>
-               VR Juggler now uses the GMTL math library (http://ggt.sf.net).  The old vrj/Math library is no longer avaliable.  There are some very fundamental changes between GMTL and Math from VR Juggler 1.0.  You should definatly read the GMTL programmer's guide available from the ggt.sf.net website.  This helps you understand how the toolkit is structured, which is pretty simple.
-               </para>
-               <para>
-               The main difference between GMTL and VRJ 1.0 Math is the way you use methods.  GMTL is similar to object oriented C programming where the object is always the first parameter in the function.  This difference from VRJ 1.0 Math will affect all application code using math.  
-               </para>
-               <para>
-               The <classname>vjMatrix</classname>, <classname>vjVec3</classname>, and <classname>vjQuat</classname> that you're used to has been changed to <classname>gmtl::Matrix44f</classname>, <classname>gmtl::Vec3f</classname>, <classname>gmtl::Point3f</classname>, and <classname>gmtl::Quatf</classname> respectively. The following shows an example of using the math classes. 
-               </para>
+               <para>VR Juggler now uses the GMTL math library (http://ggt.sf.net). The old vrj/Math library is no longer avaliable. There are some very fundamental changes between GMTL and Math from VR Juggler 1.0. You should definatly read the GMTL programmer's guide available from the ggt.sf.net website. This helps you understand how the toolkit is structured, which is pretty simple.</para>
+               <para>The main difference between GMTL and VRJ 1.0 Math is the way you use methods. GMTL is similar to object-oriented C programming where the object is always the first parameter in the function. This difference from VRJ 1.0 Math will affect all application code using math.</para>
+               <para>The <classname>vjMatrix</classname>, <classname>vjVec3</classname>, and <classname>vjQuat</classname> that you're used to has been changed to <classname>gmtl::Matrix44f</classname>, <classname>gmtl::Vec3f</classname>, <classname>gmtl::Point3f</classname>, and <classname>gmtl::Quatf</classname> respectively. The following shows an example of using the math classes.</para>
                <programlisting>#include &lt;gmtl/Matrix.h&gt;
 #include &lt;gmtl/Quat.h&gt;
 #include &lt;gmtl/Vec.h&gt;
@@ -105,21 +99,14 @@ gmtl::Point3f result_p = mat * point;</programlisting>
 float radians = gmtl::Math::deg2Rad( degrees );</programlisting>
             </listitem>
             <listitem>
-               <para>
-               While porting applications to GMTL there is
-               one critical thing to keep in mind.  All GMTL functions
-               take angles in 
-               <emphasis>radians</emphasis> while 1.0 Math took
-               <emphasis>degrees</emphasis>
-               for most of its functions.  You may need to use
-                  gmtl::Math::deg2Rad() to convert some values.  
-               </para>
+               <para>While porting applications to GMTL there is one critical thing to keep in mind. All GMTL functions take angles in <emphasis>radians</emphasis> while 1.0 Math took <emphasis>degrees</emphasis> for most of its functions. You may need to use <function>gmtl::Math::deg2Rad()</function> to convert some values.</para>
             </listitem>
             <listitem>
-               <para>The headers are in the directory <filename>gmtl/</filename>.  Typically you will type your #includes in the following format: #include&lt;gmtl/somefile.h&gt;</para>
+               <para>The headers are in the directory <filename>gmtl/</filename>. Typically you will type your <token>#include</token>s in the following format:</para>
+               <programlisting>#include &lt;gmtl/somefile.h&gt;</programlisting>
             </listitem>
             <listitem>
-               <para>For more information, refer to the http://ggt.sf.net website.  It has excellent online reference guide, and a programming guide that is more in depth than this short porting tutorial.  If you don't have a web connection, see also the headers in the gmtl/ directory, it has all the docs in the headers.  Typically the headers you'll use are these: <filename>gmtl/Vec.h</filename>, <filename>gmtl/Point.h</filename>, <filename>gmtl/Matrix.h</filename>, and <filename>gmtl/Quat.h</filename>.</para>
+               <para>For more information, refer to the <ulink url="http://ggt.sf.net/">http://ggt.sf.net/</ulink> website. It has excellent online reference guide, and a programming guide that is more in depth than this short porting tutorial. If you don't have a web connection, see also the headers in the gmtl/ directory, it has all the docs in the headers. Typically the headers you'll use are these: <filename>gmtl/Vec.h</filename>, <filename>gmtl/Point.h</filename>, <filename>gmtl/Matrix.h</filename>, and <filename>gmtl/Quat.h</filename>.</para>
             </listitem>
          </orderedlist>
       </section>
