@@ -85,18 +85,19 @@ public:
    /**
     * Constructor.
     *
-    * @param mutex A pointer to a user specified mutex
-    *             if not specified, uses internal mutex.
+    * @param mutex A pointer to a user specified mutex.  If this is NULL, we
+    *              use the internal default mutex.
     */
    CondVarGeneric(Mutex* mutex = NULL)
+      : mWaiters(0)
+      , mCondMutex(NULL)
    {
       if ( mutex == NULL )
       {
-         mutex = &defaultMutex;
+         mutex = &mDefaultMutex;
       }
 
-      condMutex = mutex;
-      waiters = 0;
+      mCondMutex = mutex;
 
       std::cerr << "------------------------------------\n"
                 << "  vpr::CondVarGeneric: DOES NOT WORK\n"
@@ -107,27 +108,27 @@ public:
     * Waits for possible condition change.
     *
     * @post The condition has been modifed, but may not be satisfied.
-    * @note The call blocks until a condition has been signaled
+    * @note The call blocks until a condition has been signaled.
     */
    vpr::ReturnStatus wait(vpr::Interval time_to_wait = vpr::Interval::NoTimeout);
 
    /**
     * Signals a condition change.
     * This call tells all waiters that the condition has changed.
-    * They can then check to see if it now sarisfies the condition
+    * They can then check to see if it now sarisfies the condition.
     */
-   vpr::ReturnStatus signal ()
+   vpr::ReturnStatus signal()
    {
       std::cerr << std::setw(5) << getpid() << "  Signal" << std::endl;
       // ASSERT:  We have been locked
-      if ( condMutex->test() == 0 )    // Not locked
+      if ( mCondMutex->test() == 0 )    // Not locked
       {
          std::cerr << " vpr::CondVarGeneric::signal: Mutex was not locked when signal called!!!" << std::endl;
       }
 
-      if ( waiters > 0 )
+      if ( mWaiters > 0 )
       {
-         return sema.release();
+         return mSema.release();
       }
       else
       {
@@ -139,17 +140,17 @@ public:
     * Signals all waiting threads.
     * This releases all waiting threads.
     */
-   vpr::ReturnStatus broadcast ()
+   vpr::ReturnStatus broadcast()
    {
       // ASSERT:  We have been locked
-      if ( condMutex->test() == 0 )    // Not locked
+      if ( mCondMutex->test() == 0 )    // Not locked
       {
          std::cerr << " vpr::CondVarGeneric::broadcast: Mutex was not locked when broadcase called!!!" << std::endl;
       }
 
-      for ( int i = waiters;i>0;i-- )
+      for ( int i = mWaiters;i>0;i-- )
       {
-         sema.release();
+         mSema.release();
       }
 
       return vpr::ReturnStatus();
@@ -158,57 +159,58 @@ public:
    /// Acquires the condition lock.
    vpr::ReturnStatus acquire()
    {
-      return condMutex->acquire();
+      return mCondMutex->acquire();
    }
 
    /// Tries to acquire the condition lock.
    vpr::ReturnStatus tryAcquire()
    {
-      return condMutex->tryAcquire();
+      return mCondMutex->tryAcquire();
    }
 
    /// Releases the condition lock.
    vpr::ReturnStatus release()
    {
-      return condMutex->release();
+      return mCondMutex->release();
    }
 
    /**
-    * Explicitly set the mutex to use.
+    * Explicitly sets the mutex to use.
     *
     * @note NEVER call except to initialize explicitly.
     */
    void setMutex(Mutex* mutex)
    {
       mutex->release();       // NOT exactly correct, but just make sure not to leave it locked
-      condMutex = mutex;
+      mCondMutex = mutex;
    }
 
-   /** Test the mutex to see if it is held.
-    */
+   /** Tests the mutex to see if it is held. */
    int test()
-   { return mCondMutex->test(); }
+   {
+      return mCondMutex->test();
+   }
 
-
-   void dump (void) const
+   void dump() const
    {
       vprDEBUG_BEGIN(vprDBG_ALL,0)
          << "------------- vpr::CondVarGeneric::Dump ---------\n"
          << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "waiters: " << waiters << std::endl
-                             << vprDEBUG_FLUSH;
-      condMutex->dump();
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "mWaiters: "
+                                                << mWaiters << std::endl
+                                                << vprDEBUG_FLUSH;
+      mCondMutex->dump();
       vprDEBUG_END(vprDBG_ALL,0) << "-----------------------------------\n"
                                  << vprDEBUG_FLUSH;
    }
 
 private:
    // --- These make up the "condition variable" ---- ///
-   Semaphore sema;     //! Condition variable.
-   long waiters;       //! The number of processes waiting
+   Semaphore mSema;     /**< Condition variable. */
+   long mWaiters;       /**< The number of processes waiting */
 
-   Mutex* condMutex;   //! Mutex for the condition variable - User specified
-   Mutex defaultMutex; //! Mutex to use if user does not specify one
+   Mutex* mCondMutex;   /**< Mutex for the condition variable - User specified */
+   Mutex mDefaultMutex; /**< Mutex to use if user does not specify one */
 
    // = Prevent assignment and initialization.
    void operator= (const CondVarGeneric&)
@@ -216,7 +218,7 @@ private:
       ;
    }
 
-   CondVarGeneric (const CondVarGeneric &c)
+   CondVarGeneric(const CondVarGeneric& c)
    {
       ;
    }
