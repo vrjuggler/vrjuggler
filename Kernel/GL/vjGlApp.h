@@ -72,6 +72,11 @@ public:
 
    vjGlApp() {;}
 
+   virtual ~vjGlApp()
+   {
+      /* Do nothing. */ ;
+   }
+
    //: Function to draw the scene
    // Override this function with the user draw routine
    //!PRE: OpenGL state has correct transformation and buffer selected

@@ -56,6 +56,11 @@ class vjConfigChunk;
 class vjConfigChunkHandler
 {
 public:
+   virtual ~vjConfigChunkHandler()
+   {
+      /* Do nothing. */ ;
+   }
+
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it

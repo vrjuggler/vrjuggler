@@ -68,6 +68,11 @@ public:
 
    vjPfApp() {;}
 
+   virtual ~vjPfApp()
+   {
+      /* Do nothing. */ ;
+   }
+
    //: Initialize the scene graph
    // Called after pfInit & pfConfig but before apiInit
    virtual void initScene() = 0;

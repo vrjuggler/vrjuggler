@@ -84,6 +84,11 @@ public:
    // Just call vjApp(vjKernel::instance())
    vjApp();
 
+   virtual ~vjApp()
+   {
+      /* Do nothing. */ ;
+   }
+
 public:
    //: Application init function
    // Execute any initialization needed before the API is started
