@@ -75,8 +75,8 @@ struct SoundInfo
                  pitchbend( 1.0f ),
                  cutoff( 1.0f ),
                  volume( 1.0f ),
-                 triggerOnNextBind( false ), 
                  streaming( true ),
+                 triggerOnNextBind( false ), 
                  repeatCountdown( 0 )
    {
       //position.makeIdent();
