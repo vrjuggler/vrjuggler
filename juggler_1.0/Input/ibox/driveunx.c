@@ -310,7 +310,9 @@ int host_open_serial(int port, long int baud)
                 }
 
                 /* Set for baud rate, 8 data bits, 1 stop bit, no parity */
-                new_setup.c_cflag = baud_code | CS8 | CREAD;
+                new_setup.c_cflag = CS8 | CREAD;
+                cfsetospeed(&new_setup, baud_code);
+                cfsetispeed(&new_setup, baud_code);
 
                 /* Set these new parameters.  Record success if it works. */
                 if (tcsetattr(port_ref[port], TCSANOW, &new_setup) >= 0)

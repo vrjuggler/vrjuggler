@@ -392,7 +392,6 @@ case $target_os in
 
         AC_DEFINE(VJ_OS_IRIX,)
         AC_DEFINE(_BSD_TYPES,)
-        AC_DEFINE(_OLD_TERMIOS,)
 
         if test ${_OS_REL_NUM_MAJOR} -lt 6 ; then
             AC_DEFINE(IRIXREL, "IRIX5")

@@ -48,8 +48,6 @@
 // Date: 1-23-99
 //===============================================================
 
-#define _OLD_TERMIOS
-
 #include <string.h> // for strcpy();
 #include <stdio.h>
 #include <stdlib.h>
@@ -135,11 +133,13 @@ int fsPinchGlove::mConnectToHardware(const char* const ttyPort)
     char buf[BUFFER_LEN];
     int cnt;
 
-    data.c_cflag = B9600 | CS8 | CREAD | CLOCAL;
+    data.c_cflag = CS8 | CREAD | CLOCAL;
     data.c_lflag = 0;
     data.c_iflag = 1;
     data.c_oflag = 0;
     data.c_cc[ VMIN ] = 1;
+    cfsetospeed(&data, B9600);
+    cfsetispeed(&data, B9600);
 
 	int fileDescriptor = -1;
     if ((fileDescriptor = open(ttyPort, O_RDWR | O_NDELAY)) == -1) 
