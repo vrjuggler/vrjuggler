@@ -194,6 +194,35 @@ public class ConfigElement implements ConfigElementPointerListener
       // Get the particular property value
       return getPropertyValues(name).get(index);
    }
+   
+   /**
+    * Sets the value for the property with the given name at the given index
+    * only after first ensuring that the new value is different from the
+    * current value. Also a ConfigElementPropertyEdit is automatically
+    * created and registered with the UndoManager.
+    *
+    * @param name    the name of the property to set
+    * @param index   the index of the property value to set
+    */  
+   public synchronized void setProperty(String name, int index, Object value, ConfigContext ctx)
+   {
+      Object old_value = getProperty(name, index);
+      
+      if (old_value instanceof ConfigElementPointer)
+      {
+         old_value = ((ConfigElementPointer)old_value).getTarget();
+      }
+      // Make sure that the value acually changed.
+      if ( !old_value.equals(value) )
+      {
+         ConfigElementPropertyEdit new_edit = 
+            new ConfigElementPropertyEdit(this, name, index, 
+                                          old_value, value);
+         setProperty(name, index, value);
+         System.out.println("Adding: " + new_edit);
+         ctx.postEdit(new_edit);
+      }
+   }
 
    /**
     * Sets the value for the property with the given name at the given index.
