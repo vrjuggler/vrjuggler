@@ -20,7 +20,7 @@
 
 #ifndef _VJ_GL_CONTEXT_DATA_H_
 #define _VJ_GL_CONTEXT_DATA_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Kernel/GL/vjGlDrawManager.h>

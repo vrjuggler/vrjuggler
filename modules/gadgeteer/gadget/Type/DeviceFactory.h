@@ -20,7 +20,7 @@
 
 #ifndef _VJ_DEVICE_FACTORY_H_
 #define _VJ_DEVICE_FACTORY_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>

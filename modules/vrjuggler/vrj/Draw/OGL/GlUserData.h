@@ -20,7 +20,7 @@
 
 #ifndef _VJ_GL_USER_DATA_H_
 #define _VJ_GL_USER_DATA_H_
-#pragma once
+//#pragma once
 
 #include <Kernel/vjUser.h>
 #include <Kernel/vjProjection.h>
@@ -49,7 +49,7 @@ public:
 
    vjProjection* getProjection()
       { return mProj; }
-   void setProjection(vjProjection* proj) 
+   void setProjection(vjProjection* proj)
       { mProj = proj; }
 
 protected:

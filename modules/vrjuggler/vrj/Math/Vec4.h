@@ -20,7 +20,7 @@
 
 #ifndef _VJ_VEC4_
 #define _VJ_VEC4_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <math.h>
