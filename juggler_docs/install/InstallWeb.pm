@@ -276,6 +276,10 @@ sub htmlFilter($)
       return 1;
    }
 
+   # Strip out ignored blocks of text.  This is done here to remove large
+   # blocks that might slow down processing time.
+   $$file_contents =~ s/${html_comment_begin}\s*${ignore_block_begin_str}\s*${html_comment_end}.*?${html_comment_begin}\s*${ignore_block_end_str}\s*${html_comment_end}//gois;
+
    ################# search and replace (tags and includes) ##################
    #
    if ($$file_contents =~ m/$html_comment_begin\s*?$ignore_includes_str\s*?$html_comment_end/is)
@@ -387,7 +391,8 @@ sub htmlFilter($)
    #
    ################# end of search and replace (tags and includes) ##################
 
-   # Strip out ignored blocks of text.
+   # Strip out ignored blocks of text again to make sure we get those that
+   # were part of included files.
    $$file_contents =~ s/${html_comment_begin}\s*${ignore_block_begin_str}\s*${html_comment_end}.*?${html_comment_begin}\s*${ignore_block_end_str}\s*${html_comment_end}//gois;
 }
 

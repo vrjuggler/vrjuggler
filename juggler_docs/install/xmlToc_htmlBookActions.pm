@@ -250,13 +250,19 @@ sub loadHTML ($$$) {
         $input =~ /<\s*body.*?>(.*?)<\s*\/body\s*>/is;
         my $body = "$1";
 
+        # Strip out blocks to be ignored in book format.  This is done here
+        # to speed things up a little bit in the cases where the included
+        # text would make a big difference in processing time.
+        $body =~ s/${html_comment_begin}\s+install-web\s+${book_ignore_b}\s*${html_comment_end}.*?${html_comment_begin}\s+install-web\s+${book_ignore_e}\s*${html_comment_end}//ogis;
+
         filterHTML(\$body);
 
         # Strip out tables of contents.  We will let the HTML -> PostScript
         # or HTML -> PDF converter make the TOC.
         $body =~ s/${html_comment_begin}\s+install-web\s+toc-begin\s*${html_comment_end}.*?${html_comment_begin}\s+install-web\s+toc-end\s*${html_comment_end}//ogis;
 
-        # Strip out blocks to be ignored in book format.
+        # Strip out blocks to be ignored in book format again to catch
+        # the blocks that were part of included files.
         $body =~ s/${html_comment_begin}\s+install-web\s+${book_ignore_b}\s*${html_comment_end}.*?${html_comment_begin}\s+install-web\s+${book_ignore_e}\s*${html_comment_end}//ogis;
 
         # At this point, the HTML is suitable for appending.
