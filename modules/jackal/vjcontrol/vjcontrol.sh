@@ -33,6 +33,11 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # shell script for running vjcontrol under jdk 1.2 using the java command
+VJC_JARS='jccl_config.jar jccl_editorgui.jar jccl_net.jar jccl_perfmonitor.jar jccl_vjcontrol.jar'
+VJC_CP=.
+for jar in ${VJC_JARS}; do
+   VJC_CP=${VJC_CP}:${JCCL_BASE_DIR}/bin/$jar
+done
 
 # If the environment variable JDK_HOME is not set, default it to /usr/java.
 if test "x${JDK_HOME}" = "x" ; then
@@ -58,7 +63,7 @@ else
     ${JDK_HOME}/bin/java -DVJ_BASE_DIR="${VJ_BASE_DIR}"		\
       -DVJ_SHARE_DIR="${VJ_SHARE_DIR}"				\
       -DJCCL_BASE_DIR="${JCCL_BASE_DIR}" -DJCCL_SHARE_DIR="${JCCL_SHARE_DIR}" \
-      -cp ${CLASSPATH}:${JCCL_BASE_DIR}/bin/VjControl.jar VjControl.Init $*
+      -cp ${CLASSPATH}:${VJC_CP} org.vrjuggler.jccl.vjcontrol.Init $*
     status=0
 fi
 
