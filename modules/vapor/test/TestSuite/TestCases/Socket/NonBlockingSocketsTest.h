@@ -53,20 +53,6 @@ public:
 
 
    // Set OpenNonBlocking
-   void testSetOpenNonBlocking()
-   {
-      int port = 6275;
-      //bool result = false;
-      vpr::InetAddr local_addr;
-      local_addr.setPort( port );
-      vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
-
-      acceptor_socket.setOpenNonBlocking(); // for opening
-
-      assertTest( acceptor_socket.getNonBlocking() );
-   }
-
-   // Set OpenNonBlocking
    // Open
    // Close
    void testSetOpenNonBlockingThenOpenThenClose()
@@ -99,14 +85,13 @@ public:
       vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
 
       acceptor_socket.setOpenNonBlocking(); // for opening
-
-      assertTest( acceptor_socket.getNonBlocking() );
-
       result = acceptor_socket.open().success();
       assertTest( result );
 
-      acceptor_socket.enableNonBlocking(); // for reads and writes
       assertTest( acceptor_socket.getNonBlocking() );
+
+      acceptor_socket.enableBlocking(); // for reads and writes
+      assertTest( acceptor_socket.getBlocking() );
 
       result = acceptor_socket.close().success();
       assertTest( result );
@@ -130,13 +115,6 @@ public:
       local_addr.setPort( port );
       vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
       vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, local_addr );
-
-      // a/c: Set OpenNonBlocking
-      acceptor_socket.setOpenNonBlocking();
-      connector_socket.setOpenNonBlocking();
-
-      assertTest( acceptor_socket.getNonBlocking() );
-      assertTest( connector_socket.getNonBlocking() );
 
       // a/c: Open
       status = acceptor_socket.open();
@@ -213,14 +191,14 @@ public:
       acceptor_socket.setOpenNonBlocking();
       connector_socket.setOpenNonBlocking();
 
-      assertTest( acceptor_socket.getNonBlocking() );
-      assertTest( connector_socket.getNonBlocking() );
-
       // a/c: Open
       status = acceptor_socket.open();
       assertTest( status.failure() != true );
       status = connector_socket.open();
       assertTest( status.failure() != true );
+
+      assertTest( acceptor_socket.getNonBlocking() );
+      assertTest( connector_socket.getNonBlocking() );
 
       // a: getHandle
       vpr::IOSys::Handle handle = acceptor_socket.getHandle();
@@ -317,7 +295,6 @@ public:
    {
       TestSuite *test_suite = new TestSuite ("NonBlockingSocketTest");
 
-      test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testSetOpenNonBlocking", &NonBlockingSocketTest::testSetOpenNonBlocking));
       test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenClose));
       test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose));
       test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSockets", &NonBlockingSocketTest::testConnect2NonBlockingSockets));
