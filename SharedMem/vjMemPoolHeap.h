@@ -42,7 +42,7 @@
 class vjMemPoolHeap : public vjMemPool {
 
 public:
-   static init()
+   static void init()
    {;}
    
    vjMemPoolHeap(size_t initialSize = 65536,  int numProcs = 8, char* staticTempName = "memPoolHeapXXXXXX")
