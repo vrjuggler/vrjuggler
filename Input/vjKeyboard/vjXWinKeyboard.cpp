@@ -25,7 +25,8 @@
 //: Constructor
 bool vjXWinKeyboard::config(vjConfigChunk *c)
 {
-    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "vjXWinKeyboard::config:\n" << vjDEBUG_FLUSH;
+    vjDEBUG_BEGIN(vjDBG_INPUT_MGR, vjDBG_STATE_LVL)
+                     << "vjXWinKeyboard::config:\n" << vjDEBUG_FLUSH;
 
     if(!vjKeyboard::config(c))
       return false;
@@ -52,8 +53,9 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
     if (0 == m_mouse_sensitivity)
        m_mouse_sensitivity = 0.5;
 
-    vjDEBUG(vjDBG_INPUT_MGR,3) << "Mouse Sensititivty: " << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
-    vjDEBUG_END(vjDBG_INPUT_MGR,3) << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "Mouse Sensititivty: "
+               << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
+    vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << endl << vjDEBUG_FLUSH;
 
     return true;
 }
@@ -122,7 +124,9 @@ int vjXWinKeyboard::startSampling()
       XClearWindow(m_display,m_window);    // Try to clear the background
 
 
-      vjDEBUG(vjDBG_INPUT_MGR,1) << "vjKeyboard::startSampling() : ready to go.." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL)
+                 << "vjKeyboard::startSampling() : ready to go.." << endl
+                 << vjDEBUG_FLUSH;
 
 
       myThread = (vjThread *) 1;
@@ -189,9 +193,9 @@ void vjXWinKeyboard::updKeys()
                                             GrabModeAsync, GrabModeAsync,
                                             CurrentTime);
 
-         vjDEBUG(vjDBG_INPUT_MGR,4) << "KeyPress:  " << hex << key
-                    << " state:" << ((XKeyEvent*)&event)->state << " ==> "
-                    << xKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "KeyPress:  " << hex
+                    << key << " state:" << ((XKeyEvent*)&event)->state
+                    << " ==> " << xKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
 
       // A KeyRelease event occurred.  Flag the key that was released (as a
@@ -212,9 +216,9 @@ void vjXWinKeyboard::updKeys()
             m_pointer_grabbed = -1;
          }
 
-         vjDEBUG(vjDBG_INPUT_MGR,4) << "KeyRelease:" << hex << key
-                    << " state:" << ((XKeyEvent*)&event)->state << " ==> "
-                    << xKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "KeyRelease:" << hex
+                    << key << " state:" << ((XKeyEvent*)&event)->state
+                    << " ==> " << xKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
 
       // A MotionNotify event (mouse pointer movement) occurred.
