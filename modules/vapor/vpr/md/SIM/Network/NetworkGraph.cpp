@@ -108,8 +108,8 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
 
       for ( vpr::Uint32 i = 0; i < full_edge_count; i++ )
       {
-         double length, bw;
-         vpr::Uint32 from_node, to_node, delay;
+         double length, delay, bw;
+         vpr::Uint32 from_node, to_node;
          std::string net_type, net_ip;
          vpr::Uint16 net_id;
 
