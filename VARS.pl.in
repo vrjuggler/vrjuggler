@@ -1,0 +1,31 @@
+# ------------------------------------------------------------------------------
+# This file is imported via require by the Perl script
+# release/scripts/makefiles-gen.pl.  It populates the %VARS hash with
+# values used in generating Makefiles from Makefile.in templates at
+# installation time.  Any @...@ symbols in the Makefile.in's found in the 
+# directories samples and test are to be replaced by these values during the
+# installation process.  All values should be in single quotes to prevent
+# expansion of possible variable strings by Perl.
+#
+# Generated for use on @PLATFORM@
+#
+#	$Id$
+# ------------------------------------------------------------------------------
+
+$VARS{'CXX'}                   = '@CXX@';
+$VARS{'CPPFLAGS'}              = '@CPPFLAGS@';
+$VARS{'CXXFLAGS'}              = '@CXXFLAGS@ @DBG_FLAGS@';
+$VARS{'DEFS'}                  = '@DEFS@';
+$VARS{'EXTRA_LINK_FLAGS'}      = '@EXTRA_LINK_FLAGS@';
+$VARS{'INCLUDES'}              = '@INCLUDES@';
+$VARS{'OBJ_NAME_FLAG'}         = '@OBJ_NAME_FLAG@';
+$VARS{'PLATFORM'}              = '@PLATFORM@';
+$VARS{'TEST_VJ_LIBS_BASIC'}    = '@TEST_VJ_LIBS_BASIC@';
+$VARS{'TEST_VJ_LIBS_GL'}       = '@TEST_VJ_LIBS_GL@';
+$VARS{'TEST_VJ_LIBS_PF'}       = '@TEST_VJ_LIBS_PF@';
+$VARS{'TEST_LIBS_BASIC'}       = '@TEST_LIBS_BASIC@';
+$VARS{'TEST_EXTRA_LIBS_BASIC'} = '@TEST_EXTRA_LIBS_BASIC@';
+$VARS{'TEST_EXTRA_LIBS_GL'}    = '@TEST_EXTRA_LIBS_GL@';
+$VARS{'TEST_EXTRA_LIBS_PF'}    = '@TEST_EXTRA_LIBS_PF@';
+
+1;
