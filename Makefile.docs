@@ -43,6 +43,7 @@ webroot=	$(HOME)/public_html/phpjug
 # ********************************
 
 SUBDIR=		docs/team.guide					\
+		modules/sonix/doc				\
 		modules/sonix/doc/programmer.guide		\
 		modules/tweek/doc				\
 		modules/tweek/doc/programmer.guide		\
