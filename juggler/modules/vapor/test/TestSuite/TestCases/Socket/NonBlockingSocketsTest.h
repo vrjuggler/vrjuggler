@@ -5,7 +5,7 @@
 
 #include <cppunit/TestCase.h>
 #include <cppunit/TestSuite.h>
-#include <cppunit/ThreadTestCase.h>
+#include <cppunit/extensions/ThreadTestCase.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Sync/Mutex.h>

@@ -10,13 +10,13 @@ namespace vprTest
 void IntervalTest::construction()
 {
    vpr::Interval val1(21,vpr::Interval::Sec);
-   CppUnit::TestAssert::assertEquals<long>(val1.sec(), 21);
+   CPPUNIT_ASSERT_EQUAL(val1.sec(), (vpr::Uint64) 21);
 
    vpr::Interval val2(21,vpr::Interval::Msec);
-   CppUnit::TestAssert::assertEquals<long>(val2.msec(), 21);
+   CPPUNIT_ASSERT_EQUAL(val2.msec(), (vpr::Uint64) 21);
 
    vpr::Interval val3(20,vpr::Interval::Usec);
-   CppUnit::TestAssert::assertEquals<long>(val3.usec(), 20);
+   CPPUNIT_ASSERT_EQUAL(val3.usec(), (vpr::Uint64) 20);
 }
 
 void IntervalTest::testSet()
@@ -24,13 +24,13 @@ void IntervalTest::testSet()
    vpr::Interval val;
 
    val.set(21,vpr::Interval::Sec);
-   CppUnit::TestAssert::assertEquals<long>(val.sec(), 21);
+   CPPUNIT_ASSERT_EQUAL(val.sec(), (vpr::Uint64) 21);
 
    val.set(21,vpr::Interval::Msec);
-   CppUnit::TestAssert::assertEquals<long>(val.msec(), 21);
+   CPPUNIT_ASSERT_EQUAL(val.msec(), (vpr::Uint64) 21);
 
    val.set(20,vpr::Interval::Usec);
-   CppUnit::TestAssert::assertEquals<long>(val.usec(), 20);
+   CPPUNIT_ASSERT_EQUAL(val.usec(), (vpr::Uint64) 20);
 }
 
 void IntervalTest::testSetf()
@@ -38,13 +38,13 @@ void IntervalTest::testSetf()
    vpr::Interval val;
 
    val.setf(12.75f, vpr::Interval::Sec);
-   CppUnit::TestAssert::assertEquals<long>(val.msec(), 12750);
+   CPPUNIT_ASSERT_EQUAL(val.msec(), (vpr::Uint64) 12750);
 
    val.setf(12.75f, vpr::Interval::Msec);
-   CppUnit::TestAssert::assertEquals<long>(val.usec(), 12750);
+   CPPUNIT_ASSERT_EQUAL(val.usec(), (vpr::Uint64) 12750);
 
    val.setf(20.75f, vpr::Interval::Usec);
-   CppUnit::TestAssert::assertEquals<long>(val.usec(), 20);
+   CPPUNIT_ASSERT_EQUAL(val.usec(), (vpr::Uint64) 20);
 }
 
 void IntervalTest::testSetd()
@@ -52,13 +52,13 @@ void IntervalTest::testSetd()
    vpr::Interval val;
 
    val.setd(12.75f, vpr::Interval::Sec);
-   CppUnit::TestAssert::assertEquals<long>(val.msec(), 12750);
+   CPPUNIT_ASSERT_EQUAL(val.msec(), (vpr::Uint64) 12750);
 
    val.setd(12.75f, vpr::Interval::Msec);
-   CppUnit::TestAssert::assertEquals<long>(val.usec(), 12750);
+   CPPUNIT_ASSERT_EQUAL(val.usec(), (vpr::Uint64) 12750);
 
    val.setd(20.75f, vpr::Interval::Usec);
-   CppUnit::TestAssert::assertEquals<long>(val.usec(), 20);
+   CPPUNIT_ASSERT_EQUAL(val.usec(), (vpr::Uint64) 20);
 }
 
 void IntervalTest::testSec()
@@ -66,9 +66,9 @@ void IntervalTest::testSec()
    vpr::Interval val;
 
    val.sec(21);
-   CppUnit::TestAssert::assertEquals<long>(val.sec(), 21);
-   CppUnit::TestAssert::assertEquals<long>(val.msec(), 21000);
-   CppUnit::TestAssert::assertEquals<long>(val.usec(), 21000000);
+   CPPUNIT_ASSERT_EQUAL(val.sec(), (vpr::Uint64) 21);
+   CPPUNIT_ASSERT_EQUAL(val.msec(), (vpr::Uint64) 21000);
+   CPPUNIT_ASSERT_EQUAL(val.usec(), (vpr::Uint64) 21000000);
 }
 
 void IntervalTest::testSecf()
@@ -102,9 +102,9 @@ void IntervalTest::testMsec()
    vpr::Interval val;
 
    val.msec(12345);
-   CppUnit::TestAssert::assertEquals<long>(val.sec() , 12);
-   CppUnit::TestAssert::assertEquals<long>(val.msec(), 12345);
-   CppUnit::TestAssert::assertEquals<long>(val.usec(), 12345000);
+   CPPUNIT_ASSERT_EQUAL(val.sec(), (vpr::Uint64) 12);
+   CPPUNIT_ASSERT_EQUAL(val.msec(), (vpr::Uint64) 12345);
+   CPPUNIT_ASSERT_EQUAL(val.usec(), (vpr::Uint64) 12345000);
 }
 
 void IntervalTest::testMsecf()
@@ -138,9 +138,9 @@ void IntervalTest::testUsec()
    vpr::Interval val;
 
    val.usecf(1234560);
-   CppUnit::TestAssert::assertEquals<long>(val.sec() , 1);
-   CppUnit::TestAssert::assertEquals<long>(val.msec(), 1234);
-   CppUnit::TestAssert::assertEquals<long>(val.usec(), 1234560);
+   CPPUNIT_ASSERT_EQUAL(val.sec() , (vpr::Uint64) 1);
+   CPPUNIT_ASSERT_EQUAL(val.msec(), (vpr::Uint64) 1234);
+   CPPUNIT_ASSERT_EQUAL(val.usec(), (vpr::Uint64) 1234560);
 }
 
 void IntervalTest::testUsecf()
@@ -180,7 +180,7 @@ void IntervalTest::testSubtract()
 
    diff = val2 - val1;
 
-   CppUnit::TestAssert::assertEquals<long>(diff.usec(), 100);
+   CPPUNIT_ASSERT_EQUAL(diff.usec(), (vpr::Uint64) 100);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(diff.secf(), .000100f, 0.0001f);
 }
 

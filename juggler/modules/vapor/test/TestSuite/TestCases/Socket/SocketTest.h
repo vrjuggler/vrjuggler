@@ -4,7 +4,7 @@
 #include <string>
 
 #include <cppunit/TestCase.h>
-#include <cppunit/ThreadTestCase.h>
+#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 
 #include <vpr/IO/Socket/SocketStream.h>

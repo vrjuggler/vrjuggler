@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <cppunit/ThreadTestCase.h>
+#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 #include <vpr/vpr.h>
