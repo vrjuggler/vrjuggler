@@ -29,6 +29,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.Iterator;
+import java.util.Stack;
 import javax.swing.*;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.services.EnvironmentService;
@@ -203,15 +204,34 @@ public class ConfigToolbar
          {
             File file = fileChooser.getSelectedFile();
             ConfigBroker broker = new ConfigBrokerProxy();
-            String res_name = file.getAbsolutePath();
 
             ChunkFactory.setDescs(broker.getDescs(ctx));
-            FileDataSource data_source = new FileDataSource(res_name,
-                                                            FileDataSource.ELEMENTS);
-            broker.add(res_name, data_source);
-            ctx.add(res_name);
-            setConfigContext(ctx);
 
+            // We want to automatically follow include directives. Keep track of
+            // all the files on a stack and read them one at a time in the order
+            // that we come across them
+            Stack files = new Stack();
+            files.push(file.getAbsolutePath());
+            while (! files.isEmpty())
+            {
+               String res_name = (String)files.pop();
+               FileDataSource data_source = new FileDataSource(res_name,
+                                                               FileDataSource.ELEMENTS);
+               broker.add(res_name, data_source);
+               ctx.add(res_name);
+
+               // Look through the chunks in the newly loaded file and see if
+               // any of them are include directives
+               java.util.List include_chunks = ConfigUtilities.getChunksWithDescToken(
+                                          broker.getChunksIn(res_name), "vjIncludeFile");
+               for (Iterator itr = include_chunks.iterator(); itr.hasNext(); )
+               {
+                  ConfigChunk include_chk = (ConfigChunk)itr.next();
+                  files.push(include_chk.getName());
+               }
+            }
+
+            setConfigContext(ctx);
             return true;
          }
          catch (IOException ioe)
@@ -265,7 +285,7 @@ public class ConfigToolbar
     */
    public boolean doClose()
    {
-      System.err.println("ConfigToolbar.doSaveAs(): not implemented");
+      System.err.println("ConfigToolbar.doClose(): not implemented");
       return false;
    }
 
