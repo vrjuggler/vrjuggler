@@ -57,40 +57,58 @@ cd "$EXTROOT_ABS/.."
 JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
+# Enable/disable installation of Boost from juggler/external.
 AC_ARG_ENABLE([boost-install],
               [  --disable-boost-install Disable installation of
                           juggler/external/boost],
               [install_boost="$enableval"], [install_boost='yes'])
+
+# Enable/disable installation of CppDOM from juggler/external.
 AC_ARG_ENABLE([cppdom-install],
               [  --disable-cppdom-install
                           Disable installation of
                           juggler/external/cppdom],
               [install_cppdom="$enableval"], [install_cppdom='yes'])
+
+# Enable/disable installation of GMTL from juggler/external.
 AC_ARG_ENABLE([gmtl-install],
               [  --disable-gmtl-install
                           Disable installation of
                           juggler/external/GMTL],
               [install_gmtl="$enableval"], [install_gmtl='yes'])
+
+# Enable/disable installation of Doozer from juggler/external.
 AC_ARG_ENABLE([doozer-install],
               [  --disable-doozer-install
                           Disable installation of
                           juggler/external/Doozer],
               [install_doozer="$enableval"], [install_doozer='yes'])
 
+# Name the path to a Boost installation.  This defaults to
+# juggler/external/boost (using an absolute path).
 AC_ARG_WITH([boostroot],
             [  --with-boostroot=<PATH> Boost installation directory],
             [BOOST_ROOT="$withval"],
             [BOOST_ROOT="$JUGGLERROOT_ABS/external/boost"])
+
+# Name the path to a CppDOM installation.  This defaults to
+# juggler/external/cppdom (using an absolute path).
 AC_ARG_WITH([cppdomroot],
             [  --with-cppdomroot=<PATH>
                           CppDOM installation directory],
             [CPPDOM_ROOT="$withval"],
             [CPPDOM_ROOT="$JUGGLERROOT_ABS/external/cppdom"])
+
+# Name the path to a GMTL installation.  This defaults to juggler/external/GMTL
+# (using an absolute path).
 AC_ARG_WITH([gmtl-prefix],
             [  --with-gmtl-prefix=<PATH>
                           GMTL installation directory],
             [GMTL_ROOT="$withval"],
             [GMTL_ROOT="$JUGGLERROOT_ABS/external/GMTL"])
+
+# Name the path to a Doozer installation.  This defaults to
+# juggler/external/Doozer (using an absolute path).
 AC_ARG_WITH([doozer-prefix],
             [  --with-doozer-prefix=<PATH>
                           Doozer installation directory],
