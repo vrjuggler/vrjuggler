@@ -65,7 +65,7 @@ do
       $ACLOCAL $aclocalinclude || exit 1
       if grep "^AC_CONFIG_HEADER" configure.in >/dev/null
       then
-        echo "Running $AUTOHEADER..."
+        echo "Running $AUTOHEADER ..."
         $AUTOHEADER || exit 1
       fi
       echo "Running $AUTOCONF ..."
