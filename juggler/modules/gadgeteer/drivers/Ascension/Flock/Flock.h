@@ -74,22 +74,16 @@ public:
     *
     * @param port  such as "/dev/ttyd3"
     * @param baud  such as 38400, 19200, 9600, 14400, etc...
-    * @param sync  sync type.
-    * @param block  blocking
     * @param numBrds  number of birds in flock
     * @param transmit  transmitter unit number
-    * @param hemi  hemisphere to track from
-    * @param filt  filtering type
-    * @param report  flock report rate
-    * @param calfile  a calibration file, if "", then use none
     *
     * @post configures internal data members,
     *          doesn't actually talk to the FOB yet.
     */
-   Flock(const char* const port = "/dev/ttyS0",
-         const int& baud = 38400,
-         const int& numBrds = 3,
-         const int& transmit = 3);
+   Flock(const char* port = "/dev/ttyS0",
+         const int baud = 38400,
+         const int numBrds = 3,
+         const int transmit = 3);
    ~Flock();
 
 
