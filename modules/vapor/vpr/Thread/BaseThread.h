@@ -43,6 +43,7 @@
 #define _VPR_BASE_THREAD_H_
 
 #include <vpr/vprConfig.h>
+#include <vpr/vprTypes.h>
 #include <map>
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/TSTable.h>            // Needed to cache a copy here
@@ -223,7 +224,7 @@ public:
     *         there was a reation error.<br>
     *         Otherwise, the value returned is this thread's ID.
     */
-   Int32 getTID()
+   vpr::Int32 getTID()
    { return mThreadId; }
 
    /**
@@ -285,18 +286,18 @@ private:
    {;}
 
 private:
-   Int32  mThreadId;    //! The local id for the thread, -1 ==> invalid thread
+   vpr::Int32  mThreadId;    //! The local id for the thread, -1 ==> invalid thread
 
    // --- STATICS ---- //
 
 private:
    // XXX: What happens when it rolls over after we have been running for a LONG time.
-   Int32 getNextThreadId()
+   vpr::Int32 getNextThreadId()
    {
       return mNextThreadId++;
    }
 
-   static Int32 mNextThreadId;    // Initialized to 0
+   static vpr::Int32 mNextThreadId;    // Initialized to 0
 };
 
 
