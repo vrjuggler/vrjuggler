@@ -91,7 +91,7 @@ public:
       assertTest( acceptor_socket.getNonBlocking() );
 
       acceptor_socket.enableBlocking(); // for reads and writes
-      assertTest( acceptor_socket.getBlocking() );
+      assertTest( acceptor_socket.getNonBlocking() );
 
       result = acceptor_socket.close().success();
       assertTest( result );
