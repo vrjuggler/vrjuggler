@@ -144,23 +144,12 @@ AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 
-# ignore the nasty paths appended by the config scripts...
-saveCXXFLAGS="$CXXFLAGS"
-saveINCLUDES="$INCLUDES"
-
 VPR_PATH([0.19.0], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
          [AC_MSG_ERROR([*** VPR required for sonix***])])
 INCLUDES="$INCLUDES $VPR_INCLUDES"
 LIBS="$LIBS $VPR_LIBS"
 
 CXXFLAGS="$VPR_CXXFLAGS $CXXFLAGS"
-
-dnl ignore the nasty paths appended by the config scripts...
-#CXXFLAGS="$saveCXXFLAGS"
-#INCLUDES="-I${VJ_BASE_DIR}/include -I${VPR_BASE_DIR}/include  $saveINCLUDES"
-#if test "x$PLATFORM" = "xIRIX" ; then
-#   INCLUDES="-I${VPR_BASE_DIR}/include/boost/compatibility/cpp_c_headers $INCLUDES"
-#fi
 
 # find and append GMTL flags...
 vjsave_CPPFLAGS="$CPPFLAGS"
