@@ -29,7 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,11 +40,8 @@
 
 void usage(char** argv)
 {
-   std::cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<std::flush;
-   std::cout<<"\n"<<std::flush;
    std::cout<<"Usage:\n";
-   std::cout<<"      "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for plib's SL library)\n";
-   std::cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<std::flush;
+   std::cout<<"      "<<argv[0]<<" <model_name> vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n";
 }
 
 int main(int argc, char* argv[])
@@ -53,53 +49,39 @@ int main(int argc, char* argv[])
    vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
    simplePfApp* application = new simplePfApp();  // Delcare an instance of my application
 
-   std::string file_path( "" );
-   const float dcs_scale( 1.0f );
-   const vjVec3 dcs_trans( 0.0f, 0.0f, 0.0f );
-   const vjVec3 dcs_rot(0.0,0.0,0.0);
-   const vjVec3 initial_pos( 0.0f, 0.0f, 0.0f );
-
+   // --- CHECK FOR CORRECT ARGUMENTS ---- //
    if (argc < 2)
    {
       usage( argv );
       std::cout<<"\n\n[ERROR!!!] you must supply a model database (then config files)\n\n"<<std::flush;
       return 1;
    }
-
-   std::string model_filename = argv[1];
-   std::cout<<"Will load: "<<model_filename.c_str()<<"\n"<<std::flush;
-
-   if (argc < 3)
+   else if (argc < 3)
    {
       std::cout<<"\n\n[ERROR!!!] you must supply config files after the model file...\n\n"<<std::flush;
       return 2;
    }
 
-   std::cout<<"==========\n"<<std::flush;
+   // --- GET MODEL NAME --- //
+   std::string model_filename = argv[1];
+   std::cout << "Will load: " << model_filename.c_str() << "\n" << std::flush;
+
+   // Load config files
    for ( int i = 2; i < argc; ++i )
    {
-      std::cout<<"Loading Config File: "<<argv[i]<<"\n"<<std::flush;
-     kernel->loadConfigFile(argv[i]);
+      kernel->loadConfigFile(argv[i]);
    }
-   std::cout<<"===========\n"<<std::flush;
 
-    kernel->start();
+   kernel->start();                            // Start the Kernel running
 
-    // Configure that application
-    application->setModel( model_filename );
-    application->setModelScale( dcs_scale );
-    application->setModelTrans( dcs_trans );
-    application->setModelRot( dcs_rot );
-    application->setFilePath( file_path );
-    application->setInitialNavPos( initial_pos );
+   // Configure the application
+   application->setModel( model_filename );
+   kernel->setApplication( application );    // Set up the kernel
 
-    kernel->setApplication( application );    // Set up the kernel
-
-    //while(!kernel->done())
-    while (1)
-    {
-       usleep( 100000 );
-    }
+   while (1)
+   {
+      usleep( 100000 );
+   }
 }
 
 

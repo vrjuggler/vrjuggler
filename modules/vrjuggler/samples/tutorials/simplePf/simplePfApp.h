@@ -38,91 +38,43 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-//#include <gl/device.h>
-#include <Performer/pf/pfChannel.h>
-#include <Performer/pf/pfEarthSky.h>
 #include <Performer/pf/pfLightSource.h>
 #include <Performer/pf/pfNode.h>
-#include <Performer/pf/pfTraverser.h>
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pfdu.h>
 #include <Performer/pfutil.h>
 
-    // --- VR Juggler Stuff --- //
+// --- VR Juggler Stuff --- //
 #include <Kernel/vjKernel.h>
 #include <Kernel/Pf/vjPfApp.h>    // the performer application base type
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjProjection.h>  // for setNearFar (for setting clipping planes)
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
-
-#include <Utils/vjFileIO.h>
-
-#include <Sound/vjSoundManager.h>
-#include <Sound/pf/pfSoundNode.h> //performer-juggler sound node.
-#include <Sound/pf/pfSoundTraverser.h>
-
-// nav includes
-#include <pfNavDCS.h>
-#include <velocityNav.h>
-#include <collider.h>
-#include <planeCollider.h>
-#include <pfPogoCollider.h>
-#include <pfRayCollider.h>
-#include <pfBoxCollider.h>
-#include <vjPfAppStats.h>
-
-#include "pfFileIO.h" // handy fileloading/caching functions
-
-#include <Performer/pf/pfTraverser.h>
-
-int AppNotifyPreTrav(pfTraverser* trav, void* data);
-int AppNotifyPostTrav(pfTraverser* trav, void* data);
 
 // Declare my application class
 class simplePfApp : public vjPfApp
 {
 public:
-   simplePfApp()
-      mLightGroup( NULL ),
-      mModels( NULL ),
-      mRootNode( NULL ),
-      mNavigationDCS( NULL )
+   simplePfApp() :
+      mModelFileName(""), mLightGroup( NULL ), mSun(NULL), mRootNode( NULL ), mModelRoot( NULL )
    {
    }
 
-   virtual ~simplePfApp (void) 
-   {
-      /* Do nothing. */ ;
-   }
+   virtual ~simplePfApp (void)
+   {;}
 
-   virtual void init()
-   {
-      /* vjProjection::setNearFar( 0.4f, 200000 ); XXXX: */
-   }
-
-   virtual void apiInit()
-   {
-   }
-
+   // Called between pfInit and pfConfig
+   // This function allows the user application to do any processing that needs
+   // to happen before performer forks its processes off but after
+   // pfInit()
    virtual void preForkInit()
    {
-         std::cout << "simplePfNavAPP: Initializing performer file loaders for types like: "
-                   << "terrain.flt" << "\n" << std::flush;
-
-            pfdInitConverter( "terrain.flt" );
-      }
+      // Initialize model converters
+      pfdInitConverter( mModelFileName.c_str() );
    }
 
    // Initialize the scene graph
+   // Called after pfInit & pfConfig but before apiInit
    virtual void initScene();
-
-   // load the model into the scene graph
-   // If another model is already in the scene graph, we destroy it and load the newly configured one.
-   // The model loaded is based on the configuration information that we currently have
-   // This may be called multiple times
-   virtual void initializeModels();
-   virtual void initializeSounds();
 
    /// Return the current scene graph
    virtual pfGroup* getScene()
@@ -130,63 +82,35 @@ public:
       return mRootNode;
    }
 
-   //: Function called in application process for each active channel each frame
-   // Called immediately before draw (pfFrame())
-   virtual void appChanFunc(pfChannel* chan)
-   {
-   }
-
-   // Function called by the DEFAULT drawChan function before clearing the channel
-   // and drawing the next frame (pfFrame())
-   virtual void preDrawChan(pfChannel* chan, void* chandata)
-   {
-   }
-
-   /// Function called after pfSync and before pfDraw
-   virtual void preFrame()
-   {
-   }
-
-   /// Function called after pfDraw
-   virtual void intraFrame()
-   {
-   }
-
-   //: Reset the application to initial state
-   virtual void reset()
-   {
-   }
+   // Set the name of the model to load
+   // This must be called before the application is given to the kernel
+   void setModel(std::string modelFile)
+   { mModelFileName = modelFile; }
 
 public:
    // CONFIG PARAMS
-   std::string    mFilePath;
-   vjVec3         mInitialPos;
-
-   // navigation objects.
-   vjDigitalInterface         mVJButton;
+   std::string    mModelFileName;
 
    // SCENE GRAPH NODES
    pfGroup*       mLightGroup;
    pfLightSource* mSun;                      // Sun to light the environment
    pfGroup*       mRootNode;                 // The root of the scene graph
+   pfNode*        mModelRoot;                // Root of the model
 };
 
 // ------- SCENE GRAPH ----
 // a standard organized interface for derived applications:
 //
-//                            /-- mLightGroup -- mSun
-// mRootNode -- mNavigationDCS -- mCollidableModelGroup -- mConfiguredCollideModels -- loaded stuff...
-//          \-- mNoNav        \-- mUnCollidableModelGroup -- mConfiguredNoCollideModels -- loaded stuff...
-//                                                       \-- mSoundNodes -- loaded stuff...
+//            /-- mLightGroup -- mSun
+// mRootNode -- mModelRoot
+//
 void simplePfApp::initScene()
 {
    // Load the scene
    vjDEBUG(vjDBG_ALL, 0) << "simplePfApp::initScene\n" << vjDEBUG_FLUSH;
 
    // Allocate all the nodes needed
-   mRootNode             = new pfGroup;       // Root of our graph
-   mRootNode->setName("simplePfApp::mRootNode");
-   mNavigationDCS        = new pfDCS;      // DCS to navigate with
+   mRootNode             = new pfGroup;            // Root of our graph
 
    // Create the SUN light source
    mLightGroup = new pfGroup;
@@ -198,14 +122,12 @@ void simplePfApp::initScene()
    mSun->setColor( PFLT_SPECULAR, 1.0f, 1.0f, 1.0f );
    mSun->on();
 
-   // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
-   mRootNode->addChild( mNavigationDCS );
-   mNavigationDCS->addChild(mLightGroup);
-   mNavigationDCS->addChild( pfdLoadModel( "terrain.flt" ) );
+   // --- LOAD THE MODEL --- //
+   mModelRoot = pfdLoadFile(mModelFileName.c_str());
 
-   std::cout<<"[simplePfApp] Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n"<<std::flush;
-   pfuTravPrintNodes( mRootNode, "lastscene.out" );
-   pfdStoreFile( mRootNode, "lastscene.pfb" );
+   // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
+   mRootNode->addChild( mModelRoot );
+   mRootNode->addChild(mLightGroup);
 }
 
 #endif
