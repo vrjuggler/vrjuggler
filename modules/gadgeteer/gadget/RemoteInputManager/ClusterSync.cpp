@@ -59,9 +59,9 @@ namespace gadget
       while ( mAccept == false )
       {
          clearIntervals();
-         recieveHandshake();
+         receiveHandshake();
          createHandshake();
-         recieveExpectedTime();
+         receiveExpectedTime();
          createResponce();
       }
    }
@@ -72,9 +72,9 @@ namespace gadget
       {
          clearIntervals();
          createHandshake();
-         recieveHandshake();
+         receiveHandshake();
          createExpectedTime();
-         recieveResponce();
+         receiveResponce();
       }
       return(mDelta);
    }
@@ -96,7 +96,7 @@ namespace gadget
       //}
       sendAndClear();
    }
-   void ClusterSync::recieveHandshake()
+   void ClusterSync::receiveHandshake()
    {
       getPacket(8);
       mLocalReceiveTime.setNow();
@@ -131,7 +131,7 @@ namespace gadget
       mWriter.writeUint64(mExpectedRemoteTime.getBaseVal());
       sendAndClear();
    }
-   void ClusterSync::recieveExpectedTime()
+   void ClusterSync::receiveExpectedTime()
    {
 
       getPacket(8);
@@ -168,7 +168,7 @@ namespace gadget
       sendAndClear();
    }
 
-   void ClusterSync::recieveResponce()
+   void ClusterSync::receiveResponce()
    {
       getPacket(1);
       mAccept = mReader->readBool();
