@@ -6,7 +6,8 @@
             class="org.vrjuggler.vrjconfig.customeditors.proxyeditor.Editor"/>
       <dependencies>
          <bean>ConfigBroker</bean>
-         <bean>jccl_editors</bean>
+         <jar path="${TWEEK_BASE_DIR}/bin">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">TableLayout.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">jgraphpad.jar</jar>
       </dependencies>
