@@ -361,7 +361,7 @@ if test "x${_enable_jdk_orb}" != "xno" ; then
    DPP_JDK_VERSION($JDK_HOME, 1.4, ,
       AC_MSG_ERROR(*** JDK 1.4 or newer required for Java IDL use ***))
 else
-   if test "x$OPENORB_ROOT" != "xnone" ; then
+   if test "x$OPENORB_JAR" != "xnone" ; then
       DPP_CHECK_JAVA_STATIC_METHOD(org.omg.CORBA.ORB,
          init(), ,
          [ ORB_CLASS_PROP='org.openorb.CORBA.ORB'
@@ -546,6 +546,10 @@ fi
 tweek_extra_ldflags="$EXTRA_LDFLAGS $OMNI_LDFLAGS"
 
 jars='TweekBeans.jar TweekEvents.jar TweekNet.jar TweekServices.jar'
+
+if test "x$OPENORB_JAR" != "xnone" ; then
+   jars="$jars $OPENORB_JAR"
+fi
 
 changequote(<<, >>)
 tweek_java_api_jars=`echo "$jars" | sed -e 's/\(Tweek[A-Za-z]*\.jar\)/${prefix}\/bin\/\1/g' -e "s/ /$JCPS/g"`
