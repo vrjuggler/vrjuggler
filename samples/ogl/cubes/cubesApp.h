@@ -167,7 +167,7 @@ public:
    // calculations and state modifications here.
    virtual void preFrame()
    {
-       vjDEBUG(vjDBG_ALL,2) << "cubesApp::preFrame()" << std::endl
+       vjDEBUG(vjDBG_ALL,5) << "cubesApp::preFrame()" << std::endl
                             << vjDEBUG_FLUSH;
 
        for(unsigned int i=0;i<mUserData.size();i++)
@@ -188,7 +188,7 @@ public:
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
-      vjDEBUG(vjDBG_ALL,2) << "cubesApp::intraFrame()" << std::endl
+      vjDEBUG(vjDBG_ALL,5) << "cubesApp::intraFrame()" << std::endl
                            << vjDEBUG_FLUSH;
    }
 
@@ -196,7 +196,7 @@ public:
    // Do calculations here.
    virtual void postFrame()
    {
-      vjDEBUG(vjDBG_ALL,2) << "cubesApp::postFrame" << std::endl
+      vjDEBUG(vjDBG_ALL,5) << "cubesApp::postFrame" << std::endl
                            << vjDEBUG_FLUSH;
    }
 

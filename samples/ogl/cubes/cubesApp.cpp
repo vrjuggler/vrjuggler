@@ -62,11 +62,11 @@ void UserData::updateNavigation()
    wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
 
 
-   vjDEBUG(vjDBG_ALL,2) << "===================================\n"
+   vjDEBUG(vjDBG_ALL,6) << "===================================\n"
                         << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,2) << "Wand:\n" << *wand_matrix << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Wand:\n" << *wand_matrix << std::endl
                         << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,2) << "Wand XYZ: " << xyzAngles << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Wand XYZ: " << xyzAngles << std::endl
                         << vjDEBUG_FLUSH;
 
    goal_rot.makeQuat(*wand_matrix);    // Create the goal rotation quaternion
@@ -79,13 +79,13 @@ void UserData::updateNavigation()
    else
       transform.makeIdent();
 
-   vjDEBUG(vjDBG_ALL,2) << "Transform:\n" << transform << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Transform:\n" << transform << std::endl
                         << vjDEBUG_FLUSH;
    transform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
-   vjDEBUG(vjDBG_ALL,2) << "Transform XYZ: " << xyzAngles << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Transform XYZ: " << xyzAngles << std::endl
                         << vjDEBUG_FLUSH;
 
-   vjDEBUG(vjDBG_ALL,2) << "Nav:\n" << mNavMatrix << std::endl << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Nav:\n" << mNavMatrix << std::endl << std::endl
                         << vjDEBUG_FLUSH;
 
    // ----- Translation ------- //
@@ -101,7 +101,7 @@ void UserData::updateNavigation()
 
 
    if(mIncVelocityButton->getData() || mDecVelocityButton->getData())
-      vjDEBUG(vjDBG_ALL,2) << "Velocity: " << mCurVelocity << std::endl
+      vjDEBUG(vjDBG_ALL,6) << "Velocity: " << mCurVelocity << std::endl
                            << vjDEBUG_FLUSH;
 
    if(mIncVelocityButton->getData() == vjDigital::TOGGLE_ON)
@@ -110,8 +110,8 @@ void UserData::updateNavigation()
       vjDEBUG(vjDBG_ALL,2) << "-- Toggle OFF --" << std::endl << vjDEBUG_FLUSH;
    if(mIncVelocityButton->getData() == vjDigital::ON)
       vjDEBUG(vjDBG_ALL,2) << "-- ON --" << std::endl << vjDEBUG_FLUSH;
-   if(mIncVelocityButton->getData() == vjDigital::OFF)
-      vjDEBUG(vjDBG_ALL,2) << "-- OFF --" << std::endl << vjDEBUG_FLUSH;
+//   if(mIncVelocityButton->getData() == vjDigital::OFF)
+//      vjDEBUG(vjDBG_ALL,) << "-- OFF --" << std::endl << vjDEBUG_FLUSH;
 
    // Find direction vector
    vjVec3   forward(0.0f, 0.0f, -1.0f);
@@ -127,11 +127,11 @@ void UserData::updateNavigation()
 
    local_xform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
    local_xform.getTrans(xyzTrans[0], xyzTrans[1], xyzTrans[2]);
-   vjDEBUG(vjDBG_ALL,2) << "Transform   Rot: " << xyzAngles << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Transform   Rot: " << xyzAngles << std::endl
                         << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,2) << "Transform Trans: " << xyzTrans << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Transform Trans: " << xyzTrans << std::endl
                         << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,2) << "-------------------------------------------"
+   vjDEBUG(vjDBG_ALL,6) << "-------------------------------------------"
                         << std::endl << vjDEBUG_FLUSH;
 }
 
