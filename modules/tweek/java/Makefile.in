@@ -45,19 +45,27 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-beandir		= $(bindir)/beans
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
+beandir			= $(bindir)/beans
+srcdir			= @srcdir@
+top_srcdir		= @top_srcdir@
+EXTRA_SRCS_PATH		= $(srcdir)/../tweek/idl $(srcdir)/tweek
+INSTALL			= @INSTALL@
+JAVA_IDL_OPTS		= -emitAll -td $(srcdir)
+JAVA_IDL_INCLUDES	= -i $(top_srcdir)
 
 JDOM_JAR	= @JDOM_JAR@
 CLASSPATH	= $(JDOM_JAR)
+
+IDL_JAVA_FILES	= SubjectManager.java
 
 JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
                   org/vrjuggler/tweek/beans/BeanCollectionBuilder.java	\
                   org/vrjuggler/tweek/services/EnvironmentService.java	\
                   org/vrjuggler/tweek/iconviewer/BeanIconViewer.java	\
-                  org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java
+                  org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java	\
+                  tweek/SubjectManagerHolder.java			\
+                  tweek/SubjectHolder.java				\
+                  tweek/ObserverHolder.java
 
 JARS		= Tweek.jar		\
                   TweekBeans.jar	\
@@ -75,7 +83,8 @@ BEANS_CLASSES	= org/vrjuggler/tweek/beans/*.class		\
                   org/vrjuggler/tweek/beans/loader/*.class
 
 COMM_CLASSES	= org/vrjuggler/tweek/net/*.class		\
-                  org/vrjuggler/tweek/net/corba/*.class
+                  org/vrjuggler/tweek/net/corba/*.class		\
+                  tweek/*.class
 
 SERVICE_MF	= $(srcdir)/services.MF
 SERVICE_CLASSES	= org/vrjuggler/tweek/services/EnvironmentService.class
@@ -166,6 +175,7 @@ endif	# if OS_TYPE == UNIX
           done
 
 CLEAN_FILES	+= $(JARS)
-CLEAN_DIRS	+= org
+CLEAN_DIRS	+= org tweek $(srcdir)/tweek
+
 
 include Makefile.inc
