@@ -320,15 +320,6 @@ public class DisplayWindowEditorPanel
       mAddDisplayItem.setText("Add Display ...");
       mAddDisplayItem.addActionListener(new DisplayWindowEditorPanel_mAddDisplayItem_actionAdapter(this));
       mResolutionPanel.setToolTipText("Set the size of the managed area (display screen resolution)");
-      mHelpButton.setEnabled(false);
-      mHelpButton.setRequestFocusEnabled(false);
-      mHelpButton.setMnemonic('0');
-      mHelpButton.setText("Help");
-      mCloseButton.setMnemonic('0');
-      mCloseButton.setText("Close");
-      mCloseButton.addActionListener(new DisplayWindowEditorPanel_mCloseButton_actionAdapter(this));
-      mMainButtonPanel.setLayout(flowLayout1);
-      flowLayout1.setAlignment(FlowLayout.RIGHT);
       this.add(mMainPanel, BorderLayout.CENTER);
       mMainPanel.add(mMainEditorPanel, BorderLayout.CENTER);
       mResolutionPanel.add(mResolutionLabel, null);
@@ -340,9 +331,6 @@ public class DisplayWindowEditorPanel
       mEditorPanel.add(mDesktopEditor, BorderLayout.CENTER);
       mMainEditorPanel.add(mResolutionPanel, BorderLayout.NORTH);
       mMainPanel.add(mExtraEditorPanel, BorderLayout.SOUTH);
-      this.add(mMainButtonPanel, BorderLayout.SOUTH);
-//      mMainButtonPanel.add(mCloseButton, null);
-      mMainButtonPanel.add(mHelpButton, null);
       mButtonPanel.add(mDisplayCreateButton,
                        new TableLayoutConstraints(1, 1, 1, 1,
                                                   TableLayout.FULL,
@@ -684,10 +672,6 @@ public class DisplayWindowEditorPanel
    private JPanel mExtraEditorPanel = new JPanel();
    private BorderLayout mEditorPanelLayout = new BorderLayout();
    private JMenuItem mAddDisplayItem = new JMenuItem();
-   private JPanel mMainButtonPanel = new JPanel();
-   private JButton mHelpButton = new JButton();
-   private JButton mCloseButton = new JButton();
-   private FlowLayout flowLayout1 = new FlowLayout();
 
    void resolutionChanged(FocusEvent e)
    {
@@ -856,20 +840,6 @@ class DisplayWindowEditorPanel_mSimViewportButton_actionAdapter implements java.
    public void actionPerformed(ActionEvent e)
    {
       adaptee.addSimulatorViewportClicked(e);
-   }
-}
-
-class DisplayWindowEditorPanel_mCloseButton_actionAdapter implements java.awt.event.ActionListener
-{
-   private DisplayWindowEditorPanel adaptee;
-
-   DisplayWindowEditorPanel_mCloseButton_actionAdapter(DisplayWindowEditorPanel adaptee)
-   {
-      this.adaptee = adaptee;
-   }
-   public void actionPerformed(ActionEvent e)
-   {
-      adaptee.closeClicked(e);
    }
 }
 
