@@ -88,7 +88,7 @@ void vjKernel::controlLoop(void* nullParam)
 
    // setup performance buffer
    perfBuffer = new vjPerfDataBuffer ("Kernel loop", 500, 8);
-//**//   environmentManager->addPerfDataBuffer (perfBuffer);
+   environmentManager->addPerfDataBuffer (perfBuffer);
 
    //while(!Exit)
    while (1)
