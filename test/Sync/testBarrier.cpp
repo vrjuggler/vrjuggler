@@ -8,14 +8,14 @@
 #include <sys/time.h>
 
 #include <sprocGroup.h>
-#include <Sync/C2Barrier.h>
+#include <Sync/vjBarrier.h>
 
 void doIt(void* param);
 
 void printArray(void);
 
 const int NUMTHREADS = 10;
-C2Barrier myBarrier(NUMTHREADS);
+vjBarrier myBarrier(NUMTHREADS);
 
 ///---//  Beginning of main
 void main()

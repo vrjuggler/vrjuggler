@@ -1,4 +1,4 @@
-/// TOP OF TEST_C
+/// TOP OF TEST_CPP
 
 #include <iostream.h>
 #include <stdio.h>
@@ -8,25 +8,23 @@
 #include <sys/time.h>
 
 #include <sprocGroup.h>
-#include <Sync/C2Mutex.h>
-#include <Sync/C2Semaphore.h>
+#include <Sync/vjMutex.h>
+#include <Sync/vjSemaphore.h>
 #include <Sync/NullMutex.h>
 
 void doIt(void*);
 void printArray(void);
 
 long counter;
-//SemaphoreSGI* mySemaphore;
-//MutexSGI* myMutex;
 //NullMutex myMutex;
-C2Mutex* myMutex;
-C2Semaphore* mySemaphore;
+vjMutex* myMutex;
+vjSemaphore* mySemaphore;
 
 ///---//  Beginning of main
 void main()
 {
-    mySemaphore = new SemaphoreSGI;
-    myMutex = new C2Mutex;
+    mySemaphore = new vjSemaphore;
+    myMutex = new vjMutex;
     //myMutex = new NullMutex;
     cout << "Hello there\n\n" << flush;
     cout << "Start:\n\n";
