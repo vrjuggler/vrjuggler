@@ -42,149 +42,149 @@ namespace gadget
 
 DTKMemorySegment::DTKMemorySegment()
 {
-    floatData = NULL;
-    intData = NULL;
-    charData = NULL;
-    _segmentName = _remotehost = NULL;
+   floatData = NULL;
+   intData = NULL;
+   charData = NULL;
+   _segmentName = _remotehost = NULL;
 
-    _numItems = _segmentSize = InputIndex = 0;
+   _numItems = _segmentSize = InputIndex = 0;
 }
 
 DTKMemorySegment::~DTKMemorySegment()
 {
-       if(floatData != NULL) delete [] floatData;
-       if(intData != NULL) delete [] intData;
-       if(charData != NULL) delete [] charData;
+   if ( floatData != NULL ) delete [] floatData;
+   if ( intData != NULL ) delete [] intData;
+   if ( charData != NULL ) delete [] charData;
 
-       if(_segmentName != NULL) delete [] _segmentName;
-       if(_remotehost != NULL) delete [] _remotehost;
+   if ( _segmentName != NULL ) delete [] _segmentName;
+   if ( _remotehost != NULL ) delete [] _remotehost;
 }
 
 
 bool DTKMemorySegment::config(jccl::ConfigChunkPtr c)
 {
-    _type = (DTK_dataType) c->getProperty<int>("dataType");
+   _type = (DTK_dataType) c->getProperty<int>("dataType");
 
-    _numItems = c->getProperty<int>("itemCount");
-    _segmentType = (DTK_memoryType) c->getProperty<int>("inputType");
+   _numItems = c->getProperty<int>("itemCount");
+   _segmentType = (DTK_memoryType) c->getProperty<int>("inputType");
 
-    _segmentName = c->getProperty<std::string>("segmentName").c_str();
-    _remotehost = c->getProperty<std::string>("remoteHost").c_str();
-    if(_remotehost[0] == '\0')
-    {
-    delete [] _remotehost;
-    _remotehost = NULL;
-    }
+   _segmentName = c->getProperty<std::string>("segmentName").c_str();
+   _remotehost = c->getProperty<std::string>("remoteHost").c_str();
+   if ( _remotehost[0] == '\0' )
+   {
+      delete [] _remotehost;
+      _remotehost = NULL;
+   }
 
-    switch(_segmentType)
-    {
-    case dtk_pos_ZYXEuler:
-    case dtk_pos_XYZEuler:
-        _numItems = 6; // Positional Euler data has to be 6 floats;
-        _type = DTK_FLOAT;
-        break;
-    case dtk_pos_QUAT:
-        _numItems = 4; // Quaternians have to be 4 floats;
-        _type = DTK_FLOAT;
-        break;
-    case dtk_digital:
-        _numItems = 1; // Assuming digital data is passes as single integers... STill must be tested and confirmed.
-        _type = DTK_INT;
-        break;
-    case dtk_analog:
-        _numItems = 1; // Same as digital, only we are assuming floats.  Both digital and analog need to be refined
-        _type = DTK_FLOAT;
-        break;
-    case dtk_custom:
-        break; // The dataType and itemCount must be specified earlier for this option
-    }
+   switch ( _segmentType )
+   {
+      case dtk_pos_ZYXEuler:
+      case dtk_pos_XYZEuler:
+         _numItems = 6; // Positional Euler data has to be 6 floats;
+         _type = DTK_FLOAT;
+         break;
+      case dtk_pos_QUAT:
+         _numItems = 4; // Quaternians have to be 4 floats;
+         _type = DTK_FLOAT;
+         break;
+      case dtk_digital:
+         _numItems = 1; // Assuming digital data is passes as single integers... STill must be tested and confirmed.
+         _type = DTK_INT;
+         break;
+      case dtk_analog:
+         _numItems = 1; // Same as digital, only we are assuming floats.  Both digital and analog need to be refined
+         _type = DTK_FLOAT;
+         break;
+      case dtk_custom:
+         break; // The dataType and itemCount must be specified earlier for this option
+   }
 
-    switch(_type)
-    {
-    case DTK_INVALID:
-        break; // Don't allocate any data... just continue on.
-    case DTK_INT:
-    _segmentSize = sizeof(int)*_numItems;
-        intData = (int*)malloc(_segmentSize);
-        break;
-    case DTK_FLOAT:
-    _segmentSize = sizeof(float)*_numItems;
-        floatData = (float*)malloc(_segmentSize);
-        break;
-    case DTK_BYTES:
-    case DTK_CSTRING:
-    _segmentSize = sizeof(char)*_numItems;
-        charData = (char*)malloc(_segmentSize);
-        break;
-    default:
-        break;
-    }
+   switch ( _type )
+   {
+      case DTK_INVALID:
+         break; // Don't allocate any data... just continue on.
+      case DTK_INT:
+         _segmentSize = sizeof(int)*_numItems;
+         intData = (int*)malloc(_segmentSize);
+         break;
+      case DTK_FLOAT:
+         _segmentSize = sizeof(float)*_numItems;
+         floatData = (float*)malloc(_segmentSize);
+         break;
+      case DTK_BYTES:
+      case DTK_CSTRING:
+         _segmentSize = sizeof(char)*_numItems;
+         charData = (char*)malloc(_segmentSize);
+         break;
+      default:
+         break;
+   }
 
 
-    return true;
+   return true;
 }
 
 bool DTKMemorySegment::connectSegment(dtkClient* in_parent)
 {
-    parent_client = in_parent;
-    m = parent_client->getSharedMem(_segmentSize, _segmentName);
-    if(_remotehost != NULL) m->getRemote(_remotehost);
-    return true;
+   parent_client = in_parent;
+   m = parent_client->getSharedMem(_segmentSize, _segmentName);
+   if ( _remotehost != NULL ) m->getRemote(_remotehost);
+   return true;
 }
 
 DTKMemorySegment::operator float*() const
 {
-    if(floatData == NULL) return 0;
+   if ( floatData == NULL ) return 0;
 
-    m->read(floatData);
-    if(m->differentByteOrder()) dtk_swapBytes(floatData, _segmentSize);
+   m->read(floatData);
+   if ( m->differentByteOrder() ) dtk_swapBytes(floatData, _segmentSize);
 
-    switch(_type)
-    {
-    case DTK_INVALID:
+   switch ( _type )
+   {
+      case DTK_INVALID:
          return 0;
-    case DTK_FLOAT:
+      case DTK_FLOAT:
          return floatData;
-    default:
+      default:
          return 0;
-    }
+   }
 }
 
 DTKMemorySegment::operator int*() const
 {
-    if(intData == NULL) return 0;
+   if ( intData == NULL ) return 0;
 
-    m->read(intData);
-    if(m->differentByteOrder()) dtk_swapBytes(intData, _segmentSize);
+   m->read(intData);
+   if ( m->differentByteOrder() ) dtk_swapBytes(intData, _segmentSize);
 
-    switch(_type)
-    {
-    case DTK_INVALID:
+   switch ( _type )
+   {
+      case DTK_INVALID:
          return 0;
-    case DTK_INT:
+      case DTK_INT:
          return intData;
-    default:
+      default:
          return 0;
-    }
+   }
 }
 
 DTKMemorySegment::operator char*() const
 {
-    if(charData == NULL) return 0;
+   if ( charData == NULL ) return 0;
 
-    m->read(charData);
-    if(m->differentByteOrder()) dtk_swapBytes(charData, _segmentSize);
+   m->read(charData);
+   if ( m->differentByteOrder() ) dtk_swapBytes(charData, _segmentSize);
 
-    switch(_type)
-    {
-    case DTK_INVALID:
+   switch ( _type )
+   {
+      case DTK_INVALID:
          return 0;
-    case DTK_BYTES:
-    case DTK_CSTRING:
+      case DTK_BYTES:
+      case DTK_CSTRING:
          return charData;
-    default:
+      default:
          return 0;
-    }
+   }
 }
 
 } // End of gadget namespace
