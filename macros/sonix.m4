@@ -47,8 +47,9 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(SNX_PATH,
 [
     dnl Get the cflags and libraries from the sonix-config script
-    AC_ARG_WITH(sonix,
-                [  --with-sonix=<PATH>     Prefix where Sonix is installed
+    AC_ARG_WITH(sonix-prefix,
+                [  --with-sonix-prefix=<PATH>
+                          Prefix where Sonix is installed
                           (optional)                      [No default]],
                 sonix_config_prefix="$withval", sonix_config_prefix="")
     AC_ARG_WITH(sonix-exec-prefix,
