@@ -68,7 +68,8 @@ import org.vrjuggler.tweek.text.*;
  */
 public class TweekFrame extends JFrame implements BeanFocusChangeListener,
                                                   MessageAdditionListener,
-                                                  BeanInstantiationListener
+                                                  BeanInstantiationListener,
+                                                  GlobalPrefsUpdateListener
 {
    public TweekFrame(MessageDocument msgDocument)
    {
@@ -292,6 +293,94 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       {
          addPrefsBean((BeanPreferences) new_bean);
          mMenuPrefsBeanEdit.setEnabled(true);
+      }
+   }
+
+   /**
+    * Handles individual updates to global preferences via the editor dialog.
+    * At this time, this method does nothing.  At some point, it could be used
+    * to provide immediate feedback to a user as he or she edits preferences
+    * values.
+    */
+   public void globalPrefsModified(GlobalPrefsUpdateEvent e)
+   {
+   }
+
+   public void globalPrefsSaved(GlobalPrefsUpdateEvent e)
+   {
+      GlobalPreferencesService prefs =
+         (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
+
+      // Save this for later.
+      int old_level = prefs.getUserLevel();
+
+      String viewer = prefs.getBeanViewer();
+
+      ViewerBean bean = (ViewerBean)BeanRegistry.instance().getBean( viewer );
+
+      // Verify that the viewer lookup did not fail.
+      // XXX: There should be a check here to compare the existing viewer
+      // with the selected viewer.  If they are the same, do not do the
+      // replacement.
+      if ( null != bean )
+      {
+         mBeanContainer.replaceViewer(bean.getViewer());
+      }
+
+      String new_laf = prefs.getLookAndFeel();
+      String old_laf = UIManager.getLookAndFeel().getName();
+
+      if ( ! old_laf.equals(new_laf) )
+      {
+         try
+         {
+            UIManager.setLookAndFeel(new_laf);
+            SwingUtilities.updateComponentTreeUI(this);
+
+            // Update all the loaded Beans.
+            List beans = BeanRegistry.instance().getBeansOfType(PanelBean.class.getName());
+            Iterator i = beans.iterator();
+            PanelBean cur_bean;
+
+            while ( i.hasNext() )
+            {
+               cur_bean = (PanelBean) i.next();
+
+               if ( null != cur_bean.getComponent() )
+               {
+                  SwingUtilities.updateComponentTreeUI(cur_bean.getComponent());
+               }
+            }
+         }
+         catch (Exception laf_e)
+         {
+            // Set the look and feel back to the old value because the
+            // newly chosen setting isn't valid.
+            prefs.setLookAndFeel(old_laf);
+            prefs.save();
+            JOptionPane.showMessageDialog(null,
+                                          "Invalid look and feel '" + new_laf + "'",
+                                          "Bad Look and Feel Setting",
+                                          JOptionPane.ERROR_MESSAGE);
+         }
+      }
+
+      // If the user level changed, fire an event saying as much.
+      if ( old_level != prefs.getUserLevel() )
+      {
+         mBeanContainer.fireUserLevelChange(old_level,
+                                            prefs.getUserLevel());
+      }
+
+      // Handle resizing this frame if necessary.
+      int window_width  = prefs.getWindowWidth();
+      int window_height = prefs.getWindowHeight();
+
+      Dimension cur_size = this.getSize();
+
+      if ( cur_size.width != window_width || cur_size.height != window_height )
+      {
+         this.setSize(window_width, window_height);
       }
    }
 
@@ -727,68 +816,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       int old_level = prefs.getUserLevel();
 
       PrefsDialog dialog = new PrefsDialog(this, "Global Preferences", prefs);
+      dialog.addGlobalPrefsUpdateListener(this);
       dialog.display();
-
-      if ( dialog.getStatus() == PrefsDialog.OK_OPTION )
-      {
-         String viewer = prefs.getBeanViewer();
-
-         ViewerBean bean = (ViewerBean)BeanRegistry.instance().getBean( viewer );
-
-         // Verify that the viewer lookup did not fail.
-         // XXX: There should be a check here to compare the existing viewer
-         // with the selected viewer.  If they are the same, do not do the
-         // replacement.
-         if ( null != bean )
-         {
-            mBeanContainer.replaceViewer(bean.getViewer());
-         }
-
-         String new_laf = prefs.getLookAndFeel();
-         String old_laf = UIManager.getLookAndFeel().getName();
-
-         if ( ! old_laf.equals(new_laf) )
-         {
-            try
-            {
-               UIManager.setLookAndFeel(new_laf);
-               SwingUtilities.updateComponentTreeUI(this);
-
-               // Update all the loaded Beans.
-               List beans = BeanRegistry.instance().getBeansOfType(PanelBean.class.getName());
-               Iterator i = beans.iterator();
-               PanelBean cur_bean;
-
-               while ( i.hasNext() )
-               {
-                  cur_bean = (PanelBean) i.next();
-
-                  if ( null != cur_bean.getComponent() )
-                  {
-                     SwingUtilities.updateComponentTreeUI(cur_bean.getComponent());
-                  }
-               }
-            }
-            catch (Exception laf_e)
-            {
-               // Set the look and feel back to the old value because the
-               // newly chosen setting isn't valid.
-               prefs.setLookAndFeel(old_laf);
-               prefs.save();
-               JOptionPane.showMessageDialog(null,
-                                             "Invalid look and feel '" + new_laf + "'",
-                                             "Bad Look and Feel Setting",
-                                             JOptionPane.ERROR_MESSAGE);
-            }
-         }
-
-         // If the user level changed, fire an event saying as much.
-         if ( old_level != prefs.getUserLevel() )
-         {
-            mBeanContainer.fireUserLevelChange(old_level,
-                                               prefs.getUserLevel());
-         }
-      }
    }
 
    private void prefsEditBean (ActionEvent e)
