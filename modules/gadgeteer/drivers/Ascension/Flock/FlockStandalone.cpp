@@ -244,8 +244,10 @@ vpr::ReturnStatus FlockStandalone::start()
          return vpr::ReturnStatus::Succeed;
       }
    }
-
-   return vpr::ReturnStatus::Succeed;
+   else
+   {
+      return vpr::ReturnStatus::Succeed;      
+   }
 }
 
 /** Call this repeatedly to update the data from the birds. */

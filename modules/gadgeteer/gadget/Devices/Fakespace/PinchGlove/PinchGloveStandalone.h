@@ -99,6 +99,7 @@ protected:
 
    vpr::ReturnStatus       mSendCommandToHardware( const char* command );
    std::vector<vpr::Uint8> mGetDataAndTimeStampFromHardware();
+   std::vector<vpr::Uint8> mGetDataFromHardware();
    
    std::string mGetStringFromHardware();
 
