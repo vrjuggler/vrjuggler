@@ -64,7 +64,7 @@ vpr::ReturnStatus SocketDatagramImplSIM::recvfrom (void* msg,
 
    if ( ! mArrivedQueue.empty() )
    {
-      vpr::sim::MessagePtr msg_ptr = mArrivedQueue[0];
+      vpr::sim::MessagePtr msg_ptr = mArrivedQueue.front();
       vpr::Uint32 msg_size, copy_len;
 
       msg_size = msg_ptr->getSize();
@@ -81,7 +81,7 @@ vpr::ReturnStatus SocketDatagramImplSIM::recvfrom (void* msg,
 
       if ( msg_ptr->resize(copy_len) == 0 )
       {
-         mArrivedQueue.erase(mArrivedQueue.begin());
+         mArrivedQueue.pop_front();
       }
    }
    else
