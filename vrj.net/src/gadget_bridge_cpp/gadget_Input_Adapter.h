@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.18 of RCSfile: class_cxx_adapter.tmpl,v
+// Generated from Revision: 1.19 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __GADGET_INPUT_ADAPTER__
@@ -131,12 +131,6 @@ public:
    virtual void destroy()
    {
       destroy_callback();
-   }
-
-   /// Public wrapper for protected virtual function gadget::Input::destroy.
-   void destroy_wrapper()
-   {
-      gadget::Input::destroy();
    }
 
 }; // class gadget_Input_Adapter
