@@ -40,30 +40,32 @@
 #include <vpr/System.h>
 
 #include <boost/format.hpp>
+#include <iterator>
 
 #include <drivers/Ascension/Flock/FlockStandalone.h>
 
 
 /** Configure constructor. */
-FlockStandalone::FlockStandalone(std::string port, const int& numBrds, 
+FlockStandalone::FlockStandalone(std::string port, const int& numBrds,
                                  const int& transmit, const int& baud,
-                                 const int& sync, const BIRD_HEMI& hemi, 
+                                 const int& sync, const BIRD_HEMI& hemi,
                                  const BIRD_FILT& filt, Flock::ReportRate report)
    : mStatus(FlockStandalone::CLOSED),
     mPort(port),
     mSerialPort(NULL),
     mBaud(baud),
-    mMode(UnknownMode),
-    mAddrMode(UnknownAddressing),
+    mMode(Flock::UnknownMode),
+    mAddrMode(Flock::UnknownAddressing),
     mSwRevision(0.0f),
     mNumBirds(numBrds),
     mXmitterUnitNumber(transmit),
     mReportRate(report),
     mHemisphere(hemi),
     mFilter(filt),
-    mSyncStyle(sync)   
+    mSyncStyle(sync)
 {
    mReadTimeout = vpr::Interval(2,vpr::Interval::Sec);
+   mOutputFormat = Flock::Output::PositionAngle;
 }
 
 FlockStandalone::~FlockStandalone()
@@ -85,48 +87,6 @@ FlockStandalone::~FlockStandalone()
 bool FlockStandalone::isActive() const
 {
    return (FlockStandalone::STREAMING == mStatus);
-}
-
-/** Sets the port to use. */
-void FlockStandalone::setPort(const std::string& serialPort)
-{
-   if ( FlockStandalone::STREAMING == mStatus )
-   {
-      std::cout << "Flock: Cannot change the serial Port while active\n";
-      return;
-   }
-
-   if ( ! serialPort.empty() )
-   {
-      mPort = serialPort;
-
-      if ( mSerialPort != NULL )
-      {
-         delete mSerialPort;
-      }
-
-      mSerialPort = new vpr::SerialPort(mPort);
-   }
-}
-
-/** Gets the port used. */
-const std::string& FlockStandalone::getPort() const
-{
-   return mPort;
-}
-
-/** Sets the baud rate. */
-void FlockStandalone::setBaudRate(const int& baud)
-{
-   if ( FlockStandalone::STREAMING == mStatus )
-   {
-      std::cerr << "Flock: Cannot change the baud rate while active\n";
-      return;
-   }
-   else
-   {
-      mBaud = baud;
-   }
 }
 
 
@@ -173,7 +133,7 @@ vpr::ReturnStatus FlockStandalone::openPort ()
          vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
       }
       vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " ok\n" << vprDEBUG_FLUSH;
-      
+
       // - Open the port for the last time
       //   - Set the port attributes to use
       if ( mSerialPort->open().success() )
@@ -189,7 +149,7 @@ vpr::ReturnStatus FlockStandalone::openPort ()
          mSerialPort->setRead(true);                        // Allow reading from port
          mSerialPort->setLocalAttach(true);                 // Say we are directly attached
          mSerialPort->setBreakByteIgnore(true);             // Ignore terminal breaks
-                  
+
          vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "  Setting baud rate: " << mBaud << std::endl << vprDEBUG_FLUSH;
          mSerialPort->setInputBaudRate(mBaud);
          mSerialPort->setOutputBaudRate(mBaud);
@@ -197,7 +157,7 @@ vpr::ReturnStatus FlockStandalone::openPort ()
          mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
          mSerialPort->setHardwareFlowControl(false);     // No hardware flow control
          mSerialPort->setParityGeneration(false);        // No parity checking
-         
+
          // --- Reset the flock with RTS signal --- //
          // - When RTS signal is high, bird is put into reset mode
          // So, to reset it: put signal high, wait, put signal low, wait
@@ -209,7 +169,7 @@ vpr::ReturnStatus FlockStandalone::openPort ()
             vpr::System::msleep(200);
             vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
          }
-         
+
          mSerialPort->setRequestToSend(false);              // Set RTS low to allow the flock to start back up
          for(unsigned i=0;i<5;++i)
          {
@@ -238,13 +198,11 @@ vpr::ReturnStatus FlockStandalone::openPort ()
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Failed to open port.\n" << vprDEBUG_FLUSH;
       return vpr::ReturnStatus::Fail;
-   }    
+   }
 }
 
 
-/** Configure the flock for execution.
-* @pre Flock is open and all configurable settings have been passed.
-* @post Flock is setup and configured to start getting samples.  It is ready to run.
+/** Configure the flock and get it ready to go
 */
 vpr::ReturnStatus FlockStandalone::configure()
 {
@@ -257,161 +215,68 @@ vpr::ReturnStatus FlockStandalone::configure()
    // If we are not standalone, then go into group mode first
    if(Flock::Standalone == mMode)
    {
-         
+
    }
    else
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting group\n" << vprDEBUG_FLUSH;
-      sendGroupCmd(true);        // Go into group mode   
+      sendGroupCmd(true);        // Go into group mode
    }
 
    // Set all parameters
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting sync\n" << vprDEBUG_FLUSH;
    sendSyncCmd(mSyncStyle);
-      
+
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting hemisphere\n" << vprDEBUG_FLUSH;
    sendHemisphereCmd(mHemisphere,true);
-      
+
    if(Flock::Standalone != mMode)
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting autoconfig\n" << vprDEBUG_FLUSH;
       sendAutoconfigCmd(mActiveUnitEndIndex-1);
    }
-   //vpr::System::sleep(1);
 
-   //std::cout << "After auto-config:\n:";
-   
-   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting transmitter\n" << vprDEBUG_FLUSH;
-   sendTransmitter();
-   //vpr::System::sleep(1);
+   // Find address of transmitter to use
+   vpr::Uint8 transmitter_addr(0);
+   if(!mXmitterIndices.empty())
+   {  transmitter_addr = mFlockUnits[mXmitterIndices[0]].mAddr; }
 
-   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting filter\n" << vprDEBUG_FLUSH;
-   sendFilter();
-   //vpr::System::sleep(1);
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting transmitter to addr: "
+                                          << transmitter_addr << "\n" << vprDEBUG_FLUSH;
+   sendNextTransmitterCmd(transmitter_addr, 0);
+   //sendFilter();
 
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting output format to: " << Flock::Output::getFormatString(mOutputFormat) << "\n" << vprDEBUG_FLUSH;
+   sendOutputFormatCmd(mOutputFormat,true);
 
-   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting pos_angles\n" << vprDEBUG_FLUSH;
-   sendPosAngles();
-   //vpr::System::sleep(1);
-
-   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting pickBird\n" << vprDEBUG_FLUSH;
-   pickBird(mXmitterUnitNumber);
-   //vpr::System::sleep(1);
-
-   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting rep_and_stream\n" << vprDEBUG_FLUSH;
-   sendRepAndStream();
-   //vpr::System::sleep(1);
-
-   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Ready to go!\n\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Flock configured and ready to run." << vprDEBUG_FLUSH;
 
    // flock is active.
    mStatus = FlockStandalone::READY;
 
    // return success
-   return vpr::ReturnStatus::Succeed;      
+   return vpr::ReturnStatus::Succeed;
 }
 
-/** Call this to connect to the Flock device.
-* - If closed, open port
-* - If not streaming, start streaming
-*
+/** Set the flock into streaming mode
 */
-vpr::ReturnStatus FlockStandalone::start()
+vpr::ReturnStatus FlockStandalone::startStreaming()
 {
    // If port closed right now
-   vprASSERT(mStatus == OPEN && "Tried to call configure with flock in wrong mode");
+   vprASSERT(mStatus == READY && "Tried to start streaming before configuring flock");
 
-   // If open, but not streaming yet
-   if (FlockStandalone::OPEN == mStatus)
-   {
-      vpr::Uint32 written;
-      char stop_command;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Changing to streaming mode. \n"
+                                          << "                   Setting report rate to: " << Flock::getReportRateString(mReportRate) << "\n" << vprDEBUG_FLUSH;
 
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-         << "============================================================================\n" << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-         << " NOTE: Version number below might be wrong if we need to restart the flock!\n" << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-         << "============================================================================\n" << vprDEBUG_FLUSH;
+   sendReportRateCmd(mReportRate);
 
-      //this->readSoftwareRevision();
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Starting stream." << vprDEBUG_FLUSH;
+   sendStreamStartCommand();
 
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] Restarting the flock.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Streaming..." << vprDEBUG_FLUSH;
 
-      //vpr::System::msleep(500);
-      stop_command = 'B';
-      mSerialPort->write(&stop_command, 1, written);
-
-      //vpr::System::msleep(500);
-      stop_command = 'G';
-      mSerialPort->write(&stop_command, 1, written);
-
-      mSerialPort->close();
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)  << " [FlockStandalone] Flock has been Stopped." << std::endl << vprDEBUG_FLUSH;
-      vpr::System::sleep(3);
-
-
-      if ( openPort() == vpr::ReturnStatus::Fail )
-      {
-         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] **** ERROR, can't open serial port: " <<  mPort << " ****\n" << vprDEBUG_FLUSH;
-         return vpr::ReturnStatus::Fail;
-      }
-      else
-      {         
-         //std::cout << "Initial status:\n:";
-                  
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting sync\n" << vprDEBUG_FLUSH;
-         sendSync();
-         //vpr::System::sleep(1);
-
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting group\n" << vprDEBUG_FLUSH;
-         sendGroup();
-         //vpr::System::sleep(1);
-
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting hemisphere\n" << vprDEBUG_FLUSH;
-         sendHemisphere();
-         //vpr::System::sleep(1);
-
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting autoconfig\n" << vprDEBUG_FLUSH;
-         sendAutoconfig();
-         //vpr::System::sleep(1);
-
-         //std::cout << "After auto-config:\n:";
-         
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting transmitter\n" << vprDEBUG_FLUSH;
-         sendTransmitter();
-         //vpr::System::sleep(1);
-
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting filter\n" << vprDEBUG_FLUSH;
-         sendFilter();
-         //vpr::System::sleep(1);
-
-
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting pos_angles\n" << vprDEBUG_FLUSH;
-         sendPosAngles();
-         //vpr::System::sleep(1);
-
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting pickBird\n" << vprDEBUG_FLUSH;
-         pickBird(mXmitterUnitNumber);
-         //vpr::System::sleep(1);
-
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting rep_and_stream\n" << vprDEBUG_FLUSH;
-         sendRepAndStream();
-         //vpr::System::sleep(1);
-
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Ready to go!\n\n" << vprDEBUG_FLUSH;
-
-         // flock is active.
-         mStatus = FlockStandalone::STREAMING;
-
-         // return success
-         return vpr::ReturnStatus::Succeed;
-      }
-   }
-   else
-   {
-      return vpr::ReturnStatus::Succeed;
-   }
+   // flock is streaming now
+   mStatus = FlockStandalone::STREAMING;
 }
 
 /** Call this repeatedly to update the data from the birds. */
@@ -421,7 +286,7 @@ bool FlockStandalone::sample()
    vprASSERT( STREAMING == mStatus );
 
    int loop_count = mNumBirds;
-   if (ExtendedRange == mMode)
+   if (Flock::ExtendedRange == mMode)
    {
       loop_count++;
    }
@@ -441,7 +306,7 @@ bool FlockStandalone::sample()
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "[Flock of Birds] Error reading packet for bird #: "
                   << bird_id << "\n" << vprDEBUG_FLUSH;
          }
-                  
+
          vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << std::endl << "\n===================================================\n" << vprDEBUG_FLUSH;
          vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << " Position of Bird #: " << bird_id
                      << " x: " << xPos(buffer_location)
@@ -500,96 +365,114 @@ int FlockStandalone::stop ()
    return retval;
 }
 
+/** Sets the port to use. */
+void FlockStandalone::setPort(const std::string& serialPort)
+{
+   if ( FlockStandalone::CLOSED != mStatus )
+   {
+      throw Flock::CommandFailureException("Cannot set port after flock has been opened.");
+   }
+
+   if ( ! serialPort.empty() )
+   {
+      mPort = serialPort;
+
+      if ( mSerialPort != NULL )
+      {
+         delete mSerialPort;
+      }
+
+      mSerialPort = new vpr::SerialPort(mPort);
+   }
+}
+
+/** Sets the baud rate. */
+void FlockStandalone::setBaudRate(const int& baud)
+{
+   if ( FlockStandalone::CLOSED != mStatus )
+   {
+      throw Flock::CommandFailureException("Cannot set baud after flock has been opened.");
+   }
+
+   mBaud = baud;
+}
+
+
 /** Sets the hemisphere that the transmitter transmits from. */
 void FlockStandalone::setHemisphere( const BIRD_HEMI& h )
 {
-   if ( mStatus == FlockStandalone::STREAMING )
+   if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
    {
-      std::cout << "Flock: Cannot change the hemisphere\n" << std::flush;
-      return;
+      throw Flock::CommandFailureException("Setting hemisphere not allowed after flock configured");
    }
-   else
-   {
-      // Set it.
-      mHemisphere = h;
-   }
+
+   mHemisphere = h;
 }
 
 /** Sets the type of filtering that the Flock uses. */
 void FlockStandalone::setFilterType( const BIRD_FILT& f )
 {
-   if (  mStatus == FlockStandalone::STREAMING )
+   if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
    {
-      std::cout << "Flock: Cannot change filter type while active\n"
-                << std::flush;
-      return;
+      throw Flock::CommandFailureException("Setting filter type not allowed after flock configured");
    }
-   else
-   {
-      // Set it.
-      mFilter = f;
-   }
+
+   mFilter = f;
 }
 
 /** Set the report rate that the Flock uses. */
 void FlockStandalone::setReportRate(Flock::ReportRate rRate )
 {
-   if ( FlockStandalone::STREAMING == mStatus )
+   if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
    {
-      std::cout << "Flock: Cannot change report rate while active\n"
-                << std::flush;
-      return;
+      throw Flock::CommandFailureException("Setting report rate not allowed after flock configured");
    }
-   else
-   {
-      // Set it.
-      mReportRate = rRate;
-   }
+
+   mReportRate = rRate;
 }
+
+void FlockStandalone::setOutputFormat(Flock::Output::Format format)
+{
+   if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
+   {
+      throw Flock::CommandFailureException("Setting output format not allowed after flock configured");
+   }
+
+   mOutputFormat = format;
+}
+
 
 /** Sets the unit number of the transmitter. */
 void FlockStandalone::setTransmitter( const int& Transmit )
 {
-   if ( FlockStandalone::STREAMING == mStatus )
+   if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
    {
-      std::cout << "Flock: Cannot change transmitter while active\n"
-                << std::flush;
-      return;
+      throw Flock::CommandFailureException("Setting transmitter not allowed after flock configured");
    }
-   else
-   {
-      // Set it.
-      mXmitterUnitNumber = Transmit;
-   }
+
+   mXmitterUnitNumber = Transmit;
 }
 
 /** Sets the number of birds to use in the Flock. */
 void FlockStandalone::setNumBirds( const int& n )
 {
-   if ( FlockStandalone::STREAMING == mStatus )
+   if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
    {
-      std::cout << "Flock: Cannot change num birds while active\n"
-                << std::flush;
-      return;
+      throw Flock::CommandFailureException("Setting number birds not allowed after flock configured");
    }
-   else
-   {
-      // Set it.
-      mNumBirds = n;
-   }
+
+   mNumBirds = n;
 }
 
 /** Sets the video sync type. */
-void FlockStandalone::setSync(vpr::Uint8 sync)
+void FlockStandalone::setSync(const vpr::Uint8& sync)
 {
    if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
    {
       throw Flock::CommandFailureException("Sync command not allowed after flock configured");
    }
-   else
-   {
-      mSyncStyle = sync;
-   }
+
+   mSyncStyle = sync;
 }
 
 float& FlockStandalone::xPos( const int& i )
@@ -843,11 +726,11 @@ std::string FlockStandalone::queryModelIdString()
 }
 
 /** Get the model id string */
-AddressingMode FlockStandalone::queryAddressingMode()
+Flock::AddressingMode FlockStandalone::queryAddressingMode()
 {
    std::vector<vpr::Uint8> resp(1);
    getAttribute(Flock::Parameter::AddressingMode, 1, resp);
-   AddressingMode amode = AddressingMode(resp[0]);
+   Flock::AddressingMode amode = Flock::AddressingMode(resp[0]);
    return amode;
 }
 
@@ -876,15 +759,15 @@ vpr::Uint16 FlockStandalone::queryBirdStatus(unsigned addr)
 /** Get status of the bird */
 std::vector<vpr::Uint8> FlockStandalone::querySystemStatus()
 {
-   vprASSERT(UnknownAddressing != mAddrMode && "No addressing mode set.  Has bird been opened?");
+   vprASSERT(Flock::UnknownAddressing != mAddrMode && "No addressing mode set.  Has bird been opened?");
 
    std::vector<vpr::Uint8> sysStatus;
 
    // Find number of addresses that will be returned
    unsigned num_addrs(14);
-   if(ExpandedAddressing == mAddrMode)
+   if(Flock::ExpandedAddressing == mAddrMode)
       num_addrs = 30;
-   if(SuperExpandedAddressing == mAddrMode)
+   if(Flock::SuperExpandedAddressing == mAddrMode)
       num_addrs = 126;
 
    sysStatus.clear();
@@ -908,7 +791,7 @@ void FlockStandalone::printFlockStatus()
    for(unsigned i=0;i<mFlockUnits.size();++i)
    {
       const FlockUnit& unit = mFlockUnits[i];
-      
+
       // build label
       std::string label("[");
       if(unit.hasTransmitter())
@@ -921,59 +804,20 @@ void FlockStandalone::printFlockStatus()
       { label += "sensor"; }
       label += "]";
 
-      std::cout << boost::format("  %s: %|-14|  master:%s accessible:%s  running:%s error:%s init:%s") % i 
+      std::cout << boost::format("  %s: %|-14|  master:%s accessible:%s  running:%s error:%s init:%s") % i
                                  % label % unit.mIsMaster % unit.mAccessible % unit.mIsRunning % unit.mHasError % unit.mHasBeenInitialized << std::endl;
    }
-   
-}
 
-
-// Does not work with older hadware
-vpr::ReturnStatus FlockStandalone::readHemisphere()
-{
-   vpr::Uint32 written;
-   if ( mSerialPort != NULL )
-   {
-      vpr::Uint32 num_read;
-      char buff[2];
-
-
-      pickBird(1);
-
-      buff[0] = 0x4F;
-      buff[1] = 0x16;
-
-      vpr::System::msleep(600);
-      mSerialPort->write(&buff, sizeof(buff), written);
-
-      //mSerialPort->drainOutput();
-      //vpr::System::msleep(500);
-
-      //mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
-
-      vpr::ReturnStatus status = mSerialPort->read(&buff,2,num_read, mReadTimeout);
-      if (!status.success())
-      {
-         return(status);
-      }
-      std::cout << "Hemisphere is: " << (int)buff[0] << "." << (int)buff[1] << std::endl;
-
-      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      //vpr::System::msleep(500);
-
-      return(vpr::ReturnStatus::Succeed);
-   }
-   else
-   {
-      return(vpr::ReturnStatus::Fail);
-   }
+   std::ostringstream x_indices_oss;
+   std::copy(mXmitterIndices.begin(), mXmitterIndices.end(), std::ostream_iterator<int>(x_indices_oss, ","));
+   std::cout << "Transmitters at indices: " << x_indices_oss.str() << std::endl;
 }
 
 unsigned FlockStandalone::getMaxBirdAddr()
 {
-   if(NormalAddressing == mAddrMode) return 14;
-   else if(ExpandedAddressing == mAddrMode) return 30;
-   else if(SuperExpandedAddressing == mAddrMode) return 127;
+   if(Flock::NormalAddressing == mAddrMode) return 14;
+   else if(Flock::ExpandedAddressing == mAddrMode) return 30;
+   else if(Flock::SuperExpandedAddressing == mAddrMode) return 127;
    else return 0;
 }
 
@@ -984,7 +828,7 @@ void FlockStandalone::readInitialFlockConfiguration()
 
    vprASSERT(( mSerialPort != NULL ) && (FlockStandalone::CLOSED != mStatus));
    vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Asking the flock for it's configuration.\n" << vprDEBUG_FLUSH;
-   
+
    try
    {
       // Software revision
@@ -992,41 +836,48 @@ void FlockStandalone::readInitialFlockConfiguration()
       mSwRevision = float(sw_rev.first) + float(sw_rev.second)/100.0f;
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "      sw ver: " << mSwRevision << std::endl << vprDEBUG_FLUSH;
       vprASSERT(mSwRevision >= 2.67f && "This driver only works with fob sw version 3.67 or higher");
-   
+
       // Get the model id
       mModelId = queryModelIdString();
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "    model id: " << mModelId << std::endl << vprDEBUG_FLUSH;
-   
+
       // Get the addressing mode
       mAddrMode = queryAddressingMode();
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "   addr mode: " << getAddressingModeString(mAddrMode) << std::endl << vprDEBUG_FLUSH;  
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "   addr mode: " << getAddressingModeString(mAddrMode) << std::endl << vprDEBUG_FLUSH;
 
       // Get the address of the master
       mMasterAddr = queryAddress();
-      
+
       // Make initial guess at mode (finalize later after looking for erts)
       if(0 == mMasterAddr)
-      { mMode = Standalone; }
+      { mMode = Flock::Standalone; }
       else
-      { mMode = Standard; }
+      { mMode = Flock::Standard; }
 
       // Setup the flock unit data structure
       setupFlockUnitsDataStructure();
 
-      // Check for erts and set mode if we find one
+      // Search for transmitters
+      // - If we have erts set to extended range mode
+      // - Store indicies of the transmitters
       for(unsigned u=0;u<mActiveUnitEndIndex;++u)
-      { 
+      {
          if(mFlockUnits[u].mTransmitterType == Transmitter::Ert0)
-         {  mMode = ExtendedRange; }
+         {  mMode = Flock::ExtendedRange; }
+         if (mFlockUnits[u].hasTransmitter())
+         {  mXmitterIndices.push_back(u); }
       }
-          
+
    }
    catch(Flock::FlockException& e)
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Flock error: " << e.getMessage() << std::endl << vprDEBUG_FLUSH;      
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Flock error: " << e.getMessage() << std::endl << vprDEBUG_FLUSH;
    }
 }
 
+/** Send the group command
+* @param newVal - New state of the group status
+*/
 void FlockStandalone::sendGroupCmd(bool newVal)
 {
    std::vector<vpr::Uint8> param;
@@ -1034,6 +885,9 @@ void FlockStandalone::sendGroupCmd(bool newVal)
    setAttribute(Flock::Parameter::GroupMode, param);
 }
 
+/** Send the sync command.
+* @param syncMethod - The sync method to use
+*/
 void FlockStandalone::sendSyncCmd(vpr::Uint8 syncMethod)
 {
    std::vector<vpr::Uint8> param;
@@ -1043,8 +897,8 @@ void FlockStandalone::sendSyncCmd(vpr::Uint8 syncMethod)
 
 void FlockStandalone::sendHemisphereCmd(BIRD_HEMI hemi, bool sendToAll)
 {
-   std::vector<vpr::Uint8> params(2);   
-    
+   std::vector<vpr::Uint8> params(2);
+
    switch ( hemi )
    {
       case FRONT_HEM:
@@ -1075,106 +929,74 @@ void FlockStandalone::sendHemisphereCmd(BIRD_HEMI hemi, bool sendToAll)
 
    if(sendToAll)
    {
-      sendCommandAll(Flock::Command::Hemisphere, params, true);
+      sendCommandAll(Flock::Command::Hemisphere, params, true);      // Send to all but ercs
    }
    else
    {
-      sendCommand(Flock::Command::Hemisphere, params);
+      sendCommand(Flock::Command::Hemisphere, params);               // Send to all units
    }
 
 }
 
-void FlockStandalone::sendRepAndStream ()
+void FlockStandalone::sendOutputFormatCmd(Flock::Output::Format format, bool sendToAll)
 {
-   vpr::Uint32 written;
-   if ( mSerialPort != NULL )
-   {
-      char buff[1];
-      /////////////////////////////////////////////////////////////////
-      // Set report rate
-      //             Q  Every cycle
-      //  buff[0] - 'R' Every other bird cycle
-      //             S  every 8 cycles
-      //             T  every 32 cycles
-      /////////////////////////////////////////////////////////////////
-      buff[0] = mReportRate;
-      vpr::System::msleep(600);
-      mSerialPort->write(buff, sizeof(buff), written);
-      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      //vpr::System::usleep(2000 * mSleepFactor);
+   std::vector<vpr::Uint8> param(0);
+   vpr::Uint8 format_cmd = (Flock::Command::Position-1) + vpr::Uint8(format);  // Exploit a nice property of the format enum
 
-      ////////////////////////////////////////////////////////////////
-      // set stream mode
-      ////////////////////////////////////////////////////////////////
-      buff[0] = '@';
-      vpr::System::msleep(600);
-      mSerialPort->write(buff, sizeof(buff), written);
-      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      //vpr::System::usleep(500 * mSleepFactor);
+   // Assert two standard cases to make sure above statement works
+   vprASSERT((Flock::Output::PositionAngle == format) && (format_cmd == Flock::Command::PositionAngles));
+   vprASSERT((Flock::Output::PositionQuaternion == format) && (format_cmd == Flock::Command::PositionQuaternion));
+
+   if(sendToAll)
+   {
+      sendCommandAll(format_cmd, param, true);     // Send to all but erc
+   }
+   else
+   {
+      sendCommand(format_cmd, param);              // Send to all units
    }
 }
 
-void FlockStandalone::sendPosAngles ()
+/** Send the sync command.
+* @param syncMethod - The sync method to use
+*/
+void FlockStandalone::sendReportRateCmd(Flock::ReportRate rate)
 {
-   //////////////////////////////////////////////////////////////////
-   // Set Position Angles
-   /////////////////////////////////////////////////////////////////
-   vpr::Uint32 written;
-   if ( mSerialPort != NULL )
-   {
-      char buff[1];
+   vpr::Uint8 report_rate_cmd = vpr::Uint8(rate);
 
-      int loop_count = mNumBirds;
-      if (ExtendedRange == mMode)
-      {
-         loop_count++;
-      }
+   // Assert above assignment works
+   vprASSERT((Flock::MaxRate == rate) && (report_rate_cmd == Flock::Command::ReportRate1));
 
-      for ( int bird_id = 1; bird_id < loop_count; bird_id++ )
-      {
-         // Skip the transmitter unit.
-         if (! isTransmitter(bird_id))
-         {
-            pickBird(bird_id);
-            buff[0] = 'Y';
-
-            vpr::System::msleep(600);
-            mSerialPort->write(buff, sizeof(buff), written);
-            //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-
-            //vpr::System::usleep(500 * mSleepFactor);
-         }
-      }
-   }
+   sendCommand(report_rate_cmd);
 }
 
+void FlockStandalone::sendStreamStartCommand()
+{
+   sendCommand(Flock::Command::Stream);
+}
+
+void FlockStandalone::sendStreamStopCommand()
+{
+   sendCommand(Flock::Command::StreamStop);
+   vpr::System::msleep(500);                                // Wait for all streaming data to stop
+   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);    // Then clear the buffers
+}
+
+/*
 void FlockStandalone::sendFilter ()
 {
-   ///////////////////////////////////////////////////////////////
-   // Turn filters on (manual page 48)
-   // 0s turn AC NARROW notch filter ON
-   //         AC WIDE notch filter ON
-   //         DC filter ON
-   ///////////////////////////////////////////////////////////////
-   vpr::Uint32 written;
-   if ( mSerialPort != NULL )
-   {
-      char buff[4];
+   std::vector<vpr::Uint8> param(2);
+   param[0] = 0x00;  // New filter state; This would turn on all filters
+   param[1] = 0;     // Ignored
 
-      buff[0] = 'P';
-      buff[1] = 0x04;
-      buff[2] = 0x00;
-      buff[3] = 0;
-
-      vpr::System::msleep(600);
-      mSerialPort->write(buff, sizeof(buff), written);
-      // mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-
-      //TODO: Do I need to sleep here?
-      // vpr::System::usleep(12000 * mSleepFactor);
-   }
+   setAttribute(Flock::Parameter::FilterStatus, param);
 }
+*/
 
+/**
+* @param addr - FBB address of the transmitter.
+* @param transmitterNumber - The transmitter number
+*/
 void FlockStandalone::sendNextTransmitterCmd (vpr::Uint8 addr, vpr::Uint8 transmitterNumber)
 {
    std::vector<vpr::Uint8> param(1);
@@ -1182,21 +1004,24 @@ void FlockStandalone::sendNextTransmitterCmd (vpr::Uint8 addr, vpr::Uint8 transm
    vprASSERT(addr <= 14);
 
    param[0] = (addr << 4) & transmitterNumber;
-   
+
    sendCommand(Flock::Command::NextTransmitter, param);
-      
-   vpr::System::msleep(300);   
+
+   vpr::System::msleep(300);
 }
 
+/** Autoconfig the system.
+* @param numUnits - The number of units in the flock
+*/
 void FlockStandalone::sendAutoconfigCmd (vpr::Uint8 numUnits)
 {
    // Must wait 600 milliseconds before and after this command
    std::vector<vpr::Uint8> params;
-   params.push_back(numUnits)
+   params.push_back(numUnits);
 
    vpr::System::msleep(600);
    setAttribute(Flock::Parameter::FbbAutoConfig,params);
-   vpr::System::msleep(600);   
+   vpr::System::msleep(600);
 }
 
 
@@ -1209,7 +1034,7 @@ void FlockStandalone::sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data )
    { throw Flock::ConnectionException("NULL port"); }
 
    unsigned bytes_written;
-   
+
    vpr::ReturnStatus ret_val = mSerialPort->write(&cmd, 1, bytes_written);
    if(ret_val.failure())
    { throw Flock::CommandFailureException("Failed to write full command"); }
@@ -1228,25 +1053,25 @@ void FlockStandalone::pickBird (const vpr::Uint8 birdID)
    vpr::Uint8 cmd;
    std::vector<vpr::Uint8> cmd_data(0);      // Default to no data
 
-   if(NormalAddressing == mAddrMode)
+   if(Flock::NormalAddressing == mAddrMode)
    {
       vprASSERT(birdID < 16);
       cmd = Flock::Command::ToFbbNormal + birdID;
    }
-   if(ExpandedAddressing == mAddrMode)
-   {  
+   if(Flock::ExpandedAddressing == mAddrMode)
+   {
       vprASSERT(birdID < 31);
       if(birdID < 16)
          cmd = Flock::Command::ToFbbNormal + birdID;
       else
          cmd = Flock::Command::ToFbbExpanded + birdID - 0x10;
    }
-   else if(SuperExpandedAddressing == mAddrMode)
-   {  
+   else if(Flock::SuperExpandedAddressing == mAddrMode)
+   {
       cmd = Flock::Command::ToFbbSuperExpanded;
       cmd_data.push_back(birdID);
    }
-   
+
    sendCommand(cmd, cmd_data);
 }
 
@@ -1281,18 +1106,18 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned respSize, std::ve
    exam_cmd[1] = attrib;
    vpr::Uint32 bytes_written;
    vpr::Uint32 bytes_read;
-   
+
    if ( NULL == mSerialPort )
    { throw Flock::ConnectionException("NULL port"); }
 
    //vpr::System::msleep(200);                                   // Wait for any random input
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
    //vpr::System::msleep(300);                                   // Let the buffers clear
-   
+
    // Send command
    mSerialPort->write(exam_cmd, 2, bytes_written);
    vprASSERT(2 == bytes_written);
-   mSerialPort->drainOutput();   
+   mSerialPort->drainOutput();
 
    if(bytes_written != sizeof(exam_cmd))
    {  throw Flock::CommandFailureException("Full command not written"); }
@@ -1315,68 +1140,32 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned respSize, std::ve
 void FlockStandalone::setAttribute(vpr::Uint8 attrib, std::vector<vpr::Uint8>& attribData)
 {
    vpr::Uint8 change_cmd[2];                    // The command to send for the change
-   exam_cmd[0] = Flock::Command::ChangeValue;
-   exam_cmd[1] = attrib;
+   change_cmd[0] = Flock::Command::ChangeValue;
+   change_cmd[1] = attrib;
    vpr::Uint32 bytes_written;
-   
+
    if ( NULL == mSerialPort )
    { throw Flock::ConnectionException("NULL port"); }
 
    //vpr::System::msleep(200);                                   // Wait for any random input
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
    //vpr::System::msleep(300);                                   // Let the buffers clear
-   
+
    // Send command
    mSerialPort->write(change_cmd, 2, bytes_written);
-   if(bytes_written != sizeof(exam_cmd))
+   if(bytes_written != sizeof(change_cmd))
    {  throw Flock::CommandFailureException("Full command not written"); }
-   
+
    // Send args
    if(!attribData.empty())
    {
-      mSerialPort->write(attribData, bytes_written);
+      mSerialPort->write(attribData, attribData.size(), bytes_written);
       if(bytes_written != attribData.size())
       {  throw Flock::CommandFailureException("Change command args not fully written"); }
    }
-   mSerialPort->drainOutput();   
+   mSerialPort->drainOutput();
 }
 
-
-
-
-
-
-
-void FlockStandalone::setDeviceReportRate(char rate)
-{
-   char exam1[1];
-   vpr::Uint32 buf=0;
-
-   switch ( rate )
-   {
-      case 'Q':
-         std::cout << "setting report rate to every cycle" << std::endl;
-         exam1[0] = 'Q';
-         break;
-      case 'R':
-         std::cout << "setting report rate to every other cycle" << std::endl;
-         exam1[0] = 'R';
-         break;
-      case 'S':
-         std::cout << "setting report rate to every 8th cycle" << std::endl;
-         exam1[0] = 'S';
-         break;
-      case 'T':
-         std::cout << "setting report rate to every 32nd cycle" << std::endl;
-         exam1[0] = 'T';
-         break;
-   }
-
-   for ( int i = 0; i < 500; ++i )
-   {
-      mSerialPort->write(exam1, sizeof(char), buf);
-   }
-}
 
 
 void FlockStandalone::printError( unsigned char ErrCode, unsigned char ExpandedErrCode )
@@ -1559,7 +1348,7 @@ bool FlockStandalone::isTransmitter(int birdID) const
 {
    // This flock is configured for extended range and thus has a transmitter on
    // the FBB.
-   if (ExtendedRange == mMode)
+   if (Flock::ExtendedRange == mMode)
    {
       // Check if the given ID is the ID for the transmitter
       if (birdID == mXmitterUnitNumber)
@@ -1577,7 +1366,7 @@ void FlockStandalone::setupFlockUnitsDataStructure()
 {
    unsigned max_units = getMaxBirdAddr();
    mFlockUnits.resize(max_units);   // Allocate enough room
-   
+
    // --- Get data from system status command --- //
    std::vector<vpr::Uint8> sys_status = querySystemStatus();
 
@@ -1590,12 +1379,12 @@ void FlockStandalone::setupFlockUnitsDataStructure()
       unit.mAccessible = Flock::SystemStatus::isAccessible(status);
       unit.mIsRunning = Flock::SystemStatus::isRunning(status);
       unit.mHasSensor = Flock::SystemStatus::hasSensor(status);
-      unit.mTransmitterType = Flock::SystemStatus::getTransmitterType(status);      
+      unit.mTransmitterType = Flock::SystemStatus::getTransmitterType(status);
    }
 
    // Correct for standalone case
-   if(Standalone == mMode)
-   {  
+   if(Flock::Standalone == mMode)
+   {
       mFlockUnits[0].mAddr = 0;     // Manually set the correct bird address
       mActiveUnitEndIndex = 1;      // Manually position it past first unit
    }
@@ -1607,9 +1396,9 @@ void FlockStandalone::setupFlockUnitsDataStructure()
       // While(not at end && unit is accessible
       while( (cur_unit != mFlockUnits.end()) && ((*cur_unit).mAccessible))
       { mActiveUnitEndIndex += 1; cur_unit++; }
-         
+
       vprASSERT(mActiveUnitEndIndex <= mFlockUnits.size());
-      vprASSERT((mActiveUnitEndIndex == 0) || 
+      vprASSERT((mActiveUnitEndIndex == 0) ||
                 (mFlockUnits[mActiveUnitEndIndex-1].mAccessible) );
    }
 
@@ -1623,4 +1412,4 @@ void FlockStandalone::setupFlockUnitsDataStructure()
       unit.mHasError = Flock::BirdStatus::hasError(status);
    }
 }
-      
+
