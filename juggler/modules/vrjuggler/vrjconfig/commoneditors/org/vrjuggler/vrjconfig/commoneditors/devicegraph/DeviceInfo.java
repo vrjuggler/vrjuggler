@@ -329,6 +329,20 @@ public class DeviceInfo
    }
 
    /**
+    * Removes the identified unit of the given type from our device.
+    *
+    * @param unitType   the type (as defined in <code>UnitConstants</code> of
+    *                   the device unit to be added)
+    * @param unitNumber the index of the unit to remove
+    *
+    * @see UnitConstants
+    */
+   public void removeUnit(Integer unitType, Integer unitNumber)
+   {
+      removeUnit(unitType, unitNumber.intValue());
+   }
+
+   /**
     * Determines whether the device config element contained within this
     * object is for a device that has a variable number of input sources
     * (units).
