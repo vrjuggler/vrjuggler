@@ -30,18 +30,64 @@
       <para>Here is an overview of Sonix capabilities: <itemizedlist>
             <listitem>
                <para>Very simple interface.</para>
-               <para>Enables people to get up and running with sound quickly.</para>
+               <para>Small learning curve.</para>
             </listitem>
             <listitem>
                <para>Sound abstraction supports reconfigurability.</para>
                <para>Reconfigurations of sound resources are protected (i.e. does not break application).</para>
                <para>Changing a sound resource reflects properly in all other handles to the same resource (resources allow multiple users) </para>
             </listitem>
+            <listitem>
+               <para>Support for features needed by 3D virtual environments.</para>
+               <para>Spacialized or ambient audio</para>
+               <para>One-shot and looping sounds.</para>
+            </listitem>
+            <listitem>
+               <para>Runs on top of some well known audio systems - <productname>OpenAL</productname>, and Multigen/Paradigm's <productname>AudioWorks</productname>. </para>
+            </listitem>
          </itemizedlist></para>
    </section>
    <section>
       <title>Simple Minimalist Interface</title>
-      <para></para>
+      <para>In <xref linkend="simplesonixinterface"/> we see the API for sonix (see <xref linkend="completesonixinterface"/> for the complete software architechture). The main parts that a sound programmer will use is shown, namely the <classname>snx::SoundHandle</classname> class, and the <classname>sonix</classname> singleton class. The <classname>sonix</classname> singleton class is used to start, stop and reconfigure the sound system. The <classname>snx::SoundHandle</classname> class is used to manipulate individual sounds. Both classes must be used for any sound to be heard. <figure id="simplesonixinterface" xreflabel="simplesonixinterface">
+            <title>UML diagram of the sonix interface.</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata
+                    fileref = "simple.interface.uml.png"
+                    format  = "PNG"
+                  />
+               </imageobject>
+            </mediaobject>
+         </figure></para>
+      <para>To start the <productname>sonix</productname> system is easy (see <xref linkend="startupCode"/>). Basically the only call needed to start the system is <methodname>changeAPI()</methodname>. Currently only OpenAL and AudioWorks is supported by <productname>sonix</productname>, so you would pass one of these two strings to <methodname>changeAPI()</methodname>.<figure>
+            <title>Code to startup and initialize sonix to use the OpenAL audio subsystem</title>
+            <programlisting
+              id     = "startupCode"
+            >sonix::instance()-&gt;changeAPI( "OpenAL" );</programlisting>
+         </figure></para>
+      <para><methodname></methodname>To setup a sound is also straight forward as seen in <xref linkend="soundHandleSetup"/>. Here we use a <ooclass>
+            <classname>snx::SoundInfo</classname>
+         </ooclass> to configure the sound object, which is accessed by a <ooclass>
+            <classname>snx::SoundHandle</classname>
+         </ooclass>. <figure>
+            <title>Code to setup a sonix sound</title>
+            <programlisting
+              id     = "soundHandleSetup"
+            >snx::SoundInfo info;
+info.filename = "crack.wav";
+info.datasource = snx::SoundInfo::FILESYTEM;
+
+snx::SoundHandle crack_sound( "crack" );
+crack_sound.configure( info );</programlisting>
+         </figure>To keep sonix running, you need to repeatedly call an update function called <methodname>step( float time )</methodname>. <varname>time</varname> is the amount of time since you last called <methodname>step()</methodname>, and <methodname>step()</methodname> should be called in your application's frame function (see ).<figure id="stepCode">
+            <title>Call sonix::step() in your frame function</title>
+            <programlisting>void frame()
+{
+   time_delta = getTimeChangeInSeconds(); // use a system call, or other API to get your time delta
+   sonix::instance()-&gt;step( time_delta );
+}</programlisting>
+         </figure></para>
    </section>
    <section>
       <title>Reconfiguration</title>
@@ -74,6 +120,20 @@
                <para>Proxy (<classname>std::string</classname>) refer to actual sounds with a <classname>std::string</classname> Proxy. This allows you to generically control a sound for any sound API. The sonix class acts as Mediator between every Proxy method and the actual SoundImplementation Adaptor. </para>
             </listitem>
          </itemizedlist>
+         <figure
+           id        = "completesonixinterface"
+           xreflabel = "completesonixinterface"
+         >
+            <title>The complete sonix interface.</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata
+                    fileref = "complete.interface.uml.png"
+                    format  = "PNG"
+                  />
+               </imageobject>
+            </mediaobject>
+         </figure>
       </section>
    </section>
    <bibliography>

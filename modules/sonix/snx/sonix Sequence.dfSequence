@@ -25,6 +25,12 @@ class reference22 {
 @__modelType reference 
 */
 class reference27 {
+}/**
+@__ref <oiref:design#Class#id2jfsecyc3789gcyc3aol8.diagram:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference28 {
 }}/**
 @__tags
 @shapeType SequenceDiagram 
@@ -36,14 +42,19 @@ class __tags {
 class __options {
 }/**
 @__positions 
-<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node19.node:oiref>=239,123,14,40,1:oigroup>
-<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node21.node:oiref>=412,133,14,20,1:oigroup>
-<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node19.link:oiref>=253,133,412,133:oigroup>
-<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node26:oiref>=523,30,118,270,1:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node19.link:oiref>=254,133,413,133:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#idxpc9cngob3p6cngorogs.node.link:oiref>=86,106,20,13,0:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node.link:oiref>=82,123,240,123:oigroup>
 <oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node:oiref>=30,30,90,270,1:oigroup>
-<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node19:oiref>=195,30,103,270,1:oigroup>
-<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node.link:oiref>=82,123,239,123:oigroup>
-<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node21:oiref>=360,30,118,270,1:oigroup>
+<oigroup:<oiref:design#Class#id2jfsecyc3789gcyc3aol8.diagram:oiref>=212,408,140,75,1:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node21:oiref>=360,30,120,270,1:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#idxpc9cngob3p6cngorogs.node19.link:oiref>=258,116,32,13,0:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node26:oiref>=523,30,120,270,1:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node19.node:oiref>=240,123,14,40,1:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node19.link24:oiref>=:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node19:oiref>=195,30,105,270,1:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node21.node:oiref>=413,133,14,20,1:oigroup>
+<oigroup:<oiref:design#Class#idxpc9cngob3p6cngorogs.node.link23:oiref>=:oigroup>
 */
 class __positions {
 }/**
