@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?morphon-document-settings
+  morphon.document.settings.print.fixed.attributes="true"
+  morphon.document.settings.relative.systemids="0"
+  morphon.document.settings.print.defaultvalues.attributes="false"
+  morphon.document.settings.print.empty.tags="true"
+  morphon.document.settings.whitespaces.amount="3"
+  morphon.document.settings.stylesheetpi.autoupdate="true"
+  morphon.document.settings.maxlinelength="78"
+  morphon.document.settings.whitespaces.type="indent"
+  morphon.document.settings.endofline.type="2"
+?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book>
+   <bookinfo>
+      <title>VR Juggler Portable Runtime</title>
+      <subtitle>Programmer's Guide</subtitle>
+      <releaseinfo>0.0</releaseinfo>
+      <pubdate>$Date$</pubdate>
+   </bookinfo>
+   <preface>
+      <title>What is the VR Juggler Portable Runtime?</title>
+      <para></para>
+   </preface>
+   <part>
+      <title>Input/Output</title>
+      <chapter>
+         <title>Buffered I/O</title>
+         <para></para>
+      </chapter>
+      <chapter>
+         <title>Sockets</title>
+         <para></para>
+      </chapter>
+      <chapter>
+         <title>Serial Ports</title>
+         <para></para>
+      </chapter>
+      <chapter>
+         <title>Object Serialization</title>
+         <para></para>
+      </chapter>
+   </part>
+   <part>
+      <title>Multi-Threading</title>
+      <chapter>
+         <title>Threads</title>
+         <para></para>
+      </chapter>
+      <chapter>
+         <title>Synchronization</title>
+         <para></para>
+         <section>
+            <title>Semaphores</title>
+            <para></para>
+         </section>
+         <section>
+            <title>Mutexes</title>
+            <para></para>
+         </section>
+         <section>
+            <title>Condition Variables</title>
+            <para></para>
+         </section>
+      </chapter>
+      <chapter>
+         <title>Signals</title>
+         <para></para>
+      </chapter>
+   </part>
+   <part>
+      <title>Miscellaneous Utilities</title>
+      <chapter>
+         <title>Globally Unique Identifiers</title>
+         <para></para>
+      </chapter>
+      <chapter>
+         <title>Intervals</title>
+         <para></para>
+      </chapter>
+      <chapter>
+         <title>Singletons</title>
+         <para></para>
+      </chapter>
+      <chapter>
+         <title>Factories</title>
+         <para></para>
+      </chapter>
+   </part>
+</book>
