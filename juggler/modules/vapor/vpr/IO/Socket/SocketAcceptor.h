@@ -80,6 +80,8 @@ public:
     // Get the member socket that is being used
     SocketStream& getSocket()
     { return mSocket; }
+    IOSys::Handle getHandle()
+    { return mSocket.getHandle(); }
 
 private:   
     SocketStream    mSocket; 
