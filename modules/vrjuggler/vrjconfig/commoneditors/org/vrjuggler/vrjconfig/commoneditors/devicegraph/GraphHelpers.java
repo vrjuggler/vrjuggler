@@ -46,10 +46,7 @@ import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphCell;
 import org.jgraph.graph.GraphConstants;
 
-import org.vrjuggler.jccl.config.ConfigContext;
-import org.vrjuggler.jccl.config.ConfigDefinition;
-import org.vrjuggler.jccl.config.ConfigElement;
-import org.vrjuggler.jccl.config.PropertyDefinition;
+import org.vrjuggler.jccl.config.*;
 
 import org.vrjuggler.vrjconfig.commoneditors.DeviceGraph;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
@@ -204,6 +201,9 @@ public abstract class GraphHelpers
 
       // XXX: This should use functors to allow for more dynamic addition of
       // cell creators.
+
+      // These device types all have exactly one unit.  In this case, the
+      // unit type is irrelevant.
       if ( token.equals(SIM_POS_DEVICE_TYPE) ||
            token.equals(KEYBOARD_MOUSE_DEVICE_TYPE) ||
            token.equals(TRACKD_CONTROLLER_TYPE) ||
@@ -213,31 +213,49 @@ public abstract class GraphHelpers
       {
          cell = createDeviceCell(devElt, context, 1, attributes, x, y, true);
       }
+      // A simulated digital device has a variable number of digital inputs
+      // based on a variable-valued property.
       else if ( token.equals(SIM_DIGITAL_DEVICE_TYPE) )
       {
          cell = createDeviceCell(devElt, context, KEY_PAIR_PROPERTY,
                                  attributes, x, y, false);
       }
+      // The Flock of Birds and MotionStar Wireless have a variable number of
+      // positional units that are determined at run time by the respective
+      // drivers.
       else if ( token.equals(FLOCK_TYPE) || token.equals(MOTION_STAR_TYPE) )
       {
+         List proxy_types = new ArrayList(1);
+         proxy_types.add(0, POSITION_PROXY_TYPE);
+         cell = createDeviceCell(devElt, context, proxy_types, attributes,
+                                 x, y, false);
       }
+      // The IS-900 and IntersenseAPI drivers have a variable number of
+      // properties...
+      // XXX: This is not complete because it does not take into account hte
+      // untis types.  Adding and removing units with an Intersense is hard...
       else if ( token.equals(INTERSENSE_TYPE) ||
                 token.equals(INTERSENSE_API_TYPE) )
       {
          cell = createDeviceCell(devElt, context, STATIONS_PROPERTY,
                                  attributes, x, y, false);
       }
+      // The Linux and Direct Input game controllers have a variable number of
+      // analog and digital units.  The number is dependent upon the game
+      // controller and is determined at run-time by the driver.
       else if ( token.equals(DIRECTX_JOYSTICK_TYPE) ||
                 token.equals(LINUX_JOYDEV_TYPE) )
       {
-         cell = createBaseDeviceCell(new DeviceInfo(devElt, context),
-                                     attributes, x, y, false);
-         addDevicePorts(cell, UnitConstants.ANALOG, 6);
-         addDevicePorts(cell, UnitConstants.DIGITAL, 10);
+         List proxy_types = new ArrayList(2);
+         proxy_types.add(0, ANALOG_PROXY_TYPE);
+         proxy_types.add(1, DIGITAL_PROXY_TYPE);
+         cell = createDeviceCell(devElt, context, proxy_types, attributes,
+                                 x, y, false);
       }
       else if ( token.equals(PUCK_DEVICE_TYPE) )
       {
       }
+      // The Ibox has a fixed number of analog and digital units (4 of both).
       else if ( token.equals(IBOX_TYPE) )
       {
          List unit_list = new ArrayList(2);
@@ -251,9 +269,17 @@ public abstract class GraphHelpers
       else if ( token.equals(DATA_GLOVE_TYPE) )
       {
       }
+      // The Pinch Gloves have a fixed numbmer of digital untis (11).
       else if ( token.equals(PINCH_GLOVE_TYPE) )
       {
+         List unit_list = new ArrayList(1);
+         unit_list.add(0, UnitConstants.DIGITAL);
+         cell = createBaseDeviceCell(new DeviceInfo(devElt, context, unit_list),
+                                     attributes, x, y, false);
+         addDevicePorts(cell, UnitConstants.DIGITAL, 11);
       }
+      // VRPN has a variable number of digital and positional units defined
+      // by two property values.
       else if ( token.equals(VRPN_TYPE) )
       {
          Integer b_count =
@@ -414,6 +440,96 @@ public abstract class GraphHelpers
                      numUnits);
 
       return dev_cell;
+   }
+
+   /**
+    * Creates a new graph cell for the given config element that is used to
+    * configure an input device using "artificial" input sources (units).
+    *
+    * @param devElt     the config element for the device being
+    *                   represented by the vertex cell to be created
+    * @param context    the config context where <code>devElt</code> exists
+    * @param proxyTypes the list of proxy types that can point at the device
+    * @param attributes the attribute map where the vertex cell's default
+    *                   attribute map will be stored by this function
+    * @param x          the X coordinate for the initial positionaing of the
+    *                   new vertex
+    * @param y          the Y coordinate for the initial positionaing of the
+    *                   new vertex
+    * @param autoSize   flag indicating whether the new cell should be
+    *                   auto-sized
+    *
+    * @see org.vrjuggler.vrjconfig.commoneditors.DeviceGraph#createDeviceAttributes(int,int,boolean)
+    */
+   public static DefaultGraphCell createDeviceCell(ConfigElement devElt,
+                                                   ConfigContext context,
+                                                   List proxyTypes,
+                                                   Map attributes,
+                                                   int x, int y,
+                                                   boolean autoSize)
+   {
+      ConfigBroker broker = new ConfigBrokerProxy();
+      List all_elts = broker.getElements(context);
+
+      Map unit_map = new HashMap();
+
+      for ( Iterator d = proxyTypes.iterator(); d.hasNext(); )
+      {
+         Object def_obj = d.next();
+         List all_proxy_elts = null;
+         if ( def_obj instanceof String )
+         {
+            all_proxy_elts = 
+               ConfigUtilities.getElementsWithDefinition(all_elts,
+                                                         (String) def_obj);
+         }
+         else if ( def_obj instanceof ConfigDefinition )
+         {
+            all_proxy_elts = 
+               ConfigUtilities.getElementsWithDefinition(all_elts,
+                                                         (ConfigDefinition) def_obj);
+         }
+
+         if ( ! all_proxy_elts.isEmpty() )
+         {
+            ConfigDefinition def = 
+               ((ConfigElement) all_proxy_elts.get(0)).getDefinition();
+            PropertyDefinition prop_def =
+               def.getPropertyDefinition(DEVICE_PROPERTY);
+            Integer unit_type =
+               UnitTypeHelpers.getUnitType(prop_def.getAllowedType(0));
+            int proxy_count = 0;
+
+            for ( Iterator e = all_proxy_elts.iterator(); e.hasNext(); )
+            {
+               ConfigElement proxy_elt = (ConfigElement) e.next();
+               ConfigElementPointer dev_ptr =
+                  (ConfigElementPointer) proxy_elt.getProperty(DEVICE_PROPERTY,
+                                                               0);
+
+               if ( dev_ptr != null &&
+                    dev_ptr.getTarget().equals(devElt.getName()) )
+               {
+                  proxy_count++;
+               }
+            }
+
+            DeviceInfo.addArtificialUnits(unit_map, unit_type, proxy_count);
+         }
+      }
+
+      DefaultGraphCell cell =
+         createBaseDeviceCell(new DeviceInfo(devElt, context, unit_map),
+                              attributes, x, y, false);
+
+      for ( Iterator t = unit_map.keySet().iterator(); t.hasNext(); )
+      {
+         Integer type = (Integer) t.next();
+         Integer proxy_count = (Integer) unit_map.get(type);
+         addDevicePorts(cell, type, proxy_count.intValue());
+      }
+
+      return cell;
    }
 
    private static DefaultGraphCell createBaseDeviceCell(DeviceInfo devInfo,
