@@ -448,7 +448,8 @@ done
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
 INCLUDES="$INCLUDES $OMNI_INCLUDES"
-tweek_cxxflags="$STDFLAGS $EXTRA_DEFS $VPR_CXXFLAGS $INCLUDES $tweek_idl_gen_includes"
+tweek_cxxflags="$STDFLAGS $EXTRA_DEFS $INCLUDES $tweek_idl_gen_includes"
+tweek_cxxflags_all="$VPR_CXXFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -460,7 +461,8 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    DBG_FLAGS="$DBG_FLAGS /MDd"
    OPT_FLAGS="$OPT_FLAGS /MD"
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
-   tweek_cxxflags="$CXXFLAGS $EXTRA_DEFS $VPR_CXXFLAGS $INCLUDES $IDL_GEN_INCLUDES"
+   tweek_cxxflags="$CXXFLAGS $EXTRA_DEFS $INCLUDES $IDL_GEN_INCLUDES"
+   tweek_cxxflags_all="$VPR_CXXFLAGS"
 fi
 
 DPP_SYSTEM_SUBST
@@ -554,13 +556,15 @@ case $OS_TYPE in
 
       tweek_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
       tweek_ldflags_linker="$tweek_ldflags_compiler"
-      tweek_libs="-ltweek $VPR_LIBS_CC"
+      tweek_libs="-ltweek"
+      tweek_libs_all="$VPR_LIBS_CC"
       tweek_extra_libs="$OMNI_LIB $tweek_extra_libs"
       ;;
    Win32)
       tweek_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
       tweek_ldflags_linker="/libpath:\$prefix/lib/debug"
-      tweek_libs="tweek.lib $VPR_LIBS_LD"
+      tweek_libs="tweek.lib"
+      tweek_libs_all="$VPR_LIBS_LD"
       tweek_extra_libs="$OMNI_LIB_LINK_EXE $tweek_extra_libs"
       ;;
 esac
@@ -626,9 +630,11 @@ AC_SUBST(DYLIB_DEPS)
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(tweek_cxxflags)
+AC_SUBST(tweek_cxxflags_all)
 AC_SUBST(tweek_ldflags_compiler)
 AC_SUBST(tweek_ldflags_linker)
 AC_SUBST(tweek_libs)
+AC_SUBST(tweek_libs_all)
 AC_SUBST(tweek_extra_cxxflags)
 AC_SUBST(tweek_extra_include_dirs)
 AC_SUBST(tweek_extra_ldflags)
