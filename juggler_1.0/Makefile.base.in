@@ -58,6 +58,9 @@
 # DEPEND_EXTRAS   - Flags not recognized by makedepend(1) that may be
 #                   necessary in ${CFLAGS} or ${CXXFLAGS}.
 # GROUP_NAME      - The name of the group that will own the files.
+# FILE_PERMS      - Normal file permissions.
+# EXEC_PERMS      - Executable file permissions.
+# DIR_PERMS       - Directory permissions.
 # INCLUDES        - Additions to the include path (-I/path/to/include).
 # LD              - Path to ld(1) (or equivalent program).
 # LDFLAGS         - Flags for ${LD}.
@@ -132,7 +135,6 @@ DEFS		= @DEFS@
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPENDFLAGS	= @DEPENDFLAGS@ @INCLUDES@ -I${VJROOT_ABS} -I${topdir}
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ ${DEFS}
-GROUP_NAME	= @GROUP_NAME@
 INCLUDES	= @INCLUDES@ -I${VJROOT} -I${topdir}
 INSTALL		= @INSTALL@
 LD		= @LD@ ${EXTRA_LDFLAGS}
@@ -149,6 +151,12 @@ OBJ_FILE_SUFFIX	= @OBJ_FILE_SUFFIX@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 PERL		= @PERL@
 RANLIB		= @RANLIB@
+
+# Installation information (permissions, ownership).
+GROUP_NAME	= @GROUP_NAME@
+FILE_PERMS	= @FILE_PERMS@
+EXEC_PERMS	= @EXEC_PERMS@
+DIR_PERMS	= @DIR_PERMS@
 
 # Allow overriding the default value of ${OBJDIR} by setting ${BASE_OBJDIR}
 # (probably using an externally defined value).
