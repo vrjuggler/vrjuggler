@@ -41,6 +41,7 @@ getopt('i:o:');
 
 my $src_dir = "$opt_i";
 my $dest_dir = "$opt_o";
+umask(002);
 mkpath("$dest_dir", 0, 0755);	# Make sure that $dest_dir exists
 
 chop($start_dir = `pwd`) unless $dest_dir =~ /^\//;	# Save this for later
