@@ -204,6 +204,8 @@ public class ConfigToolbar
       {
          // Open all the included files first
          ConfigContext ctx = new ConfigContext();
+         // TODO: Add support for jconf includes.
+         /*
          for (Iterator itr = new_dlg.getIncludes().iterator(); itr.hasNext(); )
          {
             if (! openInContext((String)itr.next(), ctx))
@@ -211,6 +213,7 @@ public class ConfigToolbar
                return false;
             }
          }
+         */
 
          // Create the new config file
          try
