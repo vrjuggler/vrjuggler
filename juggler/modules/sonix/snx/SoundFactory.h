@@ -46,6 +46,7 @@
 
 #ifndef SNXSOUNDFACTORY_H
 #define SNXSOUNDFACTORY_H
+#ifndef __APPLE__
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -252,5 +253,7 @@ public:
 };
 
 }; // end namespace
+
+#endif //stub out on OS X
 
 #endif //SNXSOUNDFACTORY_H
