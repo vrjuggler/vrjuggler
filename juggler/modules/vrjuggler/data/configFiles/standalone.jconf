@@ -431,11 +431,11 @@
          <frame_buffer_config>
             <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
                <visual_id>-1</visual_id>
-               <red_size>8</red_size>
-               <green_size>8</green_size>
-               <blue_size>8</blue_size>
-               <alpha_size>8</alpha_size>
-               <depth_buffer_size>16</depth_buffer_size>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <depth_buffer_size>1</depth_buffer_size>
                <fsaa_enable>true</fsaa_enable>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
