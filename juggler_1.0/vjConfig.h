@@ -78,15 +78,15 @@ typedef UINT u_int;
 #include <string>
 #include <algorithm>
 
+//#include <Kernel/vjDebug.h>
+#endif
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
 #ifndef WIN32
 #include <strings.h>
-#endif
-
-//#include <Kernel/vjDebug.h>
 #endif
 
 /* --- Macros ---- */
