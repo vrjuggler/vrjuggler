@@ -43,6 +43,7 @@
 #include <gmtl/AxisAngle.h>
 #include <gmtl/AxisAngleOps.h>
 #include <gmtl/Generate.h>
+#include <gmtl/Output.h>
 
 namespace gmtl
 {
@@ -507,6 +508,15 @@ namespace gmtl
    // XXX: gmtl::setRot(Coord, const Matrix) missing...
 
 // ======================================================== Generator functions
+
+// Output functions ===========================================================
+   template std::ostream& operator<<(std::ostream&, const gmtl::VecBase<float,3>&);
+   template std::ostream& operator<<(std::ostream&, const gmtl::VecBase<double,3>&);
+   template std::ostream& operator<<(std::ostream&, const gmtl::VecBase<float,4>&);
+   template std::ostream& operator<<(std::ostream&, const gmtl::VecBase<double,4>&);
+   template std::ostream& operator<<(std::ostream&, const gmtl::Matrix33f&);
+   template std::ostream& operator<<(std::ostream&, const gmtl::Matrix44f&);
+// =========================================================== Output functions
 }
 
 
@@ -709,6 +719,38 @@ namespace gmtlWrapper
    template gmtl::Matrix44d makeAxesMatrix44(const gmtl::Vec3d&,
                                              const gmtl::Vec3d&,
                                              const gmtl::Vec3d&);
+
+   template<typename T>
+   void setArrayElement(T* obj, const unsigned i, typename T::DataType value)
+   {
+      (*obj)[i] = value;
+   }
+
+   template void setArrayElement(gmtl::VecBase<int, 2>*, const unsigned, int);
+   template void setArrayElement(gmtl::VecBase<float, 2>*, const unsigned, float);
+   template void setArrayElement(gmtl::VecBase<double, 2>*, const unsigned, double);
+   template void setArrayElement(gmtl::VecBase<int, 3>*, const unsigned, int);
+   template void setArrayElement(gmtl::VecBase<float, 3>*, const unsigned, float);
+   template void setArrayElement(gmtl::VecBase<double, 3>*, const unsigned, double);
+   template void setArrayElement(gmtl::VecBase<int, 4>*, const unsigned, int);
+   template void setArrayElement(gmtl::VecBase<float, 4>*, const unsigned, float);
+   template void setArrayElement(gmtl::VecBase<double, 4>*, const unsigned, double);
+   template void setArrayElement(gmtl::Vec3f*, const unsigned, float);
+   template void setArrayElement(gmtl::Vec3d*, const unsigned, double);
+   template void setArrayElement(gmtl::Vec4f*, const unsigned, float);
+   template void setArrayElement(gmtl::Vec4d*, const unsigned, double);
+   template void setArrayElement(gmtl::Quatf*, const unsigned, float);
+   template void setArrayElement(gmtl::Quatd*, const unsigned, double);
+   template void setArrayElement(gmtl::Point3f*, const unsigned, float);
+   template void setArrayElement(gmtl::Point3d*, const unsigned, double);
+   template void setArrayElement(gmtl::Matrix33f::RowAccessor*, const unsigned, float);
+   template void setArrayElement(gmtl::Matrix44f::RowAccessor*, const unsigned, float);
+   template void setArrayElement(gmtl::EulerAngleXYZf*, const unsigned, float);
+   template void setArrayElement(gmtl::EulerAngleXYZd*, const unsigned, double);
+   template void setArrayElement(gmtl::EulerAngleZYXf*, const unsigned, float);
+   template void setArrayElement(gmtl::EulerAngleZYXd*, const unsigned, double);
+   template void setArrayElement(gmtl::EulerAngleZXYf*, const unsigned, float);
+   template void setArrayElement(gmtl::EulerAngleZXYd*, const unsigned, double);
 }
 
 
