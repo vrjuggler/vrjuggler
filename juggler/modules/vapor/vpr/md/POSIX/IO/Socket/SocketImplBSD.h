@@ -255,6 +255,16 @@ public:
     vpr::Status connect(vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
+     * Gets the status of a possibly connected socket.
+     *
+     * @pre This socket is opened and has been connected to a peer.
+     *
+     * @return true is returned if this socket is still connected.<br>
+     *         false is returned if this socket is not currently connected.
+     */
+    bool isConnected(void);
+
+    /**
      * Gets the type of this socket (e.g., vpr::SocketTypes::STREAM).
      *
      * @pre The socket implementation pointer is valid.
