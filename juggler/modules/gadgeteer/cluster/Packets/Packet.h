@@ -44,10 +44,14 @@
 
 #include <cluster/ClusterException.h>
 
+namespace gadget
+{
+   class Node;
+}
+
 namespace cluster
 {
    class Header;
-   class ClusterNode;
 
 class GADGET_CLASS_API Packet
 {
@@ -70,7 +74,7 @@ public:
    /**
     * Construct a packet using the given packet header and socketstream.
     */
-   void recv(Header* packet_head, ClusterNode* node) throw(cluster::ClusterException);
+   void recv(Header* packet_head, gadget::Node* node) throw(cluster::ClusterException);
    
    /**
     * Dump all internal data to the screen.

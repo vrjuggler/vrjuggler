@@ -35,11 +35,9 @@
 
 #include <vpr/IO/BufferObjectReader.h>
 #include <vpr/IO/BufferObjectWriter.h>
-#include <vpr/IO/Socket/SocketStream.h>
 
 #include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
 
 
 namespace cluster

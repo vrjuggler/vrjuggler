@@ -35,9 +35,9 @@
 #include <gadget/Util/Debug.h>
 #include <cluster/ClusterDepChecker.h>
 #include <cluster/ClusterManager.h>
-#include <cluster/ClusterNetwork/ClusterNetwork.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
+#include <gadget/Node.h>
 #include <gadget/Type/DeviceFactory.h>
+#include <cluster/ClusterNetwork.h>
 #include <jccl/RTRC/ConfigManager.h>
 
 #include <boost/concept_check.hpp>
@@ -65,17 +65,16 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
 
       // RemoteDeviceConfig has only two dependencies
       //   - deivceHost exists in Active List
-      //   - ClusterNode exists and is connected
+      //   - Node exists and is connected
       //   - Remote Device needs to be configured
 
       bool pass = true;
 
       jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
-      cluster::ClusterNetwork* cluster_net = cluster::ClusterNetwork::instance();
 
-      // deviceHost exists in active configuration
+      // device_host exists in active configuration
       std::string device_host = element->getProperty<std::string>("device_host");
-      ClusterNode* node = cluster_net->getClusterNodeByName(device_host);
+      gadget::Node* node = cluster::ClusterManager::instance()->getNetwork()->getNodeByName(device_host);
 
       if(!cfg_mgr->isElementInActiveList(device_host))
       {
@@ -88,17 +87,25 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
       else if(node == NULL)
       {
          pass = false;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << "[ClusterDepChecker] ClusterNode("
+         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << "[ClusterDepChecker] Node("
                << device_host << ") is NULL, so it is not in the Active List yet.\n" << vprDEBUG_FLUSH;
       }
-      else if(ClusterNode::DISCONNECTED == node->getConnected())
+      else if(gadget::Node::DISCONNECTED == node->getStatus())
       {
          pass = false;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << "[ClusterDepChecker] Adding Pending Node??" << vprDEBUG_FLUSH;
-         ClusterNetwork::instance()->addPendingNode(node);
-
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << "[ClusterDepChecker] ClusterNode("
-            << device_host << ") not connected yet.\n" << vprDEBUG_FLUSH;
+         
+         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << "[ClusterDepChecker] Remote device: "
+            << element->getName() << " depends on node: " << node->getName()
+            << " changing status to PENDING."
+            << std::endl << vprDEBUG_FLUSH;
+            
+         node->setStatus(gadget::Node::PENDING);
+      }
+      else if( gadget::Node::PENDING == node->getStatus() ||
+               gadget::Node::NEWCONNECTION == node->getStatus() )
+      {
+         // Wait until we are fully connected.
+         pass = false;
       }
       //Not needed, we kind of just did it above
       // debugOutDependencies(element, vprDBG_WARNING_LVL);
@@ -128,9 +135,9 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
             return(false);
          }
          std::string host_name = node_element->getProperty<std::string>("host_name");
-         if (!ClusterNetwork::isLocalHost(host_name))
+         if (! ClusterNetwork::isLocalHost(host_name) )
          {
-            ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByName(node_name);
+            gadget::Node* node = ClusterManager::instance()->getNetwork()->getNodeByName(node_name);
             if (node == NULL)
             {
                jccl::ConfigManager::instance()->delayStalePendingList();
@@ -198,9 +205,9 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
       //      return;
       //   }
       //   std::string host_name = node_element->getProperty<std::string>("host_name");
-      //   if (!ClusterNetwork::isLocalHost(host_name))
+      //   if ( !ClusterNetwork::isLocalHost(host_name) )
       //   {
-      //      ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByName(node_name);
+      //      gadget::Node* node = cluster::ClusterManager::instance()->getNetwork()->getNodeByName(node_name);
       //      if (node == NULL)
       //      {
       //         vprDEBUG(vprDBG_ALL, dbg_lvl) << node_name << " does not exist in ClusterNetwork."

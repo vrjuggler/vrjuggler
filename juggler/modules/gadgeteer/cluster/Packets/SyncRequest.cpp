@@ -35,7 +35,6 @@
 
 #include <cluster/Packets/SyncRequest.h>
 #include <cluster/Packets/PacketFactory.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
 
 
 namespace cluster
