@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //===============================================================
-// Isense (a Wrapper for IntersenseStandalone)
+// Intersense (a Wrapper for IntersenseStandalone)
 //
 // Purpose:
 //      VR Juggler Intersense tracking class
@@ -47,7 +47,7 @@
 #include <strstream>
 #include <fstream>
 
-#include <vrj/Input/Devices/Intersense/Isense.h>
+#include <vrj/Input/Devices/Intersense/Intersense.h>
 #include <vrj/Math/Coord.h>
 #include <vrj/Math/Quat.h>
 #include <vrj/Util/Debug.h>
@@ -64,7 +64,7 @@ namespace vrj
 // XXX: We are going to say the cubes are 0 based
 
 
-int Isense::getStationIndex(int stationNum, int bufferIndex)
+int Intersense::getStationIndex(int stationNum, int bufferIndex)
 {
     int ret_val = (stationNum*3)+bufferIndex;
     vprASSERT((ret_val >= 0) && (ret_val < ((mTracker.NumStations()+1)*3)));
@@ -73,15 +73,15 @@ int Isense::getStationIndex(int stationNum, int bufferIndex)
 
 
 
-Isense::Isense()
+Intersense::Intersense()
 {
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "*** Isense::Isense() ***\n" << vjDEBUG_FLUSH;
-    //vjDEBUG(vjDBG_INPUT_MGR,1) << "*** Isense::deviceAbilities = " << deviceAbilities << " ***\n" << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "*** Intersense::Intersense() ***\n" << vjDEBUG_FLUSH;
+    //vjDEBUG(vjDBG_INPUT_MGR,1) << "*** Intersense::deviceAbilities = " << deviceAbilities << " ***\n" << vjDEBUG_FLUSH;
 }
 
-bool Isense::config(ConfigChunk *c)
+bool Intersense::config(ConfigChunk *c)
 {
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "         Isense::Isense(ConfigChunk*)"
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "         Intersense::Intersense(ConfigChunk*)"
                                << std::endl << vjDEBUG_FLUSH;
 
 // read in Position's, Digital's, and Analog's config stuff,
@@ -91,7 +91,7 @@ bool Isense::config(ConfigChunk *c)
 
 // keep IntersenseStandalone's port and baud members in sync with Input's port
 // and baud members.
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "   Isense::Isense(ConfigChunk*) -> Input::getPort() = " << Input::getPort() << std::endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "   Intersense::Intersense(ConfigChunk*) -> Input::getPort() = " << Input::getPort() << std::endl << vjDEBUG_FLUSH;
     mTracker.setPortName( Input::getPort() );
     mTracker.rBaudRate() = Input::getBaudRate();
     mTracker.rNumStations() = c->getNum("stations");
@@ -126,7 +126,7 @@ bool Isense::config(ConfigChunk *c)
     return true;
 }
 
-Isense::~Isense()
+Intersense::~Intersense()
 {
     this->stopSampling();
     if (stations != NULL)
@@ -138,7 +138,7 @@ Isense::~Isense()
 }
 
 // Main thread of control for this active object
-void Isense::controlLoop(void* nullParam)
+void Intersense::controlLoop(void* nullParam)
 {
 
     if (theData != NULL)
@@ -174,12 +174,12 @@ void Isense::controlLoop(void* nullParam)
     }
 }
 
-int Isense::startSampling()
+int Intersense::startSampling()
 {
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
     {
-        vjDEBUG(vjDBG_INPUT_MGR,2) << "vjIsense was already started."
+        vjDEBUG(vjDBG_INPUT_MGR,2) << "vjIntersense was already started."
                                    << std::endl << vjDEBUG_FLUSH;
         return 0;
     }
@@ -188,7 +188,7 @@ int Isense::startSampling()
     if(myThread != NULL)
     {
         vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-                                                << "vjIsense: startSampling called, when already sampling.\n"
+                                                << "vjIntersense: startSampling called, when already sampling.\n"
                                                 << vjDEBUG_FLUSH;
         vprASSERT(false);
     } else {
@@ -197,14 +197,14 @@ int Isense::startSampling()
    mTracker.open();
       if (this->isActive() == false) {
       vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-                  << "vjIsense: mTracker.open() failed to connect to tracker.\n"
+                  << "vjIntersense: mTracker.open() failed to connect to tracker.\n"
                   << vjDEBUG_FLUSH;
       return 0;
       }
 
 // Create a new thread to handle the control
-        vpr::ThreadMemberFunctor<Isense>* memberFunctor =
-            new vpr::ThreadMemberFunctor<Isense>(this, &Isense::controlLoop, NULL);
+        vpr::ThreadMemberFunctor<Intersense>* memberFunctor =
+            new vpr::ThreadMemberFunctor<Intersense>(this, &Intersense::controlLoop, NULL);
         vpr::Thread* new_thread;
         new_thread = new vpr::Thread(memberFunctor);
         myThread = new_thread;
@@ -221,7 +221,7 @@ int Isense::startSampling()
     return 0;
 }
 
-int Isense::sample()
+int Intersense::sample()
 {
     if (this->isActive() == false)
         return 0;
@@ -264,7 +264,7 @@ int Isense::sample()
    mDataTimes[index] = sampletime;
 
 // We start at the index of the first digital item (set in the config files)
-// and we copy the digital data from this station to the Isense device for range (min -> min+count-1)
+// and we copy the digital data from this station to the Intersense device for range (min -> min+count-1)
    min = stations[i].dig_min;
    num = min + stations[i].dig_num;
    if(stations[i].useDigital) {
@@ -299,14 +299,14 @@ int Isense::sample()
     return 1;
 }
 
-int Isense::stopSampling()
+int Intersense::stopSampling()
 {
     if (this->isActive() == false)
         return 0;
 
     if (myThread != NULL)
     {
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "vjIsense::stopSampling(): Stopping the intersense thread... " << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "vjIntersense::stopSampling(): Stopping the intersense thread... " << vjDEBUG_FLUSH;
 
    myThread->kill();
    delete myThread;
@@ -317,7 +317,7 @@ int Isense::stopSampling()
    if (this->isActive() == true)
    {
        vjDEBUG(vjDBG_INPUT_MGR,0)  << clrOutNORM(clrRED,"\nERROR:")
-               << "vjIsense::stopSampling(): Intersense tracker failed to stop.\n"
+               << "vjIntersense::stopSampling(): Intersense tracker failed to stop.\n"
                << vjDEBUG_FLUSH;
        return 0;
    }
@@ -330,7 +330,7 @@ int Isense::stopSampling()
 
 
 //d == station#
-Matrix* Isense::getPosData( int d )
+Matrix* Intersense::getPosData( int d )
 {
     if (this->isActive() == false)
         return NULL;
@@ -339,7 +339,7 @@ Matrix* Isense::getPosData( int d )
 }
 
 
-int Isense::getDigitalData( int d )
+int Intersense::getDigitalData( int d )
 {
     if(this->isActive() == false)
         return 0;
@@ -347,7 +347,7 @@ int Isense::getDigitalData( int d )
     return mInput[current].digital[d];
 }
 
-float Isense::getAnalogData( int d )
+float Intersense::getAnalogData( int d )
 {
     float newValue;
     if(this->isActive() == false)
@@ -356,7 +356,7 @@ float Isense::getAnalogData( int d )
     return newValue;
 }
 
-TimeStamp* Isense::getPosUpdateTime (int d)
+TimeStamp* Intersense::getPosUpdateTime (int d)
 {
     if (this->isActive() == false)
         return NULL;
@@ -364,7 +364,7 @@ TimeStamp* Isense::getPosUpdateTime (int d)
     return (&mDataTimes[getStationIndex(d,current)]);
 }
 
-void Isense::updateData()
+void Intersense::updateData()
 {
     if (this->isActive() == false)
    return;

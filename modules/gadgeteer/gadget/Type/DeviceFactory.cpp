@@ -45,7 +45,7 @@
 /* Physical devices */
 #ifndef WIN32
 #   include <vrj/Input/Devices/Ascension/Flock.h>
-#   include <vrj/Input/Devices/Intersense/Isense.h>
+#   include <vrj/Input/Devices/Intersense/Intersense.h>
 
 #   ifdef VJ_OS_Darwin
 #      include <vrj/Input/Devices/Keyboard/OSXKeyboard.h>
@@ -143,7 +143,7 @@ void DeviceFactory::hackLoadKnownDevices()
    
 #endif
    DeviceConstructor<Flock>* flock = new DeviceConstructor<Flock>;
-   DeviceConstructor<Isense>* intersense = new DeviceConstructor<Isense>;
+   DeviceConstructor<Intersense>* intersense = new DeviceConstructor<Intersense>;
    DeviceConstructor<MotionStar>* motion_star = new DeviceConstructor<MotionStar>;
 
    if( (NULL == flock)        ||
