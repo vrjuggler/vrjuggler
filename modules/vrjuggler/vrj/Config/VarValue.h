@@ -1,6 +1,6 @@
 
-#ifndef _VARVALUE_H_
-#define _VARVALUE_H_
+#ifndef _VJ_VARVALUE_H_
+#define _VJ_VARVALUE_H_
 
 #include <config.h>
 #include <iostream.h>
@@ -16,23 +16,23 @@ typedef enum {U_Feet, U_Inches, U_Meters, U_Centimeters, U_BadUnit}
  * internally as feet.
  */
 
-//: A vjVarValue is an object that knows it's own type even if we don't.
-//  More seriously, it's the value storage unit and value return type
-//  for a vjConfigChunk. <br>
-//  Currently, vjVarValues can be of types int, FLOAT, boolean, string
-//  (char*), distance(essentially FLOAT), as defined by the VarType
-//  enumeration in vjVarValue.h. <br> <br>
-//  When you get a vjVarValue, you can do just a few things with it: <br>
-//    1. assign it to a variable and then use it.  Note that there is
-//       type checking here: if you try assigning a string vjVarValue to
-//       an int, you'll get an error. <br>
-//    2. Cast it to the right type and use it. <br>  
-//    3. print it - vjVarValues have overloaded << so you can print them
-//       without having to cast to the right value. <br><br>
-//  Note that it's generally incumbent upon the client to know what
-//  kind of vjVarValue he's getting and what it can do.  Hey, you're
-//  the one who queryed the vjConfigChunk, not me. <br>
-//
+/** A vjVarValue is an object that knows it's own type even if we don't.
+ *  More seriously, it's the value storage unit and value return type
+ *  for a ConfigChunk.
+ *  Currently, vjVarValues can be of types int, FLOAT, boolean, string
+ *  (char*), distance(essentially FLOAT), as defined by the VarType
+ *  enumeration in vjVarValue.h.
+ *  When you get a vjVarValue, you can do just a few things with it:
+ *    1. assign it to a variable and then use it.  Note that there is
+ *       type checking here: if you try assigning a string vjVarValue to
+ *       an int, you'll get an error.
+ *    2. Cast it to the right type and use it.  
+ *    3. print it - vjVarValues have overloaded << so you can print them
+ *       without having to cast to the right value.
+ *  Note that it's generally incumbent upon the client to know what
+ *  kind of vjVarValue he's getting and what it can do.  Hey, you're
+ *  the one who queryed the ConfigChunk, not me.
+ */
 class vjVarValue {
 
   /* general question of using objects in here.
@@ -158,9 +158,13 @@ public:
    */
   operator char* () {
     if ((type == T_STRING) || (type == T_CHUNK)) {
-      char *s = new char[strlen(val.strval)+1];
-      strcpy (s, val.strval);
-      return s;
+      if (val.strval) {
+	char *s = new char[strlen(val.strval)+1];
+	strcpy (s, val.strval);
+	return s;
+      }
+      else
+	return NULL;
     }
     if (type != T_INVALID)
       cerr << "Type error in cast to char*!\n";

@@ -1,13 +1,13 @@
  
-// vjConfigChunkDB.h
-// Header for vjConfigChunkDB class
+// ConfigChunkDB.h
+// Header for ConfigChunkDB class
 //
 // Author: Christopher Just
 // V1 - October 1997 
  
 
-#ifndef _CONFIGCHUNKDB_H_
-#define _CONFIGCHUNKDB_H_
+#ifndef _VJ_CONFIGCHUNKDB_H_
+#define _VJ_CONFIGCHUNKDB_H_
 
 #include <config.h>
 #include <Config/vjConfigChunk.h>
@@ -15,8 +15,8 @@
 
 
 
-/** The vjConfigChunkDB is a general-purpose container for vjConfigChunks,
- *  with functionality for reading/writing files of vjConfigChunks and
+/** The vjConfigChunkDB is a general-purpose container for ConfigChunks,
+ *  with functionality for reading/writing files of ConfigChunks and
  *  querying for sets of configchunks with specific properties.
  */
 class vjConfigChunkDB {
@@ -37,13 +37,13 @@ public:
    */
   vjConfigChunkDB (vjChunkDescDB *d = NULL);
 
-  /** Destroys a vjConfigChunkDB, freeing all associated memory.  This
+  /** Destroys a ConfigChunkDB, freeing all associated memory.  This
    *  includes all the Chunks in the DB and their properties, but not
-   *  the vjChunkDescDB.
+   *  the ChunkDescDB.
    */
   ~vjConfigChunkDB ();
 
-  /** Sets the vjChunkDescDB that self should use for creating vjConfigChunks
+  /** Sets the vjChunkDescDB that self should use for creating ConfigChunks
    */
   void setChunkDescDB (vjChunkDescDB *d);
 
@@ -71,22 +71,22 @@ public:
 
   /** @name vjConfigChunkDB Query Functions.
    *
-   * getMatching() lets you search for sets of vjConfigChunks.
+   * getMatching() lets you search for sets of ConfigChunks.
    *
-   * In all these functions, the return value is a vector<vjConfigChunk*>* - 
+   * In all these functions, the return value is a vector<ConfigChunk*>* - 
    * that is, a pointer to a vector whose elements are pointers to 
-   * vjConfigChunks.  The memory for the vector itself must be delete()ed by
+   * ConfigChunks.  The memory for the vector itself must be delete()ed by
    * the calling client when you're done with it.  The memory of the
-   * individual vjConfigChunks should _not_.
+   * individual ConfigChunks should _not_.
    */
   //@{
-  /// Returns all vjConfigChunks of type mytypename.
+  /// Returns all ConfigChunks of type mytypename.
   vector<vjConfigChunk*>* getMatching (char *mytypename) {
     return getMatching ("type", mytypename);
   }
   /** Returns all vjConfigChunks whose named property has the given value.
    *  The two-argument versions of getMatching take a property and a
-   *  value as arguments, and returns all vjConfigChunks where the 
+   *  value as arguments, and returns all ConfigChunks where the 
    *  named property has the specified value.
    */
   vector<vjConfigChunk*>* getMatching (char *property, char *value);
@@ -101,7 +101,7 @@ public:
   bool erase ();
 
   /** @name Remove vjConfigChunks functions.
-   *  These functions remove the specified vjConfigChunks from self,
+   *  These functions remove the specified ConfigChunks from self,
    *  and free thier memory.  The forms of the functions are the
    *  same as for getMatching().
    */

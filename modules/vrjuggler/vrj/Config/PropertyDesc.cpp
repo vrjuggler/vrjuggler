@@ -1,9 +1,9 @@
 
-#include <Config/vjChunkDesc.h>
+#include "vjChunkDesc.h"
 
 
 
-vjPropertyDesc::vjPropertyDesc () : enumv() {
+vjPropertyDesc::vjPropertyDesc () : enumv(), valuelabels() {
   name = NULL;
   token = NULL;
   num = 0;
@@ -13,7 +13,7 @@ vjPropertyDesc::vjPropertyDesc () : enumv() {
 
 
 
-vjPropertyDesc::vjPropertyDesc (char *n, int i, VarType t, char* h):enumv() {
+vjPropertyDesc::vjPropertyDesc (char *n, int i, VarType t, char* h):enumv(), valuelabels () {
   name = new char[strlen(n)+1];
   strcpy (name, n);
   token = new char[strlen(n)+1];
@@ -27,8 +27,11 @@ vjPropertyDesc::vjPropertyDesc (char *n, int i, VarType t, char* h):enumv() {
 
 
 vjPropertyDesc::~vjPropertyDesc () {
-  for (int i = 0; i < enumv.size(); i++)
+  int i;
+  for (i = 0; i < enumv.size(); i++)
     delete enumv[i];
+  for (i = 0; i < valuelabels.size(); i++)
+    delete valuelabels[i];
   if (name)
     delete name;
   if (token)
@@ -40,9 +43,20 @@ vjPropertyDesc::~vjPropertyDesc () {
 
 
 ostream& operator << (ostream& out, vjPropertyDesc& self) {
-  out << self.name << " " << typeString(self.type) << " "
-      << self.num << " " << self.token;
+  out << self.token << " " << typeString(self.type) << " "
+      << self.num << " \"" << self.name << "\"";
   
+  if (self.valuelabels.size() > 0) {
+    vjEnumEntry *e;
+    out << " vj_valuelabels { ";
+    for (int i = 0; i < self.valuelabels.size(); i++) {
+      e = self.valuelabels[i];
+      out << '"' << e->getName();
+      out << "\" ";
+    }
+    out << "}";
+  }
+
   /* print enumeration only if we have values. */
   if (self.enumv.size() > 0) {
     vjEnumEntry *e;
@@ -72,26 +86,44 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
   /* format of line is: name type size { enums/chunktypes } token. */
   
   readString (in, str, 512);
-  if (self.name)
-    delete self.name;
-  size = strlen(str)+1;
-  if (!(self.name = new char[size]))
+  //cout << "read propertydesc token " << str << endl;
+  if (self.token)
+    delete self.token;
+  if (!(self.token = new char[strlen(str)+1]))
     cout << "Unable to allocate ram" << endl;
-  strcpy (self.name, str);
-  if (!strcasecmp (self.name, "end"))
+  strcpy (self.token, str);
+  if (!strcasecmp (self.token, "end"))
     return in;
   
   self.type = readType(in);
   in >> self.num;
   readString (in,str,512);
-  if (self.token)
-    delete self.token;
-  size = strlen(str)+1;
-  self.token = new char[size];
-  strcpy (self.token, str);
-  /* crude initial parsing of enumerations.
-   */
+  //cout << "read propertydesc name " << str << endl;
+  if (self.name)
+    delete self.name;
+  self.name = new char[strlen(str)+1];
+  strcpy (self.name, str);
+
   readString (in, str, 512);
+
+  /* parsing value labels, if there are any */
+  if (!strcasecmp (str, "vj_valuelabels")) {
+    cout << "parsing valuelabels" << endl;
+    readString (in,str,512);
+    if (strcasecmp (str, "{")) 
+      cerr << "ERROR: expected '{'" << endl;
+    int j, i = 0;
+    vjEnumEntry *e;
+    readString (in, str, 512);
+    while (strcasecmp (str, "}") && !in.eof()) {
+      e = new vjEnumEntry (str, 0);
+      self.valuelabels.push_back (e);
+      readString (in, str, 512);
+    }
+    readString (in, str, 512);
+  }
+
+  /* parsing enumerations, if there are any */
   if (!strcasecmp (str, "{")) {
     if (self.type == T_BOOL) {
       cout << "ERROR: " << self.name << ": Enumerations not supported for "
