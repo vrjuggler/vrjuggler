@@ -611,6 +611,14 @@ sub processFile ($$$$$$$$$$$$$$$) {
 
     SWITCH: {
 	if ( "$type" eq 'dir' ) {
+            # XXX: This is kind of a hack to deal with Perl thinking that a
+            # symlink pointing to a directory is actually a directory.
+            if ( -l "$name" ) {
+                warn "WARNING: Symlink exists where directory expected (",
+                     printDirStack(), ") -- removing link\n";
+                unlink("$name");
+            }
+
 	    if ( ! -d "$name" ) {
 		print "missing: ";
 		printDirStack();
