@@ -144,7 +144,10 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 	    col.generateAverages(preskip, postskip);
 	    for (int i = 0; i < num; i++) {
 		double avg = col.getAverageForPhase(i);
-		avg_labels[i].setText(padFloat(avg/1000.0));
+		if (avg_labels[i] != null)
+		    avg_labels[i].setText(padFloat(avg/1000.0));
+		else
+		    ; // we should probably add something in this case...
 	    }
 	}
     }
@@ -179,6 +182,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 
     public void addDataPanelElem (PerfDataCollector col) {
 	DataPanelElem dpe = new DataPanelElem (col, data_panel, gblayout, gbc);
+	datapanel_elems.addElement(dpe);
     }
 
 
@@ -270,30 +274,6 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 	max_samples_box.addItem ("<Infinite>");
 	max_samples_box.setSelectedIndex(1);
 	max_samples_box.addActionListener (this);
-
-//  	collection_choice = new JComboBox();
-//  	display_choice = new JComboBox();
-
-//  	display_choice.addItem ("Averages");
-//  	display_choice.addItem ("Averages with discrepencies");
-
-//  	collection_choice.addActionListener (this);
-//  	display_choice.addActionListener (this);
-//  	ntoppanel.add (collection_choice);
-//  	ntoppanel.add (display_choice);
-	
-
-//  	JPanel nargpanel = new JPanel();
-//  	nargpanel.setLayout (new GridLayout (4,6,5,5));
-//  	npanel.add (nargpanel);
-
-//  	nargpanel.add (new JLabel ("Preskip"));
-//  	nargpanel.add (preskip_box = new JTextField ("   " + preskip));
-//  	preskip_box.addActionListener (this);
-
-//  	nargpanel.add (new JLabel ("Postskip"));
-//  	nargpanel.add (postskip_box = new JTextField ("   " + postskip));
-//  	postskip_box.addActionListener (this);
 
 	display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
