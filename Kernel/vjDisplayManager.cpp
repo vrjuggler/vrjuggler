@@ -272,8 +272,8 @@ bool vjDisplayManager::isMemberDisplay(vjDisplay* disp)
    if(i != mActiveDisplays.end())
       return true;
 
-   i = std::find(mInactiveDisplays.begin(),mActiveDisplays.end(),disp);
-   if(i != mActiveDisplays.end())
+   i = std::find(mInactiveDisplays.begin(),mInactiveDisplays.end(),disp);
+   if(i != mInactiveDisplays.end())
       return true;
 
    return false;  // Didn't find any
