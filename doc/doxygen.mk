@@ -36,6 +36,12 @@ LATEX_OUTPUT_DIR?=	latex
 MAN_OUTPUT_DIR?=	man
 RTF_OUTPUT_DIR?=	rtf
 
+# Extract the Doxygen version information.
+DOXYGEN_VERSION=	$(shell $(DOXYGEN) --version)
+DOXYGEN_VERSION_NUMS=	$(subst ., , $(DOXYGEN_VERSION))
+DOXYGEN_VERSION_MAJOR=	$(word 1, $(DOXYGEN_VERSION_NUMS))
+DOXYGEN_VERSION_MINOR=	$(word 2, $(DOXYGEN_VERSION_NUMS))
+
 RM=		rm -f
 
 html: $(HTML_DOXYGEN_FILE)
@@ -50,8 +56,14 @@ latex: $(LATEX_DOXYGEN_FILE)
 ps: $(LATEX_OUTPUT_DIR)
 	$(MAKE) -C $(LATEX_OUTPUT_DIR) ps
 
+# Doxygen 1.2 uses the target name 'pdf' to generate a PDF manual from LaTeX.
+# Doxygen 1.3 and newer use the target name 'refman.pdf'.
 pdf: $(LATEX_OUTPUT_DIR)
+ifeq ($(DOXYGEN_VERSION_MINOR), 2)
 	$(MAKE) -C $(LATEX_OUTPUT_DIR) pdf
+else
+	$(MAKE) -C $(LATEX_OUTPUT_DIR) refman.pdf
+endif
 
 rtf:
 	$(DOXYGEN) $(RTF_DOXYGEN_FILE)
