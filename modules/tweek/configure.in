@@ -110,7 +110,7 @@ AC_ARG_WITH(python,
             python_root="$withval", python_root='none')
 
 AC_ARG_WITH(python-orb,
-            [  --with-python-orb=<NAME> Name of Python ORB to use      [default=omniORB3]
+            [  --with-python-orb=<NAME> Name of Python ORB to use      [default=omniORBpy]
                           Allowed values are:
                             omniORBpy],
             python_orb_name="$withval", python_orb_name='omniORBpy')
@@ -158,10 +158,6 @@ DPP_ABI_SETUP
 # Define macros and helpers useful when working in a Win32/DOS-based
 # environment.
 DPP_WIN32_SETUP
-
-# We use AC_CANONICAL SYSTEM so that we can find out information about the
-# build, target and host platforms rather than only the host.
-AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
 
 # Templates for Autoheader.

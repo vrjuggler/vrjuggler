@@ -96,10 +96,6 @@ DPP_ABI_SETUP
 # System-dependent stuff.
 # -----------------------------------------------------------------------------
 DPP_WIN32_SETUP
-
-# We use AC_CANONICAL SYSTEM so that we can find out information about the
-# build, target and host platforms rather than only the host.
-AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
 
 # Depending on the target operating system, set various command options and
