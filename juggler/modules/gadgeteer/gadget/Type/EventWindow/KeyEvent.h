@@ -56,10 +56,10 @@ public:
    /**
     * Initializes data members.
     *
+    * @param type       The type of this event (either key press or key
+    *                   release).
     * @param key        The platform-independent value of the key that was
     *                   pressed or released.
-    * @param isKeyPress Flag indicating whether this is a key press event
-    *                   (true) or a key release event (false).
     * @param mask       The mask of modifiers pressed in addition to key.
     *                   This should be constructed using the bitwise OR of
     *                   gadget::ModifierMask values.

@@ -53,10 +53,10 @@ public:
    {;}
 
    /**
-    * Create a SyncRequest packet to request syncronization
+    * Create a SyncRequest packet to request syncronization.
     *
-    * @param host_name -Hostname of the node requesting syncronization.
-    * @param port -Listening port of the requesting machine.
+    * @param host_name Hostname of the node requesting syncronization.
+    * @param port      Listening port of the requesting machine.
     */
    SyncRequest(std::string& host_name, vpr::Uint16& port);
 
@@ -96,10 +96,7 @@ private:
    std::string mHostname;  /**< Hostname of the node requesting syncronization. */
    vpr::Uint16 mPort;      /**< Listening port of the requesting machine. */
 };
+
 }
 
 #endif
-
-
-
-

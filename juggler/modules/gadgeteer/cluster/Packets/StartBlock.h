@@ -52,10 +52,12 @@ public:
    {;}
 
    /**
-    * Create a StartBlock packet to signal that the local node is ready to start.
+    * Create a StartBlock packet to signal that the local node is ready to
+    * start.
     *
-    * @param plugin_guid -GUID of the ClusterPlugin that should handle this packet.
-    * @param frame_number -The current number of frames that have been drawn.
+    * @param plugin_id    GUID of the ClusterPlugin that should handle this
+    *                     packet.
+    * @param frame_number The current number of frames that have been drawn.
     */
    StartBlock(const vpr::GUID& plugin_id, const vpr::Uint32& frame_number);
    

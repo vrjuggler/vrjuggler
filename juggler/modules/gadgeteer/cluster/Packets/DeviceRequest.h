@@ -55,8 +55,9 @@ public:
    /**
     * Create a DeviceRequest packet to request a remote device.
     *
-    * @param plugin_guid -GUID of the ClusterPlugin that should handle this packet.
-    * @param device_name -Name of the remote device being requested.    
+    * @param plugin_guid GUID of the ClusterPlugin that should handle this
+    *                    packet.
+    * @param device_name Name of the remote device being requested.    
     */
    DeviceRequest(const vpr::GUID& plugin_guid, const std::string& device_name);
    

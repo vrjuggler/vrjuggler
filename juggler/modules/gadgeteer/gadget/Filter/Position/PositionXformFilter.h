@@ -46,46 +46,45 @@
 
 namespace gadget
 {
-/** PositionFilter is the abstract base class that all position filters derive from
-*
-* compute Sensor = preTrans*preRot*(Scale*Sensor)*postTrans*postRot
-*/
+
 class GADGET_CLASS_API PositionXformFilter : public PositionFilter
 {
 public:
-   /** Constructor */
+   /** Constructor. */
    PositionXformFilter()
       : mScaleValue(0.0f)
    {;}
 
-   /** Destructor */
+   /** Destructor. */
    virtual ~PositionXformFilter()
    {;}
 
-   /** Configuration for the filter
-   * @return Returns truee if configured correctly
-   */
+   /**
+    * Configuration for the filter.
+    * @return Returns truee if configured correctly.
+    */
    virtual bool config(jccl::ConfigElementPtr e);
 
-   /** Apply the pos filter.
-   * Apply the filter to the posSample in place.
-   * @param posSample - The sample to modify in place
-   * @post posSample is updated with a modified version.
-   */
+   /**
+    * Applies the position filter to the given sample in place.
+    * @post posSample is updated with a modified version.
+    * @param posSample The sample to modify in place.
+    */
    virtual void apply(std::vector< PositionData >& posSample);
 
    static std::string getElementType();
 
 protected:
-   /** Given Sensor pos xform in sensor coordinate system: Sensor
-   * world - world coordindate system that the transformed sensor "ends up in"
-   * Sensor' - Modified sensor coordinate system
-   *
-   * preXform is the transform from world to sensor (world_M_sensor)
-   * postXform is the transform from sensor to sensor' (sensor_M_newsensor)
-   *
-   * compute Sensor = preTrans*preRot*(Scale*Sensor)*postTrans*postRot
-   */
+   /**
+    * Given Sensor position transform in sensor coordinate system: Sensor
+    * world - world coordindate system that the transformed sensor "ends up in"
+    * Sensor' - Modified sensor coordinate system.
+    *
+    * preXform is the transform from world to sensor (world_M_sensor).
+    * postXform is the transform from sensor to sensor' (sensor_M_newsensor).
+    *
+    * compute Sensor = preTrans*preRot*(Scale*Sensor)*postTrans*postRot
+    */
    gmtl::Matrix44f mPreXform;    /**< pre transformation */
    gmtl::Matrix44f mPostXform;   /**< post transformation */
    float           mScaleValue;     /**< The value to use for scaling */
@@ -95,4 +94,3 @@ protected:
 } // End of gadget namespace
 
 #endif
-

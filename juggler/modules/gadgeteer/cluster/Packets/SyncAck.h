@@ -53,11 +53,13 @@ public:
    {;}
 
    /**
-    * Create a ApplicationDataAck packet to acknowledge a ApplicationDataRequest.
+    * Create a ApplicationDataAck packet to acknowledge a
+    * ApplicationDataRequest.
     *
-    * @param host_name -The hostname of the node acknowledging the SyncRequest.
-    * @param port -The port of the node acknowledging the SyncRequest.
-    * @param ack -Boolean determining if this is a positive(ACK) or a negative(NACK) responce.
+    * @param host_name The hostname of the node acknowledging the SyncRequest.
+    * @param port      The port of the node acknowledging the SyncRequest.
+    * @param ack       Boolean determining if this is a positive (ACK) or a
+    *                  negative (NACK) responce.
     */
    SyncAck(const std::string& host_name, const vpr::Uint16& port, const bool ack);
 

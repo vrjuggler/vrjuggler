@@ -54,9 +54,11 @@ public:
    /**
     * Create a DataPacket to send raw data accross the network.
     *
-    * @param plugin_guid -GUID of the ClusterPlugin that should handle this packet.
-    * @param id -GUID of the object that we are acknowledging.
-    * @param data -Pointer to the raw data that we want to send across the network
+    * @param plugin_id GUID of the ClusterPlugin that should handle this
+    *                  packet.
+    * @param object_id GUID of the object that we are acknowledging.
+    * @param data      Pointer to the raw data that we want to send across
+    *                  the network
     */
    DataPacket(const vpr::GUID& plugin_id, const vpr::GUID& object_id, std::vector<vpr::Uint8>* data);
    

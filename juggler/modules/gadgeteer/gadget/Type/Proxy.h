@@ -158,7 +158,8 @@ namespace gadget
        * @post The proxy now references the given device.  The device name we
        *       are proxying is set to devPtr->getInstanceName()
        *
-       * @param devPtr Pointer to the device.
+       * @param devName The name of the device at which we are pointing.
+       * @param devPtr  Pointer to the device.
        */
       virtual void set(std::string devName, DEV_TYPE* devPtr)
       {

@@ -55,8 +55,8 @@ public:
    /**
     * Create a ConnectionRequest packet to request a remote connection.
     *
-    * @param host_name - Hostname of the machine requesting the connection.
-    * @param port -Port that the requesting machine is listening on.
+    * @param host_name Hostname of the machine requesting the connection.
+    * @param port      Port that the requesting machine is listening on.
     */
    ConnectionRequest(std::string host_name, vpr::Uint16 port);
    

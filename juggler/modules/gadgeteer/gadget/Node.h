@@ -61,29 +61,30 @@ public:
    };
    
    /**
-    * Create a Node with the given attributes
+    * Create a Node with the given attributes.
     *
     * @param name          Name of the Cluster Node from the config file
     * @param host_name     Hostname of the remote machine
     * @param port          The scoket port that we should connect to
     * @param socket_stream SocketStream used to communicate with remote machine
+    * @param net_mgr       The network manager.
     */
    Node(const std::string& name, const std::string& host_name, 
                const vpr::Uint16& port, vpr::SocketStream* socket_stream,
                AbstractNetworkManager* net_mgr);
 
    /**
-    * Shutdown the update thread and close the SocketStream
+    * Shutdown the update thread and close the SocketStream.
     */
    virtual ~Node();
    
    /**
-    * Display all relevant information about Node
+    * Display all relevant information about Node.
     */
    void debugDump(int debug_level = vprDBG_CONFIG_LVL);
    
    /**
-    * Display Bandwidth statistics for the given SocketStream
+    * Display Bandwidth statistics for the given SocketStream.
     */
    virtual void printStats(int debug_level = 1);
 
@@ -174,29 +175,29 @@ public:
    
 public:
    /**
-    * Start the update thread for this node
+    * Start the update thread for this node.
     */
    void start();
 
    /**
-    * Control loop for updating this thread
+    * Control loop for updating this thread.
     */
    void controlLoop(void* nullParam);
 
    /**
     * Signal a semaphore to let the update thread fall into
-    * the code to update the UserData structures
+    * the code to update the UserData structures.
     */
    void signalUpdate();
          
    /**
     * Signal a semaphore to signal that we are done either
-    * updating the UserData or DeviceData
+    * updating the UserData or DeviceData.
     */
    void sync();
    
    /**
-    * Kill the update thread
+    * Kill the update thread.
     */
    void shutdown();
 
@@ -220,7 +221,7 @@ public:
    
 protected:
    /**
-    * Update this cluster node
+    * Update this cluster node.
     */
    void update();
 

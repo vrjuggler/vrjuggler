@@ -58,6 +58,8 @@ public:
    /**
     * Initializes data members.
     *
+    * @param type          The type of this event (a mouse button press, a
+    *                      mouse button release, or a mouse move).
     * @param button        The button that generated the event.
     * @param x             The X coordinate of the mouse within the window.
     * @param y             The Y coordinate of the mouse within the window.
