@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-11-2004 patrickh    Updated for JDOM 1.0.
+                        NEW VERSION 1.1.156
 Aug-04-2004 dshipton    Added in PerformanceMediator into Juggler kernel
                         loop.
                         NEW VERSION 1.1.155
