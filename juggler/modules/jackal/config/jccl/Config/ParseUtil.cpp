@@ -37,6 +37,7 @@
 #include <jccl/Util/Debug.h>
 #include <jccl/Config/ConfigTokens.h>
 #include <vpr/System.h>
+#include <vpr/Util/FileUtils.h>
 
 namespace jccl {
    
@@ -164,50 +165,6 @@ bool vjstrncmp (const std::string& a, const std::string& b, int _n) {
 }
 
 
-/** filename handling routines **/
-
-//: Returns a copy of s with all environment variable names replaced
-//+ with their values.
-std::string replaceEnvVars (const std::string& s) {
-    unsigned int i, j;
-    int lastpos = 0;
-    std::string result = "";
-    for (i = 0; i < s.length(); i++) {
-        if (s[i] == '$') {
-            //process an env var
-            result += std::string(s, lastpos, i - lastpos);
-            i++; // skip $
-            if (s[i] == '{') {
-                for (j = i; j < s.length(); j++)
-                    if (s[j] == '}')
-                        break;
-                std::string var(s,i+1,j-i-1);
-                //cout << "searching for env var '" << var.c_str() << '\'' << endl;
-		std::string res;
-		vpr::System::getenv (var, res);
-                result += res;
-                i = j+1;
-                lastpos = i;
-            }
-            else {
-                for (j = i; j < s.length(); j++)
-                    if (s[j] == '/' || s[j] == '\\')
-                        break;
-                std::string var(s,i,j-i);
-                //cout << "searching for env var '" << var.c_str() << '\'' << endl;
-		std::string res;
-		vpr::System::getenv (var, res);
-                result += res;
-                i = j;
-                lastpos = i;
-            }
-        }
-    }
-    result += std::string(s, lastpos, s.length() - lastpos);
-    return result;
-}
-
-
 
 //: is n an absolute path name?
 bool isAbsolutePathName (const std::string& n) {
@@ -223,7 +180,7 @@ bool isAbsolutePathName (const std::string& n) {
 
 std::string demangleFileName (const std::string& n, std::string parentfile) {
 
-    std::string fname = replaceEnvVars (n);
+    std::string fname = vpr::replaceEnvVars (n);
 
     if (!isAbsolutePathName(fname)) {
         // it's a relative pathname... so we have to add in the path part
