@@ -40,6 +40,7 @@
 #include <gadget/Type/Glove.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Digital.h>
+#include <gadget/Type/InputMixer.h>
 #include <gadget/Devices/5DT/DataGloveStandalone.h>
 
 namespace gadget
@@ -56,7 +57,9 @@ namespace gadget
  *
  * @date 4-25-02
  */
-class DataGlove : virtual public Input, public Glove, public Analog
+
+//class DataGlove : virtual public Input, public Glove, public Analog
+class DataGlove : public InputMixer<Input,Analog>
 {
 public:
    /** Construct */

@@ -38,7 +38,7 @@ namespace gadget
 {
 
 /** Default Constructor */
-SimDigital::SimDigital() : Digital(), SimInput()
+SimDigital::SimDigital()
 {
    vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::SimDigital()\n"<< vprDEBUG_FLUSH;
 }

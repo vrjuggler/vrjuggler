@@ -44,7 +44,7 @@ namespace gadget
 
 bool DataGlove::config(jccl::ConfigChunkPtr c)
 {
-   if(! (Input::config(c) && Glove::config(c) ))
+   if(! (Input::config(c) /*&& Glove::config(c)*/ ))
       return false;
     vprASSERT(mThread == NULL);      // This should have been set by Input(c)
     mGlove = new DataGloveStandalone();

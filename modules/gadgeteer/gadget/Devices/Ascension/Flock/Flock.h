@@ -76,6 +76,8 @@ namespace gadget
  *
  * @see gadget::Position
  */
+
+//class Flock : public Input, public Position
 class Flock : public InputMixer<Input,Position>
 {
 public:

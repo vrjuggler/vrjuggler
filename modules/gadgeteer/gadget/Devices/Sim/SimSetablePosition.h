@@ -36,13 +36,13 @@
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
+#include <gadget/Type/InputMixer.h>
 #include <gadget/Type/PositionInterface.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
 
 namespace gadget
 {
-
 /**
  * Simulated positional device whose data is set by the user (in postFrame).
  *
@@ -52,7 +52,8 @@ namespace gadget
  * set the data.  This prevents computers connected to the remote 
  * input manager from having different copies of data for very long.
  */
-class SimSetablePosition : public Input, public Position
+//class SimSetablePosition : public Input, public Position
+class SimSetablePosition : public InputMixer<Input,Position>
 {
 public:
    SimSetablePosition() {;}

@@ -37,6 +37,7 @@
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Position.h>
+#include <gadget/Type/InputMixer.h>
 #include <gadget/Devices/Open/DTK/DTKMemorySegment.h>
 
 namespace gadget
@@ -47,8 +48,9 @@ typedef DTKMemorySegment* DTKMemorySegmentHandle;
 
 class dtkClient;
 
-class GADGET_CLASS_API DTK : public Input, public Position, public Digital,
-                           public Analog
+//class GADGET_CLASS_API DTK : public Input, public Position, public Digital,
+//                           public Analog
+class GADGET_CLASS_API_DTK : public InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
 {
 public:
     // ------------------------------------------------------------------------

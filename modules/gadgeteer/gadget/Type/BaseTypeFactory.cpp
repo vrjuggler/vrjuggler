@@ -109,11 +109,11 @@ void BaseTypeFactory::hackLoadKnownDevices()
 			=new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Position>::MixedPlaceholderType >;
 	
     // SimInput Input Digital
-	BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Digital>::MixedPlaceholderType >* siminput_input_position
+	BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Digital>::MixedPlaceholderType >* siminput_input_digital
 			=new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Digital>::MixedPlaceholderType >;
 
     // SimInput Input Analog
-	BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >* siminput_input_position
+	BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >* siminput_input_analog
 			=new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >;
 
 
@@ -127,7 +127,9 @@ void BaseTypeFactory::hackLoadKnownDevices()
 		 (NULL == input_digital_position) ||
 		 (NULL == input_analog_position) ||
 		 (NULL == input_digital_analog_position) ||
-         (NULL == siminput_input_position) )
+         (NULL == siminput_input_position) ||
+         (NULL == siminput_input_digital) ||
+         (NULL == siminput_input_analog) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }

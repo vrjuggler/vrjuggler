@@ -69,6 +69,9 @@
 //
 //#define DEBUG
 
+namespace gadget
+{
+
 int ThreeDMouse::startSampling()
 {
   if (mThreadID == NULL) {
@@ -488,4 +491,6 @@ void ThreeDMouse::printBin (char a)
 
   for (i=7; i>=0; i--)
     printf ("%c", (a&(1<<i)) ? '1' : '0');
+}
+
 }

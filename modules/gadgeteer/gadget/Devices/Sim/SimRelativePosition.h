@@ -37,12 +37,12 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/InputMixer.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
 
 namespace gadget
 {
-
 /**
  * Simulated a position device by making.
  * An existing device behave relative to another one.
@@ -54,7 +54,8 @@ namespace gadget
  *
  * This class should not be used directly by the user.
  */
-class SimRelativePosition : public Input, public Position
+//class SimRelativePosition : public Input, public Position
+class SimRelativePosition : public InputMixer<Input,Position>
 {
 public:
    SimRelativePosition() {;}
