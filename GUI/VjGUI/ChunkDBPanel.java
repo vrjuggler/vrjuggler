@@ -213,7 +213,8 @@ public class ChunkDBPanel extends JPanel
 		current_treemodel.inuse = false;   // possible sync bug?
 	    }
 	    current_treemodel = dbt;
-	    db_combobox.setSelectedItem (dbt.getName());
+	    if (!db_combobox.getSelectedItem().equals(dbt.getName()))
+		db_combobox.setSelectedItem (dbt.getName());
 	    scroll_pane.setViewportView(dbt.tree);
 	    dbt.tree.addMouseListener(this);
 	    validate();
@@ -222,11 +223,18 @@ public class ChunkDBPanel extends JPanel
 	else {
 	    db_combobox.setSelectedItem (current_treemodel.getName());
 	}
+
+	if (current_treemodel == empty_treemodel)
+	    setButtonsEnabled(false);
+	else
+	    setButtonsEnabled(true);
     }
 
 
 
     public void addChunks (ConfigChunkDB newdb) {
+	if (current_treemodel == empty_treemodel)
+	    return;
 	for (int i = 0; i < newdb.size(); i++)
 	    current_treemodel.insertNode ((ConfigChunk)newdb.elementAt(i));
     }
@@ -247,6 +255,18 @@ public class ChunkDBPanel extends JPanel
 	}
     }
 
+
+
+    private void setButtonsEnabled (boolean b) {
+	save_button.setEnabled(b);
+	insert_button.setEnabled(b);
+	remove_button.setEnabled(b);
+	send_button.setEnabled(b);
+	send_all_button.setEnabled(b);
+	close_button.setEnabled(b);
+	duplicate_button.setEnabled(b);
+	checkdepend_button.setEnabled(b);
+    }
 
 
     public void actionPerformed (ActionEvent e) {
