@@ -16,18 +16,21 @@ top_srcdir	= @top_srcdir@
 PERCEPS_DIR	= ${srcdir}
 PERCEPS		= ${PERCEPS_DIR}/bin/perceps
 
-DIRS		= ${addprefix ${top_srcdir}/, ${SUBDIRS}}
 FILTERS		= ${PERCEPS_DIR}/filters
 JAVA_CLASS	= ${PERCEPS_DIR}/classes
 OUT_INT		= ./internal_doc
 OUT_PUB		= ./public_doc
 TEMPLATES_INT	= ${PERCEPS_DIR}/templates/internal
 TEMPLATES_PUB	= ${PERCEPS_DIR}/templates/public
-SRCDIR = @srcdir@
-SRC = $(SRCDIR)/Sync $(SRCDIR)/Config $(SRCDIR)/Input $(SRCDIR)/Sound \
-      $(SRCDIR)/Kernel $(SRCDIR)/SharedMem $(SRCDIR)/Threads \
-      $(SRCDIR)/Environment $(SRCDIR)/Math $(SRCDIR)/Performance \
-      $(SRCDIR)/Utils
+
+# If ${SUBDIRS} is not defined yet, include the Doc subdirs.mk file to get a
+# static list of subdirectories.
+ifndef SUBDIRS
+include ${VJROOT_ABS}/Doc/subdirs.mk
+DIRS		= ${SUBDIRS}
+else
+DIRS		= ${addprefix ${top_srcdir}/, ${SUBDIRS}}
+endif
 
 # -----------------------------------------------------------------------------
 # Documentation generation targets.
