@@ -59,9 +59,9 @@ namespace vpr {
 class VPR_CLASS_API BlockIO {
 public:
     enum _open_mode {
-        READ_ONLY,        // Open read-only
-        WRITE_ONLY,       // Open write-only
-        READ_WRITE        // Open read/write
+        READ_ONLY,        /**< Open read-only */
+        WRITE_ONLY,       /**< Open write-only */
+        READ_WRITE        /**< Open read/write */
     };
 
     /**
@@ -827,31 +827,20 @@ protected:
     virtual Status write_i(const void* buffer, const size_t length,
                            ssize_t& bytes_written,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
+    /// The name of the I/O device.
+    std::string m_name; 
 
-    /**
-     * The name of the I/O device.
-     */
-    std::string m_name;
+    /// The open mode of the device
+    _open_mode m_open_mode;
 
-    /**
-     * The open mode of the device
-     */
-    _open_mode  m_open_mode;
+    /// Flag telling if blocking is enabled when opening the device
+    bool m_open_blocking;
 
-    /**
-     * Flag telling if blocking is enabled when opening the device
-     */
-    bool        m_open_blocking;
+    /// Flag telling if the device is open
+    bool m_open;
 
-    /**
-     * Flag telling if the device is open
-     */
-    bool        m_open;
-
-    /**
-     * Flag telling if blocking for reads and writes is enabled
-     */
-    bool        m_blocking;
+    /// Flag telling if blocking for reads and writes is enabled
+    bool m_blocking;
 };
 
 }; // End of vpr namespace
