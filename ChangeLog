@@ -1,6 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
-Aug-30-2000 allenb    Added ability to specify FOV and aspect ratio in sim windows.
+Sep-15-2000 patrick   Fixed positioning of keyboard input windows on Win32
+Aug-30-2000 allenb    Added ability to specify FOV and aspect ratio in sim
+                      windows.
 Aug-29-2000 allenb    Fixed bug with Performer calling app traversals
                       once per channel.
 Aug-21-2000 allenb    Added initial trackd driver support
