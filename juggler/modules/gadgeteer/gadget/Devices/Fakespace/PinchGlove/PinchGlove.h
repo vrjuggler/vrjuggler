@@ -45,7 +45,6 @@
 #include <Input/vjGlove/vjHand.h>
 
 
-
 //: Fakespace Pinchglove Device
 //!PUBLIC_API:
 class vjPinchGlove : public vjGlove, public vjDigital
