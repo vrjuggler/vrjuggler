@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-28-2003 patrickh    Updated to Gadgeteer 0.10.0 API.
+                        NEW VERSION: 1.1.140
 Apr-14-2003 patrickh    Changed the return type of the member function
                         vrj::DrawSimInterface::config() to be bool.
                         NEW VERSION: 1.1.139

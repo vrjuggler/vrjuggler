@@ -42,7 +42,7 @@
 #include <GL/glx.h>
 
 #include <vrj/Draw/OGL/GlWindow.h>
-#include <gadget/Devices/Keyboard/KeyboardXWin.h>
+#include <gadget/Devices/EventWindow/EventWindowXWin.h>
 
 
 namespace vrj
@@ -65,7 +65,7 @@ typedef struct
  * A GLX specific glWindow.
  * Has all information specific to dealing with a GLX window in OpenGL.
  */
-class GlWindowXWin: public vrj::GlWindow, public gadget::KeyboardXWin
+class GlWindowXWin: public vrj::GlWindow, public gadget::EventWindowXWin
 {
 public:
    GlWindowXWin();
@@ -77,7 +77,7 @@ public:
    bool makeCurrent();
 
    /** Check events
-   * @post If (areKeyboardDevice), checks the x-events and processes them
+   * @post If (areEventSource), checks the x-events and processes them
    */
    virtual void checkEvents();
 
@@ -100,7 +100,7 @@ protected:
 
    /**
     * Called with any XEvents to process from X-win keyboard.
-    * Called from seperate process (keyboard device update).
+    * Called from seperate process (event window device update).
     */
    virtual void processEvent(::XEvent event);
 
@@ -111,7 +111,7 @@ private:
    ::Window       mXWindow;
    std::string    mWindowName;
    int            mPipe;
-   std::string    mXDisplayName;       /**<  Name of the x display to use */   
+   std::string    mXDisplayName;       /**<  Name of the x display to use */
 };
 
 

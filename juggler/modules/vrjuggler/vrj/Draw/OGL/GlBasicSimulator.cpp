@@ -112,17 +112,17 @@ void GlBasicSimulator::draw(const float scaleFactor)
 
 
 /**
- * Sets the keyboard the simulator can use to get input from the user.
+ * Sets the event window the simulator can use to get input from the user.
  */
-void GlBasicSimulator::setKeyboard(gadget::KeyboardInterface kbInterface)
+void GlBasicSimulator::setEventWindow(gadget::EventWindowInterface ewInterface)
 {;}
 
 
-void GlBasicSimulator::updateProjectionData(const float positionScale, 
+void GlBasicSimulator::updateProjectionData(const float positionScale,
                                      Projection* leftProj, Projection* rightProj)
 {
    updateInternalData(positionScale);
-   
+
    gmtl::Matrix44f camera_pos = getCameraPos();
    gmtl::Vec3f camera_trans = gmtl::makeTrans<gmtl::Vec3f>(camera_pos);
 
@@ -157,7 +157,7 @@ void GlBasicSimulator::updateInternalData(float positionScale)
    mCameraPos = mCamera->getData(positionScale);
    gmtl::invert(mCameraPos);
 }
-   
+
 // Draw any objects that we need to display in the scene
 // from the system.  (i.e. Gloves, etc)
 // XXX: Performance Critical problems here

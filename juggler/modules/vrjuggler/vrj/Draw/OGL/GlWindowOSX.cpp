@@ -50,7 +50,7 @@ AGLContext GlWindowOSX::aglShareContext = NULL;
 
 GlWindowOSX::GlWindowOSX():GlWindow()
 {
-    gadget::KeyboardOSX::KeyboardOSX();    
+    gadget::EventWindowOSX::EventWindowOSX();
 }
 
 GlWindowOSX::~GlWindowOSX() {
@@ -62,7 +62,7 @@ void GlWindowOSX::swapBuffers() {
     if(aglContext)
     {
         aglSwapBuffers (aglContext);
-        
+
         /* This code is supposed to change the size of the window
         ** it works but it is a wast to check to size if the window is a
         ** different size every frame.  If we want to implement this feature
@@ -83,13 +83,13 @@ void GlWindowOSX::swapBuffers() {
                 glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
                 glClear (GL_COLOR_BUFFER_BIT);
                 aglSwapBuffers (aglContext);
-                    
+
                 glViewport (0, 0, rectPort.right - rectPort.left, rectPort.bottom - rectPort.top);
             }
         }
         */
     }
-   
+
 }
 
 int GlWindowOSX::open() {
@@ -101,8 +101,8 @@ int GlWindowOSX::open() {
     //I'll need to check to see how this works with multiple monitors
     CGRect bounds;
     bounds = CGDisplayBounds(kCGDirectMainDisplay);
-    
-    
+
+
     //set the window size and location with the height adjusted
     SetRect(&rectWin, origin_x , bounds.size.height - origin_y - window_height,
                             origin_x + window_width, bounds.size.height - origin_y);
@@ -121,24 +121,20 @@ int GlWindowOSX::open() {
     SetWindowTitleWithCFString(gpWindow,window_title);
     InstallStandardEventHandler(GetWindowEventTarget(gpWindow));
     ChangeWindowAttributes(gpWindow, NULL, kWindowCloseBoxAttribute );
-    
-    //This is the a keyboard window
-    if (mAreKeyboardDevice == true)
+
+    //This is the an event source window.
+    if (mAreEventSource == true)
     {
-        std::cout << "YYY Should become a keyboard window" << std::endl;
-        
-        gadget::KeyboardOSX::mWindow = gpWindow;
-        
-        
-        
+        std::cout << "YYY Should become an event source window" << std::endl;
+
+        gadget::EventWindowOSX::mWindow = gpWindow;
         gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
-        
         vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
-        
+
         startSampling();
     }
-        
-    
+
+
     ShowWindow (gpWindow);
     SetPort ( (GrafPtr) GetWindowPort(gpWindow) );
     glInfo.fAcceleratedMust = false;    // must renderer be accelerated?
@@ -197,7 +193,7 @@ bool GlWindowOSX::makeCurrent() {
 
 void GlWindowOSX::config(vrj::Display* _display)
 {
-   
+
    std::cout << "YYY Start config in GLwindow" << std::endl;
    vprDEBUG(vrjDBG_DRAW_MGR,0) << "vjGlWindowOSX::config(Display* _display)" << std::endl << vprDEBUG_FLUSH;
 
@@ -211,36 +207,36 @@ void GlWindowOSX::config(vrj::Display* _display)
    vprASSERT(mPipe >= 0);
 
    window_title = CFStringCreateWithCString(NULL, _display->getName().c_str(), kCFStringEncodingMacRoman);
-   
-   mAreKeyboardDevice = displayChunk->getProperty<bool>("act_as_keyboard_device");
-   // if should have keyboard device
-   if ( true == mAreKeyboardDevice )
+
+   mAreEventSource = displayChunk->getProperty<bool>("act_as_event_source");
+   // if should act as an event source
+   if ( true == mAreEventSource )
    {
-      std::cout << "YYY keyboard config in GLwindow" << std::endl;
-      mAreKeyboardDevice = true;       // Set flag saying that we need to have the local device
+      std::cout << "YYY event source config in GLwindow" << std::endl;
+      mAreEventSource = true;       // Set flag saying that we need to have the local device
 
       // Configure keyboard device portion
-      jccl::ConfigChunkPtr keyboard_chunk =
-         displayChunk->getProperty<jccl::ConfigChunkPtr>("keyboard_device_chunk");
+      jccl::ConfigChunkPtr event_win_chunk =
+         displayChunk->getProperty<jccl::ConfigChunkPtr>("event_window_device");
 
       // Set the name of the chunk to the same as the parent chunk (so we can point at it)
-      //keyboard_chunk->setProperty("name", displayChunk->getName();
+      //event_win_chunk->setProperty("name", displayChunk->getName();
 
-      bool test = gadget::KeyboardOSX::config(keyboard_chunk);
-      
+      bool test = gadget::EventWindowOSX::config(event_win_chunk);
+
       if (test == false)
       {
-        std::cout << "YYY keyboard config in GLwindow FAIL" << std::endl;
-     }
+         std::cout << "YYY event window config in GLwindow FAIL" << std::endl;
+      }
 
       // Custom configuration These proably do not matter
-      //gadget::KeyboardOSX::m_width = GlWindowXWin::window_width;
-      //gadget::KeyboardOSX::m_height = GlWindowXWin::window_height;
+      //gadget::EventWindowOSX::m_width = GlWindowXWin::window_width;
+      //gadget::EventWindowOSX::m_height = GlWindowXWin::window_height;
 
-      //mWeOwnTheWindow = false;      // Keyboard device does not own window
+      //mWeOwnTheWindow = false;      // Event window device does not own window
    }
 
-   
+
 }
 
 
@@ -682,18 +678,18 @@ int GlWindowOSX::startSampling()
     {
         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED,"ERROR:")
-            << "gadget::KeyboardOSX: startSampling called, when already sampling.\n"
+            << "vrj::GlWindowOSX: startSampling called, when already sampling.\n"
             << vprDEBUG_FLUSH;
         vprASSERT(false);
     }
 
 
     //openTheWindow();
-    
+
     std::cout << "Start sampleing in GLwindow" << std::endl;
-    
-    attachEvents(mWindow); 
-    
+
+    attachEvents(mWindow);
+
     mAmSampling = true;
 
     return 1;

@@ -44,13 +44,13 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Unit" defaultvalue="0" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="SimAnalog" name="Analog Simulator" version="1.0">
+  <ChunkDesc token="SimAnalog" name="Analog Simulator" version="1.1">
     <category>Devices/Simulator</category>
-    <help>Simulated analog device.  Gets input from keyboard proxy.</help>
-    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
-      <help>The keyboard to use for event input.</help>
-      <item label="Keyboard Proxy" defaultvalue="" />
-      <allowedtype>KeyboardProxy</allowedtype>
+    <help>Simulated analog device.  Gets input from an event window proxy.</help>
+    <PropertyDesc token="eventWindowProxy" name="Event Window Proxy" type="chunk" variable="0">
+      <help>The event window to use for user input.</help>
+      <item label="Event Window Proxy" defaultvalue="" />
+      <allowedtype>EventWindowProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="keyPairsInc" name="Increment Keypress" type="embeddedchunk" variable="1">
       <help>Keys for moving value up</help>
@@ -261,13 +261,13 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Unit" defaultvalue="0" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="SimDigital" name="Digital Simulator" version="1.0">
+  <ChunkDesc token="SimDigital" name="Digital Simulator" version="1.1">
     <category>Devices/Simulator</category>
-    <help>Simulated digital device.  Gets input from keyboard proxy.</help>
-    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
-      <help>The keyboard to use for event input.</help>
-      <item label="Keyboard Proxy" defaultvalue="" />
-      <allowedtype>KeyboardProxy</allowedtype>
+    <help>Simulated digital device.  Gets input from an event window proxy.</help>
+    <PropertyDesc token="eventWindowProxy" name="Event Window Proxy" type="chunk" variable="0">
+      <help>The event window to use for user input.</help>
+      <item label="Event Window Proxy" defaultvalue="" />
+      <allowedtype>EventWindowProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="keyPairs" name="Digital button keys" type="embeddedchunk" variable="1">
       <help>Keypresses to trigger multiple digital inputs.  The number of the digital input corresponds to the index of the key press entry.</help>
@@ -287,7 +287,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="X11 Pipe" defaultvalue=":0.0" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="displayWindow" name="Display Window" version="1.0">
+  <ChunkDesc token="displayWindow" name="Display Window" version="1.1">
     <category>Display</category>
     <help>This is display window, it contains viewports.</help>
     <PropertyDesc token="origin" name="origin" type="int" variable="0">
@@ -316,14 +316,14 @@ The filters are applied in the order that they are specified in this configurati
       <help>Should the window have a border</help>
       <item label="Use border" defaultvalue="1" />
     </PropertyDesc>
-    <PropertyDesc token="act_as_keyboard_device" name="Act as keyboard device" type="bool" variable="0">
-      <help>Should this window also be a keyboard event device?</help>
-      <item label="Act as keyboard device?" defaultvalue="0" />
+    <PropertyDesc token="act_as_event_source" name="Act as event window device" type="bool" variable="0">
+      <help>Should this window also be an event window device?</help>
+      <item label="Act as event window device?" defaultvalue="0" />
     </PropertyDesc>
-    <PropertyDesc token="keyboard_device_chunk" name="Keyboard configuration" type="embeddedchunk" variable="0">
-      <help>Configuration of this keyboard device.</help>
-      <item label="Keyboard Configuration" />
-      <allowedtype>Keyboard</allowedtype>
+    <PropertyDesc token="event_window_device" name="Event window configuration" type="embeddedchunk" variable="0">
+      <help>Configuration of this event window device.</help>
+      <item label="Event Window Configuration" />
+      <allowedtype>EventWindow</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="active" name="Is Active" type="bool" variable="0">
       <help>Is the window supposed to be active?</help>
@@ -673,13 +673,13 @@ So for example a rate of:
       <allowedtype>SimGloveGesture</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="SimGloveGesture" name="Glove Gesture Simulator" version="1.0">
+  <ChunkDesc token="SimGloveGesture" name="Glove Gesture Simulator" version="1.1">
     <category>Devices/Simulator</category>
     <help>Simulate glove gesture device</help>
-    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
-      <help>The keyboard to use.</help>
-      <item label="Keyboard Proxy" defaultvalue="" />
-      <allowedtype>KeyboardProxy</allowedtype>
+    <PropertyDesc token="eventWindowProxy" name="Event Window Proxy" type="chunk" variable="0">
+      <help>The event window to use.</help>
+      <item label="Event Window Proxy" defaultvalue="" />
+      <allowedtype>EventWindowProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="keyPairs" name="Key Presses" type="embeddedchunk" variable="1">
       <item label="Key Presses" />
@@ -920,9 +920,9 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="MOUSE_BUT3" value="51" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="Keyboard" name="Keyboard" version="1.0">
+  <ChunkDesc token="EventWindow" name="Event Window" version="1.0">
     <category>Devices</category>
-    <help>Configures a window that accepts keyboard and mouse input</help>
+    <help>Configures a window that accepts keyboard and mouse events as input.</help>
     <PropertyDesc token="width" name="width" type="int" variable="0">
       <help>window width</help>
       <item label="Window Width" defaultvalue="300" />
@@ -941,7 +941,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Mouse Sensitivity" defaultvalue="1.0" />
     </PropertyDesc>
     <PropertyDesc token="display_number" name="DisplayNumber" type="int" variable="0">
-      <help>The number of the display to put the keyboard on. (-1 for local)</help>
+      <help>The number of the display on which the event window will be opened. (-1 for local)</help>
       <item label="Display Number" defaultvalue="0" />
     </PropertyDesc>
     <PropertyDesc token="lock_key" name="Lock Key" type="int" variable="0">
@@ -1005,7 +1005,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Start Locked" defaultvalue="0" />
     </PropertyDesc>
     <PropertyDesc token="sleep_time" name="Sleep time" type="int" variable="0">
-      <help>This is the number of milliseconds that the keyboard update loop should sleep between updates.</help>
+      <help>This is the number of milliseconds that the event update loop should sleep between updates.</help>
       <item label="Sleep Time" defaultvalue="75" />
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
@@ -1014,13 +1014,13 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="KeyboardProxy" name="Keyboard Proxy" version="1.0">
+  <ChunkDesc token="EventWindowProxy" name="Event Window Proxy" version="1.0">
     <category>Proxies</category>
-    <help>This proxy points to a keyboard device.</help>
+    <help>This proxy points to an event window device.</help>
     <PropertyDesc token="device" name="Device" type="chunk" variable="0">
-      <help>The keyboard device to hook the proxy to.</help>
+      <help>The event window device to hook the proxy to.</help>
       <item label="Device" defaultvalue="" />
-      <allowedtype>Keyboard</allowedtype>
+      <allowedtype>EventWindow</allowedtype>
       <allowedtype>simKeyboardDigital</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
@@ -1308,13 +1308,13 @@ The filters are applied in the order that they are specified in this configurati
 The filters are applied in the order that they are specified in this configuration.</help>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="SimPosition" name="Position Simulator" version="1.0">
+  <ChunkDesc token="SimPosition" name="Position Simulator" version="1.1">
     <category>Devices/Simulator</category>
-    <help>A simulated position device. Gets input from a keyboard proxy</help>
-    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
-      <help>The keyboard to use for event input.</help>
-      <item label="Keyboard Proxy" defaultvalue="" />
-      <allowedtype>KeyboardProxy</allowedtype>
+    <help>A simulated position device. Gets input from an event window proxy.</help>
+    <PropertyDesc token="eventWindowProxy" name="Event Window Proxy" type="chunk" variable="0">
+      <help>The event window to use for user input.</help>
+      <item label="Event Window Proxy" defaultvalue="" />
+      <allowedtype>EventWindowProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="keyPairs" name="keyPairs" type="embeddedchunk" variable="0">
       <help>Keys for moving and rotating the simulated device.</help>
@@ -1386,17 +1386,17 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>DigProxy</allowedtype>
       <allowedtype>AnaProxy</allowedtype>
       <allowedtype>GloveProxy</allowedtype>
-      <allowedtype>KeyboardProxy</allowedtype>
+      <allowedtype>EventWindowProxy</allowedtype>
       <allowedtype>GestureProxy</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="SimDigitalGlove" name="SimDigitalGlove" version="1.0">
+  <ChunkDesc token="SimDigitalGlove" name="SimDigitalGlove" version="1.1">
     <category>Devices/Simulator</category>
     <help>A digital glove simulator</help>
-    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
-      <help>The Keyboard to use for event input</help>
-      <item label="Keyboard Proxy" defaultvalue="" />
-      <allowedtype>KeyboardProxy</allowedtype>
+    <PropertyDesc token="eventWindowProxy" name="Event Window Proxy" type="chunk" variable="0">
+      <help>The event window to use for user input.</help>
+      <item label="Event Window Proxy" defaultvalue="" />
+      <allowedtype>EventWindowProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="keyPairs" name="KeyPresses" type="embeddedchunk" variable="1">
       <help>Keypresses to trigger multiple digital inputs</help>
