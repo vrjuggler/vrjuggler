@@ -13,16 +13,16 @@ public:
       this->addDescriptor( "stub" );
       this->addDescriptor( "NOSOUND" );
       this->addDescriptor( "STUB" );
+      cout<<"[soundengine] Regging Stub Creator\n"<<flush;
       SoundFactory::registerCreator( &mSoundEngineCreator );
    }
    virtual SoundEngine* newEngine()
    {
-      cout<<"Regging Stub Creator\n"<<flush;
       return new SoundEngine;
    }
    virtual ~StubSoundEngineCreator()
    {
-      cout<<"Stub Creator Died (application probably exited, or library was unloaded)\n"<<flush;
+      cout<<"[soundengine] Stub Creator Died (application probably exited, or library was unloaded)\n"<<flush;
    }
    
    static StubSoundEngineCreator mSoundEngineCreator;
