@@ -19,7 +19,7 @@ void vjPosProxy::SetTransform( float xoff, float yoff, float zoff,    // Transla
 
    if((xoff != 0.0f) || (yoff != 0.0f) || (zoff != 0.0f))
       trans_mat.makeTrans(xoff, yoff, zoff);
-   if((xrot != 0.0f) || (yrot != 0.0f) || (xrot != 0.0f))
+   if((xrot != 0.0f) || (yrot != 0.0f) || (zrot != 0.0f))
       rot_mat.makeXYZEuler(xrot, yrot, zrot);
 
    m_matrixTransform.mult(trans_mat, rot_mat);

@@ -6,6 +6,7 @@
 #include <Input/vjSim/vjSimDigital.h>
 #include <Input/vjSim/vjSimPosition.h>
 #include <Input/vjSim/vjSimGloveGesture.h>
+//#include <Input/vjSim/vjSimKeyboardDigital.h>
 
 // Physical devices
 #ifndef WIN32
@@ -38,6 +39,7 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjSimDigital>* sim_digital = new vjDeviceConstructor<vjSimDigital>;
    vjDeviceConstructor<vjSimPosition>* sim_position = new vjDeviceConstructor<vjSimPosition>;
    vjDeviceConstructor<vjSimGloveGesture>* sim_glove = new vjDeviceConstructor<vjSimGloveGesture>;
+   //vjDeviceConstructor<vjSimKeyboardDigital>* sim_keyboard_digital = new vjDeviceConstructor<vjSimKeyboardDigital>;
 #ifndef WIN32
    vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
    vjDeviceConstructor<vjIBox>* ibox = new vjDeviceConstructor<vjIBox>;
