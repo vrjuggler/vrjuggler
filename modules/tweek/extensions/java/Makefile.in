@@ -169,16 +169,16 @@ ifeq (@OS_TYPE@, UNIX)
 ifneq ($(JARS), )
 	for jar in $(JARS) ; \
           do \
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+              $(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
                 $(topdir)/extensions/java/$$jar $(bindir) ; \
           done
 endif
 ifneq ($(BEANS), )
 	for bean in $(BEANS) ; \
           do \
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+              $(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
                 $(topdir)/extensions/java/$$bean.jar $(beandir) ; \
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+              $(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
                 $(top_srcdir)/extensions/java/$$bean.xml $(beandir) ; \
           done
 endif

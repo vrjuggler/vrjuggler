@@ -167,33 +167,9 @@ endif
 # =============================================================================
 links:
 	@echo "------------------------------------------------"
-	@echo "Setting up developer installation links"
+	@echo "Setting up developer installation"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/vpr
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
-	cd $(instlinks)/include &&					\
-          for dir in $(SUBDIR) ; do					\
-              $(RM_LN) ./$$dir ;					\
-              $(LN_S) $(VPRROOT_ABS)/$$dir ./$$dir ;			\
-          done
-ifeq (@OS_TYPE@, Win32)
-	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
-else
-	for lib in $(LIBS) ; do 					\
-            cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
-              $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
-          done
-endif
-	cd $(instlinks)/include/vpr && $(RM_LN) ./*.h &&		\
-          $(LN_S) $(VPRROOT_ABS)/vpr/*.h ./
-	cd $(instlinks)/include/vpr && $(RM_LN) ./vprDefines.h &&	\
-         $(LN_S) $(topdir)/vpr/vprDefines.h ./vprDefines.h
-	cd $(instlinks)/include/vpr && $(RM_LN) ./vprParam.h &&		\
-          $(LN_S) $(topdir)/vpr/vprParam.h ./vprParam.h
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	cd $(instlinks)/bin && cp -p $(topdir)/vpr-config .
-	@echo ""
+	$(MAKE) SYMLINK=-l prefix="$(instlinks)" install-debug
 	@echo ""
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VPR_BASE_DIR to:'
@@ -260,7 +236,7 @@ pre-install:
 post-install:
 #	@$(MAKE) install-test
 	@$(MAKE) install-m4
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
           $(topdir)/vpr-config $(bindir)
 
 PREINSTALL_HEADERS	= pre-install-headers
@@ -270,21 +246,21 @@ pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VPR.include.dist -p $(prefix)
 
 post-install-headers:
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(VPRROOT_ABS)/vpr/System.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(VPRROOT_ABS)/vpr/SystemBase.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(VPRROOT_ABS)/vpr/vpr.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(VPRROOT_ABS)/vpr/vprConfig.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(VPRROOT_ABS)/vpr/vprDomain.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(VPRROOT_ABS)/vpr/vprTypes.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(topdir)/vpr/vprDefines.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(topdir)/vpr/vprParam.h $(includedir)
 
 # Install the test programs.
@@ -305,7 +281,7 @@ install-m4:
 	@echo "Installing Autoconf m4 macros"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/aclocal
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(JUGGLERROOT_ABS)/macros/vpr.m4 $(datadir)/aclocal
 
 # =============================================================================

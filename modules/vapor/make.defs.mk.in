@@ -96,7 +96,8 @@ MAKEFLAGS	+= --no-print-directory
 DEPGEN_TOOL_CC	= @CC@
 DEPGEN_TOOL_CXX	= @CXX@
 MKINSTALLDIRS	= $(scriptdir)/mkinstalldirs
-MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
+DPP_DIR		= $(JUGGLERROOT_ABS)/Doozer++
+MKPATH		= $(DPP_DIR)/mk
 MTREE_CMD	= @MTREE_CMD@
 PROFLIB_EXT	= _p
 PROF_OPT_FLAGS	= $(DBG_FLAGS)
@@ -118,6 +119,7 @@ EXTRA_DEFS		+= -D_VPR_BUILD_
 EXTRA_INCLUDES		= -I$(top_srcdir) @BOOST_INCLUDES@		\
                           -I$(JUGGLERROOT_ABS)/external/leach-uuid	\
                           -I$(JUGGLERROOT_ABS)/external/md5-c
+EXTRA_INSTALL_ARGS	+= $(SYMLINK)
 
 # -----------------------------------------------------------------------------
 # Makedepend commands.  Doozer++ uses $(MKDEP_C) and $(MKDEP_CXX).
