@@ -711,6 +711,69 @@ public class ConfigElementTreeTableModel
       }
 
       /**
+       * This gets called whenever one of the ConfigElements we are editing
+       * has the values of a property get reordered.
+       */
+      public void propertyValueOrderChanged(ConfigElementEvent evt)
+      {
+         ConfigElement src = (ConfigElement) evt.getSource();
+         int idx = evt.getIndex();
+         PropertyDefinition prop_def =
+            src.getDefinition().getPropertyDefinition(evt.getProperty());
+         DefaultMutableTreeNode elt_node = getNodeFor(src);
+
+         // Get the node containing the property description under the source
+         // ConfigElement node.
+         for (Enumeration e = elt_node.children(); e.hasMoreElements(); )
+         {
+            DefaultMutableTreeNode node =
+               (DefaultMutableTreeNode) e.nextElement();
+
+            if ( node.getUserObject().equals(prop_def) )
+            {
+               int start_index = Math.min(evt.getIndex0(), evt.getIndex1());
+               int end_index   = Math.max(evt.getIndex0(), evt.getIndex1());
+
+               List removed_children = new ArrayList();
+               for ( int c = start_index; c <= end_index; ++c )
+               {
+                  removed_children.add(getChild(node, c));
+               }
+
+               for ( Iterator c = removed_children.iterator();
+                     c.hasNext(); )
+               {
+                  removeNodeFromParent((MutableTreeNode) c.next());
+               }
+
+               String prop_token = prop_def.getToken();
+               for ( int v = start_index; v <= end_index; ++v )
+               {
+                  if ( prop_def.getType() != ConfigElement.class )
+                  {
+                     // Create a new node for the reordered property value.
+                     DefaultMutableTreeNode new_node =
+                        new DefaultMutableTreeNode(src.getProperty(prop_token,
+                                                                   v));
+
+                     // Add the new node into the tree.
+                     insertNodeInto(new_node, node, v);
+                  }
+                  else
+                  {
+                     // Embedded elements are handled specially in that all of
+                     // their respective child properties and such also need to
+                     // be added to the tree at this time.
+                     ConfigElement cur_value =
+                        (ConfigElement) src.getProperty(prop_token, v);
+                     addEmbeddedElement(node, cur_value, v);
+                  }
+               }
+            }
+         }
+      }
+
+      /**
        * This gets called whenever one of the ConfigElements we are editing adds
        * a new property value.
        */

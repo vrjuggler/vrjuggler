@@ -42,6 +42,15 @@ public interface ConfigElementListener
 {
    public void nameChanged(ConfigElementEvent evt);
    public void propertyValueChanged(ConfigElementEvent evt);
+
+   /**
+    * Invoked when a change occurs in the ordering of the values of a
+    * variable-valued property.
+    *
+    * @since 0.92.11
+    */
+   public void propertyValueOrderChanged(ConfigElementEvent evt);
+
    public void propertyValueAdded(ConfigElementEvent evt);
    public void propertyValueRemoved(ConfigElementEvent evt);
 }

@@ -65,6 +65,32 @@ public class ConfigElementEvent
    }
 
    /**
+    * Creates a new ConfigElement event from the given source element
+    * relating to a change in the ordering of the values of the named
+    * property.  The "index0" and "index1" values do not have to be the
+    * start and end of the range of reordered values within the property.
+    *
+    * @param srcElt     the element containing the property whose values were
+    *                   reordered
+    * @param property   the name of the property whose values were reordered
+    * @param index0     the "index0" of the range of values that were chagend
+    * @param index1     the "index1" of the range of values that were chagend
+    *
+    * @see #getIndex0()
+    * @see #getIndex1()
+    *
+    * @since 0.92.11
+    */
+   public ConfigElementEvent(ConfigElement srcElt, String property,
+                             int index0, int index1)
+   {
+      super(srcElt);
+      this.property = property;
+      this.index0   = index0;
+      this.index1   = index1;
+   }
+
+   /**
     * Returns the name of the property in the source config element that
     * changed or null if it was the name of the source config element that
     * changed.
@@ -87,6 +113,40 @@ public class ConfigElementEvent
    }
 
    /**
+    * Returns the "index0" of the range of proeprty values that were
+    * reordered as a result of changing the index of a property value.  If
+    * this event is not related to changing the index of a property value,
+    * then -1 is returned.  The returned value is not necessarily the start
+    * of the range of changed values, but together with the "index1" value,
+    * the range can be determined.
+    *
+    * @see #getIndex1()
+    *
+    * @since 0.92.11
+    */
+   public int getIndex0()
+   {
+      return index0;
+   }
+
+   /**
+    * Returns the "index1" of the range of proeprty values that were
+    * reordered as a result of changing the index of a property value.  If
+    * this event is not related to changing the index of a property value,
+    * then -1 is returned.  The returned value is not necessarily the start
+    * of the range of changed values, but together with the "index0" value,
+    * the range can be determined.
+    *
+    * @see #getIndex0()
+    *
+    * @since 0.92.11
+    */
+   public int getIndex1()
+   {
+      return index1;
+   }
+
+   /**
     * Gets the value associated with this event.  For the case of config
     * element name changes, the old name of the config element is returned.
     * For the cases of property value removals and property value changes, a
@@ -99,6 +159,8 @@ public class ConfigElementEvent
    }
 
    private String property;
-   private int index;
+   private int index  = -1;
+   private int index0 = -1;
+   private int index1 = -1;
    private Object value;
 }

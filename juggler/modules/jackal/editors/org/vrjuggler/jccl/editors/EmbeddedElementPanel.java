@@ -127,9 +127,16 @@ public class EmbeddedElementPanel extends ExpandablePanel
             mConfigElement.setName(mNameComponent.getText());
          }
       });
+   }
 
-
-      
+   /**
+    * Provides package visible access to the value edited by this panel;
+    *
+    * @since 0.92.11
+    */
+   Object getValue()
+   {
+      return mConfigElement;
    }
 
    private Icon                 mTypeIcon      = null;

@@ -35,10 +35,7 @@ import java.util.*;
 import javax.swing.event.EventListenerList;
 
 import org.vrjuggler.jccl.config.event.*;
-import org.vrjuggler.jccl.config.undo.ConfigElementNameEdit;
-import org.vrjuggler.jccl.config.undo.ConfigElementPropertyEdit;
-import org.vrjuggler.jccl.config.undo.ConfigElementPropertyValueAddEdit;
-import org.vrjuggler.jccl.config.undo.ConfigElementPropertyValueRemoveEdit;
+import org.vrjuggler.jccl.config.undo.*;
 
 
 /**
@@ -601,6 +598,154 @@ public class ConfigElement implements ConfigElementPointerListener
    }
 
    /**
+    * Changes the index of the given property value to <code>newIndex</code>
+    * within the named property.  This only applies if the property supports
+    * a variable number of values.  Then, a
+    * <code>ConfigElementPropertyValueIndexEdit</code> is automatically
+    * created and registered with the UndoManager associated with the given
+    * context.
+    *
+    * @param name       the name of the property to set
+    * @param value      the value whose index will be changed
+    * @param newIndex   the index of the property value to set
+    * @param ctx        the context
+    *
+    * @throws IllegalArgumentException
+    *             if this element does not have a property by that name, if
+    *             <code>newIndex</code> is invalid, or if the named property
+    *             does not support a variable number of values
+    *
+    * @see #setPropertyValueIndex(String,int,int,ConfigContext)
+    *
+    * @since 0.92.11
+    */
+   public synchronized void setPropertyValueIndex(String name, Object value,
+                                                  int newIndex,
+                                                  ConfigContext ctx)
+      throws IllegalArgumentException
+   {
+      setPropertyValueIndex(name, getPropertyValueIndex(name, value),
+                            newIndex, ctx);
+   }
+
+   /**
+    * Changes the index of the identified property value from
+    * <code>oldValue</code> to <code>newValue</code> within the named
+    * property.  This only applies if the property supports a variable number
+    * of values.  Then, a <code>ConfigElementPropertyValueIndexEdit</code> is
+    * automatically created and registered with the UndoManager associated
+    * with the given context.
+    *
+    * @param name       the name of the property to set
+    * @param oldIndex   the value whose index will be changed
+    * @param newIndex   the index of the property value to set
+    * @param ctx        the context
+    *
+    * @throws IllegalArgumentException
+    *             if this element does not have a property by that name, if
+    *             <code>newIndex</code> is invalid, or if the named property
+    *             does not support a variable number of values
+    *
+    * @since 0.92.11
+    */
+   public synchronized void setPropertyValueIndex(String name, int oldIndex,
+                                                  int newIndex,
+                                                  ConfigContext ctx)
+      throws IllegalArgumentException
+   {
+      if ( oldIndex != newIndex )
+      {
+         try
+         {
+            setPropertyValueIndex(name, oldIndex, newIndex);
+            ctx.postEdit(new ConfigElementPropertyValueIndexEdit(this, name,
+                                                                 oldIndex,
+                                                                 newIndex));
+         }
+         catch (IllegalArgumentException ex)
+         {
+            throw ex;
+         }
+      }
+   }
+
+   /**
+    * Changes the index of the given property value to <code>newIndex</code>
+    * within the named property.  This only applies if the property supports
+    * a variable number of values.
+    *
+    * @param name       the name of the property to set
+    * @param value      the value whose index will be changed
+    * @param newIndex   the index of the property value to set
+    *
+    * @throws IllegalArgumentException
+    *             if this element does not have a property by that name, if
+    *             <code>newIndex</code> is invalid, or if the named property
+    *             does not support a variable number of values
+    *
+    * @see #setPropertyValueIndex(String,int,int)
+    *
+    * @since 0.92.11
+    */
+   public synchronized void setPropertyValueIndex(String name, Object value,
+                                                  int newIndex)
+      throws IllegalArgumentException
+   {
+      setPropertyValueIndex(name, getPropertyValueIndex(name, value),
+                            newIndex);
+   }
+
+   /**
+    * Changes the index of the identified property value from
+    * <code>oldValue</code> to <code>newValue</code> within the named
+    * property.  This only applies if the property supports a variable number
+    * of values.
+    *
+    * @param name       the name of the property to set
+    * @param oldIndex   the value whose index will be changed
+    * @param newIndex   the index of the property value to set
+    *
+    * @throws IllegalArgumentException
+    *             if this element does not have a property by that name, if
+    *             <code>newIndex</code> is invalid, or if the named property
+    *             does not support a variable number of values
+    *
+    * @since 0.92.11
+    */
+   public synchronized void setPropertyValueIndex(String name, int oldIndex,
+                                                  int newIndex)
+      throws IllegalArgumentException
+   {
+      PropertyDefinition prop_def = getDefinition().getPropertyDefinition(name);
+
+      if ( ! prop_def.isVariable() )
+      {
+         throw new IllegalArgumentException(
+            "Value reordering not allowed for property type " + name +
+            " which has a static value count and ordering"
+         );
+      }
+
+      int value_count = getPropertyValueCount(name);
+      if ( oldIndex >= value_count || newIndex >= value_count )
+      {
+         throw new IllegalArgumentException(
+            "Value indices out of range [0," + (value_count - 1) + "]: " +
+            "oldIndex == " + oldIndex + ", newIndex == " + newIndex
+         );
+      }
+
+      if ( oldIndex != newIndex )
+      {
+         List prop_values = getPropertyValues(name);
+         Object value = prop_values.remove(oldIndex);
+         prop_values.add(newIndex, value);
+
+         firePropertyValueOrderChanged(name, oldIndex, newIndex);
+      }
+   }
+
+   /**
     * Gets the number of values for the given property.
     *
     * @param name    the name of the property to retrieve
@@ -615,6 +760,41 @@ public class ConfigElement implements ConfigElementPointerListener
    {
       // Get the list of property values out of the map
       return getPropertyValues(name).size();
+   }
+
+   /**
+    * Returns the index of the given value in the list of values for the
+    * named property or -1 if the named property has no such value.  The
+    * value lookup is performed using reference equality rather than object
+    * equality.  Hence, <code>value</code> must be the actual object reference
+    * that is among the values for the named proeprty.
+    *
+    * @param name       the name of the property to retrieve
+    * @param value      the value whose index will be returned
+    *
+    * @throws IllegalArgumentException
+    *             if this element does not have a property by that name.
+    *
+    * @since 0.92.11
+    */
+   public synchronized int getPropertyValueIndex(String name, Object value)
+      throws IllegalArgumentException
+   {
+      List values = getPropertyValues(name);
+
+      int value_index = -1;
+      for ( int v = 0; v < values.size(); ++v )
+      {
+         Object cur_value = values.get(v);
+
+         if ( cur_value == value )
+         {
+            value_index = v;
+            break;
+         }
+      }
+
+      return value_index;
    }
 
    /**
@@ -728,6 +908,32 @@ public class ConfigElement implements ConfigElementPointerListener
                }
                ((ConfigElementListener)listeners[i+1]).propertyValueChanged(evt);
             }
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that the ordering of the named property has changed
+    * within the given range.  The "index0" and "index1" values do not have
+    * to be the respective start and end of that range, but one must be the
+    * start and one the end.
+    */
+   protected void firePropertyValueOrderChanged(String propToken, int index0,
+                                                int index1)
+   {
+      ConfigElementEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+
+      for ( int i = listeners.length - 2; i >= 0; i -= 2 )
+      {
+         if ( listeners[i] == ConfigElementListener.class )
+         {
+            if (evt == null)
+            {
+               evt = new ConfigElementEvent(this, propToken, index0, index1);
+            }
+
+            ((ConfigElementListener) listeners[i + 1]).propertyValueOrderChanged(evt);
          }
       }
    }
