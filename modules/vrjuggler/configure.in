@@ -1930,6 +1930,8 @@ AC_OUTPUT(Makefile
           samples/pf/Makefile
           samples/pf/pfConfigNav/Makefile
           samples/pf/pfNav/Makefile
+          samples/tutorials/Makefile
+          samples/tutorials/simpleInput/Makefile
           test/Makefile 
           test/TestSuite/Makefile
           test/CfgTest/Makefile 
