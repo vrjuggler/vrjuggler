@@ -63,23 +63,37 @@ public class ConfigSchemaResolver implements EntityResolver
          // Construct the full name of the schema file.  On UNIX, it will be
          // of the form $JCCL_BASE_DIR/share/jccl/data/<schema_file>
          String base_dir = System.getProperty("JCCL_BASE_DIR");
-         String full_schema_file = base_dir + File.separator + "share" +
-                                   File.separator + "jccl" + File.separator +
-                                   "data" + File.separator + schema_file;
 
-         File f = new File(full_schema_file);
-
-         // If the schema file exists locally, use it!
-         if ( f.isFile() && f.canRead() )
+         if ( null == base_dir )
          {
-            // Let the File object give us the absolute file name just in case
-            // there is anything wonky with $JCCL_BASE_DIR.
-            source = new InputSource(f.getAbsolutePath());
+            System.err.println("WARNING: JCCL_BASE_DIR not available for " +
+                               "local schema loading!");
+            source = new InputSource(systemId);
          }
-         // Otherwise, use what we were given.
          else
          {
-            source = new InputSource(systemId);
+            String full_schema_file = base_dir + File.separator + "share" +
+                                      File.separator + "jccl" +
+                                      File.separator + "data" +
+                                      File.separator + schema_file;
+
+            File f = new File(full_schema_file);
+
+            // If the schema file exists locally, use it!
+            if ( f.isFile() && f.canRead() )
+            {
+               // Let the File object give us the absolute file name just in
+               // case there is anything wonky with $JCCL_BASE_DIR.
+               source = new InputSource(f.getAbsolutePath());
+            }
+            // Otherwise, use what we were given.
+            else
+            {
+               System.err.println("WARNING: Could not read " +
+                                  f.getAbsolutePath());
+               System.err.println("Falling back on " + systemId);
+               source = new InputSource(systemId);
+            }
          }
       }
       // This is not a JCCL schema, so pass it through untouched.
