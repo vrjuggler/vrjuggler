@@ -28,6 +28,7 @@ vpath %.o ${OBJDIR}
 
 ENVIRONTMENT_SRCS	:= vjEnvironmentManager.cpp	\
                            vjConnect.cpp                \
+		           vjCommand.cpp                \
 		           vjTimedUpdate.cpp
 
 ENVIRONMENT_OBJECTS	:= ${addprefix ${OBJDIR}/,${ENVIRONTMENT_SRCS:.cpp=.o}}
