@@ -10,7 +10,22 @@ For all versions:
 
 ===============================================================================
 
-To add:
-    - Info about change over to meters scaling
-    - Addition of RIM
+ Version: 0.18.0
+Released: October 11, 2004
+    Required changes when upgrading from all previous versions:
+        * Device driver plug-ins must include the following as an exported
+          function:
+
+             GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+             {
+                return __GADGET_version;
+             }
+
+        * Cluster plug-ins must include the following as an exported
+          function:
+
+             GADGET_CLUSTER_PLUGIN_EXPORT(vpr::Uint32) getGadgeteerVersion()
+             {
+                return __GADGET_version;
+             }
 

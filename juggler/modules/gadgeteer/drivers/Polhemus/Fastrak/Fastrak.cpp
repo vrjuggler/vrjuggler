@@ -48,10 +48,17 @@
 #include <vpr/System.h>
 
 #include <gadget/Type/DeviceConstructor.h>
+#include <gadget/gadgetParam.h>
+
 #include <drivers/Polhemus/Fastrak/Fastrak.h>
 
 extern "C"
 {
+
+GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+{
+   return __GADGET_version;
+}
 
 GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {

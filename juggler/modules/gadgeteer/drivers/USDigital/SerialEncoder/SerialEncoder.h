@@ -48,12 +48,6 @@
 #include "SerialEncoderStandalone.h"
 #include "SEIBus.h"
 
-namespace gadget
-{
-   class InputManager;
-}
-
-extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 class SerialEncoder:public gadget::InputMixer<gadget::Input,gadget::Position>
 {

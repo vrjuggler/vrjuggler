@@ -53,6 +53,7 @@
 #include <gadget/Type/Proxy.h>
 #include <gadget/Type/DeviceInterface.h>
 #include <gadget/Util/Debug.h>
+#include <gadget/gadgetParam.h>
 
 #include <gadget/InputManager.h>
 
@@ -100,12 +101,63 @@ InputManager::~InputManager()
 /**
  * This struct implements a callable object (a functor, basically).  An
  * instance can be passed in where a boost::function1<bool, void*> is expected.
+ * In gadget::InputManager::configAdd(), instances are used to handle version
+ * checking of device driver plug-ins via vpr::LibraryLoader.
+ */
+struct VersionCheckCallable
+{
+   VersionCheckCallable()
+   {
+   }
+
+   /**
+    * This will be invoked as a callback by methods of vpr::LibraryLoader.
+    *
+    * @param func A function pointer for the entry point in a dynamically
+    *             loaded device driver.  This must be cast to the correct
+    *             signature before being invoked.
+    */
+   bool operator()(void* func)
+   {
+      vpr::Uint32 (*version_func)();
+      version_func = (vpr::Uint32 (*)()) func;
+
+      // Call the entry point function, which, in this case, returns the
+      // version of Gadgeteer against which the driver was compiled.
+      vpr::Uint32 driver_gadget_ver = (*version_func)();
+
+      bool match = (driver_gadget_ver == mGadgetVersion);
+
+      if ( ! match )
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Gadgeteer version mismatch!\n" << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "Driver was compiled against Gadgeteer version "
+            << driver_gadget_ver << ",\n" << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "but this is Gadgeteer version " << mGadgetVersion
+            << std::endl << vprDEBUG_FLUSH;
+      }
+
+      return match;
+   }
+
+   static const vpr::Uint32 mGadgetVersion;
+};
+
+const vpr::Uint32 VersionCheckCallable::mGadgetVersion(__GADGET_version);
+
+/**
+ * This struct implements a callable object (a functor, basically).  An
+ * instance can be passed in where a boost::function1<bool, void*> is expected.
  * In gadget::InputManager::configAdd(), instances are used to handle dynamic
  * loading of device drivers via vpr::LibraryLoader.
  */
-struct Callable
+struct DriverInitCallable
 {
-   Callable(gadget::InputManager* inputMgr) : mgr(inputMgr)
+   DriverInitCallable(gadget::InputManager* inputMgr) : mgr(inputMgr)
    {
    }
 
@@ -279,7 +331,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
          // --- Load device driver dsos -- //
          // - Load individual drivers
          const std::string driver_prop_name("driver");
+         const std::string get_version_func("getGadgeteerVersion");
          const std::string driver_init_func("initDevice");
+
          int driver_count = element->getNum(driver_prop_name);
          std::string driver_dso_name;
 
@@ -294,18 +348,48 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                   << "[gadget::InputManager::configAdd()] Loading driver DSO '"
                   << driver_dso_name << "'\n" << vprDEBUG_FLUSH;
 
-               vpr::ReturnStatus load_status;
-               Callable functor(this);
-               vpr::LibraryPtr dso;
-               load_status =
-                  vpr::LibraryLoader::findDSOAndLookup(driver_dso_name,
-                                                       search_path,
-                                                       driver_init_func,
-                                                       functor, dso);
+               vpr::LibraryPtr dso =
+                  vpr::LibraryLoader::findDSO(driver_dso_name, search_path);
 
-               if ( load_status.success() )
+               if ( dso.get() != NULL )
                {
-                  mLoadedDrivers.push_back(dso);
+                  vpr::ReturnStatus version_status;
+                  VersionCheckCallable version_functor;
+                  version_status =
+                     vpr::LibraryLoader::findEntryPoint(dso, get_version_func,
+                                                        version_functor);
+
+                  if ( ! version_status.success() )
+                  {
+                     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                        << clrOutBOLD(clrRED, "ERROR")
+                        << ": Version mismatch while loading driver DSO '"
+                        << driver_dso_name << "'\n" << vprDEBUG_FLUSH;
+                     vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                        << "This driver will not be usable.\n"
+                        << vprDEBUG_FLUSH;
+                  }
+                  else
+                  {
+                     vpr::ReturnStatus load_status;
+                     DriverInitCallable init_functor(this);
+                     load_status =
+                        vpr::LibraryLoader::findEntryPoint(dso,
+                                                           driver_init_func,
+                                                           init_functor);
+
+                     if ( load_status.success() )
+                     {
+                        mLoadedDrivers.push_back(dso);
+                     }
+                  }
+               }
+               else
+               {
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                     << clrOutBOLD(clrRED, "ERROR")
+                     << ": Failed to find driver DSO '" << driver_dso_name
+                     << "'\n" << vprDEBUG_FLUSH;
                }
             }
          }
@@ -342,7 +426,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
                   vpr::LibraryFinder finder(driver_dir, driver_ext);
                   vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
-                  Callable functor(this);
+                  DriverInitCallable functor(this);
 
                   for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
                         lib != libs.end();

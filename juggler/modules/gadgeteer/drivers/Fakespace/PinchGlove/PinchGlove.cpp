@@ -36,6 +36,7 @@
 #include <boost/concept_check.hpp>
 
 #include <gadget/Util/Debug.h>
+#include <gadget/gadgetParam.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <jccl/Config/ConfigElement.h>
 #include <vpr/vpr.h>
@@ -49,6 +50,11 @@
 
 extern "C"
 {
+   GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+   {
+      return __GADGET_version;
+   }
+
    GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
    {
       new gadget::DeviceConstructor<gadget::PinchGlove>(inputMgr);
