@@ -112,11 +112,12 @@ public:
    void testSpawnedAcceptor()
    {
        testAssertReset();
-       mRendevousPort = 12021;
+       mRendevousPort = 45123;
        mNumItersA = 50;
        mMessageValue = std::string("The Data");
        mMessageLen = mMessageValue.length();
-       mSyncMutex.acquire();                    // Get it here so the acceptor can release it when ready
+       //mSyncMutex.acquire();                    // Get it here so the acceptor can release it when ready
+       mStartFlag = false;
 
        // Spawn acceptor thread
        vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest> 
@@ -127,6 +128,10 @@ public:
        vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest> 
            connector_functor( this, &SocketConnectorAcceptorTest::testSpawnedAcceptor_connector );
        vpr::Thread connector_thread( &connector_functor);
+
+       // Wait for threads
+       acceptor_thread.join();
+       connector_thread.join();
 
        assertTest( mThreadAssertTest );
    }
@@ -139,33 +144,40 @@ public:
        bool ret_val(true);
 
        // Open the acceptor
-       acceptor.open(local_acceptor_addr);
+       ret_val = acceptor.open(local_acceptor_addr);
+       threadAssertTest((ret_val == true), "Acceptor did not open correctly");
        
-       mSyncMutex.release();                        // We are ready to recieve, so tell connector to go
+       //mSyncMutex.release();                        // We are ready to recieve, so tell connector to go
+       mStartFlag = true;
 
        for(int i=0;i<mNumItersA;i++)
-       {           
-       
+       {                  
            sock = acceptor.accept();                // Accept a connection
            threadAssertTest((sock != NULL), "Accepted socket is null");
            ret_val = sock->write(mMessageValue, mMessageLen);      // Send a message           
            threadAssertTest((ret_val == true), "Problem writing in acceptor");
-           ret_val = sock->close();                                // Close the socket
-           threadAssertTest((ret_val == true), "Problem closing accepted socket");
            
+           //mSyncMutex.acquire();            // Wait for connector to close their side of the socket
+
+           //ret_val = sock->isConnected();
+           //threadAssertTest((ret_val == false), "Socket should not still be connected");
+           
+           ret_val = sock->close();                                // Close the socket
+           threadAssertTest((ret_val == true), "Problem closing accepted socket");           
        }       
    }
    void testSpawnedAcceptor_connector(void* arg)
    {
        bool ret_val(true);
-
-       mSyncMutex.acquire();                // Wait for acceptor to start up
-       
        vpr::InetAddr remote_addr;
        remote_addr.setAddress("localhost", mRendevousPort);
-
        vpr::SocketConnector connector;           // Connect to acceptor
-       
+
+       //mSyncMutex.acquire();                // Wait for acceptor to start up
+       //mStartFlag = false;
+       while(!mStartFlag)
+       {;}
+
        for(int i=0;i<mNumItersA;i++)
        {
            vpr::SocketStream    con_sock;
@@ -175,10 +187,13 @@ public:
        
             vpr::Uint16 size = con_sock.read(data, mMessageLen);   // Recieve data
             threadAssertTest((size == mMessageLen), "Connector recieved message of wrong size" );
+
+            //ret_val = con_sock.isConnected();
+            //threadAssertTest((ret_val == false), "Socket should still be connected");            
             
             con_sock.close();                                   // Close socket
+            //mSyncMutex.release();                   // Tell acceptor that I have closed my side
        }
-
    }
    
    static Test* suite()
@@ -202,6 +217,7 @@ protected:
     std::string     mMessageValue;      // The value of the message that is supposed to be sent (and recieved)
 
     vpr::Mutex      mSyncMutex;     // Mutex used to do synchronization
+    bool            mStartFlag;
 };
 
 }       // namespace

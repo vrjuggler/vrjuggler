@@ -4,13 +4,16 @@
 #include <TestCases/Thread/ThreadTest.h>
 #include <TestCases/IO/Socket/InetAddrTest.h>
 #include <TestCases/Socket/SocketConnectorAcceptorTest.h>
+#include <Utils/Debug.h>
 
 
 //using namespace vpr;
 
 int main (int ac, char **av)
 {
-   TestRunner runner;
+    vprDEBUG(0,0) << "Starting test\n" << vprDEBUG_FLUSH;       // Do this here to get init text out of the way
+
+    TestRunner runner;
 
    //------------------------------------
    //  noninteractive
