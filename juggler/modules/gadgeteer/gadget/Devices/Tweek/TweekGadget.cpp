@@ -139,7 +139,7 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
          {
             // Create a new servant for the i'th position device.
             TweekPositionSubjectImpl* new_pos_dev =
-               new TweekPositionSubjectImpl();
+               new TweekPositionSubjectImpl(this);
 
             jccl::ConfigChunkPtr pos_dev =
                c->getProperty<jccl::ConfigChunkPtr>(pos_dev_token, i);
@@ -172,7 +172,7 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
          {
             // Create a new servant for the i'th digital device.
             TweekDigitalSubjectImpl* new_dig_dev =
-               new TweekDigitalSubjectImpl();
+               new TweekDigitalSubjectImpl(this);
 
             jccl::ConfigChunkPtr dig_dev =
                c->getProperty<jccl::ConfigChunkPtr>(dig_dev_token, i);
@@ -204,7 +204,8 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
          for ( int i = 0; i < ana_devs; ++i )
          {
             // Create a new servant for the i'th analog device.
-            TweekAnalogSubjectImpl* new_ana_dev = new TweekAnalogSubjectImpl();
+            TweekAnalogSubjectImpl* new_ana_dev =
+               new TweekAnalogSubjectImpl(this);
 
             jccl::ConfigChunkPtr ana_dev =
                c->getProperty<jccl::ConfigChunkPtr>(ana_dev_token, i);
@@ -379,7 +380,29 @@ void TweekGadget::controlLoop(void* arg)
 
    while ( mThreadRunning )
    {
+      // Make sure to read one sample before blocking on mSampleCondVar just
+      // to initialize the sample buffers.
       sample();
+
+      // Block until we are notified that there is new data to sample.  We
+      // do this to avoid creating huge sample buffers since this device
+      // would otherwise be non-blocking with all operations happening only
+      // in local memory.
+      mSampleCondVar.acquire();
+      {
+         while ( ! mSampleReady )
+         {
+            mSampleCondVar.wait();
+         }
+
+         // This is the safest place to change this setting.  Doing it here
+         // ensures that we do not miss a sample (the mutex is locked), and
+         // the next time we come through the loop, the sample(s) will have
+         // been read.  Thus, the above test on mSampleReady will always be
+         // correct.
+         mSampleReady = false;
+      }
+      mSampleCondVar.release();
    }
 }
 

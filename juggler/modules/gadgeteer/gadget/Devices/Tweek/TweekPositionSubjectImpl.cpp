@@ -42,6 +42,7 @@
 #include <vpr/Util/Debug.h>
 
 #include <gadget/Util/Debug.h>
+#include <gadget/Devices/Tweek/TweekGadget.h>
 #include <gadget/Devices/Tweek/TweekPositionSubjectImpl.h>
 
 
@@ -63,6 +64,8 @@ void TweekPositionSubjectImpl::setTranslation(CORBA::Float xTrans,
       gmtl::setTrans(mMatrix, trans_vec);
    }
    mMatrixLock.release();
+
+   mMyDev->notifySample();
 
    tweek::SubjectImpl::notify();
 }
@@ -99,6 +102,8 @@ void TweekPositionSubjectImpl::setOrientation(CORBA::Float xOrient,
       gmtl::setRot(mMatrix, angle);
    }
    mMatrixLock.release();
+
+   mMyDev->notifySample();
 
    tweek::SubjectImpl::notify();
 }
