@@ -33,7 +33,7 @@
 #ifndef _VRJ_ASCENSION_MOTION_STAR_H_
 #define _VRJ_ASCENSION_MOTION_STAR_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <string>
 #include <vpr/Thread/Thread.h>
@@ -44,7 +44,7 @@
 
 namespace vrj
 {
-   
+
 //-----------------------------------------------------------------------------
 //: Position-derived class for running an Ascension MotionStar device that
 //+ is connected to a Flock of Birds.  It is a wrapper class for the real

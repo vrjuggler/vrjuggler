@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Display/Projection.h>
 
 namespace vrj
 {
-   
+
 float Projection::mNearDist = 0.1f;
 float Projection::mFarDist = 10000.0f;
 

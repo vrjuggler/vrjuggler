@@ -29,16 +29,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
- 
+
 #ifndef _VRJ_FINGER_H_
 #define _VRJ_FINGER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 
 namespace vrj
 {
-   
+
 //  DIJ = Distal Interphalangeal Joint  --- Finger tip
 //  PIJ = Proximal "              "     --- Middle joint
 //  MPJ = Metacarpo "             "     --- closest to Hand
@@ -49,26 +49,26 @@ public:
    Finger( const float& dij = -15, const float& pij = -45, const float& mpj = -45, const float& abduct = 0 ) : mDij( dij ), mPij( pij ), mMpj( mpj ), mAbduct( abduct )
    {
    }
-   
+
    inline const float& dij() const { return mDij; }
    inline const float& pij() const { return mPij; }
    inline const float& mpj() const { return mMpj; }
    inline const float& abduct() const { return mAbduct; }
-   
+
    inline void setDij( const float& dij ) { mDij = dij; }
    inline void setPij( const float& pij ) { mPij = pij; }
    inline void setMpj( const float& mpj ) { mMpj = mpj; }
    inline void setAbduct( const float& abduct ) { mAbduct = abduct; }
-   
+
    inline void set( const float& dij = -15, const float& pij = -45, const float& mpj = -45, const float& abduct = 0 )
    {
        mDij = dij;
        mPij = pij;
        mMpj = mpj;
        mAbduct = abduct;
-   }   
-   
-private: 
+   }
+
+private:
    float mDij, mPij, mMpj, mAbduct;
 };
 

@@ -33,7 +33,7 @@
 #ifndef _VJ_PROXY_H_
 #define _VJ_PROXY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <typeinfo>
 
@@ -45,7 +45,7 @@
 
 namespace vrj
 {
-   
+
 //class Input;
 //class Kernel;
 

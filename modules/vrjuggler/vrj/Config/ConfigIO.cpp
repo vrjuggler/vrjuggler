@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Config/StandardConfigIOHandler.h>
 #include <vrj/Config/XMLConfigIOHandler.h>
@@ -39,7 +39,7 @@
 
 namespace vrj
 {
-   
+
 
 /*static*/ const std::string ConfigIO::xml_handler_name ("xml_config");
 /*static*/ const std::string ConfigIO::standard_handler_name ("standard_config");
@@ -113,7 +113,7 @@ bool ConfigIO::readConfigChunkDB (std::string file_name, ConfigChunkDB& db,
         else
             h = getHandler (standard_handler_name);
     }
-    else 
+    else
         h = getHandler (handler_name);
     if (!h)
         return false;
@@ -180,12 +180,12 @@ bool ConfigIO::readChunkDescDB (std::string file_name, ChunkDescDB& db,
     if (handler_name == "") {
         char buf[50];
         readString (in, buf, 50, false);
-        if (buf[0] == '<' ) 
+        if (buf[0] == '<' )
             h = getHandler (xml_handler_name);
         else
             h = getHandler (standard_handler_name);
     }
-    else 
+    else
         h = getHandler (handler_name);
     if (!h)
         return false;

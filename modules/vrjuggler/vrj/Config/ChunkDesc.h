@@ -33,7 +33,7 @@
 #ifndef _VRJ_CHUNKDESC_H_
 #define _VRJ_CHUNKDESC_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/PropertyDesc.h>
 //#include <dom/DOM.hpp>
 
@@ -42,7 +42,7 @@ class DOM_Node;
 
 namespace vrj
 {
-   
+
 class ConfigChunk;
 
 //-----------------------------------------------------------------
@@ -197,7 +197,7 @@ public:
     PropertyDesc *getPropertyDesc (const std::string& _token) const;
 
 
- 
+
     //: Writes self to the given output stream
     friend VJ_API(std::ostream&) operator << (std::ostream& out,
                                               const ChunkDesc& self);

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vrj/Sound/ajSoundManager.h>
 #include <aj/AudioJuggler.h>

@@ -7,7 +7,7 @@
 /*  --    Authors: Larry Edwards and William Chapin         --  */
 /*  ==========================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <math.h>
 #include <vrj/Input/Devices/VirtualTechnologies/vt_math3d.h>
 
@@ -91,7 +91,7 @@ vt_normalize3(vec3d v1, vec3d result)
   ;
   length = sqrt((v1[VX] * v1[VX]) + (v1[VY] * v1[VY]) + (v1[VZ] * v1[VZ]));
 
-  if (length > 0.0)		/* just in case */
+  if (length > 0.0)     /* just in case */
   {
     result[VX] = v1[VX] / length;
     result[VY] = v1[VY] / length;
@@ -154,7 +154,7 @@ vt_zero_matrix_fill(matrix4x4 A)
 
 void
 vt_rot_matrix(float theta, char axis, matrix4x4 A)
-{				/* NOTE: theta is in radians */
+{               /* NOTE: theta is in radians */
   int i, j;
   float costh, sinth;
   ;
@@ -178,7 +178,7 @@ vt_rot_matrix(float theta, char axis, matrix4x4 A)
   A[3][2] = 0.0;
   A[3][3] = 1.0;
 
-  axis -= 'x';			/* WARNING: axis must be lowercase! */
+  axis -= 'x';          /* WARNING: axis must be lowercase! */
   i = (axis+1) % 3;
   j = (axis+2) % 3;
 
@@ -254,16 +254,16 @@ vt_mult_matrix(matrix4x4 A, matrix4x4 B, matrix4x4 C)
     for (i=0; i < 4; i++)
     {
       C[i][0] = A[i][0]*temp[0][0] + A[i][1]*temp[1][0] +
-	        A[i][2]*temp[2][0] + A[i][3]*temp[3][0];
+            A[i][2]*temp[2][0] + A[i][3]*temp[3][0];
 
       C[i][1] = A[i][0]*temp[0][1] + A[i][1]*temp[1][1] +
-	        A[i][2]*temp[2][1] + A[i][3]*temp[3][1];
+            A[i][2]*temp[2][1] + A[i][3]*temp[3][1];
 
       C[i][2] = A[i][0]*temp[0][2] + A[i][1]*temp[1][2] +
-	        A[i][2]*temp[2][2] + A[i][3]*temp[3][2];
+            A[i][2]*temp[2][2] + A[i][3]*temp[3][2];
 
       C[i][3] = A[i][0]*temp[0][3] + A[i][1]*temp[1][3] +
-	        A[i][2]*temp[2][3] + A[i][3]*temp[3][3];
+            A[i][2]*temp[2][3] + A[i][3]*temp[3][3];
     }
   }
   else if (C == A)
@@ -272,16 +272,16 @@ vt_mult_matrix(matrix4x4 A, matrix4x4 B, matrix4x4 C)
     for (i=0; i < 4; i++)
     {
       C[i][0] = temp[i][0]*B[0][0] + temp[i][1]*B[1][0] +
-	        temp[i][2]*B[2][0] + temp[i][3]*B[3][0];
+            temp[i][2]*B[2][0] + temp[i][3]*B[3][0];
 
       C[i][1] = temp[i][0]*B[0][1] + temp[i][1]*B[1][1] +
-	        temp[i][2]*B[2][1] + temp[i][3]*B[3][1];
+            temp[i][2]*B[2][1] + temp[i][3]*B[3][1];
 
       C[i][2] = temp[i][0]*B[0][2] + temp[i][1]*B[1][2] +
-	        temp[i][2]*B[2][2] + temp[i][3]*B[3][2];
+            temp[i][2]*B[2][2] + temp[i][3]*B[3][2];
 
       C[i][3] = temp[i][0]*B[0][3] + temp[i][1]*B[1][3] +
-	        temp[i][2]*B[2][3] + temp[i][3]*B[3][3];
+            temp[i][2]*B[2][3] + temp[i][3]*B[3][3];
     }
   }
   else
@@ -289,28 +289,28 @@ vt_mult_matrix(matrix4x4 A, matrix4x4 B, matrix4x4 C)
     for (i=0; i < 4; i++)
     {
       C[i][0] = A[i][0]*B[0][0] + A[i][1]*B[1][0] +
-	        A[i][2]*B[2][0] + A[i][3]*B[3][0];
+            A[i][2]*B[2][0] + A[i][3]*B[3][0];
 
       C[i][1] = A[i][0]*B[0][1] + A[i][1]*B[1][1] +
-	        A[i][2]*B[2][1] + A[i][3]*B[3][1];
+            A[i][2]*B[2][1] + A[i][3]*B[3][1];
 
       C[i][2] = A[i][0]*B[0][2] + A[i][1]*B[1][2] +
-	        A[i][2]*B[2][2] + A[i][3]*B[3][2];
+            A[i][2]*B[2][2] + A[i][3]*B[3][2];
 
       C[i][3] = A[i][0]*B[0][3] + A[i][1]*B[1][3] +
-	        A[i][2]*B[2][3] + A[i][3]*B[3][3];
+            A[i][2]*B[2][3] + A[i][3]*B[3][3];
     }
   }
 }
 
 void
 vt_mult_rot_matrix(float theta, char axis, int order, matrix4x4 A)
-{				/* NOTE: theta is in radians */
+{               /* NOTE: theta is in radians */
   int axis1, axis2;
   float costh, sinth;
   vec4d temp;
 
-  axis -= 'x';			/* WARNING: axis must be lowercase! */
+  axis -= 'x';          /* WARNING: axis must be lowercase! */
 
   axis1 = (axis+1) % 3;
   axis2 = (axis+2) % 3;
@@ -323,7 +323,7 @@ vt_mult_rot_matrix(float theta, char axis, int order, matrix4x4 A)
     temp[1] = costh*A[axis1][axis1] + sinth*A[axis2][axis1];
     temp[2] = costh*A[axis1][axis2] + sinth*A[axis2][axis2];
     temp[3] = costh*A[axis1][3] + sinth*A[axis2][3];
-    
+
     A[axis2][axis] = -sinth*A[axis1][axis] + costh*A[axis2][axis];
     A[axis2][axis1] = -sinth*A[axis1][axis1] + costh*A[axis2][axis1];
     A[axis2][axis2] = -sinth*A[axis1][axis2] + costh*A[axis2][axis2];
@@ -409,7 +409,7 @@ vt_mult_scale_matrix(vec3d scale, int order, matrix4x4 A)
     A[1][0] = A[1][0]*scale[PX];
     A[1][1] = A[1][1]*scale[PY];
     A[1][2] = A[1][2]*scale[PZ];
-    
+
     A[2][0] = A[2][0]*scale[PX];
     A[2][1] = A[2][1]*scale[PY];
     A[2][2] = A[2][2]*scale[PZ];
@@ -424,7 +424,7 @@ void
 vt_transform3(pos3d pt, matrix4x4 A, pos3d xformedpt)
 {
   float temp[3];
-  
+
   /* NOTE: this assumes A is not a perspective transformation     */
   /* NOTE 2: this assumes pt is a row vector multiplying A on the */
   /*         left!                                                */
@@ -440,7 +440,7 @@ vt_transform3(pos3d pt, matrix4x4 A, pos3d xformedpt)
     temp[0] = pt[0]*A[0][0] + pt[1]*A[1][0] + pt[2]*A[2][0] + A[3][0];
     temp[1] = pt[0]*A[0][1] + pt[1]*A[1][1] + pt[2]*A[2][1] + A[3][1];
     temp[2] = pt[0]*A[0][2] + pt[1]*A[1][2] + pt[2]*A[2][2] + A[3][2];
-    
+
     xformedpt[0] = temp[0];
     xformedpt[1] = temp[1];
     xformedpt[2] = temp[2];

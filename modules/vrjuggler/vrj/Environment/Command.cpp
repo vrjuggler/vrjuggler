@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Environment/TimedUpdate.h>
 #include <vrj/Config/ConfigChunkDB.h>
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
 void Command::resetFireTime (TimeStamp& ts) {
     next_fire_time = ts.usecs()/1000 + refresh_time;
 }
@@ -54,7 +54,7 @@ int Command::operator < (const Command& cmd2) const {
     // true if self should be called _after_ cmd2
     return (next_fire_time < cmd2.next_fire_time);
 }
-    
+
 
 
 
@@ -67,7 +67,7 @@ CommandRefresh::CommandRefresh() {
     next_fire_time = refresh_time = 0.0;
 }
 
-    
+
 /*virtual*/ void CommandRefresh::call (std::ostream& out) const {
     out << "<protocol handler=\"xml_config\">\n"
         "<refresh_all/>\n"
@@ -119,7 +119,7 @@ CommandSendDescDB::CommandSendDescDB (ChunkDescDB* _db, bool _all) {
     all = _all;
 }
 
-    
+
 /*virtual*/ void CommandSendDescDB::call (std::ostream& out) const {
 
     out << "<protocol handler=\"xml_config\">\n";
@@ -149,7 +149,7 @@ CommandTimedUpdate::CommandTimedUpdate (TimedUpdate* _tu, float _refresh_time) {
     next_fire_time = 0;
 }
 
-    
+
 /*virtual*/ void CommandTimedUpdate::call (std::ostream& out) const {
     out << "<protocol handler=\"" << timed_update->getProtocolHandlerName()
         << "\">\n";

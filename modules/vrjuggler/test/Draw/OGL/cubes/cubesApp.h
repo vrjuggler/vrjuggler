@@ -33,7 +33,7 @@
 #ifndef _CUBES_APP_
 #define _CUBES_APP_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #ifdef VJ_OS_Darwin
 #include <OpenGL/gl.h>

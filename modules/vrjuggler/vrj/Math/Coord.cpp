@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Math/Coord.h>
 #include <vrj/Math/Matrix.h>
 
 namespace vrj
 {
-   
+
 Coord::Coord(Matrix mat)
 {
    mat.getXYZEuler(orient[0], orient[1], orient[2]);

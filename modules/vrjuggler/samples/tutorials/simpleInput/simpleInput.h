@@ -33,7 +33,7 @@
 #ifndef _SIMPLE_INPUT
 #define _SIMPLE_INPUT
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <iostream>
 #include <iomanip>

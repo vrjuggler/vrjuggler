@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #define PF_C_API 1
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <Performer/pf.h>
 #include <Performer/pfdu.h>
@@ -59,7 +59,7 @@
 
 namespace vrj
 {
-   
+
 // Draw Callbacks
 void PfDrawFuncStereoLeft(pfChannel *chan, void* chandata);
 void PfDrawFuncStereoRight(pfChannel *chan, void* chandata);

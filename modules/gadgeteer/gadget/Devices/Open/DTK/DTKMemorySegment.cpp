@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <dtk.h>
 
@@ -39,7 +39,7 @@
 
 namespace vrj
 {
-   
+
 DTKMemorySegment::DTKMemorySegment()
 {
     floatData = NULL;
@@ -64,16 +64,16 @@ DTKMemorySegment::~DTKMemorySegment()
 bool DTKMemorySegment::config(ConfigChunk* c)
 {
     _type = (DTK_dataType)static_cast<int>(c->getProperty("dataType"));
-    
+
     _numItems = static_cast<int>(c->getProperty("itemCount"));
     _segmentType = (DTK_memoryType)static_cast<int>(c->getProperty("inputType"));
 
     _segmentName = c->getProperty("segmentName").cstring();
     _remotehost = c->getProperty("remoteHost").cstring();
-    if(_remotehost[0] == '\0') 
+    if(_remotehost[0] == '\0')
     {
-	delete [] _remotehost;
-	_remotehost = NULL;
+    delete [] _remotehost;
+    _remotehost = NULL;
     }
 
     switch(_segmentType)
@@ -90,30 +90,30 @@ bool DTKMemorySegment::config(ConfigChunk* c)
     case dtk_digital:
         _numItems = 1; // Assuming digital data is passes as single integers... STill must be tested and confirmed.
         _type = DTK_INT;
-		break;
+        break;
     case dtk_analog:
         _numItems = 1; // Same as digital, only we are assuming floats.  Both digital and analog need to be refined
         _type = DTK_FLOAT;
-		break;
+        break;
     case dtk_custom:
         break; // The dataType and itemCount must be specified earlier for this option
-	}
+    }
 
     switch(_type)
     {
     case DTK_INVALID:
         break; // Don't allocate any data... just continue on.
     case DTK_INT:
-	_segmentSize = sizeof(int)*_numItems;
+    _segmentSize = sizeof(int)*_numItems;
         intData = (int*)malloc(_segmentSize);
         break;
     case DTK_FLOAT:
-	_segmentSize = sizeof(float)*_numItems;
+    _segmentSize = sizeof(float)*_numItems;
         floatData = (float*)malloc(_segmentSize);
         break;
     case DTK_BYTES:
     case DTK_CSTRING:
-	_segmentSize = sizeof(char)*_numItems;
+    _segmentSize = sizeof(char)*_numItems;
         charData = (char*)malloc(_segmentSize);
         break;
     default:
@@ -127,18 +127,18 @@ bool DTKMemorySegment::config(ConfigChunk* c)
 bool DTKMemorySegment::connectSegment(dtkClient* in_parent)
 {
     parent_client = in_parent;
-    m = parent_client->getSharedMem(_segmentSize, _segmentName);	
+    m = parent_client->getSharedMem(_segmentSize, _segmentName);
     if(_remotehost != NULL) m->getRemote(_remotehost);
     return true;
 }
 
-DTKMemorySegment::operator float*() const 
+DTKMemorySegment::operator float*() const
 {
     if(floatData == NULL) return 0;
 
     m->read(floatData);
     if(m->differentByteOrder()) dtk_swapBytes(floatData, _segmentSize);
-    
+
     switch(_type)
     {
     case DTK_INVALID:

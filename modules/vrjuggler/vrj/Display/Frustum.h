@@ -33,15 +33,15 @@
 #ifndef _VRJ_FRUSTUM_H_
 #define _VRJ_FRUSTUM_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 namespace vrj
 {
-   
+
 //------------------------------
 //: A frustum object.
-// 
-//	This is a frustum.
+//
+//  This is a frustum.
 //
 // @author Allen Bierbaum
 //  Date: 10-1-97

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Math/Coord.h>
 #include <vrj/Math/Plane.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 bool SimPosition::config(ConfigChunk* chunk)
 {
    if(! (Input::config(chunk) && Position::config(chunk) && SimInput::config(chunk) ))

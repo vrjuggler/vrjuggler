@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/WallProjection.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 void SurfaceViewport::config(ConfigChunk *chunk)
 {
    vprASSERT(chunk != NULL);

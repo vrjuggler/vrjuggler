@@ -34,7 +34,7 @@
 #define _VRJ_MATRIX_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <math.h>
 #include <string.h>
 #include <vrj/Math/Math.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 class Quat;
 class Vec3;
 class Coord;

@@ -33,7 +33,7 @@
 #ifndef _VRJ_APP_H_
 #define _VRJ_APP_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Kernel/ConfigChunkHandler.h>
 #include <vrj/Sound/SoundManagerFactory.h>
@@ -41,7 +41,7 @@
 
 namespace vrj
 {
-   
+
 class DrawManager;
 class Kernel;
 

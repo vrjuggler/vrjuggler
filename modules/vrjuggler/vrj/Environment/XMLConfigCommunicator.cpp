@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Environment/XMLConfigCommunicator.h>
 #include <vrj/Environment/Connect.h>
@@ -44,7 +44,7 @@
 
 namespace vrj
 {
-   
+
 //: Constructor
 XMLConfigCommunicator::XMLConfigCommunicator ():NetCommunicator() {
     //connection = NULL;
@@ -88,7 +88,7 @@ XMLConfigCommunicator::XMLConfigCommunicator ():NetCommunicator() {
 
 //: True if the identifier represents a stream we can read.
 //  The id is the token in the handler attribute of a
-//  protocol tag in the EM/VjC command stream.  A given 
+//  protocol tag in the EM/VjC command stream.  A given
 //  NetCommunicator can theoretically serve several handlers;
 //  this is useful for backwards compatibility.
 //! RETURNS: True - if self knows how to parse this stream.
@@ -132,10 +132,10 @@ bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
     //vjConfigChunk* ch = 0;
     ConfigChunkDB newchunkdb;
     //      std::cout << "ok, we've got a node named '" << name << "' with a value of '" << node_value << "'." << std::endl;
-    
+
     switch (doc.getNodeType()) {
     case DOM_Node::DOCUMENT_NODE:
-	std::cout << "document node..." << std::endl;
+    std::cout << "document node..." << std::endl;
         child = doc.getFirstChild();
         while (child != 0) {
             retval = retval && (interpretDOM_Node(child));
@@ -143,7 +143,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
         }
         break;
     case DOM_Node::ELEMENT_NODE:
-	std::cout << "command is '" << name << "'." << std::endl;
+    std::cout << "command is '" << name << "'." << std::endl;
         if (!strcasecmp (name, "apply_chunks")) {
             // we've received a set of configchunks to apply.
             newchunkdb.erase();
@@ -174,11 +174,11 @@ bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
             ConfigManager::instance()->lockActive();
             ConfigChunkDB* db = new ConfigChunkDB((*(ConfigManager::instance()->getActiveConfig())));   // Make a copy
             ConfigManager::instance()->unlockActive();
-            
+
             //vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdb.\n" << vjDEBUG_FLUSH;
             //vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
             connection->sendChunkDB (db, true);
-            
+
         }
         else if (!strcasecmp (name, "request_current_descs")) {
             ChunkDescDB* db = ChunkFactory::instance()->getChunkDescDB();
@@ -192,7 +192,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
         }
         break; // ELEMENT_NODE
     default:
-	std::cout << "confused" << std::endl;
+    std::cout << "confused" << std::endl;
         break;
     }
     return retval;

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
@@ -54,7 +54,7 @@
 
 namespace vrj
 {
-   
+
 XercesXMLParser::XercesXMLParser () {
     // Xerces will have been initialized by the parser pool.
     parser = new DOMParser;
@@ -64,7 +64,7 @@ XercesXMLParser::XercesXMLParser () {
     parser->setErrorHandler(error_handler);
     parser->setCreateEntityReferenceNodes(false);
     parser->setToCreateXMLDeclTypeNode(true);
-    
+
 }
 
 
@@ -91,9 +91,9 @@ bool XercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
     catch (SAXParseException& e) {
         char* id = (DOMString(e.getSystemId())).transcode();
         char* msg = (DOMString(e.getMessage())).transcode();
-        vjDEBUG (vjDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") << 
-            " in file \"" << id << "\", line " << e.getLineNumber() << 
-            ", column " << e.getColumnNumber() << ": " << 
+        vjDEBUG (vjDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") <<
+            " in file \"" << id << "\", line " << e.getLineNumber() <<
+            ", column " << e.getColumnNumber() << ": " <<
             msg << "\n" << vjDEBUG_FLUSH;
         delete[] id;
         delete[] msg;
@@ -108,7 +108,7 @@ bool XercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
 //     }
     catch (...) {
         vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
-            " XercesXMLParser threw unidentified exception.\n" << 
+            " XercesXMLParser threw unidentified exception.\n" <<
             vjDEBUG_FLUSH;
         retval = false;
     }
@@ -135,9 +135,9 @@ bool XercesXMLParser::readStream (std::istream& input, DOM_Node& doc) {
     }
     catch (SAXParseException& e) {
         char* msg = (DOMString(e.getMessage())).transcode();
-        vjDEBUG (vjDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") << 
-            " in file \"<unnamed stream>\", line " << e.getLineNumber() << 
-            ", column " << e.getColumnNumber() << ": " << 
+        vjDEBUG (vjDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") <<
+            " in file \"<unnamed stream>\", line " << e.getLineNumber() <<
+            ", column " << e.getColumnNumber() << ": " <<
             msg << "\n" << vjDEBUG_FLUSH;
         delete[] msg;
         retval = false;
@@ -151,7 +151,7 @@ bool XercesXMLParser::readStream (std::istream& input, DOM_Node& doc) {
 //     }
     catch (...) {
         vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
-            " XercesXMLParser threw unidentified exception.\n" << 
+            " XercesXMLParser threw unidentified exception.\n" <<
             vjDEBUG_FLUSH;
         retval = false;
     }

@@ -33,18 +33,18 @@
 #ifndef _VRJ_DTK_MEMORY_SEGMENT_H_
 #define _VRJ_DTK_MEMORY_SEGMENT_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Devices/Open/DTK/DTK.h>
 
 namespace vrj
 {
-   
+
 typedef enum {
-    dtk_pos_ZYXEuler = 0, 
+    dtk_pos_ZYXEuler = 0,
     dtk_pos_XYZEuler,
-    dtk_pos_QUAT,  
-    dtk_digital, 
-    dtk_analog, 
+    dtk_pos_QUAT,
+    dtk_digital,
+    dtk_analog,
     dtk_custom
 } DTK_memoryType;
 
@@ -64,7 +64,7 @@ class VJ_CLASS_API DTKMemorySegment
 public:
     DTKMemorySegment();
     ~DTKMemorySegment();
-    
+
     //: configure the flock with a config chunk
     bool config(ConfigChunk* c);
 
@@ -73,26 +73,26 @@ public:
 
     const char* SegmentName() { return _segmentName; }
     const char* RemoteHost() { return _remotehost; }
-    
+
     DTK_memoryType SegmentType() { return _segmentType; }
-    
+
     //: Returns the number of items, size of each item, and the total memory size of
     //  The specified memory segment.  This allows users to make sure they are
     //  receiving the correct data.
-    int	ItemCount() { return _numItems; }
+    int ItemCount() { return _numItems; }
     int ItemSize() {
-	    if(_segmentSize % _numItems != 0); //ERROR!!!  Do something here!!!
-	    return _segmentSize/_numItems; 
+        if(_segmentSize % _numItems != 0); //ERROR!!!  Do something here!!!
+        return _segmentSize/_numItems;
     }
     int SegmentSize() { return _segmentSize; }
-    
-    
+
+
     //: The index is used by the Multi type device DTK.  The index is used for the proxy
     //  interfaces.  The Item index is specified at configuration time, depending on the
     //  order each chunk was entered.
     int ItemIndex() { return InputIndex; }
     void setItemIndex(int i) { InputIndex = i; }
-    
+
     //: Makes the connection to the DTK Client and gets the memory segment.
     bool connectSegment(dtkClient* in_parent);
 
@@ -102,11 +102,11 @@ public:
     operator float*() const;
     operator int*() const;
     operator char*() const;
-    
+
 private:
     dtkSharedMem* m;
     dtkClient* parent_client;
-    
+
     char* _segmentName;
     char* _remotehost;
 
@@ -118,9 +118,9 @@ private:
 
     int _numItems;
     int _segmentSize;
-    
+
     float *floatData;
-    int	  *intData;
+    int   *intData;
     char  *charData;
 };
 

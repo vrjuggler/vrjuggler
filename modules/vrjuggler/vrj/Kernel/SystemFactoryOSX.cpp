@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -44,7 +44,7 @@
 
 namespace vrj
 {
-   
+
 vprSingletonImp(SystemFactoryOSX);
 
 // This function comes from Carbon SetupGL 1.5 distributed by Apple
@@ -87,20 +87,20 @@ SystemFactoryOSX::SystemFactoryOSX()
 // Menubar Definitions
 //
 /*******************************************************************/
-#define	rMenuBar	128	/* menu bar */
+#define rMenuBar    128 /* menu bar */
 
-#define	mApple		128	/* Apple menu */
-#define	iAbout		1
+#define mApple      128 /* Apple menu */
+#define iAbout      1
 
-#define	mFile		129	/* File menu */
-#define	iNew		1
-#define	iClose		4
-#define	iQuitSeparator	10
-#define	iQuit		11
+#define mFile       129 /* File menu */
+#define iNew        1
+#define iClose      4
+#define iQuitSeparator  10
+#define iQuit       11
 
-#define	mEdit		130	/* Edit menu */
+#define mEdit       130 /* Edit menu */
 
-#define kAboutBox	200	/* Dialog resource for About box */
+#define kAboutBox   200 /* Dialog resource for About box */
 
 /*******************************************************************/
 //
@@ -116,7 +116,7 @@ static OSErr QuitAppleEventHandler( const AppleEvent *appleEvt, AppleEvent* repl
 
 void SystemFactoryOSX::Initialize()
 {
-    OSErr	err;
+    OSErr   err;
 
 
     InitCursor();
@@ -126,8 +126,8 @@ void SystemFactoryOSX::Initialize()
         ExitToShell();
 
     /*/ Doesn't work right quite yet...
-    char	bundle_path[1024];
-    char	root_path[] = "\0";
+    char    bundle_path[1024];
+    char    root_path[] = "\0";
     CFStringRef bundle_path_cfstr;
     CFURLRef bundleURL;
     CFBundleRef myBundle;
@@ -149,17 +149,17 @@ void SystemFactoryOSX::Initialize()
     CFRelease(bundleURL);
     CFRelease(bundle_path_cfstr); */
 
-    Handle	menuBar;
-    MenuRef	menu;
-    long	response;
+    Handle  menuBar;
+    MenuRef menu;
+    long    response;
 
-    menuBar = GetNewMBar(rMenuBar);	/* read menus into menu bar */
+    menuBar = GetNewMBar(rMenuBar); /* read menus into menu bar */
     if ( menuBar != nil )
     {
-        SetMenuBar(menuBar);	/* install menus */
+        SetMenuBar(menuBar);    /* install menus */
 
         err = Gestalt(gestaltMenuMgrAttr, &response);
-	if ((err == noErr) && (response & gestaltMenuMgrAquaLayoutMask))
+    if ((err == noErr) && (response & gestaltMenuMgrAquaLayoutMask))
         {
             menu = GetMenuHandle( mFile );
             DeleteMenuItem( menu, iQuit );
@@ -173,8 +173,8 @@ void SystemFactoryOSX::Initialize()
 
 void SystemFactoryOSX::EventLoop()
 {
-    Boolean	gotEvent;
-    EventRecord	event;
+    Boolean gotEvent;
+    EventRecord event;
 
     gQuitFlag = false;
     //vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::EventLoop()" << std::endl << vjDEBUG_FLUSH;
@@ -189,14 +189,14 @@ void SystemFactoryOSX::EventLoop()
     // This should kill the application completely.
     // The nice thing about this is that when you put the application into a bundle
     // Cmd + Q works for killing the application.
-    ExitToShell();					
+    ExitToShell();
 }
 
 void SystemFactoryOSX::DoEvent(EventRecord *event)
 {
-    char	key;
-    short	part;
-    WindowRef	whichWindow;
+    char    key;
+    short   part;
+    WindowRef   whichWindow;
 
     switch (event->what)
     {
@@ -225,9 +225,9 @@ void SystemFactoryOSX::DoEvent(EventRecord *event)
 
 void SystemFactoryOSX::DoMenuCommand(long menuResult)
 {
-    short	menuID;		/* the resource ID of the selected menu */
-    short	menuItem;	/* the item number of the selected menu */
-	
+    short   menuID;     /* the resource ID of the selected menu */
+    short   menuItem;   /* the item number of the selected menu */
+
     menuID = HiWord(menuResult);    /* use macros to get item & menu number */
     menuItem = LoWord(menuResult);
 
@@ -243,7 +243,7 @@ void SystemFactoryOSX::DoMenuCommand(long menuResult)
                 case iQuit:
                     ExitToShell();
                     break;
-				
+
                 default:
                     break;
             }
@@ -251,12 +251,12 @@ void SystemFactoryOSX::DoMenuCommand(long menuResult)
 
         case mFile:
             break;
-		
+
         case mEdit:
             break;
     }
 
-    HiliteMenu(0);	/* unhighlight what MenuSelect (or MenuKey) hilited */
+    HiliteMenu(0);  /* unhighlight what MenuSelect (or MenuKey) hilited */
 }
 
 };

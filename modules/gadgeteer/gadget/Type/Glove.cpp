@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Input/Type/Glove.h>
 #include <vrj/Math/Vec4.h>
 
 namespace vrj
 {
-   
+
 
 /////////////////////////////////////////////////////////////////////////
 //                GloveData                                          //

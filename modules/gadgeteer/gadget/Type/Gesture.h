@@ -34,12 +34,12 @@
 #define _VRJ_GESTURE_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 
 namespace vrj
 {
-   
+
 //-------------------------------------------------------------------------
 //: Base Juggler Gesture interface class
 // This class is the base interface for all gesture recognition objects

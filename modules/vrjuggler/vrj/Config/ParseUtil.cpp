@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <ctype.h>
 #include <vrj/Math/Math.h>
 #include <vrj/Util/Debug.h>
@@ -39,7 +39,7 @@
 
 namespace vrj
 {
-   
+
 /* a utility function that probably belongs elsewhere */
 bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
     /* reads a string from in.  a string is either " delimited
@@ -360,17 +360,17 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
     // if it's an open file afterwards.
 
     bool found = false;
-    
+
     char* path_string_tmp;
     std::string path_string;
     std::string retval;
-    
+
     // Read the value in the config path environment variable.  If it is
     // non-NULL, store the value in cfg_path since std::string's are
     // easier to use.
     if ( (path_string_tmp = getenv(env_name.c_str())) != NULL ) {
         path_string = path_string_tmp;
-        
+
         vjDEBUG(vjDBG_ALL, vjDBG_STATE_LVL)
             << "Falling back on " << env_name << ": " << path_string << "\n"
             << vjDEBUG_FLUSH;
@@ -380,7 +380,7 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
     if ( path_string.length() > 0 ) {
         std::string::size_type cur_pos = 0, old_pos = 0;
         std::string full_path;
-        
+
 // Define the separator character for the elements of $VJ_CFG_PATH.  On Win32,
 // we use ";", and on everything else, we use ":".
 #ifdef VJ_OS_Win32
@@ -398,11 +398,11 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
 #else
         char elem_sep[] = ":";
 #endif
-        
+
         while ( ! found ) {
             // Clear the flags on in so that we can try opening a new file.
             in.clear();
-            
+
             // Find the next occurrence of an element separator.
             cur_pos = path_string.find(elem_sep, old_pos);
 
@@ -432,14 +432,14 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
             // Append "/" + file_name to the current directory.
             full_path += "/";
             full_path += file_name;
-            
+
             vjDEBUG(vjDBG_CONFIG, vjDBG_STATE_LVL)
                 << "vjConfigChunkDB::load(): opening file " << full_path
                 << "\n" << vjDEBUG_FLUSH;
-            
+
             // Try to open the file name constructed above.
             in.open(full_path.c_str());
-            
+
             if ( in ) {
                 found = true;
                 retval = full_path;

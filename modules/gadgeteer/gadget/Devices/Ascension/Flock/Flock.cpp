@@ -42,7 +42,7 @@
 // Date: 4-22-99
 //===============================================================
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <sys/file.h>
 #include <sys/ioctl.h>
@@ -57,7 +57,7 @@
 
 namespace vrj
 {
-   
+
 // Helper to return the index for theData array
 // given the birdNum we are dealing with and the bufferIndex
 // to get

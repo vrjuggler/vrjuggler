@@ -33,12 +33,12 @@
 #ifndef _VRJ_PROPERTY_DESC_H_
 #define _VRJ_PROPERTY_DESC_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/EnumEntry.h>
 
 namespace vrj
 {
-   
+
 
 //------------------------------------------------------------
 //: A Description used to instantiate a Property

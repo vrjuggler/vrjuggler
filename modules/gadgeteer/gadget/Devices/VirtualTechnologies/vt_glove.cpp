@@ -10,7 +10,7 @@
 /*  ==========================================================  */
 
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

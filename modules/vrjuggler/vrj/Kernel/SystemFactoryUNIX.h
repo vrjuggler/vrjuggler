@@ -33,17 +33,17 @@
 #ifndef _VRJ_SYSTEM_FACTORY_UNIX_H_
 #define _VRJ_SYSTEM_FACTORY_UNIX_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/SystemFactory.h>
 #include <vpr/Util/Singleton.h>
 
 namespace vrj
 {
-   
+
 //---------------------------------------------------
 //: Concrete class for UNIX System specific Factory.
 //
-//	Concrete class to create UNIX system specific objects.
+//  Concrete class to create UNIX system specific objects.
 //
 // @author Allen Bierbaum
 //  Date: 9-9-97

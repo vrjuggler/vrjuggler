@@ -33,13 +33,13 @@
 #ifndef _VRJ_KEYBOARD_PROXY_H_
 #define _VRJ_KEYBOARD_PROXY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Proxy.h>
 #include <vrj/Input/Type/Keyboard.h>
 
 namespace vrj
 {
-   
+
 //: Proxy class to Keyboard based devices.
 //!PUBLIC_API:
 class VJ_CLASS_API KeyboardProxy : public TypedProxy<Keyboard>

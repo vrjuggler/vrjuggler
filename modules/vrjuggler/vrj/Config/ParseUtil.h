@@ -33,12 +33,12 @@
 #ifndef _VRJ_PARSEUTIL_H_
 #define _VRJ_PARSEUTIL_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/VarValue.h>
 
 namespace vrj
 {
-   
+
 bool readString (std::istream& in, char* buffer, int size, bool *quoted = NULL);
 
 VarType stringToVarType (const char* str);

@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Devices/Sim/SimAnalog.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {
-   
+
 //: Default Constructor
 SimAnalog::SimAnalog() : Analog(), SimInput()
 {

@@ -34,7 +34,7 @@
 #define _VRJ_VEC4_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <math.h>
 
 #include <vrj/Math/Matrix.h>

@@ -42,7 +42,7 @@
 // Date: 4-22-99
 //===============================================================
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <strstream>
 #include <fstream>
@@ -55,7 +55,7 @@
 
 namespace vrj
 {
-   
+
 // Helper to return the index for theData array
 // given the stationNum we are dealing with and the bufferIndex
 // to get

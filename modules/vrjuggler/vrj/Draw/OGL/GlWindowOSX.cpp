@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <OpenGL/gl.h>
 
@@ -45,7 +45,7 @@
 
 namespace vrj
 {
-   
+
 AGLContext GlWindowOSX::aglShareContext = NULL;
 
 GlWindowOSX::GlWindowOSX():GlWindow() {
@@ -61,7 +61,7 @@ void GlWindowOSX::swapBuffers() {
     if(aglContext)
     {
         aglSwapBuffers (aglContext);
-        
+
         Rect rectPort;
         if(gpWindow)
         {
@@ -77,7 +77,7 @@ void GlWindowOSX::swapBuffers() {
                 glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
                 glClear (GL_COLOR_BUFFER_BIT);
                 aglSwapBuffers (aglContext);
-                
+
                 glViewport (0, 0, rectPort.right - rectPort.left, rectPort.bottom - rectPort.top);
             }
         }
@@ -86,43 +86,43 @@ void GlWindowOSX::swapBuffers() {
 
 int GlWindowOSX::open() {
     vjDEBUG(vjDBG_INPUT_MGR,2) << "vjGlWindowOSX::open()" << std::endl << vjDEBUG_FLUSH;
-    
+
     GDHandle hGDWindow;
 
     rectWin.top = origin_y;
     rectWin.left = origin_x;
     rectWin.bottom = origin_y + window_height;
     rectWin.right = origin_x + window_width;
-    
+
     if (noErr != CreateNewWindow (kDocumentWindowClass, kWindowStandardDocumentAttributes | kWindowNoShadowAttribute | kWindowLiveResizeAttribute, &rectWin, &gpWindow))
     {
-        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlWindowOSX::open()	Window failed to open!" << std::endl << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlWindowOSX::open()    Window failed to open!" << std::endl << vjDEBUG_FLUSH;
         return false;
-    } 
+    }
     SetWindowTitleWithCFString(gpWindow,window_title);
     InstallStandardEventHandler(GetWindowEventTarget(gpWindow));
     ChangeWindowAttributes(gpWindow, NULL, kWindowCloseBoxAttribute );
-    
+
     ShowWindow (gpWindow);
     SetPort ( (GrafPtr) GetWindowPort(gpWindow) );
-    glInfo.fAcceleratedMust = false; 	// must renderer be accelerated?
-    glInfo.VRAM = 0 * 1048576;			// minimum VRAM (if not zero this is always required)
-    glInfo.textureRAM = 0 * 1048576;	// minimum texture RAM (if not zero this is always required)
-    glInfo.fDraggable = false; 		// desired vertical refresh frquency in Hz (0 = any)
-    glInfo.fmt = 0;					// output pixel format
-    
+    glInfo.fAcceleratedMust = false;    // must renderer be accelerated?
+    glInfo.VRAM = 0 * 1048576;          // minimum VRAM (if not zero this is always required)
+    glInfo.textureRAM = 0 * 1048576;    // minimum texture RAM (if not zero this is always required)
+    glInfo.fDraggable = false;      // desired vertical refresh frquency in Hz (0 = any)
+    glInfo.fmt = 0;                 // output pixel format
+
     int i = 0;
     glInfo.aglAttributes [i++] = AGL_RGBA;
     glInfo.aglAttributes [i++] = AGL_DOUBLEBUFFER;
     glInfo.aglAttributes [i++] = AGL_DEPTH_SIZE;
     glInfo.aglAttributes [i++] = 32;
     glInfo.aglAttributes [i++] = AGL_NONE;
-    
+
     BuildGLFromWindow (gpWindow, &aglContext, &glInfo);
     if (!aglContext)
     {
         DestroyGLFromWindow (&aglContext, &glInfo);
-        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlWindowOSX::open()	Window could not create GL Context!" << std::endl << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlWindowOSX::open()    Window could not create GL Context!" << std::endl << vjDEBUG_FLUSH;
         return false;
     }
     Rect rectPort;
@@ -132,7 +132,7 @@ int GlWindowOSX::open() {
     glClear (GL_COLOR_BUFFER_BIT);
     aglSwapBuffers (aglContext);
     glViewport (0, 0, rectPort.right - rectPort.left, rectPort.bottom - rectPort.top);
-    
+
     window_is_open = true;
     return true;
 }
@@ -140,10 +140,10 @@ int GlWindowOSX::open() {
 int GlWindowOSX::close() {
     vjDEBUG(vjDBG_INPUT_MGR,2) << "vjGlWindowOSX::close()" << std::endl << vjDEBUG_FLUSH;
     if(!gpWindow) return false;
-    
+
     DestroyGLFromWindow (&aglContext, &glInfo);
     DisposeWindow (gpWindow);
-    
+
     gpWindow = NULL;
     gFrameWindow = 0;
     gTimeWindow.hi = 0;
@@ -162,16 +162,16 @@ bool GlWindowOSX::makeCurrent() {
 void GlWindowOSX::config(Display* _display)
 {
    vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlWindowOSX::config(Display* _display)" << std::endl << vjDEBUG_FLUSH;
-   
+
    GlWindow::config(_display);
 
     // Get the vector of display chunks
    ConfigChunk* dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
    ConfigChunk* displayChunk = _display->getConfigChunk();
-   
+
    mPipe = _display->getPipe();
    vprASSERT(mPipe >= 0);
-   
+
    window_title = CFStringCreateWithCString(NULL, _display->getName().c_str(), kCFStringEncodingMacRoman);
 }
 
@@ -193,11 +193,11 @@ void GlWindowOSX::config(Display* _display)
 // Takes window in the form of an AGLDrawable and geometry request and tries
 // to build best context
 //
-// Inputs: 	aglDraw: a valid AGLDrawable (i.e., a WindowPtr)
-//		*pcontextInfo: request and requirements for cotext and drawable
+// Inputs:  aglDraw: a valid AGLDrawable (i.e., a WindowPtr)
+//      *pcontextInfo: request and requirements for cotext and drawable
 //
 // Outputs: *paglContext as allocated
-//			*pcontextInfo:  allocated parameters
+//          *pcontextInfo:  allocated parameters
 //
 // if fail to allocate: paglContext will be NULL
 // if error: will return error and paglContext will be NULL
@@ -219,7 +219,7 @@ OSStatus GlWindowOSX::BuildGLonWindow (WindowPtr pWindow,
    short numDevices;
    GLint depthSizeSupport;
    OSStatus err = noErr;
-   
+
    if (!pWindow || !pcontextInfo)
    {
       ReportError ("NULL parameter passed to BuildGLonDrawable.");
@@ -256,13 +256,13 @@ OSStatus GlWindowOSX::BuildGLonWindow (WindowPtr pWindow,
       ReportError ("Renderer check failed");
       return err;
    }
-   
+
    // do agl
    if ((Ptr) kUnresolvedCFragSymbolAddress == (Ptr) aglChoosePixelFormat) // check for existance of OpenGL
    {
       ReportError ("OpenGL not installed");
       return NULL;
-   }   
+   }
    // we successfully passed the renderer check
 
    if ((!pcontextInfo->fDraggable && (numDevices == 1)))  // not draggable on a single device
@@ -272,7 +272,7 @@ OSStatus GlWindowOSX::BuildGLonWindow (WindowPtr pWindow,
 
    aglReportError();
 
-   if (NULL == pcontextInfo->fmt) 
+   if (NULL == pcontextInfo->fmt)
    {
       ReportError("Could not find valid pixel format");
       return NULL;
@@ -281,17 +281,17 @@ OSStatus GlWindowOSX::BuildGLonWindow (WindowPtr pWindow,
    // using a default method of sharing all the contexts enables texture sharing across these contexts by default
    *paglContext = aglCreateContext (pcontextInfo->fmt, aglShareContext);            // Create an AGL context
    aglReportError ();
-   if (NULL == *paglContext) 
+   if (NULL == *paglContext)
    {
       ReportError ("Could not create context");
       return NULL;
    }
    if (aglShareContext == NULL)
       aglShareContext = *paglContext;
-   
+
    if (!aglSetDrawable (*paglContext, GetWindowPort (pWindow))) // attach the CGrafPtr to the context
       return aglReportError ();
-   
+
    if(!aglSetCurrentContext (*paglContext)) // make the context the current context
       return aglReportError ();
 
@@ -307,27 +307,27 @@ OSStatus GlWindowOSX::BuildGLonWindow (WindowPtr pWindow,
 OSStatus GlWindowOSX::DestroyGLFromWindow (AGLContext* paglContext,
                                              structGLWindowInfo* pcontextInfo)
 {
-	OSStatus err;
-	
-	if ((!paglContext) || (!*paglContext))
-		return paramErr; // not a valid context
-	glFinish ();
-	aglSetCurrentContext (NULL);
-	err = aglReportError ();
-	aglSetDrawable (*paglContext, NULL);
-	err = aglReportError ();
-	aglDestroyContext (*paglContext);
-	err = aglReportError ();
-	*paglContext = NULL;
-	
-	if (pcontextInfo->fmt)
-	{
-		aglDestroyPixelFormat (pcontextInfo->fmt); // pixel format is no longer valid
-		err = aglReportError ();
-	}
-	pcontextInfo->fmt = 0;
-	
-	return err;
+    OSStatus err;
+
+    if ((!paglContext) || (!*paglContext))
+        return paramErr; // not a valid context
+    glFinish ();
+    aglSetCurrentContext (NULL);
+    err = aglReportError ();
+    aglSetDrawable (*paglContext, NULL);
+    err = aglReportError ();
+    aglDestroyContext (*paglContext);
+    err = aglReportError ();
+    *paglContext = NULL;
+
+    if (pcontextInfo->fmt)
+    {
+        aglDestroyPixelFormat (pcontextInfo->fmt); // pixel format is no longer valid
+        err = aglReportError ();
+    }
+    pcontextInfo->fmt = 0;
+
+    return err;
 }
 
 short GlWindowOSX::FindGDHandleFromWindow (WindowPtr pWindow,
@@ -338,12 +338,12 @@ short GlWindowOSX::FindGDHandleFromWindow (WindowPtr pWindow,
    long greatestArea, sectArea;
    short numDevices = 0;
    GDHandle hgdNthDevice;
-   
+
    if (!pWindow || !phgdOnThisDevice)
       return NULL;
-      
+
    *phgdOnThisDevice = NULL;
-   
+
    GetPort (&pgpSave);
    SetPortWindowPort (pWindow);
 
@@ -356,16 +356,16 @@ short GlWindowOSX::FindGDHandleFromWindow (WindowPtr pWindow,
    LocalToGlobal ((Point*)& rectWind.bottom);
    hgdNthDevice = GetDeviceList ();
    greatestArea = 0;
-   // check window against all gdRects in gDevice list and remember 
+   // check window against all gdRects in gDevice list and remember
    //  which gdRect contains largest area of window}
    while (hgdNthDevice)
    {
       if (TestDeviceAttribute (hgdNthDevice, screenDevice))
          if (TestDeviceAttribute (hgdNthDevice, screenActive))
          {
-            // The SectRect routine calculates the intersection 
-            //  of the window rectangle and this gDevice 
-            //  rectangle and returns TRUE if the rectangles intersect, 
+            // The SectRect routine calculates the intersection
+            //  of the window rectangle and this gDevice
+            //  rectangle and returns TRUE if the rectangles intersect,
             //  FALSE if they don't.
             SectRect (&rectWind, &(**hgdNthDevice).gdRect, &rectSect);
             // determine which screen holds greatest window area
@@ -381,7 +381,7 @@ short GlWindowOSX::FindGDHandleFromWindow (WindowPtr pWindow,
             hgdNthDevice = GetNextDevice(hgdNthDevice);
          }
    }
-   
+
    SetPort (pgpSave);
    return numDevices;
 }
@@ -391,14 +391,14 @@ short GlWindowOSX::FindGDHandleFromWindow (WindowPtr pWindow,
 //
 // looks at renderer attributes it has at least the VRAM is accelerated
 //
-// Inputs: 	hGD: GDHandle to device to look at
-//		pVRAM: pointer to VRAM in bytes required; out is actual VRAM
-//		       if a renderer was found, otherwise it is the input
-//		       parameter
-//		pTextureRAM:  pointer to texture RAM in bytes required; out is
-//		       same (implementation assume VRAM returned by card is
-//		       total so we add texture and VRAM)
-//		fAccelMust: do we check for acceleration
+// Inputs:  hGD: GDHandle to device to look at
+//      pVRAM: pointer to VRAM in bytes required; out is actual VRAM
+//             if a renderer was found, otherwise it is the input
+//             parameter
+//      pTextureRAM:  pointer to texture RAM in bytes required; out is
+//             same (implementation assume VRAM returned by card is
+//             total so we add texture and VRAM)
+//      fAccelMust: do we check for acceleration
 //
 // Returns: true if renderer for the requested device complies, false otherwise
 // ----------------------------------------------------------------------------
@@ -426,7 +426,7 @@ Boolean GlWindowOSX::CheckRenderer (GDHandle hGD, long* pVRAM,
       // see if we have an accelerated renderer, if so ignore non-accelerated ones
       // this prevents returning info on software renderer when actually we'll get the hardware one
       while (info)
-      {   
+      {
          aglDescribeRenderer(info, AGL_ACCELERATED, &dAccel);
          aglReportError ();
          if (dAccel)
@@ -435,14 +435,14 @@ Boolean GlWindowOSX::CheckRenderer (GDHandle hGD, long* pVRAM,
          aglReportError ();
          inum++;
       }
-         
+
       info = head_info;
       inum = 0;
       while (info)
       {
          aglDescribeRenderer (info, AGL_ACCELERATED, &dAccel);
          aglReportError ();
-         // if we can accel then we will choose the accelerated renderer 
+         // if we can accel then we will choose the accelerated renderer
          // how about compliant renderers???
          if ((canAccel && dAccel) || (!canAccel && (!fAccelMust || dAccel)))
          {
@@ -475,18 +475,18 @@ Boolean GlWindowOSX::CheckRenderer (GDHandle hGD, long* pVRAM,
 }
 
 //-----------------------------------------------------------------------------
-// CheckAllDeviceRenderers 
+// CheckAllDeviceRenderers
 //
 // looks at renderer attributes and each device must have at least one
 // renderer that fits the profile
 //
-// Inputs: 	pVRAM: pointer to VRAM in bytes required; out is actual min
+// Inputs:  pVRAM: pointer to VRAM in bytes required; out is actual min
 //                     VRAM of all renderers found, otherwise it is the input
 //                     parameter
-//		pTextureRAM:  pointer to texture RAM in bytes required; out is
-//		       same (implementation assume VRAM returned by card is
-//		       total so we add texture and VRAM)
-//		fAccelMust: do we check fro acceleration
+//      pTextureRAM:  pointer to texture RAM in bytes required; out is
+//             same (implementation assume VRAM returned by card is
+//             total so we add texture and VRAM)
+//      fAccelMust: do we check fro acceleration
 //
 // Returns: true if any renderer for on each device complies (not necessarily
 // the same renderer), false otherwise
@@ -502,7 +502,7 @@ Boolean GlWindowOSX::CheckAllDeviceRenderers (long* pVRAM, long* pTextureRAM,
    Boolean canAccel = false, found = false, goodCheck = true; // can the renderer accelerate, did we find a valid renderer for the device, are we still successfully on all the devices looked at
    long MinVRAM = 0x8FFFFFFF; // max long
    GDHandle hGD;
-   
+
    hGD = GetDeviceList (); // get the first screen
    while (hGD && goodCheck)
    {
@@ -529,14 +529,14 @@ Boolean GlWindowOSX::CheckAllDeviceRenderers (long* pVRAM, long* pTextureRAM,
             aglReportError ();
             inum++;
          }
-            
+
          info = head_info;
          inum = 0;
          while (info)
-         {   
+         {
             aglDescribeRenderer(info, AGL_ACCELERATED, &dAccel);
             aglReportError ();
-            // if we can accel then we will choose the accelerated renderer 
+            // if we can accel then we will choose the accelerated renderer
             // how about compliant renderers???
             if ((canAccel && dAccel) || (!canAccel && (!fAccelMust || dAccel)))
             {
@@ -563,7 +563,7 @@ Boolean GlWindowOSX::CheckAllDeviceRenderers (long* pVRAM, long* pTextureRAM,
       {
          if (MinVRAM > dMaxVRAM)
             MinVRAM = dMaxVRAM; // return VRAM
-         
+
       }
       else
          goodCheck = false; // one device failed thus entire requirement fails
@@ -600,7 +600,7 @@ void GlWindowOSX::ReportError (const char * strError)
 
 GLenum GlWindowOSX::aglReportError () {
    GLenum err = aglGetError();
-   if (AGL_NO_ERROR != err)    
+   if (AGL_NO_ERROR != err)
       ReportError ((char *)aglErrorString(err));
 
    return err;

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Devices/Open/Trackd/TrackdSensorStandalone.h>
 #include <vrj/Input/Devices/Open/Trackd/TrackdSensor.h>
 #include <vrj/Config/ConfigChunk.h>
@@ -40,7 +40,7 @@
 
 namespace vrj
 {
-   
+
  // ------------------------------------------------------------------------
  //: Constructor.
  // ------------------------------------------------------------------------

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Util/FileIO.h>
 #include <vrj/Input/Devices/Sim/SimGloveGesture.h>
@@ -38,7 +38,7 @@
 
 namespace vrj
 {
-   
+
 //: Construct the SimGloveGesture
 // -Set the keyboard key pairs <b>
 // -Load the sample file

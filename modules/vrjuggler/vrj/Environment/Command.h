@@ -35,12 +35,12 @@
 #ifndef _VRJ_COMMAND_H_
 #define _VRJ_COMMAND_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Performance/TimeStamp.h>
 
 namespace vrj
 {
-   
+
 class TimedUpdate;
 class ConfigChunkDB;
 class ChunkDescDB;
@@ -56,7 +56,7 @@ public:
     void resetFireTime (TimeStamp& ts);
 
     int operator < (const Command& cmd2) const;
-    
+
     virtual const std::string& getName () const = 0;
 };
 
@@ -68,7 +68,7 @@ private:
 
 public:
     CommandRefresh();
-    
+
     virtual void call (std::ostream& out) const;
 
     virtual const std::string& getName() const;
@@ -81,7 +81,7 @@ private:
     ConfigChunkDB* db;
     bool all;
     static const std::string command_name;
-    
+
 public:
     CommandSendChunkDB (ConfigChunkDB* _db, bool _all = false);
 
@@ -100,7 +100,7 @@ private:
 
 public:
     CommandSendDescDB (ChunkDescDB* _db, bool _all = false);
-    
+
     virtual void call (std::ostream& out) const;
 
     virtual const std::string& getName() const;
@@ -112,9 +112,9 @@ class CommandTimedUpdate: public Command {
 public:
     TimedUpdate* timed_update;
     static const std::string command_name;
-    
+
     CommandTimedUpdate (TimedUpdate* _tu, float _refresh_time);
-    
+
     virtual void call (std::ostream& out) const;
 
     virtual const std::string& getName () const;

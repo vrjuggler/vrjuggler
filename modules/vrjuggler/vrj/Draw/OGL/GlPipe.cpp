@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #ifdef VJ_OS_Darwin
 #   include <OpenGL/gl.h>
@@ -51,7 +51,7 @@
 
 namespace vrj
 {
-   
+
 
 //: Start the pipe running
 //! POST: The pipe has it's own thread of control and is ready to operate

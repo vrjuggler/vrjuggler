@@ -33,7 +33,7 @@
 #ifndef _ANALOG_APP_
 #define _ANALOG_APP_
 
-#include <vrj/vjConfig.h>          // needed by other juggler classes
+#include <vrj/vrjConfig.h>          // needed by other juggler classes
 
 // C++ and STL (standard template library - http://www.sgi.com/Technology/STL)
 #include <iostream> // for std::cout
@@ -55,10 +55,10 @@
 #include <vrj/Input/Type/AnalogInterface.h>
 
 // texture application objects
-#include "renderGeometry.h"  // render interleaved vertex array data 
+#include "renderGeometry.h"  // render interleaved vertex array data
 #include "cubeGeometry.h"    // cube geometry data
 
-//: VR Juggler application demonstration to show you 
+//: VR Juggler application demonstration to show you
 //  how to do texturing in an OpenGL juggler application
 class AnalogDemoApplication : public vrj::GlApp
 {
@@ -73,21 +73,21 @@ public:
    // (called for every window that is opened)
    // put your opengl resource allocation here...
    virtual void contextInit();
-   
-   //: Called immediately upon closing an OpenGL context 
+
+   //: Called immediately upon closing an OpenGL context
    // (called for every window that is closed)
    // put your opengl deallocation here...
    virtual void contextClose();
 
    //: put vrj device inits here
    virtual void init();
-   
-   //: Function to "draw" the scene 
+
+   //: Function to "draw" the scene
    //  put your opengl draw functions here...
    //  PRE: OpenGL state has correct transformation and buffer selected
    //  POST: The current scene has been drawn
    virtual void draw();
-   
+
    // Function called before updating trackers but after the frame is drawn
    // do calculations here...
    virtual void postFrame();
@@ -107,7 +107,7 @@ private:
       }
       int id;
    };
-   
+
    cubeGeometry                   mCubeGeometry;
    vrj::GlContextData<ResourceID> mCubeDisplayList;
 
@@ -116,7 +116,7 @@ private:
 
    // timer
    vrj::Timer timer;
-};   
+};
 
 
 #endif

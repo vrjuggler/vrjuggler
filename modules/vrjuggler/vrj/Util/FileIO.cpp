@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Util/Debug.h>
 #include <vrj/Util/FileIO.h>
 
 namespace vrj
 {
-   
+
 std::vector<std::string> FileIO::mPaths;
 
 void FileIO::addFilePath( const std::string& filepath )
@@ -46,22 +46,22 @@ void FileIO::addFilePath( const std::string& filepath )
    mPaths.push_back( demangled );
 }
 
-//: true - 
+//: true -
 bool FileIO::fileExists( const char* const name )
 {
    std::string stdstring_name = name;
    std::string demangled_name = demangleFileName( stdstring_name, "" );
-	FILE* file = ::fopen( demangled_name.c_str(), "r" );
-	if (file == NULL)
-	{
-		return false;
-	}
+    FILE* file = ::fopen( demangled_name.c_str(), "r" );
+    if (file == NULL)
+    {
+        return false;
+    }
 
-	else
-	{
-		::fclose( file );
-		return true;
-	}
+    else
+    {
+        ::fclose( file );
+        return true;
+    }
 }
 
 bool FileIO::fileExists( const std::string& name )
@@ -84,12 +84,12 @@ std::string FileIO::resolvePathForName( const char* const filename )
 {
    std::string stdstring_name = filename;
    std::string demangled_name = demangleFileName( stdstring_name, "" );
-	
+
    for (unsigned int x = 0; x < FileIO::mPaths.size(); ++x)
    {
       std::string slash = "/";
       std::string temp  = FileIO::mPaths[x] + slash + demangled_name;
-      
+
       // if this path works, then return it.
       if (fileExists( temp ))
       {
@@ -97,7 +97,7 @@ std::string FileIO::resolvePathForName( const char* const filename )
          return temp;
       }
    }
-   
+
    // couldn't find any that matched, so just return the filename.
    //cout<<"Did not need to fix path: "<<demangled_name<<"\n"<<flush;
    return demangled_name;
@@ -107,19 +107,19 @@ std::string FileIO::resolvePathForName( const char* const filename )
 
 //: Returns a copy of s with all environment variable names replaced
 //+ with their values.
-std::string FileIO::replaceEnvVars( const std::string& s ) 
+std::string FileIO::replaceEnvVars( const std::string& s )
 {
     unsigned int i, j;
     int lastpos = 0;
     std::string result = "";
-    for (i = 0; i < s.length(); i++) 
+    for (i = 0; i < s.length(); i++)
     {
         if (s[i] == '$')
         {
             //process an env var
             result += std::string(s, lastpos, i - lastpos);
             i++; // skip $
-            if (s[i] == '{') 
+            if (s[i] == '{')
             {
                // now search for the closing brace...
                 for (j = i; j < s.length(); j++)
@@ -168,7 +168,7 @@ std::string FileIO::replaceEnvVars( const std::string& s )
 
 
 //: is n an absolute path name?
-bool FileIO::isAbsolutePathName (const std::string& n) 
+bool FileIO::isAbsolutePathName (const std::string& n)
 {
 #ifdef WIN32
     return ((n.length() > 0) && (n[0] == '\\'))
@@ -180,19 +180,19 @@ bool FileIO::isAbsolutePathName (const std::string& n)
 
 
 
-std::string FileIO::demangleFileName (const std::string& n, std::string parentfile) 
+std::string FileIO::demangleFileName (const std::string& n, std::string parentfile)
 {
 
    std::string fname = replaceEnvVars (n);
 
-   if (!isAbsolutePathName(fname)) 
+   if (!isAbsolutePathName(fname))
    {
       // it's a relative pathname... so we have to add in the path part
       // of parentfile...
       //         cout << "demangling relative pathname '" << fname.c_str() << "' with parent dir '"
       //              << parentfile.c_str() << "'\n" << endl;
       int lastslash = 0;
-      for (unsigned int i = 0; i < parentfile.length(); i++) 
+      for (unsigned int i = 0; i < parentfile.length(); i++)
       {
             if (parentfile[i] == '/')
                 lastslash = i;
@@ -201,7 +201,7 @@ std::string FileIO::demangleFileName (const std::string& n, std::string parentfi
                 lastslash = i;
 #endif
       }
-      if (lastslash) 
+      if (lastslash)
       {
          std::string s(parentfile, 0, lastslash+1);
          fname = s + n;

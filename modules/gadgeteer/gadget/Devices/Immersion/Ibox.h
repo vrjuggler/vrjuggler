@@ -39,7 +39,7 @@
 #ifndef _VRJ_IBOX_H_
 #define _VRJ_IBOX_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Input/Type/Digital.h>
 #include <vrj/Input/Type/Analog.h>
@@ -48,7 +48,7 @@
 
 namespace vrj
 {
-   
+
 struct IBOX_DATA {
    int button[4];
    int analog[4];
@@ -74,7 +74,7 @@ public:
       this->setMax( 255.0f );
    }
    ~IBox();
-   
+
    virtual bool config( ConfigChunk* c );
 
    // Input Pure Virtual Functions
@@ -82,7 +82,7 @@ public:
    int stopSampling();
    int sample();
    void updateData();
-   
+
    static std::string getChunkType() { return std::string( "IBox" ); }
 
    int getDigitalData( int d = 0 );

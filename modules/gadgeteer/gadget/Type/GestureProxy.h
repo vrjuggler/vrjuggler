@@ -40,7 +40,7 @@
 #ifndef _VRJ_GESTURE_PROXY_H_
 #define _VRJ_GESTURE_PROXY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <math.h>
 
 #include <vrj/Input/Type/Gesture.h>
@@ -48,7 +48,7 @@
 
 namespace vrj
 {
-   
+
 //: Proxy to Gesture object
 //
 // A proxy is used by the user to actually acces the gesture data.

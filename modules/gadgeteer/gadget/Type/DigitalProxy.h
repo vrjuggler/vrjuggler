@@ -39,14 +39,14 @@
 #ifndef _VRJ_DIGITALPROXY_H_
 #define _VRJ_DIGITALPROXY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Digital.h>
 #include <vrj/Input/Type/Proxy.h>
 #include <vpr/Util/Assert.h>
 
 namespace vrj
 {
-   
+
 //--------------------------------------------------------------------------
 //: A proxy class to digital devices, used by the InputManager.
 //

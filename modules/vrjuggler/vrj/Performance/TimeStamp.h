@@ -35,7 +35,7 @@
 #ifndef _VRJ_TIMESTAMP_H_
 #define _VRJ_TIMESTAMP_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #if VJ_PERFORMANCE == VJ_PERF_SGI
 #include <vrj/Performance/TimeStampSGI.h>

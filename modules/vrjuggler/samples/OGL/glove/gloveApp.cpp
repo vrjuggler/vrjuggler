@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <math.h>
 #include <GL/gl.h>
@@ -83,11 +83,11 @@ void gloveApp::myDraw()
     this->renderLightsAndMaterials();
 
     glPushMatrix();
-    
+
    glMatrixMode(GL_MODELVIEW);
    //glLoadIdentity();
    glLoadMatrixf( mNavigation.getFloatPtr() );
-   
+
    // draw the floor
    glPushMatrix();
        glScalef( 3.0f, 1.0f, 3.0f );
@@ -126,7 +126,7 @@ void gloveApp::myDraw()
        mScene->drawTable();
        glDisable(GL_TEXTURE_2D);
    glPopMatrix();
-   
+
    glPopMatrix();
 }
 
@@ -140,7 +140,7 @@ bool gloveApp::LeftPointing( )
    {
       return true;
    }
-   else 
+   else
       return false;
 }
 
@@ -154,7 +154,7 @@ bool gloveApp::LeftOpen()
    {
       return true;
    }
-   else 
+   else
       return false;
 }
 
@@ -168,7 +168,7 @@ bool gloveApp::RightPointing( )
    {
       return true;
    }
-   else 
+   else
       return false;
 }
 
@@ -182,7 +182,7 @@ bool gloveApp::RightOpen()
    {
       return true;
    }
-   else 
+   else
       return false;
 }
 
@@ -193,7 +193,7 @@ bool gloveApp::LeftFist()
    {
       return true;
    }
-   else 
+   else
       return false;
 }
 
@@ -204,7 +204,7 @@ bool gloveApp::RightFist()
    {
       return true;
    }
-   else 
+   else
       return false;
 }
 
@@ -223,7 +223,7 @@ void gloveApp::postFrame()
     vrj::Matrix finger_matrix;
     vrj::Matrix invNav;
     invNav.invert(mNavigation);
-    
+
    /////////////////////////////////////////////////////////
    //: Debug stuff
    std::cout<<mPinchLeftThumb->getData()
@@ -236,39 +236,39 @@ void gloveApp::postFrame()
             <<mPinchRightMiddle->getData()
             <<mPinchRightRing->getData()
             <<mPinchRightPinky->getData()<<"\n"<<std::flush;
-         
+
    if (LeftPointing() == true)
    {
       std::cout<<"Left Pointing"<<std::flush;
-   } 
-   
+   }
+
    else if (LeftOpen() == true)
    {
       std::cout<<"Left Open"<<std::flush;
    }
-   
+
    else if (LeftFist() == true)
    {
       std::cout<<"Left Fist"<<std::flush;
    }
-   
+
    if (RightPointing() == true)
    {
       std::cout<<", Right Pointing"<<std::flush;
-   } 
-   
+   }
+
    else if (RightOpen() == true)
    {
       std::cout<<", Right Open"<<std::flush;
    }
-   
+
    else if (RightFist() == true)
    {
       std::cout<<", Right Fist"<<std::flush;
    }
-   
+
    std::cout<<"\n"<<std::flush;
-   
+
    /////////////////////////////////////////////////////////
    //: Handle navigation
    //mNavigation.accelerate( LeftPointing() == true );
@@ -276,12 +276,12 @@ void gloveApp::postFrame()
    //mNavigation.setMatrix( mGlove->getPos(vrj::GloveData::INDEX) );
    //mNavigation.update( time );
 
-   
+
    //: Get the position of the index finger:
     finger_matrix = mGlove->getPos(vrj::GloveData::INDEX);
     finger_matrix.getTrans( glovePos[0], glovePos[1], glovePos[2] );
     glovePos.xformVec( invNav, glovePos );
-    
+
     ////////////////////////
     // NAVIGATION         //
     ////////////////////////////////////////////////////////
@@ -290,7 +290,7 @@ void gloveApp::postFrame()
     if (LeftPointing() == true)
     {
       userVelocity += 0.0001f;
-    } 
+    }
     else if (LeftFist() == true)
     {
       userVelocity = 0.0f;
@@ -302,8 +302,8 @@ void gloveApp::postFrame()
     userInfo.update( wandInfo, vrj::Vec3(0.0f, 0.0f, 0.0f) );
     userInfo.getSceneTransform( mNavigation );
     ////////////////////////////////////////////////////////
-    
-    
+
+
    ////////////////////////////////////////////////////////
    //: pick up the object if you're grabbing.
    //  set the object position equal to the glove position.
@@ -347,14 +347,14 @@ void gloveApp::postFrame()
           mCubeSelected = false;
           mSphereSelected = false;
           mConeSelected = true;
-      } 
+      }
 
       else if (min == sphereDistance)
       {
           mCubeSelected = false;
           mSphereSelected = true;
           mConeSelected = false;
-      } 
+      }
 
       else if (min == cubeDistance)
       {

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <sys/types.h>
 
 #include <vrj/Util/Debug.h>
@@ -41,7 +41,7 @@
 
 namespace vrj
 {
-   
+
 ChunkDescDB::ChunkDescDB (): descs() {
     ;
 }

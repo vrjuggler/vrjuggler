@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <sys/time.h>
 
 // need stdio for sprintf
@@ -47,7 +47,7 @@
 
 namespace vrj
 {
-   
+
 bool CyberGlove::config(ConfigChunk *c)
 {
    if(! (Input::config(c) && Glove::config(c) ))

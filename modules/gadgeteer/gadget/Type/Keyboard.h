@@ -33,7 +33,7 @@
 #ifndef _VRJ_KEYBOARD_H_
 #define _VRJ_KEYBOARD_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 
 // --------- VJKEY's ------------ //
@@ -97,7 +97,7 @@ const int VJMBUTTON3   = LAST_KEY + 7;
 
 namespace vrj
 {
-   
+
 //----------------------------------------------------------------------------
 //: Keyboard is an abstract class for interfacing with keyboard (and other
 //+ keybased) devices.

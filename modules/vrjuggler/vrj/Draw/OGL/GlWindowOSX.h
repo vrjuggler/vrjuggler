@@ -33,7 +33,7 @@
 #ifndef _VRJ_GL_WIN_OSX_H_
 #define _VRJ_GL_WIN_OSX_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Kernel/Kernel.h>
@@ -54,33 +54,33 @@
 // This structure comes from Carbon SetupGL 1.5 distributed by Apple
 // Corporation.  Its use is here is permitted by the license.
 struct structGLWindowInfo {
-   Boolean fAcceleratedMust; 	// input: must renderer be accelerated?
-   GLint aglAttributes[64]; 	// input: pixel format attributes always
+   Boolean fAcceleratedMust;    // input: must renderer be accelerated?
+   GLint aglAttributes[64];     // input: pixel format attributes always
                                 //        required (reset to what was actually
-				//        allocated)
-   long VRAM;			// input: minimum VRAM; output: actual (if
+                //        allocated)
+   long VRAM;           // input: minimum VRAM; output: actual (if
                                 //        successful otherwise input)
-   long textureRAM;		// input: amount of texture RAM required on
+   long textureRAM;     // input: amount of texture RAM required on
                                 //        card; output: same (used in
-				//        allcoation to ensure enough texture
-   AGLPixelFormat	fmt;	// input: none; output pixel format...
-   Boolean fDraggable;		// input: is window going to be dragable, 
-				//        * if so renderer check (accel, VRAM,
-				//          textureRAM) will look at all
-				//          renderers vice just the current one
-				//        * if window is not dragable renderer
-				//          check will either check the single
-				//          device or short circuit to software
-				//        * if window spans multiple devices 
-				//          software renderer is consider to
-				//          have unlimited VRAM, unlimited
-				//          textureRAM and to not be
-				//          accelerated
+                //        allcoation to ensure enough texture
+   AGLPixelFormat   fmt;    // input: none; output pixel format...
+   Boolean fDraggable;      // input: is window going to be dragable,
+                //        * if so renderer check (accel, VRAM,
+                //          textureRAM) will look at all
+                //          renderers vice just the current one
+                //        * if window is not dragable renderer
+                //          check will either check the single
+                //          device or short circuit to software
+                //        * if window spans multiple devices
+                //          software renderer is consider to
+                //          have unlimited VRAM, unlimited
+                //          textureRAM and to not be
+                //          accelerated
 };
 
 namespace vrj
 {
-   
+
 //------------------------------------
 //: A GL specific glWindow for OS X
 //------------------------------------
@@ -127,18 +127,18 @@ protected:
     GLenum aglReportError(void);
 
 private:
-    int          		mPipe;
-    structGLWindowInfo		glInfo;
-    AGLContext			aglContext;
-    Rect 			rectWin;
-    
-    WindowPtr 			gpWindow;
-    long			gFrameWindow;
-    AbsoluteTime		gTimeWindow;
-    float			gRotation;
-    CFStringRef			window_title;
+    int                 mPipe;
+    structGLWindowInfo      glInfo;
+    AGLContext          aglContext;
+    Rect            rectWin;
 
-    static AGLContext		aglShareContext;
+    WindowPtr           gpWindow;
+    long            gFrameWindow;
+    AbsoluteTime        gTimeWindow;
+    float           gRotation;
+    CFStringRef         window_title;
+
+    static AGLContext       aglShareContext;
 };
 
 };

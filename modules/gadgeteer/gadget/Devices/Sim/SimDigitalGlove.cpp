@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vpr/Util/Assert.h>
 #include <vrj/Input/Devices/Sim/SimDigitalGlove.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {
-   
+
 //: Default Constructor
 SimDigitalGlove::SimDigitalGlove() : Digital(), SimInput(), Glove()
 {

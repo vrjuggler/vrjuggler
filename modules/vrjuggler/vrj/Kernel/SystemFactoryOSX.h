@@ -33,20 +33,20 @@
 #ifndef _VRJ_SYSTEM_FACTORY_OSX_H_
 #define _VRJ_SYSTEM_FACTORY_OSX_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/SystemFactory.h>
 #include <vpr/Util/Singleton.h>
 #include <Carbon/Carbon.h>
 
 namespace vrj
 {
-   
+
 class DisplayManager;
 
 //---------------------------------------------------
 //: Concrete class for Mac OS X System specific Factory.
 //
-//	Concrete class to create Mac OS X system specific objects.
+//  Concrete class to create Mac OS X system specific objects.
 //
 // @author Allen Bierbaum
 //  Date: 9-9-97
@@ -70,8 +70,8 @@ protected:
 
 
 protected:
-    Boolean		gQuitFlag;
-    Boolean		InitComplete;
+    Boolean     gQuitFlag;
+    Boolean     InitComplete;
 
     void Initialize(void);
     void EventLoop(void);

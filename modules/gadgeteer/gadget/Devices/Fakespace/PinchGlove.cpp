@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <string>
 #include <sys/time.h>
@@ -45,7 +45,7 @@
 
 namespace vrj
 {
-   
+
 bool PinchGlove::config(ConfigChunk *c)
 {
    if(! (Input::config(c) && Glove::config(c) ))

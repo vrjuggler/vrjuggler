@@ -34,7 +34,7 @@
 #define _VRJ_GLOVE_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Input.h>
 //#include <vrj/Input/Type/DeviceInterface.h>
 #include <vrj/Input/Type/PosProxy.h>
@@ -47,7 +47,7 @@
 
 namespace vrj
 {
-   
+
 //: This is the data stored about a glove
 //
 // Desc:

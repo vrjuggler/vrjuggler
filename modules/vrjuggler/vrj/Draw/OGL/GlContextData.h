@@ -34,12 +34,12 @@
 #define _VRJ_GL_CONTEXT_DATA_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
 
 namespace vrj
 {
-   
+
 //! NOTE: This class for internal use only
 // This class is needed as a base class for GlContextData
 // because of dificulties making friends with a template.

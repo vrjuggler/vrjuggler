@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
 //: Constructor
 bool KeyboardXWin::config(ConfigChunk *c)
 {

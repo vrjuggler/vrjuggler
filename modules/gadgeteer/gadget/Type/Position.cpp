@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <float.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Config/ConfigChunk.h>
@@ -38,7 +38,7 @@
 
 namespace vrj
 {
-   
+
 // Set up the transformation information
 bool Position::config(ConfigChunk *c)
 {

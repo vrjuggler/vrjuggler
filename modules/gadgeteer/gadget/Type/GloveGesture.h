@@ -34,7 +34,7 @@
 #define _VRJ_GLOVE_GESTURE_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Input/Type/Gesture.h>
 #include <vrj/Input/Type/Glove.h>
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
 //: Abstract base class for all glove gesture recognition
 //
 //

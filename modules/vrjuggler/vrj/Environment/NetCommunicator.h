@@ -33,19 +33,19 @@
 #ifndef _VRJ_NETCOMMUNICATOR_H_
 #define _VRJ_NETCOMMUNICATOR_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 //#include <string>
 //#include <vrj/Environment/Connect.h>
 
 namespace vrj
 {
-   
+
 class Connect;
 
 //---------------------------------------------------------------
 //: Communications protocol handler for the Environment Manager.
-//  This design is based off of VjControl's 
+//  This design is based off of VjControl's
 //  Components/Network/NetCommunicator pluggable communications
 //  interface.
 //
@@ -87,7 +87,7 @@ public:
 
     //: True if the identifier represents a stream we can read.
     //  The id is the token in the handler attribute of a
-    //  protocol tag in the EM/VjC command stream.  A given 
+    //  protocol tag in the EM/VjC command stream.  A given
     //  NetCommunicator can theoretically serve several handlers;
     //  this is useful for backwards compatibility.
     //! RETURNS: True - if self knows how to parse this stream.

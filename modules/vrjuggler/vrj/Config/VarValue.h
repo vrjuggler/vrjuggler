@@ -33,23 +33,23 @@
 #ifndef _VRJ_VARVALUE_H_
 #define _VRJ_VARVALUE_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <ctype.h>
 
 namespace vrj
 {
-   
+
 /**********************************************************
-typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE, 
-	       T_CHUNK, T_EMBEDDEDCHUNK, T_INVALID } VarType;
+typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE,
+           T_CHUNK, T_EMBEDDEDCHUNK, T_INVALID } VarType;
 
 Had to rename T_INVALID due to a conflict of names with some
 Mac OS X variables.  This could be avoided, but just changing
 it here is much much easier.  Places which used T_INVALID have
 also been changed to VJ_T_INVALID.
 ************************************************************/
-typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE, 
-	       T_CHUNK, T_EMBEDDEDCHUNK, VJ_T_INVALID} VarType;
+typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE,
+           T_CHUNK, T_EMBEDDEDCHUNK, VJ_T_INVALID} VarType;
 
 typedef enum {U_Feet, U_Inches, U_Meters, U_Centimeters, U_BadUnit}
               CfgUnit;
@@ -107,14 +107,14 @@ public:
     //+      case of an error, and is used internally by some Config/*
     //+      classes.
     //!NOTE: There is a fairly harmless race condition where an extra
-    //+      invalid VarValue gets created & not deleted.  This is 
+    //+      invalid VarValue gets created & not deleted.  This is
     //+      very unlikely, and would only result in losing a few bytes
     //+      anyway.
     static VarValue& getInvalidInstance ();
 
 
     inline VarType getType () const {
-	return type;
+    return type;
     }
 
     //: Copy constructor.
@@ -161,7 +161,7 @@ public:
     //: Equality Operator
     bool operator == (const VarValue& v) const;
     inline bool operator != (const VarValue& v) const {
-	return !(*this == v);
+    return !(*this == v);
     }
 
 
@@ -177,7 +177,7 @@ public:
     //!RETURNS: i - integer value of self if T_INT, 0 or 1 if T_BOOL
     //!RETURNS: 0 - if not T_INT or T_BOOL (this is bad)
     operator int() const;
-    
+
 
     //: cast to ConfigChunk
     //!NOTE: Returns a copy of the contained chunk which must be
@@ -194,7 +194,7 @@ public:
 
 
     //: Returns a string VarValue as a c-style string
-    //!NOTE: returns a freshly allocated char array that the caller is 
+    //!NOTE: returns a freshly allocated char array that the caller is
     //+      responsible for deleting.
     char* cstring () const;
 
@@ -203,7 +203,7 @@ public:
     operator std::string () const;
 
 
-    //: Assignment overload 
+    //: Assignment overload
     //!NOTE: type of a VarValue is immutable, so a type mismatch here
     //+      can cause an error (in which case the assignment fails)
     VarValue& operator = (int i);
@@ -211,7 +211,7 @@ public:
     VarValue& operator = (float i);
     VarValue& operator = (const std::string& i);
 
-    //: Assignment overload 
+    //: Assignment overload
     //!NOTE: type of a VarValue is immutable, so a type mismatch here
     //+      can cause an error (in which case the assignment fails)
     //!NOTE: the VarValue makes a copy of the string - you can do with
@@ -225,10 +225,10 @@ public:
     //: Writes the value of self to the stream out
     //!NOTE: v knows what type it is, so it makes sure it's printed
     //+      in a reasonable way.  ints & floats are printed as numbers,
-    //+      bools as the strings "true" and "false", strings and 
+    //+      bools as the strings "true" and "false", strings and
     //+      chunks as their string reps, etc.
     friend std::ostream& operator << (std::ostream& out, const VarValue& v);
-    
+
 };
 
 };

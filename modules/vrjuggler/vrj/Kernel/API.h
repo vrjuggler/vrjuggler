@@ -34,16 +34,16 @@
 #define _VRJ_API_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 namespace vrj
 {
-   
+
 //---------------------------------------------------------
 // API: Encapulates interfaces to graphics APIs.
 //
 // PURPOSE:
-//	 This class is used for the application to tell the
+//   This class is used for the application to tell the
 //  Kernel what API it is using.
 //
 // @author Allen Bierbaum

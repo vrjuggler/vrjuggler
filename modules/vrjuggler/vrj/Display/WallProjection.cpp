@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 //#include <sys/types.h>
 
 #include <vrj/Display/WallProjection.h>
@@ -49,7 +49,7 @@
 
 namespace vrj
 {
-   
+
 
 // Just call the base class constructor
 void WallProjection::config(ConfigChunk* chunk)

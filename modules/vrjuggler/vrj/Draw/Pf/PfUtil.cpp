@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <vrj/Math/Vec3.h>
 
 namespace vrj
 {
-   
+
 //: Convert Performer matrix to Juggler matrix
 Matrix GetVjMatrix( const pfMatrix& perfMat )
 {
@@ -56,12 +56,12 @@ pfMatrix GetPfMatrix( const Matrix& mat )
 
    // NOTE: the man page and the pfLinMath.h header file disagree.
    // the man page says const float* and the header says float*
-   // the man page is correct, there is no reason for a set func to 
+   // the man page is correct, there is no reason for a set func to
    // change the source data (unless you're ref counting or something weird)
    // ...this may change in the future so that this cast can someday be removed.
    float* floatPtr = const_cast<float *>( mat.getFloatPtr() );
    perf_mat.set( floatPtr );
-   
+
    perf_mat.preRot( -90, 1, 0, 0, perf_mat );
    perf_mat.postRot( perf_mat, 90, 1, 0, 0 );
 

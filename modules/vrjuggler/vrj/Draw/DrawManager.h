@@ -33,12 +33,12 @@
 #ifndef _VRJ_DRAW_MANAGER_
 #define _VRJ_DRAW_MANAGER_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/ConfigChunkHandler.h>
 
 namespace vrj
 {
-   
+
 class DisplayManager;
 class App;
 class ConfigChunkDB;

@@ -33,7 +33,7 @@
 #ifndef _VRJ_XERCESXMLPARSERPOOL_H_
 #define _VRJ_XERCESXMLPARSERPOOL_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 //#include <vrj/Config/ConfigIOHandler.h>
 #include <vpr/Util/Singleton.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 //: Singleton object which can handle multi-format reading and writing of
 //+ ConfigChunkDB and ChunkDescDB files.
 //  Internally, this class knows a lot of specifics about the different

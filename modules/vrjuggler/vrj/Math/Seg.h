@@ -34,12 +34,12 @@
 #define _VRJ_SEG_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Math/Vec3.h>
 
 namespace vrj
 {
-   
+
 //: Seg: A ray segment.
 //
 // Used for intersections.
@@ -48,36 +48,36 @@ namespace vrj
 class VJ_CLASS_API Seg
 {
 public:
-	Seg()
-	{}
-	
-	//: Sets the segment to be one that starts at _p1 and ends at _p2
-	void makePts(const Vec3& _p1, const Vec3& _p2);
-	
-	//: Finds the point on the seg nearest to pt.
-	// Returns the nearest point in nearPt
-	//
-	// Makes assumptions that all pt dir is normalized
-	void findNearestPt(const Vec3& pt, Vec3& nearPt);
-	
+    Seg()
+    {}
+
+    //: Sets the segment to be one that starts at _p1 and ends at _p2
+    void makePts(const Vec3& _p1, const Vec3& _p2);
+
+    //: Finds the point on the seg nearest to pt.
+    // Returns the nearest point in nearPt
+    //
+    // Makes assumptions that all pt dir is normalized
+    void findNearestPt(const Vec3& pt, Vec3& nearPt);
+
    //: Does the segment hit the triangle
    //!NOTE: Triangle uses CCW vertex ordering
    bool isectTriangle(const Vec3 _v1, const Vec3 _v2, const Vec3 _v3, float* t);
 
-	//: Is the tValue in the range of the seg
+    //: Is the tValue in the range of the seg
    //! RETURNS: true if tDist > 0 and tDist < length
-	bool tValueOnSeg(float tDist) const
-	{ return ((tDist >= 0.0) && (tDist <= length));}
-	
-	//: Set equal to seg transformed by mat
+    bool tValueOnSeg(float tDist) const
+    { return ((tDist >= 0.0) && (tDist <= length));}
+
+    //: Set equal to seg transformed by mat
    void xform(const Matrix& mat, Seg& seg);
-	
-	Vec3	startPt()
-	{ return pos; }
-	
-	// PRE: dir MUST be normalized
-	Vec3	endPt()
-	{ return pos + (dir*length);}
+
+    Vec3    startPt()
+    { return pos; }
+
+    // PRE: dir MUST be normalized
+    Vec3    endPt()
+    { return pos + (dir*length);}
 
    float getLength()
    { return length; }
@@ -86,11 +86,11 @@ public:
    //! NOTE: t_val is a multiple of the direction
    Vec3 getPt(const float& t_val)
    { return (pos + (dir*t_val)); }
-	
-	
+
+
 public:
-	Vec3  pos;
-	Vec3  dir;      //: Direction: Assumed to be normalized
+    Vec3  pos;
+    Vec3  dir;      //: Direction: Assumed to be normalized
    float   length;   //: Length of the segment
 };
 
@@ -103,28 +103,28 @@ void Seg::makePts(const Vec3& _p1, const Vec3& _p2)
    //dir.normalize();
    if(length != 0.0f)
    {
-      dir /= length;		// Normalize it
+      dir /= length;        // Normalize it
    }
 }
 
 inline
 void Seg::xform(const Matrix& mat, Seg& seg)
 {
-	/*
-	pos.xformFull(mat, seg.pos);	    // c = Mo
-	dir.xformVec(mat, seg.dir);
-	dir.normalize();
-	length = seg.length;
-	*/
+    /*
+    pos.xformFull(mat, seg.pos);        // c = Mo
+    dir.xformVec(mat, seg.dir);
+    dir.normalize();
+    length = seg.length;
+    */
 
-	Vec3 pt1, pt2, diff;
-	pt1.xformFull(mat, seg.startPt());
-	pt2.xformFull(mat, seg.endPt());
-	diff = pt2-pt1;
+    Vec3 pt1, pt2, diff;
+    pt1.xformFull(mat, seg.startPt());
+    pt2.xformFull(mat, seg.endPt());
+    diff = pt2-pt1;
 
-	pos = pt1;
-	length = diff.length();
-	dir = (diff / length);
+    pos = pt1;
+    length = diff.length();
+    dir = (diff / length);
 }
 
 };

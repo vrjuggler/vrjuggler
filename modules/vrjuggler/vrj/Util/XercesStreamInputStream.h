@@ -33,12 +33,12 @@
 #ifndef _VRJ_XERCESSTREAMINPUTSTREAM_H_
 #define _VRJ_XERCESSTREAMINPUTSTREAM_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <util/BinInputStream.hpp>
 
 namespace vrj
 {
-   
+
 //: Xerces-XML compatible BinInputStream wrapper for std::istream.
 class XercesStreamInputStream: public BinInputStream {
 

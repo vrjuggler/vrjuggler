@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Input/Type/KeyboardProxy.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {
-   
+
 bool KeyboardProxy::config(ConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ KEYBOARD PROXY config()-----------------\n" << vjDEBUG_FLUSH;

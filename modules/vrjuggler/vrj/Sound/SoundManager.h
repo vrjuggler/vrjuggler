@@ -2,14 +2,14 @@
 #ifndef _VRJUGGLER_SOUND_MANAGER_
 #define _VRJUGGLER_SOUND_MANAGER_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/ConfigChunkHandler.h>
 
 namespace vrj
 {
    //: vrjuggler sound manager
    //!PUBLIC_API:
-   class SoundManager : public ConfigChunkHandler   
+   class SoundManager : public ConfigChunkHandler
    {
    public:
       //: Add the chunk to the configuration

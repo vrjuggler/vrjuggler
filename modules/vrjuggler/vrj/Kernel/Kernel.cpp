@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <string.h>
 #include <vrj/vrjParam.h>
 #include <vrj/Kernel/Kernel.h>
@@ -63,7 +63,7 @@
 
 namespace vrj
 {
-   
+
 //vjKernel* Kernel::_instance = NULL;
 vprSingletonImp(Kernel);
 
@@ -514,7 +514,7 @@ Kernel::Kernel()
    mDrawManager = NULL;
    mSoundManager = NULL;
    mDisplayManager = NULL;
-   
+
    environmentManager = NULL;
    perfBuffer = NULL;
 

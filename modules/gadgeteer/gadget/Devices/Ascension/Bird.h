@@ -39,7 +39,7 @@
 #ifndef _VRJ_BIRD_H_
 #define _VRJ_BIRD_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vpr/Thread/Thread.h>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Input/Type/Position.h>
@@ -47,7 +47,7 @@
 
 namespace vrj
 {
-   
+
 //: A start at a standalone bird derice driver.
 //
 //  Bird is based off of Flock, but for one bird only, the

@@ -33,7 +33,7 @@
 #ifndef _VRJ_PF_APP_H_
 #define _VRJ_PF_APP_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <Performer/pf/pfGroup.h>
 #include <Performer/pf/pfChannel.h>
 
@@ -46,7 +46,7 @@
 namespace vrj
 {
    class Kernel;
-   
+
 //-------------------------------------------------------------
 //: Encapulates an actual Performer application.
 //

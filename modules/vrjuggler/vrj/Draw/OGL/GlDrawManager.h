@@ -33,7 +33,7 @@
 #ifndef _VRJ_GL_DRAW_MANAGER_H_
 #define _VRJ_GL_DRAW_MANAGER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 //#include <vpr/Sync/CondVar.h>
 #include <vpr/Sync/Semaphore.h>
@@ -191,7 +191,7 @@ protected:     // --- Geom helpers --- //
 
 protected:
    //: Factory function to get system specific OpenGL window
-	//! POST: Returns an OpenGL window for the current system
+    //! POST: Returns an OpenGL window for the current system
    GlWindow* getGLWindow();
 
    void setCurrentContext(int val)

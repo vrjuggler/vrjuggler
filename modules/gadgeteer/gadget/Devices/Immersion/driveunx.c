@@ -9,7 +9,7 @@
  * Rev 2.1
  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #ifdef HAVE_SYS_STDSYMS_H
 #   include <sys/stdsyms.h>
@@ -44,20 +44,20 @@
 #   define SUN_PLATFORM
 #elif defined(VJ_OS_FreeBSD)
 #   define BSD_PLATFORM
-#endif	/* VJ_OS_IRIX */
+#endif  /* VJ_OS_IRIX */
 
 #if defined(SGI_PLATFORM) || defined(LINUX_PLATFORM)
 #define PORT1_DEV  "/dev/ttyd1"
 #define PORT2_DEV  "/dev/ttyd2"
 #define PORT3_DEV  "/dev/ttyd3"
 #define PORT4_DEV  "/dev/ttyd4"
-#define OFLAGS	(OPOST | OLCUC | ONLCR | OCRNL | ONOCR  \
-			| ONLRET | OFILL | OFDEL)
-#define LFLAGS	(ICANON | ISIG | XCASE | ECHO | ECHOE | ECHOK  \
-			| ECHONL | NOFLSH)
-#define IFLAGS	(IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK | INLCR  \
-			| ICRNL | IGNCR | IUCLC | ISTRIP | IXON  \
-			| IXOFF)
+#define OFLAGS  (OPOST | OLCUC | ONLCR | OCRNL | ONOCR  \
+            | ONLRET | OFILL | OFDEL)
+#define LFLAGS  (ICANON | ISIG | XCASE | ECHO | ECHOE | ECHOK  \
+            | ECHONL | NOFLSH)
+#define IFLAGS  (IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK | INLCR  \
+            | ICRNL | IGNCR | IUCLC | ISTRIP | IXON  \
+            | IXOFF)
 #endif
 
 #ifdef SUN_PLATFORM
@@ -65,14 +65,14 @@
 #define PORT2_DEV  "/dev/ttyb"
 #define PORT3_DEV  "/dev/ttyc"
 #define PORT4_DEV  "/dev/ttyd"
-#define OFLAGS	(OPOST | OLCUC | ONLCR | OCRNL | ONOCR  \
-			| ONLRET | OFILL | OFDEL)
-#define LFLAGS	(ICANON | ISIG | XCASE | ECHO | ECHOE | ECHOK  \
-			| ECHONL | NOFLSH | TOSTOP | ECHOCTL  \
-			| ECHOPRT | ECHOKE | IEXTEN)
-#define IFLAGS	(IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK  \
-			| INLCR | ICRNL | IGNCR | IUCLC | ISTRIP  \
-			| IXON | IXOFF | IMAXBEL)
+#define OFLAGS  (OPOST | OLCUC | ONLCR | OCRNL | ONOCR  \
+            | ONLRET | OFILL | OFDEL)
+#define LFLAGS  (ICANON | ISIG | XCASE | ECHO | ECHOE | ECHOK  \
+            | ECHONL | NOFLSH | TOSTOP | ECHOCTL  \
+            | ECHOPRT | ECHOKE | IEXTEN)
+#define IFLAGS  (IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK  \
+            | INLCR | ICRNL | IGNCR | IUCLC | ISTRIP  \
+            | IXON | IXOFF | IMAXBEL)
 #endif
 
 #ifdef HP_PLATFORM
@@ -80,24 +80,24 @@
 #define PORT2_DEV  "/dev/tty1p0"
 #define PORT3_DEV  "/dev/tty2p0"
 #define PORT4_DEV  "/dev/tty3p0"
-#define OFLAGS	(OPOST | OLCUC | ONLCR | OCRNL | ONOCR  \
-			| ONLRET | OFILL | OFDEL)
-#define LFLAGS	(ICANON | ISIG | XCASE | ECHO | ECHOE | ECHOK  \
-			| ECHONL | NOFLSH)
-#define IFLAGS	(IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK | INLCR  \
-			| ICRNL | IGNCR | IUCLC | ISTRIP | IXON  \
-			| IXOFF)
+#define OFLAGS  (OPOST | OLCUC | ONLCR | OCRNL | ONOCR  \
+            | ONLRET | OFILL | OFDEL)
+#define LFLAGS  (ICANON | ISIG | XCASE | ECHO | ECHOE | ECHOK  \
+            | ECHONL | NOFLSH)
+#define IFLAGS  (IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK | INLCR  \
+            | ICRNL | IGNCR | IUCLC | ISTRIP | IXON  \
+            | IXOFF)
 #endif
 
 #if defined(BSD_PLATFORM)
-#define PORT1_DEV	"/dev/ttyd1"
-#define PORT2_DEV	"/dev/ttyd2"
-#define PORT3_DEV	"/dev/ttyd3"
-#define PORT4_DEV	"/dev/ttyd4"
-#define OFLAGS		(OPOST | ONLCR)
-#define LFLAGS		(ICANON | ISIG | ECHO | ECHOE | ECHOK | ECHONL | NOFLSH)
-#define IFLAGS		(IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK |	\
-			 INLCR | ICRNL | IGNCR | ISTRIP | IXON | IXOFF)
+#define PORT1_DEV   "/dev/ttyd1"
+#define PORT2_DEV   "/dev/ttyd2"
+#define PORT3_DEV   "/dev/ttyd3"
+#define PORT4_DEV   "/dev/ttyd4"
+#define OFLAGS      (OPOST | ONLCR)
+#define LFLAGS      (ICANON | ISIG | ECHO | ECHOE | ECHOK | ECHONL | NOFLSH)
+#define IFLAGS      (IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK |    \
+             INLCR | ICRNL | IGNCR | ISTRIP | IXON | IXOFF)
 #endif
 
 
@@ -172,7 +172,7 @@ void host_start_timeout(int port)
         {
                 stop[port].tv_sec++;
                 stop[port].tv_usec -= 1000000L;
-        } 
+        }
 
 }
 
@@ -205,7 +205,7 @@ char    frame_buffer[NUM_PORTS+1][FRAME_BUF_SIZE];
 int     frame_head[NUM_PORTS+1] = { 0, 0};      /* chars come in here */
 int     frame_tail[NUM_PORTS+1] = { 0, 0};      /* chars are read out here */
 
- 
+
 
 /*--------------------------------*/
 /* Fixing up baud rate parameters */

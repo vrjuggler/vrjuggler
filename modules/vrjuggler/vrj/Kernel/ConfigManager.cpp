@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <stdlib.h>
 
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 /*
 ConfigManager* ConfigManager::_instance = NULL;
 vpr::Mutex  ConfigManager::_inst_lock;

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/ConfigChunkHandler.h>
 #include <vrj/Kernel/ConfigManager.h>
 #include <vrj/Config/ConfigChunk.h>
@@ -40,7 +40,7 @@
 
 namespace vrj
 {
-   
+
 namespace {
    enum PendItemResult
    { SUCCESS, FAILED, NEED_DEPS };

@@ -33,11 +33,11 @@
 #ifndef _VRJ_TIMESTAMP_NONE_H_
 #define _VRJ_TIMESTAMP_NONE_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 namespace vrj
 {
-   
+
 //-----------------------------------------
 //:Dummy time recorder
 //
@@ -73,32 +73,32 @@ public:
 
     //: returns 0.0
     inline float operator - (const TimeStampNone& t2) const {
-	return 0.0;
+    return 0.0;
     }
 
 
     //: returns 0.0
     inline float usecs() {
-	return 0.0;
+    return 0.0;
     }
 
 
     //: assignment operator
     inline TimeStampNone& operator= (TimeStampNone& t2) {
-	return *this;
+    return *this;
     }
 
 
     inline friend std::ostream& operator << (std::ostream& out,
                                              TimeStampNone& ts)
     {
-	return out;
+    return out;
     }
 
 
     //: returns resolution of timer in microseconds
     inline float getResolution() {
-	return 0.0;
+    return 0.0;
     }
 
 };

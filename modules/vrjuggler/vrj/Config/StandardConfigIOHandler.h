@@ -33,7 +33,7 @@
 #ifndef _VJ_STANDARDCONFIGIO_H_
 #define _VJ_STANDARDCONFIGIO_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 //#include <string.h>
 //#include <stdlib.h>
@@ -43,13 +43,13 @@
 
 namespace vrj
 {
-   
+
 //: Parent interface for XMLConfigIO and StandardConfigIO
 class StandardConfigIOHandler: public ConfigIOHandler {
 
 public:
 
-    StandardConfigIOHandler () { 
+    StandardConfigIOHandler () {
         ;
     }
 

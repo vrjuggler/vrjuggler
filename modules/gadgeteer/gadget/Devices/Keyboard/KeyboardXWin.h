@@ -33,7 +33,7 @@
 #ifndef _VRJ_KEYBOARD_XWIN_H_
 #define _VRJ_KEYBOARD_XWIN_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -46,7 +46,7 @@
 
 namespace vrj
 {
-   
+
    class ConfigChunk;
 
 //---------------------------------------------------------------

@@ -2,7 +2,7 @@
 #ifndef _VRJUGGLER_AUDIO_JUGGLER_SOUND_MANAGER_
 #define _VRJUGGLER_AUDIO_JUGGLER_SOUND_MANAGER_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Sound/SoundManager.h>
 
 namespace vrj

@@ -33,19 +33,19 @@
 #ifndef _VRJ_SYSTEM_FACTORY_WIN32_H_
 #define _VRJ_SYSTEM_FACTORY_WIN32_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/SystemFactory.h>
 #include <vpr/Util/Singleton.h>
 
 namespace vrj
 {
-   
+
 class DisplayManager;
 
 //---------------------------------------------------
 //: Concrete class for SGI System specific Factory.
 //
-//	Concrete class to create SGI system specific objects.
+//  Concrete class to create SGI system specific objects.
 //
 // @author Allen Bierbaum
 //  Date: 9-9-97

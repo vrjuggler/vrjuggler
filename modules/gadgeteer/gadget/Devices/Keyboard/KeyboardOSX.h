@@ -33,7 +33,7 @@
 #ifndef _VRJ_KEYBOARD_OSX_H_
 #define _VRJ_KEYBOARD_OSX_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Input/Type/Keyboard.h>
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
    class ConfigChunk;
 
 //---------------------------------------------------------------
@@ -128,19 +128,19 @@ private:
    //: Perform anything that must be done when state switches
    void lockMouse();
    void unlockMouse();
-   
+
    int OSXKeyToKey(int xKey);
-   
-protected:  
+
+protected:
    bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
                                        // NOTE: In a case where it does not, then the window vars must be set prior
                                        //    to starting the controlLoop (startSampling)
    int          m_x, m_y;    // x_origin, y_origin
    unsigned int m_width,m_height;
-   
-   Rect 			rectWin;
-   WindowPtr 			gpWindow;
-   CFStringRef			window_title;
+
+   Rect             rectWin;
+   WindowPtr            gpWindow;
+   CFStringRef          window_title;
 
    /* Keyboard state holders */
    // NOTE: This driver does not use the normal triple buffering mechanism.
@@ -160,7 +160,7 @@ protected:
    float m_mouse_sensitivity;
    int   mSleepTimeMS;            // Amount of time to sleep in milliseconds between updates
    int   mPrevX, mPrevY;          // Previous mouse location
-   int	 mSnapTimer;
+   int   mSnapTimer;
 };
 
 enum OSXKeyMap {

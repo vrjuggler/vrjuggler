@@ -33,12 +33,12 @@
 #ifndef _VRJ_CHUNKDESCDB_H_
 #define _VRJ_CHUNKDESCDB_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/ChunkDesc.h>
 
 namespace vrj
 {
-   
+
 //--------------------------------------------------------------
 //: Storage class for ChunkDescs used by the ConfigChunkDB.
 //
@@ -110,7 +110,7 @@ public:
     //!POST: all elements of db are inserted into self, replacing any
     //+      existing ChunkDescs with the same token.
     void insert (ChunkDescDB* db);
-    
+
 
     //:Removes ChunkDesc from self
     //!ARGS: _token - a non-NULL C string

@@ -34,7 +34,7 @@
 #define _VRJ_SIM_ANALOG_H
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Input/Type/Analog.h>
 #include <vrj/Input/Devices/Sim/SimInput.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 //: Simulated analog device
 // Simulates an analog device from a keyboard device.
 // It allows any number of simulated analog devices to be created.

@@ -33,7 +33,7 @@
 #ifndef _VRJ_DISPLAY_MANAGER_H_
 #define _VRJ_DISPLAY_MANAGER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vpr/Util/Singleton.h>
 
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
 class DrawManager;
 class Display;
 

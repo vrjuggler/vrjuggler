@@ -33,7 +33,7 @@
 #ifndef _SIMPLE_GLOVE_APP_
 #define _SIMPLE_GLOVE_APP_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <math.h>
 #include <GL/gl.h>
@@ -76,13 +76,13 @@ public:
    virtual void init()
    {
       //std::cout<<"simpleGloveApp::init()"<<std::flush;
-      
+
       // use this interface for the position of the glove.
       mGlove.init("VJGlove");
-      
+
       // use this interface if you want to use *gestures*
       mGesture.init("VJGesture");
-      
+
       //std::cout<<" --- done\n"<<std::flush;
    }
 
@@ -120,7 +120,7 @@ public:
    virtual void draw()
    {
       //std::cout<<"simpleGloveApp::draw()\n"<<std::flush;
-      
+
       initGLState();    // This should really be in another function
       myDraw();
    }
@@ -163,7 +163,7 @@ protected:
    GLUquadricObj* mQuadObj;
 
 public:
-      
+
    vrj::GestureInterface  mGesture;
    vrj::GloveInterface    mGlove;      // the glove
 };

@@ -33,7 +33,7 @@
 #ifndef _VRJ_GL_PIPE_H_
 #define _VRJ_GL_PIPE_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>

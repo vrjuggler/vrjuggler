@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Input/Type/GloveProxy.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {
-   
+
 bool GloveProxy::config(ConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ GLOVE PROXY config() -----------------\n" << vjDEBUG_FLUSH;

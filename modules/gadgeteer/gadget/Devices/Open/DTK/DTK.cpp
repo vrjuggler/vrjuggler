@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <strstream>
 #include <fstream>
@@ -47,11 +47,11 @@
 // to get
 //! ARGS:stationNum - The number of the cube we care about
 //! ARGS:bufferIndex - the value of current, progress, or valid (it is an offset in the array)
-// XXX: We are going to say the cubes are 0 based 
+// XXX: We are going to say the cubes are 0 based
 
 namespace vrj
 {
-   
+
 int DTK::getStationIndex(int stationNum, int bufferIndex)
 {
     // We could assert here to check that bufferIndex is valid.  As far as station index, there are several
@@ -69,13 +69,13 @@ DTK::DTK()
 
 bool DTK::config(ConfigChunk *c)
 {
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "	 DTK::config(ConfigChunk*)"
-			       << std::endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "  DTK::config(ConfigChunk*)"
+                   << std::endl << vjDEBUG_FLUSH;
 
     if (!Position::config(c) || !Digital::config(c) || !Analog::config(c))
-	return false;
-    
-    
+    return false;
+
+
 // This is where we map the shared memory blocks to positional, digital, and analog data types
 // The Config chunk will have the following items:
 //     String: port
@@ -86,106 +86,106 @@ bool DTK::config(ConfigChunk *c)
 
     ConfigChunk* embeddedChunk = NULL;
     int i = 0;
-    
+
 /* Dynamically Load the DTK Library
     void* handle;
     char *DTKFileName = c->getProperty("dlfilename").cstring();
     handle = dlopen(DTKFileName, RTLD_NOW|RTLD_GLOBAL);
     if(handle == NULL) return false;
-*/   
+*/
 
- 
+
 // Setup each embedded memory chunk
 
     numSegments = c->getNum("segments");
     if(numSegments > 0)
     {
-	_dtkSegments = new DTKMemorySegmentHandle[numSegments];
-	
-	for(i = 0; i < numSegments; i++)
-	{
-	    embeddedChunk = static_cast<ConfigChunk*>(c->getProperty("segments", i));
-	    _dtkSegments[i] = new DTKMemorySegment;
-	    if(embeddedChunk != NULL)
-	    {
-		if(!(_dtkSegments[i]->config(embeddedChunk)))
-		{
-		    continue;//ERROR!!! Go on to next item...
-		}
-		switch(_dtkSegments[i]->SegmentType())
-		{
-		    case dtk_pos_XYZEuler:
-		    case dtk_pos_ZYXEuler:
-		    case dtk_pos_QUAT:
-			_dtkSegments[i]->setItemIndex(numPositional++); break;
-		    case dtk_digital:
-			_dtkSegments[i]->setItemIndex(numDigital++); break;
-		    case dtk_analog:
-			_dtkSegments[i]->setItemIndex(numAnalog++); break;
-		}
-		
-	    }
-	    delete embeddedChunk; // Free the copy of the embedded memory chunk
-	}
+    _dtkSegments = new DTKMemorySegmentHandle[numSegments];
+
+    for(i = 0; i < numSegments; i++)
+    {
+        embeddedChunk = static_cast<ConfigChunk*>(c->getProperty("segments", i));
+        _dtkSegments[i] = new DTKMemorySegment;
+        if(embeddedChunk != NULL)
+        {
+        if(!(_dtkSegments[i]->config(embeddedChunk)))
+        {
+            continue;//ERROR!!! Go on to next item...
+        }
+        switch(_dtkSegments[i]->SegmentType())
+        {
+            case dtk_pos_XYZEuler:
+            case dtk_pos_ZYXEuler:
+            case dtk_pos_QUAT:
+            _dtkSegments[i]->setItemIndex(numPositional++); break;
+            case dtk_digital:
+            _dtkSegments[i]->setItemIndex(numDigital++); break;
+            case dtk_analog:
+            _dtkSegments[i]->setItemIndex(numAnalog++); break;
+        }
+
+        }
+        delete embeddedChunk; // Free the copy of the embedded memory chunk
     }
-    
+    }
+
     return true;
 }
 
 DTK::~DTK()
 {
-    this->stopSampling();  
-    int i = 0;  
-    
+    this->stopSampling();
+    int i = 0;
+
     if (_dtkSegments != NULL) {
-	for(i = 0; i < numSegments; i++) {
-	    delete _dtkSegments[i];
-	}
-	delete [] _dtkSegments;
-	_dtkSegments = NULL;
+    for(i = 0; i < numSegments; i++) {
+        delete _dtkSegments[i];
     }
-    
+    delete [] _dtkSegments;
+    _dtkSegments = NULL;
+    }
+
     if (theData != NULL)
-	delete [] theData;
+    delete [] theData;
     if (mDataTimes != NULL)
-	delete [] mDataTimes;
+    delete [] mDataTimes;
     if (mAnalogData != NULL)
-	delete [] mAnalogData;
+    delete [] mAnalogData;
     if (mDigitalData != NULL)
-	delete [] mDigitalData;
+    delete [] mDigitalData;
 }
 
 // Main thread of control for this active object
 void DTK::controlLoop(void* nullParam)
 {
 
-    
+
     if (theData != NULL)
-	delete [] theData;
+    delete [] theData;
     if (mDataTimes != NULL)
-	delete [] mDataTimes;
+    delete [] mDataTimes;
     if (mAnalogData != NULL)
-	delete [] mAnalogData;
+    delete [] mAnalogData;
     if (mDigitalData != NULL)
-	delete [] mDigitalData;
-     
+    delete [] mDigitalData;
+
     int numbuffs = numPositional*3;
     theData = (Matrix*) new Matrix[numbuffs];
     mDataTimes = new TimeStamp[numbuffs];
 
     numbuffs = numDigital*3;
     mDigitalData = new int[numbuffs];
-    
+
     numbuffs = numAnalog*3;
     mAnalogData = new float[numbuffs];
 
 // Reset current, progress, and valid indices
     resetIndexes();
-    
+
 // Loop through and keep sampling
     for (;;)
     {
-	this->sample();
+    this->sample();
     }
 }
 
@@ -194,41 +194,41 @@ int DTK::startSampling()
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
     {
-	vjDEBUG(vjDBG_INPUT_MGR,2) << "vjDTK was already started."
+    vjDEBUG(vjDBG_INPUT_MGR,2) << "vjDTK was already started."
                                    << std::endl << vjDEBUG_FLUSH;
-	return 0;
+    return 0;
     }
 
 // Has the thread actually started already
     if(myThread != NULL)
     {
-	vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-						<< "vjIsense: startSampling called, when already sampling.\n"
-						<< vjDEBUG_FLUSH;
-	vprASSERT(false);
-	
+    vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+                        << "vjIsense: startSampling called, when already sampling.\n"
+                        << vjDEBUG_FLUSH;
+    vprASSERT(false);
+
     } else {
-    	if (!this->startDTK()) {
-		vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-						<< "vjDTK: \n"
-						<< vjDEBUG_FLUSH;
-		return 0;
-    	}
+        if (!this->startDTK()) {
+        vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+                        << "vjDTK: \n"
+                        << vjDEBUG_FLUSH;
+        return 0;
+        }
 
 // Create a new thread to handle the control
-	vpr::ThreadMemberFunctor<DTK>* memberFunctor =
-	    new vpr::ThreadMemberFunctor<DTK>(this, &DTK::controlLoop, NULL);
-	vpr::Thread* new_thread;
-	new_thread = new vpr::Thread(memberFunctor);
-	myThread = new_thread;
+    vpr::ThreadMemberFunctor<DTK>* memberFunctor =
+        new vpr::ThreadMemberFunctor<DTK>(this, &DTK::controlLoop, NULL);
+    vpr::Thread* new_thread;
+    new_thread = new vpr::Thread(memberFunctor);
+    myThread = new_thread;
 
 
-	if ( myThread == NULL )
-	{
-	    return 0;  // Fail
-	} else {
-	    return 1;   // success
-	}
+    if ( myThread == NULL )
+    {
+        return 0;  // Fail
+    } else {
+        return 1;   // success
+    }
     }
 
     return 0;
@@ -237,7 +237,7 @@ int DTK::startSampling()
 int DTK::sample()
 {
     if (this->isActive() == false)
-	return 0;
+    return 0;
 
     int i;
     int index;
@@ -254,63 +254,63 @@ int DTK::sample()
 
     for (i = 0; i < numSegments; i++)
     {
-	segment = _dtkSegments[i];
-	if(segment != NULL)    
-	{    
-	    if(segment->SegmentType() <= dtk_pos_QUAT && segment->ItemIndex() < numPositional) {
-	        index = getStationIndex(segment->ItemIndex(),progress);
-	    
-	        floatData = static_cast<float*>(*segment);
-            	// Check to see that the pointer is valid
-            	if(floatData == NULL) continue;
+    segment = _dtkSegments[i];
+    if(segment != NULL)
+    {
+        if(segment->SegmentType() <= dtk_pos_QUAT && segment->ItemIndex() < numPositional) {
+            index = getStationIndex(segment->ItemIndex(),progress);
+
+            floatData = static_cast<float*>(*segment);
+                // Check to see that the pointer is valid
+                if(floatData == NULL) continue;
 
 
-	    
-	        if(segment->SegmentType() != dtk_pos_QUAT)
-            	{
-		        // Determine which format the Euler angle is in
-			if(segment->SegmentType() == dtk_pos_XYZEuler) theData[index].makeXYZEuler(floatData[5], floatData[4], floatData[3]);
-		        if(segment->SegmentType() == dtk_pos_ZYXEuler) theData[index].makeZYXEuler(floatData[5], floatData[4], floatData[3]);
-		
-		        theData[index].setTrans(floatData[0], floatData[1], floatData[2]);
-	        } else {
-		        // Data is in Quaternion Format	
-				
-		
-	        }
-	        mDataTimes[index] = sampletime;
 
-	// Transforms between the cord frames
-	// See transform documentation and VR System pg 146
-	// Since we want the reciver in the world system, Rw
-	// wTr = wTt*tTr
+            if(segment->SegmentType() != dtk_pos_QUAT)
+                {
+                // Determine which format the Euler angle is in
+            if(segment->SegmentType() == dtk_pos_XYZEuler) theData[index].makeXYZEuler(floatData[5], floatData[4], floatData[3]);
+                if(segment->SegmentType() == dtk_pos_ZYXEuler) theData[index].makeZYXEuler(floatData[5], floatData[4], floatData[3]);
 
-	        world_T_transmitter = xformMat;                    // Set transmitter offset from local info
-	        transmitter_T_reciever = theData[index];           // Get reciever data from sampled data
-	        world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
-	        theData[index] = world_T_reciever;                                     // Store corrected xform back into data
-	    
-	    } else if(segment->SegmentType() == dtk_digital && segment->ItemIndex() < numDigital) {
-	    
-	        index = getStationIndex(segment->ItemIndex(),progress);
+                theData[index].setTrans(floatData[0], floatData[1], floatData[2]);
+            } else {
+                // Data is in Quaternion Format
 
-	        intData = static_cast<int*>(*segment);
-            	// Check to see that the pointer is valid
-            	if(intData == NULL) continue;
-	    
-	        mDigitalData[index] = *(intData);
-	    	    
+
+            }
+            mDataTimes[index] = sampletime;
+
+    // Transforms between the cord frames
+    // See transform documentation and VR System pg 146
+    // Since we want the reciver in the world system, Rw
+    // wTr = wTt*tTr
+
+            world_T_transmitter = xformMat;                    // Set transmitter offset from local info
+            transmitter_T_reciever = theData[index];           // Get reciever data from sampled data
+            world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
+            theData[index] = world_T_reciever;                                     // Store corrected xform back into data
+
+        } else if(segment->SegmentType() == dtk_digital && segment->ItemIndex() < numDigital) {
+
+            index = getStationIndex(segment->ItemIndex(),progress);
+
+            intData = static_cast<int*>(*segment);
+                // Check to see that the pointer is valid
+                if(intData == NULL) continue;
+
+            mDigitalData[index] = *(intData);
+
             } else if(segment->SegmentType() == dtk_analog && segment->ItemIndex() < numAnalog) {
-	    
-	        index = getStationIndex(segment->ItemIndex(),progress);
-	    
-	        floatData = static_cast<float*>(*segment);
-            	// Check to see that the pointer is valid
-            	if(floatData == NULL) continue;
-	    
-	        mAnalogData[index] = *(floatData);
-	    }
-	}
+
+            index = getStationIndex(segment->ItemIndex(),progress);
+
+            floatData = static_cast<float*>(*segment);
+                // Check to see that the pointer is valid
+                if(floatData == NULL) continue;
+
+            mAnalogData[index] = *(floatData);
+        }
+    }
     }
 // Locks and then swaps the indices
     swapValidIndexes();
@@ -321,20 +321,20 @@ int DTK::sample()
 int DTK::stopSampling()
 {
     if (this->isActive() == false)
-	return 0;
+    return 0;
 
     if (myThread != NULL)
     {
-	vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDTK::stopSampling(): Stopping the DTK thread... " 
-				   << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDTK::stopSampling(): Stopping the DTK thread... "
+                   << vjDEBUG_FLUSH;
 
-	myThread->kill();
-	delete myThread;
-	myThread = NULL;
+    myThread->kill();
+    delete myThread;
+    myThread = NULL;
 
-	this->stopDTK();
+    this->stopDTK();
 
-	vjDEBUG(vjDBG_INPUT_MGR,1) << "stopped." << std::endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "stopped." << std::endl << vjDEBUG_FLUSH;
     }
 
     return 1;
@@ -343,7 +343,7 @@ int DTK::stopSampling()
 Matrix* DTK::getPosData( int d )
 {
     if( (this->isActive() == false) || (d < 0) || (d >= numPositional) )
-	return NULL;
+    return NULL;
 
     return (&theData[getStationIndex(d,current)]);
 }
@@ -352,25 +352,25 @@ Matrix* DTK::getPosData( int d )
 int DTK::getDigitalData( int d )
 {
     if( (this->isActive() == false) || (d < 0) || (d >= numDigital) )
-	return 0;
-  
+    return 0;
+
     return mDigitalData[getStationIndex(d,current)];
 }
 
 float DTK::getAnalogData( int d )
 {
- 
-    if( (this->isActive() == false) || (d < 0) || (d >= numAnalog) )
-	return 0.0;
-  
-    return mAnalogData[getStationIndex(d,current)];
- 
-}  
 
-TimeStamp* DTK::getPosUpdateTime (int d) 
+    if( (this->isActive() == false) || (d < 0) || (d >= numAnalog) )
+    return 0.0;
+
+    return mAnalogData[getStationIndex(d,current)];
+
+}
+
+TimeStamp* DTK::getPosUpdateTime (int d)
 {
     if( (this->isActive() == false) || (d < 0) || (d >= numPositional) )
-	return NULL;
+    return NULL;
 
     return (&mDataTimes[getStationIndex(d,current)]);
 }
@@ -378,22 +378,22 @@ TimeStamp* DTK::getPosUpdateTime (int d)
 void DTK::updateData()
 {
     if (this->isActive() == false)
-	return;
-				
+    return;
+
 // this unlocks when this object is destructed (upon return of the function)
     vpr::Guard<vpr::Mutex> updateGuard(lock);
-    
-    
+
+
 // TODO: modify the datagrabber to get correct data
 // Copy the valid data to the current data so that both are valid
     int i;
 
     for(i = 0;i < numPositional; i++)
-	theData[getStationIndex(i,current)] = theData[getStationIndex(i,valid)];   // first hand
+    theData[getStationIndex(i,current)] = theData[getStationIndex(i,valid)];   // first hand
     for(i = 0; i < numDigital; i++)
-	mDigitalData[getStationIndex(i,current)] = mDigitalData[getStationIndex(i,valid)];
+    mDigitalData[getStationIndex(i,current)] = mDigitalData[getStationIndex(i,valid)];
     for(i = 0; i < numDigital; i++)
-	mAnalogData[getStationIndex(i,current)] = mAnalogData[getStationIndex(i,valid)];
+    mAnalogData[getStationIndex(i,current)] = mAnalogData[getStationIndex(i,valid)];
 
 // Locks and then swap the indicies
     swapCurrentIndexes();
@@ -402,28 +402,28 @@ void DTK::updateData()
 bool DTK::startDTK()
 {
     int i = 0;
-    
+
     if( active || _client != NULL) return false;
-    
+
     if( port != NULL ) _client = new dtkClient( port );
     else _client = new dtkClient();
-	
+
     for(i = 0; i < numSegments; i++ )
     {
-	    _dtkSegments[i]->connectSegment(_client);
+        _dtkSegments[i]->connectSegment(_client);
     }
-    
+
     active = true;
-    
+
     return true;
 }
 
 bool DTK::stopDTK()
 {
     if( !active || _client == NULL) return false;
-    delete _client;	
+    delete _client;
     active = false;
-    
+
     return true;
 }
 

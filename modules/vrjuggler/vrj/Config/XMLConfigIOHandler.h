@@ -33,7 +33,7 @@
 #ifndef _VRJ_XMLCONFIGIOHANDLER_H_
 #define _VRJ_XMLCONFIGIOHANDLER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/ConfigIOHandler.h>
 
 #include <util/PlatformUtils.hpp>
@@ -115,7 +115,7 @@ private:
 private:
 
     char* stripQuotes (char* ch);
-    
+
     char* stringTokenizer (char* newstring, char*& tmp);
 
     void writeBuf (XMLFormatter* formatter, const char* s, XMLFormatter::EscapeFlags flags = XMLFormatter::NoEscapes);

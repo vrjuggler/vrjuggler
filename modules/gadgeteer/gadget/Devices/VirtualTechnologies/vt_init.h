@@ -12,8 +12,8 @@
 /*  ================================================================  */
 
 
-#include <vrj/vjConfig.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h>	/* Included for Boolean declaration */
+#include <vrj/vrjConfig.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h> /* Included for Boolean declaration */
 
 enum
 {
@@ -26,7 +26,7 @@ enum
 {
   VT_HIGHRES,VT_LOWRES
 };
-  
+
 /* Data needed to open serial communications for a glove ... also includes */
 /* some info linking a particular glove with a tracker receiver            */
 typedef struct
@@ -45,17 +45,17 @@ typedef struct
 {
   CbGloveOpenStruct glove[VT_MAX_GLOVES];
   int           all_gloves_on;
-  Boolean	hand_visible[VT_MAX_GLOVES];
-  Boolean	forearms_visible;
-  Boolean	verbose;
-  Boolean	debug;
+  Boolean   hand_visible[VT_MAX_GLOVES];
+  Boolean   forearms_visible;
+  Boolean   verbose;
+  Boolean   debug;
   Boolean       cal_panel;
   int           cal_panel_glove;
-  int		slider_resolution;
-  float		min_gain;
-  float		max_gain;
-  int		min_offset;
-  int		max_offset;
+  int       slider_resolution;
+  float     min_gain;
+  float     max_gain;
+  int       min_offset;
+  int       max_offset;
   Boolean       flat_shading;
   Boolean       wire_frame;
   int           hand_model;
@@ -63,5 +63,5 @@ typedef struct
   char          *hand_model_str;
 } AppDataStruct, *AppData;
 
-#endif				/* VT_APP_RESOURCE_H */
+#endif              /* VT_APP_RESOURCE_H */
 

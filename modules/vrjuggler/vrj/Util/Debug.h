@@ -35,7 +35,7 @@
 //#pragma once
 
 // #define VJ_DEBUG  Defined in vjConfig.h
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <stdlib.h>
 
 #include <vpr/Sync/Mutex.h>
@@ -185,7 +185,7 @@ const std::string vjDBG_CONFIGstr("vjDBG_CONFIGDB");
 
 namespace vrj
 {
-   
+
    //------------------------------------------
    //: Class to support debug output
    //

@@ -33,7 +33,7 @@
 #ifndef _VRJ_PROXY_DEP_CHECKER_H_
 #define _VRJ_PROXY_DEP_CHECKER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 // Dependency checker includes
 #include <vrj/Kernel/DependencyManager.h>
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
 //: Dependency checker for Proxies
 class ProxyDepChecker : public DepChecker
 {

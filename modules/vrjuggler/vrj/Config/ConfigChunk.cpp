@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <stdlib.h>
 #include <ctype.h>
@@ -45,7 +45,7 @@
 
 namespace vrj
 {
-   
+
 /*static*/ const std::string ConfigChunk::embedded_separator("->");
 
 ConfigChunk::ConfigChunk (): props(), type_as_varvalue(T_STRING) {
@@ -85,7 +85,7 @@ std::string ConfigChunk::getRemainder (const std::string &path) {
     std::string::size_type i = path.find (embedded_separator);
     if (i == path.npos)
         return path;
-    else 
+    else
         return path.substr (i + embedded_separator.length());
 }
 
@@ -93,7 +93,7 @@ std::string ConfigChunk::getFirstNameComponent (const std::string& path) {
     std::string::size_type i = path.find (embedded_separator);
     if (i == path.npos)
         return path;
-    else 
+    else
         return path.substr (0, i);
 }
 
@@ -126,7 +126,7 @@ void ConfigChunk::associateDesc (ChunkDesc* d, bool use_defaults) {
            delete (props[i]);
         */
         props.clear();
-        
+
         for (i = 0; i < desc->plist.size(); i++) {
             PropertyDesc* pd = desc->plist[i];
             Property* pr = new Property (pd);
@@ -203,7 +203,7 @@ ConfigChunk* ConfigChunk::getEmbeddedChunk (const std::string &path) {
     int i;
     ConfigChunk *ch = this;
     ConfigChunk *ch2, *ch3;
-        
+
     if (vjstrcasecmp (ch->getName(), path /*getFirstNameComponent (path)*/)) {
         return 0;
     }
@@ -227,7 +227,7 @@ ConfigChunk* ConfigChunk::getEmbeddedChunk (const std::string &path) {
                 }
             }
             else {
-                // this next bit is insurance against some of my 
+                // this next bit is insurance against some of my
                 // own most likely mistakes
                 prop = getPropertyPtrFromToken(propname);
                 if (prop) {

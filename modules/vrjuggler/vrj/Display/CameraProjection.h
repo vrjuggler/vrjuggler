@@ -33,13 +33,13 @@
 #ifndef _VRJ_CAMERA_PROJECTION_H_
 #define _VRJ_CAMERA_PROJECTION_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Display/Projection.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {
-   
+
    class Matrix;
 
 //: Projection class that simply takes a matrix for the camera position
