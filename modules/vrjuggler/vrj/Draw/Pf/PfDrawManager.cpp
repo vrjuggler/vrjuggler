@@ -74,7 +74,7 @@ vprSingletonImp(PfDrawManager);
 //: Can the handler handle the given chunk?
 //! RETURNS: true - Can handle it
 //+          false - Can't handle it
-bool PfDrawManager::configCanHandle(jccl::ConfigChunk* chunk)
+bool PfDrawManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 {
    std::string chunk_type = chunk->getType();
    return ( chunk_type == std::string("apiPerformer"));
@@ -83,7 +83,7 @@ bool PfDrawManager::configCanHandle(jccl::ConfigChunk* chunk)
 //: Add the chunk to the configuration
 //! PRE: configCanHandle(chunk) == true
 //! RETURNS: success
-bool PfDrawManager::configAdd(jccl::ConfigChunk* chunk)
+bool PfDrawManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));
 
@@ -101,9 +101,9 @@ bool PfDrawManager::configAdd(jccl::ConfigChunk* chunk)
 // Configure the Performer display settings that are needed
 // - Number of pipes to allow
 // - The xpipe strings to use
-bool PfDrawManager::configDisplaySystem(jccl::ConfigChunk* chunk)
+bool PfDrawManager::configDisplaySystem(jccl::ConfigChunkPtr chunk)
 {
-   vprASSERT(chunk != NULL);
+   vprASSERT(chunk.get() != NULL);
    vprASSERT((std::string)chunk->getType() == std::string("displaySystem"));
 
    // ---- SETUP PipeStr's ---- //
@@ -136,7 +136,7 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigChunk* chunk)
 }
 
 //: Configure the performer api stuff
-bool PfDrawManager::configPerformerAPI(jccl::ConfigChunk* chunk)
+bool PfDrawManager::configPerformerAPI(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT((std::string)chunk->getType() == std::string("apiPerformer"));
 

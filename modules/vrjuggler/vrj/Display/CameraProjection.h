@@ -52,7 +52,7 @@ public:
       mType = Projection::SIM;
    }
 
-   virtual void config(jccl::ConfigChunk* chunk)
+   virtual void config(jccl::ConfigChunkPtr chunk)
    {
       Projection::config(chunk);
 

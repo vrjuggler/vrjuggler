@@ -91,21 +91,21 @@ public:
     //: jccl::ConfigChunkHandler stuff
     //! PRE: configCanHandle(chunk) == true
     //! RETURNS: success
-    virtual bool configAdd(jccl::ConfigChunk* chunk);
+    virtual bool configAdd(jccl::ConfigChunkPtr chunk);
 
 
 
     //: Remove the chunk from the current configuration
     //! PRE: configCanHandle(chunk) == true
     //!RETURNS: success
-    virtual bool configRemove(jccl::ConfigChunk* chunk);
+    virtual bool configRemove(jccl::ConfigChunkPtr chunk);
 
 
 
     //: Can the handler handle the given chunk?
     //! RETURNS: true - Can handle it
     //+          false - Can't handle it
-    virtual bool configCanHandle(jccl::ConfigChunk* chunk);
+    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
 
 

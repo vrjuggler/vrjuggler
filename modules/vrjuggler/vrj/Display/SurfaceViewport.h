@@ -39,10 +39,7 @@
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/Projection.h>
 #include <vrj/Math/Vec3.h>
-
-namespace jccl {
-    class ConfigChunk;
-};
+#include <jccl/Config/ConfigChunkPtr.h>
 
 namespace vrj
 {
@@ -67,7 +64,7 @@ public:
    //+       and "fix" the error.
    //! NOTE: All derived display classes MUST call this function
    //+       after doing local configuration.
-   virtual void config(jccl::ConfigChunk *chunk);
+   virtual void config(jccl::ConfigChunkPtr chunk);
 
    virtual void updateProjections();
 

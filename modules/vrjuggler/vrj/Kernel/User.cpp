@@ -49,9 +49,9 @@ int User::getId()
 std::string User::getName()
 { return mName; }
 
-bool User::config(jccl::ConfigChunk* chunk)
+bool User::config(jccl::ConfigChunkPtr chunk)
 {
-   vprASSERT(chunk != NULL);
+   vprASSERT(chunk.get() != NULL);
    vprASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
 
    vprDEBUG_BEGIN(vrjDBG_KERNEL,3) << "vjUser::config: Creating a new user\n" << vprDEBUG_FLUSH;

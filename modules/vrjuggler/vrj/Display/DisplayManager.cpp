@@ -75,7 +75,7 @@ void DisplayManager::setDrawManager(DrawManager* drawMgr)
 
 //: Add the chunk to the configuration
 //! PRE: configCanHandle(chunk) == true
-bool DisplayManager::configAdd(jccl::ConfigChunk* chunk)
+bool DisplayManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));
 
@@ -104,7 +104,7 @@ bool DisplayManager::configAdd(jccl::ConfigChunk* chunk)
 
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
-bool DisplayManager::configRemove(jccl::ConfigChunk* chunk)
+bool DisplayManager::configRemove(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));
 
@@ -123,7 +123,7 @@ bool DisplayManager::configRemove(jccl::ConfigChunk* chunk)
    else if(chunk_type == std::string("displaySystem"))
    {
       // XXX: Put signal here to tell draw manager to lookup new stuff
-      mDisplaySystemChunk = NULL;     // Keep track of the display system chunk
+      mDisplaySystemChunk.reset(0);     // Keep track of the display system chunk
       return true;                     // We successfully configured.
                                        // This tell processPending to remove it to the active config
    }
@@ -136,7 +136,7 @@ bool DisplayManager::configRemove(jccl::ConfigChunk* chunk)
 //: Is it a display chunk?
 //! RETURNS: true - We have a display chunk
 //+          false - We don't
-bool DisplayManager::configCanHandle(jccl::ConfigChunk* chunk)
+bool DisplayManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 {
    return (    ((std::string)chunk->getType() == std::string("surfaceDisplay"))
             || ((std::string)chunk->getType() == std::string("simDisplay"))
@@ -153,7 +153,7 @@ bool DisplayManager::configCanHandle(jccl::ConfigChunk* chunk)
 //! POST: (display of same name already loaded) ==> old display closed, new one opened
 //+       (display is new) ==> (new display is added)
 //+       draw manager is notified of the display change
-bool DisplayManager::configAddDisplay(jccl::ConfigChunk* chunk)
+bool DisplayManager::configAddDisplay(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 
@@ -186,7 +186,7 @@ bool DisplayManager::configAddDisplay(jccl::ConfigChunk* chunk)
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
 //!RETURNS: success
-bool DisplayManager::configRemoveDisplay(jccl::ConfigChunk* chunk)
+bool DisplayManager::configRemoveDisplay(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 

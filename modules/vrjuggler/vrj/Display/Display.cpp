@@ -49,17 +49,17 @@ void Display::updateProjections()
 }
 
 
-void Display::config(jccl::ConfigChunk* chunk)
+void Display::config(jccl::ConfigChunkPtr chunk)
 {
-   vprASSERT(chunk != NULL);
+   vprASSERT(chunk.get() != NULL);
 
    configDisplayWindow(chunk);
    configViewports(chunk);
 }
 
-void Display::configDisplayWindow(jccl::ConfigChunk* chunk)
+void Display::configDisplayWindow(jccl::ConfigChunkPtr chunk)
 {
-   vprASSERT(chunk != NULL);
+   vprASSERT(chunk.get() != NULL);
 
    // -- Get config info from chunk -- //
     int originX = chunk->getProperty("origin", 0);
@@ -104,14 +104,14 @@ void Display::configDisplayWindow(jccl::ConfigChunk* chunk)
     mDisplayChunk = chunk;        // Save the chunk for later use
 }
 
-void Display::configViewports(jccl::ConfigChunk* chunk)
+void Display::configViewports(jccl::ConfigChunkPtr chunk)
 {
-   vprASSERT(chunk != NULL);
+   vprASSERT(chunk.get() != NULL);
 
    unsigned num_sim_vps = chunk->getNum("sim_viewports");
    unsigned num_surface_vps = chunk->getNum("surface_viewports");
 
-   jccl::ConfigChunk* vp_chunk = NULL;
+   jccl::ConfigChunkPtr vp_chunk(0);
    SimViewport* sim_vp = NULL;
    SurfaceViewport* surf_vp = NULL;
 

@@ -116,7 +116,7 @@ protected:  // -- CHUNK HANDLER
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   virtual bool configCanHandle(jccl::ConfigChunk* chunk);
+   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
    //: Process any pending reconfiguration that we can deal with
    //
@@ -131,20 +131,20 @@ protected:  // -- CHUNK HANDLER
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   virtual bool configAdd(jccl::ConfigChunk* chunk);
+   virtual bool configAdd(jccl::ConfigChunkPtr chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
-   virtual bool configRemove(jccl::ConfigChunk* chunk);
+   virtual bool configRemove(jccl::ConfigChunkPtr chunk);
 
 protected:  // Local config functions
    //: Add a User to the system
-   bool addUser(jccl::ConfigChunk* chunk);
+   bool addUser(jccl::ConfigChunkPtr chunk);
 
    //: Remove a User from the system
    //! NOTE: Currently not implemented
-   bool removeUser(jccl::ConfigChunk* chunk);
+   bool removeUser(jccl::ConfigChunkPtr chunk);
 
 protected:
    //: Updates any data that needs updated once a frame (Trackers, etc.)

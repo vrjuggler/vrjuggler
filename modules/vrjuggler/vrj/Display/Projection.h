@@ -39,7 +39,7 @@
 #include <vrj/Util/Debug.h>
 #include <vrj/Math/Vec3.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 
 namespace vrj
 {
@@ -70,7 +70,7 @@ public:
       mFocusPlaneDist = 1.0f;
    }
 
-   virtual void config(jccl::ConfigChunk* chunk)
+   virtual void config(jccl::ConfigChunkPtr chunk)
    {;}
 
    void setEye(int _eye)

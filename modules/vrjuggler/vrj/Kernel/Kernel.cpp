@@ -353,7 +353,7 @@ void Kernel::updateFrameData()
 //  }
 
 
-bool Kernel::configCanHandle(jccl::ConfigChunk* chunk)
+bool Kernel::configCanHandle(jccl::ConfigChunkPtr chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
@@ -363,7 +363,7 @@ bool Kernel::configCanHandle(jccl::ConfigChunk* chunk)
       return false;
 }
 
-bool Kernel::configAdd(jccl::ConfigChunk* chunk)
+bool Kernel::configAdd(jccl::ConfigChunkPtr chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
@@ -377,7 +377,7 @@ bool Kernel::configAdd(jccl::ConfigChunk* chunk)
       return false;
 }
 
-bool Kernel::configRemove(jccl::ConfigChunk* chunk)
+bool Kernel::configRemove(jccl::ConfigChunkPtr chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
@@ -392,7 +392,7 @@ bool Kernel::configRemove(jccl::ConfigChunk* chunk)
 }
 
 //: Add a new user to the kernel
-bool Kernel::addUser(jccl::ConfigChunk* chunk)
+bool Kernel::addUser(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
 
@@ -420,7 +420,7 @@ bool Kernel::addUser(jccl::ConfigChunk* chunk)
 }
 
 // XXX: Not implemented
-bool Kernel::removeUser(jccl::ConfigChunk* chunk)
+bool Kernel::removeUser(jccl::ConfigChunkPtr chunk)
 {
    return false;
 }
