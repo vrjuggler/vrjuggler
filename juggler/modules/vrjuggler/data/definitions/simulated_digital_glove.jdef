@@ -31,13 +31,13 @@
    </definition_version>
    <definition_version version="3" label="SimDigitalGlove">
       <abstract>false</abstract>
-      <help>A digital glove simulator that uses the specified keyboard/mouse device to get input events.</help>
+      <help>A digital glove simulator that uses the specified keyboard/mouse input handler to get input events.</help>
       <parent>glove_device</parent>
       <parent>digital_device</parent>
       <category>/Devices/Simulator</category>
       <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_proxy">
-         <help>The keyboard/mouse device to use for user input.</help>
-         <value label="Keyboard Mouse Proxy"/>
+         <help>The proxy to the keyboard/mouse input handler to use for user input.</help>
+         <value label="Keyboard/Mouse Proxy"/>
          <allowed_type>keyboard_mouse_proxy</allowed_type>
       </property>
       <property valuetype="configelement" variable="true" name="key_pair">

@@ -71,7 +71,7 @@
       <parent>positional_device</parent>
       <category>/Devices/Positional</category>
       <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_proxy">
-         <help>The keyboard/mouse device to use for user input.</help>
+         <help>The proxy to the keyboard/mouse input handler to use for user input.</help>
          <value label="Keyboard/Mouse Proxy"/>
          <allowed_type>keyboard_mouse_proxy</allowed_type>
       </property>
