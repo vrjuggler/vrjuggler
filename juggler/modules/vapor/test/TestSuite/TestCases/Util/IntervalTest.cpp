@@ -76,7 +76,7 @@ void IntervalTest::testSecf()
 {
    vpr::Interval val;
 
-   val.secf(12.34567);
+   val.secf(12.34567f);
 
    //float val_sec = val.secf();
    //float val_msec = val.msecf();
