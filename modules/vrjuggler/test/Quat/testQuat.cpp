@@ -190,7 +190,7 @@ int main(void)
       std::cout << "\tTesting equality using a tolerance... (if this passes, ignore previous)" << std::endl;
       std::cout << "\tTesting match.........";
       vjQuat glquat( gl_quat.w, gl_quat.x, gl_quat.y, gl_quat.z );
-      if(vj_quat.almostEqual( glquat, 0.001f ))
+      if(vj_quat.isEqual( glquat, 0.001f ))
          std::cout << "passed.\n" << std::flush;
       else
       {
