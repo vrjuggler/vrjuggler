@@ -79,6 +79,13 @@ void AnalogDemoApplication::contextClose()
    }
 }
 
+void AnalogDemoApplication::bufferPreDraw()
+{
+   // clear the screen
+   ::glClearColor( 0.0f, 0.0f, 0.1f, 1.0f );
+   ::glClear( GL_COLOR_BUFFER_BIT );
+}
+
 //: Function to "draw" the scene 
 //  put your opengl draw functions here
 //
@@ -91,9 +98,7 @@ void AnalogDemoApplication::draw()
    ::glMatrixMode( GL_MODELVIEW );
    ::glPushMatrix();
    
-   // clear the screen
-   ::glClearColor( 0.0f, 0.0f, 0.1f, 1.0f );
-   ::glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT );
+   ::glClear( GL_DEPTH_BUFFER_BIT );
    ::glDisable( GL_LIGHTING );
    ::glShadeModel( GL_SMOOTH );
    ::glEnable( GL_DEPTH_TEST );

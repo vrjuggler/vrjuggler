@@ -69,13 +69,18 @@ void simpleGloveApp::preFrame()
    }
 }
 
+void simpleGloveApp::bufferPreDraw()
+{
+   // Clear the scene
+   glClearColor(0.0, 0.0, 0.0, 0.0);
+   glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void simpleGloveApp::myDraw()
 {
     //cout<<"simpleGloveApp::myDraw()\n"<<flush;
 
-   // Clear the scene
-   glClearColor(0.0, 0.0, 0.0, 0.0);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glClear(GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
 
    int finger;
