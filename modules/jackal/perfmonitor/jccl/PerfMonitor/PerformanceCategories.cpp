@@ -90,6 +90,20 @@ namespace jccl {
 
     void PerformanceCategories::addBuffer (LabeledPerfDataBuffer* buffer) {
         mBuffersLock.acquire();
+	// need to make sure the buffer gets a unique name
+	std::string base_name = buffer->getName();
+	if (getBufferNoLock (base_name)) {
+	    std::string name;
+	    int i = 1;
+	    char s[32];
+	    do {
+		sprintf (s, "<%d>", i);
+		name = base_name + s;
+		i++;
+	    } while (getBufferNoLock(name));
+	    buffer->setName (name);
+	}
+
         mBuffers.push_back (buffer);
         mBuffersLock.release();
     }
@@ -105,6 +119,16 @@ namespace jccl {
             }
         }
         mBuffersLock.release();
+    }
+
+
+    LabeledPerfDataBuffer* PerformanceCategories::getBufferNoLock (const std::string& n) {
+	std::vector<LabeledPerfDataBuffer*>::iterator i = mBuffers.begin();
+        while (i != mBuffers.end()) {
+	    if ((*i)->getName() == n)
+		return *i;
+        }
+	return NULL;
     }
 
 
