@@ -32,10 +32,13 @@
 package org.vrjuggler.jccl.config;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.border.Border;
 import javax.swing.event.EventListenerList;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
@@ -722,40 +725,55 @@ public class ConfigBrokerImpl
          Border compound = BorderFactory.createCompoundBorder(
                BorderFactory.createRaisedBevelBorder(),
                BorderFactory.createLoweredBevelBorder());
-         
-         this.setBorder( BorderFactory.createTitledBorder(compound,
-                  "Loading Config Definitions ...",
-                  TitledBorder.CENTER, TitledBorder.BELOW_TOP) );
+         this.setBorder(compound);
 
-         mFileNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+         mTaskLabel.setHorizontalAlignment(SwingConstants.CENTER);
+         mTaskLabel.setText("Loading config definition:");
+         mTaskStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+         mTaskStatusLabel.setText("");
+
          mProgressBar = new JProgressBar(0, defFileList.size());
          mProgressBar.setValue(0);
          mProgressBar.setStringPainted(true);
-         
-         mProgressPanel.setLayout(new BorderLayout());
-         mProgressPanel.add(mFileNameLabel, BorderLayout.CENTER);
-         mProgressPanel.add(mProgressBar, BorderLayout.SOUTH);
-         
+
+         mProgressPanel.setLayout(mProgressPanelLayout);
+
+         mProgressPanel.add(mTaskLabel,
+                            new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
+                                                   GridBagConstraints.CENTER,
+                                                   GridBagConstraints.NONE,
+                                                   new Insets(0, 0, 0, 0), 0,
+                                                   0));
+         mProgressPanel.add(mTaskStatusLabel,
+                            new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
+                                                   GridBagConstraints.CENTER,
+                                                   GridBagConstraints.HORIZONTAL,
+                                                   new Insets(0, 0, 0, 0), 0,
+                                                   0));
+         mProgressPanel.add(mProgressBar,
+                            new GridBagConstraints(0, 2, 1, 1, 1.0, 1.0,
+                                                   GridBagConstraints.CENTER,
+                                                   GridBagConstraints.BOTH,
+                                                   new Insets(0, 0, 0, 0), 0,
+                                                   0));
+
          this.add(mLogoLabel, BorderLayout.CENTER);
          this.add(mProgressPanel, BorderLayout.SOUTH);
-
-         java.awt.Dimension size = new java.awt.Dimension(325, 275);
-         this.setPreferredSize(size);
-         this.setMinimumSize(size);
 
          // Load the icons for the popup menu.
          ClassLoader loader = getClass().getClassLoader();
          ImageIcon vrj_logo = null;
-         
+
          try
          {
             mLogo = new ImageIcon(loader.getResource("org/vrjuggler/jccl/config/images/jugglerlogo.jpg"));
+            mLogoLabel.setIcon(mLogo);
          }
          catch(Exception ex)
          {
             ex.printStackTrace();
          }
-         mLogoLabel.setIcon(mLogo);
+
          mLogoLabel.setHorizontalAlignment(SwingConstants.CENTER);
          this.add(mLogoLabel, BorderLayout.CENTER);
       }
@@ -809,7 +827,7 @@ public class ConfigBrokerImpl
 
                try
                {
-                  mFileNameLabel.setText("Loading " + def_file.getName());
+                  mTaskStatusLabel.setText(def_file.getName());
 
                   ConfigDefinitionReader reader =
                      new ConfigDefinitionReader(def_file);
@@ -848,11 +866,14 @@ public class ConfigBrokerImpl
 
       private List mDefFileList;
 
-      private JPanel mProgressPanel = new JPanel();
-      private JLabel mFileNameLabel = new JLabel();
+      private JPanel mProgressPanel              = new JPanel();
+      private GridBagLayout mProgressPanelLayout = new GridBagLayout();
+      private JLabel mTaskLabel                  = new JLabel();
+      private JLabel mTaskStatusLabel            = new JLabel();
+      private JProgressBar mProgressBar;
+
       private JLabel mLogoLabel = new JLabel();
       private ImageIcon mLogo = null;
-      private JProgressBar mProgressBar;
       private boolean mTaskFinished = false;
    }
 }
