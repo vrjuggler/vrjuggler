@@ -99,16 +99,42 @@ public class PropertyEditorPanel extends PropertyComponent
       mConfigElement = elm;
       mPropIndex = prop_num;
       mColor = color;
-      
+
       fillEditorComponent(value, prop_def);
 
       // Disable the editor component if the ConfigElement is read only.
       mEditorComponent.setEnabled(!mConfigElement.isReadOnly());
-     
+
       mConfigElement.addConfigElementListener(this);
-      
+
       this.setLayout(new BorderLayout());
       this.add(mEditorComponent, BorderLayout.CENTER);
+
+      // Use the help information from the property definition set a tooltip
+      // for this panel.  The first sentence of the help text will be used as
+      // the tooltip, which is very much like the JavaDoc "brief" description.
+      String help = mPropDef.getHelp();
+      if ( help != null && ! help.equals("") )
+      {
+         help = help.trim();
+         String[] split_help = help.split("[?.!]");
+         String tooltip;
+
+         // If split_help[0] is a substring of help, set the tooltip string to
+         // be split_help[0] plus the character matched in the above regular
+         // expression.
+         if ( split_help[0].length() < help.length() )
+         {
+            tooltip = help.substring(0, split_help[0].length() + 1);
+         }
+         // Otherwise, just use split_help[0] directly.
+         else
+         {
+            tooltip = split_help[0];
+         }
+
+         mEditorComponent.setToolTipText(tooltip);
+      }
    }
 
    /**
@@ -214,7 +240,7 @@ public class PropertyEditorPanel extends PropertyComponent
    /**
     * Creates a combo box containing the tags a property editor supports.
     */
-   protected Component createComboBox()
+   protected JComponent createComboBox()
    {
       // Populate the box with the tags
       JComboBox box = new JComboBox(mEditor.getTags());
@@ -253,7 +279,7 @@ public class PropertyEditorPanel extends PropertyComponent
     * Creates a text field allowing the user to edit the property as a
     * string.
     */
-   protected Component createTextField()
+   protected JComponent createTextField()
    {
       // Populate the text field with the object's string value
       final JTextField txtField = new JTextField(mEditor.getAsText());
@@ -459,6 +485,6 @@ public class PropertyEditorPanel extends PropertyComponent
    protected ConfigElement      mConfigElement = null;
    protected int                mPropIndex = 0;
    protected PropertyEditor     mEditor = null;
-   protected Component          mEditorComponent = null;
+   protected JComponent         mEditorComponent = null;
    protected String             mPropName = null;
 }
