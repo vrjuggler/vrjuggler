@@ -82,10 +82,10 @@ void Viewport::config(jccl::ConfigChunkPtr chunk)
 
     if(NULL == mUser)
     {
-       vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " User not found named: "
-                              << user_name.c_str() << std::endl
-                              << vprDEBUG_FLUSH;
-      vprASSERT(false && "User not found in Viewport::config");
+       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+          << clrOutNORM(clrRED, "ERROR:") << " User not found named: '"
+          << user_name << "'" << std::endl << vprDEBUG_FLUSH;
+       vprASSERT(false && "User not found in Viewport::config");
     }
 
     setName(name);
