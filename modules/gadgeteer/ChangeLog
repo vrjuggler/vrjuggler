@@ -1,3 +1,5 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-23-2001 allenb    Converted InputManager to a singleton
+Oct-23-2001 ALL       First successful compile of the new system
 Oct-16-2001           ChangeLog started
