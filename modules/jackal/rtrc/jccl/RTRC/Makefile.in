@@ -10,7 +10,7 @@ SHELL		= /bin/sh
 bindir		= @bindir@
 datadir		= @datadir@
 exec_prefix	= @exec_prefix@
-includedir	= @includedir@
+includedir	= @includedir@/Kernel
 libdir		= @libdir@
 libexecdir	= @libexecdir@
 prefix		= @prefix@
@@ -72,6 +72,10 @@ ddso: ddso-recursive ${KERNEL_OBJECTS}
 obj: obj-recursive  ${KERNEL_OBJECTS} 
 
 all: dbg opt dso ddso 
+
+install: install-recursive
+	${top_srcdir}/mkinstalldirs ${includedir}
+	cp ${srcdir}/*.h ${includedir}
 
 depend: depend-recursive .depend_done
 
