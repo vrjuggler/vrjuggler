@@ -43,6 +43,9 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
+#include <gadget/InputManager.h>
+#include <gadget/InputLogger.h>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Coord.h>
@@ -90,6 +93,8 @@ public:
       mButton3.init("VJButton3");
       mButton4.init("VJButton4");
       mButton5.init("VJButton5");
+
+      mLoggerPlayButton.init("LoggerPlayButton");
    }
 
    // Execute any initialization needed after API is started
@@ -133,15 +138,29 @@ public:
    {
       // Put your pre frame computations here.
 
-      std::cout  << "Wand Buttons:"
+      /*
+	  std::cout  << "Wand Buttons:"
                  << " 0:" << mButton0->getData()
                  << " 1:" << mButton1->getData()
                  << " 2:" << mButton2->getData()
                  << " 3:" << mButton3->getData()
                  << " 4:" << mButton4->getData()
                  << " 5:" << mButton5->getData() << std::endl;
+		*/
+      //mHeadHistory.push_back( gmtl::makeTrans<gmtl::Vec3f>(*(mHead->getData())) );
 
-      mHeadHistory.push_back( gmtl::makeTrans<gmtl::Vec3f>(*(mHead->getData())) );
+      // Check logger play button
+      if(mLoggerPlayButton->getData() == gadget::Digital::TOGGLE_ON)
+      {
+         std::cout << "\n\n------ Log Play Button hit ----\n" << std::flush;
+         gadget::InputManager* input_mgr = gadget::InputManager::instance();
+         gadget::InputLoggerPtr logger = input_mgr->getInputLogger();
+
+         vprASSERT(logger.get() != NULL);
+         logger->load("test_logging.xml");
+         logger->play();
+      }
+
    }
 
    virtual void bufferPreDraw();
@@ -197,6 +216,8 @@ public:
    gadget::DigitalInterface     mButton3;
    gadget::DigitalInterface     mButton4;
    gadget::DigitalInterface     mButton5;
+
+   gadget::DigitalInterface     mLoggerPlayButton;   // Playback log file when pressed
 
    std::vector<gmtl::Vec3f>     mHeadHistory;
 };
