@@ -8,7 +8,8 @@
 #include <string>
 #include <vector>
 
-namespace vrj::test
+namespace vrj {
+namespace test
 {
 
 /**
@@ -52,7 +53,7 @@ public:
    virtual std::string getName() = 0;
 };
 
-}
+} }
 
 #endif
 

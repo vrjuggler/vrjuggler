@@ -7,7 +7,9 @@
 #include <string>
 #include <vector>
 
-namespace vrj::test
+namespace vrj {
+namespace test
+
 {
 
 /**
@@ -20,7 +22,7 @@ class TestSuite
 
 };
 
-}
+} }
 
 #endif
 

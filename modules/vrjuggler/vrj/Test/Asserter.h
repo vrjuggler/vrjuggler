@@ -5,28 +5,29 @@
 #include <vrj/Test/Test.h>
 #include <vrj/Test/Message.h>
 
-namespace vrj::test
+namespace vrj {
+namespace test
 {
 
 namespace  Asserter
 {
    /** Throw failure exception with given message and line number info
    */
-   void fail( vrj::Test* test, std::string message, std::string filename, int linenum )
+   void fail( vrj::test::Test* test, vrj::test::Message message, std::string filename, int linenum )
    {
-      throw TestFailure(test, message,filename, linenum);                
+      throw vrj::test::TestFailure(test, message, filename, linenum);                
    }
 
    /** Throws an exception with given message and line information
    * if shouldFail == true
    */
-   void failIf( bool shouldFail, vrj::Test* test, std::string message, std::string filename, int linenum )
+   void failIf( bool shouldFail, vrj::test::Test* test, vrj::test::Message message, std::string filename, int linenum )
    {
       if( shouldFail )
          fail(test,message,filename,linenum);
    }
 
-}
+} }
 
 
 /** Assertions that a condition is \c true.
