@@ -186,8 +186,8 @@ bool IntersenseAPI::startSampling()
       mTracker.loadConfigState(station_index);
       mTracker.setState(station_index, mStations[i].enabled);
       mTracker.setAngleFormat(station_index, ISD_EULER);
-      mTracker.setButtons(station_index, mStations[i].useDigital);
-      mTracker.setAnalogData(station_index, mStations[i].useAnalog);
+      mTracker.setInputs(station_index,
+                         mStations[i].useDigital || mStations[i].useAnalog);
       // Save the config state to the physical tracker.
       mTracker.saveConfigState(station_index);
    }
@@ -304,7 +304,7 @@ bool IntersenseAPI::sample()
 
       if (mStations[i].useDigital)
       {
-         for ( int j = 0; j < MAX_NUM_BUTTONS; ++j )
+         for ( int j = 0; j < ISD_MAX_BUTTONS; ++j )
          {
             DigitalData new_digital(mTracker.buttonState(stationIndex, j));
             new_digital.setTime();
@@ -316,7 +316,7 @@ bool IntersenseAPI::sample()
       if (mStations[i].useAnalog)
       {
          float f;
-         for ( int j = 0; j < MAX_ANALOG_CHANNELS; ++j )
+         for ( int j = 0; j < ISD_MAX_CHANNELS; ++j )
          {
             Analog::normalizeMinToMax(mTracker.analogData(stationIndex, j), f);
             AnalogData new_analog(f);
