@@ -81,6 +81,7 @@ typedef struct
 
 // XXX: It should be virtual public, but that causes an assertion failure.  This needs to be debugged
 //class Intersense : virtual public Position, virtual public Digital, virtual public Analog
+//class Intersense :  public Input, public Position,  public Digital,  public Analog
 
 /**
  * Position derived class for running an IS900 tracking system.
@@ -106,8 +107,7 @@ typedef struct
  *   For example, if you have recievers 1,2, and 4 with transmitter on 3,
  *   then you can access the data, in order, as 0,1,2.
  *
- * See also: Position
- *class Intersense :  public Input, public Position,  public Digital,  public Analog
+ * @see Position
  */
 class IntersenseAPI : public InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
 {
