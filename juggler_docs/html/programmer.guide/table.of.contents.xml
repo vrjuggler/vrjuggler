@@ -1,94 +1,158 @@
 Builder: JExplorerBuilder V 1. 0. 7   
 < treecontrol linkurl="" imageurl="${IMAGES}/Icons/W98_Images/" >
-	< font face="Helvetica" style="Plain" size="${TREE_FONTSIZE}">
-		< idefault title="Item" image="Book_Closed.gif" imagetwo="" info="VR Juggler" target="Body" link="" rlink="">
+< font face="Helvetica" style="Plain" size="${TREE_FONTSIZE}">
+< idefault title="Item" image="Leaf.gif" imagetwo="" info="VR Juggler" target="Body" link="" rlink="">
 
-			< rootfolder title="Programmer Guide" 
-				expand 
-				link="index.html"
-				info="In depth documentation for VR application developers.  Includes introductions, easy explanations, case studies, and lots of hand holding."
-				target="Body" 
-				image="Book_Closed.gif" 
-				imagetwo="Book_Open.gif">
+< rootfolder title="Programmer Guide" 
+	expand 
+	link="index.html"
+	info="In depth documentation for VR application developers.  Includes introductions, easy explanations, case studies, and lots of hand holding."
+	target="Body" 
+	image="Book_Closed.gif" 
+	imagetwo="Book_Open.gif">
 
-			< item title="Introduction" 
-				link="${MISC}/mission.statement.html" 
-				info="Introduction to VR Juggler" 
-				image="Leaf.gif" >
+< item title="Introduction" 
+	link="introduction.html" 
+	info="Programmer's guide introduction">
 
-			<folder title="Helper Classes"
-				info="High-level descriptions of common helper classes"
-				image="Leaf_Script2.gif">
-				<item title="vjVec3 and vjVec4"
-					link="helper.classes/vjVec.html"
-					info="The vjVec classes"
-					image="Leaf.gif">
-				<item title="vjMatrix"
-					link="helper.classes/vjMatrix.html"
-					info="The vjMatrix class"
-					image="Leaf.gif">
-				<item title="vjDeviceInterface (position, analog, etc.)"
-					link="helper.classes/vjDeviceInterface.html"
-					info="The vjDeviceInterface class"
-					image="Leaf.gif">
-				<item title="vjProxy"
-					link="helper.classes/vjProxy.html"
-					info="The vjProxy interface"
-					image="Leaf.gif">
-			</folder>
+<folder title="App basics"
+        info="Application basics"
+        image="Leaf_Script2.gif">
+	<item title="App obj overview"
+		link="app.basics/application_objects_overview.html"
+		info="Application objects overview">
+	<item title="App obj benefits"
+		link="app.basics/application_object_benefits.html"
+		info="Application object benefits">
+	<item title="Startup"
+		link="app.basics/vr_juggler_startup.html"
+		info="VR Juggler startup">
+	<item title="App obj details"
+		link="app.basics/application_object_details.html"
+		info="Application object details">	
+	<item title="App obj details - vjApp"
+		link="app.basics/details_base_app_object_interface.html"
+		info="Base application object details">
+	<item title="App obj details - vj*App"
+		link="app.basics/details_drawmgr_app_object_interfaces.html"
+		info="Draw manager specific application object details">
+</folder>
 
-			< folder title="Case Studies: Learn by example" 
-				info="Learn by example"
-				image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
-				< folder title="Cubes Example - Using OpenGL display lists in VR Juggler" 
-					link="examples/cubes/index.html" 
-					info="Cubes Example - Using OpenGL display lists in VR Juggler" 
-					image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
-					< item title="Context Specific Data" 
-						link="examples/cubes/context.data.html" 
-						info="Keeping track of display lists with: Context Specific Data" 
-						image="Leaf.gif" >
-						
-					< item title="Input" 
-						link="examples/cubes/cubesInput.html" 
-						info="How input is done in the cubes example" 
-						image="Leaf.gif" >
-						
-				</folder>
-				< folder title="Wand Example - Getting Input" 
-					link="examples/wand/index.html" 
-					info="Wand Example - Getting Input" 
-					image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
-							
-					< item title="Application" 
-						link="examples/wand/app.class.html" 
-						info="How to create a Juggler application.  (or \"What goes into an application class?\")" 
-						image="Leaf.gif" >
-					
-					< item title="Wand Input" 
-						link="examples/wand/wand.html" 
-						info="Get data from a \"wand\" input device!" 
-						image="Leaf.gif" >
-					 
-					 < item title="Main" 
-						link="examples/wand/main.html" 
-						info="Where's main? (or where's the entrypoint to the executable??)" 
-						image="Leaf.gif" >
-				</folder>
-				< folder title="pfNav Example - Juggler + IRIS Performer + Navigation" 
-					link="examples/pfNav/index.html" 
-					info="pfNav Example - Juggler + IRIS Performer + Navigation" 
-					image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif">
-					<!-- TODO: under construction, add more content! -->
-				</folder>
-			</folder>
-					 < item title="Porting from CAVElib" 
-						link="app.construction/cave-to-juggler.html" 
-						info="Converting a CAVElib application to a VR Juggler application" 
-						image="Leaf.gif" >
+<folder title="Helper Classes"
+	info="High-level descriptions of common helper classes"
+	image="Leaf_Script2.gif">
+	<item title="vjVec3 and vjVec4"
+		link="helper.classes/vjVec.html"
+		info="The vjVec classes">
+	<item title="vjMatrix"
+		link="helper.classes/vjMatrix.html"
+		info="The vjMatrix class">
+	<item title="vjDeviceInterface (position, analog, etc.)"
+		link="helper.classes/vjDeviceInterface.html"
+		info="The vjDeviceInterface class">
+	<item title="vjProxy"
+		link="helper.classes/vjProxy.html"
+		info="The vjProxy interface">
+</folder>
+
+<folder title="Writing Apps"
+        info="Writing applications"
+        image="Leaf_Script2.gif">
+	<item title="Intro"
+		link="app.construction/AppConstruction_intro.html"
+		info="Introduction to writing apps">
+		
+	<folder title="Juggler Base Apps"
+	        info="Juggler base applications"
+	        image="Leaf_Script2.gif">
+	        
+	        <item title="Juggler base"
+			link="app.construction/juggler.base/juggler_base-construction.html"
+			info="Juggler base">
+		<item title="How to get input"
+			link="app.construction/juggler.base/how_to_get_input.html"
+			info="How to get input">
+		<item title="Where to get input"
+			link="app.construction/juggler.base/where_to_put_input_code.html"
+			info="Where should I put code to get input?">
+		<item title="Tutorial: Getting input"
+			link="app.construction/juggler.base/get_input-tutorial.html"
+			info="Tutorial: Getting input in VR Juggler">	        
+	</folder>
+	
+	<folder title="OpenGL Apps"
+	        info="OpenGL applications"
+	        image="Leaf_Script2.gif">
+	        <item title="Creating OpenGL apps"
+			link="app.construction/opengl/creating_opengl_apps.html"
+			info="Creating OpenGL applications in VR Juggler">
+		<item title="Drawing in OpenGL apps"
+			link="app.construction/opengl/opengl_apps-drawing.html"
+			info="How to draw in OpenGL base VR Juggler applications">
+		<item title="Tutorial: Simple OpenGL drawing application"
+			link="app.construction/opengl/opengl_drawing-tutorial.html"
+			info="Tutorial: Simple OpenGL drawing application">
+		<item title="Context Data"
+			link="app.construction/opengl/opengl_apps-context_data.html"
+			info="What is Context Data?">
+		<item title="Initializing context data"
+			link="app.construction/opengl/opengl_apps-contextInit.html"
+			info="How do I initialize OpenGL context data?">
+		<item title="How does context data work?"
+			link="app.construction/opengl/opengl"
+			info="How does context data work?">
+		<item title="Tutorial: Context data tutorial"
+			link="app.construction/opengl/opengl_context_data-tutorial.html"
+			info="Tutorial: Using context data in VR Juggler OpenGL apps">		
+	</folder>
+	
+	<folder title="Performer Apps"
+	        info="OpenGL Performer applications"
+	        image="Leaf_Script2.gif">
+	</folder>
+	
+	<folder title="VTK Apps"
+	        info="VTK Applications"
+	        image="Leaf_Script2.gif">
+	        <item title="VTK applications"
+			link="app.construction/vtk/creating_vtk_apps.html"
+			info="VTK Applications">			
+	</folder>
+	
+</folder>
+<folder title="Adv Topics"
+        info="Advanced Topics"
+        image="Leaf_Script2.gif">
+	<item title="System interaction"
+		link="adv.topics/system_interaction.html"
+		info="">
+	<folder title="Multi-threading"
+	  	info="Mutli-threading"
+	  	image="Leaf_Script2.gif">
+	  	<item title="Techniques"
+			link="adv.topics/multi.thread/Multithread-techniques.html"
+			info="">
+	</folder>
+	<folder title="Run-time config"
+	  	info="Run-time configuration"
+	  	image="Leaf_Script2.gif">
+	  	<item title="Howto"
+			link="adv.topics/run.time.config/run-time/how-to.html"
+			info="">
+	</folder>
+</folder>
+
+
+
+
+< item title="Porting from CAVElib" 
+	link="app.construction/cave-to-juggler.html" 
+	info="Converting a CAVElib application to a VR Juggler application" 
+	image="Leaf.gif" >
+
 
 </rootfolder>
-		</idefault>
-	</font>
+</idefault>
+</font>
 </treecontrol>
 
