@@ -75,6 +75,11 @@ AC_ARG_ENABLE(pf-api,
               [  --enable-pf-api         Use Perfromer API               [default=yes]],
               _enable_pf_api="$enableval", _enable_pf_api='yes')
 
+# Specify where Java3D is located
+AC_ARG_WITH(java3d,
+            [  --with-java3d=<PATH>     Path to Java3D JAR file(s) ],
+            JAVA3D_JAR="$withval", JAVA3D_JAR='none')
+
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -237,6 +242,22 @@ if test "x${_enable_pf_api}" = "xyes" ; then
 fi
 
 DPP_HAVE_CPPUNIT([1.9.10])
+
+# --------------------
+# Java3D.
+# --------------------
+
+if test "x$BUILD_JAVA" = "xY" ; then
+   # If we are building the Tweek Java code, we should try to enable building
+   # the Java test suite too.
+   if test "x$BUILD_JAVA" = "xY" ; then
+      DPP_CHECK_JAVA_STATIC_METHOD(javax.media.j3d.VirtualUniverse, getJ3DThreadPriority() , ,
+         BUILD_JAVA_3D_EDITOR='Y',
+         [ AC_MSG_WARN([*** Java3D required for Java3D custom editor ***])
+           BUILD_JAVA_3D_EDITOR='N' ],
+         $JAVA3D_JAR)
+   fi
+fi
 
 # -----------------------------------------------------------------------------
 # Checks for header files.
@@ -580,6 +601,9 @@ AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(BUILD_JAVA)
 
+AC_SUBST(BUILD_JAVA_3D_EDITOR)
+AC_SUBST(JAVA3D_JAR)
+
 AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)
 
@@ -649,6 +673,10 @@ AC_CONFIG_FILES([
    vrjconfig/build.xml
    vrjconfig/Makefile
    vrjconfig/Makefile.inc
+   vrjconfig/customeditors/Makefile
+   vrjconfig/customeditors/surfacedisplayeditor/build.xml
+   vrjconfig/customeditors/surfacedisplayeditor/Makefile
+   vrjconfig/customeditors/surfacedisplayeditor/Makefile.inc
    samples/Makefile
    samples/OGL/Makefile
    samples/OGL/advanced/Makefile

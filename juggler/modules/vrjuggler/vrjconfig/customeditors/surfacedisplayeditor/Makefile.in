@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/vrjconfig.  It requires GNU make.
+# Makefile.in for vrjuggler/vrjconfig/customeditors/surfacedisplayeditor.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -50,42 +50,30 @@ INSTALL_FILES=
 JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
-JARS		= ClusterWizard.jar Devices.jar
-BEANS		= VRJConfig
+#JARS		= ClusterWizard.jar Devices.jar
+BEANS		= SurfaceDisplayEditor
 
 # List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS	= $(VRJCONFIG_PKG)
+#DOC_PKGS	= $(VRJCONFIG_PKG)
 
-webroot		= $(HOME)/public_html/jugglerweb
-instdir		= vrjuggler/vrjconfig/1.0
-doc_prefix	= $(webroot)/$(instdir)
-DOC_ROOT	= programmer.reference.java
+#webroot		= $(HOME)/public_html/jugglerweb
+#instdir		= vrjuggler/vrjconfig/customeditors/surfacedisplayeditor/1.0
+#doc_prefix	= $(webroot)/$(instdir)
+#DOC_ROOT	= programmer.reference.java
 
 _LOCAL_CLEAN=1
 JAVA_AFTERBUILD=java_afterbuild
 
-include $(MKPATH)/dpp.obj-subdir.mk
-
-# Prefix for recursive stuff.
-DIRPRFX=	vrjconfig/
-
-# Subdirectories used for recursion through the source tree.
-SUBDIR=		customeditors
-
-$(RECTARGET): recursive
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Uses ant to build the java classes and JARs
 # -----------------------------------------------------------------------------
-java_afterbuild:
+build-editor:
 	@echo "------------------------------------------------"
-	@echo "Building java sources"
+	@echo "Building SurfaceDisplayEditor java sources"
 	@echo "------------------------------------------------"
 	$(ANT)
-	@echo "------------------------------------------------"
-	@echo "Building Custom Editors"
-	@echo "------------------------------------------------"
-	$(MAKE) -C customeditors customeditors
 
 _clean:
 	$(ANT) clean
@@ -95,23 +83,23 @@ _clean:
 # -----------------------------------------------------------------------------
 
 # This cannot be named 'install' because Doozer++ already defines that.
-vrjconfig-install:
+install-editor:
 	@echo "------------------------------------------------"
-	@echo "Installing the VRJConfig code base"
+	@echo "Installing the SurfaceDisplayEditor code base"
 	@echo "------------------------------------------------"
-ifeq (@OS_TYPE@, UNIX)
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(VJROOT_ABS)/vrjconfig/vrjconfig.sh	\
-          $(bindir)/vrjconfig
-else
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/vrjconfig/vrjconfig.bat $(bindir)/vrjconfig.bat
-endif	# if OS_TYPE == UNIX
+#ifeq (@OS_TYPE@, UNIX)
+#	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+#          $(EXTRA_INSTALL_ARGS) $(VJROOT_ABS)/vrjconfig/customeditors/surfacedisplayeditor/surfacedisplayeditor.sh \
+#          $(bindir)/surfacedisplayeditor
+#else
+#	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+#          $(VJROOT_ABS)/vrjconfig/customeditors/surfacedisplayeditor/surfacedisplayeditor.bat $(bindir)/surfacedisplayeditor.bat
+#endif	# if OS_TYPE == UNIX
 ifneq ($(JARS), )
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/$$jar		\
+                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/customeditors/surfacedisplayeditor/$$jar		\
                 $(bindir) || exit 1;					\
           done
 endif
@@ -119,19 +107,14 @@ ifneq ($(BEANS), )
 	for bean in $(BEANS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/$$bean.jar	\
+                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/customeditors/surfacedisplayeditor/$$bean.jar	\
                 $(beandir) || exit 1 ;					\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS)					\
-                $(top_srcdir)/vrjconfig/$$bean.xml $(beandir) || exit 1; \
+                $(top_srcdir)/vrjconfig/customeditors/surfacedisplayeditor/$$bean.xml $(beandir) || exit 1; \
           done
 endif
-# Build all custom editors recursivly
-	@echo "------------------------------------------------"
-	@echo "Installing Custom Editors"
-	@echo "------------------------------------------------"
-	$(MAKE) -C customeditors install-customeditors
-	
+
 install-docs:
 	$(MKINSTALLDIRS) $(doc_prefix)
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
