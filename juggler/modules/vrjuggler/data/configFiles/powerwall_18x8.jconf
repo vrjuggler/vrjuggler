@@ -2,40 +2,43 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <event_window name="Wand Event Window" version="1">
-         <width>200</width>
-         <height>200</height>
+      <event_window name="Wand Event Window" version="2">
+         <event_source_name />
+         <mouse_sensitivity>2.0</mouse_sensitivity>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>0</sleep_time>
          <origin>950</origin>
          <origin>500</origin>
-         <mouse_sensitivity>2.0</mouse_sensitivity>
+         <size>200</size>
+         <size>200</size>
          <display_number>0</display_number>
+         <device_host />
+      </event_window>
+      <event_window name="Head Event Window" version="2">
+         <event_source_name />
+         <mouse_sensitivity>1.0</mouse_sensitivity>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
-         <device_host />
-      </event_window>
-      <event_window name="Head Event Window" version="1">
-         <width>300</width>
-         <height>100</height>
          <origin>950</origin>
          <origin>0</origin>
-         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <size>300</size>
+         <size>100</size>
          <display_number>0</display_number>
-         <lock_key>KEY_NONE</lock_key>
-         <start_locked>false</start_locked>
-         <sleep_time>0</sleep_time>
          <device_host />
       </event_window>
-      <event_window name="Sim View Cameras Control" version="1">
-         <width>300</width>
-         <height>100</height>
-         <origin>950</origin>
-         <origin>175</origin>
+      <event_window name="Sim View Cameras Control" version="2">
+         <event_source_name />
          <mouse_sensitivity>2.0</mouse_sensitivity>
-         <display_number>0</display_number>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
+         <origin>950</origin>
+         <origin>175</origin>
+         <size>300</size>
+         <size>100</size>
+         <display_number>0</display_number>
          <device_host />
       </event_window>
       <event_window_proxy name="MainSimEventWindow" version="1">
@@ -472,10 +475,13 @@
          <driver_path>${VJ_BASE_DIR}/lib32/gadgeteer/drivers</driver_path>
          <driver>Flock_drv</driver>
       </input_manager>
-      <flock name="Flock_o_Birds" version="1">
+      <flock name="Flock_o_Birds" version="2">
          <port>/dev/ttyd3</port>
          <baud>38400</baud>
-         <number_of_birds>2</number_of_birds>
+         <hemisphere>Right</hemisphere>
+         <master_address>1</master_address>
+         <addressing_mode>Normal</addressing_mode>
+         <filter>0</filter>
          <position_filters>
             <position_transform_filter name="Position Filters" version="1">
                <pre_translate>0.0</pre_translate>
@@ -494,14 +500,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <calibration_file />
-         <hemisphere>RIGHT_HEM</hemisphere>
-         <filter>0</filter>
-         <sync_style>0</sync_style>
-         <blocking>false</blocking>
-         <report>R</report>
-         <transmitter_id>3</transmitter_id>
-         <extended_range>false</extended_range>
          <device_host />
       </flock>
       <ibox name="IBox1" version="1">
@@ -511,7 +509,7 @@
          <max>0.0</max>
          <device_host />
       </ibox>
-      <display_window name="big wall" version="3">
+      <display_window name="big wall" version="4">
          <origin>922</origin>
          <origin>768</origin>
          <size>1844</size>
@@ -531,57 +529,26 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>true</hide_mouse>
-         <act_as_event_source>false</act_as_event_source>
-         <event_window_device>
-            <event_window name="Event window configuration 0" version="1">
-               <width>0</width>
-               <height>0</height>
-               <origin>0</origin>
-               <origin>0</origin>
-               <mouse_sensitivity>0.0</mouse_sensitivity>
-               <display_number>0</display_number>
-               <lock_key>0</lock_key>
-               <start_locked>false</start_locked>
-               <sleep_time>0</sleep_time>
-               <device_host />
-            </event_window>
-         </event_window_device>
          <active>false</active>
          <surface_viewports>
-            <surface_viewport name="Contained Surface Viewports 0" version="1">
+            <surface_viewport name="Contained Surface Viewports 0" version="2">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
                <size>1.0</size>
                <view>Stereo</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>-2.7432</x>
-                     <y>0.0</y>
-                     <z>-0.6096</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>2.7432</x>
-                     <y>0.0</y>
-                     <z>-0.6096</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>2.7432</x>
-                     <y>2.286</y>
-                     <z>-0.6096</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>-2.7432</x>
-                     <y>2.286</y>
-                     <z>-0.6096</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>-2.7432</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>-0.6096</lower_left_corner>
+               <lower_right_corner>2.7432</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>-0.6096</lower_right_corner>
+               <upper_right_corner>2.7432</upper_right_corner>
+               <upper_right_corner>2.286</upper_right_corner>
+               <upper_right_corner>-0.6096</upper_right_corner>
+               <upper_left_corner>-2.7432</upper_left_corner>
+               <upper_left_corner>2.286</upper_left_corner>
+               <upper_left_corner>-0.6096</upper_left_corner>
                <user>User1</user>
                <active>false</active>
                <tracked>false</tracked>
