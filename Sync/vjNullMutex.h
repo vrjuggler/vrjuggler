@@ -14,7 +14,6 @@
 //-----------------------------------------------
 
 #include <vjConfig.h>
-#include <iostream.h>
 
 //: Null mutex wrapper.  Used to pass a "do nothing" mutex as a template type.
 //!PUBLIC_API:

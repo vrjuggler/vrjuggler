@@ -19,7 +19,6 @@
 #define _MEM_POOL_MALLOC_H_
 
 #include <vjConfig.h>
-#include <iostream.h>
 #include <sys/types.h>
 
 #include <Kernel/vjDebug.h>
