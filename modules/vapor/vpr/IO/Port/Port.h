@@ -49,31 +49,32 @@
 #include <vpr/IO/BlockIO.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * A cross-platform interface to using a computer's I/O ports (serial,
  * parallel, IR, etc.).
  */
-class VPR_CLASS_API Port : public BlockIO {
+class VPR_CLASS_API Port : public BlockIO
+{
 public:
 
 protected:
-    /**
-     * Constructor.
-     *
-     * <b>PRE:</b> None.
-     * <b>POST:</b> The given port name is passed on to the
-     *              <code>vpr::BlockIO</code> constructor.
-     *
-     * @param port_name The name of the port in use.
-     */
-    Port(const std::string& port_name);
+   /**
+    * Constructor.
+    *
+    * @pre None.
+    * @post The given port name is passed on to the vpr::BlockIO constructor.
+    *
+    * @param port_name The name of the port in use.
+    */
+   Port(const std::string& port_name);
 
-    /**
-     * Destructor.  This does nothing.
-     */
-    virtual ~Port(void);
+   /**
+    * Destructor.  This does nothing.
+    */
+   virtual ~Port(void);
 };
 
 }; // End of vpr namespace
