@@ -146,33 +146,6 @@ FileHandleImplUNIX::close () {
     return status;
 }
 
-/*
-// ----------------------------------------------------------------------------
-// Test if the file is read-only.
-// ----------------------------------------------------------------------------
-bool
-FileHandleImplUNIX::isReadOnly () {
-    int flags, accmode;
-
-    flags   = getFlags();
-    accmode = flags & O_ACCMODE;
-
-    return (accmode == O_RDONLY);
-}
-
-// ----------------------------------------------------------------------------
-// Test if the file is write-only.
-// ----------------------------------------------------------------------------
-bool
-FileHandleImplUNIX::isWriteOnly () {
-    int flags, accmode;
-
-    flags   = getFlags();
-    accmode = flags & O_ACCMODE;
-
-    return (accmode == O_WRONLY);
-}
-
 // ----------------------------------------------------------------------------
 // Test if the file is read/write.
 // ----------------------------------------------------------------------------
