@@ -38,7 +38,8 @@ public:
 
 
 
-   //: Copy the device data to local storage, and transform it if necessary
+   //: Update the proxy's copy of the data
+   // Copy the device data to local storage, and transform it if necessary
    void UpdateData() {
       m_posData = *(m_posPtr->GetPosData(m_unitNum));
 
@@ -47,12 +48,19 @@ public:
    }
 
    //: Set the transform for this vjPosProxy
+   // Sets the transformation matrix to
+   //    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)
+   //! NOTE: This means that to set transform, you specific the translation
+   //+       followed by rotation that takes the device from where it physically
+   //+       is in space to where you want it to be.
    void SetTransform( float xoff, float yoff, float zoff,    // Translate
                       float xrot, float yrot, float zrot)   // Rotate
    {
       etrans = true;
-      m_matrixTransform.makeXYZEuler(xrot, yrot, zrot);
-      m_matrixTransform.postTrans(m_matrixTransform, xoff, yoff, zoff);
+      if((xoff != 0.0f) || (yoff != 0.0f) || (zoff != 0.0f))
+         m_matrixTransform.makeTrans(xoff, yoff, zoff);
+      if((xrot != 0.0f) || (yrot != 0.0f) || (xrot != 0.0f))
+         m_matrixTransform.postXYZEuler(m_matrixTransform, xrot, yrot, zrot);
    }
 
    //: Set the vjPosProxy to now point to another device and subDevicenumber
@@ -84,6 +92,11 @@ public:
 
 
    //: Transform the data in m_posData
+   //! PRE: m_posData needs to have most recent data
+   //! POST: m_posData is transformed by the xform matrix
+   //+       m_posData = old(m_posData).post(xformMatrix)
+   //!NOTE: This moves the position data by the amount
+   //+      specified in SetTransform
    void TransformData()
    { m_posData.postMult(m_matrixTransform); }
 
