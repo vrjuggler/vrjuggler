@@ -276,6 +276,8 @@ esac
 # Checks for programs.
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
+VJ_PROG_CC_PROF_FLAG(yes)
+VJ_PROG_CXX_PROF_FLAG(yes)
 
 if test "x$DPP_USING_MSVCCC" = "xyes" ; then
    AR='$(CXX) /link /lib'
@@ -662,8 +664,10 @@ fi
 # Dependencies for dynamic/shared libraries.
 if test "x$OS_TYPE" = "xWin32" ; then
    DYLIB_DEPS="$VPR_LIBS_LD_MIN"
+   DYLIB_PROF_DEPS="$DYLIB_DEPS"
 else
    DYLIB_DEPS="$VPR_LIBS_CC_MIN"
+   DYLIB_PROF_DEPS="$VPR_LIBS_CC_PROF_MIN"
 fi
 
 # Information needed to generate tweek-config.
@@ -771,6 +775,7 @@ AC_SUBST(APP_EXTRA_LIBS_END)
 AC_SUBST(APP_EXTRA_LIBS_BASIC)
 
 AC_SUBST(DYLIB_DEPS)
+AC_SUBST(DYLIB_PROF_DEPS)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
