@@ -2,6 +2,7 @@
 
 #include <vpr/DynLoad/LibraryFinder.h>
 #include <vpr/System.h>
+#include <boost/filesystem/exception.hpp>
 
 #include <TestCases/DynLoad/LibraryFinderTest.h>
 
@@ -37,7 +38,15 @@ void LibraryFinderTest::scanTest()
    finder1.rescan();
    CPPUNIT_ASSERT(finder1.getLibraries().size() == 2 && "Wrong number of libraries found");
 
-   finder1.setLibraryDirectory(std::string("bogusDir"));
+   try
+   {
+      finder1.setLibraryDirectory(std::string("bogusDir"));
+   }
+   catch(boost::filesystem::filesystem_error fsException)
+   {
+      /* This is expected. */ ;
+   }
+
    CPPUNIT_ASSERT(finder1.getLibraries().size() == 0 && "Should not have found any libraries");
 
    finder1.setLibraryDirectory(mModuleDir);
@@ -49,7 +58,15 @@ void LibraryFinderTest::scanTest()
    finder1.setLibraryExtension(".so");
    CPPUNIT_ASSERT(finder1.getLibraries().size() == 2 && "Wrong number of libraries found");
 
-   finder1.setDirAndExt("bogus", ".bad");
+   try
+   {
+      finder1.setDirAndExt("bogus", ".bad");
+   }
+   catch(boost::filesystem::filesystem_error fsException)
+   {
+      /* This is expected. */ ;
+   }
+
    CPPUNIT_ASSERT(finder1.getLibraries().size() == 0 && "Should not have found any libraries");
 
    finder1.setDirAndExt(mModuleDir, ".so");
