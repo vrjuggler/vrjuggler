@@ -114,7 +114,7 @@ void cubesApp::init()
    int num_users = users.size();
 
    UserData* new_user=NULL;
-   mUserData = std::vector<UserData*>(num_users,NULL);
+   mUserData = std::vector<UserData*>(num_users);
 
    switch (num_users)
    {
