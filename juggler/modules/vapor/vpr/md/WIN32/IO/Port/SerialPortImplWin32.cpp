@@ -66,8 +66,8 @@ SerialPortImplWin32::SerialPortImplWin32 (const std::string& port_name)
 // Destructor.  If the file handle is non-NULL, its memory is released.
 // ----------------------------------------------------------------------------
 SerialPortImplWin32::~SerialPortImplWin32 () {
-    if ( m_handle != NULL ) {
-        delete m_handle;
+    if ( m_open ) {
+        close();
     }
 }
 
