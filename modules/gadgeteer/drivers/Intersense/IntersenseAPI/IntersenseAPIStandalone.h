@@ -36,7 +36,7 @@
 #include <fstream>
 #include <string>
 
-#include <gadget/Devices/Intersense/IntersenseAPI/isense.h>
+#include <drivers/Intersense/IntersenseAPI/isense.h>
 
 /*
 struct isConfig {
