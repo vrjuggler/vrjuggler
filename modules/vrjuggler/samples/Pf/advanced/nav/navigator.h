@@ -180,16 +180,17 @@ void navigator::navTranslate(vjVec3 trans, bool& didCollide, vjVec3& totalCorrec
 void navigator::navRotate( vjMatrix rot_mat )
 {
    //rot_mat.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], rot_mat );
+
    mCurPos.postMult( rot_mat );
+   
    //mCurPos.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], mCurPos );
+
    vjMatrix old_pos = mCurPos;
    float x_pos, y_pos, z_pos;
-
-
    old_pos.getTrans(x_pos,y_pos,z_pos);
    mCurPos.makeXYZEuler(0,old_pos.getYRot(),0);     // Only allow Yaw (rot y)
    mCurPos.setTrans(x_pos,y_pos,z_pos);
-
+   
    /*
    float x_rot, y_rot, z_rot;
    mCurPos.getXYZEuler(x_rot,y_rot,z_rot);

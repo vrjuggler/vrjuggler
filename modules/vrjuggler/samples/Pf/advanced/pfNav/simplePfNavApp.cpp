@@ -226,6 +226,7 @@ void simplePfNavApp::preFrame()
    if (mDisableNav == true)
    {
       mNavigationDCS->setActive( false );
+      std::cout<<"disable...\n"<<std::flush;
       
       // do animation...
       vjMatrix mat;

@@ -193,7 +193,7 @@ std::istream& operator >> (std::istream& in, vjPropertyDesc& self) {
         //cout << "reading valuelabels" << endl;
         readString (in,str,size);
         if (strcasecmp (str, lbrace_TOKEN))
-            vjDEBUG(vjDBG_ERROR,1) << "ERROR: expected '{'" << std::endl
+            vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " expected '{'" << std::endl
                                    << vjDEBUG_FLUSH;
 
         vjEnumEntry *e;

@@ -102,16 +102,16 @@ public:
       mGlove.init("VJGlove");
       
       // for the glove fingers.
-      mPinchLeftThumb.init("LeftThumb");
-      mPinchLeftIndex.init("LeftIndex");
-      mPinchLeftMiddle.init("LeftMiddle");
-      mPinchLeftRing.init("LeftRing");
-      mPinchLeftPinky.init("LeftPinky");
-      mPinchRightThumb.init("RightThumb");
-      mPinchRightIndex.init("RightIndex");
-      mPinchRightMiddle.init("RightMiddle");
-      mPinchRightRing.init("RightRing");
-      mPinchRightPinky.init("RightPinky");
+      mPinchLeftThumb.init( "LeftThumb" );
+      mPinchLeftIndex.init( "LeftIndex" );
+      mPinchLeftMiddle.init( "LeftMiddle" );
+      mPinchLeftRing.init( "LeftRing" );
+      mPinchLeftPinky.init( "LeftPinky" );
+      mPinchRightThumb.init( "RightThumb" );
+      mPinchRightIndex.init( "RightIndex" );
+      mPinchRightMiddle.init( "RightMiddle" );
+      mPinchRightRing.init( "RightRing" );
+      mPinchRightPinky.init( "RightPinky" );
 
       //mGloveTracker.init("GlovePos Proxy");
    }

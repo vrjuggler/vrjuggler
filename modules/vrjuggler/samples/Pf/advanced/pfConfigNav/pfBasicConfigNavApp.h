@@ -131,21 +131,35 @@ bool pfBasicConfigNavApp::configAdd( vjConfigChunk* chunk )
                    (float)chunk->getProperty("start_location",2));
 
    ///////////////////////////
-   this->enableNav( (bool)chunk->getProperty( "enable_nav" ) );
-   vjDEBUG_BEGIN(vjDBG_ALL,0) << "enable_nav: " << (bool)chunk->getProperty( "enable_nav" ) << "\n===========================\n" << vjDEBUG_FLUSH;
-
-   std::string a = (std::string)chunk->getProperty( "animation_filename" );
-   this->loadAnimation( a.c_str() );
-   if ((bool)chunk->getProperty( "animation_play" ) == true)
+   if (chunk->doesPropertyExistFromToken( "enable_nav" ))
    {
-      this->keyFramer().play();
-   }
+      this->enableNav( (bool)chunk->getProperty( "enable_nav" ) );
+      vjDEBUG_BEGIN(vjDBG_ALL,0) << "enable_nav: " << (bool)chunk->getProperty( "enable_nav" ) << "\n===========================\n" << vjDEBUG_FLUSH;
+   }   
    else
    {
-      this->keyFramer().stop();
-      this->keyFramer().rewind();
-   }   
-   this->keyFramer().loop( (int)chunk->getProperty( "animation_loops" ) );
+      this->enableNav( true );
+   }
+   
+   if (chunk->doesPropertyExistFromToken( "animation_filename" ))
+   {
+      std::string a = (std::string)chunk->getProperty( "animation_filename" );
+      this->loadAnimation( a.c_str() );
+   }
+   
+   if (chunk->doesPropertyExistFromToken( "animation_play" ))
+   {
+      if ((bool)chunk->getProperty( "animation_play" ) == true)
+      {
+         this->keyFramer().play();
+      }
+      else
+      {
+         this->keyFramer().stop();
+         this->keyFramer().rewind();
+      }   
+      this->keyFramer().loop( (int)chunk->getProperty( "animation_loops" ) );
+   }
    ////////////////////////////
    
    vjDEBUG_BEGIN(vjDBG_ALL,0) << "pfBasicConfigNav::configApp: " << app_name << "===========================\n" << vjDEBUG_FLUSH;

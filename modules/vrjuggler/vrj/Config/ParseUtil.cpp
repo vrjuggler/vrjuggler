@@ -33,6 +33,7 @@
 
 #include <vjConfig.h>
 #include <ctype.h>
+#include <Math/vjMath.h>
 #include <Config/vjParseUtil.h>
 #include <Utils/vjDebug.h>
 #include <Config/vjConfigTokens.h>
@@ -117,7 +118,7 @@ bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
             while (in.get(buffer[i]) && (buffer[i] != '"'))
                 ;
             buffer[i] = '\0';
-            vjDEBUG (vjDBG_ERROR,0) << "ERROR: Truncated string in config file: '"
+            vjDEBUG (vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Truncated string in config file: '"
                                     << buffer << "'\n" << vjDEBUG_FLUSH;
         }
         retval = true;
@@ -239,9 +240,9 @@ bool vjstrcasecmp (const std::string& a, const std::string& b) {
 
 bool vjstrncasecmp (const std::string& a, const std::string& b, int _n) {
 
-    int n = VJ_MIN2 (a.size(), b.size());
+    int n = vjMath::Min (a.size(), b.size());
     if (_n >= 0)
-        n = VJ_MIN2 (n, _n);
+        n = vjMath::Min (n, _n);
 
     for (int i = 0; i < n; i++)
         if (toupper(a[i]) != toupper(b[i]))
@@ -253,9 +254,9 @@ bool vjstrncasecmp (const std::string& a, const std::string& b, int _n) {
 
 bool vjstrncmp (const std::string& a, const std::string& b, int _n) {
 
-    int n = VJ_MIN2 (a.size(), b.size());
+    int n = vjMath::Min (a.size(), b.size());
     if (_n >= 0)
-        n = VJ_MIN2 (n, _n);
+        n = vjMath::Min (n, _n);
 
     for (int i = 0; i < n; i++)
         if (a[i] != b[i])

@@ -37,7 +37,7 @@
 
 #include <vjConfig.h>
 #include <math.h>
-#include <VPR/vjSystem.h>
+#include <Math/vjMath.h>
 
 class vjMatrix;
 
@@ -115,7 +115,7 @@ public:
    //: Return vector's length
    float length() const
    {
-      return vjSystem::sqrt(lengthSquared());
+      return vjMath::sqrt(lengthSquared());
    }
 
 

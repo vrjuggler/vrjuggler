@@ -38,7 +38,8 @@
 #include <vjConfig.h>
 #include <math.h>
 #include <string.h>
-#include <VPR/vjSystem.h>
+#include <Math/vjMath.h>
+
 
 class vjQuat;
 class vjVec3;
@@ -281,7 +282,7 @@ public:
       // Could be removed
        for(int i=0;i<4;i++)
           for(int j=0;j<4;j++)
-             mat[i][j] = VJ_ZERO_CLAMP(mat[i][j]);
+             mat[i][j] = vjMath::zero_clamp(mat[i][j]);
    }
 
 public:
