@@ -111,4 +111,4 @@ DepChecker::DepChecker ()
 }
 
 
-}; //namespace jccl
+} //namespace jccl

@@ -44,29 +44,29 @@ namespace jccl
 {
 
 /** Storage buffer for performance data.
- *  LabeledPerfDataBuffer is responsible for collecting performance data 
+ *  LabeledPerfDataBuffer is responsible for collecting performance data
  *  so that is can be periodically written out to a file or network
  *  connection.  The goal is to keep the act of collecting a sample
- *  as lightweight as possible, and to make sure that data can be 
+ *  as lightweight as possible, and to make sure that data can be
  *  collected without blocking even while another thread is writing
  *  the data out.
  *  <p>
  *  The LabeledPerfDataBuffer is a circular buffer
- *  for perfdata.  It can store data for multiple points inside 
+ *  for perfdata.  It can store data for multiple points inside
  *  the control loop of a thread, each loop identified by a text
  *  string.  Samples can also be tagged with categories.
  *  <p>
- *  One process can write to the buffer (using the set() fn) 
- *  while another simultaneously reads from it using the 
+ *  One process can write to the buffer (using the set() fn)
+ *  while another simultaneously reads from it using the
  *  write() function.  The system is implemented so that the
- *  writing process never has to wait.  However, this means 
- *  that if the writer gets far enough ahead of the reader 
+ *  writing process never has to wait.  However, this means
+ *  that if the writer gets far enough ahead of the reader
  *  that there are no more free buffers, the PerfDataBuffer
  *  will start throwing away data until there is a free buffer.
  *  The 'lost' field approximates the number of data samples
  *  lost; it is reported and reset at the conclusion of every
  *  write() call.
- * 
+ *
  *  @version $Revision$, $Date$
  */
 class JCCL_CLASS_API LabeledPerfDataBuffer
@@ -78,9 +78,9 @@ class JCCL_CLASS_API LabeledPerfDataBuffer
       const std::string*  mIndexString;
       char*               mIndexCString;
       const PerformanceCategory*    mCategory;
-        
+
       vpr::Interval       mStamp;
-        
+
       BufEntry()
       {
          mIndexString = 0;
@@ -96,15 +96,15 @@ class JCCL_CLASS_API LabeledPerfDataBuffer
 
    int         mReadBegin;     /**< Index of first unread sample. */
    int         mWritePos;      /**< Index to write next sample. */
-   
+
    std::string mName;
 
 public:
 
 
    /** Constructor.
-    *  Creates a new, inactive PerfDataBuffer.  The caller is 
-    *  responsible for deciding the size of the buffer and the 
+    *  Creates a new, inactive PerfDataBuffer.  The caller is
+    *  responsible for deciding the size of the buffer and the
     *  number of indices that will be stored in it via set().
     *
     *  @param _name String identifier for this buffer.
@@ -124,7 +124,7 @@ public:
 
    void setBufferSize (int n);
 
-   
+
    /** Returns the name of this instance. */
    virtual const std::string& getName() const
    {
@@ -168,15 +168,15 @@ public:
     */
    void set (PerformanceCategory &category, const std::string& index_name,
              vpr::Interval& _value);
-   
+
    void set (PerformanceCategory &category, char* index_name,
              vpr::Interval& _value);
 
 
-//        /** Marks the "top" of the calling thread's loop. 
-//         *  This is necessary for some analysis and graphing of the  
-//         *  performance data. 
-//         */ 
+//        /** Marks the "top" of the calling thread's loop.
+//         *  This is necessary for some analysis and graphing of the
+//         *  performance data.
+//         */
 //        void setBeginCycle (const vpr::GUID& category);
 
 
@@ -198,8 +198,7 @@ private:
    void operator= (const LabeledPerfDataBuffer& o) {;}
 };
 
+} // namespace jccl
 
-}; // namespace jccl
 
 #endif
-

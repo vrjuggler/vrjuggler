@@ -24,7 +24,7 @@ namespace jcclTest
     LabeledPerfDataBufferTest::LabeledPerfDataBufferTest() : CppUnit::TestCase ()
     {
     }
-    
+
     LabeledPerfDataBufferTest::LabeledPerfDataBufferTest(std::string name) : CppUnit::TestCase (name)
     {
     }
@@ -88,7 +88,7 @@ namespace jcclTest
         vpr::Barrier* barrier;
         int thread_num;
         vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer>* tsbuffer;
-        SetContentionTestLoopData (vpr::Barrier* _barrier, 
+        SetContentionTestLoopData (vpr::Barrier* _barrier,
                                    int _thread_num,
                                    vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer>* _tsbuffer) {
             barrier = _barrier;
@@ -114,7 +114,7 @@ namespace jcclTest
         }
         data->barrier->wait();
     }
-        
+
 
     void LabeledPerfDataBufferTest::testSetContentionOverhead () {
         //jccl::PerformanceCategories::instance()->activate();
@@ -127,7 +127,7 @@ namespace jcclTest
         vpr::Barrier b(num_threads+1);
 
         for (int i = 0; i < num_threads; i++) {
-            
+
             vpr::ThreadMemberFunctor<LabeledPerfDataBufferTest>* memberFunctor =
             new vpr::ThreadMemberFunctor<LabeledPerfDataBufferTest>
                 (this,
@@ -151,7 +151,7 @@ namespace jcclTest
 
     }
 
-        
+
 
     /*static*/ CppUnit::Test* LabeledPerfDataBufferTest::suite()
     {
@@ -165,11 +165,10 @@ namespace jcclTest
         test_suite->addTest( new CppUnit::TestCaller<LabeledPerfDataBufferTest>("testSetOverhead", &LabeledPerfDataBufferTest::testSetOverhead));
 
         test_suite->addTest( new CppUnit::TestCaller<LabeledPerfDataBufferTest>("testSetContentionOverhead", &LabeledPerfDataBufferTest::testSetContentionOverhead));
-        
+
         return test_suite;
    }
 
 
 
-}; // namespace jcclTest
-
+} // namespace jcclTest

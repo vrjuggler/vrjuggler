@@ -29,7 +29,7 @@ class LabeledPerfDataBufferTest : public CppUnit::TestCase
 public:
 
     LabeledPerfDataBufferTest();
-    
+
     LabeledPerfDataBufferTest(std::string name);
 
     virtual ~LabeledPerfDataBufferTest();
@@ -42,7 +42,7 @@ public:
 //         vpr::Barrier* barrier;
 //         int thread_num;
 //         vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer>* tsbuffer;
-//         SetContentionTestLoopData (vpr::Barrier* _barrier, 
+//         SetContentionTestLoopData (vpr::Barrier* _barrier,
 //                                    int _thread_num,
 //                                    vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer>* _tsbuffer) {
 //             barrier = _barrier;
@@ -52,11 +52,11 @@ public:
 //     };
 
     void setContentionTestLoop (void* d);
-        
+
 
     void testSetContentionOverhead ();
 
-        
+
 
     static CppUnit::Test* suite();
 
@@ -65,7 +65,7 @@ public:
 
 }; // class LabeledPerfDataBufferTest
 
+} // namespace jcclTest
 
-}; // namespace jcclTest
 
 #endif
