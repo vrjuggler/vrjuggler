@@ -44,8 +44,6 @@
 
 #include <vpr/vprConfig.h>
 
-#include <string>
-
 #include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
 
 
@@ -61,49 +59,40 @@ public:
    // vpr::SocketDatagram implementation.
    // ========================================================================
 
-   // ------------------------------------------------------------------------
-   //: Default constructor.  This does nothing.
-   //
-   //! PRE: None.
-   //! POST: None.
-   // ------------------------------------------------------------------------
-   SocketDatagramImplNSPR (void) : SocketImplNSPR(SocketTypes::DATAGRAM)
+   /**
+    * Default constructor.  This does nothing.
+    */
+   SocketDatagramImplNSPR() : SocketImplNSPR(SocketTypes::DATAGRAM)
    {
       /* Do nothing. */ ;
    }
 
-   // ------------------------------------------------------------------------
-   //
-   //! PRE: None.
-   //! POST: The member variables are initialized with the type in particular
-   //+       set to vpr::SocketTypes::DATAGRAM.
-   //
-   // ------------------------------------------------------------------------
-   SocketDatagramImplNSPR (const InetAddr& local_addr,
-                           const InetAddr& remote_addr)
+   /**
+    * Constructor.
+    *
+    * @post The member variables are initialized with the type in particular
+    *       set to vpr::SocketTypes::DATAGRAM.
+    */
+   SocketDatagramImplNSPR(const InetAddr& local_addr,
+                          const InetAddr& remote_addr)
       : SocketImplNSPR(local_addr, remote_addr, SocketTypes::DATAGRAM)
    {
       /* Do nothing. */ ;
    }
 
-   // ------------------------------------------------------------------------
-   // Copy constructor.
-   // ------------------------------------------------------------------------
-   SocketDatagramImplNSPR (const SocketDatagramImplNSPR& sock)
-      : SocketImplNSPR(SocketTypes::DATAGRAM)
+   /** Copy constructor. */
+   SocketDatagramImplNSPR(const SocketDatagramImplNSPR& sock)
+      : SocketImplNSPR(sock)
    {
       mLocalAddr  = sock.mLocalAddr;
       mRemoteAddr = sock.mRemoteAddr;
    }
 
-   // ------------------------------------------------------------------------
-   // ------------------------------------------------------------------------
-   vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length, const int flags,
-                              vpr::InetAddr& from, vpr::Uint32& bytes_read,
+   vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length,
+                              const int flags, vpr::InetAddr& from,
+                              vpr::Uint32& bytes_read,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   // ------------------------------------------------------------------------
-   // ------------------------------------------------------------------------
    vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
                             const int flags, const vpr::InetAddr& to,
                             vpr::Uint32& bytes_sent,
