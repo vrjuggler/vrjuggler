@@ -359,6 +359,8 @@ if test "x$BUILD_JAVA" = "xY"; then
    if test "x$ANT" == "xno"; then
       AC_MSG_WARN([*** Can't find the java build tool ant. The Tweek Java API will not be built ***])
       BUILD_JAVA='N'
+   else
+      ANT="JAVA_HOME=$JDK_HOME $ANT"
    fi
 fi
 
