@@ -25,7 +25,7 @@
    </articleinfo>
    <section>
       <title>Introduction</title>
-      <para>Sonix provides simple audio sound objects on top of several audio APIs. The interface to sonix is kept very very simple in order to get people up and running with sound as fast as possible. </para>
+      <para>Sonix provides simple audio sound objects on top of several audio APIs. The interface to Sonix is kept very very simple in order to get people up and running with sound as fast as possible. </para>
       <para>Here is an overview of Sonix capabilities: <itemizedlist>
             <listitem>
                <para>Provides simple access to spacialized sound triggering.</para>
@@ -54,7 +54,7 @@
         id        = "simplesonixinterface"
         xreflabel = "simplesonixinterface"
       >
-         <title>UML diagram of the sonix interface.</title>
+         <title>UML diagram of the Sonix interface.</title>
          <mediaobject>
             <imageobject>
                <imagedata
@@ -65,19 +65,19 @@
             </imageobject>
          </mediaobject>
       </figure>
-      <para>In <xref linkend="simplesonixinterface"/> we see the API for sonix (see <xref linkend="completesonixinterface"/> for the complete software architechture). The main parts that a sound programmer will use is shown, namely the <classname>snx::SoundHandle</classname> class, and the <classname>sonix</classname> singleton class. The <classname>sonix</classname> singleton class is used to start, stop and reconfigure the sound system. The <classname>snx::SoundHandle</classname> class is used to manipulate individual sounds. Both classes must be used for any sound to be heard. </para>
-      <para>To start the sonix system is easy (see <xref linkend="startupCode"/>). Basically the only call needed to start the system is <methodname>changeAPI()</methodname>. Currently only OpenAL and AudioWorks is supported by sonix, so you would pass one of these two strings to <methodname>changeAPI()</methodname>.</para>
+      <para>In <xref linkend="simplesonixinterface"/> we see the API for Sonix (see <xref linkend="completesonixinterface"/> for the complete software architecture). The main parts that a sound programmer will use is shown, namely the <classname>snx::SoundHandle</classname> class, and the <classname>sonix</classname> singleton class. The <classname>sonix</classname> singleton class is used to start, stop and reconfigure the sound system. The <classname>snx::SoundHandle</classname> class is used to manipulate individual sounds. Both classes must be used for any sound to be heard. </para>
+      <para>To start the Sonix system is easy (see <xref linkend="startupCode"/>). Basically the only call needed to start the system is <methodname>changeAPI()</methodname>. Currently only OpenAL and AudioWorks is supported by Sonix, so you would pass one of these two strings to <methodname>changeAPI()</methodname>.</para>
       <example
         id = "startupCode"
       >
-         <title>Code to startup and initialize sonix to use the OpenAL audio subsystem</title>
+         <title>Code to startup and initialize Sonix to use the OpenAL audio subsystem</title>
          <programlisting>sonix::instance()-&gt;changeAPI( "OpenAL" );</programlisting>
       </example>
       <para>To setup a sound is also straight forward as seen in <xref linkend="soundHandleSetup"/>. Here we use a <classname>snx::SoundInfo</classname> to configure the sound object, which is accessed by a <classname>snx::SoundHandle</classname>. </para>
       <example
         id = "soundHandleSetup"
       >
-         <title>Code to setup a sonix sound</title>
+         <title>Code to setup a Sonix sound</title>
          <programlisting>snx::SoundInfo info;
 info.filename = "crack.wav";
 info.datasource = snx::SoundInfo::FILESYTEM;
@@ -85,7 +85,7 @@ info.datasource = snx::SoundInfo::FILESYTEM;
 snx::SoundHandle crack_sound( "crack" );
 crack_sound.configure( info );</programlisting>
       </example>
-      <para>To keep sonix running, you need to repeatedly call an update function called <methodname>step( float time_delta )</methodname>. <varname>time_delta</varname> is the amount of time since you last called <methodname>step()</methodname>, and <methodname>step()</methodname> should be called in your application's frame function (see <xref linkend="stepCode"/>).</para>
+      <para>To keep Sonix running, you need to repeatedly call an update function called <methodname>step( float time_delta )</methodname>. <varname>time_delta</varname> is the amount of time since you last called <methodname>step()</methodname>, and <methodname>step()</methodname> should be called in your application's frame function (see <xref linkend="stepCode"/>).</para>
       <example
         id = "stepCode"
       >
@@ -98,7 +98,7 @@ crack_sound.configure( info );</programlisting>
       </example>
       <para></para>
       <example>
-         <title>Example C++ program that uses sonix to play a sound using OpenAL</title>
+         <title>Example C++ program that uses Sonix to play a sound using OpenAL</title>
          <programlisting>
 #include &lt;iostream&gt;
 #include &lt;string&gt;
@@ -148,13 +148,13 @@ int main( int argc, char* argv[] )
    </section>
    <section>
       <title>Reconfiguration</title>
-      <para>Sonix is reconfigurable allowing audio APIs to be safely swapped out at runtime without the dependant systems noticing. Application using sonix expect to be completely portable. Changing sound APIs at run time can be useful so that the user can experiment with quality and latency differences of different hardware and sound APIs. </para>
-      <para>If no audio API is available on a given platform, your calls to sonix simply get ignored. This gives the benefit that you need no special code in your application to enable or disable sound - it is handled by sonix. </para>
-      <para>Reconfiguration allows application code to not need to be aware when something changes. Everything is changable behind the scenes. See <xref linkend="reconfigCode"/> for an example of how to reconfigure sonix in C++. This probably makes more sense in a more complex application where there is some application logic that triggers sounds and does not want or need to know when a sound has changed state, or when the user has tried out a new audio API.</para>
+      <para>Sonix is reconfigurable allowing audio APIs to be safely swapped out at runtime without the dependent systems noticing. Application using Sonix expect to be completely portable. Changing sound APIs at run time can be useful so that the user can experiment with quality and latency differences of different hardware and sound APIs. </para>
+      <para>If no audio API is available on a given platform, your calls to Sonix simply get ignored. This gives the benefit that you need no special code in your application to enable or disable sound - it is handled by Sonix. </para>
+      <para>Reconfiguration allows application code to not need to be aware when something changes. Everything is changeable behind the scenes. See <xref linkend="reconfigCode"/> for an example of how to reconfigure Sonix in C++. This probably makes more sense in a more complex application where there is some application logic that triggers sounds and does not want or need to know when a sound has changed state, or when the user has tried out a new audio API.</para>
       <example
         id = "reconfigCode"
       >
-         <title>How to reconfigure sonix at runtime</title>
+         <title>How to reconfigure Sonix at runtime</title>
          <programlisting>   // start sonix using OpenAL
    sonix::instance()-&gt;changeAPI( "OpenAL" );
       
@@ -190,10 +190,10 @@ int main( int argc, char* argv[] )
       <para>Sonix was designed (see <xref linkend="completesonixinterface"/>) using modern software design principles including design patterns and object oriented design. </para>
       <section>
          <title>Design Patterns Overview</title>
-         <para>Design patterns describe simple and elegant solutions to specific problems in object oriented software design <xref linkend="Patterns"/>. When designing sonix, we used many design patterns, which were appropriate to a simple audio system <xref linkend="Gems2"/>.</para>
+         <para>Design patterns describe simple and elegant solutions to specific problems in object oriented software design <xref linkend="Patterns"/>. When designing Sonix, we used many design patterns, which were appropriate to a simple audio system <xref linkend="Gems2"/>.</para>
          <itemizedlist>
             <listitem>
-               <para>Adaptor (<classname>snx::SoundImplementation</classname>) provides a common interface to the underlying sound API. </para>
+               <para>Adapter (<classname>snx::SoundImplementation</classname>) provides a common interface to the underlying sound API. </para>
             </listitem>
             <listitem>
                <para>Prototype (<classname>snx::SoundImplementation</classname>) each sound implementation can be cloned, preserving its engine setup state </para>
@@ -208,14 +208,14 @@ int main( int argc, char* argv[] )
                <para>Bridge (<classname>sonix</classname> interface class and <classname>snx::SoundImplementation</classname>) <classname>sonix</classname> class is the audio system abstraction which is decoupled from its implementation <classname>snx::SoundImplementation</classname>. This way the two can vary independently. Bridge also facilitates run-time configuration of the sound API.</para>
             </listitem>
             <listitem>
-               <para>Proxy (<classname>std::string</classname>) refer to actual sounds with a <classname>std::string</classname> Proxy. This allows you to generically control a sound for any sound API. The sonix class acts as Mediator between every Proxy method and the actual SoundImplementation Adaptor. <classname>snx::SoundHandle</classname> is actually a proxy to this <classname>std::string</classname> proxy.</para>
+               <para>Proxy (<classname>std::string</classname>) refer to actual sounds with a <classname>std::string</classname> Proxy. This allows you to generically control a sound for any sound API. The Sonix class acts as Mediator between every Proxy method and the actual SoundImplementation Adapter. <classname>snx::SoundHandle</classname> is actually a proxy to this <classname>std::string</classname> proxy.</para>
             </listitem>
          </itemizedlist>
          <figure
            id        = "completesonixinterface"
            xreflabel = "completesonixinterface"
          >
-            <title>The sonix design.</title>
+            <title>The Sonix design.</title>
             <mediaobject>
                <imageobject>
                   <imagedata
@@ -229,9 +229,9 @@ int main( int argc, char* argv[] )
       </section>
       <section>
          <title>Plug-in audio subsystems</title>
-         <para>Sonix supports the selection of several audio subsystems by the application through implementation plug-ins. Each plug-in implements an adaptor to an underlying audio subsystem. The adaptor supports a common interface that sonix knows how talk to. Each adaptor is then registered with a factory object, which may ask that adaptor to clone itself for use by whoever called the factory. </para>
+         <para>Sonix supports the selection of several audio subsystems by the application through implementation plug-ins. Each plug-in implements an adapter to an underlying audio subsystem. The adapter supports a common interface that Sonix knows how talk to. Each adapter is then registered with a factory object, which may ask that adapter to clone itself for use by whoever called the factory. </para>
          <figure>
-            <title>How sonix is able to support run many audio subsystems through "plug-ins"</title>
+            <title>How Sonix is able to support run many audio subsystems through "plug-ins"</title>
             <mediaobject>
                <imageobject>
                   <imagedata
