@@ -142,10 +142,10 @@ vpr::ReturnStatus SerialPortImplTermios::clearAll()
         term.c_iflag = 0;
         term.c_oflag = 0;
         term.c_cc[ VMIN ] = 1;   //Set default to 1, setting 0 would be dangerous
-        
+
         // Construct the error message to send to setAttrs().
         msg = "Could set Clear All settings";
-        
+
         retval = setAttrs(&term, msg);
     }
     return retval;
@@ -481,7 +481,7 @@ vpr::ReturnStatus SerialPortImplTermios::disableBadByteIgnore()
 }
 // ----------------------------------------------------------------------------
 // Get the current state of ignoring BREAK bytes
-// 
+//
 // ----------------------------------------------------------------------------
 bool SerialPortImplTermios::getBreakByteIgnoreState()
 {
@@ -498,7 +498,7 @@ vpr::ReturnStatus SerialPortImplTermios::enableBreakByteIgnore()
 }
 
 // ----------------------------------------------------------------------------
-// Disable ignoring of received BREAK bytes 
+// Disable ignoring of received BREAK bytes
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::disableBreakByteIgnore()
 {
@@ -999,6 +999,88 @@ vpr::ReturnStatus SerialPortImplTermios::sendBreak(const Int32 duration)
    return retval;
 }
 
+
+// Modem line methods
+/* modem lines */
+/* Linux definitions
+#define TIOCM_LE	0x001
+#define TIOCM_DTR	0x002
+#define TIOCM_RTS	0x004
+#define TIOCM_ST	0x008
+#define TIOCM_SR	0x010
+#define TIOCM_CTS	0x020
+#define TIOCM_CAR	0x040
+#define TIOCM_RNG	0x080
+#define TIOCM_DSR	0x100
+#define TIOCM_CD	TIOCM_CAR
+#define TIOCM_RI	TIOCM_RNG
+*/
+
+/**
+* Return the status of the carrier detect signal.
+* @return - May be platform dependent, but will at least be as follows.
+*           0 - not high, 1 - high, -1 - Not supported
+*/
+int SerialPortImplTermios::getCarrierDetect()
+{
+   if(getLineFlag(TIOCM_CAR))
+      return 1;
+   else
+      return 0;
+}
+
+/**
+* Return the status of the data set ready line.
+* @return - May be platform dependent, but will at least be as follows.
+*           0 - not high, 1 - high, -1 - Not supported
+*/
+int SerialPortImplTermios::getDataSetReady()
+{
+   if(getLineFlag(TIOCM_DSR))
+      return 1;
+   else
+      return 0;
+}
+
+/**
+* Return the status of the clear to send.
+* @return - May be platform dependent, but will at least be as follows.
+*           0 - not high, 1 - high, -1 - Not supported
+*/
+int SerialPortImplTermios::getClearToSend()
+{
+   if(getLineFlag(TIOCM_CTS))
+      return 1;
+   else
+      return 0;
+}
+
+/**
+* Return the status of the ring indicator line.
+* @return - May be platform dependent, but will at least be as follows.
+*           0 - not high, 1 - high, -1 - Not supported
+*/
+int SerialPortImplTermios::getRingIndicator()
+{
+   if(getLineFlag(TIOCM_RI))
+      return 1;
+   else
+      return 0;
+}
+
+/** Set the data terminal ready line. */
+vpr::ReturnStatus SerialPortImplTermios::setDataTerminalReady(bool val)
+{
+   return setLineFlag(TIOCM_DTR, val);
+}
+
+/** Set the ready to send line */
+vpr::ReturnStatus SerialPortImplTermios::setRequestToSend(bool val)
+{
+   return setLineFlag(TIOCM_RTS, val);
+}
+
+
 // ============================================================================
 // Protected methods.
 // ============================================================================
@@ -1229,6 +1311,47 @@ vpr::ReturnStatus SerialPortImplTermios::setBit(const tcflag_t bit,
    }
 
    return retval;
+}
+
+vpr::ReturnStatus SerialPortImplTermios::setLineFlag(Uint8 flag, bool val)
+{
+   vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
+   vprASSERT( ((TIOCM_DTR == flag) || (TIOCM_RTS == flag)) && "Tried to set line flag that can't be set");
+
+   int line_status;        // current flags
+
+   if(ioctl(mHandle->mFdesc, TIOCMGET, &line_status) == -1)
+   {
+      return vpr::ReturnStatus::Fail;
+   }
+
+   if(val)
+      line_status |= flag;
+   else
+      line_status &= ~flag;
+
+   if(ioctl(mHandle->mFdesc, TIOCMSET, &line_status) == -1)
+   {
+      return vpr::ReturnStatus::Fail;
+   }
+   //tcflush(port->desc, TCIFLUSH);
+   flushQueue(vpr::SerialTypes::IO_QUEUES);  // Flush queues for goodness
+   	
+   return vpr::ReturnStatus::Succeed;
+}
+
+bool SerialPortImplTermios::getLineFlag(Uint8 flag)
+{
+   vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
+   //vprASSERT( ((TIOCM_CD
+   int line_status;
+
+   if(ioctl(mHandle->mFdesc, TIOCMGET, &line_status) == -1)
+   {
+      return vpr::ReturnStatus::Fail;
+   }
+
+   return (line_status & flag);
 }
 
 // ----------------------------------------------------------------------------
