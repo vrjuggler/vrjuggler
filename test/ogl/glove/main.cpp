@@ -3,7 +3,7 @@
 //
 // main.cpp
 //----------------------------------------
-#include <application.h>
+#include <gloveApp.h>
 
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
