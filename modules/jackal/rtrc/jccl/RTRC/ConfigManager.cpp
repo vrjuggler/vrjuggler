@@ -130,10 +130,22 @@ void ConfigManager::loadRemoteReconfig()
       }
    }
 
-   // XXX: This should not be hard-coded.
-   std::vector<std::string> search_path(1);
-   search_path[0] = base_dir + std::string("/lib/jccl/plugins");
+#if defined(_ABIN32)
+   const std::string bit_suffix("32");
+#elif defined(_ABI64)
+   const std::string bit_suffix("64");
+#else
+   const std::string bit_suffix("");
+#endif
 
+   std::vector<std::string> search_path(1);
+   search_path[0] = base_dir + std::string("/lib") + bit_suffix +
+                    std::string("/jccl/plugins");
+
+   // In the long run, we may not want to hard-code the base name of the 
+   // plug-in we load.  If we ever reach a point where we have multiple ways
+   // of implementing remote run-time reconfiguration, we could have options
+   // for which plug-in to load.
    const std::string reconfig_dso("corba_rtrc");
    const std::string init_func("initPlugin");
    Callable functor(this);
