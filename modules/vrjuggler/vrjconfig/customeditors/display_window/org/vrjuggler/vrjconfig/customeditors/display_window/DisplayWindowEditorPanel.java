@@ -476,25 +476,34 @@ public class DisplayWindowEditorPanel
             broker.getRepository().get(OPENGL_FRAME_BUFFER_TYPE);
          ConfigElement fb_cfg =
             factory.create("OpenGL Frame Buffer Configuration", fb_def);
-         fb_cfg.setProperty("visual_id", 0, dlg.getVisualID());
-         fb_cfg.setProperty("red_size", 0, dlg.getColorRedDepth());
-         fb_cfg.setProperty("green_size", 0, dlg.getColorGreenDepth());
-         fb_cfg.setProperty("blue_size", 0, dlg.getColorBlueDepth());
-         fb_cfg.setProperty("alpha_size", 0, dlg.getColorAlphaDepth());
-         fb_cfg.setProperty("auxiliary_buffer_count", 0,
+         fb_cfg.setProperty(VISUAL_ID_PROPERTY, 0, dlg.getVisualID());
+         fb_cfg.setProperty(COLOR_RED_SIZE_PROPERTY, 0,
+                            dlg.getColorRedDepth());
+         fb_cfg.setProperty(COLOR_GREEN_SIZE_PROPERTY, 0,
+                            dlg.getColorGreenDepth());
+         fb_cfg.setProperty(COLOR_BLUE_SIZE_PROPERTY, 0,
+                            dlg.getColorBlueDepth());
+         fb_cfg.setProperty(COLOR_ALPHA_SIZE_PROPERTY, 0,
+                            dlg.getColorAlphaDepth());
+         fb_cfg.setProperty(AUX_BUFFER_COUNT_PROPERTY, 0,
                             dlg.getAuxiliaryBufferCount());
-         fb_cfg.setProperty("depth_buffer_size", 0, dlg.getDepthBufferSize());
-         fb_cfg.setProperty("stencil_buffer_size", 0,
+         fb_cfg.setProperty(DEPTH_BUFFER_SIZE_PROPERTY, 0,
+                            dlg.getDepthBufferSize());
+         fb_cfg.setProperty(STENCIL_BUFFER_SIZE_PROPERTY, 0,
                             dlg.getStencilBufferSize());
-         fb_cfg.setProperty("accum_red_size", 0, dlg.getAccumRedDepth());
-         fb_cfg.setProperty("accum_green_size", 0, dlg.getAccumGreenDepth());
-         fb_cfg.setProperty("accum_blue_size", 0, dlg.getAccumBlueDepth());
-         fb_cfg.setProperty("accum_alpha_size", 0, dlg.getAccumAlphaDepth());
-         fb_cfg.setProperty("fsaa_enable", 0, dlg.getFSAAEnable());
-         elt.setProperty("frame_buffer_config", 0, fb_cfg);
+         fb_cfg.setProperty(ACCUM_RED_SIZE_PROPERTY, 0,
+                            dlg.getAccumRedDepth());
+         fb_cfg.setProperty(ACCUM_GREEN_SIZE_PROPERTY, 0,
+                            dlg.getAccumGreenDepth());
+         fb_cfg.setProperty(ACCUM_BLUE_SIZE_PROPERTY, 0,
+                            dlg.getAccumBlueDepth());
+         fb_cfg.setProperty(ACCUM_ALPHA_SIZE_PROPERTY, 0,
+                            dlg.getAccumAlphaDepth());
+         fb_cfg.setProperty(FSAA_ENABLE_PROPERTY, 0, dlg.getFSAAEnable());
+         elt.setProperty(FRAME_BUFFER_PROPERTY, 0, fb_cfg);
 
-         elt.setProperty("stereo", 0, dlg.inStereo());
-         elt.setProperty("border", 0, dlg.hasBorder());
+         elt.setProperty(STEREO_PROPERTY, 0, dlg.inStereo());
+         elt.setProperty(BORDER_PROPERTY, 0, dlg.hasBorder());
 
          elt.setProperty(KEYBOARD_MOUSE_PTR_PROPERTY, 0,
                          dlg.getKeyboardMousePointer());
@@ -656,7 +665,8 @@ public class DisplayWindowEditorPanel
          // Set the title for the new viewport based on the number of
          // simulator viewports that already exist in the window's
          // configuration.
-         int sim_vps = display_elt.getPropertyValueCount("surface_viewports");
+         int sim_vps =
+            display_elt.getPropertyValueCount(SURFACE_VIEWPORTS_PROPERTY);
          String title = "Surface Viewport " + sim_vps;
 
          // Create a new config element based on the initial information we
@@ -677,31 +687,43 @@ public class DisplayWindowEditorPanel
          elt.setProperty(ORIGIN_PROPERTY, 1, new Float(origin_y));
          elt.setProperty(SIZE_PROPERTY, 0, new Float(width));
          elt.setProperty(SIZE_PROPERTY, 1, new Float(height));
-         elt.setProperty("view", 0, dlg.getViewpoint());
-         elt.setProperty("user", 0, dlg.getUser());
+         elt.setProperty(VIEW_PROPERTY, 0, dlg.getViewpoint());
+         elt.setProperty(USER_PROPERTY, 0, dlg.getUser());
 
          Point3D[] corners = dlg.getCorners();
-         elt.setProperty("lower_left_corner", 0, new Double(corners[0].x));
-         elt.setProperty("lower_left_corner", 1, new Double(corners[0].y));
-         elt.setProperty("lower_left_corner", 2, new Double(corners[0].z));
-         elt.setProperty("lower_right_corner", 0, new Double(corners[1].x));
-         elt.setProperty("lower_right_corner", 1, new Double(corners[1].y));
-         elt.setProperty("lower_right_corner", 2, new Double(corners[1].z));
-         elt.setProperty("upper_right_corner", 0, new Double(corners[2].x));
-         elt.setProperty("upper_right_corner", 1, new Double(corners[2].y));
-         elt.setProperty("upper_right_corner", 2, new Double(corners[2].z));
-         elt.setProperty("upper_left_corner", 0, new Double(corners[3].x));
-         elt.setProperty("upper_left_corner", 1, new Double(corners[3].y));
-         elt.setProperty("upper_left_corner", 2, new Double(corners[3].z));
+         elt.setProperty(LOWER_LEFT_CORNER_PROPERTY, 0,
+                         new Double(corners[0].x));
+         elt.setProperty(LOWER_LEFT_CORNER_PROPERTY, 1,
+                         new Double(corners[0].y));
+         elt.setProperty(LOWER_LEFT_CORNER_PROPERTY, 2,
+                         new Double(corners[0].z));
+         elt.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 0,
+                         new Double(corners[1].x));
+         elt.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 1,
+                         new Double(corners[1].y));
+         elt.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 2,
+                         new Double(corners[1].z));
+         elt.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 0,
+                         new Double(corners[2].x));
+         elt.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 1,
+                         new Double(corners[2].y));
+         elt.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 2,
+                         new Double(corners[2].z));
+         elt.setProperty(UPPER_LEFT_CORNER_PROPERTY, 0,
+                         new Double(corners[3].x));
+         elt.setProperty(UPPER_LEFT_CORNER_PROPERTY, 1,
+                         new Double(corners[3].y));
+         elt.setProperty(UPPER_LEFT_CORNER_PROPERTY, 2,
+                         new Double(corners[3].z));
 
-         elt.setProperty("tracked", 0, dlg.isTracked());
+         elt.setProperty(TRACKED_PROPERTY, 0, dlg.isTracked());
 
          if ( dlg.isTracked() == Boolean.TRUE )
          {
-            elt.setProperty("tracker_proxy", 0, dlg.getTrackerProxy());
+            elt.setProperty(TRACKER_PROXY_PROPERTY, 0, dlg.getTrackerProxy());
          }
 
-         display_elt.addProperty("surface_viewports", elt, mContext);
+         display_elt.addProperty(SURFACE_VIEWPORTS_PROPERTY, elt, mContext);
       }
    }
 
@@ -723,7 +745,8 @@ public class DisplayWindowEditorPanel
          // Set the title for the new viewport based on the number of
          // simulator viewports that already exist in the window's
          // configuration.
-         int sim_vps = display_elt.getPropertyValueCount("simulator_viewports");
+         int sim_vps =
+            display_elt.getPropertyValueCount(SIMULATOR_VIEWPORTS_PROPERTY);
          String title = "Simulator Viewport " + sim_vps;
 
          // Create a new config element based on the initial information we
@@ -744,27 +767,28 @@ public class DisplayWindowEditorPanel
          elt.setProperty(ORIGIN_PROPERTY, 1, new Float(origin_y));
          elt.setProperty(SIZE_PROPERTY, 0, new Float(width));
          elt.setProperty(SIZE_PROPERTY, 1, new Float(height));
-         elt.setProperty("view", 0, dlg.getViewpoint());
-         elt.setProperty("user", 0, dlg.getUser());
-         elt.setProperty("vertical_fov", 0, dlg.getVertialFOV());
+         elt.setProperty(VIEW_PROPERTY, 0, dlg.getViewpoint());
+         elt.setProperty(USER_PROPERTY, 0, dlg.getUser());
+         elt.setProperty(VERTICAL_FOV_PROPERTY, 0, dlg.getVertialFOV());
 
          ConfigElement sim_elt;
-         if ( elt.getPropertyValues("simulator_plugin").isEmpty() )
+         if ( elt.getPropertyValues(SIMULATOR_PLUGIN_PROPERTY).isEmpty() )
          {
             ConfigDefinition sim_def =
-               broker.getRepository().get("default_simulator");
+               broker.getRepository().get(DEFAULT_SIMULATOR_TYPE);
             sim_elt = factory.create("Simulator Plug-in", sim_def);
-            elt.addProperty("simulator_plugin", sim_elt);
+            elt.addProperty(SIMULATOR_PLUGIN_PROPERTY, sim_elt);
          }
          else
          {
-            sim_elt = (ConfigElement) elt.getProperty("simulator_plugin", 0);
+            sim_elt =
+               (ConfigElement) elt.getProperty(SIMULATOR_PLUGIN_PROPERTY, 0);
          }
 
-         sim_elt.setProperty("camera_pos", 0, dlg.getCameraPosition());
-         sim_elt.setProperty("wand_pos", 0, dlg.getWandPosition());
+         sim_elt.setProperty(CAMERA_POS_PROPERTY, 0, dlg.getCameraPosition());
+         sim_elt.setProperty(WAND_POS_PROPERTY, 0, dlg.getWandPosition());
 
-         display_elt.addProperty("simulator_viewports", elt, mContext);
+         display_elt.addProperty(SIMULATOR_VIEWPORTS_PROPERTY, elt, mContext);
       }
    }
 

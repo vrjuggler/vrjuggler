@@ -47,6 +47,9 @@ public interface EditorConstants
    /** Config element type analog_proxy. */
    public static final String ANALOG_PROXY_TYPE = "analog_proxy";
 
+   /** Config element type default_simulator. */
+   public static final String DEFAULT_SIMULATOR_TYPE = "default_simulator";
+
    /** Config element type digital_proxy. */
    public static final String DIGITAL_PROXY_TYPE = "digital_proxy";
 
@@ -100,14 +103,63 @@ public interface EditorConstants
 
    // Properties.
 
+   /** Property type accum_red_size. */
+   public static final String ACCUM_RED_SIZE_PROPERTY = "accum_red_size";
+
+   /** Property type accum_green_size. */
+   public static final String ACCUM_GREEN_SIZE_PROPERTY = "accum_green_size";
+
+   /** Property type accum_blue_size. */
+   public static final String ACCUM_BLUE_SIZE_PROPERTY = "accum_blue_size";
+
+   /** Property type accum_alpha_size. */
+   public static final String ACCUM_ALPHA_SIZE_PROPERTY = "accum_alpha_size";
+
+   /** Property type active. */
+   public static final String ACTIVE_PROPERTY = "active";
+
+   /** Property type auxiliary_buffer_count. */
+   public static final String AUX_BUFFER_COUNT_PROPERTY =
+      "auxiliary_buffer_count";
+
+   /** Property type border. */
+   public static final String BORDER_PROPERTY = "border";
+
+   /** Property type camera_pos. */
+   public static final String CAMERA_POS_PROPERTY = "camera_pos";
+
+   /** Property type red_size. */
+   public static final String COLOR_RED_SIZE_PROPERTY = "red_size";
+
+   /** Property type green_size. */
+   public static final String COLOR_GREEN_SIZE_PROPERTY = "green_size";
+
+   /** Property type blue_size. */
+   public static final String COLOR_BLUE_SIZE_PROPERTY = "blue_size";
+
+   /** Property type alpha_size. */
+   public static final String COLOR_ALPHA_SIZE_PROPERTY = "alpha_size";
+
    /** Property type custom_scale. */
    public static final String CUSTOM_SCALE_PROPERTY = "custom_scale";
+
+   /** Property type depth_buffer_size. */
+   public static final String DEPTH_BUFFER_SIZE_PROPERTY = "depth_buffer_size";
 
    /** Property type device. */
    public static final String DEVICE_PROPERTY = "device";
 
    /** Property type device_units. */
    public static final String DEVICE_UNITS_PROPERTY = "device_units";
+
+   /** Property type frame_buffer_config. */
+   public static final String FRAME_BUFFER_PROPERTY = "frame_buffer_config";
+
+   /** Property type fsaa_enable. */
+   public static final String FSAA_ENABLE_PROPERTY = "fsaa_enable";
+
+   /** Property type hide_mouse. */
+   public static final String HIDE_MOUSE_PROPERTY = "hide_mouse";
 
    /** Property type keyboard_mouse_proxy. */
    public static final String KEYBOARD_MOUSE_PROXY_PTR_PROPERTY =
@@ -120,6 +172,13 @@ public interface EditorConstants
    /** Property type lock_key. */
    public static final String LOCK_KEY_PROPERTY = "lock_key";
 
+   /** Property type lower_left_corner. */
+   public static final String LOWER_LEFT_CORNER_PROPERTY = "lower_left_corner";
+
+   /** Property type lower_right_corner. */
+   public static final String LOWER_RIGHT_CORNER_PROPERTY =
+      "lower_right_corner";
+
    /** Property type origin. */
    public static final String ORIGIN_PROPERTY = "origin";
 
@@ -129,18 +188,6 @@ public interface EditorConstants
    /** Property type position_transform_filter. */
    public static final String POSITION_TRANSFORM_FILTER_TYPE =
       "position_transform_filter";
-
-   /** Property type proxy. */
-   public static final String PROXY_PROPERTY = "proxy";
-
-   /** Property type start_locked. */
-   public static final String START_LOCKED_PROPERTY = "start_locked";
-
-   /** Property type sleep_time. */
-   public static final String SLEEP_TIME_PROPERTY = "sleep_time";
-
-   /** Property type size. */
-   public static final String SIZE_PROPERTY = "size";
 
    /** Property type pre_rotation. */
    public static final String PRE_ROTATION_PROPERTY = "pre_rotation";
@@ -153,4 +200,61 @@ public interface EditorConstants
 
    /** Property type post_translation. */
    public static final String POST_TRANSLATION_PROPERTY = "post_translate";
+
+   /** Property type proxy. */
+   public static final String PROXY_PROPERTY = "proxy";
+
+   /** Property type simulator_plugin. */
+   public static final String SIMULATOR_PLUGIN_PROPERTY = "simulator_plugin";
+
+   /** Property type simulator_viewports. */
+   public static final String SIMULATOR_VIEWPORTS_PROPERTY =
+      "simulator_viewports";
+
+   /** Property type size. */
+   public static final String SIZE_PROPERTY = "size";
+
+   /** Property type sleep_time. */
+   public static final String SLEEP_TIME_PROPERTY = "sleep_time";
+
+   /** Property type start_locked. */
+   public static final String START_LOCKED_PROPERTY = "start_locked";
+
+   /** Property type stencil_buffer_size. */
+   public static final String STENCIL_BUFFER_SIZE_PROPERTY =
+      "stencil_buffer_size";
+
+   /** Property type surface_viewports. */
+   public static final String SURFACE_VIEWPORTS_PROPERTY = "surface_viewports";
+
+   /** Property type stereo. */
+   public static final String STEREO_PROPERTY = "stereo";
+
+   /** Property type tracked. */
+   public static final String TRACKED_PROPERTY = "tracked";
+
+   /** Property type tracker_proxy. */
+   public static final String TRACKER_PROXY_PROPERTY = "tracker_proxy";
+
+   /** Property type upper_left_corner. */
+   public static final String UPPER_LEFT_CORNER_PROPERTY = "upper_left_corner";
+
+   /** Property type upper_right_corner. */
+   public static final String UPPER_RIGHT_CORNER_PROPERTY =
+      "upper_right_corner";
+
+   /** Property type user. */
+   public static final String USER_PROPERTY = "user";
+
+   /** Property type vertical_fov. */
+   public static final String VERTICAL_FOV_PROPERTY = "vertical_fov";
+
+   /** Property type view. */
+   public static final String VIEW_PROPERTY = "view";
+
+   /** Property type visual_id. */
+   public static final String VISUAL_ID_PROPERTY = "visual_id";
+
+   /** Property type wand_pos. */
+   public static final String WAND_POS_PROPERTY = "wand_pos";
 }

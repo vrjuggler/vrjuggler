@@ -56,31 +56,36 @@ public class SimulatorViewportCreateDialog
             SIMULATOR_VIEWPORT_TYPE);
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      ConfigDefinition sim_def = broker.getRepository().get("default_simulator");
+      ConfigDefinition sim_def =
+         broker.getRepository().get(DEFAULT_SIMULATOR_TYPE);
 
-      if ( mViewportElement.getPropertyValues("simulator_plugin").isEmpty() )
+      if ( mViewportElement.getPropertyValues(SIMULATOR_PLUGIN_PROPERTY).isEmpty() )
       {
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
          mSimElt = factory.create("Default Simulator Plug-in", sim_def);
-         mViewportElement.addProperty("simulator_plugin", mSimElt, ctx);
+         mViewportElement.addProperty(SIMULATOR_PLUGIN_PROPERTY, mSimElt, ctx);
       }
       else
       {
          mSimElt =
-            (ConfigElement) mViewportElement.getProperty("simulator_plugin", 0);
+            (ConfigElement) mViewportElement.getProperty(SIMULATOR_PLUGIN_PROPERTY, 0);
       }
 
       mSimElt.addConfigElementListener(this);
 
       mCameraPosEditor =
-         new PropertyEditorPanel(ctx, mSimElt.getProperty("camera_pos", 0),
-                                 sim_def.getPropertyDefinition("camera_pos"),
-                                 mSimElt, 0, Color.white);
+         new PropertyEditorPanel(
+            ctx, mSimElt.getProperty(CAMERA_POS_PROPERTY, 0),
+            sim_def.getPropertyDefinition(CAMERA_POS_PROPERTY), mSimElt, 0,
+            Color.white
+         );
       mWandPosEditor =
-         new PropertyEditorPanel(ctx, mSimElt.getProperty("wand_pos", 0),
-                                 sim_def.getPropertyDefinition("wand_pos"),
-                                 mSimElt, 0, Color.white);
+         new PropertyEditorPanel(
+            ctx, mSimElt.getProperty(WAND_POS_PROPERTY, 0),
+            sim_def.getPropertyDefinition(WAND_POS_PROPERTY), mSimElt, 0,
+            Color.white
+         );
 
       initUI();
       validateUserInput();
@@ -95,12 +100,12 @@ public class SimulatorViewportCreateDialog
 
    public Object getCameraPosition()
    {
-      return mSimElt.getProperty("camera_pos", 0);
+      return mSimElt.getProperty(CAMERA_POS_PROPERTY, 0);
    }
 
    public Object getWandPosition()
    {
-      return mSimElt.getProperty("wand_pos", 0);
+      return mSimElt.getProperty(WAND_POS_PROPERTY, 0);
    }
 
    protected boolean validateCustomInput()
