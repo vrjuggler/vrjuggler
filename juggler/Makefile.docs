@@ -49,7 +49,6 @@ SUBDIR=		doc/build.system				\
 		modules/gadgeteer/doc/clusterjuggler.guide	\
 		modules/gadgeteer/doc/device.driver.guide	\
 		modules/jackal/doc				\
-		modules/jackal/doc/perf.measure.guide		\
 		modules/sonix/doc				\
 		modules/sonix/doc/programmer.guide		\
 		modules/tweek/doc				\
