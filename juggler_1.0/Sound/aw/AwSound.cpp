@@ -155,7 +155,7 @@ void AwSound::trigger()
    switch (mLooping)
    {
       case 0:
-         cout<<"[aw] Playing audio "<<mSoundName.data()<<"\n"<<flush;
+         cout<<"[aw] Playing audio "<<mSoundName.c_str()<<"\n"<<flush;
          if (mSoundPlayer != NULL)
             awProp( mSoundPlayer, AWPLYR_STATE, AWSND_ON );
          awProp( mSound, AWSND_STATE, AWSND_ON );
@@ -164,7 +164,7 @@ void AwSound::trigger()
          
       default:
       case -1:
-         cout<<"[aw] Looping audio "<<mSoundName.data()<<"\n"<<flush;
+         cout<<"[aw] Looping audio "<<mSoundName.c_str()<<"\n"<<flush;
          if (mSoundPlayer != NULL)
             awProp( mSoundPlayer, AWPLYR_STATE, AWSND_ON );
          awProp( mSound, AWSND_NLOOPS, mLooping );
@@ -183,6 +183,8 @@ void AwSound::stop()
    if (mSoundPlayer != NULL)
      awProp( mSoundPlayer, AWPLYR_STATE, AWSND_OFF );
    awProp( mSound, AWSND_STATE, AWSND_OFF );
+   
+   cout<<"[aw] Stopping audio "<<mSoundName.c_str()<<"\n"<<flush;
 }
 
 // change the position of the sound.
