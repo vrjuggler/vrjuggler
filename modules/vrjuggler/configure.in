@@ -663,6 +663,9 @@ AC_CONFIG_FILES([
    vrjconfig/customeditors/intersense/build.xml
    vrjconfig/customeditors/intersense/Makefile
    vrjconfig/customeditors/intersense/Makefile.inc
+   vrjconfig/customeditors/pinchglove/build.xml
+   vrjconfig/customeditors/pinchglove/Makefile
+   vrjconfig/customeditors/pinchglove/Makefile.inc
    vrjconfig/customeditors/proxyeditor/build.xml
    vrjconfig/customeditors/proxyeditor/Makefile
    vrjconfig/customeditors/proxyeditor/Makefile.inc
