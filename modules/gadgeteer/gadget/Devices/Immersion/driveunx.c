@@ -42,6 +42,10 @@
 #else
 #ifdef VJ_OS_Linux
 #   define LINUX_PLATFORM
+#else
+#ifdef VJ_OS_Solaris
+#   define SUN_PLATFORM
+#endif	/* VJ_OS_Solaris */
 #endif	/* VJ_OS_Linux */
 #endif	/* VJ_OS_HPUX */
 #endif	/* VJ_OS_SGI */
