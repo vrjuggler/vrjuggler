@@ -46,10 +46,7 @@
  */
 
 /* This should always be included first. */
-
-#ifdef HAVE_CONFIG_H
 #include <vjDefines.h>
-#endif   /* HAVE_CONFIG_H */
 
 #ifdef _DEBUG
 #   define VJ_DEBUG
