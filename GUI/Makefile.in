@@ -46,7 +46,7 @@ all: VjControl.jar
 
 # there's no way to append to a jar file, so this must all be done in one
 # step.  This is incredibly stupid...
-VjControl.jar:
+VjControl.jar: classfiles
 	${MAKE} classfiles
 	cp -r ${srcdir}/VjFiles .
 	${JAR} cvf VjControl.jar VjGUI/*.class VjGUI/chunkdesc/*.class	\
