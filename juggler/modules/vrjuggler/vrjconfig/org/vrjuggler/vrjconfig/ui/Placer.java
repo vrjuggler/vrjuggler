@@ -487,6 +487,13 @@ public class Placer
        */
       public void placerItemsRemoved(PlacerModelEvent evt)
       {
+         // Check if the placer is now empty so that we can make sure we clear
+         // the selection index.
+         if (model.getSize() == 0)
+         {
+            selectedIndex = -1;
+            fireItemSelected(selectedIndex);
+         }
          repaint();
       }
    }
