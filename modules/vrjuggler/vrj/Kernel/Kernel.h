@@ -88,6 +88,10 @@ public:
    */
    void stop();
 
+   /** Return status of kernel */
+   bool isRunning() const
+   { return mIsRunning; }
+
    /** Load initial configuration data for the managers
    * @post InputManager, DisplayManager, and kernel
    *       Config files loaded and handed to configAdd
@@ -226,6 +230,7 @@ protected:
    vrj::App*      mNewApp;                      /**< New application to set */
    bool           mNewAppSet;                   /**< Flag to notify that a new application should be set */
 
+   bool               mIsRunning;               /**< Flag for wether the kernel is currently running */
    bool               mExitFlag;                /**< Set true when the kernel should exit */
    vpr::BaseThread*   mControlThread;           /**< The thread in control of me */
 
