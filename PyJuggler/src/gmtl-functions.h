@@ -471,10 +471,10 @@ namespace gmtl
    template gmtl::Matrix33d makeTranspose(const gmtl::Matrix33d&);
    template gmtl::Matrix44d makeTranspose(const gmtl::Matrix44d&);
 
-   template gmtl::Matrix33f makeInverse(const gmtl::Matrix33f&);
-   template gmtl::Matrix44f makeInverse(const gmtl::Matrix44f&);
-   template gmtl::Matrix33d makeInverse(const gmtl::Matrix33d&);
-   template gmtl::Matrix44d makeInverse(const gmtl::Matrix44d&);
+   template gmtl::Matrix33f makeInvert(const gmtl::Matrix33f&);
+   template gmtl::Matrix44f makeInvert(const gmtl::Matrix44f&);
+   template gmtl::Matrix33d makeInvert(const gmtl::Matrix33d&);
+   template gmtl::Matrix44d makeInvert(const gmtl::Matrix44d&);
 
    // XXX: gmtl::set(Matrix, const Coord) missing...
 

@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-25-2003 patrickh    Updated to GMTL 0.3.1.
+                        NEW VERSION: 0.4.3
 Apr-18-2003 patrickh    Enabled the use of overloaded operators with GMTL
                         objects.
                         NEW VERSION: 0.4.2

@@ -196,12 +196,12 @@ else:
    print "gmtl.makeRot() fail"
 
 gmtl.identity(mat1)
-mat3 = gmtl.makeInverse(mat1)
+mat3 = gmtl.makeInvert(mat1)
 
 if gmtl.isEqual(mat1, mat3):
-   print "gmtl.makeInverse() pass (lame test!)"
+   print "gmtl.makeInvert() pass (lame test!)"
 else:
-   print "gmtl.makeInverse() fail"
+   print "gmtl.makeInvert() fail"
 
 sphere = gmtl.Spheref(gmtl.Point3f(5.0, 5.0, 5.0), 2.0)
 

@@ -362,7 +362,6 @@ set_policy(Function('gmtl::setDirCos', 'gmtl-functions.h'),
 set_policy(Function('gmtl::setAxes', 'gmtl-functions.h'),
                     return_internal_reference())
 Function('gmtl::makeTranspose', 'gmtl-functions.h')
-Function('gmtl::makeInverse', 'gmtl-functions.h')
 # ======================================================== Generator operations
 
 # Containment operations ======================================================
