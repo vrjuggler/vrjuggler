@@ -42,7 +42,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <vpr/Util/Singleton.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
 #include <map>
 
 

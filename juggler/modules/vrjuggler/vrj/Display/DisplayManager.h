@@ -39,7 +39,7 @@
 
 //#include <gadget/Type/Position.h>
 #include <vrj/Util/Debug.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
 #include <jccl/Config/ConfigChunk.h>
 
 namespace vrj

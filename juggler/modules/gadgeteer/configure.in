@@ -155,7 +155,7 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH(0.12.0, , AC_MSG_ERROR(*** VPR required for Gadgeteer ***))
-JCCL_PATH(0.0.2, , AC_MSG_ERROR(*** JCCL required for Gadgeteer ***))
+JCCL_PATH(0.1.0, , AC_MSG_ERROR(*** JCCL required for Gadgeteer ***))
 
 gadsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"

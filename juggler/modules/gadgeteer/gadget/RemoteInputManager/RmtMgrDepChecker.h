@@ -35,7 +35,7 @@
 #include <gadget/gadgetConfig.h>
 
 // Dependency checker includes
-#include <jccl/Plugins/ConfigManager/DepChecker.h>
+#include <jccl/RTRC/DepChecker.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <vpr/Util/Debug.h>
 

@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <jccl/Config/ConfigChunkDB.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
 
 
 namespace vrj

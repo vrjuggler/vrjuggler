@@ -49,7 +49,7 @@
 #include <gadget/Devices/Sim/SimDigitalGlove.h>
 
 // RemoteInputManager Dependency Checker
-#include <jccl/Plugins/ConfigManager/DependencyManager.h>
+#include <jccl/RTRC/DependencyManager.h>
 #include <gadget/RemoteInputManager/RmtMgrDepChecker.h>
 
 /* Physical devices */

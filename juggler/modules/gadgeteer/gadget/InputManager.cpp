@@ -42,7 +42,7 @@
 
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ConfigChunkPtr.h>
-#include <jccl/Plugins/ConfigManager/ConfigManager.h>
+#include <jccl/RTRC/ConfigManager.h>
 
 #include <gadget/RemoteInputManager/RemoteInputManager.h>
 
