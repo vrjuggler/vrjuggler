@@ -364,6 +364,15 @@ public:
     vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
                           const struct vpr::SocketOptions::Data& data);
 
+
+    // ------------------------------------------------------------------------
+    // Destructor.
+    //
+    // PRE: None.
+    // POST: Closes the socket, and deallocates and resources associated with the socket.
+    // ------------------------------------------------------------------------
+    ~SocketImplNSPR(void);
+
 protected:
     // ------------------------------------------------------------------------
     // Default constructor.  This just initializes member variables to
@@ -406,15 +415,7 @@ protected:
         m_blocking        = sock.m_blocking;
         m_blocking_fixed  = sock.m_blocking_fixed;
     }
-
-    // ------------------------------------------------------------------------
-    // Destructor.  This currently does nothing.
-    //
-    // PRE: None.
-    // POST: None.
-    // ------------------------------------------------------------------------
-    ~SocketImplNSPR(void);
-
+    
     std::string       m_name;
     PRFileDesc*       m_handle;      //: Handle to the socket
     vpr::InetAddr     m_local_addr;  //: The local site's address structure
