@@ -99,15 +99,15 @@ vpr::ReturnStatus CorbaManager::init (const std::string& local_id, int& argc,
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "Caught omniORB::fatalException:\n" << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "  file: " << fe.file() << endl << vprDEBUG_FLUSH;
+         << "  file: " << fe.file() << std::endl << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "  line: " << fe.line() << endl << vprDEBUG_FLUSH;
+         << "  line: " << fe.line() << std::endl << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "  mesg: " << fe.errmsg() << endl << vprDEBUG_FLUSH;
+         << "  mesg: " << fe.errmsg() << std::endl << vprDEBUG_FLUSH;
    }
    catch(...)
    {
-      cerr << "Caught unknown exception." << endl;
+      std::cerr << "Caught unknown exception." << std::endl;
    }
 
    return status;
