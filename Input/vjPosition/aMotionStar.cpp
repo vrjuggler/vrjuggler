@@ -42,21 +42,20 @@
 #include <time.h>
 #include <Input/vjPosition/aMotionStar.h>
  
-aMotionStar::aMotionStar(unsigned int _format,
+aMotionStar::aMotionStar(int _hemisphere,
 			 unsigned int _birdFormat,
 			 unsigned int _birdsRequired,
 			 int _runMode,
 			 double _birdRate,
 			 unsigned char _reportRate) :
 				active(0),
-				format(_format),
+				hemisphere(_hemisphere),
 				birdFormat(_birdFormat),
 				birdsRequired(_birdsRequired),
 				runMode(_runMode),
 				birdRate(_birdRate),
 				reportRate(_reportRate)
 {  
-
 
 } // end aMotionStar::aMotionStar()
 
@@ -69,25 +68,16 @@ aMotionStar::~aMotionStar() {
 } // end aMotionStar::~aMotionStar()
 
 
-
-bool& aMotionStar::isActive() {
-
-  return active;
-
-} // end bool& aMotionStar::isActive()
-
-
-
 void aMotionStar::start () {
 
   cout << "In start" << endl; 
   assert(!active);
 
   /*    strcpy(ip_address, "192.1.2.193");      */
-//   strcpy(ip_address, "192.9.200.51");
-   strcpy(ip_address, "192.168.1.111");
- 
-  rate[0] = 57; // 48
+   strcpy(ip_address, "129.186.232.39");
+  // strcpy(ip_address, "129.186.232.21");
+  
+   rate[0] = 57; // 48
   rate[1] = 48; // 50
   rate[2] = 48;
   rate[3] = 48;
@@ -158,7 +148,8 @@ void aMotionStar::start () {
   server.sin_port=htons(TCP_PORT);                              /* Server port number */
   server.sin_addr.s_addr=inet_addr(ip_address);         /* Server address */
  
-  rtn = connect(s, (struct sockaddr *) &server, sizeof(server));
+  cout << "connecting..." << endl;
+  rtn = connect(s, (struct sockaddr *) &server, sizeof(server)); 
   printf("connect = %4d, connect error = %4d, ", rtn, errno);
   perror(NULL);
   printf("\n");
@@ -201,56 +192,35 @@ void aMotionStar::start () {
  
       /* set new report rate for all birds */
       response.buffer[7] = reportRate;
- 
+      response.buffer[26] = hemisphere;
       /* set the status of an individual bird */
       set_status_fbb(flock);
-    } 
+    }
+
+  if (runMode == 0) {
+      runContinuous();
+  }
+  else {
+      singleShot();
+  }
+  active = true; 
  
 } // end void aMotionStar::start()
 
-
- 
-void aMotionStar::sample(int runMode) {
- 
-  if(runMode==0)
-    {
-      //      run_continuous(1L<<30);
-      run_continuous(4);
-    }
- 
-  else
-    {
-          single_shot();
-    }
- 
-} // end void aMotionStar::sample()
-
-
-
-float aMotionStar::xPos( int i) {return posinfo[i][0];}
-
-float aMotionStar::yPos( int i) {return posinfo[i][1];}
-
-float aMotionStar::zPos( int i) {return posinfo[i][2];}
-
-float aMotionStar::zRot( int i) {return posinfo[i][3];}
-
-float aMotionStar::yRot( int i) {return posinfo[i][4];}
-
-float aMotionStar::xRot( int i) {return posinfo[i][5];}
-
-
  
 void aMotionStar::stop() { 
+    /* put in a STOP COMMAND here */
+
+    command.sequence      = sequenceNumber;
+    command.type          = 105;
+    numberBytes           = sendto(s, (void*)lpCommand,
+                                   sizeof(command),
+                                   0,
+                                   (struct sockaddr *)&server,
+                                   sizeof(server));
 
 } // end void aMotionStar::stop()
 
-void aMotionStar::setFormat (unsigned int n) { format = n; }
-void aMotionStar::setBirdFormat (unsigned int n) { birdFormat = n; }
-void aMotionStar::setNumBirds (unsigned int n) { birdsRequired = n; }
-void aMotionStar::setBirdRate (double n) { birdRate = n; }
-void aMotionStar::setRunMode ( int n ) { runMode = n; }
-void aMotionStar::setReportRate (unsigned char n) { reportRate = n; } 
 
 void aMotionStar::send_wakeup()
 {
@@ -280,20 +250,11 @@ void aMotionStar::send_wakeup()
 } // end void aMotionStar::send_wakeup ()
  
  
-void aMotionStar::run_continuous(unsigned long loopNumber) {
-  double        x;
-  long          p;
-  unsigned int  xraw, yraw, zraw;
-  int           xint, yint, zint;
-  double                xreal, yreal, zreal;
- 
-  int           totalBytesNeeded, totalBytesReceived;
-  int           headerBytesReceived;
-  int           cpos;
-  char          *lpBuffer;
- 
+void aMotionStar::runContinuous() {
+  cout << "runContinous" << endl;
+  
   command.type=104;
-/* MSG_RUN CONTINIOUS - request server to send packets continiously */
+// MSG_RUN CONTINIOUS - request server to send packets continuously 
  
   command.xtype = 0;
   command.sequence = sequenceNumber++;
@@ -303,22 +264,20 @@ void aMotionStar::run_continuous(unsigned long loopNumber) {
                        sizeof(command),
                        0);
  
-  //  printf("\n\nSTREAM: - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
+    printf("\n\nSTREAM: - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
  
   bytesReceived = recv( s,
                         (void*)lpResponse,
                         sizeof(response),
                         0);
  
-  //  printf("  | STREAM ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
- 
-  while(loopNumber>0){
-         loopNumber--;
-    n++;
- 
- 
-    /* receive the header */
- 
+    printf("  | STREAM ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
+
+
+      /* receive the header */
+   int           headerBytesReceived;
+   char          *lpBuffer;
+
     headerBytesReceived = 0;
     lpBuffer = (char*)lpResponse;
     while(headerBytesReceived != 16) {
@@ -335,6 +294,47 @@ void aMotionStar::run_continuous(unsigned long loopNumber) {
       headerBytesReceived = headerBytesReceived + bytesReceived;
       lpBuffer = (char *)lpBuffer + bytesReceived;
     }
+ 
+} // end aMotionStar::runContinuous()
+
+
+void aMotionStar::singleShot()
+{
+  /* send a request for a single shot packet */
+  command.type=103; /* MSG_SINGLE_SHOT - request server to send single packet of data */
+  command.xtype = 0;
+  command.sequence = sequenceNumber++;
+  numberBytes = sendto(s,(void*)lpCommand, sizeof(command), 0,
+                       (struct sockaddr *)&server, sizeof(server));
+ 
+    //printf("bytes sent = %d errno %d\n", numberBytes,errno);
+ 
+  /* wait for the packet to come back */
+ 
+  bytesReceived = recvfrom(s, (void*)lpResponse, sizeof(response), 0,
+                           (struct sockaddr *)&server, lpSize);
+    //printf("  >>> %3d; sequence=%4d; type=%4d; bytes received=%4d\n",n,response.header.sequence
+	//	,response.header.type, bytesReceived); 
+    
+} // end void aMotionStar::singleShot()
+
+
+void aMotionStar::sample() {
+//    cout << "Sampling..." << endl;
+    if (runMode == 1) {singleShot();}
+//    cout << "After singleShot() " << endl;
+/*    
+    double        x;
+    long          p;   
+    unsigned int  xraw, yraw, zraw;
+    int           xint, yint, zint;
+    double                xreal, yreal, zreal;
+    int           cpos;
+
+*/
+    int           totalBytesNeeded, totalBytesReceived;
+    char          *lpBuffer;
+ 
  
     sequenceNumber = response.header.sequence;
  
@@ -375,21 +375,22 @@ void aMotionStar::run_continuous(unsigned long loopNumber) {
     totalBytesReceived = 0;
     totalBytesNeeded = response.header.number_bytes;
     lpBuffer = (char*)lpResponse + 16;
-    while(totalBytesReceived != totalBytesNeeded){
-      bytesReceived = recvfrom(s,
+    if (runMode == 0) {
+      while(totalBytesReceived != totalBytesNeeded){
+        bytesReceived = recvfrom(s,
                                (void*)lpBuffer,
                                (totalBytesNeeded-totalBytesReceived),
                                0,
                                (struct sockaddr *)&server,
                                lpSize);
-      if (bytesReceived < 0)
-        perror("recv2"), exit(1);
+        if (bytesReceived < 0)
+          perror("recv2"), exit(1);
  
-      totalBytesReceived = totalBytesReceived + bytesReceived;
-      lpBuffer = (char*)lpBuffer + bytesReceived;
+        totalBytesReceived = totalBytesReceived + bytesReceived;
+        lpBuffer = (char*)lpBuffer + bytesReceived;
  
+      }
     }
- 
     //    printf(" .....received data #bytes = %d", totalBytesReceived);
  
     //    printf("\n");
@@ -412,67 +413,29 @@ void aMotionStar::run_continuous(unsigned long loopNumber) {
  
     }
     */
- 
-    posinfo[0][0] = 144*rawToFloat(response.buffer[2],
-                                   response.buffer[3]);//x
-    posinfo[0][1] = 144*rawToFloat(response.buffer[4],
-                                   response.buffer[5]);//y
-    posinfo[0][2] = 144*rawToFloat(response.buffer[6],
-                                   response.buffer[7]);//z
-    posinfo[0][3] = 180*rawToFloat(response.buffer[8],
-                                   response.buffer[9]);//agle
-    posinfo[0][4] = 180*rawToFloat(response.buffer[10],
-                                   response.buffer[11]);//elev
-    posinfo[0][5] = 180*rawToFloat(response.buffer[12],
-                                   response.buffer[13]);//roll
- 
-    posinfo[1][0] = 144*rawToFloat(response.buffer[2+14],
-                                   response.buffer[3+14]);
-    posinfo[1][1] = 144*rawToFloat(response.buffer[4+14],
-                                   response.buffer[5+14]);
-    posinfo[1][2] = 144*rawToFloat(response.buffer[6+14],
-                                   response.buffer[7+14]);
-    posinfo[1][3] = 180*rawToFloat(response.buffer[8+14],
-                                   response.buffer[9+14]);
-    posinfo[1][4] = 180*rawToFloat(response.buffer[10+14],
-                                   response.buffer[11+14]);
-    posinfo[1][5] = 180*rawToFloat(response.buffer[12+14],
-                                   response.buffer[13+14]);
- 
-    posinfo[2][0] = 144*rawToFloat(response.buffer[2+28],
-                                   response.buffer[3+28]);
-    posinfo[2][1] = 144*rawToFloat(response.buffer[4+28],
-                                   response.buffer[5+28]);
-    posinfo[2][2] = 144*rawToFloat(response.buffer[6+28],
-                                   response.buffer[7]+28);
-    posinfo[2][3] = 180*rawToFloat(response.buffer[8+28],
-                                   response.buffer[9+28]);
-    posinfo[2][4] = 180*rawToFloat(response.buffer[10+28],
-                                   response.buffer[11+28]);
-    posinfo[2][5] = 180*rawToFloat(response.buffer[12+28],
-                                   response.buffer[13+28]);
- 
-    //    printinfo();
- 
-    //    printf("\n");
- 
-    }
- 
-  /* put in a STOP COMMAND here */
- 
-  command.sequence      = sequenceNumber;
-  command.type          = 105;
-  numberBytes           = sendto(s, (void*)lpCommand,
-                                 sizeof(command),
-                                 0,
-                                 (struct sockaddr *)&server,
-                                 sizeof(server));
-
-} // end void aMotionStar::run_continuous
-
+    int o; // Offset -- 14 * bird number (bnum)
+    for (int bnum = 0; bnum < birdsRequired; bnum++)
+    {
+      o = 14*bnum; 
+      posinfo[bnum][0] = 144*rawToFloat(response.buffer[2+o],
+                                     response.buffer[3+o]);//XPos
+      posinfo[bnum][1] = 144*rawToFloat(response.buffer[4+o],
+                                     response.buffer[5+o]);//YPos
+      posinfo[bnum][2] = 144*rawToFloat(response.buffer[6+o],
+                                     response.buffer[7+o]);//ZPos
+      posinfo[bnum][3] = 180*rawToFloat(response.buffer[8+o],
+                                     response.buffer[9+o]);//ZRot
+      posinfo[bnum][4] = 180*rawToFloat(response.buffer[10+o],
+                                     response.buffer[11+o]);//YRot
+      posinfo[bnum][5] = 180*rawToFloat(response.buffer[12+o],
+                                     response.buffer[13+o]);//XRot
+    } // end for loop
 
  
-void aMotionStar::printinfo(){
+} // end void aMotionStar::sample()
+
+ 
+void aMotionStar::printInfo(){
   int i;
  
   for (i = 0; i < 3; i++){
@@ -482,129 +445,6 @@ void aMotionStar::printinfo(){
   printf ("\n");
 
 } // end void aMotionStar::printinfo()
-
-
- 
-void aMotionStar::single_shot()
-{
-  double                x;
-  long          p;
-  unsigned int  xraw, yraw, zraw;
-  int           xint, yint, zint;
-  double                xreal, yreal, zreal;
- 
-  int           totalBytesNeeded, totalBytesReceived;
-  int           headerBytesReceived;
-  int           cpos;
-  char          *lpBuffer;
- 
-  /*****  TEST RECEIVING DATA *****/
- 
-  /* send a request for a single shot packet */
- 
-  //  printf("\n REQUEST SINGLE SHOT....");
-  command.type=103; /* MSG_SINGLE_SHOT - request server to send single packet of
- data */
-  command.xtype = 0;
-  command.sequence = sequenceNumber++;
-  numberBytes = sendto(s,(void*)lpCommand, sizeof(command), 0,
-                       (struct sockaddr *)&server, sizeof(server));
- 
-  //  printf("bytes sent = %d errno %d\n", numberBytes,errno);
- 
-  /* wait for the packet to come back */
- 
-  bytesReceived = recvfrom(s, (void*)lpResponse, sizeof(response), 0,
-                           (struct sockaddr *)&server, lpSize);
-  /*  printf("  >>> %3d; sequence=%4d; type=%4d; bytes received=%4d\n",n,response.header.sequence
-		,response.header.type, bytesReceived); */
- 
-  // added to end of function... lew
- 
- 
-  headerBytesReceived = 0;
-  lpBuffer = (char*)lpResponse;
-  //  cout << "at while" << endl;
-  // while(headerBytesReceived != 16) {
-  //  cout << "in while" << endl;
-  //  bytesReceived = recvfrom(s,
-  //                         (void*)lpBuffer,
-  //                         16,
-  //                         0,
-  //                         (struct sockaddr *)&server,
-  //                         lpSize);
-  // /*  if (bytesReceived < 0){
-  //    perror("recv1"), exit(1);
-  //    } */
-  //
-  //    headerBytesReceived = headerBytesReceived + bytesReceived;
-  //  lpBuffer = (char *)lpBuffer + bytesReceived;
-  // }
- 
-    sequenceNumber = response.header.sequence;
- 
-    timeSeconds = (unsigned int)(response.header.time[0]) << 24;
-    timeSeconds = timeSeconds | (unsigned int)(response.header.time[1]) << 16;
-    timeSeconds = timeSeconds | (unsigned int)(response.header.time[2]) <<  8;
-    timeSeconds = timeSeconds | (unsigned int)(response.header.time[3]);
-    localtime_r(&timeSeconds, &newtime);
-#ifdef __sun__
-    asctime_r(&newtime, timeChar, sizeof(timeChar));
-#else
-    asctime_r(&newtime, timeChar);
-#endif
- 
-    //    printf(" TIME: %10d \n", timeSeconds);
-    if(response.header.milliseconds>999)
-      {
-        response.header.milliseconds = response.header.milliseconds - 1000;
-      }
-    totalBytesReceived = 0;
-    totalBytesNeeded = response.header.number_bytes;
-    lpBuffer = (char*)lpResponse + 16;
-    //    while(totalBytesReceived != totalBytesNeeded){
-    //  bytesReceived = recvfrom(s,
-    //                 (void*)lpBuffer,
-    //                 (totalBytesNeeded-totalBytesReceived),
-    //                 0,
-    //                 (struct sockaddr *)&server,
-    //                 lpSize);
-    // if (bytesReceived < 0)
-    //  perror("recv2"), exit(1);
- 
-    //  totalBytesReceived = totalBytesReceived + bytesReceived;
-    // lpBuffer = (char*)lpBuffer + bytesReceived;
-    //}
- 
-    posinfo[0][0] = 144*rawToFloat(response.buffer[2],response.buffer[3]);
-    posinfo[0][1] = 144*rawToFloat(response.buffer[4],response.buffer[5]);
-    posinfo[0][2] = 144*rawToFloat(response.buffer[6],response.buffer[7]);
-    posinfo[0][3] = 180*rawToFloat(response.buffer[8],response.buffer[9]);
-    posinfo[0][4] = 180*rawToFloat(response.buffer[10],response.buffer[11]);
-    posinfo[0][5] = 180*rawToFloat(response.buffer[12],response.buffer[13]);
- 
-    posinfo[1][0] = 144*rawToFloat(response.buffer[2+14],response.buffer[3+14]);
-    posinfo[1][1] = 144*rawToFloat(response.buffer[4+14],response.buffer[5+14]);
-    posinfo[1][2] = 144*rawToFloat(response.buffer[6+14],response.buffer[7+14]);
-    posinfo[1][3] = 180*rawToFloat(response.buffer[8+14],response.buffer[9+14]);
-    posinfo[1][4] = 180*rawToFloat(response.buffer[10+14],response.buffer[11+14]
-);
-    posinfo[1][5] = 180*rawToFloat(response.buffer[12+14],response.buffer[13+14]
-);
- 
-    posinfo[2][0] = 144*rawToFloat(response.buffer[2+28],response.buffer[3+28]);
-    posinfo[2][1] = 144*rawToFloat(response.buffer[4+28],response.buffer[5+28]);
-    posinfo[2][2] = 144*rawToFloat(response.buffer[6+28],response.buffer[7]+28);
-    posinfo[2][3] = 180*rawToFloat(response.buffer[8+28],response.buffer[9+28]);
-    posinfo[2][4] = 180*rawToFloat(response.buffer[10+28],response.buffer[11+28]
-);
-    posinfo[2][5] = 180*rawToFloat(response.buffer[12+28],response.buffer[13+28]
-);
- 
- 
-} // end void aMotionStar::singleShot()
-
-
  
 void aMotionStar::get_status_all()
 {
@@ -840,3 +680,18 @@ float aMotionStar::rawToFloat(char r1,  char r2){
 
 } // end float aMotionStar::rawToFloat()
 
+void aMotionStar::setHemisphere (int n) { hemisphere = n; }
+void aMotionStar::setBirdFormat (unsigned int n) { birdFormat = n; }
+void aMotionStar::setNumBirds (unsigned int n) { birdsRequired = n; }
+void aMotionStar::setBirdRate (double n) { birdRate = n; }
+void aMotionStar::setRunMode ( int n ) { runMode = n; }
+void aMotionStar::setReportRate (unsigned char n) { reportRate = n; } 
+
+float aMotionStar::xPos( int i) {return posinfo[i][0];}
+float aMotionStar::yPos( int i) {return posinfo[i][1];}
+float aMotionStar::zPos( int i) {return posinfo[i][2];}
+float aMotionStar::zRot( int i) {return posinfo[i][3];}
+float aMotionStar::yRot( int i) {return posinfo[i][4];}
+float aMotionStar::xRot( int i) {return posinfo[i][5];}
+
+bool& aMotionStar::isActive() {return active;}
