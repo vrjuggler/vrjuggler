@@ -524,6 +524,8 @@ else
    DYLIB_DEPS="$VPR_LIBS_CC"
 fi
 
+tweek_extra_libs=`$VPR_CONFIG --extra-libs`
+
 # Information needed to generate tweek-config.
 case $OS_TYPE in
    UNIX)
@@ -540,11 +542,13 @@ case $OS_TYPE in
       tweek_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
       tweek_ldflags_linker="$tweek_ldflags_compiler"
       tweek_libs="-ltweek $VPR_LIBS_CC"
+      tweek_extra_libs="$OMNI_LIB $tweek_extra_libs"
       ;;
    Win32)
       tweek_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
       tweek_ldflags_linker="/libpath:\$prefix/lib/debug"
       tweek_libs="tweek.lib $VPR_LIBS_LD"
+      tweek_extra_libs="$OMNI_LIB_LINK_EXE $tweek_extra_libs"
       ;;
 esac
 
@@ -556,7 +560,7 @@ if test "x$PLATFORM" = "xIRIX" ; then
    tweek_64_flags='-64'
 fi
 
-tweek_extra_ldflags="$EXTRA_LDFLAGS"
+tweek_extra_ldflags="$EXTRA_LDFLAGS $OMNI_LDFLAGS"
 
 jars='TweekBeans.jar TweekNet.jar'
 
