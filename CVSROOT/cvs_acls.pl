@@ -171,7 +171,7 @@ while (<AVAIL>) {
 		for my $j (@tmp) {
 			# If the repos from avail is a parent(or equal)
 			# dir of $repos, OK
-			if ($repos eq $j || $repos =~ /^$j\//) {
+			if ($repos eq $j || $repos =~ /^\Q$j\E\//) {
 				$in_repo = 1;
 				last;
 			}
