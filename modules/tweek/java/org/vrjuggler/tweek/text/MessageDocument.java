@@ -192,7 +192,7 @@ public class MessageDocument extends DefaultStyledDocument
       try
       {
          StyleConstants.setIcon(mIconStyles[STATUS],
-                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/gui/status.gif")));
+                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/text/status.gif")));
       }
       catch (NullPointerException e)
       {;}
@@ -200,7 +200,7 @@ public class MessageDocument extends DefaultStyledDocument
       try
       {
          StyleConstants.setIcon(mIconStyles[WARNING],
-                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/gui/warning.gif")));
+                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/text/warning.gif")));
       }
       catch (NullPointerException e)
       {;}
@@ -208,7 +208,7 @@ public class MessageDocument extends DefaultStyledDocument
       try
       {
          StyleConstants.setIcon(mIconStyles[ERROR],
-                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/gui/error.gif")));
+                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/text/error.gif")));
       }
       catch (NullPointerException e)
       {;}
