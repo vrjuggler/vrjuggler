@@ -47,6 +47,7 @@ SUBDIR=		doc/build.system				\
 		doc/team.guide					\
 		modules/gadgeteer/doc				\
 		modules/gadgeteer/doc/clusterjuggler.guide	\
+		modules/gadgeteer/doc/device.driver.guide	\
 		modules/jackal/doc				\
 		modules/jackal/doc/perf.measure.guide		\
 		modules/sonix/doc				\
@@ -56,7 +57,6 @@ SUBDIR=		doc/build.system				\
 		modules/vapor/doc				\
 		modules/vrjuggler/doc/configuration.guide	\
 		modules/vrjuggler/doc/doxy			\
-		modules/vrjuggler/doc/faq			\
 		modules/vrjuggler/doc/getting.started.guide	\
 		modules/vrjuggler/doc/migration			\
 		modules/vrjuggler/doc/programmer.guide
