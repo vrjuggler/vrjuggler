@@ -539,22 +539,6 @@ private:
     void set_status_all();
 
     // ------------------------------------------------------------------------
-    //: Print out the MotionStar information.
-    //
-    //! PRE: posinfo has valid data in it.
-    //! POST: The contents of posinfo are printed to stdout.
-    // ------------------------------------------------------------------------
-    void printInfo();
-
-    // ------------------------------------------------------------------------
-    //: Print out the MotionStar's header information.
-    //
-    //! PRE: None.
-    //! POST: This currently does nothing.
-    // ------------------------------------------------------------------------
-    void display_hdr();
-
-    // ------------------------------------------------------------------------
     //: Get the status of an individual bird.
     //
     //! PRE: The socket has been initialized and is currently open to
@@ -737,6 +721,22 @@ private:
                                    response.buffer[13 + offset]) /
                     m_xmtr_divisor);
     }
+
+    // ------------------------------------------------------------------------
+    //: Print out the MotionStar information.
+    //
+    //! PRE: posinfo has valid data in it.
+    //! POST: The contents of posinfo are printed to stdout.
+    // ------------------------------------------------------------------------
+    void printInfo();
+
+    // ------------------------------------------------------------------------
+    //: Print out the MotionStar's header information.
+    //
+    //! PRE: None.
+    //! POST: This currently does nothing.
+    // ------------------------------------------------------------------------
+    void display_hdr();
 
     // ------------------------------------------------------------------------
     //: Print the error message that corresponds to the given error code.
