@@ -36,6 +36,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.*;
+import java.beans.PropertyEditorManager;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
@@ -66,8 +67,12 @@ public class ControlPanelView
 {
    public ControlPanelView()
    {
-      System.out.println("Defaut Bean: XXXX ");
-     
+      // Make sure all editors are registered.
+      PropertyEditorManager.registerEditor(Boolean.class, BooleanEditor.class);
+      PropertyEditorManager.registerEditor(String.class, StringEditor.class);
+      PropertyEditorManager.registerEditor(Integer.class, IntegerEditor.class);
+      PropertyEditorManager.registerEditor(Float.class, FloatEditor.class);
+
       // This needs to be the first step to ensure that all the basic services
       // and viewers get loaded.
       String default_path = System.getProperty("VJ_BASE_DIR")
