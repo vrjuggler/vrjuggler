@@ -52,6 +52,10 @@
 
 #include <vpr/vprConfig.h>
 
+#ifdef VPR_OS_Win32
+#  include <winsock2.h>    /* For struct timeval */
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <string>
