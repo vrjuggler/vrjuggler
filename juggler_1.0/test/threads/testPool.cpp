@@ -37,7 +37,7 @@
 #include <time.h>
 #include <sys/time.h>
 
-//#include <Sync/vjMutex.h>
+#include <Sync/vjMutex.h>
 //#include <Sync/vjSemaphore.h>
 //#include <Sync/vjBarrier.h>
 //#include <Sync/NullMutex.h>
@@ -57,6 +57,7 @@ int main(void )
 {
     vjSharedPool myPool(65536, 16);    // size, num threads
     vjThreadPool* thePool = new(&myPool) vjThreadPool(NUMTHREADS);
+    vjMutex DebugLock;
     
     DebugLock.acquire();
 	std::cout << "Hello there\n\n" << std::flush;

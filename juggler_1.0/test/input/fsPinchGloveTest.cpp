@@ -34,7 +34,7 @@
 #include <string>
 #include <unistd.h> // for usleep
 
-#include "fsPinchGlove.h"
+#include <Input/vjGlove/fsPinchGlove.h>
 
 char spin()
 {

@@ -60,13 +60,14 @@ VPATH		= @srcdir@:@srcdir@/../../Input/vjPosition
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-PROGS		= go@EXEEXT@		\
-                  go-ibox@EXEEXT@	\
-                  go-inputgroup@EXEEXT@	\
-        	  go-logiclass@EXEEXT@	\
-                  aFlockTest@EXEEXT@	\
-        	  vjFlockTest@EXEEXT@	\
+PROGS		= go@EXEEXT@			\
+                  go-ibox@EXEEXT@		\
+                  go-inputgroup@EXEEXT@		\
+        	  go-logiclass@EXEEXT@		\
+                  aFlockTest@EXEEXT@		\
+        	  vjFlockTest@EXEEXT@		\
                   dummyTrackd@EXEEXT@
+                  fsPinchGloveTest@EXEEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -129,6 +130,12 @@ go-inputgroup@EXEEXT@: main-inputgroup.@OBJEXT@
 # ----------------
 go-logiclass@EXEEXT@: main-logiclass.@OBJEXT@
 	$(LINK) -o $@ main-logiclass.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
+
+# ----------------
+# fsPinchGloveTest
+# ----------------
+fsPinchGloveTest: fsPinchGloveTest.@OBJEXT@
+	$(LINK) -o $@ fsPinchGloveTest.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
