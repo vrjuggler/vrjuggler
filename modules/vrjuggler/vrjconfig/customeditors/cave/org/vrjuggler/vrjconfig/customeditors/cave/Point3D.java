@@ -90,6 +90,13 @@ class Point3D
       }
    }
 
+   public void round()
+   {
+      x = Math.round(x);
+      y = Math.round(y);
+      z = Math.round(z);
+   }
+
    public double x;
    public double y;
    public double z;
