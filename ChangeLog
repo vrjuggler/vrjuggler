@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-20-2002 patrickh  Use of the numeric keypad works on HP and Sun hardware.
+                      Submitted by Fuel Tech Inc.
 Aug-01-2002 patrickh  Register vjDummyPosition in vjDeviceFactory.
 Jul-04-2002 patrickh  Fixed compile errors on Solaris 8.
 
