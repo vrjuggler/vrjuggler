@@ -96,18 +96,6 @@ bool vjMotionStar::config(vjConfigChunk *c)
    mMotionStar.setAddress(static_cast<std::string>(c->getProperty("address")).c_str());
 //   mMotionStar.setReportRate( (static_cast<unsigned char>(c->getProperty("rrate"))) ); 
  
-/*
-   // output what was read.
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "        Flock Settings: " << endl
-      << "              aFlock::getTransmitter(): " << mFlockOfBirds.getTransmitter() << endl
-      << "             aFlock::getNumBirds()      : " << mFlockOfBirds.getNumBirds() << endl
-      << "              aFlock::getBaudRate()      : " << mFlockOfBirds.getBaudRate() << endl
-      << "              deviceAbilities:" << deviceAbilities << endl
-      << "              aFlock::getPort()         : " << mFlockOfBirds.getPort() << endl
-      << "              instance name : " << instName << endl
-      << endl << vjDEBUG_FLUSH;
-*/
-
    return true;
 }
 
