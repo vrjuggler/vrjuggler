@@ -1,5 +1,5 @@
 #include <cppunit/TestSuite.h>
-#include <cppunit/TextTestRunner.h>
+#include <cppunit/ui/text/TestRunner.h>
 
 //#include <TestCases/VarValueTest.h>
 #include <TestCases/ChunkDescTest.h>
@@ -38,7 +38,7 @@ int main (int ac, char **av)
     srandom(random_seed);
     srand(random_seed);
 
-   CppUnit::TextTestRunner runner;
+   CppUnit::TextUi::TestRunner runner;
 
    //------------------------------------
    //  noninteractive

@@ -160,7 +160,7 @@ GMTL_PATH(0.1.9, [$JUGGLERROOT_ABS/external/GMTL],
 CPPFLAGS="$vjsave_CPPFLAGS"
 CXXFLAGS="$CXXFLAGS $GMTL_INCLUDES"
 
-DPP_HAVE_CPPUNIT
+DPP_HAVE_CPPUNIT([1.9.10])
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004, , , [AC_MSG_ERROR([*** Perl is required ***])])

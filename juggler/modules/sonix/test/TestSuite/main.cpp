@@ -1,11 +1,10 @@
-
 #include <cppunit/TestSuite.h>
-#include <cppunit/TextTestRunner.h>
+#include <cppunit/ui/text/TestRunner.h>
 
 #include <TestCases/exampleTest.h> // dummy test...
 
 
-void addNon( CppUnit::TextTestRunner& runner )
+void addNon( CppUnit::TextUi::TestRunner& runner )
 {
    CppUnit::TestSuite* suite = new CppUnit::TestSuite( "NonInteractive" );
 
@@ -15,7 +14,7 @@ void addNon( CppUnit::TextTestRunner& runner )
    // Add the test suite to the runner
    runner.addTest( suite );
 }
-void addInt( CppUnit::TextTestRunner& runner )
+void addInt( CppUnit::TextUi::TestRunner& runner )
 {
    CppUnit::TestSuite* suite = new CppUnit::TestSuite( "Interactive" );
 
@@ -26,7 +25,7 @@ void addInt( CppUnit::TextTestRunner& runner )
    runner.addTest( suite );
 }
 
-void addAll( CppUnit::TextTestRunner& runner )
+void addAll( CppUnit::TextUi::TestRunner& runner )
 {
    addNon( runner );
    addInt( runner );
@@ -47,7 +46,7 @@ int main( int ac, char **av )
    }   
    
    // add the tests
-   CppUnit::TextTestRunner runner;
+   CppUnit::TextUi::TestRunner runner;
    for (int x = 1; x < ac; ++x)
    {
       std::string arg = av[x];
