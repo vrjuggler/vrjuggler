@@ -70,9 +70,9 @@ namespace jcclTest
          CPPUNIT_ASSERT( desc->getToken() == "config-chuck-the-beaver" );
          CPPUNIT_ASSERT( desc->getHelp() == "wood chuckin'" );
          
-         jccl::PropertyDesc* p = desc->getPropertyDesc( "test prop multi" );
+         jccl::PropertyDesc* p = desc->getPropertyDesc( "test_prop_multi" );
          CPPUNIT_ASSERT( p->getName() == "big bad beaver" );
-         CPPUNIT_ASSERT( p->getToken() == "test prop multi" );
+         CPPUNIT_ASSERT( p->getToken() == "test_prop_multi" );
          CPPUNIT_ASSERT( p->getHelp() == "multi beaver" );
          CPPUNIT_ASSERT( p->getType() == jccl::T_STRING );
          CPPUNIT_ASSERT( p->getNumAllowed() == 1 );
