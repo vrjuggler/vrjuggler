@@ -497,11 +497,80 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
 {
    //Assume that the file given has the displayWindow chunk in it
    //Load up the given file 
+   jccl::ConfigChunkDB fileDB ; fileDB.load( filename );
+   std::vector<jccl::ConfigChunkPtr> windowChunks;
+   fileDB.getByType( "displayWindow", windowChunks );
 
-   //Get its attributes
-   //Get the display with the same name from the DisplayManager
+   //Verify EACH display in the file
+   for (int i=0; i < windowChunks.size(); i++)
+   {
+      //Get its attributes
+      std::string displayName = windowChunks[i]->getName();
 
-   //Run a verification check (verifyDisplayProps)
+      //Get the display with the same name from the DisplayManager
+      //and make sure it exists first
+      vrj::Display* display = getDisplay( displayName );
+      if (display == NULL)
+      {
+         std::cout << "\tError: display chunk named " << displayName << " is not in the display manager\n" << std::flush;
+         return false;
+      }
+
+      //Get origin values
+      if (windowChunks[i]->getNum( "origin" ) < 2 )
+      {
+         std::cout << "\tError: display chunk named " << displayName << " doesn't have origin properties\n" << std::flush;
+         return false;
+      }
+      int x_origin = windowChunks[i]->getProperty<int>("origin", 0);
+      int y_origin = windowChunks[i]->getProperty<int>("origin", 1);
+
+      //Get size values
+      if (windowChunks[i]->getNum( "size" ) < 2 )
+      {
+         std::cout << "\tError: display chunk named " << displayName << " doesn't have size properties\n" << std::flush;
+         return false;
+      }
+      int x_size = windowChunks[i]->getProperty<int>("size", 0);
+      int y_size = windowChunks[i]->getProperty<int>("size", 1);
+
+
+      //Get pipe number
+      if (windowChunks[i]->getNum( "pipe" ) < 1 )
+      {
+         std::cout << "\tError: display chunk named " << displayName << " doesn't have pipe property\n" << std::flush;
+         return false;
+      }
+      int pipe_num = windowChunks[i]->getProperty<int>( "pipe" );
+
+      //Get stereo value
+      if (windowChunks[i]->getNum( "stereo" ) < 1 )
+      {
+         std::cout << "\tError: display chunk named " << displayName << " doesn't have stereo property\n" << std::flush;
+         return false;
+      }
+      bool stereo = (windowChunks[i]->getProperty<int>( "stereo" ) == 1 ? true : false );
+
+      //Get border value
+      if (windowChunks[i]->getNum( "border" ) < 1 )
+      {
+         std::cout << "\tError: display chunk named " << displayName << " doesn't have border property\n" << std::flush;
+         return false;
+      }
+      bool border = (windowChunks[i]->getProperty<int>( "border" ) == 1 ? true : false );
+
+      //Get active value
+      if (windowChunks[i]->getNum( "active" ) < 1 )
+      {
+         std::cout << "\tError: display chunk named " << displayName << " doesn't have active property\n" << std::flush;
+         return false;
+      }
+      bool active = (windowChunks[i]->getProperty<int>( "active" ) == 1 ? true : false );
+
+
+      //Run a verification check (verifyDisplayProps)
+      return verifyDisplayProps( display, displayName, x_origin, y_origin, x_size, y_size, pipe_num, stereo, border, active );
+   }
 
    return true;
 }
@@ -519,28 +588,7 @@ bool reconfigApp::addGFXWindow_exec()
 
 bool reconfigApp::addGFXWindow_check()
 {
-
-   bool status = false;
-   //Check the display manager to see if we were successful
-   std::vector<vrj::Display*> allDisplays = vrj::DisplayManager::instance()->getAllDisplays();
-   
-   if (allDisplays.size() == 0)
-   {
-      std::cout << "\tError: No displays had been added after " << mWaitTime << " frames\n" << std::flush;
-      status = false;
-   }
-
-   //Iterate over all of the displays and check to see if SimWindowX01 is there
-   std::vector<vrj::Display*>::iterator iter;
-   for (iter = allDisplays.begin(); iter != allDisplays.end(); iter++)
-   {
-      if (verifyDisplayProps( *iter, "SimWindowX01", 0, 0, 100, 100, 0, 0, 1, 1 ))
-      {
-         status = true;
-      }
-   }
-
-   return status;
+   return verifyDisplayFile( "./Chunks/sim.extradisplay.01.config" );
 }
 
 
@@ -554,21 +602,23 @@ bool reconfigApp::removeGFXWindow_exec()
 bool reconfigApp::removeGFXWindow_check()
 {
 
-   bool status = true;
+   //Load up the given file 
+   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.extradisplay.01.config" );
+   std::vector<jccl::ConfigChunkPtr> windowChunks;
+   fileDB.getByType( "displayWindow", windowChunks );
 
-   //Check the display manager to see if we were successful
-   std::vector<vrj::Display*> allDisplays = vrj::DisplayManager::instance()->getAllDisplays();
-
-   //Iterate over all of the active displays and check to see if SimWindowX01 is there
-   std::vector<vrj::Display*>::iterator iter;
-   for (iter = allDisplays.begin(); iter != allDisplays.end(); iter++)
+   if (windowChunks.size() != 1)
    {
-      if (verifyDisplayProps( *iter, "SimWindowX01", 0, 0, 100, 100, 0, 0, 1, 1 ))
-      {
-         std::cout << "\tError: The display in still in the display manager after " << mWaitTime << " frames\n" << std::flush;
-         status = false;
-      }
-   }
+      std::cout << "\tError: the display config chunk file contains " << windowChunks.size() << " displays (should be 1)\n" << std::flush;
+      return false;
+   }   
+
+   vrj::Display* display = getDisplay(windowChunks[0]->getName());
+   if (display != NULL)
+   {
+      std::cout << "\tError: there is still a display in the system named " << windowChunks[0]->getName() << "\n" << std::flush;
+      return false;
+   }   
 
    return true;
 
@@ -585,32 +635,8 @@ bool reconfigApp::readdGFXWindow_exec()
 bool reconfigApp::readdGFXWindow_check()
 {
    //Verify that both windows SimWindowX01 and SimWindowX02 have been added
-   //And that ONLY these 2 exist
-   bool foundX01 = false;
-   bool foundX02 = false;
-
-   std::vector<vrj::Display*> allDisplays = vrj::DisplayManager::instance()->getAllDisplays();
-
-   if (allDisplays.size() < 2)
-   {
-      std::cout << "\tError: There are only " << allDisplays.size() << " displays left. (Should be at least 2)\n" << std::flush;
-      return false;
-   }
-
-   std::vector<vrj::Display*>::iterator iter;
-   for (iter = allDisplays.begin(); iter != allDisplays.end(); iter++)
-   {
-      if (verifyDisplayProps( *iter, "SimWindowX01", 0, 0, 100, 100, 0, 0, 1, 1 ))
-      {
-         foundX01 = true;
-      }
-      else if (verifyDisplayProps( *iter, "SimWindowX02", 100, 0, 150, 150, 0, 0, 0, 1 ))
-      {
-         foundX02 = true;
-      }
-   }
-
-   return (foundX01 && foundX02);
+   return verifyDisplayFile( "./Chunks/sim.extradisplay.01.config" ) &&
+          verifyDisplayFile( "./Chunks/sim.extradisplay.02.config" );
 }
 
 bool reconfigApp::resizeGFXWindow_exec()
@@ -624,45 +650,20 @@ bool reconfigApp::resizeGFXWindow_exec()
 
 bool reconfigApp::resizeGFXWindow_check()
 {
-   vrj::Display* simDisplay = getDisplay( "SimWindowX02" );
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX02 to check it\n" << std::flush;
-   }
-
-   if (!verifyDisplayProps( simDisplay, "SimWindowX02", 100, 0, 500, 400, 0, 0, 0, 1 ))
-   {
-      std::cout << "\tError: SimWindowX02 has invalid settings\n" << std::flush;
-      return false;
-   }
-
-   return true;
+   return verifyDisplayFile( "./Chunks/sim.extradisplay.02.resize.config" );
 }
 
 bool reconfigApp::moveGFXWindow_exec()
 {
    std::cout << "Beginning test for moving a graphics window...\n" << std::flush;
-
-   
+  
    return swapChunkFiles( "./Chunks/sim.extradisplay.01.config",
                           "./Chunks/sim.extradisplay.01.move.config" );
 }
 
 bool reconfigApp::moveGFXWindow_check()
 {
-   vrj::Display* simDisplay = getDisplay( "SimWindowX01" );
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX01 to check it\n" << std::flush;
-   }
-
-   if (!verifyDisplayProps( simDisplay, "SimWindowX01", 500, 500, 100, 100, 0, 0, 1, 1 ))
-   {
-      std::cout << "\tError: SimWindowX01 has invalid settings\n" << std::flush;
-      return false;
-   }
-
-   return true;
+   return verifyDisplayFile( "./Chunks/sim.extradisplay.01.move.config" );
 }
 
 bool reconfigApp::addViewport_exec()
@@ -813,36 +814,10 @@ bool reconfigApp::enableStereoSurface_exec()
 {
    std::cout << "Beginning test for enabling stereo on a surface display...\n" << std::flush;
 
-   jccl::ConfigChunkDB oldChunks;
-
-   //Get the SimWindowX02
-   vrj::Display* simDisplayX02 = getDisplay( "SimWindowX02" );
-
-   //If we could not find the window...we have a problem to start with
-   if (simDisplayX02 == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX02 to remove it\n" << std::flush;
-      return false;
-   }
-
-   vrj::Display* simDisplayX01 = getDisplay( "SimWindowX01" );
-   //If we could not find the window...we have a problem to start with
-   if (simDisplayX01 == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX01 to remove it\n" << std::flush;
-      return false;
-   }
-
-   oldChunks.push_back( simDisplayX02->getConfigChunk() );
-   oldChunks.push_back( simDisplayX01->getConfigChunk() );
-
-   jccl::ConfigManager::instance()->addPendingRemoves( &oldChunks );
-
-   bool status = removeChunkFile( "./Chunks/sim.extradisplay.02.moveview.config" )
+   return        removeChunkFile( "./Chunks/sim.extradisplay.02.moveview.config" )
               && removeChunkFile( "./Chunks/sim.extradisplay.01.move.config" )
               && addChunkFile( "./Chunks/sim.surfacedisplay.01.stereo.config" );
 
-   return status;
 }
 
 bool reconfigApp::enableStereoSurface_check()

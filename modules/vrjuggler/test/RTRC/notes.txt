@@ -61,6 +61,3 @@ TODO: Change all of the _check functions to load the files that they are suppose
 
       Some tests don't test for ALL possible testable values. Update them to
       fill in these possible holes.
-
-      Some GFX-related tests directly remove chunks from the system without
-      going through the removeChunkFile or swapChunkFiles methods. Change this.
