@@ -277,7 +277,6 @@ jccl_dep_scripts='vpr-config'
 
 if test "x$HAVE_TWEEK_CXX" = "xY" ; then
    jccl_dep_scripts="tweek-config $jccl_dep_scripts"
-   jccl_cxxflags="$jccl_cxxflags $TWEEK_CXXFLAGS_MIN"
 fi
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
@@ -315,11 +314,11 @@ UNIX_JCCLROOT_ABS="$JCCLROOT_ABS"
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
     APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
-    jccl_extra_libs="$LDFLAGS $TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN $LIBS"
+    jccl_extra_libs="$LDFLAGS $LIBS"
 else
     APP_EXTRA_LIBS="$LDFLAGS $TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
     APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
-    jccl_extra_libs="$LDFLAGS $TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN $LIBS"
+    jccl_extra_libs="$LDFLAGS $LIBS"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -419,9 +418,15 @@ jccl_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 jars='jccl_rtrc.jar'
 beans='jccl_config.jar jccl_editors.jar'
 
-if test "x$JDOM_JAR" != "xnone" ; then
-   jars="$jars $JDOM_JAR"
-fi
+# XXX: For now, we won't include $JDOM_JAR in the JAR files output by
+# jccl-config.  This is okay (for now) because Tweek depends on JDOM, and we
+# depend on Tweek.  The real problem is with the sed expression below that
+# has jccl_ in it.  I don't want to mess with it for fear of breaking something
+# else.
+#if test "x$JDOM_JAR" != "xnone" ; then
+#   VJ_STRIP_JAR_PATH(strip_jdom, [$JDOM_JAR])
+#   jars="$jars $strip_jdom"
+#fi
 
 changequote(<<, >>)
 jccl_java_api_jars=`echo "$jars" | sed -e 's/\(jccl_[A-Za-z]*\.jar\)/${prefix}\/bin\/\1/g' -e "s/ /$JCPS/g"`
