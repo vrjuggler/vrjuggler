@@ -49,23 +49,23 @@
 // Debug output categories
 #define vjDBG_BASE 0
 #define vjDBG_ALL (vjDBG_BASE+0)         /* Use if you always want it ouput */
-#define vjDBG_ALLstr std::string("DBG_ALL")
+const std::string vjDBG_ALLstr("DBG_ALL");
 #define vjDBG_ERROR (vjDBG_BASE+1)       /* Error output */
-#define vjDBG_ERRORstr std::string("DBG_ERROR")
+const std::string vjDBG_ERRORstr("DBG_ERROR");
 #define vjDBG_KERNEL (vjDBG_BASE+2)      /* Kernel output */
-#define vjDBG_KERNELstr std::string("DBG_KERNEL")
+const std::string vjDBG_KERNELstr("DBG_KERNEL");
 #define vjDBG_INPUT_MGR (vjDBG_BASE+3)       /* Input output */
-#define vjDBG_INPUT_MGRstr std::string("DBG_INPUT_MGR")
+const std::string vjDBG_INPUT_MGRstr("DBG_INPUT_MGR");
 #define vjDBG_DRAW_MGR (vjDBG_BASE+4)
-#define vjDBG_DRAW_MGRstr std::string("DBG_DRAW_MGR")
+const std::string vjDBG_DRAW_MGRstr("DBG_DRAW_MGR");
 #define vjDBG_DISP_MGR (vjDBG_BASE+5)
-#define vjDBG_DISP_MGRstr std::string("DBG_DISP_MGR")
+const std::string vjDBG_DISP_MGRstr("DBG_DISP_MGR");
 #define vjDBG_ENV_MGR (vjDBG_BASE+6)
-#define vjDBG_ENV_MGRstr std::string("DBG_ENV_MGR")
+const std::string vjDBG_ENV_MGRstr("DBG_ENV_MGR");
 #define vjDBG_PERFORMANCE (vjDBG_BASE+7)
-#define vjDBG_PERFORMANCEstr std::string("DBG_PERFORMANCE")
+const std::string vjDBG_PERFORMANCEstr("DBG_PERFORMANCE");
 #define vjDBG_CONFIG (vjDBG_BASE+8)
-#define vjDBG_CONFIGstr std::string("DBG_CONFIGDB")
+const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 
 #define vjDBG_USER 100
 
