@@ -1,5 +1,7 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2004-11-05 patrickh     Updated, improved, and fixed DPP_CHECK_JNI.
+                        NEW VERSION: 1.99.18
 2004-11-03 patrickh     Changed DPP_HAVE_OPENGL to use AC_PATH_XTRA instead of
                         AC_PATH_X.  Use X_CFLAGS and X_LIBS instead of
                         X_INCLUDES and X_LDFLAGS.

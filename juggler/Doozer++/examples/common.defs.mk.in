@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          common.defs.mk.in,v
-# Date modified: 2004/01/29 04:28:15
-# Version:       1.37
+# Date modified: 2004/11/05 18:01:22
+# Version:       1.38
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.37 2004/01/29 04:28:15 patrickh Exp
+# common.defs.mk.in,v 1.38 2004/11/05 18:01:22 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.  It is distributed
@@ -104,7 +104,9 @@
 # JAVAP           - javap utility.
 # JDK_HOME        - Base Java installation directory.
 # JNI_INC         - The include paths necessary for JNI.
-# JNI_LIB         - The library which needs to be statically linked for JNI.
+# JNI_LDFLAGS     - The linker flags providing paths and other information
+#                   for linking JNI code.
+# JNI_LIB         - The library which needs to be linked for JNI code.
 # LD              - Path to ld(1) (or equivalent program).
 # LDFLAGS         - Flags for $(LD).
 # LDOPTS          - Extra, often platform-specific, options for the linker.
@@ -201,6 +203,7 @@ JAVAH=			@JAVAH@
 JAVAP=			@JAVAP@
 JDK_HOME=		@JDK_HOME@
 JNI_INC=		@JNI_INC@
+JNI_LDFLAGS=		@JNI_LDFLAGS@
 JNI_LIB=		@JNI_LIB@
 LD=			@LD@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
 LDFLAGS=		@LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib
