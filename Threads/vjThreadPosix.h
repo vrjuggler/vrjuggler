@@ -22,10 +22,40 @@
 #include <pthread.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sched.h>
 
-#include <Threads/vjThreadFunctor.h>
-#include <Threads/vjBaseThread.h>
+
+typedef uint32_t	thread_id_t;
+
+
+class vjPthreadObj
+{
+public:
+    thread_id_t	id;		//: Non-decreasing, unique ID for this thread
+    pthread_t	obj;		//: pthread_t data structure for this thread
+    bool	exited;
+};
+
+
+// The following is a terrible, evil, platform-specific hack to deal with
+// determining if two pthread structures are equal.
+
+struct eq_thread {
+    bool
+    operator() (const addr_t& thread1, const addr_t& thread2) const {
+#ifdef VJ_OS_SGI
+        return ((vjPthreadObj*) thread1)->obj == ((vjPthreadObj*) thread2)->obj;
+#else
+#ifdef VJ_OS_HPUX
+        return ((vjPthreadObj*) thread1)->obj.field1 ==
+               ((vjPthreadObj*) thread2)->obj.field1;
+#else
+        return thread1 == thread2;
+#endif	/* VJ_OS_HPUX */
+#endif	/* VJ_OS_SGI */
+    }
+};
 
 
 //: Threads implementation using POSIX threads (both Draft 4 and the "final"
@@ -35,10 +65,33 @@ class vjThreadPosix : public vjBaseThread
 {
 public:
     // -----------------------------------------------------------------------
-    //: Constructor.
+    //: Spawning constructor.
+    //
+    //  This will actually start a new thread
+    //+ that will execute the specified function.
     // -----------------------------------------------------------------------
-    vjThreadPosix (void)
-    {;}
+    vjThreadPosix(THREAD_FUNC func, void* arg = 0, long flags = 0,
+                  u_int priority = 0, void* stack_addr = NULL,
+                  size_t stack_size = 0);
+
+    // -----------------------------------------------------------------------
+    //: Spawning constructor with arguments (functor version).
+    //
+    //  This will start a new
+    //+ thread that will execute the specified function.
+    // -----------------------------------------------------------------------
+    vjThreadPosix(vjBaseThreadFunctor* functorPtr, long flags = 0,
+                  u_int priority = 0, void* stack_addr = NULL,
+                  size_t stack_size = 0);
+
+    // -----------------------------------------------------------------------
+    //: Destructor.
+    //
+    //! PRE: None.
+    //! POST: This thread is removed from the thread table and from the local
+    //+       thread hash.
+    // -----------------------------------------------------------------------
+    virtual ~vjThreadPosix(void);
 
     // -----------------------------------------------------------------------
     //: Create a new thread that will execute functorPtr.
@@ -56,15 +109,15 @@ public:
     //! ARGS: stack_addr - Alternate address for thread's stack (optional).
     //! ARGS: stack_size - Size for thread's stack (optional).
     //
-    //! RETURNS:  0 - Successful thread creation
-    //! RETURNS: -1 - Error
+    //! RETURNS: 0 - Successful thread creation
+    //! RETURNS: Nonzero - Error
     //
     //! NOTE: The pthreads implementation on HP-UX 10.20 does not allow the
     //+       stack address to be changed.
     // -----------------------------------------------------------------------
-    int spawn ( vjBaseThreadFunctor* functorPtr, long flags = 0,
-                u_int priority = 0, void* stack_addr = NULL,
-                size_t stack_size = 0);
+    int spawn(vjBaseThreadFunctor* functorPtr, long flags = 0,
+              u_int priority = 0, void* stack_addr = NULL,
+              size_t stack_size = 0);
 
     // -----------------------------------------------------------------------
     //: Make the calling thread wait for the termination of this thread.
@@ -82,9 +135,8 @@ public:
     // -----------------------------------------------------------------------
     virtual int
     join (void** status = 0) {
-        return pthread_join(threadID, status);
+        return pthread_join(mThread.obj, status);
     }
-
 
     // -----------------------------------------------------------------------
     //: Resume the execution of a thread that was previously suspended using
@@ -100,8 +152,10 @@ public:
     //
     //! NOTE: This is not currently supported on HP-UX 10.20.
     // -----------------------------------------------------------------------
-    virtual int resume (void)
-    { return kill(SIGCONT); }
+    virtual int
+    resume (void) {
+        return kill(SIGCONT);
+    }
 
     // -----------------------------------------------------------------------
     //: Suspend the execution of this thread.
@@ -115,8 +169,10 @@ public:
     //
     //! NOTE: This is not currently supported on HP-UX 10.20.
     // -----------------------------------------------------------------------
-    virtual int suspend (void)
-    { return kill(SIGSTOP); }
+    virtual int
+    suspend (void) {
+        return kill(SIGSTOP);
+    }
 
     // -----------------------------------------------------------------------
     //: Get this thread's priority.
@@ -134,7 +190,7 @@ public:
     //! NOTE: This is only supported on systems that support thread priority
     //+       scheduling in their pthreads implementation.
     // -----------------------------------------------------------------------
-    virtual int getPrio (int* prio);
+    virtual int getPrio(int* prio);
 
     // -----------------------------------------------------------------------
     //: Set this thread's priority.
@@ -150,7 +206,7 @@ public:
     //! NOTE: This is only supported on systems that support thread priority
     //+       scheduling in their pthreads implementation.
     // -----------------------------------------------------------------------
-    virtual int setPrio (int prio);
+    virtual int setPrio(int prio);
 
     // -----------------------------------------------------------------------
     //: Yield execution of the calling thread to allow a different blocked
@@ -160,9 +216,10 @@ public:
     //! POST: The caller yields its execution control to another thread or
     //+       process.
     // -----------------------------------------------------------------------
-    virtual void yield (void)
-    { sched_yield();}
-
+    virtual void
+    yield (void) {
+        sched_yield();
+    }
 
     // -----------------------------------------------------------------------
     //: Send the specified signal to this thread (not necessarily SIGKILL).
@@ -185,7 +242,7 @@ public:
 
         return -1;
 #else
-        return pthread_kill(threadID, signum);
+        return pthread_kill(mThread.obj, signum);
 #endif
     }
 
@@ -206,23 +263,43 @@ public:
     // -----------------------------------------------------------------------
     virtual void
     kill (void) {
-        pthread_cancel(threadID);
+        pthread_cancel(mThread.obj);
     }
 
-
     // -----------------------------------------------------------------------
-    //: Overload the << operator to allow printing of the process and thread
-    //+ ID neatly.
+    //: Get a ptr to the thread we are in
+    //
+    //! RETURNS: NULL - Thread is not in global table
+    //! RETURNS: NonNull - Ptr to the thread that we are running within
     // -----------------------------------------------------------------------
-    ostream& outStream (ostream& out) {
-      out << "pThrd:[" << threadId << "]";
-      return out;
+    static vjBaseThread*
+    self (void) {
+        return mThreadTable.getThread(gettid());
     }
 
-// Private member variables.
+    // -----------------------------------------------------------------------
+    //: Provide a way of printing the process and thread ID neatly.
+    // -----------------------------------------------------------------------
+    ostream&
+    outStream (ostream& out) {
+        out << "pThrd: [" << getpid() << ":" << mThread.id << "] ";
+        vjBaseThread::outStream(out);
+        return out;
+    }
+
+// All private member variables and functions.
 private:
-    pthread_t	threadID;	//: pthread_t data structure for this thread
-};
+    vjPthreadObj mThread;		//: Thread object
 
+    void checkRegister(int status);
+
+    // Static member variables and functions.
+    static hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread> mThreadHash;
+
+    static thread_id_t			thread_count;
+    static vjThreadTable<thread_id_t>	mThreadTable;
+
+    static thread_id_t gettid(void);
+};
 
 #endif	/* _THREAD_POSIX_H_ */
