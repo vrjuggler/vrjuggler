@@ -41,6 +41,8 @@
 #ifndef VPR_PROFILE_ITERATOR_H
 #define VPR_PROFILE_ITERATOR_H
 
+#include <vpr/vprConfig.h>
+
 #include <vpr/Perf/ProfileNode.h>
 
 namespace vpr
@@ -49,7 +51,7 @@ namespace vpr
 /**
  * An iterator to navigate through the Profile tree
  */
-   class ProfileIterator
+   class VPR_CLASS_API ProfileIterator
    {
    public:
       /* Constructor.  Returns iterator starting at "start" node.
