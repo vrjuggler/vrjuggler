@@ -274,6 +274,8 @@ public class SimKeyboardEditorPanel
       mRemoveSimDeviceButton.addActionListener(
          new SimKeyboardEditorPanel_mRemoveSimDeviceButton_actionAdapter(this)
       );
+      mAddSimDeviceButton.setAlignmentX(0.5f);
+      mRemoveSimDeviceButton.setAlignmentX(0.5f);
       mDeviceButtonPanel.add(mAddSimDeviceButton);
       mDeviceButtonPanel.add(mRemoveSimDeviceButton);
       mDeviceList.addListSelectionListener(
@@ -309,7 +311,7 @@ public class SimKeyboardEditorPanel
    private BorderLayout mMainLayout = new BorderLayout();
    private JPanel mDevicePanel = new JPanel();
    private BorderLayout mDevicePanelLayout = new BorderLayout();
-   private JPanel mDeviceButtonPanel = new JPanel();
+   private Box mDeviceButtonPanel = new Box(BoxLayout.Y_AXIS);
    private JButton mAddSimDeviceButton = new JButton();
    private JButton mRemoveSimDeviceButton = new JButton();
    private JScrollPane mDeviceScrollPane = new JScrollPane();
