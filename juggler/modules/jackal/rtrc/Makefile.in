@@ -69,6 +69,8 @@ INSTALL_FILES=
 IDL_GENDIR=		.
 JAVA_IDL_OPTS=		@TWEEK_JAVA_IDL_OPTS@ @TWEEK_JAVA_IDL_GENDIR_OPT@$(IDL_GENDIR)
 
+EXTRA_JAVA_SRCS_PATH=	$(IDL_GENDIR)/jccl
+
 #include $(MKPATH)/dpp.compile.mk
 
 # -----------------------------------------------------------------------------
