@@ -200,6 +200,9 @@ $TC_default="\}";
 # Initially, the printing of private documentation is off.
 $PRIVATE_DOC = 0;
 
+# Initially, HTML links are allowed at all times.
+$NO_LINK = 0;
+
 $infourl="http://friga.mer.utexas.edu/mark/perl/perceps/";
 
 &Getopts('abrcefumnqhd:t:F:i:s:o:');
@@ -559,7 +562,7 @@ sub GENTEXT {
   if ($itype{$cname}<=$UNION) {
     $linkname=$cname;
     if ($container{$cname}) {
-      $linkname=~s/^(\S+)$SRO([^$SRO]+)$/\<A HREF\=\"$container{$cname}\.html\"\>$1\<\/A\>$SRO$2/;
+      $linkname=~s/^(\S+)$SRO([^$SRO]+)$/\<A HREF\=\"$container{$cname}\.html\"\>$1\<\/A\>$SRO$2/ unless $NO_LINK;
     }
   }
     
@@ -598,6 +601,17 @@ sub GENTEXT {
 
 	$str =~ s/$TO([^$TO$TC]*)$TC//;
       }
+      # {nolink <state>} was read.  Depending on <state>, set $NO_LINK
+      # appropriately.
+      elsif ( "$arg[0]" eq "nolink" ) {
+	if ( $arg[1] =~ /^t/i ) {
+	  $NO_LINK = 1;
+	} elsif ( $arg[1] =~ /^f/i ) {
+	  $NO_LINK = 0;
+	}
+
+	$str =~ s/$TO([^$TO$TC]*)$TC//;
+      }
       # {path} was read.
       elsif ( "$arg[0]" eq "path" ) {
 	my $path = $class_paths{"$cname"};
@@ -615,7 +629,7 @@ sub GENTEXT {
           if ($type{$mloc,$mnm}=~/^\s*(class|struct|union)\s*$/) {
             if (($tmptype eq ".html") || ($tmptype eq ".htm")) {
               $cleaned=$memname{$mloc,$mnm};
-              $cleaned=~s/$cleaned/\<A HREF\=\"$cname$SRO$cleaned\.html\"\>$cleaned\<\/A\>/;
+              $cleaned=~s/$cleaned/\<A HREF\=\"$cname$SRO$cleaned\.html\"\>$cleaned\<\/A\>/ unless $NO_LINK;
             }
           }
           else { $cleaned=$memname{$mloc,$mnm}; }
@@ -688,11 +702,11 @@ sub GENTEXT {
         $cleaned=$memname{$mloc,$mnm};
  	if ($type{$mloc,$mnm}=~/^\s*(class|struct|union)\s*$/) {
           if (($tmptype eq ".html") || ($tmptype eq ".htm")) {
-            $cleaned="<A HREF='$mloc$SRO$cleaned$tmptype'>$cleaned</A>";
+            $cleaned="<A HREF='$mloc$SRO$cleaned$tmptype'>$cleaned</A>" unless $NO_LINK;
           }
  	}
  	if (($mloc ne $cname) && ($access{$mloc,$mnm} ne "friend")) {
- 	  if (($tmptype eq ".html") || ($tmptype eq ".htm")) {
+ 	  if ( (($tmptype eq ".html") || ($tmptype eq ".htm")) && ! $NO_LINK ) {
  	    $cleaned="<A HREF='$mloc$tmptype'>$mloc</A>::$cleaned";
  	  }
  	  else {
@@ -1322,7 +1336,6 @@ sub GENTEXT {
     $str=REPLACE_SPECIAL($str);
   }
   
-    
   if ($ml) { $*=0; }  
   $str;
     
@@ -1717,10 +1730,13 @@ sub CLEANTEXT {
     if ($autolink) {
       foreach $c (@classes) {
         if ($keephtml) { $str=~s/(<[^<>]*)$c([^<>]*>)/$1PUTCNAMEHERE__$2/g; }
-        $str=~s/(\W|&\w+)$c(\W)/$1<A HREF=\"$c.html\" $alopt>$c<\/A>$2/g;
-        $str=~s/^$c(\W)/<A HREF=\"$c.html\" $alopt>$c<\/A>$1/g;
-        $str=~s/^$c$/<A HREF=\"$c.html\" $alopt>$c<\/A>/g;
-        $str=~s/(\W|&\w+)$c$/$1<A HREF=\"$c.html\" $alopt>$c<\/A>/g;
+
+	unless ( $NO_LINK ) {
+          $str=~s/(\W|&\w+)$c(\W)/$1<A HREF=\"$c.html\" $alopt>$c<\/A>$2/g;
+          $str=~s/^$c(\W)/<A HREF=\"$c.html\" $alopt>$c<\/A>$1/g;
+          $str=~s/^$c$/<A HREF=\"$c.html\" $alopt>$c<\/A>/g;
+          $str=~s/(\W|&\w+)$c$/$1<A HREF=\"$c.html\" $alopt>$c<\/A>/g;
+	}
         if ($keephtml) { $str=~s/PUTCNAMEHERE__/$c/g; }
       }
     }
