@@ -33,7 +33,7 @@ dnl ************** <auto-copyright.pl END do not edit this line> **************
 dnl ---------------------------------------------------------------------------
 dnl NOTE: This should not be called by external code.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(_JCCL_PATH_SETUP,
+AC_DEFUN([_JCCL_PATH_SETUP],
 [
     dnl Get the cflags and libraries from the jccl-config script
     AC_ARG_WITH(jccl,
@@ -87,7 +87,7 @@ dnl ---------------------------------------------------------------------------
 dnl _JCCL_VERSION_CHECK(MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
 dnl NOTE: This should not be called by external code.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(_JCCL_VERSION_CHECK,
+AC_DEFUN([_JCCL_VERSION_CHECK],
 [
    AC_REQUIRE([_JCCL_PATH_SETUP])
 
@@ -128,7 +128,7 @@ dnl     JCCL_PROF_LIBS_CC_MIN
 dnl     JCCL_PROF_LIBS_STATIC_CC
 dnl     JCCL_PROF_LIBS_STATIC_CC_MIN
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(JCCL_PATH_CXX,
+AC_DEFUN([JCCL_PATH_CXX],
 [
    AC_REQUIRE([_JCCL_PATH_SETUP])
 
@@ -233,7 +233,7 @@ dnl
 dnl Tests for JCCL Java API and then defines the following variables:
 dnl     JCCL_JARS
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(JCCL_PATH_JAVA,
+AC_DEFUN([JCCL_PATH_JAVA],
 [
    AC_REQUIRE([_JCCL_PATH_SETUP])
 
@@ -292,7 +292,7 @@ dnl     JCCL_PROF_LIBS_STATIC_CC
 dnl     JCCL_PROF_LIBS_STATIC_CC_MIN
 dnl     JCCL_JARS
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(JCCL_PATH,
+AC_DEFUN([JCCL_PATH],
 [
    JCCL_PATH_CXX($1, [jccl_have_cxx='yes'], $3, $4)
 
