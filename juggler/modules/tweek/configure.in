@@ -282,7 +282,7 @@ esac
 cd "$srcdir"
 UNIX_TWEEKROOT_ABS=`pwd`
 
-cd "$TWEEKROOT_ABS/../.."
+cd "$UNIX_TWEEKROOT_ABS/../.."
 UNIX_JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
