@@ -29,6 +29,7 @@ public class AllTests
       suite.addTestSuite( ConfigElementTest.class );
       suite.addTestSuite( ConfigDefinitionTest.class );
       suite.addTestSuite( PropertyDefinitionTest.class );
+      suite.addTestSuite( ConfigElementFactoryTest.class );
 
       return suite;
    }
