@@ -15,17 +15,10 @@
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
 
-class OsgNavigater : public vpr::SerializableObject
-{
-   enum NavMode
-   {
-      WALK,
-      FLY
-   };
-public:
-   OsgNavigater() : mMode(FLY)
-   {;}
 
+class NavData : public vpr::SerializableObject
+{
+public:
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
       float pos_data[16];
@@ -49,6 +42,37 @@ public:
          writer->writeFloat(pos_data[n]); 
       }
       return vpr::ReturnStatus::Succeed;
+   }  
+public:   
+   gmtl::Matrix44f mCurPos;
+};
+
+class OsgNavigater
+{
+   enum NavMode
+   {
+      WALK,
+      FLY
+   };
+public:
+   OsgNavigater() : mActive(false), mMode(FLY)
+   {;}
+
+   void init()
+   {
+      mActive = true;
+   }
+
+   void setWalkMode(bool walk_mode)
+   {
+      if(walk_mode)
+      {
+         mMode = WALK;
+      }
+      else
+      {
+         mMode = FLY;
+      }
    }
 
    void setVelocity(const gmtl::Vec3f& vel)
@@ -63,7 +87,7 @@ public:
    }
    void update(float delta)
    {
-      if(delta > 2.0)
+      if(delta > 2.0 || !mActive)
       {
          return;
       }
@@ -80,11 +104,11 @@ public:
       {
          gmtl::EulerAngleXYZf euler( 0.0f, gmtl::makeYRot(result), 0.0f );// Only allow Yaw (rot y)
          gmtl::Matrix44f real = gmtl::makeRot<gmtl::Matrix44f>( euler ); 
-         gmtl::postMult(mCurPos, real);
+         gmtl::postMult(mNavData.mCurPos, real);
       }
       else
       {
-         gmtl::postMult(mCurPos, result);
+         gmtl::postMult(mNavData.mCurPos, result);
       }
       
      
@@ -105,7 +129,7 @@ public:
       // Post multiply the delta translation
       gmtl::Matrix44f trans_matrix = gmtl::makeTrans<gmtl::Matrix44f>(trans_delta);
 
-      gmtl::postMult(mCurPos, trans_matrix);
+      gmtl::postMult(mNavData.mCurPos, trans_matrix);
             
       //osg::Matrix osg_trans_matrix;
       //osg_trans_matrix.set(trans_matrix.getData());
@@ -115,12 +139,22 @@ public:
 
    gmtl::Matrix44f getCurPos()
    {
-      return mCurPos;
+      if(!mActive)
+      {
+         return gmtl::Matrix44f();
+      }
+      else
+      {
+         return mNavData.mCurPos;
+      }
    }
    
    void setCurPos(const gmtl::Matrix44f& pos)
    {
-      mCurPos = pos;
+      if(mActive)
+      {
+         mNavData.mCurPos = pos;
+      }
    }
     
    gmtl::Matrix44f scaled_rotate(gmtl::Matrix44f rot_mat, float delta)
@@ -156,11 +190,14 @@ public:
    }
 private:
    //osg::MatrixTransform*   mNavTransform;
-
-   gmtl::Matrix44f         mCurPos;
+   bool                    mActive;
+   NavMode                 mMode;
    
+   NavData                 mNavData;
+      
+   //gmtl::Matrix44f         mCurPos;
+  
    gmtl::Vec3f             mVelocity;
    gmtl::Matrix44f         mRotVelocity;
-   NavMode                 mMode;
 };
 #endif /* _OSG_NAVIGATE_H */

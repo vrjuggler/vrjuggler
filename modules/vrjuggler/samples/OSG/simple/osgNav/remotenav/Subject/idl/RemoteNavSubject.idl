@@ -24,13 +24,13 @@ module vrj
        * Gets the absolute orientation relative to the virtual world
        * coordinate frame.
        */
-      void getOrientation(out float heading, out float pitch, out float roll);
+      void getOrientation(out float pitch, out float heading, out float roll);
 
       /**
        * Sets the absolute orientation relative to the virtual world
        * coordinate frame.
        */
-      void setOrientation(in float heading, in float pitch, in float roll);
+      void setOrientation(in float pitch, in float heading, in float roll);
       
       /**
        * Sets the rotational velocity.
@@ -40,7 +40,7 @@ module vrj
       /**
        * Sets the rotational velocity.
        */
-      void setRotationalVelocity(in float headingDelta, in float pitchDelta,
+      void setRotationalVelocity(in float pitchDelta, in float headingDelta,
                                  in float rollDelta);
 
       /**
