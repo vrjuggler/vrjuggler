@@ -51,7 +51,8 @@ typedef int socklen_t;
 
 namespace vpr {
 
-class SocketImpBSD : public BlockIO {
+class SocketImpBSD : public BlockIO
+{
 public:
     // ========================================================================
     // vpr::BlockIO overrides.
@@ -119,20 +120,6 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline virtual ssize_t
-    read (std::string& buffer, const size_t length = 0) {
-        return m_handle->read(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    read (std::vector<char>& buffer, const size_t length = 0) {
-        return m_handle->read(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
     readn (void* buffer, const size_t length) {
         return m_handle->readn(buffer, length);
     }
@@ -140,35 +127,7 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline virtual ssize_t
-    readn (std::string& buffer, const size_t length = 0) {
-        return m_handle->readn(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    readn (std::vector<char>& buffer, const size_t length = 0) {
-        return m_handle->readn(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
     write (const void* buffer, const size_t length) {
-        return m_handle->write(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    write (const std::string& buffer, const size_t length = 0) {
-        return m_handle->write(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    write (const std::vector<char>& buffer, const size_t length = 0) {
         return m_handle->write(buffer, length);
     }
 
@@ -223,7 +182,7 @@ protected:
     // ------------------------------------------------------------------------
     // Standard constructor.  This takes two InetAddr objects, a local address
     // and a remote address.
-    // 
+    //
     // PRE: None.
     // POST: The member variables are initialized with the given values.
     //
@@ -251,4 +210,4 @@ protected:
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_SOCKET_IMP_BSD_H_ */
+#endif   /* _VPR_SOCKET_IMP_BSD_H_ */
