@@ -106,7 +106,13 @@ ifneq ($(OS_TYPE), Win32)
     DYNAMIC_LIBS	= $(LIBS)
 endif
 
-DYLIB_DEPS	= @DYLIB_DEPS@
+# Dependencies for each of the various dynamic libraries we build.
+DYLIB_DEPS_VJ		= @DYLIB_DEPS_VJ@
+DYLIB_DEPS_UTILS	= @DYLIB_DEPS_UTILS@
+DYLIB_DEPS_GL		= @DYLIB_DEPS_GL@
+DYLIB_DEPS_PF		= @DYLIB_DEPS_PF@
+DYLIB_DEPS_AW		= @DYLIB_DEPS_AW@
+DYLIB_DEPS_SL		= @DYLIB_DEPS_SL@
 
 VJ_LIB_STATIC		= $(VJ_LIBRARY).$(STATICLIB_EXT)
 VJ_LIB_DYNAMIC		= $(VJ_LIBRARY).$(DYNAMICLIB_EXT)
@@ -176,14 +182,73 @@ $(LIBDIR)/$(AW_LIB_STATIC) $(LIBDIR)/$(SL_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(VJ_LIB_DYNAMIC) $(LIBDIR)/$(UTILS_LIB_DYNAMIC)		\
-$(LIBDIR)/$(GL_LIB_DYNAMIC) $(LIBDIR)/$(PF_LIB_DYNAMIC)			\
-$(LIBDIR)/$(AW_LIB_DYNAMIC) $(LIBDIR)/$(SL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+            $(DYLIB_DEPS_VJ)
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(UTILS_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+            $(DYLIB_DEPS_UTILS)
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+            $(DYLIB_DEPS_GL)
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(PF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+            $(DYLIB_DEPS_PF)
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(AW_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+            $(DYLIB_DEPS_AW)
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(SL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+            $(DYLIB_DEPS_SL)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
