@@ -33,6 +33,8 @@
 #ifndef _VPR_SERIAL_PORT_IMPL_TERMIOS_H_
 #define _VPR_SERIAL_PORT_IMPL_TERMIOS_H_
 
+#include <vpr/vprConfig.h>
+
 #include <termios.h>
 #include <string>
 #include <vector>

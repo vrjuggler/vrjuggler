@@ -33,6 +33,8 @@
 #ifndef _VPR_SOCKET_DATAGRAM_IMPL_BSD_H_
 #define _VPR_SOCKET_DATAGRAM_IMPL_BSD_H_
 
+#include <vpr/vprConfig.h>
+
 #include <string>
 
 #include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
