@@ -99,9 +99,9 @@ std::ostream& vjDebug::getStream(int cat, int level, bool show_thread_info,
    */
 
    if(show_thread_info)
-      std::cout << vjThread::self() << " VJ:";
+      std::cout << "[" << vjThread::self() << "] VJ: ";
    else
-      std::cout << "             ";
+      std::cout << "                 ";
 
 
       // Insert the correct number of tabs into the stream for indenting

@@ -243,7 +243,9 @@ public:
    // -----------------------------------------------------------------------
    std::ostream& outStream(std::ostream& out)
    {
-      out << "p:" << mThreadPID << " ";
+      out.setf(std::ios::right);
+      out << std::setw(6) << std::setfill('0') << mThreadPID << "/";
+      out.unsetf(std::ios::right);
       vjBaseThread::outStream(out);
       return out;
    }
