@@ -70,7 +70,8 @@ configure: configure.in $(M4_DEPS)
 
 config.status: configure ;
 
-Makefile: configure config.status Makefile.in Makefile.inc.in make.defs.mk.in
+Makefile: $(srcdir)/VERSION configure config.status Makefile.in		\
+          Makefile.inc.in make.defs.mk.in
 	$(CFG_SHELL) $(srcdir)/configure $(CONFIGURE_ARGS)
 
 %:: Makefile
