@@ -586,11 +586,13 @@ if test "x$OS_TYPE" = "xWin32" ; then
         LIBS=`unix2dos "$LIBS"`
     fi
 
-    LN_S='cp'
+    LN_S='cp -r'
+    RM_LN='rm -rf'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
 #    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
 else
+    RM_LN='rm -f'
     VPRROOT_ABS="$VPRROOT_ABS"
     JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
@@ -686,6 +688,7 @@ AC_SUBST(VPRROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VPR_SHARE_DIR)
 
+AC_SUBST(RM_LN)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
 AC_SUBST(SUBSYSTEM)
