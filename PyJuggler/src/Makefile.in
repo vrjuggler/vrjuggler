@@ -106,8 +106,11 @@ GMTL_SRCS=	\
 	gmtl/_VecBase_double_4.cpp		\
 	gmtl/_VecBase_float_4.cpp		\
 	gmtl/_VecBase_int_4.cpp			\
+	gmtl/_Vec_double_3.cpp			\
+	gmtl/_Vec_double_4.cpp			\
 	gmtl/_Vec_float_3.cpp			\
-	gmtl/_Vec_float_4.cpp
+	gmtl/_Vec_float_4.cpp			\
+	gmtl/_Vec_int_3.cpp
 
 GMTL_OBJS=	$(GMTL_SRCS:.cpp=.$(OBJEXT))
 VPR_OBJS=	vpr.$(OBJEXT)

@@ -127,9 +127,21 @@ exclude(VecBase4i.mData)
 
 Vec = Template('gmtl::Vec', 'gmtl/Vec.h')
 
+Vec3d = Vec('double 3')
+rename(Vec3d, 'Vec3d')
+exclude(Vec3d.getData)
+
 Vec3f = Vec('float 3')
 rename(Vec3f, 'Vec3f')
 exclude(Vec3f.getData)
+
+Vec3i = Vec('int 3')
+rename(Vec3i, 'Vec3i')
+exclude(Vec3i.getData)
+
+Vec4d = Vec('double 4')
+rename(Vec4d, 'Vec4d')
+exclude(Vec4d.getData)
 
 Vec4f = Vec('float 4')
 rename(Vec4f, 'Vec4f')
