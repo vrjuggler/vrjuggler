@@ -1041,9 +1041,11 @@ dnl # Checks for library functions.
 dnl # -------------------------------------------------------------------------
 AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod sginap)
 
-dnl # On Solaris, sched_yield(3) and its synchronization friends are in
-dnl # libposix4.
-AC_CHECK_LIB(posix4, sched_yield, LIBS="$LIBS -lposix4")
+dnl # Ensure that we have sched_yield(3).  On Solaris, sched_yield(3) and its
+dnl # synchronization friends are in libposix4.
+AC_CHECK_FUNC(sched_yield, AC_DEFINE(HAVE_SCHED_YIELD),
+              AC_CHECK_LIB(posix4, sched_yield,
+                  [ LIBS="$LIBS -lposix4" ; AC_DEFINE(HAVE_SCHED_YIELD) ]))
 
 dnl # In a Win32 environment with MS Visual C++ as the compiler, these math
 dnl # functions are not in any special library.  Test for them normally.

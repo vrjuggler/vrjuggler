@@ -122,6 +122,9 @@
 #undef int32_t
 #undef int64_t
 
+/* Define if you have the sched_yield function.  */
+#undef HAVE_SCHED_YIELD
+
 /* Define if you have the sinf function.  */
 #undef HAVE_SINF
 
