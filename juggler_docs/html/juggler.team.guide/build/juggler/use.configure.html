@@ -220,7 +220,9 @@
           is not a fatal error and simply causes the Performer API to be
           disabled for that build.  If Performer is available, use the
           <TT>--with-pfroot</TT> option to <TT>configure</TT> to specify the
-          root directory containing the Performer installation.
+          root directory containing the Performer installation.  It may also
+          be necessary to use the <TT>--with-pfver</TT> option if OpenGL
+          Performer 2.4 is not the version installed.
         </LI>
         <LI>
           A version of Perl greater than or equal to 5.004 was not found.
@@ -372,6 +374,13 @@
               <TT>lib64</TT> subdirectory.  They will be used appropriately
               depending on the ABI chosen (see above).  <I>The default path
               is <TT>/usr</TT>.</I>
+        <DT><TT>--with-pfver=&lt;VER&gt;</TT>
+          <DD>Give the IRIS/OpenGL Performer version installed.  Between
+              Performer 2.2 and 2.4, the names of the libraries were
+              changed.  In 2.2, they had an <TT>_ogl</TT> extension, but in
+              2.4, that extension was dropped.  Specifying the version
+              number defines which libraries will be linked in the Performer
+              sample applications.  <I>The default version is 2.4.</I>
         <DT><TT>--with-oglroot=&lt;PATH&gt;</TT>
           <DD>Give the OpenGL installation directory.  This is the base
               directory containing an <TT>include</TT> subdirectory that in
