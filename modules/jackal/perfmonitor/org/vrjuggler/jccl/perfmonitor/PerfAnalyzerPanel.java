@@ -284,6 +284,8 @@ public class PerfAnalyzerPanel
 	public void update() {
             Iterator i = col.indexIterator();
             int j = 0;
+
+	    // update indices
             while (i.hasNext()) {
                 LabeledPerfDataCollector.IndexInfo ii = (LabeledPerfDataCollector.IndexInfo)i.next();
 		System.out.println ("updating " + ii.index);
@@ -295,6 +297,39 @@ public class PerfAnalyzerPanel
 		    ni.update();
 		}
  	    }
+
+	    // traverse tree & calc new averages.
+	    doUpdateTreeAverages (col_root);
+
+	    tree_model.nodeChanged (col_root);
+	}
+
+	/** Utility for update.
+	 *  Does a preorder traversal of this' subtree.
+	 */
+	protected void doUpdateTreeAverages (DefaultMutableTreeNode root) {
+	    double sum = 0.0;
+	    int i, count;
+	    DefaultMutableTreeNode child;
+	    PerfTreeNodeInfo ni, child_ni;
+	    ni = (PerfTreeNodeInfo)root.getUserObject();
+	    if (ni.getIndexInfo() == null) {
+		// it's a folder... have to sum up its children.
+		count = root.getChildCount();
+		for (i = 0; i < count; i++) {
+		    child = (DefaultMutableTreeNode)root.getChildAt(i);
+		    child_ni = (PerfTreeNodeInfo)child.getUserObject();
+		    doUpdateTreeAverages(child);
+		    sum += child_ni.getAverage();
+		}
+		ni.setAverage (sum);
+		ni.update();
+		System.out.println ("set a folder average to: " + sum);
+	    }
+	    else {
+		// it was an actual index & already knows its average
+		return;
+	    }
 	}
 
 
