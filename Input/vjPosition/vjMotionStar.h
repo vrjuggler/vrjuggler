@@ -106,7 +106,7 @@ public:
                  const FLOCK::data_format bird_format = FLOCK::POSITION_ANGLES,
                  const BIRDNET::run_mode run_mode = BIRDNET::CONTINUOUS,
                  const unsigned char report_rate = 1,
-                 const float measurement_rate = 68.3,
+                 const double measurement_rate = 68.3,
                  const unsigned int birds_required = 10);
 
     // ------------------------------------------------------------------------
@@ -433,20 +433,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Get the current data measurement rate.
-    //
-    //! PRE: m_motion_star has been initialized.
-    //! POST: The current data measurement rate is returned to the caller.
-    //
-    //! RETURNS: A double-precision floating-point value for data measurement
-    //+          rate.
-    // ------------------------------------------------------------------------
-    inline double
-    getDataRate (void) const {
-        return m_motion_star.getDataRate();
-    }
-
-    // ------------------------------------------------------------------------
     //: Set the run mode for the device.
     //
     //! PRE: m_motion_star has been initialized.
@@ -495,25 +481,26 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Set the measurement rate for the chassis.
+    //: Set the data measurement rate for the chassis.
     //
     //! PRE: m_motion_star has been initialized.
-    //! POST: If the device is not active, the chassis measurement rate is set
-    //+       to the given float value.
+    //! POST: If the device is not active, the chassis data measurement rate
+    //+       is set to the given double value.
     //
     //! ARGS: rate - The new value for the measurement rate.
     // ------------------------------------------------------------------------
-    void setMeasurementRate(const float rate);
+    void setMeasurementRate(const double rate);
 
     // ------------------------------------------------------------------------
-    //: Get the current measurement rate for the chassis.
+    //: Get the current data measurement rate for the chassis.
     //
     //! PRE: m_motion_star has been initialized.
-    //! POST: The current measurement rate is returned to the caller.
+    //! POST: The current data measurement rate is returned to the caller.
     //
-    //! RETURNS: A floating-point value for measurement rate.
+    //! RETURNS: A double-precision floating-point value for data measurement
+    //+          rate.
     // ------------------------------------------------------------------------
-    inline float
+    inline double
     getMeasurementRate (void) const {
         return m_motion_star.getMeasurementRate();
     }

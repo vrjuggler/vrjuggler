@@ -208,14 +208,14 @@ aMotionStar::aMotionStar(const char* address, const unsigned short port,
                          const FLOCK::data_format bird_format,
                          const BIRDNET::run_mode run_mode,
                          const unsigned char report_rate,
-                         const float measurement_rate,
+                         const double measurement_rate,
                          const unsigned int birds_requested)
     : m_active(false), m_socket(-1), m_port(port), m_proto(proto),
       m_master(master), m_seq_num(0), m_run_mode(run_mode),
       m_hemisphere(hemisphere), m_bird_format(bird_format),
       m_measurement_rate(measurement_rate), m_report_rate(report_rate),
       m_birds_requested(birds_requested),
-      m_birds_active(0), m_unit_conv(1.0)
+      m_cur_mrate(0.0), m_birds_active(0), m_unit_conv(1.0)
 {
     union {
         char	c[sizeof(short)];
@@ -1050,7 +1050,7 @@ aMotionStar::getSystemStatus () {
         flock_number        = status_info->flockNumber;
         m_chassis_id        = status_info->chassisNumber;
         m_chassis_dev_count = status_info->chassisDevices;
-        m_data_rate         = convertDataRate(status_info->measurementRate);
+        m_cur_mrate         = convertMeasurementRate(status_info->measurementRate);
 
         // If this is the master chassis, get the extra system information
         // about all of the devices connected to the chassis.  This will tell
@@ -1582,7 +1582,7 @@ aMotionStar::toFloat (const unsigned char high_byte,
 // floating-point number representing the data rate.
 // ----------------------------------------------------------------------------
 double
-aMotionStar::convertDataRate (const unsigned char rate[6]) {
+aMotionStar::convertMeasurementRate (const unsigned char rate[6]) {
     double data_rate;
     char data_rate_a[7];
 
@@ -1755,7 +1755,7 @@ aMotionStar::printSystemStatus (const BIRDNET::SYSTEM_STATUS* status) {
               << (unsigned int) xmtr_num << "\n";
     std::cout << std::setw(pad_width_dot) << std::setfill('.')
               << "* Measurement rate " << " "
-              << convertDataRate(status->measurementRate) << "\n";
+              << convertMeasurementRate(status->measurementRate) << "\n";
     sprintf(rev_str, "%d.%d", status->softwareRevision[0],
             status->softwareRevision[1]);
     rev_num = atof(rev_str);

@@ -78,7 +78,7 @@ vjMotionStar::vjMotionStar (const char* address, const unsigned short port,
                             const FLOCK::data_format bird_format,
                             const BIRDNET::run_mode run_mode,
                             const unsigned char report_rate,
-                            const float measurement_rate,
+                            const double measurement_rate,
                             const unsigned int birds_required)
     : m_motion_star(address, port, proto, master, hemisphere, bird_format,
                     run_mode, report_rate, measurement_rate, birds_required)
@@ -661,7 +661,7 @@ vjMotionStar::setReportRate (const unsigned char rate) {
 // Set the measurement rate for the chassis.
 // ----------------------------------------------------------------------------
 void
-vjMotionStar::setMeasurementRate (const float rate) {
+vjMotionStar::setMeasurementRate (const double rate) {
    // If the device active, we cannot change the measurement rate.
    if (isActive()) {
       vjDEBUG(vjDBG_INPUT_MGR, 2)

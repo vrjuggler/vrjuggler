@@ -381,7 +381,7 @@ public:
                 const FLOCK::hemisphere hemisphere,
                 const FLOCK::data_format bird_format,
                 const BIRDNET::run_mode run_mode,
-                const unsigned char report_rate, const float measurement_rate,
+                const unsigned char report_rate, const double measurement_rate,
                 const unsigned int birds_requested);
 
     // ------------------------------------------------------------------------
@@ -595,20 +595,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Get the current data measurement rate.
-    //
-    //! PRE: None.
-    //! POST: The current data measurement rate is returned to the caller.
-    //
-    //! RETURNS: A double-precision floating-point value for data measurement
-    //+          rate.
-    // ------------------------------------------------------------------------
-    inline const double&
-    getDataRate (void) const {
-        return m_data_rate;
-    }
-
-    // ------------------------------------------------------------------------
     //: Set the run mode for the device.
     //
     //! PRE: None.
@@ -741,27 +727,29 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Set the measurement rate for the chassis.
+    //: Set the data measurement rate for the chassis.
     //
     //! PRE: None.
-    //! POST: The chassis measurement rate is set to the given byte value.
+    //! POST: The chassis data measurement rate is set to the given byte
+    //+       value.
     //
-    //! ARGS: rate - The new value for the chassis measurement rate.
+    //! ARGS: rate - The new value for the chassis data measurement rate.
     // ------------------------------------------------------------------------
     inline void
-    setMeasurementRate (const float rate) {
+    setMeasurementRate (const double rate) {
         m_measurement_rate = rate;
     }
 
     // ------------------------------------------------------------------------
-    //: Get the current measurement rate for the chassis.
+    //: Get the current data measurement rate.
     //
     //! PRE: None.
-    //! POST: The current chassis measurement rate is returned to the caller.
+    //! POST: The current data measurement rate is returned to the caller.
     //
-    //! RETURNS: A floating-point value for the chassis measurement rate.
+    //! RETURNS: A double-precision floating-point value for data measurement
+    //+          rate.
     // ------------------------------------------------------------------------
-    inline const float&
+    inline const double&
     getMeasurementRate (void) const {
         return m_measurement_rate;
     }
@@ -1324,7 +1312,7 @@ private:
     //! RETURNS: A double-precision floating-point number giving the data
     //+          measurement rate.
     // ------------------------------------------------------------------------
-    double convertDataRate(const unsigned char rate[6]);
+    double convertMeasurementRate(const unsigned char rate[6]);
 
     // ------------------------------------------------------------------------
     //: Extract the information regarding the measurement units (e.g., inches)
@@ -1429,14 +1417,15 @@ private:
     unsigned char     m_chassis_dev_count; //: Number of devices connected to
                                            //+ this chassis
     unsigned int      m_seq_num;           //: Packet sequence number
-    double            m_data_rate;         //: The data measurement rate
+    double            m_cur_mrate;         //: Current data measurement rate
+                                           //+ (as read from the server)
+    double            m_measurement_rate;  //: Measurement rate for the chassis
     BIRDNET::run_mode m_run_mode;          //: Data request mode
 
     // Bird member variables.
     FLOCK::hemisphere  m_hemisphere;       //: The transmitter hemisphere being
                                            //+ used by the birds
     FLOCK::data_format m_bird_format;      //: Data format for the birds
-    float              m_measurement_rate; //: Measurement rate for the chassis
     unsigned char      m_report_rate;      //: Report rate of the birds
                                            //+ relative to sample rate
     unsigned int       m_birds_requested;  //: Number of birds whose data will
