@@ -116,7 +116,7 @@ public class VarListPanel
       {
          // Use the PropertySheetFactory to add an additional embedded element.
          f.addEmbeddedElement((PropertySheet) mComponent, mConfigContext,
-                              elm, evt.getValue(), prop_def, row, prop_num);
+                              elm, evt.getValue(), prop_def, row);
       }
       else
       {
