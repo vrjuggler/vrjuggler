@@ -60,7 +60,7 @@ sub readSources($);
 sub printObjMakefile($$@);
 sub printAppMakefile($$$);
 sub printMultiAppMakefile($$$);
-sub printAppMakefileStart_in($@);
+sub printAppMakefileStart_in($$);
 sub printAppObjs_in($$$);
 sub printAppSuffixRules_in($$);
 sub printAppMakefileEnd_in($;@);
@@ -333,11 +333,9 @@ sub printAppMakefile ($$$) {
     my $srcs   = shift;
     my $app    = shift;
 
-    my @dirs = $srcs->getDirectories();
-
     print $handle "default: $app\@EXEEXT\@\n\n";
 
-    printAppMakefileStart_in($handle, @dirs);
+    printAppMakefileStart_in($handle, $srcs);
     printAppObjs_in($handle, 'OBJS', $srcs);
 
     # Print the target for the application.
@@ -364,11 +362,9 @@ sub printMultiAppMakefile ($$$) {
     my $srcs   = shift;
     my %apps   = %{$_[0]};
 
-    my @dirs = $srcs->getDirectories();
-
     print $handle "default: all\n\n";
 
-    printAppMakefileStart_in($handle, @dirs);
+    printAppMakefileStart_in($handle, $srcs);
 
     my @cur_srcs = ();
     my @all_apps = sort(keys(%apps));
@@ -427,9 +423,11 @@ MK_END
 # Print the variable assignments and other "leading" information common to all
 # applications to be compiled using this system.
 # -----------------------------------------------------------------------------
-sub printAppMakefileStart_in ($@) {
+sub printAppMakefileStart_in ($$) {
     my $handle = shift;
-    my @dirs   = @_;
+    my $srcs   = shift;
+
+    my @dirs = sort($srcs->getDirectories());
 
     # Construct the complete list of include paths.
     my $inc_line = '@APP_INCLUDES@';
@@ -468,12 +466,22 @@ MK_START
     # Fill in the VPATH info.  We'll take advantage of GNU make syntax where
     # possible.
     if ( $gmake ) {
-        print $handle "vpath \$(srcdir)";
+        my($suffix, $dir);
+        foreach $suffix ( $srcs->getSuffixes() ) {
+            print $handle 'vpath %', "$suffix ";
 
-        foreach ( @dirs ) {
-            if ( "$_" ne "." ) {
-                print $handle " \$(srcdir)/$_";
+            foreach $dir ( @dirs ) {
+                if ( $srcs->hasSuffix("$dir", "$suffix") ) {
+                    if ( "$dir" eq "." ) {
+                        print $handle '$(srcdir) ';
+                    }
+                    else {
+                        print $handle "\$(srcdir)/$dir ";
+                    }
+                }
             }
+
+            print $handle "\n";
         }
     }
     else {
