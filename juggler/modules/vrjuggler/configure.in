@@ -155,6 +155,13 @@ AC_ARG_WITH(oglroot,
             [  --with-oglroot=<PATH>   OpenGL installation directory   [default=/usr]],
             OGLROOT="$withval", OGLROOT='/usr')
 
+dnl # Use the Mesa OpenGL implementation.  That is, link with libMesaGL and
+dnl # libMesaGLU.
+dnl # The default is no.
+AC_ARG_WITH(mesa,
+            [  --with-mesa             Use Mesa OpenGL implementation  [default=no]],
+            _with_mesa="$withval", _with_mesa='no')
+
 dnl # Specify a directory containing a working Perl 5.004 (or newer) binary.
 dnl # There is no default since standard locations are always available.
 AC_ARG_WITH(perl,
@@ -1008,6 +1015,12 @@ dnl # OpenGL API.
 dnl # ------------
 OPENGL_API=''			dnl # 'Y' then we are using OpenGL
 
+if test "x${_with_mesa}" = "xyes" ; then
+    MESA='Mesa'
+else
+    MESA=''
+fi
+
 _LIBOPENGL=''
 _SYSTEM_OPENGL=''
 
@@ -1037,13 +1050,13 @@ if test "x${_enable_gl_api}" = "xyes" ; then
         _vjsave_CC="$CC"
         _vjsave_LIBS="$LIBS"
         CC="$CXX"
-        LIBS="$LIBS -lGL"
+        LIBS="$LIBS -l${MESA}GL"
 
         dnl # Check the cache in case this test was run previously and if not,
         dnl # compile the given code and try to link it against the GL
         dnl # library.  We don't need to test for the existence of GL/gl.h
         dnl # after linking because the test program already includes it.
-        AC_CACHE_CHECK(for glEnable in -lGL, ac_cv_glEnable_available,
+        AC_CACHE_CHECK(for glEnable in -l${MESA}GL, ac_cv_glEnable_available,
             AC_TRY_LINK([#include <GL/gl.h>], [glEnable(GL_CULL_FACE)],
                 ac_cv_glEnable_available='yes',
                 [ LIBS="${_vjsave_LIBS}";
@@ -1072,12 +1085,12 @@ if test "x${_enable_gl_api}" = "xyes" ; then
         dnl # If the OpenGL library was found, add the API object files to the
         dnl # files to be compiled and enable the OpenGL API compile-time
         dnl # option.
-        AC_CHECK_LIB(GL, glEnable, ,
+        AC_CHECK_LIB(${MESA}GL, glEnable, ,
             AC_MSG_ERROR(*** OpenGL API will not be used (GL library not found) ***),
             -lm)
 
-        dnl # This is necessary because AC_CHECK_LIB() adds -lGL to $LIBS.  We
-        dnl # want to do that ourselves later.
+        dnl # This is necessary because AC_CHECK_LIB() adds -l${MESA}GL to
+        dnl # $LIBS.  We want to do that ourselves later.
         LIBS="${_vjsave_LIBS}"
 
         dnl # If we have reached this point, the previous test succeeded.  Now
@@ -1096,12 +1109,12 @@ if test "x${_enable_gl_api}" = "xyes" ; then
         AC_CHECK_HEADER(GL/gl.h, ,
             AC_MSG_ERROR(*** OpenGL API will not be used (header not found) ***))
 
-        AC_CHECK_LIB(GLU, gluNewQuadric, ,
+        AC_CHECK_LIB(${MESA}GLU, gluNewQuadric, ,
             AC_MSG_ERROR(*** OpenGL API will not be used (GLU library not found) ***),
-            -lGL -lm -lX11 -lXext -lXt)
+            -l${MESA}GL -lm -lX11 -lXext -lXt)
 
-        dnl # This is necessary again because AC_CHECK_LIB() adds -lGLU to
-        dnl # $LIBS
+        dnl # This is necessary again because AC_CHECK_LIB() adds -l${MESA}GLU
+        dnl # to $LIBS.
         LIBS="${_vjsave_LIBS}"
 
         AC_CHECK_HEADER(GL/glu.h,
@@ -1120,7 +1133,7 @@ if test "x${_enable_gl_api}" = "xyes" ; then
             dnl # We do not need to add the path to the X libraries here
             dnl # because it was already added to $LDFLAGS above.  The same
             dnl # is true for the directories containing the GL libraries.
-            _LIBOPENGL='-lGLU -lGL -lX11 -lXext'
+            _LIBOPENGL="-l${MESA}GLU -l${MESA}GL -lX11 -lXext"
         else
             _LIBOPENGL='opengl32.lib glu32.lib'
         fi
