@@ -496,7 +496,7 @@ void _Export_GlApp()
 {
     class_< vrj::GlApp, bases< vrj::App >, boost::noncopyable, pyj::vrj_GlApp_Wrapper >("GlApp",
          "vrj.GlApp encapsulates an actual OpenGL application object.\n"
-         "This class defines the class from which OpenGL-based application\n"
+         "This defines the base class from which OpenGL-based application\n"
          "objects should be derived.  The interface given what the kernel\n"
          "and the OpenGL Draw Manager expect in order to interact with the\n"
          "application object.\n\n"
@@ -591,6 +591,7 @@ void _Export_GlApp()
          )
         .def("pipePreDraw", &vrj::GlApp::pipePreDraw,
              &pyj::vrj_GlApp_Wrapper::default_pipePreDraw,
+             "pipePreDraw()\n"
              "Function that is called at the beginning of the drawing of eacn\n"
              "pipe.\n\n"
              "Pre-conditions:\n"

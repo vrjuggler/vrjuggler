@@ -379,7 +379,7 @@ void _Export_App()
 {
     class_< vrj::App, boost::noncopyable, pyj::vrj_App_Wrapper >("App",
          "Encapsulates the actual application.\n\n"
-         "This class defines the base class for all API-specific application\n"
+         "This defines the base class for all API-specific application\n"
          "object types.  The interface given is what the VR Juggler kernel\n"
          "expects in order to communicate with the application.  Most of\n"
          "the application's interface will be defined in the derived\n"
