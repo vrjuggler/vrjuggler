@@ -93,8 +93,6 @@ int IBox::startSampling()
 
    if (mThread == NULL)
    {
-      resetIndexes();      // Reset the indexes for triple buffering
-
       result = mPhysicalIbox.connect(mPortStr, mBaudRate);
       if (result == mPhysicalIbox.SUCCESS)
       {

@@ -99,17 +99,20 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<SimAnalog>* sim_analog = new DeviceConstructor<SimAnalog>;
    DeviceConstructor<SimDigital>* sim_digital = new DeviceConstructor<SimDigital>;
    DeviceConstructor<SimPosition>* sim_position = new DeviceConstructor<SimPosition>;
-   DeviceConstructor<SimGloveGesture>* sim_glove = new DeviceConstructor<SimGloveGesture>;
    //vjDeviceConstructor<SimKeyboardDigital>* sim_keyboard_digital = new DeviceConstructor<SimKeyboardDigital>;
    DeviceConstructor<SimRelativePosition>* sim_relative = new DeviceConstructor<SimRelativePosition>;
+   
+   /*
+   DeviceConstructor<SimGloveGesture>* sim_glove = new DeviceConstructor<SimGloveGesture>;
    DeviceConstructor<SimDigitalGlove>* simpinch_glove = new DeviceConstructor<SimDigitalGlove>;
+   */
 
    if( (NULL == sim_analog)   ||
        (NULL == sim_digital)  ||
        (NULL == sim_position) ||
-       (NULL == sim_glove)    ||
-       (NULL == sim_relative) ||
-       (NULL == simpinch_glove))
+       //(NULL == sim_glove)    ||
+       //(NULL == simpinch_glove) ||
+       (NULL == sim_relative) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
@@ -126,16 +129,16 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<TrackdSensor>* trackd_sensor = new DeviceConstructor<TrackdSensor>;
    DeviceConstructor<TrackdController>* trackd_controller = new DeviceConstructor<TrackdController>;
    DeviceConstructor<IBox>* ibox = new DeviceConstructor<IBox>;
-   DeviceConstructor<PinchGlove>* pinch_glove = new DeviceConstructor<PinchGlove>;
-   DeviceConstructor<CyberGlove>* cyber_glove = new DeviceConstructor<CyberGlove>;
+//   DeviceConstructor<PinchGlove>* pinch_glove = new DeviceConstructor<PinchGlove>;
+//   DeviceConstructor<CyberGlove>* cyber_glove = new DeviceConstructor<CyberGlove>;
    DeviceConstructor<KeyboardXWin>* xwin_key = new DeviceConstructor<KeyboardXWin>;
    jccl::DependencyManager::instance()->registerChecker(new KeyboardDepCheckerXWin());
    DeviceConstructor<ThreeDMouse>* threed_mouse = new DeviceConstructor<ThreeDMouse>;
    if( (NULL == trackd_sensor)      ||
        (NULL == trackd_controller)  ||
        (NULL == ibox)         ||
-       (NULL == pinch_glove)  ||
-       (NULL == cyber_glove)  ||
+//       (NULL == pinch_glove)  ||
+//       (NULL == cyber_glove)  ||
        (NULL == xwin_key)     ||
        (NULL == threed_mouse))
    {

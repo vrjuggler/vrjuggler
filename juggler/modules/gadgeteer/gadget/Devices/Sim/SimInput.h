@@ -106,7 +106,7 @@ protected:
    //! RETURNS: vector of KeyModPairs
    std::vector<KeyModPair> readKeyList(std::vector<jccl::VarValue*>& keyList);
 
-private:
+protected:
    KeyboardInterface     mKeyboard;        //: The keyboard we are getting events from
 };
 
