@@ -6,10 +6,10 @@
       <help>A simulated analog device that gets its input from an event window.</help>
       <parent>analog_device</parent>
       <category>/Devices/Analog</category>
-      <property valuetype="configelementpointer" variable="false" name="event_window_proxy">
+      <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_proxy">
          <help>The proxy to the event window to use for user input.</help>
          <value label="Event Window Proxy"/>
-         <allowed_type>event_window_proxy</allowed_type>
+         <allowed_type>keyboard_mouse_proxy</allowed_type>
       </property>
       <property valuetype="configelement" variable="true" name="increment_keypress">
          <help>The keys used for incrementing the input value.</help>

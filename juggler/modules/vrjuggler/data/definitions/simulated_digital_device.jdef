@@ -6,10 +6,10 @@
       <help>A simulated digital device that gets its input from an event window.</help>
       <parent>digital_device</parent>
       <category>/Devices/Digital</category>
-      <property valuetype="configelementpointer" variable="false" name="event_window_proxy">
+      <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_proxy">
          <help>The proxy to the event window to use for user input.</help>
          <value label="Event Window Proxy"/>
-         <allowed_type>event_window_proxy</allowed_type>
+         <allowed_type>keyboard_mouse_proxy</allowed_type>
       </property>
       <property valuetype="configelement" variable="true" name="key_pair">
          <help>The keys used to trigger multiple digital inputs. The number of the digital inputs corresponds to the index of the key press entry.</help>

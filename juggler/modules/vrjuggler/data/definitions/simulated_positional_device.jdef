@@ -6,10 +6,10 @@
       <help>A simulated positional device. Gets input from an event window proxy.</help>
       <parent>positional_device</parent>
       <category>/Devices/Positional</category>
-      <property valuetype="configelementpointer" variable="false" name="event_window_proxy">
+      <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_proxy">
          <help>The event window to use for user input.</help>
          <value label="Event Window Proxy"/>
-         <allowed_type>event_window_proxy</allowed_type>
+         <allowed_type>keyboard_mouse_proxy</allowed_type>
       </property>
       <property valuetype="configelement" variable="false" name="key_pair">
          <help>Keys for moving and rotating the simulated device.</help>

@@ -144,7 +144,7 @@
    <definition_version version="4" label="Display Window">
       <abstract>false</abstract>
       <help>This is display window. It contains viewports.</help>
-      <parent/>
+      <parent>input_area</parent>
       <category>/Display</category>
       <property valuetype="integer" variable="false" name="origin">
          <help>Window origin (lower left screen is 0,0)</help>
