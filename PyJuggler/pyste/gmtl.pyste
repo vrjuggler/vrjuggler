@@ -258,20 +258,5 @@ Function('gmtl::makeInverse', 'gmtl-functions.h')
 # ======================================================== Generator operations
 
 # General operations ==========================================================
-set_policy(Function('gmtl::operator+=', 'gmtl-functions.h'),
-           return_internal_reference())
-Function('gmtl::operator+', 'gmtl-functions.h')
-set_policy(Function('gmtl::operator-=', 'gmtl-functions.h'),
-           return_internal_reference())
-Function('gmtl::operator-', 'gmtl-functions.h')
-set_policy(Function('gmtl::operator*=', 'gmtl-functions.h'),
-           return_internal_reference())
-Function('gmtl::operator*', 'gmtl-functions.h')
-set_policy(Function('gmtl::operator/=', 'gmtl-functions.h'),
-           return_internal_reference())
-Function('gmtl::operator/', 'gmtl-functions.h')
-Function('gmtl::operator==', 'gmtl-functions.h')
-Function('gmtl::operator!=', 'gmtl-functions.h')
-
 Function('gmtl::isEqual', 'gmtl-functions.h')
 # ========================================================== General operations
