@@ -72,17 +72,7 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
    mTexWidth  = getNearestMultipleOfTwo(mVncIf.getWidth());
    mTexHeight = getNearestMultipleOfTwo(mVncIf.getHeight());
 
-   // --- Update scales and bounds.  should move this to a method for later --- //
-   mDesktopToVncWidthScale  = mVncWidth / mDesktopWidth;
-   mDesktopToVncHeightScale = mVncHeight / mDesktopHeight;
-
-   // Configure the desktop bounding box
-   mDesktopBox.setMin(gmtl::Point3f(0, 0, -0.50f));
-   mDesktopBox.setMax(gmtl::Point3f(mDesktopWidth, mDesktopHeight, 0.50f));
-   mDesktopBox.setEmpty(false);
-
-   // Set the translation point to be the middle of the desktop polygon.
-   //gmtl::setTrans(mDesktopMatrix, gmtl::Vec3f(0.0f, 5.0f, -5.0f));
+   updateDesktopParameters();       // Initial update of desktop parameters
 
    // Request the first update.
    mVncIf.updateFramebuffer(0, 0, mVncIf.getWidth(), mVncIf.getHeight());
@@ -129,6 +119,25 @@ void VNCDesktop::init(const std::string& wandName,
 
    // Allocate a new quadric that will be used to render the sphere.
    mSphereQuad = gluNewQuadric();
+}
+
+/** Updates the desktop parameters
+* @pre mDesktopWidth, mDesktopHeight, and pos matrix are update
+* @post Everything else is updated correspondingly
+*/
+void VNCDesktop::updateDesktopParameters()
+{
+   // --- Update scales and bounds. --- //
+   mDesktopToVncWidthScale  = mVncWidth / mDesktopWidth;
+   mDesktopToVncHeightScale = mVncHeight / mDesktopHeight;
+
+   // Configure the desktop bounding box
+   mDesktopBox.setMin(gmtl::Point3f(0, 0, -0.50f));
+   mDesktopBox.setMax(gmtl::Point3f(mDesktopWidth, mDesktopHeight, 0.50f));
+   mDesktopBox.setEmpty(false);
+
+   // Set the translation point to be the middle of the desktop polygon.
+   //gmtl::setTrans(mDesktopMatrix, gmtl::Vec3f(0.0f, 5.0f, -5.0f));
 }
 
 VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
