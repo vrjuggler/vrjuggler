@@ -438,12 +438,20 @@ bool vjConfigChunkDB::load (const std::string& filename, const std::string& pare
     // paths given in the $VJ_CFG_PATH environment variable.
     if (!in) {
         char cfg_path_env[]  = "VJ_CFG_PATH";
-        std::string cfg_path = getenv(cfg_path_env);
-        bool found           = false;
+        char* cfg_path_tmp;
+        std::string cfg_path;
+        bool found = false;
 
-        vjDEBUG(vjDBG_ALL, vjDBG_STATE_LVL) << "Falling back on VJ_CFG_PATH: "
-                                            << cfg_path << "\n"
-                                            << vjDEBUG_FLUSH;
+        // Read the value in the config path environment variable.  If it is
+        // non-NULL, store the value in cfg_path since std::string's are
+        // easier to use.
+        if ( (cfg_path_tmp = getenv(cfg_path_env)) != NULL ) {
+            cfg_path = cfg_path_tmp;
+
+            vjDEBUG(vjDBG_ALL, vjDBG_STATE_LVL)
+                << "Falling back on VJ_CFG_PATH: " << cfg_path << "\n"
+                << vjDEBUG_FLUSH;
+        }
 
         // If the user set a value for $VJ_CFG_PATH, parse it, baby!
         if ( cfg_path.length() > 0 ) {
