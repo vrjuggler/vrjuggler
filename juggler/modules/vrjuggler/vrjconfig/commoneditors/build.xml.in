@@ -20,6 +20,7 @@
 
    <property name="tweek.classpath" refid="tweek.classpath" />
    <property name="jccl.classpath" refid="jccl.classpath" />
+   <property name="table_layout_dir" value="@JUGGLERROOT_ABS@/external/TableLayout" />
    <property name="jogl.classpath" refid="jogl.classpath" />
    
    <!-- Try to locate JOGL -->
@@ -37,6 +38,7 @@
          <classpath>
             <pathelement path="${tweek.classpath}" />
             <pathelement path="${jccl.classpath}" />
+            <pathelement path="${table_layout_dir}/TableLayout.jar" />
             <pathelement path="${jogl.classpath}" />
          </classpath>
       </javac>
