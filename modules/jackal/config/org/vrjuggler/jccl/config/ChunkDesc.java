@@ -41,9 +41,9 @@ import java.io.*;
 import VjConfig.PropertyDesc;
 
 public class ChunkDesc {
-
+    
     public Vector props;
-    public  String name;
+    public String name;
     public String token;
     public String help;
 
@@ -67,12 +67,30 @@ public class ChunkDesc {
 
 
 
-    public String getName () {
+    public ChunkDesc (ChunkDesc d) {
+        props = new Vector();
+        int n = d.props.size();
+        for (int i = 0; i < n; i++) {
+            props.addElement (d.props.elementAt(i));
+        }
+        name = d.name;
+        token = d.token;
+        help = d.help;
+    }
+
+
+
+    public final String getName () {
 	return name;
     }
 
 
-    public String getToken () {
+    public final void setName (String _name) {
+        name = _name;
+    }
+
+
+    public final String getToken () {
 	return token;
     }
 

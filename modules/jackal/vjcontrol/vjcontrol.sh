@@ -51,10 +51,10 @@ else
         VJ_SHARE_DIR=$VJ_BASE_DIR/#VJ_SHARE_DIR#
     fi
 
-    CLASSPATH=
+#    CLASSPATH=
     ${JDK_HOME}/bin/java -DVJ_BASE_DIR="${VJ_BASE_DIR}"		\
       -DVJ_SHARE_DIR="${VJ_SHARE_DIR}"				\
-      -cp ${VJ_BASE_DIR}/bin/VjControl.jar VjGUI.VjControl $*
+      -cp ${CLASSPATH}:${VJ_BASE_DIR}/bin/VjControl.jar VjControl.Init $*
     status=0
 fi
 

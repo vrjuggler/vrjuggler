@@ -13,7 +13,38 @@ chunk vjcontrol "VjControl Configuration" "Configuration information for the VjC
 chunk vjIncludeFile "Include File" "File that should be loaded along with this one"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   end
-chunk PerfData "Performance Data Display" "Information for displaying data from perfbuffers with a matching name"
+chunk vjc_ChunkPanelComponent "VjControl Chunk Editor Component" ""
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  ClassName String 1 "Class Name" "Complete package/class name"
+  Dependencies Chunk -1 "Dependencies" ""
+  ParentComp Chunk 1 "Parent Component" "Component to which to add this"
+  UsedFor String -1 "Associated Chunks" "ConfigChunks which should be editted with this Editor Frame"
+  end
+chunk vjc_plugpanelcontainer "VjControl ControlUI Panel Container" ""
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  ClassName String 1 "Class Name" "Complete package/class name"
+  Dependencies Chunk -1 "Dependencies" ""
+  ParentComp Chunk 1 "Parent Component" "Component to which to add this"
+  default_panel String 1 "Default Panel" ""
+  end
+chunk vjc_component "VjControl Extension Component" "Registers a VjControl Extension Component class (usually found in contents.config of extension .jars)"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  end
+chunk vjc_plugpanel "VjControl PlugPanel Instance" "Configuration information for a VjControl PlugPanel."
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  ClassName String 1 "Class Name" ""
+  Dependencies Chunk -1 "Dependencies" ""
+  ParentComp Chunk 1 "Parent Component" "Component to which to add this"
+  Category String -1 "Categories" ""
+  Hints String -1 "UI Hints" ""
+  end
+chunk vjc_genericinstance "VjControl Component Instance" ""
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  ClassName String 1 "Class Name" ""
+  Dependencies Chunk -1 "Dependencies" ""
+  ParentComp Chunk 1 "Parent Component" "Component to which to add this"
+  end
+chunk PerfData "Performance Data Display" "Information for displaying data from perfbuffers with a matching name."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   labels String -1 "Labels" "Labels for Perf Buffer phases"
   end

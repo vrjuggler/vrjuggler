@@ -106,6 +106,8 @@ public class ValType {
 
 
     public boolean equals (ValType v) {
+        if (v == null)
+            return false;
 	return (val == v.val);
     }
 
