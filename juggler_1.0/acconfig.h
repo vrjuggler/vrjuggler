@@ -126,6 +126,9 @@
 /* Define to one of the above values to enable performance testing. */
 #undef VJ_PERFORMANCE
 
+/* Definte if DTK is installed. */
+#undef VJ_HAVE_DTK
+
 /* Define to `int' if the socklen_t type is not available.  */
 #undef socklen_t
 

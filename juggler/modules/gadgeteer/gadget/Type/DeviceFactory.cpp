@@ -61,7 +61,7 @@
 #endif
 
 /* PThread Dependant Driver */
-#ifdef VJ_USE_PTHREADS
+#ifdef VJ_HAVE_DTK
 #include <Input/vjDTK/vjDTK.h>
 #endif
 
@@ -112,7 +112,7 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjKeyboardWin32>* key_win32 = new vjDeviceConstructor<vjKeyboardWin32>;
 #endif
 
-#ifdef VJ_USE_PTHREADS
+#ifdef VJ_HAVE_DTK
    vjDeviceConstructor<vjDTK>* dtk_wrapper = new vjDeviceConstructor<vjDTK>;
 #endif
 }

@@ -48,13 +48,13 @@ SUBDIR		= Filter	\
                   Multi		\
                   ibox		\
                   intersense    \
+                  vjDTK		\
                   vjGesture	\
                   vjGlove	\
                   vjInput	\
                   vjKeyboard	\
                   vjPosition	\
-                  vjSim         \
-		  vjDTK
+                  vjSim
 
 # This is a hack until I can figure out a better way to do this automatically
 # in Doozer++.  The problem is that GNU make doesn't offer much in the way
