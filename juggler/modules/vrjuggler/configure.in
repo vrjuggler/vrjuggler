@@ -829,7 +829,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
 
     AC_CHECK_LIB(pthread, pthread_create,
         AC_CHECK_HEADER(pthread.h,
-            [ THREADS='POSIX'; LIBS="$LIBS -lpthread"; ],
+            [ THREADS='POSIX' _pthread_lib='-lpthread'; ],
             AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
 
     dnl # On HP-UX 10.20, the pthreads library is in the cma library rather
@@ -837,7 +837,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
     if test "x$THREADS" = "x" ; then
         AC_CHECK_LIB(cma, pthread_create,
             AC_CHECK_HEADER(pthread.h,
-                [ THREADS='POSIX'; LIBS="$LIBS -lcma"; ],
+                [ THREADS='POSIX' _pthread_lib='-lcma'; ],
                 AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
     fi
 
@@ -845,7 +845,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
     if test "x$THREADS" = "x" ; then
         AC_CHECK_LIB(c_r, pthread_create,
             AC_CHECK_HEADER(pthread.h,
-                [ THREADS='POSIX'; LIBS="$LIBS -lc_r" ],
+                [ THREADS='POSIX' _pthread_lib='-lc_r' ],
                 AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
     fi
 
@@ -855,12 +855,17 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
     dnl # is in the library.  If it is, Draft 10 is in use.  Otherwise, assume
     dnl # it is Draft 4.
     if test "$THREADS" = "POSIX" ; then
+        _vjsave_LIBS="$LIBS"
+        LIBS="$LIBS ${_pthread_lib}"
+
         AC_CACHE_CHECK(POSIX threads draft revision,
             ac_cv_pthread_version,
-            AC_TRY_LINK([ #include <pthread.h> ],
+            AC_TRY_LINK([#include <pthread.h> ],
                 [ pthread_t t; pthread_kill(t, 1); ],
                 ac_cv_pthread_version='Draft 10',
                 ac_cv_pthread_version='Draft 4'))
+
+        LIBS="${_vjsave_LIBS}"
 
         if test "$ac_cv_pthread_version" = "Draft 10" ; then
             AC_DEFINE(_PTHREADS_DRAFT_10,)
@@ -936,17 +941,30 @@ if test "$THREADS" = "POSIX" ; then
     SHMEM_SYS='POSIX'
     THREAD_SYS='POSIX'
 
+    _vjsave_CFLAGS="$CFLAGS"
+    _vjsave_LIBS="$LIBS"
+
+    dnl # This step and the following addition to $LIBS are necessary for
+    dnl # properly testing for working POSIX semaphores.
+    if test "x$ac_cv_CC_accepts_pthread" = "xyes" ; then
+        CFLAGS="$CFLAGS -pthread"
+    fi
+
+    LIBS="$LIBS ${_pthread_lib}"
+
     dnl # If we have sem_init(3), we can use POSIX semaphores.  If not, exit
     dnl # with a fatal error.  If we are using POSIX threads, we need to have
     dnl # working POSIX semaphores too.
     AC_CHECK_FUNC(sem_init,
         [ SEMAPHORE_SYS='POSIX' ; AC_DEFINE(VJ_POSIX_SEMAPHORES,) ],
         AC_CHECK_LIB(posix4, sem_init,
-            [ LIBS="$LIBS -lposix4"
-              SEMAPHORE_SYS='POSIX' ;
+            [ _sem_lib='-lposix4' SEMAPHORE_SYS='POSIX' ;
               AC_DEFINE(VJ_POSIX_SEMAPHORES,)
             ],
             AC_MSG_ERROR(*** POSIX semaphores are required for POSIX threads ***)))
+
+    CFLAGS="${_vjsave_CFLAGS}"
+    LIBS="${_vjsave_LIBS}"
 elif test "$THREADS" = "WIN32" ; then
     dnl # Set to Win32 threading, synchronization and shared memory.
     SEMPANORE_SYS='WIN32'
@@ -1185,9 +1203,11 @@ AC_CHECK_FUNCS(gettimeofday sleep socket strcasecmp strdup strerror	\
 
 dnl # Ensure that we have sched_yield(3).  On Solaris, sched_yield(3) and its
 dnl # synchronization friends are in libposix4.
+_vjsave_LIBS="$LIBS"
 AC_CHECK_FUNC(sched_yield, AC_DEFINE(HAVE_SCHED_YIELD),
               AC_CHECK_LIB(posix4, sched_yield,
-                  [ LIBS="$LIBS -lposix4" ; AC_DEFINE(HAVE_SCHED_YIELD) ]))
+                  [ _sched_lib='-lposix4' ; AC_DEFINE(HAVE_SCHED_YIELD) ]))
+LIBS="${_vjsave_LIBS}"
 
 dnl # In a Win32 environment with MS Visual C++ as the compiler, these math
 dnl # functions are not in any special library.  Test for them normally.
@@ -1281,6 +1301,24 @@ fi
 if test "$ac_cv_CC_accepts_pthread" = "yes" ; then
     CFLAGS="$CFLAGS -pthread"
     CXXFLAGS="$CXXFLAGS -pthread"
+fi
+
+dnl # If we are using pthreads, add the library containing the pthread calls to
+dnl # $LIBS.  This must be done here because the $TEST_VJ_LIBS* stuff below
+dnl # uses $LIBS.
+if test "x$THREADS" = "xPOSIX" -a "x${_pthread_lib}" != "x" ; then
+    LIBS="$LIBS ${_pthread_lib}"
+fi
+
+dnl # Do the same if we are using POSIX semaphores.
+if test "x$SEMAPHORE_SYS" = "xPOSIX" -a "x${_sem_lib}" != "x" ; then
+    LIBS="$LIBS ${_sem_lib}"
+fi
+
+dnl # And do the same again if sched_yield(3) is in a special library (that
+dnl # is not the same as ${_sem_lib}).
+if test "x${_sched_lib}" = "x" -a "x${_sem_lib}" != "x${_sched_lib}" ; then
+    LIBS="$LIBS ${_sched_lib}"
 fi
 
 DEPENDFLAGS=""
