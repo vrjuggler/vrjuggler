@@ -18,6 +18,8 @@
 //  given is the interface that the System expects in order to
 //  interface with the application.
 //
+// See also: vjApp
+//
 // @author Allen Bierbaum
 //  Date: 1-12-98
 //-------------------------------------------------------------
@@ -30,11 +32,14 @@ public:
    }
 
    //: Function to draw the scene
+   // Override this function with the user draw routine
    //!PRE: OpenGL state has correct transformation and buffer selected
    //!POST: The current scene has been drawn
    virtual void draw() = 0;
 
    //: Function that is called immedately after a new context is created
+   //  Use this function to create context specific data structures.
+   //  i.e. Display lists, Texture objects, etc.
    //! PRE: The ogl context has been set to the new context
    //! POST: Application has completed in initialization the user wishes
    virtual void contextInit()
@@ -53,8 +58,8 @@ public:
    //: Function that is called at the beginning of the drawing of each pipe
    //!PRE: The library is preparing to render all windows on a given pipe
    //!POST: Any pre-pipe user calls have been done
-   //!NOTE: Currently the OGL context is not set when this function is called
-   //!NOTE: This is a TEST function.  DO NOT USE!!!
+   //!NOTE: Currently the OGL context is not set when this function is called <br>
+   //+      This is a TEST function.  DO NOT USE!!!
    virtual void pipePreDraw()
    {;}
 

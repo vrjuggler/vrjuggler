@@ -25,8 +25,11 @@ typedef struct {
 //  vjInput in the following functions: StartSampling,StopSampling,Sample,
 //  and UpdateData.
 //
-//  vjPosition adds one new pure virtual function, GetAnalogData for retreiving
-//  the digital data, similar to the addition for vjAnalog and vjDigital.
+//  vjPosition objects have the ability to convert from the tracker's coord system
+//  to the Juggler coordinate system.
+//
+//  vjPosition adds one new pure virtual function, GetPosData for retreiving
+//  the positional data, similar to the addition for vjAnalog and vjDigital.
 //-----------------------------------------------------------------------------------
 class vjPosition : virtual public vjInput {
     public:
@@ -49,22 +52,20 @@ class vjPosition : virtual public vjInput {
 	virtual void UpdateData() = 0;
 	//@}
 
-	/** @name vjInput virtual functions
-	 *
-	 *  virtual functions that inherited members should
-	 *  override but are not required to
-	 */
-	//@{
+	//: Get the device name
 	char* GetDeviceName() { return "vjPosition"; }
-	//@}
 
 	/* New pure virtual functions */
 	//: Get Position data
 	virtual vjMatrix* GetPosData(int devNum = 0) = 0;
 
 public:
+   /* XXX: Some of this stuff should be removed */
+   /* XXX: theData is a ptr because flock needs an infinite number */
+   /* XXX: We should change this so that theData is defined in each class and not here */
 	vjMatrix* theData;   // Ptr to matrix that holds the actually position data
-	vjMatrix xformMat;   // The total xform matrix.  T*R
+	
+   vjMatrix xformMat;   // The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system
    vjMatrix rotMat;     // Only the rotation matrix
 };
 
