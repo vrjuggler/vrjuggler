@@ -243,8 +243,13 @@ void collideApp::initGLState()
 }
 
 // Member function to detect ball collision
-template<class DATA_TYPE> void collideApp::testBallCollision(Sphere<DATA_TYPE>& s1, Vec<DATA_TYPE, 3>& v1,
-Sphere<DATA_TYPE>& s2, Vec<DATA_TYPE, 3>& v2, DATA_TYPE delta, DATA_TYPE first, DATA_TYPE second, bool& hit)
+template<class DATA_TYPE>
+void collideApp::testBallCollision(Sphere<DATA_TYPE>& s1,
+                                   Vec<DATA_TYPE, 3>& v1,
+                                   Sphere<DATA_TYPE>& s2,
+                                   Vec<DATA_TYPE, 3>& v2, DATA_TYPE delta,
+                                   DATA_TYPE first, DATA_TYPE second,
+                                   bool& hit)
 {
    VPR_PROFILE("testBallCollsion");
    bool collide_balls = false;
@@ -274,7 +279,11 @@ Sphere<DATA_TYPE>& s2, Vec<DATA_TYPE, 3>& v2, DATA_TYPE delta, DATA_TYPE first, 
 }
 
 // Member function to test plane collision
-template<class DATA_TYPE> void collideApp::testPlaneCollision(Plane<DATA_TYPE>& plane, Sphere<DATA_TYPE>& sp, Vec<DATA_TYPE, 3>& vel, DATA_TYPE delta, bool& hit) 
+template<class DATA_TYPE>
+void collideApp::testPlaneCollision(Plane<DATA_TYPE>& plane,
+                                    Sphere<DATA_TYPE>& sp,
+                                    Vec<DATA_TYPE, 3>& vel, DATA_TYPE delta,
+                                    bool& hit) 
 {
    VPR_PROFILE("testPlaneCollision");
    float dist = distance(plane, sp.getCenter());
@@ -391,7 +400,8 @@ void collideApp::preFrame()
          {
             if ((*i)->hCheck == false) // can take this out for more collisions
             {
-               testBallCollision((*i)->mSphere, (*i)->mVel, (*j)->mSphere, (*j)->mVel, delta, hit1, hit2, (*i)->hCheck);
+               testBallCollision((*i)->mSphere, (*i)->mVel, (*j)->mSphere,
+                                 (*j)->mVel, delta, hit1, hit2, (*i)->hCheck);
             }
          }
       }
