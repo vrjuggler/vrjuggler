@@ -129,14 +129,15 @@ public:
    }
 
    /**
-    * Gets the current out flag mask after a call to <code>select</code>.
-    * The value 
+    * Gets the current "out flag" mask after a call to <code>select</code>.
+    * The value returned will be the bitwise OR of the "out flags".  These
+    * state which of the operations named "in flags" were found to be ready.
     *
     * @pre <code>select</code> has been called.
     *
     * @param handle The handle whose "out" event flags will be returned.
     *
-    * @return A bitmask value representing the "in flags" of
+    * @return A bitmask value representing the "out flags" of
     *         <code>handle</code>.  These flags state which requested events
     *         were detected for <code>handle</code>.
     */
