@@ -70,8 +70,12 @@ namespace vpr
    {
    public:
 
+      ///Convenience typedef; for use by the Performance Monitor Plugin
+      typedef std::map<std::string, float> SampleTimeMap;
+      
       /**
-      * Steps one level deeper into the tree, if a child already exists with the specified name
+      * Steps one level deeper into the tree, if a child already exists with 
+      * the specified name
       * then it accumulates the profiling; otherwise a new child node is added to the profile tree.
       * INPUT: name - name of this profiling record
       * WARNINGS:
@@ -155,15 +159,15 @@ namespace vpr
             return names_list;
       }
 
-      static void getNamesRecursively( std::vector<std::string>& nameList, ProfileNode* node )
+      
+      static SampleTimeMap getValueMap( )
       {
-         if ( node == NULL)
-         { return; }
-
-         getNamesRecursively(nameList, node->getSibling());
-         nameList.push_back(node->getName());
-         getNamesRecursively(nameList, node->getChild());
-       }
+         SampleTimeMap sample_time_map;
+         mTreeLock.acquire();
+            getValueMapRecursively(sample_time_map, &mRoot);
+         mTreeLock.release();
+         return sample_time_map;
+      }
 
        static float getNamedNodeSample( const char * nodeName )
        {
@@ -184,7 +188,7 @@ namespace vpr
       /**
        * @post Iterator has been deleted
        */
-      static   void                 releaseIterator( ProfileIterator* iterator )
+      static  void  releaseIterator( ProfileIterator* iterator )
       {
          delete iterator;
       }
@@ -197,6 +201,31 @@ namespace vpr
       static   ProfileNode*         mCurrentNode;
       static   int                  mFrameCounter;
       static   vpr::Interval*       mResetTime;
+
+      /** Private Member Functions */
+      static void getNamesRecursively( std::vector<std::string>& nameList, 
+                                       ProfileNode* node )
+      {
+         if ( NULL == node )
+         { return; }
+
+         getNamesRecursively(nameList, node->getSibling());
+         nameList.push_back(node->getName());
+         getNamesRecursively(nameList, node->getChild());
+       }
+
+      static void getValueMapRecursively( SampleTimeMap& sampleTimeMap,
+                                          ProfileNode* node )
+      {
+         if ( NULL == node )
+         { return; }
+
+         getValueMapRecursively(sampleTimeMap, node->getSibling());
+         float last_sample = node->getNodeHistoryRange().first->msecf();
+         std::string name = node->getName();
+         sampleTimeMap[name] = last_sample;
+         getValueMapRecursively(sampleTimeMap, node->getChild());
+      }
    };
 
 
