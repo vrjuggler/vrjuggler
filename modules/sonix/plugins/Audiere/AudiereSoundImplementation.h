@@ -44,6 +44,8 @@
 #ifndef SNXAUDIERESOUNDIMPLEMENTATION_H
 #define SNXAUDIERESOUNDIMPLEMENTATION_H
 
+#include <snx/PluginConfig.h>
+
 #include <map>
 #include <string>
 #include <vector>
@@ -56,9 +58,9 @@
 
 #include <audiere.h>
 
-#include "snx/SoundImplementation.h"
-#include "snx/SoundInfo.h"
-#include "snx/SoundAPIInfo.h"
+#include <snx/SoundImplementation.h>
+#include <snx/SoundInfo.h>
+#include <snx/SoundAPIInfo.h>
 
 
 using namespace audiere;

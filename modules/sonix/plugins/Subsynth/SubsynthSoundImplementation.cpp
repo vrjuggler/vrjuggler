@@ -39,6 +39,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <snx/PluginConfig.h>
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -51,12 +53,12 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
 
-#include "snx/xdl.h"
-#include "snx/FileIO.h"
-#include "snx/SoundImplementation.h"
-#include "snx/SoundInfo.h"
-#include "snx/SoundFactory.h"
-#include "snx/plugins/Subsynth/SubsynthSoundImplementation.h"
+#include <snx/xdl.h>
+#include <snx/FileIO.h>
+#include <snx/SoundImplementation.h>
+#include <snx/SoundInfo.h>
+#include <snx/SoundFactory.h>
+#include "SubsynthSoundImplementation.h"
 
 /////////////////////////
 // plugin API:

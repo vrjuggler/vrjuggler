@@ -1,18 +1,3 @@
-# ***************** <SNX heading BEGIN do not edit this line> *****************
-#
-# sonix
-#
-# Original Authors:
-#   Kevin Meinert
-#
-# -----------------------------------------------------------------
-# File:          $RCSfile$
-# Date modified: $Date$
-# Version:       $Revision$
-# -----------------------------------------------------------------
-#
-# ****************** <SNX heading END do not edit this line> ******************
-
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
 # VR Juggler is (C) Copyright 1998-2003 by Iowa State University
@@ -37,42 +22,50 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
 # *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for sonix/plugins/AudioWorks.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
 default: all
 
+# Include common definitions.
 include @topdir@/make.defs.mk
 
-SRCS = AudioWorksSoundImplementation.cpp
+PLUGIN_NAME=	AudioWorks_snd
 
-# the include path directory to install to ...
-includedir	= @includedir@/snx
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+EXTRA_INCLUDES+=	@AUDIOWORKS_INCLUDES@
+INSTALL=		@INSTALL@
+INSTALL_FILES=	
+POST_DSO_PLUGIN_DEPS=	@AUDIOWORKS_LDFLAGS@ @LIBAUDIOWORKS@
+SUBOBJDIR=		$(PLUGIN_NAME)
 
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
+HAVE_AUDIOWORKS=	@HAVE_AUDIOWORKS@
 
-EXTRA_SRCS_PATH = $(srcdir)/plugins
-EXTRA_DEFS	+= -DNO_SELF_REGISTER
-
-AW_INCLUDES	= @AUDIOWORKS_INCLUDES@
-EXTRA_INCLUDES	+= $(AW_INCLUDES)
-
-ifeq ($(OS_TYPE), Win32)
-   EXTRA_DEFS+=	-DWIN32
+ifeq ($(HAVE_AUDIOWORKS), Y)
+C_AFTERBUILD=		plugin-dso
+SRCS=			AudioWorksSoundImplementation.cpp
 endif
 
-##################################################################
-
-# lib specific: (where to dump the .o files)
-SUBOBJDIR       = $(AUDIOWORKS_LIBRARY)
-
 include $(MKPATH)/dpp.obj.mk
+include @topdir@/plugin.defs.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
