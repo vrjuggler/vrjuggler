@@ -25,6 +25,8 @@
 
 #include <TestCases/Socket/NonBlockingSocketsTest.h>
 
+#include <boost/concept_check.hpp>
+
 
 namespace vprTest
 {
@@ -153,6 +155,8 @@ void NonBlockingSocketTest::testNonBlockingTransfer ()
 
 void NonBlockingSocketTest::testNonBlockingTransfer_acceptor (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::ReturnStatus status;
    vpr::Uint32 bytes_written;
    vpr::SocketAcceptor acceptor;
@@ -218,6 +222,8 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor (void* arg)
 
 void NonBlockingSocketTest::testNonBlockingTransfer_connector (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::ReturnStatus status;
    vpr::InetAddr remote_addr;
    vpr::SocketConnector connector;
@@ -434,6 +440,8 @@ void NonBlockingSocketTest::testSendUDP ()
 
 void NonBlockingSocketTest::testSendUDP_receiver (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::ReturnStatus status;
    vpr::InetAddr my_addr, from_addr;
    my_addr.setPort(mReceiverPort);
@@ -482,6 +490,8 @@ void NonBlockingSocketTest::testSendUDP_receiver (void* arg)
 
 void NonBlockingSocketTest::testSendUDP_sender (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::ReturnStatus status;
    vpr::InetAddr remote_addr;
    vpr::SocketDatagram send_sock;

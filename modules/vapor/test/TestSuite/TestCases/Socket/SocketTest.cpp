@@ -18,12 +18,16 @@
 
 #include <TestCases/Socket/SocketTest.h>
 
+#include <boost/concept_check.hpp>
+
 namespace vprTest
 {
 CPPUNIT_TEST_SUITE_REGISTRATION( SocketTest );
 
 void SocketTest::testOpenCloseOpen_connector( void* data )
 {
+   boost::ignore_unused_variable_warning(data);
+
    int num_of_times_to_test = 9;
    vpr::Uint16 port = 6970;
    //const int backlog = 5;
@@ -59,6 +63,8 @@ void SocketTest::testOpenCloseOpen_connector( void* data )
 
 void SocketTest::testOpenCloseOpen_acceptor( void* data )
 {
+   boost::ignore_unused_variable_warning(data);
+
    int num_of_times_to_test = 3;
    vpr::Uint16 port = 6970;
    bool result = 0;
@@ -149,6 +155,8 @@ void SocketTest::testOpenCloseOpen ()
 
 void SocketTest::testSendRecv_connector( void* data )
 {
+  boost::ignore_unused_variable_warning(data);
+
    int num_of_times_to_test = 10;
    vpr::Uint16 port = 6940;
    //const int backlog = 5;
@@ -200,6 +208,8 @@ void SocketTest::testSendRecv_connector( void* data )
 
 void SocketTest::testSendRecv_acceptor( void* data )
 {
+   boost::ignore_unused_variable_warning(data);
+
    int num_of_times_to_test = 10;
    vpr::Uint16 port = 6940;
    bool result = 0;
@@ -463,6 +473,8 @@ void SocketTest::reuseAddrSimpleTest()
 
 void SocketTest::reuseAddrTest_connector( void* data )
 {
+   boost::ignore_unused_variable_warning(data);
+
    vpr::Uint16 port = 6667;
    bool result = 0;
    vpr::InetAddr remote_addr;
@@ -486,6 +498,8 @@ void SocketTest::reuseAddrTest_connector( void* data )
 
 void SocketTest::reuseAddrTest_acceptor( void* data )
 {
+   boost::ignore_unused_variable_warning(data);
+
    vpr::InetAddr addr1;
 
    assertTestThread(addr1.setAddress( "localhost", 6667 ).success());
@@ -549,6 +563,8 @@ void SocketTest::reuseAddrTest()
 
 void SocketTest::testBlocking_connector(void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::Uint16 port = 7001;
    vpr::InetAddr remote_addr;
 
@@ -618,6 +634,8 @@ void SocketTest::testBlocking_connector(void* arg)
 
 void SocketTest::testBlocking_acceptor(void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    int num_of_times_to_test = 20;
    vpr::Uint16 port = 7001;
    bool  result = 0;
@@ -778,6 +796,8 @@ void SocketTest::testTcpConnection()
 
 void SocketTest::serverFunc(void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::Uint16 port=15432;
    vpr::Uint16 num=0;
 
@@ -814,6 +834,8 @@ void SocketTest::serverFunc(void* arg)
 
 void SocketTest::clientFunc(void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::SocketStream*   sock;
    vpr::InetAddr remote_addr;
 
@@ -947,6 +969,8 @@ void SocketTest::testIsConnected ()
 
 void SocketTest::testIsConnected_acceptor (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::ReturnStatus status;
    vpr::SocketAcceptor acceptor;
    vpr::SocketStream client_sock;
@@ -1021,6 +1045,8 @@ void SocketTest::testIsConnected_acceptor (void* arg)
 
 void SocketTest::testIsConnected_connector (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::ReturnStatus status;
    vpr::InetAddr remote_addr;
    vpr::SocketConnector connector;
