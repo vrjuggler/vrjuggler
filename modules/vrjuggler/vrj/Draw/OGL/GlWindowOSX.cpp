@@ -66,8 +66,8 @@ void GlWindowOSX::swapBuffers() {
         aglSwapBuffers (aglContext);
 
         /* This code is supposed to change the size of the window
-        ** it works but it is a wast to check to size if the window is a
-        ** different size every frame.  If we want to implement this feature
+        ** it works but it is a waste to check to see if the size of the window is a
+        ** different every frame.  If we want to implement this feature
         ** we should capture the window resize event and change based on that
         Rect rectPort;
         if(gpWindow)
@@ -103,6 +103,17 @@ int GlWindowOSX::open() {
     //I'll need to check to see how this works with multiple monitors
     CGRect bounds;
     bounds = CGDisplayBounds(kCGDirectMainDisplay);
+    
+    // If the size of the window and the size of the screen are the same
+    // switch to fullscreen mode
+    // Note: this is not true fullscreen the menu bar and dock are just hiden
+    // this will not give you the speed increases you could get if you gave GL
+    // full control of the screen
+    if( bounds.size.height == window_height && bounds.size.width == window_width)
+    {
+        vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "FULLSCREEN Mode enabled" << std::endl << vprDEBUG_FLUSH;
+        HideMenuBar ();
+    }
 
 
     //set the window size and location with the height adjusted
