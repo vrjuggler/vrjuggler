@@ -91,7 +91,8 @@ bool ConfigIO::readConfigChunkDB (std::string file_name, ConfigChunkDB& db) {
 
     // check if it's the obsolete syntax or not
     char buf[50];
-    readString (in, buf, 50, false);
+
+    in.get(buf,50);
     if (buf[0] != '<' ) {
         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) 
             << clrOutNORM(clrRED, "ERROR:") 
@@ -174,7 +175,7 @@ bool ConfigIO::readChunkDescDB (std::string file_name, ChunkDescDB& db) {
 
     // check if it's the obsolete syntax or not
     char buf[50];
-    readString (in, buf, 50, false);
+    in.get(buf,50);
     if (buf[0] != '<' ) {
         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) 
             << clrOutNORM(clrRED, "ERROR:") 
