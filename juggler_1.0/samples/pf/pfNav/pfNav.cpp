@@ -57,6 +57,7 @@
 #include <planeCollidor.h>
 #include <pfCollidor.h>
 
+char* filename = NULL;
 
 
 // Declare my application class
@@ -122,36 +123,37 @@ public:
 
             /// Load SIMPLE geometry
       ///*
-      pfFilePath("/usr/share/Performer/data");
+      pfFilePath(".:/usr/share/Performer/data");
       //pfNode* obj = new pfGroup;
-      pfNode* obj = pfdLoadFile("/usr/share/Performer/data/klingon.flt");
-      //rootNode->addChild(naver);
+      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/klingon.flt");
+      pfNode* obj = pfdLoadFile( filename );
+      rootNode->addChild(naver);
 
       pfDCS* world_model = new pfDCS;    // The node with the world under it
-      rootNode->addChild(world_model);
+      //rootNode->addChild(world_model);
       world_model->addChild(obj);
       world_model->setScale(0.25f);
       world_model->setTrans(0.0,5.0,-5.0);
 
       vjMatrix initial_pos;
       initial_pos.setTrans(0,0,0);
-      //naver->getNavigator()->setCurPos(initial_pos);
-      //naver->addChild(world_model);
+      naver->getNavigator()->setCurPos(initial_pos);
+      naver->addChild(world_model);
       //*/
 
       // Load the TOWN
-      /*
-      pfFilePath("/usr/share/Performer/data:/usr/share/Performer/data/town");
-      pfNode* obj = pfdLoadFile("/usr/share/Performer/data/town/town_ogl_pfi.pfb");
-      pfDCS* world_model = new pfDCS;    // The node with the world under it
-      rootNode->addChild(naver);
+      
+      //pfFilePath("/usr/share/Performer/data:/usr/share/Performer/data/town");
+      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/town/town_ogl_pfi.pfb");
+      //pfDCS* world_model = new pfDCS;    // The node with the world under it
+      //rootNode->addChild(naver);
 
-      world_model->addChild(obj);
-      world_model->setScale(3.0f);
-      vjMatrix initial_pos;
-      initial_pos.setTrans(7500,50,-7500);
-      naver->getNavigator()->setCurPos(initial_pos);
-      naver->addChild(world_model);
+      //world_model->addChild(obj);
+      //world_model->setScale(3.0f);
+      //vjMatrix initial_pos;
+      //initial_pos.setTrans(7500,50,-7500);
+      //naver->getNavigator()->setCurPos(initial_pos);
+      //naver->addChild(world_model);
 
       //planeCollidor* collide = new planeCollidor;
       pfVolumeCollidor* correction_collide = new pfVolumeCollidor(world_model);
@@ -159,10 +161,10 @@ public:
 
       naver->getNavigator()->setGravityCollidor(ride_collide);
       naver->getNavigator()->setCorrectingCollidor(correction_collide);
-      */
+      
 
-      pfuTravPrintNodes(rootNode, "nodes.out");
-      pfdStoreFile(rootNode, "nodes.pfb");
+      //pfuTravPrintNodes(rootNode, "nodes.out");
+      //pfdStoreFile(rootNode, "nodes.pfb");
    }
 
    /// Return the current scene graph
@@ -232,12 +234,27 @@ public:
 
 float transSpeed = 0.1;
 
+
 int main(int argc, char* argv[])
 {
     vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
     myApp* application = new myApp(kernel);  // Delcare an instance of my application
 
-    for ( int i = 1; i < argc; i++ ) {
+    if (argc < 2)
+    {
+       cout<<"\n\n[ERROR!!!] you must supply a .flt filename\n\n"<<flush;
+       return 0;
+    }    
+    
+    filename = argv[1];
+    
+    if (argc <= 2)
+    {
+       cout<<"\n\n[ERROR!!!] you must supply config files...\n\n"<<flush;
+       return 0;
+    }    
+    
+    for ( int i = 2; i < argc; i++ ) {
         kernel->loadConfigFile(argv[i]);
     }
 
