@@ -81,7 +81,9 @@ case $SUBSYSTEM in
         ;;
 esac
 
-# 
+# This enables the use of so-called "NSPR threads".  By default, NSPR is not
+# compiled to use NSPR threads, so we do not want to use them by default
+# either.
 DPP_ENABLE_NSPR_THREADS(no)
 
 # -------------------------------------------- #
