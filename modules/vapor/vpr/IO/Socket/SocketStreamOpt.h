@@ -60,7 +60,7 @@ public:
      * Default destructor.  This does nothing and exists only so that we can
      * build a DLL on Win32.
      */
-    ~SocketStreamOpt(void);
+    virtual ~SocketStreamOpt(void);
 
     /**
      *
