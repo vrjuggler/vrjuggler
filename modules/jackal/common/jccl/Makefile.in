@@ -43,7 +43,7 @@ include @topdir@/make.defs.mk
 DIRPRFX=	common/jccl/
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR=		Util XMLUtil
+SUBDIR=		Util
 
 $(RECTARGET): recursive
 
