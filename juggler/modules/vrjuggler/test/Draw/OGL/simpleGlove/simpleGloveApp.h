@@ -42,9 +42,9 @@
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Math/Vec3.h>
 
-#include <vrj/Input/Type/PosInterface.h>
-#include <vrj/Input/Type/GloveInterface.h>
-#include <vrj/Input/Type/GestureInterface.h>
+#include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/GloveInterface.h>
+#include <gadget/Type/GestureInterface.h>
 
 
 //----------------------------------------------------
@@ -164,8 +164,8 @@ protected:
 
 public:
 
-   vrj::GestureInterface  mGesture;
-   vrj::GloveInterface    mGlove;      // the glove
+   gadget::GestureInterface  mGesture;
+   gadget::GloveInterface    mGlove;      // the glove
 };
 
 

@@ -35,6 +35,7 @@
 #include <math.h>
 
 #include <vrj/Math/Matrix.h>
+#include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 

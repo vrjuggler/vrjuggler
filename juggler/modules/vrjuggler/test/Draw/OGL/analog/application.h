@@ -51,8 +51,8 @@
 #include <vrj/Draw/OGL/GlContextData.h> // for OpenGL resource IDs
 #include <vrj/Util/Timer.h> // so that the cube always spins the same speed
 
-// VR Juggler Input devices:
-#include <vrj/Input/Type/AnalogInterface.h>
+// Gadgeteer Input devices:
+#include <gadget/Type/AnalogInterface.h>
 
 // texture application objects
 #include "renderGeometry.h"  // render interleaved vertex array data
@@ -112,7 +112,7 @@ private:
    vrj::GlContextData<ResourceID> mCubeDisplayList;
 
    // interface to analog input.
-   vrj::AnalogInterface           mAnalog0;
+   gadget::AnalogInterface           mAnalog0;
 
    // timer
    vrj::Timer timer;

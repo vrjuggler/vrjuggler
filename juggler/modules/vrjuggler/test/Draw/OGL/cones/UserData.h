@@ -36,8 +36,8 @@
 #include <string>
 
 #include <vrj/Math/Matrix.h>
-#include <vrj/Input/Type/PosInterface.h>
-#include <vrj/Input/Type/DigitalInterface.h>
+#include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/DigitalInterface.h>
 
 #include <vrj/Kernel/User.h>
 
@@ -62,10 +62,10 @@ public:
     void updateNavigation(void);
 
     // Devices to use for the given user.
-    vrj::PosInterface       mWand;                  // the Wand
-    vrj::DigitalInterface   mIncVelocityButton;     // Button for velocity
-    vrj::DigitalInterface   mDecVelocityButton;
-    vrj::DigitalInterface   mStopButton;            // Button to stop
+    gadget::PositionInterface  mWand;                  // the Wand
+    gadget::DigitalInterface   mIncVelocityButton;     // Button for velocity
+    gadget::DigitalInterface   mDecVelocityButton;
+    gadget::DigitalInterface   mStopButton;            // Button to stop
 
       // Navigation info for the user
     float              mCurVelocity; // The current velocity
