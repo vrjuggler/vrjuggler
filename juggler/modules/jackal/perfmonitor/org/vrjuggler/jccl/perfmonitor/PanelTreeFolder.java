@@ -54,7 +54,7 @@ public class PanelTreeFolder extends JPanel implements ActionListener {
 	mNorth.setLayout (new BoxLayout(mNorth, BoxLayout.X_AXIS));
         add (mNorth, BorderLayout.NORTH);
 
-        mExpandButton = new JButton ("Expand");
+        mExpandButton = new JButton ("Hide");
         mNorth.add (mExpandButton);
         mNorth.add (top_component);
 
@@ -81,11 +81,13 @@ public class PanelTreeFolder extends JPanel implements ActionListener {
     public void actionPerformed (ActionEvent e) {
 	if (e.getSource() == mExpandButton) {
 	    if (mExpanded) {
+                mExpandButton.setText ("Show");
 		mExpanded = false;
 		remove (mCenter);
                 revalidate();
 	    }
 	    else {
+                mExpandButton.setText ("Hide");
 		mExpanded = true;
 		add (mCenter, BorderLayout.CENTER);
 	    }
