@@ -130,6 +130,11 @@ public class ControlPanelToolbar
       toolbar.add(expandBtn, null);
    }
 
+   public void setRemoteReconfigEnabled(boolean enabled)
+   {
+      rtrcBtn.setEnabled(enabled);
+   }
+
    public boolean doSave()
    {
       boolean saved = super.doSave();

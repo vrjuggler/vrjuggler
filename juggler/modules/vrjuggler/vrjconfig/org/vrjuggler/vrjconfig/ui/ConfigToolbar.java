@@ -162,6 +162,11 @@ public class ConfigToolbar
       return fileChooser.getCurrentDirectory();
    }
 
+   public void setRemoteReconfigEnabled(boolean enabled)
+   {
+      RTRCBtn.setEnabled(enabled);
+   }
+
    public void addActionListener(ActionListener listener)
    {
       listenerList.add(ActionListener.class, listener);

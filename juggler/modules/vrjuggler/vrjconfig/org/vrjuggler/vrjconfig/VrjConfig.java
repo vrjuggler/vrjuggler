@@ -50,6 +50,8 @@ import org.vrjuggler.tweek.beans.HelpProvider;
 import org.vrjuggler.tweek.beans.UndoHandler;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.event.*;
+import org.vrjuggler.tweek.net.CommunicationEvent;
+import org.vrjuggler.tweek.net.CommunicationListener;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
@@ -63,10 +65,12 @@ public class VrjConfig
             , HelpProvider
             , ClipboardUser
             , UndoHandler
+            , CommunicationListener
 {
    public VrjConfig()
    {
       mToolbar = new ConfigToolbar(this);
+      mToolbar.setRemoteReconfigEnabled(false);
 
       // Init the GUI
       try
@@ -255,6 +259,18 @@ public class VrjConfig
       }
    }
 
+   public void connectionOpened(CommunicationEvent e)
+   {
+      mOrbList.add(e.getCorbaService());
+      mToolbar.setRemoteReconfigEnabled(true);
+   }
+
+   public void connectionClosed(CommunicationEvent e)
+   {
+      mOrbList.remove(e.getCorbaService());
+      mToolbar.setRemoteReconfigEnabled(mOrbList.size() > 0);
+   }
+
    /**
     * Responding to notification that from the toolbar that a configuration has
     * been opened or a new configuration has been created, this method creates
@@ -351,6 +367,9 @@ public class VrjConfig
 
    /** A handle to the configuration broker. */
    private ConfigBroker mBroker;
+
+   /** Used to keep track of the open CORBA connections. */
+   private List mOrbList = new ArrayList();
 
    /** Our listener for activation changes to the internal frames. */
    private InternalFrameListener mActivationListener = new ActivationListener();
