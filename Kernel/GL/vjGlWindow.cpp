@@ -73,9 +73,9 @@ void vjGlWindow::setLeftEyeProjection()
    glMatrixMode(GL_PROJECTION);
    {
       glLoadIdentity();             // Load identity matrix
-      glFrustum(frust[vjFrustum::LEFT],frust[vjFrustum::RIGHT],
-                 frust[vjFrustum::BOTTOM],frust[vjFrustum::TOP],
-                 frust[vjFrustum::NEAR],frust[vjFrustum::FAR]);
+      glFrustum(frust[vjFrustum::VJ_LEFT],frust[vjFrustum::VJ_RIGHT],
+                 frust[vjFrustum::VJ_BOTTOM],frust[vjFrustum::VJ_TOP],
+                 frust[vjFrustum::VJ_NEAR],frust[vjFrustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
          // Set camera rotation and position
       glMultMatrixf(left_proj->viewMat.getFloatPtr());
@@ -114,9 +114,9 @@ void vjGlWindow::setRightEyeProjection()
    glMatrixMode(GL_PROJECTION);
    {
       glLoadIdentity();             // Load identity matrix
-      glFrustum(frust[vjFrustum::LEFT],frust[vjFrustum::RIGHT],
-                 frust[vjFrustum::BOTTOM],frust[vjFrustum::TOP],
-                 frust[vjFrustum::NEAR],frust[vjFrustum::FAR]);
+      glFrustum(frust[vjFrustum::VJ_LEFT],frust[vjFrustum::VJ_RIGHT],
+                 frust[vjFrustum::VJ_BOTTOM],frust[vjFrustum::VJ_TOP],
+                 frust[vjFrustum::VJ_NEAR],frust[vjFrustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
        // Set camera rotation and position
    glMultMatrixf(right_proj->viewMat.getFloatPtr());
@@ -160,7 +160,7 @@ void vjGlWindow::setCameraProjection()
       */
 
       gluPerspective(80.0f, float(window_width)/float(window_height),
-                     frust[vjFrustum::NEAR], frust[vjFrustum::FAR]);
+                     frust[vjFrustum::VJ_NEAR], frust[vjFrustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
        // Set camera rotation and position
    glMultMatrixf(sim_display->getCameraProj()->viewMat.getFloatPtr());

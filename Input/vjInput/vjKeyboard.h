@@ -115,6 +115,70 @@ public:
 
    virtual char* getDeviceName()
    { return "vjKeyboard"; }
+
+   std::string getKeyName(int keyId)
+   {
+      switch(keyId)
+      {
+         case VJKEY_NONE: return std::string("VJKEY_NONE");
+         case VJKEY_UP: return std::string("VJKEY_UP");
+         case VJKEY_DOWN: return std::string("VJKEY_DOWN");
+         case VJKEY_LEFT: return std::string("VJKEY_LEFT");
+         case VJKEY_RIGHT: return std::string("VJKEY_RIGHT");
+         case VJKEY_SHIFT: return std::string("VJKEY_SHIFT");
+         case VJKEY_CTRL: return std::string("VJKEY_CTRL");
+         case VJKEY_ALT: return std::string("VJKEY_ALT");
+         case VJKEY_1: return std::string("VJKEY_1");
+         case VJKEY_2: return std::string("VJKEY_2");
+         case VJKEY_3: return std::string("VJKEY_3");
+         case VJKEY_4: return std::string("VJKEY_4");
+         case VJKEY_5: return std::string("VJKEY_5");
+         case VJKEY_6: return std::string("VJKEY_6");
+         case VJKEY_7: return std::string("VJKEY_7");
+         case VJKEY_8: return std::string("VJKEY_8");
+         case VJKEY_9: return std::string("VJKEY_9");
+         case VJKEY_0: return std::string("VJKEY_0");
+         case VJKEY_A: return std::string("VJKEY_A");
+         case VJKEY_B: return std::string("VJKEY_B");
+         case VJKEY_C: return std::string("VJKEY_C");
+         case VJKEY_D: return std::string("VJKEY_D");
+         case VJKEY_E: return std::string("VJKEY_E");
+         case VJKEY_F: return std::string("VJKEY_F");
+         case VJKEY_G: return std::string("VJKEY_G");
+         case VJKEY_H: return std::string("VJKEY_H");
+         case VJKEY_I: return std::string("VJKEY_I");
+         case VJKEY_J: return std::string("VJKEY_J");
+         case VJKEY_K: return std::string("VJKEY_K");
+         case VJKEY_L: return std::string("VJKEY_L");
+         case VJKEY_M: return std::string("VJKEY_M");
+         case VJKEY_N: return std::string("VJKEY_N");
+         case VJKEY_O: return std::string("VJKEY_O");
+         case VJKEY_P: return std::string("VJKEY_P");
+         case VJKEY_Q: return std::string("VJKEY_Q");
+         case VJKEY_R: return std::string("VJKEY_R");
+         case VJKEY_S: return std::string("VJKEY_S");
+         case VJKEY_T: return std::string("VJKEY_T");
+         case VJKEY_U: return std::string("VJKEY_U");
+         case VJKEY_V: return std::string("VJKEY_V");
+         case VJKEY_W: return std::string("VJKEY_W");
+         case VJKEY_X: return std::string("VJKEY_X");
+         case VJKEY_Y: return std::string("VJKEY_Y");
+         case VJKEY_Z: return std::string("VJKEY_Z");
+         case VJKEY_ESC: return std::string("VJKEY_ESC");
+         case VJMOUSE_POSX: return std::string("VJMOUSE_POSX");
+         case VJMOUSE_NEGX: return std::string("VJMOUSE_NEGX");
+         case VJMOUSE_POSY: return std::string("VJMOUSE_POSY");
+         case VJMOUSE_NEGY: return std::string("VJMOUSE_NEGY");
+         case VJMBUTTON1: return std::string("VJMBUTTON1");
+         case VJMBUTTON2: return std::string("VJMBUTTON2");
+         case VJMBUTTON3: return std::string("VJMBUTTON3");
+         default: return std::string("Unknown key");
+      }
+
+      return std::string("n/a");
+   }
 };
+
+
 
 #endif

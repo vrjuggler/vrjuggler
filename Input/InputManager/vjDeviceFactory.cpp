@@ -36,7 +36,7 @@
 #include <Input/vjKeyboard/vjXWinKeyboard.h>
 #include <Input/vjPosition/logiclass.h>
 #else
-#include <Input/vjInput/vjKeyboardWin32.h>
+#include <Input/vjKeyboard/vjKeyboardWin32.h>
 #endif
 
 #include <typeinfo>
@@ -76,7 +76,7 @@ void vjDeviceFactory::registerDevice(vjDeviceConstructorBase* constructor)
    vjASSERT(constructor != NULL);
    mConstructors.push_back(constructor);     // Add the constructor to the list
    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDeviceFactor::registerDevice: Device registered for: "
-              << constructor->getChunkType()
+              << constructor->getChunkType().c_str()
               << "   :" << (void*)constructor
               << " type:" << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
 }
@@ -142,7 +142,7 @@ void vjDeviceFactory::debugDump()
       vjDeviceConstructorBase* dev_constr = mConstructors[cNum];
       vjDEBUG(vjDBG_INPUT_MGR,0) << cNum << ": Constructor:" << (void*)dev_constr
                  << "   type:" << typeid(*dev_constr).name() << "\n" << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "   recog:" << (std::string)dev_constr->getChunkType() << "\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,0) << "   recog:" << dev_constr->getChunkType().c_str() << "\n" << vjDEBUG_FLUSH;
    }
 
    vjDEBUG_END(vjDBG_INPUT_MGR,0) << "------ END DUMP ------\n" << vjDEBUG_FLUSH;

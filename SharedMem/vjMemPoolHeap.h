@@ -26,7 +26,7 @@
 // vjMemPoolHeap
 //
 // Purpose:
-//    First try at a pool implemenation
+//    Simple pool based on heap memory
 //
 // Author:
 //	Allen Bierbaum
@@ -42,6 +42,12 @@
 class vjMemPoolHeap : public vjMemPool {
 
 public:
+   static init()
+   {;}
+   
+   vjMemPoolHeap(size_t initialSize = 65536,  int numProcs = 8, char* staticTempName = "memPoolHeapXXXXXX")
+   {;}
+
     virtual void* allocate(size_t size)
     {
 	return malloc(size); 	

@@ -60,10 +60,10 @@ public:
 #ifdef WIN32
 #	include <SharedMem/vjMemPoolWin32.h>
 #	include <SharedMem/vjMemPoolHeap.h>
-
-	typedef vjMemPoolWin32 vjSharedPool;
+                                             // Everything is heap!!!
+	typedef vjMemPoolHeap vjSharedPool;
 	typedef vjMemPoolHeap  vjHeapPool;
-	typedef vjMemPoolWin32 vjSyncPool;
+	typedef vjMemPoolHeap vjSyncPool;
 #else
 #if defined(VJ_OS_HPUX) || defined(VJ_USE_PTHREADS)
 #   include <SharedMem/vjMemPool_malloc.h>

@@ -1,6 +1,9 @@
 #ifndef _TORUS_APP
 #define _TORUS_APP
 
+
+#include <vjConfig.h>
+
 #include <math.h>
 #include <GL/gl.h>
 #include <GL/glu.h>

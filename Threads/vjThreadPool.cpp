@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <sys/types.h>
-#include <unistd.h>
+//#include <unistd.h>
 
 #ifndef WIN32
 #   include <sys/resource.h>

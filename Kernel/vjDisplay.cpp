@@ -64,7 +64,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
 
     if(NULL == mUser)
     {
-       vjDEBUG(vjDBG_ERROR,0) << "ERROR: User not found named: " << user_name << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ERROR,0) << "ERROR: User not found named: " << user_name.c_str() << endl << vjDEBUG_FLUSH;
       vjASSERT(false);
     }
 
@@ -84,13 +84,13 @@ ostream& operator<<(ostream& out,  vjDisplay* disp)
    vjASSERT(disp->mUser != NULL);
 
     //out << "vjDisplay:" << (void*)(&disp)
-    out << setw(15) << disp->mName
+    out << setw(15) << disp->mName.c_str()
         << "  org:" << disp->_xo << ", " << disp->_yo
         << "  sz:" << disp->_xs << ", " << disp->_ys
         << "  p:" << disp->mPipe
         << "  view:" << ((disp->mView == vjDisplay::LEFT_EYE) ? "Left" : ((disp->mView==vjDisplay::RIGHT_EYE)?"Right" : "Stereo") )
         << "  act:" << (disp->mActive ? "Y" : "N")
-        << "  usr:" << disp->mUser->getName();
+        << "  usr:" << disp->mUser->getName().c_str();
 
     return out;	
 }

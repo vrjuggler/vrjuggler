@@ -44,18 +44,18 @@ class vjSemaphoreWin32
 public:
    vjSemaphoreWin32 (int initialValue = 1)
    {
-      // BUG:	
-      if (semaphorePool == NULL)
-      {
-         semaphorePool = new vjMemPoolWin32(65536, 32, "memSemaphorePoolWin32XXXXXX");
-         attachedCounter = static_cast<int*>(semaphorePool->allocate(sizeof(int)));
-         *attachedCounter = 0;
-      }
-      *attachedCounter = *attachedCounter + 1;      // Track how many semaphores are allocated
+//      // BUG:	
+//      if (semaphorePool == NULL)
+//      {
+//         semaphorePool = new vjMemPoolWin32(65536, 32, "memSemaphorePoolWin32XXXXXX");
+//         attachedCounter = static_cast<int*>(semaphorePool->allocate(sizeof(int)));
+//         *attachedCounter = 0;
+//      }
+//      *attachedCounter = *attachedCounter + 1;      // Track how many semaphores are allocated
 
-      DebugLock.acquire();
-      cerr << vjThread::self() << " vjSemaphoreWin32::vjSemaphoreWin32: attachedCounter: " << *attachedCounter << endl;
-      DebugLock.release();
+      //DebugLock.acquire();
+      //cerr << vjThread::self() << " vjSemaphoreWin32::vjSemaphoreWin32: attachedCounter: " << *attachedCounter << endl;
+      //DebugLock.release();
 
       // ----- Allocate the semaphore ----- //
       sema = CreateSemaphore(NULL,initialValue,99,NULL);
@@ -67,19 +67,19 @@ public:
       CloseHandle(sema);
 
       // ---- Deal with the pool --- //
-      *attachedCounter = *attachedCounter - 1;     // Track how many Semaphore are allocated
+//      *attachedCounter = *attachedCounter - 1;     // Track how many Semaphore are allocated
 
-      DebugLock.acquire();
-      cerr << vjThread::self() << " vjSemaphoreWin32::~vjSemaphoreWin32: attachedCounter: " << *attachedCounter << endl;
-      DebugLock.release();
+      //DebugLock.acquire();
+      //cerr << vjThread::self() << " vjSemaphoreWin32::~vjSemaphoreWin32: attachedCounter: " << *attachedCounter << endl;
+      //DebugLock.release();
 
-      if (*attachedCounter == 0)
-      {
-         semaphorePool->deallocate(attachedCounter);
-         attachedCounter = NULL;
-         delete semaphorePool;
-         semaphorePool = NULL;
-      }
+//      if (*attachedCounter == 0)
+//      {
+//         semaphorePool->deallocate(attachedCounter);
+//         attachedCounter = NULL;
+//         delete semaphorePool;
+//         semaphorePool = NULL;
+//      }
 
    }
 
@@ -181,7 +181,7 @@ public:
    //---------------------------------------------------------
    void dump (FILE* dest = stderr, const char* message = "\n------ Semaphore Dump -----\n") const
    {
-      cout << "vjSemaphoreWin32::dump() " << endl;
+      cout << "vjSemaphoreWin32::dump() \nNot implemented on Win32" << endl;
    }
 
 protected:
@@ -192,12 +192,12 @@ protected:
    void operator= (const vjSemaphoreWin32 &) {}
    vjSemaphoreWin32 (const vjSemaphoreWin32 &) {}
 
-   // Problem here.  Fork will not like these.
-   static vjMemPoolWin32* semaphorePool;
-   static int* attachedCounter;
+//   // Problem here.  Fork will not like these.
+//   static vjMemPoolWin32* semaphorePool;
+//   static int* attachedCounter;
 };
 
-vjMemPoolWin32* vjSemaphoreWin32::semaphorePool = NULL;
-int* vjSemaphoreWin32::attachedCounter = NULL;
+//vjMemPoolWin32* vjSemaphoreWin32::semaphorePool = NULL;
+//int* vjSemaphoreWin32::attachedCounter = NULL;
 
 #endif

@@ -33,8 +33,8 @@
 // Date: 11-7-97
 //-----------------------------------------------
 #include <windows.h>
-#include <SharedMem/vjMemPool.h>
-#include <SharedMem/vjMemPoolWin32.h>
+//#include <SharedMem/vjMemPool.h>
+//#include <SharedMem/vjMemPoolWin32.h>
 
 //: Mutex wrapper for Win32 systems.
 //!PUBLIC_API:
@@ -42,39 +42,19 @@ class vjMutexWin32
 {
 public:
     vjMutexWin32 ()
-    {
-        // BUG: Possible race condition here
-        if(mutexPool == NULL) {
-            mutexPool = new vjMemPoolWin32(65536, 32, "memMutexPoolSGIXXXXXX");
-            attachedCounter = static_cast<int*>(mutexPool->allocate(sizeof(int)));
-            *attachedCounter = 0;
-        }
-		
-        *attachedCounter = *attachedCounter + 1;	    // Track how many mutexes are allocated
-        cerr << "vjMutexWin32::vjMutexWin32: attachedCounter: " << *attachedCounter << endl;
-
+    {        
         // ----- Allocate the mutex ----- //
+        // NULL - No security
+        // FALSE - We don't want to qcquire it
+        // NULL - Unamed version
         mutex = CreateMutex(NULL,FALSE,NULL);
+        mLocked = false;                  // We don't have it locked yet
     }
 
     ~vjMutexWin32(void)
     {
         // ---- Delete the mutex --- //
         CloseHandle(mutex);
-
-        // ---- Deal with the pool --- //
-        *attachedCounter = *attachedCounter - 1;	    // Track how many mutexes are allocated
-
-        cerr << "vjMutexWin32::~vjMutexWin32: attachedCounter: " << *attachedCounter << endl;
-
-        if(*attachedCounter == 0)
-        {
-            mutexPool->deallocate(attachedCounter);
-            attachedCounter = NULL;
-            delete mutexPool;
-            mutexPool = NULL;
-        }
-
     }
 
     //---------------------------------------------------------
@@ -83,20 +63,24 @@ public:
     //! RETURNS:  1 - Acquired
     //! RETURNS: -1 - Error
     //---------------------------------------------------------
-    int acquire() const
+    int acquire()
     {
 		DWORD dw = WaitForSingleObject(mutex,INFINITE);
 		if (dw == WAIT_OBJECT_0)
 		{
-			return 1;
+			mLocked = true;
+         return 1;
 		}
+      else
+      {
         return -1;
+      }
     }
 
     //----------------------------------------------------------
     //: Acquire a read mutex.
     //----------------------------------------------------------
-    int acquireRead() const
+    int acquireRead()
     {
         return this->acquire();	    // No special "read" semaphore -- For now
     }
@@ -104,7 +88,7 @@ public:
     //----------------------------------------------------------
     //: Acquire a write mutex.
     //----------------------------------------------------------
-    int acquireWrite() const
+    int acquireWrite()
     {
         return this->acquire();	    // No special "write" semaphore -- For now
     }
@@ -116,12 +100,13 @@ public:
     //! RETURNS: 1 - Acquired
     //! RETURNS: 0 - Not Acquired
     //---------------------------------------------------------
-    int tryAcquire () const
+    int tryAcquire ()
     {
-        DWORD dw = WaitForSingleObject(mutex,0);
+      DWORD dw = WaitForSingleObject(mutex,0);
 		if (dw == WAIT_OBJECT_0)
 		{
-			return 1;
+			mLocked = true;
+         return 1;
 		}
 		return 0;	
     }
@@ -129,7 +114,7 @@ public:
     //----------------------------------------------------------
     //: Try to acquire a read mutex.
     //----------------------------------------------------------
-    int tryAcquireRead () const
+    int tryAcquireRead ()
     {
         return this->tryAcquire();
     }
@@ -137,7 +122,7 @@ public:
     //----------------------------------------------------------
     //: Try to acquire a write mutex.
     //----------------------------------------------------------
-    int tryAcquireWrite () const
+    int tryAcquireWrite ()
     {
         return this->tryAcquire();
     }
@@ -148,27 +133,32 @@ public:
     //! RETURNS:  0 - Success
     //! RETURNS: -1 - Error
     //---------------------------------------------------------
-    int release() const
+    int release()
     {
-        return ReleaseMutex(mutex);
+       bool ret_val = ReleaseMutex(mutex);
+       
+       if(ret_val == true)
+          mLocked = false;       // If failure, I will keep it locked
+
+       return ret_val;
     }
 
     //------------------------------------------------------
     //: Test the current lock status.
     //
+    //! NOTE: Since Win32 allows the same thread to 
+    //+        acqurie a lock multiple times, we need to do
+    //+        some extra stuff
     //
     //! RETURNS: 0 - Not locked
     //! RETURNS: 1 - Locked
     //------------------------------------------------------
-    int test()
+    int test() const
     {
-		DWORD dw = WaitForSingleObject(mutex,0);
-		if (dw == WAIT_OBJECT_0)
-		{
-			ReleaseMutex(mutex);
-			return 0;
-		}
-        return 1;
+       if(mLocked == true)
+          return 1;
+       else
+          return 0;
     }
 
 
@@ -177,22 +167,25 @@ public:
     //---------------------------------------------------------
     void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
     {
-		cout << "Mutex::dump" << endl;
+		cout << "Mutex::dump\nNot implemented on Win32" << endl;
     }
 
 
 protected:
     HANDLE mutex;
-
+    
+      // We need this variable because win32 allows multiple
+      // acquisitions by the same thread.  In order for us to
+      // determine if the thread is currently locked we need to
+      // test this variable
+      // Notice that the only place this variable is touched is
+      // in acquire and release where we implicitly have protection
+    bool   mLocked;     // Says wether the mutex is locked
+                        
     // = Prevent assignment and initialization.
     void operator= (const vjMutexWin32 &) {}
     vjMutexWin32 (const vjMutexWin32 &) {}
-
-    static vjMemPoolWin32* mutexPool;
-    static int* attachedCounter;
 };
 
-vjMemPoolWin32* vjMutexWin32::mutexPool = NULL;
-int* vjMutexWin32::attachedCounter = NULL;
 
 #endif

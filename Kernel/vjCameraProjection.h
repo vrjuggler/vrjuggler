@@ -43,7 +43,7 @@ public:
    virtual void calcViewMatrix(vjMatrix& cameraPos)
    {
       viewMat = cameraPos;
-      frustum.set(-0.6, 0.6, -0.6, 0.6, mNearDist, mFarDist);
+      frustum.set(-0.6f, 0.6f, -0.6f, 0.6f, mNearDist, mFarDist);
    }
 
    virtual ostream& outStream(ostream& out)

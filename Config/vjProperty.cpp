@@ -154,7 +154,7 @@ vjEnumEntry* vjProperty::getEnumEntryWithValue (int val) {
 
 
 ostream& operator << (ostream &out, vjProperty& p) {
-    out << p.getToken () << " { ";
+    out << p.getToken().c_str() << " { ";
     for (int i = 0; i < p.value.size(); i++) {
 	vjVarValue *v = ((p.value))[i];
 	
@@ -170,7 +170,7 @@ ostream& operator << (ostream &out, vjProperty& p) {
 	else {
 	    vjEnumEntry *e = p.getEnumEntryWithValue((int)(*v));
 	    if (e)
-		out << '"' << e->getName() << '"';
+		out << '"' << e->getName().c_str() << '"';
 	    else
 		out << *v;
 	}

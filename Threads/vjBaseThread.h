@@ -28,7 +28,8 @@
 // --------------------------------------------------------------------------
 
 #include <vjConfig.h>
-#include <hash_map>
+//#include <hash_map>
+#include <map>
 #include <Threads/vjThreadFunctor.h>
 #include <Threads/vjTSTable.h>            // Needed to cache a copy here
 
@@ -64,6 +65,7 @@ protected:
    // in derived class's constructor.
    //! POST: Thread is setup correctly to run.
    //+       The thread has been registered with the system.
+	//+		 Creates the thread's id (mThreadId)
    //! ARGS: successfulCreation - Did the thread get created correctly
    void registerThread(bool succesfulCreation);
 
@@ -82,7 +84,7 @@ public:
    //! ARGS: stack_addr - Alternate address for thread's stack (optional).
    //! ARGS: stack_size - Size for thread's stack (optional).
    //
-   //! RETURNS:  0 - Successful thread creation
+   //! RETURNS:  non-zero - Successful thread creation
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
    virtual int spawn (vjBaseThreadFunctor* functorPtr, long flags = 0,
@@ -286,7 +288,7 @@ private:
    {;}
 
 private:
-   int32_t  mThreadId;     // The local id for the thread.
+   int32_t  mThreadId;     // The local id for the thread, -1 ==> invalid thread
 
    // --- STATICS ---- //
 
@@ -326,7 +328,8 @@ public:
    // -----------------------------------------------------------------------
    vjBaseThread* getThread(IdxType index)
    {
-      std::hash_map<IdxType, vjBaseThread*>::iterator i;
+      //std::hash_map<IdxType, vjBaseThread*>::iterator i;
+      std::map<IdxType, vjBaseThread*>::iterator i;
       i = mThreadMap.find(index);
       if(i == mThreadMap.end())
          return NULL;
@@ -343,7 +346,8 @@ public:
    }
 
 private:
-   std::hash_map<IdxType, vjBaseThread*> mThreadMap;
+   std::map<IdxType, vjBaseThread*> mThreadMap;
+   //std::hash_map<IdxType, vjBaseThread*> mThreadMap;
 };
 
 #endif

@@ -105,7 +105,7 @@ public:
       vjDEBUG(vjDBG_ALL,5) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
 
       // Compute location of left and right eyes
-      float interocularDist = 2.75/12.0f;
+      float interocularDist = 2.75f/12.0f;
       float eye_offset = interocularDist/2.0f;      // Distance to move eye
 
       left_eye_pos.postTrans(cur_head_pos, -eye_offset, 0, 0);

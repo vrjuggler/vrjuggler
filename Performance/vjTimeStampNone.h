@@ -75,7 +75,7 @@ public:
     }
 
 
-    inline friend ostream& operator << (ostream& out, vjTimeStampNone& ts); {
+    inline friend ostream& operator << (ostream& out, vjTimeStampNone& ts) {
 	return out;
     }
 

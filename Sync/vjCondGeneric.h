@@ -24,7 +24,7 @@
 #include <vjConfig.h>
 
 #include <sys/types.h>
-#include <unistd.h>
+//#include <unistd.h>
 
 #include <Sync/vjSemaphore.h>
 #include <Sync/vjMutex.h>

@@ -22,6 +22,8 @@
 #define _VJ_TS_OBJECT_H_
 #pragma once
 
+#include <vjConfig.h>
+
 //-----------------------------------------------------------------
 //: Base Thread Specific object.
 //
@@ -37,7 +39,7 @@ public:
    //: Creates an instance of the object
    //! NOTE: This is not a copy
    virtual vjTSBaseObject* createNew()
-   { return NULL;}
+   { return(NULL);}
 };
 
 //-----------------------------------------------------------------

@@ -28,14 +28,14 @@
 //--------------------------------------------
 // This is the actual function that is called.
 //--------------------------------------------
-#ifdef VJ_SGI_IPC   // ---- SGI IPC Barrier ------ //
+#ifdef VJ_SGI_IPC   // ---- Using SGI IPC (Sproc) ------ //
     void
     ThreadFunctorFunction (void* args) {
         vjBaseThreadFunctor& func = *(vjBaseThreadFunctor*)args;
         func();	// Call the functor's operator ()
     }
 #else
-#ifdef WIN32
+#ifdef WIN32		// ----- Using Win32 ---- //
     unsigned int __stdcall
     ThreadFunctorFunction (void* args) {
          vjBaseThreadFunctor& func = *(vjBaseThreadFunctor*)args;

@@ -25,12 +25,12 @@
 // ---- FRIEND FUNCTIONS ---- //
 ostream& operator<<(ostream& out, vjFrustum& _frust)
 {
-    out << "l: " << _frust[vjFrustum::LEFT]
-	<< "r: " << _frust[vjFrustum::RIGHT]
-	<< "b: " << _frust[vjFrustum::BOTTOM]
-	<< "t: " << _frust[vjFrustum::TOP]
-	<< "n: " << _frust[vjFrustum::NEAR]
-	<< "f: " << _frust[vjFrustum::FAR];
+    out << "l: " << _frust[vjFrustum::VJ_LEFT]
+	<< "r: " << _frust[vjFrustum::VJ_RIGHT]
+	<< "b: " << _frust[vjFrustum::VJ_BOTTOM]
+	<< "t: " << _frust[vjFrustum::VJ_TOP]
+	<< "n: " << _frust[vjFrustum::VJ_NEAR]
+	<< "f: " << _frust[vjFrustum::VJ_FAR];
     out << endl;
 
     return out;	

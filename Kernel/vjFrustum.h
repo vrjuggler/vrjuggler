@@ -34,8 +34,8 @@
 class vjFrustum
 {
 public:
-   enum
-   {LEFT = 0, RIGHT = 1, BOTTOM, TOP, NEAR, FAR};
+   enum entry
+   {VJ_LEFT = 0, VJ_RIGHT = 1, VJ_BOTTOM, VJ_TOP, VJ_NEAR, VJ_FAR};
 
    vjFrustum()
    {
@@ -43,28 +43,28 @@ public:
       frust[3] = frust[4] = frust[5] = 0.0f;
    }
 
-   void setBottomLeftTopRight(float bot, float left, float top, float right)
+   void setBottomLeftTopRight(float bot_val, float left_val, float top_val, float right_val)
    {
-      frust[BOTTOM] = bot;
-      frust[LEFT] = left;
-      frust[TOP] = top;
-      frust[RIGHT] = right;
+      frust[VJ_BOTTOM] = bot_val;
+      frust[VJ_LEFT] = left_val;
+      frust[VJ_TOP] = top_val;
+      frust[VJ_RIGHT] = right_val;
    }
 
-   void setNearFar(float near, float far)
+   void setNearFar(float near_val, float far_val)
    {
-      frust[NEAR] = near;
-      frust[FAR] = far;
+      frust[VJ_NEAR] = near_val;
+      frust[VJ_FAR] = far_val;
    }
 
-   void set(float left, float right, float bottom, float top, float near, float far)
+   void set(float left_val, float right_val, float bottom_val, float top_val, float near_val, float far_val)
    {
-      frust[LEFT] = left;
-      frust[RIGHT] = right;
-      frust[BOTTOM] = bottom;
-      frust[TOP] = top;
-      frust[NEAR] = near;
-      frust[FAR] = far;
+      frust[VJ_LEFT] = left_val;
+      frust[VJ_RIGHT] = right_val;
+      frust[VJ_BOTTOM] = bottom_val;
+      frust[VJ_TOP] = top_val;
+      frust[VJ_NEAR] = near_val;
+      frust[VJ_FAR] = far_val;
    }
 
    float& operator[](int elt)

@@ -40,10 +40,10 @@ RSC=rc.exe
 # PROP Output_Dir "Release"
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD BASE RSC /l 0x409
-# ADD RSC /l 0x409
+# ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -63,10 +63,10 @@ LIB32=link.exe -lib
 # PROP Output_Dir "Debug"
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /Zi /Od /I "." /I "..\..\\" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /TP /Zm800 /c
-# ADD BASE RSC /l 0x409
-# ADD RSC /l 0x409
+# ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /Od /I "f:/source/juggler" /I "f:/source/juggler/lib/win32" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
+# ADD BASE RSC /l 0x409 /d "_DEBUG"
+# ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -80,12 +80,340 @@ LIB32=link.exe -lib
 
 # Name "Juggler - Win32 Release"
 # Name "Juggler - Win32 Debug"
-# Begin Group "Config"
+# Begin Group "Source Files"
 
-# PROP Default_Filter ""
+# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\Config\vjChunkDesc.C
+SOURCE=..\..\Input\InputManager\vjAnalogProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjAPI.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjBarrier.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjBaseThread.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Config\vjChunkDesc.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Config\vjChunkDescDB.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Config\vjChunkFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjCondGeneric.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Config\vjConfigChunk.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Config\vjConfigChunkDB.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjCoord.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjDebug.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjDeviceFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjDeviceInterface.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjDigitalProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjDisplay.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjDisplayManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjDrawManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjGesture\vjDummyGesture.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjGlove\vjDummyGlove.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjPosition\vjDummyPosition.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjFrustum.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjGesture\vjGesture.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjGestureProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\GL\vjGlDrawManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjGlove\vjGlove.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjGlove\vjGlove.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjGesture\vjGloveGesture.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjGesture\vjGloveGesture.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjGloveProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\GL\vjGlPipe.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\GL\vjGlWindow.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\GL\vjGlWinWin32.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjInput\vjInput.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjInputManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjKernel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjKeyboardProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjKeyboard\vjKeyboardWin32.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjMatrix.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\SharedMem\vjMemory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\SharedMem\vjMemPoolWin32.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Config\vjParseUtil.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Performance\vjPerfDataBuffer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjPlane.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjPosInterface.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjPosition\vjPosition.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjPosProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjProjection.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Config\vjProperty.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Config\vjPropertyDesc.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjProxyFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjQuat.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjRWMutex.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjSeg.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjSim\vjSimAnalog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjSim\vjSimDigital.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjSim\vjSimGloveGesture.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjSim\vjSimInput.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjSim\vjSimPosition.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjStreamLock.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjThreadFunctor.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjThreadManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjThreadPool.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjThreadWin32.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Environment\vjTimedUpdate.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Performance\vjTimeStamp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjTSObject.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjTSTable.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjUser.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Config\vjVarValue.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjVec3.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjVec4.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjWallProjection.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjWin32SystemFactory.cpp
+# End Source File
+# End Group
+# Begin Group "Header Files"
+
+# PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\..\Input\vjInput\vjAnalog.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjAnalogInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjAnalogProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjAPI.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjBarrier.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjBaseThread.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjCameraProjection.h
 # End Source File
 # Begin Source File
 
@@ -93,15 +421,27 @@ SOURCE=..\..\Config\vjChunkDesc.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Config\vjChunkDescDB.C
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\Config\vjChunkDescDB.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Config\vjConfigChunk.C
+SOURCE=..\..\Config\vjChunkFactory.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjCond.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjCondGeneric.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjCondPosix.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\vjConfig.h
 # End Source File
 # Begin Source File
 
@@ -109,39 +449,163 @@ SOURCE=..\..\Config\vjConfigChunk.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Config\vjConfigChunkDB.C
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\Config\vjConfigChunkDB.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Config\vjParseUtil.C
+SOURCE=..\..\Kernel\vjConfigChunkHandler.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Config\vjParseUtil.h
+SOURCE=..\..\Math\vjCoord.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Config\vjProperty.C
+SOURCE=..\..\Kernel\vjDebug.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Config\vjPropertyDesc.C
+SOURCE=.\vjDefines.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Config\vjVarValue.h
+SOURCE=..\..\Input\InputManager\vjDeviceFactory.h
 # End Source File
-# End Group
-# Begin Group "Memory"
-
-# PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\SharedMem\vjMemory.C
+SOURCE=..\..\Input\InputManager\vjDeviceInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjInput\vjDigital.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjDigitalInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjDigitalProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjDisplay.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjDisplayManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjDrawManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjInput\vjDummyAnalog.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjInput\vjDummyDigital.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjKeyboard\vjDummyKeyboard.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjPosition\vjDummyPosition.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Config\vjEnumEntry.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjFrustum.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjGestureInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjGestureProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\GL\vjGlApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\GL\vjGlContextData.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\GL\vjGlDrawManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjGloveInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjGloveProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\GL\vjGlPipe.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\GL\vjGlUserData.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\GL\vjGlWindow.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\GL\vjGlWinWin32.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjGuard.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjGuardedQueue.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjInput\vjInput.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjInputManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjKernel.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjInput\vjKeyboard.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjKeyboardInterface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjKeyboardProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjKeyboard\vjKeyboardWin32.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjMatrix.h
 # End Source File
 # Begin Source File
 
@@ -167,26 +631,6 @@ SOURCE=..\..\SharedMem\vjMemPoolHeap.h
 
 SOURCE=..\..\SharedMem\vjMemPoolWin32.h
 # End Source File
-# End Group
-# Begin Group "Sync"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=..\..\Sync\vjBarrier.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Sync\vjCond.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Sync\vjCondGeneric.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Sync\vjGuard.h
-# End Source File
 # Begin Source File
 
 SOURCE=..\..\Sync\vjMutex.h
@@ -201,123 +645,23 @@ SOURCE=..\..\Sync\vjNullMutex.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Sync\vjRWMutex.h
+SOURCE=..\..\Performance\vjNullPerfDataBuffer.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Sync\vjSemaphore.h
+SOURCE=..\..\Config\vjParseUtil.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Sync\vjSemaphoreWin32.h
-# End Source File
-# End Group
-# Begin Group "Math"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=..\..\Math\vjCoord.C
+SOURCE=..\..\Performance\vjPerfDataBuffer.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Math\vjCoord.h
+SOURCE=..\..\Math\vjPlane.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Math\vjMatrix.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Math\vjMatrix.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Math\vjQuat.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Math\vjQuat.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Math\vjVec3.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Math\vjVec3.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Math\vjVec4.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Math\vjVec4.h
-# End Source File
-# End Group
-# Begin Group "Input"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=..\..\Input\vjInput\vjAnalog.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\InputManager\vjAnalogProxy.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\vjInput\vjDigital.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\InputManager\vjDigitalProxy.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\vjInput\vjDummyAnalog.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\vjInput\vjDummyDigital.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\vjPosition\vjDummyPosition.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\vjPosition\vjDummyPosition.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\vjInput\vjInput.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\vjInput\vjInput.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\InputManager\vjInputManager.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\InputManager\vjInputManager.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\vjInput\vjKeyboardWin32.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\vjInput\vjKeyboardWin32.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Input\vjPosition\vjPosition.C
+SOURCE=..\..\Input\InputManager\vjPosInterface.h
 # End Source File
 # Begin Source File
 
@@ -327,142 +671,77 @@ SOURCE=..\..\Input\vjPosition\vjPosition.h
 
 SOURCE=..\..\Input\InputManager\vjPosProxy.h
 # End Source File
-# End Group
-# Begin Group "Threads"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=..\..\Threads\vjThread.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Threads\vjThreadFunctor.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Threads\vjThreadFunctor.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Threads\vjThreadKeyWin32.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Threads\vjThreadPool.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Threads\vjThreadPool.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Threads\vjThreadWin32.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Threads\vjThreadWin32.h
-# End Source File
-# End Group
-# Begin Group "Compatibility"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\config.cpp
-
-!IF  "$(CFG)" == "Juggler - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "Juggler - Win32 Debug"
-
-# ADD CPP /Yc"config.h"
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
-SOURCE=.\config.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\strings.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\vector.h
-# End Source File
-# End Group
-# Begin Group "Kernel"
-
-# PROP Default_Filter ""
-# Begin Group "Gl"
-
-# PROP Default_Filter ""
-# End Group
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjAPI.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjAPI.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjAPIFactory.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjApp.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjCameraProjection.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjDebug.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjDebug.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjFrustum.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjFrustum.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjKernel.C
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjKernel.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\Kernel\vjProjection.C
-# End Source File
 # Begin Source File
 
 SOURCE=..\..\Kernel\vjProjection.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Kernel\vjSimulator.h
+SOURCE=..\..\Config\vjProperty.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Kernel\vjStreamLock.C
+SOURCE=..\..\Config\vjPropertyDesc.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\InputManager\vjProxyFactory.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjQuat.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjRWMutex.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjSeg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjSemaphore.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Sync\vjSemaphoreWin32.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjSim\vjSimAnalog.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjSim\vjSimDigital.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjSimDisplay.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjSim\vjSimGloveGesture.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjSim\vjSimInput.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Input\vjSim\vjSimPosition.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\Kernel\vjStreamLock.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjSurfaceDisplay.h
 # End Source File
 # Begin Source File
 
@@ -478,11 +757,67 @@ SOURCE=..\..\Kernel\vjSystemFactory.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Kernel\vjWallProjection.C
+SOURCE=..\..\Threads\vjThread.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjThreadFunctor.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjThreadKeyWin32.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjThreadManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjThreadWin32.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Environment\vjTimedUpdate.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Performance\vjTimeStamp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Performance\vjTimeStampNone.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjTSObject.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjTSObjectProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Threads\vjTSTable.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjUser.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjVec3.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Math\vjVec4.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\Kernel\vjWallProjection.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Kernel\vjWin32SystemFactory.h
 # End Source File
 # End Group
 # End Target

@@ -90,7 +90,7 @@ void vjDebug::addAllowedCategory(int cat)
 // Are we allowed to print this category??
 bool vjDebug::isCategoryAllowed(int cat)
 {
-   // If now entry for cat, grow the vector
+   // If no entry for cat, grow the vector
    if(mAllowedCategories.size() < (cat+1))
       growAllowedCategoryVector(cat+1);
 
@@ -121,6 +121,7 @@ void vjDebug::getAllowedCatsFromEnv()
 
    if(dbg_cats_env != NULL)
    {
+      cout << "vjDEBUG::Found VJ_DEBUG_CATEGORIES: Listing allowed categories. (If blank, then none allowed.\n" << flush;
       std::string dbg_cats(dbg_cats_env);
 
       std::map< std::string, int >::iterator i;
@@ -129,10 +130,16 @@ void vjDebug::getAllowedCatsFromEnv()
          std::string cat_name = (*i).first;
          if (dbg_cats.find(cat_name) != std::string::npos )    // Found one
          {
-            cout << "vjDEBUG::getAllowedCatsFromEnv: Allowing: " << (*i).first << " val:" << (*i).second << endl << flush;
+            cout << "vjDEBUG::getAllowedCatsFromEnv: Allowing: " << (*i).first.c_str() << " val:" << (*i).second << endl << flush;
             addAllowedCategory((*i).second);                   // Add the category
          }
       }
+   }
+   else
+   {
+      cout << "vjDEBUG::VJ_DEBUG_CATEGORIES not found:\n"
+           << " Setting to: vjDBG_ALL!" << endl << flush;
+      addAllowedCategory(vjDBG_ALL);
    }
 }
 
