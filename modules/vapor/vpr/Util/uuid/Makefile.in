@@ -56,7 +56,6 @@ top_srcdir	= @top_srcdir@
 EXTRA_DEFS	+= @UUID_DEFS@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
-VPRROOT		= $(top_srcdir)
 
 SRCS		= uuid.c	\
                   sysdep.c

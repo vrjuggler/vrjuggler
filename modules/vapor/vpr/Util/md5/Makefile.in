@@ -55,7 +55,6 @@ srcdir		= @srcdir@/../../../../../external/md5-c
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
-VPRROOT		= $(top_srcdir)
 
 SRCS		= md5c.c
 
