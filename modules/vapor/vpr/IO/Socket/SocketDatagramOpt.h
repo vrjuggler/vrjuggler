@@ -52,6 +52,18 @@ namespace vpr {
 class VPR_CLASS_API SocketDatagramOpt : public vpr::SocketOptionWrapper {
 public:
     /**
+     * Default constructor.  This does nothing and exists only so that we can
+     * build a DLL on Win32.
+     */
+    SocketDatagramOpt(void);
+
+    /**
+     * Default destructor.  This does nothing and exists only so that we can
+     * build a DLL on Win32.
+     */
+    ~SocketDatagramOpt(void);
+
+    /**
      * Gets the multicast interface for this datagram socket.
      */
     inline vpr::Status
