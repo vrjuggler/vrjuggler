@@ -64,7 +64,7 @@ public:
 
 
 
-    ~vjEnvironmentManager();
+    virtual ~vjEnvironmentManager();
 
 
 
