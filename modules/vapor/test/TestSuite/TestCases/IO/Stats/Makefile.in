@@ -43,11 +43,10 @@ default: all
 
 include @topdir@/test/TestSuite/test.defs.mk
 
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
 
-#SRCS		= SocketBandwidthIOStatsTest.cpp
-SRCS =
+#SRCS=		SocketBandwidthIOStatsTest.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

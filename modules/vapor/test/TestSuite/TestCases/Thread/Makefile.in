@@ -43,11 +43,11 @@ default: all
 
 include @topdir@/test/TestSuite/test.defs.mk
 
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
 
-SRCS		= SignalTest.cpp	\
-                  ThreadTest.cpp
+SRCS=		SignalTest.cpp	\
+		ThreadTest.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

@@ -54,8 +54,8 @@ SUBDIR=		Port		\
 		Stats
 
 SRCS=		SelectorTest.cpp	\
-		   SerializableTest.cpp \
-         XMLReaderWriterTest.cpp
+		SerializableTest.cpp	\
+		XMLReaderWriterTest.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

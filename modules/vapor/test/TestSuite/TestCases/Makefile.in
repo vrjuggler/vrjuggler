@@ -43,23 +43,23 @@ default: all
 
 include @topdir@/test/TestSuite/test.defs.mk
 
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
 
 # Prefix for recursive stuff.
-DIRPRFX		= TestCases/
+DIRPRFX=	TestCases/
 
-SUBDIR		= DynLoad	\
-                  IO		\
-                  Perf          \
-                  Simulator	\
-                  Socket	\
-                  Thread	\
-                  Util
+SUBDIR=		DynLoad		\
+		IO		\
+		Perf		\
+		Simulator	\
+		Socket		\
+		Thread		\
+		Util
 
-SRCS		= BoostTest.cpp		\
-                  FileUtilsTest.cpp	\
-                  SystemTest.cpp
+SRCS=		BoostTest.cpp		\
+		FileUtilsTest.cpp	\
+		SystemTest.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
