@@ -84,6 +84,7 @@ const int VJMBUTTON3   = LAST_KEY + 7;
 /** @name type-checked constants for the array indicies to the positional 
  *          keyboard controls.
  */
+// XXX: This should be #defines so that we don't clutter up global variable space ??
 //@{
 const int FORWARD = 0;
 const int BACK    = 1;
@@ -95,6 +96,9 @@ const int ROTR    = 6;
 const int ROTL    = 7;
 const int ROTU    = 8;
 const int ROTD    = 9;
+const int ROT_ROLL_CCW = 10;
+const int ROT_ROLL_CW = 11;
+#define NUM_POS_CONTROLS 12      // How many do we need space for??
 //@}
 
 //: Keyboard class
@@ -150,6 +154,7 @@ private:
    void MoveUp(float, int);
    void RotUp(float, int);
    void RotLeft(float, int);
+   void RotRollCCW(float amt, int n);
 
    /* X-Windows utility functions */
    int XKeyTovjKey(KeySym xKey);
@@ -179,11 +184,11 @@ private:
    int m_realkeys[256]; // The real keyboard state, all events processed
 
    /* Control key holders */
-   int m_pos0key[10];  
-   int m_pos0mod[10]; 
+   int m_pos0key[NUM_POS_CONTROLS];  
+   int m_pos0mod[NUM_POS_CONTROLS]; 
 
-   int m_pos1key[10];
-   int m_pos1mod[10];
+   int m_pos1key[NUM_POS_CONTROLS];
+   int m_pos1mod[NUM_POS_CONTROLS];
 
    int m_digkeys[4];
    int m_anakeysup[4];
