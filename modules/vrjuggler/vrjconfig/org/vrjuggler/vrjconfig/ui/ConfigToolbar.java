@@ -289,13 +289,6 @@ public class ConfigToolbar
     */
    public boolean doOpen(ConfigContext ctx)
    {
-      // Only allow the user to choose files
-      fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-      fileChooser.setFileHidingEnabled(false);
-      fileChooser.setAcceptAllFileFilterUsed(false);
-      fileChooser.setFileFilter(new ConfigFileFilter());
-      fileChooser.setFileView(new ConfigFileView());
-
       int result = fileChooser.showOpenDialog(getParentFrame());
       if (result == JFileChooser.APPROVE_OPTION)
       {
@@ -647,6 +640,12 @@ public class ConfigToolbar
       toolbar.add(pasteBtn, null);
       toolbar.addSeparator();
       toolbar.add(Box.createHorizontalGlue(), null);
+
+      fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+      fileChooser.setFileHidingEnabled(false);
+      fileChooser.setAcceptAllFileFilterUsed(false);
+      fileChooser.setFileFilter(new ConfigFileFilter());
+      fileChooser.setFileView(new ConfigFileView());
    }
 
    /**
@@ -658,10 +657,7 @@ public class ConfigToolbar
        {
           fileChooser.setDialogTitle("Save As...");
           fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-          fileChooser.setFileFilter( new ConfigFileFilter() );
-          fileChooser.setFileView( new ConfigFileView() );
-          fileChooser.setFileHidingEnabled(false);
-          fileChooser.setAcceptAllFileFilterUsed(false);
+          
           ConfigBroker broker = new ConfigBrokerProxy();
           ArrayList removed_sources = new ArrayList();
           ArrayList added_sources = new ArrayList();
