@@ -36,6 +36,7 @@
 package org.vrjuggler.tweek.wizard;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Interface for a step within a wizard sequence. This is the basic type that
@@ -98,6 +99,23 @@ public interface WizardStep
     * @param parent  the parent WizardStep or null if this step has no parent
     */
    public void setParent(WizardStep parent);
+
+   /**
+    * Gets a list of external classes required by this wizard step to operate
+    * successfully in a new VM.
+    *
+    * @return  a list of fully-qualified class names
+    */
+   public List getRequiredClasses();
+
+   /**
+    * Gets a list of the external resources required by this wizard step in
+    * order to operate successfully in a new VM.
+    *
+    * @return  a list of the filenames of the resources needed. The filenames
+    *          need to be the same as when they are loaded from the ClassLoader.
+    */
+   public List getRequiredResources();
 
    /**
     * Adds the given wizard step listener to this wizard step.

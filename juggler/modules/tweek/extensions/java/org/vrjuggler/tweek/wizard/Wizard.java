@@ -129,8 +129,21 @@ public class Wizard
     */
    public List getRequiredClasses()
    {
-      // XXX: Query each wizard step
-      return new ArrayList();
+      List classes = new ArrayList();
+
+      // Query each wizard step for its needs
+      for (WizardStepIterator itr = iterator(); itr.hasNext(); )
+      {
+         WizardStep step = itr.next();
+
+         // Add in the step's class
+         classes.add(step.getClass().getName());
+
+         // Add in the step's required classes
+         classes.addAll(step.getRequiredClasses());
+      }
+
+      return classes;
    }
 
    /**
@@ -139,8 +152,16 @@ public class Wizard
     */
    public List getRequiredResources()
    {
-      // XXX: Query each wizard step
-      return new ArrayList();
+      List classes = new ArrayList();
+
+      // Query each wizard step for its needs
+      for (WizardStepIterator itr = iterator(); itr.hasNext(); )
+      {
+         WizardStep step = itr.next();
+         classes.addAll(step.getRequiredResources());
+      }
+
+      return classes;
    }
 
    /**

@@ -151,6 +151,29 @@ public abstract class AbstractWizardStep
    }
 
    /**
+    * Gets a list of external classes required by this wizard step to operate
+    * successfully in a new VM.
+    *
+    * @return  a list of fully-qualified class names
+    */
+   public List getRequiredClasses()
+   {
+      return new ArrayList();
+   }
+
+   /**
+    * Gets a list of the external resources required by this wizard step in
+    * order to operate successfully in a new VM.
+    *
+    * @return  a list of the filenames of the resources needed. The filenames
+    *          need to be the same as when they are loaded from the ClassLoader.
+    */
+   public List getRequiredResources()
+   {
+      return new ArrayList();
+   }
+
+   /**
     * Removes the given wizard step listener from this wizard step.
     */
    public void removeWizardStepListener(WizardStepListener listener)
