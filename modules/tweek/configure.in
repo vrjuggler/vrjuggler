@@ -400,7 +400,12 @@ setup_omniORB ( )
 
    if test "x$BUILD_CXX" != "xN" ; then
       LDFLAGS="$LDFLAGS -L$OMNI_LIB_DIR"
-      LIBS="$LIBS -l$tweek_omni_lib -lomnithread $tweek_extra_libs"
+
+      if test "x$OS_TYPE" = "xWin32" ; then
+         LIBS="$LIBS -l$tweek_omni_lib -lomnithread /LINK /NODEFAULTLIB:LIBC"
+      else
+         LIBS="$LIBS -l$tweek_omni_lib -lomnithread $tweek_extra_libs"
+      fi
 
       if test "x$OMNI_VER" = "x3" ; then
          LIBS="$LIBS -lomniGK_stub"
@@ -411,7 +416,7 @@ setup_omniORB ( )
 
       AC_CACHE_CHECK([for CORBA::ORB_init in -l$tweek_omni_lib],
          [tweek_cv_CORBA__ORB_init_in_omniORB],
-         AC_TRY_LINK([
+         [AC_TRY_LINK([
 #include <omniORB$OMNI_VER/CORBA.h>
 
 int omni_main_i(int argc, char** const argv)
@@ -422,12 +427,18 @@ int omni_main_i(int argc, char** const argv)
                      [omni_main_i(0, NULL);],
                      [ tweek_cv_CORBA__ORB_init_in_omniORB='yes'
                        rm -rf ./ii_files ],
-                     [tweek_cv_CORBA__ORB_init_in_omniORB='no']))
+                     [tweek_cv_CORBA__ORB_init_in_omniORB='no'])])
 
       DPP_LANG_RESTORE
 
-      omniidl_search_path=${OMNI_BIN_DIR}:${PATH}
-      AC_PATH_PROG(CXX_IDL, omniidl, no, [${omniidl_search_path}])
+      if test "x$OS_TYPE" = "xWin32" ; then
+         OMNI_BIN_DIR_UNIX=`unixpath "$OMNI_BIN_DIR"`
+         omniidl_search_path="${OMNI_BIN_DIR_UNIX}:${PATH}"
+      else
+         omniidl_search_path="${OMNI_BIN_DIR}:${PATH}"
+      fi
+
+      AC_PATH_PROG(CXX_IDL, omniidl, no, [$omniidl_search_path])
 
       if test "x$CXX_IDL" = "xno" ; then
          AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
