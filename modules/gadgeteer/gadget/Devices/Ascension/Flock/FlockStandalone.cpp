@@ -927,4 +927,289 @@ void FlockStandalone::set_group ()
     }
 }
 
+/****************************************************
+ * Begin testing functions
+ *
+ ****************************************************/
+
+void FlockStandalone::check_group(){
+	char exam1[1], exam2[1];
+	exam1[0] = 'O';
+	exam2[0] = 0x23;
+	vpr::Uint32 buf=0, buf1=0;
+	char in[2];
+	in[0]='a';
+
+	
+	while(true){
+		_serial_port->write(exam1, sizeof(char), buf);
+		_serial_port->write(exam2, sizeof(char), buf);
+
+		_serial_port->readn(in, sizeof(char), buf1);
+		std::cout << in[0] << " " << buf << " " << buf1 << std::endl;
+	}
+	
+}
+
+void FlockStandalone::check_config(){
+    if (_serial_port != NULL ){
+
+	char exam1[1], exam2[1];
+	exam1[0] = 'O';
+	exam2[0] = 0x0;
+	vpr::Uint32 buf=0, buf1=0;
+        char in[2] = {'a','a'};
+        int i = 0;
+
+	clear_buffer();
+
+	while(i < 400){
+            i++;
+            _serial_port->write(exam1, sizeof(char), buf);
+            _serial_port->write(exam2, sizeof(char), buf);
+            _serial_port->readn(&in, sizeof(char)*2, buf1);
+            showbits(in[1]); std::cout << "|"; showbits(in[0]);
+            std::cout << std::endl;
+        }
+
+    }
+}
+
+void FlockStandalone::check_pos_angles(){
+	return;
+}
+
+void FlockStandalone::check_rep_and_stream(){
+	return;
+}
+
+void FlockStandalone::showbits(char var)
+{
+    static unsigned mask[8]={1,2,4,8,16,32,64,128};
+    int bit;
+    unsigned bitval;
+    for(bit=7;bit>=0;bit--)
+    {
+        bitval=mask[bit]&var;
+        printf("%c",bitval?'1':'0');
+    }
+}
+
+int FlockStandalone::hextoint(char var)
+{
+    static unsigned mask[8]={1,2,4,8,16,32,64,128};
+    int bit;
+    int bitval=0;
+    for(bit=7;bit>=0;bit--)
+    {
+        bitval+=mask[bit]&var;
+    }
+    return bitval;
+}
+
+void FlockStandalone::check_data_ready_char()
+{
+    char exam1[1], exam2[1];
+    exam1[0] = 'O';
+    exam2[0] = 0x9;
+    vpr::Uint32 buf=0, buf1=0;
+    char in[2] = {'a','a'};
+    int i = 0;
+
+        // Initial exam
+    do{
+        i++;
+        _serial_port->write(exam1, sizeof(char), buf);
+        _serial_port->write(exam2, sizeof(char), buf);
+        _serial_port->readn(&in, sizeof(char)*2, buf1);
+    }while(in[0] != ',');
+    std::cout << "I=" << i << std::endl;
+    _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+    usleep(500 * mSleepFactor);
+}
+
+
+
+
+
+
+void FlockStandalone::examine_value(char exam, int data, int reps, int format)
+{  
+    char exam1[1];
+    char exam2[1];
+    exam1[0] = 'O';
+    exam2[0] = exam;
+    vpr::Uint32 buf=0, buf1=0;
+    char in[1] = {'a'};
+    int i = 0, j = 0;
+
+    
+    i = 1;
+    while(i < reps){
+        i++;
+        _serial_port->write(exam1, sizeof(char), buf);
+        _serial_port->write(exam2, sizeof(char), buf);
+        while (j < data){
+            _serial_port->readn(in, sizeof(char), buf);
+                //_serial_port->readn(&in, sizeof(char), buf1);
+            if (format == 1)
+                std::cout << in[0];
+            else
+                showbits(in[0]);
+            std::cout << std::endl;
+            j++;
+        }
+        j = 0;
+                // _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+                // usleep(500 * mSleepFactor); 
+    }
+     _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+     usleep(500 * mSleepFactor);
+}
+
+
+
+/***********************************************************
+ * Here are some additional methods for setting values of 
+ * the flock.
+ **********************************************************/
+
+void FlockStandalone::set_run_mode(){
+    char exam1[1];
+    exam1[0] = 'F';  // Put the flock into RUN mode
+    vpr::Uint32 buf=0;
+
+    int i;
+    for (i = 0; i < 150; i++)
+        _serial_port->write(exam1, sizeof(char), buf);
+  
+}
+
+void FlockStandalone::set_sleep_mode(){
+    char exam1[1];
+    exam1[0] = 'G';  // Put the flock into SLEEP mode
+    vpr::Uint32 buf=0;
+
+    int i;
+    for (i = 0; i < 150; i++)
+        _serial_port->write(exam1, sizeof(char), buf);
+  
+}
+
+void FlockStandalone::set_value(char exam, char setdata, int reps)
+{  
+    char exam1[1];
+    char exam2[1];
+    char data[1];
+    exam1[0] = 'P';
+    exam2[0] = exam;
+    data[0] = setdata;
+    vpr::Uint32 buf=0, buf1=0;
+    char in[1] = {'a'};
+    int i = 0, j = 0;
+
+    i = 1;
+    while(i < reps){
+        i++;
+        _serial_port->write(exam1, sizeof(char), buf);
+        _serial_port->write(exam2, sizeof(char), buf);
+        _serial_port->write(data, sizeof(char), buf);
+    }
+     
+     _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+     usleep(500 * mSleepFactor);
+}
+
+void FlockStandalone::set_pos_mode()
+{
+    char exam3[1];
+    exam3[0] = 0x56;  // Position mode
+    vpr::Uint32 buf=0;
+    int i = 0;
+
+    while(i < 150){
+        i++;
+        _serial_port->write(exam3, sizeof(char), buf);
+    }
+
+}
+
+void FlockStandalone::set_pos_ang_mode()
+{
+    char exam3[1];
+    exam3[0] = 0x59;  // Position/angle mode
+    vpr::Uint32 buf=0;
+    int i = 0;
+
+    while(i < 150){
+        i++;
+        _serial_port->write(exam3, sizeof(char), buf);
+    }
+
+}
+
+
+
+void FlockStandalone::set_stream_mode(){
+    char exam1[1];
+    exam1[0] = '@';  // Put the flock into STREAM mode
+    vpr::Uint32 buf=0;
+
+    int i;
+    for (i = 0; i < 150; i++)
+        _serial_port->write(exam1, sizeof(char), buf);
+  
+}
+
+void FlockStandalone::set_point_mode(){
+    char exam1[1];
+    exam1[0] = 'B';  // Put the flock into STREAM mode
+    vpr::Uint32 buf=0;
+
+    int i;
+    for (i = 0; i < 150; i++)
+        _serial_port->write(exam1, sizeof(char), buf);
+  
+}
+
+void FlockStandalone::set_report_rate(char rate){
+    char exam1[1];
+    vpr::Uint32 buf=0;
+
+    switch(rate)
+    {
+        case 'Q':
+            std::cout << "setting report rate to every cycle" << std::endl;
+            exam1[0] = 'Q';
+            break;
+          case 'R':
+            std::cout << "setting report rate to every other cycle" << std::endl;
+            exam1[0] = 'R';
+            break;
+        case 'S':
+            std::cout << "setting report rate to every 8th cycle" << std::endl;
+            exam1[0] = 'S';
+            break;
+        case 'T':
+            std::cout << "setting report rate to every 32nd cycle" << std::endl;
+            exam1[0] = 'T';
+            break;
+    }
+    int i;
+    for (i = 0; i < 500; i++)
+        _serial_port->write(exam1, sizeof(char), buf);
+  
+}
+
+void FlockStandalone::clear_buffer(){
+  vpr::Uint32 buf1;
+  vpr::IOSys::Handle handle = _serial_port->getHandle();
+  int bytes;
+  char in[1];
+
+  do{
+     _serial_port->readn(in, sizeof(in), buf1);
+    ioctl(handle, FIONREAD, &bytes);
+  }while(bytes != 0);
+}
 
