@@ -165,7 +165,8 @@ public:
    { return mRightProj; }
 
 
-   virtual std::ostream& outStream(std::ostream& out);
+   virtual std::ostream& outStream(std::ostream& out,
+                                   const unsigned int indentLevel = 0);
    friend VJ_API(std::ostream&) operator<<(std::ostream& out, Viewport& viewport);
 
 protected:

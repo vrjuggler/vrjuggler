@@ -110,24 +110,25 @@ std::ostream& operator<<(std::ostream& out, Viewport& viewport)
    return viewport.outStream(out);
 }
 
-std::ostream& Viewport::outStream(std::ostream& out)
+std::ostream& Viewport::outStream(std::ostream& out,
+                                  const unsigned int indentLevel)
 {
-   const int pad_width_dot(20);
+   const int pad_width_dot(20 - indentLevel);
+   const std::string indent_text(indentLevel, ' ');
 
-   out << std::setw(pad_width_dot)
-       << "    Name " <<  " " << getName() << std::endl;
-   out << std::setw(pad_width_dot)
-       << "    Active " <<  " " << (mActive ? "Yes" : "No") << std::endl;
-   out << std::setw(pad_width_dot)
-       << "    User " <<  " " << getUser()->getName() << std::endl;
-   out << std::setw(pad_width_dot)
-       << "    Origin " << " " << mXorigin << ", " << mYorigin << std::endl;
-   out << std::setw(pad_width_dot)
-       << "    Size " << " " << mXsize << "x" << mYsize << std::endl;
-   out << std::setw(pad_width_dot)
-       << "    View " << " "
-       << ((mView == Viewport::LEFT_EYE) ? "Left" : ((mView==Viewport::RIGHT_EYE)?"Right" : "Stereo") )
-       << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "Name " << " " << getName() << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "Active " << " " << (mActive ? "Yes" : "No") << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "User " << " " << getUser()->getName() << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "Origin " << " " << mXorigin << ", " << mYorigin << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "Size " << " " << mXsize << "x" << mYsize << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "View " << " "
+       << ((mView == Viewport::LEFT_EYE) ? "Left" : ((mView==Viewport::RIGHT_EYE)?"Right" : "Stereo") );
 
    out << std::flush;
 
