@@ -1,0 +1,49 @@
+default: all
+
+# Basic options.
+srcdir			= @srcdir@
+JAVAC_FLAGS		= -classpath "$(CLASSPATH)" -sourcepath "$(srcdir)" -d .
+JCPS           = @JCPS@
+
+JUNIT_JAR		= @JUNIT_JAR@
+VJCONTROL_JARS = $(JCCL_BASE_DIR)/bin/VjControl.jar
+CLASSPATH		= $(JUNIT_JAR)$(JCPS)$(VJCONTROL_JARS)
+
+# Commands to execute.
+JAVA_COMPILE   = @JAVAC@ $(JAVAC_FLAGS)
+JAR            = @JAR@
+
+VPATH		= @srcdir@:@srcdir@/test
+
+#IDL_JAVA_FILES	=
+
+CLASSES		= AllTests.class
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+all:
+	$(MAKE) java
+
+run: AllTests.class
+	java -classpath "$(CLASSPATH)$(JCPS)." AllTests
+
+java: $(CLASSES)
+
+install:
+	echo "Nothing to install. This makefile is for tests only!"
+
+# Suffix rules for building object files.
+.SUFFIXES: .java .class .idl
+
+.java.class:
+	$(JAVA_COMPILE) $<
+
+# -----------------------------------------------------------------------------
+# Clean-up targets.
+# -----------------------------------------------------------------------------
+clean:
+	rm -f AllTests.class test/*.class
+
+clobber:
+	@$(MAKE) clean
