@@ -24,10 +24,13 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-BUILD_JAVA	= @BUILD_JAVA@
+ifndef NO_JAVA
+   BUILD_JAVA=	@BUILD_JAVA@
+else
+   BUILD_JAVA=	N
+endif
 
 vrjconfig-java:
-ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@echo "------------------------------------------------"
 	@echo "Building code for the VRJConfig"
@@ -38,11 +41,9 @@ else
 	@echo "VRJConfig build skipped"
 	@echo "------------------------------------------------"
 endif
-endif	# ifndef NO_JAVA
 
 # Build the JAR files for VRJConfig.
 vrjconfig-jar:
-ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) jars
 else
@@ -50,7 +51,6 @@ else
 	@echo "VRJConfig JAR file creation skipped"
 	@echo "------------------------------------------------"
 endif
-endif	# ifndef NO_JAVA
 
 vrjconfig-gui-links:
 	@$(MAKE) instlinks="$(instlinks)" links

@@ -46,7 +46,11 @@ instlinks	= $(topdir)/instlinks
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 
-BUILD_JAVA=	@BUILD_JAVA@
+ifndef NO_JAVA
+   BUILD_JAVA=	@BUILD_JAVA@
+else
+   BUILD_JAVA=	N
+endif
 
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
@@ -274,14 +278,8 @@ EXTRA_OBJ_TARGETS = vrjconfig-jar
 
 # Build the VRJConfig code base and the JAR files
 vrjconfig-gui:
-ifndef NO_JAVA
 	@$(MAKE) vrjconfig-java
 	@$(MAKE) vrjconfig-jar
-else
-	@echo "------------------------------------------------"
-	@echo "VRJConfig build disabled"
-	@echo "------------------------------------------------"
-endif
 
 # Build the java code and the JAR files
 vrjconfig-java vrjconfig-jar:
@@ -420,10 +418,8 @@ install-headers-deprecated:
           -i $(VJROOT_ABS)/deprecated $(EXTRA_INSTALL_ARGS)
 
 install-java:
-ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) -C vrjconfig vrjconfig-install
-endif
 endif
 
 # Install the sample applications.
