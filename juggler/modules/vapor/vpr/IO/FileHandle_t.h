@@ -65,7 +65,7 @@ public:
      * @param file_name The name of the file to be handled.
      */
     FileHandle_t (const std::string& file_name)
-        : BlockIO(file_name), m_handle_impl(file_name)
+        : BlockIO(file_name), m_open_mode(READ_WRITE), m_handle_impl(file_name)
     {
         /* Do nothing. */ ;
     }
@@ -211,6 +211,47 @@ public:
     // ========================================================================
 
     /**
+     * Sets the open flags so that the file handle is opened in read-only mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the device is opened, it
+     *       it is opened in read-only mode.  If the device is already open,
+     *       this has no effect.
+     */
+    void
+    setOpenReadOnly (void) {
+        m_handle_impl.setOpenReadOnly();
+    }
+
+    /**
+     * Sets the open flags so that the file handle is opened in write-only
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the device is opened, it
+     *       is opened in write-only mode.  If the device is already open,
+     *       this has no effect.
+     */
+    void
+    setOpenWriteOnly (void) {
+        m_handle_impl.setOpenWriteOnly();
+    }
+
+    /**
+     * Sets the open flags so that the file handle is opened in read/write
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the device is opened, it
+     *       is opened in read/write mode.  If the device is already open,
+     *       this has no effect.
+     */
+    void
+    setOpenReadWrite (void) {
+        m_handle_impl.setOpenReadWrite();
+    }
+
+    /**
      * Reconfigures the file handle to be in append mode.
      *
      * @pre The file handle is open.
@@ -271,6 +312,51 @@ public:
     inline Status
     enableAsynchronousWrite (void) {
         return m_handle_impl.enableAsynchronousWrite();
+    }
+
+    /**
+     * Tests if the file handle is read-only.
+     *
+     * @pre The file handle is open.
+     * @post The access mode is tested for read-only mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in read-only
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isReadOnly (void) {
+        return m_handle_impl.isReadOnly();
+    }
+
+    /**
+     * Tests if the file handle is write-only.
+     *
+     * @pre The file handle is open.
+     * @post The access mode is tested for write-only mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in write-only
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isWriteOnly (void) {
+        return m_handle_impl.isWriteOnly();
+    }
+
+    /**
+     * Tests if the file handle is read/write.
+     *
+     * @pre The file handle is open.
+     * @post The access mode is tested for read/write mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in read/write
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isReadWrite (void) {
+        return m_handle_impl.isReadWrite();;
     }
 
 protected:
@@ -370,7 +456,8 @@ protected:
         return m_handle_impl.write(buffer, length, bytes_written, timeout);
     }
 
-    RealFileHandleImpl m_handle_impl; //: Platform-specific file hanlde impll
+    /// Platform-specific file hanlde impll
+    RealFileHandleImpl m_handle_impl;
 };
 
 } // End of vpr namespace

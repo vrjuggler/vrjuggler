@@ -83,19 +83,7 @@ FileHandleImplUNIX::open () {
     int open_flags;
     Status status;
 
-    open_flags = 0;
-
-    switch ( m_open_mode ) {
-      case BlockIO::READ_ONLY:
-        open_flags = O_RDONLY;
-        break;
-      case BlockIO::WRITE_ONLY:
-        open_flags = O_WRONLY;
-        break;
-      case BlockIO::READ_WRITE:
-        open_flags = O_RDWR;
-        break;
-    }
+    open_flags = m_open_mode;
 
     if ( ! m_open_blocking ) {
         open_flags |= O_NONBLOCK;

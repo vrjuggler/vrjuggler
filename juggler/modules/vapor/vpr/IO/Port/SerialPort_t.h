@@ -87,48 +87,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Set the open flags so that the serial port is opened in read-only
-    //+ mode.
-    //
-    //! PRE: None.
-    //! POST: The open flags are updated so that when the port is opened, it
-    //+       is opened in read-only mode.  If the port is already open, this
-    //+       has no effect.
-    // ------------------------------------------------------------------------
-    inline void
-    setOpenReadOnly (void) {
-        m_sio_imp.setOpenReadOnly();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Set the open flags so that the serial port is opened in write-only
-    //+ mode.
-    //
-    //! PRE: None.
-    //! POST: The open flags are updated so that when the port is opened, it
-    //+       is opened in write-only mode.  If the port is already open, this
-    //+       has no effect.
-    // ------------------------------------------------------------------------
-    inline void
-    setOpenWriteOnly (void) {
-        m_sio_imp.setOpenWriteOnly();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Set the open flags so that the serial port is opened in read/write
-    //+ mode.
-    //
-    //! PRE: None.
-    //! POST: The open flags are updated so that when the port is opened, it
-    //+       is opened in read/write mode.  If the port is already open, this
-    //+       has no effect.
-    // ------------------------------------------------------------------------
-    inline void
-    setOpenReadWrite (void) {
-        m_sio_imp.setOpenReadWrite();
-    }
-
-    // ------------------------------------------------------------------------
     //: Set the blocking flags so that the serial port is opened in blocking
     //+ mode.
     //
