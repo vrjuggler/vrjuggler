@@ -123,7 +123,7 @@ Finally, with all of the previous steps taken, VR Juggler can be compiled.
 
    1.  cd modules/vrjuggler
 
-   2.  ./configure --prefix=$HOME/vrjuggler-2.0
+   2.  ./reconfig
 
    3.  gmake debug install
 
