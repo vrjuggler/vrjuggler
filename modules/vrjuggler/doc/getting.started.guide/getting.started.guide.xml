@@ -5,7 +5,7 @@
    <bookinfo>
       <title>VR Juggler</title>
       <subtitle>Getting Started Guide</subtitle>
-      <releaseinfo>Version 1.1 DR1</releaseinfo>
+      <releaseinfo>Version 1.1 DR2</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <preface>
@@ -26,7 +26,7 @@
             <para>Knowledge of C++ and object-oriented design</para>
          </listitem>
          <listitem>
-            <para>Knowledge of one of VR Juggler's currently supported graphics APIs (<ulink url="http://www.opengl.org/">OpenGL</ulink>, <ulink url="http://www.sgi.com/software/performer/">OpenGL Performer</ulink>, or <ulink url="http://www.openscenegraph.org/">Open Scene Graph</ulink></para>
+            <para>Knowledge of one of VR Juggler's currently supported graphics APIs (<ulink url="http://www.opengl.org/">OpenGL</ulink>, <ulink url="http://www.sgi.com/software/performer/">OpenGL Performer</ulink>, <ulink url="http://www.opensg.org/">OpenSG</ulink>, or <ulink url="http://www.openscenegraph.org/">Open Scene Graph</ulink>)</para>
          </listitem>
       </itemizedlist>
    </preface>
@@ -173,69 +173,70 @@ value</screen>
                <para>Here, the reference to the value is <varname>$VARIABLE_NAME</varname>.</para>
             </section>
          </section>
-         <section>
-            <title>Required Environment Variables</title>
-            <variablelist>
-               <varlistentry>
-                  <term>VJ_BASE_DIR</term>
-                  <listitem>
-                     <para>The environment variable <varname>VJ_BASE_DIR</varname> tells a VR Juggler application where to find important data files. It is required to compile and run any Juggler app. It should be set to the base directory of the installed VR Juggler library. For example, if you downloaded a UNIX version of VR Juggler 2.0 and extracted it to the directory <filename>/home/software/</filename>, you would set <varname>VJ_BASE_DIR</varname> with this command:</para>
-                     <screen>% VJ_BASE_DIR = /home/software/vrjuggler-2.0</screen>
-                     <para>The last component of the path depends on the particular version of Juggler you have downloaded.</para>
-                     <para>If you downloaded and built VR Juggler from the source code, the compilation creates a directory called <filename>instlinks</filename> which can be used as a VR Juggler base:</para>
-                     <screen>% VJ_BASE_DIR = $HOME/juggler/my_build_dir/instlinks</screen>
-                     <para>In any case, on a Win32 platform, you should use /'s as the path separator for <varname>VJ_BASE_DIR</varname> rather than \'s. The compiler tools can handle either, and the utilities in <filename>juggler-tools</filename> will behave much better if UNIX-style paths are used. It is safe to use the drive letter at the start of the path (e.g., <filename>C:/software/vrjuggler-2.0</filename>).</para>
-                  </listitem>
-               </varlistentry>
-               <varlistentry>
-                  <term>JDK_HOME</term>
-                  <listitem>
-                     <para>The <varname>JDK_HOME</varname> environment variable is required by the script that starts VjControl, the VR Juggler configuration program. If Java is installed on your system, <varname>JDK_HOME</varname> may already be set. If not, it needs to be set to the base of the Java installation.</para>
-                  </listitem>
-               </varlistentry>
-               <varlistentry>
-                  <term>LD_LIBRARY_PATH (UNIX/Linux only)</term>
-                  <term>LD_LIBRARYN32_PATH (IRIX only)</term>
-                  <term>LD_LIBRARY64_PATH (IRIX only)</term>
-                  <listitem>
-                     <para>UNIX/Linux systems use these environment variables to find dynamically loaded libraries, such as <filename>libJuggler.so</filename>. Unless you are building everything with static libraries, you will need to set these to include the VR Juggler library directory (under <varname>VJ_BASE_DIR</varname>). IRIX supports several Application Binary Interfaces (ABIs). VR Juggler supports only the N32 and 64 formats, and there are different library path variables for each. The N32 ABI uses the <varname>LD_LIBRARYN32_PATH</varname> variable, and the 64 ABI uses <varname>LD_LIBRARY64_PATH</varname>. An example of setting the library path is as follows:</para>
-                     <screen>% LD_LIBRARY_PATH = $VJ_BASE_DIR/lib</screen>
-                     <note>
-                        <para>On some SGI systems running IRIX, users of the MIPSpro Compilers (version 7.3) will need to add another directory as follows:</para>
-                        <screen>% LD_LIBRARY_PATH = $LD_LIBRARY_PATH:/usr/lib32/cmplrs:$VJ_BASE_DIR</screen>
-                     </note>
-                  </listitem>
-               </varlistentry>
-            </variablelist>
-         </section>
-         <section>
-            <title>Optional Related Environment Variables </title>
-            <variablelist>
-               <varlistentry>
-                  <term>PATH</term>
-                  <listitem>
-                     <para>If you intend to use the VjControl program, you may want to add the <varname>$VJ_BASE_DIR/bin</varname> directory to your <varname>PATH</varname> as follows:</para>
-                     <screen>% PATH = $PATH:$VJ_BASE_DIR/bin</screen>
-                  </listitem>
-               </varlistentry>
-               <varlistentry>
-                  <term>VPR_DEBUG_NFY_LEVEL</term>
-                  <listitem>
-                     <para>This variable can be used to control the amount of diagnostic information a VR Juggler application outputs. Its value is a number between 0 (only very important messages are printed) and 7 (vast amounts of data) inclusive. Non-hackers are advised to use levels 0 through 3, as higher debug levels become increasingly cryptic and <emphasis>can severely impact application performance</emphasis>. The default is level 1&mdash;only errors and critical information are output. An example of setting a value for this variable is:</para>
-                     <screen>% VPR_DEBUG_NFY_LEVEL = 3</screen>
-                  </listitem>
-               </varlistentry>
-               <varlistentry>
-                  <term>VPR_DEBUG_CATEGORIES</term>
-                  <listitem>
-                     <para>This variable can be used to control which components of VR Juggler are allowed to output diagnostic data. If for some reason you set <varname>VPR_DEBUG_NFY_LEVEL</varname> to 5 or higher, this variable can be used to filter the output. The value of <varname>VPR_DEBUG_CATEGORIES</varname> is a space-separated list of Juggler debug component names (defined in <filename>$VJ_BASE_DIR/include/vrj/Util/Debug.h</filename>). The default value is <quote>DBG_ALL</quote>, which performs no filtering whatsoever. Examples of setting it are as follows:</para>
-                     <screen>% VPR_DEBUG_CATAGORIES = DBG_ERROR
+      </section>
+      <section>
+         <title>Required Environment Variables</title>
+         <variablelist>
+            <varlistentry>
+               <term>VJ_BASE_DIR</term>
+               <listitem>
+                  <para>The environment variable <varname>VJ_BASE_DIR</varname> tells a VR Juggler application where to find important data files. It is required to compile and run any Juggler app. It should be set to the base directory of the installed VR Juggler library. For example, if you downloaded a UNIX version of VR Juggler 2.0 and extracted it to the directory <filename>/home/software/</filename>, you would set <varname>VJ_BASE_DIR</varname> with this command:</para>
+                  <screen>% VJ_BASE_DIR = /home/software/vrjuggler-2.0</screen>
+                  <para>The last component of the path depends on the particular version of Juggler you have downloaded.</para>
+                  <para>If you downloaded and built VR Juggler from the source code, the compilation creates a directory called <filename>instlinks</filename> which can be used as a VR Juggler base:</para>
+                  <screen>% VJ_BASE_DIR = $HOME/juggler/my_build_dir/instlinks</screen>
+                  <para>In any case, on a Win32 platform, you should use /'s as the path separator for <varname>VJ_BASE_DIR</varname> rather than \'s. The compiler tools can handle either, and the utilities in <filename>juggler-tools</filename> will behave much better if UNIX-style paths are used. It is safe to use the drive letter at the start of the path (e.g., <filename>C:/software/vrjuggler-2.0</filename>).</para>
+               </listitem>
+            </varlistentry>
+            <varlistentry>
+               <term>PATH</term>
+               <listitem>
+                  <para>To compile any of the sample applications, the <varname>$VJ_BASE_DIR/bin</varname> directory must be added to your <varname>PATH</varname> as follows:</para>
+                  <screen>% PATH = $PATH:$VJ_BASE_DIR/bin</screen>
+                  <para>Depending on your shell, you may need to run the <command>rehash</command> command after executing the above.</para>
+               </listitem>
+            </varlistentry>
+            <varlistentry>
+               <term>JDK_HOME</term>
+               <listitem>
+                  <para>The <varname>JDK_HOME</varname> environment variable is required by the script that starts VjControl, the VR Juggler configuration program. If Java is installed on your system, <varname>JDK_HOME</varname> may already be set. If not, it needs to be set to the base of the Java installation.</para>
+               </listitem>
+            </varlistentry>
+            <varlistentry>
+               <term>LD_LIBRARY_PATH (UNIX/Linux only)</term>
+               <term>LD_LIBRARYN32_PATH (IRIX only)</term>
+               <term>LD_LIBRARY64_PATH (IRIX only)</term>
+               <listitem>
+                  <para>UNIX/Linux systems use these environment variables to find dynamically loaded libraries, such as <filename>libJuggler.so</filename>. Unless you are building everything with static libraries, you will need to set these to include the VR Juggler library directory (under <varname>VJ_BASE_DIR</varname>). IRIX supports several Application Binary Interfaces (ABIs). VR Juggler supports only the N32 and 64 formats, and there are different library path variables for each. The N32 ABI uses the <varname>LD_LIBRARYN32_PATH</varname> variable, and the 64 ABI uses <varname>LD_LIBRARY64_PATH</varname>. An example of setting the library path is as follows:</para>
+                  <screen>% LD_LIBRARY_PATH = $VJ_BASE_DIR/lib</screen>
+                  <note>
+                     <para>On some SGI systems running IRIX, users of the MIPSpro Compilers (version 7.3) will need to add another directory as follows:</para>
+                     <screen>% LD_LIBRARY_PATH = $LD_LIBRARY_PATH:/usr/lib32/cmplrs:$VJ_BASE_DIR</screen>
+                  </note>
+               </listitem>
+            </varlistentry>
+         </variablelist>
+      </section>
+      <section>
+         <title>Optional Related Environment Variables </title>
+         <variablelist>
+            <varlistentry>
+               <term>VPR_DEBUG_NFY_LEVEL</term>
+               <listitem>
+                  <para>This variable can be used to control the amount of diagnostic information a VR Juggler application outputs. Its value is a number between 0 (only very important messages are printed) and 7 (vast amounts of data) inclusive. Non-hackers are advised to use levels 0 through 3, as higher debug levels become increasingly cryptic and <emphasis>can severely impact application performance</emphasis>. The default is level 1&mdash;only errors and critical information are output. An example of setting a value for this variable is:</para>
+                  <screen>% VPR_DEBUG_NFY_LEVEL = 3</screen>
+               </listitem>
+            </varlistentry>
+            <varlistentry>
+               <term>VPR_DEBUG_CATEGORIES</term>
+               <listitem>
+                  <para>This variable can be used to control which components of VR Juggler are allowed to output diagnostic data. If for some reason you set <varname>VPR_DEBUG_NFY_LEVEL</varname> to 5 or higher, this variable can be used to filter the output. The value of <varname>VPR_DEBUG_CATEGORIES</varname> is a space-separated list of Juggler debug component names (defined in <filename>$VJ_BASE_DIR/include/vrj/Util/Debug.h</filename>, <filename>$VJ_BASE_DIR/include/vpr/Util/Debug.h</filename>, <filename>$VJ_BASE_DIR/include/jccl/Util/Debug.h</filename>, and <filename>$VJ_BASE_DIR/include/gadget/Util/Debug.h</filename>). The default value is <quote>DBG_ALL</quote>, which performs no filtering whatsoever. Examples of setting it are as follows:</para>
+                  <screen>% VPR_DEBUG_CATAGORIES = DBG_ERROR
 % VPR_DEBUG_CATAGORIES = "DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR"
 % VPR_DEBUG_CATAGORIES = "DBG_CONFIG DBG_RECONFIGURATION"</screen>
-                  </listitem>
-               </varlistentry>
-            </variablelist>
-         </section>
+               </listitem>
+            </varlistentry>
+         </variablelist>
       </section>
    </chapter>
    <chapter>
@@ -285,16 +286,14 @@ value</screen>
       </section>
       <section>
          <title>Compiling an Application </title>
-         <para>There are two ways to compile VR Juggler applications: from the command line or with Microsoft Visual Studio. Compiling an application at the command line will work on all supported platforms including Win32. Using Microsoft Visual Studio will only work on Win32.</para>
+         <para>There are two ways to compile VR Juggler applications: from the command line or with Microsoft Visual Studio. Compiling an application on the command line requires the use of GNU make (often installed as <command>gmake</command>) so that it will work on all supported platforms including Win32. Using Microsoft Visual Studio will only work on Win32.</para>
          <section>
             <title>Compiling from the Command Line</title>
             <para>All the sample programs in <filename>$VJ_BASE_DIR/share/samples/tutorials/simpleApp</filename> use the same basic steps to compile unless otherwise noted. Always refer to the top of the sample application's <filename>Makefile</filename> for information that may be specific to building that application. In general, though, all applications' makefiles are compatible with the standard version of the <command>make</command>(1) utility. This includes the <command>nmake</command> command provided with Visual C++.</para>
             <para>The example used here will be the Torus application found in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials/simpleApp</filename>. It is an OpenGL-based application that will compile and run on all platforms supported by VR Juggler. Begin by changing into the directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials/simpleApp</filename> in a command shell.</para>
             <para>To compile simpleApp, simply enter the following:</para>
-            <screen>% make</screen>
-            <para>or on Win32 without Cygwin, enter:</para>
-            <screen>% nmake</screen>
-            <para>The compile process will then begin. If you have your system set up properly, it will complete with an executable <filename>simpleApp</filename> file (or <filename>simpleApp.exe</filename> on Win32) in the directory. Now that you have a program compiled, it is time to learn how to run it. Readers who are not using Visual Studio can skip ahead to <xref linkend="running.app.chapter"/>.</para>
+            <screen>% gmake</screen>
+            <para>The compile process will then begin. As noted above, the use of GNU make is required to use the distributed makefiles. With Cygwin, GNU make is simple <command>make</command>. If you have your system set up properly, it will complete with an executable <filename>simpleApp</filename> file (or <filename>simpleApp.exe</filename> on Win32) in the directory. Now that you have a program compiled, it is time to learn how to run it. (Readers who are not using Visual Studio can skip ahead to <xref linkend="running.app.chapter"/>.)</para>
          </section>
          <section>
             <title>Compiling Using Microsoft Visual Studio </title>
