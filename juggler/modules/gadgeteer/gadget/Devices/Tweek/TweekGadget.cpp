@@ -253,9 +253,8 @@ int TweekGadget::startSampling()
                                                    &TweekGadget::controlLoop,
                                                    NULL);
       mThread = new vpr::Thread(mFunctor);
-      vpr::ReturnStatus start_status = mThread->start();
 
-      if ( start_status.success() )
+      if ( mThread->valid() )
       {
          status = 1;
       }

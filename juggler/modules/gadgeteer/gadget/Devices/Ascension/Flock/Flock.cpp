@@ -192,9 +192,8 @@ int Flock::startSampling()
       vpr::ThreadMemberFunctor<Flock>* memberFunctor =
           new vpr::ThreadMemberFunctor<Flock>(this, &Flock::controlLoop, NULL);
       mThread = new vpr::Thread(memberFunctor);
-      vpr::ReturnStatus start_status = mThread->start();
 
-      if ( ! start_status.success() )
+      if ( ! mThread->valid() )
       {
          return 0;  // Fail
       }

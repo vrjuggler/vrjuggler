@@ -739,8 +739,7 @@ may look something like the following:</para>
    new vpr::ThreadMemberFunctor&lt;ButtonDevice&gt;(this,
                                               &amp;ButtonDevice::sampleFunction,
                                               NULL);
-mThread = new vpr::Thread(functor);
-mThread-&gt;start();</programlisting>
+mThread = new vpr::Thread(functor);</programlisting>
                   <para>The above creates a thread that will execute
 <methodname>ButtonDevice::sampleFunction()</methodname>, a non-static member
 function in the class <classname>ButtonDevice</classname>. The implementation
@@ -1308,7 +1307,6 @@ std::string ButtonDevice::getChunkType()
 int ButtonDevice::startSampling()
 {
    mSampleThread = new vpr::Thread(threadedSampleFunction, (void*)this);
-   mSampleThread-&gt;start();
 
    if ( ! mSampleThread-&gt;valid() )
    {

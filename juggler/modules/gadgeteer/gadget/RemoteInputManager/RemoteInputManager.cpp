@@ -805,15 +805,14 @@ namespace gadget
                   (this, &RemoteInputManager::acceptLoop, NULL);
             
             mAcceptThread = new vpr::Thread(memberFunctor);
-            mAcceptThread->start();
             vprASSERT(mAcceptThread->valid());
             return true;
          }
          else
          {
             vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_CONFIG_LVL)
-            << "RemoteInputManager:startListening: cannot listen on port: "
-            << mListenPort << "\n" << vprDEBUG_FLUSH;
+               << "RemoteInputManager:startListening: cannot listen on port: "
+               << mListenPort << "\n" << vprDEBUG_FLUSH;
             return false;
          }
       }

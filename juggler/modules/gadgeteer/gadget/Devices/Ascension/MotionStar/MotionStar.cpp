@@ -170,9 +170,8 @@ int MotionStar::startSampling()
                << "gadget::MotionStar ready to go.\n" << vprDEBUG_FLUSH;
 
             mMyThread = new vpr::Thread(sampleBirds, (void*) this);
-            vpr::ReturnStatus start_status = mMyThread->start();
 
-            if ( ! start_status.success() )
+            if ( ! mMyThread->valid() )
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                   << "gadget::MotionStar could not create sampling thread.\n"

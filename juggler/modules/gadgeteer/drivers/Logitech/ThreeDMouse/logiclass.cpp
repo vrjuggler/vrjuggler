@@ -87,12 +87,13 @@ int ThreeDMouse::startSampling()
    void sampleMouse(void*);
 
    mThread = new vpr::Thread(sampleMouse, (void *) devicePtr);
-   vpr::ReturnStatus start_status = mThread->start();
 
-   if ( ! start_status.success() || ! mThread->valid() )
+   if ( ! mThread->valid() )
    {
       return -1;
-   } else {
+   }
+   else
+   {
       std::cout << "going " << std::endl;
       return 1;
    }
