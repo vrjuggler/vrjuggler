@@ -75,8 +75,8 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
 
     // Get the lock information
     mLockToggleKey = c->getProperty("lock_key");
-    bool mStartLocked = c->getProperty("start_locked");
-    if(mStartLocked)
+    bool start_locked = c->getProperty("start_locked");
+    if(start_locked)
        mLockState = Lock_LockKey;      // Initialize to the locked state
 
     m_mouse_sensitivity = c->getProperty("msens");
@@ -98,6 +98,13 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
 
    // Open the x-window
    openTheWindow();
+
+   // If we have initial locked, then we need to lock the system
+   if(mLockState == Lock_LockKey)      // Means that we are in the initially locked state
+   {
+      vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "vjXWinKeyboard::controlLoop: Mouse set to initial lock. Locking it now.\n" << vjDEBUG_FLUSH;
+      lockMouse();                     // Lock the mouse
+   }
 
    // Loop on updating
    while(!mExitFlag)
@@ -152,8 +159,6 @@ int vjXWinKeyboard::onlyModifier(int mod)
 
 void vjXWinKeyboard::updateData()
 {
-  //int i;
-  // updKeys();
 vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
 
    // Copy over values
@@ -232,7 +237,7 @@ void vjXWinKeyboard::updKeys()
                lockMouse();
             }
          }
-         else if((mLockState == Lock_KeyDown) && (vj_key == mLockToggleKey))
+         else if((mLockState == Lock_KeyDown) && (vj_key == mLockToggleKey))     // Just switch the current locking state
          {
             mLockState = Lock_LockKey;
             vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Lock_KeyDown --> Lock_LockKey\n" << vjDEBUG_FLUSH;
@@ -727,6 +732,10 @@ void vjXWinKeyboard::lockMouse()
 {
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: LOCKING MOUSE..." << vjDEBUG_FLUSH;
 
+   // Center the mouse
+   int win_center_x(m_width/2),win_center_y(m_height/2);
+   XWarpPointer(m_display, None, m_window, 0,0, 0,0, win_center_x, win_center_y);
+
    // Grab the keyboard input so that holding down a key works even
    // if the window loses focus.  While the keyboard is grabbed,
    // keyboard and pointer events will be processed normally
@@ -747,11 +756,6 @@ void vjXWinKeyboard::lockMouse()
                 GrabModeAsync, None, None,
                                CurrentTime);
 
-   // Center the mouse
-   int win_center_x(m_width/2),win_center_y(m_height/2);
-   mPrevX = win_center_x;
-   mPrevY = win_center_y;
-   XWarpPointer(m_display, None, m_window, 0,0, 0,0, win_center_x, win_center_y);
    vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "lock finished.\n" << vjDEBUG_FLUSH;
 }
 
