@@ -183,16 +183,18 @@ namespace {
 
 void outputPendingItemState(int debugLevel, std::string chunkName, std::string chunkType, PendItemResult result)
 {
-   const int state_offset(60);
+   const int item_width(25);
+   const int type_width(20);
+
 
    const std::string name_prefix("Pending item: ");
    const std::string type_prefix(" type: ");
    const int prefix_len = name_prefix.length() + type_prefix.length();
    int item_and_type_len = chunkName.length() + chunkType.length() + prefix_len;
 
-   vjDEBUG(vjDBG_ALL,debugLevel) << "Pending item: " << chunkName
-                                      << " type: " << chunkType
-                                      << "     ";
+   vjDEBUG(vjDBG_ALL,debugLevel) << "Pending item: " << std::right << std::setfill(' ') << std::setw(item_width) << chunkName
+                                 <<    "     type: " << std::right << std::setfill(' ') << std::setw(type_width) << chunkType
+                                                     << std::left << "  ";
 
    /*
    for(int c=0;c<(state_offset-item_and_type_len);c++)

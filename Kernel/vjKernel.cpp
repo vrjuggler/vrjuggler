@@ -310,7 +310,7 @@ int vjKernel::configProcessPending(bool lockIt)
    vjConfigManager* cfg_mgr = vjConfigManager::instance();
    if(cfg_mgr->pendingNeedsChecked())
    {
-      vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_CONFIG_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vjDEBUG_FLUSH;
+      vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_STATE_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vjDEBUG_FLUSH;
 
       chunks_processed += vjConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks
       chunks_processed += getInputManager()->configProcessPending(lockIt);
@@ -387,7 +387,7 @@ bool vjKernel::addUser(vjConfigChunk* chunk)
    }
    else
    {
-      vjDEBUG(vjDBG_CONFIG,vjDBG_CONFIG_LVL)
+      vjDEBUG(vjDBG_CONFIG,vjDBG_STATE_LVL)
                              << "vjKernel: Added new vjUser: "
                              << new_user->getName().c_str() << std::endl
                              << vjDEBUG_FLUSH;

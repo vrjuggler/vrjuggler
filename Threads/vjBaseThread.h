@@ -274,7 +274,9 @@ public:
    // -----------------------------------------------------------------------
    virtual std::ostream& outStream(std::ostream& out)
    {
-      out << "t:" << mThreadId << " ";
+      out.setf(std::ios::right);
+      out << std::setw(3) << mThreadId;
+      out.unsetf(std::ios::right);
       return out;
    }
 

@@ -375,9 +375,11 @@ public:  // ----- Various other thread functions ------
     // -----------------------------------------------------------------------
     std::ostream&
     outStream (std::ostream& out) {
-        //out << "pThrd:[" << getpid() << "] ";
-        out << "p:[" << getpid() << "] ";
+        out.setf(std::ios::right);
+        out << std::setw(6) << std::setfill('0') << getpid() << "/";
+        out.unsetf(std::ios::right);
         vjBaseThread::outStream(out);
+        out << std::setfill(' ');
         return out;
     }
 

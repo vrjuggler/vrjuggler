@@ -315,7 +315,7 @@ std::ostream& operator<<(std::ostream& out, vjInputManager& iMgr)
 
   for (i = 0; i < iMgr.m_devVector.size(); i++)      // Dump DEVICES
      if (iMgr.m_devVector[i] != NULL)
-       out << std::setw(2) << i << ":"
+       out << std::setw(2) << std::setfill(' ') << i << ":"
            << "  name:" << std::setw(30) << iMgr.m_devVector[i]->getInstanceName()
            << "  type:" << std::setw(12) << iMgr.m_devVector[i]->getDeviceName()
            << "  port:" << std::setw(10) << iMgr.m_devVector[i]->getPort()
@@ -959,7 +959,7 @@ bool vjInputManager::removeProxyAlias(vjConfigChunk* chunk)
 //             char*.
 void vjInputManager::addProxyAlias(std::string aliasStr, int proxyIndex)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "Proxy alias [" << aliasStr.c_str() << "] added.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "Proxy alias [" << aliasStr.c_str() << "] added.\n" << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_VERB_LVL)   << "   index:" << proxyIndex << std::endl << vjDEBUG_FLUSH;
    proxyAliases[aliasStr] = proxyIndex;
 }
