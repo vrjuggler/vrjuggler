@@ -89,9 +89,6 @@ namespace gadget
     // set to active
     mActive = true;
 
-    // grow vector
-    mCurSensorValues.resize(mTrackerReader->trackdGetNumberOfSensors());
-
     return true;
  }
 
@@ -105,16 +102,21 @@ namespace gadget
  void TrackdAPISensor::updateData()
  {
     vprASSERT(mTrackerReader != NULL && "Make sure that trackd sensors has been initialized");
-    vprASSERT((unsigned)mTrackerReader->trackdGetNumberOfSensors() <= mCurSensorValues.size());
+    std::vector<gadget::PositionData> cur_samples(mTrackerReader->trackdGetNumberOfSensors());
+
+    if ( ! cur_samples.empty() )
+    {
+       cur_samples[0].setTime();
+    }
 
     for(int i=0;i<mTrackerReader->trackdGetNumberOfSensors();i++)
     {
-       mCurSensorValues[i].mPos.mPosData = getSensorPos(i);
-       mCurSensorValues[i].setTime();
+       cur_samples[i].setTime(cur_samples[0].getTime());
+       cur_samples[i].mPosData = getSensorPos(i);
     }
 
     // Update the data buffer
-    addPositionSample(mCurSensorValues);
+    addPositionSample(cur_samples);
         
     // Swap it
     swapPositionBuffers();
@@ -132,26 +134,25 @@ gmtl::Matrix44f TrackdAPISensor::getSensorPos(int sensorNum)
    mTrackerReader->trackdGetMatrix(sensorNum, mat_data);
 
    // AJS - some obvious set/get functions seem to be missing in GMTL
-   ret_val[0]=mat_data[0][0];
-   ret_val[1]=mat_data[0][1];
-   ret_val[2]=mat_data[0][2];
-   ret_val[3]=mat_data[0][3];
+   ret_val.mData[0] = mat_data[0][0];
+   ret_val.mData[1] = mat_data[0][1];
+   ret_val.mData[2] = mat_data[0][2];
+   ret_val.mData[3] = mat_data[0][3];
 
-   ret_val[4]=mat_data[1][0];
-   ret_val[5]=mat_data[1][1];
-   ret_val[6]=mat_data[1][2];
-   ret_val[7]=mat_data[1][3];
+   ret_val.mData[4] = mat_data[1][0];
+   ret_val.mData[5] = mat_data[1][1];
+   ret_val.mData[6] = mat_data[1][2];
+   ret_val.mData[7] = mat_data[1][3];
 
-   ret_val[8]=mat_data[2][0];
-   ret_val[9]=mat_data[2][1];
-   ret_val[10]=mat_data[2][2];
-   ret_val[11]=mat_data[2][3];
+   ret_val.mData[8]  = mat_data[2][0];
+   ret_val.mData[9]  = mat_data[2][1];
+   ret_val.mData[10] = mat_data[2][2];
+   ret_val.mData[11] = mat_data[2][3];
 
-   ret_val[12]=mat_data[3][0];
-   ret_val[13]=mat_data[3][1];
-   ret_val[14]=mat_data[3][2];
-   ret_val[15]=mat_data[3][3];
-
+   ret_val.mData[12] = mat_data[3][0];
+   ret_val.mData[13] = mat_data[3][1];
+   ret_val.mData[14] = mat_data[3][2];
+   ret_val.mData[15] = mat_data[3][3];
 
    return ret_val;
 }
