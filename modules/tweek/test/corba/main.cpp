@@ -10,14 +10,13 @@ int main (int argc, char* argv[])
 
    try
    {
-      if ( mgr.init(argc, argv).success() )
+      if ( mgr.init("corba_test", argc, argv).success() )
       {
-         tweek::SubjectManagerImpl* subj_mgr = new tweek::SubjectManagerImpl();
          vpr::ReturnStatus status;
 
          try
          {
-            status = mgr.registerSubjectManager(subj_mgr);
+            status = mgr.registerSubjectManager(tweek::SubjectManagerImpl::instance());
          }
          catch (CORBA::Exception& ex)
          {
