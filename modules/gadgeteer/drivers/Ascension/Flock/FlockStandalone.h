@@ -638,6 +638,8 @@ public:  // ---- Query methods for flock state ---- //
    /** Get the current expanded error code */
    std::pair<vpr::Uint8,vpr::Uint8> queryExpandedErrorCode();
 
+   vpr::Uint8 queryPositionScaleFactor();
+
    void setErrorModeIgnore();
    void setErrorModeStandard();
 
@@ -767,6 +769,7 @@ private:  // --- Data members --- //
    std::string           mModelId;        /**< Model id for the system we are connected to */
    unsigned int          mMasterAddr;     /**< Address of the master */
    unsigned int          mNumSensors;     /**< Number of sensors in the flock */
+   float                 mMaxPos;         /**< Maximum position based on scaling factor. */
 
    Flock::Output::Format mOutputFormat;   /**< The output format to configure the flock to use */
    Flock::ReportRate     mReportRate;     /**< The report rate we to use when configuring the flock */
