@@ -330,13 +330,13 @@ int omni_main_i(int argc, char** const argv)
 
    if test "x$tweek_cv_omniORB__MaxMessageSize_in_omniORB" = "xyes" ; then
       OMNI_INCLUDES="-I$tweek_omni_inc"
-      OMNI_LIB="-l$tweek_omni_lib -lomnithread"
+      OMNI_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
       OMNI_LDFLAGS="-L$OMNI_LIB_DIR"
 
-      OMNI_LIB_MSVCCC="-l$tweek_omni_lib -lomnithread"
+      OMNI_LIB_MSVCCC="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
       OMNI_LDFLAGS_MSVCCC="-L$OMNI_LIB_DIR"
 
-      OMNI_LIB_LINK_EXE="$tweek_omni_lib.lib omnithread.lib"
+      OMNI_LIB_LINK_EXE="$tweek_omni_lib.lib omnithread.lib omniDynamic$OMNI_VER.lib omniGK_stub.lib"
       OMNI_LDFLAGS_LINK_EXE="/libpath:$OMNI_LIB_DIR"
 
       AC_DEFINE_UNQUOTED(OMNIORB_VER, $OMNI_VER)
@@ -368,9 +368,15 @@ fi
 # For use in linking applications.
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
+IDL_GEN_DIRS="tweek/CORBA"
+
+for dir in "$IDL_GEN_DIRS" ; do
+    IDL_GEN_INCLUDES="$IDL_GEN_INCLUDES -I\$(TWEEK_BASE_DIR)/include/$dir"
+done
+
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
 INCLUDES="$INCLUDES $OMNI_INCLUDES"
-tweek_cxxflags="$STDFLAGS $VPR_CXXFLAGS $INCLUDES"
+tweek_cxxflags="$STDFLAGS $VPR_CXXFLAGS $INCLUDES $IDL_GEN_INCLUDES"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -382,7 +388,7 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    DBG_FLAGS="$DBG_FLAGS /MDd"
    OPT_FLAGS="$OPT_FLAGS /MD"
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
-   tweek_cxxflags="$CXXFLAGS $VPR_CXXFLAGS"
+   tweek_cxxflags="$CXXFLAGS $VPR_CXXFLAGS $INCLUDES $IDL_GEN_INCLUDES"
 fi
 
 DPP_SYSTEM_SUBST
@@ -412,14 +418,15 @@ UNIX_TWEEKROOT_ABS="$TWEEKROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-   APP_EXTRA_LIBS="$LDFLAGS $OMNI_LDFLAGS $OMNI_LIBS $VPR_LIBS_LD $LIBS"
+   APP_EXTRA_LIBS="$LDFLAGS $OMNI_LDFLAGS $OMNI_LIB_LINK_EXE $VPR_LIBS_LD $LIBS"
 else
-   APP_EXTRA_LIBS="$LDFLAGS $OMNI_LDFLAGS $OMNI_LIBS_LINK_EXE $VPR_LIBS_CC $LIBS"
+   APP_EXTRA_LIBS="$LDFLAGS $OMNI_LDFLAGS $OMNI_LIB $VPR_LIBS_CC $LIBS"
 fi
 
 # Put together the basic information needed to compile VR Juggler applications.
-VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
-                TWEEK_BASE_DIR, $DEFS $EXTRA_DEFS, $INCLUDES, ${_EXTRA_FLAGS})
+VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS $IDL_GEN_INCLUDES, $DBG_FLAGS,
+                $OPT_FLAGS, TWEEK_BASE_DIR, $DEFS $EXTRA_DEFS, $INCLUDES,
+                ${_EXTRA_FLAGS})
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT,
               TWEEK_BASE_DIR, tweek, $APP_EXTRA_LIBS)
 
@@ -553,6 +560,7 @@ AC_OUTPUT(tweek-config
           tweek/Makefile.inc
           tweek/CORBA/Makefile
           test/Makefile
+          test/corba/Makefile
           mtree/TWEEK.include.dist
           mtree/TWEEK.install.dist
           mtree/TWEEK.test.dist, ,
