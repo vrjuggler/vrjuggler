@@ -1769,7 +1769,7 @@ The filters are applied in the order that they are specified in this configurati
   <ChunkDesc token="Vrpn" name="Vrpn" version="1.0">
     <category>Devices</category>
     <help>Configure an interface to an external VRPN server</help>
-    <PropertyDesc token="trackServer" name="trackerServer" type="string" variable="0">
+    <PropertyDesc token="trackerServer" name="trackerServer" type="string" variable="0">
       <help>Tracker server.</help>
       <item label="TrackerServer" defaultvalue="Tracker0@localhost" />
     </PropertyDesc>
