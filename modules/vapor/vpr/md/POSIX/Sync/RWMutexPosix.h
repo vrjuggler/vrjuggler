@@ -80,7 +80,7 @@ public:
    RWMutexPosix (void) : mLocked(0)
    {
       // Initialize the mutex.
-      pthread_mutex_init(&mMutex, NULL);
+      pthread_rwlock_init(&mRWMutex, NULL);
    }
 
    /**
@@ -94,10 +94,10 @@ public:
    ~RWMutexPosix (void)
    {
       // Destroy the mutex.
-      if ( pthread_rwlock_destroy(&mMutex) == -1 )
+      if ( pthread_rwlock_destroy(&mRWMutex) == -1 )
       {
-         pthread_rwlock_unlock(&mMutex);
-         pthread_rwlock_destroy(&mMutex);
+         pthread_rwlock_unlock(&mRWMutex);
+         pthread_rwlock_destroy(&mRWMutex);
       }
    }
 
@@ -131,7 +131,7 @@ public:
     */
    vpr::ReturnStatus acquireRead (void)
    {
-      int retval = pthread_rwlock_rdlock(&mMutex);
+      int retval = pthread_rwlock_rdlock(&mRWMutex);
 
       // Locking succeeded.
       if ( retval == 0 )
@@ -168,7 +168,7 @@ public:
     */
    vpr::ReturnStatus acquireWrite (void)
    {
-      int retval = pthread_rwlock_rdlock(&mMutex);
+      int retval = pthread_rwlock_rdlock(&mRWMutex);
 
       // Locking succeeded.
       if ( retval == 0 )
@@ -224,7 +224,7 @@ public:
     */
    vpr::ReturnStatus tryAcquireRead (void)
    {
-      if ( pthread_rwlock_tryrdlock(&mMutex) == 0 )
+      if ( pthread_rwlock_tryrdlock(&mRWMutex) == 0 )
       {
          mLocked = 1;
          return vpr::ReturnStatus();
@@ -250,7 +250,7 @@ public:
     */
    vpr::ReturnStatus tryAcquireWrite (void)
    {
-      if ( pthread_rwlock_trywrlock(&mMutex) == 0 )
+      if ( pthread_rwlock_trywrlock(&mRWMutex) == 0 )
       {
          mLocked = 1;
          return vpr::ReturnStatus();
@@ -274,7 +274,7 @@ public:
    vpr::ReturnStatus release (void)
    {
       mLocked = 0;
-      if ( pthread_rwlock_unlock(&mMutex) == 0 )
+      if ( pthread_rwlock_unlock(&mRWMutex) == 0 )
       {
          return vpr::ReturnStatus();
       }
