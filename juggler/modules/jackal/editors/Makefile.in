@@ -94,7 +94,9 @@ java_afterbuild:
 	$(ANT)
 
 _clean:
+ifeq ($(BUILD_JAVA), Y)
 	$(ANT) clean
+endif
 
 # -----------------------------------------------------------------------------
 # Extra targets.
