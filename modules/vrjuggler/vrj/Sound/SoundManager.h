@@ -49,19 +49,28 @@ namespace vrj
        * Adds the chunk to the configuration.
        * @pre configCanHandle(chunk) == true
        */
-      virtual bool configAdd( jccl::ConfigChunkPtr chunk ) { return false; }
+      virtual bool configAdd(jccl::ConfigChunkPtr chunk)
+      {
+         return false;
+      }
 
       /**
        * Removes the chunk from the current configuration.
        * @pre configCanHandle(chunk) == true
        */
-      virtual bool configRemove( jccl::ConfigChunkPtr chunk ) { return false; }
+      virtual bool configRemove(jccl::ConfigChunkPtr chunk)
+      {
+         return false;
+      }
 
       /**
        * Can the handler handle the given chunk?
        * @return true if we can handle the chunk; false if not.
        */
-      virtual bool configCanHandle( jccl::ConfigChunkPtr chunk ) { return false; }
+      virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
+      {
+         return false;
+      }
 
    public:
       /** Enables a frame to be drawn. */
