@@ -214,7 +214,16 @@ case $target_os in
         fi
 
         AC_DEFINE(VPR_OS_Linux,)
-        AC_DEFINE(_GNU_SOURCE,)
+
+        _vpr_gxx_ver=`$(CXX) -dumpversion`
+
+        case ${_vpr_gxx_ver} in
+           3.0*)
+              ;;
+           2.9*)
+              AC_DEFINE(_GNU_SOURCE,)
+              ;;
+        esac
         ;;
     # DEC Alpha running Digital UNIX 4.0.
     osf4.0)
