@@ -238,6 +238,26 @@
       one or both of PyOpenGL or PyGMTL may be installed in the default Python
       module directory, so this may not be a concern at all.</para>
     </tip>
+
+    <para>On Mac OS X, problems have been encountered with the <ulink
+    url="http://omniorb.sourceforge.net/">omniORB</ulink>-based plug-ins that
+    are loaded by the JCCL Config Manager and by the VR Juggler Performance
+    Mediator. Loading of these plug-ins can be disabled by setting the
+    environment variables <envar>NO_RTRC_PLUGIN</envar> and
+    <envar>NO_PERF_PLUGIN</envar> respectively. They may be set to any value.
+    Setting these environment variables will prevent a crash inside the
+    omniORB libraries due to static initializatoin problems.</para>
+
+    <note>
+      <para>According to users of omniORBpy, setting
+      <envar>DYLD_BIND_AT_LAUNCH</envar> should be sufficient to fix the
+      static initialization problems within the omniORB C++ libraries when
+      they are loaded into the Python interpreter application space on Mac OS
+      X. Thus far, this has not proven to fix the problem when running a
+      PyJuggler Python application, but there may be something else going
+      wrong. For now, setting the two environment variables described above
+      gets around the omniORB problems within the scope of PyJuggler.</para>
+    </note>
   </chapter>
 
   <chapter>
