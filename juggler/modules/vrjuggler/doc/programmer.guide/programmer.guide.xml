@@ -433,18 +433,40 @@ int main (int argc, char* argv[])
       <chapter id="ch3">
          <title>Helper Classes</title>
          <para>Within this chapter, we present information on some helper classes that are provided with VR Juggler. These classes are intended to make it easier for application programmers to write their code. Ultimately, we want application programmers to focus more on compelling immersive content and less on the many details that are involved with 3D graphics programming. The classes presented in this section focus on mathematical computations and on input from hardware devices. In particular, special attention is paid to the VR Juggler Input Manager device interfaces and proxies.</para>
-         <section>
-            <title><classname>vjVec3</classname> and <classname>vjVec4</classname></title>
+         <section id="vjVec3-and-vjVec4-sect">
+            <title>The <classname>vjVec3</classname> and <classname>vjVec4</classname> Helper Classes</title>
+            <indexterm>
+               <primary>vjVec3</primary>
+            </indexterm>
+            <indexterm>
+               <primary>vjVec4</primary>
+            </indexterm>
             <para>This section is intended to provide an introduction to how the helper classes <classname>vjVec3</classname><indexterm>
                   <primary>classes</primary>
                   <secondary>vjVec3</secondary>
+                  <seealso>vjVec3</seealso>
                </indexterm> and <classname>vjVec4</classname><indexterm>
                   <primary>classes</primary>
                   <secondary>vjVec4</secondary>
+                  <seealso>vjVec4</seealso>
                </indexterm> work and how they can be used in VR Juggler applications. It begins with a high-level description of the classes which forms the necessary basis for understanding them in detail. Then, examples of how to use all the available operations in the interfaces for these classes are provided. It concludes with a description of the internal details of the classes.</para>
             <section>
                <title>High-Level Description</title>
-               <para>The classes <classname>vjVec3</classname> and <classname>vjVec4</classname> are designed to work the same was as three- and four-dimensional mathematical vectors. That is, a <classname>vjVec3</classname> object can be thought of as a vector of the form &lt;x, y, z&gt;. Similarly, a <classname>vjVec4</classname> can be thought of as a vector of the form &lt;x, y, z, w&gt;. An existing understanding of mathematical vectors is sufficient to know how these classes can be used. The question then becomes, how are they used? We will get to that later, and you can skip ahead if you already understand such vectors. If vectors are an unfamiliar topic, you can also think of these classes as three- and four-element C++ arrays of floats respectively, but most benefits of the vector concept are lost with that simpler idea. Therefore, if you need to think of them as arrays, you should probably just use arrays until you feel more comfortable with vectors. Once you do, you are encouraged to come back and read further.</para>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>description of</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>description of</secondary>
+               </indexterm>
+               <para>The classes <classname>vjVec3</classname><indexterm>
+                     <primary>classes</primary>
+                     <secondary>vjVec3</secondary>
+                  </indexterm> and <classname>vjVec4</classname><indexterm>
+                     <primary>classes</primary>
+                     <secondary>vjVec4</secondary>
+                  </indexterm> are designed to work the same was as three- and four-dimensional mathematical vectors. That is, a <classname>vjVec3</classname> object can be thought of as a vector of the form &lt;x, y, z&gt;. Similarly, a <classname>vjVec4</classname> can be thought of as a vector of the form &lt;x, y, z, w&gt;. An existing understanding of mathematical vectors is sufficient to know how these classes can be used. The question then becomes, how are they used? We will get to that later, and you can skip ahead if you already understand such vectors. If vectors are an unfamiliar topic, it may be convenient to think of these classes as three- and four-element C++ arrays of floats respectively. Most benefits of the vector concept are lost with that simpler idea, however. Therefore, if you need to think of them as arrays, you should probably just use arrays until you feel more comfortable with vectors. Once you do, you are encouraged to come back and read further.</para>
                <para>Vectors are used typically to contain spatial data or something similar. For convenience, however, they can be visualized as a more general-purpose container for numerical data upon which well-defined operations can be performed. There is no need to constrain thinking of them as only holding the coordinates for some point in space or some other limited-scope use. VR Juggler's vectors retain this generality and can be used wherever vectors come in handy.</para>
                <para><classname>vjVec3</classname> and <classname>vjVec4</classname>, as specific implementations of mathematical vectors, hide vector operations on single-precision floating-point numbers (<type>float</type>) behind a simple-to-use interface. For a single vector, the following standard vector operations are available:</para>
                <itemizedlist>
@@ -490,11 +512,27 @@ int main (int argc, char* argv[])
                </itemizedlist>
                <para>Knowing this and keeping in mind that <classname>vjVec3</classname> and <classname>vjVec4</classname> can be thought of at this high level, using them should be a snap.</para>
             </section>
-            <section>
+            <section id="vjVec-use-sect">
                <title>Using <classname>vjVec3</classname> and <classname>vjVec4</classname></title>
+               <indexterm zone="vjVec-use-sect">
+                  <primary>classes</primary>
+                  <secondary>vjVec3</secondary>
+               </indexterm>
+               <indexterm zone="vjVec-use-sect">
+                  <primary>classes</primary>
+                  <secondary>vjVec4</secondary>
+               </indexterm>
                <para>With an understanding of these classes as standard mathematical vectors, it is time to learn how to deal with them at the C++ level. In some cases, the mathematical operators are overloaded to simplify user code; in other cases, a named method must be invoked on an object. Before any of that, however, make sure that the source file includes either <filename>Math/vjVec3.h</filename>, <filename>Math/vjVec4.h</filename>, or both as necessary. From here on, the available operations are presented in the order they were listed in the previous section. We begin with creating the objects and setting their values.</para>
-               <section>
+               <section id="vjVec-creation-sect">
                   <title>Creating Vectors and Setting Their Values</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>creating</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>creating</secondary>
+                  </indexterm>
                   <para>Before doing anything with vectors, some must be created. The examples here use <classname>vjVec3</classname>s, but the example is equally applicable to <classname>vjVec4</classname>. To create a <classname>vjVec3</classname>, the default constructor which initializes the vector to &lt;0.0, 0.0, 0.0&gt;:</para>
                   <programlisting>vjVec3 vec1;</programlisting>
                   <para>After creating the vector <varname>vec1</varname>, its elements can be assigned values all at once as follows:</para>
@@ -507,8 +545,16 @@ vec1[2] = -1.0;</programlisting>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);</programlisting>
                   <para>All of the above code has exactly the same results but accomplishes them in different ways. This flexibility is just one of the ways that VR Juggler vectors are more powerful than C++ arrays (of the same size, of course).</para>
                </section>
-               <section>
+               <section id="vjVec-inversion-sect">
                   <title>Inversion (Finding the Negative of a Vector)</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>inverting</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>inverting</secondary>
+                  </indexterm>
                   <para>Once a vector is created, the simplest operation that can be performed on it is finding its inverse. The following code demonstrates just that:</para>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
 
@@ -517,6 +563,14 @@ vec2 = -vec1;</programlisting>
                </section>
                <section>
                   <title>Normalization</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>normalizing</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>normalizing</secondary>
+                  </indexterm>
                   <para>Normalizing a vector is another simple operation (at the interface level anyway). The following code normalizes a vector:</para>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);
 
@@ -531,6 +585,14 @@ vec1.normalize();</programlisting>
                </section>
                <section>
                   <title>Length Calculation</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>length of</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>length of</secondary>
+                  </indexterm>
                   <para>Part of normalizing a vector requires finding its length first. To get a vector's length, do the following:</para>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);
 float length;
@@ -540,6 +602,14 @@ length = vec1.length();</programlisting>
                </section>
                <section>
                   <title>Multiplication by a Scalar</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>multiplying by a scalar</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>multiplying by a scalar</secondary>
+                  </indexterm>
                   <para>The VR Juggler vector classes provide an easy way to multiply a vector by a scalar. There are several ways to do it depending on what is required. Examples of each method follow.</para>
                   <para>To multiply a vector by a scalar and store the result in another vector, do the following:</para>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
@@ -554,6 +624,14 @@ vec1 *= 3;</programlisting>
                </section>
                <section>
                   <title>Division by a Scalar</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>dividing by a scalar</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>dividing by a scalar</secondary>
+                  </indexterm>
                   <para>Very similar to multiplying by a scalar, division by scalars is also possible. While the examples are almost identical, they are provided here for clarity.</para>
                   <para>To divide a vector by a scalar and store the result in another vector, do the following:</para>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
@@ -566,8 +644,17 @@ vec2 = vec1 / 3;</programlisting>
 vec1 /= 3;</programlisting>
                   <para>After this, <varname>vec1</varname> has the value &lt;0.333333, 0.5, -0.333333&gt;.</para>
                </section>
-               <section>
+               <section id="pfVec-to-vjVec-sect">
                   <title>Converting to an OpenGL Performer Vector</title>
+                  <indexterm zone="pfVec-to-vjVec-sect">
+                     <primary>vjVec3</primary>
+                     <secondary>conversion to pfVec3</secondary>
+                  </indexterm>
+                  <indexterm zone="pfVec-to-vjVec-sect">
+                     <primary>pfVec3</primary>
+                     <secondary>conversion from vjVec3</secondary>
+                     <seealso>vjVec3</seealso>
+                  </indexterm>
                   <para>SGI's OpenGL Performer likes to work with its own <classname>pfVec3</classname> class, and to facilitate the use of it with <classname>vjVec3</classname>, two conversion functions are provided for converting a <classname>vjVec3</classname> to a <classname>pfVec3</classname> and vice versa. The first works as follows:</para>
                   <programlisting>vjVec3 vj_vec;
 pfVec3 pf_vec;
@@ -586,6 +673,14 @@ vj_vec = vjGetVjVec(pf_vec);</programlisting>
                </section>
                <section>
                   <title>Assignment</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>assigning</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>assigning</secondary>
+                  </indexterm>
                   <para>We have already demonstrated vector assignment, though it was not pointed out explicitly. It works just as vector assignment in mathematics. The C++ code that does assignment is as follows:</para>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
 
@@ -594,6 +689,14 @@ vec2 = vec1;</programlisting>
                </section>
                <section>
                   <title>Equality/Inequality Comparison</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>equality comparison</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>equality comparison</secondary>
+                  </indexterm>
                   <para>To compare the equality of two vectors, there are three available methods (one is just the complement of the other, though):</para>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
 
@@ -619,6 +722,14 @@ if ( vec1 != vec2 )
                </section>
                <section>
                   <title>Dot Product</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>dot product</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>dot product</secondary>
+                  </indexterm>
                   <para>Given two vectors, finding the dot product is often needed. VR Juggler's vectors provide a way to do this quickly so that programmers can save themselves the time of typing in the formula over and over. It works as follows:</para>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
 float dot_product;
@@ -628,6 +739,10 @@ dot_product = vec1.dot(vec2);</programlisting>
                </section>
                <section>
                   <title>Cross Product (<classname>vjVec3</classname> only)</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>cross product</secondary>
+                  </indexterm>
                   <para>Besides the dot product of two vectors, the cross product is another commonly needed result. It is calculated thusly:</para>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0), vec3;
 
@@ -636,6 +751,14 @@ vec3 = vec1.cross(vec2);</programlisting>
                </section>
                <section>
                   <title>Addition</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>adding</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>adding</secondary>
+                  </indexterm>
                   <para>Adding two vectors can be done one of two ways. The first method returns a resulting vector, and the second method performs the addition and stores the result in the first vector.</para>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0), vec3;
 
@@ -648,6 +771,14 @@ vec1 += vec2;</programlisting>
                </section>
                <section>
                   <title>Subtraction</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>subtracting</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>subtracting</secondary>
+                  </indexterm>
                   <para>Subtracting two vectors gives the same options as addition, and while the code is nearly identical, it is provided for the sake of clarity.</para>
                   <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0), vec3;
 
@@ -660,6 +791,16 @@ vec1 -= vec2;</programlisting>
                </section>
                <section>
                   <title>Full Transformation by a Matrix</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>transforming by a matrix</secondary>
+                     <tertiary>full</tertiary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>transforming by a matrix</secondary>
+                     <tertiary>full</tertiary>
+                  </indexterm>
                   <para>It is often helpful to apply a transformation to a vector. Transformations are represented by a matrix, so it is necessary to multiply a matrix and a vector. The method <methodname>xformFull()</methodname> does this job. For the following example, assume that there is a<classname>vjMatrix</classname> transformation matrix <varname>xform_mat</varname>:</para>
                   <programlisting>vjVec3 vec(1.0, 1.0, 1.0);
 
@@ -673,6 +814,16 @@ vec.xformFull(xform_mat);</programlisting>
                </section>
                <section>
                   <title>Partial Transformation by a Matrix</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>transforming by a matrix</secondary>
+                     <tertiary>partial</tertiary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>transforming by a matrix</secondary>
+                     <tertiary>partial</tertiary>
+                  </indexterm>
                   <para>Besides full transformations, it is possible to apply all transformations in a matrix except translation. (The usefulness of this is left as an exercise for the reader.) Again assume that there is a <classname>vjMatrix</classname> transformation matrix <varname>xform_mat</varname>:</para>
                   <programlisting>vjVec3 vec(1.0, 1.0, 1.0);
 
@@ -681,6 +832,14 @@ vec.xformVec(xform_mat);</programlisting>
                </section>
                <section>
                   <title>The Gory Details</title>
+                  <indexterm>
+                     <primary>vjVec3</primary>
+                     <secondary>details</secondary>
+                  </indexterm>
+                  <indexterm>
+                     <primary>vjVec4</primary>
+                     <secondary>details</secondary>
+                  </indexterm>
                   <para>The details behind <classname>vjVec3</classname> and <classname>vjVec4</classname> really are not all that gory. Internally, they are represented as three- and four-element arrays of <type>float</type>s respectively. Access to these arrays is provided through the public member variable <varname>vec</varname>. For example, this access can be used in the following way:</para>
                   <programlisting>vjVec3 pos(4.0, 1.0982, 10.1241);
 
@@ -699,10 +858,28 @@ my_vec.vec[3] = 1.0;</programlisting>
          </section>
          <section>
             <title>The <classname>vjMatrix</classname> Helper Class</title>
-            <para>This document is intended to provide an introduction into how the helper class <classname>vjMatrix</classname> works and how it can be used in VR Juggler applications. It begins with a high-level description of the class, which forms the necessary basis for understanding it in detail. Then, examples of how to use all the available operations in the interfaces for the class are provided. It concludes with a description of the internal C++ details of <classname>vjMatrix</classname>.</para>
+            <indexterm>
+               <primary>vjMatrix</primary>
+            </indexterm>
+            <para>This document is intended to provide an introduction into how the helper class <classname>vjMatrix</classname><indexterm>
+                  <primary>classes</primary>
+                  <secondary>vjMatrix</secondary>
+                  <seealso>vjMatrix</seealso>
+               </indexterm> works and how it can be used in VR Juggler applications. It begins with a high-level description of the class, which forms the necessary basis for understanding it in detail. Then, examples of how to use all the available operations in the interfaces for the class are provided. It concludes with a description of the internal C++ details of <classname>vjMatrix</classname>.</para>
             <section>
                <title>High-Level Description</title>
-               <para>Abstractly, <classname>vjMatrix</classname> represents a 4x4 matrix of single-precision floating-point values. The class includes implementations of the standard matrix operations such as transpose, scale, and multiply. More specifically, it is a mechanism to facilitate common matrix operations used in computer graphics, especially those associated with a transform matrix. On the surface, it is nearly identical to a 4x4 C++ array of <type>float</type>s, but there is one crucial difference: a <classname>vjMatrix</classname> keeps its internal matrix in column-major order rather than in row-major order. More detail on this is given below, but this is done because OpenGL maintains its internal matrices using the same memory layout. At the conceptual level, this does not matter--it is related only to the matrix representation in the computer's memory. Access to the elements is still in row-major order. In any case, understanding how C++ multidimensional arrays work means understanding 90% of what there is to know about <classname>vjMatrix</classname>. The class provides a degree convenience not found with a normal C++ array, especially when doing OpenGL programming. The complications surrounding the <classname>vjMatrix</classname> class are identical to those with OpenGL matrix handling, and with an understanding of that, then all that is left to learn is the interface of <classname>vjMatrix</classname>.</para>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>description of</secondary>
+               </indexterm>
+               <para>Abstractly, <classname>vjMatrix</classname><indexterm>
+                     <primary>classes</primary>
+                     <secondary>vjMatrix</secondary>
+                     <seealso>vjMatrix</seealso>
+                  </indexterm> represents a 4x4 matrix of single-precision floating-point values. The class includes implementations of the standard matrix operations such as transpose, scale, and multiply. More specifically, it is a mechanism to facilitate common matrix operations used in computer graphics, especially those associated with a transform matrix. On the surface, it is nearly identical to a 4x4 C++ array of <type>float</type>s, but there is one crucial difference: a <classname>vjMatrix</classname> keeps its internal matrix in column-major order rather than in row-major order<indexterm>
+                     <primary>vjMatrix</primary>
+                     <secondary>compared to C++ matrices</secondary>
+                  </indexterm>. More detail on this is given below, but this is done because OpenGL maintains its internal matrices using the same memory layout. At the conceptual level, this does not matter--it is related only to the matrix representation in the computer's memory. Access to the elements is still in row-major order. In any case, understanding how C++ multidimensional arrays work means understanding 90% of what there is to know about <classname>vjMatrix</classname>. The class provides a degree convenience not found with a normal C++ array, especially when doing OpenGL programming. The complications surrounding the <classname>vjMatrix</classname> class are identical to those with OpenGL matrix handling, and with an understanding of that, then all that is left to learn is the interface of <classname>vjMatrix</classname>.</para>
                <para>As a representation of mathematical matrices, <classname>vjMatrix</classname> implements several common operations performed on matrices to relieve the users of the class of some tedious, repetitive effort. The general mathematical operations are:</para>
                <itemizedlist>
                   <listitem>
@@ -770,10 +947,18 @@ my_vec.vec[3] = 1.0;</programlisting>
             </section>
             <section>
                <title>Using <classname>vjMatrix</classname></title>
+               <indexterm zone="vjVec-use-sect">
+                  <primary>classes</primary>
+                  <secondary>vjMatrix</secondary>
+               </indexterm>
                <para>Keeping the idea of a normal mathematical matrix in mind, we are now ready to look at the C++ use of the <classname>vjMatrix</classname> class. Most of the interface is defined using methods, but there are a scant few cases where mathematical operators have been overloaded to make code easier to read. Before going any further, whenever using a <classname>vjMatrix</classname>, make sure to include <filename>Math/vjMatrix.h</filename> first. The operations presented above are now described in detail in the order in which they were listed above. We begin with creating the objects and setting their values.</para>
             </section>
             <section>
                <title>Creating Matrices and Setting Their Values</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>creating</secondary>
+               </indexterm>
                <para>Before doing anything with matrices, some must be created first. To create a <classname>vjMatrix</classname>, the default constructor can be used. It initializes the matrix to be an identity matrix:</para>
                <programlisting>vjMatrix mat1;</programlisting>
                <para>After creating this matrix <varname>mat1</varname>, its 16 elements can be assigned values all at once as follows:</para>
@@ -814,6 +999,10 @@ val = mat1(3, 0);</programlisting>
             </section>
             <section>
                <title>Assignment</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>assigning</secondary>
+               </indexterm>
                <para>Assigning one <classname>vjMatrix</classname> to another happens using the normal = operator as follows:</para>
                <programlisting>vjMatrix mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
               3.8, 0.9, 2.1, 0.1);
@@ -824,6 +1013,10 @@ mat2 = mat1;</programlisting>
             </section>
             <section>
                <title>Equality/Inequality Comparison</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>equality comparison</secondary>
+               </indexterm>
                <para>To compare the equality of two matrices, you have three available methods (one is just the complement of the other, though):</para>
                <programlisting>vjMatrix mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
               3.8, 0.9, 2.1, 0.1);
@@ -858,6 +1051,10 @@ if ( mat1 != mat2 )
             </section>
             <section>
                <title>Transposing</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>transposing</secondary>
+               </indexterm>
                <para>The transpose operation works conceptually as <inlineequation>
                      <alt>$matrix_{1}=transpose\left( matrix_{2}\right)$</alt>
                      <graphic fileref="eq_m1_eq_tr_m2.gif" format="GIF"/>
@@ -871,6 +1068,10 @@ mat1.transpose(mat2);</programlisting>
             </section>
             <section>
                <title>Finding the Inverse</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>inverting</secondary>
+               </indexterm>
                <para>The transpose operation works conceptually as <inlineequation>
                      <alt>$matrix_{1}=inverse\left( matrix_{2}\right)$</alt>
                      <graphic fileref="eq_m1_eq_inv_m2.gif" format="GIF"/>
@@ -884,6 +1085,10 @@ mat1.invert(mat2);</programlisting>
             </section>
             <section>
                <title>Addition</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>adding</secondary>
+               </indexterm>
                <para>For the addition operation, the interface is defined so that the sum of two matrices is stored in a third. There are two ways to do addition with <classname>vjMatrix</classname>: using the add() method or using the overloaded + operator. Use of the former is recommended, but the latter can be used if one prefers that style of programming. Examples of both methods follow. The first block of code only declares the <classname>vjMatrix</classname> objects.</para>
                <programlisting>vjMatrix mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
               3.8, 0.9, 2.1, 0.1);
@@ -898,6 +1103,10 @@ vjMatrix mat3;</programlisting>
             </section>
             <section>
                <title>Subtraction</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>subtracting</secondary>
+               </indexterm>
                <para>For the subtraction operation, the interface is defined so that the difference of two matrices is stored in a third. There are two ways to do subtraction with <classname>vjMatrix</classname>: using the <methodname>sub()</methodname> method or using the overloaded - operator. It is recommended that developers use the former, but the latter can be used for stylistic purposes. Examples of both methods follow. The first block of code only declares the <classname>vjMatrix</classname> objects.</para>
                <programlisting>vjMatrix mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
               3.8, 0.9, 2.1, 0.1);
@@ -912,6 +1121,10 @@ vjMatrix mat3;</programlisting>
             </section>
             <section>
                <title>Multiplication</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>multiplying</secondary>
+               </indexterm>
                <para>As in the case of addition and subtraction, the multiplication interface is defined so that the product of two matrices is stored in a third. This is likely to be the operation used most often since transformation matrices are constructed through multiplication of different transforms. For normal matrix multiplication, there are two ways to do multiplication with <classname>vjMatrix</classname>: using the <methodname>mult()</methodname> method or using the overloaded * operator. We recommend the use of the <methodname>mult()</methodname>method, but the overloaded * operator can be used by those who prefer that style of programming. Examples of both methods follow. The first block of code only declares the <classname>vjMatrix</classname> objects.</para>
                <programlisting>vjMatrix mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
               3.8, 0.9, 2.1, 0.1);
@@ -954,6 +1167,10 @@ mat1.preMult(mat2);</programlisting>
             </section>
             <section>
                <title>Scaling by a Scalar Value</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>scalinging</secondary>
+               </indexterm>
                <para>Scaling the values of a matrix by a scalar value can be done using two different methods: the <methodname>scale()</methodname> method or the overloaded * and / operators that take a single scalar value and returns a <classname>vjMatrix</classname>. As with the preceding operations, we recommend the use of the former, but the latter is available for those who want it. Examples of both methods follow. First, using the <methodname>scale()</methodname> method works as:</para>
                <programlisting>vjMatrix mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
               3.8, 0.9, 2.1, 0.1);
@@ -981,7 +1198,12 @@ mat2 = mat1 / 3.0;</programlisting>
                <para>In all cases, the result of the scaling is stored (via a copy) in <varname>mat2</varname>.</para>
             </section>
             <section>
-               <title>Creating an Identity Matrix Quickly</title>
+               <title>Making an Identity Matrix Quickly</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>making</secondary>
+                  <tertiary>identity</tertiary>
+               </indexterm>
                <para>In computer graphics, an identity matrix is often needed when doing transformations. Because of this, <classname>vjMatrix</classname> provides a method for converting a matrix into an identity matrix in a single step (at the user code level anyway):</para>
                <programlisting>vjMatrix mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
               3.8, 0.9, 2.1, 0.1);
@@ -991,6 +1213,10 @@ mat1.makeIdent();</programlisting>
             </section>
             <section>
                <title>Zeroing a Matrix in a Single Step</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>zeroing</secondary>
+               </indexterm>
                <para>Before using a matrix, it is often helpful to zero it out to ensure that there is no pollution from previous use. With a <classname>vjMatrix</classname>, this can be done in one step:</para>
                <programlisting>vjMatrix mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
               3.8, 0.9, 2.1, 0.1);
@@ -999,7 +1225,12 @@ mat1.zero();</programlisting>
                <para>The result is that all elements of <varname>mat1</varname> are now 0.0.</para>
             </section>
             <section>
-               <title>Creating an XYZ, a ZYX, or a ZXY Euler Rotation Matrix</title>
+               <title>Making an XYZ, a ZYX, or a ZXY Euler Rotation Matrix</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>making</secondary>
+                  <tertiary>Euler rotation</tertiary>
+               </indexterm>
                <para>All the rotation information for a transform can be contained in a single matrix using the methods for making an XYZ, a ZYX, or a ZXY Euler matrix. Code for all three follows:</para>
                <programlisting>vjMatrix mat1;
 float x_rot = 0.4, y_rot = 0.541, z_rot = 0.14221;
@@ -1018,6 +1249,10 @@ mat1.makeZXYEuler(z_rot, x_rot, y_rot);</programlisting>
             </section>
             <section>
                <title>Constraining Rotation About a Specific Axis or Axes</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>constraining rotation</secondary>
+               </indexterm>
                <para>In a matrix that has rotations about more than one axis, it may be useful to get a transformation matrix that constrains the rotation to certain axes. A method is provided to do just this. It is called <methodname>constrainRotAxis()</methodname>, and it is used as follows (assume that <varname>old_mat</varname> is already defined as a transformation matrix with rotations about all three axes):</para>
                <programlisting>vjMatrix new_mat;
 
@@ -1026,6 +1261,11 @@ old_mat.constrainRotAxis(true, false, false, new_mat);</programlisting>
             </section>
             <section>
                <title>Making a Matrix Using Direction Cosines</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>making</secondary>
+                  <tertiary>using direction cosines</tertiary>
+               </indexterm>
                <para>Creating a direction cosine matrix is another part of the <classname>vjMatrix</classname> interface. The method requires values for the x-, y-, and z-axes of the secondary coordinate system in terms of the first. These must be passed as objects of type <classname>vjVec3</classname>. Use of the method is shown below (assuming that <varname>sec_x_axis</varname>, <varname>sec_y_axis</varname>, and <varname>sec_z_axis</varname> are already defined and have appropriate values):</para>
                <programlisting>vjMatrix mat;
 
@@ -1034,6 +1274,11 @@ mat.makeDirCos(sec_x_axis, sec_y_axis, sec_z_axis);</programlisting>
             </section>
             <section>
                <title>Making a Matrix from a Quaternion</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>making</secondary>
+                  <tertiary>from quaternion</tertiary>
+               </indexterm>
                <para>Converting a quaternion to its corresponding matrix is possible with <classname>vjMatrix</classname> objects. Two methods are provided to do this, each taking a different type of argument as the quaternion to be converted. The first takes a four-element array of <type>float</type>s:</para>
                <programlisting>vjMatrix mat;
 float quat[4];
@@ -1052,6 +1297,11 @@ mat.makeQuaternion(quat);</programlisting>
             </section>
             <section>
                <title>Making a Rotation Transformation Matrix About a Single Axis</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>making</secondary>
+                  <tertiary>rotation about a single axis</tertiary>
+               </indexterm>
                <para>To make a rotation matrix where the rotation is about a single axis, a simple method is provided as part of the <classname>vjMatrix</classname> interface. It takes the rotation about the axis in degrees and the axis vector as a <classname>vjVec3</classname> object. Its use is as follows:</para>
                <programlisting>vjMatrix mat;
 vjVec3 axis(1.0, 0.0, 0.0);
@@ -1077,6 +1327,11 @@ mat1.postRot(mat2, 45.0, axis);</programlisting>
             </section>
             <section>
                <title>Making a Translation Transformation Matrix</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>making</secondary>
+                  <tertiary>translation transformation</tertiary>
+               </indexterm>
                <para>To make a translation matrix, there are two methods with each having two different types of arguments specifying the translation. The first makes a matrix with only the given translation (all other transformation information is destroyed):</para>
                <programlisting>vjMatrix mat;
 vjVec3 trans(4.0, -4.231, 1.0);
@@ -1124,6 +1379,11 @@ mat1.postTrans(mat2, 4.0, -4.231, 1.0);</programlisting>
             </section>
             <section>
                <title>Making a Scale Transformation Matrix</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>making</secondary>
+                  <tertiary>scale transformation</tertiary>
+               </indexterm>
                <para>To make a transformation matrix that only scales, a simple method is provided. It works as follows:</para>
                <programlisting>vjMatrix mat;
 
@@ -1146,6 +1406,10 @@ mat1.postScale(mat2, 1.5, 1.5, 1.5);</programlisting>
             </section>
             <section>
                <title>Extracting Specific Transformation Information</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>extracting transformation information</secondary>
+               </indexterm>
                <para>Finally, methods are provided for extracting transformations from a given matrix. The individual rotations and the translation can be read. For the following examples, assume that <varname>mat</varname> is a <classname>vjMatrix</classname> object representing arbitrary translation, rotation, and scaling transformations. To get the roll information, use the following:</para>
                <programlisting>float roll = mat.getRoll();</programlisting>
                <para>or</para>
@@ -1171,6 +1435,15 @@ trans = mat.getTrans();</programlisting>
             </section>
             <section>
                <title>Converting to an OpenGL Performer Matrix</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>converting to pfMatrix</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>pfMatrix</primary>
+                  <secondary>converting from vjMatrix</secondary>
+                  <seealso>vjMatrix</seealso>
+               </indexterm>
                <para>SGI's OpenGL Performer likes to work with its own <classname>pfMatrix</classname> class, and to facilitate the use of it with <classname>vjMatrix</classname>, two conversion functions are provided for making conversions. The first works as follows:</para>
                <programlisting>vjMatrix vj_mat;
 pfMatrix pf_mat;
@@ -1189,6 +1462,10 @@ vj_mat = vjGetVjMatrix(pf_mat);</programlisting>
             </section>
             <section>
                <title>The Gory Details</title>
+               <indexterm>
+                  <primary>vjMatrix</primary>
+                  <secondary>details</secondary>
+               </indexterm>
                <para>Now it is time for the really nasty part. Reading this could cause difficulty in understanding the overwhelming amount of information just presented. Do not read any further unless you absolutely have to or you just like to confuse yourself.</para>
                <para>C, C++, and mathematics use matrices in row-major order. Access indices are shown in <xref linkend="Row-maj-table"/></para>
                <table id="Row-maj-table">
@@ -1270,7 +1547,10 @@ vj_mat = vjGetVjMatrix(pf_mat);</programlisting>
                      </tbody>
                   </tgroup>
                </table>
-               <para>As mentioned, all of this is done so that a given <classname>vjMatrix</classname> that acts as a full transformation matrix can be passed to OpenGL directly (more or less). For example, with a given <classname>vjMatrix</classname> object <varname>mat</varname> upon which painstaking transformations have been performed, the following can be done:</para>
+               <para>As mentioned, all of this is done so that a given <classname>vjMatrix</classname> that acts as a full transformation matrix can be passed to OpenGL directly (more or less)<indexterm>
+                     <primary>vjMatrix</primary>
+                     <secondary>using with OpenGL</secondary>
+                  </indexterm>. For example, with a given <classname>vjMatrix</classname> object <varname>mat</varname> upon which painstaking transformations have been performed, the following can be done:</para>
                <programlisting>glMultMatrixf(mat.getFloatPtr());</programlisting>
                <para>That could not be simpler. All the transformation efforts have culminated into one statement.</para>
                <para>For further information, the best possible source of information, especially for this class, is the header file. Read it; understand it; love it.</para>
@@ -1278,54 +1558,141 @@ vj_mat = vjGetVjMatrix(pf_mat);</programlisting>
          </section>
          <section id="vjDeviceInterface-section">
             <title>The <classname>vjDeviceInterface</classname> Helper Class</title>
-            <para>The concept of device interfaces in VR Juggler is one which often causes confusion for new users. Two object-oriented design patterns are combined by <classname>vjDeviceInterface</classname>: smart pointers and proxies. Within this section, we aim to explain VR Juggler device interfaces clearly and simply. We begin with a high-level description and then move right into using the class.</para>
+            <indexterm>
+               <primary>vjDeviceInterface</primary>
+            </indexterm>
+            <para>The concept of device interfaces in VR Juggler is one which often causes confusion for new users. Two object-oriented design patterns are combined by <classname>vjDeviceInterface</classname><indexterm>
+                  <primary>classes</primary>
+                  <secondary>vjDeviceInterface</secondary>
+                  <seealso>vjDeviceInterface</seealso>
+               </indexterm>: smart pointers and proxies. Within this section, we aim to explain VR Juggler device interfaces clearly and simply. We begin with a high-level description and then move right into using the class.</para>
             <section>
                <title>High-Level Description</title>
-               <para>Physical devices are never accessed directly by VR Juggler applications. Instead, the applications are granted access to the device through a <firstterm>proxy</firstterm>. A proxy is nothing more than an intermediary who forwards information between two parties. In this case, the two parties are a VR Juggler application and an input device. The application makes requests on the input device through the proxy.</para>
+               <indexterm>
+                  <primary>vjDeviceInterface</primary>
+                  <secondary>description of</secondary>
+               </indexterm>
+               <para>Physical devices are never accessed directly by VR Juggler applications<indexterm>
+                     <primary>applications</primary>
+                     <secondary>device access</secondary>
+                  </indexterm>. Instead, the applications are granted access to the device through a <firstterm>proxy</firstterm><indexterm>
+                     <primary>proxy</primary>
+                     <secondary>application-level access</secondary>
+                  </indexterm>. A proxy is nothing more than an intermediary who forwards information between two parties<indexterm>
+                     <primary>proxy</primary>
+                     <secondary>definition of</secondary>
+                  </indexterm>. In this case, the two parties are a VR Juggler application and an input device. The application makes requests on the input device through the proxy.</para>
                <para>The class <classname>vjDeviceInterface</classname> is designed to be a wrapper class around the proxies. Applications could use the proxy classes directly, but <classname>vjDeviceInterface</classname> and its subclasses simplify use of the proxy object they contain. Thus, typical VR Juggler application objects will have one or more device interface member variables.</para>
-               <para>In the application object, a device interface member variable is used as a <firstterm>smart pointer</firstterm> to the proxy. In C++, a smart pointer is not usually an actual object pointer. Instead, the class acting as a smart pointer overloads the dereference operator -&gt; so that a special action can be taken when the "pointer" is dereferenced. The dereference operator is just another operator like the addition and subtraction operators, and overloading the deference operator allows some "magic" to occur behind the scenes. On the surface, the code looks exactly the same as a normal pointer dereference, and in most cases, people reading and writing the code can think of the smart pointer as a standard pointer. It may be convenient to think of a smart pointer as a handle.</para>
-               <para>With that background, we can move on to explain how <classname>vjDeviceInterface</classname> uses these concepts. First, know that <classname>vjDeviceInterface</classname> is a base class for all other device interface classes such as digital interfaces (wand buttons), position interfaces (wands, a user's head), etc. In user code, there will be instances of objects such as <classname>vjDigitalInterface</classname>, <classname>vjPosInterface</classname>, <classname>vjKeyboardInterface</classname>, and the like. Once they are properly initialized, device interface objects (whatever their types may be) will act as smart pointers to the actual VR Juggler proxy objects they wrap.</para>
-               <para>All the subclasses of <classname>vjDeviceInterface</classname> encapsulate a pointer to a VR Juggler proxy object. (Remember that these proxy objects act as an intermediary between the application and an input device.) The subclasses also overload the dereference operator -&gt; which allows them to act as smart pointers. The dereference operator on a device interface object gives access to the object's hidden proxy pointer. With that access, the methods of the encapsulated proxy object can be invoked, usually to read data. The end result is that user applications get access to the proxy objects they need but through a simpler interface than using the proxies directly.</para>
+               <para>In the application object, a device interface member variable is used as a <firstterm>smart pointer</firstterm><indexterm>
+                     <primary>smart pointer</primary>
+                  </indexterm> to the proxy. In C++, a smart pointer is not usually an actual object pointer. Instead, the class acting as a smart pointer overloads the dereference operator -&gt; so that a special action can be taken when the "pointer" is dereferenced. The dereference operator is just another operator like the addition and subtraction operators, and overloading the deference operator allows some "magic" to occur behind the scenes. On the surface, the code looks exactly the same as a normal pointer dereference, and in most cases, people reading and writing the code can think of the smart pointer as a standard pointer. It may be convenient to think of a smart pointer as a handle.</para>
+               <para>With that background, we can move on to explain how <classname>vjDeviceInterface</classname> uses these concepts. First, know that <classname>vjDeviceInterface</classname> is a base class for all other device interface classes such as digital interfaces (wand buttons), position interfaces (wands, a user's head), etc. In user code, there will be instances of objects such as <classname>vjDigitalInterface</classname><indexterm>
+                     <primary>classes</primary>
+                     <secondary>vjDigitalInterface</secondary>
+                  </indexterm>, <classname>vjPosInterface</classname><indexterm>
+                     <primary>classes</primary>
+                     <secondary>vjPosInterface</secondary>
+                  </indexterm>, <classname>vjKeyboardInterface</classname><indexterm>
+                     <primary>classes</primary>
+                     <secondary>vjKeyboardInterface</secondary>
+                  </indexterm>, and the like. Once they are properly initialized, device interface objects (whatever their types may be) will act as smart pointers to the actual VR Juggler proxy objects they wrap.</para>
+               <para>All the subclasses of <classname>vjDeviceInterface</classname> encapsulate a pointer to a VR Juggler proxy object. (Remember that these proxy objects act as an intermediary between the application and an input device.) The subclasses also overload the dereference operator -&gt; which allows them to act as smart pointers. The dereference operator on a device interface object gives access to the object's hidden proxy pointer. With that access, the methods of the encapsulated proxy object can be invoked, usually to read data. The end result is that user applications get access to the proxy objects they need but through a simpler interface than using the proxies directly<indexterm>
+                     <primary>device proxies</primary>
+                     <secondary>acess through device interfaces</secondary>
+                     <seealso>vjDeviceInterface</seealso>
+                  </indexterm>.</para>
                <para>At this point, it is perfectly reasonable to wonder why VR Juggler uses a concept that requires all sorts of documentation and explanation. The extra effort is worth it because it allows VR Juggler to hide the actual type of the device being used. There is no need to know that some specific VR system uses a wireless mouse connected to a PC reading bytes from a PS/2 port that represent button presses. All that matters is knowing which buttons are pressed at a given instant. The class<classname>vjDigialInterface</classname> gives exactly that information, and it quietly hides the messiness of dealing with that crazy mouse, its ugly driver, and its overly complex protocol.</para>
             </section>
             <section>
                <title>Using <classname>vjDeviceInterface</classname></title>
+               <indexterm zone="vjVec-use-sect">
+                  <primary>classes</primary>
+                  <secondary>vjDeviceInterface</secondary>
+               </indexterm>
                <para>VR Juggler applications do not usually use <classname>vjDeviceInterface</classname> directly. Instead, the subclasses mentioned above will be used. Within this section, we will refer to subclasses of <classname>vjDeviceInterface</classname> as "device interfaces". The high-level description has already made use of this convention.</para>
-               <para>Before using a device interface, some must be declared. Programmers must choose the type that is appropriate for the type of devices relevant to a given application. All device interface objects must be initialized in the application object's <methodname>init()</methodname> method. Each device interface object inherits a method called <methodname>init()</methodname> from <classname>vjDeviceInterface</classname>. This method takes a single string argument naming the proxy to which the interface will connect. Example names are "VJHead", "VJWand", and "VJButton0". These are all symbolic names specified in VR Juggler configuration files. This makes them easier to remember, and it also contributes to hiding the details about the physical device. With this system, no one needs to care how transformation information from the user's head is generated. VR Juggler cares, but there is no need for it to tell anyone else. All developers care about is the head transformation matrix. An example of initializing a <classname>vjPosInterface</classname> that connects with the user head proxy is:</para>
+               <para>Before using a device interface, some must be declared. Programmers must choose the type that is appropriate for the type of devices relevant to a given application. All device interface objects must be initialized in the application object's <methodname>init()</methodname> method<indexterm>
+                     <primary>device interfaces</primary>
+                     <secondary>initialization of</secondary>
+                  </indexterm>. Each device interface object inherits a method called <methodname>init()</methodname> from <classname>vjDeviceInterface</classname>. This method takes a single string argument naming the proxy to which the interface will connect. Example names are "VJHead", "VJWand", "VJButton0", and "VJAccelerate"<indexterm>
+                     <primary>device aliases</primary>
+                     <secondary>examples of</secondary>
+                  </indexterm>. These are all symbolic names specified in VR Juggler configuration files. This makes them easier to remember, and it also contributes to hiding the details about the physical device. With this system, no one needs to care how transformation information from the user's head is generated. VR Juggler cares, but there is no need for it to tell anyone else. All developers care about is the head transformation matrix. An example of initializing a <classname>vjPosInterface</classname> that connects with the user head proxy is:</para>
                <programlisting>vjPosInterface head;
 
 head.init("VJHead");</programlisting>
-               <para>Remember that this is to be done in an application object's <classname>init()</classname> method. The actual object used would be a member variable of the application class. Note that here, the normal syntax for calling the method of a C++ object is used rather than using the dereference operator. Until it is initialized, the device interface object cannot act as a smart pointer.</para>
-               <para>Once device interface objects are all initialized and ready to use, it is time to start using them as smart pointers. This is best part! VR Juggler is already working hard in the background to update device proxies, and the application is free to access them. (It is usually best to reference them in the <methodname>preFrame()</methodname> method, but this may not necessarily be true for all proxies.) Continuing with our example of a <classname>vjPosInterface</classname> to the user head proxy, the following code shows how to read the transformation matrix for the user's head: </para>
+               <para>Remember that this is to be done in an application object's <methodname>init()</methodname> method. The actual object used would be a member variable of the application class. Note that here, the normal syntax for calling the method of a C++ object is used rather than using the dereference operator. Until it is initialized, the device interface object cannot act as a smart pointer.</para>
+               <para>Once device interface objects are all initialized and ready to use, it is time to start using them as smart pointers<indexterm>
+                     <primary>device interfaces</primary>
+                     <secondary>as smart pointers</secondary>
+                     <seealso>smart pointer</seealso>
+                  </indexterm>. This is best part! VR Juggler is already working hard in the background to update device proxies, and the application is free to access them. (It is usually best to reference them in the <methodname>preFrame()</methodname> method, but this may not necessarily be true for all proxies.) Continuing with our example of a <classname>vjPosInterface</classname> to the user head proxy, the following code shows how to read the transformation matrix for the user's head: </para>
                <programlisting>vjMatrix* head_mat;
 
 head_mat = head-&gt;getData();</programlisting>
-               <para>But wait, that was easy! The code really is that simple, though. Simply use the overloaded dereference operator to get access to the position proxy object hidden in <classname>vjPosInterface</classname> to read data from the proxy. Of course, we have not explained the <methodname>getData()</methodname> method at all yet. That comes from the position proxy class, and that is documented elsewhere.</para>
+               <para>But wait, that was easy! Believe it or not, the code really is that simple. Simply use the overloaded dereference operator to get access to the position proxy object hidden in <classname>vjPosInterface</classname> to read data from the proxy. Of course, we have not explained the <methodname>getData()</methodname> method at all yet. That comes from the position proxy class, and that is documented elsewhere.</para>
             </section>
             <section>
                <title>The Gory Details</title>
+               <indexterm>
+                  <primary>vjDeviceInterface</primary>
+                  <secondary>details</secondary>
+               </indexterm>
                <para>What is truly amazing about VR Juggler device interfaces is, despite their seeming complexity, there is really nothing to them. Trying to trace through the source code is a little tricky, but conceptually, it is all about pointers. Keep in mind that all this documentation is written using nothing more than the header files as a reference.</para>
-               <para>As mentioned, the class <classname>vjDeviceInterface</classname> is a base class for all the specific types of device interfaces such as positional interfaces, digital interfaces, and analog interfaces. This class maintains the name of the proxy and the proxy index, and it provides the all-important <methodname>init()</methodname> method, but it is up to the inheriting classes to handle the proxy pointer and overloading the dereference operator.</para>
-               <para>Subclasses of <classname>vjDeviceInterface</classname> are used to provide the wrapper to a specific type of proxy. They each contain a pointer to a proxy object of the same conceptual type (positional, digital, and so on). The way in which the dereference operator is overloaded can vary from class to class, but the end result is always the same: a pointer to the proxy is returned so that the calling code has access to that proxy.</para>
-               <para>The beauty of it all is that the proxy object being pointed to by the device interface can be changed without affecting the execution of the user application. In other words, the proxies can be changed at run time to point to different physical devices. All the while, the user code is still using the smart pointer interface and getting data of some sort. This flexibility is one of the most important features of VR Juggler, and it is important to understand.</para>
+               <para>As mentioned, the class <classname>vjDeviceInterface</classname> is a base class for all the specific types of device interfaces such as positional interfaces, digital interfaces, and analog interfaces. This class maintains the name of the proxy and the proxy index, and it provides the all-important <methodname>init()</methodname> method, but it is up to the inheriting classes to handle the proxy pointer and to overload the dereference operator.</para>
+               <para>Subclasses of <classname>vjDeviceInterface</classname> are used to provide the wrapper to a specific type of proxy<indexterm>
+                     <primary>vjDeviceInterface</primary>
+                     <secondary>subclasses of</secondary>
+                  </indexterm>. They each contain a pointer to a proxy object of the same conceptual type (positional, digital, and so on). The way in which the dereference operator is overloaded can vary from class to class, but the end result is always the same: a pointer to the proxy is returned so that the calling code has access to that proxy.</para>
+               <para>The beauty of it all is that the proxy object being pointed to by the device interface can be changed without affecting the execution of the user application. In other words, the proxies can be changed at run time to point to different <emphasis>physical</emphasis> devices. All the while, the user code is still using the smart pointer interface and getting data of some sort. This flexibility is one of the most important features of VR Juggler, and it is important to understand.</para>
             </section>
          </section>
          <section id="vjProxy-section">
             <title>The <classname>vjProxy</classname> Helper Class</title>
-            <para>This whole proxy scheme can be confusing. We admit that it makes the learning curve for VR Juggler a little steeper, but once you get it, you will know it all. An alternate title for this section is ``Horton Hears a Proxy.'' In this case, Horton is VR Juggler (it is rather elephant-like at times), and the complexity of dealing with these ethereal, ubiquitous proxies causes VR Juggler to take a lot of guff. This document presents the <classname>vjProxy</classname> class, the base class for the input proxies making it the one that is used the most. It should be noted, however, that the concept is spreading to other parts of VR Juggler because it is so useful. While this is only the introduction, we'll give you the moral of the story now: proxies are important concepts, and you should not step on them.</para>
+            <indexterm>
+               <primary>vjProxy</primary>
+            </indexterm>
+            <para>This whole proxy scheme can be confusing. We admit that it makes the learning curve for VR Juggler a little steeper, but once you get it, you will know it all. An alternate title for this section is ``Horton Hears a Proxy.'' In this case, Horton is VR Juggler (it is rather elephant-like at times), and the complexity of dealing with these ethereal, ubiquitous proxies causes VR Juggler to take a lot of guff. This section presents the <classname>vjProxy</classname><indexterm>
+                  <primary>classes</primary>
+                  <secondary>vjProxy</secondary>
+                  <seealso>vjProxy</seealso>
+               </indexterm> class, the base class for the input proxies, making it the one that is used the most. It should be noted, however, that the concept is spreading to other parts of VR Juggler because it is so useful. While this is only the introduction, we will give you the moral of the story now: proxies are important concepts, and you should not step on them.</para>
             <section>
                <title>High-Level Description</title>
+               <indexterm>
+                  <primary>vjProxy</primary>
+                  <secondary>description of</secondary>
+               </indexterm>
                <para>The class <classname>vjProxy</classname> is the base class for all the proxies in the VR Juggler Input Manager. A better name would be <classname>vjInputProxy</classname>, and it may help to think of it with that name. As a programmer of VR Juggler applications, knowledge of such proxies does not have to be terribly in-depth. The fact is, most VR Juggler programmers will probably never need to know more about a specific device proxy's interface than the return type of its <methodname>getData()</methodname> method. Most of the apparent complexity in the specific device proxy classes is only important to VR Juggler's internal maintenance of the active proxies.</para>
-               <para>That said, this document is relatively short. As a programmer, the important thing to know is that a proxy is a pointer to a physical device. You use the higher level device interface as the mechanism to read data in some form from the device. The device interface encapsulates some type of proxy that in turn points to an input device. That device can be a wand, a keyboard, a light sensor, or a home-brewed device that reads some input and returns it to VR Juggler in a meaningful way. That is a lot of indirection, but it makes the handling of physical devices by VR Juggler incredibly powerful.</para>
+               <para>That said, this section is relatively short. As a programmer, the important thing to know is that a proxy is a pointer to a physical device<indexterm>
+                     <primary>vjProxy</primary>
+                     <secondary>as pointer to physical device</secondary>
+                  </indexterm>. Application programmers use the higher level device interface as the mechanism to read data in some form from the device. The device interface encapsulates some type of proxy that in turn points to an input device. That device can be a wand, a keyboard, a light sensor, or a home-brewed device that reads some input and returns it to VR Juggler in a meaningful way. That is a lot of indirection, but it makes the handling of physical devices by VR Juggler incredibly powerful.</para>
             </section>
             <section>
                <title>Using <classname>vjProxy</classname></title>
-               <para>To be blunt, application programmers do not use <classname>vjProxy</classname>. Instead, access to a subclass of <classname>vjProxy</classname> is given through a device interface acting as a smart pointer. The <methodname>getData()</methodname> method of that subclass is used. That method is the window into the soul of an input device. The device interface allows calling <methodname>getData()</methodname> for the specific proxy object it encapsulates, and the current state of the device pointed to by the proxy is returned.</para>
-               <para>Therefore, what must be known is the return type of the specific proxy to which access is granted through the device interface. The naming conventions for the proxies and their interfaces makes it relatively simple to determine which proxy object is being encapsulated by which device interface. For example, a <classname>vjDigitalInterface</classname> holds a <classname>vjDigitalProxy</classname> pointer. In that case, refer to the documentation for the <classname>vjDigitalProxy</classname> class and find the return type of <methodname>getData()</methodname> (<type>int</type> in this case). The proxy header files have the information, too. These are located in <filename>$VJ_BASE_DIR/Input/InputManager</filename>. Just search for the <methodname>getData()</methodname> methods therein.</para>
+               <indexterm zone="vjVec-use-sect">
+                  <primary>classes</primary>
+                  <secondary>vjProxy</secondary>
+               </indexterm>
+               <para>To be blunt, application programmers do not use <classname>vjProxy</classname>. Instead, access to a subclass of <classname>vjProxy</classname> is given through a device interface acting as a smart pointer. The <methodname>getData()</methodname> method of that subclass is used<indexterm>
+                     <primary>vjProxy</primary>
+                     <secondary>getData() method</secondary>
+                  </indexterm>. That method is the window into the soul of an input device. The device interface allows calling <methodname>getData()</methodname> for the specific proxy object it encapsulates, and the current state of the device pointed to by the proxy is returned.</para>
+               <para>Therefore, what must be known is the return type of the specific proxy to which access is granted through the device interface. The naming conventions for the proxies and their interfaces makes it relatively simple to determine which proxy object is being encapsulated by which device interface. For example, a <classname>vjDigitalInterface</classname><indexterm>
+                     <primary>classes</primary>
+                     <secondary>vjDigitalInterface</secondary>
+                  </indexterm> holds a <classname>vjDigitalProxy</classname><indexterm>
+                     <primary>classes</primary>
+                     <secondary>vjDigitalProxy</secondary>
+                  </indexterm> pointer. In that case, refer to the documentation for the <classname>vjDigitalProxy</classname> class and find the return type of <methodname>getData()</methodname> (<type>int</type> in this case). The proxy header files have the information, too. These are located in <filename>$VJ_BASE_DIR/Input/InputManager</filename>. Just search for the <methodname>getData()</methodname> methods therein.</para>
             </section>
             <section>
                <title>The Gory Details</title>
-               <para>The gory details of <classname>vjProxy</classname> and its subclasses are not really relevant to this particular document. The subclasses look complicated, and they can be. It is important to note, however, that the complication is part of the interface used <emphasis>internally</emphasis> by VR Juggler rather than the interface used by the application programmer. Because of that and because each device proxy class is different, those details will not be addressed here. It is sufficient to deal with <methodname>getData()</methodname> alone in applications. Leave the ugliness up to VR Juggler; it can handle it.</para>
+               <indexterm>
+                  <primary>vjProxy</primary>
+                  <secondary>details</secondary>
+               </indexterm>
+               <para>The gory details of <classname>vjProxy</classname> and its subclasses are not really relevant to this particular section. The subclasses look complicated, and they can be. It is important to note, however, that the complication is part of the interface used <emphasis>internally</emphasis> by VR Juggler rather than the interface used by the application programmer. Because of that and because each device proxy class is different, those details will not be addressed here. It is sufficient to deal with <methodname>getData()</methodname> alone in applications. Leave the ugliness up to VR Juggler; it can handle it.</para>
             </section>
          </section>
       </chapter>
