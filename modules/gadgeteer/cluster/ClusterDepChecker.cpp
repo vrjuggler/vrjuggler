@@ -115,10 +115,10 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
       // - No MachineSpecific elements Pending
 
 
-      int number_nodes = element->getNum("cluster_nodes");
+      int number_nodes = element->getNum("cluster_node");
       for (int i = 0 ; i < number_nodes ; i++)
       {
-         std::string node_name = element->getProperty<std::string>("cluster_nodes",i);
+         std::string node_name = element->getProperty<std::string>("cluster_node",i);
          jccl::ConfigElementPtr node_element = ClusterManager::instance()->getConfigElementPointer(node_name);
          if (node_element.get() == NULL)
          {
@@ -186,10 +186,10 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
    }
    /*else if (cluster::ClusterManager::instance()->recognizeClusterManagerConfig(element))
    {
-      //int number_nodes = element->getNum("cluster_nodes");
+      //int number_nodes = element->getNum("cluster_node");
       //for (int i = 0 ; i < number_nodes ; i++)
       //{
-      //   std::string node_name = element->getProperty<std::string>("cluster_nodes",i);
+      //   std::string node_name = element->getProperty<std::string>("cluster_node",i);
       //   jccl::ConfigElementPtr node_element = RmoteInputManager::instance()->getConfigElementPointer(node_name);
       //   if (node_element.get() == NULL)
       //   {
