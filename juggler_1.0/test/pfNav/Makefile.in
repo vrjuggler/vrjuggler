@@ -34,7 +34,7 @@ default: all
 all: pfNav
 
 pfNav: ${OBJECTS}
-	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
+	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS} ${EXTRA_LIBS}
 
 pfNav.o: pfNav.C
 	${COMPILE} -c -o $@ ${srcdir}/pfNav.C
