@@ -10,11 +10,9 @@ classfiles:
 clean:
 	cd VjConfig; make clean
 	cd VjGUI; make clean
-	rm -f *.class *~ VjCfg.jar core
 
-
-
-
+clobber: clean
+	rm VjCfg.jar
 
 
 
