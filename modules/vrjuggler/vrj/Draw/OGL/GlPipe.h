@@ -69,12 +69,12 @@ public:
    GlPipe(int num, GlDrawManager* glMgr)
       : mActiveThread(NULL)
       , mPipeNum(num)
-      , controlExit(0)
-      , glManager(glMgr)
-      , renderTriggerSema(0)
-      , renderCompleteSema(0)
-      , swapTriggerSema(0)
-      , swapCompleteSema(0)
+      , mControlExit(0)
+      , mGlDrawManager(glMgr)
+      , mRenderTriggerSema(0)
+      , mRenderCompleteSema(0)
+      , mSwapTriggerSema(0)
+      , mSwapCompleteSema(0)
    {
       mThreadRunning = false;
    }
@@ -103,7 +103,7 @@ public:
     */
    void stop()
    {
-      controlExit = 1;     // Set the control loop exit flag
+      mControlExit = 1;     // Set the control loop exit flag
    }
 
 public:     // --------- Triggering functions ------ //
@@ -198,26 +198,26 @@ private:
    vpr::Thread*   mActiveThread;    /**< The thread running this object */
    bool           mThreadRunning;   /**< Do we have a running thread? */
 
-   int   mPipeNum;                  /**< The id of the pipe */
+   int            mPipeNum;         /**< The id of the pipe */
 
-   std::vector<GlWindow*>  mNewWins;          /**< List of windows still to be opened on current pipe */
-   vpr::Mutex              mNewWinLock;       /**< Lock for accessing the newWin list */
+   std::vector<GlWindow*>  mNewWins;         /**< List of windows still to be opened on current pipe */
+   vpr::Mutex              mNewWinLock;      /**< Lock for accessing the newWin list */
 
-   std::vector<GlWindow*>  mOpenWins;         /**< List of current open windows to render */
-   vpr::Mutex              mOpenWinLock;      /**< Lock for accessing the openWinList */
+   std::vector<GlWindow*>  mOpenWins;        /**< List of current open windows to render */
+   vpr::Mutex              mOpenWinLock;     /**< Lock for accessing the openWinList */
 
    std::vector<GlWindow*>  mClosingWins;     /**< List of windows to close */
    vpr::Mutex              mClosingWinLock;  /**< Lock for access the windows to close */
 
-   int                     controlExit;         /**< Flag for when to exit the control loop */
+   int                     mControlExit;     /**< Flag for when to exit the control loop */
 
-   GlDrawManager*          glManager;    /**< The openlGL manager that we are rendering for.
-                                               Needed to get app, etc. */
+   GlDrawManager*          mGlDrawManager;   /**< The openlGL manager that we are rendering for.
+                                                  Needed to get app, etc. */
 
-   vpr::Semaphore    renderTriggerSema;  /**< Signals render trigger */
-   vpr::Semaphore    renderCompleteSema; /**< signals render completed */
-   vpr::Semaphore    swapTriggerSema;    /**< Signals a swap to happen */
-   vpr::Semaphore    swapCompleteSema;   /**< Signals a swap has been completed */
+   vpr::Semaphore    mRenderTriggerSema;  /**< Signals render trigger */
+   vpr::Semaphore    mRenderCompleteSema; /**< Signals render completed */
+   vpr::Semaphore    mSwapTriggerSema;    /**< Signals a swap to happen */
+   vpr::Semaphore    mSwapCompleteSema;   /**< Signals a swap has been completed */
 };
 
 }
