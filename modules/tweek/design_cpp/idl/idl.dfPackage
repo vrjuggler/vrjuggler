@@ -21,6 +21,16 @@ class reference23 {
 @__modelType reference 
 */
 class reference24 {
+}/**
+@__ref <oiref:idl#Class#tweek::BeanDeliverySubject:oiref><oihard>
+@__modelType reference 
+*/
+class reference2 {
+}/**
+@__ref <oiref:idl#Class#tweek::BeanInfo:oiref><oihard>
+@__modelType reference 
+*/
+class reference3 {
 }}/**
 @__tags
 @shapeType ClassDiagram 
@@ -31,9 +41,12 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:idl#Class#tweek::SubjectManager:oiref>=10,170,200,92,1:oigroup>
-<oigroup:<oiref:idl#Class#tweek::Subject:oiref>=10,10,189,118,1:oigroup>
-<oigroup:<oiref:idl#Class#tweek::Observer:oiref>=219,10,125,92,1:oigroup> 
+@__positions <oigroup:<oiref:idl#Class#tweek::SubjectManager:oiref>=40,180,220,227,0:oigroup>
+<oigroup:<oiref:idl#Class#tweek::Subject:oiref>=360,10,113,167,1:oigroup>
+<oigroup:<oiref:idl#Class#tweek::BeanInfo:oiref>=580,230,200,180,0:oigroup>
+<oigroup:<oiref:idl#Extends#tweek::BeanDeliverySubject#tweek::Subject:oiref>=416,220,416,177:oigroup>
+<oigroup:<oiref:idl#Class#tweek::Observer:oiref>=79,10,125,123,1:oigroup>
+<oigroup:<oiref:idl#Class#tweek::BeanDeliverySubject:oiref>=310,220,230,190,0:oigroup>
 */
 class __positions {
 }
