@@ -292,13 +292,6 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
-if test "x$X_INCLUDES" != "x" ; then
-    INCLUDES="$INCLUDES $X_INCLUDES"
-fi
-
-if test "x$DTK_INCLUDES" != "x" ; then
-    INCLUDES="$INCLUDES $DTK_INCLUDES"
-fi
 
 # Add these C++ options when compiling with G++.
 if test "x$GXX" = "xyes" ; then
@@ -310,6 +303,11 @@ CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GMTL_INCLUDES"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 gadget_cxxflags="$STDFLAGS"
 gadget_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS"
+
+if test "x$DTK_INCLUDES" != "x" ; then
+   INCLUDES="$INCLUDES $DTK_INCLUDES"
+   gadget_cxxflags="$gadget_cxxflags $DTK_INCLUDES"
+fi
 
 if test "x$LOCAL_GMTL" = "xY" ; then
    gadget_cxxflags="$gadget_cxxflags $GMTL_INCLUDES"
@@ -370,6 +368,7 @@ if test "$OS_TYPE" = "UNIX" ; then
 
     if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
         INCLUDES="$INCLUDES -I$x_includes"
+        gadget_cxxflags="$gadget_cxxflags -I$x_includes"
     fi
 
     if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
@@ -419,7 +418,7 @@ case $OS_TYPE in
         gadget_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
         gadget_ldflags_linker="$gadget_ldflags_compiler"
         gadget_libs='-lgadget'
-        gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS"
+        gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS $APP_EXTRA_LIBS_X11"
         gadget_extra_libs_juggler="$JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $VPR_EXTRA_LIBS_CC"
 
         Gadgeteer_lib='-lgadget'
@@ -520,9 +519,7 @@ AC_OUTPUT(gadgeteer-config
           mtree/GADGET.install.dist
           mtree/GADGET.test.dist
           VARS.pl,
-    [ sed -e 's/^\(%.*\)/#\1/g' gadgeteer-config > gadgeteer-config.tmp
-      mv gadgeteer-config.tmp gadgeteer-config
-      chmod a+x gadgeteer-config ])
+    [chmod a+x gadgeteer-config])
 
 cat <<BUILD_INFO
 
