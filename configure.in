@@ -541,7 +541,7 @@ case $target_os in
 
         AR='ar'
         ARFLAGS='-ruv'
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+        CXXFLAGS="-Wall $CXXFLAGS"
         LD='${CXX} -shared'
         LDOPTS=''
         DBG_FLAGS='-g'
@@ -569,7 +569,7 @@ case $target_os in
 
         AR='ar'
         ARFLAGS='-ruv'
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+        CXXFLAGS="-Wall $CXXFLAGS"
         LD='${CXX} -shared'
         LDOPTS=''
         OPT_FLAGS='-O1'
@@ -597,7 +597,7 @@ case $target_os in
 
         AR='ar'
         ARFLAGS='-ruv'
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+        CXXFLAGS="-Wall $CXXFLAGS"
         LD='${CXX} -G'
         LDOPTS=''
         DBG_FLAGS='-g'
