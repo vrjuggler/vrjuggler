@@ -25,14 +25,14 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
    while(num_gestures < mSimKeys.size())     // If we have to many keys
    {
       mSimKeys.pop_back();
-      vjDEBUG(0) << "vjSimGloveGesture: Not enough gestures. Trimming" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "vjSimGloveGesture: Not enough gestures. Trimming" << endl << vjDEBUG_FLUSH;
    }
 
    // Find pos proxy
    std::string glove_pos_proxy = chunk->getProperty("glovePos");    // Get the name of the pos_proxy
    if(glove_pos_proxy == std::string(""))
    {
-      vjDEBUG(0) << "ERROR: vjSimGloveGesture has no posProxy." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "ERROR: vjSimGloveGesture has no posProxy." << endl << vjDEBUG_FLUSH;
       return false;
    }
    // init glove proxy interface
@@ -40,7 +40,7 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
    if(proxy_index != -1)
       mGlovePos[0] = vjKernel::instance()->getInputManager()->GetPosProxy(proxy_index);
    else
-      vjDEBUG(0) << "ERROR: vjSimGloveGesture::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
+      vjDEBUG(vjDBG_ALL,0) << "ERROR: vjSimGloveGesture::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
 
    // Set the indexes to defaults
    resetIndexes();
@@ -64,7 +64,7 @@ void vjSimGloveGesture::UpdateData()
       if(checkKeyPair(mSimKeys[i]) > 0)
       {
          mCurGesture = i;
-         vjDEBUG(1) << "vjSimGloveGesture: Got gesture: " << getGestureString(mCurGesture) << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,1) << "vjSimGloveGesture: Got gesture: " << getGestureString(mCurGesture) << endl << vjDEBUG_FLUSH;
 
          // Set the glove to the sample
          mTheData[0][current] = mGestureExamples[mCurGesture];    // Copy over the example
@@ -88,7 +88,7 @@ void vjSimGloveGesture::loadTrainedFile(std::string fileName)
    }
    else
    {
-      vjDEBUG(0) << "vjSimGloveGesture:: Can't load trained file: " << fileName << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "vjSimGloveGesture:: Can't load trained file: " << fileName << endl << vjDEBUG_FLUSH;
    }
 }
 

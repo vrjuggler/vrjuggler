@@ -5,7 +5,7 @@
 
 bool vjKeyboardProxy::config(vjConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(1) << "------------------ KEYBOARD PROXY -----------------\n"
+   vjDEBUG_BEGIN(vjDBG_ALL,1) << "------------------ KEYBOARD PROXY -----------------\n"
                     << "   config()" << endl << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "KeyboardProxy");
 
@@ -17,12 +17,12 @@ bool vjKeyboardProxy::config(vjConfigChunk* chunk)
 
    if ( proxy_num != -1)
    {
-      vjDEBUG_END(1) << "   KeyboardProxy config()'ed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_ALL,1) << "   KeyboardProxy config()'ed" << endl << vjDEBUG_FLUSH;
       return true;
    }
    else
    {
-      vjDEBUG_END(1) << "   KeyboardProxy config() failed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_ALL,1) << "   KeyboardProxy config() failed" << endl << vjDEBUG_FLUSH;
       return false;
    }
 }

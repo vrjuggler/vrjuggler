@@ -4,7 +4,7 @@
 
 bool vjGestureProxy::config(vjConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(1) << "------------------ GESTURE PROXY -----------------\n"
+   vjDEBUG_BEGIN(vjDBG_ALL,1) << "------------------ GESTURE PROXY -----------------\n"
                     << "   config()" << endl << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "GestureProxy");
 
@@ -16,12 +16,12 @@ bool vjGestureProxy::config(vjConfigChunk* chunk)
 
    if ( proxy_num != -1)
    {
-      vjDEBUG_END(1) << "   GestureProxy config()'ed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_ALL,1) << "   GestureProxy config()'ed" << endl << vjDEBUG_FLUSH;
       return true;
    }
    else
    {
-      vjDEBUG_END(1) << "   GestureProxy config() failed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_ALL,1) << "   GestureProxy config() failed" << endl << vjDEBUG_FLUSH;
       return false;
    }
 }

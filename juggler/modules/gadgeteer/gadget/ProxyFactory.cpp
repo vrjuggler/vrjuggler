@@ -35,7 +35,7 @@ void vjProxyFactory::loadKnownProxies()
 void vjProxyFactory::registerProxy(vjProxyConstructorBase* constructor)
 {
    mConstructors.push_back(constructor);     // Add the constructor to the list
-   vjDEBUG(1) << "vjProxyFactory::registerProxy: Constructor registered for: "
+   vjDEBUG(vjDBG_ALL,1) << "vjProxyFactory::registerProxy: Constructor registered for: "
               << constructor->getChunkType()
               << "   :" << (void*)constructor
               << " type:" << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
@@ -66,7 +66,7 @@ vjProxy* vjProxyFactory::loadProxy(vjConfigChunk* chunk)
    vjProxy* new_dev;
    vjProxyConstructorBase* constructor = mConstructors[index];
 
-   vjDEBUG(1) << "vjProxyFactory::loadProxy: Loading proxy: "
+   vjDEBUG(vjDBG_ALL,1) << "vjProxyFactory::loadProxy: Loading proxy: "
               << chunk->getType() << "  with: "
               << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
    new_dev = constructor->createProxy(chunk);

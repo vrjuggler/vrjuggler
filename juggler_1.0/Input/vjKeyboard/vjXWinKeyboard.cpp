@@ -5,7 +5,7 @@
 //: Constructor
 bool vjXWinKeyboard::config(vjConfigChunk *c)
 {
-    vjDEBUG_BEGIN(1) << "vjXWinKeyboard::config:\n" << vjDEBUG_FLUSH;
+    vjDEBUG_BEGIN(vjDBG_ALL,1) << "vjXWinKeyboard::config:\n" << vjDEBUG_FLUSH;
 
     if(!vjKeyboard::config(c))
       return false;
@@ -32,8 +32,8 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
     if (0 == m_mouse_sensitivity)
        m_mouse_sensitivity = 0.5;
 
-    vjDEBUG(1) << "Mouse Sensititivty: " << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
-    vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_ALL,1) << "Mouse Sensititivty: " << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
+    vjDEBUG_END(vjDBG_ALL,1) << endl << vjDEBUG_FLUSH;
 
     return true;
 }
@@ -101,7 +101,7 @@ int vjXWinKeyboard::StartSampling()
       XClearWindow(m_display,m_window);    // Try to clear the background
 
 
-      vjDEBUG(0) << "vjKeyboard::StartSampling() : ready to go.." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "vjKeyboard::StartSampling() : ready to go.." << endl << vjDEBUG_FLUSH;
 
 
       myThread = (vjThread *) 1;
@@ -168,7 +168,7 @@ void vjXWinKeyboard::UpdKeys()
                                             GrabModeAsync, GrabModeAsync,
                                             CurrentTime);
 
-         vjDEBUG(4) << "KeyPress:  " << hex << key
+         vjDEBUG(vjDBG_ALL,4) << "KeyPress:  " << hex << key
                     << " state:" << ((XKeyEvent*)&event)->state << " ==> "
                     << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
@@ -191,7 +191,7 @@ void vjXWinKeyboard::UpdKeys()
             m_pointer_grabbed = -1;
          }
 
-         vjDEBUG(4) << "KeyRelease:" << hex << key
+         vjDEBUG(vjDBG_ALL,4) << "KeyRelease:" << hex << key
                     << " state:" << ((XKeyEvent*)&event)->state << " ==> "
                     << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;

@@ -1,5 +1,10 @@
 #include <Input/vjSim/vjSimPosition.h>
 #include <Math/vjCoord.h>
+#include <Math/vjPlane.h>
+#include <Math/vjSeg.h>
+#include <Kernel/vjDisplayManager.h>
+#include <Kernel/vjDisplay.h>
+#include <Kernel/vjSurfaceDisplay.h>
 
 bool vjSimPosition::config(vjConfigChunk* chunk)
 {
@@ -89,7 +94,7 @@ void vjSimPosition::UpdateData()
 
    // Debug output
    //vjCoord pos_data(mPos);
-   //vjDEBUG(1) << "simPos: pos:" << pos_data.pos << "  or:" << pos_data.orient << endl << vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_ALL,1) << "simPos: pos:" << pos_data.pos << "  or:" << pos_data.orient << endl << vjDEBUG_FLUSH;
 }
 
 
@@ -97,30 +102,54 @@ void vjSimPosition::UpdateData()
 // Forward is in th -Z direction
 void vjSimPosition::MoveFor(const float amt)
 {
-   if(mTransCoordSystem == LOCAL)
-      mPos.postTrans(mPos, 0.0, 0.0, -amt*mDTrans);
+   vjVec3 move_forward(0.0,0.0,-1.0);  // Base movement
+   move_forward *= (amt*mDTrans);
+
+   if(isTransAllowed(move_forward))
+   {
+      if(mTransCoordSystem == LOCAL)
+         mPos.postTrans(mPos, move_forward);
+      else
+         mPos.preTrans(move_forward, mPos);
+   }
    else
-      mPos.preTrans(0.0, 0.0, -amt*mDTrans, mPos);
+      vjDEBUG(0,vjDBG_ALL) << "SimPos hit a surface.\n" << vjDEBUG_FLUSH;
 }
 
 // Move left the given amount on position data n
 // Left is -X dir
 void vjSimPosition::MoveLeft(const float amt)
 {
-   if(mTransCoordSystem == LOCAL)
-      mPos.postTrans(mPos, -amt*mDTrans, 0.0, 0.0);
+   vjVec3 move_left(-1.0,0.0,0.0);  // Base movement
+   move_left *= (amt*mDTrans);
+
+   if(isTransAllowed(move_left))
+   {
+      if(mTransCoordSystem == LOCAL)
+         mPos.postTrans(mPos, move_left);
+      else
+         mPos.preTrans(move_left, mPos);
+   }
    else
-      mPos.preTrans(-amt*mDTrans, 0.0, 0.0, mPos);
+      vjDEBUG(0,vjDBG_ALL) << "SimPos hit a surface.\n" << vjDEBUG_FLUSH;
 }
 
 // Move up the given amount on position data n
 // Up is in th +Y dir
 void vjSimPosition::MoveUp(const float amt)
 {
-   if(mTransCoordSystem == LOCAL)
-      mPos.postTrans(mPos, 0.0, amt*mDTrans, 0.0);
+   vjVec3 move_up(0.0,1.0,0.0);  // Base movement
+   move_up *= (amt*mDTrans);
+
+   if(isTransAllowed(move_up))
+   {
+      if(mTransCoordSystem == LOCAL)
+         mPos.postTrans(mPos, move_up);
+      else
+         mPos.preTrans(move_up, mPos);
+   }
    else
-      mPos.preTrans(0.0, amt*mDTrans, 0.0, mPos);
+      vjDEBUG(0,vjDBG_ALL) << "SimPos hit a surface.\n" << vjDEBUG_FLUSH;
 }
 
 // Pitch up - rot +x axis
@@ -195,5 +224,46 @@ void vjSimPosition::RotRollCCW(const float amt)
       mPos.preMult(delta_rot);
       mPos.preMult(trans);
    }
+}
+
+//: Check if movement is allowed
+//! NOTE: It is not allowed if it hits a simulated wall, etc.
+bool vjSimPosition::isTransAllowed(vjVec3 trans)
+{
+   // check if the movement is goign to intersect with any of the surface displays
+   // If it does, then return false
+   vjVec3 ll, lr, ur, ul;
+   vjSeg trans_seg;
+   float t_dist;
+   vjVec3 src_pt;
+   mPos.getTrans(src_pt[0],src_pt[1], src_pt[2]);
+   trans_seg.makePts(src_pt, (src_pt+trans));
+
+
+   std::vector<vjDisplay*> disps = vjDisplayManager::instance()->getAllDisplays();
+
+   for(int i=0;i<disps.size();i++)
+   {
+      if(disps[i]->isSurface())
+      {
+         vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>(disps[i]);
+         vjASSERT(surf_disp != NULL);
+
+         // Get corners
+         surf_disp->getCorners(ll,lr,ur,ul);
+
+         // Check the tris
+         if(trans_seg.isectTriangle(ll,lr,ul,&t_dist))   // If ray hits
+            if(trans_seg.tValueOnSeg(t_dist))            // If t_dist on seg
+               return false;                             // Hit tri
+
+         if(trans_seg.isectTriangle(ul,lr,ur,&t_dist))   // If ray hits
+           if(trans_seg.tValueOnSeg(t_dist))            // If t_dist on seg
+              return false;                             // Hit tri
+      }
+   }
+
+   return true;
+
 }
 
