@@ -146,34 +146,6 @@ public:
    }
 
    /**
-    * Sets the blocking flags so that the serial port is opened in blocking
-    * mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the port is opened, it is
-    *       opened in blocking mode.  If the port is already open, this has
-    *       no effect.
-    */
-   void setOpenBlocking()
-   {
-      mHandle->setOpenBlocking();
-   }
-
-   /**
-    * Sets the blocking flags so that the serial port is opened in
-    * non-blocking mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the port is opened, it is
-    *       opened in non-blocking mode.  If the port is already open, this
-    *       has no effect.
-    */
-   void setOpenNonBlocking()
-   {
-      mHandle->setOpenNonBlocking();
-   }
-
-   /**
     * Opens the serial port and initialize its flags.
     *
     * @pre This serial port is not already open.
@@ -201,7 +173,6 @@ public:
     */
    vpr::ReturnStatus clearAll();
 
-
    /**
     * Closes the serial port.
     *
@@ -220,10 +191,16 @@ public:
    }
 
    /**
-    * Reconfigures the serial port so that it is in blocking mode.
+    * Reconfigures the serial port so that it is in blocking or non-blocking
+    * mode depending on the value of the argument.  If the serial port has
+    * not been opened yet, it will be opened in blocking or non-blocking
+    * mode appropriately when open() is called.
     *
-    * @pre This serial port is open.
     * @post Processes may block when accessing the port.
+    *
+    * @param blocking A value of true indicates that this port will use
+    *                 blocking I/O.  A value of false indicates that this port
+    *                 will use non-blocking I/O.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the blocking mode was
     *         changed successfully; vpr::ReturnStatus::Fail otherwise.

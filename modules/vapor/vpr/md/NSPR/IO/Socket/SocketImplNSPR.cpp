@@ -100,12 +100,10 @@ vpr::ReturnStatus SocketImplNSPR::open()
          mHandle = new_sock;
          mOpen = true;
 
-         //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Socket open: handle:[" << mHandle << "]\n" << vprDEBUG_FLUSH;
+         // Now that this socket is open, we can set the blocking state.
+         setBlocking(mOpenBlocking);
 
-         if ( ! mOpenBlocking )
-         {
-            setBlocking(false);
-         }
+         //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Socket open: handle:[" << mHandle << "]\n" << vprDEBUG_FLUSH;
       }
    }
 
@@ -174,36 +172,54 @@ vpr::ReturnStatus SocketImplNSPR::bind()
 
 vpr::ReturnStatus SocketImplNSPR::setBlocking(bool blocking)
 {
-   vprASSERT( mOpen && "precondition says you must open() the socket first" );
    vprASSERT(! mBlockingFixed && "Can't change blocking state after blocking call");
 
    vpr::ReturnStatus retval;
 
-   PRStatus status;
-   PRSocketOptionData option_data;
-   option_data.option = PR_SockOpt_Nonblocking;
-
-   if ( blocking )
+   // If this socket has not been opened yet, set mOpenBlocking to the value
+   // of blocking.  The actual change for the blocking state has to occur
+   // after the socket has been opened.
+   if ( ! mOpen )
    {
-      option_data.value.non_blocking = false;
+      mOpenBlocking = blocking;
    }
+   // If this socket is already open, change the blocking state to match the
+   // value of blocking.
    else
    {
-      option_data.value.non_blocking = true;
-   }
+      if ( ! mBlockingFixed )
+      {
+         PRStatus status;
+         PRSocketOptionData option_data;
+         option_data.option = PR_SockOpt_Nonblocking;
 
-   status = PR_SetSocketOption(mHandle, &option_data);
+         if ( blocking )
+         {
+            option_data.value.non_blocking = false;
+         }
+         else
+         {
+            option_data.value.non_blocking = true;
+         }
 
-   // If that fails, print an error and return error status.
-   if ( status == PR_FAILURE )
-   {
-      vpr::Error::outputCurrentError(std::cerr,
-                                     "SocketImplNSPR::setBlocking: Failed to set.");
-      retval.setCode(vpr::ReturnStatus::Fail);
-   }
-   else
-   {
-      mBlocking = blocking;
+         status = PR_SetSocketOption(mHandle, &option_data);
+
+         // If that fails, print an error and return error status.
+         if ( status == PR_FAILURE )
+         {
+            vpr::Error::outputCurrentError(std::cerr,
+                                           "SocketImplNSPR::setBlocking: Failed to set.");
+            retval.setCode(vpr::ReturnStatus::Fail);
+         }
+         else
+         {
+            mBlocking = blocking;
+         }
+      }
+      else
+      {
+         retval.setCode(vpr::ReturnStatus::Fail);
+      }
    }
 
    return retval;
@@ -749,9 +765,14 @@ vpr::ReturnStatus SocketImplNSPR::setOption(const vpr::SocketOptions::Types opti
 // Default constructor.  This just initializes member variables to reasonable
 // defaults.
 SocketImplNSPR::SocketImplNSPR(const vpr::SocketTypes::Type sock_type)
-   : mHandle(NULL), mType(sock_type), mOpen(false), mOpenBlocking(true),
-     mBound(false), mConnected(false), mBlocking(true),
-     mBlockingFixed(false)
+   : mHandle(NULL)
+   , mType(sock_type)
+   , mOpen(false)
+   , mBound(false)
+   , mConnected(false)
+   , mOpenBlocking(true)
+   , mBlocking(true)
+   , mBlockingFixed(false)
 {
    /* Do nothing. */ ;
 }
@@ -763,9 +784,16 @@ SocketImplNSPR::SocketImplNSPR(const vpr::SocketTypes::Type sock_type)
 SocketImplNSPR::SocketImplNSPR(const vpr::InetAddr& local_addr,
                                const vpr::InetAddr& remote_addr,
                                const vpr::SocketTypes::Type sock_type)
-   : mHandle(NULL), mLocalAddr(local_addr), mRemoteAddr(remote_addr),
-     mType(sock_type), mOpen(false), mOpenBlocking(true), mBound(false),
-     mConnected(false), mBlocking(true), mBlockingFixed(false)
+   : mHandle(NULL)
+   , mLocalAddr(local_addr)
+   , mRemoteAddr(remote_addr)
+   , mType(sock_type)
+   , mOpen(false)
+   , mBound(false)
+   , mConnected(false)
+   , mOpenBlocking(true)
+   , mBlocking(true)
+   , mBlockingFixed(false)
 {
    mName = mLocalAddr.getAddressString();
 }

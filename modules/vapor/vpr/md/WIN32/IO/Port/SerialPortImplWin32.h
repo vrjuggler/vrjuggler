@@ -139,34 +139,6 @@ public:
    }
 
    /**
-    * Sets the blocking flags so that the serial port is opened in blocking
-    * mode.
-    *
-    * @post The open flags are updated so that when the port is opened, it
-    *       is opened in blocking mode.  If the port is already open, this
-    *       has no effect.
-    */
-   void setOpenBlocking()
-   {
-      mBlocking &= ~FILE_FLAG_OVERLAPPED;
-   }
-
-   /**
-    * Sets the blocking flags so that the serial port is opened in
-    * non-blocking mode.
-    *
-    * @post The open flags are updated so that when the port is opened, it
-    *       is opened in non-blocking mode.  If the port is already open,
-    *       this has no effect.
-    */
-   void setOpenNonBlocking()
-   {
-	   //Still not sure why this is not supported
-      std::cout << "non-Blocking not currently supported in win32." << std::endl;
-//      mBlocking |= FILE_FLAG_OVERLAPPED;
-   }
-
-   /**
     * Opens the serial port and initializes its flags.
     *
     * @pre The serial port is not already open.
@@ -197,19 +169,15 @@ public:
 
    /**
     * Reconfigures the serial port so that it is in blocking or non-blocking
-    * mode.
+    * mode.  If the serial port has not been opened yet, it will be opened in
+    * blocking or non-blocking mode when open() is called.
     *
-    * @pre The serial port is open.
-    * @post Processes will block when accessing the port.
+    * @post Processes will block (or not) when accessing the port.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the blocking mode was
     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   vpr::ReturnStatus setBlocking(bool flag)
-   {
-      std::cout << "Enabling blocking mode after port open is unsuported in Win32." << std::endl;
-      return vpr::ReturnStatus::Fail;
-   }
+   vpr::ReturnStatus setBlocking(bool flag);
 
    /**
     * Get the current blocking state for the serial port.

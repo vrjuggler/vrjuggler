@@ -82,34 +82,6 @@ public:
    }
 
    /**
-    * Sets the blocking flags so that the I/O device is opened in blocking
-    * mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the device is opened,
-    *       is opened in blocking mode.  If the device is already open,
-    *       this has no effect.
-    */
-   virtual void setOpenBlocking()
-   {
-      mOpenBlocking = true;
-   }
-
-   /**
-    * Sets the blocking flags so that the I/O device is opened in
-    * non-blocking mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the device is opened, it
-    *       is opened in non-blocking mode.  If the device is already open,
-    *       this has no effect.
-    */
-   virtual void setOpenNonBlocking()
-   {
-      mOpenBlocking = false;
-   }
-
-   /**
     * Opens the I/O device.
     *
     * @pre The device is not already open.
@@ -153,9 +125,10 @@ public:
 
    /**
     * Reconfigures the I/O device so that it is in blocking or non-blocking
-    * mode depending on the given parameter.
+    * mode depending on the given parameter.  If the device has not been
+    * opened yet, it will be opened in blocking or non-blocking mode
+    * appropriately when open() is called.
     *
-    * @pre The device is open.
     * @post Processes will block when accessing the device.
     *
     * @param blocking A true value puts the I/O device into blocking mode.
@@ -650,8 +623,9 @@ protected:
     *       and the blocking mode for reads and writes is set to true.
     */
    BlockIO()
-      : mOpenBlocking(true), mOpen(false), mBlocking(true),
-        mStatsStrategy(NULL)
+      : mOpen(false)
+      , mBlocking(true)
+      , mStatsStrategy(NULL)
    {
       /* Do nothing. */ ;
    }
@@ -667,8 +641,10 @@ protected:
     * @param name The name for this device.
     */
    BlockIO(const std::string& name)
-      : mName(name), mOpenBlocking(true), mOpen(false), mBlocking(true),
-        mStatsStrategy(NULL)
+      : mName(name)
+      , mOpen(false)
+      , mBlocking(true)
+      , mStatsStrategy(NULL)
    {
       /* Do nothing. */ ;
    }
@@ -680,12 +656,12 @@ protected:
     *              as the source for the copy.
     */
    BlockIO(const BlockIO& other)
+      : mName(other.mName)
+      , mOpen(other.mOpen)
+      , mBlocking(other.mBlocking)
+      , mStatsStrategy(NULL)
    {
-      mName          = other.mName;
-      mOpenBlocking  = other.mOpenBlocking;
-      mOpen          = other.mOpen;
-      mBlocking      = other.mBlocking;
-      mStatsStrategy = NULL;
+      /* Do nothing. */ ;
    }
 
    /**
@@ -852,20 +828,17 @@ protected:
    /// The name of the I/O device.
    std::string mName;
 
-   /// Flag telling if blocking is enabled when opening the device
-   bool mOpenBlocking;
-
-   /// Flag telling if the device is open
+   /// Flag telling if the device is open.
    bool mOpen;
 
-   /// Flag telling if blocking for reads and writes is enabled
+   /// Flag telling if blocking for reads and writes is enabled.
    bool mBlocking;
 
-   /// Perf monitor
-   vpr::BaseIOStatsStrategy*   mStatsStrategy;
+   /// Perf monitor.
+   vpr::BaseIOStatsStrategy* mStatsStrategy;
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif   /* _VPR_BLOCK_IO_H_ */

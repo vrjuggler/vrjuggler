@@ -83,33 +83,6 @@ public:
    }
 
    /**
-    * Sets the blocking flags so that the socket is opened in blocking mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the socket is opened, it
-    *       is opened in blocking mode.  If the socket is already open, this
-    *       has no effect.
-    */
-   void setOpenBlocking()
-   {
-      mOpenBlocking = true;
-   }
-
-   /**
-    * Sets the blocking flags so that the socket is opened in non-blocking
-    * mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the socket is opened, it
-    *       is opened in non-blocking mode.  If the socket is already open,
-    *       this has no effect.
-    */
-   void setOpenNonBlocking()
-   {
-      mOpenBlocking = false;
-   }
-
-   /**
     * Opens the socket.  This creates a new socket using the domain and type
     * options set through member variables.
     *
@@ -388,17 +361,18 @@ protected:
     * XXX: We need to have a reference count here
     */
    SocketImplNSPR(const SocketImplNSPR& sock)
+      : mName(sock.mName)
+      , mHandle(sock.mHandle)
+      , mLocalAddr(sock.mLocalAddr)
+      , mRemoteAddr(sock.mRemoteAddr)
+      , mType(sock.mType)
+      , mOpen(sock.mOpen)
+      , mBound(sock.mBound)
+      , mConnected(sock.mConnected)
+      , mOpenBlocking(sock.mOpenBlocking)
+      , mBlocking(sock.mBlocking)
+      , mBlockingFixed(sock.mBlockingFixed)
    {
-      mLocalAddr      = sock.mLocalAddr;
-      mRemoteAddr     = sock.mRemoteAddr;
-      mHandle         = sock.mHandle;
-      mType           = sock.mType;
-      mOpen           = sock.mOpen;
-      mOpenBlocking   = sock.mOpenBlocking;
-      mBound          = sock.mBound;
-      mConnected      = sock.mConnected;
-      mBlocking       = sock.mBlocking;
-      mBlockingFixed  = sock.mBlockingFixed;
    }
 
    std::string       mName;
@@ -409,10 +383,10 @@ protected:
    vpr::SocketTypes::Type mType;  /**< Socket type */
 
    bool mOpen;
-   bool mOpenBlocking;
    bool mBound;          /**< Is the socket bound to a port yet (connect
                                and bind do this) */
    bool mConnected;
+   bool mOpenBlocking;
    bool mBlocking;
    bool mBlockingFixed;
 };

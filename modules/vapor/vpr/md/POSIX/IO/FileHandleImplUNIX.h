@@ -78,8 +78,10 @@ public:
     * @post All member variables are initialized except mName.
     */
    FileHandleImplUNIX()
-      : mOpen(false), mOpenBlocking(true), mBlocking(true), mFdesc(-1),
-        mOpen_mode(O_RDWR)
+      : mOpen(false)
+      , mBlocking(true)
+      , mFdesc(-1)
+      , mOpenMode(O_RDWR)
    {
       /* Do nothing. */ ;
    }
@@ -116,33 +118,6 @@ public:
    const std::string& getName()
    {
       return mName;
-   }
-
-   /**
-    * Sets the blocking flags so that the socket is opened in blocking mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the socket is opened, it
-    *       is opened in blocking mode.  If the socket is already open, this
-    *       has no effect.
-    */
-   void setOpenBlocking()
-   {
-      mOpenBlocking = true;
-   }
-
-   /**
-    * Sets the blocking flags so that the socket is opened in non-blocking
-    * mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the socket is opened, it
-    *       is opened in non-blocking mode.  If the socket is already open,
-    *       this has no effect.
-    */
-   void setOpenNonBlocking()
-   {
-      mOpenBlocking = false;
    }
 
    /**
@@ -190,7 +165,8 @@ public:
 
    /**
     * Reconfigures the file handle so that it is in blocking or non-blocking
-    * mode.
+    * mode.  If this file handle has not been opened yet, it will be opened in
+    * blocking or non-blocking mode appropriately when open() is called.
     *
     * @pre The file handle is open.
     * @post Processes may block (or not) when accessing the file.
@@ -245,7 +221,7 @@ public:
     */
    void setOpenReadOnly()
    {
-      mOpen_mode = O_RDONLY;
+      mOpenMode = O_RDONLY;
    }
 
    /**
@@ -258,7 +234,7 @@ public:
     */
    void setOpenWriteOnly()
    {
-      mOpen_mode = O_WRONLY;
+      mOpenMode = O_WRONLY;
    }
 
    /**
@@ -271,7 +247,7 @@ public:
     */
    void setOpenReadWrite()
    {
-      mOpen_mode = O_RDWR;
+      mOpenMode = O_RDWR;
    }
 
    /**
@@ -319,7 +295,7 @@ public:
     */
    bool isReadOnly()
    {
-      return (mOpen_mode == O_RDONLY);
+      return (mOpenMode == O_RDONLY);
    }
 
    /**
@@ -334,7 +310,7 @@ public:
     */
    bool isWriteOnly()
    {
-      return (mOpen_mode == O_WRONLY);
+      return (mOpenMode == O_WRONLY);
    }
 
    /**
@@ -349,7 +325,7 @@ public:
     */
    bool isReadWrite()
    {
-      return (mOpen_mode == O_RDWR);
+      return (mOpenMode == O_RDWR);
    }
 
    /**
@@ -524,11 +500,10 @@ protected:
 
    std::string mName;           /**< The name of this file */
    bool        mOpen;           /**< Open state of this file */
-   bool        mOpenBlocking;
    bool        mBlocking;       /**< Blocking state of this file */
 
    int mFdesc;      /**< File descriptor */
-   int mOpen_mode;  /**< The open mode of the device */
+   int mOpenMode;   /**< The open mode of the device */
 };
 
 } // End of vpr namespace
