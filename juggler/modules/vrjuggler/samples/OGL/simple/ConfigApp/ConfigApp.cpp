@@ -79,7 +79,7 @@ ConfigApp::ConfigApp()
 // are only interested in those elements of type ConfigApp.
 bool ConfigApp::configCanHandle(ConfigElementPtr element)
 {
-   const std::string my_type("ConfigApp");
+   const std::string my_type("config_app");
 
    return (my_type == element->getID());
 }
@@ -87,10 +87,10 @@ bool ConfigApp::configCanHandle(ConfigElementPtr element)
 // Handles addition of a new configuration element that we can use.
 bool ConfigApp::configAdd(ConfigElementPtr element)
 {
-   const std::string ll_color("lowerLeftColor");
-   const std::string lr_color("lowerRightColor");
-   const std::string ur_color("upperRightColor");
-   const std::string ul_color("upperLeftColor");
+   const std::string ll_color("lower_left_color");
+   const std::string lr_color("lower_right_color");
+   const std::string ur_color("upper_right_color");
+   const std::string ul_color("upper_left_color");
 
    // Get the color settings for the lower left corner (ll).
    for ( int i = 0; i < element->getNum(ll_color); ++i )
