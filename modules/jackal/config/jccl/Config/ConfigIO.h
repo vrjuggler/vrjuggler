@@ -50,10 +50,21 @@ class ConfigIO {
 
 public:
 
+    //: ID of default handler for reading/writing streams.
+    static const int DEFAULT_HANDLER;
+
+    //: ID to use for getting an XML handler.
+    static const int XML_HANDLER;
+
+    //: ID to use for getting an old-fasioned io handler.
+    static const int STANDARD_HANDLER;
+
+
+
     ~ConfigIO ();
 
-    // valid strings are "standard_config" and "xml_config"
-    ConfigIOHandler* getHandler (const std::string& handler_name);
+    // one of the 3 constants defined by this class
+    ConfigIOHandler* getHandler (int handler_type);
 
     // puts handler back in the pool.
     void releaseHandler (ConfigIOHandler* handler);
@@ -64,24 +75,24 @@ public:
     //: Read db from the named file.
     //  If handler_name is "", we use a heuristic to determine which
     //  kind of IO handler to use for reading the file.
-    bool readConfigChunkDB (std::string file_name, ConfigChunkDB& db, const std::string& handler_name = "");
+    bool readConfigChunkDB (std::string file_name, ConfigChunkDB& db, int handler_type = 0);
 
 
     //: Read db from the stream in.
     //  If handler_name is "", uses the default handler class.
     //  Note that we can't guess which handler to use because we can't
     //  back up the stream by an arbitrary amount.
-    bool readConfigChunkDB (std::istream& input, ConfigChunkDB& db, const std::string& handler_name = "");
+    bool readConfigChunkDB (std::istream& input, ConfigChunkDB& db, int handler_type = 0);
 
 
     //: Write db to the named file.
     //  If handler_name is "", uses the default handler class.
-    bool writeConfigChunkDB (const char* file_name, const ConfigChunkDB& db, const std::string& handler_name = "");
+    bool writeConfigChunkDB (const char* file_name, const ConfigChunkDB& db, int handler_type = 0);
 
 
     //: Write db to output.
     //  If handler_name is "", uses the default handler class.
-    bool writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db, const std::string& handler_name = "");
+    bool writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db, int handler_type = 0);
 
 
     //---------- ChunkDescDB methods -----------
@@ -89,24 +100,24 @@ public:
     //: Read db from the named file.
     //  If handler_name is "", we use a heuristic to determine which
     //  kind of IO handler to use for reading the file.
-    bool readChunkDescDB (std::string file_name, ChunkDescDB& db, const std::string& handler_name = "");
+    bool readChunkDescDB (std::string file_name, ChunkDescDB& db, int handler_type = 0);
 
 
     //: Read db from the stream in.
     //  If handler_name is "", uses the default handler class.
     //  Note that we can't guess which handler to use because we can't
     //  back up the stream by an arbitrary amount.
-    bool readChunkDescDB (std::istream& input, ChunkDescDB& db, const std::string& handler_name = "");
+    bool readChunkDescDB (std::istream& input, ChunkDescDB& db, int handler_type = 0);
 
 
     //: Write db to the named file.
     //  If handler_name is "", uses the default handler class.
-    bool writeChunkDescDB (const char* file_name, const ChunkDescDB& db, const std::string& handler_name = "");
+    bool writeChunkDescDB (const char* file_name, const ChunkDescDB& db, int handler_type = 0);
 
 
     //: Write db to output.
     //  If handler_name is "", uses the default handler class.
-    bool writeChunkDescDB (std::ostream& output, const ChunkDescDB& db, const std::string& handler_name = "");
+    bool writeChunkDescDB (std::ostream& output, const ChunkDescDB& db, int handler_type = 0);
 
 
 private:
@@ -118,14 +129,6 @@ private:
     std::vector<ConfigIOHandler*> xml_config_handlers;
     ConfigIOHandler* standard_config_handler;
 
-    //: Name of default handler for reading/writing streams.
-    std::string default_handler_name;
-
-    //: String name to use for getting an XML handler.
-    static const std::string xml_handler_name;
-
-    //: String name to use for getting an old-fasioned io handler.
-    static const std::string standard_handler_name;
 
 vprSingletonHeader(ConfigIO);
 
