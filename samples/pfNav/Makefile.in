@@ -16,7 +16,7 @@ LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(VJ_BASE_DIR)/include/Math \
 			-I$(srcdir) -I$(srcdir)/../nav -I$(srcdir)/../pfTools
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ @TEST_LIBS_BASIC@
-VPATH		= @srcdir@ @srcdir@/../nav @srcdir@/../pfTools
+VPATH       = @srcdir@:@srcdir@/../nav:@srcdir@/../pfTools
 
 # This test program requires the following libraries to be linked:
 #
