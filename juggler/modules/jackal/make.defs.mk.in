@@ -32,7 +32,7 @@
 
 # =============================================================================
 # This file <make.defs.mk> provides variable information shared by all
-# makefiles in the VR Juggler source tree.  It requires GNU make.
+# makefiles in the Jackal source tree.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -47,8 +47,8 @@
 # scriptdir     - The path to the directory containing scripts used in the
 #                 build and install/release process.
 # topdir        - The top of the build tree.
-# VJROOT_ABS    - The absolute path to the root of the VR Juggler source tree.
-# VJ_SHARE_DIR  - The name of the directory where the VR Juggler data files,
+# JACKALROOT_ABS- The absolute path to the root of the Jackal source tree.
+# VJ_SHARE_DIR  - The name of the directory where the Jackal data files,
 #                 test programs, and sample apps are installed.  This is
 #                 only the name of the directory, not the full path to it.
 #
@@ -68,18 +68,8 @@
 #                 For n32 binaries, it will be 32.  For 64-bit binaries, it
 #                 will be 64.
 #
-# VJ_LIBRARY    - The base name of the core Juggler library that will be built
+# JACKAL_LIBRARY- The base name of the core Jackal library that will be built
 #                 with no file extension.
-# UTILS_LIBRARY - The base name of the Juggler utility library with no file
-#                 extension.
-# GL_LIBRARY    - The base name of the OpenGL Juggler API library with no file
-#                 extension.
-# PF_LIBRARY    - The base name of the Performer Juggler API library with no
-#                 file extension.
-# AW_LIBRARY    - The base name of the Juggler AudioWorks sound engine
-#                 library with no file extension.
-# SL_LIBRARY    - The base name of the Juggler SL sound engine library with no
-#                 file extension.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -120,18 +110,13 @@ MKDEPS_CXX	= $(MKDEPS_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 # $(ABI), further settings may be made to allow for building with multiple
 # ABIs.
 # -----------------------------------------------------------------------------
-ifdef vjABI
-    dppABI	= $(vjABI)
+ifdef jcclABI
+    dppABI	= $(jcclABI)
 endif
 
 # -----------------------------------------------------------------------------
 # Library names.
 # -----------------------------------------------------------------------------
-VJ_LIBRARY	= @LIB_PREFIX@Juggler
-UTILS_LIBRARY	= @LIB_PREFIX@Juggler_utils
-GL_LIBRARY	= @LIB_PREFIX@Juggler_ogl
-PF_LIBRARY	= @LIB_PREFIX@Juggler_pf
-AW_LIBRARY	= @LIB_PREFIX@Juggler_aw
-SL_LIBRARY	= @LIB_PREFIX@Juggler_sl
+JACKAL_LIBRARY	= @LIB_PREFIX@Jackal
 
 include $(topdir)/common.defs.mk

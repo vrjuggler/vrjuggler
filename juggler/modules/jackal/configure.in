@@ -38,8 +38,8 @@
 # -----------------------------------------------------------------------------
 
 AC_REVISION($Revision$)
-AC_INIT(vjConfig.h)
-AC_CONFIG_HEADER(vjDefines.h)
+AC_INIT(jccl/jcclConfig.h)
+AC_CONFIG_HEADER(jccl/jcclDefines.h)
 DPP_PREREQ(1.4)
 DPP_INIT
 
@@ -247,6 +247,10 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH(0.4.0, , AC_MSG_ERROR(*** VPR required for Jackal***))
+# need SUBSYSTEM for makever in Makefile.inc.in
+vpr_subsystem=`$VPR_CONFIG --subsystem`
+SUBSYSTEM="$vpr_subsystem"
+
 
 # -----------
 # Xerces-c
@@ -568,10 +572,10 @@ AC_OUTPUT(Makefile
           Makefile.inc
           common.defs.mk
           make.defs.mk
-          Config/Makefile
-          Environment/Makefile
+          jccl/Config/Makefile
+          jccl/JackalServer/Makefile
+          jccl/Performance/Makefile
           VjControl/Makefile
-          Performance/Makefile
           samples/Makefile
           samples/vjcontrol/Makefile
           samples/vjcontrol/AudioPlayer/Makefile
