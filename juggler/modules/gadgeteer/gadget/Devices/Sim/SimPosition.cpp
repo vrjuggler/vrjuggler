@@ -77,7 +77,7 @@ bool SimPosition::config(jccl::ConfigElementPtr element)
 
    // Create keypairs
    vprASSERT(key_pairs.size() == NUM_POS_CONTROLS);
-   for(int i=0;i<NUM_POS_CONTROLS;i++)
+   for ( int i = 0; i < NUM_POS_CONTROLS; ++i )
    {
       mSimKeys[i] = key_pairs[i];
    }
@@ -118,59 +118,75 @@ void SimPosition::updateData()
 
    amt = checkKeyPair(mSimKeys[FORWARD]);
    if(amt > 0.0f)
+   {
       moveFor( amt );
+   }
 
    amt = checkKeyPair(mSimKeys[BACK]);
    if(amt > 0.0f)
+   {
       moveFor( -amt );
+   }
 
    amt = checkKeyPair(mSimKeys[LEFT]);
    if(amt > 0.0f)
+   {
       moveLeft( amt );
+   }
 
    amt = checkKeyPair(mSimKeys[RIGHT]);
    if(amt > 0.0f)
+   {
       moveLeft( -amt );
+   }
 
    amt = checkKeyPair(mSimKeys[UP]);
    if(amt > 0.0f)
+   {
       moveUp ( amt );
+   }
 
    amt = checkKeyPair(mSimKeys[DOWN]);
    if(amt > 0.0f)
+   {
       moveUp ( -amt );
+   }
 
    amt = checkKeyPair(mSimKeys[ROTR]);
    if(amt > 0.0f)
+   {
       rotLeft( -amt );
+   }
 
    amt = checkKeyPair(mSimKeys[ROTL]);
    if(amt > 0.0f)
+   {
       rotLeft( amt );
+   }
 
    amt = checkKeyPair(mSimKeys[ROTU]);
    if(amt > 0.0f)
+   {
       rotUp( amt );
+   }
 
    amt = checkKeyPair(mSimKeys[ROTD]);
    if(amt > 0.0f)
+   {
       rotUp( -amt );
+   }
 
    amt = checkKeyPair(mSimKeys[ROT_ROLL_CCW]);
    if(amt > 0.0f)
+   {
       rotRollCCW( amt );
+   }
 
    amt = checkKeyPair(mSimKeys[ROT_ROLL_CW]);
    if(amt > 0.0f)
+   {
       rotRollCCW( -amt );
-
-   // Debug output
-/*
-   vjCoord pos_data(mPos);
-   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "simPos: pos:" << pos_data.pos
-                                           << "  or:" << pos_data.orient
-                                           << std::endl << vprDEBUG_FLUSH;
-*/
+   }
 
    // Set the time for the position data to the EventWindow timestamp
    mPos.setTime(mEventWin->getTimeStamp());
@@ -178,7 +194,6 @@ void SimPosition::updateData()
 
    swapPositionBuffers();  // Swap the buffers
 }
-
 
 void SimPosition::moveDir(const float amt, const gmtl::Vec3f dir)
 {
@@ -189,20 +204,21 @@ void SimPosition::moveDir(const float amt, const gmtl::Vec3f dir)
    {
       if(mTransCoordSystem == LOCAL)
       {
-         gmtl::postMult(mPos.mPosData, gmtl::makeTrans<gmtl::Matrix44f>(move_vector) );
+         gmtl::postMult(mPos.mPosData,
+                        gmtl::makeTrans<gmtl::Matrix44f>(move_vector));
       }
       else
       {
-         gmtl::preMult(mPos.mPosData, gmtl::makeTrans<gmtl::Matrix44f>(move_vector) );
+         gmtl::preMult(mPos.mPosData,
+                       gmtl::makeTrans<gmtl::Matrix44f>(move_vector));
       }
-
    }
    else
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL) << "SimPos hit a surface.\n"
-                                      << vprDEBUG_FLUSH;
-
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+         << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
+   }
 }
-
 
 
 // Move forward the given amount on position data n
@@ -235,30 +251,29 @@ void SimPosition::rotAxis(const float amt, const gmtl::Vec3f& rotAxis)
    // convert the input...
    gmtl::AxisAnglef axisAngle( gmtl::Math::deg2Rad(amt*mDRot), gmtl::makeNormal( rotAxis ) );
 
-  gmtl::Matrix44f delta_rot( gmtl::makeRot<gmtl::Matrix44f>( axisAngle ) );   // make delta rot
+   gmtl::Matrix44f delta_rot( gmtl::makeRot<gmtl::Matrix44f>( axisAngle ) );   // make delta rot
 
-  if(mRotCoordSystem == LOCAL)
-  {
-     gmtl::postMult(mPos.mPosData, delta_rot);
-  }
-  else
-  {
-     // Get the translation and rotation seperated
-     // Make new matrix with Trans*DeltaRot*Rot
-     gmtl::Vec3f trans_vec(gmtl::makeTrans<gmtl::Vec3f>(mPos.mPosData));          // Get translation
-     gmtl::Matrix44f trans_mat(gmtl::makeTrans<gmtl::Matrix44f>( trans_vec ));   // Make trans matrix
-     gmtl::Matrix44f rot_mat(mPos.mPosData);
+   if(mRotCoordSystem == LOCAL)
+   {
+      gmtl::postMult(mPos.mPosData, delta_rot);
+   }
+   else
+   {
+      // Get the translation and rotation seperated
+      // Make new matrix with Trans*DeltaRot*Rot
+      gmtl::Vec3f trans_vec(gmtl::makeTrans<gmtl::Vec3f>(mPos.mPosData));          // Get translation
+      gmtl::Matrix44f trans_mat(gmtl::makeTrans<gmtl::Matrix44f>( trans_vec ));   // Make trans matrix
+      gmtl::Matrix44f rot_mat(mPos.mPosData);
 
-     gmtl::setTrans(rot_mat, gmtl::Vec3f(0.0f,0.0f,0.0f));  // Clear out trans
-     mPos.mPosData = trans_mat * delta_rot * rot_mat;
-     /*
-     gmtl::setTrans(*m, gmtl::Vec3f(0,0,0));      // Get to rotation only
-     gmtl::preMult(*m, delta_rot);
-     gmtl::preMult(*m, trans);
-     */
-  }
+      gmtl::setTrans(rot_mat, gmtl::Vec3f(0.0f,0.0f,0.0f));  // Clear out trans
+      mPos.mPosData = trans_mat * delta_rot * rot_mat;
+      /*
+      gmtl::setTrans(*m, gmtl::Vec3f(0,0,0));      // Get to rotation only
+      gmtl::preMult(*m, delta_rot);
+      gmtl::preMult(*m, trans);
+      */
+   }
 }
-
 
 // Pitch up - rot +x axis
 void SimPosition::rotUp(const float amt)
@@ -281,10 +296,8 @@ void SimPosition::rotRollCCW(const float amt)
    rotAxis(amt, neg_z_axis);
 }
 
-/**
- * Checks if movement is allowed.
- * @note It is not allowed if it hits a simulated wall, etc.
- */
+// Checks if movement is allowed.
+// NOTE: It is not allowed if it hits a simulated wall, etc.
 bool SimPosition::isTransAllowed(gmtl::Vec3f trans)
 {
    boost::ignore_unused_variable_warning(trans);
@@ -300,7 +313,7 @@ bool SimPosition::isTransAllowed(gmtl::Vec3f trans)
 
    std::vector<Display*> disps = DisplayManager::instance()->getAllDisplays();
 
-   for(unsigned int i=0;i<disps.size();i++)
+   for ( unsigned int i = 0; i < disps.size(); ++i )
    {
       if(disps[i]->isSurface())
       {
@@ -312,18 +325,25 @@ bool SimPosition::isTransAllowed(gmtl::Vec3f trans)
 
          // Check the tris
          if(trans_seg.isectTriangle(ll,lr,ul,&t_dist))   // If ray hits
+         {
             if(trans_seg.tValueOnSeg(t_dist))            // If t_dist on seg
+            {
                return false;                             // Hit tri
+            }
+         }
 
          if(trans_seg.isectTriangle(ul,lr,ur,&t_dist))   // If ray hits
-           if(trans_seg.tValueOnSeg(t_dist))            // If t_dist on seg
-              return false;                             // Hit tri
+         {
+            if(trans_seg.tValueOnSeg(t_dist))            // If t_dist on seg
+            {
+                return false;                             // Hit tri
+            }
+         }
       }
    }
    */
 
    return true;
-
 }
 
 } // End of gadget namespace
