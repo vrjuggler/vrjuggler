@@ -44,7 +44,11 @@
                 ..
                 Sim
                 ..
-            ..
+	    ..
+            Filter
+	        Position
+		..
+	    ..
             RemoteInputManager
             ..
             Type

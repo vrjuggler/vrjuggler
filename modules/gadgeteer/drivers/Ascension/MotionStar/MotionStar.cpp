@@ -287,10 +287,7 @@ int MotionStar::sample()
       FLOCK::data_format format;
 
       // Transforms between the cord frames
-      // See transform documentation and VR System pg 146
-      // Since we want the reciver in the world system, Rw
-      // wTr = wTt*tTr
-      gmtl::Matrix44f world_T_transmitter, transmitter_T_receiver, world_T_receiver;
+      gmtl::Matrix44f transmitter_T_receiver;
 
       try
       {
@@ -384,19 +381,8 @@ int MotionStar::sample()
                   break;
             }
 
-            // Set transmitter offset from local info.
-            world_T_transmitter = xformMat;
-
-            // Get receiver data from sampled data.
-            //transmitter_T_receiver = *(cur_samples[index].getPosition());
-
-            // Compute total transform.
-            // wTr = wTt * tTr
-            gmtl::mult(world_T_receiver, world_T_transmitter,
-                       transmitter_T_receiver);
-
             // Store corrected xform back into data.
-            *(cur_samples[i].getPosition()) = world_T_receiver;
+            *(cur_samples[i].getPosition()) = transmitter_T_receiver;
          }
 
          // Add the current data as a sample

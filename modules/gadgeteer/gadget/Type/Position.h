@@ -44,11 +44,10 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/PositionData.h>
 #include <gadget/Type/SampleBuffer.h>
+#include <gadget/Filter/Position/PositionFilter.h>
 
 #include <gmtl/Matrix.h>
 #include <vpr/Util/Debug.h>
-//#include <vpr/IO/ObjectReader.h>
-//#include <vpr/IO/ObjectWriter.h>
 #include <gadget/RemoteInputManager/SerializableDevice.h>
 
 
@@ -116,13 +115,7 @@ public:
    * not need to be xformed before bing passed in.
    * @post Sample is added to the buffers and the local filters are run on that sample.
    */
-   void addPositionSample(const std::vector< PositionData >& posSample)
-   {
-      // Locks and then swaps the indices.
-      mPosSamples.lock();
-      mPosSamples.addSample(posSample);
-      mPosSamples.unlock();
-   }
+   void addPositionSample(std::vector< PositionData > posSample);
 
    /** Swap the position data buffers.
     * @post If ready has values, then copy values from ready to stable
@@ -147,13 +140,11 @@ public:
    }
 
 protected:
-   PositionData      mDefaultValue;   /**< Default analog value to return */
-
-   gmtl::Matrix44f xformMat;   /**< The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system */
-   gmtl::Matrix44f rotMat;     /**< Only the rotation matrix */
+   PositionData      mDefaultValue;   /**< Default positional value to return */
 
 private:
-   SampleBuffer_t    mPosSamples;   /**< Position samples */
+   std::vector<PositionFilter*>  mPositionFilters;    /**< The active filters that are to be used */
+   SampleBuffer_t                mPosSamples;   /**< Position samples */
 
 };
 

@@ -30,18 +30,27 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include <gadget/gadgetConfig.h>
 #include <gadget/Filter/Position/PositionXformFilter.h>
 #include <gadget/Filter/Position/PositionFilterFactory.h>
 
-/** Register this filter */
-GADGET_REGISTER_POSFILTER_CREATOR( PositionXformFilter );
+#include <jccl/Config/ConfigChunk.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/EulerAngle.h>
 
 namespace gadget
 {
 
+/** Register this filter */
+GADGET_REGISTER_POSFILTER_CREATOR( PositionXformFilter );
+
 bool PositionXformFilter::config(jccl::ConfigChunkPtr c)
 {
-   std::string chunk_type = first_chunk->getDescToken();
+   std::string chunk_type = c->getDescToken();
    vprASSERT(chunk_type == PositionXformFilter::getChunkType());
 
    //vprDEBUG(vprDBG_ALL,0) << "vjPosition::config(jccl::ConfigChunkPtr)" << vprDEBUG_FLUSH;
@@ -71,6 +80,8 @@ bool PositionXformFilter::config(jccl::ConfigChunkPtr c)
       gmtl::setTrans(m_worldMsensor, gmtl::Vec3f(xt, yt, zt) );
       gmtl::postMult(m_worldMsensor, rotMat);         // xformMat = T*R
    }
+
+   return true;
 }
 
 // Update all the position samples by xforming them by the transform matrix
