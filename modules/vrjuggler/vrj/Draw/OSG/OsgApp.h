@@ -238,6 +238,8 @@ inline void OsgApp::contextInit()
 
 inline void OsgApp::draw()
 {
+   glClear(GL_DEPTH_BUFFER_BIT);
+
    glPushAttrib(GL_ALL_ATTRIB_BITS);
    glPushAttrib(GL_TRANSFORM_BIT);
    glPushAttrib(GL_VIEWPORT_BIT);
