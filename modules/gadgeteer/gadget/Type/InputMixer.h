@@ -37,8 +37,6 @@
 #include <vpr/vpr.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
-//#include <gadget/RemoteInputManager/StreamReader.h>
-//#include <gadget/RemoteInputManager/StreamWriter.h>
 
 namespace gadget
 {
@@ -76,19 +74,7 @@ class InputMixer : public ComposedParent, public NewParent
 public:
 	typedef InputPlaceHolder< InputMixer<ComposedParent, NewParent> > MixedPlaceholderType;
 
-	/*virtual vpr::ReturnStatus writeObject(vpr::StreamWriter* writer)
-	{
-		ComposedParent::writeObject(writer);
-		NewParent::writeObject(writer);
-	} */
-     
-	/*virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
-	{
-		NewParent::readObject(reader);
-		ComposedParent::readObject(reader);
-	} */
-	
-	vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+    vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
 	{
 		ComposedParent::writeObject(writer);
 		NewParent::writeObject(writer);

@@ -191,7 +191,7 @@ public:
       }
       return mInstName;
    }
-
+   
    virtual std::string getBaseType()
    {
       return std::string("Input");

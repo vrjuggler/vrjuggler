@@ -175,7 +175,10 @@ namespace gadget
          //std::cout << "[Remote Input Manager] In Digital read" << std::endl;
          vpr::Uint16 temp = reader->readUint16();
          //std::cout << "[RIM] Digital: " << (int)temp << std::endl;
-         vprASSERT(temp==MSG_DATA_DIGITAL && "[Remote Input Manager]Not Digital Data");                   // ASSERT if this data is really not Digital Data
+         
+         // ASSERT if this data is really not Digital Data
+         vprASSERT(reader->readUint16()==MSG_DATA_DIGITAL && "[Remote Input Manager]Not Digital Data");
+         
          std::vector<DigitalData> dataSample;
 
          unsigned numDigitalDatas;
