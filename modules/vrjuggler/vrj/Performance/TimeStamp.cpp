@@ -1,5 +1,5 @@
 
-#include "vjTimeStamp.h"
+#include <Performance/vjTimeStamp.h>
 
 #ifdef _VJ_SGI_TIMING_
 /*
