@@ -30,9 +30,9 @@ Builder: JExplorerBuilder V 1. 0. 7
 	<item title="App obj details"
 		link="${PROGRAMMERGUIDE}/app.basics/application_object_details.html"
 		info="Application object details">	
-	<item title="App obj details"
+	<item title="Base app obj interface"
 		link="${PROGRAMMERGUIDE}/app.basics/details_base_app_object_interface.html"
-		info="Base application object details">
+		info="Base application object interface">
 	<item title="Draw Mgr App obj details"
 		link="${PROGRAMMERGUIDE}/app.basics/details_drawmgr_app_object_interfaces.html"
 		info="Draw manager specific application object details">
