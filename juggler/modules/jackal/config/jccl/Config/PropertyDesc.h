@@ -43,24 +43,24 @@
 namespace jccl
 {
 
-/** Describes properties
-*
-* Holds all the information describing a property
-*/
+/** Describes properties.
+ *
+ * Holds all the information describing a property.
+ */
 class PropertyDesc
 {
 public:
 
-   /** Constructor
-   * Initialized with default values
-   */
-   PropertyDesc ();
+   /** Constructor.
+    * Initialized with default values.
+    */
+   PropertyDesc();
 
-   /** Constructor from XML node*/
+   /** Constructor from XML node. */
    PropertyDesc(cppdom::XMLNodePtr node);
 
-   /** Copy Constructor */
-   PropertyDesc (const PropertyDesc& d);
+   /** Copy Constructor. */
+   PropertyDesc(const PropertyDesc& d);
 
    /**
     * Convenience constructor.
@@ -68,38 +68,38 @@ public:
     *       valuelabels & enumerations are empty.
     */
    /*
-   PropertyDesc (const std::string& n, int i, VarType t, const std::string& h);
+   PropertyDesc(const std::string& n, int i, VarType t, const std::string& h);
    */
 
    /** Destroys a PropertyDesc, and frees all allocated memory. */
-   ~PropertyDesc ();
+   ~PropertyDesc();
 
 #ifdef JCCL_DEBUG
-   void assertValid () const;
+   void assertValid() const;
 #else
-   inline void assertValid () const
+   void assertValid() const
    {
       ;
    }
 #endif
 
    /** Returns the token string for the described property. */
-   inline const std::string getToken () const
+   std::string getToken() const
    {
       return mNode->getAttribute(jccl::token_TOKEN).getValue<std::string>();
    }
 
-   inline void setToken (const std::string& tok)
+   void setToken(const std::string& tok)
    {
       mNode->setAttribute(jccl::token_TOKEN, tok);
    }
 
-   inline const std::string getName () const
+   std::string getName() const
    {
       return mNode->getAttribute(jccl::name_TOKEN).getString();
    }
 
-   inline void setName (const std::string& name)
+   void setName(const std::string& name)
    {
       mNode->setAttribute(jccl::name_TOKEN, name);
    }
@@ -108,24 +108,24 @@ public:
 
    void setHelp(const std::string& help);
 
-   inline VarType getVarType () const
+   VarType getVarType() const
    {
-      return jccl::stringToVarType( mNode->getAttribute(jccl::type_TOKEN) );
+      return jccl::stringToVarType(mNode->getAttribute(jccl::type_TOKEN));
    }
 
-   inline void setVarType (VarType _type)
+   void setVarType(VarType type)
    {
-      mNode->setAttribute(jccl::type_TOKEN, jccl::typeString(_type) );
+      mNode->setAttribute(jccl::type_TOKEN, jccl::typeString(type));
    }
 
-   inline int getNumAllowed () const
+   int getNumAllowed() const
    {
       return mNode->getAttribute(jccl::num_TOKEN).getValue<int>();
    }
 
-   inline void setNumAllowed (int num)
+   void setNumAllowed(int num)
    {
-      mNode->setAttribute(jccl::num_TOKEN, num );
+      mNode->setAttribute(jccl::num_TOKEN, num);
    }
 
    /**
@@ -136,27 +136,27 @@ public:
 
    /*
    //: Returns the number of individual value labels
-   inline int getValueLabelsSize () const
+   int getValueLabelsSize() const
    {
       return valuelabels.size();
    }
 
-   void appendValueLabel (const std::string& _label);
+   void appendValueLabel(const std::string& _label);
 
    //: Returns the ith value label
-   const std::string& getValueLabel (unsigned int index) const;
+   const std::string& getValueLabel(unsigned int index) const;
    */
 
    /** Writes a PropertyDesc to the given ostream
    */
-   friend std::ostream& operator << (std::ostream& out, const PropertyDesc& self);
+   friend std::ostream& operator<< (std::ostream& out, const PropertyDesc& self);
 
    /** Equality operator. */
    // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
    bool operator== (const PropertyDesc& pd) const;
 
    /** Inequality operator. */
-   inline bool operator!= (const PropertyDesc& pd) const
+   bool operator!= (const PropertyDesc& pd) const
    {
       return !(*this == pd);
    }
@@ -171,7 +171,7 @@ public:
 
 protected:
    bool                 mIsValid;   /**< Validation flag */
-   cppdom::XMLNodePtr    mNode;      /**< The xml node for this chunk desc */
+   cppdom::XMLNodePtr   mNode;      /**< The xml node for this chunk desc */
 };
 
 } // End of jccl namespace
