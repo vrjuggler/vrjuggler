@@ -308,21 +308,9 @@ post-install:
           $(EXTRA_INSTALL_ARGS) $(topdir)/jccl-config $(bindir)
 
 PREINSTALL_HEADERS=	pre-install-headers
-POSTINSTALL_HEADERS=	post-install-headers
 
 pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.include.dist -p $(prefix)
-
-post-install-headers:
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS)						\
-          $(JCCLROOT_ABS)/common/jccl/jcclConfig.h $(includedir)/jccl/
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/common/jccl/jcclDefines.h	\
-          $(includedir)/jccl/
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/common/jccl/jcclParam.h	\
-          $(includedir)/jccl/
 
 install-java:
 	for dir in $(SUBDIR) ; do					\
