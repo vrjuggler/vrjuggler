@@ -59,8 +59,10 @@ $path_subst{"JUGGLER_USER_COMMUNITY"} = 'html/contact.info/usercommunity.html';
 # The install-web script doesn't modify the variable at all.
 
 # the href address to mail the Juggler list.
-$alias_subst{"JUGGLER_MAILING_LIST"} = 'mailto:vrjuggler@vrjuggler.org';
-$alias_subst{"JUGGLER_DEV_MAILING_LIST"} = 'mailto:vrjuggler@vrjuggler.org';
+$alias_subst{"JUGGLER_MAILING_LIST"} = 'http://sourceforge.net/mail/?group_id=8041';
+$alias_subst{"MAILTO_JUGGLER_MAILING_LIST"} = 'mailto:vrjuggler-info@lists.sourceforge.net';
+$alias_subst{"JUGGLER_DEV_MAILING_LIST"} = 'http://sourceforge.net/mail/?group_id=8041';
+$alias_subst{"MAILTO_JUGGLER_DEV_MAILING_LIST"} = 'mailto:vrjuggler-devel@lists.sourceforge.net';
 $alias_subst{"CONTACT_US_DIRECTLY"} = 'mailto:vrjuggler-contact@vrjuggler.org';
 
 $alias_subst{"SOURCEFORGE"} = 'https://sourceforge.net';
