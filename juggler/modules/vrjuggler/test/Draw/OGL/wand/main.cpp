@@ -39,7 +39,6 @@
 
       // --- Lib Stuff --- //
 #include <vrj/Kernel/Kernel.h>
-#include <vpr/System.h>
 
 
 int main(int argc, char* argv[])
@@ -76,8 +75,7 @@ int main(int argc, char* argv[])
 
    kernel->setApplication(application);
 
-   while(1)
-   {
-      vpr::Thread::yield();
-   }
+   kernel->waitForKernelStop();
+
+   return 0;
 }
