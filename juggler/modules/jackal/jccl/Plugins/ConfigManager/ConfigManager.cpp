@@ -250,9 +250,10 @@ void ConfigManager::debugDumpPending(int debug_level)
 }
 /*virtual*/ void ConfigManager::addConnect (Connect *c) {
     c->addCommunicator (config_communicator);
+    addActive (new ConfigChunk(*(c->getConfiguration())));
 }
 /*virtual*/ void ConfigManager::removeConnect (Connect* c) {
-    ;
+    removeActive (c->getConfiguration()->getName());
 }
 
 

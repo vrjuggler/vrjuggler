@@ -116,12 +116,9 @@ class VJ_CLASS_API Connect {
     bool stopProcess();
 
 
-//      void sendDescDB (ChunkDescDB* db);
-//      void sendChunkDB (ConfigChunkDB* db, bool all);
-//      void sendRefresh ();
     void sendDisconnect();
 
-    void Connect::sendCommand (Command* cmd);
+    void sendCommand (Command* cmd);
 
     //: Attaches a timed update object to this connection
     //! ARGS: _tu - a vjTimedUpdate* 
