@@ -340,8 +340,8 @@ vjMatrix* vjIsense::getPosData( int d )
 int vjIsense::getDigitalData( int d )
 {
     if(this->isActive() == false)
-        return NULL;
-  
+        return 0;
+
     return mInput[current].digital[d];
 }
 
