@@ -11,9 +11,9 @@ set_policy(sonix.instance, return_value_policy(reference_existing_object))
 
 Class('snx::SoundAPIInfo', 'snx/SoundAPIInfo.h')
 
-SoundFactory = Class('snx::SoundFactory', 'snx/SoundFactory.h')
-set_policy(SoundFactory.instance,
-           return_value_policy(reference_existing_object))
+#SoundFactory = Class('snx::SoundFactory', 'snx/SoundFactory.h')
+#set_policy(SoundFactory.instance,
+#           return_value_policy(reference_existing_object))
 
 Class('snx::SoundHandle', 'snx/SoundHandle.h')
 
