@@ -399,7 +399,7 @@ EXTRA_OBJ_TARGETS = build-java
 
 # Make sure we build java targets serially because javac is stupid and may try
 # to write to the same files at the same time while building different sources.
-MAKE_FLAGS += -j 1
+MAKEFLAGS += -j 1
 build-java:
 	$(MAKE) $(MAKEFLAGS) RECTARGET=java recursive
 
