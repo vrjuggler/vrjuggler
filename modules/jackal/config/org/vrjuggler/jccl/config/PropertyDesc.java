@@ -24,144 +24,6 @@ public class PropertyDesc {
     public ValType valtype;
 
 
-    public boolean equals(PropertyDesc d) {
-	DescEnum e1, e2;
-	if (d == null)
-	  return false;
-	if (!name.equalsIgnoreCase(d.name))
-	    return false;
-	if (!token.equalsIgnoreCase(d.token))
-	    return false;
-	if (!help.equalsIgnoreCase(d.help))
-	    return false;
-	if (num != d.num)
-	    return false;
-	if (!valtype.equals(d.valtype))
-	    return false;
-
-	/* KLUDGE: This next part returns false if both
-	 * PropertyDescs have the same descenums in a
-	 * different order.  I'm not sure if the enums
-	 * code enforces any kind of order or not, or
-	 * if this is reasonable behavior. This should
-	 * be examined more carefully.
-	 */
-	for (int i = 0; i <enums.size(); i++) {
-	    try {
-		e1 = (DescEnum)enums.elementAt(i);
-		e2 = (DescEnum)d.enums.elementAt(i);
-		if (!e1.equals(e2))
-		    return false;
-	    }
-	    catch (ArrayIndexOutOfBoundsException e) {
-		return false;
-	    }
-	}
-	return true;
-    }
-
-
-
-    public String toString() {
-	String s = token + " " + valtype.strVal() + " " 
-	    + Integer.toString(num) 
-	    + " \"" + name + "\"";
-
-	/* value labels: */
-	if (valuelabels.size() > 0) {
-	    DescEnum e;
-	    s += " vj_valuelabels { ";
-	    for (int i = 0; i < valuelabels.size(); i++) {
-		e = (DescEnum) valuelabels.elementAt(i);
-		s += "\"" + e.str + "\" ";
-	    }
-	    s += "}";
-	}
-
-	/* enumerations */
-	if (enums.size() > 0) {
-	    DescEnum e;
-	    s += " vj_enumeration { ";
-	    for (int i = 0; i < enums.size(); i++) {
-		e = (DescEnum) enums.elementAt(i);
-		if (valtype.equals(ValType.t_string) || 
-		    valtype.equals(ValType.t_chunk))
-		    s += "\"" + e.str + "\" ";
-		else
-		    s += e.str + "=" + e.val + " ";
-	    }
-	    s += "}";
-	}
-	s += " \"" + help + "\"";
-	return s;
-    }
-
-
-
-    public VarValue getEnumValue(String val) 
-	throws java.util.NoSuchElementException {
-	/* returns the int value associated with this enum el */
-	DescEnum t;
-	VarValue v;
-	
-	if (valtype.equals(ValType.t_string) || 
-	    valtype.equals(ValType.t_chunk)) {
-	    v = new VarValue(valtype);
-	    v.set(val);
-	    return v;   // no need for translation
-	}
-	
-	for (int i = 0; i < enums.size(); i++) {
-	    t = (DescEnum)enums.elementAt(i);
-	    if (t.str.equalsIgnoreCase(val)) {
-		v = new VarValue(t.val);
-		return v;
-	    }
-	}
-	throw new java.util.NoSuchElementException();
-    }
-
-
-
-    public String getEnumString(int val) 
-	throws java.util.NoSuchElementException {
-	/* does the reverse mapping of getEnumVal - maps a value 
-	 * back to the name of the enum entry 
-	 */
-	DescEnum t;
-
-	if (!valtype.equals(ValType.t_int))
-	    throw new java.util.NoSuchElementException();
-	for (int i = 0; i < enums.size(); i++) {
-	    t = (DescEnum)enums.elementAt(i);
-	    if (t.val.getInt() == val) {
-		return t.str;
-	    }
-	}
-	throw new java.util.NoSuchElementException();
-    }
-
-
-
-    public String getEnumString(float val) 
-	throws java.util.NoSuchElementException {
-	/* does the reverse mapping of getEnumVal - maps a 
-	 * value back to the name of the enum entry 
-	 */
-	DescEnum t;
-
-	if (!valtype.equals(ValType.t_float))
-	    throw new java.util.NoSuchElementException();
-	for (int i = 0; i < enums.size(); i++) {
-	    t = (DescEnum)enums.elementAt(i);
-	    if (t.val.getFloat() == val) {
-		return t.str;
-	    }
-	}
-	throw new java.util.NoSuchElementException();
-    }
-
-
 
     public PropertyDesc () {
 	/* creates an "empty" PropertyDesc */
@@ -241,6 +103,152 @@ public class PropertyDesc {
 
 
 
+    public DescEnum getEnumAtIndex (int ind) {
+	return (DescEnum)enums.elementAt(ind);
+    }
+
+
+
+    public boolean equals(PropertyDesc d) {
+	DescEnum e1, e2;
+	if (d == null)
+	  return false;
+	if (!name.equalsIgnoreCase(d.name))
+	    return false;
+	if (!token.equalsIgnoreCase(d.token))
+	    return false;
+	if (!help.equalsIgnoreCase(d.help))
+	    return false;
+	if (num != d.num)
+	    return false;
+	if (!valtype.equals(d.valtype))
+	    return false;
+
+	/* KLUDGE: This next part returns false if both
+	 * PropertyDescs have the same descenums in a
+	 * different order.  I'm not sure if the enums
+	 * code enforces any kind of order or not, or
+	 * if this is reasonable behavior. This should
+	 * be examined more carefully.
+	 */
+	for (int i = 0; i <enums.size(); i++) {
+	    try {
+		e1 = (DescEnum)enums.elementAt(i);
+		e2 = (DescEnum)d.enums.elementAt(i);
+		if (!e1.equals(e2))
+		    return false;
+	    }
+	    catch (ArrayIndexOutOfBoundsException e) {
+		return false;
+	    }
+	}
+	return true;
+    }
+
+
+
+    public String toString() {
+	String s = token + " " + valtype.toString() + " " 
+	    + Integer.toString(num) 
+	    + " \"" + name + "\"";
+
+	/* value labels: */
+	if (valuelabels.size() > 0) {
+	    DescEnum e;
+	    s += " vj_valuelabels { ";
+	    for (int i = 0; i < valuelabels.size(); i++) {
+		e = (DescEnum) valuelabels.elementAt(i);
+		s += "\"" + e.str + "\" ";
+	    }
+	    s += "}";
+	}
+
+	/* enumerations */
+	if (enums.size() > 0) {
+	    DescEnum e;
+	    s += " vj_enumeration { ";
+	    for (int i = 0; i < enums.size(); i++) {
+		e = (DescEnum) enums.elementAt(i);
+		if (valtype.equals(ValType.t_string) || 
+		    valtype.equals(ValType.t_chunk) ||
+		    valtype.equals(ValType.t_embeddedchunk))
+		    s += "\"" + e.str + "\" ";
+		else
+		    s += "\"" + e.str + "=" + e.val + "\" ";
+	    }
+	    s += "}";
+	}
+	s += " \"" + help + "\"";
+	return s;
+    }
+
+
+
+    public VarValue getEnumValue(String val) 
+	throws java.util.NoSuchElementException {
+	/* returns the int value associated with this enum el */
+	DescEnum t;
+	VarValue v;
+	
+	if (valtype.equals(ValType.t_string) || 
+	    valtype.equals(ValType.t_chunk)) {
+	    v = new VarValue(valtype);
+	    v.set(val);
+	    return v;   // no need for translation
+	}
+	
+	for (int i = 0; i < enums.size(); i++) {
+	    t = (DescEnum)enums.elementAt(i);
+	    if (t.str.equalsIgnoreCase(val)) {
+		v = new VarValue(t.val);
+		return v;
+	    }
+	}
+	throw new java.util.NoSuchElementException();
+    }
+
+
+
+    public String getEnumString(int val) 
+	throws java.util.NoSuchElementException {
+	/* does the reverse mapping of getEnumVal - maps a value 
+	 * back to the name of the enum entry 
+	 */
+	DescEnum t;
+
+	if (!valtype.equals(ValType.t_int))
+	    throw new java.util.NoSuchElementException();
+	for (int i = 0; i < enums.size(); i++) {
+	    t = (DescEnum)enums.elementAt(i);
+	    if (t.val.getInt() == val) {
+		return t.str;
+	    }
+	}
+	throw new java.util.NoSuchElementException();
+    }
+
+
+
+    public String getEnumString(float val) 
+	throws java.util.NoSuchElementException {
+	/* does the reverse mapping of getEnumVal - maps a 
+	 * value back to the name of the enum entry 
+	 */
+	DescEnum t;
+
+	if (!valtype.equals(ValType.t_float))
+	    throw new java.util.NoSuchElementException();
+	for (int i = 0; i < enums.size(); i++) {
+	    t = (DescEnum)enums.elementAt(i);
+	    if (t.val.getFloat() == val) {
+		return t.str;
+	    }
+	}
+	throw new java.util.NoSuchElementException();
+    }
+
+
+
     private Vector parseEnumerations (ConfigStreamTokenizer st,
 				      ValType vt) {
 	/* Parses a list of enumerations or valuelabels from
@@ -304,17 +312,6 @@ public class PropertyDesc {
     }
 
 
-//   public void getEnums (String line) {
-//     System.out.println ("Line is " + line);
-//     StringTokenizer st = new StringTokenizer(line, " \t");
-//     //StringTokenizer st2;
-//     //String tok, tok2;
-//     String tok;
-//     while (st.hasMoreTokens()) {
-//       tok = st.nextToken();
-//       enums.addElement(new DescEnum(tok));
-//     }
-//   }
-
-
 }
+
+

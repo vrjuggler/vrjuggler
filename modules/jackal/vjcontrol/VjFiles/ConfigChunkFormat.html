@@ -48,8 +48,8 @@ End
 <p>
 As you can see, this file defines two chunks.  The first is of type Display
 (i.e. is uses a ChunkDesc whose token is "Display"). The name of this chunk
-is "simView".  All Chunks must have a unique name - if none is supplied
-in the definition, it will receive a geeky default name like "Display_42"
+is "simView".  All Chunks must have a unique name - if none is given, the
+parser will give it a geeky default name like "Display_42"
 and all the other Chunks will make fun of it.
 
 <p>
@@ -85,8 +85,9 @@ readability.
 The general format of a config file is:
 
 <pre>
- [Chunk]
- ...
+<i>ConfigChunk1</i>
+<i>ConfigChunk2</i>
+...
 End
 </pre>
 
@@ -106,9 +107,9 @@ a debugging feature.
 The basic format of a ConfigChunk is:
 
 <pre>
-[token]
+<i>token</i>
   Name { "name" }
-  propertytoken { [values] }
+  <i>propertytoken</i> { <i>value1</i> <i>value2</i> ... }
   ...
   end
 
@@ -129,7 +130,7 @@ values will start out with no values at all.
 <h4>Property Lines</h4>
 The format for any property line is this:
 <pre>
-  token { [values] }
+  <i>token</i> { <i>value1</i> <i>value2</i> ... }
 </pre>
 
 Where token is the token for one of the properties defined in the ChunkDesc.
@@ -140,8 +141,22 @@ The format for a value varies depending upon type.  Integers and Floats
 are simply represented as numbers: 0, 42, 44.556, etc. (Warning: vjcontrol
 doesn't parse scientific notation for floats).  String values are simply
 represented as quoted text strings.  Boolean values are represented as
-the strings "True" and "False" (case is irrelevant, and the quotes, while
-recommended, not absolutely needed).
+the strings "True" and "False" (case is irrelevant, and quotes unneccessary).
 <p>
-[values w/ enums...]
+
+<h4>Properties with Enumerations</h4>
+Some Properties are defined to have a set of named values.  If this is
+the case, the values in the property line can be either names defined in
+the enumeration or actual values (the example below of an int Property 
+with an enumeration includes one value of each type).
+
+<h4>Example Property Lines</h4>
+<pre>
+     stringproperty { "a string value" "a second string value" }
+     intproperty { 42 }
+     floatproperty { 42.0 43.0 }
+     booleanproperty { True }
+     intproperty_with_enumeration { "a name from the enumeration" 42 }
+</pre>
+
 
