@@ -2,8 +2,8 @@
 
 #ifndef IAUDIOJUGGLER_H
 #define IAUDIOJUGGLER_H
-#include "ajSoundFactory.h"
-#include "ajSoundImplementation.h"
+
+#include <string>
 #include "ajSoundInfo.h"
 
 /** @interface*/
@@ -61,10 +61,18 @@ public:
     */
    virtual void getPosition( const std::string& alias, float& x, float& y, float& z ) = 0;
 
-   // TODO: do i need observer?
-   //virtual void setObserverPosition( float x, float y, float z ) = 0;
 
-   virtual void changeAPI( const std::string& apiName, bool& result ) = 0;
+   /**
+    * set the position of the listener
+    */
+   virtual void setListenerPosition( const float& x, const float& y, const float& z ) = 0;
+
+   /**
+    * get the position of the listener
+    */
+   virtual void getListenerPosition( float& x, float& y, float& z ) = 0;
+
+   virtual void changeAPI( const std::string& apiName ) = 0;
 
 public:
 

@@ -2,13 +2,16 @@
 
 #ifndef AJSOUNDFACTORY_H
 #define AJSOUNDFACTORY_H
+#include <string>
+#include <vpr.h>
+#include <Utils/Singleton.h>
 #include "ajSoundImplementation.h"
 #include "ajOpenALSoundImplementation.h"
 #include "ajAudioWorksSoundImplementation.h"
 #include "ajStubSoundImplementation.h"
 #include "ajSoundImplementation.h"
 
-class ajSoundFactory : public vpr::Singleton
+class ajSoundFactory : public vpr::Singleton<ajSoundFactory>
 {
 public:
 
@@ -23,15 +26,15 @@ public:
    {
       if (apiName == "OpenAL")
       {
-         mImplementation = new OpenALSoundImplementation;
+         mImplementation = new ajOpenALSoundImplementation;
       }
       else if (apiName == "Audioworks")
       {
-         mImplementation = new AudioWorksSoundImplementation;
+         mImplementation = new ajAudioWorksSoundImplementation;
       }
       else
       {
-         mImplementation = new StubSoundImplementation;
+         mImplementation = new ajStubSoundImplementation;
       }
    }
 private:  

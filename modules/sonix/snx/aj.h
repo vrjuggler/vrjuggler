@@ -2,10 +2,9 @@
 
 #ifndef AJ_H
 #define AJ_H
-#include "IAudioJuggler.h"
+#include <string>
 #include "ajSoundInfo.h"
 #include "IAudioJuggler.h"
-#include "ajSoundFactory.h"
 #include "ajSoundFactory.h"
 #include "ajSoundImplementation.h"
 
@@ -13,7 +12,7 @@ class aj : public IAudioJuggler
 {
 public:
 
-   aj() : ISoundInterface(), mImplementation( NULL )
+   aj() : IAudioJuggler(), mImplementation( NULL )
    {
    }
 
@@ -27,16 +26,16 @@ public:
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger( const std::string & alias, const unsigned int & repeat = -1 )
+   virtual void trigger( const std::string& alias, const unsigned int& repeat = -1 )
    {
-      this->impl().trigger( alias, looping );
+      this->impl().trigger( alias, repeat );
    }
 
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped
     */
-   virtual void stop(const std::string & name)
+   virtual void stop( const std::string& name )
    {
       this->impl().stop( name );
    }
@@ -45,7 +44,7 @@ public:
     * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
     * @input time elapsed since last frame
     */
-   virtual void step(const float & timeElapsed)
+   virtual void step( const float& timeElapsed )
    {
       this->impl().step( timeElapsed );
    }
@@ -66,7 +65,7 @@ public:
    /**
     * remove alias->sounddata association 
     */
-   virtual void remove(const std::string alias)
+   virtual void remove( const std::string alias )
    {
       this->impl().remove( alias );
    }
@@ -75,7 +74,7 @@ public:
     * set sound's 3D position 
     * @input x,y,z are in OpenGL coordinates.  alias is a name that has been associate()d with some sound data
     */
-   virtual void setPosition( const std::string& alias, float x, float y, float z )
+   virtual void setPosition( const std::string& alias, const float& x, const float& y, const float& z )
    {
       this->impl().setPosition( alias, x, y, z );
    }
@@ -91,6 +90,23 @@ public:
    }
 
    /**
+    * set the position of the listener
+    */
+   virtual void setListenerPosition( const float& x, const float& y, const float& z )
+   {
+      this->impl().setListenerPosition( x, y, z );
+   }
+
+   /**
+    * get the position of the listener
+    */
+   virtual void getListenerPosition( float& x, float& y, float& z )
+   {
+      this->impl().getListenerPosition( x, y, z );
+   }
+
+
+   /**
     * change the underlying sound API to something else.
     * @input usually a name of a valid registered sound API implementation
     * @preconditions sound implementation should be registered
@@ -101,10 +117,10 @@ public:
     */
    virtual void changeAPI( const std::string& apiName )
    {
-      SoundImplementation* oldImpl = mImplementation;
-      SoundFactory::instance()->createImplementation( apiName, mImplementation );
+      ajSoundImplementation* oldImpl = mImplementation;
+      ajSoundFactory::instance()->createImplementation( apiName, mImplementation );
 
-      mImplementation->copy( oldImpl );
+      mImplementation->copy( *oldImpl );
 
       if (oldImpl != NULL)
       {
@@ -123,9 +139,8 @@ protected:
    {
       if (mImplementation == NULL)
       {
-         SoundFactory::instance()->createImplementation( "stub", mImplementation, result );
+         ajSoundFactory::instance()->createImplementation( "stub", mImplementation );
          mImplementation->startAPI();
-         assert( result != false && "couldn't create dummy impl" );
       }
       return *mImplementation;
    }

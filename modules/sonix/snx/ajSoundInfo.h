@@ -2,7 +2,8 @@
 
 #ifndef SOUND_INFO_DATA
 #define SOUND_INFO_DATA
-#include "ajSoundImplementation.h"
+#include <string>
+
 /**
  * info struct that describes one sound entry.
  */
