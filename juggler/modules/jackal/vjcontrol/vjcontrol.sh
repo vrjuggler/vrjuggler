@@ -32,6 +32,11 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+if test -z "$JCCL_BASE_DIR" ; then
+   echo "ERROR: \$JCCL_BASE_DIR environment variable required for VjControl"
+   exit 1
+fi
+
 # shell script for running vjcontrol under jdk 1.2 using the java command
 VJC_JARS='jccl_config.jar jccl_editorgui.jar jccl_net.jar jccl_perfmonitor.jar jccl_vjcontrol.jar'
 VJC_CP=.
@@ -55,7 +60,7 @@ if test ! -x "$JDK_HOME/bin/java" ; then
 # Otherwise, start up VjControl and exit with status 0.
 else
     if test "x$VJ_SHARE_DIR" = "x" ; then
-        VJ_SHARE_DIR=$VJ_BASE_DIR/share
+        VJ_SHARE_DIR="$VJ_BASE_DIR/share/vrjuggler"
     fi
     if test "x$JCCL_SHARE_DIR" = "x" ; then
         JCCL_SHARE_DIR=$JCCL_BASE_DIR/#JCCL_SHARE_DIR#
