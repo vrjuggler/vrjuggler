@@ -1,9 +1,9 @@
 #ifndef _GUID_TEST_H_
 #define _GUID_TEST_H_
 
-#include <TestCase.h>
-#include <TestSuite.h>
-#include <TestCaller.h>
+#include <cppunit/TestCase.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TestCaller.h>
 
 #include <vpr/Util/GUID.h>
 #include <vpr/Util/GUIDFactory.h>

@@ -6,10 +6,10 @@
 #include <iostream>
 #include <vector>
 
-#include <TestCase.h>
-#include <TestSuite.h>
-#include <TestCaller.h>
-#include <ThreadTestCase.h>
+#include <cppunit/TestCase.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TestCaller.h>
+#include <cppunit/ThreadTestCase.h>
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/Socket.h>

@@ -5,10 +5,10 @@
 #include <string.h>
 #include <iostream>
 
-#include <TestCase.h>
-#include <ThreadTestCase.h>
-#include <TestSuite.h>
-#include <TestCaller.h>
+#include <cppunit/TestCase.h>
+#include <cppunit/ThreadTestCase.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TestCaller.h>
 
 #include <vpr/IO/Socket/Socket.h>
 #include <vpr/IO/Socket/SocketStream.h>
