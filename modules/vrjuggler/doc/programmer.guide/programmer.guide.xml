@@ -12,10 +12,10 @@
     <pubdate>$Date$</pubdate>
   </bookinfo>
 
-  <part id="intro.part">
+  <part id="part.intro">
     <title>Introduction</title>
 
-    <chapter id="ch1">
+    <chapter id="chatper.getting.started">
       <title>Getting Started</title>
 
       <para>In this book, we present a <quote>how-to</quote> for writing VR
@@ -26,10 +26,10 @@
       <orderedlist>
         <listitem>
           <para>Those who are required to read it in order to do a project for
-          work. To those in this category, fear not—VR Juggler is very simple
-          to use after getting through the initial learning stages. It is a
-          very powerful tool that will allow the creation of interesting and
-          powerful applications very quickly.</para>
+          work or school. To those in this category, fear not—VR Juggler is
+          very simple to use after getting through the initial learning
+          stages. It is a powerful tool that will allow the creation of
+          interesting and powerful applications very quickly.</para>
         </listitem>
 
         <listitem>
@@ -50,8 +50,8 @@
         VR Juggler takes advantage of many programming design patterns and
         advanced concepts to make it more powerful, more flexible, and more
         extensible. A good background in mathematics is helpful for performing
-        the myriad of transformations that must be applied to
-        three-dimensional geometry.</para>
+        the myriad transformations that must be applied to three-dimensional
+        (3D) geometry.</para>
 
         <section>
           <title>Required Background</title>
@@ -94,21 +94,14 @@
         <section>
           <title>Organization</title>
 
-          <para>This book is organized into five main chapters:</para>
+          <para>This book is organized into three main parts:</para>
 
           <orderedlist>
             <listitem>
-              <para>Introduction</para>
-            </listitem>
-
-            <listitem>
-              <para>Application basics: The introduction to the key VR Juggler
-              application development concept, application objects.</para>
-            </listitem>
-
-            <listitem>
-              <para>Common helper classes: A description of useful classes
-              provided to simplify writing applications.</para>
+              <para>Introduction: The introduction to the key VR Juggler
+              application development concept, application objects. We also
+              describe common helper classes that simplify the process of
+              writing applications.</para>
             </listitem>
 
             <listitem>
@@ -128,31 +121,32 @@
       </section>
     </chapter>
 
-    <chapter id="ch2">
+    <chapter id="chapter.app.basics">
       <title>Application Basics</title>
 
-      <indexterm zone="ch2">
+      <indexterm zone="chapter.app.basics">
         <primary>applications</primary>
 
         <secondary>basics</secondary>
       </indexterm>
 
       <para>In VR Juggler, all applications are written as objects that are
-      handled by the kernel. The objects are known as <firstterm>application
-      objects</firstterm><indexterm><primary>application object</primary></indexterm>,
-      and we will use that term frequently throughout this text. Application
-      objects are introduced and explained in this chapter.</para>
+      handled by the kernel. The objects are known as <glossterm
+      linkend="gloss.app.object">application objects</glossterm><indexterm><primary>application
+      object</primary></indexterm>, and we will use that term frequently
+      throughout this text. Application objects are introduced and explained
+      in this chapter.</para>
 
-      <section id="app-obj-overview">
+      <section id="section.app.object.overview">
         <title>Application Object Overview</title>
 
-        <indexterm zone="app-obj-overview">
+        <indexterm zone="section.app.object.overview">
           <primary>applications</primary>
 
           <secondary>application object overview</secondary>
         </indexterm>
 
-        <indexterm zone="app-obj-overview">
+        <indexterm zone="section.app.object.overview">
           <primary>application object</primary>
 
           <secondary>overview</secondary>
@@ -160,17 +154,16 @@
 
         <para>VR Juggler uses the application object<indexterm><primary>application
         object</primary></indexterm> to create the VR environment with which
-        the users interact. The application object implements interfaces<footnote><para>An
-        interface is a collection of operations used to specify a service of a
-        class or a component.</para></footnote> needed by the VR Juggler
-        <firstterm>virtual platform</firstterm><indexterm><primary>virtual
+        the users interact. The application object implements <glossterm
+        linkend="gloss.interface">interfaces</glossterm> needed by the VR
+        Juggler <glossterm linkend="gloss.virtual.platform">virtual platform</glossterm><indexterm><primary>virtual
         platform</primary></indexterm>.</para>
 
-        <section id="main-func-intro-sect">
+        <section id="section.main.func">
           <title>No <function>main()</function>—<quote>Don&#39;t call me,
           I&#39;ll call you</quote></title>
 
-          <indexterm zone="main-func-intro-sect">
+          <indexterm zone="section.main.func">
             <primary>main function</primary>
           </indexterm>
 
@@ -210,26 +203,26 @@
           defined by the kernel and the Draw Managers<indexterm><primary>Draw
           Manager</primary></indexterm>. There is a base class for the
           interface that the kernel expects (<classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>)
-          and a base class for each Draw Manager interface (<classname>vrj::PfApp</classname><indexterm><primary>classes</primary><secondary>vrj::PfApp</secondary><seealso>vrj::PfApp</seealso></indexterm>,
+          and a base class handled by each Draw Manager interface (<classname>vrj::PfApp</classname><indexterm><primary>classes</primary><secondary>vrj::PfApp</secondary><seealso>vrj::PfApp</seealso></indexterm>,
           <classname>vrj::GlApp</classname><indexterm><primary>classes</primary><secondary>vrj::GlApp</secondary><seealso>vrj::GlApp</seealso></indexterm>,
-          etc.). See <xref linkend="vjApp-hier-fig" /> for a visual
-          representation of the application interface hierarchy. The kernel
+          etc.). See <xref linkend="figure.vrj.App.hierarchy" /> for a visual
+          representation of the complete application interface hierarchy. The
           interface defined in <classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>
           specifies methods for initialization, shutdown, and execution of the
-          application. The Draw Manager interfaces specified in the
+          application. This is the abstract type that is seen by the VR
+          Juggler kernel. The Draw Manager interfaces specified in the
           <classname>vrj::*App</classname> classes define the API-specific
           functions necessary to render the virtual environment. For example,
-          a Draw Manager interface could have functions for drawing the scene
-          and for initializing context-specific information.</para>
+          an interface used by a Draw Manager could have functions for drawing
+          the scene and for initializing context-specific information.</para>
 
-          <figure id="vjApp-hier-fig">
+          <figure id="figure.vrj.App.hierarchy">
             <title><classname>vrj::App</classname> hierarchy</title>
 
             <mediaobject>
               <imageobject>
-                <imagedata align="center"
-                fileref="figures/userOglApp_hierarchy.png" format="PNG"
-                scalefit="1" />
+                <imagedata align="center" fileref="figures/AppHierarchy.png"
+                format="PNG" scalefit="1" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -246,6 +239,18 @@
           customize. If an implementation is not provided in the user
           application object, the default is used, but it is important to know
           that in most cases, the default implementation does nothing.</para>
+
+          <tip>
+            <para>When overriding a virtual method defined by a VR Juggler
+            application class, it is best to call the parent class method
+            implementation before performing any application-specific
+            processing. For example, if a user-defined application object
+            overrides <methodname>vrj::App::init()</methodname> in the class
+            <classname>userApp</classname>, the method
+            <methodname>userApp::init()</methodname> should invoke
+            <methodname>vrj::App::init()</methodname> before performing its
+            own initialization steps.</para>
+          </tip>
         </section>
       </section>
 
@@ -261,8 +266,10 @@
         <para>As stated earlier, the most common approach for VR application
         development is one where the application defines the
         <function>main()</function> function. That <function>main()</function>
-        function in turn calls library functions when needed. The library in
-        this model only executes code when directed to do so by the
+        function in turn calls library functions when needed. (This is the
+        model followed by software packages such as the
+        <trademark>CAVElibs</trademark> and the Diverse Toolkit.) The library
+        in this model only executes code when directed to do so by the
         application. As a result, the application developer is responsible for
         coordinating the execution of the different VR system components. This
         can lead to complex applications.</para>
@@ -270,16 +277,16 @@
         <section>
           <title>Allow for Run-Time Changes</title>
 
-          <para>As a virtual platform, VR Juggler does not use the model
-          described above because VR Juggler needs to maintain control of the
-          system components. This control is necessary to make changes to the
-          virtual platform at run time. As the controller of the execution,
-          the kernel always knows the current state of the applications, and
-          therefore, it can manage the run-time reconfigurations of the
-          virtual environment safely. With run-time reconfiguration, it is
-          possible to switch applications, start new devices, reconfigure
-          running devices, and send reconfiguration information to the
-          application object.</para>
+          <para>As a <glossterm linkend="gloss.virtual.platform">virtual
+          platform</glossterm>, VR Juggler does not use the model described
+          above because VR Juggler needs to maintain control of the system
+          components. This control is necessary to make changes to the virtual
+          platform at run time. As the controller of the execution, the kernel
+          always knows the current state of the applications, and therefore,
+          it can manage the run-time reconfigurations of the virtual
+          environment safely. With run-time reconfiguration, it is possible to
+          switch applications, start new devices, reconfigure running devices,
+          and send reconfiguration information to the application object.</para>
         </section>
 
         <section>
@@ -310,21 +317,42 @@
           virtual platform do not affect the application. Changes could
           include bug fixes, performance tuning, or new device support.</para>
         </section>
+
+        <section>
+          <title>Multi-Language Interaction</title>
+
+          <para>By treating applications as objects, we can mix programming
+          languages in the VR Juggler kernel. For example, an application
+          object could be written in Python, C#, or even VB.NET, but the VR
+          Juggler kernel (written in standard C++) will still see it as an
+          instance of the abstract interface <classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>.
+          The use of application objects has allowed such extensions to VR
+          Juggler to be written without requiring any changes to VR Juggler.</para>
+        </section>
       </section>
 
-      <section id="app-startup">
+      <section id="section.app.startup">
         <title>VR Juggler Startup</title>
 
-        <indexterm zone="app-startup">
+        <indexterm zone="section.app.startup">
           <primary>applications</primary>
 
           <secondary>starting</secondary>
         </indexterm>
 
-        <section id="app-startup-no-main">
+        <para>In this section, we describe one way to start VR Juggler. We
+        will use the traditional <function>main()</function> function in C++,
+        but this is not the only way to do it. We have written Python
+        applications that start the VR Juggler kernel, and it is possible to
+        write a VR Juggler <glossterm linkend="gloss.daemon">daemon</glossterm>
+        that loads applications on demand at runtime. In other words, the VR
+        Juggler startup procedure is quite flexible, and we choose to focus on
+        the simplest method here.</para>
+
+        <section id="section.app.startup.no.main">
           <title>No <function>main()</function>—Sort Of</title>
 
-          <indexterm zone="app-startup-no-main">
+          <indexterm zone="section.app.startup.no.main">
             <primary>applications</primary>
 
             <secondary>main function</secondary>
@@ -333,21 +361,22 @@
           </indexterm>
 
           <para>Previously, we explained how VR Juggler applications do not
-          have a <function>main()</function> function. Further explanation is
-          required. While it is true that user applications do not have a
-          <function>main()</function> function because they are objects, there
-          must still be a <function>main()</function> somewhere that starts
-          the system. This is because the operating system uses
+          have a <function>main()</function> function, but further explanation
+          is required. While it is true that user <emphasis>applications</emphasis>
+          do not have a <function>main()</function> function because they are
+          objects, there must still be a <function>main()</function> somewhere
+          that starts the system. This is because the operating system uses
           <function>main()</function> as the starting point for all
-          applications. In VR Juggler 1.0 applications, there is a
+          applications. In typical VR Juggler applications, there is a
           <function>main()</function>, but it only starts the VR Juggler
-          kernel and gives the kernel the application to run.</para>
+          kernel and gives the kernel the application to run. It then waits
+          for the kernel to shut down before exiting.</para>
         </section>
 
-        <section id="app-startup-main-structure">
+        <section id="section.app.main.structure">
           <title>Structure of a <function>main()</function> Function</title>
 
-          <indexterm zone="app-startup-main-structure">
+          <indexterm zone="section.app.main.structure">
             <primary>applications</primary>
 
             <secondary>main function</secondary>
@@ -445,15 +474,15 @@ int main(int argc, char* argv[])
 
         <para>Before proceeding into application object details, we must
         understand how VR Juggler calls the application, and we must know what
-        a <firstterm>frame</firstterm><indexterm><primary>frame</primary></indexterm>
+        a <glossterm linkend="gloss.frame">frame</glossterm><indexterm><primary>frame</primary></indexterm>
         is. In the code above, the statement on line 9 tells the kernel thread
         to start running. When the kernel begins its execution, it follows the
-        sequence shown in <xref linkend="Kernel-seq-diag" />. The specific
+        sequence shown in <xref linkend="figure.kernel.loop.sequence" />. The specific
         methods called are described in more detail in the following section.
         This diagram will be useful in understanding the order in which the
         application object methods are invoked.</para>
 
-        <figure id="Kernel-seq-diag">
+        <figure id="figure.kernel.loop.sequence">
           <title>Kernel loop sequence</title>
 
           <mediaobject>
@@ -465,10 +494,10 @@ int main(int argc, char* argv[])
           </mediaobject>
         </figure>
 
-        <section id="frame-definition-sect">
+        <section id="section.frame.definition">
           <title>Definition of a Frame</title>
 
-          <indexterm zone="frame-definition-sect">
+          <indexterm zone="section.frame.definition">
             <primary>frame</primary>
 
             <secondary>definition of</secondary>
@@ -478,8 +507,8 @@ int main(int argc, char* argv[])
           application object based on a strictly scheduled
           <firstterm>frame of execution</firstterm><indexterm><primary>frame
           of execution</primary></indexterm>. The frame of execution is shown
-          in <xref linkend="Kernel-seq-diag" />; it makes up all the lines
-          within the <quote>while(running)</quote> clause.</para>
+          in <xref linkend="figure.kernel.loop.sequence" />; it makes up all the lines
+          within the <quote>while(!quit)</quote> clause.</para>
 
           <para>During the frame of execution, the kernel calls the
           application methods and performs internal updates (the
@@ -499,10 +528,10 @@ int main(int argc, char* argv[])
         </section>
       </section>
 
-      <section id="base-app-obj-if-sect">
+      <section id="section.base.app.obj.interface">
         <title>Base Application Object Interface</title>
 
-        <indexterm zone="base-app-obj-if-sect">
+        <indexterm zone="section.base.app.obj.interface">
           <primary>application object</primary>
 
           <secondary>base interface of</secondary>
@@ -511,8 +540,8 @@ int main(int argc, char* argv[])
         <para>Within this section, we provide a brief overview of the member
         functions from the base VR Juggler application interface. This
         interface is defined by <classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>,
-        and the member functions are shown in <xref linkend="App-if-diag" />.
-        Refer to <xref linkend="Kernel-seq-diag" /> for a visual presentation
+        and the member functions are shown in <xref linkend="figure.app.obj.interface" />.
+        Refer to <xref linkend="figure.kernel.loop.sequence" /> for a visual presentation
         of the order in which the methods are invoked.</para>
 
         <para>The base interface of the application object defines the
@@ -546,7 +575,7 @@ int main(int argc, char* argv[])
         functions that can be used for reconfiguration, focus control,
         resetting, and exiting will be covered later in this book.</para>
 
-        <figure id="App-if-diag">
+        <figure id="figure.app.obj.interface">
           <title>Application object interface</title>
 
           <mediaobject>
@@ -558,10 +587,10 @@ int main(int argc, char* argv[])
           </mediaobject>
         </figure>
 
-        <section id="app-object-init">
+        <section id="section.app.obj.init">
           <title>Initialization</title>
 
-          <indexterm zone="app-object-init">
+          <indexterm zone="section.app.obj.init">
             <primary>application object</primary>
 
             <secondary>initialization</secondary>
@@ -607,8 +636,8 @@ int main(int argc, char* argv[])
             initialization required by the application. Data members that
             cannot be initialized until after the graphics API is started
             should be initialized here.<note><para>In OpenGL, there is no
-            concept of initializing the API, so this method is not normally
-            used in such applications.</para></note></para>
+            concept of initializing the API, so this method is normally empty
+            in such applications.</para></note></para>
 
             <section>
               <title>Timing</title>
@@ -626,10 +655,10 @@ int main(int argc, char* argv[])
           </section>
         </section>
 
-        <section id="app-object-frame-funcs">
-          <title id="frame.functions.section">Frame Functions</title>
+        <section id="section.app.frame.functions">
+          <title>Frame Functions</title>
 
-          <indexterm zone="app-object-frame-funcs">
+          <indexterm zone="section.app.frame.functions">
             <primary>application object</primary>
 
             <secondary>frame functions</secondary>
@@ -671,8 +700,8 @@ int main(int argc, char* argv[])
             </section>
           </section>
 
-          <section>
-            <title id="App.intraFrame.section"><methodname>vrj::App::intraFrame()</methodname></title>
+          <section id="section.app.intraFrame">
+            <title><methodname>vrj::App::intraFrame()</methodname></title>
 
             <para>The code in this method executes in parallel with the
             rendering method. That is, it executes while the current frame is
@@ -730,7 +759,7 @@ int main(int argc, char* argv[])
         </section>
       </section>
 
-      <section id="draw-mgr-classes-sect">
+      <section id="section.draw.mgr.classes">
         <title>Draw Manager-Specific Application Classes</title>
 
         <indexterm>
@@ -747,10 +776,10 @@ int main(int argc, char* argv[])
         and extend this interface further. They add extra <quote>hooks</quote>
         that support the abilities of the specific API.</para>
 
-        <section id="draw-mgr-classes-opengl-sect">
+        <section id="section.draw.mgr.opengl.classes">
           <title>OpenGL Application Class</title>
 
-          <indexterm zone="draw-mgr-classes-opengl-sect">
+          <indexterm zone="section.draw.mgr.opengl.classes">
             <primary>Draw Manager</primary>
 
             <secondary>application classes</secondary>
@@ -761,22 +790,21 @@ int main(int argc, char* argv[])
           <para>The OpenGL application base class adds several methods to the
           application interface that allow rendering of OpenGL graphics. The
           extensions to the base <classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>
-          class are shown in <xref linkend="vjGlApp-class-diag" />. In the
+          class are shown in <xref linkend="figure.vrj.GlApp" />. In the
           following, we describe the method <methodname>vrj::GlApp::draw()</methodname>,
           the most important element of the interface. More details about the
           <classname>vrj::GlApp</classname><indexterm><primary>classes</primary><secondary>vrj::GlApp</secondary></indexterm>
-          class are provided in <xref linkend="ogl-app-sect" />, found in
-          <xref linkend="ch4" />.</para>
+          class are provided in <xref linkend="section.opengl.apps" />, found in
+          <xref linkend="chatper.writing.apps" />.</para>
 
-          <figure id="vjGlApp-class-diag">
+          <figure id="figure.vrj.GlApp">
             <title><classname>vrj::GlApp</classname> interface extensions to
             <classname>vrj::App</classname></title>
 
             <mediaobject>
               <imageobject>
-                <imagedata align="center"
-                fileref="figures/userOglApp_hierarchy.png" format="PNG"
-                scalefit="1" />
+                <imagedata align="center" fileref="figures/GlAppHierarchy.png"
+                format="PNG" scalefit="1" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -789,12 +817,59 @@ int main(int argc, char* argv[])
             OpenGL graphics window. It is called for each active OpenGL
             context.</para>
           </section>
+
+          <section>
+            <title><methodname>vrj::GlApp::getDrawScaleFactor()</methodname></title>
+
+            <para>As of VR Juggler 1.1 DR4, applications can specify the units
+            of measure that are the basis for the graphics they render. The
+            default unit of measure is feet (identified by the constant scale
+            factor <constant>gadget::PositionUnitConversion::ConvertToFeet</constant>)
+            to maintain backwards compatibility with the previous VR Juggler
+            semantics. By overriding this method, applications can identify
+            the unit of measure they expect. The default implementation is the
+            following:</para>
+
+            <programlisting>float vrj::GlApp::getDrawScaleFactor()
+{
+   return gadget::PositionUnitConversion::ConvertToFeet;
+}</programlisting>
+
+            <para>Overriding this method means changing the rendering scale
+            factor used by the OpenGL Draw Manager. The current list of
+            constants (defined in <filename>gadget/Position/PositionUnitConversion.h</filename>)
+            is as follows:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para><constant>gadget::PositionUnitConversion::ConvertToFeet</constant></para>
+              </listitem>
+
+              <listitem>
+                <para><constant>gadget::PositionUnitConversion::ConvertToInches</constant></para>
+              </listitem>
+
+              <listitem>
+                <para><constant>gadget::PositionUnitConversion::ConvertToMeters</constant></para>
+              </listitem>
+
+              <listitem>
+                <para><constant>gadget::PositionUnitConversion::ConvertToCentimeters</constant></para>
+              </listitem>
+            </itemizedlist>
+
+            <para>Because the value returned is simply a scaling factor, user
+            applications can define whatever units they want. Note that
+            internally, VR Juggler is treating all units as
+            <emphasis>meters</emphasis>, so the scaling factor converts from
+            meters to the desired units.</para>
+          </section>
         </section>
 
-        <section id="draw-mgr-classes-performer-sect">
+        <section id="section.draw.mgr.performer">
           <title>OpenGL Performer Application Class</title>
 
-          <indexterm zone="draw-mgr-classes-performer-sect">
+          <indexterm zone="section.draw.mgr.performer">
             <primary>Draw Manager</primary>
 
             <secondary>application classes</secondary>
@@ -805,12 +880,12 @@ int main(int argc, char* argv[])
           <para>The OpenGL Performer application base class adds interface
           functions that deal with the OpenGL Performer scene graph. Some of
           the interface extensions are shown in <xref
-          linkend="vjPfApp-class-diag" />. The following is a description of
+          linkend="figure.vrj.PfApp" />. The following is a description of
           only two methods in the <classname>vrj::PfApp</classname><indexterm><primary>classes</primary><secondary>vrj::PfApp</secondary></indexterm>
           interface. More detailed discussion on this class is provided in
-          <xref linkend="pf-app-sect" />, found in <xref linkend="ch4" />.</para>
+          <xref linkend="section.pf.apps" />, found in <xref linkend="chatper.writing.apps" />.</para>
 
-          <figure id="vjPfApp-class-diag">
+          <figure id="figure.vrj.PfApp">
             <title><classname>vrj::PfApp</classname> interface extensions to
             <classname>vrj::App</classname></title>
 
@@ -842,33 +917,33 @@ int main(int argc, char* argv[])
       </section>
     </chapter>
 
-    <chapter id="ch3">
+    <chapter id="chapter.helper.classes">
       <title>Helper Classes</title>
 
       <para>Within this chapter, we present information on some helper classes
-      that are provided with VR Juggler. These classes are intended to make it
-      easier for application programmers to write their code. Ultimately, we
-      want application programmers to focus more on compelling immersive
-      content and less on the many details that are involved with 3D graphics
-      programming. The classes presented in this chapter focus on mathematical
-      computations and on input from hardware devices. VJ Juggler uses the
-      Graphics Math Template Library or GMTL (http://ggt.sf.net/) for
+      that are provided for use with VR Juggler. These classes are intended to
+      make it easier for application programmers to write their code.
+      Ultimately, we want application programmers to focus more on compelling
+      immersive content and less on the many details that are involved with 3D
+      graphics programming. The classes presented in this chapter focus on
+      mathematical computations and on input from hardware devices. VR Juggler
+      uses the Graphics Math Template Library or GMTL (part of the <ulink
+      url="http://ggt.sf.net/">Generic Graphics Toolkit</ulink> software) for
       mathematical computation. An overview of the most commonly used GMTL
       data types and operations is presented here. In addition to the GMTL
-      operations special attention is paid to the VR Juggler Input Manager
-      device interfaces and proxies.</para>
+      operations, special attention is paid to Gadgeteer, the input system
+      used by VR Juggler, and its device interfaces and device proxies.</para>
 
-      <section id="vjVec3-and-vjVec4-sect">
-        <title>The <classname>gmtl::Vec</classname> Helper Class</title>
-
-        <indexterm></indexterm>
+      <section id="section.vec.classes">
+        <title>The <classname>gmtl::Vec&#60;S, T&#62;</classname> Helper Class</title>
 
         <indexterm>
-          <primary></primary>
+          <primary>gmtl::Vec&#60;S, T&#62;</primary>
         </indexterm>
 
         <para>This section is intended to provide an introduction to how the
-        helper class <classname>gmtl::Vec</classname><indexterm><primary>classes</primary><secondary>vrj::Vec3</secondary><seealso>vrj::Vec3</seealso></indexterm><indexterm><primary>classes</primary><secondary>vrj::Vec4</secondary><seealso>vrj::Vec4</seealso></indexterm>
+        helper class <classname>gmtl::Vec&#60;S, T&#62;</classname><indexterm><primary>classes</primary><secondary>gmtl::Vec&#60;S,
+        T&#62;</secondary><seealso>gmtl::Vec3f, gmtl::Vec4f</seealso></indexterm>
         works and how it can be used in VR Juggler applications. It begins
         with a high-level description of the classes which forms the necessary
         basis for understanding them in detail. Then, examples of how to use
@@ -880,37 +955,31 @@ int main(int argc, char* argv[])
           <title>High-Level Description</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec&#60;S, T&#62;</primary>
 
             <secondary>description of</secondary>
           </indexterm>
 
-          <indexterm>
-            <primary>vrj::Vec4</primary>
-
-            <secondary>description of</secondary>
-          </indexterm>
-
-          <para>The class <classname>gmtl::Vec</classname><indexterm><primary>classes</primary><secondary>vrj::Vec3</secondary></indexterm>
-          <indexterm><primary>classes</primary><secondary>vrj::Vec4</secondary></indexterm>
-          is designed to work the same way as a mathematical vector, typically
-          of 3 or 4 dimensions. There are predefined vector types that would
-          normally be used in a VR application that are provided for
-          convenience. That is, a <classname>gmtl::Vec3f</classname> object
-          can be thought of as a vector of the form &#60;x, y, z&#62;.
-          Similarly, a <classname>gmtl::Vec4f</classname> can be thought of as
-          a vector of the form &#60;x, y, z, w&#62;. An existing understanding
-          of mathematical vectors is sufficient to know how these classes can
-          be used. The question then becomes, how are they used? We will get
-          to that later, and readers who have experience with vectors can skip
+          <para>The class <classname>gmtl::Vec&#60;S, T&#62;</classname><indexterm><primary>classes</primary><secondary>gmtl::Vec&#60;S,
+          T&#62;</secondary></indexterm> is designed to work the same way as a
+          mathematical vector, typically of 3 or 4 dimensions. There are
+          predefined vector types that would normally be used in a VR
+          application that are provided for convenience. That is, a
+          <classname>gmtl::Vec3f</classname> object can be thought of as a
+          vector of the form &#60;x, y, z&#62;. Similarly, a
+          <classname>gmtl::Vec4f</classname> can be thought of as a vector of
+          the form &#60;x, y, z, w&#62;. An existing understanding of
+          mathematical vectors is sufficient to know how these classes can be
+          used. The question then becomes, how are they used? We will get to
+          that later, and readers who have experience with vectors can skip
           ahead. If vectors are an unfamiliar topic, it may be convenient to
           think of these classes as three- and four-element C++ arrays of
-          floats respectively. Most benefits of the vector concept are lost
-          with that simpler idea, however. Therefore, if the reader needs to
-          think of them as arrays, then arrays should probably be used until
-          vectors feel more comfortable. Once the use of vectors seems
-          familiar and straightforward, readers are encouraged to come back
-          and read further.</para>
+          <type>float</type>s respectively. Most benefits of the vector
+          concept are lost with that simpler idea, however. Therefore, if the
+          reader needs to think of them as arrays, then arrays should probably
+          be used until vectors feel more comfortable. Once the use of vectors
+          seems familiar and straightforward, readers are encouraged to come
+          back and read further.</para>
 
           <para>Vectors are typically used to contain spatial data or
           something similar. For convenience, however, they can be visualized
@@ -918,8 +987,8 @@ int main(int argc, char* argv[])
           well-defined operations can be performed. There is no need to
           constrain thinking of them as only holding the coordinates for some
           point in space or some other limited-scope use. The GMTL vectors use
-          by Juggler retain this generality and can be used wherever vectors
-          come in handy.</para>
+          by VR Juggler retain this generality and can be used wherever
+          vectors come in handy.</para>
 
           <para><classname>gmtl::Vec3f</classname> and <classname>gmtl::Vec4f</classname>,
           as specific implementations of mathematical vectors, hide vector
@@ -981,25 +1050,26 @@ int main(int argc, char* argv[])
             </listitem>
           </itemizedlist>
 
-          <para>Knowing this and keeping in mind that <classname>gmtl::Vec3f</classname>
-          and <classname>gmtl::Vec4f</classname> can be thought of at this
-          high level, should make using them a snap.</para>
+          <para>Using GMTL vectors should be straightforward if readers
+          understand these operations and keep in mind that
+          <classname>gmtl::Vec3f</classname> and <classname>gmtl::Vec4f</classname>
+          can be thought of at this high level.</para>
         </section>
 
-        <section id="vjVec-use-sect">
+        <section id="section.gmtl.Vec.use">
           <title>Using <classname>gmtl::Vec3f</classname> and
           <classname>gmtl::Vec4f</classname></title>
 
-          <indexterm zone="vjVec-use-sect">
+          <indexterm zone="section.gmtl.Vec.use">
             <primary>classes</primary>
 
-            <secondary>vrj::Vec3</secondary>
+            <secondary>gmtl::Vec3f</secondary>
           </indexterm>
 
-          <indexterm zone="vjVec-use-sect">
+          <indexterm zone="section.gmtl.Vec.use">
             <primary>classes</primary>
 
-            <secondary>vrj::Vec4</secondary>
+            <secondary>gmtl::Vec4f</secondary>
           </indexterm>
 
           <para>With an understanding of these classes as standard
@@ -1013,17 +1083,17 @@ int main(int argc, char* argv[])
           creating the objects and setting their values.</para>
         </section>
 
-        <section id="vjVec-creation-sect">
+        <section id="section.gmtl.Vec.creation">
           <title>Creating Vectors and Setting Their Values</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>creating</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>creating</secondary>
           </indexterm>
@@ -1060,17 +1130,17 @@ vec1[2] = -1.0;</programlisting>
           same size, of course).</para>
         </section>
 
-        <section id="vjVec-inversion-sect">
+        <section id="section.gmtl.Vec.inversion">
           <title>Inversion (Finding the Negative of a Vector)</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>inverting</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>inverting</secondary>
           </indexterm>
@@ -1083,23 +1153,23 @@ vec1[2] = -1.0;</programlisting>
 
 vec2 = -vec1;</programlisting>
 
-          <para>The vector vec2 now has the value &#60;-1.0, -1.5, 1.0&#62;.
-          That is all there is to it. (Readers interested in details should
-          note that the above does a copy operation to return the negative
-          values.)</para>
+          <para>The vector <varname>vec2</varname> now has the value
+          &#60;-1.0, -1.5, 1.0&#62;. That is all there is to it. (Readers
+          interested in details should note that the above does a copy
+          operation to return the negative values.)</para>
         </section>
 
         <section>
           <title>Normalization</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>normalizing</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>normalizing</secondary>
           </indexterm>
@@ -1111,7 +1181,8 @@ vec2 = -vec1;</programlisting>
 
 gmtl::normalize( vec1 );</programlisting>
 
-          <para>The vector vec1 is now normalized. Clean and simple.</para>
+          <para>The vector <varname>vec1</varname> is now normalized. Clean
+          and simple.</para>
 
           <para>Besides normalizing a given vector, a vector can be tested to
           determine if it has already been normalized. This is done as follows
@@ -1122,21 +1193,19 @@ gmtl::normalize( vec1 );</programlisting>
 {
    // Go here if vec is normalized
 }</programlisting>
-
-          <para></para>
         </section>
 
         <section>
           <title>Length Calculation</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>length of</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>length of</secondary>
           </indexterm>
@@ -1153,22 +1222,22 @@ length = gmtl::length( vec1 );</programlisting>
           accurately, the square root of 4.25). Finding the length of a vector
           appears simple from the programmer&#39;s perspective, but it has
           some hidden costs. Namely, it requires a square root calculation.
-          For optimization purposes, we provide a method called
-          <methodname>lengthSquared()</methodname> that returns the length of
-          the vector without calculating the square root.</para>
+          For optimization purposes, GMTL provides a function called
+          <function>gmtl::lengthSquared()</function> that returns the length
+          of the vector without calculating the square root.</para>
         </section>
 
         <section>
           <title>Multiplication by a Scalar</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>multiplying by a scalar</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>multiplying by a scalar</secondary>
           </indexterm>
@@ -1185,8 +1254,8 @@ length = gmtl::length( vec1 );</programlisting>
 vec2 = 3 * vec1;</programlisting>
 
           <para>(The order of the factors in the multiplication can be swapped
-          depending on preference or need.) Here, vec2 gets the value
-          &#60;3.0, 4.5, -3.0&#62;.</para>
+          depending on preference or need.) Here, <varname>vec2</varname> gets
+          the value &#60;3.0, 4.5, -3.0&#62;.</para>
 
           <para>To multiply a vector by a scalar and store the result in the
           same vector, do the following:</para>
@@ -1195,20 +1264,21 @@ vec2 = 3 * vec1;</programlisting>
 
 vec1 *= 3;</programlisting>
 
-          <para>After this, vec1 has the value &#60;3.0, 4.5, -3.0&#62;.</para>
+          <para>After this, <varname>vec1</varname> has the value &#60;3.0,
+          4.5, -3.0&#62;.</para>
         </section>
 
         <section>
           <title>Division by a Scalar</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>dividing by a scalar</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>dividing by a scalar</secondary>
           </indexterm>
@@ -1224,9 +1294,9 @@ vec1 *= 3;</programlisting>
 
 vec2 = vec1 / 3;</programlisting>
 
-          <para>Here, vec2 gets the value &#60;0.333333, 0.5, -0.333333&#62;.
-          Note that the scalar must come after the vector because the
-          operation would not make sense otherwise.</para>
+          <para>Here, <varname>vec2</varname> gets the value &#60;0.333333,
+          0.5, -0.333333&#62;. Note that the scalar must come after the vector
+          because the operation would not make sense otherwise.</para>
 
           <para>To divide a vector by a scalar and store the result in the
           same vector, do the following:</para>
@@ -1235,25 +1305,25 @@ vec2 = vec1 / 3;</programlisting>
 
 vec1 /= 3;</programlisting>
 
-          <para>After this, vec1 has the value &#60;0.333333, 0.5,
-          -0.333333&#62;.</para>
+          <para>After this, <varname>vec1</varname> has the value
+          &#60;0.333333, 0.5, -0.333333&#62;.</para>
         </section>
 
-        <section id="pfVec-to-vjVec-sect">
+        <section id="section.pfVec.to.gmtl.Vec">
           <title>Converting to an OpenGL Performer Vector</title>
 
-          <indexterm zone="pfVec-to-vjVec-sect">
-            <primary>vrj::Vec3</primary>
+          <indexterm zone="section.pfVec.to.gmtl.Vec">
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>converting to pfVec3</secondary>
           </indexterm>
 
-          <indexterm zone="pfVec-to-vjVec-sect">
+          <indexterm zone="section.pfVec.to.gmtl.Vec">
             <primary>pfVec3</primary>
 
-            <secondary>converting from vrj::Vec3</secondary>
+            <secondary>converting from gmtl::Vec3f</secondary>
 
-            <seealso>vrj::Vec3</seealso>
+            <seealso>gmtl::Vec3f</seealso>
           </indexterm>
 
           <para>SGI&#39;s OpenGL Performer likes to work with its own
@@ -1270,10 +1340,10 @@ pfVec3 pf_vec;
 
 pf_vec = vrj::GetPfVec(vj_vec);</programlisting>
 
-          <para>where vj_vec is passed by reference for efficiency. (pf_vec
-          gets a copy of a <classname>pfVec3</classname>.) To convert a
-          <classname>pfVec3</classname> to a <classname>gmtl::Vec3f</classname>,
-          do the following:</para>
+          <para>where <varname>vj_vec</varname> is passed by reference for
+          efficiency. (<varname>pf_vec</varname> gets a copy of a
+          <classname>pfVec3</classname>.) To convert a <classname>pfVec3</classname>
+          to a <classname>gmtl::Vec3f</classname>, do the following:</para>
 
           <programlisting>pfVec3 pf_vec;
 gmtl::Vec3f vj_vec;
@@ -1282,22 +1352,23 @@ gmtl::Vec3f vj_vec;
 
 vj_vec = vrj::GetVjVec(pf_vec);</programlisting>
 
-          <para>Here again, pf_vec is passed by reference for efficiency, and
-          vj_vec gets a copy of a <classname>gmtl::Vec3f</classname>. Both of
-          these functions are found in the header <filename>vrj/Draw/Pf/PfUtil.h</filename>.</para>
+          <para>Here again, <varname>pf_vec</varname> is passed by reference
+          for efficiency, and <varname>vj_vec</varname> gets a copy of a
+          <classname>gmtl::Vec3f</classname>. Both of these functions are
+          found in the header <filename>vrj/Draw/Pf/PfUtil.h</filename>.</para>
         </section>
 
         <section>
           <title>Assignment</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>assigning</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>assigning</secondary>
           </indexterm>
@@ -1310,22 +1381,22 @@ vj_vec = vrj::GetVjVec(pf_vec);</programlisting>
 
 vec2 = vec1;</programlisting>
 
-          <para>After the assignment, vec2 has the value &#60;-1.0, -1.5,
-          1.0&#62;. Ta da! Note that this is a copy operation which is the
-          case for all the types of assignments of GMTL vectors.</para>
+          <para>After the assignment, <varname>vec2</varname> has the value
+          &#60;-1.0, -1.5, 1.0&#62;. Ta da! Note that this is a copy operation
+          which is the case for all the types of assignments of GMTL vectors.</para>
         </section>
 
         <section>
           <title>Equality/Inequality Comparison</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>equality comparison</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>equality comparison</secondary>
           </indexterm>
@@ -1365,13 +1436,13 @@ if ( vec1 != vec2 )
           <title>Dot Product</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>dot product</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>dot product</secondary>
           </indexterm>
@@ -1386,14 +1457,14 @@ float dot_product;
 
 dot_product = gmtl::dot(vec1, vec2);</programlisting>
 
-          <para>Now, dot_product has the value 4.0.</para>
+          <para>Now, <varname>dot_product</varname> has the value 4.0.</para>
         </section>
 
         <section>
           <title>Cross Product</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>cross product</secondary>
           </indexterm>
@@ -1405,20 +1476,21 @@ dot_product = gmtl::dot(vec1, vec2);</programlisting>
 
 vec3 = gmtl::cross(vec1, vec2);</programlisting>
 
-          <para>The result is that vec3 gets a copy of vec1 cross vec2.</para>
+          <para>The result is that <varname>vec3</varname> gets a copy of
+          <varname>vec1</varname> cross <varname>vec2</varname>.</para>
         </section>
 
         <section>
           <title>Addition</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>adding</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>adding</secondary>
           </indexterm>
@@ -1431,26 +1503,28 @@ vec3 = gmtl::cross(vec1, vec2);</programlisting>
 
 vec3 = vec1 + vec2;</programlisting>
 
-          <para>Now, vec3 has the value &#60;2.5, 2.5, -2.0&#62;.</para>
+          <para>Now, <varname>vec3</varname> has the value &#60;2.5, 2.5,
+          -2.0&#62;.</para>
 
           <programlisting>gmtl::Vec3f vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
 
 vec1 += vec2;</programlisting>
 
-          <para>This time, vec1 has the value &#60;2.5, 2.5, -2.0&#62;.</para>
+          <para>This time, <varname>vec1</varname> has the value &#60;2.5,
+          2.5, -2.0&#62;.</para>
         </section>
 
         <section>
           <title>Subtraction</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>subtracting</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>subtracting</secondary>
           </indexterm>
@@ -1463,20 +1537,22 @@ vec1 += vec2;</programlisting>
 
 vec3 = vec1 - vec2;</programlisting>
 
-          <para>Now, vec3 has the value &#60;-0.5, 0.5, 0.0&#62;.</para>
+          <para>Now, <varname>vec3</varname> has the value &#60;-0.5, 0.5,
+          0.0&#62;.</para>
 
           <programlisting>gmtl::Vec3f vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
 
 vec1 -= vec2;</programlisting>
 
-          <para>In this case, vec1 has the value &#60;-0.5, 0.5, 0.0&#62;.</para>
+          <para>In this case, <varname>vec1</varname> has the value &#60;-0.5,
+          0.5, 0.0&#62;.</para>
         </section>
 
         <section>
           <title>Full Transformation by a Matrix</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>transforming by a matrix</secondary>
 
@@ -1484,7 +1560,7 @@ vec1 -= vec2;</programlisting>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>transforming by a matrix</secondary>
 
@@ -1493,7 +1569,7 @@ vec1 -= vec2;</programlisting>
 
           <para>It is often helpful to apply a transformation to a vector.
           Transformations are represented by a matrix, so it is necessary to
-          multiply a matrix and a vector. The method <methodname>xformFull()</methodname>
+          multiply a matrix and a vector. The function <function>gmtl::xform()</function>
           does this job. For the following example, assume that there is a
           <classname>gmtl::Matrix44f</classname> transformation matrix
           <varname>xform_mat</varname>:</para>
@@ -1502,9 +1578,10 @@ vec1 -= vec2;</programlisting>
 
 gmtl::xform(result_vec, xform_mat, vec1);</programlisting>
 
-          <para>Depending on the transformations contained within xform_mat,
-          result_vec will be transformed fully. The operation as a
-          mathematical equation would be:</para>
+          <para>Depending on the transformations contained within
+          <varname>xform_mat</varname>, <varname>result_vec</varname> will be
+          transformed fully. The operation as a mathematical equation would
+          be:</para>
 
           <informalequation>
             <mediaobject>
@@ -1530,13 +1607,13 @@ gmtl::xform(result_vec, xform_mat, vec1);</programlisting>
           <title>The Gory Details</title>
 
           <indexterm>
-            <primary>vrj::Vec3</primary>
+            <primary>gmtl::Vec3f</primary>
 
             <secondary>details</secondary>
           </indexterm>
 
           <indexterm>
-            <primary>vrj::Vec4</primary>
+            <primary>gmtl::Vec4f</primary>
 
             <secondary>details</secondary>
           </indexterm>
@@ -1581,11 +1658,11 @@ my_vec.getData()[3] = 1.0;</programlisting>
         <title>The <classname>gmtl::Matrix44f</classname> Helper Class</title>
 
         <indexterm>
-          <primary>vrj::Matrix</primary>
+          <primary>gmtl::Matrix44f</primary>
         </indexterm>
 
         <para>This section is intended to provide an introduction into how the
-        helper class <classname>gmtl::Matrix44f</classname><indexterm><primary>classes</primary><secondary>vrj::Matrix</secondary><seealso>vrj::Matrix</seealso></indexterm>
+        helper class <classname>gmtl::Matrix44f</classname><indexterm><primary>classes</primary><secondary>gmtl::Matrix44f</secondary><seealso>gmtl::Matrix44f</seealso></indexterm>
         works and how it can be used in VR Juggler applications. It begins
         with a high-level description of the class, which forms the necessary
         basis for understanding it in detail. Then, examples of how to use all
@@ -1597,12 +1674,12 @@ my_vec.getData()[3] = 1.0;</programlisting>
           <title>High-Level Description</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>description of</secondary>
           </indexterm>
 
-          <para>Abstractly, <classname>gmtl::Matrix44f</classname><indexterm><primary>classes</primary><secondary>vrj::Matrix</secondary><seealso>vrj::Matrix</seealso></indexterm>
+          <para>Abstractly, <classname>gmtl::Matrix44f</classname><indexterm><primary>classes</primary><secondary>gmtl::Matrix44f</secondary><seealso>gmtl::Matrix44f</seealso></indexterm>
           represents a 4×4 matrix of single-precision floating-point values.
           The class includes implementations of the standard matrix operations
           such as transpose, scale, and multiply. More specifically, it is a
@@ -1611,7 +1688,7 @@ my_vec.getData()[3] = 1.0;</programlisting>
           matrix. On the surface, it is nearly identical to a 4×4 C++ array of
           <type>float</type>s, but there is one crucial difference: a
           <classname>gmtl::Matrix44f</classname> keeps its internal matrix in
-          column-major order rather than in row-major order<indexterm><primary>vrj::Matrix</primary><secondary>compared
+          column-major order rather than in row-major order<indexterm><primary>gmtl::Matrix44f</primary><secondary>compared
           to C++ matrices</secondary></indexterm>. More detail on this is
           given below, but this is done because OpenGL maintains its internal
           matrices using the same memory layout. At the conceptual level, this
@@ -1731,7 +1808,7 @@ my_vec.getData()[3] = 1.0;</programlisting>
           <indexterm>
             <primary>classes</primary>
 
-            <secondary>vrj::Matrix</secondary>
+            <secondary>gmtl::Matrix44f</secondary>
           </indexterm>
 
           <para>Keeping the idea of a normal mathematical matrix in mind, we
@@ -1750,7 +1827,7 @@ my_vec.getData()[3] = 1.0;</programlisting>
           <title>Creating Matrices and Setting Their Values</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>creating</secondary>
           </indexterm>
@@ -1837,7 +1914,7 @@ val = mat1(3, 0);</programlisting>
           <title>Assignment</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>assigning</secondary>
           </indexterm>
@@ -1859,7 +1936,7 @@ mat2 = mat1;</programlisting>
           <title>Equality/Inequality Comparison</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>equality comparison</secondary>
           </indexterm>
@@ -1908,7 +1985,7 @@ if ( mat1 != mat2 )
           <title>Transposing</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>transposing</secondary>
           </indexterm>
@@ -1926,15 +2003,15 @@ gmtl::Matrix44f mat2(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0,
 
 gmtl::transpose(mat1, mat2);</programlisting>
 
-          <para>The result is stored in mat1. mat2 is passed by reference for
-          efficiency.</para>
+          <para>The result is stored in <varname>mat1</varname>.
+          <varname>mat2</varname> is passed by reference for efficiency.</para>
         </section>
 
         <section>
           <title>Finding the Inverse</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>inverting</secondary>
           </indexterm>
@@ -1952,15 +2029,15 @@ gmtl::Matrix44f mat2(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0,
 
 gmtl::invert(mat1, mat2);</programlisting>
 
-          <para>The result is stored in mat1. mat2 is passed by reference for
-          efficiency.</para>
+          <para>The result is stored in <varname>mat1</varname>.
+          <varname>mat2</varname> is passed by reference for efficiency.</para>
         </section>
 
         <section>
           <title>Addition</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>adding</secondary>
           </indexterm>
@@ -1980,7 +2057,7 @@ gmtl::Matrix44f mat2(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0,
                      5.6, 9.9, 9.7, 8.2, 3.8, 0.9, 2.1, 0.1);
 gmtl::Matrix44f mat3;</programlisting>
 
-          <para>Using the <methodname>add()</methodname> method:</para>
+          <para>Using the <function>gmtl::add()</function> function:</para>
 
           <programlisting>gmtl::add(mat3, mat1, mat2);</programlisting>
 
@@ -1988,14 +2065,14 @@ gmtl::Matrix44f mat3;</programlisting>
 
           <programlisting>mat3 = mat1 + mat2;</programlisting>
 
-          <para>The result is stored (via a copy) in mat3.</para>
+          <para>The result is stored (via a copy) in <varname>mat3</varname>.</para>
         </section>
 
         <section>
           <title>Subtraction</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>subtracting</secondary>
           </indexterm>
@@ -2015,7 +2092,7 @@ gmtl::Matrix44f mat2(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0,
                      5.6, 9.9, 9.7, 8.2, 3.8, 0.9, 2.1, 0.1);
 gmtl::Matrix44f mat3;</programlisting>
 
-          <para>Using the <methodname>sub()</methodname> method:</para>
+          <para>Using the <methodname>gmtl::sub()</methodname> method:</para>
 
           <programlisting>gmtl::sub(mat3, mat1, mat2);</programlisting>
 
@@ -2023,14 +2100,14 @@ gmtl::Matrix44f mat3;</programlisting>
 
           <programlisting>mat3 = mat1 - mat2;</programlisting>
 
-          <para>The result is stored (via a copy) in mat3.</para>
+          <para>The result is stored (via a copy) in <varname>mat3</varname>.</para>
         </section>
 
         <section>
           <title>Multiplication</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>multiplying</secondary>
           </indexterm>
@@ -2041,12 +2118,12 @@ gmtl::Matrix44f mat3;</programlisting>
           transformation matrices are constructed through multiplication of
           different transforms. For normal matrix multiplication, there are
           two ways to do multiplication with <classname>gmtl::Matrix44f</classname>:
-          using the <methodname>mult()</methodname> method or using the
+          using the <function>gmtl::mult()</function> function or using the
           overloaded * operator. We recommend the use of the
-          <methodname>mult()</methodname>method, but the overloaded * operator
-          can be used by those who prefer that style of programming. Examples
-          of both methods follow. The first block of code only declares the
-          <classname>gmtl::Matrix44f</classname> objects.</para>
+          <function>gmtl::mult()</function> function but the overloaded *
+          operator can be used by those who prefer that style of programming.
+          Examples of both methods follow. The first block of code only
+          declares the <classname>gmtl::Matrix44f</classname> objects.</para>
 
           <programlisting>gmtl::Matrix44f mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0,
                      5.6, 9.9, 9.7, 8.2, 3.8, 0.9, 2.1, 0.1);
@@ -2054,7 +2131,7 @@ gmtl::Matrix44f mat2(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0,
                     5.6, 9.9, 9.7, 8.2, 3.8, 0.9, 2.1, 0.1);
 gmtl::Matrix44f mat3;</programlisting>
 
-          <para>Using the <methodname>mult()</methodname> method:</para>
+          <para>Using the <function>gmtl::mult()</function> function:</para>
 
           <programlisting>gmtl::mult(mat3, mat1, mat2);</programlisting>
 
@@ -2062,7 +2139,7 @@ gmtl::Matrix44f mat3;</programlisting>
 
           <programlisting>mat3 = mat1 * mat2;</programlisting>
 
-          <para>The result is stored (via a copy) in mat3.</para>
+          <para>The result is stored (via a copy) in <varname>mat3</varname>.</para>
 
           <para>There are two more multiplication operations provided that
           help in handling the order of the matrices when they are multiplied.
@@ -2114,7 +2191,7 @@ gmtl::preMult(mat1, mat2);</programlisting>
           <title>Scaling by a Scalar Value</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>scaling</secondary>
           </indexterm>
@@ -2125,8 +2202,8 @@ gmtl::preMult(mat1, mat2);</programlisting>
           value and returns a <classname>gmtl::Matrix44f</classname>. As with
           the preceding operations, we recommend the use of the former, but
           the latter is available for those who want it. Examples of both
-          methods follow. First, using the <methodname>setScale()</methodname>
-          method works as:</para>
+          methods follow. First, using the <function>gmtl::setScale()</function>
+          function works as:</para>
 
           <programlisting>gmtl::Matrix44f mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0,
                      5.6, 9.9, 9.7, 8.2, 3.8, 0.9, 2.1, 0.1);
@@ -2139,7 +2216,7 @@ gmtl::setScale(mat1, 3.0);</programlisting>
           <title>Making an Identity Matrix Quickly</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>making</secondary>
 
@@ -2156,16 +2233,16 @@ gmtl::setScale(mat1, 3.0);</programlisting>
 
 gmtl::identity(mat1);</programlisting>
 
-          <para>Of course, simply declaring mat1 with no arguments would
-          achieve the same result, but that is not such an interesting
-          example.</para>
+          <para>Of course, simply declaring <varname>mat1</varname> with no
+          arguments would achieve the same result, but that is not such an
+          interesting example.</para>
         </section>
 
         <section>
           <title>Zeroing a Matrix in a Single Step</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>zeroing</secondary>
           </indexterm>
@@ -2180,14 +2257,15 @@ gmtl::identity(mat1);</programlisting>
 
 gmtl::zero(mat1);</programlisting>
 
-          <para>The result is that all elements of mat1 are now 0.0.</para>
+          <para>The result is that all elements of <varname>mat1</varname> are
+          now 0.0.</para>
         </section>
 
         <section>
           <title>Making an XYZ, a ZYX, or a ZXY Euler Rotation Matrix</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>making</secondary>
 
@@ -2215,7 +2293,7 @@ gmtl::setRot(mat1, gmtl::EulerAngleZXYf(z_rot, x_rot, y_rot));</programlisting>
           <title>Making a Translation Transformation Matrix</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>making</secondary>
 
@@ -2245,7 +2323,7 @@ gmtl::setTrans(mat, trans);</programlisting>
           <title>Making a Scale Transformation Matrix</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>making</secondary>
 
@@ -2269,7 +2347,7 @@ mat = gmtl::makeScale&#60;Matrix44f&#62;(scale);</programlisting>
           <title>Extracting Specific Transformation Information</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>extracting transformation information</secondary>
           </indexterm>
@@ -2287,8 +2365,6 @@ mat = gmtl::makeScale&#60;Matrix44f&#62;(scale);</programlisting>
           <para>The value return is in radians. We can also get the X-axis
           rotation.</para>
 
-          <programlisting></programlisting>
-
           <programlisting>float x_rot = (gmtl::makeRot&#60;gmtl::EulerAngleXYZf&#62;(mat))[0];</programlisting>
 
           <para>Getting translations is even simpler because translations are
@@ -2298,15 +2374,15 @@ mat = gmtl::makeScale&#60;Matrix44f&#62;(scale);</programlisting>
 gmtl::setTrans(trans, mat);</programlisting>
 
           <para>After this, the translation in <varname>mat</varname> is
-          stored in trans. The same can be done with a Vec4f instead of the
-          Vec3f.</para>
+          stored in trans. The same can be done with a <classname>gmtl::Vec4f</classname>
+          instead of the <classname>gmtl::Vec3f</classname>.</para>
         </section>
 
         <section>
           <title>Converting to an OpenGL Performer Matrix</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>converting to pfMatrix</secondary>
           </indexterm>
@@ -2314,9 +2390,9 @@ gmtl::setTrans(trans, mat);</programlisting>
           <indexterm>
             <primary>pfMatrix</primary>
 
-            <secondary>converting from vrj::Matrix</secondary>
+            <secondary>converting from gmtl::Matrix44f</secondary>
 
-            <seealso>vrj::Matrix</seealso>
+            <seealso>gmtl::Matrix44f</seealso>
           </indexterm>
 
           <para>SGI&#39;s OpenGL Performer likes to work with its own
@@ -2332,9 +2408,10 @@ pfMatrix pf_mat;
 
 pf_mat = vrj::GetPfMatrix(vj_mat);</programlisting>
 
-          <para>where vj_mat is passed by reference for efficiency. (pf_mat
-          gets a copy of a <classname>pfMatrix</classname> which is a slow
-          operation.) To convert a <classname>pfMatrix</classname> to a
+          <para>where <varname>vj_mat</varname> is passed by reference for
+          efficiency. (<varname>pf_mat</varname> gets a copy of a
+          <classname>pfMatrix</classname> which is a slow operation.) To
+          convert a <classname>pfMatrix</classname> to a
           <classname>gmtl::Matrix44f</classname>, do the following:</para>
 
           <programlisting>pfMatrix pf_mat;
@@ -2344,16 +2421,17 @@ gmtl::Matrix44f vj_mat;
 
 vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
 
-          <para>Here again, pf_matis passed by reference for efficiency, and
-          vj_mat gets a copy of a <classname>gmtl::Matrix44f</classname>. Both
-          of these functions are found in the header <filename>vrj/Draw/Pf/PfUtil.h</filename>.</para>
+          <para>Here again, <varname>pf_mat</varname> is passed by reference
+          for efficiency, and <varname>vj_mat</varname> gets a copy of a
+          <classname>gmtl::Matrix44f</classname>. Both of these functions are
+          found in the header <filename>vrj/Draw/Pf/PfUtil.h</filename>.</para>
         </section>
 
         <section>
           <title>The Gory Details</title>
 
           <indexterm>
-            <primary>vrj::Matrix</primary>
+            <primary>gmtl::Matrix44f</primary>
 
             <secondary>details</secondary>
           </indexterm>
@@ -2364,9 +2442,9 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
           absolutely have to or you just like to confuse yourself.</para>
 
           <para>C, C++, and mathematics use matrices in row-major order.
-          Access indices are shown in <xref linkend="Row-maj-table" /></para>
+          Access indices are shown in <xref linkend="table.row-major.access" /></para>
 
-          <table id="Row-maj-table">
+          <table id="table.row-major.access">
             <title>Row-major access indices</title>
 
             <tgroup align="left" cols="5" colsep="1" rowsep="1">
@@ -2429,9 +2507,9 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
           class maintains its internal matrix in column-major order. Note that
           in the following table, the given indices are what the cells have to
           be called in C/C++ notation because we are putting them
-          back-to-back. This is illustrated in <xref linkend="Col-maj-table" />.</para>
+          back-to-back. This is illustrated in <xref linkend="table.column-major.access" />.</para>
 
-          <table id="Col-maj-table">
+          <table id="table.column-major.access">
             <title>Column-major access indices</title>
 
             <tgroup align="left" cols="4" colsep="1" rowsep="1">
@@ -2519,25 +2597,27 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
         </section>
       </section>
 
-      <section id="vjDeviceInterface-section">
-        <title>The <classname>gadget::DeviceInterface</classname> Helper Class</title>
+      <section id="section.gadget.DeviceInterface">
+        <title>The <classname>gadget::DeviceInterface&#60;T&#62;</classname>
+        Helper Class</title>
 
         <indexterm>
-          <primary>gadget::DeviceInterface</primary>
+          <primary>gadget::DeviceInterface&#60;T&#62;</primary>
         </indexterm>
 
-        <para>The concept of device interfaces in VR Juggler is one which
-        often causes confusion for new users. Two object-oriented design
-        patterns are combined by <classname>gadget::DeviceInterface</classname><indexterm><primary>classes</primary><secondary>gadget::DeviceInterface</secondary><seealso>gadget::DeviceInterface</seealso></indexterm>:
-        smart pointers and proxies. Within this section, we aim to explain VR
-        Juggler device interfaces clearly and simply. We begin with a
+        <para>The concept of device interfaces in VR Juggler applications is
+        something that often causes confusion for new users. Two
+        object-oriented design patterns are combined by
+        <classname>gadget::DeviceInterface&#60;T&#62;</classname><indexterm><primary>classes</primary><secondary>gadget::DeviceInterface&#60;T&#62;</secondary><seealso>gadget::DeviceInterface&#60;T&#62;</seealso></indexterm>:
+        smart pointers and proxies. Within this section, we aim to explain
+        Gadgeteer device interfaces clearly and simply. We begin with a
         high-level description and then move right into using the class.</para>
 
         <section>
           <title>High-Level Description</title>
 
           <indexterm>
-            <primary>gadget::DeviceInterface</primary>
+            <primary>gadget::DeviceInterface&#60;T&#62;</primary>
 
             <secondary>description of</secondary>
           </indexterm>
@@ -2545,22 +2625,36 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
           <para>Physical devices are never accessed directly by VR Juggler
           applications<indexterm><primary>applications</primary><secondary>device
           access</secondary></indexterm>. Instead, the applications are
-          granted access to the device through a <firstterm>proxy</firstterm><indexterm><primary>proxy</primary><secondary>application-level
+          granted access to the device through a <glossterm
+          linkend="gloss.proxy">proxy</glossterm><indexterm><primary>proxy</primary><secondary>application-level
           access</secondary></indexterm>. A proxy is nothing more than an
           intermediary who forwards information between two parties<indexterm><primary>proxy</primary><secondary>definition
           of</secondary></indexterm>. In this case, the two parties are a VR
           Juggler application and an input device. The application makes
           requests on the input device through the proxy.</para>
 
-          <para>The class <classname>gadget::DeviceInterface</classname> is
-          designed to be a wrapper class around the proxies. Applications
-          could use the proxy classes directly, but <classname>gadget::DeviceInterface</classname>
-          and its subclasses simplify use of the proxy object they contain.
-          Thus, typical VR Juggler application objects will have one or more
-          device interface member variables.</para>
+          <para>The (template) class <classname>gadget::DeviceInterface&#60;T&#62;</classname>
+          is designed to be a wrapper class around the proxies. Applications
+          could use the proxy classes directly, but <classname>gadget::DeviceInterface&#60;T&#62;</classname>
+          and its type-specific instances (<classname>gadget::PositionInterface</classname>,
+          <classname>gadget::DigitalInterface</classname>, etc.) simplify use
+          of the proxy object they contain. Thus, typical VR Juggler
+          application objects will have one or more device interface member
+          variables.</para>
+
+          <note>
+            <para>The class <classname>gadget::DeviceInterface&#60;T&#62;</classname>
+            is a templated class based on the proxy type it wraps. Example
+            instantiations of <classname>gadget::DeviceInterface&#60;T&#62;</classname>
+            are <classname>gadget::DeviceInterface&#60;gadget::PositionProxy&#62;</classname>
+            and <classname>gadget::DeviceInterface&#60;gadget::KeyboardProxy&#62;</classname>.
+            Typedefs such as <classname>gadget::PositionInterface</classname>
+            (another name for <classname>gadget::DeviceInterface&#60;gadget::PositionProxy&#62;</classname>)
+            make the code more readable.</para>
+          </note>
 
           <para>In the application object, a device interface member variable
-          is used as a <firstterm>smart pointer</firstterm><indexterm><primary>smart
+          is used as a <glossterm linkend="gloss.smart.pointer">smart pointer</glossterm><indexterm><primary>smart
           pointer</primary></indexterm> to the proxy. In C++, a smart pointer
           is not usually an actual object pointer. Instead, the class acting
           as a smart pointer overloads the dereference operator -&#62; so that
@@ -2575,35 +2669,35 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
           handle.</para>
 
           <para>With that background, we can move on to explain how
-          <classname>gadget::DeviceInterface</classname> uses these concepts.
-          First, know that <classname>gadget::DeviceInterface</classname> is a
-          base class for all other device interface classes such as digital
-          interfaces (wand buttons), position interfaces (wands, a tracked
-          user&#39;s head), etc. In user code, there will be instances of
-          objects such as <classname>gadget::DigitalInterface</classname><indexterm><primary>classes</primary><secondary>gadget::DigitalInterface</secondary></indexterm>,
+          <classname>gadget::DeviceInterface&#60;T&#62;</classname> uses these
+          concepts. First, know that <classname>gadget::DeviceInterface&#60;T&#62;</classname>
+          is a base class for all other device interface classes such as
+          digital interfaces (wand buttons), position interfaces (wands, a
+          tracked user&#39;s head), etc. In user code, there will be instances
+          of objects such as <classname>gadget::DigitalInterface</classname><indexterm><primary>classes</primary><secondary>gadget::DigitalInterface</secondary></indexterm>,
           <classname>gadget::PositionInterface</classname><indexterm><primary>classes</primary><secondary>gadget::PositionInterface</secondary></indexterm>,
           <classname>gadget::KeyboardInterface</classname><indexterm><primary>classes</primary><secondary>gadget::KeyboardInterface</secondary></indexterm>,
           and the like. Once they are properly initialized, device interface
           objects (whatever their types may be) will act as smart pointers to
-          the actual VR Juggler proxy objects they wrap.</para>
+          the actual Gadgeteer device proxy objects they wrap.</para>
 
-          <para>All the subclasses of <classname>gadget::DeviceInterface</classname>
-          encapsulate a pointer to a VR Juggler proxy object. (Remember that
-          these proxy objects act as an intermediary between the application
-          and an input device.) The subclasses also overload the dereference
-          operator -&#62; which allows them to act as smart pointers. The
-          dereference operator on a device interface object gives access to
-          the object&#39;s hidden proxy pointer. With that access, the methods
-          of the encapsulated proxy object can be invoked, usually to read
-          data. The end result is that user applications get access to the
-          proxy objects they need but through a simpler interface than using
-          the proxies directly<indexterm><primary>device proxies</primary><secondary>access
-          through device interfaces</secondary><seealso>gadget::DeviceInterface</seealso></indexterm>.</para>
+          <para>All the instances of <classname>gadget::DeviceInterface&#60;T&#62;</classname>
+          encapsulate a pointer to a Gadgeteer device proxy object. (Remember
+          that these proxy objects act as an intermediary between the
+          application and an input device.) The subclasses also overload the
+          dereference operator -&#62; which allows them to act as smart
+          pointers. The dereference operator on a device interface object
+          gives access to the object&#39;s hidden proxy pointer. With that
+          access, the methods of the encapsulated proxy object can be invoked,
+          usually to read data. The end result is that user applications get
+          access to the proxy objects they need but through a simpler
+          interface than using the proxies directly<indexterm><primary>device
+          proxies</primary><secondary>access through device interfaces</secondary><seealso>gadget::DeviceInterface&#60;T&#62;</seealso></indexterm>.</para>
 
-          <para>At this point, it is perfectly reasonable to wonder why VR
-          Juggler uses a concept that requires all sorts of documentation and
-          explanation. The extra effort is worth it because it allows VR
-          Juggler to hide the actual type of the device being used. There is
+          <para>At this point, it is perfectly reasonable to wonder why
+          Gadgeteer uses a concept that requires all sorts of documentation
+          and explanation. The extra effort is worth it because it allows
+          Gadgeteer to hide the actual type of the device being used. There is
           no need to know that some specific VR system uses a wireless mouse
           connected to a PC reading bytes from a PS/2 port that represent
           button presses. All that matters is knowing which buttons are
@@ -2614,19 +2708,21 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
         </section>
 
         <section>
-          <title>Using <classname>gadget::DeviceInterface</classname></title>
+          <title>Using <classname>gadget::DeviceInterface&#60;T&#62;</classname></title>
 
           <indexterm>
             <primary>classes</primary>
 
-            <secondary>gadget::DeviceInterface</secondary>
+            <secondary>gadget::DeviceInterface&#60;T&#62;</secondary>
           </indexterm>
 
-          <para>VR Juggler applications do not usually use
-          <classname>gadget::DeviceInterface</classname> directly. Instead,
-          the subclasses mentioned above will be used. Within this section, we
-          will refer to subclasses of <classname>gadget::DeviceInterface</classname>
-          as <quote>device interfaces</quote>. The high-level description has
+          <para>As noted above, VR Juggler applications do not usually use
+          <classname>gadget::DeviceInterface&#60;T&#62;</classname> directly.
+          Instead, the typedefs for specific instantiations of
+          <classname>gadget::DeviceInterface&#60;T&#62;</classname> mentioned
+          above will be used. Within this section, we will refer to
+          instantiations of <classname>gadget::DeviceInterface&#60;T&#62;</classname>
+          as <quote>device interfaces.</quote> The high-level description has
           already made use of this convention.</para>
 
           <para>Before using a device interface, some objects must be
@@ -2635,17 +2731,17 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
           interface objects must be initialized in the application
           object&#39;s <methodname>init()</methodname> method<indexterm><primary>device
           interfaces</primary><secondary>initialization of</secondary></indexterm>.
-          Each device interface object inherits a method called
-          <methodname>init()</methodname> from <classname>gadget::DeviceInterface</classname>.
-          This method takes a single string argument naming the proxy to which
-          the interface will connect. Example names are <quote>VJHead</quote>,
-          <quote>VJWand</quote>, <quote>VJButton0</quote>, and <quote>VJAccelerate</quote><indexterm><primary>device
+          Each device interface type has a method called
+          <methodname>init()</methodname>. This method takes a single string
+          argument naming the proxy to which the interface will connect.
+          Example names are <quote>VJHead</quote>, <quote>VJWand</quote>,
+          <quote>VJButton0</quote>, and <quote>VJAccelerate</quote><indexterm><primary>device
           aliases</primary><secondary>examples of</secondary></indexterm>.
           These are all symbolic names specified in VR Juggler configuration
           files. This makes them easier to remember, and it also contributes
           to hiding the details about the physical device. With this system,
           no one needs to care how transformation information from the
-          user&#39;s head is generated. VR Juggler cares, but there is no need
+          user&#39;s head is generated. Gadgeteer cares, but there is no need
           for it to tell anyone else. All developers care about is the head
           transformation matrix. An example of initializing a
           <classname>gadget::PositionInterface</classname> that connects with
@@ -2666,12 +2762,12 @@ head.init(&#34;VJHead&#34;);</programlisting>
           <para>Once device interface objects are all initialized and ready to
           use, it is time to start using them as smart pointers<indexterm><primary>device
           interfaces</primary><secondary>as smart pointers</secondary><seealso>smart
-          pointer</seealso></indexterm>. This is best part! VR Juggler is
-          already working hard in the background to update device proxies, and
-          the application is free to access them. (It is usually best to
-          reference them in the <methodname>preFrame()</methodname> method,
-          but this may not necessarily be true for all proxies.) Continuing
-          with our example of a <classname>gadget::PositionInterface</classname>
+          pointer</seealso></indexterm>. This is best part! VR Juggler and
+          Gadgeteer are already working hard in the background to update
+          device proxies, and the application is free to access them. (It is
+          usually best to reference them in the <methodname>preFrame()</methodname>
+          method, but this may not necessarily be true for all proxies.)
+          Continuing with our example of a <classname>gadget::PositionInterface</classname>
           to the user head proxy, the following code shows how to read the
           transformation matrix for the user&#39;s head:</para>
 
@@ -2692,34 +2788,34 @@ head_mat = head-&#62;getData();</programlisting>
           <title>The Gory Details</title>
 
           <indexterm>
-            <primary>gadget::DeviceInterface</primary>
+            <primary>gadget::DeviceInterface&#60;T&#62;</primary>
 
             <secondary>details</secondary>
           </indexterm>
 
-          <para>What is truly amazing about VR Juggler device interfaces is,
+          <para>What is truly amazing about Gadgeteer device interfaces is,
           despite their seeming complexity, there is really nothing to them.
           Trying to trace through the source code is a little tricky, but
           conceptually, it is all about pointers. Keep in mind that all this
-          documentation was written using nothing more than the header files
-          as a reference.</para>
+          documentation was written using nothing more than the Gadgeteer
+          header files as a reference.</para>
 
-          <para>As mentioned, the class <classname>gadget::DeviceInterface</classname>
+          <para>As mentioned, the class <classname>gadget::DeviceInterface&#60;T&#62;</classname>
           is a base class for all the specific types of device interfaces such
           as positional interfaces, digital interfaces, and analog interfaces.
-          This class maintains the name of the proxy and the proxy index, and
-          it provides the all-important <methodname>init()</methodname>
-          method, but it is up to the inheriting classes to handle the proxy
-          pointer and to overload the dereference operator.</para>
+          This class maintains the name of the proxy and the proxy index, it
+          provides the all-important <methodname>init()</methodname> method,
+          and it overloads the dereference operator. C++ templates then handle
+          the different type instantiations for the different Gadgeteer proxy
+          types.</para>
 
-          <para>Subclasses of <classname>gadget::DeviceInterface</classname>
-          are used to provide the wrapper to a specific type of proxy<indexterm><primary>gadget::DeviceInterface</primary><secondary>subclasses
+          <para>Instantiations of <classname>gadget::DeviceInterface&#60;T&#62;</classname>
+          are used to provide the wrapper to a specific type of proxy<indexterm><primary>gadget::DeviceInterface</primary><secondary>instantiations
           of</secondary></indexterm>. They each contain a pointer to a proxy
           object of the same conceptual type (positional, digital, and so on).
-          The way in which the dereference operator is overloaded can vary
-          from class to class, but the end result is always the same: a
-          pointer to the proxy is returned so that the calling code has access
-          to that proxy.</para>
+          Regardless of the specific instantiations of <classname>gadget::DeviceInterface&#60;T&#62;</classname>,
+          they all return a pointer to their contained proxy so that user code
+          can get the current data from the proxy.</para>
 
           <para>The beauty of it all is that the proxy object being pointed to
           by the device interface can be changed without affecting the
@@ -2727,12 +2823,12 @@ head_mat = head-&#62;getData();</programlisting>
           be changed at run time to point to different <emphasis>physical</emphasis>
           devices. All the while, the user code is still using the smart
           pointer interface and getting data of some sort. This flexibility is
-          one of the most important features of VR Juggler, and it is
-          important to understand.</para>
+          one of the most important features of Gadgeteer, and it is important
+          to understand.</para>
         </section>
       </section>
 
-      <section id="vjProxy-section">
+      <section id="section.gadget.Proxy">
         <title>The <classname>gadget::Proxy</classname> Helper Class</title>
 
         <indexterm>
@@ -2762,7 +2858,7 @@ head_mat = head-&#62;getData();</programlisting>
           </indexterm>
 
           <para>The class <classname>gadget::Proxy</classname> is the base
-          class for all the proxies in the VR Juggler Input Manager. A better
+          class for all the proxies in the Gadgeteer Input Manager. A better
           name would be <classname>gadget::InputProxy</classname>, and it may
           help to think of it with that name. As a programmer of VR Juggler
           applications, knowledge of such proxies does not have to be terribly
@@ -2770,8 +2866,8 @@ head_mat = head-&#62;getData();</programlisting>
           never need to know more about a specific device proxy&#39;s
           interface than the return type of its <methodname>getData()</methodname>
           method. Most of the apparent complexity in the specific device proxy
-          classes is only important to VR Juggler&#39;s internal maintenance
-          of the active proxies.</para>
+          classes is only important to Gadgeteer&#39;s internal maintenance of
+          the active proxies.</para>
 
           <para>That said, this section is relatively short. As a programmer,
           the important thing to know is that a proxy is a pointer to a
@@ -2781,10 +2877,11 @@ head_mat = head-&#62;getData();</programlisting>
           to read data in some form from the device. The device interface
           encapsulates some type of proxy that in turn points to an input
           device. That device can be a wand, a keyboard, a light sensor, or a
-          home-brewed device that reads some input and returns it to VR
-          Juggler in a meaningful way. That is a lot of indirection, but it
-          makes the handling of physical devices by VR Juggler incredibly
-          powerful.</para>
+          home-brewed device that reads some input and returns it to Gadgeteer
+          in a meaningful way. That is a lot of indirection, but it makes the
+          handling of physical devices by Gadgeteer incredibly powerful. Most
+          importantly, it prevents VR Juggler applications from being tied to
+          specific hardware devices.</para>
         </section>
 
         <section>
@@ -2836,12 +2933,12 @@ head_mat = head-&#62;getData();</programlisting>
           its subclasses are not really relevant to this particular section.
           The subclasses look complicated, and they can be. It is important to
           note, however, that the complication is part of the interface used
-          <emphasis>internally</emphasis> by VR Juggler rather than the
+          <emphasis>internally</emphasis> by Gadgeteer rather than the
           interface used by the application programmer. Because of that and
           because each device proxy class is different, those details will not
           be addressed here. It is sufficient to deal with
           <methodname>getData()</methodname> alone in applications. Leave the
-          ugliness up to VR Juggler; it can handle it.</para>
+          ugliness up to VR Juggler and Gadgeteer; they can handle it.</para>
         </section>
       </section>
     </chapter>
@@ -2850,7 +2947,7 @@ head_mat = head-&#62;getData();</programlisting>
   <part id="app.programming.part">
     <title>Application Programming</title>
 
-    <chapter id="ch4">
+    <chapter id="chatper.writing.apps">
       <title>Writing Applications</title>
 
       <indexterm>
@@ -2878,7 +2975,7 @@ head_mat = head-&#62;getData();</programlisting>
         <section>
           <title>Basic Application Information</title>
 
-          <para>As described in previous chapters (see <xref linkend="ch1" />,
+          <para>As described in previous chapters (see <xref linkend="chatper.getting.started" />,
           for example), all VR Juggler applications derive from a base
           application object class (<classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>).
           This class defines the basic interface that VR Juggler expects from
@@ -2905,9 +3002,9 @@ public:
           <title>Draw Manager-Specific Application Classes</title>
 
           <para>A user application does not have to (and in most cases does
-          not) derive from <classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>.
-          In most cases, an application class is derived from a Draw
-          Manager-specific application class. For example:</para>
+          not) derive from <classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>
+          directly. In almost all cases, an application class is derived from
+          a Draw Manager-specific application class. For example:</para>
 
           <programlisting>class userGlApp : public vrj::GlApp
 {
@@ -2927,10 +3024,10 @@ public:
         </section>
       </section>
 
-      <section id="get-input-sect">
+      <section id="section.get.input">
         <title>Getting Input</title>
 
-        <indexterm zone="get-input-sect">
+        <indexterm zone="section.get.input">
           <primary>application programming</primary>
 
           <secondary>getting input</secondary>
@@ -2942,13 +3039,13 @@ public:
         processes and concepts for acquiring input from devices. The main
         thing to remember about getting input in applications is that all VR
         Juggler applications receive input through device handles managed by
-        <classname>gadget::DeviceInterface</classname>s<indexterm><primary>classes</primary><secondary>gadget::DeviceInterface</secondary></indexterm>.
-        There are <classname>gadget::DeviceInterface</classname>s for each
-        type of input data that VR Juggler can handle. There is one for
-        positional input, one for analog, and so on. They all have very
-        similar interfaces and behave exactly the same. (Refer to <xref
-        linkend="vjDeviceInterface-section" /> and <xref
-        linkend="vjProxy-section" /> for more information.)</para>
+        <classname>gadget::DeviceInterface&#60;T&#62;</classname><indexterm><primary>classes</primary><secondary>gadget::DeviceInterface&#60;T&#62;</secondary></indexterm>
+        instantiations. There are <classname>gadget::DeviceInterface&#60;T&#62;</classname>
+        instantiations for each type of input data that Gadgeteer can handle.
+        There is one for positional input, one for analog, and so on. They all
+        have very similar interfaces and behave exactly the same. (Refer to
+        <xref linkend="section.gadget.DeviceInterface" /> and <xref
+        linkend="section.gadget.Proxy" /> for more information.)</para>
 
         <section>
           <title>How to Get Input</title>
@@ -2988,13 +3085,13 @@ private:
 gmtl::Matrix44f wand_pos(mWand-&#62;getData());
 ...</programlisting>
 
-          <para>The above code shows an example of using the device interface
-          in an application. It shows some sample code where the application
-          copies the positional information from a device interface. When it
-          is dereferenced, the device interface figures out what device it
-          points to and returns the data from that device. Again, refer to
-          <xref linkend="vjDeviceInterface-section" /> for more information
-          about using <classname>gadget::DeviceInterface</classname>.</para>
+          <para>The above code shows an example of using the positional device
+          interface in an application. It shows some sample code where the
+          application copies the positional information from a device
+          interface. When it is dereferenced, the device interface figures out
+          what device it points to and returns the data from that device.
+          Again, refer to <xref linkend="section.gadget.DeviceInterface" /> for
+          more information about using <classname>gadget::DeviceInterface&#60;T&#62;</classname>.</para>
         </section>
 
         <section>
@@ -3011,9 +3108,9 @@ gmtl::Matrix44f wand_pos(mWand-&#62;getData());
           surprisingly, is application dependent. There are some very good
           guidelines regarding where applications should process input. Before
           explaining them, however, we should review the VR Juggler kernel
-          control loop, presented again in <xref linkend="Kernel-seq-diag2" />.</para>
+          control loop, presented again in <xref linkend="figure.kernel.loop.sequence2" />.</para>
 
-          <figure id="Kernel-seq-diag2">
+          <figure id="figure.kernel.loop.sequence2">
             <title>VR Juggler kernel control loop</title>
 
             <mediaobject>
@@ -3027,10 +3124,10 @@ gmtl::Matrix44f wand_pos(mWand-&#62;getData());
 
           <para>This diagram looks complicated, but the key here is the
           <methodname>updateAllData()</methodname> call near the bottom of the
-          diagram. This is where VR Juggler updates all the cached device data
-          that will be used in drawing the next frame. This updated copy is
-          used by all user references to device data until the next update and
-          the end of the next frame of execution.</para>
+          diagram. This is where the Gadgeteer Input Manager updates all the
+          cached device data that will be used in drawing the next frame. This
+          updated copy is used by all user references to device data until the
+          next update and the end of the next frame of execution.</para>
 
           <para>This means two things:</para>
 
@@ -3214,7 +3311,7 @@ public:
         </section>
       </section>
 
-      <section id="ogl-app-sect">
+      <section id="section.opengl.apps">
         <title>OpenGL Applications</title>
 
         <indexterm>
@@ -3233,7 +3330,7 @@ public:
         class extends this interface by adding members that the VR Juggler
         OpenGL Draw Manager needs to render an OpenGL application correctly.</para>
 
-        <figure id="vjGlApp-class-fig">
+        <figure id="figure.vrj.GlApp2">
           <title><classname>vrj::GlApp</classname> application class</title>
 
           <mediaobject>
@@ -3245,17 +3342,70 @@ public:
           </mediaobject>
         </figure>
 
-        <para>In <xref linkend="vjGlApp-class-fig" />, we see the functions
-        added by the <classname>vrj::GlApp</classname> interface:
+        <para>In <xref linkend="figure.vrj.GlApp2" />, we see some of the
+        methods added by the <classname>vrj::GlApp</classname> interface:
         <methodname>draw()</methodname>, <methodname>contextInit()</methodname>,
         and <methodname>contextPreDraw()</methodname><indexterm><primary>vrj::GlApp</primary><secondary>extensions
-        to vrj::App</secondary></indexterm>. These functions deal with OpenGL
+        to vrj::App</secondary></indexterm>. These methods deal with OpenGL
         drawing and managing context-specific data (do not worry what context
         data is right now—we cover that in detail later). There are a few
-        other functions in the interface, but these cover 99% of the issues
-        that most developers face. In the following sections, we will describe
-        how to add OpenGL drawing to an application and how to handle
+        other member functions in the interface, but these cover 99% of the
+        issues that most developers face. In the following sections, we will
+        describe how to add OpenGL drawing to an application and how to handle
         context-specific data. There is a tutorial for each topic.</para>
+
+        <section id="section.clear.buffers">
+          <title>Clearing the Color and Depth Buffers</title>
+
+          <indexterm>
+            <primary>application programming</primary>
+
+            <secondary>OpenGL</secondary>
+
+            <tertiary>clearing color and depth buffers</tertiary>
+          </indexterm>
+
+          <indexterm>
+            <primary>vrj::GlApp</primary>
+
+            <secondary>bufferPreDraw() method</secondary>
+          </indexterm>
+
+          <para>Before describing how to render using OpenGL with VR Juggler,
+          we must cover the more basic topic of clearing the color and depth
+          buffers. We describe this part before explaining how to render
+          graphics because these steps will be common to all VR Juggler
+          applications based on OpenGL.</para>
+
+          <para>In VR Juggler 1.1 and beyond, there is support for drawing
+          multiple OpenGL viewports in a single VR Juggler display window.
+          This feature is useful for tiled displays where each viewport
+          renders a specific part of the scene. In order for an OpenGL-based
+          application to work with multiple viewports, the color and depth
+          buffers need to be cleared at the correct times.</para>
+
+          <para>In a user applcation, the method <methodname>vrj::GlApp::bufferPreDraw()</methodname>
+          is overridden so that it clears the color buffer. For example, the
+          following code clears the color buffer using black:</para>
+
+          <programlisting>void userApp::bufferPreDraw()
+{
+   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+   glClear(GL_COLOR_BUFFER_BIT);
+}</programlisting>
+
+          <para>Now we need to clear the depth buffer. This must be done
+          separately from the color buffer to ensure proper stereo rendering.
+          The depth buffer must be cleared in the application object&#39;s
+          <methodname>draw()</methodname> method, usually as the first step:</para>
+
+          <programlisting>void userApp::draw()
+{
+   glClear(GL_DEPTH_BUFFER_BIT);
+
+   // Rendering the scene ...
+}</programlisting>
+        </section>
 
         <section>
           <title>OpenGL Drawing: <methodname>vrj::GlApp::draw()</methodname></title>
@@ -3317,7 +3467,7 @@ public:
           </section>
         </section>
 
-        <section id="simple-ogl-app-sect">
+        <section id="section.simple.opengl.app">
           <title>Tutorial: Drawing a Cube with OpenGL</title>
 
           <indexterm>
@@ -3355,7 +3505,7 @@ public:
                 <row>
                   <entry>Directory</entry>
 
-                  <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/simpleApp</filename></entry>
+                  <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/SimpleApp</filename></entry>
                 </row>
 
                 <row>
@@ -3456,7 +3606,7 @@ void simpleApp::draw()
             has already been set up correctly for the system. All the user
             application must do is draw the environment; VR Juggler handles
             the rest. In this example, the <methodname>draw()</methodname>
-            function renders a cube at an offset location.</para>
+            member function renders a cube at an offset location.</para>
           </section>
 
           <section>
@@ -3467,7 +3617,7 @@ void simpleApp::draw()
           </section>
         </section>
 
-        <section id="cs-data-intro-sec">
+        <section id="section.csdata.intro">
           <title>Context-Specific Data</title>
 
           <indexterm>
@@ -3487,8 +3637,8 @@ void simpleApp::draw()
           <firstterm>context-specific data</firstterm> within OpenGL, and we
           proceed to explain how it is used by VR Juggler. Those who are
           already familiar with context-specific data may skip ahead to <xref
-          linkend="cs-data-needed-sect" /> or to <xref
-          linkend="using-csdata-sec" />.</para>
+          linkend="section.need.for.csdata" /> or to <xref
+          linkend="section.using.csdata" />.</para>
 
           <para>The OpenGL graphics API operates using a state machine that
           tracks the current settings and attributes set by the OpenGL code.
@@ -3522,7 +3672,7 @@ void simpleApp::draw()
             </listitem>
           </itemizedlist>
 
-          <section id="cs-data-needed-sect">
+          <section id="section.need.for.csdata">
             <title>Why it is Needed</title>
 
             <para>As outlined in the VR Juggler architecture documentation, VR
@@ -3613,7 +3763,7 @@ userApp::draw()
             this case, <varname>mDispListId</varname> is treated as a pointer,
             and it has a special template-based type that tells VR Juggler it
             is context-specific data. When defining a context-specific data
-            member, use the <classname>vrj::GlContextData&#60;&#62;</classname>
+            member, use the <classname>vrj::GlContextData&#60;T&#62;</classname><indexterm><primary>classes</primary><secondary>vrj::GlContextData&#60;T&#62;</secondary></indexterm>
             template class and pass the <quote>true</quote> type of the
             variable to the template definition. From then on, it can be
             treated as a normal pointer.<note><para>The types that are used
@@ -3631,7 +3781,7 @@ userApp::draw()
             description.</para>
 
             <para>The context data items are allocated using a template-based
-            smart pointer class (<classname>vrj::GlContextData&#60;&#62;</classname>).
+            smart pointer class (<classname>vrj::GlContextData&#60;T&#62;</classname><indexterm><primary>classes</primary><secondary>vrj::GlContextData&#60;T&#62;</secondary></indexterm>).
             Behind the scenes, VR Juggler keeps a list of currently allocated
             variables for each context. When the application wants to use a
             context data item, the smart pointer looks in the list and returns
@@ -3643,7 +3793,7 @@ userApp::draw()
           </section>
         </section>
 
-        <section id="using-csdata-sec">
+        <section id="section.using.csdata">
           <title>Using Context-Specific Data</title>
 
           <indexterm>
@@ -3667,9 +3817,9 @@ userApp::draw()
 
             <para>With the background in how to make a context-specific data
             member and how to use it in a <methodname>draw()</methodname>
-            function, we can move on to how and where the context-specific
-            data should be allocated. If we want to create a display list, we
-            need to know where we should allocate it.</para>
+            member function, we can move on to how and where the
+            context-specific data should be allocated. If we want to create a
+            display list, we need to know where we should allocate it.</para>
 
             <section>
               <title>Rule 1: Do not allocate context data in
@@ -3795,7 +3945,7 @@ userApp::draw()
           context-specific data in VR Juggler and justify the rules presented
           in the previous section.</para>
 
-          <figure id="vrj-ogl-system-chart">
+          <figure id="figure.vrj.opengl.system">
             <title>VR Juggler OpenGL system</title>
 
             <mediaobject>
@@ -3878,7 +4028,7 @@ userApp::draw()
             <para>The following code example shows the basics of declaring the
             class interface and data members for an application that will use
             context-specific data. This is an extension of the simple OpenGL
-            application presented in <xref linkend="simple-ogl-app-sect" />.
+            application presented in <xref linkend="section.simple.opengl.app" />.
             Note the addition of the <methodname>contextInit()</methodname>
             declaration and the use of the context-specific data member
             <varname>mCubeDlId</varname>.</para>
@@ -3906,7 +4056,7 @@ public:
             <para>We now show the implementation of <methodname>contextApp::contextInit()</methodname>.
             Here the display list is created and stored using context-specific
             data. Recall <xref linkend="context.data.init.example" />,
-            presented in <xref linkend="using-csdata-sec" />. That example was
+            presented in <xref linkend="section.using.csdata" />. That example was
             based on this tutorial application.</para>
 
             <programlisting linenumbering="numbered">void contextApp::contextInit()
@@ -3956,7 +4106,7 @@ void contextApp::draw()
         </section>
       </section>
 
-      <section id="pf-app-sect">
+      <section id="section.pf.apps">
         <title>OpenGL Performer Applications</title>
 
         <indexterm>
@@ -3968,10 +4118,10 @@ void contextApp::draw()
         <para>Programmers familiar with the use of scene graphs may prefer to
         use that data structure rather than writing OpenGL manually. While VR
         Juggler does not provide a scene graph of its own, its design allows
-        the use of existing scene graph software. In VR Juggler 1.1 DR2, the
-        supported scene graphs are OpenGL Performer from SGI, OpenSG, and Open
-        Scene Graph. This section explains how to use OpenGL Performer to
-        write VR Juggler applications.</para>
+        the use of existing scene graph software. In VR Juggler 1.1 and
+        beyond, the supported scene graphs are OpenGL Performer from SGI,
+        OpenSG, and Open Scene Graph. This section explains how to use OpenGL
+        Performer to write VR Juggler applications.</para>
 
         <para>A Performer-based VR Juggler application must derive from
         <classname>vrj::PfApp</classname><indexterm><primary>classes</primary><secondary>vrj::PfApp</secondary></indexterm>.
@@ -3980,11 +4130,11 @@ void contextApp::draw()
         <classname>vrj::App</classname>. <classname>vrj::PfApp</classname>
         extends <classname>vrj::App</classname> by adding methods that deal
         with scene graph initialization and access. <xref
-        linkend="vjPfApp-class-diag2" /> shows how <classname>vrj::PfApp</classname>
+        linkend="figure.vrj.PfApp2" /> shows how <classname>vrj::PfApp</classname>
         fits into the class hierarchy of a Performer-based VR Juggler
         application.</para>
 
-        <figure id="vjPfApp-class-diag2">
+        <figure id="figure.vrj.PfApp2">
           <title><classname>vrj::PfApp</classname> application class</title>
 
           <mediaobject>
@@ -4389,7 +4539,7 @@ pfDraw();</programlisting>
         </section>
       </section>
 
-      <section id="opensg-app-sect">
+      <section id="section.opensg.apps">
         <title>OpenSG Applications</title>
 
         <indexterm>
@@ -4402,22 +4552,24 @@ pfDraw();</programlisting>
         Juggler application. OpenSG is an open source scenegraph that is
         available at <ulink url="http://www.opensg.org/">www.opensg.org</ulink>.</para>
 
-        <para>An OpenSG VR Juggler must derive from <classname>vrj::OpenSGApp</classname><indexterm><primary>classes</primary><secondary>vrj::OpenSGApp</secondary></indexterm>.
+        <para>An OpenSG-based VR Juggler application must derive from
+        <classname>vrj::OpenSGApp</classname><indexterm><primary>classes</primary><secondary>vrj::OpenSGApp</secondary></indexterm>.
         The <classname>vrj::OpenSGApp</classname> class is derived from the
         <classname>vrj::GlApp</classname> presented previously, which in turn
         derives from <classname>vrj::App</classname>. <classname>vrj::OpenSGApp</classname>
         extends <classname>vrj::GlApp</classname> by adding methods that deal
-        with scene graph initialization and access. <emphasis>[Insert diagram
-        ref]</emphasis> shows how <classname>vrj::OpenSGApp</classname> fits
-        into the class hierarchy of an OpenSG VR Juggler application.</para>
+        with scene graph initialization and access. <xref
+        linkend="figure.class.vrj.OpenSGApp" /> shows how
+        <classname>vrj::OpenSGApp</classname> fits into the class hierarchy of
+        an OpenSG-based VR Juggler application.</para>
 
-        <figure id="vjOpenSGApp-class-diag">
+        <figure id="figure.class.vrj.OpenSGApp">
           <title><classname>vrj::OpenSGApp</classname> application class</title>
 
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-              fileref="figures/userPfApp_hierarchy.png" format="PNG"
+              fileref="figures/userOpenSGApp_hierarchy.png" format="PNG"
               scalefit="1" />
             </imageobject>
           </mediaobject>
@@ -4507,8 +4659,6 @@ pfDraw();</programlisting>
 {
    return mSceneRoot;  // Return the root of the graph
 }</programlisting>
-
-            <para></para>
 
             <para>If you need to update the scene graph, you should use either
             <methodname>preFrame()</methodname>, <methodname>intraFrame()</methodname>,
@@ -4665,7 +4815,7 @@ public:
       </section>
     </chapter>
 
-    <chapter id="porting.CAVElib.chapter">
+    <chapter id="chatper.porting.CAVElib">
       <title>Porting to VR Juggler from the <trademark>CAVElib</trademark></title>
 
       <indexterm>
@@ -4731,7 +4881,7 @@ public:
           kernel. As described in earlier sections of this chapter, the first
           step is to derive a new application class from
           <classname>vrj::GlApp</classname>. For more information on
-          application objects, it may be helpful to review <xref linkend="ch2" />.
+          application objects, it may be helpful to review <xref linkend="chapter.app.basics" />.
           Briefly, the application class definition would appear similar to
           the following:</para>
 
@@ -4798,9 +4948,9 @@ public:
           </itemizedlist>
 
           <para>Readers who find some of these concepts unfamiliar are
-          encouraged to read <xref linkend="ogl-app-sect" />. For information
+          encouraged to read <xref linkend="section.opengl.apps" />. For information
           about context-specific data, refer to <xref
-          linkend="cs-data-intro-sec" />.</para>
+          linkend="section.csdata.intro" />.</para>
         </section>
       </section>
 
@@ -4882,9 +5032,9 @@ public:
           </itemizedlist>
 
           <para>For more information about the VR Juggler device interfaces,
-          refer to <xref linkend="ch3" />. A tutorial on getting device input
+          refer to <xref linkend="chapter.helper.classes" />. A tutorial on getting device input
           in VR Juggler applications can be found in <xref
-          linkend="get-input-sect" />.</para>
+          linkend="section.get.input" />.</para>
         </section>
       </section>
 
@@ -4956,7 +5106,7 @@ public:
           It is called once per display context after each context has become
           active. For a more detailed description of these concepts and a
           tutorial on how to use them, please refer to <xref
-          linkend="cs-data-intro-sec" />.</para>
+          linkend="section.csdata.intro" />.</para>
         </section>
       </section>
 
@@ -5118,7 +5268,7 @@ int main(int argc, char* argv[])
           kernel. As described in earlier sections of this chapter, the first
           step is to derive a new application class from
           <classname>vrj::GlApp</classname>. For more information on
-          application objects, it may be helpful to review <xref linkend="ch2" />.
+          application objects, it may be helpful to review <xref linkend="chapter.app.basics" />.
           Briefly, the application class definition would appear similar to
           the following:</para>
 
@@ -5185,9 +5335,9 @@ int main(int argc, char* argv[])
           </itemizedlist>
 
           <para>Readers who find some of these concepts unfamiliar are
-          encouraged to read <xref linkend="ogl-app-sect" />. For information
+          encouraged to read <xref linkend="section.opengl.apps" />. For information
           about context-specific data, refer to <xref
-          linkend="cs-data-intro-sec" />.</para>
+          linkend="section.csdata.intro" />.</para>
         </section>
       </section>
 
@@ -5259,9 +5409,9 @@ int main(int argc, char* argv[])
           </itemizedlist>
 
           <para>For more information about the VR Juggler device interfaces,
-          refer to <xref linkend="ch3" />. A tutorial on getting device input
+          refer to <xref linkend="chapter.helper.classes" />. A tutorial on getting device input
           in VR Juggler applications can be found in <xref
-          linkend="get-input-sect" />.</para>
+          linkend="section.get.input" />.</para>
         </section>
       </section>
 
@@ -5333,7 +5483,7 @@ int main(int argc, char* argv[])
           It is called once per display context after each context has become
           active. For a more detailed description of these concepts and a
           tutorial on how to use them, please refer to <xref
-          linkend="cs-data-intro-sec" />.</para>
+          linkend="section.csdata.intro" />.</para>
         </section>
       </section>
 
@@ -5439,10 +5589,10 @@ int main(int argc, char* argv[])
     </chapter>
   </part>
 
-  <part id="adv.topics.part">
+  <part id="part.advanced.topics">
     <title>Advanced Topics</title>
 
-    <chapter id="system.interaction.chapter">
+    <chapter id="chapter.system.interaction">
       <title>System Interaction</title>
 
       <para>In this part of the book, we present information for advanced
@@ -5454,7 +5604,7 @@ int main(int argc, char* argv[])
       understand.</para>
     </chapter>
 
-    <chapter id="multi-threading.chapter">
+    <chapter id="chatper.multi-threading">
       <title>Multi-threading</title>
 
       <indexterm>
@@ -5468,7 +5618,7 @@ int main(int argc, char* argv[])
       that readers already know the necessary background material and want to
       learn about how VR Juggler implements the concepts.</para>
 
-      <section id="multi-threading-sect">
+      <section id="section.multi-threading">
         <title>Techniques</title>
 
         <indexterm>
@@ -5507,7 +5657,7 @@ int main(int argc, char* argv[])
         </orderedlist>
       </section>
 
-      <section id="tutorial.intraFrame.section">
+      <section id="section.tutorial.intraFrame">
         <title>Tutorial: Perform Computations Asynchronously to Rendering with
         <methodname>intraFrame()</methodname></title>
 
@@ -5563,7 +5713,7 @@ int main(int argc, char* argv[])
           <para>The following code example shows the basics of declaring the
           class interface and data members for an application that will use
           context-specific data. This is an extension of the simple OpenGL
-          application presented in <xref linkend="simple-ogl-app-sect" />.
+          application presented in <xref linkend="section.simple.opengl.app" />.
           Note the addition of the <methodname>contextInit()</methodname>
           declaration and the use of the context-specific data member
           <varname>mCubeDlId</varname>.</para>
@@ -5640,16 +5790,16 @@ void MPApp::draw()
           <para>In the tutorial application code, perform the computations
           asynchronously to the rendering process by using
           <methodname>intraFrame()</methodname>. Recall from <xref
-          linkend="App.intraFrame.section" /> (in <xref
+          linkend="section.app.intraFrame" /> (in <xref
           linkend="frame.functions.section" />) that <methodname>intraFrame()</methodname>
           is invoked in parallel to the execution of <methodname>draw()</methodname>.</para>
         </section>
       </section>
 
-      <section id="multi-threading.classes.section">
+      <section id="section.multi-threading.classes">
         <title>Helper Classes</title>
 
-        <indexterm zone="multi-threading.classes.section">
+        <indexterm zone="section.multi-threading.classes">
           <primary>multi-threading</primary>
 
           <secondary>helper classes</secondary>
@@ -5664,16 +5814,16 @@ void MPApp::draw()
         more detailed information, refer to the <emphasis>VR Juggler Portable
         Runtime Programmer&#39;s Guide</emphasis>.</para>
 
-        <section id="using.vprThread.section">
+        <section id="section.using.vprThread">
           <title><classname>vpr::Thread</classname></title>
 
-          <indexterm zone="using.vprThread.section">
+          <indexterm zone="section.using.vprThread">
             <primary>multi-threading</primary>
 
             <secondary>vpr::Thread</secondary>
           </indexterm>
 
-          <indexterm zone="using.vprThread.section">
+          <indexterm zone="section.using.vprThread">
             <primary>vpr::Thread</primary>
           </indexterm>
 
@@ -5807,7 +5957,7 @@ void MPApp::draw()
           of the interface is not complete.</para>
         </section>
 
-        <section id="using.vprMutex.section">
+        <section id="section.using.vprMutex">
           <title>Using the <classname>vpr::Mutex</classname> Interface</title>
 
           <indexterm>
@@ -5840,7 +5990,7 @@ void MPApp::draw()
         <title>Using Data Buffering</title>
 
         <para>In the reader exercise from <xref
-        linkend="tutorial.intraFrame.section" />, we do not suggest the use of
+        linkend="section.tutorial.intraFrame" />, we do not suggest the use of
         mutexes to protect access to the data modified in
         <methodname>intraFrame()</methodname> and rendered in
         <methodname>draw()</methodname>. When the mesh is rendered, some
@@ -5852,10 +6002,10 @@ void MPApp::draw()
         in the computation and rendering being serialized. In so doing, we
         lose the value of parallelizing the computation and rendering.</para>
 
-        <section id="triple.buffering.section">
+        <section id="section.triple.buffering">
           <title>Triple Buffering</title>
 
-          <indexterm zone="triple.buffering.section">
+          <indexterm zone="section.triple.buffering">
             <primary>triple buffering</primary>
 
             <secondary>definition</secondary>
@@ -5928,10 +6078,10 @@ void MPApp::draw()
 }</programlisting>
         </section>
 
-        <section id="optimize.tribuffer.section">
+        <section id="section.optimize.tribuffer">
           <title>Optimizing Triple Buffering</title>
 
-          <indexterm zone="optimize.tribuffer.section">
+          <indexterm zone="section.optimize.tribuffer">
             <primary>triple buffering</primary>
 
             <secondary>optimization of</secondary>
@@ -5979,10 +6129,10 @@ Unlock Working Copy Mutex</programlisting>
           regardless of the size of the data buffers.</para>
         </section>
 
-        <section id="app.tribuffer.section">
+        <section id="section.app.tribuffer">
           <title>Using Triple Buffering in an Application</title>
 
-          <indexterm zone="app.tribuffer.section">
+          <indexterm zone="section.app.tribuffer">
             <primary>triple buffering</primary>
 
             <secondary>using in an application</secondary>
@@ -6029,17 +6179,17 @@ Unlock Working Copy Mutex</programlisting>
           computation and rendering. It is up to the reader to decide whether
           to use threads (refer to the documentation for
           <classname>vpr::Thread</classname> in <xref
-          linkend="using.vprThread.section" /> and in the online
+          linkend="section.using.vprThread" /> and in the online
           <emphasis>Programmer Reference</emphasis>) or to use
           <methodname>intraFrame()</methodname>. Either way, a single
           <classname>vpr::Mutex</classname> instance will be needed, so it may
-          be helpful to review <xref linkend="using.vprMutex.section" /> as
+          be helpful to review <xref linkend="section.using.vprMutex" /> as
           well.</para>
         </section>
       </section>
     </chapter>
 
-    <chapter id="run-time.reconfig.chapter">
+    <chapter id="chapter.runtime.reconfig">
       <title>Run-Time Reconfiguration</title>
 
       <indexterm>
@@ -6340,8 +6490,6 @@ jccl::ConfigChunkPtr ch = chunk-&#62;getProperty&#60;jccl::ConfigChunkPtr&#62;(&
                   <modifier>const</modifier>
                 </methodsynopsis>
 
-                <para></para>
-
                 <indexterm>
                   <primary>jccl::ConfigChunk</primary>
 
@@ -6366,14 +6514,253 @@ jccl::ConfigChunkPtr ch = chunk-&#62;getProperty&#60;jccl::ConfigChunkPtr&#62;(&
         </orderedlist>
       </section>
 
-      <section>
+      <section id="section.app.specific.config">
         <title>Tutorial: Using Application-Specific Configurations</title>
 
-        <para></para>
+        <indexterm>
+          <primary>tutorial</primary>
+
+          <secondary>using application-specific configurations</secondary>
+        </indexterm>
+
+        <table>
+          <title>Tutorial Overview</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>Description</entry>
+
+                <entry>Simple OpenGL application that draws a cube in the
+                environment</entry>
+              </row>
+
+              <row>
+                <entry>Objectives</entry>
+
+                <entry>Understand how the <methodname>configCanHandle()</methodname>
+                and <methodname>configAdd()</methodname> member functions in
+                <classname>jccl::ConfigChunkHandler</classname> work; create
+                application-specific configurations using JCCL</entry>
+              </row>
+
+              <row>
+                <entry>Member functions</entry>
+
+                <entry><itemizedlist><listitem><para><methodname>jccl::ConfigChunkHandler::configCanHandle()</methodname></para></listitem><listitem><para><methodname>jccl::ConfigChunkHandler::configAdd()</methodname></para></listitem><listitem><para><methodname>vrj::GlApp::draw()</methodname></para></listitem></itemizedlist></entry>
+              </row>
+
+              <row>
+                <entry>Directory</entry>
+
+                <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/ConfigApp</filename></entry>
+              </row>
+
+              <row>
+                <entry>Files</entry>
+
+                <entry><itemizedlist><listitem><para><filename>ConfigApp.desc</filename></para></listitem><listitem><para><filename>ConfigApp.config</filename></para></listitem><listitem><para><filename>ConfigApp.h</filename></para></listitem><listitem><para><filename>ConfigApp.cpp</filename></para></listitem></itemizedlist></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <section>
+          <title>Class Declaration</title>
+
+          <para>The following application class is called
+          <classname>ConfigApp</classname>. It is derived from
+          <classname>vrj::GlApp</classname> and has custom
+          <methodname>configCanHandle()</methodname>,
+          <methodname>configAdd()</methodname>, <methodname>init()</methodname>,
+          and <methodname>draw()</methodname> methods declared. Note that the
+          application declares several device interface members that are used
+          by the application for getting device data.</para>
+
+          <programlisting linenumbering="numbered">using namespace vrj;
+using namespace gadget;
+
+class simpleApp : public GlApp
+{
+public:
+   simpleApp();
+   virtual bool configCanHandle(jccl::ConfigChunkPtr element);
+   virtual bool configAdd(jccl::ConfigChunkPtr element);
+   virtual void init();
+   virtual void draw();
+
+public:
+   PositionInterface mWand;
+   DigitalInterface mButtons[3];
+
+   GLfloat mSurfaceColor_ll[3];
+   GLfloat mSurfaceColor_lr[3];
+   GLfloat mSurfaceColor_ur[3];
+   GLfloat mSurfaceColor_ul[3];
+};</programlisting>
+        </section>
+
+        <section>
+          <title>Application Configuration</title>
+
+          <note>
+            <para>Readers unfamiliar with the JCCL terminology should refer to
+            the JCCL documentation. We will not attempt to give a full
+            explanation of how JCCL works here.</para>
+          </note>
+
+          <para>In the example application ConfigApp, we will see how to
+          configure the color of the ground in the 3D scene using JCCL. The
+          configuration is based on a configuration element defition that
+          defines four properties, each with three values. The ground is
+          defined as a rectangular polygon, and each property corresponds to
+          one of the corners of the rectangle. The values of the property are
+          the red, green, and blue values for the color of the corresponding
+          corner vertex.</para>
+
+          <para>In <xref linkend="example.ConfigApp.desc" />, we show one part
+          of <filename>ConfigApp.desc</filename>. This contains many key
+          pieces of information. The <quote>token</quote> defines the type of
+          the configuration element(s) that will appear in a configuration
+          file. In our case, our element type is <quote>ConfigApp.</quote>
+          Next, the category for our configuration element is defined to be
+          <quote>Application.</quote> This is done to indicate that this is an
+          application-specific configuration definition. Finally, we see the
+          property description for the lower-left corner, which has three
+          floating-point values. The values have defaults of 1.0 for red, 0.0
+          for green, and 0.0 for blue. As such, the lower left corner vertex
+          color defaults to red. The property descriptions for the other three
+          corners are similar.</para>
+
+          <example id="example.ConfigApp.desc">
+            <title>Partial listing of <filename>ConfigApp.desc</filename></title>
+
+            <programlisting>&#60;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&#62;
+&#60;?org-vrjuggler-jccl-settings desc.db.version=&#34;2.1&#34;?&#62;
+&#60;ChunkDescDB&#62;
+  &#60;ChunkDesc token=&#34;ConfigApp&#34; name=&#34;ConfigApp&#34;&#62;
+    &#60;category&#62;Application&#60;/category&#62;
+    &#60;PropertyDesc name=&#34;Lower left corner color&#34; token=&#34;lowerLeftColor&#34; type=&#34;float&#34; variable=&#34;0&#34;&#62;
+      &#60;item label=&#34;Red value&#34; defaultvalue=&#34;1.0&#34; /&#62;
+      &#60;item label=&#34;Green value&#34; defaultvalue=&#34;0.0&#34; /&#62;
+      &#60;item label=&#34;Blue value&#34; defaultvalue=&#34;0.0&#34; /&#62;
+      &#60;help&#62;Specifies the RGB values for the lower left corner color.&#60;/help&#62;
+    &#60;/PropertyDesc&#62;
+   &#60;!-- Property definitions for the remaining three corners follow. --&#62;
+&#60;/ChunkDesc&#62;</programlisting>
+          </example>
+
+          <para>Using this configuration definition, we can create an instance
+          of our configuration type in a configuration file. An example
+          instance is shown in <xref linkend="example.ConfigApp.config" />.
+          Here, we see the configuration for all four corners of the
+          rectangular ground polygon. Note also that the definition file
+          <filename>ConfigApp.desc</filename> is included using an XML
+          processing instruction on line 3. This is done so that the JCCL
+          runtime will know how to handle our custom configuration element
+          type.</para>
+
+          <example id="example.ConfigApp.config">
+            <title><filename>ConfigApp.config</filename></title>
+
+            <programlisting>&#60;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&#62;
+&#60;?org-vrjuggler-jccl-settings config.db.version=&#34;2.1&#34;?&#62;
+&#60;?org-vrjuggler-jccl-includedesc file=&#34;ConfigApp.desc&#34;?&#62;
+&#60;ConfigChunkDB&#62;
+  &#60;ConfigApp name=&#34;Config App Example&#34;&#62;
+    &#60;lowerLeftColor&#62;1.0&#60;/lowerLeftColor&#62;
+    &#60;lowerLeftColor&#62;0.0&#60;/lowerLeftColor&#62;
+    &#60;lowerLeftColor&#62;0.0&#60;/lowerLeftColor&#62;
+    &#60;lowerRightColor&#62;1.0&#60;/lowerRightColor&#62;
+    &#60;lowerRightColor&#62;1.0&#60;/lowerRightColor&#62;
+    &#60;lowerRightColor&#62;0.0&#60;/lowerRightColor&#62;
+    &#60;upperRightColor&#62;0.0&#60;/upperRightColor&#62;
+    &#60;upperRightColor&#62;1.0&#60;/upperRightColor&#62;
+    &#60;upperRightColor&#62;0.0&#60;/upperRightColor&#62;
+    &#60;upperLeftColor&#62;0.0&#60;/upperLeftColor&#62;
+    &#60;upperLeftColor&#62;0.0&#60;/upperLeftColor&#62;
+    &#60;upperLeftColor&#62;1.0&#60;/upperLeftColor&#62;
+  &#60;/ConfigApp&#62;
+&#60;/ConfigChunkDB&#62;
+</programlisting>
+          </example>
+        </section>
+
+        <section>
+          <title>The <methodname>configCanHandle()</methodname> Member
+          Function</title>
+
+          <para>The implementation of <methodname>configCanHandle()</methodname>
+          is located in <filename>ConfigApp.cpp</filename>. It will be invoked
+          whenever a new configuration element is found, and its job is to
+          tell the JCCL Configuration Manager if it can be handled or not. The
+          full implementation is as follows:</para>
+
+          <programlisting>bool ConfigApp::configCanHandle(ConfigChunkPtr element)
+{
+   const std::string my_type(&#34;ConfigApp&#34;);
+
+   return (my_type == element-&#62;getDescToken());
+}
+</programlisting>
+
+          <para>We define the element type that the application knows how to
+          handle (named <quote>ConfigApp</quote>, as shown above), and we
+          return <constant>true</constant> if that type matches the type of
+          the newly loaded configuration element.</para>
+        </section>
+
+        <section>
+          <title>The <methodname>configAdd()</methodname> Member Function</title>
+
+          <para>When a configuration element matching our type is loaded, the
+          method <methodname>configAdd()</methodname> is invoked. The
+          parameter passed in is the full configuration element that was
+          loaded. The job of <methodname>configAdd()</methodname> is to read
+          the information from the configuration element and configure the
+          application based on what is read. In this specific case, we will
+          read color information used for coloring the ground polygon in the
+          scene. A partial implementation of <methodname>ConfigApp::configAdd()</methodname>
+          follows:</para>
+
+          <programlisting>bool ConfigApp::configAdd(jccl::ConfigChunkPtr element)
+{
+   const std::string ll_color(&#34;lowerLeftColor&#34;);
+
+   // Get the color settings for the lower left corner (ll).
+   for ( int i = 0; i &#60; element-&#62;getNum(ll_color); ++i )
+   {
+      mSurfaceColor_ll[i] = element-&#62;getProperty&#60;float&#62;(ll_color, i);
+   }
+
+   // Get the color settings for the other three corners ...
+}</programlisting>
+
+          <para>Note that we are reading the values from the property named
+          <quote>lowerLeftCorner.</quote> While we know that there are three
+          (3) values to read, we ask the configuration how many values it has
+          just to be safe.</para>
+        </section>
+
+        <section>
+          <title>The <methodname>draw()</methodname> Member Function</title>
+
+          <para>For this application, the draw() member function is not
+          terribly interesting. It renders the ground, and the colors for the
+          four vertices are set using the member variables. Of course, the
+          values for these member variables are set using the configuration
+          file, and that is the interesting aspect.</para>
+        </section>
+
+        <section>
+          <title>Exercise</title>
+
+          <para></para>
+        </section>
       </section>
     </chapter>
 
-    <chapter id="add.dev.driver.chapter">
+    <chapter id="chapter.add.device.driver">
       <title>Adding Device Drivers</title>
 
       <indexterm>
@@ -6387,6 +6774,95 @@ jccl::ConfigChunkPtr ch = chunk-&#62;getProperty&#60;jccl::ConfigChunkPtr&#62;(&
       drivers for use with VR Juggler applications.</para>
     </chapter>
   </part>
+
+  <glossary>
+    <title>Glossary of Terms</title>
+
+    <glossdiv>
+      <title>A</title>
+
+      <glossentry id="gloss.app.object">
+        <glossterm>application object</glossterm>
+
+        <glosssee>An instance of a C++ class that is given to the VR Juggler
+        kernel for execution. Such objects contain the visuals and the
+        interactions that make up a virtual world.</glosssee>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>D</title>
+
+      <glossentry id="gloss.daemon">
+        <glossterm>daemon</glossterm>
+
+        <glosssee>In UNIX-baed operating systems, a background process that
+        performs some job continuously while the computer is running. For
+        example, a web server runs a daemon (often called <command>httpd</command>)
+        that manages incoming HTTP requests.</glosssee>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>F</title>
+
+      <glossentry id="gloss.frame">
+        <glossterm>frame</glossterm>
+
+        <glosssee>In computer graphics terms, one iteration of a rendering
+        loop. In VR Juggler, a frame is one complete pass through an
+        application object&#39;s methods, beginning with
+        <methodname>vrj::App::preFrame()</methodname> and ending with
+        <methodname>vrj::App::postFrame()</methodname>. Methods called in
+        between include <methodname>vrj::App::intraFrame()</methodname> and
+        methods that are specific to a given graphics API.</glosssee>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>I</title>
+
+      <glossentry id="gloss.interface">
+        <glossterm>interface</glossterm>
+
+        <glosssee>An interface is a collection of operations used to specify a
+        service of a class or a component.</glosssee>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>P</title>
+
+      <glossentry id="gloss.proxy">
+        <glossterm>proxy</glossterm>
+
+        <glosssee>An intermediary that passes information between two parties.</glosssee>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>S</title>
+
+      <glossentry id="gloss.smart.pointer">
+        <glossterm>smart pointer</glossterm>
+
+        <glosssee>In C++ terminology, a smart pointer is a pointer-like object
+        where the pointer derference operators (-&#62; and *) are overloaded
+        to perform special functionality. This takes advantage of C++ operator
+        overloading to hide extra processing steps behind a familiar syntax.</glosssee>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>V</title>
+
+      <glossentry id="gloss.virtual.platform">
+        <glossterm>virtual platform</glossterm>
+
+        <glosssee></glosssee>
+      </glossentry>
+    </glossdiv>
+  </glossary>
 
   <index></index>
 </book>

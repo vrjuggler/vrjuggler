@@ -13,8 +13,11 @@ XML_FILES=	$(NAME).xml
 HTML_FILES=	$(NAME).html
 PDF_FILES=	$(NAME).pdf
 
-SVG_IMAGES=	figures/Kernel_Loop_Call_Sequence.svg		\
+SVG_IMAGES=	figures/AppHierarchy.svg			\
+		figures/GlAppHierarchy.svg			\
+		figures/Kernel_Loop_Call_Sequence.svg		\
 		figures/userOglApp_hierarchy.svg		\
+		figures/userOpenSGApp_hierarchy.svg		\
 		figures/userPfApp_hierarchy.svg
 IMAGES=		$(SVG_IMAGES:%.svg=%.png)
 
