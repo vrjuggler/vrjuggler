@@ -1,0 +1,133 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# =============================================================================
+# This file <make.defs.mk> provides variable information shared by all
+# makefiles in the Gadgeteer source tree.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+# All makefiles in the source tree should include this file for maximum
+# information sharing.
+# -----------------------------------------------------------------------------
+# Variables defined here are:
+#
+# mtreedir      - Base directory containing the mtree directory hierarchy
+#                 specifications.
+# releasedir    - The absolute path to the release directory.
+# scriptdir     - The path to the directory containing scripts used in the
+#                 build and install/release process.
+# topdir        - The top of the build tree.
+# GADROOT_ABS   - The absolute path to the root of the Gadgeteer source tree.
+# GAD_SHARE_DIR - The name of the directory where the Gadgeteer data files,
+#                 test programs, and sample apps are installed.  This is
+#                 only the name of the directory, not the full path to it.
+#
+# MKDEPS_CC     - Compiler for C dependencies.
+# MKDEPS_CXX    - Compiler for CXX dependencies.
+# MKINSTALLDIRS - Path to shell script for making directories.
+# MKPATH        - Path to shared dpp.*.mk file directory.
+# MTREE_CMD     - Path to a BSD-compatible mtree.
+#
+# ABI           - Application Binary Interface type.  This may be used for
+#                 other binary types when supported by the operating system
+#                 (e.g., "ELF", "N32" or "64").
+# ISA           - Instruction Set Architecture.  This may be used for other
+#                 binary types when supported by the operating system (e.g.,
+#                 "mips3" or "i386").
+# LIBBITSUF     - Suffix for the library path used by the linker on IRIX only.
+#                 For n32 binaries, it will be 32.  For 64-bit binaries, it
+#                 will be 64.
+#
+# GAD_LIBRARY    - The base name of the core Juggler library that will be built
+#                 with no file extension.
+# UTILS_LIBRARY - The base name of the Juggler utility library with no file
+#                 extension.
+# GL_LIBRARY    - The base name of the OpenGL Juggler API library with no file
+#                 extension.
+# PF_LIBRARY    - The base name of the Performer Juggler API library with no
+#                 file extension.
+# AW_LIBRARY    - The base name of the Juggler AudioWorks sound engine
+#                 library with no file extension.
+# SL_LIBRARY    - The base name of the Juggler SL sound engine library with no
+#                 file extension.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Base variables needed by all makefiles.
+# -----------------------------------------------------------------------------
+mtreedir	= $(topdir)/mtree
+releasedir	= @JUGGLERROOT_ABS@/release
+scriptdir	= $(releasedir)/scripts
+topdir		= @topdir@
+top_srcdir	= @top_srcdir@
+MAKEFLAGS	+= --no-print-directory
+MKDEPS_CC	= @CC@
+MKDEPS_CXX	= @CXX@
+MKINSTALLDIRS	= $(scriptdir)/mkinstalldirs
+MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
+MTREE_CMD	= @MTREE_CMD@
+GADROOT_ABS	= @GADROOT_ABS@
+JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
+GAD_SHARE_DIR	= @GAD_SHARE_DIR@
+
+# -----------------------------------------------------------------------------
+# Extra information for the Doozer++ file common.defs.mk.
+# -----------------------------------------------------------------------------
+EXTRA_CFLAGS		= $(CFLAGS_DYNLIB)
+EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB)
+EXTRA_DEFS		= -DGAD_SHARE_DIR=\"$(GAD_SHARE_DIR)\" -D_GAD_BUILD_
+EXTRA_DEPEND_FLAGS	= -I$(GADROOT_ABS)
+EXTRA_INCLUDES		= -I$(top_srcdir)
+
+# -----------------------------------------------------------------------------
+# Makedepend commands
+# -----------------------------------------------------------------------------
+MKDEPS_C	= $(MKDEPS_CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+MKDEPS_CXX	= $(MKDEPS_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
+
+# -----------------------------------------------------------------------------
+# Platform- and binary-specific options.  The assignments preceding the
+# ifeq ... endif blocks are the default values.  Depending on the value of
+# $(ABI), further settings may be made to allow for building with multiple
+# ABIs.
+# -----------------------------------------------------------------------------
+ifdef gadABI
+    dppABI	= $(gadABI)
+endif
+
+# -----------------------------------------------------------------------------
+# Library names.
+# -----------------------------------------------------------------------------
+GAD_LIBRARY	= @LIB_PREFIX@gad
+
+include $(topdir)/common.defs.mk

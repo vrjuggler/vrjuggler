@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/vrj/Input/Devices/Open.  It requires GNU make.
+# Makefile.in for gadgeteer/gad/Devices/Open.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -40,7 +40,7 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= vrj/Input/Devices/Open/
+DIRPRFX		= gad/Devices/Open/
 
 # Subdirectories to compile.
 SUBDIR		= DTK		\
