@@ -121,19 +121,40 @@ DPP_HAVE_GNU_MAKE([3.78], ,
 DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 DPP_PROG_INSTALL
 
-AC_PATH_PROG(PYTHON, python, no, [$PYTHON_ROOT/bin:$PATH])
+if test "x$OS_TYPE" = "xWin32" ; then
+   python_root_cyg=`$CYGPATH -u $PYTHON_ROOT`
+   python_path="$python_root_cyg:$python_root_cyg/bin:$PATH"
+else
+   python_path="$PYTHON_ROOT/bin:$PATH"
+fi
+
+AC_PATH_PROG(PYTHON, python, no, [$python_path])
 
 if test "x$PYTHON" = "xno" ; then
-   AC_MSG_WARN([*** python is required to run Pyste ***])
-else
-   AC_CHECK_FILE([$PYSTE], , [AC_MSG_WARN([*** pyste.py does not exist ***])])
+   AC_MSG_ERROR([*** Python is required for building PyJuggler ***])
 fi
+
+AC_CHECK_FILE([$PYSTE], , [AC_MSG_WARN([*** pyste.py does not exist ***])])
 
 AC_MSG_CHECKING([for Python version])
 changequote(<<, >>)
-PYTHON_VERSION=`echo "import sys; print sys.version[:3]" | $PYTHON -`
+PYTHON_VERSION=`$PYTHON -c "import sys; print sys.version[:3]"`
 changequote([, ])
 AC_MSG_RESULT([$PYTHON_VERSION])
+
+AC_MSG_CHECKING([for suffix of Python extension modules])
+changequote(<<, >>)
+
+PYMOD_EXT=`$PYTHON -c "import distutils.sysconfig; print distutils.sysconfig.get_config_var('SO')"`
+
+# This is a fallback in case Python fails to tell us the file extension it
+# prefers.
+if test "x" = "x$PYMOD_EXT"; then
+   PYMOD_EXT=".$DYNAMICLIB_EXT"
+fi
+
+changequote([, ])
+AC_MSG_RESULT([$PYMOD_EXT])
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
@@ -306,6 +327,7 @@ AC_SUBST(OSG_LIBS)
 AC_SUBST(PYTHON_ROOT)
 AC_SUBST(PYTHON_INCLUDES)
 AC_SUBST(PYTHON_LIB)
+AC_SUBST(PYMOD_EXT)
 AC_SUBST(UTIL_LIB)
 AC_SUBST(PYTHON_LIB_DEPS)
 AC_SUBST(PYTHON_LDFLAGS)

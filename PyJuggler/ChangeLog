@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-20-2003 patrickh    Split PyJuggler back up into multiple Python modules.
+                        On Windows, the modules have the extension .pyd.
+                        NEW VERSION: 0.8.2
 Aug-18-2003 patrickh    Exposed vrj::OsgApp so that developers can combine
                         PyJuggler and PyOSG.
                         NEW VERSION: 0.8.1

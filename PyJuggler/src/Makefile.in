@@ -43,11 +43,17 @@ INCLUDES=	$(shell vrjuggler-config --includes) -I$(top_srcdir)	\
 PYTHON=		@PYTHON@
 PYSTE=		$(PYTHON) @PYSTE@ $(INCLUDES)
 
+VPR_LIBS=		$(shell vpr-config --libs)
+VPR_EXTRA_LIBS=		$(shell vpr-config --extra-libs)
+JCCL_LIBS=		$(shell jccl-config --libs)
+JCCL_EXTRA_LIBS=	$(shell jccl-config --extra-libs)
+GADGET_LIBS=		$(shell gadgeteer-config --libs)
+GADGET_EXTRA_LIBS=	$(shell gadgeteer-config --extra-libs)
 VJ_LIBS=		$(shell vrjuggler-config --libs)
 VJ_EXTRA_LIBS=		$(shell vrjuggler-config --extra-libs)
 
 PYTHON_VERSION=		@PYTHON_VERSION@
-PYTHON_PACKAGES=	$(prefix)/lib/python$(PYTHON_VERSION)/site-packages
+PYTHON_PACKAGES=	$(prefix)/lib/python$(PYTHON_VERSION)/site-packages/PyJuggler
 
 PYTHON_LDFLAGS=		@PYTHON_LIB_DEPS@
 BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS@
@@ -58,7 +64,7 @@ LDFLAGS=		@EXTRA_LINK_FLAGS@ $(BOOST_PYTHON_LDFLAGS)	\
 
 PYJUTIL_LIB=		@PYJUTIL_LDFLAGS@
 
-DLLEXT=			@DYNAMICLIB_EXT@
+PYMOD_EXT=		@PYMOD_EXT@
 DYLIB_NAME_FLAG=	@DYLIB_NAME_FLAG@
 OBJEXT=			@OBJEXT@
 OBJ_NAME_FLAG=		@OBJ_NAME_FLAG@
@@ -68,16 +74,18 @@ PYSTE_FILES=	vpr.pyste	\
 		gadget.pyste	\
 		vrj.pyste
 
-MODS=		PyJuggler.$(DLLEXT)
+MODS=		$(addprefix mods/, $(PYSTE_FILES:.pyste=$(PYMOD_EXT)))
 
 VPR_SRCS= \
 	vpr/_GUID.cpp		\
 	vpr/_Interval.cpp	\
-	vpr/_ReturnStatus.cpp
+	vpr/_ReturnStatus.cpp	\
+	vpr/vpr.cpp
 
 JCCL_SRCS= \
 	jccl/_ConfigElement.cpp		\
-	jccl/_ConfigElementHandler.cpp
+	jccl/_ConfigElementHandler.cpp	\
+	jccl/jccl.cpp
 
 GADGET_SRCS= \
 	gadget/_Analog.cpp				\
@@ -97,7 +105,8 @@ GADGET_SRCS= \
 	gadget/_PositionInterface.cpp			\
 	gadget/_PositionProxy.cpp			\
 	gadget/_gadget_Type_EventWindow_Event_h.cpp	\
-	gadget/_gadget_Type_EventWindow_Keys_h.cpp
+	gadget/_gadget_Type_EventWindow_Keys_h.cpp	\
+	gadget/gadget.cpp
 
 VRJ_SRCS= \
 	vrj/_App.cpp			\
@@ -109,7 +118,8 @@ VRJ_SRCS= \
 	vrj/_Projection.cpp		\
 	vrj/_SimViewport.cpp		\
 	vrj/_User.cpp			\
-	vrj/_Viewport.cpp
+	vrj/_Viewport.cpp		\
+	vrj/vrj.cpp
 
 # Add the Open Scene Graph build bits if OSG is available.
 ifeq (@HAVE_OSG@, Y)
@@ -124,8 +134,7 @@ JCCL_OBJS=	$(JCCL_SRCS:.cpp=.$(OBJEXT))
 GADGET_OBJS=	$(GADGET_SRCS:.cpp=.$(OBJEXT))
 VRJ_OBJS=	$(VRJ_SRCS:.cpp=.$(OBJEXT))
 
-OBJS=		$(VPR_OBJS) $(JCCL_OBJS) $(GADGET_OBJS) $(VRJ_OBJS)	\
-		PyJuggler.$(OBJEXT)
+OBJS=		$(VPR_OBJS) $(JCCL_OBJS) $(GADGET_OBJS) $(VRJ_OBJS)
 
 vpath %.cpp $(srcdir)
 vpath %.pyste $(srcdir)/../pyste
@@ -146,6 +155,7 @@ all:
 	if [ ! -d jccl ] ; then mkdir jccl ; fi
 	if [ ! -d gadget ] ; then mkdir gadget ; fi
 	if [ ! -d vrj ] ; then mkdir vrj ; fi
+	if [ ! -d mods ] ; then mkdir mods ; fi
 	$(MAKE) modules
 	$(MAKE) prefix="$(topdir)" install
 
@@ -153,6 +163,7 @@ modules: $(MODS)
 
 install:
 	$(MKINSTALLDIRS) $(PYTHON_PACKAGES)
+	cp $(top_srcdir)/dist/__init__.py $(PYTHON_PACKAGES)
 	cp -p $(MODS) $(PYTHON_PACKAGES)
 
 # Rule for generating a .cpp file from a .pyste file.
@@ -162,12 +173,24 @@ install:
 %.$(OBJEXT): %.cpp
 	$(CXX) $(CXXFLAGS) $(OBJ_NAME_FLAG) -c $<
 
-%.$(DLLEXT): %.$(OBJEXT)
+%$(PYMOD_EXT): %.$(OBJEXT)
 	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $< $(LDFLAGS) $(LIBS) $(EXTRA_LIBS)
 
-PyJuggler.$(DLLEXT): $(OBJS)
-	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(OBJS) $(LDFLAGS)		\
-          $(PYJUTIL_LIB) $(VJ_LIBS) $(VJ_EXTRA_LIBS)
+mods/vpr$(PYMOD_EXT): $(VPR_OBJS)
+	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(VPR_OBJS) $(LDFLAGS)		\
+          $(VPR_LIBS) $(VPR_EXTRA_LIBS)
+
+mods/jccl$(PYMOD_EXT): $(JCCL_OBJS)
+	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(JCCL_OBJS) $(LDFLAGS)	\
+          $(JCCL_LIBS) $(JCCL_EXTRA_LIBS)
+
+mods/gadget$(PYMOD_EXT): $(GADGET_OBJS)
+	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(GADGET_OBJS) $(LDFLAGS)	\
+          $(GADGET_LIBS) $(GADGET_EXTRA_LIBS)
+
+mods/vrj$(PYMOD_EXT): $(VRJ_OBJS)
+	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(VRJ_OBJS) $(PYJUTIL_LIB)	\
+          $(LDFLAGS) $(VJ_LIBS) $(VJ_EXTRA_LIBS)
 
 clean:
 	rm -f $(OBJS)
