@@ -4,6 +4,8 @@
 #include <vpr/vpr.h>
 #include <vrj/vrjConfig.h>
 
+#include <vpr/Util/Assert.h>
+
 #include <vrj/Test/Message.h>
 #include <vrj/Test/Test.h>
 
@@ -31,7 +33,7 @@ class TestFailure : public std::exception
 public:
    TestFailure(Test* failedTest, vrj::test::Message message, 
                const std::string& fileName, int lineNumber) throw()
-      : mMessage(message), 
+      : mFailedTest(failedTest), mMessage(message), 
         mFileName(fileName), mLineNumber(lineNumber)
    {
 
@@ -57,9 +59,14 @@ public:
 
    std::string getFullDescription()
    {
+      vprASSERT(NULL != mFailedTest);
+
       std::stringstream oss;
-      oss << getFailedTestName() << ": " << getFileName() << ": line:" << getLineNumber() 
-          << ": " << getMessage().shortDesc() << " -- " << getMessage().details();
+      oss << getFailedTestName() << ": ";
+      oss << getFileName() << ": line:";
+      oss << getLineNumber() << ": ";
+      oss << getMessage().shortDesc();
+      oss << " -- " << getMessage().details();
       return oss.str();
    }
 
