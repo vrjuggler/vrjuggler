@@ -38,4 +38,10 @@ public abstract class EditorConstants
    public static final String resourceBase = "org/vrjuggler/vrjconfig/customeditors/display_window";
 
    public static final String imageBase = resourceBase + "/images";
+
+   public static final String displayWindowType = "display_window";
+
+   public static final String simulatorViewportType = "simulator_viewport";
+
+   public static final String surfaceViewportType = "surface_viewport";
 }

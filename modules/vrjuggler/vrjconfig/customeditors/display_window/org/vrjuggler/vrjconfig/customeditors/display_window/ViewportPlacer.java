@@ -185,7 +185,7 @@ public class ViewportPlacer
             ImageIcon icon, scaled_icon;
 
             // XXX: Come up with a cleaner way to do this.
-            if ( ((ConfigElement) placer.getModel().getElement(index)).getDefinition().getToken().equals("surface_viewport") )
+            if ( ((ConfigElement) placer.getModel().getElement(index)).getDefinition().getToken().equals(EditorConstants.surfaceViewportType) )
             {
                icon = surfaceIcon;
                scaled_icon = scaledSurfaceIcon;
