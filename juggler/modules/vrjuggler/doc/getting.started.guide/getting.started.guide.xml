@@ -520,7 +520,7 @@ value</screen>
             required to compile and run any Juggler application. It should be
             set to the base directory of the installed VR Juggler library. For
             example, if you downloaded a UNIX version of VR Juggler 2.0 and
-            extracted it to the directory <filename>/home/software/</filename>,
+            extracted it to the directory <filename>/home/software</filename>,
             you would set <envar>VJ_BASE_DIR</envar> with this command:</para>
 
             <screen>% VJ_BASE_DIR = /home/software/vrjuggler-2.0</screen>
@@ -533,13 +533,22 @@ value</screen>
             which can be used as a VR Juggler base:</para>
 
             <screen>% VJ_BASE_DIR = $HOME/juggler/my_build_dir/instlinks</screen>
+          </listitem>
+        </varlistentry>
 
-            <para>In any case, on a Win32 platform, you should use /&#39;s as
-            the path separator for <envar>VJ_BASE_DIR</envar> rather than
-            \&#39;s. The compiler tools can handle either, and the utilities
-            in <filename>juggler-tools</filename> will behave much better if
-            UNIX-style paths are used. It is safe to use the drive letter at
-            the start of the path (e.g., <filename>C:/software/vrjuggler-2.0</filename>).</para>
+        <varlistentry>
+          <term>VJ_DEPS_DIR</term>
+
+          <listitem>
+            <para>This variable provides the path to the complete set of
+            bundled VR Juggler dependencies (Boost, CppDOM, OpenAL, etc.). It
+            is used by scripts such as <command>vrjuggler-config</command> and
+            by the Visual C++ project files that come with the sample
+            applications. If you downloaded the dependencies as a separate
+            package, set this environment variable to the path where that
+            package was installed. If the dependencies are bundled in the same
+            tree as VR Juggler, then this environment variable does not have
+            to be set.</para>
           </listitem>
         </varlistentry>
 
@@ -556,9 +565,11 @@ value</screen>
             <para>Depending on your shell, you may need to run the
             <command>rehash</command> command after executing the above.</para>
 
-            <para>Windows users must also include the <filename>$VJ_BASE_DIR/lib</filename>
-            directory in their <envar>PATH</envar> setting. This is so that
-            the VR Juggler DLLs will be found when an application is executed.</para>
+            <para>Windows users must also include the directories
+            <filename>$VJ_DEPS_DIR/bin</filename>, <filename>$VJ_DEPS_DIR/lib</filename>,
+            and <filename>$VJ_BASE_DIR/lib</filename> in their <envar>PATH</envar>
+            setting. This is so that the DLLs for VR Juggler and its
+            dependencies will be found when an application is executed.</para>
           </listitem>
         </varlistentry>
 
@@ -585,7 +596,7 @@ value</screen>
 
           <listitem>
             <para>UNIX/Linux systems use these environment variables to find
-            dynamically loaded libraries, such as <filename>libJuggler.so</filename>.
+            dynamically loaded libraries, such as <filename>libvrj.so</filename>.
             Unless you are building everything with static libraries, you will
             need to set these to include the VR Juggler library directory
             (under <envar>VJ_BASE_DIR</envar>). IRIX supports several
@@ -597,12 +608,16 @@ value</screen>
 
             <screen>% LD_LIBRARY_PATH = $VJ_BASE_DIR/lib</screen>
 
+            <para>If you have <envar>VJ_DEPS_DIR</envar> set and it is not the
+            same as <envar>VJ_BASE_DIR</envar>, then <envar>$VJ_DEPS_DIR/lib</envar>
+            also needs to be in <envar>LD_LIBRARY_PATH</envar>.</para>
+
             <note>
               <para>On some SGI systems running IRIX, users of the MIPSpro
-              Compilers (version 7.3) will need to add another directory as
+              Compilers (version 7.3) may need to add another directory as
               follows:</para>
 
-              <screen>% LD_LIBRARY_PATH = $LD_LIBRARY_PATH:/usr/lib32/cmplrs:$VJ_BASE_DIR</screen>
+              <screen>% LD_LIBRARY_PATH = $LD_LIBRARY_PATH:/usr/lib32/cmplrs:$VJ_BASE_DIR/lib32</screen>
             </note>
           </listitem>
         </varlistentry>
