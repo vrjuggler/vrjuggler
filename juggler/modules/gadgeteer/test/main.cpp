@@ -23,98 +23,130 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
+ * File:          main.cpp,v
+ * Date modified: 2003/07/10 23:59:01
+ * Version:       1.18
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <iostream>
 
-#include <jccl/Config/ConfigDefinitionRepository.h>
+// Minimal VPR includes
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <vpr/Util/FileUtils.h>
+
+// Minimal JCCL includes
+#include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ElementFactory.h>
-#include <jccl/Config/Configuration.h>
+#include <jccl/RTRC/ConfigManager.h>
+
+// Interfaces to devices
 #include <gadget/InputManager.h>
 #include <gadget/Type/PositionInterface.h>
-#include <vrj/Math/Coord.h>
-#include <vpr/System.h>
 
+#include <gmtl/Matrix.h>
+#include <gmtl/Output.h>
 
-#define CHUNK_DESC_LOCATION "/home/users/allenb/Source/juggler/Data/chunksDesc"
-#define CONFIG_LOCATION "/home/users/allenb/.vjconfig/activeConfig"
+#include <string>
 
-int main()
+using namespace gmtl;
+
+// Set some default configuration. Based on the initialiser for vrj::Kernel.
+// Last taken from 2.0alpha4
+
+void configuration()
+{	
+  // Load in the configuration definitions
+  std::string def_path;
+  if ( ! vpr::System::getenv("JCCL_DEFINITION_PATH", def_path).success() )
+    {
+      def_path = "${VJ_BASE_DIR}/share/vrjuggler/data/definitions";
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+	<< "JCCL_DEFINITION_PATH environment variable not set.\n"
+	<< vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+	<< "Defaulting to " << def_path << std::endl << vprDEBUG_FLUSH;
+    }
+  jccl::ElementFactory::instance()->loadDefs(def_path);
+   
+  std::string cfg_path;
+
+  // Set the configuration file directory
+  if ( ! vpr::System::getenv("JCCL_CFG_PATH", cfg_path).success() )
+    {
+      if ( vpr::System::getenv("VJ_CFG_PATH", cfg_path).success() )
+	{
+	  vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "JCCL_CFG_PATH environment variable not set.\n"
+            << vprDEBUG_FLUSH;
+	  vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Using VJ_CFG_PATH instead.\n" << vprDEBUG_FLUSH;
+	}
+      // Neither $JCCL_CFG_PATH nor $VJ_CFG_PATH is set, so use what basically
+      // amounts to a hard-coded default.
+      else
+	{
+	  cfg_path = "${VJ_BASE_DIR}/share/vrjuggler/data/configFiles";
+	  vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Neither JCCL_CFG_PATH nor VJ_CFG_PATH is set.\n"
+            << vprDEBUG_FLUSH;
+	  vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+	    << "Defaulting to " << cfg_path << std::endl << vprDEBUG_FLUSH;
+	  cfg_path = vpr::replaceEnvVars(cfg_path);
+	}
+      jccl::ParseUtil::setCfgSearchPath(cfg_path);
+    }
+}
+
+int main(int argc, char* argv[])
 {
-   // --- Load configuration definitions -- //
-   jccl::ConfigElementRepository defs;
-   bool load_worked = defs.load(CHUNK_DESC_LOCATION);
-   jccl::ElementFactory::instance()->addDefs(&defs);
 
-   if(!load_worked)
-      std::cerr << "Could not load definitions's\n" << std::flush;
+  // Set some default configuration variables
+  configuration();
 
-   std::cout << defs << "\n----------------------------------------"
-             << std::endl;
+  // Load in the configuration file
+  for( int i = 1; i < argc; ++i )
+    {
+      jccl::Configuration cfg;
+      std::cout
+	<< "Loading config file: " << argv[i] << std::endl;
+      cfg.load(argv[i]);
+      jccl::ConfigManager::instance()->addConfigurationAdditions(&cfg);
+    }
+  
+  // Create the input manager
+  gadget::InputManager*  input_manager = gadget::InputManager::instance();
 
-   // -- Load config -- //
-   jccl::Configuration cfg;
-   load_worked = cfg.load(CONFIG_LOCATION);
-   if(!load_worked)
-      std::cerr << "Could not load config file\n" << std::flush;
+  // Associate it with the config files
+  jccl::ConfigManager::instance()->addConfigElementHandler(input_manager);
 
-   std::cout << "Printing configuration:" << std::endl;
-   std::cout << cfg << std::endl;
+  // Do the configuration
+  while(jccl::ConfigManager::instance()->attemptReconfiguration());
 
-   gadget::InputManager *input_manager = new gadget::InputManager;
-   std::cout << "vjInputManager created" << std::endl;
+  // Create the input devices
+  gadget::PositionInterface  wand;    
+  gadget::PositionInterface  head;    
 
-   // --- configure the input manager -- //
-   for ( jccl::Configuration::iterator i = cfg.begin(); i != cfg.end(); ++i )
-   {
-      input_manager->configAdd(*i);
-   }
+  wand.init("VJWand");
+  head.init("VJHead");
 
-   std::cout << "new devices have been added..\n\n";
+  Matrix44f wand_matrix;
+  Matrix44f head_matrix;
 
-   std::cout << input_manager << std::endl;
-
-   std::cout << "Sleeping..." << std::flush;
-   vpr::System::sleep(2);
-   std::cout << "awake." << std::endl << std::flush;
-
-      // get the indices for the devices
-   gadget::PositionProxy* head_proxy =
-      dynamic_cast<gadget::PositionProxy*>(input_manager->getProxy("VJHead"));
-   gadget::PositionProxy* wand_proxy =
-      dynamic_cast<gadget::PositionProxy*>(input_manager->getProxy("VJWand"));
-
-   for (int l = 0; l <30; l++)
-   {
+  while(1)
+    {
       vpr::System::sleep (1);
       std::cout << "Updating All Data .. " << std::endl;
       input_manager->updateAllData();
 
+      wand_matrix = wand->getData();
+      std::cout << "Wand pos: \n" << wand_matrix << std::endl;
 
-      vrj::Matrix* pd_head = head_proxy->getData();
-      vrj::Matrix* pd_wand = wand_proxy->getData();
+      head_matrix = head->getData();
+      std::cout << "Head pos: \n" << head_matrix << std::endl;
 
-      std::cout << "-------------------------------------\n";
-      std::cout << "head:\n" << *pd_head << std::endl;
-      vrj::Coord head_coord(*pd_head);
-      std::cout << "\tpos:" << head_coord.pos << std::endl;
-      std::cout << "\tor:" << head_coord.orient << std::endl;
+    }
 
-      std::cout << "wand:\n" << *pd_wand << std::endl << std::flush;
-      vrj::Coord wand_coord(*pd_wand);
-      std::cout << "\tpos:" << wand_coord.pos << std::endl;
-      std::cout << "\tor:" << wand_coord.orient << std::endl;
-      std::cout << "-------------------------------------\n\n";
-   }
-
-
-   // -- Delete the garabage --- //
-   delete input_manager;
-
-   return 0;
+  return 0;
 }
