@@ -209,7 +209,7 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
       NetworkGraph::net_vertex_t next_next_hop;
 
       // Pass the message on to the next line.
-      if ( msg->getNextHop(next_next_hop).success() )
+      if ( msg->getNextHop(next_next_hop, false).success() )
       {
          NetworkGraph::net_edge_t next_line;
          bool got_next_line;
@@ -219,6 +219,10 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
          boost::tie(next_line, got_next_line) = mGraph.getEdge(next_hop,
                                                                next_next_hop);
          vprASSERT(got_next_line && "Edge between nodes not found!");
+
+         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+            << "Controller::moveMessage(): Passing message on to next hop -- "
+            << next_line << "\n" << vprDEBUG_FLUSH;
 
          dir = mGraph.isSource(next_hop, next_line) ? NetworkLine::FORWARD
                                                     : NetworkLine::REVERSE;
