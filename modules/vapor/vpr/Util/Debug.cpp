@@ -62,10 +62,16 @@ TSObjectProxy<std::vector<int> > gVprDebugCurColumn;       // What column to ind
 TSObjectProxy<std::vector<std::string> > gVprDebugCurColor;        // What color to display "everything" in
 
 // Register DEBUG categories
+/*
+
+NOTE: These primitive types are instead registered by the constructor (Debug::Debug) directly
+as to avoid any initialization order dependencies.
+
 vprREGISTER_DBG_CATEGORY(vprDBG_ALL, DBG_ALL, "DBG:");
 vprREGISTER_DBG_CATEGORY(vprDBG_ERROR, DBG_ERROR, "ERR:");
 vprREGISTER_DBG_CATEGORY(vprDBG_SIM, DBG_SIM, "I'm a little simulator:");
 vprREGISTER_DBG_CATEGORY(vprDBG_VPR, DBG_VPR, "VPR:");
+*/
 
 
 vprSingletonImp(Debug);
@@ -105,8 +111,12 @@ Debug::Debug()
       std::cout << "VPR_DEBUG_ENABLE: Defaults to " << mDebugEnabled
                 << std::endl << std::flush;
    }
-   
-//   updateAllowedCategories();
+
+   // --- Register primitive categories --- //
+   addCategory(vprDBG_ALL, "DBG_ALL", "DBG:");
+   addCategory(vprDBG_ERROR, "DBG_ERROR", "ERR:");
+   addCategory(vprDBG_SIM, "DBG_SIM", "I'm a little simulator:");
+   addCategory(vprDBG_VPR, "DBG_VPR", "VPR:");
 }
 
 std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool show_thread_info,
