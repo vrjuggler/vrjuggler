@@ -208,6 +208,7 @@ install:
 	@echo "------------------------------------------------"
 	@echo "Installing plugins"
 	@echo "------------------------------------------------"
+ifneq ($(DYNAMIC_LIBS), )
 ifeq ($(BUILD_TYPE), dbg)
 	@for lib in $(DYNAMIC_LIBS) ; do				\
 		$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
@@ -232,6 +233,7 @@ ifeq ($(BUILD_TYPE), prof)
 			$(plugindir)/$$lib.$(DYNAMICLIB_EXT) ; \
 	done
 endif
+endif # ifneq ($(DYNAMIC_LIBS), )
 
 include $(MKPATH)/dpp.subdir.mk
 
