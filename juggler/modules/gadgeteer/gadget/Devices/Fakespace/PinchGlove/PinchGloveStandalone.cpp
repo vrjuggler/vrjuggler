@@ -86,10 +86,10 @@ PinchGloveStandalone::~PinchGloveStandalone()
 }
 
 // Connect to the pinch glove hardware
-bool PinchGloveStandalone::connectToHardware(const char* const ttyPort)
+bool PinchGloveStandalone::connectToHardware(const char* const ttyPort, int mBaudRate)
 {
     std::cout<<"\n[pinch] Connecting To Fakespace Hardware\n"<<std::flush;
-    int result = mConnectToHardware( ttyPort );
+    int result = mConnectToHardware( ttyPort , mBaudRate);
     if (result == 1)
     {
         std::cout<<"[pinch] Connected to pinch glove hardware on port "<<ttyPort<<"\n"<<std::flush;
@@ -130,12 +130,12 @@ void PinchGloveStandalone::updateStringFromHardware()
 
 // send to hardware methods:
 
-int PinchGloveStandalone::mConnectToHardware(const char* const ttyPort)
+int PinchGloveStandalone::mConnectToHardware(const char* const ttyPort, int baud)
 {
     const int BUFFER_LEN = 100;
     unsigned char buf[BUFFER_LEN];
     int cnt;
-    long int baud;
+    //long int baud;
 
     //CREATE A NEW SERIAL PORT
     port = new vpr::SerialPort(ttyPort);
@@ -150,7 +150,7 @@ int PinchGloveStandalone::mConnectToHardware(const char* const ttyPort)
     else
     {
         std::cout<<"[pinch] Port ("<<ttyPort<<") open success\n"<<std::flush;
-        baud = 9600;
+        //baud = 9600;
         port->clearAll();
         port->enableLocalAttach();
         port->enableBreakByteIgnore();
@@ -236,7 +236,6 @@ int PinchGloveStandalone::mSendCommandToHardware(const char* const command, unsi
             usleep(450000);
             port->read(&buf[0], 3,written, vpr::Interval::NoWait);
         }
-        usleep(450000);
     }
 
 
@@ -271,7 +270,7 @@ int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, unsig
     records[0] = 0;
     written = 0;
 
-    usleep(150000);
+    //usleep(150000);
 
     status = port->read(&buf[0], 1, written, vpr::Interval::NoWait);
 
@@ -305,7 +304,7 @@ int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, unsig
            t1 = t2;
 		   t2 = clock();
         }
-        usleep(150000);
+        //usleep(150000);
     }
     return numbytes;
 }
