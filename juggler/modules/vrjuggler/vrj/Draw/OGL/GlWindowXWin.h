@@ -68,7 +68,7 @@ class GlWindowXWin: public vrj::GlWindow, public gadget::KeyboardXWin
 {
 public:
     GlWindowXWin();
-    ~GlWindowXWin();
+    virtual ~GlWindowXWin();
 
     void swapBuffers();
     int open();
