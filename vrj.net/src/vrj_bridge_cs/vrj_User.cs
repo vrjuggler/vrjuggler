@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -92,6 +92,7 @@ public class User
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
@@ -115,6 +116,8 @@ public class User
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(gadget.PositionProxyMarshaler))]
    private extern static gadget.PositionProxy vrj_User_getHeadPosProxy__(IntPtr obj);
 
    public  gadget.PositionProxy getHeadPosProxy()

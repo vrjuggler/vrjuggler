@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -78,6 +78,7 @@ public class Kernel
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
@@ -247,6 +248,8 @@ public class Kernel
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(gadget.InputManagerMarshaler))]
    private extern static gadget.InputManager vrj_Kernel_getInputManager__(IntPtr obj);
 
    public  gadget.InputManager getInputManager()
@@ -257,6 +260,8 @@ public class Kernel
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(vrj.UserMarshaler))]
    private extern static vrj.User vrj_Kernel_getUser__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
 	string p0);
 
@@ -307,6 +312,8 @@ public class Kernel
 
    // Start of static methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(vrj.KernelMarshaler))]
    private extern static vrj.Kernel vrj_Kernel_instance__();
 
    public static vrj.Kernel instance()

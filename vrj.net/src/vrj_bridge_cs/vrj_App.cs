@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -56,8 +56,8 @@ public abstract class App
       m_depSatisfiedDelegate = new depSatisfiedDelegate(depSatisfied);
       m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement = new configAddDelegate_boost_shared_ptr_jccl__ConfigElement(configAdd);
       m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement = new configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement(configRemove);
-      m_getDrawManagerDelegate = new getDrawManagerDelegate(getDrawManager);
-      m_getSoundManagerDelegate = new getSoundManagerDelegate(getSoundManager);
+      m_getDrawManagerDelegate = new getDrawManagerDelegate(getDrawManagerAdapter);
+      m_getSoundManagerDelegate = new getSoundManagerDelegate(getSoundManagerAdapter);
    }
 
    // Constructors.
@@ -148,6 +148,7 @@ public abstract class App
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
@@ -342,16 +343,28 @@ public abstract class App
    }
 
    // Delegate for the getDrawManager() callback.
-   public delegate vrj.DrawManager getDrawManagerDelegate();
+   protected IntPtr getDrawManagerAdapter()
+   {
+      return getDrawManager().mRawObject;
+   }
+
+   public delegate IntPtr getDrawManagerDelegate();
    protected getDrawManagerDelegate m_getDrawManagerDelegate;
 
    public abstract vrj.DrawManager getDrawManager();
 
    // Delegate for the getSoundManager() callback.
-   public delegate vrj.SoundManager getSoundManagerDelegate();
+   protected IntPtr getSoundManagerAdapter()
+   {
+      return getSoundManager().mRawObject;
+   }
+
+   public delegate IntPtr getSoundManagerDelegate();
    protected getSoundManagerDelegate m_getSoundManagerDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(vrj.SoundManagerMarshaler))]
    private extern static vrj.SoundManager vrj_App_getSoundManager__(IntPtr obj);
 
    public virtual vrj.SoundManager getSoundManager()
@@ -384,6 +397,8 @@ public class AppMarshaler : ICustomMarshaler
       }
 
       [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
+      [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                          MarshalTypeRef = typeof(vrj.DrawManagerMarshaler))]
       private extern static vrj.DrawManager vrj_App_getDrawManager__(IntPtr obj);
 
       public override vrj.DrawManager getDrawManager()

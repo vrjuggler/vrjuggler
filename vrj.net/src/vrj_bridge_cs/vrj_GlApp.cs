@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -49,7 +49,7 @@ public abstract class GlApp
       m_contextPostDrawDelegate = new contextPostDrawDelegate(contextPostDraw);
       m_bufferPreDrawDelegate = new bufferPreDrawDelegate(bufferPreDraw);
       m_pipePreDrawDelegate = new pipePreDrawDelegate(pipePreDraw);
-      m_getDrawManagerDelegate = new getDrawManagerDelegate(getDrawManager);
+      m_getDrawManagerDelegate = new getDrawManagerDelegate(getDrawManagerAdapter);
    }
 
    // Constructors.
@@ -152,6 +152,7 @@ public abstract class GlApp
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of virtual methods.
    // Delegate for the draw() callback.
@@ -233,6 +234,8 @@ public abstract class GlApp
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(vrj.DrawManagerMarshaler))]
    private extern static vrj.DrawManager vrj_GlApp_getDrawManager__(IntPtr obj);
 
    public override vrj.DrawManager getDrawManager()
