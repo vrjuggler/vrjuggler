@@ -43,9 +43,12 @@ char* vjMemPoolSGI::arenaForMemPoolsFileName = NULL;
 vjMemPoolSGI::vjMemPoolSGI (size_t initialSize, int numProcs,
                             char* staticTempName)
 {
-   std::cerr << "\n\nMemPoolSGI: Allocating Arena." << "\n\tSize: "
-             << initialSize << "\n\tnProcs: " << numProcs << "\n"
-             << std::flush;
+   std::cerr.setf(std::ios::showbase);
+   std::cerr << "\nvjMemPoolSGI: Allocating arena ("
+             << initialSize << " bytes, "
+             << numProcs  << " procs, "
+             << std::hex  << this << std::dec
+             << ")\n" << std::flush;
 
    usconfig(CONF_INITUSERS, numProcs);
    usconfig(CONF_INITSIZE, initialSize);
@@ -68,17 +71,19 @@ vjMemPoolSGI::vjMemPoolSGI (size_t initialSize, int numProcs,
       perror("ERROR: vjMemPoolSGI::MemPoolSGI");
    }
 
-   std::cerr << "\tfile: " << arenaFileName << std::endl;
-   std::cerr << "\tpool: " << this << std::endl;
-   std::cerr << "\tarena: " << arena << std::endl;
+   std::cerr << "  " << arenaFileName << ", "
+             << "arena: " << std::hex << arena << std::dec << std::endl;
+   std::cerr.unsetf(std::ios::showbase);
 }
 
 void
 vjMemPoolSGI::init (size_t initialSize, int numProcs, char* staticTempName) {
    if (arenaForMemPools == NULL)
    {
-      std::cerr << "\n\nMemPoolSGI: Allocating Base Arena for ALL vjMemPoolSGI's."
-                << "\n\tSize: " << initialSize << "\n\tnProcs: " << numProcs
+      std::cerr << "\nMemPoolSGI: Allocating Base Arena for ALL "
+                << "vjMemPoolSGI's.\n  "
+                << initialSize << " bytes, "
+                << numProcs << " procs"
                 << "\n" << std::flush;
    
       usconfig(CONF_INITUSERS, numProcs);
@@ -98,8 +103,11 @@ vjMemPoolSGI::init (size_t initialSize, int numProcs, char* staticTempName) {
       strcpy(arenaForMemPoolsFileName, tempName);
       free (tempName);
    
-      std::cerr << "\tfile: " << arenaForMemPoolsFileName << std::endl;
-      std::cerr << "\tarena: " << arenaForMemPools << std::endl;
+      std::cerr.setf(std::ios::showbase);
+      std::cerr << "  " << arenaForMemPoolsFileName << ", "
+                << "arena: " << std::hex << arenaForMemPools << std::dec
+                << std::endl;
+      std::cerr.unsetf(std::ios::showbase);
    } else {
       std::cerr << "Tried to re-init the Base Arena for ALL vjMemPoolSGI's"
                 << std::endl;
