@@ -97,12 +97,12 @@ public class LabeledSummaryGraphPanel
 	public void refigureMax() {
 	    col.refreshMaxValues();
 	    maxval = 0.0;
-            LabeledPerfDataCollector.IndexInfo ii;
-            Iterator it = col.indexIterator();
+            IndexVis iv;
+            Iterator it = indices.iterator();
             while (it.hasNext()) {
-                ii = (LabeledPerfDataCollector.IndexInfo)it.next();
-                //if (phase_active[i])
-                    maxval =+ ii.getMaximum();
+                iv = (IndexVis)it.next();
+                if (iv.isActive())
+                    maxval += iv.index_info.getMaximum();
             }
   	    maxval = Math.ceil(maxval/10000) * 10000;
 	    newmaxval = maxval;
@@ -118,7 +118,7 @@ public class LabeledSummaryGraphPanel
 	}
 
 
-	private double[] getAverageDiffs (ListIterator li, int numsamps) {
+	private double[] getAverageDiffs (Iterator li, int numsamps) {
 	    // returns an ArrayList of doubles whose values are the averages
 	    // of the deltas of the next numsamps in the collector.
 	    double[] results = new double[col.getNumIndices()];
@@ -176,6 +176,7 @@ public class LabeledSummaryGraphPanel
 	    g.fillRect (0, 0, cursize.width, cursize.height);
 	    g.setColor (Color.black);
 	    int i, j, k;
+	    int x, y, new_y;
 	    int curheight, newheight;
 
 	    //widthscale = Math.max (1, col.datalines.size() / cursize.width);
@@ -188,28 +189,28 @@ public class LabeledSummaryGraphPanel
 //  	    System.out.println ("widthscale is " + widthscale);
 	    //System.out.println ("heightscale is " + heightscale);
 	    // bug - not handling pre/postskip
-	    ListIterator li = col.datalines.listIterator(0);
-	    for (j = 0; j < col.datalines.size()/widthscale; j++) {
+	    x = 0;
+	    IndexVis iv;
+	    Iterator iv_it; // IndexVis Iterator
+	    Iterator li = col.datalines.listIterator(0);
+	    while (li.hasNext()) {
 		double[] deltas = getAverageDiffs (li, widthscale);
-		//System.out.println (dl);
 		curheight = 0;
-//  		for (k = 0; k < col.num; k++) {
-//  		    if (Double.isNaN(dl.diffs[k])) {
-//  			g.setColor (Color.green);
-//  			g.drawLine (j, cursize.height - curheight, j, 0);
-//  			break;
-//  		    }
-//  		    else {
-//  			if (phase_active[k] && (dl.diffs[k] > 0.0)) {
-//  			    newmaxval = Math.max (newmaxval, dl.diffs[k]);
-//  			    newheight = curheight + (int)(dl.diffs[k]*heightscale);
-//  			    g.setColor (colors[k]);
-//  			    g.drawLine (j, cursize.height - curheight,
-//  					j, cursize.height - newheight);
-//  			    curheight = newheight;
-//  			}
-//  		    }
-//  		}
+		// ok, just need to find the right column and draw lines.
+		iv_it = indices.iterator();
+		y = 0; // vert position
+		i = 0; // index of iv, so we can lookup in deltas.
+		while (iv_it.hasNext()) {
+		    iv = (IndexVis)iv_it.next();
+		    if (iv.isActive() && deltas[i] > 0.0) {
+			newmaxval = Math.max (newmaxval, deltas[i]);
+			new_y = y + (int)(deltas[i]*heightscale);
+			g.setColor (iv.getColor());
+			g.drawLine (x, cursize.height - y,
+				    x, cursize.height - new_y);
+			y = new_y;
+		    }
+		}
 	    }
 
 	    // draw some markings...
@@ -224,7 +225,7 @@ public class LabeledSummaryGraphPanel
 		horizbarsinterval = 500.0f;
 
 	    for (float horizbar = horizbarsinterval; horizbar < maxval; horizbar += horizbarsinterval) {
-		int y = (int)(horizbar * heightscale);
+		y = (int)(horizbar * heightscale);
 		g.setColor (Color.black);
 		g.drawLine (0, cursize.height - y, cursize.width, cursize.height-y);
 		int val = (int)(horizbar/1000.0f);
@@ -247,12 +248,18 @@ public class LabeledSummaryGraphPanel
 	public JCheckBox getCheckBox () {
 	    return checkbox;
 	}
+	public Color getColor () {
+	    return Color.red;
+	}
+	public boolean isActive () {
+	    return checkbox.isSelected();
+	}
     }
 
     LabeledPerfDataCollector col;
     SummaryDisplayPanel summarypanel;
     JComboBox vertscale_box;
-    java.util.List indices;
+    java.util.List indices;  // List of IndexVis
     int num;
 
     public LabeledSummaryGraphPanel (LabeledPerfDataCollector _col) {
@@ -283,12 +290,12 @@ public class LabeledSummaryGraphPanel
 	Iterator it = col.indexIterator();
 	while (it.hasNext()) {
 	    LabeledPerfDataCollector.IndexInfo ii = (LabeledPerfDataCollector.IndexInfo)it.next();
-	    if (ii.getAverage() > 0.0) {
+	    //if (ii.getAverage() > 0.0) {
 		IndexVis iv = new IndexVis (ii, (requested_ii == null) || 
 					    (ii == requested_ii));
 		indices.add (iv);
 		checkboxpanel.add (iv.getCheckBox());
-	    }
+	    //}
 	}
 
 //  	for (i = 0, j = 0; i < num; i++) {
