@@ -27,6 +27,7 @@
       <enumeration name="SimAnalog" />
       <enumeration name="IBox" />
       <enumeration name="TrackdController" />
+      <enumeration name="Isense" />
     </PropertyDesc>
     <PropertyDesc token="unit" name="Unit" type="int" variable="0">
       <help>The unit in the device this proxy attaches to</help>
@@ -234,6 +235,7 @@
       <enumeration name="ThreeDMouse" />
       <enumeration name="SimDigitalGlove" />
       <enumeration name="TrackdController" />
+      <enumeration name="Isense" />
     </PropertyDesc>
     <PropertyDesc token="unit" name="Unit" type="int" variable="0">
       <help>The unit in the device this proxy attaches to</help>
@@ -1095,6 +1097,7 @@
       <enumeration name="TrackdSensor" />
       <enumeration name="SimRelativePosition" />
       <enumeration name="SimSetablePosition" />
+      <enumeration name="Isense" />
     </PropertyDesc>
     <PropertyDesc token="unit" name="unit" type="int" variable="0">
       <help>The unit in the device this proxy attaches to</help>
