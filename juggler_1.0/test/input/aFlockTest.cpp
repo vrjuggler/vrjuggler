@@ -1,8 +1,10 @@
+
 #include <iostream.h> 	// for cout
 #include <iomanip.h> 	// for setw
-#include <string>   	// for aFlock.h
+
 #include <stdlib.h> 	// for system
 #include <unistd.h> 	// for sleep
+
 #include <Input/vjPosition/aFlock.h>
 
 void main()
@@ -34,14 +36,15 @@ void main()
     flock.setPort( port );
     
     char achar;
-    cout << "U - Update\n"
+    
+    do 
+    {
+	cout << "U - Update\n"
        << "S - Start\n"
        << "X - Stop\n"
        << "Q - Quit\n"
        << "O - Output\n";
-    
-    do 
-    {
+       
 	cin >> achar;
 	
 	cout << flush;
@@ -68,6 +71,8 @@ void main()
 	    }
 	    break;
 	}
+	
+       
 	cout << achar;
     } while ((achar != 'q') && (achar != 'Q'));
     
