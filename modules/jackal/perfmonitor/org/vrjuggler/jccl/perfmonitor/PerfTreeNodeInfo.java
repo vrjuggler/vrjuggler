@@ -60,6 +60,7 @@ public class PerfTreeNodeInfo implements ActionListener {
     protected JLabel mValueLabel;
     protected JButton mGraphButton;
 
+    /* if ii is null, it's for a collector... */
     public PerfTreeNodeInfo (String _sublabel, LabeledPerfDataCollector.IndexInfo _ii, LabeledPerfDataCollector col) {
 	sublabel = _sublabel;
 	ii = _ii;
@@ -68,25 +69,46 @@ public class PerfTreeNodeInfo implements ActionListener {
 
         mComponent = new JPanel();
         mComponent.setLayout (new BoxLayout (mComponent, BoxLayout.X_AXIS));
+        //mComponent.setBackground (Color.WHITE);
 
 	if (ii != null) {
-	    JLabel l = new JLabel(_sublabel);
-	    mComponent.add (l);
-            mComponent.add (Box.createHorizontalGlue());
-	    mValueLabel = new JLabel (padFloat(getAverage()/1000.0), JLabel.RIGHT);
-	    mComponent.add (mValueLabel);
-	    mGraphButton = new LabeledPanelButton (col, ii, "Graph");
-	    mGraphButton.setActionCommand ("Graph");
-	    mGraphButton.addActionListener (this);
-	    //b.addActionListener (PerfAnalyzerPanel.this);
-	    Insets insets = new Insets (1,1,1,1);
-	    mGraphButton.setMargin(insets);
-	    mComponent.add (mGraphButton);
+//  	    JLabel l = new JLabel(_sublabel);
+//  	    mComponent.add (l);
+//              mComponent.add (Box.createHorizontalGlue());
+//  	    mValueLabel = new JLabel (padFloat(getAverage()/1000.0) + " ms", JLabel.RIGHT);
+//  	    mComponent.add (mValueLabel);
+//  	    mGraphButton = new LabeledPanelButton (col, ii, "Graph");
+//  	    mGraphButton.setActionCommand ("Graph");
+//  	    mGraphButton.addActionListener (this);
+//  	    //b.addActionListener (PerfAnalyzerPanel.this);
+//  	    Insets insets = new Insets (1,1,1,1);
+//  	    mGraphButton.setMargin(insets);
+//  	    //mComponent.add (mGraphButton);
+
+
+            JLabel l = new JLabel(_sublabel + "            ");
+            mValueLabel = new JLabel (padFloat(getAverage()/1000.0) + " ms", JLabel.RIGHT);
+            GridBagLayout gbl = new GridBagLayout();
+            GridBagConstraints gbc = new GridBagConstraints();
+            mComponent.setLayout (gbl);
+
+            gbc.gridwidth = gbc.RELATIVE;
+            gbl.setConstraints (l, gbc);
+            mComponent.add(l);
+
+            gbc.gridwidth = gbc.REMAINDER;
+            gbc.anchor = gbc.EAST;
+            gbc.weightx = 1;
+            gbc.fill = gbc.BOTH;
+            gbl.setConstraints (mValueLabel, gbc);
+            mComponent.add (mValueLabel);
+
+            mGraphButton = new LabeledPanelButton (col, ii, "Graph");
 	}
 	else {
-	    mComponent.add(new JLabel ("<html><h2><i>" + sublabel + "</i></h2></html>"));
+	    mComponent.add(new JLabel ("<html><i>" + sublabel + "</i></html>"));
             mComponent.add (Box.createHorizontalGlue());
-	    mValueLabel = new JLabel (padFloat(getAverage()/1000.0), JLabel.RIGHT);
+	    mValueLabel = new JLabel (padFloat(getAverage()/1000.0) + " ms", JLabel.RIGHT);
 	    mComponent.add (mValueLabel);
 	    mGraphButton = new LabeledPanelButton (col, null, "Graph");
 	    mGraphButton.setActionCommand ("Graph");
@@ -94,7 +116,7 @@ public class PerfTreeNodeInfo implements ActionListener {
 	    //b.addActionListener (PerfAnalyzerPanel.this);
 	    Insets insets = new Insets (1,1,1,1);
 	    mGraphButton.setMargin(insets);
-	    mComponent.add (mGraphButton);
+	    //mComponent.add (mGraphButton);
 	}
     }
 
@@ -131,7 +153,7 @@ public class PerfTreeNodeInfo implements ActionListener {
 
     public void update() {
 	if (mValueLabel != null)
-	    mValueLabel.setText (padFloat(getAverage()/1000.0));
+	    mValueLabel.setText (padFloat(getAverage()/1000.0) + " ms");
     }
 
     /** Utility method for various printing routines. */
