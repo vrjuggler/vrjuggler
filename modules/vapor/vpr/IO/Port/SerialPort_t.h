@@ -177,6 +177,21 @@ public:
    }
 
    /**
+    * Clears all of the serial port settings
+    *
+    * @pre The port is open.
+    * @post All of the serial port flags are set to 0 except VMIN=1
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the port's
+    *         flags were cleard successfully
+    *         vpr::ReturnStatus::Fail is returned otherwise.
+    */
+   vpr::ReturnStatus clearAll (void)
+   {
+      mSioImpl.clearAll();
+   }
+
+   /**
     * Reconfigures the serial port so that it is in non-blocking mode.
     *
     * @pre The port is open.
@@ -470,6 +485,49 @@ public:
    {
       return mSioImpl.disableRead();
    }
+   
+   /**
+    * Gets the current CLOCAL state for the port.
+    *
+    * @pre The serial port is open.
+    * @post The CLOCAL state (either enabled or disabled) is returned to the
+    *       caller.
+    *
+    * @return true is returned if CLOCAL is set.
+    *         false is returned otherwise.
+    */
+   bool getLocalState (void)
+   {
+      return mSioImpl.getLocalState();
+   }
+
+   /**
+    * Enables CLOCAL.
+    *
+    * @pre The serial port is open.
+    * @post An attempt is made to enable CLOCAL.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if CLOCAL was enabled.
+    *         vpr::ReturnStatus::Fail is returned otherwise.
+    */
+   vpr::ReturnStatus enableLocal (void)
+   {
+      return mSioImpl.enableLocal();
+   }
+
+   /**
+    * Disables CLOCAL.
+    *
+    * @pre The serial port is open.
+    * @post An attempt is made to disable CLOCAL.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if CLOCAL was disabled.
+    *         vpr::ReturnStatus::Fail is returned otherwise.
+    */
+   vpr::ReturnStatus disableLocal (void)
+   {
+      return mSioImpl.disableLocal();
+   }
 
    /**
     * Gets the number of stop bits in use.  This will be either 1 or 2.
@@ -610,6 +668,50 @@ public:
    vpr::ReturnStatus disableBadByteIgnore (void)
    {
       return mSioImpl.disableBadByteIgnore();
+   }
+   
+   /**
+    * Gets the current state of ignoring BREAK bytes
+    * 
+    *
+    * @pre The serial port is open.
+    * @post The BREAK byte ignore state is returned to the caller.
+    *
+    * @return <code>true</code> is returned if BREAK bytes are ignored.<br>
+    *         <code>false</code> is returned if BREAK bytes are not ignored.
+    */
+   bool getBreakByteIgnoreState (void)
+   {
+      return mSioImpl.getBreakByteIgnoreState();
+   }
+
+   /**
+    * Enables ignoring of received BREAK bytes
+    *
+    * @pre The serial port is open.
+    * @post BREAK byte ignoring is enabled.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if BREAK byte ignoring is
+    *         enabled.<br>
+    *         vpr::ReturnStatus::Fail is returned otherwise.
+    */
+   vpr::ReturnStatus enableBreakByteIgnore (void)
+   {
+      return mSioImpl.enableBreakByteIgnore();
+   }
+
+   /**
+    * Disables ignoring of received BREAK bytes
+    *
+    * @pre The serial port is open.
+    * @post BREAK byte ignoring is disabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
+   vpr::ReturnStatus disableBreakByteIgnore (void)
+   {
+      return mSioImpl.disableBreakByteIgnore();
    }
 
    /**
