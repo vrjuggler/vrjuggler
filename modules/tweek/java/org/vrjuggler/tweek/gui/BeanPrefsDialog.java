@@ -83,7 +83,7 @@ public class BeanPrefsDialog extends JDialog
       mPrefsBeans.add(bean);
       mTabbedViewPane.add(new JScrollPane(bean.getEditor()),
                           bean.getEditorName());
-      bean.initGUI();
+      bean.initPrefsGUI();
       mTabbedViewPane.revalidate();
       DefaultListModel model = (DefaultListModel) mListViewBeans.getModel();
       model.addElement(bean.getEditorName());
