@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_WIN32_SYSTEM_FACTORY_H_
-#define _VRJ_WIN32_SYSTEM_FACTORY_H_
+#ifndef _VRJ_SYSTEM_FACTORY_WIN32_H_
+#define _VRJ_SYSTEM_FACTORY_WIN32_H_
 
 #include <vrj/vjConfig.h>
 #include <vrj/Kernel/SystemFactory.h>
@@ -50,17 +50,17 @@ class DisplayManager;
 // @author Allen Bierbaum
 //  Date: 9-9-97
 //----------------------------------------------------
-class Win32SystemFactory : public SystemFactory
+class SystemFactoryWin32 : public SystemFactory
 {
 public:
 
    // --- Singleton stuff --- //
 protected:
    /// Constructor:  Hidden, so no instantiation is allowed
-   Win32SystemFactory()   // Do nothing, but hide
+   SystemFactoryWin32()   // Do nothing, but hide
    {;}
 
-   vprSingletonHeader(Win32SystemFactory);
+   vprSingletonHeader(SystemFactoryWin32);
 };
 
 };

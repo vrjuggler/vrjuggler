@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_OSX_SYSTEM_FACTORY_H_
-#define _VRJ_OSX_SYSTEM_FACTORY_H_
+#ifndef _VRJ_SYSTEM_FACTORY_OSX_H_
+#define _VRJ_SYSTEM_FACTORY_OSX_H_
 
 #include <vrj/vjConfig.h>
 #include <vrj/Kernel/SystemFactory.h>
@@ -54,7 +54,7 @@ class DisplayManager;
 
 static OSErr QuitAppleEventHandler(const AppleEvent *appleEvt, AppleEvent* reply, UInt32 refcon);
 
-class OSXSystemFactory : public SystemFactory
+class SystemFactoryOSX : public SystemFactory
 {
 public:
 
@@ -63,9 +63,9 @@ public:
       // --- Singleton stuff --- //
 protected:
    /// Constructor:  Hidden, so no instantiation is allowed
-   OSXSystemFactory();
+   SystemFactoryOSX();
 
-   vprSingletonHeader(OSXSystemFactory);
+   vprSingletonHeader(SystemFactoryOSX);
 
 
 

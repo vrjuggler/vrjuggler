@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_XWIN_KB_DEP_CHECKER_H_
-#define _VRJ_XWIN_KB_DEP_CHECKER_H_
+#ifndef _VRJ_KEYBOARD_DEP_CHECKER_XWIN_H_
+#define _VRJ_KEYBOARD_DEP_CHECKER_XWIN_H_
 
 #include <vrj/vjConfig.h>
 
@@ -45,22 +45,22 @@ namespace vrj
    //: Dependency checker for XWin keyboard
 // Implement the basic stuff plus a check for wether
 // the system knows about the system display windows yet
-class XWinKBDepChecker : public DepChecker
+class KeyboardDepCheckerXWin : public DepChecker
 {
 public:
-   XWinKBDepChecker()
+   KeyboardDepCheckerXWin()
    {;}
 
    //: Return a string name of the checker
    // Used to output messages in checker listings
    virtual std::string getCheckerName()
-   { return std::string("vjXWinKeyboard Checker"); }
+   { return std::string("vrj::KeyboardXWin Checker"); }
 
    // We can handle only keyboard configuration information
    virtual bool canHandle(ConfigChunk* chunk)
    {
       std::string chunk_type = (std::string)chunk->getType();
-      return (chunk_type == XWinKeyboard::getChunkType());      // Return true if we have a XWinKeyboard chunk type
+      return (chunk_type == KeyboardXWin::getChunkType());      // Return true if we have a KeyboardXWin chunk type
    }
 
    //: Are the dependencies satisfied?

@@ -31,11 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vjConfig.h>
-#include <vrj/Draw/OGL/GlWinWin32.h>
+#include <vrj/Draw/OGL/GlWindowWin32.h>
 #include <vrj/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
-#define glWinWin32Classname "vjOGLWin32"
+#define GL_WINDOW_WIN32_CLASSNAME "vrj::GlWindowWin32"
 
 namespace vrj
 {
@@ -44,9 +44,9 @@ namespace vrj
 // - Creates a window
 // - Creates a rendering context
 // - Registers new window with the window list
-int GlWinWin32::open()
+int GlWindowWin32::open()
 {
-	if(false == GlWinWin32::registerWindowClass())
+	if(false == GlWindowWin32::registerWindowClass())
 	{
 		return 0;
 	}
@@ -79,7 +79,8 @@ int GlWinWin32::open()
         root_height = GetSystemMetrics(SM_CYSCREEN);
 
 	// Create the main application window
-        hWnd = CreateWindow(glWinWin32Classname, glWinWin32Classname, style,
+        hWnd = CreateWindow(GL_WINDOW_WIN32_CLASSNAME,
+                            GL_WINDOW_WIN32_CLASSNAME, style,
                             origin_x, root_height - origin_y - window_height,
                             window_width, window_height, NULL, NULL, hMod,
                             NULL);
@@ -102,7 +103,7 @@ int GlWinWin32::open()
 	wglMakeCurrent(hDC, hRC);
 		
 	// Register the window with the window list
-	GlWinWin32::addWindow(hWnd,this);
+	GlWindowWin32::addWindow(hWnd,this);
 
 	// Display the window
 	ShowWindow(hWnd,SW_SHOW);
@@ -115,13 +116,13 @@ int GlWinWin32::open()
 
 //: Close the OpenGL window
 //! NOTE: Must be called by the same thread that called open
-int GlWinWin32::close()
+int GlWindowWin32::close()
 {
 	if(!window_is_open)
       return false;
 
    // Remove window from window list
-	GlWinWin32::removeWindow(hWnd);
+	GlWindowWin32::removeWindow(hWnd);
 
 	window_is_open = false;
 
@@ -131,7 +132,7 @@ int GlWinWin32::close()
 
 //: Sets the current OpenGL context to this window
 //! POST: this.context is active context
-bool GlWinWin32::makeCurrent()
+bool GlWindowWin32::makeCurrent()
 {
 	vprASSERT((hDC != NULL) && (hRC != NULL));
 	wglMakeCurrent(hDC, hRC);		// Make our context current
@@ -140,13 +141,13 @@ bool GlWinWin32::makeCurrent()
 
 // Swap the front and back buffers
 // Process events here
-void GlWinWin32::swapBuffers()
+void GlWindowWin32::swapBuffers()
 {
 	vprASSERT(hDC != NULL);
 	SwapBuffers(hDC);
 }
 
-void GlWinWin32::checkEvents()
+void GlWindowWin32::checkEvents()
 {
    MSG win_message;   
    
@@ -164,7 +165,7 @@ void GlWinWin32::checkEvents()
 
 // WindowProcedure to deal with the events generated.
 // Called only for the window that we are controlling
-LRESULT GlWinWin32::handleEvent(HWND 	hWnd,
+LRESULT GlWindowWin32::handleEvent(HWND 	hWnd,
 										  UINT	message,
 										  WPARAM	wParam,
 										  LPARAM	lParam)
@@ -226,7 +227,7 @@ LRESULT GlWinWin32::handleEvent(HWND 	hWnd,
 }
 
 // Set the pixel format for the given window
-bool GlWinWin32::setPixelFormat(HDC hDC)
+bool GlWindowWin32::setPixelFormat(HDC hDC)
 {
 	int pixel_format;
 	PIXELFORMATDESCRIPTOR pfd;
@@ -281,7 +282,7 @@ bool GlWinWin32::setPixelFormat(HDC hDC)
 }
 
 // the user has changed the size of the window
-void GlWinWin32::sizeChanged(long width, long height)
+void GlWindowWin32::sizeChanged(long width, long height)
 {
 	window_width = width;
 	window_height = height;
@@ -299,12 +300,12 @@ void GlWinWin32::sizeChanged(long width, long height)
 //-------------------------------
 //: Global Window event handler
 //-------------------------------
-LRESULT CALLBACK GlWinWin32::WndProc(	HWND 	hWnd,
+LRESULT CALLBACK GlWindowWin32::WndProc(	HWND 	hWnd,
 												UINT	message,
 												WPARAM	wParam,
 												LPARAM	lParam)
 {
-	GlWinWin32* glWin = getGlWin(hWnd);
+	GlWindowWin32* glWin = getGlWin(hWnd);
 	
 	if(glWin != NULL)		// Message for one of ours
 	{
@@ -319,12 +320,12 @@ LRESULT CALLBACK GlWinWin32::WndProc(	HWND 	hWnd,
 //-------------------------------
 //: Window registration
 //-------------------------------
-bool GlWinWin32::mWinRegisteredClass = false;
-WNDCLASS GlWinWin32::winClass;			// The window class to register
-std::map<HWND, GlWinWin32*> GlWinWin32::glWinMap;
+bool GlWindowWin32::mWinRegisteredClass = false;
+WNDCLASS GlWindowWin32::winClass;			// The window class to register
+std::map<HWND, GlWindowWin32*> GlWindowWin32::glWinMap;
 
 
-bool GlWinWin32::registerWindowClass()
+bool GlWindowWin32::registerWindowClass()
 {
 	if(mWinRegisteredClass)
 		return true;
@@ -338,7 +339,7 @@ bool GlWinWin32::registerWindowClass()
 
 	// Register Window style
 	winClass.style				= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	winClass.lpfnWndProc		= (WNDPROC)GlWinWin32::WndProc;
+	winClass.lpfnWndProc		= (WNDPROC)GlWindowWin32::WndProc;
 	winClass.cbClsExtra		= 0;
 	winClass.cbWndExtra		= 0;
 	winClass.hInstance 		= hInstance;			// Get handle to the module that created current process
@@ -349,7 +350,7 @@ bool GlWinWin32::registerWindowClass()
 	winClass.hbrBackground	= NULL;		
 	
 	winClass.lpszMenuName	= NULL;
-	winClass.lpszClassName	= glWinWin32Classname;
+	winClass.lpszClassName	= GL_WINDOW_WIN32_CLASSNAME;
 
 	// Register the window class
 	if(RegisterClass(&winClass) == 0)
@@ -361,7 +362,7 @@ bool GlWinWin32::registerWindowClass()
 //----------------------//
 //			WinList			//
 //----------------------//
-void GlWinWin32::addWindow(HWND handle, GlWinWin32* glWin)
+void GlWindowWin32::addWindow(HWND handle, GlWindowWin32* glWin)
 {
 	vprASSERT(glWin != NULL);
 
@@ -371,14 +372,14 @@ void GlWinWin32::addWindow(HWND handle, GlWinWin32* glWin)
 	// vprASSERT(false);
 }
 
-void GlWinWin32::removeWindow(HWND handle)
+void GlWindowWin32::removeWindow(HWND handle)
 {
 	glWinMap.erase(handle);		// Erase the entry in the list
 }
 
-GlWinWin32* GlWinWin32::getGlWin(HWND handle)
+GlWindowWin32* GlWindowWin32::getGlWin(HWND handle)
 {
-   std::map<HWND, GlWinWin32*>::iterator glWinIter;
+   std::map<HWND, GlWindowWin32*>::iterator glWinIter;
 
 	glWinIter = glWinMap.find(handle);
 	if(glWinIter == glWinMap.end())		// Not found

@@ -43,13 +43,13 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Config/ConfigChunk.h>
 
-#include <vrj/Draw/OGL/GlxWindow.h>
+#include <vrj/Draw/OGL/GlWindowXWin.h>
 
 
 namespace vrj
 {
    
-GlxWindow::GlxWindow():GlWindow() {
+GlWindowXWin::GlWindowXWin():GlWindow() {
    window_is_open = false;
    window_width = window_height = -1;
    x_display = NULL;
@@ -63,19 +63,19 @@ GlxWindow::GlxWindow():GlWindow() {
 
 
 
-GlxWindow::~GlxWindow() {
+GlWindowXWin::~GlWindowXWin() {
     close();
 }
 
 
 
-void GlxWindow::swapBuffers() {
+void GlWindowXWin::swapBuffers() {
    glXSwapBuffers (x_display,  x_window);
 }
 
 
 
-int GlxWindow::open() {
+int GlWindowXWin::open() {
     /* attempts to open the glxWindow & create the gl context.  Does nothing
      * if the window is already open (& returns true).
      * returns true for success, false for failure.
@@ -96,12 +96,12 @@ int GlxWindow::open() {
         return true;
 
     if (window_width == -1) {
-        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: Window has not been configured\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlWindowXWin: Window has not been configured\n" << vjDEBUG_FLUSH;
         return false;
     }
 
     if (! (x_display = ::XOpenDisplay (mXDisplayName.c_str()))) {
-        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: Unable to open display '" << mXDisplayName << "'.\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlWindowXWin: Unable to open display '" << mXDisplayName << "'.\n" << vjDEBUG_FLUSH;
         return false;
     }
 
@@ -118,7 +118,7 @@ int GlxWindow::open() {
                                               RootWindow(x_display, screen),
                                               visual_info->visual,
                                               AllocNone)) == 0) {
-        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: XCreateColorMap failed on '" << mXDisplayName << "'.\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjGlWindowXWin: XCreateColorMap failed on '" << mXDisplayName << "'.\n" << vjDEBUG_FLUSH;
         goto OPEN_FAIL;
     }
 
@@ -149,7 +149,7 @@ int GlxWindow::open() {
         {
             vjDEBUG(vjDBG_DRAW_MGR,0)
                << clrOutNORM(clrRED,"ERROR:")
-               << "vjGlxWindow: Couldn't create window for " << mXDisplayName
+               << "vjGlWindowXWin: Couldn't create window for " << mXDisplayName
                << std::endl << vjDEBUG_FLUSH;
             goto OPEN_FAIL;
         }
@@ -202,7 +202,7 @@ int GlxWindow::open() {
         if (MotifHints == None) {
             vjDEBUG(vjDBG_DRAW_MGR,0)
                << clrOutNORM(clrRED,"ERROR:")
-               << "vjGlxWindow: Could not get X atom for _MOTIF_WM_HINTS."
+               << "vjGlWindowXWin: Could not get X atom for _MOTIF_WM_HINTS."
                << std::endl << vjDEBUG_FLUSH;
         }
         else {
@@ -226,7 +226,7 @@ int GlxWindow::open() {
     ::XIfEvent (x_display, &fooevent, EventIsMapNotify, (XPointer)x_window);
     ::XSync(x_display,0);
 
-    vjDEBUG(vjDBG_DRAW_MGR,4) << "vjGlxWindow: done mapping window\n" << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_DRAW_MGR,4) << "vjGlWindowXWin: done mapping window\n" << vjDEBUG_FLUSH;
 
     /********************* OpenGL Context Stuff *********************/
 
@@ -242,12 +242,12 @@ int GlxWindow::open() {
     if(true == mAreKeyboardDevice)     // Are we going to act like a keyboard device
     {
        // Set the parameters that we will need to get events
-       vrj::XWinKeyboard::m_window = x_window;
-       vrj::XWinKeyboard::m_visual = visual_info;
-       vrj::XWinKeyboard::m_display = x_display;
+       vrj::KeyboardXWin::m_window = x_window;
+       vrj::KeyboardXWin::m_visual = visual_info;
+       vrj::KeyboardXWin::m_display = x_display;
 
        // Start up the device
-       vrj::XWinKeyboard::startSampling();
+       vrj::KeyboardXWin::startSampling();
 
        vrj::Input* dev_ptr = dynamic_cast<vrj::Input*>(this);
 
@@ -258,7 +258,7 @@ int GlxWindow::open() {
 
  OPEN_FAIL:
     // close() is coincidentally safe to call on a partially-opened
-    // GlxWindow, and will deallocate all the stuff we might have
+    // GlWindowXWin, and will deallocate all the stuff we might have
     // allocated above.
     close();
     return false;
@@ -268,7 +268,7 @@ int GlxWindow::open() {
 
 //: Closes the window given
 //! NOTE: this function mucks with the current rendering context */
-int GlxWindow::close() {
+int GlWindowXWin::close() {
 //     if (!window_is_open)
 //         return true;
 
@@ -303,7 +303,7 @@ int GlxWindow::close() {
 
 
 
-bool GlxWindow::makeCurrent() {
+bool GlWindowXWin::makeCurrent() {
    /* returns true for success,
     * false for failure (eg window not open or glXMakeCurrent fails)
     */
@@ -314,9 +314,9 @@ bool GlxWindow::makeCurrent() {
    return glXMakeCurrent ( x_display, x_window, glx_context  );
 }
 
-void GlxWindow::config(vrj::Display* disp)
+void GlWindowXWin::config(vrj::Display* disp)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlxWindow::config: _display: " << (*disp)
+   vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlWindowXWin::config: _display: " << (*disp)
                               << "\nConfig chunk:\n" << (*(disp->getConfigChunk()))
                               << std::endl << vjDEBUG_FLUSH;
 
@@ -352,11 +352,11 @@ void GlxWindow::config(vrj::Display* disp)
       // Set the name of the chunk to the same as the parent chunk (so we can point at it)
       //keyboard_chunk->setProperty("name", (std::string)displayChunk->getProperty("name"));
 
-      XWinKeyboard::config(keyboard_chunk);
+      KeyboardXWin::config(keyboard_chunk);
 
       // Custom configuration
-      XWinKeyboard::m_width = GlxWindow::window_width;
-      XWinKeyboard::m_height = GlxWindow::window_height;
+      KeyboardXWin::m_width = GlWindowXWin::window_width;
+      KeyboardXWin::m_height = GlWindowXWin::window_height;
 
       mWeOwnTheWindow = false;      // Keyboard device does not own window
    }
@@ -364,10 +364,10 @@ void GlxWindow::config(vrj::Display* disp)
 
 
 /**** Static Helpers *****/
-/* static */ bool GlxWindow::createHardwareSwapGroup(std::vector<GlWindow*> wins)
+/* static */ bool GlWindowXWin::createHardwareSwapGroup(std::vector<GlWindow*> wins)
 {
    // Convert to glx windows
-   std::vector<GlxWindow*> glx_wins;
+   std::vector<GlWindowXWin*> glx_wins;
    unsigned int i;
 
    if(wins.size() <= 0)
@@ -375,7 +375,7 @@ void GlxWindow::config(vrj::Display* disp)
 
    for(i=0;i<wins.size();i++)
    {
-      GlxWindow* glx_win = dynamic_cast<GlxWindow*>(wins[i]);
+      GlWindowXWin* glx_win = dynamic_cast<GlWindowXWin*>(wins[i]);
       vprASSERT(glx_win != NULL);    // Make sure we have the right type
       glx_wins.push_back(glx_win);
    }
@@ -400,7 +400,7 @@ void GlxWindow::config(vrj::Display* disp)
 /***********************************************************/
 /* private member functions.  these get profoundly painful */
 /***********************************************************/
-::XVisualInfo* GlxWindow::GetGlxVisInfo (::Display *display, int screen)
+::XVisualInfo* GlWindowXWin::GetGlxVisInfo (::Display *display, int screen)
 {
    /* pre:  screen is a screen on the current XDisplay, and
     *       XDisplay is already defined and valid.
@@ -491,12 +491,12 @@ void GlxWindow::config(vrj::Display* disp)
 //!POST: returns true if e is a mapnotify event for window, else false
 //!NOTE: this is a utility function for InitGfx,  used to wait
 //+       until a window has actually been mapped.
-int GlxWindow::EventIsMapNotify (::Display *display,  ::XEvent *e,  ::XPointer window) {
+int GlWindowXWin::EventIsMapNotify (::Display *display,  ::XEvent *e,  ::XPointer window) {
 
     return ((e->type == MapNotify) && (e->xmap.window == (Window)window));
 }
 
-void GlxWindow::processEvent(::XEvent event)
+void GlWindowXWin::processEvent(::XEvent event)
 {
    switch (event.type)
    {

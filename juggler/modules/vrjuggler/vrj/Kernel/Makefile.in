@@ -55,12 +55,12 @@ SRCS		= App.cpp			\
                   User.cpp
 
 ifeq (@OS_TYPE@, Win32)
-    SRCS	+= Win32SystemFactory.cpp
+    SRCS	+= SystemFactoryWin32.cpp
 else
     ifeq (@PLATFORM@, Darwin)
-    	SRCS    += OSXSystemFactory.cpp
+    	SRCS    += SystemFactoryOSX.cpp
     else
-    	SRCS	+= SGISystemFactory.cpp
+    	SRCS	+= SystemFactoryUNIX.cpp
     endif
 endif
 

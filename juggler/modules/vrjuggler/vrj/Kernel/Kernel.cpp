@@ -54,11 +54,11 @@
 // Get the system factory we need
 #if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_AIX) ||   \
     defined(VJ_OS_Solaris) || defined(VJ_OS_FreeBSD) || defined(VJ_OS_HPUX)
-#include <vrj/Kernel/SGISystemFactory.h>
+#include <vrj/Kernel/SystemFactoryUNIX.h>
 #elif defined(VJ_OS_Darwin)
-#include <vrj/Kernel/OSXSystemFactory.h>
+#include <vrj/Kernel/SystemFactoryOSX.h>
 #elif defined(VJ_OS_Win32)
-#include <vrj/Kernel/Win32SystemFactory.h>
+#include <vrj/Kernel/SystemFactoryWin32.h>
 #endif
 
 namespace vrj
@@ -283,15 +283,13 @@ void Kernel::initConfig()
 
    //??// processPending() // Should I do this here
 
-#ifdef VJ_OS_IRIX
-   mSysFactory = SGISystemFactory::instance(); // XXX: Should not be system specific
-#elif defined(VJ_OS_Linux) || defined(VJ_OS_Solaris) || defined(VJ_OS_AIX) || \
-      defined(VJ_OS_FreeBSD) || defined(VJ_OS_HPUX)
-   mSysFactory = SGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
+#if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_Solaris) || \
+    defined(VJ_OS_AIX) || defined(VJ_OS_FreeBSD) || defined(VJ_OS_HPUX)
+   mSysFactory = SystemFactoryUNIX::instance(); // XXX: Should not be system specific
 #elif defined(VJ_OS_Darwin)
-   mSysFactory = OSXSystemFactory::instance();
+   mSysFactory = SystemFactoryOSX::instance();
 #elif defined(VJ_OS_Win32)
-   mSysFactory = Win32SystemFactory::instance();
+   mSysFactory = SystemFactoryWin32::instance();
 #else
    //vjDEBUG(0,0) << "ERROR!: Don't know how to create System Factory!\n" << vjDEBUG_FLUSH;
    vprASSERT(false);
