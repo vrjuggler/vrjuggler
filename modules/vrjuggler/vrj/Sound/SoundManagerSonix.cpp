@@ -30,11 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <vrj/Sound/SoundManagerSonix.h>
-#include <snx/sonix.h>
 #include <gmtl/Matrix.h>
+#include <vpr/Util/FileUtils.h> // for replaceEnvVars...
+#include <snx/sonix.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <vrj/vrjConfig.h>
+#include <vrj/Sound/SoundManagerSonix.h>
 
 namespace vrj
 {
@@ -79,6 +80,7 @@ namespace vrj
          jccl::ConfigChunkPtr sound_chunk = chunk->getProperty<jccl::ConfigChunkPtr>( "Sounds", x );
          std::string alias = sound_chunk->getName();
          std::string filename = sound_chunk->getProperty<std::string>( "filename" );
+         filename = vpr::replaceEnvVars( filename );
          bool ambient = sound_chunk->getProperty<bool>( "ambient" );
          bool retriggerable = sound_chunk->getProperty<bool>( "retriggerable" );
          int loop = sound_chunk->getProperty<int>( "loop" );
