@@ -54,8 +54,6 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
 
-#include <jccl/Config/ConfigChunk.h>
-
 #include <vpr/Util/Singleton.h>
 #include "snx/SoundInfo.h"
 #include "snx/SoundFactory.h"
