@@ -6,7 +6,12 @@ package id1m3nactylgvb1ctypqazk;
 @__modelType diagram 
 */
 class diagram {
-}/**
+/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.net.corba.CorbaService:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}}/**
 @__tags
 @shapeType ClassDiagram 
 */
@@ -16,7 +21,7 @@ class __tags {
 */
 class __options {
 }/**
-@__positions 
+@__positions <oigroup:<oiref:java#Class#org.vrjuggler.tweek.net.corba.CorbaService:oiref>=10,10,460,205,0:oigroup> 
 */
 class __positions {
 }
