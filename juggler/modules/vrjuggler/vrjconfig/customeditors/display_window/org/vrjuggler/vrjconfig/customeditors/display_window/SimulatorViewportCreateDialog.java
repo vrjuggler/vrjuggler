@@ -85,9 +85,9 @@ public class SimulatorViewportCreateDialog
       this.pack();
    }
 
-   public Double getVertialFOV()
+   public Float getVertialFOV()
    {
-      return (Double) mVertFOVField.getValue();
+      return (Float) mVertFOVField.getValue();
    }
 
    public Object getCameraPosition()
@@ -104,7 +104,7 @@ public class SimulatorViewportCreateDialog
    {
       boolean valid_fov, camera_set, wand_set;
 
-      valid_fov  = ((Double) mVertFOVField.getValue()).doubleValue() > 0.0;
+      valid_fov  = ((Float) mVertFOVField.getValue()).doubleValue() > 0.0;
       camera_set = (((ConfigElementPointer) getCameraPosition()).getTarget() != null);
       wand_set   = (((ConfigElementPointer) getWandPosition()).getTarget() != null);
 
@@ -149,7 +149,7 @@ public class SimulatorViewportCreateDialog
       mVertFOVLabel.setText("Vertical Field of View");
       mVertFOVField.setMinimumSize(new Dimension(50, 19));
       mVertFOVField.setPreferredSize(new Dimension(50, 19));
-      mVertFOVField.setValue(new Double(80.0));
+      mVertFOVField.setValue(new Float(80.0));
       mVertFOVField.setHorizontalAlignment(SwingConstants.TRAILING);
       mVertFOVField.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
       mCameraPosLabel.setLabelFor(mCameraPosEditor);
