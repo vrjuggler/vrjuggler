@@ -140,7 +140,7 @@ inline void vjOsgApp::contextInit()
 
 inline void vjOsgApp::draw()
 {
-   osgUtil::SceneView* sv(NULL);
+   osgUtil::SceneView (*sv)(NULL);
    sv = (*sceneViewer);    // Get context specific scene viewer
    vjASSERT( sv != NULL);   
 
@@ -169,7 +169,7 @@ inline void vjOsgApp::draw()
 
    //Reset the camera
    osg::Camera* the_cam = sv->getCamera();
-   vjCameraProjection* sim_cam_proj(NULL);   
+   vjCameraProjection (*sim_cam_proj)(NULL);   
 
    switch(project->getType())
    {
