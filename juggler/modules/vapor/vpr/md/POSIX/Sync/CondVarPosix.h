@@ -51,11 +51,10 @@
 #define _VPR_COND_VAR_POSIX_H_
 
 #include <vpr/vprConfig.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include <vpr/md/POSIX/Sync/MutexPosix.h>
 #include <vpr/Util/Interval.h>
-#include <vpr/Util/Debug.h>
-#include <sys/time.h>
 
 
 namespace vpr
@@ -80,7 +79,7 @@ public:
     *              association with this condition variable in this class
     *              (optional).
     */
-   CondVarPosix (MutexPosix* mutex = NULL)
+   CondVarPosix(MutexPosix* mutex = NULL)
    {
       // Initialize the condition variable.
       pthread_cond_init(&mCondVar, NULL);
@@ -101,7 +100,7 @@ public:
     * @pre None.
     * @post The condition variable is destroyed.
     */
-   ~CondVarPosix (void)
+   ~CondVarPosix()
    {
       pthread_cond_destroy(&mCondVar);
    }
@@ -118,7 +117,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if an error occurred when
     *         trying to wait on the condition variable.
     */
-   vpr::ReturnStatus wait (vpr::Interval time_to_wait = vpr::Interval::NoTimeout);
+   vpr::ReturnStatus wait(vpr::Interval timeToWait = vpr::Interval::NoTimeout);
 
    /**
     * Signals a thread waiting on this condition variable.
@@ -131,7 +130,7 @@ public:
     *         successfully.  vpr::ReturnStatus::Fail is returned if the
     *         signalling failed.
     */
-   vpr::ReturnStatus signal (void)
+   vpr::ReturnStatus signal()
    {
       // ASSERT:  We have been locked
       if ( pthread_cond_signal(&mCondVar) == 0 )
@@ -157,7 +156,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned to indicate an error with the
     *         signal broadcast.
     */
-   vpr::ReturnStatus broadcast (void)
+   vpr::ReturnStatus broadcast()
    {
       // ASSERT:  We have been locked
 
@@ -191,7 +190,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the lock was acquired
     *         successfully. vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus acquire (void)
+   vpr::ReturnStatus acquire()
    {
       return mCondMutex->acquire();
    }
@@ -209,7 +208,7 @@ public:
     *         successfully.  vpr::ReturnStatus::Fail is returned if the lock
     *         could not be acquired.
     */
-   vpr::ReturnStatus tryAcquire (void)
+   vpr::ReturnStatus tryAcquire()
    {
       return mCondMutex->tryAcquire();
    }
@@ -221,7 +220,7 @@ public:
     * @pre None.
     * @post The lock held by the caller on the mutex variable is released.
     */
-   vpr::ReturnStatus release (void)
+   vpr::ReturnStatus release()
    {
       return mCondMutex->release();
    }
@@ -239,17 +238,18 @@ public:
     *
     * @note NEVER call except to initialize explicitly.
     */
-   void setMutex (vpr::MutexPosix* mutex)
+   void setMutex(vpr::MutexPosix* mutex)
    {
       // NOT exactly correct, but just make sure not to leave it locked
       mutex->release();
       mCondMutex = mutex;
    }
 
-   /** Test the mutex to see if it is held.
-    */
+   /** Tests the mutex to see if it is held. */
    int test()
-   { return mCondMutex->test(); }
+   {
+      return mCondMutex->test();
+   }
 
    /**
     * Prints out information about the condition variable to stderr.
@@ -258,7 +258,7 @@ public:
     * @post All important data and debugging information related to the
     *       condition variable and its mutex are dumped to stderr.
     */
-   void dump (void) const
+   void dump() const
    {
       std::cerr << "------------- vpr::CondVarPosix::Dump ---------\n"
                 << "Not Implemented yet.\n";
