@@ -362,13 +362,10 @@ AC_CONFIG_FILES([
    snx/Util/Makefile
    samples/Makefile
    samples/opengl/Makefile
-   test/Makefile
-   test/TestSuite/Makefile
    mtree/SNX.data.dist
    mtree/SNX.include.dist
    mtree/SNX.install.dist
    mtree/SNX.samples.dist
-   mtree/SNX.test.dist
    VARS.pl
    ],
    [chmod a+x sonix-config])

@@ -269,7 +269,6 @@ pre-install:
 # Do everything needed after installing the library binaries.
 post-install:
 	@$(MAKE) install-samples
-	@$(MAKE) install-test
 	@$(MAKE) install-data
 	@$(MAKE) install-m4
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
@@ -307,19 +306,6 @@ install-samples:
 	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
           --prefix="$(projdatadir)/samples" --vars="$(topdir)/VARS.pl"	\
           --startdir="$(top_srcdir)/samples" $(_GROUP_OPT_PL) --srcdir="."
-
-# Install the test programs.
-install-test:
-	@echo "------------------------------------------------"
-	@echo "Installing test programs"
-	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.test.dist -p $(projdatadir)
-	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/test	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/test
-	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
-          --prefix="$(projdatadir)/test" --vars="$(topdir)/VARS.pl"	\
-          --startdir="$(top_srcdir)/test" $(_GROUP_OPT_PL) --srcdir="."
 
 # Install the standard data files.
 install-data:
