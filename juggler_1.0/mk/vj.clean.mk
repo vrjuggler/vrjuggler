@@ -2,7 +2,7 @@
 # $Id$
 #
 # This include file <vj.clean.mk> handles clean-up operations.  It adds a
-# 'clean' target.
+# 'clean' target and a 'cleandepend' target.
 # -----------------------------------------------------------------------------
 # The Makefiles that include this file can add to the ${CLEAN_FILES} variable
 # to dictate which files should be removed when 'make clean' is done.
@@ -25,3 +25,6 @@ clean:
 ifdef _LOCAL_CLEAN
 	${MAKE} _clean
 endif
+
+cleandepend:
+	-rm -f .depend_done
