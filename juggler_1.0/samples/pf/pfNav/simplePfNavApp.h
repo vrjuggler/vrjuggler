@@ -189,7 +189,8 @@ public:
       // Initialize loaders
       for (int x = 0; x < mModelList.size(); ++x)
       {
-         cout<<"simplePfNavAPP: Initializing performer file loaders for types like: "<<mModelList[x].filename<<"\n"<<flush;
+         cout << "simplePfNavAPP: Initializing performer file loaders for types like: "
+              << mModelList[x].filename.c_str() << "\n" << flush;
 
          if (!mModelList[x].filename.empty())
             pfdInitConverter( mModelList[x].filename.c_str() );
@@ -305,7 +306,8 @@ public:  // Configure the application
    // These must be set before the kernel starts calling the application
    void addModelFile( const std::string filename )
    {
-      vjDEBUG(vjDBG_ALL,0) <<"Adding model file: "<<filename<<"\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "Adding model file: " << filename.c_str() <<"\n"
+                           << vjDEBUG_FLUSH;
       Model m;
       m.filename = filename;
       m.description = filename;
@@ -370,7 +372,10 @@ public:  // Configure the application
          // Switch em
          mCurNavIndex = new_index;
          mNavigationDCS->setNavigator(mNavigators[mCurNavIndex]);
-         vjDEBUG(vjDBG_ALL,0) << "simplePfNavApp: Navigation switched to: " << clrSetNORM(clrGREEN) << mNavigators[mCurNavIndex]->getName() << clrRESET << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "simplePfNavApp: Navigation switched to: "
+                              << clrSetNORM(clrGREEN)
+                              << mNavigators[mCurNavIndex]->getName().c_str()
+                              << clrRESET << endl << vjDEBUG_FLUSH;
       }
    }
 
@@ -429,7 +434,8 @@ void simplePfNavApp::initializeModels()
    pfFileIO::setFilePath( ".:./data:/usr/share/Performer/data:/usr/share/Performer/data/town:");
    // set the file paths...
    pfFileIO::addFilePath( mFilePath );
-   vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrCYAN,"setFilePath: ") << mFilePath <<"\n"<<vjDEBUG_FLUSH;
+   vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrCYAN,"setFilePath: ")
+                           << mFilePath.c_str() << "\n" << vjDEBUG_FLUSH;
 
 
    // ----------- DESTROY OLD -------- //
@@ -463,7 +469,8 @@ void simplePfNavApp::initializeModels()
       // FIXME: do rotation...
       mModelList[x].modelDCS->setScale( mModelList[x].scale );
 
-      vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Adding " << mModelList[x].filename
+      vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Adding "
+                           << mModelList[x].filename.c_str()
                            << "\n" << vjDEBUG_FLUSH;
       mModelList[x].modelNode = pfFileIO::autoloadFile( mModelList[x].filename, pfFileIO::NOCONVERT );
 

@@ -216,7 +216,8 @@ void velocityNav::setActionButtons(std::vector<std::string> action_btn_names)
 // Set the name of the pos device that is used in navigation
 void velocityNav::setNavPosControl(std::string wand_dev)
 {
-   vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrGREEN,"Setting Nav Pos Control: ") << wand_dev << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrGREEN,"Setting Nav Pos Control: ")
+      << wand_dev.c_str() << endl << vjDEBUG_FLUSH;
    mNavWand.init(wand_dev);
 }
 

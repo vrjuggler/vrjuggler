@@ -133,8 +133,9 @@ bool vjPfDrawManager::configPerformerAPI(vjConfigChunk* chunk)
    mHeadModel = std::string(head_file);
    mWandModel = std::string(wand_file);
 
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "Head Model: " << mHeadModel << endl
-                                            << "Wand Model: " << mWandModel << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL)
+      << "Head Model: " << mHeadModel.c_str() << endl
+      << "Wand Model: " << mWandModel.c_str() << endl << vjDEBUG_FLUSH;
    vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "-----------------------------------------------------" << endl << vjDEBUG_FLUSH;
    return true;
 }

@@ -80,7 +80,7 @@ void main(int argc, char* argv[])
    }
 
    std::string model_filename = argv[1];
-   cout<<"Will load: "<<model_filename<<"\n"<<flush;
+   cout<<"Will load: "<<model_filename.c_str()<<"\n"<<flush;
 
    if (argc < 3)
    {
