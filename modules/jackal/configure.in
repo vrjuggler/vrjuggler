@@ -111,10 +111,10 @@ DPP_WIN32_SETUP
 AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
 
-# These are used on all platforms.
-AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE, "$OS_REL_STR")
-AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE_MAJOR, $OS_REL_NUM_MAJOR)
-AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE_MINOR, $OS_REL_NUM_MINOR)
+## These are used on all platforms.
+#AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE, "$OS_REL_STR")
+#AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE_MAJOR, $OS_REL_NUM_MAJOR)
+#AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE_MINOR, $OS_REL_NUM_MINOR)
 
 # Depending on the target operating system, set various command options and
 # such.
@@ -519,6 +519,14 @@ case $OS_TYPE in
         ;;
 esac
 
+jccl_extra_cxxflags=''
+jccl_extra_include_dirs=''
+
+if test "x$PLATFORM" = "xIRIX" ; then
+    jccl_n32_flags='-n32'
+    jccl_64_flags='-64'
+fi
+
 jccl_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 jccl_extra_libs="$APP_EXTRA_LIBS $APP_EXTRA_LIBS_END"
 
@@ -553,8 +561,12 @@ AC_SUBST(static_end)
 AC_SUBST(jccl_ldflags)
 AC_SUBST(jccl_libs)
 AC_SUBST(jccl_lib)
+AC_SUBST(jccl_extra_cxxflags)
+AC_SUBST(jccl_extra_include_dirs)
 AC_SUBST(jccl_extra_ldflags)
 AC_SUBST(jccl_extra_libs)
+AC_SUBST(jccl_n32_flags)
+AC_SUBST(jccl_64_flags)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
