@@ -39,7 +39,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gadget_d.lib jccl_d.lib vpr_d.lib cppdom_d.lib libnspr4.lib python$(PYTHON_VERSION).lib boost_python-vc71-mt-gd-1_31.lib $(NOINHERIT)"
+				AdditionalDependencies="gadget_d.lib jccl_d.lib vpr_d.lib cppdom_d.lib libnspr4.lib boost_python-vc71-mt-gd-1_31.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/gadget_d.pyd"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -99,7 +99,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gadget.lib jccl.lib vpr.lib cppdom.lib libnspr4.lib python$(PYTHON_VERSION).lib boost_python-vc71-mt-1_31.lib $(NOINHERIT)"
+				AdditionalDependencies="gadget.lib jccl.lib vpr.lib cppdom.lib libnspr4.lib boost_python-vc71-mt-1_31.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/gadget.pyd"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

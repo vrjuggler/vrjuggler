@@ -39,7 +39,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib cppdom_d.lib python$(PYTHON_VERSION).lib boost_python-vc71-mt-gd-1_31.lib $(NOINHERIT)"
+				AdditionalDependencies="vpr_d.lib cppdom_d.lib boost_python-vc71-mt-gd-1_31.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr_d.pyd"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -99,7 +99,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr.lib cppdom.lib python$(PYTHON_VERSION).lib boost_python-vc71-mt-1_31.lib $(NOINHERIT)"
+				AdditionalDependencies="vpr.lib cppdom.lib boost_python-vc71-mt-1_31.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr.pyd"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

@@ -39,7 +39,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj_d.lib vrj_ogl_d.lib gadget_d.lib jccl_d.lib vpr_d.lib cppdom_d.lib python$(PYTHON_VERSION).lib boost_python-vc71-mt-gd-1_31.lib osgd.lib osgProducerd.lib osgUtild.lib osgDBd.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="vrj_d.lib vrj_ogl_d.lib gadget_d.lib jccl_d.lib vpr_d.lib cppdom_d.lib boost_python-vc71-mt-gd-1_31.lib osgd.lib osgProducerd.lib osgUtild.lib osgDBd.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/__osgapp_d.pyd"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -99,7 +99,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj.lib vrj_ogl.lib gadget.lib jccl.lib vpr.lib cppdom.lib python$(PYTHON_VERSION).lib boost_python-vc71-mt-1_31.lib osg.lib osgProducer.lib osgUtil.lib osgDB.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="vrj.lib vrj_ogl.lib gadget.lib jccl.lib vpr.lib cppdom.lib boost_python-vc71-mt-1_31.lib osg.lib osgProducer.lib osgUtil.lib osgDB.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/__osgapp.pyd"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
