@@ -27,7 +27,7 @@ $MAILCMD = "/usr/lib/sendmail -odb -oem";
 $MAIL_BRANCH_HDR = "X-VRJuggler-CVS-Branch:";
 $ADD_TO_LINE = 1;
 
-$MAILADDRS = 'vrjuggler-checkins@lists.sourceforge.net';
+$MAILADDRS = 'patrickh@users.sourceforge.net';
 
 @COMMIT_HOSTS = ();
 
