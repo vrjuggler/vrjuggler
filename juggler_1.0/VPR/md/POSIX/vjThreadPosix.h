@@ -515,8 +515,29 @@ private:
         return hash(me);
     }
 
-    static vjThreadKeyPosix   mThreadIdKey;           // Key for the id of the local thread
-    static unsigned           mStaticsInitialized;    // Just a debug helper to try to find times when people call us before the statics are created
+// ===========================================================================
+// Static stuff follows.
+// ===========================================================================
+
+    struct staticWrapper
+    {
+       staticWrapper() : mStaticsInitialized(1221), mThreadIdKey(NULL)
+       {;}
+
+       unsigned          mStaticsInitialized;    // Just a debug helper to try
+                                                 // to find times when people
+                                                 // call us before the statics
+                                                 // are created    
+       vjThreadKeyPosix  mThreadIdKey;           // Key for the id of the
+                                                 // local thread
+    };
+
+    static vjThreadKeyPosix& threadIdKey()
+    {
+      return statics.mThreadIdKey;
+    }
+
+    static staticWrapper statics;
 };
 
 
