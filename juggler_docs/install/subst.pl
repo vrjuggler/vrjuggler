@@ -110,3 +110,9 @@ $alias_subst{'CONFIGURE_REV'} = '1.182';
 # Time of posting
 require "ctime.pl";
 $alias_subst{'TimeOfLastBuild'} = ctime(time);
+
+# Juggler colors
+$alias_subst{'VJRED'} = '#712237';
+$alias_subst{'VJPURPLE'} = '#604882';
+$alias_subst{'VJBLUE'} = '#00375c';
+$alias_subst{'VJORANGE'} = '#913c1d';
