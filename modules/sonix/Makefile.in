@@ -76,6 +76,12 @@ ifneq (@OS_TYPE@, Win32)
 DYNAMICLIB_VER	= .$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
 endif
 
+# Add extra linking options on Darwin/OS X.
+ifeq (@PLATFORM@, Darwin)
+LDOPTS+=	-compatibility_version $(SHLIB_MAJOR).$(SHLIB_MINOR)
+LDOPTS+=	-current_version $(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+endif
+
 STATICLIB_EXT	= @STATICLIB_EXT@
 DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 
