@@ -276,9 +276,6 @@ public class PropertySheetFactory extends PropertyComponent
             {
                Component source = (Component) evt.getSource();
                PropertyComponent temp = (PropertyComponent) source.getParent();
-               System.out.println("Removing value #" + temp_index +
-                                  " from property " + temp_string +
-                                  " in element " + temp_elm);
                temp_elm.removeProperty(temp_string, temp_index, temp_ctx);
 
                if(temp.getLayout() instanceof TableLayout)
