@@ -78,18 +78,18 @@ public class PerfAnalyzerPanel
 	}
     }
 
-    protected class LabeledPanelButton extends JButton {
-        public LabeledPerfDataCollector collector;
-        public LabeledPerfDataCollector.IndexInfo index_info;
+//      protected class LabeledPanelButton extends JButton {
+//          public LabeledPerfDataCollector collector;
+//          public LabeledPerfDataCollector.IndexInfo index_info;
 
-        public LabeledPanelButton (LabeledPerfDataCollector _collector, 
-                                   LabeledPerfDataCollector.IndexInfo _ii, 
-                                   String text) {
-            super (text);
-            collector = _collector;
-            index_info = _ii;
-        }
-    }
+//          public LabeledPanelButton (LabeledPerfDataCollector _collector, 
+//                                     LabeledPerfDataCollector.IndexInfo _ii, 
+//                                     String text) {
+//              super (text);
+//              collector = _collector;
+//              index_info = _ii;
+//          }
+//      }
 
     protected interface DataPanelElem 
         extends ActionListener {
@@ -218,8 +218,8 @@ public class PerfAnalyzerPanel
     protected class LabeledDataPanelElem 
         implements DataPanelElem {
 
-	public LabeledPerfDataCollector col;
-	public DefaultMutableTreeNode col_root;
+	protected LabeledPerfDataCollector col;
+	protected DefaultMutableTreeNode col_root;
 	protected HashMap node_map; // maps IndexInfos to TreeNodes
 
         public LabeledDataPanelElem (LabeledPerfDataCollector _col, MutableTreeNode global_root) {
@@ -244,7 +244,7 @@ public class PerfAnalyzerPanel
         }
 
 
-	public void addToTree (LabeledPerfDataCollector.IndexInfo ii) {
+	protected void addToTree (LabeledPerfDataCollector.IndexInfo ii) {
 	    MutableTreeNode node = col_root;
 	    MutableTreeNode new_node;
 	    int i, j, n;  // i = index into ii.label_components
@@ -262,14 +262,18 @@ public class PerfAnalyzerPanel
 		}
 		if (new_node == null) {
 		    // didn't find it, create folder node
-		    new_node = new DefaultMutableTreeNode( new PerfTreeNodeInfo ((String)ii.label_components.get(i), null, col));
+		    PerfTreeNodeInfo ni = new PerfTreeNodeInfo ((String)ii.label_components.get(i), null, col);
+		    new_node = new DefaultMutableTreeNode(ni);
 		    tree_model.insertNodeInto (new_node, node, node.getChildCount());
+		    ni.getGraphButton().addActionListener (PerfAnalyzerPanel.this);
 		}
 		node = new_node;
 	    }
 	    // add ii as a child node of node.
-	    new_node = new DefaultMutableTreeNode(new PerfTreeNodeInfo ((String)ii.label_components.get(ii.label_components.size()-1), ii, col));
+	    PerfTreeNodeInfo ni = new PerfTreeNodeInfo ((String)ii.label_components.get(ii.label_components.size()-1), ii, col);
+	    new_node = new DefaultMutableTreeNode(ni);
 	    tree_model.insertNodeInto (new_node, node, node.getChildCount());
+	    ni.getGraphButton().addActionListener (PerfAnalyzerPanel.this);
 
 	    node_map.put (ii, new_node);
 
@@ -436,8 +440,8 @@ public class PerfAnalyzerPanel
                 System.out.println ("Not implemented");
             }
         }
-        else if (source instanceof LabeledPanelButton) {
-            LabeledPanelButton b = (LabeledPanelButton)e.getSource();
+        else if (source instanceof PerfTreeNodeInfo.LabeledPanelButton) {
+            PerfTreeNodeInfo.LabeledPanelButton b = (PerfTreeNodeInfo.LabeledPanelButton)e.getSource();
             if (e.getActionCommand().equals ("Graph")) {
                 GenericGraphPanel gp = new LabeledSummaryGraphPanel (b.collector, b.index_info);
                 String title = "Graph of " + b.collector.getName();
