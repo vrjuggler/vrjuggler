@@ -81,6 +81,7 @@
 
 /* Define all of the following if building on HP-UX. */
 #undef VJ_OS_HPUX
+#undef VJ_HPUX_VERSION
 #undef _HPUX_SOURCE
 #undef _INCLUDE_TERMIO
 #undef _CMA_NOWRAPPERS_
