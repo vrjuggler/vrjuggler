@@ -61,15 +61,22 @@ class ObjectWriter : public AttributeMapBase
 {
 protected:
    ObjectWriter()
+      : mIsBinary(false)
    {;}
 
    ObjectWriter(const ObjectWriter& o)
-      : AttributeMapBase(o)
+      : AttributeMapBase(o), mIsBinary(false)
    {;}
 
 public:
    virtual ~ObjectWriter()
    {;}
+
+   /** Returns true if the writer is a binary based format. 
+    * This can be used to choose wether to use human-readable forms of serialization.
+    */
+   bool isBinary()
+   { return mIsBinary; }
 
    /** @name Tag and attribute handling.
     * ObjectReader and ObjectWriter support an interface that allows for using
@@ -110,6 +117,9 @@ public:
    virtual vpr::ReturnStatus writeDouble(double val) = 0;
    virtual vpr::ReturnStatus writeString(std::string val) = 0;
    virtual vpr::ReturnStatus writeBool(bool val) = 0;
+
+protected:
+   bool mIsBinary;   /**< Is this a binary serializer. */
 };
 
 } // namespace vpr
