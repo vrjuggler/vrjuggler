@@ -35,6 +35,9 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <iostream>
+
+
 namespace vrj
 {
 
@@ -88,9 +91,9 @@ public:
    float frust[6];  /**<  Left, Right, Bottom, Top, Near, Far */
 };
 
-
 // ---- FRIEND FUNCTIONS ---- //
 std::ostream& operator<<(std::ostream& out, Frustum& _frust);
 
-};
+}
+
 #endif
