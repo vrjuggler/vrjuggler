@@ -265,10 +265,9 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # -----------------------------------------------------------------------------
 
 # Add these C++ options when compiling with G++.
-if test "x$GXX" = "xyes" ; then
-#   CXXFLAGS="-fhonor-std -Wall $CXXFLAGS"
-   CXXFLAGS="-Wall $CXXFLAGS"
-fi
+#if test "x$GXX" = "xyes" ; then
+#   CXXFLAGS="-fhonor-std $CXXFLAGS"
+#fi
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN $TWEEK_CXXFLAGS_MIN"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
@@ -285,8 +284,9 @@ if test "x$HAVE_TWEEK_CXX" = "xY" ; then
 fi
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
-    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-    CXXFLAGS="$CXXFLAGS -woff 3322,1388 -w2"
+#    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
+#    CXXFLAGS="$CXXFLAGS -woff 3322,1388 -w2"
+    CXXFLAGS="$CXXFLAGS -w2"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     vc_cflags='/QIfdiv /QI0f'
