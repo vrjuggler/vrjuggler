@@ -232,7 +232,7 @@ void vjGlxWindow::config(vjDisplay* _display)
 
     // Get the vector of display chunks
    std::vector<vjConfigChunk*>* dispSysChunk;
-   dispSysChunk = vjKernel::instance()->getChunkDB()->getMatching("displaySystem");
+   dispSysChunk = vjKernel::instance()->getInitialChunkDB()->getMatching("displaySystem");
 
    window_name = _display->getName();
    pipe = _display->getPipe();
