@@ -448,7 +448,7 @@ namespace gadget
       return true;
    }
 
-   bool MsgPackage::receiveDeviceDataPacket(vpr::BufferObjectReader* object_reader, Input* virtual_device, vpr::Uint64* delta)
+   bool MsgPackage::receiveDeviceDataPacket(vpr::BufferObjectReader* object_reader, Input* virtual_device)
    {
       //////////////////////////////////////////////////////////////////////////////////////
       //																			      //
@@ -475,7 +475,7 @@ namespace gadget
          << "Data Packet Number: " << mRecvDataPacketCount << "\n" << clrRESET << vprDEBUG_FLUSH;
 
          //Read the device data from the packet
-      virtual_device->readObject(object_reader, delta);
+      virtual_device->readObject(object_reader);
 
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  clrOutBOLD(clrCYAN,"[Parse Packet]RECEIVEING A DEVICE DATA PACKET\n") << vprDEBUG_FLUSH;
       return true;

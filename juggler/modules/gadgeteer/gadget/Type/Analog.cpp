@@ -78,9 +78,11 @@ vpr::ReturnStatus Analog::writeObject(vpr::ObjectWriter* writer)
    ////////////////////////////////////////////////////
 }
 
-vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader,
-                                     vpr::Uint64* delta)
+vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
 {
+   vprASSERT(reader->attribExists("rim.timestamp.delta"));
+   vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
+
    vpr::Uint16 temp = reader->readUint16();
    vprASSERT(temp==MSG_DATA_ANALOG && "[Remote Input Manager]Not Analog Data");                          // ASSERT if this data is really not Analog Data
    std::vector<AnalogData> dataSample;
@@ -105,7 +107,7 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader,
          //std::cout << value;
          timeStamp = reader->readUint64();                       //Write Time Stamp vpr::Uint64
          temp_analog_data.setAnalog(value);
-         temp_analog_data.setTime(vpr::Interval(timeStamp + *delta,vpr::Interval::Usec));
+         temp_analog_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
          dataSample.push_back(temp_analog_data);
       }
       //std::cout << std::endl;
