@@ -431,13 +431,10 @@ public:
 protected:
    vpr::ReturnStatus constructGraph (void)
    {
-      std::string path_base;
+      std::string path_base(GRAPH_PATH);
       vpr::ReturnStatus status;
 
-      status = vpr::System::getenv("VPR_TEST_DIR", path_base);
-      CPPUNIT_ASSERT(status.success() && "Could not find VPR_TEST_DIR environment variable");
-
-      status = vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test_network.vsn"));
+      status = vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test/TestSuite/test_network.vsn"));
       CPPUNIT_ASSERT(status.success() && "Could not construct network");
 
       return status;

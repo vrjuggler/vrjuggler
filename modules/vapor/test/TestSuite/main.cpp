@@ -74,19 +74,9 @@ int main (int ac, char **av)
    srand(random_seed);
 
 #ifdef VPR_SIMULATOR       // ------ CONFIGURE SIM NETWORK ------ //
-   std::string path_base;
+   std::string path_base(GRAPH_PATH);
 
-   if ( ! vpr::System::getenv("VPR_TEST_DIR", path_base).success() )
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << clrOutBOLD(clrRED, "WARNING: Could not construct sim network graph -- $VPR_TEST_DIR not set\n")
-         << vprDEBUG_FLUSH;
-      exit(0);
-   }
-   else
-   {
-      vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test_network.vsn"));
-   }
+   vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test/TestSuite/test_network.vsn"));
 
    vpr::Thread sim_thread(run);
 #endif
