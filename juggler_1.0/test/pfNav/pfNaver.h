@@ -18,7 +18,7 @@ class pfNaver : public pfDCS
 public:
    pfNaver();
 
-   navigator* getNavigator()
+   velocityNav* getNavigator()
    { return &mVNav; }
 
 private:
@@ -98,10 +98,6 @@ int pfNaver::app(pfTraverser *trav)
 
    return pfDCS::app(trav);        /* Finish by calling the parent class's app() */
 }
-
-
-
-
 
 
 

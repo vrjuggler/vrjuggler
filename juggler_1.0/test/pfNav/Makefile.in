@@ -9,7 +9,7 @@ srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ -g
-VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
+VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir} -I${srcdir}/../nav
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@
 

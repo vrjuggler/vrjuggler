@@ -2,7 +2,6 @@
 #include <Math/vjMatrix.h>
 #include <Math/vjCoord.h>
 
-#include <collidor.h>
 
 #ifndef _NAVIGATOR_H_
 #define _NAVIGATOR_H_
@@ -14,7 +13,6 @@ public:
    navigator()
    {
       allowAxis[0] = allowAxis[1] = allowAxis[2] = true;    // Initialize to rot in all axes
-      mCollidor = NULL;
    }
 
    virtual void update(vjMatrix mat, bool allowTrans, bool allowRot) = 0;
@@ -26,19 +24,12 @@ public:
    void setCurPos(vjMatrix pos)
    { mCurPos = pos; }
 
-   void setCollidor(collidor* c)
-   { mCollidor = c; }
-   collidor* getCollidor()
-   { return mCollidor; }
-
 protected:
-   // Returns true if there was a collision
-   virtual bool navTranslate(vjVec3 trans);
-   virtual void navRotate(vjMatrix rot_mat);
+   bool navTranslate(vjVec3 trans);
+   void navRotate(vjMatrix rot_mat);
 
 protected:
    vjMatrix    mCurPos;       // The current position or the user- In Juggler coords
-   collidor*   mCollidor;     // The collidor to use
    bool        allowAxis[3];  // The collidor to use
 };
 
@@ -50,22 +41,6 @@ bool navigator::navTranslate(vjVec3 trans)
    cerr << "Trans: " << trans << endl;
    cerr << "    =: " << (cur_pos.pos+trans) << endl;
 
-   // Check for collision
-   if(mCollidor != NULL)
-   {
-
-      vjVec3 correction;
-      if(mCollidor->testMove(cur_pos.pos, trans, correction))
-      {
-         trans += correction;                // Correct the translation
-         //trans += correction*(0.1/correction.length());   // Bounce a little too much
-         ret_val = true;
-         cerr << "------ HIT -------\n";
-         cerr << "Correction: " << correction << endl;
-         cerr << "Corrected:  " << trans << endl;
-      }
-
-   }
    // Pre mult cur_mat by the trans we need to do
    //trans *= -1;
    vjMatrix trans_mat;  trans_mat.makeTrans(trans[0],trans[1],trans[2]);
