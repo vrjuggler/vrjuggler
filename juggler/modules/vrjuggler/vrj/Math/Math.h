@@ -211,19 +211,27 @@ public:
    }
 
    //: convert a trigonometric value given in degrees to radians
-   template <class dataType>
-   inline static dataType deg2rad( const dataType& deg )
+   inline static float deg2rad( const float& deg )
    {
       // x * (VJ_PI / 180.0)
       return deg * 0.01745329252f; 
    }
+   inline static double deg2rad( const double& deg )
+   {
+      // x * (VJ_PI / 180.0)
+      return deg * 0.01745329252; 
+   }
    
    //: convert a trigonometric value given in radians to degrees
-   template <class dataType>
-   inline static dataType rad2deg( const dataType& rad )
+   inline static float rad2deg( const float& rad )
    {
       // x * (180.0 / VJ_PI)
       return rad * 57.2957795131f;
+   }
+   inline static double rad2deg( const double& rad )
+   {
+      // x * (180.0 / VJ_PI)
+      return rad * 57.2957795131;
    }
    
    //: min returns the minimum of 2 values
@@ -276,6 +284,19 @@ public:
    {
        dataType size = b - a;
        result = a + (size * lerp);
+   }
+   
+   // round to nearest integer (32bit)
+   inline static float round( float p )
+   {
+      p += 0.5f;
+      return floor( p );
+   }
+   // round to nearest integer (64bit)
+   inline static double round( double p )
+   {
+      p += 0.5f;
+      return floor( p );
    }
    
    //: Is almost equal?
