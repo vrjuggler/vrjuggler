@@ -227,7 +227,7 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 # -----------------------------------------------------------------------------
 VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for VR Juggler ***))
 JCCL_PATH(0.0.1, , AC_MSG_ERROR(*** Jackal required for VR Juggler ***))
-GADGETEER_PATH(0.0.1, , AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***))
+GADGETEER_PATH(0.0.1, , AC_MSG_WARN(*** Gadgeteer required for VR Juggler ***))
 
 # ------------
 # OpenGL API.
