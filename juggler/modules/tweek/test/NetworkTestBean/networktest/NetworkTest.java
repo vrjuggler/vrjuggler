@@ -20,7 +20,7 @@ import tweek.*;
  */
 public class NetworkTest
    extends JPanel
-   implements CommunicationListener, TweekFrameListener
+   implements CommunicationListener
 {
    public NetworkTest()
    {
@@ -32,6 +32,10 @@ public class NetworkTest
       {
          e.printStackTrace();
       }
+
+      mFrameListener = new FrameListener(this);
+      EventListenerRegistry.instance().registerListener(mFrameListener,
+                                                        TweekFrameListener.class);
    }
 
    /**
@@ -120,12 +124,11 @@ public class NetworkTest
       disconnect();
    }
 
-   public void frameStateChanged (TweekFrameEvent e)
+   public boolean frameClosing()
    {
-      if ( e.getType() == TweekFrameEvent.FRAME_CLOSE )
-      {
-         disconnect();
-      }
+      System.out.println("frameClosing()");
+      disconnect();
+      return true;
    }
 
    private void disconnect()
@@ -230,6 +233,7 @@ public class NetworkTest
       private WhiteboardSubject mWhiteboard_subject = null;
    }
 
+   private TweekFrameListener mFrameListener;
    private BorderLayout mBeanLayout = new BorderLayout();
 
    private JPanel mSliderPanel = new JPanel();
@@ -242,4 +246,19 @@ public class NetworkTest
 
    private SliderObserverImpl mSliderObserver = null;
    private WhiteboardObserverImpl mWhiteboardObserver = null;
+}
+
+class FrameListener extends TweekFrameAdapter
+{
+   public FrameListener(NetworkTest bean)
+   {
+      this.bean = bean;
+   }
+
+   public boolean frameClosing(TweekFrameEvent e)
+   {
+      return bean.frameClosing();
+   }
+
+   private NetworkTest bean = null;
 }
