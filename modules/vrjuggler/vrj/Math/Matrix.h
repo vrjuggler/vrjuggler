@@ -180,9 +180,9 @@ public:
    void copy(const vjMatrix&  _v) { *this = _v;}
 
    //: Compare matrix for equality
-   //!RETVAL: 1 - this == _m
-   //!RETVAL: 0 - this != _m
-   int     equal(const vjMatrix&  _m) const  {
+   //!RETVAL: true - this == _m
+   //!RETVAL: false - this != _m
+   bool     equal(const vjMatrix&  _m) const  {
       return (((mat)[0][0] == (_m)[0][0]) &&
               ((mat)[0][1] == (_m)[0][1]) &&
               ((mat)[0][2] == (_m)[0][2]) &&

@@ -19,8 +19,11 @@ class vjVec3
 {
 public:
    // Constructor
+   //! ARGS: x,y,z - the values of the vector
    vjVec3(float _x, float _y, float _z)
    { set(_x, _y, _z);}
+
+   //: Default constructor
    vjVec3() {};
 
 public:
@@ -34,7 +37,7 @@ public:
 public:
    //: Are we equal
    //! RETURNS: true - Values in _v equal our values
-   int equal(const vjVec3&  _v) const {
+   bool equal(const vjVec3&  _v) const {
       return (vec[0] == _v[0] &&
               vec[1] == _v[1] &&
               vec[2] == _v[2]);
@@ -65,7 +68,6 @@ public:
                    (vec[2]*vec[2]));
    }
 
-//**//    float distance(const vjVec3& _v) const;
 
    //: Calculate the cross product of me X _v
    const vjVec3 cross(const vjVec3&  _v)
@@ -89,13 +91,6 @@ public:
    //--------------------------------------------------------
    void xformVec(const vjMatrix& _m, const vjVec3& _v);
 
-
-   /// Return me X matrix
-//**//    void xformPt(const vjVec3& _v, const vjMatrix& _m);
-
-   /// Return me X matrix
-//**//    void fullXformPt(const vjVec3& _v, const vjMatrix& _m);
-
 public:
    /// Operators
    float&  operator [](int i) { return vec[i];}
@@ -112,8 +107,7 @@ public:
    }
 
 public:
-   // vjVec3 operators (N.B. return by value can be slow)
-
+   // vjVec3 operators, return by value could be slow
    vjVec3 operator -() const {
       return vjVec3(-vec[0], -vec[1], -vec[2]);
    }
@@ -176,7 +170,6 @@ public:
 vjVec3 operator *(float _s, const vjVec3& _v);
 vjVec3 operator *(const vjVec3& _v, float _s);
 vjVec3 operator /(const vjVec3& _v, float _s);
-//inline vjVec3 operator *(const vjVec3& _v, const vjMatrix&  _m);
 ostream& operator<<(ostream& out, vjVec3& _v);
 
 #endif
