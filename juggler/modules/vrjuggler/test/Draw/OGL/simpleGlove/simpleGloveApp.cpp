@@ -33,6 +33,39 @@
 #include <simpleGloveApp.h>
 
 
+// Function called after tracker update but before start of drawing.  Do
+// calculations and state modifications here.
+void simpleGloveApp::preFrame()
+{
+   //std::cout<<"simpleGloveApp::preFrame()\n"<<std::flush;
+      
+   // what gesture is happening??
+   int currentGesture = mGesture->getGesture();
+       
+   // lookup the name of that gesture, and output it.
+   std::cout << "gestureID[" << currentGesture << "]:"
+             << mGesture->getGestureString(currentGesture).c_str()
+             << "\n" << std::flush;
+   
+   if (mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
+   {
+      // do openhand stuff.
+      //std::cout<<"OpenHand\n"<<std::flush;
+   }
+       
+   if (mGesture->getGesture() == mGesture->getGestureIndex("Closed Fist"))
+   {
+      // do closed fist stuff.
+      //std::cout<<"Closed Fist\n"<<std::flush;
+   }  
+   
+   if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
+   {
+      // do pointing stuff.
+      //std::cout<<"Pointing\n"<<std::flush;
+   }  
+}   
+
 void simpleGloveApp::myDraw()
 {
 	//cout<<"simpleGloveApp::myDraw()\n"<<flush;
