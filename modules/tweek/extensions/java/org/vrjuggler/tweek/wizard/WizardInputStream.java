@@ -36,6 +36,7 @@
 package org.vrjuggler.tweek.wizard;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 import java.util.jar.*;
 
@@ -45,14 +46,16 @@ import java.util.jar.*;
  * successfully loaded in with the all the resources it needs.
  */
 public class WizardInputStream
-   extends BufferedInputStream
+   extends JarInputStream
 {
    /**
     * Creates an WizardInputStream that reads from the specified InputStream.
     */
-   public WizardInputStream(InputStream out)
+   public WizardInputStream(String jarfile)
+      throws IOException
    {
-      super(out);
+      super(new BufferedInputStream(new FileInputStream(jarfile)));
+      mJar = new JarFile(jarfile);
    }
 
    /**
@@ -62,19 +65,23 @@ public class WizardInputStream
       throws IOException
    {
       Wizard wizard = null;
-      JarInputStream jar_in = new JarInputStream(this);
+      WizardClassLoader class_loader =
+               new WizardClassLoader(getClass().getClassLoader(), mJar);
 
       try
       {
-         JarEntry entry = jar_in.getNextJarEntry();
+         JarEntry entry = getNextJarEntry();
          while (entry != null)
          {
+            System.out.println("Looking at: " + entry.getName());
+            // We've run into the wizard entry
             if (entry.getName().equals("wizard.ser"))
             {
-               wizard = readSerializedWizard(jar_in);
+               wizard = readSerializedWizard(class_loader);
             }
 
-            jar_in.closeEntry();
+            closeEntry();
+            entry = getNextJarEntry();
          }
       }
       catch (EOFException e)
@@ -85,12 +92,15 @@ public class WizardInputStream
       return wizard;
    }
 
-   private Wizard readSerializedWizard(InputStream in)
+   /**
+    * Deserializes the wizard stored in the stream using the given class loader.
+    */
+   private Wizard readSerializedWizard(ClassLoader classLoader)
       throws IOException
    {
       try
       {
-         ObjectInputStream obj_in = new ObjectInputStream(in);
+         ObjectInputStream obj_in = new WizardObjectInputStream(this, classLoader);
          return (Wizard)obj_in.readObject();
       }
       catch (ClassNotFoundException cnfe)
@@ -107,4 +117,130 @@ public class WizardInputStream
    {
       return classname.replace('.', '/') + ".class";
    }
+
+   private JarFile mJar;
+}
+
+/**
+ * This customized ClassLoader is responsible for providing a way for custom
+ * wizard step classes used by the wizard along with the resources needed for
+ * those steps to be retrieved correctly from the wizard JAR.
+ */
+class WizardClassLoader
+   extends ClassLoader
+{
+   public WizardClassLoader(ClassLoader parent, JarFile jar)
+   {
+      super(parent);
+      mJar = jar;
+   }
+
+   public Class findClass(String name)
+      throws ClassNotFoundException
+   {
+      System.out.println("[WizardClassLoader] Finding class: " + name);
+      byte[] b = loadClassData(name);
+      return defineClass(name, b, 0, b.length);
+   }
+
+   private byte[] loadClassData(String name)
+      throws ClassNotFoundException
+   {
+      JarEntry entry = mJar.getJarEntry(classToFile(name));
+      if (entry == null)
+      {
+         throw new ClassNotFoundException(name);
+      }
+
+      // Get the bytes for the entry
+      int size = (int)entry.getSize();
+      byte[] bytes = new byte[size];
+
+      // Read in the class data
+      try
+      {
+         InputStream in = mJar.getInputStream(entry);
+         int bytes_read = 0;
+
+         while (bytes_read < size)
+         {
+            int count = in.read(bytes, bytes_read, size - bytes_read);
+            if (count == -1)
+            {
+               break;
+            }
+            else
+            {
+               bytes_read += count;
+            }
+         }
+      }
+      catch (IOException ioe)
+      {
+         ioe.printStackTrace();
+         bytes = null;
+      }
+
+      return bytes;
+   }
+
+   protected URL findResource(String name)
+   {
+      URL path = null;
+
+      JarEntry entry = mJar.getJarEntry(name);
+      if (entry != null)
+      {
+         try
+         {
+            path = new URL("jar:file:" + mJar.getName() + "!/" + name);
+         }
+         catch (MalformedURLException mue)
+         {
+            System.err.println("WARNING: Invalid URL contructed when " +
+                               "trying to find resource " + name + " in " +
+                               mJar.getName());
+         }
+      }
+
+      return path;
+   }
+
+   private String classToFile(String classname)
+   {
+      return classname.replace('.', '/') + ".class";
+   }
+
+   private JarFile mJar;
+}
+
+/**
+ * Customization of ObjectInputStream that uses a particular class loader to
+ * resolve classes when deserializing objects.
+ */
+class WizardObjectInputStream
+   extends ObjectInputStream
+{
+   public WizardObjectInputStream(InputStream in, ClassLoader classLoader)
+      throws IOException
+   {
+      super(in);
+      mClassLoader = classLoader;
+   }
+
+   protected Class resolveClass(ObjectStreamClass desc)
+      throws IOException, ClassNotFoundException
+   {
+      String name = desc.getName();
+      try
+      {
+         return mClassLoader.loadClass(name);
+      }
+      catch (ClassNotFoundException cnfe)
+      {
+         return super.resolveClass(desc);
+      }
+   }
+
+   private ClassLoader mClassLoader;
 }
