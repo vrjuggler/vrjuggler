@@ -91,7 +91,9 @@ DPP_SYSTEM_SETUP
 case $target_os in
     # SGI running IRIX 6.*.
     irix6*)
-        DBG_FLAGS="$DBG_FLAGS -gslim"
+        if test "x$USE_GCC" != "xyes" ; then
+            DBG_FLAGS="$DBG_FLAGS -gslim"
+        fi
 
         AC_DEFINE(_BSD_TYPES,)
         ;;
@@ -302,7 +304,7 @@ EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 gadget_cxxflags="$STDFLAGS $GMTL_INCLUDES"
 gadget_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS"
 
-if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
@@ -418,7 +420,7 @@ case $OS_TYPE in
         ;;
 esac
 
-if test "x$PLATFORM" = "xIRIX" ; then
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     gadget_n32_flags='-n32'
     gadget_64_flags='-64'
 fi
