@@ -81,10 +81,16 @@ bool InputArea::config(jccl::ConfigElementPtr e)
    bool found_window = KeyboardMouseDevice::KeyboardMouseDeviceRegistry::instance()->getKeyboardMouseDevice(mKeyboardMouseDeviceName, event_source_info);
    if(!found_window)
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "NOTE: Could not find keyboard/mouse device named '"
+      // Use vprDBG_WARNING_LVL for input_window config elements as they are
+      // almost certainly mis-configured without a valid value for
+      // keyboard_mouse_device_name.
+      int level = e->getID() == std::string("input_window") ? vprDBG_WARNING_LVL
+                                                            : vprDBG_STATE_LVL;
+
+      vprDEBUG(gadgetDBG_INPUT_MGR, level)
+         << "WARNING: Could not find keyboard/mouse device named '"
          << mKeyboardMouseDeviceName << "'\n" << vprDEBUG_FLUSH;
-      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, level)
          << "No InputArea will be created for window named '"
          << e->getName() << "'.\n" << vprDEBUG_FLUSH;
       return false;
