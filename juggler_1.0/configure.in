@@ -103,23 +103,28 @@ LIBBITSUF=''
 # Based on the value of $abi_type, set $ABI for later use and the Makefile
 # substitution variables $LIBBITSUF and $ABI.
 if test "x$abi_type" = "x64_M3" ; then
-    ABI='64_M3'
+    ABI='64'
+    INST_SET='mips3'
     LIBBITSUF='64'
     _EXTRA_FLAGS='-64 -mips3'
 elif test "x$abi_type" = "x64_M4" ; then
-    ABI='64_M4'
+    ABI='64'
+    INST_SET='mips4'
     LIBBITSUF='64'
     _EXTRA_FLAGS='-64 -mips4'
 elif test "x$abi_type" = "xN32_M3" ; then
-    ABI='N32_M3'
+    ABI='N32'
+    INST_SET='mips3'
     LIBBITSUF='32'
     _EXTRA_FLAGS='-n32 -mips3'
 elif test "x$abi_type" = "xN32_M4" ; then
-    ABI='N32_M4'
+    ABI='N32'
+    INST_SET='mips4'
     LIBBITSUF='32'
     _EXTRA_FLAGS='-n32 -mips4'
 elif test "x$abi_type" = "xO32" ; then
     ABI='O32'
+    INST_SET='mips2'
     LIBBITSUF=''
     _EXTRA_FLAGS='-o32 -mips2'
 fi
@@ -142,6 +147,7 @@ OPT_FLAGS=''		# Compiler optimization flags
 DSOREGFILE=''
 DSOVERSION=''
 DSOVERSIONOPTS=''
+ABI_LIST=''		# List of supported ABIs on a given platform
 PLATFORM=''		# Platform name
 
 # Depending on the host type, set various command options and such.
@@ -156,16 +162,10 @@ case $host in
 
         # Set compiler flags and the location of $DSOREGFILE depending on
         # $ABI.
-        if test "$ABI" = "64_M3" ; then
+        if test "$ABI" = "64" ; then
             DSOREGFILE='/usr/lib64/so_locations'
             OPT_FLAGS='-OPT:Olimit=2000'
-        elif test "$ABI" = "64_M4" ; then
-            DSOREGFILE='/usr/lib64/so_locations'
-            OPT_FLAGS='-OPT:Olimit=2000'
-        elif test "$ABI" = "N32_M3" ; then
-            DSOREGFILE='/usr/lib32/so_locations'
-            OPT_FLAGS='-OPT:Olimit=2000'
-        elif test "$ABI" = "N32_M4" ; then
+        elif test "$ABI" = "N32" ; then
             DSOREGFILE='/usr/lib32/so_locations'
             OPT_FLAGS='-OPT:Olimit=2000'
         elif test "$ABI" = "O32" ; then
@@ -187,6 +187,7 @@ case $host in
         DSOVERSION='sgi4.0'
         DSOVERSIONOPTS='-set_version ${DSOVERSION}'
 
+        ABI_LIST='N32_M4 N32_M3 64_M4 64_M3'
         PLATFORM='SGI'
 
         AC_DEFINE(VJ_OS_SGI,)
@@ -226,6 +227,7 @@ case $host in
     # i386-class machine running FreeBSD.
     i386-[a-z]*-freebsd*)
         AC_DEFINE(VJ_OS_FreeBSD,)
+        ABI_LIST='AOUT ELF'
         PLATFORM='i386-FBSD'
         ;;
     # Unkown operating system (to config.guess).
@@ -424,15 +426,12 @@ if test "x$enable_opengl" = "xyes" ; then
     # Ensure that /usr/include and /usr/lib are not included multiple times
     # if $OGLROOT is "/usr".
     if test "x${OGLROOT}" != "x/usr" ; then
-        _tmp='-I${OGLROOT}/include'
-        INCLUDES="$INCLUDES $_tmp"
+        INCLUDES="$INCLUDES -I\${OGLROOT}/include"
 
         if test "$PLATFORM" = "SGI" ; then
-            _tmp='-L${OGLROOT}/lib${LIBBITSUF}'
-            LDFLAGS="$_tmp $LDFLAGS"
+            LDFLAGS="-L\${OGLROOT}/lib\${LIBBITSUF} $LDFLAGS"
         else
-            _tmp='-L${OGLROOT}/lib'
-            LDFLAGS="$_tmp $LDFLAGS"
+            LDFLAGS="-L\${OGLROOT}/lib $LDFLAGS"
         fi
     fi
 
@@ -487,9 +486,9 @@ if test "x$enable_opengl" = "xyes" ; then
         if test "$PLATFORM" = "HP" ; then
             SYSTEM_OPENGL="$LIBOPENGL -lX11 -lm -lC"
         else
-            if test "$ABI" = "64_M3" -o "$ABI" = "64_M4" ; then
+            if test "$ABI" = "64" ; then
                 SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
-            elif test "$ABI" = "N32_M3" -o "$ABI" = "N32_M4" ; then
+            elif test "$ABI" = "N32" ; then
                 SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
             elif test "$ABI" = "O32" ; then
                 SYSTEM_OPENGL="-lmpc -limage -lGLw $LIBOPENGL -lfpe -lXm -lXt -lXmu -lX11 -lm -lmalloc -lC"
@@ -517,10 +516,8 @@ if test "x$enable_perf" = "xyes" ; then
     # Ensure that /usr/include and /usr/lib are not included multiple times
     # if $PFROOT is "/usr".
     if test "x${PFROOT}" != "x/usr" ; then
-        _tmp='-I${PFROOT}/include'
-        INCLUDES="$INCLUDES $_tmp"
-        _tmp='-L${PFROOT}/lib${LIBBITSUF}'
-        LDFLAGS="$_tmp $LDFLAGS"
+        INCLUDES="$INCLUDES -I\${PFROOT}/include"
+        LDFLAGS="-L\${PFROOT}/lib\${LIBBITSUF} $LDFLAGS"
     fi
 
     CFLAGS="$CFLAGS $INCLUDES $_EXTRA_FLAGS"
@@ -616,7 +613,11 @@ cd "$topdir"
 # alternative to using ${srcdir}.
 VJ_SRCDIR='${VJROOT_ABS}'
 
+# Variables set in Makefiles found in the test tree.
+TEST_VJ_LIBS="-L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
+TEST_VJ_LIBS_SUBST="-L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
 TEST_EXTRA_LIBS="$LDFLAGS -L${OGLROOT}/lib${LIBBITSUF} $OGLLIB $SYSTEM_OPENGL $LIBS"
+TEST_EXTRA_LIBS_SUBST="$LDFLAGS -L${OGLROOT}/lib\${LIBBITSUF} $OGLLIB $SYSTEM_OPENGL $LIBS"
 
 dnl # AC_SUBST(builddir)
 AC_SUBST(topdir)
@@ -637,6 +638,8 @@ AC_SUBST(OPT_FLAGS)
 AC_SUBST(SHAREDLIB_EXT)
 
 AC_SUBST(ABI)
+AC_SUBST(INST_SET)
+AC_SUBST(ABI_LIST)
 AC_SUBST(LIBBITSUF)
 AC_SUBST(PLATFORM)
 AC_SUBST(DSOREGFILE)
@@ -658,7 +661,10 @@ AC_SUBST(SHMEM_SYS)
 AC_SUBST(SYNC_SYS)
 AC_SUBST(THREAD_SYS)
 
+AC_SUBST(TEST_VJ_LIBS)
+AC_SUBST(TEST_VJ_LIBS_SUBST)
 AC_SUBST(TEST_EXTRA_LIBS)
+AC_SUBST(TEST_EXTRA_LIBS_SUBST)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
