@@ -57,16 +57,19 @@ public class VarValueMiniChunkPanel extends VarValuePanel implements ActionListe
     VarValuePanelParent     parent; // the parent is a listener on the remove button
     JButton           removebutton;
     ConfigChunk       chunk;
-    //Property          prop;
     boolean           use_remove_button;
     Vector            panels;
+    ConfigUIHelper    uihelper_module;
 
-    public VarValueMiniChunkPanel(VarValuePanelParent par, boolean _use_remove_button, ConfigChunk _chunk) {
+    public VarValueMiniChunkPanel(VarValuePanelParent par, 
+                                  boolean _use_remove_button, 
+                                  ConfigChunk _chunk,
+                                  ConfigUIHelper _uihelper_module) {
 	super();
 	parent = par;
-	//prop = _prop;
         use_remove_button = _use_remove_button;
 	chunk = new ConfigChunk (_chunk);
+        uihelper_module = _uihelper_module;
 
         setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
 
@@ -83,7 +86,7 @@ public class VarValueMiniChunkPanel extends VarValuePanel implements ActionListe
 	    j = p.getNum();
 	    for (k = 0; k < j; k++) {
 		v2 = p.getValue (j);
-		VarValuePanel vp = new VarValueStandardPanel (this, p.getDesc());
+		VarValuePanel vp = new VarValueStandardPanel (this, p.getDesc(), uihelper_module);
 		if (v2 != null)
 		    vp.setValue (v2);
                 add (vp);

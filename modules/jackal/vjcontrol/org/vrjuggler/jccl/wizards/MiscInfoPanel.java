@@ -39,6 +39,7 @@ import javax.swing.*;
 import VjWizards.*;
 import VjConfig.*;
 import VjComponents.UI.Widgets.*;
+import VjComponents.ConfigEditor.ConfigUIHelper;
 
 /**
  * Title:        VjControl Sim Wizard GUI
@@ -115,6 +116,10 @@ public class MiscInfoPanel
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
         this.add(jLabel6, new GridBagConstraints(0, 6, 1, 1, 0.0, 0.2
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+    }
+
+
+    public void setConfigUIHelper (ConfigUIHelper _uihelper_module) {
     }
 
 

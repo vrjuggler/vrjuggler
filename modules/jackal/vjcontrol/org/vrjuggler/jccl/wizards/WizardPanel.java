@@ -44,13 +44,17 @@ import VjWizards.*;
 import VjConfig.*;
 import VjComponents.UI.*;
 import VjComponents.ConfigEditor.ConfigModule;
+import VjComponents.ConfigEditor.ConfigUIHelper;
 import VjControl.Core;
+import VjControl.VjComponent;
 
 public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
 
     protected String component_name;
     protected ConfigChunk component_chunk;
     protected boolean ui_initialized;
+
+    protected ConfigUIHelper uihelper_module;
 
     protected java.util.List subpanels;
     protected java.util.List subpanel_gfx;
@@ -74,6 +78,8 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
         component_chunk = null;
         ui_initialized = false;
 
+        uihelper_module = null;
+
         current_gfxpanel = null;
         current_subpanel = null;
         current_subpanel_index = 0;
@@ -88,6 +94,7 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
     public boolean addSubPanel (WizardSubPanel p, ImageIcon gfx, String label) {
         if (subpanels.isEmpty())
             p.setInitialDB (initial_chunkdb);
+        p.setConfigUIHelper (uihelper_module);
         subpanels.add(p);
         subpanel_gfx.add(gfx);
         subpanel_labels.add (label);
@@ -95,9 +102,31 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
         return true;
     }
 
+
     public boolean configure (ConfigChunk ch) {
         component_chunk = ch;
         component_name = ch.getName();
+
+        // get pointers to the modules we need.
+        Property p = ch.getPropertyFromToken ("Dependencies");
+        if (p != null) {
+            int i;
+            int n = p.getNum();
+            String s;
+            VjComponent c;
+            for (i = 0; i < n; i++) {
+                s = p.getValue(i).toString();
+                c = Core.getComponentFromRegistry(s);
+                if (c != null) {
+                    if (c instanceof ConfigUIHelper)
+                        uihelper_module = (ConfigUIHelper)c;
+                }
+            }
+        }
+        if (uihelper_module == null) {
+            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
+            return false;
+        }
 
         return true;
     }

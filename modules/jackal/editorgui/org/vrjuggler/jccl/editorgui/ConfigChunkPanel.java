@@ -84,7 +84,6 @@ public interface ConfigChunkPanel extends EditorPanel {
     public ConfigChunk getNewValue();
 
 
-
     
 }
 

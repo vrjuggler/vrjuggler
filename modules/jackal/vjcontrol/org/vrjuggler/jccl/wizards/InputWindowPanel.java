@@ -44,6 +44,7 @@ import VjWizards.*;
 import VjConfig.*;
 import VjControl.*;
 import VjComponents.UI.Widgets.*;
+import VjComponents.ConfigEditor.ConfigUIHelper;
 
 /**
  * Title:        VjControl Sim Wizard GUI
@@ -208,6 +209,11 @@ public class InputWindowPanel
         right_panel_3.add(jLabel2, null);
         right_panel_3.add(mouse_slider, null);
     }
+
+
+    public void setConfigUIHelper (ConfigUIHelper uihelper_module) {
+    }
+
 
     /** Sets the state of the UI components to reflect the resultsDB. 
      *  This is called when the ui is initialized or when a new input db

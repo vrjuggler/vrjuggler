@@ -60,7 +60,9 @@ import VjComponents.ConfigEditor.*;
 import VjComponents.UI.Widgets.*;
 
 
-public class VarValueStandardPanel extends VarValuePanel implements ActionListener {
+public class VarValueStandardPanel 
+    extends VarValuePanel 
+    implements ActionListener {
 
     VarValuePanelParent     parent; // the parent is a listener on the remove button
     PropertyDesc      desc;
@@ -68,11 +70,15 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
     JComboBox         choice;   // note that only one of text,choice will be used.
     JButton           removebutton;
 
+    ConfigUIHelper    uihelper_module;
 
-    public VarValueStandardPanel(VarValuePanelParent par, PropertyDesc d) {
+    public VarValueStandardPanel(VarValuePanelParent par, 
+                                 PropertyDesc d,
+                                 ConfigUIHelper _uihelper_module) {
 	super();
 	parent = par;
 	desc = d;
+        uihelper_module = _uihelper_module;
 	int i, j, k;
 
 	setLayout(new BorderLayout (1,1));
@@ -148,11 +154,7 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
         ConfigChunkDB db;
         ConfigChunk ch;
 
-        ConfigModule config_module = (ConfigModule)Core.getModule ("Config Module");
-        if (config_module == null) {
-            Core.consoleErrorMessage ("GUI", "VarValueStandardPanel expected Config Module to exist");
-            return bm;
-        }
+        ConfigModule config_module = uihelper_module.getConfigModule();
 
         bm.addObject ("<No Selection>");
         for (i = 0; i < config_module.chunkdbs.size(); i++) {
