@@ -81,7 +81,20 @@ struct hash {
 
 inline bool operator<(const vpr::InetAddr& addr1, const vpr::InetAddr& addr2)
 {
-   return ((addr1.getAddressValue() < addr2.getAddressValue()) ? true : (addr1.getPort() < addr2.getPort()));
+   if ( addr1.getAddressValue() < addr2.getAddressValue() )
+   {
+      return true;
+   }
+   else if ( addr1.getAddressValue() > addr2.getAddressValue() )
+   {
+      return false;
+   }
+   else if ( addr1.getAddressValue() == addr2.getAddressValue() )
+   {
+      return (addr1.getPort() < addr2.getPort());
+   }
+
+   return false;
 }
 
 namespace std
