@@ -82,8 +82,10 @@ vjPosition::vjPosition()
 
 vjPosition::~vjPosition()
 {
+    /*  I didn't allocate it, so I should not deallocate it
     if (theData != NULL)
        getMyMemPool()->deallocate((void*)theData);
+    */
     if (mDataTimes != NULL)
    delete mDataTimes;
 }
