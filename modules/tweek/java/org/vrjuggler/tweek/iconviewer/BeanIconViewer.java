@@ -66,18 +66,18 @@ public class BeanIconViewer
    public void setModel (BeanTreeModel model)
    {
       // We only want to perform these steps the first time our model is set.
-      if ( m_model == null )
+      if ( mModel == null )
       {
          BeanRegistry.instance().addBeanRegistrationListener(this);
          initDataModel(model);
       }
       else
       {
-         m_model = model;
+         mModel = model;
          refreshDataModel();
       }
 
-      m_model = model;
+      mModel = model;
    }
 
    /**
@@ -118,15 +118,15 @@ public class BeanIconViewer
     * taken.
     *
     * @pre No data model has been provided.
-    * @post m_home_panel is created, and m_cur_panel is set to m_home_panel.
+    * @post mHomePanel is created, and mCurPanel is set to mHomePanel.
     *       The tree model is traversed, and the view is created.
     */
    private void initDataModel (BeanTreeModel model)
    {
       DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-      m_home_panel = new BeanIconPanel(root, "Home");
-      handleChildren(root, m_home_panel);
-      m_cur_panel = m_home_panel;
+      mHomePanel = new BeanIconPanel(root, "Home");
+      handleChildren(root, mHomePanel);
+      mCurPanel = mHomePanel;
    }
 
    /**
@@ -136,37 +136,37 @@ public class BeanIconViewer
     */
    private void refreshDataModel ()
    {
-      DefaultMutableTreeNode root = (DefaultMutableTreeNode) m_model.getRoot();
-      m_home_panel.removeAll();
-      handleChildren(root, m_home_panel);
-      m_home_panel.doLayout();
-      m_home_panel.repaint();
+      DefaultMutableTreeNode root = (DefaultMutableTreeNode) mModel.getRoot();
+      mHomePanel.removeAll();
+      handleChildren(root, mHomePanel);
+      mHomePanel.doLayout();
+      mHomePanel.repaint();
    }
 
    private void jbInit () throws Exception
    {
-      m_home_panel.setName("Home");
-      m_home_panel.setBackground(Color.white);
+      mHomePanel.setName("Home");
+      mHomePanel.setBackground(Color.white);
 
-      viewer.setLayout(m_icon_panel_layout);
+      viewer.setLayout(mIconPanelLayout);
 
-      m_home_button.setToolTipText("Home");
+      mHomeButton.setToolTipText("Home");
 
       String icon_name = "org/vrjuggler/tweek/iconviewer/home.gif";
 
       try
       {
-         m_home_button.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
+         mHomeButton.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
       }
       catch (NullPointerException e)
       {
-         m_home_button.setText("Home");
+         mHomeButton.setText("Home");
          System.err.println("WARNING: Failed to load icon " + icon_name);
       }
 
-      m_home_button.setVerticalTextPosition(JLabel.BOTTOM);
-      m_home_button.setHorizontalTextPosition(JLabel.CENTER);
-      m_home_button.addActionListener(new ActionListener ()
+      mHomeButton.setVerticalTextPosition(JLabel.BOTTOM);
+      mHomeButton.setHorizontalTextPosition(JLabel.CENTER);
+      mHomeButton.addActionListener(new ActionListener ()
          {
             public void actionPerformed (ActionEvent e)
             {
@@ -174,24 +174,24 @@ public class BeanIconViewer
             }
          });
 
-      m_back_button.setEnabled(false);
-      m_back_button.setToolTipText("Back");
+      mBackButton.setEnabled(false);
+      mBackButton.setToolTipText("Back");
 
       icon_name = "org/vrjuggler/tweek/iconviewer/back.gif";
 
       try
       {
-         m_back_button.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
+         mBackButton.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
       }
       catch (NullPointerException e)
       {
-         m_back_button.setText("Back");
+         mBackButton.setText("Back");
          System.err.println("WARNING: Failed to load icon " + icon_name);
       }
 
-      m_back_button.setVerticalTextPosition(JLabel.BOTTOM);
-      m_back_button.setHorizontalTextPosition(JLabel.CENTER);
-      m_back_button.addActionListener(new ActionListener ()
+      mBackButton.setVerticalTextPosition(JLabel.BOTTOM);
+      mBackButton.setHorizontalTextPosition(JLabel.CENTER);
+      mBackButton.addActionListener(new ActionListener ()
          {
             public void actionPerformed (ActionEvent e)
             {
@@ -199,24 +199,24 @@ public class BeanIconViewer
             }
          });
 
-      m_forw_button.setEnabled(false);
-      m_forw_button.setToolTipText("Forward");
+      mForwButton.setEnabled(false);
+      mForwButton.setToolTipText("Forward");
 
       icon_name = "org/vrjuggler/tweek/iconviewer/forward.gif";
 
       try
       {
-         m_forw_button.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
+         mForwButton.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
       }
       catch (NullPointerException e)
       {
-         m_forw_button.setText("Forward");
+         mForwButton.setText("Forward");
          System.err.println("WARNING: Failed to load icon " + icon_name);
       }
 
-      m_forw_button.setVerticalTextPosition(JLabel.BOTTOM);
-      m_forw_button.setHorizontalTextPosition(JLabel.CENTER);
-      m_forw_button.addActionListener(new ActionListener ()
+      mForwButton.setVerticalTextPosition(JLabel.BOTTOM);
+      mForwButton.setHorizontalTextPosition(JLabel.CENTER);
+      mForwButton.addActionListener(new ActionListener ()
          {
             public void actionPerformed (ActionEvent e)
             {
@@ -224,8 +224,8 @@ public class BeanIconViewer
             }
          });
 
-      m_multi_button.setText("Multiple Windows");
-      m_multi_button.addItemListener(new ItemListener ()
+      mMultiButton.setText("Multiple Windows");
+      mMultiButton.addItemListener(new ItemListener ()
          {
             public void itemStateChanged (ItemEvent e)
             {
@@ -233,26 +233,26 @@ public class BeanIconViewer
             }
          });
 
-      m_sep.setOrientation(SwingConstants.VERTICAL);
+      mSep.setOrientation(SwingConstants.VERTICAL);
 
-      m_view_container.setBorder(BorderFactory.createLoweredBevelBorder());
+      mViewContainer.setBorder(BorderFactory.createLoweredBevelBorder());
 
-      m_nav_bar.setBorder(BorderFactory.createEtchedBorder());
-      m_nav_bar.add(m_home_button, null);
-      m_nav_bar.add(m_back_button, null);
-      m_nav_bar.add(m_forw_button, null);
-      m_nav_bar.add(m_sep, null);
-      m_nav_bar.add(m_multi_button, null);
-      viewer.add(m_nav_bar,  BorderLayout.NORTH);
+      mNavBar.setBorder(BorderFactory.createEtchedBorder());
+      mNavBar.add(mHomeButton, null);
+      mNavBar.add(mBackButton, null);
+      mNavBar.add(mForwButton, null);
+      mNavBar.add(mSep, null);
+      mNavBar.add(mMultiButton, null);
+      viewer.add(mNavBar,  BorderLayout.NORTH);
 
-      viewer.add(m_view_container,  BorderLayout.CENTER);
-      m_view_container.getViewport().add(m_cur_panel, null);
+      viewer.add(mViewContainer,  BorderLayout.CENTER);
+      mViewContainer.getViewport().add(mCurPanel, null);
    }
 
    private void addInternalFrame (JComponent panel)
    {
       JInternalFrame frame = new JInternalFrame();
-      m_desktop_pane.add(frame);
+      mDesktopPane.add(frame);
       frame.getContentPane().setLayout(new BorderLayout());
       frame.getContentPane().add(new JScrollPane(panel), null);
       frame.setTitle(panel.getName());
@@ -267,15 +267,15 @@ public class BeanIconViewer
 
    private void homeClicked ()
    {
-      if ( m_multi_win )
+      if ( mMultiWin )
       {
-         addInternalFrame(m_home_panel);
+         addInternalFrame(mHomePanel);
       }
       else
       {
-         if ( m_cur_panel != m_home_panel )
+         if ( mCurPanel != mHomePanel )
          {
-            pushCurrentBack(m_home_panel);
+            pushCurrentBack(mHomePanel);
          }
       }
    }
@@ -285,24 +285,24 @@ public class BeanIconViewer
     */
    private void backClicked ()
    {
-      if ( m_forw_stack.empty() )
+      if ( mForwStack.empty() )
       {
-         m_forw_button.setEnabled(true);
+         mForwButton.setEnabled(true);
       }
 
-      swapPanel(m_back_stack, m_forw_stack);
+      swapPanel(mBackStack, mForwStack);
 
-      if ( m_last_panel != null )
+      if ( mLastPanel != null )
       {
-         fireBeanUnfocusEvent(m_last_panel);
+         fireBeanUnfocusEvent(mLastPanel);
 
          // XXX: Not exactly what we want...
-         m_last_panel = null;
+         mLastPanel = null;
       }
 
-      if ( m_back_stack.empty() )
+      if ( mBackStack.empty() )
       {
-         m_back_button.setEnabled(false);
+         mBackButton.setEnabled(false);
       }
    }
 
@@ -311,39 +311,39 @@ public class BeanIconViewer
     */
    private void forwClicked ()
    {
-      if ( m_back_stack.empty() )
+      if ( mBackStack.empty() )
       {
-         m_back_button.setEnabled(true);
+         mBackButton.setEnabled(true);
       }
 
-      swapPanel(m_forw_stack, m_back_stack);
+      swapPanel(mForwStack, mBackStack);
 
-      if ( m_last_panel != null )
+      if ( mLastPanel != null )
       {
-         fireBeanUnfocusEvent(m_last_panel);
+         fireBeanUnfocusEvent(mLastPanel);
 
          // XXX: Not exactly what we want...
-         m_last_panel = null;
+         mLastPanel = null;
       }
 
-      if ( m_forw_stack.empty() )
+      if ( mForwStack.empty() )
       {
-         m_forw_button.setEnabled(false);
+         mForwButton.setEnabled(false);
       }
    }
 
    /**
-    * Moves the current panel to the top of to_stack and sets the current
-    * panel to the top of from_stack.
+    * Moves the current panel to the top of toStack and sets the current
+    * panel to the top of fromStack.
     */
-   private void swapPanel (Stack from_stack, Stack to_stack)
+   private void swapPanel (Stack fromStack, Stack toStack)
    {
-      to_stack.push(m_cur_panel);
-      m_view_container.getViewport().remove(m_cur_panel);
-      m_cur_panel = (JComponent) from_stack.pop();
+      toStack.push(mCurPanel);
+      mViewContainer.getViewport().remove(mCurPanel);
+      mCurPanel = (JComponent) fromStack.pop();
 
-      m_view_container.getViewport().add(m_cur_panel, null);
-      m_view_container.repaint();
+      mViewContainer.getViewport().add(mCurPanel, null);
+      mViewContainer.repaint();
    }
 
    /**
@@ -355,38 +355,38 @@ public class BeanIconViewer
    {
       if ( e.getStateChange() == ItemEvent.DESELECTED )
       {
-         m_view_container.getViewport().remove(m_desktop_pane);
-         m_view_container.getViewport().add(m_cur_panel, null);
-         m_home_button.setEnabled(true);
-         m_back_button.setEnabled(false);
-         m_forw_button.setEnabled(false);
-         m_back_stack.clear();
-         m_forw_stack.clear();
+         mViewContainer.getViewport().remove(mDesktopPane);
+         mViewContainer.getViewport().add(mCurPanel, null);
+         mHomeButton.setEnabled(true);
+         mBackButton.setEnabled(false);
+         mForwButton.setEnabled(false);
+         mBackStack.clear();
+         mForwStack.clear();
 
-         m_multi_win = false;
-         m_desktop_pane.removeAll();
+         mMultiWin = false;
+         mDesktopPane.removeAll();
       }
       else
       {
-         m_view_container.getViewport().remove(m_cur_panel);
-         m_view_container.getViewport().add(m_desktop_pane, null);
-         m_home_button.setEnabled(false);
-         m_back_button.setEnabled(false);
-         m_forw_button.setEnabled(false);
+         mViewContainer.getViewport().remove(mCurPanel);
+         mViewContainer.getViewport().add(mDesktopPane, null);
+         mHomeButton.setEnabled(false);
+         mBackButton.setEnabled(false);
+         mForwButton.setEnabled(false);
 
-         m_multi_win = true;
+         mMultiWin = true;
 
-         Iterator i = m_back_stack.iterator();
+         Iterator i = mBackStack.iterator();
 
          while ( i.hasNext() )
          {
             addInternalFrame((JComponent) i.next());
          }
 
-         addInternalFrame(m_cur_panel);
+         addInternalFrame(mCurPanel);
       }
 
-      m_view_container.repaint();
+      mViewContainer.repaint();
    }
 
    /**
@@ -395,46 +395,46 @@ public class BeanIconViewer
     *
     * @post The view container is refreshed.
     */
-   private void pushCurrentBack (JComponent new_component)
+   private void pushCurrentBack (JComponent newComponent)
    {
-      if ( m_back_stack.empty() )
+      if ( mBackStack.empty() )
       {
-         m_back_button.setEnabled(true);
+         mBackButton.setEnabled(true);
       }
 
-      m_back_stack.push(m_cur_panel);
+      mBackStack.push(mCurPanel);
 
       // Clear out the forward navigation stack because what we are now viewing
       // is what will go into the forward stack if the Back button is pressed.
-      m_forw_stack.clear();
-      m_forw_button.setEnabled(false);
+      mForwStack.clear();
+      mForwButton.setEnabled(false);
 
-      m_view_container.getViewport().remove(m_cur_panel);
-      m_cur_panel = new_component;
-      m_view_container.getViewport().add(m_cur_panel, null);
-      m_view_container.repaint();
+      mViewContainer.getViewport().remove(mCurPanel);
+      mCurPanel = newComponent;
+      mViewContainer.getViewport().add(mCurPanel, null);
+      mViewContainer.repaint();
    }
 
-   private void handleChildren (TreeNode parent_data_node,
-                                BeanIconPanel parent_panel)
+   private void handleChildren (TreeNode parentDataNode,
+                                BeanIconPanel parentPanel)
    {
-      int child_count = parent_data_node.getChildCount();
+      int child_count = parentDataNode.getChildCount();
 
       for ( int i = 0; i < child_count; i++ )
       {
          DefaultMutableTreeNode child_data_node =
-            (DefaultMutableTreeNode) parent_data_node.getChildAt(i);
+            (DefaultMutableTreeNode) parentDataNode.getChildAt(i);
 
          if ( child_data_node.isLeaf() )
          {
             addPanelIcon((PanelBean) child_data_node.getUserObject(),
-                         parent_panel);
+                         parentPanel);
          }
          else
          {
             BeanIconPanel child_panel = new BeanIconPanel(child_data_node);
-            DefaultMutableTreeNode child_node = new DefaultMutableTreeNode(parent_panel);
-            addFolderIcon(child_panel, parent_panel);
+            DefaultMutableTreeNode child_node = new DefaultMutableTreeNode(parentPanel);
+            addFolderIcon(child_panel, parentPanel);
             handleChildren(child_data_node, child_panel);
          }
       }
@@ -444,10 +444,10 @@ public class BeanIconViewer
     * Adds a folder icon to the given parent panel.  The folder "opens" to
     * contain the given child panel.
     */
-   private void addFolderIcon (BeanIconPanel child_panel,
-                               BeanIconPanel parent_panel)
+   private void addFolderIcon (BeanIconPanel childPanel,
+                               BeanIconPanel parentPanel)
    {
-      JLabel folder_icon = new JLabel(child_panel.getName());
+      JLabel folder_icon = new JLabel(childPanel.getName());
 
       String icon_name = "org/vrjuggler/tweek/iconviewer/bean_folder.gif";
 
@@ -460,14 +460,14 @@ public class BeanIconViewer
          System.err.println("WARNING: Failed to load icon " + icon_name);
       }
 
-      folder_icon.addMouseListener(new FolderMouseListener(child_panel));
-      parent_panel.addIcon(folder_icon);
+      folder_icon.addMouseListener(new FolderMouseListener(childPanel));
+      parentPanel.addIcon(folder_icon);
    }
 
    /**
     * Adds a panel (leaf) icon to the given parent panel.
     */
-   private void addPanelIcon (PanelBean panel, BeanIconPanel panel_parent)
+   private void addPanelIcon (PanelBean panel, BeanIconPanel panelParent)
    {
       JLabel panel_icon = new JLabel(panel.toString());
 
@@ -495,14 +495,14 @@ public class BeanIconViewer
       }
 
       panel_icon.addMouseListener(new IconMouseListener(panel));
-      panel_parent.addIcon(panel_icon);
+      panelParent.addIcon(panel_icon);
    }
 
    private class IconMouseListener implements MouseListener
    {
       public IconMouseListener (PanelBean p)
       {
-         m_bean_panel = p;
+         mBeanPanel = p;
       }
 
       public void mouseClicked (MouseEvent e)
@@ -512,23 +512,23 @@ public class BeanIconViewer
 
          try
          {
-            if ( ! m_bean_panel.isInstantiated() )
+            if ( ! mBeanPanel.isInstantiated() )
             {
-               m_bean_panel.instantiate();
+               mBeanPanel.instantiate();
             }
 
-            JComponent bean = m_bean_panel.getComponent();
-            bean.setName(m_bean_panel.toString());
+            JComponent bean = mBeanPanel.getComponent();
+            bean.setName(mBeanPanel.toString());
 
-            if ( m_last_panel != null )
+            if ( mLastPanel != null )
             {
-               fireBeanUnfocusEvent(m_last_panel);
+               fireBeanUnfocusEvent(mLastPanel);
             }
 
-            fireBeanFocusEvent(m_bean_panel);
-            m_last_panel = m_bean_panel;
+            fireBeanFocusEvent(mBeanPanel);
+            mLastPanel = mBeanPanel;
 
-            if ( m_multi_win )
+            if ( mMultiWin )
             {
                addInternalFrame(bean);
             }
@@ -561,31 +561,31 @@ public class BeanIconViewer
       {
       }
 
-      private PanelBean m_bean_panel = null;
+      private PanelBean mBeanPanel = null;
    }
 
    private class FolderMouseListener implements MouseListener
    {
       public FolderMouseListener (BeanIconPanel icon_panel)
       {
-         m_panel = icon_panel;
+         mPanel = icon_panel;
       }
 
       public void mouseClicked (MouseEvent e)
       {
-         if ( m_last_panel != null )
+         if ( mLastPanel != null )
          {
-            fireBeanUnfocusEvent(m_last_panel);
-            m_last_panel = null;
+            fireBeanUnfocusEvent(mLastPanel);
+            mLastPanel = null;
          }
 
-         if ( m_multi_win )
+         if ( mMultiWin )
          {
-            addInternalFrame(m_panel);
+            addInternalFrame(mPanel);
          }
          else
          {
-            pushCurrentBack(m_panel);
+            pushCurrentBack(mPanel);
          }
       }
 
@@ -605,30 +605,30 @@ public class BeanIconViewer
       {
       }
 
-      private BeanIconPanel m_panel = null;
+      private BeanIconPanel mPanel = null;
    }
 
-   private BeanTreeModel m_model = null;
+   private BeanTreeModel mModel = null;
 
    private JPanel       viewer           = new JPanel();
-   private BorderLayout m_icon_panel_layout = new BorderLayout();
+   private BorderLayout mIconPanelLayout = new BorderLayout();
 
-   private JToolBar           m_nav_bar      = new JToolBar();
-   private JButton            m_home_button  = new JButton();
-   private JButton            m_back_button  = new JButton();
-   private JButton            m_forw_button  = new JButton();
-   private JToolBar.Separator m_sep          = new JToolBar.Separator();
-   private JCheckBox          m_multi_button = new JCheckBox();
+   private JToolBar           mNavBar      = new JToolBar();
+   private JButton            mHomeButton  = new JButton();
+   private JButton            mBackButton  = new JButton();
+   private JButton            mForwButton  = new JButton();
+   private JToolBar.Separator mSep         = new JToolBar.Separator();
+   private JCheckBox          mMultiButton = new JCheckBox();
 
-   private JScrollPane m_view_container = new JScrollPane();
+   private JScrollPane mViewContainer = new JScrollPane();
 
-   private BeanIconPanel m_home_panel = null;
-   private JComponent    m_cur_panel  = null;
-   private PanelBean     m_last_panel = null;
+   private BeanIconPanel mHomePanel = null;
+   private JComponent    mCurPanel  = null;
+   private PanelBean     mLastPanel = null;
 
-   private JDesktopPane m_desktop_pane = new JDesktopPane();
-   private boolean      m_multi_win    = false;
+   private JDesktopPane mDesktopPane = new JDesktopPane();
+   private boolean      mMultiWin    = false;
 
-   private Stack m_back_stack = new Stack();
-   private Stack m_forw_stack = new Stack();
+   private Stack mBackStack = new Stack();
+   private Stack mForwStack = new Stack();
 }
