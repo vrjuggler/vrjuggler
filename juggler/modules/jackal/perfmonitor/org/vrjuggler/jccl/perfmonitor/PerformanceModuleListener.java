@@ -49,9 +49,9 @@ import VjComponents.PerfMonitor.PerformanceModuleEvent;
  */
 public interface PerformanceModuleListener extends java.util.EventListener {
 
-    public abstract void addPerfDataCollector (PerformanceModuleEvent e);
-    public abstract void removePerfDataCollector (PerformanceModuleEvent e);
-    public abstract void removeAllPerfDataCollectors (PerformanceModuleEvent e);
+    public abstract void perfDataCollectorAdded (PerformanceModuleEvent e);
+    public abstract void perfDataCollectorRemoved (PerformanceModuleEvent e);
+    public abstract void perfDataCollectorsCleared (PerformanceModuleEvent e);
 
 }
 

@@ -730,14 +730,14 @@ public class ControlUIModule
     //------------------------- ChunkDBListener stuff ------------------------
 
     /** Listening to Core.vjcontrol_chunkdb. */
-    public void addChunk (ChunkDBEvent e) {
+    public void configChunkAdded (ChunkDBEvent e) {
 	reconfigure (e.getNewChunk());
     }
-    public void removeChunk (ChunkDBEvent e) {;}
-    public void replaceChunk (ChunkDBEvent e) {
+    public void configChunkRemoved (ChunkDBEvent e) {;}
+    public void configChunkReplaced (ChunkDBEvent e) {
 	reconfigure (e.getNewChunk());
     }
-    public void removeAllChunks (ChunkDBEvent e) {;}
+    public void configChunksCleared (ChunkDBEvent e) {;}
 
 }
 

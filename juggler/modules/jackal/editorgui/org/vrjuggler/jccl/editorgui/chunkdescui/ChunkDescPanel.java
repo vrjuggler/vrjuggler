@@ -394,9 +394,9 @@ public class ChunkDescPanel
 
 
     //------------------- DescDBListener stuff ----------------------
-    public void addDesc (DescDBEvent e) {;}
-    public void removeDesc (DescDBEvent e) {;}
-    public void replaceDesc (DescDBEvent e) {
+    public void chunkDescAdded (DescDBEvent e) {;}
+    public void chunkDescRemoved (DescDBEvent e) {;}
+    public void chunkDescReplaced (DescDBEvent e) {
         // basically we're checking for when an apply comes across, so we
         // can correct exactly which chunk we're supposed to be editing.
         // at some point, we should add the ability to completely update the
@@ -408,7 +408,7 @@ public class ChunkDescPanel
         if (e.getOldDesc() == desc)
             desc = e.getNewDesc();
     }
-    public void removeAllDescs (DescDBEvent e) {;}
+    public void chunkDescsCleared (DescDBEvent e) {;}
 
 
 

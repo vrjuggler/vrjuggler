@@ -586,15 +586,15 @@ public class PerfAnalyzerPanel
 
     //------------------ PerformanceModuleListener Stuff ---------------------
 
-    public void addPerfDataCollector (PerformanceModuleEvent e) {
+    public void perfDataCollectorAdded (PerformanceModuleEvent e) {
         addDataPanelElem (e.getPerfDataCollector());
     }
 
-    public void removePerfDataCollector (PerformanceModuleEvent e) {
+    public void perfDataCollectorRemoved (PerformanceModuleEvent e) {
         // not implemented
     }
 
-    public void removeAllPerfDataCollectors (PerformanceModuleEvent e) {
+    public void perfDataCollectorsCleared (PerformanceModuleEvent e) {
         removeAllData ();
     }
 

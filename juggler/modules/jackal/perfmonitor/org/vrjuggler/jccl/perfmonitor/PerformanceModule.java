@@ -367,7 +367,7 @@ public class PerformanceModule extends DefaultCoreModule {
             n = performance_module_listeners.size();
             for (i = 0; i < n; i++) {
                 l = (PerformanceModuleListener)performance_module_listeners.get(i);
-                l.removeAllPerfDataCollectors (e);
+                l.perfDataCollectorsCleared (e);
             }
         }
     }
@@ -380,7 +380,7 @@ public class PerformanceModule extends DefaultCoreModule {
             n = performance_module_listeners.size();
             for (i = 0; i < n; i++) {
                 l = (PerformanceModuleListener)performance_module_listeners.get(i);
-                l.addPerfDataCollector (e);
+                l.perfDataCollectorAdded (e);
             }
         }
     }
@@ -393,7 +393,7 @@ public class PerformanceModule extends DefaultCoreModule {
             n = performance_module_listeners.size();
             for (i = 0; i < n; i++) {
                 l = (PerformanceModuleListener)performance_module_listeners.get(i);
-                l.removePerfDataCollector (e);
+                l.perfDataCollectorRemoved (e);
             }
         }
     }

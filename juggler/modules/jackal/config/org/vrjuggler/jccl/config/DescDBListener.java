@@ -48,10 +48,10 @@ import VjConfig.DescDBEvent;
  */
 public interface DescDBListener extends java.util.EventListener {
 
-    public abstract void addDesc (DescDBEvent e);
-    public abstract void removeDesc (DescDBEvent e);
-    public abstract void replaceDesc (DescDBEvent e);
-    public abstract void removeAllDescs (DescDBEvent e);
+    public abstract void chunkDescAdded (DescDBEvent e);
+    public abstract void chunkDescRemoved (DescDBEvent e);
+    public abstract void chunkDescReplaced (DescDBEvent e);
+    public abstract void chunkDescsCleared (DescDBEvent e);
 }
 
 
