@@ -36,6 +36,8 @@
 
 package org.vrjuggler.tweek.net;
 
+import org.vrjuggler.tweek.net.corba.*;
+
 
 /**
  * Event class used by org.vrjuggler.tweek.net.CommunicationListener.
@@ -50,14 +52,11 @@ public class CommunicationEvent extends java.util.EventObject
    public final static int DISCONNECT = 1;
    public final static int UPDATE     = 2;
 
-   public CommunicationEvent (Object source, int _type, String node_addr,
-                              int node_port, PlexusNodeInterface plex_if)
+   public CommunicationEvent (Object source, int _type, CorbaService corba_if)
    {
       super(source);
-      type            = _type;
-      hostAddress     = node_addr;
-      hostPort        = node_port;
-      plexusInterface = plex_if;
+      type          = _type;
+      corbaRegistry = corba_if;
    }
 
    public int getType ()
@@ -67,21 +66,19 @@ public class CommunicationEvent extends java.util.EventObject
 
    public String getHostAddress ()
    {
-      return hostAddress;
+      return corbaRegistry.getInitHost();
    }
 
    public int getHostPort ()
    {
-      return hostPort;
+      return corbaRegistry.getInitPort();
    }
 
-   public PlexusNodeInterface getPlexusInterface ()
+   public CorbaService getCorbaRegistry ()
    {
-      return plexusInterface ;
+      return corbaRegistry ;
    }
 
-   private int                 type            = -1;
-   private String              hostAddress     = null;
-   private int                 hostPort        = 0;
-   private PlexusNodeInterface plexusInterface = null;
+   private int          type          = -1;
+   private CorbaService corbaRegistry = null;
 }

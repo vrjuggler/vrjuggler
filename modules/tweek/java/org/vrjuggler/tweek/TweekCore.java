@@ -96,8 +96,7 @@ public class TweekCore
       // Load the user's global preferences file.
       GlobalPreferencesService.instance().load();
 
-      m_gui = new TweekFrame(org.vrjuggler.tweek.net.PlexusNodeInterfaceFactory.create(),
-                             GlobalPreferencesService.instance());
+      m_gui = new TweekFrame();
 
       // Now we need to register the TweekFrame instance as a listener for
       // BeanFocusChangeEvents.

@@ -45,7 +45,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.net.CommunicationEvent;
 import org.vrjuggler.tweek.net.CommunicationListener;
-import org.vrjuggler.tweek.net.PlexusNodeInterface;
+import org.vrjuggler.tweek.net.corba.*;
 import org.vrjuggler.tweek.services.GlobalPreferencesService;
 
 
@@ -62,11 +62,8 @@ import org.vrjuggler.tweek.services.GlobalPreferencesService;
 public class TweekFrame extends JFrame implements TreeModelRefreshListener,
                                                   BeanFocusChangeListener
 {
-   public TweekFrame (PlexusNodeInterface plex_if,
-                      GlobalPreferencesService prefs)
+   public TweekFrame ()
    {
-      m_plex_if = plex_if;
-      m_prefs   = prefs;
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
    }
 
@@ -104,7 +101,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
       try
       {
-         UIManager.setLookAndFeel(m_prefs.getLookAndFeel());
+         UIManager.setLookAndFeel(GlobalPreferencesService.instance().getLookAndFeel());
          jbInit();
       }
       catch (Exception e)
@@ -162,7 +159,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
     */
    private void jbInit () throws Exception
    {
-      setBeanViewer(m_prefs.getBeanViewer());
+      setBeanViewer(GlobalPreferencesService.instance().getBeanViewer());
 
       m_content_pane = (JPanel) this.getContentPane();
       m_content_pane.setLayout(m_content_pane_layout);
@@ -170,8 +167,9 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       this.setTitle("Tweek JavaBean Loader");
 
       // Define the Connect option in the Network menu.
+      m_menu_net_connect.setActionCommand("Connect to ORB ...");
       m_menu_net_connect.setMnemonic('C');
-      m_menu_net_connect.setText("Connect to Plexus ...");
+      m_menu_net_connect.setText("Connect to ORB ...");
       m_menu_net_connect.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
@@ -182,7 +180,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
       // Define the Disconnect option in the Network menu.
       m_menu_net_disconnect.setMnemonic('D');
-      m_menu_net_disconnect.setText("Disconnect from Plexus");
+      m_menu_net_disconnect.setText("Disconnect from ORB ...");
       m_menu_net_disconnect.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
@@ -192,15 +190,6 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
          });
 
       // Define the Update option in the Network menu.
-      m_menu_net_update.setMnemonic('U');
-      m_menu_net_update.setText("Update");
-      m_menu_net_update.addActionListener(new ActionListener()
-         {
-            public void actionPerformed (ActionEvent e)
-            {
-               networkUpdateAction(e);
-            }
-         });
 
       // Define the Exit option in the Network menu.
 
@@ -277,7 +266,6 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       m_menu_network.setMnemonic('N');
       m_menu_network.add(m_menu_net_connect);
       m_menu_network.add(m_menu_net_disconnect);
-      m_menu_network.add(m_menu_net_update);
 
       // Set up the Preferences menu.
       m_menu_prefs.setText("Preferences");
@@ -344,11 +332,10 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
     */
    private void networkConnectAction (ActionEvent e)
    {
-      String addr =
-         JOptionPane.showInputDialog(null,
-            "Please input a node address of the form <address>:<port>",
-            "Plexus Instance Address", JOptionPane.QUESTION_MESSAGE);
+      ConnectionDialog dialog = new ConnectionDialog(this, "ORB Connections");
+      dialog.display();
 
+/*
       if ( addr != null )
       {
          int colon_index = addr.indexOf(':');
@@ -389,6 +376,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
                                           JOptionPane.ERROR_MESSAGE);
          }
       }
+*/
    }
 
    /**
@@ -396,6 +384,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
     */
    private void networkDisconnectAction (ActionEvent e)
    {
+/*
       try
       {
          m_plex_if.disconnect();
@@ -405,14 +394,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       {
          ex.printStackTrace();
       }
-   }
-
-   /**
-    * Network | Update action performed.
-    */
-   private void networkUpdateAction (ActionEvent e)
-   {
-      m_bean_container.fireUpdateEvent();
+*/
    }
 
    /**
@@ -422,18 +404,19 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
    private void prefsEditGlobal (ActionEvent e)
    {
       // Save this for later.
-      int old_level = m_prefs.getUserLevel();
+      int old_level = GlobalPreferencesService.instance().getUserLevel();
 
-      PrefsDialog dialog = new PrefsDialog(this, "Global Preferences", m_prefs);
+      PrefsDialog dialog = new PrefsDialog(this, "Global Preferences",
+                                           GlobalPreferencesService.instance());
       dialog.display();
-
+/*
       if ( dialog.getStatus() == PrefsDialog.OK_OPTION )
       {
-         String viewer = m_prefs.getBeanViewer();
+         String viewer = GlobalPreferencesService.instance().getBeanViewer();
 
          m_bean_container.replaceViewer((BeanModelViewer) ViewerRegistry.instance().getViewer(viewer));
 
-         String new_laf = m_prefs.getLookAndFeel();
+         String new_laf = GlobalPreferencesService.instance().getLookAndFeel();
          String old_laf = UIManager.getCrossPlatformLookAndFeelClassName();
 
          if ( ! old_laf.equals(new_laf) )
@@ -446,7 +429,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
             }
             catch (Exception laf_e)
             {
-               m_prefs.setLookAndFeel(old_laf);
+               GlobalPreferencesService.instance().setLookAndFeel(old_laf);
                JOptionPane.showMessageDialog(null, "Invalid look and feel '" +
                                              new_laf + "'",
                                              "Bad Look and Feel Setting",
@@ -455,12 +438,13 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
          }
 
          // If the user level changed, fire an event saying as much.
-         if ( old_level != m_prefs.getUserLevel() )
+         if ( old_level != GlobalPreferencesService.instance().getUserLevel() )
          {
             m_bean_container.fireUserLevelChange(old_level,
-                                                 m_prefs.getUserLevel());
+                                                 GlobalPreferencesService.instance().getUserLevel());
          }
       }
+*/
    }
 
    private void beansLoadAction (ActionEvent e)
@@ -507,12 +491,11 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
    private boolean packFrame = false;
 
-   private GlobalPreferencesService m_prefs = null;
-
    // GUI objects.
    private JPanel        m_content_pane        = null;    /**< Top-level container */
    private BorderLayout  m_content_pane_layout = new BorderLayout();
    private BeanContainer m_bean_container      = new BeanContainer();
+   private JPanel        m_status_bar          = new JPanel();
 
    // Menu bar objects.
    private JMenuBar m_menu_bar             = new JMenuBar();
@@ -522,7 +505,6 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
    private JMenu m_menu_network            = new JMenu();
    private JMenuItem m_menu_net_connect    = new JMenuItem();
    private JMenuItem m_menu_net_disconnect = new JMenuItem();
-   private JMenuItem m_menu_net_update     = new JMenuItem();
    private JMenu m_menu_prefs              = new JMenu();
    private JMenuItem m_menu_prefs_gedit    = new JMenuItem();
    private JMenuItem m_menu_prefs_ledit    = new JMenuItem();
@@ -532,6 +514,4 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
    private JMenuItem m_menu_help_about     = new JMenuItem();
 
    // Networking stuff.
-   private PlexusNodeInterface m_plex_if = null;
-   JPanel m_status_bar = new JPanel();
 }
