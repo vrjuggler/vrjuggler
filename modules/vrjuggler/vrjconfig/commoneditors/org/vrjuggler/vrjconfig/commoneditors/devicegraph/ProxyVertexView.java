@@ -47,6 +47,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.Map;
 import javax.swing.*;
@@ -163,17 +164,7 @@ public class ProxyVertexView
                public void actionPerformed(ActionEvent evt)
                {
                   ConfigElement elt = createAlias();
-                  Dimension row_size = addAliasRow(elt);
-
-                  ProxyVertexRenderer r = ProxyVertexRenderer.this;
-                  Dimension pref_size = r.getPreferredSize();
-
-                  int width = Math.max(pref_size.width, row_size.width);
-                  int height = pref_size.height + row_size.height;
-
-                  r.setPreferredSize(new Dimension(width, height));
-                  r.revalidate();
-                  r.repaint();
+                  addAliasRow(elt, true);
                }
             }
          );
@@ -219,25 +210,16 @@ public class ProxyVertexView
                         ConfigElement alias_elt =
                            (ConfigElement) contents.getTransferData(flavor);
                         addAlias(alias_elt);
-                        Dimension row_size = addAliasRow(alias_elt);
-
-                        ProxyVertexRenderer r = ProxyVertexRenderer.this;
-
-                        Dimension pref_size = r.getPreferredSize();
-
-                        int width = Math.max(pref_size.width, row_size.width);
-                        int height = pref_size.height + row_size.height;
-                        r.setPreferredSize(new Dimension(width, height));
+                        addAliasRow(alias_elt, true);
 
                         // Manually disable all the "Paste" buttons in the
                         // proxy vertex renderers.
                         // XXX: It would be better if this would happen
                         // automatically upon reading the contents of the
                         // clipboard.
-                        setAllPasteButtonsEnabled(r.graph, false);
-
-                        r.revalidate();
-                        r.repaint();
+                        setAllPasteButtonsEnabled(
+                           ProxyVertexRenderer.this.graph, false
+                        );
                      }
                      // The condition above that tests the transferable object
                      // to see if our data flavor is supported makes it so
@@ -286,6 +268,8 @@ public class ProxyVertexView
                                             boolean selected, boolean hasFocus,
                                             boolean preview)
       {
+         mView = view;
+
          this.graph    = graph;
          this.selected = selected;
          this.preview  = preview;
@@ -305,31 +289,37 @@ public class ProxyVertexView
 
                ConfigElement proxy_elt = mProxyInfo.getElement();
 
-               int alias_width = 0, alias_height = 0;
+               Dimension label_size = mNameLabel.getPreferredSize();
+               Dimension add_size   = mAddAliasButton.getPreferredSize();
+               Dimension paste_size = mPasteAliasButton.getPreferredSize();
+
+               int min_width = Math.max(label_size.width,
+                                        Math.max(add_size.width,
+                                                 paste_size.width));
+
+               // The extra 10 units of height is to allow some vertical
+               // breathing room.
+               int min_height = label_size.height + add_size.height +
+                                   paste_size.height + 10;
+
+               setMinimumSize(new Dimension(min_width, min_height));
+               // XXX: Doubling the minimum width is a hack to deal with the
+               // default preferred alias row sizes not being wide enough.
+               setPreferredSize(new Dimension(min_width * 2, min_height));
 
                for ( Iterator i = mProxyInfo.getAliases().iterator();
                      i.hasNext(); )
                {
-                  Dimension row_size = addAliasRow((ConfigElement) i.next());
-
-                  alias_width   = Math.max(alias_width, row_size.width);
-                  alias_height += row_size.height;
+                  // Do not revalidate the layout and resize the cell view for
+                  // each new row.  We do what is necessary one time after all
+                  // the rows are added.
+                  addAliasRow((ConfigElement) i.next(), false);
                }
 
+               // At this point, we only revalidate the layout.  There is no
+               // need to change the cell view size because it is still being
+               // set up by JGraph at this stage of execution.
                this.revalidate();
-
-               Dimension label_size = mNameLabel.getPreferredSize();
-               Dimension add_size   = mAddAliasButton.getPreferredSize();
-               Dimension paste_size = mPasteAliasButton.getPreferredSize();
-               int width = Math.max(alias_width,
-                                    Math.max(label_size.width,
-                                             Math.max(add_size.width,
-                                                      paste_size.width)));
-               int min_height = label_size.height + add_size.height +
-                                   paste_size.height + 10;
-               int pref_height = min_height + alias_height;
-               setMinimumSize(new Dimension(width, min_height));
-               setPreferredSize(new Dimension(width * 2, pref_height));
             }
             catch (Exception ex)
             {
@@ -497,12 +487,22 @@ public class ProxyVertexView
 
       /**
        * Adds a new row for the given config element that is an alias for
-       * the proxy being rendered.
+       * the proxy being rendered.  If the caller chooses not to resize the
+       * cell view after adding the new row to this renderer, it is the
+       * responsibility of the caller to perform the layout validation and
+       * the cell view resizing.
        *
-       * @return The preferred size of the new row (as the sum of its
-       *         components) is returned.
+       * @param aliasElt        the config element for the alias that will be
+       *                        represented by the newly added row
+       * @param resizeCellView  a flag indicating whether or not to revalidate
+       *                        the renderer layout and to resize the cell
+       *                        view associated with this renderer
+       *
+       * @see #revalidate()
+       * @see GraphHelpers#autoSizeCellView(JGraph,Dimension,CellView)
        */
-      private Dimension addAliasRow(final ConfigElement aliasElt)
+      private void addAliasRow(final ConfigElement aliasElt,
+                               boolean resizeCellView)
       {
          final ConfigContext ctx = mProxyInfo.getContext();
 
@@ -721,12 +721,27 @@ public class ProxyVertexView
                                              TableLayoutConstraints.CENTER,
                                              TableLayoutConstraints.CENTER));
 
+         // Update the preferred size of the renderer based on the
+         // dimensions of the newly added row.
          int width = name_field.getPreferredSize().width +
                         edit_btn.getPreferredSize().width +
                         cut_btn.getPreferredSize().width +
                         remove_btn.getPreferredSize().width;
          int height = name_field.getPreferredSize().height;
-         return new Dimension(width, height);
+
+         Dimension pref_size = this.getPreferredSize();
+         int new_width  = Math.max(width, pref_size.width);
+         int new_height = height + pref_size.height;
+         pref_size = new Dimension(new_width, new_height);
+         this.setPreferredSize(pref_size);
+
+         // Only resize the cell view associated with this renderer if we are
+         // told to do so.  This is a bit of an optimization.
+         if ( resizeCellView )
+         {
+            this.revalidate();
+            GraphHelpers.autoSizeCellView(this.graph, pref_size, mView);
+         }
       }
 
       private static void setAllPasteButtonsEnabled(JGraph graph,
@@ -746,14 +761,33 @@ public class ProxyVertexView
 
       private void removeAliasRow(JComponent[] components, int row)
       {
+         // Get the preferred size of the renderer so that we can modify it
+         // after the row is removed.
+         Dimension pref_size = this.getPreferredSize();
+
+         // Set up the new preferred width and height based on the row that
+         // is being removed.
+         int width = pref_size.width;
+         int height =
+            pref_size.height - components[0].getPreferredSize().height;
+
+         // Remove all the components in this row (at least as far as we know).
          for ( int i = 0; i < components.length; ++i )
          {
             this.remove(components[i]);
          }
 
          mMainLayout.deleteRow(row);
+
+         // Change the preferred size of the renderer to account for the row
+         // removal.
+         pref_size = new Dimension(width, height);
+         this.setPreferredSize(pref_size);
+
          this.revalidate();
-         this.repaint();
+
+         // Resize the cell view now that the renderer has changed.
+         GraphHelpers.autoSizeCellView(this.graph, pref_size, mView);
       }
 
       private void removeAlias(ConfigElement aliasElt)
@@ -777,6 +811,8 @@ public class ProxyVertexView
          System.err.println("ERROR: Failed to find the data source that " +
                             "contains " + aliasElt.getName());
       }
+
+      private transient CellView mView = null;
 
       private transient JGraph graph        = null;
       private transient Color gradientColor = null;
