@@ -273,6 +273,28 @@ else
     fi
 fi
 
+if test "x$OS_TYPE" = "xUNIX" ; then
+   if test "x$gadget_use_x11" = "xyes" ; then
+      if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
+         INCLUDES="$INCLUDES -I$x_includes"
+         gadget_cxxflags="$gadget_cxxflags -I$x_includes"
+      fi
+
+      APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11"
+   fi
+fi
+
+# Remove duplicated arguments from each of the following.  This can help speed
+# up compile times, and it reduces the (perceived) complexity of the commands.
+# These steps are performed here because no further additions are made to any
+# of these variables after this point.
+VJ_STRIP_DUPLICATE_ARGS(CFLAGS, [$CFLAGS])
+VJ_STRIP_DUPLICATE_ARGS(CXXFLAGS, [$CXXFLAGS])
+VJ_STRIP_DUPLICATE_ARGS(DEPEND_FLAGS, [$DEPEND_FLAGS])
+VJ_STRIP_DUPLICATE_ARGS(DEPEND_EXTRAS, [$DEPEND_EXTRAS])
+VJ_STRIP_DUPLICATE_ARGS(INCLUDES, [$INCLUDES])
+VJ_STRIP_DUPLICATE_ARGS(gadget_cxxflags, [$gadget_cxxflags])
+
 # Put together the basic information needed to compile Gadgeteer applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
                 GADGET_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
@@ -284,19 +306,6 @@ APP_BASE_DIR_INST='$(GADGET_BASE_DIR)'
 
 DYLIB_DEPS="$APP_EXTRA_LIBS"
 DYLIB_PROF_DEPS="$APP_EXTRA_PROF_LIBS"
-
-if test "x$OS_TYPE" = "xUNIX" ; then
-    DSO_DRIVER_DEPS="-L\$(LIBDIR) -lgadget $DYLIB_DEPS"
-    if test "x$gadget_use_x11" = "xyes" ; then
-        if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
-            INCLUDES="$INCLUDES -I$x_includes"
-            gadget_cxxflags="$gadget_cxxflags -I$x_includes"
-        fi
-        APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11"
-    fi
-elif test "x$OS_TYPE" = "xWin32" ; then
-    DSO_DRIVER_DEPS="-libpath:\$(LIBDIR) gadget.lib $DYLIB_DEPS"
-fi
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
@@ -377,8 +386,6 @@ AC_SUBST(APP_BASE_DIR_INST)
 
 AC_SUBST(DYLIB_DEPS)
 AC_SUBST(DYLIB_PROF_DEPS)
-
-AC_SUBST(DSO_DRIVER_DEPS)
 
 AC_SUBST(APP_EXTRA_LIBS_X11)
 
