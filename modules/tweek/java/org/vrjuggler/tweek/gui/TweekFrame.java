@@ -201,7 +201,7 @@ public class TweekFrame
    /**
     * Initializes the GUI.
     *
-    * @pre The JavaBean search has been performed.
+    * Pre-condition: The JavaBean search has been performed.
     */
    public void initGUI()
    {
@@ -399,9 +399,9 @@ public class TweekFrame
    }
 
    /**
-    * @post If the instantiated Bean implements the BeanPreferences
-    *       interface, its preferences are loaded, and its editor is added to
-    *       the Bean-specified editor dialog.
+    * If the instantiated Bean implements the BeanPreferences interface, its
+    * preferences are loaded, and its editor is added to the Bean-specified
+    * editor dialog.
     */
    public void beanInstantiated(BeanInstantiationEvent e)
    {

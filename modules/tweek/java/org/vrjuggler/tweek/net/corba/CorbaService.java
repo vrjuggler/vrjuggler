@@ -138,8 +138,8 @@ public class CorbaService
     * argument, this call will (or will not) block until all pending events
     * are completed.
     *
-    * @post If an ORB has been initialized, it will be shut down, its thread
-    *       will stop running, and the references will be set to null.
+    * Post conditin: If an ORB has been initialized, it will be shut down, its
+    * thread will stop running, and the references will be set to null.
     *
     * @param wait_for_completion If true, the shutdown process for this
     *                            service will block until pending events are
@@ -175,10 +175,10 @@ public class CorbaService
     * Retrieves a reference to all the CORBA objects that implement the
     * tweek.SubjectManager interface.
     *
-    * @return A list containing zero or more tweek.SubjectManager objects.
-    *
-    * @note The implementation of this method is based on code found on page
+    * NOTE: The implementation of this method is based on code found on page
     *       806 of <i>Advanced CORBA Programming with C++</i>.
+    *
+    * @return A list containing zero or more tweek.SubjectManager objects.
     */
    public List getSubjectManagerList()
    {

@@ -93,9 +93,10 @@ public class BeanJarClassLoader extends ClassLoader
     * Adds the given list of dependencies (String objects naming the JAR files
     * that must be loaded).
     *
-    * @pre The class path has been extended via extendClassPath().
-    * @post Those dependency JAR files that are found are added to the vector
-    *       of known JAR files.
+    * Pre-condition: The class path has been extended via extendClassPath().
+    *
+    * Post condition: Those dependency JAR files that are found are added to
+    * the vector of known JAR files.
     *
     * @return A list of String objects containing any dependencies that were
     *         not resolved is returned to the caller.
@@ -242,8 +243,8 @@ public class BeanJarClassLoader extends ClassLoader
     * Loads the actual data bytes for the named class and returns those bytes
     * to the caller.
     *
-    * @pre The class path and dependency list have been extended to include all
-    *      dependencies needed by the class being instantiated.
+    * Pre-condition: The class path and dependency list have been extended to
+    * include all dependencies needed by the class being instantiated.
     */
    protected byte[] loadClassData (String classname)
       throws IOException, ClassNotFoundException
