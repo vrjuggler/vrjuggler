@@ -39,6 +39,7 @@
 
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Kernel/Kernel.h>
+#include <vrj/Kernel/Exceptions.h>
 
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Viewport.h>
@@ -84,7 +85,22 @@ void GlDrawManager::setApp(App* _app)
    // We have a new app, so the contexts must be re-initialized
    // so... dirty them all.
    dirtyAllWindows();
-   vprASSERT(mApp != NULL);
+
+   if ( NULL == mApp )
+   {
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR:")
+         << " [vrj::GlDrawManager::setApp()] Failed to downcast "
+         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << "application object from vrj::App to vrj::GlApp!" << std::endl
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << "Type of object " << std::hex << _app << std::dec << " is "
+         << typeid(_app).name() << std::endl << vprDEBUG_FLUSH;
+
+      throw vrj::DrawMgrException("Object not of type vrj::GlApp");
+   }
 }
 
 /** Returns the app we are rednering. */
