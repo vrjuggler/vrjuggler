@@ -186,10 +186,16 @@ GADGETEER_PATH([0.2.3], ,
 
 vjsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"
-GMTL_PATH(0.0.2, [$JUGGLERROOT_ABS/modules/GMTL],
-          [$JUGGLERROOT_ABS/modules/GMTL], ,
+GMTL_PATH(0.0.2, [$JUGGLERROOT_ABS/external/GMTL],
+          [$JUGGLERROOT_ABS/external/GMTL], ,
           [AC_MSG_ERROR([*** GMTL required for Gadgeteer ***])])
 CPPFLAGS="$vjsave_CPPFLAGS"
+
+# If we are not using GMTL from the external directory, we have a locally
+# installed copy.
+if test "x$GMTL_ROOT" != "x$JUGGLERROOT_ABS/external/GMTL" ; then
+    LOCAL_GMTL='Y'
+fi
 
 # ------------
 # OpenGL API.
@@ -354,8 +360,12 @@ fi
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS $GMTL_INCLUDES"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
-vrj_cxxflags="$STDFLAGS $GMTL_INCLUDES"
+vrj_cxxflags="$STDFLAGS"
 vrj_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
+
+if test "x$LOCAL_GMTL" = "xY" ; then
+   vrj_cxxflags="$vrj_cxxflags $GMTL_INCLUDES"
+fi
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
