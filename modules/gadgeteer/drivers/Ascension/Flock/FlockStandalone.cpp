@@ -507,25 +507,25 @@ int FlockStandalone::close()
    {
       char bird_command[4];
 
-      std::cout << " [FlockStandalone] Stopping the flock ...\n" << std::flush;
+      std::cout << " [FlockStandalone] Closing the flock ...\n" << std::flush;
 
-      vpr::System::msleep(500);
-      bird_command[0] = 'B';
-      mSerialPort->write(bird_command, 1, written);
-      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      if (STREAMING == mStatus)
+      {
+         stopStreaming();
+      }
 
-      vpr::System::msleep(500);
-      bird_command[0] = 'G';
-      mSerialPort->write(bird_command, 1, written);
-      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      //vpr::System::usleep(200 * FlockStandalone::mSleepFactor);
-
+      if(CLOSED != mStatus)
+      {
+         vpr::System::msleep(500);
+         sendCommand(Flock::Command::Sleep);    // Put the flock to sleep
+      }
+      
       mSerialPort->close();
 
       // flock is not active now.
       mStatus = FlockStandalone::CLOSED;
 
-      std::cout << " [FlockStandalone] Stopped." << std::endl << std::flush;
+      std::cout << " [FlockStandalone] Closed." << std::endl << std::flush;
 
       retval = 1;
    }
