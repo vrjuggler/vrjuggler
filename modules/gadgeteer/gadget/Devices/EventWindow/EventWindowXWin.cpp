@@ -1190,7 +1190,8 @@ Window EventWindowXWin::createWindow(Window parent, unsigned int border,
    window = XCreateWindow(mDisplay, parent, mX, winattrs.height - mY - mHeight,
                           mWidth, mHeight, border, mVisual->depth,
                           InputOutput, mVisual->visual,
-                          CWBorderPixel | CWColormap | CWEventMask, &mSWA);
+                          CWBackPixel | CWBorderPixel | CWColormap | CWEventMask,
+                          &mSWA);
 
    return window;
 }
