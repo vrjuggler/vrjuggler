@@ -45,7 +45,8 @@ COMMON_SRCS=	simplePfNavApp.cpp	\
 		pfTerryCollide.cpp	\
 		pfTerryPogoCollide.cpp	\
 		pfTerryBoxCollide.cpp	\
-		pfMPStats.cpp
+		pfMPStats.cpp		\
+		velocityNav.cpp
 
 SRCS=		pfNav.cpp $(COMMON_SRCS)
 
