@@ -48,7 +48,7 @@
 #include <gadget/Devices/Sim/SimDigital.h>
 #include <gadget/Devices/Sim/SimAnalog.h>
 #include <gadget/Devices/Sim/SimInput.h>
-#include <gadget/Devices/EventWindow/EventWindowXWin.h>
+#include <gadget/Devices/KeyboardMouseDevice/InputWindowXWin.h>
 #include <gadget/Type/AnalogProxy.h>
 
 #include <vrj/Display/Display.h>
@@ -852,7 +852,7 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
       }
 
       //Verify all of the viewports
-      for (int j=0; j < windowElements[i]->getNum( "simulator_viewports" ); j++)
+      for (unsigned int j=0; j < windowElements[i]->getNum( "simulator_viewports" ); ++j)
       {
          jccl::ConfigElementPtr viewlist = windowElements[i]->getProperty<jccl::ConfigElementPtr>("simulator_viewports", j);
 
@@ -1196,7 +1196,7 @@ bool reconfigApp::removeKeyboardWin_check()
 
    std::string keyboardName = fileElements[0]->getName();
 
-   gadget::EventWindow* keyboard = (gadget::EventWindow*)gadget::InputManager::instance()->getDevice( keyboardName );
+   gadget::KeyboardMouse* keyboard = (gadget::KeyboardMouse*)gadget::InputManager::instance()->getDevice( keyboardName );
 
    if (keyboard != NULL)
    {
@@ -1216,7 +1216,7 @@ bool reconfigApp::removeKeyboardWin_check()
       return false;
    }
 
-   gadget::EventWindowProxy* keyboard_proxy = (gadget::EventWindowProxy*)gadget::InputManager::instance()->getProxy( fileElements[0]->getName() );
+   gadget::KeyboardMouseProxy* keyboard_proxy = (gadget::KeyboardMouseProxy*)gadget::InputManager::instance()->getProxy( fileElements[0]->getName() );
 
    if (keyboard_proxy == NULL)
    {
@@ -1259,7 +1259,7 @@ bool reconfigApp::readdKeyboardWin_check()
 
    std::string keyboardName = fileElements[0]->getName();
 
-   gadget::EventWindow* keyboard = (gadget::EventWindow*)gadget::InputManager::instance()->getDevice( keyboardName );
+   gadget::KeyboardMouse* keyboard = (gadget::KeyboardMouse*)gadget::InputManager::instance()->getDevice( keyboardName );
 
    if (keyboard == NULL)
    {
@@ -1279,7 +1279,7 @@ bool reconfigApp::readdKeyboardWin_check()
       return false;
    }
 
-   gadget::EventWindowProxy* keyboard_proxy = (gadget::EventWindowProxy*)gadget::InputManager::instance()->getProxy( fileElements[0]->getName() );
+   gadget::KeyboardMouseProxy* keyboard_proxy = (gadget::KeyboardMouseProxy*)gadget::InputManager::instance()->getProxy( fileElements[0]->getName() );
 
    if (keyboard_proxy == NULL)
    {
@@ -1301,7 +1301,7 @@ bool reconfigApp::readdKeyboardWin_check()
    }
 
    //Make sure the pointers match up
-   if (((gadget::EventWindow*)(keyboard_proxy->getProxiedInputDevice())) != keyboard)
+   if (((gadget::KeyboardMouse*)(keyboard_proxy->getProxiedInputDevice())) != keyboard)
    {
       std::cout << "\tError: pointers don't match up\n" << std::flush;
       return false;
@@ -1486,7 +1486,7 @@ bool reconfigApp::reconfigSimDigital_check()
       key_status = false;
 
       //Scan the sim digital config element to see if was defined there
-      for ( int j=0; j < fileElements[0]->getNum("key_pair"); j++ )
+      for ( unsigned int j=0; j < fileElements[0]->getNum("key_pair"); ++j )
       {
          jccl::ConfigElementPtr key_mod_pair = fileElements[0]->getProperty<jccl::ConfigElementPtr>("key_pair", j);
 
@@ -1546,7 +1546,7 @@ bool reconfigApp::reconfigSimAnalog_check()
    bool key_status;
 
    //Scan the sim digital config element to see if was defined there
-   for ( int i=0; i < fileElements[0]->getNum("key_pair"); i++ )
+   for ( unsigned int i=0; i < fileElements[0]->getNum("key_pair"); ++i )
    {
       key_status = false;
 
