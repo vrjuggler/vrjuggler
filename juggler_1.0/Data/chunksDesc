@@ -118,6 +118,7 @@ chunk MotionStar "Motion Star" "Ascension Wireless Motion Tracker"
   translate Float 3 "Translation" "(world_T_transmitter) Translation of the transmitter from Juggler coord system."
   rotate Float 3 "Rotation" "(world_T_transmitter) Rotation of the tranmitter from the Juggler coord system."
   address String 1 "Hostname or IP Address" ""
+  serverPort Int 1 "Server Port" "The port on the server to which the client connects."
   end
 chunk SimGloveGesture "Glove Gesture Simulator" "Simulate glove gesture device"
   Name String 1 "Name" "Unique name of an instance of this chunk type"

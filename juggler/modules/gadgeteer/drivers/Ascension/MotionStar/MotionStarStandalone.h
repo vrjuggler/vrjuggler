@@ -43,8 +43,6 @@
 #include <arpa/inet.h>
 #include <time.h>
 
-#define TCP_PORT 6000 /* bird server port */
-
 
 // BIRDNET command/response codes.
 const unsigned char MSG_WAKE_UP        = 10;
@@ -163,6 +161,7 @@ public:
     //
     //! ARGS: _address       - The IP address or hostname of the MotionStar
     //+                        server to which we are connecting.
+    //! ARGS: port           - The port on the server to which we connect.
     //! ARGS: _hemisphere    - The hemisphere in use on the transmitter.
     //! ARGS: _birdFormat    - The bird format.
     //! ARGS: _birdsRequired - The number of birds required.
@@ -170,9 +169,9 @@ public:
     //! ARGS: _birdRate      - The bird rate.
     //! ARGS: _reportRate    - The report rate.
     // ------------------------------------------------------------------------
-    aMotionStar(char* _address, int _hemisphere, unsigned int _birdFormat,
-                unsigned int _birdsRequired, int _runMode, double _birdRate,
-                unsigned char _reportRate);
+    aMotionStar(char* _address, const unsigned short port, int _hemisphere,
+                unsigned int _birdFormat, unsigned int _birdsRequired,
+                int _runMode, double _birdRate, unsigned char _reportRate);
 
     // ------------------------------------------------------------------------
     //: Destructor.
@@ -410,6 +409,32 @@ public:
     inline char*
     getAddress () {
         return address;
+    }
+
+    // ------------------------------------------------------------------------
+    //: Set the port on the server to which we connect.
+    //
+    //! PRE: None.
+    //! POST: The value in port is stored in m_port.
+    //
+    //! ARGS: port - The new value for the server port.
+    // ------------------------------------------------------------------------
+    inline void
+    setServerPort (const unsigned short port) {
+        m_port = port;
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the server port.
+    //
+    //! PRE: None.
+    //! POST: The current value of m_port is returned to the caller.
+    //
+    //! RETURNS: An unsigned short integer containing the server port number.
+    // ------------------------------------------------------------------------
+    inline unsigned short
+    getServerPort () {
+        return m_port;
     }
 
     // ------------------------------------------------------------------------
@@ -828,6 +853,7 @@ private:
     double          birdRate;
     int             runMode;
     unsigned char   addr;
+    unsigned short  m_port;
     unsigned char   reportRate;
 
     float           m_xmtr_pos_scale;   //: Transmitter position scaling factor
