@@ -20,6 +20,11 @@ Started: April 13, 2001
         * vjGlApp::bufferPreDraw() - New interface function for OpenGL-based
           apps.  Must use if going to use multiviewport code.
 
+        * Performer now has some support for run-time reconfiguration.  This 
+          has the following new implications:
+            - numpipes must be set correctly in the display config chunk
+            - Sometimes black windows will appear on unused pipes.
+
 ===============================================================================
 
  Version: 1.0.0
