@@ -170,7 +170,6 @@ private:
       // --- Dynamic cast to "real" type wrapper
       TSObject<T>* real_object = dynamic_cast< TSObject<T>* >(object);
 
-#ifdef VPR_DEBUG
       if(real_object == NULL)    // Failed cast
       {
          std::cout << "Failed dynamic cast\n";
@@ -178,10 +177,12 @@ private:
                    << std::endl;
          std::cout << "Want type: " << typeid(T).name() << std::endl;
       }
-#endif
 
       // If fails, it means that "real" object was different type than the
       // proxy.
+      // XXX: Throw an exception here instead of asserting.  With optimized
+      // code, a segmentation fault occurs for less-than-obvious reasons due
+      // to the smart pointer indirection.  -PH 7/13/2004
       vprASSERT((real_object != NULL) && "Dynamic_cast of TS object failed");
 
       // Return the pointer.
