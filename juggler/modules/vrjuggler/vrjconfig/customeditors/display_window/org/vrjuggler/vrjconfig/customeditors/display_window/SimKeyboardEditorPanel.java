@@ -413,6 +413,7 @@ public class SimKeyboardEditorPanel
             {
                mCurSimEditor = (SimDeviceEditor) editor_class.newInstance();
                mCurSimEditor.setConfigElement(dev_elt);
+               mDeviceSplitPane.remove(mEmptyEditor);
                mDeviceSplitPane.add(mCurSimEditor.getEditor(),
                                     JSplitPane.LEFT);
             }
