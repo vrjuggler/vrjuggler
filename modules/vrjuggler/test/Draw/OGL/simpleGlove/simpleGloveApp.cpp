@@ -35,6 +35,7 @@
 #include <gmtl/VecOps.h>
 #include <simpleGloveApp.h>
 
+#include <gmtl/Generate.h>
 
 // Function called after tracker update but before start of drawing.  Do
 // calculations and state modifications here.
@@ -46,9 +47,9 @@ void simpleGloveApp::preFrame()
    int currentGesture = mGesture->getGesture();
 
    // lookup the name of that gesture, and output it.
-   std::cout << "gestureID[" << currentGesture << "]:"
-             << mGesture->getGestureString(currentGesture).c_str()
-             << "\n" << std::flush;
+//   std::cout << "gestureID[" << currentGesture << "]:"
+//             << mGesture->getGestureString(currentGesture).c_str()
+//             << "\n" << std::flush;
 
    if (mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
    {
@@ -88,18 +89,22 @@ void simpleGloveApp::myDraw()
       // -- Draw box on wand --- //
    gmtl::Matrix44f finger_matrix;
 
-   // Draw green balls on finger tips
+   // Draw green balls on finger joints
    glColor3f(0.0f, 1.0f, 0.0f);
    glPushMatrix();
    {
       for(finger=gadget::GloveData::THUMB;finger<=gadget::GloveData::PINKY;finger++)
       {
-      glPushMatrix();
-         finger_matrix =
-            mGlove->getPos((gadget::GloveData::GloveComponent)finger);
-         glMultMatrixf(finger_matrix.mData);
-         drawSphere((0.1f*(1.0f/12.0f)), 4, 4);
-      glPopMatrix();
+	 int joint;
+         for(joint=gadget::GloveData::MPJ;joint<=gadget::GloveData::DIJ;joint++)
+         {
+            glPushMatrix();
+            finger_matrix=mGlove->getJointTransform((gadget::GloveData::GloveComponent)finger,(gadget::GloveData::GloveJoint)joint);
+//	    std::cout << finger_matrix << std::endl;
+	    glMultMatrixf(finger_matrix.mData);
+            drawSphere((0.1f*(1.0f/12.0f)), 6, 6);
+            glPopMatrix();
+	 }
       }
    }
    glPopMatrix();
@@ -108,6 +113,7 @@ void simpleGloveApp::myDraw()
    // I am not doing this in the most efficient way.
    // I am just trying to test the vector functions
    glColor3f(1.0f, 0.0f, 0.0f);
+   glLineWidth(5);
    glPushMatrix();
    {
       for(finger=gadget::GloveData::THUMB;finger<=gadget::GloveData::PINKY;finger++)
@@ -115,9 +121,9 @@ void simpleGloveApp::myDraw()
       glPushMatrix();
          gmtl::Point3f origin(0,0,0);    // Base of the vector
          finger_matrix =
-            mGlove->getPos((gadget::GloveData::GloveComponent)finger);
+            mGlove->getTipTransform((gadget::GloveData::GloveComponent)finger);
          origin = finger_matrix * origin;  // Go to new coord system
-         gmtl::Point3f end = origin + (0.25 * mGlove->getVector((gadget::GloveData::GloveComponent)finger));
+         gmtl::Point3f end = origin + (0.25 * mGlove->getTipVector((gadget::GloveData::GloveComponent)finger));
          drawLine(origin, end);
       glPopMatrix();
       }
