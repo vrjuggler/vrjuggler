@@ -48,8 +48,9 @@
 #include <vpr/System.h>
 #include <vpr/Util/Version.h>
 #include <vpr/Util/FileUtils.h>
-#include <gadget/Util/Version.h>
+#include <vpr/Perf/ProfileManager.h>
 
+#include <gadget/Util/Version.h>
 #include <gadget/InputManager.h>
 
 #include <cluster/ClusterManager.h>
@@ -148,18 +149,22 @@ void Kernel::controlLoop(void* nullParam)
    // Do any initial configuration
    initConfig();
 
+   vpr::prof::start("Kernel: controlLoop",10);
+
    // --- MAIN CONTROL LOOP -- //
    while(! (mExitFlag && (mApp == NULL)))     // While not exit flag set and don't have app. (can't exit until app is closed)
    {
       // Might not want the Kernel to know about the ClusterNetwork
       // It is currently being registered as a jccl::ConfigElementHandler in
       // the ClusterManager constructor
-      cluster::ClusterNetwork* cluster_network = cluster::ClusterManager::instance()->getNetwork();
-      cluster_network->updateNewConnections();
-      cluster::ClusterManager::instance()->sendRequests();
+         vpr::prof::start("Cluster: updateNewConnections.",10);
+       cluster::ClusterManager::instance()->getNetwork()->updateNewConnections();
+         vpr::prof::next("Cluster: sendRequests.",10);
+       cluster::ClusterManager::instance()->sendRequests();
+         vpr::prof::stop();
 
-      bool cluster = !(cluster::ClusterManager::instance()->isClusterActive() &&
-                       !cluster::ClusterManager::instance()->isClusterReady());
+      bool cluster = !( cluster::ClusterManager::instance()->isClusterActive() &&
+                        !cluster::ClusterManager::instance()->isClusterReady());
 
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL) && cluster)
@@ -167,7 +172,9 @@ void Kernel::controlLoop(void* nullParam)
             vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
                << "vrj::Kernel::controlLoop: mApp->preFrame()\n"
                << vprDEBUG_FLUSH;
+         vpr::prof::start("App: PreFrame",10);
          mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff
+         vpr::prof::stop();
             vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
                << "vrj::Kernel::controlLoop: Update ClusterManager preDraw()\n"
                << vprDEBUG_FLUSH;
@@ -179,32 +186,42 @@ void Kernel::controlLoop(void* nullParam)
          vpr::Thread::yield();   // Give up CPU
       }
 
+      vpr::prof::start("Cluster: preDraw",10);
       mClusterManager->preDraw();
+      vpr::prof::stop();
 
       if((mApp != NULL) && (mDrawManager != NULL) && cluster)
       {
             vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
                << "vrj::Kernel::controlLoop: mApp->latePreFrame()\n"
                << vprDEBUG_FLUSH;
+            vpr::prof::start("App: latePreFrame",10);
          mApp->latePreFrame();
             vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
                << "vrj::Kernel::controlLoop: drawManager->draw()\n"
                << vprDEBUG_FLUSH;
+            vpr::prof::next("trigger draw",10);
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
+            vpr::prof::next("sound mgr update",10);
          mSoundManager->update();
             vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
                << "vrj::Kernel::controlLoop: mApp->intraFrame()\n"
                << vprDEBUG_FLUSH;
+            vpr::prof::next("App: intraFrame",10);
          mApp->intraFrame();        // INTRA FRAME: Do computations that can be done while drawing.  This should be for next frame.
             vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
                << "vrj::Kernel::controlLoop: drawManager->sync()\n"
                << vprDEBUG_FLUSH;
+            vpr::prof::next("sound sync",10);
          mSoundManager->sync();
+            vpr::prof::next("draw sync",10);
          mDrawManager->sync();    // SYNC: Block until drawing is done
             vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
                << "vrj::Kernel::controlLoop: mApp->postFrame()\n"
                << vprDEBUG_FLUSH;
+            vpr::prof::next("App: postFrame",10);
          mApp->postFrame();        // POST FRAME: Do processing after drawing is complete
+            vpr::prof::stop();
       }
       else
       {
@@ -214,24 +231,33 @@ void Kernel::controlLoop(void* nullParam)
       }
 
       // --- Stop for reconfiguration -- //
+         vpr::prof::start("checkForReconfig",10);
       checkForReconfig();        // Check for any reconfiguration that needs done (system or application)
+         vpr::prof::next("check kern signals",10);
       checkSignalButtons();      // Check for any pending control requests
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
             << "vrj::Kernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
+         vpr::prof::next("updateAllDevices",10);
       getInputManager()->updateAllDevices();
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
             << "vrj::Kernel::controlLoop: Update ClusterManager\n"
             << vprDEBUG_FLUSH;
+         vpr::prof::next("Cluster: postPostFrame.",10);
       mClusterManager->postPostFrame();
            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
             << "vrj::Kernel::controlLoop: Update Proxies\n"
             << vprDEBUG_FLUSH;
+         vpr::prof::next("updateAllProxies",10);
       getInputManager()->updateAllProxies();
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
             << "vrj::Kernel::controlLoop: Update Projections\n"
             << vprDEBUG_FLUSH;
+         vpr::prof::next("Update frame data",10);
       updateFrameData();         // Any frame-based manager data
+         vpr::prof::stop();
    }
+
+   vpr::prof::stop();
 
    vprDEBUG(vrjDBG_KERNEL, vprDBG_WARNING_LVL)
       << "vrj::Kernel::controlLoop: Exiting. \n" << vprDEBUG_FLUSH;
@@ -384,7 +410,7 @@ void Kernel::initConfig()
 
 
    mPerformanceMediator = new PerformanceMediator();
-   
+
    //??// processPending() // Should I do this here
 
    // hook dynamically-reconfigurable managers up to config manager
