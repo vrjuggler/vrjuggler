@@ -44,7 +44,7 @@
 #define VPR_PROFILE_MANAGER_H
 
 /**
- * mostly taken from:
+ * Primarily based on
  * Real-Time Hierarchical Profiling for Game Programming Gems 3
  * by Greg Hjelstrom & Byon Garrabrant
  */
@@ -77,16 +77,19 @@ namespace vpr
       */
       static   void                 startProfile( const char * name );
 
+      /** Starts profile for given name.
+       * Same as above but passes a queue size to the child node.
+       */
       static   void                 startProfile( const char * profileName, const unsigned int queueSize);
 
       /**
-       * Stop timing and record the results.
+       * Stop timing on most resent startProfile and record the results.
        */
       static   void                 stopProfile( void );
 
       /**
        * Reset the contents of the profiling system
-       * 
+       *
        * @post Everything is reset except tree structure. Timing data is reset.
        */
       static   void                 reset( void );
@@ -162,36 +165,36 @@ namespace vpr
    public:
       ProfileSample( const char * name )
       {
-         ProfileManager::startProfile( name ); 
+         ProfileManager::startProfile( name );
       }
 
       ProfileSample( const char * name, const unsigned int queue_size)
       {
-         ProfileManager::startProfile( name, queue_size); 
+         ProfileManager::startProfile( name, queue_size);
       }
 
-      ~ProfileSample( void )              
+      ~ProfileSample( void )
       {
-         ProfileManager::stopProfile(); 
+         ProfileManager::stopProfile();
       }
    };
 
 #if defined(DEBUG) || defined(_DEBUG)
-#define	VPR_PROFILE( name )			vpr::ProfileSample __profile( name )
+#define  VPR_PROFILE( name )        vpr::ProfileSample __profile( name )
 #else
-#define	VPR_PROFILE( name )
+#define  VPR_PROFILE( name )
 #endif
 
 #if defined(DEBUG) || defined(_DEBUG)
-#define	VPR_PROFILE_HISTORY( name, queue_size )			vpr::ProfileSample __profile( name, queue_size)
+#define  VPR_PROFILE_HISTORY( name, queue_size )         vpr::ProfileSample __profile( name, queue_size)
 #else
-#define	VPR_PROFILE_HISTORY( name, queue_size )
+#define  VPR_PROFILE_HISTORY( name, queue_size )
 #endif
 
 #if defined(DEBUG) || defined(_DEBUG)
-#define	VPR_PROFILE_RESULTS( )			vpr::ProfileManager::printTree( )
+#define  VPR_PROFILE_RESULTS( )        vpr::ProfileManager::printTree( )
 #else
-#define	VPR_PROFILE_RESULTS( )
+#define  VPR_PROFILE_RESULTS( )
 #endif
 
 } // end vpr namespace
