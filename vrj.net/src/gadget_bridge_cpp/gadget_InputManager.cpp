@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.56 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -34,25 +34,6 @@
 
 extern "C"
 {
-   // Copy constructor wrapper.
-   SHARPPY_API gadget::InputManager* gadget_InputManager_InputManager__gadget_InputManager(const gadget::InputManager* p)
-   {
-      gadget::InputManager* obj = new gadget::InputManager(*p);
-      return obj;
-   }
-
-   // Constructor wrapper.
-   SHARPPY_API gadget::InputManager* gadget_InputManager_InputManager__()
-   {
-      gadget::InputManager* obj = new gadget::InputManager();
-      return obj;
-   }
-
-   SHARPPY_API void delete_gadget_InputManager(gadget::InputManager* self_)
-   {
-      delete self_;
-   }
-
    // Wrapper for non-virtual method gadget::InputManager::getDisplaySystemElement()
    SHARPPY_API boost::shared_ptr<jccl::ConfigElement>* gadget_InputManager_getDisplaySystemElement__(gadget::InputManager* self_)
    {
