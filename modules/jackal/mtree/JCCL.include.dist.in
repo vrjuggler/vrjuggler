@@ -41,8 +41,6 @@
         jccl
             Config
             ..
-            Net
-            ..
             PerfMonitor
             ..
             RTRC
