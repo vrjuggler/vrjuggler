@@ -35,6 +35,7 @@ package org.vrjuggler.perfmon;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JSlider;
 import tweek.ObserverPOA;
+import vrj.PerformanceMonitorSubjectPackage.SampleTimeMap;
 import vrj.*;
 
 
@@ -112,18 +113,24 @@ public class PerformanceMonitorObserverImpl extends ObserverPOA
       return 0.0f;
    }
 
-   public SampleTimeMap getValueMap()
+   public SampleTimeMap[] getValueMap()
    {
       try
       {
-         return mPerformanceMonitorSubject.getValueMap();
+         if(mPerformanceMonitorSubject == null)
+         { System.out.println("PerfMonSubj nullified"); }
+         
+         SampleTimeMap[] n = mPerformanceMonitorSubject.getValueMap();
+
+         return n;
       }
       catch (org.omg.CORBA.COMM_FAILURE comm_ex)
       {
          System.out.println(comm_ex);
          comm_ex.printStackTrace();
       }
-      return new SampleTimeMap();
+      SampleTimeMap[] j = null;
+      return j;
    }
    private PerformanceMonitorSubject mPerformanceMonitorSubject = null;
 }

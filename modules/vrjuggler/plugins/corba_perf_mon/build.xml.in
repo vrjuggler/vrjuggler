@@ -51,6 +51,7 @@
       <jar destfile="PerformanceMonitor.jar" basedir=".">
          <include name="org/vrjuggler/perfmon/*.class" />
          <include name="vrj/*.class" />
+         <include name="vrj/PerformanceMonitorSubjectPackage/*.class" />
       </jar>
    </target>
 
