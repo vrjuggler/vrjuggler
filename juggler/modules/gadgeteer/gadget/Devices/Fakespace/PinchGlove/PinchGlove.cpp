@@ -74,18 +74,20 @@ PinchGlove::~PinchGlove ()
 
 int PinchGlove::startSampling()
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Begin sampling\n"
-                                    << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "[PinchGlove] Begin sampling\n"
+      << vprDEBUG_FLUSH;
    mGlove->setPort(mPortName);
    mGlove->setBaudRate(mBaudRate);
 
    if ( mThread == NULL )
    {
       int maxAttempts=0;
-      vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Connecting to "
-                                    << mPortName << " at "
-                                    << mBaudRate << "...\n"
-                                    << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "[PinchGlove] Connecting to "
+         << mPortName << " at "
+         << mBaudRate << "...\n"
+         << vprDEBUG_FLUSH;
 
       while ( mGlove->connectToHardware() != vpr::ReturnStatus::Succeed )
       {
@@ -93,19 +95,19 @@ int PinchGlove::startSampling()
          maxAttempts++;
          if (maxAttempts==5)
          {
-            vprDEBUG(gadgetDBG_INPUT_MGR,0)
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << "[PinchGlove] Could not connect to PinchGlove on port "
                << mPortName << std::endl << vprDEBUG_FLUSH;
             return(vpr::ReturnStatus::Fail);
          }
       }
 
-      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "[PinchGlove] Successfully connected to Fakespace Hardware on "
          << mPortName << std::endl << vprDEBUG_FLUSH;
 
       // Create a new thread to handle the control
-      vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Spawning control thread\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL) << "[PinchGlove] Spawning control thread\n"
                                        << vprDEBUG_FLUSH;
       vpr::ThreadMemberFunctor<PinchGlove>* memberFunctor =
          new vpr::ThreadMemberFunctor<PinchGlove>(this, &PinchGlove::controlLoop, NULL);
@@ -133,8 +135,9 @@ void PinchGlove::controlLoop(void* nullParam)
 {
    boost::ignore_unused_variable_warning(nullParam);
 
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Entered control thread\n"
-                                    << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "[PinchGlove] Entered control thread\n"
+      << vprDEBUG_FLUSH;
 
    // XXX: I can never exit!
    while ( 1 )

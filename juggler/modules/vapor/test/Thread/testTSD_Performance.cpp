@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
 
    total_avg /= (double)num_threads;
 
-   vprDEBUG(vprDBG_ALL,0) << "AVERAGE TIMING: " << total_avg*1000.0f << "ms"
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "AVERAGE TIMING: " << total_avg*1000.0f << "ms"
                           << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -116,7 +116,7 @@ void doFunc(void* void_thread_num)
 {
    int thread_num = (int)void_thread_num;
 
-   vprDEBUG(vprDBG_ALL, 0) << "Thread: " << thread_num << ": Entering.\n"
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Thread: " << thread_num << ": Entering.\n"
                            << vprDEBUG_FLUSH;
 
    timers[thread_num].startTiming();
@@ -126,7 +126,7 @@ void doFunc(void* void_thread_num)
    }
    timers[thread_num].stopTiming();
 
-   vprDEBUG(vprDBG_ALL, 0) << "Thread: " << thread_num
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Thread: " << thread_num
                            << ": Exiting: Avg Time of: "
                            << ((timers[thread_num].getTiming()/(double)num_reps)*1000.0f)
                            << "ms" << std::endl << vprDEBUG_FLUSH;

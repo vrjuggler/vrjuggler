@@ -407,8 +407,9 @@ namespace cluster
 
       if (NULL == mControlThread || !mControlThread->valid())
       {
-         vprDEBUG(gadgetDBG_RIM,1) << "ClusterNode " << getName() << " already running..."
-                                   << std::endl << vprDEBUG_FLUSH;         
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+               << "ClusterNode " << getName() << " already running..."
+               << std::endl << vprDEBUG_FLUSH;         
       }
 
       vpr::ThreadMemberFunctor<ClusterNode>* memberFunctor =

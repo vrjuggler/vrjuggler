@@ -189,7 +189,7 @@ void GlWindow::setProjection(vrj::Projection* proj)
 
    const float* frust = proj->getFrustum().frust;
 
-   vprDEBUG(vrjDBG_DRAW_MGR,7)  << "---- Frustum ----\n"
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HEX_LVL)  << "---- Frustum ----\n"
                << proj->getFrustum().frust << std::endl
                << vprDEBUG_FLUSH;
 

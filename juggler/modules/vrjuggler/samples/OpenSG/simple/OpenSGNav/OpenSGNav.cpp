@@ -133,7 +133,7 @@ void OpenSGNav::initGLState()
 
 void OpenSGNav::initScene(void)
 {
-   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::initScene: Called.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "OpenSGNav::initScene: Called.\n" << vprDEBUG_FLUSH;
    
    // --- Initialize vrj devices --- //
    std::string wand("VJWand");
@@ -229,6 +229,6 @@ void OpenSGNav::initScene(void)
    osg::endEditCP(mSceneRoot);
    
    // --- Add scene to root node --- //
-   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::initScene finished\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "OpenSGNav::initScene finished\n" << vprDEBUG_FLUSH;
 }
 

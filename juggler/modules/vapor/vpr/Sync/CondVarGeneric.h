@@ -189,7 +189,7 @@ public:
       vprDEBUG_BEGIN(vprDBG_ALL,0)
          << "------------- vpr::CondVarGeneric::Dump ---------\n"
          << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL,0) << "waiters: " << waiters << std::endl
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "waiters: " << waiters << std::endl
                              << vprDEBUG_FLUSH;
       condMutex->dump();
       vprDEBUG_END(vprDBG_ALL,0) << "-----------------------------------\n"

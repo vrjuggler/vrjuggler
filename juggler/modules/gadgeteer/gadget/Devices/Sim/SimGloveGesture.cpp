@@ -93,7 +93,7 @@ bool SimGloveGesture::config(jccl::ConfigChunkPtr chunk)
    if(proxy_index != -1)
       mGlovePos[0] = Kernel::instance()->getInputManager()->getPosProxy(proxy_index);
    else
-      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED, "ERROR:")
          << " SimGloveGesture::CyberGlove: Can't find posProxy."
          << std::endl << std::endl << vprDEBUG_FLUSH;
@@ -160,7 +160,7 @@ void SimGloveGesture::updateData()
       if(checkKeyPair(mSimKeys[i]) > 0)
       {
          mCurGesture = i;
-         vprDEBUG(gadgetDBG_INPUT_MGR,3)
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
             << "vjSimGloveGesture: Got gesture: "
             << getGestureString(mCurGesture).c_str()
             << std::endl << vprDEBUG_FLUSH;

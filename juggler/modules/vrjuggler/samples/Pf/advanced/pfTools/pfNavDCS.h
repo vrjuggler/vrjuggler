@@ -155,7 +155,7 @@ inline int pfNavDCS::app(pfTraverser *trav)
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,0) << "pfNavDCS::app: No naver set\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "pfNavDCS::app: No naver set\n" << vprDEBUG_FLUSH;
    }
 
    return pfDCS::app(trav);        /* Finish by calling the parent class's app() */

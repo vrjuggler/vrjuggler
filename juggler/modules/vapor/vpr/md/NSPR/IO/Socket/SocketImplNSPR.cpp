@@ -254,7 +254,7 @@ vpr::ReturnStatus SocketImplNSPR::connect (vpr::Interval timeout)
 
    if(mConnected)
    {
-      vprDEBUG(vprDBG_ALL,0) << "SocketImplNSPR::connect: Socket already connected.  Can't connect again"
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "SocketImplNSPR::connect: Socket already connected.  Can't connect again"
                     << vprDEBUG_FLUSH;
       retval.setCode(vpr::ReturnStatus::Fail);
    }

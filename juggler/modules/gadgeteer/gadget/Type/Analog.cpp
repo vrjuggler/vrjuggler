@@ -160,8 +160,9 @@ bool Analog::config(jccl::ConfigChunkPtr c)
    mMin = c->getProperty<float>("min");
    mMax = c->getProperty<float>("max");
 
-   vprDEBUG(vprDBG_ALL,4) << " Analog::config() min:" << mMin
-                          << " max:" << mMax << "\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << " Analog::config() min:" << mMin
+      << " max:" << mMax << "\n" << vprDEBUG_FLUSH;
 
    return true;
 }

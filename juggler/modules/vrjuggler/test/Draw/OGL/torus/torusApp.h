@@ -92,10 +92,10 @@ public:
       //count++;
       
       // Did we ask for an app exit
-      //vprDEBUG(vprDBG_ALL, 0) << "VJAppExit: " << mAppExit->getData() << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "VJAppExit: " << mAppExit->getData() << std::endl << vprDEBUG_FLUSH;
       if(mAppExit->getData() )
       {
-         vprDEBUG(vprDBG_ALL, 0) << "APP EXIT KEY PRESSED: Stopping kernel and exiting.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "APP EXIT KEY PRESSED: Stopping kernel and exiting.\n" << vprDEBUG_FLUSH;
          mKernel->stop();     // trigger a kernel stop
       }
 
@@ -136,7 +136,7 @@ public:
    //: Execute any final cleanup needed for the application
    virtual void exit()
    {
-      vprDEBUG(vprDBG_ALL, 0) << "torusApp::exit: Exit called. Cleaning up application.\n" << vprDEBUG_FLUSH;;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "torusApp::exit: Exit called. Cleaning up application.\n" << vprDEBUG_FLUSH;;
    }
 
 

@@ -184,7 +184,7 @@ Input* DeviceFactory::loadDevice(jccl::ConfigChunkPtr chunk)
    Input* new_dev;
    DeviceConstructorBase* constructor = mConstructors[index];
 
-   vprDEBUG(gadgetDBG_INPUT_MGR,3)
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "gadget::DeviceFactory::loadDevice: Loading device: "
       << chunk->getDescToken() << "  with: " << typeid(*constructor).name()
       << std::endl << vprDEBUG_FLUSH;
@@ -214,20 +214,20 @@ int DeviceFactory::findConstructor(jccl::ConfigChunkPtr chunk)
 
 void DeviceFactory::debugDump()
 {
-   vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, 0,
+   vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL,
       std::string("gadget::DeviceFactory::debugDump\n"),
       std::string("------ END DUMP ------\n"));
-   vprDEBUG(gadgetDBG_INPUT_MGR,0) << "num constructors:"
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL) << "num constructors:"
                                    << mConstructors.size() << "\n"
                                    << vprDEBUG_FLUSH;
 
    for(unsigned int cNum=0;cNum<mConstructors.size();cNum++)
    {
       DeviceConstructorBase* dev_constr = mConstructors[cNum];
-      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
          << cNum << ": Constructor:" << (void*)dev_constr
          << "   type:" << typeid(*dev_constr).name() << "\n" << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_INPUT_MGR,0) << "   recog:"
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL) << "   recog:"
                                       << dev_constr->getChunkType() << "\n"
                                       << vprDEBUG_FLUSH;
    }

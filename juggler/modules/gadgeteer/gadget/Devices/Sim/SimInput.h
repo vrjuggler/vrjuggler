@@ -89,7 +89,7 @@ public:
 public:
    SimInput()
    {
-      //vprDEBUG(vprDBG_ALL,4)<<"*** SimInput::SimInput()\n"<< vprDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimInput::SimInput()\n"<< vprDEBUG_FLUSH;
    }
    virtual ~SimInput() {}
 

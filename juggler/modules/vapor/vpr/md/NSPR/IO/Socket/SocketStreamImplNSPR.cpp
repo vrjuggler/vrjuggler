@@ -95,7 +95,7 @@ vpr::ReturnStatus SocketStreamImplNSPR::listen (const int backlog)
 
    if ( !mBound )        // To listen, we must be bound
    {
-      vprDEBUG(vprDBG_ALL,0) << "SocketStreamImplNSPR::listen: Trying to listen on an unbound socket.\n"
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "SocketStreamImplNSPR::listen: Trying to listen on an unbound socket.\n"
       << vprDEBUG_FLUSH;
       retval.setCode(vpr::ReturnStatus::Fail);
    }
@@ -126,7 +126,7 @@ vpr::ReturnStatus SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock,
 
    if ( ! mBound )        // To listen, we must be bound
    {
-      vprDEBUG(vprDBG_ALL,0) << "SocketStreamImplNSPR::accept: Trying to accept on an unbound socket.\n"
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "SocketStreamImplNSPR::accept: Trying to accept on an unbound socket.\n"
       << vprDEBUG_FLUSH;
       retval.setCode(vpr::ReturnStatus::Fail);
    }

@@ -68,7 +68,7 @@ void Projection::getFrustumApexAndCorners(gmtl::Vec3f& apex,
    gmtl::Matrix44f view_mat_inv;
    gmtl::invert(view_mat_inv, mViewMat);
 
-   // vprDEBUG(vprDBG_ALL,0) << "GetApex:\nview mat:\n" << mViewMat << "\nviewMatInv:\n" << view_mat_inv << std::endl << vprDEBUG_FLUSH;
+   // vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "GetApex:\nview mat:\n" << mViewMat << "\nviewMatInv:\n" << view_mat_inv << std::endl << vprDEBUG_FLUSH;
 
 
    //float near_dist = mFocusPlaneDist;

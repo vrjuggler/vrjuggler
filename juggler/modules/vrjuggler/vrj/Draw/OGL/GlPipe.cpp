@@ -125,9 +125,10 @@ void GlPipe::completeSwap()
 void GlPipe::addWindow(GlWindow* win)
 {
    vpr::Guard<vpr::Mutex> guardNew(mNewWinLock);       // Protect the data
-   vprDEBUG(vrjDBG_DRAW_MGR,3) << "vjGlPipe::addWindow: Pipe: " << mPipeNum
-                             << " adding window (to new wins):\n" << win
-                             << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+      << "vjGlPipe::addWindow: Pipe: " << mPipeNum
+      << " adding window (to new wins):\n" << win
+      << std::endl << vprDEBUG_FLUSH;
    mNewWins.push_back(win);
 }
 
@@ -138,9 +139,10 @@ void GlPipe::addWindow(GlWindow* win)
 void GlPipe::removeWindow(GlWindow* win)
 {
    vpr::Guard<vpr::Mutex> guardClosing(mClosingWinLock);
-   vprDEBUG(vrjDBG_DRAW_MGR,3) << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum
-                             << " window added to closingWins.\n" << win
-                             << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+      << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum
+      << " window added to closingWins.\n" << win
+      << std::endl << vprDEBUG_FLUSH;
    mClosingWins.push_back(win);
 }
 
@@ -279,9 +281,10 @@ void GlPipe::checkForNewWindows()
           }
           else
           {
-              vprDEBUG(vprDBG_ALL,0) << clrOutBOLD(clrRED,"ERROR:") << "vjGlPipe::checkForNewWindows: Failed to open window: "
-                                   << mNewWins[winNum]->getDisplay()->getName().c_str()
-                                   << std::endl << vprDEBUG_FLUSH;
+              vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                 << clrOutBOLD(clrRED,"ERROR:") << "vjGlPipe::checkForNewWindows: Failed to open window: "
+                 << mNewWins[winNum]->getDisplay()->getName().c_str()
+                 << std::endl << vprDEBUG_FLUSH;
               // BUG!!
               // should we do something to tell the current config that it
               // didn't get enabled properly?
@@ -312,9 +315,10 @@ void GlPipe::renderWindow(GlWindow* win)
 
    glManager->setCurrentContext(win->getId());     // Set TSS data of context id
 
-   vprDEBUG(vrjDBG_DRAW_MGR,5) << "vjGlPipe::renderWindow: Set context to: "
-                             << GlDrawManager::instance()->getCurrentContext()
-                             << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
+      << "vjGlPipe::renderWindow: Set context to: "
+      << GlDrawManager::instance()->getCurrentContext()
+      << std::endl << vprDEBUG_FLUSH;
 
    // --- SET CONTEXT --- //
    win->makeCurrent();

@@ -106,7 +106,7 @@ void OpenSGViewer::initGLState()
 
 void OpenSGViewer::initScene(void)
 {
-   vprDEBUG(vprDBG_ALL,0) << "OpenSGViewer::initScene: Called.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "OpenSGViewer::initScene: Called.\n" << vprDEBUG_FLUSH;
    
    // --- Initialize vrj devices --- //
    std::string wand("VJWand");
@@ -184,7 +184,7 @@ void OpenSGViewer::initScene(void)
    osg::endEditCP(mSceneRoot);
    
    // --- Add scene to root node --- //
-   vprDEBUG(vprDBG_ALL,0) << "OpenSGViewer::initScene finished\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "OpenSGViewer::initScene finished\n" << vprDEBUG_FLUSH;
 }
 
 //! NOTE: Inherited from jccl::ConfigChunkHandler

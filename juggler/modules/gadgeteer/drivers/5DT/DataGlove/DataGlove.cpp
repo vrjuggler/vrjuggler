@@ -71,22 +71,24 @@ DataGlove::~DataGlove ()
 
 int DataGlove::startSampling()
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[dataglove] Begin sampling\n"
-                                    << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+         << "[dataglove] Begin sampling\n"
+         << vprDEBUG_FLUSH;
    if (mThread == NULL)
    {
       int maxAttempts=0;
       bool result = false;
       while (result == false && maxAttempts < 5)
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[dataglove] Connecting to "
-                                          << mPortName << " at "
-                                          << mBaudRate << "...\n"
-                                          << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+               << "[dataglove] Connecting to "
+               << mPortName << " at "
+               << mBaudRate << "...\n"
+               << vprDEBUG_FLUSH;
          result = mGlove->connectToHardware( mPortName , mBaudRate);
          if (result == false)
          {
-            vprDEBUG(gadgetDBG_INPUT_MGR,0)
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << "[dataglove] ERROR: Can't open or it is already opened."
                << vprDEBUG_FLUSH;
             vpr::System::usleep(14500);
@@ -94,11 +96,11 @@ int DataGlove::startSampling()
          }
       }
 
-      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "[dataglove] Successfully connected, Now sampling dataglove data."
          << vprDEBUG_FLUSH;
       // Create a new thread to handle the control
-      vprDEBUG(gadgetDBG_INPUT_MGR, 0)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "[dataglove] Spawning control thread\n" << vprDEBUG_FLUSH;
       vpr::ThreadMemberFunctor<DataGlove>* memberFunctor =
          new vpr::ThreadMemberFunctor<DataGlove>(this, &DataGlove::controlLoop, NULL);
@@ -127,8 +129,9 @@ void DataGlove::controlLoop(void* nullParam)
 {
    boost::ignore_unused_variable_warning(nullParam);
 
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[dataglove] Entered control thread\n"
-                                    << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+         << "[dataglove] Entered control thread\n"
+         << vprDEBUG_FLUSH;
 
    // XXX: I can never exit!
    while(1)

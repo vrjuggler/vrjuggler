@@ -46,7 +46,7 @@
 int main (int ac, char **av)
 {
    // Do this here to get init text out of the way
-   vprDEBUG(vprDBG_ALL,0) << "Starting test\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Starting test\n" << vprDEBUG_FLUSH;
 
    CppUnit::TextUi::TestRunner runner;
 
