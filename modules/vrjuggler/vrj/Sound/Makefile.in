@@ -50,8 +50,6 @@ SUBOBJDIR	= $(VJ_LIBRARY)
 # Prefix for recursive stuff.
 DIRPRFX		= vrj/Sound/
 
-SUBDIR		= pf
-
 # Subdirectories to compile.
 INCLUDES	+= -I$(SNX_BASE_DIR)/include
 SRCS		+= SoundManagerSonix.cpp

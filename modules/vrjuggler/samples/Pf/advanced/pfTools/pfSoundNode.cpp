@@ -33,16 +33,16 @@
 #include <snx/sonix.h>
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Sound/pf/pfSoundNode.h>
+#include <pfSoundNode.h>
 
 
-pfSoundNode::pfSoundNode( const std::string& sound, bool isPositional ) : mIsPositional( true )
+pfSoundNode::pfSoundNode(const std::string& sound, bool isPositional)
+   : mIsPositional(true)
 {
-   this->setPositional( isPositional );
-   this->setSound( sound );
+   this->setPositional(isPositional);
+   this->setSound(sound);
    this->setType(classType);  // Set the type
 }
-
 
 // app() - APP traversal function.  This overloads the standard pfDCS
 // app() method, which will be called each frame during the APP
@@ -57,36 +57,45 @@ int pfSoundNode::app(pfTraverser *trav)
    // only do it if the sound is a positional sound.
    if (mSound != "" && mIsPositional == true)
    {
-      // get position of this sound in relation to the user's orientation and position
-      // NOTE: the sound will change position if the user rotates without translation.
-      //       it should orbit the user, so that the audio will pan correctly.
+      // Get position of this sound in relation to the user's orientation and
+      // position.
+      // NOTE: The sound will change position if the user rotates without
+      //       translation.  It should orbit the user, so that the audio will
+      //       pan correctly.
       pfMatrix matrix, traverserMatrix, dcsMatrix;
       matrix.makeIdent();
 
-      //: take the sound from soundspace to userspace.
+      // Take the sound from soundspace to userspace.
 
-      // add in any offset due to this DCS node
-      // (since the traverser hasn't yet added it to it's matrix stack.)
-      // *NOTE: this is the matrix that takes the sound from local(sound)space to modelspace.
-      this->getMat( dcsMatrix ); //TODO: don't call this.
-      // ...to get the location of the sound in modelspace, you'd do an invertFull here, but we want it in user space..
-      matrix.postMult( dcsMatrix );
+      // Add in any offset due to this DCS node.
+      // (Since the traverser hasn't yet added it to it's matrix stack.)
+      // *NOTE: this is the matrix that takes the sound from local(sound)space
+      // to modelspace.
+      this->getMat(dcsMatrix); //TODO: don't call this.
+      // ...to get the location of the sound in modelspace, you'd do an
+      // invertFull here, but we want it in user space..
+      matrix.postMult(dcsMatrix);
 
-      // add in any offset due to navigation and any other DCS xforms currently on the traverser's stack.
-      // this is the position of the model's origin in relation to a user at position 0,0,0
-      // this is just the nav matrix, which should be on the matrix stack right now...
-      // *NOTE: this is the matrix that takes the sound from modelspace to userspace
-      trav->getMat( traverserMatrix );
-      // ...to get the location of the sound in modelspace, you'd do an invertFull here, but we want it in user space..
-      matrix.postMult( traverserMatrix );
+      // Add in any offset due to navigation and any other DCS xforms currently
+      // on the traverser's stack.  This is the position of the model's origin
+      // in relation to a user at position 0,0,0.
+      // This is just the nav matrix, which should be on the matrix stack right
+      // now...
+      // *NOTE: this is the matrix that takes the sound from modelspace to
+      // userspace
+      trav->getMat(traverserMatrix);
+      // ...to get the location of the sound in modelspace, you'd do an
+      // invertFull here, but we want it in user space..
+      matrix.postMult(traverserMatrix);
 
       pfCoord coord;
-      matrix.getOrthoCoord( &coord );
+      matrix.getOrthoCoord(&coord);
 
       // set my sound's position.
       pfVec3 pf_soundPosition = coord.xyz;
-      gmtl::Vec3f soundPosition = vrj::GetVjVec( pf_soundPosition );
-      sonix::instance()->setPosition( mSound, soundPosition[0], soundPosition[1], soundPosition[2] );
+      gmtl::Vec3f soundPosition = vrj::GetVjVec(pf_soundPosition);
+      sonix::instance()->setPosition(mSound, soundPosition[0],
+                                     soundPosition[1], soundPosition[2]);
 
       // Engine's update should be called by the app's frame process,
       // or in juggler's manager (not both, of course)...
@@ -98,11 +107,10 @@ int pfSoundNode::app(pfTraverser *trav)
    {
       // redundant (fixme), but make sure it's 0.0f,0.0f,0.0f
       // this makes the sound the same as the observer.
-      sonix::instance()->setPosition( mSound, 0.0f, 0.0f, 0.0f );
+      sonix::instance()->setPosition(mSound, 0.0f, 0.0f, 0.0f);
    }
 
-   return pfDCS::app( trav );  // call the parent class's app()
-
+   return pfDCS::app(trav);  // call the parent class's app()
 }
 
 //---------------------------------------------------------------------//
