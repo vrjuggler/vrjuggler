@@ -14,3 +14,15 @@ avail||juggler_1.0
 avail||juggler
 avail|patrickh,nonchocoboy,allenb|PyJuggler
 avail|patrickh|vrj.net
+
+# Protect vendor branches.
+avail|patrickh|juggler/Doozer++
+avail|patrickh|juggler/external/Doozer
+avail|patrickh|juggler/external/JacORB
+avail|patrickh|juggler/external/ant
+avail|patrickh|juggler/external/jdom
+avail|patrickh|juggler/external/leach-uuid/uuid
+avail|patrickh|juggler/external/macros
+avail|patrickh|juggler/external/md5-c
+avail|patrickh|juggler/external/swing-laf
+avail|patrickh|juggler/modules/gadgeteer/drivers/Intersense/IntersenseAPI/isense
