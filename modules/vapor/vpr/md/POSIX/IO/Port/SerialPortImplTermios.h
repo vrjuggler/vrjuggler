@@ -207,7 +207,6 @@ public:
     */
    vpr::ReturnStatus setBlocking(bool blocking)
    {
-      vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
       return mHandle->setBlocking(blocking);
    }
 
