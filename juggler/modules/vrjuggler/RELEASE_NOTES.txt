@@ -53,15 +53,15 @@ Released: July 1, 2003
               <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/SwapLockTCPPlugin.dll</clusterPlugin> 
             </ClusterManager>
 
-          On OSX, it would appear as:
+          On Mac OS X, it would appear as:
           
             <ClusterManager name="SouthPark Cluster">
               <cluser_nodes>cartman</cluster_nodes>
                   ...
-              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libApplicationDataManager.lylib</clusterPlugin>
-              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libRemoteInputManager.lylib</clusterPlugin> 
-              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libStartBarrierPlugin.lylib</clusterPlugin> 
-              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libSwapLockTCPPlugin.lylib</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libApplicationDataManager.dylib</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libRemoteInputManager.dylib</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libStartBarrierPlugin.dylib</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libSwapLockTCPPlugin.dylib</clusterPlugin> 
             </ClusterManager>
             
         * ClusterPlugins have the following functionality:
