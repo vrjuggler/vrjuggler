@@ -64,6 +64,8 @@ sub getType($);
 sub checkType($$);
 sub wrap($$$@);
 
+my $Win32 = 1 if $ENV{'OS'} =~ /Windows/;
+
 # Parse command-line options.
 getopts('cdeif:np:Uu', \%opts);
 
@@ -580,9 +582,11 @@ sub processFile ($$$$$$$$$$$$$$$) {
     my $time      = $_[12] || $KEYWORDS{'time'};
     my $type      = $_[13] || $KEYWORDS{'type'};
 
-    $uname = getpwuid($<) if ! $uname;
-    $uid = (getpwnam("$uname"))[2] if $uname && ! $uid;
-    $gid = (getgrnam("$gname"))[2] if $gname && ! $gid;
+    if ( ! $Win32 ) {
+	$uname = getpwuid($<) if ! $uname;
+	$uid = (getpwnam("$uname"))[2] if $uname && ! $uid;
+	$gid = (getgrnam("$gname"))[2] if $gname && ! $gid;
+    }
 
     SWITCH: {
 	if ( "$type" eq 'dir' ) {
@@ -728,7 +732,7 @@ sub checkKeyVal ($$) {
     my $err = "";
 
     # Check group name.
-    if ( "$keyword" eq "gname" ) {
+    if ( "$keyword" eq "gname" && ! $Win32 ) {
 	$err = "No such group '$value'" if getgrnam("$value") eq undef;
     }
     # Check user name.
