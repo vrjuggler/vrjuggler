@@ -1127,6 +1127,7 @@ public class TweekFrame
    private FileLoader      mFileLoader      = null;
    private BeanPrefsDialog mBeanPrefsDialog = null;
 
-   private static boolean mMacOS = (System.getProperty("mrj.version") != null);
+   private static boolean mMacOS =
+      System.getProperty("os.name").toLowerCase().startsWith("mac os x");
    private Object mMacAppListener = null;
 }

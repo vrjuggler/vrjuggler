@@ -72,10 +72,11 @@ class GlobalPreferencesServiceImpl
       super(attr);
 
       String data_dir_name = getAppDataDir();
+      String os_name       = System.getProperty("os.name");
 
       // Mac OS X and Windows preferences location.
-      if ( System.getProperty("mrj.version") != null ||
-           System.getProperty("os.name").indexOf("Windows") != -1 )
+      if ( os_name.toLowerCase().startsWith("mac os x") ||
+           os_name.indexOf("Windows") != -1 )
       {
          data_dir_name = data_dir_name + File.separator + "Tweek";
       }
