@@ -40,7 +40,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vpr/src/Utils/md5-cc.  It requires GNU make.
+# Makefile.in for vapor/vpr/Util/md5.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -50,12 +50,12 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-srcdir		= @srcdir@/../../../../../external/md5-c
-top_srcdir	= @top_srcdir@
-INSTALL_FILES	=
-SUBOBJDIR	= $(VPR_LIBRARY)
+srcdir=		@srcdir@/../../../../../external/md5-c
+top_srcdir=	@top_srcdir@
+INSTALL_FILES=	
+SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS		= md5c.c
+SRCS=		md5c.c
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -64,6 +64,6 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
