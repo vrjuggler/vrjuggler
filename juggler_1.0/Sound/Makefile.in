@@ -32,6 +32,8 @@ INSTALL_DEPS	+= install-recursive
 # Prefix for recursive stuff.
 DIRPRFX		= Sound/
 
+SUBDIRS		= pf
+
 # Subdirectories to compile.
 ifeq (@AUDIO_WORKS@, Y)
     SUBDIRS	+= aw

@@ -1802,7 +1802,8 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           Input/vjPosition/Makefile Input/vjSim/Makefile Kernel/Makefile
           Kernel/Pf/Makefile Kernel/GL/Makefile Math/Makefile
           Performance/Makefile SharedMem/Makefile Sound/Makefile
-          Sound/aw/Makefile Sound/sl/Makefile Sync/Makefile Threads/Makefile
+          Sound/aw/Makefile Sound/pf/Makefile Sound/sl/Makefile Sync/Makefile
+          Threads/Makefile
           test/Makefile test/CfgTest/Makefile test/GLWindow/Makefile
           test/Math/Makefile test/Matrix/Makefile test/Performance/Makefile
           test/Performance/analyzer/Makefile
