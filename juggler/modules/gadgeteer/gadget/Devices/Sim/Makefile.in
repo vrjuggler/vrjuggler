@@ -27,7 +27,10 @@ vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 
 DEPEND_SRCS	:= vjSimGloveGesture.cpp \
-		   vjSimInput.cpp
+		   vjSimInput.cpp \
+		   vjSimAnalog.cpp \
+		   vjSimDigital.cpp \
+		   vjSimPosition.cpp
 
 VJSIM_OBJECTS := $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
