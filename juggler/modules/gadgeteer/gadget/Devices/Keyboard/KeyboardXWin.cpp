@@ -116,6 +116,9 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
    if(mWeOwnTheWindow)
       openTheWindow();
 
+   // Sync up with window
+   XSync(m_display,0);
+
    // If we have initial locked, then we need to lock the system
    if(mLockState == Lock_LockKey)      // Means that we are in the initially locked state
    {
@@ -185,9 +188,9 @@ int vjXWinKeyboard::onlyModifier(int mod)
 void vjXWinKeyboard::updateData()
 {
 vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
-   if(mUpdKeysHasBeenCalled)            // If we haven't updated anything, then don't swap stuff
+   if(mHandleEventsHasBeenCalled)            // If we haven't updated anything, then don't swap stuff
    {
-      mUpdKeysHasBeenCalled = false;
+      mHandleEventsHasBeenCalled = false;
 
       // Scale mouse values based on sensitivity
       m_keys[VJMOUSE_POSX] = int(float(m_keys[VJMOUSE_POSX]) * m_mouse_sensitivity);
@@ -215,7 +218,7 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
    }
 }
 
-void vjXWinKeyboard::updKeys()
+void vjXWinKeyboard::HandleEvents()
 {
    XEvent event;
    KeySym key;
@@ -224,9 +227,9 @@ void vjXWinKeyboard::updKeys()
    // XXX: Need to add to mask to get more events for subclasses
    const long event_mask = (KeyPressMask | KeyReleaseMask | ButtonPressMask |
                              ButtonReleaseMask | ButtonMotionMask |
-                             PointerMotionMask);
+                             PointerMotionMask | StructureNotifyMask);
    mKeysLock.acquire();
-   mUpdKeysHasBeenCalled = true;       // We have been called now -- Tell them to swap data because we don't have events
+   mHandleEventsHasBeenCalled = true;       // We have been called now -- Tell them to swap data because we don't have events
    mKeysLock.release();
 
    // Wait until we actually have some events -- THIS BLOCKS for an event
@@ -237,7 +240,7 @@ void vjXWinKeyboard::updKeys()
 // In order to copy data over to the m_curKeys array
 vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
 
-   mUpdKeysHasBeenCalled = true;       // We have been called now - Tell tehm to swap because we do have data
+   mHandleEventsHasBeenCalled = true;       // We have been called now - Tell tehm to swap because we do have data
    // Loop while the event queue contains events for m_window that are part
    // of the given event mask.
    do
@@ -425,6 +428,10 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for t
 
          break;
       }
+
+      // Let any other event watchers process their events
+      this->processEvent(event);
+
    }
    while ( XCheckWindowEvent(m_display, m_window, event_mask, &event) );
 
@@ -589,17 +596,15 @@ int vjXWinKeyboard::openTheWindow()
    m_swa.border_pixel = WhitePixel(m_display,m_screen);
    m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask;
    m_swa.background_pixel = BlackPixel(m_display,m_screen);
-
+   unsigned long event_mask = ExposureMask | StructureNotifyMask | KeyPressMask |
+                              KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
+                              ButtonMotionMask | PointerMotionMask | StructureNotifyMask;
    m_window = createWindow ( DefaultRootWindow(m_display) ,
                              1, BlackPixel(m_display,m_screen),
-                             WhitePixel(m_display,m_screen), ExposureMask |
-                             StructureNotifyMask |
-                             KeyPressMask | KeyReleaseMask | ButtonPressMask |
-                             ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
+                             WhitePixel(m_display,m_screen),event_mask );
    setHints(m_window, instName , "VJm_keys" , "VJKeyboard2", "VJInputD" );
    XSelectInput(m_display, m_window,
-                KeyPressMask | KeyReleaseMask | ButtonPressMask |
-                ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
+                event_mask );
    XMapWindow(m_display, m_window);
    XFlush(m_display);
    XRaiseWindow(m_display,m_window);

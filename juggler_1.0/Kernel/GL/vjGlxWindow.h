@@ -90,6 +90,11 @@ protected:
    //+       until a window has actually been mapped.
    static int EventIsMapNotify (Display *display,  XEvent *e,  XPointer window);
 
+   //: Called with any x-events to process
+   // From X-win keyboard
+   // Called from seperate process (keyboard device update)
+   virtual void processEvent(XEvent event);
+
 private:
    Display*       x_display;
    XVisualInfo*   visual_info;

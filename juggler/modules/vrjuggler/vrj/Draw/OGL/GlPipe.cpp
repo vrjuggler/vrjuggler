@@ -279,6 +279,10 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    // --- SET CONTEXT --- //
    win->makeCurrent();
 
+   // VIEWPORT cleaning
+   if(win->hasDirtyViewport())
+      win->updateViewport();
+
    // CONTEXT INIT(): Check if we need to call contextInit()
    if(win->hasDirtyContext())
    {

@@ -56,6 +56,7 @@ public:
       in_stereo = false;
       window_is_open = false;
       mDirtyContext = true;      // Always dirty when window first created
+      mDirtyViewport = true;
 
       mDisplay = NULL;
    }
@@ -102,6 +103,9 @@ public:
    //: Sets the projection matrix for this window to the one for simulator
    void setCameraProjection();
 
+   //: Updates the viewport and does any viewport cleaning
+   void updateViewport();
+
    //: Is the context dirty?
    bool hasDirtyContext() const
    { return mDirtyContext; }
@@ -109,6 +113,14 @@ public:
    //: Set the dirty bit for the context
    void setDirtyContext(bool val=true)
    { mDirtyContext = val; }
+
+   //: Is the context dirty?
+   bool hasDirtyViewport() const
+   { return mDirtyViewport; }
+
+   //: Set the dirty bit for the context
+   void setDirtyViewport(bool val=true)
+   { mDirtyViewport = val; }
 
    //: Query wether the window is open
    //! RETURNS: true - If window is open
@@ -127,6 +139,15 @@ public:
    int getId()
    { return mWindowId; }
 
+   // Called by event function to update size info
+   // XXX: Should update vjDisplay chunk in some way
+   void updateOriginSize(int o_x, int o_y, int width, int height)
+   {
+      origin_x = o_x; origin_y = o_y;
+      window_width = width; window_height = height;
+
+   }
+
    friend std::ostream& operator<<(std::ostream& out, vjGlWindow* win);
 
 public:  /**** Static Helpers *****/
@@ -143,6 +164,7 @@ protected:
    vjDisplay* mDisplay;
 
    bool mDirtyContext;  //: The context is dirty.  We need to (re)initialize it next draw
+   bool mDirtyViewport; //: The gl window setup (viewport, etc) is dirty and needs to be reinited.
 
    bool in_stereo;      //: Wether the display is actually in stereo
                         // if we wanted a stereo display but couldn't open it

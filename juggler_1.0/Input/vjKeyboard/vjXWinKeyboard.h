@@ -79,7 +79,7 @@ public:
       mPrevX = 0; mPrevY = 0;
       mLockState = Unlocked;     // Initialize to unlocked.
       mExitFlag = false;
-      mUpdKeysHasBeenCalled = false;      // Initialize it to not being called yet
+      mHandleEventsHasBeenCalled = false;      // Initialize it to not being called yet
       mWeOwnTheWindow = true;
    }
    ~vjXWinKeyboard() { stopSampling();}
@@ -95,7 +95,7 @@ public:
 
    // process the current x-events
    // Called repetatively by the controlLoop
-   int sample() { updKeys(); return 1; }
+   int sample() { HandleEvents(); return 1; }
    void updateData();
 
    static std::string getChunkType() { return std::string("Keyboard");}
@@ -113,13 +113,19 @@ public:
    virtual bool modifierOnly(int modKey)
    { return onlyModifier(modKey); }
 
+protected:
+   //: Do any extra event processing needed
+   virtual void processEvent(XEvent event)
+   {;}
+
+
 private:
    /* Private functions for processing input data */
    int onlyModifier(int);
 
-   //: Update the keys.
+   //: Handle any events in the system
    // Copies m_keys to m_curKeys
-   void updKeys();
+   void HandleEvents();
 
    /* X-Windows utility functions */
    //: Convert XKey to vjKey
@@ -155,8 +161,8 @@ protected:
    int      m_keys[256];         // (0,*): The num key presses during an UpdateData (ie. How many keypress events)
    int      m_curKeys[256];      // (0,*): Copy of m_keys that the user reads from between updates
    int      m_realkeys[256];     // (0,1): The real keyboard state, all events processed (ie. what is the key now)
-   vjMutex  mKeysLock;           // Must hold this lock when accessing m_keys OR mUpdKeysHasBeenCalled
-   bool     mUpdKeysHasBeenCalled;  // This flag keeps track of wether or not updKeys has been called since the last updateData.
+   vjMutex  mKeysLock;           // Must hold this lock when accessing m_keys OR mHandleEventsHasBeenCalled
+   bool     mHandleEventsHasBeenCalled;  // This flag keeps track of wether or not HandleEvents has been called since the last updateData.
                                     // It is used by updateData to make sure we don't get a "blank" update where no keys are pressed.
    bool     mExitFlag;           // Should we exit
 
