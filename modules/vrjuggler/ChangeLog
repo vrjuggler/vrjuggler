@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-28-2004 patrickh    Added the first version of the display window custom
+                        editor to the VRJConfig Control Panel.
 Jul-12-2004 patrickh    Began adding very basic exception handling to the
                         kernel.
                         NEW VERSION: 1.1.154
