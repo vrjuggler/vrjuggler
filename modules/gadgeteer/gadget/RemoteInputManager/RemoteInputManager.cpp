@@ -54,30 +54,6 @@
 
 namespace gadget
 {
-
-   bool recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk);
-   bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
-
-   bool recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk)
-   {
-      return(chunk->getDescToken() == std::string("cluster_machine"));
-   }
-   
-   bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk)
-   {  //Can not check with BaseTypeFactory since we do not know thw BaseType yet
-   
-      if ( DeviceFactory::instance()->recognizeDevice(chunk) &&  chunk->getNum("host_chunk") > 0 )
-      {
-         std::string host_chunk = chunk->getProperty<std::string>("host_chunk");
-         if ( !host_chunk.empty() )
-         {
-            return true;
-         }// Else it is an empty chunk_ptr
-      }// Else it is not a device, or does not have a host_chunk property
-      return false;
-   }
-
-
    RemoteInputManager::RemoteInputManager(InputManager* input_manager)
    {
       mLocalMachineChunkName = "";
@@ -108,6 +84,24 @@ namespace gadget
       shutdown();  // kills thread, removes devices
    }
 
+   bool RemoteInputManager::recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk)
+   {
+      return(chunk->getDescToken() == std::string("cluster_machine"));
+   }
+   
+   bool RemoteInputManager::recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk)
+   {  //Can not check with BaseTypeFactory since we do not know thw BaseType yet
+   
+      if ( DeviceFactory::instance()->recognizeDevice(chunk) &&  chunk->getNum("host_chunk") > 0 )
+      {
+         std::string host_chunk = chunk->getProperty<std::string>("host_chunk");
+         if ( !host_chunk.empty() )
+         {
+            return true;
+         }// Else it is an empty chunk_ptr
+      }// Else it is not a device, or does not have a host_chunk property
+      return false;
+   }
 
 
 
@@ -150,7 +144,6 @@ namespace gadget
    bool RemoteInputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
    {
       return( recognizeClusterMachineConfig(chunk) ||
-              recognizeClusterSystemConfig(chunk) ||
               recognizeRemoteDeviceConfig(chunk) );
    }
 
@@ -234,6 +227,7 @@ namespace gadget
                {
                   mAcceptMsgPackage.createHandshake(true,mShortHostname,mListenPort, mManagerId.toString());   // send my name: send my hostname & port
                   mAcceptMsgPackage.sendAndClear(client_sock);
+                  mClusterSync.clientClusterSync(client_sock);
                   client_sock = new vpr::SocketStream;
                   mIncomingConnections++;
                }
@@ -404,16 +398,6 @@ namespace gadget
             // int num_connections = chunk->getProperty("num_connections");
             mInstanceName = chunk->getFullName();
 
-            // forcedHostname is used when a machine has two network interfaces, 
-            // and you want to use the non-default one
-            std::string forcedHostname = chunk->getProperty<std::string>("forced_hostname");
-
-            if ( forcedHostname.size() > 0 )
-            {
-               mLongHostname = forcedHostname;
-               mShortHostname = getShortHostnameFromLong(mLongHostname);
-            }
-
             mListenWasInitialized = true;
             startListening();
 
@@ -421,11 +405,7 @@ namespace gadget
          return true;
    
    }
-   bool RemoteInputManager::configureClusterSystem(jccl::ConfigChunkPtr chunk)
-   {
-      this->mNumMachines = chunk->getNum("cluster_machine");
-      return true;
-   }
+   
    bool RemoteInputManager::configureDevice(jccl::ConfigChunkPtr chunk)
    {
       vprASSERT(chunk->getNum("host_chunk") > 0 && "This chunk does not have a host_chunk");
