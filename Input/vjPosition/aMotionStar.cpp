@@ -376,9 +376,9 @@ aMotionStar::sample () {
       posinfo[bnum][0] = getXPos(o) / 12.0;	// X translation
       posinfo[bnum][1] = getYPos(o) / 12.0;	// Y translation
       posinfo[bnum][2] = getZPos(o) / 12.0;	// Z translation
-      posinfo[bnum][3] = getRoll(o);		// Z rotation (roll)
-      posinfo[bnum][4] = getAzimuth(o);		// Y rotation (azimuth)
-      posinfo[bnum][5] = getElevation(o);	// X rotatoin (elevation)
+      posinfo[bnum][3] = getZRot(o);		// Z rotation
+      posinfo[bnum][4] = getYRot(o);		// Y rotation
+      posinfo[bnum][5] = getXRot(o);		// X rotation
     } // end for loop
 } // end void aMotionStar::sample()
 
