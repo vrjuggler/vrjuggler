@@ -2,7 +2,7 @@
 
 #ifndef CONCRETEDEPCHECKER_H
 #define CONCRETEDEPCHECKER_H
-#include "RTRC/DepChecker.h"
+#include "jccl/RTRC/DepChecker.h"
 
 /**
  * @stereotype multiple 

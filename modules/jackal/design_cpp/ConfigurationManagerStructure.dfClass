@@ -52,8 +52,25 @@ class diagram {
 @__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#removePending#(#std::list<PendingChunk>::iterator#)#:oiref>
 @__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#removeActive#(#const std::string&#)#:oiref>
 @__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#addActive#(#ConfigChunkPtr#)#:oiref>
-@hideClasses
-@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#isPendingStale#(##)#:oiref>*/
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#isPendingStale#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#loadRemoteReconfig#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#getNumIncoming#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#scanForLostDependencies#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#removeConfigElementHandler#(#ConfigElementHandler*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#setRemoteReconfigPlugin#(#jccl::RemoteReconfig*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#addConfigElementHandler#(#ConfigElementHandler*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#mIncomingLock:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#mElementHandlers:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#mPluginLoader:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#mReconfigIf:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#removePending#(#std::list<PendingElement>::iterator#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#hasElementType#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#isElementTypeInPendingList#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#isElementInActiveList#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#isElementTypeInActiveList#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#getElementFromActive#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#getElementFromPending#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#getElementNamed#(#const std::string&#)#:oiref>*/
 class reference {
 }/**
 @__ref <oiref:cpp#Class#jccl::ConfigManager::PendingChunk:oiref><oihard>
@@ -88,6 +105,15 @@ class reference19 {
 @__hiddenMember <oiref:cpp#Member#jccl::ConfigChunkDB#save#(#const std::string&#)#:oiref>
 @hideOperations*/
 class reference1 {
+}/**
+@__ref <oiref:cpp#Class#jccl::Configuration:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@hideOperations
+@hideProperties 
+*/
+class reference2 {
 }}/**
 
 @__tags
@@ -100,17 +126,15 @@ class __tags {
 class __options {
 }/**
 @__positions <oigroup:MemberLink#<oiref:cpp#Member#jccl::ConfigChunkDB#mChunks:oiref>=530,160,530,260:oigroup>
-<oigroup:MemberLink#<oiref:cpp#Member#jccl::ConfigManager#mActiveConfig:oiref>=330,115,420,115:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jccl::ConfigManager#mActiveConfig:oiref>=330,80,420,80:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#jccl::ConfigManager#lnkjccl::ConfigChunk:oiref>=308,140,308,220:oigroup>
+<oigroup:<oiref:cpp#Class#jccl::Configuration:oiref>=420,40,253,80,0:oigroup>
 <oigroup:<oiref:cpp#Class#jccl::ConfigChunkDB:oiref>=420,70,220,90,0:oigroup>
 <oigroup:<oiref:cpp#Class#jccl::ConfigChunkPtr:oiref>=450,260,155,58,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#jccl::ConfigManager#mPendingConfig:oiref>=155,210,155,260:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jccl::ConfigManager#mPendingConfig:oiref>=121,234,30,22,0:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jccl::ConfigChunkDB#mChunks:oiref>=496,234,30,22,0:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jccl::ConfigManager::PendingChunk#mChunk:oiref>=430,263,16,22,0:oigroup>
 <oigroup:<oiref:cpp#Class#jccl::ConfigManager::PendingChunk:oiref>=20,260,270,150,0:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#jccl::ConfigManager::PendingChunk#mChunk:oiref>=290,289,450,289:oigroup>
-<oigroup:<oiref:cpp#Class#jccl::ConfigManager:oiref>=20,10,310,200,0:oigroup>
+<oigroup:<oiref:cpp#Class#jccl::ConfigManager:oiref>=20,10,310,250,0:oigroup>
 */
 class __positions {
 }
