@@ -34,6 +34,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _TWEEK_SUBJECT_IDL_
+#define _TWEEK_SUBJECT_IDL_
+#define _TWEEK_SUBJECT_IDL_
+
 #include <tweek/idl/Observer.idl>
 
 
@@ -48,3 +52,5 @@ interface Subject
 };
 
 };
+
+#endif /* _TWEEK_SUBJECT_IDL_ */

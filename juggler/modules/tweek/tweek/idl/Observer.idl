@@ -34,6 +34,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _TWEEK_OBSERVER_IDL_
+#define _TWEEK_OBSERVER_IDL_
 
 module tweek
 {
@@ -44,3 +46,5 @@ interface Observer
 };
 
 };
+
+#endif /* _TWEEK_OBSERVER_IDL_ */
