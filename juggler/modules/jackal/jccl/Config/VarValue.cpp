@@ -42,12 +42,13 @@
 
 namespace jccl
 {
-   
+
 VarValue* VarValue::invalid_instance = NULL;
 const std::string VarValue::using_invalid_msg = "Casting from VJ_T_INVALID VarValue - this may mean we're confused";
 
 
-/*static*/ VarValue& VarValue::getInvalidInstance () {
+/*static*/ VarValue& VarValue::getInvalidInstance ()
+{
     if (invalid_instance == NULL)
         invalid_instance = new VarValue (VJ_T_INVALID);
     return *invalid_instance;
@@ -97,13 +98,15 @@ VarValue::VarValue ( VarType t )
 
 
 
-VarValue::~VarValue() {
+VarValue::~VarValue()
+{
     validation = 0;
 }
 
 
 #ifdef JCCL_DEBUG
-void VarValue::assertValid () const {
+void VarValue::assertValid () const
+{
     vprASSERT (validation == 1 && "Trying to use deleted VarValue");
     if ((type == T_EMBEDDEDCHUNK) && embeddedchunkval.get())
         embeddedchunkval->assertValid();
@@ -112,7 +115,8 @@ void VarValue::assertValid () const {
 
 
 
-VarValue& VarValue::operator= (const VarValue &v) {
+VarValue& VarValue::operator= (const VarValue &v)
+{
     assertValid();
     v.assertValid();
 
@@ -136,7 +140,8 @@ VarValue& VarValue::operator= (const VarValue &v) {
 
 
 //: Equality Operator
-bool VarValue::operator == (const VarValue& v) const {
+bool VarValue::operator == (const VarValue& v) const
+{
     assertValid();
     v.assertValid();
 
@@ -171,7 +176,8 @@ bool VarValue::operator == (const VarValue& v) const {
 
 
 
-VarValue::operator int() const {
+VarValue::operator int() const
+{
     assertValid();
 
     switch (type) {
@@ -194,7 +200,8 @@ VarValue::operator int() const {
 
 
 
-VarValue::operator ConfigChunkPtr() const {
+VarValue::operator ConfigChunkPtr() const
+{
     assertValid();
 
     switch (type) {
@@ -219,7 +226,8 @@ VarValue::operator ConfigChunkPtr() const {
 
 
 
-VarValue::operator bool() const {
+VarValue::operator bool() const
+{
     assertValid();
 
     if ((type == T_BOOL))
@@ -244,7 +252,8 @@ VarValue::operator bool() const {
 
 
 
-VarValue::operator float () const {
+VarValue::operator float () const
+{
     assertValid();
 
     switch (type) {
@@ -266,7 +275,8 @@ VarValue::operator float () const {
 
 
 
-char* VarValue::cstring () const {
+char* VarValue::cstring () const
+{
     assertValid();
     char buf[256];
 
@@ -294,11 +304,13 @@ char* VarValue::cstring () const {
 
 
 
-VarValue::operator std::string () const {
+VarValue::operator std::string () const
+{
     assertValid();
     //std::string s;
     //char* c;
-    switch (type) {
+    switch (type)
+    {
     case T_STRING:
     case T_CHUNK:
         return strval;
@@ -308,27 +320,28 @@ VarValue::operator std::string () const {
             sprintf (buf, "%i", intval);
             return std::string (buf);
         }
-    case T_FLOAT: 
+    case T_FLOAT:
         {
             char buf[256];
             sprintf (buf, "%f", floatval);
             return std::string (buf);
         }
     case T_BOOL:
-        return boolval?"true":"false";
+        return boolval? std::string("true") : std::string("false");
     case VJ_T_INVALID:
         vprDEBUG(jcclDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6
                                 << std::endl << vprDEBUG_FLUSH;
-        return (std::string)"";
+        return std::string("");
     default:
         vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to std::string.\n" << vprDEBUG_FLUSH;
-        return (std::string)"";
+        return std::string("");
     }
 }
 
 
 
-VarValue &VarValue::operator = (int i) {
+VarValue &VarValue::operator = (int i)
+{
     assertValid();
 
     switch (type) {
@@ -349,7 +362,8 @@ VarValue &VarValue::operator = (int i) {
 
 
 
-VarValue& VarValue::operator = (bool i) {
+VarValue& VarValue::operator = (bool i)
+{
     assertValid();
 
     switch (type) {
@@ -367,7 +381,8 @@ VarValue& VarValue::operator = (bool i) {
 
 
 
-VarValue &VarValue::operator = (float i) {
+VarValue &VarValue::operator = (float i)
+{
     assertValid();
 
     switch (type) {
@@ -389,7 +404,8 @@ VarValue &VarValue::operator = (float i) {
 
 
 
-VarValue &VarValue::operator = (const std::string& s) {
+VarValue &VarValue::operator = (const std::string& s)
+{
     assertValid();
 
     return *this = s.c_str();
@@ -397,7 +413,8 @@ VarValue &VarValue::operator = (const std::string& s) {
 
 
 
-VarValue &VarValue::operator = (const char *val) {
+VarValue &VarValue::operator = (const char *val)
+{
     assertValid();
 
     bool err = false;
@@ -453,7 +470,8 @@ VarValue &VarValue::operator = (const char *val) {
 }
 
 
-VarValue &VarValue::operator = (const ConfigChunkPtr ch) {
+VarValue &VarValue::operator = (const ConfigChunkPtr ch)
+{
    assertValid();
 
    switch (type)
@@ -473,7 +491,8 @@ VarValue &VarValue::operator = (const ConfigChunkPtr ch) {
 
 
 
-std::ostream& operator << (std::ostream& out, const VarValue& v) {
+std::ostream& operator << (std::ostream& out, const VarValue& v)
+{
     v.assertValid();
 
     //      vprDEBUG(vprDBG_ERROR,0) << "in << func" << vprDEBUG_FLUSH;
