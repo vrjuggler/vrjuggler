@@ -211,7 +211,15 @@ public class ConfigContextEditor
       mBaseSplitPane.setOneTouchExpandable(true);
       this.add(mBaseSplitPane, BorderLayout.CENTER);
       mBaseSplitPane.add(treePane, JSplitPane.LEFT);
-      mBaseSplitPane.add(mTabPane, JSplitPane.RIGHT);
+      mBaseSplitPane.add(propsSplitPane, JSplitPane.RIGHT);
+
+      propsSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+      propsSplitPane.setOneTouchExpandable(true);
+     
+      helpScrollPane.setViewportView(helpPane);
+      propsSplitPane.add(mTabPane, JSplitPane.TOP);
+      propsSplitPane.add(helpScrollPane, JSplitPane.BOTTOM);
+      
       mTabPane.add(mElementPropSheetScrollPane, "DefaultEditor");
       mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
       mElementTreeScrollPane.getViewport().add(mElementTree, null);
@@ -222,7 +230,15 @@ public class ConfigContextEditor
       //addBtn.setEnabled(false);
       removeBtn.setText("Remove");
       //removeBtn.setEnabled(false);
- 
+
+      helpScrollPane.setMinimumSize(new Dimension(0, 0));
+      helpPane.setBackground(new Color(255, 253, 181));
+      helpPane.setBorder(null);
+      helpPane.setEditable(false);
+      helpPane.setMinimumSize(new Dimension(0, 0));
+
+      helpScrollPane.setViewportView(helpPane);
+      
       addBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -311,7 +327,12 @@ public class ConfigContextEditor
          selectConfigElement(element);
       }
    }
-      
+   
+   public JEditorPane getHelpPane()
+   {
+      return helpPane;
+   }
+    
    private BorderLayout mBaseLayout = new BorderLayout();
    private JSplitPane mBaseSplitPane = new JSplitPane();
    private JTabbedPane mTabPane = new JTabbedPane();
@@ -324,6 +345,14 @@ public class ConfigContextEditor
    private java.util.List mCustomEditors = null;
    
    private PropertySheet mElementPropSheet = new PropertySheet();
+
+   private JSplitPane propsSplitPane = new JSplitPane();
+   private JScrollPane helpScrollPane = new JScrollPane();
+   private JEditorPane helpPane = new JEditorPane("text/html", "")
+   {
+      public boolean getScrollableTracksViewportWidth() { return true; }
+      public boolean getScrollableTracksViewportHeight() { return true; }
+   };
    
    private BorderLayout treeLayout = new BorderLayout();
    private JPanel treePane = new JPanel();
