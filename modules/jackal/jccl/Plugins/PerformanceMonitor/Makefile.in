@@ -27,12 +27,12 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 PERFORMANCE_SRCS	:= vjTimeStamp.cpp	\
                            vjPerfDataBuffer.cpp
 
-PERFORMANCE_OBJECTS	:= ${addprefix ${OBJDIR}/,${PERFORMANCE_SRCS:.cpp=.o}}
+PERFORMANCE_OBJECTS	:= ${addprefix ${OBJDIR}/,${PERFORMANCE_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES		:= ${PERFORMANCE_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

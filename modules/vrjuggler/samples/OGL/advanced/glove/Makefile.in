@@ -5,7 +5,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .cxx
+.SUFFIXES: .cpp .cxx .@OBJ_FILE_SUFFIX@
 
 srcdir		= @srcdir@
 
@@ -28,7 +28,8 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= main.o gloveApp.o navigation.o
+OBJECTS		= main.@OBJ_FILE_SUFFIX@ gloveApp.@OBJ_FILE_SUFFIX@	\
+                  navigation.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -40,14 +41,14 @@ all: glove
 glove: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-main.o: gloveApp.h
-gloveApp.o: gloveApp.h navigation.h
-navigation.o: navigation.h
+main.@OBJ_FILE_SUFFIX@: gloveApp.h
+gloveApp.@OBJ_FILE_SUFFIX@: gloveApp.h navigation.h
+navigation.@OBJ_FILE_SUFFIX@: navigation.h
 
-.cpp.o:
+.cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
-.cxx.o:
+.cxx.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
