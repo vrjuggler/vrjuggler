@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="http://www.vrjuggler.org/docbook_ab.css" type="text/css"?>
 <?morphon-document-settings
   morphon.document.settings.whitespaces.amount="3"
   morphon.document.settings.print.fixed.attributes="true"
@@ -20,7 +20,7 @@
             <surname>Hartling</surname>
          </author>
       </authorgroup>
-      <releaseinfo>0.0.5</releaseinfo>
+      <releaseinfo>0.11.0</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <preface>
@@ -1240,12 +1240,12 @@ private SliderObserverImpl mSliderObserver = null;         <co linkends="Network
                </section>
                <section>
                   <title>Handling CORBA Communications</title>
-                  <para>The most complex part of this Bean is the handling of CORBA communication events delivered by the Tweek GUI. All of the handling in this example will be done in the method <methodname>connectionStateChanged()</methodname>. The steps that must be followed are straightforward, but there are errors that must be handled properly. It is the error handling that can make the code look daunting, not the use of the Tweek Network library.</para>
+                  <para>The most complex part of this Bean is the handling of CORBA communication events delivered by the Tweek GUI. All of the handling in this example will be done in the methods <methodname>connectionOpened()</methodname> and <methodname>connectionClosed()</methodname>. The steps that must be followed are straightforward, but there are errors that must be handled properly. It is the error handling that can make the code look daunting, not the use of the Tweek Network library.</para>
                   <programlisting linenumbering="numbered">/**
  * Implements the Tweek CommunicationListener interface needed for being
- * informed of connections and disconnections with remote CORBA servers.
+ * informed of new connections with remote ORBs.
  */
-public void connectionStateChanged(CommunicationEvent e)
+public void connectionOpened(CommunicationEvent e)                        <co linkends="NetworkTest.java.connect.co" id="NetworkTest.java.connect"/>
 {
    // The first thing to do is get the CORBA service object from the
    // event.  We need this so we know to whom we are are connecting.  Once
@@ -1272,41 +1272,44 @@ public void connectionStateChanged(CommunicationEvent e)
                                     JOptionPane.ERROR_MESSAGE);
    }
 
-   // Handle a CORBA connection event from Tweek.
-   if ( CommunicationEvent.CONNECT == e.getType() )                       <co linkends="NetworkTest.java.connect.co" id="NetworkTest.java.connect"/>
+   // Ensure that slider_subject is a valid object just to be safe.
+   if ( slider_subject != null )
    {
-      // Ensure that slider_subject is a valid object just to be safe.
-      if ( slider_subject != null )
-      {
-         // First, we need a Java object that implements the Observer.  That
-         // object must be registered with the Java CORBA service.
-         m_slider_observer = new SliderObserverImpl(mDataSlider,
-                                                    slider_subject);      <co linkends="NetworkTest.java.observer.create.co" id="NetworkTest.java.observer.create"/>
-         corba_service.registerObject(mSliderObserver, "SliderObserver"); <co linkends="NetworkTest.java.observer.register.co" id="NetworkTest.java.observer.register"/>
+      // First, we need a Java object that implements the Observer.  That
+      // object must be registered with the Java CORBA service.
+      m_slider_observer = new SliderObserverImpl(mDataSlider,
+                                                 slider_subject);         <co linkends="NetworkTest.java.observer.create.co" id="NetworkTest.java.observer.create"/>
+      corba_service.registerObject(mSliderObserver, "SliderObserver");    <co linkends="NetworkTest.java.observer.register.co" id="NetworkTest.java.observer.register"/>
 
-         // Now that the observer is registered, we can attach it to the
-         // subject.  The subject needs to know who its observers are so
-         // that it can notify them of updates.
-         slider_subject.attach(mSliderObserver._this());                  <co linkends="NetworkTest.java.observer.attach.co" id="NetworkTest.java.observer.attach"/>
+      // Now that the observer is registered, we can attach it to the
+      // subject.  The subject needs to know who its observers are so
+      // that it can notify them of updates.
+      slider_subject.attach(mSliderObserver._this());                     <co linkends="NetworkTest.java.observer.attach.co" id="NetworkTest.java.observer.attach"/>
 
-         // Now we set the slider in our GUI to be whatever value the
-         // remote subject is holding for us.
-         mDataSlider.setValue(slider_subject.getValue());                 <co linkends="NetworkTest.java.setValue.co" id="NetworkTest.java.setValue"/>
-         mDataSlider.addChangeListener(
-            new SliderChangeListener(slider_subject)
-         );                                                               <co linkends="NetworkTest.java.addChangeListener.co" id="NetworkTest.java.addChangeListener"/>
-      }
+      // Now we set the slider in our GUI to be whatever value the
+      // remote subject is holding for us.
+      mDataSlider.setValue(slider_subject.getValue());                    <co linkends="NetworkTest.java.setValue.co" id="NetworkTest.java.setValue"/>
+      mDataSlider.addChangeListener(
+         new SliderChangeListener(slider_subject)
+      );                                                                  <co linkends="NetworkTest.java.addChangeListener.co" id="NetworkTest.java.addChangeListener"/>
    }
-   // Handle a CORBA disconnect event from Tweek.
-   else if ( CommunicationEvent.DISCONNECT == e.getType() )               <co linkends="NetworkTest.java.shutdown.co" id="NetworkTest.java.disconnect"/>
+}
+
+/**
+ * Implements the Tweek CommunicationListener interface needed for being
+ * informed when existing ORB connections are closed.
+ */
+public void connectionClosed(ConnectEvent e)                              <co linkends="NetworkTest.java.shutdown.co" id="NetworkTest.java.disconnect"/>
+{
+   if ( slider_subject != null )
    {
-      if ( slider_subject != null )
-      {
-         slider_subject.detach(mSliderObserver._this());                  <co linkends="NetworkTest.java.shutdown.co" id="NetworkTest.java.observer.detach"/>
-      }
+      slider_subject.detach(mSliderObserver._this());                     <co linkends="NetworkTest.java.shutdown.co" id="NetworkTest.java.observer.detach"/>
    }
 }</programlisting>
                   <calloutlist>
+                     <callout arearefs="NetworkTest.java.connect" id="NetworkTest.java.connect.co">
+                        <para>If the event delivered to the Bean is a newly opened connection, there is a new CORBA service available, so we will create a new observer to communicate through that service.</para>
+                     </callout>
                      <callout arearefs="NetworkTest.java.corba.service NetworkTest.java.corba.subjectmgr" id="NetworkTest.java.corba.co">
                         <para>The first step that must be taken is retrieving the <classname>org.vrjuggler.tweek.net.corba.CorbaService</classname> object from the event. This is needed as the basis for all further actions. With the CORBA service reference, we can request the Subject Manager reference. The result is a CORBA reference to the remote Subject Manager, a servant within the C++ application.</para>
                      </callout>
@@ -1315,9 +1318,6 @@ public void connectionStateChanged(CommunicationEvent e)
                      </callout>
                      <callout arearefs="NetworkTest.java.narrow-subject NetworkTest.java.narrow-exception" id="NetworkTest.java.narrow.co">
                         <para>The call to <methodname>getSubject()</methodname> returns a reference of type <interfacename>tweek.Subject</interfacename>, but we need to narrow it to <interfacename>networktest.SliderSubject</interfacename> so we can use it. Among the code generated by the IDL compiler is a class named <classname>networktest.SliderSubjectHelper</classname>. Its <methodname>narrow()</methodname> method is used to narrow the CORBA reference type to a more specific type. If the narrowing fails, an exception of type <exceptionname>org.omg.CORBA.BAD_PARAM</exceptionname> is thrown, and it is best to handle it here.</para>
-                     </callout>
-                     <callout arearefs="NetworkTest.java.connect" id="NetworkTest.java.connect.co">
-                        <para>If the event delivered to the Bean was of type <constant>org.vrjuggler.tweek.net.CommunicationEvent.CONNECT</constant>, there is a new CORBA service available, so we will create a new observer to communicate through that service.</para>
                      </callout>
                      <callout arearefs="NetworkTest.java.observer.create" id="NetworkTest.java.observer.create.co">
                         <para>Once we have the subject reference, we create an observer servant that we will attach to the subject. This is where <classname>networktest.SliderObserverImpl</classname> comes into the picture.</para>
@@ -1335,7 +1335,7 @@ public void connectionStateChanged(CommunicationEvent e)
                         <para>As part of the collaborative slider, we need to register a change listener with the GUI slider so that it will be informed of changes made by the local user. These changes are reported to the remote subject so that other users get the update. The class <classname>SliderChangeListener</classname> is shown later.</para>
                      </callout>
                      <callout arearefs="NetworkTest.java.disconnect NetworkTest.java.observer.detach" id="NetworkTest.java.shutdown.co">
-                        <para>If the event delivered to the Bean was of type <constant>org.vrjuggler.tweek.net.CommunicationEvent.DISCONNECT</constant>, the CORBA service is being shut down. When the CORBA service is shut down, we need to detach the local observer from the remote subject to prevent further update notification attempts for this observer.</para>
+                        <para>If the event delivered to the Bean was the closing of an existing connection, the CORBA service is being shut down. When the CORBA service is shut down, we need to detach the local observer from the remote subject to prevent further update notification attempts for this observer.</para>
                      </callout>
                   </calloutlist>
                   <para>It is important to note that the use of hard-coded subject names is not recommended. In this example, the subject name is hard-coded for simplicity. The Tweek Subject Manager allows accessing code to request a list of all registered subjects. Using this information, it is possible to present the Java GUI user with a list of subjects from which they can make a selection.</para>
