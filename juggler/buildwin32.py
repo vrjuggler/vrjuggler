@@ -140,6 +140,7 @@ def setVars():
 
       # Default values for optional settings.
       'JAVA_HOME'       : os.getenv('JAVA_HOME', r'C:\java'),
+      'JAVA3D_HOME'     : os.getenv('JAVA3D_HOME', os.getenv('JAVA_HOME', '')),
       'OMNIORB_ROOT'    : os.getenv('OMNIORB_ROOT', ''),
       'PFROOT'          : os.getenv('PFROOT',
                                     r'C:\Program Files\Silicon Graphics\OpenGL Performer'),
@@ -182,6 +183,7 @@ def setVars():
       os.environ['PATH'] = jdk_path + os.pathsep + os.environ['PATH']
       os.environ['JACORB_PATH'] = os.path.join(juggler_dir, r'external\JacORB')
 
+   processInput(options, 'JAVA3D_HOME', 'Java3D installation directory', False)
    processInput(options, 'OMNIORB_ROOT', 'omniORB installation directory',
                 False)
    processInput(options, 'PFROOT', 'OpenGL Performer installation directory',
@@ -328,6 +330,7 @@ def generateAntBuildFiles():
       tweek_ext_jars_re = re.compile(r'^(.*)@TWEEK_EXT_JARS@(.*)$')
       jccl_jars_re      = re.compile(r'^(.*)@JCCL_JARS@(.*)$')
       java_orb_jar_re   = re.compile(r'^(.*)@JAVA_ORB_JAR@(.*)$')
+      java3d_jars_re    = re.compile(r'^(.*)@JAVA3D_JAR@(.*)$')
 
       jdom_jars = [
          os.path.join(juggler_dir, r'external\jdom\jaxen-core.jar'),
@@ -364,6 +367,13 @@ def generateAntBuildFiles():
       jccl_rtrc_jars = [
          os.path.join(juggler_dir, r'vc7\JCCL_Java\RTRC_Plugin_Java',
                       'jccl_rtrc.jar')
+      ]
+
+      java3d_jars = [
+         os.path.join(os.environ['JAVA3D_HOME'], r'jre\lib\ext\j3daudio.jar'),
+         os.path.join(os.environ['JAVA3D_HOME'], r'jre\lib\ext\j3dcore.jar'),
+         os.path.join(os.environ['JAVA3D_HOME'], r'jre\lib\ext\j3dutils.jar'),
+         os.path.join(os.environ['JAVA3D_HOME'], r'jre\lib\ext\vecmath.jar')
       ]
 
       def generateBuildFile(self):
@@ -408,6 +418,11 @@ def generateAntBuildFiles():
             elif self.jccl_jars_re.search(line):
                jars = os.pathsep.join(self.jccl_jars + self.jccl_rtrc_jars)
                match = self.jccl_jars_re.search(line)
+               input[i] = '%s%s%s\n' % (match.groups()[0], jars,
+                                        match.groups()[1])
+            elif self.java3d_jars_re.search(line):
+               jars = os.pathsep.join(self.java3d_jars)
+               match = self.java3d_jars_re.search(line)
                input[i] = '%s%s%s\n' % (match.groups()[0], jars,
                                         match.groups()[1])
 
