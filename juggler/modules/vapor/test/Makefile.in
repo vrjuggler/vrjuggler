@@ -50,11 +50,11 @@
 # -----------------------------------------------------------------------------
 default: TestSuite
 
-SUBDIRS	= SerialPort	\
-          Socket	\
-          Sync		\
-          Threads \
-          TestSuite
+SUBDIRS=	SerialPort	\
+		Socket		\
+		Sync		\
+		Threads		\
+		TestSuite
 
 all: $(SUBDIRS)
 
