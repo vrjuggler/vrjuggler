@@ -126,9 +126,9 @@ EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @
 # -----------------------------------------------------------------------------
 default: all
 
-all: testSuite
+all: testSuite@EXEEXT@
 
-testSuite: $(TESTSUITE_OBJECTS)
+testSuite@EXEEXT@: $(TESTSUITE_OBJECTS)
 	$(LINK) -o $@ $(TESTSUITE_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 # Include source building, recursive, dependency and installation targets.

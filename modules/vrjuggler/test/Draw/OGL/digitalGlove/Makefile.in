@@ -68,10 +68,10 @@ OBJECTS		= main.@OBJEXT@ digitalGloveApp.@OBJEXT@
 default: all
 
 
-all: digitalGlove
+all: digitalGlove@EXEEXT@
 
 
-digitalGlove: $(OBJECTS)
+digitalGlove@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 main.@OBJEXT@ digitalGloveApp.@OBJEXT@: digitalGloveApp.h
@@ -83,6 +83,6 @@ main.@OBJEXT@ digitalGloveApp.@OBJEXT@: digitalGloveApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend digitalGlove digitalGlove.exe digitalGlove.ilk	\
+	rm -f Makedepend digitalGlove@EXEEXT@ digitalGlove.ilk	\
           $(OBJECTS) *core so_locations *.?db
 	rm -rf ./ii_files

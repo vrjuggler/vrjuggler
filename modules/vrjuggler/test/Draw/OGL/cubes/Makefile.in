@@ -67,9 +67,9 @@ OBJECTS		= cubes.@OBJEXT@ cubesApp.@OBJEXT@
 # -----------------------------------------------------------------------------
 default: all
 
-all: cubes
+all: cubes@EXEEXT@
 
-cubes: $(OBJECTS)
+cubes@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 cubes.@OBJEXT@ cubesApp.@OBJEXT@: cubesApp.h
@@ -81,6 +81,6 @@ cubes.@OBJEXT@ cubesApp.@OBJEXT@: cubesApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend cubes cubes.exe cubes.ilk $(OBJECTS) *core	\
+	rm -f Makedepend cubes@EXEEXT@ cubes.ilk $(OBJECTS) *core	\
           so_locations *.?db
 	rm -rf ./ii_files

@@ -67,9 +67,9 @@ OBJECTS		= main.@OBJEXT@ simpleGloveApp.@OBJEXT@
 # -----------------------------------------------------------------------------
 default: all
 
-all: simpleGlove
+all: simpleGlove@EXEEXT@
 
-simpleGlove: $(OBJECTS)
+simpleGlove@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 main.@OBJEXT@ simpleGloveApp.@OBJEXT@: simpleGloveApp.h
@@ -81,6 +81,6 @@ main.@OBJEXT@ simpleGloveApp.@OBJEXT@: simpleGloveApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend simpleGlove simpleGlove.exe simpleGlove.ilk	\
+	rm -f Makedepend simpleGlove@EXEEXT@ simpleGlove.ilk	\
           $(OBJECTS) *core so_locations *.?db
 	rm -rf ./ii_files

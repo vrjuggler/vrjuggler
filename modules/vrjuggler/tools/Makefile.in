@@ -79,9 +79,9 @@ TRACKER_CONFIG_OBJECTS = trackerConfig.@OBJEXT@		\
 # -----------------------------------------------------------------------------
 default: all
 
-all: trackerConfig
+all: trackerConfig@EXEEXT@
 
-trackerConfig: $(TRACKER_CONFIG_OBJECTS)
+trackerConfig@EXEEXT@: $(TRACKER_CONFIG_OBJECTS)
 	$(LINK) -o $@ $(TRACKER_CONFIG_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJEXT@:
@@ -91,6 +91,6 @@ trackerConfig: $(TRACKER_CONFIG_OBJECTS)
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend trackerConfig trackerConfig.exe		\
-          trackerConfig.ilk $(TRACKER_CONFIG_OBJECTS) *core so_locations *.?db
+	rm -f Makedepend trackerConfig@EXEEXT@ trackerConfig.ilk	\
+          $(TRACKER_CONFIG_OBJECTS) *core so_locations *.?db
 	rm -rf ./ii_files

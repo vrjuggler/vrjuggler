@@ -67,9 +67,9 @@ OBJECTS		= main.@OBJEXT@
 # -----------------------------------------------------------------------------
 default: all
 
-all: simpleInput
+all: simpleInput@EXEEXT@
 
-simpleInput: $(OBJECTS)
+simpleInput@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 main.@OBJEXT@: simpleInput.h
@@ -81,6 +81,6 @@ main.@OBJEXT@: simpleInput.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend simpleInput simpleInput.exe simpleInput.ilk $(OBJECTS) *core	\
-          so_locations *.?db
+	rm -f Makedepend simpleInput@EXEEXT@ simpleInput.ilk $(OBJECTS)	\
+          *core so_locations *.?db
 	rm -rf ./ii_files

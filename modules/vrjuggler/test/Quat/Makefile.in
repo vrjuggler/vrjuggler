@@ -63,9 +63,9 @@ OBJECTS		= testQuat.@OBJEXT@ glquat.@OBJEXT@
 # -----------------------------------------------------------------------------
 default: all
 
-all: testQuat
+all: testQuat@EXEEXT@
 
-testQuat: $(OBJECTS)
+testQuat@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 .c.@OBJEXT@:
@@ -78,6 +78,6 @@ testQuat: $(OBJECTS)
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend testQuat *.exe *.ilk $(OBJECTS) *core *.?db	\
+	rm -f Makedepend testQuat@EXEEXT@ *.ilk $(OBJECTS) *core *.?db	\
           so_locations
 	rm -rf ./ii_files
