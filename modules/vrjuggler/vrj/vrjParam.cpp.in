@@ -30,27 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_PARAM_H_
-#define _VJ_PARAM_H_
-
 #include <vrj/vrjConfig.h>
+#include <vrj/vrjParam.h>
 
-
-/*
- * Define to the 9-digit VR Juggler version integer.  This is the "internal
- * version number" that is intended for internal feature checks by VR Juggler
- * itself.
- */
-#define __VJ_version @VER_NUMBER@
-
-/*
- * This is the "human-readable" VR Juggler version _string_.  It is of the
- * form <major>.<minor>.<days since last major release>.
- */
 namespace vrj
 {
-   extern VJ_DATA_API(const char*) VJ_VERSION;
+   const char* VJ_VERSION = @VER_STRING@;
 }
-
-
-#endif	/* _VJ_PARAM_H_ */
