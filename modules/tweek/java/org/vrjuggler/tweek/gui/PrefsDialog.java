@@ -259,11 +259,18 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mCorbaPortField.setMinimumSize(new Dimension(15, 17));
       mCorbaPortField.setPreferredSize(new Dimension(15, 17));
       mCorbaPortField.setToolTipText("The port number of the CORBA Naming Service");
+      mCorbaPortField.addFocusListener(new java.awt.event.FocusAdapter()
+      {
+         public void focusLost(FocusEvent e)
+         {
+            corbaPortFieldChanged();
+         }
+      });
       mCorbaPortField.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
-            corbaPortFieldChanged(e);
+            corbaPortFieldChanged();
          }
       });
       mCorbaPortLabel.setMaximumSize(new Dimension(77, 13));
@@ -277,11 +284,18 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mCorbaHostField.setMinimumSize(new Dimension(85, 17));
       mCorbaHostField.setPreferredSize(new Dimension(85, 17));
       mCorbaHostField.setToolTipText("The hostname for the CORBA Naming Service");
+      mCorbaHostField.addFocusListener(new java.awt.event.FocusAdapter()
+      {
+         public void focusLost(FocusEvent e)
+         {
+            corbaHostFieldChanged();
+         }
+      });
       mCorbaHostField.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
-            corbaHostFieldChanged(e);
+            corbaHostFieldChanged();
          }
       });
       mCorbaHostLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -495,7 +509,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
     * CORBA port.  This validates the entered port number to ensure that it is
     * valid.
     */
-   private void corbaHostFieldChanged(ActionEvent e)
+   private void corbaHostFieldChanged()
    {
       defaultCorbaHost = mCorbaHostField.getText();
    }
@@ -505,7 +519,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
     * CORBA port.  This validates the entered port number to ensure that it is
     * valid.
     */
-   private void corbaPortFieldChanged(ActionEvent e)
+   private void corbaPortFieldChanged()
    {
       try
       {
