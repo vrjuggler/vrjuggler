@@ -60,7 +60,7 @@ int vjGlxWindow::open() {
    if ((w_attrib.colormap = XCreateColormap (x_display,
                                              RootWindow(x_display, screen),
                                              visual_info->visual,
-                                             AllocNone)) == NULL)
+                                             AllocNone)) == 0)
    {
       vjDEBUG(0) << "ERROR: XCreateColorMap failed on " << display_name << endl << vjDEBUG_FLUSH;
       return false;
@@ -79,7 +79,7 @@ int vjGlxWindow::open() {
                                   CWEventMask | CWColormap | CWBorderPixel,
                                   /* ^--attrib mask*/
                                   &w_attrib))  /* Attributes */
-       == NULL)
+       == 0)
    {
       vjDEBUG(0) << "ERROR: Couldn't create window for " << display_name << endl << vjDEBUG_FLUSH;
       return false;
