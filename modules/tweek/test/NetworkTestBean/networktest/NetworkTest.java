@@ -1,10 +1,10 @@
- ackage networktest;
+package networktest;
 
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
-import orb.omg.CORBA.BAD_PARAM;
+import org.omg.CORBA.BAD_PARAM;
 import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.net.*;
 import org.vrjuggler.tweek.net.corba.*;
