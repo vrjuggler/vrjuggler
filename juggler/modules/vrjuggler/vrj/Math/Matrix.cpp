@@ -309,28 +309,20 @@ void vjMatrix::postRot(const vjMatrix&  _m, float _degrees, vjVec3& axis)
     *this = rotMat;
 }
 
-void vjMatrix::preEuler(float _h, float _p, float _r, vjMatrix& _m)
+void vjMatrix::preXYZEuler(float x, float y, float z, vjMatrix& _m)
 {
-    /*
     vjMatrix rotMat;
-    rotMat.makeEuler(_h, _p, _r);
+    rotMat.makeXYZEuler(x, y, z);
     rotMat.postMult(_m);
     *this = rotMat;
-    */
-
-   cerr << "vjMatrix::preEuler: Not defined..." << endl;
 }
 
-void vjMatrix::postEuler(vjMatrix& _m, float _h, float _p, float _r)
+void vjMatrix::postXYZEuler(vjMatrix& _m, float x, float y, float z)
 {
-    /*
     vjMatrix rotMat;
-    rotMat.makeEuler(_h, _p, _r);
+    rotMat.makeXYZEuler(x, y, z);
     rotMat.preMult(_m);
     *this = rotMat;
-    */
-
-    cerr << "vjMatrix::postEuler: Not defined..." << endl;
 }
 
     /// mat = scale(_xs,_ys,_zs) * _m;
