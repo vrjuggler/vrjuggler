@@ -136,7 +136,7 @@ private:
    /** Rotation amt around axis.
    * Captures code common for all rotations.
    */
-   void rotAxis(const float amt, const gmtl::Vec3f rotAxis);
+   void rotAxis(const float amt, const gmtl::Vec3f& rotAxis);
 
    /** Pitch up - rot +x axis. */
    void rotUp(const float amt);
