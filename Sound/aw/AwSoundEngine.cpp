@@ -49,6 +49,8 @@ AwSoundEngine::~AwSoundEngine() {}
 
 void AwSoundEngine::init()
 {
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"Juggler is starting Audioworks:")  << "\n" << vjDEBUG_FLUSH;
+   
    std::string tmpFile = "/var/tmp/";
    tmpFile += getenv( "USER" );
    tmpFile += ".AwSoundEngine.adf";
