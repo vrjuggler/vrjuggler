@@ -106,6 +106,9 @@ void vjPfDrawManager::initDrawing()
    // --- FORKS HERE --- //
    pfConfig();
 
+   initSimulator();        // Call here to load the scene graph
+   initPerformerApp();
+
    // ------ OPEN/ALLOCATE Pipes ------- //
    for (int pipeNum = 0; pipeNum < numPipes; pipeNum++)
    {
@@ -154,6 +157,8 @@ void vjPfDrawManager::initDrawing()
 
       // --- Setup pWin --- //
       tempPfDisp.pWin = new pfPipeWindow(localPipe);
+      vjASSERT(NULL != tempPfDisp.pWin);
+
       tempPfDisp.disp->originAndSize(xo, yo, xs, ys);
       tempPfDisp.pWin->setOriginSize(xo, yo, xs, ys);
 
@@ -185,13 +190,15 @@ void vjPfDrawManager::initDrawing()
          tempPfDisp.chans[pfDisp::RIGHT]->setViewport(0.0f, 1.0f, 0.0f, 1.0f);
          tempPfDisp.pWin->addChan(tempPfDisp.chans[pfDisp::RIGHT]);
       }
+      else
+      {
+         tempPfDisp.chans[pfDisp::RIGHT] = NULL;
+      }
 
       // -- Add new pfDisp to disp Vector -- //
       disps.push_back(tempPfDisp);      // This should make a COPY
    }
 
-   initSimulator();        // Call here to load the scene graph
-   initPerformerApp();
 
    // ----- SETUP MASTER CHANNEL ----- //
    pfChannel* masterChan = disps[0].chans[0];
@@ -200,8 +207,7 @@ void vjPfDrawManager::initDrawing()
    masterChan->setTravFunc(PFTRAV_DRAW, vjPfDrawFunc);
    masterChan->setNearFar(0.05, 10000.0f);
 
-   if (masterChan == NULL)
-      cerr << "vjPfDrawManager::initDrawing: MasterChan is NULL!!\n";
+   vjASSERT(masterChan != NULL);
 
    masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
                         PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
@@ -210,10 +216,16 @@ void vjPfDrawManager::initDrawing()
    // ----- SETUP CHANNEL GROUP ---- //
    for (int dispIndex=0; dispIndex<disps.size(); dispIndex++)
    {
+      pfChannel *left_ch, *right_ch;
+      left_ch = disps[dispIndex].chans[pfDisp::LEFT];
+      right_ch = disps[dispIndex].chans[pfDisp::RIGHT];
+
+      vjASSERT(NULL != left_ch);
+
       if (dispIndex != 0)
-         masterChan->attach(disps[dispIndex].chans[pfDisp::LEFT]);
-      if(disps[dispIndex].chans[pfDisp::RIGHT] != NULL)
-      	masterChan->attach(disps[dispIndex].chans[pfDisp::RIGHT]);
+         masterChan->attach(left_ch);
+      if(right_ch != NULL)
+      	masterChan->attach(right_ch);
    }
 
    // --- Setup channel's scene --- //
@@ -233,7 +245,9 @@ void vjPfDrawManager::initDrawing()
       }
    }
 
-   pfFrame();
+   vjASSERT(sceneRoot != NULL);
+
+   //pfFrame();
 
    // Dump the state
    debugDump();
