@@ -200,7 +200,7 @@ private:
       /* Do nothing. */ ;
    }
 
-   BeanDeliverySubject& operator=(const BeanDeliverySubjectImpl& subj)
+   BeanDeliverySubjectImpl& operator=(const BeanDeliverySubjectImpl& subj)
    {
       return *this;
    }
