@@ -37,6 +37,6 @@
 links:
 	cd $(instlinks)/include/tweek &&				\
           for dir in $(SUBDIR) ; do					\
-              rm -f ./$$dir ;						\
-              ln -s $(TWEEKROOT_ABS)/tweek/$$dir ./$$dir ;		\
+              $(RM_LN) ./$$dir ;					\
+              $(LN_S) $(TWEEKROOT_ABS)/tweek/$$dir ./$$dir ;		\
           done
