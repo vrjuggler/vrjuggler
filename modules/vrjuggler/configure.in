@@ -379,8 +379,7 @@ fi
 # -----------------------------------------------------------------------------
 AC_HEADER_STDC
 AC_HEADER_TIME
-AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
-                 sys/time.h termios.h unistd.h sys/z8530.h sys/stdsyms.h)
+AC_CHECK_HEADERS(strings.h sys/time.h unistd.h)
 
 # -----------------------------------------------------------------------------
 # Checks for typedefs, structures, and compiler characteristics.
@@ -390,7 +389,7 @@ AC_TYPE_SIZE_T
 # -----------------------------------------------------------------------------
 # Checks for library functions.
 # -----------------------------------------------------------------------------
-AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod strtok_r)
+AC_CHECK_FUNCS(gettimeofday)
 
 # In a Win32 environment with MS Visual C++ as the compiler, these math
 # functions are not in any special library.  Test for them normally.
