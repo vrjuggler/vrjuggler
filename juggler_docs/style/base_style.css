@@ -104,3 +104,24 @@ TT, tt, PRE, pre
    text-indent: -2em;
    margin-left:  2em;
 }
+
+small small small, td small small small
+{
+   font-family: Arial, Helvetica, sans-serif;
+   font-size: 8pt;
+   font-style: normal;
+}
+
+small small, td small small
+{
+   font-family: Arial, Helvetica, sans-serif;
+   font-size: 9pt;
+   font-style: normal;
+}
+
+small, td small 
+{
+   font-family: Arial, Helvetica, sans-serif;
+   font-size: 10pt;
+   font-style: normal;
+}
