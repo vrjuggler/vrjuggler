@@ -94,7 +94,7 @@ void Controller::addEvent (const vpr::Interval& event_time,
 {
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
       << "Controller::addEvent(): Adding event scheduled for time "
-      << event_time.usec() / 10 << " on edge " << edge << "\n"
+      << event_time.getBaseVal() << " on edge " << edge << "\n"
       << vprDEBUG_FLUSH;
    mEvents.insert(std::pair<vpr::Interval, NetworkGraph::net_edge_t>(event_time, edge));
 }
@@ -114,9 +114,9 @@ void Controller::processNextEvent ()
 
       vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
          << "Controller::processNextEvent() [time = "
-         << mClock.getCurrentTime() << "]: Processing event scheduled to "
-         << "occur at time " << event_time.usec() / 10 << "\n"
-         << vprDEBUG_FLUSH;
+         << mClock.getCurrentTime().getBaseVal()
+         << "]: Processing event scheduled to occur at time "
+         << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
 
       // ----------------------------------------------------------------------
       // Process event in the line's transmission queue.
@@ -206,10 +206,9 @@ void Controller::processNextEvent ()
    }
 }
 
-void Controller::processEvents (const vpr::Uint32 time_step)
+void Controller::processEvents (const vpr::Interval& time_step)
 {
-   vpr::Interval event_time(mClock.getCurrentTime() + time_step,
-                            vpr::Interval::Base);
+   vpr::Interval event_time = mClock.getCurrentTime() + time_step;
    event_map_t::iterator next_event;
 
    mClock.setCurrentTime(event_time);
@@ -261,9 +260,9 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
 
          vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
             << "New message times: "
-            << "starts = " << msg->whenStartOnWire().usec() / 10 << ", "
-            << "transmits = " << msg->whenFullyOnWire().usec() / 10 << ", "
-            << "arrives = " << msg->whenArrivesFully().usec() / 10
+            << "starts = " << msg->whenStartOnWire().getBaseVal() << ", "
+            << "transmits = " << msg->whenFullyOnWire().getBaseVal() << ", "
+            << "arrives = " << msg->whenArrivesFully().getBaseVal()
             << std::endl << vprDEBUG_FLUSH;
 
          next_line_prop.addReadyMessage(msg, dir);
