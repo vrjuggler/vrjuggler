@@ -1094,6 +1094,8 @@ dnl # include these extra paths.
 if test "$PLATFORM" = "HP" ; then
     _aCC_ROOT="/opt/aCC"
     DEPEND_EXTRAS="-I${_aCC_ROOT} -I${_aCC_ROOT}/include -I${_aCC_ROOT}/include/iostream"
+elif test "$OS_TYPE" = "Win32" ; then
+    DEPEND_EXTRAS='-D_WIN32 -D_M_IX86'
 fi
 
 dnl # $srcdir is the root directory of the juggler source tree.  To get a
