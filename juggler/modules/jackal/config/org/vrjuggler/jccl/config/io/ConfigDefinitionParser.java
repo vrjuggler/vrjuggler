@@ -156,7 +156,7 @@ public class ConfigDefinitionParser
          icon_location = parent.getAttributeValue(ICON_PATH);
          if (icon_location == null)
          {
-            throw new MissingAttributeException(ICON_PATH);
+            icon_location = "";
          }
       }
 
