@@ -296,10 +296,13 @@ int main(int argc, char* argv[])
 {
     vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
     pfNavJugglerApplication* application = new pfNavJugglerApplication(kernel);  // Delcare an instance of my application
-
+       
+    cout<<"Usage: "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"<<flush;
+    cout<<"\n"<<flush;
+  
     if (argc < 2)
     {
-       cout<<"\n\n[ERROR!!!] you must supply a .flt filename\n\n"<<flush;
+       cout<<"\n\n[ERROR!!!] you must supply a .flt database (then config files)\n\n"<<flush;
        return 0;
     }    
     
@@ -307,7 +310,7 @@ int main(int argc, char* argv[])
     
     if (argc <= 2)
     {
-       cout<<"\n\n[ERROR!!!] you must supply config files...\n\n"<<flush;
+       cout<<"\n\n[ERROR!!!] you must supply config files after the .flt file...\n\n"<<flush;
        return 0;
     }    
     
