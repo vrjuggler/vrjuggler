@@ -224,7 +224,7 @@ case $host_os in
         ARFLAGS='-ar -WR,-v -o'
         CFLAGS="$CFLAGS"
         CXXFLAGS="-ptv $CXXFLAGS"
-        DBG_FLAGS="-g"
+        DBG_FLAGS="-g -gslim"
         INCLUDES="$INCLUDES -I/usr/include/CC -I/usr/include"
         LD='${CXX} -shared'
         LDFLAGS="$LDFLAGS"
@@ -912,6 +912,7 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           test/Sync/Makefile test/Quat/Makefile test/input/Makefile
           test/ogl/Makefile test/ogl/cubes/Makefile test/ogl/glove/Makefile
           test/ogl/simpleGlove/Makefile test/ogl/wand/Makefile
-	  test/ogl/torus/Makefile
+	  test/ogl/torus/Makefile test/ogl/combo/Makefile
           test/pfNav/Makefile test/testDynamicCastSTL/Makefile
+	  test/Math/Makefile
           test/threads/Makefile test/Performance/Makefile test/Performance/perfdatabuffer-test/Makefile test/Performance/analyzer/Makefile)
