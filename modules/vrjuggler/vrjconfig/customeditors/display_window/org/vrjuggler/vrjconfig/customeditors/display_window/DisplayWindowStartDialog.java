@@ -285,7 +285,7 @@ public class DisplayWindowStartDialog
       mNameField.setMinimumSize(new Dimension(60, 21));
       mNameField.setPreferredSize(new Dimension(60, 21));
       mNameField.setText("Display Window");
-      SizeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mSizeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mSizeLabel.setLabelFor(mSizePanel);
       mSizeLabel.setText("Size");
       mPositionLabel.setHorizontalAlignment(SwingConstants.TRAILING);
