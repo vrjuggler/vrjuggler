@@ -238,13 +238,43 @@ public class ConfigElementParser
       throws ParseException
    {
       List values = new ArrayList();
+      List missing_values = new ArrayList();
 
       // Make sure that a property that is not variable has a number of values
       // equals to those in the definition
       boolean variable = propDef.isVariable();
       if (!variable && (elements.size() != propDef.getPropertyValueDefinitionCount()))
       {
-         throw new ParseException("Invalid number of property values for the property "+propDef.getToken());
+         int diff = propDef.getPropertyValueDefinitionCount() - elements.size();
+         if (diff > 0)
+         {
+            JOptionPane.showMessageDialog(null, 
+               "Appending " + diff + " default values for missing values in property: " + propDef.getToken(),
+               "Updating Configuation", JOptionPane.INFORMATION_MESSAGE);
+
+            for (int i = 0 ; i < diff ; i++)
+            {
+               Object obj = propDef.getPropertyValueDefinition(elements.size()).getDefaultValue();
+               missing_values.add(obj);
+            }
+         }
+         else
+         {
+            JOptionPane.showMessageDialog(null, 
+               "Removing " + -diff + " excess values from property: " + propDef.getToken(),
+               "Updating Configuation", JOptionPane.INFORMATION_MESSAGE);
+            
+            // Start is the first item passed the max limit
+            int start = propDef.getPropertyValueDefinitionCount();
+            
+            // End is the last item in the list elements
+            int end = elements.size() - 1;
+            
+            for(int i = end ; i >= start ; i--)
+            {
+               elements.remove(i);
+            }
+         }
       }
 
       // Go through each property value XML element and parse it
@@ -254,6 +284,7 @@ public class ConfigElementParser
          values.add(parsePropertyValue(elt, propDef));
       }
 
+      values.addAll(missing_values);
       return values;
    }
 
