@@ -312,6 +312,7 @@
       </xsl:element>
    </xsl:template>
 
+   <!-- Rename machine_specific to cluster_node.  -->
    <xsl:template match="jconf:machine_specific">
       <xsl:element name="cluster_node">
          <xsl:attribute name="name">
@@ -322,10 +323,43 @@
          </xsl:attribute>
 
          <xsl:copy-of select="./jconf:display_system" />
-         <xsl:copy-of select="./jconf:display_windows" />
+
+         <xsl:for-each select="./jconf:display_windows">
+            <xsl:copy select=".">
+               <xsl:apply-templates />
+            </xsl:copy>
+         </xsl:for-each>
+
          <xsl:copy-of select="./jconf:listen_port" />
          <xsl:copy-of select="./jconf:host_name" />
       </xsl:element>
+   </xsl:template>
+
+   <!--
+      Handle config files that already have machine_specific renamed to
+      cluster_node.  They may have embedded display_window elements that
+      need to be updated.
+   -->
+   <xsl:template match="jconf:cluster_node">
+      <xsl:copy select=".">
+         <xsl:attribute name="name">
+            <xsl:value-of select="@name" />
+         </xsl:attribute>
+         <xsl:attribute name="version">
+            <xsl:value-of select="@version" />
+         </xsl:attribute>
+
+         <xsl:copy-of select="./jconf:display_system" />
+
+         <xsl:for-each select="./jconf:display_windows">
+            <xsl:copy select=".">
+               <xsl:apply-templates />
+            </xsl:copy>
+         </xsl:for-each>
+
+         <xsl:copy-of select="./jconf:listen_port" />
+         <xsl:copy-of select="./jconf:host_name" />
+      </xsl:copy>
    </xsl:template>
 
    <xsl:template match="jconf:sound_manager">
