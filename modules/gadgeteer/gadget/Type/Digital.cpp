@@ -31,13 +31,50 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+
 #include <boost/concept_check.hpp>
+
+#include <vpr/Util/Debug.h>
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/ObjectReader.h>
+#include <gadget/Util/DeviceSerializationTokens.h>
+
 #include <gadget/Type/Digital.h>
+
 
 namespace gadget
 {
+
+const DigitalData Digital::getDigitalData(int devNum)
+{
+   SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
+
+   if ( (!stable_buffer.empty()) &&
+        (stable_buffer.back().size() > (unsigned)devNum) )  // If Have entry && devNum in range
+   {
+      return stable_buffer.back()[devNum];
+   }
+   else        // No data or request out of range, return default value
+   {
+      if ( stable_buffer.empty() )
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "WARNING: [gadget::Digital::getDigitalData()] "
+            << "Stable buffer is empty.  If this is not the first "
+            << "read, then this is a problem.\n" << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+            << "WARNING: [gadget::Digital::getDigitalData()] "
+            << "Requested devNum (" << devNum
+            << ") is not in the range available.  "
+            << "This is probably a configuration error.\n"
+            << vprDEBUG_FLUSH;
+      }
+      return mDefaultValue;
+   }
+}
 
 vpr::ReturnStatus Digital::writeObject(vpr::ObjectWriter* writer)
 {

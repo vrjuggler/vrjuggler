@@ -34,14 +34,14 @@
 #define _GADGET_DIGITAL_H_
 
 #include <gadget/gadgetConfig.h>
+
 #include <vector>
 #include <boost/concept_check.hpp>   /* for ignore_unused_variable_warning */
+
+#include <vpr/IO/SerializableObject.h>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/DigitalData.h>
 #include <gadget/Type/SampleBuffer.h>
-#include <vpr/Util/Debug.h>
-#include <vpr/IO/SerializableObject.h>
-#include <gadget/Util/DeviceSerializationTokens.h>
 
 
 namespace gadget
@@ -86,7 +86,7 @@ namespace gadget
       /* Constructor/Destructors */
       Digital()
       {
-         //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** Digital::Digital()\n"<< vprDEBUG_FLUSH;
+         ;
       }
 
       virtual ~Digital()
@@ -96,7 +96,6 @@ namespace gadget
       virtual bool config(jccl::ConfigElementPtr e)
       {
          boost::ignore_unused_variable_warning(e);
-         //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** Digital::config()\n"<< vprDEBUG_FLUSH;
          return true;
       }
 
@@ -109,28 +108,7 @@ namespace gadget
        * @note If devNum is out of range, function will fail, possibly issuing
        *       an error to a log or console - but will not ASSERT.
        */
-      const DigitalData getDigitalData(int devNum = 0)
-      {
-         SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
-
-         if ( (!stable_buffer.empty()) &&
-              (stable_buffer.back().size() > (unsigned)devNum) )  // If Have entry && devNum in range
-         {
-            return stable_buffer.back()[devNum];
-         }
-         else        // No data or request out of range, return default value
-         {
-            if ( stable_buffer.empty() )
-            {
-               vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Warning: Digital::getDigitalData: Stable buffer is empty. If this is not the first read, then this is a problem.\n" << vprDEBUG_FLUSH;
-            }
-            else
-            {
-               vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Warning: Digital::getDigitalData: Requested devNum " << devNum << " is not in the range available.  May have configuration error\n" << vprDEBUG_FLUSH;
-            }
-            return mDefaultValue;
-         }
-      }
+      const DigitalData getDigitalData(int devNum = 0);
 
       /**
        * Helper method to add a collection of digital samples to the sample
