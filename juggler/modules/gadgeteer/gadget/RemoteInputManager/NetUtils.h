@@ -166,6 +166,23 @@ inline void shortTo2Bytes(char* dst, const short in_code){
     dst[1] = ((char*) &in_code)[0];  // (char)(in_code / 256);    
 }
 
+// simply copy four bytes of float into a char buffer
+inline void floatTo4Bytes(char* dst, const float& in_float){
+   dst[0] = ((char*) &in_float)[3];
+   dst[1] = ((char*) &in_float)[2];
+   dst[2] = ((char*) &in_float)[1];
+   dst[3] = ((char*) &in_float)[0];
+}
+
+// simply copy four bytes from char buffer to float
+inline void bytes4ToFloat(float& dst, const char* in_char){
+   char* f = (char*)(&dst);
+   f[3] = in_char[0];
+   f[2] = in_char[1];
+   f[1] = in_char[2];
+   f[0] = in_char[3];
+}
+
 template <class T> class IdGenerator{
 private:
    T mMAXID;
