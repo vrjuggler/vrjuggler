@@ -200,7 +200,8 @@ namespace sim
       vprASSERT( handle->isBound() && "Can't unbind and unbound handle");
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-           << "Unbinding handle(" << handle << ": << " << handle->getLocalAddr() << ")\n" << vprDEBUG_FLUSH;
+           << "Unbinding handle (" << handle << " --> "
+           << handle->getLocalAddr() << ")\n" << vprDEBUG_FLUSH;
 
       // -- Unassign from node
       status = unassignFromNode( handle );
