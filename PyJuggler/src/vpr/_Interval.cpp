@@ -16,6 +16,25 @@
 // Using =======================================================================
 using namespace boost::python;
 
+// Declarations ================================================================
+namespace pyj {
+
+struct IntervalPickle : pickle_suite
+{
+   static tuple getstate(const vpr::Interval& i)
+   {
+      return make_tuple(i.usec());
+   }
+
+   static void setstate(vpr::Interval& i, tuple state)
+   {
+      vpr::Uint64 usec = extract<vpr::Uint64>(state[0]);
+      i.usec(usec);
+   }
+};
+                                                                                
+}
+
 // Module ======================================================================
 void _Export_Interval()
 {
@@ -51,6 +70,7 @@ void _Export_Interval()
         .def("usecd", (double (vpr::Interval::*)() const)&vpr::Interval::usecd)
         .def("getBaseVal", &vpr::Interval::getBaseVal)
         .def("now", &vpr::Interval::now)
+        .def_pickle(pyj::IntervalPickle())
         .staticmethod("now")
         .def( self == self )
         .def( self != self )
