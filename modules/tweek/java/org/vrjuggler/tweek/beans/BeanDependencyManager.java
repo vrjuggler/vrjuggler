@@ -107,14 +107,17 @@ public class BeanDependencyManager
    {
       int num_unsatisfied_deps = 0;
 
-      for (Iterator itr = bean.getAttributes().getBeanDependencies().iterator();
-           itr.hasNext(); )
+      if ( null != bean.getAttributes().getBeanDependencies() )
       {
-         BeanDependency dep = (BeanDependency)itr.next();
-         String dep_name = dep.getBeanName();
-         if (! BeanRegistry.instance().isRegistered(dep_name))
+         for (Iterator itr = bean.getAttributes().getBeanDependencies().iterator();
+              itr.hasNext(); )
          {
-            ++num_unsatisfied_deps;
+            BeanDependency dep = (BeanDependency)itr.next();
+            String dep_name = dep.getBeanName();
+            if (! BeanRegistry.instance().isRegistered(dep_name))
+            {
+               ++num_unsatisfied_deps;
+            }
          }
       }
 
