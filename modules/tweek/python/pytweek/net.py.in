@@ -25,8 +25,9 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 import sys
-from @PYTHON_ORB_MODULE@ import CORBA, PortableServer
+from =PYTHON_ORB_MODULE= import CORBA, PortableServer
 import CosNaming
+from qt import QListBoxItem
 import tweek
 
 class CorbaService:
@@ -172,3 +173,16 @@ class CorbaService:
             print ex.why
       else:
          print "WARNING: Tried to unregister empty ID in CorbaService.unregisterObject()!"
+
+class SubjectManagerWrapper:
+   def __init__(self, mgr):
+      self.mgr = mgr
+
+   def text(self):
+      return str(self)
+
+   def __str__(self):
+      info = []
+      for i in self.mgr.getInfo():
+         info.append(i.value)
+      return "Subject Manager: " + str(info)

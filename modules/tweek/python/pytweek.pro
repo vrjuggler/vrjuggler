@@ -6,7 +6,8 @@ unix {
 FORMS	= tweekframe.ui \
 	aboutbox.ui \
 	orbconnectbox.ui \
-	globalprefsdialog.ui
+	globalprefsdialog.ui \
+	orbdisconnectbox.ui
 IMAGES	= images/filenew \
 	images/fileopen \
 	images/filesave \
