@@ -419,7 +419,6 @@ AC_CONFIG_FILES([
    common.defs.mk
    make.defs.mk
    cluster/Makefile
-   cluster/ClusterNetwork/Makefile
    cluster/Packets/Makefile
    gadget/Makefile
    gadget/Devices/Makefile
