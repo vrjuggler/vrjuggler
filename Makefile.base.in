@@ -26,6 +26,10 @@
 # libexecdir     - Path to libexec directory that generally contains
 #                  executables not called directly by users (usually
 #                  ${exec_prefix}/libexec).
+# mtreedir       - Base directory containing the mtree directory hierarchy
+#                  specifications.
+# mtreedir_os    - Subdirectory of ${mtreedir} containing platform-specific
+#                  directory hierarchy specification files.
 # prefix         - Base path used for installation and other things.
 # releasedir     - The absolute path to the release directory.
 # sbindir        - Path to sbin directory containing executables (usually
