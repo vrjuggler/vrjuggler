@@ -66,6 +66,10 @@ vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
    {
       close();
    }
+
+   vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
+      << "Deleting memory at address " << std::hex << this << std::dec
+      << std::endl << vprDEBUG_FLUSH;
 }
 
 vpr::ReturnStatus SocketImplSIM::close()
@@ -78,7 +82,10 @@ vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "SocketImplSIM::close: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
 
-   if ( mConnected )
+   // XXX: There should be no need to check mConnected and mPeer.  If mPeer is
+   // non-NULL, it should imply that mConnected is true, but that is not the
+   // case for some reason...
+   if ( mConnected || mPeer != NULL )
    {
       vprASSERT(mPeer != NULL && "I am connected to a NULL peer");
 
@@ -89,6 +96,8 @@ vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
       disconnect();
       vpr::sim::Controller::instance()->flushPath(this, mPathToPeer);
    }
+
+   vprASSERT(mPeer == NULL && "I should not have a peer at this point");
 
    if ( mBound )
    {
