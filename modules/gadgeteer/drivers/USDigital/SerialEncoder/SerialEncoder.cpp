@@ -47,12 +47,14 @@ SerialEncoder::SerialEncoder()
    , mExitFlag(false)
    , mBaudRate(0)
 {
+   mSerialEncoder = new SerialEncoderStandalone;
    /* Do nothing. */
 }
 
 SerialEncoder::~SerialEncoder()   
 {
    this->stopSampling();
+   delete mSerialEncoder;
 }
 
 bool SerialEncoder::config(jccl::ConfigElementPtr e)
@@ -65,12 +67,13 @@ bool SerialEncoder::config(jccl::ConfigElementPtr e)
    mPortStr=e->getProperty<std::string>("port");
    mBaudRate=e->getProperty<long>("baud");
 
-   return true;
+   mSerialEncoder->setPort(mPortStr);
+   mSerialEncoder->setBaudRate(mBaudRate);
+   return mSerialEncoder->initializeDevice();
 }
 
 bool SerialEncoder::startSampling()
 {
-   mBus.initializeSEI(mPortStr.c_str());
    mExitFlag = false;
    mThreadFunctor =
       new vpr::ThreadMemberFunctor<SerialEncoder>(this,
@@ -89,28 +92,11 @@ bool SerialEncoder::startSampling()
 
 bool SerialEncoder::sample()
 {
-   unsigned int tiltDevice=1;
-   unsigned int heightDevice=2;
-
    std::vector<gadget::PositionData> positionSample(1);
 
    positionSample[0].setTime();
 
-   static float tableRotation=0;
-   mBus.ED2GetPosition1(tiltDevice,tableRotation);
-   gmtl::EulerAngleXYZf eulerRot(gmtl::Math::deg2Rad(tableRotation),0,0);
-   gmtl::Matrix44f rotation;
-   gmtl::setRot(rotation,eulerRot);
-
-   float tableHeight=0;
-   mBus.ED2GetPosition1(heightDevice,tableHeight);
-   tableHeight=tableHeight/gadget::PositionUnitConversion::ConvertToInches;
-   gmtl::Vec3f vecTrans;
-   vecTrans[1]+=tableHeight;
-   gmtl::Matrix44f translation;
-   gmtl::setTrans(translation,vecTrans);
-
-   positionSample[0].mPosData=translation*rotation;
+   positionSample[0].mPosData = mSerialEncoder->getSample();
 
    addPositionSample(positionSample);
 

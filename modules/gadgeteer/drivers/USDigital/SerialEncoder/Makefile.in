@@ -51,7 +51,8 @@ INSTALL_FILES=
 SUBOBJDIR=	$(DRIVER_NAME)
 C_AFTERBUILD=	driver-dso
 
-SRCS=		SerialEncoder.cpp		
+SRCS=		SerialEncoder.cpp \
+		SerialEncoderStandalone.cpp
 
 include $(MKPATH)/dpp.obj.mk
 include @topdir@/driver.defs.mk
