@@ -626,6 +626,8 @@ VJ_SRCDIR='${VJROOT_ABS}'
 #       time).
 #     * TEST_VJ_LIBS_GL: The VR Juggler OpenGL API library.
 #     * TEST_VJ_LIBS_PF: The VR Juggler Performer API library.
+#     * TEST_LIBS_BASIC: The _most basic_ basic libraries needed for compiling
+#       (e.g., -lC).
 #     * TEST_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker flags
 #       needed for compiling.  These are put after those listed in the
 #       previous variables in the compile line.
@@ -637,11 +639,12 @@ VJ_SRCDIR='${VJROOT_ABS}'
 #     * TEST_VJ_LIBS_PF: The Performer libraries needed for compiling with the
 #       Performer API.
 #
-TEST_VJ_LIBS_BASIC="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler -lm -lC"
-TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler -lm -lC"
+TEST_VJ_LIBS_BASIC="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
+TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
 TEST_VJ_LIBS_GL="-lJuggler_ogl"
 TEST_VJ_LIBS_PF="-lJuggler_pf"
-TEST_EXTRA_LIBS_BASIC="$LDFLAGS -B dynamic $LIBS"
+TEST_LIBS_BASIC="-B dynamic -lm -lC"
+TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
 TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} $_SYSTEM_OPENGL"
 TEST_EXTRA_LIBS_GL_SUBST="-L${OGLROOT}/lib\${LIBBITSUF} $_SYSTEM_OPENGL"
 TEST_EXTRA_LIBS_PF="$_PFOGLLIB"
@@ -692,6 +695,7 @@ AC_SUBST(TEST_VJ_LIBS_BASIC)
 AC_SUBST(TEST_VJ_LIBS_BASIC_SUBST)
 AC_SUBST(TEST_VJ_LIBS_GL)
 AC_SUBST(TEST_VJ_LIBS_PF)
+AC_SUBST(TEST_LIBS_BASIC)
 AC_SUBST(TEST_EXTRA_LIBS_BASIC)
 AC_SUBST(TEST_EXTRA_LIBS_BASIC_SUBST)
 AC_SUBST(TEST_EXTRA_LIBS_GL)

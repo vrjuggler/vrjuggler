@@ -533,6 +533,7 @@ install-test:
           --TEST_VJ_LIBS_BASIC='@TEST_VJ_LIBS_BASIC_SUBST@'		\
           --TEST_VJ_LIBS_GL='@TEST_VJ_LIBS_GL@'				\
           --TEST_VJ_LIBS_PF='@TEST_VJ_LIBS_PF@'				\
+          --TEST_LIBS_BASIC='@TEST_LIBS_BASIC@'				\
           --TEST_EXTRA_LIBS_BASIC="@TEST_EXTRA_LIBS_BASIC_SUBST@"	\
           --TEST_EXTRA_LIBS_GL="@TEST_EXTRA_LIBS_GL_SUBST@"		\
           --TEST_EXTRA_LIBS_PF="@TEST_EXTRA_LIBS_PF@"
