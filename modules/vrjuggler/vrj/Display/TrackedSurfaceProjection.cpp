@@ -32,7 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Display/TrackedWallProjection.h>
+#include <vrj/Display/TrackedSurfaceProjection.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
 #include <gmtl/Generate.h>
 
@@ -40,7 +40,7 @@
 namespace vrj
 {
 
-void TrackedWallProjection::updateWallParams()
+void TrackedSurfaceProjection::updateWallParams()
 {
    // Compute the correct rotation matrix
    // mWallRotationMatrix_bak ==> surfMbase
@@ -62,7 +62,7 @@ void TrackedWallProjection::updateWallParams()
    gmtl::invert(mWallRotationMatrix,base_m_surf);
 #endif
 
-#if 1
+#if 0 // use this one
    // Method 2:
    // surfMbase = surfMbase*trackerMbase
    // Cost: 1 inversion, 1 mult, 1 temp matrix
@@ -74,11 +74,11 @@ void TrackedWallProjection::updateWallParams()
 #endif
 }
 
-std::ostream& TrackedWallProjection::outStream(std::ostream& out)
+std::ostream& TrackedSurfaceProjection::outStream(std::ostream& out)
 {
-   out << "vjTrackedWallProjection:\n";
+   out << "vjTrackedSurfaceProjection:\n";
    out << "Pos Proxy: " << mTracker.getProxyName().c_str() << std::endl;
-   return WallProjection::outStream(out);
+   return SurfaceProjection::outStream(out);
 }
 
 

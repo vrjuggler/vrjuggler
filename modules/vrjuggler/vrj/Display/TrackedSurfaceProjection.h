@@ -34,7 +34,7 @@
 #define _VRJ_TRACKED_WALL_PROJECTION_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Display/WallProjection.h>
+#include <vrj/Display/SurfaceProjection.h>
 #include <vrj/Util/Debug.h>
 #include <gadget/Type/PositionInterface.h>
 
@@ -46,13 +46,13 @@ class Matrix;
 /**
  * Wall-specific class for viewport definitions.
  *
- * This class behaves the same as the WallProjection class except that it is
+ * This class behaves the same as the SurfaceProjection class except that it is
  * tracked.  This means that all parameters are relative to a tracked (moving)
  * frame of reference.
  *
  * @date 10-5-97
  */
-class TrackedWallProjection : public WallProjection
+class TrackedSurfaceProjection : public SurfaceProjection
 {
 public:
 
@@ -61,10 +61,10 @@ public:
     *
     * @param tracker_name Name of the tracker tracking the screen.
     */
-   TrackedWallProjection(gmtl::Matrix44f surfaceRot, float toScr,
+   TrackedSurfaceProjection(gmtl::Matrix44f surfaceRot, float toScr,
                     float toRight, float toLeft,
                     float toTop, float toBottom, std::string tracker_name)
-      : WallProjection(surfaceRot, toScr, toRight, toLeft, toTop, toBottom)
+      : SurfaceProjection(surfaceRot, toScr, toRight, toLeft, toTop, toBottom)
    {
       // --- Backup some parameters --- //
       mOriginToScreen_bak = toScr;
@@ -79,7 +79,7 @@ public:
       mTracker.init(tracker_name);              // Intialize the tracker
    }
 
-   virtual ~TrackedWallProjection() {}
+   virtual ~TrackedSurfaceProjection() {}
 
    virtual void config(jccl::ConfigChunkPtr chunk)
    {
@@ -100,7 +100,7 @@ public:
 
       // We don't need to postTrans like in non-tracked projection
       // because the wall position is already in mWallRotationMatrix
-      mViewMat = mWallRotationMatrix;
+      //**//mViewMat = mWallRotationMatrix;
    }
 
    void updateWallParams();

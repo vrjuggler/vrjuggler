@@ -48,15 +48,15 @@ INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
 SRCS		= CameraProjection.cpp \
-           Display.cpp			\
-                  DisplayManager.cpp		\
-                  Frustum.cpp			\
-                  Projection.cpp		\
-                  SimViewport.cpp \
-                  SurfaceViewport.cpp		\
-                  TrackedWallProjection.cpp	\
-                  Viewport.cpp			\
-                  WallProjection.cpp
+              Display.cpp			\
+              DisplayManager.cpp		\
+              Frustum.cpp			\
+              Projection.cpp		\
+              SimViewport.cpp \
+              SurfaceViewport.cpp		\
+              TrackedSurfaceProjection.cpp	\
+              Viewport.cpp			\
+              SurfaceProjection.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

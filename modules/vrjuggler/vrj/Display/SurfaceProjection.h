@@ -35,7 +35,8 @@
 
 #include <vrj/vrjConfig.h>
 #include <vrj/Display/Projection.h>
-//#include <vrj/Math/Coord.h>
+#include <gmtl/MatrixOps.h>
+
 
 namespace vrj
 {
@@ -52,16 +53,20 @@ class Matrix;
  *
  * @date 10-5-97
  */
-class WallProjection : public Projection
+class SurfaceProjection : public Projection
 {
 public:
-   WallProjection(gmtl::Matrix44f surfaceRot, float toScr,
+   /**
+   * @param surfaceRot - The rotation of the surface relative to the base world
+   *                     base_M_surface
+   */
+   SurfaceProjection(gmtl::Matrix44f surfaceRot, float toScr,
                     float toRight, float toLeft,
                     float toTop, float toBottom)
    {
-      //mType = Projection::SURFACE;
+      m_base_M_surface = surfaceRot;
+      m_surface_M_base = gmtl::invert(m_surface_M_base, m_base_M_surface);    // Set the inverse matrix for later
 
-      mWallRotationMatrix = surfaceRot;
       mOriginToScreen = toScr;
       mOriginToRight = toRight;
       mOriginToLeft = toLeft;
@@ -92,10 +97,23 @@ public:
                            const unsigned int indentLevel = 0);
 
 protected:
-   /// Rotation of the screen
-   gmtl::Matrix44f   mWallRotationMatrix;
+   /* Coordinate system descriptions
+   * Base - B - Base coordinate system of the real physical world
+   * Surface - S - Cordinate frame that is aligned with the surface.  This is the coordinates that
+   *                the surface and frustum (projection) parameters are stored in/relative to.
+   * Surface Transform - ST - Coordinate frame that offsets the Surface in space.  Only used for tracked surfaces.
+   * Eye - E - Coordinate system that is aligned with the eye.  This is the frame that the frustum
+   *              is drawn in for final projection.  This is where the "view" starts from.
+   */
 
-   /// Screen configuration
+   /** Rotation of the surface
+   * Xfrom from the Base to the surface
+   */
+   gmtl::Matrix44f   m_base_M_surface;
+   gmtl::Matrix44f   m_surface_M_base;    /** Stored inverse for performance */
+
+   /** Screen configuration (in Surface coordinate frame )
+   */
    float mOriginToScreen, mOriginToRight, mOriginToLeft, mOriginToTop, mOriginToBottom;
 };
 

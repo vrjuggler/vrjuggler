@@ -104,7 +104,7 @@ protected:
 
 protected:
    gmtl::Point3f   mLLCorner, mLRCorner, mURCorner, mULCorner;  /**< The corners in 3Space (for config) */
-   gmtl::Matrix44f mSurfaceRotation;                            /**< surfMbase - rotation to base coordinate frame of the surface view plane */
+   gmtl::Matrix44f mSurfaceRotation;                            /**< baseMsurf - rotation to base coordinate frame of the surface view plane */
 
    // Deal with tracked surfaces (ie. HMD, movable walls, desks, etc)
    bool           mTracked;            /**< Is this surface tracked? */
