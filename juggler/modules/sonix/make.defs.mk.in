@@ -39,264 +39,92 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# make.defs.mk.in,v 1.2 2001/01/06 04:31:32 patrick Exp
-#
-# This is an example file that defines variables that can be used by a whole
-# tree of makefiles.  The contents of this file are a subset of that found in
-# examples/common.defs.mk.in, and in a real project, this file would be much
-# shorter.  It would contain values specific to that project and would include
-# common.defs.mk to get all the common variable settings.
+# This file <make.defs.mk> provides variable information shared by all
+# makefiles in the Sonix source tree.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
-# All makefiles in a source tree should include this file for maximum
+# All makefiles in the source tree should include this file for maximum
 # information sharing.
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
-# bindir        - Path to bin directory containing executables (usually
-#                 $(exec_prefix)/bin).
-# projdatadir   - Project-specific data directory.  This is a subdirectory
-#                 of $(datadir).
-# datadir       - Path to a directory generally sharing platform-independent
-#                 data (usually $(prefix)/share).
-# exec_prefix   - Path to base directory where executables will be (usually
-#                 $(prefix)).
-# libdir        - Path to directory containing shared and static libraries
-#                 (usually $(exec_prefix)/lib).
-# libexecdir    - Path to libexec directory that generally contains
-#                 executables not called directly by users (usually
-#                 $(exec_prefix)/libexec).
-# prefix        - Base path used for installation and other things.
-# sbindir       - Path to sbin directory containing executables (usually
-#                 $(exec_prefix)/sbin).
-# releasedir    - The absolute path to the release directory.
-# scriptdir     - The path to the directory containing scripts used in the
-#                 build and install/release process.
-# sysconfdir    - System configuration directory (usually $(prefix)/etc).
-# topdir        - The top of the build tree.
+# mtreedir       - Base directory containing the mtree directory hierarchy
+#                  specifications.
+# projdatadir    - Project-specific data directory.  This is a subdirectory
+#                  of $(datadir).
+# releasedir     - The absolute path to the release directory.
+# scriptdir      - The path to the directory containing scripts used in the
+#                  build and install/release process.
+# topdir         - The top of the build tree.
+# GADGETROOT_ABS - The absolute path to the root of the Gadgeteer source tree.
 #
-# AR              - Path to ar(1) (or equivalent program).
-# ARFLAGS         - Flags for $(AR).
-# AR_NAME_FLAG  - flag to name your archive file...
-# ABI_LIST
-# CC            - Path to C compiler.
-# CXX           - Path to C++ compiler.
-# CPP           - Command for invoking the C preprocessor.
-# CXXCPP        - Command for invoking the C preprocessor used by the C++
-#                 compiler.
-# CFLAGS        - Flags for $(CC).
-# CPPFLAGS      - Flags for $(CPP) and $(CXXCPP).
-# CXXFLAGS      - Flags for $(CXX).
-# DEFS          - Command-line preprocessor definitions (-Dvariable=value).
-# DEP_GEN_FLAG  - Flag passed to the compiler to generate dependencies.
-# DEPEND_FLAGS  - Flags passed to makedepend(1) (or equivalent program for
-#                 generating dependencies).
-# DEPEND_EXTRAS - Flags not recognized by makedepend(1) that may be
-#                 necessary in $(CFLAGS) or $(CXXFLAGS).
-# EXEC_PERMS
-# FILE_PERMS
-# GROUP_NAME
-# INCLUDES      - Additions to the include path (-I/path/to/include).
-# LIBS          - Extra external libraries needed at link time.
-# LD
-# LDFLAGS
-# LDOPTS
-# LDOPTS_DBG
-# LDOPTS_OPT
-# LN_S          - Working 'ln -s' command.
+# MKDEPS_CC     - Compiler for C dependencies.
+# MKDEPS_CXX    - Compiler for CXX dependencies.
+# MKINSTALLDIRS - Path to shell script for making directories.
 # MKPATH        - Path to shared dpp.*.mk file directory.
-# OBJEXT        - Suffix for object file names (e.g., "o" or "obj").
-# OBJ_NAME_FLAG - Flag passed to the compiler to name an object file.
-# OBJ_BUILD_FLAG - Flag passed to the compiler to name an object file.
-# OBJDIR        - Path to the directory where the object files will be built.
-# OS_TYPE       - Type of the target operating system (UNIX or Win32).
-# PERL            - Path to Perl 5 binary.
-# RANLIB          - Path to ranlib(1) binary if it is available. ':'
-#                   otherwise.
-# ROOT_ABS      - checked out project dir
-# JUGGLERROOT_ABS - The absolute path to the root of the juggler source tree.
+# MTREE_CMD     - Path to a BSD-compatible mtree.
 #
-# C_COMPILE     - Command for compiling C code.
-# CXX_COMPILE   - Command for compiling C++ code.
+# ABI           - Application Binary Interface type.  This may be used for
+#                 other binary types when supported by the operating system
+#                 (e.g., "ELF", "N32" or "64").
+# ISA           - Instruction Set Architecture.  This may be used for other
+#                 binary types when supported by the operating system (e.g.,
+#                 "mips3" or "i386").
+# LIBBITSUF     - Suffix for the library path used by the linker on IRIX only.
+#                 For n32 binaries, it will be 32.  For 64-bit binaries, it
+#                 will be 64.
 #
-# PLATFORM      - The operating system abbreviation on which the library is
-#                 being built.
-
-# ABI            - Application Binary Interface type.  This may be used for
-#                  other binary types when supported by the operating system
-#                  (e.g., "ELF", "N32" or "64").
-# ABI_LIST       - List of all possible ABI/ISA combinations that can be built
-#                  on the target system.
-# ISA            - Instruction Set Architecture.  This may be used for other
-#                  binary types when supported by the operating system (e.g.,
-#                  "mips3" or "i386").
-# LIBBITSUF      - Suffix for the library path used by the linker on IRIX
-#                  only.  For n32 binaries, it will be 32.  For 64-bit
-#                  binaries, it will be 64.
-#
-# DYNAMICLIB_EXT - File extension for dynamic libraries.
-# STATICLIB_EXT  - File extension for shared libraries.
+# SNX_LIBRARY   - The base name of the core Sonix library that will be built
+#                 with no file extension.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
-bindir		= @bindir@
-datadir		= @datadir@
-exec_prefix	= @exec_prefix@
-libdir		= @libdir@
-libexecdir	= @libexecdir@
-prefix		= @prefix@
-sbindir		= @sbindir@
-sysconfdir	= @sysconfdir@
-topdir		= @topdir@
-
-projdatadir     = $(datadir)/sonix
-
-AR              = @AR@ $(DPP_EXTRA_ARFLAGS) $(EXTRA_ARFLAGS) $(ARFLAGS)
-ARFLAGS         = @ARFLAGS@
-AR_NAME_FLAG    = @AR_NAME_FLAG@
-DYLIB_NAME_FLAG = @DYLIB_NAME_FLAG@
-CC		= @CC@
-CXX		= @CXX@
-CPP		= @CPP@
-CXXCPP		= @CXXCPP@
-CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
-CPPFLAGS	= @CPPFLAGS@ $(EXTRA_CPPFLAGS)
-CXXFLAGS	= @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CXXFLAGS)
-DEFS		= @DEFS@
-DEP_GEN_FLAG	= @DEP_GEN_FLAG@
-DEPEND_FLAGS	= @DEPEND_FLAGS@ @INCLUDES@ -I$(topdir) $(EXTRA_DEPEND_FLAGS)
-DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
-EXEC_PERMS = @EXEC_PERMS@
-FILE_PERMS = @FILE_PERMS@
-GROUP_NAME = @GROUP_NAME@
-INCLUDES	= -I@projectdir@ @INCLUDES@ $(EXTRA_INCLUDES)
-INSTALL		= @INSTALL@
-LIBS		= @LIBS@  # doozer also uses LIBS for the .a and .so target names...
-LN_S		= @LN_S@
-LD              = @LD@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
-LDFLAGS         = @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib
-LDOPTS          = @LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)          \
-                  $(DSOVERSIONOPTS)
-LDOPTS_DBG      = @LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
-LDOPTS_OPT      = @LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
-MKPATH		?= $(JUGGLERROOT_ABS)/Doozer++/mk
-OBJEXT		= @OBJEXT@
-OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
-OBJ_BUILD_FLAG	= @OBJ_BUILD_FLAG@
-EXE_NAME_FLAG	= @EXE_NAME_FLAG@
-OS_TYPE		= @OS_TYPE@
-PERL              =@PERL@
-RANLIB            =@RANLIB@
-MKINSTALLDIRS     =@projectdir@/mkinstalldirs
-ROOT_ABS          =@projectdir@
-JUGGLERROOT_ABS	=@SAFE_JUGGLERROOT_ABS@
-releasedir        =@SAFE_JUGGLERROOT_ABS@/release
-scriptdir	= $(releasedir)/scripts
-
-# SGI-specific dynamic-shared-object information.
-DSOREGFILE	= @DSOREGFILE@
-DSOVERSION	= @DSOVERSION@
-DSOVERSIONOPTS	= @DSOVERSIONOPTS@
-
-# binary format crap.
-ABI = @ABI@
-ABI_LIST = @ABI_LIST@   
-ISA = @ISA@
-LIBBITSUF = @LIBBITSUF@
-
-# extensions
-DYNAMICLIB_EXT = @DYNAMICLIB_EXT@
-STATICLIB_EXT = @STATICLIB_EXT@
-
-
-# Allow overriding the default value of $(OBJDIR) by setting $(BASE_OBJDIR)
-# (probably using an externally defined value).
-ifdef BASE_OBJDIR
-    OBJDIR	= $(BASE_OBJDIR)
-else
-    OBJDIR	= .
-endif
+mtreedir=		$(topdir)/mtree
+projdatadir=		$(datadir)/sonix
+releasedir=		@SAFE_JUGGLERROOT_ABS@/release
+scriptdir=		$(releasedir)/scripts
+topdir=			@topdir@
+top_srcdir=		@top_srcdir@
+MAKEFLAGS+=		--no-print-directory
+DEPGEN_TOOL_CC=		@CC@
+DEPGEN_TOOL_CXX=	@CXX@
+MKINSTALLDIRS=		$(scriptdir)/mkinstalldirs
+MKPATH=			$(JUGGLERROOT_ABS)/Doozer++/mk
+MTREE_CMD=		@MTREE_CMD@
+PROFLIB_EXT=		_p
+PROF_OPT_FLAGS=		$(DBG_FLAGS)
+RM_LN=			@RM_LN@
+ROOT_ABS=		@projectdir@
+JUGGLERROOT_ABS=	@SAFE_JUGGLERROOT_ABS@
 
 # -----------------------------------------------------------------------------
-# Compiler command lines.
+# Extra information for the Doozer++ file common.defs.mk.
 # -----------------------------------------------------------------------------
-C_COMPILE	= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
+EXTRA_CFLAGS=		$(CFLAGS_DYNLIB)
+EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB)
+EXTRA_DEFS=		-D_GADGET_BUILD_
+EXTRA_DEPEND_FLAGS=	-I$(ROOT_ABS)
+EXTRA_INCLUDES=		-I$(top_srcdir)
 
 # -----------------------------------------------------------------------------
-# Platform- and binary-specific options.  The assignments preceding the
-# ifeq ... endif blocks are the default values.  Depending on the value of
-# $(ABI), further settings may be made to allow for building with multiple
-# ABIs.
+# Makedepend commands.  Doozer++ uses $(MKDEP_C) and $(MKDEP_CXX).
 # -----------------------------------------------------------------------------
-ifdef dppABI
-    ifeq ($(dppABI), N32_M3)
-        ABI     = N32
-        ISA     = mips3
-    endif
-    ifeq ($(dppABI), N32_M4)
-        ABI     = N32
-        ISA     = mips4
-    endif
-    ifeq ($(dppABI), 64_M3)
-        ABI     = 64
-        ISA     = mips3
-    endif
-    ifeq ($(dppABI), 64_M4)
-        ABI     = 64
-        ISA     = mips4
-    endif
-    ifeq ($(dppABI), ELF_i386)
-        ABI     = ELF
-        ISA     = i386
-    endif
-else
-    ABI         ?= @ABI@
-    ISA         ?= @ISA@
-    LIBBITSUF   ?= @LIBBITSUF@
-endif
+MKDEP_C=	$(DEPGEN_TOOL_CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+MKDEP_CXX=	$(DEPGEN_TOOL_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
-ABI_LIST        = @ABI_LIST@
-PLATFORM        = @PLATFORM@
-
-ifeq ($(ABI), N32)
-    ARFLAGS     := -n32 $(ARFLAGS)
-    CFLAGS      += -n32
-    CXXFLAGS    += -n32
-    LDOPTS      += -n32
-    LIBBITSUF   = 32
+# -----------------------------------------------------------------------------
+# Platform- and binary-specific options.
+# -----------------------------------------------------------------------------
+ifdef snxABI
+    dppABI=	$(snxABI)
 endif
-ifeq ($(ABI), 64)
-    ARFLAGS     := -64 $(ARFLAGS)
-    CFLAGS      += -64
-    CXXFLAGS    += -64
-    LDOPTS      += -64
-    LIBBITSUF   = 64
-endif
-ifeq ($(ABI), ELF)
-    LIBBITSUF   =
-endif
-
-ifeq ($(ISA), mips3)
-    ARFLAGS     := -mips3 $(ARFLAGS)
-    CFLAGS      += -mips3
-    CXXFLAGS    += -mips3
-    LDOPTS      += -mips3
-endif
-ifeq ($(ISA), mips4)
-    ARFLAGS     := -mips4 $(ARFLAGS)
-    CFLAGS      += -mips4
-    CXXFLAGS    += -mips4
-    LDOPTS      += -mips4
-endif
-
-@SET_MAKE@
-
 
 # -----------------------------------------------------------------------------
 # Library names.
 # -----------------------------------------------------------------------------
-SNX_LIBRARY     = @LIB_PREFIX@sonix
+SNX_LIBRARY=	@LIB_PREFIX@sonix
+
+include $(topdir)/common.defs.mk
