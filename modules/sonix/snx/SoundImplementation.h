@@ -45,11 +45,11 @@
 
 #include <snx/snxConfig.h>
 
-#include <assert.h>
 #include <string>
 #include <map>
 #include <boost/concept_check.hpp>
 #include <gmtl/Matrix.h>
+#include <vpr/Util/Assert.h>
 
 #include <snx/SoundInfo.h>
 #include <snx/SoundAPIInfo.h>
@@ -103,7 +103,7 @@ public:
     */
    virtual void trigger( const std::string & alias, const int & repeat = 1 )
    {
-      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      vprASSERT(this->isStarted() == true && "must call startAPI prior to this function");
 
       this->lookup( alias ).repeat = repeat;
       this->lookup( alias ).repeatCountdown = repeat;
@@ -141,7 +141,7 @@ public:
     */
    virtual void stop( const std::string& alias )
    {
-      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      vprASSERT(this->isStarted() == true && "must call startAPI prior to this function");
       this->lookup( alias ).repeatCountdown = 0;
    }
 
@@ -215,7 +215,7 @@ public:
     */
    virtual void setPosition( const std::string& alias, float x, float y, float z )
    {
-      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      vprASSERT(this->isStarted() == true && "must call startAPI prior to this function");
       this->lookup( alias ).position[0] = x;
       this->lookup( alias ).position[1] = y;
       this->lookup( alias ).position[2] = z;
@@ -234,7 +234,7 @@ public:
     */
    virtual void getPosition( const std::string& alias, float& x, float& y, float& z )
    {
-      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      vprASSERT(this->isStarted() == true && "must call startAPI prior to this function");
 
       x = this->lookup( alias ).position[0];
       y = this->lookup( alias ).position[1];
@@ -246,7 +246,7 @@ public:
     */
    virtual void setListenerPosition( const gmtl::Matrix44f& mat )
    {
-      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      vprASSERT(this->isStarted() == true && "must call startAPI prior to this function");
       mListenerPos = mat;
    }
 
@@ -255,7 +255,7 @@ public:
     */
    virtual void getListenerPosition( gmtl::Matrix44f& mat )
    {
-      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      vprASSERT(this->isStarted() == true && "must call startAPI prior to this function");
       mat = mListenerPos;
    }
 

@@ -51,6 +51,7 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
 
+#include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 
 #include <snx/SoundFactory.h>
@@ -420,7 +421,7 @@ namespace snx
       {
          awEngAWD( mEngine, hostname.c_str() );
       }
-      assert( mEngine != NULL );
+      vprASSERT(mEngine != NULL);
       awProp(mEngine, AWENG_VOLUME, 1.0);   //Set its volume to maximum output
       int result = awAttachEng(mEngine);
       if (result < 0)      //Attach the engine to the system
@@ -435,7 +436,7 @@ namespace snx
 
       //Set up the channel
       mChannel = awNewChan();            //Define the new channel
-      assert( mChannel != NULL );
+      vprASSERT(mChannel != NULL);
       awChanEng(mChannel, mEngine);         //Associate the channel with the engine
 
       awProp(mChannel, AWCHAN_MODEL, AWIF_QUAD);   //Set QUAD sound imaging model
@@ -445,16 +446,16 @@ namespace snx
 
       //Set up scene object and add the sound objects to it
       mScene = awNewScene();            //Define new scene
-      assert( mScene != NULL );
+      vprASSERT(mScene != NULL);
 
       //Set up environment object
       mEnv = awNewEnv();            //Define new environment
-      assert( mEnv != NULL );
+      vprASSERT(mEnv != NULL);
       awProp(mEnv, AWENV_SOS, 330.0);         //Set the speed of sound
 
       //Set up observer object
       mObs = awNewObs();                  //Define new observer
-      assert( mObs != NULL );
+      vprASSERT(mObs != NULL);
 
       awProp(mObs, AWOBS_STATE,       AW_ON);      //Enable the observer
       awProp(mObs, AWOBS_TETHERCOORD,       AWOBS_TABSOLUTE);   //Set coords to absolute
@@ -692,7 +693,7 @@ namespace snx
          //std::cout<<"[snx]AudioWorks| DEBUG: unbind() "<<alias<<"\n"<<std::flush;
       }
 
-      assert( mBindTable.count( alias ) == 0 && "should have unbound" );
+      vprASSERT(mBindTable.count( alias ) == 0 && "should have unbound");
    }
 
    /**
