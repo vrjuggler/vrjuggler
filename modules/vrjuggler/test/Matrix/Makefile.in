@@ -9,9 +9,9 @@
 
 srcdir		= @srcdir@
 
-COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
-LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ -g
-VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@
 
@@ -32,19 +32,20 @@ MATRIX_PROGS	= test
 # -----------------------------------------------------------------------------
 default: all
 
-all: ${MATRIX_PROGS}
+all: $(MATRIX_PROGS)
 
-test: ${OBJECTS}
-	${LINK} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
+test: $(OBJECTS)
+	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 matrix.o: matrix.cpp
 
 .cpp.o:
-	${COMPILE} -c $<
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend ${MATRIX_PROGS} *.o *core so_locations
+	rm -f Makedepend $(MATRIX_PROGS) *.exe *.ilk *.o *core *.?db	\
+          so_locations
 	rm -rf ./ii_files

@@ -9,9 +9,9 @@
 
 srcdir		= @srcdir@
 
-COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
-LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ -g
-VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@:@srcdir@/../../Input/vjPosition
 
@@ -35,56 +35,56 @@ PROGS		= go go-ibox go-inputgroup go-logiclass aFlockTest vjFlockTest
 # -----------------------------------------------------------------------------
 default: all
 
-all: ${PROGS}
+all: $(PROGS)
 
 # ----------------
 # aFlock test driver
 # ----------------
 aFlockTest: aFlockTest.o aFlock.o
-	${LINK} -o $@ aFlockTest.o aFlock.o 
+	$(LINK) -o $@ aFlockTest.o aFlock.o 
 
 # ----------------
 # vjFlock test driver
 # ----------------
 vjFlockTest: vjFlockTest.o
-	${LINK} -o $@ vjFlockTest.o ${VJ_LIBS} ${EXTRA_LIBS}
+	$(LINK) -o $@ vjFlockTest.o $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # new
 # ----------------
 new: new.o
-	${LINK} -o $@ new.o ${VJ_LIBS} ${EXTRA_LIBS}
+	$(LINK) -o $@ new.o $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go
 # ----------------
 go: main.o
-	${LINK} -o $@ main.o ${VJ_LIBS} ${EXTRA_LIBS}
+	$(LINK) -o $@ main.o $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-ibox
 # ----------------
 go-ibox: main-ibox.o
-	${LINK} -o $@ main-ibox.o ${VJ_LIBS} ${EXTRA_LIBS}
+	$(LINK) -o $@ main-ibox.o $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-inputgroup
 # ----------------
 go-inputgroup: main-inputgroup.o
-	${LINK} -o $@ main-inputgroup.o ${VJ_LIBS} ${EXTRA_LIBS}
+	$(LINK) -o $@ main-inputgroup.o $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-logiclass
 # ----------------
 go-logiclass: main-logiclass.o
-	${LINK} -o $@ main-logiclass.o ${VJ_LIBS} ${EXTRA_LIBS}
+	$(LINK) -o $@ main-logiclass.o $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.o:
-	${COMPILE} -c $<
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend ${PROGS} *.o *core so_locations
+	rm -f Makedepend $(PROGS) *.exe *.ilk *.o *core *.?db so_locations
 	rm -rf ./ii_files

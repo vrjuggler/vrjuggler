@@ -13,14 +13,14 @@ default: all
 all: CfgTest input ogl pfNav Quat threads
 
 CfgTest input ogl pfNav Quat threads::
-	cd $@ && ${MAKE} all
+	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	-cd CfgTest && ${MAKE} clean
-	-cd input   && ${MAKE} clean
-	-cd Quat    && ${MAKE} clean
-	-cd threads && ${MAKE} clean
-	-cd Math    && ${MAKE} clean
+	-cd CfgTest && $(MAKE) clean
+	-cd input   && $(MAKE) clean
+	-cd Quat    && $(MAKE) clean
+	-cd threads && $(MAKE) clean
+	-cd Math    && $(MAKE) clean

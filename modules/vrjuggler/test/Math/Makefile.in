@@ -9,9 +9,9 @@
 
 srcdir		= @srcdir@
 
-COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
-LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ -g
-VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@
 
@@ -31,20 +31,21 @@ MATH_PROGS	= testPlane testSeg
 # -----------------------------------------------------------------------------
 default: all
 
-all: ${MATH_PROGS}
+all: $(MATH_PROGS)
 
 testPlane: testPlane.o
-	${LINK} -o $@ testPlane.o ${VJ_LIBS} ${EXTRA_LIBS}
+	$(LINK) -o $@ testPlane.o $(VJ_LIBS) $(EXTRA_LIBS)
 
 testSeg: testSeg.o
-	${LINK} -o $@ testSeg.o ${VJ_LIBS} ${EXTRA_LIBS}
+	$(LINK) -o $@ testSeg.o $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.o:
-	${COMPILE} -c $<
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend ${MATH_PROGS} *.o *core so_locations
+	rm -f Makedepend $(MATH_PROGS) *.exe *.ilk *.o *core *.?db	\
+          so_locations
 	rm -rf ./ii_files
