@@ -71,10 +71,7 @@ public:
 
 
     //: Adds descriptions in file 'filename' to the factory
-    void loadDescs (const std::string& filename) {
-        //vjConfigIO::instance->readChunkDescDB (filename, descdb);
-        descdb.load(filename.c_str());
-    }
+    bool loadDescs (const std::string& filename);
 
 
     // we actually do need this so that the EM can send the descdb to the gui...
