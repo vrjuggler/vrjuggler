@@ -34,7 +34,7 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= jccl/Plugins
+DIRPRFX		= jccl/Plugins/
 
 SUBDIR		= ConfigManager		\
 		  PerformanceMonitor
