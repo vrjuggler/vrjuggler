@@ -33,12 +33,13 @@
 
 
 #include <jccl/jcclConfig.h>
+#include <jccl/Performance/TimeStamp.h>
 
 // these should all be in separate .cpp files.  fix later
 
 #if VJ_PERFORMANCE == VJ_PERF_SGI
 
-#include <jccl/Performance/TimeStampSGI.h>
+//#include <jccl/Performance/TimeStampSGI.h>
 
 /*
  * SGI cyclecounter timing
@@ -106,6 +107,7 @@ float TimeStampSGI::usecs () {
 
 
 TimeStampSGI::TimeStampSGI() {
+    TimeStampInitializer::instance();
     set();
 }
 
@@ -153,6 +155,12 @@ long long TimeStampSGI::maxval;
 
 namespace jccl {
 
+    TimeStampPosix::TimeStampPosix() {
+        TimeStampInitializer::instance();
+	set();
+    }
+
+
 TimeStampPosix& TimeStampPosix::operator= (const TimeStampPosix& t2) {
     val = t2.val;
     return *this;
@@ -166,3 +174,9 @@ float TimeStampPosix::initval = 0.0;
 #elif VJ_PERFORMANCE == VJ_PERF_NONE
 // nothing to do here
 #endif // VJ_PERF_NONE
+
+
+namespace jccl {
+    vprSingletonImp(TimeStampInitializer);
+};
+
