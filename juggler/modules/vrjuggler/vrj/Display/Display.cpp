@@ -100,4 +100,6 @@ std::ostream& operator<<(std::ostream& out, vjDisplay& disp)
    {
       out << "vp: " << i << " " << *(disp.mViewports[i]) << std::endl;
    }
+
+   return out;
 }

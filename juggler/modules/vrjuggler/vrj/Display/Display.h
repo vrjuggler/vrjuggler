@@ -114,7 +114,7 @@ public:
    friend std::ostream& operator<<(std::ostream& out, vjDisplay& disp);
 
    // --- Viewport handling --- //
-   int getNumViewports()
+   unsigned getNumViewports()
    { return mViewports.size(); }
 
    vjViewport* getViewport(int vpNum)

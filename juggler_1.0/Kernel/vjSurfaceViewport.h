@@ -36,6 +36,7 @@
 
 #include <Utils/vjDebug.h>
 #include <Kernel/vjViewport.h>
+#include <Kernel/vjProjection.h>
 #include <Math/vjVec3.h>
 class vjConfigChunk;
 

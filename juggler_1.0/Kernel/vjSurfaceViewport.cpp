@@ -35,6 +35,9 @@
 #include <Kernel/vjWallProjection.h>
 #include <Kernel/vjTrackedWallProjection.h>
 #include <Math/vjCoord.h>
+#include <Math/vjVec3.h>
+#include <Math/vjVec4.h>
+#include <Config/vjConfigChunk.h>
 
 void vjSurfaceViewport::config(vjConfigChunk *chunk)
 {

@@ -49,6 +49,9 @@
 #include <Kernel/GL/vjGlPipe.h>
 #include <Kernel/GL/vjGlWindow.h>
 
+#include <Math/vjVec3.h>
+#include <Math/vjVec4.h>
+
 //vjGlDrawManager* vjGlDrawManager::_instance = NULL;
 vjSingletonImp(vjGlDrawManager);
 

@@ -95,6 +95,16 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjSimRelativePosition>* sim_relative = new vjDeviceConstructor<vjSimRelativePosition>;
    vjDeviceConstructor<vjSimDigitalGlove>* simpinch_glove = new vjDeviceConstructor<vjSimDigitalGlove>;
 
+   if( (NULL == sim_analog)   ||
+       (NULL == sim_digital)  ||
+       (NULL == sim_position) ||
+       (NULL == sim_glove)    ||
+       (NULL == sim_relative) ||
+       (NULL == simpinch_glove))
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+   }
+
 #ifndef WIN32
    vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
    vjDeviceConstructor<vjIsense>* intersense = new vjDeviceConstructor<vjIsense>;
@@ -107,12 +117,35 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjXWinKeyboard>* xwin_key = new vjDeviceConstructor<vjXWinKeyboard>;
    vjDependencyManager::instance()->registerChecker(new vjXWinKBDepChecker());
    vjDeviceConstructor<vjThreeDMouse>* threed_mouse = new vjDeviceConstructor<vjThreeDMouse>;
+
+   if( (NULL == flock)        ||
+       (NULL == intersense)   ||
+       (NULL == MotionStar)   ||
+       (NULL == trackd_sensor)      ||
+       (NULL == trackd_controller)  ||
+       (NULL == ibox)         ||
+       (NULL == pinch_glove)  ||
+       (NULL == cyber_glove)  ||
+       (NULL == xwin_key)     ||
+       (NULL == threed_mouse))
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+   }
 #else
 
    vjDeviceConstructor<vjKeyboardWin32>* key_win32 = new vjDeviceConstructor<vjKeyboardWin32>;
+   if( (NULL == key_win32))
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+   }
+
 #endif
 #ifdef VJ_HAVE_DTK
    vjDeviceConstructor<vjDTK>* dtk_wrapper = new vjDeviceConstructor<vjDTK>;
+   if( (NULL == dtk_wrapper))
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+   }
 #endif
 }
 
