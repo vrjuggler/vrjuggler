@@ -117,7 +117,7 @@ public class CoordinateFrameEditor
       try
       {
          ClassLoader loader = getClass().getClassLoader();
-         String img_base = "org/vrjuggler/vrjconfig/commoneditors/images";
+         String img_base = EditorConstants.COMMON_IMG_ROOT;
 
          for ( int i = 0; i < mCoordFrames.length; ++i )
          {
