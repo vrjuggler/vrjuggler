@@ -133,7 +133,7 @@ public class ChunkDesc implements Cloneable {
         synchronized (this) {
             if ((default_chunk == null) && (default_node != null)) {
                 XMLConfigIOHandler h = 
-                    (XMLConfigIOHandler)ConfigIO.getHandler (ConfigIO.XML);
+                    (XMLConfigIOHandler)ConfigIO.getHandler ();
                 ConfigIOStatus iostatus = new ConfigIOStatus();
                 default_chunk = h.buildConfigChunk (default_node, false,
                                                     iostatus);

@@ -110,20 +110,10 @@ public class XMLConfigCommunicator
         if (config_module == null)
             throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");
 
-        config_handler = (XMLConfigIOHandler)ConfigIO.getHandler (ConfigIO.XML);
+        config_handler = (XMLConfigIOHandler)ConfigIO.getHandler();
         if (config_handler == null)
             throw new VjComponentException (component_name + ": Couldn't get XML IO Handler.");
     }
-
-
-//      public boolean addConfig (ConfigChunk ch) {
-//          return false;
-//      }
-
-
-//      public boolean removeConfig (String name) {
-//          return false;
-//      }
 
 
     public void destroy () {

@@ -142,7 +142,7 @@ public class ComponentFactory {
                 // Get an optional chunkdescs file "contents.desc"
                 URL descdb_url = new URL (jar_file_url + "contents.desc");
                 ChunkDescDB descdb = new ChunkDescDB();
-                ConfigIO.readChunkDescDB (descdb_url.openStream(), descdb, ConfigIO.GUESS);
+                ConfigIO.readChunkDescDB (descdb_url.openStream(), descdb);
                 Core.descdb.addAll (descdb);
             }
             catch (FileNotFoundException e1) {
@@ -159,7 +159,7 @@ public class ComponentFactory {
             URL chunkdb_url = new URL (jar_file_url + "contents.config");
 
             ConfigChunkDB chunkdb = new ConfigChunkDB();
-            ConfigIO.readConfigChunkDB (chunkdb_url.openStream(), chunkdb, ConfigIO.GUESS);
+            ConfigIO.readConfigChunkDB (chunkdb_url.openStream(), chunkdb);
             /* now we need to analyze the read-in chunks and deal with 'em */
 
             for (int i = 0; i < chunkdb.size(); i++)
@@ -187,7 +187,7 @@ public class ComponentFactory {
             is = loader.getSystemResourceAsStream ("contents.desc");
             if (is != null) {
                 ChunkDescDB descdb = new ChunkDescDB();
-                ConfigIO.readChunkDescDB (is, descdb, ConfigIO.GUESS);
+                ConfigIO.readChunkDescDB (is, descdb);
                 Core.descdb.addAll (descdb);
             }
         }
@@ -202,7 +202,7 @@ public class ComponentFactory {
             is = loader.getSystemResourceAsStream ("contents.config");
             if (is != null) {
                 ConfigChunkDB chunkdb = new ConfigChunkDB();
-                ConfigIO.readConfigChunkDB (is, chunkdb, ConfigIO.GUESS);
+                ConfigIO.readConfigChunkDB (is, chunkdb);
 
                 /* now we need to analyze the read-in chunks */
                 for (int i = 0; i < chunkdb.size(); i++)
