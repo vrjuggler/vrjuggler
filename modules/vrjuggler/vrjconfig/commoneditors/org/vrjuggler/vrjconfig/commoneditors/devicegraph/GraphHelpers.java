@@ -599,7 +599,7 @@ public abstract class GraphHelpers
     * @param unitType   the type of input source for the new port
     * @param unitNumber the index of this input source in the device
     */
-   public DefaultPort createDevicePort(Integer unitType, int unitNumber)
+   public static DefaultPort createDevicePort(Integer unitType, int unitNumber)
    {
       return createDevicePort(new UnitInfo(unitType, new Integer(unitNumber)));
    }
@@ -611,7 +611,8 @@ public abstract class GraphHelpers
     * @param unitType   the type of input source for the new port
     * @param unitNumber the index of this input source in the device
     */
-   public DefaultPort createDevicePort(Integer unitType, Integer unitNumber)
+   public static DefaultPort createDevicePort(Integer unitType,
+                                              Integer unitNumber)
    {
       return createDevicePort(new UnitInfo(unitType, unitNumber));
    }
@@ -625,7 +626,7 @@ public abstract class GraphHelpers
     *                   device cell that accurately represents the input
     *                   source
     */
-   public DefaultPort createDevicePort(UnitInfo unitInfo)
+   public static DefaultPort createDevicePort(UnitInfo unitInfo)
    {
       return new DefaultPort(unitInfo);
    }
