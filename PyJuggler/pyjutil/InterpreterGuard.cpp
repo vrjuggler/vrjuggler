@@ -81,6 +81,7 @@ InterpreterGuard::InterpreterGuard() : mMyLock(false)
 
       // Lock the GIL.
       PyEval_AcquireThread(mState->pyState);
+      mState->pyState->interp->sysdict = PyThreadState_GetDict();
 
       vprDEBUG(pyjDBG_CXX, vprDBG_VERB_LVL)
          << std::hex << this << std::dec << " locked\n" << vprDEBUG_FLUSH;
@@ -92,8 +93,9 @@ InterpreterGuard::InterpreterGuard() : mMyLock(false)
 
 InterpreterGuard::~InterpreterGuard()
 {
-   if ( mMyLock && mState->gilLocked )
+   if ( mMyLock )
    {
+      vprASSERT(mState->gilLocked && "GIL is not held, but I thought it was.");
       vprDEBUG(pyjDBG_CXX, vprDBG_VERB_LVL)
          << std::hex << this << std::dec << " unlocking\n" << vprDEBUG_FLUSH;
 
