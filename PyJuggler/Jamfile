@@ -39,9 +39,11 @@ extension vpr
    <include>$(VJ_BASE_DIR)/include
    <include>$(NSPR_ROOT)/include/nspr
 
-   <debug><library-path>$(VJ_BASE_DIR)/lib/debug
-   <debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
-   <release><library-path>$(VJ_BASE_DIR)/lib/opt
+   <library-path>$(VJ_BASE_DIR)/lib
+
+   <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
+   <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
+   <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
 
    <find-library>vpr
   ;
@@ -62,9 +64,11 @@ extension jccl
    <include>$(VJ_BASE_DIR)/include
    <include>$(NSPR_ROOT)/include/nspr
 
-   <debug><library-path>$(VJ_BASE_DIR)/lib/debug
-   <debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
-   <release><library-path>$(VJ_BASE_DIR)/lib/opt
+   <library-path>$(VJ_BASE_DIR)/lib
+
+   <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
+   <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
+   <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
 
    <find-library>vpr
    <find-library>jccl
@@ -103,9 +107,11 @@ extension gadget
    <include>$(VJ_BASE_DIR)/include
    <include>$(NSPR_ROOT)/include/nspr
 
-   <debug><library-path>$(VJ_BASE_DIR)/lib/debug
-   <debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
-   <release><library-path>$(VJ_BASE_DIR)/lib/opt
+   <library-path>$(VJ_BASE_DIR)/lib
+
+   <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
+   <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
+   <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
 
    <find-library>vpr
    <find-library>jccl
@@ -138,9 +144,11 @@ extension vrj
    <include>$(VJ_BASE_DIR)/include
    <include>$(NSPR_ROOT)/include/nspr
 
-   <debug><library-path>$(VJ_BASE_DIR)/lib/debug
-   <debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
-   <release><library-path>$(VJ_BASE_DIR)/lib/opt
+   <library-path>$(VJ_BASE_DIR)/lib
+
+   <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
+   <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
+   <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
 
    <find-library>vpr
    <find-library>jccl
