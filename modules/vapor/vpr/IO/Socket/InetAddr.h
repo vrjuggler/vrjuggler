@@ -33,6 +33,8 @@
 #ifndef _VPR_INET_ADDR_H_
 #define _VPR_INET_ADDR_H_
 
+#include <vprConfig.h>
+
 #include <string.h>
 #include <string>
 
@@ -161,10 +163,10 @@ public:
     //! POST: The port associated with this address structure is returned to
     //+       the caller in host byte order.
     //
-    //! RETURNS: An unsigned short (16-bit value) giving the port for this
+    //! RETURNS: A Uint16 (unsigned 16-bit value) giving the port for this
     //+          address structure in host byte order.
     // ------------------------------------------------------------------------
-    inline unsigned short
+    inline Uint16
     getPort (void) const {
         return ntohs(m_addr.sin_port);
     }
@@ -176,11 +178,11 @@ public:
     //! POST: The given port number is stored in the address structure in
     //+       network byte order.
     //
-    //! ARGS: port - An unsigned short (16-bit value) port number for this
+    //! ARGS: port - A Uint16 (unsigned 16-bit value) port number for this
     //+              address structure in host byte order.
     // ------------------------------------------------------------------------
     inline void
-    setPort (const unsigned short port) {
+    setPort (const Uint16 port) {
         m_addr.sin_port = htons(port);
     }
 
