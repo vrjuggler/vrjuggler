@@ -35,6 +35,8 @@
 
 #include <vprConfig.h>
 
+#include <string>
+
 #include <IO/Socket/SocketTypes.h>
 #include <Utils/Assert.h>
 
