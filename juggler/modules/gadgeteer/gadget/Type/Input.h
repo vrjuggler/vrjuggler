@@ -177,6 +177,11 @@ protected:  // Helpers
    //: Swap the valid and progress indexes (thread safe)
    void swapValidIndexes();
 
+   void assertIndexes()
+   {
+      vjASSERT((current != progress) && (current != valid) && (progress != valid));
+   }
+
 protected:
    char*       sPort;
    char*       instName;
