@@ -34,6 +34,7 @@
 #ifndef SOCK_ACCEPTOR_H
 #define SOCK_ACCEPTOR_H
 
+#include <vprConfig.h>
 #include <IO/Socket/SocketStream.h>
 #include <IO/Socket/InetAddr.h>
 
@@ -48,6 +49,12 @@ public:
     // Default constructor
     SocketAcceptor()
     {;}
+
+    ~SocketAcceptor()
+    {
+        if(mSocket.isOpen())
+            mSocket.close();
+    }
 
     // Construct Acceptor to accept connections on the given address    
     // - Opens the socket automatically
@@ -67,7 +74,8 @@ public:
     SocketStream* accept();
 
     // Close the accepting socket
-    bool close();
+    bool close()
+    { return mSocket.close(); }
 
     // Get the member socket that is being used
     SocketStream& getSocket()
@@ -82,7 +90,7 @@ SocketAcceptor::SocketAcceptor(const InetAddr& addr, int backlog)
     open(addr, backlog);
 }
 
-bool open(const InetAddr& addr, int backlog)
+bool SocketAcceptor::open(const InetAddr& addr, int backlog)
 {
     vprASSERT((!mSocket.isOpen()) && "Trying to re-open socket that has already been opened");
 
@@ -103,9 +111,9 @@ bool open(const InetAddr& addr, int backlog)
     return true;
 }
 
-SocketStream* accept()
+SocketStream* SocketAcceptor::accept()
 {
-    SocketStream* new_socket(NULL)
+    SocketStream* new_socket(NULL);
 
     new_socket = mSocket.accept();
 
@@ -118,3 +126,4 @@ SocketStream* accept()
 
 
 #endif //SOCK_ACCEPTOR_H
+
