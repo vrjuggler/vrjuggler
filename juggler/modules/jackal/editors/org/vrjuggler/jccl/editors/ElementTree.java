@@ -41,7 +41,6 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.jccl.config.undo.ConfigElementNameEdit;
 
 
 /**
@@ -238,11 +237,9 @@ class ElementNameEditor implements TreeCellEditor
                "Invalid Name", JOptionPane.ERROR_MESSAGE);
          return false;
       }
-      ConfigElementNameEdit new_edit =
-         new ConfigElementNameEdit(mElement, mElement.getName(),
-                                   mTextField.getText());
-      mElement.setName(mTextField.getText());
-      ctx.postEdit(new_edit);
+
+      mElement.setName(mTextField.getText(), ctx);
+
       return true;
    }
 
