@@ -61,6 +61,14 @@
             ..
         ..
         tutorials
+            MPApp
+            ..
+            SimpleApp
+            ..
+            contextApp
+            ..
+            device.drivers
+            ..
             simpleInput
             ..
             simplePfApp
