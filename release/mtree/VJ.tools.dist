@@ -3,7 +3,7 @@
 #
 # $Id$
 
-/set type=dir gname=vrjuggler mode=0775
+/set type=dir mode=0755
 .
     tools
 	common

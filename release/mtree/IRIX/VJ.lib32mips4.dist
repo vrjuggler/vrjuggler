@@ -3,7 +3,7 @@
 #
 # $Id$
 
-/set type=dir mode=0775 gname=vrjuggler
+/set type=dir mode=0755
 .
     lib32
 	mips4
