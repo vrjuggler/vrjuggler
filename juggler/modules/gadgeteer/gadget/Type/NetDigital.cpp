@@ -12,7 +12,7 @@ NetDigital::NetDigital(const std::string& src_device_name, Input* input_ptr, VJ_
 
   if(src_device_name.length() > 0){   // pointing to another device/proxy for data source
      mLocalSource.init(mDeviceName);
-     mSendBuffer.resize(3 + DATA_TIME_SIZE * 1);            // 2 bytes for code/id, 2 bytes data, 2 bytes timestamp, 1 byte for semicolon
+     mSendBuffer.resize(3 + DATA_TIME_SIZE * 1);            // 2 bytes for code/id, 2 bytes data, 4 bytes timestamp, 1 byte for semicolon
      mNetworkShortDigitalValues.resize(1);  // space for one data item
   }
   else{                              // use ourself as source of digital data
@@ -26,7 +26,7 @@ NetDigital::NetDigital(const std::string& src_device_name, Input* input_ptr, VJ_
 
      // allocate space for data
      mSendBuffer.resize(3 + DATA_TIME_SIZE * num_elements);  
-     // 2 bytes for code/id, 2*n bytes for data, 2*n bytes of timestamp data, 1 byte for semicolon
+     // 2 bytes for code/id, 2*n bytes for data, 4*n bytes of timestamp data, 1 byte for semicolon
   }
 }
 
