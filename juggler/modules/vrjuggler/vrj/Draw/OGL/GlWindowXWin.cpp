@@ -373,7 +373,7 @@ bool GlWindowXWin::makeCurrent()
 
 void GlWindowXWin::configWindow(vrj::Display* disp)
 {
-   const char neg_one_STRING[] = "-1";
+   const char neg_one_string[] = "-1";
    vrj::GlWindow::configWindow(disp);
 
    // Get the vector of display elements.
@@ -384,8 +384,12 @@ void GlWindowXWin::configWindow(vrj::Display* disp)
    mPipe = disp->getPipe();
    vprASSERT(mPipe >= 0);
 
+   // NOTE: ConfigElements return the default value for a property if a value is
+   //       not present. So if a pipe string is not specified for this pipe then
+   //       it gets the default value of "-1".
    mXDisplayName = disp_sys_elt->getProperty<std::string>("x11_pipes", mPipe);
-   if ( mXDisplayName == neg_one_STRING )    // Use display env
+
+   if ( mXDisplayName == neg_one_string )    // Use display env
    {
       const std::string DISPLAY_str("DISPLAY");    // DISPLAY_str[] = "DISPLAY";
       const char* d = getenv(DISPLAY_str.c_str());
