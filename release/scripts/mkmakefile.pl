@@ -35,7 +35,7 @@
 require 5.004;
 
 use strict 'vars';
-use vars qw($dir_prfx $dotin $exp_file $gmake $makefile_name $sub_objdir);
+use vars qw($dir_prfx $exp_file $gmake $sub_objdir);
 use vars qw(%VARS);
 
 use File::Basename;
@@ -57,9 +57,9 @@ use SourceList;
 sub printHelp();
 sub findSources(@);
 sub readSources($);
-sub printObjMakefile($@);
-sub printAppMakefile($$);
-sub printMultiAppMakefile($$);
+sub printObjMakefile($$@);
+sub printAppMakefile($$$);
+sub printMultiAppMakefile($$$);
 sub printAppMakefileStart_in($@);
 sub printAppObjs_in($$$);
 sub printAppSuffixRules_in($$);
@@ -69,13 +69,13 @@ sub expandAll($);
 # Set default values for all variables used as storage by GetOptions().
 my $app     = '';
 my %apps    = ();
+my $dotin   = 1;
 my $gmake   = 0;
 my $help    = 0;
 my @srcdirs = ();
 my @subdirs = ();
 
 $dir_prfx   = '';
-$dotin      = 1;
 $sub_objdir = '';
 
 GetOptions('app=s' => \$app, 'apps=s' => \%apps, 'dirprefix=s' => \$dir_prfx,
@@ -91,24 +91,35 @@ printHelp() && exit(0) if $help;
 @srcdirs = split(/,/, join(',', @srcdirs));
 @subdirs = split(/,/, join(',', @subdirs));
 
+my $all_src = findSources(@srcdirs);
+
 # Set the generated file name once since all the subroutines will create a
 # file with the same name.
-$makefile_name = 'Makefile';
-$makefile_name .= ".in" if $dotin;
+my $makefile_name  = 'Makefile';
+$makefile_name    .= ".in" if $dotin;
 
-my $all_src = findSources(@srcdirs);
+# Create $makefile_name here.
+open(MAKEFILE, "> $makefile_name")
+    or die "ERROR: Could not create $makefile_name: $!\n";
 
 # Generate a single-application makefile.
 if ( $app ) {
-    printAppMakefile($all_src, "$app");
+    printAppMakefile(MAKEFILE, $all_src, "$app");
 }
 # Generate a multi-application makefile.
 elsif ( keys(%apps) ) {
-    printMultiAppMakefile($all_src, \%apps);
+    printMultiAppMakefile(MAKEFILE, $all_src, \%apps);
 }
 # Generate a Doozer++ object-building makefile.
 else {
-    printObjMakefile($all_src, @subdirs);
+    printObjMakefile(MAKEFILE, $all_src, @subdirs);
+}
+
+close(MAKEFILE) or warn "WARNING: Could not close $makefile_name: $!\n";
+
+# Now replace all the @...@ strings if this is not a Makefile.in.
+unless ( $dotin ) {
+    expandAll($makefile_name);
 }
 
 exit(0);
@@ -213,20 +224,17 @@ sub findSources (@) {
 # Generate a makefile for use with Doozer++ that can compile object files and
 # recurse into subdirectories if necessary.
 # -----------------------------------------------------------------------------
-sub printObjMakefile ($@) {
+sub printObjMakefile ($$@) {
+    my $handle  = shift;
     my $srcs    = shift;
     my @subdirs = @_;
-
-    # Create the makefile.
-    open(MAKEFILE, "> $makefile_name")
-        or die "ERROR: Could not create $makefile_name: $!\n";
 
     my $include_dir = '@includedir@';
     $include_dir .= "/$dir_prfx" if $dir_prfx;
 
     # Print out the basic stuff that is common to all types of Doozer++
     # makefiles.
-    print MAKEFILE <<MK_START;
+    print $handle <<MK_START;
 default: all
 
 # Include common definitions here.
@@ -245,40 +253,40 @@ MK_START
     $has_objs = 1 if $#src_files > -1;
 
     if ( $sub_objdir && $has_objs ) {
-        print MAKEFILE "SUBOBJDIR\t= $sub_objdir\n";
+        print $handle "SUBOBJDIR\t= $sub_objdir\n";
     }
 
-    print MAKEFILE "\n";
+    print $handle "\n";
 
     # If there are subdirectories, list them.
     if ( $#subdirs > -1 ) {
         $has_subdirs = 1;
-        print MAKEFILE "DIRPRFX\t= $dir_prfx/\n\n" if $dir_prfx;
+        print $handle "DIRPRFX\t= $dir_prfx/\n\n" if $dir_prfx;
 
-        print MAKEFILE "# Subdirectories to compile.\n";
-        print MAKEFILE "SUBDIR\t=";
+        print $handle "# Subdirectories to compile.\n";
+        print $handle "SUBDIR\t=";
 
         foreach ( @subdirs ) {
-            print MAKEFILE " $_" unless "$_" eq "." ;
+            print $handle " $_" unless "$_" eq "." ;
         }
 
-        print MAKEFILE "\n\n";
+        print $handle "\n\n";
     }
 
     # If there are object files to compile, list the source files.
     if ( $has_objs ) {
-        print MAKEFILE "SRCS\t= ", join(' ', sort(@src_files)), "\n";
+        print $handle "SRCS\t= ", join(' ', sort(@src_files)), "\n";
 
         # If the directory list has more than one element (which would be
         # the current directory), add an assignment for $(EXTRA_SRCS_PATH) so
         # that make will know where to find all the source files.
         my @other_dirs = $srcs->getDirectories();
         if ( $#other_dirs > 0 ) {
-            print MAKEFILE "EXTRA_SRCS_PATH\t= ", join(' ', sort(@other_dirs)),
-                           "\n";
+            print $handle "EXTRA_SRCS_PATH\t= ", join(' ', sort(@other_dirs)),
+                          "\n";
         }
 
-        print MAKEFILE "\n";
+        print $handle "\n";
     }
 
     warn "No object files found, no subdirectories listed!\n"
@@ -287,22 +295,22 @@ MK_START
     # Include the mk file that build objects and recurses if both object files
     # and subdirectories must be handled.
     if ( $has_objs && $has_subdirs ) {
-        print MAKEFILE "include \$(MKPATH)/dpp.obj-subdir.mk\n\n";
+        print $handle "include \$(MKPATH)/dpp.obj-subdir.mk\n\n";
     }
     # If we have only objects to build, include that mk file.
     elsif ( $has_objs ) {
-        print MAKEFILE "include \$(MKPATH)/dpp.obj.mk\n\n";
+        print $handle "include \$(MKPATH)/dpp.obj.mk\n\n";
     }
     # If we have only subdirectories, include the recursion file.
     elsif ( $has_subdirs ) {
-        print MAKEFILE "\$(RECTARGET): recursive\n\n";
-        print MAKEFILE "include \$(MKPATH)/dpp.subdir.mk\n\n";
+        print $handle "\$(RECTARGET): recursive\n\n";
+        print $handle "include \$(MKPATH)/dpp.subdir.mk\n\n";
     }
 
     # If this directory has object files, generate the dependency including
     # code too.
     if ( $has_objs ) {
-        print MAKEFILE <<MK_END;
+        print $handle <<MK_END;
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
@@ -311,49 +319,33 @@ include \$(DEPEND_FILES)
 endif
 MK_END
     }
-
-    close(MAKEFILE) or warn "WARNING: Could not close $makefile_name: $!\n";
-
-    # Now replace all the @...@ strings if this is not a Makefile.in.
-    unless ( $dotin ) {
-        expandAll($makefile_name);
-    }
 }
 
 # -----------------------------------------------------------------------------
 # Generate a makefile capable of compiling a single application.  This is
 # relatively simple.
 # -----------------------------------------------------------------------------
-sub printAppMakefile ($$) {
-    my $srcs = shift;
-    my $app  = shift;
+sub printAppMakefile ($$$) {
+    my $handle = shift;
+    my $srcs   = shift;
+    my $app    = shift;
 
     my @dirs = $srcs->getDirectories();
 
-    open(MAKEFILE, "> $makefile_name")
-        or die "ERROR: Could not create $makefile_name: $!\n";
+    print $handle "default: $app\@EXEEXT\@\n\n";
 
-    print MAKEFILE "default: $app\@EXEEXT\@\n\n";
-
-    printAppMakefileStart_in(MAKEFILE, @dirs);
-    printAppObjs_in(MAKEFILE, 'OBJS', $srcs);
+    printAppMakefileStart_in($handle, @dirs);
+    printAppObjs_in($handle, 'OBJS', $srcs);
 
     # Print the target for the application.
-    print MAKEFILE <<MK_END;
+    print $handle <<MK_END;
 $app\@EXEEXT\@: \$(OBJS)
 	\$(LINK) \@EXE_NAME_FLAG\@ \$(OBJS) \$(BASIC_LIBS) \$(EXTRA_LIBS)
 
 MK_END
 
-    printAppSuffixRules_in(MAKEFILE, $srcs);
-    printAppMakefileEnd_in(MAKEFILE, "$app");
-
-    close(MAKEFILE) or warn "WARNING: Could not close $makefile_name: $!\n";
-
-    # Now replace all the @...@ strings if this is not a Makefile.in.
-    unless ( $dotin ) {
-        expandAll($makefile_name);
-    }
+    printAppSuffixRules_in($handle, $srcs);
+    printAppMakefileEnd_in($handle, "$app");
 }
 
 # -----------------------------------------------------------------------------
@@ -361,18 +353,16 @@ MK_END
 # simpler, but I put in some sanity checking that verifies that the source
 # files listed on the command line actually exist.
 # -----------------------------------------------------------------------------
-sub printMultiAppMakefile ($$) {
-    my $srcs = shift;
-    my %apps = %{$_[0]};
+sub printMultiAppMakefile ($$$) {
+    my $handle = shift;
+    my $srcs   = shift;
+    my %apps   = %{$_[0]};
 
     my @dirs = $srcs->getDirectories();
 
-    open(MAKEFILE, "> $makefile_name")
-        or die "ERROR: Could not create $makefile_name: $!\n";
+    print $handle "default: all\n\n";
 
-    print MAKEFILE "default: all\n\n";
-
-    printAppMakefileStart_in(MAKEFILE, @dirs);
+    printAppMakefileStart_in($handle, @dirs);
 
     my @cur_srcs = ();
     my @all_apps = sort(keys(%apps));
@@ -404,28 +394,21 @@ sub printMultiAppMakefile ($$) {
         }
 
         # Finally, generate the object list for this application.
-        printAppObjs_in(MAKEFILE, "${app}_OBJS", $cur_app_src);
+        printAppObjs_in($handle, "${app}_OBJS", $cur_app_src);
     }
 
     # Loop over the applications again and print the targets that build the
     # actual executables.
     foreach ( @all_apps ) {
-        print MAKEFILE <<MK_END;
+        print $handle <<MK_END;
 $_\@EXEEXT\@: \$(${_}_OBJS)
 	\$(LINK) \@EXE_NAME_FLAG\@ \$(${_}_OBJS) \$(BASIC_LIBS) \$(EXTRA_LIBS)
 
 MK_END
     }
 
-    printAppSuffixRules_in(MAKEFILE, $srcs);
-    printAppMakefileEnd_in(MAKEFILE, @all_apps);
-
-    close(MAKEFILE) or warn "WARNING: Could not close $makefile_name: $!\n";
-
-    # Now replace all the @...@ strings if this is not a Makefile.in.
-    unless ( $dotin ) {
-        expandAll($makefile_name);
-    }
+    printAppSuffixRules_in($handle, $srcs);
+    printAppMakefileEnd_in($handle, @all_apps);
 }
 
 # -----------------------------------------------------------------------------
@@ -492,7 +475,7 @@ MK_START
     }
 
     # Finish the VPATH line.
-    print MAKEFILE "\n\n";
+    print $handle "\n\n";
 }
 
 # -----------------------------------------------------------------------------
