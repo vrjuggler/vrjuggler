@@ -232,19 +232,19 @@ public:
    Mutex& debugLock()
    { return mDebugLock; }
 
-   // Add a category name
+   /// Adds a category name.
    void addCategoryName(std::string name, int cat);
 
-   // Allow the given category
+   /// Allows the given category.
    void addAllowedCategory(int cat);
 
-   // Are we allowed to print this category??
+   /// Are we allowed to print this category??
    bool isCategoryAllowed(int cat);
 
-   // Setup the default categories
+   /// Sets up the default categories.
    void setDefaultCategoryNames();
 
-   // Configure the allowed categories from the users environment
+   /// Configures the allowed categories from the users environment.
    void getAllowedCatsFromEnv();
 
    void growAllowedCategoryVector(int newSize);
@@ -259,15 +259,15 @@ public:
    void setThreadLocalColor(std::string color);
 
 private:
-   int debugLevel;      // Debug level to use
-   int indentLevel;     // Amount to indent
+   int debugLevel;      //! Debug level to use
+   int indentLevel;     //! Amount to indent
 
-   bool  mUseThreadLocal;  // Wether to use thread local info or not
+   bool  mUseThreadLocal;  //! Whether to use thread local info or not
 
    Mutex          mDebugLock;
 
-   std::vector<bool> mAllowedCategories;      //: The categories we allow
-   std::map<std::string,int> mCategoryNames; //: The names and id of allowed catagories
+   std::vector<bool> mAllowedCategories;      //! The categories we allow
+   std::map<std::string,int> mCategoryNames; //! The names and id of allowed catagories
 
 vprSingletonHeader(Debug);
 };
