@@ -1,10 +1,12 @@
 #ifndef _VJ_SIMULATOR_H_
 #define _VJ_SIMULATOR_H_
 
+#include <vjConfig.h>
 #include <Kernel/vjKernel.h>
 #include <Input/InputManager/vjInputManager.h>
 #include <Kernel/vjDebug.h>
 #include <Input/InputManager/vjPosInterface.h>
+#include <Kernel/vjUser.h>
 
 
 class vjSimulator
@@ -19,11 +21,11 @@ public:
    {
       char* proxy_str = NULL;
       proxy_str  = chunk->getProperty("simCamera");
-      char* head_str = NULL;
-      head_str  = chunk->getProperty("headPos");
+
+      string user_name = (string)(char*)chunk->getProperty("user");
+      mUser = vjKernel::instance()->getUser(user_name);
 
       mCamera.init(proxy_str);
-      mHead.init(head_str);
       mWand.init("VJWand");
 
       if(mCamera.getProxyIndex() == -1)
@@ -32,9 +34,9 @@ public:
          exit(1);
       }
 
-      if(mHead.getProxyIndex() == -1)
+      if(mUser == NULL)
       {
-         cerr << "vjSimulator:: Fatal Error: Head not found named: " << head_str << endl;
+         cerr << "vjSimulator:: Fatal Error: User not found named: " << user_name << endl;
          exit(1);
       }
    }
@@ -42,7 +44,7 @@ public:
    //: Update internal simulator data
    void update()
    {
-      mHeadPos = *(mHead->GetData());
+      mHeadPos = *(mUser->getHeadPos());
       mWandPos = *(mWand->GetData());
 
       mCameraPos = *(mCamera->GetData());
@@ -60,8 +62,8 @@ public:
 
 private:
    vjPosInterface mCamera;     // Prosy interfaces to devices needed
-   vjPosInterface mHead;
    vjPosInterface mWand;
+   vjUser*        mUser;
 
    vjMatrix    mCameraPos;    // The data about the position of all this stuff
    vjMatrix    mHeadPos;
