@@ -40,7 +40,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vpr/src/Utils.  It requires GNU make.
+# Makefile.in for vpr/src/Utils/md5-cc.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -50,25 +50,16 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/Util
-srcdir		= @srcdir@
+includedir	= @includedir@/vpr/Util/md5
+srcdir		= @srcdir@/../../../../../external/md5-c
 top_srcdir	= @top_srcdir@
-EXTRA_DEFS	+= @UUID_DEFS@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 VPRROOT		= $(top_srcdir)
-VPR_SRCDIR	= @VPR_SRCDIR@/vpr/Util
 
-DIRPRFX		= vpr/Util/
-SUBDIR		= md5		\
-                  uuid
+SRCS		= md5c.c
 
-SRCS 		= Debug.cpp		\
-                  GUID.cpp		\
-                  Interval.cpp		\
-                  StreamLock.cpp
-
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
