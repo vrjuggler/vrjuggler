@@ -30,15 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
-
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
-
-#include <gadget/Util/Debug.h>
-#include <gadget/InputManager.h>
 #include <jccl/Config/ConfigChunk.h>
 
+#include <gadget/gadgetConfig.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/InputManager.h>
 #include <gadget/Devices/Keyboard/KeyboardXWin.h> // my header
 
 namespace gadget
@@ -181,7 +179,15 @@ int KeyboardXWin::startSampling()
    new_thread = new vpr::Thread(memberFunctor);
    mThread = new_thread;
 
-   return 1;
+   // return success value...
+   if (NULL == mThread)
+   {
+      return 0; // fail
+   }
+   else 
+   {
+      return 1; // success
+   }
 }
 
 int KeyboardXWin::onlyModifier(int mod)
@@ -486,6 +492,7 @@ int KeyboardXWin::stopSampling()
   {
     mExitFlag = true;
     vpr::System::sleep(1);
+    delete mThread;
   }
 
   return 1;
