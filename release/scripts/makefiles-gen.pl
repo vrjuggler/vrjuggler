@@ -79,17 +79,18 @@ chop($basedir = `pwd`);
 # Loop over the directories given with --SUBDIRS and generate the Makefiles
 # from the corresponding Makefile.in's.
 foreach $dir ( split(/\s/, "$VARS{'SUBDIRS'}") ) {
-    print "Generating $prefix/$dir/Makefile ...\n";
+    my $outfile = "$prefix/$dir/Makefile";
+
+    print "Generating $outfile ...\n";
 
     my $infile = "$basedir/$dir/Makefile.in";
     my $workfile = "/tmp/Makefile.in";
-    my $outfile = "$prefix/$dir/Makefile";
 
     # Make a working copy of the input file to be safe.
     copy("$infile", "$workfile") unless "$infile" eq "$workfile";
 
     # Replace the tags in $workfile with the values in %VARS.
-    next unless replaceTags("$workfile", %VARS);
+    next if replaceTags("$workfile", %VARS) < 0;
 
     # Move $workfile to its final destination.
     copy("$workfile", "$outfile");

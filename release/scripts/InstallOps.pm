@@ -162,8 +162,8 @@ sub installFile ($$$) {
 #        %VARS: The hash of tags with replacement values.
 #
 # Returns:
-#     The count of tags replace in the input file or undef if an error
-#     occurs.
+#     The count of tags replaced in the input file (>= 0) on success.
+#     -1 on error.
 # -----------------------------------------------------------------------------
 sub replaceTags ($%) {
     my $infile = shift;
@@ -178,13 +178,13 @@ sub replaceTags ($%) {
     foreach $tag ( keys(%VARS) ) {
 	if ( ! open(INPUT, "$infile") ) {
 	    warn "WARNING: Cannot read from $infile: $!\n";
-	    return undef;
+	    return -1;
 	}
 
 	if ( ! open(OUTPUT, "> $outfile") ) {
 	    warn "WARNING: Cannot create $outfile: $!\n";
 	    close(INPUT) or warn "WARNING: Cannot close $infile: $!\n";
-	    return undef;
+	    return -1;
 	}
 
 	my $line;
