@@ -5,6 +5,8 @@
 
 #include <string>
 
+#include <vpr/vpr.h>
+#include <vpr/Sync/Mutex.h>
 #include <tweek/CORBA/SubjectImpl.h>
 #include <tweek/CORBA/Observer.h>
 #include <StringSubject.h>
@@ -56,7 +58,8 @@ public:
    }
 
 private:
-   std::string mValue;   /**< Our value */
+   std::string mValue;      /**< Our value */
+   vpr::Mutex  mValueLock;  /**< A mutex to protect mValue accesses */
 };
 
 } // End of CxxClientTest namespace
