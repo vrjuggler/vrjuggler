@@ -75,7 +75,8 @@ void LibraryLoaderTest::loadAndInitTestRaw()
    vpr::ReturnStatus status;
 
    vpr::LibraryPtr dso(new vpr::Library(mModules[0].first));
-   status = loader.loadAndInitDSO(dso, mModules[0].second, rawCallback);
+   status = loader.loadAndInitDSO(dso, mModules[0].second,
+                                  (bool(*)(void*)) rawCallback);
    CPPUNIT_ASSERT(status.success());
 }
 
@@ -98,7 +99,7 @@ void LibraryLoaderTest::findAndInitTest()
 
    path[0] = std::string(MODULE_DIR);
    status = loader.findAndInitDSO("loadermod1", path, mModules[0].second,
-                                  rawCallback);
+                                  (bool(*)(void*)) rawCallback);
    CPPUNIT_ASSERT(status.success());
 }
 
@@ -108,7 +109,8 @@ void LibraryLoaderTest::multiLoadTest()
    vpr::ReturnStatus status;
 
    vpr::LibraryPtr dso1(new vpr::Library(mModules[0].first));
-   status = loader.loadAndInitDSO(dso1, mModules[0].second, rawCallback);
+   status = loader.loadAndInitDSO(dso1, mModules[0].second,
+                                  (bool(*)(void*)) rawCallback);
    CPPUNIT_ASSERT(status.success());
 
    LoaderFunctor functor;
@@ -124,7 +126,8 @@ void LibraryLoaderTest::loadFailureTest()
 
    vpr::Debug::instance()->disableOutput();
       vpr::LibraryPtr dso(new vpr::Library("loadFailureTest"));
-      status = loader.loadAndInitDSO(dso, "notThere", rawCallback);
+      status = loader.loadAndInitDSO(dso, "notThere",
+                                     (bool(*)(void*)) rawCallback);
       CPPUNIT_ASSERT(status.failure());
    vpr::Debug::instance()->enableOutput();
 }
@@ -136,7 +139,8 @@ void LibraryLoaderTest::lookupFailureTest()
 
    vpr::Debug::instance()->disableOutput();
       vpr::LibraryPtr dso1(new vpr::Library(mModules[0].first));
-      status = loader.loadAndInitDSO(dso1, "lookupFailureTest", rawCallback);
+      status = loader.loadAndInitDSO(dso1, "lookupFailureTest",
+                                     (bool(*)(void*)) rawCallback);
       CPPUNIT_ASSERT(status.failure());
    vpr::Debug::instance()->enableOutput();
 }
@@ -149,7 +153,7 @@ void LibraryLoaderTest::findFailureTest()
 
    vpr::Debug::instance()->disableOutput();
       status = loader.findAndInitDSO("findFailureTest", path, "notThere",
-                                     rawCallback);
+                                     (bool(*)(void*)) rawCallback);
       CPPUNIT_ASSERT(status.failure());
    vpr::Debug::instance()->enableOutput();
 }
