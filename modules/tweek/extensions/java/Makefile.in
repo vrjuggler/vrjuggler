@@ -165,23 +165,23 @@ extensions-install:
 	@echo "------------------------------------------------"
 	@echo "Installing the Tweek extensions"
 	@echo "------------------------------------------------"
-ifeq (@OS_TYPE@, UNIX)
 ifneq ($(JARS), )
-	for jar in $(JARS) ; \
-          do \
-              $(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/extensions/java/$$jar $(bindir) ; \
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+              $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$jar $(bindir) ; \
           done
 endif
 ifneq ($(BEANS), )
-	for bean in $(BEANS) ; \
-          do \
-              $(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/extensions/java/$$bean.jar $(beandir) ; \
-              $(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(top_srcdir)/extensions/java/$$bean.xml $(beandir) ; \
+	for bean in $(BEANS) ;						\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$bean.jar	\
+                $(beandir) ;						\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX)					\
+                $(top_srcdir)/extensions/java/$$bean.xml $(beandir) ;	\
           done
-endif
 endif
 
 install-docs:
