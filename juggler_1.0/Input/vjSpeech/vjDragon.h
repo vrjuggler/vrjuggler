@@ -119,7 +119,7 @@ inline void vjDragon::config()
 	_filename = "somefile.vjs";
 	_dragonIP = "129.186.232.70";
 	_dragonPort = 5600;
-	_user = "kevin";
+	_user = "groucho";
 }
 
 

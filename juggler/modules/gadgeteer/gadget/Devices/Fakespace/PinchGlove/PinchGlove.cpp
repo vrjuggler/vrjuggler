@@ -187,14 +187,14 @@ int vjPinchGlove::sample()
 {
    // Tell the glove to resample
     mGlove->updateStringFromHardware();
-	
     
+    //*** old vjGesture stuff
+    // Currently the pinch glove doesn't do "gestures", only digital
+    // fix this code to get it to work with gestures, and thus 
+    // be compatible with cyberglove, and other gesture based 
+    // gloves in general.
     
-    
-    
-    //*** old, from vjGesture stuff
-    // Copy the data from the fsPinchGlove to myself.
-    //copyDataFromGlove();//dies here...
+    //updateFingerAngles();
 	
     // Update the xform data
     //mTheData[0][progress].calcXforms();
@@ -303,7 +303,7 @@ void vjPinchGlove::mInitLookupTable()
 	vjPinchGlove::mLookupInitialized = true;
 }
 
-void vjPinchGlove::copyDataFromGlove()
+void vjPinchGlove::updateFingerAngles()
 {
     std::string gesture;
     // the the fakespace "gesture", it's a string like this "00000.00000"
