@@ -185,6 +185,7 @@ void DirectXJoystickStandalone::init()
 
    // Get device-specific information.
    DIDEVICEINSTANCE dx_dev_info;
+   dx_dev_info.dwSize = sizeof(DIDEVICEINSTANCE);
    mDxJoystick->GetDeviceInfo(&dx_dev_info);
    mType = dx_dev_info.dwDevType;
    mProductName = std::string(dx_dev_info.tszProductName);
