@@ -52,6 +52,7 @@ import VjComponents.ConfigEditor.*;
  */
 public class PropertyPanel extends JPanel implements ActionListener, VarValuePanel.VarValuePanelParent {
 
+    ConfigUIHelper uihelper_module;
     
     protected static AbstractBorder border=null;
     public Property prop;
@@ -65,8 +66,11 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
     protected GridBagConstraints c;
 
 
-    public PropertyPanel (Property pr, JPanel par) {
+    public PropertyPanel (Property pr, JPanel par, 
+                          ConfigUIHelper _uihelper_module) {
 	super();
+
+        uihelper_module = _uihelper_module;
 
 	if (border == null)
 	    border = new CompoundBorder ( new BevelBorder (BevelBorder.RAISED),
@@ -160,12 +164,12 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
                     ch.setName (d.getName() + " " + valindex);
             }
 	    if (useMiniPanel (ch))
-		return new VarValueMiniChunkPanel (this, !pr.hasFixedNumberOfValues(), ch);
+		return new VarValueMiniChunkPanel (this, !pr.hasFixedNumberOfValues(), ch, uihelper_module);
 	    else
-		return new VarValueBigChunkPanel (this, pr, ch);
+		return new VarValueBigChunkPanel (this, pr, ch, uihelper_module);
 	}
 	else
-	    return new VarValueStandardPanel(this, pr.getDesc());
+	    return new VarValueStandardPanel(this, pr.getDesc(), uihelper_module);
     }
 
 

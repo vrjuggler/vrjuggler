@@ -37,6 +37,7 @@ import java.io.*;
 import VjConfig.*;
 import VjComponents.Network.DefaultNetCommunicator;
 import VjControl.Core;
+import VjControl.VjComponent;
 import VjComponents.PerfMonitor.PerformanceModule;
 import VjComponents.Network.NetworkModule;
 
@@ -69,11 +70,27 @@ public class PerformanceCommunicator
 
 
     public boolean configure (ConfigChunk ch) {
+        component_chunk = ch;
         component_name = ch.getName();
-        
-        perf_module = (PerformanceModule)Core.getModule ("Performance Module");
+
+        // get pointers to the modules we need.
+        Property p = ch.getPropertyFromToken ("Dependencies");
+        if (p != null) {
+            int i;
+            int n = p.getNum();
+            String s;
+            VjComponent c;
+            for (i = 0; i < n; i++) {
+                s = p.getValue(i).toString();
+                c = Core.getComponentFromRegistry(s);
+                if (c != null) {
+                    if (c instanceof PerformanceModule)
+                        perf_module = (PerformanceModule)c;
+                }
+            }
+        }
         if (perf_module == null) {
-            Core.consoleErrorMessage (component_name, "Expected Performance Module to exist.");
+            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
             return false;
         }
         

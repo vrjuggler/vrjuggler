@@ -41,6 +41,7 @@ import javax.swing.border.*;
 import VjWizards.*;
 import VjConfig.*;
 import VjComponents.ConfigEditor.ConfigModule;
+import VjComponents.ConfigEditor.ConfigUIHelper;
 import VjComponents.UI.ControlUIModule;
 //import VjComponents.UI.Widgets.*;
 import VjControl.*;
@@ -98,6 +99,10 @@ public class SavePanel
         jTextArea1.setEditable(false);
         this.add(save_button, null);
         this.add(jTextArea1, null);
+    }
+
+
+    public void setConfigUIHelper (ConfigUIHelper uihelper_module) {
     }
 
 

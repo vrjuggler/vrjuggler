@@ -44,6 +44,7 @@ import VjWizards.*;
 import VjConfig.*;
 import VjControl.*;
 import VjComponents.ConfigEditor.ConfigChunkUI.*;
+import VjComponents.ConfigEditor.ConfigUIHelper;
 import VjComponents.UI.Widgets.*;
 
 /**
@@ -158,6 +159,8 @@ public class InputDevicePanel
         }
     }
 
+    ConfigUIHelper uihelper_module;
+
     boolean ui_initialized;
     boolean results_dirty;  // does results_db need to be updated from ui?
     ArrayList devices_list;
@@ -250,6 +253,10 @@ public class InputDevicePanel
         keys_panel_int.setLayout (keys_panel_int_layout);
     }
 
+
+    public void setConfigUIHelper (ConfigUIHelper _uihelper_module) {
+        uihelper_module = _uihelper_module;
+    }
 
 
     /** Sets the state of the UI components to reflect the resultsDB. 
@@ -563,7 +570,7 @@ public class InputDevicePanel
                     keys_panel_int.add (l);
                     gbc.gridwidth = gbc.REMAINDER;
                     gbc.weightx = 1.0;
-                    vp = new VarValueMiniChunkPanel (null, false, ch);
+                    vp = new VarValueMiniChunkPanel (null, false, ch, uihelper_module);
                     vp.setValue (p.getValue(0)); // yech... this api sucks
                     keys_panel_int_layout.setConstraints (vp, gbc);
                     keys_panel_int.add (vp);
@@ -578,7 +585,7 @@ public class InputDevicePanel
                     keys_panel_int.add (l);
                     gbc.gridwidth = gbc.REMAINDER;
                     gbc.weightx = 1.0;
-                    vp = new VarValueMiniChunkPanel (null, false, ch);
+                    vp = new VarValueMiniChunkPanel (null, false, ch, uihelper_module);
                     vp.setValue (p.getValue(0)); // yech... this api sucks
                     keys_panel_int_layout.setConstraints (vp, gbc);
                     keys_panel_int.add (vp);
@@ -605,7 +612,7 @@ public class InputDevicePanel
                         keys_panel_int.add (l);
                         gbc.gridwidth = gbc.REMAINDER;
                         gbc.weightx = 1.0;
-                        vp = new VarValueMiniChunkPanel (null, false, ch);
+                        vp = new VarValueMiniChunkPanel (null, false, ch, uihelper_module);
                         vp.setValue (p.getValue(i)); // yech... this api sucks
                         keys_panel_int_layout.setConstraints (vp, gbc);
                         keys_panel_int.add (vp);

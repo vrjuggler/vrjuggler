@@ -87,9 +87,11 @@ public class ConfigUIHelper
     public class ConfigChunkPanelFactory {
 
         protected HashMap chunkpanel_mappings;
+        private ConfigChunk default_panel_chunk;
 
         public ConfigChunkPanelFactory () {
             chunkpanel_mappings = new HashMap();
+            default_panel_chunk = null;
         }
 
 
@@ -104,10 +106,15 @@ public class ConfigUIHelper
                 if (p == null)
                     return false;
                 int n = p.getNum();
-                String s;
-                for (int i = 0; i < n; i++) {
-                    s = p.getValue(i).toString();
-                    chunkpanel_mappings.put (s, cn);
+                if (n == 0) {
+                    default_panel_chunk = ch;
+                }
+                else {
+                    String s;
+                    for (int i = 0; i < n; i++) {
+                        s = p.getValue(i).toString();
+                        chunkpanel_mappings.put (s, cn);
+                    }
                 }
                 return true;
             }
@@ -120,14 +127,20 @@ public class ConfigUIHelper
         public ConfigChunkPanel createConfigChunkPanel (String desc_token) {
             ConfigChunkPanel p = null;
             try {
-                String cn = (String)chunkpanel_mappings.get(desc_token);
-                if (cn == null)
-                    cn = "VjComponents.ConfigEditor.ConfigChunkUI.DefaultConfigChunkPanel";
+                ConfigChunk ch = (ConfigChunk)chunkpanel_mappings.get(desc_token);
+                if (ch == null)
+                    ch = default_panel_chunk;
+                String cn = ch.getValueFromToken ("ClassName", 0).getString();
+//                  if (cn == null)
+//                      cn = "VjComponents.ConfigEditor.ConfigChunkUI.DefaultConfigChunkPanel";
                 p = (ConfigChunkPanel)Core.component_factory.createComponent(cn);
+                p.configure (ch);
                 return p;
             }
             catch (Exception e) {
                 System.out.println ("error in ConfigChunkPanelFactory.createConfigChunkPanel");
+                System.out.println (e.toString());
+                e.printStackTrace();
                 return null;
             }
         }
@@ -139,9 +152,10 @@ public class ConfigUIHelper
 
     public ControlUIModule ui_module;
     public ConfigModule config_module;
+    public ChunkOrgTreeModule orgtree_module;
 
-    public  ConfigChunkPanelFactory configchunkpanel_factory;
-    public  ChunkDBTreeModelFactory chunkdbt_factory;
+    public ConfigChunkPanelFactory configchunkpanel_factory;
+    public ChunkDBTreeModelFactory chunkdbt_factory;
 
     /** All the frames (ConfigChunkFrames, mainly, but not exclusively). */
     Vector child_frames;
@@ -156,6 +170,7 @@ public class ConfigUIHelper
 
         ui_module = null;
         config_module = null;
+        orgtree_module = null;
 
         configchunkpanel_factory = new ConfigChunkPanelFactory();
         chunkdbt_factory = new ChunkDBTreeModelFactory();
@@ -165,6 +180,7 @@ public class ConfigUIHelper
 
 
     public boolean configure (ConfigChunk ch) {
+        component_chunk = ch;
         component_name = ch.getName();
 
         // get pointers to the modules we need.
@@ -182,32 +198,20 @@ public class ConfigUIHelper
                         ui_module = (ControlUIModule)c;
                     if (c instanceof ConfigModule)
                         config_module = (ConfigModule)c;
+                    if (c instanceof ChunkOrgTreeModule)
+                        orgtree_module = (ChunkOrgTreeModule)c;
                 }
             }
         }
-        if (ui_module == null)
-            ui_module = (ControlUIModule)Core.getComponentFromRegistry ("ControlUI Module");
-        if (config_module == null)
-            config_module = (ConfigModule)Core.getComponentFromRegistry ("Config Module");
-        if ((ui_module == null) || (config_module == null)) {
+        if ((ui_module == null) || (config_module == null) || (orgtree_module == null)) {
             Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
             return false;
         }
 
-
-//         if (ui_module == null) {
-//             Core.consoleErrorMessage (component_name, "ConfigUIHelper expected ControlUI Module to exist.");
-//             return false;
-//         }
-//         config_module = (ConfigModule)Core.getModule ("Config Module");
-//         if (config_module == null) {
-//             Core.consoleErrorMessage (component_name, "ControlUI expected Config Module to exist.");
-//             return false;
-//         }
-
         config_module.addConfigModuleListener (this);
  	config_module.descdb.addDescDBListener (this);
 
+        chunkdbt_factory.setChunkOrgTreeModule(orgtree_module);
 
         // Menu stuff
 
@@ -226,6 +230,23 @@ public class ConfigUIHelper
         }
 
         return true;
+    }
+
+
+    /** Returns the ConfigModule this ConfigUIHelper depends on.
+     *  This is a useful way to keep ConfigUIHelper's children from
+     *  having to explicitly name their ConfigModule.
+     */
+    public ConfigModule getConfigModule() {
+        return config_module;
+    }
+
+    public ControlUIModule getControlUIModule() {
+        return ui_module;
+    }
+
+    public ChunkOrgTreeModule getChunkOrgTreeModule() {
+        return orgtree_module;
     }
 
 

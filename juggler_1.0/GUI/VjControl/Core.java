@@ -164,20 +164,6 @@ public class Core
 
 
 
-    /** Gives a reference to the named module */
-    static public CoreModule getModule (String name) {
-        CoreModule c;
-        Iterator i = instance.modules.iterator();
-        while (i.hasNext()) {
-            c = (CoreModule)i.next();
-            if (c.getComponentName().equalsIgnoreCase (name))
-                return c;
-        }
-        return null;
-    }
-
-
-
     /** Updates self based on VjControl global prefs */
     static protected void reconfigure(ConfigChunk ch) {
 	// called whenever vjcontrol_preferences changes

@@ -38,6 +38,7 @@ import java.io.*;
 import javax.swing.JComponent;
 
 import VjConfig.ConfigChunkDB;
+import VjComponents.ConfigEditor.ConfigUIHelper;
 
 public interface WizardSubPanel {
 
@@ -56,5 +57,6 @@ public interface WizardSubPanel {
 
     // called on all subpanels when the wizard is reset (finished)
     public void reset ();
-    
+
+    public void setConfigUIHelper (ConfigUIHelper uihelper_module);
 }
