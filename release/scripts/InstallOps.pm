@@ -34,6 +34,7 @@ package InstallOps;
 
 require 5.003;
 
+use Cwd;
 use File::Basename;
 use File::Copy;
 use File::Path;
@@ -71,8 +72,7 @@ sub recurseDir ($$) {
     my $base_inst_dir = shift;
 
     # Save the current directory.
-    my $prevdir;
-    chop($prevdir = `pwd`);
+    my $prevdir = cwd();
 
     chdir("$start_dir") or die "ERROR: Cannot chdir to $start_dir: $!\n";
 
@@ -122,8 +122,7 @@ sub newDir ($$) {
     my $newdir = shift;
 
     # Save the current directory.
-    my $prevdir;
-    chop($prevdir = `pwd`);
+    my $prevdir = cwd();
 
     # As long as $newdir does not exist, use mkpath() to create it.
     if ( ! -d "$newdir" ) {
