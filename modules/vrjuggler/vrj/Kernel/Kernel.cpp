@@ -487,8 +487,9 @@ void Kernel::loadConfigFile(std::string filename)
       exit(1);
    }
 
-   // Put them all in pending
-   jccl::ConfigManager::instance()->addPendingAdds(&cfg);
+   // Put all the newly loaded config elments into the Config Manager's
+   // incoming element list.
+   jccl::ConfigManager::instance()->addConfigurationAdditions(&cfg);
 }
 
 // Scans the given directory (or directories) for .jdef files and loads all
