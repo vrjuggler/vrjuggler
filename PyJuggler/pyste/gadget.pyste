@@ -115,3 +115,10 @@ set_policy(PositionInterface.getProxy, return_internal_reference())
 #rename(PositionInterface, 'PositionInterface')
 #set_policy(PositionInterface.getProxy, return_internal_reference())
 # ============================================================== Smart pointers
+
+# Event handling ==============================================================
+AllFromHeader('gadget/Type/EventWindow/Keys.h')
+Class('gadget::Event', 'gadget/Type/EventWindow/Event.h')
+Class('gadget::KeyEvent', 'gadget/Type/EventWindow/KeyEvent.h')
+Class('gadget::MouseEvent', 'gadget/Type/EventWindow/MouseEvent.h')
+# ============================================================== Event handling

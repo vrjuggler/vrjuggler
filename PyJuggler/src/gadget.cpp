@@ -28,13 +28,17 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gadget/Type/PositionProxy.h>
-#include <gadget/Type/Position.h>
+#include <gadgeteer-wrappers.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/DeviceInterface.h>
 #include <gadget/Type/AnalogProxy.h>
-#include <gadget/Type/Digital.h>
+#include <gadget/Type/EventWindow/Keys.h>
+#include <gadget/Type/EventWindow/MouseEvent.h>
 #include <gadget/Type/DigitalData.h>
-#include <gadgeteer-wrappers.h>
+#include <gadget/Type/EventWindow/KeyEvent.h>
+#include <gadget/Type/EventWindow/Event.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/Position.h>
 #include <gadget/Type/DigitalProxy.h>
 #include <gadget/Type/AnalogData.h>
 #include <gadget/Type/PositionData.h>
@@ -392,6 +396,20 @@ BOOST_PYTHON_MODULE(gadget)
         .def("refresh", &gadget::BaseDeviceInterface::refresh, &gadget_BaseDeviceInterface_Wrapper::default_refresh)
     ;
 
+    scope* gadget_Event_scope = new scope(
+    class_< gadget::Event >("Event", init< const gadget::Event & >())
+        .def("type", &gadget::Event::type, return_value_policy< copy_const_reference >())
+        .def("time", &gadget::Event::time, return_value_policy< copy_const_reference >())
+    );
+
+    enum_< gadget::Event::Type >("Type")
+        .value("MouseEvent", gadget::Event::MouseEvent)
+        .value("None", gadget::Event::None)
+        .value("KeyEvent", gadget::Event::KeyEvent)
+    ;
+
+    delete gadget_Event_scope;
+
     class_< gadgetWrapper::AnalogInterface, boost::noncopyable >("AnalogInterface", init<  >())
         .def(init< gadgetWrapper::AnalogInterface & >())
         .def("init", &gadgetWrapper::AnalogInterface::init)
@@ -433,6 +451,26 @@ BOOST_PYTHON_MODULE(gadget)
         .def(init< const gadget::DigitalData & >())
         .def("getDigital", &gadget::DigitalData::getDigital)
         .def("setDigital", &gadget::DigitalData::setDigital)
+    ;
+
+    class_< gadget::KeyEvent, bases< gadget::Event >  >("KeyEvent", init< const gadget::KeyEvent & >())
+        .def(init< const gadget::Keys &, const bool &, const int &, const long unsigned int & >())
+        .def("key", &gadget::KeyEvent::key, return_value_policy< copy_const_reference >())
+        .def("isKeyPress", &gadget::KeyEvent::isKeyPress, return_value_policy< copy_const_reference >())
+        .def("isKeyRelease", &gadget::KeyEvent::isKeyRelease)
+        .def("getModifierMask", &gadget::KeyEvent::getModifierMask, return_value_policy< copy_const_reference >())
+        .def("getKeyChar", &gadget::KeyEvent::getKeyChar)
+    ;
+
+    class_< gadget::MouseEvent, bases< gadget::Event >  >("MouseEvent", init< const gadget::MouseEvent & >())
+        .def(init< const int &, const bool &, const int &, const int &, const int &, const int &, const long unsigned int & >())
+        .def("isButtonPress", &gadget::MouseEvent::isButtonPress, return_value_policy< copy_const_reference >())
+        .def("isButtonRelease", &gadget::MouseEvent::isButtonRelease)
+        .def("getX", &gadget::MouseEvent::getX, return_value_policy< copy_const_reference >())
+        .def("getY", &gadget::MouseEvent::getY, return_value_policy< copy_const_reference >())
+        .def("getGlobalX", &gadget::MouseEvent::getGlobalX, return_value_policy< copy_const_reference >())
+        .def("getGlobalY", &gadget::MouseEvent::getGlobalY, return_value_policy< copy_const_reference >())
+        .def("getState", &gadget::MouseEvent::getState, return_value_policy< copy_const_reference >())
     ;
 
     class_< gadget::PositionData >("PositionData", init<  >())
@@ -531,6 +569,75 @@ BOOST_PYTHON_MODULE(gadget)
         .def("getBaseType", &gadget::Position::getBaseType, &gadget_Position_Wrapper::default_getBaseType)
         .def("writeObject", &gadget::Position::writeObject, &gadget_Position_Wrapper::default_writeObject)
         .def("readObject", &gadget::Position::readObject, &gadget_Position_Wrapper::default_readObject)
+    ;
+
+    enum_< gadget::ButtonMask >("ButtonMask")
+        .value("BUTTON5_MASK", gadget::BUTTON5_MASK)
+        .value("BUTTON1_MASK", gadget::BUTTON1_MASK)
+        .value("BUTTON2_MASK", gadget::BUTTON2_MASK)
+        .value("BUTTON3_MASK", gadget::BUTTON3_MASK)
+        .value("BUTTON4_MASK", gadget::BUTTON4_MASK)
+    ;
+
+    enum_< gadget::Keys >("Keys")
+        .value("KEY_E", gadget::KEY_E)
+        .value("KEY_D", gadget::KEY_D)
+        .value("KEY_G", gadget::KEY_G)
+        .value("KEY_F", gadget::KEY_F)
+        .value("KEY_A", gadget::KEY_A)
+        .value("KEY_C", gadget::KEY_C)
+        .value("KEY_B", gadget::KEY_B)
+        .value("KEY_M", gadget::KEY_M)
+        .value("KEY_L", gadget::KEY_L)
+        .value("KEY_O", gadget::KEY_O)
+        .value("KEY_N", gadget::KEY_N)
+        .value("KEY_I", gadget::KEY_I)
+        .value("KEY_H", gadget::KEY_H)
+        .value("KEY_K", gadget::KEY_K)
+        .value("KEY_J", gadget::KEY_J)
+        .value("KEY_U", gadget::KEY_U)
+        .value("KEY_T", gadget::KEY_T)
+        .value("KEY_W", gadget::KEY_W)
+        .value("KEY_V", gadget::KEY_V)
+        .value("KEY_Q", gadget::KEY_Q)
+        .value("KEY_P", gadget::KEY_P)
+        .value("KEY_S", gadget::KEY_S)
+        .value("KEY_R", gadget::KEY_R)
+        .value("KEY_Y", gadget::KEY_Y)
+        .value("KEY_X", gadget::KEY_X)
+        .value("KEY_Z", gadget::KEY_Z)
+        .value("KEY_UP", gadget::KEY_UP)
+        .value("KEY_RIGHT", gadget::KEY_RIGHT)
+        .value("MOUSE_NEGX", gadget::MOUSE_NEGX)
+        .value("KEY_LEFT", gadget::KEY_LEFT)
+        .value("MOUSE_NEGY", gadget::MOUSE_NEGY)
+        .value("KEY_ALT", gadget::KEY_ALT)
+        .value("KEY_SHIFT", gadget::KEY_SHIFT)
+        .value("KEY_CTRL", gadget::KEY_CTRL)
+        .value("KEY_DOWN", gadget::KEY_DOWN)
+        .value("KEY_ESC", gadget::KEY_ESC)
+        .value("MOUSE_POSX", gadget::MOUSE_POSX)
+        .value("MOUSE_POSY", gadget::MOUSE_POSY)
+        .value("MBUTTON3", gadget::MBUTTON3)
+        .value("KEY_NONE", gadget::KEY_NONE)
+        .value("MBUTTON2", gadget::MBUTTON2)
+        .value("KEY_5", gadget::KEY_5)
+        .value("KEY_4", gadget::KEY_4)
+        .value("KEY_7", gadget::KEY_7)
+        .value("KEY_6", gadget::KEY_6)
+        .value("KEY_1", gadget::KEY_1)
+        .value("KEY_0", gadget::KEY_0)
+        .value("KEY_3", gadget::KEY_3)
+        .value("KEY_2", gadget::KEY_2)
+        .value("KEY_9", gadget::KEY_9)
+        .value("KEY_8", gadget::KEY_8)
+        .value("MBUTTON1", gadget::MBUTTON1)
+    ;
+
+    enum_< gadget::ModiferMask >("ModiferMask")
+        .value("ALT_MASK", gadget::ALT_MASK)
+        .value("SHIFT_MASK", gadget::SHIFT_MASK)
+        .value("CTRL_MASK", gadget::CTRL_MASK)
     ;
 
 }
