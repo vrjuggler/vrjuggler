@@ -34,12 +34,15 @@ LD		= @LD@
 LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib		\
                   -L$(VPR_BASE_DIR)/lib$(LIBBITSUF)
 LIBBITSUF	= @LIBBITSUF@
-LIBS		= -B static -lvpr -B dynamic @LIBS@
+LIBS		= @LIBS@ $(VPR_LIBS)
 OBJEXT		= @OBJEXT@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 OS_TYPE		= @OS_TYPE@
 LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
                   $(EXTRA_FLAGS)
+
+VPR_LIBS	= @APP_VPR_LIBS_BEGIN@ @APP_VPR_LIBS_BASIC@ @APP_VPR_LIBS_END@ @APP_LIBS_BASIC@
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_END@
 
 # -----------------------------------------------------------------------------
 # Compiler command lines.
