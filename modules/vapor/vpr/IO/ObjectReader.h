@@ -89,7 +89,7 @@ public:
    virtual vpr::Uint64 readUint64() = 0;
    virtual float readFloat() = 0;
    virtual double readDouble() = 0;
-   virtual std::string readString(unsigned len) = 0;
+   virtual std::string readString() = 0;
    virtual bool readBool() = 0;
 
    /* Helper methods */
@@ -105,8 +105,8 @@ public:
    { val = this->readFloat(); }
    virtual void readDouble(double& val)
    { val = this->readDouble(); }
-   virtual void readString(std::string& str, unsigned len)
-   { str = this->readString(len); }
+   virtual void readString(std::string& str)
+   { str = this->readString(); }
    virtual void readBool(bool& val)
    { val = this->readBool(); }
 };

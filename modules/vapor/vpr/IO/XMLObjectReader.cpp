@@ -223,7 +223,7 @@ double XMLObjectReader::readDouble()
 }
 
 
-std::string XMLObjectReader::readString(unsigned len)
+std::string XMLObjectReader::readString()
 {
    std::string ret_val("");
 

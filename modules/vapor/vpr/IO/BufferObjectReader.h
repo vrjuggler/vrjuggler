@@ -108,7 +108,7 @@ public:
    virtual vpr::Uint64 readUint64();
    virtual float readFloat();
    virtual double readDouble();
-   virtual std::string readString(unsigned len);
+   virtual std::string readString();
    virtual bool readBool();
 
    /* Read raw data of length len
@@ -184,11 +184,12 @@ inline double BufferObjectReader::readDouble()
 }
 
 
-inline std::string BufferObjectReader::readString(unsigned len)
+inline std::string BufferObjectReader::readString()
 {
+   vpr::Uint16 str_len = readUint16();
    std::string ret_val;
    char tempChar;
-   for(unsigned i=0; i<len;++i)
+   for(unsigned i=0; i<str_len;++i)
    {
       tempChar = (char)(*readRaw(1));
       ret_val += tempChar;
