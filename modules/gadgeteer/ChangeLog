@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Aug-01-2002 patrickh  Enabled shared library versioning.
 Jul-11-2002 patrickh  Updated the Polhemus Fastrack driver to use VPR serial
                       ports, VPR threads, GMTL, Gadgeteer sample buffers, and
                       the new JCCL config chunk API.  These changes have not
