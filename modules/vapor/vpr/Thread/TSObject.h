@@ -55,7 +55,7 @@ namespace vpr
  * (ie. We get some type safety)
  * Also defines some members that all TS Objects need.
  */
-class TSBaseObject
+class VPR_CLASS_API TSBaseObject
 {
 public:
    virtual ~TSBaseObject();
