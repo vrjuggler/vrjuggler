@@ -241,9 +241,22 @@ public:
        return ::usleep(micro);
    }
 
-   static int msleep (vpr::Uint32 milli)
+   /**
+    * Causes the calling thread to sleep for the given number of milliseconds.
+    *
+    * @param milli The number of milliseconds to sleep.
+    */
+   static int msleep(vpr::Uint32 milli)
    {
-       return ::usleep(milli * 1000);
+      // usleep() cannot sleep for more than 1 second, so we have to work
+      // around that here.  First, we sleep for N seconds.
+      if ( milli >= 1000 )
+      {
+         ThreadSGI::sleep(milli / 1000);
+      }
+
+      // Then we finish off by sleeping for (N mod 1000) milliseconds.
+      return ThreadSGI::usleep((milli % 1000) * 1000);
    }
 
    static int sleep (vpr::Uint32 seconds)
