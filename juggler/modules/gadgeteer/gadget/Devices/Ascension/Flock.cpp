@@ -19,6 +19,7 @@
 
 #include <Kernel/vjDebug.h>
 
+#include <fstream.h>
 
 // Helper to return the index for theData array
 // given the birdNum we are dealing with and the bufferIndex
@@ -212,20 +213,19 @@ int vjFlock::Sample()
    mFlockOfBirds.sample();
 
    //: XXX: +1 for the transmitter???
-   for (i=1; i < (mFlockOfBirds.getNumBirds()+1); i++)
+   for (i=0; i < (mFlockOfBirds.getNumBirds()); i++)
    {
-      if (i == mFlockOfBirds.getTransmitter())
-         continue;
-
       // int index = progress*(mFlockOfBirds.getNumBirds()+1)+i-1;
       int index = getBirdIndex(i,progress);
 
       // Sets index to current read buffer
 
 
-      theData[index].makeZYXEuler(mFlockOfBirds.zRot( i ),
-                                  mFlockOfBirds.yRot( i ),
-                                  mFlockOfBirds.xRot( i ));
+      // We add 1 to "i" to account for the fact that aFlock is 1-based
+
+      theData[index].makeZYXEuler(mFlockOfBirds.zRot( i+1 ),
+                                  mFlockOfBirds.yRot( i+1 ),
+                                  mFlockOfBirds.xRot( i+1 ));
 
 
 
@@ -236,14 +236,14 @@ int vjFlock::Sample()
                                   */
 
 
-      theData[index].setTrans(mFlockOfBirds.xPos( i ),
-                              mFlockOfBirds.yPos( i ),
-                              mFlockOfBirds.zPos( i ));
+      theData[index].setTrans(mFlockOfBirds.xPos( i+1 ),
+                              mFlockOfBirds.yPos( i+1 ),
+                              mFlockOfBirds.zPos( i+1 ));
       mDataTimes[index] = sampletime;
+
 
       //if (i==1)
          //vjDEBUG(vjDBG_ALL,2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
-
 
       // Transforms between the cord frames
       // See transform documentation and VR System pg 146
@@ -256,7 +256,8 @@ int vjFlock::Sample()
       world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
       theData[index] = world_T_reciever;                                     // Store corrected xform back into data
 
-      //if (i==1)
+
+    //if (i == 1)
          //vjDEBUG(vjDBG_ALL,2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
    }
 
