@@ -7,98 +7,157 @@
 #include <time.h>
 #include <sys/time.h>
 
-#include <sprocGroup.h>
-#include <Sync/C2Cond.h>
+#include <Sync/vjCond.h>
+#include <Kernel/vjDebug.h>
+#include <Threads/vjThread.h>
 
-void decrementIt(void*);
-void checkIt(void* param);
-
-void printArray(void);
-
-const int ITERATIONS = 25;
-long counter;
-long num;
-long exitFlag;
-
-C2Cond myCond;
-///---//  Beginning of main
-void main()
+class SyncIncrementer
 {
-    cout << "Hello there\n\n" << flush;
-    cout << "Start:\n\n";
+public:
+   SyncIncrementer() : value(0), go(false)
+      {;}
+   
+   int start();     // Start the thingie
+   void trigger();   // Trigger increment
+   void sync();      // Wait for completion
+   void main(void* nullParam);   // Main loop
+   
+   void incValue()
+      { value++;}
+   void decValue()
+      { value--;}
+   int getValue()
+      { return value; }
 
-    counter = 1000;
-    num = 0;
-    exitFlag = 0;
-    cerr << "Counter: " << counter << endl;
-    
-    
-    sprocInit(NULL);
-    sginap(100);	
+private:
+   vjCond syncCond;     // condition var
+   bool   go;
+   int    value;
+};
 
-//-------------------------------------------------
-	    // Timing variables
-    struct timeval startTime, endTime;		    // Used to calculate time
-    double startSecond, endSecond, totalSeconds;    // performance
-    
-    gettimeofday(&startTime, NULL);	    // Get the starting time
-//--------------------------------------------------
-    
-    sprocFunc(decrementIt, NULL, NULL);
-    
-    for (float i=0;i<ITERATIONS;i++) {
-	sprocFunc(checkIt,NULL,NULL);      
-    }
-    
-    sprocBarrier();
-    
-//--------------------------------------------------------
-    gettimeofday(&endTime, NULL);	    // Get ending time
-    startSecond = (startTime.tv_sec + (startTime.tv_usec * 0.000001));
-    endSecond = endTime.tv_sec + (endTime.tv_usec * 0.000001);
-    totalSeconds = (endSecond - startSecond);
-    
-    cerr << "\nDone: It took... " << totalSeconds << " seconds" << flush;
-//---------------------------------------------------------
-    
-    sginap(100);
-    cout << "\n\nCounter: " << counter << endl << flush;
-    
-    cout << "End:\n\n";
-    cout << "\n" << flush;
-    
-    // -- Clean up --- //
-    //    delete mySemaphore;
-//    delete myMutex;    
+
+// ------------------------------ //
+// -----    MAIN   -------------- //
+// ------------------------------ //
+int main(void)
+{
+   SyncIncrementer syncer;    // The test syncer
+   
+   // Spawn incrementer
+   syncer.start();
+
+   while (1)
+   {         
+      //cerr << setw(5) << vjThread::self() << "P1: Before Trigger" << endl;   
+
+         vjDEBUG(0) << "main: trigger\n" << vjDEBUG_FLUSH;
+      syncer.trigger();    // Trigger the beginning of frame drawing
+         vjDEBUG(3) << "main: trigger done\n" << vjDEBUG_FLUSH;
+
+      //cerr << setw(5) << vjThread::self() << "P1: Between" << endl;
+
+         vjDEBUG(0) << "main: sync up\n" << vjDEBUG_FLUSH;
+      syncer.sync();    // Block until drawing is done
+         vjDEBUG(0) << "main: sync done\n" << vjDEBUG_FLUSH;
+      
+      syncer.decValue();
+      vjDEBUG(0) << "VAL: " << syncer.getValue() << endl << vjDEBUG_FLUSH;
+   }
+
+   return 1;
 }
 
-void decrementIt(void* param)
-{
-///---//  Beginning of doIt
 
-    while(exitFlag == 0)
-    {
-	myCond.acquire();
-	    if (counter > 0)
-		counter--;
-	    
-	    myCond.signal();	    
-	myCond.release();
-    }
+/// -------------------- ///
+/// ---- Members ------- ///
+/// -------------------- ///
+    
+//: Start the main function
+int SyncIncrementer::start()
+{
+   // Create a new thread to handle the control
+   vjThreadMemberFunctor<SyncIncrementer>* memberFunctor = 
+   new vjThreadMemberFunctor<SyncIncrementer>(this, &SyncIncrementer::main, NULL);
+
+   vjThreadId* controlPid = vjThread::spawn(memberFunctor, 0);
+
+   vjDEBUG(0) << "SyncIncrementer::start: Just started main loop.  "
+              << *controlPid << endl << vjDEBUG_FLUSH;
+
+   return 1;
 }
 
-void checkIt(void* param)
+
+//: Trigger and increment 
+void SyncIncrementer::trigger()
 {
-    myCond.acquire();
-	    // Want to wait for counter == 0
-	while(counter != 0)
-	    myCond.wait();
-	    
-	cerr << "We are done with ...." << ++num << endl << flush;
-	counter = 1000;
-	if (num >= ITERATIONS) {
-	    cerr << "Setting exit flag" << endl;
-	    exitFlag = 1;
-	    }
-    myCond.release();
+     // Allow the processes to draw
+   syncCond.acquire();        // Get exclusive access
+   {
+      cerr << setw(5) << vjThread::self() << "  P1: Signal" << endl;
+
+      go = true;          // Signal that rendering can happen
+      syncCond.signal();
+         vjDEBUG(0) << "Trigger signaled\n" << vjDEBUG_FLUSH;
+         //syncCond.dump();
+   }
+   syncCond.release();
 }
+    
+//: Wait for completion
+void SyncIncrementer::sync()
+{
+   syncCond.acquire();
+   {   // Wait for triggerRender == false
+      while (go == true)
+      {
+         cerr << setw(5) << vjThread::self() << "  P1: Wait" << endl;
+         syncCond.wait();
+      }
+      /* Do nothing */
+         vjDEBUG(0) << "Sync: Completed. trigger == false\n" << vjDEBUG_FLUSH;
+         //syncCond.dump();
+      cerr << setw(5) << vjThread::self() << "  P1: Exit wait" << endl;
+   }
+   syncCond.release();
+}
+
+
+//: This is the main loop that incs
+void SyncIncrementer::main(void* nullParam)
+{
+   while (1)
+   {
+      syncCond.acquire();
+      {
+         vjDEBUG(0) << "Wait for trigger\n" << vjDEBUG_FLUSH;
+         
+         // Wait for trigger == true
+         while (go == false)
+         {
+            cerr << setw(5) << vjThread::self() << "  P2: Wait" << endl;
+            syncCond.wait();
+         }
+         
+         cerr << setw(5) << vjThread::self() << "  P2: Wait done" << endl;
+         //syncCond.dump();
+         // THEN --- Do Work --- //
+         vjDEBUG(0) << "Incrementing\n" << vjDEBUG_FLUSH;
+	
+         incValue();
+
+         vjDEBUG(0) << "Var Incremented - Set trigger FALSE and SIGNAL\n" << vjDEBUG_FLUSH;
+
+         go = false;   // We are done rendering
+
+         cerr << setw(5) << vjThread::self() << "  P2: Signal" << endl;
+         syncCond.signal();
+
+         //syncCond.dump();
+      }
+      syncCond.release();
+
+      //cerr << "P2: Out of lock" << endl;
+   }
+}
+
