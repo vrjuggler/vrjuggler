@@ -120,8 +120,6 @@ public class ProxyTree extends JTree implements ActionListener
       mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
       popup.add(mi);
 
-
-
       popup.setOpaque(true);
       popup.setLightWeightPopupEnabled(true);
 
@@ -167,10 +165,8 @@ public class ProxyTree extends JTree implements ActionListener
          DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
          Object value = node.getUserObject();
          
-         if(value instanceof ProxyTreeModel.ProxyType)
-         {
-            System.out.println("ProxyType");
-         }
+         // If the currently selected node in the tree is a DeviceUnit
+         // then we can attach to it.
          if(value instanceof ProxyTreeModel.DeviceUnit)
          {
             ProxyTreeModel.DeviceUnit du = (ProxyTreeModel.DeviceUnit)value;
@@ -191,8 +187,9 @@ public class ProxyTree extends JTree implements ActionListener
                ConfigElement proxy = chooser.getSelectedProxy();
                proxy.setProperty("device", 0, new ConfigElementPointer(du.getDeviceName()));
                proxy.setProperty("unit", 0, new Integer(du.getDeviceNum()));
-               //TODO: Make the tree auto select the newly attached proxy.
-               //selectConfigElement(element);
+               
+               // Make the tree auto select the newly attached proxy.
+               selectUserObject(proxy);
             }
          }
       }
@@ -234,6 +231,7 @@ public class ProxyTree extends JTree implements ActionListener
                                              JOptionPane.ERROR_MESSAGE);
                return;
             }
+            selectUserObject(element);
          }
       }
       else if(event.getActionCommand().equals("remove"))
@@ -277,6 +275,66 @@ public class ProxyTree extends JTree implements ActionListener
       }
    }
 
+   /**
+    * Expand or collapse the entire tree.
+    *
+    * @param expand     true to expand, false to collapse 
+    */
+   public void expandAll(boolean expand)
+   {
+      TreeNode root = (TreeNode)getModel().getRoot();
+
+      // Traverse tree from root
+      expandAll(new TreePath(root), expand);
+   }
+
+   /**
+    * Expand or collapse the entire tree under the given path.
+    *
+    * @param parent     path to the parent to expand/collapse under
+    * @param expand     true to expand, false to collapse 
+    */
+   public void expandAll(TreePath parent, boolean expand)
+   {
+      // Traverse children
+      TreeNode node = (TreeNode)parent.getLastPathComponent();
+      if (node.getChildCount() >= 0)
+      {
+         for (Enumeration e=node.children(); e.hasMoreElements(); )
+         {
+            TreeNode n = (TreeNode)e.nextElement();
+            TreePath path = parent.pathByAddingChild(n);
+            expandAll(path, expand);
+         }
+      }
+
+      // Expansion or collapse must be done bottom-up
+      if(expand)
+      {
+         expandPath(parent);
+      }
+      else
+      {
+         collapsePath(parent);
+      }
+   }
+   
+   /**
+    * Selects the path to the given ConfigElement in the ElementTree.
+    */
+   public void selectUserObject(Object obj)
+   {
+      ProxyTreeModel model = (ProxyTreeModel)getModel();
+      java.util.List element_nodes = model.getNodesFor(obj);
+      if (element_nodes.size() > 0)
+      {
+         TreeNode element_node = (TreeNode)element_nodes.get(0);
+         TreePath path = new TreePath(model.getPathToRoot(element_node));
+         setSelectionPath(path);
+      } 
+   }
+
+   
    /** Reference to the ConfigBroker used in this object. */
    private ConfigBroker mBroker = null;
    

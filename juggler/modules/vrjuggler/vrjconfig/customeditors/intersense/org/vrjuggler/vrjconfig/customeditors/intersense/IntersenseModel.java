@@ -173,17 +173,36 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
          {
             ConfigElement station_elm = (ConfigElement)value;
             System.out.println("Embedded Element: " + station_elm.getName());
+            station_elm.addConfigElementListener(this);
             mStationElements.add(station_elm);
             
             // Create a new StationModel for each embedded element.
             StationModel station = new StationModel(elm, station_elm, mISenseConfigContext);
             mStationModels.add(station);
 
-            // Make this StationModel listen to us for events.
+            // Make this ProxyTreeModel listen to us for events.
             this.addIntersenseModelListener(station.getProxyModel());
-            
          }
       }
+
+      // Sort stations depending on station index.
+      Collections.sort(mStationModels, new Comparator()
+            {
+               public int compare(Object o1, Object o2)
+               {
+                  if(((StationModel)o1).getStationIndex() < ((StationModel)o2).getStationIndex())
+                  {
+                     return -1;
+                  }
+                  else if(((StationModel)o1).getStationIndex() > ((StationModel)o2).getStationIndex())
+                  {
+                     return 1;
+                  }
+                  return 0;
+               }
+               public boolean equals(Object obj)
+               { return(this == obj); }
+            });
 
       // We must listen to all proxy elements to ensure that we are informed if
       // they start pointing at this device.
@@ -192,10 +211,60 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
       {
          ConfigElement elt = (ConfigElement)itr.next();
          String token = elt.getDefinition().getToken();
-         if (token.equals("digital_proxy") || token.equals("analog_proxy") || token.equals("position_proxy"))
+         if(token.equals("digital_proxy") ||
+            token.equals("analog_proxy") ||
+            token.equals("position_proxy"))
          {
             elt.addConfigElementListener(this);
          }
+      }
+      
+      fixStationUnitNumbers();
+   }
+
+   public void fixStationUnitNumbers()
+   {
+      // Make sure that the buffer ranges are large enough.
+      for(Iterator itr = mStationModels.iterator() ; itr.hasNext() ; )
+      {
+         StationModel station = (StationModel)itr.next();
+
+         if(station.isDigitalEnabled() && station.getDigitalCount() < 6)
+         {
+            System.out.println("ERROR: This editor assumes that we are using 6 digital inputs."
+                               + " Changing property digital_count to 6.");
+            station.setDigitalCount(6);
+         }
+         if(station.isAnalogEnabled() && station.getAnalogCount() < 2)
+         {
+            System.out.println("ERROR: This editor assumes that we are using 2 analog inputs."
+                               + " Changing property analog_count to 2.");
+            station.setAnalogCount(2);
+         }
+      }
+      
+      int next_open_digital = 0;
+      int next_open_analog = 0;
+      
+      // Make sure that the buffer ranges do not overlap.
+      for(Iterator itr = mStationModels.iterator() ; itr.hasNext() ; )
+      {
+         StationModel station = (StationModel)itr.next();
+         if(station.isDigitalEnabled() && station.getDigitalFirst() < next_open_digital)
+         {
+            System.out.println("ERROR: Digital Unit number out of order."
+                               + " Station indices will be shifted to correct for this.");
+            station.setDigitalFirst(next_open_digital);
+         }
+         next_open_digital = station.getDigitalFirst() + station.getDigitalCount();
+
+         if(station.isAnalogEnabled() && station.getAnalogFirst() < next_open_analog)
+         {
+            System.out.println("ERROR: Analog Unit number out of order."
+                               + " Station indices will be shifted to correct for this.");
+            station.setAnalogFirst(next_open_analog);
+         }
+         next_open_analog = station.getAnalogFirst() + station.getAnalogCount();
       }
    }
 
@@ -234,7 +303,10 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
       //   - If new new element points at us we must inform all listeners.
       //   - We must start listening to see if it every starts pointing at us.
       ConfigElement elm = evt.getElement();
-      if(elm.getDefinition().getParents().contains("proxy"))
+      String token = elm.getDefinition().getToken();
+      if(token.equals("digital_proxy") ||
+         token.equals("analog_proxy") ||
+         token.equals("position_proxy"))
       {
          // We must start listening to this proxy now.
          elm.addConfigElementListener(this);
@@ -244,7 +316,6 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
          // If the proxy pointed at us inform all listeners.
          if(device_name.equals(our_name))
          {
-            String token = elm.getDefinition().getToken();
             int unit = ((Integer)elm.getProperty("unit", 0)).intValue();
             fireProxyAdded(elm, token, unit);
          }
@@ -261,14 +332,19 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
       // - If element is a proxy
       //   - If it pointed at us inform all listeners.
       ConfigElement elm = evt.getElement();
-      if(elm.getDefinition().getParents().contains("proxy"))
+      String token = elm.getDefinition().getToken();
+      if(token.equals("digital_proxy") ||
+         token.equals("analog_proxy") ||
+         token.equals("position_proxy"))
       {
+         // We should stop listening to this proxy now.
+         elm.removeConfigElementListener(this);
+         
          String device_name = ((ConfigElementPointer)elm.getProperty("device", 0)).getTarget();
          String our_name = mISenseConfigElement.getName();
          // If the proxy pointed at us inform all listeners.
          if(device_name.equals(our_name))
          {
-            String token = elm.getDefinition().getToken();
             int unit = ((Integer)elm.getProperty("unit", 0)).intValue();
             fireProxyRemoved(elm, token, unit);
          }
@@ -282,7 +358,7 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
    { 
       // - If element is a proxy
       //   - Remove it from the tree.
-      //     - If device and unit match add it again.
+      //   - If device and unit match add it again.
       ConfigElement elm = (ConfigElement)evt.getSource();
       String token = elm.getDefinition().getToken();
       if(token.equals("position_proxy") ||
@@ -295,23 +371,20 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
          {
             return;
          }
-         
-         ConfigElementPointer ep = (ConfigElementPointer)elm.getProperty("device", 0);
-         String device = ep.getTarget();
-
+        
+         String device_name = ((ConfigElementPointer)elm.getProperty("device", 0)).getTarget();
          int unit = ((Integer)elm.getProperty("unit", 0)).intValue();
 
          // Remove the node if it exists.
-         fireProxyRemoved(elm, elm.getDefinition().getToken(), unit);
+         fireProxyRemoved(elm, token, unit);
 
          // Add the node if it points at this device.
-         if(device.equals(our_name))
+         if(device_name.equals(our_name))
          {
-            fireProxyAdded(elm, elm.getDefinition().getToken(), unit);
+            fireProxyAdded(elm, token, unit);
          }
       }
    }
-
 
    /**
     * Adds the given listener to be notified when this Intersense model changes.
@@ -369,7 +442,7 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
          }
       }
    }
-
+   
    /** Reference to the ConfigBroker used in this object. */
    private ConfigBroker mBroker = null;
    

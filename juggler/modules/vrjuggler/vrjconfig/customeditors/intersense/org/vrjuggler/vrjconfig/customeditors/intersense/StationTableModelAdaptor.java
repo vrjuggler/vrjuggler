@@ -31,41 +31,58 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.vrjconfig.customeditors.intersense;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import java.util.*;
-import org.vrjuggler.jccl.config.*;
+import javax.swing.table.AbstractTableModel;
 
+/**
+ * Adaptor which provides the necessary data to a JTable when 
+ * given an IntersenseModel.
+ *
+ * @see AbstractTableModel
+ * @see IntersenseModel
+ */
 public class StationTableModelAdaptor extends AbstractTableModel
 {
+   /** Model of the entire Intersense tracking device. */
    private IntersenseModel mISenseModel = null;
-   
+  
+   /**
+    * Create an adaptor to give a JTable all data needed 
+    * to display a table.
+    */
    public StationTableModelAdaptor(IntersenseModel model)
    {
       mISenseModel = model;
    }
 
+   /**
+    * Return the number of rows to display in table.
+    */
    public int getRowCount()
    {
       return getNumStations();
    }
+
+   /**
+    * Return the number of columns to display in table.
+    */
    public int getColumnCount()
    {
       return 1;
    }
+
+   /**
+    * Return the StationModel for the given row.
+    *
+    * @see StationModel
+    */
    public Object getValueAt(int row, int column)
    {
       return mISenseModel.getStationModels().get(row);
    }
    
-   /*
-   public void removeStation(ConfigElement elm)
-   {
-      mISenseModel.getStationModels().remove(elm);
-   }
-   */
-   
+   /**
+    * Return the number of Intersense stations displayed in table.
+    */
    public int getNumStations()
    {
       return mISenseModel.getStationModels().size();
