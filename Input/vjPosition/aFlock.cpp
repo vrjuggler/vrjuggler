@@ -745,7 +745,7 @@ void aFlock::set_hemisphere( const int& port,
     /////////////////////////////////////////////////////////////////
     char buff[3];
     buff[0] = 'L';
-    for (int i = 1; i < (numbirds+1); i++)
+    for (int i = 1; i <= (numbirds+1); i++)
     {
 	if (i == transmitter)
 		continue;
