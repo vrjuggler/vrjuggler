@@ -88,6 +88,19 @@ public class ConfigElementFactory
       return new ConfigElement(def, name, props);
    }
 
+   public ConfigElement createUnique(ConfigDefinition def, ConfigContext ctx)
+   {
+      String base_name = def.getName().replaceAll(" ", "");
+      int num = 0;
+      while (ctx.containsElementNamed(base_name + Integer.toString(num)))
+      {
+         ++num;
+      }
+      
+      ConfigElement elm = create(base_name + Integer.toString(num), def);
+      return elm;
+   }
+
    /**
     * Gets a map containing the default properties for the given configuration
     * definition. This can be used to create a new configuration element

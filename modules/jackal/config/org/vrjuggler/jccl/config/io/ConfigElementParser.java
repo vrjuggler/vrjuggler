@@ -121,7 +121,8 @@ public class ConfigElementParser
          JOptionPane.showMessageDialog(null, 
                "ConfigElement \"" + name + "\", of type \"" + token + "\", is an old version.\n"
                + " We are updating your configuration to the new ConfigElement format.\n" 
-               + " You must save your configuration in order for these changes to become permanent.");
+               + " You must save your configuration in order for these changes to become permanent.",
+               "Upgrading Configuation", JOptionPane.INFORMATION_MESSAGE);
          
          // We must iterate over all versions between ours and the newest
          // transforming for each new version.
