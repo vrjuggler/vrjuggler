@@ -137,7 +137,7 @@ class vjPerfDataBuffer {
     //! RETURNS: x - time in usecs between first and last points.
     //+          which is only useful if you know how many pts 
     //+          there are...
-    void writeTotal (ostream& out, float discrep);
+    void writeTotal (ostream& out, int preskip, int postskip, float discrep);
 
 
     //: just empties out the buffer & throws away the data.
