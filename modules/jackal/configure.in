@@ -107,9 +107,8 @@ DPP_WITH_GCC(no)
 # Define the binary format.
 DPP_ABI_SETUP
 
-AC_ARG_WITH(cppdomroot,
-            [  --with-cppdomroot=<PATH>
-                          CppDOM installation directory   [default=$JUGGLERROOT_ABS/external/cppdom]],
+AC_ARG_WITH(cppdom,
+            [  --with-cppdom=<PATH>    CppDOM installation directory   [default=$JUGGLERROOT_ABS/external/cppdom]],
             CPPDOM_ROOT="$withval", CPPDOM_ROOT="$JUGGLERROOT_ABS/external/cppdom")
 
 # Specify where JDOM is located
