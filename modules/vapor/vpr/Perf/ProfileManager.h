@@ -236,6 +236,53 @@ namespace vpr
    };
 
 
+/** Set of routines for allowing simplified access to profile monitoring API.
+ */
+namespace prof
+{
+#if defined(DISABLE_VPR_PROFILE)
+   inline void start(const char* name) {;}
+   inline void start(const char* name, unsigned histSize) {;}
+   inline void next(const char* name) {;}
+   inline void next(const char* name, unsigned histSize) {;}
+   inline void stop() {;}
+   inline void printTree() {;}
+#else
+   /** Start a sample. */
+   inline void start(const char* name)
+   {
+      vpr::ProfileManager::startProfile(name);
+   }
+   /** Start a sample with history. */
+   inline void start(const char* name, unsigned histSize)
+   {
+      vpr::ProfileManager::startProfile(name,histSize);
+   }
+   /** Go to the next sample (stoping previous sample). */
+   inline void next(const char* name)
+   {
+      vpr::ProfileManager::stopProfile();
+      vpr::ProfileManager::startProfile(name);
+   }
+   /** Go to the next sample (stoping previous sample). */
+   inline void next(const char* name, unsigned histSize)
+   {
+      vpr::ProfileManager::stopProfile();
+      vpr::ProfileManager::startProfile(name,histSize);
+   }
+   /** Stop the previous sample. */
+   inline void stop()
+   {
+      vpr::ProfileManager::stopProfile();
+   }
+   /** Print the current profile tree. */
+   inline void printTree()
+   {
+      vpr::ProfileManager::printTree();
+   }
+#endif
+}
+
 /*
  * ProfileSample is a guard style class for handle a single sample.
  *
@@ -265,19 +312,16 @@ namespace vpr
    };
 
 
-// XXX: We really need some macros that do not require scoping.
-/// VPR_PROFILE_NEXT or something like that would be nice.
-//
 #if defined(DISABLE_VPR_PROFILE)
-#define  VPR_PROFILE( name )
+#define  VPR_PROFILE_GUARD( name )
 #else
-#define  VPR_PROFILE( name )        vpr::ProfileSample __profile( name )
+#define  VPR_PROFILE_GUARD( name )        vpr::ProfileSample __profile( name )
 #endif
 
 #if defined(DISABLE_VPR_PROFILE)
-#define  VPR_PROFILE_HISTORY( name, queue_size )
+#define  VPR_PROFILE_GUARD_HISTORY( name, queue_size )
 #else
-#define  VPR_PROFILE_HISTORY( name, queue_size )         vpr::ProfileSample __profile( name, queue_size)
+#define  VPR_PROFILE_GUARD_HISTORY( name, queue_size )         vpr::ProfileSample __profile( name, queue_size)
 #endif
 
 #if defined(DISABLE_VPR_PROFILE)
