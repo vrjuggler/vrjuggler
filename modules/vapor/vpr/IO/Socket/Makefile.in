@@ -49,7 +49,8 @@ SUBOBJDIR	= $(VPR_LIBRARY)
 VPRROOT		= $(top_srcdir)
 VPR_SRCDIR	= @VPR_SRCDIR@/vpr/IO/Socket
 
-SRCS	 	= SocketDatagramOpt.cpp
+SRCS	 	= SocketDatagramOpt.cpp	\
+                  SocketStreamOpt.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
