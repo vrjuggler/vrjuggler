@@ -37,6 +37,12 @@ if test "x$JCCL_BASE_DIR" = "x" ; then
    exit 1
 fi
 
+if test "x$TWEEK_BASE_DIR" = "x" ; then
+   echo "WARNING: Defaulting \$TWEEK_BASE_DIR to $JCCL_BASE_DIR"
+   TWEEK_BASE_DIR="$JCCL_BASE_DIR"
+   export TWEEK_BASE_DIR
+fi
+
 if test "x$VJ_SHARE_DIR" = "x" ; then
    VJ_SHARE_DIR="$VJ_BASE_DIR/share/vrjuggler"
 fi
@@ -46,7 +52,8 @@ fi
 
 # Make sure java knows about the JCCL_BASE_DIR variable
 EXTRA_JDK_ARGS="-DJCCL_BASE_DIR=$JCCL_BASE_DIR -DVJ_SHARE_DIR=$VJ_SHARE_DIR -DJCCL_SHARE_DIR=$JCCL_SHARE_DIR"
-export EXTRA_JDK_ARGS
 
 # Run tweek
-$TWEEK_BASE_DIR/bin/tweek
+. $TWEEK_BASE_DIR/bin/tweek-base.sh
+
+exit $status
