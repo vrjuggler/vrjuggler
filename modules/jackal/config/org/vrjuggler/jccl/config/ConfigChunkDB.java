@@ -5,6 +5,7 @@ import java.util.Vector;
 import VjConfig.ConfigChunk;
 import java.io.*;
 import VjConfig.ConfigStreamTokenizer;
+import VjConfig.ChunkDependEntry;
 
 public class ConfigChunkDB extends Vector {
 
@@ -224,42 +225,68 @@ public class ConfigChunkDB extends Vector {
 
 
 
-public Vector getDependencies () {
-    // gets the dependencies of _this_chunk_only_
-    int i, j, k;
-    ConfigChunk ch, ch2;
-    Property p;
-    String s;
-    VarValue val;
-    ChunkDependEntry e;
+    public Vector getDependencies () {
+	// gets the dependencies of _this_chunk_only_
+	int i, j, k;
+	ConfigChunk ch, ch2;
+	Property p;
+	String s;
+	VarValue val;
+	ChunkDependEntry cde;
+	ChunkDependEntry.PropDependEntry pde;
 
-    Vector dep = new Vector();
-
-    for (i = 0; i < size(); i++) {
-	ch = (ConfigChunk)elementAt(i);
-	for (j = 0; j < ch.props.size(); j++) {
-	    p = (Property)ch.props.elementAt(j);
-	    if (p.valtype.equals (ValType.t_chunk)) {
-		for (k = 0; k < p.vals.size(); k++) {
-		    s = ((VarValue)p.vals.elementAt(k)).getString();
-		    if (s.equals (""))
-			continue;
-		    ch2 = get(s);
-		    if (ch2 == null) {
-			e = new ChunkDependEntry();
-			e.chunk = ch;
-			e.property = p;
-			e.dependency_name = s;
-			dep.addElement(e);
+	Vector dep = new Vector();
+	
+	for (i = 0; i < size(); i++) {
+	    cde = null;
+	    ch = (ConfigChunk)elementAt(i);
+	    for (j = 0; j < ch.props.size(); j++) {
+		p = (Property)ch.props.elementAt(j);
+		if (p.valtype.equals (ValType.t_chunk)) {
+		    for (k = 0; k < p.vals.size(); k++) {
+			s = ((VarValue)p.vals.elementAt(k)).getString();
+			if (s.equals (""))
+			    continue;
+			ch2 = get(s);
+			if (ch2 == null) {
+			    if (cde == null) {
+				cde = new ChunkDependEntry();
+				cde.chunk = ch;
+			    }
+			    pde = cde.new PropDependEntry();
+			    pde.property = p;
+			    pde.dependency_name = s;
+			    cde.propdepends.addElement (pde);
+			}
 		    }
 		}
 	    }
+	    if (cde != null)
+		dep.addElement (cde);
 	}
+	return dep;
     }
 
-    return dep;
-}
 
+    public void searchDependencies (Vector v) {
+	// searches self for any chunks that satisfy dependencies in v,
+	// which is a vector of DependEntry.  DependEntries in v are
+	// updated with that information
+	ChunkDependEntry cde;
+	ChunkDependEntry.PropDependEntry pde;
+	ConfigChunk ch;
+	int i, j;
+
+	for (i = 0; i < v.size(); i++) {
+	    cde = (ChunkDependEntry)v.elementAt(i);
+	    for (j = 0; j < cde.propdepends.size(); j++) {
+		pde = (ChunkDependEntry.PropDependEntry)cde.propdepends.elementAt(j);
+		ch = get (pde.dependency_name);
+		if (ch != null)
+		    pde.other_files.addElement (getName());
+	    }
+	}
+    }
 
 
 
