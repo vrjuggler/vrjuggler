@@ -63,6 +63,8 @@
 #ifdef SUN_PLATFORM
 #define PORT1_DEV  "/dev/ttya"
 #define PORT2_DEV  "/dev/ttyb"
+#define PORT3_DEV  "/dev/ttyc"
+#define PORT4_DEV  "/dev/ttyd"
 #define OFLAGS	(OPOST | OLCUC | ONLCR | OCRNL | ONOCR  \
 			| ONLRET | OFILL | OFDEL)
 #define LFLAGS	(ICANON | ISIG | XCASE | ECHO | ECHOE | ECHOK  \
