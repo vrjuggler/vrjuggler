@@ -68,20 +68,20 @@ dnl # --enable-feature[=arg] and --disable-feature arguments #
 dnl # ------------------------------------------------------ #
 
 dnl # Enable compilation of the OpenGL API.  Possible values are "yes" or
-dnl # "no".  "yes" is set with --enable-opengl and "no" is set with
-dnl # --disable-opengl.
+dnl # "no".  "yes" is set with --enable-gl-api and "no" is set with
+dnl # --disable-gl-api.
 dnl # The default is "yes".
-AC_ARG_ENABLE(opengl,
-              [  --enable-opengl         use OpenGL API [default=yes]],
-              _enable_opengl="$enableval", _enable_opengl='yes')
+AC_ARG_ENABLE(gl-api,
+              [  --enable-gl-api         use OpenGL API [default=yes]],
+              _enable_gl_api="$enableval", _enable_gl_api='yes')
 
 dnl # Enable compilation of the Performer API.  Possible values are "yes" or
-dnl # "no".  "yes" is set with --enable-perf and "no" is set with
-dnl # --disable-perf.
+dnl # "no".  "yes" is set with --enable-pf-api and "no" is set with
+dnl # --disable-pf-api.
 dnl # The default is "yes".
-AC_ARG_ENABLE(perf,
-              [  --enable-perf           use Perfromer API [default=yes]],
-              _enable_perf="$enableval", _enable_perf='yes')
+AC_ARG_ENABLE(pf-api,
+              [  --enable-pf-api         use Perfromer API [default=yes]],
+              _enable_pf_api="$enableval", _enable_pf_api='yes')
 
 dnl # Set default values for these before checking $abi_type.  Currently,
 dnl # these are for non-SGI platforms.
@@ -558,7 +558,7 @@ _LIBOPENGL=''
 _SYSTEM_OPENGL=''
 
 dnl # Test for the OpenGL library if the OpenGL API was enabled.
-if test "x${_enable_opengl}" = "xyes" ; then
+if test "x${_enable_gl_api}" = "xyes" ; then
     dnl # Save these values in case they need to be restored later.
     _vjsave_CFLAGS="$CFLAGS"
     _vjsave_CPPFLAGS="$CPPFLAGS"
@@ -654,7 +654,7 @@ dnl # --------------------
 PERFORMER_API=''		dnl # 'Y' then we are using Performer
 
 dnl # Test for the Performer library if the Performer API was enabled.
-if test "x${_enable_perf}" = "xyes" ; then
+if test "x${_enable_pf_api}" = "xyes" ; then
     _vjsave_CFLAGS="$CFLAGS"
     _vjsave_INCLUDES="$INCLUDES"
     _vjsave_LDFLAGS="$LDFLAGS"
