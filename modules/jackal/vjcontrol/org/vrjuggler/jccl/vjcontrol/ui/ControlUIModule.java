@@ -383,7 +383,7 @@ public class ControlUIModule
     //----------------------------------------------------------------------
 
     protected void quit() {
-        Core.getComponentFromRegistry("VjControl Core").destroy();
+        Core.getVjComponent ("VjControl Core").destroy();
         //dispose();
     }
 

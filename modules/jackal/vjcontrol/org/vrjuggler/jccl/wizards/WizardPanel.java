@@ -154,7 +154,7 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
             VjComponent c;
             for (i = 0; i < n; i++) {
                 s = p.getValue(i).toString();
-                c = Core.getComponentFromRegistry(s);
+                c = Core.getVjComponent (s);
                 if (c != null) {
                     if (c instanceof ConfigUIHelper)
                         uihelper_module = (ConfigUIHelper)c;
@@ -312,7 +312,7 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
                 // this is inexcusable cheating, but i'm in a terrible hurry
                 // BUG BUG BUG BUG BUG BUG BUG BUG!!! CJ LOOK HERE!!!
                 ConfigModule config_module;
-                config_module = (ConfigModule)Core.getComponentFromRegistry ("Config Module");
+                config_module = (ConfigModule)Core.getVjComponent ("Config Module");
                 config_module.addChunkDB (results);
 
                 // reset the wizard

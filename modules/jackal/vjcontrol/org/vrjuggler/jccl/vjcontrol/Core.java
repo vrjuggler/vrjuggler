@@ -92,7 +92,7 @@ public class Core
 
     // private data
 
-    static protected String component_name;
+    private String component_name;
 
     /** Contains all CoreModules added to self */
     private List modules;
@@ -124,6 +124,8 @@ public class Core
     static public FileControl file;
 
     private Core() {
+        component_name = "VjControl Core";
+
         modules = new Vector();
         pending_chunks = new Vector();
         pending_wrong_profile_chunks = new Vector();
@@ -143,8 +145,6 @@ public class Core
 
 	instance = new Core();
 	
-        component_name = "VjControl Core";
-
         file = new FileControl();
 
         component_factory = new ComponentFactory();
@@ -206,7 +206,7 @@ public class Core
 
     // All of this code needs to be refactored somewhat to handle removing
     // as well as adding components.  in-place reconfiguration is also a 
-    // good thing before the spec solidifies in juggler 1.2.0
+    // good thing before the spec solidifies in juggler 2.0
 
     /** Adds a component creation ConfigChunk to the queue of pending adds.
      *  Once the ConfigChunk's dependencies are met, it will be forwarded
@@ -274,7 +274,7 @@ public class Core
         try {
             Property p = ch.getPropertyFromToken ("parentcomp");
             String parentname = p.getValue(0).getString();
-            VjComponent parent = getComponentFromRegistry (parentname);
+            VjComponent parent = getVjComponent (parentname);
             VjComponent child = parent.addConfig (ch);
             if (child != null)
                 registered_components.add (child);
@@ -305,7 +305,7 @@ public class Core
         List v = ch.getDependencyNames();
         for (int i = 0; i < v.size(); i++) {
             String s = (String)v.get(i);
-            if (getComponentFromRegistry(s) == null)
+            if (getVjComponent(s) == null)
                 return false;
         }
 
@@ -314,9 +314,9 @@ public class Core
 
 
 
-    /** Finds a component in registered_components.
+    /** Searches for a component instance with the given name.
      */
-    static public VjComponent getComponentFromRegistry (String name) {
+    static public VjComponent getVjComponent (String name) {
         VjComponent vjc;
         Iterator i = instance.registered_components.iterator();
         while (i.hasNext()) {
@@ -395,7 +395,7 @@ public class Core
 
     //-------------------- LogMessage Target Stuff --------------------------
 
-    static public synchronized void addLogMessageListener (LogMessageListener l) {
+    static public void addLogMessageListener (LogMessageListener l) {
 	synchronized (instance.logmessage_targets) {
 	    instance.logmessage_targets.add (l);
             instance.no_logmessage_targets = false;
@@ -475,7 +475,8 @@ public class Core
     }
 
     public void setComponentName (String _name) {
-        component_name = _name;
+        // component_name = _name;
+        // must always be "VjControl Core"
     }
 
 
@@ -500,7 +501,6 @@ public class Core
         vjc.setConfiguration (ch);
         vjc.initialize ();
         modules.add (vjc);
-        //registerComponent (vjc);
         return vjc;
     }
 
