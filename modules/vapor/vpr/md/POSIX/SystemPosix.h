@@ -60,7 +60,7 @@
 // I don't know why this is necessary, but I think something is being defined
 // incorrectly somewhere.
 #ifdef VPR_OS_IRIX
-#  include <sys/endian.h>
+   #include <sys/endian.h>
 #endif
 
 #include <sys/types.h>
@@ -139,29 +139,29 @@ public:
       return status;
    }
 
-   inline static ReturnStatus
-    setenv (const std::string& name, const std::string& value)
-    {
-       // NSPR requires form of "name=value"
-       std::string set_value(name);
-       set_value += "=";
-       set_value += value;
+   static ReturnStatus setenv (const std::string& name,
+                               const std::string& value)
+   {
+      // NSPR requires form of "name=value"
+      std::string set_value(name);
+      set_value += "=";
+      set_value += value;
 
-        ReturnStatus status;
+      ReturnStatus status;
 
-        int ret_val = ::putenv(const_cast<char*>(set_value.c_str()));
+      int ret_val = ::putenv(const_cast<char*>(set_value.c_str()));
 
-        if ( ret_val == 0 )
-        {
-            status.setCode(ReturnStatus::Succeed);
-        }
-        else 
-        {
-            status.setCode(ReturnStatus::Fail);
-        }
+      if ( ret_val == 0 )
+      {
+         status.setCode(ReturnStatus::Succeed);
+      }
+      else
+      {
+         status.setCode(ReturnStatus::Fail);
+      }
 
-        return status;
-    }   
+      return status;
+   }
 
    /**
     * Returns the name of the host.
