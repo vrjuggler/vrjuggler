@@ -39,6 +39,12 @@ if test "x$TWEEK_BASE_DIR" = "x" ; then
    exit 1
 fi
 
+# Make sure tweek-config is executable
+if test ! -x "$TWEEK_BASE_DIR/bin/tweek-config" ; then
+   echo "FATAL ERROR: Cannot execute tweek-config!"
+   exit 1
+fi
+
 # If the environment variable JDK_HOME is not set, default it to /usr/java.
 if test "x$JDK_HOME" = "x" ; then
    echo "WARNING: Setting JDK_HOME environment variable to /usr/java"
@@ -52,6 +58,7 @@ if test ! -x "$JDK_HOME/bin/java" ; then
    status=1
 # Otherwise, start up Tweek and exit with status 0.
 else
+
    # Set these to the location where the JDOM and the Java ORB JAR files can
    # be found.  If using the ORB distributed with the JDK, assign $ORB_JAR a
    # null string.
@@ -61,7 +68,8 @@ else
    # Java classpath separator character.
    JCPS="@JCPS@"
 
-   CLASSPATH="${JDOM_JAR}${JCPS}${ORB_JAR}${JCPS}${TWEEK_BASE_DIR}/bin/Tweek.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekBeans.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekEvents.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekNet.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekBeanDelivery.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekServices.jar${JCPS}${TWEEK_BASE_DIR}/bin/kunststoff-mod.jar${JCPS}${TWEEK_BASE_DIR}/bin/metouia.jar${JCPS}${CLASSPATH}"
+   TWEEK_JARS=`$TWEEK_BASE_DIR/bin/tweek-config --jars`
+   CLASSPATH="${TWEEK_JARS}${JCPS}${CLASSPATH}"
    export CLASSPATH
 
    # If using an ORB other than that distributed with the JDK, these must be
