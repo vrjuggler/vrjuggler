@@ -34,17 +34,26 @@ package org.vrjuggler.vrjconfig.commoneditors;
 
 public abstract class EditorConstants
 {
-   public static final String analog_proxy_type  = "analog_proxy";
-   public static final String digital_proxy_type = "digital_proxy";
+   public static final String ANALOG_PROXY_TYPE  = "analog_proxy";
 
-   public static final String position_proxy_type   = "position_proxy";
-   public static final String position_filters_prop = "position_filters";
+   public static final String DIGITAL_PROXY_TYPE = "digital_proxy";
 
-   public static final String position_transform_filter_type = "position_transform_filter";
-   public static final String custom_scale_prop              = "custom_scale";
-   public static final String device_units_prop              = "device_units";
-   public static final String pre_rotation_prop              = "pre_rotation";
-   public static final String post_rotation_prop             = "post_rotation";
-   public static final String pre_translation_prop           = "pre_translate";
-   public static final String post_translation_prop          = "post_translate";
+   public static final String POSITION_PROXY_TYPE   = "position_proxy";
+
+   public static final String POSITION_TRANSFORM_FILTER_TYPE =
+      "position_transform_filter";
+
+   public static final String POSITION_FILTERS_PROPERTY = "position_filters";
+
+   public static final String CUSTOM_SCALE_PROPERTY = "custom_scale";
+
+   public static final String DEVICE_UNITS_PROPERTY = "device_units";
+
+   public static final String PRE_ROTATION_PROPERTY = "pre_rotation";
+
+   public static final String POST_ROTATION_PROPERTY = "post_rotation";
+
+   public static final String PRE_TRANSLATION_PROPERTY = "pre_translate";
+
+   public static final String POST_TRANSLATION_PROPERTY = "post_translate";
 }

@@ -216,7 +216,7 @@ public class CoordinateFrameEditor
 
    public void setConfig(ConfigContext ctx, ConfigElement elt)
    {
-      if ( ! elt.getDefinition().getToken().equals(EditorConstants.position_transform_filter_type) )
+      if ( ! elt.getDefinition().getToken().equals(EditorConstants.POSITION_TRANSFORM_FILTER_TYPE) )
       {
          throw new IllegalArgumentException("Config element of type '" +
                                             elt.getDefinition().getToken() +
@@ -228,11 +228,11 @@ public class CoordinateFrameEditor
 
       if ( mCoordinateType == TRANSMITTER )
       {
-         mRotateProp = EditorConstants.pre_rotation_prop;
+         mRotateProp = EditorConstants.PRE_ROTATION_PROPERTY;
       }
       else
       {
-         mRotateProp = EditorConstants.post_rotation_prop;
+         mRotateProp = EditorConstants.POST_ROTATION_PROPERTY;
       }
 
       float x_rot = ((Number) elt.getProperty(mRotateProp, 0)).floatValue();

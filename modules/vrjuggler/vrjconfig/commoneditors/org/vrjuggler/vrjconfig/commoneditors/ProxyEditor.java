@@ -175,13 +175,13 @@ public class ProxyEditor
       Class editor_class;
 
       // This panel will be a position proxy editor.
-      if ( mProxyDef.getToken().equals(EditorConstants.position_proxy_type) )
+      if ( mProxyDef.getToken().equals(EditorConstants.POSITION_PROXY_TYPE) )
       {
          editor_class = PositionProxyEditor.class;
       }
       // This panel will be an analog or a digital proxy editor.
-      else if ( mProxyDef.getToken().equals(EditorConstants.analog_proxy_type) ||
-                mProxyDef.getToken().equals(EditorConstants.digital_proxy_type) )
+      else if ( mProxyDef.getToken().equals(EditorConstants.ANALOG_PROXY_TYPE) ||
+                mProxyDef.getToken().equals(EditorConstants.DIGITAL_PROXY_TYPE) )
       {
          editor_class = DefaultProxyTypeEditor.class;
       }
@@ -272,15 +272,15 @@ public class ProxyEditor
          // If we are working with a position proxy, we have to fill in a
          // default position transform filter.  It's too bad that this has to
          // be here.
-         if ( mProxyDef.getToken().equals(EditorConstants.position_proxy_type) )
+         if ( mProxyDef.getToken().equals(EditorConstants.POSITION_PROXY_TYPE) )
          {
             ConfigDefinition filter_def =
-               broker.getRepository().get(EditorConstants.position_transform_filter_type);
+               broker.getRepository().get(EditorConstants.POSITION_TRANSFORM_FILTER_TYPE);
             ConfigElement xform_filter = factory.create("Transform Filter 0",
                                                         filter_def);
 
             // Add the new config element to the position_filters property.
-            proxy.addProperty(EditorConstants.position_filters_prop,
+            proxy.addProperty(EditorConstants.POSITION_FILTERS_PROPERTY,
                               xform_filter);
          }
 
