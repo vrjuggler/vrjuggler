@@ -42,6 +42,8 @@
 #ifndef SNXSUBSYNTHSOUNDIMPLEMENTATION_H
 #define SNXSUBSYNTHSOUNDIMPLEMENTATION_H
 
+#include <snx/PluginConfig.h>
+
 #include <map>
 #include <string>
 #include <vector>
@@ -52,10 +54,6 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
 
-#include "snx/SoundImplementation.h"
-#include "snx/SoundInfo.h"
-#include "snx/SoundAPIInfo.h"
-
 #include <syn/Core/Module.h>
 #include <syn/Stream/PortAudioOStream.h>
 #include <syn/Module/MixerModule.h>
@@ -65,6 +63,10 @@
 #include <syn/Module/FilterModule.h>
 #include <syn/Module/OStreamModule.h>
 #include <syn/Runner/Runner.h>
+
+#include <snx/SoundImplementation.h>
+#include <snx/SoundInfo.h>
+#include <snx/SoundAPIInfo.h>
 
 namespace snx
 {
@@ -328,6 +330,6 @@ private:
    /*#  snx::SoundAPIInfo lnksnx::SoundAPIInfo; */
 };
 
-}; // end namespace
+} // end namespace
 
 #endif //SNXSUBSYNTHSOUNDIMPLEMENTATION_H

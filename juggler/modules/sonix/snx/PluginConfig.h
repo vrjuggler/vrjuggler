@@ -48,7 +48,7 @@
 #ifndef _SNX_PLUGIN_CONFIG_H_
 #define _SNX_PLUGIN_CONFIG_H_
 
-#include <gadget/gadgetConfig.h>
+#include <snx/snxConfig.h>
 
 /*
  * ----------------------------------------------------------------------------
