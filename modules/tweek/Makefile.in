@@ -231,9 +231,9 @@ endif
           $(EXTRA_INSTALL_ARGS) $(TWEEKROOT_ABS)/COPYING.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(TWEEKROOT_ABS)/README.txt $(projdatadir)
-#	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-#          $(EXTRA_INSTALL_ARGS) $(TWEEKROOT_ABS)/RELEASE_NOTES.txt	\
-#          $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(TWEEKROOT_ABS)/RELEASE_NOTES.txt	\
+          $(projdatadir)
 	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> Tweek make release started on $(STARTTIME)"
