@@ -200,7 +200,6 @@ AC_SUBST(EXTRA_LINK_FLAGS)
 
 AC_OUTPUT(vj/Makefile 
           aj/Makefile 
-          hack
           Makefile 
           make.defs.mk)
 
