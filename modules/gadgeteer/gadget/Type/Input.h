@@ -186,8 +186,8 @@ public:
    //
    //  Returns the name identifying this instance of the device.
    // This is the name given to the device in it's config chunk (ie. "MyFlockOfBirds", "TheIbox", etc)
-   const char* getInstanceName() {
-      if (instName == NULL)
+   const std::string getInstanceName() {
+      if (instName.empty())
          return "Undefined";
       return instName;
    }
@@ -220,7 +220,7 @@ protected:  // Helpers
 
 protected:
    char*       sPort;
-   char*       instName;
+   std::string instName;
    int         port_id;
    vjThread*   myThread;   //: The thread being used by the driver
    int         active;     //: Is the driver active
