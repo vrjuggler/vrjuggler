@@ -261,6 +261,7 @@ protected:
         m_handle          = sock.m_handle;
         m_bound           = sock.m_bound;
         m_type            = sock.m_type;
+        m_blocking_fixed  = sock.m_blocking_fixed;
     }
 
     // ------------------------------------------------------------------------
@@ -306,7 +307,10 @@ protected:
     InetAddr          m_local_addr;  //: The local site's address structure
     InetAddr          m_remote_addr; //: The remote site's address structure
     SocketTypes::Type m_type;        //:
-    bool              m_bound;      //: Is the socket bound to a port yet (connect and bind do this)
+    bool              m_bound;       //: Is the socket bound to a port yet
+                                     //+ (connect and bind do this)
+
+    bool              m_blocking_fixed;
 };
 
 }; // End of vpr namespace

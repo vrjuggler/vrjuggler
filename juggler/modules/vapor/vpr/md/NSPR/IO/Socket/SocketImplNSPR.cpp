@@ -149,8 +149,8 @@ SocketImplNSPR::enableBlocking () {
 
    Status retval;
 
-   if (m_bound) {
-       vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't enable blocking after socket is bound\n"
+   if (m_blocking_fixed) {
+       vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't enable blocking after blocking call\n"
                      << vprDEBUG_FLUSH;
        retval.setCode(Status::Failure);
    }
@@ -181,9 +181,9 @@ SocketImplNSPR::enableNonBlocking () {
 
    assert( m_open && "precondition says you must open() the socket first" );
 
-   if(m_bound)
+   if(m_blocking_fixed)
    {
-      vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't diable blocking after socket is bound\n"
+      vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't diable blocking after blocking call\n"
                     << vprDEBUG_FLUSH;
       retval.setCode(Status::Failure);
    }
@@ -246,6 +246,7 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
       else
       {
          m_bound = true;
+         m_blocking_fixed = true;
       }
    }
 
@@ -262,7 +263,7 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
 // ----------------------------------------------------------------------------
 SocketImplNSPR::SocketImplNSPR (const SocketTypes::Type sock_type)
     : BlockIO(std::string("INADDR_ANY")), m_handle(NULL), m_type(sock_type),
-      m_bound(false)
+      m_bound(false), m_blocking_fixed(false)
 {
     /* Do nothing. */ ;
 }
@@ -278,7 +279,7 @@ SocketImplNSPR::SocketImplNSPR (const InetAddr& local_addr,
                                 const SocketTypes::Type sock_type)
     : BlockIO(std::string("INADDR_ANY")), m_handle(NULL),
       m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(sock_type),
-      m_bound(false)
+      m_bound(false), m_blocking_fixed(false)
 {;}
 
 // ----------------------------------------------------------------------------
