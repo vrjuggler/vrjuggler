@@ -77,7 +77,15 @@ void * trackd_attach_tracker_mem(int shmKey)
 
 void trackd_release_tracker_mem(void *mem)
 	{
+#ifdef __sun__
+#   if defined(_XOPEN_SOURCE) && (_XOPEN_VERSION - 0 >= 4)
 	shmdt(mem);
+#   else
+	shmdt((char*) mem);
+#   endif
+#else
+	shmdt(mem);
+#endif
 	}
 
 
@@ -128,7 +136,15 @@ void * trackd_attach_controller_mem(int shmKey)
 
 void trackd_release_controller_mem(void *mem)
 	{
+#ifdef __sun__
+#   if defined(_XOPEN_SOURCE) && (_XOPEN_VERSION - 0 >= 4)
 	shmdt(mem);
+#   else
+	shmdt((char*) mem);
+#   endif
+#else
+	shmdt(mem);
+#endif
 	}
 
 
