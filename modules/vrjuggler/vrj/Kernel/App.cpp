@@ -31,8 +31,15 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
+
 #include <stdlib.h>
+#include <boost/concept_check.hpp>
+
+#include <vpr/vpr.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
 #include <vrj/Kernel/Kernel.h>
+#include <vrj/Sound/SoundManagerFactory.h>
 #include <vrj/Kernel/App.h>
 
 
@@ -53,4 +60,28 @@ App::App()
    /* Do nothing. */ ;
 }
 
+bool App::configCanHandle(jccl::ConfigElementPtr element)
+{
+   boost::ignore_unused_variable_warning(element);
+   return false;
+}
+
+bool App::configAdd(jccl::ConfigElementPtr element)
+{
+   boost::ignore_unused_variable_warning(element);
+   vprASSERT(false);
+   return false;
+}
+
+bool App::configRemove(jccl::ConfigElementPtr element)
+{
+   boost::ignore_unused_variable_warning(element);
+   vprASSERT(false);
+   return false;
+}
+
+SoundManager* App::getSoundManager()
+{
+   return &SoundManagerFactory::get();
+}
 }
