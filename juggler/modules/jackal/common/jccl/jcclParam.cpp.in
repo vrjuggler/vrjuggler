@@ -30,26 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _JCCL_PARAM_H_
-#define _JCCL_PARAM_H_
-
 #include <jccl/jcclConfig.h>
+#include <jccl/jcclParam.h>
 
-
-/*
- * Define to the 9-digit JCCL version integer.  This is the "internal version
- * number" that is intended for internal feature checks by JCCL itself.
- */
-#define __JCCL_version @VER_NUMBER@
-
-/*
- * This is the "human-readable" JCCL version _string_.  It is of the form
- * <major>.<minor>.<days since last major release>.
- */
 namespace jccl
 {
-   extern JCCL_DATA_API(const char*) JCCL_VERSION;
+   const char* JCCL_VERSION = @VER_STRING@;
 }
-
-
-#endif	/* _JCCL_PARAM_H_ */
