@@ -214,6 +214,7 @@ void vjGlPipe::checkForWindowsToClose()
          glManager->setCurrentContext(win->getId());     // Set TS data of context id
          glManager->currentUserData()->setUser(NULL);         // Set user data
          glManager->currentUserData()->setProjection(NULL);
+         glManager->currentUserData()->setViewport(NULL);         // Set vp data
 
          win->makeCurrent();              // Make the context current
          theApp->contextClose();          // Call context close function
@@ -310,6 +311,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
          // Have dirty context
       glManager->currentUserData()->setUser(NULL);         // Set user data
       glManager->currentUserData()->setProjection(NULL);
+      glManager->currentUserData()->setViewport(NULL);     // Set vp data
 
       theApp->contextInit();              // Call context init function
       win->setDirtyContext(false);        // All clean now
@@ -337,6 +339,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
 
          // Set user information
          glManager->currentUserData()->setUser(viewport->getUser());         // Set user data
+         glManager->currentUserData()->setViewport(viewport);                // Set the viewport
 
          // ---- SURFACE --- //
          if (viewport->isSurface())
