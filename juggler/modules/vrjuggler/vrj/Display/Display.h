@@ -37,13 +37,9 @@
 #include <vector>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <vpr/Util/Assert.h>
-
-
 namespace vrj
 {
-
    class Viewport;
-
 
 /**
  * Container class for viewports and window information.
