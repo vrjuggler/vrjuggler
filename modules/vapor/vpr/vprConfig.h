@@ -45,6 +45,7 @@
 
 /* This should always be included first. */
 #include <vprDefines.h>
+#include <vprTypes.h>
 
 #ifdef _DEBUG
 #   define VPR_DEBUG
