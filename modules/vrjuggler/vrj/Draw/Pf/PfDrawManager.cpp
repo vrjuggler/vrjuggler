@@ -128,8 +128,9 @@ void vjPfDrawManager::initDrawing()
    //  For each display:
    //	    -Create a pWin for it
    //	    -Create the channels to put it the pWin
-   for (vector<vjDisplay*>::iterator dispIter = displayManager->displays.begin();
-       dispIter != displayManager->displays.end(); dispIter++)
+   vector<vjDisplay*> displays = displayManager->getDisplays();
+   for (vector<vjDisplay*>::iterator dispIter = displays.begin();
+       dispIter != displays.end(); dispIter++)
    {
       vjDEBUG(0) << "------- Opening new Display --------" << endl << vjDEBUG_FLUSH;
 
