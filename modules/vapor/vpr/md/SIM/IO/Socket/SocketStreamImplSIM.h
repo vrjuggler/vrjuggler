@@ -46,7 +46,7 @@
 
 #include <string>
 #include <queue>
-#include <pair.h>
+#include <utility>
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Interval.h>
