@@ -146,7 +146,7 @@ optimize = ARGUMENTS.get('debug', 'yes')
 # Add options
 opts = Options(files = ['options.cache', 'options.custom']);
 
-opts.Add('prefix', "What directory should we install to. default: boost/instlinks", "boost/instlinks");
+opts.Add('prefix', "What directory should we install to. default: boost/installed", "boost/installed");
 opts.Add('bjam', "Full path to the boost jam executable: default: bjam", "bjam");
 opts.Add('boost_base', "Base directory where we can find the boost source: default: boost", "boost");
 opts.Add('boost_debug', "Should we use debug versions: default: 1", 1);
