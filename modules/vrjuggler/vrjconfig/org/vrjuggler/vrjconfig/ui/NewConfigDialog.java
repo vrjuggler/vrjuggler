@@ -90,7 +90,7 @@ public class NewConfigDialog
 
       // Setup the default UI texts
       setDialogTitle("Create New Configuration");
-      nameTxt.setText("untitled.config");
+      nameTxt.setText("untitled.jconf");
 
       // Init the includes list
       includesList.setModel(includesTableModel);
