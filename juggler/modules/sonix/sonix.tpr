@@ -69,3 +69,5 @@ preview.autoupdate=true
 preview.scale=4
 [favorites]
 root.0=<oiref:design#Class#id2iypwcngob3p6cni5b8ia.diagram:oiref>
+[option]
+properties.enable=false

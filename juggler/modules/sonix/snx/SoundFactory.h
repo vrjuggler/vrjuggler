@@ -98,6 +98,12 @@ private:
 
    /** @link dependency */
    /*#  snx::OpenALSoundImplementation lnksnx::OpenALSoundImplementation; */
+
+   /** @link aggregation 
+    * @clientCardinality 1
+    * @supplierCardinality 0..*
+    * @directed */
+   /*#  snx::SoundImplementation lnkSoundImplementation1; */
 };
 
 template <class _type>
