@@ -63,11 +63,11 @@ sub handleOptArg($$);
 
 usage(1) if $#ARGV == -1;
 
-my $vpr_default_abi = "@ABI@";
-my $vpr_default_isa = "@ISA@";
-my $vpr_n32_flags   = "@vpr_n32_flags@";
-my $vpr_64_flags    = "@vpr_64_flags@";
-$LIBBITSUF          = '@LIBBITSUF@';
+my $vpr_default_abi = qq(@ABI@);
+my $vpr_default_isa = qq(@ISA@);
+my $vpr_n32_flags   = qq(@vpr_n32_flags@);
+my $vpr_64_flags    = qq(@vpr_64_flags@);
+$LIBBITSUF          = qq(@LIBBITSUF@);
 
 my $use_gcc = '@USE_GCC@';
 
@@ -115,7 +115,7 @@ if ( $Win32  && $base_dir !~ /^[A-Za-z]:/ )
 # $exec_prefix may refer to $prefix, so it must be set after $prefix is
 # defined.
 $prefix      = "$base_dir";
-$exec_prefix = "@exec_prefix@";
+$exec_prefix = qq(@exec_prefix@);
 
 $ECHO_PREFIX      = 0;
 $ECHO_EXEC_PREFIX = 0;
@@ -222,7 +222,7 @@ sub make_CXXFLAGS ($;$)
    my $cxxflags = '';
 
    # Default setting from configure.
-   my $vpr_extra_cxxflags = "@vpr_extra_cxxflags@";
+   my $vpr_extra_cxxflags = qq(@vpr_extra_cxxflags@);
 
    if ( $cxxflags_arg =~ /n32/i )
    {
@@ -237,7 +237,7 @@ sub make_CXXFLAGS ($;$)
       $vpr_extra_cxxflags = "$vpr_extra_cxxflags $VPR_ABI_FLAGS $VPR_ISA_FLAGS";
    }
 
-   my $vpr_extra_include_dirs     = "@vpr_extra_include_dirs@";
+   my $vpr_extra_include_dirs     = qq(@vpr_extra_include_dirs@);
    my $vpr_extra_includes         = '';
    my $vpr_basedir_extra_includes = '';
 
@@ -253,7 +253,7 @@ sub make_CXXFLAGS ($;$)
    }
 
    $cxxflags =
-      "@vpr_cxxflags@ $vpr_extra_cxxflags @subsystem_cxxflags@ " .
+      qq(@vpr_cxxflags@ $vpr_extra_cxxflags @subsystem_cxxflags@ ) .
       ($use_base_dir ? "-I$ENV{'VPR_BASE_DIR'}/include $vpr_basedir_extra_includes"
                      : "-I@includedir@ $vpr_extra_includes");
 
@@ -281,8 +281,8 @@ sub make_LDFLAGS ($;$$$)
 
    if ( $echo_static )
    {
-      $static_begin = '@static_begin@';
-      $static_end   = '@static_end@';
+      $static_begin = qq(@static_begin@);
+      $static_end   = qq(@static_end@);
    }
 
    my $ldflags = '';
@@ -332,7 +332,7 @@ sub make_EXTRA_LDFLAGS ($;$)
       $LIBBITSUF = '64';
    }
 
-   my $subsystem_libs    = "@subsystem_libs@";
+   my $subsystem_libs    = qq(@subsystem_libs@);
    my $my_subsystem_libs = '';
 
    my $arg;
@@ -341,8 +341,8 @@ sub make_EXTRA_LDFLAGS ($;$)
       $my_subsystem_libs .= " $arg" unless "$arg" eq "-L@libdir@";
    }
 
-   my $extra_ldflags = ($use_linker ? "@vpr_extra_ldflags_linker@"
-                                    : "@vpr_extra_ldflags_compiler@");
+   my $extra_ldflags = ($use_linker ? qq(@vpr_extra_ldflags_linker@)
+                                    : qq(@vpr_extra_ldflags_compiler@));
 
    my $full_extra_ldflags = "$extra_ldflags @vpr_extra_libs@ " .
                             "$my_subsystem_libs";
