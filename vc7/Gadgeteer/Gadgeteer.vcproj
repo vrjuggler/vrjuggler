@@ -121,6 +121,12 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\AbstractNetworkManager.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Acceptor.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Analog.cpp">
 			</File>
 			<File
@@ -145,10 +151,7 @@
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterManager.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\cluster\ClusterNetwork\ClusterNetwork.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\cluster\ClusterNetwork\ClusterNode.cpp">
+				RelativePath="..\..\modules\gadgeteer\cluster\ClusterNode.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterPlugin.cpp">
@@ -158,6 +161,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\ConnectionRequest.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Connector.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\DataPacket.cpp">
@@ -173,6 +179,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\DeviceRequest.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\DeviceServer.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Digital.cpp">
@@ -229,6 +238,9 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\MouseEvent.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Node.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\Packet.cpp">
 			</File>
 			<File
@@ -251,6 +263,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\ProxyFactory.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\RemoteInputManager.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Devices\Sim\SimAnalog.cpp">
@@ -300,10 +315,19 @@
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Util\Version.cpp">
 			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\VirtualDevice.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\AbstractNetworkManager.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Acceptor.h">
+			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Analog.h">
 			</File>
@@ -338,10 +362,10 @@
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterManager.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\cluster\ClusterNetwork\ClusterNetwork.h">
+				RelativePath="..\..\modules\gadgeteer\cluster\ClusterNetwork.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\cluster\ClusterNetwork\ClusterNode.h">
+				RelativePath="..\..\modules\gadgeteer\cluster\ClusterNode.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterPlugin.h">
@@ -351,6 +375,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\ConnectionRequest.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Connector.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\DataPacket.h">
@@ -378,6 +405,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Util\DeviceSerializationTokens.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\DeviceServer.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Digital.h">
@@ -482,10 +512,19 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\MouseEventPtr.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\NetworkManager.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Node.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\Packet.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\PacketFactory.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\PacketHandler.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Position.h">
@@ -519,6 +558,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\ProxyFactory.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\RemoteInputManager.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\SampleBuffer.h">
@@ -588,6 +630,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Util\Version.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\VirtualDevice.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\gadgetConfig.h">
