@@ -231,7 +231,10 @@
         reading a printed version of this file, please check the website to
         ensure that you have the latest information. There have been several
         instances where bugs in third party software caused problems with
-        compiling VR Juggler and running VR Juggler applications.</para>
+        compiling VR Juggler and running VR Juggler applications. For the most
+        current system setup instructions, visit <ulink
+        url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/SystemSetup">the
+        system setup Wiki page</ulink>.</para>
 
         <table>
           <title>All Platforms</title>
@@ -241,37 +244,49 @@
               <row>
                 <entry>CVS</entry>
 
-                <entry align="right">1.11</entry>
+                <entry align="right">1.11 (or newer)</entry>
               </row>
 
               <row>
                 <entry>GNU make</entry>
 
-                <entry align="right">3.78</entry>
+                <entry align="right">3.78 (or newer)</entry>
               </row>
 
               <row>
                 <entry>GNU Autoconf</entry>
 
-                <entry align="right">2.53</entry>
+                <entry align="right">2.53 (or newer)</entry>
               </row>
 
               <row>
                 <entry>GNU Automake</entry>
 
-                <entry align="right">1.4</entry>
+                <entry align="right">1.5 (or newer)</entry>
               </row>
 
               <row>
                 <entry>Perl</entry>
 
-                <entry align="right">5.6.0</entry>
+                <entry align="right">5.6.0 (or newer)</entry>
+              </row>
+
+              <row>
+                <entry>Boost</entry>
+
+                <entry align="right">1.31.0</entry>
+              </row>
+
+              <row>
+                <entry>CppDOM</entry>
+
+                <entry align="right">0.3.1 (or newer)</entry>
               </row>
 
               <row>
                 <entry>Java 2 Platform (for Tweek and VRJConfig)</entry>
 
-                <entry align="right">1.3.0</entry>
+                <entry align="right">1.3.1 or newer (1.4.2 is recommended)</entry>
               </row>
             </tbody>
           </tgroup>
@@ -316,6 +331,38 @@
 
                   <entry align="right">3.2</entry>
                 </row>
+
+                <row>
+                  <entry>Mesa 3D</entry>
+
+                  <entry align="right">Comes with XFree86 4.x package</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+
+          <table>
+            <title>Fedora Core</title>
+
+            <tgroup cols="2">
+              <tbody>
+                <row>
+                  <entry>Operating System</entry>
+
+                  <entry align="right">1</entry>
+                </row>
+
+                <row>
+                  <entry>GCC Compilers</entry>
+
+                  <entry align="right">3.3</entry>
+                </row>
+
+                <row>
+                  <entry>Mesa 3D</entry>
+
+                  <entry align="right">Comes with XFree86 4.x package</entry>
+                </row>
               </tbody>
             </tgroup>
           </table>
@@ -337,7 +384,7 @@
                 <row>
                   <entry>Microsoft Visual Studio</entry>
 
-                  <entry align="right">7.0 (.NET 2002)</entry>
+                  <entry align="right">7.0 (.NET 2002) or 7.1 (.NET 2003)</entry>
                 </row>
 
                 <row>
@@ -349,7 +396,13 @@
                 <row>
                   <entry>Cygwin</entry>
 
-                  <entry align="right">1.3 (including Perl 5.6.1)</entry>
+                  <entry align="right">1.3 (including Perl 5.6.1 or newer)</entry>
+                </row>
+
+                <row>
+                  <entry>NSPR</entry>
+
+                  <entry align="right">4.1 (or newer)</entry>
                 </row>
               </tbody>
             </tgroup>
@@ -405,19 +458,25 @@
                 <row>
                   <entry>GCC</entry>
 
-                  <entry align="right">3.0.2</entry>
+                  <entry align="right">3.0.2 (or newer)</entry>
                 </row>
 
                 <row>
                   <entry>GNU Binutils</entry>
 
-                  <entry align="right">2.12</entry>
+                  <entry align="right">2.12 (or newer)</entry>
                 </row>
 
                 <row>
                   <entry>Mesa 3D</entry>
 
-                  <entry align="right">3.2</entry>
+                  <entry align="right">3.2 (or newer)</entry>
+                </row>
+
+                <row>
+                  <entry>NSPR</entry>
+
+                  <entry align="right">4.1 (or newer)</entry>
                 </row>
               </tbody>
             </tgroup>
@@ -437,7 +496,7 @@
                 <row>
                   <entry>Operating System</entry>
 
-                  <entry align="right">5.0</entry>
+                  <entry align="right">5.0 (or newer)</entry>
                 </row>
 
                 <row>
@@ -449,7 +508,33 @@
                 <row>
                   <entry>Mesa 3D</entry>
 
-                  <entry align="right">3.2</entry>
+                  <entry align="right">Comes with XFree86 4.x package</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+
+          <table>
+            <title>Mac OS X</title>
+
+            <tgroup cols="2">
+              <tbody>
+                <row>
+                  <entry>Operating System</entry>
+
+                  <entry align="right">10.2</entry>
+                </row>
+
+                <row>
+                  <entry>GCC</entry>
+
+                  <entry align="right">Comes with developer Tools</entry>
+                </row>
+
+                <row>
+                  <entry>OpenGL Framework</entry>
+
+                  <entry align="right">Comes with the OS</entry>
                 </row>
               </tbody>
             </tgroup>
@@ -1599,21 +1684,6 @@
             </varlistentry>
 
             <varlistentry>
-              <term>--with-threads=OPT</term>
-
-              <listitem>
-                <para>Define the threading implementation. The options are
-                <literal>IRIX_SPROC</literal> (use IRIX <function>sproc(2)</function>
-                threads), <literal>POSIX</literal> (use pthreads) and
-                <literal>WIN32</literal> (use Win32 threads). The default is
-                <literal>IRIX_SPROC</literal>, though configure knows what
-                other platforms should use. For example, POSIX threads are
-                used on Linux, Solaris and FreeBSD without specifying this
-                option.</para>
-              </listitem>
-            </varlistentry>
-
-            <varlistentry>
               <term>--with-jdkhome=PATH</term>
 
               <listitem>
@@ -1693,6 +1763,18 @@
             </varlistentry>
 
             <varlistentry>
+              <term>--with-audiere=PATH</term>
+
+              <listitem>
+                <para>Give the Audiere installation directory. This is the
+                base directory containing an <filename>include/audiere</filename>
+                subdirectory and at least a <filename>lib</filename>
+                subdirectory with the Audiere libraries. The default path is
+                <filename>/usr/local</filename>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
               <term>--with-audioworks=PATH</term>
 
               <listitem>
@@ -1706,18 +1788,16 @@
             </varlistentry>
 
             <varlistentry>
-              <term>--with-sl=PATH</term>
+              <term>--with-openal=PATH</term>
 
               <listitem>
-                <para>Give the SL installation directory. This is the base
-                directory containing an <filename>include/sl</filename>
+                <para>Give the OpenAL installation directory. This is the base
+                directory containing an <filename>include/AL</filename>
                 subdirectory and at least a <filename>lib</filename>
-                subdirectory with the SL libraries. Before testing for SL, a
-                test will be performed checking for the SGI Audio library if
-                compiling on IRIX. If it is found, then the test for SL is
-                performed. If SL is found, the VR Juggler SL sound wrapper
-                will be compiled and installed. The default path is
-                <filename>/usr</filename>.</para>
+                subdirectory with the OpenAL libraries. OpenAL cannot be used
+                with SPROC threads, and its use will be disabled when VPR is
+                compiled to use SPROC threads on IRIX The default path is
+                <filename>/usr/local</filename>.</para>
               </listitem>
             </varlistentry>
 
@@ -1789,6 +1869,21 @@
                 <para>Set the version number for this build. If not specified,
                 it will be determined automatically from the contents of the
                 <filename>VERSION</filename> file.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>--enable-subsystem=OPT</term>
+
+              <listitem>
+                <para>Define the threading implementation. The options are
+                <literal>SPROC</literal> (use IRIX <function>sproc(2)</function>
+                threads), <literal>POSIX</literal> (use pthreads), and
+                <literal>NSPR</literal> (use NSPR threads). The default on
+                IRIX is <literal>SPROC</literal>, though configure knows what
+                other platforms should use. For example, POSIX threads are
+                used on Linux and FreeBSD without specifying this option. NSPR
+                is required on Mac OS X, Windows, and Solaris.</para>
               </listitem>
             </varlistentry>
 
