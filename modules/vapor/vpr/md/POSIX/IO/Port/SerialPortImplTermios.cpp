@@ -93,6 +93,7 @@ vpr::ReturnStatus SerialPortImplTermios::open ()
               "[vpr::SerialPortImplTermios] Could not open serial port %s: %s\n",
               getName().c_str(), strerror(errno));
    }
+#ifdef VPR_OS_IRIX
    // Otherwise, initialize the serial port's flags.
    else
    {
@@ -115,6 +116,7 @@ vpr::ReturnStatus SerialPortImplTermios::open ()
          }
       }
    }
+#endif
 
    return status;
 }
