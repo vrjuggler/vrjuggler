@@ -81,6 +81,8 @@ public class PropertyDefinitionEditor
       basicTable.getColumnModel().getColumn(0).
             setCellRenderer(new BoldCellRenderer());
       basicTable.getColumnModel().getColumn(1).
+            setCellRenderer(new BasicTypeRenderer());
+      basicTable.getColumnModel().getColumn(1).
             setCellEditor(new BasicCellEditor());
 
       // Setup the items table
@@ -1066,6 +1068,36 @@ public class PropertyDefinitionEditor
          comp.setFont(comp.getFont().deriveFont(Font.BOLD));
          return comp;
       }
+   }
+   
+   /**
+    * Cell renderer that renders the name of the type instead of the object itself.
+    */
+   class BasicTypeRenderer
+      extends DefaultTableCellRenderer
+   {
+      public Component getTableCellRendererComponent(JTable table,
+                                                     Object value,
+                                                     boolean selected,
+                                                     boolean focus,
+                                                     int row,
+                                                     int col)
+      {
+         // If we are trying to render a cell that contains a property type,
+         // make sure to render the name, not the class name.
+         if (value instanceof Class)
+         {
+            mValuetypeEditor.setValue(value);
+            value = mValuetypeEditor.getAsText();
+         }
+
+         Component comp = super.getTableCellRendererComponent(table, value,
+                                                              selected, focus,
+                                                              row, col);
+         return comp;
+      }
+
+      private ValuetypeEditor mValuetypeEditor = new ValuetypeEditor();
    }
 
    /**
