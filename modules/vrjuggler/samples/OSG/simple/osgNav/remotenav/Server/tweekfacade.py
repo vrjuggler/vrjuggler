@@ -20,15 +20,17 @@ class TweekFacade(RemoteNavFacade.RemoteNavFacade):
    def getPosition(self):
       return self.navSubj.getPosition()
 
+   def setOrientation(self, heading, pitch, roll):
+      self.navSubj.setOrientation(heading, pitch, roll)
+
    def getOrientation(self):
       return self.navSubj.getOrientation()
 
    def setVelocity(self, xDelta, yDelta, zDelta):
-      return self.navSubj.setVelocity(xDelta, yDelta, zDelta)
+      self.navSubj.setVelocity(xDelta, yDelta, zDelta)
 
    def setRotationalVelocity(self, headingDelta, pitchDelta, rollDelta):
-      return self.navSubj.setRotationalVelocity(headingDelta, pitchDelta,
-                                                   rollDelta)
+      self.navSubj.setRotationalVelocity(headingDelta, pitchDelta, rollDelta)
 
    def setWalkMode(self, walk):
-      return self.navSubj.setWalkMode(walk)
+      self.navSubj.setWalkMode(walk)

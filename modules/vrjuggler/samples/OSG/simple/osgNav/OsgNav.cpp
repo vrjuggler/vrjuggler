@@ -38,52 +38,9 @@
 #include <gmtl/Coord.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Math.h>
+#include "remotenav/Subject/RemoteNavSubjectImpl.h"
 
-void OsgNav::preFrame()
-{
-
-//vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "------- preFrame ------\n" << vprDEBUG_FLUSH;
-
-   // -- Get wand info -- //
-   gmtl::Matrix44f wandMatrix = mWand->getData();      // Get the wand matrix
-
-   osg::Matrix osgWandMat;
-   osgWandMat.set(wandMatrix.getData());
-
-
-   if ( mButton0->getData() == gadget::Digital::ON )
-   {
-      // Speed up
-      speed = speed + inc;
-      std::cout << "speed: " << speed << std::endl;
-   }
-   if ( mButton1->getData() == gadget::Digital::ON )
-   {
-      // Stop
-      speed = 0.0;
-   }
-   if ( mButton2->getData() == gadget::Digital::ON )
-   {
-      // Slow down
-      speed = speed - inc;
-      std::cout << "speed: " << speed << std::endl;
-   }
-
-
-   //Navigation
-   gmtl::Vec3f direction;
-   gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, speed);
-   gmtl::xform(direction, wandMatrix, Zdir);
-   mNavTrans->preMult(osg::Matrix::translate(direction[0], direction[1], direction[2]));
-}
-
-void OsgNav::bufferPreDraw()
-{
-   glClearColor(0.0, 0.0, 0.0, 0.0);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void OsgNav::myInit()
+OsgNav::OsgNav(vrj::Kernel* kern, int& argc, char** argv) : vrj::OsgApp(kern)
 {
    //
    //          /-- mNoNav
@@ -94,6 +51,77 @@ void OsgNav::myInit()
    mRootNode = new osg::Group();
    mNoNav    = new osg::Group();
    mNavTrans = new osg::MatrixTransform();
+   mFileToLoad = std::string("");
+   
+   //Initialize tweek with the regular MMAInterfaceSubject
+   initTweek( argc, argv );
+}
+
+void OsgNav::preFrame()
+{
+   static vpr::Interval last_time;
+
+   vpr::Interval cur_time = mWand->getTimeStamp();
+   vpr::Interval diff_time(cur_time-last_time);
+      
+   float time_delta = diff_time.secf();
+
+   // Cluster debug code.
+   // std::cout << "CLUSTER Delta: " << diff_time.getBaseVal() << std::endl;
+   // std::cout << "CLUSTER Current: " << cur_time.getBaseVal() << "Last: " << mLastTimeStamp.getBaseVal() << "\n" << std::endl;
+   
+   last_time = cur_time;
+   
+
+   //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "------- preFrame ------\n" << vprDEBUG_FLUSH;
+
+   // Get wand data 
+   gmtl::Matrix44f wandMatrix = mWand->getData();      // Get the wand matrix
+
+   // If we are pressing button 1 then translate in the direction the wand is
+   // pointing.
+   if ( mButton0->getData() == gadget::Digital::ON )
+   {
+      gmtl::Vec3f direction;
+      gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, 10.0f);
+      gmtl::xform(direction, wandMatrix, Zdir);
+
+      mNavigater->setVelocity(direction); 
+   } // Make sure to reset the velocity when we stop pressing the button.
+   else if ( mButton0->getData() == gadget::Digital::TOGGLE_OFF)
+   {
+      mNavigater->setVelocity(gmtl::Vec3f(0.0, 0.0, 0.0)); 
+   }
+   
+   // If we are pressing button 2 then rotate in the direction the wand is
+   // pointing.
+   if ( mButton2->getData() == gadget::Digital::ON )
+   {
+      mNavigater->setRotationalVelocity(mWand->getData());
+   } // Make sure to reset the rotational velocity when we stop pressing the button.
+   else if(mButton2->getData() == gadget::Digital::TOGGLE_OFF)
+   {
+      mNavigater->setRotationalVelocity(gmtl::Matrix44f());
+   }
+   
+   // Update the navigation using the time delta between
+   mNavigater->update(time_delta);
+
+   // Update the scene graph
+   osg::Matrix osg_current_matrix;
+   osg_current_matrix.set(mNavigater->getCurPos().getData());
+   mNavTrans->setMatrix(osg_current_matrix);
+}
+
+void OsgNav::bufferPreDraw()
+{
+   glClearColor(0.0, 0.0, 0.0, 0.0);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void OsgNav::myInit()
+{
+
 
    mRootNode->addChild( mNoNav );
    mRootNode->addChild( mNavTrans );
@@ -126,4 +154,59 @@ void OsgNav::myInit()
    speed = 0.0f;
    // How much we should accelerat each frame the button is held
    inc = 0.005f;
+
 }
+
+void OsgNav::initTweek( int& argc, char* argv[] )
+{
+#ifdef TWEEK_HAVE_CXX
+   std::cout << "\n\nSTARTING TWEEK INITIALIZATION!!\n\n" << std::flush;
+
+   std::string name_context( "OSG_REMOTE_NAV_");
+   
+   try
+   {
+      if ( mCorbaManager.init(name_context, argc, argv).success() )
+      {
+         try
+         {
+            if ( mCorbaManager.createSubjectManager().success() )
+            {
+               RemoteNavSubjectImpl* remote_nav_interface =
+                  new RemoteNavSubjectImpl(&(*mNavigater));
+
+               mCorbaManager.getSubjectManager()->addInfoItem("OsgNav","RemoteNav");
+               try
+               {
+                  mCorbaManager.getSubjectManager()->registerSubject(remote_nav_interface,
+                                                                     "RemoteNavSubject");
+               }
+               catch (...)
+               {
+                  std::cout
+                     << "Failed to register subject\n" << std::flush;
+               }
+            }
+         }
+         catch (CORBA::Exception& ex)
+         {
+            std::cout
+               << "Caught an unknown CORBA exception when trying to register!\n"
+               << std::flush;
+         }
+      }
+
+   }
+   catch (...)
+   {
+      std::cout
+         << "Caught an unknown exception while initializing Tweek!\n" << std::flush;
+   }
+
+   std::cout << "\n\nDONE WITH TWEEK INITIALIZATION!!\n\n" << std::flush;
+#else
+   boost::ignore_unused_variable_warning(argc);
+   boost::ignore_unused_variable_warning(argv);
+#endif
+}
+
