@@ -259,6 +259,8 @@ private:
     */
    vpr::Uint32 genUnusedPort( void );
 
+   vpr::sim::NetworkGraph::net_vertex_t getLocalhost(void);
+
    /**
     * Comparison function for vpr::InetAddrSIM
     */
