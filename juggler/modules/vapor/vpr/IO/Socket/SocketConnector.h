@@ -133,11 +133,11 @@ inline vpr::ReturnStatus SocketConnector::connect(SocketStream& newStream,
 
     // Open the socket
     if(!checkOpen(newStream))
-        return vpr::ReturnStatus(vpr::ReturnStatus::Failure);
+        return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
 
     // Start the connection
     if(!connectStart(newStream, timeout, localAddr))
-        return vpr::ReturnStatus(vpr::ReturnStatus::Failure);
+        return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
 
     newStream.setRemoteAddr(remoteAddr);
 
@@ -193,7 +193,7 @@ inline vpr::ReturnStatus SocketConnector::complete (SocketStream &newStream,
    if( newStream.isConnected() )
    {
       // XXX: Should this actually be a failure
-      return vpr::ReturnStatus::Success;
+      return vpr::ReturnStatus::Succeed;
    }
 
    // If non-blocking, then we can only wait as long as the timeout
@@ -214,7 +214,7 @@ inline vpr::ReturnStatus SocketConnector::complete (SocketStream &newStream,
       // connected.
       if ( selector.getOut(handle) & (vpr::Selector::Read | vpr::Selector::Write) )
       {
-         status = vpr::ReturnStatus::Success;
+         status = vpr::ReturnStatus::Succeed;
 
          /*
          if ( remoteAddr != NULL ) {

@@ -131,12 +131,12 @@ public:
      *                request.  This argument is optional and default to
      *                vpr::Interval::NoTimeout.
      *
-     * @return vpr::ReturnStatus::Success is returned when a connection is completed
+     * @return vpr::ReturnStatus::Succeed is returned when a connection is completed
      *         successfully.  In this case, the <code>sock</code> argument
      *         returned is the newly created connected socket.<br>
      *         vpr::ReturnStatus::WouldBlock is returned if this is a non-blocking
      *         acceptor and there are no pending connections.<br>
-     *         vpr::ReturnStatus::Failure is returned if the socket failed to accept.
+     *         vpr::ReturnStatus::Fail is returned if the socket failed to accept.
      */
     vpr::ReturnStatus accept(vpr::SocketStream& sock,
                        vpr::Interval timeout = vpr::Interval::NoTimeout)

@@ -119,16 +119,16 @@ public:
     /**
      * Creates a set that includes no signals defined by the system.
      *
-     * @return vpr::ReturnStatus::Success is returned if this object's signal set is
-     *         emptied.  vpr::ReturnStatus::Failure is returned otherwise.
+     * @return vpr::ReturnStatus::Succeed is returned if this object's signal set is
+     *         emptied.  vpr::ReturnStatus::Fail is returned otherwise.
      */
     vpr::ReturnStatus emptySet(void);
 
     /**
      * Creates a set that includes all signals defined by the system.
      *
-     * @return vpr::ReturnStatus::Success is returned if this object's signal set is
-     *         filled.  vpr::ReturnStatus::Failure is returned otherwise.
+     * @return vpr::ReturnStatus::Succeed is returned if this object's signal set is
+     *         filled.  vpr::ReturnStatus::Fail is returned otherwise.
      */
     vpr::ReturnStatus fillSet(void);
 
@@ -137,8 +137,8 @@ public:
      *
      * @param sig_num The signal number to be added.
      *
-     * @return vpr::ReturnStatus::Success is returned if the given signal is added
-     *         to this object's signal set.  vpr::ReturnStatus::Failure is returned
+     * @return vpr::ReturnStatus::Succeed is returned if the given signal is added
+     *         to this object's signal set.  vpr::ReturnStatus::Fail is returned
      *         otherwise.
      */
     vpr::ReturnStatus addSignal(const int sig_num);
@@ -148,8 +148,8 @@ public:
      *
      * @param sig_num The signal number to be removed.
      *
-     * @return vpr::ReturnStatus::Success is returned if the given signal is removed
-     *         from this object's signal set.  vpr::ReturnStatus::Failure is returned
+     * @return vpr::ReturnStatus::Succeed is returned if the given signal is removed
+     *         from this object's signal set.  vpr::ReturnStatus::Fail is returned
      *         otherwise.
      */
     vpr::ReturnStatus removeSignal(const int sig_num);
@@ -261,8 +261,8 @@ class VPR_CLASS_API SigHandler {
      * @param sig_num The signal to be handled.
      * @param handler The callback that does the signal handling.
      *
-     * @returns vpr::ReturnStatus::Success is returned if the given handler is
-     *          registered successfully; vpr::ReturnStatus::Failure otherwise.
+     * @returns vpr::ReturnStatus::Succeed is returned if the given handler is
+     *          registered successfully; vpr::ReturnStatus::Fail otherwise.
      */
     static vpr::ReturnStatus registerHandler(const int sig_num,
                                        vpr::SignalHandler_t handler);
@@ -280,8 +280,8 @@ class VPR_CLASS_API SigHandler {
      * @param action  A vpr::SignalAction object encapsulating all the
      *                information needed to handle the named signal.
      *
-     * @returns vpr::ReturnStatus::Success is returned if the given action is
-     *          registered successfully; vpr::ReturnStatus::Failure otherwise.
+     * @returns vpr::ReturnStatus::Succeed is returned if the given action is
+     *          registered successfully; vpr::ReturnStatus::Fail otherwise.
      */
     static vpr::ReturnStatus registerHandler(const int sig_num,
                                        vpr::SignalAction& action);

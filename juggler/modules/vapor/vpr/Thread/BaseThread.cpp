@@ -69,7 +69,7 @@ std::ostream& vpr::operator<<(std::ostream& out, vpr::BaseThread* threadPtr)
 //! ARGS: successfulCreation - Did the thread get created correctly
 void vpr::BaseThread::registerThread(bool succesfulCreation)
 {
-   if(succesfulCreation)   // Success
+   if(succesfulCreation)   // Succeed
    {
       create_thread_id();
       ThreadManager::instance()->addThread(this); // Add the thread to the table

@@ -59,15 +59,15 @@ namespace vpr
       /// Possible status codes
       enum Code
       {
-         Success,          /**< Successful status */
-         Failure,          /**< Failure status */
+         Succeed,          /**< Succeedful status */
+         Fail,          /**< Fail status */
          WouldBlock,       /**< Operation would block */
          Timeout,          /**< Timeout occurred */
          InProgress        /**< Operation is still in progress */
       };
 
-      /// Default constructor.  vpr::ReturnStatus:;Success is default
-      ReturnStatus() : mReturnStatus( Success )
+      /// Default constructor.  vpr::ReturnStatus:;Succeed is default
+      ReturnStatus() : mReturnStatus( vpr::ReturnStatus::Succeed )
       {
       }
 
@@ -156,11 +156,11 @@ namespace vpr
       }
 
    public:
-      bool success() const { return mReturnStatus == Success; }
-      bool failure() const { return mReturnStatus == Failure; }
-      bool wouldBlock() const { return mReturnStatus == WouldBlock; }
-      bool inProgress() const { return mReturnStatus == InProgress; }
-      bool timeout() const { return mReturnStatus == Timeout; }
+      bool success() const { return mReturnStatus == vpr::ReturnStatus::Succeed; }
+      bool failure() const { return mReturnStatus == vpr::ReturnStatus::Fail; }
+      bool wouldBlock() const { return mReturnStatus == vpr::ReturnStatus::WouldBlock; }
+      bool inProgress() const { return mReturnStatus == vpr::ReturnStatus::InProgress; }
+      bool timeout() const { return mReturnStatus == vpr::ReturnStatus::Timeout; }
 
    private:
       ReturnStatus::Code mReturnStatus;
