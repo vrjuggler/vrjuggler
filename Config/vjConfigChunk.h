@@ -136,10 +136,10 @@ public:
     //: Return all the values for a given property
     // This is just a simple helper function
     //! NOTE: The vector has COPIES of the var values.
-    vector<vjVarValue*> getAllProperties(char* property)
+    std::vector<vjVarValue*> getAllProperties(char* property)
     {
        int num_properties = getNum(property);
-       vector<vjVarValue*> ret_val;
+       std::vector<vjVarValue*> ret_val;
        for(int i=0;i<num_properties;i++)
        {
          vjVarValue* new_var_val = new vjVarValue(T_INT);
