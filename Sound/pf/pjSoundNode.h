@@ -39,7 +39,7 @@
 #include <Math/vjCoord.h>
 #include <Kernel/vjDebug.h>
 #include <Kernel/Pf/vjPfUtil.h>
-#include <Sound.h> //juggler sound
+#include <vjSound.h> //juggler sound
 
 //: Performer-Juggler sound node.
 //  this node automatically updates the Sound's position information.
@@ -50,7 +50,7 @@
 class pjSoundNode : public pfDCS
 {
 public:
-   pjSoundNode( Sound* sound );
+   pjSoundNode( vjSound* sound );
    virtual ~pjSoundNode()
    {
       mSound = NULL;
@@ -63,7 +63,7 @@ public:
       mX = x; mY = y; mZ = z;
    }   
 
-   void setSound( Sound* sound )
+   void setSound( vjSound* sound )
    {
       mSound = sound;
    }   
@@ -85,12 +85,12 @@ public:  // Required for Performer class
    
 private:
    static pfType* classType;
-   Sound*         mSound;
+   vjSound*         mSound;
 };
 
 
 
-pjSoundNode::pjSoundNode( Sound* sound )
+pjSoundNode::pjSoundNode( vjSound* sound )
 {
    this->setSound( sound );
    this->setType(classType);  // Set the type
@@ -140,8 +140,10 @@ int pjSoundNode::app(pfTraverser *trav)
       vjVec3 soundPosition = vjGetVjVec( pf_soundPosition );
       mSound->setPosition( soundPosition[0], soundPosition[1], soundPosition[2] );
    
-      // TODO: call engine's update here???
+      // Engine's update should be called by the app's frame process, 
+      // or in juggler's manager (not both, of course)...
       
+      // use this for debugging the location of the sound reletive to the user.
       //cout<<"sound in userspace: "<<soundPosition[0]<<" "<<soundPosition[1]<<" "<<soundPosition[2]<<"\n"<<flush;
    }
       

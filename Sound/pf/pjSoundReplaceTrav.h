@@ -55,6 +55,7 @@
 #include <unistd.h>
 #include <string>
 #include <assert.h>
+#include <Sound/vjSoundManager.h>
 
 //: This is a Performer traverser that will replace any node ending in mKeyName
 //  in your scene graph with a pjSoundNode.
@@ -62,15 +63,24 @@
 //  For example, if mKeyName == _Sound_, and your nodename == Gong_Sound_
 //  then that node will be replaced with a new pjSoundNode of a sound 
 //  called "Gong"
+//
+// REQUIRED!!! You must call pjSoundReplaceTrav::preForkInit() in your juggler app's
+//              preForkInit() member function.  Your app is likely to crash otherwise!!
 class pjSoundReplaceTrav
 {
 public:
-   static void traverse( pfNode* node, SoundEngine* engine, const std::string& keyName = "_Sound_" )
+   // This function must be called pjSoundReplaceTrav::preForkInit() in your juggler app's
+   // preForkInit() member function.  Your app is likely to crash otherwise!!
+   static void preForkInit()
    {
-      assert( engine != NULL && node != NULL );
-      pjSoundReplaceTrav::mSoundEnginePtr = engine;
-      engine->setPosition( 0.0f, 0.0f, 0.0f );
-      
+      pjSoundNode::init();
+   }
+   
+   static void traverse( pfNode* node, const std::string& keyName = "_Sound_" )
+   {
+      //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
+      cout<<"[SoundReplacer] Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<flush;
+   
       // use the performer traversal mechanism
        pfuTraverser trav;
        pfuInitTraverser( &trav );
@@ -116,15 +126,17 @@ protected:
          {
             std::string soundName = nodeName.substr( 0, startOfKeyWord );
             cout<<"extracted sound named \""<<soundName<<"\"\n"<<flush;
-            assert( mSoundEnginePtr != NULL );
-            Sound* sound = mSoundEnginePtr->getHandle( soundName.c_str() );
+            vjSound* sound = vjSoundManager::instance()->getHandle( soundName.c_str() );
             
             // replace the found node with a sound node.
-            parent->removeChild( currentNode );
+            // note: only replace if the sound is valid.
+            //        this way, the users can see where the sounds are.
             if (sound != NULL)
             {
+               parent->removeChild( currentNode );
                parent->addChild( new pjSoundNode( sound ) );
                sound->trigger();
+               cout<<"[SoundReplacer]     Replaced "<<nodeName<<" node with a pjSoundNode referencing the "<<soundName<<" sound."<<flush;
             }
             else
             {
@@ -135,7 +147,7 @@ protected:
          }
          else
          {
-            cout<<"but Parent is NULL (nowhere to hang the Sound node!)\n"<<flush;
+            cout<<"but Parent is NULL (nowhere to hang the pjSoundNode!)\n"<<flush;
          }         
       }
       // for very verbose output...
@@ -145,11 +157,6 @@ protected:
       //}      
       return PFTRAV_CONT;	    // Return continue 
    }
-   
-   static SoundEngine* mSoundEnginePtr;
 };
-
-SoundEngine* pjSoundReplaceTrav::mSoundEnginePtr = NULL;
-
 
 #endif	/* _PERFORMER_JUGGLER_SOUND_REPLACE_TRAV_H_ */
