@@ -605,12 +605,13 @@ void SocketTest::testBlocking_connector(void* arg)
          connector_socket.enableNonBlocking();
 
       //if the the flag of readn is true, use readn(), otherwise use read().
+      // Try to read 20 bytes
       if (mReadnFlag == true)
          connector_socket.readn(buffer, 20, amount_read);
       else
          connector_socket.read(buffer, 20, amount_read);
 
-      if (amount_read>=0)
+      if (amount_read>0)
       {
          connector_socket.write(buffer, amount_read, amount_written);
       }
