@@ -55,7 +55,7 @@ class vjGlDrawManager;
 // @author Allen Bierbaum
 //  Date: 1-12-98
 //---------------------------------------------------------------------------------------
-class vjGlPipe
+class VJ_CLASS_API vjGlPipe
 {
 public:
       //: Constructor
@@ -152,6 +152,9 @@ private:
 
    //: Swaps the buffers of the given window
    void swapWindowBuffers(vjGlWindow* win);
+
+   vjGlPipe(const vjGlPipe& o) {;}
+   void operator=(const vjGlPipe& o) {;}
 
 private:
    vjThread*   mActiveThread;      //: The thread running this object
