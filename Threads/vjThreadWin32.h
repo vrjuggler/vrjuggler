@@ -259,7 +259,7 @@ public:
    virtual std::ostream& outStream(std::ostream& out)
    {
       out.setf(std::ios::right);
-      out << std::setw(7) << std::setfill('0') << mThreadPID << "/";
+      out << std::setw(7) << std::setfill('0') << mThreadTID << "/";
       out.unsetf(std::ios::right);
       vjBaseThread::outStream(out);
       out << std::setfill(' ');
