@@ -742,6 +742,12 @@ public class ConfigModule extends DefaultCoreModule {
             db.need_to_save = false;
 	    /* do some fixing up if the name changed */
 	    db.setFile (f);
+            renameChunkDB (db, f.getName());
+
+//             String newname = db.getFile().getName();
+//             if (!newname.equals(db.getName())) {
+//                 db.setName (createUniqueChunkDBName(newname));
+//             }
             return db.name;
 	}
 	catch (IOException e) {

@@ -120,6 +120,11 @@ public class ConfigChunkDB implements Cloneable {
         file = f;
     }
 
+    /** Retruns the file used for loading/saving */
+    public final File getFile () {
+        return file;
+    }
+
     /** Sets the identifier string for this DB */
     public final void setName (String _name) {
 	name = _name;
