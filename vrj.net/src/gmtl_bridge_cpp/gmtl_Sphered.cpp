@@ -49,9 +49,9 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Sphered* gmtl_Sphere_double__Sphere__gmtl_Point_double_3_double(const gmtl::Point<double,3>* p0, const double& p1)
+   SHARPPY_API gmtl::Sphered* gmtl_Sphere_double__Sphere__gmtl_Point3d_double(const gmtl::Point3d* p0, const double& p1)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
       gmtl::Sphered* obj = new gmtl::Sphered(marshal_p0, p1);
       ; // Post-call marshaling for p0
       return obj;
@@ -72,10 +72,10 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Sphere<double>::getCenter()
-   SHARPPY_API const gmtl::Point<double,3>* gmtl_Sphere_double__getCenter__(gmtl::Sphered* self_)
+   SHARPPY_API const gmtl::Point3d* gmtl_Sphere_double__getCenter__(gmtl::Sphered* self_)
    {
-      const gmtl::Point<double,3>* result;
-      result = new const gmtl::Point<double,3>(self_->getCenter());
+      const gmtl::Point3d* result;
+      result = new const gmtl::Point3d(self_->getCenter());
 
       return result;
    }
@@ -90,9 +90,9 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Sphere<double>::setCenter()
-   SHARPPY_API void gmtl_Sphere_double__setCenter__gmtl_Point_double_3(gmtl::Sphered* self_, const gmtl::Point<double,3>* p0)
+   SHARPPY_API void gmtl_Sphere_double__setCenter__gmtl_Point3d(gmtl::Sphered* self_, const gmtl::Point3d* p0)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
       self_->setCenter(marshal_p0);
       ; // Post-call marshaling for p0
    }

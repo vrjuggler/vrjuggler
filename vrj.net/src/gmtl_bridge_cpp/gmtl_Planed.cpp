@@ -53,11 +53,11 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Planed* gmtl_Plane_double__Plane__gmtl_Point_double_3_gmtl_Point_double_3_gmtl_Point_double_3(const gmtl::Point<double,3>* p0, const gmtl::Point<double,3>* p1, const gmtl::Point<double,3>* p2)
+   SHARPPY_API gmtl::Planed* gmtl_Plane_double__Plane__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d(const gmtl::Point3d* p0, const gmtl::Point3d* p1, const gmtl::Point3d* p2)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
-      const gmtl::Point<double,3>& marshal_p1 = *p1; // Pre-call marshaling for p1
-      const gmtl::Point<double,3>& marshal_p2 = *p2; // Pre-call marshaling for p2
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Point3d& marshal_p2 = *p2; // Pre-call marshaling for p2
       gmtl::Planed* obj = new gmtl::Planed(marshal_p0, marshal_p1, marshal_p2);
       ; // Post-call marshaling for p0
       ; // Post-call marshaling for p1
@@ -66,10 +66,10 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Planed* gmtl_Plane_double__Plane__gmtl_Vec3d_gmtl_Point_double_3(const gmtl::Vec3d* p0, const gmtl::Point<double,3>* p1)
+   SHARPPY_API gmtl::Planed* gmtl_Plane_double__Plane__gmtl_Vec3d_gmtl_Point3d(const gmtl::Vec3d* p0, const gmtl::Point3d* p1)
    {
       const gmtl::Vec3d& marshal_p0 = *p0; // Pre-call marshaling for p0
-      const gmtl::Point<double,3>& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Point3d& marshal_p1 = *p1; // Pre-call marshaling for p1
       gmtl::Planed* obj = new gmtl::Planed(marshal_p0, marshal_p1);
       ; // Post-call marshaling for p0
       ; // Post-call marshaling for p1

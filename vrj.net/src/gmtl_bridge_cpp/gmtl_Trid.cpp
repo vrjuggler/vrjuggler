@@ -54,11 +54,11 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Trid* gmtl_Tri_double__Tri__gmtl_Point_double_3_gmtl_Point_double_3_gmtl_Point_double_3(const gmtl::Point<double,3>* p0, const gmtl::Point<double,3>* p1, const gmtl::Point<double,3>* p2)
+   SHARPPY_API gmtl::Trid* gmtl_Tri_double__Tri__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d(const gmtl::Point3d* p0, const gmtl::Point3d* p1, const gmtl::Point3d* p2)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
-      const gmtl::Point<double,3>& marshal_p1 = *p1; // Pre-call marshaling for p1
-      const gmtl::Point<double,3>& marshal_p2 = *p2; // Pre-call marshaling for p2
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Point3d& marshal_p2 = *p2; // Pre-call marshaling for p2
       gmtl::Trid* obj = new gmtl::Trid(marshal_p0, marshal_p1, marshal_p2);
       ; // Post-call marshaling for p0
       ; // Post-call marshaling for p1
@@ -99,11 +99,11 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Tri<double>::set()
-   SHARPPY_API void gmtl_Tri_double__set__gmtl_Point_double_3_gmtl_Point_double_3_gmtl_Point_double_3(gmtl::Trid* self_, const gmtl::Point<double,3>* p0, const gmtl::Point<double,3>* p1, const gmtl::Point<double,3>* p2)
+   SHARPPY_API void gmtl_Tri_double__set__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d(gmtl::Trid* self_, const gmtl::Point3d* p0, const gmtl::Point3d* p1, const gmtl::Point3d* p2)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
-      const gmtl::Point<double,3>& marshal_p1 = *p1; // Pre-call marshaling for p1
-      const gmtl::Point<double,3>& marshal_p2 = *p2; // Pre-call marshaling for p2
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Point3d& marshal_p2 = *p2; // Pre-call marshaling for p2
       self_->set(marshal_p0, marshal_p1, marshal_p2);
       ; // Post-call marshaling for p0
       ; // Post-call marshaling for p1

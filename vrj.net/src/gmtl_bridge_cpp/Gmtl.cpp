@@ -25,11 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.1 of RCSfile: free_function_cxx.tmpl,v
+// Generated from Revision: 1.1 of RCSfile: free_types_cxx.tmpl,v
 
 
 #include "sharppy.h"
-#include <gmtl-functions.h>
+#include <gmtl-free-types.h>
 
 extern "C"
 {
@@ -123,9 +123,9 @@ extern "C"
 
 
    // Wrapper for free function gmtl::center()
-   SHARPPY_API gmtl::Point3i* gmtl_center__gmtl_Tri_int(const gmtl::Tri<int>* p0)
+   SHARPPY_API gmtl::Point3i* gmtl_center__gmtl_Trii(const gmtl::Trii* p0)
    {
-      const gmtl::Tri<int>& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Trii& marshal_p0 = *p0; // Pre-call marshaling for p0
       gmtl::Point3i* result;
       result = new gmtl::Point3i(gmtl::center(marshal_p0));
 
@@ -2129,12 +2129,12 @@ extern "C"
 
 
    // Wrapper for free function gmtl::whichSide()
-   SHARPPY_API gmtl::PlaneSide* gmtl_whichSide__gmtl_Planed_gmtl_Point3d(const gmtl::Planed* p0, const gmtl::Point3d* p1)
+   SHARPPY_API gmtl::PlaneSide gmtl_whichSide__gmtl_Planed_gmtl_Point3d(const gmtl::Planed* p0, const gmtl::Point3d* p1)
    {
       const gmtl::Planed& marshal_p0 = *p0; // Pre-call marshaling for p0
       const gmtl::Point3d& marshal_p1 = *p1; // Pre-call marshaling for p1
-      gmtl::PlaneSide* result;
-      result = new gmtl::PlaneSide(gmtl::whichSide(marshal_p0, marshal_p1));
+      gmtl::PlaneSide result;
+      result = gmtl::whichSide(marshal_p0, marshal_p1);
 
       ; // Post-call marshaling for p0
       ; // Post-call marshaling for p1
@@ -2143,12 +2143,12 @@ extern "C"
 
 
    // Wrapper for free function gmtl::whichSide()
-   SHARPPY_API gmtl::PlaneSide* gmtl_whichSide__gmtl_Planef_gmtl_Point3f(const gmtl::Planef* p0, const gmtl::Point3f* p1)
+   SHARPPY_API gmtl::PlaneSide gmtl_whichSide__gmtl_Planef_gmtl_Point3f(const gmtl::Planef* p0, const gmtl::Point3f* p1)
    {
       const gmtl::Planef& marshal_p0 = *p0; // Pre-call marshaling for p0
       const gmtl::Point3f& marshal_p1 = *p1; // Pre-call marshaling for p1
-      gmtl::PlaneSide* result;
-      result = new gmtl::PlaneSide(gmtl::whichSide(marshal_p0, marshal_p1));
+      gmtl::PlaneSide result;
+      result = gmtl::whichSide(marshal_p0, marshal_p1);
 
       ; // Post-call marshaling for p0
       ; // Post-call marshaling for p1
@@ -2157,12 +2157,12 @@ extern "C"
 
 
    // Wrapper for free function gmtl::whichSide()
-   SHARPPY_API gmtl::PlaneSide* gmtl_whichSide__gmtl_Planef_gmtl_Point3f_float(const gmtl::Planef* p0, const gmtl::Point3f* p1, const float& p2)
+   SHARPPY_API gmtl::PlaneSide gmtl_whichSide__gmtl_Planef_gmtl_Point3f_float(const gmtl::Planef* p0, const gmtl::Point3f* p1, const float& p2)
    {
       const gmtl::Planef& marshal_p0 = *p0; // Pre-call marshaling for p0
       const gmtl::Point3f& marshal_p1 = *p1; // Pre-call marshaling for p1
-      gmtl::PlaneSide* result;
-      result = new gmtl::PlaneSide(gmtl::whichSide(marshal_p0, marshal_p1, p2));
+      gmtl::PlaneSide result;
+      result = gmtl::whichSide(marshal_p0, marshal_p1, p2);
 
       ; // Post-call marshaling for p0
       ; // Post-call marshaling for p1
@@ -2171,12 +2171,12 @@ extern "C"
 
 
    // Wrapper for free function gmtl::whichSide()
-   SHARPPY_API gmtl::PlaneSide* gmtl_whichSide__gmtl_Planed_gmtl_Point3d_double(const gmtl::Planed* p0, const gmtl::Point3d* p1, const double& p2)
+   SHARPPY_API gmtl::PlaneSide gmtl_whichSide__gmtl_Planed_gmtl_Point3d_double(const gmtl::Planed* p0, const gmtl::Point3d* p1, const double& p2)
    {
       const gmtl::Planed& marshal_p0 = *p0; // Pre-call marshaling for p0
       const gmtl::Point3d& marshal_p1 = *p1; // Pre-call marshaling for p1
-      gmtl::PlaneSide* result;
-      result = new gmtl::PlaneSide(gmtl::whichSide(marshal_p0, marshal_p1, p2));
+      gmtl::PlaneSide result;
+      result = gmtl::whichSide(marshal_p0, marshal_p1, p2);
 
       ; // Post-call marshaling for p0
       ; // Post-call marshaling for p1

@@ -52,9 +52,9 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__gmtl_Point_double_3_gmtl_Vec3d(const gmtl::Point<double,3>* p0, const gmtl::Vec3d* p1)
+   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__gmtl_Point3d_gmtl_Vec3d(const gmtl::Point3d* p0, const gmtl::Vec3d* p1)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
       const gmtl::Vec3d& marshal_p1 = *p1; // Pre-call marshaling for p1
       gmtl::LineSegd* obj = new gmtl::LineSegd(marshal_p0, marshal_p1);
       ; // Post-call marshaling for p0
@@ -72,10 +72,10 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__gmtl_Point_double_3_gmtl_Point_double_3(const gmtl::Point<double,3>* p0, const gmtl::Point<double,3>* p1)
+   SHARPPY_API gmtl::LineSegd* gmtl_LineSeg_double__LineSeg__gmtl_Point3d_gmtl_Point3d(const gmtl::Point3d* p0, const gmtl::Point3d* p1)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
-      const gmtl::Point<double,3>& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p1 = *p1; // Pre-call marshaling for p1
       gmtl::LineSegd* obj = new gmtl::LineSegd(marshal_p0, marshal_p1);
       ; // Post-call marshaling for p0
       ; // Post-call marshaling for p1

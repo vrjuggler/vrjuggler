@@ -51,9 +51,9 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Rayd* gmtl_Ray_double__Ray__gmtl_Point_double_3_gmtl_Vec3d(const gmtl::Point<double,3>* p0, const gmtl::Vec3d* p1)
+   SHARPPY_API gmtl::Rayd* gmtl_Ray_double__Ray__gmtl_Point3d_gmtl_Vec3d(const gmtl::Point3d* p0, const gmtl::Vec3d* p1)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
       const gmtl::Vec3d& marshal_p1 = *p1; // Pre-call marshaling for p1
       gmtl::Rayd* obj = new gmtl::Rayd(marshal_p0, marshal_p1);
       ; // Post-call marshaling for p0
@@ -76,18 +76,18 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Ray<double>::getOrigin()
-   SHARPPY_API const gmtl::Point<double,3>* gmtl_Ray_double__getOrigin__(gmtl::Rayd* self_)
+   SHARPPY_API const gmtl::Point3d* gmtl_Ray_double__getOrigin__(gmtl::Rayd* self_)
    {
-      const gmtl::Point<double,3>* result;
-      result = new const gmtl::Point<double,3>(self_->getOrigin());
+      const gmtl::Point3d* result;
+      result = new const gmtl::Point3d(self_->getOrigin());
 
       return result;
    }
 
    // Wrapper for non-virtual method gmtl::Ray<double>::setOrigin()
-   SHARPPY_API void gmtl_Ray_double__setOrigin__gmtl_Point_double_3(gmtl::Rayd* self_, const gmtl::Point<double,3>* p0)
+   SHARPPY_API void gmtl_Ray_double__setOrigin__gmtl_Point3d(gmtl::Rayd* self_, const gmtl::Point3d* p0)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
       self_->setOrigin(marshal_p0);
       ; // Post-call marshaling for p0
    }

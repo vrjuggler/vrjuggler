@@ -50,10 +50,10 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::AABoxd* gmtl_AABox_double__AABox__gmtl_Point_double_3_gmtl_Point_double_3(const gmtl::Point<double,3>* p0, const gmtl::Point<double,3>* p1)
+   SHARPPY_API gmtl::AABoxd* gmtl_AABox_double__AABox__gmtl_Point3d_gmtl_Point3d(const gmtl::Point3d* p0, const gmtl::Point3d* p1)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
-      const gmtl::Point<double,3>& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p1 = *p1; // Pre-call marshaling for p1
       gmtl::AABoxd* obj = new gmtl::AABoxd(marshal_p0, marshal_p1);
       ; // Post-call marshaling for p0
       ; // Post-call marshaling for p1
@@ -75,19 +75,19 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::AABox<double>::getMin()
-   SHARPPY_API const gmtl::Point<double,3>* gmtl_AABox_double__getMin__(gmtl::AABoxd* self_)
+   SHARPPY_API const gmtl::Point3d* gmtl_AABox_double__getMin__(gmtl::AABoxd* self_)
    {
-      const gmtl::Point<double,3>* result;
-      result = new const gmtl::Point<double,3>(self_->getMin());
+      const gmtl::Point3d* result;
+      result = new const gmtl::Point3d(self_->getMin());
 
       return result;
    }
 
    // Wrapper for non-virtual method gmtl::AABox<double>::getMax()
-   SHARPPY_API const gmtl::Point<double,3>* gmtl_AABox_double__getMax__(gmtl::AABoxd* self_)
+   SHARPPY_API const gmtl::Point3d* gmtl_AABox_double__getMax__(gmtl::AABoxd* self_)
    {
-      const gmtl::Point<double,3>* result;
-      result = new const gmtl::Point<double,3>(self_->getMax());
+      const gmtl::Point3d* result;
+      result = new const gmtl::Point3d(self_->getMax());
 
       return result;
    }
@@ -102,17 +102,17 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::AABox<double>::setMin()
-   SHARPPY_API void gmtl_AABox_double__setMin__gmtl_Point_double_3(gmtl::AABoxd* self_, const gmtl::Point<double,3>* p0)
+   SHARPPY_API void gmtl_AABox_double__setMin__gmtl_Point3d(gmtl::AABoxd* self_, const gmtl::Point3d* p0)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
       self_->setMin(marshal_p0);
       ; // Post-call marshaling for p0
    }
 
    // Wrapper for non-virtual method gmtl::AABox<double>::setMax()
-   SHARPPY_API void gmtl_AABox_double__setMax__gmtl_Point_double_3(gmtl::AABoxd* self_, const gmtl::Point<double,3>* p0)
+   SHARPPY_API void gmtl_AABox_double__setMax__gmtl_Point3d(gmtl::AABoxd* self_, const gmtl::Point3d* p0)
    {
-      const gmtl::Point<double,3>& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
       self_->setMax(marshal_p0);
       ; // Post-call marshaling for p0
    }
