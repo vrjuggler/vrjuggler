@@ -14,7 +14,7 @@
 	typedef vjSemaphoreWin32 vjSemaphore;
 #else
 #if defined(VJ_USE_PTHREADS) || defined(VJ_USE_POSIX)
-#   define _POSIX_C_SOURCE 2
+#   define _POSIX_C_SOURCE VJ_POSIX_C_SOURCE
 
 #   include <Sync/vjSemaphorePosix.h>
 
