@@ -2,7 +2,7 @@
 #define _VRJ_TRACKD_CONTROLLER_STANDALONE_H_
 
 #include <stdlib.h>
-#include <vrj/Input/Devices/Open/Trackd/trackdmem.h>
+#include <gad/Devices/Open/Trackd/trackdmem.h>
 
 class TrackdControllerStandalone
 {

@@ -47,9 +47,9 @@
 
 #include <vrj/vrjConfig.h>
 #include <vpr/Thread/Thread.h>
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Position.h>
-#include <vrj/Input/Devices/Ascension/FlockStandalone.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Position.h>
+#include <gad/Devices/Ascension/FlockStandalone.h>
 
 namespace vrj
 {

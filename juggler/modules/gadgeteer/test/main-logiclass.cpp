@@ -32,7 +32,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include <vrj/Input/Devices/Logitech/logiclass.h>
+#include <gad/Devices/Logitech/logiclass.h>
 #include <vpr/System.h>
 
 int main()

@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <vrj/Input/Devices/Immersion/hci.h>
-#include <vrj/Input/Devices/Immersion/iboxStandalone.h>
+#include <gad/Devices/Immersion/hci.h>
+#include <gad/Devices/Immersion/iboxStandalone.h>
 
 ibox_rec ibox;
 

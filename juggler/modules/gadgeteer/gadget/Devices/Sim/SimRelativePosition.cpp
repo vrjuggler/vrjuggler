@@ -32,7 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Input/Devices/Sim/SimRelativePosition.h>
+#include <gad/Devices/Sim/SimRelativePosition.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj

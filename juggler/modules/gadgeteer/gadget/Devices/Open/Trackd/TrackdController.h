@@ -35,11 +35,11 @@
 
 #include <vrj/vrjConfig.h>
 #include <vector>
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Digital.h>
-#include <vrj/Input/Type/Analog.h>
-#include <vrj/Input/Devices/Sim/SimInput.h>
-#include <vrj/Input/Devices/Open/Trackd/TrackdControllerStandalone.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Digital.h>
+#include <gad/Type/Analog.h>
+#include <gad/Devices/Sim/SimInput.h>
+#include <gad/Devices/Open/Trackd/TrackdControllerStandalone.h>
 
 namespace vrj
 {

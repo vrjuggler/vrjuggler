@@ -43,8 +43,8 @@
 #include <vrj/vrjConfig.h>
 #include <math.h>
 
-#include <vrj/Input/Type/Gesture.h>
-#include <vrj/Input/Type/Proxy.h>
+#include <gad/Type/Gesture.h>
+#include <gad/Type/Proxy.h>
 
 namespace vrj
 {

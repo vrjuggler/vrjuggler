@@ -40,7 +40,7 @@
 #include <vrj/Config/ConfigChunk.h>
 #include <ApplicationServices/ApplicationServices.h>
 
-#include <vrj/Input/Devices/Keyboard/KeyboardOSX.h>
+#include <gad/Devices/Keyboard/KeyboardOSX.h>
 
 namespace vrj
 {

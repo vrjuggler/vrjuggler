@@ -40,11 +40,11 @@
 #include <vrj/vrjConfig.h>
 #include <vector>
 #include <vpr/Thread/Thread.h>
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Position.h>
-#include <vrj/Input/Type/Digital.h>
-#include <vrj/Input/Type/Analog.h>
-#include <vrj/Input/Devices/Intersense/IntersenseStandalone.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Position.h>
+#include <gad/Type/Digital.h>
+#include <gad/Type/Analog.h>
+#include <gad/Devices/Intersense/IntersenseStandalone.h>
 
 // maximum number of digital and analog buttons possible on a IS interface
 // box.

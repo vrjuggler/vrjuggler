@@ -35,8 +35,8 @@
 #include <vrj/Config/ChunkDescDB.h>
 #include <vrj/Config/ChunkFactory.h>
 #include <vrj/Config/ConfigChunkDB.h>
-#include <vrj/Input/InputManager.h>
-#include <vrj/Input/Type/PosInterface.h>
+#include <gad/InputManager.h>
+#include <gad/Type/PosInterface.h>
 #include <vrj/Math/Coord.h>
 #include <vpr/System.h>
 

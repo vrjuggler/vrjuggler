@@ -1,7 +1,7 @@
 #ifndef _VRJ_TRACKD_SENSOR_STANDALONE_H_
 #define _VRJ_TRACKD_SENSOR_STANDALONE_H_
 
-#include <vrj/Input/Devices/Open/Trackd/trackdmem.h>
+#include <gad/Devices/Open/Trackd/trackdmem.h>
 #include <vrj/Math/Matrix.h>
 
 class TrackdSensorStandalone

@@ -33,7 +33,7 @@
 #ifndef _VRJ_GLOVE_INTERFACE_H_
 #define _VRJ_GLOVE_INTERFACE_H_
 
-#include <vrj/Input/Type/GloveProxy.h>
-#include <vrj/Input/Type/DeviceInterface.h>
+#include <gad/Type/GloveProxy.h>
+#include <gad/Type/DeviceInterface.h>
 
 #endif

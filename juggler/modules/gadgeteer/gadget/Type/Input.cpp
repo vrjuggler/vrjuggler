@@ -35,7 +35,7 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Assert.h>
 
-#include <vrj/Input/Type/Input.h>
+#include <gad/Type/Input.h>
 #include <vrj/Config/ConfigChunk.h>
 
 

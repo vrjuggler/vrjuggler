@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Devices/Open/Trackd/TrackdControllerStandalone.h>
-#include <vrj/Input/Devices/Open/Trackd/TrackdController.h>
+#include <gad/Devices/Open/Trackd/TrackdControllerStandalone.h>
+#include <gad/Devices/Open/Trackd/TrackdController.h>
 #include <vrj/Config/ConfigChunk.h>
 
 #include <vrj/Util/Debug.h>

@@ -12,7 +12,7 @@
 /*  ==============================================================  */
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_math3d.h>
+#include <gad/Devices/VirtualTechnologies/vt_math3d.h>
 
 #ifndef NULL
 #define NULL 0

@@ -32,14 +32,14 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Input/Type/AnalogProxy.h>
-#include <vrj/Input/Type/DigitalProxy.h>
-#include <vrj/Input/Type/PosProxy.h>
-#include <vrj/Input/Type/GloveProxy.h>
-#include <vrj/Input/Type/GestureProxy.h>
-#include <vrj/Input/Type/KeyboardProxy.h>
-#include <vrj/Input/ProxyDepChecker.h>
-#include <vrj/Input/ProxyFactory.h>
+#include <gad/Type/AnalogProxy.h>
+#include <gad/Type/DigitalProxy.h>
+#include <gad/Type/PosProxy.h>
+#include <gad/Type/GloveProxy.h>
+#include <gad/Type/GestureProxy.h>
+#include <gad/Type/KeyboardProxy.h>
+#include <gad/ProxyDepChecker.h>
+#include <gad/ProxyFactory.h>
 
 #include <typeinfo>
 

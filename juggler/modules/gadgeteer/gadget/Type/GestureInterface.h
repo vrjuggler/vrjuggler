@@ -33,7 +33,7 @@
 #ifndef _VRJ_GESTURE_INTERFACE_H_
 #define _VRJ_GESTURE_INTERFACE_H_
 
-#include <vrj/Input/Type/GestureProxy.h>
-#include <vrj/Input/Type/DeviceInterface.h>
+#include <gad/Type/GestureProxy.h>
+#include <gad/Type/DeviceInterface.h>
 
 #endif

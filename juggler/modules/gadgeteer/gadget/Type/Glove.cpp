@@ -32,7 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Input/Type/Glove.h>
+#include <gad/Type/Glove.h>
 #include <vrj/Math/Vec4.h>
 
 namespace vrj

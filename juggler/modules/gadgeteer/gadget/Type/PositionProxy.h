@@ -42,10 +42,10 @@
 #include <vrj/vrjConfig.h>
 #include <math.h>
 
-#include <vrj/Input/Type/Position.h>
-#include <vrj/Input/Type/Proxy.h>
+#include <gad/Type/Position.h>
+#include <gad/Type/Proxy.h>
 #include <vrj/Math/Matrix.h>
-#include <vrj/Input/Type/PosFilter.h>
+#include <gad/Type/PosFilter.h>
 
 
 namespace vrj

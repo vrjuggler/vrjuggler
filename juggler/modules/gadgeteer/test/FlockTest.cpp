@@ -32,7 +32,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include <vrj/Input/Devices/Ascension/Flock.h>
+#include <gad/Devices/Ascension/Flock.h>
 #include <vrj/Math/Coord.h>
 #include <vpr/System.h>
 

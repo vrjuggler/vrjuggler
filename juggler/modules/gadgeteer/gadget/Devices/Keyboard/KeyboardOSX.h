@@ -35,8 +35,8 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Keyboard.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Keyboard.h>
 #include <vpr/Sync/Mutex.h>
 #include <Carbon/Carbon.h>
 #include <vrj/Kernel/OSXSystemFactory.h>

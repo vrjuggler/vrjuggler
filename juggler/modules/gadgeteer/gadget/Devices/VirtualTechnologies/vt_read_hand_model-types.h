@@ -15,7 +15,7 @@
 /*  ==============================================================  */
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_read_object-types.h>
+#include <gad/Devices/VirtualTechnologies/vt_read_object-types.h>
 
 typedef struct
 {

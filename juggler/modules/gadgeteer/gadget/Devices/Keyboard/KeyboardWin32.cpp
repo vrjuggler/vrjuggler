@@ -37,7 +37,7 @@
 #include <vrj/Math/Coord.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Input/Devices/Keyboard/KeyboardWin32.h>
+#include <gad/Devices/Keyboard/KeyboardWin32.h>
 
 #ifndef GET_X_LPARAM
 #define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))

@@ -35,7 +35,7 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/KeyboardInterface.h>
+#include <gad/Type/KeyboardInterface.h>
 #include <vrj/Config/VarValue.h>
 
 namespace vrj

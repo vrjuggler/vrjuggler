@@ -33,7 +33,7 @@
 #ifndef _VRJ_ANALOG_INTERFACE_H_
 #define _VRJ_ANALOG_INTERFACE_H_
 
-#include <vrj/Input/Type/AnalogProxy.h>
-#include <vrj/Input/Type/DeviceInterface.h>
+#include <gad/Type/AnalogProxy.h>
+#include <gad/Type/DeviceInterface.h>
 
 #endif

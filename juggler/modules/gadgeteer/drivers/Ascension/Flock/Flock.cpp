@@ -53,7 +53,7 @@
 #include <vrj/Util/Debug.h>
 #include <vrj/Util/FileIO.h>
 #include <vrj/Config/ConfigChunk.h>
-#include <vrj/Input/Devices/Ascension/Flock.h>
+#include <gad/Devices/Ascension/Flock.h>
 
 namespace vrj
 {

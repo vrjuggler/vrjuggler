@@ -34,7 +34,7 @@
 #include <float.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Config/ConfigChunk.h>
-#include <vrj/Input/Type/Position.h>
+#include <gad/Type/Position.h>
 
 namespace vrj
 {
