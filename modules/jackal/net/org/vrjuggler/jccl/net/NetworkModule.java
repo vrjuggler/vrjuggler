@@ -128,7 +128,7 @@ public class NetworkModule
         String classname = ch.getValueFromToken ("classname", 0).getString();
         if (classname == null)
             throw new VjComponentException (component_name + ": Not a component instance chunk: " + ch.getName());
-        if (Core.component_factory.classSupportsInterface (classname, VjComponents.Network.NetCommunicator.class)) {
+        if (Core.component_factory.classSupportsInterface (classname, NetCommunicator.class)) {
             NetCommunicator nc = (NetCommunicator) Core.component_factory.createComponent(classname);
             nc.setConfiguration (ch);
             nc.initialize ();
