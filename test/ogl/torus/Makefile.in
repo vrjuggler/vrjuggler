@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/test/ogl/cubes
+# Makefile.in for juggler/test/ogl/torus
 # $Id$
 # -----------------------------------------------------------------------------
 
@@ -40,7 +40,6 @@ torus.o: torus.cpp torusApp.h
 	
 torusApp.o: torusApp.cpp torusApp.h
 	${COMPILE} -c -o $@ ${srcdir}/torusApp.cpp
-
 
 # -----------------------------------------------------------------------------
 # Clean-up.
