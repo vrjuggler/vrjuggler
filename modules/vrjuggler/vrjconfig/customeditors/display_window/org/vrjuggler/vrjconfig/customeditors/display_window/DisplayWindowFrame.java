@@ -324,6 +324,13 @@ public class DisplayWindowFrame
 
          mElement.setProperty("stereo", 0, dlg.inStereo(), mContext);
          mElement.setProperty("border", 0, dlg.hasBorder(), mContext);
+
+         mElement.setProperty(EditorConstants.lockKeyProperty, 0,
+                              dlg.getLockKey(), mContext);
+         mElement.setProperty(EditorConstants.startLockedProperty, 0,
+                              dlg.shouldStartLocked(), mContext);
+         mElement.setProperty(EditorConstants.sleepTimeProperty, 0,
+                              dlg.getSleepTime(), mContext);
       }
    }
 
