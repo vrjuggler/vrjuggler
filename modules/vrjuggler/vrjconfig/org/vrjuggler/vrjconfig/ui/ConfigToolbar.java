@@ -37,8 +37,10 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.Stack;
 import javax.swing.*;
+import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.GlobalPreferencesService;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.PopupButton;
 import org.vrjuggler.vrjconfig.VrjConfigConstants;
@@ -85,6 +87,30 @@ public class ConfigToolbar
          undoBtn.setText("Undo");
          redoBtn.setText("Redo");
          expandBtn.setText("Expand");
+      }
+
+      GlobalPreferencesService prefs =
+         (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
+
+      // If we were able to get a handle to the global user preferences, set
+      // the start directory for fileChooser.
+      if ( null != prefs )
+      {
+         String start_dir = prefs.getChooserStartDir();
+         System.out.println("Opening in " + start_dir);
+
+         File f;
+
+         if ( start_dir.equals(GlobalPreferencesService.CWD_START) )
+         {
+            f = new File(System.getProperty("user.dir"));
+         }
+         else
+         {
+            f = new File(EnvironmentService.getUserHome());
+         }
+
+         fileChooser.setCurrentDirectory(f);
       }
    }
 
