@@ -49,7 +49,6 @@ import VjGUI.util.ChildFrame;
 import VjGUI.configchunk.ConfigChunkFrame;
 import VjGUI.chunkdesc.ChunkDescFrame;
 import VjConfig.*;
-import VjPerf.*;
 
 
 public class ControlUI  
@@ -119,23 +118,25 @@ public class ControlUI
 	// ------------------- SUBPANELS ----------------------
 	// eventually, this will need to know to load components from somewhere
 
-	p = new ConfigurePane();
-	tabpane.add ("Configure", p);
+        Vector panelclasses = new Vector();
+        panelclasses.addElement ("VjGUI.ConfigurePane");
+        panelclasses.addElement ("VjGUI.ConnectionPane");
+        panelclasses.addElement ("VjGUI.DescDBPanel");
+        panelclasses.addElement ("VjGUI.ChunkOrgTreePane");
+        panelclasses.addElement ("VjGUI.ConsolePane");
+        panelclasses.addElement ("VjPerf.PerfAnalyzerPanel");
 
-	p = new ConnectionPane();
-	tabpane.add ("Connection", p);
-	
-	p = new DescDBPanel();
-	tabpane.add ("Descriptions", p);
-	
-	p = new ChunkOrgTreePane();
-	tabpane.add ("Org Tree", p);
+        for (int i = 0; i < panelclasses.size(); i++) {
 
-	p = new ConsolePane();
-	tabpane.add ("Messages", p);
+            try {
+                p = (JComponent)ClassLoader.getSystemClassLoader().loadClass((String)panelclasses.elementAt(i)).newInstance();
+                tabpane.add (p.getName(), p);
+            }
+            catch (Exception e) {
+                Core.consoleErrorMessage ("VjControl", e.toString());
+            }
+        }
 
-	p = new PerfAnalyzerPanel();
-	tabpane.add ("Performance", p);
 
 
 	// --------------------- MENUS -------------------------------------------

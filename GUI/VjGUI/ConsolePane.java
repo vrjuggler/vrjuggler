@@ -72,4 +72,13 @@ public class ConsolePane extends JPanel implements LogMessageListener {
     }
 
 
+    /********************** PlugPanel Stuff **************************/
+    public void destroy () {
+    }
+
+    public String getName () {
+        return "Messages";
+    }
+
+
 }

@@ -365,6 +365,16 @@ public class ChunkOrgTreePane extends JPanel
     public void removeDescDB (CoreDBEvent e) {
 	updateInsertTypes();
     }
+
+    /********************** PlugPanel Stuff **************************/
+    public void destroy () {
+    }
+
+    public String getName () {
+        return "OrgTree";
+    }
+
+
 }
 
 

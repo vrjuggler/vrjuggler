@@ -105,6 +105,10 @@ public class ConfigurePane extends JSplitPane
 	rightpanel.destroy();
     }
 
+    public String getName () {
+        return "Configure";
+    }
+
 }
 
 

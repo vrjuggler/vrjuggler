@@ -300,15 +300,6 @@ public class DescDBPanel extends JPanel
     }
 
 
-    /***************** PlugPanel Stuff ***************************/
-
-    public void destroy () {
-	Core.removeCoreDBListener (this);
-	if (currdb != null)
-	    currdb.removeDescDBListener (this);
-    }
-
-
 
     /***************** DescDBListener Stuff **********************/
 
@@ -360,6 +351,22 @@ public class DescDBPanel extends JPanel
 	root.removeAllChildren();
 	((DefaultTreeModel)tree.getModel()).reload(root);
     }
+
+
+
+    /***************** PlugPanel Stuff ***************************/
+
+    public void destroy () {
+	Core.removeCoreDBListener (this);
+	if (currdb != null)
+	    currdb.removeDescDBListener (this);
+    }
+
+
+    public String getName () {
+        return "Descriptions";
+    }
+
 
 
 }
