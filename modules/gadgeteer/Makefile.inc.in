@@ -41,52 +41,52 @@
 # -----------------------------------------------------------------------------
 
 # Variables whose values are specific to this file.
-includedir	= @includedir@
-instlinks	= $(topdir)/instlinks
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
+includedir=	@includedir@
+instlinks=	$(topdir)/instlinks
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
 
 # Extra compiler and linker options needed only by this file.
-DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
-OPT_FLAGS	= -D_OPT @OPT_FLAGS@
+DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
+OPT_FLAGS=	-D_OPT @OPT_FLAGS@
 
 # =============================================================================
 # Build and installation directory naming and ownership information.
 # =============================================================================
-DEFAULT_DIR	= $(OPT_DIR)
+DEFAULT_DIR=	$(OPT_DIR)
 
 # If we have a name for the install group, define group-setting options for
 # UNIX commands (chown(1), chgrp(1)) and for local Perl scripts
 # (makefiles-gen.pl in particular).
 ifdef GROUP_NAME
-    _GROUP_OPT_PL	= --gname="$(GROUP_NAME)"
+   _GROUP_OPT_PL=	--gname="$(GROUP_NAME)"
 endif
 
 # --------------------------------------------
 # Library build information.
 # --------------------------------------------
 
-SHLIB_MAJOR	= @MAJOR_VERSION@
-SHLIB_MINOR	= @MINOR_VERSION@
-SHLIB_MICRO	= @MICRO_VERSION@
+SHLIB_MAJOR=	@MAJOR_VERSION@
+SHLIB_MINOR=	@MINOR_VERSION@
+SHLIB_MICRO=	@MICRO_VERSION@
 
 ifneq (@OS_TYPE@, Win32)
-DYNAMICLIB_VER	= .$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+DYNAMICLIB_VER=	.$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
 endif
 
 # Full list of the libraries to build.
-LIBS		= $(GADGET_LIBRARY)
-STATIC_LIBS	= $(LIBS)
-DYNAMIC_LIBS	= $(LIBS)
+LIBS=		$(GADGET_LIBRARY)
+STATIC_LIBS=	$(LIBS)
+DYNAMIC_LIBS=	$(LIBS)
 
 # Dependencies for each of the various dynamic libraries we build.
-DYLIB_DEPS		= @DYLIB_DEPS@
-DYLIB_PROF_DEPS		= @DYLIB_PROF_DEPS@
+DYLIB_DEPS=		@DYLIB_DEPS@
+DYLIB_PROF_DEPS=	@DYLIB_PROF_DEPS@
 
-GADGET_LIB_STATIC	= $(GADGET_LIBRARY).$(STATICLIB_EXT)
-GADGET_LIB_DYNAMIC	= $(GADGET_LIBRARY).$(DYNAMICLIB_EXT)
-GADGET_PROF_LIB_STATIC	= $(GADGET_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
-GADGET_PROF_LIB_DYNAMIC	= $(GADGET_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
+GADGET_LIB_STATIC=		$(GADGET_LIBRARY).$(STATICLIB_EXT)
+GADGET_LIB_DYNAMIC=		$(GADGET_LIBRARY).$(DYNAMICLIB_EXT)
+GADGET_PROF_LIB_STATIC=		$(GADGET_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+GADGET_PROF_LIB_DYNAMIC=	$(GADGET_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # On Linux, we have to compile the Performer library with -O for things to
 # link properly.
@@ -95,24 +95,24 @@ ifeq ($(PLATFORM), Linux)
 endif
 
 # Version information.
-PARAM_HEADER	= gadget/gadgetParam.h
-BRANCH		= HEAD
-CANON_NAME	= Evil Cartman
-VER_ARGS	= -f $(GADGETROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@	\
-                  -b $(BRANCH) -o $(PARAM_HEADER) 			\
-                  -i $(GADGETROOT_ABS)/gadget/gadgetParam.h.in		\
-                  -n "$(CANON_NAME)" -d "`date '+%b %e, %Y %H:%M:%S'`"
+PARAM_HEADER=	gadget/gadgetParam.h
+BRANCH=		HEAD
+CANON_NAME=	Evil Cartman
+VER_ARGS=	-f $(GADGETROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
+		-b $(BRANCH) -o $(PARAM_HEADER) 			\
+		-i $(GADGETROOT_ABS)/gadget/gadgetParam.h.in		\
+		-n "$(CANON_NAME)" -d "`date '+%b %e, %Y %H:%M:%S'`"
 
 ifdef VERSION
-    VER_ARGS	+= -v $(VERSION)
+   VER_ARGS+=	-v $(VERSION)
 endif
 
 # =============================================================================
 # Library targets.
 # =============================================================================
 
-BEFOREBUILD	= beforebuild
-AFTERBUILD	= afterbuild
+BEFOREBUILD=	beforebuild
+AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
 beforebuild: $(PARAM_HEADER)
@@ -263,8 +263,8 @@ drivers-prof:
 #     6) Install the Java-based config editor (if possible).
 # =============================================================================
 
-BEFOREINSTALL	= beforeinstall
-AFTERINSTALL	= afterinstall
+BEFOREINSTALL=	beforeinstall
+AFTERINSTALL=	afterinstall
 
 # Steps to take before beginning the installation process.  This target is
 # independent of the current ABI.
@@ -291,8 +291,8 @@ afterinstall:
 	@echo "Gadgeteer installation complete"
 	@echo "==============================================================="
 
-PREINSTALL	= pre-install
-POSTINSTALL	= post-install
+PREINSTALL=	pre-install
+POSTINSTALL=	post-install
 
 pre-install:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.lib.dist -p $(prefix)
@@ -307,8 +307,8 @@ post-install:
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/gadgeteer-config $(bindir)
 
-PREINSTALL_HEADERS	= pre-install-headers
-POSTINSTALL_HEADERS	= post-install-headers
+PREINSTALL_HEADERS=	pre-install-headers
+POSTINSTALL_HEADERS=	post-install-headers
 
 pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.include.dist -p $(prefix)
@@ -387,12 +387,12 @@ _clobber:
 
 # Define $(_LOCAL_CLOBBER) to inform the shared 'clobber' target that there is
 # a '_clobber' target to be run besides the standard target.
-_LOCAL_CLOBBER	= 1
-_LOCAL_CLEANDEP	= 1
+_LOCAL_CLOBBER=		1
+_LOCAL_CLEANDEP=	1
 
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
 
-CLEAN_FILES	+= $(PARAM_HEADER)
-CLEAN_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
-CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLEAN_FILES+=	$(PARAM_HEADER)
+CLEAN_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
