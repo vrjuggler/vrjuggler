@@ -39,6 +39,7 @@
 
 #include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
+#include <cluster/ClusterNetwork/ClusterNode.h>
 
 
 namespace cluster
@@ -66,39 +67,6 @@ namespace cluster
 	  delete mPacketWriter;
 	  //delete mData;
    }
-
-   vpr::Uint16 Packet::getPacketType() 
-   { 
-      return mHeader->getPacketType(); 
-   }
-
-   void Packet::recv(Header* packet_head, vpr::SocketStream* stream) throw(cluster::ClusterException)
-   {
-      // -Copy over pointer to header
-      // -Continue reading packet from socket
-      
-      mHeader = packet_head;
-        // We need to test if packetLength is greater than HEAD_SIZE since we might not 
-        // actually have to read anything. And if we try to read 0 bytes, we get an exception
-      if (stream != NULL)
-      {
-         vpr::Uint32 bytes_read;	  
-         vpr::ReturnStatus status = stream->recvn(mData,mHeader->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE,bytes_read);	  
-         if (!status.success())
-         {
-            stream->close();
-            delete stream;
-            stream = NULL;
-            throw cluster::ClusterException("Packet::recv() - Reading packet data failed!");
-         }
-      }
-      else
-      {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED) 
-            << "ERROR: SocketSteam is NULL\n" << clrRESET << vprDEBUG_FLUSH;
-         throw cluster::ClusterException("Packet::recv() - SocketStream is NULL!");
-      }
-   }
    
    void Packet::dump()
    {
@@ -117,6 +85,11 @@ namespace cluster
          std::cout << (int)*i << " ";
       }
       std::cout << std::endl;
+   }
+   
+   vpr::Uint16 Packet::getPacketType()
+   {
+      return mHeader->getPacketType();
    }
    
    void Packet::printData(int debug_level)
@@ -141,5 +114,4 @@ namespace cluster
          << vprDEBUG_FLUSH;               
       }
    }
-
 }   // end namespace gadget

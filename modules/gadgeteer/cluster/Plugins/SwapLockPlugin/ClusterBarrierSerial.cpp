@@ -181,7 +181,7 @@ namespace cluster
       SyncRequest sync_request(local_host_name, mTCPport, temp_manager_id);
       sync_request.send(mSyncServer);
 
-      Packet* packet = PacketFactory::instance()->recvPacket(mSyncServer);
+      Packet* packet = mSyncServer->recvPacket();
       SyncAck* ack_packet = static_cast<SyncAck*>(packet);
 
       if (ack_packet->getAck())

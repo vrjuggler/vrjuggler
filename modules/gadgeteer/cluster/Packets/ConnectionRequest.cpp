@@ -32,18 +32,12 @@
 
 #include <gadget/Util/Debug.h>
 #include <cluster/Packets/ConnectionRequest.h>
+#include <cluster/Packets/PacketFactory.h>
 
 namespace cluster
 {
-   ConnectionRequest::ConnectionRequest(Header* packet_head, vpr::SocketStream* stream)
-   {
-      // Receive the data needed for this packet from the given SocketStream.
-      recv(packet_head,stream);
+   CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(ConnectionRequest);
 
-      // Parse the new data into member variables.
-      parse();
-   }
-   
    ConnectionRequest::ConnectionRequest(std::string host_name, vpr::Uint16 port)
    {
       // Set the local member variables using the given values.
@@ -78,13 +72,13 @@ namespace cluster
       mPacketWriter->writeUint16(mPort);                  
    }
    
-   void ConnectionRequest::parse()
+   void ConnectionRequest::parse(vpr::BufferObjectReader* reader)
    {
       // De-Serialize the hostname of the requesting machine.
-      mHostname = mPacketReader->readString();
+      mHostname = reader->readString();
          
       // De-Serialize the listening port of the requesting machine
-      mPort = mPacketReader->readUint16();
+      mPort = reader->readUint16();
    }
 
    void ConnectionRequest::printData(int debug_level)

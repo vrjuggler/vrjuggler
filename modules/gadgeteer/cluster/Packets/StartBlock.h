@@ -52,21 +52,8 @@ namespace cluster
 class GADGET_CLASS_API StartBlock : public Packet
 {
 public:
-   /**
-    * Create a StartBlock packet
-    *   
-    * @param packet_head -Header which has already been received and 
-    *                     determined to be for a StartBlock.
-    * @param stream -A SocketStream that we will use to receive the packet data.
-    */
-   StartBlock(Header* packet_head, vpr::SocketStream* stream)
-   {
-      // Receive the data needed for this packet from the given SocketStream.
-      recv(packet_head,stream);
-      
-      // Parse the new data into member variables.
-      parse();
-   }
+   StartBlock()
+   {;}
 
    /**
     * Create a StartBlock packet to signal that the local node is ready to start.
@@ -109,10 +96,10 @@ public:
    /**
     * Parses the data stream into the local member variables.
     */
-   void parse()
+   virtual void parse(vpr::BufferObjectReader* reader)
    {
       // De-Serialize the Plugin ID
-      mPluginId.readObject(mPacketReader);
+      mPluginId.readObject(reader);
    }
    
    /**
@@ -137,7 +124,7 @@ public:
    /**
     * Return the type of this packet.
     */
-   static vpr::Uint16 getBaseType()
+   static vpr::Uint16 getPacketFactoryType()
    {
        return(Header::RIM_START_BLOCK);
    }

@@ -32,18 +32,12 @@
 
 #include <gadget/Util/Debug.h>
 #include <cluster/Packets/ConnectionAck.h>
+#include <cluster/Packets/PacketFactory.h>
 
 namespace cluster
 {
-   ConnectionAck::ConnectionAck(Header* packet_head, vpr::SocketStream* stream)
-   {
-      // Receive the data needed for this packet from the given SocketStream.
-      recv(packet_head,stream);
-      
-      // Parse the new data into member variables.
-      parse();
-   }
-   
+   CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(ConnectionAck);
+
    ConnectionAck::ConnectionAck(std::string host_name, vpr::Uint16 port, bool ack)
    {
       // Set the local member variables using the given values.
@@ -83,16 +77,16 @@ namespace cluster
       mPacketWriter->writeBool(mAck);
    }
    
-   void ConnectionAck::parse()
+   void ConnectionAck::parse(vpr::BufferObjectReader* reader)
    {
       // De-Serialize the hostname of the acknowledging node
-      mHostname = mPacketReader->readString();
+      mHostname = reader->readString();
          
       // De-Serialize the listening port of the acknowledging node
-      mPort = mPacketReader->readUint16();
+      mPort = reader->readUint16();
 
       // De-Serialize the Ack boolean
-      mAck = mPacketReader->readBool();
+      mAck = reader->readBool();
    }
    
    void ConnectionAck::printData(int debug_level)

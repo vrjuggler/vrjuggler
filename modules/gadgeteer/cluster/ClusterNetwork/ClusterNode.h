@@ -67,12 +67,10 @@ namespace cluster
        * @param name          Name of the Cluster Node from the config file
        * @param host_name     Hostname of the remote machine
        * @param port          The scoket port that we should connect to
-       * @param manager_id    GUID for the remote node's Remote Input Manager(NOT CURRENTLY USED)
        * @param socket_stream SocketStream used to communicate with remote machine
        */
       ClusterNode(const std::string& name, const std::string& host_name, 
-                  const vpr::Uint16& port, const std::string& manager_id, 
-                  vpr::SocketStream* socket_stream);
+                  const vpr::Uint16& port, vpr::SocketStream* socket_stream);
 
       /**
        * Shutdown the update thread and close the SocketStream
@@ -105,11 +103,6 @@ namespace cluster
       vpr::Uint16 getPort() { return mPort;}
 
       /**
-       * Return the GUID of the remote nodes's RemoteInputManager
-       */
-      const vpr::GUID& getRemoteManagerId() { return mRemoteManagerId; }
-
-      /**
        * Set the name of the ClusterNode.
        */
       void setName(std::string& name) { mName = name; }
@@ -123,15 +116,7 @@ namespace cluster
        * Set the port of the ClusterNode.
        */
       void setPort(vpr::Uint16& port) { mPort = port;}
-      
-      /**
-       * Set the value of the RemoteManagerId GUID.
-       */      
-      void setRemoteManagerId(const std::string& manager_id)
-      {
-         mRemoteManagerId = vpr::GUID(manager_id); // set the id of the other computer's remote manager
-      }
-      
+            
       /**
        * Get a pointer to the SocketStream used to communicate with this node.
        */
@@ -245,7 +230,8 @@ namespace cluster
          return &mDelta;
       }
       
-      vpr::ReturnStatus send(Packet* out);
+      vpr::ReturnStatus send(Packet* out_packet);
+      Packet* recvPacket();
 private:
       //vpr::Interval        mDelta;
       //ClusterSync          mClusterSync;
@@ -257,10 +243,6 @@ private:
       vpr::Mutex           mSockReadLock;       /**< Lock reading from the SocketStream */
       vpr::Mutex           mSockWriteLock;      /**< Lock writing to the SocketStream */
 
-      // NOT NEEDED ANY MORE
-      // XXX: REMOVE
-      vpr::GUID            mRemoteManagerId;    /**< Remote ClusterNodes RemoteInputManager GUID */
-      
       vpr::Mutex           mConnectedLock;      /**< Lock the isConnected value */
       int                  mConnected;          /**< States if this node is connected */
       
@@ -271,14 +253,15 @@ private:
       
       std::vector<cluster::Packet*>   mPendingDeviceRequests;       /**< Vector of Pending Device Requests */
       vpr::Mutex                      mPendingDeviceRequestsLock;   /**< Lock the mPendingDeviceRequests list */
-
-      // Used for Update Thread
-      vpr::Thread*      mControlThread;         /**< Update thread for this node */
-      bool              mThreadActive;          /**< Has the update thread started? */
       
       vpr::Semaphore    mUpdateTriggerSema;   /**< Semaphore trigger for UserData update  */
       
       vpr::Semaphore    mClusterNodeDoneSema;   /**< Semaphore trigger for completion */
+      
+      // Used for Update Thread
+      vpr::Thread*      mControlThread;         /**< Update thread for this node */
+      bool              mThreadActive;          /**< Has the update thread started? */
+      
       vpr::Uint64       mDelta;
       bool              mRunning;
    };

@@ -31,20 +31,16 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //#include <gadget/gadgetConfig.h>
-#include <cluster/Packets/SyncRequest.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
 #include <gadget/Util/Debug.h>
+
+#include <cluster/Packets/SyncRequest.h>
+#include <cluster/Packets/PacketFactory.h>
+#include <cluster/ClusterNetwork/ClusterNode.h>
+
 
 namespace cluster
 {
-   SyncRequest::SyncRequest(Header* packet_head, vpr::SocketStream* stream)
-   {
-      // Receive the data needed for this packet from the given SocketStream.
-      recv(packet_head,stream);
-
-      // Parse the new data into member variables.
-      parse();
-   }
+   CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(SyncRequest);
 
    SyncRequest::SyncRequest(std::string& host_name, vpr::Uint16& port)
    {
@@ -84,13 +80,13 @@ namespace cluster
       mPacketWriter->writeUint16(mPort);         
    }
 
-   void SyncRequest::parse()
+   void SyncRequest::parse(vpr::BufferObjectReader* reader)
    {
       // De-Serialize the hostname of the requesting node.
-      mHostname = mPacketReader->readString();
+      mHostname = reader->readString();
          
       // De-Serialize the listening port of the requesting node.
-      mPort = mPacketReader->readUint16();
+      mPort = reader->readUint16();
    }
 
    void SyncRequest::printData(int debug_level)

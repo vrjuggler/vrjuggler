@@ -30,19 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <cluster/Packets/ApplicationDataRequest.h>
 #include <gadget/Util/Debug.h>
+
+#include <cluster/Packets/ApplicationDataRequest.h>
+#include <cluster/Packets/PacketFactory.h>
 
 namespace cluster
 {
-   ApplicationDataRequest::ApplicationDataRequest(Header* packet_head, vpr::SocketStream* stream)
-   {
-      // Receive the data needed for this packet from the given SocketStream.
-      recv(packet_head,stream);
+   CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(ApplicationDataRequest);
 
-      // Parse the new data into member variables.
-      parse();
-   }
    ApplicationDataRequest::ApplicationDataRequest(const vpr::GUID plugin_guid, const vpr::GUID& id)
    {
       // Set the local member variables using the given values.
@@ -74,13 +70,14 @@ namespace cluster
       // Serialize ApplicationData object GUID
       mId.writeObject(mPacketWriter);
    }
-   void ApplicationDataRequest::parse()
+
+   void ApplicationDataRequest::parse(vpr::BufferObjectReader* reader)
    {
       // De-Serialize plugin GUID
-      mPluginId.readObject(mPacketReader);
+      mPluginId.readObject(reader);
       
       // De-Serialize ApplicationData object GUID
-      mId.readObject(mPacketReader);
+      mId.readObject(reader);
    }
    
    void ApplicationDataRequest::printData(int debug_level)

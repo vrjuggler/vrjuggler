@@ -30,157 +30,40 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_PACKET_FACTORY_H_
-#define _GADGET_PACKET_FACTORY_H_
-//#pragma once
+#ifndef _CLUSTER_PACKET_FACTORY_H_
+#define _CLUSTER_PACKET_FACTORY_H_
 
 #include <gadget/gadgetConfig.h>
-#include <boost/concept_check.hpp>
-#include <vpr/IO/Socket/SocketStream.h>
-
-//#include <gadget/Type/Input.h>
-#include <cluster/Packets/Packet.h>
-//#include <jccl/Config/ConfigChunkPtr.h>
+#include <string>
+#include <vpr/Util/Factory.h>
 #include <vpr/Util/Singleton.h>
+#include <cluster/Packets/Packet.h>
 
-#include <vpr/Util/Debug.h>
-#include <vpr/Util/Assert.h>
+/**
+ * Registers a creator for the Packet base classe.
+ *
+ * @pre Requires that the method std::string getPacketFactoryType() be defined for
+ *      class PacketType.
+ *
+ * Ex: VRJ_REGISTER_GL_SIM_INTERFACE_CREATOR(simulators::PySim)
+ */
+#define CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(PacketType) \
+class PacketType; \
+const bool reg_ctr_ ## PacketType = \
+   cluster::PacketFactory::instance()-> \
+      registerCreator(PacketType::getPacketFactoryType(), \
+                      vpr::CreateProduct<cluster::Packet, PacketType>);
 
 namespace cluster
 {
 
-/**
- * Base class for virtual construction of devices.
- * Implementations of this class are registered with the device factory
- * for each device in the system.
- */
-class PacketConstructorBase
+class GADGET_CLASS_API PacketFactory :
+   public vpr::Factory<Packet, vpr::Uint16>
 {
 public:
-   /**
-    * Constructor.
-    * @post Device is registered.
-    */
-   PacketConstructorBase() {;}
-
-   /** Creates the device. */
-   virtual Packet* createPacket(Header* packetHead, vpr::SocketStream* stream)
-   {
-      boost::ignore_unused_variable_warning(packetHead);
-      boost::ignore_unused_variable_warning(stream);
-
-      vprDEBUG(vprDBG_ALL,0)
-         << "ERROR: DeviceConstructorBase::createDevice: Should never be called"
-         << vprDEBUG_FLUSH;
-      return NULL;
-   }
-
-   /** Gets the string desc of the type of chunk we can create. */
-   virtual vpr::Uint16  getBaseType()
-   { return 0; }
+   vprSingletonHeader(PacketFactory);
 };
 
-
-/**
- * Object used for creating devices.
- * @note Singleton
- */
-class GADGET_CLASS_API PacketFactory
-{
-private:
-   // Singleton so must be private
-   PacketFactory()
-   {
-      mConstructors = std::vector<PacketConstructorBase*>(0);
-      vprASSERT(mConstructors.size() == 0);
-   }
-
-   // This should be replaced with device plugins.
-   /**
-    * @post Devices are loaded that the system knows about.
-    */
-   void loadKnownPackets();
-
-public:
-   void registerPacket(PacketConstructorBase* constructor);
-
-   /**
-    * Queries if the factory knows about the given device.
-    * @pre chunk != NULL, chunk is a valid chunk.
-    * @param chunk The chunk we are requesting about knowledge to create.
-    * @return true if the factory knows how to create the device; false if not.
-    */
-   bool recognizePacket(vpr::Uint16 base_type);
-
-   /**
-    * Loads the specified device.
-    * @pre recognizeDevice(chunk) == true
-    * @param chunk The specification of the device to load.
-    * @return NULL is returned if the device failed to load.
-    *         Otherwise, a pointer to the loaded device is returned.
-    */
-
-   
-   
-   Packet* recvPacket(vpr::SocketStream* stream);
-
-private:
-   /**
-    * Finds a constructor for the given device type.
-    * @return -1 is returned if the constructor is not found.
-    *         Otherwise, the index of the constructor is returned.
-    */
-   int   findConstructor(vpr::Uint16 base_type);
-
-   void debugDump();
-
-
-private:
-   std::vector<PacketConstructorBase*> mConstructors;  /**<  List of the device constructors */
-
-   vprSingletonHeaderWithInitFunc(PacketFactory, loadKnownDevices);
-};
-
-
-template <class DEV>
-class PacketConstructor : public PacketConstructorBase
-{
-public:
-   PacketConstructor()
-   {
-      vprASSERT(PacketFactory::instance() != NULL);
-      PacketFactory::instance()->registerPacket(this);
-   }
-
-   Packet* createPacket(Header* packet_head, vpr::SocketStream* stream)
-   {
-      DEV* new_dev = new DEV(packet_head, stream);
-      return new_dev;
-   }
-
-   virtual vpr::Uint16 getBaseType()
-    { return DEV::getBaseType(); }
-
-   /**
-    * Invokes the global scope delete operator.  This is required for proper
-    * releasing of memory in DLLs on Win32.
-    */
-   void operator delete(void* p)
-   {
-      ::operator delete(p);
-   }
-
-protected:
-   /**
-    * Deletes this object.  This is an implementation of the pure virtual
-    * gadget::Input::destroy() method.
-    */
-   virtual void destroy()
-   {
-      delete this;
-   }
-};
-
-} // end namespace gadget
+} // End of cluster namespace
 
 #endif

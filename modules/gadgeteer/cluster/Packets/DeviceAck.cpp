@@ -32,20 +32,14 @@
 
 #include <gadget/Util/Debug.h>
 
-#include <cluster/Packets/DeviceAck.h>
-
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
+#include <cluster/Packets/DeviceAck.h>
+#include <cluster/Packets/PacketFactory.h>
 
 namespace cluster
 {
-   DeviceAck::DeviceAck(Header* packet_head, vpr::SocketStream* stream)
-   {
-      // Receive the data needed for this packet from the given SocketStream.
-      recv(packet_head,stream);
-      
-      // Parse the new data into member variables.
-      parse();
-   }
+   CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(DeviceAck);
+
    DeviceAck::DeviceAck(const vpr::GUID& plugin_id, const vpr::GUID& id, 
                         const std::string& device_name, 
                         const std::string& device_base_type, bool ack)
@@ -101,25 +95,25 @@ namespace cluster
       mPacketWriter->writeBool(mAck);
    }
 
-   void DeviceAck::parse()
+   void DeviceAck::parse(vpr::BufferObjectReader* reader)
    {
       // De-Serialize plugin GUID
-      mPluginId.readObject(mPacketReader);
+      mPluginId.readObject(reader);
 
       // De-Serialize Device GUID
-      mId.readObject(mPacketReader);
+      mId.readObject(reader);
          
       // De-Serialize the Device Name
-      mDeviceName = mPacketReader->readString();
+      mDeviceName = reader->readString();
 
       // De-Serialize the Base Type of the acknowledged device
-      mDeviceBaseType = mPacketReader->readString();
+      mDeviceBaseType = reader->readString();
 
       // De-Serialize the hostname of the acknowledging node
-      mHostname = mPacketReader->readString();
+      mHostname = reader->readString();
 
       // De-Serialize the Ack boolean
-      mAck = mPacketReader->readBool();
+      mAck = reader->readBool();
    }
 
    void DeviceAck::printData(int debug_level)

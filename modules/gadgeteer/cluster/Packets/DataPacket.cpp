@@ -35,6 +35,8 @@
 #include <gadget/Util/Debug.h>
 
 #include <cluster/Packets/DataPacket.h>
+#include <cluster/Packets/PacketFactory.h>
+
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include <gadget/Type/Input.h>
@@ -46,121 +48,87 @@
 
 namespace cluster
 {
-   DataPacket::DataPacket(Header* packet_head, vpr::SocketStream* stream)
-   {
-      recv(packet_head,stream);
-      parse();
-   }
-   DataPacket::DataPacket()
-   {
-      // Given the input, create the packet and then serialize the packet(which includes the header)
-      // - Set member variables
-      // - Create the correct packet header
-      // - Serialize the packet
+   CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(DataPacket);
+   
+   DataPacket::DataPacket() : mDeviceData(NULL)
+   {;}
 
-      //vprASSERT(mDeviceData == NULL && "Device data vector can't equal NULL");
+   DataPacket::DataPacket(const vpr::GUID& plugin_id, const vpr::GUID& device_id, std::vector<vpr::Uint8>* data)
+         : mDeviceId(device_id), mDeviceData(data)
+   {      
+      mPluginId = plugin_id;
 
-      // Header vars (Create Header)
+      // Create a Header for this packet with the correect type and size.
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_DATA_PACKET,
                                       Header::RIM_PACKET_HEAD_SIZE 
-                                      + 16 /* Plugin GUID */
-                                      + 16 /* GUID */
-                                      + 0 /*mDeviceData->size()*/,
-                                      0/* Frame ID*/);
+                                       + 16 /*Plugin GUID*/
+                                       + 16 /*Plugin GUID*/
+                                       + mDeviceData->size(),
+                                      0/*Field not curently used*/);
+      // Serialize the given data.
       serialize();
    }
-   
-   vpr::ReturnStatus DataPacket::send(vpr::SocketStream* socket)
-   {
-      boost::ignore_unused_variable_warning(socket);
-      vprASSERT(false && "YOU SHOULD NOT BE USING THIS SEND FUNCTION");
-      return(vpr::ReturnStatus::Fail);
-   }
 
-   void DataPacket::send(vpr::SocketStream* socket, const vpr::GUID& plugin_id, const vpr::GUID& device_id, std::vector<vpr::Uint8>* device_data)
-   {
-      // - Send header data
-      // - Send Device ID
-      // - Send Device Data
-      // - Send packet data
-      vprASSERT(socket != NULL && "SocketStream can't be NULL");
-      vprASSERT(device_data != NULL && "Device Data can't be NULL");
-
-
-      vpr::Uint32 bytes_written;
-      mHeader->setPacketLength(Header::RIM_PACKET_HEAD_SIZE 
-                                      + 16 /* Plugin GUID*/
-                                      + 16 /* GUID*/
-                                      + device_data->size());
-      mHeader->serializeHeader();
-      mHeader->send(socket);
-      
-      // Send the device ID
-      ////////////////////////////////
-
-      mPluginId = plugin_id;
-      mId = device_id;
-      
-      vpr::BufferObjectWriter temp_writer;
-      
-      // Serialize the Plugin GUID
-      mPluginId.writeObject((vpr::ObjectWriter*)&temp_writer);
-      
-      // Serialize the Device GUID
-      mId.writeObject((vpr::ObjectWriter*)&temp_writer);
-
-      // Send 32 bits since we are sending two GUIDs
-      socket->send(*temp_writer.getData(),32,bytes_written);
-
-      // Send 32 bits less then the packet size since we have already sent two GUIDs
-      socket->send(*device_data,mHeader->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE-32,bytes_written);
-   }
    void DataPacket::serialize()
    {
-      // Create the header information
-      mHeader->serializeHeader();      
-   }
-   void DataPacket::parse()
-   {
-      // De-Serialize the plugin ID
-      mPluginId.readObject(mPacketReader);
+      // Clear the data stream.
+      mPacketWriter->getData()->clear();
+      mPacketWriter->setCurPos(0);
 
-      // De-Serialize the device ID
-      mId.readObject(mPacketReader);
-   
-      // WE MUST KEEP IN MIND THAT mData is not simply the device data but the device data with the
-      // Virtual Device Data ID at the beginning
+      // Serialize the header.
+      mHeader->serializeHeader();
       
-      //std::cout << "Size before shrink: " << mPacketReader->mData->size() << std::endl;
-      //std::vector<vpr::Uint8>::iterator i;
-      //i = mPacketReader->mData->begin();
-      //i = mPacketReader->mData->erase(i);
-      //i = mPacketReader->mData->begin();
-      //i = mPacketReader->mData->erase(i);
-      //std::cout << "Size after shrink: " << mPacketReader->mData->size() << std::endl;
+      // Serialize plugin GUID.
+      mPluginId.writeObject(mPacketWriter);
+      
+      // Serialize device GUID.
+      mDeviceId.writeObject(mPacketWriter);
+      
+      // mDeviceData is a pointer that points at the DeviceData located in the DeviceServer
+      // this data will be updated every frame before sent.
+   }
+
+   void DataPacket::parse(vpr::BufferObjectReader* reader)
+   {
+      // De-Serialize plugin GUID
+      mPluginId.readObject(reader);
+
+      // De-Serialize plugin GUID
+      mDeviceId.readObject(reader);
+            
+      mDeviceData = new std::vector<vpr::Uint8>();
+
+      unsigned int data_size = mHeader->getPacketLength() - Header::RIM_PACKET_HEAD_SIZE - 32;
+      for(unsigned int i = 0 ; i < data_size ; i++)
+      {
+         mDeviceData->push_back(*(reader->readRaw(1)));
+      }
    }
 
    void DataPacket::printData(int debug_level)
    {
       // NOTE: This should be removed if any of the below code ever puts
       // debug_level to use.
+      
       boost::ignore_unused_variable_warning(debug_level);
-
-      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) 
+      
+      /*
+      vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
          <<  clrOutBOLD(clrYELLOW,"==== Device Data Packet ====\n") << vprDEBUG_FLUSH;
       
-      Packet::printData(vprDBG_VERB_LVL);
+      Packet::printData(debug_level);
 
-      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) 
+      vprDEBUG(gadgetDBG_RIM,debug_level) 
          << clrOutBOLD(clrYELLOW, "Plugin ID: ") << mPluginId.toString()
          << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) 
-         << clrOutBOLD(clrYELLOW, "Object ID: ") << mId.toString()
+      vprDEBUG(gadgetDBG_RIM,debug_level) 
+         << clrOutBOLD(clrYELLOW, "Object ID: ") << mDeviceId.toString()
          << std::endl << vprDEBUG_FLUSH;
 
-      vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) 
+      vprDEBUG_END(gadgetDBG_RIM,debug_level) 
          <<  clrOutBOLD(clrYELLOW,"============================\n") << vprDEBUG_FLUSH;
+      */
    }
 
 }   // end namespace gadget

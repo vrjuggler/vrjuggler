@@ -47,8 +47,8 @@ namespace cluster
 
       mApplicationData = user_data;
 
-      mDataPacket = new DataPacket();
       mDeviceData = new std::vector<vpr::Uint8>;
+      mDataPacket = new DataPacket(plugin_guid, mId, mDeviceData);
       mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
    }
 
@@ -57,9 +57,9 @@ namespace cluster
 
    void ApplicationDataServer::send()
    {
-      lockClients();
+      vpr::Guard<vpr::Mutex> guard(mClientsLock);
+      
       //--send to all nodes in the map
-      //WE MUST NEVER USE THE BASE CLASS's SEND()
       for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin();
            i != mClients.end() ; i++)
       {
@@ -67,9 +67,7 @@ namespace cluster
             << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
          try
          {
-            // XXX Might have to change this to use ClusterNode's send
-            //     method soon.
-            mDataPacket->send((*i)->getSockStream(), mPluginGUID, mId, mDeviceData);
+            (*i)->send(mDataPacket);
          }
          catch(cluster::ClusterException cluster_exception)
          {
@@ -87,7 +85,6 @@ namespace cluster
             debugDump(vprDBG_CONFIG_LVL);
          }
       }
-      unlockClients();
    }
    void ApplicationDataServer::updateLocalData()
    {
@@ -95,8 +92,17 @@ namespace cluster
       mBufferObjectWriter->getData()->clear();
       mBufferObjectWriter->setCurPos(0);
 
+      // This updates the mApplicationData which both mBufferedObjectReader and mDevicePacket point to
       mApplicationData->writeObject(mBufferObjectWriter);
 
+      // We must update the size of the actual data that we are going to send
+      mDataPacket->getHeader()->setPacketLength(Header::RIM_PACKET_HEAD_SIZE 
+                                       + 16 /*Plugin GUID*/
+                                       + 16 /*Plugin GUID*/
+                                       + mDeviceData->size());
+
+      // We must serialize the header again so that we can reset the size.
+      mDataPacket->getHeader()->serializeHeader();
    }
 
    void ApplicationDataServer::addClient(ClusterNode* new_client_node)

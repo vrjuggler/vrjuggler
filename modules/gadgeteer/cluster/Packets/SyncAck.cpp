@@ -30,21 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//#include <gadget/gadgetConfig.h>
-#include <cluster/Packets/SyncAck.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
 #include <gadget/Util/Debug.h>
+
+#include <cluster/ClusterNetwork/ClusterNode.h>
+#include <cluster/Packets/SyncAck.h>
+#include <cluster/Packets/PacketFactory.h>
+
 
 namespace cluster
 {
-   SyncAck::SyncAck(Header* packet_head, vpr::SocketStream* stream)
-   {
-      // Receive the data needed for this packet from the given SocketStream.
-      recv(packet_head,stream);
-      
-      // Parse the new data into member variables.
-      parse();
-   }
+   CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(SyncAck);
 
    SyncAck::SyncAck(const std::string& host_name, const vpr::Uint16& port, const bool ack)
    {
@@ -85,16 +80,16 @@ namespace cluster
       mPacketWriter->writeBool(mAck);
    }
 
-   void SyncAck::parse()
+   void SyncAck::parse(vpr::BufferObjectReader* reader)
    {
       // De-Serialize the hostname of the machine acknowledging the SyncRequest.
-      mHostname = mPacketReader->readString();
+      mHostname = reader->readString();
          
       // De-Serialize the listening port of the machine acknowledging the SyncRequest.
-      mPort = mPacketReader->readUint16();
+      mPort = reader->readUint16();
 
       // De-Serialize the Ack boolean
-      mAck = mPacketReader->readBool();
+      mAck = reader->readBool();
    }
 
    void SyncAck::printData(int debug_level)
