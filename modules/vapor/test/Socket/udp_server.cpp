@@ -77,8 +77,7 @@ int main (int argc, char* argv[])
          vpr::InetAddr addr;
 
          // Read a message from a client.
-         sock_stat = sock.recvfrom(recv_buf, sizeof(recv_buf), 0, addr,
-                                   bytes);
+         sock_stat = sock.recvfrom(recv_buf, sizeof(recv_buf), addr, bytes);
 
          // If we read anything, print it and send a response.
          if ( sock_stat.success() )
@@ -87,7 +86,7 @@ int main (int argc, char* argv[])
                       << " bytes) from " << addr.getAddressString()
                       << std::endl;
 
-            sock.sendto(send_buf, sizeof(send_buf), 0, addr, bytes);
+            sock.sendto(send_buf, sizeof(send_buf), addr, bytes);
          }
       }
 
