@@ -8,17 +8,16 @@
 #define VJ_INPUT_MANAGER_H
 
 #include <vjConfig.h>
+#include <map>
 
 #ifdef VJ_OS_HPUX
 #   include <vector>
-#   include <map>
 #else
 #   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
 #       define _PTHREADS
 #   endif
 
 #   include <vector.h>
-#   include <map.h>
 #endif
 
 #include <Kernel/vjDebug.h>
@@ -360,7 +359,7 @@ protected:
 
    vjPosProxy*      m_dummyPosProxy;      // Proxy to the dummy pos
 
-   map<std::string, int> proxyAliases;    // List of alias indices for proxies
+   std::map<std::string, int> proxyAliases; // List of alias indices for proxies
 
 private:
    //: Function to configure the proxy Alias array
