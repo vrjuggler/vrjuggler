@@ -50,9 +50,17 @@
 class pjSoundNode : public pfDCS
 {
 public:
-   pjSoundNode( vjSound* sound, bool isPositional );
+   // TODO: the constructor takes a vjSound, which does not 
+   //       mean that it was aquired with a getHandle function... fixme..
+   //  who manages this memory?  should be sound manager... but... 
+   //  what if it wasn't created by the manager?   
+   pjSoundNode( vjSound* sound, bool isPositional = true );
    virtual ~pjSoundNode()
    {
+      // vjSounds recieved with a sound handle are managed by 
+      // the sound manager.
+      // TODO: the constructor takes a vjSound, which does not 
+      //       mean that it was aquired with a getHandle function... fixme..
       mSound = NULL;
    }
 
@@ -96,7 +104,7 @@ private:
 
 
 
-pjSoundNode::pjSoundNode( vjSound* sound, bool isPositional )
+pjSoundNode::pjSoundNode( vjSound* sound, bool isPositional ) : mIsPositional( true )
 {
    this->setPositional( isPositional );
    this->setSound( sound );
@@ -152,13 +160,14 @@ int pjSoundNode::app(pfTraverser *trav)
       // or in juggler's manager (not both, of course)...
 
       // use this for debugging the location of the sound reletive to the user.
-      //cout<<"sound in userspace: "<<soundPosition[0]<<" "<<soundPosition[1]<<" "<<soundPosition[2]<<"\n"<<flush;
+      //cout<<"["<<mSound->getName()<<"] sound in userspace: "<<soundPosition[0]<<" "<<soundPosition[1]<<" "<<soundPosition[2]<<"\n"<<flush;
    }
    else
    {
       // redundant (fixme), but make sure it's 0.0f,0.0f,0.0f 
       // this makes the sound the same as the observer.
       mSound->setPosition( 0.0f, 0.0f, 0.0f );
+      //cout<<"["<<mSound->getName()<<"] No position\n"<<flush;
    }   
       
    return pfDCS::app(trav);  // call the parent class's app()
