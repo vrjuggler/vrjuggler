@@ -226,10 +226,12 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mFcOpenStyleButtonPanel.setPreferredSize(new Dimension(128, 50));
       mLazyInstanceButton.setSelected(mPrefs.getLazyPanelBeanInstantiation());
       mLazyInstanceButton.setText("Lazy Panel Bean Instantiaion");
-      mLevelBox.setMinimumSize(new Dimension(126, 10));
-      mLevelBox.setPreferredSize(new Dimension(130, 10));
-      mViewerBox.setMinimumSize(new Dimension(126, 10));
-      mViewerBox.setPreferredSize(new Dimension(130, 10));
+      mLevelBox.setMaximumSize(new Dimension(130, 26));
+      mLevelBox.setMinimumSize(new Dimension(30, 26));
+      mLevelBox.setPreferredSize(new Dimension(40, 26));
+      mViewerBox.setMaximumSize(new Dimension(32767, 26));
+      mViewerBox.setMinimumSize(new Dimension(126, 26));
+      mViewerBox.setPreferredSize(new Dimension(130, 26));
       mGeneralPanel.setToolTipText("General Tweek interface configuration");
       mGeneralPanel.setLayout(mGenLayout);
       mLevelLabel.setMinimumSize(new Dimension(24, 13));
@@ -244,8 +246,9 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mViewerLabel.setLabelFor(mViewerBox);
       mViewerLabel.setText("Bean Viewer");
       mGenConfigPanel.setLayout(mGenConfigLayout);
-      mLafBox.setMinimumSize(new Dimension(126, 10));
-      mLafBox.setPreferredSize(new Dimension(130, 10));
+      mLafBox.setMaximumSize(new Dimension(32767, 26));
+      mLafBox.setMinimumSize(new Dimension(126, 26));
+      mLafBox.setPreferredSize(new Dimension(130, 26));
       mLafLabel.setMaximumSize(new Dimension(74, 13));
       mLafLabel.setMinimumSize(new Dimension(24, 13));
       mLafLabel.setPreferredSize(new Dimension(24, 13));
@@ -289,9 +292,9 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mWinSizeLabel.setText("Window Size");
       mWinSizeTable.setCellSelectionEnabled(true);
       mWinSizeTable.setRowSelectionAllowed(false);
-      mWinSizeTablePane.setMaximumSize(new Dimension(32767, 16));
-      mWinSizeTablePane.setMinimumSize(new Dimension(150, 16));
-      mWinSizeTablePane.setPreferredSize(new Dimension(150, 16));
+      mWinSizeTablePane.setMaximumSize(new Dimension(32767, 45));
+      mWinSizeTablePane.setMinimumSize(new Dimension(150, 32));
+      mWinSizeTablePane.setPreferredSize(new Dimension(150, 32));
       mButtonPanel.add(mOkButton, null);
       mButtonPanel.add(mSaveButton, null);
       mButtonPanel.add(mCancelButton, null);
@@ -300,16 +303,16 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mGeneralPanel.add(mGenConfigPanel, BorderLayout.CENTER);
       mGenConfigPanel.add(mLevelLabel,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(mLevelBox,  new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
+      mGenConfigPanel.add(mLevelBox,    new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
       mGenConfigPanel.add(mLafLabel,  new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(mLafBox,  new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
+      mGenConfigPanel.add(mLafBox,    new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
       mGenConfigPanel.add(mViewerLabel,  new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(mViewerBox,  new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
+      mGenConfigPanel.add(mViewerBox,   new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 0));
       mGenConfigPanel.add(mLazyInstanceButton,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
       mGenConfigPanel.add(mWinSizeLabel,    new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0
@@ -340,8 +343,8 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mOpenStyleButtonGroup.add(mEmacsStyleButton);
       mContentPane.add(mFileChooserPanel,  "File Chooser");
       mWinSizeTablePane.getViewport().add(mWinSizeTable);
-      mGenConfigPanel.add(mWinSizeTablePane,          new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 16));
+      mGenConfigPanel.add(mWinSizeTablePane,           new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
    }
 
    /**
