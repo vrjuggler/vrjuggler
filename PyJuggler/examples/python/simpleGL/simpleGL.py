@@ -137,7 +137,7 @@ class SimplGlApp(PyJuggler.GlApp):
       glShadeModel(GL_SMOOTH)
 
 app    = SimplGlApp()
-kernel = PyJuggler.KernelWrap().getInstance()
+kernel = PyJuggler.Kernel.instance()
 
 for arg in sys.argv[1:]:
    kernel.loadConfigFile(arg)
