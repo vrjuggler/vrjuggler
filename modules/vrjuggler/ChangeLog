@@ -1,8 +1,12 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-15-2003 patrick     Renamed the libraries Juggler, Juggler_ogl, and
+                        Juggler_pf to vrj, vrj_ogl, and vrj_pf respectively.
+                        NEW VERSION: 1.1.146
 Aug-25-1003 aronb       Fixed a bug in PfDrawManager which was causing the
                         optimized build to go into an endless loop while running
                         a Performer application.
+                        NEW VERSION: 1.1.145
 Aug-16-2003 patrickh    VRJConfig now depends on Tweek 0.15.
 Jul-10-2003 nonchocoboy Updated to JCCL 0.12.0 API for both Java and C++.
                         This involved breaking vrj-chunks.desc into individual
