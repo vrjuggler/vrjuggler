@@ -85,6 +85,35 @@
          <value label="y" defaultvalue="0.0"/>
          <value label="z" defaultvalue="0.0"/>
       </property>
-      <upgrade_transform/>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+           
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+           
+            <xsl:template match="jconf:sound">
+               <xsl:element namespace="{$jconf}" name="sound">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:copy-of select="./jconf:filename"/>
+                  <xsl:copy-of select="./jconf:ambient"/>
+                  <xsl:copy-of select="./jconf:retriggerable"/>
+                  <xsl:copy-of select="./jconf:loop"/>
+                  <xsl:copy-of select="./jconf:pitch_bend"/>
+                  <xsl:copy-of select="./jconf:cutoff"/>
+                  <xsl:copy-of select="./jconf:volume"/>
+                  <xsl:copy-of select="./jconf:position"/>
+                  <xsl:element namespace="{$jconf}" name="streaming">
+                     <xsl:text>true</xsl:text>
+                  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
    </definition_version>
 </definition>
