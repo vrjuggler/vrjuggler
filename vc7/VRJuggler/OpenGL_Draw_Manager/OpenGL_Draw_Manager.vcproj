@@ -127,6 +127,9 @@
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawManager.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawHeadFunctors.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawWandFunctors.cpp">
 			</File>
 			<File
@@ -159,6 +162,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawObjectFunctor.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawHeadFunctors.h">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawWandFunctors.h">
