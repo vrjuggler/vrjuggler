@@ -41,6 +41,7 @@
 
 #include <string>
 #include <map>
+#include <vpr/vpr.h>
 #include <vpr/Sync/Mutex.h>
 
 #include <tweek/CORBA/Subject.h>
@@ -59,6 +60,8 @@ class TWEEK_CLASS_API SubjectManagerImpl
 {
 public:
    void registerSubject(SubjectImpl* subject, const char* name);
+
+   vpr::ReturnStatus unregisterSubject(const char* name);
 
    virtual Subject_ptr getSubject(const char* name);
 
@@ -88,7 +91,7 @@ protected:
 
    void operator= (const SubjectManagerImpl& sm) {;}
 
-   void registerSubject(Subject_ptr subject, const char* name);
+   void registerSubject(Subject_ptr subject, const std::string& name);
 
 private:
    const CorbaManager& m_corba_mgr;
@@ -96,6 +99,10 @@ private:
    typedef std::map<std::string, Subject_ptr> subject_map_t;
    subject_map_t m_subjects;
    vpr::Mutex m_subjects_mutex;
+
+   typedef std::map<std::string, PortableServer::ObjectId_var> subject_id_map_t;
+   subject_id_map_t m_subject_ids;
+   vpr::Mutex m_subject_ids_mutex;
 };
 
 } // End of tweek namespace

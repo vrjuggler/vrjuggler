@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-09 patrickh Added the capability to "unregister" subjects previously
+                    registered with the Subject Manager.
 2001-11-20 patrickh Created two new Java API libraries: TweekServices.jar and
                     TweekEvents.jar.
 2001-11-18 patrickh Added the ability to request all subjects currently

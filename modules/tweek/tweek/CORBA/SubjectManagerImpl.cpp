@@ -50,21 +50,58 @@ namespace tweek
 void SubjectManagerImpl::registerSubject (SubjectImpl* subject_servant,
                                           const char* name)
 {
-   // We have to register servant with POA first.
-   m_corba_mgr.getChildPOA()->activate_object(subject_servant);
+   std::string name_str(name);
 
-   registerSubject(subject_servant->_this(), name);
+   m_subject_ids_mutex.acquire();
+   {
+      // We have to register servant with POA first.
+      m_subject_ids[name_str] =
+         m_corba_mgr.getChildPOA()->activate_object(subject_servant);
+   }
+   m_subject_ids_mutex.release();
+
+   registerSubject(subject_servant->_this(), name_str);
 }
 
-void SubjectManagerImpl::registerSubject (Subject_ptr subject, const char* name)
+vpr::ReturnStatus SubjectManagerImpl::unregisterSubject (const char* name)
 {
+   vpr::ReturnStatus status;
    std::string name_str(name);
+   vpr::Guard<vpr::Mutex> guard(m_subjects_mutex);
+
+   if ( m_subjects.count(name_str) > 0 )
+   {
+      m_subject_ids_mutex.acquire();
+      {
+         // Deactivate the object in the POA.
+         m_corba_mgr.getChildPOA()->deactivate_object(m_subject_ids[name_str]);
+      }
+      m_subject_ids_mutex.release();
+
+      Subject_ptr subj = m_subjects[name_str];
+      CORBA::release(subj);
+      m_subjects.erase(name_str);
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "ERROR: No subject registered under the name '" << name_str
+         << "'\n" << vprDEBUG_FLUSH;
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+
+   return status;
+}
+
+void SubjectManagerImpl::registerSubject (Subject_ptr subject,
+                                          const std::string& name)
+{
    vpr::Guard<vpr::Mutex> guard(m_subjects_mutex);
 
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "Registering subject named '" << name << "'\n" << vprDEBUG_FLUSH;
 
-   m_subjects[name_str] = Subject::_duplicate(subject);
+   m_subjects[name] = Subject::_duplicate(subject);
 }
 
 Subject_ptr SubjectManagerImpl::getSubject (const char* name)
