@@ -295,62 +295,72 @@ void vjXWinKeyboard::updKeys()
       // If motion occurs within the window, determine how far the pointer
       // moved since the last time anything was read.
       case MotionNotify:
-         int win_center_x(m_width/2),win_center_y(m_height/2);
-
-         int cur_x, cur_y, dx, dy;
-
-         // Determine how far the mouse pointer moved since the last event.
-         // event.xmotion.x & y are relative to the x window
-         cur_x = event.xmotion.x;
-         cur_y = event.xmotion.y;
-
-         vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "MotionNotify: x:" << setw(6) << cur_x << "  y:" << setw(6) << cur_y << endl << vjDEBUG_FLUSH;
-
-         if(mLockState == Unlocked)
          {
-            dx = cur_x - mPrevX;
-            dy = cur_y - mPrevY;
+            int win_center_x(m_width/2),win_center_y(m_height/2);
 
-            mPrevX = cur_x;
-            mPrevY = cur_y;
-         }
-         else
-         {
-            dx = cur_x - win_center_x;    // Base delta off of center of window
-            dy = cur_y - win_center_y;
-            mPrevX = win_center_x;        // Must do this so if state changes, we have accurate dx,dy next time
-            mPrevY = win_center_y;
+            int cur_x, cur_y, dx, dy;
 
-            // Warp back to center, IF we are not there already
-            // This prevents us from sending an event based on our XWarp event
-            if((dx != 0) && (dy != 0))
+            // Determine how far the mouse pointer moved since the last event.
+            // event.xmotion.x & y are relative to the x window
+            cur_x = event.xmotion.x;
+            cur_y = event.xmotion.y;
+
+            vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "MotionNotify: x:"
+                                               << setw(6) << cur_x << "  y:"
+                                               << setw(6) << cur_y << endl
+                                               << vjDEBUG_FLUSH;
+
+            if(mLockState == Unlocked)
             {
-               vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "CORRECTING: x:" << setw(6) << dx << "  y:" << setw(6) << dy << endl << vjDEBUG_FLUSH;
-               XWarpPointer(m_display, None, m_window, 0,0, 0,0, win_center_x, win_center_y);
+               dx = cur_x - mPrevX;
+               dy = cur_y - mPrevY;
+
+               mPrevX = cur_x;
+               mPrevY = cur_y;
             }
-         }
+            else
+            {
+               dx = cur_x - win_center_x; // Base delta off of center of window
+               dy = cur_y - win_center_y;
+               mPrevX = win_center_x;     // Must do this so if state changes, we have accurate dx,dy next time
+               mPrevY = win_center_y;
 
-         // Positive movement in the x direction.
-         if ( dx > 0 ) {
-            m_keys[VJMOUSE_POSX] = int(dx * m_mouse_sensitivity);
-            m_keys[VJMOUSE_NEGX] = 0;
-         }
-         // Negative movement in the x direction.
-         else if ( dx < 0 ) {
-            m_keys[VJMOUSE_NEGX] = int(-dx * m_mouse_sensitivity);
-            m_keys[VJMOUSE_POSX] = 0;
-         }
+               // Warp back to center, IF we are not there already
+               // This prevents us from sending an event based on our XWarp event
+               if((dx != 0) && (dy != 0))
+               {
+                  vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "CORRECTING: x:"
+                                                     << setw(6) << dx
+                                                     << "  y:" << setw(6)
+                                                     << dy << endl
+                                                     << vjDEBUG_FLUSH;
+                  XWarpPointer(m_display, None, m_window, 0,0, 0,0,
+                               win_center_x, win_center_y);
+               }
+            }
 
-         // Positive movement in the y direction.
-         if ( dy > 0 ) {
-            m_keys[VJMOUSE_POSY] = int(dy * m_mouse_sensitivity);
-            m_keys[VJMOUSE_NEGY] = 0;
-         }
-         // Negative movement in the y direction.
-         else {
-            m_keys[VJMOUSE_NEGY] = int(-dy * m_mouse_sensitivity);
-            m_keys[VJMOUSE_POSY] = 0;
-         }
+            // Positive movement in the x direction.
+            if ( dx > 0 ) {
+               m_keys[VJMOUSE_POSX] = int(dx * m_mouse_sensitivity);
+               m_keys[VJMOUSE_NEGX] = 0;
+            }
+            // Negative movement in the x direction.
+            else if ( dx < 0 ) {
+               m_keys[VJMOUSE_NEGX] = int(-dx * m_mouse_sensitivity);
+               m_keys[VJMOUSE_POSX] = 0;
+            }
+
+            // Positive movement in the y direction.
+            if ( dy > 0 ) {
+               m_keys[VJMOUSE_POSY] = int(dy * m_mouse_sensitivity);
+               m_keys[VJMOUSE_NEGY] = 0;
+            }
+            // Negative movement in the y direction.
+            else {
+               m_keys[VJMOUSE_NEGY] = int(-dy * m_mouse_sensitivity);
+               m_keys[VJMOUSE_POSY] = 0;
+            }
+	 }
 
          break;
 
