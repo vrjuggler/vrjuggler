@@ -32,29 +32,13 @@ if test "$DIE" -eq 1; then
   exit 1
 fi
 
-for coin in `find ${srcdir-.} -name configure.in -print`
-do 
-  dr=`dirname $coin`
-  if test -f $dr/NO-AUTO-GEN; then
-    echo skipping $dr -- flagged as no auto-gen
-  else
-    echo processing $dr
-    macrodirs=`sed -n -e 's,AM_ACLOCAL_INCLUDE(\(.*\)),\1,gp' < $coin`
-    ( cd $dr
-      macrosdir=`find . -name macros -print`
-#      for i in $macrodirs; do
-#      done
-
-      aclocalinclude="$ACLOCAL_FLAGS"
-      echo "Running aclocal $aclocalinclude ..."
-      aclocal $aclocalinclude
-      if grep "^AC_CONFIG_HEADER" configure.in >/dev/null
-      then
-	echo "Running autoheader..."
-	autoheader
-      fi
-      echo "Running autoconf ..."
-      autoconf
-    )
-  fi
-done
+aclocalinclude="$ACLOCAL_FLAGS"
+echo "Running aclocal $aclocalinclude ..."
+aclocal $aclocalinclude
+if grep "^AC_CONFIG_HEADER" configure.in >/dev/null
+then
+  echo "Running autoheader..."
+  autoheader
+fi
+echo "Running autoconf ..."
+autoconf
