@@ -10,8 +10,8 @@ NetPosition::NetPosition(const std::string& src_device_name, Input* input_ptr, V
 
    if(src_device_name.length() > 0){   // pointing to another device/proxy for data source
       mLocalSource.init(mDeviceName);
-      mSendBuffer.resize(3 + 16 * sizeof(float));  // 2 bytes of code/id, 16 bytes of float data, 1 byte for semicolon
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "NetPosition: SendBuffer size: " << (3 + 16 * sizeof(float)) << std::endl << vprDEBUG_FLUSH; 
+      mSendBuffer.resize(3 + DATA_TIME_SIZE);  // 2 bytes code/id, 16 bytes float data, 4 bytes timestamp, 1 byte semicolon
+      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "NetPosition: SendBuffer size: " << (3 + DATA_TIME_SIZE) << std::endl << vprDEBUG_FLUSH; 
       mNetworkMatrices.resize(1);  // space for one data item
    }
    else{                              // use ourself as source of data
@@ -24,23 +24,23 @@ NetPosition::NetPosition(const std::string& src_device_name, Input* input_ptr, V
       mNetworkMatrices.resize(num_elements);
 
       // allocate space for data
-      mSendBuffer.resize(3 + 16 * sizeof(float) * num_elements);  // 2 bytes of code/id, 16*4*n bytes of data, 1 byte for semicolon
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "NetPosition: SendBuffer size: " << (3 + 16 * sizeof(float) * num_elements) << std::endl << vprDEBUG_FLUSH;
+      mSendBuffer.resize(3 + DATA_TIME_SIZE * num_elements);  // 2 bytes of code/id, 16*4*n bytes of data, 1 byte for semicolon
+      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "NetPosition: SendBuffer size: " << (3 + DATA_TIME_SIZE * num_elements) << std::endl << vprDEBUG_FLUSH;
    }
 }
 
 // constructor for a transmitting network proxy
 NetPosition::NetPosition(const std::string& src_device_name, Proxy* proxy_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id ) : NetInput(src_device_name, proxy_ptr, local_device_id, rmt_device_id, 16 * sizeof(float)){
    mLocalSource.init(mDeviceName);
-   mSendBuffer.resize(3 + 16 * sizeof(float)); // 2 bytes of code/id, 16*4 bytes of data, 1 byte for semicolon
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "NetPosition: SendBuffer size: " << (3 + 16 * sizeof(float) ) << std::endl << vprDEBUG_FLUSH;
+   mSendBuffer.resize(3 + DATA_TIME_SIZE); // 2 bytes code/id, 16*4 bytes data, 4 byte timestamp, 1 byte for semicolon
+   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "NetPosition: SendBuffer size: " << (3 + DATA_TIME_SIZE ) << std::endl << vprDEBUG_FLUSH;
    mNetworkMatrices.resize(1);  // a proxy only points to a single data item
 }
 
 // constructor for a receiving NetInput
 NetPosition::NetPosition(jccl::ConfigChunkPtr chunk, VJ_NETID_TYPE local_device_id) : NetInput(chunk, local_device_id, 16 * sizeof(float)){
    mNetworkMatrices.resize(1);  // a proxy only points to a single data item
-   mSendBuffer.resize(3 + 16 * sizeof(float) * mNetworkMatrices.size()); // buffer not used when receiving, but its size is currently used to determine how much data to pull from the recv buffer
+   mSendBuffer.resize(3 + DATA_TIME_SIZE * mNetworkMatrices.size()); // buffer not used when receiving, but its size is currently used to determine how much data to pull from the recv buffer
 }
 
 // When updating, the data shouldn't really be accessed
@@ -76,13 +76,15 @@ void NetPosition::updateFromLocalSource(){
 
    ushortTo2Bytes((char*)(&(mSendBuffer[0])), htons(mRemoteId));  // put the 2 byte id in the buffer
 
-   // copy the number byte by byte into the buffer
+   // copy the data into the buffer
    for(unsigned int n = 0; n < mNetworkMatrices.size();  n++){
-      for(unsigned int j = 0; j < 16 * sizeof(float); j++)
-         mSendBuffer[2 + 16*n*sizeof(float) + j ] = ( (char*)(mNetworkMatrices[n].getFloatPtr()) )[j];
+      for(unsigned int j = 0; j < DATA_SIZE; j++)  // one byte at a time 
+         mSendBuffer[2 + DATA_TIME_SIZE*n + j ] = ( (char*)(mNetworkMatrices[n].getFloatPtr()) )[j];
+      float net_float = vj_htonf(pos_data_sample[n].getTime().usecs());
+      floatTo4Bytes((char*)(&(mSendBuffer[2 + DATA_TIME_SIZE*n + DATA_SIZE])), net_float);   // copy the timestamp
    }
 
-   mSendBuffer[2 + 16 * sizeof(float) * mNetworkMatrices.size()] = ';';
+   mSendBuffer[2 + DATA_TIME_SIZE * mNetworkMatrices.size()] = ';';
 }
 
 void NetPosition::updateFromRemoteSource(char* recv_buffer, int recv_buff_len){
@@ -97,16 +99,19 @@ void NetPosition::updateFromRemoteSource(char* recv_buffer, int recv_buff_len){
       vprASSERT(0);
    }
 
-   // copy the number byte by byte out of the buffer
+   // copy the data out of the buffer
    for(unsigned int k = 0; k < mNetworkMatrices.size(); k++){
 
       vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_VERB_LVL) << "NetPosition: PreReceiving : ntwk byte order --------------------------: " << std::endl << mNetworkMatrices[k] << std::endl << vprDEBUG_FLUSH;
 
-      for(unsigned int j = 0; j < 16 * sizeof(float); j++)
-         ( (char*)( mNetworkMatrices[k].getFloatPtr() ) )[j] = recv_buffer[2 + k*16*sizeof(float) + j];
+      for(unsigned int j = 0; j < DATA_SIZE; j++) // byte by byte
+         ( (char*)( mNetworkMatrices[k].getFloatPtr() ) )[j] = recv_buffer[2 + k*DATA_TIME_SIZE + j];
 
       vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_VERB_LVL) << "NetPosition: Receiving : ntwk byte order --------------------------: " << std::endl << mNetworkMatrices[k] << std::endl << vprDEBUG_FLUSH;
 
+      float dev_time;
+      bytes4ToFloat(dev_time, recv_buffer + 2 + DATA_TIME_SIZE*k + DATA_SIZE );
+      pos_data_sample[k].setTime(jccl::TimeStamp(vj_ntohf(dev_time)));       // get timestamp from buffer
 
       // convert network data to local data
       for(int i = 0; i < 16; i++)
