@@ -52,7 +52,9 @@ GADGET_REGISTER_POSFILTER_CREATOR( PositionXformFilter );
 bool PositionXformFilter::config(jccl::ConfigChunkPtr c)
 {
    vprDEBUG_OutputGuard(vprDBG_ALL, 0, 
-                        std::string("PositionXformFilter::config: ") + c->getFullName() + std::string(":") + c->getDescToken(),
+                        std::string("PositionXformFilter::config: ") +
+                           c->getFullName() + std::string(":") +
+                           c->getDescToken() + std::string("\n"),
                         std::string("PositionXformFilter::config: done.\n") );
 
    std::string chunk_type = c->getDescToken();
