@@ -40,4 +40,21 @@ interface EditorConstants
       "org/vrjuggler/vrjconfig/customeditors/cave";
 
    static final String IMAGE_BASE = RESOURCE_BASE + "/images";
+
+   static final int FRONT_PLANE = 0;
+   static final int BACK_PLANE = 1;
+   static final int LEFT_PLANE = 2;
+   static final int RIGHT_PLANE = 3;
+   static final int BOTTOM_PLANE = 4;
+   static final int TOP_PLANE = 5;
+   static final int CUSTOM_PLANE = 6;
+
+   static final int LOWER_LEFT = 0;
+   static final int LOWER_RIGHT = 1;
+   static final int UPPER_LEFT = 2;
+   static final int UPPER_RIGHT = 3;
+   
+   static final int ACTIVE_STEREO = 0;
+   static final int PASSIVE_STEREO = 1;
+   static final int MONO = 2;
 }
