@@ -1,15 +1,15 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
-<class>OrbDisconnectBox</class>
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>OrbDisconnectBoxBase</class>
 <widget class="QDialog">
     <property name="name">
-        <cstring>OrbDisconnectBox</cstring>
+        <cstring>OrbDisconnectBoxBase</cstring>
     </property>
     <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
             <width>396</width>
-            <height>397</height>
+            <height>399</height>
         </rect>
     </property>
     <property name="caption">
@@ -27,6 +27,12 @@
             </item>
             <property name="name">
                 <cstring>subjMgrListBox</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
             </property>
         </widget>
         <widget class="QLayoutWidget">
@@ -101,25 +107,25 @@
     <connection>
         <sender>disconnectPushButton</sender>
         <signal>clicked()</signal>
-        <receiver>OrbDisconnectBox</receiver>
+        <receiver>OrbDisconnectBoxBase</receiver>
         <slot>accept()</slot>
     </connection>
     <connection>
         <sender>cancelPushButton</sender>
         <signal>clicked()</signal>
-        <receiver>OrbDisconnectBox</receiver>
+        <receiver>OrbDisconnectBoxBase</receiver>
         <slot>reject()</slot>
     </connection>
     <connection>
         <sender>subjMgrListBox</sender>
         <signal>clicked(QListBoxItem*)</signal>
-        <receiver>OrbDisconnectBox</receiver>
+        <receiver>OrbDisconnectBoxBase</receiver>
         <slot>subjMgrSelected()</slot>
     </connection>
     <connection>
         <sender>subjMgrListBox</sender>
         <signal>doubleClicked(QListBoxItem*)</signal>
-        <receiver>OrbDisconnectBox</receiver>
+        <receiver>OrbDisconnectBoxBase</receiver>
         <slot>accept()</slot>
     </connection>
 </connections>

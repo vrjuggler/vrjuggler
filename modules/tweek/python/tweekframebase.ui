@@ -1,20 +1,15 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
-<class>TweekFrame</class>
-<comment>Python:from aboutbox import AboutBox
-Python:from orbconnectbox import OrbConnectBox
-Python:from orbdisconnectbox import OrbDisconnectBox
-Python:from globalprefsdialog import GlobalPrefsDialog
-Python:from net import SubjectManagerWrapper</comment>
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>TweekFrameBase</class>
 <widget class="QMainWindow">
     <property name="name">
-        <cstring>TweekFrame</cstring>
+        <cstring>TweekFrameBase</cstring>
     </property>
     <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
             <width>600</width>
-            <height>480</height>
+            <height>488</height>
         </rect>
     </property>
     <property name="caption">
@@ -289,79 +284,76 @@ Python:from net import SubjectManagerWrapper</comment>
     <connection>
         <sender>fileNewAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>fileNew()</slot>
     </connection>
     <connection>
         <sender>fileOpenAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>fileOpen()</slot>
     </connection>
     <connection>
         <sender>fileSaveAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>fileSave()</slot>
     </connection>
     <connection>
         <sender>fileSaveAsAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>fileSaveAs()</slot>
     </connection>
     <connection>
         <sender>fileExitAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>fileExit()</slot>
     </connection>
     <connection>
         <sender>helpIndexAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>helpIndex()</slot>
     </connection>
     <connection>
         <sender>helpContentsAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>helpContents()</slot>
     </connection>
     <connection>
         <sender>helpAboutAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>helpAbout()</slot>
     </connection>
     <connection>
         <sender>networkConnectAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>networkConnect()</slot>
     </connection>
     <connection>
         <sender>networkDisconnectAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>networkDisconnect()</slot>
     </connection>
     <connection>
         <sender>editGlobalPrefsAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>editGlobalPrefs()</slot>
     </connection>
     <connection>
         <sender>editModuleSpecificAction</sender>
         <signal>activated()</signal>
-        <receiver>TweekFrame</receiver>
+        <receiver>TweekFrameBase</receiver>
         <slot>editModulePrefs()</slot>
     </connection>
 </connections>
-<includes>
-    <include location="local" impldecl="in implementation">tweekframe.ui.h</include>
-</includes>
 <slots>
     <slot>fileNew()</slot>
     <slot>fileOpen()</slot>

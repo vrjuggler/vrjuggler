@@ -3,11 +3,11 @@ unix {
   MOC_DIR = .moc
   OBJECTS_DIR = .obj
 }
-FORMS	= tweekframe.ui \
-	aboutbox.ui \
-	orbconnectbox.ui \
+FORMS	= aboutbox.ui \
+	orbconnectboxbase.ui \
 	globalprefsdialog.ui \
-	orbdisconnectbox.ui
+	orbdisconnectboxbase.ui \
+	tweekframebase.ui
 IMAGES	= images/filenew \
 	images/fileopen \
 	images/filesave \
