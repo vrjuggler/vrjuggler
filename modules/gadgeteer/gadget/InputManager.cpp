@@ -113,7 +113,8 @@ bool vjInputManager::configAdd(vjConfigChunk* chunk)
    //DumpStatus();                      // Dump the status
    if(ret_val)
    {
-      UpdateAllData();
+      UpdateAllData();                             // Update all the input data
+      vjDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
       vjDEBUG(vjDBG_ALL,1) << "InputManager::configAdd(): Updated all data" << endl << vjDEBUG_FLUSH;
    }
 
@@ -290,6 +291,7 @@ ostream& operator<<(ostream& out, vjInputManager& iMgr)
      out << "    " << (*cur_alias).first << "  index:" << (*cur_alias).second << endl;
 	
   out << "=============== vjInputManager Status =========================" << endl;
+  return out;
 }
 
 /**********************************************************
@@ -749,29 +751,29 @@ bool recognizeProxyAlias(vjConfigChunk* chunk)
 
 // Configures proxy aliases in config database
 // PRE: none
-// POST: Alias is added to proxyAlias list
+// POST: (alias not already in list) ==> Alias is added to proxyAlias list
+//+      (alias was already is list) ==> Alias is set to point to the new proxy instead
 bool vjInputManager::ConfigureProxyAlias(vjConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_ALL,1) << "vjInputManager::ConfigureProxyAlias" << endl << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "proxyAlias");
 
-
-   std::string alias_name, proxy_ptr;  // The string of the alias, name of proxy to pt to
+   std::string alias_name, proxy_name;  // The string of the alias, name of proxy to pt to
 
    alias_name = (std::string)chunk->getProperty("aliasName");
-   proxy_ptr = (std::string)chunk->getProperty("proxyPtr");
+   proxy_name = (std::string)chunk->getProperty("proxyPtr");
 
-   if(proxyAliases.end() == proxyAliases.find(proxy_ptr))
+   if(proxyAliases.end() == proxyAliases.find(proxy_name))
    {
       vjDEBUG(vjDBG_ALL,1) << "vjInputManager::ConfigureProxyAliases: Alias: " << alias_name
-                 << "  cannot find proxy: " << proxy_ptr << endl << vjDEBUG_FLUSH;
+                 << "  cannot find proxy: " << proxy_name << endl << vjDEBUG_FLUSH;
       return false;
    } else {
          // Since all proxies are already in the alias list, we just have to find the
          // one to point to and use it's index
-      proxyAliases[alias_name] = proxyAliases[proxy_ptr];
+      proxyAliases[alias_name] = proxyAliases[proxy_name];
       vjDEBUG(vjDBG_ALL,0) << "   alias:" << alias_name << "   index:"
-                 << proxyAliases[proxy_ptr] << endl << vjDEBUG_FLUSH;
+                 << proxyAliases[proxy_name] << endl << vjDEBUG_FLUSH;
    }
    vjDEBUG_END(vjDBG_ALL,1) << endl << vjDEBUG_FLUSH;
    return true;

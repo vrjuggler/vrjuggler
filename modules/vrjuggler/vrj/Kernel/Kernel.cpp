@@ -237,6 +237,9 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
    // Dump status
    vjDEBUG(vjDBG_ALL,0) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
 
+   // Tell the environment manager to refresh
+   //**//environmentManager->sendRefresh();
+
    if(guarded)
       mRuntimeConfigSema.release();
 }
@@ -289,6 +292,9 @@ vjGuard<vjSemaphore> runtimeSem(mRuntimeConfigSema);
 
    // Dump status
    vjDEBUG(vjDBG_ALL,0) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
+
+   // Tell the environment manager to refresh
+   //**//environmentManager->sendRefresh();
 }
 
 
