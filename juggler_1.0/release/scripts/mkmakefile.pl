@@ -49,7 +49,7 @@ BEGIN {
     $path = (fileparse("$0"))[1];
 }
 
-use lib qw($path /home/mystify /home/mystify/juggler/release/scripts);
+use lib($path);
 use InstallOps;
 use SourceList;
 
@@ -414,6 +414,8 @@ sub printMultiAppMakefile ($$$) {
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
+all: @all_apps
+
 EOF
 
     # Loop over the applications again and print the targets that build the
