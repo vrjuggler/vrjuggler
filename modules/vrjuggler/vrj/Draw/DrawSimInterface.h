@@ -41,6 +41,8 @@
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <vrj/Display/Projection.h>
 
+#include <boost/concept_check.hpp>
+
 namespace vrj
 {
    class SimViewport;
@@ -62,7 +64,11 @@ namespace vrj
 
       /** Called as part of the viewports updateProjection call */
       virtual void updateProjectionData(const float positionScale, Projection* leftProj, Projection* rightProj)
-      {;}
+      {
+         boost::ignore_unused_variable_warning(positionScale);
+         boost::ignore_unused_variable_warning(leftProj);
+         boost::ignore_unused_variable_warning(rightProj);
+      }
 
       virtual void initialize(SimViewport* simVp) = 0;
    };

@@ -40,6 +40,8 @@
 #include <vrj/Display/Display.h>
 #include <vrj/Display/CameraProjection.h>
 
+#include <boost/concept_check.hpp>
+
 
 namespace vrj
 {
@@ -55,6 +57,7 @@ void CameraProjection::config(jccl::ConfigChunkPtr chunk)
 */
 void CameraProjection::calcViewMatrix(gmtl::Matrix44f& cameraPos, const float scaleFactor)
 {
+   boost::ignore_unused_variable_warning(scaleFactor);
    mViewMat = cameraPos;
 
    gmtl::Vec3f camera_trans = gmtl::makeTrans<gmtl::Vec3f>(cameraPos);
