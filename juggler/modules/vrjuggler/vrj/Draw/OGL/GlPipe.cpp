@@ -300,6 +300,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
       theApp->bufferPreDraw();
 
    // CONTEXT INIT(): Check if we need to call contextInit()
+   // - Must call when context is new OR application is new
    if(win->hasDirtyContext())
    {
          // Have dirty context
@@ -320,67 +321,72 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
       viewport = theDisplay->getViewport(vp_num);
-      view = viewport->getView();
 
-      // Set the glViewport to draw within
-      viewport->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
-      win->setViewport(vp_ox, vp_oy, vp_sx, vp_sy);
-
-      // Set user information
-      glManager->currentUserData()->setUser(viewport->getUser());         // Set user data
-
-      // ---- SURFACE --- //
-      if (viewport->isSurface())
+      // Should viewport be rendered???
+      if(viewport->isActive())
       {
-         vjSurfaceViewport* surface_vp = dynamic_cast<vjSurfaceViewport*>(viewport);
+         view = viewport->getView();
 
-         if((vjViewport::STEREO == view) || (vjViewport::LEFT_EYE == view))      // LEFT EYE
+         // Set the glViewport to draw within
+         viewport->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
+         win->setViewport(vp_ox, vp_oy, vp_sx, vp_sy);
+
+         // Set user information
+         glManager->currentUserData()->setUser(viewport->getUser());         // Set user data
+
+         // ---- SURFACE --- //
+         if (viewport->isSurface())
          {
-            win->setViewBuffer(vjViewport::LEFT_EYE);
-            win->setProjection(surface_vp->getLeftProj());
-            glManager->currentUserData()->setProjection(surface_vp->getLeftProj());
+            vjSurfaceViewport* surface_vp = dynamic_cast<vjSurfaceViewport*>(viewport);
+
+            if((vjViewport::STEREO == view) || (vjViewport::LEFT_EYE == view))      // LEFT EYE
+            {
+               win->setViewBuffer(vjViewport::LEFT_EYE);
+               win->setProjection(surface_vp->getLeftProj());
+               glManager->currentUserData()->setProjection(surface_vp->getLeftProj());
+
+                  mPerfBuffer->set(++mPerfPhase);
+
+               theApp->draw();
+                  mPerfBuffer->set(++mPerfPhase);
+               glManager->drawObjects();
+                  mPerfBuffer->set(++mPerfPhase);
+            }
+            if ((vjViewport::STEREO == view) || (vjViewport::RIGHT_EYE == view))    // RIGHT EYE
+            {
+               win->setViewBuffer(vjViewport::RIGHT_EYE);
+               win->setProjection(surface_vp->getRightProj());
+               glManager->currentUserData()->setProjection(surface_vp->getRightProj());
+
+                  mPerfBuffer->set(++mPerfPhase);
+               theApp->draw();
+                  mPerfBuffer->set(++mPerfPhase);
+
+               glManager->drawObjects();
+                  mPerfBuffer->set(++mPerfPhase);
+            }
+            else
+               mPerfPhase += 2;
+         }
+         // ---- SIMULATOR ---------- //
+         else if(viewport->isSimulator())
+         {
+            vjSimViewport* sim_vp = dynamic_cast<vjSimViewport*>(viewport);
+
+            win->setCameraProjection(sim_vp->getCameraProj());
+            glManager->currentUserData()->setProjection(sim_vp->getCameraProj());
 
                mPerfBuffer->set(++mPerfPhase);
-
             theApp->draw();
                mPerfBuffer->set(++mPerfPhase);
-            glManager->drawObjects();
-               mPerfBuffer->set(++mPerfPhase);
-         }
-         if ((vjViewport::STEREO == view) || (vjViewport::RIGHT_EYE == view))    // RIGHT EYE
-         {
-            win->setViewBuffer(vjViewport::RIGHT_EYE);
-            win->setProjection(surface_vp->getRightProj());
-            glManager->currentUserData()->setProjection(surface_vp->getRightProj());
-
-               mPerfBuffer->set(++mPerfPhase);
-            theApp->draw();
-               mPerfBuffer->set(++mPerfPhase);
 
             glManager->drawObjects();
-               mPerfBuffer->set(++mPerfPhase);
+            glManager->drawSimulator(sim_vp);
+            mPerfBuffer->set (++mPerfPhase);
+            mPerfPhase += 3;
          }
-         else
-            mPerfPhase += 2;
-      }
-      // ---- SIMULATOR ---------- //
-      else if(viewport->isSimulator())
-      {
-         vjSimViewport* sim_vp = dynamic_cast<vjSimViewport*>(viewport);
 
-         win->setCameraProjection(sim_vp->getCameraProj());
-         glManager->currentUserData()->setProjection(sim_vp->getCameraProj());
-
-            mPerfBuffer->set(++mPerfPhase);
-         theApp->draw();
-            mPerfBuffer->set(++mPerfPhase);
-
-         glManager->drawObjects();
-         glManager->drawSimulator(sim_vp);
-         mPerfBuffer->set (++mPerfPhase);
-         mPerfPhase += 3;
-      }
-
+      }  // should viewport be rendered
    }     // for each viewport
 
 }
