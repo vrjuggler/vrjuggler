@@ -20,22 +20,14 @@
 
 application object to create the VR environment in which the user interacts. &nbsp;The 
 
-application object implements interfaces needed by the virtual platform to create the virtual environment. &nbsp;(An interface is a collection of operations used 
+application object implements interfaces needed by the VR Juggler virtual platform to create the virtual environment. &nbsp;(An interface is a collection of operations used 
 
 to specify a service of a class or a component)</p>
-<p>The kernel maintains control over the environment 
-
-and calls the methods defined in the application 
-
-interface. &nbsp;When the kernel calls the application's methods it gives up control to the application 
-
-object so the application can execute the code needed to 
-
-create the virtual environment.&nbsp;</p>
-<h3>Don't call me, I'll call you</h3>
-<p>There is no main() function, instead the VR Juggler kernel controls the
-application's processing time by calling the application object's method
-functions. &nbsp;Since VR Juggler applications are objects, developers do not write a main() function. &nbsp;Instead, developers create an application object that implement a set of pre-defined interfaces.</p>
+<h3>No main() - Don't call me, I'll call you</h3>
+<p>Since VR Juggler applications are objects, developers do not write a main() function. &nbsp;Instead, developers create an application object that implement a set of pre-defined interfaces.&nbsp;
+The VR Juggler kernel controls the
+application's processing time by calling the application object's
+implementations of the pre-defined interfaces. &nbsp;</p>
 
 <p>
 In common programs, the main function signals the point where the thread of control enters the application.
@@ -54,7 +46,7 @@ about the resources needed and used by the applications, it maintains a very str
 time. This is the basis to maintain coherence across the system.</p>
 
 <h3>Application objects derive from graphics API specific base classes</h3>
-<p><img border="0" src="../images/vj_app_hier_small.gif" width="241" height="246"></p>
+<p><img border="0" src="../images/vj_app_hier_small.gif" width="241" height="246"><img border="0" src="../images/myAppHierarchy.gif" width="270" height="379"></p>
 <p>Figure 2: vjApp hierarchy</p>
 <p>The first step in defining an application object is to derive from the base classes that define the 
 
@@ -63,7 +55,7 @@ kernel and draw manager interfaces the
 application needs to implement. &nbsp;There is a base class for the interface that the kernel expects
 (vjApp) and a base class for each draw manager 
 
-interface (vj*App) (see Figure 2).</p>
+interface (vjPfApp, vjGlApp, etc) (see Figure 2).</p>
 
 <p>
 
