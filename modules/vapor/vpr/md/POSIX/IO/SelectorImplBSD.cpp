@@ -184,17 +184,23 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents, const vpr::Interval timeout
       }
    }
 
-   // Apparently select(2) doesn't like if the microsecond member has a time
-   // larger than 1 second, so if timeout (given in milliseconds) is larger
-   // than 1000, we have to split it up between the seconds and microseconds
-   // members.
-   if ( timeout.msec() >= 1000 ) {
-      timeout_obj.tv_sec  = timeout.msec() / 1000;
-      timeout_obj.tv_usec = (timeout.msec() % 1000) * 1000000;
+   if ( timeout == vpr::Interval::NoWait ) {
+       timeout_obj.tv_sec  = 0;
+       timeout_obj.tv_usec = 0;
    }
    else {
-      timeout_obj.tv_sec  = 0;
-      timeout_obj.tv_usec = timeout.msec() * 1000;
+       // Apparently select(2) doesn't like if the microsecond member has a
+       // time larger than 1 second, so if timeout (given in milliseconds) is
+       // larger than 1000, we have to split it up between the seconds and
+       // microseconds members.
+       if ( timeout.msec() >= 1000 ) {
+          timeout_obj.tv_sec  = timeout.msec() / 1000;
+          timeout_obj.tv_usec = (timeout.msec() % 1000) * 1000000;
+       }
+       else {
+          timeout_obj.tv_sec  = 0;
+          timeout_obj.tv_usec = timeout.msec() * 1000;
+       }
    }
 
    // If timeout is 0, this will be the same as polling the descriptors.  To
