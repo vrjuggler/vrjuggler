@@ -351,6 +351,10 @@ if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_LD $JCCL_EXTRA_LIBS_LD $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS_LD"
 else
     APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS_CC"
+
+    if test "x$PLATFORM" = "xDarwin" ; then
+       APP_EXTRA_LIBS="$APP_EXTRA_LIBS -framework Carbon"
+    fi
 fi
 
 # Put together the basic information needed to compile Gadgeteer applications.
