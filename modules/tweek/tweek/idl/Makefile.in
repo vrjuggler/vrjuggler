@@ -54,7 +54,7 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(TWEEK_LIBRARY)
 
-INSTALL_FILES	+= *.idl
+INSTALL_FILES	+= $(srcdir)/*.idl
 #SRCS	=
 
 include $(MKPATH)/dpp.obj.mk
