@@ -56,7 +56,7 @@ namespace jccl {
 // @author  Christopher Just
 //-----------------------------------------
 
-class VJ_CLASS_API TimeStampNone {
+class JCCL_CLASS_API TimeStampNone {
 
 public:
 

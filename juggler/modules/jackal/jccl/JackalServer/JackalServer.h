@@ -69,7 +69,7 @@ class ConfigChunkDB;
 // Date 2-27-98
 //---------------------------------------
 
-class VJ_CLASS_API JackalServer: public ConfigChunkHandler {
+class JCCL_CLASS_API JackalServer: public ConfigChunkHandler {
 
 public:
 
