@@ -60,14 +60,14 @@ public class PositionProxyEditor
 
    public void setConfig(ConfigContext ctx, ConfigElement elt)
    {
-      if ( ! elt.getDefinition().getToken().equals(EditorConstants.position_proxy_type) )
+      if ( ! elt.getDefinition().getToken().equals(EditorConstants.POSITION_PROXY_TYPE) )
       {
          throw new IllegalArgumentException("Config element of type '" +
                                             elt.getDefinition().getToken() +
                                             "' is not allowed");
       }
 
-      List filters = elt.getPropertyValues(EditorConstants.position_filters_prop);
+      List filters = elt.getPropertyValues(EditorConstants.POSITION_FILTERS_PROPERTY);
 
       if ( filters == null || filters.size() == 0 )
       {
@@ -87,21 +87,21 @@ public class PositionProxyEditor
          // Create the new position_transform_filter config element.
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition filter_def =
-            broker.getRepository().get(EditorConstants.position_transform_filter_type);
+            broker.getRepository().get(EditorConstants.POSITION_TRANSFORM_FILTER_TYPE);
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
          ConfigElement xform_filter = factory.create("Transform Filter 0",
                                                      filter_def);
 
          // Add the new config element to the position_filters property.
-         elt.addProperty(EditorConstants.position_filters_prop, xform_filter,
-                         ctx);
+         elt.addProperty(EditorConstants.POSITION_FILTERS_PROPERTY,
+                         xform_filter, ctx);
          mRotationPanel.setConfig(ctx, xform_filter);
          mTranslationPanel.setConfig(ctx, xform_filter);
       }
       else
       {
-         String type = EditorConstants.position_transform_filter_type;
+         String type = EditorConstants.POSITION_TRANSFORM_FILTER_TYPE;
 
          // Pass off the embedded position_transform_filter config element.
          // For now, we assume that there will be at most one such element.
