@@ -11,17 +11,16 @@
 
 //: Recalculate the projection matrix
 // Uses a method that needs to know the distance in the screen plane
-// from the origin (determined by the normal to the plane throught the 
+// from the origin (determined by the normal to the plane throught the
 // origin) to the edges of the screen.
 // This method can be used for any rectangular planar screen.
 // By adjusting the wall rotation matrix, this method can be used for
 // the general case of a rectangular screen in 3-space
 void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
 {
-   // XXX: Hard-coded near and far clipping
    float near_dist, far_dist;
-   near_dist = 0.1;
-   far_dist = 10000;
+   near_dist = mNearDist;
+   far_dist = mFarDist;
 
    // Distance measurements from eye to screen/edges
    // Distance to edges is from the point on the screen plane
@@ -64,6 +63,8 @@ void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
                 -n_eye_to_bottom, n_eye_to_top,
                 near_dist, far_dist);
 
+   mFocusPlaneDist = eye_to_screen;    // Needed for drawing
+
 
    //vjDEBUG(0) << "vjWallProjection::calcWallProjection: \n\tFrustum: " << frustum << endl << vjDEBUG_FLUSH;
 
@@ -82,7 +83,7 @@ void vjWallProjection::setWallRotationMatrix()
 {
    vjDEBUG(2) << "vjWallProjection::setWallRotationMatrix: Entering" << endl << vjDEBUG_FLUSH;
 
-   switch (surface)
+   switch (mSurface)
    {
    /************/
    /* R  V  U  */
@@ -107,9 +108,43 @@ void vjWallProjection::setWallRotationMatrix()
    }
 
    vjDEBUG(2) << "vjWallProjection::setWallRotationMatrix: Matrix" << endl << vjDEBUG_FLUSH;
-   vjDEBUG(2) << mWallRotationMatrix << endl << vjDEBUG_FLUSH; 
+   vjDEBUG(2) << mWallRotationMatrix << endl << vjDEBUG_FLUSH;
 }
 
+
+
+ostream& vjWallProjection::outStream(ostream& out)
+{
+   out << "vjWallProjection:\n";
+   out << "surface: ";
+   switch(mSurface)
+   {
+   case vjWallProjection::LEFT:
+      out << "Left";
+      break;
+   case vjWallProjection::RIGHT:
+      out << "Right";
+      break;
+   case vjWallProjection::FRONT:
+      out << "Front";
+      break;
+   case vjWallProjection::FLOOR:
+      out << "Floor";
+      break;
+   case vjWallProjection::BACK:
+      out << "Back";
+      break;
+   case vjWallProjection::CEILING:
+      out << "Ceiling";
+      break;
+   case vjWallProjection::USER:
+      out << "User";
+      break;
+   }
+   out << endl;
+
+   return vjProjection::outStream(out);
+}
 
 ////// OLD CODE ///////////////
 /*
@@ -131,9 +166,9 @@ void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
    vjFar = 1000.0f;
 
    vjWidth = 12.0f;
-   vjHeight = 9.0f; 
+   vjHeight = 9.0f;
 
-   // XXX: Hack: Coords 
+   // XXX: Hack: Coords
    OrigX = 6.0f;     // Dist from right
    OrigY = 0.0f;     // Dist from floor
    OrigZ = 6.0f;     // Dist from front
@@ -147,7 +182,7 @@ void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
 #else
    eyeX = eye_coord.pos[0];
    eyeY = eye_coord.pos[1];
-   eyeZ = eye_coord.pos[2];     
+   eyeZ = eye_coord.pos[2];
 #endif
 
       // XXX: Hack
