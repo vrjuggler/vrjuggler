@@ -110,7 +110,15 @@ AFTERBUILD	= afterbuild
 # Things to do before the object files and library are built.
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
+	@$(MAKE) cxx-idl
+	@$(MAKE) java-idl
 	@$(MAKE) tweek-java
+
+cxx-idl:
+	@$(MAKE) RECTARGET="cxx_idl" recursive
+
+java-idl:
+	@$(MAKE) -C java java_idl
 
 # Things to do after the object files and library are built.
 afterbuild:

@@ -34,58 +34,51 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _TWEEK_CORBA_REGISTRY_H_
-#define _TWEEK_CORBA_REGISTRY_H_
+#ifndef _TWEEK_CORBA_MANAGER_H_
+#define _TWEEK_CORBA_MANAGER_H_
 
 #include <tweek/tweekConfig.h>
 
 #include <stdlib.h>
 #include <string>
-
 #include <omnithread.h>
-
-#if OMNIORB_VER == 2
-#  include <omniORB2/CORBA.h>
-#elif OMNIORB_VER == 3
-#  include <omniORB3/CORBA.h>
-#endif
-
+#include <omniORB3/CORBA.h>
 #include <vpr/Thread/Thread.h>
+
+#include <tweek/CORBA/SubjectManagerImpl.h>
 
 
 namespace tweek
 {
 
-class Registry
+class CorbaManager
 {
 public:
    /**
     * Default constructor.
     */
-   Registry();
+   CorbaManager (void) : m_my_thread(NULL)
+   {
+      /* Do nothing. */ ;
+   }
 
    /**
     * Gets CORBA ready.
+    * Creates a thread and runs the CORBA server.
     */
-   void initCORBA();
+   void init(int argc = 0, char** argv = NULL);
 
    /**
     * Binds the interface object.
     */
-   void addInterface(CORBA::Object_ptr obj, std::string& objectId,
-                     std::string& objectKind);
+   void registerSubjectManager(tweek::SubjectManagerImpl* mgr);
 
-   CORBA::Object_var getInterface(std::string& objectId,
-                                  std::string& objectKind);
-
-   CORBA::BOA_ptr boa;
+   const PortableServer::POA_var& getPOA (void)
+   {
+      return m_poa;
+   }
 
 private:
-   /**
-    * Creates a thread and runs the CORBA server.
-    */
-   void start();
-
    /**
     * Runs the server.
     */
@@ -94,10 +87,10 @@ private:
    vpr::Thread* m_my_thread;
 
    CORBA::ORB_var m_orb;
-
-   CosNaming::NamingContext_var m_naming_context;
+   PortableServer::POA_var m_poa;
+   CosNaming::NamingContext_var m_root_context;
 };
 
 } // End of tweek namespace
 
-#endif /* _TWEEK_CORBA_REGISTRY_H_ */
+#endif /* _TWEEK_CORBA_MANAGER_H_ */
