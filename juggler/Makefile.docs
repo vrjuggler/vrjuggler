@@ -45,6 +45,7 @@ webroot=	$(HOME)/public_html/jugglerweb
 SUBDIR=		doc/build.system				\
 		doc/team.guide					\
 		modules/gadgeteer/doc				\
+		modules/gadgeteer/doc/clusterjuggler.guide	\
 		modules/jackal/doc				\
 		modules/jackal/doc/perf.measure.guide		\
 		modules/sonix/doc				\
