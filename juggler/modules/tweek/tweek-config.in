@@ -292,7 +292,7 @@ print qq(@tweek_java_api_jars@\n) if $echo_jars;
 print qq(@tweek_ext_jars@\n) if $echo_ext_jars;
 print "@BUILD_CXX@\n" if $echo_has_cxx;
 print "@BUILD_JAVA@\n" if $echo_has_java;
-print "@BUILD_PYTHON@\n" if $echo_has_python;
+print "@BUILD_PYTHON_IDL@\n" if $echo_has_python;
 
 exit(0);
 
