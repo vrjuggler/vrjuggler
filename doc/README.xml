@@ -166,6 +166,17 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
       <title>Modules</title>
       <para>The Juggler Project is made up of several modules that have evolved from the original VR Juggler source tree. Within this section, we describe each of the modules, what they are used for, and, when possible, how they relate to VR Juggler 1.0.</para>
       <section>
+         <title>VR Juggler</title>
+         <section>
+            <title>Directory</title>
+            <para><filename>juggler/modules/vrjuggler</filename></para>
+         </section>
+         <section>
+            <title>Description</title>
+            <para>VR Juggler is still VR Juggler. There are many new features in VR Juggler since the 1.0 series, but in essence, it is still the same familiar tool. Of the projects listed below, VR Juggler depends on VPR, JCCL, and Gadgeteer. Its individual components have simply been broken out into individually developed modules. More information about the latest version of VR Juggler is given in the following section.</para>
+         </section>
+      </section>
+      <section>
          <title>VR Juggler Portable Runtime (VPR)</title>
          <section>
             <title>Directory</title>
@@ -201,7 +212,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
          <section>
             <title>Description</title>
             <para>JCCL provides the configuration layer for VR Juggler and other modules. The config chunks and configuration editor VjControl come from JCCL. In essence, JCCL is the VR Juggler 1.0 Config directory with many new features including XML-based config files.</para>
-            <para>To build the JCCL C++ library, Xerces-C is required for parsing XML. As of this writing, version 1.5.1 has been used for testing. Newer versions may work. Xerces-C can be downloaded from http://xml.apache.org/xerces-c/.</para>
+            <para>To build the JCCL C++ library, Xerces-C is required for parsing XML. As of this writing, version 1.5.1 has been used for testing. Newer versions may work. Xerces-C can be downloaded from <ulink url="http://xml.apache.org/xerces-c/">http://xml.apache.org/xerces-c/</ulink>.</para>
             <para>To build VjControl, the Java API for XML Parsing (JAXP) is required. JAXP is distributed with JDK 1.4, and it is available for earlier versions as a separately distributed library. More information and downloads can be found at <ulink url="http://java.sun.com/xml/jaxp/index.html">http://java.sun.com/xml/jaxp/index.html</ulink>.</para>
          </section>
       </section>
@@ -209,7 +220,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
          <title>Gadgeteer</title>
          <section>
             <title>Directory</title>
-            <para>juggler/modules/gadgeteer</para>
+            <para><filename>juggler/modules/gadgeteer</filename></para>
          </section>
          <section>
             <title>Description</title>
@@ -260,17 +271,6 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
             <title>Description</title>
             <para>Tweek is a cross-platform, cross-language library consisting of a C++ API and a Java API. Its purpose is to provide a convenient mechanism for a Java-based GUI to interact with a complex C++ library or application. The Tweek GUI can be run in virtual environments, external on a palm top, or on the desktop next to a running application. Each of these methods gives a familier 2D widget set that can control applications flexibly. To provide this capability, it uses CORBA.</para>
             <para>The Java code in Tweek includes the Tweek Java API and the Tweek JavaBean loader application. The Java API is provided to make the use of JavaBeans and CORBA simpler for programmers. The JavaBean loader application simply loads the Beans it finds and presents them to the user in some sort of structured manner (for example, a collection of icons with web-style navigation).</para>
-         </section>
-      </section>
-      <section>
-         <title>VR Juggler</title>
-         <section>
-            <title>Directory</title>
-            <para><filename>juggler/modules/vrjuggler</filename></para>
-         </section>
-         <section>
-            <title>Description</title>
-            <para>VR Juggler is still VR Juggler. There are many new features in VR Juggler since the 1.0 series, but in essence, it is still the same familiar tool. Of the above projects, VR Juggler depends on VPR, JCCL, and Gadgeteer. Its individual components have simply been broken out into individually developed modules. More information about the latest version of VR Juggler is given in the following section.</para>
          </section>
       </section>
    </section>
