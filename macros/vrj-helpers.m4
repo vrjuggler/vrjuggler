@@ -634,7 +634,7 @@ AC_DEFUN(VJ_APP_COMPILER,
     APP_CFLAGS="$2"
     APP_CXXFLAGS="$4"
     APP_DEBUG_CFLAGS="$5 -D_DEBUG"
-    APP_OPTIM_CFLAGS="$6 -D_OPT"
+    APP_OPTIM_CFLAGS="$6 -D_OPT -DNDEBUG"
     APP_DEFS="$8"
     APP_INCLUDES=ifelse([$7], , "$9", "-I\$($7)/include $9")
     APP_EXTRA_CFLAGS="$10"
