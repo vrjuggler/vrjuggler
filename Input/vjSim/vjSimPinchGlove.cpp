@@ -46,6 +46,7 @@ bool vjSimPinchGlove::config( vjConfigChunk* chunk )
    int num_pairs = mSimKeys.size();
    mDigitalData = std::vector< int >( num_pairs, 0 );      // Initialize to all zeros
 
+   vjDEBUG(vjDBG_ALL,0)<<"vjSimPinchGlove::config\n"<<flush;
    return true;
 }
 
@@ -55,6 +56,9 @@ bool vjSimPinchGlove::config( vjConfigChunk* chunk )
 //+     When key is release, digital goes to off state
 void vjSimPinchGlove::updateData()
 {
+   vjDEBUG(vjDBG_ALL,0)<<"vjSimPinchGlove::UpdateData\n"<<flush;
+   
+   
 vjGuard<vjMutex> updateGuard(lock);
 
    // Copy the valid data to the current data so that both are valid
@@ -81,7 +85,7 @@ vjGuard<vjMutex> updateGuard(lock);
     mTheData[1][progress].calcXforms();
 	
     swapValidIndexes();
-    
+  
     return;
 }
 
@@ -107,12 +111,16 @@ void vjSimPinchGlove::updateFingerAngles()
                      mDigitalData[RMIDDLE] == 1,
                      mDigitalData[RINDEX] == 1,
                      mDigitalData[RTHUMB] == 1 );
-              
+    
+    vjDEBUG(vjDBG_ALL,0)<<"rightp:"<<right.pinky().mpj()<<","<<right.pinky().pij()<<","<<right.pinky().dij()<<","<<right.pinky().abduct()<<"   "<<flush;
+       
+    
     //Now, set the ugly ambiguously named array, mTheData:
     
     // if that assert failed, then at least the code will still run...
-    if ( RIGHT_HAND >= VJ_MAX_GLOVE_DEVS )
+    if ( RIGHT_HAND < VJ_MAX_GLOVE_DEVS )
     {
+       vjDEBUG(vjDBG_ALL,0)<<"Rpinky:"<<right.pinky().mpj()<<","<<right.pinky().pij()<<","<<right.pinky().dij()<<","<<right.pinky().abduct()<<"   "<<flush;
        // Right Pinky
        mTheData[RIGHT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::MPJ] = right.pinky().mpj();
        mTheData[RIGHT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::PIJ] = right.pinky().pij();
@@ -149,8 +157,9 @@ void vjSimPinchGlove::updateFingerAngles()
     }
             
     // if that assert failed, then at least the code will still run...
-    if ( LEFT_HAND >= VJ_MAX_GLOVE_DEVS )
+    if ( LEFT_HAND < VJ_MAX_GLOVE_DEVS )
     {
+       vjDEBUG(vjDBG_ALL,0)<<"Lpinky:"<<left.pinky().mpj()<<","<<left.pinky().pij()<<","<<left.pinky().dij()<<","<<left.pinky().abduct()<<"\n"<<flush;
        // Left Pinky
        mTheData[LEFT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::MPJ] = left.pinky().mpj();
        mTheData[LEFT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::PIJ] = left.pinky().pij();

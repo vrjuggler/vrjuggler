@@ -52,7 +52,7 @@
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimPinchGlove : virtual public vjDigital, public vjGlove, public vjSimInput
+class vjSimPinchGlove : virtual public vjDigital, virtual public vjGlove, virtual public vjSimInput
 {
 public:
    //: Default Constructor
@@ -92,9 +92,18 @@ public:
    }
 
    /* These functions don't do anything */
-   int startSampling() { return 1; }
-   int stopSampling() { return 1; }
-   int sample() { return 1; }
+   virtual int startSampling() 
+   { 
+     cout<<"start\n"<<flush; return 1; 
+   }
+   virtual int stopSampling() 
+   { 
+     cout<<"stop\n"<<flush; return 1; 
+   }
+   virtual int sample() 
+   { 
+     cout<<"sample\n"<<flush; return 1; 
+   }
 
    //: Update the data
    virtual void updateData();
