@@ -71,6 +71,7 @@ public class WallEditorDialog
       {
          cw = new CaveWall();
       }
+
       /*
       if ( elt == null )
       {
@@ -85,9 +86,9 @@ public class WallEditorDialog
       
       mCaveWall = cw;
       mConfigContext = ctx;
-      //XXX: What should we be listening to?
-      //mViewportElement.addConfigElementListener(this);
       
+      // Listen for changes to left view.
+      mCaveWall.getLeftView().addConfigElementListener(this);
 
       mCorners[Plane.LL_CORNER] = "Lower Left Corner";
       mCorners[Plane.LR_CORNER] = "Lower Right Corner";
@@ -295,7 +296,7 @@ public class WallEditorDialog
    
    public Object getTrackerProxy()
    {
-      return mCaveWall.getLeftView().getProperty(TRACKER_PROXY_PROPERTY, 1);
+      return mCaveWall.getLeftView().getProperty(TRACKER_PROXY_PROPERTY, 0);
    }
       
    public void nameChanged(ConfigElementEvent e)
@@ -320,13 +321,6 @@ public class WallEditorDialog
       return (mTracked ? Boolean.TRUE : Boolean.FALSE);
    }
    
-   /*
-   public Object getTrackerProxy()
-   {
-      return mViewportElement.getProperty("tracker_proxy", 1);
-   }
-   */
-
    public Point3D[] getCorners()
    {
       float wall_width = ((Number) mWallWidthField.getValue()).floatValue();
@@ -759,13 +753,11 @@ public class WallEditorDialog
    
    protected final void validateUserInput()
    {
-      boolean user_set, size_set, custom_valid;
+      boolean user_set, custom_valid;
       boolean enabled;
 
-      //Rectangle bounds = mBoundsPanel.getViewportBounds();
-
-      user_set = (((ConfigElementPointer) getUser()).getTarget() != null);
-      //size_set = bounds.width > 0 && bounds.height > 0;
+      String user = ((ConfigElementPointer) getUser()).getTarget();
+      user_set = (user != null && !user.equals(""));
       custom_valid = validateCustomInput();
 
       // All of the above conditions must be true in order for the OK button
@@ -947,8 +939,8 @@ public class WallEditorDialog
 
       // The tracker proxy editor parts of the UI are only needed when mTracked
       // is true.
-      //mTrackerProxyLabel.setEnabled(mTracked);
-      //mTrackerProxyEditor.setEnabled(mTracked);
+      mTrackerProxyLabel.setEnabled(mTracked);
+      mTrackerProxyEditor.setEnabled(mTracked);
       validateUserInput();
    }
 
