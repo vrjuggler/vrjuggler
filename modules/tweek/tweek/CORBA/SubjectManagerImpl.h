@@ -18,9 +18,10 @@ namespace tweek
 class CorbaManager;
 class SubjectImpl;
 
-class SubjectManagerImpl : public POA_tweek::SubjectManager,
-                           public PortableServer::RefCountServantBase,
-                           public vpr::Singleton<SubjectManagerImpl>
+class TWEEK_CLASS_API SubjectManagerImpl
+   : public POA_tweek::SubjectManager,
+     public PortableServer::RefCountServantBase,
+     public vpr::Singleton<SubjectManagerImpl>
 {
 public:
    void registerSubject(const CorbaManager& corba_mgr,
