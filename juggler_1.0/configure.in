@@ -593,7 +593,7 @@ AC_SUBST(TEST_EXTRA_LIBS)
 # -----------------------------------------------------------------------------
 # Final file generation step.
 # -----------------------------------------------------------------------------
-AC_OUTPUT(Makefile Makefile.base Config/Makefile Math/Makefile
+AC_OUTPUT(Makefile Makefile.base Config/Makefile Math/Makefile GUI/Makefile
           Input/Makefile Input/vjGlove/Makefile Input/vjInput/Makefile
           Input/vjPosition/Makefile Input/InputManager/Makefile
           Input/ibox/Makefile Kernel/Makefile Kernel/Pf/Makefile
