@@ -453,16 +453,17 @@
       To take advantage of this feature, make a directory somewhere for
       building the library.  This directory can go anywhere, but the
       typical location is a subdirectory of the top-level Juggler source
-      tree.  It can also be called whatever seems appropriate.  A common
-      name is ``<TT>build</TT>'', and alternate options are
-      ``<TT>build-PLATFORM</TT>'' where ``PLATFORM'' is the name of the
-      platform on which Juggler is being built.  Multiple build directories
-      can exist side by side.  They fully separate all parts of the
-      compile process and can be removed safely at the root.  After making
-      the directory, <TT><B>cd</B></TT> into it and run the
-      configure script from it.  For example, if a directory called
-      <TT>build</TT> has been created as a subdirectory of
-      <TT>juggler</TT>, do the following:
+      tree.  (Note that on a Win32 platform, this directory MUST be a
+      subdirectory of the Juggler source tree.)  It can also be called
+      whatever seems appropriate.  A common name is ``<TT>build</TT>'',
+      and alternate options are ``<TT>build-PLATFORM</TT>'' where
+      ``PLATFORM'' is the name of the platform on which Juggler is being
+      built.  Multiple build directories can exist side by side.  They
+      fully separate all parts of the compile process and can be removed
+      safely at the root.  After making the directory, <TT><B>cd</B></TT>
+      into it and run the configure script from it.  For example, if a
+      directory called <TT>build</TT> has been created as a subdirectory
+      of <TT>juggler</TT>, do the following:
 
       <PRE>
     <B>cd build
