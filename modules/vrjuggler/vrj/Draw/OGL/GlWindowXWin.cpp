@@ -282,10 +282,8 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
  */
 int GlWindowXWin::close()
 {
-vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
-//     if (!window_is_open)
-//         return true;
+   vprASSERT( !mXfuncLock.test() && "Attempting to close a display window that is locked" );
 
    if (glx_context)
    {
@@ -312,6 +310,7 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
    }
 
    window_is_open = false;
+
    return true;
 
 } /* close() */
@@ -320,7 +319,7 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
 bool GlWindowXWin::makeCurrent()
 {
-vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+   vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
    /* returns true for success,
     * false for failure (eg window not open or glXMakeCurrent fails)
