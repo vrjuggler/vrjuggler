@@ -60,7 +60,10 @@ void InetAddrTest::testAddressLookup ()
    CPPUNIT_ASSERT(addr3.getAddressValue() == addr4.getAddressValue());
    CPPUNIT_ASSERT(addr3.getAddressString() == addr4.getAddressString());
    CPPUNIT_ASSERT(addr3 == addr4);
-   CPPUNIT_ASSERT(addr3.getHostname() == addr4.getHostname());
+   std::string addr3_hn, addr4_hn;
+   CPPUNIT_ASSERT(addr3.getHostname(addr3_hn).success());
+   CPPUNIT_ASSERT(addr4.getHostname(addr4_hn).success());
+   CPPUNIT_ASSERT(addr3_hn == addr4_hn);
    CPPUNIT_ASSERT(addr3 == addr5);
 #endif
 }

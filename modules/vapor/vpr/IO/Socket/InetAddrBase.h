@@ -196,10 +196,10 @@ public:
    /**
     * Returns the fully qualified hostname for this address.
     */
-   std::string getHostname() const
+   vpr::ReturnStatus getHostname(std::string& s) const
    {
       vprASSERT(false && "Implement me");
-      return std::string("");
+      return vpr::ReturnStatus::Fail;
    }
 
    /**

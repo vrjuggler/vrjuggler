@@ -239,7 +239,7 @@ public:
    /**
     * Returns the fully qualified hostname for this address.
     */
-   std::string getHostname() const;
+   vpr::ReturnStatus getHostname(std::string& hostname) const;
 
    /**
     * Returns the fully qualified primary hostname for this address and all

@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-05-08 patrickh Changed vpr::InetAddr::getHostname() to return something
+                    meaningful if the hostname lookup fails.
+                    NEW VERSION: 0.36.0
 2004-04-21 patrickh With SPROC threads, thread-specific data is now stored in
            aronb    PRDA->usr2_data to avoid conflicts with OpenSG and
                     OpenThreads.
