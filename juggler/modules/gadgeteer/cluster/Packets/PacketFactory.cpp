@@ -33,6 +33,8 @@
 #include <gadget/gadgetConfig.h>
 #include <typeinfo>
 
+#include <vpr/IO/Socket/SocketStream.h>
+
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/Packets/Packet.h>
 #include <cluster/Packets/DeviceRequest.h>

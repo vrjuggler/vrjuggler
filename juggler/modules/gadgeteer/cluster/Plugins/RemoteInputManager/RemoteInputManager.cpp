@@ -97,6 +97,16 @@ namespace cluster
       }  
    }
 
+   void RemoteInputManager::recoverFromLostNode(ClusterNode* lost_node)
+   {
+      removeVirtualDevicesOnHost(lost_node->getHostname());
+      removeDeviceClientsForHost(lost_node->getHostname());
+      
+      // Since we have lost a connection we need to set a flag so 
+      // that when we gain a new connection we will reconfigure.
+      setReconfigurationNeededOnConnection(true);
+   }
+
    /**
     * Handle a incoming packet.
     */
@@ -323,6 +333,8 @@ namespace cluster
       {
          if ( (*i).first == device_id )
          {
+            // Remove remote device from the InputManager
+            gadget::InputManager::instance()->removeDevice((*i).second->getName());
             delete (*i).second;
             mVirtualDevices.erase(i);
             return;
@@ -333,6 +345,9 @@ namespace cluster
    void RemoteInputManager::removeVirtualDevice(const std::string& device_name)
    {
       vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
+
+      // Remove remote device from the InputManager
+      gadget::InputManager::instance()->removeDevice(device_name);
 
       for ( std::map<vpr::GUID, VirtualDevice*>::iterator i = mVirtualDevices.begin();
           i != mVirtualDevices.end() ; i++ )
