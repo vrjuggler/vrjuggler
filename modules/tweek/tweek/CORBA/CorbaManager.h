@@ -42,7 +42,7 @@
 #include <stdlib.h>
 #include <string>
 #include <omnithread.h>
-#include <omniORB3/CORBA.h>
+#include TWEEK_INCLUDE_CORBA_H
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/ReturnStatus.h>
 
