@@ -56,7 +56,7 @@ namespace vpr
  * extern C type function to be called by a thread creation
  * routine.
  */
-class VPR_CLASS_API BaseThreadFunctor
+class BaseThreadFunctor
 {
 public:
 
@@ -98,7 +98,7 @@ public:
  * to be used as functors.
  */
 template<class OBJ_TYPE>
-class VPR_CLASS_API ThreadMemberFunctor : public BaseThreadFunctor
+class ThreadMemberFunctor : public BaseThreadFunctor
 {
 public:
    typedef void (OBJ_TYPE::* FunPtr)(void*);
@@ -163,7 +163,7 @@ private:
  * Nonmember functor class.  Converts a non-member function or a static class
  * member function into a functor.
  */
-class VPR_CLASS_API ThreadNonMemberFunctor : public BaseThreadFunctor
+class ThreadNonMemberFunctor : public BaseThreadFunctor
 {
 public:
    typedef void(* NonMemFunPtr)(void*);
