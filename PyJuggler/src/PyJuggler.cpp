@@ -374,9 +374,6 @@ struct Dummy
 
 }
 
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(loadConfigFile_overloads,
-                                       vrj::Kernel::loadConfigFile, 1, 1)
-
 BOOST_PYTHON_FUNCTION_OVERLOADS(deg2Rad_overloads,
                                 gmtl::Math::deg2Rad, 1, 1)
 
@@ -385,10 +382,8 @@ BOOST_PYTHON_MODULE(PyJuggler)
    class_<vrj::Kernel, boost::noncopyable>("Kernel", no_init)
       .def("start", &vrj::Kernel::start)
       .def("setApplication", &vrj::Kernel::setApplication)
-      .def("loadConfigFile", (void(vrj::Kernel::*) (const char*)) 0,
-           loadConfigFile_overloads())
-      .def("loadConfigFile", (void(vrj::Kernel::*) (std::string)) 0,
-           loadConfigFile_overloads())
+      .def("loadConfigFile", (void (vrj::Kernel::*)(const char *) )&vrj::Kernel::loadConfigFile)
+      .def("loadConfigFile", (void (vrj::Kernel::*)(std::basic_string<char,std::char_traits<char>,std::allocator<char> >) )&vrj::Kernel::loadConfigFile)
       .def("loadChunkDescFile", &vrj::Kernel::loadChunkDescFile)
       .def("waitForKernelStop", &vrj::Kernel::waitForKernelStop)
       .def("getUser", &vrj::Kernel::getUser, return_internal_reference<>())
