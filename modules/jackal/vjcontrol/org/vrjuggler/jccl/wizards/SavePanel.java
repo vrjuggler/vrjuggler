@@ -29,30 +29,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjWizards;
+package org.vrjuggler.jccl.wizards;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import VjWizards.*;
-import VjConfig.*;
-import VjComponents.ConfigEditor.ConfigModule;
-import VjComponents.ConfigEditor.ConfigUIHelper;
-import VjComponents.UI.ControlUIModule;
-//import VjComponents.UI.Widgets.*;
-import VjControl.*;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.ConfigModule;
+import org.vrjuggler.jccl.editorgui.ConfigUIHelper;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.ControlUIModule;
 
 /**
  * Title:        VjControl Sim Wizard GUI
  * Description:
  * Copyright:    Copyright (c) 2001
  * Company:      VRAC
- * @author Christopher Just
- * @version 1.0
  */
 
 public class SavePanel 
