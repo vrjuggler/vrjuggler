@@ -231,7 +231,7 @@ bool vjConfigChunkDB::load (const char *fname) {
 	       << fname << "'" << endl << vjDEBUG_FLUSH;
     return false;
   }
-  vjDEBUG(3) << " succeeded." << endl;
+  vjDEBUG(3) << " succeeded." << endl << vjDEBUG_FLUSH;
   in >> *this;
   return true;
 }
