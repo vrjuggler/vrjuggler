@@ -10,7 +10,7 @@
 
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -114,7 +114,7 @@ public:
     */
    vpr::ReturnStatus init(const std::string& localId, int& argc, char** argv,
                           const std::string& nsHost = std::string(""),
-                          const vpr::Uint16& = vpr::Uint16(2809),
+                          const vpr::Uint16& nsPort = vpr::Uint16(2809),
                           const std::string& iiopVersion = std::string("1.0"));
 
    /**
