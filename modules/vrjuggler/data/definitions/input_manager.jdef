@@ -16,7 +16,7 @@
          <help>This property defines zero or more directories containing dynamically loadable device drivers.  Within the directory, all driver DSOs that are discovered at runtime will be loaded.</help>
          <value label="DSO directory" defaultvalue=""/>
       </property>
-      <property valuetype="string" variable="false" name="dso_file_extension">
+      <property valuetype="string" variable="true" name="dso_file_extension">
          <help>Define the file extension used on dynamically loaded modules.  On most UNIX systems, the value will be &quot;so&quot;.  On Win32, the value will be &quot;dll&quot;.  Note that the value must not contain the &quot;.&quot; that separates the module name from its extension.</help>
          <value label="DSO file extension" defaultvalue="so"/>
       </property>
