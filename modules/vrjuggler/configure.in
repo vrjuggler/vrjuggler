@@ -334,7 +334,7 @@ if test "x${_enable_osg_api}" = "xyes" ; then
     OSG_INCLUDES="-I$OSGROOT/include"
 
     if test "x$OS_TYPE" = "xWin32" ; then
-        OSG_LDFLAGS="-libpath:$OSGROOT/lib"
+        OSG_LDFLAGS="/libpath:$OSGROOT/lib"
         LIBOSG='osg.lib osgGLUT.lib osgUtil.lib osgDB.lib'
     else
         OSG_LDFLAGS="-L$OSGROOT/lib"
@@ -490,7 +490,7 @@ DPP_LANG_RESTORE
 XERCES_INCLUDES="-I$XERCESROOT/include"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    XERCES_LDFLAGS="-libpath:$XERCESROOT/lib"
+    XERCES_LDFLAGS="/libpath:$XERCESROOT/lib"
 else
     XERCES_LDFLAGS="-L$XERCESROOT/lib$LIBBITSUF"
 fi
@@ -676,9 +676,9 @@ if test "$OS_TYPE" = "UNIX" ; then
     fi
 elif test "$OS_TYPE" = "Win32" ; then
     DYLIB_DEPS_BASIC="$APP_EXTRA_LIBS"
-    DYLIB_DEPS_VJ="-libpath:\$(LIBDIR) Juggler_utils.lib $DYLIB_DEPS_BASIC"
+    DYLIB_DEPS_VJ="/libpath:\$(LIBDIR) Juggler_utils.lib $DYLIB_DEPS_BASIC"
     DYLIB_DEPS_UTILS="$DYLIB_DEPS_BASIC"
-    DYLIB_DEPS_GL="-libpath:\$(LIBDIR) Juggler.lib Juggler_utils.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
+    DYLIB_DEPS_GL="/libpath:\$(LIBDIR) Juggler.lib Juggler_utils.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
 
     APP_VJ_LIBS_GL='Juggler_ogl.lib'
     APP_VJ_LIBS_PF='Juggler_pf.lib'
