@@ -66,6 +66,8 @@ my $rec_func = \&{"${caller}::recurseAction"};
 
 my $Win32 = 1 if $ENV{'OS'} =~ /Windows/;
 
+sub recurseDir($$);
+
 # -----------------------------------------------------------------------------
 # Recurse through the given directory tree starting at $start_dir.  If a file
 # is encountered, run &main::recurseAction() on that file.  The new directory
@@ -107,7 +109,7 @@ sub recurseDir ($$) {
 
 	    newDir("$base_inst_dir", "$curfile");
 	    push(@dirstack, "$curfile");
-	    recurseDir("$curfile");
+	    recurseDir("$curfile", "$base_inst_dir");
 	    pop(@dirstack);
 	}
 	# $curfile is something other than a directory (most likely a normal
@@ -212,8 +214,8 @@ sub installFile ($$$$$) {
     print "$inst_path/$src_file ==> $inst_dir/$filename\n";
 
     umask(002);
-    mkpath("$inst_dir", 0, 0755) or "mkpath: $!\n";
-    copy("$src_file", "$inst_dir") or "copy: $!\n";
+    mkpath("$inst_dir", 0, 0755) or warn "mkpath: $!\n";
+    copy("$src_file", "$inst_dir") or warn "copy: $!\n";
     chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
     chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
 }
