@@ -52,7 +52,7 @@ void ThreadTest::testCreateJoin()
    }
 
    CppUnit::TestAssert::assertEquals<long>((num_threads*ThreadTest_INC_COUNT),
-                                           mCounter);
+                                           mCounter, CppUnit::SourceLine());
    //CPPUNIT_ASSERT(mCounter == (num_threads*50000));
 
    std::cout << " done\n" << std::flush;

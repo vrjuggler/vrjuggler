@@ -1,7 +1,7 @@
 #ifndef _VPR_TEST_THREAD_TEST_H_
 #define _VPR_TEST_THREAD_TEST_H_
 
-#include <cppunit/ThreadTestCase.h>
+#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
