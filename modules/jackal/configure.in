@@ -127,15 +127,10 @@ case $target_os in
         if test "x$USE_GCC" != "xyes" ; then
             DBG_FLAGS="$DBG_FLAGS -gslim"
         fi
-
-        AC_DEFINE(_BSD_TYPES,)
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20|hpux11*)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
-        ;;
-    darwin1.*)
-        AC_DEFINE(_BSD_TYPES,) 
         ;;
 esac
 
@@ -244,8 +239,7 @@ LDFLAGS="${_vjsave_LDFLAGS}"
 # Checks for header files.
 # -----------------------------------------------------------------------------
 AC_HEADER_STDC
-AC_HEADER_TIME
-AC_CHECK_HEADERS(fcntl.h strings.h sys/time.h unistd.h)
+AC_CHECK_HEADERS(strings.h)
 
 # -----------------------------------------------------------------------------
 # Checks for typedefs, structures, and compiler characteristics.
@@ -257,7 +251,7 @@ DPP_TYPE_SOCKLEN_T
 # -----------------------------------------------------------------------------
 # Checks for library functions.
 # -----------------------------------------------------------------------------
-AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod strtok_r)
+AC_CHECK_FUNCS(socket strcasecmp)
 
 ## All of the above function checks may not be necessary ...
 
