@@ -54,7 +54,7 @@ import org.jdom.output.XMLOutputter;
  */
 public class GlobalPreferencesService
    extends ServiceBean
-   implements BeanInstantiationListener
+   implements BeanRegistrationListener
 {
    /**
     * Creates a new global preferences service.
@@ -63,18 +63,20 @@ public class GlobalPreferencesService
    {
       super( attr );
       load();
-      BeanInstantiationCommunicator.instance().addBeanInstantiationListener( this );
+      BeanRegistry.instance().addBeanRegistrationListener( this );
    }
 
    /**
-    * Called by the BeanInstantiationCommunicator singleton whenever a new bean
-    * is instantiated.
+    * Called by the BeanRegistry singleton whenever a new bean is registered
+    * with it.
+    *
+    * @param evt     the event describing the bean that got registered
     */
-   public void beanInstantiation( BeanInstantiationEvent evt )
+   public void beanRegistered( BeanRegistrationEvent evt )
    {
-      Object bean = evt.getBean();
+      TweekBean bean = evt.getBean();
       if ( bean instanceof ViewerBean ) {
-         addBeanViewer( ((ViewerBean)bean).getName() );
+         addBeanViewer( bean.getName() );
       }
    }
 
