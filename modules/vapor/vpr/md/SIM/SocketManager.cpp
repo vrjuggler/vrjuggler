@@ -173,6 +173,7 @@ namespace sim
                sock = const_cast<vpr::SocketImplSIM*>(sim_sock);
 
                status = sock->addConnector(local_socket, remote_socket);
+               vprASSERT(! status.failure() && "Failed to add connector");
 
                // The local socket needs an address now if it does not already
                // have one.
@@ -181,6 +182,7 @@ namespace sim
                   vpr::SocketImplSIM* temp_sock;
 
                   temp_sock = const_cast<vpr::SocketImplSIM*>(local_socket);
+//                  assignToNode(temp_sock);
                   bindUnusedPort(temp_sock, temp_sock->mLocalAddr);
                }
             }
@@ -227,11 +229,10 @@ namespace sim
             mod_local_sock->mPeer = mod_remote_sock;
             *remote_socket        = mod_remote_sock;
 
+            // Now find the shortest path between u and v.
             const NetworkGraph::net_vertex_t& u = local_socket->getNetworkNode();
             const NetworkGraph::net_vertex_t& v = (*remote_socket)->getNetworkNode();
             path = vpr::sim::Controller::instance()->getNetworkGraph().getShortestPath(u, v);
-
-            // Now find the shortest path between u and v.
 
             // The local socket needs an address now if it does not already
             // have one.
@@ -512,6 +513,12 @@ namespace sim
       // for the simulation.
       vprASSERT(mActive && "Socket manager not activated yet");
 
+      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         << "SocketManager::sendMessage(): Sending message from "
+         << msg->getSourceSocket()->getLocalAddr() << " to "
+         << msg->getDestinationSocket()->getLocalAddr() << "\n"
+         << vprDEBUG_FLUSH;
+
       NetworkGraph::net_vertex_t first_hop, second_hop;
       vpr::ReturnStatus status;
       NetworkGraph::net_edge_t first_edge;
@@ -557,6 +564,11 @@ namespace sim
       else
       {
          vprASSERT(msg->getSourceSocket()->getLocalAddr().getAddressValue() == msg->getDestinationSocket()->getLocalAddr().getAddressValue() && "Could not get second node in message's path");
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+            << "SocketManager::sendMessage(): Loopback--delivering to "
+            << msg->getDestinationSocket()->getLocalAddr() << "("
+            << msg->getDestinationSocket() << ") immediately\n"
+            << vprDEBUG_FLUSH;
          NetworkNode node_prop = vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(first_hop);
          node_prop.deliverMessage(msg);
       }
