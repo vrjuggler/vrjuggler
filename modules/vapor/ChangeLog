@@ -1,5 +1,10 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-02-16 patrickh Turned off the zeroing out of serial port attributes when
+                    opening a new port except when building on IRIX.  If the
+                    attributes are zeroed out on Linux, the port cannot be
+                    re-opened after being closed.
+                    NEW VERSION: 0.11.2
 2002-02-16 patrickh Added methods to vpr::SerialPort that enable and disable
                     "hardware" flow control.
                     NEW VERSION: 0.11.1
