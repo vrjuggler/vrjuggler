@@ -107,10 +107,10 @@ public class Core
     static private Core instance;
 
     /* logmessage stuff */
-    static private List logmessage_targets;
-    static protected boolean no_logmessage_targets;
-    static final private boolean info_msg_to_stdout = true;
-    static final private boolean error_msg_to_stdout = true;
+    private List logmessage_targets;
+    private boolean no_logmessage_targets;
+    final private boolean info_msg_to_stdout = true;
+    final private boolean error_msg_to_stdout = true;
 
     /* this stuff should move into ui - deal with this when i muck with
      * prefs later this summer.
@@ -128,7 +128,12 @@ public class Core
         pending_chunks = new Vector();
         pending_wrong_profile_chunks = new Vector();
         registered_components = new Vector();
+
         command_line = new String[0];
+
+	logmessage_targets = new ArrayList();
+        no_logmessage_targets = true;
+
     }
 
 
@@ -148,9 +153,6 @@ public class Core
 	screenHeight = 600;
         user_profile = new UserProfile();
 
-	logmessage_targets = new ArrayList();
-        no_logmessage_targets = true;
-
   	descdb = new ChunkDescDB();
         descdb.setName ("VjControl default Global ChunkDescDB");
 	default_chunkdb = new ConfigChunkDB();
@@ -167,7 +169,7 @@ public class Core
 
 
     /** Updates self based on VjControl global prefs */
-    static protected void reconfigure(ConfigChunk ch) {
+    protected void reconfigure(ConfigChunk ch) {
 	// called whenever vjcontrol_preferences changes
 	int i;
 	String s;
@@ -185,9 +187,9 @@ public class Core
 	    screenHeight = ch.getPropertyFromToken("windowsize").getValue(1).getInt();	   
 
             user_profile.setFromConfigChunk (ch);
-            instance.pending_chunks.addAll (instance.pending_wrong_profile_chunks);
-            instance.pending_wrong_profile_chunks.clear();
-            instance.configProcessPending();
+            pending_chunks.addAll (instance.pending_wrong_profile_chunks);
+            pending_wrong_profile_chunks.clear();
+            configProcessPending();
 	}
 	catch (Exception e) {
 	    Core.consoleInfoMessage (component_name, "Old vjcontrol preferences file - please check preferences and re-save");
@@ -263,6 +265,7 @@ public class Core
 
 
     /** Finds which component is ch's parent and calls addConfig for it.
+     *  This is a utility method for configProcessPending.
      *  This shouldn't be confused with Core.addConfig, which just creates
      *  components that are children of Core directly.  addComponentConfig
      *  calls Core.addConfig if ch's parent is actually "VjControl Core".
@@ -384,12 +387,12 @@ public class Core
      *  As consoleTempMessage (String s) but includes a source identifier.
      */
     public static void consoleTempMessage (String source, String s) {
-	if (info_msg_to_stdout || no_logmessage_targets)
+	if (instance.info_msg_to_stdout || instance.no_logmessage_targets)
 	    System.out.println (source + ": " + s);
 	if (s == null || s.equals (""))
 	    s = " ";
 
-	notifyLogMessageTargets (new LogMessageEvent (instance, source, s, LogMessageEvent.TEMPORARY_MESSAGE));
+	instance.notifyLogMessageTargets (new LogMessageEvent (instance, source, s, LogMessageEvent.TEMPORARY_MESSAGE));
     }
 
 
@@ -397,9 +400,9 @@ public class Core
 	consoleInfoMessage ("", s);
     }
     public static void consoleInfoMessage (String source, String s) {
-	if (info_msg_to_stdout || no_logmessage_targets)
+	if (instance.info_msg_to_stdout || instance.no_logmessage_targets)
 	    System.out.println (source + ": " + s);
-	notifyLogMessageTargets (new LogMessageEvent (instance, source, s, LogMessageEvent.PERMANENT_MESSAGE));
+	instance.notifyLogMessageTargets (new LogMessageEvent (instance, source, s, LogMessageEvent.PERMANENT_MESSAGE));
     }
 
 
@@ -407,9 +410,9 @@ public class Core
 	consoleInfoMessage ("", s);
     }
     public static void consoleErrorMessage (String source, String s) {
-	if (error_msg_to_stdout || no_logmessage_targets)
+	if (instance.error_msg_to_stdout || instance.no_logmessage_targets)
 	    System.out.println ("Error (" + source + "): " + s);
-	notifyLogMessageTargets (new LogMessageEvent (instance, source, s, LogMessageEvent.PERMANENT_ERROR));
+	instance.notifyLogMessageTargets (new LogMessageEvent (instance, source, s, LogMessageEvent.PERMANENT_ERROR));
     }
 
 
@@ -417,17 +420,17 @@ public class Core
     //-------------------- LogMessage Target Stuff --------------------------
 
     static public synchronized void addLogMessageListener (LogMessageListener l) {
-	synchronized (logmessage_targets) {
-	    logmessage_targets.add (l);
-            no_logmessage_targets = false;
+	synchronized (instance.logmessage_targets) {
+	    instance.logmessage_targets.add (l);
+            instance.no_logmessage_targets = false;
 	}
     }
 
     static public void removeLogMessageListener (LogMessageListener l) {
-	synchronized (logmessage_targets) {
-	    logmessage_targets.remove (logmessage_targets.indexOf(l));
-            if (logmessage_targets.size() == 0)
-                no_logmessage_targets = true;
+	synchronized (instance.logmessage_targets) {
+	    instance.logmessage_targets.remove (l);
+            instance.no_logmessage_targets = 
+                instance.logmessage_targets.isEmpty();
 	}
     }
 
@@ -449,7 +452,7 @@ public class Core
     };
 
 
-    static protected void notifyLogMessageTargets (LogMessageEvent e) {
+    protected void notifyLogMessageTargets (LogMessageEvent e) {
         if (!no_logmessage_targets) {
             // get array so we don't hold the lock for too long.
             LogMessageListener[] l;
