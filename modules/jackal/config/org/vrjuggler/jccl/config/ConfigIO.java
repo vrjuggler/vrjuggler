@@ -61,7 +61,7 @@ import VjControl.Core;
  *  @see ConfigChunkDB
  *  @see ChunkDescDB
  *  @see ConfigIOHandler
- *  @author Christopher Just
+ *
  *  @version $Revision$
  */
 public class ConfigIO {
@@ -152,8 +152,8 @@ public class ConfigIO {
     /** Reads a ConfigChunkDB from file into db.
      *  If handler_type is DEFAULT or GUESS, we use a heuristic to decide 
      *  which handler should try to parse the file.
-     *  @returns true - success
-     *  @returns false - on any parsing error.
+     *  @return A ConfigIOStatus object with information about errors
+     *          encountered during the read.
      */
     public static ConfigIOStatus readConfigChunkDB (File file, ConfigChunkDB db, int handler_type) {
         ConfigIOStatus iostatus = new ConfigIOStatus();
@@ -192,7 +192,8 @@ public class ConfigIO {
 
 
     /** Reads a ConfigChunkDB from input into db.
-     *  @return true if succesful, false on error.
+     *  @return A ConfigIOStatus object with information about errors
+     *          encountered during the read.
      */
     public static ConfigIOStatus readConfigChunkDB (InputStream input, ConfigChunkDB db, int handler_type) {
         ConfigIOStatus iostatus = new ConfigIOStatus();
@@ -254,8 +255,8 @@ public class ConfigIO {
     /** Reads a ChunkDescDB from file into db.
      *  If handler_type is DEFAULT or GUESS, we use a heuristic to decide 
      *  which handler should try to parse the file.
-     *  @returns true - success
-     *  @returns false - on any parsing error.
+     *  @return A ConfigIOStatus object with information about errors
+     *          encountered during the read.
      */
     public static ConfigIOStatus readChunkDescDB (File file, ChunkDescDB db, int handler_type) {
         ConfigIOStatus iostatus = new ConfigIOStatus();
@@ -292,7 +293,8 @@ public class ConfigIO {
 
 
     /** Reads a ChunkDescDB from input into db.
-     *  @return true if succesful, false on error.
+     *  @return A ConfigIOStatus object with information about errors
+     *          encountered during the read.
      */
     public static ConfigIOStatus readChunkDescDB (InputStream input, ChunkDescDB db, int handler_type) {
         ConfigIOStatus iostatus = new ConfigIOStatus();
