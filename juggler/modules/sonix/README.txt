@@ -60,9 +60,11 @@ Table of contents:
       - Currently sonix implements an: 
         - OpenAL interface 
         - AudioWorks interface 
+        - Audiere interface
       - Also wanted: 
         - If someone wants to volunteer, we're also interested in writing 
-          an interface to Lake's sound API (contact me: kevn@vrac.iastate.edu) 
+          an interface to Lake's sound API (contact us:
+          vrjuggler-devel@lists.sourceforge.net) 
         - Max
 
 ==============================================================================
@@ -74,28 +76,27 @@ Table of contents:
       sonix is officially supported on the following platforms:
 
         IRIX 6.5
-        RedHat Linux 7.1 and newer
-        Windows NT 4.0 and 2000
-        Windows 98/Me
+        RedHat Linux 8.0 and newer
+        Windows NT 5.0 and 2000
 
    B. Minimum requirements (by operating system)
 
       * All
         GNU make 3.78 or newer
-        GNU Autoconf 2.13
+        GNU Autoconf 2.14
         GNU Automake 1.4
 
       * IRIX
         MIPSpro Compilers 7.3.1.1m or newer
         OpenAL or AudioWorks or other supported sonix sound subsystem
 
-      * RedHat Linux 7.0
-        GCC 2.96.69
+      * RedHat Linux 8.0
+        GCC 3.0.4
         OpenAL
+        Audiere
 
       * Win32
-        Microsoft Visual Studio 6.0 (SP4 or SP5)
-        Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools-1.1.zip)
+        Microsoft Visual Studio 7.0
         OpenAL
 
 ==============================================================================
