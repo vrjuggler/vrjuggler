@@ -169,6 +169,8 @@ void SurfaceViewport::calculateSurfaceRotation()
 
    // Calculate the surfaceRotMat using law of cosines
    mSurfaceRotation = gmtl::makeDirCos<gmtl::Matrix44f>(x_base, y_base, z_base );
+   gmtl::invert(mSurfaceRotation);
+
    //mSurfaceRotation.makeDirCos(x_base,y_base,z_base);      // surfMbase
    //mSurfaceRotation.invert(mSurfRotInv);              // baseMsurf
 }
