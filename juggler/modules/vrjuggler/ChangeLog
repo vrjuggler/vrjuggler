@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-30-2002 allenb    Changed order that oglApp functions are called.  Now
+                      contextInit() is called before bufferPreDraw().
+Jan-29-2002 allenb    Added new interface function oglApp::contextPostDraw()
 Nov-14-2001 allenb    Fixed OsgApp to allow for multi-window/multi-pipe apps.
                       Added method for configuring new osgUtil::SceneViewers.
 Oct-17-2001 kevn      Fixed bug where vjGetVjMatrix returns the wrong 
