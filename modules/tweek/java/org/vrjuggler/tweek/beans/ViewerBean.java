@@ -41,8 +41,6 @@ import org.vrjuggler.tweek.beans.loader.BeanInstantiationException;
 
 /**
  * @since 1.0
- *
- * @see org.vrjuggler.tweek.beans.BeanCollectionBuilder
  */
 public class ViewerBean extends TweekBean
 {

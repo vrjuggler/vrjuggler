@@ -50,8 +50,6 @@ import org.vrjuggler.tweek.beans.loader.*;
  *
  * @version $Revision$
  * @since 1.0
- *
- * @see org.vrjuggler.tweek.beans.BeanCollectionBuilder
  */
 public class PanelBean extends TweekBean
 {
