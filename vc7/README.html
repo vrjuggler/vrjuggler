@@ -170,7 +170,7 @@ The required environment variables are as follows:
   </dd>
 </dl>
 
-<h3>3.1.2. Optional Environment Variables</h3>
+<a name="opt_env_vars"><h3>3.1.2. Optional Environment Variables</h3></a>
 
 <p>
 The optional environment variables are as follows:
@@ -183,8 +183,13 @@ The optional environment variables are as follows:
     installation.  It is highly recommended that version 1.4.2 or newer be
     installed.  Version 1.3.1 is the minimum required version.
   </dd>
-  <dd><tt>JAVA3D_HOME</tt></dt>
+  <dt><tt>JAVA3D_HOME</tt></dt>
   <dd>
+    The root directory of a
+    <a href="http://java.sun.com/products/java-media/3D/">Java 3D API</a>
+    installation.  Typically, this will be the same as <tt>%JAVA_HOME%</tt>,
+    but that may not always be the case.  The minimum required version of
+    the Java 3D API is 1.3.1.
   </dd>
   <dt><tt>PFROOT</tt></dt>
   <dd>
@@ -240,9 +245,12 @@ you must choose the configuration that you want to build.
 
 <p>
 The chosen target should be either "Debug DLL" or "Release DLL".  Otherwise,
-select "Batch Build" and compile everything.  Compiling the static versions
-of the various libraries (the "Release" and "Debug" targets) is not
-necessary.
+select "Batch Build" under the "Build" menu and compile everything all at
+once.  If you choose to build everything but do not have all the
+<a href="#opt_env_vars">optional dependencies</a>, some optional targets
+such as device drivers or Java features may fail to build.  If this is not
+acceptable, you must <a href="#run_buildwin32_py">go back to Step 3</a>
+and run <tt>buildwin32.py</tt> again.
 </p>
 
 <a name="install_vrj"><h1>5. Install VR Juggler</h1></a>
