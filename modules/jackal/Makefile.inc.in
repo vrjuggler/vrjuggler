@@ -160,7 +160,7 @@ EXTRA_OBJ_TARGETS	= vjcontrol
 # Build the Java-based configuration GUI.
 vjcontrol:
 ifndef NO_JAVA_GUI
-ifeq ($(BUILD_GUI), Y)
+ifeq ($(BUILD_VJCONTROL), Y)
 	@echo "===> GUI"
 	@$(MAKE) -C VjControl VjControl.jar
 	@echo "<=== GUI"
