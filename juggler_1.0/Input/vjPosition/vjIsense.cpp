@@ -75,7 +75,7 @@ vjIsense::vjIsense()
 bool vjIsense::config(vjConfigChunk *c)
 {
     vjDEBUG(vjDBG_INPUT_MGR,1) << "	 vjIsense::vjIsense(vjConfigChunk*)"
-				<< endl << vjDEBUG_FLUSH;
+			       << std::endl << vjDEBUG_FLUSH;
 
 // read in vjPosition's, vjDigital's, and vjAnalog's config stuff,
 // --> this will be the port and baud fields
@@ -83,7 +83,7 @@ bool vjIsense::config(vjConfigChunk *c)
 	return false;
    
 // keep isIntersense's port and baud members in sync with vjInput's port and baud members.
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "   vjIsense::vjIsense(vjConfigChunk*) -> vjInput::getPort() = " << vjInput::getPort() << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "   vjIsense::vjIsense(vjConfigChunk*) -> vjInput::getPort() = " << vjInput::getPort() << std::endl << vjDEBUG_FLUSH;
     mTracker.setPortName( vjInput::getPort() );
     mTracker.rBaudRate() = vjInput::getBaudRate();
     mTracker.rNumStations() = (int)  static_cast<int>(c->getProperty("num"));
@@ -142,7 +142,8 @@ int vjIsense::startSampling()
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
     {
-	vjDEBUG(vjDBG_INPUT_MGR,2)  << "vjIsense was already started." << endl << vjDEBUG_FLUSH;
+	vjDEBUG(vjDBG_INPUT_MGR,2) << "vjIsense was already started."
+                                   << std::endl << vjDEBUG_FLUSH;
 	return 0;
     }
 
@@ -160,7 +161,7 @@ int vjIsense::startSampling()
 	mTracker.open();
 // sanity check.. make sure birds actually started
     	if (this->isActive() == false) {
-		vjDEBUG(vjDBG_INPUT_MGR,2)  << "vjIsense: mTracker.open failed to start tracker" << endl << vjDEBUG_FLUSH;
+		vjDEBUG(vjDBG_INPUT_MGR,2)  << "vjIsense: mTracker.open failed to start tracker" << std::endl << vjDEBUG_FLUSH;
 		return 0;
     	}
 
@@ -262,11 +263,11 @@ int vjIsense::stopSampling()
 // sanity check: did the flock actually stop?
 	if (this->isActive() == true)
 	{
-	    vjDEBUG(vjDBG_INPUT_MGR,0) << "Intersense tracker didn't stop." << endl << vjDEBUG_FLUSH;
+	    vjDEBUG(vjDBG_INPUT_MGR,0) << "Intersense tracker didn't stop." << std::endl << vjDEBUG_FLUSH;
 	    return 0;
 	}
 
-	vjDEBUG(vjDBG_INPUT_MGR,1) << "stopped." << endl << vjDEBUG_FLUSH;
+	vjDEBUG(vjDBG_INPUT_MGR,1) << "stopped." << std::endl << vjDEBUG_FLUSH;
     }
 
     return 1;
