@@ -2,9 +2,8 @@ SRCS = app.cpp fileIO.cpp
 PROJECT_NAME = app
 OBJDIR = object_code
 
-include ../Makefile.base
-include ../Makefile.rec
-include ../Makefile.dep
+include Makefile.base
+include Makefile.dep
 
 # Do any pre init stuff that has to happen before build rules 
 #  are processed

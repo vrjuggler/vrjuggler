@@ -2,11 +2,11 @@
 #include <stdlib.h>   //for NULL
 #include <unistd.h>   //for sleep
 #include <iostream.h> // for cout
-#include "SoundFactory.h"
+#include <vjSound/vjSoundFactory.h>
 #include "fileIO.h"
 
-SoundEngine* gSoundEngine = NULL;
-Sound* longPan = NULL, *fastPan = NULL, *shortTriggeredSound = NULL;
+vjSoundEngine* gSoundEngine = NULL;
+vjSound* longPan = NULL, *fastPan = NULL, *shortTriggeredvjSound = NULL;
 
 void usage(char** argv)
 {
@@ -16,7 +16,7 @@ void usage(char** argv)
       cout<<"      "<<argv[0]<<" nosound  (to stub out all sound functionality)\n"<<flush;
 }
 
-bool initSoundEngine( const std::string& arg, SoundEngine* &engine )
+bool initvjSoundEngine( const std::string& arg, vjSoundEngine* &engine )
 {
    std::string soundConfigFile;
    if (arg == "sl") // some hacky logic.
@@ -42,7 +42,7 @@ bool initSoundEngine( const std::string& arg, SoundEngine* &engine )
    std::string soundConfigFileWithPath;
    if (fileIO::fileExistsResolvePath( soundConfigFile, soundConfigFileWithPath ))
    {
-      engine = SoundFactory::newEngine( arg, soundConfigFileWithPath.c_str() );
+      engine = vjSoundFactory::newEngine( arg, soundConfigFileWithPath.c_str() );
       
       if ( engine == NULL)
       {
@@ -72,7 +72,7 @@ void main(int argc, char** argv)
    }   
    
    // get the sound engine...
-   bool success = initSoundEngine( arg, gSoundEngine );
+   bool success = initvjSoundEngine( arg, gSoundEngine );
    if (!success)
    {
       ::usage(argv);
@@ -80,7 +80,7 @@ void main(int argc, char** argv)
       cout<<"!!! WARNING !!!: Option \""<<arg.c_str()<<"\" not recognized, Defaulting to the \"nosound\" option\n"<<flush;
       cout<<"\n"<<flush;
       arg = "nosound"; //default arg
-      success = initSoundEngine( arg, gSoundEngine );
+      success = initvjSoundEngine( arg, gSoundEngine );
       sleep( 1 );
    }   
    
@@ -93,8 +93,8 @@ void main(int argc, char** argv)
    fastPan = gSoundEngine->getHandle( "fastPan" );
    fastPan->print();
    
-   shortTriggeredSound = gSoundEngine->getHandle( "shortTriggeredSound" );
-   shortTriggeredSound->print();
+   shortTriggeredvjSound = gSoundEngine->getHandle( "shortTriggeredvjSound" );
+   shortTriggeredvjSound->print();
 
    // Find players
    //pendulumplayer = awFindPlyr("pendulumplayer");
@@ -113,7 +113,7 @@ void main(int argc, char** argv)
    usleep( 1 );
    
    gSoundEngine->setPosition( 0, 5, 5 );
-   shortTriggeredSound->trigger();
+   shortTriggeredvjSound->trigger();
    gSoundEngine->update();
    usleep( 1 );
    
@@ -128,7 +128,7 @@ void main(int argc, char** argv)
    sleep( 1 );
    
    gSoundEngine->setPosition( 0, 0, 5 );
-   shortTriggeredSound->trigger();
+   shortTriggeredvjSound->trigger();
    gSoundEngine->update();
    sleep( 1 );
    
@@ -199,7 +199,7 @@ void main(int argc, char** argv)
    
    // or just trigger a sound, no panning...
    cout<<"Triggering a short sound....\n"<<flush;
-   shortTriggeredSound->trigger();
+   shortTriggeredvjSound->trigger();
    gSoundEngine->update();
    
    sleep( 3 );
@@ -207,12 +207,12 @@ void main(int argc, char** argv)
    gSoundEngine->update();
    longPan->stop();
    fastPan->stop();
-   shortTriggeredSound->stop();
+   shortTriggeredvjSound->stop();
    gSoundEngine->update();
   
    usleep( 30000 );
    
-   cout<<"Sound should have stopped....\n"<<flush;
+   cout<<"vjSound should have stopped....\n"<<flush;
    cout<<"Done...\n"<<flush;
    gSoundEngine->kill();
    
