@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book>
+  <bookinfo>
+    <title>VR Juggler</title>
+
+    <subtitle>VRJConfig Guide</subtitle>
+
+    <releaseinfo>Version 2.0 Alpha 2</releaseinfo>
+
+    <pubdate>$Date$</pubdate>
+  </bookinfo>
+
+  <part>
+    <title>Getting Started</title>
+
+    <preface>
+      <title>Introducing VRJConfig</title>
+
+      <para>Configuring VR software for a particular hardware system can be a
+      daunting taks due to the complexity and diversity of the environments
+      and hardware in use. In addition to this, many users will need to switch
+      between immersive VR hardware and desktop simulators during development,
+      or between one hardware system and another.</para>
+
+      <para>VR Juggler&#39;s inherent flexibility increases this complexity.
+      VR Juggler components such as displays and device drivers can be
+      combined in many ways. For example, a configuration could mix simulated
+      and real input devices. Or, hardware permitting, VR Juggler could use
+      two separate head-mounted displays (HMDs) simultaneously. Input devices
+      can be chained together, manipulated in a variety of ways, and mapped to
+      different names. The possibilities are endless - but so are the
+      potential pitfalls.</para>
+
+      <para>In order to be successful, the design of VR Juggler mandated the
+      need for a simple yet flexible configuration system whereby individual
+      configuation elements can be easily mixed together. In such an open
+      environment, resulting configuration files can become extremely complex
+      making editing configurations by hand can be a tedious task in which
+      making mistakes is easy. Enter VRJConfig, a GUI configuration editing
+      tool designed to provide a simple, concise view of a configuration while
+      helping prevent many kinds of errors.</para>
+
+      <para>This part is provides an introduction to the basic features of the
+      VRJConfig configuration editor.</para>
+    </preface>
+
+    <chapter>
+      <title>The Philosophy Behind VRJConfig</title>
+
+      <para>The design of VRJConfig has been driven by a few simple ideas in
+      the hope to come up with a simplified editor for complex configurations.
+      The concept of a configuration has been broken down into two parts: the
+      configuration data and the definition of how that data is laid out in a
+      configuration file.</para>
+
+      <section>
+        <title>Configuration Elements</title>
+
+        <para>VRJConfig attempts to break down any complex configuration into
+        a set of individual, independent configuration elements. Each element
+        contains the information needed to configure a single piece of the
+        software. There are many, many different types of configuration
+        elements, each specialized to contain different information specific
+        to the part of the software they represent.</para>
+      </section>
+
+      <section>
+        <title>Configuration Definitions</title>
+
+        <para>Given a file with a list of configuration elements, how do you
+        know how to interpret the data? This is where configuration
+        definitions come into play. Each configuration definition defines
+        exactly what properties are allowed in a given element, how to
+        interpret the data contained therein, what values properties should
+        default to, and general metadata describing the purpose of the
+        element.</para>
+      </section>
+    </chapter>
+
+    <chapter>
+      <title>Getting Started With a New Configuration</title>
+
+      <para>In this chapter, we will carefully walk through the creation of a
+      new simple configuration completely from scratch. This should give you a
+      good idea of what configuration definitions and elements are in addition
+      to learning how to create and edit them in the VRJConfig editor.</para>
+
+      <section>
+        <title>Creating a new configuration definition</title>
+
+        <para></para>
+
+        <section>
+          <title>Parts of a configuration description</title>
+
+          <para></para>
+
+          <itemizedlist>
+            <listitem>
+              <para>the name</para>
+            </listitem>
+
+            <listitem>
+              <para>the token</para>
+            </listitem>
+
+            <listitem>
+              <para>categories</para>
+            </listitem>
+
+            <listitem>
+              <para>help text</para>
+            </listitem>
+
+            <listitem>
+              <para>properties</para>
+
+              <itemizedlist>
+                <listitem>
+                  <para>the name</para>
+                </listitem>
+
+                <listitem>
+                  <para>the token</para>
+                </listitem>
+
+                <listitem>
+                  <para>the type</para>
+                </listitem>
+
+                <listitem>
+                  <para>variable valued properties</para>
+                </listitem>
+
+                <listitem>
+                  <para>items</para>
+
+                  <itemizedlist>
+                    <listitem>
+                      <para>labels</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>default values</para>
+                    </listitem>
+                  </itemizedlist>
+                </listitem>
+
+                <listitem>
+                  <para>enumerations</para>
+                </listitem>
+
+                <listitem>
+                  <para>allowed types</para>
+                </listitem>
+
+                <listitem>
+                  <para>help text</para>
+                </listitem>
+              </itemizedlist>
+            </listitem>
+          </itemizedlist>
+
+          <para></para>
+        </section>
+      </section>
+
+      <section>
+        <title>Creating a new configuration element</title>
+
+        <para></para>
+
+        <section>
+          <title>Parts of a configuration element</title>
+
+          <para></para>
+
+          <itemizedlist>
+            <listitem>
+              <para>the name</para>
+            </listitem>
+
+            <listitem>
+              <para>editing numerical values</para>
+            </listitem>
+
+            <listitem>
+              <para>editing element pointers</para>
+            </listitem>
+
+            <listitem>
+              <para>editing embedded elements</para>
+            </listitem>
+          </itemizedlist>
+        </section>
+      </section>
+    </chapter>
+  </part>
+</book>

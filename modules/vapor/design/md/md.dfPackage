@@ -1,0 +1,46 @@
+package id2mxs2coygvor1coyhh8zn;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id4mksmcoygvor1coyhh93g.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#md.POSIX:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id47089coygvor1coyhh93y.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#md.SPROC:oiref> 
+*/
+class reference6 {
+}/**
+@__ref <oiref:design#Class#idtgz1coygvor1coyhh94n.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#md.WIN32:oiref> 
+*/
+class reference7 {
+}/**
+@__ref <oiref:design#Class#id3pjxjcoygvor1coyhh92z.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#md.NSPR:oiref> 
+*/
+class reference8 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+*/
+class __positions {
+}

@@ -1,0 +1,98 @@
+package id801zrd6hwwobod6hx3dh5;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#gadget::Proxy:oiref><oihard>
+@__modelType reference
+@__imported
+@hideProperties
+@hideAttributes 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#gadget::PositionProxy:oiref><oihard>
+@__modelType reference
+@__imported
+@hideProperties
+@hideAttributes 
+*/
+class reference1 {
+}/**
+@__ref <oiref:cpp#Class#gadget::DeviceInterface:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference2 {
+}/**
+@__ref <oiref:cpp#Class#gadget::Position:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@hideProperties 
+*/
+class reference3 {
+}/**
+@__ref <oiref:cpp#Class#gadget::Input:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@hideProperties*/
+class reference4 {
+}/**
+@__ref <oiref:cpp#Class#gadget::InputMixer:oiref><oihard>
+@__modelType reference
+@__imported
+@hideProperties 
+*/
+class reference5 {
+}/**
+@__ref <oiref:cpp#Class#gadget::TypedProxy:oiref><oihard>
+@__modelType reference
+@__imported
+@hideProperties
+@hideAttributes 
+*/
+class reference6 {
+}/**
+@__ref <oiref:cpp#Class#gadget::InputManager:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@hideOperations
+@hideClasses
+@hideProperties 
+*/
+class reference15 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#gadget::Proxy:oiref>=20,10,142,164,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::DeviceInterface:oiref>=20,240,240,207,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#gadget::PositionProxy#lnkPosition:oiref>=493,323,550,323:oigroup>
+<oigroup:<oiref:cpp#Extends#gadget::PositionProxy#gadget::TypedProxy:oiref>=363,250,363,176:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::InputManager:oiref>=450,50,189,96,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#gadget::DeviceInterface#lnkPositionProxy:oiref>=260,334,310,334:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::TypedProxy:oiref>=240,50,177,126,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#gadget::InputManager#lnkInput:oiref>=555,142,880,250:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::PositionProxy:oiref>=310,250,183,138,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::InputMixer:oiref>=800,20,200,204,1:oigroup>
+<oigroup:<oiref:cpp#Extends#gadget::TypedProxy#gadget::Proxy:oiref>=240,112,162,112:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::Position:oiref>=550,250,200,219,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::Input:oiref>=780,250,200,255,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#gadget::InputManager#lnkPositionProxy:oiref>=471,142,471,250:oigroup>
+
+*/
+class __positions {
+}

@@ -1,0 +1,12 @@
+#ifndef _CORBA_TEST_INTERFACE_IDL_
+#define _CORBA_TEST_INTERFACE_IDL_
+
+#include <tweek/CORBA/TweekObserver.idl>
+
+
+interface TestInterface : TweekObserver
+{
+   void doSomething();
+};
+
+#endif /* _CORBA_TEST_INTERFACE_IDL_ */

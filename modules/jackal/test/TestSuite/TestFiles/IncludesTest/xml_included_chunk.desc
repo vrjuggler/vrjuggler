@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChunkDescDB>
+  <ChunkDesc token="chunkincludetest" name="Chunk Include Test">
+    <PropertyDesc token="int_prop" name="int_prop" type="int" num="1">
+        <help>help yourself, bub</help>
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>

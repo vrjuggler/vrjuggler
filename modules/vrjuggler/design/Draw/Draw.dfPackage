@@ -1,0 +1,51 @@
+package id3vpe2dazpbhwvdazpfpif;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id2jiedazpbhwvdazpfrlq.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Draw.OSG:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id24iqpdazpbhwvdazpfrmu.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Draw.OpenSG:oiref> 
+*/
+class reference9 {
+}/**
+@__ref <oiref:cpp#Class#vrj::DrawManager:oiref><oihard>
+@__modelType reference 
+*/
+class reference10 {
+}/**
+@__ref <oiref:design#Class#id39waqdazpbhwvdazpfrnd.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Draw.Pf:oiref> 
+*/
+class reference11 {
+}/**
+@__ref <oiref:design#Class#idwwv0dazpbhwvdazpfrl7.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Draw.OGL:oiref> 
+*/
+class reference12 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+*/
+class __positions {
+}

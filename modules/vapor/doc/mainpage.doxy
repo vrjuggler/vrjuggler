@@ -1,0 +1,8 @@
+/*! \mainpage VPR - The VR Juggler Portable Runtime
+
+The VR Juggler Portable Runtime (VPR) is the foundation for all software
+in the Juggler Project.  It provides an object-oriented operating system
+abstraction layer upon which cross-platform software can be written.  It
+abstracts sockets, threads, synchronization primitves, and serial I/O.
+
+*/

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="1.0"?>
+<configuration name="VRAC People">
+<!--   <include file="blah.jconf" /> -->
+   <definition_path>
+      <dir>${DATA_DIR}</dir>
+   </definition_path>
+   <elements>
+      <person name="Ben" version="1">
+         <name>Ben</name>
+         <age>22</age>
+      </person>
+   </elements>
+</configuration>

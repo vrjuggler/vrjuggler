@@ -1,0 +1,53 @@
+#!smake
+
+PROCESSOR               = mips3
+BINTYPE                 = n32
+OPTIMIZATION            = O2
+COMPILER                = CC
+PARALLEL                = -pca
+NAMESPACES              = namespaces=ON 
+BOOL                    = bool=ON
+FULLWARN                = fullwarn
+SMAKEMAX                = -J 8
+LINK_UNUSED_OBJECT_CODE = -all
+
+PREPROCESS_OPTIONS = $(SMAKEMAX) $(LINK_UNUSED_OBJECT_CODE)\
+	$(NAMESPACES) $(BOOL) -$(PROCESSOR) -$(BINTYPE) \
+	-$(OPTIMIZATION) 
+
+LINK_OPTIONS = $(SMAKEMAX) $(LINK_UNUSED_OBJECT_CODE) \
+	-$(PROCESSOR) -$(BINTYPE) -$(OPTIMIZATION) 
+
+SERVER = socketUtil.o socketUtilserver.o 
+CLIENT = socketUtil.o socketUtilclient.o 
+
+all: server client
+server: $(SERVER)
+	$(COMPILER) $(LINK_OPTIONS) -o server $(SERVER)
+	
+client: $(CLIENT)
+	$(COMPILER) $(LINK_OPTIONS) -o client $(CLIENT)
+
+socketUtil.o : socketUtil.cpp
+	$(COMPILER) $(PREPROCESS_OPTIONS) -c $@ ../../Input/vjSpeech/socketUtil.cpp
+
+# Build-rule to make .o's from .c files
+.c.o:
+	$(COMPILER) $(PREPROCESS_OPTIONS) -c $@ $*.c 
+
+# Build-rule to make .o's from .cxx files
+.cxx.o:
+	$(COMPILER) $(PREPROCESS_OPTIONS) -c $@ $*.cxx 
+
+# Build-rule to make .o's from .c++ files
+.c++.o:
+	$(COMPILER) $(PREPROCESS_OPTIONS) -c $@ $*.c++
+
+# Build-rule to make .o's from .C files
+.C.o:
+	$(COMPILER) $(PREPROCESS_OPTIONS) -c $@ $*.C
+
+# Build-rule to make .o's from .cpp files
+.cpp.o:
+	$(COMPILER) $(PREPROCESS_OPTIONS) -c $@ $*.cpp 
+

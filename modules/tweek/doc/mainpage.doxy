@@ -1,0 +1,10 @@
+/*! \mainpage Tweek
+
+Tweek is a collection of multiple technologies: C++, Java, JavaBeans,
+and CORBA. Combined, these allow a Java GUI composed of plug-ins to
+communicate with a C++ application. Our implementation aims to simplify
+the inter-language communication so that programmers can make use of
+Tweek in their VR applications without knowing all the details of the
+individual technologies.
+
+*/

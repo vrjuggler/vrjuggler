@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChunkDescDB>
+  <ChunkDesc token="enumtest_fake_MotionStar" name="enumtest_fake_MotionStar">
+    <help>toy chunkdesc for the enums test</help>
+    <PropertyDesc token="address" name="Server Address" type="string" num="1">
+        <help>Hostname or IP address of the server.</help>
+    </PropertyDesc>
+    <PropertyDesc token="serverPort" name="Server Port" type="int" num="1">
+        <help>The port on the server to which the client connects.  (UDP -&gt; 5000, TCP -&gt; 6000)</help>
+        <enumeration name="UDP Port" value="5000"/>
+        <enumeration name="TCP Port" value="6000"/>
+    </PropertyDesc>
+    <PropertyDesc token="serverType" name="Server Type" type="bool" num="1">
+        <help>The type of this server chassis.</help>
+        <enumeration name="Master" value="true"/>
+        <enumeration name="Slave" value="false"/>
+    </PropertyDesc>
+    <PropertyDesc token="hemisphere" name="Hemisphere" type="int" num="1">
+        <help>Transmitter hemisphere to use.</help>
+        <enumeration name="Front" value="0"/>
+        <enumeration name="Aft" value="1"/>
+        <enumeration name="Upper" value="2"/>
+        <enumeration name="Lower" value="3"/>
+        <enumeration name="Left" value="4"/>
+        <enumeration name="Right" value="5"/>
+    </PropertyDesc>
+    <PropertyDesc token="translate" name="Translation" type="float" num="3">
+        <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
+    </PropertyDesc>
+    <PropertyDesc token="rotate" name="Rotation" type="float" num="3">
+        <help>(world_T_transmitter) Rotation of the tranmitter from the Juggler coord system.</help>
+    </PropertyDesc>
+    <PropertyDesc token="num" name="Number of Birds" type="int" num="1">
+        <help>Number of birds connected to this chassis.</help>
+    </PropertyDesc>
+    <PropertyDesc token="bformat" name="Data Format" type="int" num="1">
+        <help>Data format for the birds.</help>
+        <enumeration name="No Data" value="0"/>
+        <enumeration name="Position" value="1"/>
+        <enumeration name="Angles" value="2"/>
+        <enumeration name="Matrix" value="3"/>
+        <enumeration name="Position and Angles" value="4"/>
+        <enumeration name="Position and Matrix" value="5"/>
+        <enumeration name="Quaternion" value="7"/>
+        <enumeration name="Position and Quaternion" value="8"/>
+    </PropertyDesc>
+    <PropertyDesc token="mode" name="Sample Mode" type="int" num="1">
+        <help>The sample mode for the running driver.</help>
+        <enumeration name="Run Continuous" value="0"/>
+        <enumeration name="Sample Individually" value="1"/>
+    </PropertyDesc>
+    <PropertyDesc token="reportRate" name="Bird Report Rate" type="int" num="1">
+        <help>Report rate for the birds (0-255).  This should usually be 1.</help>
+    </PropertyDesc>
+    <PropertyDesc token="measurementRate" name="Chassis Measurement Rate" type="float" num="1">
+        <help>Measurement rate for the chassis.</help>
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>

@@ -1,0 +1,8 @@
+# Let any VRAC host connect.
+#omniNames : 129.186.232.0/24 : allow
+
+# Allow connections from the local machine.
+omniNames : 127.0.0.1 : allow
+
+# Deny everyone else.
+omniNames : ALL : deny

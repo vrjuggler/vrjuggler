@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
+   <guipanel name="WizardBuilder">
+      <file name="${TWEEK_BASE_DIR}/bin/beans/WizardBuilder.jar"
+            class="org.vrjuggler.tweek.wizard.builder.WizardBuilder" />
+      <dependencies>
+         <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">wizard.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin/beans">VRJConfig.jar</jar>
+      </dependencies>
+      <tree path="/Wizards/" />
+   </guipanel>
+</beanlist>

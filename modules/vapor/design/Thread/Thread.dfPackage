@@ -1,0 +1,102 @@
+package id1j3bzcoygvor1coyhh8xj;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vpr::ThreadMemberFunctor:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vpr::SignalSet:oiref><oihard>
+@__modelType reference 
+*/
+class reference39 {
+}/**
+@__ref <oiref:cpp#Class#vpr::TSObject:oiref><oihard>
+@__modelType reference 
+*/
+class reference40 {
+}/**
+@__ref <oiref:cpp#Class#vpr::BaseThreadFunctor:oiref><oihard>
+@__modelType reference 
+*/
+class reference41 {
+}/**
+@__ref <oiref:cpp#Class#vpr::TSObjectProxy:oiref><oihard>
+@__modelType reference 
+*/
+class reference42 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SigHandler:oiref><oihard>
+@__modelType reference 
+*/
+class reference43 {
+}/**
+@__ref <oiref:cpp#Class#vpr::OneThread:oiref><oihard>
+@__modelType reference 
+*/
+class reference44 {
+}/**
+@__ref <oiref:cpp#Class#vpr::TSTable:oiref><oihard>
+@__modelType reference 
+*/
+class reference45 {
+}/**
+@__ref <oiref:cpp#Class#vpr::ThreadPool:oiref><oihard>
+@__modelType reference 
+*/
+class reference46 {
+}/**
+@__ref <oiref:cpp#Class#vpr::ThreadManager:oiref><oihard>
+@__modelType reference 
+*/
+class reference47 {
+}/**
+@__ref <oiref:cpp#Class#vpr::BaseThread:oiref><oihard>
+@__modelType reference 
+*/
+class reference48 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SignalAction:oiref><oihard>
+@__modelType reference 
+*/
+class reference49 {
+}/**
+@__ref <oiref:cpp#Class#vpr::TSBaseObject:oiref><oihard>
+@__modelType reference 
+*/
+class reference50 {
+}/**
+@__ref <oiref:cpp#Class#vpr::ThreadNonMemberFunctor:oiref><oihard>
+@__modelType reference 
+*/
+class reference51 {
+}/**
+@__ref <oiref:cpp#Class#sigaction:oiref><oihard>
+@__modelType reference 
+*/
+class reference52 {
+}/**
+@__ref <oiref:cpp#Class#vpr::ThreadTable:oiref><oihard>
+@__modelType reference 
+*/
+class reference53 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+*/
+class __positions {
+}

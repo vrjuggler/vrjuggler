@@ -1,0 +1,6 @@
+/*! \mainpage Gadgeteer
+
+Gadgeteer is a device management system.  It handles the configuration,
+control, acquisition, and representation of data from VR devices.
+
+*/
