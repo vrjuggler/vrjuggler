@@ -20,9 +20,6 @@
 #ifndef _UUID_SYSDEP_H_
 #define _UUID_SYSDEP_H_
 
-/* remove the following define if you aren't running WIN32 */
-#define WININC 0
-
 #ifdef WININC
 #include <windows.h>
 #else
