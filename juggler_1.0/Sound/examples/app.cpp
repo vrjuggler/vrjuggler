@@ -24,19 +24,20 @@ void main(int argc, char** argv)
       arg = argv[1];
    }   
    
+   std::string soundConfigFile;
    if (arg == "sl")
    {
-      gSoundEngine = SoundFactory::newEngine( SoundFactory::SL, "sound.dat" );
+      soundConfigFile = "sound.dat";
    }
    
    else if (arg == "aw")
    {
-      gSoundEngine = SoundFactory::newEngine( SoundFactory::AW, "sound.adf" );
+      soundConfigFile = "sound.adf";
    }
    
    else if (arg == "nosound")
    {
-      gSoundEngine = SoundFactory::newEngine( SoundFactory::NOSOUND, "nofileneeded" );
+      soundConfigFile = "nofileneeded";
    }   
    
    else
@@ -45,10 +46,14 @@ void main(int argc, char** argv)
       cout<<"\n"<<flush;
       cout<<"!!! WARNING !!!: Option \""<<arg.c_str()<<"\" not recognized, Defaulting to the \"nosound\" option\n"<<flush;
       cout<<"\n"<<flush;
+      arg = "nosound"; //default arg
+      soundConfigFile = "nofileneeded";
       sleep( 1 );
-      gSoundEngine = SoundFactory::newEngine( SoundFactory::NOSOUND, "nofileneeded" );
-      //exit( 0 );
    }   
+   
+   // get the sound engine...
+   gSoundEngine = SoundFactory::newEngine( arg, soundConfigFile.c_str() );
+   assert( gSoundEngine != NULL );
    
    sound1 = gSoundEngine->getHandle( "sound1" );
    sound1->print();

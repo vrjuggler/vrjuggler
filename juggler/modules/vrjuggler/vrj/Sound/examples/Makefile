@@ -1,5 +1,5 @@
-SRCS = soundtest.cxx
-PROJECT_NAME = soundtest
+SRCS = app.cpp
+PROJECT_NAME = app
 OBJDIR = object_code
 
 include ../Makefile.base
@@ -28,7 +28,7 @@ build: $(OBJS)
 	-@echo "-------------------------------------------"
 	-@echo "Linking... (.$(OBJ_FILE_SUFFIX),.lib --> Executable)"
 	-@echo "-------------------------------------------"
-	$(EXE_LINKER) $(EXE_FLAGS) $(OBJS) $(OUTPUT_FILE) $(LIB_PATHS) $(LIBS) -L../src -lsoundengine -L../sl -lsl
+	$(EXE_LINKER) $(EXE_FLAGS) $(OBJS) $(OUTPUT_FILE) $(LIB_PATHS) $(LIBS)
 	-@echo "-------------------------------------------"
 	-@echo "Done... (type $(FILENAME) to run)"
 	-@echo "-------------------------------------------"
