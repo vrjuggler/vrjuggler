@@ -169,10 +169,10 @@ void SurfaceViewport::calculateSurfaceRotation()
 
 void SurfaceViewport::calculateCornersInBaseFrame()
 {
-   gmtl::xform( mxLLCorner, mSurfaceRotation,mLLCorner);
-   gmtl::xform( mxLRCorner, mSurfaceRotation,mLRCorner);
-   gmtl::xform( mxURCorner, mSurfaceRotation,mURCorner);
-   gmtl::xform( mxULCorner, mSurfaceRotation,mULCorner);
+   mxLLCorner = mSurfaceRotation * mLLCorner;
+   mxLRCorner = mSurfaceRotation * mLRCorner;
+   mxURCorner = mSurfaceRotation * mURCorner;
+   mxULCorner = mSurfaceRotation * mULCorner;
 
    // Verify that they are all in the same x,y plane
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << std::setprecision(10)

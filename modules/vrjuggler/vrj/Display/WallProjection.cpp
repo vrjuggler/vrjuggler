@@ -111,9 +111,9 @@ void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos)
 
 
    //Coord eye_coord(eyePos);
-   gmtl::Vec3f   eye_pos;             // Non-xformed pos
-   eye_pos = gmtl::makeTrans<gmtl::Vec3f>(eyePos);
-   gmtl::Vec3f   eye_xformed;         // Xformed position of eyes
+   gmtl::Point3f   eye_pos;             // Non-xformed pos
+   eye_pos = gmtl::makeTrans<gmtl::Point3f>(eyePos);
+   gmtl::Point3f   eye_xformed;         // Xformed position of eyes
 
    vprDEBUG(vrjDBG_DISP_MGR,7)
       << "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this
@@ -126,7 +126,7 @@ void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos)
       */
 
    // Convert eye coords into the wall's coord system
-   gmtl::xform( eye_xformed, mWallRotationMatrix, eye_pos);
+   eye_xformed = mWallRotationMatrix * eye_pos;
 
    /*
    vprDEBUG(vrjDBG_DISP_MGR,7)
