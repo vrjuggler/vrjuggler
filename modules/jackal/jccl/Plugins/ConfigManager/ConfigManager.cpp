@@ -227,7 +227,12 @@ void vjConfigManager::debugDumpPending(int debug_level)
    {
       vjConfigChunk* cur_chunk = (*current).mChunk;
 
-      vjDEBUG_NEXT(vjDBG_ALL,debug_level) << cur_chunk->getProperty("name")
+      if((*current).mType == vjPendingChunk::ADD)
+         vjDEBUG_NEXT(vjDBG_ALL,debug_level) << "   ADD -->" << vjDEBUG_FLUSH;
+      else if((*current).mType == vjPendingChunk::REMOVE)
+         vjDEBUG_NEXT(vjDBG_ALL,debug_level) << "REMOVE -->" << vjDEBUG_FLUSH;
+
+      vjDEBUG_CONT(vjDBG_ALL,debug_level) << cur_chunk->getProperty("name")
                                         << " type: "
                                         << ((std::string)cur_chunk->getType()).c_str()
                                         << std::endl << vjDEBUG_FLUSH;
