@@ -435,33 +435,6 @@ std::ostream& ThreadPosix::outStream(std::ostream& out)
 // ===========================================================================
 
 // ---------------------------------------------------------------------------
-//: Check the status of the thread creation in order to determine if this
-//+ thread should be registered in the thread table or not.
-//
-//! PRE: An attempt must have been made to create a thread using spawn().
-//! POST: If status is 0, the thread gets registered in the thread table and
-//+       in the local thread hash.  The count of created threads is
-//+       incremented as well.
-//
-//! ARGS: status - The integer status returned by spawn().
-// ---------------------------------------------------------------------------
-/*
-void ThreadPosix::checkRegister (int status)
-{
-   if ( status == 0 )
-   {
-      mThreadTable.addThread(this, hash());      // Store way to look me up
-      threadIdKey().setspecific((void*)this);    // Store the pointer to me
-      registerThread(true);
-   }
-   else
-   {
-      registerThread(false);   // Failed to create
-   }
-}
-*/
-
-// ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 int ThreadPosix::vprThreadPriorityToPOSIX (const VPRThreadPriority priority)
 {
@@ -599,26 +572,5 @@ BaseThread::VPRThreadState ThreadPosix::posixThreadStateToVPR (const int state)
    return vpr_state;
 }
 
-thread_id_t ThreadPosix::hash()
-{
-#if defined(VPR_OS_IRIX)
-   return mThread;
-#else
-
-   // This works on Linux, Solaris and FreeBSD.
-   return(thread_id_t) mThread;
-#endif    /* VPR_OS_IRIX */
-}
-
-thread_id_t ThreadPosix::hash(pthread_t thread)
-{
-#ifdef VPR_OS_IRIX
-   return thread;
-#else
-
-   // This works on Linux, Solaris and FreeBSD.
-   return(thread_id_t) thread;
-#endif
-}
 
 } // End of vpr namespace

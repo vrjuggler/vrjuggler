@@ -368,71 +368,23 @@ private:
    bool mThreadStartCompleted; /**< Flag for signaling when thread start is completed */
    vpr::CondVarPosix mThreadStartCondVar;  /**< CondVar for thread starting */
 
-   //void checkRegister(int status);
-
-   /// Converts a VPR thread priority to its Pthread equivalent.
+   /** Converts a VPR thread priority to its Pthread equivalent. */
    int vprThreadPriorityToPOSIX(const VPRThreadPriority priority);
 
-   /// Converts a VPR thread scope to its Pthread equivalent.
+   /** Converts a VPR thread scope to its Pthread equivalent. */
    int vprThreadScopeToPOSIX(const VPRThreadScope scope);
 
-   /// Converts a VPR thread state value to its Pthread equivalent.
+   /** Converts a VPR thread state value to its Pthread equivalent. */
    int vprThreadStateToPOSIX(const VPRThreadState state);
 
-   /// Converts a Pthread thread priority to its VPR equivalent.
+   /** Converts a Pthread thread priority to its VPR equivalent. */
    VPRThreadPriority posixThreadPriorityToVPR(const int priority);
 
-   /// Converts a Pthread thread scope to its VPR equivalent.
+   /** Converts a Pthread thread scope to its VPR equivalent. */
    VPRThreadScope posixThreadScopeToVPR(const int scope);
 
-   /// Converts a Pthread thread state value to its VPR equivalent.
+   /** Converts a Pthread thread state value to its VPR equivalent. */
    VPRThreadState posixThreadStateToVPR(const int state);
-
-   /**
-    * Gets a hash index for this thread.  This will always be a non-zero
-    * value.
-    *
-    * @pre None.
-    * @post The hash index for this thread is returned to the caller.
-    *
-    * @return A non-zero value is returned giving the hash index of this
-    *         thread.
-    */
-   thread_id_t hash();
-
-   /**
-    * Gets a hash index for the given thread.  This will always be a non-zero
-    * value.
-    *
-    * @pre None.
-    * @post The hash index for the given thread is returned to the caller.
-    *
-    * @param thread A pthread_t structure whose hash index will be
-    *               determined and returned.
-    *
-    * @return A non-zero value is returned giving the hash index of the given
-    *         thread.
-    */
-   static thread_id_t hash(pthread_t thread);
-
-   /**
-    * Gets this thread's ID (i.e., its hash index for the thread table).  It
-    * will always be greater than 0.
-    *
-    * @pre None.
-    * @post The hash index ID for this thread is returned to the caller.
-    *
-    * @return A non-zero value is returned giving the hash index of this
-    *         thread.
-    */
-   static thread_id_t gettid()
-   {
-      pthread_t me;
-
-      me = pthread_self();
-
-      return hash(me);
-   }
 
 // ===========================================================================
 // Static stuff follows.
