@@ -29,13 +29,21 @@ srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 
 EXTRA_CXXFLAGS=	@VRJ_CXXFLAGS@ @CLI_CFLAGS@
-EXTRA_INCLUDES=	-I$(top_srcdir)/src
-EXTRA_LDFLAGS=	@CLI_LDFLAGS@ @CLI_LIBS@ @VRJ_LIBS_CC@ @VRJ_EXTRA_LIBS_CC@
+EXTRA_INCLUDES=	-I$(top_srcdir)/src -I$(topdir)/include
+EXTRA_LDFLAGS=	$(UTIL_LIB) @CLI_LDFLAGS@ @CLI_LIBS@ @VRJ_LIBS_CC@	\
+		@VRJ_EXTRA_LIBS_CC@					\
+		$(NULL)
 MOD_NAME=	vrj
 
 SRCS=		vrj_App.cpp		\
 		vrj_GlApp.cpp		\
 		vrj_Kernel.cpp		\
 		vrj_User.cpp
+
+ifeq ($(BUILD_TYPE), DEBUG)
+   UTIL_LIB=	@VRJNET_UTIL_LDFLAGS_DBG@
+else
+   UTIL_LIB=	@VRJNET_UTIL_LDFLAGS_OPT@
+endif
 
 include ../common-cxx.mk

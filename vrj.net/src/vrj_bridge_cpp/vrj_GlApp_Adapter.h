@@ -33,6 +33,7 @@
 
 #include "sharppy.h"
 #include <vrj/Draw/OGL/GlApp.h>
+#include <vrjnet_util/CliGuard.h>
 
 class SHARPPY_API vrj_GlApp_Adapter : public vrj::GlApp
 {
@@ -54,6 +55,7 @@ public:
    /// Override for virtual function vrj::App::init.
    virtual void init()
    {
+      vrjnet::CliGuard guard;
       init_callback();
    }
 
@@ -63,6 +65,7 @@ public:
    /// Override for virtual function vrj::App::apiInit.
    virtual void apiInit()
    {
+      vrjnet::CliGuard guard;
       apiInit_callback();
    }
 
@@ -72,6 +75,7 @@ public:
    /// Override for virtual function vrj::App::exit.
    virtual void exit()
    {
+      vrjnet::CliGuard guard;
       exit_callback();
    }
 
@@ -81,6 +85,7 @@ public:
    /// Override for virtual function vrj::App::preFrame.
    virtual void preFrame()
    {
+      vrjnet::CliGuard guard;
       preFrame_callback();
    }
 
@@ -90,6 +95,7 @@ public:
    /// Override for virtual function vrj::App::latePreFrame.
    virtual void latePreFrame()
    {
+      vrjnet::CliGuard guard;
       latePreFrame_callback();
    }
 
@@ -99,6 +105,7 @@ public:
    /// Override for virtual function vrj::App::intraFrame.
    virtual void intraFrame()
    {
+      vrjnet::CliGuard guard;
       intraFrame_callback();
    }
 
@@ -108,6 +115,7 @@ public:
    /// Override for virtual function vrj::App::postFrame.
    virtual void postFrame()
    {
+      vrjnet::CliGuard guard;
       postFrame_callback();
    }
 
@@ -117,6 +125,7 @@ public:
    /// Override for virtual function vrj::App::reset.
    virtual void reset()
    {
+      vrjnet::CliGuard guard;
       reset_callback();
    }
 
@@ -126,6 +135,7 @@ public:
    /// Override for virtual function vrj::App::focusChanged.
    virtual void focusChanged()
    {
+      vrjnet::CliGuard guard;
       focusChanged_callback();
    }
 
@@ -135,6 +145,7 @@ public:
    /// Override for virtual function vrj::App::getDrawScaleFactor.
    virtual float getDrawScaleFactor()
    {
+      vrjnet::CliGuard guard;
       float result = getDrawScaleFactor_callback();
       return result;
    }
@@ -146,6 +157,7 @@ public:
    /// Override for virtual function vrj::App::configCanHandle.
    virtual bool configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0)
    {
+      vrjnet::CliGuard guard;
       holder_p0_vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
       bool result = configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
       ;
@@ -158,6 +170,7 @@ public:
    /// Override for virtual function vrj::App::depSatisfied.
    virtual bool depSatisfied()
    {
+      vrjnet::CliGuard guard;
       bool result = depSatisfied_callback();
       return result;
    }
@@ -169,6 +182,7 @@ public:
    /// Override for virtual function vrj::App::configAdd.
    virtual bool configAdd(boost::shared_ptr<jccl::ConfigElement> p0)
    {
+      vrjnet::CliGuard guard;
       holder_p0_vrj_App_configAdd__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_vrj_App_configAdd__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
       bool result = configAdd_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
       ;
@@ -182,6 +196,7 @@ public:
    /// Override for virtual function vrj::App::configRemove.
    virtual bool configRemove(boost::shared_ptr<jccl::ConfigElement> p0)
    {
+      vrjnet::CliGuard guard;
       holder_p0_vrj_App_configRemove__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_vrj_App_configRemove__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
       bool result = configRemove_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
       ;
@@ -194,6 +209,7 @@ public:
    /// Override for virtual function vrj::App::getSoundManager.
    virtual vrj::SoundManager* getSoundManager()
    {
+      vrjnet::CliGuard guard;
       vrj::SoundManager* result = getSoundManager_callback();
       return result;
    }
@@ -204,6 +220,7 @@ public:
    /// Override for virtual function vrj::GlApp::draw.
    virtual void draw()
    {
+      vrjnet::CliGuard guard;
       draw_callback();
    }
 
@@ -213,6 +230,7 @@ public:
    /// Override for virtual function vrj::GlApp::contextInit.
    virtual void contextInit()
    {
+      vrjnet::CliGuard guard;
       contextInit_callback();
    }
 
@@ -222,6 +240,7 @@ public:
    /// Override for virtual function vrj::GlApp::contextClose.
    virtual void contextClose()
    {
+      vrjnet::CliGuard guard;
       contextClose_callback();
    }
 
@@ -231,6 +250,7 @@ public:
    /// Override for virtual function vrj::GlApp::contextPreDraw.
    virtual void contextPreDraw()
    {
+      vrjnet::CliGuard guard;
       contextPreDraw_callback();
    }
 
@@ -240,6 +260,7 @@ public:
    /// Override for virtual function vrj::GlApp::contextPostDraw.
    virtual void contextPostDraw()
    {
+      vrjnet::CliGuard guard;
       contextPostDraw_callback();
    }
 
@@ -249,6 +270,7 @@ public:
    /// Override for virtual function vrj::GlApp::bufferPreDraw.
    virtual void bufferPreDraw()
    {
+      vrjnet::CliGuard guard;
       bufferPreDraw_callback();
    }
 
@@ -258,6 +280,7 @@ public:
    /// Override for virtual function vrj::GlApp::pipePreDraw.
    virtual void pipePreDraw()
    {
+      vrjnet::CliGuard guard;
       pipePreDraw_callback();
    }
 
@@ -267,6 +290,7 @@ public:
    /// Override for virtual function vrj::GlApp::getDrawManager.
    virtual vrj::DrawManager* getDrawManager()
    {
+      vrjnet::CliGuard guard;
       vrj::DrawManager* result = getDrawManager_callback();
       return result;
    }
