@@ -66,8 +66,8 @@ public:
       //api.setPerformer();  // Tell everyone that we are Performer
    }
 
-   
-   
+   vjPfApp() {;}
+
    //: Initialize the scene graph
    // Called after pfInit & pfConfig but before apiInit
    virtual void initScene() = 0;
@@ -88,6 +88,8 @@ public:
    //: Return the current scene graph
    // This function must be defined so that the performer draw manager
    // can get a scene graph to draw.
+   // NOTE: Do NOT put model loading and manipulation in this function
+   //       instead, but that type of think in initScene()
    // NOTE: Make sure that the node returned is NOT a pfScene.
    //+      If it is, then lighting will NOT work.
    virtual pfGroup* getScene() = 0;
@@ -135,7 +137,7 @@ public:
    // and drawing the next frame (pfFrame())
    virtual void postDrawChan(pfChannel* chan, void* chandata){;}
 
-public: // -- Factory Function -- //   
+public: // -- Factory Function -- //
    //: Get the DrawManager to use
    // Returns the ogl draw manager
    virtual vjDrawManager* getDrawManager()
