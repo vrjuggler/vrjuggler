@@ -12,6 +12,7 @@ namespace vprTest
 CPPUNIT_TEST_SUITE_REGISTRATION( LibraryFinderTest );
 
 static const std::string C_MOD("libcmod.so");
+static const unsigned int MOD_COUNT(4);
 
 LibraryFinderTest::LibraryFinderTest()
    :  mModuleDir(MODULE_DIR)
@@ -36,7 +37,7 @@ void LibraryFinderTest::scanTest()
    CPPUNIT_ASSERT(finder1.getLibraries().size() == 0 && "Should not have any libraries yet");
 
    finder1.rescan();
-   CPPUNIT_ASSERT(finder1.getLibraries().size() == 2 && "Wrong number of libraries found");
+   CPPUNIT_ASSERT(finder1.getLibraries().size() == MOD_COUNT && "Wrong number of libraries found");
 
    try
    {
@@ -50,13 +51,13 @@ void LibraryFinderTest::scanTest()
    CPPUNIT_ASSERT(finder1.getLibraries().size() == 0 && "Should not have found any libraries");
 
    finder1.setLibraryDirectory(mModuleDir);
-   CPPUNIT_ASSERT(finder1.getLibraries().size() == 2 && "Wrong number of libraries found");
+   CPPUNIT_ASSERT(finder1.getLibraries().size() == MOD_COUNT && "Wrong number of libraries found");
 
    finder1.setLibraryExtension(".bad");
    CPPUNIT_ASSERT(finder1.getLibraries().size() == 0 && "Should not have found any libraries");
 
    finder1.setLibraryExtension(".so");
-   CPPUNIT_ASSERT(finder1.getLibraries().size() == 2 && "Wrong number of libraries found");
+   CPPUNIT_ASSERT(finder1.getLibraries().size() == MOD_COUNT && "Wrong number of libraries found");
 
    try
    {
@@ -70,10 +71,10 @@ void LibraryFinderTest::scanTest()
    CPPUNIT_ASSERT(finder1.getLibraries().size() == 0 && "Should not have found any libraries");
 
    finder1.setDirAndExt(mModuleDir, ".so");
-   CPPUNIT_ASSERT(finder1.getLibraries().size() == 2 && "Wrong number of libraries found");
+   CPPUNIT_ASSERT(finder1.getLibraries().size() == MOD_COUNT && "Wrong number of libraries found");
 
    vpr::LibraryFinder finder2(mModuleDir, std::string(".so"));
-   CPPUNIT_ASSERT(finder2.getLibraries().size() == 2 && "Wrong number of libraries found");
+   CPPUNIT_ASSERT(finder2.getLibraries().size() == MOD_COUNT && "Wrong number of libraries found");
 }
 
 void LibraryFinderTest::scanAndLoadTest()
@@ -82,7 +83,7 @@ void LibraryFinderTest::scanAndLoadTest()
 
    vpr::LibraryFinder::LibraryList libs;
    libs = finder.getLibraries();
-   CPPUNIT_ASSERT(libs.size() == 2 && "Wrong number of libraries found");
+   CPPUNIT_ASSERT(libs.size() == MOD_COUNT && "Wrong number of libraries found");
 
    vpr::ReturnStatus status;
    status = libs[0]->load();
