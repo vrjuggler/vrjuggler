@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-11 allenb   Added debugOutputGuard to vpr::Debug.  Helps with scoped
+                    debug output.
+					NEW VERSION: 0.6.2
 2001-12-11 allenb   Added new return status: NotConnected. Read and write on 
                     sockets can (should) return this status when the socket 
 					being used has lost it's connection to the socket on the
