@@ -67,9 +67,9 @@ struct AppWrap : public vrj::App
       call_method<void>(mSelf, "init");
    }
 
-   static void default_init(AppWrap& self)
+   void default_init()
    {
-      self.vrj::App::init();
+      vrj::App::init();
    }
 
    virtual void apiInit()
@@ -77,9 +77,9 @@ struct AppWrap : public vrj::App
       call_method<void>(mSelf, "apiInit");
    }
 
-   static void default_apiInit(AppWrap& self)
+   void default_apiInit()
    {
-      self.vrj::App::apiInit();
+      vrj::App::apiInit();
    }
 
    virtual void preFrame()
@@ -87,9 +87,9 @@ struct AppWrap : public vrj::App
       call_method<void>(mSelf, "preFrame");
    }
 
-   static void default_preFrame(AppWrap& self)
+   void default_preFrame()
    {
-      self.vrj::App::preFrame();
+      vrj::App::preFrame();
    }
 
    virtual void intraFrame()
@@ -97,9 +97,9 @@ struct AppWrap : public vrj::App
       call_method<void>(mSelf, "intraFrame");
    }
 
-   static void default_intraFrame(AppWrap& self)
+   void default_intraFrame()
    {
-      self.vrj::App::intraFrame();
+      vrj::App::intraFrame();
    }
 
    virtual void postFrame()
@@ -107,9 +107,9 @@ struct AppWrap : public vrj::App
       call_method<void>(mSelf, "postFrame");
    }
 
-   static void default_postFrame(AppWrap& self)
+   void default_postFrame()
    {
-      self.vrj::App::postFrame();
+      vrj::App::postFrame();
    }
 
    virtual void exit()
@@ -117,14 +117,19 @@ struct AppWrap : public vrj::App
       call_method<void>(mSelf, "exit");
    }
 
-   static void default_exit(vrj::App& self)
+   void default_exit()
    {
-      self.vrj::App::exit();
+      vrj::App::exit();
    }
 
-   static void default_focusChanged(vrj::App& self)
+   virtual void focusChanged()
    {
-      self.vrj::App::focusChanged();
+      call_method<void>(mSelf, "focusChanged");
+   }
+
+   void default_focusChanged()
+   {
+      vrj::App::focusChanged();
    }
 
    virtual void reset()
@@ -132,9 +137,9 @@ struct AppWrap : public vrj::App
       call_method<void>(mSelf, "reset");
    }
 
-   static void default_reset(vrj::App& self)
+   void default_reset()
    {
-      self.vrj::App::reset();
+      vrj::App::reset();
    }
 
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
@@ -142,10 +147,9 @@ struct AppWrap : public vrj::App
       return call_method<bool>(mSelf, "configCanHandle", chunk);
    }
 
-   static bool default_configCanHandle(vrj::App& self,
-                                       jccl::ConfigChunkPtr chunk)
+   bool default_configCanHandle(jccl::ConfigChunkPtr chunk)
    {
-      return self.vrj::App::configCanHandle(chunk);
+      return vrj::App::configCanHandle(chunk);
    }
 
    vrj::DrawManager* getDrawManager()
@@ -176,9 +180,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "init");
    }
 
-   static void default_init(vrj::GlApp& self)
+   void default_init()
    {
-      self.vrj::GlApp::init();
+      vrj::GlApp::init();
    }
 
    virtual void apiInit()
@@ -186,9 +190,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "apiInit");
    }
 
-   static void default_apiInit(vrj::GlApp& self)
+   void default_apiInit()
    {
-      self.vrj::GlApp::apiInit();
+      vrj::GlApp::apiInit();
    }
 
    virtual void preFrame()
@@ -196,9 +200,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "preFrame");
    }
 
-   static void default_preFrame(vrj::GlApp& self)
+   void default_preFrame()
    {
-      self.vrj::GlApp::preFrame();
+      vrj::GlApp::preFrame();
    }
 
    virtual void intraFrame()
@@ -206,9 +210,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "intraFrame");
    }
 
-   static void default_intraFrame(vrj::GlApp& self)
+   void default_intraFrame()
    {
-      self.vrj::GlApp::intraFrame();
+      vrj::GlApp::intraFrame();
    }
 
    virtual void postFrame()
@@ -216,9 +220,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "postFrame");
    }
 
-   static void default_postFrame(vrj::GlApp& self)
+   void default_postFrame()
    {
-      self.vrj::GlApp::postFrame();
+      vrj::GlApp::postFrame();
    }
 
    virtual void exit()
@@ -226,9 +230,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "exit");
    }
 
-   static void default_exit(vrj::GlApp& self)
+   void default_exit()
    {
-      self.vrj::GlApp::exit();
+      vrj::GlApp::exit();
    }
 
    virtual void focusChanged()
@@ -236,9 +240,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "focusChanged");
    }
 
-   static void default_focusChanged(vrj::GlApp& self)
+   void default_focusChanged()
    {
-      self.vrj::App::focusChanged();
+      vrj::App::focusChanged();
    }
 
    virtual void reset()
@@ -246,9 +250,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "reset");
    }
 
-   static void default_reset(vrj::GlApp& self)
+   void default_reset()
    {
-      self.vrj::GlApp::reset();
+      vrj::GlApp::reset();
    }
 
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
@@ -256,10 +260,9 @@ struct GlAppWrap : public vrj::GlApp
       return call_method<bool>(mSelf, "configCanHandle", chunk);
    }
 
-   static bool default_configCanHandle(vrj::GlApp& self,
-                                       jccl::ConfigChunkPtr chunk)
+   bool default_configCanHandle(jccl::ConfigChunkPtr chunk)
    {
-      return self.vrj::App::configCanHandle(chunk);
+      return vrj::App::configCanHandle(chunk);
    }
 
    virtual void bufferPreDraw()
@@ -267,9 +270,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "bufferPreDraw");
    }
 
-   static void default_bufferPreDraw(vrj::GlApp& self)
+   void default_bufferPreDraw()
    {
-      self.vrj::GlApp::bufferPreDraw();
+      vrj::GlApp::bufferPreDraw();
    }
 
    virtual void contextInit()
@@ -277,9 +280,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "contextInit");
    }
 
-   static void default_contextInit(vrj::GlApp& self)
+   void default_contextInit()
    {
-      self.vrj::GlApp::contextInit();
+      vrj::GlApp::contextInit();
    }
 
    virtual void contextClose()
@@ -287,9 +290,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "contextClose");
    }
 
-   static void default_contextClose(vrj::GlApp& self)
+   void default_contextClose()
    {
-      self.vrj::GlApp::contextClose();
+      vrj::GlApp::contextClose();
    }
 
    virtual void contextPreDraw()
@@ -297,9 +300,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "contextPreDraw");
    }
 
-   static void default_contextPreDraw(vrj::GlApp& self)
+   void default_contextPreDraw()
    {
-      self.vrj::GlApp::contextPreDraw();
+      vrj::GlApp::contextPreDraw();
    }
 
    virtual void draw()
@@ -312,9 +315,9 @@ struct GlAppWrap : public vrj::GlApp
       call_method<void>(mSelf, "contextPostDraw");
    }
 
-   static void default_contextPostDraw(vrj::GlApp& self)
+   void default_contextPostDraw()
    {
-      self.vrj::GlApp::contextPostDraw();
+      vrj::GlApp::contextPostDraw();
    }
 
    PyObject* mSelf;
@@ -396,37 +399,47 @@ BOOST_PYTHON_MODULE(PyJuggler)
 
    class_<vrj::App, AppWrap, boost::noncopyable>("App", init<>())
       .def(init<vrj::Kernel*>())
-      .def("init", &AppWrap::default_init)
-      .def("apiInit", &AppWrap::default_apiInit)
-      .def("preFrame", &AppWrap::default_preFrame)
-      .def("intraFrame", &AppWrap::default_intraFrame)
-      .def("postFrame", &AppWrap::default_postFrame)
-      .def("exit", &AppWrap::default_exit)
+      .def("init", &vrj::App::init, &AppWrap::default_init)
+      .def("apiInit", &vrj::App::apiInit, &AppWrap::default_apiInit)
+      .def("preFrame", &vrj::App::preFrame, &AppWrap::default_preFrame)
+      .def("intraFrame", &vrj::App::intraFrame, &AppWrap::default_intraFrame)
+      .def("postFrame", &vrj::App::postFrame, &AppWrap::default_postFrame)
+      .def("exit", &vrj::App::exit, &AppWrap::default_exit)
       .def("haveFocus", &vrj::App::haveFocus)
-      .def("focusChanged", &AppWrap::default_focusChanged)
-      .def("reset", &AppWrap::default_reset)
-      .def("configCanHandle", &AppWrap::default_configCanHandle)
+      .def("focusChanged", &vrj::App::focusChanged,
+           &AppWrap::default_focusChanged)
+      .def("reset", &vrj::App::reset, &AppWrap::default_reset)
+      .def("configCanHandle", &vrj::App::configCanHandle,
+           &AppWrap::default_configCanHandle)
       .def_readonly("mKernel", &vrj::App::mKernel)
       .def_readonly("mHaveFocus", &vrj::App::mHaveFocus)
    ;
 
    class_<vrj::GlApp, bases<vrj::App>, GlAppWrap, boost::noncopyable>("GlApp", init<>())
       .def(init<vrj::Kernel*>())
-      .def("init", &GlAppWrap::default_init)
-      .def("apiInit", &GlAppWrap::default_apiInit)
-      .def("preFrame", &GlAppWrap::default_preFrame)
-      .def("intraFrame", &GlAppWrap::default_intraFrame)
-      .def("postFrame", &GlAppWrap::default_postFrame)
-      .def("exit", &GlAppWrap::default_exit)
+      .def("init", &vrj::GlApp::init, &GlAppWrap::default_init)
+      .def("apiInit", &vrj::GlApp::apiInit, &GlAppWrap::default_apiInit)
+      .def("preFrame", &vrj::GlApp::preFrame, &GlAppWrap::default_preFrame)
+      .def("intraFrame", &vrj::GlApp::intraFrame,
+           &GlAppWrap::default_intraFrame)
+      .def("postFrame", &vrj::GlApp::postFrame, &GlAppWrap::default_postFrame)
+      .def("exit", &vrj::GlApp::exit, &GlAppWrap::default_exit)
       .def("haveFocus", &vrj::GlApp::haveFocus)
-      .def("focusChanged", &GlAppWrap::default_focusChanged)
-      .def("reset", &GlAppWrap::default_reset)
-      .def("configCanHandle", &GlAppWrap::default_configCanHandle)
-      .def("contextInit", &GlAppWrap::default_contextInit)
-      .def("contextClose", &GlAppWrap::default_contextClose)
-      .def("contextPreDraw", &GlAppWrap::default_contextPreDraw)
-      .def("contextPostDraw", &GlAppWrap::default_contextPostDraw)
-      .def("bufferPreDraw", &GlAppWrap::default_bufferPreDraw)
+      .def("focusChanged", &vrj::GlApp::focusChanged,
+           &GlAppWrap::default_focusChanged)
+      .def("reset", &vrj::GlApp::reset, &GlAppWrap::default_reset)
+      .def("configCanHandle", &vrj::GlApp::configCanHandle,
+           &GlAppWrap::default_configCanHandle)
+      .def("contextInit", &vrj::GlApp::contextInit,
+           &GlAppWrap::default_contextInit)
+      .def("contextClose", &vrj::GlApp::contextClose,
+           &GlAppWrap::default_contextClose)
+      .def("contextPreDraw", &vrj::GlApp::contextPreDraw,
+           &GlAppWrap::default_contextPreDraw)
+      .def("contextPostDraw", &vrj::GlApp::contextPostDraw,
+           &GlAppWrap::default_contextPostDraw)
+      .def("bufferPreDraw", &vrj::GlApp::bufferPreDraw,
+           &GlAppWrap::default_bufferPreDraw)
    ;
 
 // Gadgeteer classes ==========================================================
