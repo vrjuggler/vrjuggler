@@ -21,6 +21,8 @@
 	  <li><a href="#WhatIs">What is VR Juggler?</a></li>
 	  <li><a href="#WhatIsNot">What is VR Juggler not?</a></li>
 	  <li><a href="#getstarted">Great, where do I begin?</a></li>
+     <li><a href="#whatdoineed">What do I need to run juggler?</a></li>
+     <li><a href="#compilejugglerwin32">How do I compile the juggler source code under Win32?</a></li>
 	</ul>
 	<li><a href="#applications"> VjControl</a></LI>
    <ul>
@@ -76,6 +78,14 @@
 		<p>To begin, we suggest reading one of Juggler's books called the "Programmer Guide".  
 		You'll find this book in the tree control on the www.vrjuggler.org web site.  
 		In the tree control the path to getting started is: "Books"/"Programmer Guide"/"Getting Started"</p><BR>
+	
+   <b><a name="whatdoineed">What do I need to run juggler?</a></b>
+		<p>For a very specific answer to this question, check out the downloads page.  There will be requirements next to each juggler distribution.  Generally you will need OpenGL or Performer as your image generator.  Juggler will run by itself otherwise (you will not need any other display driver such as CAVElib, or WTK). </p><BR> 
+      
+    <b><a name="compilejugglerwin32">How do I compile the juggler source code under Win32?</a></b>
+		<p>You really don't need to do this, unless you plan to modify the code and submit the changes to us.  You can find binaries for Win32 on our downloads page.  <BR>
+      To compile the source code to Juggler on win32 platforms, you will want to download <a target="${NEW_WINDOW}" href="${GETCYGWIN}">Cygnus's set of UNIX tools</a>, and <a target="${NEW_WINDOW}" href="${GETAUTOCONF}">GNU Autoconf</a>.<BR>
+      You can find detailed information about all of this in "Juggler Team Guide"/"Build Systems"/Juggler/"Win32 Caveats" of the Juggler Team Guide (book) on our web site.</p><BR>
 		
 
 	</blockquote>
@@ -120,8 +130,8 @@
 		<blockquote>
 		<li><a name="lnpnotcompile"><b>Why do my LiNUX/Performer Juggler applications not compile?</b></a><BR>
 		     Maybe you aren't using the -o option to your compiler.  <BR>
-		     You must compile with the -o option when using <a href="${PERFORMERLINUX}">Performer 2.3 for LiNUX</a>.<BR>
-		     See the <a href="http://www.sgi.com/software/performer/linux-buglist.html">Performer LiNUX bug-list (item SCR 767188)</a> for more info.</li>
+		     You must compile with the -o option when using <a target="${NEW_WINDOW}" href="${PERFORMERLINUX}">Performer 2.3 for LiNUX</a>.<BR>
+		     See the <a target="${NEW_WINDOW}" href="http://www.sgi.com/software/performer/linux-buglist.html">Performer LiNUX bug-list (item SCR 767188)</a> for more info.</li>
 		<LI><font size=1><a href="${CONTACT_US_DIRECTLY}">Contact Us</a> to add your question to this list!</font></li>
 		</blockquote>
 	</blockquote>
