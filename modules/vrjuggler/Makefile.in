@@ -177,12 +177,8 @@ PF_LIB_DYNAMIC	= ${PF_LIBRARY}.@SHAREDLIB_EXT@
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIRS		:= Math Config Kernel Performance Input	SharedMem Sync	\
-                   Threads
-
-ifneq (@OS_TYPE@, Win32)
-SUBDIRS		+= Environment
-endif
+SUBDIRS		= Math Config Kernel Environment Performance Input	\
+                  SharedMem Sync Threads
 
 # Subdirectories used for recursion through the test source tree when
 # installing.
