@@ -35,11 +35,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libboost_filesystem-$(BOOST_TOOL)-mt-gd-$(BOOST_VERSION).lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib"
+				AdditionalDependencies="libboost_filesystem-$(BOOST_TOOL)-mt-gd-$(BOOST_VERSION).lib cppdom_d.lib libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr_d.dll"
-				Version="0.35.1"
+				Version="0.35.2"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\DebugDLL&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/vpr_d.pdb"
@@ -88,11 +88,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libboost_filesystem-$(BOOST_TOOL)-mt-$(BOOST_VERSION).lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib"
+				AdditionalDependencies="libboost_filesystem-$(BOOST_TOOL)-mt-$(BOOST_VERSION).lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr.dll"
-				Version="0.35.1"
+				Version="0.35.2"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\ReleaseDLL&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
