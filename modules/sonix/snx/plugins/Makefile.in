@@ -165,8 +165,8 @@ $(LIBDIR)/$(AUDIOWORKS_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
-		$(AW_LDFLAGS) $(AW_LIBS) $(DYLIB_DEPS_SNX)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
+          $(AW_LDFLAGS) $(AW_LIBS) $(DYLIB_DEPS_SNX)
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -177,8 +177,8 @@ $(LIBDIR)/$(OPENAL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
-		$(OPENAL_LDFLAGS) $(OPENAL_LIBS) $(DYLIB_DEPS_SNX)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
+          $(OPENAL_LDFLAGS) $(OPENAL_LIBS) $(DYLIB_DEPS_SNX)
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -189,8 +189,8 @@ $(LIBDIR)/$(SUBSYNTH_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
-		$(SUBSYNTH_LDFLAGS) $(SUBSYNTH_LIBS) $(DYLIB_DEPS_SNX)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
+          $(SUBSYNTH_LDFLAGS) $(SUBSYNTH_LIBS) $(DYLIB_DEPS_SNX)
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
