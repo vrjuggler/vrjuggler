@@ -83,6 +83,12 @@ public:
    {
    }
 
+   /**
+    * Default constructor needed in order to use the templated EventFactory 
+    * without modification. The EventFactory was needed to allow the 
+    * correct subtype of Event, KeyEvent in this case, to be created 
+    * during de-serialization.
+    */
    KeyEvent() 
       : gadget::Event(NoEvent, 0)
    {
@@ -91,6 +97,9 @@ public:
       mAsciiKey      = ' ';
    }
 
+   /**
+    * Get the key that was pressed while generating this event.
+    */
    const gadget::Keys& getKey() const
    {
       return mKey;
