@@ -35,7 +35,7 @@ use Getopt::Long;
 use Pod::Usage;
 
 use strict 'vars';
-use vars qw($indent $log_file $full_path $debug_level $override);
+use vars qw($indent $log_file $full_path $debug_level $override $max_cvs_tries);
 use vars qw($CRITICAL_LVL $WARNING_LVL $CONFIG_LVL $STATE_LVL $VERB_LVL
             $HVERB_LVL $HEX_LVL);
 
@@ -76,6 +76,8 @@ my (@limit_modules) = ();
 my (@overrides)     = ();
 my (%cmd_overrides) = ();
 
+$max_cvs_tries = 10;
+
 $CRITICAL_LVL = 0;
 $WARNING_LVL  = 1;
 $CONFIG_LVL   = 2;
@@ -90,7 +92,8 @@ GetOptions('cfg=s' => \$cfg_file, 'help' => \$help, 'override=s' => \@overrides,
            'debug=i' => \$debug_level, 'set=s' => \%cmd_overrides,
            'version' => \$print_version, 'verbose' => \$verbose,
            'entry-mod' => \$entry_mod, 'force-install' => \$force_install,
-           'target=s' => \@limit_modules, 'manual' => \$manual)
+           'target=s' => \@limit_modules, 'manual' => \$manual,
+           'cvs-tries=i' => \$max_cvs_tries)
    or pod2usage(2);
 
 # Print the help output and exit if --help was on the command line.
@@ -978,43 +981,56 @@ sub runCvsCommand ($)
 {
    my $cmd_line = shift;
 
-   # Open a pipe to read from the output of $cmd_line.
-   open(CVS_CMD, "$cmd_line 2>&1 |") or die "Can't fork: $!\n";
-   $| = 1;
+   my $try        = 0;
+   my $have_error = 0;
 
-   # Power users will appreciate seeing the output from CVS as it happens.
-   if ( $verbose )
+   do
    {
-      print "$_" while <CVS_CMD>;
-   }
-   # For simpler folk, we will just write out to a log file.  To keep them
-   # placated, however, there will be a little spinner that runs while CVS is
-   # doing its job.
-   else
-   {
-      my $next_char = '|';
+      # Open a pipe to read from the output of $cmd_line.
+      open(CVS_CMD, "$cmd_line 2>&1 |") or die "Can't fork: $!\n";
+      $| = 1;
 
-      print "Working ... $next_char";
-
-      while ( <CVS_CMD> )
+      # Power users will appreciate seeing the output from CVS as it happens.
+      if ( $verbose )
       {
-         print LOG_FILE "$_";
-         $next_char = nextSpinnerFrame("$next_char");
+         print "$_" while <CVS_CMD>;
+      }
+      # For simpler folk, we will just write out to a log file.  To keep them
+      # placated, however, there will be a little spinner that runs while CVS is
+      # doing its job.
+      else
+      {
+         my $next_char = '|';
+
+         print "Working ... $next_char";
+
+         while ( <CVS_CMD> )
+         {
+            print LOG_FILE "$_";
+            $next_char = nextSpinnerFrame("$next_char");
+         }
+
+         print "\n";
       }
 
-      print "\n";
-   }
+      $| = 0;
 
-   $| = 0;
+      # Close up our pipe now that we are done with it.
+      close(CVS_CMD);
 
-   # Close up our pipe now that we are done with it.
-   close(CVS_CMD);
-
-   if ( $? && ! $verbose )
-   {
-      warn "WARNING: An error may have occurred when running CVS.  " .
-           "Check $log_file\n";
-   }
+      if ( $? )
+      {
+         print "CVS returned error status.\n" .
+               "Trying again after sleeping 1 second ...\n";
+         $try++;
+         $have_error = 1;
+         sleep(1);
+      }
+      else
+      {
+         $have_error = 0;
+      }
+   } while ( $have_error && $try < $max_cvs_tries );
 
    return 1;
 }
@@ -1151,6 +1167,11 @@ same file.
 =item B<--debug=<level>>
 
 Set the debug output level (0-5).
+
+=item B<--cvs-tries=<count>>
+
+Set the maximum number of times to retry a failed CVS command.  The default
+is 10.
 
 =item B<--entry-mod>
 
