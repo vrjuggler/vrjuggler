@@ -1,5 +1,5 @@
-#include <vrj/vjConfig.h> // for DEG2RAD macro
-#include <fstream.h>		// for ifstream
+#include <vrj/vrjConfig.h> // for DEG2RAD macro
+#include <fstream.h>        // for ifstream
 #include "KeyFramer.h"
 #include <vrj/Util/Debug.h>
 #include <vrj/Math/Math.h>
@@ -19,11 +19,11 @@ namespace kev
          key.rotation().getRot( w, x, y, z );
          vjDEBUG(vjDBG_ALL,1)<<"KEY "<<key.time()<<": "<<key.position()[0]<<", \t"<<key.position()[1]<<", \t"<<key.position()[2]<<", |#| "<<vrj::Math::rad2deg( w )<<", "<<x<<", "<<y<<", "<<z<<"\n"<<vjDEBUG_FLUSH;
       }
-   
+
       void execute( const char* const filename, kev::KeyFramer& kf )
       {
          kf.clear();
-         
+
 #ifdef WIN32
          ifstream frames_file( filename, ios::in | ios::nocreate | ios::binary, filebuf::openprot );
 #else
@@ -34,15 +34,15 @@ namespace kev
          {
             vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrYELLOW) << "WARNING: "
                            << clrRESET
-                           << "couldn't open keyframe file: " 
+                           << "couldn't open keyframe file: "
                            << filename <<"\n"
                            << vjDEBUG_FLUSH;
             return;
          }
-         
+
          vjDEBUG(vjDBG_ALL,0) << "Reading keyframe(s) in file: "
                 <<filename<<"\n"<<vjDEBUG_FLUSH;
-         
+
          float time;
          float deg;
          vrj::Vec3 vec;
@@ -50,7 +50,7 @@ namespace kev
          while (!frames_file.eof())
          {
             frames_file>>time;
-            
+
             // if EOF then return...
             if (time == -1)
             {
@@ -58,17 +58,17 @@ namespace kev
                return;
             }
             frames_file>>pos[0]>>pos[1]>>pos[2]>>deg>>vec[0]>>vec[1]>>vec[2];
-            
+
             // convert [TWIST, VEC] to Quat
             vrj::Quat rot;
             float rad = vrj::Math::deg2rad( deg );
             rot.makeRot( rad, vec[0], vec[1], vec[2] );
-         
+
             kev::KeyFramer::Key key( time, pos, rot );
             kf.addkey( key );
             output( key );
          }
          frames_file.close();
-      }   
+      }
    };
 };

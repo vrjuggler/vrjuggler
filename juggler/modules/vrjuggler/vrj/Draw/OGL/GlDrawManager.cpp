@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vpr/Thread/Thread.h>
 
@@ -55,7 +55,7 @@
 
 namespace vrj
 {
-   
+
 //vjGlDrawManager* GlDrawManager::_instance = NULL;
 vprSingletonImp(GlDrawManager);
 
@@ -784,7 +784,7 @@ void GlDrawManager::drawGlove(GloveProxy* gloveProxy)
 
 namespace vrj
 {
-   
+
 vrj::GlWindow* GlDrawManager::getGLWindow()
 {
 #if  defined(VJ_OS_Win32)

@@ -37,14 +37,14 @@
 * Performer helper routines                       *
 ***************************************************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <Performer/pr/pfLinMath.h>
 #include <vrj/Math/Matrix.h>
 
 namespace vrj
 {
-   
+
 
 //: Convert Performer matrix to Juggler matrix
 vrj::Matrix GetVjMatrix( const pfMatrix& perfMat ); //TODO!!! FIXME!!! change VJ to Vj
@@ -61,7 +61,7 @@ vrj::Matrix GetVjMatrix( const pfMatrix& perfMat ); //TODO!!! FIXME!!! change VJ
    std::cout<<"  !!!!!!!!!!!!\n"<<std::flush;\
    std::cout<<"Exiting...\n"<<std::flush;\
    exit(-1);
-   
+
 inline vrj::Matrix GetVJMatrix( const pfMatrix& perfMat )
 {
    featureChange("Please change all references to GetVJMatrix to GetVjMatrix (lower case j)")

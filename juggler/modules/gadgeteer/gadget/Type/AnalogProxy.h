@@ -39,14 +39,14 @@
 #ifndef _VRJ_ANALOGPROXY_H_
 #define _VRJ_ANALOGPROXY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Input/Type/Analog.h>
 #include <vrj/Input/Type/Proxy.h>
 
 namespace vrj
 {
-   
+
 //: A proxy class to analog devices, used by the InputManager.
 //
 //  A AnalogProxy always points to an analog device and subUnit number,

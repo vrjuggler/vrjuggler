@@ -39,11 +39,11 @@
 #ifndef _VRJ_DIGITAL_H_
 #define _VRJ_DIGITAL_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 namespace vrj
 {
-   
+
 //-----------------------------------------------------------------------------
 //: Digital is the abstract base class that devices with digital data derive
 //+ from.

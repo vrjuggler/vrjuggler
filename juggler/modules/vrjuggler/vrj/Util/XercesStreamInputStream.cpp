@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Util/XercesStreamInputStream.h>
 
 namespace vrj
 {
-   
+
 XercesStreamInputStream::XercesStreamInputStream (std::istream& _in, const char* _terminator): terminator (_terminator) {
     //terminator = strdup (_terminator);
     termlength = strlen (terminator);
@@ -61,10 +61,10 @@ XercesStreamInputStream::XercesStreamInputStream (std::istream& _in, const char*
     unsigned int buflen = _buflen - termlength;
     unsigned int i;
     char ch;
-    
+
     if (finished)
         return 0;
-    
+
     for (i = 0; i < buflen;) {
         if (!in->get(ch))
             break; // it was eof
@@ -85,7 +85,7 @@ XercesStreamInputStream::XercesStreamInputStream (std::istream& _in, const char*
             buf[i++] = ch;
         }
     }
-    
+
     return i;
 }
 

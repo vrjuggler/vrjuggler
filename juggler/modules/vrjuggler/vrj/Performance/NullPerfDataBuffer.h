@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 namespace vrj
 {
-   
+
 //---------------------------------------------------------------
 //: Dummy standin for PerfDataBuffer
 class PerfDataBuffer {
@@ -56,7 +56,7 @@ class PerfDataBuffer {
     }
 
     //: writes a new time entry to the buffer
-    //! POST: if a buffer is available, it is stamped with 
+    //! POST: if a buffer is available, it is stamped with
     //+       the current time and _phase.  If not, the
     //+       'lost' counter is incremented.
     //! ARGS: _phase - an integer index used to differentiate

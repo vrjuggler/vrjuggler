@@ -33,13 +33,13 @@
 #ifndef _VJ_DISPLAY_WINDOW_H_
 #define _VJ_DISPLAY_WINDOW_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vector>
 #include <vrj/Display/Viewport.h>
 
 namespace vrj
 {
-   
+
     // Config stuff
 class ConfigChunk;
 

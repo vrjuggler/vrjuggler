@@ -10,7 +10,7 @@
 /*  --    Author: Larry Edwards                                 --  */
 /*  ==============================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -93,7 +93,7 @@ read_vertices(FILE *infile, objptr thisobj)
   for (i = 0; i < numverts; ++i)
   {
     fscanf (infile,"Vertex %d:%f %f %f\n",&vertex_index,
-	    &(newvert[VX]),&(newvert[VY]),&(newvert[VZ]));
+        &(newvert[VX]),&(newvert[VY]),&(newvert[VZ]));
     if (vertex_index < numverts)
     {
       thisobj->vertices[vertex_index].pos[VX] = newvert[VX];
@@ -170,15 +170,15 @@ find_loopseg(objptr thisobj, faceptr thisface, vertptr v1, vertptr v2)
   loopsegs = thisface->loopsegs;
   numloopsegs = thisface->numloopsegs;
 
-  for (i=0; i < numloopsegs; i++)	/* go through loop forwards */
+  for (i=0; i < numloopsegs; i++)   /* go through loop forwards */
   {
     next_loopseg = &(loopsegs[vt_next_index(i,numloopsegs)]);
     if (((loopsegs[i].vert == v1) && (next_loopseg->vert == v2)) ||
-	((loopsegs[i].vert == v2) && (next_loopseg->vert == v1)))
+    ((loopsegs[i].vert == v2) && (next_loopseg->vert == v1)))
       return (&loopsegs[i]);
   }
 
-  return (NULL);		/*  the edge was not in this face */
+  return (NULL);        /*  the edge was not in this face */
 }
 
 static loopsegptr
@@ -195,10 +195,10 @@ find_other_loopseg(objptr thisobj, faceptr currentface, int loopsegindex)
     if (&(thisobj->faces[i]) != currentface)
     {
       other_loopseg = find_loopseg(thisobj,&(thisobj->faces[i]),
-				   loopsegs[loopsegindex].vert,
-				   next_loopseg->vert);
+                   loopsegs[loopsegindex].vert,
+                   next_loopseg->vert);
       if ((other_loopseg != NULL) && (other_loopseg->edge == NULL))
-	return (other_loopseg);
+    return (other_loopseg);
     }
   }
 
@@ -231,42 +231,42 @@ make_edges(objptr thisobj)
     {
       if (loopsegs[j].edge == NULL)
       {
-	/* the following should never happen but we may have a topologically */
-	/* bad object so we check anyway */
-	if (edge_index >= numedges)
-	{			
+    /* the following should never happen but we may have a topologically */
+    /* bad object so we check anyway */
+    if (edge_index >= numedges)
+    {
 /* Put back someday when we have valid objects
-	  printf("\nWARNING in make_edges: F+V-E != 2, continuing anyway");
+      printf("\nWARNING in make_edges: F+V-E != 2, continuing anyway");
 */
-	  /* make new bigger edges array */
-	  edges = thisobj->edges = (edgeptr) realloc(edges,(numedges+64)*
-						     sizeof(edgestruct));
-	  /* point loopseg ptrs at the new edges array elements */
-	  for (k=0; k<numedges; k++)
-	  {
-	    if (edges[k].loopseg1 != NULL) /* check just in case... */
-	      edges[k].loopseg1->edge = &(edges[k]);
-	    if (edges[k].loopseg2 != NULL)
-	      edges[k].loopseg2->edge = &(edges[k]);
-	  }
-	  numedges += 64;
-	}
+      /* make new bigger edges array */
+      edges = thisobj->edges = (edgeptr) realloc(edges,(numedges+64)*
+                             sizeof(edgestruct));
+      /* point loopseg ptrs at the new edges array elements */
+      for (k=0; k<numedges; k++)
+      {
+        if (edges[k].loopseg1 != NULL) /* check just in case... */
+          edges[k].loopseg1->edge = &(edges[k]);
+        if (edges[k].loopseg2 != NULL)
+          edges[k].loopseg2->edge = &(edges[k]);
+      }
+      numedges += 64;
+    }
 
-	other_loopseg = find_other_loopseg(thisobj,&faces[i],j);
-	if (other_loopseg == NULL)
-	  other_loopseg = &(loopsegs[j]);
+    other_loopseg = find_other_loopseg(thisobj,&faces[i],j);
+    if (other_loopseg == NULL)
+      other_loopseg = &(loopsegs[j]);
 
 
-	/* a loopseg always points to the edge having endpoints of */
-	/* loopseg->vert and loopseg[next_index(i,numloopsegs)].vert */
-	loopsegs[j].edge = &(edges[edge_index]);
-	other_loopseg->edge = &(edges[edge_index]);
-	edges[edge_index].loopseg1 = &(loopsegs[j]);
-	edges[edge_index].loopseg2 = other_loopseg;
-	edges[edge_index].vertex1 = loopsegs[j].vert;
-	edges[edge_index].vertex2 = other_loopseg->vert;
+    /* a loopseg always points to the edge having endpoints of */
+    /* loopseg->vert and loopseg[next_index(i,numloopsegs)].vert */
+    loopsegs[j].edge = &(edges[edge_index]);
+    other_loopseg->edge = &(edges[edge_index]);
+    edges[edge_index].loopseg1 = &(loopsegs[j]);
+    edges[edge_index].loopseg2 = other_loopseg;
+    edges[edge_index].vertex1 = loopsegs[j].vert;
+    edges[edge_index].vertex2 = other_loopseg->vert;
 
-	edge_index++;
+    edge_index++;
       }
     }
   }
@@ -294,32 +294,32 @@ CyberGloveBasic::vt_calculate_face_normals(objptr thisobj, Boolean clockwise)
     {
       for (j=0; j < numloopsegs; j++)
       {
-	nextj = vt_next_index(j,numloopsegs);
+    nextj = vt_next_index(j,numloopsegs);
 
-	norm[VX] += (loopsegs[j].vert->pos[VY] - loopsegs[nextj].vert->pos[VY]) *
-	  (loopsegs[j].vert->pos[VZ] + loopsegs[nextj].vert->pos[VZ]);
+    norm[VX] += (loopsegs[j].vert->pos[VY] - loopsegs[nextj].vert->pos[VY]) *
+      (loopsegs[j].vert->pos[VZ] + loopsegs[nextj].vert->pos[VZ]);
 
-	norm[VY] += (loopsegs[j].vert->pos[VZ] - loopsegs[nextj].vert->pos[VZ]) *
-	  (loopsegs[j].vert->pos[VX] + loopsegs[nextj].vert->pos[VX]);
+    norm[VY] += (loopsegs[j].vert->pos[VZ] - loopsegs[nextj].vert->pos[VZ]) *
+      (loopsegs[j].vert->pos[VX] + loopsegs[nextj].vert->pos[VX]);
 
-	norm[VZ] += (loopsegs[j].vert->pos[VX] - loopsegs[nextj].vert->pos[VX]) *
-	  (loopsegs[j].vert->pos[VY] + loopsegs[nextj].vert->pos[VY]);
+    norm[VZ] += (loopsegs[j].vert->pos[VX] - loopsegs[nextj].vert->pos[VX]) *
+      (loopsegs[j].vert->pos[VY] + loopsegs[nextj].vert->pos[VY]);
       }
     }
     else
     {
       for (j=0; j < numloopsegs; j++)
       {
-	nextj = vt_next_index(j,numloopsegs);
+    nextj = vt_next_index(j,numloopsegs);
 
-	norm[VX] -= (loopsegs[j].vert->pos[VY] - loopsegs[nextj].vert->pos[VY]) *
-	  (loopsegs[j].vert->pos[VZ] + loopsegs[nextj].vert->pos[VZ]);
+    norm[VX] -= (loopsegs[j].vert->pos[VY] - loopsegs[nextj].vert->pos[VY]) *
+      (loopsegs[j].vert->pos[VZ] + loopsegs[nextj].vert->pos[VZ]);
 
-	norm[VY] -= (loopsegs[j].vert->pos[VZ] - loopsegs[nextj].vert->pos[VZ]) *
-	  (loopsegs[j].vert->pos[VX] + loopsegs[nextj].vert->pos[VX]);
+    norm[VY] -= (loopsegs[j].vert->pos[VZ] - loopsegs[nextj].vert->pos[VZ]) *
+      (loopsegs[j].vert->pos[VX] + loopsegs[nextj].vert->pos[VX]);
 
-	norm[VZ] -= (loopsegs[j].vert->pos[VX] - loopsegs[nextj].vert->pos[VX]) *
-	  (loopsegs[j].vert->pos[VY] + loopsegs[nextj].vert->pos[VY]);
+    norm[VZ] -= (loopsegs[j].vert->pos[VX] - loopsegs[nextj].vert->pos[VX]) *
+      (loopsegs[j].vert->pos[VY] + loopsegs[nextj].vert->pos[VY]);
       }
     }
     vt_normalize3(norm,norm);
@@ -365,21 +365,21 @@ CyberGloveBasic::vt_calculate_vertex_normals(objptr thisobj)
     if (thisloopseg != NULL)
       do
       {
-	vertnorm[VX] += thisloopseg->parentface->norm[VX];
-	vertnorm[VY] += thisloopseg->parentface->norm[VY];
-	vertnorm[VZ] += thisloopseg->parentface->norm[VZ];
-	numfaces++;
-	
-	nextloopseg = vt_loopseg_twin(thisloopseg);
-	if (thisloopseg == nextloopseg)
-	  break;
-	
-	thisloopseg = nextloopseg;
-	parentface = thisloopseg->parentface;
-	loopsegindex = vt_get_index(parentface->loopsegs,thisloopseg,
-				    sizeof(loopsegstruct));
-	thisloopseg = &(parentface->loopsegs[vt_next_index(loopsegindex,
-				   parentface->numloopsegs)]);
+    vertnorm[VX] += thisloopseg->parentface->norm[VX];
+    vertnorm[VY] += thisloopseg->parentface->norm[VY];
+    vertnorm[VZ] += thisloopseg->parentface->norm[VZ];
+    numfaces++;
+
+    nextloopseg = vt_loopseg_twin(thisloopseg);
+    if (thisloopseg == nextloopseg)
+      break;
+
+    thisloopseg = nextloopseg;
+    parentface = thisloopseg->parentface;
+    loopsegindex = vt_get_index(parentface->loopsegs,thisloopseg,
+                    sizeof(loopsegstruct));
+    thisloopseg = &(parentface->loopsegs[vt_next_index(loopsegindex,
+                   parentface->numloopsegs)]);
       } while (thisloopseg != loopseg0);
 
     vertnorm[VX] = vertnorm[VX] / (float) numfaces;

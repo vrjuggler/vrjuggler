@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -48,7 +48,7 @@
 
 namespace vrj
 {
-   
+
 GlWindowXWin::GlWindowXWin():GlWindow() {
    window_is_open = false;
    window_width = window_height = -1;

@@ -33,7 +33,7 @@
 #ifndef _VRJ_GL_APP_H_
 #define _VRJ_GL_APP_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Kernel/App.h>
 

@@ -345,7 +345,7 @@ pre-install-headers:
 post-install-headers:
 	$(MAKE) install-headers-deprecated
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/vrj/vjConfig.h $(includedir)/vrj/vjConfig.h
+          $(VJROOT_ABS)/vrj/vrjConfig.h $(includedir)/vrj/vrjConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/vrj/vrjDefines.h $(includedir)/vrj
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\

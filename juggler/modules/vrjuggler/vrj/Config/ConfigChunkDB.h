@@ -33,13 +33,13 @@
 #ifndef _VRJ_CONFIGCHUNKDB_H_
 #define _VRJ_CONFIGCHUNKDB_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/ConfigChunk.h>
 
 
 namespace vrj
 {
-   
+
 //------------------------------------------------------------------
 //: Database of ConfigChunks
 //

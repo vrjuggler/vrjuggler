@@ -7,11 +7,11 @@
  * HCI.C   |   Rev 2.0   |   March 1994
  *
  * Immersion Corp. Developer's Programming Library Module
- * 	Functions for direct communication with the Immersion HCI
+ *  Functions for direct communication with the Immersion HCI
  *      Requires HCI firmware version 2.0 or later
  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <stdio.h>
 #include <vrj/Input/Devices/Immersion/hci.h>
 #include <vrj/Input/Devices/Immersion/driveunx.h>
@@ -49,17 +49,17 @@
 
 /* Argument list for Special Configuration Commands
  */
-byte	cfg_args[MAX_CFG_SIZE];
-int	num_cfg_args;	/* The # of valid bytes stored in cfg_args[] */
+byte    cfg_args[MAX_CFG_SIZE];
+int num_cfg_args;   /* The # of valid bytes stored in cfg_args[] */
 
 /* Strings for establishing connection */
-char	SIGNON_STR[5] = "IMMC";
-char	BEGIN_STR[6] = "BEGIN";
+char    SIGNON_STR[5] = "IMMC";
+char    BEGIN_STR[6] = "BEGIN";
 
 /* Result Codes for which there are no error handlers */
-char	SUCCESS[8] = "Success";
-char	NO_PACKET_YET[32] = "Current packet not yet complete";
-char	TRY__AGAIN[29] = "Try this HCI operation again";
+char    SUCCESS[8] = "Success";
+char    NO_PACKET_YET[32] = "Current packet not yet complete";
+char    TRY__AGAIN[29] = "Try this HCI operation again";
 /* TRY__AGAIN[] is provided for use by modules built on hci.c.  This
  *   hci module does not directly use TRY__AGAIN[].  The idea is to
  *   have error handlers return TRY__AGAIN if an error has been fixed
@@ -70,15 +70,15 @@ char	TRY__AGAIN[29] = "Try this HCI operation again";
 
 /* Result Codes for which there are error handlers
  */
-char	TIMED_OUT[29] = "Timed out waiting for packet";
-char	BAD_PORT_NUM[25] = "Port number out of range";
-char	BAD_PACKET[17] = "Corrupted packet";
-char	NO_HCI[19] = "Unable to find HCI";
-char	CANT_BEGIN[34] = "Found HCI but can't begin session";
-char	CANT_OPEN_PORT[27] = "Unable to open serial port";
-char	BAD_PASSWORD[40] = "Password rejected during config command";
-char	BAD_VERSION[47] = "Firmware version does not support this feature";
-char	BAD_FORMAT[34] = "Unknown firmware parameter format";
+char    TIMED_OUT[29] = "Timed out waiting for packet";
+char    BAD_PORT_NUM[25] = "Port number out of range";
+char    BAD_PACKET[17] = "Corrupted packet";
+char    NO_HCI[19] = "Unable to find HCI";
+char    CANT_BEGIN[34] = "Found HCI but can't begin session";
+char    CANT_OPEN_PORT[27] = "Unable to open serial port";
+char    BAD_PASSWORD[40] = "Password rejected during config command";
+char    BAD_VERSION[47] = "Firmware version does not support this feature";
+char    BAD_FORMAT[34] = "Unknown firmware parameter format";
 
 
 
@@ -91,12 +91,12 @@ char	BAD_FORMAT[34] = "Unknown firmware parameter format";
  */
 void hci_clear_packet(hci_rec *hci)
 {
-	hci->packet.num_bytes_needed = 0;
-	hci->packet.cmd_byte = 0;
-	hci->packet.parsed = 1;
-	hci->packet.error = 0;
-	hci->packet.data_ptr = hci->packet.data;
-	hci->packets_expected = 0;
+    hci->packet.num_bytes_needed = 0;
+    hci->packet.cmd_byte = 0;
+    hci->packet.parsed = 1;
+    hci->packet.error = 0;
+    hci->packet.data_ptr = hci->packet.data;
+    hci->packets_expected = 0;
 }
 
 
@@ -104,14 +104,14 @@ void hci_clear_packet(hci_rec *hci)
  */
 void hci_com_params(hci_rec *hci, int port, long int baud)
 {
-	hci->port_num = port;
+    hci->port_num = port;
 
-	host_fix_baud(&baud);
-	hci->baud_rate = baud;
+    host_fix_baud(&baud);
+    hci->baud_rate = baud;
 
-	hci->slow_timeout = 3.0;	/* 3 seconds */
-	hci->fast_timeout = TIMEOUT_CHARS * 8.0 / (float) baud;
-	if (hci->fast_timeout < MIN_TIMEOUT) hci->fast_timeout = MIN_TIMEOUT;
+    hci->slow_timeout = 3.0;    /* 3 seconds */
+    hci->fast_timeout = TIMEOUT_CHARS * 8.0 / (float) baud;
+    if (hci->fast_timeout < MIN_TIMEOUT) hci->fast_timeout = MIN_TIMEOUT;
         hci_clear_packet(hci);
 }
 
@@ -120,32 +120,32 @@ void hci_com_params(hci_rec *hci, int port, long int baud)
  */
 void hci_init(hci_rec *hci, int port, long int baud)
 {
-	hci_com_params(hci, port, baud);
-	hci_clear_packet(hci);
+    hci_com_params(hci, port, baud);
+    hci_clear_packet(hci);
 
         /* Set all descr. strings to null strings */
-	hci->serial_number[0] = 0;
-	hci->product_name[0] = 0;
-	hci->product_id[0] = 0;
-	hci->model_name[0] = 0;
-	hci->comment[0] = 0;
-	hci->param_format[0] = 0;
-	hci->version[0] = 0;
+    hci->serial_number[0] = 0;
+    hci->product_name[0] = 0;
+    hci->product_id[0] = 0;
+    hci->model_name[0] = 0;
+    hci->comment[0] = 0;
+    hci->param_format[0] = 0;
+    hci->version[0] = 0;
 
-	/* By default, no error handlers are installed */
-	hci->BAD_PORT_handler = NULL;
-	hci->CANT_OPEN_handler = NULL;
-	hci->NO_HCI_handler = NULL;
-	hci->CANT_BEGIN_handler = NULL;
-	hci->TIMED_OUT_handler = NULL;
-	hci->BAD_PACKET_handler = NULL;
-	hci->BAD_VERSION_handler = NULL;
-	hci->BAD_FORMAT_handler = NULL;
+    /* By default, no error handlers are installed */
+    hci->BAD_PORT_handler = NULL;
+    hci->CANT_OPEN_handler = NULL;
+    hci->NO_HCI_handler = NULL;
+    hci->CANT_BEGIN_handler = NULL;
+    hci->TIMED_OUT_handler = NULL;
+    hci->BAD_PACKET_handler = NULL;
+    hci->BAD_VERSION_handler = NULL;
+    hci->BAD_FORMAT_handler = NULL;
 
-	hci->default_handler = NULL;
+    hci->default_handler = NULL;
 
         /* This field is free for the user's own purpose */
-	hci->user_data = (long int) 0;
+    hci->user_data = (long int) 0;
 }
 
 
@@ -155,7 +155,7 @@ void hci_init(hci_rec *hci, int port, long int baud)
  */
 void hci_fast_timeout(hci_rec *hci)
 {
-	host_set_timeout(hci->port_num, hci->fast_timeout);
+    host_set_timeout(hci->port_num, hci->fast_timeout);
 }
 
 
@@ -165,7 +165,7 @@ void hci_fast_timeout(hci_rec *hci)
  */
 void hci_slow_timeout(hci_rec *hci)
 {
-	host_set_timeout(hci->port_num, hci->slow_timeout);
+    host_set_timeout(hci->port_num, hci->slow_timeout);
 }
 
 
@@ -174,33 +174,33 @@ void hci_slow_timeout(hci_rec *hci)
  */
 hci_result hci_connect(hci_rec *hci)
 {
-	hci_result	result;
-	int	port = hci->port_num;
+    hci_result  result;
+    int port = hci->port_num;
 
-	if ( host_port_valid(port) )
-	{
-		/* Open the port */
-		if (host_open_serial(port, hci->baud_rate))
-		{
-			/* Get ready for slow process */
-			hci_slow_timeout(hci);
+    if ( host_port_valid(port) )
+    {
+        /* Open the port */
+        if (host_open_serial(port, hci->baud_rate))
+        {
+            /* Get ready for slow process */
+            hci_slow_timeout(hci);
 
-			/* Then synch to the HCI */
-			result = hci_autosynch(hci);
-			if (result == SUCCESS)
-			{
-				/* If it worked, ready to BEGIN session */
-				result = hci_begin(hci);
-			}
-		}
-		else result = CANT_OPEN_PORT;
-	}
-	else
-	{
-		result = BAD_PORT_NUM;
-	}
+            /* Then synch to the HCI */
+            result = hci_autosynch(hci);
+            if (result == SUCCESS)
+            {
+                /* If it worked, ready to BEGIN session */
+                result = hci_begin(hci);
+            }
+        }
+        else result = CANT_OPEN_PORT;
+    }
+    else
+    {
+        result = BAD_PORT_NUM;
+    }
 
-	return hci_error(hci, result);
+    return hci_error(hci, result);
 }
 
 
@@ -211,35 +211,35 @@ hci_result hci_connect(hci_rec *hci)
  */
 hci_result hci_autosynch(hci_rec *hci)
 {
-	int ch, port = hci->port_num;
-	char *sign_ch = SIGNON_STR;
-	int  signed_on = 0;
+    int ch, port = hci->port_num;
+    char *sign_ch = SIGNON_STR;
+    int  signed_on = 0;
 
-	host_start_timeout(port);
-	while ( !signed_on && !host_timed_out(port) )
-	{
-		hci_end(hci);	/* In case session wasn't ended before */
-		host_write_string(port, SIGNON_STR);
+    host_start_timeout(port);
+    while ( !signed_on && !host_timed_out(port) )
+    {
+        hci_end(hci);   /* In case session wasn't ended before */
+        host_write_string(port, SIGNON_STR);
                 host_pause(SIGNON_PAUSE);
-		while (((ch=host_read_char(port)) != -1) && !signed_on)
-		{
-			if (ch == *sign_ch)
-			{
-				if (!*++sign_ch)
-				{
-					signed_on = 1;
-				}
-			}
-			else
-			{
-				sign_ch = SIGNON_STR;
-			}
-		}
-	}
-	host_flush_serial(port);	/* Get rid of excess SIGNON strings in buffer */
+        while (((ch=host_read_char(port)) != -1) && !signed_on)
+        {
+            if (ch == *sign_ch)
+            {
+                if (!*++sign_ch)
+                {
+                    signed_on = 1;
+                }
+            }
+            else
+            {
+                sign_ch = SIGNON_STR;
+            }
+        }
+    }
+    host_flush_serial(port);    /* Get rid of excess SIGNON strings in buffer */
 
-	if (signed_on) return SUCCESS;
-	else return NO_HCI;
+    if (signed_on) return SUCCESS;
+    else return NO_HCI;
 }
 
 
@@ -249,13 +249,13 @@ hci_result hci_autosynch(hci_rec *hci)
  */
 hci_result hci_begin(hci_rec *hci)
 {
-	int port = hci->port_num;
+    int port = hci->port_num;
 
-	host_write_string(port, BEGIN_STR);
-	if (hci_read_string(hci, hci->product_id) == SUCCESS)
-		return SUCCESS;
-	else
-		return CANT_BEGIN;
+    host_write_string(port, BEGIN_STR);
+    if (hci_read_string(hci, hci->product_id) == SUCCESS)
+        return SUCCESS;
+    else
+        return CANT_BEGIN;
 }
 
 
@@ -265,7 +265,7 @@ hci_result hci_begin(hci_rec *hci)
  */
 void hci_end(hci_rec *hci)
 {
-	host_write_char(hci->port_num, END_SESSION);
+    host_write_char(hci->port_num, END_SESSION);
 }
 
 
@@ -275,10 +275,10 @@ void hci_end(hci_rec *hci)
  */
 void hci_disconnect(hci_rec *hci)
 {
-	host_flush_serial(hci->port_num);
-	hci_end(hci);
+    host_flush_serial(hci->port_num);
+    hci_end(hci);
         host_pause(END_PAUSE);
-	host_close_serial(hci->port_num);
+    host_close_serial(hci->port_num);
 }
 
 
@@ -288,9 +288,9 @@ void hci_disconnect(hci_rec *hci)
  */
 void hci_reset_com(hci_rec *hci)
 {
-	host_pause(5e-2);	/* Wait 50 ms for HCI to settle */
-	host_flush_serial(hci->port_num);
-	hci_clear_packet(hci);
+    host_pause(5e-2);   /* Wait 50 ms for HCI to settle */
+    host_flush_serial(hci->port_num);
+    hci_clear_packet(hci);
 }
 
 
@@ -299,16 +299,16 @@ void hci_reset_com(hci_rec *hci)
  */
 void hci_change_baud(hci_rec *hci, long int new_baud)
 {
-	byte baud_code;
+    byte baud_code;
 
-	host_fix_baud(&new_baud);
-	baud_code = baud_to_code(new_baud);
-	new_baud = code_to_baud(baud_code);
-	host_write_char(hci->port_num, SET_BAUD);
-	host_write_char(hci->port_num, baud_code);
-	host_pause(END_PAUSE);
-	host_close_serial(hci->port_num);
-	host_open_serial(hci->port_num, new_baud);
+    host_fix_baud(&new_baud);
+    baud_code = baud_to_code(new_baud);
+    new_baud = code_to_baud(baud_code);
+    host_write_char(hci->port_num, SET_BAUD);
+    host_write_char(hci->port_num, baud_code);
+    host_pause(END_PAUSE);
+    host_close_serial(hci->port_num);
+    host_open_serial(hci->port_num, new_baud);
 }
 
 
@@ -317,17 +317,17 @@ void hci_change_baud(hci_rec *hci, long int new_baud)
  */
 hci_result hci_get_strings(hci_rec *hci)
 {
-	hci_result result;
+    hci_result result;
 
-	result = hci_string_cmd(hci, GET_PROD_NAME);
-	if (result == SUCCESS) result = hci_string_cmd(hci, GET_PROD_ID);
-	if (result == SUCCESS) result = hci_string_cmd(hci, GET_MODEL_NAME);
-	if (result == SUCCESS) result = hci_string_cmd(hci, GET_SERNUM);
-	if (result == SUCCESS) result = hci_string_cmd(hci, GET_COMMENT);
-	if (result == SUCCESS) result = hci_string_cmd(hci, GET_PRM_FORMAT);
-	if (result == SUCCESS) result = hci_string_cmd(hci, GET_VERSION);
+    result = hci_string_cmd(hci, GET_PROD_NAME);
+    if (result == SUCCESS) result = hci_string_cmd(hci, GET_PROD_ID);
+    if (result == SUCCESS) result = hci_string_cmd(hci, GET_MODEL_NAME);
+    if (result == SUCCESS) result = hci_string_cmd(hci, GET_SERNUM);
+    if (result == SUCCESS) result = hci_string_cmd(hci, GET_COMMENT);
+    if (result == SUCCESS) result = hci_string_cmd(hci, GET_PRM_FORMAT);
+    if (result == SUCCESS) result = hci_string_cmd(hci, GET_VERSION);
 
-	return result;
+    return result;
 }
 
 
@@ -343,17 +343,17 @@ hci_result hci_get_strings(hci_rec *hci)
  *    or asynchronously using hci_check_packet()
  */
 void hci_std_cmd(hci_rec *hci, int timer_flag, int analog_reports,
-		int encoder_reports)
+        int encoder_reports)
 {
-	byte	cmnd = CMD_BYTE(timer_flag, analog_reports, encoder_reports);
+    byte    cmnd = CMD_BYTE(timer_flag, analog_reports, encoder_reports);
 
-	host_write_char(hci->port_num, cmnd);
+    host_write_char(hci->port_num, cmnd);
 
         /* If there are no pending packets, start timing this one */
-	if (! hci->packets_expected++)
-	{
-		hci_fast_timeout(hci);
-		host_start_timeout(hci->port_num);
+    if (! hci->packets_expected++)
+    {
+        hci_fast_timeout(hci);
+        host_start_timeout(hci->port_num);
         }
 }
 
@@ -366,13 +366,13 @@ void hci_std_cmd(hci_rec *hci, int timer_flag, int analog_reports,
  */
 void hci_simple_cfg_cmd(hci_rec *hci, byte cmnd)
 {
-	host_write_char(hci->port_num, cmnd);
+    host_write_char(hci->port_num, cmnd);
 
         /* If there are no pending packets, start timing this one */
-	if (! hci->packets_expected++)
-	{
-		hci_fast_timeout(hci);
-		host_start_timeout(hci->port_num);
+    if (! hci->packets_expected++)
+    {
+        hci_fast_timeout(hci);
+        host_start_timeout(hci->port_num);
         }
 }
 
@@ -382,21 +382,21 @@ void hci_simple_cfg_cmd(hci_rec *hci, byte cmnd)
  */
 hci_result hci_get_params(hci_rec *hci, byte *block, int *block_size)
 {
-	int port = hci->port_num, ch;
+    int port = hci->port_num, ch;
 
-	host_write_char(port, GET_PARAMS);
-	hci_fast_timeout(hci);
-	host_start_timeout(port);
-	while ( (ch=host_read_char(port)) != GET_PARAMS)
-	{
-		if (ch != -1) host_start_timeout(port);
-		if (host_timed_out(port)) break;
-	}
-	if (ch != GET_PARAMS) return hci_error(hci, TIMED_OUT);
+    host_write_char(port, GET_PARAMS);
+    hci_fast_timeout(hci);
+    host_start_timeout(port);
+    while ( (ch=host_read_char(port)) != GET_PARAMS)
+    {
+        if (ch != -1) host_start_timeout(port);
+        if (host_timed_out(port)) break;
+    }
+    if (ch != GET_PARAMS) return hci_error(hci, TIMED_OUT);
 
-	*block_size = -1;	/* Means take 1st byte as the block length */
+    *block_size = -1;   /* Means take 1st byte as the block length */
 
-	return hci_read_block(hci, block, block_size);
+    return hci_read_block(hci, block, block_size);
 }
 
 
@@ -405,12 +405,12 @@ hci_result hci_get_params(hci_rec *hci, byte *block, int *block_size)
  */
 hci_result hci_set_params(hci_rec *hci, byte *block, int block_size)
 {
-	int i;
+    int i;
 
-	num_cfg_args = block_size;
-	for (i=0;i<block_size;i++) cfg_args[i] = block[i];
+    num_cfg_args = block_size;
+    for (i=0;i<block_size;i++) cfg_args[i] = block[i];
 
-	return hci_passwd_cmd(hci, SET_PARAMS);
+    return hci_passwd_cmd(hci, SET_PARAMS);
 }
 
 
@@ -418,7 +418,7 @@ hci_result hci_set_params(hci_rec *hci, byte *block, int block_size)
  */
 hci_result hci_get_home_ref(hci_rec *hci)
 {
-	hci_simple_cfg_cmd(hci, GET_HOME_REF);
+    hci_simple_cfg_cmd(hci, GET_HOME_REF);
         return hci_wait_packet(hci);
 }
 
@@ -427,8 +427,8 @@ hci_result hci_get_home_ref(hci_rec *hci)
  */
 hci_result hci_go_home_pos(hci_rec *hci)
 {
-	hci_simple_cfg_cmd(hci, HOME_POS);
-	return hci_wait_packet(hci);
+    hci_simple_cfg_cmd(hci, HOME_POS);
+    return hci_wait_packet(hci);
 }
 
 
@@ -436,8 +436,8 @@ hci_result hci_go_home_pos(hci_rec *hci)
  */
 hci_result hci_get_maxes(hci_rec *hci)
 {
-	hci_simple_cfg_cmd(hci, GET_MAXES);
-	return hci_wait_packet(hci);
+    hci_simple_cfg_cmd(hci, GET_MAXES);
+    return hci_wait_packet(hci);
 }
 
 
@@ -446,8 +446,8 @@ hci_result hci_get_maxes(hci_rec *hci)
  */
 void hci_insert_marker(hci_rec *hci, byte marker)
 {
-	hci_simple_cfg_cmd(hci, INSERT_MARKER);
-	host_write_char(hci->port_num, marker);
+    hci_simple_cfg_cmd(hci, INSERT_MARKER);
+    host_write_char(hci->port_num, marker);
 }
 
 
@@ -455,48 +455,48 @@ void hci_insert_marker(hci_rec *hci, byte marker)
  */
 hci_result hci_string_cmd(hci_rec *hci, byte cmnd)
 {
-	hci_result result;
+    hci_result result;
         int ch, port = hci->port_num;
 
-	host_write_char(port, cmnd);
-	hci_fast_timeout(hci);
-	host_start_timeout(port);
-	while ( (ch=host_read_char(port)) != cmnd)
-	{
-		if (ch != -1) host_start_timeout(port);
-		if (host_timed_out(port)) break;
-	}
-	if (ch != cmnd) return hci_error(hci, TIMED_OUT);
+    host_write_char(port, cmnd);
+    hci_fast_timeout(hci);
+    host_start_timeout(port);
+    while ( (ch=host_read_char(port)) != cmnd)
+    {
+        if (ch != -1) host_start_timeout(port);
+        if (host_timed_out(port)) break;
+    }
+    if (ch != cmnd) return hci_error(hci, TIMED_OUT);
 
-	switch (cmnd)
-	{
-		case GET_PROD_NAME:
-			result = hci_read_string(hci, hci->product_name);
-			break;
-		case GET_PROD_ID:
-			result = hci_read_string(hci, hci->product_id);
-			break;
-		case GET_MODEL_NAME:
-			result = hci_read_string(hci, hci->model_name);
-			break;
-		case GET_SERNUM:
-			result = hci_read_string(hci, hci->serial_number);
-			break;
-		case GET_COMMENT:
-			result = hci_read_string(hci, hci->comment);
-			break;
-		case GET_PRM_FORMAT:
-			result = hci_read_string(hci, hci->param_format);
-			break;
-		case GET_VERSION:
-			result = hci_read_string(hci, hci->version);
-			break;
-		default:
-			result = SUCCESS;
-			break;
-	}
+    switch (cmnd)
+    {
+        case GET_PROD_NAME:
+            result = hci_read_string(hci, hci->product_name);
+            break;
+        case GET_PROD_ID:
+            result = hci_read_string(hci, hci->product_id);
+            break;
+        case GET_MODEL_NAME:
+            result = hci_read_string(hci, hci->model_name);
+            break;
+        case GET_SERNUM:
+            result = hci_read_string(hci, hci->serial_number);
+            break;
+        case GET_COMMENT:
+            result = hci_read_string(hci, hci->comment);
+            break;
+        case GET_PRM_FORMAT:
+            result = hci_read_string(hci, hci->param_format);
+            break;
+        case GET_VERSION:
+            result = hci_read_string(hci, hci->version);
+            break;
+        default:
+            result = SUCCESS;
+            break;
+    }
 
-	return result;
+    return result;
 }
 
 
@@ -506,34 +506,34 @@ hci_result hci_string_cmd(hci_rec *hci, byte cmnd)
  */
 hci_result hci_passwd_cmd(hci_rec *hci, byte cmnd)
 {
-	int ch, port = hci->port_num, i;
+    int ch, port = hci->port_num, i;
 
-	host_write_char(port, cmnd);
+    host_write_char(port, cmnd);
         hci_fast_timeout(hci);
         host_start_timeout(port);
-	while( (ch=host_read_char(port)) != cmnd)
-	{
-		if (ch != -1) host_start_timeout(port);
-		if (host_timed_out(port)) break;
-	}
-	if (ch == cmnd)
-	{
-		host_write_string(port, hci->serial_number);
-		host_write_char(port, 0x00);	/* Write the null to terminate */
-	        host_start_timeout(port);
-		while( (ch=host_read_char(port)) == -1)
-			if (host_timed_out(port)) break;
-		if (ch == -1) return hci_error(hci, TIMED_OUT);
-		else if (ch == PASSWD_OK)
-		{
-			for(i=0; i<num_cfg_args; i++)
-				host_write_char(hci->port_num, cfg_args[i]);
-			for(i=0; i<num_cfg_args; i++)
-				host_pause(CFG_ARG_PAUSE);
-			return SUCCESS;
-		}
+    while( (ch=host_read_char(port)) != cmnd)
+    {
+        if (ch != -1) host_start_timeout(port);
+        if (host_timed_out(port)) break;
+    }
+    if (ch == cmnd)
+    {
+        host_write_string(port, hci->serial_number);
+        host_write_char(port, 0x00);    /* Write the null to terminate */
+            host_start_timeout(port);
+        while( (ch=host_read_char(port)) == -1)
+            if (host_timed_out(port)) break;
+        if (ch == -1) return hci_error(hci, TIMED_OUT);
+        else if (ch == PASSWD_OK)
+        {
+            for(i=0; i<num_cfg_args; i++)
+                host_write_char(hci->port_num, cfg_args[i]);
+            for(i=0; i<num_cfg_args; i++)
+                host_pause(CFG_ARG_PAUSE);
+            return SUCCESS;
+        }
                 else return BAD_PASSWORD;
-	}
+    }
         else return hci_error(hci, TIMED_OUT);
 }
 
@@ -542,20 +542,20 @@ hci_result hci_passwd_cmd(hci_rec *hci, byte cmnd)
  */
 hci_result hci_set_home_pos(hci_rec *hci, int *homepos)
 {
-	num_cfg_args = 2*NUM_ENCODERS;
-	cfg_args[0] = homepos[0] >> 8;
-	cfg_args[1] = homepos[0] & 0x00FF;
-	cfg_args[2] = homepos[1] >> 8;
-	cfg_args[3] = homepos[1] & 0x00FF;
-	cfg_args[4] = homepos[2] >> 8;
-	cfg_args[5] = homepos[2] & 0x00FF;
-	cfg_args[6] = homepos[3] >> 8;
-	cfg_args[7] = homepos[3] & 0x00FF;
-	cfg_args[8] = homepos[4] >> 8;
-	cfg_args[9] = homepos[4] & 0x00FF;
-	cfg_args[10] = homepos[5] >> 8;
-	cfg_args[11] = homepos[5] & 0x00FF;
-	return hci_passwd_cmd(hci, SET_HOME);
+    num_cfg_args = 2*NUM_ENCODERS;
+    cfg_args[0] = homepos[0] >> 8;
+    cfg_args[1] = homepos[0] & 0x00FF;
+    cfg_args[2] = homepos[1] >> 8;
+    cfg_args[3] = homepos[1] & 0x00FF;
+    cfg_args[4] = homepos[2] >> 8;
+    cfg_args[5] = homepos[2] & 0x00FF;
+    cfg_args[6] = homepos[3] >> 8;
+    cfg_args[7] = homepos[3] & 0x00FF;
+    cfg_args[8] = homepos[4] >> 8;
+    cfg_args[9] = homepos[4] & 0x00FF;
+    cfg_args[10] = homepos[5] >> 8;
+    cfg_args[11] = homepos[5] & 0x00FF;
+    return hci_passwd_cmd(hci, SET_HOME);
 }
 
 
@@ -563,20 +563,20 @@ hci_result hci_set_home_pos(hci_rec *hci, int *homepos)
  */
 hci_result hci_set_home_ref(hci_rec *hci, int *homeref)
 {
-	num_cfg_args = 2*NUM_ENCODERS;
-	cfg_args[0] = homeref[0] >> 8;
-	cfg_args[1] = homeref[0] & 0x00FF;
-	cfg_args[2] = homeref[1] >> 8;
-	cfg_args[3] = homeref[1] & 0x00FF;
-	cfg_args[4] = homeref[2] >> 8;
-	cfg_args[5] = homeref[2] & 0x00FF;
-	cfg_args[6] = homeref[3] >> 8;
-	cfg_args[7] = homeref[3] & 0x00FF;
-	cfg_args[8] = homeref[4] >> 8;
-	cfg_args[9] = homeref[4] & 0x00FF;
-	cfg_args[10] = homeref[5] >> 8;
-	cfg_args[11] = homeref[5] & 0x00FF;
-	return hci_passwd_cmd(hci, SET_HOME_REF);
+    num_cfg_args = 2*NUM_ENCODERS;
+    cfg_args[0] = homeref[0] >> 8;
+    cfg_args[1] = homeref[0] & 0x00FF;
+    cfg_args[2] = homeref[1] >> 8;
+    cfg_args[3] = homeref[1] & 0x00FF;
+    cfg_args[4] = homeref[2] >> 8;
+    cfg_args[5] = homeref[2] & 0x00FF;
+    cfg_args[6] = homeref[3] >> 8;
+    cfg_args[7] = homeref[3] & 0x00FF;
+    cfg_args[8] = homeref[4] >> 8;
+    cfg_args[9] = homeref[4] & 0x00FF;
+    cfg_args[10] = homeref[5] >> 8;
+    cfg_args[11] = homeref[5] & 0x00FF;
+    return hci_passwd_cmd(hci, SET_HOME_REF);
 }
 
 
@@ -584,13 +584,13 @@ hci_result hci_set_home_ref(hci_rec *hci, int *homeref)
  */
 hci_result hci_factory_settings(hci_rec *hci)
 {
-	hci_result result;
+    hci_result result;
 
-	num_cfg_args = 0;
-	result = hci_passwd_cmd(hci, RESTORE_FACTORY);
-	host_pause(RESTORE_PAUSE);
+    num_cfg_args = 0;
+    result = hci_passwd_cmd(hci, RESTORE_FACTORY);
+    host_pause(RESTORE_PAUSE);
 
-	return result;
+    return result;
 }
 
 
@@ -611,24 +611,24 @@ hci_result hci_factory_settings(hci_rec *hci)
  *    message-driven functions are installed.
  */
 void hci_report_motion(hci_rec *hci, int timer_flag, int analog_reports,
-		int encoder_reports, int delay, byte active_btns,
-		int *analog_deltas, int *encoder_deltas)
+        int encoder_reports, int delay, byte active_btns,
+        int *analog_deltas, int *encoder_deltas)
 {
-	byte	cmnd = CMD_BYTE(timer_flag, analog_reports, encoder_reports);
-	int	port = hci->port_num, i;
+    byte    cmnd = CMD_BYTE(timer_flag, analog_reports, encoder_reports);
+    int port = hci->port_num, i;
 
-	host_write_char(port, REPORT_MOTION);
-	host_write_char(port, delay >> 8);
-	host_write_char(port, delay & 0x00FF);
-	host_write_char(port, cmnd);
-	host_write_char(port, active_btns);
-	for (i=0; i<NUM_ANALOGS; i++)
-		host_write_char(port, analog_deltas[i]);
-	for (i=0; i<NUM_ENCODERS; i++)
-	{
-		host_write_char(port, encoder_deltas[i] >> 8);
-		host_write_char(port, encoder_deltas[i] & 0x00FF);
-	}
+    host_write_char(port, REPORT_MOTION);
+    host_write_char(port, delay >> 8);
+    host_write_char(port, delay & 0x00FF);
+    host_write_char(port, cmnd);
+    host_write_char(port, active_btns);
+    for (i=0; i<NUM_ANALOGS; i++)
+        host_write_char(port, analog_deltas[i]);
+    for (i=0; i<NUM_ENCODERS; i++)
+    {
+        host_write_char(port, encoder_deltas[i] >> 8);
+        host_write_char(port, encoder_deltas[i] & 0x00FF);
+    }
 }
 
 
@@ -637,10 +637,10 @@ void hci_report_motion(hci_rec *hci, int timer_flag, int analog_reports,
  */
 void hci_end_motion(hci_rec *hci)
 {
-	int port = hci->port_num;
+    int port = hci->port_num;
 
-	host_write_char(port, 0);
-	host_pause(5e-2);
+    host_write_char(port, 0);
+    host_pause(5e-2);
         host_flush_serial(port);
 }
 
@@ -656,11 +656,11 @@ void hci_end_motion(hci_rec *hci)
  */
 float hci_version_num(hci_rec *hci)
 {
-	float vers = 0.0;
+    float vers = 0.0;
 
-	sscanf(hci->version, "HCI %f", &vers);
+    sscanf(hci->version, "HCI %f", &vers);
 
-	return vers;
+    return vers;
 }
 
 
@@ -675,15 +675,15 @@ float hci_version_num(hci_rec *hci)
  */
 hci_result hci_wait_packet(hci_rec *hci)
 {
-	hci_result result;
+    hci_result result;
 
-	hci_fast_timeout(hci);
-	host_start_timeout(hci->port_num);
+    hci_fast_timeout(hci);
+    host_start_timeout(hci->port_num);
 
-	/* Watch the port until something happens */
-	while ( (result = hci_check_packet(hci)) == NO_PACKET_YET);
+    /* Watch the port until something happens */
+    while ( (result = hci_check_packet(hci)) == NO_PACKET_YET);
 
-	return result;
+    return result;
 }
 
 
@@ -693,21 +693,21 @@ hci_result hci_wait_packet(hci_rec *hci)
  */
 hci_result hci_check_packet(hci_rec *hci)
 {
-	hci_result result;
+    hci_result result;
 
-	if (hci_build_packet(hci))
-	{
-		result = hci_parse_packet(hci);
-		if (result == SUCCESS) return result;
-		else return hci_error(hci, result);
-	}
-	else
-	{
-		if (host_timed_out(hci->port_num))
-			return hci_error(hci, TIMED_OUT);
-		else
-			return NO_PACKET_YET;
-	}
+    if (hci_build_packet(hci))
+    {
+        result = hci_parse_packet(hci);
+        if (result == SUCCESS) return result;
+        else return hci_error(hci, result);
+    }
+    else
+    {
+        if (host_timed_out(hci->port_num))
+            return hci_error(hci, TIMED_OUT);
+        else
+            return NO_PACKET_YET;
+    }
 }
 
 
@@ -717,15 +717,15 @@ hci_result hci_check_packet(hci_rec *hci)
  */
 hci_result hci_check_motion(hci_rec *hci)
 {
-	hci_result result;
+    hci_result result;
 
-	if (hci_build_packet(hci))
-	{
-		result = hci_parse_packet(hci);
-		if (result == SUCCESS) return result;
-		else return hci_error(hci, result);
-	}
-	else return NO_PACKET_YET;
+    if (hci_build_packet(hci))
+    {
+        result = hci_parse_packet(hci);
+        if (result == SUCCESS) return result;
+        else return hci_error(hci, result);
+    }
+    else return NO_PACKET_YET;
 }
 
 
@@ -738,43 +738,43 @@ hci_result hci_check_motion(hci_rec *hci)
  */
 int hci_build_packet(hci_rec *hci)
 {
-	static int	ch;
-	static int	port;
+    static int  ch;
+    static int  port;
 
-	port = hci->port_num;
-	if (hci->packet.parsed)
-	{
-		if ((ch = host_read_char(port)) == -1) return 0;
-		else
-		{
-			hci->packet.cmd_byte = (byte) ch;
-			if (ch < 0x80)
-			{
+    port = hci->port_num;
+    if (hci->packet.parsed)
+    {
+        if ((ch = host_read_char(port)) == -1) return 0;
+        else
+        {
+            hci->packet.cmd_byte = (byte) ch;
+            if (ch < 0x80)
+            {
                                 hci->packet.error = 1;
-				return 1;
-			}
-			else
-			{
-				hci->packet.parsed = 0;
+                return 1;
+            }
+            else
+            {
+                hci->packet.parsed = 0;
                                 hci->packet.error = 0;
-				hci->packet.data_ptr = hci->packet.data;
-				hci->packet.num_bytes_needed = hci_packet_size(ch);
-				hci->packets_expected--;
-				hci_fast_timeout(hci);
-				host_start_timeout(port);
-			}
-		}
+                hci->packet.data_ptr = hci->packet.data;
+                hci->packet.num_bytes_needed = hci_packet_size(ch);
+                hci->packets_expected--;
+                hci_fast_timeout(hci);
+                host_start_timeout(port);
+            }
         }
-	else if (hci->packet.num_bytes_needed > 0)
-	{
-		while ((ch = host_read_char(port)) != -1)
-		{
-			*(hci->packet.data_ptr)++ = ch;
-			if (--hci->packet.num_bytes_needed == 0) break;
-		}
-	}
+        }
+    else if (hci->packet.num_bytes_needed > 0)
+    {
+        while ((ch = host_read_char(port)) != -1)
+        {
+            *(hci->packet.data_ptr)++ = ch;
+            if (--hci->packet.num_bytes_needed == 0) break;
+        }
+    }
 
-	return (hci->packet.num_bytes_needed <= 0);
+    return (hci->packet.num_bytes_needed <= 0);
 }
 
 
@@ -785,53 +785,53 @@ int hci_build_packet(hci_rec *hci)
  */
 int hci_packet_size(int cmd)
 {
-	int size = 1;	/* Regular cmds always include buttons byte */
+    int size = 1;   /* Regular cmds always include buttons byte */
         int bits;
 
-	if (cmd < CONFIG_MIN)
-	{
-		if (cmd & TIMER_BIT) size += 2;
-		bits = cmd & ANALOG_BITS;
-		if (bits == ANALOG_LO_BIT) size += 2 + 1;
-		else if (bits == ANALOG_HI_BIT) size += 4 + 1;
-		else if (bits == ANALOG_BITS) size += 8 + 1;
-		bits = cmd & ENCODER_BITS;
-		if (bits == ENCODER_LO_BIT) size += 2*2;
-		else if (bits == ENCODER_HI_BIT) size += 2*3;
-		else if (bits == ENCODER_BITS) size += 2*6;
-	}
-	else switch (cmd)
-	{
-		case GET_HOME_REF:
-			size = 12;
-			break;
-		case SET_BAUD:
-		case INSERT_MARKER:
-			size = 1;
-			break;
-		case GET_MAXES:
-			size = 24;
-			break;
-		case HOME_POS:
-		case END_SESSION:
-		case REPORT_MOTION:
-			size = 0;
-			break;
-		case GET_PARAMS:
-		case GET_PROD_NAME:
-		case GET_PROD_ID:
-		case GET_MODEL_NAME:
-		case GET_SERNUM:
-		case GET_COMMENT:
-		case GET_PRM_FORMAT:
-		case GET_VERSION:
-		case SET_PARAMS:
-		case SET_HOME:
-		case SET_HOME_REF:
-		case RESTORE_FACTORY:
-			size = -1;
+    if (cmd < CONFIG_MIN)
+    {
+        if (cmd & TIMER_BIT) size += 2;
+        bits = cmd & ANALOG_BITS;
+        if (bits == ANALOG_LO_BIT) size += 2 + 1;
+        else if (bits == ANALOG_HI_BIT) size += 4 + 1;
+        else if (bits == ANALOG_BITS) size += 8 + 1;
+        bits = cmd & ENCODER_BITS;
+        if (bits == ENCODER_LO_BIT) size += 2*2;
+        else if (bits == ENCODER_HI_BIT) size += 2*3;
+        else if (bits == ENCODER_BITS) size += 2*6;
+    }
+    else switch (cmd)
+    {
+        case GET_HOME_REF:
+            size = 12;
+            break;
+        case SET_BAUD:
+        case INSERT_MARKER:
+            size = 1;
+            break;
+        case GET_MAXES:
+            size = 24;
+            break;
+        case HOME_POS:
+        case END_SESSION:
+        case REPORT_MOTION:
+            size = 0;
+            break;
+        case GET_PARAMS:
+        case GET_PROD_NAME:
+        case GET_PROD_ID:
+        case GET_MODEL_NAME:
+        case GET_SERNUM:
+        case GET_COMMENT:
+        case GET_PRM_FORMAT:
+        case GET_VERSION:
+        case SET_PARAMS:
+        case SET_HOME:
+        case SET_HOME_REF:
+        case RESTORE_FACTORY:
+            size = -1;
                         break;
-	}
+    }
 
         return size;
 }
@@ -841,21 +841,21 @@ int hci_packet_size(int cmd)
  */
 void hci_invalidate_fields(hci_rec *hci)
 {
-	hci->timer_updated = 0;
-	hci->analog_updated[0] = 0;
-	hci->analog_updated[1] = 0;
-	hci->analog_updated[2] = 0;
-	hci->analog_updated[3] = 0;
-	hci->analog_updated[4] = 0;
-	hci->analog_updated[5] = 0;
-	hci->analog_updated[6] = 0;
-	hci->analog_updated[7] = 0;
-	hci->encoder_updated[0] = 0;
-	hci->encoder_updated[1] = 0;
-	hci->encoder_updated[2] = 0;
-	hci->encoder_updated[3] = 0;
-	hci->encoder_updated[4] = 0;
-	hci->encoder_updated[5] = 0;
+    hci->timer_updated = 0;
+    hci->analog_updated[0] = 0;
+    hci->analog_updated[1] = 0;
+    hci->analog_updated[2] = 0;
+    hci->analog_updated[3] = 0;
+    hci->analog_updated[4] = 0;
+    hci->analog_updated[5] = 0;
+    hci->analog_updated[6] = 0;
+    hci->analog_updated[7] = 0;
+    hci->encoder_updated[0] = 0;
+    hci->encoder_updated[1] = 0;
+    hci->encoder_updated[2] = 0;
+    hci->encoder_updated[3] = 0;
+    hci->encoder_updated[4] = 0;
+    hci->encoder_updated[5] = 0;
         hci->marker_updated = 0;
 }
 
@@ -867,107 +867,107 @@ void hci_invalidate_fields(hci_rec *hci)
  */
 hci_result hci_parse_packet(hci_rec *hci)
 {
-	int cmnd = hci->packet.cmd_byte, bits, temp;
-	hci_result result = SUCCESS;
-	byte *dp;
+    int cmnd = hci->packet.cmd_byte, bits, temp;
+    hci_result result = SUCCESS;
+    byte *dp;
         int *p, *q;
 
-	if (hci->packet.num_bytes_needed)
-	{
-		if (hci->packet.num_bytes_needed < 0)
-			result = BAD_PACKET;
-		else return NO_PACKET_YET;
+    if (hci->packet.num_bytes_needed)
+    {
+        if (hci->packet.num_bytes_needed < 0)
+            result = BAD_PACKET;
+        else return NO_PACKET_YET;
         }
 
-	if (hci->packet.error) result = hci_error(hci, BAD_PACKET);
+    if (hci->packet.error) result = hci_error(hci, BAD_PACKET);
 
-	if (result == SUCCESS)
+    if (result == SUCCESS)
         {
-		hci_invalidate_fields(hci);
-		dp = hci->packet.data;
-		if (cmnd < CONFIG_MIN)
-		{
-			bits = *dp++;
-			hci->buttons = bits;
+        hci_invalidate_fields(hci);
+        dp = hci->packet.data;
+        if (cmnd < CONFIG_MIN)
+        {
+            bits = *dp++;
+            hci->buttons = bits;
                         p = hci->button;
-			*p++ = bits & 0x01;
-			*p++ = bits & 0x02;
-			*p++ = bits & 0x04;
-			*p++ = bits & 0x08;
-			*p++ = bits & 0x10;
-			*p++ = bits & 0x20;
-			*p++ = bits & 0x40;
-			if (cmnd & TIMER_BIT)
-			{
-				temp = *dp++ << 7;
-				temp += *dp++;
-				hci->timer = temp;
-				hci->timer_updated = 1;
-			}
-			bits = (cmnd & ANALOG_BITS) >> 2;
-			if (bits--)
-			{
-				p = hci->analog;
+            *p++ = bits & 0x01;
+            *p++ = bits & 0x02;
+            *p++ = bits & 0x04;
+            *p++ = bits & 0x08;
+            *p++ = bits & 0x10;
+            *p++ = bits & 0x20;
+            *p++ = bits & 0x40;
+            if (cmnd & TIMER_BIT)
+            {
+                temp = *dp++ << 7;
+                temp += *dp++;
+                hci->timer = temp;
+                hci->timer_updated = 1;
+            }
+            bits = (cmnd & ANALOG_BITS) >> 2;
+            if (bits--)
+            {
+                p = hci->analog;
                                 q = hci->analog_updated;
-				*p++ = *dp++ << 1;
-				*p++ = *dp++ << 1;
-				*q++ = 1, *q++ = 1;
-				if (bits--)
-				{
-					*p++ = *dp++ << 1;
-					*p++ = *dp++ << 1;
-					*q++ = 1, *q++ = 1;
-					if (bits--)
-					{
-						*p++ = *dp++ << 1;
-						*p++ = *dp++ << 1;
-						*p++ = *dp++ << 1;
-						*p++ = *dp++ << 1;
-						*q++ = 1, *q++ = 1;
-						*q++ = 1, *q++ = 1;
-					}
-				}
-				p = hci->analog;
-				*p++ |= (*dp & 0x40 ? 1 : 0);
-				*p++ |= (*dp & 0x20 ? 1 : 0);
-				*p++ |= (*dp & 0x10 ? 1 : 0);
-				*p++ |= (*dp & 0x08 ? 1 : 0);
-				*p++ |= (*dp & 0x04 ? 1 : 0);
-				*p++ |= (*dp & 0x02 ? 1 : 0);
-				*p++ |= (*dp++ & 0x01 ? 1 : 0);
-			}
+                *p++ = *dp++ << 1;
+                *p++ = *dp++ << 1;
+                *q++ = 1, *q++ = 1;
+                if (bits--)
+                {
+                    *p++ = *dp++ << 1;
+                    *p++ = *dp++ << 1;
+                    *q++ = 1, *q++ = 1;
+                    if (bits--)
+                    {
+                        *p++ = *dp++ << 1;
+                        *p++ = *dp++ << 1;
+                        *p++ = *dp++ << 1;
+                        *p++ = *dp++ << 1;
+                        *q++ = 1, *q++ = 1;
+                        *q++ = 1, *q++ = 1;
+                    }
+                }
+                p = hci->analog;
+                *p++ |= (*dp & 0x40 ? 1 : 0);
+                *p++ |= (*dp & 0x20 ? 1 : 0);
+                *p++ |= (*dp & 0x10 ? 1 : 0);
+                *p++ |= (*dp & 0x08 ? 1 : 0);
+                *p++ |= (*dp & 0x04 ? 1 : 0);
+                *p++ |= (*dp & 0x02 ? 1 : 0);
+                *p++ |= (*dp++ & 0x01 ? 1 : 0);
+            }
 
-			bits = cmnd & ENCODER_BITS;
-			if (bits--)
-			{
-				p = hci->encoder;
+            bits = cmnd & ENCODER_BITS;
+            if (bits--)
+            {
+                p = hci->encoder;
                                 q = hci->encoder_updated;
-				*p = *dp++ << 7;
-				*p++ += *dp++;
-				*p = *dp++ << 7;
-				*p++ += *dp++;
-				*q++ = 1, *q++ = 1;
-				if (bits--)
-				{
-					*p = *dp++ << 7;
-					*p++ += *dp++;
-					*q++ = 1;
-					if (bits--)
-					{
-						*p = *dp++ << 7;
-						*p++ += *dp++;
-						*p = *dp++ << 7;
-						*p++ += *dp++;
-						*p = *dp++ << 7;
-						*p++ += *dp++;
-						*q++ = 1, *q++ = 1, *q++ = 1;
-					}
+                *p = *dp++ << 7;
+                *p++ += *dp++;
+                *p = *dp++ << 7;
+                *p++ += *dp++;
+                *q++ = 1, *q++ = 1;
+                if (bits--)
+                {
+                    *p = *dp++ << 7;
+                    *p++ += *dp++;
+                    *q++ = 1;
+                    if (bits--)
+                    {
+                        *p = *dp++ << 7;
+                        *p++ += *dp++;
+                        *p = *dp++ << 7;
+                        *p++ += *dp++;
+                        *p = *dp++ << 7;
+                        *p++ += *dp++;
+                        *q++ = 1, *q++ = 1, *q++ = 1;
+                    }
                                 }
-			}
-		}
-		else result = hci_parse_cfg_packet(hci);
-		hci->packet.parsed = 1;
-	}
+            }
+        }
+        else result = hci_parse_cfg_packet(hci);
+        hci->packet.parsed = 1;
+    }
 
         return result;
 }
@@ -978,65 +978,65 @@ hci_result hci_parse_packet(hci_rec *hci)
  */
 hci_result hci_parse_cfg_packet(hci_rec *hci)
 {
-	hci_result result = SUCCESS;
-	byte *dp = hci->packet.data;
+    hci_result result = SUCCESS;
+    byte *dp = hci->packet.data;
         int *p;
 
-	switch(hci->packet.cmd_byte)
-	{
-		case GET_HOME_REF:
-			p = hci->home_ref;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			break;
-		case GET_MAXES:
-			p = hci->button_supported;
-			*p++ = *dp & 0x01; *p++ = *dp & 0x02;
-			*p++ = *dp & 0x04; *p++ = *dp & 0x08;
-			*p++ = *dp & 0x10; *p++ = *dp & 0x20;
-			*p++ = *dp++ & 0x40;
+    switch(hci->packet.cmd_byte)
+    {
+        case GET_HOME_REF:
+            p = hci->home_ref;
+            *p = *dp++ << 8; *p++ += *dp++;
+            *p = *dp++ << 8; *p++ += *dp++;
+            *p = *dp++ << 8; *p++ += *dp++;
+            *p = *dp++ << 8; *p++ += *dp++;
+            *p = *dp++ << 8; *p++ += *dp++;
+            *p = *dp++ << 8; *p++ += *dp++;
+            break;
+        case GET_MAXES:
+            p = hci->button_supported;
+            *p++ = *dp & 0x01; *p++ = *dp & 0x02;
+            *p++ = *dp & 0x04; *p++ = *dp & 0x08;
+            *p++ = *dp & 0x10; *p++ = *dp & 0x20;
+            *p++ = *dp++ & 0x40;
 
-			hci->max_timer = *dp++ << 8;
-			hci->max_timer |= *dp++;
+            hci->max_timer = *dp++ << 8;
+            hci->max_timer |= *dp++;
 
-			p = hci->max_analog;
-			*p++ = *dp++; *p++ = *dp++; *p++ = *dp++;
-			*p++ = *dp++; *p++ = *dp++; *p++ = *dp++;
-			*p++ = *dp++; *p++ = *dp++;
-			p = hci->max_analog;
-			*p++ |= (0x40 & *dp ? 0x01 : 0);
-			*p++ |= (0x20 & *dp ? 0x01 : 0);
-			*p++ |= (0x10 & *dp ? 0x01 : 0);
-			*p++ |= (0x08 & *dp ? 0x01 : 0);
-			*p++ |= (0x04 & *dp ? 0x01 : 0);
-			*p++ |= (0x02 & *dp ? 0x01 : 0);
-			*p++ |= (0x01 & *dp++ ? 0x01 : 0);
+            p = hci->max_analog;
+            *p++ = *dp++; *p++ = *dp++; *p++ = *dp++;
+            *p++ = *dp++; *p++ = *dp++; *p++ = *dp++;
+            *p++ = *dp++; *p++ = *dp++;
+            p = hci->max_analog;
+            *p++ |= (0x40 & *dp ? 0x01 : 0);
+            *p++ |= (0x20 & *dp ? 0x01 : 0);
+            *p++ |= (0x10 & *dp ? 0x01 : 0);
+            *p++ |= (0x08 & *dp ? 0x01 : 0);
+            *p++ |= (0x04 & *dp ? 0x01 : 0);
+            *p++ |= (0x02 & *dp ? 0x01 : 0);
+            *p++ |= (0x01 & *dp++ ? 0x01 : 0);
 
-			p = hci->max_encoder;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			break;
-		case INSERT_MARKER:
-			hci->marker = *dp;
-			hci->marker_updated = 1;
-			break;
-		case HOME_POS:	/* No action needed */
-		case REPORT_MOTION:
-			break;
-		default:
-			result = BAD_PACKET;
-			break;
-	}
+            p = hci->max_encoder;
+            *p = *dp++ << 8; *p++ += *dp++;
+            *p = *dp++ << 8; *p++ += *dp++;
+            *p = *dp++ << 8; *p++ += *dp++;
+            *p = *dp++ << 8; *p++ += *dp++;
+            *p = *dp++ << 8; *p++ += *dp++;
+            *p = *dp++ << 8; *p++ += *dp++;
+            break;
+        case INSERT_MARKER:
+            hci->marker = *dp;
+            hci->marker_updated = 1;
+            break;
+        case HOME_POS:  /* No action needed */
+        case REPORT_MOTION:
+            break;
+        default:
+            result = BAD_PACKET;
+            break;
+    }
 
-	return result;
+    return result;
 }
 
 
@@ -1045,19 +1045,19 @@ hci_result hci_parse_cfg_packet(hci_rec *hci)
  */
 hci_result hci_read_string(hci_rec *hci, char *str)
 {
-	int port = hci->port_num, ch;
+    int port = hci->port_num, ch;
 
         host_start_timeout(port);
-	while (!host_timed_out(port))
-	{
-		ch=host_read_char(port);
-		if (ch != -1)
-		{
-			*str++ = (byte) ch;
-			if (ch == 0) return SUCCESS;
-		}
-	}
-	return TIMED_OUT;
+    while (!host_timed_out(port))
+    {
+        ch=host_read_char(port);
+        if (ch != -1)
+        {
+            *str++ = (byte) ch;
+            if (ch == 0) return SUCCESS;
+        }
+    }
+    return TIMED_OUT;
 }
 
 
@@ -1068,28 +1068,28 @@ hci_result hci_read_string(hci_rec *hci, char *str)
  */
 hci_result hci_read_block(hci_rec *hci, byte *block, int *num_bytes)
 {
-	int port = hci->port_num, ch, count;
+    int port = hci->port_num, ch, count;
 
-	count = *num_bytes;
-	*num_bytes = 0;
-	hci_slow_timeout(hci);
-	host_start_timeout(port);
-	while (!host_timed_out(port))
-	{
-		if (count < 0) count = host_read_char(port);
-		else
-		{
-			ch = host_read_char(port);
-			if (ch != -1)
-			{
-				*block++ = (byte) ch;
-				(*num_bytes)++;
-				if (--count == 0) return SUCCESS;
-			}
+    count = *num_bytes;
+    *num_bytes = 0;
+    hci_slow_timeout(hci);
+    host_start_timeout(port);
+    while (!host_timed_out(port))
+    {
+        if (count < 0) count = host_read_char(port);
+        else
+        {
+            ch = host_read_char(port);
+            if (ch != -1)
+            {
+                *block++ = (byte) ch;
+                (*num_bytes)++;
+                if (--count == 0) return SUCCESS;
+            }
                 }
-	}
+    }
 
-	return TIMED_OUT;
+    return TIMED_OUT;
 }
 
 
@@ -1106,9 +1106,9 @@ hci_result hci_read_block(hci_rec *hci, byte *block, int *num_bytes)
  */
 hci_result hci_simple_string(hci_rec *hci, hci_result condition)
 {
-	printf("\n**HCI Error: %s\n", condition);
+    printf("\n**HCI Error: %s\n", condition);
 
-	return condition;
+    return condition;
 }
 
 
@@ -1118,37 +1118,37 @@ hci_result hci_simple_string(hci_rec *hci, hci_result condition)
  */
 hci_result hci_error(hci_rec *hci, hci_result condition)
 {
-	hci_result (*handler)();
+    hci_result (*handler)();
 
-	/* These two are not really errors */
-	if (condition == SUCCESS) return SUCCESS;
-	if (condition == NO_PACKET_YET) return NO_PACKET_YET;
+    /* These two are not really errors */
+    if (condition == SUCCESS) return SUCCESS;
+    if (condition == NO_PACKET_YET) return NO_PACKET_YET;
 
-	/* These errors have handler pointers */
-	if (condition == BAD_PORT_NUM)
-		handler = hci->BAD_PORT_handler;
-	else if (condition == CANT_OPEN_PORT)
-		handler = hci->CANT_OPEN_handler;
-	else if (condition == NO_HCI)
-		handler = hci->NO_HCI_handler;
-	else if (condition == CANT_BEGIN)
-		handler = hci->CANT_BEGIN_handler;
-	else if (condition == TIMED_OUT)
-		handler = hci->TIMED_OUT_handler;
-	else if (condition == BAD_PACKET)
-		handler = hci->BAD_PACKET_handler;
-	else if (condition == BAD_PASSWORD)
-		handler = hci->BAD_PASSWORD_handler;
-	else if (condition == BAD_VERSION)
-		handler = hci->BAD_VERSION_handler;
-	else if (condition == BAD_FORMAT)
-		handler = hci->BAD_FORMAT_handler;
-	else handler = NULL;
+    /* These errors have handler pointers */
+    if (condition == BAD_PORT_NUM)
+        handler = hci->BAD_PORT_handler;
+    else if (condition == CANT_OPEN_PORT)
+        handler = hci->CANT_OPEN_handler;
+    else if (condition == NO_HCI)
+        handler = hci->NO_HCI_handler;
+    else if (condition == CANT_BEGIN)
+        handler = hci->CANT_BEGIN_handler;
+    else if (condition == TIMED_OUT)
+        handler = hci->TIMED_OUT_handler;
+    else if (condition == BAD_PACKET)
+        handler = hci->BAD_PACKET_handler;
+    else if (condition == BAD_PASSWORD)
+        handler = hci->BAD_PASSWORD_handler;
+    else if (condition == BAD_VERSION)
+        handler = hci->BAD_VERSION_handler;
+    else if (condition == BAD_FORMAT)
+        handler = hci->BAD_FORMAT_handler;
+    else handler = NULL;
 
-	if (handler == NULL) handler = hci->default_handler;
-	if (handler == NULL) return condition;
+    if (handler == NULL) handler = hci->default_handler;
+    if (handler == NULL) return condition;
 
-	return (*handler)(hci, condition);
+    return (*handler)(hci, condition);
 }
 
 
@@ -1163,37 +1163,37 @@ hci_result hci_error(hci_rec *hci, hci_result condition)
  */
 byte baud_to_code(long int baud)
 {
-	byte code;
+    byte code;
 
-	switch(baud)
-	{
-		case 115200:
-			code = 0x00;
-			break;
-		case 57600:
-			code = 0x01;
-			break;
-		case 28800:
-			code = 0x02;
-			break;
-		case 14400:
-			code = 0x03;
-			break;
-		case 38400:
-			code = 0x10;
-			break;
-		case 19200:
-			code = 0x11;
-			break;
-		case 9600:
-			code = 0x12;
-			break;
-		default:	/* When in doubt, use 9600 */
-			code = 0x12;
-			break;
-	}
+    switch(baud)
+    {
+        case 115200:
+            code = 0x00;
+            break;
+        case 57600:
+            code = 0x01;
+            break;
+        case 28800:
+            code = 0x02;
+            break;
+        case 14400:
+            code = 0x03;
+            break;
+        case 38400:
+            code = 0x10;
+            break;
+        case 19200:
+            code = 0x11;
+            break;
+        case 9600:
+            code = 0x12;
+            break;
+        default:    /* When in doubt, use 9600 */
+            code = 0x12;
+            break;
+    }
 
-	return code;
+    return code;
 }
 
 
@@ -1202,37 +1202,37 @@ byte baud_to_code(long int baud)
  */
 long int code_to_baud(byte code)
 {
-	long int baud;
+    long int baud;
 
-	switch(code)
-	{
-		case 0x00:
-			baud = 115200;
-			break;
-		case 0x01:
-			baud = 57600;
-			break;
-		case 0x02:
-			baud = 28800;
-			break;
-		case 0x03:
-			baud = 14400;
-			break;
-		case 0x10:
-			baud = 38400;
+    switch(code)
+    {
+        case 0x00:
+            baud = 115200;
+            break;
+        case 0x01:
+            baud = 57600;
+            break;
+        case 0x02:
+            baud = 28800;
+            break;
+        case 0x03:
+            baud = 14400;
+            break;
+        case 0x10:
+            baud = 38400;
                         break;
-		case 0x11:
-			baud = 19200;
-			break;
-		case 0x12:
-			baud = 9600;
+        case 0x11:
+            baud = 19200;
+            break;
+        case 0x12:
+            baud = 9600;
                         break;
-		default:	/* When in doubt, use 9600 */
-			baud = 9600;
-			break;
-	}
+        default:    /* When in doubt, use 9600 */
+            baud = 9600;
+            break;
+    }
 
-	return baud;
+    return baud;
 }
 
 
@@ -1241,7 +1241,7 @@ long int code_to_baud(byte code)
  */
 void hci_strcopy(char *from, char *to)
 {
-	while(*to++ = *from++);
+    while(*to++ = *from++);
 }
 
 
@@ -1251,10 +1251,10 @@ void hci_strcopy(char *from, char *to)
  */
 int hci_strcmp(char *s1, char *s2)
 {
-	int match;
+    int match;
 
-	while(*s1 && (match = (*s1++ == *s2++)) );
-	return match;
+    while(*s1 && (match = (*s1++ == *s2++)) );
+    return match;
 }
 
 

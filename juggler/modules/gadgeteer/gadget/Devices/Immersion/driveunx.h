@@ -19,7 +19,7 @@
 #ifndef _DRIVEUNIX_H
 #define _DRIVEUNIX_H
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 /* Public constants */
 #define NUM_PORTS 4

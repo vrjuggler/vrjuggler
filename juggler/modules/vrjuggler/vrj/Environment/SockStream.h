@@ -33,12 +33,12 @@
 #ifndef _VRJ_SOCKSTREAM_H_
 #define _VRJ_SOCKSTREAM_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 namespace vrj
 {
-   
-class VJ_CLASS_API sockstreambuf : public std::streambuf 
+
+class VJ_CLASS_API sockstreambuf : public std::streambuf
 {
 public:
 

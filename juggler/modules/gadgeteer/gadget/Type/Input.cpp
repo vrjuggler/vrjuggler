@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Assert.h>
@@ -41,7 +41,7 @@
 
 namespace vrj
 {
-   
+
 Input::Input()
  : sPort(NULL),
    instName(""),

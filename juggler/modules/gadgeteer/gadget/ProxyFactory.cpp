@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Input/Type/AnalogProxy.h>
 #include <vrj/Input/Type/DigitalProxy.h>
@@ -46,7 +46,7 @@
 
 namespace vrj
 {
-   
+
 // Initialize the singleton ptr
 //vjProxyFactory* ProxyFactory::mInstance = NULL;
 //vjSingletonImp( ProxyFactory ); // kevin

@@ -1,5 +1,5 @@
-#include <vrj/vjConfig.h> // for DEG2RAD macro
-#include <fstream.h>		// for ifstream
+#include <vrj/vrjConfig.h> // for DEG2RAD macro
+#include <fstream.h>        // for ifstream
 #include "KeyFramer.h"
 #include <vrj/Util/Debug.h>
 #include <vrj/Math/Math.h>
@@ -12,28 +12,28 @@ namespace kev
       KeyFramerExporter()
       {
       }
-   
+
       void execute( const char* const filename, const kev::KeyFramer& kf )
       {
          #ifdef WIN32
-		   ofstream frames_file( filename, ios::out | ios::binary, filebuf::openprot );
-		   #else
-		   ofstream frames_file( filename, ios::out, filebuf::openprot );
-		   #endif
+           ofstream frames_file( filename, ios::out | ios::binary, filebuf::openprot );
+           #else
+           ofstream frames_file( filename, ios::out, filebuf::openprot );
+           #endif
 
          if (!frames_file.rdbuf()->is_open())
          {
             vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrYELLOW) << "WARNING: "
                            << clrRESET
-                           << "couldn't open keyframe file: " 
+                           << "couldn't open keyframe file: "
                            << filename <<"\n"
                            << vjDEBUG_FLUSH;
             return;
          }
-         
+
          vjDEBUG(vjDBG_ALL,0) << "Writing keyframe(s) to file: "
                 <<filename<<"\n"<<vjDEBUG_FLUSH;
-         
+
          std::map<float, kev::KeyFramer::Key>::const_iterator it1 = kf.keys().begin();
          for (; it1 != kf.keys().end(); ++it1)
          {
@@ -44,12 +44,12 @@ namespace kev
             float deg;
             vrj::Vec3 vec;
             quat.getRot( deg, vec[0], vec[1], vec[2] );
-            deg = vrj::Math::rad2deg( deg ); 
+            deg = vrj::Math::rad2deg( deg );
             frames_file<<time<<" "<<pos[0]<<" "<<pos[1]<<" "
                        <<pos[2]<<" "<<deg<<" "<<vec[0]<<" "
                        <<vec[1]<<" "<<vec[2]<<"\n";
          }
          frames_file.close();
-      }   
+      }
    };
 };

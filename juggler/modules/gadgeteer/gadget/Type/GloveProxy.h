@@ -39,7 +39,7 @@
 #ifndef _VRJ_GLOVE_PROXY_H_
 #define _VRJ_GLOVE_PROXY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <math.h>
 
 #include <vrj/Input/Type/Glove.h>
@@ -47,7 +47,7 @@
 
 namespace vrj
 {
-   
+
 //: Glove proxy class.
 //!PUBLIC_API:
 class VJ_CLASS_API GloveProxy : public TypedProxy<Glove>

@@ -34,14 +34,14 @@
 #define _VRJ_SIM_DIGITAL_H
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Input/Type/Digital.h>
 #include <vrj/Input/Devices/Sim/SimInput.h>
 
 namespace vrj
 {
-   
+
 //: Simulated digital device
 // Simulates a digital device from a keyboard device.
 // It allows any number of simulated digital devices to be created.

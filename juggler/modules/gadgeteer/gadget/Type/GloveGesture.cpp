@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/GloveGesture.h>
 
 namespace vrj
 {
-   
+
 //: Get a gesture name
 //! RETURNS: (gestureId in range) - string desc of gesture
 //! RETURNS: (gesture not in range) - empty string

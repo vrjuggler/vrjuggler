@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Input/Type/Proxy.h>
 #include <vrj/Util/Debug.h>
@@ -49,7 +49,7 @@ namespace vrj
 
 // Local helpers
 bool recognizeProxyAlias( ConfigChunk* chunk );
-   
+
 /**********************************************************
   InputManager::InputManager()
 

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Config/ParseUtil.h>
 #include <vrj/Config/ChunkDesc.h>
@@ -40,7 +40,7 @@
 
 namespace vrj
 {
-   
+
 PropertyDesc::PropertyDesc () : valuelabels(), enumv() {
     validation = 1;
     name = "";
@@ -110,7 +110,7 @@ const std::string& PropertyDesc::getValueLabel (unsigned int i) const {
 }
 
 
-void PropertyDesc::appendEnumeration (const std::string& _label, 
+void PropertyDesc::appendEnumeration (const std::string& _label,
                                         const std::string& _value) {
     VarValue *v;
     // this is slightly kludgey.  We make a varvalue to store the enumeration
@@ -128,7 +128,7 @@ void PropertyDesc::appendEnumeration (const std::string& _label,
     else {
         if (_value == "")
             *v = enum_val;
-        else 
+        else
             *v = _value;
         //*v = (_value == "")?enum_val:_value;
     }

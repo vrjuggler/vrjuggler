@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Viewport.h>
@@ -39,7 +39,7 @@
 
 namespace vrj
 {
-   
+
 void Display::updateProjections()
 {
    for(unsigned i=0;i<mViewports.size();i++)

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vrj/Config/ChunkFactory.h>
 #include <vrj/Config/PropertyDesc.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 Property::Property (PropertyDesc *pd): value() {
     //cout << "vjProperty(): desc is '" << flush << *pd << "'" << endl;
     int j;

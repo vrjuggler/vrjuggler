@@ -33,7 +33,7 @@
 #ifndef _VRJ_DIVERSE_TOOLKIT_H_
 #define _VRJ_DIVERSE_TOOLKIT_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Digital.h>
 #include <vrj/Input/Type/Analog.h>
 #include <vrj/Input/Type/Position.h>
@@ -41,7 +41,7 @@
 
 namespace vrj
 {
-   
+
 class DTKMemorySegment;
 typedef DTKMemorySegment* DTKMemorySegmentHandle;
 
@@ -63,7 +63,7 @@ public:
     //! POST: Shared memory is released
     // ------------------------------------------------------------------------
    virtual ~DTK();
-   
+
 //: configure the flock with a config chunk
     virtual bool config(ConfigChunk* c);
 
@@ -111,31 +111,31 @@ public:
 //: see if the DTK is active or not
     inline bool isActive() { return active; };
 
-private:   
+private:
     int getStationIndex(int stationNum, int bufferIndex);
 
 //: DTK related data (could be in a wrapper, but not necessary)
 
     bool active;
-    
-    dtkClient*		_client;
-    
-    int numPositional;    
+
+    dtkClient*      _client;
+
+    int numPositional;
     int numDigital;
-    int numAnalog; 
+    int numAnalog;
     int numSegments;
-    
+
     DTKMemorySegmentHandle *_dtkSegments;
-    int	*mDigitalData;
+    int *mDigitalData;
     float *mAnalogData;
-    char*		port;
+    char*       port;
 
 //: Start the DTK Client Connection
     bool startDTK();
-    
+
 //: Stop the DTK Client Connection
     bool stopDTK();
-    
+
 };
 
 };

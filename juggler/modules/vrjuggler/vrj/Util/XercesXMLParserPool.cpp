@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <util/PlatformUtils.hpp>
 #include <vrj/Util/XercesXMLParserPool.h>
 
 namespace vrj
 {
-   
+
 XercesXMLParserPool::XercesXMLParserPool () {
     // Initialize the XML4C2 system
     try {

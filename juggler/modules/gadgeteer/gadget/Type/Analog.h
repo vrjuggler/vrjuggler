@@ -38,13 +38,13 @@
 #ifndef _VRJ_ANALOG_H_
 #define _VRJ_ANALOG_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vrj/Util/Debug.h>
 
 namespace vrj
 {
-   
+
 //-----------------------------------------------------------------------------
 //: Analog is the abstract base class that devices with digital data derive
 //+ from.

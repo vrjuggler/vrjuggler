@@ -34,13 +34,13 @@
 #define _VRJ_VEC3_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <math.h>
 #include <vrj/Math/Math.h>
 
 namespace vrj
 {
-   
+
 class Matrix;
 
 //----------------------------------------------------------------
@@ -77,8 +77,8 @@ public:
               vec[2] == _v[2]);
    }
 
-   //: Compute dot product 
-   //! RETURNS: Dot product of this and _v (returns 
+   //: Compute dot product
+   //! RETURNS: Dot product of this and _v (returns
    //! RETURNS:      cos of the angle [this] and [v] make)
    float dot(const Vec3&  _v) const {
       return (vec[0] * _v[0] +
@@ -184,7 +184,7 @@ public:
    {
       Vec3 offset = b - a;
       (*this) = a + (offset * n);
-   }   
+   }
 public:
    //: Assignment Operators
    Vec3&  operator =(const Vec3& _v)

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <sax/SAXParseException.hpp>
 #include <stdlib.h>
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
 void XercesXMLError::warning(const SAXParseException&)
 {
     //
@@ -54,10 +54,10 @@ void XercesXMLError::warning(const SAXParseException&)
 void XercesXMLError::error(const SAXParseException& toCatch)
 {
 //      cerr << "Error at file \"" << DOMString(toCatch.getSystemId())
-//  		 << "\", line " << toCatch.getLineNumber()
-//  		 << ", column " << toCatch.getColumnNumber()
+//           << "\", line " << toCatch.getLineNumber()
+//           << ", column " << toCatch.getColumnNumber()
 //           << "\n   Message: " << DOMString(toCatch.getMessage()) << endl;
-    throw SAXParseException(toCatch);  // Copy the 'toCatch' object before throwing - 
+    throw SAXParseException(toCatch);  // Copy the 'toCatch' object before throwing -
                                        //   otherwise we would be throwing a reference to
                                        //   a local object that gets destroyed before
                                        //   the catch.
@@ -66,8 +66,8 @@ void XercesXMLError::error(const SAXParseException& toCatch)
 void XercesXMLError::fatalError(const SAXParseException& toCatch)
 {
 //      cerr << "Fatal Error at file \"" << DOMString(toCatch.getSystemId())
-//  		 << "\", line " << toCatch.getLineNumber()
-//  		 << ", column " << toCatch.getColumnNumber()
+//           << "\", line " << toCatch.getLineNumber()
+//           << ", column " << toCatch.getColumnNumber()
 //           << "\n   Message: " << DOMString(toCatch.getMessage()) << endl;
     throw SAXParseException(toCatch);
 }

@@ -46,7 +46,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <stdio.h>    // for perror(3C)
 #include <sys/types.h>   // for open(2)
 #include <sys/stat.h>    // for open(2)
@@ -365,7 +365,7 @@ void ThreeDMouse::cuResetControlUnit ()
 ///////////////////////////////////////////////////////////////////////////////
 void ThreeDMouse::getDiagnostics ( char data[])
 {
-  ThreeDMouse::cuRequestDiagnostics ();	/* command diagnostics */
+  ThreeDMouse::cuRequestDiagnostics (); /* command diagnostics */
   vpr::System::sleep(1);
   read (mouseFD, data, DIAGNOSTIC_SIZE);
 }
@@ -414,9 +414,9 @@ int ThreeDMouse::getRecord ( vrj::POS_DATA* data)
 //////////////////////////////////////////////////////////////////////////////
 void ThreeDMouse::resetControlUnit ()
 {
-  ThreeDMouse::cuDemandReporting ();	/* make sure control unit is processing */
-  vpr::System::usleep ((long) 100000);	/* wait 10 clock ticks = 100 ms */
-  ThreeDMouse::cuResetControlUnit ();	/* command a reset */
+  ThreeDMouse::cuDemandReporting ();    /* make sure control unit is processing */
+  vpr::System::usleep ((long) 100000);  /* wait 10 clock ticks = 100 ms */
+  ThreeDMouse::cuResetControlUnit ();   /* command a reset */
   vpr::System::sleep(1);
 }
 

@@ -33,14 +33,14 @@
 #ifndef _VRJ_LINEAR_SIGMOID_POS_FILTER_H_
 #define _VRJ_LINEAR_SIGMOID_POS_FILTER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Input/Type/PosFilter.h>
 #include <vrj/Math/Quat.h>
 
 namespace vrj
 {
-   
+
 //: A pos filter class that uses a linear sigmoid
 class LinearSigmoidPosFilter : public PosFilter
 {

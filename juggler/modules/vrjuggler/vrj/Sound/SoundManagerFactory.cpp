@@ -1,4 +1,4 @@
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #ifdef USE_AUDIOJUGGLER
 #include <vrj/Sound/ajSoundManager.h>

@@ -34,7 +34,7 @@
 //
 // author: Christopher Just
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Environment/Connect.h>
@@ -49,7 +49,7 @@
 
 namespace vrj
 {
-   
+
 EnvironmentManager::EnvironmentManager():
                           connections(),
                           perf_buffers(),

@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/SystemFactoryWin32.h>
 
 namespace vrj
 {
-   
+
 
 //SystemFactoryWin32* SystemFactoryWin32::_instance = NULL;
 vprSingletonImp(SystemFactoryWin32);

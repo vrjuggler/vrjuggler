@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Config/ParseUtil.h>
 #include <vpr/Util/Assert.h>
@@ -41,7 +41,7 @@
 
 namespace vrj
 {
-   
+
 ChunkDesc::ChunkDesc () :plist() {
     validation = 1;
     name = "unnamed";
@@ -232,7 +232,7 @@ VJ_IMPLEMENT(std::ostream&) operator << (std::ostream& out,
 {
     self.assertValid();
 
-    out << self.token.c_str() << " \"" << self.name.c_str() << "\" \"" 
+    out << self.token.c_str() << " \"" << self.name.c_str() << "\" \""
         << self.help.c_str() << '"' << std::endl;
     for (unsigned int i = 0; i < self.plist.size(); i++)
         out << "  " << *(self.plist[i]) << std::endl;
@@ -248,7 +248,7 @@ VJ_IMPLEMENT(std::istream&) operator >> (std::istream& in, ChunkDesc& self)
     const int buflen = 512;
     char str[buflen];
     PropertyDesc *p;
-    
+
     readString (in, str, buflen);
     self.token = str;
 
@@ -265,7 +265,7 @@ VJ_IMPLEMENT(std::istream&) operator >> (std::istream& in, ChunkDesc& self)
         */
     }
     self.plist.clear();
-    
+
     // this could use improvement
     do {
         p = new PropertyDesc();
@@ -278,7 +278,7 @@ VJ_IMPLEMENT(std::istream&) operator >> (std::istream& in, ChunkDesc& self)
         }
         self.add(p);
     } while (!in.eof());
-    
+
     if (!self.getPropertyDesc ("name"))
         self.plist.insert (self.plist.begin(), new PropertyDesc("name",1,T_STRING," "));
     return in;

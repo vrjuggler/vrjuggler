@@ -33,7 +33,7 @@
 #ifndef _VJ_GL_WINDOW_H_
 #define _VJ_GL_WINDOW_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <stdio.h>
 #ifdef VJ_OS_Darwin
@@ -51,7 +51,7 @@ namespace vrj
 
 class Projection;
 class CameraProjection;
-   
+
 //-------------------------------------------------------
 //: Represent cross-platform interface to OpenGL windows
 //-------------------------------------------------------

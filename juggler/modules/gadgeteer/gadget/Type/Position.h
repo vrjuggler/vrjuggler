@@ -39,7 +39,7 @@
 #ifndef _VRJ_POSITION_H_
 #define _VRJ_POSITION_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <typeinfo>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Math/Vec3.h>
@@ -48,7 +48,7 @@
 
 namespace vrj
 {
-   
+
 typedef struct {
   Vec3 pos, orient;   // orient - EulerZYX , 0-Z, 1-Y, 2-X ???
   //float x,y,z,azi,elev,roll;

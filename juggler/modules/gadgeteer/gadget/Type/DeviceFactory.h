@@ -34,7 +34,7 @@
 #define _VRJ_DEVICE_FACTORY_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vpr/Util/Singleton.h>
@@ -44,7 +44,7 @@
 
 namespace vrj
 {
-   
+
 //: Base class for virtual construction of devices
 // Implementations of this class are registered with the device factory
 // for each device in the system

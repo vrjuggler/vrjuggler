@@ -33,18 +33,18 @@
 #ifndef _VRJ_TIMESTAMP_POSIX_H_
 #define _VRJ_TIMESTAMP_POSIX_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <sys/time.h>
 
 namespace vrj
 {
-   
+
 //-----------------------------------------
 //:Portable time recorder for Unix/Linux systems
 //
 //     This version of TimeStamp uses the gettimeofday()
 //     system call to collect timing information.  While
-//     it is probably not as high resolution as 
+//     it is probably not as high resolution as
 //     TimeStampSGI, it should be portable accross all
 //     Unix and Unix-like OSes
 //
@@ -60,15 +60,15 @@ class TimeStampPosix {
 public:
 
     static void initialize() {
-	struct timeval t;
-	gettimeofday (&t, 0);
+    struct timeval t;
+    gettimeofday (&t, 0);
         initval = t.tv_sec * 1000000 + t.tv_usec;
     }
 
 
 
     TimeStampPosix() {
-	set();
+    set();
     }
 
 
@@ -78,36 +78,36 @@ public:
 
 
     void set() {
-	struct timeval tp;
-	gettimeofday (&tp, 0);
+    struct timeval tp;
+    gettimeofday (&tp, 0);
         val = tp.tv_sec * 1000000 + tp.tv_usec;
     }
 
 
 
     float usecs() const {
-	return val - initval;
+    return val - initval;
     }
 
 
 
     //: returns number of microseconds between self and t2
     //! PRE: t2 is stamped with an earlier time than self
-    //! 
+    //!
     float operator - (const TimeStampPosix& t2) const {
-	return (usecs() - t2.usecs());
+    return (usecs() - t2.usecs());
     }
 
 
     float diff (TimeStampPosix& ts) {
-	return ts.val - val;
+    return ts.val - val;
     }
 
 
 
     friend std::ostream& operator << (std::ostream& out, TimeStampPosix& ts) {
-	out << ts.usecs();
-	return out;
+    out << ts.usecs();
+    return out;
     }
 
 

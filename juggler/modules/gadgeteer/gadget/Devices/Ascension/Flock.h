@@ -45,7 +45,7 @@
 #ifndef _VRJ_ASCENSION_FLOCK_OF_BIRDS_H_
 #define _VRJ_ASCENSION_FLOCK_OF_BIRDS_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vpr/Thread/Thread.h>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Input/Type/Position.h>
@@ -53,7 +53,7 @@
 
 namespace vrj
 {
-   
+
 //----------------------------------------------------------------------------
 //: Position derived class for running a Flock of Birds.
 //: , also a wrapper class for the real ascension flock class "FlockStandalone"

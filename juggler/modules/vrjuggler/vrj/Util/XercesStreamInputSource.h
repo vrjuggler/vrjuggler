@@ -33,7 +33,7 @@
 #ifndef _VRJ_XERCESSTREAMINPUTSOURCE_H_
 #define _VRJ_XERCESSTREAMINPUTSOURCE_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <sax/InputSource.hpp>
 #include <util/BinInputStream.hpp>
@@ -41,12 +41,12 @@
 
 namespace vrj
 {
-   
+
 //: Xerces-XML compatible InputSource wrapper for std::istream.
-//  The stream has some kind of a terminating symbole (e.g. 
-//  "&lt;/protocol&gt;").  The InputSource stops reading 
+//  The stream has some kind of a terminating symbole (e.g.
+//  "&lt;/protocol&gt;").  The InputSource stops reading
 //  <i>immediately</i> upon seeing the end of the terminator string.
-//  This is useful for grabbing sections of an XML document out of 
+//  This is useful for grabbing sections of an XML document out of
 //  a larger data stream, such as we have with VjControl and Juggler's
 //  Environment Manager.
 class XercesStreamInputSource: public InputSource {

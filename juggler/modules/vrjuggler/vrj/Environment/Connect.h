@@ -33,7 +33,7 @@
 #ifndef _VRJ_CONNECT_H_
 #define _VRJ_CONNECT_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <queue>
 #include <vpr/Thread/Thread.h>
@@ -45,7 +45,7 @@
 
 namespace vrj
 {
-   
+
 class TimedUpdate;
 class ConfigChunk;
 
@@ -60,8 +60,8 @@ enum ConnectMode { VJC_INTERACTIVE, VJC_INPUT, VJC_OUTPUT };
 class VJ_CLASS_API Connect {
  public:
 
-    Connect (Socket* s, const std::string& _name="unnamed", 
-	       ConnectMode _mode = VJC_INTERACTIVE);
+    Connect (Socket* s, const std::string& _name="unnamed",
+           ConnectMode _mode = VJC_INTERACTIVE);
 
 
 
@@ -82,8 +82,8 @@ class VJ_CLASS_API Connect {
     //! NOTE: The name is the same as the name of the ConfigChunk that
     //+       represents it.
     std::string getName () {
-	//cout << "name of this thing is " << name << endl;
-	return name;
+    //cout << "name of this thing is " << name << endl;
+    return name;
     }
 
 
@@ -114,7 +114,7 @@ class VJ_CLASS_API Connect {
     void sendDisconnect();
 
     //: Attaches a timed update object to this connection
-    //! ARGS: _tu - a TimedUpdate* 
+    //! ARGS: _tu - a TimedUpdate*
     //! ARGS: _refresh_time - time between refreshes, in milliseconds
     void addTimedUpdate (TimedUpdate* _tu, float _refresh_time);
 
@@ -141,9 +141,9 @@ private:
 
     //: used for storing Command* in a priority queue
     struct CommandPtrCmp {
-	bool operator() (const Command* a, const Command* b) {
-	    return (a->next_fire_time > b->next_fire_time);
-	}
+    bool operator() (const Command* a, const Command* b) {
+        return (a->next_fire_time > b->next_fire_time);
+    }
     };
 
 

@@ -33,14 +33,14 @@
 #ifndef _VRJ_XERCESXMLERROR_H_
 #define _VRJ_XERCESXMLERROR_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <util/XercesDefs.hpp>
 #include <sax/ErrorHandler.hpp>
 
 namespace vrj
 {
-   
+
 
 class XercesXMLError : public ErrorHandler
 {
@@ -51,7 +51,7 @@ public:
 
     ~XercesXMLError()
     {
-    } 
+    }
 
 
     void warning(const SAXParseException& toCatch);

@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Util/XercesStreamInputSource.h>
 #include <vrj/Util/XercesStreamInputStream.h>
 
 namespace vrj
 {
-   
+
 XercesStreamInputSource::XercesStreamInputSource (std::istream& _in, char const * _terminator) {
     in = &_in;
     terminator = strdup (_terminator);

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #ifdef VJ_OS_Win32
 #include <winsock2.h>
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
 const size_t sockstreambuf::BUFSIZE = 128;
 
 
@@ -66,13 +66,13 @@ sockstreambuf::sockstreambuf () {
 
 int sockstreambuf::overflow (int c) {
     //std::cout << "overflow: pbase is " << (int)pbase() << " and msg size is " << (int)(pptr()-pbase()) << std::endl;
-    
+
     send (sock, pbase(), pptr()-pbase(), 0);
     setp (buf+BUFSIZE, buf+2*BUFSIZE);          //set the put area
     if (c != EOF)
         sputc(c);
     return 1;
-    
+
 }
 
 

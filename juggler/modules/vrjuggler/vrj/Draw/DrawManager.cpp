@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Draw/DrawManager.h>
 
 namespace vrj
 {
-   
+
 void DrawManager::setDisplayManager(DisplayManager* _dispMgr)
 { mDisplayManager = _dispMgr; }
 

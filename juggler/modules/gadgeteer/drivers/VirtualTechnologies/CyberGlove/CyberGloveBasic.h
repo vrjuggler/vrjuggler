@@ -33,7 +33,7 @@
 #ifndef _CYBER_GLOVE_BASIC_H_
 #define _CYBER_GLOVE_BASIC_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <stdio.h>
 
@@ -81,7 +81,7 @@ struct CYBER_GLOVE_DATA {
  */
 class CyberGloveBasic
 {
-public:	
+public:
 
      //: Construct a cyber glove
      // initializes hand & opens hand on serport
@@ -187,7 +187,7 @@ public:
     char*   mSerialPort;         // The serial port to use
     int     mBaudRate;           // The baud rate to use
 
-    bool    mItsOpen;	         //: Is the glove open
+    bool    mItsOpen;            //: Is the glove open
 
 
 private:
@@ -202,29 +202,29 @@ private:
 
     // vt_virtual_hand.cpp
     VirtualHand vt_create_VirtualHand(char *port, int baud,
-					 AppDataStruct &app );
+                     AppDataStruct &app );
     void vt_destroy_VirtualHand(VirtualHand hand);
     void *vt_hand_receiver_map_address(VirtualHand hand);
     VirtualHand vt_virtual_hand_from_glove_id(int glove_id);
     void vt_build_hand_matrices(VirtualHand hand);
     void vt_build_flexed_hand_matrices(VirtualHand hand,
-					  matrix4x4 palm_matrix,
-				   matrix4x4 finger_matrix[][MAX_SENSOR_GROUPS]);
+                      matrix4x4 palm_matrix,
+                   matrix4x4 finger_matrix[][MAX_SENSOR_GROUPS]);
     void vt_build_hand_pos_orient_matrix(VirtualHand hand,
-					    matrix4x4 hand_matrix);
+                        matrix4x4 hand_matrix);
     void vt_request_new_hand_data(VirtualHand hand);
     void vt_update_hand_state(VirtualHand hand);
     float vt_calc_thumb_roll(VirtualHand hand);
     void init_VirtualHand(VirtualHand hand, int glove_index,
-		 char calfile[],
-		 Boolean visible);
+         char calfile[],
+         Boolean visible);
 
     // vt_read_user_cal.cpp
     int vt_geom_in(FILE *inputfp, UserGeometry user);
     void vt_geom_out( FILE *outputfp, UserGeometry user);
     int vt_read_glove_calibration(FILE *infile, CbGlove glove);
     void vt_write_glove_calibration(FILE *outputfp, CbGlove glove,
-				       char *version_string);
+                       char *version_string);
     int vt_hand_read(VirtualHand hand, char *filename);
     int vt_hand_write(VirtualHand hand, char *filename, char *version_string);
 
@@ -242,7 +242,7 @@ private:
     void vt_unprocess_glove_angles(void);
     unsigned long vt_get_glove_param_flags(void);
     void vt_glove_private_fieldoffset(int finger, int joint,
-					 int *offset, int *gain);
+                     int *offset, int *gain);
     int vt_read_glove_data(void);
     int vt_read_processed_glove_data(void);
     int vt_send_glove_command(int id, ...);
@@ -311,4 +311,4 @@ private:
 
 };
 
-#endif	/* _CYBERGLOVE_H_ */
+#endif  /* _CYBERGLOVE_H_ */

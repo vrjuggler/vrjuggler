@@ -1,10 +1,10 @@
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Display/Viewport.h>
 
 namespace vrj
 {
-   
+
 void Viewport::config(ConfigChunk* chunk)
 {
    vprASSERT(chunk != NULL);

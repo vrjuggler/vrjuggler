@@ -50,7 +50,7 @@
 #ifndef _LOGICLASS_H_
 #define _LOGICLASS_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Input/Type/Position.h>    // The base class for vr_devices
 #include <vrj/Math/Vec3.h>

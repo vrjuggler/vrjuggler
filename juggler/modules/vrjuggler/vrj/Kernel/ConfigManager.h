@@ -32,7 +32,7 @@
 #ifndef _VRJ_CONFIG_MANGER_H_
 #define _VRJ_CONFIG_MANGER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <list>
 

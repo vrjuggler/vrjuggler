@@ -34,7 +34,7 @@
 #define _VRJ_SIM_DISPLAY_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Math/Matrix.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Input/Type/PosInterface.h>
@@ -45,7 +45,7 @@
 
 namespace vrj
 {
-   
+
 class SimViewport : public Viewport
 {
 public:

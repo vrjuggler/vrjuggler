@@ -33,13 +33,13 @@
 #ifndef _VRJ_PROPERTY_H_
 #define _VRJ_PROPERTY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/VarValue.h>
 #include <vrj/Config/PropertyDesc.h>
 
 namespace vrj
 {
-   
+
 class ChunkDesc;
 
 

@@ -9,7 +9,7 @@
 /*  --    Authors: William Chapin and Larry Edwards         --  */
 /*  ==========================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #ifdef HAVE_SYS_STDSYMS_H
 #   include <sys/stdsyms.h>
@@ -25,12 +25,12 @@
 #   include <sys/z8530.h>
 #else
     // These are taken from sys/z8530.h on IRIX.
-#   define LDISC1	1
-#   define SIOC		('z' << 8)
-#   define SIOC_EXTCLK	(SIOC | 1)
-#   define SIOC_RS422	(SIOC | 2)
-#   define EXTCLK_OFF	0xff
-#   define RS422_OFF	0x0
+#   define LDISC1   1
+#   define SIOC     ('z' << 8)
+#   define SIOC_EXTCLK  (SIOC | 1)
+#   define SIOC_RS422   (SIOC | 2)
+#   define EXTCLK_OFF   0xff
+#   define RS422_OFF    0x0
 #endif
 
 #include <termios.h>
@@ -191,8 +191,8 @@ CyberGloveBasic::vt_serial_open(char *devname, int baudrate)
   temp_termio = termiotemplate;
   cfsetospeed(&temp_termio, baud_from_int(baudrate));
   cfsetispeed(&temp_termio, baud_from_int(baudrate));
-  temp_termio.c_cc[VMIN] = 0;	/* incoming char buffer size */
-  temp_termio.c_cc[VTIME] = 1;	/* timeout (in tenths of a second) */
+  temp_termio.c_cc[VMIN] = 0;   /* incoming char buffer size */
+  temp_termio.c_cc[VTIME] = 1;  /* timeout (in tenths of a second) */
 
   /* save old tty state */
   if (tcgetattr(portfd, &old_termio[portfd]) == -1)
@@ -246,7 +246,7 @@ CyberGloveBasic::vt_serial_close_ports(void)
   for (i=0; i < MAXNUMFILEDESCR; i++)
     if (strlen(open_port_names[i]) != 0)
       if (vt_serial_close(i) < Ok)
-	vt_print_error("vt_serial_close_ports");
+    vt_print_error("vt_serial_close_ports");
 }
 
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
@@ -308,14 +308,14 @@ timed_read(int filedescr, void *buffer, unsigned int numbytes)
     do
     {
       if ((num_bytes_read = read(filedescr,&((char *) buffer)[tot_bytes_read],
-				 numbytes-tot_bytes_read)) == -1)
+                 numbytes-tot_bytes_read)) == -1)
       {
-	setitimer(ITIMER_REAL,&value,NULL); /* turn off timer */
-	return (-1);
+    setitimer(ITIMER_REAL,&value,NULL); /* turn off timer */
+    return (-1);
       }
       tot_bytes_read += num_bytes_read;
     } while (tot_bytes_read < numbytes);
-    setitimer(ITIMER_REAL,&value,NULL);	/* turn off timer */
+    setitimer(ITIMER_REAL,&value,NULL); /* turn off timer */
     return (tot_bytes_read);
   }
 
@@ -458,7 +458,7 @@ CyberGloveBasic::vt_serial_read_string(int portfd, char *buffer, int length)
 
   for (num_bytes_read = 0; num_bytes_read < length; num_bytes_read++)
     if (((returnval = read(portfd,&buffer[num_bytes_read],1)) < 1) ||
-	(buffer[num_bytes_read] == 0))
+    (buffer[num_bytes_read] == 0))
       break;
 
   if (returnval == -1)
@@ -468,12 +468,12 @@ CyberGloveBasic::vt_serial_read_string(int portfd, char *buffer, int length)
   }
   else if (returnval == 0)
   {
-    buffer[num_bytes_read] = 0;	/* NULL terminate it just to be anal */
+    buffer[num_bytes_read] = 0; /* NULL terminate it just to be anal */
     vt_set_error("vt_serial_read_string",IO_ERROR5);
     return (-num_bytes_read);
   }
   else if (num_bytes_read == length)
-    buffer[length] = 0;		/* NULL terminate the sucker */
+    buffer[length] = 0;     /* NULL terminate the sucker */
   /* if none of the above ifs are true then we stopped because we hit a */
   /* string terminator so we don't have to terminate the string         */
 
@@ -497,7 +497,7 @@ CyberGloveBasic::vt_serial_read_line(int portfd, char *buffer, int length)
       break;
   }
 
-  buffer[index] = 0;		/* you're terminated f*cker! */
+  buffer[index] = 0;        /* you're terminated f*cker! */
 
   if (ch == -1)
     vt_print_error("vt_serial_read_line");

@@ -33,12 +33,12 @@
 #ifndef _VRJ_TIMED_UPDATE_H_
 #define _VRJ_TIMED_UPDATE_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 
 namespace vrj
 {
-   
+
 //------------------------------------------------
 //: Parent class for any object whose value can be read periodically by EM
 //
@@ -56,10 +56,10 @@ class VJ_CLASS_API TimedUpdate {
 
     //: writes the current contents of this TimedUpdate to out
     virtual void write (std::ostream& out) = 0;
-    
+
     //: gets a name associated with this object
     virtual const std::string& getName () const = 0;
-    
+
     //: gets a name of a protocol handler associated with this object
     //  This is used by the network communication system.
     virtual const std::string& getProtocolHandlerName() const = 0;

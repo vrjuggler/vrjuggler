@@ -37,7 +37,7 @@
 #ifndef _VRJ_INTERSENSE_H_
 #define _VRJ_INTERSENSE_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vector>
 #include <vpr/Thread/Thread.h>
 #include <vrj/Input/Type/Input.h>
@@ -65,7 +65,7 @@
 
 namespace vrj
 {
-   
+
 struct Isense_Data {
     int digital[IS_BUTTON_NUM];
     float analog[IS_ANALOG_NUM];

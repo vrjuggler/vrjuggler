@@ -33,7 +33,7 @@
 #ifndef _VRJ_FILE___IO_STUFF
 #define _VRJ_FILE___IO_STUFF
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <stdlib.h>
 #include <string>
@@ -42,13 +42,13 @@
 
 namespace vrj
 {
-  
-   
+
+
 class VJ_CLASS_API FileIO
 {
 public:
    // == "." by default
-   // this is in the form of: 
+   // this is in the form of:
    //     /home/users/me
    // or: ../../hi-man
    // or: ./rgbfiles
@@ -60,34 +60,34 @@ public:
 
    //: Returns a copy of s with all environment variable names replaced
    //+ with their values.
-   // if ${...} not found... then replaces it with "", and emits error 
+   // if ${...} not found... then replaces it with "", and emits error
    // message to console.
    static std::string replaceEnvVars( const std::string& s);
 
    //: is n an absolute path name?
-   // examples of one are: 
+   // examples of one are:
    // ${HOME}/filename
    // /home/vr/filename
    static bool isAbsolutePathName( const std::string& n );
-   
+
    // n is your filename
    // returns n with all ${...} names replaced with their env vars.
-   // if ${...} not found... then replaces it with "", and emits error 
+   // if ${...} not found... then replaces it with "", and emits error
    // message to console.
    static std::string demangleFileName( const std::string& n, std::string parentfile );
 
    // check if file exists... does a demangle on the name before checking
    static bool fileExists( const char* const name );
    static bool fileExists( const std::string& name );
-   
+
    // check if file exists in any of the registered paths
    // returns true if exists and the resolved filepath
    static bool fileExistsResolvePath( const char* const filename, std::string& realPath );
    static bool fileExistsResolvePath( const std::string& filename, std::string& realPath );
-   
+
    // TODO: remove this function, and move it's code into fileExistsResolvePath
    static std::string resolvePathForName( const char* const filename );
-   
+
    static std::vector<std::string> mPaths;
 };
 

@@ -33,7 +33,7 @@
 #ifndef _VRJ_TRACKD_SENSOR_H_
 #define _VRJ_TRACKD_SENSOR_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vector>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Input/Type/Position.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 //-----------------------------------------------------------------------------
 //: Position-derived class for interfacing with trackd sensor data
 //+ located on the local machine in a shared memory arena

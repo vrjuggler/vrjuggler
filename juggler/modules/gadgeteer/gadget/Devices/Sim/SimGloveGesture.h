@@ -33,7 +33,7 @@
 #ifndef _VRJ_SIM_GLOVE_GESTURE_H_
 #define _VRJ_SIM_GLOVE_GESTURE_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Input/Type/Digital.h>
 #include <vrj/Input/Type/GloveGesture.h>
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
 
 //: Simulated glove class
 //

@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Input/Devices/Sim/SimInput.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {
-   
+
 //: Construct the mod pair from a mod pair chunk
 std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<VarValue*>& keyList)
 {

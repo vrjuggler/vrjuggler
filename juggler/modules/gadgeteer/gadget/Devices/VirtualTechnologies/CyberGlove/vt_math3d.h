@@ -12,7 +12,7 @@
 /*  --    Authors:  Larry Edwards, William L. Chapin        --  */
 /*  ==========================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <math.h>
 
 #define epsilon 0.000001
@@ -68,7 +68,7 @@ extern void vt_rot_matrix(float theta, char axis, matrix4x4 A);
 extern void vt_trans_matrix(vec3d pnt, matrix4x4 A);
 extern void vt_scale_matrix(vec3d scale, matrix4x4 A);
 extern void vt_axis_rot_matrix(vec3d rot_pt, vec3d rot_axis, float rot_angle,
-			matrix4x4 rot_matrix);
+            matrix4x4 rot_matrix);
 extern void vt_mult_matrix(matrix4x4 A, matrix4x4 B, matrix4x4 result);
 extern void vt_mult_rot_matrix(float theta, char axis, int order, matrix4x4 A);
 extern void vt_mult_trans_matrix(pos3d pnt, int order, matrix4x4 A);
@@ -77,6 +77,6 @@ extern void vt_transform3(vec3d pt, matrix4x4 A, vec3d xformedpt);
 extern void vt_transform4(vec4d pt, matrix4x4 A, vec4d xformedpt);
 extern void vt_matrix_to_euler_angles(matrix4x4 rotm, vec3d euler_angle);
 extern void vt_gen_view_matrix(vec3d camera, vec3d gaze_vec,
-			       matrix4x4 viewmatrix);
+                   matrix4x4 viewmatrix);
 
-#endif				/* VT_MATH3D_H */
+#endif              /* VT_MATH3D_H */

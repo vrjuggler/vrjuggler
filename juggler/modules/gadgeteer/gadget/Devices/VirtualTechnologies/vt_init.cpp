@@ -10,7 +10,7 @@
 /*  --    Further modified by Larry Edwards                       --  */
 /*  ================================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -73,7 +73,7 @@ CyberGloveBasic::vt_init(char *indir, AppDataStruct &app)
   /* is because we realloc these fields in file_read() in "panel.c" and     */
   /* reallocing a pointer pointing to the DATA section rather than the heap */
   /* is bad news. So as it stands these fields are initialized to NULL in   */
-  /* resources[] and pointed to strings alloced on the heap here.	    */
+  /* resources[] and pointed to strings alloced on the heap here.       */
 
   sprintf( defaultcalfile, "%s/%s", indir, "default.cal");
   app.glove[0].incalfile  = strdup(defaultcalfile);

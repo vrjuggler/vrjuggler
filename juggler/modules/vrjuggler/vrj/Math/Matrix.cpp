@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vpr/Util/Assert.h>
 #include <vrj/Math/Matrix.h>
@@ -41,7 +41,7 @@
 
 namespace vrj
 {
-   
+
 Matrix::Matrix(Coord coord)
 {
    makeXYZEuler(coord.orient[0], coord.orient[1], coord.orient[2]);
@@ -66,7 +66,7 @@ void Matrix::makeXYZEuler(float xRot, float yRot, float zRot)
 }
 
 // args are in degrees
-// TODO: degrees are more inefficient (cause you have to convert), 
+// TODO: degrees are more inefficient (cause you have to convert),
 //       which is why most math libs standardize on radians.
 //       think about standardizing our stuff on radians instead?
 void Matrix::getXYZEuler(float& xRot, float& yRot, float& zRot) const
@@ -411,7 +411,7 @@ void Matrix::makeDirCos(Vec3 secXAxis, Vec3 secYAxis, Vec3 secZAxis)
 // From Watt & Watt
 void Matrix::makeQuaternion( const Quat& q )
 {
-   /* 
+   /*
    // A piece of reference code for checking against...
    const int W = VJ_W;
    const int X = VJ_X;
@@ -478,9 +478,9 @@ void Matrix::makeQuaternion( const float* const q )
    makeQuaternion( quat );
 }
 
-// TODO: consider changing to radians... 
-// then this func will be fast as possible, 
-// plus client won't have to convert rad->deg most times they 
+// TODO: consider changing to radians...
+// then this func will be fast as possible,
+// plus client won't have to convert rad->deg most times they
 // want to use this func.
 void  Matrix::makeRot(float _degrees, Vec3 _axis)
 {
@@ -506,7 +506,7 @@ void  Matrix::makeRot(float _degrees, Vec3 _axis)
     mat[0][1] = (t*x*y)+(s*z); mat[1][1] = (t*y*y)+c;     mat[2][1] = (t*y*z)-(s*x); mat[3][1] = 0.0f;
     mat[0][2] = (t*x*z)-(s*y); mat[1][2] = (t*y*z)+(s*x); mat[2][2] = (t*z*z)+c;     mat[3][2] = 0.0f;
     mat[0][3] = 0.0f;          mat[1][3] = 0.0f;          mat[2][3] = 0.0f;          mat[3][3] = 1.0f;
-          
+
     zeroClamp();     // Clamp ~ zero values
 }
 

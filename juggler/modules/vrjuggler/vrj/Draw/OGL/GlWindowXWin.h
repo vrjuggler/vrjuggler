@@ -34,7 +34,7 @@
 #define _VRJ_GLX_WIN_H
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -59,7 +59,7 @@ typedef struct {
   long input_mode;
 } MotifWmHints;
 
-   
+
 //------------------------------------
 //: A GLX specific glWindow
 //------------------------------------

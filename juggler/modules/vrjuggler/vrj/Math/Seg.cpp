@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Math/Seg.h>
 #include <vrj/Math/Plane.h>
@@ -39,7 +39,7 @@
 
 namespace vrj
 {
-   
+
 //: Finds the point on the seg nearest to pt.
 // Returns the nearest point in nearPt
 //

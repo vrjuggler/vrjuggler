@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Environment/Socket.h>
 
@@ -49,7 +49,7 @@
 
 namespace vrj
 {
-   
+
 const int SOCKID_INVALID = -1;
 
 
@@ -114,7 +114,7 @@ bool SocketPosix::listen (int port) {
                      sizeof (struct sockaddr_in));
     if (!err)
         err = ::listen (sockid, 0);
-    
+
     if (err) {
         close();
         return false;
@@ -158,7 +158,7 @@ SocketPosix* SocketPosix::accept () {
 
 namespace vrj
 {
-         
+
 const int SOCKID_INVALID = -1;
 
 
@@ -209,7 +209,7 @@ bool SocketWin32::listen (int port) {
     unsigned short wVersionRequested = (0x1<<8) | 0x1;
     int err;
 
-    err = WSAStartup( wVersionRequested, &wsaData ); 
+    err = WSAStartup( wVersionRequested, &wsaData );
     if(err < 0) {
         std::cout << "-------- socket - WSAstartup failed-------------"
                   << std::endl;

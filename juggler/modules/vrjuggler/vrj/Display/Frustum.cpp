@@ -30,25 +30,25 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Display/Frustum.h>
 
 namespace vrj
 {
-   
+
 // ---- FRIEND FUNCTIONS ---- //
 std::ostream& operator<<(std::ostream& out, Frustum& _frust)
 {
     out << "l: " << _frust[Frustum::VJ_LEFT]
-	<< "r: " << _frust[Frustum::VJ_RIGHT]
-	<< "b: " << _frust[Frustum::VJ_BOTTOM]
-	<< "t: " << _frust[Frustum::VJ_TOP]
-	<< "n: " << _frust[Frustum::VJ_NEAR]
-	<< "f: " << _frust[Frustum::VJ_FAR];
+    << "r: " << _frust[Frustum::VJ_RIGHT]
+    << "b: " << _frust[Frustum::VJ_BOTTOM]
+    << "t: " << _frust[Frustum::VJ_TOP]
+    << "n: " << _frust[Frustum::VJ_NEAR]
+    << "f: " << _frust[Frustum::VJ_FAR];
     out << std::endl;
 
-    return out;	
+    return out;
 }
 
 };

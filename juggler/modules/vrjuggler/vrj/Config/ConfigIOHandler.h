@@ -33,14 +33,14 @@
 #ifndef _VRJ_CONFIGIOHANDLER_H_
 #define _VRJ_CONFIGIOHANDLER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <string.h>
 #include <stdlib.h>
 
 namespace vrj
 {
-   
+
 class ConfigChunkDB;
 class ConfigChunk;
 class ChunkDescDB;
@@ -51,7 +51,7 @@ class ConfigIOHandler {
 
 public:
 
-//     ConfigIOHandler () { 
+//     ConfigIOHandler () {
 //         ;
 //     }
 

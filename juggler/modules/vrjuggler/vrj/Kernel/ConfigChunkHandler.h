@@ -33,7 +33,7 @@
 #ifndef _VJ_CONFIG_CHUNK_HANDLER_H_
 #define _VJ_CONFIG_CHUNK_HANDLER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 namespace vrj
 {
@@ -50,7 +50,7 @@ namespace vrj
 // to recognize chunks the derived class cares about.
 // Then you over ride configAdd and configRemove
 // to actually process those chunks.
-// It is also possible to override configProcessPending although the 
+// It is also possible to override configProcessPending although the
 // default one will work in most cases.
 //---------------------------------------------
 //! PUBLIC_API:
@@ -72,7 +72,7 @@ public:
    //   remove/add from current
    //
    //! ARGS: lockIt - Should we lock the cfg_mgr pending list
-   //+       defaults to true.  The only time this should be false is 
+   //+       defaults to true.  The only time this should be false is
    //+       if you override this function and still want to make use of it's abilities
    //+         (ex.  The kernel needs to do this because if has to call configProcessPending on other managers in addition to itself)
    //! RETURNS: Number of chunks it actually processes

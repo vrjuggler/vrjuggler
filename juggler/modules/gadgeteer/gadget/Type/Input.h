@@ -45,7 +45,7 @@
 #ifndef _VRJ_INPUT_H_
 #define _VRJ_INPUT_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #ifndef VJ_OS_Win32
 #  include <unistd.h>

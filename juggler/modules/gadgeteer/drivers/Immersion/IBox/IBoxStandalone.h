@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <string>
 #include <vpr/IO/Port/SerialPort.h>
 
@@ -159,13 +159,13 @@ public:
  *
  * @author Josh Brown
  */
-     
+
     /**
-     * Constructor.  This creates a port object: sets the default values for 
-     * timeouts, clears all arrays to 0, and turns off all error handlers. 
-     * 
+     * Constructor.  This creates a port object: sets the default values for
+     * timeouts, clears all arrays to 0, and turns off all error handlers.
+     *
      * @post slow timeouts are set to 3.0 seconds, fast timeouts are set to .1
-     *       all product info arrays are cleared to 0 and all error handlers 
+     *       all product info arrays are cleared to 0 and all error handlers
      *       are set to NULL, and port is set to NULL.
      */
     ibox2();
@@ -174,11 +174,11 @@ public:
      * Destructor. Deletes the port object.
      *
      * @post The Serial Port port is deleted.
-     */ 
+     */
     ~ibox2();
 
     // ----------------------------------------------------------------------------
-    // Setup & configuration of Immersion Interface Box 
+    // Setup & configuration of Immersion Interface Box
     // ----------------------------------------------------------------------------
 
 
@@ -186,80 +186,80 @@ public:
      * Connects us to the ibox
      *
      * @post An attempt is made to connect to the ibox.  It if is successful, the
-     *       port is opened and has synchronized with the ibox.  
-     *       The result is returned to the caller.  
+     *       port is opened and has synchronized with the ibox.
+     *       The result is returned to the caller.
      *
      * @param port_name A reference to a std::string where the name of the serial
      *                  port is held.
      * @param buad      The buad rate for input and output
      *
      * @return SUCCESS is returned if the the ibox connects successfully. <br>
-     *         CANT_BEGIN if the ibox was synched but couldn't begin 
+     *         CANT_BEGIN if the ibox was synched but couldn't begin
      *         reading data. <br>
      *         NO_HCI if the ibox could not successfully synchronize. <br>
-     *         CANT_OPEN_PORT if connecting to the serial port was unsuccessful. 
+     *         CANT_OPEN_PORT if connecting to the serial port was unsuccessful.
      */
     ibox2_result    connect(const std::string& port_name, long int baud);
 
     /**
-     * ibox_fancy_connect() establishes communication with its corresponding 
+     * ibox_fancy_connect() establishes communication with its corresponding
      * Interface Box.
-     * 
-     * @post An attempt is made to connect to the ibox.  If it is successful, the 
+     *
+     * @post An attempt is made to connect to the ibox.  If it is successful, the
      *       port is opned and has sychoronized with the ibox. The result
      *       is returned to the caller.
-     * 
+     *
      * @param port_name A reference to a std::string where the name of the serial
-     *                  port is held. 
+     *                  port is held.
      * @param buad      The buad rate for input and output
      *
      * @param installer_fun is a function pointer that points to a user-defined
-     *                  function which will install error handlers.  Use the 
-     *                  following  definition for installer_fun: 
+     *                  function which will install error handlers.  Use the
+     *                  following  definition for installer_fun:
      *                  void installer_fun().
      *
      * @return SUCCESS is returned if the the ibox connects successfully. <br>
-     *         CANT_BEGIN if the ibox was synched but couldn't begin 
+     *         CANT_BEGIN if the ibox was synched but couldn't begin
      *         reading data. <br>
      *         NO_HCI if the ibox could not successfully synchronize. <br>
-     *         CANT_OPEN_PORT if connecting to the serial port was unsuccessful. 
+     *         CANT_OPEN_PORT if connecting to the serial port was unsuccessful.
      */
     ibox2_result    fancy_connect(const std::string& port_name, long int baud
                         , void (*installer_fun)());
 
 
-    /** 
-     * ibox_wait_update() updates ibox data.  
+    /**
+     * ibox_wait_update() updates ibox data.
      * @post updates the ibox data and waits for packet before going on.
-     *   
+     *
      * @param timer_flag is the whether or not to report the timer (0 or non-zero). <br>
      * @param num_analogs is the # of analog fields to report (0, 2, 4, or 8) <br>
      * @param num_encoders is the # of encoder fields to report (0, 2, 3, or 6)
-     * 
+     *
      * @return NO_PACKET_YET if a packet was not sent by the ibox; return SUCCESS
      *         otherwise.
      */
     ibox2_result    wait_update(int timer_flag, int num_analogs
-                        ,int num_encoders); 
+                        ,int num_encoders);
 
-    /** 
+    /**
      * Closes the connection to the ibox.
-     * 
+     *
      * @pre The port is open to the ibox
-     * @post An attempt is made to disconnect from the ibox. 
-     */  
+     * @post An attempt is made to disconnect from the ibox.
+     */
     void            disconnect();
 
     //------------------------------------------------------------------------
-    // Issuing commands to HCI 
+    // Issuing commands to HCI
     //------------------------------------------------------------------------
 
     /** hci_std_cmd() writes any standard (non-config) cmd and immediately exits.
      *
-     * @pre The ibox is connected.   
+     * @pre The ibox is connected.
      * @post writes the standard cmd and exits
-     * 
-     * @param timer_flag is the whether or not to report the timer (0 or non-zero). <br> 
+     *
+     * @param timer_flag is the whether or not to report the timer (0 or non-zero). <br>
      * @param num_analogs is the # of analog fields to report (0, 2, 4, or 8) <br>
      * @param num_encoders is the # of encoder fields to report (0, 2, 3, or 6)
      */
@@ -271,41 +271,41 @@ public:
      * and immediately exits; simple cfg cmds do not require passwords,
      * do not concern communications parameters, and have a fixed-length
      * response: GET_HOME_REF, HOME_POS, GET_MAXES, and INSERT_MARKER.
-     * 
+     *
      * @pre The ibox is connected.
      * @post writes the cmd byte of any simple config cmd.
-     * 
+     *
      * @param cmnd the byte that is being written.
      */
 
     void            simple_cfg_cmd(byte cmnd);
 
     /**
-     * 
+     *
      * hci_string_cmd() handles commands that request an info string.
-     * 
+     *
      * @pre The ibox is connected.
      * @post reads information from the ibox into the appropriate string member.
-     *       
+     *
      * @param cmnd byte designating which string to read into.
      *
      * @return TIMED_OUT if cmnd isn't satisfied in time or if the read failed<br>
      *         SUCCESS if a string was read into a member character array successfully
-     */   
+     */
     ibox2_result    string_cmd(byte cmnd);
 
 
     /**
      * hci_passwd_cmd() handles a cmd that requires a password.
-     * 
-     * @pre Assumes any nec arguments are in cfg_args[].Throws out any chars 
+     *
+     * @pre Assumes any nec arguments are in cfg_args[].Throws out any chars
      *      currently still in input buffer. Also the ibox must be connected.
      * @post Attempts to write serial number data into member array serial_number.
-     * 
+     *
      * @param cmnd byte designating serial number.
-     *  
+     *
      * @return BAD_PASSWORD if ibox sends bad data. <br>
-     *         TIMED_OUT if at any point we time out before we finish reading from the 
+     *         TIMED_OUT if at any point we time out before we finish reading from the
      *         ibox. <br>
      *         SUCCESS if serial_number is filled and ibox sent password back to caller.
      */
@@ -314,10 +314,10 @@ public:
     /**
      * hci_insert_marker() inserts a place marker packet into the HCI stream and
      * DOES NOT WAIT for response (that would defeat the marker's purpose).
-     * 
+     *
      * @pre the ibox is connected.
      * @post writes a marker character.
-     * 
+     *
      * @param marker byte to send as the marker to the ibox.
      */
     void            insert_marker(byte marker);
@@ -328,26 +328,26 @@ public:
      *
      * @pre The ibox is connected.
      * @post Attempts to read paramaters from the ibox.
-     * 
+     *
      * @param block A pointer to a block of bytes where data will be stored.
      * @param block_size a pointer to the number of bytes to be written.
-     * 
+     *
      * @return TIMED_OUT if bytes could not be written to block. <br>
      *         SUCCESSS if data was successfully written at block.
      */
     ibox2_result    get_params(byte *block, int *block_size);
 
     /**
-     * set_params() changes main parameter block on HCI.  
-     * 
+     * set_params() changes main parameter block on HCI.
+     *
      * @pre The ibox is connected.
      * @post Takes values stored in block and writes them to HCI's EEPROM.
      *
      * @param A pointer to a block of bytes where data will be stored.
      * @param block_size a pointer to the number of bytes to be written.
-     * 
+     *
      * @return BAD_PASSWORD if ibox sends bad data. <br>
-     *         TIMED_OUT if at any point we time out before we finish reading from the 
+     *         TIMED_OUT if at any point we time out before we finish reading from the
      *         ibox. <br>
      *         SUCCESS if serial_number is filled and ibox sent password back to caller.
      */
@@ -355,7 +355,7 @@ public:
 
     /**
      * get_home_ref() gets home reference offsets from HCI, waits for response.
-     * 
+     *
      * @pre The ibox is connected.
      * @post Attempts to get home reference offset from HCI.
      *
@@ -366,17 +366,17 @@ public:
 
     /**
      * set_home_ref() defines a new set of home references for the HCI encoders.
-     * 
+     *
      * @pre The ibox is connected.
      * @post Attempts to define a new set of home references for the HCI encoders.
-     * 
+     *
      * @param homefer Pointer to the location of the new home reference.
      *
      * @return BAD_PASSWORD if ibox sends bad data. <br>
-     *         TIMED_OUT if at any point we time out before we finish reading from the 
+     *         TIMED_OUT if at any point we time out before we finish reading from the
      *         ibox. <br>
      *         SUCCESS if the home position was successfully changed.
-     */ 
+     */
     ibox2_result    set_home_ref(int *homeref);
 
     /**
@@ -392,17 +392,17 @@ public:
 
     /**
      * set_home_pos() defines a new home position for the HCI encoders.
-     * 
+     *
      * @pre The ibox is connected.
      * @post Attempts to define a new home position for the HCI encoders.
-     * 
+     *
      * @param homepos Pointer to the new home position.
      *
      * @return BAD_PASSWORD if ibox sends bad data. <br>
-     *         TIMED_OUT if at any point we time out before we finish reading from the 
+     *         TIMED_OUT if at any point we time out before we finish reading from the
      *         ibox. <br>
      *         SUCCESS if the home position was successfully changed.
-     */ 
+     */
     ibox2_result    set_home_pos(int *homepos);
 
     /**
@@ -410,12 +410,12 @@ public:
      *
      * @pre The ibox is connected.
      * @post reads the max field values.
-     * 
+     *
      * @return BAD_PASSWORD if ibox sends bad data. <br>
-     *         TIMED_OUT if at any point we time out before we finish reading from the 
+     *         TIMED_OUT if at any point we time out before we finish reading from the
      *         ibox. <br>
      *         SUCCESS if the max field values were successfully retrieved.
-     */ 
+     */
     ibox2_result    get_maxes();
 
     /**
@@ -425,18 +425,18 @@ public:
      * @post resets all member variable information.
      *
      * @return BAD_PASSWORD if ibox sends bad data. <br>
-     *         TIMED_OUT if at any point we time out before we finish reading from the 
+     *         TIMED_OUT if at any point we time out before we finish reading from the
      *         ibox. <br>
      *         SUCCESS if the factory settings were successfully restored.
      */
     ibox2_result    factory_settings();
-    
+
     /**
      * report_motion() sends a motion-sensitive cmd and immediately exits.
-     * 
+     *
      * @pre The ibox is connected.
      * @post attempts to send a motion-sensitive cmd
-     * 
+     *
      * @param timer_flag is the whether or not to report the timer (0 or non-zero). <br>
      * @param analog_reports is the # of analog fields to report (0, 2, 4, or 8) <br>
      * @param encoder_reports is the # of encoder fields to report (0, 2, 3, or 6)i <br>
@@ -453,7 +453,7 @@ public:
     /**
      * end_motion() cancels motion-reporting mode and clears all unparsed data;
      * to cancel motion-reporting without clearing data, use insert_marker().
-     * 
+     *
      * @pre The ibox is connected.
      * @post Attempts to cancel motion reporting mode and clear all unparsed data.
      */
@@ -462,7 +462,7 @@ public:
     /**
      * hci_wait_packet() waits for the given port to receive a complete packet and
      * times out if it takes too long.
-     * 
+     *
      * @pre The Ibox is connected.
      * @post Waits for the given port to recieve a complete packet and times out if
      *       it takes too long.
@@ -472,12 +472,12 @@ public:
      */
     ibox2_result    wait_packet();
 
-    /** 
+    /**
      * check_packet() checks for a complete packet and parses it if it's ready.
      *
      * @pre The Ibox is connected.
      * @post checks for a complete packet and parses it if it's ready.
-     * 
+     *
      * @return TIMED_OUT if packet is not complete and it's been too long since the
      *         last timeout was started. <br>
      *         SUCCESS otherwise.
@@ -490,7 +490,7 @@ public:
      * reporting mode, and packets may be few & far between.
      *
      * @pre The Ibox is connected.
-     * @post Checks for a complete packet and parses it if it's ready. But 
+     * @post Checks for a complete packet and parses it if it's ready. But
      *       TIMED_OUT is not considered an error; we assume we're in motion-
      *       reporting mode, and packets may be few & far between.
      *
@@ -500,7 +500,7 @@ public:
      *         SUCCESS otherwise.
      */
     ibox2_result    check_motion();
-    
+
     /**
      * build_packet() reads chars from serial buffer into the packet array.
      *
@@ -516,14 +516,14 @@ public:
      int             build_packet();
 
     //---------------------------------------------------------------------------
-    // Packet parsing functions 
+    // Packet parsing functions
     //---------------------------------------------------------------------------
-    
+
     /**
      * parse_packet() interprets the hci's packet and stores all HCI data.
-     * 
+     *
      * @pre Before calling this, call build_packet() to see if packet is ready.
-     * @post parse_packet() interprets the hci's packet and stores all HCI data. 
+     * @post parse_packet() interprets the hci's packet and stores all HCI data.
      *       Also marks this hci's packet as having been parsed.
      *
      * @return BAD_PACKET if the packet doesn't have enough bytes. <br>
@@ -547,18 +547,18 @@ public:
      * packet_size() returns the # of data bytes that FOLLOW a given cmd byte.
      *
      * @post returns the # of data bytes that FOLLOW a given cmd byte.
-     * 
-     * @param cmd is an int, not a byte, for compatibility reasons; It is the cmd 
-     *        that marks the start for counting the number of bytes. 
-     * 
-     * @return value of -1 means packet needs special handling (i.e. passwd) or has 
+     *
+     * @param cmd is an int, not a byte, for compatibility reasons; It is the cmd
+     *        that marks the start for counting the number of bytes.
+     *
+     * @return value of -1 means packet needs special handling (i.e. passwd) or has
      *         uncertain length; too complicated for standard parser. <br>
      *         Otherwise returns the number of bytes following cmd
-     */ 
+     */
     int             packet_size(int cmd);
-    
+
     //------------------------------------------------------------------------
-    //Helper functions 
+    //Helper functions
     //------------------------------------------------------------------------
 
     /**
@@ -577,8 +577,8 @@ public:
 
     /**
      * read_block() reads a block of binary data from the serial port
-     * and puts it in memory at 'block' location. 
-     * 
+     * and puts it in memory at 'block' location.
+     *
      * @pre The Ibox is connected.
      * @post Reads a block of data into memory at block.
      *
@@ -597,9 +597,9 @@ public:
      */
     void            invalidate_fields();
 
-    /** 
+    /**
      * Returns the state of the button designated by pos.
-     * 
+     *
      * @post returns the state of the button designated by pos.
      *
      * @param pos the button in which to query.
@@ -607,20 +607,20 @@ public:
      * @return the state of the button.
      */
     int             buttonFunc(int pos);
-   
+
     /**
-     * Returns the state of the analog device desiganted by pos. 
-     * 
+     * Returns the state of the analog device desiganted by pos.
+     *
      * @post returns the state of the analog device designated by pos.
      *
      * @param pos the position in the analog array in which to query.
-     * 
+     *
      * @return the state of the analog device.
      */
     int             analogFunc(int pos);
 
     //--------------------------------------------------------------------
-    // Error handling 
+    // Error handling
     //-------------------------------------------------------------------
 
     /**
@@ -629,7 +629,7 @@ public:
      *
      * @post error() handles HCI module errors by looking for error handler that
      * corresponds to the condition.
-     * 
+     *
      * @param condition To check for error handler funcitons for that condition.
      *
      * @return SUCCESS if condition is SUCCESS. <br>
@@ -651,9 +651,9 @@ private:
                       * pending in overlapped opperation.
                       * However this feature isn't currently supported
                       * by the serial port interface so it is not used */
-    packet_rec      packet;	    /* The current packet */
-    int             packets_expected; /* Determines whether timeout is important */	
-	
+    packet_rec      packet;     /* The current packet */
+    int             packets_expected; /* Determines whether timeout is important */
+
 
 /* Descriptor strings:
          *   These strings provide information about a particular HCI system.
@@ -725,7 +725,7 @@ private:
 /* Helper functions */
     int     autosynch();
     int     begin();
-    int     end();	
+    int     end();
 
 /* Handlers for errors */
     ibox2_result      (*BAD_PORT_handler)();

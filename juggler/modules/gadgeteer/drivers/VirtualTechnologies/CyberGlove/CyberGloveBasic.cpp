@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 // need stdio for sprintf
 #include <stdio.h>
@@ -52,7 +52,7 @@ CyberGloveBasic::CyberGloveBasic (char* calFileDir, char *serport, int baud)
    if(calFileDir != NULL)
    {
       mCalFileDir = new char [strlen(calFileDir) + 1];
-	   strcpy(mCalFileDir,calFileDir);
+       strcpy(mCalFileDir,calFileDir);
    }
    else
       std::cerr << "Invalid calibration file specified" << std::endl;
@@ -60,7 +60,7 @@ CyberGloveBasic::CyberGloveBasic (char* calFileDir, char *serport, int baud)
    if(serport != NULL)
    {
       mSerialPort = new char [strlen(serport) + 1];
-	   strcpy(mSerialPort,serport);
+       strcpy(mSerialPort,serport);
    }
    else
       std::cerr << "Invalid calibration file specified" << std::endl;
@@ -147,7 +147,7 @@ int CyberGloveBasic::sample()
      for(j = 0; j < MAX_GROUP_VALUES; j++)
        for(int k = 0; k <= 4; k++)
           for(int l = 0; l <= 4; l++)
-	(theData[progress].xforms[i][j])[k][l] = (hand->digit_xform[i][j])[k][l];
+    (theData[progress].xforms[i][j])[k][l] = (hand->digit_xform[i][j])[k][l];
  */
      return 1;
 }
@@ -160,16 +160,16 @@ CYBER_GLOVE_DATA* CyberGloveBasic::getData()
 
 
 //volatile float** CyberGloveBasic::getData () {
-//	/* I always find multidimensional arrays confusing to pass
-//	 * and return.  For the record, the glove code defines the
-// 	 * type of joint angle as:
-//	 * volatile float (*joint_angle)[MAX_GROUP_VALUES]
-//	 * or float joint_angle[MAX_SENSOR_GROUPS][MAX_GROUP_VALUES]
-//	 */
+//  /* I always find multidimensional arrays confusing to pass
+//   * and return.  For the record, the glove code defines the
+//   * type of joint angle as:
+//   * volatile float (*joint_angle)[MAX_GROUP_VALUES]
+//   * or float joint_angle[MAX_SENSOR_GROUPS][MAX_GROUP_VALUES]
+//   */
 //      int i;
-////	hand->joint_angle[THUMB][MCP]=3.0;
+////    hand->joint_angle[THUMB][MCP]=3.0;
 //      for (i = 0; i < MAX_SENSOR_GROUPS; i++)
-//	joints[i] = (hand->joint_angle[i]);
+//  joints[i] = (hand->joint_angle[i]);
 //      return joints;
 //    };
 
@@ -178,36 +178,36 @@ matrix4x4 ** CyberGloveBasic::getDigitXForms ()
 {
    int i;
    for (i = 0; i < 5; i++)
-	xforms[i] = (hand->digit_xform[i]);
-      return xforms;	
+    xforms[i] = (hand->digit_xform[i]);
+      return xforms;
 };
 
 float CyberGloveBasic::getThumbRoll ()
 {
-	return (DEG2RAD)*vt_calc_thumb_roll(hand);
+    return (DEG2RAD)*vt_calc_thumb_roll(hand);
 };
 
 SurfaceModel CyberGloveBasic::getSurfaceModel()
 {
-	return (hand->surface);
+    return (hand->surface);
 };
 
 volatile float * CyberGloveBasic::getStateVec()
 {
-	return hand->state_vec;
+    return hand->state_vec;
 }
 
 float CyberGloveBasic::getThumbUnflexedAbduction() {
- 	return hand->unflexed_abduction;
+    return hand->unflexed_abduction;
 }
 
 int CyberGloveBasic::getFingerState (int finger)
 {
    /* a quick function to determine the position of a finger.
-	return values:
-	0 finger open/pointing
-	1 finger closed
-	2 finger inbetween/relaxed (whatever isn't zero or one
+    return values:
+    0 finger open/pointing
+    1 finger closed
+    2 finger inbetween/relaxed (whatever isn't zero or one
       */
      /* Still need to double check these values...
         I'm taking a hint from the other gesture recognition code &

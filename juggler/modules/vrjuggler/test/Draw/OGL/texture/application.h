@@ -33,7 +33,7 @@
 #ifndef _TEXTURE_APP_
 #define _TEXTURE_APP_
 
-#include <vrj/vjConfig.h>          // needed by other juggler classes
+#include <vrj/vrjConfig.h>          // needed by other juggler classes
 
 // C++ and STL (standard template library - http://www.sgi.com/Technology/STL)
 #include <iostream> // for std::cout
@@ -52,7 +52,7 @@
 #include <vrj/Util/Timer.h> // so that the cube always spins the same speed
 
 // texture application objects
-#include "renderGeometry.h"  // render interleaved vertex array data 
+#include "renderGeometry.h"  // render interleaved vertex array data
 #include "cubeGeometry.h"    // cube geometry data
 #include "Image.h"           // Image class
 #include "Texture.h"         // Texture class
@@ -60,7 +60,7 @@
 #include "squareImage.h"     // the cube texture's image data
 #include "renderTexture.h"   // render Texture class to OpenGL hardware
 
-//: VR Juggler application demonstration to show you 
+//: VR Juggler application demonstration to show you
 //  how to do texturing in an OpenGL juggler application
 class TextureDemoApplication : public vrj::GlApp
 {
@@ -75,18 +75,18 @@ public:
    // (called for every window that is opened)
    // put your opengl resource allocation here...
    virtual void contextInit();
-   
-   //: Called immediately upon closing an OpenGL context 
+
+   //: Called immediately upon closing an OpenGL context
    // (called for every window that is closed)
    // put your opengl deallocation here...
    virtual void contextClose();
 
-   //: Function to "draw" the scene 
+   //: Function to "draw" the scene
    //  put your opengl draw functions here...
    //  PRE: OpenGL state has correct transformation and buffer selected
    //  POST: The current scene has been drawn
    virtual void draw();
-   
+
    // Function called before updating trackers but after the frame is drawn
    // do calculations here...
    virtual void postFrame();
@@ -106,7 +106,7 @@ private:
       }
       int id;
    };
-   
+
    // helper functions to make your code easier to read
    // i.e. hides all the static_cast and template lengthyness
    static void setTexObjID( Texture& t,
@@ -114,23 +114,23 @@ private:
    {
       void* data = reinterpret_cast<void*>( &texObjectID );
       t.setUserData( data );
-   }   
-   static int& getTexObjID( Texture& t ) 
-   { 
+   }
+   static int& getTexObjID( Texture& t )
+   {
       vrj::GlContextData<ResourceID>* texObject = static_cast<vrj::GlContextData<ResourceID>* >( t.userData() );
       return (*texObject)->id;
    }
-   
+
    // Cube objects:
    Texture                        mCubeTexture;
    vrj::GlContextData<ResourceID> mCubeTextureObj;
    cubeGeometry                   mCubeGeometry;
    vrj::GlContextData<ResourceID> mCubeDisplayList;
-   
+
    // Floor:
    Texture                        mFloorTexture;
    vrj::GlContextData<ResourceID> mFloorTextureObj;
-   
+
    // timer
    vrj::Timer timer;
 };

@@ -33,7 +33,7 @@
 #ifndef _VRJ_CONFIGCHUNK_H_
 #define _VRJ_CONFIGCHUNK_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/ChunkDesc.h>
 #include <vrj/Config/Property.h>
 #include <vrj/Config/VarValue.h>
@@ -41,7 +41,7 @@
 
 namespace vrj
 {
-   
+
 struct VJCFGToken;
 
 
@@ -81,7 +81,7 @@ public:
     //: Constructs a ConfigChunk with no given description.
     //! NOTE: a ConfigChunk created with this function is essentially
     //+       useless until a description has been assigned with
-    //+       associateDesc() or the Chunk is assigned into with =, 
+    //+       associateDesc() or the Chunk is assigned into with =,
     //+       but I want this so I can have vectors of
     //+       ConfigChunks, instead of ptrs...
     ConfigChunk ();
@@ -272,15 +272,15 @@ public:
     inline bool doesPropertyExistFromToken( const std::string& token ) const
     {
        return (this->getPropertyPtrFromToken( token ) != NULL);
-    }    
-    
+    }
+
     //: Return a list of chunk names dependant based on chunk ptrs
     // Returns a list of the names of all the chunks
     // that are pointed to by chunk ptrs of this chunk
     std::vector<std::string> getChunkPtrDependencies() const;
 
     Property *getPropertyPtrFromName (const std::string& name) const;
-    
+
     Property *getPropertyPtrFromToken (const std::string& token) const;
 
 

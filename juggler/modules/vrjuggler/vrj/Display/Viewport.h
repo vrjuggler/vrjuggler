@@ -33,7 +33,7 @@
 #ifndef _VRJ_VIEWPORT_H_
 #define _VRJ_VIEWPORT_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Math/Vec3.h>
 #include <vrj/Input/Type/Position.h>
@@ -44,7 +44,7 @@
 
 namespace vrj
 {
-   
+
 // Config stuff
 class ConfigChunk;
 
