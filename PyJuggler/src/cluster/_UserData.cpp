@@ -188,10 +188,71 @@ void setContainedUserDataObject(cluster::UserData<pyj::PickleObject>* self_,
 // Module ======================================================================
 void _Export_UserData()
 {
-   class_<cluster::UserData<pyj::PickleObject>, boost::noncopyable>("UserData", init<>())
+   class_<cluster::UserData<pyj::PickleObject>, boost::noncopyable>("UserData",
+       "__init__()\n"
+       "Creates a new instance of a Python object container for use with\n"
+       "VR Juggler clustering.  The Python object contained within a\n"
+       "cluster.UserData instance will be distributed to all the nodes of\n"
+       "a cluster.\n\n"
+       "cluster.UserData is based on the C++ type cluster::UserData<T>, but\n"
+       "its usage takes advantage of Python features to simplify the usage.\n"
+       "In the C++ version, the contained type must be serializable (it\n"
+       "must derive from the C++ type vpr::SerializableObject), but with\n"
+       "cluster.UserData, the requirement is that the contained object\n"
+       "support pickling (Python's version of serialization).  Most Python\n"
+       "objects support pickling by default, so no additional code must be\n"
+       "written in most cases.\n\n"
+       "The basic usage in a VR Juggler application object is as follows:\n\n"
+       "class AppObj(vrj.GlApp):\n"
+       "   def __init__(self):\n"
+       "      vrj.GlApp.__init__(self)\n"
+       "      self.user_data   = cluster.UserData()\n"
+       "      self.pickled_obj = MyObj()\n\n"
+       "   def init(self):\n"
+       "      self.user_data.init(vpr.GUID(\"...\")\n"
+       "      self.user_data.setPickleObject(self.pickled_obj)\n\n"
+       "   def preFrame(self):\n"
+       "      if self.user_data.isLocal():\n"
+       "         # Modify self.pickled_obj ...\n\n"
+       "   def latePfreFrame(self):\n"
+       "      # Set up rendering state based on self.pickled_obj ...\n\n"
+       "More details can be found in the PyJuggler Getting Started Guide."
+       ,
+       init<>()
+      )
       .def("init", &cluster::UserData<pyj::PickleObject>::init,
-           pyj::cluster_UserData_PickleObject_init_overloads_1_2())
-      .def("isLocal", &cluster::UserData<pyj::PickleObject>::isLocal)
-      .def("setPickleObject", pyj::setContainedUserDataObject)
+           pyj::cluster_UserData_PickleObject_init_overloads_1_2()
+/*
+           ,
+           "init(guid)\n"
+           "Initializes this application-specific shared data object with\n"
+           "the given vpr.GUID instance.  There must be a distinct GUID for\n"
+           "for each instance of shared data, even if the instances are all\n"
+           "of the same type.  With this variant, the writer (master) host\n"
+           "must be identified using a configuration element of type\n"
+           "application_data.\n\n"
+           "init(guid, writerAddr)\n"
+           "The same as the single-argument variant except that the writer\n"
+           "host is explicitly identified.  This is somewhat easier to use\n"
+           "than the other variant, but it can be less flexible."
+*/
+       )
+      .def("isLocal", &cluster::UserData<pyj::PickleObject>::isLocal,
+           "isLocal() -> Boolean\n"
+           "Returns whether this cluster node is responsible for updating\n"
+           "the application-specific shared data.  This determination is\n"
+           "based on which node was identified as the writer when init()\n"
+           "was called.\n"
+           "Pre-condition:\n"
+           "init() has been invoked."
+       )
+      .def("setPickleObject", pyj::setContainedUserDataObject,
+           "setPickleObject(object)\n"
+           "Stores the given Python object as the object to be pickled and\n"
+           "un-pickled by the data-sharing code.  The object must support\n"
+           "pickling.  Refer to the Python pickling documentation, which\n"
+           "can be found at http://docs.python.org/lib/module-pickle.html\n"
+           "among other sites."
+       )
    ;
 }
