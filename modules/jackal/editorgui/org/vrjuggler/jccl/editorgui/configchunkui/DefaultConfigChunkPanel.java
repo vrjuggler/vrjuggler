@@ -148,7 +148,7 @@ public class DefaultConfigChunkPanel extends JPanel
                 p = chunk.getProperty (i);
                 if (Core.user_profile.accepts (p.getDesc().getUserLevel())) {
                     t = new PropertyPanel (chunk.getProperty(i), 
-                                           this, uihelper_module);
+                                           uihelper_module);
                     proppanels.add(t);
                     properties_panel.add(t);
                 }
