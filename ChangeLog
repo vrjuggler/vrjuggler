@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jul-05-2001 patrick   Fixed the TrackdSensor and TrackdController chunk
+                      descriptions so that min and max are correctly listed
+                      with TrackdController.
 Jun-28-2001 patrick   The POSIX thread wrapper no longer calls pthread_exit(3)
                       in its destructor.  For stack-allocated vjThread objects
                       (using pthreads), this caused the wrong thread to exit
