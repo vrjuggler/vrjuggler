@@ -320,7 +320,7 @@ public class ProxyTree extends JTree implements ActionListener
    }
    
    /**
-    * Selects the path to the given ConfigElement in the ElementTree.
+    * Selects the path to the given ConfigElement in the ProxyTree.
     */
    public void selectUserObject(Object obj)
    {
@@ -429,7 +429,7 @@ public class ProxyTree extends JTree implements ActionListener
             // NOTE: DefaultTreeCellRenderer extends JLabel and returns 
             // itself, if we call the following method to set everything up
             // we can then set the Icon to whatever we want and return this.
-            super.getTreeCellRendererComponent( tree, elm.getName(), selected,expanded, leaf,row, hasFocus);
+            super.getTreeCellRendererComponent( tree, elm.getName(), selected, expanded, leaf,row, hasFocus);
 
             setIcon(mProxyIcon);
          }
