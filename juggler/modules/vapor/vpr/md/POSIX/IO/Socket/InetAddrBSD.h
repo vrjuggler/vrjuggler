@@ -64,81 +64,13 @@ public:
     //! PRE: None.
     //! POST: The m_addr structure has its memory zeroed, and the port and
     //+       internet address are set to wildcard values.
+    //
+    //! ARGS: port - An unsigned 16-bit integer port number for this address
+    //+              in host byte order.
     // ------------------------------------------------------------------------
-    InetAddrBSD (void) {
+    InetAddrBSD (const Uint16 port = 0) {
         memset(&m_addr, 0, sizeof(m_addr));
         setAddressValue(INADDR_ANY);
-        setPort(0);
-        setFamily(SocketTypes::INET);
-    }
-
-    // ------------------------------------------------------------------------
-    //: Construct an address object using the given address.  It must be of
-    //+ the form <address>:<port> where <address> can be a hostname or a
-    //+ dotted-decimal IP address.
-    //
-    //! PRE: None.
-    //! POST:
-    //
-    //! ARGS: address - A string giving the address and port number separated
-    //+                 by a colon.  The address can be a hostname or a
-    //+                 dotted-decimal IP address.
-    // ------------------------------------------------------------------------
-    InetAddrBSD (const std::string& address) {
-        std::string::size_type pos;
-        std::string host_addr, host_port;
-        Uint16 port;
-
-        // Extract the address and the port number from the given string.
-        pos       = address.find(":");
-        host_addr = address.substr(0, pos);
-        host_port = address.substr(pos + 1);
-        port      = (Uint16) atoi(host_port.c_str());
-
-        setAddress(host_addr);
-        setPort(port);
-        setFamily(SocketTypes::INET);
-    }
-
-    // ------------------------------------------------------------------------
-    //: Construct an address object using the given address and port number.
-    //+ The address string can be a hostname or a dotted-decimal IP address.
-    //
-    //! PRE: None.
-    //! POST:
-    //
-    //! ARGS: address - A string giving the address (either hostname or IP
-    //+                 address).
-    //! ARGS: port    - The port to associate with the IP address.
-    // ------------------------------------------------------------------------
-    InetAddrBSD (const std::string& address, const Uint16 port) {
-        setAddress(address);
-        setPort(port);
-        setFamily(SocketTypes::INET);
-    }
-
-    // ------------------------------------------------------------------------
-    //: Construct an address that is associated with the given port number.
-    //+ The address will be set to a wildcard.
-    // ------------------------------------------------------------------------
-    InetAddrBSD (const Uint16 port) {
-        setAddressValue(INADDR_ANY);
-        setPort(port);
-        setFamily(SocketTypes::INET);
-    }
-
-    // ------------------------------------------------------------------------
-    //: Construct an address object using the given address and port number.
-    //+ The address must be the actual 32-bit integer value.
-    //
-    //! PRE: None.
-    //! POST:
-    //
-    //! ARGS: address - A 32-bit integer IP address.
-    //! ARGS: port    - The port to associate with the IP address.
-    // ------------------------------------------------------------------------
-    InetAddrBSD (const Uint32 address, const Uint16 port) {
-        setAddressValue(address);
         setPort(port);
         setFamily(SocketTypes::INET);
     }
@@ -154,6 +86,60 @@ public:
     // ------------------------------------------------------------------------
     InetAddrBSD (const InetAddrBSD& addr) {
         copy(addr);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Set the address for this object using the given address.  It must be
+    //+ of the form <address>:<port> where <address> can be a hostname or a
+    //+ dotted-decimal IP address.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A string giving the address and port number separated
+    //+                 by a colon.  The address can be a hostname or a
+    //+                 dotted-decimal IP address.
+    // ------------------------------------------------------------------------
+    bool setAddress(const std::string& address);
+
+    // ------------------------------------------------------------------------
+    //: Set the address for this object using the given address and port
+    //+ number.  The address string can be a hostname or a dotted-decimal IP
+    //+ address.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A string giving the address (either hostname or IP
+    //+                 address).
+    //! ARGS: port    - The port to associate with the IP address.
+    // ------------------------------------------------------------------------
+    inline bool
+    setAddress (const std::string& address, const Uint16 port) {
+        bool retval;
+
+        retval = lookupAddress(address);
+        setPort(port);
+        setFamily(SocketTypes::INET);
+        return retval;
+    }
+
+    // ------------------------------------------------------------------------
+    //: Set the address for this object using the given address and port
+    //+ number.  The address must be the actual 32-bit integer value.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A 32-bit integer IP address.
+    //! ARGS: port    - The port to associate with the IP address.
+    // ------------------------------------------------------------------------
+    inline bool
+    setAddress (const Uint32 address, const Uint16 port) {
+        setAddressValue(address);
+        setPort(port);
+        setFamily(SocketTypes::INET);
+        return true;
     }
 
     // ------------------------------------------------------------------------
@@ -262,21 +248,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Set this objects's IP address.  The given address must be in host byte
-    //+ order.
-    //
-    //! PRE: The given IP address is in host byte order.
-    //! POST: The given IP address is stored.
-    //
-    //! ARGS: port - An unsigned 32-bit integer IP address for this object in
-    //+              host byte order.
-    // ------------------------------------------------------------------------
-    inline void
-    setAddressValue (const Uint32 addr_value) {
-        m_addr.sin_addr.s_addr = htonl(addr_value);
-    }
-
-    // ------------------------------------------------------------------------
     //: Get the IP address associated with this object as a human-readable
     //+ string.
     //
@@ -288,27 +259,6 @@ public:
     //+          in the human-readable "dotted-decimal" notation.
     // ------------------------------------------------------------------------
     std::string getAddressString(void) const;
-
-    // ------------------------------------------------------------------------
-    //: Set the IP address for this object using the given string.  The string
-    //+ can be a hostname or a dotted-decimal IP address.
-    //
-    //! PRE: None.
-    //! POST: If the address is valid, the object's IP address is updated
-    //+       appropriately.
-    //
-    //! ARGS: addr - An address string in dotted-decimal address notation or
-    //+              as a hostname.
-    //
-    //! RETURNS: true  - The address was valid and the set operation
-    //+                  succeeded.
-    //! RETURNS: false - The address could not be looked up.  An error message
-    //+                  is printed to stderr explaining what went wrong.
-    // ------------------------------------------------------------------------
-    inline bool
-    setAddress (const std::string& addr) {
-        return lookupAddress(addr);
-    }
 
     // ------------------------------------------------------------------------
     //: Overloaded assignment operator to ensure that assignments work
@@ -383,6 +333,21 @@ protected:
     copyAddressValue (const char* addr_value) {
         memcpy((void*) &m_addr.sin_addr.s_addr, (void*) addr_value,
                sizeof(m_addr.sin_addr.s_addr));
+    }
+
+    // ------------------------------------------------------------------------
+    //: Set this objects's IP address.  The given address must be in host byte
+    //+ order.
+    //
+    //! PRE: The given IP address is in host byte order.
+    //! POST: The given IP address is stored.
+    //
+    //! ARGS: port - An unsigned 32-bit integer IP address for this object in
+    //+              host byte order.
+    // ------------------------------------------------------------------------
+    inline void
+    setAddressValue (const Uint32 addr_value) {
+        m_addr.sin_addr.s_addr = htonl(addr_value);
     }
 
     // ------------------------------------------------------------------------

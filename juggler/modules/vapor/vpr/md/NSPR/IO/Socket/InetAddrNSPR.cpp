@@ -48,6 +48,30 @@ namespace vpr {
 const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults to ANY addr
 
 // ----------------------------------------------------------------------------
+// Set the address for this object using the given address.  It must be of the
+// form <address>:<port> where <address> can be a hostname or a dotted-decimal
+// IP address.
+// ----------------------------------------------------------------------------
+bool
+InetAddrNSPR::setAddress (const std::string& address) {
+   std::string::size_type pos;
+   std::string host_addr, host_port;
+   Uint16 port;
+   bool retval;
+
+   // Extract the address and the port number from the given string.
+   pos       = address.find(":");
+   host_addr = address.substr(0, pos);
+   host_port = address.substr(pos + 1);
+   port      = (Uint16) atoi(host_port.c_str());
+
+   retval = lookupAddress(host_addr);
+   setPort(port);
+   setFamily(SocketTypes::INET);
+   return retval;
+}
+
+// ----------------------------------------------------------------------------
 // Get the protocol family of this address structure.
 // ----------------------------------------------------------------------------
 SocketTypes::Domain
@@ -109,7 +133,7 @@ InetAddrNSPR::getAddressString (void) const {
 // Look up the address in m_name and store the address in m_remote_addr.
 // ----------------------------------------------------------------------------
 bool
-InetAddrNSPR::setAddress (const std::string& address) {
+InetAddrNSPR::lookupAddress (const std::string& address) {
    bool retval;
    PRStatus ret_status;
    PRHostEnt host_entry;
@@ -121,14 +145,18 @@ InetAddrNSPR::setAddress (const std::string& address) {
    if(ret_status == PR_FAILURE)
    {
       setAddressValue(0);           // Error on lookup, so zero the address
-      std::string error_msg("InetAddrNSPR::setAddress: Failure to look up host: ");
+      std::string error_msg("[InetAddrNSPR::setAddress] Failure to look up host: ");
       error_msg += address;
 
       NSPR_PrintError(error_msg);
       return false;
    }
 
-   retval = (-1 == PR_EnumerateHostEnt(0, &host_entry, 0, &mAddr));
+   retval = (-1 != PR_EnumerateHostEnt(0, &host_entry, 0, &mAddr));
+
+   if ( ! retval ) {
+       NSPR_PrintError(std::string("[InetAddrNSPR::lookupAddress] Could not enumerate host entry"));
+   }
 
    return retval;
 }
