@@ -215,7 +215,12 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
     }
 
     protected void addDataElem (String label, String category, double time) {
-
+	if (label.endsWith ("startframe")) {
+	    // start a new data line...
+	    addDataLine (current_dl);
+	    current_dl = new DataLine ();
+	}
+	current_dl.addSample (category, label, time);
     }
 
 
