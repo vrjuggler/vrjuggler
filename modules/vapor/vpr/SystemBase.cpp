@@ -50,8 +50,69 @@
 #include <sstream>
 #endif
 
+#if ! defined(__INTEL_COMPILER) && defined(__GNUC__) && \
+    ((__GNUC__ == 3 && __GNUC_MINOR__ >= 3) || __GNUC__ > 3)
+
+#define USE_CXA_DEMANGLE 1
+#include <cxxabi.h>
+
+#endif
+
 #include <vpr/SystemBase.h>
 
+namespace
+{
+
+std::string demangleTraceString(char* traceLine)
+{
+#ifdef USE_CXA_DEMANGLE
+
+   // Try to extract the mangled name from the line (if it exists)
+   // and replace it with a demangled version of the name.
+   // Example: build.linux/stuff/classfile(_ZN4vpr11Someing33methodEv+0xd3) [0x80cfa29]
+
+   std::string trace_line(traceLine);
+   std::string mangled_name, demangled_name;
+
+   unsigned start(std::string::npos), end(std::string::npos);
+   start = trace_line.find("(_");
+   if(std::string::npos != start)
+   { end = trace_line.find_first_of("+)",start); }
+   if(std::string::npos != end)
+   {
+      mangled_name.assign(trace_line, start+1, end-start-1);
+      int status;
+      char* demangled_buf = abi::__cxa_demangle(mangled_name.c_str(), NULL, NULL, &status);
+      if(0==status)
+      {
+         demangled_name = std::string(demangled_buf);
+         free(demangled_buf);
+
+         trace_line.replace(start+1, (end-start-1), demangled_name);
+      }
+      else if(-1==status)
+      {
+         std::cerr << "vpr::SystemBase::dmangleTraceString: A memory allocation failiure occurred.\n";
+      }
+      else if(-2 == status)
+      {
+         std::cerr << "vpr::SystemBase::demangleTraceString: mangled_name is not a valid name under the C++ ABI mangling rules.\n";
+      }
+      else if(-3 == status)
+      {
+         std::cerr << "vpr::SystemBase::demangleTraceString: One of the arguments is invalid.\n";
+      }
+   }
+
+   //trace_line += std::string(" mangle:") + mangled_name + std::string(" demangled:") + demangled_name;
+   return trace_line;
+
+#else
+   return std::string(traceLine);
+#endif
+}
+
+}
 
 namespace vpr
 {
@@ -74,7 +135,7 @@ std::string SystemBase::getCallStack()
 
    for (size_t i = 0; i < size; ++i)
    {
-      trace_stream << "   " << i << ":" << strings[i] << std::endl;
+      trace_stream << "   " << i << ":" << demangleTraceString(strings[i]) << std::endl;
    }
 
    free(strings);
