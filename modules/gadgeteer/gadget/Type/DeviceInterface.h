@@ -181,8 +181,9 @@ public:
          if(NULL == mTypeSpecificProxy)
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-               << "vjAnalogInterface: Tried to point at proxy of incorrect type named: "
-               << mProxyName << std::endl << vprDEBUG_FLUSH;
+               << "[gadget::DeviceInterface::refresh()] Tried to point at "
+               << "proxy of incorrect type named '" << mProxyName << "'"
+               << std::endl << vprDEBUG_FLUSH;
          }
       }
 
