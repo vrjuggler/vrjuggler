@@ -334,7 +334,7 @@ vjSocketImpWinSock::send (const std::vector<char>& buffer, const size_t length,
 vjSocketImpWinSock::vjSocketImpWinSock ()
     : vjSocketImp(), m_sockfd(-1)
 {
-    /* Do nothing. */ ;
+    init();
 }
 
 // ----------------------------------------------------------------------------
@@ -349,12 +349,23 @@ vjSocketImpWinSock::vjSocketImpWinSock (const std::string& address,
                                         const vjSocketTypes::Type type)
     : vjSocketImp(address, port, domain, type), m_sockfd(-1)
 {
-    /* Do nothing. */ ;
+    init();
 }
 
 // ----------------------------------------------------------------------------
 // Destructor.  This currently does nothing.
 // ----------------------------------------------------------------------------
 vjSocketImpWinSock::~vjSocketImpWinSock () {
-    /* Do nothing. */ ;
+    init();
+}
+
+// ----------------------------------------------------------------------------
+// Do the WinSock initialization required before any socket stuff can happen.
+// This is copied from a similar function given on page 279 of _Effective
+// TCP/IP Programming_ by Jon C. Snader.
+// ----------------------------------------------------------------------------
+void
+vjSocketImpWinSock::init () {
+    WSADATA wsadata;
+    WSAStartup(MAKEWORD(2, 2), &wsadata);
 }

@@ -518,6 +518,15 @@ protected:
     virtual ~vjSocketImpWinSock(void);
 
     // ------------------------------------------------------------------------
+    //: Do the WinSock initialization required before any socket stuff can
+    //+ happen.
+    //
+    //! PRE: None.
+    //! POST: The WinSock startup operation is performed.
+    // ------------------------------------------------------------------------
+    void init(void);
+
+    // ------------------------------------------------------------------------
     // Look up the address in m_file_name and store the address in the
     // m_host_addr structure's address field.
     //
