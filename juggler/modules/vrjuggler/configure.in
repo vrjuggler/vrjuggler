@@ -338,10 +338,14 @@ fi
 # of these variables after this point.
 VJ_STRIP_DUPLICATE_ARGS(CFLAGS, [$CFLAGS])
 VJ_STRIP_DUPLICATE_ARGS(CXXFLAGS, [$CXXFLAGS])
-VJ_STRIP_DUPLICATE_ARGS(INCLUDES, [$INCLUDES])
 VJ_STRIP_DUPLICATE_ARGS(DEPEND_FLAGS, [$DEPEND_FLAGS])
 VJ_STRIP_DUPLICATE_ARGS(DEPEND_EXTRAS, [$DEPEND_EXTRAS])
 VJ_STRIP_DUPLICATE_ARGS(vrj_cxxflags, [$vrj_cxxflags])
+
+# XXX: The macro does not handle spaces in paths correctly.
+if test "x$OS_TYPE" != "xWin32" ; then
+   VJ_STRIP_DUPLICATE_ARGS(INCLUDES, [$INCLUDES])
+fi
 
 VJ_APP_CXXFLAGS='$(VRJ_CXX_FLAGS)'
 VJ_APP_EXTRA_LIBS='$(VRJ_EXTRA_LIBS_STATIC)'
@@ -425,9 +429,9 @@ if test "x$OS_TYPE" = "xWin32" ; then
     VJROOT_ABS=`dospath -p "$VJROOT_ABS"`
     JUGGLERROOT_ABS=`dospath -p "$JUGGLERROOT_ABS"`
 
-    DEPEND_EXTRAS=`dospath "$DEPEND_EXTRAS"`
-    INCLUDES=`dospath "$INCLUDES"`
-    LIBS=`dospath "$LIBS"`
+#    DEPEND_EXTRAS=`dospath "$DEPEND_EXTRAS"`
+#    INCLUDES=`dospath "$INCLUDES"`
+#    LIBS=`dospath "$LIBS"`
     LN_S='cp -r'
     RM_LN='rm -rf'
     MTREE_CMD=`dospath "$MTREE_CMD"`
