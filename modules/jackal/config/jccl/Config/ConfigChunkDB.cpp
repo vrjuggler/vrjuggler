@@ -359,8 +359,7 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
    catch (cppdom::Error& xml_e)
    {
       cppdom::Location where( chunk_db_doc->getContext()->getLocation() );
-      std::string errmsg;
-      xml_e.getStrError(errmsg);
+      std::string errmsg = xml_e.getStrError();
 
       // print out where the error occured
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
