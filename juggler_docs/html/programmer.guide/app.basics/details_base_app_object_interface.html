@@ -7,6 +7,9 @@
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>Base application object interface</title>
+<!-- install-web block-ignore-begin -->
+<link rel="stylesheet" type="text/css" href="../../../style/base_style.css">
+<!-- install-web block-ignore-end -->
 </head>
 
 <body>
@@ -19,9 +22,17 @@
   <tr>
     <td></td>
     <td><img border="0" src="${PROGRAMMERGUIDE}/images/myAppHierarchy-highlightVjApp.gif" width="360" height="505" alt=""></td>
-    <td><img border="0" src="${PROGRAMMERGUIDE}/images/AppInitAndMainLoop_modified.gif" width="473" height="491" alt=""></td>
+    <td><img border="0" src="${PROGRAMMERGUIDE}/images/AppInitAndMainLoop_modified.gif" width="473" height="491" alt=""></td>    
     <td></td>
   </tr>
+  <!-- install-web block-ignore-begin -->
+  <tr>
+    <td></td>
+    <td><img border="0" src="../images/myAppHierarchy-highlightVjApp.gif" width="360" height="505" alt=""></td>
+    <td><img border="0" src="../images/AppInitAndMainLoop_modified.gif" width="473" height="491" alt=""></td>
+    <td></td>
+  </tr>
+  <!-- install-web block-ignore-end -->
   <tr>
     <td colspan="4"></td>
   </tr>
@@ -96,11 +107,8 @@ pre-processing that the application needs to setup data structures.</p>
     <td width="5%"></td>
     <td width="95%">
 <p>This function is for graphics API specific initialization. &nbsp;It is used to 
-
 initialize any data members that cannot be initialized until the 
-
 graphics API has been initialized.</p>
-
 <p>NOTE: In OpenGL applications, there is no concept of initializing 
 
 the API, so it is not normally used.</p>
@@ -137,9 +145,7 @@ Uses</h5>
   <tr>
     <td width="5%"></td>
     <td width="95%">
-
 <p>
-
 Scene graph loading or other API specific initialization.</p>
     </td>
   </tr>
@@ -160,17 +166,11 @@ Frame functions</a></h3>
   <tr>
     <td width="5%"></td>
     <td width="95%">
-
 The preFrame() method is called when the system is about to trigger drawing. &nbsp;This is the 
-
 time to do any last minute updates of data based on input 
-
 device status. &nbsp;It is best to avoid doing any time-consuming computation in this method because 
-
 the time use in this method contributes to the overall 
-
 device latency in the system. &nbsp;The devices will not be resampled before rendering begins.
-
     </td>
   </tr>
   <tr>
@@ -184,29 +184,20 @@ device latency in the system. &nbsp;The devices will not be resampled before ren
   <tr>
     <td width="5%"></td>
     <td width="95%">
-
 Called immediately before triggering rendering of current frame.
-
     </td>
   </tr>
   <tr>
     <td width="5%"></td>
     <td width="95%">
-
 <h5>
-
 Uses</h5>
-
     </td>
   </tr>
   <tr>
     <td width="5%"></td>
     <td width="95%">
-
-<p>
-
-Last millisecond updating data in response to device input. (latency critical
-code)</p>
+<p>Last millisecond updating data in response to device input. (latency critical code)</p>
     </td>
   </tr>
 </table>
@@ -241,10 +232,8 @@ while it is being used to render.
   <tr>
     <td width="5%"></td>
     <td width="95%">
-
 Called after rendering has been triggered, but before rendering has necessarily
 finished.
-
     </td>
   </tr>
   <tr>
@@ -260,10 +249,7 @@ Uses</h5>
   <tr>
     <td width="5%"></td>
     <td width="95%">
-
-<p>
-
-Time consuming computation for the next frame.&nbsp; Parallel computation.</p>
+<p>Time consuming computation for the next frame.&nbsp; Parallel computation.</p>
     </td>
   </tr>
 </table>
@@ -279,11 +265,8 @@ Time consuming computation for the next frame.&nbsp; Parallel computation.</p>
   <tr>
     <td width="5%"></td>
     <td width="95%">
-
     This is a good place to do any data 
-
-updates that are not dependent upon input devices, but can not be overlapped with the rendering process.
-
+    updates that are not dependent upon input devices, but can not be overlapped with the rendering process.
     </td>
   </tr>
   <tr>

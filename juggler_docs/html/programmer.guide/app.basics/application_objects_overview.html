@@ -7,7 +7,9 @@
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>Application Objects Overview</title>
-<!-- <link rel="stylesheet" type="text/css" href="../../../style/base_style.css"> -->
+<!-- install-web block-ignore-begin -->
+<link rel="stylesheet" type="text/css" href="../../../style/base_style.css">
+<!-- install-web block-ignore-end -->
 </head>
 
 <body>
@@ -17,6 +19,10 @@
 
 
 <img border="0" src="${PROGRAMMERGUIDE}/images/VP_APP_sepLine.gif" width="231" height="226" alt="">
+<!-- install-web block-ignore-begin -->
+<br><img border="0" src="../images/VP_APP_sepLine.gif" width="231" height="226" alt="">
+<!-- install-web block-ignore-end -->
+
 <p>Figure 1: Application object and virtual platform</p>
 <h2>All VR Juggler apps are objects</h2>
 <p>In VR Juggler, all applications are objects. &nbsp;VR Juggler uses the 
@@ -49,35 +55,31 @@ about the resources needed and used by the applications, it maintains a very str
 time. This is the basis to maintain coherence across the system.</p>
 
 <h3>Application objects derive from graphics API specific base classes</h3>
-<p><img border="0" src="${PROGRAMMERGUIDE}/images/vj_app_hier_small.gif" width="241" height="246" alt=""><img border="0" src="${PROGRAMMERGUIDE}/images/myAppHierarchy.gif" width="270" height="379" alt=""></p>
+<p>
+<img border="0" src="${PROGRAMMERGUIDE}/images/vj_app_hier_small.gif" width="241" height="246" alt="">
+<img border="0" src="${PROGRAMMERGUIDE}/images/myAppHierarchy.gif" width="270" height="379" alt="">
+</p>
+<!-- install-web block-ignore-begin -->
+<p>
+<img border="0" src="../images/vj_app_hier_small.gif" width="241" height="246" alt="">
+<img border="0" src="../images/myAppHierarchy.gif" width="270" height="379" alt="">
+</p>
+<!-- install-web block-ignore-end -->
 <p>Figure 2: vjApp hierarchy</p>
-<p>The first step in defining an application object is to derive from the base classes that define the 
-
-kernel and draw manager interfaces the 
-
+<p>The first step in defining an application object is to derive 
+from the base classes that define the kernel and draw manager interfaces the 
 application needs to implement. &nbsp;There is a base class for the interface that the kernel expects
-(vjApp) and a base class for each draw manager 
+(vjApp) and a base class for each draw manager interface (vjPfApp, vjGlApp, etc) (see Figure 2).</p>
 
-interface (vjPfApp, vjGlApp, etc) (see Figure 2).</p>
+<p>The kernel interface defined in vjApp, specifies methods for 
+initialization, shutdown, and to give the application processing time.</p>
 
-<p>
-
-The kernel interface defined in vjApp, specifies methods for initialization, shutdown, and to give the application processing 
-
-time.</p>
-
-<p>
-
-The draw manager interface specified in vj*App classes, specifies the API
-specific functions that are necessary to render the virtual environment. &nbsp;The interface 
-
+<p>The draw manager interface specified in vj*App classes, specifies the API
+specific functions that are necessary to render the virtual environment. The interface 
 has functions for drawing the scene and for initializing context-specific information.</p>
 
-<p>
-
-The system expects all applications to implement this set of methods that the kernel uses to interact 
-
-with the application.</p>
+<p> The system expects all applications to implement this set of methods 
+that the kernel uses to interact with the application.</p>
 
 <h3>Writing and application = Filling in the blanks</h3>
 
