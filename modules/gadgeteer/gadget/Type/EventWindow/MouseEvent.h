@@ -77,8 +77,13 @@ public:
    MouseEvent(const int& state, const bool& isButtonPress, const int& x,
               const int& y, const int& globalX, const int& globalY,
               const unsigned long& time)
-      : gadget::Event(Event::MouseEvent, time), mState(state), mRelativeX(x),
-        mRelativeY(y),mGlobalX(globalX), mGlobalY(globalY)
+      : gadget::Event(Event::MouseEvent, time)
+      , mState(state)
+      , mIsButtonPress(isButtonPress)
+      , mRelativeX(x)
+      , mRelativeY(y)
+      , mGlobalX(globalX)
+      , mGlobalY(globalY)
    {
    }
 
