@@ -227,7 +227,7 @@ public class RTRCDataSource
       for(Iterator itr = mRemovedConfigElements.iterator() ; itr.hasNext() ; )
       {
          ConfigElement removed_elm = (ConfigElement)itr.next();
-         mSubject.add(convertElementToString(removed_elm));
+         mSubject.remove(convertElementToString(removed_elm));
       }
       mRemovedConfigElements.clear();
       
