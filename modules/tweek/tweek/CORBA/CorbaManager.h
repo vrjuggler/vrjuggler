@@ -87,9 +87,14 @@ public:
     */
    vpr::ReturnStatus registerSubjectManager(tweek::SubjectManagerImpl* mgr);
 
-   const PortableServer::POA_var& getRootPOA (void)
+   const PortableServer::POA_var& getRootPOA (void) const
    {
       return m_root_poa;
+   }
+
+   const PortableServer::POA_var& getChildPOA (void) const
+   {
+      return m_child_poa;
    }
 
 private:
