@@ -72,7 +72,7 @@ void WallProjection::config(jccl::ConfigChunkPtr chunk)
  * @pre WallRotation matrix must be set correctly.
  * @pre mOrigin*'s must all be set correctly.
  */
-void WallProjection::calcViewMatrix(gmtl::Matrix44f& eyePos)
+void WallProjection::calcViewMatrix( gmtl::Matrix44f& eyePos )
 {
    calcViewFrustum(eyePos);
 
@@ -81,8 +81,7 @@ void WallProjection::calcViewMatrix(gmtl::Matrix44f& eyePos)
    //eye_pos = eye_coord.pos;
 
    // Need to post translate to get the view matrix at the position of the eye
-   mViewMat = mWallRotationMatrix *
-              gmtl::makeTrans<gmtl::Matrix44f, 3>( gmtl::Vec3f(-eye_pos[gmtl::Xelt], -eye_pos[gmtl::Yelt], -eye_pos[gmtl::Zelt]));
+   mViewMat = mWallRotationMatrix * gmtl::makeTrans<gmtl::Matrix44f>( -eye_pos );
 }
 
 

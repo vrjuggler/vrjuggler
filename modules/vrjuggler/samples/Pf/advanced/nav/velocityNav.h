@@ -281,7 +281,7 @@ inline void velocityNav::updateInteraction()
    if(mResetting)
    {
       gmtl::Vec3f hpos;
-      gmtl::setTrans( hpos[0], hpos[1], hpos[2], mHomePos );
+      gmtl::setTrans( hpos, mHomePos );
       vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Resetting") << " to "
                            << hpos << std::endl << vprDEBUG_FLUSH;
    }
@@ -345,8 +345,9 @@ inline void velocityNav::update()
       // NOTE: constrain to the Y axis in GROUND mode (no flying/hopping or diving faster than gravity allows)
       gmtl::Matrix44f constrainedToY;
       //mRotationalAcceleration.constrainRotAxis( false, true, false, constrainedToY );
-      gmtl::setRot(constrainedToY, 0.0f,
-                   gmtl::getYRot(mRotationalAcceleration), 0.0f, gmtl::XYZ); // Only allow Yaw (rot y)
+      gmtl::EulerAngleXYZf euler( 0.0f,
+                   gmtl::makeYRot(mRotationalAcceleration), 0.0f );
+      gmtl::setRot( constrainedToY, euler ); // Only allow Yaw (rot y)
 
       gmtl::xform( trackerZaxis, constrainedToY, trackerZaxis );
       gmtl::xform( trackerXaxis, constrainedToY, trackerXaxis );

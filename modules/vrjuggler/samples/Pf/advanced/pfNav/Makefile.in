@@ -57,10 +57,10 @@ VJ_LIBS		= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
                   @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) @APP_BASIC_LIBS_END@
 
 
-ifeq (@USE_AUDIOJUGGLER@, Y)
-    VJ_INCLUDES +=  -I$(AJ_BASE_DIR)/include
-    VJ_LIBS += -L$(AJ_BASE_DIR)/lib@LIBBITSUF@ -lAudioJuggler
-    CXXFLAGS += -DUSE_AUDIOJUGGLER
+ifeq (@USE_SONIX@, Y)
+    VJ_INCLUDES +=  -I$(SNX_BASE_DIR)/include
+    VJ_LIBS += -L$(SNX_BASE_DIR)/lib@LIBBITSUF@ -lsonix
+    CXXFLAGS += -DUSE_SONIX
 endif
 
 

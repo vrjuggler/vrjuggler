@@ -41,6 +41,7 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
+#include <gmtl/EulerAngle.h>
 
 #include <gadget/Type/PositionProxy.h>
 
@@ -76,9 +77,10 @@ void PositionProxy::setTransform(float xoff, float yoff, float zoff,    // Trans
    if((xrot != 0.0f) || (yrot != 0.0f) || (zrot != 0.0f))
    {
       //rot_mat.makeXYZEuler(xrot, yrot, zrot);
-      gmtl::setRot(rot_mat, gmtl::Math::deg2Rad(xrot),
-                            gmtl::Math::deg2Rad(yrot),
-                            gmtl::Math::deg2Rad(zrot), gmtl::XYZ);
+      gmtl::EulerAngleXYZf euler( gmtl::Math::deg2Rad(xrot),
+                                  gmtl::Math::deg2Rad(yrot),
+                                  gmtl::Math::deg2Rad(zrot) );
+      gmtl::setRot( rot_mat, euler );
    }
 
    mMatrixTransform = (trans_mat * rot_mat);

@@ -41,6 +41,7 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
+#include <gmtl/EulerAngle.h>
 
 namespace gadget
 {
@@ -87,10 +88,10 @@ bool SimPosition::config(jccl::ConfigChunkPtr chunk)
    }
    if((x_rot != 0.0f) || (y_rot != 0.0f) || (z_rot != 0.0f))
    {
-      gmtl::postMult( (*mPos.getPosition()),
-                      gmtl::makeRot<gmtl::Matrix44f>(gmtl::Math::deg2Rad(x_rot),
-                                                     gmtl::Math::deg2Rad(y_rot),
-                                                     gmtl::Math::deg2Rad(z_rot), gmtl::XYZ) );
+      gmtl::EulerAngleXYZf euler( gmtl::Math::deg2Rad(x_rot),
+                                  gmtl::Math::deg2Rad(y_rot),
+                                  gmtl::Math::deg2Rad(z_rot) );
+      gmtl::postMult( (*mPos.getPosition()), gmtl::makeRot<gmtl::Matrix44f>(euler) );
    }
    mPos.setTime();
 
@@ -165,11 +166,11 @@ void SimPosition::moveDir(const float amt, const gmtl::Vec3f dir)
    {
       if(mTransCoordSystem == LOCAL)
       {
-         gmtl::postMult(*(mPos.getPosition()), gmtl::makeTrans<gmtl::Matrix44f, 3>(move_vector) );
+         gmtl::postMult(*(mPos.getPosition()), gmtl::makeTrans<gmtl::Matrix44f>(move_vector) );
       }
       else
       {
-         gmtl::preMult(*(mPos.getPosition()), gmtl::makeTrans<gmtl::Matrix44f, 3>(move_vector) );
+         gmtl::preMult(*(mPos.getPosition()), gmtl::makeTrans<gmtl::Matrix44f>(move_vector) );
       }
 
    }
@@ -220,7 +221,7 @@ void SimPosition::rotAxis(const float amt, const gmtl::Vec3f rotAxis)
      // Get the translation and rotation seperated
      // Make new matrix with Trans*DeltaRot*Rot
      gmtl::Vec3f trans_vec(gmtl::makeTrans<gmtl::Vec3f>(*m));          // Get translation
-     gmtl::Matrix44f trans_mat(gmtl::makeTrans<gmtl::Matrix44f, 3>( trans_vec ));   // Make trans matrix
+     gmtl::Matrix44f trans_mat(gmtl::makeTrans<gmtl::Matrix44f>( trans_vec ));   // Make trans matrix
      gmtl::Matrix44f rot_mat(*m);
 
      gmtl::setTrans(rot_mat, gmtl::Vec3f(0.0f,0.0f,0.0f));  // Clear out trans

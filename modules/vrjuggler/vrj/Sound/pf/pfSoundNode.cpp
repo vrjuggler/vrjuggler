@@ -81,11 +81,11 @@ int pfSoundNode::app(pfTraverser *trav)
 
       pfCoord coord;
       matrix.getOrthoCoord( &coord );
-      pfVec3 pf_soundPosition = coord.xyz;
-
+      
       // set my sound's position.
 #ifdef USE_SONIX
-      vrj::Vec3 soundPosition = vrj::GetVjVec( pf_soundPosition );
+      pfVec3 pf_soundPosition = coord.xyz;
+      gmtl::Vec3f soundPosition = vrj::GetVjVec( pf_soundPosition );
       sonix::instance().setPosition( mSound, soundPosition[0], soundPosition[1], soundPosition[2] );
 #endif
       

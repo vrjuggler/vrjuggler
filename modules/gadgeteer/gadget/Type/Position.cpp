@@ -68,7 +68,8 @@ bool Position::config(jccl::ConfigChunkPtr c)
       // This makes a rotation matrix that moves a pt in
       // the device's coord system to the vj coord system.
       // ==> world_M_transmitter
-    rotMat = gmtl::makeRot<gmtl::Matrix44f>(xr,yr,zr,gmtl::XYZ);
+    gmtl::EulerAngleXYZf euler( xr,yr,zr );
+    rotMat = gmtl::makeRot<gmtl::Matrix44f>( euler );
 
     gmtl::identity(xformMat);
     gmtl::setTrans(xformMat, gmtl::Vec3f(xt, yt, zt) );

@@ -15,13 +15,13 @@ namespace kev
 
       void output( kev::KeyFramer::Key& key )
       {
-         float w, x, y, z;
-         gmtl::setRot( w, x, y, z, key.rotation() );
+         gmtl::AxisAnglef axisAngle;
+         gmtl::set( axisAngle, key.rotation() );
          vprDEBUG(vprDBG_ALL,1)
             << "KEY " << key.time() << ": " << key.position()[0] <<", \t"
             << key.position()[1] << ", \t" << key.position()[2] << ", |#| "
-            << gmtl::Math::rad2Deg( w ) << ", " << x << ", " << y << ", "
-            << z << "\n" <<vprDEBUG_FLUSH;
+            << gmtl::Math::rad2Deg( axisAngle.getAngle() ) << ", " 
+            << axisAngle.getAxis() << "\n" <<vprDEBUG_FLUSH;
       }
 
       void execute( const char* const filename, kev::KeyFramer& kf )
@@ -60,9 +60,10 @@ namespace kev
             frames_file>>pos[0]>>pos[1]>>pos[2]>>deg>>vec[0]>>vec[1]>>vec[2];
 
             // convert [TWIST, VEC] to Quat
-            gmtl::Quatf rot;
             float rad = gmtl::Math::deg2Rad( deg );
-            gmtl::setRot( rot, rad, vec );
+            gmtl::Quatf rot;
+            gmtl::AxisAnglef axisAngle( rad, vec );
+            gmtl::set( rot, axisAngle );
 
             kev::KeyFramer::Key key( time, pos, rot );
             kf.addkey( key );

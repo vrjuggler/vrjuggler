@@ -75,10 +75,11 @@ public:
 
    virtual void heading( float& pitch, float& yaw, float& roll )
    {
-      gmtl::setRot( pitch, yaw, roll, gmtl::XYZ, mCurPos );
-      pitch = -pitch;
-      yaw = -yaw;
-      roll = -roll;
+      gmtl::EulerAngleXYZf pyr;
+      gmtl::setRot( pyr, mCurPos );
+      pitch = -pyr[0];
+      yaw = -pyr[1];
+      roll = -pyr[2];
    }
 
    gmtl::Matrix44f getCurPos() const
@@ -91,7 +92,7 @@ public:
    {
       mHomePos = pos;
       gmtl::Vec3f hpos;
-      gmtl::setTrans( hpos[0], hpos[1], hpos[2], mHomePos );
+      gmtl::setTrans( hpos, mHomePos );
       vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrCYAN,"navigator: HomePosition = ")
                            << hpos << std::endl << vprDEBUG_FLUSH;
     }
@@ -191,10 +192,11 @@ inline void navigator::navRotate( gmtl::Matrix44f rot_mat )
    //mCurPos.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], mCurPos );
 
    gmtl::Matrix44f old_pos = mCurPos;
-   float x_pos, y_pos, z_pos;
-   gmtl::setTrans( x_pos, y_pos, z_pos, old_pos );
-   mCurPos = gmtl::makeRot<gmtl::Matrix44f>(0.0f, gmtl::getYRot(old_pos), 0.0f, gmtl::XYZ); // Only allow Yaw (rot y)
-   gmtl::setTrans(mCurPos, gmtl::Vec3f(x_pos, y_pos, z_pos));
+   gmtl::Vec3f xyz;
+   gmtl::setTrans( xyz, old_pos );
+   gmtl::EulerAngleXYZf euler( 0.0f, gmtl::makeYRot( old_pos ), 0.0f );// Only allow Yaw (rot y)
+   mCurPos = gmtl::makeRot<gmtl::Matrix44f>( euler ); 
+   gmtl::setTrans( mCurPos, xyz );
 
    /*
    float x_rot, y_rot, z_rot;
