@@ -80,6 +80,28 @@ vjRWMutex::tryAcquireRead () {
     return retVal;
 }
 
+//----------------------------------------------------------
+// Try to acquire a write mutex.
+//----------------------------------------------------------
+int
+vjRWMutex::tryAcquireWrite () {
+    int retVal = -1;
+
+    if (stateLock.acquire() != -1)
+    {
+        if(refCount != 0)
+            retVal = -1;
+        else
+        {
+            refCount = -1;
+            retVal = 0;
+        }
+        stateLock.release();
+    }
+
+    return retVal;
+}
+
 //---------------------------------------------------------
 // Release the mutex.
 //
@@ -115,26 +137,4 @@ vjRWMutex::release () {
     stateLock.release();
 
     return retVal;	
-}
-
-//----------------------------------------------------------
-// Try to acquire a write mutex.
-//----------------------------------------------------------
-int
-vjRWMutex::tryAcquireWrite () {
-    int retVal = -1;
-
-    if (stateLock.acquire() != -1)
-    {
-        if(refCount != 0)
-            retVal = -1;
-        else
-        {
-            refCount = -1;
-            retVal = 0;
-        }
-        stateLock.release();
-    }
-
-    return retVal;
 }
