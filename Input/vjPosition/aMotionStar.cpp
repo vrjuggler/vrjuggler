@@ -523,110 +523,113 @@ aMotionStar::sample () {
 
     // First, we need to read the header for the incoming data packet so we
     // know how much data to expect.
-    getRsp(&recv_pkt.header, sizeof(BIRDNET::HEADER));
+    if ( getRsp(&recv_pkt.header, sizeof(BIRDNET::HEADER)) == 0 )
+    {
+       // Record the current sequence number so that we know what to use the
+       // next time we need to send a packet to the server.
+       m_seq_num = ntohs(recv_pkt.header.sequence);
 
-    // Record the current sequence number so that we know what to use the
-    // next time we need to send a packet to the server.
-    m_seq_num = ntohs(recv_pkt.header.sequence);
+       if ( recv_pkt.header.error_code != 0 ) {
+           printError(recv_pkt.header.error_code);
+       }
+       else {
+           // Test the type of the packet read just to be safe.
+           if ( recv_pkt.header.type == BIRDNET::DATA_PACKET_MULTI ) {
+               char* base_ptr;
+               BIRDNET::DATA_RECORD* rec_ptr;
+               unsigned char format_code;
+               unsigned int rec_data_words;
+               size_t rec_data_size;
 
-    if ( recv_pkt.header.error_code != 0 ) {
-        printError(recv_pkt.header.error_code);
-    }
-    else {
-        // Test the type of the packet read just to be safe.
-        if ( recv_pkt.header.type == BIRDNET::DATA_PACKET_MULTI ) {
-            char* base_ptr;
-            BIRDNET::DATA_RECORD* rec_ptr;
-            unsigned char format_code;
-            unsigned int rec_data_words;
-            size_t rec_data_size;
+               getRsp(&recv_pkt.buffer, ntohs(recv_pkt.header.number_bytes));
 
-            getRsp(&recv_pkt.buffer, ntohs(recv_pkt.header.number_bytes));
+               // Use a char* for doing pointer arithmetic.  It starts at the
+               // beginning of the received packet's buffer field.
+               base_ptr = (char*) &recv_pkt.buffer[0];
 
-            // Use a char* for doing pointer arithmetic.  It starts at the
-            // beginning of the received packet's buffer field.
-            base_ptr = (char*) &recv_pkt.buffer[0];
+               for ( unsigned char bird = 0; bird < m_birds_active; bird++ ) {
+                   // Set the record pointer to the current data record's
+                   // address as defined by base_ptr.
+                   rec_ptr = (BIRDNET::DATA_RECORD*) base_ptr;
 
-            for ( unsigned char bird = 0; bird < m_birds_active; bird++ ) {
-                // Set the record pointer to the current data record's address
-                // as defined by base_ptr.
-                rec_ptr = (BIRDNET::DATA_RECORD*) base_ptr;
+                   // The least significant four bits of the data_info field
+                   // contain the number of words (2 bytes) of formatted data.
+                   // m_birds[bird]->data_words already has this value, but we
+                   // read it from the packet to be safe.
+                   rec_data_words = (rec_ptr->data_info) & 0x0f;
+                   rec_data_size  = rec_data_words * 2;
 
-                // The least significant four bits of the data_info field
-                // contain the number of words (2 bytes) of formatted data.
-                // m_birds[bird]->data_words already has this value, but we
-                // read it from the packet to be safe.
-                rec_data_words = (rec_ptr->data_info) & 0x0f;
-                rec_data_size  = rec_data_words * 2;
+                   if ( rec_data_words != m_birds[bird]->data_words ) {
+                       fprintf(stderr,
+                               "[aMotionStar] WARNING: Expecting %u data words from bird %u, got %u\n"
+                               "                       You may have requested more birds than you\n"
+                               "                       have connected, or the birds may not be\n"
+                               "                       connected sequentially\n"
+                               "                       Verify that your configuratoin is correct\n",
+                               m_birds[bird]->data_words, bird, rec_data_words);
+                   }
 
-                if ( rec_data_words != m_birds[bird]->data_words ) {
-                    fprintf(stderr,
-                            "[aMotionStar] WARNING: Expecting %u data words from bird %u, got %u\n"
-                            "                       You may have requested more birds than you\n"
-                            "                       have connected, or the birds may not be\n"
-                            "                       connected sequentially\n"
-                            "                       Verify that your configuratoin is correct\n",
-                            m_birds[bird]->data_words, bird, rec_data_words);
-                }
+                   // Get the four most significant bits of the data_info
+                   // field.  This gives the format code.  See page 134 of the
+                   // Operation Guide for more information.
+                   // m_birds[bird]->format already has this set, but again,
+                   // we read it from the current packet just to be safe.
+                   // This is especially important because an error may have
+                   // occurred thus giving a format code of 15.
+                   format_code = (rec_ptr->data_info >> 4) & 0x0f;
 
-                // Get the four most significant bits of the data_info field.
-                // This gives the format code.  See page 134 of the Operation
-                // Guide for more information.  m_birds[bird]->format already
-                // has this set, but again, we read it from the current packet
-                // just to be safe.  This is especially important because an
-                // error may have occurred thus giving a format code of 15.
-                format_code = (rec_ptr->data_info >> 4) & 0x0f;
+                   if ( format_code != m_birds[bird]->format ) {
+                       fprintf(stderr,
+                               "[aMotionStar] WARNING: Expecting format %u from "
+                               "bird %u, got %u\n", m_birds[bird]->format, bird,
+                               format_code);
+                   }
 
-                if ( format_code != m_birds[bird]->format ) {
-                    fprintf(stderr,
-                            "[aMotionStar] WARNING: Expecting format %u from "
-                            "bird %u, got %u\n", m_birds[bird]->format, bird,
-                            format_code);
-                }
+                   // If the format code is 15, an error occurred in sampling
+                   // the data, and therefore the data block is invalid and
+                   // should be ignored.
+                   if ( format_code == 15 ) {
+                       fprintf(stderr,
+                               "[aMotionStar] An error occurred in sampling\n");
+                   }
+                   // Now that we have the size of the data block in the current
+                   // record, we can read it into the current bird's data block.
+                   // Since it uses a union, we can just read into its base
+                   // address.
+                   else {
+                       memcpy(&m_birds[bird]->data, &rec_ptr->data,
+                              rec_data_size);
+                   }
 
-                // If the format code is 15, an error occurred in sampling the
-                // data, and therefore the data block is invalid and should be
-                // ignored.
-                if ( format_code == 15 ) {
-                    fprintf(stderr,
-                            "[aMotionStar] An error occurred in sampling\n");
-                }
-                // Now that we have the size of the data block in the current
-                // record, we can read it into the current bird's data block.
-                // Since it uses a union, we can just read into its base
-                // address.
-                else {
-                    memcpy(&m_birds[bird]->data, &rec_ptr->data,
-                           rec_data_size);
-                }
+                   // The size of each record may vary depending on the data
+                   // format in use.  Increment the address of the current
+                   // record by the statically known sizes and by the size of
+                   // the current record's data block (each bird may have a
+                   // different sized data block).
+                   base_ptr += sizeof(rec_ptr->address) +
+                                   sizeof(rec_ptr->data_info) + rec_data_size;
 
-                // The size of each record may vary depending on the data
-                // format in use.  Increment the address of the current
-                // record by the statically known sizes and by the size of
-                // the current record's data block (each bird may have a
-                // different sized data block).
-                base_ptr += sizeof(rec_ptr->address) +
-                                sizeof(rec_ptr->data_info) + rec_data_size;
+                   // If the most significant bit is set in address, then there
+                   // is also button data for this record.
+                   if ( rec_ptr->address & 0x80 ) {
+                       // Copy the button data into the current bird's info
+                       // block.
+                       m_birds[bird]->buttons[0] = rec_ptr->button_data[0];
+                       m_birds[bird]->buttons[1] = rec_ptr->button_data[1];
 
-                // If the most significant bit is set in address, then there
-                // is also button data for this record.
-                if ( rec_ptr->address & 0x80 ) {
-                    // Copy the button data into the current bird's info block.
-                    m_birds[bird]->buttons[0] = rec_ptr->button_data[0];
-                    m_birds[bird]->buttons[1] = rec_ptr->button_data[1];
-
-                    // Increment the pointer to account for the button data.
-                    base_ptr += sizeof(rec_ptr->button_data);
-                }
-            }
-        }
-        // It's unlikely that we will have received the wrong packet type at
-        // this point, but this message will warn us if we did.
-        else {
-            fprintf(stderr,
-                    "[aMotionStar] WARNING: Got unexpected packet type %u in "
-                    "sample()!\n", recv_pkt.header.type);
-        }
+                       // Increment the pointer to account for the button data.
+                       base_ptr += sizeof(rec_ptr->button_data);
+                   }
+               }
+           }
+           // It's unlikely that we will have received the wrong packet type at
+           // this point, but this message will warn us if we did.
+           else {
+               fprintf(stderr,
+                       "[aMotionStar] WARNING: Got unexpected packet type %u "
+                       "in sample()!\n", recv_pkt.header.type);
+           }
+       }
     }
 }
 
