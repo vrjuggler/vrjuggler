@@ -103,6 +103,15 @@ AC_ARG_WITH(gmtl-prefix,
                        Prefix where GMTL is installed  [default=/usr/local]],
             [GMTL_ROOT="$withval"], [GMTL_ROOT=/usr/local])
 
+AC_ARG_WITH(nspr,
+            [  --with-nspr=<PATH>      NSPR installation directory     [default=/usr]],
+            NSPR_ROOT="$withval", NSPR_ROOT='/usr')
+
+AC_ARG_WITH(nspr-includes,
+            [  --with-nspr-includes=<DIR>
+                       NSPR headers are in DIR         [default=/usr/include]],
+            _with_nspr_inc="$withval", _with_nspr_inc="$NSPR_ROOT/include")
+
 AC_ARG_WITH(openal,
             [  --with-openal=<PATH>    OpenAL installation directory   [default=/usr/local]],
             [OPENAL_ROOT="$withval"], [OPENAL_ROOT='/usr/local'])
@@ -168,6 +177,11 @@ if test -d "$CPPUNIT_ROOT/include/cppunit" ; then
    TARGETS="$TARGETS cppunit"
 fi
 
+if test -e "${_with_nspr_inc}/nspr/nspr.h" ; then
+   TARGETS="$TARGETS nspr"
+   NSPR_INC_DIR="${_with_nspr_inc}"
+fi
+
 if test -d "$OPENAL_ROOT/include/AL" ; then
    TARGETS="$TARGETS openal"
 fi
@@ -229,6 +243,8 @@ AC_SUBST(CXX_ORB_NAME)
 AC_SUBST(CXX_ORB_ROOT)
 AC_SUBST(CXX_ORB_BIN_DIR)
 AC_SUBST(CXX_ORB_LIB_DIR)
+AC_SUBST(NSPR_ROOT)
+AC_SUBST(NSPR_INC_DIR)
 AC_SUBST(OPENAL_ROOT)
 
 AC_SUBST(OMNIORB_CMDS)
