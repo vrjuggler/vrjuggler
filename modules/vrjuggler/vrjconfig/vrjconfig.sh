@@ -41,6 +41,6 @@ fi
 
 EXTRA_JDK_ARGS="-DVJ_BASE_DIR=${VJ_BASE_DIR}"
 
-. $TWEEK_BASE_DIR/bin/tweek-base.sh --defaultbean=ControlPanel $*
+. $TWEEK_BASE_DIR/bin/tweek-base.sh --defaultbean=VRJConfig $*
 
 exit $status
