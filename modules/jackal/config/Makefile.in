@@ -48,7 +48,8 @@ srcdir	= @srcdir@
 JDK_HOME	= @JDK_HOME@
 JAR		= @JAR@
 JAVAC		= @JAVAC@
-JAVAC_CMD	= $(JAVAC) -d . -sourcepath $(srcdir)
+JAXP_JAR = @JAXP_JAR@
+JAVAC_CMD	= $(JAVAC) -d . -sourcepath $(srcdir) -classpath $(JAXP_JAR)
 JAVADOC		= $(JAVAC:javac=javadoc)
 
 DOC_DIR		= $(HOME)/public_html/vjcontrol
