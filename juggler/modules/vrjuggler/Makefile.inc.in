@@ -253,7 +253,7 @@ endif
 	@echo 'You must now set $$VJ_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo ""
-	@echo "and extend your path to include $$VJ_BASE_DIR/bin"
+	@echo 'and extend your path to include $$VJ_BASE_DIR/bin'
 	@echo "---------------------------------------------------------------"
 
 # Remove the links in $(instlinks).
