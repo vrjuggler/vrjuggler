@@ -516,9 +516,8 @@ if test "x${_enable_osg_api}" = "xyes" ; then
     CPPFLAGS="$CPPFLAGS $STDFLAGS"
 
     AC_CHECK_LIB(osg, osgGetVersion,
-        AC_CHECK_HEADER(osg/Vec3, vj_have_osg='yes',
-            AC_MSG_WARN(*** OpenScenegraph API will not be used (headers not found) ***)),
-        AC_MSG_WARN(*** OpenScenegraph API will not be used (libraries not found) ***), -lX11 -lXext)
+        AC_CHECK_HEADER(osg/Vec3, vj_have_osg='yes', vj_have_osg='no'),
+        vj_have_osg='no', -lX11 -lXext)
 
     CPPFLAGS="${_vjsave_CPPFLAGS}"
 
@@ -527,10 +526,19 @@ if test "x${_enable_osg_api}" = "xyes" ; then
     if test "x$vj_have_osg" = "xyes" ; then
         OSG_API='Y'
         AC_DEFINE(VJ_API_OPENSCENEGRAPH,)
+    else
+        OSG_API='N'
+        OSGROOT='$(OSGHOME)'
+    fi
 
-        LIBOSG='-losg -losgGLUT -losgUtil -losgDB'
-        OSG_INCLUDES="-I$OSGROOT/include"
+    OSG_INCLUDES="-I$OSGROOT/include"
+
+    if test "x$OS_TYPE" = "xWin32" ; then
+        OSG_LDFLAGS="-libpath:$OSGROOT/lib"
+        LIBOSG='osg.lib osgGLUT.lib osgUtil.lib osgDB.lib'
+    else
         OSG_LDFLAGS="-L$OSGROOT/lib"
+        LIBOSG='-losg -losgGLUT -losgUtil -losgDB'
     fi
 
     CFLAGS="${_vjsave_CFLAGS}"
@@ -891,7 +899,7 @@ if test "x$PF_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $PF_INCLUDES"
 fi
 
-if test "x$OSG_INCLUDES" != "x" ; then
+if test "x$OSG_INCLUDES" != "x" -a "x$OSG_API" = "xY" ; then
     INCLUDES="$INCLUDES $OSG_INCLUDES"
 fi
 
@@ -1188,6 +1196,7 @@ AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)
 AC_SUBST(OSGROOT)
 AC_SUBST(OSG_API)
+AC_SUBST(OSG_INCLUDES)
 AC_SUBST(DTK_CONFIG)
 AC_SUBST(HAVE_DTK)
 AC_SUBST(XERCESROOT)
