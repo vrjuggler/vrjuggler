@@ -59,6 +59,7 @@ GlWindowXWin::GlWindowXWin():GlWindow() {
    mPipe = -1;
    mXDisplayName = std::string("");
    mAreKeyboardDevice = false;
+   KeyboardXWin::mShared = true;       // Window is shared
 }
 
 
@@ -69,13 +70,19 @@ GlWindowXWin::~GlWindowXWin() {
 
 
 
-void GlWindowXWin::swapBuffers() {
+void GlWindowXWin::swapBuffers()
+{
+//vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+
    glXSwapBuffers (x_display,  x_window);
 }
 
 
 
-int GlWindowXWin::open() {
+int GlWindowXWin::open()
+{
+//vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+
     /* attempts to open the glxWindow & create the gl context.  Does nothing
      * if the window is already open (& returns true).
      * returns true for success, false for failure.
@@ -251,6 +258,7 @@ int GlWindowXWin::open() {
 
        vrj::Input* dev_ptr = dynamic_cast<vrj::Input*>(this);
 
+       // XXX: Possibly not the best way to add this to input manager
        vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
     }
 
@@ -268,7 +276,10 @@ int GlWindowXWin::open() {
 
 //: Closes the window given
 //! NOTE: this function mucks with the current rendering context */
-int GlWindowXWin::close() {
+int GlWindowXWin::close()
+{
+//vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+
 //     if (!window_is_open)
 //         return true;
 
@@ -303,7 +314,10 @@ int GlWindowXWin::close() {
 
 
 
-bool GlWindowXWin::makeCurrent() {
+bool GlWindowXWin::makeCurrent()
+{
+//vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+
    /* returns true for success,
     * false for failure (eg window not open or glXMakeCurrent fails)
     */
@@ -511,4 +525,4 @@ void GlWindowXWin::processEvent(::XEvent event)
    }
 }
 
-} // namespace bokbokbokbok
+} // namespace vrj
