@@ -140,6 +140,10 @@ vpr::ReturnStatus FileHandleImplUNIX::close()
 {
    vpr::ReturnStatus status;
 
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << "[vpr::FileHandleImplUNIX::close] Closing file descriptor "
+      << mFdesc << std::endl << vprDEBUG_FLUSH;
+
    if ( ::close(mFdesc) == -1 )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
