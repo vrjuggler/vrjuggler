@@ -57,6 +57,8 @@ vpr_n32_flags="@vpr_n32_flags@"
 vpr_64_flags="@vpr_64_flags@"
 LIBBITSUF='@LIBBITSUF@'
 
+USE_GCC='@USE_GCC@'
+
 if [ "x$vpr_default_abi" = "xN32" ]; then
     vpr_abi_flags="$vpr_n32_flags"
 elif [ "x$vpr_default_abi" = "x64" ]; then
@@ -65,10 +67,13 @@ else
     vpr_abi_flags=''
 fi
 
-if [ "x$vpr_default_isa" = "xmips3" -o "x$vpr_default_isa" = "xmips4" ]; then
-    vpr_isa_flags="-$vpr_default_isa"
-else
-    vpr_isa_flags=''
+vpr_isa_flags=''
+
+if [ "x$USE_GCC" != "xyes" ]; then
+   if [ "x$vpr_default_isa" = "xmips3" -o "x$vpr_default_isa" = "xmips4" ]
+   then
+      vpr_isa_flags="-$vpr_default_isa"
+   fi
 fi
 
 prefix=@prefix@
