@@ -62,8 +62,6 @@ EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @
 
 PROGS		= go			\
                   go-ibox		\
-                  go-inputgroup		\
-                  go-logiclass		\
                   aFlockTest		\
                   vjFlockTest		\
                   dummyTrackd		\
@@ -119,18 +117,6 @@ go: main.@OBJ_FILE_SUFFIX@
 # ----------------
 go-ibox: main-ibox.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ main-ibox.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
-
-# ----------------
-# go-inputgroup
-# ----------------
-go-inputgroup: main-inputgroup.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ main-inputgroup.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
-
-# ----------------
-# go-logiclass
-# ----------------
-go-logiclass: main-logiclass.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ main-logiclass.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # fsPinchGloveTest

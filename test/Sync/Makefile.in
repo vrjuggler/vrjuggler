@@ -61,7 +61,7 @@ VPATH		= @srcdir@
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-SYNC_PROGS	= test testBarrier testCond
+SYNC_PROGS	= testCond
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -69,12 +69,6 @@ SYNC_PROGS	= test testBarrier testCond
 default: all
 
 all: $(SYNC_PROGS)
-
-test: test.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ test.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
-
-testBarrier: testBarrier.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ testBarrier.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 testCond: testCond.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ testCond.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
