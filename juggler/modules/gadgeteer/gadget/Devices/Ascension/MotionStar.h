@@ -129,9 +129,9 @@ class vjMotionStar : public vjPosition {
     void            setReportRate( unsigned char n );
     inline unsigned char  getReportRate() { return mMotionStar.getReportRate();}
 
-    void            setIpAddress( const char* n );
-    inline char* getIpAddress () {return mMotionStar.getIpAddress();}
-
+    void            setAddress( const char* n );
+    inline char* getAddress () {return mMotionStar.getAddress();}
+ 
         //: get the x position of the i'th reciever
         inline float       xPos( int i ) { return mMotionStar.xPos(i); }
 

@@ -129,7 +129,7 @@ class aMotionStar {
 
     // constructor
 
-      aMotionStar(char* ipAddress,
+      aMotionStar(char* address,
                   int hemisphere,
 		  unsigned int birdFormat,
 		  unsigned int birdsRequired,
@@ -172,8 +172,8 @@ class aMotionStar {
       void setHemisphere ( int n );
 inline unsigned int getHemisphere () {return hemisphere;}
 
-      void setIpAddress( const char* n );
-inline char* getIpAddress () {return ipAddress;}
+      void setAddress( const char* n );
+inline char* getAddress () {return address;}
 
       void setBirdFormat ( unsigned int n );
 inline unsigned int getBirdFormat () {return birdFormat;}
@@ -236,7 +236,7 @@ private:
 
 float posinfo[3][6];
 bool 			active;
-char                    ipAddress[16];
+char*                   address;
 int x;
 unsigned char           all;
 unsigned char           FBBerror;
