@@ -48,7 +48,7 @@
 // By default the glove is in gesture 0
 //!PUBLIC_API:
 class vjSimGloveGesture
-   : virtual public vjGloveGesture, virtual public vjGlove, public vjSimInput
+   : virtual public vjGloveGesture, virtual public vjGlove, virtual public vjDigital, public vjSimInput
 {
 public:
    //: Construct a vjSimGloveGesture
@@ -60,6 +60,8 @@ public:
    //! RETURNS: id of current gesture
    virtual int getGesture();
 
+   virtual int getDigitalData(int devNum = 0);
+   
    //: Load trained data for the gesture object
    // Loads the file for trained data
    void loadTrainedFile(std::string fileName);
@@ -70,7 +72,7 @@ public:
 
    //: Update the device data
    void updateData ();
-
+   
    //: Return our name
    char* getDeviceName() { return "vjSimGloveGesture"; }
    static std::string getChunkType() { return std::string("SimGloveGesture");}

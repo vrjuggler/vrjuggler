@@ -82,6 +82,33 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
    return true;
 }
 
+//: Get the digital data for the given devNum
+//  Returns digital 0 or 1, if devNum makes sense.<BR>
+//  Returns -1 if function fails or if devNum is out of range.<BR>
+//  NOTE: If devNum is out of range, function will fail, possibly issueing 
+//  an error to a log or console - but will not ASSERT.<BR>   
+int vjSimGloveGesture::getDigitalData(int devNum)
+{
+   int openLookupTable[] = { 0,0,0,0,0,-1,0,0,0,0,0 };
+   int closedLookupTable[] = { 1,1,1,1,1,-1,1,1,1,1,1 };
+   int pointingLookupTable[] = { 1,1,1,0,1,-1,1,1,1,0,1 };
+   switch (mCurGesture)
+   {
+      case 0:
+         //open
+         return openLookupTable[devNum];
+      case 1:
+         //closed
+         return closedLookupTable[devNum];
+      case 2:
+         // pointing
+         return pointingLookupTable[devNum];
+      default:
+         return openLookupTable[devNum];
+         //return -1;// function failed
+   }
+}
+
 //: Get the current gesture.
 //! RETURNS: id of current gesture
 int vjSimGloveGesture::getGesture()

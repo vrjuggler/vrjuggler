@@ -54,7 +54,7 @@ class vjSimRelativePosition : virtual public vjPosition
 {
 public:
    vjSimRelativePosition() {;}
-   ~vjSimRelativePosition() {;}
+   virtual ~vjSimRelativePosition() {;}
 
    virtual bool config(vjConfigChunk* chunk);
 

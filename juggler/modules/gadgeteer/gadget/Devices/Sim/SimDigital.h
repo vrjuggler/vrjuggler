@@ -53,7 +53,7 @@ class vjSimDigital : virtual public vjDigital, public vjSimInput
 {
 public:
    vjSimDigital() {;}
-   ~vjSimDigital() {;}
+   virtual ~vjSimDigital() {;}
 
    virtual bool config(vjConfigChunk* chunk);
 
