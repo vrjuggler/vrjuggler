@@ -132,6 +132,22 @@ Builder: JExplorerBuilder V 1. 0. 7
 	  	<item title="Techniques"
 			link="adv.topics/multi.thread/Multithread-techniques.html"
 			info="">
+		<item title="vjThread"
+			link="advanced.classes/vjThread.html"
+			info="The vjThread interface"
+			image="Leaf.gif">
+		<item title="vjBaseThreadFunctor"
+			link="advanced.classes/vjBaseThreadFunctor.html"
+			info="The vjBaseThreadFunctor class and its use"
+			image="Leaf.gif">
+		<item title="vjSemaphore"
+			link="advanced.classes/vjSemaphore.html"
+			info="The vjSemaphore interface"
+			image="Leaf.gif">
+		<item title="vjMutex"
+			link="advanced.classes/vjMutex.html"
+			info="The vjMutex interface"
+			image="Leaf.gif">
 	</folder>
 	<folder title="Run-time config"
 	  	info="Run-time configuration"
