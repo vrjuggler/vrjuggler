@@ -229,7 +229,6 @@ ifdef BUILD_TYPE
 else
 	$(MAKE) drivers-dbg
 endif
-	$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-drivers
 
 drivers-all drivers-opt:
 	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)
@@ -261,7 +260,6 @@ ifdef BUILD_TYPE
 else
 	$(MAKE) plugins-dbg
 endif
-	$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-plugins
 
 # XXX: DSO_DRIVER_DIR="$(DSO_PLUGIN_DIR)" needs to be changed to DSO_PLUGIN_DIR="$(DSO_PLUGIN_DIR)".
 #	 It is currently only like this since we are using the same build files
