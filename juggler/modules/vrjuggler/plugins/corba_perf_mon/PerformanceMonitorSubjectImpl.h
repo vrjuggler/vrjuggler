@@ -64,6 +64,13 @@ public:
    virtual CORBA::Float getValue(CORBA::Float param);
 
    /**
+    * This function prepares a map of profiles to samples.
+    *
+    * @return   the newly created SampleTimeMap
+    */
+   virtual SampleTimeMap* getValueMap();
+
+   /**
     * This overriding method is needed so that the correct type is returned
     * when the _this() method is invoked.  Without this method, an object of
     * type tweek::Subject_ptr would be returned.

@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/Performance/PluginConfig.h>
+#include <vpr/Perf/ProfileManager.h>
 
 #include <string>
 #include <list>
@@ -52,5 +53,21 @@ namespace vrj
    CORBA::Float PerformanceMonitorSubjectImpl::getValue(CORBA::Float param)
    {
       return param;
+   }
+   
+   SampleTimeMap*
+   PerformanceMonitorSubjectImpl::getValueMap()
+   {
+      using vrj::PerformanceMonitorSubject;
+      SampleTimeMap* value_map = new SampleTimeMap();
+      std::map<std::string, float> sample_time_map = vpr::ProfileManager::getValueMap();
+      std::map<std::string, float>::iterator itr;
+      unsigned long i = 0;
+      for (itr = sample_time_map.begin(); itr != sample_time_map.end(); ++itr,++i)
+      {
+         value_map->mNames[i] = itr->first.c_str();
+         value_map->mSampleTimes[i] = itr->second;
+      }
+      return value_map;
    }
 } // namespace jccl
