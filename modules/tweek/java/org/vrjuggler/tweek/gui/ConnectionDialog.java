@@ -178,8 +178,9 @@ public class ConnectionDialog extends JDialog
       mSubjectMgrPanel.setLayout(mSubjectMgrLayout);
       mSubjectMgrSplitPane.setDividerSize(7);
       mNSConnectButton.setEnabled(false);
-      mNSConnectButton.setMaximumSize(new Dimension(60, 18));
-      mNSConnectButton.setMinimumSize(new Dimension(60, 18));
+      mNSConnectButton.setMaximumSize(new Dimension(91, 26));
+      mNSConnectButton.setMinimumSize(new Dimension(91, 26));
+      mNSConnectButton.setPreferredSize(new Dimension(91, 26));
       mNSConnectButton.setText("Connect");
       mNSConnectButton.addActionListener(new java.awt.event.ActionListener()
       {
@@ -243,8 +244,8 @@ public class ConnectionDialog extends JDialog
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 56, 18));
       mNSConnectPanel.add(mNamingContextField,    new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 44, 6));
-      mNSConnectPanel.add(mNSConnectButton,             new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 0, 0, 0), 45, 5));
+      mNSConnectPanel.add(mNSConnectButton,               new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 0, 0, 0), 0, 0));
 
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
       mButtonPanel.add(mOkayButton, null);
