@@ -567,9 +567,6 @@ AC_OUTPUT(Makefile
           samples/vjcontrol/AudioPlayer/Makefile
           samples/jccl/Makefile
           samples/jccl/serverdemo/Makefile
-          test/Makefile 
-          test/TestSuite/Makefile
-          test/CfgTest/Makefile
           mtree/JCCL.data.dist
           mtree/JCCL.include.dist
           mtree/JCCL.install.dist
