@@ -84,48 +84,6 @@ SocketDatagramImplBSD::recvfrom (void* msg, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImplBSD::recvfrom (std::string& msg, const size_t length,
-                                 const int flags, InetAddr& from,
-                                 ssize_t& bytes_read, const vpr::Interval timeout)
-{
-   if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
-
-   msg.resize(length);
-    memset(&msg[0], '\0', msg.size());
-
-    return recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read, timeout);
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-Status
-SocketDatagramImplBSD::recvfrom (std::vector<vpr::Uint8>& msg,
-                                 const size_t length, const int flags,
-                                 InetAddr& from, ssize_t& bytes_read, const vpr::Interval timeout)
-{
-    Status retval;
-
-    if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
-
-    msg.resize(length);
-
-    memset(&msg[0], '\0', msg.size());
-    retval = recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read, timeout);
-
-    // Size it down if needed, if (bytes_read==length), then resize does
-    // nothing.
-    if ( bytes_read >= 0 ) {
-        msg.resize(bytes_read);
-    }
-
-    return retval;
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-Status
 SocketDatagramImplBSD::sendto (const void* msg, const size_t length,
                                const int flags, const InetAddr& to,
                                ssize_t& bytes_sent, const vpr::Interval timeout)
@@ -148,35 +106,6 @@ SocketDatagramImplBSD::sendto (const void* msg, const size_t length,
     }
 
     return retval;
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-Status
-SocketDatagramImplBSD::sendto (const std::string& msg, const size_t length,
-                               const int flags, const InetAddr& to,
-                               ssize_t& bytes_sent, const vpr::Interval timeout)
-{
-   if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
-
-   vprASSERT(length <= msg.size() && "Length is bigger than data given");
-    return sendto(msg.c_str(), length, flags, to, bytes_sent, timeout);
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-Status
-SocketDatagramImplBSD::sendto (const std::vector<vpr::Uint8>& msg,
-                               const size_t length, const int flags,
-                               const InetAddr& to, ssize_t& bytes_sent,
-                               const vpr::Interval timeout)
-{
-   if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
-
-   vprASSERT(length <= msg.size() && "Length is bigger than data given");
-    return sendto((const void*) &msg[0], length, flags, to, bytes_sent, timeout);
 }
 
 }; // End of vpr namespace
