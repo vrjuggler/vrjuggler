@@ -58,10 +58,13 @@ import org.vrjuggler.jccl.config.event.*;
 
       List categories = new ArrayList();
       categories.add("VRAC");
+
+      List parents = new ArrayList();
       mDef = new ConfigDefinition("Person",
                                   "person",
                                   "",
                                   1,
+                                  parents,
                                   "A person",
                                   categories,
                                   prop_defs);
