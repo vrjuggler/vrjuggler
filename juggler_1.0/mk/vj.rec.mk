@@ -17,7 +17,7 @@ recursive:
             for subdir in $$list; do					\
                 (cd $$subdir && ${MAKE} OPTIMIZER="${OPTIMIZER}"	\
                                     BASE_OBJDIR="${BASE_OBJDIR}"	\
-                                    ${RECTARGET})                        \
+                                    ${RECTARGET})			\
                     || case "$$amf" in					\
                          *=*) exit 1;;					\
                          *k*) fail=yes;;				\
