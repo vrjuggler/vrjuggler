@@ -52,6 +52,7 @@ import org.vrjuggler.jccl.editors.net.TinyBrowser;
 import org.vrjuggler.tweek.TweekCore;
 import org.vrjuggler.tweek.beans.BeanPathException;
 import org.vrjuggler.tweek.beans.BeanRegistry;
+import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.beans.HelpProvider;
 import org.vrjuggler.tweek.beans.XMLBeanFinder;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
@@ -70,9 +71,12 @@ import org.vrjuggler.vrjconfig.ui.*;
 public class ControlPanelView
    extends JPanel
    implements HelpProvider
+            , FileLoader
 {
    public ControlPanelView()
    {
+      mToolbar = new ConfigToolbar(this);
+
       // Make sure all editors are registered.
       PropertyEditorManager.registerEditor(Boolean.class, BooleanEditor.class);
       PropertyEditorManager.registerEditor(String.class, StringEditor.class);
@@ -173,6 +177,56 @@ public class ControlPanelView
    public String getHelpDescription()
    {
       return "VR Juggler Configuration Help ...";
+   }
+
+   public String getFileType()
+   {
+      return "VR Juggler Configuration";
+   }
+
+   public boolean canOpenMultiple()
+   {
+      return false;
+   }
+
+   public boolean openRequested()
+   {
+      return true;
+   }
+
+   public boolean canSave()
+   {
+      return true;
+   }
+
+   public boolean hasUnsavedChanges()
+   {
+      return mContext.getConfigUndoManager().getUnsavedChanges();
+   }
+
+   public boolean saveRequested()
+   {
+      return mToolbar.doSaveAll();
+   }
+
+   public boolean saveAsRequested()
+   {
+      return false;
+   }
+
+   public boolean saveAllRequested()
+   {
+      return mToolbar.doSaveAll();
+   }
+
+   public boolean closeRequested()
+   {
+      return true;
+   }
+
+   public int getOpenFileCount()
+   {
+      return 1;
    }
 
    public void helpRequested()
@@ -613,7 +667,7 @@ public class ControlPanelView
 
    //--- JBuilder GUI variables ---//
    private BorderLayout mBaseLayout = new BorderLayout();
-   private ConfigToolbar mToolbar = new ConfigToolbar();
+   private ConfigToolbar mToolbar = null;
    private JFileChooser mFileChooser = new JFileChooser();
 
    /**

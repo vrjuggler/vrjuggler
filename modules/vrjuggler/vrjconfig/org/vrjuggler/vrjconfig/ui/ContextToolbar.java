@@ -41,6 +41,8 @@ import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 
+import org.vrjuggler.tweek.TweekCore;
+import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
@@ -65,9 +67,13 @@ public class ContextToolbar
    implements VrjConfigConstants, UndoableEditListener
 {
    public ContextToolbar(File curDir, ConfigContext ctx,
-                         VrjConfig.ConfigIFrame frame)
+                         VrjConfig.ConfigIFrame frame, FileLoader fileLoader)
    {
       mConfigIFrame = frame;
+
+      // Set up file handling stuff needed for communication with the Tweek
+      // Java GUI.
+      mFileLoaderBean = fileLoader;
 
       try
       {
@@ -133,12 +139,25 @@ public class ContextToolbar
                                                         TweekFrameListener.class);
    }
 
+   public void addNotify()
+   {
+      super.addNotify();
+      TweekCore.instance().registerFileActionGenerator(mFileActionGen);
+   }
+
+   public void removeNotify()
+   {
+      TweekCore.instance().unregisterFileActionGenerator(mFileActionGen);
+      super.removeNotify();
+   }
+
    public void undoableEditHappened(UndoableEditEvent e)
    {
       undoBtn.setEnabled(true);
       saveBtn.setEnabled(true);
       redoBtn.setEnabled(false);
       mConfigIFrame.setTitle("Configuration Editor < Unsaved >");
+      mFileActionGen.fireChangePerformed(mFileLoaderBean);
    }
 
    public void addToToolbar(Component comp)
@@ -506,6 +525,10 @@ public class ContextToolbar
       System.out.println("Unregistering listener");
       EventListenerRegistry.instance().unregisterListener(mTweekFrameListener,
                                                           TweekFrameListener.class);
+
+      // Indicate that a close operation was performed successfully.
+      mFileActionGen.fireClosePerformed(mFileLoaderBean);
+
       return true;
    }
 
@@ -633,6 +656,9 @@ public class ContextToolbar
       {
          public void actionPerformed(ActionEvent evt)
          {
+            // We do not fire a file open action for this event because it
+            // cannot be invoked except through the use of newBtn, so no one
+            // else needs to know about this activity.
             doNew();
          }
       });
@@ -641,6 +667,9 @@ public class ContextToolbar
       {
          public void actionPerformed(ActionEvent evt)
          {
+            // We do not fire a file open action for this event because it
+            // cannot be invoked except through the use of openBtn, so no one
+            // else needs to know about this activity.
             doOpen();
          }
       });
@@ -649,7 +678,13 @@ public class ContextToolbar
       {
          public void actionPerformed(ActionEvent evt)
          {
-            doSave();
+            if ( doSave() )
+            {
+               // Indicate that a save operation was completed successfully.
+               // We only do this here because we can guarantee that a child
+               // of this component is the true source of the save event.
+               mFileActionGen.fireSavePerformed(mFileLoaderBean);
+            }
          }
       });
 
@@ -657,7 +692,13 @@ public class ContextToolbar
       {
          public void actionPerformed(ActionEvent evt)
          {
-            doSaveAs();
+            if ( doSaveAs() )
+            {
+               // Indicate that a save-as operation was completed successfully.
+               // We only do this here because we can guarantee that a child
+               // of this component is the true source of the save event.
+               mFileActionGen.fireSaveAsPerformed(mFileLoaderBean);
+            }
          }
       });
 
@@ -666,6 +707,7 @@ public class ContextToolbar
          public void actionPerformed(ActionEvent evt)
          {
             doUndo();
+            mFileActionGen.fireChangePerformed(mFileLoaderBean);
          }
       });
 
@@ -674,6 +716,7 @@ public class ContextToolbar
          public void actionPerformed(ActionEvent evt)
          {
             doRedo();
+            mFileActionGen.fireChangePerformed(mFileLoaderBean);
          }
       });
 
@@ -990,6 +1033,9 @@ public class ContextToolbar
    private Container mParentFrame = null;
    private VrjConfig.ConfigIFrame mConfigIFrame = null;
    private TweekFrameAdapter mTweekFrameListener = null;
+
+   private FileLoader          mFileLoaderBean = null;
+   private FileActionGenerator mFileActionGen = new FileActionGenerator();
 
    /**
     * Our special context change listener used to toggle the save and expand
