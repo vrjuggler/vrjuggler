@@ -147,29 +147,6 @@ public:
    }
 
    /**
-    * Executes a step in the simulation.  If the simulation is not already
-    * running, it is started.
-    *
-    * @post At least one step is taken in the socket simulation.
-    *
-    * @param max_interval The maximum step to take.  This is used to jump
-    *                     over intervals when it is known that no activity
-    *                     will occur.  This is an optional, and it defaults
-    *                     to 1 (take only a single step).
-    */
-/*
-   void step (vpr::Uint32 max_interval = 1)
-   {
-      if ( ! m_started )
-      {
-         start();
-      }
-
-      vpr::sim::Controller::instance()->getSocketManager().step(max_interval);
-   }
-*/
-
-   /**
     * Queries the running state of this socket simulation.  The simulation is
     * considered running if it has been started and if the Sim Socket
     * Manager still has active sockets registered.
@@ -188,7 +165,23 @@ public:
    void addEvent(const vpr::Interval& event_time,
                  const NetworkGraph::net_edge_t edge);
 
+   /**
+    * Processes the next event in the event queue no matter how far into the
+    * (simulated) future it occurs.  If there is an event in the queue, it will
+    * be processed by this method.
+    */
    void processNextEvent(void);
+
+   /**
+    * Limits the time frame for the occurrence of the next event to the given
+    * time step.  There may not be an event in the queue that occurs between
+    * the current time and the time step, and in that case, no event will be
+    * processed.
+    *
+    * @param time_step The maximum time step allowed for the simulation in
+    *                  tens of microseconds.
+    */
+   void processNextEvent(const vpr::Uint32 time_step);
 
    const vpr::sim::Clock& getClock (void) const
    {
