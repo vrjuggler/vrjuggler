@@ -49,7 +49,7 @@ namespace vrjTest
 void wandApp::bufferPreDraw()
 {
    glClearColor(0.0, 0.0, 0.0, 0.0);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT);
 }
 
 
@@ -59,6 +59,7 @@ void wandApp::bufferPreDraw()
 
 void wandApp::myDraw()
 {
+   glClear(GL_DEPTH_BUFFER_BIT);
    //std::cout << "\n--- myDraw() ---\n";
 
    //std::cout << "HeadPos:" << vrj::Coord(*mHead->getData()).pos << "\t"
