@@ -34,12 +34,14 @@
 
 #include <GL/gl.h>
 
+#include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Vec.h>
 
 #include <gadget/Type/Position/PositionUnitConversion.h>
 
+#include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/SurfaceViewport.h>
 
@@ -62,7 +64,7 @@ void WallTest::draw()
       glEnable(GL_NORMALIZE);
       glEnable(GL_LIGHT0);
       glLightfv(GL_LIGHT0,GL_POSITION,mLightPosition.getData());
-      glLightf(GL_LIGHT0,GL_LINEAR_ATTENUATION,0.1);
+      glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.1f);
       glEnable(GL_COLOR_MATERIAL);
       glEnable(GL_LIGHTING);
    }
@@ -269,7 +271,7 @@ void WallTest::drawGrid()
 
    glColor3f(1,1,0);
    glBegin(GL_LINE_LOOP);
-   for(x=0;x<M_PI*2;x+=M_PI/20.0)
+   for ( x = 0; x < Math::TWO_PI; x += Math::PI / 20.0 )
    {
       glVertex2f(sin(x)*5,cos(x)*5);
    }
