@@ -311,8 +311,12 @@ public class ConnectionDialog extends JDialog
       // Something went wrong with the CORBA service initialization.
       catch (org.omg.CORBA.SystemException sys_ex)
       {
-         // Disable the Naming Service connection button just to be safe.
-         mNSConnectButton.setEnabled(false);
+         // Make sure the connection button is enabled.  We do not know what
+         // caused the connection to fail, but failure should not disallow any
+         // further attempts to connect.
+         mNSConnectButton.setEnabled(true);
+
+         // Pop up a dialog stating that the connection failed.
          JOptionPane.showMessageDialog(null, "CORBA System Exception: '" +
                                        sys_ex.getMessage() + "'",
                                        "CORBA System Exception",
