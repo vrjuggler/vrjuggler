@@ -713,7 +713,16 @@ public class ConfigChunkDBEditor
          ConfigChunk chunk = new ConfigChunk(chooser.getSelectedChunkDesc());
 //         chunk.setName(configChunkDB.getNewName(chunk.getDesc().getName()));
          chunk.setName(chunk.getDesc().getName()); // TODO: Compute a unique name
-         getConfigBroker().add(context, chunk);
+
+         // Make sure this add goes through successfully
+         if (! getConfigBroker().add(context, chunk))
+         {
+            JOptionPane.showMessageDialog(this,
+                                          "There are no configuration files active",
+                                          "Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            return;
+         }
 
          // Make sure the new node gets selected
          List chunk_nodes = getNodesFor(chunk);
