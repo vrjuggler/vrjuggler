@@ -30,6 +30,7 @@ if($opt_a == 1)
 $command .= " -a";
 }
 
+print "$command\n\n\n\n-------------\n\n";
 system("$command");
 my $netscape_command = "netscape " . $html_install_prefix . "index.html &";
 print "$netscape_command\n";

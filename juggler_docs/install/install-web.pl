@@ -608,10 +608,12 @@ sub create_script($)
    print OUTFILE "\$command .= \" -f \$html_footer_filename\";\n";
    print OUTFILE "\$command .= \" -h \$html_install_prefix\";\n";
    print OUTFILE "\$command .= \" -w \$subst_file\";\n";
+   print OUTFILE "\$command .= \" -z use.last.build.pl\";\n";
    print OUTFILE "if(\$opt_a == 1)\n{\n";
    print OUTFILE "\$command .= \" -a\";\n}";
    print OUTFILE "\n\n";
 
+   print OUTFILE "print \"\$command\\n\\n\\n\\n----------------\\n\\n\";\n";
    print OUTFILE "system(\"\$command\");\n";
 
    ## Netscape executing command ##
