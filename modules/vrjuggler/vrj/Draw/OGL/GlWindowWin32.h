@@ -150,8 +150,7 @@ public:
     int            mPipe;
     std::string    mXDisplayName;       /**<  Name of the x display to use */
 
-    PIXELFORMATDESCRIPTOR* mMatch;    /**< Points the the found pixel format */
-    bool           mAreKeyboardDevice;  /**< Should we act as a keyboard device too? */
+    PIXELFORMATDESCRIPTOR* mMatch;    /**< Points the the found pixel format */    
 };
 
 } // End of vrj namespace

@@ -34,6 +34,7 @@
 #define _VRJ_GL_WIN_OSX_H_
 
 #include <vrj/vrjConfig.h>
+#include <vector>
 
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Kernel/Kernel.h>
@@ -139,8 +140,7 @@ private:
     long            gFrameWindow;
     AbsoluteTime        gTimeWindow;
     float           gRotation;
-    CFStringRef         window_title;
-    bool           mAreKeyboardDevice;  /**< Should we act as a keyboard device too? */
+    CFStringRef         window_title;    
 
     static AGLContext       aglShareContext;
 };

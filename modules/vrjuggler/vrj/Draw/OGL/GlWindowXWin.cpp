@@ -54,8 +54,7 @@ namespace vrj
 
 GlWindowXWin::GlWindowXWin()
    : GlWindow(), mXDisplay(NULL), mVisualInfo(NULL), mGlxContext(NULL),
-     mXWindow(0), mWindowName(""), mPipe(-1), mXDisplayName(""),
-     mAreKeyboardDevice(false)
+     mXWindow(0), mWindowName(""), mPipe(-1), mXDisplayName("")
 {
    window_is_open = false;
    window_width = window_height = -1;
