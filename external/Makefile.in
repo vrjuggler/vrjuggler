@@ -160,7 +160,7 @@ links-cppdom:
 links-gmtl:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	-$(RM_LN) $(instlinks)/include/gmtl
-	$(LN_S) $(CPPDOM_ROOT)/include/gmtl $(instlinks)/include/gmtl
+	$(LN_S) $(GMTL_ROOT)/include/gmtl $(instlinks)/include/gmtl
 
 links-audiere:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
