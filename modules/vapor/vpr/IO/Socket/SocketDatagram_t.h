@@ -50,7 +50,8 @@ namespace vpr {
  * @author Kevin Meinert
  */
 template<class SocketConfig_>
-class SocketDatagram_t : public Socket_t<SocketConfig_>, public SocketStreamOpt
+class SocketDatagram_t : public Socket_t<SocketConfig_>,
+                         public SocketDatagramOpt
 {
 public:
    typedef SocketConfig_ Config;
