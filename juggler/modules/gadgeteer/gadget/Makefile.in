@@ -31,7 +31,7 @@ all: dbg opt dso ddso
 
 dbg opt dso ddso obj depend newdepend install:
 	${MAKE} RECTARGET="$@" OPTIMIZER="${OPTIMIZER}"		\
-            OBJDIR="${OBJDIR}" recursive
+            BASE_OBJDIR="${BASE_OBJDIR}" recursive
 
 # -----------------------------------------------------------------------------
 # Clean-up.
