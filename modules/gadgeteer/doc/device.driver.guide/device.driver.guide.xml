@@ -245,7 +245,7 @@ Furthermore, any termios settings that relate specifically to modems are not
 included in the VPR serial port abstraction.</para>
          </section>
          <section id="vpr.sockets.section">
-            <title id="vpr.threads.section">Sockets</title>
+            <title>Sockets</title>
             <indexterm>
                <primary>VPR</primary>
                <secondary>socket abstraction</secondary>
