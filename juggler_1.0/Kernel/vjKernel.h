@@ -115,7 +115,7 @@ protected:  // -- CHUNK HANDLER
    //  that don't have a control thread)
    //
    // It just calls process pending for dependant processes
-   virtual void configProcessPending(bool lockIt = true);
+   virtual int configProcessPending(bool lockIt = true);
 
 protected:  // -- CHUNK HANDLER
    //: Add the chunk to the configuration

@@ -25,7 +25,7 @@
 #include <Kernel/vjDebug.h>
 #include <typeinfo>
 
-void vjConfigChunkHandler::configProcessPending(bool lockIt)
+int vjConfigChunkHandler::configProcessPending(bool lockIt)
 {
    vjConfigManager*     cfg_mgr = vjConfigManager::instance();
    vjDependencyManager* dep_mgr = vjDependencyManager::instance();
@@ -37,7 +37,8 @@ void vjConfigChunkHandler::configProcessPending(bool lockIt)
    vjDEBUG_BEGIN(vjDBG_ALL,0) << typeid(*this).name() << "::configProcessPending: Entering: "
                               << initial_num_pending << " items pending.\n" << vjDEBUG_FLUSH;
 
-   cfg_mgr->lockPending();     // We need to lock the pending first
+   if(lockIt)
+      cfg_mgr->lockPending();     // We need to lock the pending first
    {
       std::list<vjConfigManager::vjPendingChunk>::iterator current, end, remove_me;
       current = cfg_mgr->getPendingBegin();
@@ -119,7 +120,8 @@ void vjConfigChunkHandler::configProcessPending(bool lockIt)
       }        // END: while(current != end)
 
    }
-   cfg_mgr->unlockPending();   // Unlock it
+   if(lockIt)
+      cfg_mgr->unlockPending();   // Unlock it
 
    vjDEBUG_END(vjDBG_ALL,0) << typeid(*this).name() << "::configProcessPending: Exiting: "
                             << cfg_mgr->getNumPending() << " items now pending ==> We processed "
@@ -129,6 +131,8 @@ void vjConfigChunkHandler::configProcessPending(bool lockIt)
    {
 
    }
+
+   return (initial_num_pending-cfg_mgr->getNumPending());
 }
 
 

@@ -60,7 +60,8 @@ public:
    //+       defaults to true.  The only time this should be false is 
    //+       if you override this function and still want to make use of it's abilities
    //+         (ex.  The kernel needs to do this because if has to call configProcessPending on other managers in addition to itself)
-   virtual void configProcessPending(bool lockIt = true);
+   //! RETURNS: Number of chunks it actually processes
+   virtual int configProcessPending(bool lockIt = true);
 
 protected:
    //: Add the chunk to the configuration
