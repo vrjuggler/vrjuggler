@@ -36,11 +36,14 @@ use RecurseDir;
 
 # get opts:
 use Getopt::Std;
-getopts('t:c:ha');
+getopts('t:c:e:ha');
 
 my $tags_file = "$opt_t";
 my $copyright_file = "$opt_c";
-   
+my @extensions = split( /,/, "$opt_e" );
+
+
+
 
 if ( $opt_h ) 
 {
@@ -186,8 +189,11 @@ sub recurseFunc ($) {
 }
 
 sub checkName ($) {
-    my $filename = shift;
+   my $filename = shift;
 
-    return 1 if $filename =~ /\.(cpp|[CcHh]|cxx|java)$/;
-    return 0;
+   foreach (@extensions)
+   {
+      return 1 if $filename =~ /\.$_$/;
+   }
+   return 0;
 }
