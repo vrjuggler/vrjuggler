@@ -36,7 +36,10 @@ vpath %.C @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
 
-DEPEND_SRCS	:= vjInputManager.C
+DEPEND_SRCS	:= vjInputManager.C \
+		   vjDeviceInterface.C \
+		   vjPosInterface.C
+		   
 
 INPUT_GROUP_OBJECTS := $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
 
