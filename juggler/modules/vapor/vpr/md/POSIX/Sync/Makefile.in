@@ -57,7 +57,8 @@ INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 
 ifeq (@SUBSYSTEM@, POSIX)
-    SRCS	= MutexPosix.cpp
+    SRCS	= MutexPosix.cpp \
+                  CondVarPosix.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk
