@@ -154,23 +154,27 @@ vpr::SerialTypes::UpdateActionOption SerialPortImplTermios::getUpdateAction ()
 // Clear all flags by setting them to 0. This is mainly needed by Linux
 // because IRIX does this automatically.
 // ----------------------------------------------------------------------------
+
 vpr::ReturnStatus SerialPortImplTermios::clearAll ()
 {
-    vpr::ReturnStatus status;
-  
-    int pinchfd = getHandle();
-    struct termios data;
-    data.c_cflag = 0;
-    data.c_lflag = 0;
-    data.c_iflag = 0;
-    data.c_oflag = 0;
-    data.c_cc[ VMIN ] = 1;   //Set default to 1, setting 0 would be dangerous
-    if (tcsetattr(pinchfd, TCSAFLUSH, &data) < 0) 
+    std::cout << "Clear ALL" << std::endl;
+    struct termios term;
+    vpr::ReturnStatus retval;
+    if ( (retval = getAttrs(&term)).success() )
     {
-        std::cout<<"[pinch] tcsetattr failed\n"<<std::flush;
-        status.setCode(ReturnStatus::Fail);
-        return status;
+        std::string msg;
+        term.c_cflag = 0;
+        term.c_lflag = 0;
+        term.c_iflag = 0;
+        term.c_oflag = 0;
+        term.c_cc[ VMIN ] = 1;   //Set default to 1, setting 0 would be dangerous
+        
+        // Construct the error message to send to setAttrs().
+        msg = "Could set Clear All settings";
+        
+        retval = setAttrs(&term, msg);
     }
+    return retval;
 }
 
 // ----------------------------------------------------------------------------
