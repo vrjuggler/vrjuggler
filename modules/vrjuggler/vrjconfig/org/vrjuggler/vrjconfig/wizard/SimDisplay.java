@@ -133,7 +133,7 @@ public class SimDisplay
    /**
     * The name of this display.
     */
-   private String name = "";
+   private String name = "Untitled";
 
    /**
     * The x position of this display.

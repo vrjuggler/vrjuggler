@@ -32,9 +32,14 @@
 package org.vrjuggler.vrjconfig.wizard;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.*;
+import java.beans.*;
 import java.util.*;
 import javax.swing.*;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
@@ -139,6 +144,8 @@ class SimDisplayPanePanel
 
       // Setup the display placer
       wndPlacer.setModel(model);
+      System.out.println("SimDisplayPanePanel.<init>: Setting the placer renderer!");
+      wndPlacer.setRenderer(new SimDisplayRenderer());
 
       // Connect the display placer to the property sheet
       wndPlacer.addPlacerSelectionListener(new PlacerSelectionListener()
@@ -174,6 +181,81 @@ class SimDisplayPanePanel
       placerToolbar.add(addBtn, null);
       this.add(wndPropSheet,  BorderLayout.EAST);
    }
+
+   /**
+    * A specialized renderer for simulator displays in the placer component.
+    */
+   class SimDisplayRenderer
+      extends JPanel
+      implements PlacerRenderer
+   {
+      private Placer placer;
+      private int index;
+      private boolean selected;
+      private ImageIcon icon, scaledIcon;
+      private JLabel iconLbl = new JLabel();
+
+      public SimDisplayRenderer()
+      {
+         ClassLoader loader = BeanJarClassLoader.instance();
+         icon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/images/graphics_window.png"));
+         scaledIcon = new ImageIcon();
+      }
+
+      public Component getPlacerRendererComponent(Placer placer,
+                                                  Object value,
+                                                  boolean selected,
+                                                  boolean focused,
+                                                  int index)
+      {
+         this.placer = placer;
+         this.index = index;
+         this.selected = selected;
+         if (selected)
+         {
+            setForeground(placer.getSelectionForeground());
+            setBackground(placer.getSelectionBackground());
+         }
+         else
+         {
+            setForeground(placer.getSelectionBackground());
+            setBackground(placer.getSelectionForeground());
+         }
+
+         return this;
+      }
+
+      public void paintComponent(Graphics g)
+      {
+         super.paintComponent(g);
+         if (placer != null && index >= 0)
+         {
+            Point pos = placer.getModel().getLocationOf(index);
+            Dimension dim = placer.getModel().getSizeOf(index);
+
+            // Check if we need to update the scaled image
+            Image img = scaledIcon.getImage();
+            if ((scaledIcon.getIconWidth() != dim.width) ||
+                (scaledIcon.getIconHeight() != dim.height))
+            {
+               img = icon.getImage().getScaledInstance(dim.width, dim.height, Image.SCALE_DEFAULT);
+               scaledIcon.setImage(img);
+            }
+
+            g.drawImage(img, 0, 0, null);
+            if (selected)
+            {
+               g.setColor(getBackground());
+            }
+            else
+            {
+               g.setColor(Color.white);
+            }
+            g.drawRect(0, 0, dim.width-1, dim.height-1);
+            g.fillRect(0, 0, dim.width, 3);
+         }
+      }
+   }
 }
 
 /**
@@ -181,6 +263,7 @@ class SimDisplayPanePanel
  */
 class SimDisplayPlacerModel
    extends AbstractPlacerModel
+   implements PropertyChangeListener
 {
    /**
     * List of all displays in this model.
@@ -192,19 +275,27 @@ class SimDisplayPlacerModel
     */
    public void add(Object obj)
    {
+      SimDisplay disp = (SimDisplay)obj;
+      disp.addPropertyChangeListener(this);
       displays.add(0, obj);
-//      fireItemInserted(0, obj);
+      fireItemsInserted(new int[] { 0 });
    }
 
    public void remove(int idx)
    {
-      Object old = displays.remove(idx);
-//      fireItemRemoved(idx, old);
+      SimDisplay old = (SimDisplay)displays.remove(idx);
+      old.removePropertyChangeListener(this);
+      fireItemsRemoved(new int[] { idx }, new Object[] { old });
    }
 
    public Object getElement(int idx)
    {
       return displays.get(idx);
+   }
+
+   public int getIndexOf(Object obj)
+   {
+      return displays.indexOf(obj);
    }
 
    public Object getElementAt(Point pt)
@@ -267,5 +358,17 @@ class SimDisplayPlacerModel
    public int getSize()
    {
       return displays.size();
+   }
+
+   /**
+    * Called whenever one of the displays contained within the model changes.
+    */
+   public void propertyChange(PropertyChangeEvent evt)
+   {
+      int idx = getIndexOf((SimDisplay)evt.getSource());
+      if (idx != -1)
+      {
+         fireItemsChanged(new int[] { idx });
+      }
    }
 }
