@@ -246,6 +246,31 @@ public class GlobalPreferencesService
    }
 
    /**
+    * Sets the user's preference for lazy Panel Bean instantiation.  This
+    * defines whether Panel Beans are instantiated upon discovery or upon
+    * first interaction.
+    */
+   public void setLazyPanelBeanInstantiation (boolean enabled)
+   {
+      lazyPanelBeanInstantiation = enabled;
+
+      Element e = m_prefs_doc_root.getChild("lazyinst");
+
+      if ( e == null )
+      {
+         e = new Element("lazyinst");
+         m_prefs_doc_root.addContent(e);
+      }
+
+      e.setAttribute("enabled", enabled ? "true" : "false");
+   }
+
+   public boolean getLazyPanelBeanInstantiation ()
+   {
+      return lazyPanelBeanInstantiation;
+   }
+
+   /**
     * Changes the default preferences file name to be the given name.
     */
    public void setFileName (String name)
@@ -314,6 +339,13 @@ public class GlobalPreferencesService
                   chooserOpenStyle = EMACS_CHOOSER;
                }
             }
+
+            Element lazyinst_element = m_prefs_doc_root.getChild("lazyinst");
+
+            if ( lazyinst_element != null )
+            {
+               lazyPanelBeanInstantiation = chooser_element.getAttribute("enabled").getBooleanValue();
+            }
          }
          catch (JDOMException e)
          {
@@ -361,6 +393,11 @@ public class GlobalPreferencesService
                chooser_element.setAttribute("style", "Windows");
                break;
          }
+
+         Element lazyinst_element = new Element("lazyinst");
+         chooser_element.setAttribute("enabled",
+                                      lazyPanelBeanInstantiation ? "true"
+                                                                 : "false");
 
          save(true);
       }
@@ -429,4 +466,5 @@ public class GlobalPreferencesService
    private String beanViewer       = null;
    private String chooserStartDir  = CWD_START;
    private int    chooserOpenStyle = WINDOWS_CHOOSER;
+   private boolean lazyPanelBeanInstantiation = true;
 }

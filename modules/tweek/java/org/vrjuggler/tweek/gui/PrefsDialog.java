@@ -236,6 +236,8 @@ public class PrefsDialog extends JDialog
       m_laf_box.setPreferredSize(new Dimension(130, 10));
       mFcOpenStyleButtonPanel.setMinimumSize(new Dimension(128, 50));
       mFcOpenStyleButtonPanel.setPreferredSize(new Dimension(128, 50));
+      mLazyInstanceButton.setSelected(m_prefs.getLazyPanelBeanInstantiation());
+      mLazyInstanceButton.setText("Lazy Panel Bean Instantiaion");
       mGeneralPanel.add(mGenConfigPanel, BorderLayout.CENTER);
       m_content_panel.add(mGeneralPanel, null);
       m_content_panel.add(mFileChooserPanel, null);
@@ -248,9 +250,9 @@ public class PrefsDialog extends JDialog
                userLevel = m_level_box.getSelectedIndex() + 1;
             }
          });
-      mGenConfigPanel.add(m_level_label,    new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+      mGenConfigPanel.add(m_level_label,     new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(m_level_box,  new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+      mGenConfigPanel.add(m_level_box,   new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
 
       m_laf_label.setText("Look and Feel");
@@ -287,9 +289,9 @@ public class PrefsDialog extends JDialog
                }
             }
          });
-      mGenConfigPanel.add(m_laf_label,   new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+      mGenConfigPanel.add(m_laf_label,    new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(m_laf_box,  new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+      mGenConfigPanel.add(m_laf_box,   new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
 
       m_viewer_label.setText("Bean Viewer");
@@ -300,10 +302,12 @@ public class PrefsDialog extends JDialog
                beanViewer = (String) m_viewer_box.getSelectedItem();
             }
          });
-      mGenConfigPanel.add(m_viewer_label,    new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+      mGenConfigPanel.add(m_viewer_label,     new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(m_viewer_box,  new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
+      mGenConfigPanel.add(m_viewer_box,   new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
+      mGenConfigPanel.add(mLazyInstanceButton,   new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
       m_button_panel.add(m_ok_button, null);
       m_button_panel.add(m_save_button, null);
@@ -392,6 +396,7 @@ public class PrefsDialog extends JDialog
       m_prefs.setBeanViewer(beanViewer);
       m_prefs.setChooserStartDir(chooserStartDir);
       m_prefs.setChooserOpenStyle(chooserOpenStyle);
+      m_prefs.setLazyPanelBeanInstantiation(mLazyInstanceButton.isSelected());
    }
 
    private int status;
@@ -441,4 +446,5 @@ public class PrefsDialog extends JDialog
    private JButton m_cancel_button = new JButton();
    private JButton m_save_button   = new JButton();
    private JButton m_ok_button     = new JButton();
+   private JCheckBox mLazyInstanceButton = new JCheckBox();
 }
