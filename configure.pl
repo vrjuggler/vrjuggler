@@ -48,6 +48,7 @@ use Pod::Usage;
 BEGIN
 {
    $base_dir = (fileparse("$0"))[1];
+   $base_dir =~ s|/+$||;
 }
 
 use lib("$base_dir");
@@ -56,16 +57,15 @@ use JugglerConfigure;
 # Subroutine prototypes.
 sub mergeArgArrays($$);
 sub loadDefaultArgs($);
-sub configureModule($);
-sub regenModuleInfo($);
-sub generateMakefile(;$);
+sub generateTopLevelMakefile(;$);
+sub generateModuleMakefiles($);
+sub generatePreMakefile($);
 sub generateReconfig($@);
 sub listModules();
 sub printHelp();
 sub getConfigureHelp($$);
 sub parseOutput($$);
 sub getPlatform();
-sub getRelativePath($$);
 
 %MODULES = ();
 
@@ -75,7 +75,6 @@ my $user_cfg      = '';
 $module           = '';
 my $script_help   = 0;
 my $manual        = 0;
-my $regen         = 0;
 my $mod_list      = 0;
 my $args_file     = 'acdefaults.cfg';
 my $args_mod_file = 'acdefaults.pl';
@@ -97,7 +96,7 @@ my @save_argv = @ARGV;
 Getopt::Long::Configure('pass_through');
 GetOptions('help|?' => \$script_help, 'cfg=s' => \$user_cfg,
            'module=s' => \$module, 'all-help' => \$all_help,
-           'manual' => \$manual, 'regen' => \$regen, 'modlist' => \$mod_list,
+           'manual' => \$manual, 'modlist' => \$mod_list,
            'args=s' => \$user_args, 'argsmod=s' => \$user_args_mod,
            'noargs' => \$no_user_args, 'os=s' => \$OS)
    or pod2usage(2);
@@ -107,6 +106,16 @@ pod2usage(1) if $script_help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $manual;
 
 die "ERROR: No configuration given\n" unless $cfg || $user_cfg;
+
+my $inst_prefix = '/usr/local';
+my $arg;
+foreach $arg ( @ARGV )
+{
+   if ( $arg =~ /--prefix=(.*)$/ )
+   {
+      $inst_prefix = "$1";
+   }
+}
 
 $Win32 = 1 if $ENV{'OS'} && $ENV{'OS'} =~ /Windows/;
 
@@ -137,33 +146,6 @@ my $cfg_load = ("$user_cfg" eq "") ? "$base_dir/$cfg" : "$user_cfg";
 listModules() && exit(0) if $mod_list;
 printHelp() && exit(0) if $all_help;
 
-if ( $regen )
-{
-   if ( $module )
-   {
-      die "ERROR: No such module $module in $cfg!\n"
-         unless defined($MODULES{"$module"});
-
-      regenModuleInfo("$module");
-      generateMakefile("$module");
-   }
-   elsif ( $JugglerConfigure::DEFAULT_MODULE &&
-           defined($MODULES{"$JugglerConfigure::DEFAULT_MODULE"}) )
-   {
-      regenModuleInfo("$JugglerConfigure::DEFAULT_MODULE");
-      generateMakefile("$JugglerConfigure::DEFAULT_MODULE");
-   }
-   else
-   {
-      foreach ( keys(%MODULES) )
-      {
-         regenModuleInfo("$_");
-      }
-
-      generateMakefile();
-   }
-}
-else
 {
    my $cache_file_set = 0;
 
@@ -217,8 +199,8 @@ else
          unless defined($MODULES{"$module"});
 
       generateReconfig("$module", @save_argv);
-      configureModule("$module");
-      generateMakefile("$module");
+      generateModuleMakefiles("$module");
+      generateTopLevelMakefile("$module");
    }
    # If no module was named on the command line but we do have a default
    # module, configure it.
@@ -226,8 +208,8 @@ else
            defined($MODULES{"$JugglerConfigure::DEFAULT_MODULE"}) )
    {
       generateReconfig("$JugglerConfigure::DEFAULT_MODULE", @save_argv);
-      configureModule("$JugglerConfigure::DEFAULT_MODULE");
-      generateMakefile("$JugglerConfigure::DEFAULT_MODULE");
+      generateModuleMakefiles("$JugglerConfigure::DEFAULT_MODULE");
+      generateTopLevelMakefile("$JugglerConfigure::DEFAULT_MODULE");
    }
    # If neither of the above will do, just configure every module we know
    # about from the input file.
@@ -237,11 +219,51 @@ else
 
       foreach ( keys(%MODULES) )
       {
-         configureModule("$_");
+         generateModuleMakefiles("$_");
       }
 
-      generateMakefile();
+      generateTopLevelMakefile();
    }
+
+   my $gnu_make = 'gmake';
+
+   # Do a quick check to try to find GNU make.  If we don't find it, then we
+   # will just assume that GNU make is 'gmake' and that the user knows what
+   # he or she is doing.
+   foreach ( 'make', 'gmake' )
+   {
+      my $result = open(MAKE, "$_ -v |");
+      next unless $result;
+      my @output = <MAKE>;
+      close(MAKE);
+
+      if ( grep(/GNU Make/, @output) )
+      {
+         $gnu_make = $_;
+         last;
+      }
+   }
+
+   print <<EOF;
+ 
+ GNU make is required to build the Juggler Suite.
+ On your system, GNU make is the command $gnu_make.
+ To build and install everything into $inst_prefix,
+ run the following:
+ 
+    $gnu_make build install
+ 
+ To make a developer build and installation in
+ ./instlinks, (debug only), simply run the following:
+
+    $gnu_make
+
+ To make an optimized build in ./instlinks, run the
+ following:
+
+    $gnu_make optim
+
+EOF
 }
 
 exit(0);
@@ -320,132 +342,7 @@ sub loadDefaultArgs ($)
    }
 }
 
-sub configureModule ($)
-{
-   my $module_name = shift;
-
-   my $cwd = getcwd();
-   my $safe_cwd;
-
-   if ( $Win32 )
-   {
-      $safe_cwd = `cygpath -w $cwd`;
-      chomp($safe_cwd);
-      $safe_cwd =~ s/\\/\//g;
-   }
-   else
-   {
-      $safe_cwd = "$cwd";
-   }
-
-   die "ERROR: No module $module_name defined\n"
-      unless defined($MODULES{"$module_name"});
-
-   # Use ksh to run configure if we are on Solaris.  Otherwise, use sh
-   my $shell = ((getPlatform() =~ /solaris/i) ? 'ksh' : '/bin/sh');
-
-   my $depencency;
-   foreach $depencency ( $MODULES{"$module_name"}->getDependencies() )
-   {
-      my $mod_path = $depencency->getPath();
-
-      mkpath("$mod_path", 1, 0755) unless -d "$mod_path";
-
-      # Do not try to proceed with $dependency unless we can chdir to
-      # $mod_path.
-      unless ( chdir("$mod_path") )
-      {
-         warn "WARNING: Could not chdir to $mod_path: $!\n";
-         next;
-      }
-
-      my $src_root;
-
-      # Dependeing on the value of $base_dir, assign $src_root such that it
-      # is an absolute path.
-      # XXX: This creates a problem on Win32 with $(srcdir) in generated
-      # makefiles!  Win32 utilities will not understand the Cygwin path, but
-      # they would understand a relative path...
-      if ( $base_dir =~ /^\// )
-      {
-         $src_root = "$base_dir";
-      }
-      else
-      {
-         $src_root = "$cwd/$base_dir";
-      }
-
-      # Ensure $src_root isn't terminated with a '/'.
-      $src_root =~ s/\/$//;
-
-      # If we're being run in Win32, force a relative path for $src_root
-      my $cfg_exec = "$src_root/$mod_path/configure";
-      if ($Win32)
-      {
-         $cfg_exec = getRelativePath(getcwd(), $cfg_exec);
-      }
-
-      print "Running $shell $cfg_exec @ARGV\n";
-      system("$shell $cfg_exec @ARGV 2>&1") == 0
-         or die "Configuration of $module_name in $ENV{'PWD'} failed\n" .
-                "Check $ENV{'PWD'}/config.log for details\n";
-
-      my %mod_env = $depencency->getEnvironment();
-      foreach ( keys(%mod_env) )
-      {
-         my $env_val = $depencency->getEnvironmentValue($_);
-
-         if ( /_CONFIG$/ )
-         {
-            $ENV{"$_"}    = "$cwd/$mod_path/$env_val";
-            $ENV{'PATH'} .= ":$cwd/$mod_path";
-         }
-         elsif ( /_BASE_DIR$/ )
-         {
-            if ( "$env_val" eq "instlinks" )
-            {
-               $ENV{"$_"} = "$safe_cwd/instlinks";
-            }
-            else
-            {
-               $ENV{"$_"} = "$env_val";
-            }
-         }
-         else
-         {
-            $ENV{"$_"} = "$env_val";
-         }
-      }
-
-      $ENV{'USE_BASE_DIR'} = 'yes';
-
-      chdir("$cwd");
-   }
-}
-
-sub regenModuleInfo ($)
-{
-   my $module_name = shift;
-
-   my $cwd = getcwd();
-
-   die "ERROR: No module $module_name defined\n"
-      unless defined($MODULES{"$module_name"});
-
-   my $depencency;
-   foreach $depencency ( $MODULES{"$module_name"}->getDependencies() )
-   {
-      my $mod_path = $depencency->getPath();
-
-      chdir("$mod_path")
-         or die "WARNING: Could not chdir to $mod_path\n";
-      system("./config.status 2>&1") == 0
-         or die "Regeneration for $module_name in $ENV{'PWD'} failed\n";
-      chdir("$cwd");
-   }
-}
-
-sub generateMakefile (;$)
+sub generateTopLevelMakefile(;$)
 {
    my $gen_module = shift || '';
 
@@ -518,6 +415,81 @@ sub generateMakefile (;$)
    close(OUTPUT) or warn "WARNING: Failed to save Makefile: $!\n";
 }
 
+sub generateModuleMakefiles($)
+{
+   my $module_name = shift;
+
+   die "ERROR: No module $module_name defined\n"
+      unless defined($MODULES{"$module_name"});
+
+   my $cwd = getcwd();
+
+   chdir("$base_dir");
+   my $root_srcdir = getcwd();
+   chdir("$cwd");
+
+   my $depencency;
+   foreach $depencency ( $MODULES{"$module_name"}->getDependencies() )
+   {
+      my $mod_path = $depencency->getPath();
+
+      mkpath("$mod_path", 0, 0755) unless -d "$mod_path";
+
+      # Do not try to proceed with $dependency unless we can chdir to
+      # $mod_path.
+      unless ( -e "$root_srcdir/$mod_path/Makefile.pre.in" )
+      {
+         warn "WARNING: Missing $root_srcdir/$mod_path/Makefile.pre.in!\n";
+         next;
+      }
+
+      generatePreMakefile("$mod_path/Makefile.pre");
+   }
+}
+
+sub generatePreMakefile($)
+{
+   my $output_file_name = shift;
+
+   my $cwd = getcwd();
+
+   chdir("$base_dir");
+   my $root_srcdir = getcwd();
+   my $input_file_name  = "$root_srcdir/$output_file_name.in";
+   chdir("$cwd");
+
+   open(INPUT, "$input_file_name")
+      or die "ERROR: Could not read from $input_file_name: $!\n";
+
+   my $input_file;
+   while ( <INPUT> )
+   {
+      $input_file .= "$_";
+   }
+
+   close(INPUT);
+
+   my $srcdir = (fileparse("$input_file_name"))[1];
+   $srcdir =~ s|/+$||;
+
+   my $configure_args = join(" ", @ARGV);
+
+   # Use ksh to run configure if we are on Solaris.  Otherwise, use the default
+   # shell.
+   my $shell = ((getPlatform() =~ /solaris/i) ? 'ksh' : '$(SHELL)');
+
+   $input_file =~ s/\@srcdir\@/$srcdir/g;
+   $input_file =~ s/\@top_srcdir\@/$root_srcdir/g;
+   $input_file =~ s/\@CONFIGURE_ARGS\@/$configure_args/g;
+   $input_file =~ s/\@CFG_SHELL\@/$shell/g;
+
+   print "Generating $output_file_name\n";
+   open(OUTPUT, "> $output_file_name")
+      or die "ERROR: Could not create $output_file_name: $!\n";
+   print OUTPUT "$input_file";
+   close(OUTPUT) or warn "WARNING: Failed to save $output_file_name: $!\n";
+}
+
 sub generateReconfig ($@)
 {
    my $gen_module = shift;
@@ -527,12 +499,15 @@ sub generateReconfig ($@)
 
    open(RECONFIG, "> reconfig");
 
+   print RECONFIG "#!/bin/sh\n";
+   print RECONFIG "if [ \"x\$1\" != \"x-q\" ]; then\n";
+
    if ( $gen_module )
    {
       foreach ( $MODULES{"$gen_module"}->getDependencies() )
       {
-         print RECONFIG "(cd " . $_->getPath() . " && rm -f config.status " .
-                        "config.cache config.log)\n"
+         print RECONFIG "   (cd " . $_->getPath() .
+                        " && rm -f config.status config.log)\n";
       }
    }
    else
@@ -542,13 +517,14 @@ sub generateReconfig ($@)
       {
          foreach ( $MODULES{"$mod_name"}->getDependencies() )
          {
-            print RECONFIG "(cd " . $_->getPath() . " && rm -f config.status " .
-                           "config.cache config.log)\n"
+            print RECONFIG "   (cd " . $_->getPath() .
+                           " && rm -f config.status config.cache config.log)\n";
          }
       }
    }
 
-   print RECONFIG "rm -f config.cache\n";
+   print RECONFIG "   rm -f config.cache\n";
+   print RECONFIG "fi\n";
 
    # Print the command to run this script again.  The actual output will be
    # the exec shell command followed by the full path to the Perl
@@ -666,10 +642,13 @@ sub getConfigureHelp ($$)
    my $mod_name    = shift;
    my $arg_arr_ref = shift;
 
+   my $configure_count = 0;
+
    foreach ( $MODULES{"$mod_name"}->getDependencies() )
    {
       next unless -x "$base_dir/$$_{'path'}/configure";
 
+      $configure_count++;
       open(CFG_OUTPUT, "$base_dir/$$_{'path'}/configure --help |");
 
       my $cfg_output;
@@ -682,6 +661,10 @@ sub getConfigureHelp ($$)
 
       parseOutput("$cfg_output", $arg_arr_ref);
    }
+
+   die "ERROR: No configure scripts found!  Please run autogen.sh\n" .
+       "       (found in $base_dir) first.\n"
+      if $configure_count == 0;
 }
 
 sub parseOutput ($$)
@@ -844,33 +827,6 @@ sub getHostname ()
    return $hostname;
 }
 
-#
-# getRelativePath(wd, target)
-# Given a working directory, returns the relative path to the target file.
-#
-sub getRelativePath ($$)
-{
-   my ($wd, $target) = @_;
-
-   my @wd = split(/\//, $wd);
-   my @target = split(/\//, $target);
-
-   # Remove matching directory elements from both @wd and @target
-   while ((scalar(@wd) > 0) && (scalar(@target) > 0) && ($wd[0] eq $target[0]))
-   {
-      shift(@wd);
-      shift(@target);
-   }
-
-   # For each remaining part of the wd, prefix a .. to the target
-   foreach my $dir (@wd)
-   {
-      unshift(@target, '..');
-   }
-
-   return join('/', @target);
-}
-
 __END__
 
 =head1 NAME
@@ -903,6 +859,8 @@ Print usage information of this script alone and exit.
 Print usage information for all the known configure scripts.  The
 knowledge of configure scripts comes from the configuration file.  The
 output may be limited using the B<--module> argument, described below.
+In order for this option to behave correctly, B<autogen.sh> must have been
+run in the top-level Juggler source directory.
 
 =item B<--manual>
 
@@ -934,11 +892,6 @@ Limit the work done by this script to what is required by the named
 module.  The given name must correspond to one listed in the aforementioned
 configuration file.  This can be specified in conjunction with B<--all-help>
 to limit the output to only what is appropriate for the named module.
-
-=item B<--regen>
-
-Just regenerate the files previously generated without running the
-configure script(s) again.
 
 =item B<--args>=file
 

@@ -97,8 +97,6 @@ if ( $use_gcc !~ /^y/i && $vpr_default_isa =~ /^mips[34]/ )
 # important when this script has been installed.
 $Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
 
-my $base_dir = '';
-
 # Set the location of the collection of dependencies.  If $VJ_DEPS_DIR is
 # not defined, then $deps_dir will be an empty string.  If the dependencies
 # are installed in $VPR_BASE_DIR, then the user gets the right compiler and
@@ -107,21 +105,14 @@ my $base_dir = '';
 my $deps_dir = "$ENV{'VJ_DEPS_DIR'}" if defined("$ENV{'VJ_DEPS_DIR'}");
 
 # Get the directory where this script is located.
-if ( defined($ENV{'VPR_BASE_DIR'}) )
-{
-   $base_dir = "$ENV{'VPR_BASE_DIR'}";
-}
-else
-{
-   $base_dir = (fileparse("$0"))[1];
+my $base_dir = (fileparse("$0"))[1];
 
-   # If we are on Windows and $base_dir contains \'s, set $path_sep to \.
-   # Otherwise, we use / for the path separator.
-   my $path_sep = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
+# If we are on Windows and $base_dir contains \'s, set $path_sep to \.
+# Otherwise, we use / for the path separator.
+my $path_sep = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
 
-   $base_dir =~ s|${path_sep}+$||o;     # Strip off the trailing slash(es)
-   $base_dir =~ s|${path_sep}+bin$||io; # If the path ends in "/bin", strip it
-}
+$base_dir =~ s|${path_sep}+$||o;     # Strip off the trailing slash(es)
+$base_dir =~ s|${path_sep}+bin$||io; # If the path ends in "/bin", strip it
 
 # Strip extra slashes from $base_dir.
 normalizePath(\$base_dir);
