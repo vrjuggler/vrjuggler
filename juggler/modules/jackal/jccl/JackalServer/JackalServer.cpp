@@ -177,10 +177,10 @@ namespace jccl {
             // I wanted to just look if the fileconnect had been added yet.
             // however I seem to have a chicken/egg problem.
             // so the kludge we'll do now is to not directly add a chunk that's
-            // of type VJC_INTERACTIVE. sigh.
+            // of type INTERACTIVE_CONNECT. sigh.
             // Unfortunately, this means that for other cases (such as attaching
             // to a named pipe) we're still broken
-            if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
+            if ((int)chunk->getProperty("Mode") != INTERACTIVE_CONNECT) {
                 // it's new to us
                 Connect* vn = new Connect (chunk);
                 vprDEBUG (jcclDBG_SERVER, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'

@@ -47,7 +47,7 @@
 namespace jccl {
 
 
-enum ConnectMode { VJC_INTERACTIVE, VJC_INPUT, VJC_OUTPUT };
+enum ConnectMode { INTERACTIVE_CONNECT, INPUT_CONNECT, OUTPUT_CONNECT };
 
 //--------------------------------------------------
 //: vjConnect reads/writes to a file, pipe, or socket.
@@ -59,7 +59,7 @@ class JCCL_CLASS_API Connect {
  public:
 
     Connect (Socket* s, const std::string& _name="unnamed", 
-	       ConnectMode _mode = VJC_INTERACTIVE);
+	       ConnectMode _mode = INTERACTIVE_CONNECT);
 
 
 
@@ -82,6 +82,11 @@ class JCCL_CLASS_API Connect {
     std::string getName () {
 	//cout << "name of this thing is " << name << endl;
 	return name;
+    }
+
+
+    ConnectMode getConnectMode () const {
+        return mode;
     }
 
 
