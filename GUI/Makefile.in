@@ -44,7 +44,10 @@ vpath %.class VjConfig VjGUI VjGUI/chunkdesc VjGUI/configchunk VjGUI/util
 # -----------------------------------------------------------------------------
 all: VjControl.jar
 
+# there's no way to append to a jar file, so this must all be done in one
+# step.  This is incredibly stupid...
 VjControl.jar: classfiles
+	cp -r ${srcdir}/VjFiles .
 	${JAR} cvf VjControl.jar VjGUI/*.class VjGUI/chunkdesc/*.class VjGUI/configchunk/*.class VjGUI/util/*.class VjConfig/*.class VjFiles
 
 classfiles: ${VJCONFIG_OBJS} ${VJGUI_OBJS} ${VJGUICHUNKDESC_OBJS} ${VJGUICONFIGCHUNK_OBJS} ${VJGUIUTIL_OBJS}
