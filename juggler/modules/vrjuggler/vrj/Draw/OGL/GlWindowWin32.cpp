@@ -32,7 +32,7 @@
 
 #include <vrj/vjConfig.h>
 #include <vrj/Draw/OGL/GlWinWin32.h>
-#include <vrj/Utils/Debug.h>
+#include <vrj/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
 #define glWinWin32Classname "vjOGLWin32"
