@@ -41,7 +41,7 @@
 
 namespace cluster
 {
-   typedef gadget::NetworkManager<gadget::Acceptor, gadget::Connector> ClusterNetwork;
+   typedef gadget::NetworkManager< gadget::Acceptor, gadget::Connector > ClusterNetwork;
 } // end namespace cluster
 
 #endif /* _CLUSTER_NETWORK_H */
