@@ -73,7 +73,7 @@ void vjNetworkConnect::transmitData(vjConfigChunk* c) {
 
 
 void vjNetworkConnect::stopAllUpdates() {
-    vector<vjTimedUpdate*>::iterator i;
+    std::vector<vjTimedUpdate*>::iterator i;
     for (i = updates.begin(); i < updates.end(); i++) {
 	delete(*i);
     }
@@ -83,7 +83,7 @@ void vjNetworkConnect::stopAllUpdates() {
 
 
 void vjNetworkConnect::stopUpdate(char* s) {
-    vector<vjTimedUpdate*>::iterator i;
+    std::vector<vjTimedUpdate*>::iterator i;
     for (i = updates.begin(); i < updates.end(); i++) {
 	if (!strcasecmp((*i)->name, s)) {
 	    delete(*i);

@@ -99,7 +99,7 @@ bool vjChunkDesc::remove (char *_token) {
     if (!_token)
 	return 0;
 
-    vector<vjPropertyDesc*>::iterator begin = plist.begin();
+    std::vector<vjPropertyDesc*>::iterator begin = plist.begin();
     while (begin != plist.end()) {
 	if (!strcasecmp ((*begin)->token, _token)) {
 	    delete (*begin);

@@ -1,4 +1,5 @@
 
+#include <vjConfig.h>
 #include <Environment/vjTuPerfBufReader.h>
 #include <Environment/vjConnect.h>
 
@@ -66,7 +67,7 @@ bool vjTuPerfBufReader::stopProcess() {
 
 
 void vjTuPerfBufReader::controlLoop(void* nullParam) {
-    vector<vjPerfDataBuffer*>::iterator p;
+    std::vector<vjPerfDataBuffer*>::iterator p;
 
     for (;;) {
 	sginap (50);

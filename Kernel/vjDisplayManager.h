@@ -7,17 +7,13 @@
 class vjDrawManager;
 class vjDisplay;
 
-#ifdef VJ_OS_HPUX
-#   include <vector>
-#else
+#ifndef VJ_OS_HPUX
     // This needs to be done for vector.h if pthread.h has not already been
     // included.
 #   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
 #       define _PTHREADS
 #   endif
-
-#   include <vector.h>
-#endif	/* VJ_OS_HPUX */
+#endif
 
 #include <Input/vjPosition/vjPosition.h>
 #include <Kernel/vjDebug.h>
@@ -50,7 +46,7 @@ public:
 
    //: Return a list of the current displays
    //! NOTE: DO NOT EDIT THE DISPLAYS
-   vector<vjDisplay*> getDisplays()
+   std::vector<vjDisplay*> getDisplays()
    { return mDisplays;}
 
 public:     // --- Config stuff -- //
@@ -83,7 +79,7 @@ private:
    virtual vjDisplay* getDisplay(int dispId);
 
 public:
-   vector<vjDisplay*>  mDisplays;    //: List of displays currently operating
+   std::vector<vjDisplay*>  mDisplays;    //: List of displays currently operating
 
 protected:
    vjDrawManager*  mDrawManager;     //: The current drawManager to communicate with

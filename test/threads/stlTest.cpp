@@ -1,4 +1,4 @@
-#include <vector.h>
+#include <vector>
 //#include </home/usr1/allenb/STL/vector.h>
 #include <iostream.h>
 #include <stdio.h>
@@ -14,12 +14,12 @@
 void doIt(void*);
 
 template<class T>
-void dumpVector(vector<T>& theVector);
+void dumpVector(std::vector<T>& theVector);
 
 
 const int NUMTHREADS = 2;
 
-vector<int> intVector;
+std::vector<int> intVector;
     
 void main(void)
 {
@@ -78,9 +78,9 @@ void doIt(void* param)
 }
 
 template<class T>
-void dumpVector(vector<T>& theVector)
+void dumpVector(std::vector<T>& theVector)
 {
-    for(vector<T>::iterator i = theVector.begin(); i != theVector.end(); i++)
+    for(std::vector<T>::iterator i = theVector.begin(); i != theVector.end(); i++)
 	cout << "\n" << *i;
     cout << endl;
 }

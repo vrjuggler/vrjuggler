@@ -1,13 +1,13 @@
 #include <iostream.h>
-#include <vector.h>
+#include <vector>
 #include <SharedMem/MemPool_alloc.h>
 
 template<class T, class A>
-void printVector(vector<T, A>& list);
+void printVector(std::vector<T, A>& list);
 
 int main(void)
 {
-    vector<int, mempool_alloc> intList;
+    std::vector<int, mempool_alloc> intList;
     
     for(int i=0;i<20;i++)
 	intList.push_back(i);
@@ -38,7 +38,7 @@ int main(void)
 
 
 template<class T, class A>
-void printVector(vector<T, A>& list)
+void printVector(std::vector<T, A>& list)
 {
     for(int i=0;i<list.size();i++)
 	cout << list[i] << ", "; 

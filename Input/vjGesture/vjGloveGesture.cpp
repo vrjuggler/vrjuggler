@@ -53,14 +53,14 @@ void vjGloveGesture::loadFileHeader(ifstream& infile)
    int i;
    char gest_name[512];
 
-   mGestureNames = vector<std::string>(num_gestures);
+   mGestureNames = std::vector<std::string>(num_gestures);
    for(i=0;i<num_gestures;i++)
    {
       infile.getline(gest_name,512);
       mGestureNames[i] = std::string(gest_name);
    }
 
-   mGestureExamples = vector<vjGloveData>(num_gestures);
+   mGestureExamples = std::vector<vjGloveData>(num_gestures);
 
    // Get gesture data
    for(i=0;i<num_gestures;i++)
