@@ -58,7 +58,7 @@
 void OpenSGViewer::init()
 {
    vrj::OpenSGApp::init();      // Call base class init
-   mUser.init();
+   mUser->init();
 }
 
 /** Called once per context at context creation */
@@ -77,10 +77,10 @@ void OpenSGViewer::draw()
 void OpenSGViewer::preFrame()
 {
    // Update the user (and viewplatform with navigation strategy)
-   mUser.update();
+   mUser->update();
 
    osg::beginEditCP(mSceneTransform); 
-      mSceneTransform->getMatrix().setValue( mUser.viewPlatform().getTransform_platMvirt().getData() );
+      mSceneTransform->getMatrix().setValue( mUser->viewPlatform().getTransform_platMvirt().getData() );
    osg::endEditCP(mSceneTransform);
 }
 
