@@ -147,6 +147,7 @@ SUBDIR=	5DT/DataGlove			\
 	Open/Trackd			\
 	Open/VRPN			\
 	Polhemus/Fastrak		\
+	USDigital/SerialEncoder	        \
 	VRCO/TrackdAPI			\
 	VirtualTechnologies/CyberGlove
 
