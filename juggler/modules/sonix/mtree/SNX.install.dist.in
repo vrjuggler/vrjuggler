@@ -39,22 +39,16 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # This file defines the specification for the base installation directory
-# tree for VR Juggler Portable Runtime.
+# tree for Sonix.
+#
+# $Id$
 
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     bin
     ..
     include
-        snx
-        ..
     ..
     share
-        sonix
-            data
-            ..
-            plugins
-            ..
-        ..
     ..
 ..
