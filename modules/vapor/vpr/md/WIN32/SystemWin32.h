@@ -72,7 +72,6 @@ public:
 #ifdef HAVE_GETTIMEOFDAY
         return ::gettimeofday(tp, tzp);
 #else
-        int retval;
         FILETIME file_time, tfile;
         GetSystemTimeAsFileTime(&tfile);
 
