@@ -38,7 +38,7 @@
 namespace gadget
 {
 
-//: Construct the mod pair from a mod pair chunk
+/** Constructs the mod pair from a mod pair chunk. */
 std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::ConfigChunkPtr>& keyList)
 {
    std::vector<KeyModPair> key_vec;
@@ -64,8 +64,9 @@ std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::Config
 }
 
 
-// Configure the keyboard interface
-// Grabs it out of the given config chunk
+/**
+ * Configures the keyboard interface.  Grabs it out of the given config chunk.
+ */
 bool SimInput::config(jccl::ConfigChunkPtr chunk)
 {
    std::string keyboardName = chunk->getProperty<std::string>("keyboardProxy");    // Get the event source

@@ -258,8 +258,10 @@ void SimPosition::rotRollCCW(const float amt)
    rotAxis(amt, neg_z_axis);
 }
 
-//: Check if movement is allowed
-//! NOTE: It is not allowed if it hits a simulated wall, etc.
+/**
+ * Checks if movement is allowed.
+ * @note It is not allowed if it hits a simulated wall, etc.
+ */
 bool SimPosition::isTransAllowed(gmtl::Vec3f trans)
 {
    // check if the movement is goign to intersect with any of the surface displays

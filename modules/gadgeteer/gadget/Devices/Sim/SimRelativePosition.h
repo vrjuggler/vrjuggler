@@ -43,16 +43,17 @@
 namespace gadget
 {
 
-//: Simulated a position device by making
-// An existing device behave relative to another one.
-//
-// One device is the base coordinate system frame of reference.
-// The other device has it's position information transformed
-// to be relative to that frame.
-// ie. There is a matrix multiply. :)
-//
-// This class should not be used directly by the user.
-//!PUBLIC_API:
+/**
+ * Simulated a position device by making.
+ * An existing device behave relative to another one.
+ *
+ * One device is the base coordinate system frame of reference.
+ * The other device has it's position information transformed
+ * to be relative to that frame.
+ * ie. There is a matrix multiply.
+ *
+ * This class should not be used directly by the user.
+ */
 class SimRelativePosition : public Input, public Position
 {
 public:
@@ -61,20 +62,20 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
-   /* These functions don't do anything */
+   /** These functions don't do anything. */
    int startSampling() { return 1; }
    int stopSampling() { return 1; }
    int sample() { return 1; }
 
-   //: Update the data
+   /** Updates the data. */
    virtual void updateData();
 
    static std::string getChunkType() { return std::string( "SimRelativePosition" ); }
 
 private:
-   PositionData            mPos;                   //: The current position being simulated
-   PositionInterface mBaseFrame;             //: The base frame of reference
-   PositionInterface mRelativePos;           //: the relative position
+   PositionData      mPos;                   /**< The current position being simulated */
+   PositionInterface mBaseFrame;             /**< The base frame of reference */
+   PositionInterface mRelativePos;           /**< the relative position */
 
 };
 

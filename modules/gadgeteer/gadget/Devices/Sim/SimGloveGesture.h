@@ -45,36 +45,38 @@ namespace gadget
 {
 
 
-//: Simulated glove class
-//
-// This class simulates a gesture input device
-//
-// By default the glove is in gesture 0
-//!PUBLIC_API:
+/**
+ * Simulated glove class.  This class simulates a gesture input device.
+ * By default the glove is in gesture 0.
+ */
 class SimGloveGesture
    :  virtual public Input, public GloveGesture,  public Glove,  public Digital, public SimInput
 {
 public:
-   //: Construct a SimGloveGesture
+   /** Constructs a SimGloveGesture. */
    SimGloveGesture() {;}
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
-   //: Get the current gesture.
-   //! RETURNS: id of current gesture
+   /**
+    * Get the current gesture.
+    * @return id of current gesture.
+    */
    virtual int getGesture();
 
    virtual const DigitalData getDigitalData(int devNum = 0);
 
-   //: Load trained data for the gesture object
-   // Loads the file for trained data
+   /**
+    * Loads trained data for the gesture object.
+    * Loads the file for trained data.
+    */
    void loadTrainedFile(std::string fileName);
 
    int startSampling() { return 1; }
    int stopSampling() { return 1; }
    int sample() { return 1; }
 
-   //: Update the device data
+   /** Updates the device data. */
    void updateData ();
 
    static std::string getChunkType() { return std::string("SimGloveGesture");}
@@ -88,9 +90,9 @@ public:
    void train() { ; }
 
 private:
-   std::vector<KeyModPair> mSimKeys;    //: The keys to press for the gestures
-   int             mCurGesture;   //: The current gesture id
-    DigitalData    mDigitalData;  // result of table lookup of mCurGesture
+   std::vector<KeyModPair> mSimKeys;    /**<  The keys to press for the gestures */
+   int             mCurGesture;   /**< The current gesture id */
+   DigitalData     mDigitalData;  /**< Result of table lookup of mCurGesture */
 };
 
 };

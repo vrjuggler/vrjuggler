@@ -45,16 +45,16 @@
 namespace gadget
 {
 
-//: Simulated positional device
-// Simulates a positional device from a keyboard device.
-//
-// This class should not be used directly by the user.
-//!PUBLIC_API:
+/**
+ * Simulated positional device.
+ * Simulates a positional device from a keyboard device.
+ * This class should not be used directly by the user.
+ */
 //class SimPosition :  public SimInput, public Input, public Position
 class SimPosition : public InputMixer<InputMixer<SimInput,Input>,Position>
 {
 public:
-   /* constants for the key array */
+   /** Constants for the key array. */
    enum {
       FORWARD = 0,
       BACK    = 1,
@@ -71,7 +71,7 @@ public:
       NUM_POS_CONTROLS = 12
    };
 
-   // Const for coord system selection
+   /** Const for coord system selection. */
    enum {
       LOCAL = 0,
       GLOBAL = 1
@@ -85,12 +85,12 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
-   /* These functions don't do anything */
+   /** These functions don't do anything. */
    int startSampling() { return 1; }
    int stopSampling() { return 1; }
    int sample() { return 1; }
 
-   //: Update the data
+   /** Updates the data. */
    virtual void updateData();
 
    static std::string getChunkType() { return std::string("SimPosition"); }
@@ -98,49 +98,51 @@ public:
 private:
    /** @name Movement helpers */
    //@{
-   /** Move amt in direction
-   * Captures code common for all movements
+   /** Move amt in direction.
+   * Captures code common for all movements.
    */
    void moveDir(const float amt, const gmtl::Vec3f dir);
 
-   //: Move forward (-z) the given amount on position data n
+   /** Moves forward (-z) the given amount on position data n. */
    void moveFor(const float amt);
 
-   //: Move left (-X) the given amount
+   /** Moves left (-X) the given amount. */
    void moveLeft(const float amt);
 
-   //: Move up (+y) the given amount
+   /** Moves up (+y) the given amount. */
    void moveUp(const float amt);
 
    /** @name Rotation helpers */
    //@{
-   /** Rotation amt around axis
-   * Captures code common for all rotations
+   /** Rotation amt around axis.
+   * Captures code common for all rotations.
    */
    void rotAxis(const float amt, const gmtl::Vec3f rotAxis);
 
-   /** Pitch up - rot +x axis */
+   /** Pitch up - rot +x axis. */
    void rotUp(const float amt);
 
-   /** Yaw left - rot +Y axis */
+   /** Yaw left - rot +Y axis. */
    void rotLeft(const float amt);
 
-   /** Roll Left - rot -z axis */
+   /** Roll Left - rot -z axis. */
    void rotRollCCW(const float amt);
    //@}
 
-      //: Check if movement is allowed
-   //! NOTE: It is not allowed if it hits a simulated wall, etc.
+   /**
+    * Checks if movement is allowed.
+    * @note It is not allowed if it hits a simulated wall, etc.
+    */
    bool isTransAllowed(gmtl::Vec3f trans);
 
 
 private:
-   int            mTransCoordSystem;                 //: What coord system for translations?
-   int            mRotCoordSystem;              //: What coord system for rotations?
-   PositionData   mPos;                         //: The current position being simulated
-   KeyModPair     mSimKeys[NUM_POS_CONTROLS];   //: The keys to press for digital simulation
-   float          mDTrans;                      //: Delta translation
-   float          mDRot;                        //: Delta rotation
+   int            mTransCoordSystem;            /**< What coord system for translations? */
+   int            mRotCoordSystem;              /**< What coord system for rotations? */
+   PositionData   mPos;                         /**< The current position being simulated */
+   KeyModPair     mSimKeys[NUM_POS_CONTROLS];   /**< The keys to press for digital simulation */
+   float          mDTrans;                      /**< Delta translation */
+   float          mDRot;                        /**< Delta rotation */
 
 };
 

@@ -58,12 +58,12 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
-   /** These functions don't do anything */
+   /** These functions don't do anything. */
    int startSampling() { return 1; }
    int stopSampling() { return 1; }
    int sample() { return 1; }
 
-   //: Update the data
+   /** Updates the data. */
    virtual void updateData();
 
    static std::string getChunkType() { return std::string("SimAnalog");}

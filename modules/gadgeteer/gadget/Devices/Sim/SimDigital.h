@@ -42,15 +42,16 @@
 namespace gadget
 {
 
-//: Simulated digital device
-// Simulates a digital device from a keyboard device.
-// It allows any number of simulated digital devices to be created.
-//
-// When the key configured is held down, the digital device is on.
-// When the key is released, the device is no longer set.
-//
-// This class should not be used directly by the user.
-//!PUBLIC_API:
+/**
+ * Simulated digital device.
+ * Simulates a digital device from a keyboard device.
+ * It allows any number of simulated digital devices to be created.
+ *
+ * When the key configured is held down, the digital device is on.
+ * When the key is released, the device is no longer set.
+ *
+ * This class should not be used directly by the user.
+ */
 class SimDigital : public Input, public Digital, public SimInput
 {
 public:
@@ -59,12 +60,12 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
    
-   /* These functions don't do anything */
+   /** These functions don't do anything. */
    virtual int startSampling() { return 1; }
    virtual int stopSampling() { return 1; }
    virtual int sample() { return 1; }
 
-   //: Update the data
+   /** Updates the data. */
    virtual void updateData();
 
    static std::string getChunkType() { return std::string("SimDigital");}
@@ -72,7 +73,7 @@ public:
    virtual std::vector<KeyModPair> getKeys() { return mSimKeys; }
 
 private:   
-   std::vector<KeyModPair> mSimKeys;       //: The keys to press for digital simulation
+   std::vector<KeyModPair> mSimKeys;       /**< The keys to press for digital simulation */
 };
 
 };
