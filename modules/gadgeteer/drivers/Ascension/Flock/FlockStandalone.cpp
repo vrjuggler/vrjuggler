@@ -96,8 +96,8 @@ FlockStandalone::FlockStandalone(const char* const port, const int& baud,
 //: Destructor
 FlockStandalone::~FlockStandalone()
 {
-    this->stop();
-
+    if (_active)
+        this->stop();
     if ( _serial_port != NULL ) {
         delete _serial_port;
         _serial_port = NULL;
@@ -170,34 +170,44 @@ int FlockStandalone::start()
                       << (_blocking ? "" : "non-") << "blocking)\n"
                       << std::flush;
             set_blocking();
-
+            sleep(1);
+	    
             std::cout << "[FlockStandalone] Setting sync\n" << std::flush;
             set_sync();
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting group\n" << std::flush;
             set_group();
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting autoconfig\n" << std::flush;
             set_autoconfig();
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting transmitter\n" << std::flush;
             set_transmitter();
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting filter\n" << std::flush;
             set_filter();
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting hemisphere\n" << std::flush;
             set_hemisphere();
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting pos_angles\n" << std::flush;
             set_pos_angles();
+	    sleep(1);
 
             std::cout << "[FlockStandalone] Setting pickBird\n" << std::flush;
             pickBird(_xmitterUnitNumber);
-
+            sleep(1);
+	    
             std::cout << "[FlockStandalone] Setting rep_and_stream\n" << std::flush;
             set_rep_and_stream();
-
+            sleep(1);
+	    
             std::cout  << "[FlockStandalone] Ready to go!\n\n" << std::flush;
 
             // flock is active.
@@ -513,6 +523,7 @@ int FlockStandalone::getReading (const int& n, float& xPos, float& yPos,
                                  float& xRot)
 {
     int addr;
+    vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
     vpr::Uint32 num_read;
     if ( _serial_port != NULL ) {
         char buff[12], group;
@@ -523,37 +534,25 @@ int FlockStandalone::getReading (const int& n, float& xPos, float& yPos,
 
             while ( ! i && c < 99999 ) {
                 c++;
-                _serial_port->readn(&buff[0], 1, num_read);
-                if ( (num_read == 1) /* && 
-                     (buff[0] & 0x80) */)
-                {
+                _serial_port->readn(&buff[0], 1, num_read, vpr::Interval(timeout, vpr::Interval::Msec));
+                if ( (num_read == 1) )
                     i = 1;
-                }
             }
 
-//std::cerr << "After first loop -- c: " << c << std::endl;
 
             while ( i != 12 && c < 99999 ) {
                 c++;
-                _serial_port->read(&buff[i], 12 - i, num_read);
+                _serial_port->read(&buff[i], 12 - i, num_read, vpr::Interval(timeout, vpr::Interval::Msec));
                 i += num_read;
             }
 
-//std::cerr << "After second loop -- c: " << c << std::endl;
-            _serial_port->read(&group,/* sizeof(group)*/ 1,num_read);
+            _serial_port->read(&group, 1,num_read, vpr::Interval(timeout, vpr::Interval::Msec));
             while ( (num_read == 0) &&
                    (c < 99999) )
             {
                 usleep(100 * mSleepFactor);
                 c++;
-                _serial_port->read(&group, 1, num_read);
-            }
-
-//std::cerr << "After third loop -- c: " << c << std::endl;
-
-
-            if ( c >= 5000 ) {
-                std::cerr << "[FlockStandalone] Tracker timeout (" << c << ")\n";
+                _serial_port->read(&group, 1, num_read, vpr::Interval(timeout, vpr::Interval::Msec));
             }
 
             addr = group;
@@ -886,6 +885,7 @@ void FlockStandalone::set_autoconfig ()
         buff[1] = 0x32;
         buff[2] = _numBirds + 1;  //number of input devices + 1 for transmitter
 
+	sleep(3);
         _serial_port->write(buff, sizeof(buff), written);
         _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
         sleep(2);
