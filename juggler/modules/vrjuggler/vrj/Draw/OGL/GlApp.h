@@ -7,6 +7,9 @@
 #include <Kernel/GL/vjGlDrawManager.h>
 
 #include <Kernel/vjKernel.h>
+#include <Kernel/vjUser.h>
+#include <Kernel/vjProjection.h>
+
 #include <vector.h>
 
 //-----------------------------------------------------------
