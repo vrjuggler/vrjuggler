@@ -129,14 +129,7 @@ bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
 //+     When key is release, digital goes to off state
 void SimDigitalGlove::updateData()
 {
-   // this unlocks when this object is destructed (upon return of the function)
-   vpr::Guard<vpr::Mutex> updateGuard(lock);
-
-   // Copy the valid data to the current data so that both are valid
-   mTheData[0][current] = mTheData[0][valid];   // first hand
-   mTheData[1][current] = mTheData[1][valid];   // other hand
-
-   // -- Update digital data --- //
+    // -- Update digital data --- //
    for (unsigned int i = 0; i < mSimKeys.size(); i++)
    {
       if (checkKeyPair( mSimKeys[i] ))             // If keys pressed
@@ -145,26 +138,13 @@ void SimDigitalGlove::updateData()
          mDigitalData[i] = 0;
    }
 
-   // The data is triple buffered in mTheData
-   //  The data slots are as follows:
-   //
-   // [writable], [temp/valid], [readable]    <-- what they mean
-   //  progress,   valid,        current      <-- what you type
-   //
-   // You write to progress, whenever you swap, the data moves to valid,
-   //  then current.
-
-   // this function looks at mDigitalData, and sets angles in mTheData.
-   // This updates the writable buffer of mTheData (called progress)
-   this->updateFingerAngles();
-
-   // Update the xform data for the writable buffer (called progress)
-   mTheData[0][progress].calcXforms();
-   mTheData[1][progress].calcXforms();
+   mDigitalSamples.lock();
+   mDigitalSamples.addSample(mDigitalData);
+   mDigitalSamples.unlock();
 
    // swap the indicies for the pointers.
    // This swaps the temp and readable buffers (called 'valid' and 'current')
-   swapCurrentIndexes();
+
 
    //vprDEBUG(vprDBG_ALL,0)<<mTheData[0][current].outputAngles(cout)<<vprDEBUG_FLUSH;
    //vprDEBUG(vprDBG_ALL,0)<<mTheData[1][current].outputAngles(cout)<<vprDEBUG_FLUSH;
@@ -172,12 +152,14 @@ void SimDigitalGlove::updateData()
 
    //TODO:  how does the angles get turned into a gesture ID????
    return;
+
 }
 
 //TODO: move this function up the hierarchy, since PinchGlove also has this one.
 //NOTE: this function *is* slightly different...
 void SimDigitalGlove::updateFingerAngles()
 {
+/* TEMPORARILY REMOVE    
     const int LEFT_HAND = 0;
     const int RIGHT_HAND = 1;
 
@@ -278,6 +260,7 @@ void SimDigitalGlove::updateFingerAngles()
     }
 
     //vprDEBUG(vprDBG_ALL,0)<<"out\n"<<std::flush<<vprDEBUG_FLUSH;
+*/
 }
 
 /*
