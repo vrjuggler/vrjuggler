@@ -61,8 +61,6 @@ LabeledPerfDataBuffer::LabeledPerfDataBuffer (const std::string& _name,
 
 
 
-//: destructor
-//: POST: all memory & buffers have been freed.
 LabeledPerfDataBuffer::~LabeledPerfDataBuffer () {
     active = false;
     delete[] buffer;
@@ -70,10 +68,6 @@ LabeledPerfDataBuffer::~LabeledPerfDataBuffer () {
 
 
 
-//: activates the buffer
-//! POST: once this call is made, the buffer will start
-//+       storing data whenever a set() is made and
-//+       writing available data when requested.
 void LabeledPerfDataBuffer::activate() {
     active = true;
     vprDEBUG(jcclDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
@@ -82,11 +76,6 @@ void LabeledPerfDataBuffer::activate() {
 
 
 
-//: deactivates the buffer
-//! POST: once this call is made, the buffer will,
-//+       essentially, do nothing.  set() will not store
-//+       any information and the write calls won't
-//+       write anything.
 void LabeledPerfDataBuffer::deactivate() {
     active = 0;
     /* deactivate maybe should reset the buffer so it's reactivated
@@ -102,7 +91,7 @@ void LabeledPerfDataBuffer::deactivate() {
 
 
 
-bool LabeledPerfDataBuffer::isActive() {
+bool LabeledPerfDataBuffer::isActive() const {
     return active;
 }
 
