@@ -39,78 +39,56 @@ import vrj.*;
 
 public class Updater implements Runnable
 {
-  TimeSeriesCollection mTimeSeriesCollection;
-  double mLastValue = 100.0;
-  SpinnerModel mSpinnerModel = null;
-  private PerformanceMonitorObserverImpl mObserver;
+   TimeSeriesCollection mTimeSeriesCollection;
+   double mLastValue = 100.0;
+   SpinnerModel mSpinnerModel = null;
+   private PerformanceMonitorObserverImpl mObserver;
 
 
-  public Updater ( TimeSeriesCollection series, SpinnerModel model, 
-                   PerformanceMonitorObserverImpl observer )
-  {
-     //Will get multiple time series based on the list that comes back
-     //from c++ side
-    mTimeSeriesCollection = series;
-    mSpinnerModel = model;
-    mObserver = observer;
-    try 
-    {
-      /*
-       *
-      // create and initialize the ORB
-      ORB mOrb = ORB.init();
+   public Updater ( TimeSeriesCollection series, SpinnerModel model, 
+                    PerformanceMonitorObserverImpl observer )
+   {
+      //Will get multiple time series based on the list that comes back
+      //from c++ side
+      mTimeSeriesCollection = series;
+      mSpinnerModel = model;
+      mObserver = observer;
+   }
 
-      // get the root naming context
-      org.omg.CORBA.Object mObjRef =
-        mOrb.resolve_initial_references("Performance Monitor");
-
-      // Use NamingContextExt instead of NamingContext. This is
-      // part of the Interoperable Naming Service.
-      NamingContextExt mRef =
-        NamingContextExtHelper.narrow(mObjRef);
-       */
-    }
-    catch (Exception e) 
-    {
-       System.out.println("ERROR : " + e) ;
-       e.printStackTrace(System.out);
-    }
-
-  }
-
-  public void run ()
-  {
-     if(mObserver == null)
-     { System.out.println("[DBG] mObserver is null!!!!!"); }
-    SampleTimeMap[] value_map = mObserver.getValueMap();
-    int length = Array.getLength(value_map);
-    System.out.println("[DBG] Got a samples list of length " + length);
-    for (int i = 0; i < length; ++i)
-    {
-      System.out.println("[DBG] Adding a new series for " + value_map[i].mName);
-      TimeSeries s = new TimeSeries(value_map[i].mName, Millisecond.class);
-      mTimeSeriesCollection.addSeries(s);
-    }
-    while ( true )
-    {
-      try
+   public void run ()
+   {
+      if ( mObserver == null )
       {
-        Thread.sleep( ( ( Integer ) mSpinnerModel.getValue() ).longValue() );
+         System.out.println("mObserver in Performance Monitoring is null!");
       }
-      catch ( InterruptedException ex )
+      SampleTimeMap[] value_map = mObserver.getValueMap();
+      int length = Array.getLength(value_map);
+      System.out.println("Received a samples list of length " + length);
+      for ( int i = 0; i < length; ++i )
       {
-        ex.printStackTrace();
+         System.out.println("Adding a new series for " + value_map[i].mName);
+         TimeSeries s = new TimeSeries(value_map[i].mName, Millisecond.class);
+         mTimeSeriesCollection.addSeries(s);
       }
+      while ( true )
+      {
+         try
+         {
+            Thread.sleep( ( ( Integer ) mSpinnerModel.getValue() ).longValue() );
+         }
+         catch ( InterruptedException ex )
+         {
+            ex.printStackTrace();
+         }
 
-      value_map = mObserver.getValueMap();
-      length = Array.getLength(value_map);
-      for (int i = 0; i < length; ++i)
-      {
-         mTimeSeriesCollection.getSeries(i).add( new Millisecond(), value_map[i].mSampleTime );
-         //System.out.println("[DBG] Setting value for series " + i);
+         value_map = mObserver.getValueMap();
+         length = Array.getLength(value_map);
+         for ( int i = 0; i < length; ++i )
+         {
+            mTimeSeriesCollection.getSeries(i).add( new Millisecond(), value_map[i].mSampleTime );
+         }
+
+         Thread.yield();
       }
-      
-      Thread.yield();
-    }
-  }
+   }
 }

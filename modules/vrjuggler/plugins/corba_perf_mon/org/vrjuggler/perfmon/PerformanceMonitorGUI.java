@@ -59,7 +59,7 @@ import java.util.*;
 import org.vrjuggler.jccl.config.io.*;
 
 public class PerformanceMonitorGUI extends JPanel
-   implements CommunicationListener, TweekFrameListener
+implements CommunicationListener, TweekFrameListener
 {
    private PerformanceMonitorSubject mPerformanceMonitorSubject = null;
    private PerformanceMonitorObserverImpl mPerfMonObserver = null;
@@ -90,36 +90,36 @@ public class PerformanceMonitorGUI extends JPanel
       mChartPanel = new ChartPanel( chart );
 
       jbInit();
-      
+
       System.out.println("PerformanceMonitor started");
    }
 
    void jbInit ()
    {
-       this.setLayout( borderLayout1 );
-       mChartPanel.setPreferredSize( new java.awt.Dimension( 500, 270 ) );
-       this.add( mChartPanel, BorderLayout.CENTER );
-       this.add( jPanel1, BorderLayout.SOUTH );
-       jPanel1.add( mJSpinner, null );
-  }
+      this.setLayout( borderLayout1 );
+      mChartPanel.setPreferredSize( new java.awt.Dimension( 500, 270 ) );
+      this.add( mChartPanel, BorderLayout.CENTER );
+      this.add( jPanel1, BorderLayout.SOUTH );
+      jPanel1.add( mJSpinner, null );
+   }
 
    private JFreeChart createTimeSeriesChart ( XYDataset dataset )
    {
       JFreeChart result = ChartFactory.createTimeSeriesChart(
-         "Performance Monitoring Statistics",
-         "Time",
-         "Sample",
-         dataset,
-         true,
-         true,
-         false);
-    XYPlot plot = result.getXYPlot();
-    ValueAxis axis = plot.getDomainAxis();
-    axis.setAutoRange( true );
-    axis.setFixedAutoRange( 60000.0 ); // 60 seconds
-    axis = plot.getRangeAxis();
-    axis.setRange( 0.0, 10.0 );
-    return result;
+                                                            "Performance Monitoring Statistics",
+                                                            "Time",
+                                                            "Sample",
+                                                            dataset,
+                                                            true,
+                                                            true,
+                                                            false);
+      XYPlot plot = result.getXYPlot();
+      ValueAxis axis = plot.getDomainAxis();
+      axis.setAutoRange( true );
+      axis.setFixedAutoRange( 60000.0 ); // 60 seconds
+      axis = plot.getRangeAxis();
+      axis.setRange( 0.0, 10.0 );
+      return result;
    }
 
    /**
@@ -143,10 +143,10 @@ public class PerformanceMonitorGUI extends JPanel
       // a dialog box saying that the narrowing failed.
       try
       {
-            mPerformanceMonitorSubject =
-            PerformanceMonitorSubjectHelper.narrow(subject);
+         mPerformanceMonitorSubject =
+         PerformanceMonitorSubjectHelper.narrow(subject);
       }
-      catch (BAD_PARAM narrow_ex)
+      catch ( BAD_PARAM narrow_ex )
       {
 
          System.out.println("[DBG] Caught BAD_PARAM setting mPerformanceMonitorSubject to Null");
@@ -158,34 +158,36 @@ public class PerformanceMonitorGUI extends JPanel
       }
       //if (CommunicationEvent.CONNECT == e.getType())
       // Ensure that slide_subject is a valid object just to be safe.
-      if (mPerformanceMonitorSubject != null)
+      if ( mPerformanceMonitorSubject != null )
       {
          // First, we need a Java object that implements the Observer.  That
          // object must be registered with the Java CORBA service.
          mPerfMonObserver = new PerformanceMonitorObserverImpl(mPerformanceMonitorSubject);
          //mManipulationPanel.setObserver (mObserver);
-         
+
          corba_service.registerObject(mPerfMonObserver, "PerformanceMonitorObserver");
 
          // Now that the observer is registered, we can attach it to the
          // subject.  The subject needs to know who its observers are so
          // that it can notify them of updates.
          mPerformanceMonitorSubject.attach(mPerfMonObserver._this());
-         
+
+         // Now that we have the Subject narrowed, start the thread
+         // to poll data from the c++ side
          mUpdaterThread = new Thread( new Updater( mDataset, mSpinnerModel, mPerfMonObserver ) );
-         
+
          ///Start the updater thread.
          mUpdaterThread.start();
       }
    }
 
    /**
-    * Catch an event when we lose a CORBA connection that a RTRDDataSource is
+    * Catch an event when we lose a CORBA connection that a DataSource is
     * using.
     */
    public void connectionClosed(CommunicationEvent e)
    {
-      //TODO: Find a way to close the RTRCDataSource that has lost its connection.
+      //TODO: Find a way to close the DataSource that has lost its connection.
       disconnect();
    }
 
@@ -197,7 +199,7 @@ public class PerformanceMonitorGUI extends JPanel
          mPerfMonObserver = null;
       }
    }
-   
+
    /**
     * Catch a frame close event to cleanly shutdown our CORBA subjects.
     */

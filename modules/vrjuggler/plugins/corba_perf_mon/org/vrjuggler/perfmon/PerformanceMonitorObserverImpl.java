@@ -34,6 +34,7 @@ package org.vrjuggler.perfmon;
 
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JSlider;
+
 import tweek.ObserverPOA;
 import vrj.PerformanceMonitorSubjectPackage.SampleTimeMap;
 import vrj.*;
@@ -58,22 +59,7 @@ public class PerformanceMonitorObserverImpl extends ObserverPOA
     */
    public void update ()
    {
-      System.out.println("Updated from our subject!");
-
-      // If we have a valid slider object, we need to update its value to
-      // whatever our subject has.
-      /*
-      if ( mSlider != null )
-      {
-         DefaultBoundedRangeModel model = (DefaultBoundedRangeModel) mSlider.getModel();
-         System.out.println("Got slider model, setting value");
-         model.setValue(mSliderSubject.getValue());
-         System.out.println("Set value, repainting slider");
-         mSlider.repaint();
-      }
-      */
-
-      System.out.println("Update processed");
+      System.out.println("Received update notification from our subject!");
    }
 
    /**
@@ -91,21 +77,22 @@ public class PerformanceMonitorObserverImpl extends ObserverPOA
       {
          return mPerformanceMonitorSubject.getAllSections();
       }
-      catch (org.omg.CORBA.COMM_FAILURE comm_ex )
+      catch ( org.omg.CORBA.COMM_FAILURE comm_ex )
       {
          System.out.println (comm_ex);
          comm_ex.printStackTrace();
       }
       return null;
    }
-   
+
+   // TODO: Implement lookup
    public float getValue(float param)
    {
       try
       {
          return mPerformanceMonitorSubject.getValue(param);
       }
-      catch (org.omg.CORBA.COMM_FAILURE comm_ex )
+      catch ( org.omg.CORBA.COMM_FAILURE comm_ex )
       {
          System.out.println (comm_ex);
          comm_ex.printStackTrace();
@@ -117,14 +104,16 @@ public class PerformanceMonitorObserverImpl extends ObserverPOA
    {
       try
       {
-         if(mPerformanceMonitorSubject == null)
-         { System.out.println("PerfMonSubj nullified"); }
-         
+         if ( mPerformanceMonitorSubject == null )
+         {
+            System.out.println("PerfMonSubject nullified");
+         }
+
          SampleTimeMap[] n = mPerformanceMonitorSubject.getValueMap();
 
          return n;
       }
-      catch (org.omg.CORBA.COMM_FAILURE comm_ex)
+      catch ( org.omg.CORBA.COMM_FAILURE comm_ex )
       {
          System.out.println(comm_ex);
          comm_ex.printStackTrace();
