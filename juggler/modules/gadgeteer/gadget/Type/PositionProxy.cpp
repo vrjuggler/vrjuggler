@@ -57,6 +57,10 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       std::string("------------------ Position PROXY config() -----------------\n"),
       std::string("\n"));
    vprASSERT(chunk->getDescToken() == "PosProxy");
+   bool base_config = Proxy::config(chunk);
+   if(!base_config)
+      return false;
+
 
    // if we are going to be receiving remote data, we need to connect to a vjNetInput
    std::string location = chunk->getProperty<std::string>("location");

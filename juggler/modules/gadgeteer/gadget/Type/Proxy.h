@@ -58,6 +58,7 @@ namespace gadget
       Proxy()
       {
          mStupified = true;
+         mName.clear();          // Clear the name
       }
 
       virtual ~Proxy()
@@ -102,13 +103,26 @@ namespace gadget
          return "Undefined";
       }
 
+      /** Get the name of the proxy. */
       std::string getName()
       {
          return mName;
       }
 
+      /** Set the name of the proxy. */
+      void setName(std::string name)
+      {
+         mName = name;
+      }
+
+      /** Is the proxy current stupified?
+      * If the device we are proxying doesn't exist then this will return true
+      */
       virtual bool isStupified() const { return mStupified; }
 
+      /** Set the stupification state.
+      * @param newState - The new state of stupification
+      */
       void stupify(bool newState = true) {mStupified = newState;}
       
 
@@ -131,15 +145,29 @@ namespace gadget
        * Sets the proxy to point to the given type specific device.
        *
        * @pre devPtr must be a valid device of type DEV_TYPE.
-       * @post The proxy now references the analog device.
-       * @param anaPtr Pointer to the device.
+       * @post The proxy now references the given device.
+       * @post The device name we are proxying is set to devPtr->getInstanceName()
+       * @param devPtr Pointer to the device.
        */
-      virtual void set(DEV_TYPE* devPtr)
+      virtual void set(std::string devName, DEV_TYPE* devPtr)
       {
          mTypedDevice = devPtr;
-         stupify(false);
+         if(NULL != devPtr)
+         {
+            mDeviceName = devName;
+            stupify(false);
+         }
+         else
+         {
+            vprASSERT(false && "Tried to set proxy to NULL device");
+         }
       }
 
+      /** Refresh the proxy.
+      * This attempts to lookup the device that we are proxying.
+      * If the lookup fails, then we become stupified.  If not
+      * the the proxy is pointed at this potentially new device
+      */
       virtual bool refresh()
       {
          Input* input_dev = NULL;
@@ -166,10 +194,13 @@ namespace gadget
             }
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
             << "   Proxy config()'ed" << std::endl << vprDEBUG_FLUSH;
-            set(typed_dev);    // Set the proxy
+            mTypedDevice = typed_dev;    // Set the proxy
+            stupify(false);
          }
          return true;
       }
+
+   /** Get the name of the device that we are proxying. */
    virtual std::string getDeviceName() const { return mDeviceName; } 
 
 protected:

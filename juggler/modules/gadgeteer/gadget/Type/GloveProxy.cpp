@@ -45,6 +45,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       std::string("------------------ Glove PROXY config() -----------------\n"),
       std::string("\n"));
    vprASSERT(chunk->getDescToken() == "GloveProxy");
+   bool base_config = Proxy::config(chunk);
+   if(!base_config)
+      return false;
 
    mUnitNum = chunk->getProperty<int>("unit");
    mDeviceName = chunk->getProperty<std::string>("device");

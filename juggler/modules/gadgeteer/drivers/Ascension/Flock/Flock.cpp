@@ -46,6 +46,8 @@
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Devices/Ascension/Flock/Flock.h>
 
+#include <vector>
+
 
 void initDevice(gadget::InputManager* inputMgr)
 {
