@@ -42,10 +42,7 @@
 default: TestSuite
 
 SUBDIRS	= TestSuite	\
-          Input		\
-          Math		\
-          Matrix	\
-          Quat
+          Input
 
 all: $(SUBDIRS)
 
