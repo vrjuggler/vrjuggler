@@ -60,26 +60,42 @@ protected:
 
 
 /**
- * OpenGL helper class that has templatized user context data.
+ * OpenGL helper class that has templated user context data.
  *
  * This class allows the user to specify a data type that contains
  * data that needs to have a context specific copy.  This means that there
  * is a unique copy of the data structure for each openGL context in
  * the current environment.  Juggler will take care of the data copies
  * transparently for the user so the user never has to know about the
- * current configuration. <br>
+ * current configuration.
  *
  * An example use would be a struct full of display list id's.
  * The user passes their user-defined data structure as the template parameter.
  * The resulting object will be a "smart" pointer to the context specific
- * data to use. <br> <br>
+ * data to use.
  *
- * Ex: <br>
- *   GlContextData<myStruct>   myData; <br>
- *   myData->dlSphere = 0;
+ * @example "Example of using GL context-specific data"
+ * \code
+ * struct myStruct
+ * {
+ *    GLuint listId;
+ * };
+ *
+ * void MyApp::contextInit()
+ * {
+ *    vrj::GlContextData<myStruct> myData;
+ *    myData->listId = glGenList(1);
+ *    // Compile display list...
+ * }
+ *
+ * void MyApp::draw()
+ * {
+ *    glCallList(myData->listId);
+ * }
+ * \endcode
  *
  * @note Requires that the type of the context data provide a default
- *  constructor used to initialize all of the copies of the data.
+ *       constructor used to initialize all of the copies of the data.
  */
 template<class ContextDataType = int>
 class GlContextData : private GlContextDataBase
@@ -96,17 +112,21 @@ public:
     *        Results are un-defined for other functions.
     */
    ContextDataType& operator*()
-   { return (*getPtrToCur()); }
+   {
+      return (*getPtrToCur());
+   }
 
    /**
     * Returns reference to user data for the current context.
     *
     * @pre We are in a draw process.
     * @note Should only be called from the draw function.
-    *        Results are un-defined for other functions.
+    *       Results are un-defined for other functions.
     */
    ContextDataType* operator->()
-   { return getPtrToCur(); }
+   {
+      return getPtrToCur();
+   }
 
    /**
     * This function gives exclusive access to ALL copies of the
@@ -114,8 +134,6 @@ public:
     *
     * @note THIS CAN NOT BE USED IN A DRAW PROCESS OR VERY BAD THINGS WILL
     *       HAPPEN.  Only for EXPERT use.
-    *       Needed for casses where something must be done to each
-    *       copy of the data during pre-draw.
     */
    std::vector<ContextDataType*>* getDataVector()
    {
@@ -123,8 +141,7 @@ public:
    }
 
 protected:
-   /** Container for the thread specific context data
-   */
+   /** Container for the thread-specific context data. */
    template<class DataType>
    struct ThreadContextData
    {
@@ -140,13 +157,14 @@ protected:
          {
             mContextDataVector.reserve(requiredSize);          // Resize smartly
             while(mContextDataVector.size() < requiredSize)    // Add any new items needed
-            {  mContextDataVector.push_back(new DataType()); }
+            {
+               mContextDataVector.push_back(new DataType());
+            }
          }
       }
 
       std::vector<DataType*> mContextDataVector;   /**< Vector of user data */
    };
-
 
    /**
     * Returns a pointer to the correct data element in the current context.
@@ -159,7 +177,10 @@ protected:
    {
       // Get current context
       int context_id = getCurContext();
-      ThreadContextData<ContextDataType>* thread_specific_context_data = &(*mThreadSpecificContextData);    // Cache ref for better performance
+
+      // Cache ref for better performance
+      ThreadContextData<ContextDataType>* thread_specific_context_data =
+         &(*mThreadSpecificContextData);
 
       thread_specific_context_data->checkSize(context_id+1);     // Make sure we are large enough (+1 since we have index)
 
