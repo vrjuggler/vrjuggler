@@ -39,17 +39,17 @@
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/Util/Assert.h>
 
-#include <gadget/Type/EventWindow.h>
-#include <gadget/Type/EventWindow/Event.h>
-#include <gadget/Type/EventWindow/KeyEvent.h>
-#include <gadget/Type/EventWindow/MouseEvent.h>
-#include <gadget/Type/EventWindow/EventFactory.h>
+#include <gadget/Type/KeyboardMouse.h>
+#include <gadget/Type/KeyboardMouse/Event.h>
+#include <gadget/Type/KeyboardMouse/KeyEvent.h>
+#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+#include <gadget/Type/KeyboardMouse/EventFactory.h>
 
 
 namespace gadget
 {
 
-EventWindow::EventWindow()
+KeyboardMouse::KeyboardMouse()
 {
    for ( int i = 0; i < gadget::LAST_KEY; ++i )
    {
@@ -61,15 +61,15 @@ EventWindow::EventWindow()
    mCurKeys[gadget::KEY_NONE] = 1;
 }
 
-std::string EventWindow::getInputTypeName()
+std::string KeyboardMouse::getInputTypeName()
 {
-   return "event_window";
+   return "keyboard_mouse";
 }
 
 /**
  * Write both mCurKeys and mCurEventQueueLock to a stream using the given ObjectWriter.
  */
-vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
+vpr::ReturnStatus KeyboardMouse::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint16(MSG_DATA_EVENT_WINDOW); // Write out the data type so that we can assert if reading in wrong place
 
@@ -100,14 +100,14 @@ vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
 /**
  * Read mCurKeys and mCurEventQueueLock from a stream using the given ObjectReader.
  */
-vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
+vpr::ReturnStatus KeyboardMouse::readObject(vpr::ObjectReader* reader)
 {
    // ASSERT if the given datastream does not start with the correct datatype
    // flag.
    // XXX: Should there be error checking for the case when vprASSERT() is
    // compiled out?  -PH 8/21/2003
    vpr::Uint16 data_type = reader->readUint16();
-   vprASSERT(data_type==MSG_DATA_EVENT_WINDOW && "[EventWindow::readObject()] Not EventWindow Data");
+   vprASSERT(data_type==MSG_DATA_EVENT_WINDOW && "[KeyboardMouse::readObject()] Not KeyboardMouse Data");
    boost::ignore_unused_variable_warning(data_type);
 
    // We must save this value to set the sync time after we updateEventQueue.
@@ -118,7 +118,7 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
    // Read Current Keys using the given ObjectReader
    unsigned int num_keys = reader->readUint16();
 
-   vprASSERT(gadget::LAST_KEY == num_keys && "[EventWindow::readObject()] Different number of keys.");
+   vprASSERT(gadget::LAST_KEY == num_keys && "[KeyboardMouse::readObject()] Different number of keys.");
 
    for ( unsigned int i = 0; i < num_keys; ++i )
    {
@@ -155,7 +155,7 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
    return vpr::ReturnStatus::Succeed;
 }
 
-bool EventWindow::modifierOnly(gadget::Keys modKey)
+bool KeyboardMouse::modifierOnly(gadget::Keys modKey)
 {
    switch (modKey)
    {
@@ -173,7 +173,7 @@ bool EventWindow::modifierOnly(gadget::Keys modKey)
    }
 }
 
-std::string EventWindow::getKeyName(gadget::Keys keyId)
+std::string KeyboardMouse::getKeyName(gadget::Keys keyId)
 {
    switch(keyId)
    {
@@ -337,19 +337,19 @@ std::string EventWindow::getKeyName(gadget::Keys keyId)
    return std::string("Unrecognized key");
 }
 
-EventWindow::EventQueue EventWindow::getEventQueue()
+KeyboardMouse::EventQueue KeyboardMouse::getEventQueue()
 {
    vpr::Guard<vpr::Mutex> guard(mCurEventQueueLock);
    return mCurEventQueue;
 }
 
-void EventWindow::addEvent(gadget::EventPtr e)
+void KeyboardMouse::addEvent(gadget::EventPtr e)
 {
    vpr::Guard<vpr::Mutex> guard(mWorkingEventQueueLock);
    mWorkingEventQueue.push_back(e);
 }
 
-void EventWindow::updateEventQueue()
+void KeyboardMouse::updateEventQueue()
 {
    mSyncTime.setNow();
 

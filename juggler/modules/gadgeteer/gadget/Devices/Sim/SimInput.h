@@ -38,7 +38,7 @@
 #include <vector>
 #include <boost/concept_check.hpp>
 #include <jccl/Config/ConfigElementPtr.h>
-#include <gadget/Type/EventWindowInterface.h>
+#include <gadget/Type/KeyboardMouseInterface.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/SerializableObject.h>
@@ -138,7 +138,7 @@ protected:
    std::vector<KeyModPair> readKeyList(std::vector<jccl::ConfigElementPtr>& keyList);
 
 protected:
-   EventWindowInterface mEventWin; /**< The event window from which we receive events. */
+   KeyboardMouseInterface mKeyboardMouse; /**< The event window from which we receive events. */
 };
 
 } // End of gadget namespace

@@ -30,14 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_EVENT_WINDOW_PROXY_H_
-#define _GADGET_EVENT_WINDOW_PROXY_H_
+#ifndef _GADGET_KEYBOARD_MOUSE_PROXY_H_
+#define _GADGET_KEYBOARD_MOUSE_PROXY_H_
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Proxy.h>
-#include <gadget/Type/EventWindow.h>
-#include <gadget/Type/EventWindow/Event.h>
-#include <gadget/Type/EventWindow/EventPtr.h>
+#include <gadget/Type/KeyboardMouse.h>
+//#include <gadget/Devices/KeyboardMouseDevice/KeyboardMouseDevice.h>
+#include <gadget/Type/KeyboardMouse/Event.h>
+#include <gadget/Type/KeyboardMouse/EventPtr.h>
 
 namespace gadget
 {
@@ -50,18 +51,18 @@ namespace gadget
  * of these around and treat them as digital devices that only return a single
  * sub-device's amount of data (an event queue and individual keys).
  *
- * @see gagdet::EventWindow
+ * @see gagdet::KeyboardMouse
  */
-class GADGET_CLASS_API EventWindowProxy : public TypedProxy<EventWindow>
+class GADGET_CLASS_API KeyboardMouseProxy : public TypedProxy<KeyboardMouse>
 {
 public:
-   EventWindowProxy()
+   KeyboardMouseProxy()
    { ; }
 
    /**
-    * Returns a pointer to the gadget::EventWindow object held by this proxy.
+    * Returns a pointer to the gadget::KeyboardMouse object held by this proxy.
     */
-   EventWindow* getEventWindowPtr()
+   KeyboardMouse* getKeyboardMousePtr()
    {
       if(isStupified())
       {
@@ -133,11 +134,11 @@ public:
    /**
     * Returns a copy of the current queue of events for the proxied window.
     */
-   EventWindow::EventQueue getEventQueue()
+   KeyboardMouse::EventQueue getEventQueue()
    {
       if ( isStupified() || (mTypedDevice == NULL) )
       {
-         return EventWindow::EventQueue();
+         return KeyboardMouse::EventQueue();
       }
       else
       {
@@ -157,7 +158,7 @@ public:
       }
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
-      vprASSERT((ret_val != NULL) && "Cross-cast in EventWindowProxy failed");
+      vprASSERT((ret_val != NULL) && "Cross-cast in KeyboardMouseProxy failed");
       return ret_val;
    }
 };

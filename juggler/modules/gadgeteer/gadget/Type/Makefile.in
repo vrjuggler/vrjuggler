@@ -49,7 +49,7 @@ SUBOBJDIR=	$(GADGET_LIBRARY)
 
 DIRPRFX=	gadget/Type/
 
-SUBDIR=		EventWindow	\
+SUBDIR=		KeyboardMouse	\
 		Position
 
 SRCS=		Analog.cpp			\
@@ -61,14 +61,14 @@ SRCS=		Analog.cpp			\
 		DeviceInterface.cpp		\
 		Digital.cpp			\
 		DigitalProxy.cpp		\
-		EventWindow.cpp			\
-		EventWindowProxy.cpp		\
 		GestureProxy.cpp		\
 		Glove.cpp			\
 		GloveData.cpp			\
 		GloveGesture.cpp		\
 		GloveProxy.cpp			\
 		Input.cpp			\
+		KeyboardMouse.cpp		\
+		KeyboardMouseProxy.cpp		\
 		Position.cpp			\
 		PositionProxy.cpp		\
 		StringProxy.cpp			\
