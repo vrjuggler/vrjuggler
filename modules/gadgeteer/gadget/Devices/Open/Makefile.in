@@ -35,21 +35,3 @@
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
-
-# Include common definitions.
-include @topdir@/make.defs.mk
-
-# Prefix for recursive stuff.
-DIRPRFX		= gadget/Devices/Open/
-
-# Subdirectories to compile.
-SUBDIR		= DTK		\
-                  Trackd
-
-# This is a hack until I can figure out a better way to do this automatically
-# in Doozer++.  The problem is that GNU make doesn't offer much in the way
-# of execution logic, and when recursion gets to this point, I don't know a
-# good way to tell it to continue recursing with the given arguments.
-$(RECTARGET): recursive
-
-include $(MKPATH)/dpp.subdir.mk
