@@ -401,13 +401,13 @@ BOOST_PYTHON_MODULE(gadget)
         .def("type", &gadget::Event::type, return_value_policy< copy_const_reference >())
         .def("time", &gadget::Event::time, return_value_policy< copy_const_reference >())
     );
-
-    enum_< gadget::Event::Type >("Type")
-        .value("MouseEvent", gadget::Event::MouseEvent)
-        .value("None", gadget::Event::None)
-        .value("KeyEvent", gadget::Event::KeyEvent)
-    ;
-
+    // Temporary code for smart pointers
+    objects::class_value_wrapper< 
+      boost::shared_ptr< gadget::Event >, objects::make_ptr_instance< 
+        gadget::Event, objects::pointer_holder< 
+          boost::shared_ptr< gadget::Event >, gadget::Event >
+      >
+    >();
     delete gadget_Event_scope;
 
     class_< gadgetWrapper::AnalogInterface, boost::noncopyable >("AnalogInterface", init<  >())
@@ -453,25 +453,40 @@ BOOST_PYTHON_MODULE(gadget)
         .def("setDigital", &gadget::DigitalData::setDigital)
     ;
 
+    scope* gadget_KeyEvent_scope = new scope(
     class_< gadget::KeyEvent, bases< gadget::Event >  >("KeyEvent", init< const gadget::KeyEvent & >())
-        .def(init< const gadget::Keys &, const bool &, const int &, const long unsigned int & >())
-        .def("key", &gadget::KeyEvent::key, return_value_policy< copy_const_reference >())
-        .def("isKeyPress", &gadget::KeyEvent::isKeyPress, return_value_policy< copy_const_reference >())
-        .def("isKeyRelease", &gadget::KeyEvent::isKeyRelease)
+        .def(init< const gadget::EventType &, const gadget::Keys &, const int &, const long unsigned int & >())
+        .def("getKey", &gadget::KeyEvent::getKey, return_value_policy< copy_const_reference >())
         .def("getModifierMask", &gadget::KeyEvent::getModifierMask, return_value_policy< copy_const_reference >())
         .def("getKeyChar", &gadget::KeyEvent::getKeyChar)
-    ;
+    );
+    // Temporary code for smart pointers
+    objects::class_value_wrapper< 
+      boost::shared_ptr< gadget::KeyEvent >, objects::make_ptr_instance< 
+        gadget::KeyEvent, objects::pointer_holder< 
+          boost::shared_ptr< gadget::KeyEvent >, gadget::KeyEvent >
+      >
+    >();
+    delete gadget_KeyEvent_scope;
 
+    scope* gadget_MouseEvent_scope = new scope(
     class_< gadget::MouseEvent, bases< gadget::Event >  >("MouseEvent", init< const gadget::MouseEvent & >())
-        .def(init< const int &, const bool &, const int &, const int &, const int &, const int &, const long unsigned int & >())
-        .def("isButtonPress", &gadget::MouseEvent::isButtonPress, return_value_policy< copy_const_reference >())
-        .def("isButtonRelease", &gadget::MouseEvent::isButtonRelease)
+        .def(init< const gadget::EventType &, const gadget::Keys &, const int &, const int &, const int &, const int &, const int &, const long unsigned int & >())
+        .def("getButton", &gadget::MouseEvent::getButton, return_value_policy< copy_const_reference >())
         .def("getX", &gadget::MouseEvent::getX, return_value_policy< copy_const_reference >())
         .def("getY", &gadget::MouseEvent::getY, return_value_policy< copy_const_reference >())
         .def("getGlobalX", &gadget::MouseEvent::getGlobalX, return_value_policy< copy_const_reference >())
         .def("getGlobalY", &gadget::MouseEvent::getGlobalY, return_value_policy< copy_const_reference >())
         .def("getState", &gadget::MouseEvent::getState, return_value_policy< copy_const_reference >())
-    ;
+    );
+    // Temporary code for smart pointers
+    objects::class_value_wrapper< 
+      boost::shared_ptr< gadget::MouseEvent >, objects::make_ptr_instance< 
+        gadget::MouseEvent, objects::pointer_holder< 
+          boost::shared_ptr< gadget::MouseEvent >, gadget::MouseEvent >
+      >
+    >();
+    delete gadget_MouseEvent_scope;
 
     class_< gadget::PositionData >("PositionData", init<  >())
         .def(init< const gadget::PositionData & >())
@@ -579,6 +594,15 @@ BOOST_PYTHON_MODULE(gadget)
         .value("BUTTON4_MASK", gadget::BUTTON4_MASK)
     ;
 
+    enum_< gadget::EventType >("EventType")
+        .value("KeyPressEvent", gadget::KeyPressEvent)
+        .value("MouseMoveEvent", gadget::MouseMoveEvent)
+        .value("MouseButtonPressEvent", gadget::MouseButtonPressEvent)
+        .value("NoEvent", gadget::NoEvent)
+        .value("KeyReleaseEvent", gadget::KeyReleaseEvent)
+        .value("MouseButtonReleaseEvent", gadget::MouseButtonReleaseEvent)
+    ;
+
     enum_< gadget::Keys >("Keys")
         .value("KEY_E", gadget::KEY_E)
         .value("KEY_D", gadget::KEY_D)
@@ -614,6 +638,7 @@ BOOST_PYTHON_MODULE(gadget)
         .value("KEY_ALT", gadget::KEY_ALT)
         .value("KEY_SHIFT", gadget::KEY_SHIFT)
         .value("KEY_CTRL", gadget::KEY_CTRL)
+        .value("NO_MBUTTON", gadget::NO_MBUTTON)
         .value("KEY_DOWN", gadget::KEY_DOWN)
         .value("KEY_ESC", gadget::KEY_ESC)
         .value("MOUSE_POSX", gadget::MOUSE_POSX)

@@ -118,7 +118,9 @@ set_policy(PositionInterface.getProxy, return_internal_reference())
 
 # Event handling ==============================================================
 AllFromHeader('gadget/Type/EventWindow/Keys.h')
-Class('gadget::Event', 'gadget/Type/EventWindow/Event.h')
-Class('gadget::KeyEvent', 'gadget/Type/EventWindow/KeyEvent.h')
-Class('gadget::MouseEvent', 'gadget/Type/EventWindow/MouseEvent.h')
+Enum('gadget::EventType', 'gadget/Type/EventWindow/Event.h')
+use_shared_ptr(Class('gadget::Event', 'gadget/Type/EventWindow/Event.h'))
+use_shared_ptr(Class('gadget::KeyEvent', 'gadget/Type/EventWindow/KeyEvent.h'))
+use_shared_ptr(Class('gadget::MouseEvent',
+                     'gadget/Type/EventWindow/MouseEvent.h'))
 # ============================================================== Event handling
