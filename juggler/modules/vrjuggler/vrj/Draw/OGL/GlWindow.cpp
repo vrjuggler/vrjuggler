@@ -58,10 +58,10 @@ void vjGlWindow::setLeftEyeProjection()
       return;
 
    vjProjection* left_proj = surf_display->getLeftProj();
-   float* frust = left_proj->frustum.frust;
+   float* frust = left_proj->mFrustum.frust;
 
    vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Left Frustum ----\n"
-               << surf_display->getLeftProj()->frustum.frust << endl << vjDEBUG_FLUSH;
+               << surf_display->getLeftProj()->mFrustum.frust << endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    if(isStereo())
@@ -78,7 +78,7 @@ void vjGlWindow::setLeftEyeProjection()
                  frust[vjFrustum::VJ_NEAR],frust[vjFrustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
          // Set camera rotation and position
-      glMultMatrixf(left_proj->viewMat.getFloatPtr());
+      glMultMatrixf(left_proj->mViewMat.getFloatPtr());
 #endif
    }
    glMatrixMode(GL_MODELVIEW);
@@ -99,7 +99,7 @@ void vjGlWindow::setRightEyeProjection()
       return;
 
    vjProjection* right_proj = surf_display->getRightProj();
-   float* frust = right_proj->frustum.frust;
+   float* frust = right_proj->mFrustum.frust;
 
    vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Right Frustum ----\n"
                << *frust << endl << vjDEBUG_FLUSH;
@@ -119,7 +119,7 @@ void vjGlWindow::setRightEyeProjection()
                  frust[vjFrustum::VJ_NEAR],frust[vjFrustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
        // Set camera rotation and position
-   glMultMatrixf(right_proj->viewMat.getFloatPtr());
+   glMultMatrixf(right_proj->mViewMat.getFloatPtr());
 #endif
    }
    glMatrixMode(GL_MODELVIEW);
@@ -141,10 +141,10 @@ void vjGlWindow::setCameraProjection()
    if (!window_is_open)
       return;
 
-   float* frust = sim_display->getCameraProj()->frustum.frust;
+   float* frust = sim_display->getCameraProj()->mFrustum.frust;
 
    vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Camera Frustrum ----\n"
-               << sim_display->getCameraProj()->frustum.frust << endl << vjDEBUG_FLUSH;
+               << sim_display->getCameraProj()->mFrustum.frust << endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    glDrawBuffer(GL_BACK);
@@ -163,7 +163,7 @@ void vjGlWindow::setCameraProjection()
                      frust[vjFrustum::VJ_NEAR], frust[vjFrustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
        // Set camera rotation and position
-   glMultMatrixf(sim_display->getCameraProj()->viewMat.getFloatPtr());
+   glMultMatrixf(sim_display->getCameraProj()->mViewMat.getFloatPtr());
 #endif
    }
    glMatrixMode(GL_MODELVIEW);
@@ -171,7 +171,7 @@ void vjGlWindow::setCameraProjection()
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(sim_display->getCameraProj()->viewMat.getFloatPtr());
+   glMultMatrixf(sim_display->getCameraProj()->mViewMat.getFloatPtr());
 #endif
 }
 

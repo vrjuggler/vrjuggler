@@ -212,8 +212,8 @@ protected:
 
 
 protected:
-   vjVec3   mLLCorner, mLRCorner, mURCorner, mULCorner;  //: The corners in 3Space
-   vjMatrix mSurfaceRotation;                            //: surfMbase
+   vjVec3   mLLCorner, mLRCorner, mURCorner, mULCorner;  //: The corners in 3Space (for config)
+   vjMatrix mSurfaceRotation;                            //: surfMbase - rotation to base coordinate frame of the surface view plane
 
    // Deal with tracked surfaces (ie. HMD, movable walls, desks, etc)
    bool           mTracked;            // Is this surface tracked
@@ -224,6 +224,8 @@ protected:
    vjProjection*   mRightProj;             //: Right eye projection
 
 private:
+         // These values are used to compute the coordinates of the view plane
+         // in the transformed coord system of mSurfaceRotation
    vjVec3   mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    //: The corners transformed onto an x,y plane
 };
 

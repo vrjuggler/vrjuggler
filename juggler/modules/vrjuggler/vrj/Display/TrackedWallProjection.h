@@ -23,6 +23,7 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjWallProjection.h>
+#include <Kernel/vjDebug.h>
 #include <Input/InputManager/vjPosInterface.h>
 
 class vjMatrix;
@@ -75,7 +76,12 @@ public:
    virtual void calcViewMatrix(vjMatrix& eyePos)
    {
       updateWallParams();
-      vjWallProjection::calcViewMatrix(eyePos);
+      
+      calcViewFrustum(eyePos);
+      
+      // We don't need to postTrans like in non-tracked projection
+      // because the wall position is already in mWallRotationMatrix
+      mViewMat = mWallRotationMatrix;   
    }
 
    void updateWallParams();
