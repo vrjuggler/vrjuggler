@@ -364,6 +364,8 @@ dnl     VJ_APP_LINKER(linker, link-flags, debug-flags, optimization-flags, base-
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(VJ_APP_LINKER,
 [
+    AC_REQUIRE([DPP_PROG_LINKER])
+
     if test "x$OS_TYPE" = "xUNIX" ; then
         APP_LINK="$1"
         APP_LINK_FLAGS="$2"
@@ -374,7 +376,8 @@ AC_DEFUN(VJ_APP_LINKER,
 
         APP_EXTRA_LIBS="$7"
 
-        if test "x$PLATFORM" = "xIRIX" -a "x$GXX" != "xyes" ; then
+        dnl IRIX without GNU linker.
+        if test "x$PLATFORM" = "xIRIX" -a "x$GNU_LD" != "xyes" ; then
             APP_LINKALL_ON='-all'
             APP_LINKALL_OFF=''
 
@@ -385,7 +388,8 @@ AC_DEFUN(VJ_APP_LINKER,
 
             APP_EXTRA_LIBS_BEGIN='-B dynamic'
             APP_EXTRA_LIBS_END=''
-        elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
+        dnl UNIX-based system (but not Darwin) using GNU linker.
+        elif test "x$GNU_LD" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
             if test "x$PLATFORM" = "xIRIX" ; then
                 APP_LINKALL_ON='-Wl,-all'
                 APP_LINKALL_OFF=''
@@ -404,7 +408,7 @@ AC_DEFUN(VJ_APP_LINKER,
         else
             # For now, we are disabling static linking for the sample
             # applications when compiled in a developer's build tree.  This
-            # is only the case on non-IRIX platforms and non-GCC compilers.
+            # is only the case on non-IRIX platforms and non-GNU linkers.
             APP_BASIC_LIBS_BEGIN="-L\$($5)/lib$LIBBITSUF"
             APP_BASIC_LIBS_BEGIN_INST="$APP_BASIC_LIBS_BEGIN"
         fi
@@ -462,6 +466,8 @@ dnl    VJ_APP_LINKER_DOOZER(linker, link-flags, debug-flags, optimization-flags,
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(VJ_APP_LINKER_DOOZER,
 [
+   AC_REQUIRE([DPP_PROG_LINKER])
+
    APP_BASIC_LIBS_BEGIN='$(STATIC_ON) $(LINKALL_ON)'
    APP_BASIC_LIBS=$5
    APP_BASIC_LIBS_END='$(LINKALL_OFF) $(STATIC_OFF)'
@@ -476,7 +482,8 @@ AC_DEFUN(VJ_APP_LINKER_DOOZER,
       APP_LINK=$1
       APP_LINK_FLAGS=$2
 
-      if test "x$PLATFORM" = "xIRIX" -a "x$GXX" != "xyes" ; then
+      dnl IRIX without GNU linker.
+      if test "x$PLATFORM" = "xIRIX" -a "x$GNU_LD" != "xyes" ; then
          APP_LINKALL_ON='-all'
          APP_LINKALL_OFF=''
 
@@ -485,7 +492,8 @@ AC_DEFUN(VJ_APP_LINKER_DOOZER,
 
          APP_EXTRA_LIBS_BEGIN='-B dynamic'
          APP_EXTRA_LIBS_END=''
-      elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
+      dnl UNIX-based system (but not Darwin) using GNU linker.
+      elif test "x$GNU_LD" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
          if test "x$PLATFORM" = "xIRIX" ; then
             APP_LINKALL_ON='-Wl,-all'
             APP_LINKALL_OFF=''
