@@ -81,6 +81,20 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       msgDocument.addMessageAdditionListener(this);
       mMsgDocument = msgDocument;
 
+      String icon_name = "tweek-icon.gif";
+
+      // Try to load an icon for this frame.
+      try
+      {
+         ImageIcon icon = new ImageIcon(TweekFrame.class.getResource(icon_name));
+         this.setIconImage(icon.getImage());
+      }
+      catch (NullPointerException e)
+      {
+         mMsgDocument.printWarning("WARNING: Failed to load icon " +
+                                   icon_name + "\n");
+      }
+
       // Install extra look and feels.
       UIManager.installLookAndFeel("Kunststoff",
                                    KunststoffLookAndFeel.class.getName());
