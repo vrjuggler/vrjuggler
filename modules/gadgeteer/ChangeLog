@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-19-2002 patrickh  Use of the numeric keypad works on HP and Sun hardware.
+                      Submitted by Fuel Tech Inc.
+                      NEW VERSION: 0.5.1
 Sep-27-2002 patrickh  Device drivers are now loaded as dynamic shared objects.
                       NEW VERSION: 0.5.0
 Sep-27-2002 allenb    trackdAPI wrapper additions.  This allows gadgeteer to
