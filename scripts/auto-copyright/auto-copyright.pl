@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2000 Patrick L. Hartling (original author)
 # contributors:
-#             new functionality by Kevin Meinert (program works in different way than original)
+#  - Kevin Meinert (command line args, external config data, working dir)
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,7 +31,7 @@
 #       $Id$
 #
 
-use lib qw(/home/users/patrick/libdata/perl);
+use lib qw(../);
 use RecurseDir;
 
 # get opts:
@@ -51,7 +51,7 @@ if ( $opt_h )
    exit 1;
 }
 
-
+# execute the tags file, putting it's vars into scope.
 if($tags_file)
 {
    unless ($return = do $tags_file) 
@@ -61,19 +61,26 @@ if($tags_file)
        warn "couldn't do $tags_file: $!"            unless defined $return;
        warn "couldn't run $tags_file"               unless $return;
    }
-#      warn "ERROR: Not enough args supplied to script";
 }
 
-open(TAGSFILE, "$tags_file")
-    or die "ERROR: Must specify a valid tags file. i.e. -t tags.pl\n";
+if (!open(TAGSFILE, "$tags_file"))
+{
+   helpText();
+   print "ERROR: Must specify a valid tags file. i.e. -t tags.pl\n";
+   exit 1;
+}
 close(TAGSFILE);
 
 
 $RecurseDir::print_cur_dir = 1;
 $RecurseDir::pass_rec_func_cur_file = 1;
 
-open(COPYRIGHT, "$copyright_file")
-    or die "ERROR: Must specify a valid copyright file. i.e. -c copyright_header_include.txt\n";
+if (!open(COPYRIGHT, "$copyright_file"))
+{
+   helpText();
+   print "ERROR: Must specify a valid copyright file. i.e. -c copyright_header_include.txt\n";
+   exit 1;
+}
 my(@copyright) = <COPYRIGHT>;
 close(COPYRIGHT);
 
@@ -88,16 +95,18 @@ sub helpText()
     print "auto-copyright - by patrick hartling and kevin meinert\n";
     print "\n";
     print "Example Usage: \n";
-    print "       $0 -c copyrightheader.txt -t tagsfile.pl -a\n";
+    print "       $0 -c copyrightheader.txt -t tagsfile.pl -e h,cpp -a\n";
     print "             add or replace header to all files in current dir\n";
     print "\n";
-    print "       $0 -c copyrightheader.txt -t tagsfile.pl\n";
+    print "       $0 -c copyrightheader.txt -t tagsfile.pl -e h,cpp\n";
     print "             replace headers (no add) to all files in current dir\n";
     print "\n";
     print "       $0 -h\n";
     print "             gives this text\n";
     print "\n";
     print "Options:\n";
+    print "       -d <working dir> name of dir to start recursive processing\n";
+    print "       -e <ext1,ext2,..,extn> file extensions to process\n";
     print "       -c <(c) header> name of file with copyright text\n";
     print "       -t <tags.pl> name of perl script which defines 4\n";
     print "                    variables as input to this script\n";
@@ -125,12 +134,20 @@ sub recurseFunc {
 
     return unless checkName("$filename");
 
-    if ( ! open(INPUT, "$filename") ) {
+    if ( ! open(INPUT, "$filename") ) 
+    {
 	warn "WARNING: Could not open $filename: $!\n";
-    } else {
-	if ( ! open(OUTPUT, "> $filename.new") ) {
+    } 
+    
+    else 
+    {
+	if ( ! open(OUTPUT, "> $filename.new") )
+         {
 	    warn "WARNING: Could not create new file: $!\n";
-	} else {
+	} 
+         
+         else 
+         {
             # gather every copyright together
             my $all_copyrights;
             foreach(@copyright)
