@@ -41,44 +41,44 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node22.node:oiref>=455,410,14,20,1:oigroup>
-<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link48:oiref>=96,481,165,16,0:oigroup>
-<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link31:oiref>=176,159,76,16,0:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node26.node41:oiref>=858,300,14,20,1:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link28:oiref>=252,125,252,119,292,119,292,131,261,131:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node22.node47:oiref>=455,460,14,20,1:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20:oiref>=190,30,111,601,1:oigroup>
+@__positions <oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node22.node:oiref>=478,410,14,20,1:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link48:oiref>=74,484,180,13,0:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link31:oiref>=163,162,82,13,0:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node26.node41:oiref>=859,300,14,20,1:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link28:oiref>=245,125,245,119,285,119,285,131,254,131:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node22.node47:oiref>=478,460,14,20,1:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20:oiref>=183,30,111,601,1:oigroup>
 <oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link33:oiref>=:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node:oiref>=54,30,90,601,1:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node:oiref>=54,30,106,601,1:oigroup>
 <oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link29:oiref>=:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link34:oiref>=270,211,628,211:oigroup>
-<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link28:oiref>=265,131,112,16,0:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node22:oiref>=414,30,97,601,1:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link34:oiref>=263,211,653,211:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link28:oiref>=258,131,124,13,0:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node22:oiref>=414,30,142,601,1:oigroup>
 <oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link35:oiref>=:oigroup>
-<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link34:oiref>=274,191,83,16,0:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24:oiref>=590,30,90,601,1:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.node:oiref>=628,211,14,129,0:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.node42:oiref>=265,370,14,161,0:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node26:oiref>=820,30,90,601,1:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.node43:oiref>=274,391,14,99,0:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link44:oiref>=288,410,455,410:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.node:oiref>=247,125,14,426,0:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link34:oiref>=267,194,89,13,0:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24:oiref>=590,30,140,601,1:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.node:oiref>=653,211,14,129,0:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.node42:oiref>=258,370,14,161,0:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node26:oiref>=820,30,92,601,1:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.node43:oiref>=267,391,14,99,0:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link44:oiref>=281,410,478,410:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.node:oiref>=240,125,14,426,0:oigroup>
 <oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link45:oiref>=:oigroup>
-<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link44:oiref>=292,390,109,16,0:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.link40:oiref>=651,300,858,300:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link46:oiref>=288,460,455,460:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.node36:oiref>=637,227,14,103,0:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node26.node:oiref>=858,250,14,20,1:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node.node49:oiref>=92,501,14,20,1:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.link37:oiref>=651,250,858,250:oigroup>
-<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.link40:oiref>=655,280,166,16,0:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node.node32:oiref>=92,179,14,20,1:oigroup>
-<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link46:oiref>=292,440,151,16,0:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.node30:oiref>=256,160,14,381,0:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link44:oiref>=285,393,119,13,0:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.link40:oiref>=676,300,859,300:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link46:oiref>=281,460,478,460:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.node36:oiref>=662,227,14,103,0:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node26.node:oiref>=859,250,14,20,1:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node.node49:oiref>=100,501,14,20,1:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.link37:oiref>=676,250,859,250:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.link40:oiref>=680,283,179,13,0:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node.node32:oiref>=100,179,14,20,1:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link46:oiref>=285,443,164,13,0:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.node30:oiref>=249,160,14,381,0:oigroup>
 <oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.link38:oiref>=:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link48:oiref>=265,501,106,501:oigroup>
-<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link31:oiref>=256,179,106,179:oigroup>
-<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.link37:oiref>=655,230,73,16,0:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link48:oiref>=258,501,114,501:oigroup>
+<oigroup:<oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link31:oiref>=249,179,114,179:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.link37:oiref>=680,233,77,13,0:oigroup>
 */
 class __positions {
 }/**
@@ -88,12 +88,6 @@ class __positions {
 */
 class node {
 /**
-@shapeType DependencyLink
-@__modelType link
-@__ref <oiref:cpp#Class#vjConfigManager:oiref><oihard> 
-*/
-class link {
-}/**
 @shapeType Activation
 @__modelType node
 @name Activation2
@@ -107,6 +101,12 @@ class node32 {
 @activationMessage <oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link48:oiref> 
 */
 class node49 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:cpp#Class#jccl::ConfigManager:oiref><oihard> 
+*/
+class link {
 }}/**
 @shapeType Object
 @__modelType node
@@ -115,12 +115,6 @@ class node49 {
 */
 class node20 {
 /**
-@shapeType DependencyLink
-@__modelType link
-@__ref <oiref:cpp#Class#vjKernel:oiref><oihard> 
-*/
-class link {
-}/**
 @shapeType MessageLink
 @__modelType link
 @__ref <oiref:design#Class#id39lyacydgs0hccydhdfqq.node20:oiref><oihard>
@@ -255,6 +249,12 @@ class link46 {
 @label removePending
 */
 class link48 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:cpp#Class#vrj::Kernel:oiref><oihard> 
+*/
+class link {
 }}/**
 @shapeType Object
 @__modelType node
@@ -262,12 +262,6 @@ class link48 {
 */
 class node22 {
 /**
-@shapeType DependencyLink
-@__modelType link
-@__ref <oiref:cpp#Class#vjConfigChunkHandler:oiref><oihard> 
-*/
-class link {
-}/**
 @shapeType Activation
 @__modelType node
 @name Activation6
@@ -281,6 +275,12 @@ class node {
 @activationMessage <oiref:design#Class#id39lyacydgs0hccydhdfqq.node20.link46:oiref> 
 */
 class node47 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:cpp#Class#jccl::ConfigChunkHandler:oiref><oihard> 
+*/
+class link {
 }}/**
 @shapeType Object
 @__modelType node
@@ -288,12 +288,6 @@ class node47 {
 */
 class node24 {
 /**
-@shapeType DependencyLink
-@__modelType link
-@__ref <oiref:cpp#Class#vjDependencyManager:oiref><oihard> 
-*/
-class link {
-}/**
 @shapeType Activation
 @__modelType node
 @name Activation3
@@ -341,6 +335,12 @@ class link38 {
 @showReturnArrow
 */
 class link40 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:cpp#Class#jccl::DependencyManager:oiref><oihard> 
+*/
+class link {
 }}/**
 @shapeType Object
 @__modelType node
@@ -348,12 +348,6 @@ class link40 {
 */
 class node26 {
 /**
-@shapeType DependencyLink
-@__modelType link
-@__ref <oiref:cpp#Class#vjDepChecker:oiref><oihard> 
-*/
-class link {
-}/**
 @shapeType Activation
 @__modelType node
 @name Activation4
@@ -367,4 +361,10 @@ class node {
 @activationMessage <oiref:design#Class#id39lyacydgs0hccydhdfqq.node24.link40:oiref> 
 */
 class node41 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:cpp#Class#jccl::DepChecker:oiref><oihard> 
+*/
+class link {
 }}
