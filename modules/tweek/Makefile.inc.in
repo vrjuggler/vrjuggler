@@ -198,10 +198,14 @@ links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/tweek
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C tweek instlinks="$(instlinks)" links
+ifeq (@OS_TYPE@, Win32)
+	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
+else
 	for lib in $(LIBS) ; do 					\
             cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
+endif
 	cd $(instlinks)/include/tweek && $(RM_LN) ./*.h &&		\
           $(LN_S) $(TWEEKROOT_ABS)/tweek/*.h ./
 	cd $(instlinks)/include/tweek && $(RM_LN) ./tweekDefines.h &&	\
