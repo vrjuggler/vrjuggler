@@ -19,7 +19,7 @@ a
 {
 }
 
-p, ul, li
+p, ul, ol, li, table, td
 {
    font-family: Century Gothic, Arial, Helvetica;
 }
@@ -43,7 +43,6 @@ img, a img
 
 table, td
 {
-   font-family: Century Gothic, Arial, Helvetica;
    table-border-color-light: rgb(204, 153, 255);
    table-border-color-dark: rgb(204, 0, 204); 
    cell-spacing: none;
@@ -100,7 +99,7 @@ TT, tt, PRE, pre
    color: rgb(0, 0, 40);
 }
 
-li, ul, LI, .hanging
+.hanging
 {
    text-indent: -2em;
    margin-left:  2em;
