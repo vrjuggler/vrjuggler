@@ -341,18 +341,14 @@ public:  // Configure the application
       // if the navigator is already created then initScene has been called,
       // so we need to set the home pos in the nav, not just the member var.
       // FIXME: some code duplication here.
-      if (mNavigators.size() > 0 && mNavigators[0] != NULL)
+      for (unsigned int i=0;i<mNavigators.size();i++)
       {
+	      vjMatrix initial_nav;
          vjDEBUG(vjDBG_ALL,0) << "setting pos\n" << vjDEBUG_FLUSH;
-
-         vjMatrix initial_nav;              // Initial navigation position
          initial_nav.setTrans( mInitialNavPos );
-
-         for(unsigned int i=0;i<mNavigators.size();i++)
-         {
-            mNavigators[i]->setHomePosition(initial_nav);
-            mNavigators[i]->setCurPos(initial_nav);
-         }
+         
+         mNavigators[i]->setHomePosition(initial_nav);
+         mNavigators[i]->setCurPos(initial_nav);
       }
    }
 
