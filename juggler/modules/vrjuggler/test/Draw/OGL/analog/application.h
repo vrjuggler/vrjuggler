@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _TEXTURE_APP_
-#define _TEXTURE_APP_
+#ifndef _ANALOG_APP_
+#define _ANALOG_APP_
 
 // C++ and STL (standard template library - http://www.sgi.com/Technology/STL)
 #include <iostream> // for std::cout
