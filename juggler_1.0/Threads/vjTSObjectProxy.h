@@ -57,23 +57,18 @@ class vjTSObjectProxy
 public:
    //-----------------------------------------------------------------
    //: Constructor for proxy.
-   // The "real" object is actually create in this routine.
    //-----------------------------------------------------------------
    vjTSObjectProxy() : mObjectKey(-1)
    {
-      vjTSObject<T>* new_object = new vjTSObject<T>;  // create object to add
-      mObjectKey = vjThreadManager::instance()->addTSObject(new_object);  // Tell tables to add it
+      // Get a TS key for the object(s) that this will proxy
+      mObjectKey = vjThreadManager::instance()->generateNewTSKey();
    }
 
    //-----------------------------------------------------------------
    //: Destructor.
-   //  When proxy is destroyed, we want to delete the object from the
-   //  global tables.
    //-----------------------------------------------------------------
    ~vjTSObjectProxy()
-   {
-      vjThreadManager::instance()->removeTSObject(mObjectKey);
-   }
+   {;}
 
    T* operator->()
    { return getSpecific(); }
@@ -85,15 +80,25 @@ private:
    //-----------------------------------------------------------------
    //: Get the correct version for current thread
    // - Find the correct table
+   // - Make sure that object exists locally
    // - Get the obj pointer
    // - Attempts a dynamic cast
    //-----------------------------------------------------------------
    T* getSpecific()
    {
-      vjTSTable* table =
-         vjThreadManager::instance()->getCurrentTSTable();        // get table for current thread
-      vjTSBaseObject* object = table->getObject(mObjectKey);      // get the specific object
-      vjTSObject<T>* real_object = dynamic_cast< vjTSObject<T>* >(object); // try dynamic casting it
+      vjTSTable* table = vjThread::self()->getTSTable();
+
+      // ---- DOES OBJECT EXIST --- //
+      // If not, Create the object and add it to the table
+      if(!table->containsKey(mObjectKey))
+      {
+         vjTSBaseObject* new_object = new vjTSObject<T>;
+         table->setObject(new_object,mObjectKey);
+      }
+
+      // --- GET THE TS OBJECT --- //
+      vjTSBaseObject* object = table->getObject(mObjectKey);                  // get the specific object
+      vjTSObject<T>* real_object = dynamic_cast< vjTSObject<T>* >(object);    // try dynamic casting it
 
       vjASSERT(real_object != NULL);      // If fails, it means that "real" object was different type than the proxy
       if(real_object == NULL)
@@ -105,6 +110,7 @@ private:
    // Don't allow copy construction
    vjTSObjectProxy(vjTSObjectProxy& proxy)
    {;}
+
 private:
    long  mObjectKey;    // The key to find the object
 };
