@@ -62,6 +62,6 @@ java:
 	$(ANT) -f build-ext.xml
 
 clean:
-	rmdir /S /Q tweek
+	-rmdir /S /Q tweek
 	$(ANT) clean
 	$(ANT) -f build-ext.xml clean
