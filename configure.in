@@ -332,7 +332,7 @@ case $target_os in
         fi
 
         AR='ar'
-        ARFLAGS='r'
+        ARFLAGS='ru'
         CFLAGS="-Aa $CFLAGS"
         CXXFLAGS="+p $CXXFLAGS"
         LD='ld'
@@ -364,7 +364,8 @@ case $target_os in
             VJ_ABI_CFG('ALPHA')
         fi
 
-        AR='ar -r'
+        AR='ar'
+        ARFLAGS='-ruv'
         INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
         LDOPTS=''
@@ -383,7 +384,8 @@ case $target_os in
             VJ_ABI_CFG('ELF', "$target_cpu", '', '-elf')
         fi
 
-        AR='ar -r'
+        AR='ar'
+        ARFLAGS='-ruv'
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
         INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
@@ -410,7 +412,8 @@ case $target_os in
             VJ_ABI_CFG('ELF', "$target_cpu")
         fi
 
-        AR='ar -r'
+        AR='ar'
+        ARFLAGS='-ruv'
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
         INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
@@ -439,7 +442,8 @@ case $target_os in
             VJ_ABI_CFG('ELF', "$target_cpu")
         fi
 
-        AR='ar -r'
+        AR='ar'
+        ARFLAGS='-ruv'
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
         LD='${CXX} -G'
         LDOPTS=''
@@ -472,7 +476,8 @@ case $target_os in
         fi
 
         if test "x${_use_gcc}" = "xyes" ; then
-            AR='ar -r'
+            AR='ar'
+            ARFLAGS='-ruv'
             CFLAGS="-mno-cygwin"
             CXXFLAGS="-mno-cygwin"
             DBG_FLAGS='-g'
