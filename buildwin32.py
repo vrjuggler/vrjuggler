@@ -1365,7 +1365,8 @@ class GuiFrontEnd:
                                   sticky = Tkinter.W + Tkinter.E)
 
       # HeaderFrame Innards
-      self.mRoot.HeaderFrame.vjImage = Tkinter.PhotoImage(file="modules/vrjuggler/vrjconfig/org/vrjuggler/vrjconfig/images/juggler.logo.100x100.gif", format="gif")
+      self.mRoot.HeaderFrame.vjImage = \
+         Tkinter.PhotoImage(file = r"vc7\juggler-logo.gif", format = "gif")
       self.mRoot.HeaderFrame.Image = Tkinter.Label(self.mRoot.HeaderFrame,
                                                    image = self.mRoot.HeaderFrame.vjImage,
                                                    bg = self.JugglerYellow)
