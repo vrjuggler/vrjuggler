@@ -501,11 +501,11 @@ USE_LEACH_UUID='Y'
 # Test for the DCE 1.1 UUID interface.
 _vpr_save_LIBS="$LIBS"
 AC_CHECK_FUNC([uuid_create],
-   [AC_DEFINE(HAVE_UUID_CREATE)
+   [AC_DEFINE([VPR_USE_DCE_1_1_UUID])
     UUID_LIB=''
     USE_LEACH_UUID='N'],
    [AC_CHECK_LIB([uuid], [uuid_create],
-      [AC_DEFINE(HAVE_UUID_CREATE)
+      [AC_DEFINE([VPR_USE_DCE_1_1_UUID])
        UUID_LIB='-luuid'
        USE_LEACH_UUID='N'])])
 LIBS="${_vpr_save_LIBS}"
@@ -515,13 +515,12 @@ LIBS="${_vpr_save_LIBS}"
 # Linux), typically.
 if test "x$USE_LEACH_UUID" = "xY" ; then
    _vpr_save_LIBS="$LIBS"
-   USE_LEACH_UUID='Y'
    AC_CHECK_FUNC([uuid_generate],
-      [AC_DEFINE(HAVE_UUID_GENERATE)
+      [AC_DEFINE([VPR_USE_LIBUUID])
        UUID_LIB=''
        USE_LEACH_UUID='N'],
       [AC_CHECK_LIB([uuid], [uuid_generate],
-         [AC_DEFINE(HAVE_UUID_GENERATE)
+         [AC_DEFINE([VPR_USE_LIBUUID])
           UUID_LIB='-luuid'
           USE_LEACH_UUID='N'])])
    LIBS="${_vpr_save_LIBS}"
