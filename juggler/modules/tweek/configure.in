@@ -244,6 +244,16 @@ DPP_PATH_JAVA( ,
       $JDOM_JAR),
    BUILD_JAVA='N')
 
+# If we are building the Tweek Java code, we should try to enable building the
+# Java test suite too.
+if test "x$BUILD_JAVA" = "xY" ; then
+   DPP_CHECK_JAVA_STATIC_METHOD(junit.framework.Assert, assertTrue(true), ,
+      BUILD_JAVA_TEST_SUITE='Y',
+      [ AC_MSG_WARN(*** JUnit required for Tweek Java test suite ***)
+        BUILD_JAVA_TEST_SUITE='N' ],
+      $JUNIT_JAR)
+fi
+
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
 
@@ -599,6 +609,9 @@ AC_SUBST(VPR_SUBSYSTEM)
 AC_SUBST(BUILD_JAVA)
 AC_SUBST(JDOM_JAR)
 AC_SUBST(OPENORB_JAR)
+
+AC_SUBST(BUILD_JAVA_TEST_SUITE)
+AC_SUBST(JUNIT_JAR)
 
 AC_SUBST(ORB_CLASS_PROP)
 AC_SUBST(ORB_SINGLETON_CLASS_PROP)
