@@ -749,6 +749,8 @@ links:
           ${LN_S} ${VJROOT_ABS}/vjConfig.h ./vjConfig.h
 	cd ${instlinks}/include && rm -f ./vjDefines.h &&		\
 	  ${LN_S} ${topdir}/vjDefines.h ./vjDefines.h
+	cd ${instlinks}/include && rm -f ./vjParam.h &&			\
+	  ${LN_S} ${topdir}/vjParam.h ./vjParam.h
 	${SHELL} ${scriptdir}/mkinstalldirs ${instlinks}/bin
 ifndef NO_JAVA_GUI
 	cd ${instlinks}/bin && rm -f ./VjControl.jar &&			\
@@ -1130,7 +1132,7 @@ install-headers:
           ${VJROOT_ABS}/vjConfig.h ${includedir}/vjConfig.h
 	@-rm -f ./vjConfig.tmp
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${topdir}/vjDefines.h ${includedir}
+          ${topdir}/*.h ${includedir}
 
 # Install the sample applications.
 install-samples:
