@@ -201,22 +201,22 @@ int vjConfigChunkDB::dependencySort()
 {
    // Print out dependancies
 #ifdef VJ_DEBUG
-   vjDEBUG_BEGIN(2) << "---- Dependencies -----------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(4) << "---- Dependencies -----------\n" << vjDEBUG_FLUSH;
    for(int i=0;i<chunks.size();i++)
    {
-      vjDEBUG(2) << "Chunk:" << chunks[i]->getProperty("name") << endl
+      vjDEBUG(4) << "Chunk:" << chunks[i]->getProperty("name") << endl
                  << "\tDepends on:\n" << vjDEBUG_FLUSH;
       std::vector<std::string> deps = chunks[i]->getDependencies();
       if(deps.size() > 0)
       {
          for(int j=0;j<deps.size();j++)
-            vjDEBUG(2) << "   " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
+            vjDEBUG(4) << "   " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
       } else {
-         vjDEBUG(2) << "   Nothing.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(4) << "   Nothing.\n" << vjDEBUG_FLUSH;
       }
       //vjDEBUG(2) << endl;
    }
-   vjDEBUG_END(2) << "-----------------------------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(4) << "-----------------------------\n" << vjDEBUG_FLUSH;
 #endif
 
    // Create new src list to work from
@@ -234,7 +234,7 @@ int vjConfigChunkDB::dependencySort()
 
    while(cur_item != src_chunks.end())          // While not at end of src list
    {
-      vjDEBUG(2) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vjDEBUG_FLUSH;
+      vjDEBUG(4) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vjDEBUG_FLUSH;
 
       deps = (*cur_item)->getDependencies();             // Get src dependencies
       for(int dep_num=0;dep_num<deps.size();dep_num++)   // For each dependency
@@ -281,23 +281,25 @@ int vjConfigChunkDB::dependencySort()
    else
    {
       // Print out sorted dependancies
-      /*
-      cout << "---- After sort ----" << endl;
+#ifdef VJ_DEBUG
+      vjDEBUG_BEGIN(4) << "---- After sort ----" << endl << vjDEBUG_FLUSH;
       for(int i=0;i<chunks.size();i++)
       {
-         cout << "Chunk:" << chunks[i]->getProperty("name") << endl;
-         cout << "\tDepends on:";
+         vjDEBUG(4) << "Chunk:" << chunks[i]->getProperty("name") << endl
+                    << "\tDepends on:\n" << vjDEBUG_FLUSH;
          std::vector<std::string> deps = chunks[i]->getDependencies();
+
          if(deps.size() > 0)
          {
             for(int j=0;j<deps.size();j++)
-               cout << deps[j] << ", ";
+               vjDEBUG(4) << "   " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
          } else {
-            cout << "Nothing.";
+            vjDEBUG(4) << "   Nothing.\n" << vjDEBUG_FLUSH;
          }
-         cout << endl;
+         //vjDEBUG(2) << endl;
       }
-      */
+      vjDEBUG_END(4) << "-----------------\n" << vjDEBUG_FLUSH;
+#endif
 
       return 0;      // Success
    }
