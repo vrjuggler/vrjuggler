@@ -466,11 +466,8 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse (file);
-            long time = System.currentTimeMillis();
             if (!buildChunkDescDB (db, doc))
                 throw new ConfigParserException ("buildChunkDescDB failed.");
-            time = System.currentTimeMillis()-time;
-            System.out.println ("buildChunkDescDB took " + time + " ms.");
         }
         catch (javax.xml.parsers.ParserConfigurationException e1) {
             throw new ConfigParserException (e1.getMessage());
