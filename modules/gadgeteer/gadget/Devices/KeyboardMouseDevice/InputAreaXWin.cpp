@@ -33,6 +33,8 @@
 #include <gadget/gadgetConfig.h>
 
 #include <iomanip>
+
+#include <gadget/Util/Debug.h>
 #include <gadget/Type/KeyboardMouse/EventPtr.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
 
