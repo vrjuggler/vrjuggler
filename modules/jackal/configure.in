@@ -59,6 +59,11 @@ DPP_STD_CPP(yes)
 
 builtin(include, cfgargs.m4)
 
+# Force the use of GCC as the compiler.
+# NOTE: This is not fully implemented yet for any platform, but it is partially
+# usable on Windows.
+DPP_WITH_GCC(no)
+
 # Define the binary format.
 DPP_ABI_SETUP
 
