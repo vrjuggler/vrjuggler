@@ -143,26 +143,24 @@ bool isAbsolutePathName (const std::string& n)
 #endif
 }
 
-std::string demangleFileName (const std::string& n, std::string parentfile)
+std::string demangleFileName(const std::string& n, std::string parentfile)
 {
+   std::string fname = vpr::replaceEnvVars(n);
 
-   std::string fname = vpr::replaceEnvVars (n);
-
-   if ( !isAbsolutePathName(fname) )
+   if ( ! isAbsolutePathName(fname) )
    {
       // it's a relative pathname... so we have to add in the path part
       // of parentfile...
-//         cout << "demangling relative pathname '" << fname.c_str() << "' with parent dir '"
-//              << parentfile.c_str() << "'\n" << endl;
-      int lastslash = 0;
-      for ( unsigned int i = 0; i < parentfile.length(); i++ )
+      int lastslash(0);
+      for ( unsigned int i = 0; i < parentfile.length(); ++i )
       {
-         if ( parentfile[i] == '/' )
+#ifdef VPR_OS_Win32
+         if ( parentfile[i] == '\\' )
          {
             lastslash = i;
          }
-#ifdef WIN32
-         if ( parentfile[i] == '\\' )
+#else
+         if ( parentfile[i] == '/' )
          {
             lastslash = i;
          }
@@ -171,7 +169,7 @@ std::string demangleFileName (const std::string& n, std::string parentfile)
 
       if ( lastslash )
       {
-         std::string s(parentfile, 0, lastslash+1);
+         std::string s(parentfile, 0, lastslash + 1);
          fname = s + n;
       }
    }
