@@ -27,7 +27,7 @@ VPATH		= @srcdir@
 # Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
 # appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
 # use -L/usr/lib64.
-EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_PF@ -limage @TEST_EXTRA_LIBS_GL@
+EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_PF@ @TEST_EXTRA_LIBS_GL@
 
 OBJECTS		= pfNav.@OBJ_FILE_SUFFIX@
 
