@@ -71,7 +71,8 @@ INSTALL_FILES		=
 # Java-related setup
 # -----------------------------------------------------------------------------
 JDOM_JAR	= @JDOM_JAR@
-CLASSPATH	= $(JDOM_JAR)
+TWEEK_JARS	= @TWEEK_JARS@
+CLASSPATH	= $(JDOM_JAR)$(JCPS)$(TWEEK_JARS)
 
 CONFIG_PKG	= org.vrjuggler.jccl.config
 CONFIG_DIR	= $(subst .,/,$(CONFIG_PKG))
