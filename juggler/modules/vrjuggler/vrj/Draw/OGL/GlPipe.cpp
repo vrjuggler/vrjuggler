@@ -304,7 +304,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
       if((vjDisplay::STEREO == view) || (vjDisplay::LEFT_EYE == view))
       {
          win->setLeftEyeProjection();
-            mPerfBuffer->set(++mPerfPhase);
+         //mPerfBuffer->set(++mPerfPhase);
          glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
          glManager->currentUserData()->setProjection(surface_disp->getLeftProj());
 
@@ -326,6 +326,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
             mPerfBuffer->set(++mPerfPhase);
 
          glManager->drawObjects();
+            mPerfBuffer->set(++mPerfPhase);
       }
       else
          mPerfPhase += 2;
