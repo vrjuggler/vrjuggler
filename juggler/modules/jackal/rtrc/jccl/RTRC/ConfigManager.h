@@ -56,40 +56,41 @@ namespace jccl
 class ConfigElementHandler;
 class RemoteReconfig;
 
-/** Dynamic reconfiguration management plugin for JCCL.
- *  The ConfigManager provides a complete solution for configuring an
- *  application via JCCL's ConfigElement API.  The ConfigManager can
- *  configure based on static configuration files, or dynamically
- *  via a network interface to the Java front-end.
+/**
+ * Dynamic reconfiguration management for JCCL.  The Config Manager provides
+ * a complete solution for configuring an application via JCCL's ConfigElement
+ * type.  The Config Manager can configure based on static configuration
+ * files  or dynamically via a network interface.
  *
- *  The ConfigManager can be used in a number of ways; it provides a
- *  complete default solution to configuration, but also exposes
- *  enough of its inner workings to allow applications to implement
- *  their own dynamic configuration algorithms.
+ * The Config Manager can be used in a number of ways; it provides a complete
+ * default solution to configuration, but also exposes enough of its inner
+ * workings to allow applications to implement their own dynamic configuration
+ * algorithms.
  *
- *  The simplest way to use the ConfigManager is to create one or more
- *  objects that implement the ConfigElementHandler interface, and register
- *  these using the ConfigManager::addConfigElementHandler method.
+ * The simplest way to use the Config Manager is to create one or more types
+ * that implement the jccl::ConfigElementHandler interface and to register
+ * instances of these using the method
+ * jccl::ConfigManager::addConfigElementHandler().
  *
- *  Requests to add config elements can be added via the JavaBeans or by the
- *  addPending*() methods of this class.  These requests are added to
- *  the ConfigManager's "pending" list.  The ConfigManager also maintains
- *  an "active" list, containing all the config elements that have been
- *  successfully configured.
+ * Requests to add config elements can be added via the network or by the
+ * addPending*() methods of this class.  These requests are added to the
+ * Configi Manager's "pending" list.  The Config Manager also maintains an
+ * "active" list, containing all the config elements that have been
+ * successfully configured.
  *
- *  Once ConfigElementHandlers have been registered with the ConfigManager,
- *  the application should periodically call
- *  ConfigManager::attemptReconfiguration.  This will try to match items
- *  in the pending list with ConfigElementHandler objects that know how to
- *  configure them.
+ * Once config element handlers have been registered with the Config Manager,
+ * the application should periodically call the method
+ * jccl::ConfigManager::attemptReconfiguration().  This will try to match items
+ * in the pending list with instances of jccl::ConfigElementHandler that know
+ * how to handle them.
  *
- *  For more advanced uses, ConfigManager provides accessor functions that
- *  allow direct manipulation of the pending and active lists.  This
- *  allows an application to decide on its own when and how to process
- *  requests in the pending list.  However, the attemptReconfiguration()
- *  interface should be sufficient for almost all uses.
+ * For more advanced uses, jccl::ConfigManager provides accessor functions that
+ * allow direct manipulation of the pending and active lists.  This allows an
+ * application to decide on its own when and how to process requests in the
+ * pending list.  However, the attemptReconfiguration() interface should be
+ * sufficient for almost all uses.
  *
- *  @date January 13, 2000
+ * @date January 13, 2000
  */
 class JCCL_CLASS_API ConfigManager
 {
