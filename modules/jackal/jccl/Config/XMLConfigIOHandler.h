@@ -99,7 +99,7 @@ public:
 
 
     bool buildChunkDescDB (ChunkDescDB& db, const DOM_Node& doc);
-    ChunkDesc* buildChunkDesc (const DOM_Node& doc);
+    ChunkDescPtr buildChunkDesc (const DOM_Node& doc);
 
 private:
 

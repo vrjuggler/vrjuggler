@@ -56,7 +56,7 @@ class JCCL_CLASS_API ChunkDescDB {
 private:
 
     //:Internal storage of ChunkDescs
-    std::vector<ChunkDesc*> descs;
+    std::vector<ChunkDescPtr> descs;
 
 public:
 
@@ -71,8 +71,8 @@ public:
     ~ChunkDescDB ();
 
 
-    typedef std::vector<ChunkDesc*>::iterator iterator;
-    typedef std::vector<ChunkDesc*>::const_iterator const_iterator;
+    typedef std::vector<ChunkDescPtr>::iterator iterator;
+    typedef std::vector<ChunkDescPtr>::const_iterator const_iterator;
 
     inline iterator begin() {
         return descs.begin();
@@ -94,7 +94,7 @@ public:
     //:Searches for a particular ChunkDesc
     //!RETURNS: desc - a ChunkDesc whose token matches _token
     //!RETURNS: NULL - if no such ChunkDesc is found
-    ChunkDesc *getChunkDesc (const std::string& _token);
+    ChunkDescPtr getChunkDesc (const std::string& _token);
 
 
     //:Inserts a ChunkDesc
@@ -102,7 +102,7 @@ public:
     //!POST: d is inserted into self, replacing any ChunkDesc
     //+      with the same token.
     //!RETURNS: True - always.
-    bool insert (ChunkDesc *d);
+    bool insert (ChunkDescPtr d);
 
 
     //:Inserts all ChunkDescs in db
