@@ -63,8 +63,9 @@ enum data_format {
     POSITION_MATRIX     = 5,    //: Position and angle information in a matrix
     INVALID             = 6,    //: Placeholder
     QUATERNION          = 7,    //: Angle information as quaternion parameters
-    POSITION_QUATERNION = 8     //: Possition information and angle information
+    POSITION_QUATERNION = 8,    //: Possition information and angle information
                                 //+ as quaternion parameters
+    FEEDTHROUGH_DATA    = 14
 };
 
 //: Data blocks corresponding to the Flock data formats.  Refer to page 136 of

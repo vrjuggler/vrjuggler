@@ -102,6 +102,9 @@ getFormatName (const data_format format) {
       case POSITION_QUATERNION:
         name = "POSITION/QUATERNION";
         break;
+      case FEEDTHROUGH_DATA:
+        name = "FEEDTHROUGH DATA";
+        break;
     }
 
     return name;
