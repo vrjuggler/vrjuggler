@@ -31,8 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Devices/Open/Trackd/TrackdSensorStandalone.h>
-#include <gadget/Devices/Open/Trackd/TrackdSensor.h>
+#include <gadget/Devices/Open/TrackdAPI/TrackdAPISensor.h>
 #include <jccl/Config/ConfigChunk.h>
 
 #include <vpr/Util/Debug.h>
@@ -119,34 +118,34 @@ namespace gadget
  // Return the position of the given sensor
 gmtl::Matrix44f TrackdAPISensor::getSensorPos(int sensorNum)
 {
-   assert(mMem != NULL && "We don't have a valid trackd memory area");
-   assert(sensorNum < numSensors() && "Out of bounds request for a sensor");
+   assert(mTrackerReader != NULL && "We don't have a valid trackd memory area");
+   assert(sensorNum < mTrackerReader->trackdGetNumberOfSensors() && "Out of bounds request for a sensor");
 
    gmtl::Matrix44f ret_val;
-   float tmp[4][4]; 
+   float mat_data[4][4]; 
    
-   mMem->trackdGetMatrix(sensorNum, tmp);
+   mTrackerReader->trackdGetMatrix(sensorNum, mat_data);
 
    // AJS - some obvious set/get functions seem to be missing in GMTL
-   ret_val[0]=tmp[0][0];
-   ret_val[1]=tmp[0][1];
-   ret_val[2]=tmp[0][2];
-   ret_val[3]=tmp[0][3];
+   ret_val[0]=mat_data[0][0];
+   ret_val[1]=mat_data[0][1];
+   ret_val[2]=mat_data[0][2];
+   ret_val[3]=mat_data[0][3];
 
-   ret_val[4]=tmp[1][0];
-   ret_val[5]=tmp[1][1];
-   ret_val[6]=tmp[1][2];
-   ret_val[7]=tmp[1][3];
+   ret_val[4]=mat_data[1][0];
+   ret_val[5]=mat_data[1][1];
+   ret_val[6]=mat_data[1][2];
+   ret_val[7]=mat_data[1][3];
 
-   ret_val[8]=tmp[2][0];
-   ret_val[9]=tmp[2][1];
-   ret_val[10]=tmp[2][2];
-   ret_val[11]=tmp[2][3];
+   ret_val[8]=mat_data[2][0];
+   ret_val[9]=mat_data[2][1];
+   ret_val[10]=mat_data[2][2];
+   ret_val[11]=mat_data[2][3];
 
-   ret_val[12]=tmp[3][0];
-   ret_val[13]=tmp[3][1];
-   ret_val[14]=tmp[3][2];
-   ret_val[15]=tmp[3][3];
+   ret_val[12]=mat_data[3][0];
+   ret_val[13]=mat_data[3][1];
+   ret_val[14]=mat_data[3][2];
+   ret_val[15]=mat_data[3][3];
 
 
    return ret_val;

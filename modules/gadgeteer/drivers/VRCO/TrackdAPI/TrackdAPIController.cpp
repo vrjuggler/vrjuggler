@@ -31,11 +31,20 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Devices/Open/Trackd/TrackdControllerStandalone.h>
-#include <gadget/Devices/Open/Trackd/TrackdController.h>
+#include <gadget/Devices/Open/TrackdAPI/TrackdAPIController.h>
+#include <gadget/Devices/Open/TrackdAPI/TrackdAPISensor.h>
 #include <jccl/Config/ConfigChunk.h>
-
 #include <vpr/Util/Debug.h>
+
+#include <gadget/Type/DeviceConstructor.h>
+
+
+GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::TrackdAPIController>(inputMgr);
+   new gadget::DeviceConstructor<gadget::TrackdAPISensor>(inputMgr);
+}
+
 
 namespace gadget
 {
@@ -72,6 +81,7 @@ bool TrackdAPIController::config(jccl::ConfigChunkPtr c)
 
    // Create sensor
    int shm_key = c->getProperty<int>("shm_key");
+   vprDEBUG(vprDBG_ALL,0) << "TrackdAPIController::config: shared mem key:" << shm_key << std::endl << vprDEBUG_FLUSH;
    if (shm_key == 0)
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "vjTrackdSensor::config: Bad shm_key sent: Had value of 0.\n" << vprDEBUG_FLUSH;
@@ -86,6 +96,9 @@ bool TrackdAPIController::config(jccl::ConfigChunkPtr c)
    mCurValuators.resize(mControllerReader->trackdGetNumberOfValuators());
    mCurButtons.resize(mControllerReader->trackdGetNumberOfButtons());
 
+   vprDEBUG(vprDBG_ALL,0) << "Num valuators:" << mCurValuators.size() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,0) << "Num buttons:" << mCurButtons.size() << std::endl << vprDEBUG_FLUSH;
+
    return true;
 }
 
@@ -98,7 +111,7 @@ bool TrackdAPIController::config(jccl::ConfigChunkPtr c)
  */
 void TrackdAPIController::updateData()
 {
-   vprASSERT(mTrackdController != NULL && "Make sure that trackd controller has been initialized");
+   vprASSERT(mControllerReader != NULL && "Make sure that trackd controller has been initialized");
    vprASSERT((unsigned)mControllerReader->trackdGetNumberOfButtons() <= mCurButtons.size());
    vprASSERT((unsigned)mControllerReader->trackdGetNumberOfValuators() <= mCurValuators.size() );
 
