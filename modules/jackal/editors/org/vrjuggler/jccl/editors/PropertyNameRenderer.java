@@ -58,47 +58,64 @@ public class PropertyNameRenderer
                                                            row, column);
       if (table.getModel() instanceof ConfigChunkTableModel)
       {
-         ConfigChunkTableModel data_model = (ConfigChunkTableModel)table.getModel();
-         ConfigChunk chunk = data_model.getConfigChunk();
-         PropertyDesc desc = data_model.getPropertyDesc(row);
-
          JLabel lbl = (JLabel)comp;
          lbl.setHorizontalAlignment(SwingConstants.LEFT);
          lbl.setFont(lbl.getFont().deriveFont(Font.BOLD));
 
-         // If the property has more than one value, we shall specialize on it
-         int num_values = chunk.getNumPropertyValues(desc.getToken());
-         if (num_values > 1)
+         // First row is the chunk name, second is the chunk type
+         if (row == 0 || row == 1)
          {
-            // Get the index of the value in the property
-            int base_row = data_model.getRowFor(desc);
-            int value_idx = row - base_row;
-
-            // If this is the first property value, we need two labels ...
-            if (value_idx == 0)
+            lbl.setFont(lbl.getFont().deriveFont(Font.ITALIC));
+            lbl.setText((String)value);
+            if (row == 1)
             {
-               // Property name on the left, index on the right.
-               JPanel pnl = new JPanel();
-               pnl.setForeground(comp.getForeground());
-               pnl.setBackground(comp.getBackground());
-               pnl.setLayout(new BorderLayout());
-               // Property name label
-               pnl.add(comp, BorderLayout.CENTER);
-               // Index number label
-               JLabel idx_lbl = new JLabel(Integer.toString(value_idx), SwingConstants.RIGHT);
-               idx_lbl.setForeground(comp.getForeground());
-               idx_lbl.setBackground(comp.getBackground());
-               idx_lbl.setFont(comp.getFont().deriveFont(Font.PLAIN));
-               pnl.add(idx_lbl, BorderLayout.EAST);
-
-               comp = pnl;
+               ((JComponent)comp).setBorder(
+                  BorderFactory.createMatteBorder(0, 0, 2, 0, getForeground()));
             }
-            // If this is not the first property value, just display the index
-            else
+         }
+         // Remainder of the table is a literal chunk property
+         else
+         {
+            ConfigChunkTableModel data_model = (ConfigChunkTableModel)table.getModel();
+            ConfigChunk chunk = data_model.getConfigChunk();
+            PropertyDesc desc = data_model.getPropertyDesc(row);
+
+            ((JComponent)comp).setBorder(null);
+
+            // If the property has more than one value, we shall specialize on it
+            int num_values = chunk.getNumPropertyValues(desc.getToken());
+            if (num_values > 1)
             {
-               lbl.setText(Integer.toString(value_idx));
-               lbl.setHorizontalAlignment(SwingConstants.RIGHT);
-               lbl.setFont(comp.getFont().deriveFont(Font.PLAIN));
+               // Get the index of the value in the property
+               int base_row = data_model.getRowFor(desc);
+               int value_idx = row - base_row;
+
+               // If this is the first property value, we need two labels ...
+               if (value_idx == 0)
+               {
+                  // Property name on the left, index on the right.
+                  JPanel pnl = new JPanel();
+                  pnl.setForeground(comp.getForeground());
+                  pnl.setBackground(comp.getBackground());
+                  pnl.setLayout(new BorderLayout());
+                  // Property name label
+                  pnl.add(comp, BorderLayout.CENTER);
+                  // Index number label
+                  JLabel idx_lbl = new JLabel(Integer.toString(value_idx), SwingConstants.RIGHT);
+                  idx_lbl.setForeground(comp.getForeground());
+                  idx_lbl.setBackground(comp.getBackground());
+                  idx_lbl.setFont(comp.getFont().deriveFont(Font.PLAIN));
+                  pnl.add(idx_lbl, BorderLayout.EAST);
+
+                  comp = pnl;
+               }
+               // If this is not the first property value, just display the index
+               else
+               {
+                  lbl.setText(Integer.toString(value_idx));
+                  lbl.setHorizontalAlignment(SwingConstants.RIGHT);
+                  lbl.setFont(comp.getFont().deriveFont(Font.PLAIN));
+               }
             }
          }
       }

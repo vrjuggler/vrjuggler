@@ -61,46 +61,62 @@ public class PropertyValueRenderer
                                                            row, column);
       if (table.getModel() instanceof ConfigChunkTableModel)
       {
-         ConfigChunkTableModel data_model = (ConfigChunkTableModel)table.getModel();
-         PropertyDesc desc = data_model.getPropertyDesc(row);
 
-         // If the cell value is an embedded chunk, render a hyperlink.
-         if (desc.getValType() == ValType.EMBEDDEDCHUNK)
+         // First row is the chunk name, second is the chunk type
+         if (row == 0 || row == 1)
          {
-            ConfigChunk chunk = (ConfigChunk)value;
-
-            JButton btn = new JButton();
-            btn.setText("<html><font size=-1><a href=\"\">"+chunk.getName()+"</a></font></html>");
-            btn.setHorizontalAlignment(JButton.LEFT);
-            btn.setMargin(new Insets(0,0,0,0));
-            btn.setBorderPainted(false);
-            btn.setFocusPainted(false);
-            btn.setFont(table.getFont());
-            if (selected)
+            ((JLabel)comp).setText((String)value);
+            if (row == 1)
             {
-               btn.setForeground(table.getSelectionForeground());
-               btn.setBackground(table.getSelectionBackground());
+               ((JComponent)comp).setBorder(
+                  BorderFactory.createMatteBorder(0, 0, 2, 0, getForeground()));
             }
-            else
-            {
-               btn.setForeground(table.getForeground());
-               btn.setBackground(table.getBackground());
-            }
-            btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-            comp = btn;
          }
-
-         // If the value has enumerated values, render the name instead
-         else if (desc.getNumEnums() > 0 && desc.getValType() != ValType.CHUNK)
+         else
          {
-            for (int i=0; i<desc.getNumEnums(); ++i)
+            ConfigChunkTableModel data_model = (ConfigChunkTableModel)table.getModel();
+            PropertyDesc desc = data_model.getPropertyDesc(row);
+
+            ((JComponent)comp).setBorder(null);
+
+            // If the cell value is an embedded chunk, render a hyperlink.
+            if (desc.getValType() == ValType.EMBEDDEDCHUNK)
             {
-               DescEnum de = desc.getEnumAt(i);
-               if (de.getValue().get().equals(value))
+               ConfigChunk chunk = (ConfigChunk)value;
+
+               JButton btn = new JButton();
+               btn.setText("<html><font size=-1><a href=\"\">"+chunk.getName()+"</a></font></html>");
+               btn.setHorizontalAlignment(JButton.LEFT);
+               btn.setMargin(new Insets(0,0,0,0));
+               btn.setBorderPainted(false);
+               btn.setFocusPainted(false);
+               btn.setFont(table.getFont());
+               if (selected)
                {
-                  setText(de.getName());
-                  break;
+                  btn.setForeground(table.getSelectionForeground());
+                  btn.setBackground(table.getSelectionBackground());
+               }
+               else
+               {
+                  btn.setForeground(table.getForeground());
+                  btn.setBackground(table.getBackground());
+               }
+               btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+               comp = btn;
+            }
+
+            // If the value has enumerated values, render the name instead
+            else if (desc.getNumEnums() > 0 && desc.getValType() != ValType.CHUNK)
+            {
+               for (int i=0; i<desc.getNumEnums(); ++i)
+               {
+                  DescEnum de = desc.getEnumAt(i);
+                  if (de.getValue().get().equals(value))
+                  {
+                     setText(de.getName());
+                     break;
+                  }
                }
             }
          }
