@@ -28,6 +28,7 @@ public:
    vjProjection()
    {
       mType = -1;
+      mEye = 0;
       mFocusPlaneDist = 1.0f;
    }
 
@@ -55,10 +56,6 @@ public:
 
    friend ostream& operator<<(ostream& out, vjProjection& proj);
 
-protected:
-   //:  Must be Called whenever surface is changed by class.
-   //	Used by sub-classes to do any updates that need to happen.
-   virtual void surfaceSet() = 0;
 
 public:
    vjMatrix    viewMat;

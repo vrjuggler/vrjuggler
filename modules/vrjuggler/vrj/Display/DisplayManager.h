@@ -28,11 +28,13 @@ class vjDisplayManager : public vjConfigChunkHandler
 {
 public:
    //: This function updates the projections for all contained displays.
+   // It also tells the draw manager that the projections have changed
    virtual void updateProjections();
 
    //: Set the draw manager that the system is running
    // We need to know this in order to notify the draw
    // manager of any display changes
+   //! POST: draw manager is notified of any displays currently configured
    void setDrawManager(vjDrawManager* drawMgr);
 
    //: Return a list of the current displays
@@ -41,10 +43,12 @@ public:
    { return mActiveDisplays;}
 
    //: Return list of inactive displays
+   //! NOTE: DO NOT EDIT THE DISPLAYS
    std::vector<vjDisplay*> getInActiveDisplays()
    { return mInactiveDisplays;}
 
    //: Return list of all displays (inactive and active)
+   //! NOTE: DO NOT EDIT THE DISPLAYS
    std::vector<vjDisplay*> getAllDisplays();
 
 public:     // --- Config stuff -- //
@@ -94,7 +98,7 @@ public:
    }
 
 protected:
-   vjDisplayManager()
+   vjDisplayManager() : mDrawManager(NULL)
    {;}
 
 private:

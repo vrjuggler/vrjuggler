@@ -18,7 +18,21 @@ std::vector<vjDisplay*> vjDisplayManager::getAllDisplays()
 
 
 void vjDisplayManager::setDrawManager(vjDrawManager* drawMgr)
-{ mDrawManager = drawMgr; }
+{
+   vjDEBUG(vjDBG_ALL,0) << "vjDisplayManager::setDrawManager: Entered.\n" << vjDEBUG_FLUSH;
+
+   // set the draw manager
+   mDrawManager = drawMgr;
+
+   // Alert the draw manager about all the active windows currently configured
+   if(mDrawManager != NULL)
+   {
+      for(int i=0;i<mActiveDisplays.size();i++)
+      {
+         mDrawManager->addDisplay(mActiveDisplays[i]);
+      }
+   }
+}
 
 //: Add the chunk to the configuration
 //! PRE: configCanHandle(chunk) == true
@@ -27,15 +41,15 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
 {
    vjASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 
-   vjDEBUG_BEGIN(1) << "------- vjDisplayManager::configAdd() Entering -------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_ALL,1) << "------- vjDisplayManager::configAdd() Entering -------\n" << vjDEBUG_FLUSH;
 
 
    if((std::string)chunk->getType() == std::string("surfaceDisplay"))      // Surface DISPLAY
    {
       vjDisplay* newDisp = new vjSurfaceDisplay();    // Create display
       newDisp->config(chunk);                         // Config it
-      addDisplay(newDisp);                            // Add it
-      vjDEBUG(1) << "Display: "  << *newDisp << endl << flush << vjDEBUG_FLUSH;
+      addDisplay(newDisp, true);                            // Add it
+      vjDEBUG(vjDBG_ALL,1) << "Display: "  << *newDisp << endl << flush << vjDEBUG_FLUSH;
    }
 
    if((std::string)chunk->getType() == std::string("simDisplay"))      // Surface DISPLAY
@@ -43,10 +57,10 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
       vjDisplay* newDisp = new vjSimDisplay();     // Create display
       newDisp->config(chunk);                      // Config it
       addDisplay(newDisp);                         // Add it
-      vjDEBUG(1) << "Display: "  << *newDisp << endl << flush << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,1) << "Display: "  << *newDisp << endl << flush << vjDEBUG_FLUSH;
    }
 
-   vjDEBUG_END(1) << "------- vjDisplayManager::configAdd() Exiting --------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_ALL,1) << "------- vjDisplayManager::configAdd() Exiting --------\n" << vjDEBUG_FLUSH;
    return true;
 }
 
@@ -72,27 +86,19 @@ bool vjDisplayManager::configCanHandle(vjConfigChunk* chunk)
 // notifyDrawMgr = 0; Defaults to 0
 int vjDisplayManager::addDisplay(vjDisplay* disp, bool notifyDrawMgr)
 {
-   //XXX: When we add this back in, we have to deal wiht several issues
-   // - drawmanager needs to be known by the time we get here
-   // - If it is not (because kernel has no app) then we just store the windows
-   // - If it is, then pass the window on
-   // - There is a lot of kernel, app, draw manager going on here that needs ironed out
-   //vjASSERT(mDrawManager != NULL);     // If draw mgr is null, then we can't update it.
+   vjDEBUG(vjDBG_ALL,0) << "vjDisplayManager::addDisplay: Entered.\n" << vjDEBUG_FLUSH;
 
    // Test if active or not, to determine correct list
    // The place it in the list
+   // --- Update Local Display structures
    if(disp->isActive())
       mActiveDisplays.push_back(disp);
    else
       mInactiveDisplays.push_back(disp);
 
-   // --- Update Local Display structures
-   //Open new window object;
-   //Assign it the correct size,  position,  and system specific data???;
-   //Place it in the vector;
-
-   //if(notifyDrawMgr)
-   //    Tell Draw Manager to add dislay;
+   // If we are supposed to notify about, and valid draw mgr, and disp is active
+   if((notifyDrawMgr) && (mDrawManager != NULL) && (disp->isActive()))
+      mDrawManager->addDisplay(disp);;    // Tell Draw Manager to add dislay;
 
    return 1;
 }
@@ -122,6 +128,9 @@ void vjDisplayManager::updateProjections()
 
    for (std::vector<vjDisplay*>::iterator j = mInactiveDisplays.begin(); j != mInactiveDisplays.end(); j++)
       (*j)->updateProjections();
+
+   if(mDrawManager != NULL)
+      mDrawManager->updateProjections();
 }
 
 

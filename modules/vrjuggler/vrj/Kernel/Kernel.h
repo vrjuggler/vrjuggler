@@ -43,10 +43,11 @@ class vjKernel
 public:
 
    //: Start the Kernel running
+   // Spawn kernel thread
    int start();
 
    //: Load initial configuration data for the managers
-   //! POST: Managers set up
+   //! POST: InputManager, DisplayManager, and kernel
    //+       Config files loaded and handed to configAdd
    void initConfig();
 
@@ -60,13 +61,12 @@ public:
 
    // Stops the current application but leaves the kernel running.
    // It closes all API specific stuff (DrawManager,  etc.)
-   int stopApplication()
-   { return 1; }
+   //! RETURNS: success
+   bool stopApplication();
 
-   /* Load configuration data for Kernel
-    * POST: Config data has been read in
-    *       All Managers are configured
-    */
+   //: Load configuration data for Kernel
+   //! POST: Config data has been read into initial buffer
+   //! NOTE: Designed ONLY to specify initial configuration
    void loadConfigFile(std::string filename);
 
 public:  // --- Config interface --- //
@@ -87,8 +87,10 @@ public:  // --- Config interface --- //
       return mInitialChunkDB;
    }
 
-      // Add a group of config chunks
-   void configAdd(vjConfigChunkDB* chunkDB);
+   //: Add a group of config chunks
+   //! ARGS: guarded - Should the add be guarded
+   //! NOTE: All gaurds after kernel has started, should be guarded
+   void configAdd(vjConfigChunkDB* chunkDB, bool guarded=true);
 
       // Remove a group of config chunks
    void configRemove(vjConfigChunkDB* chunkDB);
@@ -108,21 +110,22 @@ protected:      // --- STARTUP ROUTINES --- //
    void initialSetupInputManager();
    void setupEnvironmentManager();
    void initialSetupDisplayManager();
-   void initialSetupDrawManager();
 
-   // Starts the drwa manager running
+   // Starts the draw manager running
    // Calls the app callbacks for the draw manager
-   void startDrawManager();
+   //! ARGS: newMgr - Is this a new manager, or the same one
+   void startDrawManager(bool newMgr);
 
-   // Stop the draw manager and close it's resources
-   void stopDrawManager()
-   {;}
+   // Stop the draw manager and close it's resources, then delete it
+   //! POST: draw mgr resources are closed
+   //+       draw mgr is deleted, display manger set to NULL draw mgr
+   void stopDrawManager();
 
 public:      // Global "get" interface
 
       //: Get the system Factory
    vjSystemFactory* getSysFactory()
-   { return sysFactory; }
+   { return mSysFactory; }
 
       //: Get the input manager
    vjInputManager* getInputManager()
@@ -146,23 +149,26 @@ private:
 
 protected:
 
-   vjApp*      app;                        //: The app object
+   vjApp*      mApp;                        //: The app object
    vjThread*   mControlThread;             //: The thread in control of me.
 
    /// Factories and Managers
-   vjSystemFactory*  sysFactory;          //: The current System factory
+   vjSystemFactory*  mSysFactory;          //: The current System factory
    vjInputManager*   mInputManager;       //: The input manager for the system
-   vjDrawManager*    drawManager;         //: The Draw Manager we are currently using
-   vjDisplayManager* displayManager;      //: The Display Manager we are currently using
+   vjDrawManager*    mDrawManager;         //: The Draw Manager we are currently using
+   vjDisplayManager* mDisplayManager;      //: The Display Manager we are currently using
    vjEnvironmentManager* environmentManager; //: The Environment Manager object
 
    /// Performance information
    vjPerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
+   bool              performanceEnabled;
 
    /// Config Stuff
    vjChunkDescDB*    mConfigDesc;
    vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
    vjConfigChunkDB*  mInitialChunkDB;     //: Initial chunks added to system before it is started
+   vjSemaphore       mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
+                                          //+ is acquired can run-time config occur
 
    /// Shared Memory stuff
    vjMemPool*       sharedMemPool;
@@ -175,9 +181,14 @@ protected:
    // ----------------------- //
 protected:
    //: Constructor:  Hidden, so no instantiation is allowed
-   vjKernel()
+   vjKernel() : mRuntimeConfigSema(0)
    {
-      app = NULL;
+      mApp = NULL;
+      mControlThread = NULL;
+      mSysFactory = NULL;
+      mInputManager = NULL;
+      mDisplayManager = NULL;
+
       mInitialChunkDB = NULL;
       mConfigDesc = NULL;
    }
