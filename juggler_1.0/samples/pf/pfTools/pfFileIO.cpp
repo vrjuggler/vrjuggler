@@ -29,8 +29,8 @@ pfNode* pfFileIO::loadFile( const std::string& filename )
 
    if (node == NULL)
    {
-      cout<<"COULDN'T FIND "<<filename.data()<<"\n"<<flush;
-      exit(0);
+      cout << "pfFileIO::loadFile: COULDN'T FIND "<<filename.data()
+           << "\tusing filepath: " << filePath << endl;
    }
 
    return node;
@@ -60,7 +60,7 @@ void pfFileIO::writeOptimizedFile( pfNode* node, std::string optimizedName )
 pfNode* pfFileIO::autoloadFile( std::string fileName, const pfFileIO::units& un )
 {
    pfNode* node = NULL;
-      
+
    std::string optimizedFileName = optimizedName( fileName );
    if (fileIO::fileExists(optimizedFileName))
    {
@@ -68,28 +68,29 @@ pfNode* pfFileIO::autoloadFile( std::string fileName, const pfFileIO::units& un 
       //cout<<"Loading "<<optimizedFileName.data()<<"\n"<<flush;
       node = loadFile( optimizedFileName );
    }
-
    else
    {
       cout<<"Loading "<<fileName.data()<<"... "<<flush;
       node = loadFile( fileName );
-      cout<<"Caching to "<<optimizedFileName.data()<<"...\n"<<flush;
-      writeOptimizedFile( node, optimizedFileName );
+      if(node != NULL)
+      {
+         cout<<"Caching to "<<optimizedFileName.data()<<"...\n"<<flush;
+         writeOptimizedFile( node, optimizedFileName );
+      }
       // TODO: consider if the user has write access,
       //       for demos, they may not.
       // one workaround is to always distribute the app with the pfb's.
    }
 
-   assert( node != NULL );
-   
+   //assert( node != NULL );
+
    // convert it if requested.
-   if (un != NOCONVERT)
+   if ((NULL != node) && (un != NOCONVERT))
    {
       pfDCS* conversionDCS = pfFileIO::newConversionDCS( un );
       conversionDCS->addChild( node );
       return conversionDCS;
-   }   
-   
+   }
    else
    {
       return node;

@@ -16,18 +16,20 @@ public:
    enum units
    {
       FEET, METERS, NOCONVERT
-   };   
-      
+   };
+
    // == "." by default
    static std::string filePath;
    static void setFilePath( const std::string& filepath = "." )
    {
       filePath = filepath;
+      //cout << "pfFileIO::setFilePath: path now: " << filePath << endl;
    }
 
    static void addFilePath( const std::string& filepath)
    {
       filePath += filepath;
+      //cout << "pfFileIO::addFilePath: path now: " << filePath << endl;
    }
 
    //: Load geometry from File
@@ -45,8 +47,8 @@ public:
    // function generates a new pfb file.
    // if there is a current pfb file, then function uses it instead.
    // TODO: add time stamp check - not implemented yet.
-   // 
-   // function will auto scale your model based on the units you provide, 
+   //
+   // function will auto scale your model based on the units you provide,
    // default is no conversion.
    static pfNode* autoloadFile( std::string fileName, const units& un );
 
@@ -57,9 +59,9 @@ public:
 
    //: get the name of the optimized file given the original name
    static std::string optimizedName( std::string originalFltName );
-   
-   
-      
+
+
+
    // returns a DCS that will scale an flt model to the suitable size for
    // viewing in a cave environment.
    // setting the units in multigen doesn't seem to do anything, but if anything
@@ -82,9 +84,9 @@ public:
             // do nothing.
             break;
       }
-      
+
       return dcs;
-   }   
+   }
 };
 
 
