@@ -59,6 +59,7 @@ class vjConnect {
 
     void sendDescDB (vjChunkDescDB* db);
     void sendChunkDB (vjConfigChunkDB* db, bool all);
+    void sendRefresh ();
 
     vjSyncWriter            output;
     char*                   name;

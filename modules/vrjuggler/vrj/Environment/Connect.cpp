@@ -103,6 +103,13 @@ void vjConnect::sendChunkDB (vjConfigChunkDB* db, bool all) {
 }
 
 
+void vjConnect::sendRefresh () {
+    output.lock();
+    output << "refresh\n";
+    output.unlock();
+}
+
+
 void vjConnect::controlLoop(void* nullParam) {
     /* this probably needs considerable revision */
     char        c;
