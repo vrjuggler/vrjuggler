@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-01-10 patrickh Fixed a race condition between vpr::BaseThread::valid() and
+                    vpr::BaseThread::registerThread().
+                    NEW VERSION: 0.23.1
 2003-01-09 allenb   Migrated test suite to latest cppunit abilities.
 2003-01-08 allenb   Refactored ObjectReader and ObjectWriter to be abstract
                     base classes for serializing objects.  Introduced a new

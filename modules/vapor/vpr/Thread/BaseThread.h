@@ -81,9 +81,7 @@ public:
       VPR_UNJOINABLE_THREAD  /**< The thread cannot be attached with join() */
    };
 
-   // XXX: Should mThreadId be initialized to -1 to indicate that a thread is
-   // initially invalid?
-   BaseThread() : mThreadId(0)
+   BaseThread() : mThreadId(-1)
    {
       ;
    }
@@ -265,7 +263,12 @@ public:
     * Is this a valid thread?
     *
     * @return true is returned if this object represents a thread that has
-    *         been created correctly.
+    *         been spawned correctly.
+    *
+    * @note A true value may be returned before the spawned thread begins
+    *       executing.  This is due to the way that the operating system
+    *       schedules a newly created thread.  However, true is returned if
+    *       and only if the thread has been spawned successfully.
     */
    bool valid()
    {
