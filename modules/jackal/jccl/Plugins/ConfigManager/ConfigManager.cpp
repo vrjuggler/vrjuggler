@@ -79,11 +79,8 @@ namespace jccl {
         }
         
         unlockPending();
-        
-        // Reset pending count
-        mPendingCountMutex.acquire();
-        mPendingCheckCount = 0;
-        mPendingCountMutex.release();
+
+        refreshPendingList();
     }
     
 
@@ -102,22 +99,20 @@ namespace jccl {
         
         unlockPending();
 
-        // Reset pending count
-        mPendingCountMutex.acquire();
-        mPendingCheckCount = 0;
-        mPendingCountMutex.release();
+        refreshPendingList();
     }
 
 
 
     void ConfigManager::removePending(std::list<PendingChunk>::iterator item)
     {
-        vprASSERT(1 == mPendingLock.test());
+        vprASSERT (1 == mPendingLock.test());
         mPendingConfig.erase(item);
     }
 
 
     void ConfigManager::refreshPendingList () {
+        vprASSERT (0 == mPendingCountMutex.test());
         mPendingCountMutex.acquire();
         mPendingCheckCount = 0;
         mPendingCountMutex.release();
@@ -195,10 +190,7 @@ namespace jccl {
         mPendingConfig.push_back(pendingChunk);
         unlockPending();
         
-        // Reset pending count
-        mPendingCountMutex.acquire();
-        mPendingCheckCount = 0;
-        mPendingCountMutex.release();
+        refreshPendingList();
     }
 
 
