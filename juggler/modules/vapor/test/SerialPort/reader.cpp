@@ -44,8 +44,9 @@ main (int argc, char* argv[]) {
     read_port->setOpenReadOnly();
     read_port->setOpenBlocking();
 
-    if ( read_port->open() ) {
+    if ( read_port->open().success() ) {
         char buffer[80];
+        ssize_t bytes;
 
 //        read_port->setUpdateAction(vpr::SerialIO::NOW);
 //        read_port->enableLocalAttach();
@@ -53,7 +54,7 @@ main (int argc, char* argv[]) {
         read_port->enableRead();
 //        read_port->flushQueue(vpr::SerialIO::INPUT_QUEUE);
         std::cout << "Port opened\n";
-        read_port->read(buffer, sizeof(buffer));
+        read_port->read(buffer, sizeof(buffer), bytes);
         std::cout << "Read '" << buffer << "'\n";
     }
 

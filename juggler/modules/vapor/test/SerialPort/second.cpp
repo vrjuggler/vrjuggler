@@ -49,7 +49,7 @@ main (int argc, char* argv[]) {
     port->setOpenReadWrite();
     port->setOpenBlocking();
 
-    if ( port->open() ) {
+    if ( port->open().success() ) {
         char read_buffer[10], write_buffer[10];
         int val;
         ssize_t bytes;
@@ -64,12 +64,12 @@ main (int argc, char* argv[]) {
         for ( int i = 0; i < 10; i++ ) {
             bzero((void*) &write_buffer, sizeof(write_buffer));
             sprintf(write_buffer, "%d", val);
-            bytes = port->write(write_buffer, strlen(write_buffer) + 1);
+            port->write(write_buffer, strlen(write_buffer) + 1, bytes);
             std::cerr << "Wrote '" << write_buffer << "' (" << bytes
                       << " bytes)\n";
 
             bzero((void*) &read_buffer, sizeof(read_buffer));
-            port->read(read_buffer, sizeof(read_buffer));
+            port->read(read_buffer, sizeof(read_buffer), bytes);
             std::cerr << "Read '" << read_buffer << "'\n";
 
             val = atoi(read_buffer);
