@@ -352,6 +352,9 @@ post-install-headers:
           $(topdir)/vrj/vjParam.h $(includedir)/vrj
 
 install-headers-deprecated:
+	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -e .h -o $(includedir)/deprecated		\
+          -i $(VJROOT_ABS)/deprecated
 
 # Install the sample applications.
 install-samples:
