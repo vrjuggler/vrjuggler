@@ -22,7 +22,7 @@ public class AllTests
       suite.addTestSuite( ValTypeTest.class );
       suite.addTestSuite( VarValueTest.class );
       suite.addTestSuite( DescEnumTest.class );
-
+      suite.addTestSuite( PropertyDescTest.class );
 
       return suite;
    }
