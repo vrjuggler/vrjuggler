@@ -6,6 +6,8 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Output.h>
 
+#include <Common/PointAndGo.h>
+
 
 void User::update()
 {
@@ -40,5 +42,8 @@ void User::init()
    mButtonInterfaces.push_back(btn2);
    mButtonInterfaces.push_back(btn3);
    mButtonInterfaces.push_back(btn4);
+
+   // Set to default navigation strategy
+   mViewPlatform.setNavStrategy( new PointAndGo);
 }
 

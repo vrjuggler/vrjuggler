@@ -1,11 +1,10 @@
 #ifndef POINTANDGO_H
 #define POINTANDGO_H
 
-#include <User/NavStrategy.h>
-#include <User/InterfaceMethod.h>
-#include <User/SimpleWandInterface.h>
+#include <Common/NavStrategy.h>
+#include <vpr/Util/Interval.h>
 
-#include <snx/SoundHandle.h>
+//#include <snx/SoundHandle.h>
 
 class User;
 
@@ -22,13 +21,13 @@ public:
       : mVelocity(0), mAllowRotate(true)
    {
       mLastUpdate = vpr::Interval::NoTimeout;
-      initSounds();
+   //   initSounds();
    }
 
    virtual ~PointAndGo()
    {;}
 
-   void initSounds();
+   //void initSounds();
 
    /**
      * Template method for updating the view platform (navigation, etc).
@@ -43,7 +42,7 @@ protected:
    vpr::Interval  mLastUpdate;   /**< Time of the last update, used to compute delta */
     
 protected:
-   std::vector<snx::SoundHandle> mSounds;
+   //std::vector<snx::SoundHandle> mSounds;
 };
 #endif //POINTANDGO_H
 
