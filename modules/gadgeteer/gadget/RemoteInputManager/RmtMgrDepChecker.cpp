@@ -37,6 +37,7 @@
 #include <gadget/Util/Debug.h>
 #include <gadget/InputManager.h>
 #include <gadget/RemoteInputManager/RmtMgrDepChecker.h>
+#include <jccl/RTRC/ConfigManager.h>
 
 
 namespace gadget
@@ -44,51 +45,67 @@ namespace gadget
 
 bool RmtMgrDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
 {
-   /*bool pass = jccl::DepChecker::depSatisfied(chunk);   // Run default check
-
-   // If we can pass normal check and we have a display system chunk
-   if ( haveDisplaySystemChunk() )
+   
+   static int last_pending = 0;
+      // If we have a RIMChunk then we have to make sure that all machine chunks are loaded
+   //if (chunk->getDescToken() == RemoteInputManager::getChunkType())
+   //{
+      // Return TRUE if standard dependencies are satisfied and there 
+      // are NOT any pending machine specific chunks
+   jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
+   
+   if (cfg_mgr->getNumPending() == last_pending)
    {
-      return pass;
+      return true;
    }
    else
    {
+      last_pending = cfg_mgr->getNumPending();
       return false;
-   }*/
-   return false;
+   }
+   //return(jccl::DepChecker::depSatisfied(chunk) &&
+   //       !cfg_mgr->isChunkTypeInPendingList(RemoteInputManager::getMachineSpecificChunkType()));
+   //}
+   /*
+   else  // We must have a device
+   {
+      return(jccl::DepChecker::depSatisfied(chunk) &&
+            !jccl::ConfigManager::instance()->isChunkTypeInPendingList(RemoteInputManager::getChunkType()));
+   }
+   */
 }
 
 
-// We can handle Remote Connection Chunks and Remote Device Chunks
+// We can handle any device and the RIMChunk
 bool RmtMgrDepChecker::canHandle(jccl::ConfigChunkPtr chunk)
 {
-   /*std::string chunk_type = chunk->getDescToken();
-   return (chunk_type == KeyboardXWin::getChunkType());      // Return true if we have a KeyboardXWin chunk type
-   */
-   return false;
+   // return (DeviceFactory::instance()->recognizeDevice(chunk) ||
+   return (chunk->getDescToken() == RemoteInputManager::getChunkType());
+   
 }
 
 void RmtMgrDepChecker::debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_lvl)
 {
-   /*jccl::DepChecker::debugOutDependencies(chunk,dbg_lvl);
+   jccl::DepChecker::debugOutDependencies(chunk,dbg_lvl);
 
-   vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl) << "Extra Dependency: Dependent upon getting DisplaySystemChunk from displayManager: " << vprDEBUG_FLUSH;
-   if ( ! haveDisplaySystemChunk() )
+   vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl) << "Extra Dependency[RIM]: Dependent "
+      << "upon the Pending list becoming stable: " << vprDEBUG_FLUSH;
+   if (jccl::DepChecker::depSatisfied(chunk) &&
+       !jccl::ConfigManager::instance()->isChunkTypeInPendingList(RemoteInputManager::getMachineSpecificChunkType()))
    {
-      vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "FAILED!!!\n" << vprDEBUG_FLUSH;
+      vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "passed.\n" << vprDEBUG_FLUSH;      
    }
    else
    {
-      vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "passed.\n" << vprDEBUG_FLUSH;
+      vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "FAILED!!!\n" << vprDEBUG_FLUSH;
    }
 
    vprDEBUG_NEXT(vprDBG_ALL,dbg_lvl)
-      << "Extra Dependencies for: item: " << chunk->getFullName()
+      << "Extra Dependencies for: " << chunk->getFullName()
       << " type: " << chunk->getDescToken() << std::endl
-      << "   Dependent upon displaySystemChunk in display Manager. (Needs it to find display strings)"
       << vprDEBUG_FLUSH;
 
-   vprDEBUG_NEXT_END(vprDBG_ALL,dbg_lvl) << std::endl << vprDEBUG_FLUSH;*/
+   vprDEBUG_NEXT_END(vprDBG_ALL,dbg_lvl) << std::endl << vprDEBUG_FLUSH;
 }
 
 }  // end namespace gadget

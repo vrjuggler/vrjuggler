@@ -94,10 +94,6 @@ public:
    {
       mBaudRate = baud;
    }
-   void setMsgPackage(gadget::MsgPackage* msg_packer)
-   {
-      mMsgPackage = msg_packer;
-   }
    void setMaster(bool master)
    {
       mIsMaster = master;
@@ -105,6 +101,10 @@ public:
    bool isActive()
    {
       return(mActive);
+   }
+   bool isMaster()
+   {
+      return(mIsMaster);
    }
 
 protected:
@@ -116,7 +116,6 @@ protected:
    int                  mTCPport;
    std::string          mSerialPortName;
    int                  mBaudRate;
-   gadget::MsgPackage*  mMsgPackage;
    bool                 mIsMaster;
 };
 
