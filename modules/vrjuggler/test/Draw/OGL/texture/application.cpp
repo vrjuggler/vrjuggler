@@ -69,7 +69,7 @@ void TextureDemoApplication::contextInit()
       
    //: Floor GL state (just a texture obj)
 
-      // create cube texture object
+      // create floor texture object
       mFloorTexture.image() = hexImage;
       tex::bind( mFloorTexture, TextureDemoApplication::getTexObjID( mFloorTexture ) );
 }
