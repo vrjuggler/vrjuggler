@@ -122,7 +122,7 @@ namespace snxFileIO
    template<class typeT>
    inline static int WriteData( Endianness fileByteOrdering, FILE* fp, const typeT& data )
    {
-      register typeT tempData = data;
+      typeT tempData = data;
 
       // if we're not on a little endian machine (i.e. intel is little endian, mips is big) 
       // then reverse the bytes.

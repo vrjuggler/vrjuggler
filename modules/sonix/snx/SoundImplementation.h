@@ -49,6 +49,7 @@
 #include <assert.h>
 #include <string>
 #include <map>
+#include <boost/concept_check.hpp>
 #include <gmtl/Matrix.h>
 
 #include <snx/SoundInfo.h>
@@ -113,6 +114,7 @@ public:
      */
    virtual bool isPlaying( const std::string& alias )
    {
+      boost::ignore_unused_variable_warning(alias);
       return false;
    }   
    
@@ -163,6 +165,7 @@ public:
    /** if the sound is paused, then return true. */
    virtual bool isPaused( const std::string& alias )
    {
+      boost::ignore_unused_variable_warning(alias);
       return false;
    }   
    
@@ -300,6 +303,7 @@ public:
     */
    virtual void step( const float& timeElapsed )
    {
+      boost::ignore_unused_variable_warning(timeElapsed);
    }   
 
    /**
