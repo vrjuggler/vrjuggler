@@ -32,6 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
 
 #include <vrj/Draw/OGL/GlDrawManager.h>
@@ -774,9 +775,9 @@ void GlDrawManager::drawGlove(GloveProxy* gloveProxy)
 } // end namespace
 
 
-#if  defined(VJ_OS_Win32)
+#if  defined(VPR_OS_Win32)
 #  include <vrj/Draw/OGL/GlWindowWin32.h>
-#elif defined(VJ_OS_Darwin)
+#elif defined(VPR_OS_Darwin)
 #  include <vrj/Draw/OGL/GlWindowOSX.h>
 #else
 #  include <vrj/Draw/OGL/GlWindowXWin.h>
@@ -787,9 +788,9 @@ namespace vrj
 
 vrj::GlWindow* GlDrawManager::getGLWindow()
 {
-#if  defined(VJ_OS_Win32)
+#if  defined(VPR_OS_Win32)
    return new vrj::GlWindowWin32;
-#elif defined(VJ_OS_Darwin)
+#elif defined(VPR_OS_Darwin)
    return new vrj::GlWindowOSX
 #else
    return new vrj::GlWindowXWin;

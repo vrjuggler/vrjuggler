@@ -41,6 +41,7 @@
 #include <vrj/Kernel/App.h>
 #include <vrj/Kernel/User.h>
 
+#include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
 #include <vrj/Environment/EnvironmentManager.h>
 #include <vpr/System.h>
@@ -52,12 +53,12 @@
 
 
 // Get the system factory we need
-#if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_AIX) ||   \
-    defined(VJ_OS_Solaris) || defined(VJ_OS_FreeBSD) || defined(VJ_OS_HPUX)
+#if defined(VPR_OS_IRIX) || defined(VPR_OS_Linux) || defined(VPR_OS_AIX) ||   \
+    defined(VPR_OS_Solaris) || defined(VPR_OS_FreeBSD) || defined(VPR_OS_HPUX)
 #include <vrj/Kernel/SystemFactoryUNIX.h>
-#elif defined(VJ_OS_Darwin)
+#elif defined(VPR_OS_Darwin)
 #include <vrj/Kernel/SystemFactoryOSX.h>
-#elif defined(VJ_OS_Win32)
+#elif defined(VPR_OS_Win32)
 #include <vrj/Kernel/SystemFactoryWin32.h>
 #endif
 
@@ -283,12 +284,12 @@ void Kernel::initConfig()
 
    //??// processPending() // Should I do this here
 
-#if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_Solaris) || \
-    defined(VJ_OS_AIX) || defined(VJ_OS_FreeBSD) || defined(VJ_OS_HPUX)
+#if defined(VPR_OS_IRIX) || defined(VPR_OS_Linux) || defined(VPR_OS_Solaris) || \
+    defined(VPR_OS_AIX) || defined(VPR_OS_FreeBSD) || defined(VPR_OS_HPUX)
    mSysFactory = SystemFactoryUNIX::instance(); // XXX: Should not be system specific
-#elif defined(VJ_OS_Darwin)
+#elif defined(VPR_OS_Darwin)
    mSysFactory = SystemFactoryOSX::instance();
-#elif defined(VJ_OS_Win32)
+#elif defined(VPR_OS_Win32)
    mSysFactory = SystemFactoryWin32::instance();
 #else
    //vprDEBUG(0,0) << "ERROR!: Don't know how to create System Factory!\n" << vprDEBUG_FLUSH;

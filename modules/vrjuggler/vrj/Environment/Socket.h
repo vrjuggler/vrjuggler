@@ -35,10 +35,11 @@
 
 #include <vrj/vrjConfig.h>
 #include <iostream>
+#include <vpr/vpr.h>
 #include <vpr/IO/Socket/Socket.h>
 
 
-#ifndef VJ_OS_Win32
+#ifndef VPR_OS_Win32
 
 namespace vrj
 {
@@ -150,7 +151,7 @@ typedef SocketIDWin32 SocketID;
 } // End of vrj namespace
 
 
-#endif //ifndef VJ_OS_Win32
+#endif /* ifndef VPR_OS_Win32 */
 
 #endif
 

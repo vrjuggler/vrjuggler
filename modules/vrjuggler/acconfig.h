@@ -51,44 +51,20 @@
 /* Define to use the OpenScenegraph API. */
 #undef VJ_API_OPENSCENEGRAPH
 
-/* Define all of the following if building on IRIX. */
-#undef VJ_OS_IRIX
+/* Define all of the following if building on IRIX or Darwin. */
 #undef _BSD_TYPES
 
 /* Define to be either IRIX5 or IRIX6 depending on your system. */
 #undef IRIXREL
 
 /* Define all of the following if building on HP-UX. */
-#undef VJ_OS_HPUX
 #undef VJ_HPUX_VERSION
 #undef _INCLUDE_TERMIO
 #undef _CMA_NOWRAPPERS_
 
-/* Define if building on Digital UNIX. */
-#undef VJ_OS_DUX
-
-/* Define if building on FreeBSD. */
-#undef VJ_OS_FreeBSD
-
-/* Define if building on Linux. */
-#undef VJ_OS_Linux
-
-/* Define if building on Solaris. */
-#undef VJ_OS_Solaris
-
-/* Define if building on AIX. */
-#undef VJ_OS_AIX
-
 /* Define if building on a Win32 platform. */
-#undef VJ_OS_Win32
 #undef WIN32
 #undef _MBCS
-
-/* Define if building on Darwin (aka, Mac OS X). */
-#undef VJ_OS_Darwin
-
-/* Define if building on a platform not specified above. */
-#undef VJ_OS_GENERIC
 
 /* Define to unique values used for defining VJ_PERFORMANCE. */
 #undef VJ_PERF_NONE

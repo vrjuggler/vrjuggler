@@ -32,9 +32,10 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <vpr/vpr.h>
 #include <vrj/Environment/Socket.h>
 
-#ifndef VJ_OS_Win32
+#ifndef VPR_OS_Win32
 
 /***************************** BSD Sockets Version **************************/
 
@@ -130,7 +131,7 @@ SocketPosix* SocketPosix::accept () {
     int servsock;
 
 
-#ifdef VJ_OS_HPUX
+#ifdef VPR_OS_HPUX
     int len;
 #else
     socklen_t len;
@@ -271,5 +272,5 @@ SocketWin32* SocketWin32::accept () {
 
 } // end namespace
 
-#endif //ifndef VJ_OS_Win32
+#endif /* ifndef VPR_OS_Win32 */
 
