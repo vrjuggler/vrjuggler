@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-07-31 patrick  Fixed major problems with SocketImplBSD::isConnected() and
+                    with FileHandleImplUNIX::is{Redable,Writeable}().  These
+                    methods now work properly.
 2001-07-27 patrick  Removed the compiler flags dealing with warnings from the
                     output of 'vpr-config --cxxflags'.
 2001-07-24 allenb   Changed socket bridge templates to use boost::shared_ptr
