@@ -48,6 +48,7 @@
 
 #include <boost/static_assert.hpp>
 #include <vpr/IO/ObjectReader.h>
+#include <vpr/Util/Assert.h>
 #include <vpr/System.h>
 
 
