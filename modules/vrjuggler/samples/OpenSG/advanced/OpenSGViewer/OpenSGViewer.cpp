@@ -79,44 +79,8 @@ void OpenSGViewer::preFrame()
    // Update the user (and viewplatform with navigation strategy)
    mUser.update();
 
-   const float inc_vel(0.005f);
-   const float max_vel(0.5f);
-
-   // Update velocity
-   if(mButton0->getData() == gadget::Digital::ON)
-   {
-     velocity += inc_vel;
-     std::cout << "vel: " << velocity << std::endl;
-   }
-   else if(velocity > 0)
-   {
-      std::cout << "vel: " << velocity << std::endl;
-      velocity -= inc_vel;
-   }
-
-   // Restrict range
-   if(velocity < 0)
-      { velocity = 0;}
-   if(velocity > max_vel)
-      { velocity = max_vel; }
-
-   if(mButton1->getData() == gadget::Digital::ON)
-   { velocity = 0; }
-
-   // Travel in model
-   // - Find forward direction of wand
-   // - Translate along that direction
-   gmtl::Matrix44f wandMatrix;
-   wandMatrix = (*mWandPos->getData());      // Get the wand matrix
-   gmtl::Vec3f direction;
-   gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, velocity);
-   direction = wandMatrix * Zdir;
-
-   osg::Matrix osg_trans_mat( osg::Matrix::identity());
-   osg_trans_mat.setTranslate(direction[0], direction[1], direction[2]);
-      
-   osg::beginEditCP(mSceneTransform);
-      mSceneTransform->getMatrix().multLeft(osg_trans_mat);
+   osg::beginEditCP(mSceneTransform); 
+      mSceneTransform->getMatrix().setValue( mUser.viewPlatform().getTransform_platMvirt().getData() );
    osg::endEditCP(mSceneTransform);
 }
 
@@ -147,12 +111,12 @@ void OpenSGViewer::initScene(void)
    if (mFileToLoad ==  std::string("none"))
    {
       std::cout << "OpenSGViewere::initScene: No model specified!!! Loading torus.\n";
-      mModelRoot = OSG::makeTorus(.5, 2, 16, 16);      
+      mWorldRoot = OSG::makeTorus(.5, 2, 16, 16);      
    }
    else
    {
       std::cout << "OpenSGViewer::initScene: Loading [" << mFileToLoad.c_str() << "]\n";
-      mModelRoot = OSG::SceneFileHandler::the().read((OSG::Char8 *)(mFileToLoad.c_str()));
+      mWorldRoot = OSG::SceneFileHandler::the().read((OSG::Char8 *)(mFileToLoad.c_str()));
    }
 
    // --- Light setup --- //
@@ -192,9 +156,9 @@ void OpenSGViewer::initScene(void)
    
    // --- Setup Scene -- //
    // add the loaded scene to the light node, so that it is lit by the light
-   osg::addRefCP(mModelRoot);
+   osg::addRefCP(mWorldRoot);
    osg::beginEditCP(mLightNode);
-      mLightNode->addChild(mModelRoot);
+      mLightNode->addChild(mWorldRoot);
    osg::endEditCP(mLightNode);
    
    // create the root.
