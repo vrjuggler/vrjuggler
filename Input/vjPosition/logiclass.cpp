@@ -383,8 +383,8 @@ int vjThreeDMouse::getRecord ( vjPOS_DATA* data)
 	printf ("get_record: only got %d bytes\n", num_read);
     #endif
 
-    /* flush the buffer */
-    ioctl (mouseFD, TCFLSH, 0);
+    /* flush the input buffer */
+    tcflush(mouseFD, TCIFLUSH);
 
     vjThreeDMouse::cuRequestReport ();
     num_read = read (mouseFD, record, EULER_RECORD_SIZE);
