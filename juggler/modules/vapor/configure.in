@@ -611,6 +611,8 @@ fi
 
 vpr_extra_ldflags="$EXTRA_LDFLAGS"
 
+VJ_VERSION_GROK(VERSION)
+
 DPP_SUBST
 
 AC_SUBST(topdir)
@@ -662,7 +664,8 @@ AC_SUBST(vpr_64_flags)
 
 VJ_MTREE_LIB_GEN(VPR, mtree, $PLATFORM, $ISA)
 
-AC_OUTPUT(Makefile
+AC_OUTPUT(vpr-config
+          Makefile
           Makefile.inc
           common.defs.mk
           make.defs.mk
@@ -704,7 +707,10 @@ AC_OUTPUT(Makefile
           mtree/VPR.include.dist
           mtree/VPR.install.dist
           mtree/VPR.test.dist
-          VARS.pl)
+          VARS.pl, ,
+    [ sed -e 's/^\(%.*\)/#\1/g' vpr-config > vpr-config.tmp
+      mv vpr-config.tmp vpr-config
+      chmod a+x vpr-config ])
 
 cat <<BUILD_INFO
 
