@@ -44,30 +44,24 @@
 namespace jccl
 {
    
-struct VJCFGToken;
 
-
-//------------------------------------------------------------------
-//: A container for configuration information
-//
-// A ConfigChunk stores a number of Propertys that describe
-// the configuration of a particular component of the system.
-// It has an associated ChunkDesc which describes its type
-// and the Propertys that belong to it.
-//
-// @author  Christopher Just
-//
-//!PUBLIC_API:
-//------------------------------------------------------------------
+/** A container of configuration information.
+ *  A ConfigChunk stores a number of Propertys that describe
+ *  the configuration of a particular component of the system.
+ *  It has an associated ChunkDesc which describes its type
+ *  and the Propertys that belong to it.
+ *
+ *  @version $Revision$, $Date$
+ */
 class JCCL_CLASS_API ConfigChunk {
 
-private:
-    ChunkDescPtr desc;
-    std::vector<Property*> props;       // Stores the set of properties
-    VarValue type_as_varvalue;
-    unsigned int validation;  // flag for testing validity of self
+protected:
+    ChunkDescPtr mDesc;                /**< Description for this Chunk. */
+    std::vector<Property*> mProps;     /**< Properties of this Chunk. */
 
-    static const std::string embedded_separator;
+    unsigned int mValidation;          /**< Flag for testing memory use.*/
+
+    static const std::string embedded_separator; 
 
 
 public:
@@ -80,197 +74,258 @@ public:
 
 public:
 
-    //: Constructs a ConfigChunk with no given description.
-    //! NOTE: a ConfigChunk created with this function is essentially
-    //+       useless until a description has been assigned with
-    //+       associateDesc() or the Chunk is assigned into with =, 
-    //+       but I want this so I can have vectors of
-    //+       ConfigChunks, instead of ptrs...
+    /** Constructs a ConfigChunk with no given description.
+     *  @note A ConfigChunk created with this function is essentially
+     *        useless until a description has been assigned with
+     *        associateDesc() or the Chunk is assigned into with =, 
+     *        but I want this so I can have vectors of
+     *        ConfigChunks, instead of ptrs...
+     */
     ConfigChunk ();
 
 
-    //: Constructs a ConfigChunk matching the given description.
-    //!PRE: desc points to a valid ChunkDesc
-    //!POST: self has been created, and all its Propertys
-    //+      initialized to their default values.
+
+    /** Constructs a ConfigChunk matching the given description.
+     *  @param desc points to a valid ChunkDesc
+     *  @param use_defaults (default = true) determines whether to use
+     *         the default values supplied with this ChunkDesc.  This
+     *         is almost always true (except when creating the default
+     *         values chunk itself).
+     */
     ConfigChunk (ChunkDescPtr _desc, bool use_defaults = true);
 
 
 
-    //: Destroys a ConfigChunk and all related memory.
-    //!POST:  self has been destroyed, and all memory associated
-    //+       with it and its properties is freed (but not the
-    //+       memory associated with its ChunkDesc).
+    /** Copy constructor. */
+    ConfigChunk (const ConfigChunk& c);
+
+
+
+    /** Destroys a ConfigChunk and frees associated memory.
+     *  @post Self has been destroyed, along with all properties
+     *        and values associated with it (but _not_ the memory
+     *        associated with its ChunkDesc).
+     */
     ~ConfigChunk ();
 
-
-    ConfigChunk (const ConfigChunk& c);
 
 
     #ifdef JCCL_DEBUG
     void assertValid () const;
-    #else
+    #else 
     inline void assertValid () const {;}
     #endif
 
-    //: Associates the description d with this Chunk
-    //!NOTE:  When this function is called, any previous properties etc.
-    //+       of this Chunk are destroyed, and new (blank) properties are
-    //+       created.
-    void associateDesc (ChunkDescPtr d, bool use_defaults = true);
 
 
+    /** Assignment operator. */
     ConfigChunk& operator = (const ConfigChunk& c);
 
 
 
-    //: tests for equality of two ConfigChunks
+    /** Tests for value equality of two ConfigChunks.
+     *  @return True iff self and c have the same values for all properties.
+     */
     bool operator == (const ConfigChunk& c) const;
 
-    //: tests for inequality of two ConfigChunks
+
+
+    /** Tests for inequality of two ConfigChunks. 
+     *  @return True iff self and c don't have the same value.
+     **/
     inline bool operator != (const ConfigChunk& c) const {
         return !(*this == c);
     }
 
 
-    //: Compares two ConfigChunks based on their instance names
+
+    /** Lexical comparison based on chunks' instance names.
+     *  @return True if the instance name of self lexically
+     *          precedes the name of c.
+     */
     bool operator < (const ConfigChunk& c) const;
 
 
 
+    /** Iterator type for self's properties. */
     typedef std::vector<Property*>::iterator iterator;
+    /** Const iterator type for self's properties. */
     typedef std::vector<Property*>::const_iterator const_iterator;
 
+
+    /** Iterator to beginning of self's properties list. */
     inline iterator begin() {
-        return props.begin();
+        return mProps.begin();
     }
 
+    /** Const iterator to beginning of self's properties list. */
     inline const_iterator begin() const {
-        return props.begin();
+        return mProps.begin();
     }
 
+    /** Iterator to end of self's properties list. */
     inline iterator end() {
-        return props.end();
+        return mProps.end();
     }
 
+    /** Const iterator to end of self's properties list. */
     inline const_iterator end() const {
-        return props.end();
+        return mProps.end();
     }
 
 
-    // used for dependency resolution
+
+    /** Gets an embedded chunk from a property of self.
+     *  This is primarily used for dependency resolution.
+     *  @param path The complete name of an embedded chunk in self.
+     *              The form is, for example, 
+     *              "base_name->prop_name->instance_name".
+     *  @return A ConfigChunkPtr to the embedded chunk.  This may be
+     *          A NULL ConfigChunkPtr, if the embedded chunk name was
+     *          not found.  Check before use.
+     */
     ConfigChunkPtr getEmbeddedChunk (const std::string &path);
 
 
-    //: writes self to out
-    //!POST: self is written to out.  Format is as defined
-    //+      in the ConfigFileFormats document.
-    //!RETURNS: out - the output stream
-    //!ARGS: out - a valid ostream.
-    //!ARGS: self - a valid ConfigChunk
+
+    /** Writes a representation of self to out.
+     *  @param out An ostream.
+     *  @param self A ConfigChunk.
+     *  @return out.
+     *  @note This method uses ConfigIO to perform the actual output.
+     */
     friend JCCL_API(std::ostream&) operator << (std::ostream& out,
-                                              const ConfigChunk& self);
+                                                const ConfigChunk& self);
 
 
 
-    //: Returns the name of a chunk's type.
-    //!RETURNS: s - a C string containing the token for this
-    //+          chunk's ChunkDesc.
-    //!NOTE: this is the same as a call of getProperty ("type",0)
-    const VarValue& getType () const;
+    /** Alias for getDescToken().
+     *  @deprecated
+     */
+    const std::string& getType () const;
 
 
 
-    //: returns number of values for the named property
-    //!ARGS: property - a non-NULL C string; the name of a property
-    //!RETURNS: n - the number of values contained by the named
-    //+         property. (could be 0)
-    //!RETURNS: 0 - if self does not contain a property with the
-    //+         given name.
-    //!NOTE: This should always be used before looking at any
-    //+      Property that can have a variable number of values.
+    /** Returns number of values for the specified property.
+     *  @param property The token of a property.
+     *  @return The number of values that exist for the given property,
+     *          or 0 if the property does not exist in self.
+     */
     int getNum (const std::string& property) const;
 
 
 
-    //: Returns the name of this ConfigChunk.
+    /** Returns the instance name of this ConfigChunk. */
     const std::string getName () const {
         return getProperty("Name");
     }
 
-    //: Returns token of this ConfigChunk's ChunkDesc.
+
+
+    /** Returns the token string that identifies self's ChunkDesc. */
     const std::string& getDescToken () const;
 
 
-    //: Returns one of the values for a given property.
-    //!ARGS: property - a non-NULL C string, the token of a property
-    //!ARGS: ind - an integer index, in the range from 0 to
-    //+      getNum(property) -1.  Determines which of the
-    //+      values in the Property to return.
-    //!RETURNS: v - a VarValue that can be cast directly if
-    //+         its type is known (float, int, etc).
+
+    /** Returns a value from one of self's properties. 
+     *  @param property The token string for a property.
+     *  @param ind The index to the property's list of values.  Use
+     *             getNum() to determine the number of values for a 
+     *             given property.  The valid range is 0 to getNum()-1.
+     *  @return The ind'th value in the named property's list of values,
+     *          or an INVALID VarValue if the property doesn't exist or
+     *          the index is out of range.
+     *  @see VarValue
+     */
     const VarValue& getProperty (const std::string& property, int ind = 0) const;
 
 
-    //: Return all the values for a given property
-    // This is just a simple helper function
-    //! NOTE: The vector has COPIES of the var values.
-    std::vector<VarValue*> getAllProperties (const std::string& property) const;
 
-
-    //: Sets a value for the given property.
-    //!PRE:  property is a non-null string, ind >= 0.
-    //!POST: If the named property is in self,  and if the index
-    //+      given is valid, and the types match, then val is
-    //+      assigned to that value of that property
-    //!RETURNS: true - succesful assignment
-    //!RETURNS: false - failed assignment (type mismatch,
-    //+         no such property, invalid index, etc.)
-    //!NOTE: if ind is higher than the number of values in the
-    //+      property, but the property allows a variable number
-    //+      of values, the property will be padded with values
-    //+      so that the assignment can occure.
-    //+      <p>The char* version of setProperty allocates its
-    //+      own copy of the string value argument.
+    /** @name Property setter values. */
+    //@{
+    /** Sets a value for the given property.
+     *  @param property The token string for a property.
+     *  @param ind The index to the property's list of values.  Use
+     *             getNum() to determine the number of values for a 
+     *             given property.  The valid range is 0 to getNum()-1.
+     *             The default value is 0.
+     *  @param val The value to set.
+     *  @post The ind'th value of the specified property (if it exists)
+     *        is set to val.  If the property allows a variable number
+     *        of values, the values list may be extended so that the ind'th
+     *        value exists.
+     *  @return True if the set was successful, otherwise false.  Failure
+     *          can indicate that the property wasn't found, the index 
+     *          was out of range, or a type mismatch on the assignment.
+     */
     bool setProperty (const std::string& property, int val, int ind=0);
     bool setProperty (const std::string& property, float val, int ind=0);
     bool setProperty (const std::string& property, const std::string& val, 
                       int ind=0);
     bool setProperty (const std::string& property, 
                       ConfigChunkPtr val, int ind=0);
+    //@}
 
 
 
-    //: Appends val to the set of values for the named Property
-    //!NOTE: This can be considered a convenience function for
-    //+      "setValue (property, val, getNum(property))"
-    //!ARGS: property - non-NULL C string, token for a property.
-    //!ARGS: val - a value to be appended to the named property.
-    //!POST: The given Property has the new value appended to
-    //+      the end of its list of values.
-    //!RETURNS: true - success
-    //!RETURNS: false - failure. (no such property, or it
-    //+         does exist but has a fixed number of values
-    bool addValue (const std::string& property, int val);
-    bool addValue (const std::string& property, float val);
-    bool addValue (const std::string& property, const std::string& val);
-    bool addValue (const std::string& property, ConfigChunkPtr val);
-
-
-    //: check to see if a property exists within a config chunk.
+    /** Checks if the given property actually exists within self.
+     *  @return True iff self has a Property with the given token.
+     */
     inline bool doesPropertyExistFromToken( const std::string& token ) const
     {
        return (this->getPropertyPtrFromToken( token ) != NULL);
     }    
-    
-    //: Return a list of chunk names dependant based on chunk ptrs
-    // Returns a list of the names of all the chunks
-    // that are pointed to by chunk ptrs of this chunk
+
+
+
+    /** Return a list of self's depenencies.
+     *  Dependencies are any ConfigChunks named by a "Chunk Pointer" property
+     *  of self (or any chunk embedded in self).
+     *  @return A vector of the names of all ConfigChunks referenced by self,
+     *          which can be used for dependency checking.
+     */
     std::vector<std::string> getChunkPtrDependencies() const;
 
+
+
+    /** Returns the requested property from self.
+     *  @param property The name string for a property.
+     *  @return A pointer to the matching property, or NULL if none was
+     *          found.
+     */
     Property *getPropertyPtrFromName (const std::string& name) const;
     
+
+
+    /** Returns the requested property from self.
+     *  @param property The token string for a property.
+     *  @return A pointer to the matching property, or NULL if none was
+     *          found.
+     */
     Property *getPropertyPtrFromToken (const std::string& token) const;
+
+
+public:
+
+    /** Associates the description d with this Chunk
+     *  @post When this function is called, any previous properties etc.
+     *        of this Chunk are destroyed, and new (blank) properties are
+     *        created.
+     */ 
+    void associateDesc (ChunkDescPtr d, bool use_defaults = true);
+
+
+
+    /** Returns copies of all the values for a given property.
+     *  @param property The token string for a property.
+     *  @return A vector of VarValue*.  These are copies of the VarValues in
+     *          self and should be deleted when the caller is finished with
+     *          the vector.  If the specified property was not found, the
+     *          vector will be empty.
+     */
+    std::vector<VarValue*> getAllProperties (const std::string& property) const;
+
+
 
 
 };
