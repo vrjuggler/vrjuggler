@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <float.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Config/ConfigChunk.h>
-#include <gad/Type/Position.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Type/Position.h>
 
-namespace vrj
+namespace gadget
 {
 
 // Set up the transformation information

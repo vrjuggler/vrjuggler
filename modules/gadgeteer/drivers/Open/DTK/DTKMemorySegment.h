@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_DTK_MEMORY_SEGMENT_H_
-#define _VRJ_DTK_MEMORY_SEGMENT_H_
+#ifndef _GADGET_DTK_MEMORY_SEGMENT_H_
+#define _GADGET_DTK_MEMORY_SEGMENT_H_
 
-#include <gad/gadConfig.h>
-#include <gad/Devices/Open/DTK/DTK.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/Open/DTK/DTK.h>
 
-namespace vrj
+namespace gadget
 {
 
 typedef enum {
@@ -59,7 +59,7 @@ typedef enum {
 class dtkSharedMem;
 class dtkClient;
 
-class GAD_CLASS_API DTKMemorySegment
+class GADGET_CLASS_API DTKMemorySegment
 {
 public:
     DTKMemorySegment();

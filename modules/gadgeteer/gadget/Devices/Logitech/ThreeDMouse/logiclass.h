@@ -50,9 +50,9 @@
 #ifndef _LOGICLASS_H_
 #define _LOGICLASS_H_
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Input.h>
-#include <gad/Type/Position.h>    // The base class for vr_devices
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Position.h>    // The base class for vr_devices
 #include <vrj/Math/Vec3.h>
 //#include <Inventor/SbLinear.h> // For the vec classes
 
@@ -85,7 +85,7 @@
 //  Digital driver support could/should be added in the future.
 //
 //!PUBLIC_API:
-class ThreeDMouse : public vrj::Input, public vrj::Position
+class ThreeDMouse : public gadget::Input, public gadget::Position
 {
 public:
    //: Default constructor
@@ -106,7 +106,7 @@ public:
 
    /** Position pure virtual functions **/
    vrj::Matrix* getPosData(int devNum = 0);
-   void getPosData(vrj::POS_DATA* &data);
+   void getPosData(gadget::POS_DATA* &data);
 
    /** @name Internal functions from original implementation
     *
@@ -128,7 +128,7 @@ public:
    void cuResetControlUnit ();
 
    void getDiagnostics (char data[]);
-   int  getRecord (vrj::POS_DATA *data);
+   int  getRecord (gadget::POS_DATA *data);
    void resetControlUnit ();
 
 
@@ -155,7 +155,7 @@ public:
    //@}
     private:
    int mouseFD;
-   vrj::POS_DATA theData[3];
+   gadget::POS_DATA theData[3];
 
    vpr::Thread*   myThreadID; // Ptr to the thread object
    vrj::Vec3      baseVector; // Used to store the base location tooffset from
@@ -163,7 +163,7 @@ public:
 
    int  logitechOpen (char *port_name);
 
-   void eulerToAbsolute (byte record[], vrj::POS_DATA * data);
+   void eulerToAbsolute (byte record[], gadget::POS_DATA * data);
    void printBin (char a);
 };
 

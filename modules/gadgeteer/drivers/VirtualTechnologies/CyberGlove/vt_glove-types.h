@@ -12,7 +12,7 @@
 #ifndef VT_GLOVE_TYPES_H
 #define VT_GLOVE_TYPES_H
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 /* some convenience macros */
 #define CG_ASCII_COMM(cmd) tolower((cmd)) /* make ascii version of a command */

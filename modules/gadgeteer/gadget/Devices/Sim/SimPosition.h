@@ -30,17 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SIM_POSITION_H
-#define _VRJ_SIM_POSITION_H
+#ifndef _GADGET_SIM_POSITION_H
+#define _GADGET_SIM_POSITION_H
 //#pragma once
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Input.h>
-#include <gad/Devices/Sim/SimInput.h>
-#include <gad/Type/Position.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Devices/Sim/SimInput.h>
+#include <gadget/Type/Position.h>
 
 
-namespace vrj
+namespace gadget
 {
 
 //: Simulated positional device

@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gad/Devices/Ascension.  It requires GNU make.
+# Makefile.in for gadgeteer/gadget/Devices/Ascension.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,7 +41,7 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/gad/Devices/Ascension
+includedir	= @includedir@/gadget/Devices/Ascension
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@

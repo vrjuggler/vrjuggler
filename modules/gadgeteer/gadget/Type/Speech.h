@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SPEECH_H_
-#define _VRJ_SPEECH_H_
+#ifndef _GADGET_SPEECH_H_
+#define _GADGET_SPEECH_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
-namespace vrj
+namespace gadget
 {
 
 class Speech
@@ -136,4 +136,4 @@ inline void Speech::config()
 
 };
 
-#endif   /* _VJ_SPEECH_H_ */
+#endif   /* _GADGET_SPEECH_H_ */

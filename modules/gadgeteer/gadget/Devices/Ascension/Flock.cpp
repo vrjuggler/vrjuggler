@@ -42,7 +42,7 @@
 // Date: 4-22-99
 //===============================================================
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <sys/file.h>
 #include <sys/ioctl.h>
@@ -52,10 +52,10 @@
 #include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Util/FileIO.h>
-#include <vrj/Config/ConfigChunk.h>
-#include <gad/Devices/Ascension/Flock.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Devices/Ascension/Flock.h>
 
-namespace vrj
+namespace gadget
 {
 
 // Helper to return the index for theData array

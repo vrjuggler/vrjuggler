@@ -32,14 +32,14 @@
 
 #include <iostream>
 #include <iomanip>
-#include <gad/Devices/Logitech/logiclass.h>
+#include <gadget/Devices/Logitech/logiclass.h>
 #include <vpr/System.h>
 
 int main()
 {
   ThreeDMouse* t1 = new ThreeDMouse;
 
-  vrj::POS_DATA *data;
+  gadget::POS_DATA *data;
 
   char achar;
   std::cout << "U - Update\n"
@@ -55,12 +55,12 @@ int main()
      case 'u':case 'U': t1->updateData(); break;
      case 's':case 'S': t1->startSampling(); break;
      case 'x':case 'X': t1->stopSampling(); break;
-     case 'o':case 'O': 
+     case 'o':case 'O':
      for(int z = 0; z < 10; z++){
          t1->updateData();
          t1->getPosData(data);
 
-         std::cout << std::endl 
+         std::cout << std::endl
                    << "Data: x:" << std::setw(10) << data->pos.vec[0] << std::endl
                    << "      y:" << std::setw(10) << data->pos.vec[1] << std::endl
                    << "      z:" << std::setw(10) << data->pos.vec[2] << std::endl
@@ -75,9 +75,9 @@ int main()
    }
    std::cout << achar;
   } while ((achar != 'q') && (achar != 'Q'));
-  
+
   t1->stopSampling();
-  
+
   delete t1;
   return 0;
 }

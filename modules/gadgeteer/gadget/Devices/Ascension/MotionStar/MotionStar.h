@@ -30,19 +30,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_ASCENSION_MOTION_STAR_H_
-#define _VRJ_ASCENSION_MOTION_STAR_H_
+#ifndef _GADGET_ASCENSION_MOTION_STAR_H_
+#define _GADGET_ASCENSION_MOTION_STAR_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <string>
 #include <vpr/Thread/Thread.h>
 
-#include <gad/Type/Input.h>
-#include <gad/Type/Position.h>
-#include <gad/Devices/Ascension/MotionStarStandalone.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Position.h>
+#include <gadget/Devices/Ascension/MotionStarStandalone.h>
 
-namespace vrj
+namespace gadget
 {
 
 //-----------------------------------------------------------------------------
@@ -623,4 +623,4 @@ private:
 
 };
 
-#endif   /* _VJ_ASCENSION_MOTION_STAR_H_ */
+#endif   /* _GADGET_ASCENSION_MOTION_STAR_H_ */

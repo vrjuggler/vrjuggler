@@ -30,22 +30,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_PROXY_DEP_CHECKER_H_
-#define _VRJ_PROXY_DEP_CHECKER_H_
+#ifndef _GADGET_PROXY_DEP_CHECKER_H_
+#define _GADGET_PROXY_DEP_CHECKER_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 // Dependency checker includes
-#include <vrj/Kernel/DependencyManager.h>
+#include <jccl/Plugins/ConfigManager/DependencyManager.h>
 #include <vrj/Display/DisplayManager.h>
-#include <vrj/Kernel/DepChecker.h>
+#include <jccl/Plugins/ConfigManager/DepChecker.h>
 
 
-namespace vrj
+namespace gadget
 {
 
 //: Dependency checker for Proxies
-class ProxyDepChecker : public DepChecker
+class ProxyDepChecker : public jccl::DepChecker
 {
 public:
    ProxyDepChecker()
@@ -54,20 +54,20 @@ public:
    //: Return a string name of the checker
    // Used to output messages in checker listings
    virtual std::string getCheckerName()
-   { return std::string("vjProxyChecker Checker"); }
+   { return std::string("gadget::ProxyChecker Checker"); }
 
    // We can handle only keyboard configuration information
-   virtual bool canHandle(ConfigChunk* chunk);
+   virtual bool canHandle(jccl::ConfigChunk* chunk);
 
    //: Are the dependencies satisfied?
    // Defaults to all being handled for it
-   virtual bool depSatisfied(ConfigChunk* chunk)
+   virtual bool depSatisfied(jccl::ConfigChunk* chunk)
    {
       return true;
    }
 
    // Write out the dependencies to the vprDEBUG macro
-   virtual void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl=vprDBG_WARNING_LVL)
+   virtual void debugOutDependencies(jccl::ConfigChunk* chunk,int dbg_lvl=vprDBG_WARNING_LVL)
    {
       ;
    }

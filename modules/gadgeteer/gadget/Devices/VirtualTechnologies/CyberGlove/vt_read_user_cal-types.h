@@ -11,9 +11,9 @@
 #ifndef VT_READ_USER_CAL_TYPES_H
 #define VT_READ_USER_CAL_TYPES_H
 
-#include <gad/gadConfig.h>
-#include <gad/Devices/VirtualTechnologies/vt_math3d.h>
-#include <gad/Devices/VirtualTechnologies/vt_glove-types.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/VirtualTechnologies/vt_math3d.h>
+#include <gadget/Devices/VirtualTechnologies/vt_glove-types.h>
 
 typedef struct
 {

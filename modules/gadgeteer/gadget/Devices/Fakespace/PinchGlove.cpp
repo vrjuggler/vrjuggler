@@ -30,20 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <string>
 #include <sys/time.h>
 #include <stdio.h>                      /* need stdio for sprintf */
 #include <vpr/System.h>
 
-#include <gad/Devices/Fakespace/PinchGloveStandalone.h> /* fakespace pinch driver */
-#include <gad/Devices/Fakespace/PinchGlove.h> /* vrjuggler pinch driver */
+#include <gadget/Devices/Fakespace/PinchGloveStandalone.h> /* fakespace pinch driver */
+#include <gadget/Devices/Fakespace/PinchGlove.h> /* vrjuggler pinch driver */
 //#include <vrj/Kernel/Kernel.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 
 
-namespace vrj
+namespace gadget
 {
 
 bool PinchGlove::config(ConfigChunk *c)
@@ -252,8 +252,8 @@ void PinchGlove::updateFingerAngles()
     const int LEFT_HAND = 1;
 
     assert( progress < 3 && progress >= 0 );
-    assert( LEFT_HAND < VJ_MAX_GLOVE_DEVS );
-    assert( RIGHT_HAND < VJ_MAX_GLOVE_DEVS );
+    assert( LEFT_HAND < GADGET_MAX_GLOVE_DEVS );
+    assert( RIGHT_HAND < GADGET_MAX_GLOVE_DEVS );
 
     // use the digital data set the angles for each joint.
     right.setFingers( gesture[PinchGloveStandalone::RPINKY] == '1',
@@ -270,7 +270,7 @@ void PinchGlove::updateFingerAngles()
     //Now, set the ugly ambiguously named array, mTheData:
 
     // if that assert failed, then at least the code will still run...
-    if ( RIGHT_HAND >= VJ_MAX_GLOVE_DEVS )
+    if ( RIGHT_HAND >= GADGET_MAX_GLOVE_DEVS )
     {
        // Right Pinky
        mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::MPJ] = right.pinky().mpj();
@@ -308,7 +308,7 @@ void PinchGlove::updateFingerAngles()
     }
 
     // if that assert failed, then at least the code will still run...
-    if ( LEFT_HAND >= VJ_MAX_GLOVE_DEVS )
+    if ( LEFT_HAND >= GADGET_MAX_GLOVE_DEVS )
     {
        // Left Pinky
        mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::MPJ] = left.pinky().mpj();

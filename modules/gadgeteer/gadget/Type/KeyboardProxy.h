@@ -30,19 +30,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_KEYBOARD_PROXY_H_
-#define _VRJ_KEYBOARD_PROXY_H_
+#ifndef _GADGET_KEYBOARD_PROXY_H_
+#define _GADGET_KEYBOARD_PROXY_H_
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Proxy.h>
-#include <gad/Type/Keyboard.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Proxy.h>
+#include <gadget/Type/Keyboard.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Proxy class to Keyboard based devices.
 //!PUBLIC_API:
-class GAD_CLASS_API KeyboardProxy : public TypedProxy<Keyboard>
+class GADGET_CLASS_API KeyboardProxy : public TypedProxy<Keyboard>
 {
 public:
    KeyboardProxy()
@@ -77,7 +77,7 @@ public:
 
    static std::string getChunkType() { return "KeyboardProxy"; }
 
-   bool config(ConfigChunk* chunk);
+   bool config(jccl::ConfigChunk* chunk);
 
    virtual Input* getProxiedInputDevice()
    {
@@ -92,6 +92,6 @@ public:
 };
 
 
-};
+} // End of gadget namespace
 
 #endif

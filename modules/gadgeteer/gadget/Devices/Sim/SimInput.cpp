@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
-#include <gad/Devices/Sim/SimInput.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/Devices/Sim/SimInput.h>
+#include <jccl/Config/ConfigChunk.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Construct the mod pair from a mod pair chunk
@@ -43,7 +43,7 @@ std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<VarValue*>& 
 {
    if(keyList.size() > 0)
    {
-#ifdef VJ_DEBUG
+#ifdef GADGET_DEBUG
       ConfigChunk* first_chunk = (ConfigChunk*)(*(keyList[0]));
       std::string chunk_type = first_chunk->getType();
       vprASSERT(chunk_type == std::string("KeyModPair"));

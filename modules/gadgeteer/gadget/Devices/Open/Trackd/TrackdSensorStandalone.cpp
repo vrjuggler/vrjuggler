@@ -1,4 +1,4 @@
-#include <gad/Devices/Open/Trackd/TrackdSensorStandalone.h>
+#include <gadget/Devices/Open/Trackd/TrackdSensorStandalone.h>
 #include <assert.h>
 
 int TrackdSensorStandalone::numSensors()

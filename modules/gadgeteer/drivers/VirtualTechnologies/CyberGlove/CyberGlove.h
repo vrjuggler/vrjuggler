@@ -30,15 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_CYBER_GLOVE_H_
-#define _VRJ_CYBER_GLOVE_H_
+#ifndef _GADGET_CYBER_GLOVE_H_
+#define _GADGET_CYBER_GLOVE_H_
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Input.h>
-#include <gad/Type/Glove.h>
-#include <gad/Devices/VirtualTechnologies/CyberGloveBasic.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Glove.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGloveBasic.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Cyberglove device
@@ -77,4 +77,4 @@ protected:
 
 };
 
-#endif   /* _VJ_CYBER_GLOVE_H_ */
+#endif   /* _GADGET_CYBER_GLOVE_H_ */

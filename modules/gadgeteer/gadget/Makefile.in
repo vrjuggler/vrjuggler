@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gad/Input.  It requires GNU make.
+# Makefile.in for gadgeteer/gadget/Input.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -48,7 +48,7 @@ INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GAD_LIBRARY)
 
 # Prefix for recursive stuff.
-DIRPRFX	= gad/
+DIRPRFX	= gadget/
 
 # Subdirectories to compile.
 SUBDIR	= Devices	\

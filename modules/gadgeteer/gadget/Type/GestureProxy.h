@@ -37,16 +37,16 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef _VRJ_GESTURE_PROXY_H_
-#define _VRJ_GESTURE_PROXY_H_
+#ifndef _GADGET_GESTURE_PROXY_H_
+#define _GADGET_GESTURE_PROXY_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <math.h>
 
-#include <gad/Type/Gesture.h>
-#include <gad/Type/Proxy.h>
+#include <gadget/Type/Gesture.h>
+#include <gadget/Type/Proxy.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Proxy to Gesture object
@@ -59,7 +59,7 @@ namespace vrj
 //
 // See also: Gesture
 //!PUBLIC_API:
-class GAD_CLASS_API GestureProxy : public TypedProxy<Gesture>
+class GADGET_CLASS_API GestureProxy : public TypedProxy<Gesture>
 {
 public:
    //: Construct the proxy to point to the given gesture device.
@@ -115,7 +115,7 @@ public:
 
    static std::string getChunkType() { return "GestureProxy"; }
 
-   bool config(ConfigChunk* chunk);
+   bool config(jccl::ConfigChunk* chunk);
 
    virtual Input* getProxiedInputDevice()
    {
@@ -127,5 +127,7 @@ public:
       return ret_val;
    }
 };
-};
+
+} // End of gadget namespace
+
 #endif

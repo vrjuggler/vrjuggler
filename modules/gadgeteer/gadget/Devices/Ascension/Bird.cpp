@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <sys/file.h>
 #include <sys/ioctl.h>
@@ -40,11 +40,11 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 
-#include <gad/Devices/Ascension/Bird.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/Devices/Ascension/Bird.h>
+#include <jccl/Config/ConfigChunk.h>
 
 
-namespace vrj
+namespace gadget
 {
 
 int getReading(Matrix* data, int port);

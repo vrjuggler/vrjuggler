@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <dtk.h>
 
-#include <vrj/Config/ConfigChunk.h>
-#include <gad/Devices/Open/DTK/DTKMemorySegment.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Devices/Open/DTK/DTKMemorySegment.h>
 
-namespace vrj
+namespace gadget
 {
 
 DTKMemorySegment::DTKMemorySegment()

@@ -34,17 +34,17 @@
 // Intersense (a Wrapper for IntersenseStandalone)
 //===============================================================
 
-#ifndef _VRJ_INTERSENSE_H_
-#define _VRJ_INTERSENSE_H_
+#ifndef _GADGET_INTERSENSE_H_
+#define _GADGET_INTERSENSE_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vector>
 #include <vpr/Thread/Thread.h>
-#include <gad/Type/Input.h>
-#include <gad/Type/Position.h>
-#include <gad/Type/Digital.h>
-#include <gad/Type/Analog.h>
-#include <gad/Devices/Intersense/IntersenseStandalone.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Position.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/Analog.h>
+#include <gadget/Devices/Intersense/IntersenseStandalone.h>
 
 // maximum number of digital and analog buttons possible on a IS interface
 // box.
@@ -63,7 +63,7 @@
 #define IS_BUTTON_NUM MAX_NUM_BUTTONS*MAX_NUM_STATIONS
 #define IS_ANALOG_NUM MAX_ANALOG_CHANNELS*MAX_NUM_STATIONS
 
-namespace vrj
+namespace gadget
 {
 
 struct Isense_Data {

@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_DIVERSE_TOOLKIT_H_
-#define _VRJ_DIVERSE_TOOLKIT_H_
+#ifndef _GADGET_DIVERSE_TOOLKIT_H_
+#define _GADGET_DIVERSE_TOOLKIT_H_
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Digital.h>
-#include <gad/Type/Analog.h>
-#include <gad/Type/Position.h>
-#include <gad/Devices/Open/DTK/DTKMemorySegment.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/Analog.h>
+#include <gadget/Type/Position.h>
+#include <gadget/Devices/Open/DTK/DTKMemorySegment.h>
 
-namespace vrj
+namespace gadget
 {
 
 class DTKMemorySegment;
@@ -47,7 +47,7 @@ typedef DTKMemorySegment* DTKMemorySegmentHandle;
 
 class dtkClient;
 
-class GAD_CLASS_API DTK : public Input, public Position, public Digital,
+class GADGET_CLASS_API DTK : public Input, public Position, public Digital,
                            public Analog
 {
 public:

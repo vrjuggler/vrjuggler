@@ -61,7 +61,7 @@
 #                     $(OBJDIR).
 #
 # links             - Define links (for developer use only) that provide
-#                     functionality allowing the use of the $GAD_BASE_DIR
+#                     functionality allowing the use of the $GADGET_BASE_DIR
 #                     environment variable.
 # clean-links       - Remove the symlinks created by 'links'.
 #
@@ -118,7 +118,7 @@ STARTTIME	:= $(shell LC_TIME=C date)
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= gad
+SUBDIR		= gadget
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
@@ -169,7 +169,7 @@ endif
             echo "------------------------------------------------" ;	\
             echo "Building libraries using $$abi" ;			\
             echo "------------------------------------------------" ;	\
-            $(MAKE) gadABI=$$abi libs ;					\
+            $(MAKE) gadgetABI=$$abi libs ;				\
           done
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Gadgeteer installation process"
@@ -179,7 +179,7 @@ endif
             echo "------------------------------------------------" ;	\
             echo "Installing $$abi version of libraries" ;		\
             echo "------------------------------------------------" ;	\
-            $(MAKE) gadABI=$$abi install-libs ;				\
+            $(MAKE) gadgetABI=$$abi install-libs ;			\
           done
 	@$(MAKE) do-post-install
 	@echo "==============================================================="
@@ -206,15 +206,15 @@ endif
 	@$(MAKE) install-libs
 	@$(MAKE) do-post-install
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADROOT_ABS)/ChangeLog $(prefix)
+          $(GADGETROOT_ABS)/ChangeLog $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADROOT_ABS)/COPYING.txt $(prefix)
+          $(GADGETROOT_ABS)/COPYING.txt $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADROOT_ABS)/INSTALL.txt $(prefix)
+          $(GADGETROOT_ABS)/INSTALL.txt $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADROOT_ABS)/README.txt $(prefix)
+          $(GADGETROOT_ABS)/README.txt $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADROOT_ABS)/RELEASE_NOTES.txt $(prefix)
+          $(GADGETROOT_ABS)/RELEASE_NOTES.txt $(prefix)
 	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> Gadgeteer make release started on $(STARTTIME)"
@@ -247,9 +247,9 @@ doc-public:
 # Human-readable information about the build system.
 # =============================================================================
 info:
-	@echo "\nInfo for the make of $(GAD_LIBRARY)"
+	@echo "\nInfo for the make of $(GADGET_LIBRARY)"
 	@echo "\nOBJDIR: $(OBJDIR)"
-	@echo "GADROOT_ABS: $(GADROOT_ABS)"
+	@echo "GADGETROOT_ABS: $(GADGETROOT_ABS)"
 	@echo "Default ABI: $(ABI)"
 	@echo "Default instruction set architecture: $(ISA)"
 	@echo "ABI list: $(ABI_LIST)"

@@ -30,15 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vrj/Kernel/Kernel.h>
-#include <gad/Type/KeyboardProxy.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/Type/KeyboardProxy.h>
+#include <jccl/Config/ConfigChunk.h>
 
-namespace vrj
+namespace gadget
 {
 
-bool KeyboardProxy::config(ConfigChunk* chunk)
+bool KeyboardProxy::config(jccl::ConfigChunk* chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ KEYBOARD PROXY config()-----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "KeyboardProxy");

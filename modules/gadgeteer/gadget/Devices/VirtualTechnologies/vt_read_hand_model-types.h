@@ -14,8 +14,8 @@
 /*  --    Author:  Larry Edwards                                --  */
 /*  ==============================================================  */
 
-#include <gad/gadConfig.h>
-#include <gad/Devices/VirtualTechnologies/vt_read_object-types.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/VirtualTechnologies/vt_read_object-types.h>
 
 typedef struct
 {

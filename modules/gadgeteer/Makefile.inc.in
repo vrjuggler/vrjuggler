@@ -73,7 +73,7 @@ STATICLIB_EXT	= @STATICLIB_EXT@
 DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 
 # Full list of the libraries to build.
-LIBS		= $(GAD_LIBRARY)
+LIBS		= $(GADGET_LIBRARY)
 
 STATIC_LIBS	= $(LIBS)
 
@@ -84,8 +84,8 @@ endif
 # Dependencies for each of the various dynamic libraries we build.
 DYLIB_DEPS		= @DYLIB_DEPS@
 
-GAD_LIB_STATIC		= $(GAD_LIBRARY).$(STATICLIB_EXT)
-GAD_LIB_DYNAMIC		= $(GAD_LIBRARY).$(DYNAMICLIB_EXT)
+GADGET_LIB_STATIC	= $(GADGET_LIBRARY).$(STATICLIB_EXT)
+GADGET_LIB_DYNAMIC	= $(GADGET_LIBRARY).$(DYNAMICLIB_EXT)
 
 # On Linux, we have to compile the Performer library with -O for things to
 # link properly.
@@ -95,10 +95,11 @@ endif
 
 # Version information.
 BRANCH		= HEAD
-CANON_NAME	= Kenny
-VER_ARGS	= -f $(GADROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-                  -i $(GADROOT_ABS)/gad/gadParam.h.in -o gad/gadParam.h	\
-                  -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
+CANON_NAME	= Evil Cartman
+VER_ARGS	= -f $(GADGETROOT_ABS)/VERSION -s @SUBSYSTEM@		\
+                  -b $(BRANCH) -o gadget/gadgetParam.h 			\
+                  -i $(GADGETROOT_ABS)/gadget/gadgetParam.h.in		\
+                  -n "$(CANON_NAME)" -d "`date '+%b %e, %Y %H:%M:%S'`"
 
 ifdef VERSION
     VER_ARGS	+= -v $(VERSION)
@@ -115,7 +116,8 @@ AFTERBUILD	= afterbuild
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(GADROOT_ABS)/gadgeteer-config.in -o $(topdir)/gadgeteer-config
+            -t $(GADGETROOT_ABS)/gadgeteer-config.in			\
+            -o $(topdir)/gadgeteer-config
 	@chmod +x $(topdir)/gadgeteer-config
 
 # Things to do after the object files and library are built.
@@ -125,7 +127,7 @@ afterbuild:
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-$(LIBDIR)/$(GAD_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(GADGET_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 #ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
@@ -142,55 +144,49 @@ $(LIBDIR)/$(GAD_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(GAD_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(GADGET_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
-ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && rm -f $(GAD_LIB_STATIC) &&			\
-            $(LN_S) $(LIBDIR)/$(GAD_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && rm -f $(GAD_LIBRARY).exp &&		\
-            $(LN_S) $(LIBDIR)/$(GAD_LIBRARY).exp ./
-endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
 # =============================================================================
 # Make links for developer use that provide the needed functionality for
-# the $GAD_BASE_DIR environment variable to be used when needed.  $GAD_BASE_DIR
-# should be set to $(instlinks).
+# the $GADGET_BASE_DIR environment variable to be used when needed.
+# $GADGET_BASE_DIR should be set to $(instlinks).
 # =============================================================================
 links:
 ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/gad
-	@$(MAKE) -C gad instlinks=$(instlinks) links
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/gadget
+	@$(MAKE) -C gadget instlinks=$(instlinks) links
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
           ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
-	cd $(instlinks)/include/gad && rm -f ./*.h &&			\
-          $(LN_S) $(GADROOT_ABS)/gad/*.h ./
-	cd $(instlinks)/include/gad && rm -f ./gadDefines.h &&		\
-	  $(LN_S) $(topdir)/gad/gadDefines.h ./gadDefines.h
-	cd $(instlinks)/include/gad && rm -f ./gadParam.h &&		\
-	  $(LN_S) $(topdir)/gad/gadParam.h ./gadParam.h
+	cd $(instlinks)/include/gadget && rm -f ./*.h &&		\
+          $(LN_S) $(GADGETROOT_ABS)/gadget/*.h ./
+	cd $(instlinks)/include/gadget && rm -f ./gadgetDefines.h &&	\
+	  $(LN_S) $(topdir)/gadget/gadgetDefines.h ./gadgetDefines.h
+	cd $(instlinks)/include/gadget && rm -f ./gadgetParam.h &&	\
+	  $(LN_S) $(topdir)/gadget/gadgetParam.h ./gadgetParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(GADROOT_ABS)/gadgeteer-config.in -p 'use_base_dir=yes'	\
-            -o $(instlinks)/bin/gadgeteer-config -x
+            -t $(GADGETROOT_ABS)/gadgeteer-config.in			\
+            -p 'use_base_dir=yes' -o $(instlinks)/bin/gadgeteer-config -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
-	@echo 'You should now set $$GAD_BASE_DIR to:'
+	@echo 'You should now set $$GADGET_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
 else
 	@echo "---------------------------------------------------------------"
-	@echo 'You must now install Gadgeteer and set %GAD_BASE_DIR% to:'
+	@echo 'You must now install Gadgeteer and set %GADGET_BASE_DIR% to:'
 	@echo "  $(prefix)"
 	@echo "---------------------------------------------------------------"
 endif
@@ -229,12 +225,12 @@ hier:
 	@echo "Making hierarchy"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.install.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.install.dist -p $(prefix)
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.data.dist -p $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.include.dist -p $(prefix)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.lib.dist -p $(prefix)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.test.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.data.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.include.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.lib.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.test.dist -p $(datadir)
 
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.
@@ -247,7 +243,7 @@ PREINSTALL	= pre-install
 POSTINSTALL	= post-install
 
 pre-install:
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.lib.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.lib.dist -p $(prefix)
 
 # Do everything needed after installing the library binaries.
 post-install:
@@ -261,15 +257,16 @@ PREINSTALL_HEADERS	= pre-install-headers
 POSTINSTALL_HEADERS	= post-install-headers
 
 pre-install-headers:
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.include.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.include.dist -p $(prefix)
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADROOT_ABS)/gad/gadConfig.h $(includedir)/gad/gadConfig.h
+          $(GADGETROOT_ABS)/gadget/gadgetConfig.h			\
+          $(includedir)/gadget/gadgetConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/gad/gadDefines.h $(includedir)/gad
+          $(topdir)/gadget/gadgetDefines.h $(includedir)/gadget
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/gad/gadParam.h $(includedir)/gad
+          $(topdir)/gadget/gadgetParam.h $(includedir)/gadget
 
 # Install the test programs.
 install-test:
@@ -277,7 +274,7 @@ install-test:
 	@echo "Installing test programs"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.test.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.test.dist -p $(datadir)
 	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/test	\
           -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/test
 	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
@@ -290,7 +287,7 @@ install-data:
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.data.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.data.dist -p $(datadir)
 	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/Data	\
           -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/Data		\
           -v "$(topdir)/VARS.pl"

@@ -30,19 +30,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
 #include <vrj/Utils/Debug.h>
 #include <vrj/Display/DisplayManager.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <ApplicationServices/ApplicationServices.h>
 
-#include <gad/Devices/Keyboard/KeyboardOSX.h>
+#include <gadget/Devices/Keyboard/KeyboardOSX.h>
 
-namespace vrj
+namespace gadget
 {
 
    //: Constructor

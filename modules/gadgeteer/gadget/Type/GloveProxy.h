@@ -36,21 +36,21 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef _VRJ_GLOVE_PROXY_H_
-#define _VRJ_GLOVE_PROXY_H_
+#ifndef _GADGET_GLOVE_PROXY_H_
+#define _GADGET_GLOVE_PROXY_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <math.h>
 
-#include <gad/Type/Glove.h>
-#include <gad/Type/Proxy.h>
+#include <gadget/Type/Glove.h>
+#include <gadget/Type/Proxy.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Glove proxy class.
 //!PUBLIC_API:
-class GAD_CLASS_API GloveProxy : public TypedProxy<Glove>
+class GADGET_CLASS_API GloveProxy : public TypedProxy<Glove>
 {
 public:
      //: Construct the proxy to point to the given glove device and sub-unit number.
@@ -73,18 +73,18 @@ public:
   }
 
 
-  Vec3 getVector(GloveData::GloveComponent component)
+  vrj::Vec3 getVector(GloveData::GloveComponent component)
   {
      if(mStupified)
-        return Vec3(0,0,0);
+        return vrj::Vec3(0,0,0);
      else
         return mTypedDevice->getGloveVector(component, mUnitNum);
   }
 
-  Matrix getPos( GloveData::GloveComponent component = GloveData::WRIST)
+  vrj::Matrix getPos( GloveData::GloveComponent component = GloveData::WRIST)
   {
      if(mStupified)
-        return Matrix();
+        return vrj::Matrix();
      else
       return mTypedDevice->getGlovePos(component, mUnitNum);
   }
@@ -118,7 +118,7 @@ public:
 
    static std::string getChunkType() { return "GloveProxy"; }
 
-   bool config(ConfigChunk* chunk);
+   bool config(jccl::ConfigChunk* chunk);
 
    virtual Input* getProxiedInputDevice()
    {
@@ -139,6 +139,6 @@ private:
    int mUnitNum;
 };
 
-};
+} // End of gadget namespace
 
 #endif

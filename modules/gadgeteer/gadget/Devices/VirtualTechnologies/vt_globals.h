@@ -8,8 +8,8 @@
 /*  --       Copyright (C) 1993 Virtual Technologies        --  */
 /*  ==========================================================  */
 
-#include <gad/gadConfig.h>
-#include <gad/Devices/VirtualTechnologies/vt_init.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/VirtualTechnologies/vt_init.h>
 
 extern char version_string[];
 extern int vt_error_code;

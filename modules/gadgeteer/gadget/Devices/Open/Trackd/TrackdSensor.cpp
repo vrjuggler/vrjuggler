@@ -30,15 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
-#include <gad/Devices/Open/Trackd/TrackdSensorStandalone.h>
-#include <gad/Devices/Open/Trackd/TrackdSensor.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/Open/Trackd/TrackdSensorStandalone.h>
+#include <gadget/Devices/Open/Trackd/TrackdSensor.h>
+#include <jccl/Config/ConfigChunk.h>
 
 #include <vrj/Util/Debug.h>
 
 
-namespace vrj
+namespace gadget
 {
 
  // ------------------------------------------------------------------------

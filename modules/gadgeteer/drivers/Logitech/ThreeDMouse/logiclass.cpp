@@ -46,7 +46,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <stdio.h>    // for perror(3C)
 #include <sys/types.h>   // for open(2)
 #include <sys/stat.h>    // for open(2)
@@ -56,7 +56,7 @@
 #include <sys/time.h>
 
 #include <vpr/System.h>
-#include <gad/Devices/Logitech/logiclass.h>   /* classprototypes and data types */
+#include <gadget/Devices/Logitech/logiclass.h>   /* classprototypes and data types */
 
 // uncommenting the following will produce debug print statements */
 //
@@ -128,17 +128,17 @@ vrj::Matrix* ThreeDMouse::getPosData(int devNum)
   return (vrj::Matrix*)&theData[current];
 }
 
-void ThreeDMouse::getPosData(vrj::POS_DATA* &data){
+void ThreeDMouse::getPosData(gadget::POS_DATA* &data){
   data = &theData[current];
 }
 
 
-bool ThreeDMouse::config(vrj::ConfigChunk *c)
+bool ThreeDMouse::config(jccl::ConfigChunk *c)
     // PURPOSE: Constructor - Setup all vars
 {
 //   strncpy(sPort,"/dev/ttyd2",11);
 //    baseVector.setValue(0, 0, 0);   // Setup base offest as origin
-   if(! (vrj::Input::config(c) && vrj::Position::config(c)))
+   if(! (gadget::Input::config(c) && gadget::Position::config(c)))
       return false;
 
    baseVector[0] = baseVector[1] = baseVector[2] = 0;
@@ -375,7 +375,7 @@ void ThreeDMouse::getDiagnostics ( char data[])
 // Retrieve a single record. This routine will spin until a valid record
 // (i.e., 16 bytes and bit 7, byte 0 is on) is received.
 ///////////////////////////////////////////////////////////////////////////////
-int ThreeDMouse::getRecord ( vrj::POS_DATA* data)
+int ThreeDMouse::getRecord ( gadget::POS_DATA* data)
 {
   int num_read;
   byte record[EULER_RECORD_SIZE];
@@ -435,7 +435,7 @@ void ThreeDMouse::setBaseOrigin()
 /////////////////////////////////////////////////////////////////////////
 // convert from raw Euler data record to absolute data
 ////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::eulerToAbsolute (byte record[], vrj::POS_DATA* data)
+void ThreeDMouse::eulerToAbsolute (byte record[], gadget::POS_DATA* data)
 {
   long ax, ay, az, arx, ary, arz;
 

@@ -41,13 +41,13 @@
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
-# mtreedir      - Base directory containing the mtree directory hierarchy
-#                 specifications.
-# releasedir    - The absolute path to the release directory.
-# scriptdir     - The path to the directory containing scripts used in the
-#                 build and install/release process.
-# topdir        - The top of the build tree.
-# GADROOT_ABS   - The absolute path to the root of the Gadgeteer source tree.
+# mtreedir       - Base directory containing the mtree directory hierarchy
+#                  specifications.
+# releasedir     - The absolute path to the release directory.
+# scriptdir      - The path to the directory containing scripts used in the
+#                  build and install/release process.
+# topdir         - The top of the build tree.
+# GADGETROOT_ABS - The absolute path to the root of the Gadgeteer source tree.
 #
 # MKDEPS_CC     - Compiler for C dependencies.
 # MKDEPS_CXX    - Compiler for CXX dependencies.
@@ -65,18 +65,8 @@
 #                 For n32 binaries, it will be 32.  For 64-bit binaries, it
 #                 will be 64.
 #
-# GAD_LIBRARY    - The base name of the core Juggler library that will be built
-#                 with no file extension.
-# UTILS_LIBRARY - The base name of the Juggler utility library with no file
-#                 extension.
-# GL_LIBRARY    - The base name of the OpenGL Juggler API library with no file
-#                 extension.
-# PF_LIBRARY    - The base name of the Performer Juggler API library with no
-#                 file extension.
-# AW_LIBRARY    - The base name of the Juggler AudioWorks sound engine
-#                 library with no file extension.
-# SL_LIBRARY    - The base name of the Juggler SL sound engine library with no
-#                 file extension.
+# GADGET_LIBRARY - The base name of the core Juggler library that will be built
+#                  with no file extension.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -93,7 +83,7 @@ MKDEPS_CXX	= @CXX@
 MKINSTALLDIRS	= $(scriptdir)/mkinstalldirs
 MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
 MTREE_CMD	= @MTREE_CMD@
-GADROOT_ABS	= @GADROOT_ABS@
+GADGETROOT_ABS	= @GADGETROOT_ABS@
 JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
 
 # -----------------------------------------------------------------------------
@@ -101,8 +91,8 @@ JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
 # -----------------------------------------------------------------------------
 EXTRA_CFLAGS		= $(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB)
-EXTRA_DEFS		= -D_GAD_BUILD_
-EXTRA_DEPEND_FLAGS	= -I$(GADROOT_ABS)
+EXTRA_DEFS		= -D_GADGET_BUILD_
+EXTRA_DEPEND_FLAGS	= -I$(GADGETROOT_ABS)
 EXTRA_INCLUDES		= -I$(top_srcdir)
 
 # -----------------------------------------------------------------------------
@@ -117,13 +107,13 @@ MKDEPS_CXX	= $(MKDEPS_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 # $(ABI), further settings may be made to allow for building with multiple
 # ABIs.
 # -----------------------------------------------------------------------------
-ifdef gadABI
-    dppABI	= $(gadABI)
+ifdef gadgetABI
+    dppABI	= $(gadgetABI)
 endif
 
 # -----------------------------------------------------------------------------
 # Library names.
 # -----------------------------------------------------------------------------
-GAD_LIBRARY	= @LIB_PREFIX@gadget
+GADGET_LIBRARY	= @LIB_PREFIX@gadget
 
 include $(topdir)/common.defs.mk

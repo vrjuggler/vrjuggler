@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
-#include <gad/Type/PositionProxy.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/PositionProxy.h>
+#include <jccl/Config/ConfigChunk.h>
 
-#include <gad/Type/PositionFilter.h>
-#include <gad/Type/LinearSigmoidPositionFilter.h>
+#include <gadget/Type/PositionFilter.h>
+#include <gadget/Type/LinearSigmoidPositionFilter.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Set the transform for this PositionProxy
@@ -51,8 +51,8 @@ void PositionProxy::setTransform(float xoff, float yoff, float zoff,    // Trans
 {
    mETrans = true;
    mMatrixTransform.makeIdent();
-   Matrix trans_mat; trans_mat.makeIdent();
-   Matrix rot_mat; rot_mat.makeIdent();
+   vrj::Matrix trans_mat; trans_mat.makeIdent();
+   vrj::Matrix rot_mat; rot_mat.makeIdent();
 
    if((xoff != 0.0f) || (yoff != 0.0f) || (zoff != 0.0f))
       trans_mat.makeTrans(xoff, yoff, zoff);

@@ -30,22 +30,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_GLOVE_H_
-#define _VRJ_GLOVE_H_
+#ifndef _GADGET_GLOVE_H_
+#define _GADGET_GLOVE_H_
 //#pragma once
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Input.h>
-//#include <gad/Type/DeviceInterface.h>
-#include <gad/Type/PositionProxy.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Input.h>
+//#include <gadget/Type/DeviceInterface.h>
+#include <gadget/Type/PositionProxy.h>
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Matrix.h>
 
 // TODO: 2 devs here is a hack until we make
 //       the pinch glove act more like the flock of birds.
-#define VJ_MAX_GLOVE_DEVS 2   /* The maximum number of gloves per device */
+#define GADGET_MAX_GLOVE_DEVS 2   /* The maximum number of gloves per device */
 
-namespace vrj
+namespace gadget
 {
 
 //: This is the data stored about a glove
@@ -66,7 +66,7 @@ namespace vrj
 // NOTE: More docs needed here
 //
 //!PUBLIC_API:
-class GAD_CLASS_API GloveData
+class GADGET_CLASS_API GloveData
 {
 public:
    enum { NUM_JOINTS = 4, NUM_COMPONENTS = 6 };
@@ -98,13 +98,13 @@ public:
    //: These are the xforms from TO the coord system of the given joint
    // Ex: xforms[0] ==> <br>
    //     base<b>T</b>mpj mpj<b>T</b>pij pij<b>T</b>dij
-   Matrix  xforms[NUM_COMPONENTS][(NUM_JOINTS-1)];
+   vrj::Matrix  xforms[NUM_COMPONENTS][(NUM_JOINTS-1)];
 
    // Finger params
    //  XXX: Should put better info about hand dimensions in here
    // For now this is the translations FROM the previous joint to
    // the SPECIFIED joint.  In case of (DIJ+1), length to tip of finger
-   Vec3    dims[NUM_COMPONENTS][NUM_JOINTS];
+   vrj::Vec3    dims[NUM_COMPONENTS][NUM_JOINTS];
 };
 
 
@@ -117,7 +117,7 @@ public:
 //
 //-------------------------------------------------------------------------
 //!PUBLIC_API:
-class GAD_CLASS_API Glove : virtual public Input
+class GADGET_CLASS_API Glove : virtual public Input
 {
 public:
    Glove();
@@ -136,12 +136,12 @@ public:  // ---- GLOVE INTERFACE ---- //
 
    //: This returns a vector ponting "out" of the component
    // Can be used for selection, etc.
-   Vec3 getGloveVector(GloveData::GloveComponent component, int devNum);
+   vrj::Vec3 getGloveVector(GloveData::GloveComponent component, int devNum);
 
    //: This returns the position of given components.
    // Defaults to returning the palm position.
    // Can also get finger tips.
-   Matrix getGlovePos(GloveData::GloveComponent component = GloveData::WRIST, int devNum = 0);
+   vrj::Matrix getGlovePos(GloveData::GloveComponent component = GloveData::WRIST, int devNum = 0);
 
    //: This returns a copy of the glove data struct
    GloveData getGloveData(int devNum);
@@ -149,15 +149,15 @@ public:  // ---- GLOVE INTERFACE ---- //
 protected:
    // NOTE: make sure you use the "vjInput::progress" member in the [3] slot
    // here. Then you'll not go off the end of this array.
-   // TODO: VJ_MAX_GLOVE_DEVS = 2 here is a hack until we make
+   // TODO: GADGET_MAX_GLOVE_DEVS = 2 here is a hack until we make
    //       the pinch glove act more like the flock of birds.
-   GloveData mTheData[VJ_MAX_GLOVE_DEVS][3];
+   GloveData mTheData[GADGET_MAX_GLOVE_DEVS][3];
 
    //: This is the positional proxy of the glove.  It defines the location of the
    // "center" of the glove. "center" could be different for each glove type.
-   // TODO: VJ_MAX_GLOVE_DEVS = 2 here is a hack until we make
+   // TODO: GADGET_MAX_GLOVE_DEVS = 2 here is a hack until we make
    //       the pinch glove act more like the flock of birds.
-   PositionProxy*  mGlovePos[VJ_MAX_GLOVE_DEVS];
+   PositionProxy*  mGlovePos[GADGET_MAX_GLOVE_DEVS];
 
 };
 

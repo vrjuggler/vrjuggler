@@ -14,9 +14,9 @@
 #define MIN_TIMEOUT 0.1
 
 
-#include <gad/gadConfig.h>
+#include <gadget/gadConfig.h>
 #include <stdio.h>
-#include <gad/Devices/Immersion/ibox2.h>
+#include <gadget/Devices/Immersion/ibox2.h>
 
 
 char SIGNON_STR[5] = "IMMC"; 

@@ -10,7 +10,7 @@
 /*  ==========================================================  */
 
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,11 +19,11 @@
 #include <unistd.h>
 #include <termios.h>
 
-#include <gad/Devices/VirtualTechnologies/CyberGlove.h>
-#include <gad/Devices/VirtualTechnologies/vt_types.h>
-#include <gad/Devices/VirtualTechnologies/vt_globals.h>
-#include <gad/Devices/VirtualTechnologies/vt_glove-types.h>
-#include <gad/Devices/VirtualTechnologies/vt_error.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
+#include <gadget/Devices/VirtualTechnologies/vt_types.h>
+#include <gadget/Devices/VirtualTechnologies/vt_globals.h>
+#include <gadget/Devices/VirtualTechnologies/vt_glove-types.h>
+#include <gadget/Devices/VirtualTechnologies/vt_error.h>
 
 #define delay(t) (usleep(t*100)) /* t is in milliseconds */
 

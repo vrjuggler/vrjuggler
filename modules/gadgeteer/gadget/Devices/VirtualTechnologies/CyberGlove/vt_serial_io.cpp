@@ -9,7 +9,7 @@
 /*  --    Authors: William Chapin and Larry Edwards         --  */
 /*  ==========================================================  */
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #ifdef HAVE_SYS_STDSYMS_H
 #   include <sys/stdsyms.h>
@@ -44,9 +44,9 @@
 #include <stdlib.h>
 #include <X11/Intrinsic.h>
 
-#include <gad/Devices/VirtualTechnologies/CyberGlove.h>
-#include <gad/Devices/VirtualTechnologies/vt_globals.h>
-#include <gad/Devices/VirtualTechnologies/vt_error.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
+#include <gadget/Devices/VirtualTechnologies/vt_globals.h>
+#include <gadget/Devices/VirtualTechnologies/vt_error.h>
 
 /* UNIX allows a max of 20 file descriptors ... really should use */
 /* getdtablesize() to determine this but 20 should be fine.       */
