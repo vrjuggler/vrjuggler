@@ -161,7 +161,7 @@ inline void OsgApp::draw()
    sv->setSceneData(getScene());
    sv->setCalcNearFar(false);
 
-   //Take care of the view port (this does not work)
+   //Take care of the view port
    GLint view[4];
    glGetIntegerv(GL_VIEWPORT, view);      //Get the view port that juggler sets
    sv->setViewport(view[0],view[1],view[2],view[3]);
