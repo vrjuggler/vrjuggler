@@ -36,8 +36,11 @@
 #define _VJ_PF_APP_H_
 
 #include <vjConfig.h>
-#include <Performer/pf/pfScene.h>
+#include <Performer/pf/pfGroup.h>
+#include <Performer/pf/pfChannel.h>
+
 #include <Kernel/vjApp.h>
+#include <Kernel/vjDrawManager.h>
 //#include <Kernel/vjKernel.h>
 class vjKernel;
 #include <Kernel/Pf/vjPfDrawManager.h>
@@ -46,7 +49,7 @@ class vjKernel;
 //-------------------------------------------------------------
 //: Encapulates an actual Performer application.
 //
-//	This class defines the class that Performer
+// This class defines the class that Performer
 //  application classes should be derived from.  The interface
 //  given is the interface that the System expects in order to
 //  interface with the application.
@@ -63,6 +66,8 @@ public:
       //api.setPerformer();  // Tell everyone that we are Performer
    }
 
+   
+   
    //: Initialize the scene graph
    // Called after pfInit & pfConfig but before apiInit
    virtual void initScene() = 0;
@@ -130,12 +135,12 @@ public:
    // and drawing the next frame (pfFrame())
    virtual void postDrawChan(pfChannel* chan, void* chandata){;}
 
-
-public:  // --- Factory functions --- //
+public: // -- Factory Function -- //   
    //: Get the DrawManager to use
    // Returns the ogl draw manager
-   virtual vjDrawManager*    getDrawManager()
+   virtual vjDrawManager* getDrawManager()
    { return vjPfDrawManager::instance(); }
+
 };
 
 #endif

@@ -171,7 +171,7 @@ bool velocityNav::trans(vjVec3 trans)
 // check if we are hitting anything current, and correct for it
 bool velocityNav::correctPosition(vjVec3 prev_delta)
 {
-   vjVec3 zero_trans(0.0f,0.0f,0.0f);
+   //vjVec3 zero_trans(0.0f,0.0f,0.0f);
    vjVec3 correction;
    vjCoord cur_pos(mCurPos);
 

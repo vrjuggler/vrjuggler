@@ -72,7 +72,7 @@ bool navigator::navTranslate(vjVec3 trans)
    vjCoord cur_pos(mCurPos);
    cerr << "Cur P: " << cur_pos.pos << endl;
    cerr << "Trans: " << trans << endl;
-   cerr << "    =: " << (cur_pos.pos+trans) << endl;
+   cerr << "    =: " << cur_pos.pos+trans << endl;
 
    // Pre mult cur_mat by the trans we need to do
    //trans *= -1;

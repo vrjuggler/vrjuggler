@@ -108,7 +108,7 @@ public:
       //rootNode->addChild(new pfLightSource);
 
       /// Load SIMPLE geometry
-      /*
+      ///*
       pfFilePath("/usr/share/Performer/data");
       //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/chamber.0.lsa");
       pfNode* obj = pfdLoadFile("/usr/share/Performer/data/klingon.flt");
@@ -125,10 +125,10 @@ public:
       initial_pos.setTrans(0,0,0);
       //naver->getNavigator()->setCurPos(initial_pos);
       //naver->addChild(world_model);
-      */
+      //*/
 
       // Load the TOWN
-      ///*
+      /*
       pfFilePath("/usr/share/Performer/data:/usr/share/Performer/data/town");
       pfNode* obj = pfdLoadFile("/usr/share/Performer/data/town/town_ogl_pfi.pfb");
       pfDCS* world_model = new pfDCS;    // The node with the world under it
@@ -147,7 +147,7 @@ public:
 
       naver->getNavigator()->setGravityCollidor(ride_collide);
       naver->getNavigator()->setCorrectingCollidor(correction_collide);
-      //*/
+      */
 
       pfuTravPrintNodes(rootNode, "nodes.out");
       pfdStoreFile(rootNode, "nodes.pfb");
