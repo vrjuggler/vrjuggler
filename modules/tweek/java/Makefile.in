@@ -60,7 +60,15 @@ LAF_DIR=		$(JUGGLERROOT_ABS)/external/swing-laf
 KUNSTSTOFF_SRCDIR=	$(LAF_DIR)/kunststoff/sources
 JAVA_SRC_PATH=		$(KUNSTSTOFF_SRCDIR)
 
-JDOM_JAR=	@JDOM_JAR@
+JDOM_DIR=		$(JUGGLERROOT_ABS)/external/jdom
+JDOM_JARS=		$(JDOM_DIR)/jaxen-core.jar \
+			$(JDOM_DIR)/jaxen-jdom.jar \
+			$(JDOM_DIR)/jdom.jar	   \
+			$(JDOM_DIR)/saxpath.jar	   \
+			$(JDOM_DIR)/xalan.jar	   \
+			$(JDOM_DIR)/xerces.jar	   \
+			$(JDOM_DIR)/xml-apis.jar
+
 JAVA_ORB_JAR=	@JAVA_ORB_JAR@
 
 #SKIN_LAF_DIR=	$(LAF_DIR)/skinlf/lib
@@ -73,7 +81,7 @@ LAF_JARS=	$(METOUIA_JAR)$(JCPS)$(JGOODIES_JAR)
 # The following check is done this way to prevent unwanted spaces from
 # appearing in $(CLASSPATH)
 ifneq ($(JAVA_ORB_JAR), none)
-   CLASSPATH=	$(JDOM_JAR)$(JCPS)$(JAVA_ORB_JAR)$(JCPS)$(LAF_JARS)
+   CLASSPATH=	$(JDOM_JARS)$(JCPS)$(JAVA_ORB_JAR)$(JCPS)$(LAF_JARS)
 else
    CLASSPATH=	$(JDOM_JAR)$(JCPS)$(LAF_JARS)
 endif
@@ -148,7 +156,7 @@ endif	# if OS_TYPE == UNIX
                 $(GROUP_OPT_UNIX) $(top_srcdir)/java/$$bean.xml		\
                 $(beandir) ;						\
           done
-	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
+	for jar in `echo "$(JDOM_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
                 $(GROUP_OPT_UNIX) $$jar $(bindir) ;			\
