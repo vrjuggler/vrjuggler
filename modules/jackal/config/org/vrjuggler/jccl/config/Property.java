@@ -29,14 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
+package org.vrjuggler.jccl.config;
 
 import java.util.*;
-import java.io.StreamTokenizer;
-import java.util.NoSuchElementException;
 import java.io.IOException;
-import VjConfig.PropertyDesc;
-import VjConfig.ChunkFactory;
+import java.io.StreamTokenizer;
 
 /** A single property of a ConfigChunk.
  *  A property can have 0 or more values, all of the same type.

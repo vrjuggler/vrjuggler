@@ -29,10 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
+package org.vrjuggler.jccl.config;
 
 import java.util.EventObject;
-import VjConfig.ChunkDesc;
 
 /**
  * Event type for modifications to a descdb : insert, remove, and

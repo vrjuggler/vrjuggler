@@ -29,20 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.config;
 
-
-/* corresponds to ChunkDescDB.C/.h */
-
-package VjConfig;
-
-import java.util.Vector;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.*;
+import java.util.Vector;
 
-import VjConfig.DescDBEvent;
-import VjConfig.DescDBListener;
-
+/** Corresponds to ChunkDescDB.C/.h */
 public class ChunkDescDB
 {
    public String name;

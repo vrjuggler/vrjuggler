@@ -29,14 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
+package org.vrjuggler.jccl.config;
 
 import java.io.*;
-
-import VjConfig.ConfigChunkDB;
-import VjConfig.ChunkDescDB;
-import VjConfig.ChunkFactory;
-import VjConfig.ConfigIOStatus;
 
 public interface ConfigIOHandler
 {

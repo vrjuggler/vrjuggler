@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
+package org.vrjuggler.jccl.config;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /** Status object for ConfigIO & its parser objects.
  *  This is used to store various warning & error messages while 

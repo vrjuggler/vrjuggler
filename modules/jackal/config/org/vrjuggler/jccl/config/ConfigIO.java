@@ -29,10 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
+package org.vrjuggler.jccl.config;
 
 import java.io.*;
-import VjConfig.*;
 
 /** Master IO handler for VR Juggler-style configuration files.
  *  There are currently two different formats for these configuration files:

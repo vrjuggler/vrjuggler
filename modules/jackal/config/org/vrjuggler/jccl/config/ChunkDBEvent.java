@@ -29,17 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.config;
 
-/*
+import java.util.EventObject;
+
+/**
  * Event type for modifications to a chunkdb : insert, remove, and
  * replace chunks...
  */
-
-package VjConfig;
-
-import java.util.EventObject;
-import VjConfig.ConfigChunk;
-
 public class ChunkDBEvent
    extends EventObject
 {

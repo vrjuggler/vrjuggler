@@ -29,15 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
+package org.vrjuggler.jccl.config;
 
+import java.io.*;
 import javax.xml.parsers.*;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
-import java.io.*;
 
-import VjConfig.*;
 
 /** ConfigIOHandler for XML files.
  *  This class handles reading and writing ChunkDescDB and ConfigChunkDB files
