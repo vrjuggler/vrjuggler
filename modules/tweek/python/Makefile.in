@@ -55,7 +55,6 @@ UI_FILES=		pytweek/aboutbox.ui		\
 			pytweek/globalprefsdialog.ui	\
 			pytweek/orbdisconnectboxbase.ui	\
 			pytweek/orbconnectboxbase.ui	\
-			pytweek/treeviewerbase.ui	\
 			pytweek/tweekframebase.ui
 PY_FILES=		$(UI_FILES:.ui=.py)
 
