@@ -42,6 +42,8 @@
 
 #include <Kernel/vjDrawManager.h>
 #include <Kernel/vjDisplay.h>
+#include <Kernel/vjSimViewport.h>
+
 //#include <Kernel/Pf/vjPfApp.h>
 #include <Kernel/Pf/vjPfUtil.h>
 #include <Utils/vjSingleton.h>
@@ -68,22 +70,37 @@ class vjPfDrawManager : public vjDrawManager
 {
 protected:
 
-   struct pfDisp
+   // The channels associated with a viewport
+   struct pfViewport
    {
-      pfDisp()
+      // Identifier for the channels
+      // ie. PRIMARY is the primary channel, etc
+      enum {PRIMARY = 0, SECONDARY = 1};
+
+      pfViewport()
       {
          chans[0] = chans[1] = NULL;
+         viewport = NULL;
+      }
+
+      pfChannel*  chans[2];         // The channels
+      vjViewport* viewport;         // The viewport that we are rendering
+   };
+
+   struct pfDisplay
+   {
+      pfDisplay()
+      {
          disp = NULL;
          pWin = NULL;
       }
 
-      enum {PRIMARY = 0, SECONDARY = 1};
-
-      vjDisplay*     disp;
-      pfPipeWindow*  pWin;
-      pfChannel*     chans[2];
+      vjDisplay*              disp;
+      pfPipeWindow*           pWin;
+      std::vector<pfViewport> viewports;
    };
 
+   /*
    struct findPfDispChan : unary_function<pfDisp, bool>
    {
       findPfDispChan(pfChannel* chan) : mChan(chan) {;}
@@ -92,6 +109,7 @@ protected:
       }
       pfChannel* mChan;                // Channel to find
    };
+   */
 
 public:
     //: Function to config API specific stuff.
@@ -146,7 +164,7 @@ public:
    //: dumps the object's internal state
    void debugDump(int debugLevel);
 
-   void debugDumpPfDisp(pfDisp* pf_disp, int debugLevel);
+   void debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel);
 
    friend void vjPFconfigPWin(pfPipeWindow* pWin);
    friend void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
@@ -192,17 +210,27 @@ protected:
    //: Helper to set channel view params from a vjProjection
    void updatePfProjection(pfChannel* chan, vjProjection* proj, bool simulator=false);
 
-   //: Helper function to bind Performer to the pfApp
-   void initPerformerApp();
+   //: Helper function to create the base scene graph stuff
+   void initPerformerGraph();
 
    //: Helper to initialize the Performer simulato
-   void initSimulator();
+   void initSimulatorGraph();
+
+   //: Helper that (re)loads the application's scene graph into the active scene(s)
+   void initAppGraph();
+
+
    void initLoaders();
-   void updateSimulator(vjSimDisplay* sim);
+   void updateSimulator(vjSimViewport* simVp);
 
    //: Helper to get the pfDisp given a channel
    //! RETURNS: NULL - Not found
-   pfDisp* getPfDisp(pfChannel* chan);
+   //**//pfDisp* getPfDisp(pfChannel* chan);
+
+   // Get a performer pipe
+   //! PRE: pipe_num < mNumPipes
+   //       Fork must have happend
+   pfPipe* getPfPipe(unsigned pipe_num);
 
    //: Return the needed mono frame buffer config
    std::vector<int> getMonoFBConfig();
@@ -219,15 +247,25 @@ protected:
    unsigned int mNumPipes;    // The number of Performer pipes
 
    // --- Performer State --- //
-   vjPfApp*             app;              // There User applications
-   pfChannel*           mSurfMasterChan;  // Master channel
-   pfChannel*           mSimMasterChan;   // Master channel for simulators
-   std::vector<pfDisp>  mSurfDisps;       // Surface displays
-   std::vector<pfDisp>  mSimDisps;        // List of sim displays
-   std::vector<pfPipe*> pipes;            // Performer pipes we have opened
-   std::vector<char*>   mPipeStrs;        // The X-Strs of the pipes
-   pfScene*             mSceneRoot;       // Root of Performer tree to render
-   pfGroup*             mSceneGroup;      // The group node with only sceneRoot under it
+   vjPfApp*                app;              // There User applications
+   std::vector<pfDisplay>  mDisplays;        // All Performer displays
+
+   std::vector<pfChannel*> mSurfChannels;
+   std::vector<pfChannel*> mSimChannels;        // List of sim displays
+   pfChannel*              mSurfMasterChan;  // Master channel
+   pfChannel*              mSimMasterChan;   // Master channel for simulators
+
+   std::vector<pfPipe*>    mPipes;            // Performer pipes we have opened
+   std::vector<char*>      mPipeStrs;        // The X-Strs of the pipes
+   bool                    mPfHasForked;     // Performer has forked it processes already
+
+   // mSceneRoot
+   //       \
+   //     mSceneGroup -- app scene
+   //       /
+   // mRootWithSim
+   pfScene*                mSceneRoot;       // Root of Performer tree to render
+   pfGroup*                mSceneGroup;      // The group node with only sceneRoot under it
 
    // ---- Simulator stuff --- //
    pfGroup*          mSimTree;      // The simulator scene graph
@@ -249,6 +287,7 @@ protected:
       mRootWithSim = NULL;
       mHeadDCS     = NULL;
       mWandDCS     = NULL;
+      mPfHasForked = false;
    }
 
    virtual ~vjPfDrawManager() {}
