@@ -235,20 +235,9 @@
       settings.</para>
 
       <note>
-        <para>The following paragraph is no longer valid since addition of the
-        postiton transform filters were added to VR Juggler.</para>
+        <para>Please refer to the section below for configuring transformation
+        settings for the tracking system.</para>
       </note>
-
-      <para>The <property>Translation</property> and <property>Rotation</property>
-      properties are common to all positional devices. They describe the
-      position of the tracking system&#39;s origin relative to the VR Juggler
-      origin we selected in the previous step. In our example, the tracking
-      system&#39;s origin is the position and orientation of its transmitter,
-      which is suspended above the floor of our SSVR system. The Y value for
-      our translation is therefore about +8.3 (for a transmitter 8.3 feet
-      above the VR Juggler origin), and the X and Z values are the slight
-      offset of the transmitter from the center of the floor. The rotation
-      values (in degrees) represent the way the transmitter is facing.</para>
 
       <para>Most of the other configuration options shown for the MotionStar
       are particular to its specific hardware and low-level software driver,
@@ -307,15 +296,131 @@
         configured for two sensors, so one of our proxies will be unit 0 and
         the other will be unit 1.</para>
 
-        <para>The <property>Position Proxy</property> also has translation and
-        rotation options. This is useful for transforming the raw position
-        data into something that is easy to use and manipulate. For example,
-        in our particular example VR system, the physical tracking sensor that
-        we are using as &#34;VJHead&#34; is mounted sideways on the earpiece
-        of a pair of stereo glasses. The transformation settings we use (as
-        seen in the screenshot) change that data so that the position returned
-        to VR Juggler and the application itself is the position of a point
-        directly between the user&#39;s eyes.</para>
+        <para>The <property>Position Proxy</property> also has position
+        transformation options (see below for a full description). These
+        settings are used to transform the returned tracker information into a
+        value that matches the correct physical coordinates to use. For
+        example, in our particular example VR system, the physical tracking
+        sensor that we are using as &#34;VJHead&#34; is mounted sideways on
+        the earpiece of a pair of stereo glasses. The transformation settings
+        we use (as seen in the screenshot) change that data so that the
+        position returned to VR Juggler and the application itself is the
+        position of a point directly between the user&#39;s eyes.</para>
+      </section>
+
+      <section>
+        <title>Configuring position device coordinate transformations</title>
+
+        <para>The positional information returned from a tracking system can
+        be used directly, but many times the frame of reference for the
+        trackers is not the same as the real world. Because of this, the
+        tracking data needs to be transformed to be in the coordinate frame
+        that the system (and user) expect for the data.</para>
+
+        <para>This may sound complex, but it really just means that the
+        coordinate system the tracking system is using is not the same as what
+        VR Juggler applications expect. This is not because VR Juggler
+        requires some certain coordinate system, the reason is that
+        applications are generally written to expect the VR system to use a
+        standard coordinate system. If your application had to run in two
+        different systems and one system had the x-axis going the the right
+        while the other had the x-axis going up, your application would be
+        pretty confusing in one of the systems.</para>
+
+        <para>Now that we all understand why tracking systems have to be
+        configured we need to know how to do it. This section focuses on
+        exactly this namely, &#34;how can I configure the transformations for
+        my tracking system&#34;. Until recently, this was a little difficult
+        to do with VR Juggler (ok it was downright painful). But recently we
+        revamped the system so that all positional devices have a common way
+        of configuring their transformations. We hope that this will make it
+        easier to understand and create configurations.</para>
+
+        <para>Before we get into the details though we need to take one side
+        track into mathematics. Specifically matrix mathematics and notations.
+        This is probably nothing you haven&#39;t seen before, we just need to
+        agree on a starting point for this description.</para>
+
+        <section>
+          <title>Matrix notation</title>
+
+          <para>This description is going to make use of a specific matrix
+          notation for transformations between various frames of reference. We
+          have found this notation very useful for tackling transformation
+          problems related to VR. We didn&#39;t make up this notation or
+          anything. The original inspiration came from a VR systems book, but
+          we have adapted it slightly for our purposes. So here it is:</para>
+
+          <para><subscript>frame1</subscript>M<subscript>frame2</subscript> -</para>
+
+          <para>The notation uses subscripts to represent the two frames of
+          reference for the transformation. In this case, we say that the
+          matrix transforms from frame1 to frame2. More specifically it moves
+          the frame of reference from frame1 to frame2. So if we are talking
+          about transforming points (or other geometry) the transformation
+          looks like:</para>
+
+          <para>P<subscript>frame1</subscript> = <subscript>frame1</subscript>M<subscript>frame2</subscript>
+          * P<subscript>frame2</subscript></para>
+
+          <para>You can see that we are using the notation for points as well.
+          The subscript of the point represents the frame of reference that
+          the point&#39;s coordinates are relative too.</para>
+
+          <para>We should mention that some readers may be saying to
+          themselves now &#34;they have this thing backwards, this matrix
+          moves from frame2 to frame1&#34;. This is true if you look at it
+          from the perspective of the transformed points. But if you look at
+          it from the perspective of transforming the frames of reference, the
+          matrix moves from frame1 to frame2. It is all a matter of
+          perspective. The math will work out the same either way, so think
+          about it whichever way seems more comfortable.</para>
+
+          <para>Where this notation gets interesting is what if I want to move
+          from frame1 to frame3 and I have the following matrices:</para>
+
+          <para>frame1Mframe2, frame3Mframe2</para>
+
+          <para>I know that the matrix I want is frame1Mframe3 so the correct
+          matrix is:</para>
+
+          <para>frame1Mframe3 = frame1Mframe2 * frame2Mframe3</para>
+
+          <para>which means that I need to invert the frame3Mframe2 matrix
+          that I have to use it.</para>
+
+          <para>This notation makes things like this easy to &#34;see&#34;
+          since the frames of reference are right there as part of the matrix
+          name. We make use of this in the next section to keep track of which
+          matrices to use at which times.</para>
+        </section>
+
+        <section>
+          <title>Tracker transformations</title>
+
+          <figure id="vjheadchunkfigure">
+            <title>Frames of reference for configuring a tracking system</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="figures/config_trackers_diagram.png"
+                format="PNG" scale="50" width="4in" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>The figure above shows....</para>
+
+          <para>We want to...</para>
+
+          <para>Position filters do this...</para>
+
+          <para>So imagine we had...</para>
+
+          <para>We configure it by...</para>
+
+          <para>And that&#39;s all folks.</para>
+        </section>
       </section>
 
       <section>
