@@ -736,16 +736,34 @@ if test "x${_enable_pf_api}" = "xyes" ; then
 
     CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
 
+    dnl # On Linux, we have to link all the Performer libraries AND libdl to
+    dnl # get the check for pfInit() in libpf to compile.
+    if test "$PLATFORM" = "Linux" ; then
+        _vjsave_LIBS="$LIBS"
+        LIBS="$LIBS -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -ldl"
+    fi
+
     dnl # If the Performer library was found, add the API object files to the
     dnl # files to be compiled and enable the Performer API compile-time
     dnl # option.
     AC_CHECK_LIB(pf, pfInit,
         AC_CHECK_HEADER(Performer/pf.h,
-            PERFORMER_API="Y";	\
-            _PFOGLLIB='-lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl'; \
-            AC_DEFINE(VJ_API_PERFORMER,),
+            [ PERFORMER_API="Y";
+              _PFOGLLIB='-lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl';
+              AC_DEFINE(VJ_API_PERFORMER,) ],
             AC_MSG_WARN(*** Performer API will not be used (pf.h not found) ***)),
         AC_MSG_WARN(*** Performer API will not be used (library not found) ***))
+
+    dnl # Restore $LIBS to its original value if we are using Linux (it was
+    dnl # modified before the previous check block).  Also append -ldl to
+    dnl # $LIBS if the Performer library was found.
+    if test "$PLATFORM" = "Linux" ; then
+        LIBS="${_vjsave_LIBS}"
+
+        if test "x$PERFORMER_API" != "x" ; then
+            _PFOGLLIB="${_PFOGLLIB} -ldl"
+        fi
+    fi
 
     dnl # Restore $CFLAGS now that we are done testing.
     CFLAGS="${_vjsave_CFLAGS}"
