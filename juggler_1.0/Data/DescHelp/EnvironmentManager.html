@@ -1,0 +1,46 @@
+<html>
+<title>Environment Manager</title>
+
+<body bgcolor="#ffffcc">
+<h2>Environment Manager Chunk</h2>
+
+The Environment Manager is the part of a VR Juggler application which connects
+to outside control and data-gathering programs, most notably the VjControl 
+configuration editor.
+<p>
+The Environment Manager chunk (token: "EnvironmentManager") configures the 
+network settings for the Environment Manager and controls which features
+are activated.
+
+<p>
+The <b>Port</b> field tells VR Juggler what network port to listen for connections
+on.  A reasonable default value is port 4450.
+
+<p>
+The <b>Accept Connections</b> field tells VR Juggler whether or not it should
+open the network port and accept connections.  If this is set to false,
+VjControl will be unable to connect to the Juggler application.
+
+<p>
+<b>Performance Target</b>.  This field tells Juggler where to send the performance
+data it gathers.  The result is either a <a href="FileConnect.html">File
+Connection</a> or a Network Connection.  Note that currently the Network
+Connection is not fully implemented.
+
+<p>
+<h3>Environment Manager chunk definition:</h3>
+
+<pre>
+chunk EnvironmentManager "Environment Manager" ""
+  Name String 1 "Name" ""
+  Port Int 1 "Port" ""
+  AcceptConnections Bool 1 "Accept Connections" ""
+  PerformanceTarget Chunk 1 "Performance Target" 
+       vj_enumeration { "FileConnect" "NetworkConnect" } ""
+  end
+
+</pre>
+
+</html>
+
+
