@@ -153,7 +153,7 @@ vpr::ReturnStatus FileHandleImplUNIX::close()
 }
 
 // Reconfigure the file handle so that it is in blocking mode.
-vpr::ReturnStatus FileHandleImplUNIX::setBlocking(const bool& blocking)
+vpr::ReturnStatus FileHandleImplUNIX::setBlocking(bool blocking)
 {
    int cur_flags, new_flags;
    vpr::ReturnStatus retval;
@@ -204,7 +204,7 @@ vpr::ReturnStatus FileHandleImplUNIX::setBlocking(const bool& blocking)
 }
 
 // Reconfigure the file handle to be in append mode.
-vpr::ReturnStatus FileHandleImplUNIX::setAppend(const bool& append)
+vpr::ReturnStatus FileHandleImplUNIX::setAppend(bool append)
 {
    int cur_flags, new_flags, retval;
    vpr::ReturnStatus status;
@@ -239,7 +239,7 @@ vpr::ReturnStatus FileHandleImplUNIX::setAppend(const bool& append)
 }
 
 // Reconfigure the file handle so that writes are synchronous.
-vpr::ReturnStatus FileHandleImplUNIX::setSynchronousWrite(const bool& sync)
+vpr::ReturnStatus FileHandleImplUNIX::setSynchronousWrite(bool sync)
 {
    vpr::ReturnStatus status;
 #if ! defined(_POSIX_SOURCE) && defined(O_SYNC) && defined(O_ASYNC)

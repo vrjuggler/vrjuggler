@@ -186,7 +186,7 @@ public:
       return mBlockingFixed;
    }
 
-   vpr::ReturnStatus setBlocking(const bool& blocking);
+   vpr::ReturnStatus setBlocking(bool blocking);
 
    /**
     * Gets the current blocking state for the socket.

@@ -172,7 +172,7 @@ vpr::ReturnStatus SocketImplNSPR::bind()
    return retval;
 }
 
-vpr::ReturnStatus SocketImplNSPR::setBlocking(const bool& blocking)
+vpr::ReturnStatus SocketImplNSPR::setBlocking(bool blocking)
 {
    vprASSERT( mOpen && "precondition says you must open() the socket first" );
    vprASSERT(! mBlockingFixed && "Can't change blocking state after blocking call");

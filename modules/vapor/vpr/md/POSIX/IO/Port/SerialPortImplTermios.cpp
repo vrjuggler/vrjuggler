@@ -294,7 +294,7 @@ bool SerialPortImplTermios::getReadState()
 }
 
 // Enable or disable the receiver so that bytes can be read from the port.
-vpr::ReturnStatus SerialPortImplTermios::setRead(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setRead(bool flag)
 {
    return setBit(CREAD, SerialPortImplTermios::CFLAG, flag,
                  "Could not change read state reading");
@@ -307,7 +307,7 @@ bool SerialPortImplTermios::getLocalAttachState()
 }
 
 // Enable or disable CLOCAL, that is the device is locally attached.
-vpr::ReturnStatus SerialPortImplTermios::setLocalAttach(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setLocalAttach(bool flag)
 {
    return setBit(CLOCAL, SerialPortImplTermios::CFLAG, flag,
                  "Could not change local attachment");
@@ -369,7 +369,7 @@ bool SerialPortImplTermios::getCanonicalState()
 }
 
 // Enable or disable canonical input.
-vpr::ReturnStatus SerialPortImplTermios::setCanonicalInput(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setCanonicalInput(bool flag)
 {
    return setBit(ICANON, SerialPortImplTermios::LFLAG, flag,
                  "Could not change canonical input mode");
@@ -384,7 +384,7 @@ bool SerialPortImplTermios::getBadByteIgnoreState()
 
 // Enable or disable ignoring of received bytes with framing errors or parity
 // errors.
-vpr::ReturnStatus SerialPortImplTermios::setBadByteIgnore(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setBadByteIgnore(bool flag)
 {
    return setBit(IGNPAR, SerialPortImplTermios::IFLAG, flag,
                  "Could not change bad byte ignoring");
@@ -397,7 +397,7 @@ bool SerialPortImplTermios::getBreakByteIgnoreState()
 }
 
 // Enable or disable ignoring of received BREAK bytes.
-vpr::ReturnStatus SerialPortImplTermios::setBreakByteIgnore(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setBreakByteIgnore(bool flag)
 {
    return setBit(IGNBRK, SerialPortImplTermios::IFLAG, flag,
                  "Could not change break byte ignoring");
@@ -410,7 +410,7 @@ bool SerialPortImplTermios::getInputParityCheckState()
 }
 
 // Enable or disable input parity checking.
-vpr::ReturnStatus SerialPortImplTermios::setInputParityCheck(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setInputParityCheck(bool flag)
 {
    return setBit(INPCK, SerialPortImplTermios::IFLAG, flag,
                  "Could not change input parity checking");
@@ -424,7 +424,7 @@ bool SerialPortImplTermios::getBitStripState()
 }
 
 // Enable stripping of input bytes to seven bits.
-vpr::ReturnStatus SerialPortImplTermios::setBitStripping(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setBitStripping(bool flag)
 {
    return setBit(ISTRIP, SerialPortImplTermios::IFLAG, flag,
                  "Could not change bit stripping setting");
@@ -437,7 +437,7 @@ bool SerialPortImplTermios::getStartStopInputState()
 }
 
 // Enable or disable start-stop input control.
-vpr::ReturnStatus SerialPortImplTermios::setStartStopInput(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setStartStopInput(bool flag)
 {
    return setBit(IXOFF, SerialPortImplTermios::IFLAG, flag,
                  "Could not change start-stop input control");
@@ -450,7 +450,7 @@ bool SerialPortImplTermios::getStartStopOutputState()
 }
 
 // Enable or disable start-stop output control.
-vpr::ReturnStatus SerialPortImplTermios::setStartStopOutput(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setStartStopOutput(bool flag)
 {
    return setBit(IXON, SerialPortImplTermios::IFLAG, flag,
                  "Could not enable start-stop output control");
@@ -465,7 +465,7 @@ bool SerialPortImplTermios::getParityGenerationState()
 
 // Enable or disable parity generation for outgoing bytes and parity checking
 // for incoming bytes.
-vpr::ReturnStatus SerialPortImplTermios::setParityGeneration(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setParityGeneration(bool flag)
 {
    return setBit(PARENB, SerialPortImplTermios::CFLAG, flag,
                  "Could not change parity generation on outgoing characters");
@@ -483,7 +483,7 @@ bool SerialPortImplTermios::getParityErrorMarkingState()
 }
 
 // Enable or disable parity error and framing error marking.
-vpr::ReturnStatus SerialPortImplTermios::setParityErrorMarking(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setParityErrorMarking(bool flag)
 {
    return setBit(PARMRK, SerialPortImplTermios::IFLAG, flag,
                  "Could not change parity error marking");
@@ -688,7 +688,7 @@ bool SerialPortImplTermios::getHardwareFlowControlState()
 #endif
 }
 
-vpr::ReturnStatus SerialPortImplTermios::setHardwareFlowControl(const bool& flag)
+vpr::ReturnStatus SerialPortImplTermios::setHardwareFlowControl(bool flag)
 {
 #ifdef VPR_OS_IRIX
    return setBit(CNEW_RTSCTS, SerialPortImplTermios::CFLAG, flag,
@@ -1027,7 +1027,7 @@ bool SerialPortImplTermios::getBit(const tcflag_t bit,
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::setBit(const tcflag_t bit,
                                                 SerialPortImplTermios::TermFlag flag,
-                                                const bool& enable,
+                                                bool enable,
                                                 const std::string& err_msg,
                                                 const bool print_sys_err)
 {

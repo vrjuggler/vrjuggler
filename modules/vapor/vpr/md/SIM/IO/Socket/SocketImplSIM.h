@@ -224,7 +224,7 @@ public:
     *         blocking mode is set to blocking.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus setBlocking(const bool& blocking)
+   vpr::ReturnStatus setBlocking(bool blocking)
    {
       mBlocking = blocking;
       return vpr::ReturnStatus(); // success

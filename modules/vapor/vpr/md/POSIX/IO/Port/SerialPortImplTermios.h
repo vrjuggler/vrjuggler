@@ -228,7 +228,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the blocking mode was
     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   vpr::ReturnStatus setBlocking(const bool& blocking)
+   vpr::ReturnStatus setBlocking(bool blocking)
    {
       vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
       return mHandle->setBlocking(blocking);
@@ -452,7 +452,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setRead(const bool& flag);
+   vpr::ReturnStatus setRead(bool flag);
 
    /**
     * Get the local attach state.  That is, test if the device is attached
@@ -477,7 +477,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setLocalAttach(const bool& flag);
+   vpr::ReturnStatus setLocalAttach(bool flag);
 
    /**
     * Gets the number of stop bits in use.  This will be either 1 or 2.
@@ -539,7 +539,7 @@ public:
     *
     * @see getCanonicalState
     */
-   vpr::ReturnStatus setCanonicalInput(const bool& flag);
+   vpr::ReturnStatus setCanonicalInput(bool flag);
 
    /**
     * Gets the current state of ignoring bytes with framing errors (other
@@ -565,7 +565,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setBadByteIgnore(const bool& flag);
+   vpr::ReturnStatus setBadByteIgnore(bool flag);
 
    /**
     * Gets the current state of ignoring BREAK bytes
@@ -589,7 +589,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setBreakByteIgnore(const bool& flag);
+   vpr::ReturnStatus setBreakByteIgnore(bool flag);
 
    /**
     * Gets the state of parity checking for input.
@@ -613,7 +613,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setInputParityCheck(const bool& flag);
+   vpr::ReturnStatus setInputParityCheck(bool flag);
 
    /**
     * Gets the current state of bit stripping.  When enabled, input bytes are
@@ -639,7 +639,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setBitStripping(const bool& flag);
+   vpr::ReturnStatus setBitStripping(bool flag);
 
    /**
     * Gets the state of start-stop input control.  When enabled, if the
@@ -672,7 +672,7 @@ public:
     *
     * @see getStartStopInputState
     */
-   vpr::ReturnStatus setStartStopInput(const bool& flag);
+   vpr::ReturnStatus setStartStopInput(bool flag);
 
    /**
     * Gets the state of start-stop output control.  When enabled, when the
@@ -703,7 +703,7 @@ public:
     *
     * @see getStartStopOutputState
     */
-   vpr::ReturnStatus setStartStopOutput(const bool& flag);
+   vpr::ReturnStatus setStartStopOutput(bool flag);
 
    /**
     * Gets the current state of parity generation for outgoing bytes and
@@ -732,7 +732,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setParityGeneration(const bool& flag);
+   vpr::ReturnStatus setParityGeneration(bool flag);
 
    /**
     * Returns the current state of parity error marking for this serial port.
@@ -763,7 +763,7 @@ public:
     *
     * @see enableInputParityCheck
     */
-   vpr::ReturnStatus setParityErrorMarking(const bool& flag);
+   vpr::ReturnStatus setParityErrorMarking(bool flag);
 
    /**
     * Gets the current parity checking type (either odd or even).
@@ -900,7 +900,7 @@ public:
     *
     * @see controlFlow
     */
-   vpr::ReturnStatus setHardwareFlowControl(const bool& flag);
+   vpr::ReturnStatus setHardwareFlowControl(bool flag);
 
    /**
     * Discards either the input buffer (unread data received from the
@@ -1129,7 +1129,7 @@ protected:
     * error message is printed.
     */
    vpr::ReturnStatus setBit(const tcflag_t bit, TermFlag flag,
-                            const bool& enable, const std::string& err_msg,
+                            bool enable, const std::string& err_msg,
                             const bool print_sys_err = true);
 
    /** Helper for setting line status flags */
