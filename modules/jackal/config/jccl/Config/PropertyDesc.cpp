@@ -133,9 +133,9 @@ void PropertyDesc::setHelp (const std::string& help)
    help_cdata->setCdata(help);
 }
 
-cppdom::XMLString PropertyDesc::getDefaultValueString (int index)
+std::string PropertyDesc::getDefaultValueString(int index)
 {
-   cppdom::XMLString value_str("");
+   std::string value_str("");
 
    if ( mNode.get() != NULL )
    {

@@ -59,8 +59,8 @@ std::ostream& operator << (std::ostream& out, const ChunkDescDB& self)
    }
    catch (cppdom::XMLError& xml_e)
    {
-      cppdom::XMLLocation where( chunk_desc_db_node->getContext()->getLocation() );
-      cppdom::XMLString errmsg;
+      cppdom::XMLLocation where(chunk_desc_db_node->getContext()->getLocation());
+      std::string errmsg;
       xml_e.getStrError(errmsg);
 
       // print out where the error occured
@@ -70,7 +70,8 @@ std::ostream& operator << (std::ostream& out, const ChunkDescDB& self)
    }
    catch (std::exception& std_e)
    {
-      std::cerr << "ChunkDescDB::<<: std::exception: " << std_e.what() << std::endl;
+      std::cerr << "ChunkDescDB::<<: std::exception: " << std_e.what()
+                << std::endl;
       throw;   // rethrow exception
    }
 
@@ -88,8 +89,8 @@ std::istream& operator >> (std::istream& in, ChunkDescDB& self)
    }
    catch (cppdom::XMLError& xml_e)
    {
-      cppdom::XMLLocation where( chunk_desc_db_node->getContext()->getLocation() );
-      cppdom::XMLString errmsg;
+      cppdom::XMLLocation where(chunk_desc_db_node->getContext()->getLocation());
+      std::string errmsg;
       xml_e.getStrError(errmsg);
 
       // print out where the error occured
@@ -99,7 +100,8 @@ std::istream& operator >> (std::istream& in, ChunkDescDB& self)
    }
    catch (std::exception& std_e)
    {
-      std::cerr << "ChunkDescDB::>>: std::exception: " << std_e.what() << std::endl;
+      std::cerr << "ChunkDescDB::>>: std::exception: " << std_e.what()
+                << std::endl;
       throw;   // rethrow exception
    }
 
@@ -136,8 +138,8 @@ bool ChunkDescDB::load (const std::string& filename, const std::string& parentfi
    }
    catch (cppdom::XMLError& xml_e)
    {
-      cppdom::XMLLocation where( chunk_desc_doc->getContext()->getLocation() );
-      cppdom::XMLString errmsg;
+      cppdom::XMLLocation where(chunk_desc_doc->getContext()->getLocation());
+      std::string errmsg;
       xml_e.getStrError(errmsg);
 
       // print out where the error occured
@@ -148,7 +150,8 @@ bool ChunkDescDB::load (const std::string& filename, const std::string& parentfi
    }
    catch (std::exception& std_e)
    {
-      std::cerr << "ChunkDescDB::load: std::exception: " << std_e.what() << std::endl;
+      std::cerr << "ChunkDescDB::load: std::exception: " << std_e.what()
+                << std::endl;
       //throw;   // rethrow exception
    }
    catch (...)
@@ -173,18 +176,19 @@ bool ChunkDescDB::save (const std::string& file_name)
    }
    catch (cppdom::XMLError& xml_e)
    {
-      cppdom::XMLLocation where( chunk_desc_db_doc->getContext()->getLocation() );
-      cppdom::XMLString errmsg;
+      cppdom::XMLLocation where(chunk_desc_db_doc->getContext()->getLocation());
+      std::string errmsg;
       xml_e.getStrError(errmsg);
 
       // print out where the error occured
-      std::cout << "ChunkDescDB::>> XMLError:" << file_name << ":" << where.getLine() << " "
-                << "at position " << where.getPos()
+      std::cout << "ChunkDescDB::>> XMLError:" << file_name << ":"
+                << where.getLine() << " " << "at position " << where.getPos()
                 << ": error: " << errmsg.c_str() << std::endl;
    }
    catch (std::exception& std_e)
    {
-      std::cerr << "ChunkDescDB::>>: std::exception: " << std_e.what() << std::endl;
+      std::cerr << "ChunkDescDB::>>: std::exception: " << std_e.what()
+                << std::endl;
       throw;   // rethrow exception
    }
 
