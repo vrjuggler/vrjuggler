@@ -51,7 +51,7 @@ bool IBox::config(jccl::ConfigChunkPtr c)
 
   vprDEBUG(vrjDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
                              << vprDEBUG_FLUSH;
-  mPortStr = static_cast<std::string>(c->getProperty( "portNum" ));
+  mPortStr = static_cast<std::string>(c->getProperty( "port" ));
 
   // Done in Input
   //active = 0;
