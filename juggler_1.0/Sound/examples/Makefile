@@ -1,4 +1,4 @@
-SRCS = app.cpp
+SRCS = app.cpp fileIO.cpp
 PROJECT_NAME = app
 OBJDIR = object_code
 

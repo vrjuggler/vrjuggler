@@ -3,6 +3,7 @@
 #include <unistd.h>   //for sleep
 #include <iostream.h> // for cout
 #include "SoundFactory.h"
+#include "fileIO.h"
 
 SoundEngine* gSoundEngine = NULL;
 Sound* sound1 = NULL, *sound2 = NULL, *sound3 = NULL;
@@ -15,17 +16,10 @@ void usage(char** argv)
       cout<<"      "<<argv[0]<<" nosound  (to stub out all sound functionality)\n"<<flush;
 }
 
-void main(int argc, char** argv)
+bool initSoundEngine( const std::string& arg, SoundEngine* &engine )
 {
-   std::string arg;
-   
-   if (argc > 1)
-   {
-      arg = argv[1];
-   }   
-   
    std::string soundConfigFile;
-   if (arg == "sl")
+   if (arg == "sl") // some hacky logic.
    {
       soundConfigFile = "sound.dat";
    }
@@ -37,23 +31,61 @@ void main(int argc, char** argv)
    
    else if (arg == "nosound")
    {
-      soundConfigFile = "nofileneeded";
+      soundConfigFile = "sound.dat";
+   }   
+   else
+   {
+      engine = NULL;
+      return false; //user didn't specify an option
+   }
+   
+   std::string soundConfigFileWithPath;
+   if (fileIO::fileExistsResolvePath( soundConfigFile, soundConfigFileWithPath ))
+   {
+      engine = SoundFactory::newEngine( arg, soundConfigFileWithPath.c_str() );
+      
+      if ( engine == NULL)
+      {
+         cout<<"NULL engine\n"<<flush;
+         return false;
+      }      
+   }
+      
+   else
+   {
+      cout<<"Couldn't find "<<soundConfigFile<<"\n"<<flush;
+      engine = NULL;
+      return false;
+   }    
+   
+   cout<<"Good engine\n"<<flush;
+   return true; //user specified an option
+}
+
+void main(int argc, char** argv)
+{
+   std::string arg;
+   
+   if (argc > 1)
+   {
+      arg = argv[1];
    }   
    
-   else
+   // get the sound engine...
+   bool success = initSoundEngine( arg, gSoundEngine );
+   if (!success)
    {
       ::usage(argv);
       cout<<"\n"<<flush;
       cout<<"!!! WARNING !!!: Option \""<<arg.c_str()<<"\" not recognized, Defaulting to the \"nosound\" option\n"<<flush;
       cout<<"\n"<<flush;
       arg = "nosound"; //default arg
-      soundConfigFile = "nofileneeded";
+      success = initSoundEngine( arg, gSoundEngine );
       sleep( 1 );
    }   
    
-   // get the sound engine...
-   gSoundEngine = SoundFactory::newEngine( arg, soundConfigFile.c_str() );
    assert( gSoundEngine != NULL );
+   assert( success == true );
    
    sound1 = gSoundEngine->getHandle( "sound1" );
    sound1->print();
