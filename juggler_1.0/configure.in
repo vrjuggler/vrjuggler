@@ -249,7 +249,7 @@ case $target_os in
 
         AC_DEFINE(VJ_OS_Win32,)
         ;;
-    darwin1.3)
+    darwin1.*)
         if test "x$SUBSYSTEM" != "xNSPR" ; then
             AC_MSG_WARN(*** Forcing the use of NSPR subsystem ***)
             SUBSYSTEM='NSPR' 
@@ -843,24 +843,6 @@ if test "$SL" = "Y" ; then
     APP_EXTRA_LIBS_SL="$SL_LIB ${_sl_libs}"
 fi
 
-if test "$OS_TYPE" = "Darwin" ; then
-    APP_VJ_LIBS_GL="-lJuggler_ogl"
-    APP_VJ_LIBS_PF="-lJuggler_pf"
-    APP_VJ_LIBS_UTILS="-lJuggler_utils"
-
-    APP_VJ_LIBS_BEGIN="-L\$(VJ_BASE_DIR)/lib"
-    APP_VJ_LIBS_END='$APP_VJ_LIBS_UTILS'
-    APP_VJ_LIBS_BASIC='-lJuggler'
-
-    APP_VJ_LIBS_BEGIN_INST="-L\$(VJ_BASE_DIR)/lib"
-    APP_VJ_LIBS_END_INST="-lJuggler_utils -Wl,-rpath,\$(VJ_BASE_DIR)/lib"
-    APP_VJ_LIBS_BASIC_INST='-lJuggler'
-
-    APP_EXTRA_LIBS_BEGIN="" 
-    APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm -lftime"
-    APP_EXTRA_LIBS_GL="-framework OpenGL -framework SetupGL -framework Carbon -framework ApplicationServices"
-fi
-
 if test "$OS_TYPE" = "UNIX" ; then
     if test "$PLATFORM" = "IRIX" ; then
         APP_VJ_LIBS_BEGIN="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
@@ -873,7 +855,7 @@ if test "$OS_TYPE" = "UNIX" ; then
 
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
         APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
-    elif test "x$GXX" = "xyes" ; then
+    elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xMacOSX" ; then
         APP_VJ_LIBS_BEGIN="-Wl,-Bstatic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
         APP_VJ_LIBS_END='-lJuggler_utils'
         APP_VJ_LIBS_BASIC='-lJuggler'
@@ -910,7 +892,11 @@ if test "$OS_TYPE" = "UNIX" ; then
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $PTHREAD_ARG $LIBS $DTK_LDFLAGS"
 
     if test "x$OGL_LDFLAGS" != "x" ; then
-        APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"
+        if test "x$PLATFORM" = "xMacOSX" ; then
+            APP_EXTRA_LIBS_GL="$OGL_LDFLAGS -framework AGL -framework DrawSprocket -framework Carbon -framework ApplicationServices"
+        else
+            APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"
+        fi
     else
         APP_EXTRA_LIBS_GL="$LIBOPENGL"
     fi
