@@ -4,7 +4,7 @@
 #include <Environment/vjSyncWriter.h>
 
 vjSyncWriter::vjSyncWriter(): ofstream(), mutex() {
-    cout << "syncwriter was initialized" << endl;
+    //cout << "syncwriter was initialized" << endl;
 }
 
 int vjSyncWriter::lock() {

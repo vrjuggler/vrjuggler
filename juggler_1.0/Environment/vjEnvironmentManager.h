@@ -119,11 +119,15 @@ private:
     bool                      activated;
     bool                      configured_to_accept;
     void controlLoop (void* nullParam);
-    //void reconfigure();
 
-    bool configuredToActivate (vjPerfDataBuffer* b) {
-	return 1;
-    }
+    // utility for reconfiguration
+    void activatePerfBuffersWithPrefix (std::string prefix);
+    void deactivatePerfBuffersWithPrefix (std::string prefix);
+
+    // should this buffer be active under our current config?
+    // used when a buffer is added after configure
+    bool configuredToActivate (vjPerfDataBuffer* b);
+
 
 }; // end vjEnvironmentManager
 

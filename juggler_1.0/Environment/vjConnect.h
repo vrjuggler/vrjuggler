@@ -57,6 +57,8 @@ class vjConnect {
     bool stopProcess();
 
 
+    void reopenFile ();
+
     void sendDescDB (vjChunkDescDB* db);
     void sendChunkDB (vjConfigChunkDB* db, bool all);
     void sendRefresh ();
@@ -69,6 +71,7 @@ class vjConnect {
     vjThread*               connect_thread;
     int                     fd;
     bool                    readable;
+    bool                    i_opened_this;  // workaround for write bug
 
     static char* default_name;
 

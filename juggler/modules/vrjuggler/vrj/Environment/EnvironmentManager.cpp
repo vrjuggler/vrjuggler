@@ -44,7 +44,6 @@ vjEnvironmentManager::~vjEnvironmentManager() {
 
 
 void vjEnvironmentManager::activate() {
-    //reconfigure();
 
     /* start updaters */
     for (int i = 0; i < updaters.size(); i++) {
@@ -206,72 +205,6 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
 
 
 
-// void vjEnvironmentManager::reconfigure () {
-//     int i;
-//     vjConfigChunk *c;
-//     std::vector<vjConfigChunk*>* v;
-//     vjConnect* vn;
-//     char* s;
-//     bool networkingchanged;
-//     int newport;
-
-//     chunkdb = vjKernel::instance()->getInitialChunkDB();
-//     v = chunkdb->getMatching ("EnvironmentManager");
-
-//     if (v->size() == 0) {
-// 	vjDEBUG(1) << "ERROR: vjEnvironmentManager::reconfigure()"
-// 		   << " - can't find ConfigChunk. Using defaults.\n"
-// 		   << vjDEBUG_FLUSH;
-// 	return;
-//     }
-//     if (v->size() > 1) {
-// 	vjDEBUG(2) << "vjEnvironmentManager::reconfigure()"
-// 		   << " - multiple EM ConfigChunks found. Using "
-// 		   << "first one.\n" << vjDEBUG_FLUSH;
-//     }
-
-//     c = (*v)[0];
-//     delete v;
-
-//     configured_to_accept = c->getProperty ("AcceptConnections");
-//     newport = c->getProperty("Port");
-
-//     if (newport == 0)
-// 	newport = Port;
-//     if (newport != Port || configured_to_accept != isAccepting())
-// 	networkingchanged = 1;
-
-//     /* BUG: we need to
-//      *    a) delete current connects that aren't in v
-//      *    b) not add connects for ones that are in v
-//      * otherwise we won't reconfigure correctly
-//      */
-//     v = chunkdb->getMatching ("FileConnect");
-//     for (i = 0; i < v->size(); i++) {
-// 	vn = new vjConnect ((*v)[i]);
-// 	connections.push_back (vn);
-// 	vn->startProcess();
-//     }
-//     delete v;
-
-//     s = c->getProperty ("PerformanceTarget");
-//     perf_buffer_reader->setTarget(getConnect(s));
-//     delete s;
-
-//     if (networkingchanged) {
-// 	Port = newport;
-// 	if (isAccepting())
-// 	    rejectConnections();
-// 	if (configured_to_accept)
-// 	    acceptConnections();
-// 	else
-// 	    killConnections();
-//     }
-
-//     /* repeat above w/ various tu's */
-
-
-// }
 
 
 
@@ -282,6 +215,36 @@ void vjEnvironmentManager::sendRefresh() {
 
 }
 
+
+void vjEnvironmentManager::activatePerfBuffersWithPrefix (std::string prefix) {
+    // activates all perf buffers whose names start with prefix
+    vjPerfDataBuffer* b;
+    int i;
+
+    for (i = 0; i < perf_buffers.size(); i++) {
+	b = perf_buffers[i];
+	std::string n = b->getName();
+	if (!n.compare (0, prefix.size(), prefix)) {
+	    perf_buffer_reader->addBuffer(b);
+	}
+    }
+}
+
+
+void vjEnvironmentManager::deactivatePerfBuffersWithPrefix (std::string prefix) {
+    vjPerfDataBuffer* b;
+    int i;
+
+    for (i = 0; i < perf_buffers.size(); i++) {
+	b = perf_buffers[i];
+	// this below is correct!!! returns false when strings match, true else
+	// just like strcmp
+	std::string n = b->getName();
+	if (!n.compare (0, prefix.size(), prefix)) {
+	    perf_buffer_reader->removeBuffer(b);
+	}
+    }
+}
 
 
 //: ConfigChunkHandler stuff
@@ -316,7 +279,18 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 	return true;
     }
     else if (s == "PerfMeasure") {
-	return false;
+	vjConfigChunk* c2;
+	for (int i = 0; i < chunk->getNum ("TimingTests"); i++) {
+	    c2 = chunk->getProperty ("TimingTests", i);
+	    if ((bool)c2->getProperty ("Enabled") == true) {
+		activatePerfBuffersWithPrefix ((std::string)c2->getProperty ("Prefix"));
+	    }
+	    else {
+		deactivatePerfBuffersWithPrefix ((std::string)c2->getProperty ("Prefix"));
+	    }
+	}
+	sendRefresh();
+	return true;
     }
     else if (s == "FileConnect") {
 	vjConnect* vn = new vjConnect (chunk);
@@ -348,3 +322,11 @@ bool vjEnvironmentManager::configCanHandle(vjConfigChunk* chunk) {
 	return true;
     return false;
 }
+
+
+// should this buffer be active under our current config?
+// used when a buffer is added after configure
+bool vjEnvironmentManager::configuredToActivate (vjPerfDataBuffer* b) {
+    return false;
+}
+
