@@ -253,14 +253,24 @@ public class ObjectWriterMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      PropertyInfo raw_obj_prop =
-         obj.GetType().GetProperty("RawObject",
-                                   BindingFlags.NonPublic | BindingFlags.Instance);
-      if ( null != raw_obj_prop )
+      // Try the fast return method first.  If it fails, catch the exception
+      // and use the slow technique instead.
+      try
       {
-         return (IntPtr) raw_obj_prop.GetValue(obj, null);
+         return ((DummyObjectWriter) obj).mRawObject;
+      }
+      catch(System.InvalidCastException ex)
+      {
+         PropertyInfo raw_obj_prop =
+            obj.GetType().GetProperty("RawObject",
+                                      BindingFlags.NonPublic | BindingFlags.Instance);
+         if ( null != raw_obj_prop )
+         {
+            return (IntPtr) raw_obj_prop.GetValue(obj, null);
+         }
       }
 
+      // Marshaling failed.
       return IntPtr.Zero;
    }
 
