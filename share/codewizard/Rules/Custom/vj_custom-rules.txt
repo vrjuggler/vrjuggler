@@ -1,0 +1,6 @@
+AssignInIf-7000.rule
+NameMemberVarStart_m-7001.rule
+NameLocalVariable-7002.rule
+NameGlobalVariable-7003.rule
+NameClass-7004.rule
+InitAllVariables-7006.rule
