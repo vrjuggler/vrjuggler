@@ -52,10 +52,10 @@ public:
     }
 
 public:
-    vjThread* thread;	            //: Handle of the thread process
-    vjOneThread* next;		         //: -> next vjOneThread ready to run
-    vjBaseThreadFunctor* functor;	//: -> function thread is to call
-    vjSemaphore threadWait;	      //: thread waits for work here
+    vjThread* thread;               //: Handle of the thread process
+    vjOneThread* next;              //: -> next vjOneThread ready to run
+    vjBaseThreadFunctor* functor;   //: -> function thread is to call
+    vjSemaphore threadWait;         //: thread waits for work here
 };
 
 std::ostream& operator<< (std::ostream&, vjOneThread&);
@@ -71,12 +71,12 @@ std::ostream& operator<< (std::ostream&, vjOneThread&);
 //   |-Just repetiviely add work to the process <br>
 //
 // Author:
-//	Allen Bierbaum
+// Allen Bierbaum
 //
 // Date: 2-5-97
 //-----------------------------------------------
 //!PUBLIC_API:
-class vjThreadPool : public vjMemory
+class vjThreadPool
 {
 public:
     // -----------------------------------------------------------------------
@@ -143,8 +143,8 @@ public:
     // -----------------------------------------------------------------------
     void
     barrier (void) {
-        finishedLock.acquire();	    // Get the lock that means threads done
-        finishedLock.release();	    // Reset it to done
+        finishedLock.acquire();      // Get the lock that means threads done
+        finishedLock.release();      // Reset it to done
     }
 
     // -----------------------------------------------------------------------
@@ -152,12 +152,12 @@ public:
     void printList(void);
 
 private:
-    vjSemaphore readyThreads;	//: count represents threads ready to work
-    vjMutex listLock;		//: mutex control of threadList head
-    vjMutex workingCountLock;	//: mutex on thread count
-    vjMutex finishedLock;	//: Lock for wether thread are finished, lock -> doing work
-    vjOneThread* listHead;	//: -> first ready vjOneThread
-    volatile int workingCount;	//: Number of threads currently doing work
+    vjSemaphore readyThreads; //: count represents threads ready to work
+    vjMutex listLock;      //: mutex control of threadList head
+    vjMutex workingCountLock; //: mutex on thread count
+    vjMutex finishedLock;  //: Lock for wether thread are finished, lock -> doing work
+    vjOneThread* listHead; //: -> first ready vjOneThread
+    volatile int workingCount;   //: Number of threads currently doing work
 };
 
 #endif
