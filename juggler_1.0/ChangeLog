@@ -1,8 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+May-21-2001 patrick   Initial attempt to support HP-UX 11.x.  A newer version
+                      of Doozer++ is needed before the port can be completed.
 May-02-2001 allenb    Added new sync string descriptions to flock of birds
                       chunk.  Added: CRT_Above_72hz and CRT_Below_72hz
-                      NOTE: This BREAKS old config files that had "Normal_72hz"                      
+                      NOTE: This BREAKS old config files that had "Normal_72hz"
 Apr-12-2001 patrick   The MotionStar driver now supports setting the
                       measurement rate
 Apr-03-2001 allenb    Refactored the vjDisplayManager to support viewports

@@ -312,7 +312,7 @@ public:
    vjBaseThread* getThread(IdxType index)
    {
       //std::hash_map<IdxType, vjBaseThread*>::iterator i;
-      std::map<IdxType, vjBaseThread*>::iterator i;
+      typename std::map<IdxType, vjBaseThread*>::iterator i;
       i = mThreadMap.find(index);
       if(i == mThreadMap.end())
          return NULL;

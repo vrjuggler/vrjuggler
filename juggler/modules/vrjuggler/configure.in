@@ -193,6 +193,12 @@ case $target_os in
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
+    dnl # HP PA-RISC machine running HP-UX 11.x.
+    hpux11*)
+        AC_DEFINE(VJ_OS_HPUX,)
+        AC_DEFINE(_INCLUDE_TERMIO,)
+        AC_DEFINE(_CMA_NOWRAPPERS_,)
+        ;;
     dnl # DEC Alpha running Digital UNIX 4.0.
     osf4.0)
         AC_DEFINE(VJ_OS_DUX,)
