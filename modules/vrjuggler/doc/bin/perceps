@@ -2315,7 +2315,7 @@ sub PROCCLASS {
         }
       }
       # Match Typed Member Functions
-      elsif ( $line =~ /^\s*([\w<>:\,\s\*&]*[\w<>:\*&]\s[\s\*&]*)(\S+)\s*\(([^\{\)]*)\)\s*(const|)\s*(\=|throw\s*\w*\s*\([^\{\)]*\)\s*=?|)/ )
+      elsif ( $line =~ /^\s*([\w<>:\,\s\*&]*[\w<>:\*&]\s[\s\*&]*)([^\s\[\]]+)\s*\(([^\{\)]*)\)\s*(const|)\s*(\=|throw\s*\w*\s*\([^\{\)]*\)\s*=?|)/ )
       {
         $temp1=$1,$temp2=$2,$temp3=$3,$temp4=$4,$temp5=$5;
         $fid=&PROCARGS($temp3);
