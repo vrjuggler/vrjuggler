@@ -3,6 +3,7 @@
 #include "KeyFramer.h"
 #include <vrj/Util/Debug.h>
 #include <gmtl/Math.h>
+#include <gmtl/Output.h>
 
 namespace kev
 {
