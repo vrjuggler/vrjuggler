@@ -84,12 +84,12 @@ DPP_ABI_SETUP
 # Define the root directory for the Xerces-c installation.
 AC_ARG_WITH(xercesroot,
             [  --with-xercesroot=<PATH>
-                          Xerces-c installation directory [default=/usr]],
+                          Xerces-C installation directory [default=/usr]],
             XERCESROOT="$withval", XERCESROOT="/usr")
 
 AC_ARG_WITH(xerceslib,
             [  --with-xerceslib=<NAME>
-                          Xerces-c base library name      [default=xerces-c]],
+                          Xerces-C base library name      [default=xerces-c]],
             XERCES_LIB="$withval", XERCES_LIB='xerces-c')
 
 # Specify location of JAXP jars
@@ -214,28 +214,25 @@ LIBS="$LIBS -l$XERCES_LIB `$VPR_CONFIG --extra-libs`"
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 
-AC_CHECK_HEADER([util/XercesDefs.hpp], [xerces_include="$XERCESROOT/include"],
-    [ CPPFLAGS="-I$XERCESROOT/include/xercesc $CPPFLAGS"
-      AC_CHECK_HEADER([xercesc/util/XercesDefs.hpp],
-          [xerces_include="$XERCESROOT/include/xercesc"],
-          [AC_MSG_ERROR([*** Xerces-C headers not found ***])])
-    ])
+AC_CHECK_HEADER([xercesc/util/XercesDefs.hpp],
+    [xerces_include="$XERCESROOT/include"],
+    [AC_MSG_ERROR([*** Xerces-C headers not found ***])])
 
 # Extract the full Xerces version number and transform it into the form x.y.z.
 changequote(<<, >>)
-xerces_ver_str=`grep gXercesFullVersionStr $xerces_include/util/XercesDefs.hpp | sed -e 's/.*"\([1-9][0-9_]*\)".*/\1/' | sed -e 's/_/./g'`
+xerces_ver_str=`grep gXercesFullVersionStr $xerces_include/xercesc/util/XercesDefs.hpp | sed -e 's/.*"\([1-9][0-9_]*\)".*/\1/' | sed -e 's/_/./g'`
 changequote([, ])
 
-DPP_VERSION_CHECK_MSG([Xerces C++], [$xerces_ver_str], [1.5.1],
-                      [acp_cv_xerces_c_version_okay], ,
+DPP_VERSION_CHECK_MSG([Xerces C++], [$xerces_ver_str], [1.7.0],
+                      [jccl_cv_xerces_c_version_okay], ,
                       [AC_MSG_ERROR([*** Xerces-C version too old ***])])
 
 # Finally, check that the library actually exists where we expect it to be.
 AC_CACHE_CHECK([for XMLPlatformUtils::Initialize in $XERCES_LIB],
-    [ac_cv_initialize_in_xerces_c],
-    [AC_TRY_LINK([#include <util/PlatformUtils.hpp> ],
+    [jccl_cv_initialize_in_xerces_c],
+    [AC_TRY_LINK([#include <xercesc/util/PlatformUtils.hpp> ],
                  [ XMLPlatformUtils::Initialize(); ],
-                 [ ac_cv_initialize_in_xerces_c='yes' ; rm -rf ./ii_files ],
+                 [ jccl_cv_initialize_in_xerces_c='yes' ; rm -rf ./ii_files ],
                  [AC_MSG_ERROR([*** Xerces-C library not found ***])])])
 
 DPP_LANG_RESTORE

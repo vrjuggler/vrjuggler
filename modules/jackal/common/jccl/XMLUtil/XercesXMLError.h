@@ -34,8 +34,8 @@
 #define _JCCL_XERCESXMLERROR_H_
 
 #include <jccl/jcclConfig.h>
-#include <util/XercesDefs.hpp>
-#include <sax/ErrorHandler.hpp>
+#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/sax/ErrorHandler.hpp>
 
 namespace jccl {
 
@@ -48,7 +48,7 @@ public:
 
     ~XercesXMLError()
     {
-    } 
+    }
 
 
     void warning(const SAXParseException& toCatch);

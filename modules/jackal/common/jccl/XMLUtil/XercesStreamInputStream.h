@@ -34,7 +34,7 @@
 #define _JCCL_XERCESSTREAMINPUTSTREAM_H_
 
 #include <jccl/jcclConfig.h>
-#include <util/BinInputStream.hpp>
+#include <xercesc/util/BinInputStream.hpp>
 
 namespace jccl {
 

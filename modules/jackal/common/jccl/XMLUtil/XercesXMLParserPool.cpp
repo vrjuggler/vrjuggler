@@ -32,7 +32,7 @@
 
 
 #include <jccl/XMLUtil/XercesXMLParserPool.h>
-#include <util/PlatformUtils.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 namespace jccl {
 
