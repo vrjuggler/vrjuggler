@@ -150,15 +150,17 @@ int PinchGlove::sample()
         if(i<5)
         {
             character[0]=gesture[i];
-            character[1]='\0';
-            number = atoi(character);
-            mDigitalData[i]=number;
+            //character[1]='\0';
+            //number = atoi(character);
+            number = character[0] - '0';
+	    mDigitalData[i]=number;
         }
         else if(i>5)
         {
             character[0]=gesture[i];
-            character[1]='\0';
-            number = atoi(character);
+            //character[1]='\0';
+            //number = atoi(character);
+               number = character[0] - '0';
             mDigitalData[i-1]=number;
         }
     }
