@@ -166,6 +166,28 @@ public class BeanContainer extends JScrollPane
       }
    }
 
+   public synchronized void addTweekFrameListener (TweekFrameListener l)
+   {
+      m_frame_listeners.add(l);
+   }
+
+   public synchronized void removeTweekFrameListener (TweekFrameListener l)
+   {
+      m_frame_listeners.removeElement(l);
+   }
+
+   public void fireFrameOpened ()
+   {
+      TweekFrameEvent e = new TweekFrameEvent(this, TweekFrameEvent.FRAME_OPEN);
+      fireFrameStateChangeEvent(e);
+   }
+
+   public void fireFrameClosed ()
+   {
+      TweekFrameEvent e = new TweekFrameEvent(this, TweekFrameEvent.FRAME_CLOSE);
+      fireFrameStateChangeEvent(e);
+   }
+
    /**
     * Implementation of BeanInstantiationListener.beanInstantiation().  Upon
     * instantiation of a JavaBean by the BeanTree, the Bean is inspected to
@@ -185,10 +207,16 @@ public class BeanContainer extends JScrollPane
             addCommunicationListener((CommunicationListener) bean);
          }
 
-         if ( Beans.isInstanceOf(bean, Class.forName("org.vrjuggler.tweek.beans.UserLevelChangeListener")) )
+         if ( Beans.isInstanceOf(bean, Class.forName("org.vrjuggler.tweek.event.UserLevelChangeListener")) )
          {
             System.out.println("Adding new UserLevelChangeListener");
             addUserLevelChangeListener((UserLevelChangeListener) bean);
+         }
+
+         if ( Beans.isInstanceOf(bean, Class.forName("org.vrjuggler.tweek.event.TweekFrameListener")) )
+         {
+            System.out.println("Adding new TweekFrameListener");
+            addTweekFrameListener((TweekFrameListener) bean);
          }
       }
       // This better not happen (i.e., org.vrjuggler.tweek.net.* and
@@ -203,12 +231,30 @@ public class BeanContainer extends JScrollPane
    {
    }
 
+   private void fireFrameStateChangeEvent (TweekFrameEvent e)
+   {
+      TweekFrameListener l = null;
+      Vector listeners;
+
+      synchronized (this)
+      {
+         listeners = (Vector) m_frame_listeners.clone();
+      }
+
+      for ( int i = 0; i < listeners.size(); i++ )
+      {
+         l = (TweekFrameListener) listeners.elementAt(i);
+         l.frameStateChanged(e);
+      }
+   }
+
    // ========================================================================
    // Private data members.
    // ========================================================================
 
    private Vector m_comm_listeners  = new Vector();
    private Vector m_level_listeners = new Vector();
+   private Vector m_frame_listeners = new Vector();
 
    private TreeModel m_data_model = null;
 }
