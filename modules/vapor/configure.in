@@ -276,6 +276,10 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
             AC_DEFINE(VPR_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
         fi
 
+        if test "x$PLATFORM" = "xLinux" ; then
+            AC_DEFINE(_GNU_SOURCE,)
+        fi
+
         USE_PTHREADS='yes'
         DPP_GET_POSIX_SEMAPHORE_LIB( ,
             AC_MSG_ERROR(*** POSIX semaphores are required for POSIX subsystem ***))
@@ -637,7 +641,7 @@ case $SUBSYSTEM in
         subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 
         if test "x$PLATFORM" != "xMacOX" ; then
-            if test "x$USE_GCC" = "xyes" ; then
+            if test "x$GXX" = "xyes" ; then
                 static_begin="-Wl,-Bstatic"
                 static_end="-Wl,-Bdynamic"
             else
@@ -664,7 +668,7 @@ case $SUBSYSTEM in
             vpr_libs='-lvpr'
 
             if test "x$PLATFORM" != "xDarwin" ; then
-                if test "x$USE_GCC" = "xyes" ; then
+                if test "x$GXX" = "xyes" ; then
                     static_begin="-Wl,-Bstatic"
                     static_end="-Wl,-Bdynamic"
                 else
