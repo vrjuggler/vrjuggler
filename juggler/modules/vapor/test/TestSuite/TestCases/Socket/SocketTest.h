@@ -277,11 +277,8 @@ public:
       vpr::SocketStream*	sock;
       sock = new vpr::SocketStream(vpr::InetAddr(port), vpr::InetAddr::AnyAddr);	
       if ( sock->openServer() ) {
-         sock->setReuseAddr(true);
          vpr::SocketStream* client_sock;
          thread_args_t* tArgs;
-
-         sock->setReuseAddr(true);
 
          while ( num<mNumSServer) {
             client_sock = sock->accept();
