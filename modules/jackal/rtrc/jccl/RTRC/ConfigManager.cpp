@@ -36,6 +36,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
+#include <vpr/DynLoad/LibraryLoader.h>
 #include <vpr/IO/Socket/InetAddr.h>
 
 #include <jccl/Config/ConfigElement.h>
@@ -147,8 +148,9 @@ void ConfigManager::loadRemoteReconfig()
    const std::string init_func("initPlugin");
    Callable functor(this);
    vpr::ReturnStatus status;
-   status = mPluginLoader.findAndInitDSO(reconfig_dso, search_path, init_func,
-                                         functor);
+   status = vpr::LibraryLoader::findDSOAndLookup(reconfig_dso, search_path,
+                                                 init_func, functor,
+                                                 mRemoteRtrcPlugin);
 
    if ( ! status.success() )
    {
