@@ -52,7 +52,7 @@
 #include <gmtl/Xforms.h>
 
 #include "snx/SoundFactory.h"
-#include "snx/plugins/AudioWorksSoundImplementation.h"
+#include "snx/plugins/AudioWorks/AudioWorksSoundImplementation.h"
 
 /////////////////////////
 // plugin API:
@@ -69,7 +69,9 @@ XDL_EXPORT void deletePlugin( snx::ISoundImplementation* &p ) { if (NULL == p) r
 
 namespace snx
 {
+#ifndef NO_SELF_REGISTER
    snx::SoundFactoryReg<AudioWorksSoundImplementation> audioworksRegistrator( "AudioWorks" );
+#endif
 
 
    /**

@@ -56,7 +56,7 @@
 #include "snx/SoundImplementation.h"
 #include "snx/SoundInfo.h"
 #include "snx/SoundFactory.h"
-#include "snx/plugins/SubsynthSoundImplementation.h"
+#include "snx/plugins/Subsynth/SubsynthSoundImplementation.h"
 
 /////////////////////////
 // plugin API:
