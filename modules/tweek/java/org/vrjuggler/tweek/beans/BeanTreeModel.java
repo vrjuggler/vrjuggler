@@ -98,6 +98,98 @@ public class BeanTreeModel
    }
 
    /**
+    * Gets the node that corresponds to the given path in the tree this model
+    * represents.
+    *
+    * @param path          the path to the node to retrieve
+    *
+    * @return  the node at the path if found; null if the path is invalid
+    */
+   public synchronized TreeNode getNode(String path)
+   {
+      DefaultMutableTreeNode root = (DefaultMutableTreeNode)getRoot();
+      return getNode(root, path);
+   }
+
+   /**
+    * A recursive helper method for getNode(String). This will recursively walk
+    * through the given path from the given parent node looking for the node
+    * corresponding to the path.
+    *
+    * @param parent        the parent node for the path
+    * @param path          the path corresponding to the parent
+    */
+   protected synchronized TreeNode getNode(DefaultMutableTreeNode parent,
+                                           String path)
+   {
+      // If the path is null, we found the node we're looking for
+      if (path == null)
+      {
+         return parent;
+      }
+
+      // Make sure this part of the path is valid
+      if (path.startsWith("/"))
+      {
+         int begin_index = 1;
+         int end_index = path.indexOf('/', 1);
+         String path_element, path_remainder;
+
+         // Check if this is the last node in the path
+         if (end_index == -1)
+         {
+            path_element = path.substring(begin_index);
+            path_remainder = null;
+         }
+         // Not the last node in the path
+         else
+         {
+            path_element = path.substring(begin_index, end_index);
+            path_remainder = path.substring(end_index);
+         }
+
+         // Find the child that corresponds to the current path_element
+         for (Enumeration children = parent.children(); children.hasMoreElements(); )
+         {
+            DefaultMutableTreeNode node =
+                  (DefaultMutableTreeNode)children.nextElement();
+            Object value = node.getUserObject();
+
+            // Figure out what type of node this is
+            if (value instanceof String)
+            {
+               // Node is just a sub-path
+               if (((String)value).equals(path_element))
+               {
+                  return getNode(node, path_remainder);
+               }
+            }
+            else if (value instanceof PanelBean)
+            {
+               // Node is a PanelBean (leaf node)
+               PanelBean bean = (PanelBean)value;
+               if (bean.getName().equals(path_element))
+               {
+                  return getNode(node, path_remainder);
+               }
+            }
+            else
+            {
+               System.err.println("WARNING: Invalid node '" + node + "'");
+            }
+         }
+         // Couldn't find that child
+         System.err.println("WARNING: Invalid tree path '" + path + "'");
+         return null;
+      }
+      else
+      {
+         System.err.println("WARNING: Invalid tree path '" + path + "'");
+         return null;
+      }
+   }
+
+   /**
     * Adds the given node to the given path of the tree this model represents.
     *
     * @param new_node      the node to add

@@ -140,6 +140,30 @@ public class TweekCore
       }
 
       m_gui.initGUI();
+
+      // Now select the default bean if necessary
+      if (defaultBean != null)
+      {
+         System.out.println("Trying to focus default bean: "+defaultBean);
+         TweekBean bean = BeanRegistry.instance().getBean(defaultBean);
+         // Valid the bean registered under the default bean's name
+         if (bean == null)
+         {
+            System.err.println("WARNING: Default bean doesn't exist");
+         }
+         else if (! (bean instanceof PanelBean))
+         {
+            System.err.println("WARNING: Default bean is not a panel bean");
+         }
+         else
+         {
+            ViewerBean viewer = m_gui.getBeanViewer();
+            if (viewer != null)
+            {
+               viewer.getViewer().focusBean((PanelBean)bean);
+            }
+         }
+      }
    }
 
    /**
@@ -227,6 +251,17 @@ public class TweekCore
    }
 
    /**
+    * Gets the name of the panel bean to select/instantiate by default when
+    * Tweek is started.
+    *
+    * @return  the name of the default bean; null if there is no default
+    */
+   public String getDefaultBean()
+   {
+      return defaultBean;
+   }
+
+   /**
     * Default constructor.
     */
    protected TweekCore ()
@@ -263,6 +298,11 @@ public class TweekCore
                (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
             prefs.setFileName(path);
          }
+         else if ( args[i].startsWith("--defaultbean=") )
+         {
+            int start = args[i].indexOf('=') + 1;
+            defaultBean = args[i].substring(start);
+         }
          else
          {
             save_args.add(args[i]);
@@ -293,6 +333,11 @@ public class TweekCore
    // ========================================================================
    // Private data members.
    // ========================================================================
+
+   /**
+    * The name of the panel bean to select by default when Tweek is started.
+    */
+   private String defaultBean = null;
 
    private List mBeanDirs = new ArrayList();
 

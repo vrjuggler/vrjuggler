@@ -79,6 +79,11 @@ public class BeanIconViewer
       mModel = model;
    }
 
+   public BeanTreeModel getModel()
+   {
+      return mModel;
+   }
+
    /**
     * @pre setDataModel has been called.
     */
@@ -97,6 +102,16 @@ public class BeanIconViewer
    public JComponent getViewer ()
    {
       return viewer;
+   }
+
+   /**
+    * Programmatically focuses the given panel bean in this viewer.
+    *
+    * @param bean       the bean to focus
+    */
+   public void focusBean(PanelBean bean)
+   {
+      System.err.println("BeanIconViewer.focusBean(PanelBean) not implemented");
    }
 
    public void beanRegistered (BeanRegistrationEvent e)

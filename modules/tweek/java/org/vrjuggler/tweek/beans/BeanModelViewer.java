@@ -47,7 +47,15 @@ public interface BeanModelViewer
    public javax.swing.JComponent getViewer();
    public void init(BeanTreeModel tree_model);
    public void setModel(BeanTreeModel tree_model);
+   public BeanTreeModel getModel();
    public void initGUI();
+
+   /**
+    * Programmatically focuses the given panel bean in this viewer.
+    *
+    * @param bean       the bean to focus
+    */
+   public void focusBean(PanelBean bean);
 
    public void addBeanFocusChangeListener(BeanFocusChangeListener l);
    public void removeBeanFocusChangeListener(BeanFocusChangeListener l);

@@ -80,11 +80,11 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       BeanRegistry registry = BeanRegistry.instance();
       if ( viewer != null )
       {
-         ViewerBean bean = (ViewerBean)registry.getBean( viewer );
+         mBeanViewer = (ViewerBean)registry.getBean( viewer );
 
-         if ( bean != null )
+         if ( mBeanViewer != null )
          {
-            BeanModelViewer bv = bean.getViewer();
+            BeanModelViewer bv = mBeanViewer.getViewer();
             mBeanContainer.replaceViewer(bv);
          }
          else
@@ -94,20 +94,26 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
             if ( viewers.size() > 0 )
             {
-               ViewerBean defaultBean = (ViewerBean) viewers.get(0);
-               mBeanContainer.replaceViewer((BeanModelViewer)defaultBean.getViewer() );
+               mBeanViewer = (ViewerBean) viewers.get(0);
+               mBeanContainer.replaceViewer((BeanModelViewer)mBeanViewer.getViewer() );
             }
             else
             {
                MessagePanel.instance().printWarning("WARNING: No Viewer Beans loaded");
+               mBeanViewer = null;
             }
          }
       }
       else
       {
-         ViewerBean defaultBean = (ViewerBean)registry.getBeansOfType( ViewerBean.class.getName() ).get( 0 );
-         mBeanContainer.replaceViewer((BeanModelViewer)defaultBean.getViewer() );
+         mBeanViewer = (ViewerBean)registry.getBeansOfType(ViewerBean.class.getName()).get(0);
+         mBeanContainer.replaceViewer((BeanModelViewer)mBeanViewer.getViewer());
       }
+   }
+
+   public ViewerBean getBeanViewer()
+   {
+      return mBeanViewer;
    }
 
    /**
@@ -803,6 +809,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    private BorderLayout  mContentPaneLayout = new BorderLayout();
    private JSplitPane    mMainPanel         = new JSplitPane();
    private BeanContainer mBeanContainer     = new BeanContainer();
+   private ViewerBean    mBeanViewer        = null;
 
    // Status bar stuff.
    private JPanel        mStatusBar        = new JPanel();
