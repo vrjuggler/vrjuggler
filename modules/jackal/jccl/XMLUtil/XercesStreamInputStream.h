@@ -39,7 +39,7 @@
 namespace jccl {
 
 //: Xerces-XML compatible BinInputStream wrapper for std::istream.
-class vjXercesStreamInputStream: public BinInputStream {
+class XercesStreamInputStream: public BinInputStream {
 
 private:
 
@@ -55,9 +55,9 @@ private:
 
 public:
 
-    vjXercesStreamInputStream (std::istream& _in, const char* _terminator);
+    XercesStreamInputStream (std::istream& _in, const char* _terminator);
 
-    virtual ~vjXercesStreamInputStream();
+    virtual ~XercesStreamInputStream();
 
     virtual unsigned int curPos() const;
 

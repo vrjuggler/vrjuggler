@@ -42,14 +42,14 @@
 
 namespace jccl {
 
-void vjXercesXMLError::warning(const SAXParseException&)
+void XercesXMLError::warning(const SAXParseException&)
 {
     //
     // Ignore all warnings.
     //
 }
 
-void vjXercesXMLError::error(const SAXParseException& toCatch)
+void XercesXMLError::error(const SAXParseException& toCatch)
 {
 //      cerr << "Error at file \"" << DOMString(toCatch.getSystemId())
 //  		 << "\", line " << toCatch.getLineNumber()
@@ -61,7 +61,7 @@ void vjXercesXMLError::error(const SAXParseException& toCatch)
                                        //   the catch.
 }
 
-void vjXercesXMLError::fatalError(const SAXParseException& toCatch)
+void XercesXMLError::fatalError(const SAXParseException& toCatch)
 {
 //      cerr << "Fatal Error at file \"" << DOMString(toCatch.getSystemId())
 //  		 << "\", line " << toCatch.getLineNumber()
@@ -70,7 +70,7 @@ void vjXercesXMLError::fatalError(const SAXParseException& toCatch)
     throw SAXParseException(toCatch);
 }
 
-void vjXercesXMLError::resetErrors()
+void XercesXMLError::resetErrors()
 {
     // No-op in this case
 }

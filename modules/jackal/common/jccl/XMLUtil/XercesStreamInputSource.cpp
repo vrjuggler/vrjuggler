@@ -35,17 +35,17 @@
 
 namespace jccl {
 
-vjXercesStreamInputSource::vjXercesStreamInputSource (std::istream& _in, char const * _terminator) {
+XercesStreamInputSource::XercesStreamInputSource (std::istream& _in, char const * _terminator) {
     in = &_in;
     terminator = strdup (_terminator);
 }
 
-/*virtual*/ vjXercesStreamInputSource::~vjXercesStreamInputSource () {
+/*virtual*/ XercesStreamInputSource::~XercesStreamInputSource () {
     free (terminator);
 }
 
-/*virtual*/ BinInputStream* vjXercesStreamInputSource::makeStream() const {
-    return new vjXercesStreamInputStream (*in, terminator);
+/*virtual*/ BinInputStream* XercesStreamInputSource::makeStream() const {
+    return new XercesStreamInputStream (*in, terminator);
 }
 
 
