@@ -29,7 +29,7 @@ ifndef FILE_PERMS
 endif
 
 ifndef GROUP_NAME
-    GROUP_NAME	= c2dev
+    GROUP_NAME	= vrjuggler
 endif
 
 INSTALL_DEPS	?=

@@ -3,7 +3,7 @@
 #
 # $Id$
 
-/set type=dir mode=0775 gname=c2dev
+/set type=dir mode=0775 gname=vrjuggler
 .
     lib64
 	mips3
