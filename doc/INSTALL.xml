@@ -129,9 +129,12 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       system will not compile with MS Visual Studio 6.0, and as a result, we
       currently require the use of Visual Studio 7 (.NET) to compile the
       source code. We understand that this is an inconvenience, and we are
-      interested in methods for compiling the code with Visual Studio 6.
-      However, due to VC6's poor support for templates and the C++ standard in
-      general, users need to be aware that it may not be possible.</para>
+      interested in methods for compiling the code with Visual Studio 6.0.
+      However, Microsoft <ulink url="http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q243/4/51.asp&NoWebContent=1">acknowledges</ulink> 
+      issues concerning noncompliance to the C++ Standard with Visual Studio 
+      6.0, and it appears Microsoft has no plans to fix these problems;
+      users need to be aware that it may not be possible to compile 
+      VR Juggler 1.1 using Visual Studio 6.0.</para>  
     </section>
   </section>
 
