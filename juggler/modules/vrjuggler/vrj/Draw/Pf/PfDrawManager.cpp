@@ -55,6 +55,7 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Draw/Pf/PfDrawManager.h>
 #include <vrj/Draw/Pf/PfApp.h>
+#include <vrj/Draw/Pf/PfSimInterface.h>
 #include <vrj/Util/Debug.h>
 
 #include <vrj/Display/Display.h>
