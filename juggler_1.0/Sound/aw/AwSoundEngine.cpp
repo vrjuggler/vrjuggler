@@ -60,6 +60,8 @@ void AwSoundEngine::init( const char* const adfFileName )
           <<"[aw] !!!         !!!:   functions will work (like setPosition). \n"
           <<"[aw] \n"<<flush;
    }
+   
+   //this->setPosition( 0.0f, 0.0f, 0.0f );
 }
 
 // lookup a filename, given the sound's alias.
