@@ -162,7 +162,7 @@ struct PerfCatRegistrator
 {
     PerfCatRegistrator(const vpr::GUID& catGuid, const std::string& catName)
     {
-        PerformanceCategories::instance()->addCategory(catGuid, catName);
+      PerformanceCategories::instance()->addCategory(catGuid, catName);
     }
 };
 
