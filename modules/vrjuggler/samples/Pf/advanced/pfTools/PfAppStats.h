@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_PF_APP_STATS_
-#define _VJ_PF_APP_STATS_
+#ifndef _VRJ_PF_APP_STATS_
+#define _VRJ_PF_APP_STATS_
 
-#include <Input/InputManager/vjDigitalInterface.h>
-#include <Input/InputManager/vjDigitalProxy.h>
+#include <vrj/Input/Type/DigitalInterface.h>
+#include <vrj/Input/Type/DigitalProxy.h>
 #include <Performer/pf/pfChannel.h>
 #include <Performer/pfutil.h>
 #include <pfMPStats.h>

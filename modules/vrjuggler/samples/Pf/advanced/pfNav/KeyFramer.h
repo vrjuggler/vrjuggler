@@ -3,10 +3,10 @@
 #define KEY_FRAMER
 
 #include <map>
-#include "Math/vjVec3.h"
-#include "Math/vjQuat.h"
-#include "Math/vjMatrix.h"
-#include "Math/vjMath.h"
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Quat.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Math/Math.h>
 
 namespace kev
 {
@@ -36,7 +36,7 @@ namespace kev
          }  
                 
          // matrix constructor
-         Key( const float& timeVal, const Matrix& mat )
+         Key( const float& timeVal, const vrj::Matrix& mat )
          {
             assert( timeVal >= 0 && "Keyframes always have positive time value" );
             mTime = timeVal;
@@ -44,7 +44,7 @@ namespace kev
             mPos = mat.getTrans();
          }
          // pos/quat constructor
-         Key( const float& timeVal, const Vec3& pos, const Quat& rot )
+         Key( const float& timeVal, const vrj::Vec3& pos, const vrj::Quat& rot )
          {
             assert( timeVal >= 0 && "Keyframes always have positive time value" );
             mTime = timeVal;
@@ -53,17 +53,17 @@ namespace kev
          }
          // accessors
          const float&    time() const { return mTime; }
-         const Quat&   rotation() const { return mRot; }
-         const Vec3&   position() const { return mPos; }
+         const vrj::Quat&   rotation() const { return mRot; }
+         const vrj::Vec3&   position() const { return mPos; }
          float&          time() { return mTime; }
-         Quat&         rotation() { return mRot; }
-         Vec3&         position() { return mPos; }
+         vrj::Quat&         rotation() { return mRot; }
+         vrj::Vec3&         position() { return mPos; }
          
          // quat/pos -> matrix conversion
-         void getMatrix( Matrix& mat ) const
+         void getMatrix( vrj::Matrix& mat ) const
          {
-            Matrix rot;
-            Matrix pos;
+            vrj::Matrix rot;
+            vrj::Matrix pos;
             
             rot.makeQuaternion( mRot );
             pos.makeTrans( mPos );
@@ -76,8 +76,8 @@ namespace kev
          
       private:
          float       mTime;
-         Quat      mRot;
-         Vec3      mPos;
+         vrj::Quat      mRot;
+         vrj::Vec3      mPos;
       };
    
       //: default constructor
@@ -195,10 +195,10 @@ namespace kev
       const Key& key() const { return mCurrentKey; }
       
       //: get the current interpolated key's quaternion rotation
-      const Quat& rotation() const { return mCurrentKey.rotation(); }
+      const vrj::Quat& rotation() const { return mCurrentKey.rotation(); }
       
       //: get the current interpolated key's position
-      const Vec3& position() const { return mCurrentKey.position(); }
+      const vrj::Vec3& position() const { return mCurrentKey.position(); }
       
       //: get the time of the current interpolated key
       const float& time() const
@@ -208,7 +208,7 @@ namespace kev
       }
       
       //: get the current interpolated key's matrix transform
-      void getMatrix( Matrix& mat ) const { mCurrentKey.getMatrix( mat ); }
+      void getMatrix( vrj::Matrix& mat ) const { mCurrentKey.getMatrix( mat ); }
       
       //: update func.
       void update( float timeOfKey )
@@ -305,7 +305,7 @@ public:
          float time_needed( timeNeeded );
          assert( (time_needed >= keyTwo.time() && time_needed <= keyOne.time()) ||
                  (time_needed >= keyOne.time() && time_needed <= keyTwo.time()) && "time_needed need to be in between the two times" );
-         float size = Math::abs( keyTwo.time() - keyOne.time() );
+         float size = vrj::Math::abs( keyTwo.time() - keyOne.time() );
 
          // degenerate case where you're interpolating between two keys of the same size..
          if (size <= 0.00001f)
@@ -315,11 +315,11 @@ public:
          }
 
          // find the distance between [keyOneTime, time_needed, keyTwoTime] to  [0, normalize, 1]
-         time_needed -= Math::Min( keyOne.time(), keyTwo.time() );
+         time_needed -= vrj::Math::Min( keyOne.time(), keyTwo.time() );
          float normalize = time_needed / size;
 
          // interpolate.
-         Math::lerp( resultingKey.time(), normalize, keyOne.time(), keyTwo.time() );
+         vrj::Math::lerp( resultingKey.time(), normalize, keyOne.time(), keyTwo.time() );
          resultingKey.position().lerp( normalize, keyOne.position(), keyTwo.position() );
 	      resultingKey.rotation().slerp( normalize, keyOne.rotation(), keyTwo.rotation() );
       }

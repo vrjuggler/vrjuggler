@@ -1,8 +1,8 @@
-#include "vjConfig.h" // for DEG2RAD macro
+#include <vrj/vjConfig.h> // for DEG2RAD macro
 #include <fstream.h>		// for ifstream
 #include "KeyFramer.h"
-#include "Kernel/vjDebug.h"
-#include "Math/vjMath.h"
+#include <vrj/Util/Debug.h>
+#include <vrj/Math/Math.h>
 
 namespace kev
 {
@@ -17,18 +17,18 @@ namespace kev
       {
          float w, x, y, z;
          key.rotation().getRot( w, x, y, z );
-         vjDEBUG(vjDBG_ALL,1)<<"KEY "<<key.time()<<": "<<key.position()[0]<<", \t"<<key.position()[1]<<", \t"<<key.position()[2]<<", |#| "<<Math::rad2deg( w )<<", "<<x<<", "<<y<<", "<<z<<"\n"<<vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,1)<<"KEY "<<key.time()<<": "<<key.position()[0]<<", \t"<<key.position()[1]<<", \t"<<key.position()[2]<<", |#| "<<vrj::Math::rad2deg( w )<<", "<<x<<", "<<y<<", "<<z<<"\n"<<vjDEBUG_FLUSH;
       }
    
       void execute( const char* const filename, kev::KeyFramer& kf )
       {
          kf.clear();
          
-         #ifdef WIN32
-		   ifstream frames_file( filename, ios::in | ios::nocreate | ios::binary, filebuf::openprot );
-		   #else
-		   ifstream frames_file( filename, ios::in | ios::nocreate, filebuf::openprot );
-		   #endif
+#ifdef WIN32
+         ifstream frames_file( filename, ios::in | ios::nocreate | ios::binary, filebuf::openprot );
+#else
+         ifstream frames_file( filename, ios::in | ios::nocreate, filebuf::openprot );
+#endif
 
          if (!frames_file.rdbuf()->is_open())
          {
@@ -45,8 +45,8 @@ namespace kev
          
          float time;
          float deg;
-         Vec3 vec;
-         Vec3 pos;
+         vrj::Vec3 vec;
+         vrj::Vec3 pos;
          while (!frames_file.eof())
          {
             frames_file>>time;
@@ -60,8 +60,8 @@ namespace kev
             frames_file>>pos[0]>>pos[1]>>pos[2]>>deg>>vec[0]>>vec[1]>>vec[2];
             
             // convert [TWIST, VEC] to Quat
-            Quat rot;
-            float rad = Math::deg2rad( deg );
+            vrj::Quat rot;
+            float rad = vrj::Math::deg2rad( deg );
             rot.makeRot( rad, vec[0], vec[1], vec[2] );
          
             kev::KeyFramer::Key key( time, pos, rot );
