@@ -9,6 +9,14 @@
 
 vjDisplayManager* vjDisplayManager::_instance = NULL;
 
+std::vector<vjDisplay*> vjDisplayManager::getAllDisplays()
+{
+   std::vector<vjDisplay*> ret_val = mActiveDisplays;
+   ret_val.insert(ret_val.end(), mInactiveDisplays.begin(), mInactiveDisplays.end());
+   return ret_val;
+}
+
+
 void vjDisplayManager::setDrawManager(vjDrawManager* drawMgr)
 { mDrawManager = drawMgr; }
 
@@ -24,17 +32,17 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
 
    if((std::string)(char*)chunk->getType() == std::string("surfaceDisplay"))      // Surface DISPLAY
    {
-      vjDisplay* newDisp = new vjSurfaceDisplay();     // Create display
-      newDisp->config(chunk);                   // Config it
-      addDisplay(newDisp);      // Add it
+      vjDisplay* newDisp = new vjSurfaceDisplay();    // Create display
+      newDisp->config(chunk);                         // Config it
+      addDisplay(newDisp);                            // Add it
       vjDEBUG(1) << "Display: "  << *newDisp << endl << flush << vjDEBUG_FLUSH;
    }
 
    if((std::string)(char*)chunk->getType() == std::string("simDisplay"))      // Surface DISPLAY
    {
       vjDisplay* newDisp = new vjSimDisplay();     // Create display
-      newDisp->config(chunk);                   // Config it
-      addDisplay(newDisp);      // Add it
+      newDisp->config(chunk);                      // Config it
+      addDisplay(newDisp);                         // Add it
       vjDEBUG(1) << "Display: "  << *newDisp << endl << flush << vjDEBUG_FLUSH;
    }
 
@@ -71,8 +79,12 @@ int vjDisplayManager::addDisplay(vjDisplay* disp, bool notifyDrawMgr)
    // - There is a lot of kernel, app, draw manager going on here that needs ironed out
    //vjASSERT(mDrawManager != NULL);     // If draw mgr is null, then we can't update it.
 
-   // For now just do this
-   mDisplays.push_back(disp);
+   // Test if active or not, to determine correct list
+   // The place it in the list
+   if(disp->isActive())
+      mActiveDisplays.push_back(disp);
+   else
+      mInactiveDisplays.push_back(disp);
 
    // --- Update Local Display structures
    //Open new window object;
@@ -85,6 +97,7 @@ int vjDisplayManager::addDisplay(vjDisplay* disp, bool notifyDrawMgr)
    return 1;
 }
 
+/*
 int vjDisplayManager::closeDisplay(int dispId)
 {
    //Tell draw manager to kill Display;
@@ -92,17 +105,23 @@ int vjDisplayManager::closeDisplay(int dispId)
 
    return 1;
 }
+*/
 
+/*
 vjDisplay* vjDisplayManager::getDisplay(int dispId)
 {
     return mDisplays[dispId];
 }
+*/
 
 void vjDisplayManager::updateProjections()
 {
    // for (all displays) update the projections
-   for (std::vector<vjDisplay*>::iterator i = mDisplays.begin(); i != mDisplays.end(); i++)
+   for (std::vector<vjDisplay*>::iterator i = mActiveDisplays.begin(); i != mActiveDisplays.end(); i++)
       (*i)->updateProjections();
+
+   for (std::vector<vjDisplay*>::iterator j = mInactiveDisplays.begin(); j != mInactiveDisplays.end(); j++)
+      (*j)->updateProjections();
 }
 
 
