@@ -1183,7 +1183,7 @@ install-test:
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/test	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/test
+          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/test
 	${PERL} ${scriptdir}/makefiles-gen.pl --mode="${FILE_PERMS}"	\
           --prefix="${datadir}/test" --vars="${topdir}/VARS.pl"		\
           --startdir="${top_srcdir}/test" ${_GROUP_OPT_PL} --srcdir="."
