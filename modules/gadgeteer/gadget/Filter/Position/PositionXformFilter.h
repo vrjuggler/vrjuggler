@@ -35,9 +35,9 @@
 #include <gadget/gadgetConfig.h>
 #include <typeinfo>
 
-#include <gadget/Type/Position.h>
+#include <jccl/Config/ConfigChunkPtr.h>
+#include <gadget/Filter/Position/PositionFilter.h>
 #include <gadget/Type/PositionData.h>
-#include <gadget/Type/SampleBuffer.h>
 
 #include <gmtl/Matrix.h>
 #include <vpr/Util/Debug.h>

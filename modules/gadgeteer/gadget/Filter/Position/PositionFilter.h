@@ -35,9 +35,8 @@
 #include <gadget/gadgetConfig.h>
 #include <typeinfo>
 
-#include <gadget/Type/Position.h>
 #include <gadget/Type/PositionData.h>
-#include <gadget/Type/SampleBuffer.h>
+//#include <gadget/Type/SampleBuffer.h>
 
 #include <gmtl/Matrix.h>
 #include <vpr/Util/Debug.h>
@@ -51,7 +50,7 @@ namespace gadget
 class GADGET_CLASS_API PositionFilter
 {
 public:
-   typedef gadget::SampleBuffer<PositionData> SampleBuffer_t;   
+//   typedef gadget::SampleBuffer<PositionData> SampleBuffer_t;   
 
 public:
    /** Constructor */
