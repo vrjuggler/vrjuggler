@@ -35,9 +35,9 @@ private:
     vjVarValue val;
 
 public:
-    vjEnumEntry (const std::string& e, int v): val(T_INT) {
-	entry = e;
-	val = v;
+    vjEnumEntry (const std::string& _entry, vjVarValue _val): val(T_INT) {
+	entry = _entry;
+	val = _val;
     }
 
     std::string getName () {
@@ -46,6 +46,23 @@ public:
 
     vjVarValue& getValue () {
 	return val;
+    }
+
+    friend ostream& operator << (ostream& out, vjEnumEntry& e) {
+	switch (e.val.getType()) {
+	case T_INT:
+	case T_FLOAT:
+	case T_BOOL:
+	    out << '"' << e.entry << '=' << e.val << '"';
+	    break;
+	default:
+	    if ((std::string)e.val == "" || (std::string)e.val == e.entry)
+		out << '"' << e.entry << '"';
+	    else
+		out << '"' << e.entry << '=' << e.val << '"';
+	    break;
+	}
+	return out;
     }
 };
 

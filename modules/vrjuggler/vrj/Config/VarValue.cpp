@@ -290,29 +290,66 @@ vjVarValue &vjVarValue::operator = (float i) {
 
 
 
-vjVarValue &vjVarValue::operator = (std::string s) {
-    switch (type) {
-    case T_STRING:
-    case T_CHUNK:
-	strval = s;
-	break;
-    default:
-	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
-    }
-    return *this;
+vjVarValue &vjVarValue::operator = (const std::string& s) {
+    return *this = s.c_str();
+//      switch (type) {
+//      case T_STRING:
+//      case T_CHUNK:
+//          strval = s;
+//  	break;
+//      default:
+//  	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
+//      }
+//      return *this;
 }
 
 
 
-vjVarValue &vjVarValue::operator = (char *s) {
+vjVarValue &vjVarValue::operator = (const char *val) {
+    bool err = false;
+    char* endval;
+    int i;
+    float f;
+    bool b;
+
     switch (type) {
     case T_STRING:
     case T_CHUNK:
-	strval = s;
+        strval = val;
 	break;
+    case T_INT:
+	i = strtol (val, &endval, 0);
+        if (*endval == '\0')
+            intval = i;
+        else
+            err = true;
+	break;
+    case T_FLOAT:
+	f = (float)strtod (val, &endval);
+	if (*endval == '\0')
+            floatval = f;
+        else
+            err = true;
+	break;
+    case T_BOOL:
+	if (!strcasecmp (val, "true"))
+	    boolval = true;
+	else if (!strcasecmp (val, "false"))
+	    boolval = false;
+	else { // we'll try to accept a numeric value
+	    b = strtol (val, &endval, 0);
+	    if (*endval == '\0')
+	        boolval = b;
+	    else
+		err = true;
+	}
+	break; 
     default:
-	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
     }
+    if (err) 
+        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: couldn't assign string '" 
+                               << val << "'.\n" << vjDEBUG_FLUSH;
     return *this;
 }
 

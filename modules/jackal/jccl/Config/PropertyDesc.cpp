@@ -107,16 +107,9 @@ ostream& operator << (ostream& out, vjPropertyDesc& self) {
 
     /* print enumeration only if we have values. */
     if (self.enumv.size() > 0) {
-	vjEnumEntry *e;
 	out << " vj_enumeration { ";
-	for (int i = 0; i < self.enumv.size(); i++) {
-	    e = self.enumv[i];
-	    out << '"' << e->getName();
-	    if ((self.type != T_STRING) && (self.type != T_CHUNK) &&
-		(self.type != T_EMBEDDEDCHUNK))
-		out << "=" << e->getValue();
-	    out << "\" ";
-	}
+	for (int i = 0; i < self.enumv.size(); i++)
+	    out << *(self.enumv[i]) << ' ';
 	out << "}";
     }
 
@@ -170,30 +163,25 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 	readString (in, str, size);
     if (!strcasecmp (str, "{")) {
 	//cout << "parsing enumerations" << endl;
-	if (self.type == T_BOOL) {
-	    vjDEBUG(vjDBG_ERROR,1) << "ERROR: " << self.name << ": Enumerations not supported for "
-		"boolean types.\n" << vjDEBUG_FLUSH;
-	    do {
-		readString (in, str, size);
-	    } while (!strcasecmp (str, "}") && !in.eof());
-	}
-	else {
-	    int j, i = 0;
-	    vjEnumEntry *e;
-	    readString (in, str, size);
-	    while (strcasecmp (str, "}") && !in.eof()) {
-		if (self.type == T_INT)
-		    for (j = 0; j < strlen(str); j++) {
-			if (str[j] == '=') {
-			    i = atoi (str+j+1);
-			    str[j] = '\0';
-			    break;
-			}
-		    }
-		e = new vjEnumEntry (str, i++);
-		self.enumv.push_back (e);
-		readString (in, str, size);
+	int j, i = 0;
+	vjEnumEntry *e;
+	readString (in, str, size);
+	while (strcmp (str, "}") && !in.eof()) {
+	    vjVarValue v(self.type);
+	    char* c = strstr (str, "=");
+	    if (c) {
+		*c = '\0';
+		v = (c+1);
 	    }
+	    else {
+		if (self.type == T_STRING || self.type == T_CHUNK || 
+		    self.type == T_EMBEDDEDCHUNK)
+		    v = str;
+		else
+		    v = i++;
+	    }
+	    self.enumv.push_back (new vjEnumEntry (str, v));
+	    readString (in, str, size);
 	}
 	readString (in, str, size);
     }
