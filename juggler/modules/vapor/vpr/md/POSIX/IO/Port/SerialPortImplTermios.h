@@ -188,6 +188,21 @@ public:
    vpr::ReturnStatus open(void);
 
    /**
+    * Clears all of the serial port's flags
+    *
+    * @pre This serial port is already open.
+    * @post An attempt is made to change the flags.  If it is successful, the
+    *       port's flags are initaialized to 0.  The resulting status is
+    *       returned to the caller.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the serial port was opened
+    *         successfully.
+    *         vpr::ReturnStatus::Fail is returned otherwise.
+    */
+   vpr::ReturnStatus clearAll (void);
+
+
+   /**
     * Closes the serial port.
     *
     * @pre This serial port is open.
@@ -474,6 +489,40 @@ public:
     *         operation.
     */
    vpr::ReturnStatus disableRead(void);
+   
+   /**
+    * Gets the current CLOCAL state for the port.
+    *
+    * @pre This serial port is open.
+    * @post The CLOCAL state (either enabled or disabled) is returned to the
+    *       caller.
+    *
+    * @return true is returned if CLOCAL is ON.  false is
+    *         returned otherwise.
+    */
+   bool getLocalState(void);
+
+   /**
+    * Enables CLOCAL.
+    *
+    * @pre This serial port is open.
+    * @post An attempt is made to enable CLOCAL.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
+   vpr::ReturnStatus enableLocal(void);
+
+   /**
+    * Disables CLOCAL.
+    *
+    * @pre This serial port is open.
+    * @post An attempt is made to disable CLOCAL.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
+   vpr::ReturnStatus disableLocal(void);
 
    /**
     * Gets the number of stop bits in use.  This will be either 1 or 2.
@@ -575,6 +624,42 @@ public:
    //! @return A vpr::ReturnStatus object describing the results of the operation.
    // ------------------------------------------------------------------------
    vpr::ReturnStatus disableBadByteIgnore(void);
+   
+   ///////----------------->>>>>    TODO          <<<<<---------------
+
+   // ------------------------------------------------------------------------
+   //: Get the current state of ignoring BREAK bytes
+   // 
+   //
+   //! @pre This serial port is open.
+   //! @post The BREAK byte ignore state is returned to the caller.
+   //
+   //! @return true  - Bad bytes are ignored.
+   //! @return false - Bad bytes are not ignored.
+   // ------------------------------------------------------------------------
+   bool getBreakByteIgnoreState(void);
+
+   // ------------------------------------------------------------------------
+   //: Enable ignoring of received BREAK bytes
+   //
+   //
+   //! @pre This serial port is open.
+   //! @post BREAK byte ignoring is enabled.
+   //
+   //! @return A vpr::ReturnStatus object describing the results of the operation.
+   // ------------------------------------------------------------------------
+   vpr::ReturnStatus enableBreakByteIgnore(void);
+
+   // ------------------------------------------------------------------------
+   //: Disable ignoring of received BREAK bytes
+   //
+   //
+   //! @pre This serial port is open.
+   //! @post BREAK byte ignoring is disabled.
+   //
+   //! @return A vpr::ReturnStatus object describing the results of the operation.
+   // ------------------------------------------------------------------------
+   vpr::ReturnStatus disableBreakByteIgnore(void);
 
    // ------------------------------------------------------------------------
    //: Get the state of parity checking for input.
