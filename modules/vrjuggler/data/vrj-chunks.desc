@@ -73,6 +73,10 @@ The filters are applied in the order that they are specified in this configurati
       <help>the actual analog data values range - upper bound</help>
       <item label="Range Maximum" defaultvalue="255.0" />
     </PropertyDesc>
+    <PropertyDesc token="initial_value" name="Initial Value" type="float" variable="0">
+      <help>The initial value of all the analog inputs on this device.</help>
+      <item label="Initial Value" defaultvalue="0.0" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="AwSoundEngine" name="Audioworks Sound Engine">
     <category>Audio</category>
