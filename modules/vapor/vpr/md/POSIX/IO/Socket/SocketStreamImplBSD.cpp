@@ -87,7 +87,7 @@ vpr::ReturnStatus SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::In
    int accept_sock;
    vpr::ReturnStatus retval;
    InetAddr addr;
-#ifdef VPR_OS_IRIX
+#if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
    int addrlen;
 #else
    socklen_t addrlen;
