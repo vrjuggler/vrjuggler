@@ -44,6 +44,9 @@
 
 #include <vpr/vprConfig.h>
 
+#include <iostream>
+#include <iomanip>
+
 #ifdef VPR_OS_Win32
 #  include <process.h>
 #endif
