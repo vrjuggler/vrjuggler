@@ -101,13 +101,14 @@ public class ConfigContextEditor
                   return;
                }
 
-               Color start_color = UIManager.getColor("desktop");
+               Color start_color = UIManager.getColor("Tree.selectionBackground");
 
                if ( null == start_color )
                {
                   start_color = new Color(160, 160, 180);
-                  System.out.println("Could not get the color 'desktop' " +
-                                     "from the UIManager.");
+                  System.out.println("Could not get the color " +
+                                     "'Tree.selectionBackground' from the " +
+                                     "UIManager.");
                }
 
                // Create a new PropertySheet for the given ConfigElement.
@@ -146,12 +147,13 @@ public class ConfigContextEditor
          ConfigElement elt = (ConfigElement)elts.get(0);
 
          // Create a PropertySheet for the default selected ConfigElement.
-         Color start_color = UIManager.getColor("desktop");
+         Color start_color = UIManager.getColor("Tree.selectionBackground");
 
          if ( null == start_color )
          {
             start_color = new Color(160, 160, 180);
-            System.out.println("Could not get the color 'desktop' from the " +
+            System.out.println("Could not get the color " +
+                               "'Tree.selectionBackground' from the " +
                                "UIManager.");
          }
 
