@@ -195,14 +195,21 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level, c
 
 void Debug::addCategory(const vpr::DebugCategory& catId)
 {
-   std::cout << "\nAdding category named '" << catId.mName << "'  -- prefix: " << catId.mPrefix <<  " -- guid: " << catId.mGuid
-             << " to debug categories:" << &mCategories << " size: " << mCategories.size() << std::endl;
+   if(getLevel() > 4)
+   {
+      std::cout << "\nAdding category named '" << catId.mName << "'  -- prefix: " << catId.mPrefix <<  " -- guid: " << catId.mGuid
+               << " to debug categories:" << &mCategories << " size: " << mCategories.size() << std::endl;
+   }
    mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId.mGuid, 
                                                          CategoryInfo(catId.mName, catId.mPrefix, false, false)));
-   std::cout << "new size: " << mCategories.size() << std::endl;
-   debugDump();
+   if(getLevel() > 4)
+   {
+      std::cout << "new size: " << mCategories.size() << std::endl;
+      debugDump();
+   }
    updateAllowedCategories();
-   debugDump();
+   if(getLevel() > 4)
+      debugDump();
 }
 
 
@@ -260,8 +267,11 @@ void Debug::updateAllowedCategories()
    char* dbg_allow_cats_env = getenv("VPR_DEBUG_ALLOW_CATEGORIES");
    char* dbg_disallow_cats_env = getenv("VPR_DEBUG_DISALLOW_CATEGORIES");
 
-   std::cout << "updateAllowedCategories" << std::endl;
-   std::cout << "   updateAllowedCat: Trying to find vprDBG_ALL. guid [" << vprDBG_ALL.mGuid << "] " << std::endl;
+   if(getLevel() > 4)
+   {
+      std::cout << "updateAllowedCategories" << std::endl;
+      std::cout << "   updateAllowedCat: Trying to find vprDBG_ALL. guid [" << vprDBG_ALL.mGuid << "] " << std::endl;
+   }
 
    // Get cat info for vprDBG_ALL
    // Auto-register vprDBG_ALL if needed
@@ -284,7 +294,9 @@ void Debug::updateAllowedCategories()
    {
      (*cat_all).second.mAllowed = false;       // Disable the showing of all for now
 
-      std::cout << "   vprDEBUG::Found VPR_DEBUG_ALLOW_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;
+      if(getLevel() > 4)
+         std::cout << "   vprDEBUG::Found VPR_DEBUG_ALLOW_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;
+
       std::string dbg_cats(dbg_allow_cats_env);
 
       // For each currently known category name
@@ -294,30 +306,43 @@ void Debug::updateAllowedCategories()
          std::string cat_name = (*i).second.mName;
          if (dbg_cats.find(cat_name) != std::string::npos )    // Found one
          {
-            std::cout << "   vprDEBUG::updateAllowedCategories: Allowing: "
+            if(getLevel() > 2)
+            {
+               std::cout << "   vprDEBUG::updateAllowedCategories: Allowing: "
                       << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
-                      << std::endl << std::flush;            
+                      << std::endl << std::flush;
+            }
             (*i).second.mAllowed = true;
          }
          else
          {
-            //std::cout << "vprDEBUG::updateAllowedCategories: Not found (to allow): "
-            //          << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
-            //          << std::endl << std::flush;
+            if(getLevel() > 4)
+            {
+              std::cout << "vprDEBUG::updateAllowedCategories: Not found (to allow): "
+                        << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
+                        << std::endl << std::flush;
+            }
          }
       }
    }
    else
    {
-      std::cout << "   vprDEBUG::VPR_DEBUG_ALLOW_CATEGORIES not found:\n"
-                << " Setting to: vprDBG_ALL!" << std::endl << std::flush;
+      if(getLevel() > 2)
+      {
+         std::cout << "   vprDEBUG::VPR_DEBUG_ALLOW_CATEGORIES not found:\n"
+                  << " Setting to: vprDBG_ALL!" << std::endl << std::flush;
+      }
       (*cat_all).second.mAllowed = true;       // Enable the showing of all for now      
    }   
 
    // --- Setup dis-allowed categories --- //
    if(dbg_disallow_cats_env != NULL)
    {
-      std::cout << "   vprDEBUG::Found VPR_DEBUG_DISALLOW_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;
+      if(getLevel() > 2)
+      {
+         std::cout << "   vprDEBUG::Found VPR_DEBUG_DISALLOW_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;         
+      }
+
       std::string dbg_disallow_cats(dbg_disallow_cats_env);
 
       // For each currently known category name
@@ -327,22 +352,31 @@ void Debug::updateAllowedCategories()
          std::string cat_name = (*i).second.mName;
          if (dbg_disallow_cats.find(cat_name) != std::string::npos )    // Found one
          {
-            std::cout << "   vprDEBUG::updateAllowedCategories: Dis-allowing: "
-                      << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
-                      << std::endl << std::flush;            
+            if(getLevel() > 2)
+            {
+               std::cout << "   vprDEBUG::updateAllowedCategories: Dis-allowing: "
+                         << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
+                         << std::endl << std::flush;
+            }
             (*i).second.mDisallowed = true;
          }
          else
          {
-            //std::cout << "vprDEBUG::updateAllowedCategories: Not found (to allow): "
-            //          << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
-            //          << std::endl << std::flush;
+            if(getLevel() > 4)
+            {
+               std::cout << "vprDEBUG::updateAllowedCategories: Not found (to allow): "
+                         << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
+                         << std::endl << std::flush;
+            }
          }
       }
    }
    else
    {
-      std::cout << "   vprDEBUG::VPR_DEBUG_DISALLOW_CATEGORIES not found." << std::flush;      
+      if(getLevel() > 2)
+      {
+         std::cout << "   vprDEBUG::VPR_DEBUG_DISALLOW_CATEGORIES not found." << std::flush;      
+      }
    } 
    
 }
