@@ -14,7 +14,7 @@ PDF_FILES=	$(NAME).pdf
 VRJ_VERSION=	1.1-DR1
 
 # Fill these in!!  Together, they make up the installation prefix.
-webroot=	$(HOME)/public_html/phpjug
+webroot=	$(HOME)/public_html/jugglerweb
 instdir=	docs/juggler.team.guide
 
 prefix=		$(webroot)/$(instdir)
