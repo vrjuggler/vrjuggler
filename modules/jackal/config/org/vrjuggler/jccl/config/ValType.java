@@ -41,7 +41,16 @@ package VjConfig;
  *  created, it is safe to do direct object comparisons.  ie vt1 == vt2 can
  *  be treated as equivalent to vt1.equals(vt2).
  */
-public class ValType {
+public final class ValType {
+
+    private final static int t_string        = 1;
+    private final static int t_float         = 2;
+    private final static int t_int           = 3;
+    private final static int t_bool          = 4;
+    private final static int t_chunk         = 5;
+    private final static int t_embeddedchunk = 6;
+    private final static int t_invalid       = 7;
+
 
     public final static ValType STRING = new ValType (t_string);
     public final static ValType FLOAT = new ValType (t_float);
@@ -52,14 +61,6 @@ public class ValType {
     public final static ValType INVALID = new ValType (t_invalid);
 
     private int val; // type identifier for this instance.
-
-    private final static int t_string        = 1;
-    private final static int t_float         = 2;
-    private final static int t_int           = 3;
-    private final static int t_bool          = 4;
-    private final static int t_chunk         = 5;
-    private final static int t_embeddedchunk = 6;
-    private final static int t_invalid       = 7;
 
 
     /** Constructor.  Private so that no other ValTypes can be created. */
