@@ -90,6 +90,7 @@ public:
    void copy( const SoundImplementation& si )
    {
       // copy over the current state
+      mName = si.mName;
       mSounds = si.mSounds;
       mListenerPos = si.mListenerPos;
       mSoundAPIInfo = si.mSoundAPIInfo;
