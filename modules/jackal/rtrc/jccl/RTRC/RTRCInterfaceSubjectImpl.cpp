@@ -108,4 +108,20 @@ char* RTRCInterfaceSubjectImpl::getChunks()
    return active_output.str();
 }
 
+char* RTRCInterfaceSubjectImpl::getChunkDescs()
+{
+
+   //Get the list of chunk descs from the ChunkFactory
+   ChunkDescDB* chunkDescs = jccl::ChunkFactory::instance()->getChunkDescDB();
+
+   //Compile a string of the chunk desc DB
+   std::ostringstream descs_output;
+
+   descs_output << chunkDescs;
+
+   //Return the full string
+   return descs_output.str();
+}
+
+
 }; // namespace jccl
