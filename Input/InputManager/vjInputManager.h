@@ -89,6 +89,7 @@ public:
    //+          false - Can't handle it
    bool configCanHandle(vjConfigChunk* chunk);
 
+private:
    //: Load the device for the given chunk
    //!RETURNS: true - Device was configured and added
    bool ConfigureDevice(vjConfigChunk* chunk);
@@ -100,22 +101,29 @@ public:
    //-------------------//
    //     PROXIES       //
    //-------------------//
-
+public:
    //: Function to get an index to the proxy/alias given in str
    //! RETURNS: -1 - Not Found
    int  GetProxyIndex(string proxyName);
 
 
-   /************************************************************************
-    *  Device Level API
-    *  The Device level functions give direct access to the actual
-    *  devices, that is functions that do not take a Config structure.
-    *  These functions should primarily be used by the vjInputManager itself.
-    *************************************************************************/
+   /* ------------------------------- //
+   //        DEVICE API               //
+   // ------------------------------- */
+public:
+   //: Update the Data in all the devices.
+   //
+   // Call UpdateData() on all the devices in the devArray
+   // Also updates all proxies.
+   //
+   //! MODIFIES: instances pointed to by devArray
+   void UpdateAllData();
+
+private:
    //: Add a device to vjInputManager.
    //
    // Add the devPtr to the device Array, devPtr should
-   //      * not already be in the array.  Returns -1 on failure
+   // not already be in the array.  Returns -1 on failure
    //
    //! MODIFIES: self
    //! POST: m_devVector' = m_devVector \/ devPtr
@@ -130,16 +138,7 @@ public:
    //! MODIFIES: self
    //! POST: m_devVector[devNum]' = NULL
    int RemoveDevice(int devNum);
-
    int RemoveDevice(char* instName);
-
-   //: Update the Data in all the devices.
-   //
-   // Call UpdateData() on all the devices in the devArray
-   // Also updates all proxies.
-   //
-   //! MODIFIES: instances pointed to by devArray
-   void UpdateAllData();
 
    //: Get the device number from its Instance Name.
    //
@@ -154,15 +153,15 @@ public:
    //!POST: return = m_devVector[devNum]  (this can be NULL)
    vjInput* GetDevice(int devNum);
 
-
-   /**********************************************************
-    *  Position Proxy Level
-    *  Functions for Position Proxies
-    **********************************************************/
+   /*********************************************************
+    *          PROXIES                                      *
+    *********************************************************/
+public:
+   /**********     POS PROXY   ****************************/
 
    //: Set the index ProxyNum in the posProxy array to proxy
    // device at devNum in the device array, with subNumber <br>
-   // <br>
+   //
    //! MODIFIES: self <br>
    //! POST: m_posProxyArray[proxyNum]' = new Proxy at DevNum/subNum
    //       return = 0 for fail, other for success
@@ -181,7 +180,6 @@ public:
    //! RETURNS: -1: failure, >0: proxy_num
    int AddPosProxy(string devName, int subNum, string proxyName, vjPosProxy* posProxy);
 
-
    //: Turn the position proxy at index ProxyNum to point back
    // to the default dummy proxy. <br>
    // <br>
@@ -190,11 +188,7 @@ public:
    void StupifyPos(int ProxyNum);
 
 
-   /************************************************************************
-    * Digital Proxy Level
-    *  Functions for Digital proxies
-    ************************************************************************/
-
+/***********       DIGITAL PROXY   * ******************/
    //: Set the index ProxyNum in the digProxy array to proxy
    // device at devNum in the device array, with subNumber <br>
    // <br>
@@ -210,14 +204,11 @@ public:
       return m_digProxyVector[digProxyIndex];
    }
 
-
    //: Add the digital proxy
    //! POST: dig proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
    int AddDigProxy(string devName, int subNum, string proxyName, vjDigitalProxy* digitalProxy);
-
-
 
    //: Turn the digital proxy at index ProxyNum to point back
    // to the default dummy proxy.<br>
@@ -227,17 +218,7 @@ public:
    void StupifyDig(int ProxyNum);
 
 
-   //: Get the digital data at digital Proxy d
-   //
-   //! POST: return = integer for the digital data returned
-   //int GetDigData(int d);
-
-
-   /**************************************************************
-    * Analog Proxy Level
-    *  Functions for Analog proxies
-    **************************************************************/
-
+/*************** ANALOG PROXY *******************************/
    //: Set the index ProxyNum in the anaProxy array to proxy
    // device at devNum in the device array, with subNumber<br>
    // <br>
@@ -253,13 +234,11 @@ public:
       return m_anaProxyVector[anaProxyIndex];
    }
 
-
    //: Add the analog proxy
    //! POST: analog proxy has been added
    //+   proxy alias has been set
    //! RETURNS: -1: failure, >0: proxy_num
    int AddAnaProxy(string devName, int subNum, string proxyName, vjAnalogProxy* anaProxy);
-
 
    //: Turn the analog proxy at index ProxyNum to point back
    // to the default dummy proxy.<br>
@@ -268,16 +247,8 @@ public:
    //!POST:  m_anaProxyArray[proxyNum]' = m_dummyAna
    void StupifyAna(int ProxyNum);
 
-   //: Get the analog data at analog Proxy d
-   //
-   //!POST: return = integer version of the analog data at proxy d
-   //int GetAnaData(int d);
 
-
-   /**************************************************************
-    *  Glove Proxy Level
-    *  Functions for Gesture proxies
-    **************************************************************/
+/******************     GLOVE PROXY   ************************/
    //: Set the index ProxyNum in the gloveProxy array to proxy
    // device at devNum in the device array, with subNumber <br>
    // <br>
@@ -311,10 +282,7 @@ public:
    int getNumGloveProxies()
    { return m_gloveProxyVector.size(); }
 
-   /**************************************************************
-    *  Keyboard Proxy Level
-    *  Functions for keyboard proxies
-    **************************************************************/
+/*****************       KEYBOARD PROXY        **************/
    //: Set the index ProxyNum in the keyboardProxy array to proxy
    // device at devNum in the device array<br>
    // <br>
@@ -343,10 +311,7 @@ public:
    //! POST:  m_keyboardProxyArray[proxyNum]' = m_dummyKeyboard
    void StupifyKeyboard(int ProxyNum);
 
-   /**************************************************************
-    *  Gesture Proxy Level
-    *  Functions for Gesture proxies
-    **************************************************************/
+/*******************       GESTURE PROXY    ***************************/
    //: Set the index ProxyNum in the gestureProxy array to proxy
    // device at devNum in the device array<br>
    // <br>
@@ -377,7 +342,6 @@ public:
 
 
 protected:
-
       // --- Vectors of devices and proxies --- //
    vector<vjInput*>           m_devVector;
    vector<vjPosProxy*>        m_posProxyVector;
