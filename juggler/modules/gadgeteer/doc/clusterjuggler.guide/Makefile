@@ -21,6 +21,8 @@ prefix=		$(webroot)/$(instdir)
 INSTALL_DIRS=	figures
 INSTALL_FILES=	$(webroot)/base_style.css
 
+NEED_DB_IMAGES=	1
+
 $(NAME).html: $(NAME).xml
 $(NAME).pdf: $(NAME).xml $(NAME).fo
 
