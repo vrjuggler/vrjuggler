@@ -11,10 +11,16 @@
 <h3><strong>Introduction</strong></h3>
 <blockquote>
   <p>Juggler requires config files in order to setup the system.&nbsp; In the current version of the library, config files are
-  passed to the application as a parameters.&nbsp; By default, these config files
-  are located in the users home directory in the <strong>~/.vjconfig</strong>
-  subdirectory.&nbsp;</p>
-  <p>Each release starting with alpha 4 includes sample config files that may be copied to the users <strong>~/.vjconfig</strong> directory to be used as a starting point for customization.&nbsp;&nbsp;&nbsp;</p>
+  passed to the application as a parameters.&nbsp; New users should use the default config files located on the system in the 
+  <strong>juggler/Data/configFiles/</strong> directory of the Juggler installation.  <BR> <BR> </p>
+  
+  <p>Advanced users should copy these files to a directory of their choice (~/.vjcontrol for example), 
+  and modify using the vjcontrol java application.<BR><BR></p>
+  
+  <b>!!!</b> Encourage new users to use the default "system" config files, this keeps redundant copies to a minimum.  
+      This helps when upgrading Juggler, or making system configuration changes.<BR><BR>
+       
+  <p>Each release starting with alpha 4 includes sample config files in the juggler/Data/configFiles/ directory.&nbsp;&nbsp;&nbsp;</p>
 </blockquote>
 
 <h4>Sample config files</h4>
@@ -22,12 +28,11 @@
 <blockquote>
   <p>The sample files are located in <strong><a href="environment.variables.html">VJ_BASE_DIR</a>/Data/configFiles</strong>. &nbsp;
   (Where <a href="environment.variables.html">VJ_BASE_DIR</a> is the base directory for the Juggler release being used.)&nbsp;</p>
-  <p>In order to get started using Juggler quickly, you should copy all the
-  config files from the configFiles directory into your local ~/.vjconfig
-  directory.</p>
+  <p>Advanced users will want to copy the config files from the configFiles directory into their local ~/.vjconfig
+  directory.  This allows editing of the files to change, for example, the key mapping in the simulator or the port you can connect to your application with vjcontrol.</p>
   <p><b>NOTE</b>: You are not required to use the default configuration
-  files.&nbsp; You are encouraged to customize them to suit your individual
-  tastes and needs.</p>
+  files.&nbsp; However, you are <i>strongly encouraged</i> to use them if your sysadmin has customized 
+  them to match your site's hardware configuration. - <B class="red">Contact your sysadmin for details on your local policy.</b></p>
 </blockquote>
 
 <h4>Editing config files</h4>
