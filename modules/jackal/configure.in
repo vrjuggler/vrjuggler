@@ -202,6 +202,7 @@ DPP_PERL_VER([5.004], , , [AC_MSG_ERROR([*** Perl is required ***])])
 AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 DPP_PROG_INSTALL
+DPP_PROG_LINKER
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
@@ -446,7 +447,7 @@ JCCL_SHARE_DIR=`echo "$JCCL_SHARE_DIR" | sed -e "${_prefix_exp}"`
 # Information needed to generate jccl-config.
 case $OS_TYPE in
     UNIX)
-        if test "x$GXX" = "xyes" ; then
+        if test "x$GNU_LD" = "xyes" ; then
             static_begin="-Wl,-Bstatic"
             static_end="-Wl,-Bdynamic"
         else
