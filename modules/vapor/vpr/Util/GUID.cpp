@@ -58,7 +58,15 @@
 #elif defined(HAVE_UUID_UUID_H) || defined(VPR_USE_LEACH_UUID)
 #  include <uuid/uuid.h>
 #elif defined(HAVE_SYS_UUID_H)
+
+// XXX: On IRIX, sys/uuid.h is not a C++-safe header.  Blah...
+#  ifdef VPR_OS_IRIX
+extern "C" {
+#  endif
 #  include <sys/uuid.h>
+#  ifdef VPR_OS_IRIX
+}
+#  endif
 #endif
 
 #include <vpr/Util/GUID.h>
