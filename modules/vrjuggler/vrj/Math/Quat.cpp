@@ -34,7 +34,7 @@
 
 #include <Math/vjQuat.h>
 
-void vjQuat::makeQuat(vjMatrix& mat)
+void vjQuat::makeQuat(const vjMatrix& mat)
 {
    float tr, s;
    //static int nxt[3] = {VJ_Y, VJ_Z, VJ_X};
@@ -61,20 +61,20 @@ void vjQuat::makeQuat(vjMatrix& mat)
 
       if (mat.mat[VJ_Y][VJ_Y] > mat.mat[VJ_X][VJ_X])
          i = VJ_Y;
-	   if (mat.mat[VJ_Z][VJ_Z] > mat.mat[i][i])
+      if (mat.mat[VJ_Z][VJ_Z] > mat.mat[i][i])
          i = VJ_Z;
 
-	   j = nxt[i];
+      j = nxt[i];
       k = nxt[j];
 
       s = sqrt ((mat.mat[i][i] - (mat.mat[j][j] + mat.mat[k][k])) + 1.0);
 
-	   vec[i] = s * 0.5;
+      vec[i] = s * 0.5;
 
       if (s != 0.0)
          s = (0.5 / s);
 
-	   vec[VJ_W] = (mat.mat[j][k] - mat.mat[k][j]) * s;
+      vec[VJ_W] = (mat.mat[j][k] - mat.mat[k][j]) * s;
       vec[j] = (mat.mat[i][j] + mat.mat[j][i]) * s;
       vec[k] = (mat.mat[i][k] + mat.mat[k][i]) * s;
    }
