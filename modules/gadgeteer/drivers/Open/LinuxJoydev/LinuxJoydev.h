@@ -48,7 +48,7 @@ namespace gadget
 /**
  * Driver to Linux joystick input.
  *
- * @see Digital, Analog
+ * @see gadget:;Digital, gadget:;Analog
  */
 class LinuxJoydev : public InputMixer<InputMixer<Input,Digital>,Analog>
 {
@@ -60,29 +60,28 @@ public:
    /**
     * Destructor.
     *
-    * @pre None.
-    * @post Shared memory is released
+    * @post Shared memory is released.
     */
    ~LinuxJoydev();
 
    /**
     * Configure the driver.
     *
-    * @param c A pointer to a config element.
+    * @param e A pointer to a config element.
     *
     * @return true if the device was configured succesfully; false if the
     *         configuration element is invalid.
     */
    virtual bool config(jccl::ConfigElementPtr e);
 
-   /** Begin sampling.
-   * Connect to the joystick and prepare to read.
-   */
+   /**
+    * Begins sampling.  Connects to the joystick and prepares to read.
+    */
    bool startSampling();
 
-   /** Stops sampling.
-   * Drop connection to joystick and clear everything.
-   */
+   /**
+    * Stops sampling.  Drops the connection to joystick and clears everything.
+    */
    bool stopSampling();
 
    /** Samples a value. */
@@ -94,7 +93,6 @@ public:
    /**
     * Updates to the sampled data.
     *
-    * @pre None.
     * @post Most recent value is copied over to temp area.
     */
    void updateData();
@@ -112,12 +110,10 @@ public:
    }
 
    /**
-    * Return "analog data"..
-    *  Gee, that's ambiguous especially on a discrete system such as a digital computer....
+    * Returns the sample for the requested device index.
     *
-    * @pre give the device number you wish to access.
-    * @post returns a value that ranges from 0.0f to 1.0f
-    *
+    * @pre Give the device number you wish to access.
+    * @post Returns a value that ranges from 0.0f to 1.0f.
     */
    virtual AnalogData* getAnalogData(int devNum=0)
    {
@@ -154,7 +150,7 @@ private:
    std::vector<int>           mAxisToButtonIndexLookup;   /**< Maps axis number to button index (-1 means none) */
 
    typedef std::pair<float,float> axis_range_t;       /**< Current axis range */
-   std::vector<axis_range_t>  mCurAxesRanges;         /**<  Current known ranges on the axes */
+   std::vector<axis_range_t>  mCurAxesRanges;         /**< Current known ranges on the axes */
 
    std::string       mJsLabel;         /**< The VR Juggler name of the joystick device */
    std::string       mPhysicalJsName;  /**< Name of the joystick */

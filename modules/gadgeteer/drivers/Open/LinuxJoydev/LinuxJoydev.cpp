@@ -70,18 +70,13 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-/** Constructor. */
+// Constructor.
 LinuxJoydev::LinuxJoydev()
 {
    /* Do nothing. */ ;
 }
 
-/**
- * Destructor.
- *
- * @pre None.
- * @post Shared memory is released.
- */
+// Destructor.
 LinuxJoydev::~LinuxJoydev()
 {
    /* Do nothing. */ ;
@@ -92,9 +87,6 @@ std::string LinuxJoydev::getElementType()
    return "linux_joydev";
 }
 
-/**
- *
- */
 bool LinuxJoydev::config(jccl::ConfigElementPtr e)
 {
    if(! (Input::config(e) && Digital::config(e) && Analog::config(e)))
@@ -115,9 +107,7 @@ bool LinuxJoydev::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-/** Begin sampling.
-* Connect to the joystick and prepare to read.
-*/
+// Begins sampling.  Connects to the joystick and prepares to read.
 bool LinuxJoydev::startSampling()
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL)
@@ -205,9 +195,7 @@ bool LinuxJoydev::startSampling()
    return true;
 }
 
-/** Stops sampling.
-* Drop connection to joystick and clear everything.
-*/
+// Stops sampling.  Drops the connection to joystick and clears everything.
 bool LinuxJoydev::stopSampling()
 {
    if(mJsFD > 0)
@@ -219,12 +207,7 @@ bool LinuxJoydev::stopSampling()
 }
 
 
-/**
- * Updates to the sampled data.
- *
- * @pre None.
- * @post Most recent value is copied over to temp area.
- */
+// Updates to the sampled data.
 void LinuxJoydev::updateData()
 {
    // -- Read in any new pending events
