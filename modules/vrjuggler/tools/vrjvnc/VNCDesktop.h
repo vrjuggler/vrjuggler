@@ -156,6 +156,7 @@ private:
 
    // Grabing to resize and rotate
    gmtl::Point3f    mCornerGrabPoint;  /**< The point that we previously grabbed at */
+   gmtl::Matrix44f  m_wandMdesktop_grab;  /**< Xform from wand to desktop when grabbed */
 
    // Corners
    gmtl::AABoxf     mLLCorner;         /**< LL of the desktop */

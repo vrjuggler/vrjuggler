@@ -385,6 +385,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       {
          if(select_button_state)
          {
+            mSelectState = TopBorderGrab;
+            m_wandMdesktop_grab = wand_mat;
+            gmtl::invert(m_wandMdesktop_grab);
          }
          else     // Just select it
          {
@@ -396,6 +399,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       {
          if(select_button_state)
          {
+            mSelectState = BottomBorderGrab;
+            m_wandMdesktop_grab = wand_mat;
+            gmtl::invert(m_wandMdesktop_grab);
          }
          else     // Just select it
          {
@@ -407,6 +413,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       {
          if(select_button_state)
          {
+            mSelectState = LeftBorderGrab;
+            m_wandMdesktop_grab = wand_mat;
+            gmtl::invert(m_wandMdesktop_grab);
          }
          else     // Just select it
          {
@@ -418,6 +427,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       {
          if(select_button_state)
          {
+            mSelectState = RightBorderGrab;
+            m_wandMdesktop_grab = wand_mat;
+            gmtl::invert(m_wandMdesktop_grab);
          }
          else     // Just select it
          {
@@ -437,8 +449,6 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       // Compute the desired change in height and width
       float delta_w = mIsectPoint[0] - mCornerGrabPoint[0];       // now - grab
       float delta_h =  mCornerGrabPoint[1] - mIsectPoint[1];      // Grab - now
-
-      std::cout << "deltah: " << delta_h << "deltaw: " << delta_w << std::endl;
 
       // Transform opposite of change in height to make it look right
       m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
@@ -460,8 +470,6 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       float delta_w =  mCornerGrabPoint[0] - mIsectPoint[0];      // grab - now
       float delta_h =  mCornerGrabPoint[1] - mIsectPoint[1];      // Grab - now
 
-      std::cout << "deltah: " << delta_h << "deltaw: " << delta_w << std::endl;
-
       // Transform opposite of change in height and width to look right
       m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(-delta_w, -delta_h, 0.0f));
       mDesktopWidth += delta_w;
@@ -469,13 +477,22 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
       updateDesktopParameters();
 
-      // Reset grab point. Both stay same since we transformed to get them to be the same
+      // Don't reset grab point. Both stay same since we transformed to get them to be the same
       //mCornerGrabPoint[0] = mIsectPoint[0];
-      //mCornerGrabPoint[1] = 0.0f;             // y stays because we adjust desk mat to make it stay the same
 
       if(!select_button_state)
          mSelectState = Nothing;
+   }
+   // --- Moving --- //
+   else if((LeftBorderGrab == mSelectState) || (RightBorderGrab == mSelectState) ||
+           (TopBorderGrab == mSelectState) || (BottomBorderGrab == mSelectState))
+   {
+      // Compute desired pos and then figure out how to get the desktop to there
+      gmtl::Matrix44f desired_pos = (wand_mat * m_wandMdesktop_grab);
+      m_world_M_desktop *= desired_pos;
 
+      if(!select_button_state)
+         mSelectState = Nothing;
    }
 
 
