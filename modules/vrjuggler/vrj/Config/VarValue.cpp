@@ -17,6 +17,36 @@ vjVarValue::vjVarValue (vjConfigChunk* ch) {
 }
 
 
+vjVarValue::vjVarValue ( VarType t ) {
+    type = t;
+    switch (type) {
+    case T_INT:
+	val.intval = 0;
+	break;
+    case T_EMBEDDEDCHUNK:
+	val.embeddedchunkval = NULL;
+	break;
+    case T_BOOL:
+	val.boolval = false;
+	break;
+    case T_FLOAT:
+	val.floatval = 0.0;
+	break;
+    case T_STRING:
+    case T_CHUNK:
+	val.strval = "";
+	break;
+    }
+}
+
+
+
+vjVarValue::~vjVarValue() {
+    if ((type == T_EMBEDDEDCHUNK) && val.embeddedchunkval)
+	delete val.embeddedchunkval;
+}
+
+
 
 vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
    type = v.type;
@@ -49,34 +79,27 @@ vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
 
 
 
-vjVarValue::vjVarValue ( VarType t ) {
-    type = t;
+//: Equality Operator
+bool vjVarValue::operator == (const vjVarValue& v) {
+    if (type != v.type)
+	return false;
     switch (type) {
     case T_INT:
-	val.intval = 0;
-	break;
-    case T_EMBEDDEDCHUNK:
-	val.embeddedchunkval = NULL;
-	break;
-    case T_BOOL:
-	val.boolval = false;
-	break;
+	return (val.intval == v.val.intval);
     case T_FLOAT:
-	val.floatval = 0.0;
-	break;
+	return (val.floatval == v.val.floatval);
     case T_STRING:
     case T_CHUNK:
-	val.strval = "";
-	break;
+	return (val.strval == v.val.strval);
+    case T_BOOL:
+	return (val.boolval == v.val.boolval);
+    case T_EMBEDDEDCHUNK:
+	return (val.embeddedchunkval == v.val.embeddedchunkval);
+    default:
+	return false;
     }
 }
 
-
-
-vjVarValue::~vjVarValue() {
-    if ((type == T_EMBEDDEDCHUNK) && val.embeddedchunkval)
-	delete val.embeddedchunkval;
-}
 
 
 

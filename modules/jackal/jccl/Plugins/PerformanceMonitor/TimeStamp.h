@@ -5,7 +5,7 @@
 #ifndef _VJ_TIMESTAMP_
 #define _VJ_TIMESTAMP_
 
-#include <vjDefines.h>
+#include <vjConfig.h>
 
 #if VJ_PERFORMANCE == VJ_PERF_SGI
 

@@ -2,7 +2,6 @@
 #define _VJ_CHUNKDESC_H_
 
 #include <vjConfig.h>
-#include <Config/vjEnumEntry.h>
 #include <Config/vjPropertyDesc.h>
 
 #ifdef VJ_OS_HPUX

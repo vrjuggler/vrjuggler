@@ -2,17 +2,24 @@
 #ifndef _VJ_TIMESTAMP_POSIX_
 #define _VJ_TIMESTAMP_POSIX_
 
-/*
- * This version of vjTimeStampPosix uses the gettimeofday system call
- * to collect timing information.  It's probably not as high
- * resolution as the SGI-specific version, but should be portable
- * across all unix platforms.
- */
-
 #include <iostream.h>
 #include <sys/time.h>
 
-
+//-----------------------------------------
+//:Portable time recorder for Unix/Linux systems
+//
+//     This version of vjTimeStamp uses the gettimeofday()
+//     system call to collect timing information.  While
+//     it is probably not as high resolution as 
+//     vjTimeStampSGI, it should be portable accross all
+//     Unix and Unix-like OSes
+//
+//     vjTimeStampPosix should never be instantiated directly.
+//     Instead, use vjTimeStamp, which will be typedefed to
+//     the correct implementation.
+//
+// @author  Christopher Just
+//-----------------------------------------
 
 class vjTimeStampPosix {
 
