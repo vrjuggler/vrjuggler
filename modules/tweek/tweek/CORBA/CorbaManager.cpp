@@ -146,6 +146,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
          new vpr::ThreadMemberFunctor<CorbaManager>(this, &CorbaManager::run);
 
       mOrbThread = new vpr::Thread(corba_run);
+      mOrbThread->start();
    }
    catch (CORBA::SystemException& sysEx)
    {
