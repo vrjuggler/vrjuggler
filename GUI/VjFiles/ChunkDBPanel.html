@@ -1,0 +1,81 @@
+<html>
+
+<title>Working with Config Files</title>
+
+<body bgcolor="#ffffcc">
+<h2><img src="juggler.gif"></img>Working with Config Files</h2>
+
+You can load and edit VR Juggler Config Files by clicking on the 
+"Configure" tab of the main window.  This displays a panel that
+is divided into two similar parts.  The idea is that you can
+view one file on each side, making it easy to compare two files
+and to copy Chunks back and forth between them.
+
+<p>
+At the top of each panel is a ComboBox that lets you choose which of the
+loaded config files to display.  The selected file will appear in a
+tree format in the middle of the panel.  Click on a Chunk in the tree
+to select it.  You can double-click
+on a chunk to view or edit it.
+
+<p>
+There are eight buttons along the side of each panel:
+
+<ul>
+<li><b>New</b> - creates a new (empty) config file.
+<li><b>Load</b> - loads a config file and views it in this panel.
+<li><b>Save</b> - save the config file currently being viewed.  Note that this
+button always opens a file dialog, so it's technically Save As...
+<li><b>Close</b> - removes the currently viewed config file from memory.
+<b>WARNING!</b> VjControl does not currently warn you if you close a
+file without saving it.
+
+<li><b>>></b> - copies all selected chunks in this file to the file
+being viewed in the other panel.
+<li><b>>All></b> - copies every chunk in this file to the file being
+viewed in the other panel.
+<li><b>Remove</b> - deletes all selected chunks in the currently viewed file.
+<li><b>Duplicate</b> - adds duplicate copies of all selected chunks in the currently viewed file.
+<li><b>Insert</b> - inserts a new chunk.  The type of chunk to insert is determined
+by the Insert Type combo box at the bottom of the panel.
+
+</ul>
+
+<hr>
+<h3> The ConfigChunk Editing Window</h3>
+
+Double-click on one of the ConfigChunks in the tree to open the
+ConfigChunk editing window.  This window displays the values for all 
+the Chunk's properties, and lets you modify these values.  Properties
+that allow a variable number of values will include an <b>Add Value</b> button
+next to the Property name, and a <b>Remove</b> button next to each value.
+<p>
+Click the <b>OK</b> button to exit the window, or <b>Cancel</b> to close
+the window without saving the changes you've made.
+
+<br><br>
+
+<hr>
+<h3>Including other Config Files</h3>
+
+VR Juggler config files can include references to other config files.  If a config file with
+includes is loaded by a Juggler app, all the files it includes are loaded first (so a chunk
+in the file can replace a chunk in an included file with the same name).
+<p>
+If a config file with includes is loaded into vjcontrol, the included files are automatically
+loaded, though each file is viewed separately.
+<p>
+To include a file, simply add an "Include File" chunk to the config file.  The name of the 
+"Include File" chunk is the complete path name of the file to load.  You can use the strings
+"$HOME" and "$VJ_BASE_DIR" at the start of the name to refer to your home directory and the
+Juggler install directory, respectively.
+<p>
+Note that path names should be absolute paths (paths starting with "/" or "$HOME" or "$VJ_BASE_DIR").
+Relative path names should be relative to the file including them, but this may not work
+correctly in Juggler Beta1
+
+<br><br>
+</body>
+</html>
+
+

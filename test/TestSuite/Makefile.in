@@ -1,0 +1,151 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for test/TestSuite
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+# IMPORTANT NOTE:
+#     This application will not compile unless you are using GNU make.
+# -----------------------------------------------------------------------------
+
+default: all
+
+BASE_OBJDIR = ./obj
+
+# Include common definitions.
+include @topdir@/Makefile.base
+
+includedir	= @includedir@/test/TestSuite
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+INSTALL		= @INSTALL@
+VJROOT		= ${top_srcdir}
+VJ_SRCDIR	= @VJ_SRCDIR@/test/TestSuite
+WORKDIR		= ${topdir}/test/TestSuite
+
+
+# Add 'install-recursive' to ${INSTALL_DEPS} so installations will be
+# completed.  This has to be done before including <vj.install.mk>
+# unfortunately.
+INSTALL_DEPS	+= install-recursive
+
+# Prefix for recursive stuff.
+DIRPRFX		= test/TestSuite/
+
+# Subdirectories to compile.
+SUBDIRS = 
+
+# Path to all the local source files
+SRC_PATH = \
+	@srcdir@/CppUnit/framework \
+	@srcdir@/CppUnit/textui
+
+# Search path for source code and object files.
+vpath
+vpath %.c @srcdir@ $(SRC_PATH)
+vpath %.cpp @srcdir@ $(SRC_PATH)
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
+
+#
+# To add a new test, just add the .cpp file(s) to the TEST_SRC's list
+#
+TEST_SRCS = 
+CPPUNIT_TEXTUI_SRCS = TestRunner.cpp TextTestResult.cpp
+CPPUNIT_SRCS = TestCase.cpp \
+               TestResult.cpp \
+               TestFailure.cpp \
+               TestSuite.cpp
+TESTDRIVER_SRCS = testSuite.cpp
+
+TESTSUITE_SRCS	:= $(TEST_SRCS) $(CPPUNIT_TEXTUI_SRCS) $(CPPUNIT_SRCS) $(TESTDRIVER_SRCS)
+
+TESTSUITE_OBJECTS	:= ${addprefix ${OBJDIR}/,${TESTSUITE_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
+DEPEND_FILES	:= ${TESTSUITE_SRCS:.cpp=.d}
+
+# 
+# App compile
+#
+#
+EXTRA_FLAGS	= @APP_EXTRA_FLAGS@
+#COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
+LINK				= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
+SUITE_INCLUDES = -I$(srcdir) -I$(srcdir)/CppUnit/framework -I$(srcdir)/CppUnit/textui 
+VJ_INCLUDES		= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir) $(SUITE_INCLUDES)
+VJ_LIBS				= @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_LIBS_BASIC@
+#VPATH				= @srcdir@
+
+#DEPENDFLAGS += $(VJ_INCLUDES)
+INCLUDES += $(VJ_INCLUDES)
+
+# OpenGL test programs require the following libraries to be linked:
+#
+#     -lGLU -lGL -lX11 -lXext -lm
+#
+# If the library uses POSIX threads, the appropriate pthread enabling option
+# must also be added to the list of libraries.  In most cases, this will be
+# "-lpthread".
+#
+# The proper library path must be specified depending on the Application
+# Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
+# 64-bit binaries, use -L/usr/lib64.
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
+
+# -----------------------------------------------------------------------------
+# Targets.
+# -----------------------------------------------------------------------------
+default: all
+
+all: testSuite
+
+testSuite: $(TESTSUITE_OBJECTS)
+	$(LINK) -o $@ $(TESTSUITE_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
+
+# Include source building, recursive, dependency and installation targets.
+include ${MKPATH}/vj.compile.mk
+include ${MKPATH}/vj.rec.mk
+include ${MKPATH}/vj.dep.mk
+#include ${MKPATH}/vj.install.mk
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+CLEAN_FILES	+= ${TESTSUITE_OBJECTS} ${DEPEND_FILES}
+CLEAN_FILES	+= $(BASE_OBJDIR)
+
+# -----------------------------------------------------------------------------
+# Include dependencies generated by make automatically.
+# -----------------------------------------------------------------------------
+ifndef DO_CLEANDEPEND
+    include ${DEPEND_FILES}
+endif

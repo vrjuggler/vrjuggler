@@ -1,0 +1,381 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="Author" CONTENT="Christopher Just">
+   <META NAME="Description" CONTENT="This file describes C2 configuration and the Configuration Editor GUI.">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.05 [en] (X11; I; IRIX64 6.4 IP30) [Netscape]">
+   <TITLE>Using the VRLib Configuration System</TITLE>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000">
+
+<H2>
+Using the VRLib Configuration System</H2>
+This document describes the fundamentals of VRLib's extensible configuration
+system, and gives an introduction to CfgEdit, a graphical configuration
+editing utility written in Java.
+<H4>
+Contents</H4>
+
+<UL>
+<LI>
+<A HREF="#fundamentals">Configuration Fundamentals</A></LI>
+
+<LI>
+<A HREF="#files">Configuration Files</A></LI>
+
+<LI>
+<A HREF="#descriptions">ConfigChunk Descriptions</A></LI>
+
+<LI>
+<A HREF="#cfgedit">Using the CfgEdit tool</A></LI>
+</UL>
+
+<HR><A NAME="fundamentals"></A>
+<H3>
+Configuration Fundamentals - Smooth and Extra Chunky</H3>
+VRLib has a <I>lot</I> of configuration information; enough that a simple
+text-based configuration file would be an unmanageable mess. Things are
+a lot simpler if we can divide things into manageable pieces.
+
+<P>We call these pieces <I>ConfigChunks</I>, or <I>Chunks</I> for short.
+A Chunk contains the configuration information for a particular component
+of the system. For example, each supported input device will have a Chunk
+describing its setup. Another kind of Chunk describes a display device.
+There are many different kinds of Chunks, which store many different kinds
+of information.
+
+<P>To give you a better idea, here's a list of a few of the Chunks we used
+in a development version of the library:
+<UL>
+<LI>
+Display - defines a display window</LI>
+
+<LI>
+DisplaySystem - matches graphic pipes to X Displays</LI>
+
+<LI>
+IBox</LI>
+
+<LI>
+Flock - setup for an Ascension Flock of Birds</LI>
+
+<LI>
+Keyboard - stores key bindings for a keyboard-based input simulator</LI>
+
+<LI>
+DummyPosition - stores default orientation and position for a dummy tracker
+standin.</LI>
+</UL>
+Each ConfigChunk contains one or more <I>Properties</I>. A Property has
+a name, a type, and zero or more values. As an example, let's consider
+a ConfigChunk for a 3-D tracking device with a serial interface. We might
+choose these four properties:
+<UL>
+<LI>
+<B>Name</B> - a string value that provides a descriptive name for this
+device. <I>All</I> ConfigChunks have a Name property. They are especially
+useful for telling apart several ConfigChunks of the same type - like three
+displays named "north", "south", and "middle".</LI>
+
+<LI>
+<B>Serial Port</B> - the serial port to connect to. If we're using some
+kind of Unix system, this would be a single string value, "/dev/ttyd2"
+or something similar.</LI>
+
+<LI>
+<B>Serial Speed</B> - the speed of the serial connection; probably a single
+integer value.</LI>
+
+<LI>
+<B>Position Offset</B> - this might be an offset from the physical tracker
+origin to some logical origin of your choice. We probably want a floating
+point value for this property, but unlike our other examples, we want three
+of them, for x, y, and z offsets. Any property can have multiple values,
+but they must all be of the same type.</LI>
+</UL>
+
+<H4>
+Property Details</H4>
+Before we continue, let's take a closer look at the individual parts of
+a Property.
+<UL>
+<H4>
+Name</H4>
+The name of a property is simply a text string used to refer to it by the
+GUI, like "Serial Port" or "X Display Name".
+<H4>
+Token</H4>
+The token is a lot like the name, and they are often the same string. The
+difference is that the token is used internally, in the config file format,
+and in the library itself when querying the configuration database. The
+token is restricted in a way similar to C/C++ variable names: no whitespace
+is permitted, and it may not begin with a number.
+<H4>
+Type</H4>
+There are four primitive types for properties: strings, integers, floating-point
+numbers, and booleans. In addition to these four types, Property values
+can also refer to other ConfigChunks. Example: The ConfigChunk for "general
+setup" might have a Property that lists the active Displays. The type for
+this Property could just be a string (matching the name of a Display ConfigChunk),
+but we can also make the Property type be "name of a Display ConfigChunk".
+This lets the GUI be a little smarter and easier to use when editing that
+property - but more on that later.
+<H4>
+Number</H4>
+Most Properties have single values. Other times, as with our "Position
+Offset" example, a Property may need a fixed number of values. It is also
+possible for a Property to have a variable number of values; the list of
+active Displays mentioned above would be a good example. There may be no
+active displays, there may be 6, or 2, or just 1.
+<H4>
+Value Lists (optional)</H4>
+Sometimes a Property might have a certain number of appropriate choices.
+For example, the handedness of a glove is either "Left" or "Right", and
+it would be nice if our GUI could display those as choices to the user,
+instead of requiring them to type in a string. The configuration system
+supports this with enumerations, which are simply lists of the appropriate
+values for a Property. Enumerations for string Properties are just lists
+of string values, while enumerations for integer and float Properties map
+descriptive strings to numeric values.</UL>
+
+<HR><A NAME="files"></A>
+<H3>
+Configuration Files</H3>
+The configuration information for a VRLib application is stored in several
+files:
+<UL>
+<LI>
+The <I>Global</I> config file contains a basic configuration. The global
+file should be enough to get an application running; it should contain
+all of the basic hardware setup information.</LI>
+
+<LI>
+The <I>User</I> config files are used to modify and add to a basic configuration.</LI>
+
+
+<P>A user's config files are stored in the <TT>.C2Config</TT> directory
+of the user's home directory. A user can have as many different User config
+files as he or she desires. There may be different User config files for
+different applications, or maybe one that sets up a particular set of simulator
+devices.</UL>
+When a VRLib application is initialized, it creates an internal database
+of config information. The ConfigChunks defined in the Global config file
+are added into the database, followed by the Chunks in a specified User
+config file (<TT>~/.C2Config/default</TT> if none is specified). If a Chunk
+in the User file has the same name as a Chunk in the Global file, it replaces
+the previously-read Global Chunk.
+
+<P>
+<HR>
+<H4>
+ConfigChunk Descriptions</H4>
+The configuration system is itself configurable. A separate file lists
+all the available kinds of ConfigChunks, what their Properties are, wether
+these Properties have enumerations, and so on. These <I>ChunkDescs</I>
+can also be edited by the GUI.
+
+<P>Because the ConfigChunk descriptions can be edited by users and developers,
+applications built on VRLib can use this configuration system to handle
+their own setup information. All that is needed is to add an "ApplicationData"
+ChunkDesc with the appropriate Properties, and put a Chunk of that type
+in one of the configuration files. This can all be done through the GUI.
+VRLib provides an interface for the client application itself to access
+this data.
+
+<P>
+<HR><A NAME="cfgedit"></A>
+<H3>
+The CfgEdit tool</H3>
+blah blah blah java yadda yadda
+<H4>
+Installing CfgEdit</H4>
+
+<OL>
+<LI>
+Make sure you have installed on your system the Java Development Kit (JDK),
+version 1.1.3 or higher. <A HREF="http://java.sun.com/products/jdk/">Sun's
+JDK index page</A> has information about obtaining the JDK for various
+operating systems.</LI>
+
+<LI>
+Make a directory for the CfgEdit files. For demonstration purposes, we'll
+use the directory <TT>/bin/cfgedit</TT>.</LI>
+
+<LI>
+Copy the following files into the directory you just made:</LI>
+
+<PRE>CfgEdit
+c2cfg.html
+c2cfg.jar</PRE>
+
+<LI>
+CfgEdit is a very short script file that can be used to execute the CfgEdit
+tool from any directory. However, it needs to be told how to find the .jar
+file which contains the actual java code. To do this, find this line in
+the file:</LI>
+
+<PRE>java -classpath /bin/cfgedit/c2cfg.jar:$JDK_HOME/lib/classes.zip AppCore</PRE>
+Change the path to c2cfg.jar to whatever directory you moved the files
+to in step 2.
+<LI>
+Before running CfgEdit for the first time, create a directory called <TT>.C2Config</TT>
+in your home directory. This will be used to store your User config files.</LI>
+
+<LI>
+Inside the <TT>.C2Config</TT> directory, create a file called <TT>basedir</TT>.
+This file should contain one line: the name of the directory where the
+Global config and ChunkDesc files are located. (This depends on where you
+installed the rest of VRLib).</LI>
+</OL>
+
+<H4>
+Running CfgEdit</H4>
+Once installed, CfgEdit can be executed either as an application or as
+an applet.
+
+<P>To run as an application, simply run the CfgEdit script. The script
+accepts the name of a User ConfigChunk file as an argument.
+
+<P>To run as an applet, type <TT>appletviewer /bin/cfgedit/c2cfg.html</TT>
+(or whatever the correct path to the html file is). While it is currently
+easiest to run CfgEdit as an application, using the script, we hope to
+soon be able to run the applet from various web browsers.
+
+<P>As soon at it begins, CfgEdit checks the user's .C2Config/basedir file
+to determine where the global configuration files are. It then loads files
+in this order:
+<OL>
+<LI>
+The Global ChunkDesc file, chunkDescs in the basedir.</LI>
+
+<LI>
+The user's User ChunkDesc file, .C2Config/chunkDescs (currently unimplemented).</LI>
+
+<LI>
+The Global ConfigChunk file, <TT>C2config</TT> in the basedir.</LI>
+
+<LI>
+One of the user's User ConfigChunk files, if one was specified.</LI>
+</OL>
+The window that CfgEdit opens has two parts. On the left side is a list
+of the available panels. Double-click on one of the names on the list to
+show that panel in the right side of the window. Currently, there are two
+available panels, one for editing ChunkDesc files and one for editing ConfigChunk
+files.
+<H4>
+Editing ConfigChunks</H4>
+You can access a list of all ConfigChunks in the DB by double-clicking
+on "Chunks" in the Panels list. The list is sorted by type of chunks, so
+that all the Display chunks are listed together, and so on.
+
+<P>The Global config file is usually loaded by default. In addition, you
+can load a User config file on top of the Global file, so that all the
+different Chunks in both files are displayed in the list.
+
+<P>Once you have modified one or more Chunks, there are several options
+for saving your work. Using the "Save Global Config" menu option writes
+the entire contents to the file C2config in the directory given by basedir.
+Of course, you may not have permission to write that file, so there is
+also a "Save Global Config As" option which lets you enter a filename.
+
+<P>You can also save just those Chunks which differ from the Global config
+file. You do this with the "Save User Config" and "Save User Config As"
+menu items, or with the "Save" button to the right of the list of Chunks.
+User config files are always written to the user's .C2Config directory,
+and always have the suffix ".cfg" added to them.
+
+<P>Once you've loaded the config files you want to deal with, you can look
+at and edit the configuration. There are several buttons to the right of
+the list of Chunks which help you do this:
+<UL>
+<LI>
+Insert - inserts a new ConfigChunk. The menu button to the right of the
+Insert button lets you choose the type of ConfigChunk that will be inserted.</LI>
+
+<LI>
+Remove - you can remove a ConfigChunk by selecting it from the list and
+then pressing this button.</LI>
+
+<LI>
+Clear - removes all ConfigChunks.</LI>
+
+<LI>
+Load - does the same thing as the "Load User Config" menu option.</LI>
+
+<LI>
+Save - does the same thing as the "Save User Config" menu option.</LI>
+</UL>
+Double-clicking on a Chunk's name in the list will bring up a new window,
+displaying the Chunk's name and a list of all its properties. A text field
+at the top of the window lets the user change the Chunk's name.
+
+<P>A scrolling list in the middle of the window displays all of the available
+properties. Each property is listed with its name, type, and values. A
+line of help information is also displayed if available. The user can edit
+the displayed values. If the property is of boolean type, or has a list
+of acceptable values, the value is displayed with a pop-up list, from which
+the user can choose a new value. Otherwise, the current value is displayed
+in a text field, in which the user can enter a new numeric or string value.
+
+<P>Press the OK button to close the window and save any changes. Press
+Cancel or the close button to get rid of the window without making any
+changes. Of course, nothing happens to the files on disk until you specifically
+save them.
+<H4>
+Editing Chunk Descriptions</H4>
+You can edit the list of Chunk descriptions by double-clicking on "Descriptions"
+in the Panels list. The panel that shows up looks and functions very similarly
+to the ConfigChunk panel; it has the same buttons which perform the same
+functions, and an analogous set of menu items. The key difference is that
+while there can be multiple User ConfigChunk files in the .C2Config directory,
+there is only one ChunkDesc file - .C2Config/chunkDescs .
+
+<P>The Window for editing a ChunkDesc is much like the window for editing
+a ConfigChunk. The main difference is the addition of "Insert" and "Remove"
+buttons to add and get rid of individual property descriptions.
+
+<P>The ConfigChunk Window had a scrolled list of Properties; the ChunkDesc
+Window has a scrolled list of Property descriptions. Each property description
+has several fields. The first two are for "Name" and "Token". "Name" is
+the string the library or an application will use to access that property.
+"Token" is the string that will be used inside the config file. Most likely
+you'll want these to be the same, but they don't have to be. The major
+limitation is that you may not use white space characters int the Token
+field.
+
+<P>Next there is a field to enter the number of values you want this property
+to have, and a checkbox to select if you want the property to have a variable
+number of values. There is also a text field to enter a help message describing
+what the values for this property mean.
+
+<P>Finally, there is a pulldown list to select the type of this property
+(String, Integer, Float, Boolean, or Chunk), and a button marked&nbsp;
+<HR>
+<H2>
+Known Bugs</H2>
+
+<UL>
+<LI>
+If you create or load a ChunkDesc for a type "foo", and create a ConfigChunk
+of that type, and then edit the ChunkDesc for "foo", the effect on the
+extant ConfigChunks is not defined. They <I>ought</I> to cleanly adapt
+to the new ChunkDesc. What will currently probably <I>happen</I> is that
+the Chunk will retain the old description, save itself according to that
+description, and cause a parse error when it's reloaded.</LI>
+
+
+<P>Reccommended fix: delete all chunks of type "foo" before changing the
+description. In practice, ChunkDescs aren't edited often.
+<LI>
+There should be a way for users to define their own ChunkDescs in a file
+in their own directory (much like the Global/User config files). Currently,
+if a user wants to add a new type of ConfigChunk for an application they
+are creating, the ChunkDesc must be added to the global ChunkDesc file.</LI>
+
+<LI>
+While CfgEdit lets you create value lists for float type Properties, the
+Config system in VRLib itself doesn't support these correctly yet.</LI>
+</UL>
+
+</BODY>
+</HTML>

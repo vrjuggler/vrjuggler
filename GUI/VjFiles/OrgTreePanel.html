@@ -1,0 +1,58 @@
+<html>
+
+<title>Working with ChunkOrgTrees</title>
+
+<body bgcolor="#ffffcc">
+<h2><img src="juggler.gif"></img>
+Working with ChunkOrgTrees</H2>
+
+<h3>Overview</h3>
+ChunkOrgTrees are used to provide the tree layout of config file contents
+used in the "Configure" pane.  By clicking on the "Org Tree" tab, you can
+examine and modify this layout.
+
+<p>
+The bulk of the OrgTree pane is taken up by a view of the tree currently in 
+use.  The folders represent different categories of config data - "input",
+"displays", etc.  The leaves, or documents, of the tree are labeled with 
+the names of types of ConfigChunks.  When viewing a config file in the 
+"Configure" pane, the same tree structure will be used, but the leaves will
+be replaced with folders containing all the chunks in the file of a given
+type.
+
+<p>
+One additional note: a folder in the OrgTree with the name "*" will 
+include all ConfigChunks in a config file, of any type.  It's useful
+to include a folder named "*" in any tree, in case you've forgotten
+to include a chunk type in your structure.  This way, you'll still be 
+guaranteed to be able to see the entire file contents.
+
+<p>
+The New, Save, and Load buttons work in the same way as the other panels, but
+there are also a number of additional features:
+
+<ul>
+<li>The <b>Apply</b> button is used to update the config file views in the
+Configure pane to use the tree shown in the OrgTree pane.  Use this button
+after loading an OrgTree file or making changes to the structure.
+
+<li>You can select elements in the tree by clicking on them.  The <b>Remove</b>
+button deletes all selected elements from the tree.<html>
+
+<li>You can change the name of a tree element by double-clicking on it.
+
+<li>Right-clicking on a tree element brings up a context menu.  This
+menu lets you insert folders or Chunk types, or remove the element.
+
+</ul>
+
+<h3>Missing Functionality</h3>
+The major missing feature in the current OrgTree is the ability to drag
+around elements of the tree to rearrange them.  This ability is forthcoming.
+For the time being, curious and adventurous readers are referred to the
+<a href="OrgTreeFormat.html">OrgTree File Format spec</a>.
+
+<br><br><br><br>
+
+</body>
+</html>
