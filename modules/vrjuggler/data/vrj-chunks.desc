@@ -71,11 +71,6 @@ chunk PosProxy "Position Proxy" "Used to access a single positional input source
   useFilter Bool 1 "Use Filter" ""
   sigmoidParams EmbeddedChunk 1 "sigmoidParams" vj_enumeration { "sigmoid_linear_pos_filter" } ""
   end
-chunk InputManager "Input Manager" "Configure the initial Input Manager settings."
-  Name String 1 "Name" "Unique name of an instance of this chunk type"
-  dummyPos Float 3 "Dummy Position" vj_valuelabels { "X" "Y" "Z" } "The Position of the dummy value."
-  dummyOr Float 3 "Dummy Orientation" vj_valuelabels { "X" "Y" "Z" } "The Euler XYZ orientation of the dummy"
-  end
 chunk Flock "Flock of Birds" "Configuration for Ascension Flock of Birds"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   port String 1 "Port" "Serial port the Flock is attached to"
