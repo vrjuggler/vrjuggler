@@ -38,7 +38,7 @@
 
 #include <vpr/Util/Singleton.h>
 
-#include <vrj/Kernel/SystemFactory.h>
+//#include <vrj/Kernel/SystemFactory.h>
 #include <vpr/Sync/CondVar.h>
 
 #include <gadget/Type/DigitalInterface.h>
@@ -207,19 +207,15 @@ protected:      // --- DRAW MGR ROUTINES --- //
 
 public:      // Global "get" interface
 
-   /** Get the system Factory */
-   vrj::SystemFactory* getSysFactory()
-   { return mSysFactory; }
-
-   /** Get the input manager */
+   /** Get the Input Manager. */
    gadget::InputManager* getInputManager();
 
-   /** Get the user associated with given name
-   * return NULL - Not found
-   */
+   /** Get the user associated with given name.
+    * @return NULL if not found.
+    */
    vrj::User*  getUser(std::string userName);
 
-   /** Get a list of the users back */
+   /** Get a list of the users back. */
    std::vector<vrj::User*> getUsers()
    { return mUsers; }
 
@@ -237,7 +233,6 @@ protected:
    vpr::CondVar       mExitWaitCondVar;         /**< Cond var for waiting for exit */
 
    /// Factories and Managers
-   vrj::SystemFactory*        mSysFactory;            /**< The current System factory */
    gadget::InputManager*      mInputManager;          /**< The input manager for the system  */
    DrawManager*               mDrawManager;           /**< The Draw Manager we are currently using */
    SoundManager*              mSoundManager;          /**< The Audio Manager we are currently using  */
@@ -262,6 +257,6 @@ protected:
    vprSingletonHeader( Kernel );
 };
 
-
 } // end namespace
+
 #endif
