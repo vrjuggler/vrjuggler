@@ -23,7 +23,8 @@ import org.vrjuggler.jccl.config.io.*;
    public void setUp()
    {
       String base_dir = System.getProperty("DATA_DIR");
-      mConfigFile = new File(base_dir, "test.jconf");
+      mPersonDefFile  = new File(base_dir, "person.jdef");
+      mConfigFile     = new File(base_dir, "test.jconf");
    }
 
    public void testParseConfiguration()
@@ -32,6 +33,15 @@ import org.vrjuggler.jccl.config.io.*;
       {
          // Create the repository
          ConfigDefinitionRepository repos = new ConfigDefinitionRepository();
+         ConfigDefinitionReader def_reader = new ConfigDefinitionReader(mPersonDefFile);
+         List defs = def_reader.readDefinition();
+
+         assertTrue(defs.size() == 1);
+         PropertyDefinition prop_def;
+
+         // Person element
+         ConfigDefinition def = (ConfigDefinition)defs.get(0);
+         repos.add(def);
 
          // Create the reader and read in the configuration
          ConfigurationReader reader = new ConfigurationReader(mConfigFile, repos);
@@ -68,5 +78,6 @@ import org.vrjuggler.jccl.config.io.*;
       }
    }
 
+   private File mPersonDefFile;
    private File mConfigFile;
 }
