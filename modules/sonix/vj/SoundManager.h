@@ -7,10 +7,9 @@
 
 namespace vrj
 {
-
    //: vrjuggler sound manager
    //!PUBLIC_API:
-   class SoundManager : public vjConfigChunkHandler, public vjSingleton<vrj::SoundManager>
+   class SoundManager : public vjConfigChunkHandler, public vrj::Singleton<SoundManager>
    {
    public:
       //: Add the chunk to the configuration
@@ -33,10 +32,6 @@ namespace vrj
       //: Blocks until the end of the frame
       //! POST: The frame has been rendered
       virtual void sync();
-
-   protected:
-      //: Constructor.
-      SoundManager();
    };
 }; // end namespace
 

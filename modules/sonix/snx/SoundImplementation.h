@@ -17,11 +17,12 @@ public:
    /**
     * @semantics default constructor 
     */
-   SoundImplementation() : mSounds(), mName( "unknown" )
+   SoundImplementation() : mName( "unknown" ),
+                           mSoundAPIInfo(),
+                           mSounds(),
+                           mListenerPos()
    {
-      mListenerPos[0] = 0.0f;
-      mListenerPos[1] = 0.0f;
-      mListenerPos[2] = 0.0f;
+      mListenerPos.makeIdent();
    }
 
    /**
