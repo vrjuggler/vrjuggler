@@ -254,55 +254,60 @@ public class ProxyEditor
                                      "Enter a name for the new input source",
                                      "New Input Source Name",
                                      JOptionPane.QUESTION_MESSAGE);
-      String proxy_name = alias_name + " Proxy";
-      ConfigBroker broker = new ConfigBrokerProxy();
-      ConfigElementFactory factory =
-         new ConfigElementFactory(broker.getRepository().getAllLatest());
 
-      ConfigElement proxy = factory.create(proxy_name, mProxyDef);
-      proxy.setProperty("device", 0, mDeviceElt.getName());
-
-      // If we are working with a position proxy, we have to fill in a default
-      // position transform filter.  It's too bad that this has to be here.
-      if ( mProxyDef.getToken().equals(EditorConstants.position_proxy_type) )
+      if ( alias_name != null )
       {
-         ConfigDefinition filter_def =
-            broker.getRepository().get(EditorConstants.position_transform_filter_type);
-         ConfigElement xform_filter = factory.create("Transform Filter 0",
-                                                     filter_def);
+         String proxy_name = alias_name + " Proxy";
+         ConfigBroker broker = new ConfigBrokerProxy();
+         ConfigElementFactory factory =
+            new ConfigElementFactory(broker.getRepository().getAllLatest());
 
-         // Add the new config element to the position_filters property.
-         proxy.addProperty(EditorConstants.position_filters_prop,
-                           xform_filter);
-      }
+         ConfigElement proxy = factory.create(proxy_name, mProxyDef);
+         proxy.setProperty("device", 0, mDeviceElt.getName());
 
-      broker.add(mContext, proxy);
+         // If we are working with a position proxy, we have to fill in a
+         // default position transform filter.  It's too bad that this has to
+         // be here.
+         if ( mProxyDef.getToken().equals(EditorConstants.position_proxy_type) )
+         {
+            ConfigDefinition filter_def =
+               broker.getRepository().get(EditorConstants.position_transform_filter_type);
+            ConfigElement xform_filter = factory.create("Transform Filter 0",
+                                                        filter_def);
 
-      ConfigDefinition alias_def = broker.getRepository().get("alias");
-      ConfigElement alias = factory.create(alias_name, alias_def);
-      alias.setProperty("proxy", 0, proxy_name);
-      broker.add(mContext, alias);
+            // Add the new config element to the position_filters property.
+            proxy.addProperty(EditorConstants.position_filters_prop,
+                              xform_filter);
+         }
 
-      try
-      {
-         Class editor_class = pickProxyTypeEditor();
-         ProxyElement proxy_elt = new ProxyElement(proxy);
+         broker.add(mContext, proxy);
 
-         Constructor ctor       = editor_class.getConstructor(null);
-         ProxyTypeEditor editor = (ProxyTypeEditor) ctor.newInstance(null);
+         ConfigDefinition alias_def = broker.getRepository().get("alias");
+         ConfigElement alias = factory.create(alias_name, alias_def);
+         alias.setProperty("proxy", 0, proxy_name);
+         broker.add(mContext, alias);
 
-         editor.setConfig(mContext, proxy);
-         proxy_elt.setPanel(editor);
-         proxy_elt.addAlias(alias);
+         try
+         {
+            Class editor_class = pickProxyTypeEditor();
+            ProxyElement proxy_elt = new ProxyElement(proxy);
 
-         // This proxy config element will only be used by the editor
-         // if its editor was successfully created and configured.
-         // Otherwise, there is no point in holding onto it.
-         ((DefaultListModel) mProxyList.getModel()).addElement(proxy_elt);
-      }
-      catch(Exception ex)
-      {
-         ex.printStackTrace();
+            Constructor ctor       = editor_class.getConstructor(null);
+            ProxyTypeEditor editor = (ProxyTypeEditor) ctor.newInstance(null);
+
+            editor.setConfig(mContext, proxy);
+            proxy_elt.setPanel(editor);
+            proxy_elt.addAlias(alias);
+
+            // This proxy config element will only be used by the editor
+            // if its editor was successfully created and configured.
+            // Otherwise, there is no point in holding onto it.
+            ((DefaultListModel) mProxyList.getModel()).addElement(proxy_elt);
+         }
+         catch(Exception ex)
+         {
+            ex.printStackTrace();
+         }
       }
    }
 
