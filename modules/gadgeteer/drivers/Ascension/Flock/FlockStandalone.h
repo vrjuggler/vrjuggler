@@ -283,7 +283,7 @@ namespace Flock
 
       /** Does the unit have a sensor? */
       inline bool hasSensor(vpr::Uint8 bstatus)
-      { return (AccessibleBit & bstatus); }
+      { return (SensorBit & bstatus); }
 
       inline bool isErt(vpr::Uint8 bstatus)
       { return (ErtBit & bstatus); }
@@ -455,8 +455,6 @@ public:
     *          doesn't actually talk to the FOB yet.
     */
    FlockStandalone(std::string port,
-                   const unsigned& numBrds = 3,
-                   const int& transmit = 3,
                    const int& baud = 38400,
                    const int& sync = 1,
                    const BIRD_HEMI& hemi = LOWER_HEM,
@@ -525,25 +523,6 @@ public:
    /** Gets the baud rate. */
    const int& getBaudRate() const
    { return mBaud; }
-
-   /**
-    * Sets the unit number of the transmitter.
-    * @param Transmit An integer that is the same as the dip switch
-    *                 setting on the transmitter box (for the unit number).
-    */
-   void setTransmitter( const int& Transmit );
-
-   /**
-    * Gets the unit number of the transmitter.
-    *
-    * @return An integer that is the same as the dip switch
-    *         setting on the transmitter box (for the unit number).
-    */
-   /*inline const int& getTransmitter() const
-   {
-      return mXmitterUnitNumber;
-   }
-   */
 
    /**
     * Sets the number of birds to use in the Flock.
@@ -775,8 +754,7 @@ private:  // --- Data members --- //
    std::string           mModelId;        /**< Model id for the system we are connected to */
    unsigned              mMasterAddr;     /**< Address of the master */
 
-   unsigned              mNumSensors;     /**< Number of sensorts in the flock */
-   int               mXmitterUnitNumber;  /**< Unit number of the transmitter */
+   unsigned              mNumSensors;     /**< Number of sensors in the flock */
 
    Flock::Output::Format mOutputFormat;   /**< The output format to configure the flock to use */
    Flock::ReportRate     mReportRate;     /**< The report rate we to use when configuring the flock */
@@ -789,7 +767,7 @@ private:  // --- Data members --- //
    unsigned                mActiveUnitEndIndex;      /**< Index of end of active units (one past last active) */
    std::vector<vpr::Uint8> mXmitterIndices;          /**< Indices into mFlockUnits of the transmitters */
 
-   /** Maps the addr of a unit to the index of the associated sensor in mSensorData. -1 means no sensor at that addr */
+   /** Maps the addr of a unit (flock addr) to the index of the associated sensor in mSensorData (vrj unit). -1 means no sensor at that addr */
    std::vector<int>        mAddrToSensorIdMap;
 
    /** Current sensor data for all sensors in flock.
