@@ -125,12 +125,12 @@ public class ConfigChunk {
 
 
     public final String getName() {
-	return name;
+        return name;
     }
 
     public final void setName (String s) {
         setLastNameComponent(s);
-	//name = s;
+        //name = s;
         //validateEmbeddedChunkNames();
     }
 
@@ -265,12 +265,12 @@ public class ConfigChunk {
     }
 
     public final String getDescName() {
-	return desc.getName();
+        return desc.getName();
     }
 
 
     public final String getDescToken() {
-	return desc.getToken();
+        return desc.getToken();
     }
 
     public final String getDescHelp() {
@@ -296,24 +296,32 @@ public class ConfigChunk {
 
 
     public boolean equals (ConfigChunk c) {
-	Property p1, p2;
+        Property p1, p2;
         if (c == null)
+        {
             return false;
-	if (!name.equals(c.name))
-	    return false;
-	if (!desc.token.equals(c.desc.token))
-	    return false;
+        }
+        if (!name.equals(c.name))
+        {
+            return false;
+        }
+        if (!desc.token.equals(c.desc.token))
+        {
+            return false;
+        }
 
-	/* This next part is O(n^2) <sigh> */
-	for (int i = 0; i < props.size(); i++) {
-	    p1 = (Property) props.get(i);
-	    p2 = c.getProperty(p1.getToken());
-	    if (!p1.equals(p2))
-		return false;
-	}
-	return true;
+        /* This next part is O(n^2) <sigh> */
+        for (int i = 0; i < props.size(); i++)
+        {
+            p1 = (Property) props.get(i);
+            p2 = c.getProperty(p1.getToken());
+            if (!p1.equals(p2))
+            {
+                return false;
+            }
+        }
+        return true;
     }
-
 
     public int getPropertiesSize() {
         return props.size();
@@ -326,22 +334,24 @@ public class ConfigChunk {
 
 
     public Property getProperty(String n) {
-	Property p;
-	for (int i = 0; i < props.size(); i++) {
-	    p = (Property)props.get(i);
-	    if (p.getName().equalsIgnoreCase(n))
-		return p;
-	}
-	return null;
+        Property p;
+        for (int i = 0; i < props.size(); i++)
+        {
+            p = (Property)props.get(i);
+            if (p.getName().equalsIgnoreCase(n))
+            {
+                return p;
+            }
+        }
+        return null;
     }
 
-
-
     public boolean setPropertyFromToken (String tok, VarValue val, int i) {
-	// sets the ith value in property tok to val
-	Property p = getPropertyFromToken (tok);
-	if (p != null) {
-	    p.setValue (val, i);
+        // sets the ith value in property tok to val
+        Property p = getPropertyFromToken (tok);
+        if (p != null)
+        {
+            p.setValue (val, i);
             return true;
         }
         else {
@@ -366,14 +376,17 @@ public class ConfigChunk {
 
 
     public Property getPropertyFromToken(String _token) {
-	Property p;
+        Property p;
         int i, n = props.size();
-	for (i = 0; i < n; i++) {
-	    p = (Property)props.get(i);
-	    if (p.getToken().equalsIgnoreCase(_token))
-		return p;
-	}
-	return null;
+        for (i = 0; i < n; i++)
+        {
+            p = (Property)props.get(i);
+            if (p.getToken().equalsIgnoreCase(_token))
+            {
+                return p;
+            }
+        }
+        return null;
     }
 
 
@@ -388,37 +401,44 @@ public class ConfigChunk {
 
     /** Returns a vector of ConfigChunk names this chunk depends on */
     public List getDependencyNames() {
-	int j, k;
-	ConfigChunk ch2;
-	Property p;
-	String s;
-	VarValue val;
+        int j, k;
+        ConfigChunk ch2;
+        Property p;
+        String s;
+        VarValue val;
         ArrayList results = new ArrayList();
 
-	for (j = 0; j < props.size(); j++) {
-	    p = (Property)props.get(j);
-	    if (p.valtype == ValType.CHUNK) {
-		for (k = 0; k < p.vals.size(); k++) {
-		    s = ((VarValue)p.vals.get(k)).getString();
+        for (j = 0; j < props.size(); j++)
+        {
+            p = (Property)props.get(j);
+            if (p.valtype == ValType.CHUNK)
+            {
+                for (k = 0; k < p.vals.size(); k++)
+                {
+                    s = ((VarValue)p.vals.get(k)).getString();
                     if (!s.equals(""))
+                    {
                         results.add (s);
+                    }
                 }
-	    }
-	    else if (p.valtype == ValType.EMBEDDEDCHUNK) {
-		for (k = 0; k < p.vals.size(); k++) {
-		    ch2 = ((VarValue)p.vals.get(k)).getEmbeddedChunk();
+            }
+            else if (p.valtype == ValType.EMBEDDEDCHUNK)
+            {
+                for (k = 0; k < p.vals.size(); k++)
+                {
+                    ch2 = ((VarValue)p.vals.get(k)).getEmbeddedChunk();
                     List results2 = ch2.getDependencyNames();
                     results.addAll (results2);
-		}
-	    }
-	}
-	return results;
+                }
+            }
+        }
+        return results;
     }
 
 
 
     public final String toString () {
-	return xmlRep();
+        return xmlRep();
     }
 
 
@@ -445,7 +465,4 @@ public class ConfigChunk {
         s.append(">\n");
         return s.toString();
     }
-
-
 }
-
