@@ -24,8 +24,10 @@ require Exporter;
 
 my(%book) = ();
 
-$book{'title'}    = '';
-$book{'chapters'} = [];
+$book{'title'}      = '';
+$book{'files'}      = [];
+$book{'chapters'}   = [];
+$book{'appendices'} = [];
 
 sub useme () {
     xmlToc::setAction("folder", \&xmlToc_htmlBookActions::pushFolder_action);
@@ -51,12 +53,14 @@ sub pushFolder_action ($$$$$) {
     outputIndents($xmlToc_data_out, $indent_level);
 
     if ( $whatAmI =~ /rootfolder/ ) {
-        $book{'title'}       = "$title";
-        @{$book{'chapters'}} = ();
+        $book{'title'}         = "$title";
+        @{$book{'files'}}      = ();
+        @{$book{'chapters'}}   = ();
+        @{$book{'appendices'}} = ();
     }
 
     if ( $myParams =~ /link\s*=\s*"(.*?)"/si ) {
-        push(@{$book{'chapters'}}, "$1");
+        push(@{$book{'files'}}, "$1");
     }
 
     outputIndents($xmlToc_data_out, $indent_level);
@@ -98,9 +102,32 @@ sub popFolder_action ($$$$$) {
         #         root directory of the web install
         $$xmlToc_data_out =~ s/<link(.*?)\"stylesheet\"(.*?)href(.*?)\"/$&$html_install_prefix/gis;
 
-        foreach ( @{$book{'chapters'}} ) {
+        # Loop over all the HTML files and process each one.
+        foreach ( @{$book{'files'}} ) {
             print "+";
-            printChapter($xmlToc_data_out, "$_");
+            processFile("$_");
+        }
+
+        # If this book has any chapters, concatenate them.  The files will
+        # already have been processed and stored in the book's chapters array
+        # by processFile().
+        if ( $#{$book{'chapters'}} > -1 ) {
+            foreach ( @{$book{'chapters'}} ) {
+                print 'c';
+                $$xmlToc_data_out .= "$_";
+            }
+        }
+
+        # If this book has any appendices, make an Appendices section and
+        # append them.  The files will already have been processed and
+        # stored in the book's appendices array by processFile().
+        if ( $#{$book{'appendices'}} > -1 ) {
+            $$xmlToc_data_out .= "<!--NewPage-->\n<H1>Appendices</H1>\n\n";
+
+            foreach ( @{$book{'appendices'}} ) {
+                print '@';
+                $$xmlToc_data_out .= "$_";
+            }
         }
 
         # Insert footer.
@@ -142,7 +169,7 @@ sub item_action ($$$$$) {
 
     if ( $myParams =~ /link[ ]*=[ ]*"(.*?)"/s ) {
         $link = "$1";
-        push(@{$book{'chapters'}}, "$link");
+        push(@{$book{'files'}}, "$link");
     }
 
     if ( $myParams =~ /jit[ ]*=[ ]*"(.*?)"/s ) {
@@ -171,19 +198,13 @@ sub outputIndents ($$) {
     }
 }
 
-sub printChapter ($$) {
-    my $output_ref   = shift;
-    my $chapter_file = shift;
+sub processFile ($) {
+    my $file = shift;
 
-    my $html ='';
-
-    if ( loadHTML(\$html, "$chapter_file", 0) ) {
-        $$output_ref .= "$html";
-    }
+    loadHTML("$file", 0);
 }
 
-sub loadHTML ($$$$) {
-    my $data         = shift;
+sub loadHTML ($$$) {
     my $input_file   = shift;
     my $use_feedback = shift;
 
@@ -205,7 +226,19 @@ sub loadHTML ($$$$) {
         filterHTML(\$body);
 
         # At this point, the HTML is suitable for appending.
-        $$data .= "$body";
+
+        my $html_comment_begin = $InstallWeb::html_comment_begin;
+        my $html_comment_end   = $InstallWeb::html_comment_end;
+
+        # If this file is flagged as an appendix, move its contents to the
+        # book's appendices.
+        if ( $body =~ /${html_comment_begin}\s+install-web\s+appendix\s*${html_comment_end}/is ) {
+            push(@{$book{'appendices'}}, "$body");
+        }
+        # Otherwise, put the file contents in the chapter array.
+        else {
+            push(@{$book{'chapters'}}, "$body");
+        }
     }
     else {
         warn "WARNING: Could not open $input_file for reading: $!\n";
