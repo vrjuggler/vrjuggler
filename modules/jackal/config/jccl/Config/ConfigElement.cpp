@@ -551,7 +551,7 @@ cppdom::NodePtr ConfigElement::getPropertyCdataNode(const std::string& prop, int
       {
          cppdom::NodePtr new_cdata_node = ElementFactory::instance()->createXMLNode();
          new_cdata_node->setName("cdata");
-         new_cdata_node->setType(cppdom::xml_nt_cdata);
+         new_cdata_node->setType(cppdom::Node::xml_nt_cdata);
          (*property_i)->addChild(new_cdata_node);
          cdata_node = new_cdata_node;
       }
