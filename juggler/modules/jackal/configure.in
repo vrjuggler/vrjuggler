@@ -107,10 +107,6 @@ DPP_WITH_GCC(no)
 # Define the binary format.
 DPP_ABI_SETUP
 
-AC_ARG_WITH(cppdom,
-            [  --with-cppdom=<PATH>    CppDOM installation directory   [default=$JUGGLERROOT_ABS/external/cppdom]],
-            CPPDOM_ROOT="$withval", CPPDOM_ROOT="$JUGGLERROOT_ABS/external/cppdom")
-
 # Specify where JDOM is located
 AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
             JDOM_JAR="$withval", JDOM_JAR='none')
@@ -227,61 +223,6 @@ TWEEK_PATH_JAVA([0.10.1], ,
 BUILD_CXX='Y'
 
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-
-# -----------
-# cppdom
-# -----------
-_vjsave_CFLAGS="$CFLAGS"
-_vjsave_CPPFLAGS="$CPPFLAGS"
-_vjsave_INCLUDES="$INCLUDES"
-_vjsave_LDFLAGS="$LDFLAGS"
-
-# XXX: There are problems with the use of $CPPDOM_ROOT for installed versions
-# of cppdom!!!
-
-# Ensure that /usr/include and /usr/lib are not included multiple times
-# if $CPPDOM_ROOT is "/usr".
-# XXX: Should be -I$CPPDOM_ROOT/include
-if test "x$CPPDOM_ROOT" != "x/usr" ; then
-    CPPFLAGS="$STDFLAGS -I$CPPDOM_ROOT $CPPFLAGS"
-    INCLUDES="-I$CPPDOM_ROOT $INCLUDES"
-    LDFLAGS="-L$CPPDOM_ROOT/lib $LDFLAGS"
-fi
-
-CXXFLAGS="$CXXFLAGS $STDFLAGS $INCLUDES ${_EXTRA_FLAGS}"
-
-# Add in the tweek flags if RTRC is enabled
-if test "x$enable_corba_rtrc" = "xyes" ; then
-   CXXFLAGS="$CXXFLAGS $TWEEK_CXXFLAGS"
-fi
-
-DPP_LANG_SAVE
-DPP_LANG_CPLUSPLUS
-
-# XXX: Should be $CPPDOM_ROOT/include
-AC_CHECK_HEADER([cppdom/config.h],
-    [cppdom_include="$CPPDOM_ROOT"],
-    [AC_MSG_ERROR([*** CppDOM is required for JCCL ***])])
-
-DPP_LANG_RESTORE
-
-CPPDOM_INCLUDES="-I$cppdom_include"
-
-if test "x$CPPDOM_ROOT" != "x$JUGGLERROOT_ABS/external/cppdom" ; then
-    LOCAL_CPPDOM='Y'
-fi
-
-if test "x$CYGPATH" != "xno" ; then
-   UNIX_CPPDOM_ROOT=`cygpath -u $CPPDOM_ROOT`
-else
-   UNIX_CPPDOM_ROOT="$CPPDOM_ROOT"
-fi
-
-CFLAGS="${_vjsave_CFLAGS}"
-CPPFLAGS="${_vjsave_CPPFLAGS}"
-INCLUDES="${_vjsave_INCLUDES}"
-LDFLAGS="${_vjsave_LDFLAGS}"
-
 DPP_HAVE_CPPUNIT([1.9.10])
 
 # -----------------------------------------------------------------------------
@@ -324,10 +265,6 @@ if test "x$GXX" = "xyes" ; then
    CXXFLAGS="-Wall $CXXFLAGS"
 fi
 
-if test "x$CPPDOM_INCLUDES" != "x" ; then
-    INCLUDES="$INCLUDES $CPPDOM_INCLUDES"
-fi
-
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN $TWEEK_CXXFLAGS_MIN"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 DEPEND_FLAGS="$VPR_INCLUDES_MIN $TWEEK_INCLUDES_MIN"
@@ -341,11 +278,6 @@ jccl_dep_scripts='vpr-config'
 if test "x$HAVE_TWEEK_CXX" = "xY" ; then
    jccl_dep_scripts="tweek-config $jccl_dep_scripts"
    jccl_cxxflags="$jccl_cxxflags $TWEEK_CXXFLAGS_MIN"
-fi
-
-# If the user has a local copy of CppDOM, add its path to the C++ flags.
-if test "x$LOCAL_CPPDOM" = "xY" ; then
-   jccl_cxxflags="$jccl_cxxflags $CPPDOM_INCLUDES"
 fi
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
@@ -383,11 +315,11 @@ UNIX_JCCLROOT_ABS="$JCCLROOT_ABS"
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
     APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
-    jccl_extra_libs="$LDFLAGS $LIBS"
+    jccl_extra_libs="$LDFLAGS $TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN $LIBS"
 else
     APP_EXTRA_LIBS="$LDFLAGS $TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
     APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
-    jccl_extra_libs="$LDFLAGS $LIBS"
+    jccl_extra_libs="$LDFLAGS $TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN $LIBS"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -520,11 +452,6 @@ AC_SUBST(JDOM_JAR)
 
 AC_SUBST(BUILD_JAVA_TEST_SUITE)
 AC_SUBST(JUNIT_JAR)
-
-AC_SUBST(CPPDOM_ROOT)
-AC_SUBST(CPPDOM_INCLUDES)
-AC_SUBST(UNIX_CPPDOM_ROOT)
-AC_SUBST(LOCAL_CPPDOM)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
