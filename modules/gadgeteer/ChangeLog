@@ -1,6 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
-Mar-21-2002 allenb    GMTL port.
+Apr-09-2002 allenb    GMTL port.
+                      NEW VERSION: 0.2.0
 Mar-10-2002 patrickh  Renamed the class ibox2 to IboxStandalone.
 Feb-24-2002 allenb    Added interface to Digital, Analog, and Position to
                       allow returning of current sample buffer.  This feature
