@@ -66,11 +66,13 @@ import org.vrjuggler.tweek.services.*;
  * @see org.vrjuggler.tweek.BeanContainer
  */
 public class TweekFrame extends JFrame implements BeanFocusChangeListener,
-                                                  MessageAdditionListener
+                                                  MessageAdditionListener,
+                                                  BeanInstantiationListener
 {
    public TweekFrame ()
    {
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
+      BeanInstantiationCommunicator.instance().addBeanInstantiationListener(this);
    }
 
    public void setBeanViewer (String viewer)
@@ -114,6 +116,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
             (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
          UIManager.setLookAndFeel( prefs.getLookAndFeel() );
          jbInit();
+         mBeanPrefsDialog =
+            new BeanPrefsDialog(this, "Bean-Specific Preferences Editor");
       }
       catch (Exception e)
       {
@@ -162,6 +166,33 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       if ( prefs.getUserLevel() <= 5 )
       {
          mStatusMsgLabel.setText("New message in message panel ");
+      }
+   }
+
+   /**
+    * @post If the instantiated Bean implements the BeanPreferences
+    *       interface, its preferences are loaded, and its editor is added to
+    *       the Bean-specified editor dialog.
+    */
+   public void beanInstantiated (BeanInstantiationEvent e)
+   {
+      Object new_bean = ((TweekBean) e.getBean()).getBean();
+
+      if ( new_bean instanceof BeanPreferences )
+      {
+         try
+         {
+            ((BeanPreferences) new_bean).load();
+         }
+         catch (java.io.IOException io_ex)
+         {
+            MessagePanel.instance().printWarning("Failed to load preferences for " +
+                                                 ((TweekBean) e.getBean()).getName() +
+                                                 ": " + io_ex.getMessage());
+         }
+
+         mBeanPrefsDialog.addPrefsBean((BeanPreferences) new_bean);
+         mMenuPrefsBeanEdit.setEnabled(true);
       }
    }
 
@@ -223,6 +254,13 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       mMenuPrefsBeanEdit.setMnemonic('B');
       mMenuPrefsBeanEdit.setText("Edit Bean-Specific ...");
       mMenuPrefsBeanEdit.setEnabled(false);
+      mMenuPrefsBeanEdit.addActionListener(new ActionListener()
+         {
+            public void actionPerformed (ActionEvent e)
+            {
+               prefsEditBean(e);
+            }
+         });
 
       mMenuBeansLoad.setMnemonic('L');
       mMenuBeansLoad.setText("Load Beans ...");
@@ -525,6 +563,11 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       }
    }
 
+   private void prefsEditBean (ActionEvent e)
+   {
+      mBeanPrefsDialog.display();
+   }
+
    private void beansLoadAction (ActionEvent e)
    {
       GlobalPreferencesService prefs =
@@ -673,4 +716,6 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
    // Networking stuff.
    private Vector mORBs = new Vector();
+
+   private BeanPrefsDialog mBeanPrefsDialog = null;
 }

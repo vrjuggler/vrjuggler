@@ -716,6 +716,7 @@ AC_OUTPUT(tweek-config
           tweek/Util/Makefile
           tweek/idl/Makefile
           test/Makefile
+          test/PrefsTestBean/Makefile
           test/NetworkTestBean/Makefile
           test/TestBean/Makefile
           test/TestSuite/Makefile
