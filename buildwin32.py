@@ -823,6 +823,10 @@ def installGadgeteer(prefix):
    srcdir  = os.path.join(juggler_dir, 'vc7', 'Gadgeteer', 'gadget')
    installDir(srcdir, destdir, ['.h'])
 
+   destdir = os.path.join(prefix, 'include', 'cluster')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'cluster')
+   installDir(srcdir, destdir, ['.h'])
+
    destdir = os.path.join(prefix, 'lib')
    srcroot = os.path.join(juggler_dir, 'vc7', 'Gadgeteer')
    installLibs(srcroot, destdir)
