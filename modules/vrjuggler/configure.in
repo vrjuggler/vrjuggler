@@ -248,6 +248,12 @@ case $target_os in
         ;;
     dnl # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
     cygwin)
+        dnl # There is no performance testing/monitoring code for Win32 (yet).
+        if test "x${_enable_perf}" != "xNONE" ; then
+            AC_MSG_WARN(*** Disabling performance testing on $host ***)
+            _enable_perf='NONE'
+        fi
+
         dnl # We have to use Win32 threads on Win32.
         if test "x${_thread_pkg}" != "xWIN32" ; then
             AC_MSG_WARN(*** WIN32 threads must be used on $host ***)
