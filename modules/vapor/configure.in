@@ -685,8 +685,15 @@ else
    AC_PATH_PROG(CPPDOM_CONFIG, [cppdom-config], [no], [$cppdom_path])
 
    if test "x$CPPDOM_CONFIG" != "xno" ; then
-      CPPDOM_CXXFLAGS=`$CPPDOM_CONFIG --cxxflags`
-      cppdom_lib_output=`$CPPDOM_CONFIG --libs`
+      if test "x$cppdom_root" = "x" ; then
+         # XXX: This expression is not as robust as it ought to be.  It assumes
+         # that cppdom-config is in a directory called 'bin'.  That is not
+         # entirely invalid, but it is not flexible either.
+         cppdom_root=`echo $CPPDOM_CONFIG | sed -e 's|\(.*\)/bin/cppdom-config$|\1|'`
+      fi
+
+      CPPDOM_CXXFLAGS=`CPPDOM_BASE_DIR=$cppdom_root $CPPDOM_CONFIG --cxxflags --basedir`
+      cppdom_lib_output=`CPPDOM_BASE_DIR=$cppdom_root $CPPDOM_CONFIG --libs --basedir`
       changequote(<<, >>)
       # XXX: These sed(1) expressions could be improved.
       CPPDOM_LDFLAGS=`echo $cppdom_lib_output | sed -e 's/-l[^ ]*//g'`
