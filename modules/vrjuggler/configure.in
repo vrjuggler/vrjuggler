@@ -57,16 +57,18 @@ DPP_GEN_RECONFIG
 
 DPP_STD_CPP(yes)
 
-AC_ARG_ENABLE(sound,
-              [  --enable-sound          Enable AudioJuggler sound       [default=no]],
-              AJSOUNDMANAGER="$enableval", AJSOUNDMANAGER='no')
+AC_ARG_ENABLE(sonix,
+              [  --enable-sonix          Enable Sonix reconfiguration    [default=no]],
+              SONIX_SOUNDMANAGER="$enableval", SONIX_SOUNDMANAGER='no')
 
-if test "$AJSOUNDMANAGER" = "yes" ; then
-   USE_AUDIOJUGGLER='Y'
+if test "$SONIX_SOUNDMANAGER" = "yes" ; then
+   USE_SONIX='Y'
+   SNX_PATH(0.0.3, , AC_MSG_ERROR(*** Can't find sonix ***))
 else
-   USE_AUDIOJUGGLER='N'
+   USE_SONIX='N'
 fi
-AC_SUBST(USE_AUDIOJUGGLER)
+AC_SUBST(USE_SONIX)
+
 
 
 
@@ -487,7 +489,7 @@ if test "x$GXX" = "xyes" ; then
     CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 fi
 
-CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $SNX_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
@@ -528,9 +530,9 @@ UNIX_VJROOT_ABS="$VJROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $JCCL_LIBS_LD comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $JCCL_LIBS_LD $SNX_LIBS_LD comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $JCCL_LIBS_CC $LIBS $DTK_LDFLAGS -lm"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $JCCL_LIBS_CC $SNX_LIBS_CC $LIBS $DTK_LDFLAGS -lm"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
