@@ -54,6 +54,11 @@ namespace tweek
 const std::string SubjectManagerImpl::USERNAME_KEY("Username");
 const std::string SubjectManagerImpl::APPNAME_KEY("Application");
 
+SubjectManagerImpl::~SubjectManagerImpl()
+{
+
+}
+
 void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
                                          const char* name)
 {
