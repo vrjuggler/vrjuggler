@@ -55,8 +55,9 @@ const unsigned short MSG_DATA_ANALOG = 421;
  * Analog inherits from Input, so it has pure virtual function
  * constraints from Input in the following functions: StartSampling,
  * StopSampling, Sample, and UpdateData. <br> <br>
- * Analog adds one new pure virtual function, GetAnalogData for retreiving
- * the analog data, similar to the addition for Position and Digital.
+ * Analog adds one new pure virtual function, getAnalogData() for retreiving
+ * the analog data, similar to the addition for gadget:;Position and
+ * gadget:;Digital.
  */
 class GADGET_CLASS_API Analog : public vpr::SerializableObject
 {
@@ -144,6 +145,10 @@ protected:
    float getMax() const;
    void setMin(float mIn);
    void setMax(float mAx);
+
+   // gadget::SampleBuffer<T> is not copyable, so neither are we.
+   Analog(const gadget::Analog& d) : vpr::SerializableObject() {;}
+   void operator=(const gadget::Analog& d) {;}
 
 private:
    float mMin, mMax;
