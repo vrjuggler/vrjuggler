@@ -2,9 +2,8 @@ DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
 2001-12-09 patrickh Disallowed the overriding of the VPR "domain" (the thing
                     that defines what sockets, threads, etc. to use) by user
-                    code.  The classes vpr::BaseIOStatsStrategy,
-                    vpr::SocketAcceptor, and vpr::SocketConnector are now
-                    templatized classes.
+                    code.  The class vpr::BaseIOStatsStrategy is now a
+                    templatized class.
                     NEW VERSION: 0.5.0
 2001-12-07 allenb   GUID now has a constructor that can use a dispatch tag
                     to specify that it should generate a new id an init time.
