@@ -52,18 +52,9 @@ VJ_SRCDIR	= @VJ_SRCDIR@/Utils
 # Prefix for recursive stuff.
 DIRPRFX		= Utils/
 
-SUBDIR		= Port		\
-                  Socket
-
 SRCS 		= vjDebug.cpp		\
                   vjFileIO.cpp		\
                   vjStreamLock.cpp
-
-ifeq (@OS_TYPE@, Win32)
-    SRCS	+=
-else
-    SRCS	+= vjFileHandleUNIX.cpp
-endif
 
 BEFOREBUILD	= beforebuild
 
