@@ -77,6 +77,7 @@ public class AboutBox extends JDialog implements ActionListener
          e.printStackTrace();
       }
       pack();
+      setLocationRelativeTo(parent);
    }
 
    private void jbInit() throws Exception  {
