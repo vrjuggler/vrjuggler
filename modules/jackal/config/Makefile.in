@@ -48,9 +48,12 @@ all: VjControl.jar
 # step.  This is incredibly stupid...
 VjControl.jar: classfiles
 	cp -r ${srcdir}/VjFiles .
-	${JAR} cvf VjControl.jar VjGUI/*.class VjGUI/chunkdesc/*.class VjGUI/configchunk/*.class VjGUI/util/*.class VjConfig/*.class VjFiles
+	${JAR} cvf VjControl.jar VjGUI/*.class VjGUI/chunkdesc/*.class	\
+            VjGUI/configchunk/*.class VjGUI/util/*.class		\
+            VjConfig/*.class VjFiles
 
-classfiles: ${VJCONFIG_OBJS} ${VJGUI_OBJS} ${VJGUICHUNKDESC_OBJS} ${VJGUICONFIGCHUNK_OBJS} ${VJGUIUTIL_OBJS}
+classfiles: ${VJCONFIG_OBJS} ${VJGUI_OBJS} ${VJGUICHUNKDESC_OBJS}	\
+            ${VJGUICONFIGCHUNK_OBJS} ${VJGUIUTIL_OBJS}
 	@echo "------------------------------------------------"
 	@echo "Made all classfiles"
 	@echo "------------------------------------------------"
@@ -64,7 +67,10 @@ VjGUI/%.class: %.java
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-CLEAN_FILES	+= ${VJCONFIG_OBJS} VjConfig/*~ ${VJGUI_OBJS} VjGUI/*~ ${VJGUICHUNKDESC_OBJS} VjGUI/chunkdesc/*~ ${VJGUICONFIGCHUNK_OBJS} VjGUI/configchunk/*~ ${VJGUIUTIL_OBJS} VjGUI/util/*~
+CLEAN_FILES	+= ${VJCONFIG_OBJS} VjConfig/*~ ${VJGUI_OBJS} VjGUI/*~	\
+                   ${VJGUICHUNKDESC_OBJS} VjGUI/chunkdesc/*~		\
+                   ${VJGUICONFIGCHUNK_OBJS} VjGUI/configchunk/*~	\
+                   ${VJGUIUTIL_OBJS} VjGUI/util/*~
 
 clobber: clean
 	rm VjControl.jar
