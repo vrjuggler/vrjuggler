@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.68 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -98,10 +98,11 @@ public abstract class ConfigElementHandler
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of virtual methods.
    // Delegate for the configCanHandle() callback.
-   public delegate bool configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement(jccl.ConfigElement p0);
+   public delegate bool configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
    protected configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement;
 
    public abstract bool configCanHandle(jccl.ConfigElement p0);
@@ -121,13 +122,13 @@ public abstract class ConfigElementHandler
    }
 
    // Delegate for the configAdd() callback.
-   public delegate bool configAddDelegate_boost_shared_ptr_jccl__ConfigElement(jccl.ConfigElement p0);
+   public delegate bool configAddDelegate_boost_shared_ptr_jccl__ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
    protected configAddDelegate_boost_shared_ptr_jccl__ConfigElement m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement;
 
    public abstract bool configAdd(jccl.ConfigElement p0);
 
    // Delegate for the configRemove() callback.
-   public delegate bool configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement(jccl.ConfigElement p0);
+   public delegate bool configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
    protected configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement;
 
    public abstract bool configRemove(jccl.ConfigElement p0);
