@@ -529,6 +529,14 @@ public class DisplayWindowFrame
    {
       Container owner = (Container) SwingUtilities.getRoot(this);
 
+      float old_origin_x = ((Number) mSelectedViewport.getProperty("origin", 0)).floatValue();
+      float old_origin_y = ((Number) mSelectedViewport.getProperty("origin", 1)).floatValue();
+      float old_width    = ((Number) mSelectedViewport.getProperty("size", 0)).floatValue();
+      float old_height   = ((Number) mSelectedViewport.getProperty("size", 1)).floatValue();
+
+      int status;
+      float origin_x = 0.0f, origin_y = 0.0f, width = 0.0f, height = 0.0f;
+
       if ( mSelectedViewport.getDefinition().getToken().equals(EditorConstants.surfaceViewportType) )
       {
          SurfaceViewportCreateDialog dlg =
@@ -536,13 +544,14 @@ public class DisplayWindowFrame
          positionDialog(dlg, owner);
          dlg.show();
 
-         if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
+         status = dlg.getStatus();
+         if ( status == DisplayWindowStartDialog.OK_OPTION )
          {
             Rectangle bounds = dlg.getViewportBounds();
-            float origin_x = (float) bounds.x / 100.0f;
-            float origin_y = (float) bounds.y / 100.0f;
-            float width    = (float) bounds.width / 100.0f;
-            float height   = (float) bounds.height / 100.0f;
+            origin_x = (float) bounds.x / 100.0f;
+            origin_y = (float) bounds.y / 100.0f;
+            width    = (float) bounds.width / 100.0f;
+            height   = (float) bounds.height / 100.0f;
 
             mSelectedViewport.setProperty("origin", 0, new Float(origin_x));
             mSelectedViewport.setProperty("origin", 1, new Float(origin_y));
@@ -593,13 +602,14 @@ public class DisplayWindowFrame
          positionDialog(dlg, owner);
          dlg.show();
 
-         if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
+         status = dlg.getStatus();
+         if ( status == DisplayWindowStartDialog.OK_OPTION )
          {
             Rectangle bounds = dlg.getViewportBounds();
-            float origin_x = (float) bounds.x / 100.0f;
-            float origin_y = (float) bounds.y / 100.0f;
-            float width    = (float) bounds.width / 100.0f;
-            float height   = (float) bounds.height / 100.0f;
+            origin_x = (float) bounds.x / 100.0f;
+            origin_y = (float) bounds.y / 100.0f;
+            width    = (float) bounds.width / 100.0f;
+            height   = (float) bounds.height / 100.0f;
 
             mSelectedViewport.setProperty("origin", 0, new Float(origin_x));
             mSelectedViewport.setProperty("origin", 1, new Float(origin_y));
@@ -615,6 +625,19 @@ public class DisplayWindowFrame
 
             sim_elt.setProperty("camera_pos", 0, dlg.getCameraPosition());
             sim_elt.setProperty("wand_pos", 0, dlg.getWandPosition());
+         }
+      }
+
+      // If the user changed the bounds of the viewport, the placer needs to
+      // be repainted ASAP to reflect that change.
+      if ( status == DisplayWindowStartDialog.OK_OPTION )
+      {
+         if ( old_origin_x != origin_x || old_origin_y != origin_y ||
+              old_width != width || old_height != height )
+         {
+            // Having an optimal repaint call here would be nice, but computing
+            // the correct bounding box is not entirely straightforward.
+            mViewportEditor.getPlacer().repaint();
          }
       }
    }
