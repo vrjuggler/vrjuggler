@@ -89,8 +89,7 @@ struct timezone
 namespace vpr
 {
 
-class VPR_CLASS_API SystemNSPR
-: public SystemBase
+class SystemNSPR : public SystemBase
 {
 public:
    static int gettimeofday (struct timeval* tp, struct timezone* tzp = NULL)
