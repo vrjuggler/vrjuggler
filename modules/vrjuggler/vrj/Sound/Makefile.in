@@ -47,10 +47,10 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
-SOUND_SRCS	:= Sound.cpp			\
-                   SoundEngine.cpp		\
-                   SoundEngineCreator.cpp	\
-                   SoundFactory.cpp
+SOUND_SRCS	:= vjSound.cpp			      \
+               vjSoundEngine.cpp		\
+               vjSoundFactory.cpp    \
+               vjSoundManager.cpp
 
 SOUND_OBJECTS	:= ${addprefix ${OBJDIR}/,${SOUND_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${SOUND_SRCS:.cpp=.d}
