@@ -223,6 +223,8 @@ public:
       return *this;
    }
 
+   friend std::ostream& operator<<( std::ostream& out, const vjVec3& _v );
+
 public:
    float vec[3];
 };
@@ -231,6 +233,5 @@ public:
 vjVec3 operator *(float _s, const vjVec3& _v);
 vjVec3 operator *(const vjVec3& _v, float _s);
 vjVec3 operator /(const vjVec3& _v, float _s);
-std::ostream& operator<<(std::ostream& out, vjVec3& _v);
 
 #endif

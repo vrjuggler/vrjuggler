@@ -77,7 +77,7 @@ vjVec3 operator /(const vjVec3& _v, float _s) {
 //    vjVec3 dst; dst.xformPt(_v, _m); return dst;
 //}
 
-std::ostream& operator<<(std::ostream& out, vjVec3& _v)
+std::ostream& operator<<( std::ostream& out, const vjVec3& _v )
 {
     for(int j=0;j<3;j++)
     {
