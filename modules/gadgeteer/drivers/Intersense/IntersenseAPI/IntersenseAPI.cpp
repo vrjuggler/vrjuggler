@@ -78,6 +78,7 @@ int IntersenseAPI::getStationIndex(int stationNum, int bufferIndex)
 
 
 IntersenseAPI::IntersenseAPI()
+   : stations(NULL)
 {
     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
        << "*** IntersenseAPI::IntersenseAPI() ***\n" << vprDEBUG_FLUSH;
