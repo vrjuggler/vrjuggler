@@ -163,7 +163,7 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs
-	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
+	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Gadgeteer Plugin installation process"
 	@echo "---------------------------------------------------------------"
@@ -192,7 +192,7 @@ endif
             echo "------------------------------------------------" ;	\
             $(MAKE) driverABI=$$abi libs ;				\
           done
-	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
+	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Gadgeteer Plugin installation process"
 	@echo "---------------------------------------------------------------"
