@@ -154,5 +154,11 @@ public:
 
 } // End of vpr namespace
 
+inline std::ostream& operator<<(std::ostream& out, const vpr::GUID& guid)
+{
+   out << guid.toString();
+   return out;
+}
+
 
 #endif /* _VPR_GUID_H_ */
