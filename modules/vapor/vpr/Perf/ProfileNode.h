@@ -43,7 +43,7 @@ namespace vpr
        */
       ProfileNode( const char * name, ProfileNode * parent );
 
-      ProfileNode( const char * name, ProfileNode * parent, const unsigned int queue_size);
+      ProfileNode( const char * name, ProfileNode * parent, const unsigned int queueSize);
 
       /** 
        * destructor
@@ -57,7 +57,7 @@ namespace vpr
        */
       ProfileNode*  getSubNode( const char * name );
 
-      ProfileNode*  getSubNode( const char * name, const unsigned int queue_size);
+      ProfileNode*  getSubNode( const char * name, const unsigned int queueSize);
 
       /**
        * return This nodes parent.

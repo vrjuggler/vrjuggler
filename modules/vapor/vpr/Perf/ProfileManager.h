@@ -32,7 +32,7 @@ namespace vpr
       */
       static   void                 startProfile( const char * name );
 
-      static   void                 startProfile( const char * name, const unsigned int queue_size);
+      static   void                 startProfile( const char * profileName, const unsigned int queueSize);
 
       /**
        * Stop timing and record the results.

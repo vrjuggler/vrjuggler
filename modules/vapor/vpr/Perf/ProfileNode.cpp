@@ -42,13 +42,13 @@ namespace vpr
       delete mSibling;
    }
 
-   ProfileNode* ProfileNode::getSubNode( const char* name )
+   ProfileNode* ProfileNode::getSubNode( const char* profileName )
    {
       // Try to find this sub node
       ProfileNode* child = mChild;
       while ( child )
       {
-         if ( child->mName == name )
+         if ( child->mName == profileName )
          {
             return child;
          }
@@ -56,19 +56,19 @@ namespace vpr
       }
 
       // We didn't find it, so add it
-      ProfileNode* node = new ProfileNode( name, this );
+      ProfileNode* node = new ProfileNode( profileName, this );
       node->mSibling = mChild;
       mChild = node;
       return node;
    }
 
-   ProfileNode* ProfileNode::getSubNode( const char* name, const unsigned int queue_size )
+   ProfileNode* ProfileNode::getSubNode( const char* profileName, const unsigned int queueSize )
    {
       // Try to find this sub node
       ProfileNode* child = mChild;
       while ( child )
       {
-         if ( child->mName == name )
+         if ( child->mName == profileName )
          {
             return child;
          }
@@ -76,7 +76,7 @@ namespace vpr
       }
 
       // We didn't find it, so add it
-      ProfileNode* node = new ProfileNode( name, this, queue_size);
+      ProfileNode* node = new ProfileNode( profileName, this, queueSize);
       node->mSibling = mChild;
       mChild = node;
       return node;
