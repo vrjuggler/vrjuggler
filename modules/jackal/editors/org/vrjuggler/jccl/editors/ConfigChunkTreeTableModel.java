@@ -586,7 +586,13 @@ public class ConfigChunkTreeTableModel
    public void nameChanged(ConfigChunkEvent evt)
    {
       ConfigChunk src = (ConfigChunk)evt.getSource();
-      setValueAt(src.getName(), getRoot(), 1);
+      DefaultMutableTreeNode root = (DefaultMutableTreeNode)getRoot();
+      DefaultMutableTreeNode name_node = (DefaultMutableTreeNode)root.getChildAt(0);
+      name_node.setUserObject(src.getName());
+      fireTreeNodesChanged(this,
+                           new Object[] { getPathToRoot(root) },
+                           new int[] { 0 },
+                           new Object[] { name_node });
    }
 
    /**

@@ -191,11 +191,17 @@ public class ConfigChunkPropertySheet
          return super.getCellEditor(row, col);
       }
 
+      // First row is always the chunk name
+      if (row == 0)
+      {
+         chunkCellEditor.setPropertyDesc(null);
+         return chunkCellEditor;
+      }
+
       // Get the property desc for the row in question
       PropertyDesc prop_desc = getPropertyDescForRow(row);
       if (prop_desc == null)
       {
-         System.out.println("Couldn't get property desc for row: "+row);
          return super.getCellEditor(row, col);
       }
 
@@ -355,7 +361,12 @@ public class ConfigChunkPropertySheet
             {
                idx -= 2;
             }
-            return parent_chunk.getDesc().getPropertyDesc(idx);
+            // Make sure the index is out of bounds
+            if ((idx >= 0) && (idx < parent_chunk.getDesc().propertyDescsSize()))
+            {
+               return parent_chunk.getDesc().getPropertyDesc(idx);
+            }
+            return null;
          }
          return null;
       }
