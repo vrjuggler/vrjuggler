@@ -76,10 +76,15 @@
       url="http://www.gnu.org/">the GNU Project</ulink>. A compressed TAR file
       is made for each VR Juggler distribution, and some distributions come in
       other formats as well. You can always count on the availability of a TAR
-      file, though. The TAR files are compressed using GZIP which is a
-      standard compression format. The <command>gzip</command>(1) utility is
-      freely available from the GNU Project (the GNU version of TAR has the
-      GZIP algorithm built in) if your platform does not have it.</para>
+      file, though. The TAR files are compressed using either GZIP or BZIP2,
+      both of which are standard compression formats. The <command>gzip</command>(1)
+      utility is freely available from the GNU Project, and the
+      <command>bzip2</command>(1) utility can be downloaded for free from
+      <ulink url="http://sources.redhat.com/bzip2/">RedHat, Inc.</ulink>. The
+      GNU version of TAR has the GZIP and BZIP2 algorithms built in. The
+      compression algorithm used can be determined by the file extension.
+      Files compressed with GZIP end in <filename>.gz</filename>; files
+      compressed with BZIP2 end in <filename>.bz2</filename>.</para>
 
       <para>Once you have downloaded a VR Juggler TAR distribution, you can
       unpack it one of two ways depending on what your platform&#39;s version
@@ -89,25 +94,41 @@
       the <option>-z</option> option), the following command will do the
       decompression and extraction:</para>
 
-      <screen>% gzip -cd vrjuggler-distribution.tar.gz | tar -xvf -vrjuggler-distribution.tar.gz</screen>
+      <screen>% gzip -cd vrjuggler-distribution.tar.gz | tar -xvf -</screen>
+
+      <para>For versions of TAR without built-in BZIP2 support (there is no
+      <option>-j</option> option) the command is similar:</para>
+
+      <screen>% bzip2 -cd vrjuggler-distribution.tar.bz2 | tar -xvf -</screen>
 
       <para>Here, you should fill in <filename>vrjuggler-distribution.tar.gz</filename>
-      with the name of the VR Juggler distribution file you downloaded. The
-      above command will work with any shell that supports redirection of
-      standard output to a pipe. If that looks too scary, you can separate the
-      decompression and extraction into two commands:</para>
+      (or <filename>vrjuggler-distribution.tar.bz2</filename>) with the name
+      of the VR Juggler distribution file you downloaded. The above commands
+      will work with any shell that supports redirection of standard output to
+      a pipe. If that looks too scary, you can separate the decompression and
+      extraction into two commands (for GZIP):</para>
 
       <screen>% gunzip vrjuggler-distribution.tar.gz
+% tar -xvf vrjuggler-distribution.tar</screen>
+
+      <para>or for BZIP2:</para>
+
+      <screen>% bunzip2 vrjuggler-distribution.tar.bz2
 % tar -xvf vrjuggler-distribution.tar</screen>
 
       <para>Note that the distribution file in the second command does not
       have the <filename>.gz</filename> extension after <command>gzip</command>(1)
       is run. These steps also work if your version of <command>tar</command>(1)
-      supports the <option>-z</option> option, but you can simplify your work
-      if that option is supported. The following illustrates how to uncompress
-      and extract all in one step:</para>
+      supports the <option>-z</option> option (<option>-j</option> for BZIP2),
+      but you can simplify your work if that option is supported. The
+      following illustrates how to decompress and extract a TAR file
+      compressed with GZIP all in one step:</para>
 
       <screen>% tar -xzvf vrjuggler-distribution.tar.gz</screen>
+
+      <para>The following would be used for a TAR file compressed with BZIP2:</para>
+
+      <screen>% tar -xjvf vrjuggler-distribution.tar.bz2</screen>
 
       <para>In either case, while the command runs, you will see the name of
       each file as it is written to disk. This is because of the
@@ -323,7 +344,7 @@
         <para>The typical syntax for setting an environment variable from the
         command line (in a DOS shell window) under Win32 is:</para>
 
-        <screen>C:\ set &#60;VARIABLE_NAME&#62;=&#60;value&#62;</screen>
+        <screen>C:\&#62; set &#60;VARIABLE_NAME&#62;=&#60;value&#62;</screen>
 
         <para>Here, <literal>&#60;VARIABLE_NAME&#62;</literal> is the name of
         the environment variable to be set, and <literal>&#60;value&#62;</literal>
@@ -334,17 +355,17 @@
         <para>To print the value of an environment variable, use the following
         command:</para>
 
-        <screen>C:\ set &#60;VARIABLE_NAME&#62;</screen>
+        <screen>C:\&#62; set &#60;VARIABLE_NAME&#62;</screen>
 
         <para>Referring to a variable, however, is done using the following
         syntax:</para>
 
-        <screen>C:\ cd %VARIABLE_NAME%\bin</screen>
+        <screen>C:\&#62; cd %VARIABLE_NAME%\bin</screen>
 
         <para>Paths are specified as a semicolon-separated list. An example of
         this is:</para>
 
-        <screen>C:\ set PATH
+        <screen>C:\&#62; set PATH
 C:\WINDOWS;C:\bin;C:\</screen>
 
         <para>For some versions of Windows, a <quote>permanent</quote> setting
@@ -608,7 +629,7 @@ value</screen>
         </varlistentry>
 
         <varlistentry>
-          <term>VPR_DEBUG_CATEGORIES</term>
+          <term>VPR_DEBUG_ALLOW_CATEGORIES</term>
 
           <listitem>
             <para>This variable can be used to control which components of VR
@@ -618,14 +639,31 @@ value</screen>
             <envar>VPR_DEBUG_CATEGORIES</envar> is a space-separated list of
             Juggler debug component names (defined in <filename>$VJ_BASE_DIR/include/vrj/Util/Debug.h</filename>,
             <filename>$VJ_BASE_DIR/include/vpr/Util/Debug.h</filename>,
+            <filename>$VJ_BASE_DIR/include/tweek/Util/Debug.h</filename>,
             <filename>$VJ_BASE_DIR/include/jccl/Util/Debug.h</filename>, and
             <filename>$VJ_BASE_DIR/include/gadget/Util/Debug.h</filename>).
             The default value is <quote>DBG_ALL</quote>, which performs no
             filtering whatsoever. Examples of setting it are as follows:</para>
 
-            <screen>% VPR_DEBUG_CATAGORIES = DBG_ERROR
-% VPR_DEBUG_CATAGORIES = &#34;DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR&#34;
-% VPR_DEBUG_CATAGORIES = &#34;DBG_CONFIG DBG_RECONFIGURATION&#34;</screen>
+            <screen>% VPR_DEBUG_ALLOW_CATEGORIES = DBG_ERROR
+% VPR_DEBUG_ALLOW_CATEGORIES = &#34;DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR&#34;
+% VPR_DEBUG_ALLOW_CATEGORIES = &#34;DBG_CONFIG DBG_RECONFIGURATION&#34;</screen>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>VPR_DEBUG_DISALLOW_CATEGORIES</term>
+
+          <listitem>
+            <para>This variable is basically the opposite of <envar>VPR_DEBUG_ALLOW_CATEGORIES</envar>.
+            Instead of specifying which debugging categories you want to see,
+            you specify which ones you <emphasis>do not</emphasis> want to
+            see. Its default value is empty which means that no debugging
+            categories are excluded. Examples of setting it are as follows:</para>
+
+            <screen>% VPR_DEBUG_DISALLOW_CATEGORIES = DBG_ERROR
+% VPR_DEBUG_DISALLOW_CATEGORIES = &#34;DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR&#34;
+% VPR_DEBUG_DISALLOW_CATEGORIES = &#34;DBG_CONFIG DBG_RECONFIGURATION&#34;</screen>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -675,6 +713,12 @@ value</screen>
         </listitem>
 
         <listitem>
+          <para>ConfigApp: A relatively simple application that demonstrates
+          how user-level code can take advantage of the VR Juggler
+          configuration system, JCCL.</para>
+        </listitem>
+
+        <listitem>
           <para>MPApp: A more complex OpenGL application that demonstrates how
           to do multi-processing in VR Juggler applications. As it exists in
           its distributed form, no multi-processing is done. A more detailed
@@ -714,7 +758,7 @@ value</screen>
         <listitem>
           <para>pfConfigNav: A more advanced example of a VR Juggler Performer
           application that can be given its model through a VR Juggler
-          configuration chunk.</para>
+          configuration element.</para>
         </listitem>
       </itemizedlist>
     </section>
@@ -757,11 +801,11 @@ value</screen>
       <section>
         <title>Compiling from the Command Line</title>
 
-        <para>All the sample programs in <filename>$VJ_BASE_DIR/share/samples</filename>
+        <para>All the sample programs in <filename>$VJ_BASE_DIR/share/vrjuggler/samples</filename>
         use the same basic steps to compile unless otherwise noted. Always
         refer to the top of the sample application&#39;s <filename>Makefile</filename>
         for information that may be specific to building that application. In
-        general, though, all applications&#39; makefiles required the GNU
+        general, though, all applications&#39; makefiles require the GNU
         version of the <command>make</command>(1) utility, sometimes installed
         as <command>gmake</command>.</para>
 
@@ -976,7 +1020,7 @@ value</screen>
       <title><anchor id="simulator" />Running an Application in Simulator Mode</title>
 
       <para>Running in <quote>simulator mode</quote> means that your input is
-      simulated and your display windows may have limited functionality. (By,
+      simulated and your display windows may have limited functionality. (By
       <quote>simulated input</quote>, we mean that input is provided through
       windows that take keyboard and mouse input and translate that into
       transformations in the virtual world.) Simulator viewports are limited
@@ -987,7 +1031,7 @@ value</screen>
       separate camera that is just another positional device. Within a
       simulator viewport, VR Juggler draws certain objects to help visualize
       the environment. For example, the heads of users are represented as blue
-      spheres with gray eyes, and a wand (if present) is drawn as a green
+      ellipsoids with gray eyes, and a wand (if present) is drawn as a green
       pointing device. Besides these common simulator objects, display
       surfaces can be drawn. These represent projection screens or HMD viewing
       projections and are drawn as translucent rectangles.</para>
@@ -1011,12 +1055,12 @@ value</screen>
           using the keyboard. For now, it is sufficient to know that it is
           required to run the sample applications in simulator mode.</para>
 
-          <para>It also contains the basic simulator display configuration
-          file needed by all applications when run in simulator mode. It file
-          defines the display windows where the rendering magic occurs. Two
-          simulator display windows are configured by this file: a small one
-          that is active by default and a larger one that is inactive
-          initially.</para>
+          <para>This file also contains the basic simulator display
+          configuration file needed by all applications when run in simulator
+          mode. It defines the display windows where the rendering magic
+          occurs. Two simulator display windows are configured by this file: a
+          small one that is active by default and a larger one that is
+          inactive initially.</para>
         </listitem>
 
         <listitem>
@@ -1037,8 +1081,9 @@ value</screen>
           <para><filename>sim.c6displays.mixin.config</filename> - A
           <quote>mix-in</quote> configuration file that defines the surface
           displays of VRAC&#39;s C6. This is not required for any application
-          but can be used to test opening multiple display windows (both
-          surface and simulator) before running in a multi-screen VR system.</para>
+          but can be used to test opening multiple display windows (each
+          containing either a surface or a simulator viewport) before running
+          in a multi-screen VR system.</para>
         </listitem>
 
         <listitem>
@@ -1078,8 +1123,8 @@ value</screen>
         </listitem>
       </itemizedlist>
 
-      <para>For the MPApp application, we need the base configuration file,
-      the displays configuration file, and the wand mix-in configuration file.</para>
+      <para>For the MPApp application, we need the base configuration file and
+      the wand mix-in configuration file.</para>
 
       <para>Now it is time to run the application—finally! Make sure that all
       your environment variables are set properly before trying to start the
@@ -1091,7 +1136,7 @@ value</screen>
       <para>You will notice that no paths are specified for finding the three
       configuration files. This is intentional to shorten the command line
       given in the example. In general, you always have to give the full path
-      to the files<footnote><para>This is being remedied for VR Juggler 1.1
+      to the files<footnote><para>This is being remedied for VR Juggler 2.0
       and beyond.</para></footnote>. Beginning users will typically want to
       reference the example configuration files in <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.
       As you get more comfortable with VR Juggler and its configuration
@@ -1104,25 +1149,25 @@ value</screen>
       each of the configuration files you pass on the command line.</para>
 
       <para>As the application starts, you will see a plethora of output (more
-      or less depending on how you have <envar>$VPR_DEBUG_NFY_LEVEL</envar>
-      and <envar>$VPR_DEBUG_CATAGORIES</envar> set), and then one moderately
-      sized simulator display window will open on the left side of your screen
-      while three blank keyboard input windows open on the right side of your
-      screen. The display window will be titled <quote>SimWindow1</quote>, and
-      the keyboard input windows will be titled <quote>Head Keyboard</quote>,
-      <quote>Sim View Cameras Control</quote> and <quote>Wand Keyboard</quote>
-      (in order from the top of the display to the bottom). Do not worry that
-      the keyboard windows are black—that is normal. The display window will
-      have an animated blue mesh, a cyan sphere, and a green pointer. The mesh
-      is what you have come to see; the sphere is the simulated user&#39;s
-      head; and the pointer is the simulated user&#39;s wand. In <xref
-      linkend="MPApp.running.figure" />, we show what this looks on an IRIX
-      6.5 desktop for comparison with what you are seeing. Note that the head
-      and wand are only rendered in the simulator windows. They are present
-      because head and wand input are being simulated, and it is typically
-      quite helpful to see the results of that simulated input. To exit the
-      application, press <keysym>ESC</keysym> in the window titled
-      <quote>Head Window</quote>.</para>
+      or less depending on how you have <envar>$VPR_DEBUG_NFY_LEVEL</envar>,
+      <envar>$VPR_DEBUG_ALLOW_CATEGORIES</envar>, and <envar>$VPR_DEBUG_DISALLOW_CATEGORIES</envar>
+      set), and then one moderately sized simulator display window will open
+      on the left side of your screen while three blank keyboard input windows
+      open on the right side of your screen. The display window will be titled
+      <quote>SimWindow1</quote>, and the keyboard input windows will be titled
+      <quote>Head Keyboard</quote>, <quote>Sim View Cameras Control</quote>
+      and <quote>Wand Keyboard</quote> (in order from the top of the display
+      to the bottom). Do not worry that the keyboard windows are black—that is
+      normal. The display window will have an animated blue mesh, a cyan
+      ellipsoid, and a green pointer. The mesh is what you have come to see;
+      the ellipsoid is the user&#39;s head; and the pointer is the user&#39;s
+      hand. In <xref linkend="MPApp.running.figure" />, we show what this
+      looks on a RedHat Linux 7.2 desktop for comparison with what you are
+      seeing. Note that the head and wand are only rendered in the simulator
+      windows. They are present because head and wand input are being
+      simulated, and it is typically quite helpful to see the results of that
+      simulated input. To exit the application, press <keysym>ESC</keysym> in
+      the window titled <quote>Head Window</quote>.</para>
 
       <figure id="MPApp.running.figure">
         <title>MPApp running on a Linux desktop with multiple input windows</title>
