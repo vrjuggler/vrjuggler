@@ -42,6 +42,7 @@ namespace fs = boost::filesystem;
 
 #include <vector>
 #include <cassert>
+#include <cstring>
 
 //  helpers  -----------------------------------------------------------------// 
 
