@@ -238,6 +238,16 @@ public class ConfigChunkDBEditor
                // TODO: Switch to a category panel. Clear the editing panel.
                editorPaneLayout.show(editorPane, CATEGORY);
             }
+
+            // Selected a property desc (for an embedded chunk)
+            else if (node.getUserObject() instanceof PropertyDesc)
+            {
+               addBtn.setEnabled(false);
+               removeBtn.setEnabled(false);
+
+               //TODO: Siwtch to a property desc panel.
+               editorPaneLayout.show(editorPane, CATEGORY);
+            }
          }
       });
    }
