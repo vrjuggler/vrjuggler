@@ -56,9 +56,10 @@ import org.vrjuggler.vrjconfig.commoneditors.placer.*;
 public class ViewportPlacer
    extends JPanel
 {
-   public ViewportPlacer(Dimension desktopSize, ConfigElement elt)
+   public ViewportPlacer(Dimension desktopSize, ConfigContext ctx,
+                         ConfigElement elt)
    {
-      model = new ViewportPlacerModel(desktopSize, elt);
+      model = new ViewportPlacerModel(desktopSize, ctx, elt);
 
       try
       {
@@ -236,9 +237,11 @@ public class ViewportPlacer
 class ViewportPlacerModel
    extends AbstractPlacerModel
 {
-   public ViewportPlacerModel(Dimension desktopSize, ConfigElement elt)
+   public ViewportPlacerModel(Dimension desktopSize, ConfigContext ctx,
+                              ConfigElement elt)
    {
       mDesktopSize = desktopSize;
+      mContext        = ctx;
       mDisplayElement = elt;
       mDisplayElement.addConfigElementListener(mChangeListener);
 
@@ -328,8 +331,8 @@ class ViewportPlacerModel
          vp_height = 1.0;
       }
 
-      vp_elt.setProperty("size", 0, new Double(vp_width));
-      vp_elt.setProperty("size", 1, new Double(vp_height));
+      vp_elt.setProperty("size", 0, new Double(vp_width), mContext);
+      vp_elt.setProperty("size", 1, new Double(vp_height), mContext);
    }
 
    public Point getLocationOf(int idx)
@@ -367,8 +370,8 @@ class ViewportPlacerModel
          vp_origin_y = 0.0;
       }
 
-      vp_elt.setProperty("origin", 0, new Double(vp_origin_x));
-      vp_elt.setProperty("origin", 1, new Double(vp_origin_y));
+      vp_elt.setProperty("origin", 0, new Double(vp_origin_x), mContext);
+      vp_elt.setProperty("origin", 1, new Double(vp_origin_y), mContext);
    }
 
    public void moveToFront(int idx)
@@ -393,6 +396,7 @@ class ViewportPlacerModel
       fireDesktopSizeChanged();
    }
 
+   private ConfigContext mContext        = null;
    private ConfigElement mDisplayElement = null;
 
    /**
