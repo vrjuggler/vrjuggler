@@ -41,6 +41,7 @@ import java.awt.Color;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.text.*;
+import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 
 
 /**
@@ -156,15 +157,40 @@ public class MessagePanel
 
    private void initStyles ()
    {
-      for ( int i = 0; i < mStyles.length; i++ )
+      for ( int i = 0; i < mTextStyles.length; i++ )
       {
-         mStyles[i] = new SimpleAttributeSet();
+         mTextStyles[i] = new SimpleAttributeSet();
+         mIconStyles[i] = new SimpleAttributeSet();
       }
 
-      StyleConstants.setForeground(mStyles[STATUS], Color.black);
-      StyleConstants.setForeground(mStyles[WARNING], Color.orange);
-      StyleConstants.setForeground(mStyles[ERROR], Color.red);
-      StyleConstants.setBold(mStyles[ERROR], true);
+      StyleConstants.setForeground(mTextStyles[STATUS], Color.black);
+      StyleConstants.setForeground(mTextStyles[WARNING], Color.orange);
+      StyleConstants.setForeground(mTextStyles[ERROR], Color.red);
+      StyleConstants.setBold(mTextStyles[ERROR], true);
+
+      try
+      {
+         StyleConstants.setIcon(mIconStyles[STATUS],
+                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/gui/status.gif")));
+      }
+      catch (NullPointerException e)
+      {;}
+
+      try
+      {
+         StyleConstants.setIcon(mIconStyles[WARNING],
+                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/gui/warning.gif")));
+      }
+      catch (NullPointerException e)
+      {;}
+
+      try
+      {
+         StyleConstants.setIcon(mIconStyles[ERROR],
+                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/gui/error.gif")));
+      }
+      catch (NullPointerException e)
+      {;}
    }
 
    private void print (String text, int type)
@@ -173,7 +199,14 @@ public class MessagePanel
 
       try
       {
-         doc.insertString(mLastIndex, text, mStyles[type]);
+         if ( StyleConstants.getIcon(mIconStyles[type]) != null )
+         {
+            String icon_pad = " ";
+            doc.insertString(mLastIndex, icon_pad, mIconStyles[type]);
+            mLastIndex += icon_pad.length();
+         }
+
+         doc.insertString(mLastIndex, text, mTextStyles[type]);
          mLastIndex += text.length();
 
          fireMessageAddition(text, type);
@@ -240,7 +273,8 @@ public class MessagePanel
    private JScrollPane panel      = new JScrollPane();
    private int         mLastIndex = 0;
 
-   private SimpleAttributeSet[] mStyles = new SimpleAttributeSet[MSG_TYPE_COUNT];
+   private SimpleAttributeSet[] mTextStyles = new SimpleAttributeSet[MSG_TYPE_COUNT];
+   private SimpleAttributeSet[] mIconStyles = new SimpleAttributeSet[MSG_TYPE_COUNT];
 
    private JPopupMenu mMsgPanelMenu   = new JPopupMenu();
    private JMenuItem  mPopupClearItem = new JMenuItem();
