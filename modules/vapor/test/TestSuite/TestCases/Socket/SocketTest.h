@@ -193,14 +193,36 @@ public:
       delete sock;
    }
    
-/*   void ReuseAddr()
+   void reuseAddrTest()
    {
-      sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, vpr::InetAddr::AnyAddr);
-      sock->setReuse(true);
-      openSuccess=sock->open();
-//      
+      vpr::InetAddr addr1(13768);
+      vpr::InetAddr addr2("129.186.232.58", 5438);
+      vpr::SocketStream*	sock1;
+      vpr::SocketStream*	sock2;
+      vpr::SocketStream*	sock3;
+      sock1 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
+      sock2 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
+      sock3 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
+      if (sock1->open()){
+         sock1->setReuseAddr(true);
+         assertTest(sock1->bind());
+      }
+      else assert(false && "Cannot open sock1");
+      if (sock2->open()){
+//         sock2->setReuseAddr(true);
+         assertTest(sock2->bind());
+      }
+      else assert(false && "Cannot open sock2");
+//      if (sock3->open())
+//         assertTest(sock3->bind());
+      sock1->close();
+      sock2->close();
+//      sock3->close();
+      delete sock1;
+      delete sock2;
+      delete sock3;
    }
-*/   
+   
    void testTcpConnection()
    {
       mServerCheck=0;
@@ -247,8 +269,8 @@ public:
 
       vpr::SocketStream*	sock;
       sock = new vpr::SocketStream(vpr::InetAddr(port), vpr::InetAddr::AnyAddr);	
-//      sock->setReuseAddr(true);
       if ( sock->openServer() ) {
+         sock->setReuseAddr(true);
          vpr::SocketStream* client_sock;
          thread_args_t* tArgs;
 
@@ -326,7 +348,9 @@ public:
    {
       TestSuite *test_suite = new TestSuite ("SocketTest");
       test_suite->addTest( new TestCaller<SocketTest>("Open/CloseTest", &SocketTest::openCloseTest));
+      test_suite->addTest( new TestCaller<SocketTest>("ReuseAddrTest", &SocketTest::reuseAddrTest));
       test_suite->addTest( new TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
+      test_suite->addTest( new TestCaller<SocketTest>("ReuseAddrTest", &SocketTest::reuseAddrTest));
       test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
       return test_suite;
    }
