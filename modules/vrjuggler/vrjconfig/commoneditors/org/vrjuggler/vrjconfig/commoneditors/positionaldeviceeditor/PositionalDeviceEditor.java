@@ -521,6 +521,7 @@ public class PositionalDeviceEditor extends JPanel
       // Load textures
       Texture temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/carpet.png");
       mFloorTextures.add(temp);
+      /*
       temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/wood.png");
       mFloorTextures.add(temp);
       temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/grassy_t.png");
@@ -531,6 +532,7 @@ public class PositionalDeviceEditor extends JPanel
       mFloorTextures.add(temp);
       temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/cncrt1_t.png");
       mFloorTextures.add(temp);
+      */
 
       mCurrentFloorTexture = (Texture)(mFloorTextures.get(mCurrentFloorIndex));
 
