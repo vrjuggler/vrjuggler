@@ -46,6 +46,12 @@
             osgNav
             ..
         ..
+        OpenSG
+            simple
+                OpenSGNav
+                ..
+            ..
+        ..
         Pf
             advanced
                 nav
