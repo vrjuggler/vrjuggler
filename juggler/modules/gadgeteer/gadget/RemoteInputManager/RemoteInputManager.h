@@ -77,8 +77,6 @@ namespace gadget{
       std::string                   mShortHostname;
       std::string                   mLongHostname;
       std::string                   mLocalMachineChunkName;
-      std::string                   mSyncMachine;
-
       std::list<NetConnection*>     mTransmittingConnections;           /**< network connections to other juggler instances */
       std::list<NetConnection*>     mReceivingConnections;           /**< network connections to other juggler instances */
       
@@ -94,9 +92,11 @@ namespace gadget{
       vpr::InetAddr        mListenAddr;
       vpr::Mutex           mConfigMutex;  // prevents us from try to read devices while they are being modified (added or removed)
 
-      std::list<vpr::SocketStream*>       mClientSyncs;
+      std::vector<vpr::SocketStream*>       mClientSyncs;
 
       vpr::SocketStream*                  mServerSync;
+      bool                                mIsMaster;
+      std::string                       mSyncMasterChunkName;
 
    public:
       RemoteInputManager(InputManager* input_manager);
