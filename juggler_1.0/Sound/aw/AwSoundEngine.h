@@ -79,7 +79,7 @@ public:
    // given an alias, return the handle.
    // TODO: if called twice with name alias, should return same pointer.
    // memory managed by engine...
-   vjSound* getHandle( const char* const alias );
+   //vjSound* getHandle( const char* const alias );
    
    //: Factory function to create a new sound.
    // memory managed by engine
