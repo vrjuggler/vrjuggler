@@ -393,14 +393,14 @@ bool MotionStar::sample()
          if ( ! cur_samples.empty() )
          {
             cur_samples[0].setTime();
-         }
 
-         // For each bird
-         for ( unsigned int i = 0; i < mMotionStar.getNumSensors(); ++i )
-         {
-            // Get the index to the current read buffer
-            cur_samples[i].setTime( cur_samples[0].getTime() );
-            cur_samples[i].mPosData = mMotionStar.getDeviceData(i);
+            // For each bird
+            for ( unsigned int i = 0; i < mMotionStar.getNumSensors(); ++i )
+            {
+               // Get the index to the current read buffer
+               cur_samples[i].setTime( cur_samples[0].getTime() );
+               cur_samples[i].mPosData = mMotionStar.getDeviceData(i);
+            }
          }
 
          // Add the current data as a sample
