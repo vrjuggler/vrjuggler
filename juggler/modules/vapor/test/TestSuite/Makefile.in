@@ -13,14 +13,15 @@ topdir		= @topdir@
 #top_srcdir	= @top_srcdir@
 
 CXX		= @CXX@
-CFLAGS		= @CFLAGS@ $(OPTIMIZER)
+CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
 CPPFLAGS	= @CPPFLAGS@
-CXXFLAGS	= @CXXFLAGS@ $(OPTIMIZER)
+CXXFLAGS	= @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
 DEFS		= @DEFS@
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPEND_FLAGS	= @DEPEND_FLAGS@ @INCLUDES@ -I$(topdir)			\
                   -I$(VPR_BASE_DIR)/include
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
+EXTRA_FLAGS	= @APP_EXTRA_FLAGS@
 INCLUDES	= @INCLUDES@ -I$(topdir) -I$(VPR_BASE_DIR)/include	\
                  -I$(srcdir) -I$(srcdir)/TestCases			\
                  -I$(srcdir)/CppUnit/framework -I$(srcdir)/CppUnit/textui
