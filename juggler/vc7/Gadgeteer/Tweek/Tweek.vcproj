@@ -11,7 +11,7 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
-			Name="Debug - DLL|Win32"
+			Name="Debug|Win32"
 			OutputDirectory="DebugDLL"
 			IntermediateDirectory="DebugDLL"
 			ConfigurationType="2"
@@ -66,7 +66,7 @@ $(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..
 				Name="VCWebDeploymentTool"/>
 		</Configuration>
 		<Configuration
-			Name="Release - DLL|Win32"
+			Name="Release|Win32"
 			OutputDirectory="ReleaseDLL"
 			IntermediateDirectory="ReleaseDLL"
 			ConfigurationType="2"
