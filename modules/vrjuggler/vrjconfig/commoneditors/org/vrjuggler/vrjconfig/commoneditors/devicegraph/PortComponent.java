@@ -66,9 +66,8 @@ import org.jgraph.graph.GraphConstants;
  * </ol>
  *
  * This works, and it works behind the scenes.  It is, nonetheless, a hack.
- * The visibility of this class (package) reflects how I feel about it.
  */
-class PortComponent
+public class PortComponent
    extends JComponent
 {
    public PortComponent(JGraph graph, DefaultPort port)
