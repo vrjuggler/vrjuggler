@@ -56,7 +56,7 @@
 #      include <gadget/Devices/Keyboard/OSXKeyboard.h>
 #   else
 #      include <gadget/Devices/Immersion/Ibox.h>
-#      include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
+//#      include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
 #      include <gadget/Devices/Fakespace/PinchGlove.h>
 #      include <gadget/Devices/Keyboard/KeyboardXWin.h>
 #      include <gadget/Devices/Keyboard/KeyboardDepCheckerXWin.h>
