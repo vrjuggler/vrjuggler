@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="swap_lock_plugin"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+   <definition_version version="1" label="Swap Lock Plugin">
+      <help />
+      <parent/>
+      <category>/Cluster Juggler</category>
+      <property valuetype="configelementpointer" variable="false" name="sync_server">
+         <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
+         <value label="Sync Server Machine"/>
+         <allowed_type>machine_specific</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>
