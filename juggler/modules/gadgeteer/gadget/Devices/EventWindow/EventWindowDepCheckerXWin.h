@@ -36,9 +36,12 @@
 #include <gadget/gadgetConfig.h>
 
 // Dependency checker includes
-#include <gadget/InputManager.h>
-#include <jccl/RTRC/DependencyManager.h>
+#include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/DepChecker.h>
+
+#include <gadget/InputManager.h>
+#include <gadget/Devices/EventWindow/EventWindowXWin.h>
+
 
 namespace gadget
 {
@@ -78,53 +81,16 @@ public:
     * @return true is returned if default dependencies are satisfied and the
     *         Display Manager has display system element.
     */
-   virtual bool depSatisfied(jccl::ConfigElementPtr element)
-   {
-      bool pass = jccl::DepChecker::depSatisfied(element);   // Run default check
-
-      // If we can pass normal check and we have a display system element.
-      if ( haveDisplaySystemElement() )
-      {
-         return pass;
-      }
-      else
-      {
-         return false;
-      }
-   }
+   virtual bool depSatisfied(jccl::ConfigElementPtr element);
 
    bool haveDisplaySystemElement() const
    {
       return (gadget::InputManager::instance()->getDisplaySystemElement().get() != NULL);
    }
 
-   /// Write out the dependencies to the vprDEBUG macro.
+   /** Writes out the dependencies to the vprDEBUG macro. */
    virtual void debugOutDependencies(jccl::ConfigElementPtr element,
-                                     int dbg_lvl=vprDBG_WARNING_LVL)
-   {
-      jccl::DepChecker::debugOutDependencies(element, dbg_lvl);
-
-      vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl)
-         << "Extra Dependency: Dependent upon getting displaySystem element from Display Manager: "
-         << vprDEBUG_FLUSH;
-
-      if ( ! haveDisplaySystemElement() )
-      {
-         vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "FAILED!!!\n" << vprDEBUG_FLUSH;
-      }
-      else
-      {
-         vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "passed.\n" << vprDEBUG_FLUSH;
-      }
-
-      vprDEBUG_NEXT(vprDBG_ALL,dbg_lvl)
-         << "Extra Dependencies for: item: " << element->getFullName()
-         << " type: " << element->getID() << std::endl
-         << "   Dependent upon displaySystem element in Display Manager. (Needs it to find display strings)"
-         << vprDEBUG_FLUSH;
-
-      vprDEBUG_NEXT_END(vprDBG_ALL,dbg_lvl) << std::endl << vprDEBUG_FLUSH;
-   }
+                                     int dbg_lvl=vprDBG_WARNING_LVL);
 };
 
 } // End of gadget namespace
