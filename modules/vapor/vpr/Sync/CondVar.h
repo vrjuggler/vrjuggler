@@ -57,4 +57,30 @@
 #   include <vpr/md/NSPR/Sync/CondVarNSPR.h>
 #endif   /* VPR_IRIX_SPROC */
 
+
+/** @example "Example of using a CondVar"
+* \code
+*
+* vpr::CondVar mCondVar;   // The condition variable to use
+* 
+* // --- Set a state and signal everyone else about it --- //
+* mCondVar.acquire();
+* {
+*     mState = NEW_STATE;
+*     mCondVar.signal();
+* }
+* mCondVar.release();
+*   
+*
+* // -- Wait for a condition -- //
+*   mCondVar.acquire();
+*   {
+*      while ( mState != DESIRED_STATE ) {
+*         mCondVar.wait();
+*      }
+*   }
+*   mCondVar.release();
+* \endcode
+*/
+
 #endif
