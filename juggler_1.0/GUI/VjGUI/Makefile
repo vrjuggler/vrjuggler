@@ -10,7 +10,9 @@ CORE_SOURCES = \
 	VjGUI/ConfigChunkDBPanel.java  VjGUI/ConfigChunkFrame.java          \
 	VjGUI/VarValuePanel.java       VjGUI/ConnectionPanel.java           \
 	VjGUI/MainWindowPanel.java     VjGUI/DataDisplayFrame.java          \
-	VjGUI/ProcGroupPanel.java      VjGUI/ProcessFrame.java
+	VjGUI/ProcGroupPanel.java      VjGUI/ProcessFrame.java              \
+	VjGUI/NoSpaceTextField.java    VjGUI/IntegerTextField.java          \
+	VjGUI/FloatTextField.java
 
 
 OBJECTS = $(CORE_SOURCES:.java=.class)

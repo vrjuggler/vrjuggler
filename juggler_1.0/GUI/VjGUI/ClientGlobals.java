@@ -22,10 +22,12 @@ public class ClientGlobals {
      * (basically, if true, all files are treated as user files)
      */
     public boolean        multilevelchunkdescenabled;
+    public boolean        chunkdescusestandardfilereq;
 
     public ClientGlobals (boolean l) {
 	multilevelconfigenabled = false;
 	multilevelchunkdescenabled = false;
+	chunkdescusestandardfilereq = true;
     }
 
     public boolean isConnected() {
