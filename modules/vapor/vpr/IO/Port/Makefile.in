@@ -49,15 +49,15 @@ SUBOBJDIR	= $(VPR_LIBRARY)
 VPRROOT		= $(top_srcdir)
 VPR_SRCDIR	= @VPR_SRCDIR@/vpr/IO/Port
 
-#SRCS 		=
+SRCS 		= Port.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
-#ifndef DO_CLEANDEPEND
-#ifndef DO_BEFOREBUILD
-#    include $(DEPEND_FILES)
-#endif
-#endif
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+    include $(DEPEND_FILES)
+endif
+endif
