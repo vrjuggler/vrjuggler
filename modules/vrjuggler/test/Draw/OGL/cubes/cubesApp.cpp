@@ -273,14 +273,14 @@ void cubesApp::myDraw(vrj::User* user)
 {
    vprDEBUG(vprDBG_ALL,5) << "\n--- myDraw() ---\n" << vprDEBUG_FLUSH;
 
-   vrj::GlUserData* user_data = vrj::GlDrawManager::instance()->currentUserData();
-   int cur_eye = user_data->getProjection()->getEye();
-
    static const float SCALE = 100;
    //static const float SCALE = 10;
    static const float INCR = 0.1;
 
    /*
+   vrj::GlUserData* user_data = vrj::GlDrawManager::instance()->currentUserData();
+   int cur_eye = user_data->getProjection()->getEye();
+
    if(cur_eye == vrj::Projection::LEFT)
    {
       glColor3f(1.0f, 0.0f, 0.0f);
@@ -372,7 +372,7 @@ void cubesApp::initGLState()
    GLfloat mat_diffuse[] = { 1.0,  0.5,  0.8,  1.0};
    GLfloat mat_specular[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat mat_shininess[] = { 50.0};
-   GLfloat mat_emission[] = { 1.0,  1.0,  1.0,  1.0};
+//   GLfloat mat_emission[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat no_mat[] = { 0.0,  0.0,  0.0,  1.0};
 
    glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
