@@ -290,7 +290,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 		if (p->type == T_EMBEDDEDCHUNK) {
 		    vjConfigChunk *ch = vjChunkFactory::createChunk (p->embeddesc);
 		    in >> *ch;
-		    p->setValue (ch, p->getNum());
+		    p->setValue (ch, i++);
 		}
 		else if (tok.type == TK_Unit) {
 		    p->applyUnits (tok.unitval);
