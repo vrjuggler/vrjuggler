@@ -1,3 +1,4 @@
+#include <vjConfig.h>
 #include <Input/vjSim/vjSimAnalog.h>
 
 bool vjSimAnalog::config(vjConfigChunk* chunk)
@@ -28,7 +29,7 @@ bool vjSimAnalog::config(vjConfigChunk* chunk)
 
    vjASSERT(mSimKeysUp.size() == mSimKeysDown.size());   // If trimming worked, then they should be same size
 
-   mAnaData = vector<int>(num_pairs,0);      // Initialize to all zeros
+   mAnaData = std::vector<int>(num_pairs,0); // Initialize to all zeros
    mAnaStep = chunk->getProperty("anastep");
 
    return true;

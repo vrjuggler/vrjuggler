@@ -61,7 +61,7 @@ private:
    // Singleton so must be private
    vjDeviceFactory()
    {
-      mConstructors = vector<vjDeviceConstructorBase*>(0);
+      mConstructors = std::vector<vjDeviceConstructorBase*>(0);
       vjASSERT(mConstructors.size() == 0);
    }
 
@@ -96,7 +96,7 @@ private:
 
 
 private:
-   vector<vjDeviceConstructorBase*>    mConstructors;    //: List of the device constructors
+   std::vector<vjDeviceConstructorBase*> mConstructors;  //: List of the device constructors
 
 
 public:     // ------ SINGLETON ----- ///

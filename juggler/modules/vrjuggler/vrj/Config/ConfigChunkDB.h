@@ -28,7 +28,7 @@ private:
     vjChunkDescDB *descs;
 
     //: vector of ConfigChunks
-    vector<vjConfigChunk*> chunks;
+    std::vector<vjConfigChunk*> chunks;
 
 public:
 
@@ -109,12 +109,12 @@ public:
     //: return a vector of all the chunks
     //! POST: returns
     //! RETURNS: Copy of the pointers to the chunks in this.
-    vector<vjConfigChunk*> getChunks();
+    std::vector<vjConfigChunk*> getChunks();
 
     //: Add chunks to this
     //! PRE: Description DB that this points to must have all desc's for added chunks
     //! POST: this has added the chunks specified
-    void addChunks(vector<vjConfigChunk*> new_chunks);
+    void addChunks(std::vector<vjConfigChunk*> new_chunks);
 
 
     //: Returns all chunks of a given type.
@@ -128,7 +128,7 @@ public:
     //! NOTE: The memory for the vector should be deleted by the
     //+       caller when it is no longer needed.  The individual
     //+       vjConfigChunks in the vector should not be freed.
-    vector<vjConfigChunk*>* getMatching (char *mytypename) {
+    std::vector<vjConfigChunk*>* getMatching (char *mytypename) {
 	return getMatching ("type", mytypename);
     }
 
@@ -146,9 +146,9 @@ public:
     //! NOTE: The memory for the vector should be deleted by the
     //+       caller when it is no longer needed.  The individual
     //+       ConfigChunks in the vector should not be freed.
-    vector<vjConfigChunk*>* getMatching (char *property, char *value);
-    vector<vjConfigChunk*>* getMatching (char *property, int value);
-    vector<vjConfigChunk*>* getMatching (char *property, float value);
+    std::vector<vjConfigChunk*>* getMatching (char *property, char *value);
+    std::vector<vjConfigChunk*>* getMatching (char *property, int value);
+    std::vector<vjConfigChunk*>* getMatching (char *property, float value);
 
 
 

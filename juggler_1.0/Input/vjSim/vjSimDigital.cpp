@@ -1,3 +1,4 @@
+#include <vjConfig.h>
 #include <Input/vjSim/vjSimDigital.h>
 
 bool vjSimDigital::config(vjConfigChunk* chunk)
@@ -20,7 +21,7 @@ bool vjSimDigital::config(vjConfigChunk* chunk)
       mSimKeys.push_back(key_pair);
    }
 
-   mDigitalData = vector<int>(num_pairs,0);      // Initialize to all zeros
+   mDigitalData = std::vector<int>(num_pairs,0); // Initialize to all zeros
 
    return true;
 }

@@ -10,6 +10,7 @@
  */
 
 
+#include <vjConfig.h>
 #include <Input/InputManager/vjInputManager.h>
 #include <Environment/vjConnect.h>
 #include <Environment/vjTimedUpdate.h>
@@ -17,7 +18,7 @@
 #include <Config/vjChunkFactory.h>
 
 void vjTrackerTimedUpdate::controlLoop(void* nullParam) {
-    vector<vjConfigChunk*> results;
+    std::vector<vjConfigChunk*> results;
     vjConnect* t;
     vjConfigChunk *p;
     vjMatrix pos;

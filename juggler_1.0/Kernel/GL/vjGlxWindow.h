@@ -259,7 +259,7 @@ public:
 */
 
        // Get the vector of display chunks
-      vector<vjConfigChunk*>* dispSysChunk;
+      std::vector<vjConfigChunk*>* dispSysChunk;
       dispSysChunk = vjKernel::instance()->getChunkDB()->getMatching("displaySystem");
 
       window_name = display->getName();

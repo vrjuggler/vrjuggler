@@ -62,9 +62,9 @@ public:
 
 protected:
    // mGestureNames and mGestureExamples MUST always be same size
-   vector<std::string>     mGestureNames;       //: List of all gesture names
-   vector<vjGloveData>     mGestureExamples;    //: Examples of all gestures
-   vjGloveProxy*           mGloveProxy;         //: Proxy to the glove
+   std::vector<std::string> mGestureNames;      //: List of all gesture names
+   std::vector<vjGloveData> mGestureExamples;   //: Examples of all gestures
+   vjGloveProxy*            mGloveProxy;        //: Proxy to the glove
 };
 
 #endif

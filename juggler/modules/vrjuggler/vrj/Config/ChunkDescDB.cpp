@@ -44,7 +44,7 @@ bool vjChunkDescDB::insert (vjChunkDesc *d) {
 
 bool vjChunkDescDB::remove (char *tok) {
   
-  vector<vjChunkDesc*>::iterator begin = descs.begin();
+  std::vector<vjChunkDesc*>::iterator begin = descs.begin();
   while (begin != descs.end()) {
     if (!strcasecmp ((*begin)->token, tok)) {
       delete(*begin);
@@ -60,7 +60,7 @@ bool vjChunkDescDB::remove (char *tok) {
 
 
 void vjChunkDescDB::removeAll () {
-  vector<vjChunkDesc*>::iterator i = descs.begin();
+  std::vector<vjChunkDesc*>::iterator i = descs.begin();
   while (i != descs.end()) {
     delete (*i);
     i++;

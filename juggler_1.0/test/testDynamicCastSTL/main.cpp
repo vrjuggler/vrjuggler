@@ -1,4 +1,4 @@
-#include <vector.h>
+#include <vector>
 #include <iostream.h>
 
 class base
@@ -17,7 +17,7 @@ public:
 
 main(void)
 {
-    vector<base*> bVec;
+    std::vector<base*> bVec;
     
     base* b = new derived;
     derived* d = new derived;

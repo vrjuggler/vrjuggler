@@ -3,14 +3,10 @@
 
 #include <vjConfig.h>
 
-#ifdef VJ_OS_HPUX
-#   include <vector>
-#else
+#ifndef VJ_OS_HPUX
 #   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
 #       define _PTHREADS
 #   endif
-
-#   include <vector.h>
 #endif
 
 #include <GL/gl.h>
@@ -133,9 +129,9 @@ protected:
    int      numPipes;     //: The number of pipes in the system
 
    // --- API data --- //
-   vjGlApp*             app;           //: The OpenGL application
-   vector<vjGlWindow*>  wins;          //: A list of the windows in the system
-   vector<vjGlPipe*>    pipes;         //: A list of the pipes in the system
+   vjGlApp*                 app;      //: The OpenGL application
+   std::vector<vjGlWindow*> wins;     //: A list of the windows in the system
+   std::vector<vjGlPipe*>   pipes;    //: A list of the pipes in the system
 
    // --- Helper field data --- //
    vjTSObjectProxy<int>             mContextId;    //: TS Data for context id

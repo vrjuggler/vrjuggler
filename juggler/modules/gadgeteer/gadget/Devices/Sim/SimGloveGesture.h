@@ -1,6 +1,7 @@
 #ifndef _VJ_SIM_GLOVE_GESTURE_H_
 #define _VJ_SIM_GLOVE_GESTURE_H_
 
+#include <vjConfig.h>
 #include <Input/vjGesture/vjGloveGesture.h>
 #include <Input/vjGesture/vjGesture.h>
 #include <Input/vjSim/vjSimInput.h>
@@ -49,7 +50,7 @@ public:
    void train() { ; }
 
 private:
-   vector<vjKeyModPair>    mSimKeys;      //: The keys to press for the gestures
+   std::vector<vjKeyModPair> mSimKeys;    //: The keys to press for the gestures
    int                     mCurGesture;   //: The current gesture id
 };
 

@@ -84,8 +84,8 @@ public:
 
 private:
     vjConfigChunkDB*          chunkdb;
-    vector<vjConnect*> connections;
-    vector<vjTimedUpdate*>    updaters;
+    std::vector<vjConnect*>   connections;
+    std::vector<vjTimedUpdate*> updaters;
     vjThread*                 listen_thread;
     int                       Port;
     int                       listen_socket;

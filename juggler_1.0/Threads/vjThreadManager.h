@@ -67,7 +67,7 @@ public:
 
 private:
    vjMutex                 mThreadVectorMutex;     //: Mutex to protect the threads vector
-   vector<vjBaseThread*>   mThreads;               //: List of all threads in system
+   std::vector<vjBaseThread*> mThreads;            //: List of all threads in system
 
       /******** TS DATA **********/
 public:
@@ -95,7 +95,7 @@ private:
 
 private:
    vjMutex             mTSMutex;          //: Mutex to protect access to all TS stuff
-   vector<vjTSTable*>  mTSTables;         //: The table of TSTables
+   std::vector<vjTSTable*> mTSTables;     //: The table of TSTables
    vjTSTable           mBaseTSTable;      //: This is the "good" copy of the table to use as source for copies
    long                mNextTSObjectKey;  //: The next available object key
 

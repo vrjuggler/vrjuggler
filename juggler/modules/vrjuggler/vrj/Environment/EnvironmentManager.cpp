@@ -188,7 +188,7 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
 void vjEnvironmentManager::reconfigure () {
     int i;
     vjConfigChunk *c;
-    vector<vjConfigChunk*>* v;
+    std::vector<vjConfigChunk*>* v;
     vjConnect* vn;
     char* s;
     bool networkingchanged;

@@ -2,7 +2,7 @@
 #define _VJ_TS_TABLE_H_
 #pragma once
 
-#include <vector.h>
+#include <vjConfig.h>
 #include <Threads/vjTSObject.h>
 #include <Kernel/vjDebug.h>
 
@@ -70,7 +70,7 @@ public:
 //   friend vjThreadManager;
 
 private:
-   vector<vjTSBaseObject*>   mTSObjects; //: Map object key to TS Object ptr
+   std::vector<vjTSBaseObject*> mTSObjects; //: Map object key to TS Object ptr
 };
 
 #endif

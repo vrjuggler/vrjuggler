@@ -3,14 +3,10 @@
 
 #include <vjConfig.h>
 
-#ifdef VJ_OS_HPUX
-#   include <vector>
-#else
+#ifndef VJ_OS_HPUX
 #   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
 #       define _PTHREADS
 #   endif
-
-#   include <vector.h>
 #endif
 
 #include <Kernel/GL/vjGlWindow.h>
@@ -109,13 +105,13 @@ public:
    enum RenderState {RENDERING, WAITING};    // Type to delineate the current rendering state
 
 private:
-   int   pipeNum;                //: The id of the pipe
+   int   pipeNum;                     //: The id of the pipe
 
-   vector<vjGlWindow*> newWins;  //: List of windows still to be opened on current pipe
-   vjMutex newWinLock;           //: Lock for accessing the newWin list
+   std::vector<vjGlWindow*> newWins;  //: List of windows still to be opened on current pipe
+   vjMutex newWinLock;                //: Lock for accessing the newWin list
 
-   vector<vjGlWindow*> openWins; //: List of current open windows to render
-   vjMutex openWinLock;          //: Lock for accessing the openWinList
+   std::vector<vjGlWindow*> openWins; //: List of current open windows to render
+   vjMutex openWinLock;               //: Lock for accessing the openWinList
 
    vjGlDrawManager*    glManager;    //: The openlGL manager that we are rendering for
                                      //: Needed to get app, etc.

@@ -86,7 +86,7 @@ private:
    int   findConstructor(vjConfigChunk* chunk);
 
 private:
-   vector<vjProxyConstructorBase*>    mConstructors;    //: List of the proxy constructors
+   std::vector<vjProxyConstructorBase*> mConstructors;   //: List of the proxy constructors
 
 
 public:     // ------ SINGLETON ----- ///

@@ -14,7 +14,6 @@
 #include <vjConfig.h>
 #include <Environment/vjTimedUpdate.h>
 #include <Performance/vjPerfDataBuffer.h>
-#include <vector.h>
 
 //: TimedUpdate for reading from Performance Data buffers
 //
@@ -26,7 +25,7 @@
 class vjTuPerfBufReader: public vjTimedUpdate {
 
 public:
-    vector<vjPerfDataBuffer*>   buffers;
+    std::vector<vjPerfDataBuffer*>   buffers;
 
     vjTuPerfBufReader( vjConnect *_target, 
 		       float _refresh_time );

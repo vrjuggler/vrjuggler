@@ -17,7 +17,7 @@ vjPfDrawManager* vjPfDrawManager::_instance = NULL;
 
 void vjPfDrawManager::config(vjConfigChunkDB*  chunkDB)
 {
-   vector<vjConfigChunk*>* sgiChunks;
+   std::vector<vjConfigChunk*>* sgiChunks;
    sgiChunks = chunkDB->getMatching("displaySystem");       // Get the chunk to config system
 
    if (sgiChunks->size() <= 0)
@@ -43,7 +43,7 @@ void vjPfDrawManager::config(vjConfigChunkDB*  chunkDB)
    }
 
       // --- Get simulator model info --- //
-   vector<vjConfigChunk*>* perf_chunks;
+   std::vector<vjConfigChunk*>* perf_chunks;
    perf_chunks = chunkDB->getMatching("apiPerformer");      // Get the performer API chunks
 
    if(perf_chunks->size() > 0)
@@ -139,8 +139,8 @@ void vjPfDrawManager::initDrawing()
    //  For each display:
    //	    -Create a pWin for it
    //	    -Create the channels to put it the pWin
-   vector<vjDisplay*> displays = displayManager->getDisplays();
-   for (vector<vjDisplay*>::iterator dispIter = displays.begin();
+   std::vector<vjDisplay*> displays = displayManager->getDisplays();
+   for (std::vector<vjDisplay*>::iterator dispIter = displays.begin();
        dispIter != displays.end(); dispIter++)
    {
       vjDEBUG(0) << "------- Opening new Display --------" << endl << vjDEBUG_FLUSH;
@@ -309,7 +309,7 @@ void vjPfDrawManager::updateProjections()
    // --- Update the channel projections --- //
    //for(each pfDisp)
    //    update Performer specific stuff.
-   for (vector<pfDisp>::iterator i = disps.begin(); i != disps.end(); i++)
+   for (std::vector<pfDisp>::iterator i = disps.begin(); i != disps.end(); i++)
    {
       if(!((*i).disp->isSimulator()))
       {   // Update the projections
@@ -375,7 +375,7 @@ void vjPfDrawManager::debugDump()
    vjDEBUG(0)       << "scene:" << (void*)sceneRoot << endl << vjDEBUG_FLUSH;
    vjDEBUG(0)       << "Disps:" << disps.size() << endl << vjDEBUG_FLUSH;
 
-   for (vector<pfDisp>::iterator i = disps.begin(); i != disps.end(); i++)
+   for (std::vector<pfDisp>::iterator i = disps.begin(); i != disps.end(); i++)
    {
       vjDEBUG(0) << "\n\tDisplay:" << (void*)(i->disp) << endl << vjDEBUG_FLUSH;
       vjDEBUG(0) << "\tpWin:" << (void*)(i->pWin) << endl << vjDEBUG_FLUSH;

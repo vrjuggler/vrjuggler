@@ -96,7 +96,7 @@ class vjTrackerTimedUpdate: public vjTimedUpdate {
 
 public:
 
-  vector<int> proxies;
+  std::vector<int> proxies;
 
     vjTrackerTimedUpdate (vjConnect* _target,
 			  float _refresh_time): 

@@ -78,7 +78,7 @@ void vjInputManager::ConfigureInitial(vjConfigChunkDB *cdb)
 {
    vjDEBUG(1) << "vjInputManager::ConfigureInputManager" << endl << vjDEBUG_FLUSH;
    vjConfigChunk *c;// = cdb->getChunk("vjInputManager");
-   vector<vjConfigChunk*> *vChunks;
+   std::vector<vjConfigChunk*> *vChunks;
    vChunks = cdb->getMatching("InputManager");
 
    if (vChunks->size() > 0)
