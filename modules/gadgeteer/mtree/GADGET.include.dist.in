@@ -68,6 +68,8 @@
                 ..
                 RemoteInputManager
                 ..
+                SwapLockPlugin
+                ..
             ..
         ..
     ..
