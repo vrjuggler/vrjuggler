@@ -275,8 +275,6 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
       p = q;
    }
 
-   vprDEBUG_CONT(vprDBG_ALL, vprDBG_VERB_LVL)
-      << " <-- " << node_prop_map[src].getIpAddressString() << vprDEBUG_FLUSH;
    vprDEBUG_CONT_END(vprDBG_ALL, vprDBG_VERB_LVL) << "\n" << vprDEBUG_FLUSH;
    vprASSERT(p == src && "Destination is unreachable!");
 
