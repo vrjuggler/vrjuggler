@@ -98,7 +98,7 @@ void pfTerryBoxCollide::setVelocity( pfVec3 velocityVec )
          mCollideVolume.segs[i].dir = warpedBox;
          mCollideVolume.segs[i].length = warpedBoxLength;
       }
-      //cout<<velocity_length<<"\n"<<flush;
+      //std::cout<<velocity_length<<"\n"<<std::flush;
    }
 }
 
@@ -124,7 +124,7 @@ int pfTerryBoxCollide::collide(pfVec3& correction, pfNode* objNode, pfVec3 pos )
    correction = pfVec3(0, 0, 0);
    if (objNode->isect(&mCollideVolume, hits) > 0)
    {
-      cout<<"Box: Hit "<<flush;
+      std::cout<<"Box: Hit "<<std::flush;
             
       for (i = 0; i < COLLIDE_SEGMENTS; i++)
       {
@@ -174,7 +174,7 @@ int pfTerryBoxCollide::collide(pfVec3& correction, pfNode* objNode, pfVec3 pos )
             returnval++;
          }
       }
-      cout<<(pos+correction)[0]<<" "<<(pos+correction)[1]<<" "<<(pos+correction)[2]<<"\n"<<flush;
+      std::cout<<(pos+correction)[0]<<" "<<(pos+correction)[1]<<" "<<(pos+correction)[2]<<"\n"<<std::flush;
    
    }
    return returnval;

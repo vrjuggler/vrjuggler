@@ -31,6 +31,7 @@
  * -----------------------------------------------------------------
  */
 
+#include <iostream>
 #include <assert.h>
 #include <stdio.h>
 #include <string>
@@ -57,10 +58,12 @@ bool AwSound::load( const char* const alias )
    mSoundPlayer = awFindPlyr( mSoundName.data() );
    if (mSoundPlayer == NULL)
    {
-      cout<<"[aw] Loading \""<<mSoundName.data()<<"\" as an awSound (non-positional type)\n"<<flush;
+      std::cout<<"[aw] Loading \""<<mSoundName.data()
+               <<"\" as an awSound (non-positional type)\n"<<std::flush;
    }
    else
-      cout<<"[aw] Loading \""<<mSoundName.data()<<"\" as an awPlayer (positional type)\n"<<flush;
+      std::cout<<"[aw] Loading \""<<mSoundName.data()
+               <<"\" as an awPlayer (positional type)\n"<<std::flush;
    
    // find the sound with the same name.
    mSound = awFindSnd( mSoundName.data() );
@@ -87,11 +90,11 @@ bool AwSound::load( const char* const alias )
    awObserver* obs = awFindObs( "you" );
    if (obs == NULL)
    {
-      cout<<"[aw] \n"
+      std::cout<<"[aw] \n"
           <<"[aw] !!! WARNING !!!: could not find in the .adf file the \"observer\" named \"you\".  \n"
           <<"[aw] !!!         !!!: This *has* to be there, or else none of the sound localization \n"
           <<"[aw] !!!         !!!:   functions will work (like setPosition). \n"
-          <<"[aw] \n"<<flush;
+          <<"[aw] \n"<<std::flush;
       // make the sound absolute (reletive to 0,0,0?)
       awProp( mSoundPlayer, AWPLYR_CSREF, AWPLYR_ABSOLUTE );
       return true; // observer failed, sound did not, if it's a player it will still be reletive to absolute (i think?)
@@ -117,7 +120,8 @@ void AwSound::pitchBend( float amount )
 {
    assert( mSound != NULL );
    // turn on the sound by default
-   cout<<"[aw] awProp( mSoundPlayer, AWSND_PBEND, "<<amount<<" )\n"<<flush;
+   std::cout<<"[aw] awProp( mSoundPlayer, AWSND_PBEND, "<<amount<<" )\n"
+            <<std::flush;
    
    //if (mSoundPlayer != NULL)
    //   awProp( mSoundPlayer, AWSND_PBEND, amount );
@@ -136,13 +140,15 @@ void AwSound::enable( const bool& state )
    switch (this->isEnabled())
    {
       case true:
-         cout<<"[aw] Enabling sound: "<<mSoundName.c_str()<<"\n"<<flush;
+         std::cout<<"[aw] Enabling sound: "<<mSoundName.c_str()<<"\n"
+                  <<std::flush;
          if (mSoundPlayer != NULL)
             awProp( mSoundPlayer, AWSND_ENABLED, AWSND_ON );
          awProp( mSound, AWSND_ENABLED, AWSND_ON );
          break;
       case false:
-         cout<<"[aw] Disabling sound: "<<mSoundName.c_str()<<"\n"<<flush;
+         std::cout<<"[aw] Disabling sound: "<<mSoundName.c_str()<<"\n"
+                  <<std::flush;
          if (mSoundPlayer != NULL)
             awProp( mSoundPlayer, AWSND_ENABLED, AWSND_OFF );
          awProp( mSound, AWSND_ENABLED, AWSND_OFF );
@@ -158,7 +164,8 @@ void AwSound::trigger()
    switch (mLooping)
    {
       case 0:
-         cout<<"[aw] Playing sound: "<<mSoundName.c_str()<<"\n"<<flush;
+         std::cout<<"[aw] Playing sound: "<<mSoundName.c_str()<<"\n"
+                  <<std::flush;
          if (mSoundPlayer != NULL)
             awProp( mSoundPlayer, AWPLYR_STATE, AWSND_ON );
          awProp( mSound, AWSND_STATE, AWSND_ON );
@@ -167,7 +174,7 @@ void AwSound::trigger()
          
       default:
       case -1:
-         cout<<"[aw] Looping audio "<<mSoundName.c_str()<<"\n"<<flush;
+         std::cout<<"[aw] Looping audio "<<mSoundName.c_str()<<"\n"<<std::flush;
          if (mSoundPlayer != NULL)
             awProp( mSoundPlayer, AWPLYR_STATE, AWSND_ON );
          awProp( mSound, AWSND_NLOOPS, mLooping );
@@ -187,7 +194,7 @@ void AwSound::stop()
      awProp( mSoundPlayer, AWPLYR_STATE, AWSND_OFF );
    awProp( mSound, AWSND_STATE, AWSND_OFF );
    
-   cout<<"[aw] Stopping audio "<<mSoundName.c_str()<<"\n"<<flush;
+   std::cout<<"[aw] Stopping audio "<<mSoundName.c_str()<<"\n"<<std::flush;
 }
 
 // change the position of the sound.
@@ -204,7 +211,7 @@ void AwSound::setPosition( float x, float y, float z )
    if (mSoundPlayer != NULL)
    {
       // debug:
-      //cout<<"[aw] Setting player position to "<<xyz[0]<<" "<<xyz[1]<<" "<<xyz[2]<<"\n"<<flush;
+      //std::cout<<"[aw] Setting player position to "<<xyz[0]<<" "<<xyz[1]<<" "<<xyz[2]<<"\n"<<std::flush;
       awXYZHPR( mSoundPlayer, xyz, hpr);
    }
    // doesn't work... second awSound man page says it should...
@@ -218,10 +225,10 @@ void AwSound::print()
    
    if (mSoundPlayer != NULL)
    {
-      cout<<"[aw] Printing the Player: \n"<<flush;
+      std::cout<<"[aw] Printing the Player: \n"<<std::flush;
       awPrint( mSoundPlayer );
    }
    
-   cout<<"[aw] Printing the Sound: \n"<<flush;
+   std::cout<<"[aw] Printing the Sound: \n"<<std::flush;
    awPrint( mSound );
 }

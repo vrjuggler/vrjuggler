@@ -31,7 +31,7 @@
  * -----------------------------------------------------------------
  */
 
-
+#include <iostream>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include "../../C2glxWindow.h"
@@ -58,7 +58,7 @@ GLUquadricObj *cyl, *sp, *cone;
 
 void childp (void* i) {
   for(;;) {
-    cout << "sphere height: " << sppos[1] << endl;
+    std::cout << "sphere height: " << sppos[1] << std::endl;
   w.makeCurrent();
   cjDrawScene(NULL);
   w.swapBuffers();

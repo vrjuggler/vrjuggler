@@ -66,7 +66,7 @@ vjThreadPool::vjThreadPool (int numToStartWith) : readyThreads(0) {
          << "vjThreadPool::vjThreadPool: Entering.\n" << vjDEBUG_FLUSH;
       vjDEBUG(vjDBG_ALL, vjDBG_HVERB_LVL)
          << "\tvjThreadPool::vjThreadPool: Number threads: " << numToStartWith
-         << endl << vjDEBUG_FLUSH;
+         << std::endl << vjDEBUG_FLUSH;
     DebugLock.release();
 
     listHead = NULL;
@@ -96,7 +96,7 @@ vjThreadPool::threadLoop(void* theThreadAsVoid) {
    DebugLock.acquire();
    vjDEBUG(vjDBG_ALL, vjDBG_DETAILED_LVL) << vjThread::self()
                                           << " vjThreadPool::threadLoop: Entering."
-                                          << endl << vjDEBUG_FLUSH;
+                                          << std::endl << vjDEBUG_FLUSH;
 //      vjDEBUG(vjDBG_ALL, vjDBG_HVERB_LVL) << vjThread::self()
 //      << " vjThreadPool::threadLoop: theThreadAsVoid:"
 //      << theThreadAsVoid << endl << vjDEBUG_FLUSH;
@@ -182,11 +182,11 @@ vjThreadPool::printList (void) {
     vjOneThread* curThread = listHead;
     int counter = 0;
 
-    cerr << "----- Thread List -----\n";
+    std::cerr << "----- Thread List -----\n";
 
     while(curThread != NULL) {
-        cerr << "Thread: " << counter++ << endl;
-        cerr << "\tpid: " << *curThread << endl;
+        std::cerr << "Thread: " << counter++ << std::endl;
+        std::cerr << "\tpid: " << *curThread << std::endl;
         curThread = curThread->next;
     }
 }
@@ -199,7 +199,7 @@ vjOneThread* vjThreadPool::addThread (void)
     DebugLock.acquire();
       vjDEBUG(vjDBG_ALL, vjDBG_DETAILED_LVL) << vjThread::self()
                                              << " vjThreadPool::addThread: Entering: "
-                                             << ++numTimes << endl
+                                             << ++numTimes << std::endl
                                              << vjDEBUG_FLUSH;
     DebugLock.release();
 
@@ -223,7 +223,7 @@ vjOneThread* vjThreadPool::addThread (void)
     return listHead;
 }
 
-ostream& operator<< (ostream& outfile, vjOneThread& thread)
+std::ostream& operator<< (std::ostream& outfile, vjOneThread& thread)
 {
     outfile << thread.thread;
     return outfile;

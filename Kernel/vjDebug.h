@@ -127,9 +127,9 @@
 #else
 #  define LOCK_DEBUG_STREAM
 #  define MAX_DBG_LEVEL vjDBG_WARNING_LVL
-//#   define vjDEBUG(cat,val) if (1) ; else cout
-//#   define vjDEBUG_BEGIN(cat,val) if (1) ; else cout
-//#   define vjDEBUG_END(cat,val) if (1) ; else cout
+//#   define vjDEBUG(cat,val) if (1) ; else std::cout
+//#   define vjDEBUG_BEGIN(cat,val) if (1) ; else std::cout
+//#   define vjDEBUG_END(cat,val) if (1) ; else std::cout
 #endif
 
 #undef LOCK_DEBUG_STREAM
@@ -158,11 +158,11 @@
 #ifdef LOCK_DEBUG_STREAM
 #   define vjDEBUG_STREAM_LOCK vjStreamLock(vjDebug::instance()->debugLock())
 #   define vjDEBUG_STREAM_UNLOCK vjStreamUnLock(vjDebug::instance()->debugLock())
-#   define vjDEBUG_FLUSH vjDEBUG_STREAM_UNLOCK << flush
+#   define vjDEBUG_FLUSH vjDEBUG_STREAM_UNLOCK << std::flush
 #else
-#   define vjDEBUG_STREAM_LOCK flush
-#   define vjDEBUG_STREAM_UNLOCK flush
-#   define vjDEBUG_FLUSH flush
+#   define vjDEBUG_STREAM_LOCK std::flush
+#   define vjDEBUG_STREAM_UNLOCK std::flush
+#   define vjDEBUG_FLUSH std::flush
 #endif
 
 // -- ASSERT -- //
@@ -194,7 +194,7 @@ private:
 
 public:
    // Get the debug stream to use
-   ostream& getStream(int cat, int level, bool show_thread_info = true, bool use_indent = true, int indentChange = 0);
+   std::ostream& getStream(int cat, int level, bool show_thread_info = true, bool use_indent = true, int indentChange = 0);
 
    int getLevel()
    { return debugLevel; }

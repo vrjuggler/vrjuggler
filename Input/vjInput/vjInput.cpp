@@ -80,7 +80,7 @@ bool vjInput::config( vjConfigChunk *c)
 void vjInput::setPort(const char* serialPort)
 {
 if (myThread != NULL) {
-     cerr << "Cannot change the serial Port while active\n";
+     std::cerr << "Cannot change the serial Port while active\n";
      return;
   }
   strncpy(sPort,serialPort,(size_t)30);

@@ -31,7 +31,7 @@
  * -----------------------------------------------------------------
  */
 
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <math.h>
 
@@ -89,7 +89,7 @@ void doFunc(void* TSCounterPtr)
    }
 
    (*ts_counter) = 0;
-   vjDEBUG(vjDBG_ALL, 0) << "Starting with: " << *ts_counter << endl
+   vjDEBUG(vjDBG_ALL, 0) << "Starting with: " << *ts_counter << std::endl
                          << vjDEBUG_FLUSH;
 
    while((*ts_counter) < 1000)
@@ -100,7 +100,7 @@ void doFunc(void* TSCounterPtr)
    }
 
    vjDEBUG(vjDBG_ALL, 0) << "Finished counting: Final val:" << *ts_counter
-                         << endl << vjDEBUG_FLUSH;
+                         << std::endl << vjDEBUG_FLUSH;
 
    create_mutex.acquire();
       threads_exited++;

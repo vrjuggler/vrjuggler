@@ -31,15 +31,9 @@
  * -----------------------------------------------------------------
  */
 
-/// TOP OF TEST_C
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
-
-#ifdef VJ_OS_IRIX
-#   include <ulocks.h>
-#endif
-
 #include <math.h>
 #include <time.h>
 #include <sys/time.h>
@@ -67,11 +61,11 @@ int main(void )
     vjThreadPool* thePool = new(&myPool) vjThreadPool(NUMTHREADS);
     
     DebugLock.acquire();
-	cout << "Hello there\n\n" << flush;
-	cout << "Start:\n\n";
+	std::cout << "Hello there\n\n" << std::flush;
+	std::cout << "Start:\n\n";
     
 	counter = 0;
-	cout << "Counter: " << counter << endl;
+	std::cout << "Counter: " << counter << std::endl;
     DebugLock.release();
     
         
@@ -79,22 +73,22 @@ int main(void )
 	thePool->startFunc((THREAD_FUNC)doIt);      
     }
     thePool->barrier();
-  
-    cerr << "\n\nPast the barrier:" << counter << "\n\n" << flush;
-    
+
+    std::cerr << "\n\nPast the barrier:" << counter << "\n\n" << std::flush;
+
     counter = 0;
-    
+
     for (float z=0;z<30;z++) {
-	thePool->startFunc((THREAD_FUNC)doIt);      
+	thePool->startFunc((THREAD_FUNC)doIt);
     }
     thePool->barrier();
   
     DebugLock.acquire();
-	cout << "\n\nCounter: " << counter << endl << flush;
+	std::cout << "\n\nCounter: " << counter << std::endl << std::flush;
 	
-	cout << "End:\n\n";
-	cout << "\n" << flush;
-	cerr << "\n\nDone:" << endl;
+	std::cout << "End:\n\n";
+	std::cout << "\n" << std::flush;
+	std::cerr << "\n\nDone:" << std::endl;
     DebugLock.release();
 
 }
@@ -103,7 +97,7 @@ void doIt(void* param)
 {
     counterMutex.acquire();
 	counter = counter+1;
-	cout << vjThread::self() << " Counter:" << counter << endl;
+	std::cout << vjThread::self() << " Counter:" << counter << std::endl;
     counterMutex.release();
     
     float pdq = 3.14;
@@ -114,4 +108,3 @@ void doIt(void* param)
     }
     	
 }
-

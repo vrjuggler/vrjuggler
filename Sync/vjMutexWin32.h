@@ -181,7 +181,7 @@ public:
     //---------------------------------------------------------
     void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
     {
-		cout << "Mutex::dump\nNot implemented on Win32" << endl;
+        std::cout << "Mutex::dump\nNot implemented on Win32" << std::endl;
     }
 
 

@@ -57,12 +57,20 @@ void vjDisplay::config(vjConfigChunk* chunk)
     // -- Check for error in configuration -- //
     // NOTE: If there are errors, set them to some default value
    if(sizeX <= 0)
-   {  vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: window sizeX set to: " << sizeX << ".  Setting to 10." << endl << vjDEBUG_FLUSH;
-      sizeX = 10; }
+   {
+      vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: window sizeX set to: " << sizeX
+                                << ".  Setting to 10." << std::endl
+                                << vjDEBUG_FLUSH;
+      sizeX = 10;
+   }
 
    if(sizeY <= 0)
-   {  vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: window sizeY set to: " << sizeY << ".  Setting to 10." << endl << vjDEBUG_FLUSH;
-      sizeY = 10; }
+   {
+      vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: window sizeY set to: " << sizeY
+                                << ".  Setting to 10." << std::endl
+                                << vjDEBUG_FLUSH;
+      sizeY = 10;
+   }
 
    if(pipe < 0)
    {
@@ -79,7 +87,9 @@ void vjDisplay::config(vjConfigChunk* chunk)
 
     if(NULL == mUser)
     {
-       vjDEBUG(vjDBG_ERROR,0) << "ERROR: User not found named: " << user_name.c_str() << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ERROR,0) << "ERROR: User not found named: "
+                              << user_name.c_str() << std::endl
+                              << vjDEBUG_FLUSH;
       vjASSERT(false);
     }
 
@@ -93,11 +103,11 @@ void vjDisplay::config(vjConfigChunk* chunk)
     // ---- FRIEND FUNCTIONS ---- //
 //! PRE: disp != NULL
 //+      disp->mUser != NULL
-ostream& vjDisplay::outStream(ostream& out)
+std::ostream& vjDisplay::outStream(std::ostream& out)
 {
    vjASSERT(mUser != NULL);
 
-    out << setw(15) << mName.c_str() << endl
+    out << std::setw(15) << mName.c_str() << std::endl
         << "  org:" << _xo << ", " << _yo
         << "  sz:" << _xs << ", " << _ys
         << "  p:" << mPipe
@@ -109,7 +119,7 @@ ostream& vjDisplay::outStream(ostream& out)
 }
 
 
-ostream& operator<<(ostream& out,  vjDisplay& disp)
+std::ostream& operator<<(std::ostream& out,  vjDisplay& disp)
 {
    return disp.outStream(out);
 }

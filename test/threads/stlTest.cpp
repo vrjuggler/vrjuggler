@@ -32,13 +32,8 @@
  */
 
 #include <vector>
-//#include </home/usr1/allenb/STL/vector.h>
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
-
-#ifdef VJ_OS_IRIX
-#   include <ulocks.h>
-#endif
 
 #include <math.h>
 #include <time.h>
@@ -63,8 +58,8 @@ int main(void)
     vjSharedPool myPool(65536, 16);    // size, num threads
     vjThreadPool* thePool = new(&myPool) vjThreadPool(NUMTHREADS);
     
-    cout << "\nMax: " << intVector.max_size() << endl;
-    
+    std::cout << "\nMax: " << intVector.max_size() << std::endl;
+
     int params[1000];
     for(int z=0;z<1000;z++)
 	params[z] = z;
@@ -96,7 +91,7 @@ int main(void)
     endSecond = endTime.tv_sec + (endTime.tv_usec * 0.000001);
     totalSeconds = (endSecond - startSecond);
     
-///    cout << "\nDone: It took... " << totalSeconds << " seconds" << flush;
+///    std::cout << "\nDone: It took... " << totalSeconds << " seconds" << std::flush;
 //---------------------------------------------------------
 
     usleep(100);
@@ -120,6 +115,6 @@ template<class T>
 void dumpVector(std::vector<T>& theVector)
 {
     for(std::vector<T>::iterator i = theVector.begin(); i != theVector.end(); i++)
-	cout << "\n" << *i;
-    cout << endl;
+	std::cout << "\n" << *i;
+    std::cout << std::endl;
 }

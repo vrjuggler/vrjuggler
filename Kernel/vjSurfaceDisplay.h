@@ -139,8 +139,11 @@ public:
       vjMatrix cur_head_pos = *(mUser->getHeadPos());
       vjCoord  head_coord(cur_head_pos);       // Create a user readable version
 
-      vjDEBUG(vjDBG_ALL,5) << "vjDisplay::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_ALL,5) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,5)
+         << "vjDisplay::updateProjections: Getting head position" << std::endl
+         << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,5) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:"
+                           << head_coord.orient << std::endl << vjDEBUG_FLUSH;
 
       // Compute location of left and right eyes
       float interocularDist = 2.75f/12.0f;
@@ -164,15 +167,15 @@ public:
    vjProjection* getRightProj()
    { return mRightProj; }
 
-   virtual ostream& outStream(ostream& out)
+   virtual std::ostream& outStream(std::ostream& out)
    {
       vjDisplay::outStream(out);
 
       out << "LL: " << mLLCorner << ", LR: " << mLRCorner
-          << ", UR: " << mURCorner << ", UL:" << mULCorner << endl;
-      out << "surfRot: \n" << mSurfaceRotation << endl;
+          << ", UR: " << mURCorner << ", UL:" << mULCorner << std::endl;
+      out << "surfRot: \n" << mSurfaceRotation << std::endl;
       out << "leftProj: " << *mLeftProj;
-      out << "  rightProj: " << *mRightProj << endl;
+      out << "  rightProj: " << *mRightProj << std::endl;
       return out;
    }
 

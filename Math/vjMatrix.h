@@ -424,7 +424,7 @@ public:
    friend inline vjMatrix operator*(float _s, const vjMatrix&);
    friend inline vjMatrix operator*(const vjMatrix& _v, float _s);
    friend inline vjMatrix operator/(const vjMatrix& _v, float _s);
-   friend ostream& operator<<(ostream& out, vjMatrix& _mat);
+   friend std::ostream& operator<<(std::ostream& out, vjMatrix& _mat);
 
 public:
    // Assignment operators

@@ -70,7 +70,7 @@ public:
     // ------------------------------------------------------------------------
     void dump (void)
     {
-        cerr << "vjSubBarrier::dump" << endl;
+        std::cerr << "vjSubBarrier::dump" << std::endl;
         this->barrierFinished.dump();
     }
 };
@@ -98,7 +98,7 @@ public:
         subBarrier1(count, &mutex),
         subBarrier2(count, &mutex)
     {
-        //cerr << "vjBarrier::vjBarrier: Entering." << endl;
+        //std::cerr << "vjBarrier::vjBarrier: Entering." << std::endl;
         subBarrier[0] = &subBarrier1;
         subBarrier[1] = &subBarrier2;
     }
@@ -115,7 +115,8 @@ public:
     // -----------------------------------------------------------------------
     void addProcess()
     {
-        cerr << "vjBarrier::addProcess: Not implemented yet." << endl;
+        std::cerr << "vjBarrier::addProcess: Not implemented yet."
+                  << std::endl;
     }
 
     // -----------------------------------------------------------------------
@@ -124,7 +125,8 @@ public:
     // -----------------------------------------------------------------------
     void removeProcess()
     {
-        cerr << "vjBarrier::removeProcess: Not implemented yet." << endl;
+        std::cerr << "vjBarrier::removeProcess: Not implemented yet."
+                  << std::endl;
     }
 
     // -----------------------------------------------------------------------

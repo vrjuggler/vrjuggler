@@ -83,7 +83,8 @@ public:
    {
       mHomePos = pos;
       vjVec3 hpos = mHomePos.getTrans();
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"navigator: HomePosition = ") << hpos << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"navigator: HomePosition = ")
+                           << hpos << std::endl << vjDEBUG_FLUSH;
     }
 
    // Reset to home position and initial navigation state
@@ -141,8 +142,9 @@ void navigator::navTranslate(vjVec3 trans, bool& didCollide, vjVec3& totalCorrec
 {
    /*
    vjCoord cur_pos(mCurPos);
-   cerr << "Cur P: " << cur_pos.pos << endl << "Trans: " << trans << endl;
-        << "    =: " << cur_pos.pos+trans << endl;
+   std::cerr << "Cur P: " << cur_pos.pos << std::endl << "Trans: " << trans
+             << std::endl
+             << "    =: " << cur_pos.pos+trans << std::endl;
    */
 
    // convert the info to model coordinates, since that's what the nav routines take.

@@ -97,7 +97,7 @@ public:
                       u_int priority = 0, void* stack_addr = NULL,
                       size_t stack_size = 0)
    {
-      cerr << "Base spawn.  Should NOT be called." << endl;
+      std::cerr << "Base spawn.  Should NOT be called." << std::endl;
       return -1;
    }
 
@@ -273,7 +273,7 @@ public:
    // -----------------------------------------------------------------------
    //: Ouput the state of the object.
    // -----------------------------------------------------------------------
-   virtual ostream& outStream(ostream& out)
+   virtual std::ostream& outStream(std::ostream& out)
    {
       out << "t:" << mThreadId << " ";
       return out;
@@ -309,7 +309,7 @@ private:
 };
 
 // Ouput operator
-ostream& operator<<(ostream& out, vjBaseThread* threadPtr);
+std::ostream& operator<<(std::ostream& out, vjBaseThread* threadPtr);
 
 
 //: Helper class fot vjThread that maintains a list of threads and ides

@@ -36,7 +36,7 @@
 #include <Kernel/vjStreamLock.h>
 
 
-ostream& operator<<(ostream& s, const vjStreamLock& streamLock)
+std::ostream& operator<<(std::ostream& s, const vjStreamLock& streamLock)
 {
    streamLock.mMutex.acquire();
    
@@ -44,7 +44,7 @@ ostream& operator<<(ostream& s, const vjStreamLock& streamLock)
 }
 
 
-ostream& operator<<(ostream& s, const vjStreamUnLock& streamUnLock)
+std::ostream& operator<<(std::ostream& s, const vjStreamUnLock& streamUnLock)
 {
    streamUnLock.mMutex.release();
    

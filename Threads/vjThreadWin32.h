@@ -177,7 +177,7 @@ public:
     // -----------------------------------------------------------------------
     inline int
     getprio (int* prio) {
-        cerr << "vjThreadWin32::getprio() not implemented yet!\n";
+        std::cerr << "vjThreadWin32::getprio() not implemented yet!\n";
 
         return -1;
     }
@@ -195,7 +195,7 @@ public:
     // -----------------------------------------------------------------------
     inline int
     setprio (int prio) {
-        cerr << "vjThreadWin32::setprio() not implemented yet!\n";
+        std::cerr << "vjThreadWin32::setprio() not implemented yet!\n";
 
         return -1;
     }
@@ -233,7 +233,7 @@ public:
     // -----------------------------------------------------------------------
     virtual int
     kill (int signum) {
-        cerr << "vjThreadWin32::kill() not implemented yet!\n";
+        std::cerr << "vjThreadWin32::kill() not implemented yet!\n";
 
         return -1;
     }
@@ -257,7 +257,7 @@ public:
    // -----------------------------------------------------------------------
    //: Output the state of the object.
    // -----------------------------------------------------------------------
-   virtual ostream& outStream(ostream& out)
+   virtual std::ostream& outStream(std::ostream& out)
    {
       out << "p:" << mThreadTID << " ";
       vjBaseThread::outStream(out);

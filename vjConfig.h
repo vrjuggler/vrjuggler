@@ -82,9 +82,9 @@
 /* Common C++ includes. */
 /* Put here for pre-compiled headers. */
 #ifdef __cplusplus
-#include <iostream.h>
-#include <iomanip.h>
-#include <fstream.h>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
 #include <vector>
 #include <map>
 #include <string>

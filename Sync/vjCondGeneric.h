@@ -78,9 +78,9 @@ public:
       condMutex = mutex;
       waiters = 0;
 
-      cerr << "-----------------------------------\n"
-           << "  vjCondGeneric: DOES NOT WORK\n"
-           << "-----------------------------------\n";
+      std::cerr << "-----------------------------------\n"
+                << "  vjCondGeneric: DOES NOT WORK\n"
+                << "-----------------------------------\n";
    }
 
    //: Wait for possible condition change
@@ -93,10 +93,10 @@ public:
    // They can then check to see if it now sarisfies the condition
    int signal ()
    {
-      cerr << setw(5) << getpid() << "  Signal" << endl;
+      std::cerr << std::setw(5) << getpid() << "  Signal" << std::endl;
       // ASSERT:  We have been locked
       if (condMutex->test() == 0)    // Not locked
-         cerr << " vjCondGeneric::signal: Mutex was not locked when signal called!!!" << endl;
+         std::cerr << " vjCondGeneric::signal: Mutex was not locked when signal called!!!" << std::endl;
 
       if (waiters > 0)
       {
@@ -113,7 +113,7 @@ public:
    {
       // ASSERT:  We have been locked
       if (condMutex->test() == 0)    // Not locked
-         cerr << " vjCondGeneric::broadcast: Mutex was not locked when broadcase called!!!" << endl;
+         std::cerr << " vjCondGeneric::broadcast: Mutex was not locked when broadcase called!!!" << std::endl;
 
       for (int i = waiters;i>0;i--)
          sema.release();
@@ -150,7 +150,7 @@ public:
    void dump (void) const
    {
       vjDEBUG_BEGIN(vjDBG_ALL,0) << "-------------  vjCondGeneric::Dump ---------\n" << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_ALL,0) << "waiters: " << waiters << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "waiters: " << waiters << std::endl << vjDEBUG_FLUSH;
       condMutex->dump();
       vjDEBUG_END(vjDBG_ALL,0) << "-----------------------------------\n" << vjDEBUG_FLUSH;
    }

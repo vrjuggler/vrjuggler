@@ -180,7 +180,7 @@ public:
 
 
     //: writes p to out
-    friend ostream& operator << (ostream &out, vjProperty& p);
+    friend std::ostream& operator << (std::ostream &out, vjProperty& p);
 
 
 

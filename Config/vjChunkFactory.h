@@ -115,7 +115,7 @@ protected:
       char* vj_base_dir = getenv("VJ_BASE_DIR");
       if(vj_base_dir == NULL)
       {
-         vjDEBUG(vjDBG_ERROR,0) << "vjChunkFactory::setupInitialEnvironment: Env var VJ_BASE_DIR not defined." << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ERROR,0) << "vjChunkFactory::setupInitialEnvironment: Env var VJ_BASE_DIR not defined." << std::endl << vjDEBUG_FLUSH;
          exit(1);
       }
 

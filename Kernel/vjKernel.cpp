@@ -69,7 +69,8 @@ int vjKernel::start()
    vjThread* new_thread;   // I set mControlThread in vjKernel::controlLoop
    new_thread = new vjThread(memberFunctor, 0);
 
-   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::start: Just started control loop.  " << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::start: Just started control loop.  "
+                           << std::endl << vjDEBUG_FLUSH;
 
    return 1;
 }
@@ -207,7 +208,8 @@ void vjKernel::checkForReconfig()
 //             Give it the application
 void vjKernel::changeApplication(vjApp* _app)
 {
-   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::changeApplication: Changing to:" << _app << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::changeApplication: Changing to:"
+                           << _app << std::endl << vjDEBUG_FLUSH;
 
    vjASSERT(vjThread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
@@ -323,7 +325,8 @@ int vjKernel::configProcessPending(bool lockIt)
       if(NULL != mApp)
          chunks_processed += mApp->configProcessPending(lockIt);
 
-      vjDEBUG_ENDlg(vjDBG_ALL,vjDBG_CONFIG_LVL,false,false) << endl << vjDEBUG_FLUSH;
+      vjDEBUG_ENDlg(vjDBG_ALL,vjDBG_CONFIG_LVL,false,false) << std::endl
+                                                            << vjDEBUG_FLUSH;
    }
    return chunks_processed;
 }
@@ -379,14 +382,16 @@ bool vjKernel::addUser(vjConfigChunk* chunk)
    {
       vjDEBUG(vjDBG_CONFIG,vjDBG_CRITICAL_LVL)
                      << clrOutNORM(clrRED,"ERROR:") << "Failed to add new vjUser: "
-                     << chunk->getProperty("name") << endl << vjDEBUG_FLUSH;
+                     << chunk->getProperty("name") << std::endl
+                     << vjDEBUG_FLUSH;
       delete new_user;
    }
    else
    {
       vjDEBUG(vjDBG_CONFIG,vjDBG_CONFIG_LVL)
                              << "vjKernel: Added new vjUser: "
-                             << new_user->getName().c_str() << endl << vjDEBUG_FLUSH;
+                             << new_user->getName().c_str() << std::endl
+                             << vjDEBUG_FLUSH;
       mUsers.push_back(new_user);
    }
 
@@ -402,7 +407,8 @@ bool vjKernel::removeUser(vjConfigChunk* chunk)
 // --- STARTUP ROUTINES --- //
 void vjKernel::loadConfigFile(std::string filename)
 {
-   vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::loadConfigFile: " << filename.c_str() << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::loadConfigFile: "
+                           << filename.c_str() << std::endl << vjDEBUG_FLUSH;
 
    vjConfigChunkDB chunk_db;
 
@@ -412,7 +418,9 @@ void vjKernel::loadConfigFile(std::string filename)
 
    if (!chunk_db.load(filename.c_str()))
    {
-     vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjConfigManager::loadConfigFile: DB Load failed to load file: " << filename.c_str() << endl << vjDEBUG_FLUSH;
+     vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:")
+        << "vjConfigManager::loadConfigFile: DB Load failed to load file: "
+        << filename.c_str() << std::endl << vjDEBUG_FLUSH;
      exit(1);
    }
 

@@ -81,7 +81,7 @@ public:
    vjInputManager();
    virtual ~vjInputManager();
 
-   friend ostream& operator<<(ostream& out, vjInputManager& iMgr);
+   friend std::ostream& operator<<(std::ostream& out, vjInputManager& iMgr);
 
  //---------------------------//
  //      CONFIG               //
@@ -433,6 +433,6 @@ private:
 };
 
 // Write out the status of the input manager
-ostream& operator<<(ostream& out, vjInputManager& iMgr);
+std::ostream& operator<<(std::ostream& out, vjInputManager& iMgr);
 
 #endif

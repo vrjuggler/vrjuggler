@@ -33,7 +33,7 @@
 
 #include <assert.h>
 #include <unistd.h>
-#include <iostream.h>
+#include <iostream>
 #include "sl.h"
 #include <Sound/vjSoundEngine.h> // base class..
 #include <Sound/sl/SlSound.h>     // my sound handle type...
@@ -52,7 +52,7 @@ SlSoundEngine::~SlSoundEngine()
       mUpdateThread->kill();
       delete mUpdateThread;
       mUpdateThread = NULL;
-      cout<<"Killed the update thread\n"<<flush;
+      std::cout<<"Killed the update thread\n"<<std::flush;
    }
 }
 
@@ -126,7 +126,7 @@ void SlSoundEngine::kill()
       mUpdateThread->kill();
       delete mUpdateThread;
       mUpdateThread = NULL;
-      cout<<"Killed the update thread\n"<<flush;
+      std::cout<<"Killed the update thread\n"<<std::flush;
    }
 }
 

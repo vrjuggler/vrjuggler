@@ -49,7 +49,8 @@ void samplem_keys(void*);
 bool vjKeyboardWin32::config(vjConfigChunk *c)
 {
     vjDEBUG_BEGIN(vjDBG_INPUT_MGR, vjDBG_STATE_LVL)
-                     << "vjKeyboardWin32::config " << endl << vjDEBUG_FLUSH;
+                     << "vjKeyboardWin32::config " << std::endl
+                     << vjDEBUG_FLUSH;
 
     // Call base class config function first
     if(!vjKeyboard::config(c))
@@ -74,8 +75,9 @@ bool vjKeyboardWin32::config(vjConfigChunk *c)
     if (0 == m_mouse_sensitivity) m_mouse_sensitivity = 0.5;
 
     vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "Mouse Sensititivty: "
-               << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
-    vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << endl << vjDEBUG_FLUSH;
+               << m_mouse_sensitivity << std::endl << vjDEBUG_FLUSH;
+    vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << std::endl
+                                                  << vjDEBUG_FLUSH;
 
     return true;
 }
@@ -94,8 +96,8 @@ int vjKeyboardWin32::startSampling()
       m_x = 100; m_y = 200;
 
       vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL)
-                 << "vjWin32Keyboard::startSampling() : ready to go.." << endl
-                 << vjDEBUG_FLUSH;
+                 << "vjWin32Keyboard::startSampling() : ready to go.."
+                 << std::endl << vjDEBUG_FLUSH;
 
       vjKeyboard* devicePtr = this;
 
@@ -220,14 +222,16 @@ void vjKeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
                 m_framekeys[key] += 1;
                 vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << instName
                            << ": WM_KEYDOWN: " << key << ": "
-                           << getKeyName(key).c_str() << endl << vjDEBUG_FLUSH;
+                           << getKeyName(key).c_str() << std::endl
+                           << vjDEBUG_FLUSH;
                 break;
 
         case WM_KEYUP:
                 key = VKKeyTovjKey(wParam);
                 m_realkeys[key] = 0;
                 vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << instName
-                           << ": WM_KEYUP: " << key << endl << vjDEBUG_FLUSH;
+                           << ": WM_KEYUP: " << key << std::endl
+                	   << vjDEBUG_FLUSH;
                 break;
 
       // mouse buttons
@@ -314,16 +318,16 @@ void vjKeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
                         //  oldx = newx; oldy = newy;
 
                     vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "move PosX: "
-                               << m_framekeys[VJMOUSE_POSX] << endl
+                               << m_framekeys[VJMOUSE_POSX] << std::endl
                                << vjDEBUG_FLUSH;
                     vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "move NegX: "
-                               << m_framekeys[VJMOUSE_NEGX] << endl
+                               << m_framekeys[VJMOUSE_NEGX] << std::endl
                                << vjDEBUG_FLUSH;
                     vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "move PosY: "
-                               << m_framekeys[VJMOUSE_POSY] << endl
+                               << m_framekeys[VJMOUSE_POSY] << std::endl
                                << vjDEBUG_FLUSH;
                     vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "move NegY: "
-                               << m_framekeys[VJMOUSE_NEGY] << endl
+                               << m_framekeys[VJMOUSE_NEGY] << std::endl
                                << vjDEBUG_FLUSH;
                 }
 
@@ -338,7 +342,7 @@ int vjKeyboardWin32::stopSampling()
    {
       myThread->kill();
       myThread = NULL;
-      cout << "Stoppping Keyboard.." << endl;
+      std::cout << "Stoppping Keyboard.." << std::endl;
    }
    return 1;
 

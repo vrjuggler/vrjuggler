@@ -36,7 +36,7 @@
 
 #include <assert.h>
 #include <unistd.h>
-#include <iostream.h>
+#include <iostream>
 #include <aw.h> //audio works
 #include <Sound/vjSoundEngine.h>
 #include <Sound/vjSoundEngineConstructor.h>

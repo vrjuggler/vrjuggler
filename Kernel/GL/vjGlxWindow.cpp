@@ -122,9 +122,9 @@ int vjGlxWindow::open() {
     // get screen dimensions for translating window origin.
     XWindowAttributes winattrs;
     XGetWindowAttributes (x_display, RootWindow (x_display, screen), &winattrs);
-//    cout << "------------------------------------------------------------------\n"
+//    std::cout << "------------------------------------------------------------------\n"
 //          << "    screen dims: " << winattrs.width << ", " << winattrs.height 
-//          << "    win pos: " << origin_x << ", " <<  winattrs.height - origin_y - window_height << endl;
+//          << "    win pos: " << origin_x << ", " <<  winattrs.height - origin_y - window_height << std::endl;
 
 
     // create window
@@ -139,7 +139,10 @@ int vjGlxWindow::open() {
                                    &w_attrib))  /* Attributes */
         == 0)
         {
-            vjDEBUG(vjDBG_DRAW_MGR,0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: Couldn't create window for " << display_name << endl << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_DRAW_MGR,0)
+               << clrOutNORM(clrRED,"ERROR:")
+               << "vjGlxWindow: Couldn't create window for " << display_name
+               << std::endl << vjDEBUG_FLUSH;
             goto OPEN_FAIL;
         }
 
@@ -185,10 +188,14 @@ int vjGlxWindow::open() {
      * manager don't support this feature.
      */
     if (!border) {
-        vjDEBUG(vjDBG_DRAW_MGR,5) << "attempting to make window borderless" << endl << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_DRAW_MGR,5) << "attempting to make window borderless"
+                                  << std::endl << vjDEBUG_FLUSH;
         Atom vjMotifHints = XInternAtom (x_display, "_MOTIF_WM_HINTS", 0);
         if (vjMotifHints == None) {
-            vjDEBUG(vjDBG_DRAW_MGR,0) << clrOutNORM(clrRED,"ERROR:") << "vjGlxWindow: Could not get X atom for _MOTIF_WM_HINTS." << endl << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_DRAW_MGR,0)
+               << clrOutNORM(clrRED,"ERROR:")
+               << "vjGlxWindow: Could not get X atom for _MOTIF_WM_HINTS."
+               << std::endl << vjDEBUG_FLUSH;
         }
         else {
             MotifWmHints hints;
@@ -310,7 +317,8 @@ void vjGlxWindow::config(vjDisplay* _display)
    display_name = dispSysChunk->getProperty("xpipes", pipe).cstring();
    if(strcmp(display_name, "-1") == 0)    // Use display env
       strcpy(display_name, getenv("DISPLAY"));
-   vjDEBUG(vjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: " << display_name << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
+                             << display_name << std::endl << vjDEBUG_FLUSH;
 }
 
 

@@ -107,7 +107,8 @@ void vjDeviceFactory::registerDevice(vjDeviceConstructorBase* constructor)
    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDeviceFactory::registerDevice: Device registered for: "
               << constructor->getChunkType().c_str()
               << "   :" << (void*)constructor
-              << " type:" << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
+              << " type:" << typeid(*constructor).name() << std::endl
+              << vjDEBUG_FLUSH;
 }
 
 // Simply query all device constructors registered looking
@@ -136,7 +137,7 @@ vjInput* vjDeviceFactory::loadDevice(vjConfigChunk* chunk)
 
    vjDEBUG(vjDBG_INPUT_MGR,3) << "vjDeviceFactory::loadDevice: Loading device: "
               << chunk->getType() << "  with: "
-              << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
+              << typeid(*constructor).name() << std::endl << vjDEBUG_FLUSH;
 
    new_dev = constructor->createDevice(chunk);
    return new_dev;

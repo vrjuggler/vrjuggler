@@ -64,7 +64,8 @@ public:
               << "vjDependencyManager::registerChecker: Checker registered: "
               << checker->getCheckerName().c_str()
               << "   :" << (void*)checker
-              << " type:" << typeid(*checker).name() << endl << vjDEBUG_FLUSH;
+              << " type:" << typeid(*checker).name() << std::endl
+              << vjDEBUG_FLUSH;
       debugDump();
    }
 

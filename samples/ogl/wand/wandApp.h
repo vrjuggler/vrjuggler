@@ -36,7 +36,7 @@
 
 #include <vjConfig.h>
 
-#include <iostream.h>
+#include <iostream>
 #include <iomanip.h>
 
 #include <Kernel/GL/vjGlApp.h>
@@ -71,7 +71,7 @@ public:
    // This is called once before OGL is initialized
    virtual void init()
    {
-      //cout << "---------- App:init() ---------------" << endl;
+      //std::cout << "---------- App:init() ---------------" << std::endl;
       // Initialize devices
       mWand.init("VJWand");
       mHead.init("VJHead");
@@ -134,13 +134,13 @@ public:
    {
       // Put your pre frame computations here.
 
-      cout  << "Wand Buttons:"
-            << " 0:" << mButton0->getData()
-            << " 1:" << mButton1->getData()
-            << " 2:" << mButton2->getData()
-            << " 3:" << mButton3->getData()
-            << " 4:" << mButton4->getData()
-            << " 5:" << mButton5->getData() << endl;
+      std::cout  << "Wand Buttons:"
+                 << " 0:" << mButton0->getData()
+                 << " 1:" << mButton1->getData()
+                 << " 2:" << mButton2->getData()
+                 << " 3:" << mButton3->getData()
+                 << " 4:" << mButton4->getData()
+                 << " 5:" << mButton5->getData() << std::endl;
    }
 
    //: Function called after drawing has been triggered but BEFORE it completes<BR><BR>

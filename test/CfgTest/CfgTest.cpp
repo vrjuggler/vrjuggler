@@ -31,10 +31,8 @@
  * -----------------------------------------------------------------
  */
 
-
-
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <Config/vjConfigChunkDB.h>
 #include <Config/vjParseUtil.h>
 #include <Config/vjChunkFactory.h>
@@ -55,51 +53,51 @@ main () {
      *                   TESTING CHUNKDESCDB                      *
      **************************************************************/
 
-    cout << "loading chunk descriptions..." << flush;
+    std::cout << "loading chunk descriptions..." << std::flush;
     desc.load("chunks");
-    cout << "OK." << endl;
-    cout << "Read " << desc.size() << " descriptions." << endl;
-    cout << desc << "\n--------------------------------\n";
-    cout << "Getting chunkdesc 'flockobirds'..." << flush;
+    std::cout << "OK." << std::endl;
+    std::cout << "Read " << desc.size() << " descriptions." << std::endl;
+    std::cout << desc << "\n--------------------------------\n";
+    std::cout << "Getting chunkdesc 'flockobirds'..." << std::flush;
     d = desc.getChunkDesc("flockobirds");
     if (d) {
-	cout << "OK." << endl;
+	std::cout << "OK." << std::endl;
     }
     else {
-	cout << "ERROR: Couldn't find chunkdesc!" << endl;
+	std::cout << "ERROR: Couldn't find chunkdesc!" << std::endl;
 	err = 1;
     }
 
 
     // Checking enumerations
-    cout << "Getting chunkdesc 'enumtest'..." << flush;
+    std::cout << "Getting chunkdesc 'enumtest'..." << std::flush;
     d = desc.getChunkDesc("enumtest");
     if (d) {
-	cout << "OK." << endl;
-	cout << *d;
+	std::cout << "OK." << std::endl;
+	std::cout << *d;
     }
     else {
-	cout << "ERROR: Couldn't find chunkdesc!" << endl;
+	std::cout << "ERROR: Couldn't find chunkdesc!" << std::endl;
 	err = 1;
     }
 
 
 
-    cout << "Getting chunkdesc 'ptrtest'..." << flush;
+    std::cout << "Getting chunkdesc 'ptrtest'..." << std::flush;
     d = desc.getChunkDesc("ptrtest");
     if (d) {
-	cout << "OK.  Read:" << endl;
-	cout << *d << endl;
+	std::cout << "OK.  Read:" << std::endl;
+	std::cout << *d << std::endl;
     }
     else {
-	cout << "ERROR: Couldn't find chunkdesc ptrtest!" << endl;
+	std::cout << "ERROR: Couldn't find chunkdesc ptrtest!" << std::endl;
 	err = 1;
     }
 
 
-    cout << "\n-------DONE-TESTING-CHUNKDESCSDB--------" << endl;
+    std::cout << "\n-------DONE-TESTING-CHUNKDESCSDB--------" << std::endl;
     if (err == 1) {
-	cout << "Failed ChunkDescDB test - aborting" << endl;
+	std::cout << "Failed ChunkDescDB test - aborting" << std::endl;
 	//    exit(1);
     }
     
@@ -107,133 +105,131 @@ main () {
      *                TESTING CONFIGCHUNKDB                       *
      **************************************************************/
 
-    cout << "\n\nCreating ConfigChunkDB..." << flush;
+    std::cout << "\n\nCreating ConfigChunkDB..." << std::flush;
     vjConfigChunkDB chunk(&desc);
-    cout << "OK." << endl;  // at least we didn't segv.
+    std::cout << "OK." << std::endl;  // at least we didn't segv.
     
-    cout << "loading config chunks..." << flush;
+    std::cout << "loading config chunks..." << std::flush;
     if (!chunk.load("config"))
 	err = 1;
     if (err) 
-	cout << "Failed." << endl;
+	std::cout << "Failed." << std::endl;
     else
-	cout << "OK." << endl;
-    //cout << "Read " << desc.size() << " descriptions." << endl;
+	std::cout << "OK." << std::endl;
+    //std::cout << "Read " << desc.size() << " descriptions." << std::endl;
     
-    cout << "Printing Chunk DB:" << endl;
-    cout << chunk;
-    cout << "endochunks" << endl;
+    std::cout << "Printing Chunk DB:" << std::endl;
+    std::cout << chunk;
+    std::cout << "endochunks" << std::endl;
 
-    cout << "Getting ConfigChunk 'chunk in chunk test 1'..." <<flush;
+    std::cout << "Getting ConfigChunk 'chunk in chunk test 1'..." <<std::flush;
     c = chunk.getChunk ("chunk in chunk test 1");
     if (c == NULL) {
 	err = 1;
-	cout << "Failed!" << endl;
+	std::cout << "Failed!" << std::endl;
     }
     else 
-	cout << "OK.\nPrinting:\n" << *c << endl;
+	std::cout << "OK.\nPrinting:\n" << *c << std::endl;
     
-    cout << "Getting dependencies for 'chunk in chunk test 1'..." << flush;
+    std::cout << "Getting dependencies for 'chunk in chunk test 1'..."
+              << std::flush;
     std::vector<std::string> deps = c->getDependencies();
-    cout << "OK\nPrinting:" << endl;
+    std::cout << "OK\nPrinting:" << std::endl;
     for (int k = 0; k < deps.size(); k++) {
-	cout << "    " << deps[k] << endl;
+	std::cout << "    " << deps[k] << std::endl;
     }
-    cout << "Finished." << endl;
+    std::cout << "Finished." << std::endl;
 
-    cout << "Getting its 2nd display prop..." << flush;
+    std::cout << "Getting its 2nd display prop..." << std::flush;
     c2 = c->getProperty ("bigchunk", 1);
     if (c2 == NULL) {
 	err = 1;
-	cout << "Failed!" << endl;
+	std::cout << "Failed!" << std::endl;
     }
     else
-	cout << "OK.\nPrinting:\n" << *c2 << endl;
+	std::cout << "OK.\nPrinting:\n" << *c2 << std::endl;
     
     c3 = chunk.getChunk("Right");
     if (c3) {
 	c->setProperty ("bigchunk", c3, 1);
-	cout << "replaced c's 2nd bigchunk value w/ 'right':\n"
-	     << *c3 << "\nResulting chunk is:\n"
-	     << *c;
+	std::cout << "replaced c's 2nd bigchunk value w/ 'right':\n"
+	          << *c3 << "\nResulting chunk is:\n" << *c;
     }
     
-    cout << "Getting ConfigChunk 'ptrtest 1'..." << flush;
+    std::cout << "Getting ConfigChunk 'ptrtest 1'..." << std::flush;
     c = chunk.getChunk("ptrtest 1");
     if (c == NULL) {
 	err = 1;
-	cout << "Failed!" << endl;
+	std::cout << "Failed!" << std::endl;
     }
     else {
-	cout << "OK.";
+	std::cout << "OK.";
     
 	/* query "ptrtest 1" chunk */
     
-	cout << "Querying 'ptrtest 1'" << endl;
+	std::cout << "Querying 'ptrtest 1'" << std::endl;
 	std::string s = c->getProperty ("ptr");
 
-	cout << "  'ptr' property value is '" << s << "'" << endl;
+	std::cout << "  'ptr' property value is '" << s << "'" << std::endl;
 
-	cout << "Getting property '" << s << "'..." << flush;
+	std::cout << "Getting property '" << s << "'..." << std::flush;
 	c2 = chunk.getChunk(s);
 	if (c2) {
-	    cout << "OK.  Read:\n" << *c2 << endl;
+	    std::cout << "OK.  Read:\n" << *c2 << std::endl;
 	}
 	else {
 	    err = 1;
-	    cout << "Failed!" << endl;
+	    std::cout << "Failed!" << std::endl;
 	}
 
     }
 
 
     /****************** TESTING VARVALUES *************************/
-cout << "Getting ConfigChunk 'varvaltest 1'..." << flush;
+std::cout << "Getting ConfigChunk 'varvaltest 1'..." << std::flush;
     c = chunk.getChunk("varvaltest 1");
     if (c == NULL) {
 	err = 1;
-	cout << "Failed!" << endl;
+	std::cout << "Failed!" << std::endl;
     }
     else
-	cout << "OK." << endl;
+	std::cout << "OK." << std::endl;
     
     if (c) {
 	/* query "varvaltest 1" chunk */
-	cout << "  Checking booleans...";
+	std::cout << "  Checking booleans...";
 	
 	bool b = c->getProperty ("boolprop");
 	if (b)
-	    cout << "  Error: initial value of boolprop is wrong." << endl;
+	    std::cout << "  Error: initial value of boolprop is wrong."
+	              << std::endl;
 	bool v1 = 1;
 	bool v2;
 	c->setProperty ("boolprop", v1);
 	v2 = c->getProperty ("boolprop");
 	if (v1 != v2) {
-	    cout << "Error in boolean set-get test 1" << endl;
+	    std::cout << "Error in boolean set-get test 1" << std::endl;
 	    err = 1;
 	}
 	v1 = 0;
 	c->setProperty ("boolprop", v1);
 	v2 = c->getProperty ("boolprop");
 	if (v1 != v2) {
-	    cout << "Error in boolean set-get test 2" << endl;
+	    std::cout << "Error in boolean set-get test 2" << std::endl;
 	    err = 1;
 	}
 	if (err) {
-	    cout << "Error: boolean get or set is broken!" << endl;
-	    cout << "Chunk prints as:\n" << *c << endl;
+	    std::cout << "Error: boolean get or set is broken!" << std::endl;
+	    std::cout << "Chunk prints as:\n" << *c << std::endl;
 	}
 	else
-	    cout << "OK." << endl;
+	    std::cout << "OK." << std::endl;
     }
 
-    cout << "\n-------DONE-TESTING-CONFIGCHUNKDB--------" << endl;
+    std::cout << "\n-------DONE-TESTING-CONFIGCHUNKDB--------" << std::endl;
     if (err == 1) {
-	cout << "Failed ConfigChunkDB test - aborting" << endl;
+	std::cout << "Failed ConfigChunkDB test - aborting" << std::endl;
 	exit(1);
     }
 
 }
-
-
-

@@ -82,8 +82,9 @@ public:
     vjMemPool_malloc (size_t initialSize = 65536,  int numProcs = 8,
                       char* staticTempName = "/var/tmp/memPool_mallocXXXXXX")
     {
-        vjDEBUG(vjDBG_ALL,3) << "\n\nvjMemPool_malloc: Allocating Arena.\n"
-                   << "Initial size: " << initialSize << endl << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ALL,3)
+            << "\n\nvjMemPool_malloc: Allocating Arena.\n" << "Initial size: "
+            << initialSize << std::endl << vjDEBUG_FLUSH;
     }
 
     // -----------------------------------------------------------------------
@@ -116,7 +117,7 @@ public:
         retval = malloc(size);
 
         if ( retval == NULL ) {
-            cerr << "vjMemPool_malloc: Out of memory!!!" << endl;
+            std::cerr << "vjMemPool_malloc: Out of memory!!!\n";
         }
 
         return retval;
@@ -154,7 +155,7 @@ public:
         retval = realloc(ptr, new_size);
 
         if ( retval == NULL ) {
-            cerr << "vjMemPool_malloc: Out of memory!!!\n";
+            std::cerr << "vjMemPool_malloc: Out of memory!!!\n";
         }
 
         return ptr;
@@ -180,9 +181,10 @@ public:
     init (size_t initialSize = 32768, int numProcs = 64,
           char* staticTempName = "/var/tmp/memPoolsArenaXXXXXX")
     {
-        vjDEBUG(vjDBG_ALL,3) << "\n\nvjMemPool_malloc: Allocating Base Arena for ALL "
-                   << "vjMemPool_malloc's.\n\tSize: " << initialSize << endl
-                   << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ALL,3)
+            << "\n\nvjMemPool_malloc: Allocating Base Arena for ALL "
+            << "vjMemPool_malloc's.\n\tSize: " << initialSize << std::endl
+            << vjDEBUG_FLUSH;
     }
 
     // -----------------------------------------------------------------------
@@ -196,8 +198,8 @@ public:
     // -----------------------------------------------------------------------
     void*
     operator new (size_t size) {
-        vjDEBUG(vjDBG_ALL,6) << "vjMemPool_malloc::new called.\n" << flush
-                   << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ALL,6) << "vjMemPool_malloc::new called.\n"
+                             << vjDEBUG_FLUSH;
 
         init();
 

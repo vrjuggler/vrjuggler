@@ -58,10 +58,12 @@ vjDebug::vjDebug()
    if(debug_lev != NULL)
    {
       debugLevel = atoi(debug_lev);
-      cout << "VJ_DEBUG_NFY_LEVEL: Set to " << debugLevel << endl << flush;
+      std::cout << "VJ_DEBUG_NFY_LEVEL: Set to " << debugLevel << std::endl
+                << std::flush;
    } else {
-      cout << "VJ_DEBUG_NFY_LEVEL: Not found. " << endl << flush;
-      cout << "VJ_DEBUG_NFY_LEVEL: Defaults to " << debugLevel << endl << flush;
+      std::cout << "VJ_DEBUG_NFY_LEVEL: Not found. " << std::endl << std::flush;
+      std::cout << "VJ_DEBUG_NFY_LEVEL: Defaults to " << debugLevel
+                << std::endl << std::flush;
    }
 
    setDefaultCategoryNames();
@@ -69,28 +71,29 @@ vjDebug::vjDebug()
 
 }
 
-ostream& vjDebug::getStream(int cat, int level, bool show_thread_info, bool use_indent, int indentChange)
+std::ostream& vjDebug::getStream(int cat, int level, bool show_thread_info,
+                                 bool use_indent, int indentChange)
 {
    if(indentChange < 0)                // If decreasing indent
       indentLevel += indentChange;
 
    //cout << "VJ " << level << ": ";
    if(show_thread_info)
-      cout << vjDEBUG_STREAM_LOCK << vjThread::self() << " VJ:";
+      std::cout << vjDEBUG_STREAM_LOCK << vjThread::self() << " VJ:";
    else
-      cout << vjDEBUG_STREAM_LOCK << "             ";
+      std::cout << vjDEBUG_STREAM_LOCK << "             ";
 
       // Insert the correct number of tabs into the stream for indenting
    if(use_indent)
    {
       for(int i=0;i<indentLevel;i++)
-         cout << "\t";
+         std::cout << "\t";
    }
 
    if(indentChange > 0)             // If increasing indent
       indentLevel += indentChange;
 
-   return cout;
+   return std::cout;
 }
 
 void vjDebug::addCategoryName(std::string name, int cat)
@@ -140,7 +143,7 @@ void vjDebug::getAllowedCatsFromEnv()
 
    if(dbg_cats_env != NULL)
    {
-      cout << "vjDEBUG::Found VJ_DEBUG_CATEGORIES: Listing allowed categories. (If blank, then none allowed.\n" << flush;
+      std::cout << "vjDEBUG::Found VJ_DEBUG_CATEGORIES: Listing allowed categories. (If blank, then none allowed.\n" << std::flush;
       std::string dbg_cats(dbg_cats_env);
 
       std::map< std::string, int >::iterator i;
@@ -149,15 +152,17 @@ void vjDebug::getAllowedCatsFromEnv()
          std::string cat_name = (*i).first;
          if (dbg_cats.find(cat_name) != std::string::npos )    // Found one
          {
-            cout << "vjDEBUG::getAllowedCatsFromEnv: Allowing: " << (*i).first.c_str() << " val:" << (*i).second << endl << flush;
+            std::cout << "vjDEBUG::getAllowedCatsFromEnv: Allowing: "
+                      << (*i).first.c_str() << " val:" << (*i).second
+                      << std::endl << std::flush;
             addAllowedCategory((*i).second);                   // Add the category
          }
       }
    }
    else
    {
-      cout << "vjDEBUG::VJ_DEBUG_CATEGORIES not found:\n"
-           << " Setting to: vjDBG_ALL!" << endl << flush;
+      std::cout << "vjDEBUG::VJ_DEBUG_CATEGORIES not found:\n"
+                << " Setting to: vjDBG_ALL!" << std::endl << std::flush;
       addAllowedCategory(vjDBG_ALL);
    }
 }

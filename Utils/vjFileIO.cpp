@@ -83,7 +83,7 @@ std::string vjFileIO::resolvePathForName( const char* const filename )
       // if this path works, then return it.
       if (fileExists( temp ))
       {
-         cout<<"Fixed path: "<<temp.c_str()<<"\n"<<flush;
+         std::cout<<"Fixed path: "<<temp.c_str()<<"\n"<<std::flush;
          return temp;
       }
    }

@@ -159,8 +159,11 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
       vjDisplay* newDisp = new vjSurfaceDisplay();    // Create display
       newDisp->config(chunk);                         // Config it
       addDisplay(newDisp, true);                            // Add it
-      vjDEBUG(vjDBG_DISP_MGR,vjDBG_WARNING_LVL) << "Adding display: " << newDisp->getName().c_str() << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DISP_MGR,vjDBG_VERB_LVL) << "Display: "  << newDisp << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_WARNING_LVL) << "Adding display: "
+                                                << newDisp->getName().c_str()
+                                                << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_VERB_LVL) << "Display: "  << newDisp
+                                             << std::endl << vjDEBUG_FLUSH;
    }
 
    if((std::string)chunk->getType() == std::string("simDisplay"))      // Surface DISPLAY
@@ -168,8 +171,12 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
       vjDisplay* newDisp = new vjSimDisplay();     // Create display
       newDisp->config(chunk);                      // Config it
       addDisplay(newDisp, true);                         // Add it
-      vjDEBUG(vjDBG_DISP_MGR,vjDBG_WARNING_LVL) << "Adding Display: " << newDisp->getName().c_str() << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DISP_MGR,vjDBG_VERB_LVL) << "Display: "  << newDisp << endl << flush << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_WARNING_LVL) << "Adding Display: "
+                                                << newDisp->getName().c_str()
+                                                << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_VERB_LVL) << "Display: " << newDisp
+                                             << std::endl << std::flush
+                                             << vjDEBUG_FLUSH;
    }
 
    vjDEBUG_END(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- vjDisplayManager::configAddDisplay Done. --------\n" << vjDEBUG_FLUSH;

@@ -31,8 +31,9 @@
  * -----------------------------------------------------------------
  */
 
+#include <vjConfig.h>
+
 #include <unistd.h>
-#include <iostream.h>
 #include <aw.h> //audio works
 #include <Sound/vjSoundEngine.h>   // base class
 #include <Sound/aw/AwSound.h>       // my sound type...
@@ -99,7 +100,9 @@ void AwSoundEngine::init()
 
    // - Definition
    // Call awDefineSys() with the name of an application definition file
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "[aw] Loading: " << flush << tmpFile.c_str() << "\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "[aw] Loading: " << std::flush
+                                       << tmpFile.c_str() << "\n"
+                                       << vjDEBUG_FLUSH;
    int result = awDefineSys( tmpFile.c_str() );
    if (result == -1)
    {

@@ -217,7 +217,7 @@ void velocityNav::setActionButtons(std::vector<std::string> action_btn_names)
 void velocityNav::setNavPosControl(std::string wand_dev)
 {
    vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrGREEN,"Setting Nav Pos Control: ")
-      << wand_dev.c_str() << endl << vjDEBUG_FLUSH;
+                        << wand_dev.c_str() << std::endl << vjDEBUG_FLUSH;
    mNavWand.init(wand_dev);
 }
 
@@ -264,18 +264,22 @@ void velocityNav::updateInteraction()
 
    // Output visual feedback
    if(mAcceleratingForward)
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Accelerating Forward") << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Accelerating Forward")                           << std::endl << vjDEBUG_FLUSH;
    if(mBraking)
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Braking") << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Braking")
+                           << std::endl << vjDEBUG_FLUSH;
    if(mStopping)
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Stopping") << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Stopping")
+                           << std::endl << vjDEBUG_FLUSH;
    if(mResetting)
    {
       vjVec3 hpos = mHomePos.getTrans();
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Resetting") << " to "<< hpos << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Resetting") << " to "
+                           << hpos << std::endl << vjDEBUG_FLUSH;
    }
    if(mRotating)
-       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Rotating") << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Rotating")
+                            << std::endl << vjDEBUG_FLUSH;
 }
 
 void velocityNav::update()
@@ -285,13 +289,15 @@ void velocityNav::update()
 
    if(stopWatch.timeInstant > 2.0f)    // If the time is greater than 2 seconds ( 1/2 fps)
    {
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"VelNav: timeInstant to large: ") << stopWatch.timeInstant << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0)
+         << clrOutNORM(clrCYAN,"VelNav: timeInstant to large: ")
+         << stopWatch.timeInstant << std::endl << vjDEBUG_FLUSH;
       stopWatch.stop();    // Get a REALLY small delta time
       stopWatch.start();
    }
 
    //vjDEBUG_BEGIN(vjDBG_ALL,0) << "VelNav: ----- Update ----\n" << vjDEBUG_FLUSH;
-   //vjDEBUG(vjDBG_ALL,0) << "VelNav: timeInstant: " << stopWatch.timeInstant << endl << vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_ALL,0) << "VelNav: timeInstant: " << stopWatch.timeInstant << std::endl << vjDEBUG_FLUSH;
 
    // If we are not supposed to be active, then don't run
    if(!this->isActive())

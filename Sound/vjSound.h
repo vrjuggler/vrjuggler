@@ -34,7 +34,7 @@
 #ifndef _VJ_SOUND_h
 #define _VJ_SOUND_h
 
-#include <iostream.h>
+#include <iostream>
 #include <Math/vjVec3.h>
 
 class vjSoundEngine;

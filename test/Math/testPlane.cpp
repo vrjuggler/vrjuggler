@@ -31,6 +31,8 @@
  * -----------------------------------------------------------------
  */
 
+#include <iostream>
+
 #include <Math/vjPlane.h>
 #include <Math/vjVec3.h>
 #include <Math/vjSeg.h>
@@ -52,11 +54,11 @@ int main(void)
    float dist;
    dist = zy_plane.findNearestPt(vjVec3(1,0,0), near_pt);
 
-   cout << "Testing findNearestPt: ";
+   std::cout << "Testing findNearestPt: ";
    if((dist > 0.0f) && (near_pt == origin))
-      cout << "Passed.\n";
+      std::cout << "Passed.\n";
    else
-      cout << "FAILED!!!\n";
+      std::cout << "FAILED!!!\n";
 
    // Test isect with a seg
    vjSeg seg_through, seg_toward, seg_parallel;
@@ -68,47 +70,47 @@ int main(void)
    seg_parallel.makePts(x_axis, (x_axis+z_axis));  // Is parallel to the plane
 
    hit = zy_plane.isect(seg_through,&t_dist);
-   cout << "Testing isect (through): ";
+   std::cout << "Testing isect (through): ";
    if(hit && VJ_IS_ZERO(t_dist - 1.0f))
-      cout << "Passed.\n";
+      std::cout << "Passed.\n";
    else
-      cout << "FAILED!!!!\n";
+      std::cout << "FAILED!!!!\n";
 
    hit = zy_plane.isect(seg_toward,&t_dist);
-   cout << "Testing isect (toward): ";
+   std::cout << "Testing isect (toward): ";
    if(!hit)
-      cout << "Passed.\n";
+      std::cout << "Passed.\n";
    else
-      cout << "FAILED!!!!\n";
+      std::cout << "FAILED!!!!\n";
 
    hit = zy_plane.isect(seg_parallel,&t_dist);
-   cout << "Testing isect (parallel): ";
+   std::cout << "Testing isect (parallel): ";
    if(!hit)
-      cout << "Passed.\n";
+      std::cout << "Passed.\n";
    else
-      cout << "FAILED!!!!\n";
+      std::cout << "FAILED!!!!\n";
 
 
    // Test isect with a line
    hit = zy_plane.isectLine(seg_through,&t_dist);
-   cout << "Testing isectLine (through): ";
+   std::cout << "Testing isectLine (through): ";
    if(hit && VJ_IS_ZERO(t_dist - 1.0f))
-      cout << "Passed.\n";
+      std::cout << "Passed.\n";
    else
-      cout << "FAILED!!!!\n";
+      std::cout << "FAILED!!!!\n";
 
    hit = zy_plane.isectLine(seg_toward,&t_dist);
-   cout << "Testing isectLine (toward): ";
+   std::cout << "Testing isectLine (toward): ";
    if(hit && VJ_IS_ZERO(t_dist - 1.0f))
-      cout << "Passed.\n";
+      std::cout << "Passed.\n";
    else
-      cout << "FAILED!!!!\n";
+      std::cout << "FAILED!!!!\n";
 
    hit = zy_plane.isectLine(seg_parallel,&t_dist);
-   cout << "Testing isectLine (parallel): ";
+   std::cout << "Testing isectLine (parallel): ";
    if(!hit)
-      cout << "Passed.\n";
+      std::cout << "Passed.\n";
    else
-      cout << "FAILED!!!!\n";
+      std::cout << "FAILED!!!!\n";
 
 }

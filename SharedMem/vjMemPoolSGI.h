@@ -79,7 +79,7 @@ public:
    virtual ~vjMemPoolSGI() {
       usdetach(arena);
       unlink(arenaFileName);
-      cerr << "\nUnlinking: " << arenaFileName << endl;
+      std::cerr << "\nUnlinking: " << arenaFileName << std::endl;
    }
 
 public:
@@ -89,7 +89,7 @@ public:
       retval = usmalloc(size, arena);
 
       if (retval == NULL)
-         cerr << "MemPoolSGI: Out of memory!!!" << endl;
+         std::cerr << "MemPoolSGI: Out of memory!!!" << std::endl;
 
       return retval;
    }
@@ -118,7 +118,7 @@ public:
 
    void* operator new(size_t sz)
    {
-      cerr << "MemPoolSGI::new called. sz:" << sz << "\n";
+      std::cerr << "MemPoolSGI::new called. sz:" << sz << "\n";
       if (arenaForMemPools == NULL)
          init(); // Make sure that we are initialized already.
 

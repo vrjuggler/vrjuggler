@@ -31,9 +31,7 @@
  * -----------------------------------------------------------------
  */
 
-/// TOP OF TEST_C
-
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <ulocks.h>
 #include <math.h>
@@ -81,20 +79,22 @@ int main(void)
 
    while (1)
    {         
-      cerr << setw(5) << vjThread::self() << "P1: Before Trigger" << endl;   
+      std::cerr << std::setw(5) << vjThread::self() << "P1: Before Trigger"
+                << std::endl;
 
          vjDEBUG(vjDBG_ALL, 0) << "main: trigger\n" << vjDEBUG_FLUSH;
       syncer.trigger();    // Trigger the beginning of frame drawing
          vjDEBUG(vjDBG_ALL, 3) << "main: trigger done\n" << vjDEBUG_FLUSH;
 
-      cerr << setw(5) << vjThread::self() << "P1: Between" << endl;
+      std::cerr << std::setw(5) << vjThread::self() << "P1: Between"
+                << std::endl;
 
          vjDEBUG(vjDBG_ALL, 0) << "main: sync up\n" << vjDEBUG_FLUSH;
       syncer.sync();    // Block until drawing is done
          vjDEBUG(vjDBG_ALL, 0) << "main: sync done\n" << vjDEBUG_FLUSH;
       
       syncer.decValue();
-      vjDEBUG(vjDBG_ALL, 0) << "VAL: " << syncer.getValue() << endl
+      vjDEBUG(vjDBG_ALL, 0) << "VAL: " << syncer.getValue() << std::endl
                             << vjDEBUG_FLUSH;
    }
 
@@ -116,7 +116,7 @@ int SyncIncrementer::start()
    vjThread* control_thread = new vjThread(memberFunctor, 0);
 
    vjDEBUG(vjDBG_ALL, 0) << "SyncIncrementer::start: Just started main loop.  "
-                         << control_thread << endl << vjDEBUG_FLUSH;
+                         << control_thread << std::endl << vjDEBUG_FLUSH;
 
    return 1;
 }
@@ -128,7 +128,8 @@ void SyncIncrementer::trigger()
      // Allow the processes to draw
    syncCond.acquire();        // Get exclusive access
    {
-      cerr << setw(5) << vjThread::self() << "  P1: Signal" << endl;
+      std::cerr << std::setw(5) << vjThread::self() << "  P1: Signal"
+                << std::endl;
 
       go = true;          // Signal that rendering can happen
       syncCond.signal();
@@ -145,14 +146,16 @@ void SyncIncrementer::sync()
    {   // Wait for triggerRender == false
       while (go == true)
       {
-         cerr << setw(5) << vjThread::self() << "  P1: Wait" << endl;
+         std::cerr << std::setw(5) << vjThread::self() << "  P1: Wait"
+                   << std::endl;
          syncCond.wait();
       }
       /* Do nothing */
          vjDEBUG(vjDBG_ALL, 0) << "Sync: Completed. trigger == false\n"
                                << vjDEBUG_FLUSH;
          //syncCond.dump();
-      cerr << setw(5) << vjThread::self() << "  P1: Exit wait" << endl;
+      std::cerr << std::setw(5) << vjThread::self() << "  P1: Exit wait"
+                << std::endl;
    }
    syncCond.release();
 }
@@ -169,11 +172,13 @@ void SyncIncrementer::main(void* nullParam) {
          // Wait for trigger == true
          while (go == false)
          {
-            cerr << setw(5) << vjThread::self() << "  P2: Wait" << endl;
+            std::cerr << std::setw(5) << vjThread::self() << "  P2: Wait"
+                      << std::endl;
             syncCond.wait();
          }
          
-         cerr << setw(5) << vjThread::self() << "  P2: Wait done" << endl;
+         std::cerr << std::setw(5) << vjThread::self() << "  P2: Wait done"
+                   << std::endl;
          //syncCond.dump();
          // THEN --- Do Work --- //
          vjDEBUG(vjDBG_ALL, 0) << "Incrementing\n" << vjDEBUG_FLUSH;
@@ -185,7 +190,8 @@ void SyncIncrementer::main(void* nullParam) {
 
          go = false;   // We are done rendering
 
-         cerr << setw(5) << vjThread::self() << "  P2: Signal" << endl;
+         std::cerr << std::setw(5) << vjThread::self() << "  P2: Signal"
+                   << std::endl;
          syncCond.signal();
 
          //syncCond.dump();

@@ -40,7 +40,7 @@
 int32_t vjBaseThread::mNextThreadId = 0;
 
 	// ---- Ouput operator ---- //
-ostream& operator<<(ostream& out, vjBaseThread* threadPtr)
+std::ostream& operator<<(std::ostream& out, vjBaseThread* threadPtr)
 {
    if(threadPtr != NULL)
       threadPtr->outStream(out);

@@ -34,7 +34,7 @@
 #ifndef _PF_BASIC_CONFIG_NAV_
 #define _PF_BASIC_CONFIG_NAV_
 
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -178,9 +178,12 @@ bool pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
    setInitialNavPos( initial_pos );
    mBoundingSize = chunk->getProperty("bounding_size");
 
-   vjDEBUG_NEXT(vjDBG_ALL,0) << "   filepath: " << file_path << endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_ALL,0) << "initial pos: " << initial_pos << endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_ALL,0) << " bound size: " << mBoundingSize << endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_ALL,0) << "   filepath: " << file_path << std::endl
+                             << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_ALL,0) << "initial pos: " << initial_pos << std::endl
+                             << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_ALL,0) << " bound size: " << mBoundingSize << std::endl
+                             << vjDEBUG_FLUSH;
    vjDEBUG_END(vjDBG_ALL,0) << "========================================\n" << vjDEBUG_FLUSH;
 
    // Initialize the models and sounds

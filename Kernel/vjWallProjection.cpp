@@ -98,13 +98,19 @@ void vjWallProjection::calcViewFrustum(vjMatrix& eyePos)
    eye_pos = eye_coord.pos;
    vjVec3   eye_xformed;         // Xformed position of eyes
 
-   vjDEBUG(vjDBG_DISP_MGR,7) << "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DISP_MGR,7) << "vjWallProjection::calcWallProjection:    Base eye:" << eye_coord.pos << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DISP_MGR,7)
+      << "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this
+      << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DISP_MGR,7)
+      << "vjWallProjection::calcWallProjection:    Base eye:" << eye_coord.pos
+      << std::endl << vjDEBUG_FLUSH;
 
    // Convert eye coords into the wall's coord system
    eye_xformed.xformFull(mWallRotationMatrix, eye_pos);
 
-   vjDEBUG(vjDBG_DISP_MGR,7) << "vjWallProjection::calcWallProjection:    Xformed eye:" << eye_xformed << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DISP_MGR,7)
+      << "vjWallProjection::calcWallProjection:    Xformed eye:" << eye_xformed
+      << std::endl << vjDEBUG_FLUSH;
 
    // Compute dist from eye to screen/edges
    eye_to_screen = mOriginToScreen + eye_xformed[VJ_Z];
@@ -127,12 +133,16 @@ void vjWallProjection::calcViewFrustum(vjMatrix& eyePos)
 
    mFocusPlaneDist = eye_to_screen;    // Needed for drawing
 
-   vjDEBUG(vjDBG_DISP_MGR,7) << "vjWallProjection::calcWallProjection: \n\tFrustum: " << mFrustum << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DISP_MGR,7) << "vjWallProjection::calcWallProjection: B4 Trans:\n" << mWallRotationMatrix << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DISP_MGR,7)
+      << "vjWallProjection::calcWallProjection: \n\tFrustum: " << mFrustum
+      << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DISP_MGR,7)
+      << "vjWallProjection::calcWallProjection: B4 Trans:\n"
+      << mWallRotationMatrix << std::endl << vjDEBUG_FLUSH;
 }
 
 
-ostream& vjWallProjection::outStream(ostream& out)
+std::ostream& vjWallProjection::outStream(std::ostream& out)
 {
    out << "vjWallProjection: ";
 

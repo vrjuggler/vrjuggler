@@ -41,7 +41,6 @@
 #include <Environment/vjTimedUpdate.h>
 #include <Performance/vjTimeStamp.h>
 #include <Sync/vjMutex.h>
-#include <iostream.h>
 #include <Kernel/vjDebug.h>
 
 //---------------------------------------------------------------
@@ -177,7 +176,7 @@ public:
     //+       <br>2 25
     //+       <br>3 27
     //+       <br>1 42
-    void write (ostream& out);
+    void write (std::ostream& out);
 
 
     //: just deletes all the current info in buffer.
@@ -186,7 +185,7 @@ public:
     //! RETURNS: x - time in usecs between first and last points.
     //+          which is only useful if you know how many pts 
     //+          there are...
-    void writeTotal (ostream& out, int preskip, int postskip, float discrep);
+    void writeTotal (std::ostream& out, int preskip, int postskip, float discrep);
 
 
     //: just empties out the buffer & throws away the data.

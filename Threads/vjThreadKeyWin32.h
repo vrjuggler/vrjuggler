@@ -97,7 +97,7 @@ public:
     // -----------------------------------------------------------------------
     int
     keycreate (THREAD_FUNC destructor, void* arg = 0) {
-        cerr << "vjThreadKeyWin32::keycreate() not implemented yet!\n";
+        std::cerr << "vjThreadKeyWin32::keycreate() not implemented yet!\n";
 
         return -1;
     }
@@ -120,7 +120,7 @@ public:
     // -----------------------------------------------------------------------
     int
     keycreate ( vjBaseThreadFunctor* destructor) {
-        cerr << "vjThreadKeyWin32::keycreate() not implemented yet!\n";
+        std::cerr << "vjThreadKeyWin32::keycreate() not implemented yet!\n";
 
         return -1;
     }
@@ -140,7 +140,7 @@ public:
     // -----------------------------------------------------------------------
     int
     keyfree (void) {
-        cerr << "vjThreadKeyWin32::keyfree() not implemented yet!\n";
+        std::cerr << "vjThreadKeyWin32::keyfree() not implemented yet!\n";
 
         return -1;
     }
@@ -162,7 +162,7 @@ public:
     // -----------------------------------------------------------------------
     int
     setspecific (void* value) {
-        cerr << "vjThreadKeyWin32::setspecific() not implemented yet!\n";
+        std::cerr << "vjThreadKeyWin32::setspecific() not implemented yet!\n";
 
         return -1;
     }
@@ -184,7 +184,7 @@ public:
     // -----------------------------------------------------------------------
     int
     getspecific (void** valuep) {
-        cerr << "vjThreadKeyWin32::getspecific() not implemented yet!\n";
+        std::cerr << "vjThreadKeyWin32::getspecific() not implemented yet!\n";
 
         return -1;
     }

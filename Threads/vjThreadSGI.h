@@ -241,7 +241,7 @@ public:
    // -----------------------------------------------------------------------
    //: Output the state of the object.
    // -----------------------------------------------------------------------
-   ostream& outStream(ostream& out)
+   std::ostream& outStream(std::ostream& out)
    {
       out << "p:" << mThreadPID << " ";
       vjBaseThread::outStream(out);

@@ -141,7 +141,7 @@ public:
 #ifndef VJ_OS_Win32
     void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
     {
-       cerr << message << "NULL Mutex\n";
+       std::cerr << message << "NULL Mutex\n";
     }
 #endif
 

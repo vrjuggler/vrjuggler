@@ -32,20 +32,20 @@
  */
 
 #include <vector>
-#include <iostream.h>
+#include <iostream>
 
 class base
 {
 public:
     virtual void bar() 
-	{ cerr << "base\n"; }
+	{ std::cerr << "base\n"; }
 };
 
 class derived : public base
 {
 public:
     virtual void bar()
-	{ cerr << "derived\n"; }
+	{ std::cerr << "derived\n"; }
 };
 
 main(void)
@@ -60,14 +60,14 @@ main(void)
     
     b->bar();
     if(dynamic_cast<derived*>(b) == NULL)
-	cerr << "Failed to cast to derived.\n";
+	std::cerr << "Failed to cast to derived.\n";
     else
-	cerr << "Success casting to derived.\n";
+	std::cerr << "Success casting to derived.\n";
 	
     base* b2 = bVec[0];
     b2->bar();
     if(dynamic_cast<derived*>(b2) == NULL)
-	cerr << "Failed to cast to derived.\n";
+	std::cerr << "Failed to cast to derived.\n";
     else
-	cerr << "Success casting to derived.\n";
+	std::cerr << "Success casting to derived.\n";
 }

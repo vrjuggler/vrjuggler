@@ -49,13 +49,15 @@ bool vjGloveProxy::config(vjConfigChunk* chunk)
 
    if ( proxy_num != -1)
    {
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "   GloveProxy config()'ed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "   GloveProxy config()'ed"
+                                     << std::endl << vjDEBUG_FLUSH;
       return true;
    }
    else
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "   GloveProxy config() failed" << endl << vjDEBUG_FLUSH;
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,0) << "   GloveProxy config() failed"
+                                 << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_INPUT_MGR,3) << std::endl << vjDEBUG_FLUSH;
       return false;
    }
 }

@@ -110,7 +110,7 @@ vjEnumEntry* vjPropertyDesc::getEnumEntryWithValue (vjVarValue& val) {
 }
 
 
-ostream& operator << (ostream& out, vjPropertyDesc& self) {
+std::ostream& operator << (std::ostream& out, vjPropertyDesc& self) {
     out << self.token.c_str() << " " << typeString(self.type) << " "
         << self.num << " \"" << self.name.c_str() << "\"";
 
@@ -140,7 +140,7 @@ ostream& operator << (ostream& out, vjPropertyDesc& self) {
 
 
 
-istream& operator >> (istream& in, vjPropertyDesc& self) {
+std::istream& operator >> (std::istream& in, vjPropertyDesc& self) {
 
     const int size = 512;
     char str[size];
@@ -166,7 +166,8 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
         //cout << "reading valuelabels" << endl;
         readString (in,str,size);
         if (strcasecmp (str, "{"))
-            vjDEBUG(vjDBG_ERROR,1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_ERROR,1) << "ERROR: expected '{'" << std::endl
+                                   << vjDEBUG_FLUSH;
    
         vjEnumEntry *e;
         readString (in, str, size);

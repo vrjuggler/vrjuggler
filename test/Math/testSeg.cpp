@@ -31,6 +31,8 @@
  * -----------------------------------------------------------------
  */
 
+#include <iostream>
+
 #include <Math/vjPlane.h>
 #include <Math/vjVec3.h>
 #include <Math/vjSeg.h>
@@ -57,25 +59,25 @@ int main(void)
    seg_miss.makePts(vjVec3(1,1,1), vjVec3(-1,0.5,0.5));  // Misses
 
    hit = seg_through.isectTriangle(z_axis,origin,y_axis,&t_dist);
-   cout << "Testing isectTriangle (through): ";
+   std::cout << "Testing isectTriangle (through): ";
    if(hit && VJ_IS_ZERO(t_dist - 1.0f))
-      cout << "Passed.\n";
+      std::cout << "Passed.\n";
    else
-      cout << "FAILED!!!!\n";
+      std::cout << "FAILED!!!!\n";
 
    hit = seg_parallel.isectTriangle(z_axis,origin,y_axis,&t_dist);
-   cout << "Testing isectTriangle (parallel): ";
+   std::cout << "Testing isectTriangle (parallel): ";
    if(!hit)
-      cout << "Passed.\n";
+      std::cout << "Passed.\n";
    else
-      cout << "FAILED!!!!\n";
+      std::cout << "FAILED!!!!\n";
 
    hit = seg_miss.isectTriangle(z_axis,origin,y_axis,&t_dist);
-   cout << "Testing isectTriangle (miss): ";
+   std::cout << "Testing isectTriangle (miss): ";
    if(!hit)
-      cout << "Passed.\n";
+      std::cout << "Passed.\n";
    else
-      cout << "FAILED!!!!\n";
+      std::cout << "FAILED!!!!\n";
 
 
 
