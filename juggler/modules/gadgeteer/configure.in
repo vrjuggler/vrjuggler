@@ -330,7 +330,7 @@ fi
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
                 GAD_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, GAD_BASE_DIR,
-              gad, $APP_EXTRA_LIBS)
+              gadget, $APP_EXTRA_LIBS)
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(GAD_BASE_DIR)'
@@ -377,13 +377,13 @@ case $OS_TYPE in
         fi
 
         gad_ldflags="-L\$prefix/lib$LIBBITSUF"
-        gad_libs='-lgad'
+        gad_libs='-lgadget'
 
-        Gadgeteer_lib='-lgad'
+        Gadgeteer_lib='-lgadget'
         ;;
     WIN32)
         gad_ldflags="/link /libpath:\$prefix/lib/debug "
-        gad_libs='gad.lib'
+        gad_libs='gadget.lib'
 
         Gadgeteer_lib='gad.lib'
         ;;
