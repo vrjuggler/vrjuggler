@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Dec-28-2000 patrick   Added initial version of serial and socket I/O
+                      abstraction layers.  These are to be used for making
+                      cross-platform drivers with very little effort.
 Dec-17-2000 bthomp    UNIX version of IS-900 driver converted to use termios
                       which in turn fixes cross-platform building
 Nov-27-2000 bthomp    Added initial version of Intersense IS-900 driver
