@@ -181,16 +181,16 @@ bool vjConfigChunkDB::erase () {
 int vjConfigChunkDB::removeMatching (const std::string& property, int value) {
     int i = 0;
     int c;
-    std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
-    while (begin != chunks.end()) {
-        c = (*begin)->getProperty(property);
+    std::vector<vjConfigChunk*>::iterator cur_chunk = chunks.begin();
+    while (cur_chunk != chunks.end()) {
+        c = (*cur_chunk)->getProperty(property);
         if (c == value) {
-            //delete (*begin);
-            chunks.erase(begin);
+            //delete (*next);
+            cur_chunk = chunks.erase(cur_chunk);
             i++;
         }
         else
-            begin++;
+            cur_chunk++;
     }
     return i;
 }
@@ -199,16 +199,16 @@ int vjConfigChunkDB::removeMatching (const std::string& property, float value) {
     int i = 0;
     float c;
 
-    std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
-    while (begin != chunks.end()) {
-        c = (*begin)->getProperty(property);
+    std::vector<vjConfigChunk*>::iterator cur_chunk = chunks.begin();
+    while (cur_chunk != chunks.end()) {
+        c = (*cur_chunk)->getProperty(property);
         if (c == value) {
-            //delete (*begin);
-            chunks.erase(begin);
+            //delete (*cur_chunk);
+            cur_chunk = chunks.erase(cur_chunk);
             i++;
         }
         else
-            begin++;
+            cur_chunk++;
     }
     return i;
 }
@@ -216,17 +216,17 @@ int vjConfigChunkDB::removeMatching (const std::string& property, float value) {
 int vjConfigChunkDB::removeMatching (const std::string& property, const std::string& value) {
 
     int i = 0;
-    std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
-    while (begin != chunks.end()) {
-        vjVarValue v = ((*begin)->getProperty(property));
+    std::vector<vjConfigChunk*>::iterator cur_chunk = chunks.begin();
+    while (cur_chunk != chunks.end()) {
+        vjVarValue v = ((*cur_chunk)->getProperty(property));
         if (((v.getType() == T_STRING) || (v.getType() == T_STRING))
             &&  (!vjstrcasecmp (value, (std::string)v))) {
             //delete (*begin);
-            chunks.erase(begin);
+            cur_chunk = chunks.erase(cur_chunk);
             i++;
         }
         else
-            begin++;
+            cur_chunk++;
     }
 
     return i;
