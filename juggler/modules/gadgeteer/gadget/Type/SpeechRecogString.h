@@ -150,12 +150,15 @@ namespace gadget
 
    protected:
       // gadget::SampleBuffer<T> is not copyable, so neither are we.
-      SpeechRecogString(const gadget::SpeechRecogString& d) : vpr::SerializableObject() {;}
-      void operator=(const gadget::SpeechRecogString& d) {;}
+      SpeechRecogString(const gadget::SpeechRecogString& o)
+         : vpr::SerializableObject(o)
+      {;}
+
+      void operator=(const gadget::SpeechRecogString&) {;}
 
    private:
-      SampleBuffer_t    mStringSamples; /**< String samples */
-      StringData       mDefaultValue;   /**< Default String value to return */
+      SampleBuffer_t mStringSamples;  /**< String samples */
+      StringData     mDefaultValue;   /**< Default String value to return */
    };
 
 } // End of gadget namespace

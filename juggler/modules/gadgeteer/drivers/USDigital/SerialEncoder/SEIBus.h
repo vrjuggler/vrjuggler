@@ -34,6 +34,7 @@
 
 #include <iostream>
 #include <time.h>
+#include <boost/concept_check.hpp>
 
 #include <vpr/IO/Port/SerialPort.h>
 #include <vpr/System.h>
@@ -415,6 +416,8 @@ private:
       }  while ( getTime() < t );     // check for time out
       return -1;           // there was a timeout
 #else
+      boost::ignore_unused_variable_warning(timeout);
+      boost::ignore_unused_variable_warning(inverted);
       return 0;
 #endif
    }

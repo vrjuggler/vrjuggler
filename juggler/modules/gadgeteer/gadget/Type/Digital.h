@@ -162,8 +162,8 @@ namespace gadget
 
    protected:
       // gadget::SampleBuffer<T> is not copyable, so neither are we.
-      Digital(const gadget::Digital& d) : vpr::SerializableObject() {;}
-      void operator=(const gadget::Digital& d) {;}
+      Digital(const gadget::Digital& d) : vpr::SerializableObject(d) {;}
+      void operator=(const gadget::Digital&) {;}
 
    private:
       SampleBuffer_t    mDigitalSamples; /**< Digital samples */
