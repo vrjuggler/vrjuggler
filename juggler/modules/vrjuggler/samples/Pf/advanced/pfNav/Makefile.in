@@ -52,8 +52,7 @@ VJ_INCLUDES	= @APP_INCLUDES@ $(AW_INCLUDES) -I$(srcdir)		\
                   -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/nav \
                   -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfTools
 VJ_LIBS		= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
-                  @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) \
-                  @APP_BASIC_LIBS_END@
+                  @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) @APP_BASIC_LIBS_END@
 
 
 ifeq (@USE_AUDIOJUGGLER@, Y)
