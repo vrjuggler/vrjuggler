@@ -9,7 +9,7 @@ JCPS			= @JCPS@
 
 JDOM_JAR		= @JDOM_JAR@
 OPENORB_JAR		= @OPENORB_JAR@
-JUNIT_JAR		= /home/users/patrick/src/Juggler/junit3.7/junit.jar
+JUNIT_JAR		= @JUNIT_JAR@
 TWEEK_JARS		= $(TWEEK_BASE_DIR)/bin/TweekServices.jar$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekNet.jar$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekEvents.jar$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekBeans.jar
 
 CLASSPATH		= $(JDOM_JAR)$(JCPS)$(JUNIT_JAR)$(JCPS)$(TWEEK_JARS)$(JCPS)$(OPENORB_JAR)
