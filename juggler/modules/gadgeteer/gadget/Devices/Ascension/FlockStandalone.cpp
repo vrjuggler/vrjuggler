@@ -12,6 +12,11 @@
     }
 */
 
+
+// look into this, it may be a KLUDGE!!!
+// it allows this driver to work under 6.5 (6.2 worked fine)
+#define _OLD_TERMIOS
+
 #include <termio.h>        // for definition of NCCS
 #include <sys/termio.h>    // for termio structure used by some ioctls
 #include <sys/types.h>     // for open
@@ -25,6 +30,7 @@
 #include <iostream.h>      // for cout
 
 #include <Input/vjPosition/aFlock.h>
+
 
 const int aFlock::MAXCHARSTRINGSIZE = 256;
 
