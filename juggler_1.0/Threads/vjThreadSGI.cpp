@@ -40,29 +40,31 @@
 #include <Threads/vjThreadSGI.h>
 #include <Threads/vjThreadManager.h>
 
-vjThreadTable<pid_t> vjThreadSGI::mThreadTable;
-
-
-
 //: Spawning constructor
 //  This will actually start a new thread
 //  that will execute the specified function.
 vjThreadSGI::vjThreadSGI (THREAD_FUNC func, void* arg, long flags,
              u_int priority, void* stack_addr, size_t stack_size)
 {
-   vjThreadManager::instance()->lock();
+   mUserThreadFunctor = NULL;
+
+   // Create the thread functor to start
+   mUserThreadFunctor = new vjThreadNonMemberFunctor(func, arg);
+   vjThreadMemberFunctor<vjThreadSGI>* start_functor
+               = new vjThreadMemberFunctor<vjThreadSGI>(this,&vjThreadSGI::startThread,NULL);
+
+   // START THREAD
+   // NOTE: Automagically registers UNLESS failure
+   int ret_val = spawn(start_functor, flags, priority, stack_addr, stack_size);
+
+   if(!ret_val)
    {
-      vjThreadNonMemberFunctor* NonMemFunctor = new vjThreadNonMemberFunctor(func, arg);
-      int retVal = spawn(NonMemFunctor, flags, priority, stack_addr, stack_size);
-      if (retVal > 0)
+      vjThreadManager::instance()->lock();
       {
-         registerThread(true);
-         mThreadTable.addThread(this, mThreadPID);
-      }
-      else
          registerThread(false);     // Failed to create
+      }
+      vjThreadManager::instance()->unlock();
    }
-   vjThreadManager::instance()->unlock();
 }
 
 
@@ -72,32 +74,62 @@ vjThreadSGI::vjThreadSGI (THREAD_FUNC func, void* arg, long flags,
 vjThreadSGI::vjThreadSGI ( vjBaseThreadFunctor* functorPtr, long flags,
               u_int priority, void* stack_addr, size_t stack_size)
 {
-   vjThreadManager::instance()->lock();
+    mUserThreadFunctor = NULL;
+
+   // Create the thread functor to start
+   mUserThreadFunctor = functorPtr;;
+   vjThreadMemberFunctor<vjThreadSGI>* start_functor
+               = new vjThreadMemberFunctor<vjThreadSGI>(this,&vjThreadSGI::startThread,NULL);
+
+   // START THREAD
+   // NOTE: Automagically registers UNLESS failuer
+   int ret_val = spawn(start_functor, flags, priority, stack_addr, stack_size);
+
+   if(!ret_val)
    {
-      int retVal = spawn(functorPtr, flags, priority, stack_addr, stack_size);
-      if (retVal > 0)
+      vjThreadManager::instance()->lock();
       {
-         registerThread(true);
-         mThreadTable.addThread(this, mThreadPID);
+         registerThread(false);     // Failed to create
       }
-      else
-         registerThread(false);     // Failed to create));
+      vjThreadManager::instance()->unlock();
+   }
+}
+
+/**
+ * Called by the spawn routine to start the user thread function
+ * PRE: Called ONLY by a new thread
+ * POST: Do any thread registration necessary
+ *       Call the user thread functor
+ *
+ * @param null_param
+ */
+void vjThreadSGI::startThread(void* null_param)
+{
+   // WE are a new thread... yeah!!!!
+   // TELL EVERYONE THAT WE LIVE!!!!
+   vjThreadManager::instance()->lock();      // Lock manager
+   {
+      setLocalThreadPtr(this);               // Store the pointer to me
+      registerThread(true);
    }
    vjThreadManager::instance()->unlock();
+
+   // --- CALL USER FUNCTOR --- //
+   (*mUserThreadFunctor)();
 }
 
 
 // -----------------------------------------------------------------------
-   //: Make the calling thread wait for the termination of the specified
-   //+ thread.
-   //! NOTE:  Not implemented.
-   //! RETURNS:  0 - Successful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
-    int
-   vjThreadSGI::join (void** arg)
-   {
-      cerr << "vjThreadSGI::join() not implemented yet!\n";
-      return -1;
-   }
+//: Make the calling thread wait for the termination of the specified
+//+ thread.
+//! NOTE:  Not implemented.
+//! RETURNS:  0 - Successful completion
+//! RETURNS: -1 - Error
+// -----------------------------------------------------------------------
+ int
+vjThreadSGI::join (void** arg)
+{
+   cerr << "vjThreadSGI::join() not implemented yet!\n";
+   return -1;
+}
 

@@ -77,7 +77,7 @@ public:
                size_t stack_size = 0);
 
    virtual ~vjThreadSGI()
-   { mThreadTable.removeThread(mThreadPID);}
+   {;}
 
    // -----------------------------------------------------------------------
    //: Spawns a new thread that will execute functorPtr.
@@ -102,6 +102,17 @@ public:
       mThreadPID = sproc(THREAD_FUNC(&ThreadFunctorFunction), PR_SADDR, functorPtr);
       return mThreadPID;
    }
+
+   // Called by the spawn routine to start the user thread function
+    // PRE: Called ONLY by a new thread
+    // POST: The new thread will have started the user thread function
+    void startThread(void* null_param);
+
+private:
+   // The functor to call from startThread
+   vjBaseThreadFunctor* mUserThreadFunctor;
+
+public:
 
    // -----------------------------------------------------------------------
    //: Make the calling thread wait for the termination of the specified
@@ -253,13 +264,28 @@ public:
    // -----------------------------------------------------------------------
    static vjBaseThread* self()
    {
-      pid_t cur_pid = getpid();
-      vjBaseThread* cur_thread = mThreadTable.getThread(cur_pid);
-
-      return cur_thread;
+      return getLocalThreadPtr();
    }
+
 private:
-   static vjThreadTable<pid_t>    mThreadTable;
+   // Set the thread ptr stored in the local PRDA area
+   // NOTE: PRDA is a memory address that each thread has a seperate copy of.
+   static void setLocalThreadPtr(vjThreadSGI* threadPtr)
+   {
+      ((ThreadInfo*)PRDA->usr_prda.fill)->mThreadPtr = threadPtr;
+   }
+
+   // Get the thread ptr stored in the local PRDA area
+   static vjThreadSGI* getLocalThreadPtr()
+   {
+      return ((ThreadInfo*)PRDA->usr_prda.fill)->mThreadPtr;
+   }
+
+   // Structure for storing thread specific information
+   struct ThreadInfo
+   {
+      vjThreadSGI* mThreadPtr;
+   };
 };
 
 
