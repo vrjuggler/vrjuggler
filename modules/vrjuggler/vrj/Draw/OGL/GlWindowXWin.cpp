@@ -114,8 +114,8 @@ int GlWindowXWin::open()
     }
 
     vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-       << "Visual ID: " << std::hex << visual_info << std::dec << std::endl
-       << vprDEBUG_FLUSH;
+       << "Visual ID: 0x" << std::hex << visual_info->visualid << std::dec
+       << std::endl << vprDEBUG_FLUSH;
 
     // window attributes.
     if ((w_attrib.colormap = ::XCreateColormap (x_display,
