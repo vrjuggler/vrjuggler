@@ -107,7 +107,7 @@ public class SerializableObjectMarshaler : ICustomMarshaler
    public IntPtr MarshalManagedToNative(Object obj)
    {
       PropertyInfo raw_obj_prop =
-         obj.GetType().GetProperty("mRawObject",
+         obj.GetType().GetProperty("RawObject",
                                    BindingFlags.NonPublic | BindingFlags.Instance);
       if ( null != raw_obj_prop )
       {
