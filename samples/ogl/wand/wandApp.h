@@ -24,14 +24,14 @@ class wandApp : public vjGlApp
 {
 public:
    wandApp(vjKernel* kern)
-      : vjGlApp(kern), clearColor(0.0f)            // Initialize base class
+      : vjGlApp(kern)         // Initialize base class
    {;}
 
    // Execute any initialization needed before the API is started
    virtual void init()
    {
       //cout << "---------- App:init() ---------------" << endl;
-         // Initialize devices
+      // Initialize devices
       mWand.init("VJWand");
       mHead.init("VJHead");
    }
@@ -41,12 +41,18 @@ public:
    virtual void apiInit()
    {;}
 
+   //: Function that is called immediately after a new OGL context is created
+   // Initialize GL state here. Also used to create context specific information
+   virtual void contextInit()
+   {
+      initGLState();       // Initialize the GL state information. (lights, shading, etc)
+   }
+
    //: Function to draw the scene
    //! PRE: OpenGL state has correct transformation and buffer selected
    //! POST: The current scene has been drawn
    virtual void draw()
    {
-      initGLState();    // This should really be in another function
       myDraw();
    }
 
@@ -57,41 +63,26 @@ public:
    //  while (drawing)
    //  {
    //        preDraw();
-   //	      draw();
-   //	       postDraw();      // Drawing is happening while here
+   //       draw();
+   //        postDraw();      // Drawing is happening while here
    //       sync();
    //        postSync();      // Drawing is now done
    //
-   //	      UpdateTrackers();
+   //       UpdateTrackers();
    //  }
    //------------------------------------
 
-   /// Function called before updating trackers but after the frame is drawn
+   //: Function called before updating trackers but after the frame is drawn
    virtual void postSync()
-   {
-     // cout << "cubesApp::postSync\n";
-   }
+   {;}
 
-   /// Function called after tracker update but before start of drawing
+   //: Function called after tracker update but before start of drawing
    virtual void preDraw()
-   {
-      //cout << "cubesApp::preDraw()\n";
-      static float direction = 1;
-      const float incr(0.0025);
+   {;}
 
-      clearColor += (direction*incr);
-
-      if(clearColor == 1.0f)
-         direction = -1.0f;
-      if(clearColor == 0.0f)
-         direction = 1.0f;
-   }
-
-   /// Function called after drawing has been triggered but BEFORE it completes
+   //: Function called after drawing has been triggered but BEFORE it completes
    virtual void postDraw()
-   {
-       //cout << "cubesApp::postDraw()\n";
-   }
+   {;}
 
 private:
    //------------------------------------------------
@@ -108,7 +99,6 @@ private:
 public:
    vjPosInterface    mWand;      // the Wand
    vjPosInterface    mHead;      // the head
-   float             clearColor;
 };
 
 
