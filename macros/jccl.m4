@@ -84,11 +84,13 @@ AC_DEFUN([_JCCL_PATH_SETUP],
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl _JCCL_VERSION_CHECK(MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
+dnl _JCCL_VERSION_CHECK(minimum-version, [action-if-found [, action-if-not-found]])
 dnl NOTE: This should not be called by external code.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([_JCCL_VERSION_CHECK],
 [
+   DPP_PREREQ([2.0.1])
+
    AC_REQUIRE([_JCCL_PATH_SETUP])
 
    if test "x$JCCL_CONFIG" = "xno" ; then
@@ -97,14 +99,13 @@ AC_DEFUN([_JCCL_VERSION_CHECK],
       JCCL_VERSION=`$JCCL_CONFIG --version`
 
       min_jccl_version=ifelse([$1], , 0.0.1, $1)
-      AC_MSG_CHECKING([whether JCCL version is >= $min_jccl_version])
-      AC_MSG_RESULT([$JCCL_VERSION])
-      DPP_VERSION_CHECK([$JCCL_VERSION], [$min_jccl_version], $2, $3)
+      DPP_VERSION_CHECK_MSG_NO_CACHE([JCCL], [$JCCL_VERSION],
+                                     [$min_jccl_version], [$2], [$3])
    fi
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl JCCL_PATH_CXX([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl JCCL_PATH_CXX([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Tests for JCCL C++ API and then defines the following variables:
 dnl     JCCL_CXXFLAGS
@@ -228,7 +229,7 @@ AC_DEFUN([JCCL_PATH_CXX],
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl JCCL_PATH_JAVA([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl JCCL_PATH_JAVA([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Tests for JCCL Java API and then defines the following variables:
 dnl     JCCL_JARS
@@ -268,7 +269,7 @@ AC_DEFUN([JCCL_PATH_JAVA],
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl JCCL_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl JCCL_PATH([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Tests for JCCL C++ and Java APIs and then defines the following
 dnl variables:
@@ -294,9 +295,9 @@ dnl     JCCL_JARS
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([JCCL_PATH],
 [
-   JCCL_PATH_CXX($1, [jccl_have_cxx='yes'], $3, $4)
+   JCCL_PATH_CXX($1, [jccl_have_cxx='yes'], $3)
 
    if test "x$jccl_have_cxx" = "xyes" ; then
-      JCCL_PATH_JAVA($1, $2, $3, $4)
+      JCCL_PATH_JAVA($1, $2, $3)
    fi
 ])
