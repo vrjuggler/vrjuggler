@@ -107,9 +107,9 @@ public:
     * @semantics stop the sound
     * @input alias of the sound to be stopped
     */
-   virtual void stop( const std::string & name )
+   virtual void stop( const std::string & alias )
    {
-      snx::SoundImplementation::stop( name );
+      snx::SoundImplementation::stop( alias );
       this->lookup( alias ).triggerOnNextBind = false;
       // do nothing
       //std::cout << "[snx]Stub::stop (does nothing)\n"<<std::flush;
