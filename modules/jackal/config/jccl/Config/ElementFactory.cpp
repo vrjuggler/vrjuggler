@@ -98,6 +98,9 @@ namespace jccl
                         const std::string file_ext = file->leaf().substr(pos);
                         if (file_ext == def_ext)
                         {
+                           vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
+                              << "Loading '" << file->native_file_string()
+                              << "'\n" << vprDEBUG_FLUSH;
                            loadDef(file->native_file_string());
                         }
                      }
@@ -156,6 +159,19 @@ namespace jccl
       return true;
    }
 
+   ConfigDefinitionPtr ElementFactory::getConfigDefinition(const std::string& token,
+                                                           unsigned int version)
+   {
+      return mRepository.get(token, version);
+   }
+
+   // Creates an Element using the named definition.
+   ConfigElementPtr ElementFactory::createElement(const std::string& defToken,
+                                                  unsigned int version)
+   {
+      return createElement(mRepository.get(defToken, version));
+   }
+
    // Creates an element using the given config definition.
    ConfigElementPtr ElementFactory::createElement(ConfigDefinitionPtr d)
    {
@@ -168,6 +184,25 @@ namespace jccl
       {
          return ConfigElementPtr();
       }
+   }
+
+   // Get the global XML context that we are using system-wide.
+   cppdom::ContextPtr ElementFactory::getXMLContext()
+   {
+      vprASSERT(mGlobalContext.get() != NULL);
+      return mGlobalContext;
+   }
+
+   // Creates a new (empty) XML node using global context.
+   cppdom::NodePtr ElementFactory::createXMLNode()
+   {
+      return cppdom::NodePtr(new cppdom::Node(getXMLContext()));
+   }
+
+   // Creates a new (empty) XML document using global context.
+   cppdom::DocumentPtr ElementFactory::createXMLDocument()
+   {
+      return cppdom::DocumentPtr(new cppdom::Document(getXMLContext()));
    }
 
    vprSingletonImp(ElementFactory);
