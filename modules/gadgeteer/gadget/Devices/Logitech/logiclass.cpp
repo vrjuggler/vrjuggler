@@ -66,8 +66,7 @@
 int ThreeDMouse::startSampling()
 {
   if (mThreadID == NULL) {
-   //int i;
-   current = 0; valid = 1; progress = 2;
+
    openMouse(mPort);
    ThreeDMouse* devicePtr = this;
    void sampleMouse(void*);
@@ -115,20 +114,9 @@ int ThreeDMouse::stopSampling()
    return 1;
 }
 
-void ThreeDMouse::updateData() {
-  lock.acquire();
-  int tmp = valid;
-  valid = progress;
-  progress = tmp;
-  lock.release();
-}
-
-gadget::PositionData* ThreeDMouse::getPositionData (int dev) {
-    if (this->isActive() == false) {
-        return NULL;
-    }
-    else
-        return &mData[current];
+void ThreeDMouse::updateData()
+{
+   mPosSamples.swapBuffers();
 }
 
 
@@ -420,6 +408,7 @@ void ThreeDMouse::resetControlUnit ()
 }
 
 
+/*
 void ThreeDMouse::setBaseOrigin()
     // PURPOSE: Sets the current mouse X,Y,Z position to be the base origin
 {
@@ -431,6 +420,7 @@ void ThreeDMouse::setBaseOrigin()
 //      baseVector[2] = mData[current].getPositionData()->pos[2];
     // Setup currrent offest as origin
 }
+*/
 
 
 
