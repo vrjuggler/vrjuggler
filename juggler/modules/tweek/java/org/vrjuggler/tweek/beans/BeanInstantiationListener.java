@@ -45,5 +45,5 @@ package org.vrjuggler.tweek.beans;
  */
 public interface BeanInstantiationListener extends java.util.EventListener
 {
-   public void beanInstantiation(BeanInstantiationEvent e);
+   public void beanInstantiated(BeanInstantiationEvent e);
 }
