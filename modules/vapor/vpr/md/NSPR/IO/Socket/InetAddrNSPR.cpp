@@ -57,6 +57,7 @@ vpr::ReturnStatus InetAddrNSPR::getLocalHost (vpr::InetAddrNSPR& host_addr)
 {
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
    char local_host_name[257];
+   memset(local_host_name, 0, 257);
 
    if ( PR_GetSystemInfo(PR_SI_HOSTNAME, local_host_name, 256) == PR_SUCCESS )
    {
@@ -145,6 +146,7 @@ void InetAddrNSPR::setFamily (const vpr::SocketTypes::Domain family)
 std::string InetAddrNSPR::getAddressString (void) const
 {
    char ip_str[256];
+   memset(ip_str, 0, 256);
    PR_NetAddrToString(&mAddr, ip_str, sizeof(PRNetAddr));
    std::string temp(ip_str);
    return temp;
@@ -154,6 +156,7 @@ std::string InetAddrNSPR::getHostname () const
 {
    std::string hostname;
    char buffer[PR_NETDB_BUF_SIZE];
+   memset(buffer, 0, PR_NETDB_BUF_SIZE);
    PRStatus ret_status;
    PRHostEnt hostent;
 
