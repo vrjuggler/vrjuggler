@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-13 patrickh The simulator clock now operates in vpr::Intervals so that
+                    it can take advantage of the built-in base time and
+                    roll-over capabilities.
+                    NEW VERSION: 0.8.0
 2001-12-13 patrickh Users can define a "pause time" in between events in the
                     simulation controller.
                     NEW VERSION: 0.7.1

@@ -55,7 +55,7 @@ const vpr::Interval vpr::Interval::HalfPeriod((0xffffffffUL/2), vpr::Interval::B
 #ifdef VPR_SIMULATOR
 void vpr::Interval::setNow ()
 {
-   mTensOfUsecs = vpr::sim::Controller::instance()->getClock().getCurrentTime();
+   mTensOfUsecs = vpr::sim::Controller::instance()->getClock().getCurrentTime().getBaseVal();
 }
 #endif /* ifdef VPR_SIMULATOR */
 
