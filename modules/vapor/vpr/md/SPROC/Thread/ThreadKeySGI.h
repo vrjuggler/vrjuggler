@@ -98,7 +98,7 @@ public:
     //+                   the functor data structure.
     //! ARGS: arg - Argument to be passed to destructor (optional).
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     //
     //! NOTE: Use this routine to construct the key destructor function if
@@ -125,7 +125,7 @@ public:
     //+                     associated with the key when the thread
     //+                     terminates.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     int
@@ -143,7 +143,7 @@ public:
     //! POST: The specified key is destroyed using the destructor function
     //+       previously associated with it, and its resources are freed.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     //
     //! NOTE: This is not currently supported on HP-UX 10.20.
@@ -167,7 +167,7 @@ public:
     //! ARGS: value - Address containing data to be associated with the
     //+               specified key for the current thread.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     int
@@ -189,7 +189,7 @@ public:
     //! ARGS: valuep - Address of the current data value associated with the
     //+                key.
     //
-    //! RETURNS:  0 - Successful completion
+    //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     int

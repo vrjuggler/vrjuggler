@@ -139,8 +139,8 @@ public:
      *       returned to the caller.  If the file is opened, m_open is set to
      *       true.
      *
-     * @return vpr::ReturnStatus;:Success is returned if the file handle was opened
-     *         successfully.  vpr::ReturnStatus::Failure is returned otherwise.
+     * @return vpr::ReturnStatus;:Succeed is returned if the file handle was opened
+     *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
      */
     vpr::ReturnStatus open(void);
 
@@ -152,9 +152,9 @@ public:
      *       returned to the caller.  If the file is closed, m_open is set to
      *       false.
      *
-     * @return vpr::ReturnStatus::Success is returned if the file handle was closed
+     * @return vpr::ReturnStatus::Succeed is returned if the file handle was closed
      *         successfully.<br>
-     *         vpr::ReturnStatus::Failure is returned if the file handle could not
+     *         vpr::ReturnStatus::Fail is returned if the file handle could not
      *         be closed for some reason.
      */
     vpr::ReturnStatus close(void);
@@ -180,8 +180,8 @@ public:
      * @pre The file handle is open.
      * @post Processes may block when accessing the file.
      *
-     * @return vpr::ReturnStatus;:Success is returned if the blocking mode was
-     *         changed successfully; vpr::ReturnStatus::Failure otherwise.
+     * @return vpr::ReturnStatus;:Succeed is returned if the blocking mode was
+     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
      */
     ReturnStatus enableBlocking(void);
 
@@ -191,8 +191,8 @@ public:
      * @pre The file handle is open.
      * @post Processes will not block when accessing the file.
      *
-     * @return vpr::ReturnStatus;:Success is returned if the blocking mode was
-     *         changed successfully; vpr::ReturnStatus::Failure otherwise.
+     * @return vpr::ReturnStatus;:Succeed is returned if the blocking mode was
+     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
      */
     ReturnStatus enableNonBlocking(void);
 
@@ -287,9 +287,9 @@ public:
      * @pre The file handle is open.
      * @post The file handle's write mode is set to append.
      *
-     * @return vpr::ReturnStatus::Success is returned if the write mode was changed
+     * @return vpr::ReturnStatus::Succeed is returned if the write mode was changed
      *         successfully.<br>
-     *         vpr::ReturnStatus::Failure is returned if the write mode could not be
+     *         vpr::ReturnStatus::Fail is returned if the write mode could not be
      *         changed for some reason.
      */
     ReturnStatus enableAppend(void);
@@ -300,9 +300,9 @@ public:
      * @pre The file handle is open.
      * @post The file handle's write mode is set so that writes are appended.
      *
-     * @return vpr::ReturnStatus::Success is returned if the write mode was changed
+     * @return vpr::ReturnStatus::Succeed is returned if the write mode was changed
      *         successfully.<br>
-     *         vpr::ReturnStatus::Failure is returned if the write mode could not be
+     *         vpr::ReturnStatus::Fail is returned if the write mode could not be
      *         changed for some reason.
      */
     ReturnStatus disableAppend(void);
@@ -313,9 +313,9 @@ public:
      * @pre The file handle is open.
      * @post Writes are performed synchronously.
      *
-     * @return vpr::ReturnStatus::Success is returned if the write mode was changed
+     * @return vpr::ReturnStatus::Succeed is returned if the write mode was changed
      *         successfully.<br>
-     *         vpr::ReturnStatus::Failure is returned if the write mode could not be
+     *         vpr::ReturnStatus::Fail is returned if the write mode could not be
      *         changed for some reason.
      */
     ReturnStatus enableSynchronousWrite(void);
@@ -326,9 +326,9 @@ public:
      * @pre The file handle is open.
      * @post Writes are performed asynchronously.
      *
-     * @return vpr::ReturnStatus::Success is returned if the write mode was changed
+     * @return vpr::ReturnStatus::Succeed is returned if the write mode was changed
      *         successfully.<br>
-     *         vpr::ReturnStatus::Failure is returned if the write mode could not be
+     *         vpr::ReturnStatus::Fail is returned if the write mode could not be
      *         changed for some reason.
      */
     ReturnStatus enableAsynchronousWrite(void);
@@ -389,7 +389,7 @@ public:
         vpr::ReturnStatus status;
 
         if ( ioctl(m_fdesc, FIONREAD, &buffer) == -1 ) {
-            status.setCode(vpr::ReturnStatus::Failure);
+            status.setCode(vpr::ReturnStatus::Fail);
         }
 
         return status;
@@ -413,13 +413,13 @@ public:
      *                   available for reading.  This argument is optional and
      *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::ReturnStatus::Success is returned if the read operation
+     * @return vpr::ReturnStatus::Succeed is returned if the read operation
      *         completed successfully.<br>
      *         vpr::ReturnStatus::WouldBlock if the file is in non-blocking mode,
      *         and there is no data to read.<br>
      *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
      */
     vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
                        vpr::Uint32& bytes_read,
@@ -445,7 +445,7 @@ public:
      *                   available for reading.  This argument is optional and
      *                   defaults to <code>vpr::Interval::NoTimeout</code>
      *
-     * @return vpr::ReturnStatus::Success is returned if the read operation
+     * @return vpr::ReturnStatus::Succeed is returned if the read operation
      *         completed successfully.<br>
      *         vpr::ReturnStatus::WouldBlock if the file is in non-blocking mode,
      *         and there is no data to read.<br>
@@ -473,14 +473,14 @@ public:
      *                      and defaults to
      *                      <code>vpr::Interval::NoTimeout</code>.
      *
-     * @return vpr::ReturnStatus::Success is returned if the write operation
+     * @return vpr::ReturnStatus::Succeed is returned if the write operation
      *         completed successfully.<br>
      *         vpr::ReturnStatus::WouldBLock is returned if the handle is in
      *         non-blocking mode, and the write operation could not be
      *         completed.<br>
      *         vpr::ReturnStatus::Timeout is returned if the write could not begin
      *         within the timeout interval.<br>
-     *         vpr::ReturnStatus::Failure is returned if the write operation failed.
+     *         vpr::ReturnStatus::Fail is returned if the write operation failed.
      */
     vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytes_written,

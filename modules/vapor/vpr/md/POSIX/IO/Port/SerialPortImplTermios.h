@@ -178,9 +178,9 @@ public:
      *       port's flags are initaialized to 0.  The resulting status is
      *       returned to the caller.
      *
-     * @return vpr::ReturnStatus::Success is returned if the serial port was opened
+     * @return vpr::ReturnStatus::Succeed is returned if the serial port was opened
      *         successfully.<br>
-     *         vpr::ReturnStatus::Failure is returned otherwise.
+     *         vpr::ReturnStatus::Fail is returned otherwise.
      */
     vpr::ReturnStatus open(void);
 
@@ -191,9 +191,9 @@ public:
      * @post An attempt is made to close the port.  The resulting status is
      *       returned to the caller.
      *
-     * @return vpr::ReturnStatus::Success is returned if the serial port was closed
+     * @return vpr::ReturnStatus::Succeed is returned if the serial port was closed
      *         successfully.<br>
-     *         vpr::ReturnStatus::Failure is returned otherwise.
+     *         vpr::ReturnStatus::Fail is returned otherwise.
      */
     inline vpr::ReturnStatus
     close (void) {
@@ -206,8 +206,8 @@ public:
      * @pre The serial port is open.
      * @post Processes may block when accessing the port.
      *
-     * @return vpr::ReturnStatus::Success is returned if the blocking mode was
-     *         changed successfully; vpr::ReturnStatus::Failure otherwise.
+     * @return vpr::ReturnStatus::Succeed is returned if the blocking mode was
+     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
      */
     inline vpr::ReturnStatus
     enableBlocking (void) {
@@ -220,8 +220,8 @@ public:
      * @pre The serial port is open.
      * @post Processes will not block when accessing the port.
      *
-     * @return vpr::ReturnStatus::Success is returned if the blocking mode was
-     *         changed successfully; vpr::ReturnStatus::Failure otherwise.
+     * @return vpr::ReturnStatus::Succeed is returned if the blocking mode was
+     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
      */
     inline vpr::ReturnStatus
     enableNonBlocking (void) {
@@ -343,8 +343,8 @@ public:
      * @param size A reference to a vpr::Uint8 where the buffer size is
      *             stored for return to the caller.
      *
-     * @return vpr::ReturnStatus::Success is returned if the buffer size was
-     *         retrieved successfully; vpr::ReturnStatus::Failure otherwise.
+     * @return vpr::ReturnStatus::Succeed is returned if the buffer size was
+     *         retrieved successfully; vpr::ReturnStatus::Fail otherwise.
      */
     ReturnStatus getBufferSize(Uint16& size);
 
@@ -358,8 +358,8 @@ public:
      *
      * @param size The new size for the buffer.
      *
-     * @return vpr::ReturnStatus::Success is returned if the buffer size was set
-     *         successfully; vpr::ReturnStatus::Failure otherwise.
+     * @return vpr::ReturnStatus::Succeed is returned if the buffer size was set
+     *         successfully; vpr::ReturnStatus::Fail otherwise.
      */
     ReturnStatus setBufferSize(const Uint8 size);
 
@@ -374,8 +374,8 @@ public:
      * @param timeout A reference to a vpr::Uint8 to be used as storage for
      *                the timeout value.
      *
-     * @return vpr::ReturnStatus::Success is returned if the timeout was requested
-     *         successfully; vpr::ReturnStatus::Failure otherwise.
+     * @return vpr::ReturnStatus::Succeed is returned if the timeout was requested
+     *         successfully; vpr::ReturnStatus::Fail otherwise.
      *
      * @see Refer to page 353 of <I>Advanced Programming in the UNIX
      *      Environment</I> for more details.
@@ -393,8 +393,8 @@ public:
      * @param timeout_val The new timeout value measured in tenths of a
      *                    second.
      *
-     * @return vpr::ReturnStatus::Success is returned if the timeout was set
-     *         successfully; vpr::ReturnStatus::Failure otherwise.
+     * @return vpr::ReturnStatus::Succeed is returned if the timeout was set
+     *         successfully; vpr::ReturnStatus::Fail otherwise.
      *
      * @see Refer to page 353 of <I>Advanced Programming in the UNIX
      *      Environment</I> for more details.
@@ -934,13 +934,13 @@ public:
      *                   available for reading.  This argument is optional and
      *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::ReturnStatus::Success is returned if the read operation
+     * @return vpr::ReturnStatus::Succeed is returned if the read operation
      *         completed successfully.<br>
      *         vpr::ReturnStatus::WouldBlock if the port is in non-blocking mode,
      *         and there is no data to read.<br>
      *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
      */
     inline vpr::ReturnStatus
     read_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
@@ -969,13 +969,13 @@ public:
      *                   available for reading.  This argument is optional and
      *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::ReturnStatus::Success is returned if the read operation
+     * @return vpr::ReturnStatus::Succeed is returned if the read operation
      *         completed successfully.<br>
      *         vpr::ReturnStatus::WouldBlock if the port is in non-blocking mode,
      *         and there is no data to read.<br>
      *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
      */
     inline vpr::ReturnStatus
     readn_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
@@ -1000,14 +1000,14 @@ public:
      *                      available for writing.  This argument is optional
      *                      and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::ReturnStatus::Success is returned if the write operation
+     * @return vpr::ReturnStatus::Succeed is returned if the write operation
      *         completed successfully.<br>
      *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
      *         non-blocking mode, and the write operation could not be
      *         completed.<br>
      *         vpr::ReturnStatus::Timeout is returned if the write could not begin
      *         within the timeout interval.<br>
-     *         vpr::ReturnStatus::Failure is returned if the write operation failed.
+     *         vpr::ReturnStatus::Fail is returned if the write operation failed.
      */
     inline vpr::ReturnStatus
     write_i (const void* buffer, const vpr::Uint32 length,

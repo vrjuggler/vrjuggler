@@ -77,7 +77,7 @@ SocketStreamImplBSD::listen (const int backlog) {
         fprintf(stderr,
                 "[vpr::SocketStreamImplBSD] Cannot listen on socket: %s\n",
                 strerror(errno));
-        retval.setCode(ReturnStatus::Failure);
+        retval.setCode(ReturnStatus::Fail);
     }
 
     return retval;
@@ -112,7 +112,7 @@ SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
                 fprintf(stderr,
                         "[vpr::SocketStreamImplBSD] Error while accepting "
                         "incoming connection: %s\n", strerror(errno));
-                retval.setCode(ReturnStatus::Failure);
+                retval.setCode(ReturnStatus::Fail);
             }
         }
         // Otherwise, put the new socket in the passed socket object.

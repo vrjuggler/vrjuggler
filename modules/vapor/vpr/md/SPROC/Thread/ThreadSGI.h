@@ -108,7 +108,7 @@ public:
    //! ARGS: flags - Flags for the thread--not currently used in this
    //+               implementation (optional).
    //
-   //! RETURNS: non-zero - Successful thread creation
+   //! RETURNS: non-zero - Succeedful thread creation
    //! RETURNS:       -1 - Error
    // -----------------------------------------------------------------------
    virtual int
@@ -138,7 +138,7 @@ public:
    //: Make the calling thread wait for the termination of the specified
    //+ thread.
    //
-   //! RETURNS:  0 - Successful completion
+   //! RETURNS:  0 - Succeedful completion
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
    virtual int
@@ -153,7 +153,7 @@ public:
    //! POST: The specified thread is sent the SIGCONT signal and is allowed
    //+       to begin executing again.
    //
-   //! RETURNS:  0 - Successful completion
+   //! RETURNS:  0 - Succeedful completion
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
    virtual int resume (void)
@@ -166,7 +166,7 @@ public:
    //! POST: This thread is sent the SIGSTOP signal and is thus suspended
    //+       from execution until the member function resume() is called.
    //
-   //! RETURNS:  0 - Successful completion
+   //! RETURNS:  0 - Succeedful completion
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
    virtual int suspend (void)
@@ -182,7 +182,7 @@ public:
    //! ARGS: prio - Pointer to an int variable that will have the thread's
    //+              priority stored in it.
    //
-   //! RETURNS:  0 - Successful completion
+   //! RETURNS:  0 - Succeedful completion
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
    virtual int getprio (int* prio)
@@ -203,7 +203,7 @@ public:
    //
    //! ARGS: prio - The new priority of the specified thread.
    //
-   //! RETURNS:  0 - Successful completion
+   //! RETURNS:  0 - Succeedful completion
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
    inline int
@@ -252,7 +252,7 @@ public:
    //
    //! ARGS: signum - The signal to send to the specified thread.
    //
-   //! RETURNS:  0 - Successful completion
+   //! RETURNS:  0 - Succeedful completion
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
    virtual int kill (int signum)
