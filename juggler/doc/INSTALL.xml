@@ -144,9 +144,9 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
             <screen>./autogen.sh</screen>
             <note>
                <para>On Win32, recent versions of Cygwin install Autoconf 2.13 <emphasis>and</emphasis> Autoconf 2.5x. Similarly, Automake 1.4 <emphasis>and</emphasis> Automake 1.5 are installed. The former versions (2.13 and 1.4) are considered <quote>stable</quote> while the latter are <quote>developmental</quote>. While the VR Juggler build system does work with either set on UNIX-based systems, the build system does not work with Automake 1.5 on Win32. At this time, it is unclear why it does not work, but the following provides a workaround for running <command>autogen.sh</command> on Win32 using the default BASH environment:</para>
-               <screen>ACLOCAL=/usr/autotools/stable/bin/aclocal ./autogen.sh</screen>
+               <screen>ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh</screen>
                <para>If you are using tcsh, use the following command instead:</para>
-               <screen>env ACLOCAL=/usr/autotools/stable/bin/aclocal ./autogen.sh</screen>
+               <screen>env ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh</screen>
             </note>
             <section id="using.configure.pl">
                <title>Using <command>configure.pl</command></title>
