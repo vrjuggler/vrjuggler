@@ -134,12 +134,13 @@ afterbuild:
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-$(LIBDIR)/$(VPR_LIB_STATIC) $(LIBDIR)/$(VPR_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(VPR_LIB_STATIC) $(LIBDIR)/$(VPR_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT) $(OBJDIR)/ext/*/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
+	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)			\
+          $(OBJDIR)/ext/*/*.$(OBJEXT)
 	$(RANLIB) $@
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
@@ -149,12 +150,13 @@ $(LIBDIR)/$(VPR_LIB_STATIC) $(LIBDIR)/$(VPR_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJE
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(VPR_LIB_DYNAMIC) $(LIBDIR)/$(VPR_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(VPR_LIB_DYNAMIC) $(LIBDIR)/$(VPR_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT) $(OBJDIR)/ext/*/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+          $(OBJDIR)/ext/*/*.$(OBJEXT) $(DYLIB_DEPS)
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && cp $(LIBDIR)/* .
 else

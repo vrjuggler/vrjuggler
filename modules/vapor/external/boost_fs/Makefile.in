@@ -57,7 +57,7 @@ srcdir=			$(BOOST_FS_DIR)/libs/filesystem/src
 top_srcdir=		@top_srcdir@
 EXTRA_INCLUDES+=	-I$(BOOST_FS_DIR)
 INSTALL_FILES=		$(BOOST_FS_DIR)/boost/filesystem/*.hpp
-SUBOBJDIR=		$(VPR_LIBRARY)
+SUBOBJDIR=		$(VPR_LIBRARY)/ext/boost_fs
 
 SRCS=			exception.cpp			\
 			operations_posix_windows.cpp	\
