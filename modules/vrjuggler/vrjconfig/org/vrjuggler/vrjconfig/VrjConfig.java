@@ -53,7 +53,7 @@ import org.vrjuggler.vrjconfig.ui.ContextToolbar;
 
 public class VrjConfig
    extends JPanel
-   implements FileLoader
+   implements FileLoader//, TweekFrameListener
 {
    public VrjConfig()
    {
