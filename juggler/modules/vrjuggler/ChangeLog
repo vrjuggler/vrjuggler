@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Aug-06-2001 allenb    tools/pfStatLinux contains a library that must be used
+                      with performer application on Linux due to a bug in
+                      performer.
 Jun-20-2001 allenb    Chunk types: simDisplay and surfaceDisplay have been
                       removed from the system.  They have been replaced
                       by the new chunk of type displayWindow.  Any old

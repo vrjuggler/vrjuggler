@@ -25,6 +25,9 @@ Started: April 13, 2001
           has the following new implications:
             - numpipes must be set correctly in the display config chunk
             - Sometimes black windows will appear on unused pipes.
+        * Performer applications running on Linux must use the pfStat library
+          in tools/pfStatLinux otherwise there will be an unresolved symbol
+          when running applications.  This is due to a bug in Linux performer.
 
 ===============================================================================
 
