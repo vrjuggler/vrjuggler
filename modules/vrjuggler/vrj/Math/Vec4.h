@@ -35,7 +35,7 @@ public:
 
 public:
    //: Are we equal
-   int equal(const vjVec4&  _v) const {
+   bool equal(const vjVec4&  _v) const {
       return (vec[0] == _v[0] &&
               vec[1] == _v[1] &&
               vec[2] == _v[2] &&
@@ -66,11 +66,9 @@ public:
                    (vec[3]*vec[3]));
    }
 
-//**//    float distance(const vjVec4& _v) const;
 
-   /**
-    * Set vec = (Mat)(Vec)
-    */
+   //: Xform the vector
+   // Set vec = (Mat)(Vec)
    void xform(const vjMatrix& _m, vjVec4 _v);
 
 public:
@@ -90,8 +88,7 @@ public:
    }
 
 public:
-   // vjVec4 operators (N.B. return by value can be slow)
-
+   // vjVec4 operators, return by value could be slow
    vjVec4 operator -() const {
       return vjVec4(-vec[0], -vec[1], -vec[2], -vec[3]);
    }
@@ -107,7 +104,6 @@ public:
    friend inline vjVec4 operator *(float _s, const vjVec4&);
    friend inline vjVec4 operator *(const vjVec4& _v, float _s);
    friend inline vjVec4 operator /(const vjVec4& _v, float _s);
-//    friend inline vjVec4 operator *(const vjVec4& _v, const vjMatrix& _m);
 
 public:
    //: Assignment Operators
