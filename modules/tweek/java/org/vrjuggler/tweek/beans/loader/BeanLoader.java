@@ -39,7 +39,7 @@ package org.vrjuggler.tweek.beans.loader;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.JarURLConnection;
-import java.util.Vector;
+import java.util.List;
 import java.util.jar.*;
 import java.util.jar.JarEntry;
 
@@ -56,8 +56,7 @@ public class BeanLoader
     * Loads the JavaBean contained in the JAR file pointed to by the given
     * java.io.File argument.
     */
-   public void loadBeanFromJar (java.io.File file, Vector deps,
-                                String class_path)
+   public void loadBeanFromJar (java.io.File file, List deps, String class_path)
       throws IOException
    {
       if ( file.isFile() )
@@ -70,7 +69,7 @@ public class BeanLoader
     * Loads the JavaBean contained in the JAR file found at the given URL.
     * The URL should be a "normal" URL rather than a JAR URL.
     */
-   public void loadBeanFromJar (String url, Vector deps, String class_path)
+   public void loadBeanFromJar (String url, List deps, String class_path)
       throws java.net.MalformedURLException, IOException
    {
       java.net.URL jar_url = new java.net.URL("jar:" + url + "!/");
