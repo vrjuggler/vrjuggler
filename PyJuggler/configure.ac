@@ -59,7 +59,7 @@ AC_ARG_WITH([boost-python],
             [BOOST_PYTHON_DIR="$withval"], [BOOST_PYTHON_DIR='/usr/local'])
 
 AC_ARG_WITH([pyste],
-            [  --with-pytse=<PATH>     Full path to pyste.py script    [No default]],
+            [  --with-pyste=<PATH>     Full path to pyste.py script    [No default]],
             [PYSTE="$withval"], [PYSTE='pyste.py'])
 
 AC_ARG_WITH([osg],
@@ -83,25 +83,6 @@ DPP_WIN32_SETUP
 # build, target and host platforms rather than only the host.
 AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
-
-# -----------------------------------------------------------------------------
-# Path setup.
-# -----------------------------------------------------------------------------
-
-# $srcdir is the root directory of the PyJuggler source tree.  To get a value
-# for $PYJROOT_ABS, we cd there and save the value of running pwd.  Then
-# return to the directory where configure is being run ($topdir).
-cd "$srcdir"
-PYJROOT_ABS=`pwd`
-cd "$PYJROOT_ABS/../.."
-UNIX_PYJUGGLERROOT_ABS=`pwd`
-cd "$topdir"
-
-if test "x$CYGPATH" != "xno" ; then
-   PYJUGGLERROOT_ABS=`cygpath -w "$UNIX_PYJUGGLERROOT_ABS" | sed -e 's/\\\\/\\//g'`
-else
-   PYJUGGLERROOT_ABS="$UNIX_PYJUGGLERROOT_ABS"
-fi
 
 # -----------------------------------------------------------------------------
 # Checks for programs.
@@ -173,10 +154,10 @@ DPP_GET_PTHREAD_LIB
 
 # We do this first so that we can pass the $DL_LOAD_LIB in as a dependency of
 # Python.
-_vpr_save_LIBS="$LIBS"
+_pyj_save_LIBS="$LIBS"
 AC_CHECK_FUNC([dlopen], [DL_LOAD_LIB=''],
     [AC_CHECK_LIB([dl], [dlopen], [DL_LOAD_LIB='-ldl'])])
-LIBS="${_vpr_save_LIBS}"
+LIBS="${_pyj_save_LIBS}"
 
 _pyj_save_LIBS="$LIBS"
 AC_CHECK_FUNC([openpty], [UTIL_LIB=''],
