@@ -64,6 +64,7 @@ public class WizardOutputStream
    {
       // Get a list of all the classes this wizard needs
       List classes = wizard.getRequiredClasses();
+      classes.addAll(getInnerClasses(classes));
       stripDuplicates(classes);
 
       // Get a list of all the resources this wizard needs
@@ -96,6 +97,7 @@ public class WizardOutputStream
       {
          for (Iterator itr = classes.iterator(); itr.hasNext(); )
          {
+            // Add the class itself
             String classname = (String)itr.next();
             Class cls = getClass().getClassLoader().loadClass(classname);
             addFile(out, classToFile(cls.getName()));
@@ -170,6 +172,41 @@ public class WizardOutputStream
    private String classToFile(String classname)
    {
       return classname.replace('.', '/') + ".class";
+   }
+
+   /**
+    * Given the list of classes, all inner classes are found and added to the
+    * list.
+    *
+    * XXX: This doesn't appear to work for anonymous classes.
+    */
+   private List getInnerClasses(List classes)
+      throws IOException
+   {
+      List inner_classes = new ArrayList();
+
+      try
+      {
+         for (Iterator itr = classes.iterator(); itr.hasNext(); )
+         {
+            String classname = (String)itr.next();
+            Class cls = Class.forName(classname);
+
+            // Get all declared classes
+            Class[] declared_classes = cls.getDeclaredClasses();
+            for (int i=0; i<declared_classes.length; ++i)
+            {
+               String decl_class_name = declared_classes[i].getName();
+               inner_classes.add(decl_class_name);
+            }
+         }
+      }
+      catch (ClassNotFoundException cnfe)
+      {
+         throw new IOException("Could not find inner class: "+cnfe.getMessage());
+      }
+
+      return inner_classes;
    }
 
    /**
