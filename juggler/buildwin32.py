@@ -41,6 +41,12 @@ import time
 import traceback
 import getopt
 
+EXIT_STATUS_SUCCESS           = 0
+EXIT_STATUS_NO_MSVS           = 1
+EXIT_STATUS_MISSING_DATA_FILE = 2
+EXIT_STATUS_MSVS_START_ERROR  = 3
+EXIT_STATUS_INVALID_PATH      = 4
+
 gHaveTk = False
 try:
    import Tkinter
@@ -117,7 +123,7 @@ def noVisualStudioError():
    print "ERROR: Visual Studio commands are not in your path!"
    print "Run vsvars32.bat in this shell or update the %PATH% environment"
    print "variable on your system."
-   sys.exit(1)
+   sys.exit(EXIT_STATUS_NO_MSVS)
 
 def processInput(optionDict, envVar, inputDesc, required = False):
    default_value = optionDict[envVar]
@@ -153,6 +159,7 @@ def setDefaultVars():
 
       # Default values for optional settings.
       'JAVA_HOME'       : os.getenv('JAVA_HOME', r'C:\java'),
+      'JOGL_HOME'       : os.getenv('JOGL_HOME', os.getenv('JAVA_HOME', '')),
       'JAVA3D_HOME'     : os.getenv('JAVA3D_HOME', os.getenv('JAVA_HOME', '')),
       'OMNIORB_ROOT'    : os.getenv('OMNIORB_ROOT', ''),
       'PFROOT'          : os.getenv('PFROOT',
@@ -205,6 +212,7 @@ def setVars():
       os.environ['PATH'] = jdk_path + os.pathsep + os.environ['PATH']
       os.environ['JACORB_PATH'] = os.path.join(juggler_dir, r'external\JacORB')
 
+   processInput(options, 'JOGL_HOME', 'Jogl installation directory', False)
    processInput(options, 'JAVA3D_HOME', 'Java3D installation directory', False)
    processInput(options, 'OMNIORB_ROOT', 'omniORB installation directory',
                 False)
@@ -352,7 +360,7 @@ def generateVersionHeaders():
             print "ERROR: Could not read from %s" % self.header_template
             print ex
             print "Cannot continue; exiting with error status."
-            sys.exit(2)
+            sys.exit(EXIT_STATUS_MISSING_DATA_FILE)
 
    mods = []
    mods.append(JugglerModule(r'modules\vapor', r'vpr\vprParam.h', 'VPR'))
@@ -374,8 +382,15 @@ def generateAntBuildFiles():
    class AntTarget:
       def __init__(self, srcdir, moduleName, outputFile = 'build.xml'):
          self.srcdir      = os.path.join(juggler_dir, srcdir)
-         self.module_name = os.path.join(juggler_dir, r'vc7', moduleName)
+         self.topdir      = os.path.join(juggler_dir, r'vc7')
+         self.module_name = os.path.join(self.topdir, moduleName)
          self.output_file = os.path.join(self.module_name, outputFile)
+
+         if not os.path.exists(self.module_name):
+            os.mkdir(self.module_name)
+         elif not os.path.isdir(self.module_name):
+            print "ERROR: %s exists, but it is not a directory!" % self.module_name
+            sys.exit(EXIT_STATUS_INVALID_PATH)
 
       # This form of regular expressions appears to be necessary because
       # the sub() method does not handle backslashes in the replacement string
@@ -388,6 +403,7 @@ def generateAntBuildFiles():
       tweek_ext_jars_re = re.compile(r'^(.*)@TWEEK_EXT_JARS@(.*)$')
       jccl_jars_re      = re.compile(r'^(.*)@JCCL_JARS@(.*)$')
       java_orb_jar_re   = re.compile(r'^(.*)@JAVA_ORB_JAR@(.*)$')
+      jogl_jars_re      = re.compile(r'^(.*)@JOGL_JARS@(.*)$')
       java3d_jars_re    = re.compile(r'^(.*)@JAVA3D_JAR@(.*)$')
 
       jdom_jars = [
@@ -427,6 +443,11 @@ def generateAntBuildFiles():
                       'jccl_rtrc.jar')
       ]
 
+      jogl_jars = [
+         os.path.join(os.environ['JOGL_HOME'], 'jogl.jar'),
+         os.path.join(os.environ['JOGL_HOME'], 'jogl-demos-util.jar')
+      ]
+
       java3d_jars = [
          os.path.join(os.environ['JAVA3D_HOME'], r'jre\lib\ext\j3daudio.jar'),
          os.path.join(os.environ['JAVA3D_HOME'], r'jre\lib\ext\j3dcore.jar'),
@@ -448,7 +469,7 @@ def generateAntBuildFiles():
                                         match.groups()[1])
             elif self.topdir_re.search(line):
                match = self.topdir_re.search(line)
-               input[i] = '%s%s%s\n' % (match.groups()[0], self.module_name,
+               input[i] = '%s%s%s\n' % (match.groups()[0], self.topdir,
                                         match.groups()[1])
             elif self.juggler_root_re.search(line):
                match = self.juggler_root_re.search(line)
@@ -478,6 +499,11 @@ def generateAntBuildFiles():
                match = self.jccl_jars_re.search(line)
                input[i] = '%s%s%s\n' % (match.groups()[0], jars,
                                         match.groups()[1])
+            elif self.jogl_jars_re.search(line):
+               jars = os.pathsep.join(self.jogl_jars)
+               match = self.jogl_jars_re.search(line)
+               input[i] = '%s%s%s\n' % (match.groups()[0], jars,
+                                        match.groups()[1])
             elif self.java3d_jars_re.search(line):
                jars = os.pathsep.join(self.java3d_jars)
                match = self.java3d_jars_re.search(line)
@@ -500,6 +526,9 @@ def generateAntBuildFiles():
                          r'JCCL_Java\RTRC_Plugin_Java', 'build.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig', 'VRJConfig',
                          'build.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\commoneditors',
+                         r'VRJConfig\commoneditors',
+                         'build-commoneditors.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\display_window',
                          'VRJConfig', 'build-display_window.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\intersense',
@@ -994,8 +1023,10 @@ def installVRJConfig(prefix):
          'VRJConfig.jar'
       ]
 
-      editor_src = os.path.join(vrjconfig_src, 'customeditors')
-      editors = [
+      common_editors = glob.glob(os.path.join(jardir, 'commoneditors', '*.jar'))
+
+      custom_editor_src = os.path.join(vrjconfig_src, 'customeditors')
+      custom_editors = [
          ('display_window', 'DisplayWindowEditor'),
          ('intersense', 'IntersenseEditor'),
          ('pinchglove', 'PinchGloveEditor'),
@@ -1019,13 +1050,20 @@ def installVRJConfig(prefix):
 
       shutil.copy2(os.path.join(vrjconfig_src, 'VRJConfig.xml'), destdir)
 
+      # Install any common editors that were compiled.
+      destdir = os.path.join(prefix, 'lib', 'vrjuggler')
+      mkinstalldirs(destdir)
+      for e in common_editors:
+         jar_file = os.path.join(jardir, 'commoneditors', e)
+         shutil.copy2(jar_file, destdir)
+
       # Install any custom editors that were compiled.
       destdir = os.path.join(prefix, 'lib', 'vrjuggler', 'customeditors')
       mkinstalldirs(destdir)
 
-      for e in editors:
+      for e in custom_editors:
          jar_file = os.path.join(jardir, e[1] + '.jar')
-         xml_file = os.path.join(editor_src, e[0], e[1] + '.xml')
+         xml_file = os.path.join(custom_editor_src, e[0], e[1] + '.xml')
          if os.path.exists(jar_file):
             shutil.copy2(xml_file, destdir)
             shutil.copy2(jar_file, destdir)
@@ -1297,6 +1335,10 @@ class Win32SetupFrontEnd:
       self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"Dependency instalation prefix:", 'deps-prefix',NextRow, False)
       NextRow = NextRow+1
       self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"Java instalation directory:", 'JAVA_HOME',NextRow, False)
+      NextRow = NextRow + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                        "Jogl instalation directory:", 'JOGL_HOME', NextRow,
+                        False)
       NextRow = NextRow+1
       self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"Java3D instalation directory:", 'JAVA3D_HOME',NextRow, False)
       NextRow = NextRow+1
@@ -1589,7 +1631,7 @@ class Win32SetupFrontEnd:
             status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
          except OSError, osEx:
             print "Could not execute %s: %s" % (cmd, osEx)
-            sys.exit(3)
+            sys.exit(EXIT_STATUS_MSVS_START_ERROR)
       self.buildFinished()
 
 def main():
@@ -1655,9 +1697,9 @@ def main():
                   doDependencyInstall(options['deps-prefix'])
       except OSError, osEx:
          print "Could not execute %s: %s" % (devenv_cmd, osEx)
-         sys.exit(3)
+         sys.exit(EXIT_STATUS_MSVS_START_ERROR)
 
-      sys.exit(0)
+      sys.exit(EXIT_STATUS_SUCCESS)
    else:
       root = Tkinter.Tk()
 
@@ -1679,14 +1721,16 @@ if __name__ == '__main__':
    try:
       main()
    except SystemExit, exitEx:
-      if exitEx.code == 0:
+      if exitEx.code == EXIT_STATUS_SUCCESS:
          status = 'successful completion'
-      elif exitEx.code == 1:
+      elif exitEx.code == EXIT_STATUS_NO_MSVS:
          status = 'no Visual Studio installation found'
-      elif exitEx.code == 2:
+      elif exitEx.code == EXIT_STATUS_MISSING_DATA_FILE:
          status = 'could not read data file required for compiling'
-      elif exitEx.code == 3:
+      elif exitEx.code == EXIT_STATUS_MSVS_START_ERROR:
          status = 'could not start Visual Studio'
+      elif exitEx.code == EXIT_STATUS_INVALID_PATH:
+         status = 'invalid directory structure'
       else:
          status = 'error encountered'
 
