@@ -7,6 +7,9 @@
 # The Makefile including this file should define the following variables:
 #
 # BASE_OBJDIR - The directory to which the object file(s) will be written.
+# DIRPRFX     - The prefix directory (if any) of the directories listed in
+#               ${SUBDIRS}.  This is used for echoing what directory is being
+#               entered.
 # OPTIMIZER   - Optimizer flag(s) for the compiler.
 # RECTARGET   - The name of the recursive target to build.
 # SUBDIRS     - The subdirectories over which the recursion will be done.
