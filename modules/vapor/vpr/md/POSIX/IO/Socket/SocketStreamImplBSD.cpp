@@ -82,34 +82,35 @@ SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
     InetAddr addr;
     socklen_t addrlen;
 
-    if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+    retval = m_handle->isReadable(timeout);
 
-    // Accept an incoming connection request.
-    addrlen = addr.size();
-    accept_sock = ::accept(m_handle->m_fdesc, (struct sockaddr*) &addr.m_addr,
-                           &addrlen);
+    if ( retval.success() ) {
+        // Accept an incoming connection request.
+        addrlen = addr.size();
+        accept_sock = ::accept(m_handle->m_fdesc,
+                               (struct sockaddr*) &addr.m_addr, &addrlen);
 
-    // If accept(2) failed, print an error message and return error stauts.
-    if ( accept_sock == -1 ) {
-        if ( errno == EWOULDBLOCK && ! m_blocking ) {
-            retval.setCode(Status::InProgress);
+        // If accept(2) failed, print an error message and return error stauts.
+        if ( accept_sock == -1 ) {
+            if ( errno == EWOULDBLOCK && ! m_blocking ) {
+                retval.setCode(Status::InProgress);
+            }
+            else {
+                fprintf(stderr,
+                        "[vpr::SocketStreamImplBSD] Error while accepting "
+                        "incoming connection: %s\n", strerror(errno));
+                retval.setCode(Status::Failure);
+            }
         }
+        // Otherwise, put the new socket in the passed socket object.
         else {
-            fprintf(stderr,
-                    "[vpr::SocketStreamImplBSD] Error while accepting incoming "
-                    "connection: %s\n", strerror(errno));
-            retval.setCode(Status::Failure);
+            sock.setRemoteAddr(addr);
+            sock.m_handle          = new FileHandleUNIX(addr.getAddressString());
+            sock.m_handle->m_fdesc = accept_sock;
+            sock.m_open            = true;
+            sock.m_bound           = true;
+            sock.m_connected       = true;
         }
-    }
-    // Otherwise, put the new socket in the passed socket object.
-    else {
-        sock.setRemoteAddr(addr);
-        sock.m_handle          = new FileHandleUNIX(addr.getAddressString());
-        sock.m_handle->m_fdesc = accept_sock;
-        sock.m_open            = true;
-        sock.m_bound           = true;
-        sock.m_connected       = true;
     }
 
     return retval;
