@@ -248,9 +248,9 @@ inline void OpenSGApp::draw()
 
    // Copy the matrix
    vrj::Projection* project = userData->getProjection();
-   vrj::Frustum vrj_frustum = userData->getProjection()->mFrustum;
+   vrj::Frustum vrj_frustum = userData->getProjection()->getFrustum();
 
-   float* vj_proj_view_mat = project->mViewMat.mData;
+   const float* vj_proj_view_mat = project->getViewMatrix().mData;
    OSG::Matrix frustum_matrix, view_xform_mat;
    view_xform_mat.setValue(vj_proj_view_mat);
 
