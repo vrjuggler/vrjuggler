@@ -135,7 +135,10 @@ namespace vpr
       /** Print tree rooted at this node.
        * @param depth Depth in the traversal. Used for indentation and the like.
        */
-      void printTree(unsigned depth=0);
+      void printTree(const unsigned depth=0);
+
+      /** Get an xml representation of the profile hierarchy. */
+      std::string getXMLRep();
 
       /** Recursively resets the metric values for all nodes rooted here.
        * Resets total calls and total times.  Also resets the history.
@@ -199,7 +202,10 @@ namespace vpr
       //@}
 
    protected:
+      /** Helper for building up XML rep recursively. */
+      void getXMLRep(std::stringstream& s, unsigned depth=0);
 
+   protected:
       const char*    mName;         /**< Pointer to the name for this node.  Must be a static string. */
       int            mTotalCalls;   /**< Total number of times called since last reset. */
       vpr::Interval  mTotalTime;    /**< Total summed time over mTotalCalls. */

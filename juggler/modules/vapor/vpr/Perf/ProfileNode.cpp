@@ -163,7 +163,7 @@ namespace vpr
          << clrSetBOLD(clrYELLOW) << " total calls: " << clrRESET << getTotalCalls()
          << clrSetBOLD(clrYELLOW) << " total time: " << clrRESET << getTotalTime().msecf()
          << clrSetBOLD(clrYELLOW) << " ave: " << clrRESET
-         << getTotalTime().msecf() / getTotalCalls() << std::endl << vprDEBUG_FLUSH;
+         << getAverage().msecf() << std::endl << vprDEBUG_FLUSH;
 
       std::stringstream s;
       NodeHistoryRange p = getNodeHistoryRange();
@@ -181,6 +181,48 @@ namespace vpr
 
       if(getSibling() != NULL)
       { getSibling()->printTree(depth); }
+   }
+
+
+   // Just make use of the helper method
+   std::string ProfileNode::getXMLRep()
+   {
+      std::stringstream s;
+      getXMLRep(s,0);
+      return s.str();
+   }
+
+   // Recursively build up simple xml rep of this stuff.
+   void ProfileNode::getXMLRep(std::stringstream& s, const unsigned depth)
+   {
+      std::string indent_str(depth*3,' ');
+
+      s << indent_str
+        << "<profile_node name=\"" << getName() << "\" total_calls=\"" << getTotalCalls()
+        << "\" total_time=\"" << getTotalTime().msecf()
+        << "\" average=\"" << getAverage().msecf()
+        << "\" sta=\"" << getSTA().msecf()
+        << "\">\n";
+
+      NodeHistoryRange p = getNodeHistoryRange();
+      if(p.first != p.second)
+      {
+         s << indent_str << "  ";
+         for ( ; p.first != p.second; p.first++ )
+         {
+            s << p.first->msecf() << " ";
+         }
+         s << std::endl;
+      }
+
+      std::string child_xml_rep, sibling_xml_rep;
+
+      if(getChild() != NULL)
+      { getChild()->getXMLRep(s, depth+1); }
+      s << indent_str << "</profile_node>\n";
+
+      if(getSibling() != NULL)
+      { getSibling()->getXMLRep(s, depth); }
    }
 
 
