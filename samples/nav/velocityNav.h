@@ -43,14 +43,24 @@ public:
    enum navMode { GROUND=0, FLY=1 };
    velocityNav();
 
+   // Update the interaction state
+   virtual void updateInteraction();
+
+   // Update the navigation position
    virtual void update();
 
-   // set the rotational acceleration matrix
-   // only rotational components of this matrix are used.
-   void setRotationalAcceleration( const vjMatrix& mat )
-   {
-      mRotationalAcceleration = mat;
-   }
+   // Set the action buttons that can be used
+   void setActionButtons(std::vector<std::string> action_btn_names);
+
+   // Set the name of the pos device that is used in navigation
+   void setNavPosControl(std::string wand_dev);
+
+   // Specify the combination of keys necessary to trigger the given state
+   void setAccelActionCombo(std::vector<ActionState> combo) { mAccelCombo = combo; }
+   void setBrakeActionCombo(std::vector<ActionState> combo) { mBrakeCombo = combo; }
+   void setStopActionCombo(std::vector<ActionState> combo) { mStopCombo = combo; }
+   void setRotationActionCombo(std::vector<ActionState> combo) { mRotateCombo = combo; }
+   void setResetActionCombo(std::vector<ActionState> combo) { mResetCombo = combo; }
 
    // set the highest velocity this nav can achieve.
    // default is 35
@@ -59,26 +69,14 @@ public:
 
    void accelerate(const vjVec3& accel);
 
-   // add forward velocity  (accelerate)
-   void accelerateForward( const float& accel ) { accelerate(vjVec3(0,0,-accel)); }
-
-   // add backward velocity (decelerate/reverse)
-   void accelerateBackward( const float& accel ) { accelerate(vjVec3(0,0,accel)); }
-
-   // add left velocity (Strafe left)
-   void accelerateLeft( const float& accel )  { accelerate(vjVec3(-accel,0,0)); }
-
-   // add right velocity (strafe right)
-   void accelerateRight( const float& accel )  { accelerate(vjVec3(accel,0,0)); }
-
-   // add up velocity (rise/climb)
-   void accelerateUp( const float& accel )  { accelerate(vjVec3(0,accel,0)); }
-
-   // add down velocity (fall/dive)
-   void accelerateDown( const float& accel )  { accelerate(vjVec3(0,-accel,0)); }
-
    //: zero all velocity
    void stop();
+
+   bool braking() { return mBraking; }
+   bool accelerating() { return mAccelerating;}
+   bool rotating() { return mRotating;}
+   bool stopping() { return mStopping;}
+   bool reseting() { return mReseting;}
 
    //: damping [0...1], where 0 stops immediately, .99 brakes very slowly
    //  default is no damping (1.0f)
@@ -90,50 +88,54 @@ public:
    vjVec3 getVelocity() const { return mVelocity; }
    float  getSpeed() const { return mVelocity.length(); }
 
-   //: set the matrix
-   virtual void setOrigin( const vjMatrix& matrix )
-   {
-      mOrigin = matrix;
-   }
-
    // resets the navigator's matrix to the origin (set by setOrigin)
-   virtual void reset()
-   {
-      mVelocity.set( 0,0,0 );
-      mVelocityFromGravityAccumulator.set( 0,0,0 );
-      mRotVelocity = 0;
-      mRotationalAcceleration.makeIdent();
-      this->setCurPos( mOrigin );
-   }
+   virtual void reset();
 
 protected:
-   // check if we are hitting anything current, and correct for it
-   /*
-   bool correctPosition(vjVec3 prev_delta);
-   */
+   // set the rotational acceleration matrix
+   // only rotational components of this matrix are used.
+   void setRotationalAcceleration( const vjMatrix& mat )
+   { mRotationalAcceleration = mat;}
 
    // Rotate the environment
-   void rotate(vjMatrix rot_mat);
+   void scaled_rotate(vjMatrix rot_mat);
 
 private:
    vjVec3 mVelocity;
    vjVec3 mVelocityFromGravityAccumulator;
-   float mMaxVelocity;
-   float mRotVelocity, mMaxRotVelocity;
+   float    mMaxVelocity;
    vjMatrix mRotationalAcceleration;
-   float mDamping;
+   float    mDamping;
 
-   //collider* mCorrectingCollider;
-   //collider* mGravCollider;
-   StopWatch stopWatch;
-   navMode  mMode;
-   int mTimeHack;
+   // digitalInterfaces
+   std::vector<vjDigitalInterface*> mActionButtons;
+   vjPosInterface mNavWand;
+
+   // State combos
+   std::vector<ActionState> mAccelCombo;
+   std::vector<ActionState> mBrakeCombo;
+   std::vector<ActionState> mStopCombo;
+   std::vector<ActionState> mRotateCombo;
+   std::vector<ActionState> mResetCombo;
+
+   // State flags for the navigation
+   bool  mBraking;
+   bool  mAccelerating;
+   bool  mRotating;
+   bool  mStopping;
+   bool  mReseting;
+
+   StopWatch   stopWatch;
+   navMode     mMode;
+   int         mTimeHack;
 
    vjMatrix mOrigin;
 };
 
-velocityNav::velocityNav() : mOrigin(), mTimeHack(0), mDamping( 1.0f ), mRotVelocity( 0.0f ),
-   mMaxRotVelocity( 1.0f ),
+velocityNav::velocityNav() :
+   mOrigin(),
+   mTimeHack(0),
+   mDamping( 1.0f ),
    mVelocity( 0.0f, 0.0f , 0.0f ),
    mMode( velocityNav::GROUND ),
    mMaxVelocity( 55.0f )
@@ -141,8 +143,87 @@ velocityNav::velocityNav() : mOrigin(), mTimeHack(0), mDamping( 1.0f ), mRotVelo
    stop();
    stopWatch.start();
    stopWatch.stop();
+
+   setNavPosControl("VJWand");         // Initialize wand device
+
+   std::vector<std::string> def_btns(3);
+   def_btns[0] = std::string("VJButton0");
+   def_btns[1] = std::string("VJButton1");
+   def_btns[2] = std::string("VJButton2");
+   setActionButtons(def_btns);
+
+   std::vector<navigator::ActionState> accel_combo(3), brake_combo(3), stop_combo(3), rotate_combo(3), reset_combo(3);
+   accel_combo[0] = ON;    accel_combo[1] = OFF;   accel_combo[2] = OFF;    // 100
+   brake_combo[0] = OFF;   brake_combo[1] = ON;    brake_combo[2] = OFF;    // 010
+   stop_combo[0] = ON;     stop_combo[1] = ON;     stop_combo[2] = OFF;     // 110
+   rotate_combo[0] = OFF;  rotate_combo[1] = OFF;  rotate_combo[2] = ON;    // 001
+   reset_combo[0] = OFF;   reset_combo[1] = ON;    reset_combo[2] = ON;     // 011
+
+   setAccelActionCombo(accel_combo);
+   setBrakeActionCombo(brake_combo);
+   setStopActionCombo(stop_combo);
+   setRotationActionCombo(rotate_combo);
+   setResetActionCombo(reset_combo);
 }
 
+
+// Set the action buttons that can be used
+void velocityNav::setActionButtons(std::vector<std::string> action_btn_names)
+{
+   // Make sure list is long enough
+   while(action_btn_names.size() > mActionButtons.size())
+   {
+      mActionButtons.push_back(new vjDigitalInterface());
+   }
+
+   // Update all the entries
+   for(int i=0;i<action_btn_names.size();i++)
+   {
+      mActionButtons[i]->init(action_btn_names[i]);
+   }
+}
+
+// Set the name of the pos device that is used in navigation
+void velocityNav::setNavPosControl(std::string wand_dev)
+{
+   vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrGREEN,"Setting Nav Pos Control: ") << wand_dev << endl << vjDEBUG_FLUSH;
+   mNavWand.init(wand_dev);
+}
+
+void velocityNav::updateInteraction()
+{
+   mAccelerating = checkForAction(mActionButtons,mAccelCombo);
+   mBraking = checkForAction(mActionButtons,mBrakeCombo);
+   mStopping = checkForAction(mActionButtons,mStopCombo);
+   mReseting = checkForAction(mActionButtons,mResetCombo);
+   mRotating = checkForAction(mActionButtons,mRotateCombo);
+
+   // Braking
+   if(mBraking)
+   { mDamping = 0.85; }
+   else
+   { mDamping = 1.0f; }
+
+   // Stopping -- NOTE: This must go after braking
+   if(mStopping)
+   {
+      setDamping(0.0f);
+   }
+
+   // Accelerate
+   if(mAccelerating)
+   { accelerate(vjVec3(0,0,-1)); }
+
+   // Reseting
+   if(mReseting)
+      navigator::reset();
+
+   // Rotating
+   vjMatrix rot_mat = *(mNavWand->getData());
+   rot_mat.setTrans(0,0,0);
+
+   setRotationalAcceleration(rot_mat);
+}
 
 void velocityNav::update()
 {
@@ -154,7 +235,6 @@ void velocityNav::update()
       stopWatch.timeInstant = 0;
       ++mTimeHack;
    }
-
 
    //////////////////////////////////
    // do navigations...
@@ -173,9 +253,9 @@ void velocityNav::update()
    //vjMatrix IcurrentRotation;
    //IcurrentRotation.invert( currentRotation );
 
-   if (mAllowRot)
+   if ((mAllowRot) && (mRotating))
    {
-      this->rotate( mRotationalAcceleration );     // Interpolates the rotation, and updates mCurPos matrix
+      this->scaled_rotate( mRotationalAcceleration );     // Interpolates the rotation, and updates mCurPos matrix
    }
 
    if (mMode == GROUND)
@@ -237,7 +317,7 @@ void velocityNav::update()
    }
 }
 
-void velocityNav::rotate(vjMatrix rot_mat)
+void velocityNav::scaled_rotate(vjMatrix rot_mat)
 {
    //: Confused by quaternions???
    //  All this does is scale the angle of rotation back by about %4
@@ -269,29 +349,6 @@ void velocityNav::rotate(vjMatrix rot_mat)
    navigator::navRotate(transform);                   // update the mCurPos navigation matrix
 }
 
-// check if we are hitting anything current, and correct for it
-/*
-bool velocityNav::correctPosition( vjVec3 prev_delta )
-{
-   //vjVec3 zero_trans(0.0f,0.0f,0.0f);
-   vjVec3 correction;
-   vjCoord cur_pos(mCurPos);
-
-   // TODO: Kevin....
-   vjMatrix rotMat = mCurPos;
-   rotMat.setTrans( 0.0f, 0.0f, 0.0f );
-   prev_delta.xformVec( rotMat, prev_delta );
-
-
-   if ((mCorrectingCollider != NULL) &&
-      mCorrectingCollider->testMove( cur_pos.pos, prev_delta, correction, true ))
-   {
-      navigator::navTranslate( correction );
-      return true;
-   }
-   return false;
-}
-*/
 
 void velocityNav::accelerate(const vjVec3& accel)
 {
@@ -300,6 +357,7 @@ void velocityNav::accelerate(const vjVec3& accel)
       mVelocity += (accel * stopWatch.timeInstant);
    }
 }
+
 
 void velocityNav::stop()
 {
@@ -312,4 +370,11 @@ void velocityNav::setDamping( const float& damping )
    //cout<<"Setting damping coef to: "<<mDamping<<"\n"<<flush;
 }
 
+void velocityNav::reset()
+{
+   mVelocity.set( 0,0,0 );
+   mVelocityFromGravityAccumulator.set( 0,0,0 );
+   mRotationalAcceleration.makeIdent();
+   navigator::reset();
+}
 

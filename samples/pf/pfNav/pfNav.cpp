@@ -56,12 +56,13 @@
 
 
 // nav includes
-#include <CaveNavigator.h>
+#include <velocityNav.h>
 #include <collider.h>
 #include <planeCollider.h>
 #include <pfPogoCollider.h>
 #include <pfRayCollider.h>
 #include <pfBoxCollider.h>
+#include <vjPfAppStats.h>
 
 char* filename = NULL;
 
@@ -87,7 +88,9 @@ public:
       mHead.init( "VJHead" );
       mActionButton.init( "VJButton0" );
       mActionButton2.init( "VJButton1" );
-      mModeChangeButton.init( "VJButton2" );
+      mModeChangeButton.init( "VJButton3" );
+
+      mStats.setToggleButton("VJButton5");
    }
 
    virtual void apiInit()
@@ -102,6 +105,8 @@ public:
 
       // Initialize loaders
       pfdInitConverter("terrain.flt");
+
+      mStats.preForkInit();
    }
 
    inline void textures( bool state ) const
@@ -132,11 +137,13 @@ public:
       pfDCS*  world_model_dcs = new pfDCS;
 
       // CONFIG PARAMS
+
       std::string    pf_file_path( "" );
       const float    world_dcs_scale( 1.0f );
       const pfVec3   world_dcs_trans( 0.0f, 0.0f, 0.0f );
       vjVec3         initial_nav_pos( 0.0f, 6.0f, 0.0f );
       bool           use_gravity( true );
+
 
       // Create the SUN
       sun1 = new pfLightSource;
@@ -154,7 +161,7 @@ public:
       // LOAD file
       world_model = pfFileIO::autoloadFile( filename );
 
-      // Construct scene graph
+      // --- CONSTRUCT SCENE GRAPH --- //
       //                           /-- sun1
       // rootNode -- mNavigationDCS -- world_model_dcs -- world_model
       //
@@ -168,21 +175,21 @@ public:
       // Configure the Navigator DCS node:
       vjMatrix initial_nav;              // Initial navigation position
       initial_nav.setTrans(initial_nav_pos);
-      mNavigator.getNavigator()->setCurPos(initial_nav);
+      mNavigator.setCurPos(initial_nav);
       if(use_gravity)
-         mNavigator.setGravity(CaveNavigator::ON);
+         mNavigator.setMode(velocityNav::GROUND);
       else
-         mNavigator.setGravity(CaveNavigator::OFF);
+         mNavigator.setMode(velocityNav::FLY);
 
       // --- COLLISION DETECTORS --- //
       // Terrain collider
       //planeCollider* collide = new planeCollider;
       pfPogoCollider*  ride_collide = new pfPogoCollider(world_model_dcs);
-      mNavigator.getNavigator()->addCollider(ride_collide);
+      mNavigator.addCollider(ride_collide);
 
       // Set the navigator's collider.
       pfBoxCollider* correction_collide = new pfBoxCollider( world_model_dcs );
-      mNavigator.getNavigator()->addCollider( correction_collide );
+      mNavigator.addCollider( correction_collide );
 
       // load these files into perfly to see just what your scenegraph
       // looked like. . . . .useful for debugging.
@@ -198,40 +205,29 @@ public:
       return rootNode;
    }
 
-    // Function called by the DEFAULT drawChan function before clearing the channel
+   //: Function called in application process for each active channel each frame
+   // Called immediately before draw (pfFrame())
+   virtual void appChanFunc(pfChannel* chan)
+   {
+      mStats.appChanFunc(chan);
+   }
+
+   // Function called by the DEFAULT drawChan function before clearing the channel
    // and drawing the next frame (pfFrame())
    virtual void preDrawChan(pfChannel* chan, void* chandata)
    {
       this->textures( true );     // Override texturing to turn it on;
-   }
-
-
-   /// Function called before pfSync
-   virtual void preSync()
-   {
-      //vjDEBUG(vjDBG_ALL, 1) << "app::preSync\n" << vjDEBUG_FLUSH;
+      mStats.preDrawChan(chan,chandata);
    }
 
    // Update the navigation based on user input
    virtual void updateNavigation()
    {
-      if (mActionButton2->getData() == vjDigital::TOGGLE_ON)
-         cout<<"Brake\n"<<flush;
-      if (mActionButton->getData() == vjDigital::TOGGLE_ON)
-         cout<<"Accelerate\n"<<flush;
-
-      // let the navigator collect some instructions from input devices...
-      mNavigator.accelerate( mActionButton->getData() == vjDigital::ON);
-      mNavigator.brake( mActionButton2->getData() == vjDigital::ON);
-      mNavigator.rotate( mActionButton2->getData() == vjDigital::OFF );
-
-      // Update the navigators rotation information
-      vjMatrix rotMatrix = *(mWand->getData());;
-      rotMatrix.setTrans(0, 0, 0);
-      mNavigator.setMatrix( rotMatrix );
+      mNavigator.updateInteraction();
 
       // tell the navigator to update itself with any new instructions just given to it.
       mNavigator.update();
+
    }
 
    /// Function called after pfSync and before pfDraw
@@ -245,7 +241,10 @@ public:
       updateNavigation();
 
       // Set the navigation DCS to the new navigation matrix
-      pfMatrix mNavigator_pf = vjGetPfMatrix( mNavigator );
+      vjMatrix cur_pos_inv, cur_pos;
+      cur_pos = mNavigator.getCurPos();
+      cur_pos_inv.invert(cur_pos);
+      pfMatrix mNavigator_pf = vjGetPfMatrix( cur_pos_inv );
       mNavigationDCS->setMat( mNavigator_pf );
 
       // output the FPS so the team artist can get metrics on their model
@@ -261,6 +260,9 @@ public:
          
          mStatusMessageEmitCount = 0;
       }
+
+      // Update stats stuff
+      mStats.preFrame();
    }
 
    int mStatusMessageEmitCount;
@@ -277,7 +279,7 @@ public:
    pfLightSource* sun1;
 
    // navigation objects.
-   CaveNavigator  mNavigator;
+   velocityNav    mNavigator;
    pfDCS*         mNavigationDCS;
 
    // juggler device interface objects
@@ -289,6 +291,8 @@ public:
 
    // scene's root (as far as we're concerned here)
    pfGroup*   rootNode;
+
+   vjPfAppStats         mStats;
 };
 
 
