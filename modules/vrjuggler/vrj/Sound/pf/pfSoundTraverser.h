@@ -164,8 +164,8 @@ protected:
               nodeName = nodeNameChar;
          
          // unpause the sound, unmute it too
-         #ifdef USE_AUDIOJUGGLER
-         AudioJuggler::instance().trigger( nodeName );
+         #ifdef USE_SONIX
+         sonix::instance().trigger( nodeName );
          #endif
          vprDEBUG(vprDBG_ALL,0) << clrOutNORM( clrYELLOW, "[SoundTrigger] " )
             << "Setting the " << nodeName
@@ -196,8 +196,8 @@ protected:
               nodeName = nodeNameChar;
          
          // unpause the sound, unmute it too
-         #ifdef USE_AUDIOJUGGLER
-         AudioJuggler::instance().stop( nodeName );
+         #ifdef USE_SONIX
+         sonix::instance().stop( nodeName );
          #endif
          
          vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundStop] ")
@@ -229,9 +229,9 @@ protected:
               nodeName = nodeNameChar;
          
          // unpause the sound, unmute it too
-         #ifdef USE_AUDIOJUGGLER
-         AudioJuggler::instance().unpause( nodeName );
-         AudioJuggler::instance().unmute( nodeName );
+         #ifdef USE_SONIX
+         sonix::instance().unpause( nodeName );
+         sonix::instance().unmute( nodeName );
          #endif
             
          vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundEnable] ")
@@ -263,9 +263,9 @@ protected:
               nodeName = nodeNameChar;
          
          // pause the sound, mute it too in case it is triggered again
-         #ifdef USE_AUDIOJUGGLER
-         AudioJuggler::instance().pause( nodeName );
-         AudioJuggler::instance().mute( nodeName );
+         #ifdef USE_SONIX
+         sonix::instance().pause( nodeName );
+         sonix::instance().mute( nodeName );
          #endif
          
          vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundDisable] ")
@@ -338,8 +338,8 @@ protected:
                   sn->setName( newName.c_str() );
                }
                parent->addChild( sn );
-               #ifdef USE_AUDIOJUGGLER
-               AudioJuggler::instance().trigger( soundName );
+               #ifdef USE_SONIX
+               sonix::instance().trigger( soundName );
                #endif
                
                vprDEBUG( vprDBG_ALL, vprDBG_CONFIG_LVL )

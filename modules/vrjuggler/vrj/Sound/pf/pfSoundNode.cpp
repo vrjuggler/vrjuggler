@@ -50,9 +50,9 @@ int pfSoundNode::app(pfTraverser *trav)
       pfVec3 pf_soundPosition = coord.xyz;
 
       // set my sound's position.
-#ifdef USE_AUDIOJUGGLER
+#ifdef USE_SONIX
       vrj::Vec3 soundPosition = vrj::GetVjVec( pf_soundPosition );
-      AudioJuggler::instance().setPosition( mSound, soundPosition[0], soundPosition[1], soundPosition[2] );
+      sonix::instance().setPosition( mSound, soundPosition[0], soundPosition[1], soundPosition[2] );
 #endif
       
       // Engine's update should be called by the app's frame process,
@@ -65,8 +65,8 @@ int pfSoundNode::app(pfTraverser *trav)
    {
       // redundant (fixme), but make sure it's 0.0f,0.0f,0.0f
       // this makes the sound the same as the observer.
-#ifdef USE_AUDIOJUGGLER
-      AudioJuggler::instance().setPosition( mSound, 0.0f, 0.0f, 0.0f );
+#ifdef USE_SONIX
+      sonix::instance().setPosition( mSound, 0.0f, 0.0f, 0.0f );
 #endif
    }
 
