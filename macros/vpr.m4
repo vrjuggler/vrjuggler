@@ -56,15 +56,6 @@ AC_DEFUN(VPR_PATH,
     AC_ARG_ENABLE(vprtest, [  --disable-vprtest       Do not try to compile and run a test VPR program],
                     , enable_vprtest=yes)
 
-dnl    for module in . $4
-dnl    do
-dnl        case "$module" in
-dnl           <fill me in!>) 
-dnl               vpr_config_args="$vpr_config_args ???"
-dnl           ;;
-dnl        esac
-dnl    done
-
     if test x$vpr_config_exec_prefix != x ; then
         vpr_config_args="$vpr_config_args --exec-prefix=$vpr_config_exec_prefix"
 
@@ -91,6 +82,11 @@ dnl    done
 
     AC_PATH_PROG(VPR_CONFIG, vpr-config, no)
     min_vpr_version=ifelse([$1], ,0.0.1,$1)
+
+    dnl Do a sanity check to ensure that $VPR_CONFIG actually works.
+    if ! eval `$VPR_CONFIG --cxxflags >/dev/null 2>&1` ; then
+        VPR_CONFIG='no'
+    fi
 
     no_vpr=''
     if test "x$VPR_CONFIG" = "xno" ; then
