@@ -207,7 +207,7 @@ public class XMLBeanFinder
          else if ( e.getName().equals("icon") )
          {
             icon_path = env.expandEnvVars(e.getAttribute("source").getValue());
-            tool_tip  = env.expandEnvVars(e.getAttribute("tooltip").getValue());
+            tool_tip  = e.getAttribute("tooltip").getValue();
          }
       }
 
