@@ -337,7 +337,7 @@ vjVarValue& vjConfigChunk::getProperty (const std::string& property_token, int i
    if (!p)
    {
        vjDEBUG(vjDBG_CONFIG,2) << "request for property " << property_token << " in chunk named "
-	    << getProperty("Name") << " returning invalid instance" << endl;
+	    << getProperty("Name") << " returning invalid instance" << endl << vjDEBUG_FLUSH;
       return vjVarValue::getInvalidInstance();
    }
    return p->getValue (ind);
