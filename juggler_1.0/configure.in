@@ -1194,8 +1194,8 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           Kernel/Pf/Makefile Kernel/GL/Makefile Math/Makefile
           Performance/Makefile SharedMem/Makefile Sync/Makefile
           Threads/Makefile
-          test/Makefile test/CfgTest/Makefile test/Math/Makefile
-          test/Matrix/Makefile test/Performance/Makefile
+          test/Makefile test/CfgTest/Makefile test/GLWindow/Makefile
+          test/Math/Makefile test/Matrix/Makefile test/Performance/Makefile
           test/Performance/analyzer/Makefile
           test/Performance/perfdatabuffer-test/Makefile test/Quat/Makefile
           test/Sync/Makefile test/input/Makefile test/testDynamicCastSTL/Makefile
