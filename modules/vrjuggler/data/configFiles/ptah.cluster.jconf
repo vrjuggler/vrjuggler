@@ -3,7 +3,6 @@
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Base Simulator Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
       <cluster_manager name="Cluster Configuration" version="2">
-         <plugin_path>${VJ_BASE_DIR}/lib/gadgeteer/plugins/</plugin_path>
          <plugin>ApplicationDataManager</plugin>
          <plugin>RIMPlugin</plugin>
          <plugin>StartBarrierPlugin</plugin>
