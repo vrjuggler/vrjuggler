@@ -39,7 +39,7 @@
 #include <gadget/Type/DeviceConstructor.h>
 
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::TrackdAPIController>(inputMgr);
    new gadget::DeviceConstructor<gadget::TrackdAPISensor>(inputMgr);

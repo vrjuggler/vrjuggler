@@ -40,7 +40,7 @@
 
 #include <gadget/Devices/Immersion/IBox/IBox.h>
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::IBox>(inputMgr);
 }

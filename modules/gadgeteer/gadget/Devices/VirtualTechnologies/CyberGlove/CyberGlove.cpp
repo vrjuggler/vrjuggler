@@ -48,7 +48,7 @@
 #include <gadget/Devices/VirtualTechnologies/CyberGlove/CyberGlove.h>
 
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::CyberGlove>(inputMgr);
 }

@@ -39,7 +39,7 @@
 #include <gadget/Devices/Open/Trackd/TrackdSensor.h>
 
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::TrackdController>(inputMgr);
    new gadget::DeviceConstructor<gadget::TrackdSensor>(inputMgr);
