@@ -61,18 +61,19 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
                        const std::string& password,
                        const float& desktopSideLength)
    : mVncIf(hostname, port, password), mVncThreadFunctor(NULL),
-     mVncThread(NULL), mHaveKeyboard(false), mRectSize(desktopSideLength,
-     desktopSideLength), mDesktopWandIsect(false), mDesktopGrabbed(false),
+     mVncThread(NULL), mHaveKeyboard(false), 
+     mDesktopWidth(desktopSideLength), mDesktopHeight(desktopSideLength),
+     mDesktopWandIsect(false), mDesktopGrabbed(false),
      mTextureData(NULL)
 {
    mTexWidth  = getNearestMultipleOfTwo(mVncIf.getWidth());
    mTexHeight = getNearestMultipleOfTwo(mVncIf.getHeight());
 
-   mWidthScale  = mTexWidth / mRectSize[0];
-   mHeightScale = mTexHeight / mRectSize[1];
+   mWidthScale  = mTexWidth / mDesktopWidth;
+   mHeightScale = mTexHeight / mDesktopHeight;
 
-   const float half_width(mRectSize[0] / 2.0f);
-   const float half_height(mRectSize[1] / 2.0f);
+   const float half_width(mDesktopWidth / 2.0f);
+   const float half_height(mDesktopHeight / 2.0f);
 
    const gmtl::Point3f desktop_center(0.0f, 0.0f, 0.0f);
 
@@ -169,6 +170,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
    enum Focus focus_val(NOT_IN_FOCUS);
 
+   // -------- COPY OVER TEXTURE DATA --------- //
    Rectangle r;
 
    r.x      = 0;
@@ -216,19 +218,8 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       dest += r.width * bytes_per_pixel;
    }
 
-/*
-   for ( int h = 0; h < mTexHeight; ++h )
-   {
-      for ( int w = 0; w < mTexWidth; ++w )
-      {
-         std::cerr << std::setfill('0') << std::setw(2) << std::hex
-                   << (unsigned int) mTextureData[mTexWidth * h + w];
-      }
-
-      std::cerr << std::endl;
-   }
-*/
-
+   // --------- UPDATE NAV AND DESKTOP MATRICES ----------------------- //
+   
    gmtl::Matrix44f desktop_nav = navMatrix * mDesktopMatrix;
 
    // Get the point position of the wand and construct a ray that shoots out
@@ -306,7 +297,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       // Translate that point into the coordinates VNC wants to see.
       gmtl::Point3f vnc_isect = isect - desktop_ul_trans[1];
       float x(isect[0] - desktop_ul_trans[2][0]);
-      float y(mRectSize[1] - isect[1] - desktop_ul_trans[2][1]);
+      float y(mDesktopWidth - isect[1] - desktop_ul_trans[2][1]);
 
       int button_mask(0);
 
