@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
       <title>VR Juggler</title>
       <subtitle>The Programmer's Guide</subtitle>
-      <releaseinfo>Version 1.1 DR1</releaseinfo>
+      <releaseinfo>Version 1.1 DR2</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <part id="intro.part">
@@ -94,7 +94,7 @@
                   <primary>virtual platform</primary>
                </indexterm>.</para>
             <section id="main-func-intro-sect">
-               <title>No <function>main()</function>&mdash;"Don't call me, I'll call you"</title>
+               <title>No <function>main()</function>&mdash;<quote>Don't call me, I'll call you</quote></title>
                <indexterm zone="main-func-intro-sect">
                   <primary>main function</primary>
                </indexterm>
@@ -1902,7 +1902,10 @@ public:
                <section>
                   <title>Class Declaration</title>
                   <para>The following application class is called <classname>simpleApp</classname>. It is derived from <classname>vrj::GlApp</classname> and has custom <methodname>init()</methodname> and <methodname>draw()</methodname> methods declared. Note that the application declares several device interface members that are used by the application for getting device data.</para>
-                  <programlisting linenumbering="numbered">class simpleApp : public vrj::GlApp
+                  <programlisting linenumbering="numbered">using namespace vrj;
+using namespace gadget;
+
+class simpleApp : public GlApp
 {
 public:
    simpleApp();
@@ -1910,10 +1913,10 @@ public:
    virtual void draw();
 
 public:
-   gadget::PositionInterface mWand;
-   gadget::PositionInterface mHead;
-   gadget::DigitalInterface mButton0;
-   gadget::DigitalInterface mButton1;
+   PositionInterface mWand;
+   PositionInterface mHead;
+   DigitalInterface mButton0;
+   DigitalInterface mButton1;
 };</programlisting>
                </section>
                <section>
@@ -1925,13 +1928,17 @@ public:
                         <area coords="11" id="box-offset.push"/>
                         <area coords="13" id="draw.cube"/>
                      </areaspec>
-                     <programlisting linenumbering="numbered">void simpleApp::draw()
+                     <programlisting linenumbering="numbered">using namespace gmtl;
+
+void simpleApp::draw()
 {
    ...
    // Create box offset matrix
-   gmtl::Matrix44f box_offset;		
-   box_offset = makeRot&lt;Matrix44f&gt;(box_offset, -1.57,0,0, gmtl::XYZ);
-   gmtl::setTrans(box_offset, 0.0,1.0f,0.0f);
+   Matrix44f box_offset;		
+   const EulerAngleXYZf euler_ang(Math::deg2Rad(-90.0f), Math::deg2Rad(0.0f),
+                                  Math::deg2Rad(0.0f));
+   box_offset = makeRot&lt;Matrix44f&gt;(euler_ang);
+   setTrans(box_offset, Vec3f(0.0, 1.0f, 0.0f));
    ...
    glPushMatrix();
       // Push on offset
@@ -1997,7 +2004,9 @@ public:
                   <para>As outlined in the VR Juggler architecture documentation, VR Juggler uses a single memory area for all application data. All threads can see the same memory area and thus share the same copy of all variables. This makes programming normal application code very easy because programmers never have to worry about which thread can see which variables. In the case of context-specific data, however, it presents a problem.</para>
                   <para>To understand the problem, consider an environment where we use a single display list. That display list is created to draw some object in the scene. We would like to be able to call the display list in our <methodname>draw()</methodname> method and have it draw the primitives that were captured in it.</para>
                   <para>The following class skeleton shows an outline of this idea. Do not worry for now that we do not show the code where we allocate the display list&mdash;that will be covered later. For now, we see that there is a variable that stores the display list ID (<varname>mDispListId</varname>), and we use it in the <methodname>draw()</methodname> method.</para>
-                  <programlisting>class userApp : public vrj::GlApp
+                  <programlisting>using namespace vrj;
+
+class userApp : public GlApp
 {
 public:
   draw();
@@ -2019,12 +2028,14 @@ userApp::draw()
                      <primary>context-specific variables</primary>
                   </indexterm>
                   <para>The following shows how a context-specific variable appears in a VR Juggler application:</para>
-                  <programlisting>class userApp : public vrj::GlApp
+                  <programlisting>using namespace vrj;
+
+class userApp : public GlApp
 {
 public:
-  draw();
+   draw();
 public:
-  vrj::GlContextData&lt;int&gt; mDispListId; // Context-specific variable
+   GlContextData&lt;int&gt; mDispListId; // Context-specific variable
 };
 
 userApp::draw()
@@ -2172,7 +2183,9 @@ userApp::draw()
                <section>
                   <title>Class Declaration and Data Members</title>
                   <para>The following code example shows the basics of declaring the class interface and data members for an application that will use context-specific data. This is an extension of the simple OpenGL application presented in <xref linkend="simple-ogl-app-sect"/>. Note the addition of the <methodname>contextInit()</methodname> declaration and the use of the context-specific data member <varname>mCubeDlId</varname>.</para>
-                  <programlisting linenumbering="numbered">class contextApp : public vrj::GlApp
+                  <programlisting linenumbering="numbered">using namespace vrj;
+
+class contextApp : public GlApp
 {
 public:
    contextApp() {;}
@@ -2182,7 +2195,7 @@ public:
     ...
 public:
    // Id of the cube display list
-   vrj::GlContextData&lt;GLuint&gt; mCubeDlId;
+   GlContextData&lt;GLuint&gt; mCubeDlId;
    ...
 };</programlisting>
                </section>
@@ -2204,10 +2217,12 @@ public:
                <section>
                   <title>The <methodname>draw()</methodname> Member Function</title>
                   <para>Now that we have a display list ID in context-specific data, we can use it in the <methodname>draw()</methodname> member function. We render the display list by dereferencing the context-specific display list ID.</para>
-                  <programlisting linenumbering="numbered">void contextApp::draw()
+                  <programlisting linenumbering="numbered">using namespace gmtl;
+
+void contextApp::draw()
 {
    // Get Wand matrix
-   gmtl::Matrix44f wand_matrix;
+   Matrix44f wand_matrix;
    wand_mat = *(mWand-&gt;getData());
    ...
    glPushMatrix();
@@ -2761,12 +2776,10 @@ int main(int argc, char* argv[])
    MyApplication* application = new MyApplication();
    kernel-&gt;setApplication(application);
 
-   // hit CTRL-C to exit.
-   while (1)
-   {
-      // Juggler executes within other threads, so sleep here.
-      usleep( 100000 );
-   }
+   // Block until the kernel exits.
+   kernel-&gt;waitForKernelStop();
+
+   return 0;
 }</programlisting>
             </section>
          </section>
@@ -3003,12 +3016,10 @@ int main(int argc, char* argv[])
    MyApplication* application = new MyApplication();
    kernel-&gt;setApplication(application);
 
-   // hit CTRL-C to exit.
-   while (1)
-   {
-      // Juggler executes within other threads, so sleep here.
-      usleep( 100000 );
-   }
+   // Block until the kernel exits.
+   kernel-&gt;waitForKernelStop();
+
+   return 0;
 }</programlisting>
             </section>
          </section>
