@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
-
 #include <string>
 #include <string.h>
 #include <vpr/vpr.h>
