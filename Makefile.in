@@ -1168,13 +1168,8 @@ ifeq (${BUILD_GUI}, Y)
 	@echo "Installing vjcontrol"
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
-	swingpath=`${PERL} ${scriptdir}/find-swing.pl` ;		\
-          ${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}		\
-          $$swingpath ${bindir}
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${VJROOT_ABS}/GUI/vjcontrol ${bindir}/vjcontrol
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${VJROOT_ABS}/GUI/vjcontrol1.1 ${bindir}/vjcontrol1.1
 else
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX} 			\
           ${VJROOT_ABS}/GUI/vjcontrol.bat ${bindir}/vjcontrol.bat
