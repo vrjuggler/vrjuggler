@@ -78,6 +78,12 @@ else
 STATIC_SUFFIX=	_s
 endif
 
+# Add extra linking options on Darwin/OS X.
+ifeq (@PLATFORM@, Darwin)
+LDOPTS+=	-compatibility_version $(SHLIB_MAJOR).$(SHLIB_MINOR)
+LDOPTS+=	-current_version $(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+endif
+
 # Full list of the libraries to build.
 LIBS=		$(GADGET_LIBRARY)
 STATIC_LIBS=	$(LIBS)
