@@ -27,11 +27,10 @@
 //-----------------------------------------------
 
 #include <config.h>
+#include <stdio.h>
 #include <iostream.h>
 #include <unistd.h>
-#include <stdio.h>
 #include <ulocks.h>
-#include <SharedMem/vjMemPool.h>
 //#include <Kernel/vjDebug.h>
 
 // - Call usinit in new processes created.  Try to overcome limitation on number of users.
