@@ -32,7 +32,6 @@
 #ifndef _WAND_APP_
 #define _WAND_APP_
 
-#include <gadget/InputLogger.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 #include <vrj/Draw/OGL/GlApp.h>
@@ -107,9 +106,6 @@ private:
    gadget::DigitalInterface     mButton3;
    gadget::DigitalInterface     mButton4;
    gadget::DigitalInterface     mButton5;
-
-   /** Playback log file when pressed. */
-   gadget::DigitalInterface     mLoggerPlayButton;
 
    std::vector<gmtl::Vec3f>     mHeadHistory;
 };
