@@ -31,8 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.config;
 
+import java.awt.BorderLayout;
 import java.io.*;
 import java.util.*;
+import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
@@ -556,36 +558,8 @@ public class ConfigBrokerImpl
          }
       }
 
-      System.out.print("ConfigBroker: Loading config definitions ");
-
-      // Load in the definitions for each file and place them in the repository
-      for (Iterator itr = def_file_list.iterator(); itr.hasNext(); )
-      {
-         try
-         {
-            System.out.print(".");
-            System.out.flush();
-            // Attempt to load in the definitions in the file
-            File def_file = (File)itr.next();
-            ConfigDefinitionReader reader = new ConfigDefinitionReader(def_file);
-            List defs = reader.readDefinition();
-            for (Iterator def_itr = defs.iterator(); def_itr.hasNext(); )
-            {
-               ConfigDefinition def = (ConfigDefinition)def_itr.next();
-               mRepos.add(def);
-            }
-         }
-         catch (ParseException pe)
-         {
-            pe.printStackTrace();
-         }
-         catch (IOException ioe)
-         {
-            ioe.printStackTrace();
-         }
-      }
-
-      System.out.println(" done.");
+      DefinitionLoaderDialog dlg = new DefinitionLoaderDialog(def_file_list);
+      dlg.showDialog();
    }
 
    /**
@@ -744,4 +718,95 @@ public class ConfigBrokerImpl
 
    /** All listeners interested in this broker. */
    private EventListenerList mListeners = new EventListenerList();
+
+   private class DefinitionLoaderDialog extends JPanel
+   {
+      public DefinitionLoaderDialog(List defFileList)
+      {
+         super(new BorderLayout());
+         mDefFileList = defFileList;
+
+         mFileNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+         mProgressBar = new JProgressBar(0, defFileList.size());
+         mProgressBar.setValue(0);
+         mProgressBar.setStringPainted(true);
+
+         this.add(mFileNameLabel, BorderLayout.CENTER);
+         this.add(mProgressBar, BorderLayout.SOUTH);
+
+         java.awt.Dimension size = new java.awt.Dimension(325, 50);
+         this.setPreferredSize(size);
+         this.setMinimumSize(size);
+      }
+
+      public void showDialog()
+      {
+         final JDialog dialog = new JDialog();
+         dialog.setTitle("Loading Config Definitions ...");
+         dialog.setModal(true);
+
+         java.awt.Container content_pane = dialog.getContentPane();
+         content_pane.setLayout(new BorderLayout());
+         content_pane.add(this, BorderLayout.CENTER);
+
+         final SwingWorker worker = new SwingWorker() {
+            public Object construct()
+            {
+               return new Task(dialog);
+            }
+         };
+         worker.start();
+
+         dialog.pack();
+         dialog.setLocationRelativeTo(null);
+         dialog.show();
+      }
+
+      private class Task
+      {
+         public Task(JDialog dialog)
+         {
+            int count = 0;
+
+            // Load in the definitions for each file and place them in the
+            // repository.
+            for (Iterator itr = mDefFileList.iterator(); itr.hasNext(); )
+            {
+               try
+               {
+                  // Attempt to load in the definitions in the file.
+                  File def_file = (File)itr.next();
+
+                  mFileNameLabel.setText("Loading " + def_file.getName());
+
+                  ConfigDefinitionReader reader =
+                     new ConfigDefinitionReader(def_file);
+                  List defs = reader.readDefinition();
+                  for (Iterator def_itr = defs.iterator(); def_itr.hasNext(); )
+                  {
+                     ConfigDefinition def = (ConfigDefinition)def_itr.next();
+                     mRepos.add(def);
+                  }
+
+                  mProgressBar.setValue(++count);
+               }
+               catch (ParseException pe)
+               {
+                  pe.printStackTrace();
+               }
+               catch (IOException ioe)
+               {
+                  ioe.printStackTrace();
+               }
+            }
+
+            dialog.hide();
+         }
+      }
+
+      private List mDefFileList;
+
+      private JLabel mFileNameLabel = new JLabel();
+      private JProgressBar mProgressBar;
+   }
 }
