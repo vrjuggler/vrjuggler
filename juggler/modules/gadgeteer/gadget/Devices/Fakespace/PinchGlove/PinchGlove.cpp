@@ -89,7 +89,8 @@ vjPinchGlove::~vjPinchGlove ()
 
 int vjPinchGlove::startSampling()
 {
-   vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Begin sampling\n" << std::flush;
+   vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Begin sampling\n" << std::flush
+                               << vjDEBUG_FLUSH;
    
    if (myThread == NULL)
    {
@@ -97,7 +98,7 @@ int vjPinchGlove::startSampling()
 
       // Create a new thread to handle the control
       vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Spawning control thread\n"
-                                  << std::flush;
+                                  << std::flush << vjDEBUG_FLUSH;
       vjThreadMemberFunctor<vjPinchGlove>* memberFunctor =
          new vjThreadMemberFunctor<vjPinchGlove>(this, &vjPinchGlove::controlLoop, NULL);
 
@@ -110,7 +111,7 @@ int vjPinchGlove::startSampling()
       else
       {
          vjDEBUG(vjDBG_INPUT_MGR,1) << "[vjPinch] vjPinchGlove is active "
-                                    << std::endl;
+                                    << std::endl << vjDEBUG_FLUSH;
          active = 1;
          return 1;
       }
@@ -122,13 +123,14 @@ int vjPinchGlove::startSampling()
 void vjPinchGlove::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Entered control thread\n"
-                               << std::flush;
+                               << std::flush << vjDEBUG_FLUSH;
    
    bool result = false;
    while (result == false)
 	{
 		vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Connecting to "
-                                            << sPort << "...\n" << std::flush;
+                                            << sPort << "...\n" << std::flush
+                                            << vjDEBUG_FLUSH;
       result = mGlove->connectToHardware( sPort );
       if (result == false)
       {
@@ -225,7 +227,7 @@ int vjPinchGlove::stopSampling()
       // XXX: there is no "close"
       //mGlove->Close();
       vjDEBUG(vjDBG_INPUT_MGR,1) << "[vjPinch] stopping vjPinchGlove.."
-                                 << std::endl;
+                                 << std::endl << vjDEBUG_FLUSH;
    }
    return 1;
 }

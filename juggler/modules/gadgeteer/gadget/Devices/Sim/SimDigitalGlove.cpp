@@ -161,8 +161,8 @@ void vjSimDigitalGlove::updateData()
    // This swaps the temp and readable buffers (called 'valid' and 'current')
    swapCurrentIndexes();
   
-   //vjDEBUG(vjDBG_ALL,0)<<mTheData[0][current].outputAngles(cout);
-   //vjDEBUG(vjDBG_ALL,0)<<mTheData[1][current].outputAngles(cout);
+   //vjDEBUG(vjDBG_ALL,0)<<mTheData[0][current].outputAngles(cout)<<vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_ALL,0)<<mTheData[1][current].outputAngles(cout)<<vjDEBUG_FLUSH;
 
    
    //TODO:  how does the angles get turned into a gesture ID????
@@ -272,7 +272,7 @@ void vjSimDigitalGlove::updateFingerAngles()
        mTheData[RIGHT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::PITCH] = mRightHand.pitch();
     }
     
-    //vjDEBUG(vjDBG_ALL,0)<<"out\n"<<std::flush; 
+    //vjDEBUG(vjDBG_ALL,0)<<"out\n"<<std::flush<<vjDEBUG_FLUSH;
 }
 
 /*
