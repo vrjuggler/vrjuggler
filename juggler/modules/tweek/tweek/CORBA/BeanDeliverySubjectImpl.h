@@ -196,7 +196,7 @@ private:
    // vpr::Mutex objects is not allowed.
    BeanDeliverySubjectImpl(const BeanDeliverySubjectImpl& subj);
 
-   BeanDeliverySubjectImpl& operator=(const BeanDeliverySubjectImpl& subj)
+   BeanDeliverySubjectImpl& operator=(const BeanDeliverySubjectImpl&)
    {
       return *this;
    }

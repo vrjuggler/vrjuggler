@@ -96,4 +96,13 @@ vpr::ReturnStatus LibraryUNIX::unload()
    return status;
 }
 
+void* LibraryUNIX::findSymbolAndLibrary(const char* symbolName,
+                                        LibraryUNIX& lib)
+{
+   boost::ignore_unused_variable_warning(symbolName);
+   boost::ignore_unused_variable_warning(lib);
+   vprASSERT(false && "Not implemented yet");
+   return NULL;
+}
+
 } // End of vpr namespace

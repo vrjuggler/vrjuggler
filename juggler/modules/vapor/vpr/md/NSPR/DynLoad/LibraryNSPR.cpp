@@ -67,7 +67,7 @@ vpr::ReturnStatus LibraryNSPR::load()
 
    if ( NULL == mLibrary )
    {
-      vpr::NSPR_PrintError("WARNING: Could not load library -- ");
+      vpr::NSPR_PrintError("\nWARNING: Could not load library -- ");
       status.setCode(vpr::ReturnStatus::Fail);
    }
 

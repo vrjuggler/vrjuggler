@@ -46,6 +46,7 @@
 
 #include <string>
 #include <vector>
+#include <boost/concept_check.hpp>
 
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketTypes.h>
@@ -127,6 +128,7 @@ public:
     */
    void setFamily(const vpr::SocketTypes::Domain family)
    {
+      boost::ignore_unused_variable_warning(family);
       vprASSERT(false && "Implement me");
    }
 
@@ -156,6 +158,7 @@ public:
     */
    void setPort(const vpr::Uint16 port)
    {
+      boost::ignore_unused_variable_warning(port);
       vprASSERT(false && "Implement me");
    }
 
@@ -198,6 +201,7 @@ public:
     */
    vpr::ReturnStatus getHostname(std::string& s) const
    {
+      boost::ignore_unused_variable_warning(s);
       vprASSERT(false && "Implement me");
       return vpr::ReturnStatus::Fail;
    }
@@ -228,6 +232,7 @@ public:
     */
    const vpr::ReturnStatus setAddress(const std::string& addr)
    {
+      boost::ignore_unused_variable_warning(addr);
       vprASSERT(false && "Implement me");
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
@@ -246,6 +251,8 @@ public:
     */
    vpr::ReturnStatus setAddress(const std::string& addr, const Uint16 port)
    {
+      boost::ignore_unused_variable_warning(addr);
+      boost::ignore_unused_variable_warning(port);
       vprASSERT(false && "Implement me");
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
@@ -263,6 +270,8 @@ public:
    vpr::ReturnStatus setAddress(const vpr::Uint32 address,
                                 const vpr::Uint16 port)
    {
+      boost::ignore_unused_variable_warning(address);
+      boost::ignore_unused_variable_warning(port);
       vprASSERT(false && "Implement me");
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }

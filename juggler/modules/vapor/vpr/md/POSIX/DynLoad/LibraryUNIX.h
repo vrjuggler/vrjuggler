@@ -192,11 +192,7 @@ public:
     * Finds a symbol in one of the currently loaded libraries, and returns
     * both the symbol and the library in which it was found.
     */
-   static void* findSymbolAndLibrary(const char* symbolName, LibraryUNIX& lib)
-   {
-      vprASSERT(false && "Not implemented yet");
-      return NULL;
-   }
+   static void* findSymbolAndLibrary(const char* symbolName, LibraryUNIX& lib);
 
    static void* findSymbolAndLibrary(const std::string& symbolName,
                                      LibraryUNIX& lib)
