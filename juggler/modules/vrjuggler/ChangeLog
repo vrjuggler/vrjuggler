@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-29-2004 patrickh    Updated to require Tweek 0.18.
 Oct-18-2004 allenb      Refactored how GL and Performer windows allow event
                         input.  They now work with a window registry
                         in gadgeteer to allow event sampling from event window
