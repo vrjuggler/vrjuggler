@@ -948,7 +948,8 @@ void SocketTest::testIsConnected_acceptor (void* arg)
    vpr::ReturnStatus status;
    vpr::SocketAcceptor acceptor;
    vpr::SocketStream client_sock;
-   vpr::InetAddr acceptor_addr(mAcceptorPort);
+   vpr::InetAddr acceptor_addr;
+   acceptor_addr.setPort(mAcceptorPort);
 
    status = acceptor.open(acceptor_addr);
    assertTestThread(status.success() && "Failed to open acceptor");
