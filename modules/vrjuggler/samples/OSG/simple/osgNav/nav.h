@@ -14,7 +14,7 @@
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
-#include <cluster/Plugins/ApplicationDataManager/UserData.h>
+#include <plugins/ApplicationDataManager/UserData.h>
 
 /** Class to wrap the navigation matrix to share across cluster.
  */
