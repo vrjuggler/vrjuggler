@@ -45,8 +45,9 @@ bool vjPosition::config(vjConfigChunk *c)
     yr = c->getProperty("rotate",1);
     zr = c->getProperty("rotate",2);
 
-      // This makes a rotation matrix that moves the device's coord system
-      // to the vj coord system.
+      // This makes a rotation matrix that moves a pt in
+      // the device's coord system to the vj coord system.
+      // ==> world_M_transmitter
     rotMat.makeXYZEuler(xr, yr, zr);
 
     xformMat.makeTrans(xt, yt, zt);
