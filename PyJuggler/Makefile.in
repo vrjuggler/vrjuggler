@@ -45,6 +45,7 @@ install:
 	$(scriptdir)/mkinstalldirs $(projdatadir)/examples
 	$(PERL) $(scriptdir)/install-dir.pl -o $(projdatadir)/examples	\
           -i $(top_srcdir)/examples -v "$(topdir)/VARS.pl"
+	-chmod $(EXEC_PERMS) $(projdatadir)/examples/python/contextApp/contextApp.py
 	-chmod $(EXEC_PERMS) $(projdatadir)/examples/python/simpleGL/simpleGL.py
 	-chmod $(EXEC_PERMS) $(projdatadir)/examples/python/pyosgnav/pyosgnav.py
 
