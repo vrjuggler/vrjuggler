@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Feb-22-2002 allenb    OpenSG app now uses MatrixCamera to render displays.
 Jan-31-2002 allenb    Added SignalButtons init and check functions to the
                       Kernel.  The only "signal" being checked currently
                       is the VJSystemStopKernel button which triggers a kernel
