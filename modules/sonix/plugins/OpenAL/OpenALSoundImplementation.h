@@ -1,4 +1,3 @@
-
 /****************** <SNX heading BEGIN do not edit this line> *****************
  *
  * sonix
@@ -289,7 +288,7 @@ private:
                                        // instead of this separate copy of the data...
    };
    std::map< std::string, AlSoundInfo > mBindLookup;
-   void*       mContextId;
+   ALCcontext* mContextId;
    ALCdevice*  mDev;
 
    /** @link dependency */
