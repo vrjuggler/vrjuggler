@@ -50,8 +50,7 @@
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfTraverser.h>
 
-
-#include <vpr/Util/FileUtils.h>
+#include <vpr/vpr.h>
 
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/DisplayManager.h>
@@ -222,8 +221,13 @@ void PfDrawManager::initAPI()
    // Set params for Multi-pipe and Multiprocess
    pfMultipipe(mNumPipes);
 
+#ifdef VPR_OS_Linux
+   // Multi-processing with Performer on SMP Linux machines is unstable, and
+   // there is not much of a performance gain to splitting App, Cull, and Draw
+   // up among multiple processes on a single-processor machine.
+   pfMultiprocess(PFMP_APPCULLDRAW);
+#else
    // If we are running in a cluster then we must run in single process mode.
-   /*
    if(jccl::ConfigManager::instance()->isElementTypeInPendingList("cluster_manager") ||
       jccl::ConfigManager::instance()->isElementTypeInActiveList("cluster_manager"))
    {
@@ -238,9 +242,7 @@ void PfDrawManager::initAPI()
       // Multiple process mode.
       pfMultiprocess(PFMP_APP_CULL_DRAW);
    }
-   */
-   pfMultiprocess(PFMP_APPCULLDRAW);
-
+#endif
 
 // We can not init head and wand model loaders since they are loaded in PfBasicSimInterface
 //   initLoaders();          // Must call before pfConfig
