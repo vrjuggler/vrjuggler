@@ -49,7 +49,8 @@ builddir=	$(shell pwd)
 EXTRA_DEFS+=	-DMODULE_DIR="\"$(builddir)/modules\""
 C_AFTERBUILD=	afterbuild-libs
 
-SRCS=	LibraryFinderTest.cpp	\
+SRCS=	DsoLoaderTest.cpp	\
+	LibraryFinderTest.cpp	\
 	LibraryTest.cpp
 
 include $(MKPATH)/dpp.obj.mk
