@@ -52,3 +52,11 @@ sealed(Vec4f)
 Quat = ReferenceTemplate(mod, 'gmtl::Quat', 'gmtl/Quat.h')
 Quatf = Quat('float', rename = 'gmtl::Quatf')
 sealed(Quatf)
+
+gmtl_funcs = FunctionHolder(mod, 'Gmtl', 'gmtl-functions.h')
+gmtl_funcs.addFunction('gmtl::invert')
+gmtl_funcs.addFunction('gmtl::isEqual')
+
+gmtl_Math_funcs = FunctionHolder(mod, 'Math', 'gmtl-Math-functions.h')
+gmtl_Math_funcs.addFunction('gmtl::Math::deg2Rad')
+gmtl_Math_funcs.addFunction('gmtl::Math::rad2Deg')
