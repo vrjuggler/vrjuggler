@@ -84,6 +84,39 @@
 #define vjDBG_HEX_LVL 7
 
 
+// COLOR CONTROL CODES
+// TODO: Make the work for windows
+// 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
+// 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
+#define clrNONE "00"
+#define clrBOLD "01"
+#define clrBLACK "30"
+#define clrRED "31"
+#define clrGREEN "32"
+#define clrYELLOW "33"
+#define clrBLUE "34"
+#define clrMAGENTA "35"
+#define clrCYAN "36"
+#define clrWHITE "37"
+
+#ifdef WIN32
+#  define clrESC
+#  define clrCONTROL_CHARS(font, color)
+#  define clrSetNORM(color)
+#  define clrSetBOLD(color)
+#  define clrRESET
+#  define clrOutBOLD(color,text)
+#  define clrOutNORM(color,text)
+#else
+#  define clrESC char(27)
+#  define clrCONTROL_CHARS(font, color) clrESC << "[" << font << ";" << color << "m"
+#  define clrSetNORM(color) clrESC << "[" << color << "m"
+#  define clrSetBOLD(color) clrCONTROL_CHARS(clrBOLD, color)
+#  define clrRESET clrESC << "[" << clrNONE << "m"
+#  define clrOutBOLD(color,text) clrSetBOLD(color) << text << clrRESET
+#  define clrOutNORM(color,text) clrSetNORM(color) << text << clrRESET
+#endif
+
 
 #ifdef VJ_DEBUG
 //#   define vjDEBUG(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val)
