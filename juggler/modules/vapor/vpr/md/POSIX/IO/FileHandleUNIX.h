@@ -98,14 +98,6 @@ public:
     virtual Status close(void);
 
     // ------------------------------------------------------------------------
-    //: Return the contained handle.
-    // ------------------------------------------------------------------------
-    inline IOSys::Handle
-    getHandle (void) {
-        return m_fdesc;
-    }
-
-    // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that it is in blocking mode.
     //
     //! PRE: The file handle is open.
