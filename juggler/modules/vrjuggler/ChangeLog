@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-26-2001 cjust     Improved Navigation in VjControl help.
+Jan-20-2001 cjust     VjControl now recommends JDK1.3 (1.2 still minimum).
 Dec-30-2000 patrick   Build system converted to use Doozer++ 1.0.  Automake 1.4
                       is now required for compiling in addition to Autoconf.
                       Use autogen.sh to do the auto generation phase before
