@@ -64,7 +64,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
 
     if(mHeadInterface.getProxyIndex() == -1)
     {
-      cerr << "Fatal Error: Head not found: " << head_str << endl;
+      cerr << "Fatal Error: Head not found named: " << head_str << endl;
       exit(1);
     }
 
@@ -94,8 +94,8 @@ void vjDisplay::updateProjections()
    vjMatrix cur_head_pos = *(mHeadInterface->GetData());
    vjCoord  head_coord(cur_head_pos);       // Create a user readable version
 
-   vjDEBUG(2) << "vjDisplay::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
-   vjDEBUG(1) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
+   vjDEBUG(4) << "vjDisplay::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(4) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
 
    // Compute location of left and right eyes
    float interocularDist = 2.75/12.0f;
