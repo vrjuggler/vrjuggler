@@ -1,0 +1,90 @@
+package id3pq1gduvgg5uhduvgjw9r;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::App#mKernel:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#mHaveFocus:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#haveFocus#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#focusChanged#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#depSatisfied#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref> 
+@hideAttributes
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::GlApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextClose#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextPreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextPostDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#pipePreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref> 
+@hideAttributes
+*/
+class reference1 {
+}/**
+@__ref <oiref:cpp#Class#vrj::OsgApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#sceneViewer:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#init#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#contextInit#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#draw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#contextClose#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#bufferPreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#contextPreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#pipePreDraw#(##)#:oiref> 
+@hideAttributes
+*/
+class reference2 {
+}/**
+@__ref <oiref:cpp#Class#userOsgApp:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes 
+*/
+class reference3 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#userOsgApp:oiref>=20,230,163,148,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=250,106,192,106:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OsgApp:oiref>=240,230,163,103,1:oigroup>
+<oigroup:<oiref:cpp#Extends#userOsgApp#vrj::OsgApp:oiref>=183,281,240,281:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::OsgApp#vrj::GlApp:oiref>=321,230,321,153:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=250,50,143,103,1:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,182,193,1:oigroup>
+*/
+class __positions {
+}
