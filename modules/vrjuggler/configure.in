@@ -524,13 +524,17 @@ case $OS_TYPE in
         vrj_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
         vrj_ldflags_linker="$vrj_ldflags_compiler"
         vrj_libs='-lJuggler -lJuggler_ogl'
+        vrj_prof_libs='-lJuggler_p -lJuggler_ogl_p'
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_X11 $LIBS"
 
         Juggler_lib='-lJuggler'
+        Juggler_prof_lib='-lJuggler_p'
         Juggler_ogl_lib='-lJuggler_ogl'
+        Juggler_ogl_prof_lib='-lJuggler_ogl_p'
 
         if test "x$PERFORMER_API" = "xY" ; then
             Juggler_pf_lib='-lJuggler_pf'
+            Juggler_pf_prof_lib='-lJuggler_pf_p'
             Juggler_pf_extra_libs="$APP_EXTRA_LIBS_PF"
         fi
 
@@ -542,10 +546,13 @@ case $OS_TYPE in
         vrj_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
         vrj_ldflags_linker="/libpath:\$prefix/lib/debug "
         vrj_libs='Juggler.lib Juggler_ogl.lib'
+        vrj_prof_libs="$vrj_libs"
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $BASIC_WIN32_LIBS $LIBS"
 
         Juggler_lib='Juggler.lib'
+        Juggler_prof_lib='Juggler.lib'
         Juggler_ogl_lib='Juggler_ogl.lib'
+        Juggler_ogl_prof_lib='Juggler_ogl.lib'
         Juggler_extra_libs="$LDFLAGS $BASIC_WIN32_LIBS $LIBS"
         Juggler_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
         ;;
@@ -607,6 +614,7 @@ AC_SUBST(vrj_extra_cxxflags)
 AC_SUBST(vrj_ldflags_compiler)
 AC_SUBST(vrj_ldflags_linker)
 AC_SUBST(vrj_libs)
+AC_SUBST(vrj_prof_libs)
 AC_SUBST(vrj_extra_ldflags_compiler)
 AC_SUBST(vrj_extra_ldflags_linker)
 AC_SUBST(vrj_extra_libs)
@@ -616,6 +624,9 @@ AC_SUBST(vrj_64_flags)
 AC_SUBST(Juggler_lib)
 AC_SUBST(Juggler_ogl_lib)
 AC_SUBST(Juggler_pf_lib)
+AC_SUBST(Juggler_prof_lib)
+AC_SUBST(Juggler_ogl_prof_lib)
+AC_SUBST(Juggler_pf_prof_lib)
 AC_SUBST(Juggler_extra_libs)
 AC_SUBST(Juggler_ogl_extra_libs)
 AC_SUBST(Juggler_pf_extra_libs)
