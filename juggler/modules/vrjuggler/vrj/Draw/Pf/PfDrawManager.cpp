@@ -230,7 +230,7 @@ void vjPfDrawManager::initAPI()
 
    app->preForkInit();
 
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initDrawing: Entering." << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initAPI: Entering." << std::endl << vjDEBUG_FLUSH;
 
    // Set params for Multi-pipe and Multiprocess
    pfMultipipe(mNumPipes);
@@ -243,21 +243,26 @@ void vjPfDrawManager::initAPI()
    pfConfig();
    mPfHasForked = true;
 
+   // Initialize the pipes that the system may need
+   // If we don't do this, then pf automatically give each pipe a big black channel
+   initPipes();
+
    initSimulatorGraph();        // Create the simulator scene graph nodes
    initPerformerGraph();        // Create the other scene graph nodes
    if(app != NULL)
       initAppGraph();           // App was already set, but pf was not loaded.  So load graph now
 
 
-   vjASSERT(mSceneRoot != NULL && "We have a NULL root scene in vjPfDrawManager");
+   vjASSERT(mRoot != NULL && "We have a NULL root in vjPfDrawManager");
    vjASSERT(mRootWithSim != NULL && "We have a NULL sim root scene in vjPfDrawManager");
+   vjASSERT(mSceneRoot != NULL && "We have a NULL root scene in vjPfDrawManager");
 
    //pfFrame();
 
    // Dump the state
 //   debugDump(vjDBG_CONFIG_LVL);
 
-   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initDrawing: Exiting." << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initAPI: Exiting." << std::endl << vjDEBUG_FLUSH;
 }
 
 // Get a performer pipe
@@ -267,41 +272,42 @@ pfPipe* vjPfDrawManager::getPfPipe(unsigned pipe_num)
 {
    vjASSERT((mPfHasForked) && "Tried to get pipe before forking happened");
    vjASSERT((pipe_num < mNumPipes) && "Tried to request out of bounds pipe");
-
-   // ------ OPEN/ALLOCATE Pipes ------- //
-   // Make sure there is room for the pipe.  The check must be made using
-   // less than or equal because pipe numbering may start from 0, and an
-   // empty vector has size 0 but still needs room for a pipe entry.
-   //while(pipes.size() <= pipe_num)
-   //   mPipes.push_back(NULL);
-
-   // If need more room, then resize the vector
-   if(mPipes.size() < (pipe_num + 1))
-      mPipes.resize((pipe_num+1), NULL);
-
-   // Does the pipe need allocated???
-   if(NULL == mPipes[pipe_num])
-   {
-      vjASSERT((mPipeStrs.size() > pipe_num) && "Don't have xpipes entry for pipe num");
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::getPfPipe: Opening Pipe." << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tpipe:" << pipe_num << ": " << mPipeStrs[pipe_num] << std::endl << vjDEBUG_FLUSH;
-
-      mPipes[pipe_num] = pfGetPipe(pipe_num);
-      mPipes[pipe_num]->setWSConnectionName(mPipeStrs[pipe_num]);
-      mPipes[pipe_num]->setScreen(pipe_num);
-   }
+   vjASSERT((pipe_num < mPipes.size()) && "Tried to get out of range pipe");
 
    // Return the actual pipe
    vjASSERT((NULL != mPipes[pipe_num]) && "Have NULL pipe");
    return mPipes[pipe_num];
 }
 
+// Initialize all the pipes that the system may need to use
+// XXX: If performer were more flexible, then this would actually be
+//      done on demand while the application is running :(
+void vjPfDrawManager::initPipes()
+{
+   mPipes.resize(mNumPipes, NULL);     // Resize the vector
+
+   for(unsigned pipe_num=0; pipe_num<mNumPipes; pipe_num++)
+   {
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::initPipes: Opening Pipe." << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tpipe:" << pipe_num << ": " << mPipeStrs[pipe_num] << std::endl << vjDEBUG_FLUSH;
+
+      mPipes[pipe_num] = pfGetPipe(pipe_num);
+      mPipes[pipe_num]->setWSConnectionName(mPipeStrs[pipe_num]);
+      mPipes[pipe_num]->setScreen(pipe_num);
+
+      pfPipeWindow* pw = new pfPipeWindow(mPipes[pipe_num]);
+      pw->setOriginSize(0,0,1,1);
+   }
+}
+
 
 //: Callback when display is added to display manager
 //! PRE: Must be in kernel controlling thread
+//  PRE: Must have already initialized performer
 void vjPfDrawManager::addDisplay(vjDisplay* disp)
 {
    vjASSERT(disp != NULL);    // Can't add a null display
+   vjASSERT((true == mPfHasForked) && "Trying to add display when performer has not been initialized");
 
    // Get frame buffer config
    std::vector<int> stereo_fb_config = getStereoFBConfig();
@@ -328,7 +334,7 @@ void vjPfDrawManager::addDisplay(vjDisplay* disp)
    pf_disp.disp = disp;
 
    vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tDisplay is:" << (void*)(disp) << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tvjPfDrawManager::initDrawing: Got Display:\n" << (*disp) << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tvjPfDrawManager::add Display: Got Display:\n" << (*disp) << vjDEBUG_FLUSH;
 
    int xo, yo, xs, ys;
    pfPipe* pipe = getPfPipe(disp->getPipe());      // Get the pipe
@@ -418,7 +424,7 @@ void vjPfDrawManager::addDisplay(vjDisplay* disp)
          if(NULL == mSurfMasterChan)      // If NULL, then add us as the new one
          {
             mSurfMasterChan = pf_viewport.chans[pfViewport::PRIMARY];
-            mSurfMasterChan->setScene(mSceneRoot);
+            mSurfMasterChan->setScene(mRoot);
             initChanGroupAttribs(mSurfMasterChan);
             mSurfChannels.push_back(mSurfMasterChan);
          }
@@ -608,9 +614,9 @@ void vjPfDrawManager::initLoaders()
 // Set's the sceneRoot
 void vjPfDrawManager::initPerformerGraph()
 {
-   mSceneRoot = new pfScene;
+   mRoot = new pfScene;
    mSceneGroup = new pfGroup;                // (Placeholder until app loads theirs)
-   mSceneRoot->addChild(mSceneGroup);        // Create the base scene without sim
+   mRoot->addChild(mSceneGroup);        // Create the base scene without sim
    mRootWithSim->addChild(mSceneGroup);      // Create base scene with sim
 }
 
@@ -621,11 +627,11 @@ void vjPfDrawManager::initPerformerGraph()
 void vjPfDrawManager::initAppGraph()
 {
    app->initScene();
-   if(mSceneGroup != NULL)
-      mSceneRoot->removeChild(mSceneGroup);
+   if(mSceneRoot != NULL)
+      mSceneGroup->removeChild(mSceneRoot);
 
-   mSceneGroup = app->getScene();
-   mSceneRoot->addChild(mSceneGroup);
+   mSceneRoot = app->getScene();
+   mSceneGroup->addChild(mSceneRoot);
 }
 
 
@@ -834,7 +840,7 @@ void vjPfDrawManager::debugDump(int debugLevel)
 {
    vjDEBUG_BEGIN(vjDBG_DRAW_MGR,debugLevel) << "-- DEBUG DUMP --------- " << clrOutNORM(clrCYAN,"vjPfDrawManager:") << (void*)this << " ------------" << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "app:" << (void*)app << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "scene:" << (void*)mSceneRoot << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "scene:" << (void*)mRoot << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "sim scene:" << (void*)mRootWithSim << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "Disps:" << mDisplays.size() << std::endl << vjDEBUG_FLUSH;
    for (std::vector<pfDisplay>::iterator i = mDisplays.begin(); i != mDisplays.end(); i++)

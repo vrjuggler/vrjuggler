@@ -227,6 +227,9 @@ protected:
    //! RETURNS: NULL - Not found
    //**//pfDisp* getPfDisp(pfChannel* chan);
 
+   // Init all the pipes that may need to be used
+   void initPipes();
+
    // Get a performer pipe
    //! PRE: pipe_num < mNumPipes
    //       Fork must have happend
@@ -259,17 +262,23 @@ protected:
    std::vector<char*>      mPipeStrs;        // The X-Strs of the pipes
    bool                    mPfHasForked;     // Performer has forked it processes already
 
-   // mSceneRoot
+   //   mRoot
    //       \
-   //     mSceneGroup -- app scene
+   //     mSceneGroup -- mSceneRoot -- app scene
    //       /
-   // mRootWithSim
-   pfScene*                mSceneRoot;       // Root of Performer tree to render
-   pfGroup*                mSceneGroup;      // The group node with only sceneRoot under it
+   // mRootWithSim   mHeadDCS
+   //       \       /
+   //       mSimTree
+   //               \
+   //                mWandDCS
+   pfScene*          mRoot;            // Root of performer tree to render
+   pfGroup*          mSceneRoot;       // Root of scene to render (changes at run-time)
+   pfGroup*          mSceneGroup;      // The group node with only sceneRoot under it
+   pfScene*          mRootWithSim;  // The root with the simulator group & the sceneRoot
+
 
    // ---- Simulator stuff --- //
    pfGroup*          mSimTree;      // The simulator scene graph
-   pfScene*          mRootWithSim;  // The root with the simulator group & the sceneRoot
    pfDCS*            mHeadDCS;      // The DCS above the head
    pfDCS*            mWandDCS;      // The DCS above the wand
    std::string       mHeadModel;    // The head model file path
@@ -281,6 +290,7 @@ protected:
    vjPfDrawManager() {
       mSurfMasterChan = NULL;
       mSimMasterChan = NULL;
+      mRoot         = NULL;
       mSceneRoot    = NULL;
       mSceneGroup = NULL;
       mSimTree     = NULL;
