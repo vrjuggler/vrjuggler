@@ -71,7 +71,7 @@ public:
    SocketDatagram_t() : mSocketDgramImpl()
    {
       mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl);
-      mSocketImpl = mSocketDgramImpl;
+      Socket_t<SocketConfig_>::mSocketImpl = mSocketDgramImpl;
    }
 
    /**
@@ -89,7 +89,7 @@ public:
       : Socket_t<Config>()
    {
       mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl(local_addr, remote_addr));
-      mSocketImpl = mSocketDgramImpl;
+      Socket_t<SocketConfig_>::mSocketImpl = mSocketDgramImpl;
    }
 
    /**
@@ -100,7 +100,7 @@ public:
    SocketDatagram_t(const SocketDatagram_t& sock)
       : mSocketDgramImpl(sock.mSocketDgramImpl)
    {
-      mSocketImpl = mSocketDgramImpl;
+      Socket_t<SocketConfig_>::mSocketImpl = mSocketDgramImpl;
    }
 
    /**
