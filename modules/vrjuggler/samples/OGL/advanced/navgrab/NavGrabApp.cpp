@@ -47,6 +47,7 @@ void NavGrabApp::init()
    mWand.init("VJWand");
    mGrabButton.init("VJButton0");
    mResetButton.init("VJButton1");
+   mDumpStateButton.init("VJButton2");
 }
 
 void NavGrabApp::contextInit()
@@ -110,6 +111,13 @@ void NavGrabApp::preFrame()
       mSphereSelected = false;
       mCubeSelected   = false;
    }
+
+   // If the dump state button has just been pressed, dump the current state
+   // information.
+   if ( mDumpStateButton->getData() == gadget::Digital::TOGGLE_ON )
+   {
+      dumpState();
+   }
 }
 
 void NavGrabApp::bufferPreDraw()
@@ -140,6 +148,16 @@ void NavGrabApp::reset()
 
    mSphereSelected = false;
    mCubeSelected   = false;
+}
+
+void NavGrabApp::dumpState()
+{
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "Sphere -- center: " << mSphere.getCenter() << " ## radius: "
+      << mSphere.getRadius() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "Cube -- min: " << mCube.getMin() << " ## max: " << mCube.getMax()
+      << std::endl << vprDEBUG_FLUSH;
 }
 
 void NavGrabApp::initShapes()
