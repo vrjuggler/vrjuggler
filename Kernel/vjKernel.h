@@ -267,20 +267,7 @@ protected:
    virtual ~vjKernel()
    {;}
 
-   vjSingletonHeader(vjKernel);
-/*
-public:
-   //: Get instance of singleton object
-   static vjKernel* instance()
-   {
-      if (_instance == NULL)
-         _instance = new vjKernel;
-      return _instance;
-   }
-
-private:
-   static vjKernel* _instance;   //: The instance
-   */
+   vjSingletonHeader( vjKernel );
 };
 
 
