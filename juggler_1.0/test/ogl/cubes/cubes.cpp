@@ -1,5 +1,5 @@
 //----------------------------------------
-// Test OpenGL C2Lib program
+// Test OpenGL VR Juggler program
 //
 // cubes.cpp
 //----------------------------------------
