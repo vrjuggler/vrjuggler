@@ -196,8 +196,16 @@ public:
       mRunning = false;
    }
 
-   // Inherited methods
-   void updateFramebuffer(int x, int y, int w, int h);
+   /** Send request for the server to send updates.
+   * This requests that the server tells us anytime there
+   * is an update to the framebuffer.
+   * @note: I am not sure about this....
+   */
+   void sendFramebufferUpdateRequest(int x, int y, int w, int h);
+
+   /** Call to generate a pointer event on the desktop.
+   * @param x,y - mouse position in vnc desktop coordinates.
+   */
    void pointerEvent(int x, int y, int button_mask);
    void keyEvent(unsigned int key, bool pressed = true);
 
@@ -205,58 +213,37 @@ public:
     * Retrieve the frame buffer pixel format.
     */
    const PixelFormat& getPixelFormat() const
-   {
-      return mPf;
-   }
+   {  return mPf; }
 
    /**
     * Retrieve the frame buffer width.
     */
    int getWidth() const
-   {
-      return mWidth;
-   }
+   {  return mWidth; }
 
    /**
     * Retrieve the frame buffer height.
     */
    int getHeight() const
-   {
-      return mHeight;
-   }
+   {  return mHeight;   }
 
    /**
     * Retrieve the size, in bits, of each pixel.
     */
    int getPixelSize() const
-   {
-      return mPf.size;
-   }
-
-   /**
-    * Retrieve the pixel type. For VNC it is 32-bit RGBA
-    * although alpha is currently unused.
-    */
-//   Nobel::PixelType getPixelType() const
-//   {
-//      return Nobel::RGBA8888;
-//   }
+   {  return mPf.size;  }
 
    /**
     * Retrieve the frame buffer pointer.
     */
    const char* getFramebuffer() const
-   {
-      return mFramebuffer;
-   }
+   {  return mFramebuffer; }
 
    /**
     * Retrieve the desktop name.
     */
    const std::string& getName() const
-   {
-      return mName;
-   }
+   {  return mName; }
 
    /**
     * Retrieve a frame buffer update.
@@ -322,18 +309,18 @@ private:
    // Private member variables
    std::string mName;
 
-   std::list<Rectangle> mRectQueue;
+   std::list<Rectangle> mRectQueue;    /**< List of pending updates */
 
-   std::string mHost;
-   vpr::Uint16 mPort;
-   vpr::SocketStream mSock;
+   std::string          mHost;
+   vpr::Uint16          mPort;
+   vpr::SocketStream    mSock;
    int mServerMajor, mServerMinor;
-   bool mIncremental;
+   bool                 mIncremental;
 
    PixelFormat mPf;
    PixelFormat mNativePf;
-   int mWidth;                /**< Width of frame buffer */
-   int mHeight;               /**< Height of frame buffer */
+   int         mWidth;                /**< Width of frame buffer */
+   int         mHeight;               /**< Height of frame buffer */
 
    /** The frame buffer of data.
    * This is an array of pixels of size mWidth x mHeight
@@ -343,7 +330,7 @@ private:
 
    // Read buffer (used in framebuffer updates)
    vpr::Uint32 mReadBufferSize;
-   char* mReadBuffer;
+   char*       mReadBuffer;
 
    vpr::Mutex mMutex;
    bool       mRunning;
