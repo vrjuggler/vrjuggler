@@ -170,6 +170,10 @@ Builder: JExplorerBuilder V 1. 0. 7
 			link="${PROGRAMMERGUIDE}/adv.topics/run.time.config/run-time-how-to.html"
 			info="">
 	</folder>
+   < item title="DeviceDrivers"
+				link="${TEAMGUIDE}/tutorials/add.device.driver.html"
+				info="How to add your own custom device driver to juggler."
+				image="Leaf.gif" >
 </folder>
 
 
