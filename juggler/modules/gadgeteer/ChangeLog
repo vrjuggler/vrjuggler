@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Sep-17-2002 aronb     Fixed data collection bugs in Pinch Glove driver.
+                      NEW VERSION: 0.4.1
 Sep-13-2002 aronb     gadget::Input no longer defines member variables for the
                       port name and baud rate of a device.  The individual
                       devices are responsible for that now.
