@@ -30,16 +30,29 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
 package VjComponents.PerfMonitor;
 
-import javax.swing.*;
+import VjComponents.PerfMonitor.PerformanceModuleEvent;
 
-abstract public class GenericGraphPanel extends JPanel {
+/** Listener interface for ConfigModule events.
+ *  By becoming a ConfigModuleListener, an object can receive 
+ *  events about addition or removal of ConfigChunkDBs and 
+ *  ChunkDescDBs.
+ *  <p>
+ *  ConfigModuleEvents may be sent by any thread; a listener intending
+ *  to update GUI components based on the event must use 
+ *  SwingUtilities.invokeLater or something similar to ensure correct
+ *  synchronization.
+ * 
+ *  @author Christopher Just
+ *  @version $Revision$
+ */
+public interface PerformanceModuleListener extends java.util.EventListener {
 
-    abstract public void refresh();
-
-    abstract public void destroy();
+    public abstract void addPerfDataCollector (PerformanceModuleEvent e);
+    public abstract void removePerfDataCollector (PerformanceModuleEvent e);
+    public abstract void removeAllPerfDataCollectors (PerformanceModuleEvent e);
 
 }
+
+

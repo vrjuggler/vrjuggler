@@ -58,7 +58,11 @@ import VjConfig.*;
  *  @author Christopher Just
  *  @version $Revision$
  */
-public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListener {
+public class PerfAnalyzerPanel 
+    extends JPanel 
+    implements PlugPanel, 
+               ActionListener,
+               PerformanceModuleListener {
 
 
     private class CollectorSummaryButton extends JButton {
@@ -106,7 +110,9 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 	return s;
     }
 
-    public class DataPanelElem {
+    public class DataPanelElem 
+        implements ActionListener {
+
 	public PerfDataCollector col;
 	public JLabel sep_label;
 	public JLabel colname_label;
@@ -176,7 +182,13 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 		gblayout.setConstraints (b, gbc);
 		panel.add(b);
 	    }
+
+            col.addActionListener (this);
 	}
+
+        public void destroy () {
+            col.removeActionListener (this);
+        }
 
 	public void update() {
 	    col.generateAverages(preskip, postskip);
@@ -188,6 +200,13 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 		    ; // we should probably add something in this case...
 	    }
 	}
+
+        public void actionPerformed (ActionEvent e) {
+            if (e.getActionCommand().equals ("Update")) {
+                update();
+            }
+        }
+
     }
 
 
@@ -265,26 +284,6 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 //  	    print_all_button.setEnabled (true);
 //  	}
 //      }
-
-
-
-    private void refreshDataPanel () {
-	int i,j;
-	PerfDataCollector col;
-	double avg;
-	//data_panel.removeAll();
-	DataPanelElem dpe;
-
-	for (i = 0; i < perf_module.getSize(); i++) {
-	    col = perf_module.getCollector(i);
-	    dpe = getDataPanelElem (col);
-	    if (dpe == null) {
-		addDataPanelElem (col);
-	    }
-	    else
-		dpe.update();
-	}
-    }
 
 
 
@@ -392,22 +391,18 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 	    }
 	    System.out.println (s);
 	}
-	else if (source == perf_module) {
-	    String s = e.getActionCommand();
-	    if (s.equalsIgnoreCase ("update"))
-		refreshDisplay();
-	    else if (s.equalsIgnoreCase ("removealldata"))
-		removeAllData();
-	}
     }
 
 
 
     public void refreshDisplay() {
         if (initialized) {
-            for (int i = 0; i < child_frames.size(); i++)
-                ((GenericGraphFrame)child_frames.elementAt(i)).refresh();
-            refreshDataPanel();
+            DataPanelElem dpe;
+            int n = datapanel_elems.size();
+            for (int i = 0; i < n; i++) {
+                dpe = (DataPanelElem)datapanel_elems.elementAt(i);
+                dpe.update();
+            }
         }
     }
 
@@ -415,18 +410,24 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 
     public void removeAllData() {
         if (initialized) {
-            for (int i = 0; i < child_frames.size(); i++)
-                ((GenericGraphFrame)child_frames.elementAt(i)).dispose();
+            int i, n;
+
+            for (i = 0; i < child_frames.size(); i++) {
+                GenericGraphFrame f = (GenericGraphFrame)child_frames.get(i);
+                f.destroy();
+            }
             child_frames.removeAllElements();
-            refreshDataPanel();
+
+            DataPanelElem dpe;
+            n = datapanel_elems.size();
+            for (i = 0; i < n; i++) {
+                dpe = (DataPanelElem)datapanel_elems.elementAt(i);
+                dpe.destroy();
+            }
+            datapanel_elems.clear();
         }
     }
 
-
-
-//      public void refresh() {
-//  	refreshDisplay();
-//      }
 
 
 
@@ -481,7 +482,7 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
         if (perf_module == null || ui_module == null)
             throw new VjComponentException (component_name + ": Instantiated with unmet dependencies.");
 
-	perf_module.addActionListener (this);
+	perf_module.addPerformanceModuleListener (this);
 
         perf_filter = new SuffixFilter ("Perf Data Files (*.perf)", ".perf");
         ui_module.getEasyFileDialog().addFilter (perf_filter, "PerfData");
@@ -565,13 +566,27 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 
 
     public void destroy () {
-        ;
+        removeAllData ();
     }
 
 
     public void rebuildDisplay () {
     }
 
+
+    //------------------ PerformanceModuleListener Stuff ---------------------
+
+    public void addPerfDataCollector (PerformanceModuleEvent e) {
+        addDataPanelElem (e.getPerfDataCollector());
+    }
+
+    public void removePerfDataCollector (PerformanceModuleEvent e) {
+        // not implemented
+    }
+
+    public void removeAllPerfDataCollectors (PerformanceModuleEvent e) {
+        removeAllData ();
+    }
 
 }
 

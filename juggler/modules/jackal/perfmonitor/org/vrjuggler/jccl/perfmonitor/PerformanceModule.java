@@ -53,9 +53,19 @@ public class PerformanceModule extends DefaultCoreModule {
 
 
     public Vector collectors;  // v of PerfDataCollector
-    public Vector listeners; // actionListeners
     public int max_samples;
     public File file;
+    public List performance_module_listeners;
+
+
+    public PerformanceModule () {
+        component_name = "Performance Module";
+	collectors = new Vector();
+	max_samples = 500;
+	file = new File(System.getProperty("user.dir",""), "perfdata");
+        performance_module_listeners = new ArrayList();
+    }
+
 
 
     public void setConfiguration (ConfigChunk ch) throws VjComponentException {
@@ -115,19 +125,9 @@ public class PerformanceModule extends DefaultCoreModule {
     }
 
 
-    public PerformanceModule () {
-        component_name = "Performance Module";
-	collectors = new Vector();
-	listeners = new Vector();
-	max_samples = 500;
-	file = new File(System.getProperty("user.dir",""), "perfdata");
-    }
-
-
-
     public void removeAllData () {
 	collectors.removeAllElements();
-	fireActionPerformed (new ActionEvent (this, 1, "removealldata"));
+        notifyPerformanceModuleListenersRemoveAll();
     }
 
 
@@ -138,22 +138,6 @@ public class PerformanceModule extends DefaultCoreModule {
     }
 
 
-    public void addActionListener (ActionListener l) {
-	if (!listeners.contains (l))
-	    listeners.addElement (l);
-    }
-    public void removeActionListener (ActionListener l) {
-	listeners.removeElement (l);
-    }
-
-    public void fireActionPerformed (ActionEvent e) {
-	int i;
-	ActionListener l;
-	for (i = 0; i < listeners.size(); i++) {
-	    l = (ActionListener)listeners.elementAt(i);
-	    l.actionPerformed (e);
-	}
-    }
 
     public int getSize() {
 	return collectors.size();
@@ -183,6 +167,7 @@ public class PerformanceModule extends DefaultCoreModule {
     public PerfDataCollector addCollector (String _name, int _num) {
 	PerfDataCollector p = new PerfDataCollector (_name, _num, max_samples);
 	collectors.addElement (p);
+        notifyPerformanceModuleListenersAdd (p);
 	return p;
     }
 
@@ -209,7 +194,6 @@ public class PerformanceModule extends DefaultCoreModule {
             if (p == null)
                 p = addCollector (name, num);
             p.read (st);
-	    fireActionPerformed (new ActionEvent (this, 5, "update"));
         }
         else {
             //Core.consoleErrorMessage ("Perf", "Major parsing failure in PerfDataCollection");
@@ -255,9 +239,6 @@ public class PerformanceModule extends DefaultCoreModule {
                 p.read (st);
             }
 
-            //System.out.println ("firing perfdatacollection update");
-            fireActionPerformed (new ActionEvent (this, 5, "update"));
-            
 	}
 	catch (IOException e) {
 	    // I always seem to hit an exception at eof of a data file...
@@ -318,9 +299,6 @@ public class PerformanceModule extends DefaultCoreModule {
 	    readFile (st);
 	    file = f;
 
-            //System.out.println ("firing perfdatacollection update");
-            fireActionPerformed (new ActionEvent (this, 5, "update"));
-
 	    return f.toString();
 	}
 	catch (FileNotFoundException e) {
@@ -352,5 +330,60 @@ public class PerformanceModule extends DefaultCoreModule {
 	    return "";
 	}
     }
+
+    //------------------ PerformanceModuleEvent Stuff ------------------------
+
+    public void addPerformanceModuleListener (PerformanceModuleListener l) {
+	synchronized (performance_module_listeners) {
+	    performance_module_listeners.add (l);
+	}
+    }
+
+    public void removePerformanceModuleListener (PerformanceModuleListener l) {
+	synchronized (performance_module_listeners) {
+	    performance_module_listeners.remove (l);
+	}
+    }
+
+
+    private void notifyPerformanceModuleListenersRemoveAll () {
+        PerformanceModuleEvent e = new PerformanceModuleEvent (this, PerformanceModuleEvent.REMOVE_ALL, null);
+        PerformanceModuleListener l;
+        int i, n;
+        synchronized (performance_module_listeners) {
+            n = performance_module_listeners.size();
+            for (i = 0; i < n; i++) {
+                l = (PerformanceModuleListener)performance_module_listeners.get(i);
+                l.removeAllPerfDataCollectors (e);
+            }
+        }
+    }
+
+    private void notifyPerformanceModuleListenersAdd (PerfDataCollector p) {
+        PerformanceModuleEvent e = new PerformanceModuleEvent (this, PerformanceModuleEvent.ADD_COLLECTOR, p);
+        PerformanceModuleListener l;
+        int i, n;
+        synchronized (performance_module_listeners) {
+            n = performance_module_listeners.size();
+            for (i = 0; i < n; i++) {
+                l = (PerformanceModuleListener)performance_module_listeners.get(i);
+                l.addPerfDataCollector (e);
+            }
+        }
+    }
+
+    private void notifyPerformanceModuleListenersRemove (PerfDataCollector p) {
+        PerformanceModuleEvent e = new PerformanceModuleEvent (this, PerformanceModuleEvent.REMOVE_COLLECTOR, p);
+        PerformanceModuleListener l;
+        int i, n;
+        synchronized (performance_module_listeners) {
+            n = performance_module_listeners.size();
+            for (i = 0; i < n; i++) {
+                l = (PerformanceModuleListener)performance_module_listeners.get(i);
+                l.removePerfDataCollector (e);
+            }
+        }
+    }
+
 
 }
