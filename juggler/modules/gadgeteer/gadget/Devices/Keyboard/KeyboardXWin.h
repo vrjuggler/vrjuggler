@@ -54,12 +54,12 @@ class vjConfigChunk;
 //    This device recieves input from the XWindows display.  As such,
 //  the xwindow must have focus to generate events.  In order to help
 //  users keep the window in focus, there are two cases where the
-//  driver will "lock" the mouse to the window, thus preventing lock of focus.
+//  driver will "lock" the mouse to the window, thus preventing loss of focus.
 //  CASE 1: The user holds down any key. (ie. a,b, ctrl, shift, etc)
 //  CASE 2: The user can toggle locking using a special "locking" key
 //           defined in the configuration chunk.
 //
-// See also: vjKeyboard vjKeyboardProxy
+// See also: vjKeyboard, vjKeyboardProxy
 //--------------------------------------------------------------
 class vjXWinKeyboard : public vjInput, public vjKeyboard
 {
@@ -80,6 +80,7 @@ public:
       mLockState = Unlocked;     // Initialize to unlocked.
       mExitFlag = false;
       mUpdKeysHasBeenCalled = false;      // Initialize it to not being called yet
+      mWeOwnTheWindow = true;
    }
    ~vjXWinKeyboard() { stopSampling();}
 
@@ -128,10 +129,6 @@ private:
    // Open the X window to sample from
    int openTheWindow();
 
-   int filterEvent( XEvent* event, int want_exposes,
-                    int width, int height);
-   char*    checkArgs(char* look_for);
-   void     checkGeometry();
    Window   createWindow (Window parent, unsigned int border, unsigned long
                         fore, unsigned long back, unsigned long event_mask);
    void     setHints(Window window, char*  window_name, char*  icon_name,
@@ -141,6 +138,10 @@ private:
    void lockMouse();
    void unlockMouse();
 
+protected:
+   bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
+                                       // NOTE: In a case where it does not, then the window vars must be set prior
+                                       //    to starting the controlLoop (startSampling)
    Window       m_window;
    XVisualInfo* m_visual;
    Display*     m_display;
