@@ -50,21 +50,9 @@
 #include <vrj/Draw/OGL/GlContextData.h>
 
 /*-----------------------------OpenSG includes--------------------------------*/
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGWindow.h>
 
-#include <OpenSG/OSGDrawAction.h>
-#include <OpenSG/OSGRenderAction.h>
 #include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGWindow.h>
-#include <OpenSG/OSGImageForeground.h>
 #include <OpenSG/OSGTransform.h>
-#include <OpenSG/OSGGeometry.h>
-#include <OpenSG/OSGGeoPropPtrs.h>
-#include <OpenSG/OSGSimpleMaterial.h>
-#include <OpenSG/OSGMatrixCamera.h>
-#include <OpenSG/OSGDirectionalLight.h>
-#include <OpenSG/OSGGroup.h>
 
 /*----------------------------------------------------------------------------*/
 
@@ -120,7 +108,7 @@ public:
     OSG::NodePtr        mModelRoot;       /**< Root of the loaded model */
 
     OSG::NodePtr  mLightNode;       /**< The light node */
-    OSG::NodePtr  mLightCart;       /**< The cart for the light */
+    OSG::NodePtr  mLightBeacon;     /**< The beacon for the light */
 
   public:
     gadget::PositionInterface   mWand;

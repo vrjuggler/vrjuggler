@@ -48,18 +48,9 @@
 
 #include <OpenSGNav.h>
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGBaseFunctions.h>
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGImageFileType.h>
-#include <OpenSG/OSGSolidBackground.h>
-#include <OpenSG/OSGViewport.h>
-#include <OpenSG/OSGLogoData.h>
-#include <OpenSG/OSGThread.h>
-#include <OpenSG/OSGMPBase.h>
-#include <OpenSG/OSGMatrixUtility.h>
-#include <OpenSG/OSGGeometry.h>
+#include <OpenSG/OSGMatrix.h>
 #include <OpenSG/OSGSimpleGeometry.h>
+#include <OpenSG/OSGDirectionalLight.h>
 #include <OpenSG/OSGSceneFileHandler.h>
 
 
@@ -81,33 +72,6 @@ void OpenSGNav::draw()
 {
    // Call parent class first to render the scene graph
    vrj::OpenSGApp::draw();
-
-   // --- DEBUGGING CODE ------------- //
-   // - Draws a little white triangle on the screen - //
-   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-     // Set material color
-   float onyx_red = 59.0f/255.0f;
-   float onyx_blue = 57.0f/255.0f;
-   GLfloat mat_ambient[] = { onyx_red, 0.0, onyx_blue, 1.0};
-   GLfloat mat_diffuse[] = { onyx_red, 0.0, onyx_blue, 1.0};
-   GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0};
-   GLfloat mat_shininess[] = { 50.0};
-
-   glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
-   glMaterialfv( GL_FRONT,  GL_DIFFUSE, mat_diffuse );
-   glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
-   glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess );
-   //glColor4f(1.0, 1.0, 1.0, 1.0);
-
-   //glLoadIdentity();
-   glPushMatrix();
-      glTranslatef(-1.5f,0.0f,6.0f);
-       glBegin(GL_TRIANGLES);
-         glVertex3f(0.0f,1.0f,0.0f);
-         glVertex3f(-1.0f,-1.0f,0.0f);
-         glVertex3f(1.0f,-1.0f,0.0f);
-       glEnd();
-   glPopMatrix();
 }
 
 void OpenSGNav::preFrame()
@@ -157,30 +121,11 @@ void OpenSGNav::preFrame()
 void OpenSGNav::initGLState()
 {
     std::cout << "OpenSGNav::initGLState called\n";
-    /*
-    glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-    glPixelStorei( GL_PACK_ALIGNMENT, 1 );
-    */
 
-    GLfloat light0_ambient[] = { .2,  .2,  .2,  1.0};
-   GLfloat light0_diffuse[] = { 1.0,  1.0,  1.0,  1.0};
-   GLfloat light0_specular[] = { 1.0,  1.0,  1.0,  1.0};
-   GLfloat light0_position[] = {6.0, 6,0, 6.0, 1.0};
-
-   glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
-   glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
-   glLightfv(GL_LIGHT0, GL_SPECULAR,  light0_specular);
-   glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
-
-   glEnable(GL_DEPTH_TEST);
-   glEnable(GL_NORMALIZE);
-   //glEnable(GL_LIGHTING);
-   //glEnable(GL_LIGHT0);
-   //glEnable(GL_COLOR_MATERIAL);
-   glShadeModel(GL_SMOOTH);
-
-   glMatrixMode(GL_MODELVIEW);
-
+    // OpenSG does not handle this yet, beiung smart about it is not 
+    // that trivial...
+    
+    glEnable(GL_NORMALIZE);
 }
 
 void OpenSGNav::initScene(void)
@@ -211,31 +156,30 @@ void OpenSGNav::initScene(void)
     }
     std::cout << "OpenSGNav::initScene before RenderAction::create()\n";
 
-    // -- light node --> light cart
-    //the camera and light beacon
-    mLightNode = OSG::Node::create();
-    mLightCart = OSG::Node::create();
+    // add a directional light
+    mLightNode   = OSG::Node::create();
+    mLightBeacon = OSG::Node::create();
     OSG::DirectionalLightPtr light_core = OSG::DirectionalLight::create();
-    OSG::TransformPtr cart_core = OSG::Transform::create();
+    OSG::TransformPtr light_beacon_core = OSG::Transform::create();
 
     osg::Matrix light_pos;
     light_pos.setTransform(osg::Vec3f( 2.0f, 5.0f, 4.0f));
 
-   osg::beginEditCP(cart_core, OSG::Transform::MatrixFieldMask);
-   {
-       cart_core->setMatrix(light_pos);
-   }
-   osg::endEditCP(cart_core, osg::Transform::MatrixFieldMask);
+    osg::beginEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
+    {
+        light_beacon_core->setMatrix(light_pos);
+    }
+    osg::endEditCP(light_beacon_core, osg::Transform::MatrixFieldMask);
 
     // Setup light cart node
-    osg::beginEditCP(mLightCart);
-      mLightCart->setCore(cart_core);
-    osg::endEditCP(mLightCart);
+    osg::beginEditCP(mLightBeacon);
+      mLightBeacon->setCore(light_beacon_core);
+    osg::endEditCP(mLightBeacon);
 
     osg::addRefCP(mLightNode);
     osg::beginEditCP(mLightNode);
       mLightNode->setCore(light_core);
-      mLightNode->addChild(mLightCart);
+      mLightNode->addChild(mLightBeacon);
     osg::endEditCP(mLightNode);
 
     osg::beginEditCP(light_core);
@@ -247,17 +191,19 @@ void OpenSGNav::initScene(void)
     osg::endEditCP(light_core);
 
     // --- Setup Scene -- //
+    // add the loaded scene to the light node, so that it is lit by the light
     osg::addRefCP(mModelRoot);
-    osg::beginEditCP(mModelRoot);
-      mModelRoot->addChild(mLightNode);
-    osg::endEditCP(mModelRoot);
+    osg::beginEditCP(mLightNode);
+      mLightNode->addChild(mModelRoot);
+    osg::endEditCP(mLightNode);
 
+    // create the root.Is the transform really needed?
     mSceneRoot = OSG::Node::create();
     mSceneTransform = OSG::Transform::create();
 
     osg::beginEditCP(mSceneRoot);
        mSceneRoot->setCore(mSceneTransform);
-       mSceneRoot->addChild(mModelRoot);
+       mSceneRoot->addChild(mLightNode);
     osg::endEditCP(mSceneRoot);
 
     // --- Add scene to root node --- //
