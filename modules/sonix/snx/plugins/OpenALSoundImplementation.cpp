@@ -200,7 +200,7 @@ void OpenALSoundImplementation::startAPI()
       mDev = alcOpenDevice( NULL );
 	   if (mDev == NULL) 
       {
-		   std::cerr << "ERROR: Could not open device\n" << std::flush;
+		   std::cerr << "[aj]OpenAL| ERROR: Could not open device\n" << std::flush;
    	   return;
 	   }
 
@@ -212,18 +212,18 @@ void OpenALSoundImplementation::startAPI()
       if (mContextId == NULL) 
       {
          std::string err = (char*)alGetString( alcGetError() );
-		   std::cerr << "ERROR: Could not open context: " << err.c_str() << "\n" << std::flush;
+		   std::cerr << "[aj]OpenAL| ERROR: Could not open context: " << err.c_str() << "\n" << std::flush;
 		   return;
 	   }
 
       // make context active...
 	   alcMakeContextCurrent( mContextId );
       
-      std::cerr<<"NOTICE: OpenAL API started: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
+      std::cerr<<"[aj]OpenAL| NOTICE: OpenAL API started: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
    }
    else
    {
-      std::cerr << "WARNING: startAPI called when API is already started\n" << std::flush;
+      std::cerr << "[aj]OpenAL| WARNING: startAPI called when API is already started\n" << std::flush;
    }      
 
   
@@ -244,7 +244,7 @@ void OpenALSoundImplementation::shutdownAPI()
 {
    if (this->isStarted() == false)
    {
-      std::cerr << "WARNING: API not started, nothing to shutdown [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n" << std::flush;
+      std::cerr << "[aj]OpenAL| WARNING: API not started, nothing to shutdown [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n" << std::flush;
       return;
    }
    
@@ -263,7 +263,7 @@ void OpenALSoundImplementation::shutdownAPI()
    mContextId = NULL;
    mDev = NULL;
 
-   std::cerr<<"NOTICE: OpenAL API closed: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
+   std::cerr<<"[aj]OpenAL| NOTICE: OpenAL API closed: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
 }   
 
 /**
@@ -292,7 +292,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
 
    if (this->isStarted() == false)
    {
-      std::cerr << "ERROR: API not started, bind() failed\n" << std::flush;
+      std::cerr << "[aj]OpenAL| ERROR: API not started, bind() failed\n" << std::flush;
       return;
    }
    
@@ -317,12 +317,12 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          // open the file as readonly binary
 	      if (!ajFileIO::fileExists( soundInfo.filename.c_str() )) 
          {
-		      std::cerr<<"file doesn't exist: "<<soundInfo.filename<<"\n" << std::flush;
+		      std::cerr<<"[aj]OpenAL| file doesn't exist: "<<soundInfo.filename<<"\n" << std::flush;
             break;
 	      }
 
          // read the data from the file.
-         std::cout<<"NOTIFY: loading: "<<soundInfo.filename<<"... " << std::flush;
+         std::cout<<"[aj]OpenAL| NOTIFY: loading: "<<soundInfo.filename<<"... " << std::flush;
          ajFileIO::fileLoad( soundInfo.filename.c_str(), mBindLookup[alias].data );
          std::cout<<"done("<<mBindLookup[alias].data.size()<<")\n" << std::flush;
 
@@ -350,7 +350,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          err = alGetError();
          if (err != AL_NO_ERROR)
          {
-            std::cerr << "ERROR: Could not buffer data [bufferID="<<bufferID<<",err="<<err<<"]\n" << std::flush;
+            std::cerr << "[aj]OpenAL| ERROR: Could not buffer data [bufferID="<<bufferID<<",err="<<err<<"]\n" << std::flush;
             switch (err)
             {
                case AL_ILLEGAL_COMMAND:
@@ -383,7 +383,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
 	      alGenSources( 1, &sourceID );
          if (alGetError() != AL_NO_ERROR)
          {
-		      std::cerr << "ERROR: Could not generate a source\n" << std::flush;
+		      std::cerr << "[aj]OpenAL| ERROR: Could not generate a source\n" << std::flush;
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
 		      break;
@@ -404,7 +404,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
    if (soundInfo.triggerOnNextBind == true)
    {
       soundInfo.triggerOnNextBind = false; // done...
-      std::cout<<"NOTIFY: triggering reconfigured sound\n"<<std::flush;
+      std::cout<<"[aj]OpenAL| NOTIFY: triggering reconfigured sound\n"<<std::flush;
       this->trigger( alias );
    }
 }   
@@ -417,7 +417,7 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
 {
    if (this->isStarted() == false)
    {
-      std::cerr << "ERROR: API not started, unbind() failed\n" << std::flush;
+      std::cerr << "[aj]OpenAL| ERROR: API not started, unbind() failed\n" << std::flush;
       return;
    }
  
@@ -433,7 +433,7 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
       }
       else
       {
-         std::cout<<"ERROR: can't trigger on next bind. alias not registered when it should be\n"<<std::flush;
+         std::cout<<"[aj]OpenAL| ERROR: can't trigger on next bind. alias not registered when it should be\n"<<std::flush;
       }      
    }
    
@@ -445,13 +445,13 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         std::cout<<"ERROR: unbind() deleting source\n"<<std::flush;
+         std::cout<<"[aj]OpenAL| ERROR: unbind() deleting source\n"<<std::flush;
       }
       alDeleteBuffers( 1, &mBindLookup[alias].buffer );
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         std::cout<<"ERROR: unbind() deleting buffer\n"<<std::flush;
+         std::cout<<"[aj]OpenAL| ERROR: unbind() deleting buffer\n"<<std::flush;
       }
       mBindLookup.erase( alias );
    }
