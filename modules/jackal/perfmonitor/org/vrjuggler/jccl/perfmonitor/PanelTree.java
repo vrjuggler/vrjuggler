@@ -82,18 +82,11 @@ public class PanelTree extends JComponent implements TreeModelListener {
 	}
     }
 
-//      public void doInitialLayout (DefaultMutableTreeNode node) {
-//  	PerfTreeNodeInfo ni = (PerfTreeNodeInfo)node.getUserObject();
-//  	if (ni != null) {
-//  	    add (ni.getComponent());
-//  	}
-//  	for (int i = 0; i < node.getChildCount(); i++) {
-//  	    doInitialLayout ((DefaultMutableTreeNode)node.getChildAt(i));
-//  	}
-//      }
+
+    //-------------------- TreeModelListener Stuff ------------------------
 
     public void treeNodesChanged(TreeModelEvent e) {
-	System.out.println ("got a treenodeschanged event");
+	//System.out.println ("got a treenodeschanged event");
 	repaint();
 //  	removeAll();
 //  	doInitialLayout();
