@@ -190,9 +190,6 @@ public class ConfigBrokerImpl
          List res_names = new ArrayList();
          for (Iterator itr = resources.iterator(); itr.hasNext(); )
          {
-            //System.out.println(getNameFor(itr.next()));
-            //res_names.add(getNameFor(itr.next()));
-            System.out.println(itr.next());
             res_names.add(itr.next());
          }
          chooser.setResources(res_names);
