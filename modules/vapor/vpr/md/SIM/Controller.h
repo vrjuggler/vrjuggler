@@ -267,6 +267,13 @@ private:
    static vpr::TSObjectProxy<ControllerTS> mInstance;
 
 protected:  // --- Data members --- //
+   // These two have to be here because Visual C++ will try to make them
+   // exported public symbols.  This causes problems because copying vpr::Mutex
+   // objects is not allowed.  We do not want to copy sim Controller instances
+   // anyway, so this should be fine.
+   Controller (const Controller& o) {;}
+   void operator= (const Controller& o) {;}
+
    vpr::sim::Clock         mClock;              /**< The global clock that we are using */
    vpr::sim::SocketManager mSocketManager;      /**< The socket manager that we are using */
    vpr::sim::NetworkGraph  mGraph;              /**< The network graph used for the simulation */
