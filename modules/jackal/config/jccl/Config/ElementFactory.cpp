@@ -58,8 +58,20 @@ namespace jccl
       std::string::size_type sep_index = 0;
       while (sep_index != std::string::npos)
       {
-         std::string::size_type next_sep_index = path.find_first_of(":;", sep_index);
-         const std::string dir_str = path.substr(sep_index, next_sep_index - sep_index);
+         // This will not work on windows since the path seperator is ";" not ":"
+         std::string::size_type next_sep_index = path.find_first_of(":", sep_index);
+
+         std::string dir_str;
+         
+         if(next_sep_index == std::string::npos)
+         {
+            dir_str = path.substr(sep_index, path.size() - sep_index);
+         }
+         else
+         {
+            dir_str = path.substr(sep_index, next_sep_index - sep_index);
+         }
+
          vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
             << "Adding directory to search path: " << dir_str << "\n"
             << vprDEBUG_FLUSH;
@@ -94,15 +106,27 @@ namespace jccl
                      {
                         // Only accept files with a .jdef extension
                         const std::string def_ext = ".jdef";
-                        const std::string::size_type pos = file->leaf().size() - def_ext.size();
-                        const std::string file_ext = file->leaf().substr(pos);
-                        if (file_ext == def_ext)
+                        const std::string file_name = file->leaf();
+                        
+                        std::string::size_type result = file_name.rfind(".");
+                        if(result != std::string::npos && file_name.substr(result) == def_ext)
                         {
                            vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
                               << "Loading '" << file->native_file_string()
                               << "'\n" << vprDEBUG_FLUSH;
                            loadDef(file->native_file_string());
                         }
+
+                        
+                        //const std::string::size_type pos = file->leaf().size() - def_ext.size();
+                        //const std::string file_ext = file->leaf().substr(pos);
+                        //if (file_ext == def_ext)
+                        //{
+                        //   vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
+                        //      << "Loading '" << file->native_file_string()
+                        //      << "'\n" << vprDEBUG_FLUSH;
+                        //   loadDef(file->native_file_string());
+                        //}
                      }
                   }
                   catch (fs::filesystem_error& err)
