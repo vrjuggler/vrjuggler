@@ -494,10 +494,22 @@ bool Kernel::addUser(jccl::ConfigElementPtr element)
    return success;
 }
 
-// XXX: Not implemented
 bool Kernel::removeUser(jccl::ConfigElementPtr element)
 {
-   boost::ignore_unused_variable_warning(element);
+   vprASSERT(element->getID() == "user");
+   
+   std::string user_name = element->getName();
+   vrj::User* user = getUser(user_name);
+
+   if (NULL != user)
+   {
+      vprDEBUG(vrjDBG_KERNEL, vprDBG_STATE_LVL)
+         << "vrj::Kernel: Removing User: " << user->getName() << std::endl
+         << vprDEBUG_FLUSH;
+         
+      mUsers.erase(std::find(mUsers.begin(), mUsers.end(), user));
+      return true;
+   }
    return false;
 }
 
