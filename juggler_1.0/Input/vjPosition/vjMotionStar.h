@@ -65,12 +65,12 @@
 class vjMotionStar : public vjPosition {
     public:
 
-    vjMotionStar(unsigned int format = 5,
-                  unsigned int birdFormat = 5,
+    vjMotionStar(int hemisphere = 3,
+                  unsigned int birdFormat = 4,
                   unsigned int birdsRequired = 10,
-                  double birdRate = 90.0,
-                  int runMode = 0
-//                unsigned char reportRate
+                  int runMode = 0,
+                  double birdRate = 90.0
+                  //unsigned char reportRate
                   );
 
     ~vjMotionStar();
@@ -103,12 +103,15 @@ class vjMotionStar : public vjPosition {
     //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
     //+  then you can access them, in order, as 0,1,2.
     vjMatrix* getPosData( int dev = 0); // 0 base
+    
+    //  Not used currently -- needed for interface
+    vjTimeStamp* getPosUpdateTime (int d); 
  
     //: see if the flock is active or not
     inline bool isActive() { return mMotionStar.isActive(); }
  
-    void            setFormat(unsigned int i );
-    inline unsigned int  getFormat()  { return mMotionStar.getFormat();}
+    void            setHemisphere(int i );
+    inline unsigned int  getHemisphere()  { return mMotionStar.getHemisphere();}
 
     void            setBirdFormat(unsigned int n );
     inline unsigned int  getBirdFormat() { return mMotionStar.getBirdFormat();}
