@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -159,13 +159,10 @@ public class DigitalInterfaceMarshaler : ICustomMarshaler
       return ((gadget.DigitalInterface) obj).mRawObject;
    }
 
-   [DllImport("gadget_bridge")]
-   private extern static IntPtr new_gadget_DigitalInterface_Holder(IntPtr obj);
-
    // Marshaling for native memory coming from C++.
    public Object MarshalNativeToManaged(IntPtr nativeObj)
    {
-      return new gadget.DigitalInterface(new_gadget_DigitalInterface_Holder(nativeObj), false);
+      return new gadget.DigitalInterface(nativeObj, false);
    }
 
    public static ICustomMarshaler GetInstance(string cookie)

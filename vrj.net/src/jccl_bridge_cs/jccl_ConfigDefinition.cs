@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.66 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -228,13 +228,10 @@ public class ConfigDefinitionMarshaler : ICustomMarshaler
       return ((jccl.ConfigDefinition) obj).mRawObject;
    }
 
-   [DllImport("jccl_bridge")]
-   private extern static IntPtr new_jccl_ConfigDefinition_Holder(IntPtr obj);
-
    // Marshaling for native memory coming from C++.
    public Object MarshalNativeToManaged(IntPtr nativeObj)
    {
-      return new jccl.ConfigDefinition(new_jccl_ConfigDefinition_Holder(nativeObj), false);
+      return new jccl.ConfigDefinition(nativeObj, false);
    }
 
    public static ICustomMarshaler GetInstance(string cookie)
