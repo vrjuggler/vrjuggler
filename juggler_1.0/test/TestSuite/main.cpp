@@ -30,16 +30,44 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <CppUnit/framework/TestSuite.h>
 #include <CppUnit/textui/TestRunner.h>
-#include <Math/vjMatrixTest.h>
+#include <TestCases/Math/QuatSelfTest.h>
+#include <Utils/vjDebug.h>
 
+
+//using namespace vpr;
 
 int main (int ac, char **av)
 {
+    vjDEBUG(0,0) << "Starting test\n" << vjDEBUG_FLUSH;       // Do this here to get init text out of the way
+
     TestRunner runner;
 
-    runner.addTest( "vjMatrixTest", vjMatrixTest::suite() );
-    runner.run( ac, av );
+   //------------------------------------
+   //  noninteractive
+   //------------------------------------
+   // create non-interactive test suite
+   TestSuite* noninteractive_suite = new TestSuite( "NonInteractive" );
 
-    return 0;
+   // add tests to the noninteractive suite
+   noninteractive_suite->addTest( vrjTest::QuatSelfTest::suite() );
+   
+   // Add the test suite to the runner
+   runner.addTest( "noninteractive", noninteractive_suite );
+
+   // create test suite #2
+   TestSuite* interactive_suite = new TestSuite("Interactive");
+
+   // add tests to the interactive suite
+   //interactive_suite->addTest( ThreadTest::suite() );
+
+   // Add the test suite to the runner
+   runner.addTest( "interactive", interactive_suite );
+
+   // run all test suites
+   runner.run( ac, av );
+
+
+   return 0;
 }
