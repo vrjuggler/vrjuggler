@@ -56,6 +56,8 @@ import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.config.event.ConfigElementListener;
 
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
+import org.vrjuggler.vrjconfig.commoneditors.event.DeviceUnitEvent;
+import org.vrjuggler.vrjconfig.commoneditors.event.DeviceUnitListener;
 
 
 /**
@@ -88,6 +90,7 @@ public class MultiUnitDeviceVertexView
    private static class DeviceVertexRenderer
       extends AbstractCustomVertexRenderer
       implements ConfigElementListener
+               , DeviceUnitListener
    {
       private static final int PORT_START_COLUMN    = 1;
       private static final int PORT_END_COLUMN      = 1;
@@ -265,6 +268,7 @@ public class MultiUnitDeviceVertexView
                // only gets executed once per instance of this type...
                if ( ! preview )
                {
+                  mDeviceInfo.addDeviceUnitListener(this);
                   mDeviceInfo.getElement().addConfigElementListener(this);
                }
             }
@@ -293,157 +297,66 @@ public class MultiUnitDeviceVertexView
 
       public void propertyValueAdded(ConfigElementEvent evt)
       {
-         if ( mVariableUnits )
-         {
-            Collection unit_types = mDeviceInfo.getUnitTypes();
-
-            for ( Iterator t = unit_types.iterator(); t.hasNext(); )
-            {
-               Integer type = (Integer) t.next();
-               String prop_token = mDeviceInfo.getUnitPropertyToken(type);
-
-               // If the device has a variable unit count and the value added
-               // was for the device unit property, then we need to add another
-               // row to the renderer to repersent the new unit.
-               if ( evt.getProperty().equals(prop_token) )
-               {
-                  int unit_num = mDeviceInfo.getUnitCount(type) - 1;
-                  DefaultPort port = GraphHelpers.createDevicePort(type,
-                                                                   unit_num);
-                  ((DefaultGraphCell) mView.getCell()).add(port);
-                  addUnitRow(port, true);
-
-                  break;
-               }
-            }
-         }
+         /* Do nothing. */ ;
       }
 
       public void propertyValueChanged(ConfigElementEvent evt)
       {
-         if ( mVariableUnits )
-         {
-            Collection unit_types = mDeviceInfo.getUnitTypes();
-
-            for ( Iterator t = unit_types.iterator(); t.hasNext(); )
-            {
-               Integer type = (Integer) t.next();
-               String prop_token = mDeviceInfo.getUnitPropertyToken(type);
-
-               // If the device has a variable unit count and the value added
-               // was for the device unit property, then we need to add another
-               // row to the renderer to repersent the new unit.
-               if ( evt.getProperty().equals(prop_token) )
-               {
-                  int cur_count = mDeviceInfo.getUnitCount(type);
-                  int old_count = ((Number) evt.getValue()).intValue();
-
-                  // Unit addition.  This always appends the new unit.
-                  if ( cur_count > old_count )
-                  {
-                     UnitInfo new_unit_info =
-                        new UnitInfo(type, new Integer(cur_count - 1));
-                     DefaultPort port =
-                        GraphHelpers.createDevicePort(new_unit_info);
-
-                     ((DefaultGraphCell) mView.getCell()).add(port);
-                     addUnitRow(port, true);
-
-                     // Keep track of the rows that are added dynamically.
-                     // These may need to be removed later as a result of an
-                     // undo operation.
-                     mAddedUnitRows.push(new_unit_info);
-                  }
-                  // Unit removal.
-                  else
-                  {
-                     DefaultPort port = null;
-
-                     // This bit is needed for handling undo and redo
-                     // correctly.  mRemovedUnitInfo is only non-null when
-                     // a row is removed as a result of the user clicking on
-                     // the "Delete" button for a row.
-                     if ( mRemovedUnitInfo == null )
-                     {
-                        if ( ! mAddedUnitRows.empty() )
-                        {
-                           UnitInfo row_unit_info =
-                              (UnitInfo) mAddedUnitRows.pop();
-                           port = findPort((DefaultGraphCell) mView.getCell(),
-                                           row_unit_info);
-                        }
-                     }
-                     else
-                     {
-                        mAddedUnitRows.remove(mRemovedUnitInfo);
-                        port = findPort((DefaultGraphCell) mView.getCell(),
-                                        mRemovedUnitInfo);
-                     }
-
-                     if ( port != null )
-                     {
-                        removeUnitRow(port);
-                        mRemovedUnitInfo = null;
-                     }
-                     else
-                     {
-                        System.err.println("WARNING: Could not find port " +
-                                           "to remove containing an object " +
-                                           "matching " + mRemovedUnitInfo);
-                     }
-                  }
-
-                  break;
-               }
-            }
-         }
+         /* Do nothing. */ ;
       }
 
       public void propertyValueRemoved(ConfigElementEvent evt)
       {
-         // NOTE: This method does not make use of the hack member variable
-         // mRemovedUnitInfo.  The removed unit can be determined through a
-         // searching process.  This method could be sped up slightly for
-         // the case of a device supporting multiple unit types, but the
-         // search through the vertex's children is still the slow part either
-         // way.  -PH 3/22/2005
+         /* Do nothing. */ ;
+      }
 
-         if ( mVariableUnits )
+      public void deviceUnitAdded(DeviceUnitEvent evt)
+      {
+         UnitInfo unit_info = new UnitInfo(evt.getUnitType(),
+                                           evt.getUnitNumber());
+         DefaultPort port = GraphHelpers.createDevicePort(unit_info);
+         ((DefaultGraphCell) mView.getCell()).add(port);
+         addUnitRow(port, true);
+
+         // Keep track of the rows that are added dynamically.  These may need
+         // to be removed later as a result of an undo operation.
+         mAddedUnitRows.push(unit_info);
+      }
+
+      public void deviceUnitRemoved(DeviceUnitEvent evt)
+      {
+         DefaultPort port = null;
+
+         // This bit is needed for handling undo and redo
+         // correctly.  mRemovedUnitInfo is only non-null when
+         // a row is removed as a result of the user clicking on
+         // the "Delete" button for a row.
+         if ( mRemovedUnitInfo == null )
          {
-            Collection unit_types = mDeviceInfo.getUnitTypes();
-
-            for ( Iterator t = unit_types.iterator(); t.hasNext(); )
+            if ( ! mAddedUnitRows.empty() )
             {
-               Integer type = (Integer) t.next();
-               String prop_token = mDeviceInfo.getUnitPropertyToken(type);
-
-               if ( evt.getProperty().equals(prop_token) )
-               {
-                  ConfigElement elt = mDeviceInfo.getElement();
-                  int old_unit = evt.getIndex();
-                  UnitInfo old_info = new UnitInfo(type, new Integer(old_unit));
-
-                  DefaultPort port =
-                     findPort((DefaultGraphCell) mView.getCell(), old_info);
-
-                  if ( port != null )
-                  {
-                     removeUnitRow(port);
-
-                     // Though we did not make use of this variable here, we
-                     // should still reset it to be safe.
-                     mRemovedUnitInfo = null;
-                  }
-                  else
-                  {
-                     System.err.println("WARNING: Could not find port to " +
-                                        "remove containing an object " +
-                                        "matching " + old_info);
-                  }
-
-                  break;
-               }
+               UnitInfo row_unit_info = (UnitInfo) mAddedUnitRows.pop();
+               port = findPort((DefaultGraphCell) mView.getCell(),
+                               row_unit_info);
             }
+         }
+         else
+         {
+            mAddedUnitRows.remove(mRemovedUnitInfo);
+            port = findPort((DefaultGraphCell) mView.getCell(),
+                            mRemovedUnitInfo);
+         }
+
+         if ( port != null )
+         {
+            removeUnitRow(port);
+            mRemovedUnitInfo = null;
+         }
+         else
+         {
+            System.err.println("WARNING: Could not find port " +
+                               "to remove containing an object " +
+                               "matching " + mRemovedUnitInfo);
          }
       }
 

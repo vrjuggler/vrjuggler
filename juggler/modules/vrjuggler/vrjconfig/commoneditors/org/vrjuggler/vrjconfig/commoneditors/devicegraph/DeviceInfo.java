@@ -37,10 +37,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import javax.swing.event.EventListenerList;
 
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.event.ConfigElementEvent;
+import org.vrjuggler.jccl.config.event.ConfigElementListener;
 
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
+import org.vrjuggler.vrjconfig.commoneditors.event.DeviceUnitEvent;
+import org.vrjuggler.vrjconfig.commoneditors.event.DeviceUnitListener;
 
 
 /**
@@ -70,6 +75,7 @@ import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
  */
 public class DeviceInfo
    extends ConfigElementHolder
+   implements ConfigElementListener
 {
    /**
     * Creates a new <code>DeviceInfo</code> object for a device that has
@@ -103,6 +109,8 @@ public class DeviceInfo
                      String unitPropertyName)
    {
       super(devElt, ctx);
+
+      devElt.addConfigElementListener(this);
 
       ConfigDefinition def = devElt.getDefinition();
       Integer unit_type = UnitTypeHelpers.getSingleUnitType(def);
@@ -149,6 +157,8 @@ public class DeviceInfo
    {
       super(devElt, ctx);
 
+      devElt.addConfigElementListener(this);
+
       mVariableUnitCount = true;
       mUnitTypeMap       = unitTypeMap;
       this.unitTypes     = unitTypeMap.keySet();
@@ -170,6 +180,8 @@ public class DeviceInfo
    {
       super(devElt, ctx);
 
+      devElt.addConfigElementListener(this);
+
       mVariableUnitCount = false;
       this.unitTypes     = unitTypes;
 
@@ -178,6 +190,100 @@ public class DeviceInfo
       {
          mUnitTypeMap.put(i.next(), null);
       }
+   }
+
+   public void nameChanged(ConfigElementEvent evt)
+   {
+      /* Do nothing. */ ;
+   }
+
+   public void propertyValueAdded(ConfigElementEvent evt)
+   {
+      if ( hasVariableUnitCount() )
+      {
+         Collection unit_types = getUnitTypes();
+
+         for ( Iterator t = unit_types.iterator(); t.hasNext(); )
+         {
+            Integer type = (Integer) t.next();
+            String prop_token = getUnitPropertyToken(type);
+
+            // If the device has a variable unit count and the value added
+            // was for the device unit property, then we need to add another
+            // row to the renderer to repersent the new unit.
+            if ( evt.getProperty().equals(prop_token) )
+            {
+               fireDeviceUnitAdded(type, getUnitCount(type) - 1);
+               break;
+            }
+         }
+      }
+   }
+
+   public void propertyValueChanged(ConfigElementEvent evt)
+   {
+      if ( hasVariableUnitCount() )
+      {
+         Collection unit_types = getUnitTypes();
+
+         for ( Iterator t = unit_types.iterator(); t.hasNext(); )
+         {
+            Integer type = (Integer) t.next();
+            String prop_token = getUnitPropertyToken(type);
+
+            // If the device has a variable unit count and the value added
+            // was for the device unit property, then we need to add another
+            // row to the renderer to repersent the new unit.
+            if ( evt.getProperty().equals(prop_token) )
+            {
+               int cur_count = getUnitCount(type);
+               int old_count = ((Number) evt.getValue()).intValue();
+
+               // Unit addition.  This always appends the new unit.
+               if ( cur_count > old_count )
+               {
+                  fireDeviceUnitAdded(type, cur_count - 1);
+               }
+               // Unit removal.
+               else
+               {
+                  fireDeviceUnitRemoved(type, cur_count);
+               }
+
+               break;
+            }
+         }
+      }
+   }
+
+   public void propertyValueRemoved(ConfigElementEvent evt)
+   {
+      if ( hasVariableUnitCount() )
+      {
+         Collection unit_types = getUnitTypes();
+
+         for ( Iterator t = unit_types.iterator(); t.hasNext(); )
+         {
+            Integer type = (Integer) t.next();
+            String prop_token = getUnitPropertyToken(type);
+
+            if ( evt.getProperty().equals(prop_token) )
+            {
+               fireDeviceUnitRemoved(type, evt.getIndex());
+               break;
+            }
+         }
+      }
+   }
+
+   public void addDeviceUnitListener(DeviceUnitListener l)
+   {
+      listenerList.add(DeviceUnitListener.class, l);
+   }
+
+   public void removeDeviceUnitListener(DeviceUnitListener l)
+   {
+      listenerList.remove(DeviceUnitListener.class, l);
    }
 
    public void addUnit(Integer unitType)
@@ -253,6 +359,7 @@ public class DeviceInfo
       {
          int cur_value = ((Number) unit_prop_obj).intValue();
          mUnitTypeMap.put(unitType, new Integer(cur_value + 1));
+         fireDeviceUnitAdded(unitType, cur_value);
       }
    }
 
@@ -296,12 +403,13 @@ public class DeviceInfo
       }
       else
       {
-         int cur_value = ((Number) unit_prop_obj).intValue();
-         mUnitTypeMap.put(unitType, new Integer(cur_value - 1));
+         int unit_number = ((Number) unit_prop_obj).intValue() - 1;
+         mUnitTypeMap.put(unitType, new Integer(unit_number));
+         fireDeviceUnitRemoved(unitType, unit_number);
       }
    }
 
-   public int getUnitCount(Integer unitType)
+   private int getUnitCount(Integer unitType)
    {
       int count = 0;
       Object unit_prop_obj = mUnitTypeMap.get(unitType);
@@ -329,7 +437,7 @@ public class DeviceInfo
       return count;
    }
 
-   public int getUnitCount(String propToken)
+   private int getUnitCount(String propToken)
    {
       int count = 0;
       Collection unit_types = getUnitTypes();
@@ -349,7 +457,7 @@ public class DeviceInfo
       return count;
    }
 
-   public String getUnitPropertyToken(Integer unitType)
+   private String getUnitPropertyToken(Integer unitType)
    {
       String result = null;
 
@@ -402,8 +510,48 @@ public class DeviceInfo
       return unitTypes;
    }
 
+   protected void fireDeviceUnitAdded(Integer type, int unitNum)
+   {
+      DeviceUnitEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+
+      for ( int i = listeners.length - 2; i >= 0; i -= 2 )
+      {
+         if ( listeners[i] == DeviceUnitListener.class )
+         {
+            if (evt == null)
+            {
+               evt = new DeviceUnitEvent(this, type, unitNum);
+            }
+
+            ((DeviceUnitListener) listeners[i + 1]).deviceUnitAdded(evt);
+         }
+      }
+   }
+
+   protected void fireDeviceUnitRemoved(Integer type, int unitNum)
+   {
+      DeviceUnitEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+
+      for ( int i = listeners.length - 2; i >= 0; i -= 2 )
+      {
+         if ( listeners[i] == DeviceUnitListener.class )
+         {
+            if (evt == null)
+            {
+               evt = new DeviceUnitEvent(this, type, unitNum);
+            }
+
+            ((DeviceUnitListener) listeners[i + 1]).deviceUnitRemoved(evt);
+         }
+      }
+   }
+
    private boolean mVariableUnitCount = false;
    private Map     mUnitTypeMap       = null;
+
+   private EventListenerList listenerList = new EventListenerList();
 
    private Collection unitTypes = null;
 }
