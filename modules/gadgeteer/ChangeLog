@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-10-2003 nonchocoboy Updated to JCCL 0.12.0 API for both Java and C++.
+                        NEW VERSION: 0.13.0
 Jun-25-2003 patrickh    Allow the use of X11 on Mac OS X instead of the Carbon
                         UI classes.
                         NEW VERSION: 0.12.3
