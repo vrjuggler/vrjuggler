@@ -25,8 +25,11 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+AC_INIT([PyJuggler], [0.4], [vrjuggler-devel@lists.sourceforge.net])
+AC_PREREQ([2.53])
+AC_COPYRIGHT([PyJuggler is (C) Copyright 2002, 2003 by Patrick Hartling])
 AC_REVISION([$Revision$])
-AC_INIT([src/gmtl-functions.h])
+AC_CONFIG_SRCDIR([src/gmtl-functions.h])
 AC_CONFIG_AUX_DIR([Doozer++/scripts])
 DPP_PREREQ([1.5.1])
 DPP_INIT
@@ -112,11 +115,19 @@ if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
 fi
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
-DPP_PERL_VER([5.004], , , [AC_MSG_ERROR([*** Perl is required ***])])
+dnl DPP_PERL_VER([5.004], , , [AC_MSG_ERROR([*** Perl is required ***])])
 DPP_HAVE_GNU_MAKE([3.78], ,
     [AC_MSG_ERROR([*** The build system requires GNU make 3.78 or newer ***])])
 DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 DPP_PROG_INSTALL
+
+AC_PATH_PROG(PYTHON, python, no, [$PYTHON_ROOT/bin:$PATH])
+
+if test "x$PYTHON" = "xno" ; then
+   AC_MSG_WARN([*** python is required to run Pyste ***])
+else
+   AC_CHECK_FILE([$PYSTE], , [AC_MSG_WARN([*** pyste.py does not exist ***])])
+fi
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
@@ -131,8 +142,6 @@ AC_CHECK_FUNC([dlopen], [DL_LOAD_LIB=''],
     [AC_CHECK_LIB([dl], [dlopen], [DL_LOAD_LIB='-ldl'])])
 LIBS="${_vpr_save_LIBS}"
 
-# We do this first so that we can pass the $DL_LOAD_LIB in as a dependency of
-# NSPR.
 _pyj_save_LIBS="$LIBS"
 AC_CHECK_FUNC([openpty], [UTIL_LIB=''],
     [AC_CHECK_LIB([util], [openpty], [UTIL_LIB='-lutil'])])
@@ -174,20 +183,13 @@ LDFLAGS="${_pyj_save_LDFLAGS}"
 
 DPP_LANG_RESTORE
 
-AC_PATH_PROG(PYTHON, python, no, [$PYTHON_ROOT/bin:$PATH])
-
-if test "x$PYTHON" = "xno" ; then
-   AC_MSG_WARN([*** python is required to run Pyste ***])
-else
-   AC_CHECK_FILE([$PYSTE], , [AC_MSG_WARN([*** pyste.py does not exist ***])])
-fi
-
 BOOST_PYTHON_LIB="boost_python.$DYNAMICLIB_EXT"
 
 if test "x$OS_TYPE" = "xUNIX" ; then
    BOOST_PYTHON_LIB="lib$BOOST_PYTHON_LIB"
 fi
 
+# XXX: This is pathetic.
 AC_CHECK_FILE([$BOOST_PYTHON_LIBDIR/$BOOST_PYTHON_LIB], ,
               [AC_MSG_ERROR([*** Boost.Python v2 is required for PyJuggler ***])])
 
@@ -234,10 +236,16 @@ AC_SUBST(PYSTE)
 
 AC_SUBST(BOOST_PYTHON_LDFLAGS)
 
-AC_OUTPUT(Makefile
-          pyjutil/Makefile
-          src/Makefile
-          examples/Makefile
-          examples/cxx/Makefile
-          examples/cxx/PyAppLoader/Makefile
-          examples/cxx/PyExtApp/Makefile)
+# -----------------------------------------------------------------------------
+# Finish up.
+# -----------------------------------------------------------------------------
+
+AC_CONFIG_FILES([Makefile
+                 pyjutil/Makefile
+                 src/Makefile
+                 examples/Makefile
+                 examples/cxx/Makefile
+                 examples/cxx/PyAppLoader/Makefile
+                 examples/cxx/PyExtApp/Makefile])
+
+AC_OUTPUT
