@@ -60,6 +60,7 @@
 
 // To get the POSIX key stuff for storing self.
 #include <vpr/md/POSIX/Thread/ThreadKeyPosix.h>
+#include <vpr/md/POSIX/Sync/CondVarPosix.h>
 
 namespace vpr
 {
@@ -370,6 +371,9 @@ private:
    VPRThreadScope    mScope;         /**< Scope (process or system) of this thread */
    VPRThreadState    mState;
    size_t            mStackSize;
+
+   bool mThreadStartCompleted; /**< Flag for signaling when thread start is completed */
+   vpr::CondVarPosix mThreadStartCondVar;  /**< CondVar for thread starting */
 
    //void checkRegister(int status);
 
