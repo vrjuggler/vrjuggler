@@ -91,16 +91,21 @@ void RTRCInterfaceSubjectImpl::swap( const char* addChunkDBString, const char* r
 char* RTRCInterfaceSubjectImpl::getChunks()
 {
    //Lock the config manager
+   jccl::ConfigManager::instance()->lockActive();
+
    //Get the list of active config chunks from config manager
-   //Unlock the list
+   ConfigChunkDB* activeChunkDB = jccl::ConfigManager::instance()->getActiveConfig();
+
    //Compile a string of the config chunk DB
-   //Return it
+   std::ostringstream active_output;
 
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-      << "RTRCInterfaceSubjectImpl::getChunks() not implemented yet! Returning an empty string...\n"
-      << vprDEBUG_FLUSH;
+   active_output << activeChunkDB;
 
-   return NULL;
+   //Unlock the list
+   jccl::ConfigManager::instance()->unlockActive();
+
+   //Return the full string
+   return active_output.str();
 }
 
 }; // namespace jccl
