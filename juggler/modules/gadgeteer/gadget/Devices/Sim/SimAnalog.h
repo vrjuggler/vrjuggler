@@ -59,14 +59,14 @@ public:
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
    //: Return analog data
-   virtual float getAnalogData(int devNum=0)
+   virtual AnalogData* getAnalogData(int devNum=0)
    {
       vprASSERT(devNum < (int)mAnaData.size());    // Make sure we have enough space
-
-      float value = static_cast<float>( mAnaData[devNum] );
-      float normalized;
-      this->normalizeMinToMax( value, normalized );
-      return normalized;
+      return &(mAnaData[devNum]);
+//        float value = static_cast<float>( mAnaData[devNum] );
+//        float normalized;
+//        this->normalizeMinToMax( value, normalized );
+//        return normalized;
    }
 
    /* These functions don't do anything */
@@ -80,7 +80,7 @@ public:
    static std::string getChunkType() { return std::string("SimAnalog");}
 
 private:
-   std::vector<float>          mAnaData;     //: The analog data that we have
+   std::vector<AnalogData> mAnaData;     //: The analog data that we have
    std::vector<KeyModPair> mSimKeysUp;   //: The keys to press for moving analog up
    std::vector<KeyModPair> mSimKeysDown; //: The keys to press for moving analog up
    float                     mAnaStep;      //: The analog step size

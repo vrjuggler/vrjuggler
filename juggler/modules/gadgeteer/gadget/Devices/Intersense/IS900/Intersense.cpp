@@ -271,8 +271,11 @@ int Intersense::sample()
    min = stations[i].ana_min;
    num = min + stations[i].ana_num;
    if(stations[i].useAnalog) {
-       for( j = 0, k = min; (j < MAX_ANALOG_CHANNELS) && (k < IS_ANALOG_NUM) && (k < num); j++)
-      mInput[progress].analog[k] = mTracker.analogData(stationIndex, j);
+       float f;
+       for( j = 0, k = min; (j < MAX_ANALOG_CHANNELS) && (k < IS_ANALOG_NUM) && (k < num); j++) {
+           Analog::normalizeMinToMax(mTracker.analogData(stationIndex, j), f);
+           mInput[progress].analog[k] = f;
+       }
    }
 
 // Transforms between the cord frames
@@ -342,13 +345,14 @@ DigitalData* Intersense::getDigitalData( int d )
     return &(mInput[current].digital[d]);
 }
 
-float Intersense::getAnalogData( int d )
+AnalogData* Intersense::getAnalogData( int d )
 {
     float newValue;
     if(this->isActive() == false)
-   return 0.0;
-    Analog::normalizeMinToMax(mInput[current].analog[d], newValue);
-    return newValue;
+        return 0;
+    return &(mInput[current].analog[d]);
+//      Analog::normalizeMinToMax(mInput[current].analog[d], newValue);
+//      return newValue;
 }
 
 
@@ -367,10 +371,9 @@ void Intersense::updateData()
     for(i=0;i<mTracker.NumStations();i++)
         mData[getStationIndex(i,current)] = mData[getStationIndex(i,valid)];   // first hand
     for(i=0;i<IS_BUTTON_NUM;i++)
-   mInput[current].digital[i] = mInput[valid].digital[i];
+        mInput[current].digital[i] = mInput[valid].digital[i];
     for(i=0;i<IS_ANALOG_NUM;i++)
-   mInput[current].analog[i] = mInput[valid].analog[i];
-
+        mInput[current].analog[i] = mInput[valid].analog[i];
 // Locks and then swap the indicies
     swapCurrentIndexes();
 }

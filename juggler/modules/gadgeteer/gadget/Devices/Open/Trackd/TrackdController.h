@@ -134,17 +134,18 @@ public:
    //        "min" and "max" are set to 0.0f and 1.0f respectivly.
    //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
    //        Analog::normalizeMinToMax()
-   virtual float getAnalogData(int devNum=0)
+   virtual AnalogData* getAnalogData(int devNum=0)
    {
       vprASSERT(devNum < (int)mCurValuators.size() && "Analog index out of range");    // Make sure we have enough space
-      float normalized;
-      this->normalizeMinToMax( mCurValuators[devNum], normalized );
-      return normalized;
+      return &(mCurValuators[devNum]);
+//        float normalized;
+//        this->normalizeMinToMax( mCurValuators[devNum], normalized );
+//        return normalized;
    }
 
 private:
    TrackdControllerStandalone* mTrackdController;  // The controller we are dealing with
-   std::vector<float>      mCurValuators;          // The current (up-to-date) values
+   std::vector<AnalogData>      mCurValuators;          // The current (up-to-date) values
    std::vector<DigitalData>       mCurButtons;            // The current button states
 };
 
