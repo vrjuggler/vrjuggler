@@ -14,8 +14,9 @@
 #include <gmtl/Output.h>
 #include <gmtl/Vec.h>
 
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
+#include <Common/User.h>
+#include <OpenSGViewer.h>
+
 
 namespace
 {
@@ -50,8 +51,10 @@ void HoverSelectionMethod::init()
    #endif
 }
 
-OSG::NodePtr HoverSelectionMethod::updateSelection()
+void HoverSelectionMethod::updateSelection()
 {
+   vprASSERT(mInitialized && "updateSelection called before selection method was initialized");
+
    //   vwMo - Virtual World to object xform,
    //   vwMi - virtual world to "interface" (wand),
    //   iMo - Interface to object
@@ -101,7 +104,7 @@ OSG::NodePtr HoverSelectionMethod::updateSelection()
       while((!does_isect) && (node_i != selectable_nodes.end()))
       {
          cur_node = *node_i;
-         does_isect = this->intersect(cur_node, vm_M_wand);
+         does_isect = this->intersect(cur_node, vw_M_wand);
          ++node_i;
       }
    }
@@ -118,17 +121,18 @@ OSG::NodePtr HoverSelectionMethod::updateSelection()
    // -- UPDATE LOCAL STATE --- //
    // Initially no states have changed
    mSelectStateChanged = false;        // Intially state has not changed
+   mOldSelectionState = mSelectionState;
 
    // Switch on selection state
-   switch (mLocalSelectionState)
+   switch (mSelectionState)
    {
    case NotSelected:
       {
          if(does_isect)
          {
-            vprDEBUG(vprDBG_ALL, 1) << "GrabController: Intersection with entity: " << getEntity()->getName() << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL, 1) << "GrabController: Intersection with object: " << std::endl << vprDEBUG_FLUSH;
 
-            mLocalSelectionState = IsHighlighted;            
+            mSelectionState = IsHighlighted;            
             mSelectStateChanged = true;   // Now in selected state
             vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "GrabController: NotSelected --> IsSelected.\n" << vprDEBUG_FLUSH;
          }         
@@ -139,7 +143,7 @@ OSG::NodePtr HoverSelectionMethod::updateSelection()
          // If we don't isect any more --> NotSelected
          if(!does_isect)
          {
-            mLocalSelectionState = NotSelected;
+            mSelectionState = NotSelected;
             mSelectStateChanged = true;
             vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "GrabController: IsSelected --> NotSelected.\n" << vprDEBUG_FLUSH;
          }
@@ -152,7 +156,7 @@ OSG::NodePtr HoverSelectionMethod::updateSelection()
             gmtl::invert(wand_M_vw, vw_M_wand);
             mSelectionPoint_vw = wand_M_vw;
             
-            mLocalSelectionState = IsSelected;
+            mSelectionState = IsSelected;
             mSelectStateChanged = true;
             vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "GrabController: IsSelected --> IsGrabbed.\n" << vprDEBUG_FLUSH;           
          }
@@ -164,13 +168,13 @@ OSG::NodePtr HoverSelectionMethod::updateSelection()
          // Let go of grab --> IsSelected
          if(!grab_pressed)
          {
-            mLocalSelectionState = IsHighlighted;
+            mSelectionState = IsHighlighted;
             mSelectStateChanged = true;           
          }         
       }      
       break;
    default:
-      vprASSERT(false && "mLocalSelectionState is in an unknown state, this is bad.");
+      vprASSERT(false && "mSelectionState is in an unknown state, this is bad.");
    }
 
    // Update the visuals based upon this information
@@ -185,21 +189,21 @@ void HoverSelectionMethod::updateVisualState()
    if(mSelectStateChanged)    // Only update the visual rep when the state changes
    {
       // First determine if highlighting should even be on
-      if(NotSelected == mLocalSelectionState)
+      if(NotSelected == mSelectionState)
       { 
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Setting highlight state false: (NotSelected == mLocalSelectionState)\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Setting highlight state false: (NotSelected == mSelectionState)\n" << vprDEBUG_FLUSH;
          setHighlightState(false); 
       }
       else
       {  
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Setting highlight state true: !((NotSelected == mLocalSelectionState) || (UnSelected == mRemoteState))\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Setting highlight state true: !((NotSelected == mSelectionState) || (UnSelected == mRemoteState))\n" << vprDEBUG_FLUSH;
          setHighlightState(true); 
          
          float red(0.0f), green(0.0f), blue(0.0f);
 
-         if(IsHighlighted == mLocalSelectionState)
+         if(IsHighlighted == mSelectionState)
          {  blue = 1.0f; }
-         else if(IsSelected == mLocalSelectionState)
+         else if(IsSelected == mSelectionState)
          {  green = 0.5f; }         
       
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Setting highlight color: [" << red << "," 
@@ -209,7 +213,7 @@ void HoverSelectionMethod::updateVisualState()
 
    }   
 
-   if(mLocalSelectionState != NotSelected)
+   if(mSelectionState != NotSelected)
    {
       //vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Updating hightlight geometry.\n" << vprDEBUG_FLUSH;
       updateHighlightGeom();        // Update the geometry (only does this when selected)
@@ -225,7 +229,7 @@ bool HoverSelectionMethod::intersect(OSG::NodePtr node, gmtl::Matrix44f wandWorl
    // XXX: The bounding volume returned from getWorldVolume is in the platform (real world)
    //      coordinate frame, so we need to transform wandWorldPos in that coordinate
    //      frame from the vw coordinate frame it starts in
-   gmtl::Matrix44f plat_M_virt =  mViewer->getUser()->viewPlatform()->getTransform_platMvirt();
+   gmtl::Matrix44f plat_M_virt =  mViewer->getUser()->viewPlatform().getTransform_platMvirt();
    gmtl::Matrix44f plat_M_wand = plat_M_virt * wandWorldPos;
 
    osg::Matrix osg_wand_pos;
@@ -345,7 +349,7 @@ void HoverSelectionMethod::updateHighlightGeom(void)
 
 
 /** Initialize the selection geometry */
-void OpenSGGrabController::initSelectionGeom()
+void HoverSelectionMethod::initSelectionGeom()
 {
    vprASSERT(mInitialized == false && "Tried to initialize twice");
       
@@ -430,7 +434,7 @@ void OpenSGGrabController::initSelectionGeom()
    initWandRep();
 }
 
-void OpenSGGrabController::initWandRep()
+void HoverSelectionMethod::initWandRep()
 {
    // --- Initialize wand rep --- //
    // Create the geometyr
@@ -474,7 +478,7 @@ void OpenSGGrabController::initWandRep()
    osg::endEditCP  (wand_geo, osg::Geometry::MaterialFieldMask );
 }
 
-void OpenSGGrabController::attachWandRep()
+void HoverSelectionMethod::attachWandRep()
 {
    // Attach wand rep to root (world) coord for debugging
    OSG::NodePtr vworld_root = mViewer->getWorldRoot();     // Get the world root to attach to
@@ -488,7 +492,7 @@ void OpenSGGrabController::attachWandRep()
 /*! Update the highlight for a moved object. Does not handle changing the
  object, this is done by highlightChanged().
  */
-void OpenSGGrabController::updateWandRep(osg::Matrix osg_wand_pos)
+void HoverSelectionMethod::updateWandRep(osg::Matrix osg_wand_pos)
 {
    if(!mWandRepAttached)
    {
@@ -504,7 +508,8 @@ void OpenSGGrabController::updateWandRep(osg::Matrix osg_wand_pos)
 }
 
 
-void OpenSGGrabController::drawDebugGeom()
+/*
+void HoverSelectionMethod::drawDebugGeom()
 {
 #ifdef DEBUG_DRAW_VIEW_CONTROLLER
    glPushMatrix();
@@ -538,6 +543,6 @@ void OpenSGGrabController::drawDebugGeom()
    glPopMatrix();
 #endif
 }
-
+*/
 
 

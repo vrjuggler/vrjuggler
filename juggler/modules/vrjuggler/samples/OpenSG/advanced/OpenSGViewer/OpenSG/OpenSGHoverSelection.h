@@ -15,11 +15,7 @@
 #include <Common/HelperMacros.h>
 #include <gmtl/Matrix.h>
 
-
-SHARED_PTR_TYPE(OpenSGGrabController);
-REGISTER_CONTROLLER_CREATOR( GrabController_ID, OpenSGSubSystem, OpenSGGrabController);
-
-class OpenSGGrabController : public GrabController
+class OpenSGHoverSelection : public GrabController
 {
 public:
    OpenSGGrabController()
@@ -76,7 +72,7 @@ protected:
    /** Attach a wand representation to the base dataspace graph */
    void attachWandRep();
 
-protected:
+protected:     // ** Visual Rep stuff **//
    bool  mInitialized;     /**< Has everything been initialized */
    bool  mCurHightlightState; /**< The current highlighting state */
 

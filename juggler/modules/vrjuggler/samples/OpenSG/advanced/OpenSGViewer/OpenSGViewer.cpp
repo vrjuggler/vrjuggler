@@ -53,6 +53,8 @@
 #include <OpenSG/OSGDirectionalLight.h>
 #include <OpenSG/OSGSceneFileHandler.h>
 
+#include <Common/HoverSelectionMethod.h>
+
 
 // Handle any initialization needed before API
 void OpenSGViewer::init()
@@ -64,6 +66,7 @@ void OpenSGViewer::init()
    mSelectionMethod = new HoverSelectionMethod;
 
    mSelectionMethod->setViewer(this);
+   mSelectionMethod->init();
 }
 
 /** Called once per context at context creation */
@@ -126,6 +129,8 @@ void OpenSGViewer::initScene(void)
       std::cout << "OpenSGViewer::initScene: Loading [" << mFileToLoad.c_str() << "]\n";
       mWorldRoot = OSG::SceneFileHandler::the().read((OSG::Char8 *)(mFileToLoad.c_str()));
    }
+
+   mSelectableNodes.push_back(mWorldRoot);
 
    // --- Light setup --- //
    // - Add directional light for scene

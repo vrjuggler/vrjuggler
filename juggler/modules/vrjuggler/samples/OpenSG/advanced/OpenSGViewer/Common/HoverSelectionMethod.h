@@ -3,9 +3,27 @@
 
 #include <Common/SelectionMethod.h>
 
+#include <OpenSG/OSGMatrix.h>
+#include <OpenSG/OSGNode.h>
+#include <OpenSG/OSGGeoPropPositions.h>
+#include <OpenSG/OSGGeoPropPtrs.h>
+#include <OpenSG/OSGTransform.h>
+
+#include <OpenSG/OSGSimpleMaterial.h>
+
+#include <gmtl/Matrix.h>
+
+#include <boost/bind.hpp>
+#include <boost/function.hpp>
+
+
 class HoverSelectionMethod : public SelectionMethod
 {
 public:
+   HoverSelectionMethod()
+      : mInitialized(false), mWandRepAttached(false)
+   {;}
+
    virtual void updateSelection();
 
    virtual OSG::NodePtr getCurSelection()
@@ -17,31 +35,9 @@ public:
    /** Initialization method
    * Called by creator when the control should be initialized.
    */
-   virtual void init()
-   {
-      mSelectStateChanged = false;
-      mLocalSelctionState = SelectionMethod::NotSelected;
-      mOldLocalSelectionState = SelectionMethod::NotSelected;
+   virtual void init();   
 
-      initSelectionGeom();          // Initialize the geometry node that we use for marking selection
-
-      #ifdef DEBUG_DRAW_VIEW_CONTROLLER
-      // Setup drawing of debug geometry
-      boost::function<void> gl_callback = boost::bind(&OpenSGGrabController::drawDebugGeom, this);
-      Viewer* base_viewer = DataSpace::instance()->getViewer();
-      OpenSGViewer* osg_viewer = dynamic_cast<OpenSGViewer*>(base_viewer);
-      vprASSERT(osg_viewer != NULL);
-      
-      osg_viewer->addGlCallback(gl_callback);      // Add callback for drawing debug geometry
-      #endif
-   }
-
-   void initLocalGrabControllerData();
-
-   /** Update the grab state */
-   virtual void preUpdate(Traverser* traverser);
-
-   bool intersect(OSG::NodePtr node, gmtl::Matrix44f wandWorldPos)
+   bool intersect(OSG::NodePtr node, gmtl::Matrix44f wandWorldPos);
 
 protected:
    /** Set the current state of the highlight */
@@ -93,9 +89,6 @@ protected:     // ** Visual Rep stuff **//
    bool                 mWandRepAttached;
    osg::NodePtr         mWandRepTransNode;
    osg::TransformPtr    mWandRepTrans;
-
-};
-
 
 };
 

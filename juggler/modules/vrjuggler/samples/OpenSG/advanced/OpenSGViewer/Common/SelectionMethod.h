@@ -32,10 +32,10 @@ public:
    {
       mSelectStateChanged = false;
       mSelectionState = SelectionMethod::NotSelected;
-      mOldLocalSelectionState = SelectionMethod::NotSelected;
+      mOldSelectionState = SelectionMethod::NotSelected;
    }
 
-   virtual OSG::NodePtr checkSelection() = 0;
+   virtual void updateSelection() = 0;
 
    virtual gmtl::Matrix44f getSelectionPoint()
    { return mSelectionPoint_vw; }
