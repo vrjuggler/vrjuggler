@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2005 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -57,8 +57,6 @@ namespace vrj
  * CORBA remote performance monitor implementation. Handles
  * configuration of the Tweek CORBA Manager and creation of the interface
  * subject.
- *
- * @date July 31, 2002
  */
    class CorbaPerfPlugin
       : public vrj::PerfPlugin
