@@ -289,16 +289,6 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
     # appropriate.
     AC_DEFINE(VPR_USE_PTHREADS,)
     AC_DEFINE(VPR_POSIX_SEMAPHORES,)
-    AC_DEFINE(RWSTD_MULTI_THREAD,)
-    AC_DEFINE(RW_MULTI_THREAD,)
-    AC_DEFINE(_THREAD_SAFE,)
-
-    # On Linux, defining _THREAD_SAFE is the same as defining _REENTRANT, so
-    # we will not define both.
-    if test "x$PLATFORM" != "xLinux" ; then
-        AC_DEFINE(_REENTRANT,)
-    fi
-
     # Use POSIX threading, mutexes and shared memory.
     MUTEX_SYS='POSIX'
     SHMEM_SYS='POSIX'
@@ -353,6 +343,18 @@ else
 
     HANDLE_ABS='NSPR'
     SOCKET_ABS='NSPR'
+fi
+
+if test "x$USE_PTHREADS" = "xyes" ; then
+    AC_DEFINE(RWSTD_MULTI_THREAD,)
+    AC_DEFINE(RW_MULTI_THREAD,)
+    AC_DEFINE(_THREAD_SAFE,)
+
+    # On Linux, defining _THREAD_SAFE is the same as defining _REENTRANT, so
+    # we will not define both.
+    if test "x$PLATFORM" != "xLinux" ; then
+        AC_DEFINE(_REENTRANT,)
+    fi
 fi
 
 # -----------------------------------------------------------------------------
