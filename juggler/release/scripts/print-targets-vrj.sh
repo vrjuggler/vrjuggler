@@ -62,6 +62,7 @@ Library type targets are:
                       (that does not have a default value).
 
 Install targets are:
+    hier            - Make the full directory hierarchy for the installation.
     install-all     - Install all versions of the libraries, all header files,
                       the Data directory, the configuration GUI and the test
                       code.

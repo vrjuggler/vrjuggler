@@ -40,6 +40,7 @@
 #                   target depends on a correct value for ${LIBDIR} (that does
 #                   not have a default value).
 #
+# hier            - Make the full directory hierarchy for the installation.
 # install-all     - Install all versions of the libraries, all header files,
 #                   the Data directory, the configuration GUI and the test
 #                   code.
@@ -651,7 +652,7 @@ clean-links:
 # the static debugging version of the libraries.  The steps taken for a full
 # installation are:
 #
-#     1) Create the installation directory.
+#     1) Create the full installation directory hierarchy.
 #     2) Install the libraries.
 #     3) Install the header files.
 #     4) Install the test programs.
@@ -662,8 +663,19 @@ clean-links:
 # Steps to take before beginning the installation process.  This target is
 # independent of the current ABI.
 beforeinstall:
+	${MAKE} hier
+
+# Make the full directory hierarchy for the installation.
+hier:
+	@echo "------------------------------------------------"
+	@echo "Making hierarchy"
+	@echo "------------------------------------------------"
 	${SHELL} ${scriptdir}/mkinstalldirs ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.install.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.include.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
 
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.
