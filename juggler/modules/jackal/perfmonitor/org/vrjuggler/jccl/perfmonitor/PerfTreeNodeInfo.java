@@ -37,41 +37,52 @@ import java.awt.*;
 import java.awt.event.*;
 import VjComponents.PerfMonitor.LabeledPerfDataCollector; 
 
-public class PerfTreeNodeInfo implements ActionListener {
+public class PerfTreeNodeInfo implements ActionListener
+{
 
-    protected class LabeledPanelButton extends JButton {
-        public LabeledPerfDataCollector collector;
-        public LabeledPerfDataCollector.IndexInfo index_info;
+   protected class LabeledPanelButton extends JButton
+   {
+      public LabeledPerfDataCollector collector;
+      public LabeledPerfDataCollector.IndexInfo index_info;
 
-        public LabeledPanelButton (LabeledPerfDataCollector _collector, 
-                                   LabeledPerfDataCollector.IndexInfo _ii, 
-                                   String text) {
-            super (text);
-            collector = _collector;
-            index_info = _ii;
-        }
-    }
+      public LabeledPanelButton (LabeledPerfDataCollector _collector, 
+                                 LabeledPerfDataCollector.IndexInfo _ii, 
+                                 String text)
+      {
+         super (text);
+         collector = _collector;
+         index_info = _ii;
+      }
+   }
 
-    public String sublabel;
-    public LabeledPerfDataCollector.IndexInfo ii; // null for folders
-    protected double mSumAverages; // sum of averages of children, if ii = null
-    protected LabeledPerfDataCollector mCollector;
-    protected JComponent mComponent;
-    protected JLabel mValueLabel;
-    protected JButton mGraphButton;
+   public String sublabel;
+   public LabeledPerfDataCollector.IndexInfo ii; // null for folders
+   protected double mSumAverages; // sum of averages of children, if ii = null
+   protected LabeledPerfDataCollector mCollector;
+   protected JComponent mComponent;
+   protected JLabel mLabel;
+   protected JLabel mValueLabel;
+   protected JButton mGraphButton;
+   protected Component mPad;
+   
+   
+   /* if ii is null, it's for a collector... */
+   public PerfTreeNodeInfo (String _sublabel, LabeledPerfDataCollector.IndexInfo _ii, LabeledPerfDataCollector col)
+   {
+      sublabel = _sublabel;
+      ii = _ii;
+      mSumAverages = 0.0;
+      mCollector = col;
 
-    /* if ii is null, it's for a collector... */
-    public PerfTreeNodeInfo (String _sublabel, LabeledPerfDataCollector.IndexInfo _ii, LabeledPerfDataCollector col) {
-	sublabel = _sublabel;
-	ii = _ii;
-	mSumAverages = 0.0;
-	mCollector = col;
+      mComponent = new JPanel();
+      mComponent.setLayout (new BoxLayout (mComponent, BoxLayout.X_AXIS));
+      mComponent.setBackground (Color.WHITE);
 
-        mComponent = new JPanel();
-        mComponent.setLayout (new BoxLayout (mComponent, BoxLayout.X_AXIS));
-        //mComponent.setBackground (Color.WHITE);
-
-	if (ii != null) {
+      mPad = Box.createHorizontalStrut(150);
+        
+        
+      if (ii != null)
+      {
 //  	    JLabel l = new JLabel(_sublabel);
 //  	    mComponent.add (l);
 //              mComponent.add (Box.createHorizontalGlue());
@@ -86,90 +97,130 @@ public class PerfTreeNodeInfo implements ActionListener {
 //  	    //mComponent.add (mGraphButton);
 
 
-            JLabel l = new JLabel(_sublabel + "            ");
-            mValueLabel = new JLabel (padFloat(getAverage()/1000.0) + " ms", JLabel.RIGHT);
-            GridBagLayout gbl = new GridBagLayout();
-            GridBagConstraints gbc = new GridBagConstraints();
-            mComponent.setLayout (gbl);
+         mLabel = new JLabel(_sublabel + "            ");
+         mValueLabel = new JLabel (padFloat(getAverage()/1000.0) + " ms", JLabel.RIGHT);
+         GridBagLayout gbl = new GridBagLayout();
+         GridBagConstraints gbc = new GridBagConstraints();
+            
+         gbc.gridwidth = gbc.RELATIVE;
+         gbl.setConstraints (mLabel, gbc);
+         mComponent.add(mLabel);
 
-            gbc.gridwidth = gbc.RELATIVE;
-            gbl.setConstraints (l, gbc);
-            mComponent.add(l);
+         mComponent.add (mPad);
+            
+            
+         gbc.gridwidth = gbc.REMAINDER;
+         gbc.anchor = gbc.EAST;
+         gbc.weightx = 1;
+         gbc.fill = gbc.BOTH;
+         gbl.setConstraints (mValueLabel, gbc);
+         mComponent.add (mValueLabel);
+            
+            
+         mGraphButton = new LabeledPanelButton (col, ii, "Graph");
+      }
+      else
+      {
+         mLabel = new JLabel ("<html><i>" + sublabel + "</i></html>");
+         mComponent.add(mLabel);
+         //mComponent.add (Box.createHorizontalGlue());
+         mComponent.add (mPad);
 
-            gbc.gridwidth = gbc.REMAINDER;
-            gbc.anchor = gbc.EAST;
-            gbc.weightx = 1;
-            gbc.fill = gbc.BOTH;
-            gbl.setConstraints (mValueLabel, gbc);
-            mComponent.add (mValueLabel);
+         mValueLabel = new JLabel (padFloat(getAverage()/1000.0) + " ms", JLabel.RIGHT);
+         mComponent.add (mValueLabel);
+         mGraphButton = new LabeledPanelButton (col, null, "Graph");
+         mGraphButton.setActionCommand ("Graph");
+         mGraphButton.addActionListener (this);
+         //b.addActionListener (PerfAnalyzerPanel.this);
+         Insets insets = new Insets (1,1,1,1);
+         mGraphButton.setMargin(insets);
+         //mComponent.add (mGraphButton);
+      }
+      if (mValueLabel != null) 
+      {
+         mPad.setSize ((int)(500 - mLabel.getSize().getWidth() - mValueLabel.getSize().getWidth()), 1);
+      }
+        
+   }
 
-            mGraphButton = new LabeledPanelButton (col, ii, "Graph");
-	}
-	else {
-	    mComponent.add(new JLabel ("<html><i>" + sublabel + "</i></html>"));
-            mComponent.add (Box.createHorizontalGlue());
-	    mValueLabel = new JLabel (padFloat(getAverage()/1000.0) + " ms", JLabel.RIGHT);
-	    mComponent.add (mValueLabel);
-	    mGraphButton = new LabeledPanelButton (col, null, "Graph");
-	    mGraphButton.setActionCommand ("Graph");
-	    mGraphButton.addActionListener (this);
-	    //b.addActionListener (PerfAnalyzerPanel.this);
-	    Insets insets = new Insets (1,1,1,1);
-	    mGraphButton.setMargin(insets);
-	    //mComponent.add (mGraphButton);
-	}
-    }
+   
+   public String toString ()
+   {
+      return sublabel;
+   }
 
-    public String toString () {
-	return sublabel;
-    }
-    
-    public JComponent getComponent() {
-	return mComponent;
-    }
+   
+   public JComponent getComponent()
+   {
+      return mComponent;
+   }
+   
 
-    public LabeledPerfDataCollector.IndexInfo getIndexInfo() {
-	return ii;
-    }
+   public LabeledPerfDataCollector.IndexInfo getIndexInfo()
+   {
+      return ii;
+   }
 
-    public LabeledPerfDataCollector getCollector() {
-	return mCollector;
-    }
+   
+   public LabeledPerfDataCollector getCollector()
+   {
+      return mCollector;
+   }
 
-    public double getAverage () {
-	if (ii != null) 
-	    return ii.getAverage();
-	else
-	    return mSumAverages;
-    }
+   
+   public double getAverage ()
+   {
+      if (ii != null) 
+      {
+         return ii.getAverage();
+      }
+      else
+      {
+         return mSumAverages;
+      }
+   }
 
-    public void setAverage (double avg) {
-	mSumAverages = avg;
-    }
+   
+   public void setAverage (double avg)
+   {
+      mSumAverages = avg;
+   }
 
-    public JButton getGraphButton () {
-	return mGraphButton;
-    }
 
-    public void update() {
-	if (mValueLabel != null)
-	    mValueLabel.setText (padFloat(getAverage()/1000.0) + " ms");
-    }
+   public JButton getGraphButton ()
+   {
+      return mGraphButton;
+   }
 
-    /** Utility method for various printing routines. */
-    private String padFloat (double f) {
-	// reformats f to a string w/ 3 places after decimal
-	String s = Double.toString(f);
-	if (s.indexOf('E') != -1)
-	    return s;
-	int i = s.lastIndexOf('.');
-	if ((i >= 0) && (i+5 < s.length()))
-	    s = s.substring (0, i + 5);
-	return s;
-    }
+   
+   public void update()
+   {
+      if (mValueLabel != null) 
+      {
+         mValueLabel.setText (padFloat(getAverage()/1000.0) + " ms");
+         mPad.setSize ((int)(500 - mLabel.getSize().getWidth() - mValueLabel.getSize().getWidth()), 1);
+      }
+      
+   }
 
-    public void actionPerformed (ActionEvent e) {
-	System.out.println ("actionevent...");
-    }
+   
+   /** Utility method for various printing routines. */
+   private String padFloat (double f)
+   {
+      // reformats f to a string w/ 3 places after decimal
+      String s = Double.toString(f);
+      if (s.indexOf('E') != -1)
+         return s;
+      int i = s.lastIndexOf('.');
+      if ((i >= 0) && (i+5 < s.length()))
+         s = s.substring (0, i + 5);
+      return s;
+   }
+
+   
+   public void actionPerformed (ActionEvent e)
+   {
+      System.out.println ("actionevent...");
+   }
 
 }
