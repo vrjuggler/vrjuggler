@@ -122,7 +122,7 @@ BUILD_GUI	= @BUILD_GUI@
 # =============================================================================
 _DEBUG_DIR	= debug
 _OPT_DIR	= opt
-_DEFAULT_DIR	= ${_DEBUG_DIR}
+_DEFAULT_DIR	= ${_OPT_DIR}
 
 _UMASK		= 002
 
