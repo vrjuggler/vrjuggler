@@ -135,7 +135,6 @@ namespace cluster
 
    void DeviceServer::addClient(ClusterNode* new_client_node)
    {
-      vprASSERT(0 == mClientsLock.test());
       vprASSERT(new_client_node != NULL && "You can not add a new client that is NULL");
       vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
@@ -144,7 +143,6 @@ namespace cluster
 
    void DeviceServer::removeClient(const std::string& host_name)
    {
-      vprASSERT(0 == mClientsLock.test());
       vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
       for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ;
