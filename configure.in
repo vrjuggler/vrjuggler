@@ -62,7 +62,7 @@ dnl # -------------------------------------------- #
 dnl # Enable binary format.  Possible values are "O32", "N32" or "64".
 dnl # The default is "N32".
 AC_ARG_WITH(abi,
-            [  --with-abi=<O32|N32_M3|N32_M4|64_M3|64_M4|HP|ELF_i386>
+            [  --with-abi=<O32|N32_M3|N32_M4|64_M3|64_M4|HP|ALPHA|ELF_i386>
                           Define the Application Binary
                           Interface to use                [default=N32_M3]],
             _abi_type="$withval", _abi_type='N32_M3')
@@ -184,6 +184,9 @@ case "x${_abi_type}" in
         ;;
     xHP)
         VJ_ABI_CFG(HP, PA-RISC)
+        ;;
+    xALPHA)
+        VJ_ABI_CFG(ALPHA)
         ;;
     xELF_i386)
         VJ_ABI_CFG('ELF', 'i386')
@@ -310,8 +313,20 @@ case $target_os in
         ;;
     dnl # DEC Alpha running Digital UNIX 4.0.
     osf4.0)
+        AR='ar -r'
+        INCLUDES="$INCLUDES -I/usr/include"
+        LD='${CXX} -shared'
+        LDOPTS=''
+        OPT_FLAGS='-O2'
+        SHAREDLIB_EXT='so'
+
         AC_DEFINE(VJ_OS_DUX,)
-        PLATFORM='alpha-DUX'
+        ABI='ALPHA'
+        ISA=""
+        ABI_LIST='ALPHA'
+        LIBBITSUF=''
+        _EXTRA_FLAGS=''
+        PLATFORM='alpha-osf'
         ;;
     dnl # A machine running FreeBSD.  Currently only i386 is known to compile.
     freebsd*)
