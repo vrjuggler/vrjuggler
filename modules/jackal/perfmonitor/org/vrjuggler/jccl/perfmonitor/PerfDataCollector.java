@@ -37,11 +37,7 @@ package VjComponents.PerfMonitor;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
-
-import VjComponents.PerfMonitor.DataLine;
 import VjConfig.*;
-import VjControl.Core;
-import VjConfig.ConfigStreamTokenizer;
 
 /** Class for storing performance data from a single source.
  *  A source is, for example, a jccl::PerfDataBuffer.

@@ -45,7 +45,6 @@ import org.w3c.dom.*;
 
 import VjConfig.*;
 import VjControl.Core;
-import VjConfig.ConfigStreamTokenizer;
 
 /** Class for storing performance data from a single source.
  *  A source is, for example, a jccl::PerfDataBuffer.
