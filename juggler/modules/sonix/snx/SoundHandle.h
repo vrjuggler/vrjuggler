@@ -50,6 +50,7 @@
 #include <gmtl/MatrixOps.h>
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
+#include <vpr/Util/Assert.h>
 
 #include <snx/sonix.h>
 
@@ -293,7 +294,7 @@ namespace snx
        */
       virtual void configure( const snx::SoundInfo& description )
       {
-         assert( mAlias != mDefaultName && "you must call init to set your sound's name" );
+         vprASSERT(mAlias != mDefaultName && "you must call init to set your sound's name");
          sonix::instance()->configure( mAlias, description );
       }
 

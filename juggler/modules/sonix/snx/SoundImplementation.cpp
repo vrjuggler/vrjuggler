@@ -39,11 +39,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <snx/snxConfig.h>
+
 #include <gmtl/Math.h>
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
+#include <vpr/Util/Assert.h>
 
 #include <snx/SoundImplementation.h>
 
@@ -110,7 +113,7 @@ void SoundImplementation::unbindAll()
       this->unbind( (*it).first );
    }
 
-   assert( mBindLookup.size() == 0 && "unbindAll failed" );
+   vprASSERT(mBindLookup.size() == 0 && "unbindAll failed");
    */
 }
 

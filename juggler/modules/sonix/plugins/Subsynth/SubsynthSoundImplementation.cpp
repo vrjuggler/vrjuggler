@@ -52,6 +52,7 @@
 #include <gmtl/MatrixOps.h>
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
+#include <vpr/Util/Assert.h>
 
 #include <snx/FileIO.h>
 #include <snx/SoundImplementation.h>
@@ -591,7 +592,7 @@ void SubsynthSoundImplementation::unbind( const std::string& alias )
       mRunner.unpause();
    }
    
-   assert( mBindLookup.count( alias ) == 0 && "unbind failed" );
+   vprASSERT(mBindLookup.count( alias ) == 0 && "unbind failed");
 }
 
-}; // end namespace
+} // end namespace

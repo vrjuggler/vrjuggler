@@ -43,9 +43,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <fstream>
 
+#include <vpr/Util/Assert.h>
 #include <snx/FileIO.h>
 
 namespace snx
@@ -78,7 +78,7 @@ int fileSize(const char* filename)
       return 0;
 
    FILE* fh = fopen( filename, "rb" );
-   assert( fh != NULL ); 
+   vprASSERT(fh != NULL); 
 
    if ( fseek(fh, 0, SEEK_END) == 0 )
    {
@@ -102,7 +102,7 @@ void fileLoad(const char* filename, std::vector<unsigned char>& data)
    
    FILE* fh = fopen( filename, "rb" );
    unsigned int file_length = fread( &data[0], 1, data.size(), fh );
-   assert( file_length == data.size() );
+   vprASSERT(file_length == data.size());
    fclose( fh );
 }
 
