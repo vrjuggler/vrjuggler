@@ -68,13 +68,11 @@ public:
    }
 
    vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length,
-                              const int flags, vpr::InetAddr& from,
-                              vpr::Uint32& bytes_read,
+                              vpr::InetAddr& from, vpr::Uint32& bytes_read,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
-                            const int flags, const vpr::InetAddr& to,
-                            vpr::Uint32& bytes_sent,
+                            const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    virtual vpr::ReturnStatus isReadReady() const;

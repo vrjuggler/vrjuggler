@@ -9,6 +9,8 @@
 #include <numeric>
 #endif
 
+#include <boost/concept_check.hpp>
+
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadFunctor.h>
@@ -27,7 +29,7 @@
 namespace vprTest
 {
 
-CPPUNIT_TEST_SUITE_REGISTRATION( GUIDTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( SocketSimulatorTest );
 
 void SocketSimulatorTest::graphConstructionTest ()
 {
@@ -299,7 +301,7 @@ void SocketSimulatorTest::networkCommTestUDP()
    for ( unsigned int i = 0; i < source_sockets.size(); i++ )
    {
       vpr::Uint32 bytes_written;
-      status = source_sockets[i].sendto(msg, msg.length(), 0,
+      status = source_sockets[i].sendto(msg, msg.length(),
                                         dest_sockets[i].getLocalAddr(),
                                         bytes_written);
       CPPUNIT_ASSERT(status.success() && "Failed to send buffer to receiver");
@@ -310,7 +312,7 @@ void SocketSimulatorTest::networkCommTestUDP()
 
       do
       {
-         status = dest_sockets[i].recvfrom(buffer, sizeof(buffer), 0, src_addr,
+         status = dest_sockets[i].recvfrom(buffer, sizeof(buffer), src_addr,
                                            bytes_read);
       }
       while (status == vpr::ReturnStatus::WouldBlock);
@@ -474,6 +476,8 @@ void SocketSimulatorTest::multiThreadTest ()
 
 void SocketSimulatorTest::multiThreadTest_acceptor (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::ReturnStatus status;
    vpr::Uint32 bytes_written;
    vpr::SocketAcceptor acceptor;
@@ -486,7 +490,7 @@ void SocketSimulatorTest::multiThreadTest_acceptor (void* arg)
 
    // The acceptor must be non-blocking so that the connected socket it
    // returns will also be non-blocking.  *sigh*
-   status = acceptor.getSocket().enableNonBlocking();
+   status = acceptor.getSocket().setBlocking(false);
    assertTestThread(status.success() &&
                     "Failed to enable non-blocking for accepted socket");
 
@@ -506,7 +510,7 @@ void SocketSimulatorTest::multiThreadTest_acceptor (void* arg)
    assertTestThread(status.success() && "Accept failed");
 
    assertTestThread(client_sock.isOpen() && "Accepted socket should be open");
-   assertTestThread(client_sock.getNonBlocking() &&
+   assertTestThread(! client_sock.isBlocking() &&
                     "Connected client socket should be non-blocking");
 
    // Wait until the connector knows that it's connected before we proceed.
@@ -541,6 +545,8 @@ void SocketSimulatorTest::multiThreadTest_acceptor (void* arg)
 
 void SocketSimulatorTest::multiThreadTest_connector (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::ReturnStatus status;
    vpr::InetAddr remote_addr;
    vpr::SocketConnector connector;
@@ -562,7 +568,7 @@ void SocketSimulatorTest::multiThreadTest_connector (void* arg)
    status = con_sock.open();
    assertTestThread(status.success() && "Failed to open connector socket");
 
-   status = con_sock.enableNonBlocking();
+   status = con_sock.setBlocking(false);
    assertTestThread(status.success() &&
                     "Failed to enable non-blocking for connector");
 
@@ -593,7 +599,7 @@ void SocketSimulatorTest::multiThreadTest_connector (void* arg)
 
    assertTestThread(status.success() && "Connector can't connect");
 
-   assertTestThread(con_sock.getNonBlocking() &&
+   assertTestThread(! con_sock.isBlocking() &&
                     "Connector should be non-blocking");
 
    // Tell the acceptor that we are ready and it can do whatever it wants.

@@ -162,7 +162,7 @@ public:
    /// Gets the handle to this socket.
    vpr::IOSysSIM::Handle getHandle() const
    {
-      return this;
+      return const_cast<vpr::IOSysSIM::Handle>(this);
    }
 
    // set it.

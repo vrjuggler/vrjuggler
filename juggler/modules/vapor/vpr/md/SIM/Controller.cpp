@@ -45,6 +45,7 @@
 #include <vpr/Util/Interval.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Thread/Thread.h>
+#include <vpr/System.h>
 
 #include <vpr/md/SIM/Network/Message.h>
 #include <vpr/md/SIM/Network/MessagePtr.h>
