@@ -30,10 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vjConfig.h>
 
-#include <Input\vjKeyboard\vjKeyboardWin32.h>
-#include <sys\types.h>
-#include <Math\vjCoord.h>
+#include <sys/types.h>
+
+#include <Math/vjCoord.h>
+#include <Input/vjKeyboard/vjKeyboardWin32.h>
 
 // The message loop
 void samplem_keys(void*);
@@ -547,17 +549,9 @@ void vjKeyboardWin32::createWindowWin32 ()
    MenuInit(m_hInst);
 
    /* Create the app. window */
-   m_hWnd = CreateWindow(("Juggler Keyboard"),
-                         (instName),
-                         WS_OVERLAPPEDWINDOW,
-                         m_x,
-                         m_y,
-                         m_width,//CW_USEDEFAULT,
-                         m_height,//CW_USEDEFAULT,
-                         (HWND) NULL,
-                         NULL,
-                         m_hInst,
-                         (LPSTR) NULL);
+   m_hWnd = CreateWindow(("Juggler Keyboard"), (instName), WS_OVERLAPPEDWINDOW,
+                         m_x, m_y, m_width, m_height, (HWND) NULL, NULL,
+                         m_hInst, (LPSTR) NULL);
    ShowWindow(m_hWnd,SW_SHOW);
    UpdateWindow(m_hWnd);
 
