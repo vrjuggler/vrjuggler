@@ -79,7 +79,11 @@
 #                  being built (e.g., SGI -> IRIX on an SGI computer,
 #                  HP => HP-UX on an HP workstation).
 #
-# LIBRARY        - The base name of the library that will be built with no
+# VJ_LIBRARY     - The base name of the core Juggler library that will be
+#                  built with no file extension.
+# GL_LIBRARY     - The base name of the OpenGL Juggler API library with no
+#                  file extension.
+# PF_LIBRARY     - The base name of the Performer Juggler API library with no
 #                  file extension.
 # -----------------------------------------------------------------------------
 # Targets defined here are:
