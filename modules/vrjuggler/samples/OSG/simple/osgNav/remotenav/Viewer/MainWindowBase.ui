@@ -13,7 +13,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>MMA Client</string>
+        <string>Nav Control</string>
     </property>
     <hbox>
         <property name="name">
