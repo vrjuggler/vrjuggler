@@ -1,0 +1,147 @@
+package id47wwsctylgvb1ctyljbb6;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#_0RL_cd_04c606180245213e_00000000:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#Observer_Helper:oiref><oihard>
+@__modelType reference 
+*/
+class reference4 {
+}/**
+@__ref <oiref:cpp#Class#_pof_SubjectManager:oiref><oihard>
+@__modelType reference 
+*/
+class reference5 {
+}/**
+@__ref <oiref:cpp#Class#_impl_Subject:oiref><oihard>
+@__modelType reference 
+*/
+class reference6 {
+}/**
+@__ref <oiref:cpp#Class#_pof_Observer:oiref><oihard>
+@__modelType reference 
+*/
+class reference7 {
+}/**
+@__ref <oiref:cpp#Class#tweek::CorbaManager:oiref><oihard>
+@__modelType reference 
+*/
+class reference8 {
+}/**
+@__ref <oiref:cpp#Class#_impl_SubjectManager:oiref><oihard>
+@__modelType reference 
+*/
+class reference9 {
+}/**
+@__ref <oiref:cpp#Class#_impl_Observer:oiref><oihard>
+@__modelType reference 
+*/
+class reference10 {
+}/**
+@__ref <oiref:cpp#Class#tweek::SubjectImpl:oiref><oihard>
+@__modelType reference 
+*/
+class reference11 {
+}/**
+@__ref <oiref:cpp#Class#tweek::ObserverImpl:oiref><oihard>
+@__modelType reference 
+*/
+class reference12 {
+}/**
+@__ref <oiref:cpp#Class#_pof_Subject:oiref><oihard>
+@__modelType reference 
+*/
+class reference14 {
+}/**
+@__ref <oiref:cpp#Class#_objref_Subject:oiref><oihard>
+@__modelType reference 
+*/
+class reference16 {
+}/**
+@__ref <oiref:cpp#Class#SubjectManager_Helper:oiref><oihard>
+@__modelType reference 
+*/
+class reference17 {
+}/**
+@__ref <oiref:cpp#Class#Subject_Helper:oiref><oihard>
+@__modelType reference 
+*/
+class reference18 {
+}/**
+@__ref <oiref:cpp#Class#_0RL_cd_0897e6e6faa9bc64_00000000:oiref><oihard>
+@__modelType reference 
+*/
+class reference19 {
+}/**
+@__ref <oiref:cpp#Class#_objref_SubjectManager:oiref><oihard>
+@__modelType reference 
+*/
+class reference20 {
+}/**
+@__ref <oiref:cpp#Class#tweek::SubjectManagerImpl:oiref><oihard>
+@__modelType reference 
+*/
+class reference21 {
+}/**
+@__ref <oiref:cpp#Class#_objref_Observer:oiref><oihard>
+@__modelType reference 
+*/
+class reference22 {
+}/**
+@__ref <oiref:cpp#Class#Observer:oiref><oihard>
+@__modelType reference 
+*/
+class reference86 {
+}/**
+@__ref <oiref:cpp#Class#SubjectManager:oiref><oihard>
+@__modelType reference 
+*/
+class reference87 {
+}/**
+@__ref <oiref:cpp#Class#Subject:oiref><oihard>
+@__modelType reference 
+*/
+class reference88 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#_impl_Observer:oiref>=230,490,200,144,1:oigroup>
+<oigroup:<oiref:cpp#Class#_impl_Subject:oiref>=10,390,200,170,1:oigroup>
+<oigroup:<oiref:cpp#Class#tweek::SubjectManagerImpl:oiref>=670,230,200,176,1:oigroup>
+<oigroup:<oiref:cpp#Class#_pof_Observer:oiref>=450,10,200,131,1:oigroup>
+<oigroup:<oiref:cpp#Class#_pof_Subject:oiref>=450,390,200,131,1:oigroup>
+<oigroup:<oiref:cpp#Class#Observer_Helper:oiref>=10,170,200,183,1:oigroup>
+<oigroup:<oiref:cpp#Class#_objref_Observer:oiref>=670,450,200,183,1:oigroup>
+<oigroup:<oiref:cpp#Class#SubjectManager_Helper:oiref>=450,570,200,183,1:oigroup>
+<oigroup:<oiref:cpp#Class#Subject_Helper:oiref>=230,790,200,183,1:oigroup>
+<oigroup:<oiref:cpp#Class#tweek::ObserverImpl:oiref>=450,210,200,131,1:oigroup>
+<oigroup:<oiref:cpp#Class#SubjectManager:oiref>=10,1030,200,176,1:oigroup>
+<oigroup:<oiref:cpp#Class#_objref_Subject:oiref>=10,790,200,209,1:oigroup>
+<oigroup:<oiref:cpp#Class#_objref_SubjectManager:oiref>=890,10,200,183,1:oigroup>
+<oigroup:<oiref:cpp#Class#_pof_SubjectManager:oiref>=230,10,200,131,1:oigroup>
+<oigroup:<oiref:cpp#Class#Observer:oiref>=670,670,200,176,1:oigroup>
+<oigroup:<oiref:cpp#Class#Subject:oiref>=670,890,200,176,1:oigroup>
+<oigroup:<oiref:cpp#Class#_impl_SubjectManager:oiref>=10,610,200,144,1:oigroup>
+<oigroup:<oiref:cpp#Class#tweek::CorbaManager:oiref>=230,190,200,254,1:oigroup>
+<oigroup:<oiref:cpp#Class#_0RL_cd_0897e6e6faa9bc64_00000000:oiref>=450,790,200,163,1:oigroup>
+<oigroup:<oiref:cpp#Class#tweek::SubjectImpl:oiref>=670,10,200,163,1:oigroup>
+<oigroup:<oiref:cpp#Class#_0RL_cd_04c606180245213e_00000000:oiref>=10,10,200,124,1:oigroup> 
+*/
+class __positions {
+}
