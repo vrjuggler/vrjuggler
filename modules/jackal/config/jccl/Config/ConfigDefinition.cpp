@@ -238,6 +238,46 @@ std::vector<PropertyDefinition> ConfigDefinition::getAllPropertyDefinitions() co
    assertValid();
 
    std::vector<PropertyDefinition> ret_val;
+
+   cppdom::NodeList parents = mNode->getChildren(tokens::PARENT);
+
+   // Iterate over each parent grabbing all of their property definitions.
+   for ( cppdom::NodeList::iterator p = parents.begin(); p != parents.end(); ++p )
+   {
+      const std::string p_name((*p)->getCdata());
+
+      // Minor optimization for empty <parent> XML nodes.  There may be a
+      // nicer way of doing this via the cppdom::Node interface.
+      if ( p_name == std::string("") )
+      {
+         continue;
+      }
+
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
+         << "[ConfigDefinition::getAllPropertyDefinitions()] "
+         << "grabbing all properties for parent'" << p_name
+         << std::endl << vprDEBUG_FLUSH;
+
+      ConfigDefinitionPtr parent_def =
+         ElementFactory::instance()->getConfigDefinition(p_name);
+
+      if ( parent_def.get() != NULL )
+      {
+         std::vector<PropertyDefinition> parent_props =
+            parent_def->getAllPropertyDefinitions();
+         
+         ret_val.insert(ret_val.end(), parent_props.begin(), parent_props.end());
+      }
+      else
+      {
+         vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL)
+            << "[ConfigDefinition::getAllPropertyDefinitions()] WARNING: "
+            << "Failed to find parent of '" << this->getName()
+            << "' named '" << p_name << "'\n" << vprDEBUG_FLUSH;
+      }
+   }
+
+   // Grab our own property definitions.
    cppdom::NodeList prop_defs = mNode->getChildren(tokens::PROPERTY);
 
    for(cppdom::NodeList::iterator i=prop_defs.begin(); i!= prop_defs.end(); ++i)
