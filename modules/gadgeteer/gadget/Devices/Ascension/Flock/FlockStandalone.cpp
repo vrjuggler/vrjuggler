@@ -294,7 +294,7 @@ int FlockStandalone::sample()
         bird_id <= loop_count && bird_id < MAX_SENSORS;
         bird_id++)
    {
-      if (bird_id != mXmitterUnitNumber)
+      if (!mExtendedRange || bird_id != mXmitterUnitNumber)
       {
          vprASSERT( bird_id < MAX_SENSORS );
          vpr::ReturnStatus status = getReading(bird_id, xPos(buffer_location), yPos(buffer_location), zPos(buffer_location), 
@@ -1242,46 +1242,45 @@ void FlockStandalone::sendHemisphere()
       for ( int i = 1; i <= (mNumBirds + 1); i++ )
       {
          // Skip the transmitter.
-         if ( i == mXmitterUnitNumber )
+         if (!mExtendedRange || i != mXmitterUnitNumber)
          {
-            continue;
+            
+            pickBird(i);
+            
+            switch ( mHemisphere )
+            {
+               case FRONT_HEM:
+                  buff[1] = 0x00;
+                  buff[2] = 0x00;
+                  break;
+               case AFT_HEM:
+                  buff[1] = 0x00;
+                  buff[2] = 0x01;
+                  break;
+               case UPPER_HEM:
+                  buff[1] = 0x0C;
+                  buff[2] = 0x01;
+                  break;
+               case LOWER_HEM:
+                  buff[1] = 0x0C;
+                  buff[2] = 0x00;
+                  break;
+               case LEFT_HEM:
+                  buff[1] = 0x06;
+                  buff[2] = 0x01;
+                  break;
+               case RIGHT_HEM:
+                  buff[1] = 0x06;
+                  buff[2] = 0x00;
+                  break;
+            }
+   
+            vpr::System::msleep(600);
+            mSerialPort->write(buff, sizeof(buff), written);
+            // mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+   
+            // vpr::System::usleep(500 * mSleepFactor);
          }
-
-         pickBird(i);
-         
-         switch ( mHemisphere )
-         {
-            case FRONT_HEM:
-               buff[1] = 0x00;
-               buff[2] = 0x00;
-               break;
-            case AFT_HEM:
-               buff[1] = 0x00;
-               buff[2] = 0x01;
-               break;
-            case UPPER_HEM:
-               buff[1] = 0x0C;
-               buff[2] = 0x01;
-               break;
-            case LOWER_HEM:
-               buff[1] = 0x0C;
-               buff[2] = 0x00;
-               break;
-            case LEFT_HEM:
-               buff[1] = 0x06;
-               buff[2] = 0x01;
-               break;
-            case RIGHT_HEM:
-               buff[1] = 0x06;
-               buff[2] = 0x00;
-               break;
-         }
-
-         vpr::System::msleep(600);
-         mSerialPort->write(buff, sizeof(buff), written);
-         // mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-
-         // vpr::System::usleep(500 * mSleepFactor);
       }
    }
 }
@@ -1335,7 +1334,7 @@ void FlockStandalone::sendPosAngles ()
       for ( int bird_id = 1; bird_id < loop_count; bird_id++ )
       {
          // Skip the transmitter unit.
-         if ( bird_id != mXmitterUnitNumber )
+         if (!mExtendedRange || bird_id != mXmitterUnitNumber)
          {
             pickBird(bird_id);
             buff[0] = 'Y';
@@ -1413,7 +1412,7 @@ void FlockStandalone::sendAutoconfig ()
 
       buff[0] = 'P';
       buff[1] = 0x32;
-      buff[2] = mNumBirds + 1;  //number of input devices + 1 for transmitter
+      buff[2] = mNumBirds + (mExtendedRange)?1:0; //number of input devices + 1 for transmitter
 
       vpr::System::msleep(600);
       mSerialPort->write(buff, sizeof(buff), written);
