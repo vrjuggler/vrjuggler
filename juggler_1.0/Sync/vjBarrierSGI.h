@@ -19,7 +19,7 @@
 //	Allen Bierbaum
 //
 // Date: 1-30-97
-//!PUBLIC_API
+//!PUBLIC_API:
 //-----------------------------------------------
 class  vjBarrierSGI
 {

@@ -42,7 +42,7 @@ public:
 //     the barrier correct.  This code is based on an article from
 //     SunOpsis Vol. 4, No. 1 by Richard Marejka
 //     (Richard.Marejka@canada.sun.com).
-//!PUBLIC_API
+//!PUBLIC_API:
 //---------------------------------------------------------------------
 class vjBarrier
 {

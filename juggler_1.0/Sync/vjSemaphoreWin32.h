@@ -18,7 +18,7 @@
 #include <Kernel/vjDebug.h>
 #include <Threads/vjThread.h>
 
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjSemaphoreWin32
 {
 public:

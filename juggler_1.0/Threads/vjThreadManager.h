@@ -16,7 +16,7 @@
 // - Thread Specific data items
 //
 //-----------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjThreadManager
 {
 public:

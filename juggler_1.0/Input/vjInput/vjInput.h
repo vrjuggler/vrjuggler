@@ -79,7 +79,7 @@ const unsigned int DEVICE_GROW2    = 128;
 //+       frame.  Because of this, threads should not be reading data while
 //+       it is being updated to the most recent copy.
 //-----------------------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjInput : public vjMemory
 {
 public:

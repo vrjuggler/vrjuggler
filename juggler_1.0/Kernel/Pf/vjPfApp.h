@@ -20,7 +20,7 @@ class vjKernel;
 // @author Allen Bierbaum
 //  Date: 9-8-97
 //-------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjPfApp : public vjApp
 {
 public:

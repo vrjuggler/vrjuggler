@@ -9,7 +9,7 @@
 //: Provides a simplified user interface to an glove device
 //
 // See also: vjDeviceInterface
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjGloveInterface : public vjDeviceInterface
 {
 public:

@@ -17,7 +17,7 @@
 // string representation of the current gesture.
 //
 //-------------------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjGesture : virtual public vjInput
 {
 public:

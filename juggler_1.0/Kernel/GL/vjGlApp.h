@@ -23,7 +23,7 @@
 // @author Allen Bierbaum
 //  Date: 1-12-98
 //-------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjGlApp : public vjApp
 {
 public:

@@ -52,7 +52,7 @@
 //  set up by configChunks and should be accessed by number, rather than name.
 //  (for speed)
 //-------------------------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjInputManager : public vjMemory, public vjConfigChunkHandler
 {
 public:

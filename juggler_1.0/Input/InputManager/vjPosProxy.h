@@ -25,7 +25,7 @@
 //
 // See also: vjPosition
 //------------------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjPosProxy : public vjMemory, public vjProxy
 {
 public:

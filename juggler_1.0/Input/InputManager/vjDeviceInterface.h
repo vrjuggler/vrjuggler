@@ -13,7 +13,7 @@
 //
 //! NOTE: The init function should be called in the init function of the user
 //+         application
-//!PUBLIC_API
+//!PUBLIC_API:
 //------------------------------------------------------------------------------
 class vjDeviceInterface
 {

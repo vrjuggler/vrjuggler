@@ -38,7 +38,7 @@
 // Primarily, it is a name and a list of vjPropertyDescs.
 // vjChunkDescs will probably only need to be used by the
 // vjChunkDescDB, vjChunkFactory, and the GUI.
-//!PUBLIC_API
+//!PUBLIC_API:
 //------------------------------------------------------------------------
 class vjChunkDesc {
 

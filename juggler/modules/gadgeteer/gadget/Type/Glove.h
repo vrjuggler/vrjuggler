@@ -26,7 +26,7 @@
 //
 // NOTE: More docs needed here
 //
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjGloveData
 {
 public:
@@ -73,7 +73,7 @@ public:
 // Description:
 //
 //-------------------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjGlove : virtual public vjInput
 {
 public:

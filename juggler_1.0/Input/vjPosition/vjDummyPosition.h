@@ -10,7 +10,7 @@
 //
 // vjDummyPosition is a dummy positional device for holding semi-static
 // device data.
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjDummyPosition: public vjPosition {
 
   public:

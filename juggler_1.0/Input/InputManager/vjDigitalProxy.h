@@ -19,7 +19,7 @@
 //  the inputgroup can therefore keep an array of these around and
 //  treat them as digital devices which only return a single
 //  subDevice's amount of data.  (one int)
-//!PUBLIC_API
+//!PUBLIC_API:
 //--------------------------------------------------------------------------
 class vjDigitalProxy : public vjMemory, public vjProxy
 {

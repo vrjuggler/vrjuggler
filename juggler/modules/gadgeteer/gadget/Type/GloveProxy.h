@@ -15,7 +15,8 @@
 #include <Input/InputManager/vjProxy.h>
 
 
-//!PUBLIC_API
+//: vjGlove proxy class.
+//!PUBLIC_API:
 class vjGloveProxy : public vjProxy
 {
 public:

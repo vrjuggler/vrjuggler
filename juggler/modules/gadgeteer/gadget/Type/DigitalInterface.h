@@ -10,7 +10,7 @@
 //: Provides a simplified user interface to a digital device
 //
 // See also: vjDeviceInterface
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjDigitalInterface : public vjDeviceInterface
 {
 public:

@@ -5,7 +5,7 @@
 #include <Config/vjConfigChunk.h>
 
 //: Base class for all proxies
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjProxy
 {
 public:

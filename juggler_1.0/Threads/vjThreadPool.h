@@ -28,7 +28,7 @@ ostream& operator<< (ostream&, vjOneThread&);
 
 
 //----------------------------------------------
-// A pool of threads to process user jobs
+//: A pool of threads to process user jobs
 //
 //
 // Outline of thread pool <br>
@@ -41,7 +41,7 @@ ostream& operator<< (ostream&, vjOneThread&);
 //
 // Date: 2-5-97
 //-----------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjThreadPool : public vjMemory
 {
 public:

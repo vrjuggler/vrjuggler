@@ -25,7 +25,7 @@
 
 //: Condition variable wrapper for POSIX-compliant systems using pthreads
 //+ condition variables for the implementation.
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjCondPosix {
 public:
     // -----------------------------------------------------------------------

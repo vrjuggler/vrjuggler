@@ -75,7 +75,7 @@ const int VJMBUTTON3   = LAST_KEY + 7;
 // That is to say, that vjKeyboard counts the number of keypresses between
 // updates.  Updates in Juggler occur once per frame.
 //-----------------------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjKeyboard : virtual public vjInput
 {
 public:

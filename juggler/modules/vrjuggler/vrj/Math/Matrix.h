@@ -35,8 +35,9 @@ class vjCoord;
 // <br>
 // For OpenGL, the matrix has to be column major in memory, so we need to
 // access it more like: <br>
-//    NOTE: The given indexes are what the cells have to be called in C/C++ notation
-//	    Since we are putting the columns into memory back-to-back
+//    NOTE: The given indexes are what the cells have to be called in C/C++
+//          notation.  Since we are putting the columns into memory
+//          back-to-back.
 // (0,0) (1,0) (2,0) (3,0)       <br>
 // (0,1) (1,1) (2,1) (3,1)       <br>
 // (0,2) (1,2) (2,2) (3,2)       <br>
@@ -45,8 +46,8 @@ class vjCoord;
 //   ====================== Arrays     <br>
 //
 // This is VERY important!!!
-//--------------------------------------------------------------------------------
-//!PUBLIC_API
+//-----------------------------------------------------------------------------
+//!PUBLIC_API:
 class vjMatrix
 {
 public:

@@ -7,7 +7,7 @@
 //: Provides a simplified user interface to a pos device
 //
 // See Also: vjDeviceInterface
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjPosInterface : public vjDeviceInterface
 {
 public:

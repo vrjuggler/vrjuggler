@@ -21,7 +21,7 @@
 //
 //  vjAnalog adds one new pure virtual function, GetAnalogData for retreiving
 //  the digital data, similar to the addition for vjPosition and vjDigital.
-//!PUBLIC_API
+//!PUBLIC_API:
 //-----------------------------------------------------------------------------
 class vjAnalog : virtual public vjInput
 {

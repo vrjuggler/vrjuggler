@@ -13,7 +13,7 @@ typedef int sigset_t;
 //----------------------------------------------
 //: Wrapper for Win32 thread handling functions
 //----------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjThreadWin32
 {
 public:

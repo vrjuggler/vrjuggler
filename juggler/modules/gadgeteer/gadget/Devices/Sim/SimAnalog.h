@@ -11,7 +11,7 @@
 // It allows any number of simulated analog devices to be created.
 //
 // This class should not be used directly by the user.
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjSimAnalog : virtual public vjAnalog, public vjSimInput
 {
 public:

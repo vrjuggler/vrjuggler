@@ -23,7 +23,7 @@
 // <p>author: Christopher Just
 //
 //------------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjProperty {
 
 public:

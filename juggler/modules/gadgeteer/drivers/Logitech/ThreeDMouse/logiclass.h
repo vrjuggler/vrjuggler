@@ -49,7 +49,7 @@
 //
 //  Digital driver support could/should be added in the future.
 //
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjThreeDMouse : public vjPosition
 {
 public:

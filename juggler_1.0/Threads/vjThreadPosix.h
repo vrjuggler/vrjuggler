@@ -31,7 +31,7 @@ typedef uint32_t	thread_id_t;
 //: Threads implementation using POSIX threads (both Draft 4 and the "final"
 //+ draft of the standard are supported).
 
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjThreadPosix : public vjBaseThread
 {
 public:

@@ -11,7 +11,7 @@
 // Simulates a positional device from a keyboard device.
 //
 // This class should not be used directly by the user.
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjSimPosition : virtual public vjPosition, public vjSimInput
 {
 public:

@@ -17,7 +17,8 @@
 #include <Sync/vjSemaphore.h>
 #include <Sync/vjMutex.h>
 
-//!PUBLIC_API
+//: Guard wrapper.
+//!PUBLIC_API:
 template <class LOCK>
 class vjGuard
 {

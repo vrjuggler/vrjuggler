@@ -57,7 +57,7 @@ struct Token {
 // It has an associated vjChunkDesc which describes its type
 // and the vjPropertys that belong to it.
 //
-//!PUBLIC_API
+//!PUBLIC_API:
 //------------------------------------------------------------------
 class vjConfigChunk {
 

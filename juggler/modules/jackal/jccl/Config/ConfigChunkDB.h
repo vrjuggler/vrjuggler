@@ -19,7 +19,7 @@
 // @author Christopher Just
 // October 1997
 //
-//!PUBLIC_API
+//!PUBLIC_API:
 //------------------------------------------------------------------
 class vjConfigChunkDB {
 
