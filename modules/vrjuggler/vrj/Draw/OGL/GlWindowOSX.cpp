@@ -95,8 +95,9 @@ void GlWindowOSX::swapBuffers() {
 }
 
 int GlWindowOSX::open() {
-    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
-       << "vrj::GlWindowOSX::open()" << std::endl << vprDEBUG_FLUSH;
+   vpr::DebugOutputGuard(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL,
+                         "vrj::GlWindowOSX::open()\n",
+                         "vrj::GlWindowOSX::open() done.\n");
 
     //Get the size of the screen from core graphics
     //I'll need to check to see how this works with multiple monitors
@@ -126,7 +127,9 @@ int GlWindowOSX::open() {
     //This is the an event source window.
     if (mAreEventSource == true)
     {
-        std::cout << "YYY Should become an event source window" << std::endl;
+        vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+           << "vrj::GlWindowOSX::config(): We will be an event source\n"
+           << vprDEBUG_FLUSH;
 
         gadget::EventWindowOSX::mWindow = gpWindow;
         gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
@@ -195,9 +198,9 @@ bool GlWindowOSX::makeCurrent() {
 
 void GlWindowOSX::configWindow(vrj::Display* _display)
 {
-
-   std::cout << "YYY Start config in GLwindow" << std::endl;
-   vprDEBUG(vrjDBG_DRAW_MGR,0) << "vjGlWindowOSX::config(Display* _display)" << std::endl << vprDEBUG_FLUSH;
+   vpr::DebugOutputGuard(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL,
+                         "vrj::GlWindowOSX::configWindow()\n",
+                         "vrj::GlWindowOSX::configWindow() done.\n");
 
    GlWindow::configWindow(_display);
 
@@ -214,8 +217,9 @@ void GlWindowOSX::configWindow(vrj::Display* _display)
    // if should act as an event source
    if ( true == mAreEventSource )
    {
-      std::cout << "YYY event source config in GLwindow" << std::endl;
-      mAreEventSource = true;       // Set flag saying that we need to have the local device
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << "vrj::GlWindowOSX::config(): We will be an event source\n"
+         << vprDEBUG_FLUSH;
 
       // Configure keyboard device portion
       jccl::ConfigChunkPtr event_win_chunk =
@@ -228,7 +232,9 @@ void GlWindowOSX::configWindow(vrj::Display* _display)
 
       if (test == false)
       {
-         std::cout << "YYY event window config in GLwindow FAIL" << std::endl;
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+            << "vrj::GlWindowOSX::config(): Failed to configure gadget::EventWindowOSX\n"
+            << vprDEBUG_FLUSH;
       }
 
       // Custom configuration These proably do not matter
@@ -687,7 +693,9 @@ int GlWindowOSX::startSampling()
 
     //openTheWindow();
 
-    std::cout << "Start sampleing in GLwindow" << std::endl;
+    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+       << "vrj::GlWindowOSX::startSampling() starting to sample\n"
+       << vprDEBUG_FLUSH;
 
     attachEvents(mWindow);
 
