@@ -55,6 +55,10 @@
 namespace vpr
 {
 
+// Forward declare this.  It is defined in vpr/IO/Socket/InetAddr.h which may
+// not be included by this file.
+struct InetAddrHash;
+
 /**
  * Cross-platform abstraction to Internet address structures.
  */
@@ -62,6 +66,8 @@ class VPR_CLASS_API InetAddrNSPR : public InetAddrBase
 {
 public:
    static const InetAddrNSPR AnyAddr;     // constructor defaults to any addr
+
+   typedef vpr::InetAddrHash hash;
 
    /**
     * Default constructor.
