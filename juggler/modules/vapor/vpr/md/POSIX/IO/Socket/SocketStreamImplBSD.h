@@ -48,7 +48,7 @@ namespace vpr {
  *
  * @author Patrick Hartling
  */
-class SocketStreamImplBSD : public SocketStreamOpt, public SocketImplBSD {
+class SocketStreamImplBSD : public SocketImplBSD {
 public:
     // ========================================================================
     // vpr::SocketStreamImp implementation.
@@ -151,21 +151,6 @@ public:
      */
     virtual Status accept(SocketStreamImplBSD& sock,
                           vpr::Interval timeout = vpr::Interval::NoTimeout);
-
-protected:
-    virtual Status
-    getOption (const SocketOptions::Types option,
-               struct SocketOptions::Data& data)
-    {
-        return SocketImplBSD::getOption(option, data);
-    }
-
-    virtual Status
-    setOption (const SocketOptions::Types option,
-               const struct SocketOptions::Data& data)
-    {
-        return SocketImplBSD::setOption(option, data);
-    }
 };
 
 }; // End of vpr namespace
