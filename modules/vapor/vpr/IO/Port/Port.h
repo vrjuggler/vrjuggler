@@ -42,33 +42,34 @@
 
 namespace vpr {
 
-// ----------------------------------------------------------------------------
-//: A cross-platform interface to using a computer's I/O ports (serial,
-//+ parallel, IR, etc.).
-// ----------------------------------------------------------------------------
-//! PUBLIC_API:
+/**
+ * A cross-platform interface to using a computer's I/O ports (serial,
+ * parallel, IR, etc.).
+ *
+ * @author Patrick Hartling
+ */
 class VPR_CLASS_API Port : public BlockIO {
 public:
 
 protected:
-    // ------------------------------------------------------------------------
-    //: Constructor.
-    //
-    //! PRE: None.
-    //! POST: The given port name is passed on to the vpr::BlockIO
-    //+       constructor.
-    //
-    //! ARGS: port_name - The name of the port in use.
-    // ------------------------------------------------------------------------
+    /**
+     * Constructor.
+     *
+     * <b>PRE:</b> None.
+     * <b>POST:</b> The given port name is passed on to the
+     *              <code>vpr::BlockIO</code> constructor.
+     *
+     * @param port_name The name of the port in use.
+     */
     Port (const std::string& port_name)
         : BlockIO(port_name)
     {
         /* Do nothing. */ ;
     }
 
-    // ------------------------------------------------------------------------
-    //: Destructor.
-    // ------------------------------------------------------------------------
+    /**
+     * Destructor.  This does nothing.
+     */
     virtual ~Port(void) {
         /* Do nothing. */ ;
     }
