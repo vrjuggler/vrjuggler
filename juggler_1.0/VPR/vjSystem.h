@@ -295,6 +295,21 @@ public:
 
 };
 
+
+#if defined(VJ_IRIX_SPROC) || defined(VJ_USE_PTHREADS)
+#   include <VPR/md/POSIX/vjSystemPosix.h>
+
+    typedef class vjSystemPosix vjSystem;
+#elif defined(VJ_OS_Win32)
+#   include <VPR/md/WIN32/vjSystemWin32.h>
+
+    typedef class vjSystemWin32 vjSystem;
+#else
+#   include <VPR/md/NSPR/vjSystemNSPR.h>
+
+    typedef class vjSystemNSPR vjSystem;
+#endif  /* VJ_IRIX_SPROC || VJ_USE_PTHREADS */
+
 //: Linear Interpolation
 // use double or float only...
 template <class dataType>
@@ -314,20 +329,5 @@ inline bool VJ_ISEQUAL( const dataType& a, const dataType& b, const dataType& to
    return vjSystem::abs( a - b ) <= tolerance;
 }
 
-
-
-#if defined(VJ_IRIX_SPROC) || defined(VJ_USE_PTHREADS)
-#   include <VPR/md/POSIX/vjSystemPosix.h>
-
-    typedef class vjSystemPosix vjSystem;
-#elif defined(VJ_OS_Win32)
-#   include <VPR/md/WIN32/vjSystemWin32.h>
-
-    typedef class vjSystemWin32 vjSystem;
-#else
-#   include <VPR/md/NSPR/vjSystemNSPR.h>
-
-    typedef class vjSystemNSPR vjSystem;
-#endif  /* VJ_IRIX_SPROC || VJ_USE_PTHREADS */
 
 #endif   /* _VJ_SYSTEM_H_ */
