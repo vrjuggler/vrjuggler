@@ -1,12 +1,16 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 
 <title>Description of ChunkDesc files</title>
 
 <body bgcolor="#ffffcc">
-<h2><img src="juggler.gif"></img>
-Description of ChunkDesc (ConfigChunk Description) files.</H2>
 
-<h3>Overview</h3>
+<!--NewPage-->
+<h1><img src="juggler.gif" width="29" height="33"></img>
+Description of ChunkDesc (ConfigChunk Description) files</h1>
+
+<h2>Overview</h2>
 
 A ChunkDesc file includes descriptions of different kinds of ConfigChunks.
 It is a way to configure the configuration system itself. Here's a simple
@@ -61,9 +65,7 @@ files more flexible or readable.
 contains spaces or is empty, it must be in quotes.
 
 
-<h3>ChunkDesc File Reference</h3>
-
-<h4>General Rules</h4>
+<h2>General Rules</h2>
 <ol>
 <li>ChunkDesc files are non-case-sensitive.  For example, "end", "End",
 and "eND" are all valid ways to end a chunk description or a file.
@@ -81,7 +83,7 @@ so it is possible for parts of a line to be broken up for greater
 readability.
 </ol>
 
-<h4>ChunkDesc Files</h4>
+<h2>ChunkDesc Files</h2>
 
 The general format of a ChunkDesc file is:
 
@@ -102,7 +104,7 @@ Note that the vjcontrol program does not preserve comments in the files
 that it loads and saves, so this is mostly useful as a quick hack or as
 a debugging feature.
 
-<h4>ChunkDescs</h4>
+<h2>ChunkDescs</h2>
 
 The basic format of a ChunkDesc is:
 
@@ -127,7 +129,7 @@ must always be for the "Name" property - this is used to give a unique
 name to every ConfigChunk using this ChunkDesc.  If there is no "Name"
 PropertyDesc, one will be added by the loader.
 
-<h4>Property Description Lines</h4>
+<h3>Property Description Lines</h3>
 
 The format of a Property Description line is:
 <pre>
@@ -149,7 +151,7 @@ directory search paths, etc.).
 There are also two optional fields in a PropertyDesc line, either or both
 of which can be placed between the Name and Help fields of the line.
 <ul>
-<li><h4>Enumerations</h4>
+<h4><li>Enumerations</h4>
         <p>Sometimes a given Property will have a small number of 
         possible values. For example, in configuring a C2-like device, 
         we might have a description for a Property called
@@ -191,7 +193,7 @@ of which can be placed between the Name and Help fields of the line.
         0, 1, 2... (or 0.0, 1.0, 2.0...) to the entries as they are read. </p>
         <p>Frankly, you're better off just using the editor. </p>
 
-<li><h4>Value Labels</h4>
+<h4><li>Value Labels</h4>
 
         <p>Consider this Property definition: </p>
         <pre>
@@ -218,4 +220,6 @@ of which can be placed between the Name and Help fields of the line.
 
 </body>
 
+
 </html>
+

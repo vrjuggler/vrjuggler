@@ -44,20 +44,20 @@ EXTRA_FLAGS	= @APP_EXTRA_FLAGS@
 COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
-VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_UTILS@ @APP_VJ_LIBS_END@ @APP_LIBS_BASIC@
+VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_END@ @APP_LIBS_BASIC@
 VPATH		= @srcdir@
 
-# This test program requires the following libraries to be linked:
+# This OpenGL sample program requires the following libraries to be linked:
 #
-#     -lGLU -lGL -lXext -lXmu -lX11 -lm
+#     -lGLU -lGL -lX11 -lXext -lm
 #
-# If the library uses POSIX threads, "-lpthread" must also be added to the
-# list of libraries.
+# If the library uses POSIX threads, the appropriate pthread enabling option
+# must also be added to the list of libraries.  In most cases, this will be
+# "-lpthread".
 #
 # The proper library path must be specified depending on the Application
-# Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
-# appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
-# use -L/usr/lib64.
+# Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
+# 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
 OBJECTS		= torus.@OBJ_FILE_SUFFIX@ torusApp.@OBJ_FILE_SUFFIX@

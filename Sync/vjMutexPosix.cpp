@@ -49,13 +49,13 @@ int
 vjMutexPosix::test (void) {
     int ret_val;
 
-    ret_val = pthread_mutex_trylock(mMutex);
+    ret_val = pthread_mutex_trylock(&mMutex);
 
     // If the return value from pthread_mutex_trylock() is 0, then this
     // process now has a lock on mutex.  Therefore, no other process could
     // have held a lock on it, so unlock the mutex and return 0.
     if ( ret_val == 0 ) {
-        pthread_mutex_unlock(mMutex);
+        pthread_mutex_unlock(&mMutex);
         ret_val = 0;
     }
     // The mutex is currently locked by some thread if ret_val is non-zero.

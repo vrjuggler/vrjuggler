@@ -52,16 +52,16 @@ VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
 VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_END@ @APP_LIBS_BASIC@
 VPATH		= @srcdir@
 
-# If the library uses POSIX threads, "-lpthread" must also be added to the
-# list of libraries.
+# If the library uses POSIX threads, the appropriate pthread enabling option
+# must also be added to the list of libraries.  In most cases, this will be
+# "-lpthread".
 #
 # The proper library path must be specified depending on the Application
-# Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
-# appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
-# use -L/usr/lib64.
+# Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
+# 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-TEST_PROGS	= test stlTest testPool testSelfPerformance testTSD_Performance
+TEST_PROGS	= test testSelfPerformance testTSD_Performance
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -73,12 +73,6 @@ all: $(TEST_PROGS)
 test: test.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ test.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-stlTest: stlTest.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ stlTest.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
-
-testPool: testPool.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ testPool.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
-	
 testSelfPerformance: testSelfPerformance.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ testSelfPerformance.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 	

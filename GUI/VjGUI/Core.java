@@ -411,15 +411,51 @@ public class Core implements NetControlListener, ChunkDBListener {
 	}
     }
 
+    /** Used to ensure that logMessageListeners are notified by the AWT thread.
+     */
+    static protected class doNotifyLogMessageTargets implements Runnable {
+        private LogMessageEvent event;
+        private LogMessageListener[] targets;
+        public doNotifyLogMessageTargets (LogMessageEvent e, LogMessageListener[] t) {
+            event = e;
+            targets = t;
+        }
+
+        public void run () {
+            for (int i = 0; i < targets.length; i++) {
+                targets[i].logMessage (event);
+            }
+        }
+    };
+
     static protected void notifyLogMessageTargets (LogMessageEvent e) {
-	Vector l;
-	synchronized (logmessage_targets) {
-	    l = (Vector) logmessage_targets.clone();
-	}
-	for (int i = 0; i < l.size(); i++) {
-	    LogMessageListener lis = (LogMessageListener)l.elementAt (i);
-	    lis.logMessage (e);
-	}
+            // get array so we don't hold the lock for too long.
+            LogMessageListener[] l;
+            synchronized (logmessage_targets) {
+                l = new LogMessageListener[logmessage_targets.size()];
+                l = (LogMessageListener[])logmessage_targets.toArray(l);
+            }
+            if (javax.swing.SwingUtilities.isEventDispatchThread()) {
+                for (int i = 0; i < l.length; i++) {
+                    l[i].logMessage (e);
+                }
+            }
+            else {
+                try {
+                    javax.swing.SwingUtilities.invokeAndWait (new
+                        doNotifyLogMessageTargets (e, l));
+                }
+                catch (Exception ex) {
+                }
+        }
+//  	Vector l;
+//  	synchronized (logmessage_targets) {
+//  	    l = (Vector) logmessage_targets.clone();
+//  	}
+//  	for (int i = 0; i < l.size(); i++) {
+//  	    LogMessageListener lis = (LogMessageListener)l.elementAt (i);
+//  	    lis.logMessage (e);
+//  	}
     }
 
 

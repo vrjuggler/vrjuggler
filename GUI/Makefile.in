@@ -46,18 +46,8 @@ JDK_HOME	= @JDK_HOME@
 GUI_CLASSPATH	= ${srcdir}:${JDK_HOME}/lib/classes.zip
 JAR		= @JAR@
 JAVAC		= @JAVAC@
-ifeq (@OS_TYPE@, Win32)
-    JAVAC_CMD	= ${JAVAC} -d . -sourcepath ${srcdir}
-else
-    JAVAC_CMD	= ${JAVAC} -d . -classpath ${GUI_CLASSPATH}
-endif
 
-# If the user defined ${CLASSPATH} (either as an environment variable or a
-# command-line argument), put it in ${GUI_CLASSPATH}.  Otherwise, leave it
-# out.
-ifdef CLASSPATH
-    GUI_CLASSPATH	:= ${CLASSPATH}:${GUI_CLASSPATH}
-endif
+JAVAC_CMD	= ${JAVAC} -d .
 
 # Prevent anything in this file from being built in parallel.
 MAKEFLAGS	+= -j 1

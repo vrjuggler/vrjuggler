@@ -173,6 +173,14 @@ public:
    friend vjVec3 operator /(const vjVec3& _v, float _s);
 //    friend inline vjVec3 operator *(const vjVec3& _v, const vjMatrix& _m);
 
+   //: linear interpolate from vector a to vector b
+   //!PRE:  n is a number between [0..1]
+   //!POST: "this" is set to the interpolated vector
+   void lerp( float n, const vjVec3& a, const vjVec3& b )
+   {
+      vjVec3 offset = b - a;
+      (*this) = a + (offset * n);
+   }   
 public:
    //: Assignment Operators
    vjVec3&  operator =(const vjVec3& _v)

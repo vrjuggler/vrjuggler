@@ -97,7 +97,7 @@ public:
    { return isKeyPressed(keyId); }
 
    virtual bool modifierOnly(int modKey)
-   { return onlyModifier(modKey); }
+   { return ((onlyModifier(modKey) == 1) ? true : false); }
 
    void createWindowWin32 ();
 	void updKeys(	UINT message,	UINT wParam, LONG lParam);

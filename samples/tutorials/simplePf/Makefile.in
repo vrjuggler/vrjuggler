@@ -45,9 +45,7 @@ COMPILE		= @CXX@ @DEFS@ -I$(srcdir)  $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_F
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 
 VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include
-VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ \
-            @APP_VJ_LIBS_PF@ @APP_VJ_LIBS_UTILS@ @APP_VJ_LIBS_END@ \
-            @APP_LIBS_BASIC@ 
+VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ @APP_VJ_LIBS_END@ @APP_LIBS_BASIC@ 
 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
               $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_ogl.a	\
@@ -55,18 +53,17 @@ VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
 
 vpath %.cpp $(srcdir)
 
-# This test program requires the following libraries to be linked:
+# This Performer sample program requires the following libraries to be linked:
 #
-#     -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -limage -lGLU -lGL -lXext \
-#     -lXmu -lX11 -lm
+#   -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -limage -lGLU -lGL -lX11 -lXext -lm
 #
-# If the library uses POSIX threads, "-lpthread" must also be added to the
-# list of libraries.
+# If the library uses POSIX threads, the appropriate pthread enabling option
+# must also be added to the list of libraries.  In most cases, this will be
+# "-lpthread".
 #
 # The proper library path must be specified depending on the Application
-# Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
-# appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
-# use -L/usr/lib64.
+# Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
+# 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
 SIMPLEPF_OBJECTS	= main.@OBJ_FILE_SUFFIX@

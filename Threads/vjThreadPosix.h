@@ -53,13 +53,17 @@
 #include <signal.h>
 #include <sched.h>
 
+#ifdef HAVE_INTTYPES_H
+#   include <inttypes.h>
+#endif
+
 
 #ifdef VJ_OS_Solaris
 typedef unsigned int thread_id_t;
 #elif defined(VJ_OS_FreeBSD)
 typedef caddr_t thread_id_t;
 #else
-typedef u_int32_t thread_id_t;
+typedef uint32_t thread_id_t;
 #endif
 
 #include <Threads/vjThreadKeyPosix.h>     // To get the posix key stuff for storing self
@@ -375,8 +379,11 @@ public:  // ----- Various other thread functions ------
     // -----------------------------------------------------------------------
     std::ostream&
     outStream (std::ostream& out) {
-        out << "pThrd: [" << getpid() << "] ";
+        out.setf(std::ios::right);
+        out << std::setw(7) << std::setfill('0') << getpid() << "/";
+        out.unsetf(std::ios::right);
         vjBaseThread::outStream(out);
+        out << std::setfill(' ');
         return out;
     }
 
@@ -400,8 +407,6 @@ private:
     hash (void) {
 #if defined(VJ_OS_IRIX)
         return mThread;
-#elif defined(VJ_OS_HPUX)
-        return mThread.field1;
 #else
         // This works on Linux, Solaris and FreeBSD.
         return (thread_id_t) mThread;
@@ -424,8 +429,6 @@ private:
     hash (pthread_t thread) {
 #ifdef VJ_OS_IRIX
         return thread;
-#elif defined(VJ_OS_HPUX)
-        return thread.field1;
 #else
         // This works on Linux, Solaris and FreeBSD.
         return (thread_id_t) thread;
@@ -450,7 +453,22 @@ private:
         return hash(me);
     }
 
-    static vjThreadKeyPosix            mThreadIdKey;     // Key for the id of the local thread
+public:
+    struct staticWrapper
+    {
+       staticWrapper() : mStaticsInitialized(1221), mThreadIdKey(NULL)
+       {;}
+
+       unsigned          mStaticsInitialized;    // Just a debug helper to try to find times when people call us before the statics are created    
+       vjThreadKeyPosix  mThreadIdKey;           // Key for the id of the local thread
+    };
+
+    static vjThreadKeyPosix& threadIdKey()
+    {
+      return statics.mThreadIdKey;
+    }
+
+    static staticWrapper statics;
 };
 
 

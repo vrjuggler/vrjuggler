@@ -32,6 +32,8 @@
 
 #include <vjConfig.h>
 #include <Kernel/GL/vjGlWinWin32.h>
+#include <Kernel/vjDebug.h>
+#include <Kernel/vjAssert.h>
 
 #define glWinWin32Classname "vjOGLWin32"
 
@@ -50,23 +52,35 @@ int vjGlWinWin32::open()
       return 1;
 
 	HMODULE hMod = GetModuleHandle(NULL);
+        DWORD style;
+        int root_height;
+
+        // OpenGL requires WS_CLIPCHILDREN and WS_CLIPSIBLINGS.
+        style = WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+
+        // If we want a border, create an overlapped window.  This will have
+        // a titlebar and a border.
+        if ( border ) {
+            vjDEBUG(vjDBG_DRAW_MGR, 5) << "attempting to give window a border"
+                                       << std::endl << vjDEBUG_FLUSH;
+            style |= WS_OVERLAPPEDWINDOW;
+        }
+        // Otherwise, come as close as possible to having no border by using
+        // the thin-line border.
+        else {
+            vjDEBUG(vjDBG_DRAW_MGR, 5) << "attempting to make window borderless"
+                                       << std::endl << vjDEBUG_FLUSH;
+            style |= WS_OVERLAPPED | WS_POPUP | WS_VISIBLE;
+        }
+
+        root_height = GetSystemMetrics(SM_CYSCREEN);
 
 	// Create the main application window
-	hWnd = CreateWindow(
-				glWinWin32Classname,
-				glWinWin32Classname,
-				
-				// OpenGL requires WS_CLIPCHILDREN and WS_CLIPSIBLINGS
-				WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
-	
-				// Window position and size
-				origin_x, origin_y,
-				window_width, window_height,
-				NULL,
-				NULL,
-				hMod,
-				NULL);
-	
+        hWnd = CreateWindow(glWinWin32Classname, glWinWin32Classname, style,
+                            origin_x, root_height - origin_y - window_height,
+                            window_width, window_height, NULL, NULL, hMod,
+                            NULL);
+
 	// If window was not created, quit
 	if(NULL == hWnd)
 		return 0;
@@ -81,7 +95,7 @@ int vjGlWinWin32::open()
 
 	// Create the rendering context and make it current
 	hRC = wglCreateContext(hDC);
-	assert(hRC != NULL);
+	vjASSERT(hRC != NULL);
 	wglMakeCurrent(hDC, hRC);
 		
 	// Register the window with the window list
@@ -116,7 +130,7 @@ int vjGlWinWin32::close()
 //! POST: this.context is active context
 bool vjGlWinWin32::makeCurrent()
 {
-	assert((hDC != NULL) && (hRC != NULL));
+	vjASSERT((hDC != NULL) && (hRC != NULL));
 	wglMakeCurrent(hDC, hRC);		// Make our context current
 	return true;
 }
@@ -125,7 +139,7 @@ bool vjGlWinWin32::makeCurrent()
 // Process events here
 void vjGlWinWin32::swapBuffers()
 {
-	assert(hDC != NULL);
+	vjASSERT(hDC != NULL);
 	SwapBuffers(hDC);
 }
 
@@ -156,7 +170,7 @@ LRESULT vjGlWinWin32::handleEvent(HWND 	hWnd,
 	{
 		// ---- Window creation, setup for OpenGL ---- //
 	case WM_CREATE:
-		assert(false);								// Should never get called because 
+		vjASSERT(false);								// Should never get called because 
 														//we are not registered when this gets called
 
 		hDC = GetDC(hWnd);			         // Store the device context		
@@ -346,12 +360,12 @@ bool vjGlWinWin32::registerWindowClass()
 //----------------------//
 void vjGlWinWin32::addWindow(HWND handle, vjGlWinWin32* glWin)
 {
-	assert(glWin != NULL);
+	vjASSERT(glWin != NULL);
 
 	if(glWinMap.find(handle) == glWinMap.end())		// Not already there
 		glWinMap[handle] = glWin;
 	//else
-	// assert(false);
+	// vjASSERT(false);
 }
 
 void vjGlWinWin32::removeWindow(HWND handle)
@@ -369,4 +383,3 @@ vjGlWinWin32* vjGlWinWin32::getGlWin(HWND handle)
 	else
 		return (*glWinIter).second;					// Return the found window
 }
-

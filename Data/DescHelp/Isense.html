@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<TITLE>Intersense Tracker Device ConfigChunk</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffcc">
+
+<H2>Intersense Tracker Device Chunk</H2>
+
+The tracking system is composed of multiple stations connected to a single
+base unit; the base connects to a host computer via a serial interface.
+Configuration for the base (defined in the Chunk) includes serial port 
+settings and a global transformation to be applied to all positional inputs.
+<p>
+Each station is a device such as a head sensor or wand.  The station provides
+a single positional input, and may include an arbitrary number of digital and
+analog inputs.  
+
+<p>
+The mapping of stations to the positional inputs of the Isense
+device is defined by the order the stations appear in the Stations property
+listed below.  The mappings for digital and analog devices are specifically
+listed inside the configuration for each station; for example, the first
+station could provide digital units 4 through 7, while the second station
+provides units 0 through 3.
+
+<p>
+As with all input devices, positional, digital, and analog units are indexed
+separately (e.g. positional 0-3, digital 0-12, analog 0-2, etc.).
+
+<TABLE BORDER="1">
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Intersense Tracker Device</B>
+    </TD>
+    <TD>
+      Chunk token: ``<TT>Isense</TT>''<BR>
+      Configuration for Intersense IS-9000 tracker.
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Port</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>port</TT>''<BR>
+      The string name of the serial port this device is attached to.  On
+      Unix systems, a typical value would be something like 
+      ``<TT>/dev/ttyd3</TT>''.
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Baud Rate</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>baud</TT>''<BR>
+      The speed of the serial port connection, in bps.  Typical values might
+      include 19200 and 38400.
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Translation</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>translate</TT>''<BR>
+      An XYZ translation to be applied to position data from this tracker.
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Rotation</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>rotate</TT>''<BR>
+      XYZ Rotation to be applied to position data from this tracker.
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Stations</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>stations</TT>''<BR>
+      Settings for the individual stations of this tracking system.  Each
+      value is a <a href="IsenseStation.html">IsenseStation</a> ConfigChunk.
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Verbose Output</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>verbose</TT>''<BR>
+      Enable output from the Intersense driver.
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Startup script</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>script</TT>''<BR>
+      File path of a script to be sent to the tracking system on startup.
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Analog Lower Bound</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>min</TT>''<BR>
+      Lower bound for analog data values. 0.0 is a reasonable value.
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Analog Upper Bound</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>max</TT>''<BR>
+      Upper bound for analog data values. 1.0 is a reasonable value.
+    </TD>
+  </TR>
+</TABLE>
+
+<H3>Sim Position chunk definition</H3>
+
+<PRE>
+chunk Isense "Isense" "Intersense Tracking Devices"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  port String 1 "Port" "Serial port the Flock is attached to"
+  baud Int 1 "Baud Rate" "Serial port speed"
+  translate Float 3 "Translation" "(world_T_transmitter) Translation of 
+                              the transmitter from Juggler coord system."
+  rotate Float 3 "Rotation" "(world_T_transmitter) Rotation of the 
+                              tranmitter from the Juggler coord system."
+  stations EmbeddedChunk -1 "Stations" vj_enumeration { "ISenseStation" } 
+                              "Settings for each Station."
+  verbose Bool 1 "Vebose Enabled" "Enable output from the Intersense Driver"
+  script String 1 "Script File" "File path of script sent to the tracker 
+                              on startup."
+  min Float 1 "min" "the actual analog data values range - lower bound"
+  max Float 1 "max" "the actual analog data values range - upper bound"
+  end
+
+</PRE>
+
+</BODY>
+</HTML>

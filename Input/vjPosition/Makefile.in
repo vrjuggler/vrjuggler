@@ -74,6 +74,10 @@ VJPOS_SRCS	+= logiclass.cpp	\
                    vjMotionStar.cpp
 endif
 
+ifeq (@THREAD_SYS@, IRIX_SPROC)
+VJPOS_SRCS	+= vjFastrack.cpp
+endif
+
 VJPOS_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJPOS_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${VJPOS_SRCS:.cpp=.d}
 

@@ -78,9 +78,10 @@ vjMotionStar::vjMotionStar (const char* address, const unsigned short port,
                             const FLOCK::data_format bird_format,
                             const BIRDNET::run_mode run_mode,
                             const unsigned char report_rate,
+                            const double measurement_rate,
                             const unsigned int birds_required)
     : m_motion_star(address, port, proto, master, hemisphere, bird_format,
-                    run_mode, report_rate, birds_required)
+                    run_mode, report_rate, measurement_rate, birds_required)
 {
    m_my_thread = NULL;
 }
@@ -120,6 +121,7 @@ vjMotionStar::config (vjConfigChunk* c) {
       setBirdFormat((unsigned int) static_cast<int>(c->getProperty("bformat")));
       setRunMode((unsigned int) static_cast<int>(c->getProperty("mode")));
       setReportRate((unsigned char) static_cast<int>(c->getProperty("reportRate")));
+      setMeasurementRate((float) static_cast<float>(c->getProperty("measurementRate")));
       retval = true;
    }
  
@@ -655,6 +657,21 @@ vjMotionStar::setReportRate (const unsigned char rate) {
    }
 }
 
+// ----------------------------------------------------------------------------
+// Set the measurement rate for the chassis.
+// ----------------------------------------------------------------------------
+void
+vjMotionStar::setMeasurementRate (const double rate) {
+   // If the device active, we cannot change the measurement rate.
+   if (isActive()) {
+      vjDEBUG(vjDBG_INPUT_MGR, 2)
+         << "vjMotionStar: Cannot change chassis measurement rate while active\n"
+         << vjDEBUG_FLUSH;
+   } else {
+      m_motion_star.setMeasurementRate(rate);
+   }
+}
+
 // ============================================================================
 // Private methods.
 // ============================================================================
@@ -684,7 +701,7 @@ vjMotionStar::initCorrectionTable (const char* table_file) {
 unsigned int
 vjMotionStar::getBirdIndex (int bird_num, int buffer_index) {
    unsigned int ret_val = (bird_num * 3) + buffer_index;
-   vjASSERT(ret_val >= 0 && ret_val < ((getNumBirds() + 1) * 3));
+   vjASSERT(ret_val < ((getNumBirds() + 1) * 3));
 
    return ret_val;
 }

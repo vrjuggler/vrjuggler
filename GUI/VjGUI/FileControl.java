@@ -51,6 +51,7 @@ import VjGUI.*;
 public class FileControl {
 
     static String vjbasedir = null;
+    static String vjsharedir = null;
     static String homedir = null;
 
     static final int FILTER_ALL = 0;
@@ -71,6 +72,9 @@ public class FileControl {
 	    vjbasedir = System.getProperty ("VJ_BASE_DIR");
 	    if (vjbasedir == null)
 		vjbasedir = ".";
+	    vjsharedir = System.getProperty ("VJ_SHARE_DIR");
+	    if (vjsharedir == null)
+		vjsharedir = ".";
 	}
 
 	if (s == null)
@@ -84,6 +88,10 @@ public class FileControl {
 	    s = homedir + s.substring (5);
 	else if (s.startsWith ("HOME"))
 	    s = homedir + s.substring (4);
+	else if (s.startsWith ("$VJ_SHARE_DIR"))
+	    s = vjsharedir + s.substring (13);
+	else if (s.startsWith ("VJ_SHARE_DIR"))
+	    s = vjsharedir + s.substring (12);
 
 	//System.out.println ("stringReplacement: '" + s + "'");
 	return s;
@@ -119,7 +127,7 @@ public class FileControl {
 	}
 	catch (FileNotFoundException e2) {
 	    try {
-		f1 = new File (mangleFileName ("$VJ_BASE_DIR/Data/vjcontrol.cfg"));
+		f1 = new File (mangleFileName ("$VJ_SHARE_DIR/Data/vjcontrol.cfg"));
 		Core.gui_chunkdb.setName (f1.getName());
 		Core.gui_chunkdb.setFile (f1);
 		r = new FileReader (f1);
@@ -146,7 +154,7 @@ public class FileControl {
 	}
 	catch (FileNotFoundException e) {
 	    try {
-		f1 = new File (mangleFileName ("$VJ_BASE_DIR/Data/orgtree.org"));
+		f1 = new File (mangleFileName ("$VJ_SHARE_DIR/Data/orgtree.org"));
 		r = new FileReader(f1);
 	    }
 	    catch (FileNotFoundException e2) {

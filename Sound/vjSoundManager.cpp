@@ -97,9 +97,7 @@ void vjSoundManager::update()
 {
    if(mSoundEngine == NULL)
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
-               << clrOutNORM(clrYELLOW,"[SoundEngine] ALERT: ")
-               << " Engine wasn't created yet, so Juggler is using stubbed out version, your app should run, but you will not hear sound.  (run-time reconfigure of the SoundEngine at this point may fail or crash the system).\n" << vjDEBUG_FLUSH;
+      printAlert();
       mSoundEngine = new vjSoundEngine;
    }
 
@@ -113,9 +111,7 @@ void vjSoundManager::sync()
 {
    if(mSoundEngine == NULL)
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
-               << clrOutNORM(clrYELLOW,"[SoundEngine] ALERT: ")
-               << " Engine wasn't created yet, so Juggler is using stubbed out version, your app should run, but you will not hear sound.  (run-time reconfigure of the SoundEngine at this point may fail or crash the system).\n" << vjDEBUG_FLUSH;
+      printAlert();
       mSoundEngine = new vjSoundEngine;
    }
 
@@ -131,9 +127,7 @@ vjSound* vjSoundManager::getHandle( const char* const alias )
 {
    if(mSoundEngine == NULL)
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
-               << clrOutNORM(clrYELLOW,"[SoundEngine] ALERT: ")
-               << " Engine wasn't created yet, so Juggler is using stubbed out version, your app should run, but you will not hear sound.  (run-time reconfigure of the SoundEngine at this point may fail or crash the system).\n" << vjDEBUG_FLUSH;
+      printAlert();
       mSoundEngine = new vjSoundEngine;
    }
 
@@ -149,9 +143,7 @@ vjSound* vjSoundManager::newSound()
 {
    if(mSoundEngine == NULL)
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
-               << clrOutNORM(clrYELLOW,"[SoundEngine] ALERT: ")
-               << " Engine wasn't created yet, so Juggler is using stubbed out version, your app should run, but you will not hear sound.  (run-time reconfigure of the SoundEngine at this point may fail or crash the system).\n" << vjDEBUG_FLUSH;
+      printAlert();
       mSoundEngine = new vjSoundEngine;
    }
 
@@ -161,3 +153,21 @@ vjSound* vjSoundManager::newSound()
       return NULL;
 }
 
+void vjSoundManager::printAlert()
+{
+   vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+      << clrOutNORM(clrYELLOW,"[SoundEngine] ALERT:") << std::endl
+      << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+      << "A sound engine wasn't created yet, so VR Juggler is using\n"
+      << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+      << "stubbed out version--your app should run, but you will\n"
+      << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+      << "not hear sound (run-time reconfiguration of the SoundEngine\n"
+      << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+      << "at this point may fail or crash the system).\n"
+      << vjDEBUG_FLUSH;
+}
