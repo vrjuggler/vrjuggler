@@ -42,7 +42,6 @@
     typedef float               FLOAT;
     typedef long                LONG;
     typedef int                 INT;
-#   define REVERSE_BYTE_ORDER
 #else
 #   include <windows.h>
 #   include <winbase.h>
