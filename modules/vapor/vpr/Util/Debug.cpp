@@ -179,7 +179,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level, c
 
       ///* For debugging indentation
       // Output the indent level that we are going to of coming from
-      if(getLevel() >= 3)
+      if(getLevel() >= 7)
       {
          if(indentChange >0)  // Not incremented yet
          {
