@@ -315,7 +315,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
       mPerfBuffer->set(++mPerfPhase);
 
    // --- FOR EACH VIEWPORT -- //
-   vjViewport* viewport(NULL);
+   vjViewport* viewport = NULL;
    unsigned num_vps = theDisplay->getNumViewports();
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {

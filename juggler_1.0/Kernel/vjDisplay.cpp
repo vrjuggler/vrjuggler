@@ -106,9 +106,9 @@ void vjDisplay::configViewports(vjConfigChunk* chunk)
    unsigned num_sim_vps = chunk->getNum("sim_viewports");
    unsigned num_surface_vps = chunk->getNum("surface_viewports");
 
-   vjConfigChunk* vp_chunk(NULL);
-   vjSimViewport* sim_vp(NULL);
-   vjSurfaceViewport* surf_vp(NULL);
+   vjConfigChunk* vp_chunk = NULL;
+   vjSimViewport* sim_vp = NULL;
+   vjSurfaceViewport* surf_vp = NULL;
 
    unsigned i(0);
 

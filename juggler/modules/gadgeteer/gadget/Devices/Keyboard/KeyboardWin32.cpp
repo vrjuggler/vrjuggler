@@ -156,8 +156,7 @@ int vjKeyboardWin32::onlyModifier(int mod)
      case VJKEY_ALT:
         return (!m_keys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && m_keys[VJKEY_ALT]);
      default:
-       OutputDebugString(instName);
-       OutputDebugString(": OnlyModifier: bad modifier key");
+       vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL) << instName << ": OnlyModifier: bad modifier key" << vjDEBUG_FLUSH;
        return 0;
   }
 }
@@ -555,8 +554,9 @@ void vjKeyboardWin32::createWindowWin32 ()
    root_height = GetSystemMetrics(SM_CYSCREEN);
 
    /* Create the app. window */
-   m_hWnd = CreateWindow(("Juggler Keyboard"), (instName), WS_OVERLAPPEDWINDOW,
-                         m_x, root_height - m_y - m_height, m_width, m_height,
+   m_hWnd = CreateWindow(("Juggler Keyboard"), instName.c_str(), 
+                         WS_OVERLAPPEDWINDOW, m_x, 
+                         root_height - m_y - m_height, m_width, m_height,
                          (HWND) NULL, NULL, m_hInst, (LPSTR) NULL);
    ShowWindow(m_hWnd,SW_SHOW);
    UpdateWindow(m_hWnd);
