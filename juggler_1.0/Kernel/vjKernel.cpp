@@ -529,15 +529,13 @@ vjKernel::vjKernel()
    //mInitialChunkDB = NULL;
    //mChunkDB = NULL;
 
-#ifdef VJ_VERSION
    // Print out the Juggler version number when the kernel is created.
-   vjDEBUG(vjDBG_BASE, 0) << "======================================"
+   vjDEBUG(vjDBG_BASE, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
                           << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_BASE, 0) << clrOutNORM(clrGREEN, "VR Juggler version: ")
+   vjDEBUG(vjDBG_BASE, 0) << clrOutNORM(clrGREEN, "VR Juggler: ")
                           << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
                           << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_BASE, 0) << "======================================"
+   vjDEBUG(vjDBG_BASE, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
                           << std::endl << vjDEBUG_FLUSH;
-#endif
 }
 

@@ -125,6 +125,16 @@ ifeq ($(PLATFORM), Linux)
     EXTRA_LDOPTS = -O
 endif
 
+# Version information.
+BRANCH		= HEAD
+VER_ARGS	= -f $(VJROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
+                  -i $(VJROOT_ABS)/vjParam.h.in -o vjParam.h		\
+                  -d "`date '+%b %e, %G %H:%M:%S'`"
+
+ifdef VERSION
+    VER_ARGS	+= -v $(VERSION)
+endif
+
 # =============================================================================
 # Library targets.
 # =============================================================================
@@ -134,6 +144,7 @@ AFTERBUILD	= afterbuild
 
 # Things to do before the object files and library are built.
 beforebuild:
+	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 
 # Things to do after the object files and library are built.
 afterbuild:
