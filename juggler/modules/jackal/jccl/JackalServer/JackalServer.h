@@ -85,6 +85,12 @@ public:
 
 
 
+    //: sends a message to all open connections that they need to 
+    //+ refresh their data.
+    void sendRefresh();
+
+
+
 private:
     vjConfigChunkDB*          chunkdb;
     std::vector<vjConnect*>   connections;

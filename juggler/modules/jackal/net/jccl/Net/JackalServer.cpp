@@ -255,3 +255,11 @@ void vjEnvironmentManager::reconfigure () {
     /* repeat above w/ various tu's */
     
 }
+
+
+
+void vjEnvironmentManager::sendRefresh() {
+    for (int i = 0; i < connections.size(); i++) {
+	connections[i]->sendRefresh();
+    }
+}
