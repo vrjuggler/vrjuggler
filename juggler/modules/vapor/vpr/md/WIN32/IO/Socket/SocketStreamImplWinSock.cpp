@@ -84,9 +84,9 @@ fprintf(stderr, "    Type: %d\n", m_type);
 // ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketStreamImpWinSock::listen (const int backlog) {
-    bool retval;
+    Status retval;
 
     // Put the socket into listning mode.  If that fails, print an error and
     // return error status.
@@ -94,11 +94,7 @@ SocketStreamImpWinSock::listen (const int backlog) {
         fprintf(stderr,
                 "[vpr::SocketStreamImpWinSock] Cannot listen on socket: %s\n",
                 strerror(errno));
-        retval = false;
-    }
-    // Otherwise, return success.
-    else {
-        retval = true;
+        retval.setCode(Status::Failure);
     }
 
     return retval;
@@ -107,12 +103,12 @@ SocketStreamImpWinSock::listen (const int backlog) {
 // ----------------------------------------------------------------------------
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
-SocketStreamImpWinSock*
-SocketStreamImpWinSock::accept () {
+Status
+SocketStreamImpWinSock::accept (SocketStreamImpWinSock& sock) {
     SOCKET accept_sock;
     InetAddr addr;
     int addrlen;
-    SocketStreamImpWinSock* new_sock;
+    Status retval;
 
     // Accept an incoming connection request.
     addrlen = addr.size();
@@ -124,38 +120,20 @@ SocketStreamImpWinSock::accept () {
         fprintf(stderr,
                 "[vpr::SocketStreamImpWinSock] Error while accepting incoming connection: %s\n",
                 strerror(errno));
-        new_sock = NULL;
+        retval.setCode(Status::Failure);
     }
     // Otherwise, create a new vpr::SocketStreamImpWinSock object using what
     // the operating system gave us through accept(2).
     else {
-        new_sock = new SocketStreamImpWinSock(accept_sock, addr);
+        sock.setRemoteAddr(addr);
+        sock.m_sockfd    = accept_sock;
+        sock.m_type      = SocketTypes::STREAM;
+        sock.m_open      = true;
+        sock.m_bound     = true;
+        sock.m_connected = true;
     }
 
-    return new_sock;
-}
-
-// ============================================================================
-// Protected methods.
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Protected constructor.  This is used when the socket is created by the
-// operating system, typically by the accept(2) system call.
-// ----------------------------------------------------------------------------
-SocketStreamImpWinSock::SocketStreamImpWinSock (const SOCKET sock,
-                                                const InetAddr& remote_addr)
-    : SocketImpWinSock()
-{
-fprintf(stderr, "Protected vpr::SocketStreamImpWinSock constructor\n");
-// XXX: Merge
-    std::string addr = remote_addr.getAddressString();
-fprintf(stderr, "Client addr: %s:%hu\n", addr.c_str(), remote_addr.getPort());
-    m_sockfd         = sock;
-    m_type           = SocketTypes::STREAM;
-
-    // Copy the given vpr::InetAddr to the new object's member variable.
-    m_remote_addr = remote_addr;
+    return retval;
 }
 
 }; // End of vpr namespace

@@ -66,7 +66,7 @@ public:
     //     false - The socket could not be opened for some reason (an error
     //             message is printed explaining why).
     // ------------------------------------------------------------------------
-    virtual bool open(void);
+    virtual Status open(void);
 
     // ------------------------------------------------------------------------
     //: Close the socket.
@@ -79,7 +79,7 @@ public:
     //! RETURNS: true  - The socket was closed successfully.
     //! RETURNS: false - The socket could not be closed for some reason.
     // ------------------------------------------------------------------------
-    virtual bool close(void);
+    virtual Status close(void);
 
     // ------------------------------------------------------------------------
     // Bind this socket to the address in the host address member variable.
@@ -93,30 +93,39 @@ public:
     //             m_host_addr.  An error message is printed explaining what
     //             went wrong.
     // ------------------------------------------------------------------------
-    virtual bool bind(void);
+    virtual Status bind(void);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual bool
+    virtual Status
     enableBlocking (void) {
         u_long non_blocking_mode;
+        Status status;
 
         non_blocking_mode = 0;    // XXX: What is the right value?
         m_blocking        = true;
 
-        return (ioctlsocket(m_sockfd, FIONBIO, &non_blocking_mode) == 0);
+        if ( ioctlsocket(m_sockfd, FIONBIO, &non_blocking_mode) != 0 ) {
+            status.setCode(Status::Failure);
+        }
+
+        return status;
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual bool
+    virtual Status
     enableNonBlocking (void) {
         u_long non_blocking_mode;
+        Status status;
 
         non_blocking_mode = 1;
         m_blocking        = false;
 
-        return (ioctlsocket(m_sockfd, FIONBIO, &non_blocking_mode) == 0);
+        if ( ioctlsocket(m_sockfd, FIONBIO, &non_blocking_mode) != 0 ) {
+        }
+
+        return status;
     }
 
     // ========================================================================
@@ -140,7 +149,7 @@ public:
     //     false - The connect could not be made.  An error message is
     //             printed explaining what happened.
     // ------------------------------------------------------------------------
-    virtual bool connect(void);
+    virtual Status connect(void);
 
     // ------------------------------------------------------------------------
     //: Get the type of this socket (e.g., vpr::SocketTypes::STREAM).
@@ -180,14 +189,20 @@ public:
         return m_remote_addr;
     }
 
-    bool setRemoteAddr(const InetAddr& addr)
-    {
-       if (this->m_open)
-       { return false; }
-       else
-          m_remote_addr = addr;
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    inline Status
+    setRemoteAddr (const InetAddr& addr) {
+        Status retval;
 
-       return true;
+        if ( m_open ) {
+            retval.setCode(Status::Failure);
+        }
+        else {
+            m_remote_addr = addr;
+        }
+
+        return retval;
     }
 
 protected:
@@ -234,23 +249,23 @@ protected:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    read_i (void* buffer, const size_t length) {
-        return recv(buffer, length);
+    virtual Status
+    read_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return recv(buffer, length, 0, bytes_read);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    readn_i (void* buffer, const size_t length) {
-        return recvn(buffer, length);
+    virtual Status
+    readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return recvn(buffer, length, 0, bytes_read);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    write_i (const void* buffer, const size_t length) {
-        return send(buffer, length);
+    virtual Status
+    write_i (const void* buffer, const size_t length, ssize_t& bytes_written) {
+        return send(buffer, length, 0, bytes_written);
     }
 
     // ------------------------------------------------------------------------
@@ -274,8 +289,8 @@ protected:
     //     >-1 - The number of bytes received.
     //      -1 - Something went wrong when trying to receive the data.
     // ------------------------------------------------------------------------
-    virtual ssize_t recv(void* buffer, const size_t length,
-                         const int flags = 0);
+    virtual Status recv(void* buffer, const size_t length, const int flags,
+                        ssize_t& bytes_read);
 
     // ------------------------------------------------------------------------
     //! Read exactly the specified number of bytes from the socket into the
@@ -294,8 +309,8 @@ protected:
     //! RETURNS: >-1 - The number of bytes successfully read from the socket.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual ssize_t recvn(void* buffer, const size_t length,
-                          const int flags = 0);
+    virtual Status recvn(void* buffer, const size_t length, const int flags,
+                         ssize_t& bytes_read);
 
     // ------------------------------------------------------------------------
     // Send the specified number of bytes contained in the given buffer from
@@ -316,22 +331,24 @@ protected:
     //     >-1 - The number of bytes received.
     //      -1 - Something went wrong when trying to receive the data.
     // ------------------------------------------------------------------------
-    virtual ssize_t send(const void* buffer, const size_t length,
-                         const int flags = 0);
+    virtual Status send(const void* buffer, const size_t length,
+                        const int flags, ssize_t& bytes_sent);
 
     /**
      *
      */
-    virtual bool getOption(const SocketOptions::Types option,
-                           struct SocketOptions::Data& data);
+    virtual Status getOption(const SocketOptions::Types option,
+                             struct SocketOptions::Data& data);
 
     /**
      *
      */
-    virtual bool setOption(const SocketOptions::Types option,
-                           const struct SocketOptions::Data& data);
+    virtual Status setOption(const SocketOptions::Types option,
+                             const struct SocketOptions::Data& data);
 
     SOCKET            m_sockfd;
+    bool              m_bound;
+    bool              m_connected;
     InetAddr          m_local_addr;
     InetAddr          m_remote_addr;
     SocketTypes::Type m_type;

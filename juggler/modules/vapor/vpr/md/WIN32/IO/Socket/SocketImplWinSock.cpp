@@ -51,9 +51,9 @@ namespace vpr {
 // Open the socket.  This creates a new socket using the domain and type
 // options set through member variables.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketImpWinSock::open () {
-    bool retval;
+    Status retval;
     int domain, type;
 
     switch (m_local_addr.getFamily()) {
@@ -95,10 +95,7 @@ SocketImpWinSock::open () {
         fprintf(stderr,
                 "[vpr::SocketImpWinSock] Could not create socket (%s): %s\n",
                 m_name.c_str(), strerror(errno));
-        retval = false;
-    }
-    else {
-        retval = true;
+        retval.setCode(Status::Failure);
     }
 
     return retval;
@@ -107,19 +104,18 @@ SocketImpWinSock::open () {
 // ----------------------------------------------------------------------------
 // Close the socket.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketImpWinSock::close (void) {
-    bool retval;
+    Status retval;
 
     if ( ::closesocket(m_sockfd) == 0 ) {
         m_open = false;
-        retval = true;
     }
     else {
         fprintf(stderr,
                 "[vpr::SocketImpWinSock] Could not close socket (%s): %s\n",
                 m_name.c_str(), strerror(errno));
-        retval = false;
+        retval.setCode(Status::Failure);
     }
 
     return retval;
@@ -128,9 +124,9 @@ SocketImpWinSock::close (void) {
 // ----------------------------------------------------------------------------
 // Bind this socket to the address in the host address member variable.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketImpWinSock::bind () {
-    bool retval;
+    Status retval;
     int status;
 
     // Bind the socket to the address in m_addr.
@@ -142,11 +138,10 @@ SocketImpWinSock::bind () {
         fprintf(stderr,
                 "[vpr::SocketImpWinSock] Cannot bind socket to address: %s\n",
                 strerror(errno));
-        retval = false;
+        retval.setCode(Status::Failure);
     }
-    // Otherwise, return success.
     else {
-        retval = true;
+        m_bound = true;
     }
 
     return retval;
@@ -158,9 +153,9 @@ SocketImpWinSock::bind () {
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketImpWinSock::connect () {
-    bool retval;
+    Status retval;
     int status;
 
     // Attempt to connect to the address in m_addr.
@@ -172,11 +167,10 @@ SocketImpWinSock::connect () {
     if ( status == -1 ) {
         fprintf(stderr, "[vpr::SocketImpWinSock] Error connecting to %s: %s\n",
                 m_name.c_str(), strerror(errno));
-        retval = false;
+        retval.setCode(Status::Failure);
     }
-    // Otherwise, return success.
     else {
-        retval = true;
+        m_connected = true;
     }
 
     return retval;
@@ -191,7 +185,8 @@ SocketImpWinSock::connect () {
 // defaults.
 // ----------------------------------------------------------------------------
 SocketImpWinSock::SocketImpWinSock ()
-    : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1)
+    : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1), m_bound(false),
+      m_connected(false)
 {
     init();
 }
@@ -205,8 +200,9 @@ SocketImpWinSock::SocketImpWinSock ()
 SocketImpWinSock::SocketImpWinSock (const InetAddr& local_addr,
                                     const InetAddr& remote_addr,
                                     const SocketTypes::Type type)
-    : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1),
-      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(type)
+    : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1), m_bound(false),
+      m_connected(false), m_local_addr(local_addr),
+      m_remote_addr(remote_addr), m_type(type)
 {
     init();
 }
@@ -233,9 +229,19 @@ SocketImpWinSock::init () {
 // Receive the specified number of bytes from the remote site to which the
 // local side is connected.
 // ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::recv(void* buffer, const size_t length, const int flags) {
-    return ::recv(m_sockfd, (char*) buffer, length, flags);
+Status
+SocketImpWinSock::recv (void* buffer, const size_t length, const int flags,
+                        ssize_t& bytes_read)
+{
+    Status retval;
+
+    bytes_read = ::recv(m_sockfd, (char*) buffer, length, flags);
+
+    if ( bytes_read < 0 ) {
+        retval.setCode(Status::Failure);
+    }
+
+    return retval;
 }
 
 // ----------------------------------------------------------------------------
@@ -243,42 +249,53 @@ SocketImpWinSock::recv(void* buffer, const size_t length, const int flags) {
 // given buffer.  This is baesd on the readn() function given on pages 51-2 of
 // _Effective TCP/IP Programming_ by Jon D. Snader.
 // ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::recvn (void* buffer, const size_t length, const int flags) {
+Status
+SocketImpWinSock::recvn (void* buffer, const size_t length, const int flags,
+                         ssize_t& bytes_read)
+{
     size_t count;
-    ssize_t bytes;
+    Status retval;
 
     count = length;
 
     while ( count > 0 ) {
-        bytes = ::recv(m_sockfd, (char*) buffer, length, flags);
+        bytes_read = ::recv(m_sockfd, (char*) buffer, length, flags);
 
         // Read error.
-        if ( bytes < 0 ) {
+        if ( bytes_read < 0 ) {
+            retval.setCode(Status::Failure);
             break;
         }
         // May have read EOF, so return bytes read so far.
-        else if ( bytes == 0 ) {
-            bytes = length - count;
+        else if ( bytes_read == 0 ) {
+            bytes_read = length - count;
         }
         else {
-            buffer = (void*) ((char*) buffer + bytes);
-            count  -= bytes;
+            buffer = (void*) ((char*) buffer + bytes_read);
+            count  -= bytes_read;
         }
     }
 
-    return bytes;
+    return retval;
 }
 
 // ----------------------------------------------------------------------------
 // Send the specified number of bytes contained in the given buffer from the
 // local side to the remote site to which we are connected.
 // ----------------------------------------------------------------------------
-ssize_t
+Status
 SocketImpWinSock::send (const void* buffer, const size_t length,
-                        const int flags)
+                        const int flags, ssize_t& bytes_sent)
 {
-    return ::send(m_sockfd, (char*) buffer, length, flags);
+    Status retval;
+
+    bytes_sent = ::send(m_sockfd, (char*) buffer, length, flags);
+
+    if ( bytes_sent < 0 ) {
+        retval.setCode(Status::Failure);
+    }
+
+    return retval;
 }
 
 /**
@@ -294,12 +311,12 @@ union sockopt_data {
     Uint8          mcast_loop;
 };
 
-bool
+Status
 SocketImpWinSock::getOption (const SocketOptions::Types option,
                              struct SocketOptions::Data& data)
 {
     int opt_name, opt_level;
-    bool retval;
+    Status retval;
     socklen_t opt_size;
     union sockopt_data opt_data;
     bool do_get;
@@ -373,11 +390,13 @@ SocketImpWinSock::getOption (const SocketOptions::Types option,
     }
 
     if ( do_get ) {
+        int status;
+
         status = getsockopt(m_sockfd, opt_level, opt_name, (char*) &opt_data,
                             &opt_size);
 
         if ( status == 0 ) {
-            retval = false;
+            retval.setCode(Status::Failure);
 
             // This extracts the information from the union passed to
             // getsockopt(2) and puts it in our friendly SocketOptions::Data
@@ -431,7 +450,7 @@ SocketImpWinSock::getOption (const SocketOptions::Types option,
 
                 break;
               case SocketOptions::McastInterface:
-                data.mcast_if = InetAddr(opt_data.mcast_if.s_addr, 0);
+                data.mcast_if.setAddress(opt_data.mcast_if.s_addr, 0);
                 break;
               case SocketOptions::McastTimeToLive:
                 data.mcast_ttl = opt_data.mcast_ttl;
@@ -448,7 +467,7 @@ SocketImpWinSock::getOption (const SocketOptions::Types option,
             }
         }
         else {
-            retval = false;
+            retval.setCode(Status::Failure);
             fprintf(stderr,
                     "[vpr::SocketImpWinSock] ERROR: Could not get socket "
                     "option for socket %s: %s\n", getName().c_str(),
@@ -456,13 +475,13 @@ SocketImpWinSock::getOption (const SocketOptions::Types option,
         }
     }
     else {
-        retval = false;
+        retval.setCode(Status::Failure);
     }
 
     return retval;
 }
 
-bool
+Status
 SocketImpWinSock::setOption (const SocketOptions::Types option,
                              const struct SocketOptions::Data& data)
 {
@@ -470,7 +489,7 @@ SocketImpWinSock::setOption (const SocketOptions::Types option,
     socklen_t opt_size;
     union sockopt_data opt_data;
     bool do_set;
-    int retval;
+    Status retval;
 
     do_set = true;
 
@@ -609,11 +628,17 @@ SocketImpWinSock::setOption (const SocketOptions::Types option,
     }
 
     if ( do_set ) {
-        retval = setsockopt(m_sockfd, opt_level, opt_name, (char*) &opt_data,
-                            opt_size);
+        int set_status;
+
+        set_status = setsockopt(m_sockfd, opt_level, opt_name,
+                                (char*) &opt_data, opt_size);
+
+        if ( set_status < 0 ) {
+            retval.setCode(Status::Failure);
+        }
     }
     else {
-        retval = -1;
+        retval.setCode(Status::Failure);
     }
 
     return retval;
