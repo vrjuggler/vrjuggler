@@ -36,6 +36,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JComponent;
 
@@ -50,9 +52,7 @@ import org.jgraph.graph.GraphModel;
 import org.jgraph.util.JGraphHeavyweightRedirector;
 import org.jgraph.util.JGraphUtilities;
 
-import org.vrjuggler.jccl.config.ConfigBroker;
-import org.vrjuggler.jccl.config.ConfigBrokerProxy;
-import org.vrjuggler.jccl.config.ConfigDefinitionRepository;
+import org.vrjuggler.jccl.config.*;
 
 import org.vrjuggler.vrjconfig.commoneditors.devicegraph.*;
 
@@ -84,15 +84,36 @@ public class DeviceGraph
 
       ConfigBroker broker = new ConfigBrokerProxy();
       ConfigDefinitionRepository repos = broker.getRepository();
+      List all_defs = repos.getAllLatest();
 
-      factory.registerCreator(repos.get(SIM_DIGITAL_DEVICE_TYPE),
-                              MultiUnitDeviceVertexView.class);
+      // Input device types.
+      List device_types =
+         ConfigUtilities.getDefinitionsOfType(all_defs, INPUT_DEVICE_TYPE);
+
+      for ( Iterator d = device_types.iterator(); d.hasNext(); )
+      {
+         ConfigDefinition def = (ConfigDefinition) d.next();
+         if ( ! def.isAbstract() )
+         {
+            factory.registerCreator(def, MultiUnitDeviceVertexView.class);
+         }
+      }
+
+      // Override the creators for specific device types.
       factory.registerCreator(repos.get(SIM_POS_DEVICE_TYPE),
                               JGraphRoundRectView.class);
-      factory.registerCreator(repos.get(DIGITAL_PROXY_TYPE),
-                              ProxyVertexView.class);
-      factory.registerCreator(repos.get(POSITION_PROXY_TYPE),
-                              ProxyVertexView.class);
+
+      // Proxy types.
+      List proxy_types = ConfigUtilities.getDefinitionsOfType(all_defs,
+                                                              PROXY_TYPE);
+      for ( Iterator d = proxy_types.iterator(); d.hasNext(); )
+      {
+         ConfigDefinition def = (ConfigDefinition) d.next();
+         if ( ! def.isAbstract() )
+         {
+            factory.registerCreator(def, ProxyVertexView.class);
+         }
+      }
 
       setGraphLayoutCache(new DeviceGraphLayoutCache(getModel(), factory));
 
