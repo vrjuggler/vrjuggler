@@ -166,7 +166,7 @@ std::vector<PRPollDesc>::iterator SelectorImplNSPR::getHandle(PRFileDesc const* 
    // XXX: Should probably be replaced by a map in the future for speed
 
    for(std::vector<PRPollDesc>::iterator i=mPollDescs.begin();
-          i != mPollDescs.end();i++)
+          i != mPollDescs.end();++i)
    {
       if((*i).fd == handle)
          return i;

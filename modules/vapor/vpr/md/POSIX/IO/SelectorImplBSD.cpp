@@ -173,7 +173,7 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents, const vpr::Interval timeout
 
    last_fd = -1;
 
-   for ( i = mPollDescs.begin(); i != mPollDescs.end(); i++ ) {
+   for ( i = mPollDescs.begin(); i != mPollDescs.end(); ++i ) {
       (*i).out_flags = 0;
 
       if ( (*i).in_flags & SelectorBase::Read ) {
@@ -232,7 +232,7 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents, const vpr::Interval timeout
    }
    // We got one!
    else {
-      for ( i = mPollDescs.begin(); i != mPollDescs.end(); i++ ) {
+      for ( i = mPollDescs.begin(); i != mPollDescs.end(); ++i ) {
          if ( FD_ISSET((*i).fd, &read_set) ) {
             (*i).out_flags |= SelectorBase::Read;
          }
@@ -259,7 +259,7 @@ SelectorImplBSD::getHandle (int handle) {
    // XXX: Should probably be replaced by a map in the future for speed
 
    for(std::vector<BSDPollDesc>::iterator i=mPollDescs.begin();
-          i != mPollDescs.end();i++)
+          i != mPollDescs.end();++i)
    {
       if((*i).fd == handle)
          return i;

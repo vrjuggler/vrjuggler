@@ -73,7 +73,7 @@ NetworkNode::NetworkNode (const vpr::Uint32 index, const vpr::Uint8 type,
 
    cur_pos = 0;
 
-   for ( vpr::Uint8 i = 0; i < 4; i++ )
+   for ( vpr::Uint8 i = 0; i < 4; ++i )
    {
       next_dot = ip_str.find(".", cur_pos);
       cur_val  = ip_str.substr(cur_pos, next_dot - cur_pos);

@@ -86,7 +86,7 @@ vpr::ReturnStatus Message::getNextHop (NetworkGraph::net_vertex_t& hop,
 
       if ( increment_next_hop )
       {
-         mNextHop++;
+         ++mNextHop;
       }
    }
    else
