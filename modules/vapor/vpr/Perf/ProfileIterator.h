@@ -61,22 +61,29 @@ namespace vpr
       /** Copy constructor. */
       ProfileIterator(const ProfileIterator& rhs)
       {
-          mCurrentParent = rhs.mCurrentParent;
-          mCurrentNode = rhs.mCurrentNode;
-          mDepth = rhs.mDepth;
+         mCurrentParent = rhs.mCurrentParent;
+         mCurrentNode = rhs.mCurrentNode;
+         mDepth = rhs.mDepth;
       }
 
       /** Go to next element. */
       void operator++();
 
       ProfileNode& operator*()
-      { return *mCurrentNode; }
+      {
+         return *mCurrentNode;
+      }
+
       ProfileNode* operator->()
-      { return mCurrentNode; }
+      {
+         return mCurrentNode;
+      }
 
       /** Return the current depth in the traversal. */
-      unsigned depth()
-      { return mDepth; }
+      unsigned int depth()
+      {
+         return mDepth;
+      }
 
       bool operator==(const ProfileIterator& rhs)
       {
@@ -86,14 +93,15 @@ namespace vpr
       }
 
       bool operator!=(const ProfileIterator& rhs)
-      { return !(operator==(rhs)); }
-
+      {
+         return !(operator==(rhs));
+      }
 
    protected:
       ProfileNode*   mCurrentParent;   /** The current parent of the node we are holding. */
       ProfileNode*   mCurrentNode;     /** The current node we are holding on to. */
 
-      unsigned       mDepth;           /** The current depth in the tree. */
+      unsigned int   mDepth;           /** The current depth in the tree. */
 
       friend class ProfileManager;
       friend class ProfileNode;
