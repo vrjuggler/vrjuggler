@@ -164,6 +164,9 @@ bool vjInputManager::ConfigureProxy(vjConfigChunk* chunk)
    vjDEBUG_BEGIN(1) << "ConfigureProxy: Named: " << proxy_name << endl << vjDEBUG_FLUSH;
 
    vjProxy* new_proxy;
+
+   // Tell the factory to load the proxy
+   // NOTE: The constructor for the proxy registers it with the input manager
    new_proxy = vjProxyFactory::instance()->loadProxy(chunk);
 
    if ( new_proxy != NULL)
