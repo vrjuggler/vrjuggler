@@ -66,6 +66,7 @@ public:
     // -----------------------------------------------------------------------
     vjThreadKeyPosix (void) {
         keycreate(NULL);
+        setspecific(NULL);
     } 
 
     // -----------------------------------------------------------------------
@@ -73,6 +74,7 @@ public:
     // -----------------------------------------------------------------------
     vjThreadKeyPosix (vj_thread_func_t destructor, void* arg) {
         keycreate(destructor, arg);
+        setspecific(NULL);
     }
 
     // -----------------------------------------------------------------------
@@ -80,6 +82,7 @@ public:
     // -----------------------------------------------------------------------
     vjThreadKeyPosix (vjBaseThreadFunctor* destructor) {
         keycreate(destructor);
+        setspecific(NULL);
     }
 
     // -----------------------------------------------------------------------
