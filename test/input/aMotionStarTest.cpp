@@ -9,13 +9,8 @@ int main()
 {
   vjMemPool* aMemPool = new vjSharedPool(1024*1024);
 
-  // Get configuration information
-  int hemisphere = 3;
-  unsigned int birdFormat = 4;
-  double birdRate = 90.0;
-  unsigned int birdsRequired = 3;
-  int runMode = 1;
-  char ipAddress[] = "129.186.232.39";  
+  // Get configuration information \
+   
   cout << "-------- Bird Test program -------\n";
 /*       << "First we need some config info:\n"
        << "NOTE: Sample values are in ()'s\n" << flush;
@@ -25,8 +20,8 @@ int main()
   cout << "\nEnter baud rate (38400): " << flush;
   cin >> baud;
 */  
-  cout << "\nHow many birds (3): " << flush;
-  cin >> birdsRequired;
+//  cout << "\nHow many birds (3): " << flush;
+//  cin >> birdsRequired;
 /*  
   cout << "\nNot using calibration file." << flush;
   cout << "\nUsing LOWER_HEM" << flush;
@@ -40,14 +35,19 @@ int main()
   cout << "\nWhat is the transmitter id (1-based numbering): " << flush;
   cin >> transmitter;
 */
+  int hemisphere = 3;
+  unsigned int birdFormat = 4;
+  double birdRate = 90.0;
+  unsigned int birdsRequired = 3;
+  int runMode = 1;
+  
 
     aMotionStar* motionstar = new(aMemPool) aMotionStar
-    		(hemisphere,
+    		("129.186.232.39", hemisphere,
              birdFormat,
              birdsRequired,
-             birdRate,
-             runMode, 1,
-             ipAddress
+             runMode,
+             birdRate, 1
              );
 
   char achar;
@@ -97,7 +97,7 @@ int main()
          {
             motionstar->sample();
             system("clear");
-            cout << "-------- vjMotionStar: Sampling (" << z << " of " << num_samples << ") -------" << endl;
+            cout << "-------- aMotionStar: Sampling (" << z << " of " << num_samples << ") -------" << endl;
             for(int bird=0;bird<birdsRequired;bird++)
             {
             //   vjVec3 pos0 = vjCoord( *motionstar->getPosData(bird) ).pos;
