@@ -60,12 +60,10 @@ AC_DEFUN(EQUIP_PATH,
     dnl ----------------------------------------------- 
     DPP_LANG_SAVE
     DPP_LANG_CPLUSPLUS
-    AC_CHECK_HEADERS(iostream hash_map hash_map.h)
 
     dso_save_CPPFLAGS="$CPPFLAGS"
     CPPFLAGS="$CPPFLAGS $VPR_CXXFLAGS -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
-    AC_CHECK_HEADER([EquipExt/VectorStream.h], ,
-                    [AC_MSG_ERROR(*** Equip standalone required for DSO ***)])
+    AC_CHECK_HEADER([EquipExt/VectorStream.h], , $3)
     CPPFLAGS="$dso_save_CPPFLAGS"
     INCLUDES="$INCLUDES -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
 
