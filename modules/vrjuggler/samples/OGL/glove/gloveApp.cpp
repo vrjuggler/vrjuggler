@@ -214,8 +214,6 @@ bool gloveApp::RightFist()
 //  objects.
 void gloveApp::postFrame()
 {
-   vrj::GlApp::postFrame();
-   
    //: we need to keep track of the wand, and the user.
     UserInfo    userInfo;
     TrackedInfo wandInfo;
