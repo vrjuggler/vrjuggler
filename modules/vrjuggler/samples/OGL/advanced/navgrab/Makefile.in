@@ -51,5 +51,7 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 # -----------------------------------------------------------------------------
 navgrab@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
-	test -d data  && rm -f data
+ifneq ($(srcdir), .)
+	test -h data && rm -f data
 	ln -s $(srcdir)/data data
+endif
