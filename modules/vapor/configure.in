@@ -671,14 +671,20 @@ else
 fi
 
 if test "x$OS_TYPE" = "xWin32" ; then
-   CPPDOM_CXXFLAGS='-I$cppdom_root/include'
-   CPPDOM_LIBS='/libpath:$cppdom_root/lib cppdom.lib'
+   CPPDOM_CXXFLAGS="-I$cppdom_root/include"
+   CPPDOM_LDFLAGS="/libpath:$cppdom_root/lib"
+   CPPDOM_LIBS="cppdom.lib"
 else
    AC_PATH_PROG(CPPDOM_CONFIG, [cppdom-config], [no], [$cppdom_path])
 
    if test "x$CPPDOM_CONFIG" != "xno" ; then
       CPPDOM_CXXFLAGS=`$CPPDOM_CONFIG --cxxflags`
-      CPPDOM_LIBS=`$CPPDOM_CONFIG --libs`
+      cppdom_lib_output=`$CPPDOM_CONFIG --libs`
+      changequote(<<, >>)
+      # XXX: These sed(1) expressions could be improved.
+      CPPDOM_LDFLAGS=`echo $cppdom_lib_output | sed -e 's/-l[^ ]*//g'`
+      CPPDOM_LIBS=`echo $cppdom_lib_output | sed -e 's/-L[^ ]*//g'`
+      changequote([, ])
    else
       AC_MSG_ERROR([*** CppDOM is required for VPR ***])
    fi
@@ -699,7 +705,7 @@ DPP_VERSION_CHECK([$cppdom_version], [$min_cppdom_version], ,
 
 CXXFLAGS="$CPPDOM_CXXFLAGS $CXXFLAGS $STDFLAGS $ABI_FLAGS"
 CPPFLAGS="$CPPDOM_CXXFLAGS $CPPFLAGS"
-LDFLAGS="$CPPDOM_LIBS $LDFLAGS"
+LDFLAGS="$CPPDOM_LDFLAGS $CPPDOM_LIBS $LDFLAGS"
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
@@ -724,7 +730,7 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
 
-vpr_cxxflags="$STDFLAGS $BOOST_INCLUDES $CPPDOM_CXXFLAGS"
+vpr_cxxflags="$STDFLAGS"
 
 # Add these C++ options when compiling with G++.
 if test "x$GXX" = "xyes" ; then
@@ -801,9 +807,9 @@ UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 
 # Put together the basic information needed to compile VPR applications.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $LIBS $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $LIBS $CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_fs_name $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_fs_name $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
 fi
 
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
@@ -842,7 +848,7 @@ fi
 
 # Dependencies for dynamic/shared libraries.
 if test "x$OS_TYPE" = "xWin32" ; then
-    DYLIB_DEPS="$CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
+    DYLIB_DEPS="$CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
     DYLIB_DEPS="$APP_EXTRA_LIBS"
 fi
@@ -856,7 +862,7 @@ case $SUBSYSTEM in
         static_end="-B dynamic"
         vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
         vpr_ldflags_linker="$vpr_ldflags_compiler"
-        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_fs_name"
+        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS -l$boost_fs_name"
         vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
         vpr_libs='-lvpr'
         vpr_prof_libs='-lvpr_p'
@@ -877,7 +883,7 @@ case $SUBSYSTEM in
 
         vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
         vpr_ldflags_linker="$vpr_ldflags_compiler"
-        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_fs_name"
+        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS -l$boost_fs_name"
         vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
         vpr_libs='-lvpr'
         vpr_prof_libs='-lvpr_p'
@@ -894,10 +900,10 @@ case $SUBSYSTEM in
             vpr_prof_libs='vpr.lib'
         else
             subsystem_cxxflags="$subsystem_includes"
-            subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
+            subsystem_libs="$NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
             vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
             vpr_ldflags_linker="$vpr_ldflags_compiler"
-            vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_fs_name"
+            vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS -l$boost_fs_name"
             vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
             vpr_libs='-lvpr'
             vpr_prof_libs='-lvpr_p'
@@ -949,6 +955,7 @@ AC_SUBST(SOCKET_ABS)
 
 AC_SUBST(CPPDOM_CXXFLAGS)
 AC_SUBST(CPPDOM_LIBS)
+AC_SUBST(CPPDOM_LDFLAGS)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
