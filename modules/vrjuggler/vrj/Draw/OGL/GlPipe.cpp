@@ -363,16 +363,22 @@ void GlPipe::renderWindow(GlWindow* win)
 
          mPerfBuffer->set(perf_phase++);
 
-         // ---- SURFACE --- //
-         if (viewport->isSurface())
+         // ---- SURFACE & Simulator --- //
+         // if (viewport->isSurface())
          {
-            SurfaceViewport* surface_vp = dynamic_cast<SurfaceViewport*>(viewport);
+            SimViewport* sim_vp(NULL);
+
+            if(viewport->isSimulator())
+            {
+               sim_vp = dynamic_cast<SimViewport*>(viewport);
+               vprASSERT(NULL != sim_vp);
+            }
 
             if((Viewport::STEREO == view) || (Viewport::LEFT_EYE == view))      // LEFT EYE
             {
                win->setViewBuffer(Viewport::LEFT_EYE);
-               win->setProjection(surface_vp->getLeftProj());
-               glManager->currentUserData()->setProjection(surface_vp->getLeftProj());
+               win->setProjection(viewport->getLeftProj());
+               glManager->currentUserData()->setProjection(viewport->getLeftProj());
 
                mPerfBuffer->set(perf_phase++);
 
@@ -381,6 +387,10 @@ void GlPipe::renderWindow(GlWindow* win)
                mPerfBuffer->set(perf_phase++);
 
                glManager->drawObjects();
+               if(NULL != sim_vp)
+               {
+                  glManager->drawSimulator(sim_vp);
+               }
 
                mPerfBuffer->set(perf_phase++);
 
@@ -388,8 +398,8 @@ void GlPipe::renderWindow(GlWindow* win)
             if ((Viewport::STEREO == view) || (Viewport::RIGHT_EYE == view))    // RIGHT EYE
             {
                win->setViewBuffer(Viewport::RIGHT_EYE);
-               win->setProjection(surface_vp->getRightProj());
-               glManager->currentUserData()->setProjection(surface_vp->getRightProj());
+               win->setProjection(viewport->getRightProj());
+               glManager->currentUserData()->setProjection(viewport->getRightProj());
 
                mPerfBuffer->set(perf_phase++);
 
@@ -398,14 +408,18 @@ void GlPipe::renderWindow(GlWindow* win)
                mPerfBuffer->set(perf_phase++);
 
                glManager->drawObjects();
+               if(NULL != sim_vp)
+               {
+                  glManager->drawSimulator(sim_vp);
+               }
 
                mPerfBuffer->set(perf_phase++);
-
             }
             else
                perf_phase += 3;
          }
          // ---- SIMULATOR ---------- //
+         /*
          else if(viewport->isSimulator())
          {
             SimViewport* sim_vp = dynamic_cast<SimViewport*>(viewport);
@@ -426,6 +440,7 @@ void GlPipe::renderWindow(GlWindow* win)
             mPerfBuffer->set(perf_phase++);
 
          }
+         */
 
       }  // should viewport be rendered
    }     // for each viewport
