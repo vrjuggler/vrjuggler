@@ -35,35 +35,36 @@
 
 namespace vpr {
 
-// ----------------------------------------------------------------------------
-//: Cross-platform serial port interface.
-// ----------------------------------------------------------------------------
-//!PUBLIC_API:
+/**
+ * Cross-platform serial port interface.
+ *
+ * @author Patrick Hartling
+ */
 template<class RealSerialPortImpl>
 class SerialPort_t : public Port {
 public:
-    // ------------------------------------------------------------------------
-    //: Constructor.
-    //
-    //! PRE: None.
-    //! POST: A serial port interface implementation object is created using
-    //+       the given port name.
-    //
-    //! ARGS: port_name - The name of the serial port to be accessed by this
-    //+                   object.
-    // ------------------------------------------------------------------------
+    /**
+     * Constructor.
+     *
+     * @pre None.
+     * @post A serial port interface implementation object is created using
+     *       the given port name.
+     *
+     * @param port_name The name of the serial port to be accessed through this
+     *                  object.
+     */
     SerialPort_t (const std::string& port_name)
         : Port(port_name), m_sio_imp(port_name)
     {
         /* Do nothing. */ ;
     }
 
-    // ------------------------------------------------------------------------
-    //: Destructor.  This does nothing.
-    //
-    //! PRE: None.
-    //! POST: None.
-    // ------------------------------------------------------------------------
+    /**
+     * Destructor.  This does nothing.
+     *
+     * @pre None.<br>
+     * @post None.
+     */
     virtual ~SerialPort_t (void) {
         /* Do nothing. */ ;
     }
@@ -72,132 +73,143 @@ public:
     // Block I/O device interface.
     // ========================================================================
 
-    // ------------------------------------------------------------------------
-    //: Get the name of this serial port.
-    //
-    //! PRE: None.
-    //! POST: A constant reference to the m_name object is returned to the
-    //+       caller.
-    //
-    //! RETURNS: An object containing the name of this serial port.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the name of the encapsulated serial port.
+     *
+     * @pre None.
+     * @post A constant reference to the m_name object is returned to the
+     *       caller.
+     *
+     * @return An object containing the name of this serial port.
+     */
     virtual const std::string&
     getName (void) {
         return m_sio_imp.getName();
     }
 
-    // ------------------------------------------------------------------------
-    //: Set the blocking flags so that the serial port is opened in blocking
-    //+ mode.
-    //
-    //! PRE: None.
-    //! POST: The open flags are updated so that when the port is opened, it
-    //+       is opened in blocking mode.  If the port is already open, this
-    //+       has no effect.
-    // ------------------------------------------------------------------------
+    /**
+     * Sets the blocking flags so that the serial port is opened in blocking
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it is
+     *       opened in blocking mode.  If the port is already open, this has
+     *       no effect.
+     */
     inline void
     setOpenBlocking (void) {
         m_sio_imp.setOpenBlocking();
     }
 
-    // ------------------------------------------------------------------------
-    //: Set the blocking flags so that the serial port is opened in
-    //+ non-blocking mode.
-    //
-    //! PRE: None.
-    //! POST: The open flags are updated so that when the port is opened, it
-    //+       is opened in non-blocking mode.  If the port is already open,
-    //+       this has no effect.
-    // ------------------------------------------------------------------------
+    /**
+     * Sets the blocking flags so that the serial port is opened in
+     * non-blocking mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it is
+     *       opened in non-blocking mode.  If the port is already open, this
+     *       has no effect.
+     */
     inline void
     setOpenNonBlocking (void) {
         m_sio_imp.setOpenNonBlocking();
     }
 
-    // ------------------------------------------------------------------------
-    //: Open the serial port.
-    //
-    //! PRE: The serial port is not already open.
-    //! POST: An attempt is made to open the serial port.  The resulting
-    //+       status is returned to the caller.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Opens the serial port.
+     *
+     * @pre The serial port is not already open.
+     * @post An attempt is made to open the serial port.  The resulting status
+     *       is returned to the caller.
+     *
+     * @return vpr::Status::Success is returned if the serial port opened
+     *         successfully.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     open (void) {
         return m_sio_imp.open();
     }
 
-    // ------------------------------------------------------------------------
-    //: Close the serial port.
-    //
-    //! PRE: The serial port is open.
-    //! POST: An attempt is made to close the serial port.  The resulting
-    //+       status is returned to the caller.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Closes the serial port.
+     *
+     * @pre The serial port is open.
+     * @post An attempt is made to close the serial port.  The resulting
+     *       status is returned to the caller.
+     *
+     * @return vpr::Status::Success is returned if the serial port is closed
+     *         successfully.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     close (void) {
         return m_sio_imp.close();
     }
 
-    // ------------------------------------------------------------------------
-    //: Reconfigure the serial port so that it is in blocking mode.
-    //
-    //! PRE: The port is open.
-    //! POST: Processes will block when accessing the port.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Reconfigures the serial port so that it is in blocking mode.
+     *
+     * @pre The port is open.
+     * @post Processes may block when accessing the port.
+     *
+     * @return vpr::Status::Success is returned if the device's blocking mode
+     *         is set to blocking.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     enableBlocking (void) {
         return m_sio_imp.enableBlocking();
     }
 
-    // ------------------------------------------------------------------------
-    //: Reconfigure the serial port so that it is in non-blocking mode.
-    //
-    //! PRE: The port is open.
-    //! POST: Processes will not block when accessing the port.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Reconfigures the serial port so that it is in non-blocking mode.
+     *
+     * @pre The port is open.
+     * @post Processes will not block when accessing the port.
+     *
+     * @return vpr::Status::Success is returned if the device's blocking mode
+     *         is set to non-blocking.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     */
     inline virtual vpr::Status
     enableNonBlocking (void) {
         return m_sio_imp.enableNonBlocking();
     }
 
-    // ------------------------------------------------------------------------
-    //: Get the current blocking state for the serial port.
-    //
-    //! PRE: m_blocking is set correctly
-    //! POST:
-    //
-    //! RETURNS: true  - The port is in blocking mode.
-    //! RETURNS: false - The port is in non-blocking mode.
-    // ------------------------------------------------------------------------
+    /**
+     * Get the current blocking state for the serial port.
+     *
+     * @pre m_blocking is set correctly
+     *
+     * @return true is returned if the port is in blocking mode.<br>
+     *         false is returned if the port is in non-blocking mode.
+     */
     inline bool
     getBlocking (void) const {
         return m_sio_imp.getBlocking();
     }
 
-    // ------------------------------------------------------------------------
-    //: Get the current non-blocking state for the serial port.
-    //
-    //! PRE: m_blocking is set correctly
-    //! POST:
-    //
-    //! RETURNS: true  - The port is in non-blocking mode.
-    //! RETURNS: false - The port is in blocking mode.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the current non-blocking state for the serial port.
+     *
+     * @pre <code>m_blocking</code> is set correctly<br>
+     *
+     * @return <code>true</code> is returned if the port is in non-blocking
+     *         mode.   Otherwise, <code>false</code> is returned.
+     */
     inline bool
     getNonBlocking (void) const {
         return m_sio_imp.getNonBlocking();
     }
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the <code>vpr::IOSys::Handle</code> object for this serial port.
+     *
+     * @return <code>vpr::IOSys::NullHandle</code> is returned if the port
+     *         has no handle or if the handle could not be returned for some
+     *         reason.
+     */
     inline virtual IOSys::Handle
     getHandle (void) {
         return m_sio_imp.getHandle();
@@ -207,247 +219,283 @@ public:
     // Serial port interface.
     // ========================================================================
 
-    // ------------------------------------------------------------------------
-    //: Get the current update action.  This tells when updates to the serial
-    //+ device take effect.
-    //
-    //! PRE: None.
-    //! POST: The current update action is returned to the caller.
-    //
-    //! RETURNS: A vpr::SerialTypes::UpdateActionOption value stating when
-    //+          updates take effect.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the current update action.  This tells when updates to the serial
+     * device take effect.
+     *
+     * @pre None.
+     * @post The current update action is returned to the caller.
+     *
+     * @return A <code>vpr::SerialTypes::UpdateActionOption</code> value
+     *         stating when updates take effect.
+     *         
+     * @see vpr::SerialTypes::UpdateActionOption
+     */
     inline SerialTypes::UpdateActionOption
     getUpdateAction (void) {
         return m_sio_imp.getUpdateAction();
     }
 
-    // ------------------------------------------------------------------------
-    //: Change the current update action to take place as described by the
-    //+ given value.
-    //
-    //! PRE: None.
-    //! POST: The update action is modified to use the new value.  The results
-    //+       will be seen with the next device operation.
-    //
-    //! ARGS: action - The new update action value.
-    // ------------------------------------------------------------------------
+    /**
+     * Changes the current update action to take place as described by the
+     * given value.
+     *
+     * @pre None.
+     * @post The update action is modified to use the new value.  The results
+     *       will be seen with the next device operation.
+     *
+     * @param action The new update action value.
+     *
+     * @see vpr::SerialTypes::UpdateActionOption
+     */
     inline void
     setUpdateAction (SerialTypes::UpdateActionOption action) {
         m_sio_imp.setUpdateAction(action);
     }
 
-    // ------------------------------------------------------------------------
-    //: Query the serial port for the minimum buffer size.  This is only
-    //+ applicable in non-canonical mode.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The maximum buffer size is returned to the caller through the
-    //+       by-reference argument.
-    //
-    //! ARGS: size - A reference to a vpr::Uint16 where the buffer size is
-    //+              stored for return to the caller.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Queries the serial port for the minimum buffer size.  This is only
+     * applicable in non-canonical mode.
+     *
+     * @pre The serial port is open.
+     * @post The maximum buffer size is returned to the caller through the
+     *       by-reference argument.
+     *
+     * @param size A reference to a vpr::Uint16 where the buffer size is
+     *             stored for return to the caller.
+     *
+     * @return vpr::Status::Success is returned if the buffer size was
+     *         retrieved successfully.  vpr::Status::Failure is returned
+     *         otherwise.
+     */
     inline vpr::Status
     getBufferSize (vpr::Uint16& size) {
         return m_sio_imp.getBufferSize(size);
     }
 
-    // ------------------------------------------------------------------------
-    //: Attempt to change the minimum buffer size to the given argument.  This
-    //+ will change the minimum number of bytes required in the buffer before
-    //+ a read() will return.  This is only applicable in non-canonical mode.
-    //
-    //! PRE: The serial port is open.
-    //! POST: If the buffer size is usable on the port, the port attributes
-    //+       are updated and success is returned.  Otherwise, a failure
-    //+       status is returned.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Attempts to change the minimum buffer size to the given argument.  This
+     * will change the minimum number of bytes required in the buffer before
+     * a <code>read</code> call will return.  This is only applicable in
+     * non-canonical mode.
+     *
+     * @pre The serial port is open.
+     * @post If the buffer size is usable on the port, the port attributes are
+     *       updated and success is returned.  Otherwise, a failure status is
+     *       returned.
+     *
+     * @return vpr::Status::Success is returned if the buffer size was set
+     *         successfully.  vpr::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     setBufferSize (const vpr::Uint8 size) {
         return m_sio_imp.setBufferSize(size);
     }
 
-    // ------------------------------------------------------------------------
-    //: Get the value of the timeout (in tenths of a second) to wait for data
-    //+ to arrive.  This is only applicable in non-canonical mode.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The current timeout setting is returned to the caller in the
-    //+       by-reference argument.
-    //
-    //! ARGS: timeout - A reference to a vpr::Uint8 to be used as storage for
-    //+                 the timeout value.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the value of the timeout (in tenths of a second) to wait for data
+     * to arrive.  This is only applicable in non-canonical mode.
+     *
+     * @pre The serial port is open.
+     * @post The current timeout setting is returned to the caller in the
+     *       by-reference argument.
+     *
+     * @param timeout A reference to a <code>vpr::Uint8</code> to be used as
+     *                storage for the timeout value.
+     *
+     * @return vpr::Status::Success is returned if the timeout length was
+     *         retrieved successfully.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     getTimeout (vpr::Uint8& timeout) {
         return m_sio_imp.getTimeout(timeout);
     }
 
-    // ------------------------------------------------------------------------
-    //: Set the value of the timeout to wait for data to arrive.  The value
-    //+ given must be in tenths of a second.  This is only applicable in
-    //+ non-canonical mode.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The timeout interval is updated to use the given value.
-    //
-    //! ARGS: timeout_val - The new timeout value measured in tenths of a
-    //+                     second.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Sets the value of the timeout to wait for data to arrive.  The value
+     * given must be in tenths of a second.  This is only applicable in
+     * non-canonical mode.
+     *
+     * @pre The serial port is open.
+     * @post The timeout interval is updated to use the given value.
+     *
+     * @param timeout_val  The new timeout value measured in tenths of a
+     *                     second.
+     *
+     * @return vpr::Status::Success is returned if the timeout length was
+     *         updated successfully.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     setTimeout (const vpr::Uint8 timeout_val) {
         return m_sio_imp.setTimeout(timeout_val);
     }
 
-    // ------------------------------------------------------------------------
-    //: Get the character size (the bits per byte).
-    //
-    //! PRE: The serial port is open.
-    //! POST: The current character size is returned to the caller in the
-    //+       by-reference argument.
-    //
-    //! ARGS: size - A reference to a vpr::SerialTypes::CharacterSizeOption
-    //+              object to be used as storage for the character size
-    //+              value.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the character size (the bits per byte).
+     *
+     * @pre The serial port is open.
+     * @post The current character size is returned to the caller in the
+     *       by-reference argument.
+     *
+     * @param size  A reference to a
+     *              <code>vpr::SerialTypes::CharacterSizeOption</code> object
+     *              to be used as storage for the character size value.
+     *
+     * @return vpr::Status::Success is returned if the character size was
+     *         retrieved successfully.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     *
+     * @see vpr::SerialTypes::CharacterSizeOption
+     */
     inline vpr::Status
     getCharacterSize (SerialTypes::CharacterSizeOption& size) {
         return m_sio_imp.getCharacterSize(size);
     }
 
-    // ------------------------------------------------------------------------
-    //: Set the current character size (the bits per byte) to the size in the
-    //+ given value.  This is used for both reding and writing, and the size
-    //+ does not include the parity bit (if any).
-    //
-    //! PRE: The serial port is open.
-    //! POST: The bits per byte for the serial port is updated.
-    //
-    //! ARGS: bpb - The new character size.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Sets the current character size (the bits per byte) to the size in the
+     * given value.  This is used for both reding and writing, and the size
+     * does not include the parity bit (if any).
+     *
+     * @pre The serial port is open.
+     * @post The bits per byte for the serial port is updated.
+     *
+     * @param bpb - The new character size.
+     *
+     * @return vpr::Status::Success is returned if the character size was
+     *         updated successfully. vpr::Status::Failure is is returned
+     *         otherwise.
+     *
+     * @see vpr::SerialTypes::CharacterSizeOption
+     */
     inline vpr::Status
     setCharacterSize (const SerialTypes::CharacterSizeOption bpb) {
         return m_sio_imp.setCharacterSize(bpb);
     }
 
-    // ------------------------------------------------------------------------
-    //: Get the number of stop bits in use.  This will be either 1 or 2.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The number of stop bits currently in use is returned via the
-    //+       by-reference argument.
-    //
-    //! ARGS: num_bits - A reference to a vpr::Uint8 that will be used to
-    //+                  store the number of stop bits.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the number of stop bits in use.  This will be either 1 or 2.
+     *
+     * @pre The serial port is open.
+     * @post The number of stop bits currently in use is returned via the
+     *       by-reference argument.
+     *
+     * @param num_bits A reference to a vpr::Uint8 that will be
+     *                 used to store the number of stop bits.
+     *
+     * @return vpr::Status::Success is returned if the number of
+     *         stop bits was retrieved successfully.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     getStopBits (vpr::Uint8& num_bits) {
         return m_sio_imp.getStopBits(num_bits);
     }
 
-    // ------------------------------------------------------------------------
-    //: Set the number of stop bits to use.  The value must be either 1 or 2.
-    //
-    //! PRE: The serial port is open, and the given number of stop bits is
-    //+      either 1 or 2.
-    //! POST: The number of stop bits is updated to use the given value.
-    //
-    //! ARGS: num_bits - The number of stop bits to use.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Sets the number of stop bits to use.  The value must be either 1 or 2.
+     *
+     * @pre The serial port is open, and the given number of stop bits is
+     *      either 1 or 2.
+     * @post The number of stop bits is updated to use the given value.
+     *
+     * @param num_bits The number of stop bits to use.
+     *
+     * @return vpr::Status::Success is returned if the number of stop bits was
+     *         updated successfully.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     setStopBits (const vpr::Uint8 num_bits) {
         return m_sio_imp.setStopBits(num_bits);
     }
 
-    // ------------------------------------------------------------------------
-    //: Query the canonical input state of the serial port.  If canonical mode
-    //+ is enabled, the characters EOF, EOL, EOL2, ERASE, KILL, REPRINT,
-    //+ STATUS, and WERASE are enabled, and the input characters are
-    //+ assembled into lines.  Otherwise, read requests are satisfied directly
-    //+ from the input queue, and a read will not return until the buffer is
-    //+ at its minimum capacity or the timeout has expired.  See
-    //+ getBufferSize() and getTimeout() for more information.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The current state of canonical input is returnd to the caller.
-    //
-    //! RETURNS: true  - Canonical input is enabled.
-    //! RETURNS: false - Canonical input is disabled.
-    // ------------------------------------------------------------------------
+    /**
+     * Queries the canonical input state of the serial port.  If canonical
+     * mode is enabled, the characters <code>EOF</code>, <code>EOL</code>,
+     * <code>EOL2</code>, <code>ERASE</code>, <code>KILL</code>,
+     * <code>REPRINT</code>, <code>STATUS</code>, and <code>WERASE</code> are
+     * enabled, and the input characters are assembled into lines.  Otherwise,
+     * read requests are satisfied directly from the input queue, and a read
+     * will not return until the buffer is at its minimum capacity or the
+     * timeout has expired.
+     *
+     * @pre The serial port is open.
+     * @post The current state of canonical input is returnd to the caller.
+     *
+     * @return <code>true</code> is returned if canonical input mode is
+     *         enabled.  Otherwise, <code>false</code> is returned.
+     *
+     * @see getBufferSize
+     * @see getTimeout
+     */
     inline bool
     getCanonicalState (void) {
         return m_sio_imp.getCanonicalState();
     }
 
-    // ------------------------------------------------------------------------
-    //: Enable canonical input.  See getCanonicalState() for more information
-    //+ about what this means.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Canonical input is enabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Enables canonical input.  See <code>getCanonicalState</code> for more
+     * information about what this means.
+     *
+     * @pre The serial port is open.
+     * @post Canonical input is enabled.
+     *
+     * @return vpr::Status::Success is returned if canonical input was
+     *         enabled.  Otherwise, vpr::Status::Failure is returned.
+     *
+     * @see getCanonicalState
+     */
     inline vpr::Status
     enableCanonicalInput (void) {
         return m_sio_imp.enableCanonicalInput();
     }
 
-    // ------------------------------------------------------------------------
-    //: Disable canonical input.  See getCanonicalState() for more information
-    //+ about what this means.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Canonical input is disabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Disables canonical input.  See <code>getCanonicalState</code> for more
+     * information about what this means.
+     *
+     * @pre The serial port is open.
+     * @post Canonical input is disabled.
+     *
+     * @return vpr::Status::Success is returned if canonical input was
+     *         disabled.  Otherwise, vpr::Status::Failure is returned.
+     *
+     * @see getCanonicalState
+     */
     inline vpr::Status
     disableCanonicalInput (void) {
         return m_sio_imp.disableCanonicalInput();
     }
 
-    // ------------------------------------------------------------------------
-    //: Get the current state of ignoring bytes with framing errors (other
-    //+ than a BREAK) or parity errors.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The erroneous byte ignore state is returned to the caller.
-    //
-    //! RETURNS: true  - Bad bytes are ignored.
-    //! RETURNS: false - Bad bytes are not ignored.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the current state of ignoring bytes with framing errors (other
+     * than a <code>BREAK</code>) or parity errors.
+     *
+     * @pre The serial port is open.
+     * @post The erroneous byte ignore state is returned to the caller.
+     *
+     * @return <code>true</code> is returned if bad bytes are ignored.<br>
+     *         <code>false</code> is returned if bad bytes are not ignored.
+     */
     inline bool
     getBadByteIgnoreState (void) {
         return m_sio_imp.getBadByteIgnoreState();
     }
 
-    // ------------------------------------------------------------------------
-    //: Enable ignoring of received bytes with framing errors or parity
-    //+ errors.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Erroneous byte ignoring is enabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Enables ignoring of received bytes with framing errors or parity
+     * errors.
+     *
+     * @pre The serial port is open.
+     * @post Erroneous byte ignoring is enabled.
+     *
+     * @return vpr::Status::Success is returned if bad byte ignoring is
+     *         enabled.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     enableBadByteIgnore (void) {
         return m_sio_imp.enableBadByteIgnore();
@@ -905,75 +953,108 @@ public:
     }
 
 protected:
-    // ------------------------------------------------------------------------
-    //: Read at most the specified number of bytes from the serial port into
-    //+ the given buffer.
-    //
-    //! PRE: The port implementation object is valid, and the buffer is at
-    //+     least length bytes long.
-    //! POST: The given buffer has length bytes copied into it from the port's
-    //+       buffer, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer     - A pointer to the buffer where the port's buffer
-    //+                    contents are to be stored.
-    //! ARGS: length     - The number of bytes to be read.
-    //! ARGS: bytes_read - The number of bytes read into the buffer.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Implementation of the <code>read</code> template method.  This reads at
+     * most the specified number of bytes from the serial port into the given
+     * buffer.
+     *
+     * @pre The port is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has length bytes copied into it from the port,
+     *       and the number of bytes read successfully is returned to the
+     *       caller via the <code>bytes_read</code> parameter.
+     *
+     * @param buffer     A pointer to the buffer where the port's buffer
+     *                   contents are to be stored.
+     * @param length     The number of bytes to be read.
+     * @param bytes_read The number of bytes read into the buffer.
+     * @param timeout    The maximum amount of time to wait for data to be
+     *                   available for reading.  This argument is optional and
+     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *
+     * @return <code>vpr::Status::Success</code> is returned if the read
+     *         operation completed successfully.<br>
+     *         <code>vpr::Status::Success</code> is returned if the read
+     *         operation failed.<br>
+     *         <code>vpr::Status::InProgress</code> if the port is in
+     *         non-blocking mode, and the read operation is in progress.<br>
+     *         <code>vpr::Status::Timeout</code> is returned if the read
+     *         could not begin within the timeout interval.
+     */
     virtual vpr::Status
-    read_i (void* buffer, const size_t length,
-            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    read_i (void* buffer, const size_t length, ssize_t& bytes_read,
+            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_sio_imp.read(buffer, length, bytes_read, timeout);
     }
 
-    // ------------------------------------------------------------------------
-    //: Read exactly the specified number of bytes from the serial port into
-    //+ the given buffer.
-    //
-    //! PRE: The port implementation object is valid, and the buffer is at
-    //+       least length bytes long.
-    //! POST: The given buffer has length bytes copied into it from the port's
-    //+       buffer, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer     - A pointer to the buffer where the port's buffer
-    //+                    contents are to be stored.
-    //! ARGS: length     - The number of bytes to be read.
-    //! ARGS: bytes_read - The number of bytes read into the buffer.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Implementation of the <code>readn</code> template method.  This reads
+     * exactly the specified number of bytes from the serial port into the
+     * given buffer.
+     *
+     * @pre The port is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has <code>length</code> bytes copied into
+     *       it from the port, and the number of bytes read successfully
+     *       is returned to the caller via the <code>bytes_read</code>
+     *       parameter.
+     *
+     * @param buffer     A pointer to the buffer where the ports's buffer
+     *                   contents are to be stored.
+     * @param length     The number of bytes to be read.
+     * @param bytes_read The number of bytes read into the buffer.
+     * @param timeout    The maximum amount of time to wait for data to be
+     *                   available for reading.  This argument is optional and
+     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *
+     * @return vpr::Status::Success is returned if the read operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress if the port is in non-blocking mode,
+     *         and the read operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the read could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the read operation failed.
+     */
     virtual vpr::Status
-    readn_i (void* buffer, const size_t length,
-             ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_sio_imp.readn(buffer, length, bytes_read, timeout);
     }
 
-    // ------------------------------------------------------------------------
-    //: Write the buffer to the serial port.
-    //
-    //! PRE: The port implementation object is valid.
-    //! POST: The given buffer is written to the serial port, and the number
-    //+       of bytes written successfully is returned to the caller.
-    //
-    //! ARGS: buffer        - A pointer to the buffer to be written.
-    //! ARGS: length        - The length of the buffer.
-    //! ARGS: bytes_written - The number of bytes written to the device.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Implementation of the <code>write</code> template method.  This writes
+     * the given buffer to the serial port.
+     *
+     * @pre The port is open for writing.
+     * @post The given buffer is written to the I/O port, and the number
+     *       of bytes written successfully is returned to the caller via the
+     *       <code>bytes_written</code> parameter.
+     *
+     * @param buffer        A pointer to the buffer to be written.
+     * @param length        The length of the buffer.
+     * @param bytes_written The number of bytes written to the port.
+     * @param timeout       The maximum amount of time to wait for data to be
+     *                      available for writing.  This argument is optional
+     *                      and defaults to vpr::Interval::NoTimeout.
+     *
+     * @return vpr::Status::Success is returned if the write operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress is returned if the handle is in
+     *         non-blocking mode, and the write operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the write could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the write operation failed.
+     */
     virtual vpr::Status
     write_i (const void* buffer, const size_t length,
              ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
         return m_sio_imp.write(buffer, length, bytes_written, timeout);
     }
 
-    RealSerialPortImpl m_sio_imp;    //: Platform-specific serial port
-                                     //+ implementation object
+    /// Platform-specific serial port implementation object
+    RealSerialPortImpl m_sio_imp;
 };
 
 }; // End of vpr namespace
