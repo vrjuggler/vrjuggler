@@ -60,9 +60,9 @@ SRCS		= AnalogProxy.cpp			\
                   Position.cpp				\
                   PositionProxy.cpp			\
                   Glove.cpp				\
-                  GloveProxy.cpp			
-#                  GestureProxy.cpp			\
-#                  GloveGesture.cpp			\
+                  GloveProxy.cpp			\
+                  GestureProxy.cpp		\
+                  GloveGesture.cpp		\
 
 
 include $(MKPATH)/dpp.obj.mk
