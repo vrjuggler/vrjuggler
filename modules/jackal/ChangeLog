@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-22-2005 patrickh    Extended org.vrjuggler.jccl.config.ConfigBroker to
+                        include overloads of add() and remove() for new
+                        ConfigElement objects that allow the caller to provide
+                        the data source to which the element will be added.
+                        NEW VERSION: 0.92.5
 Feb-17-2005 patrickh    Allow org.vrjuggler.jccl.config.ConfigElementPointer
                         references to be passed as the property value for
                         org.vrjuggler.jccl.config.ConfigElement.setProperty().

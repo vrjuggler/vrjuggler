@@ -120,9 +120,12 @@ public class ConfigBrokerProxy
    }
 
    /**
-    * Adds the given configuration element to the current context. If the
-    * context contains more than one resource, a dialog will prompt the user
-    * for which resource they wish to add the element to.
+    * Adds the given configuration element to the given context and a
+    * resource associated with that context.  If the context contains more
+    * than one resource, a dialog will prompt the user for the resource to
+    * which the element will be added.  Upon successful addition of the
+    * element to the context and resource, an undoable edit is logged with
+    * the ConfigUndoManager associated with the given context.
     *
     * @param context    the context in which to add the element
     * @param elt        the configuration element to add
@@ -135,11 +138,57 @@ public class ConfigBrokerProxy
    }
 
    /**
-    * Removes the given configuration element from the current context. If the
-    * element appears in more than one resource in the context, a dialog will
-    * prompt the user for which resource they wish to remove the element from.
-    * If the element does not appear in any resource in the context, this method
-    * will return false.
+    * Adds the given configuration element to the given context and the named
+    * resource within that context.  The named resource must exist and must
+    * be associated with the given context.  Upon successful addition of the
+    * element to the context and resource, an undoable edit is logged with
+    * the ConfigUndoManager associated with the given context.
+    *
+    * @param context            the context in which to add the element
+    * @param elt                the configuration element to add
+    * @param dataSourceName     the name of the resource to which the element
+    *                           will be added
+    *
+    * @return  true if the addition was successful, false otherwise
+    *
+    * @since 0.92.5
+    */
+   public boolean add(ConfigContext context, ConfigElement elt,
+                      String dataSourceName)
+   {
+      return mBroker.add(context, elt, dataSourceName);
+   }
+
+   /**
+    * Adds the given configuration element to the given context and the given
+    * resource within that context.  The given resource must exist and must
+    * be associated with the given context.  Upon successful addition of the
+    * element to the context and resource, an undoable edit is logged with
+    * the ConfigUndoManager associated with the given context.
+    *
+    * @param context    the context in which to add the element
+    * @param elt        the configuration element to add
+    * @param dataSource the resource to which the element will be added
+    *
+    * @return  true if the addition was successful, false otherwise
+    *
+    * @since 0.92.5
+    */
+   public boolean add(ConfigContext context, ConfigElement elt,
+                      DataSource dataSource)
+   {
+      return mBroker.add(context, elt, dataSource);
+   }
+
+   /**
+    * Removes the given configuration element from the current context.  All
+    * the resources in the given context are searched for the given element.
+    * If the element appears in more than one resource in the context, it will
+    * be removed from the first resource found.  If the element does not
+    * appear in any resource in the context, this method will return false.
+    * Upon successful removal of the element from the context and resource, an
+    * undoable edit is logged with the ConfigUndoManager associated with the
+    * given context.
     *
     * @param context    the context from which to remove the element
     * @param elt        the element to remove
@@ -150,6 +199,55 @@ public class ConfigBrokerProxy
    public boolean remove(ConfigContext context, ConfigElement elt)
    {
       return mBroker.remove(context, elt);
+   }
+
+   /**
+    * Removes the given configuration element from the current context and the
+    * named resource within that context.  The named resource must exist and
+    * must be associated with the given context.  If the element does not
+    * appear in any resource in the context, this method will return false.
+    * Upon successful removal of the element from the context and resource, an
+    * undoable edit is logged with the ConfigUndoManager associated with the
+    * given context.
+    *
+    * @param context            the context from which to remove the element
+    * @param elt                the element to remove
+    * @param dataSourceName     the name of the resource from which the element
+    *                           will be removed
+    *
+    * @return  true if the removal was successful, false if the user cancelled
+    *          the removal or the element does not exist in any resource
+    *
+    * @since 0.92.5
+    */
+   public boolean remove(ConfigContext context, ConfigElement elt,
+                         String dataSourceName)
+   {
+      return mBroker.remove(context, elt, dataSourceName);
+   }
+
+   /**
+    * Removes the given configuration element from the current context and the
+    * given resource within that context.  The given resource must exist and
+    * must be associated with the given context.  If the element does not
+    * appear in any resource in the context, this method will return false.
+    * Upon successful removal of the element from the context and resource, an
+    * undoable edit is logged with the ConfigUndoManager associated with the
+    * given context.
+    *
+    * @param context    the context from which to remove the element
+    * @param elt        the element to remove
+    * @param dataSource the resource from which the element will be removed
+    *
+    * @return  true if the removal was successful, false if the user cancelled
+    *          the removal or the element does not exist in any resource
+    *
+    * @since 0.92.5
+    */
+   public boolean remove(ConfigContext context, ConfigElement elt,
+                         DataSource dataSource)
+   {
+      return mBroker.remove(context, elt, dataSource);
    }
 
    /**
