@@ -439,7 +439,7 @@
                <blue_size>1</blue_size>
                <alpha_size>1</alpha_size>
                <depth_buffer_size>1</depth_buffer_size>
-               <fsaa_enable>true</fsaa_enable>
+               <fsaa_enable>false</fsaa_enable>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
          <stereo>false</stereo>
