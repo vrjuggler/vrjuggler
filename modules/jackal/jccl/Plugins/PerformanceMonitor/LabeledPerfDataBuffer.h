@@ -44,42 +44,39 @@
 
 namespace jccl {
 
-//---------------------------------------------------------------
-//: temporary storage for performance data
-//
-// Problem: gathering up the performance data and shipping it out
-//          to wherever should happen independently of the 
-//          process that's generating the data.
-// <p>
-// Solution: the LabeledPerfDataBuffer is used as a temporary storage
-//           for perfdata.  Each unit in the buffer contains
-//           an integer index and a timestamp. the index is used
-//           in case there are multiple points inside the 
-//           process body where timestamps are generated
-//           (i.e. 1 = start of frame, 2 = before sync, 
-//           3 = between sync and buffer swap.
-// <p>
-// One process can write to the buffer (using the set() fn) 
-// while another simultaneously reads from it using the 
-// write() function.  The system is implemented so that the
-// writing process never has to wait.  However, this means 
-// that if the writer gets far enough ahead of the reader 
-// that there are no more free buffers, the LabeledPerfDataBuffer
-// will start throwing away data until there is a free buffer.
-// The 'lost' field approximates the number of data samples
-// lost; it is reported and reset at the conclusion of every
-// write() call.
-//
-//----------------------------------------------------------------
+/** Storage buffer for performance data.
+ *  LabeledPerfDataBuffer is responsible for collecting performance data 
+ *  so that is can be periodically written out to a file or network
+ *  connection.  The goal is to keep the act of collecting a sample
+ *  as lightweight as possible, and to make sure that data can be 
+ *  collected without blocking even while another thread is writing
+ *  the data out.
+ *  <p>
+ *  The LabeledPerfDataBuffer is a circular buffer
+ *  for perfdata.  It can store data for multiple points inside 
+ *  the control loop of a thread, each loop identified by a text
+ *  string.  Samples can also be tagged with categories.
+ *  <p>
+ *  One process can write to the buffer (using the set() fn) 
+ *  while another simultaneously reads from it using the 
+ *  write() function.  The system is implemented so that the
+ *  writing process never has to wait.  However, this means 
+ *  that if the writer gets far enough ahead of the reader 
+ *  that there are no more free buffers, the PerfDataBuffer
+ *  will start throwing away data until there is a free buffer.
+ *  The 'lost' field approximates the number of data samples
+ *  lost; it is reported and reset at the conclusion of every
+ *  write() call.
+ * 
+ *  @version $Revision$, $Date$
+ */
 class JCCL_CLASS_API LabeledPerfDataBuffer {
 
     struct buf_entry {
 
-        //: an index for the point in the proc. that we're at
         const std::string      *index;
         vpr::GUID        category;
         
-        //: time stamp associated with this point.
         TimeStamp        stamp;
         
         buf_entry() {
@@ -97,7 +94,6 @@ class JCCL_CLASS_API LabeledPerfDataBuffer {
     int         read_begin;
     int         write_pos;
 
-    //: Buffer is currently active
     bool        active;
 
 public:
@@ -105,85 +101,107 @@ public:
 
  public:
 
-    //: constructor
-    //! PRE: true
-    //! POST: self is created and has _numbufs buffers
-    //! ARGS: _numbufs - number of buffers to allocate
-    //+       (default 50)
+
+    /** Constructor.
+     *  Creates a new, inactive PerfDataBuffer.  The caller is 
+     *  responsible for deciding the size of the buffer and the 
+     *  number of indices that will be stored in it via set().
+     *
+     *  @param _name String identifier for this buffer.
+     *  @param _numbufs Number of samples to store (default = 50).
+     *  @param _nindex Number of unique indices this buffer will use.
+     */
     LabeledPerfDataBuffer (const std::string& _name, int _numbufs);
 
 
+    /** Default constructor. */
     LabeledPerfDataBuffer ();
 
 
-    //: destructor
-    //: POST: all memory & buffers have been freed.
+    /** Destructor. */
     virtual ~LabeledPerfDataBuffer ();
 
 
-
+    /** Returns the name of this instance. */
     virtual const std::string& getName() const {
         return name;
     }
 
-    //: activates the buffer
-    //! POST: once this call is made, the buffer will start 
-    //+       storing data whenever a set() is made and
-    //+       writing available data when requested.
+
+    /** Activates the PerfDataBuffer.
+     *  Once this method is called, the buffer will store a data 
+     *  point whenever a set() is made.
+     */
     void activate();
 
 
-
-    //: deactivates the buffer
-    //! POST: once this call is made, the buffer will,
-    //+       essentially, do nothing.  set() will not store
-    //+       any information and the write calls won't
-    //+       write anything.
+    /** Deactivates the PerfDataBuffer.
+     *  When the buffer is deactivated, the set() and write calls
+     *  will return without performing any actions.
+     */
     void deactivate();
 
 
-
-    //: is the buffer active?
-    //! RETURNS: True - buffer is currently active
-    //! RETURNS: False - buffer is not active
+    /** Returns whether the buffer is active.
+     *  @return True iff the buffer is active.
+     */
     bool isActive();
 
 
 
+    /** Returns whether the given category is active.
+     *  @return True iff the category is active.
+     */
     bool isCategoryActive (const vpr::GUID& category) {
         return true;
     }
 
 
-    //: writes a new time entry to the buffer
-    //! POST: if a buffer is available, it is stamped with 
-    //+       the current time and _phase.  If not, the
-    //+       'lost' counter is incremented.
-    //! ARGS: _phase - an integer index used to differentiate
-    //+       between different stamping points in the process
-    //+       that calls set. e.g. 1 = point right before
-    //+       entering some big computation, and 2 = point
-    //+       right after.
+    /** Records a new data point.
+     *  If self is active and the buffer is not full, a new data
+     *  point is recorded with the given index and the current
+     *  time.
+     *  <p>
+     *  If the buffer is full, the lost counter is incremented.
+     *
+     *  @param category Category of this data point.
+     *  @param index_name A name indicating where in the calling
+     *                    thread's code the data point was gathered.
+     */
     void set (const vpr::GUID &category, const std::string& index_name);
 
+
+    /** Records a new data point.
+     *  If self is active and the buffer is not full, a new data
+     *  point is recorded with the given index and the given
+     *  time.
+     *  <p>
+     *  If the buffer is full, the lost counter is incremented.
+     *
+     *  @param category Category of this data point.
+     *  @param index_name A name indicating where in the calling
+     *                    thread's code the data point was gathered.
+     *  @param _value A TimeStamp.
+     */
     void set (const vpr::GUID &category, const std::string& index_name,
               TimeStamp& _value);
 
+
+    /** Marks the "top" of the calling thread's loop. 
+     *  This is necessary for some analysis and graphing of the 
+     *  performance data.
+     */
     void setBeginCycle (const vpr::GUID& category);
 
-    // for below: need a version w/ max # buffers to write
 
-    //: writes buffer contents to an ostream
-    //! POST: As many buffers as available are written to
-    //+       the ostream out and released so they can be
-    //+       used again by the writer.
-    //! ARGS: out - an ostream to write contents to.
-    //! NOTE: The format for a buffer is 'ind timestamp\n',
-    //+       e.g.: (for four buffers, say we have 3 indices)
-    //+       <br>1 15
-    //+       <br>2 25
-    //+       <br>3 27
-    //+       <br>1 42
+    /** Writes buffer contents to an ostream.
+     *  As many buffers as available are written to the ostream
+     *  and released so that they can be used again by set.
+     *  The format for the output is, well, not yet defined.
+     *  The stamp values are written in microseconds.
+     *
+     *  @param out An std::ostream that data is written to.
+     */
     void write (std::ostream& out);
 
 
