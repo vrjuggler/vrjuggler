@@ -78,24 +78,20 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:cpp#Class#gadget::InputManager:oiref>=450,50,189,92,1:oigroup>
-<oigroup:<oiref:cpp#Class#gadget::PositionProxy:oiref>=310,250,183,147,1:oigroup>
-<oigroup:<oiref:cpp#Class#gadget::Input:oiref>=780,250,200,238,1:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#gadget::InputManager#lnkInput:oiref>=793,233,30,13,0:oigroup>
-<oigroup:<oiref:cpp#Class#gadget::Position:oiref>=550,250,200,189,1:oigroup>
-<oigroup:MemberLink#<oiref:cpp#Member#gadget::InputManager#lnkInput:oiref>=555,142,880,250:oigroup>
-<oigroup:MemberLink#<oiref:cpp#Member#gadget::InputManager#lnkPositionProxy:oiref>=471,142,471,250:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#gadget::InputManager#lnkPositionProxy:oiref>=435,233,32,13,0:oigroup>
-<oigroup:<oiref:cpp#Class#gadget::TypedProxy:oiref>=240,50,177,122,1:oigroup>
+@__positions <oigroup:<oiref:cpp#Class#gadget::Proxy:oiref>=20,10,200,199,1:oigroup>
 <oigroup:<oiref:cpp#Class#gadget::DeviceInterface:oiref>=20,240,240,207,0:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#gadget::PositionProxy#lnkPosition:oiref>=514,306,32,13,0:oigroup>
-<oigroup:<oiref:cpp#Extends#gadget::TypedProxy#gadget::Proxy:oiref>=240,110,162,110:oigroup>
-<oigroup:<oiref:cpp#Extends#gadget::PositionProxy#gadget::TypedProxy:oiref>=350,250,350,172:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#gadget::PositionProxy#lnkPosition:oiref>=493,323,550,323:oigroup>
-<oigroup:<oiref:cpp#Class#gadget::InputMixer:oiref>=800,20,200,187,1:oigroup>
+<oigroup:<oiref:cpp#Extends#gadget::PositionProxy#gadget::TypedProxy:oiref>=374,250,374,185:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::InputManager:oiref>=450,50,173,92,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#gadget::DeviceInterface#lnkPositionProxy:oiref>=260,334,310,334:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#gadget::DeviceInterface#lnkPositionProxy:oiref>=274,314,32,13,0:oigroup>
-<oigroup:<oiref:cpp#Class#gadget::Proxy:oiref>=20,10,142,160,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::TypedProxy:oiref>=240,50,199,135,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#gadget::InputManager#lnkInput:oiref>=555,142,880,250:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::PositionProxy:oiref>=310,250,200,251,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::InputMixer:oiref>=800,20,200,213,1:oigroup>
+<oigroup:<oiref:cpp#Extends#gadget::TypedProxy#gadget::Proxy:oiref>=240,117,220,117:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::Position:oiref>=550,250,200,215,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::Input:oiref>=780,250,200,277,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#gadget::InputManager#lnkPositionProxy:oiref>=471,142,471,250:oigroup>
 
 */
 class __positions {
