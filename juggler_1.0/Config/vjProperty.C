@@ -4,7 +4,7 @@
 
 
 #include <config.h>
-#include <Config/vjConfigChunk.h>
+#include <Config/vjProperty.h>
 
 
 

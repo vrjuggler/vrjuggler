@@ -1,5 +1,6 @@
 
 #include <Config/vjChunkDesc.h>
+#include <Kernel/vjDebug.h>
 
 
 
@@ -90,7 +91,7 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
   if (self.token)
     delete self.token;
   if (!(self.token = new char[strlen(str)+1]))
-    cout << "Unable to allocate ram" << endl;
+    vjDEBUG(1) << "Unable to allocate ram" << endl << vjDEBUG_FLUSH;
   strcpy (self.token, str);
   if (!strcasecmp (self.token, "end"))
     return in;
@@ -108,10 +109,9 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 
   /* parsing value labels, if there are any */
   if (!strcasecmp (str, "vj_valuelabels")) {
-    cout << "parsing valuelabels" << endl;
     readString (in,str,512);
     if (strcasecmp (str, "{")) 
-      cerr << "ERROR: expected '{'" << endl;
+      vjDEBUG(1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
     int j, i = 0;
     vjEnumEntry *e;
     readString (in, str, 512);
@@ -126,8 +126,8 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
   /* parsing enumerations, if there are any */
   if (!strcasecmp (str, "{")) {
     if (self.type == T_BOOL) {
-      cout << "ERROR: " << self.name << ": Enumerations not supported for "
-	"boolean types.\n";
+      vjDEBUG(1) << "ERROR: " << self.name << ": Enumerations not supported for "
+	"boolean types.\n" << vjDEBUG_FLUSH;
       do {
 	readString (in, str, 512);
       } while (!strcasecmp (str, "}") && !in.eof());
