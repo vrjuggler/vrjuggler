@@ -250,7 +250,7 @@ int fsPinchGlove::mReadRecordsFromHardware(const int& rec_max_len, char *records
 
     records[0] = 0;
    
-    while (s = read(pinchfd, buf, 1) ) 
+    while ( (s = read(pinchfd, buf, 1)) ) 
     {
 		if ( (buf[0] == START_BYTE_DATA) ||
 		   (buf[0] == START_BYTE_DATA_TS) ||

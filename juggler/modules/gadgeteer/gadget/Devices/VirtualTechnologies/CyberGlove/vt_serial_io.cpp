@@ -205,7 +205,7 @@ CyberGloveBasic::vt_serial_open(char *devname, int baudrate)
   if (tcsetattr(portfd, TCSANOW, &temp_termio) == -1)
   {
     sprintf(failed_routine_name, "tcsetattr(%d, TCSANOW, %#x)", portfd,
-            temp_termio);
+            &temp_termio);
     vt_fatal_unix_error("vt_serial_open", failed_routine_name);
   }
 
