@@ -33,9 +33,7 @@
 #ifndef STOP_WATCH_INCLUDED
 #define STOP_WATCH_INCLUDED
 
-#ifndef WIN32
-#include <sys/time.h>
-#endif
+#include <vpr/System.h>
 
 //: A StopWatch
 //  This class monitors frame rate, and general time performance metrics 
@@ -148,7 +146,7 @@ inline StopWatch::StopWatch(const int& averageFpsRefreshRate) :
 	inline void StopWatch::getTime( double& num )
     {
 	struct timeval tv;
-	gettimeofday(&tv, 0);
+        vpr::System::gettimeofday(&tv);
 	
 	// compose sec with microsec for sec.millisec
 	double goodPrecision = 
