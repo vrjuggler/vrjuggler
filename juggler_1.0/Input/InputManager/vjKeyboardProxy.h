@@ -35,6 +35,13 @@ public:
 
    bool config(vjConfigChunk* chunk);
 
+   virtual vjInput* getProxiedInputDevice()
+   {
+      vjInput* ret_val = dynamic_cast<vjInput*>(mKeyboard);
+      vjASSERT(ret_val != NULL);
+      return ret_val;
+   }
+
 private:
   //: Pointer to the real keyboard.
   vjKeyboard* mKeyboard;

@@ -190,6 +190,8 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
    if(guarded)
       mRuntimeConfigSema.acquire();
 
+   vjDEBUG_BEGIN(vjDBG_KERNEL,1) << "vjKernel: configAdd: Adding chunks.\n" << vjDEBUG_FLUSH;
+
    // Dependency sort the items
    int dep_result = chunkDB->dependencySort(getChunkDB());
 
@@ -241,7 +243,7 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
    }
 
    // Dump status
-   vjDEBUG(vjDBG_ALL,0) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,0) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
 
    if(guarded)
       mRuntimeConfigSema.release();
@@ -249,11 +251,14 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
    // Tell the environment manager to refresh
    environmentManager->sendRefresh();
 
+   vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel: configAdd: Exiting.\n" << vjDEBUG_FLUSH;
 }
 
 void vjKernel::configRemove(vjConfigChunkDB* chunkDB)
 {
 vjGuard<vjSemaphore> runtimeSem(mRuntimeConfigSema);
+
+    vjDEBUG_BEGIN(vjDBG_KERNEL,1) << "vjKernel: configRemove: Removing chunks.\n" << vjDEBUG_FLUSH;
 
    //XXX: Should do some dependency checking
 
@@ -265,7 +270,7 @@ vjGuard<vjSemaphore> runtimeSem(mRuntimeConfigSema);
    {
       bool removed_chunk = false;        // Flag: true - chunk was removed
 
-      vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configREmove: chunk: " << chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configRemove: chunk: " << chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
 
       // Find manager to handle them
       if(this->configKernelHandle(chunks[i]))                                 // Kernel
@@ -288,7 +293,7 @@ vjGuard<vjSemaphore> runtimeSem(mRuntimeConfigSema);
          vjASSERT(mChunkDB != NULL);
          mChunkDB->removeNamed(chunks[i]->getProperty("name"));
          int num_chunks = mChunkDB->getChunks().size();
-         vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configAdd: Removeded chunk: Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configRemove: Removed chunk: Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
       }
       else                 // Else: Give unrecognized error
       {
@@ -299,6 +304,8 @@ vjGuard<vjSemaphore> runtimeSem(mRuntimeConfigSema);
 
    // Dump status
    vjDEBUG(vjDBG_ALL,0) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
+
+   vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel: configRemove: Exiting.\n" << vjDEBUG_FLUSH;
 
    // Tell the environment manager to refresh
    environmentManager->sendRefresh();

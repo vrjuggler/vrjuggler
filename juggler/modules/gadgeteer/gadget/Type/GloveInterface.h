@@ -13,11 +13,26 @@
 class vjGloveInterface : public vjDeviceInterface
 {
 public:
+   vjGloveInterface() : mGloveProxy(NULL)
+   {;}
+
    vjGloveProxy* operator->()
-   { return vjKernel::instance()->getInputManager()->GetGloveProxy(mProxyIndex); }
+   { return mGloveProxy; }
 
    vjGloveProxy& operator*()
-   { return *(vjKernel::instance()->getInputManager()->GetGloveProxy(mProxyIndex)); }
+   { return *(mGloveProxy); }
+
+   virtual void refresh()
+   {
+      vjDeviceInterface::refresh();
+      if(mProxyIndex != -1)
+         mGloveProxy = vjKernel::instance()->getInputManager()->GetGloveProxy(mProxyIndex);
+      else
+         mGloveProxy = NULL;
+   }
+
+private:
+   vjGloveProxy* mGloveProxy;     // The proxy that is being wrapped
 };
 
 #endif

@@ -16,7 +16,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
     std::string name  = chunk->getProperty("name");
     mBorder     = chunk->getProperty("border");
     int pipe    = chunk->getProperty("pipe");
-    mStereo  = chunk->getProperty("stereo");
+    mView    = (vjDisplay::DisplayView)(int)chunk->getProperty("view");
     mActive  = chunk->getProperty("active");
 
     // -- Check for error in configuration -- //
@@ -43,7 +43,10 @@ void vjDisplay::config(vjConfigChunk* chunk)
     mUser = vjKernel::instance()->getUser(user_name);
 
     if(NULL == mUser)
-    { vjDEBUG(vjDBG_ALL,0) << "ERROR: User not found named: " << user_name << endl << vjDEBUG_FLUSH; }
+    {
+       vjDEBUG(vjDBG_ALL,0) << "ERROR: User not found named: " << user_name << endl << vjDEBUG_FLUSH;
+      vjASSERT(false);
+    }
 
     setName(name);
     setPipe(pipe);
@@ -87,16 +90,18 @@ void vjDisplay::config(vjConfigChunk* chunk)
 
 	
     // ---- FRIEND FUNCTIONS ---- //
-ostream& operator<<(ostream& out,  vjDisplay& disp)
+ostream& operator<<(ostream& out,  vjDisplay* disp)
 {
+   vjASSERT(disp->mUser != NULL);
+
     //out << "vjDisplay:" << (void*)(&disp)
-    out << setw(15) << disp.mName
-        << "  org:" << disp._xo << ", " << disp._yo
-        << "  sz:" << disp._xs << ", " << disp._ys
-        << "  p:" << disp.mPipe
-        << "  st:" << (disp.mStereo ? "Y" : "N")
-        << "  act:" << (disp.mActive ? "Y" : "N")
-        << "  usr:" << disp.mUser->getName();
+    out << setw(15) << disp->mName
+        << "  org:" << disp->_xo << ", " << disp->_yo
+        << "  sz:" << disp->_xs << ", " << disp->_ys
+        << "  p:" << disp->mPipe
+        << "  view:" << ((disp->mView == vjDisplay::LEFT_EYE) ? "Left" : ((disp->mView==vjDisplay::RIGHT_EYE)?"Right" : "Stereo") )
+        << "  act:" << (disp->mActive ? "Y" : "N")
+        << "  usr:" << disp->mUser->getName();
 
     return out;	
 }

@@ -23,7 +23,7 @@ Begin "Zelda"
             "3D Mouse"
             "Dummy Position"
         End
-        Begin "Simulator Devices"
+        Begin "Simulated Devices"
             "Position Simulator"
             "Analog Simulator"
             "Digital Simulator"

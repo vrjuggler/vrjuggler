@@ -38,7 +38,7 @@
 
 class vjMemPoolSGI : public vjMemPool
 {
-public:    
+public:
    vjMemPoolSGI(size_t initialSize = 65536, int numProcs = 8,
                 char* staticTempName = "/var/tmp/memPoolSGIXXXXXX");
 
@@ -46,7 +46,7 @@ public:
       usdetach(arena);
       unlink(arenaFileName);
       cerr << "\nUnlinking: " << arenaFileName << endl;
-   }       
+   }
 
 public:
    virtual void* allocate(size_t size)
@@ -57,7 +57,7 @@ public:
       if (retval == NULL)
          cerr << "MemPoolSGI: Out of memory!!!" << endl;
 
-      return retval;    
+      return retval;
    }
 
    virtual void deallocate(void* ptr)
@@ -83,18 +83,18 @@ public:
                     char* staticTempName = "/var/tmp/memPoolsArenaXXXXXX");
 
    void* operator new(size_t sz)
-   {   
-      cerr << "MemPoolSGI::new called.\n";
+   {
+      cerr << "MemPoolSGI::new called. sz:" << sz << "\n";
       if (arenaForMemPools == NULL)
          init(); // Make sure that we are initialized already.
 
-      return usmalloc(sizeof(vjMemPoolSGI), arenaForMemPools);   
+      return usmalloc(sizeof(vjMemPoolSGI), arenaForMemPools);
    }
 
    void operator delete(void* ptr)
-   { 
+   {
       usfree(ptr, arenaForMemPools);
-   } 
+   }
 
 private:
    usptr_t*   arena;

@@ -32,6 +32,10 @@ public:
       display_name = NULL;
    }
 
+   // Cirtual destructor
+   virtual ~vjGlWindow()
+   {;}
+
 public:
 
    //: Open the OpenGL window
@@ -56,9 +60,11 @@ public:
 
 public:
    //: Sets the projection matrix for this window to draw the left eye frame
+   // If the window is in stereo, it changes to the left buffer
    void setLeftEyeProjection();
 
    //: Sets the projection matrix for this window to draw the right eye frame
+   // If the window is in stereo, it changes to the right buffer
    void setRightEyeProjection();
 
    //: Sets the projection matrix for this window to the one for simulator
@@ -89,7 +95,7 @@ public:
    int getId()
    { return mWindowId; }
 
-   friend ostream& operator<<(ostream& out, vjGlWindow& win);
+   friend ostream& operator<<(ostream& out, vjGlWindow* win);
 
 public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<vjGlWindow*> wins)

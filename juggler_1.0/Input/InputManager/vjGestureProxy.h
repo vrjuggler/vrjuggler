@@ -68,6 +68,13 @@ public:
 
    bool config(vjConfigChunk* chunk);
 
+   virtual vjInput* getProxiedInputDevice()
+   {
+      vjInput* ret_val = dynamic_cast<vjInput*>(mGesturePtr);
+      vjASSERT(ret_val != NULL);
+      return ret_val;
+   }
+
 private:
    //: Pointer to the gesture device we are proxying.
    vjGesture* mGesturePtr;

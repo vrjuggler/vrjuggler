@@ -13,11 +13,26 @@
 class vjAnalogInterface : public vjDeviceInterface
 {
 public:
+   vjAnalogInterface() : mAnaProxy(NULL)
+   {;}
+
    vjAnalogProxy* operator->()
-   { return vjKernel::instance()->getInputManager()->GetAnaProxy(mProxyIndex); }
+   { return mAnaProxy; }
 
    vjAnalogProxy& operator*()
-   { return *(vjKernel::instance()->getInputManager()->GetAnaProxy(mProxyIndex)); }
+   { return *(mAnaProxy); }
+
+   virtual void refresh()
+   {
+      vjDeviceInterface::refresh();
+      if(mProxyIndex != -1)
+         mAnaProxy = vjKernel::instance()->getInputManager()->GetAnaProxy(mProxyIndex);
+      else
+         mAnaProxy = NULL;
+   }
+
+private:
+   vjAnalogProxy* mAnaProxy;     // The proxy that is being wrapped
 };
 
 #endif

@@ -3,9 +3,9 @@
 
 #include <vjConfig.h>
 
-//: Base class for simplified interfaces
+//: Base class for simplified proxy interfaces
 //
-// Interfaces provide an easier way to access proxy objects from
+// Wrapper to provide an easier way to access proxy objects from
 // within user applications. <br> <br>
 //
 // Users can simply declare a local interface variable and use it
@@ -27,7 +27,9 @@ public:
    void init(std::string proxyName);
 
    //: Refreshes the interface based on the current configuration
-   void refresh();
+   //! POST: (mProxyIndex == -1) ==> Proxy not initi.ized yet
+   //+       (mProxyIndex != -1) ==> mProxyName has name of device && local proxy ptr is set to the device
+   virtual void refresh();
 
    //: Return the index of the proxy
    int getProxyIndex()
@@ -36,7 +38,6 @@ public:
 protected:
    int         mProxyIndex;         //: The index of the proxy
    std::string mProxyName;          //: The name of the proxy (or alias) we are looking at
-
 
 public:
    static void refreshAllDevices();

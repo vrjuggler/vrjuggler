@@ -71,7 +71,7 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
 	break;
     }
     if (fd == -1) {
-	vjDEBUG(vjDBG_ALL,0) << "ERROR: file open failed for \"" << filename 
+	vjDEBUG(vjDBG_ALL,0) << "ERROR: file open failed for \"" << filename
 			     << "\"\n" << vjDEBUG_FLUSH;
     }
     output.attach (fd);
@@ -99,32 +99,34 @@ vjConnect::~vjConnect() {
 
 
 bool vjConnect::startProcess() {
-    if (write_connect_thread)
-	return true;
+   if (write_connect_thread)
+      return true;
 
-    bool success = true;
+   bool success = true;
 
-    shutdown = false;
-    // Create a new thread to handle the control
+   shutdown = false;
+   // Create a new thread to handle the control
 
-    if (mode == VJC_OUTPUT || mode == VJC_INTERACTIVE) {
-	vjThreadMemberFunctor<vjConnect> *writeMemberFunctor =
-	    new vjThreadMemberFunctor<vjConnect>(this,
-						 &vjConnect::writeControlLoop,
-						 NULL);
-	write_connect_thread = new vjThread (writeMemberFunctor, 0);
-	success = success && write_connect_thread;
-    }
-    if (mode == VJC_INPUT || mode == VJC_INTERACTIVE) {
-	vjThreadMemberFunctor<vjConnect> *readMemberFunctor =
-	    new vjThreadMemberFunctor<vjConnect>(this,
-						 &vjConnect::readControlLoop,
-						 NULL);
-	read_connect_thread = new vjThread (readMemberFunctor, 0);
-	success = success && read_connect_thread;
-    }
+   if (mode == VJC_OUTPUT || mode == VJC_INTERACTIVE)
+   {
+      vjThreadMemberFunctor<vjConnect> *writeMemberFunctor =
+      new vjThreadMemberFunctor<vjConnect>(this,
+                                           &vjConnect::writeControlLoop,
+                                           NULL);
+      write_connect_thread = new vjThread (writeMemberFunctor, 0);
+      success = success && write_connect_thread;
+   }
+   if (mode == VJC_INPUT || mode == VJC_INTERACTIVE)
+   {
+      vjThreadMemberFunctor<vjConnect> *readMemberFunctor =
+      new vjThreadMemberFunctor<vjConnect>(this,
+                                           &vjConnect::readControlLoop,
+                                           NULL);
+      read_connect_thread = new vjThread (readMemberFunctor, 0);
+      success = success && read_connect_thread;
+   }
 
-    return success;
+   return success;
 }
 
 
@@ -190,8 +192,8 @@ void vjConnect::removeTimedUpdate (vjTimedUpdate* _tu) {
 
 //----------------- PRIVATE utility functions ---------------------------
 
-void vjConnect::readControlLoop(void* nullParam) { 
-   vjDEBUG(vjDBG_ENV_MGR,2) << "vjConnect " << name 
+void vjConnect::readControlLoop(void* nullParam) {
+   vjDEBUG(vjDBG_ENV_MGR,2) << "vjConnect " << name
 			    << " started read control loop.\n"
 			    << vjDEBUG_FLUSH;
    ifstream fin(fd);
@@ -209,7 +211,7 @@ void vjConnect::writeControlLoop(void* nullParam) {
    /* this probably needs considerable revision */
    vjCommand*  cmd;
 
-   vjDEBUG(vjDBG_ENV_MGR,2) << "vjConnect " << name 
+   vjDEBUG(vjDBG_ENV_MGR,2) << "vjConnect " << name
 			    << " started write control loop.\n"
 			    << vjDEBUG_FLUSH;
 
@@ -259,6 +261,7 @@ void vjConnect::readCommand(ifstream& fin) {
 
    vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect:: read: '" << rbuf
 			    << "'.\n" << vjDEBUG_FLUSH;
+
    s = strtok (rbuf, " \t\n");
    if (!s) {
        cout << "couldn't get a token.  something's really wrong in vjConnect" << endl;
@@ -269,19 +272,21 @@ void vjConnect::readCommand(ifstream& fin) {
       s = strtok (NULL, " \t\n");
       if (!strcasecmp (s, "descriptions"))
       {
-	  vjChunkDescDB* db = vjChunkFactory::getChunkDescDB();
-	  sendDescDB (db);
+         vjChunkDescDB* db = vjChunkFactory::getChunkDescDB();
+         vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect: Sending (requested) chunkdesc:\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ENV_MGR,3) << *db << endl << vjDEBUG_FLUSH;
+         sendDescDB (db);
       }
       else if (!strcasecmp (s,"chunks"))
       {
-	  vjConfigChunkDB* db = vjKernel::instance()->getChunkDB();
-	  //cout << "Sending chunkdb:\n" << *db << endl << flush;
-	  sendChunkDB (db, true);
+         vjConfigChunkDB* db = vjKernel::instance()->getChunkDB();
+         vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect: Sending (requested) chunkdb:\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ENV_MGR,3) << *db << endl << vjDEBUG_FLUSH;
+         sendChunkDB (db, true);
       }
       else
       {
-	  vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect:: Received "
-	      "unknown GET " << s << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect:: Received unknown GET: " << s << endl << vjDEBUG_FLUSH;
       }
    }
 
@@ -307,20 +312,23 @@ void vjConnect::readCommand(ifstream& fin) {
        * descriptions line contains "all", we should
        * clear the db first
        */
-       //s = strtok (NULL, " \t\n");
+      //s = strtok (NULL, " \t\n");
       // chunks 'all' option disabled for now...
       //if (!strcasecmp (s, "all"))
       //	chunkdb->removeAll()
+      vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect:: Read: chunks: Started\n" << vjDEBUG_FLUSH;
+
       vjConfigChunkDB newchunkdb;
       fin >> newchunkdb;
-      vjDEBUG(vjDBG_ENV_MGR,1) << "READ CHUNKS:\n" << newchunkdb << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ENV_MGR,3) << newchunkdb << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect:: Read: chunks: Completed\n" << vjDEBUG_FLUSH;
       // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
       vjKernel::instance()->configAdd(&newchunkdb);      // Add new chunks
+      vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect: Kernel has added the new chunks\n" << vjDEBUG_FLUSH;
    }
 
    else if (!strcasecmp (s, "remove"))
    {
-      cerr << "rec'd remove message" << endl;
       s = strtok (NULL, " \t\n");
       if (!strcasecmp (s, "descriptions"))
       {
@@ -334,17 +342,22 @@ void vjConnect::readCommand(ifstream& fin) {
       else if (!strcasecmp (s, "chunks"))
       {
          vjConfigChunkDB remove_chunk_db;
-         fin >> remove_chunk_db;
-         vjDEBUG(vjDBG_ENV_MGR,1) << "EM: message to remove chunks:\n" << remove_chunk_db
-			      << vjDEBUG_FLUSH;
-         // ALLEN: THIS IS WHERE THE GUI HAS SENT A COMMAND TO
-         // REMOVE A CHUNK - S IS THE NAME OF THE CHUNK
-         vjKernel::instance()->configRemove(&remove_chunk_db);
 
+         vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect: Remove: chunks: Starting...\n"  << vjDEBUG_FLUSH;
+
+         fin >> remove_chunk_db;       // Read in the chunks to remove
+
+         vjDEBUG(vjDBG_ENV_MGR,3) << remove_chunk_db << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect: Remove: chunks: Completed.\n" << vjDEBUG_FLUSH;
+
+         // Tell kernel to remove the chunks
+
+         vjKernel::instance()->configRemove(&remove_chunk_db);
+         vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect: Kernel has removed the chunks\n" << vjDEBUG_FLUSH;
       }
       else
          vjDEBUG(vjDBG_ENV_MGR,1) << "Error: vjConnect: Unknown remove type: "
-			      << s << endl << vjDEBUG_FLUSH;
+         << s << endl << vjDEBUG_FLUSH;
    }
 #if 0
    // obsolete timed update stuff
@@ -376,6 +389,6 @@ void vjConnect::readCommand(ifstream& fin) {
    else
    {
       vjDEBUG(vjDBG_ALL,0) << "Error: vjConnect:: Unknown command '"
-			   << s << "'\n" << vjDEBUG_FLUSH;
+      << s << "'\n" << vjDEBUG_FLUSH;
    }
 }

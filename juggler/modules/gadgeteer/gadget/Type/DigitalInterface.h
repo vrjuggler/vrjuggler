@@ -14,11 +14,26 @@
 class vjDigitalInterface : public vjDeviceInterface
 {
 public:
+   vjDigitalInterface() : mDigProxy(NULL)
+   {;}
+
    vjDigitalProxy* operator->()
-   { return vjKernel::instance()->getInputManager()->GetDigProxy(mProxyIndex); }
+   { return mDigProxy; }
 
    vjDigitalProxy& operator*()
-   { return *(vjKernel::instance()->getInputManager()->GetDigProxy(mProxyIndex)); }
+   { return *(mDigProxy); }
+
+   virtual void refresh()
+   {
+      vjDeviceInterface::refresh();
+      if(mProxyIndex != -1)
+         mDigProxy = vjKernel::instance()->getInputManager()->GetDigProxy(mProxyIndex);
+      else
+         mDigProxy = NULL;
+   }
+
+private:
+   vjDigitalProxy* mDigProxy;     // The proxy that is being wrapped
 };
 
 #endif

@@ -4,7 +4,16 @@
 
 
 vjPosProxy* vjPosInterface::operator->()
-{ return vjKernel::instance()->getInputManager()->GetPosProxy(mProxyIndex);}
+{ return mPosProxy;}
 
 vjPosProxy& vjPosInterface::operator*()
-{ return *(vjKernel::instance()->getInputManager()->GetPosProxy(mProxyIndex));}
+{ return *(mPosProxy);}
+
+void vjPosInterface::refresh()
+{
+   vjDeviceInterface::refresh();
+   if(mProxyIndex != -1)
+      mPosProxy = vjKernel::instance()->getInputManager()->GetPosProxy(mProxyIndex);
+   else
+      mPosProxy = NULL;
+}

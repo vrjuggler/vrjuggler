@@ -125,21 +125,18 @@ chunk SimPosition "Position Simulator" "A simulated position device. Gets input 
   transCoordSystem Int 1 "Translation Coordinate System" vj_enumeration { "Local=0" "Global=1" } "Do the translations apply to the tracker's local coordinate system?  Ex. Wand - global, Camera - Local"
   rotCoordSystem Int 1 "Rotation Coordinate System" vj_enumeration { "Local=0" "Global=1" } "Do the rotations apply to the tracker's local coordinate system?"
   end
-
 chunk EnvironmentManager "Environment Manager" "Application-side of connection to vjcontrol GUI"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   Port Int 1 "Port" "Networking port to listen on"
   AcceptConnections Bool 1 "Accept Connections" "Whether or not we should accept connections from vjcontrol clients"
   PerformanceTarget Chunk 1 "Performance Target" vj_enumeration { "FileConnect" "NetworkConnect" } "File or network connection that performance data should be sent to."
   end
-
 chunk FileConnect "EM Connection" "A file for outputing Environment Manager data"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   FileName String 1 "File Name" ""
   Enabled Bool 1 "Enabled" "Should file be opened & used?"
   Mode Int 1 "File Mode" vj_enumeration { "Interactive=0" "Input=1" "Output=2" } "Is the file readable, writeable, or interactive (e.g. socket or pipe)"
   end
-
 chunk JugglerUser "Juggler User" "This is a user in Juggler.  This is used for multi-user applications"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   headPos Chunk 1 "Head Position" vj_enumeration { "proxyAlias" "PosProxy" } "This is the source of head position information."
@@ -154,7 +151,7 @@ chunk simDisplay "Simulator Display" "This is a surface that images are projecte
   origin Int 2 "origin" vj_valuelabels { "X" "Y" } "Window origin (upper left is 0,0)"
   size Int 2 "size" vj_valuelabels { "Width" "Height" } "Window size"
   pipe Int 1 "pipe" "Graphics pipe"
-  stereo Bool 1 "stereo" ""
+  view Int 1 "view" vj_enumeration { "left_eye=1" "right_eye=2" "stereo=3" } ""
   border Bool 1 "border" ""
   cameraPos Chunk 1 "cameraPos" vj_enumeration { "PosProxy" "proxyAlias" } "This is the pos proxy that controls the sim view"
   user Chunk 1 "user" vj_enumeration { "JugglerUser" } "This is the user that the window is drawing for."
@@ -173,24 +170,21 @@ chunk simKeyboardDigital "simKeyboardDigital" ""
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   simKeys EmbeddedChunk -1 "simKeys" vj_enumeration { "simKeyDigital" } "The keys we are simulated"
   end
-
 chunk surfaceDisplay "Surface Display" "This is a surface that images are projected onto."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   origin Int 2 "origin" vj_valuelabels { "X" "Y" } "Window origin (lower left corner) (upper left screen is 0,0)"
   size Int 2 "size" vj_valuelabels { "Width" "Height" } "Window size"
   pipe Int 1 "pipe" "Graphics pipe"
-  stereo Bool 1 "stereo" ""
+  view Int 1 "view" vj_enumeration { "left eye=1" "right eye=1" "stereo=1" } ""
   border Bool 1 "border" ""
   corners EmbeddedChunk 4 "corners" vj_valuelabels { "lower left" "lower right" "upper right" "upper left" } vj_enumeration { "Vec3" } "The corners of the surface"
   user Chunk 1 "user" vj_enumeration { "JugglerUser" } ""
   active Bool 1 "active" "Is the window active?"
   end
-
 chunk PerfMeasure "Performance Measurements" "Controls performance monitoring of Juggler library"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   TimingTests EmbeddedChunk -1 "Timing Tests" vj_enumeration { "PerfTestActive" } "Turn on/off Juggler internal timing tests"
   end
-
 chunk PerfTestActive "PerfTestActive" "inner chunk for Performance Testing"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   Prefix String 1 "Prefix" ""
@@ -202,11 +196,9 @@ chunk Vec3 "Vec3" ""
   y Float 1 "y" ""
   z Float 1 "z" ""
   end
-
 chunk vjIncludeFile "Include File" "File that should be loaded along with this one"
-  Name String 1 "Name" ""
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
   end
-
 chunk vjcontrol "VjControl Configuration" "Configuration information for the VjControl GUI itself"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   looknfeel String 1 "Look and Feel" vj_enumeration { "Java" "Motif" "Windows" } "The visual 'Look and Feel' to use for the GUI"
@@ -219,10 +211,8 @@ chunk vjcontrol "VjControl Configuration" "Configuration information for the VjC
   fontsize Int 1 "Font Size" "Font size to use for GUI"
   windowsize Int 2 "Max Window Size" vj_valuelabels { "Width" "Height" } "Maximum size to open vjcontrol windows"
   end
-
 chunk PerfData "Performance Data Display" "Information for displaying data from perfbuffers with a matching name"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   labels String -1 "Labels" "Labels for Perf Buffer phases"
   end
-
 End
