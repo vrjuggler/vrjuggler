@@ -124,7 +124,7 @@ void TSTable::setObject(TSBaseObject* object, unsigned long key)
 {
    //vprASSERT(key >= 0);
 #ifdef _DEBUG
-   unsigned long size_before = mTSObjects.size();
+   std::vector<TSBaseObject*>::size_type size_before = mTSObjects.size();
 #endif
    if(mTSObjects.size() <= key)
    {
