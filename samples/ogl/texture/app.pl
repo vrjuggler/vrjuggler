@@ -14,18 +14,18 @@ $HOME = "/home/users/kevn";
 $VJ_BASE_DIR = $ENV{'VJ_BASE_DIR'};
 
 #sim
-$simconfig = "$HOME/.vjconfig/sim.base.config ";
-$simconfig .= "$HOME/.vjconfig/sim.displays.config ";
-$simconfig .= "$HOME/.vjconfig/sim.wand.mixin.config";
+$simconfig = "$VJ_BASE_DIR/share/Data/configFiles/sim.base.config ";
+$simconfig .= "$VJ_BASE_DIR/share/Data/configFiles/sim.displays.config ";
+$simconfig .= "$VJ_BASE_DIR/share/Data/configFiles/sim.wand.mixin.config";
 
 #aud
-$audconfig = "$HOME/.vjconfig/sim.base.config ";
-$audconfig .= "$HOME/.vjconfig/sim.wand.mixin.config ";
+$audconfig = "$VJ_BASE_DIR/share/Data/configFiles/sim.base.config ";
+$audconfig .= "$VJ_BASE_DIR/share/Data/configFiles/sim.wand.mixin.config ";
 $audconfig .= "/home/vr/vjconfig/auditorium/auditorium.displays-x2.1con.config";
 
 #audsim
-$audsimconfig = "$HOME/.vjconfig/sim.base.config ";
-$audsimconfig .= "$HOME/.vjconfig/sim.wand.mixin.config ";
+$audsimconfig = "$VJ_BASE_DIR/share/Data/configFiles/sim.base.config ";
+$audsimconfig .= "$VJ_BASE_DIR/share/Data/configFiles/sim.wand.mixin.config ";
 $audsimconfig .= "/home/vr/vjconfig/auditorium/sim.aud.config";
 
 #1con
