@@ -25,9 +25,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: vjMotionStar.cpp,v
- * Date modified: $Date: 2000/05/11 17:57:49
- * Version:       $Revision: 1.9
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
  * -----------------------------------------------------------------
  */
 
