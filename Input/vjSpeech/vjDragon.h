@@ -1,3 +1,24 @@
+/*
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+
+#ifndef _VJ_DRAGON_H_
+#define _VJ_DRAGON_H_
 
 
 class vjDragon : public vjSpeech
@@ -85,3 +106,6 @@ inline void vjDragon::config()
 	_dragonPort = 5600;
 	_user = "kevin";
 }
+
+
+#endif	/* _VJ_DRAGON_H_ */

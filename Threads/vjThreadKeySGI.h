@@ -1,8 +1,23 @@
 /*
- * --------------------------------------------------------------------------
- * vjThreadKeySGI.h
- * $Revision$
- * $Date$
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+
+/*
  * --------------------------------------------------------------------------
  * NOTES:
  *    - This file (vjThreadKeySGI.h) MUST be included by vjThread.h, not the
@@ -10,8 +25,8 @@
  * --------------------------------------------------------------------------
  */
 
-#ifndef _THREAD_KEY_SGI_H_
-#define _THREAD_KEY_SGI_H_
+#ifndef _VJ_THREAD_KEY_SGI_H_
+#define _VJ_THREAD_KEY_SGI_H_
 #pragma once
 
 #include <vjConfig.h>
@@ -164,4 +179,4 @@ private:
     int keyID;		//: Thread key ID
 };
 
-#endif	/* _THREAD_KEY_SGI_H_ */
+#endif	/* _VJ_THREAD_KEY_SGI_H_ */

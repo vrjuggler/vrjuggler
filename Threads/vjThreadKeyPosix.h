@@ -1,8 +1,23 @@
 /*
- * --------------------------------------------------------------------------
- * vjThreadKeyPosix.h
- * $Revision$
- * $Date$
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+
+/*
  * --------------------------------------------------------------------------
  * NOTES:
  *    - This file (vjThreadKeyPosix.h) MUST be included by vjThread.h, not
@@ -10,8 +25,8 @@
  * --------------------------------------------------------------------------
  */
 
-#ifndef _THREAD_KEY_POSIX_H_
-#define _THREAD_KEY_POSIX_H_
+#ifndef _VJ_THREAD_KEY_POSIX_H_
+#define _VJ_THREAD_KEY_POSIX_H_
 
 #include <vjConfig.h>
 #include <pthread.h>
@@ -181,4 +196,4 @@ private:
     pthread_key_t keyID;		//: Thread key ID
 };
 
-#endif	/* _THREAD_KEY_POSIX_H_ */
+#endif	/* _VJ_THREAD_KEY_POSIX_H_ */

@@ -1,10 +1,29 @@
+/*
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+
 #ifndef _VJ_DEFINES_H_
 #define _VJ_DEFINES_H_
 
 /*
  * --------------------------------------------------------------------------
  * Library-wide configuration file.
- * Generated from acconfig.h ($Revision$)
+ * Generated from acconfig.h.
  * --------------------------------------------------------------------------
  */
 
