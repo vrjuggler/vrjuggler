@@ -7,7 +7,7 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="3" label="Default Simulator">
       <help>Standard VR Juggler simulator setup.</help>
-      <parent />
+      <parent>simulator_plugin</parent>
       <category>/Display/Simulator</category>
       <property valuetype="configelementpointer" variable="false" name="camera_pos">
          <help>This is the position proxy that controls the simulator view.</help>
