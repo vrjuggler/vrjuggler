@@ -39,7 +39,7 @@
 using namespace boost::python;
 
 // Declarations ================================================================
-namespace  {
+namespace pyj {
 
 struct vrj_OsgApp_Wrapper: vrj::OsgApp
 {
@@ -563,39 +563,39 @@ struct vrj_OsgApp_Wrapper: vrj::OsgApp
 };
 
 
-}// namespace 
+}// namespace pyj
 
 
 // Module ======================================================================
 void _Export_OsgApp()
 {
-    class_< vrj::OsgApp, bases< vrj::GlApp >, boost::noncopyable, vrj_OsgApp_Wrapper >("OsgApp", init<  >())
+    class_< vrj::OsgApp, bases< vrj::GlApp >, boost::noncopyable, pyj::vrj_OsgApp_Wrapper >("OsgApp", init<  >())
         .def(init< vrj::Kernel* >())
         .def_readwrite("mKernel", &vrj::App::mKernel)
         .def_readwrite("mHaveFocus", &vrj::App::mHaveFocus)
         .def("initScene", pure_virtual(&vrj::OsgApp::initScene))
         .def("getScene", pure_virtual(&vrj::OsgApp::getScene), return_internal_reference< 1 >())
-        .def("configSceneView", &vrj::OsgApp::configSceneView, &vrj_OsgApp_Wrapper::default_configSceneView)
-        .def("draw", (void (vrj::OsgApp::*)() )&vrj::OsgApp::draw, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_draw)
-        .def("init", (void (vrj::OsgApp::*)() )&vrj::OsgApp::init, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_init)
-        .def("contextInit", (void (vrj::OsgApp::*)() )&vrj::OsgApp::contextInit, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_contextInit)
-        .def("contextClose", (void (vrj::OsgApp::*)() )&vrj::OsgApp::contextClose, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_contextClose)
-        .def("contextPreDraw", (void (vrj::OsgApp::*)() )&vrj::OsgApp::contextPreDraw, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_contextPreDraw)
-        .def("bufferPreDraw", (void (vrj::OsgApp::*)() )&vrj::OsgApp::bufferPreDraw, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_bufferPreDraw)
-        .def("pipePreDraw", (void (vrj::OsgApp::*)() )&vrj::OsgApp::pipePreDraw, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_pipePreDraw)
-        .def("contextPostDraw", (void (vrj::GlApp::*)() )&vrj::GlApp::contextPostDraw, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_contextPostDraw)
-        .def("apiInit", (void (vrj::App::*)() )&vrj::App::apiInit, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_apiInit)
-        .def("exit", (void (vrj::App::*)() )&vrj::App::exit, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_exit)
-        .def("preFrame", (void (vrj::App::*)() )&vrj::App::preFrame, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_preFrame)
-        .def("latePreFrame", (void (vrj::App::*)() )&vrj::App::latePreFrame, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_latePreFrame)
-        .def("intraFrame", (void (vrj::App::*)() )&vrj::App::intraFrame, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_intraFrame)
-        .def("postFrame", (void (vrj::App::*)() )&vrj::App::postFrame, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_postFrame)
-        .def("reset", (void (vrj::App::*)() )&vrj::App::reset, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_reset)
-        .def("focusChanged", (void (vrj::App::*)() )&vrj::App::focusChanged, (void (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_focusChanged)
-        .def("getDrawScaleFactor", (float (vrj::App::*)() )&vrj::App::getDrawScaleFactor, (float (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_getDrawScaleFactor)
-        .def("configCanHandle", (bool (vrj::App::*)(jccl::ConfigElementPtr) )&vrj::App::configCanHandle, (bool (vrj_OsgApp_Wrapper::*)(jccl::ConfigElementPtr))&vrj_OsgApp_Wrapper::default_configCanHandle)
-        .def("depSatisfied", (bool (vrj::App::*)() )&vrj::App::depSatisfied, (bool (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_depSatisfied)
-        .def("configProcessPending", (int (jccl::ConfigElementHandler::*)() )&jccl::ConfigElementHandler::configProcessPending, (int (vrj_OsgApp_Wrapper::*)())&vrj_OsgApp_Wrapper::default_configProcessPending)
+        .def("configSceneView", &vrj::OsgApp::configSceneView, &pyj::vrj_OsgApp_Wrapper::default_configSceneView)
+        .def("draw", (void (vrj::OsgApp::*)() )&vrj::OsgApp::draw, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_draw)
+        .def("init", (void (vrj::OsgApp::*)() )&vrj::OsgApp::init, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_init)
+        .def("contextInit", (void (vrj::OsgApp::*)() )&vrj::OsgApp::contextInit, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_contextInit)
+        .def("contextClose", (void (vrj::OsgApp::*)() )&vrj::OsgApp::contextClose, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_contextClose)
+        .def("contextPreDraw", (void (vrj::OsgApp::*)() )&vrj::OsgApp::contextPreDraw, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_contextPreDraw)
+        .def("bufferPreDraw", (void (vrj::OsgApp::*)() )&vrj::OsgApp::bufferPreDraw, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_bufferPreDraw)
+        .def("pipePreDraw", (void (vrj::OsgApp::*)() )&vrj::OsgApp::pipePreDraw, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_pipePreDraw)
+        .def("contextPostDraw", (void (vrj::GlApp::*)() )&vrj::GlApp::contextPostDraw, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_contextPostDraw)
+        .def("apiInit", (void (vrj::App::*)() )&vrj::App::apiInit, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_apiInit)
+        .def("exit", (void (vrj::App::*)() )&vrj::App::exit, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_exit)
+        .def("preFrame", (void (vrj::App::*)() )&vrj::App::preFrame, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_preFrame)
+        .def("latePreFrame", (void (vrj::App::*)() )&vrj::App::latePreFrame, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_latePreFrame)
+        .def("intraFrame", (void (vrj::App::*)() )&vrj::App::intraFrame, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_intraFrame)
+        .def("postFrame", (void (vrj::App::*)() )&vrj::App::postFrame, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_postFrame)
+        .def("reset", (void (vrj::App::*)() )&vrj::App::reset, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_reset)
+        .def("focusChanged", (void (vrj::App::*)() )&vrj::App::focusChanged, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_focusChanged)
+        .def("getDrawScaleFactor", (float (vrj::App::*)() )&vrj::App::getDrawScaleFactor, (float (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_getDrawScaleFactor)
+        .def("configCanHandle", (bool (vrj::App::*)(jccl::ConfigElementPtr) )&vrj::App::configCanHandle, (bool (pyj::vrj_OsgApp_Wrapper::*)(jccl::ConfigElementPtr))&pyj::vrj_OsgApp_Wrapper::default_configCanHandle)
+        .def("depSatisfied", (bool (vrj::App::*)() )&vrj::App::depSatisfied, (bool (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_depSatisfied)
+        .def("configProcessPending", (int (jccl::ConfigElementHandler::*)() )&jccl::ConfigElementHandler::configProcessPending, (int (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_configProcessPending)
         .def("haveFocus", &vrj::App::haveFocus)
         .def("setFocus", &vrj::App::setFocus)
     ;
