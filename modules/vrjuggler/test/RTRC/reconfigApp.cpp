@@ -388,6 +388,12 @@ bool reconfigApp::verifyProxy( std::string proxyName, std::string deviceName )
       return false;
    }
 
+   if (proxy->isStupified())
+   {
+      std::cout << "\tError: Proxy is stupified\n" << std::flush;
+      return false;
+   }
+
    gadget::Input* inputDevice = proxy->getProxiedInputDevice();
 
    if (inputDevice == NULL)
@@ -1275,39 +1281,60 @@ bool reconfigApp::reconfigSimAnalog_check()
 
 bool reconfigApp::addSimDigital_exec()
 {
-   std::cout << "Beginning test for adding a sim digital device...\n" << std::flush;
-   return true;
+   std::cout << "Beginning test for adding a sim digital device and pointing proxies at it...\n" << std::flush;   
+
+   return (  addChunkFile( "./Chunks/sim.digitaldevice.config" )
+          && addChunkFile( "./Chunks/sim.digitalproxy.config"  ));
 }
 
 bool reconfigApp::addSimDigital_check()
 {
-   return true;
+   return verifyProxy( "DigitalProxy", "ExtraDigitalDevice" );
 }
 
 
 bool reconfigApp::removeSimDigital_exec()
 {
    std::cout << "Beginning test for removing a sim digital device...\n" << std::flush;
-   return true;
+   return removeChunkFile( "./Chunks/startup/sim.wandbuttonsdigital.config" );
 }
 
 bool reconfigApp::removeSimDigital_check()
 {
+   //Look at the button proxy and see what it points at
+   gadget::Proxy* proxy = gadget::InputManager::instance()->getProxy( "Button0Proxy" );
+
+   if (proxy == NULL)
+   {
+      std::cout << "\tError: Could not find the proxy\n" << std::flush;
+      return false;
+   }
+
+   if (!proxy->isStupified())
+   {
+      std::cout << "\tError: Proxy is not stupified\n" << std::flush;
+   }
+   
    return true;
 }
 
 
 bool reconfigApp::readdSimDigital_exec()
 {
-   std::cout << "Beginning test for readding a sim digital device...\n" << std::flush;
-   return true;
+   std::cout << "Beginning test for readding a sim digital device and checking the proxies pointing at it...\n" << std::flush;
+   
+   return addChunkFile( "./Chunks/startup/sim.wandbuttonsdigital.config" );
 }
 
 bool reconfigApp::readdSimDigital_check()
 {
-   return true;
+   return (   verifyProxy( "Button0Proxy", "SimWandButtons" )
+           && verifyProxy( "Button1Proxy", "SimWandButtons" )
+           && verifyProxy( "Button2Proxy", "SimWandButtons" )
+           && verifyProxy( "Button3Proxy", "SimWandButtons" )
+           && verifyProxy( "Button4Proxy", "SimWandButtons" )
+           && verifyProxy( "Button5Proxy", "SimWandButtons" ));
 }
-
 
 bool reconfigApp::addSimAnalog_exec()
 {
