@@ -91,7 +91,7 @@ TWEEK_LIB_DYNAMIC	= $(TWEEK_LIBRARY).$(DYNAMICLIB_EXT)
 # Version information.
 BRANCH		= HEAD
 CANON_NAME	= Harbucks Coffee
-VER_ARGS	= -f $(TWEEKROOT_ABS)/VERSION -s @SUBSYSTEM@		\
+VER_ARGS	= -f $(TWEEKROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@	\
                   -b $(BRANCH) -o tweek/tweekParam.h -n "$(CANON_NAME)"	\
                   -i $(TWEEKROOT_ABS)/tweek/tweekParam.h.in		\
                   -d "`date '+%b %e, %Y %H:%M:%S'`"

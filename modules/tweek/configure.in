@@ -283,6 +283,7 @@ AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \$(PERL) \$(scriptdir)/mtree.pl)
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for Tweek ***))
+VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 
 # Find omniORB.  This one is a beast.
 if test "x$OMNI_ROOT" != "xnone" ; then
@@ -587,6 +588,7 @@ AC_SUBST(JAVA_IDL_GENDIR_OPT)
 AC_SUBST(JAVA_IDL_INCFLAG)
 AC_SUBST(EXTRA_DEFS)
 AC_SUBST(EXTRA_LINK_FLAGS)
+AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(BUILD_JAVA)
 AC_SUBST(JDOM_JAR)
@@ -657,8 +659,7 @@ AC_OUTPUT(tweek-config
           mtree/TWEEK.test.dist, ,
    [ sed -e 's/^\(%.*\)/#\1/g' tweek-config > tweek-config.tmp
      mv tweek-config.tmp tweek-config
-     chmod a+x tweek-config
-     chmod a+x java/tweek.sh ])
+     chmod a+x tweek-config ])
 
 cat <<BUILD_INFO
 
