@@ -8,3 +8,6 @@
   - make sure this state is transferred when an API is changed to another.
 
 - respect whether a sound is retriggerable
+
+- support for streaming audio
+- DSP plugins (maybe?) streaming audio might work with this.
