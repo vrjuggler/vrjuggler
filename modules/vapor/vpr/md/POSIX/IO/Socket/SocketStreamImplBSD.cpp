@@ -59,6 +59,26 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
+SocketStreamImplBSD::SocketStreamImplBSD()
+   : SocketImplBSD(vpr::SocketTypes::STREAM)
+{
+   /* Do nothing. */ ;
+}
+
+SocketStreamImplBSD::SocketStreamImplBSD(const InetAddr& local_addr,
+                                         const InetAddr& remote_addr)
+   : SocketImplBSD(local_addr, remote_addr, SocketTypes::STREAM)
+{
+   /* Do nothing. */ ;
+}
+
+SocketStreamImplBSD::SocketStreamImplBSD(const SocketStreamImplBSD& sock)
+   : SocketImplBSD(sock.mLocalAddr, sock.mRemoteAddr, SocketTypes::STREAM)
+{
+   mHandle         = new FileHandleImplUNIX(sock.mHandle->getName());
+   mHandle->mFdesc = sock.mHandle->mFdesc;
+}
+
 // Listen on the socket for incoming connection requests.
 vpr::ReturnStatus SocketStreamImplBSD::listen(const int backlog)
 {

@@ -60,6 +60,28 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
+SocketDatagramImplBSD::SocketDatagramImplBSD()
+   : SocketImplBSD(vpr::SocketTypes::DATAGRAM)
+{
+   /* Do nothing. */ ;
+}
+
+SocketDatagramImplBSD::SocketDatagramImplBSD(const InetAddr& local_addr,
+                                             const InetAddr& remote_addr)
+   : SocketImplBSD(local_addr, remote_addr, vpr::SocketTypes::DATAGRAM)
+{
+   /* Do nothing. */ ;
+}
+
+SocketDatagramImplBSD::SocketDatagramImplBSD(const SocketDatagramImplBSD& sock)
+   : SocketImplBSD(sock.mLocalAddr, sock.mRemoteAddr, SocketTypes::DATAGRAM)
+{
+   mHandle            = new FileHandleImplUNIX(sock.mHandle->getName());
+   mHandle->mFdesc    = sock.mHandle->mFdesc;
+   mHandle->mOpen     = sock.mHandle->mOpen;
+   mHandle->mBlocking = sock.mHandle->mBlocking;
+}
+
 vpr::ReturnStatus SocketDatagramImplBSD::recvfrom(void* msg,
                                                   const vpr::Uint32 length,
                                                   const int flags,

@@ -44,21 +44,12 @@
 
 #include <vpr/vprConfig.h>
 
-#include <fcntl.h>
-#include <sys/ioctl.h>
-
-#ifdef HAVE_SYS_FILIO_H
-#  include <sys/filio.h>
-#endif
-
-#include <sys/types.h>
 #include <string>
 #include <vector>
 
 #include <vpr/IO/IOSys.h>
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Interval.h>
-#include <vpr/Util/Debug.h>
 
 
 namespace vpr
@@ -77,15 +68,7 @@ public:
     *
     * @post All member variables are initialized except mName.
     */
-   FileHandleImplUNIX()
-      : mOpen(false)
-      , mOpenBlocking(true)
-      , mBlocking(true)
-      , mFdesc(-1)
-      , mOpenMode(O_RDWR)
-   {
-      /* Do nothing. */ ;
-   }
+   FileHandleImplUNIX();
 
    /**
     * Constructor.  This initializes the member variables to reasonable
@@ -116,7 +99,7 @@ public:
     *
     * @return An object containing the name of this file.
     */
-   const std::string& getName()
+   const std::string& getName() const
    {
       return mName;
    }
@@ -159,7 +142,7 @@ public:
     *
     * @return true is returned if this file handle is open; false otherwise.
     */
-   bool isOpen()
+   bool isOpen() const
    {
       return mOpen;
    }
@@ -183,16 +166,7 @@ public:
    /**
     * Returns the contained handle.
     */
-   vpr::IOSys::Handle getHandle()
-   {
-#ifdef VPR_USE_NSPR
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-          << "ERROR: Cannot get handle for UNIX file descriptor with NSPR!\n";
-      return vpr::IOSys::NullHandle;
-#else
-      return mFdesc;
-#endif
-   }
+   vpr::IOSys::Handle getHandle() const;
 
    /**
     * Gets the current blocking state for the file handle.
@@ -219,10 +193,7 @@ public:
     *       it is opened in read-only mode.  If the device is already open,
     *       this has no effect.
     */
-   void setOpenReadOnly()
-   {
-      mOpenMode = O_RDONLY;
-   }
+   void setOpenReadOnly();
 
    /**
     * Sets the open flags so that the I/O device is opened in write-only mode.
@@ -232,10 +203,7 @@ public:
     *       is opened in write-only mode.  If the device is already open,
     *       this has no effect.
     */
-   void setOpenWriteOnly()
-   {
-      mOpenMode = O_WRONLY;
-   }
+   void setOpenWriteOnly();
 
    /**
     * Sets the open flags so that the I/O device is opened in read/write mode.
@@ -245,10 +213,7 @@ public:
     *       is opened in read/write mode.  If the device is already open,
     *       this has no effect.
     */
-   void setOpenReadWrite()
-   {
-      mOpenMode = O_RDWR;
-   }
+   void setOpenReadWrite();
 
    /**
     * Reconfigures the file handle to be in append mode or not.
@@ -293,10 +258,7 @@ public:
     * @return true is returned if the device is in read-only mode; false
     *         otherwise.
     */
-   bool isReadOnly()
-   {
-      return (mOpenMode == O_RDONLY);
-   }
+   bool isReadOnly() const;
 
    /**
     * Tests if the I/O device is write-only.
@@ -308,10 +270,7 @@ public:
     * @return true is returned if the device is in write-only mode; false
     *         otherwise.
     */
-   bool isWriteOnly()
-   {
-      return (mOpenMode == O_WRONLY);
-   }
+   bool isWriteOnly() const;
 
    /**
     * Tests if the I/O device is read/write.
@@ -323,10 +282,7 @@ public:
     * @return true is returned if the device is in read/write mode; false
     *         otherwise.
     */
-   bool isReadWrite()
-   {
-      return (mOpenMode == O_RDWR);
-   }
+   bool isReadWrite() const;
 
    /**
     * Queries the amount of data currently in the read buffer.
@@ -334,17 +290,7 @@ public:
     * @pre The file descriptor is valid.
     * @post The buffer size is returned via the by-reference parameter.
     */
-   vpr::ReturnStatus getReadBufferSize(vpr::Int32& buffer)
-   {
-      vpr::ReturnStatus status;
-
-      if ( ioctl(mFdesc, FIONREAD, &buffer) == -1 )
-      {
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
-
-      return status;
-   }
+   vpr::ReturnStatus getReadBufferSize(vpr::Int32& buffer) const;
 
    /**
     * Implementation of the read template method.  This reads at most the
@@ -443,17 +389,7 @@ public:
     *         read.  If there is nothing to read or an error occurred, 0 is
     *         returned.
     */
-   vpr::Uint32 availableBytes()
-   {
-      int result;
-
-      if ( ioctl(mFdesc, FIONREAD, &result) < 0 )
-      {
-         result = 0;
-      }
-
-      return result;
-   }
+   vpr::Uint32 availableBytes() const;
 
 protected:
    // Friends.

@@ -39,12 +39,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vpr/vprConfig.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/ioctl.h>
 #include <sys/time.h>
 #include <unistd.h>
 #include <errno.h>
@@ -63,6 +66,19 @@ namespace vpr
 // ============================================================================
 // Public methods.
 // ============================================================================
+
+// Constructor for unnamed file-based devices.  This initializes the member
+// variables to reasonable defaults and stores the given file name for
+// later use.
+FileHandleImplUNIX::FileHandleImplUNIX()
+   : mOpen(false)
+   , mOpenBlocking(true)
+   , mBlocking(true)
+   , mFdesc(-1)
+   , mOpenMode(O_RDWR)
+{
+   /* Do nothing. */ ;
+}
 
 // Constructor.  This initializes the member variables to reasonable defaults
 // and stores the given file name for later use.
@@ -214,6 +230,32 @@ vpr::ReturnStatus FileHandleImplUNIX::setBlocking(bool blocking)
    return retval;
 }
 
+vpr::IOSys::Handle FileHandleImplUNIX::getHandle() const
+{
+#ifdef VPR_USE_NSPR
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+       << "ERROR: Cannot get handle for UNIX file descriptor with NSPR!\n";
+   return vpr::IOSys::NullHandle;
+#else
+   return mFdesc;
+#endif
+}
+
+void FileHandleImplUNIX::setOpenReadOnly()
+{
+   mOpenMode = O_RDONLY;
+}
+
+void FileHandleImplUNIX::setOpenWriteOnly()
+{
+   mOpenMode = O_WRONLY;
+}
+
+void FileHandleImplUNIX::setOpenReadWrite()
+{
+   mOpenMode = O_RDWR;
+}
+
 // Reconfigure the file handle to be in append mode.
 vpr::ReturnStatus FileHandleImplUNIX::setAppend(bool append)
 {
@@ -288,6 +330,33 @@ vpr::ReturnStatus FileHandleImplUNIX::setSynchronousWrite(bool sync)
       << " writes on this platform!\n" << vprDEBUG_FLUSH;
    status.setCode(vpr::ReturnStatus::Fail);
 #endif
+
+   return status;
+}
+
+bool FileHandleImplUNIX::isReadOnly() const
+{
+   return (mOpenMode == O_RDONLY);
+}
+
+bool FileHandleImplUNIX::isWriteOnly() const
+{
+   return (mOpenMode == O_WRONLY);
+}
+
+bool FileHandleImplUNIX::isReadWrite() const
+{
+   return (mOpenMode == O_RDWR);
+}
+
+vpr::ReturnStatus FileHandleImplUNIX::getReadBufferSize(vpr::Int32& buffer) const
+{
+   vpr::ReturnStatus status;
+
+   if ( ioctl(mFdesc, FIONREAD, &buffer) == -1 )
+   {
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
 
    return status;
 }
@@ -454,6 +523,18 @@ vpr::ReturnStatus FileHandleImplUNIX::write_i(const void* buffer,
    }
 
    return status;
+}
+
+vpr::Uint32 FileHandleImplUNIX::availableBytes() const
+{
+   int result;
+
+   if ( ioctl(mFdesc, FIONREAD, &result) < 0 )
+   {
+      result = 0;
+   }
+
+   return result;
 }
 
 // Get the current file handle flags.

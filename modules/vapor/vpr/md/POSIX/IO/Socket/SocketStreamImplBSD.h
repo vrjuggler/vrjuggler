@@ -47,7 +47,6 @@
 #include <string>
 
 #include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
-#include <vpr/IO/Socket/SocketStreamOpt.h>
 
 
 namespace vpr
@@ -70,10 +69,7 @@ public:
     * @post The member variables are initialized with the mType variable in
     *       particular set to vpr::SocketTypes::SOCK_STREAM.
     */
-   SocketStreamImplBSD (void) : SocketImplBSD(vpr::SocketTypes::STREAM)
-   {
-      /* Do nothing. */ ;
-   }
+   SocketStreamImplBSD();
 
    /**
     * Constructs a stream socket using the given addresses as defaults for
@@ -89,26 +85,14 @@ public:
     * @param remote_addr The remote address for this socket.  This is used to
     *                    specify the connection addres for this socket.
     */
-   SocketStreamImplBSD (const InetAddr& local_addr,
-                        const InetAddr& remote_addr)
-      : SocketImplBSD(local_addr, remote_addr, SocketTypes::STREAM)
-   {
-      /* Do nothing. */ ;
-   }
+   SocketStreamImplBSD(const InetAddr& local_addr, const InetAddr& remote_addr);
 
    /**
     * Copy constructor.
     *
     * @post This socket is a copy of the given socket.
     */
-   SocketStreamImplBSD (const SocketStreamImplBSD& sock)
-      : SocketImplBSD(SocketTypes::STREAM)
-   {
-      mLocalAddr      = sock.mLocalAddr;
-      mRemoteAddr     = sock.mRemoteAddr;
-      mHandle         = new FileHandleImplUNIX(sock.mHandle->getName());
-      mHandle->mFdesc = sock.mHandle->mFdesc;
-   }
+   SocketStreamImplBSD(const SocketStreamImplBSD& sock);
 
    /**
     * Puts this socket into the listening state where it listens for

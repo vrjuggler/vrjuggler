@@ -44,8 +44,6 @@
 
 #include <vpr/vprConfig.h>
 
-#include <sys/types.h>
-#include <netinet/in.h>
 #include <string>
 #include <vector>
 
@@ -53,7 +51,6 @@
 #include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/SocketOptions.h>
-#include <vpr/Util/Assert.h>
 #include <vpr/Util/ReturnStatus.h>
 
 
@@ -78,10 +75,7 @@ public:
     *
     * @return An object containing the "name" of this socket.
     */
-   const std::string& getName()
-   {
-      return mHandle->getName();
-   }
+   const std::string& getName();
 
    /**
     * Opens the socket.  This creates a new socket using the domain and type
@@ -108,15 +102,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the socket was closed
     *         successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   vpr::ReturnStatus close()
-   {
-      vpr::ReturnStatus retval;
-
-      retval = mHandle->close();
-      mOpen = (retval.success() ? false : true);
-
-      return retval;
-   }
+   vpr::ReturnStatus close();
 
    /**
     * Gets the open state of this socket.
@@ -424,17 +410,7 @@ protected:
     * @post The member variables are initialized accordingly to reasonable
     *       defaults.
     */
-   SocketImplBSD(const vpr::SocketTypes::Type sock_type)
-      : mOpen(false)
-      , mOpenBlocking(true)
-      , mBound(false)
-      , mConnected(false)
-      , mBlockingFixed(false)
-      , mHandle(NULL)
-      , mType(sock_type)
-   {
-      mHandle = new FileHandleImplUNIX();
-   }
+   SocketImplBSD(const vpr::SocketTypes::Type sock_type);
 
    /**
     * Standard constructor.  This takes two vpr::InetAddr objects, a local
@@ -448,19 +424,7 @@ protected:
     */
    SocketImplBSD(const vpr::InetAddr& local_addr,
                  const vpr::InetAddr& remote_addr,
-                 const vpr::SocketTypes::Type sock_type)
-      : mOpen(false)
-      , mOpenBlocking(true)
-      , mBound(false)
-      , mConnected(false)
-      , mBlockingFixed(false)
-      , mHandle(NULL)
-      , mLocalAddr(local_addr)
-      , mRemoteAddr(remote_addr)
-      , mType(sock_type)
-   {
-      mHandle = new FileHandleImplUNIX(remote_addr.getAddressString());
-   }
+                 const vpr::SocketTypes::Type sock_type);
 
 protected:
    // XXX: This class should not need mOpen and should instead use the one
