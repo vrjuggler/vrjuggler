@@ -31,6 +31,7 @@ SYNC_SRCS	= vjCondGeneric.cpp	\
                   vjRWMutex.cpp
 
 # Determine what objects to use.
+ifneq (@SYNC_SYS@, WIN32)
 ifeq (@SYNC_SYS@,POSIX)
     SYNC_SRCS	+= vjBarrier.cpp	\
                    vjMutexPosix.cpp
@@ -38,6 +39,7 @@ else
     SYNC_SRCS	+= vjBarrierSGI.cpp	\
                    vjMutexSGI.cpp	\
                    vjSemaphoreSGI.cpp
+endif
 endif
 
 SYNC_OBJECTS	:= ${addprefix ${OBJDIR}/,${SYNC_SRCS:.cpp=.o}}
