@@ -30,9 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vpr/vprConfig.h>
 #include <vrj/vrjConfig.h>
 
+#ifdef VPR_OS_Darwin
+#include <OpenGL/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 
 #include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
