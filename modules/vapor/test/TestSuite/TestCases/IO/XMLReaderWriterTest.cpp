@@ -85,31 +85,51 @@ void XMLReaderWriterTest::testBasicWriteRead()
 
       vpr::XMLObjectReader xml_reader(data_buffer);
 
-      xml_reader.beginTag("FirstLevel");
-         xml_reader.beginAttribute("uint8_16");
-            xml_reader.readUint8(read_uint8);
-            xml_reader.readUint16(read_uint16);
-         xml_reader.endAttribute();
-         xml_reader.beginAttribute("uint16");
-            xml_reader.readUint16(read_uint16_2);
-         xml_reader.endAttribute();
-         xml_reader.readUint32(read_uint32);
-         xml_reader.readUint64(read_uint64);
-         xml_reader.beginTag("LargeNumberLevel");
-            xml_reader.readFloat(read_float);
-            xml_reader.beginAttribute("StringAttrib");
-               xml_reader.readString(read_string_attrib);
+      // Test for re-initialization
+      for(unsigned iter=0;iter<5;iter++)
+      {
+
+         xml_reader.beginTag("FirstLevel");
+            xml_reader.beginAttribute("uint8_16");
+               xml_reader.readUint8(read_uint8);
+               xml_reader.readUint16(read_uint16);
             xml_reader.endAttribute();
-            xml_reader.readDouble(read_double);
+            xml_reader.beginAttribute("uint16");
+               xml_reader.readUint16(read_uint16_2);
+            xml_reader.endAttribute();
+            xml_reader.readUint32(read_uint32);
+            xml_reader.readUint64(read_uint64);
+            xml_reader.beginTag("LargeNumberLevel");
+               xml_reader.readFloat(read_float);
+               xml_reader.beginAttribute("StringAttrib");
+                  xml_reader.readString(read_string_attrib);
+               xml_reader.endAttribute();
+               xml_reader.readDouble(read_double);
+            xml_reader.endTag();
+            xml_reader.readString(read_string);
+            xml_reader.readBool(read_bool);
+            xml_reader.beginTag("DataLevel");
+               xml_reader.readString(read_long_string);
+            xml_reader.endTag();
+            xml_reader.beginTag("EmptyLevel");
+            xml_reader.endTag();
          xml_reader.endTag();
-         xml_reader.readString(read_string);
-         xml_reader.readBool(read_bool);
-         xml_reader.beginTag("DataLevel");
-            xml_reader.readString(read_long_string);
-         xml_reader.endTag();
-         xml_reader.beginTag("EmptyLevel");
-         xml_reader.endTag();
-      xml_reader.endTag();
+
+         CPPUNIT_ASSERT_EQUAL(data_uint8, read_uint8);
+         CPPUNIT_ASSERT_EQUAL(data_uint16, read_uint16);
+         CPPUNIT_ASSERT_EQUAL(data_uint16, read_uint16_2);
+         CPPUNIT_ASSERT_EQUAL(data_uint32, read_uint32);
+         CPPUNIT_ASSERT_EQUAL(data_uint64, read_uint64);
+         CPPUNIT_ASSERT_DOUBLES_EQUAL(data_float, read_float, 0.001f);
+         CPPUNIT_ASSERT_DOUBLES_EQUAL(data_double, read_double, 0.001f);
+         CPPUNIT_ASSERT_EQUAL(data_string1, read_string_attrib);
+         CPPUNIT_ASSERT_EQUAL(data_string2, read_string);
+         CPPUNIT_ASSERT_EQUAL(data_bool, read_bool);
+         CPPUNIT_ASSERT_EQUAL(long_string, read_long_string);
+
+         xml_reader.resetReading();       // Reset the reading for another pass
+      }
+
    }
    catch (cppdom::Error& ce)
    {
@@ -131,17 +151,6 @@ void XMLReaderWriterTest::testBasicWriteRead()
       throw;
    }
 
-   CPPUNIT_ASSERT_EQUAL(data_uint8, read_uint8);
-   CPPUNIT_ASSERT_EQUAL(data_uint16, read_uint16);
-   CPPUNIT_ASSERT_EQUAL(data_uint16, read_uint16_2);
-   CPPUNIT_ASSERT_EQUAL(data_uint32, read_uint32);
-   CPPUNIT_ASSERT_EQUAL(data_uint64, read_uint64);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(data_float, read_float, 0.001f);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(data_double, read_double, 0.001f);
-   CPPUNIT_ASSERT_EQUAL(data_string1, read_string_attrib);
-   CPPUNIT_ASSERT_EQUAL(data_string2, read_string);
-   CPPUNIT_ASSERT_EQUAL(data_bool, read_bool);
-   CPPUNIT_ASSERT_EQUAL(long_string, read_long_string);
 }
 
 

@@ -57,7 +57,7 @@
 #define XML_OR_LEVEL vprDBG_HEX_LVL
 
 
-namespace 
+namespace
 {
 /** Helper to read the data from the current string */
  template<class T>
@@ -129,7 +129,7 @@ XMLObjectReader::NodeState& XMLObjectReader::NodeState::operator=(const NodeStat
 
 void XMLObjectReader::NodeState::debugDump(int debug_level)
 {
-   vprDEBUG(vprDBG_ALL, debug_level) << "Node:" << node->getName() << "  num children:" << node->getChildren().size() 
+   vprDEBUG(vprDBG_ALL, debug_level) << "Node:" << node->getName() << "  num children:" << node->getChildren().size()
                                      << "  distance: nextChild-->endChild:" << std::distance(nextChild_i,endChild_i) << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -139,16 +139,16 @@ void XMLObjectReader::NodeState::debugDump(int debug_level)
 std::stringstream* XMLObjectReader::getCurSource()
 {
    std::stringstream* in_stream(NULL);
-   
+
    if(AttribSource == mCurSource)
-   { 
-      in_stream = &mAttribSource;       
+   {
+      in_stream = &mAttribSource;
    }
    else
-   { 
-      in_stream = &(mCurNodeStack.back().cdataSource);      
+   {
+      in_stream = &(mCurNodeStack.back().cdataSource);
    }
-   
+
    return in_stream;
 }
 
@@ -196,7 +196,7 @@ vpr::ReturnStatus XMLObjectReader::beginTag(std::string tagName)
    }
    else                      // Find the next child and push it on
    {
-      vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "Attempting to find next child: " 
+      vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "Attempting to find next child: "
                              << " cur node (back): " << mCurNodeStack.back().node->getName()
                              << "  num children:" << mCurNodeStack.back().node->getChildren().size() << std::endl << vprDEBUG_FLUSH;
 
@@ -213,7 +213,7 @@ vpr::ReturnStatus XMLObjectReader::beginTag(std::string tagName)
 
       cppdom::NodePtr tag_node = *(mCurNodeStack.back().nextChild_i);   // Get the node with the given tag
       mCurNodeStack.back().nextChild_i++;                               // Step to the next child for next time
-      
+
       vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "Incrementing next child:  at end:" << (mCurNodeStack.back().nextChild_i == mCurNodeStack.back().endChild_i) << std::endl << vprDEBUG_FLUSH;
 
       mCurNodeStack.push_back( NodeState(tag_node.get()));              // Add the child to the stack
@@ -222,7 +222,7 @@ vpr::ReturnStatus XMLObjectReader::beginTag(std::string tagName)
       vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "Found node:" << tag_node->getName() << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "  Node stack size:" << mCurNodeStack.size() << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "  Num children:" << tag_node->getChildren().size() << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "  New node child at end:" << (mCurNodeStack.back().nextChild_i == mCurNodeStack.back().endChild_i) 
+      vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "  New node child at end:" << (mCurNodeStack.back().nextChild_i == mCurNodeStack.back().endChild_i)
                              << std::endl << vprDEBUG_FLUSH;
    }
 
@@ -267,6 +267,12 @@ vpr::ReturnStatus XMLObjectReader::endAttribute()
    return vpr::ReturnStatus::Succeed;
 }
 //@}
+
+void XMLObjectReader::resetReading()
+{
+   mCurSource = CdataSource;
+   mCurNodeStack.clear();
+}
 
 
 vpr::Uint8 XMLObjectReader::readUint8()
