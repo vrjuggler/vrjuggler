@@ -67,6 +67,7 @@ namespace gadget{
    protected:
       bool                          mListenWasInitialized;
       bool                          mActive;
+      bool                          mConfigured;
       IdGenerator<VJ_NETID_TYPE>    mLocalIdGen;            /**< keeps track of used/free network ids */
 
       gadget::MsgPackage            mMsgPackage;
@@ -96,7 +97,6 @@ namespace gadget{
       std::vector<vpr::SocketStream*>       mSyncClients;
 
       vpr::SocketStream*                  mSyncServer;
-      bool                                mIsMaster;
       std::string                         mSyncMasterChunkName;
       vpr::SerialPort                     *mSerialPort;
       gadget::ClusterBarrier*             mBarrier;
@@ -116,6 +116,7 @@ namespace gadget{
       bool configRemove(jccl::ConfigChunkPtr chunk);
       bool configCanHandle(jccl::ConfigChunkPtr chunk);
       bool configureRIM();
+      bool configureCluster(jccl::ConfigChunkPtr chunk);
       bool recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk);
       bool recognizeRemoteInputManagerConfig(jccl::ConfigChunkPtr chunk);
       bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
@@ -149,6 +150,8 @@ namespace gadget{
       bool isActive()
       {return mActive;}
 
+      bool isConfigured()
+      {return mConfigured;}
 
       /**
        * Sends and receives data for all NetDevices
