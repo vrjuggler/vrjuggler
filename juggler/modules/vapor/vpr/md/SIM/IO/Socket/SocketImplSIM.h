@@ -510,7 +510,7 @@ public:
     *         ready for reading.  This can happen if the socket is not open,
     *         not connected, or without any received data.
     */
-   virtual vpr::ReturnStatus isReadReady(const vpr::Interval timeout = vpr::Interval::NoWait) const;
+   virtual vpr::ReturnStatus isReadReady(const vpr::Interval timeout = vpr::Interval::NoWait) const = 0;
 
    /**
     * Tests if this socket can write without blocking.
@@ -532,7 +532,7 @@ public:
     *         ready for writing.  This can happen if the socket is not open or
     *         not connected.
     */
-   virtual vpr::ReturnStatus isWriteReady(const vpr::Interval timeout = vpr::Interval::NoWait) const;
+   virtual vpr::ReturnStatus isWriteReady(const vpr::Interval timeout = vpr::Interval::NoWait) const = 0;
 
    /**
     * Tests if this socket is in an exceptional state.

@@ -44,6 +44,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <vpr/Util/ReturnStatus.h>
 #include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
 
 
@@ -75,6 +76,10 @@ public:
                             const int flags, const vpr::InetAddr& to,
                             vpr::Uint32& bytes_sent,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
+
+   virtual vpr::ReturnStatus isReadReady(const vpr::Interval timeout = vpr::Interval::NoWait) const;
+
+   virtual vpr::ReturnStatus isWriteReady(const vpr::Interval timeout = vpr::Interval::NoWait) const;
 };
 
 } // End of vpr namespace

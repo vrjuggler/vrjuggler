@@ -182,29 +182,9 @@ public:
       return mConnectorQueue.size();
    }
 
-   virtual vpr::ReturnStatus isReadReady (void) const
-   {
-      vpr::ReturnStatus status = SocketImplSIM::isReadReady();
+   virtual vpr::ReturnStatus isReadReady(const vpr::Interval timeout = vpr::Interval::NoWait) const;
 
-      if ( status.success() && mOpen && getConnectorCount() > 0 )
-      {
-         status.setCode(vpr::ReturnStatus::Succeed);
-      }
-
-      return status;
-   }
-
-   virtual vpr::ReturnStatus isWriteReady (void) const
-   {
-      vpr::ReturnStatus status = SocketImplSIM::isWriteReady();
-
-      if ( status.success() && mPeer != NULL )
-      {
-         status.setCode(vpr::ReturnStatus::Succeed);
-      }
-
-      return status;
-   }
+   virtual vpr::ReturnStatus isWriteReady(const vpr::Interval timeout = vpr::Interval::NoWait) const;
 
 protected:
    typedef std::pair<SocketStreamImplSIM*, SocketStreamImplSIM**> queue_obj_t;
