@@ -59,44 +59,44 @@ namespace Flock
       std::string ret_val;
       switch(errCode)
       {
-         F_ERR(0x0, "No Errors Have Occurred");
-         F_ERR(0x1, "System RAM Failure");
-         F_ERR(0x2, "Non-Volatile Storage Write Failure");
-         F_ERR(0x3, "PCB EEPROM Configuration Corrupt");
-         F_ERR(0x4, "Transmitter EEPROM Configuration Data Corrupt");
-         F_ERR(0x5, "Receiver EEPROM Configuration Corrupt");
-         F_ERR(0x6, "Invalid RS232 Command");
-         F_ERR(0x7, "Not an FBB Master");
-         F_ERR(0x8, "No 6DFOBs are Active");
-         F_ERR(0x9, "6DFOB has not been Initialized");
-         F_ERR(0x10, "FBB Receive Error - Intra Bird Bus");
-         F_ERR(0x11, "RS232 Overrun and/or Framing Error");
-         F_ERR(0x12, "FBB Receive Error - FBB Host Bus");
-         case 0x13:
-            ret_val = "No FBB Command Response from device at address" + boost::lexical_cast<std::string>(expandedErr);
+         F_ERR(0, "No Errors Have Occurred");
+         F_ERR(1, "System RAM Failure");
+         F_ERR(2, "Non-Volatile Storage Write Failure");
+         F_ERR(3, "PCB EEPROM Configuration Corrupt");
+         F_ERR(4, "Transmitter EEPROM Configuration Data Corrupt");
+         F_ERR(5, "Receiver EEPROM Configuration Corrupt");
+         F_ERR(6, "Invalid RS232 Command");
+         F_ERR(7, "Not an FBB Master");
+         F_ERR(8, "No 6DFOBs are Active");
+         F_ERR(9, "6DFOB has not been Initialized");
+         F_ERR(10, "FBB Receive Error - Intra Bird Bus");
+         F_ERR(11, "RS232 Overrun and/or Framing Error");
+         F_ERR(12, "FBB Receive Error - FBB Host Bus");
+         case 13:
+            ret_val = "No FBB Command Response from device at address: " + boost::lexical_cast<std::string>(int(expandedErr));
             break;
-         F_ERR(0x14, "Invalid FBB Host Command");
-         F_ERR(0x15, "FBB Run Time Error");
-         F_ERR(0x16, "Invalid CPU Speed");
-         F_ERR(0x17, "Slave No Data Error");
-         F_ERR(0x18, "Illegal Baud Rate");
-         F_ERR(0x19, "Slave Acknowledge Error");
-         F_ERR(0x20, "CPU Overflow Error - call factory");
-         F_ERR(0x21, "Array Bounds Error - call factory");
-         F_ERR(0x22, "Unused Opcode Error - call factory");
-         F_ERR(0x23, "Escape Opcode Error - call factory");
-         F_ERR(0x24, "Reserved Int 9 - call factory");
-         F_ERR(0x25, "Reserved Int 10 - call factory");
-         F_ERR(0x26, "Reserved Int 11 - call factory");
-         F_ERR(0x27, "Numeric CPU Error - call factory");
-         F_ERR(0x28, "CRT Syncronization Error");
-         F_ERR(0x29, "Transmitter Not Active Error");
-         F_ERR(0x30, "ERC Extended Range Transmitter Not Attached Error");
-         F_ERR(0x31, "CPU Time Overflow Error");
-         F_ERR(0x32, "Receiver Saturated Error");
-         F_ERR(0x33, "Slave Configuration Error");
-         F_ERR(0x34, "ERC Watchdog Error");
-         F_ERR(0x35, "ERC Overtemp Error");
+         F_ERR(14, "Invalid FBB Host Command");
+         F_ERR(15, "FBB Run Time Error");
+         F_ERR(16, "Invalid CPU Speed");
+         F_ERR(17, "Slave No Data Error");
+         F_ERR(18, "Illegal Baud Rate");
+         F_ERR(19, "Slave Acknowledge Error");
+         F_ERR(20, "CPU Overflow Error - call factory");
+         F_ERR(21, "Array Bounds Error - call factory");
+         F_ERR(22, "Unused Opcode Error - call factory");
+         F_ERR(23, "Escape Opcode Error - call factory");
+         F_ERR(24, "Reserved Int 9 - call factory");
+         F_ERR(25, "Reserved Int 10 - call factory");
+         F_ERR(26, "Reserved Int 11 - call factory");
+         F_ERR(27, "Numeric CPU Error - call factory");
+         F_ERR(28, "CRT Syncronization Error");
+         F_ERR(29, "Transmitter Not Active Error");
+         F_ERR(30, "ERC Extended Range Transmitter Not Attached Error");
+         F_ERR(31, "CPU Time Overflow Error");
+         F_ERR(32, "Receiver Saturated Error");
+         F_ERR(33, "Slave Configuration Error");
+         F_ERR(34, "ERC Watchdog Error");
+         F_ERR(35, "ERC Overtemp Error");
          default:
             ret_val = "Uknown error.";
             break;
@@ -274,7 +274,7 @@ vpr::ReturnStatus FlockStandalone::open ()
 */
 vpr::ReturnStatus FlockStandalone::configure()
 {
-   setErrorModeIgnore();      // Set to mode where fatal errors are ignored
+   //setErrorModeIgnore();      // Set to mode where fatal errors are ignored
 
    // Make sure we are called correctly
    vprASSERT((mStatus == FlockStandalone::OPEN) && "Tried to call configure with flock in wrong mode");
@@ -296,7 +296,7 @@ vpr::ReturnStatus FlockStandalone::configure()
 
    // Set all parameters
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting sync\n" << vprDEBUG_FLUSH;
-   sendSyncCmd(mSyncStyle);
+   //**//sendSyncCmd(mSyncStyle);
 
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting hemisphere\n" << vprDEBUG_FLUSH;
    sendHemisphereCmd(mHemisphere, true);
@@ -310,25 +310,28 @@ vpr::ReturnStatus FlockStandalone::configure()
    // - Set to correct transmitter
    if(Flock::Standalone != mMode)
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting autoconfig\n" << vprDEBUG_FLUSH;
-      sendAutoconfigCmd(mActiveUnitEndIndex);
-      checkError();
-
       // Find address of transmitter to use
       vpr::Uint8 transmitter_addr(0);
       if(!mXmitterIndices.empty())
       {  transmitter_addr = mFlockUnits[mXmitterIndices[0]].mAddr; }
 
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting transmitter to addr: "
-                                             << int(transmitter_addr) << "\n" << vprDEBUG_FLUSH;
-      sendNextTransmitterCmd(transmitter_addr, 0);
-      checkError();
+      if(transmitter_addr != mMasterAddr)
+      {
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting transmitter to addr: "
+                                                << int(transmitter_addr) << "\n" << vprDEBUG_FLUSH;
+         sendNextTransmitterCmd(transmitter_addr, 0);
+         checkError();
+      }
+
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting autoconfig\n" << vprDEBUG_FLUSH;
+      sendAutoconfigCmd(mActiveUnitEndIndex);    // Add one for flock stupidity
+      //checkError();      
    }
 
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Flock configured and ready to run." << vprDEBUG_FLUSH;
 
    // Check for errors
-   checkError();
+   //checkError();
 
    // flock is active.
    mStatus = FlockStandalone::RUNNING;
@@ -1046,7 +1049,7 @@ void FlockStandalone::sendAutoconfigCmd (vpr::Uint8 numUnits)
 
    vpr::System::msleep(1000);
    setAttribute(Flock::Parameter::FbbAutoConfig,params);
-   vpr::System::msleep(1000);
+   vpr::System::msleep(1500);
 }
 
 
@@ -1238,7 +1241,7 @@ void FlockStandalone::checkError()
 
    while(errs.first != 0)
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "ERROR: [FlockStandalone] Bird error: "
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "ERROR: [FlockStandalone] Bird error: [" << int(errs.first) << "] "
                   << Flock::getErrorDescription(errs.first, errs.second) << std::endl << vprDEBUG_FLUSH;
       
       prev_err = errs;
