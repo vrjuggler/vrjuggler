@@ -49,14 +49,17 @@ aFlock.o: ../../Input/vjPosition/aFlock.cpp
 # ----------------
 # vjFlock test driver
 # ----------------
-vjFlockTest: vjFlockTest.o vjFlock.o
-	${COMPILE} -D_OLD_TERMIOS -o $@ vjFlockTest.o vjFlock.o ${VJ_LIBS} ${EXTRA_LIBS}
+vjFlockTest: vjFlockTest.o vjFlock.o aFlock.o
+	${COMPILE} -D_OLD_TERMIOS -o $@ aFlock.o vjFlockTest.o vjFlock.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 vjFlockTest.o: vjFlockTest.cpp
 	${COMPILE} -D_OLD_TERMIOS -woff 3303 -c ${srcdir}/vjFlockTest.cpp -o $@ 
 
 vjFlock.o: ../../Input/vjPosition/vjFlock.cpp
 	${COMPILE} -D_OLD_TERMIOS -woff 3303 -c ../../Input/vjPosition/vjFlock.cpp -o $@ 
+
+aFlock.o: ../../Input/vjPosition/aFlock.cpp
+	CC -D_OLD_TERMIOS -mips3 -n32 -all namespaces=ON bool=ON -woff 3303 -c $@ ../../Input/vjPosition/aFlock.cpp
 
 
 # ----------------
