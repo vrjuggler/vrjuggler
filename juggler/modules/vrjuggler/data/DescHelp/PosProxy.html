@@ -52,7 +52,7 @@
   </TR>
   <TR>
     <TD ALIGN="RIGHT">
-      <B>Etrans</B>
+      <B>Enable Transformation</B>
     </TD>
     <TD>
       Property token: ``<TT>etrans</TT>''<BR>
@@ -65,19 +65,19 @@
   </TR>
   <TR>
     <TD ALIGN="RIGHT">
-      <B>Translate</B>
+      <B>Translation</B>
     </TD>
     <TD>
       Property token: ``<TT>translate</TT>''<BR>
       A triple of coordinates the form (<I>x</I>, <I>y</I>, <I>z</I>) where
       <I>x</I>, <I>y</I> and <I>z</I> are floating point numbers.  These
       specify the initial translation of the device pointed to by the proxy.
-      They will only be applied if <B>Etrans</B> is set to 1.
+      They will only be applied if <B>Enable Transformation</B> is true.
     </TD>
   </TR>
   <TR>
     <TD ALIGN="RIGHT">
-      <B>Rotate</B>
+      <B>Rotation</B>
     </TD>
     <TD>
       Property token: ``<TT>rotate</TT>''<BR>
@@ -85,7 +85,7 @@
       <I>x</I>, <I>y</I> and <I>z</I> are floating-point numbers.  These
       specify the initial Euler rotation (in degrees) relative to the
       appropriate axes of the device pointed to by the proxy.  They will
-      only be applied if <B>Etrans</B> is set to 1.
+      only be applied if <B>Enable Transformation</B> is true.
     </TD>
   </TR>
 </TABLE>
@@ -93,15 +93,19 @@
 <H3>PosProxy chunk definition</H3>
 
 <PRE>
-chunk PosProxy "PosProxy" "A Pos Proxy points to position data to use"
-   Name String 1 "Name" "Unique name of an instance of this chunk type"
-   device Chunk 1 "device" vj_enumeration { "Flock" "SimPosition" "DummyPosition" } "The device the proxy points to."
-   unit Int 1 "unit" ""
-   etrans Int 1 "etrans" "Enable transformation? 1 for yes"
-   translate Float 3 "translate" vj_valuelabels { "Trans X" "Trans Y" "Trans Z" } "Translate x, y, z"
-   rotate Float 3 "rotate" "x y z Euler rotate"
-   end
+chunk PosProxy "Position Proxy" "Used to access a single positional input source"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  device Chunk 1 "device" vj_enumeration { "Flock" "SimPosition" "DummyPosition" } 
+          "The device the proxy points to"
+  unit Int 1 "unit" "The unit in the device this proxy attaches to"
+  etrans Bool 1 "Enable Transformation" "If true, the Proxy Transformation is applied to data"
+  translate Float 3 "Translation" vj_valuelabels { "Trans X" "Trans Y" "Trans Z" } 
+          "Proxy translation (in the reciever's coord system)"
+  rotate Float 3 "Rotation" vj_valuelabels { "X" "Y" "Z" } 
+          "Proxy rotation (Euler angles in the reciever's coord system)"
+  end
 </PRE>
 
 </BODY>
 </HTML>
+

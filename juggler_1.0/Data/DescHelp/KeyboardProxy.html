@@ -25,7 +25,8 @@
     <TD>
       Property token: ``<TT>device</TT>''<BR>
       The keyboard device to which the proxy points.  Currently, the proxy
-      must point to a Keyboard chunk.  Other chunk types can be added through
+      must point to a Keyboard or simKeyboardDigital chunk.  Other chunk 
+      types can be added through
       the chunk description file (<TT>chunksDesc</TT>).
     </TD>
   </TR>
@@ -34,10 +35,11 @@
 <H3>Keyboard Proxy chunk definition</H3>
 
 <PRE>
-chunk KeyboardProxy "KeyboardProxy" "This proxy points to a keyboard device."
-   Name String 1 "Name" "Unique name of an instance of this chunk type"
-   device Chunk 1 "device" vj_enumeration { "Keyboard" } "The keyboard device to hook the proxy to."
-   end
+chunk KeyboardProxy "Keyboard Proxy" "This proxy points to a keyboard device."
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  device Chunk 1 "Device" vj_enumeration { "Keyboard" "simKeyboardDigital" } 
+          "The keyboard device to hook the proxy to."
+  end
 </PRE>
 
 </BODY>

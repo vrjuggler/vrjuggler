@@ -1,11 +1,11 @@
 <HTML>
 <HEAD>
-<TITLE>Sim Position</TITLE>
+<TITLE>Position Simulator ConfigChunk</TITLE>
 </HEAD>
 
 <BODY BGCOLOR="#ffffcc">
 
-<H2>Sim Position Chunk</H2>
+<H2>Position Simulator Chunk</H2>
 
 <TABLE BORDER="1">
   <TR>
@@ -31,30 +31,17 @@
   </TR>
   <TR>
     <TD ALIGN="RIGHT">
-      <B>Keys</B>
+      <B>KeyPresses</B>
     </TD>
     <TD>
-      Property token: ``<TT>keys</TT>''<BR>
-      The list of keyboard keys, mouse movement directions and mouse buttons
-      that can be used for changing the value returned by the simulated
-      position device.  All standard keys (except the F1-F12 keys), modifier
-      keys (listed above), cursor movement keys, mouse movement directions
-      and mouse buttons (for a three-button mouse) are available for use.
-      Each key can be assigned to a particular aspect of the simulation, and
-      modifiers can be used to allow the same keys (say those on the number
-      pad) to be used for different aspects of simulation.
-    </TD>
-  </TR>
-  <TR>
-    <TD ALIGN="RIGHT">
-      <B>Modifier Keys</B>
-    </TD>
-    <TD>
-      Property token: ``<TT>modKeys</TT>''<BR>
-      Lists the modifier keys that may be used together with normal keyboard
-      keys and mouse buttons when changing the value returned by the position
-      device.  The modifier keys must be chosen from a predefined set of
-      keys that are treated as modifiers.  The current modifier keys are:
+      Defines the keypresses used to control this position simulator.
+      This property has twelve values, allowing complete movement in
+      six degrees of freedom.  
+      <p>
+      <B>Modifiers</B><br>
+      The modifier keys must be chosen from 
+      a predefined set
+      of keys that are treated as modifiers.  The current modifier keys are:
 
       <UL>
 	<LI>NONE (<I>no modifier</I>)
@@ -63,8 +50,16 @@
 	<LI>ALT (<I>the &lt;ALT&gt; or &lt;META&gt; key</I>)
       </UL>
 
-      These keys and their values have special significance to VR Juggler and
-      should not be altered.
+      <p>
+      <B>Keys</B><br>
+      The keyboard key, mouse movement direction, or mouse button used to
+      trigger a particular movement.
+      All standard keys (except the F1-F12 keys), modifier
+      keys (listed above), cursor movement keys, mouse movement directions
+      and mouse buttons (for a three-button mouse) are available for use.
+      Each key can be assigned to a particular aspect of the simulation, and
+      modifiers can be used to allow the same keys (say those on the number
+      pad) to be used for different aspects of simulation.
     </TD>
   </TR>
   <TR>
@@ -132,16 +127,24 @@
 <H3>Sim Position chunk definition</H3>
 
 <PRE>
-chunk SimPosition "SimPosition" "A simulated position device."
+chunk SimPosition "Position Simulator" "A simulated position device. Gets input from a keyboard proxy"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  keyboardProxy Chunk 1 "keyboardProxy" vj_enumeration { "KeyboardProxy" } "The keyboard to use for event input."
-  keys Int 12 "keys" vj_valuelabels { "Forward" "Back" "Left" "Right" "Up" "Down" "Rot Right" "Rot Left" "Rot Up" "Rot Down" "Roll CCW" "Roll CW" } vj_enumeration { "KEY_NONE=0" "KEY_UP=1" "KEY_DOWN=2" "KEY_LEFT=3" "KEY_RIGHT=4" "KEY_CTRL=5" "KEY_SHIFT=6" "KEY_ALT=7" "KEY_1=8" "KEY_2=9" "KEY_3=10" "KEY_4=11" "KEY_5=12" "KEY_6=13" "KEY_7=14" "KEY_8=15" "KEY_9=16" "KEY_0=17" "KEY_A=18" "KEY_B=19" "KEY_C=20" "KEY_D=21" "KEY_E=22" "KEY_F=23" "KEY_G=24" "KEY_H=25" "KEY_I=26" "KEY_J=27" "KEY_K=28" "KEY_L=29" "KEY_M=30" "KEY_N=31" "KEY_O=32" "KEY_P=33" "KEY_Q=34" "KEY_R=35" "KEY_S=36" "KEY_T=37" "KEY_U=38" "KEY_V=39" "KEY_W=40" "KEY_X=41" "KEY_Y=42" "KEY_Z=43" "KEY_ESC=44" "MOUSE_POSX=45" "MOUSE_NEGX=46" "MOUSE_POSY=47" "MOUSE_NEGY=48" "MOUSE_BUT1=49" "MOUSE_BUT2=50" "MOUSE_BUT3=51" } "Keys used for moving the positions"
-  modKeys Int 12 "modKeys" vj_valuelabels { "Forward" "Back" "Left" "Right" "Up" "Down" "Rot Right" "Rot Left" "Rot Up" "Rot Down" "Roll CCW" "Roll CW" } vj_enumeration { "NONE=0" "SHIFT=5" "CTRL=6" "ALT=7" } "Modifier keys used for moving the position"
-  initialPos Float 3 "initialPos" "Translate x, y, z"
-  initialRot Float 3 "initialRot" "x y z Euler rotate"
-  dtrans Float 1 "dtrans" "Delta translation.  How much to translate each keypress."
-  drot Float 1 "drot" "delta rotation.  How many degrees to rotate each keypress."
-  xformCoordSystem Int 1 "xformCoordSystem" vj_enumeration { "Local=0" "Global=1" } "Do the transformations apply to the tracker's local coordinate system?  Ex. Wand - global, Camera - Local"
+  keyboardProxy Chunk 1 "Keyboard Proxy" vj_enumeration { "KeyboardProxy" } 
+           "The keyboard to use for event input."
+  keyPairs EmbeddedChunk 12 "keyPairs" vj_valuelabels { "Forward" "Back" 
+           "Left" "Right" "Up" "Down" "Rot Right" "Rot Left" "Rot Up" 
+           "Rot Down" "Rot CCW" "Rot CW" } vj_enumeration { "KeyModPair" } 
+           "Keys for moving and rotating the simulated device."
+  initialPos Float 3 "Initial Position" vj_valuelabels { "X" "Y" "Z" } 
+           "Initial position"
+  initialRot Float 3 "Initial Rotation" vj_valuelabels { "X" "Y" "Z" } 
+           "Initial Euler rotation"
+  dtrans Float 1 "Translation Delta" "How much to translate for a single keypress."
+  drot Float 1 "Rotation Delta" "How many degrees to rotate for a single keypress."
+  transCoordSystem Int 1 "Translation Coordinate System" vj_enumeration { "Local=0" "Global=1" } 
+           "Do the translations apply to the tracker's local coordinate system?  Ex. Wand - global, Camera - Local"
+  rotCoordSystem Int 1 "Rotation Coordinate System" vj_enumeration { "Local=0" "Global=1" } 
+           "Do the rotations apply to the tracker's local coordinate system?"
   end
 </PRE>
 
