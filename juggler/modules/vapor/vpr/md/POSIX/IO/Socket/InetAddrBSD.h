@@ -328,6 +328,24 @@ public:
         return *this;
     }
 
+    // ------------------------------------------------------------------------
+    //: Overloaded equality operator.
+    // ------------------------------------------------------------------------
+    bool
+    operator== (const InetAddrBSD& addr) {
+        return ((m_addr.sin_addr.s_addr == addr.m_addr.sin_addr.s_addr) &&
+                (m_addr.sin_port == addr.m_addr.sin_port) &&
+                (m_addr.sin_family == addr.m_addr.sin_family));
+    }
+
+    // ------------------------------------------------------------------------
+    //: Overloaded inequality operator.
+    // ------------------------------------------------------------------------
+    bool
+    operator!= (const InetAddrBSD& addr) {
+        return ! (*this == addr);
+    }
+
 protected:
     friend class SocketImpBSD;
     friend class SocketDatagramImpBSD;
