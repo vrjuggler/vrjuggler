@@ -99,7 +99,9 @@ BEANS=		Viewers
 TWEEK_CLASSES=	org/vrjuggler/tweek/*.class			\
 		org/vrjuggler/tweek/gui/*.class			\
 		org/vrjuggler/tweek/text/*.class
-TWEEK_EXTRAS=	org/vrjuggler/tweek/gui/*.gif LICENSE-java-laf.txt
+TWEEK_EXTRAS=	org/vrjuggler/tweek/gui/*.gif			\
+		org/vrjuggler/tweek/text/*.gif			\
+		LICENSE-java-laf.txt
 
 BEANS_MF=	$(srcdir)/beans.MF
 BEANS_CLASSES=	org/vrjuggler/tweek/beans/*.class		\
