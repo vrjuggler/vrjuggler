@@ -1,35 +1,50 @@
 #include <iostream>
 
 #include <unistd.h>
-#include "aj/ajSoundInfo.h"
 #include "aj/AudioJuggler.h"    // interface
-#include "aj/CFileIO.h"
+#include "aj/FileIO.h"
+
+void usage( int argc, char* argv[] )
+{
+   std::cout<<"Usage: "<<argv[0]<<" apiname filename\n"<<std::flush;
+   std::cout<<"       "<<argv[0]<<" OpenAL sample.wav\n"<<std::flush;
+   std::cout<<"       "<<argv[0]<<" AudioWorks sample.aifc\n"<<std::flush;
+}
 
 int main( int argc, char* argv[] )
 {
    char bok[] = "../../../Audio/wav/sample.wav";
-   argv[1] = bok;
+   std::string filename, api;
    
-   std::cout<<"exists: "<<CFileIO::fileExists( argv[1] ) << "\n" << std::flush;
-
-   /*
-   if (CFileIO::fileExists( argv[1] ))
+   if (argc == 1 || argc == 2)
    {
-      std::cout<<CFileIO::fileSize( argv[1] ) << "\n" << std::flush;
-   
-      std::vector<unsigned char> data;
-      CFileIO::fileLoad( argv[1], data );
-      
-      for (int x = 0; x < data.size(); ++x)
-      {
-         std::cout<< data[x] << std::flush;
-      }      
+      api = "OpenAL";
+      filename = bok;
+      usage( argc, argv );
    }
-   */
+   if (argc == 2 || argc == 3)
+   {
+      api = argv[1];
+   }
+   if (argc == 3)
+   {
+      filename = argv[2];
+   }
+   if (argc > 3)
+   {
+      usage( argc, argv );
+      return 0;
+   }
+
+   if (!ajFileIO::fileExists( filename.c_str() ))
+   {
+      std::cout << "File not found: " << filename << "\n" << std::flush;
+      return 0;
+   }
    
-   ajSoundInfo si;
-   si.filename = argv[1];
-   si.datasource = ajSoundInfo::FILESYSTEM;
+   aj::SoundInfo si;
+   si.filename = filename;
+   si.datasource = aj::SoundInfo::FILESYSTEM;
       
    
    std::cout<<"AudioJuggler: \n" << std::flush;
@@ -45,7 +60,7 @@ int main( int argc, char* argv[] )
    std::cout<<"sleep: \n" << std::flush;
    sleep( 1 );
    
-   aj.changeAPI( "OpenAL" );
+   aj.changeAPI( api );
    
    std::cout<<"trigger: \n" << std::flush;
    aj.trigger( "kevin" );

@@ -2,10 +2,13 @@
 #ifndef AJ_SOUND_API_INFO
 #define AJ_SOUND_API_INFO
 
-class ajSoundAPIInfo
+namespace aj
+{
+
+class SoundAPIInfo
 {
 public:
-   ajSoundAPIInfo() : voices( 65535 ), speakerConfig( STEREO ), sampleRate( STEREO_22050_KHZ ) {}
+   SoundAPIInfo() : voices( 65535 ), speakerConfig( STEREO ), sampleRate( STEREO_22050_KHZ ) {}
 
    int voices; // 0 - n (hardware limited)
    
@@ -23,5 +26,7 @@ public:
 
    SampleRate sampleRate;
 };
+
+}; // end namespace
 
 #endif //AJ_SOUND_API_INFO

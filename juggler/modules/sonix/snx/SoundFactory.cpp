@@ -1,9 +1,12 @@
 #include <string>
-#include "ajSoundImplementation.h"
+#include "aj/SoundImplementation.h"
 
-#include "ajStubSoundImplementation.h" // in case lookup fails...
+#include "aj/StubSoundImplementation.h" // in case lookup fails...
 
-#include "ajSoundFactory.h" // my header.
+#include "aj/SoundFactory.h" // my header.
+
+namespace aj
+{
 
 /**
  * @input name of api to create
@@ -11,8 +14,8 @@
  * @postconditions if apiName is not known, then a stub implementation is returned
  * @semantics factory function used to create an implementation of a sound API 
  */
-void ajSoundFactory::createImplementation( const std::string& apiName,
-                           ajSoundImplementation* &mImplementation )
+void SoundFactory::createImplementation( const std::string& apiName,
+                           aj::SoundImplementation* &mImplementation )
 {
    if (mRegisteredImplementations.count( apiName ) > 0)
    {
@@ -21,6 +24,8 @@ void ajSoundFactory::createImplementation( const std::string& apiName,
 
    else
    {
-      mImplementation = new ajStubSoundImplementation;
+      mImplementation = new aj::StubSoundImplementation;
    }
 }
+
+}; // end namespace

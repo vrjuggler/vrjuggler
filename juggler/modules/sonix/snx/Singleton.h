@@ -35,7 +35,6 @@
 
 namespace aj
 {
-   
    // you can use this coolio class to make a singleton,
    // just inherit like so...
    //

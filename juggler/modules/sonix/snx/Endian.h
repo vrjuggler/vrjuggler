@@ -1,11 +1,9 @@
 #ifndef ENDIAN_FUNCS
 #define ENDIAN_FUNCS
 
-// confused about namespaces?
-// to call these funcs, use kev::byteReverse() for example
-namespace kev
-{
 
+namespace ajEndian
+{
    //: Swap the bytes in any data type.
    // Motorola and Intel store their bytes in reversed formats <BR>
    // ex: An SGI image is native to the SGI system,            <BR>
@@ -32,7 +30,7 @@ namespace kev
    }
 
    //: check the system for endianess
-   inline bool littleEndian() 
+   inline bool isLittle() 
    {
 	   union 
 	   {
@@ -49,9 +47,9 @@ namespace kev
    }
 
    //: check the system for endianess
-   inline bool bigEndian()
+   inline bool isBig()
    {
-      return !littleEndian();
+      return !isLittle();
    }   
 };
 #endif

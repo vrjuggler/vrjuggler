@@ -4,10 +4,10 @@
 #define IAUDIOJUGGLER_H
 
 #include <string>
-#include "aj/ajSoundInfo.h"
-#include "aj/ajSoundAPIInfo.h"
-#include "aj/ajMatrix44.h"
-
+#include "aj/SoundInfo.h"
+#include "aj/SoundAPIInfo.h"
+#include "aj/Matrix44.h"
+   
 /** @interface*/
 class IAudioJuggler
 {
@@ -83,16 +83,16 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const ajMatrix44& mat ) = 0;
+   virtual void setListenerPosition( const aj::Matrix44& mat ) = 0;
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( ajMatrix44& mat ) = 0;
+   virtual void getListenerPosition( aj::Matrix44& mat ) = 0;
 
    virtual void changeAPI( const std::string& apiName ) = 0;
    
-   virtual void configure( const ajSoundAPIInfo& sai ) = 0;
+   virtual void configure( const aj::SoundAPIInfo& sai ) = 0;
 
    /**
      * configure/reconfigure a sound
@@ -102,7 +102,7 @@ public:
      * @postconditions alias will point to loaded sound data
      * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
      */
-   virtual void configure( const std::string& alias, const ajSoundInfo& description ) = 0;
+   virtual void configure( const std::string& alias, const aj::SoundInfo& description ) = 0;
 
      
    /**
@@ -120,11 +120,12 @@ public:
 public:
 
    /** @link dependency */
-   /*#  ajSoundInfo lnkSoundInfo; */
+   /*#  aj::SoundInfo lnkSoundInfo; */
 private:
 
    /** @link dependency */
-   /*#  ajSoundAPIInfo lnkajSoundAPIInfo; */
+   /*#  aj::SoundAPIInfo lnkaj::SoundAPIInfo; */
 public:
 };
+
 #endif  //IAUDIOJUGGLER_H

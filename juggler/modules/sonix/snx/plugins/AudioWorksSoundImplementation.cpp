@@ -1,14 +1,16 @@
 
-#include "ajAudioWorksSoundImplementation.h"
+#include "AudioWorksSoundImplementation.h"
 
-#include "aj/ajSoundFactory.h"
-ajSoundFactoryReg<ajAudioWorksSoundImplementation> audioworksRegistrator( "AudioWorks" );
+#include "aj/SoundFactory.h"
+namespace aj
+{
+aj::SoundFactoryReg<AudioWorksSoundImplementation> audioworksRegistrator( "AudioWorks" );
 
 
 /**
  * constructor for the OpenAL implementation 
  */
-ajAudioWorksSoundImplementation::ajAudioWorksSoundImplementation() : ajSoundImplementation(), mTotalTimeElapsed( 0.0f )
+AudioWorksSoundImplementation::AudioWorksSoundImplementation() : aj::SoundImplementation(), mTotalTimeElapsed( 0.0f )
 {
    // TODO: set up the defaults for aw...
    //mSoundAPIInfo.
@@ -17,16 +19,16 @@ ajAudioWorksSoundImplementation::ajAudioWorksSoundImplementation() : ajSoundImpl
 /**
  * destructor for the OpenAL implementation
  */
-ajAudioWorksSoundImplementation::~ajAudioWorksSoundImplementation()
+AudioWorksSoundImplementation::~AudioWorksSoundImplementation()
 {
 }
 
 /**
   * every implementation can return a new copy of itself
   */
-void ajAudioWorksSoundImplementation::clone( ajSoundImplementation* &newCopy )
+void AudioWorksSoundImplementation::clone( aj::SoundImplementation* &newCopy )
 {
-   newCopy = new ajAudioWorksSoundImplementation;
+   newCopy = new AudioWorksSoundImplementation;
 
    // copy state, so that we return a true "clone"
    newCopy->copy( *this );
@@ -38,9 +40,9 @@ void ajAudioWorksSoundImplementation::clone( ajSoundImplementation* &newCopy )
  * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
  * @semantics Triggers a sound
  */
-void ajAudioWorksSoundImplementation::trigger( const std::string & alias, const unsigned int & looping )
+void AudioWorksSoundImplementation::trigger( const std::string & alias, const unsigned int & looping )
 {
-   ajSoundImplementation::trigger( alias, looping );
+   aj::SoundImplementation::trigger( alias, looping );
 
    if (mBindTable.count( alias ) > 0)
    {
@@ -53,9 +55,9 @@ void ajAudioWorksSoundImplementation::trigger( const std::string & alias, const 
  * does the sound restart from beginning?
  * (if a tree falls and no one is around to hear it, does it make sound?)
  */
-void ajAudioWorksSoundImplementation::setRetriggerable( const std::string& alias, bool onOff )
+void AudioWorksSoundImplementation::setRetriggerable( const std::string& alias, bool onOff )
 {
-   ajSoundImplementation::setRetriggerable( alias, onOff );
+   aj::SoundImplementation::setRetriggerable( alias, onOff );
 
    if (mBindTable.count( alias ) > 0)
    {
@@ -72,9 +74,9 @@ void ajAudioWorksSoundImplementation::setRetriggerable( const std::string& alias
  * when listener moves...
  * or is the sound positional - changes volume as listener nears or retreats..
  */
-void ajAudioWorksSoundImplementation::setAmbient( const std::string& alias, bool isAmbient )
+void AudioWorksSoundImplementation::setAmbient( const std::string& alias, bool isAmbient )
 {
-   ajSoundImplementation::setAmbient( alias, isAmbient );
+   aj::SoundImplementation::setAmbient( alias, isAmbient );
 
    if (mBindTable.count( alias ) > 0)
    {
@@ -105,9 +107,9 @@ void ajAudioWorksSoundImplementation::setAmbient( const std::string& alias, bool
 /*
  * mute, sound continues to play, but you can't hear it...
  */
-void ajAudioWorksSoundImplementation::mute( const std::string& alias )
+void AudioWorksSoundImplementation::mute( const std::string& alias )
 {
-   ajSoundImplementation::mute( alias );
+   aj::SoundImplementation::mute( alias );
 
    if (mBindTable.count( alias ) > 0)
    {
@@ -118,9 +120,9 @@ void ajAudioWorksSoundImplementation::mute( const std::string& alias )
 /*
  * unmute, let the muted-playing sound be heard again
  */
-void ajAudioWorksSoundImplementation::unmute( const std::string& alias )
+void AudioWorksSoundImplementation::unmute( const std::string& alias )
 {
-   ajSoundImplementation::unmute( alias );
+   aj::SoundImplementation::unmute( alias );
 
    if (mBindTable.count( alias ) > 0)
    {
@@ -132,9 +134,9 @@ void ajAudioWorksSoundImplementation::unmute( const std::string& alias )
  * @semantics stop the sound
  * @input alias of the sound to be stopped
  */
-void ajAudioWorksSoundImplementation::stop( const std::string& alias )
+void AudioWorksSoundImplementation::stop( const std::string& alias )
 {
-   ajSoundImplementation::stop( alias );
+   aj::SoundImplementation::stop( alias );
 
    if (mBindTable.count( alias ) > 0)
    {
@@ -145,10 +147,10 @@ void ajAudioWorksSoundImplementation::stop( const std::string& alias )
 /**
  * set sound's 3D position 
  */
-void ajAudioWorksSoundImplementation::setPosition( const std::string& alias, float x, float y, float z )
+void AudioWorksSoundImplementation::setPosition( const std::string& alias, float x, float y, float z )
 {
    // NOTE: don't limit based on ambiance, even abient sounds can have position...
-   ajSoundImplementation::setPosition( alias, x, y, z );
+   aj::SoundImplementation::setPosition( alias, x, y, z );
 
    if (mBindTable.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
@@ -162,25 +164,25 @@ void ajAudioWorksSoundImplementation::setPosition( const std::string& alias, flo
  * @input alias is a name that has been associate()d with some sound data
  * @output x,y,z are returned in OpenGL coordinates.
  */
-void ajAudioWorksSoundImplementation::getPosition( const std::string& alias, float& x, float& y, float& z )
+void AudioWorksSoundImplementation::getPosition( const std::string& alias, float& x, float& y, float& z )
 {
-   ajSoundImplementation::getPosition( alias, x, y, z );
+   aj::SoundImplementation::getPosition( alias, x, y, z );
 }
 
 /**
  * set the position of the listener
  */
-void ajAudioWorksSoundImplementation::setListenerPosition( const ajMatrix44& mat )
+void AudioWorksSoundImplementation::setListenerPosition( const aj::Matrix44& mat )
 {
-   ajSoundImplementation::setListenerPosition( mat );
+   aj::SoundImplementation::setListenerPosition( mat );
 }
 
 /**
  * get the position of the listener
  */
-void ajAudioWorksSoundImplementation::getListenerPosition( ajMatrix44& mat )
+void AudioWorksSoundImplementation::getListenerPosition( aj::Matrix44& mat )
 {
-   ajSoundImplementation::getListenerPosition( mat );
+   aj::SoundImplementation::getListenerPosition( mat );
 }
 
 /**
@@ -188,7 +190,7 @@ void ajAudioWorksSoundImplementation::getListenerPosition( ajMatrix44& mat )
  * @postconditions sound API is ready to go.
  * @semantics this function should be called before using the other functions in the class.
  */
-void ajAudioWorksSoundImplementation::startAPI()
+void AudioWorksSoundImplementation::startAPI()
 {
    // setup the hardware system
    awOpenAWD("");
@@ -272,7 +274,7 @@ void ajAudioWorksSoundImplementation::startAPI()
  * @postconditions sound API is ready to go.
  * @semantics this function could be called any time, the function could be called multiple times, so it should be smart.
  */
-void ajAudioWorksSoundImplementation::shutdownAPI()
+void AudioWorksSoundImplementation::shutdownAPI()
 {
    awExit();
 }   
@@ -281,7 +283,7 @@ void ajAudioWorksSoundImplementation::shutdownAPI()
   * query whether the API has been started or not
   * @semantics return true if api has been started, false otherwise.
   */
-bool ajAudioWorksSoundImplementation::isStarted() const
+bool AudioWorksSoundImplementation::isStarted() const
 {
    return false;
 }
@@ -289,9 +291,9 @@ bool ajAudioWorksSoundImplementation::isStarted() const
 /**
  * configure the sound API global settings
  */
-void ajAudioWorksSoundImplementation::configure( const ajSoundAPIInfo& sai )
+void AudioWorksSoundImplementation::configure( const aj::SoundAPIInfo& sai )
 {
-   ajSoundImplementation::configure( sai );
+   aj::SoundImplementation::configure( sai );
    // TODO: configure the engine based on the settings!!
 }
 
@@ -303,9 +305,9 @@ void ajAudioWorksSoundImplementation::configure( const ajSoundAPIInfo& sai )
   * @postconditions alias will point to loaded sound data
   * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
   */
-void ajAudioWorksSoundImplementation::configure( const std::string& alias, const ajSoundInfo& description )
+void AudioWorksSoundImplementation::configure( const std::string& alias, const aj::SoundInfo& description )
 {
-   ajSoundImplementation::configure( alias, description );
+   aj::SoundImplementation::configure( alias, description );
    // do nothing
 }
 
@@ -313,9 +315,9 @@ void ajAudioWorksSoundImplementation::configure( const std::string& alias, const
   * remove a configured sound, any future reference to the alias will not
   * cause an error, but will not result in a rendered sound
   */
-void ajAudioWorksSoundImplementation::remove( const std::string alias )
+void AudioWorksSoundImplementation::remove( const std::string alias )
 {
-   ajSoundImplementation::remove( alias );
+   aj::SoundImplementation::remove( alias );
    // do nothing
 }
 
@@ -323,7 +325,7 @@ void ajAudioWorksSoundImplementation::remove( const std::string alias )
  * clear all associate()tions.
  * @semantics any existing aliases will be stubbed. aounds will be unbind()ed
  */
-void ajAudioWorksSoundImplementation::clear()
+void AudioWorksSoundImplementation::clear()
 {
 }   
 
@@ -331,7 +333,7 @@ void ajAudioWorksSoundImplementation::clear()
  * bind: load (or reload) all associate()d sounds
  * @postconditions all sound associations are buffered by the sound API
  */
-void ajAudioWorksSoundImplementation::bindAll()
+void AudioWorksSoundImplementation::bindAll()
 {
 }   
 
@@ -339,7 +341,7 @@ void ajAudioWorksSoundImplementation::bindAll()
  * unbind: unload/deallocate all associate()d sounds.
  * @postconditions all sound associations are unbuffered by the sound API
  */
-void ajAudioWorksSoundImplementation::unbindAll()
+void AudioWorksSoundImplementation::unbindAll()
 {
 }
 
@@ -347,12 +349,12 @@ void ajAudioWorksSoundImplementation::unbindAll()
  * load/allocate the sound data this alias refers to the sound API
  * @postconditions the sound API has the sound buffered.
  */
-void ajAudioWorksSoundImplementation::bind( const std::string& alias )
+void AudioWorksSoundImplementation::bind( const std::string& alias )
 {
    this->unbind( alias );
 
-   ajAWSoundInfo si;
-   ajSoundInfo sinfo = mSounds[alias];
+   AWSoundInfo si;
+   aj::SoundInfo sinfo = mSounds[alias];
 
 
    // Set up waves and load files
@@ -409,11 +411,11 @@ void ajAudioWorksSoundImplementation::bind( const std::string& alias )
  * unload/deallocate the sound data this alias refers from the sound API
  * @postconditions the sound API no longer has the sound buffered.
  */
-void ajAudioWorksSoundImplementation::unbind( const std::string& alias )
+void AudioWorksSoundImplementation::unbind( const std::string& alias )
 {
    if (mBindTable.count( alias ) > 0)
    {
-      ajAWSoundInfo si;
+      AWSoundInfo si;
       si = mBindTable[alias];
 
       awRemSceneSnd( myScene, si.mySound );  // detach from the scene
@@ -429,12 +431,12 @@ void ajAudioWorksSoundImplementation::unbind( const std::string& alias )
  * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
  * @input time elapsed since last frame
  */
-void ajAudioWorksSoundImplementation::step( const float & timeElapsed )
+void AudioWorksSoundImplementation::step( const float & timeElapsed )
 {
    // audioworks wants total time elapsed, not time of last frame.
    mTotalTimeElapsed += timeElapsed;
 
-   ajSoundImplementation::step( timeElapsed );
+   aj::SoundImplementation::step( timeElapsed );
    double total_time_elapsed = mTotalTimeElapsed;
    //total_time_elapsed = awGetClockSecs();
    awFrame(total_time_elapsed);
@@ -459,3 +461,6 @@ void ajAudioWorksSoundImplementation::step( const float & timeElapsed )
    }
    */
 }
+
+
+}; // end namespace;

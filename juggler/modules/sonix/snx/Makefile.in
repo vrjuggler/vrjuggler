@@ -2,7 +2,15 @@ default: all
 
 include @topdir@/make.defs.mk
 
-SRCS = ajMatrix44.cpp ajOpenALSoundImplementation.cpp ajSoundFactory.cpp 
+SRCS = Matrix44.cpp SoundFactory.cpp 
+
+ifeq (@OPENAL_API@, Y)
+    SRCS        += OpenALSoundImplementation.cpp
+endif
+
+ifeq (@AUDIOWORKS_API@, Y)
+    SRCS        += AudioWorksSoundImplementation.cpp
+endif
 
 
 # ABI            - Application Binary Interface type.  This may be used for

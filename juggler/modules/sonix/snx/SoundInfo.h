@@ -4,14 +4,16 @@
 #define SOUND_INFO_DATA
 #include <string>
 
-//#include "aj/ajMatrix44.h"
+
+namespace aj
+{
 
 /**
  * info struct that describes one sound entry.
  */
-struct ajSoundInfo
+struct SoundInfo
 {
-   ajSoundInfo() : ambient( true ), isPlaying( false ), datasource( FILESYSTEM ), repeat( 1 ), repeat_countdown( 0 ), data(), filename()
+   SoundInfo() : ambient( true ), isPlaying( false ), datasource( FILESYSTEM ), repeat( 1 ), repeat_countdown( 0 ), data(), filename()
    {
       //position.makeIdent();
    }
@@ -36,4 +38,7 @@ struct ajSoundInfo
    int repeat;           // number of times to repeat (static)
    int repeat_countdown; // number of times left to repeat (changes during play)
 };
+
+}; // end namespace
+
 #endif //SOUND_INFO_DATA
