@@ -21,8 +21,8 @@ class WhiteboardSubjectImpl : public POA_networktest::WhiteboardSubject,
 {
 public:
    WhiteboardSubjectImpl (void)
-      : tweek::SubjectImpl(), m_text(""), m_last_offset(0), m_last_length(0),
-        m_last_change("")
+      : tweek::SubjectImpl(), mText(""), mLastOffset(0), mLastLength(0),
+        mLastChange("")
    {
       /* Do nothing. */ ;
    }
@@ -46,13 +46,13 @@ public:
    }
 
 private:
-   std::string m_text;
-   CORBA::Long m_last_offset;
-   CORBA::Long m_last_length;
-   std::string m_last_change;
+   std::string mText;
+   CORBA::Long mLastOffset;
+   CORBA::Long mLastLength;
+   std::string mLastChange;
 };
 
 } // End of networktest namespace
 
 
-#endif /* _SLIDER_SUBJECT_IMPL_H_ */
+#endif /* _WHITEBOARD_SUBJECT_IMPL_H_ */

@@ -13,10 +13,10 @@ import tweek.*;
  */
 public class SliderObserverImpl extends ObserverPOA
 {
-   public SliderObserverImpl (JSlider _slider, SliderSubject _subject)
+   public SliderObserverImpl (JSlider slider, SliderSubject subject)
    {
-      slider         = _slider;
-      slider_subject = _subject;
+      mSlider        = slider;
+      mSliderSubject = subject;
    }
 
    /**
@@ -29,13 +29,13 @@ public class SliderObserverImpl extends ObserverPOA
 
       // If we have a valid slider object, we need to update its value to
       // whatever our subject has.
-      if ( slider != null )
+      if ( mSlider != null )
       {
-         DefaultBoundedRangeModel model = (DefaultBoundedRangeModel) slider.getModel();
+         DefaultBoundedRangeModel model = (DefaultBoundedRangeModel) mSlider.getModel();
          System.out.println("Got slider model, setting value");
-         model.setValue(slider_subject.getValue());
+         model.setValue(mSliderSubject.getValue());
          System.out.println("Set value, repainting slider");
-         slider.repaint();
+         mSlider.repaint();
       }
 
       System.out.println("Update processed");
@@ -47,9 +47,9 @@ public class SliderObserverImpl extends ObserverPOA
     */
    public void detach ()
    {
-      slider_subject.detach(this._this());
+      mSliderSubject.detach(this._this());
    }
 
-   private SliderSubject slider_subject = null;
-   private JSlider       slider         = null;
+   private SliderSubject mSliderSubject = null;
+   private JSlider       mSlider        = null;
 }
