@@ -1,2 +1,2 @@
 #!/bin/sh
-./cvs-gather.pl --verbose --cfg=deps.esrc
+./cvs-gather.pl --verbose
