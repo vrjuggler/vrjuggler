@@ -180,14 +180,17 @@ class myApplication : public vrj::GlApp
    ...
    void bufferPreDraw()
    {
-      //Clear the window
-      glClearColor(0.0, 0.0, 0.0, 0.0);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      // Clear the depth buffer.
+      glClear(GL_DEPTH_BUFFER_BIT);
    }
 
    void draw()
    {
-      //Render the scene
+      // Clear the window.
+      glClearColor(0.0, 0.0, 0.0, 0.0);
+      glClear(GL_COLOR_BUFFER_BIT);
+
+      // Render the scene...
       ...
    }
    ...
