@@ -11,7 +11,7 @@ public:
    virtual void  startSampling();
    virtual void  sample();
    virtual void  stopSampling();
-   virtual char* getDeviceName();
+   static std::string getChunkType();
 private:
    static void   threadedSampleFunction( void* classPointer );
    int           mDigitalData;
@@ -26,9 +26,9 @@ vjDeviceConstructor<MyButtonDevice>* this_ptr_not_used = new vjDeviceConstructor
 //: What is the name of this device?
 //  This function returns a string that should match this device's 
 //  configchunk name.
-char* MyButtonDevice::getDeviceName()
+static std::string  MyButtonDevice::getChunkType() 
 { 
-   return "MyButtonDevice"; 
+   return std::string("MyButtonDevice");
 }
 
 // spawn a sample thread, 
