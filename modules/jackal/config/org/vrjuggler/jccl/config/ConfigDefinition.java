@@ -168,6 +168,40 @@ public class ConfigDefinition
    }
 
    /**
+    * Adds the named parent to this definition. If the parent already exists
+    * in this definition, it will not be added a second time.
+    *
+    * @param parent     the parent to add
+    *
+    * @since 0.92.7
+    */
+   public synchronized void addParent(String parent)
+   {
+      if ( ! mParents.contains(parent) )
+      {
+         mParents.add(parent);
+         fireParentAdded(parent);
+      }
+   }
+
+   /**
+    * Removes the named parent from this definition. If the parent does not
+    * exist in this definition, this method will fail silently.
+    *
+    * @param parent     the parent to remove
+    *
+    * @since 0.92.7
+    */
+   public synchronized void removeParent(String parent)
+   {
+      if ( mParents.contains(parent) )
+      {
+         mParents.remove(parent);
+         fireParentRemoved(parent);
+      }
+   }
+
+   /**
     * Gets a list of all the categories this definition belongs to.
     */
    public List getCategories()
@@ -194,7 +228,7 @@ public class ConfigDefinition
     * Removes the given category from this definition. If the category does not
     * exist in this definition, this method will fail silently.
     *
-    * @param category      the category to removed
+    * @param category      the category to remove
     */
    public synchronized void removeCategory(Category category)
    {
@@ -491,6 +525,54 @@ public class ConfigDefinition
                evt = new ConfigDefinitionEvent(this, old_help);
             }
             ((ConfigDefinitionListener)listeners[i+1]).helpChanged(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that a parent has been added to this definition.
+    *
+    * @since 0.92.7
+    */
+   protected void fireParentAdded(String parent)
+   {
+      ConfigDefinitionEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+
+      for ( int i = listeners.length - 2; i >= 0; i -= 2 )
+      {
+         if ( listeners[i] == ConfigDefinitionListener.class )
+         {
+            if ( evt == null )
+            {
+               evt = new ConfigDefinitionEvent(this, parent);
+            }
+
+            ((ConfigDefinitionListener) listeners[i + 1]).parentAdded(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that a parent has been removed from this definition.
+    *
+    * @since 0.92.7
+    */
+   protected void fireParentRemoved(String parent)
+   {
+      ConfigDefinitionEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+
+      for ( int i = listeners.length - 2; i >= 0; i -= 2 )
+      {
+         if ( listeners[i] == ConfigDefinitionListener.class )
+         {
+            if ( evt == null )
+            {
+               evt = new ConfigDefinitionEvent(this, parent);
+            }
+
+            ((ConfigDefinitionListener) listeners[i + 1]).parentRemoved(evt);
          }
       }
    }

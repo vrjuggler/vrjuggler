@@ -48,6 +48,16 @@ public interface ConfigDefinitionListener
 
    public void helpChanged(ConfigDefinitionEvent evt);
 
+   /**
+    * @since 0.92.7
+    */
+   public void parentAdded(ConfigDefinitionEvent evt);
+
+   /**
+    * @since 0.92.7
+    */
+   public void parentRemoved(ConfigDefinitionEvent evt);
+
    public void categoryAdded(ConfigDefinitionEvent evt);
 
    public void categoryRemoved(ConfigDefinitionEvent evt);
