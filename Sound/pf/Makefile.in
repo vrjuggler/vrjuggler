@@ -60,6 +60,11 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
+## Linux Performer must have the -O flag to compile ##
+ifeq (${PLATFORM}, Linux)
+    override OPTIMIZER += -O
+endif
+
 ifeq (@PERFORMER_API@, Y)
 SOUND_SRCS	:= pfSoundNode.cpp
 endif
