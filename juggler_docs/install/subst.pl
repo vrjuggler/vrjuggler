@@ -34,7 +34,10 @@ $path_subst{"PUB"} = 'pub/';
 # directories within the ~/html directory
 $path_subst{"BUGS"} = 'html/bugs';
 $path_subst{"CONTACT"} = 'html/contact.info';
-$path_subst{"TEAMGUIDE"} = 'html/juggler.team.guide/';
+$path_subst{"JUGGLERSTATUS"} = 'html/status';
+$path_subst{"ABOUTJUGGLER"} = 'html/about';
+$path_subst{"OVERVIEW"} = 'html/juggler.overview';
+$path_subst{"TEAMGUIDE"} = 'html/juggler.team.guide';
 $path_subst{"DOWNLOAD"} = 'html/download';
 $path_subst{"LAYOUT"} = 'html/layout';
 $path_subst{"LEGAL"} = 'html/legal';
@@ -50,6 +53,7 @@ $path_subst{"FAQ"} = 'html/misc/FAQ.html';
 
 # html files
 $path_subst{"JUGGLER_USER_COMMUNITY"} = 'html/contact.info/usercommunity.html';
+$path_subst{"SITEMAP"} = 'html/misc/usertype.sitemap.html';
 
 
 
@@ -120,6 +124,8 @@ $alias_subst{"PERFORMERLINUX"} = 'http://www.sgi.com/software/performer/linux.ht
 $alias_subst{"PATTERNS"} = 'http://hillside.net/patterns/patterns.html';
 $alias_subst{"GETCYGWIN"} = 'http://sourceware.cygnus.com/cygwin/';
 $alias_subst{"GETAUTOCONF"} = 'ftp://ftp.gnu.org/gnu/autoconf/';
+$alias_subst{"OPENSOURCE"} = 'http://www.opensource.org';
+
 
 # links to books and manuals
 $alias_subst{"DESIGNPATTERNSBOOK"} = 'http://www.amazon.com/exec/obidos/ASIN/0201633612/o/qid=947544224/sr=2-1/002-9163340-6788217';

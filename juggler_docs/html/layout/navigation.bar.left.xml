@@ -12,7 +12,7 @@ Builder: JExplorerBuilder V 1. 0. 7
     < item title="News" link="${NEWS}/index.html"  info="The latest Juggler news" image="Newspaper.gif" >
     < item title="FAQ" link="${MISC}/faq.html"  info="Frequently Asked Questions" image="Leaf.gif" >
 
-    < folder title="Manuals/Guides" ref=1 info="Online documentation.  Click this for an overview." link="${MISC}/documentation.html" rlink="${ROOT}/books.html" rtarget="${NEW_WINDOW}" image="Book_Closed.gif" >
+    < folder title="Manuals/Guides" ref=1 info="Online documentation.  Click this for an overview." link="${DOCUMENTATION}/index.html" rlink="${ROOT}/books.html" rtarget="${NEW_WINDOW}" image="Book_Closed.gif" >
     <!-- install-web include books-include.xml -->
     </folder>
 
@@ -41,6 +41,7 @@ Builder: JExplorerBuilder V 1. 0. 7
                 < item title="Juggler License (LGPL)" link="${LEGAL}/LGPL.html"  info="The LGPL license used for VR Juggler." image="Leaf.gif" >
                 < item title="Documentation License (GPL)" link="${LEGAL}/GPL.html" info="The GPL license used for VR Juggler documentation." image ="Leaf.gif" >
     </folder>
+    < item title="SiteMap" link="${SITEMAP}" target="NewWindow" rtarget="Body" info="Check out the Juggler page at sourceforge" image="sourceforge.icon.gif" >
     < item title="--SourceForge" link="${JUGGLER_SOURCEFORGE}" target="NewWindow" rtarget="Body" info="Check out the Juggler page at sourceforge" image="sourceforge.icon.gif" >
     </font>
     
