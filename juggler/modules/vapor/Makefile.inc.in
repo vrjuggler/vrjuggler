@@ -54,7 +54,6 @@ includedir	= @includedir@/vpr
 instlinks	= $(topdir)/instlinks
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
-VPRROOT		= $(top_srcdir)
 VPR_SRCDIR	= @VPR_SRCDIR@
 
 # Extra compiler and linker options needed only by this file.
