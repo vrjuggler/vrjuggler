@@ -249,7 +249,7 @@ public:
     // ------------------------------------------------------------------------
     //: Not used currently -- needed for interface.
     // ------------------------------------------------------------------------
-    virtual TimeStaMp* getPosUpdateTime(int d);
+    virtual TimeStamp* getPosUpdateTime(int d);
 
     // ========================================================================
     // MotionStar-specific methods.

@@ -53,7 +53,7 @@ public:
 public:
     virtual void call (std::ostream& out) const = 0;
 
-    void resetFireTime (TimeStaMp& ts);
+    void resetFireTime (TimeStamp& ts);
 
     int operator < (const Command& cmd2) const;
     

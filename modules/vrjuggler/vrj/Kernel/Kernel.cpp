@@ -103,7 +103,7 @@ void Kernel::controlLoop(void* nullParam)
    }
    mControlThread = (vpr::Thread*) vpr::Thread::self();
 
-   TimeStaMp::initialize();
+   TimeStamp::initialize();
    // Do any initial configuration
    initConfig();
 

@@ -44,7 +44,7 @@
 namespace vrj
 {
    
-void Command::resetFireTime (TimeStaMp& ts) {
+void Command::resetFireTime (TimeStamp& ts) {
     next_fire_time = ts.usecs()/1000 + refresh_time;
 }
 

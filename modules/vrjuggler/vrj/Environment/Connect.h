@@ -156,7 +156,7 @@ private:
     vpr::Mutex                    commands_mutex;
 
     //: used to see if it's time to spring a timed_command
-    TimeStaMp             current_time;
+    TimeStamp             current_time;
 
     //: body of network process.
     void readControlLoop (void* nullParam);

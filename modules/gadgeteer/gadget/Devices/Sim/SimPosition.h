@@ -86,7 +86,7 @@ public:
       return &mPos;
    }
 
-    TimeStaMp* getPosUpdateTime (int devNum = 0) {
+    TimeStamp* getPosUpdateTime (int devNum = 0) {
    return &mUpdateTime;
     }
 
@@ -132,7 +132,7 @@ private:
    float          mDTrans;                      //: Delta translation
    float          mDRot;                        //: Delta rotation
 
-    TimeStaMp   mUpdateTime;                  //: Time of last update
+    TimeStamp   mUpdateTime;                  //: Time of last update
 };
 
 };

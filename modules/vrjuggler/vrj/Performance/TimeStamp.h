@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   typedef TimeStaMpSGI TimeStaMp;
+   typedef TimeStampSGI TimeStamp;
 };
 
 
@@ -50,7 +50,7 @@ namespace vrj
 #include <vrj/Performance/TimeStampPosix.h>
 namespace vrj
 {
-   typedef TimeStaMpPosix TimeStaMp;
+   typedef TimeStampPosix TimeStamp;
 }
 
 
@@ -58,7 +58,7 @@ namespace vrj
 #include <vrj/Performance/TimeStampNone.h>
 namespace vrj
 {
-   typedef TimeStaMpNone TimeStaMp;
+   typedef TimeStampNone TimeStamp;
 };
 
 #endif

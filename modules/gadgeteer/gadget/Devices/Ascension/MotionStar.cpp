@@ -424,7 +424,7 @@ MotionStar::getPosData (int d) {
 // ----------------------------------------------------------------------------
 // Not used currently -- needed for interface.
 // ----------------------------------------------------------------------------
-TimeStaMp*
+TimeStamp*
 MotionStar::getPosUpdateTime (int d) {
     return (&mDataTimes[getBirdIndex(d,current)]);
 }

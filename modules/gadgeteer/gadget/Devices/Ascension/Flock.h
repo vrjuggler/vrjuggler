@@ -134,7 +134,7 @@ class Flock : public Input, public Position {
     //: Get time of last update for this receiver
     //! ARGS: dev - is the reciever number
     //! POST: returns a pointer to the reciever's timestamp
-    TimeStaMp* getPosUpdateTime (int dev = 0);
+    TimeStamp* getPosUpdateTime (int dev = 0);
 
     //: see if the flock is active or not
     inline const bool& isActive() const { return mFlockOfBirds.isActive(); }

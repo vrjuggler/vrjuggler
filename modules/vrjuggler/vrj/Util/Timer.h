@@ -44,7 +44,7 @@ namespace vrj
    
 //: Simple class to take timings and give averages
 // NOTE: All times are in seconds
-// XXX: Should use TimeStaMp for the time info in the future
+// XXX: Should use TimeStamp for the time info in the future
 class Timer
 {
 public:

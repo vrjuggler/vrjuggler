@@ -84,14 +84,14 @@ public:
     /* New pure virtual functions */
     //: Get Position data
     virtual Matrix* getPosData(int devNum = 0) = 0;
-    virtual TimeStaMp* getPosUpdateTime (int devNum = 0);
+    virtual TimeStamp* getPosUpdateTime (int devNum = 0);
 
 public:
     /* XXX: Some of this stuff should be removed */
     /* XXX: theData is a ptr because flock needs an infinite number */
     /* XXX: We should change this so that theData is defined in each class and not here */
     Matrix* theData;   // Ptr to matrix that holds the actually position data
-    TimeStaMp* mDataTimes; // time when each buffer was last filled.
+    TimeStamp* mDataTimes; // time when each buffer was last filled.
 
     Matrix xformMat;   // The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system
     Matrix rotMat;     // Only the rotation matrix

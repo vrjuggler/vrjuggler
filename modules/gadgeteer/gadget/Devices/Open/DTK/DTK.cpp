@@ -171,7 +171,7 @@ void DTK::controlLoop(void* nullParam)
      
     int numbuffs = numPositional*3;
     theData = (Matrix*) new Matrix[numbuffs];
-    mDataTimes = new TimeStaMp[numbuffs];
+    mDataTimes = new TimeStamp[numbuffs];
 
     numbuffs = numDigital*3;
     mDigitalData = new int[numbuffs];
@@ -245,7 +245,7 @@ int DTK::sample()
     float *floatData;
     int   *intData;
 
-    TimeStaMp sampletime;
+    TimeStamp sampletime;
     Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
     sampletime.set();
@@ -367,7 +367,7 @@ float DTK::getAnalogData( int d )
  
 }  
 
-TimeStaMp* DTK::getPosUpdateTime (int d) 
+TimeStamp* DTK::getPosUpdateTime (int d) 
 {
     if( (this->isActive() == false) || (d < 0) || (d >= numPositional) )
 	return NULL;

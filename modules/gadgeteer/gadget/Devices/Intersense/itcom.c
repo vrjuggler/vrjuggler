@@ -713,15 +713,15 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                         {
                             if(numChars-pos >= 4)
                             {
-                                tracker->station[station].TimeStaMp = byteOrder(buffer);
+                                tracker->station[station].TimeStamp = byteOrder(buffer);
 
                                 if(tracker->state.timeUnits == MICROSECONDS)
                                 {
-                                    tracker->station[station].TimeStaMp /= 1000000.0f;
+                                    tracker->station[station].TimeStamp /= 1000000.0f;
                                 }
                                 else
                                 {
-                                    tracker->station[station].TimeStaMp /= 1000.0f;
+                                    tracker->station[station].TimeStamp /= 1000.0f;
                                 }
                             }
                             pos = min(numChars-1, pos+4);
@@ -731,15 +731,15 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                         {
                             if(sscanf((const char *) buffer, "%f", &values[0]) == 1)
                             {
-                                tracker->station[station].TimeStaMp = values[0];
+                                tracker->station[station].TimeStamp = values[0];
 
                                 if(tracker->state.timeUnits == MICROSECONDS)
                                 {
-                                    tracker->station[station].TimeStaMp /= 1000000.0f;
+                                    tracker->station[station].TimeStamp /= 1000000.0f;
                                 }
                                 else
                                 {
-                                    tracker->station[station].TimeStaMp /= 1000.0f;
+                                    tracker->station[station].TimeStamp /= 1000.0f;
                                 }
                             }
                             pos = min(numChars-1, pos+14);
