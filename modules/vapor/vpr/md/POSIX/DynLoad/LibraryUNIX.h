@@ -95,6 +95,14 @@ public:
    }
 
    /**
+    * Copy constructor.
+    */
+   LibraryUNIX(const LibraryUNIX& lib) : mName(""), mLibrary(NULL)
+   {
+      copy(lib);
+   }
+
+   /**
     * Unloads the library if one has been loaded.
     */
    ~LibraryUNIX()
@@ -103,6 +111,15 @@ public:
       {
          unload();
       }
+   }
+
+   /**
+    * Overlaoded assignment operator.
+    */
+   LibraryUNIX& operator=(const LibraryUNIX& lib)
+   {
+      copy(lib);
+      return *this;
    }
 
    /**
@@ -187,6 +204,16 @@ public:
       return findSymbolAndLibrary(symbolName.c_str(), lib);
    }
    //@}
+
+protected:
+   /**
+    * Makes a copy of the given vpr::LibraryUNIX into this object.
+    */
+   void copy(const LibraryUNIX& lib)
+   {
+      this->mName    = lib.mName;
+      this->mLibrary = lib.mLibrary;
+   }
 
 private:
    std::string mName;      /**< The name of the library */
