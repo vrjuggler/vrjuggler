@@ -67,6 +67,7 @@ def setVars():
       'BOOST_VERSION'  : os.getenv('BOOST_VERSION', '1_31'),
       'BOOST_TOOL'     : os.getenv('BOOST_TOOL', 'vc71'),
       'PYTHON_ROOT'    : os.getenv('PYTHON_ROOT', ''),
+      'PYTHON_VERSION' : os.getenv('PYTHON_VERSION', sys.version[:3]),
       'prefix'         : r'C:\PyJuggler',
 
       # Default values for optional settings.
@@ -87,6 +88,9 @@ def setVars():
    processInput(options, 'BOOST_TOOL',
                 'the Boost.Build toolset used to compile Boost C++')
    processInput(options, 'PYTHON_ROOT', 'Python installation directory')
+
+   py_ver = processInput(options, 'PYTHON_VERSION', 'Python version')
+   python_pkg_dir = os.path.join('lib', 'python' + py_ver, 'site-packages')
 
    print "\n+++ Optional Settings"
    processInput(options, 'OSGHOME', 'Open Scene Graph installation directory',
