@@ -73,27 +73,8 @@ public:
    }
 
    // Execute any initialization needed before the API is started.
-   // Initialize VR Juggler devices here.
-   virtual void init()
-   {
-      //std::cout<<"digitalGloveApp::init()"<<std::flush;
-      
-      mGlove.init("VJGlove");
-      
-      // for the digital glove fingers.
-      mLeftThumb.init("LeftThumb");
-      mLeftIndex.init("LeftIndex");
-      mLeftMiddle.init("LeftMiddle");
-      mLeftRing.init("LeftRing");
-      mLeftPinky.init("LeftPinky");
-      mRightThumb.init("RightThumb");
-      mRightIndex.init("RightIndex");
-      mRightMiddle.init("RightMiddle");
-      mRightRing.init("RightRing");
-      mRightPinky.init("RightPinky");
-      
-      //std::cout<<" --- done\n"<<std::flush;
-   }
+   // Initialize VR Juggler device interfaces here.
+   virtual void init();
 
    // Execute any initialization needed after API is started
    //  but before the drawManager starts the drawing loops.
@@ -104,21 +85,7 @@ public:
 
    // Function called after tracker update but before start of drawing.  Do
    // calculations and state modifications here.
-   virtual void preFrame()
-   {
-     //std::cout<<"digitalGloveApp::preFrame()\n"<<std::flush; 
-      
-       std::cout<<mLeftThumb->getData()
-                <<mLeftIndex->getData()
-                <<mLeftMiddle->getData()
-                <<mLeftRing->getData()
-                <<mLeftPinky->getData()<<"."
-                <<mRightThumb->getData()
-                <<mRightIndex->getData()
-                <<mRightMiddle->getData()
-                <<mRightRing->getData()
-                <<mRightPinky->getData()<<"\n"<<std::flush;
-   }
+   virtual void preFrame();
 
    // ----- Drawing Loop Functions ------
    //

@@ -33,6 +33,47 @@
 #include <digitalGloveApp.h>
 
 
+// Execute any initialization needed before the API is started.
+// Initialize VR Juggler device interfaces here.
+void digitalGloveApp::init()
+{
+   //std::cout<<"digitalGloveApp::init()"<<std::flush;
+      
+   mGlove.init("VJGlove");
+      
+   // for the digital glove fingers.
+   mLeftThumb.init("LeftThumb");
+   mLeftIndex.init("LeftIndex");
+   mLeftMiddle.init("LeftMiddle");
+   mLeftRing.init("LeftRing");
+   mLeftPinky.init("LeftPinky");
+   mRightThumb.init("RightThumb");
+   mRightIndex.init("RightIndex");
+   mRightMiddle.init("RightMiddle");
+   mRightRing.init("RightRing");
+   mRightPinky.init("RightPinky");
+      
+   //std::cout<<" --- done\n"<<std::flush;
+}
+
+// Function called after tracker update but before start of drawing.  Do
+// calculations and state modifications here.
+void digitalGloveApp::preFrame()
+{
+  //std::cout<<"digitalGloveApp::preFrame()\n"<<std::flush; 
+   
+    std::cout<<mLeftThumb->getData()
+             <<mLeftIndex->getData()
+             <<mLeftMiddle->getData()
+             <<mLeftRing->getData()
+             <<mLeftPinky->getData()<<"."
+             <<mRightThumb->getData()
+             <<mRightIndex->getData()
+             <<mRightMiddle->getData()
+             <<mRightRing->getData()
+             <<mRightPinky->getData()<<"\n"<<std::flush;
+}
+
 void digitalGloveApp::myDraw()
 {
 	//cout<<"digitalGloveApp::myDraw()\n"<<flush;
