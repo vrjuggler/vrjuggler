@@ -258,8 +258,8 @@ namespace cluster
 
       if (/*mConfigured && mBarrier != NULL &&*/ mBarrier->isActive())
       {
-         vpr::Interval first_time, second_time;
-         first_time.setNow();
+         //vpr::Interval first_time, second_time;
+         //first_time.setNow();
 
          if (mBarrier->isMaster())
          {
@@ -271,10 +271,10 @@ namespace cluster
             mBarrier->SlaveSend();
             mBarrier->SlaveReceive();
          }
-         second_time.setNow();
-         vpr::Interval diff_time(second_time-first_time);
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrCYAN) << "Latency: " 
-            << diff_time.getBaseVal() << " usecs\n"<< clrRESET << vprDEBUG_FLUSH;
+         //second_time.setNow();
+         //vpr::Interval diff_time(second_time-first_time);
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrCYAN) << "Latency: " 
+         //   << diff_time.getBaseVal() << " usecs\n"<< clrRESET << vprDEBUG_FLUSH;
       }
       return(true);
    }

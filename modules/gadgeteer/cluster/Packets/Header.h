@@ -74,6 +74,7 @@ public:
    const static unsigned short RIM_APPDATA_REQ     = 408;
    const static unsigned short RIM_APPDATA_ACK     = 409;
    const static unsigned short RIM_END_BLOCK 	   = 410;
+   const static unsigned short RIM_START_BLOCK 	   = 411;
 
    //const unsigned short MSG_DEVICE_NACK 	= 404;
    //const unsigned short MSG_CLOCK_SRC 	= 405;

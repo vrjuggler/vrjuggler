@@ -49,22 +49,40 @@ namespace cluster
    class ClusterPlugin;
 
 class GADGET_CLASS_API ClusterManager : public jccl::ConfigChunkHandler
-{
+{      
+   enum Status
+   {
+      NOTHING     = 0,
+      CONFIGURING = 1,
+      WAITING     = 2,
+      RUNNING     = 3,
+      NOTUSED     = 4
+   };
    vprSingletonHeader( ClusterManager );
-
 public:
    ClusterManager();
    virtual ~ClusterManager();
 
+   // ClusterPlugin Interface
+public:
+   void addPlugin(ClusterPlugin* new_manager);
+   void removePlugin(ClusterPlugin* old_manager);
+   bool doesPluginExist(ClusterPlugin* old_manager);
+   
    void preDraw();
    void postPostFrame();
-
-   bool isClusterReady();
-
    void createBarrier();
-
+   
+   //Helper Functions for Plugins
+private:   
+   void sendEndBlocksAndSignalUpdate();
+   
+   //Configuration
+public:
+   bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
    bool recognizeClusterManagerConfig(jccl::ConfigChunkPtr chunk);
    
+
    /** Add the pending chunk to the configuration.
     *  PRE: configCanHandle (chunk) == true.
     *  @return true iff chunk was successfully added to configuration.
@@ -85,24 +103,32 @@ public:
     *  @return true iff this handler can process chunk.
     */
    bool configCanHandle(jccl::ConfigChunkPtr chunk);
-
-   void addPlugin(ClusterPlugin* new_manager);
-   void removePlugin(ClusterPlugin* old_manager);
-   bool doesPluginExist(ClusterPlugin* old_manager);
-   void sendEndBlocksAndSignalUpdate();
-
-   jccl::ConfigChunkPtr getConfigChunkPointer(std::string& name);
-   bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
-
+   
+   //Config Helper Functions
 private:      
    /**
     * Returns the string representation of the chunk type used for the ClusterManager
     */   
    static std::string getChunkType() { return std::string( "ClusterManager" ); }
+   
+   //Start Barrier Stuff
+public:
+   bool isClusterReady();
+   void updateStatus();
+private:   
+   bool allNodesRunning();
+   void processPackets();
+   void sendStartPacketToAllNodes();
+
+   //General helper functions
+public:
+   jccl::ConfigChunkPtr getConfigChunkPointer(std::string& name);
 
 private:
-   std::list<ClusterPlugin*>     mPlugins;
-   vpr::Mutex                    mPluginsLock;  /**< Lock on Device Server list.*/
+   std::list<ClusterPlugin*>     mPlugins;            /**< List of Plugins.*/
+   vpr::Mutex                    mPluginsLock;        /**< Lock on plugins list.*/
+   std::string                   mBarrierMachineName; /**< Name of the barrier machine.*/
+   int                           mStatus;             /**< Current status of the cluster*/
 };
 
 } // end namespace

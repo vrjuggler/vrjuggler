@@ -63,21 +63,41 @@ class GADGET_CLASS_API RemoteInputManager  : public cluster::ClusterPlugin
 public:
    RemoteInputManager();
    virtual ~RemoteInputManager();
-   
+
+   /** Calls any action needed by this plugin before draw()
+    *
+    *  This function was inherited from the
+    *  ClusterPlugin abstract class. 
+    */
    virtual void preDraw();
+   
+   /** Calls any action needed by this plugin before postFrame()
+    *
+    *  This function was inherited from the
+    *  ClusterPlugin abstract class. 
+    */
    virtual void postPostFrame();
+   
+   /** Returns the status of RemoteInputManager
+    *
+    *  @return true If plugin is completly configured
+    *               and has no pending tasks.
+    *  
+    */
    virtual bool isPluginReady();
+   
+   /** 
+    *  Returns the name of the this plugin
+    */
    virtual std::string getManagerName()
    {
       return(std::string("RemoteInputManager"));
    }
-   
-   //   bool pendingNeedsChecked();
-	//   int attemptConnections();
-
-//   cluster::ClusterNode* getClusterNodeByHostname(std::string node_name);
-//   cluster::ClusterNode* getClusterNodeByName(std::string node_name);
-  
+     
+   /**
+    * Create a new virtual device on the local system and add
+    * it to the list of virtual devices.
+    */
    vpr::ReturnStatus addVirtualDevice(const vpr::GUID& device_id, const std::string& name, 
                                       const std::string& device_base_type, const std::string& hostname);
    void addVirtualDevice(VirtualDevice* device);
@@ -214,8 +234,6 @@ public:
    void sendDeviceRequests();
    vpr::Uint16 getNumberPendingDeviceRequests();
    
-//   std::string getLocalHostname() { return mLocalHostnameShort; }
-   
 private:   
    std::map<DeviceRequest*, ClusterNode*>          mPendingDeviceRequests;     /**< UserData Request list. */
    vpr::Mutex                                      mPendingDeviceRequestsLock; /**< Lock on UserData Request list.*/   
@@ -228,9 +246,6 @@ private:
 
    vpr::Uint32                                     mFrameNumber;
    bool                          mReconfigurationNeededOnConnection;    /**< We need to try to reconfigure on the next connection made. */
-//   std::string mLocalHostnameShort;
-//   std::string mLocalHostnameLong;
-
 };
 
 } // end namespace gadget

@@ -34,7 +34,6 @@
 
 #include <gadget/Util/Debug.h>
 #include <cluster/ClusterDepChecker.h>
-//#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
@@ -100,7 +99,7 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
 
       return pass;
    }
-   else if (cluster::ClusterManager::instance()->recognizeClusterManagerConfig(chunk))
+   /*else if (cluster::ClusterManager::instance()->recognizeClusterManagerConfig(chunk))
    {
       // We need the following for the Cluster to be setup correctly
       // - All Nodes connected(All listed machines connected)
@@ -110,15 +109,16 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
       // - No MachineSpecific Chunks Pending
 
 
-      /*int number_nodes = chunk->getNum("cluster_nodes");
+      int number_nodes = chunk->getNum("cluster_nodes");
       for (int i = 0 ; i < number_nodes ; i++)
       {
          std::string node_name = chunk->getProperty<std::string>("cluster_nodes",i);
-         jccl::ConfigChunkPtr node_chunk = RemoteInputManager::instance()->getConfigChunkPointer(node_name);
+         jccl::ConfigChunkPtr node_chunk = ClusterManager::instance()->getConfigChunkPointer(node_name);
          if (node_chunk == NULL)
          {
             // Node not in current configuration
             jccl::ConfigManager::instance()->delayStalePendingList();
+            std::cout << "L" << std::flush;
             return(false);
          }
          std::string host_name = node_chunk->getProperty<std::string>("host_name");
@@ -128,17 +128,19 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
             if (node == NULL)
             {
                jccl::ConfigManager::instance()->delayStalePendingList();
+               std::cout << "N" << std::flush;
                return(false);
             }
             else if (!node->isConnected())
             {
                jccl::ConfigManager::instance()->delayStalePendingList();
+               std::cout << "D" << std::flush;
                return(false);
             }
          }
-      } */
+      }
       return(true);
-   }
+   }*/
    else
    {
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ERROR, Something is seriously wrong, we should never get here\n"
@@ -152,8 +154,8 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
 bool ClusterDepChecker::canHandle(jccl::ConfigChunkPtr chunk)
 {   
    return (chunk->getDescToken() == ClusterNetwork::getMachineSpecificChunkType() ||
-           cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk) ||
-           cluster::ClusterManager::instance()->recognizeClusterManagerConfig(chunk) );
+           cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk) /*||
+           cluster::ClusterManager::instance()->recognizeClusterManagerConfig(chunk)*/ );
 }
 
 void ClusterDepChecker::debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_lvl)
@@ -171,37 +173,37 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_
       //vprDEBUG(vprDBG_ALL,dbg_lvl) << "Virtual Device: " << chunk->getName() 
       //   << " has NO Deps since it is Virtual!!!\n" << vprDEBUG_FLUSH;      
    }
-   else if (cluster::ClusterManager::instance()->recognizeClusterManagerConfig(chunk))
+   /*else if (cluster::ClusterManager::instance()->recognizeClusterManagerConfig(chunk))
    {
-      /*int number_nodes = chunk->getNum("cluster_nodes");
-      for (int i = 0 ; i < number_nodes ; i++)
-      {
-         std::string node_name = chunk->getProperty<std::string>("cluster_nodes",i);
-         jccl::ConfigChunkPtr node_chunk = RemoteInputManager::instance()->getConfigChunkPointer(node_name);
-         if (node_chunk == NULL)
-         {
-            vprDEBUG(vprDBG_ALL, dbg_lvl) << node_name << " Node not in current configuration."
-               << std::endl << vprDEBUG_FLUSH;            
-            return;
-         }
-         std::string host_name = node_chunk->getProperty<std::string>("host_name");
-         if (host_name != ClusterNetwork::instance()->getLocalHostname())
-         {
-            ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByName(node_name);
-            if (node == NULL)
-            {
-               vprDEBUG(vprDBG_ALL, dbg_lvl) << node_name << " does not exist in ClusterNetwork."
-                  << std::endl << vprDEBUG_FLUSH;            
-               return;
-            }
-            else if (!node->isConnected())
-            {
-               node->debugDump(dbg_lvl);
-               return;
-            }
-         }
-      } */
-   }
+      //int number_nodes = chunk->getNum("cluster_nodes");
+      //for (int i = 0 ; i < number_nodes ; i++)
+      //{
+      //   std::string node_name = chunk->getProperty<std::string>("cluster_nodes",i);
+      //   jccl::ConfigChunkPtr node_chunk = RemoteInputManager::instance()->getConfigChunkPointer(node_name);
+      //   if (node_chunk == NULL)
+      //   {
+      //      vprDEBUG(vprDBG_ALL, dbg_lvl) << node_name << " Node not in current configuration."
+      //         << std::endl << vprDEBUG_FLUSH;            
+      //      return;
+      //   }
+      //   std::string host_name = node_chunk->getProperty<std::string>("host_name");
+      //   if (host_name != ClusterNetwork::instance()->getLocalHostname())
+      //   {
+      //      ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByName(node_name);
+      //      if (node == NULL)
+      //      {
+      //         vprDEBUG(vprDBG_ALL, dbg_lvl) << node_name << " does not exist in ClusterNetwork."
+      //            << std::endl << vprDEBUG_FLUSH;            
+      //         return;
+      //      }
+      //      else if (!node->isConnected())
+      //      {
+      //         node->debugDump(dbg_lvl);
+      //         return;
+      //      }
+      //   }
+      //} 
+   }*/
    else
    {
       //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ERROR, Something is seriously wrong, we should never get here\n"
