@@ -67,16 +67,17 @@ sub getPlatform();
 
 %MODULES = ();
 
-my $all_help    = 0;
-my $cfg         = "juggler.cfg";
-my $user_cfg    = '';
-$module         = '';
-my $script_help = 0;
-my $manual      = 0;
-my $regen       = 0;
-my $mod_list    = 0;
-my $args_file   = 'acdefaults.cfg';
-my $user_args   = '';
+my $all_help     = 0;
+my $cfg          = "juggler.cfg";
+my $user_cfg     = '';
+$module          = '';
+my $script_help  = 0;
+my $manual       = 0;
+my $regen        = 0;
+my $mod_list     = 0;
+my $args_file    = 'acdefaults.cfg';
+my $user_args    = '';
+my $no_user_args = 0;
 
 $CONFIG_ARGS    = 0;
 $PATH_ARGS      = 1;
@@ -91,7 +92,7 @@ Getopt::Long::Configure('pass_through');
 GetOptions('help|?' => \$script_help, 'cfg=s' => \$user_cfg,
            'module=s' => \$module, 'all-help' => \$all_help,
            'manual' => \$manual, 'regen' => \$regen, 'modlist' => \$mod_list,
-           'args=s' => \$user_args, 'os=s' => \$OS)
+           'args=s' => \$user_args, 'noargs' => \$no_user_args, 'os=s' => \$OS)
    or pod2usage(2);
 
 # Print the help output and exit if --help was on the command line.
@@ -147,14 +148,19 @@ else
       }
    }
 
-   # Figure out what argument file to load, if any.  If the user specified
-   # a file name on the command line, it will be in $user_args.  Otherwise, we
-   # fall back on $base_dir/$args_file.
-   my $args_load = ("$user_args" eq "") ? "$base_dir/$args_file" : "$user_args";
-
-   if ( -r "$args_load" )
+   # Unless the user passed --noargs, try to find default argument values.
+   unless ( $no_user_args )
    {
-      loadDefaultArgs("$args_load");
+      # Figure out what argument file to load, if any.  If the user specified
+      # a file name on the command line, it will be in $user_args.  Otherwise,
+      # we fall back on $base_dir/$args_file.
+      my $args_load = ("$user_args" eq "") ? "$base_dir/$args_file"
+                                           : "$user_args";
+
+      if ( -r "$args_load" )
+      {
+         loadDefaultArgs("$args_load");
+      }
    }
 
    if ( ! $cache_file_set )
