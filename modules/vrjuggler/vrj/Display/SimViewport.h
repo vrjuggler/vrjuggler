@@ -57,7 +57,11 @@ public:
 public:
    /**  Configure the simulator */
    virtual void config(jccl::ConfigChunkPtr chunk);
-   virtual void updateProjections();
+   
+   /** Update the projections
+   * @param positionScale - Scale value for converting from Juggler units (meters) to the display units
+   */
+   virtual void updateProjections(float positionScale);
 
    gmtl::Matrix44f getCameraPos()
    { return mCameraPos; }
@@ -78,7 +82,7 @@ public:  // Sim Drawing parameters
 
 protected:
     /**  Update internal simulator data */
-   void updateInternalData();
+   void updateInternalData(float positionScale);
 
 private:
    // Drawing attributes

@@ -124,12 +124,12 @@ void SurfaceViewport::config(jccl::ConfigChunkPtr chunk)
    mRightProj->setViewport(this);
 }
 
-void SurfaceViewport::updateProjections()
+void SurfaceViewport::updateProjections(float positionScale)
 {
    gmtl::Matrix44f left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
 
    // -- Calculate Eye Positions -- //
-   gmtl::Matrix44f cur_head_pos = mUser->getHeadPosProxy()->getData(gadget::PositionUnitConversion::ConvertToMeters);
+   gmtl::Matrix44f cur_head_pos = mUser->getHeadPosProxy()->getData(positionScale);
    /*
    Coord  head_coord(cur_head_pos);       // Create a user readable version
 
@@ -142,8 +142,9 @@ void SurfaceViewport::updateProjections()
 
    // Compute location of left and right eyes
    //float interocularDist = 2.75f/12.0f;
-   float interocularDist = mUser->getInterocularDistance();
-   float eye_offset = interocularDist/2.0f;      // Distance to move eye
+   float interocular_dist = mUser->getInterocularDistance();
+   interocular_dist *= positionScale;              // Scale eye separation
+   float eye_offset = interocular_dist/2.0f;      // Distance to move eye
 
    left_eye_pos = cur_head_pos * gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f( -eye_offset, 0, 0));
    right_eye_pos = cur_head_pos * gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(eye_offset, 0, 0));
