@@ -248,6 +248,37 @@ SocketImpWinSock::recv(void* buffer, const size_t length, const int flags) {
     return ::recv(m_sockfd, (char*) buffer, length, flags);
 }
 
+// ----------------------------------------------------------------------------
+// Read exactly the specified number of bytes from the file handle into the
+// given buffer.  This is baesd on the readn() function given on pages 51-2 of
+// _Effective TCP/IP Programming_ by Jon D. Snader.
+// ----------------------------------------------------------------------------
+ssize_t
+SocketImpWinSock::recvn (void* buffer, const size_t length, const int flags) {
+    size_t count;
+    ssize_t bytes;
+
+    count = length;
+
+    while ( count > 0 ) {
+        bytes = ::recv(m_sockfd, (char*) buffer, length, flags);
+
+        // Read error.
+        if ( bytes < 0 ) {
+            break;
+        }
+        // May have read EOF, so return bytes read so far.
+        else if ( bytes == 0 ) {
+            bytes = length - count;
+        }
+        else {
+            buffer = (void*) ((char*) buffer + bytes);
+            count  -= bytes;
+        }
+    }
+
+    return bytes;
+}
 
 // ----------------------------------------------------------------------------
 // Send the specified number of bytes contained in the given buffer from the
