@@ -112,29 +112,29 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IntersenseAPI\IntersenseAPI.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\IntersenseAPI.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IntersenseAPI\IntersenseAPIStandalone.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\IntersenseAPIStandalone.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IntersenseAPI\isense.c">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\isense.c">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IntersenseAPI\IntersenseAPI.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\IntersenseAPI.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IntersenseAPI\IntersenseAPIStandalone.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\IntersenseAPIStandalone.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IntersenseAPI\isense.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\isense.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\gadget\Devices\Intersense\IntersenseAPI\types.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\types.h">
 			</File>
 		</Filter>
 		<Filter

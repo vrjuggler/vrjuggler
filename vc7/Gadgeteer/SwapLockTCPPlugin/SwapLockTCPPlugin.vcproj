@@ -112,14 +112,14 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\SwapLockTCPPlugin\SwapLockTCPPlugin.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\SwapLockTCPPlugin\SwapLockTCPPlugin.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\cluster\Plugins\SwapLockTCPPlugin\SwapLockTCPPlugin.h">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\SwapLockTCPPlugin\SwapLockTCPPlugin.h">
 			</File>
 		</Filter>
 		<Filter
