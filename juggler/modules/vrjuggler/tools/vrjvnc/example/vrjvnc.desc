@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings desc.db.version="2.2"?>
 <ChunkDescDB>
-  <ChunkDesc token="vrjVncApp" name="GUI 3D Application">
+  <ChunkDesc token="vrjVncApp" name="VNC Desktop Connection">
     <help>Configuration for Logitech 3D mouse</help>
     <category>Application-Specific</category>
     <PropertyDesc name="Use embedded GUI?" token="embeddedGUI" type="bool" variable="0">
@@ -21,7 +21,7 @@
       <item label="Password" defaultvalue="" />
     </PropertyDesc>
     <PropertyDesc name="VNC Desktop Dimensions" token="vncDesktopSideLength" type="float" variable="0">
-      <help></help>
+      <help />
       <item label="Length" defaultvalue="10.0" />
     </PropertyDesc>
   </ChunkDesc>
