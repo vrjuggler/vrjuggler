@@ -34,6 +34,13 @@
 
 #include <OsgNav.h>
 
+#include <osg/Math>
+#include <osg/Geode>
+#include <osg/Material>
+#include <osg/Vec3>
+#include <osgUtil/Optimizer>
+#include <osgDB/ReadFile>
+
 #include <gmtl/Vec.h>
 #include <gmtl/Coord.h>
 #include <gmtl/Xforms.h>
