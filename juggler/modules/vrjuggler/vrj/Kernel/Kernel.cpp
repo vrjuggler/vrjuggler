@@ -254,6 +254,7 @@ void Kernel::changeApplication(App* _app)
       }
 
       cfg_mgr->addConfigChunkHandler (mApp);
+      cfg_mgr->refreshPendingList();
    }
    else                 // No app, clear to NULL
    {
