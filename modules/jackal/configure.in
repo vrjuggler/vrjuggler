@@ -300,6 +300,7 @@ fi
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
+DEPEND_FLAGS="$VPR_INCLUDES_MIN"
 jccl_cxxflags="$STD_FLAGS"
 
 # List the scripts jccl-config will call to get flags.  This should be in the
