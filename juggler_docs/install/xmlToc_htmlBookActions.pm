@@ -233,7 +233,11 @@ sub loadHTML ($$$) {
 
     my $status = 1;
 
-    if ( open(INPUT, "$input_file") ) {
+    if ( $input_file =~ /\.html?#\w+/ ) {
+        # Ignore this type of file for the time being.
+        ;
+    }
+    elsif ( open(INPUT, "$input_file") ) {
         my $input;
         while ( <INPUT> ) {
             $input .= $_;
