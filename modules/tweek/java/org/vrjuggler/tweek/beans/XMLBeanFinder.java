@@ -65,7 +65,7 @@ public class XMLBeanFinder
 
    public XMLBeanFinder(boolean validate)
    {
-      mValidate = true;
+      mValidate = validate;
    }
 
    /**
