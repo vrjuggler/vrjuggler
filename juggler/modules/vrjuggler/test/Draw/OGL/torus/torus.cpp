@@ -40,16 +40,16 @@
 #include <torusApp.h>
 
       // --- Lib Stuff --- //
-#include <Kernel/vjKernel.h>
-#include <Kernel/vjProjection.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Display/Projection.h>
 #include <vpr/System.h>
 
 
 int main(int argc, char* argv[])
 {
-   Projection::setNearFar(0.01f, 10000.0f);
+   vrj::Projection::setNearFar(0.01f, 10000.0f);
    
-   Kernel* kernel = Kernel::instance();        // Get the kernel
+   vrj::Kernel* kernel = vrj::Kernel::instance();  // Get the kernel
    torusApp* application = new torusApp(kernel);   // Declare an instance of the app
 
    if (argc <= 1)
@@ -79,8 +79,7 @@ int main(int argc, char* argv[])
    kernel->setApplication(application);         // Set application
 
    while(1)
-   {   
-      /*
+   {   /*
       vpr::System::sleep(2);
       kernel->stopApplication();
       vpr::System::sleep(2);

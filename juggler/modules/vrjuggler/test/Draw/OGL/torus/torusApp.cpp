@@ -30,12 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <iostream>
+#include <math.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+#include <vrj/Math/Coord.h>
+
 #include <torusApp.h>
-#include <Math/vjCoord.h>
 
 
-static void
-doughnut(GLfloat r, GLfloat R, GLint nsides, GLint rings);
+static void doughnut(GLfloat r, GLfloat R, GLint nsides, GLint rings);
 
 void torusApp::bufferPreDraw()
 {
@@ -48,7 +53,7 @@ void torusApp::bufferPreDraw()
 //----------------------------------------------
 void torusApp::draw()
 {
-   Coord wand_pos(*mWand->getData());
+   vrj::Coord wand_pos(*mWand->getData());
 
    // Set light position
    GLfloat light0_position[] = {6.0, 6,0, 6.0, 1.0};
