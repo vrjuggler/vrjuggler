@@ -49,14 +49,17 @@
 #ifndef _GADGET_PINCH_GLOVE_STANDALONE_H_
 #define _GADGET_PINCH_GLOVE_STANDALONE_H_
 
+#include <gadget/gadgetConfig.h>
 #include <string>
+#include <vpr/IO/Port/SerialPort.h>
+
 
 class PinchGloveStandalone
 {
 public:
     // Default constructor.
     PinchGloveStandalone();
-    
+    ~PinchGloveStandalone();
     //: Connect to the pinch glove hardware
     bool    connectToHardware( const char* const ttyPort );
     
@@ -79,20 +82,22 @@ public:
 protected:
     std::string 		mGestureString;
     std::string 		mPreviousGestureString;
-    int pinchfd;
+    vpr::SerialPort     *port;
 
     // equal to "00000.00000"
     static const std::string 	mOpenHandString;
-    
+
     /* functions provided by fakespace */
-    int	    mConnectToHardware( const char* const ttyPort = "/dev/ttyd3" );
-    int	    mSendCommandToHardware( const char* const command, char *reply );
+    //int	    mConnectToHardware( const unsigned char* const ttyPort = "/dev/ttyd3" );
+    int	    mConnectToHardware( const char* const ttyPort );
+    int	    mSendCommandToHardware( const char* const command, unsigned char *reply );
     
-    int	    mReadRecordsFromHardware( const int& rec_max_len, char *records );
+    int	    mReadRecordsFromHardware( const int& rec_max_len, unsigned char *records );
     void    mGetStringFromHardware( char string[12] );
     
 private:
     char                        mGestureStringTemp[12];
+    int first;
 };
 
 #endif
