@@ -51,6 +51,11 @@ public class TransformTranslationEditor
    public static final int TRANSMITTER = CoordinateFrameEditor.TRANSMITTER;
    public static final int SENSOR      = CoordinateFrameEditor.SENSOR;
 
+   private final static int METERS      = 0;
+   private final static int CENTIMETERS = 1;
+   private final static int FEET        = 2;
+   private final static int INCHES      = 3;
+
    public TransformTranslationEditor(int coordinateType)
    {
       if ( coordinateType == TRANSMITTER )
@@ -66,11 +71,13 @@ public class TransformTranslationEditor
             "<html>Position of the sensor from VR Juggler tracked origin (post-translation)</html>");
       }
 
-      mTranslationUnits    = new MeasurementUnit[4];
-      mTranslationUnits[0] = new MeasurementUnit("Meters", 1.0);
-      mTranslationUnits[1] = new MeasurementUnit("Centimeters", 0.1);
-      mTranslationUnits[2] = new MeasurementUnit("Feet", 0.3048);
-      mTranslationUnits[3] = new MeasurementUnit("Inches", 0.0254);
+      // Initially set up the conversion factors to convert from meters to
+      // other units.
+      mTranslationUnits              = new MeasurementUnit[4];
+      mTranslationUnits[METERS]      = new MeasurementUnit("Meters", 1.0);
+      mTranslationUnits[CENTIMETERS] = new MeasurementUnit("Centimeters", 10.0);
+      mTranslationUnits[FEET]        = new MeasurementUnit("Feet", 3.28084);
+      mTranslationUnits[INCHES]      = new MeasurementUnit("Inches", 39.37008);
 
       for ( int i = 0; i < mTranslationUnits.length; ++i )
       {
@@ -215,18 +222,47 @@ public class TransformTranslationEditor
 
    void mTrackerPosUnitsChooser_actionPerformed(ActionEvent actionEvent)
    {
-      double conv_factor =
-         mTranslationUnits[mTrackerPosUnitsChooser.getSelectedIndex()].toMeters;
+      int units = mTrackerPosUnitsChooser.getSelectedIndex();
+      double conv_factor = mTranslationUnits[units].convFactor;
       double x_pos =
          ((Number) mTrackerXPosField.getValue()).doubleValue() * conv_factor;
       double y_pos =
-         ((Number) mTrackerXPosField.getValue()).doubleValue() * conv_factor;
+         ((Number) mTrackerYPosField.getValue()).doubleValue() * conv_factor;
       double z_pos =
-         ((Number) mTrackerXPosField.getValue()).doubleValue() * conv_factor;
+         ((Number) mTrackerZPosField.getValue()).doubleValue() * conv_factor;
 
       mTrackerXPosField.setValue(new Double(x_pos));
       mTrackerYPosField.setValue(new Double(y_pos));
       mTrackerZPosField.setValue(new Double(z_pos));
+
+      if ( units == METERS )
+      {
+         mTranslationUnits[METERS].convFactor      = 1.0;
+         mTranslationUnits[CENTIMETERS].convFactor = 10.0;
+         mTranslationUnits[FEET].convFactor        = 3.28084;
+         mTranslationUnits[INCHES].convFactor      = 39.37008;
+      }
+      else if ( units == CENTIMETERS )
+      {
+         mTranslationUnits[METERS].convFactor      = 0.1;
+         mTranslationUnits[CENTIMETERS].convFactor = 1.0;
+         mTranslationUnits[FEET].convFactor        = 0.328084;
+         mTranslationUnits[INCHES].convFactor      = 3.937008;
+      }
+      else if ( units == FEET )
+      {
+         mTranslationUnits[METERS].convFactor      = 0.3048;
+         mTranslationUnits[CENTIMETERS].convFactor = 3.048;
+         mTranslationUnits[FEET].convFactor        = 1.0;
+         mTranslationUnits[INCHES].convFactor      = 12.0;
+      }
+      else if ( units == INCHES )
+      {
+         mTranslationUnits[METERS].convFactor      = 0.0254;
+         mTranslationUnits[CENTIMETERS].convFactor = 0.254;
+         mTranslationUnits[FEET].convFactor        = 0.0833;
+         mTranslationUnits[INCHES].convFactor      = 1.0;
+      }
    }
 
    void mTrackerXPosField_propertyChange(PropertyChangeEvent propertyChangeEvent)
@@ -316,12 +352,12 @@ class TransformTranslationEditor_mTrackerPosUnitsChooser_actionAdapter
 
 class MeasurementUnit
 {
-   public MeasurementUnit(String name, double toMeters)
+   public MeasurementUnit(String name, double convFactor)
    {
-      this.name     = name;
-      this.toMeters = toMeters;
+      this.name       = name;
+      this.convFactor = convFactor;
    }
 
    public String name;
-   public double toMeters;
+   public double convFactor;
 }
