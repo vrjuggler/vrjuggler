@@ -49,10 +49,14 @@ namespace vrj
 {
 
 GlWindowWin32::GlWindowWin32()
-   : mMatch(NULL), mWinHandle(NULL), mRenderContext(NULL),
-      mDeviceContext(NULL)
+   : mMatch(NULL)
+   , mWinHandle(NULL)
+   , mRenderContext(NULL)
+   , mDeviceContext(NULL)
 {
+   /* Do nothing. */ ;
 }
+
 GlWindowWin32::~GlWindowWin32()
 {
    this->close();
@@ -85,7 +89,8 @@ int GlWindowWin32::open()
    // a titlebar and a border.
    if ( border )
    {
-      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL) << "attempting to give window a border"
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
+         << "[vrj::GlWindowWin32::open()] Attempting to give window a border"
          << std::endl << vprDEBUG_FLUSH;
       style |= WS_OVERLAPPEDWINDOW;
    }
@@ -93,7 +98,8 @@ int GlWindowWin32::open()
    // the thin-line border.
    else
    {
-      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL) << "attempting to make window borderless"
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
+         << "[vrj::GlWindowWin32::open()] Attempting to make window borderless"
          << std::endl << vprDEBUG_FLUSH;
       style |= WS_OVERLAPPED | WS_POPUP | WS_VISIBLE;
    }
@@ -114,7 +120,7 @@ int GlWindowWin32::open()
    }
 
    // Attach a pointer to the device for use from the WNDPROC
-   SetWindowLong( mWinHandle, GWL_USERDATA, (LPARAM)this );
+   SetWindowLong(mWinHandle, GWL_USERDATA, (LPARAM) this);
 
    // We have a valid window, so... Create the context
    //case WM_CREATE:
@@ -145,8 +151,7 @@ int GlWindowWin32::open()
    }
 
    // If mHideMouse is true we must pass false to ShowCursor
-   ShowCursor( !mHideMouse );
-   
+   ShowCursor(! mHideMouse);
 
    return 1;
 }
@@ -168,7 +173,7 @@ void GlWindowWin32::becomeEventWindowDevice()
    // @todo Possibly not the best way to add this to input manager
    // - What happens when the event window is removed at run-time???
    // - What happens when this is called again?
-   vrj::Kernel::instance()->getInputManager()->addDevice( dev_ptr );
+   vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
 }
 
 void GlWindowWin32::removeEventWindowDevice()
@@ -250,7 +255,7 @@ void GlWindowWin32::checkEvents()
    {
       // not an event source, so pump our own events
       MSG win_message;
-      while (PeekMessage( &win_message, NULL, 0, 0, PM_REMOVE ))
+      while ( PeekMessage(&win_message, NULL, 0, 0, PM_REMOVE) )
       {
          // Test if quit
          if (win_message.message == WM_QUIT)
@@ -258,30 +263,31 @@ void GlWindowWin32::checkEvents()
             break;
          }
 
-         TranslateMessage( &win_message );     // Translate the accelerator keys
-         DispatchMessage( &win_message );      // Send to the WinProc
+         TranslateMessage(&win_message);     // Translate the accelerator keys
+         DispatchMessage(&win_message);      // Send to the WinProc
       }
    }
 }
 
-void GlWindowWin32::processEvent( UINT message, UINT wParam, LONG lParam )
+void GlWindowWin32::processEvent(UINT message, UINT wParam, LONG lParam)
 {
 
 }
 
-void GlWindowWin32::configWindow( vrj::Display* disp )
+void GlWindowWin32::configWindow(vrj::Display* disp)
 {
    const char neg_one_STRING[] = "-1";
    vprASSERT( disp != NULL );
-   vrj::GlWindow::configWindow( disp );
+   vrj::GlWindow::configWindow(disp);
 
     // Get the vector of display chunks
-   jccl::ConfigElementPtr disp_sys_elt = DisplayManager::instance()->getDisplaySystemElement();
+   jccl::ConfigElementPtr disp_sys_elt =
+      DisplayManager::instance()->getDisplaySystemElement();
    jccl::ConfigElementPtr display_elt = disp->getConfigElement();
 
    window_name = disp->getName();
    mPipe = disp->getPipe();
-   vprASSERT( mPipe >= 0 );
+   vprASSERT(mPipe >= 0);
 
    mXDisplayName = disp_sys_elt->getProperty<std::string>("x11_pipes", mPipe);
    if (mXDisplayName == neg_one_STRING)    // Use display env
@@ -313,7 +319,8 @@ void GlWindowWin32::configWindow( vrj::Display* disp )
       jccl::ConfigElementPtr event_win_chunk =
          display_elt->getProperty<jccl::ConfigElementPtr>("event_window_device");
 
-      // Set the name of the chunk to the same as the parent chunk (so we can point at it)
+      // Set the name of the chunk to the same as the parent chunk (so we can
+      // point at it).
       //event_win_chunk->setProperty("name", display_elt->getName();
 
       gadget::EventWindowWin32::config(event_win_chunk);
@@ -335,8 +342,8 @@ void GlWindowWin32::configWindow( vrj::Display* disp )
 
 // WindowProcedure to deal with the events generated.
 // Called only for the window that we are controlling
-LRESULT GlWindowWin32::handleEvent( HWND hWnd, UINT message, WPARAM wParam,
-                                    LPARAM lParam )
+LRESULT GlWindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
+                                   LPARAM lParam)
 {
    switch ( message )
    {
@@ -380,15 +387,14 @@ LRESULT GlWindowWin32::handleEvent( HWND hWnd, UINT message, WPARAM wParam,
          // whenever the screen needs updating.
       case WM_PAINT:
          {
-            PAINTSTRUCT   ps;           // Paint structure
+            PAINTSTRUCT ps;         // Paint structure
             BeginPaint(hWnd, &ps);  // Validate the drawing of the window
             EndPaint(hWnd, &ps);
          }
          break;
 
       default:   // Passes it on if unproccessed
-         return(DefWindowProc(hWnd, message, wParam, lParam));
-
+         return DefWindowProc(hWnd, message, wParam, lParam);
    }
 
    return(0L);
@@ -515,7 +521,7 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
 }
 
 // the user has changed the size of the window
-void GlWindowWin32::sizeChanged( long width, long height )
+void GlWindowWin32::sizeChanged(long width, long height)
 {
    window_width = width;
    window_height = height;
@@ -533,8 +539,6 @@ void GlWindowWin32::sizeChanged( long width, long height )
    // XXX: Should reset viewport here
 }
 
-
-
 /**
  * Global Window event handler.
  */
@@ -545,7 +549,7 @@ LRESULT CALLBACK GlWindowWin32::WndProc(HWND hWnd, UINT message,
 
    if ( glWin != NULL )       // Message for one of ours
    {
-      glWin->processEvent( message, wParam, lParam );
+      glWin->processEvent(message, wParam, lParam);
       return glWin->handleEvent(hWnd, message, wParam, lParam);
    }
    else
@@ -560,7 +564,6 @@ LRESULT CALLBACK GlWindowWin32::WndProc(HWND hWnd, UINT message,
 bool GlWindowWin32::mWinRegisteredClass = false;
 WNDCLASS GlWindowWin32::mWinClass;           // The window class to register
 std::map<HWND, GlWindowWin32*> GlWindowWin32::mGlWinMap;
-
 
 bool GlWindowWin32::registerWindowClass()
 {
