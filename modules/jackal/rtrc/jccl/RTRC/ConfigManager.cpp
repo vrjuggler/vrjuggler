@@ -288,7 +288,7 @@ static const int pending_repeat_limit = 3;    // Must be one or greater.  1 mean
 // changing size, then it returns false until mLastPendingSize changes
 bool ConfigManager::pendingNeedsChecked()
 {
-   int cur_pending_size = 0;
+   std::list<PendingElement>::size_type cur_pending_size(0);
    bool ret_val = false;
 
    mPendingCountMutex.acquire();
