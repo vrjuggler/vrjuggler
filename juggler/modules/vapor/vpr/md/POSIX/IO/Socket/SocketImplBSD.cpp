@@ -265,6 +265,7 @@ SocketImplBSD::connect (vpr::Interval timeout) {
     }
     // Otherwise, return success.
     else {
+        m_bound          = true;
         m_connected      = true;
         m_blocking_fixed = true;
     }
