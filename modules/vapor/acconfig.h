@@ -89,6 +89,8 @@
 
 /* Define if building on FreeBSD. */
 #undef VPR_OS_FreeBSD
+#undef WCHAR_MIN
+#undef WCHAR_MAX
 
 /* Define if building on Linux. */
 #undef VPR_OS_Linux
