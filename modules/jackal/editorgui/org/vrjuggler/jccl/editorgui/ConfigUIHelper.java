@@ -110,7 +110,7 @@ public class ConfigUIHelper
                 String s;
                 for (int i = 0; i < n; i++) {
                     s = p.getValue(i).toString();
-                    chunkpanel_mappings.put (s, cn);
+                    chunkpanel_mappings.put (s, ch);
                 }
             }
             return null;
@@ -124,12 +124,13 @@ public class ConfigUIHelper
         public ConfigChunkPanel createConfigChunkPanel (String desc_token) {
             ConfigChunkPanel p = null;
             try {
+                //String cn = (String)chunkpanel_mappings.get(desc_token);
                 ConfigChunk ch = (ConfigChunk)chunkpanel_mappings.get(desc_token);
                 if (ch == null)
                     ch = default_panel_chunk;
                 String cn = ch.getValueFromToken ("ClassName", 0).getString();
-//                  if (cn == null)
-//                      cn = "VjComponents.ConfigEditor.ConfigChunkUI.DefaultConfigChunkPanel";
+                 if (cn == null)
+                     cn = "VjComponents.ConfigEditor.ConfigChunkUI.DefaultConfigChunkPanel";
                 p = (ConfigChunkPanel)Core.component_factory.createComponent(cn);
                 p.setConfiguration (ch);
                 p.initialize ();
