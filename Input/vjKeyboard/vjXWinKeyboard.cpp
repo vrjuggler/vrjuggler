@@ -92,8 +92,9 @@ int vjXWinKeyboard::StartSampling()
                                 KeyPressMask | KeyReleaseMask | ButtonPressMask |
                                 ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
       SetHints(m_window, instName , "VJm_keys" , "VJKeyboard2", "VJInputD" );
-      XSelectInput(m_display,m_window, KeyPressMask | KeyReleaseMask | ButtonPressMask |
-                   ButtonReleaseMask);
+      XSelectInput(m_display, m_window,
+                   KeyPressMask | KeyReleaseMask | ButtonPressMask |
+                   ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
       XMapWindow(m_display, m_window);
       XFlush(m_display);
       XRaiseWindow(m_display,m_window);
@@ -134,73 +135,161 @@ void vjXWinKeyboard::UpdateData()
   UpdKeys();
 }
 
-
 void vjXWinKeyboard::UpdKeys()
 {
    XEvent event;
    KeySym key;
-   Window win1, win2;
-   int wX, wY, rootX, rootY;
-   unsigned int mask;
 
    for(int i = 0; i < 256; i++)
       m_keys[i] = m_realkeys[i];
 
-   while(XCheckWindowEvent(m_display,m_window,KeyPressMask |
-		KeyReleaseMask | ButtonPressMask | ButtonReleaseMask, &event))
+   // Loop while the event queue contains events for m_window that are part
+   // of the given event mask.
+   while ( XCheckWindowEvent(m_display, m_window,
+                             KeyPressMask | KeyReleaseMask | ButtonPressMask |
+                             ButtonReleaseMask | ButtonMotionMask |
+                             PointerMotionMask, &event) )
    {
       switch (event.type)
       {
+      // A KeyPress event occurred.  Flag the key that was pressed (as a
+      // VJ key) as being pressed and grab the keyboard.
       case KeyPress:
+         // Convert the pressed key from the event to a VJ key.
          key = XLookupKeysym((XKeyEvent*)&event,0);
          m_realkeys[XKeyTovjKey(key)] = 1;
          m_keys[XKeyTovjKey(key)] += 1;
+
+         // Grab the keyboard input so that holding down a key works even
+         // if the window loses focus.  While the keyboard is grabbed,
+         // keyboard and pointer events will be processed normally
+         // (GrabModeAsync).
+         m_keyboard_grabbed = XGrabKeyboard(m_display, m_window, True,
+                                            GrabModeAsync, GrabModeAsync,
+                                            CurrentTime);
+
          vjDEBUG(4) << "KeyPress:  " << hex << key
-                    << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
+                    << " state:" << ((XKeyEvent*)&event)->state << " ==> "
+                    << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
+
+      // A KeyRelease event occurred.  Flag the key that was released (as a
+      // VJ key) as being not pressed and ungrab the keyboard.
       case KeyRelease:
+         // Convert the released key from the event to a VJ key.
          key = XLookupKeysym((XKeyEvent*)&event,0);
          m_realkeys[XKeyTovjKey(key)] = 0;
+
+         // Ungrab the keyboard now that we're no longer holding down the key.
+         XUngrabKeyboard(m_display, CurrentTime);
+         m_keyboard_grabbed = -1;
+
+         // If the mouse pointer is grabbed, ungrab it since our modifier
+         // is no longer being pressed.
+         if ( m_pointer_grabbed == GrabSuccess ) {
+            XUngrabPointer(m_display, CurrentTime);
+            m_pointer_grabbed = -1;
+         }
+
          vjDEBUG(4) << "KeyRelease:" << hex << key
-                    << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
+                    << " state:" << ((XKeyEvent*)&event)->state << " ==> "
+                    << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
+         break;
+
+      // A MotionNotify event (mouse pointer movement) occurred.
+      // If motion occurs within the window, determine how far the pointer
+      // moved since the last time anything was read.
+      case MotionNotify:
+         int win_x, win_y, delta_x, delta_y;
+
+         // If the keyboard is currently grabbed, this is now the combination
+         // of a modifier key and movement.  Grab the mouse so that if it
+         // moves outside the window, we still get its events.
+         if ( m_keyboard_grabbed == GrabSuccess ) {
+            unsigned int event_mask;
+
+            event_mask = ButtonPressMask | ButtonReleaseMask |
+                         PointerMotionMask | ButtonMotionMask;
+
+            // While the pointer is grabbed, we will watch for the events in
+            // event_mask, and keyboard and pointer events will be processed
+            // normally (GrabModeAsync).
+            m_pointer_grabbed = XGrabPointer(m_display, m_window, True,
+                                             event_mask, GrabModeAsync,
+                                             GrabModeAsync, None, None,
+                                             CurrentTime);
+         }
+
+         // Determine how far the mouse pointer moved since the last event.
+         win_x = event.xmotion.x;
+         win_y = event.xmotion.y;
+         delta_x = win_x - oldMouseX;
+         delta_y = win_y - oldMouseY;
+
+         // Positive movement in the x direction.
+         if ( delta_x > 0 ) {
+            m_keys[VJMOUSE_POSX] = delta_x * m_mouse_sensitivity;
+            m_keys[VJMOUSE_NEGX] = 0;
+         }
+         // Negative movement in the x direction.
+         else if ( delta_x < 0 ) {
+            m_keys[VJMOUSE_NEGX] = -delta_x * m_mouse_sensitivity;
+            m_keys[VJMOUSE_POSX] = 0;
+         }
+
+         // Positive movement in the y direction.
+         if ( delta_y > 0 ) {
+            m_keys[VJMOUSE_POSY] = delta_y * m_mouse_sensitivity;
+            m_keys[VJMOUSE_NEGY] = 0;
+         }
+         // Negative movement in the y direction.
+         else {
+            m_keys[VJMOUSE_NEGY] = -delta_y * m_mouse_sensitivity;
+            m_keys[VJMOUSE_POSY] = 0;
+         }
+
+         oldMouseX = win_x;
+         oldMouseY = win_y;
+
+         break;
+
+      // A mouse button was pressed.  We set that button to 1 in m_keys AND
+      // in m_realkeys so that it will be remembered as being held down
+      // untill a ButtonRelease event occurs.
+      case ButtonPress:
+         switch ( event.xbutton.button )
+         {
+         case Button1:
+            m_realkeys[VJMBUTTON1] = m_keys[VJMBUTTON1] = 1;
+            break;
+         case Button2:
+            m_realkeys[VJMBUTTON2] = m_keys[VJMBUTTON2] = 1;
+            break;
+         case Button3:
+            m_realkeys[VJMBUTTON3] = m_keys[VJMBUTTON3] = 1;
+            break;
+         }
+
+         break;
+
+      // A mouse button was released.
+      case ButtonRelease:
+         switch ( event.xbutton.button )
+         {
+         case Button1:
+            m_realkeys[VJMBUTTON1] = m_keys[VJMBUTTON1] = 0;
+            break;
+         case Button2:
+            m_realkeys[VJMBUTTON2] = m_keys[VJMBUTTON2] = 0;
+            break;
+         case Button3:
+            m_realkeys[VJMBUTTON3] = m_keys[VJMBUTTON3] = 0;
+            break;
+         }
+
          break;
       }
    }
-
-
-   XQueryPointer(m_display, m_window, &win1, &win2, &rootX, &rootY,
-		   &wX, &wY, &mask);
-	
-
-   int delta_x = (rootX - oldMouseX);
-   int delta_y = (rootY - oldMouseY);
-
-   if (delta_x > 0)
-      m_keys[VJMOUSE_POSX] = delta_x * m_mouse_sensitivity;
-   else
-      m_keys[VJMOUSE_POSX] = 0;
-
-   if (delta_x < 0)
-      m_keys[VJMOUSE_NEGX] = -delta_x * m_mouse_sensitivity;
-   else
-      m_keys[VJMOUSE_NEGX] = 0;
-
-   if (delta_y > 0)     // Mouse moving down
-      m_keys[VJMOUSE_POSY] = delta_y * m_mouse_sensitivity;
-   else
-      m_keys[VJMOUSE_POSY] = 0;
-
-   if (delta_y < 0)     // Mouse moving up
-      m_keys[VJMOUSE_NEGY] = -delta_y * m_mouse_sensitivity;
-   else
-      m_keys[VJMOUSE_NEGY] = 0;
-
-  oldMouseX = rootX; oldMouseY = rootY;
-
-   m_keys[VJMBUTTON1] = ((mask | Button1Mask) == mask) ? 1 : 0;
-   m_keys[VJMBUTTON2] = ((mask | Button2Mask) == mask) ? 1 : 0;
-   m_keys[VJMBUTTON3] = ((mask | Button3Mask) == mask) ? 1 : 0;
-
 }
 
 int vjXWinKeyboard::StopSampling()
