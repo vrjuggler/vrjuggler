@@ -1776,7 +1776,6 @@ VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
 # Information needed to generate juggler-config.
 case $THREADS in
     IRIX_SPROC)
-        subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="${_sem_lib}"
         static_begin="-B static"
@@ -1785,7 +1784,6 @@ case $THREADS in
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     POSIX)
-        subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="${_pthread_lib} ${_sem_lib}"
 
@@ -1801,7 +1799,6 @@ case $THREADS in
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     WIN32)
-        subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="comctl32.lib user32.lib gdi32.lib ws2_32.lib"
         vrj_ldflags="-link -libpath:\$prefix/lib/debug $NSPR_LDFLAGS"
@@ -1933,7 +1930,6 @@ AC_SUBST(APP_EXTRA_LIBS_PF)
 AC_SUBST(APP_EXTRA_LIBS_AW)
 AC_SUBST(APP_EXTRA_LIBS_SL)
 
-AC_SUBST(subsystem_cflags)
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
