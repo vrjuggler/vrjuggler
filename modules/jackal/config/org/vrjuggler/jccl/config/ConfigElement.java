@@ -415,17 +415,27 @@ public class ConfigElement implements ConfigElementPointerListener
    protected void firePropertyValueChanged(String prop_token, int index,
                                            Object old_value)
    {
-      ConfigElementEvent evt = null;
-      Object[] listeners = listenerList.getListenerList();
-      for (int i=listeners.length-2; i>=0; i-=2)
+      // Get the new value of the changed property.
+      List values = getPropertyValues(prop_token);
+      Object new_value = values.get(index);
+
+      // If the value did not actually change, then do not fire the change
+      // event.
+      if ( ! old_value.equals(new_value) )
       {
-         if (listeners[i] == ConfigElementListener.class)
+         ConfigElementEvent evt = null;
+         Object[] listeners = listenerList.getListenerList();
+         for (int i=listeners.length-2; i>=0; i-=2)
          {
-            if (evt == null)
+            if (listeners[i] == ConfigElementListener.class)
             {
-               evt = new ConfigElementEvent(this, prop_token, index, old_value);
+               if (evt == null)
+               {
+                  evt = new ConfigElementEvent(this, prop_token, index,
+                                               old_value);
+               }
+               ((ConfigElementListener)listeners[i+1]).propertyValueChanged(evt);
             }
-            ((ConfigElementListener)listeners[i+1]).propertyValueChanged(evt);
          }
       }
    }
