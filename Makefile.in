@@ -1315,7 +1315,7 @@ ifeq (@OS_TYPE@, UNIX)
 	@sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
           ${VJROOT_ABS}/GUI/vjcontrol.sh > vjcontrol
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          vjcontrol.sh ${bindir}/vjcontrol && rm -f vjcontrol
+          vjcontrol ${bindir}/vjcontrol && rm -f vjcontrol
 else
 	@sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
           ${VJROOT_ABS}/GUI/vjcontrol.bat > vjcontrol.bat
