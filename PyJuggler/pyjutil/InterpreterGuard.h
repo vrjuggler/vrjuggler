@@ -62,8 +62,8 @@ private:
 
       ~State();
 
-      bool           gilLocked;
-      PyThreadState* pyState;
+      bool           gilLocked; /**< Indicates that the GIL is held. */
+      PyThreadState* pyState;   /**< The Python state info for this thread. */
    };
 
 public:
@@ -98,7 +98,8 @@ private:
       /* Do nothing. */ ;
    }
 
-   bool   mMyLock;
+   /** Indicates that this object was the one that acquired the GIL. */
+   bool mMyLock;
 };
 
 } // End of PyJuggler namespace
