@@ -76,8 +76,8 @@ extern "C"
 namespace cluster
 {
    RIMPlugin::RIMPlugin()
-   : mHandlerGUID("9c3fb301-b142-4c6f-8ca3-1570898974d0"),
-     mRIM(mHandlerGUID)
+      : mHandlerGUID(std::string("9c3fb301-b142-4c6f-8ca3-1570898974d0"))
+      , mRIM(mHandlerGUID)
    {;}
 
    RIMPlugin::~RIMPlugin()

@@ -56,8 +56,10 @@ class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockWiredPlugin
    : public cluster::ClusterPlugin
 {
 public:
-   SwapLockWiredPlugin() : mWire(-1), mHandlerGUID("f4f31d1c-eb4f-41fa-94d4-bde783bf32d6"),
-      mIsMaster(false), mActive(false), mMasterWaitByte(0)
+   SwapLockWiredPlugin()
+      : mWire(-1)
+      , mHandlerGUID(std::string("f4f31d1c-eb4f-41fa-94d4-bde783bf32d6"))
+      , mIsMaster(false), mActive(false), mMasterWaitByte(0)
    {;}
 
    virtual ~SwapLockWiredPlugin()
