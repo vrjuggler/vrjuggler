@@ -31,9 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //#include <gadget/gadgetConfig.h>
-#include <cluster/Packets/ApplicationDataAck.h>
+#include <boost/concept_check.hpp>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include <gadget/Util/Debug.h>
+#include <cluster/Packets/ApplicationDataAck.h>
 
 namespace cluster
 {
@@ -126,6 +127,7 @@ namespace cluster
 
    bool ApplicationDataAck::action(ClusterNode* node)
    {  
+      boost::ignore_unused_variable_warning(node);
       return false;
    }
 

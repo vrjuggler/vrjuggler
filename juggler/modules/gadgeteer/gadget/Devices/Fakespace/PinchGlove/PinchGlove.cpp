@@ -34,6 +34,7 @@
 
 #include <string>
 #include <stdio.h>                      /* need stdio for sprintf */
+#include <boost/concept_check.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
@@ -129,9 +130,12 @@ int PinchGlove::startSampling()
 
 void PinchGlove::controlLoop(void* nullParam)
 {
+   boost::ignore_unused_variable_warning(nullParam);
+
    vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Entered control thread\n"
                                     << vprDEBUG_FLUSH;
 
+   // XXX: I can never exit!
    while ( 1 )
    {
       sample();

@@ -34,6 +34,7 @@
 
 #include <sstream>
 #include <fstream>
+#include <boost/concept_check.hpp>
 
 #include <vpr/vprConfig.h>
 #include <vpr/System.h>
@@ -146,6 +147,7 @@ IntersenseAPI::~IntersenseAPI()
 // Main thread of control for this active object
 void IntersenseAPI::controlLoop(void* nullParam)
 {
+   boost::ignore_unused_variable_warning(nullParam);
 
     // Configure the stations used by the configuration
     int j = 0;
@@ -162,6 +164,7 @@ void IntersenseAPI::controlLoop(void* nullParam)
     }
 
 // Loop through and keep sampling
+    // XXX: I can never exit!
     for (;;)
     {
         this->sample();

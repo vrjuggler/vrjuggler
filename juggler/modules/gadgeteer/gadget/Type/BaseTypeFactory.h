@@ -36,6 +36,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vector>
+#include <boost/concept_check.hpp>
 
 #include <gadget/Type/Input.h>
 #include <jccl/Config/ConfigChunkPtr.h>
@@ -62,8 +63,9 @@ public:
    BaseTypeConstructorBase() {;}
 
    /** Creates the device. */
-   virtual Input* createNetDevice(std::string base_type)
+   virtual Input* createNetDevice(std::string baseType)
    {
+      boost::ignore_unused_variable_warning(baseType);
       vprDEBUG(vprDBG_ALL,0) << "ERROR: DeviceConstructorBase::createDevice: Should never be called" << vprDEBUG_FLUSH;
       return NULL;
    }
@@ -140,8 +142,9 @@ public:
       BaseTypeFactory::instance()->registerNetDevice(this);
    }
 
-   Input* createNetDevice(std::string base_type)
+   Input* createNetDevice(std::string baseType)
    {
+      boost::ignore_unused_variable_warning(baseType);
       DEV* new_dev = new DEV;
       //bool success = new_dev->config(chunk);
       //if(success)

@@ -83,11 +83,31 @@ public:
    static std::string getChunkType() { return std::string("SimGloveGesture");}
 
    /*** These are not supported in sim ***/
-   void saveTrainedFile(std::string fileName) { ;}
-   void loadSamplesFile(std::string filename) {;}
-   void saveSamplesFile(std::string filename) {;}
-   void clearSamples(int gestureId=-1) {;}
-   void addSample(int gestureId) {;}
+   void saveTrainedFile(std::string fileName)
+   {
+      boost::ignore_unused_variable_warning(fileName);
+   }
+
+   void loadSamplesFile(std::string filename)
+   {
+      boost::ignore_unused_variable_warning(filename);
+   }
+
+   void saveSamplesFile(std::string filename)
+   {
+      boost::ignore_unused_variable_warning(filename);
+   }
+
+   void clearSamples(int gestureId = -1)
+   {
+      boost::ignore_unused_variable_warning(gestureId);
+   }
+
+   void addSample(int gestureId)
+   {
+      boost::ignore_unused_variable_warning(gestureId);
+   }
+
    void train() { ; }
 
    /**

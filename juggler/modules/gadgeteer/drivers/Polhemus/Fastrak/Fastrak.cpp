@@ -38,9 +38,12 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
+#include <vector>
+#include <boost/concept_check.hpp>
 #include <gmtl/EulerAngle.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Generate.h>
+
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 
@@ -49,7 +52,6 @@
 
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Devices/Polhemus/Fastrak/Fastrak.h>
-#include <vector>
 
 void initDevice(gadget::InputManager* inputMgr)
 {
@@ -60,6 +62,8 @@ static void printError(std::string errorMsg)
 {
 #ifdef _FASTRAK_DEBUG_
    std::cout << errorMsg << std:endl;
+#else
+   boost::ignore_unused_variable_warning(errorMsg);
 #endif
 }
 

@@ -35,6 +35,7 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
+#include <boost/concept_check.hpp>
 #include <jccl/Config/ConfigChunkPtr.h>
 
 
@@ -63,8 +64,10 @@ public:
    {;}
 
    virtual bool config(jccl::ConfigChunkPtr c)
-   { return true;}
-
+   {
+      boost::ignore_unused_variable_warning(c);
+      return true;
+   }
 
 public:  // **** GET GESTURES **** //
    /**

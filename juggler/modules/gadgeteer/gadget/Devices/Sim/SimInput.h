@@ -36,6 +36,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vector>
+#include <boost/concept_check.hpp>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <gadget/Type/EventWindowInterface.h>
 #include <vpr/IO/ObjectReader.h>
@@ -97,14 +98,23 @@ public:
     * @post Event window proxy is configured.
     */
    virtual bool config(jccl::ConfigChunkPtr chunk);
+
    virtual std::string getBaseType()
    {
        return std::string("SimInput");
    }
+
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
-   {return(vpr::ReturnStatus::Succeed);}
+   {
+      boost::ignore_unused_variable_warning(writer);
+      return vpr::ReturnStatus::Succeed;
+   }
+
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
-   {return(vpr::ReturnStatus::Succeed);}
+   {
+      boost::ignore_unused_variable_warning(reader);
+      return vpr::ReturnStatus::Succeed;
+   }
 
 protected:
 
