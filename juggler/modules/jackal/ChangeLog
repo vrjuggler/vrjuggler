@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-14-2005 patrickh    Provide public Java classes for allowing ConfigElement
+                        references to be stored in the Java clipboard.
+                        NEW VERSION: 0.92.8
 Mar-05-2005 patrickh    Extended the config definition editor to support
                         adding and removing parents.  This added two new
                         methods (for adding and removing parents) to
