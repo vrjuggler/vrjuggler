@@ -121,11 +121,6 @@ DPP_WIN32_SETUP
 AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
 
-## These are used on all platforms.
-#AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE, "$OS_REL_STR")
-#AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE_MAJOR, $OS_REL_NUM_MAJOR)
-#AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE_MINOR, $OS_REL_NUM_MINOR)
-
 # Depending on the target operating system, set various command options and
 # such.
 case $target_os in
@@ -320,7 +315,6 @@ AC_CHECK_HEADERS(fcntl.h strings.h sys/time.h unistd.h)
 # -----------------------------------------------------------------------------
 # Checks for typedefs, structures, and compiler characteristics.
 # -----------------------------------------------------------------------------
-#AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 
 # The following checks for availability of the socklen_t type.  Since it is
@@ -350,21 +344,6 @@ _vjsave_LIBS="$LIBS"
 AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',
     AC_CHECK_LIB(socket, gethostbyname, SOCKET_LIB='-lsocket'))
 LIBS="${_vjsave_LIBS}"
-
-# In a Win32 environment with MS Visual C++ as the compiler, these math
-# functions are not in any special library.  Test for them normally.
-#if test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
-#    AC_CHECK_FUNCS(sinf cosf sqrtf asinf acosf atan2f fabsf)
-# Otherwise, they are in libmath if they are anywhere.
-#else
-#    AC_CHECK_LIB(m, sinf, AC_DEFINE(HAVE_SINF))
-#    AC_CHECK_LIB(m, cosf, AC_DEFINE(HAVE_COSF))
-#    AC_CHECK_LIB(m, sqrtf, AC_DEFINE(HAVE_SQRTF))
-#    AC_CHECK_LIB(m, asinf, AC_DEFINE(HAVE_ASINF))
-#    AC_CHECK_LIB(m, acosf, AC_DEFINE(HAVE_ACOSF))
-#    AC_CHECK_LIB(m, atan2f, AC_DEFINE(HAVE_ATAN2F))
-#    AC_CHECK_LIB(m, fabsf, AC_DEFINE(HAVE_FABSF))
-#fi
 
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
