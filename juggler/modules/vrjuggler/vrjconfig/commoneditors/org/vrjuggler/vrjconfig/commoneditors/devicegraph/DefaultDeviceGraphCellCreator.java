@@ -44,6 +44,7 @@ import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.PropertyDefinition;
 
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
+import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.SimAnalogUnitPropertyHandler;
 
 
 /**
@@ -76,6 +77,31 @@ public class DefaultDeviceGraphCellCreator
       {
          cell = GraphHelpers.createDeviceCell(devElt, context, 1, attributes,
                                               x, y, true);
+      }
+      else if ( token.equals(SIM_ANALOG_DEVICE_TYPE) )
+      {
+         Map unit_types = new HashMap();
+         unit_types.put(UnitConstants.ANALOG, null);
+         SimAnalogUnitPropertyHandler h = new SimAnalogUnitPropertyHandler();
+         cell = GraphHelpers.createBaseDeviceCell(
+            new DeviceInfo(devElt, context, unit_types, h), attributes, x, y,
+            false
+         );
+
+         int dec_count =
+            devElt.getPropertyValueCount(DECREMENT_KEYPRESS_PROPERTY);
+         int inc_count =
+            devElt.getPropertyValueCount(INCREMENT_KEYPRESS_PROPERTY);
+
+         if ( dec_count != inc_count )
+         {
+            throw new IllegalArgumentException(
+               "Increment/decrement keypress mismatch in " + devElt.getName() +
+               ": " + inc_count + " != " + dec_count
+            );
+         }
+
+         GraphHelpers.addDevicePorts(cell, UnitConstants.ANALOG, inc_count);
       }
       // A simulated digital device has a variable number of digital inputs
       // based on a variable-valued property.
