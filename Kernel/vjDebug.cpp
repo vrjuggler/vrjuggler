@@ -97,7 +97,7 @@ void vjDebug::addAllowedCategory(int cat)
 bool vjDebug::isCategoryAllowed(int cat)
 {
    // If no entry for cat, grow the vector
-   if(mAllowedCategories.size() < (cat+1))
+   if((int)mAllowedCategories.size() < (cat+1))
       growAllowedCategoryVector(cat+1);
 
    // If I specified to listen to all OR

@@ -40,7 +40,7 @@ class vjDrawManager : public vjConfigChunkHandler
 {
 public:
    vjDrawManager (void) {
-      displayManager = NULL;
+      mDisplayManager = NULL;
    }
 
    //: Function to initialy config API specific stuff.
@@ -93,7 +93,7 @@ public:
    { out << "vjDrawManager: outstream\n"; }  // Set a default
 
 protected:
-   vjDisplayManager* displayManager;  //: The display manager dealing with
+   vjDisplayManager* mDisplayManager;  //: The display manager dealing with
 };
 
 #endif

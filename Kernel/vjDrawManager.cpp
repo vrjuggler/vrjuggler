@@ -23,7 +23,7 @@
 #include <Kernel/vjDisplayManager.h>
 
 void vjDrawManager::setDisplayManager(vjDisplayManager* _dispMgr)
-{ displayManager = _dispMgr; }
+{ mDisplayManager = _dispMgr; }
 
 
 ostream& operator<<(ostream& out, vjDrawManager& drawMgr)
