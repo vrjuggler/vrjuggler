@@ -16,7 +16,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				info="A complete reference to every Juggler class." 
 				image="Leaf.gif" >
 
-			<!-- install-web include ${PROGRAMMERREF}/classes/class_nav.xml -->		
+			<!-- install-web include ${PROGRAMMERREF}/classes/index.xml -->		
 </rootfolder>
 		</idefault>
 	</font>
