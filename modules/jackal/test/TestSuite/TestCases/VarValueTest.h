@@ -42,8 +42,8 @@ public:
     }
 
     void Conversions () {
-        char* cs;
-        char buf[256];
+        //char* cs;
+        //char buf[256];
 
         // conversions for int varvalue
         {
