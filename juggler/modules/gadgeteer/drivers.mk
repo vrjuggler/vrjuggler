@@ -52,3 +52,4 @@ DRIVERS+=	Polhemus/Fastrak
 DRIVERS+=	Tweek
 #DRIVERS+=	VRCO/TrackdAPI
 DRIVERS+=	VirtualTechnologies/CyberGlove
+DRIVERS+=	Open/VRPN
