@@ -120,7 +120,7 @@ void velocityNav::updateInteraction()
 
    // Braking
    if(mBraking)
-   { mDamping = 0.85; }
+   { mDamping = 0.85f; }
    else
    { mDamping = 1.0f; }
 

@@ -132,7 +132,7 @@ public:
     */
    virtual void preFrame()
    {
-      mCurTime += 0.005;
+      mCurTime += 0.005f;
 
       mMesh.compute(mCurTime);
 
