@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-20-2001 allenb    Chunk types: simDisplay and surfaceDisplay have been
+                      removed from the system.  They have been replaced
+                      by the new chunk of type displayWindow.  Any old
+                      chunks will be ignored.
 Jun-20-2001 patrick   The Mac OS X port no longer requires Carbon SetupGL
                       because the necessary SetupGL code has been copied into
                       the library
