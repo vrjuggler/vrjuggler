@@ -32,19 +32,16 @@
 
 #include <jccl/jcclConfig.h>
 
-#include <jccl/Config/ChunkDesc.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ParseUtil.h>
-#include <jccl/Config/ConfigTokens.h>
-#include <jccl/Config/ChunkFactory.h>
-#include <jccl/Config/PropertyDesc.h>
-
 #include <sstream>
+#include <cppdom/cppdom.h>
+#include <cppdom/predicates.h>
 
 #include <vpr/Util/Assert.h>
 
-#include <cppdom/cppdom.h>
-#include <cppdom/predicates.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ChunkFactory.h>
+#include <jccl/Config/PropertyDesc.h>
+#include <jccl/Config/ChunkDesc.h>
 
 namespace jccl
 {
