@@ -1,0 +1,331 @@
+package id3rhz8cp2qfpb1cp2t308m;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8:oiref><oihard>
+@__modelType reference 
+*/
+class reference9 {
+}/**
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node10:oiref><oihard>
+@__modelType reference 
+*/
+class reference11 {
+}/**
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node12:oiref><oihard>
+@__modelType reference 
+*/
+class reference13 {
+}/**
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node14:oiref><oihard>
+@__modelType reference 
+*/
+class reference15 {
+}/**
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node16:oiref><oihard>
+@__modelType reference 
+*/
+class reference17 {
+}}/**
+
+@__tags
+@shapeType SequenceDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8.link27:oiref>=351,420,566,420:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8.link25:oiref>=351,280,742,280:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node14:oiref>=840,30,90,520,1:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node12:oiref>=682,30,135,520,1:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link36:oiref>=213,330,878,330:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link20:oiref>=195,194,195,189,235,189,235,199,204,199:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link23:oiref>=204,244,337,244:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node12.node:oiref>=742,280,14,100,1:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node12.link33:oiref>=742,310,213,310:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.node21:oiref>=190,194,14,266,1:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node16.link:oiref>=86,157,392,13,0:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.node29:oiref>=181,174,14,296,1:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8:oiref>=266,30,156,520,1:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node16.link30:oiref>=:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8.link27:oiref>=355,403,400,13,0:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link36:oiref>=217,313,53,13,0:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8.link25:oiref>=355,263,400,13,0:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link20:oiref>=208,199,400,13,0:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node14.node:oiref>=878,330,14,20,1:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link23:oiref>=208,227,400,13,0:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8.link28:oiref>=:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8.link26:oiref>=:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node:oiref>=143,30,90,520,1:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node10:oiref>=487,30,172,520,1:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node16:oiref>=30,30,90,520,1:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link37:oiref>=:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link24:oiref>=:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link22:oiref>=:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.node34:oiref>=199,310,14,60,0:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node12.link35:oiref>=:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node12.link33:oiref>=338,293,400,13,0:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node10.node:oiref>=566,420,14,20,1:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node16.link:oiref>=82,174,181,174:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8.node:oiref>=337,244,14,206,1:oigroup>
+*/
+class __positions {
+}/**
+@shapeType Object
+@__modelType node
+@name Sock 
+*/
+class node {
+/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:cpp#Class#vpr::BlockIO:oiref><oihard> 
+*/
+class link {
+}/**
+@shapeType MessageLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node:oiref><oihard>
+@sendingInstant 194
+@processingDuration 266
+@sequenceNumber 1.1
+@label
+@operation <oiref:cpp#Member#vpr::BlockIO#read_s#(#void*#const size_t#ssize_t&#const vpr::Interval#)#:oiref>
+@operationNameAsText 'read_s(void *,const size_t,ssize_t &,const vpr::Interval):Status' 
+*/
+class link20 {
+}/**
+@shapeType Activation
+@__modelType node
+@name Activation2
+@activationMessage <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link20:oiref> 
+*/
+class node21 {
+}/**
+@shapeType CollaborationLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node:oiref><oihard> 
+*/
+class link22 {
+}/**
+@shapeType MessageLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8:oiref><oihard>
+@sendingInstant 244
+@processingDuration 206
+@sequenceNumber 1.1.1
+@label
+@minProcessingDuration 20
+@description read_s
+@operation <oiref:cpp#Member#vpr::IOStatsStrategyAdapter#read_s#(#Status&#void*#const size_t#ssize_t&#const vpr::Interval#)#:oiref>
+@operationNameAsText 'read_s(Status &,void *,const size_t,ssize_t &,const vpr::Interval):void'
+@showReturnArrow
+*/
+class link23 {
+}/**
+@shapeType CollaborationLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8:oiref><oihard> 
+*/
+class link24 {
+}/**
+@shapeType Activation
+@__modelType node
+@name Activation1
+@activationMessage <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node16.link:oiref> 
+*/
+class node29 {
+}/**
+@shapeType Activation
+@__modelType node
+@name Activation6
+@activationMessage <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node12.link33:oiref> 
+*/
+class node34 {
+}/**
+@shapeType MessageLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node14:oiref><oihard>
+@sendingInstant 330
+@processingDuration 20 
+@sequenceNumber 1.1.1.1.1.1
+@label read_i
+@showReturnArrow
+@minProcessingDuration 20
+*/
+class link36 {
+}/**
+@shapeType CollaborationLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node14:oiref><oihard> 
+*/
+class link37 {
+}}/**
+@shapeType Object
+@__modelType node
+@name StrAdapter 
+*/
+class node8 {
+/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:cpp#Class#vpr::IOStatsStrategyAdapter:oiref><oihard> 
+*/
+class link {
+}/**
+@shapeType Activation
+@__modelType node
+@name Activation3
+@activationMessage <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link23:oiref> 
+*/
+class node {
+}/**
+@shapeType MessageLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node12:oiref><oihard>
+@sendingInstant 280
+@processingDuration 100
+@sequenceNumber 1.1.1.1
+@label
+@operation <oiref:cpp#Member#vpr::BaseIOStatsStrategy#read_s#(#Status&#void*#const size_t#ssize_t&#const vpr::Interval#)#:oiref>
+@operationNameAsText 'read_s(Status &,void *,const size_t,ssize_t &,const vpr::Interval):void'
+@showReturnArrow
+@minProcessingDuration 60
+*/
+class link25 {
+}/**
+@shapeType CollaborationLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node12:oiref><oihard> 
+*/
+class link26 {
+}/**
+@shapeType MessageLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node10:oiref><oihard>
+@sendingInstant 420
+@processingDuration 20 
+@sequenceNumber 1.1.1.2
+@label
+@operation <oiref:cpp#Member#vpr::BandwidthIOStatsStrategy#read_s#(#Status&#void*#const size_t#ssize_t&#const vpr::Interval#)#:oiref>
+@operationNameAsText 'read_s(Status &,void *,const size_t,ssize_t &,const vpr::Interval):void'
+@showReturnArrow
+*/
+class link27 {
+}/**
+@shapeType CollaborationLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node10:oiref><oihard> 
+*/
+class link28 {
+}}/**
+@shapeType Object
+@__modelType node
+@name BW_Strategy 
+*/
+class node10 {
+/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:cpp#Class#vpr::BandwidthIOStatsStrategy:oiref><oihard> 
+*/
+class link {
+}/**
+@shapeType Activation
+@__modelType node
+@name Activation5
+@activationMessage <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8.link27:oiref> 
+*/
+class node {
+}}/**
+@shapeType Object
+@__modelType node
+@name BaseStr 
+*/
+class node12 {
+/**
+@shapeType Activation
+@__modelType node
+@name Activation4
+@activationMessage <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8.link25:oiref> 
+*/
+class node {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:cpp#Class#vpr::BaseIOStatsStrategy:oiref><oihard> 
+*/
+class link {
+}/**
+@shapeType MessageLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node:oiref><oihard>
+@sendingInstant 310
+@processingDuration 60
+@sequenceNumber 1.1.1.1.1
+@label
+@operation <oiref:cpp#Member#vpr::BlockIO#read_i#(#void*#const size_t#ssize_t&#const vpr::Interval#)#:oiref>
+@operationNameAsText 'read_i(void *,const size_t,ssize_t &,const vpr::Interval):Status'
+@showReturnArrow
+@minProcessingDuration 60
+*/
+class link33 {
+}/**
+@shapeType CollaborationLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node:oiref><oihard> 
+*/
+class link35 {
+}}/**
+@shapeType Object
+@__modelType node
+@name Real Impl 
+*/
+class node14 {
+/**
+@shapeType Activation
+@__modelType node
+@name Activation7
+@activationMessage <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link36:oiref> 
+*/
+class node {
+}}/**
+@shapeType Object
+@__modelType node
+@name App
+@stereotype actor 
+*/
+class node16 {
+/**
+@shapeType MessageLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node:oiref><oihard>
+@sendingInstant 174
+@processingDuration 296
+@sequenceNumber 1
+@label
+@operation <oiref:cpp#Member#vpr::BlockIO#read#(#void*#const size_t#ssize_t&#const vpr::Interval#)#:oiref>
+@operationNameAsText 'read(void *,const size_t,ssize_t &,const vpr::Interval):Status'
+@showReturnArrow 
+*/
+class link {
+}/**
+@shapeType CollaborationLink
+@__modelType link
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node:oiref><oihard> 
+*/
+class link30 {
+}}
