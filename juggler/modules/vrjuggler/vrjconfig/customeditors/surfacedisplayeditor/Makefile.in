@@ -41,7 +41,9 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-beandir=		$(bindir)/beans
+beandir=		$(libdir)/vrjuggler/customeditors
+jardir=			$(libdir)/vrjuggler/customeditors
+
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
 EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
@@ -87,20 +89,14 @@ install-editor:
 	@echo "------------------------------------------------"
 	@echo "Installing the SurfaceDisplayEditor code base"
 	@echo "------------------------------------------------"
-#ifeq (@OS_TYPE@, UNIX)
-#	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-#          $(EXTRA_INSTALL_ARGS) $(VJROOT_ABS)/vrjconfig/customeditors/surfacedisplayeditor/surfacedisplayeditor.sh \
-#          $(bindir)/surfacedisplayeditor
-#else
-#	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-#          $(VJROOT_ABS)/vrjconfig/customeditors/surfacedisplayeditor/surfacedisplayeditor.bat $(bindir)/surfacedisplayeditor.bat
-#endif	# if OS_TYPE == UNIX
+	$(MKINSTALLDIRS) $(beandir)
+	$(MKINSTALLDIRS) $(jardir)
 ifneq ($(JARS), )
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/customeditors/surfacedisplayeditor/$$jar		\
-                $(bindir) || exit 1;					\
+                $(jardir) || exit 1;					\
           done
 endif
 ifneq ($(BEANS), )

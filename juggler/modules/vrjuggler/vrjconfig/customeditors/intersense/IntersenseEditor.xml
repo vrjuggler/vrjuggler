@@ -2,7 +2,7 @@
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
    <service name="IntersenseEditor">
-      <file name="${TWEEK_BASE_DIR}/bin/beans/IntersenseEditor.jar"
+      <file name="${TWEEK_BASE_DIR}/lib/vrjuggler/customeditors/IntersenseEditor.jar"
             class="org.vrjuggler.vrjconfig.customeditors.intersense.IntersensePanel"/>
       <dependencies>
          <bean>ConfigBroker</bean>
