@@ -1,5 +1,17 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-07-20 patrick  The vpr::Socket connect() method now uses its timeout to
+                    wait for the connection to complete on a non-blocking
+                    socket.
+2001-07-20 allenb   The broken semantics of vpr::SocketConnector when using
+                    non-blocking sockets have been corrected.
+2001-07-17 patrick  Read/write calls take a vpr::Uint32 for their by-reference
+                    out parameter giving the number of bytes read or written.
+2001-07-13 patrick  Read/write calls return vpr::Status::WouldBlock instead of
+                    vpr::Status::InProgress for non-blocking configurations.
+2001-07-12 patrick  The internal platform-specific I/O implementation classes
+                    no longer inherit from vpr::BlockIO.
+2001-06-28 patrick  Non-blocking socket support (mostly) added.
 2001-06-25 allenb   Added timeout interval param to nearly every I/O
                     method in the library.
 2001-06-24 allenb   Added vpr::Interval class
