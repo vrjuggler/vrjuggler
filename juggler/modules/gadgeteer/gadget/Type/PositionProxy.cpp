@@ -67,7 +67,7 @@ void PositionProxy::setTransform(float xoff, float yoff, float zoff,    // Trans
 bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ POS PROXY config() -----------------\n" << vprDEBUG_FLUSH;
-   vprASSERT(((std::string)chunk->getType()) == "PositionProxy");
+   vprASSERT(((std::string)chunk->getType()) == "PosProxy");
 
    mUnitNum = chunk->getProperty("unit");
    mDeviceName = (std::string)chunk->getProperty("device");
