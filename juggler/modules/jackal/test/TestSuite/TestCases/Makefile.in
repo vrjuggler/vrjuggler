@@ -43,8 +43,7 @@ DIRPRFX=	TestCases/
 SRCS= \
 	ConfigChunkDBTest.cpp		\
 	ConfigChunkTest.cpp		\
-	IncludesTest.cpp		\
-	LabeledPerfDataBufferTest.cpp
+	IncludesTest.cpp
 
 
 include $(MKPATH)/dpp.obj.mk
