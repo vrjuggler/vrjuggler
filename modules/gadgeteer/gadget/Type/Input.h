@@ -222,7 +222,9 @@ protected:
    int            mActive;       /**< Is the driver active? */
    int            mBaudRate;     /**< Baud rate of the device (if it is serial device) */
 
-   Input (const Input& o) {;}
+   Input (const Input& o) 
+      : SerializableDevice()
+   {;}
    void operator= (const Input& o) {;}
 };
 
