@@ -118,10 +118,10 @@ beforebuild:
 	@$(MAKE) tweek-java
 
 cxx-idl:
-	@$(MAKE) RECTARGET="cxx_idl" recursive
+	@$(MAKE) RECTARGET="cxx_idl" DO_IDL=1 recursive
 
 java-idl:
-	@$(MAKE) -C java java_idl
+	@$(MAKE) -C java DO_IDL=1 java_idl
 
 # Things to do after the object files and library are built.
 afterbuild:
