@@ -1,52 +1,70 @@
-default: all
+# **************** <Tweek heading BEGIN do not edit this line> ****************
+# Tweek
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+# **************** <Tweek heading END do not edit this line> ******************
 
-# Basic options.
-srcdir=		@srcdir@
-JAVAC_FLAGS=	-classpath $(CLASSPATH) -sourcepath $(srcdir) -d .
-JCPS=		@JCPS@
-
-JDOM_JAR=	@JDOM_JAR@
-
-CLASSPATH=	$(TWEEK_BASE_DIR)/bin/TweekServices.jar$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekBeans.jar$(JCPS)$(JDOM_JAR)
-
-# Commands to execute.
-JAVA_COMPILE=	@JAVAC@ $(JAVAC_FLAGS)
-JAR=		@JAR@
-
-VPATH=		@srcdir@
-
-CLASSES=	prefstestbean/PrefsTestBean.class
-ALL_CLASSES=	prefstestbean/*.class
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2003 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Application build targets.
+# Makefile.in for tweek/test/PrefsTestBean.  It requires GNU make.
 # -----------------------------------------------------------------------------
+
 all:
 	$(MAKE) java
 	$(MAKE) PrefsTestBean.jar
 	-$(MAKE) install
 
+# Basic options.
+srcdir=		@srcdir@
+NO_DEPEND=	YES
+
+JAVA_SRCS=	prefstestbean/PreferencesEditEvent.java		\
+		prefstestbean/PreferencesEditListener.java	\
+		prefstestbean/PrefsEditor.java			\
+		prefstestbean/PrefsTestBean.java
+ALL_CLASSES=	prefstestbean/*.class
+
+include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
 java: $(CLASSES)
 
-PrefsTestBean.jar: $(CLASSES)
-	$(JAR) cvfm $@ $(srcdir)/prefs_test.MF $(ALL_CLASSES)
+PrefsTestBean.jar: $(JAVA_CLASSES)
+	$(JAR) cvf $@ $(ALL_CLASSES)
 
 install:
 	cp PrefsTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
 	cp $(srcdir)/PrefsTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
 
-# Suffix rules for building object files.
-.SUFFIXES: .java .class
-
-.java.class:
-	$(JAVA_COMPILE) $<
-
-# -----------------------------------------------------------------------------
-# Clean-up targets.
-# -----------------------------------------------------------------------------
-clean:
-	rm -f $(ALL_CLASSES)
-
-clobber:
-	@$(MAKE) clean
-	rm -f PrefsTestBean.jar
+CLOBBER_FILES+=	PrefsTestBean.jar
