@@ -36,11 +36,14 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.*;
 import java.beans.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
 
 import org.vrjuggler.jccl.config.*;
@@ -98,8 +101,16 @@ public class PropertyDefinitionEditor
       enumTable.setBackground(UIManager.getColor("Menu"));
 
       // Setup the allowed types list
-      allowedTypesTable.setModel(allowedTypesTableModel);
-      allowedTypesTable.setBackground(UIManager.getColor("Menu"));
+      allowedTypesList.setModel(allowedTypesListModel);
+      allowedTypesList.addListSelectionListener(
+         new ListSelectionListener()
+         {
+            public void valueChanged(ListSelectionEvent e)
+            {
+               allowedTypeSelectionChanged(e);
+            }
+         }
+      );
 
       // Setup the inital property definition to null
       setPropertyDefinition(null);
@@ -134,7 +145,7 @@ public class PropertyDefinitionEditor
       basicTableModel.setPropertyDefinition(mPropDef);
       itemsTableModel.setPropertyDefinition(mPropDef);
       enumsTableModel.setPropertyDefinition(mPropDef);
-      allowedTypesTableModel.setPropertyDefinition(mPropDef);
+      allowedTypesListModel.setPropertyDefinition(mPropDef);
       if (mPropDef != null)
       {
          helpTextArea.setText(mPropDef.getHelp());
@@ -206,13 +217,15 @@ public class PropertyDefinitionEditor
          enumScrollPane.setMaximumSize(maxSize);
       }
 
-      if (allowedTypesTable != null)
+/*
+      if ( allowedTypesList != null )
       {
-         Dimension maxSize = allowedTypesTable.getPreferredSize();
+         Dimension maxSize = allowedTypesList.getPreferredSize();
          maxSize.width = Integer.MAX_VALUE;
-         allowedTypesTable.setPreferredScrollableViewportSize(maxSize);
+         allowedTypesList.setPreferredScrollableViewportSize(maxSize);
          allowedTypesScrollPane.setMaximumSize(maxSize);
       }
+*/
 
       super.revalidate();
    }
@@ -337,11 +350,12 @@ public class PropertyDefinitionEditor
    private void setupAllowedTypesTab()
    {
       // Setup the allowed types table
-      allowedTypesScrollPane.setViewportView(allowedTypesTable);
+      allowedTypesScrollPane.setViewportView(allowedTypesList);
       allowedTypesScrollPane.setAlignmentX(LEFT_ALIGNMENT);
 
       // Setup the allowed types button panel
       addAllowedTypeBtn.setText("Add");
+      removeAllowedTypeBtn.setEnabled(false);
       removeAllowedTypeBtn.setText("Remove");
       addAllowedTypeBtn.addActionListener(new ActionListener()
       {
@@ -453,12 +467,32 @@ public class PropertyDefinitionEditor
       }
    }
 
+   protected void allowedTypeSelectionChanged(ListSelectionEvent e)
+   {
+      removeAllowedTypeBtn.setEnabled(allowedTypesList.getSelectedIndex() > -1);
+   }
+
    /**
     * Adds a new allowed type to the current property definition.
     */
    protected void addAllowedType()
    {
-      mPropDef.addAllowedType("");
+      ConfigBroker broker = new ConfigBrokerProxy();
+      ConfigDefinitionRepository repos = broker.getRepository();
+      java.util.List all_defs = repos.getAllLatest();
+      ConfigDefinitionChooser chooser = new ConfigDefinitionChooser();
+      chooser.setDefinitions(all_defs);
+      Frame parent = (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
+                                                               this);
+
+      if ( chooser.showDialog(parent) == ConfigDefinitionChooser.APPROVE_OPTION )
+      {
+         ConfigDefinition new_type = chooser.getSelectedDefinition();
+         if ( new_type != null )
+         {
+            mPropDef.addAllowedType(new_type.getToken());
+         }
+      }
    }
 
    /**
@@ -467,12 +501,7 @@ public class PropertyDefinitionEditor
     */
    protected void removeAllowedType()
    {
-      int row = allowedTypesTable.getSelectedRow();
-      if (row != -1)
-      {
-         String type = allowedTypesTableModel.getAllowedTypeAt(row);
-         mPropDef.removeAllowedType(type);
-      }
+      mPropDef.removeAllowedType((String) allowedTypesList.getSelectedValue());
    }
 
    /**
@@ -510,7 +539,7 @@ public class PropertyDefinitionEditor
    /**
     * The table model for the allowed types table.
     */
-   AllowedTypesTableModel allowedTypesTableModel = new AllowedTypesTableModel();
+   AllowedTypesListModel allowedTypesListModel = new AllowedTypesListModel();
 
    /**
     * The property definition for this editor.
@@ -529,7 +558,7 @@ public class PropertyDefinitionEditor
    private JTable enumTable = new JTable();
    private JScrollPane allowedTypesTab = new JScrollPane();
    private JScrollPane allowedTypesScrollPane = new JScrollPane();
-   private JTable allowedTypesTable = new JTable();
+   private JList allowedTypesList = new JList();
    private JTabbedPane mHelpPanel = new JTabbedPane();
    private JScrollPane mHelpEditorScrollPane = new JScrollPane();
    private JTextArea helpTextArea = new JTextArea();
@@ -952,78 +981,46 @@ public class PropertyDefinitionEditor
    }
 
    /**
-    * A table model for the allowed types table.
+    * A list model for the allowed types list.
     */
-   class AllowedTypesTableModel
-      extends AbstractTableModel
+   private static class AllowedTypesListModel
+      extends AbstractListModel
    {
+      public Object getElementAt(int index)
+      {
+         if ( propertyDesc != null )
+         {
+            return propertyDesc.getAllowedTypes().get(index);
+         }
+         return null;
+      }
+
+      public int getSize()
+      {
+         if ( propertyDesc != null )
+         {
+            return propertyDesc.getAllowedTypesCount();
+         }
+         return 0;
+      }
+
       public void setPropertyDefinition(PropertyDefinition propDef)
       {
          // Update our listener status
          if (propertyDesc != null)
          {
             propertyDesc.removePropertyDefinitionListener(mChangeListener);
+            fireContentsChanged(this, 0, propertyDesc.getAllowedTypesCount());
          }
+
          propertyDesc = propDef;
+
          if (propertyDesc != null)
          {
             propertyDesc.addPropertyDefinitionListener(mChangeListener);
-         }
-         fireTableDataChanged();
-      }
-
-      public PropertyDefinition getPropertyDefinition()
-      {
-         return propertyDesc;
-      }
-
-      public String getColumnName(int col)
-      {
-         return columnNames[col].toString();
-      }
-
-      public int getRowCount()
-      {
-         // We only have rows if we have a property definition to model
-         if (propertyDesc != null)
-         {
-            return propertyDesc.getAllowedAndDerivedTypesCount();
-         }
-         else
-         {
-            return 0;
+            fireContentsChanged(this, 0, propertyDesc.getAllowedTypesCount());
          }
       }
-
-      public int getColumnCount() { return columnNames.length; }
-
-      public Object getValueAt(int row, int col)
-      {
-         return propertyDesc.getAllowedType(row);
-      }
-
-      public String getAllowedTypeAt(int row)
-      {
-         return propertyDesc.getAllowedType(row);
-      }
-
-      public boolean isCellEditable(int row, int col)
-      {
-         return true;
-      }
-
-      public void setValueAt(Object value, int row, int col)
-      {
-         String old_allowed_type = getAllowedTypeAt(row);
-         propertyDesc.removeAllowedType(old_allowed_type);
-         propertyDesc.addAllowedType((String)value);
-         fireTableCellUpdated(row, col);
-      }
-
-      /**
-       * The names of the columns.
-       */
-      private String[] columnNames = { "Type" };
 
       /**
        * The property definition this table model represents.
@@ -1031,22 +1028,22 @@ public class PropertyDefinitionEditor
       private PropertyDefinition propertyDesc = null;
 
       /** Custom listener for changes to the property definition. */
-      private PropertyDefinitionListener mChangeListener = new PropertyDefinitionAdapter()
-      {
-         public void allowedTypeAdded(PropertyDefinitionEvent evt)
+      private PropertyDefinitionListener mChangeListener =
+         new PropertyDefinitionAdapter()
          {
-            // TODO: Someday, fire off a more specific event with information
-            // about only the allowed types that have actually changed
-            fireTableDataChanged();
-         }
+            public void allowedTypeAdded(PropertyDefinitionEvent evt)
+            {
+               PropertyDefinition def = (PropertyDefinition) evt.getSource();
+               int index = def.getAllowedTypes().indexOf(evt.getValue());
+               fireContentsChanged(this, index, def.getAllowedTypesCount());
+            }
 
-         public void allowedTypeRemoved(PropertyDefinitionEvent evt)
-         {
-            // TODO: Someday, fire off a more specific event with information
-            // about only the allowed types that have actually changed
-            fireTableDataChanged();
-         }
-      };
+            public void allowedTypeRemoved(PropertyDefinitionEvent evt)
+            {
+               PropertyDefinition def = (PropertyDefinition) evt.getSource();
+               fireContentsChanged(this, 0, def.getAllowedTypesCount());
+            }
+         };
    }
 
    /**
