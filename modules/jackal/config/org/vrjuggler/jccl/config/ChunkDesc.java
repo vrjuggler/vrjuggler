@@ -176,12 +176,28 @@ public class ChunkDesc implements Cloneable {
 
     public boolean equals (ChunkDesc c) {
         PropertyDesc p1, p2;
-        if (!token.equals(c.token))
+        if (! name.equals(c.name))
+        {
             return false;
+        }
+        if (! token.equals(c.token))
+        {
+            return false;
+        }
+        if (! help.equals(c.help))
+        {
+            return false;
+        }
+
+        if (props.size() != c.propertyDescsSize())
+        {
+            return false;
+        }
 
         /* This next part is O(n^2) <sigh> */
         int n = props.size();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++)
+        {
             p1 = (PropertyDesc) props.get(i);
             p2 = c.getPropertyDesc(p1.getToken());
             if ((p2 == null) || (!p1.equals(p2)))
