@@ -62,7 +62,7 @@ public:
    //: Function to draw the scene
    //! PRE: OpenGL state has correct transformation and buffer selected
    //! POST: The current scene has been drawn
-   virtual void draw(vjUser* user, vjProjection* proj);
+   virtual void draw();
 
    /// Function called before updating trackers but after the frame is drawn
    virtual void postSync();
