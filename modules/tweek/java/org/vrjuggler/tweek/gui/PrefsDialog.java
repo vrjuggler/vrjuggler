@@ -43,16 +43,13 @@ import java.util.List;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
 import org.vrjuggler.tweek.services.GlobalPreferencesService;
 
 
 /**
  * @since 1.0
  */
-public class PrefsDialog extends JDialog implements TableModelListener
+public class PrefsDialog extends JDialog
 {
    public PrefsDialog (Frame owner, String title,
                        GlobalPreferencesService prefs)
@@ -65,17 +62,12 @@ public class PrefsDialog extends JDialog implements TableModelListener
       userLevel          = mPrefs.getUserLevel();
       lookAndFeel        = mPrefs.getLookAndFeel();
       beanViewer         = mPrefs.getBeanViewer();
-      windowWidth        = new Integer(mPrefs.getWindowWidth());
-      windowHeight       = new Integer(mPrefs.getWindowHeight());
+      windowWidth        = mPrefs.getWindowWidth();
+      windowHeight       = mPrefs.getWindowHeight();
       chooserStartDir    = mPrefs.getChooserStartDir();
       defaultCorbaHost   = mPrefs.getDefaultCorbaHost();
       defaultCorbaPort   = mPrefs.getDefaultCorbaPort();
       defaultIiopVersion = mPrefs.getDefaultIiopVersion();
-
-      WindowSizeTableModel table_model = new WindowSizeTableModel(windowWidth,
-                                                                  windowHeight);
-      table_model.addTableModelListener(this);
-      mWinSizeTable = new JTable(table_model);
 
       try
       {
@@ -91,6 +83,8 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mCorbaHostField.setText(String.valueOf(defaultCorbaHost));
       mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
       mIiopVerField.setText(String.valueOf(defaultIiopVersion));
+      mWindowWidthField.setText(String.valueOf(windowWidth));
+      mWindowHeightField.setText(String.valueOf(windowHeight));
 
       this.setModal(true);
       this.pack();
@@ -138,7 +132,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
     */
    public Dimension getWindowSize()
    {
-      return new Dimension(windowWidth.intValue(), windowHeight.intValue());
+      return new Dimension(windowWidth, windowHeight);
    }
 
    /**
@@ -193,24 +187,6 @@ public class PrefsDialog extends JDialog implements TableModelListener
    public int getStatus()
    {
       return status;
-   }
-
-   public void tableChanged(TableModelEvent e)
-   {
-      WindowSizeTableModel model =
-         (WindowSizeTableModel) e.getSource();
-
-      switch (e.getColumn())
-      {
-         case 0:
-            windowWidth = (Integer) model.getValueAt(0, 0);
-            break;
-         case 1:
-            windowHeight = (Integer) model.getValueAt(0, 1);
-            break;
-      }
-
-      fireGlobalPrefsModified(GlobalPrefsUpdateEvent.WINDOW_SIZE);
    }
 
    public synchronized void addGlobalPrefsUpdateListener(GlobalPrefsUpdateListener l)
@@ -375,10 +351,50 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
       mWinSizeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       mWinSizeLabel.setText("Window Size");
-      mWinSizeTable.setCellSelectionEnabled(true);
-      mWinSizeTable.setRowSelectionAllowed(false);
-      mWinSizeTablePane.setMinimumSize(new Dimension(150, 45));
-      mWinSizeTablePane.setPreferredSize(new Dimension(150, 45));
+      mWinSizePanel.setLayout(mWinSizeLayout);
+      mWinSizePanel.setRequestFocusEnabled(true);
+      mWinSizeLayout.setColumns(2);
+      mWinSizeLayout.setRows(2);
+      mWindowWidthLabel.setBorder(BorderFactory.createEtchedBorder());
+      mWindowWidthLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      mWindowWidthLabel.setLabelFor(mWindowWidthField);
+      mWindowWidthLabel.setText("Width");
+      mWindowHeightLabel.setBorder(BorderFactory.createEtchedBorder());
+      mWindowHeightLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      mWindowHeightLabel.setLabelFor(mWindowHeightField);
+      mWindowHeightLabel.setText("Height");
+      mWindowWidthField.setText("");
+      mWindowWidthField.setHorizontalAlignment(SwingConstants.RIGHT);
+      mWindowWidthField.addFocusListener(new java.awt.event.FocusAdapter()
+      {
+         public void focusLost(FocusEvent e)
+         {
+            windowWidthFieldChanged();
+         }
+      });
+      mWindowWidthField.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            windowWidthFieldChanged();
+         }
+      });
+      mWindowHeightField.setText("");
+      mWindowHeightField.setHorizontalAlignment(SwingConstants.RIGHT);
+      mWindowHeightField.addFocusListener(new java.awt.event.FocusAdapter()
+      {
+         public void focusLost(FocusEvent e)
+         {
+            windowHeightFieldChanged();
+         }
+      });
+      mWindowHeightField.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            windowHeightFieldChanged();
+         }
+      });
       mButtonPanel.add(mOkButton, null);
       mButtonPanel.add(mApplyButton, null);
       mButtonPanel.add(mCancelButton, null);
@@ -401,6 +417,12 @@ public class PrefsDialog extends JDialog implements TableModelListener
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
       mGenConfigPanel.add(mWinSizeLabel,    new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 0, 23));
+      mGenConfigPanel.add(mWinSizePanel, new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+      mWinSizePanel.add(mWindowWidthLabel, null);
+      mWinSizePanel.add(mWindowHeightLabel, null);
+      mWinSizePanel.add(mWindowWidthField, null);
+      mWinSizePanel.add(mWindowHeightField, null);
       mContentPane.add(mCorbaPanel,   "CORBA");
       mCorbaPanel.add(mCorbaHostLabel,              new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 40, 0));
@@ -422,9 +444,6 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mFcConfigPanel.add(mFcStartDirBox,        new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
       mContentPane.add(mFileChooserPanel,  "File Chooser");
-      mWinSizeTablePane.getViewport().add(mWinSizeTable);
-      mGenConfigPanel.add(mWinSizeTablePane,           new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
    }
 
    /**
@@ -564,8 +583,8 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mPrefs.setUserLevel(userLevel);
       mPrefs.setLookAndFeel(lookAndFeel);
       mPrefs.setBeanViewer(beanViewer);
-      mPrefs.setWindowWidth(windowWidth.intValue());
-      mPrefs.setWindowHeight(windowHeight.intValue());
+      mPrefs.setWindowWidth(windowWidth);
+      mPrefs.setWindowHeight(windowHeight);
       mPrefs.setChooserStartDir(chooserStartDir);
       mPrefs.setLazyPanelBeanInstantiation(mLazyInstanceButton.isSelected());
       mPrefs.setDefaultCorbaHost(defaultCorbaHost);
@@ -674,65 +693,34 @@ public class PrefsDialog extends JDialog implements TableModelListener
       fireGlobalPrefsModified(GlobalPrefsUpdateEvent.DEFAULT_IIOP_VERSION);
    }
 
-   private class WindowSizeTableModel extends AbstractTableModel
+   /**
+    * Action taken when the user changes the text field containing the Tweek
+    * window width.
+    */
+   private void windowWidthFieldChanged()
    {
-      public WindowSizeTableModel(Integer width, Integer height)
+      int old_width = windowWidth;
+      windowWidth = Integer.parseInt(mWindowWidthField.getText());
+
+      if ( old_width != windowWidth )
       {
-         this.width  = width;
-         this.height = height;
+         fireGlobalPrefsModified(GlobalPrefsUpdateEvent.WINDOW_SIZE);
       }
+   }
 
-      public int getRowCount()
+   /**
+    * Action taken when the user changes the text field containing the Tweek
+    * window height.
+    */
+   private void windowHeightFieldChanged()
+   {
+      int old_height = windowHeight;
+      windowHeight = Integer.parseInt(mWindowHeightField.getText());
+
+      if ( old_height != windowHeight )
       {
-         return 1;
+         fireGlobalPrefsModified(GlobalPrefsUpdateEvent.WINDOW_SIZE);
       }
-
-      public int getColumnCount()
-      {
-         return 2;
-      }
-
-      public String getColumnName(int col)
-      {
-         return (col == 0 ? "Width" : "Height");
-      }
-
-      public Object getValueAt(int row, int column)
-      {
-         return (column == 0 ? width : height);
-      }
-
-      public void setValueAt(Object newVal, int row, int column)
-      {
-         switch (column)
-         {
-            case 0:
-               width = (Integer) newVal;
-               break;
-            case 1:
-               height = (Integer) newVal;
-               break;
-         }
-
-         fireTableCellUpdated(row, column);
-      }
-
-      /**
-       * Overrides the default getColumnClass().  This method is critical for
-       * getting cell renderers to work.
-       */
-      public Class getColumnClass(int column)
-      {
-         return Integer.class;
-      }
-
-      public boolean isCellEditable(int row, int col)
-      {
-         return true;
-      }
-
-      private Integer width;
-      private Integer height;
    }
 
    private static class LAFBoxRenderer extends JLabel
@@ -774,8 +762,8 @@ public class PrefsDialog extends JDialog implements TableModelListener
    private int     userLevel          = 0;
    private String  lookAndFeel        = null;
    private String  beanViewer         = null;
-   private Integer windowWidth        = new Integer(1024);
-   private Integer windowHeight       = new Integer(768);
+   private int     windowWidth        = 1024;
+   private int     windowHeight       = 768;
    private String  chooserStartDir    = GlobalPreferencesService.DEFAULT_START;
    private String  defaultCorbaHost   = "";
    private int     defaultCorbaPort   = 0;
@@ -821,6 +809,10 @@ public class PrefsDialog extends JDialog implements TableModelListener
    private JLabel mCorbaHostLabel = new JLabel();
    private GridBagLayout mCorbaLayout = new GridBagLayout();
    private JLabel mWinSizeLabel = new JLabel();
-   private JTable mWinSizeTable = null;
-   private JScrollPane mWinSizeTablePane = new JScrollPane();
+   private JPanel mWinSizePanel = new JPanel();
+   private GridLayout mWinSizeLayout = new GridLayout();
+   private JLabel mWindowWidthLabel = new JLabel();
+   private JTextField mWindowWidthField = new JTextField();
+   private JLabel mWindowHeightLabel = new JLabel();
+   private JTextField mWindowHeightField = new JTextField();
 }
