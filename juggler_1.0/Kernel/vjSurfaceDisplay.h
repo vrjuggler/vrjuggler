@@ -85,8 +85,8 @@ public:
       // Create Projection objects
       // NOTE: The -'s are because we are measuring distance to
       //  the left(bottom) which is opposite the normal axis direction
-      vjMatrix rot_inv;
-      rot_inv.invert(mSurfaceRotation);
+      //vjMatrix rot_inv;
+      //rot_inv.invert(mSurfaceRotation);
       if(!mTracked)
       {
          mLeftProj = new vjWallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
@@ -213,7 +213,7 @@ protected:
 
 protected:
    vjVec3   mLLCorner, mLRCorner, mURCorner, mULCorner;  //: The corners in 3Space
-   vjMatrix mSurfaceRotation;                            //: baseMsurf
+   vjMatrix mSurfaceRotation;                            //: surfMbase
 
    // Deal with tracked surfaces (ie. HMD, movable walls, desks, etc)
    bool           mTracked;            // Is this surface tracked
