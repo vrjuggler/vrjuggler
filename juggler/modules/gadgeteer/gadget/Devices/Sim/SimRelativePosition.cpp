@@ -55,7 +55,7 @@ bool SimRelativePosition::config(jccl::ConfigChunkPtr chunk)
 
 void SimRelativePosition::updateData()
 {
-   mPos.getPositionData()->mult( *(mBaseFrame->getData()),
+   mPos.getPosition()->mult( *(mBaseFrame->getData()),
                                  *(mRelativePos->getData()) );
 
    // NOTE: This is a little bit of an overkill, but it works and it allows for the

@@ -49,11 +49,11 @@ public:
     { mDigitalData = 0; }
 
 
-    int getDigitalData () const
+    int getDigital() const
     { return mDigitalData; }
 
 
-    void setDigitalData (const int d)
+    void setDigital(const int d)
     { mDigitalData = d; }
 
 

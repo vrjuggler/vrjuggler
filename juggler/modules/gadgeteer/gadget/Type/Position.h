@@ -78,6 +78,7 @@ public:
     PositionData* getPositionData (int devNum = 0)
     {
        // XXX: Fill in
+       return &(mPosSamples.stableBuffer().back()[devNum]);
     }
 
 public:

@@ -86,11 +86,12 @@ public:
       if(mStupified)
          return defaultDigital;
       else
-         return m_data.getDigitalData();
+         return m_data.getDigital();
    }
 
 
-    DigitalData* getDigitalData () {
+    DigitalData* getDigitalData ()
+    {
         return &m_data;
     }
 

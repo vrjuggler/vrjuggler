@@ -389,7 +389,7 @@ int ThreeDMouse::getRecord ( gadget::PositionData* data)
   printf ("%d bytes read...", num_read);
 #endif
 
-  ThreeDMouse::eulerToAbsolute (record, data->getPositionData());
+  ThreeDMouse::eulerToAbsolute (record, data->getPosition());
 
   return (0);
 }
@@ -412,12 +412,12 @@ void ThreeDMouse::resetControlUnit ()
 void ThreeDMouse::setBaseOrigin()
     // PURPOSE: Sets the current mouse X,Y,Z position to be the base origin
 {
-    mData[current].getPositionData()->getTrans (baseVector[0],
+    mData[current].getPosition()->getTrans (baseVector[0],
                                                 baseVector[1],
                                                 baseVector[2]);
-//      baseVector[0] = mData[current].getPositionData()->pos[0];
-//      baseVector[1] = mData[current].getPositionData()->pos[1];
-//      baseVector[2] = mData[current].getPositionData()->pos[2];
+//      baseVector[0] = mData[current].getPosition()->pos[0];
+//      baseVector[1] = mData[current].getPosition()->pos[1];
+//      baseVector[2] = mData[current].getPosition()->pos[2];
     // Setup currrent offest as origin
 }
 */

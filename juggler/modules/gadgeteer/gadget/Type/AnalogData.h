@@ -49,11 +49,11 @@ public:
     { mAnalogData = 0.0f; }
 
 
-    float getAnalogData () const
+    float getAnalog () const
     { return mAnalogData; }
 
 
-    void setAnalogData (const float f)
+    void setAnalog (const float f)
     { mAnalogData = f; }
 
 

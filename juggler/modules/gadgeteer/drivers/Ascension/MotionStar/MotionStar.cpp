@@ -94,7 +94,7 @@ MotionStar::MotionStar (const char* address, const unsigned short port,
 // ----------------------------------------------------------------------------
 MotionStar::~MotionStar ()
 {
-   stopSampling();   
+   stopSampling();
 }
 
 // ----------------------------------------------------------------------------
@@ -309,9 +309,9 @@ int MotionStar::sample ()
 
       // get an initial timestamp for this entire sample. we'll copy it into
       // each PositionData for this sample.
-      if (!cur_samples.empty()) 
+      if (!cur_samples.empty())
       {
-         cur_samples[0].setTime();          
+         cur_samples[0].setTime();
       }
 
       // For each bird
@@ -342,8 +342,8 @@ int MotionStar::sample ()
                break;
             case FLOCK::MATRIX:
                m_motion_star.getMatrixAngles(i, angles);
-               transmitter_T_reciever.makeZYXEuler(angles[0], 
-                                                            angles[1], 
+               transmitter_T_reciever.makeZYXEuler(angles[0],
+                                                            angles[1],
                                                             angles[2]);
                break;
             case FLOCK::POSITION_ANGLES:
@@ -381,13 +381,13 @@ int MotionStar::sample ()
          world_T_transmitter = xformMat;
 
          // Get reciever data from sampled data.
-         //transmitter_T_reciever = *(cur_samples[index].getPositionData());
+         //transmitter_T_reciever = *(cur_samples[index].getPosition());
 
          // Compute total transform.
          world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);
 
          // Store corrected xform back into data.
-         *(cur_samples[i].getPositionData()) = world_T_reciever;
+         *(cur_samples[i].getPosition()) = world_T_reciever;
       }
 
       // Locks and then swaps the indices.

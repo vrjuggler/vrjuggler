@@ -40,22 +40,19 @@
 namespace gadget {
 
     /** InputData subclass for positional data. */
-class GADGET_CLASS_API PositionData: public InputData {
-
+class GADGET_CLASS_API PositionData: public InputData
+{
 public:
 
     /** Constructor. */
-    PositionData (): InputData() {
+    PositionData (): InputData()
+    {;}
 
-    }
+    vrj::Matrix* getPosition()
+    { return &mPosData; }
 
-
-    vrj::Matrix* getPositionData() {
-        return &mPosData;
-    }
-
-
-    PositionData& operator= (const PositionData& pd) {
+    PositionData& operator= (const PositionData& pd)
+    {
         InputData::copy (pd);
         mPosData = pd.mPosData;
         return *this;
