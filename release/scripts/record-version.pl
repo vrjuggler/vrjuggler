@@ -45,13 +45,34 @@ use vars qw(%opts);
 
 my $status = 0;
 
-getopts('i:o:v:', \%opts);
+getopts('f:i:o:v:', \%opts);
 
-die "ERROR: No version number given!\n" unless $opts{'v'};
+die "ERROR: No version number given!\n" unless $opts{'f'} || $opts{'v'};
 
-my $version_string = "$opts{'v'}";
-$version_string =~ /^(\d+)\.(\d+)\.(\d+)$/;
-my $version_number = sprintf("%03d%03d%03d", $1, $2, $3);
+my($version_string, $version_number) = ('0.0.0', '000000000');
+
+# If -v was given on the command line, use that for the version number.
+if ( $opts{'v'} ) {
+    $version_string = "$opts{'v'}";
+    $version_string =~ /^(\d+)\.(\d+)\.(\d+)$/;
+    $version_number = sprintf("%03d%03d%03d", $1, $2, $3);
+}
+# Otherwise, extract the version number from the named version input file.
+elsif ( $opts{'f'} ) {
+    open(VER_FILE, "$opts{'f'}")
+        or die "ERROR: Could not open version file $opts{'f'}: $!\n";
+
+    my $line = <VER_FILE>;
+    close(VER_FILE);
+
+    if ( $line =~ /^\s*((\d+)\.(\d+)\.(\d+))/ ) {
+        $version_string = "$1";
+        $version_number = sprintf("%03d%03d%03d", $2, $3, $4);
+    }
+    else {
+        die "ERROR: No version number found in $opts{'f'}\n";
+    }
+}
 
 if ( $opts{'o'} ) {
     if ( $opts{'i'} ) {
