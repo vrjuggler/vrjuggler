@@ -62,11 +62,11 @@ import org.vrjuggler.tweek.beans.PanelBean;
 public class BeanSelectionListener implements TreeSelectionListener
 {
    public BeanSelectionListener (JSplitPane pane, BeanTree tree,
-                                 JPanel default_panel)
+                                 JPanel defaultPanel)
    {
-      m_pane          = pane;
-      m_tree          = tree;
-      m_default_panel = default_panel;
+      mPane         = pane;
+      mTree         = tree;
+      mDefaultPanel = defaultPanel;
    }
 
    /**
@@ -78,7 +78,7 @@ public class BeanSelectionListener implements TreeSelectionListener
    public void valueChanged (TreeSelectionEvent e)
    {
       DefaultMutableTreeNode node =
-         (DefaultMutableTreeNode) m_tree.getLastSelectedPathComponent();
+         (DefaultMutableTreeNode) mTree.getLastSelectedPathComponent();
 
       if ( node != null )
       {
@@ -100,7 +100,7 @@ public class BeanSelectionListener implements TreeSelectionListener
                }
 
                // Add the Bean to the right element of the split pane.
-               m_pane.add(bp.getComponent(), JSplitPane.RIGHT);
+               mPane.add(bp.getComponent(), JSplitPane.RIGHT);
             }
             catch (org.vrjuggler.tweek.beans.loader.BeanInstantiationException inst_ex)
             {
@@ -113,12 +113,12 @@ public class BeanSelectionListener implements TreeSelectionListener
          // the right side of the split pane.
          else
          {
-            m_pane.add(m_default_panel, JSplitPane.RIGHT);
+            mPane.add(mDefaultPanel, JSplitPane.RIGHT);
          }
       }
    }
 
-   private JSplitPane m_pane          = null;
-   private BeanTree   m_tree          = null;
-   private JPanel     m_default_panel = null;
+   private JSplitPane mPane         = null;
+   private BeanTree   mTree         = null;
+   private JPanel     mDefaultPanel = null;
 }
