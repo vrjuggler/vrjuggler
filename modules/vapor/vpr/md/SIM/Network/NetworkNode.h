@@ -135,9 +135,9 @@ public:
 
 private:
    vpr::Uint32 mIndex;
-   vpr::Uint8  mType;
-   std::string mIpStr;
-   vpr::Uint32 mIpAddr;
+   vpr::Uint8  mType;            /**< ???? - Int value from tiers for WAN/LAN, etc*/
+   std::string mIpStr;           /**< String for the IP address */
+   vpr::Uint32 mIpAddr;          /**< IP Address of the node */
 
    std::map<vpr::Uint32, vpr::SocketImplSIM*> mStreamSocketMap;
    std::map<vpr::Uint32, vpr::SocketImplSIM*> mDgramSocketMap;

@@ -74,7 +74,9 @@ class Controller;
 /**
  * Abstraction for C-style sockets.  This is used by Plexus sim sockets, and
  * in the overall sim socket scheme, this sits at the operating system level.
- * This roughly corresponds to the data link layer.
+ * This roughly corresponds to the data link or transport layer.
+ *
+ * It provides a way to bind address and send messages.
  */
 class VPR_CLASS_API SocketManager
 {
@@ -285,6 +287,10 @@ private:
 
    bool mActive;
 
+   /** This is a list of sockets that have gone into a listening state
+    * Used to track which sockets are currently in a listening state
+    * XXX: Could move this into the actually socket as a socket state instead.
+   */
    std::map<vpr::InetAddrSIM, std::pair<const vpr::SocketStreamImplSIM*, int>, ltaddr> mListenerList;
    vpr::Mutex mListenerListMutex;
 
