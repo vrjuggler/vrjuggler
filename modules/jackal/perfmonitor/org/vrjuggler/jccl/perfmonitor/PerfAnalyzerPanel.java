@@ -345,6 +345,7 @@ public class PerfAnalyzerPanel
     JButton savecontents_button;
     JButton load_button;
     JButton print_all_button;
+    JButton graph_button;
     JPanel data_panel;
     GridBagLayout gblayout;
     GridBagConstraints gbc;
@@ -518,6 +519,24 @@ public class PerfAnalyzerPanel
 	    }
 	    System.out.println (s);
 	}
+        else if (source == graph_button) {
+            TreePath[] selections = tree.getSelectionPaths();
+            for (int i = 0; i < selections.length; i++) {
+                DefaultMutableTreeNode node;
+                node = (DefaultMutableTreeNode)selections[i].getLastPathComponent();
+                PerfTreeNodeInfo ni = (PerfTreeNodeInfo)node.getUserObject();
+                if (ni != null) {
+                    GenericGraphPanel gp = new LabeledSummaryGraphPanel (ni.getCollector(), ni.getIndexInfo());
+                    String title = "Graph of " + ni.getCollector().getName();
+                    if (ni.getIndexInfo() != null)
+                        title = title + " label = " + ni.getIndexInfo().index;
+                    GenericGraphFrame gf = new GenericGraphFrame (gp, title);
+                    gf.addActionListener (this);
+                    child_frames.addElement (gf);
+                    gf.show();
+                }
+            }
+        }
     }
 
 
@@ -662,6 +681,9 @@ public class PerfAnalyzerPanel
             print_all_button.addActionListener (this);
             epanel.add (print_all_button);
        
+            graph_button = new JButton ("Graph");
+            graph_button.addActionListener (this);
+            epanel.add (graph_button);
 
             JPanel npanel = new JPanel ();
             npanel.setLayout (new BoxLayout (npanel, BoxLayout.Y_AXIS));
@@ -685,7 +707,12 @@ public class PerfAnalyzerPanel
             data_panel.setLayout (gbl);
             //data_panel.setBackground (Color.WHITE);
 
-            display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            tree = new JTree (tree_model);
+            tree.setCellRenderer (new LabeledPerfTreeCellRenderer(tree.getCellRenderer()));
+            tree.setRootVisible (true);
+            display_pane = new JScrollPane (tree, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+//              display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             
             add (display_pane, "Center");
 
@@ -696,23 +723,23 @@ public class PerfAnalyzerPanel
 //  		else
 //  		    ((NumberedDataPanelElem)dpe).initialize (data_panel, gblayout, gbc);
 //              }
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.anchor = GridBagConstraints.NORTHWEST;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.gridwidth = GridBagConstraints.RELATIVE;
-            gbc.gridheight = GridBagConstraints.RELATIVE;
-	    panel_tree = new PanelTree (tree_model);
-            gbl.setConstraints (panel_tree, gbc);
-	    data_panel.add (panel_tree);
-            gbc.fill = GridBagConstraints.BOTH;
-            gbc.gridwidth = GridBagConstraints.REMAINDER;
-            Component comp = Box.createHorizontalGlue();
-            gbl.setConstraints (comp, gbc);
-            data_panel.add (comp);
-            gbc.gridheight = GridBagConstraints.REMAINDER;
-            comp = Box.createVerticalGlue();
-            gbl.setConstraints (comp, gbc);
-            data_panel.add (comp);
+//              GridBagConstraints gbc = new GridBagConstraints();
+//              gbc.anchor = GridBagConstraints.NORTHWEST;
+//              gbc.fill = GridBagConstraints.NONE;
+//              gbc.gridwidth = GridBagConstraints.RELATIVE;
+//              gbc.gridheight = GridBagConstraints.RELATIVE;
+//  	    panel_tree = new PanelTree (tree_model);
+//              gbl.setConstraints (panel_tree, gbc);
+//  	    data_panel.add (panel_tree);
+//              gbc.fill = GridBagConstraints.BOTH;
+//              gbc.gridwidth = GridBagConstraints.REMAINDER;
+//              Component comp = Box.createHorizontalGlue();
+//              gbl.setConstraints (comp, gbc);
+//              data_panel.add (comp);
+//              gbc.gridheight = GridBagConstraints.REMAINDER;
+//              comp = Box.createVerticalGlue();
+//              gbl.setConstraints (comp, gbc);
+//              data_panel.add (comp);
             //data_panel.add (Box.createVerticalGlue());
 //              display_pane = new JScrollPane (panel_tree, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             
