@@ -824,7 +824,7 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
       bool active = (windowChunks[i]->getProperty<int>( "active" ) == 1 ? true : false );
 
       //Verify the number of viewports
-      if (windowChunks[i]->getNum("sim_viewports") != display->getNumViewports())
+      if (unsigned(windowChunks[i]->getNum("sim_viewports")) != unsigned(display->getNumViewports()))
       {
          std::cout << "\tError: display chunk named " << displayName << " has the wrong number of viewports\n" << std::flush;
          return false;
