@@ -191,7 +191,7 @@ if test "x$GADGET_USE_X11" = "xyes" ; then
 fi
 
 if test "x$BUILD_JAVA" = "xY" ; then
-   TWEEK_PATH_JAVA([0.16.0],
+   TWEEK_PATH_JAVA([0.17.0],
                    [JCCL_PATH_JAVA([0.16], ,
                        [AC_MSG_WARN([*** JCCL Java API required for VRJConfig ***])
                        BUILD_JAVA='N'])],
@@ -660,6 +660,9 @@ AC_CONFIG_FILES([
    vrjconfig/Makefile
    vrjconfig/Makefile.inc
    vrjconfig/customeditors/Makefile
+   vrjconfig/customeditors/display_window/build.xml
+   vrjconfig/customeditors/display_window/Makefile
+   vrjconfig/customeditors/display_window/Makefile.inc
    vrjconfig/customeditors/intersense/build.xml
    vrjconfig/customeditors/intersense/Makefile
    vrjconfig/customeditors/intersense/Makefile.inc
