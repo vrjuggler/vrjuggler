@@ -102,7 +102,8 @@ JCCL_SHARE_DIR	= @JCCL_SHARE_DIR@
 EXTRA_CFLAGS		= $(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB)
 EXTRA_DEPEND_FLAGS	= -I$(JCCLROOT_ABS)
-EXTRA_DEFS	        += -DJCCL_SHARE_DIR=\"$(JCCL_SHARE_DIR)\" -D_JCCL_BUILD_
+EXTRA_DEFS	        += -DJCCL_SHARE_DIR="\"$(JCCL_SHARE_DIR)\""     \
+                           -D_JCCL_BUILD_
 EXTRA_INCLUDES		= -I$(top_srcdir)
 
 # -----------------------------------------------------------------------------
