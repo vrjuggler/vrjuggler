@@ -81,9 +81,22 @@ public class DisplayPlacer
       }
 
       // Setup the display placer
-      model.setConfigChunkDB(getConfigManager().getActiveConfig());
+//      List chunks = getConfigBroker().getChunks();
+//      model.setChunks(chunks);
+//      model.setConfigChunkDB(getConfigManager().getActiveConfig());
       wndPlacer.setModel(model);
       wndPlacer.setRenderer(new DisplayRenderer());
+   }
+
+   public void setConfigContext(ConfigContext context)
+   {
+      this.context = context;
+      model.setChunks(getConfigBroker().getChunks(context));
+   }
+
+   public ConfigContext getConfigContext()
+   {
+      return context;
    }
 
    public void setDesktopSize(Dimension desktopSize)
@@ -121,16 +134,17 @@ public class DisplayPlacer
    protected void addNewDisplay()
    {
       // Create the new window
-      ChunkDescDB all_descs = getConfigManager().getAllChunkDescs();
+      List all_descs = getConfigBroker().getDescs(context);
+//      ChunkDescDB all_descs = getConfigManager().getAllChunkDescs();
       ChunkDesc display_desc = (ChunkDesc)ConfigUtilities.getDescsWithToken(
-                                    all_descs.getAll(), "displayWindow").get(0);
+                                    all_descs, "displayWindow").get(0);
       ConfigChunk display_chunk = new ConfigChunk(display_desc);
 
       // Add the window to the database
-      ConfigChunkDB active_config = getConfigManager().getActiveConfig();
-      String name = active_config.getNewName(display_desc.getToken());
+      // TODO: Compute a new, unique name for the new chunk
+      String name = display_desc.getToken();
       display_chunk.setName(name);
-      active_config.add(display_chunk);
+      getConfigBroker().add(context, display_chunk);
    }
 
    /**
@@ -142,13 +156,13 @@ public class DisplayPlacer
       if (idx != -1)
       {
          ConfigChunk display_chunk = (ConfigChunk)wndPlacer.getModel().getElement(idx);
-         getConfigManager().getActiveConfig().remove(display_chunk);
+         getConfigBroker().remove(context, display_chunk);
       }
    }
 
-   private ConfigManagerService getConfigManager()
+   private ConfigBroker getConfigBroker()
    {
-      return (ConfigManagerService)BeanRegistry.instance().getBean("ConfigManager").getBean();
+      return new ConfigBrokerProxy();
    }
 
    /**
@@ -201,6 +215,11 @@ public class DisplayPlacer
     * The data model for our window placer.
     */
    private DisplayPlacerModel model = new DisplayPlacerModel();
+
+   /**
+    * Our view into the configuration.
+    */
+   private ConfigContext context = new ConfigContext();
 
    /**
     * A specialized renderer for displays in the placer component.
@@ -289,20 +308,18 @@ public class DisplayPlacer
  */
 class DisplayPlacerModel
    extends AbstractPlacerModel
-   implements ChunkDBListener, ConfigChunkListener
+   implements ConfigListener, ConfigChunkListener
 {
-   public void setConfigChunkDB(ConfigChunkDB db)
+   public void setChunks(List chunks)
    {
-      chunkDB = db;
-      windows = ConfigUtilities.getChunksWithDescToken(chunkDB.getAll(),
-                                                       "displayWindow");
+      windows = ConfigUtilities.getChunksWithDescToken(chunks, "displayWindow");
       for (Iterator itr = windows.iterator(); itr.hasNext(); )
       {
          ConfigChunk chunk = (ConfigChunk)itr.next();
          chunk.addConfigChunkListener(this);
       }
-      chunkDB.addChunkDBListener(this);
-//      fireTableContentsChanged();
+//      chunkDB.addChunkDBListener(this);
+//    fireTableContentsChanged();
    }
 
    public Object getElement(int idx)
@@ -381,9 +398,9 @@ class DisplayPlacerModel
       return windows.size();
    }
 
-   public void configChunkAdded(ChunkDBEvent evt)
+   public void configChunkAdded(ConfigEvent evt)
    {
-      ConfigChunk chunk = evt.getChunk();
+      ConfigChunk chunk = evt.getConfigChunk();
       if (chunk.getDesc().getToken().equals("displayWindow"))
       {
          System.out.println("Adding a new displayWindow.");
@@ -393,9 +410,9 @@ class DisplayPlacerModel
       }
    }
 
-   public void configChunkRemoved(ChunkDBEvent evt)
+   public void configChunkRemoved(ConfigEvent evt)
    {
-      ConfigChunk chunk = evt.getChunk();
+      ConfigChunk chunk = evt.getConfigChunk();
       if (chunk.getDesc().getToken().equals("displayWindow"))
       {
          int idx = getIndexOf(chunk);
@@ -409,23 +426,12 @@ class DisplayPlacerModel
       }
    }
 
-   public void configChunkReplaced(ChunkDBEvent evt)
+   public void chunkDescAdded(ConfigEvent evt)
    {
    }
 
-   public void configChunksCleared(ChunkDBEvent evt)
+   public void chunkDescRemoved(ConfigEvent evt)
    {
-      int[] idxs = new int[windows.size()];
-      Object[] items = new Object[windows.size()];
-      for (int i=0; i<windows.size(); ++i)
-      {
-         ConfigChunk chunk = (ConfigChunk)windows.get(i);
-         chunk.removeConfigChunkListener(this);
-         idxs[i] = i;
-         items[i] = chunk;
-      }
-      windows.clear();
-      fireItemsRemoved(idxs, items);
    }
 
    /**
@@ -443,11 +449,6 @@ class DisplayPlacerModel
    public void propertyValueChanged(ConfigChunkEvent evt) { nameChanged(evt); }
    public void propertyValueAdded(ConfigChunkEvent evt) { nameChanged(evt); }
    public void propertyValueRemoved(ConfigChunkEvent evt) { nameChanged(evt); }
-
-   /**
-    * The ConfigChunkDB we're working off of.
-    */
-   private ConfigChunkDB chunkDB;
 
    /**
     * The list of windows in the active db.

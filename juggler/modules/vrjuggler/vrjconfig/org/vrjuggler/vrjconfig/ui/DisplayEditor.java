@@ -29,6 +29,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.vrjuggler.jccl.config.ConfigChunk;
+import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.editors.ConfigChunkPropertySheet;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.vrjconfig.ui.DisplayPlacer;
@@ -70,6 +71,16 @@ public class DisplayEditor
       });
 
 //      mainScrollPane.resetToPreferredSizes();
+   }
+
+   public void setConfigContext(ConfigContext context)
+   {
+      displayPlacer.setConfigContext(context);
+   }
+
+   public ConfigContext getConfigContext()
+   {
+      return displayPlacer.getConfigContext();
    }
 
    /**
