@@ -72,10 +72,11 @@ const bool reg_ctr_ ## SimIfType = \
 namespace vrj
 {
 
-class DrawSimInterfaceFactory :
-   public vpr::Factory<DrawSimInterface, std::string>, 
-   public vpr::Singleton<DrawSimInterfaceFactory>
+class VJ_CLASS_API DrawSimInterfaceFactory :
+   public vpr::Factory<DrawSimInterface, std::string>
 {
+public:
+   vprSingletonHeader(DrawSimInterfaceFactory);
 };
 
 } // End of vrj namespace
