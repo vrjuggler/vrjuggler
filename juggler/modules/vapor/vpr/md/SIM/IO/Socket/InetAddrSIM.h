@@ -236,9 +236,10 @@ public:
    /**
     * Returns the fully qualified hostname for this address.
     */
-   std::string getHostname (void) const
+   vpr::ReturnStatus getHostname(std::string& hostname) const
    {
-      return getAddressString();
+      hostname = getAddressString()
+      return vpr::ReturnStatus();
    }
 
    /**
