@@ -43,6 +43,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.vrjuggler.tweek.beans.*;
+import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.net.CommunicationEvent;
 import org.vrjuggler.tweek.net.CommunicationListener;
 import org.vrjuggler.tweek.net.corba.*;
@@ -344,7 +345,19 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
          {
             CorbaService new_orb = new CorbaService(dialog.getOrbHost(),
                                                     dialog.getOrbPort());
-            new_orb.init(null);
+
+            Object service = ServiceRegistry.instance().getService("Environment");
+
+            if ( service != null )
+            {
+               EnvironmentService env_service = (EnvironmentService) service;
+               new_orb.init(env_service.getCommandLineArgs());
+            }
+            else
+            {
+               new_orb.init(null);
+            }
+
             m_bean_container.fireConnectionEvent(new_orb);
          }
       }
