@@ -141,7 +141,8 @@ namespace jccl
               itr != defs.end();
               ++itr)
          {
-            mRepository.add(*itr);
+            ConfigDefinitionPtr cfg_def = (*itr);
+            mRepository.add(cfg_def);
          }
       }
       catch (std::runtime_error& e)
