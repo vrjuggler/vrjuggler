@@ -166,26 +166,8 @@ public:   // ----- PENDING LIST ----- //
 
    //: Send a copy of the pending list to debug output
    //! PRE: Pending must be locked
-   void debugDumpPending()
-   {
-      vjASSERT(1 == mPendingLock.test());
-      vjDEBUG_BEGIN(vjDBG_ALL,0) << "---- Debug Dump of Pending list: " << mPendingConfig.size() << " items in list\n" << vjDEBUG_FLUSH;
-      std::list<vjConfigManager::vjPendingChunk>::iterator current, end;
-      current = getPendingBegin();
-      end = getPendingEnd();
+   void debugDumpPending(int debug_level);
 
-      while(current != end)
-      {
-         vjConfigChunk* cur_chunk = (*current).mChunk;
-
-         vjDEBUGlg(vjDBG_ALL,0,false,true) << cur_chunk->getProperty("name")
-                                           << " type: "
-                                           << ((std::string)cur_chunk->getType()).c_str()
-                                           << endl << vjDEBUG_FLUSH;
-         current++;
-      }
-      vjDEBUG_ENDlg(vjDBG_ALL,0,false,true) << "-------------------------------\n" << vjDEBUG_FLUSH      ;
-   }
 
 public:   // ----- ACTIVE LIST ----- //
    //: Are there items in current   //! CONCURRENCY: concurrent

@@ -49,7 +49,7 @@ vjConfigManager* vjConfigManager::_instance = NULL;
 // changing size, then it returns false until mLastPendingSize changes
 bool vjConfigManager::pendingNeedsChecked()
 {
-   const int pending_repeat_limit = 0;
+   const int pending_repeat_limit = 1;    // Must be one or greater.  1 means only allow one time of no changes
    int cur_pending_size = 0;
    bool ret_val = false;
 
@@ -62,17 +62,23 @@ bool vjConfigManager::pendingNeedsChecked()
          mPendingCheckCount=0;                     // Reset the counter
          mLastPendingSize = cur_pending_size;      // Keep track of size
       }
-      else if(mPendingCheckCount < pending_repeat_limit)
+      else if(mPendingCheckCount < pending_repeat_limit)     // allowed in at least once [1...pending_repeat_limit]
       {
-         ret_val = true;         // Less than count, so do a check
          mPendingCheckCount++;   // Increment it
-         if(mPendingCheckCount == pending_repeat_limit)
+
+         if(mPendingCheckCount < pending_repeat_limit)
          {
-            vjDEBUG_BEGIN(vjDBG_ALL,0) << "vjConfigManager::pendingNeedsChecked: Pending list is now STALE."
+            ret_val = true;        // Repeats still allowed
+         }
+         else
+         {
+            vjDEBUG_BEGIN(vjDBG_ALL,0) << "vjConfigManager::pendingNeedsChecked: Pending list is now "
+                                       << clrOutNORM(clrGREEN,"STALE: ")
                                        << cur_pending_size << " items still in pending\n" << vjDEBUG_FLUSH;
             lockPending();
-            debugDumpPending();     // Output the stale pending list
+            debugDumpPending(0);     // Output the stale pending list
             unlockPending();
+            ret_val = false;
          }
       }
       else
@@ -184,6 +190,31 @@ int vjConfigManager::scanForLostDependencies()
    vjDEBUG_END(vjDBG_ALL,1) << "vjConfigManager::scanForLostDependencies: Exiting: \n" << vjDEBUG_FLUSH;
 
    return num_lost_deps;
+}
+
+
+void vjConfigManager::debugDumpPending(int debug_level)
+{
+   vjASSERT(1 == mPendingLock.test());
+   vjDEBUG_BEGIN(vjDBG_ALL,debug_level)
+         << clrSetNORM(clrGREEN)
+         << "---- Debug Dump of Pending list: " << mPendingConfig.size() << " items in list\n"
+         << clrRESET << vjDEBUG_FLUSH;
+   std::list<vjConfigManager::vjPendingChunk>::iterator current, end;
+   current = getPendingBegin();
+   end = getPendingEnd();
+
+   while(current != end)
+   {
+      vjConfigChunk* cur_chunk = (*current).mChunk;
+
+      vjDEBUG_NEXT(vjDBG_ALL,debug_level) << cur_chunk->getProperty("name")
+                                        << " type: "
+                                        << ((std::string)cur_chunk->getType()).c_str()
+                                        << endl << vjDEBUG_FLUSH;
+      current++;
+   }
+   vjDEBUG_ENDlg(vjDBG_ALL,0,false,true) << "----------------------------------\n" << vjDEBUG_FLUSH      ;
 }
 
 
