@@ -678,6 +678,15 @@ public class ConfigChunkDBEditor
          ConfigChunk chunk = new ConfigChunk(chooser.getSelectedChunkDesc());
          chunk.setName(configChunkDB.getNewName(chunk.getDesc().getName()));
          configChunkDB.add(chunk);
+
+         // Make sure the new node gets selected
+         java.util.List chunk_nodes = getNodesFor(chunk);
+         if (chunk_nodes.size() > 0)
+         {
+            TreeNode chunk_node = (TreeNode)chunk_nodes.get(0);
+            TreePath path = new TreePath(treeModel.getPathToRoot(chunk_node));
+            chunkPropTree.setSelectionPath(path);
+         }
       }
    }
 
