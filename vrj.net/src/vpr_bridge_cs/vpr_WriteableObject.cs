@@ -93,7 +93,7 @@ public class WriteableObjectMarshaler : ICustomMarshaler
    public IntPtr MarshalManagedToNative(Object obj)
    {
       PropertyInfo raw_obj_prop =
-         obj.GetType().GetProperty("RawObject",
+         obj.GetType().GetProperty("mRawObject",
                                    BindingFlags.NonPublic | BindingFlags.Instance);
       if ( null != raw_obj_prop )
       {
