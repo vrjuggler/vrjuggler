@@ -33,6 +33,7 @@ package org.vrjuggler.jccl.config.io;
 
 import java.util.*;
 import org.jdom.*;
+import org.jdom.transform.*;
 import org.vrjuggler.jccl.config.*;
 
 /**
@@ -129,7 +130,6 @@ public class ConfigDefinitionParser
          parent_definitions.add(elt.getTextTrim());
       }
 
-
       // Grok the categories
       List categories = new ArrayList();
       for (Iterator itr = root.getChildren(CATEGORY, DEF_NS).iterator(); itr.hasNext(); )
@@ -150,6 +150,17 @@ public class ConfigDefinitionParser
          // Parse the given property definition
          Element elt = (Element)itr.next();
          prop_defs.add(parsePropertyDefinition(elt));
+      }
+      
+      // Grok the XSLT transform
+      int num = root.getChild(UPGRADE_TRANSFORM, DEF_NS).getChildren().size();
+      
+      JDOMSource xslt_source = null;
+      
+      if(num > 0)
+      {
+         Element xslt_element = (Element)root.getChild(UPGRADE_TRANSFORM, DEF_NS).getChildren().get(0);
+         xslt_source = new JDOMSource(xslt_element);
       }
 
       // Get the parent and the icon location.
@@ -177,7 +188,7 @@ public class ConfigDefinitionParser
                                   parent_definitions,
                                   help,
                                   categories,
-                                  prop_defs);
+                                  prop_defs, xslt_source);
    }
 
    private PropertyDefinition parsePropertyDefinition(Element root)
@@ -393,6 +404,7 @@ public class ConfigDefinitionParser
    private static final String ICON_PATH              = "icon_path";
    private static final String PARENT                 = "parent";
    private static final String PROPERTY               = "property";
+   private static final String UPGRADE_TRANSFORM      = "upgrade_transform";
    private static final String VALUE                  = "value";
    private static final String VALUETYPE              = "valuetype";
    private static final String VARIABLE               = "variable";
