@@ -22,6 +22,9 @@
    <property name="jccl.classpath" refid="jccl.classpath" />
    <property name="jogl.classpath" refid="jogl.classpath" />
    
+   <!-- Try to locate JOGL -->
+   <available classpath="${jogl.classpath}" classname="net.java.games.jogl.Version" property="jogl.present"/>
+      
    <!-- Compile all java sources -->
    <target name="compile">
       <javac destdir="."
@@ -30,6 +33,7 @@
              optimize="${optimize}">
          <src path="${srcdir}" />
          <include name="org/**"/>
+         <exclude unless="jogl.present" name="org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/**"/>
          <classpath>
             <pathelement path="${tweek.classpath}" />
             <pathelement path="${jccl.classpath}" />
