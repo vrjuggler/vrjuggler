@@ -47,6 +47,7 @@
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:exsl="http://exslt.org/common"
                 extension-element-prefixes="exsl">
    <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
@@ -118,12 +119,25 @@
          is one-based.
       -->
       <xsl:variable name="version">
-         <xsl:variable name="orig_version"><xsl:value-of select="number(@version)" /></xsl:variable>
-         <xsl:variable name="decimal"><xsl:value-of select="$orig_version - floor($orig_version)" /></xsl:variable>
-         <xsl:variable name="remainder">
-            <xsl:value-of select="substring(format-number($decimal, '#.0'), 2)" />
-         </xsl:variable>
-         <xsl:value-of select="number($remainder) + 1" />
+         <xsl:choose>
+            <!--
+               Default to version 1 if no version attribute exists.
+               Techincally, this shouldn't be needed because version 2.3 of
+               the file format requires that a version attribute exist.
+               However, we'll include this check just to be safe.
+            -->
+            <xsl:when test="string-length(@version) = 0">
+               <xsl:text>1</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:variable name="orig_version"><xsl:value-of select="number(@version)" /></xsl:variable>
+               <xsl:variable name="decimal"><xsl:value-of select="$orig_version - floor($orig_version)" /></xsl:variable>
+               <xsl:variable name="remainder">
+                  <xsl:value-of select="substring(format-number($decimal, '#.0'), 2)" />
+               </xsl:variable>
+               <xsl:value-of select="number($remainder) + 1" />
+            </xsl:otherwise>
+         </xsl:choose>
       </xsl:variable>
 
       <!-- Start a new document. -->
@@ -134,7 +148,10 @@
 
          <!-- Create the new XML tree. -->
          <xsl:element name="definition" namespace="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
-            <xsl:attribute name="schemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">
+            <xsl:attribute name="xmlns:xsi">
+               <xsl:text>http://www.w3.org/2001/XMLSchema-instance</xsl:text>
+            </xsl:attribute>
+            <xsl:attribute name="xsi:schemaLocation">
                <xsl:value-of select="$definition_namespace" />
                <xsl:text> </xsl:text>
                <xsl:value-of select="$definition_schema" />
@@ -202,6 +219,7 @@
             <xsl:choose>
                <xsl:when test="@variable = '0' or @variable = 'false'"><xsl:text>false</xsl:text></xsl:when>
                <xsl:when test="@variable = '1' or @variable = 'true'"><xsl:text>true</xsl:text></xsl:when>
+               <xsl:otherwise><xsl:text>false</xsl:text></xsl:otherwise>
             </xsl:choose>
          </xsl:attribute>
          <xsl:attribute name="name">
