@@ -166,7 +166,7 @@ namespace vpr
    typedef class RWMutexNSPR   RWMutex;
    typedef class SemaphoreNSPR Semaphore;
    typedef class ThreadNSPR    Thread;
-//   typedef class ThreadKeyNSPR KeyId;
+   typedef class ThreadKeyNSPR KeyId;
 
 /* POSIX and SPROC */
 #else

@@ -52,7 +52,7 @@
 namespace vpr
 {
 
-ThreadTable<PRThread*> ThreadNSPR::mThreadTable;
+ThreadNSPR::staticWrapper ThreadNSPR::statics;                 // Initialize the static data
 PRUint32 ThreadNSPR::mTicksPerSec = PR_TicksPerSecond();
 
 // Non-spawning constructor.  This will not start a thread.
@@ -91,7 +91,7 @@ ThreadNSPR::ThreadNSPR(BaseThreadFunctor* functorPtr,
 // Destructor.
 ThreadNSPR::~ThreadNSPR()
 {
-   mThreadTable.removeThread(gettid());
+   ;
 }
 
 void ThreadNSPR::setFunctor(BaseThreadFunctor* functorPtr)
@@ -183,6 +183,17 @@ int ThreadNSPR::join(void** status)
    return PR_JoinThread(mThread);
 }
 
+BaseThread* ThreadNSPR::self (void)
+{
+   vprASSERT((statics.mStaticsInitialized==1221) && "Trying to call vpr::ThreadNSPR::self before statics are initialized. Don't do that");
+
+   BaseThread* my_thread;
+   threadIdKey().getspecific((void**)&my_thread);
+
+   return my_thread;
+}
+
+
 /**
  * Helper method Called by the spawn routine to start the user thread function.
  *
@@ -202,7 +213,7 @@ void ThreadNSPR::startThread(void* nullParam)
    vprASSERT(NULL != mThread && "Invalid thread");    // We should not be able to have a NULL thread
    ThreadManager::instance()->lock();                 // Lock manager
    {
-      mThreadTable.addThread(this, mThread);          // Store local lookup
+      threadIdKey().setspecific((void*)this);         // Store self in thread local data
       registerThread(true);                           // Finish thread initialization
    }
    ThreadManager::instance()->unlock();
@@ -241,22 +252,6 @@ int ThreadNSPR::setPrio(VPRThreadPriority prio)
 // Private methods follow.
 // ===========================================================================
 
-// Check the status of the thread creation in order to determine if this
-// thread should be registered in the thread table or not.
-/*
-void ThreadNSPR::checkRegister(const int status)
-{
-   if ( status == 0 )
-   {
-      registerThread(true);
-      mThreadTable.addThread(this, mThread);
-   }
-   else
-   {
-      registerThread(false);  // Failed to create
-   }
-}
-*/
 
 PRThreadPriority ThreadNSPR::vprThreadPriorityToNSPR(const VPRThreadPriority priority)
 {
