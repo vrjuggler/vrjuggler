@@ -71,11 +71,8 @@ public:
     *
     * @pre None.
     * @post Zero out the address and set everything to wildcard values.
-    *
-    * @param port An unsigned 16-bit integer port number for this address
-    *              in host byte order.
     */
-   InetAddr (const vpr::Uint16 port = 0)
+   InetAddr ()
    {
       vprASSERT(false && "Implement me");
    }
