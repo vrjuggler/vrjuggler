@@ -57,6 +57,7 @@ endif
 ifneq (@SUBSYSTEM@, WIN32)
 ifneq (@SUBSYSTEM@, NSPR)
     SRCS	+= FileHandleUNIX.cpp		\
+                   IOSysUnix.cpp		\
                    InetAddrBSD.cpp		\
                    SelectorImpBSD.cpp		\
                    SerialPortImpTermios.cpp	\
