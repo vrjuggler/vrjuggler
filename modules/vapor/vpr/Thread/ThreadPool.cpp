@@ -229,7 +229,6 @@ OneThread* ThreadPool::addThread ()
    ThreadMemberFunctor<ThreadPool>* memberFunctor = new ThreadMemberFunctor<ThreadPool>(this, &ThreadPool::threadLoop, (void*)newThread);
 
    newThread->thread = new Thread(memberFunctor);
-   newThread->thread->start();
 
 //    DebugLock.acquire();
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << newThread->thread
