@@ -58,8 +58,17 @@
 // 3 - State changes & who is doing what
 // 4 - Verbose (don't need source) ex
 // 5 - Highly verbose (may need source)
-// 6 - Function entry and exit
+// 6 - Very detailed: i.e. Function entry and exit
 // 7 - You will be reading hexidecimal
+#define vjDBG_CRITICAL_LVL 0
+#define vjDBG_CONFIG_LVL 1
+#define vjDBG_WARNING_LVL 2
+#define vjDBG_STATE_LVL 3
+#define vjDBG_VERB_LVL 4
+#define vjDBG_HVERB_LVL 5
+#define vjDBG_DETAILED_LVL 6
+#define vjDBG_HEX_LVL 7
+
 
 
 #ifdef VJ_DEBUG
@@ -70,7 +79,7 @@
 #  define MAX_DBG_LEVEL 100
 #else
 #  define LOCK_DEBUG_STREAM
-#  define MAX_DBG_LEVEL 2
+#  define MAX_DBG_LEVEL vjDBG_WARNING_LVL
 //#   define vjDEBUG(cat,val) if (1) ; else cout
 //#   define vjDEBUG_BEGIN(cat,val) if (1) ; else cout
 //#   define vjDEBUG_END(cat,val) if (1) ; else cout

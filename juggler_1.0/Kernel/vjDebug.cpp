@@ -87,7 +87,7 @@ void vjDebug::addCategoryName(std::string name, int cat)
 
 void vjDebug::addAllowedCategory(int cat)
 {
-   if(mAllowedCategories.size() < (cat+1))
+   if((int)mAllowedCategories.size() < (cat+1))
       growAllowedCategoryVector(cat+1);
 
    mAllowedCategories[cat] = true;
@@ -151,7 +151,7 @@ void vjDebug::getAllowedCatsFromEnv()
 
 void vjDebug::growAllowedCategoryVector(int newSize)
 {
-   while(mAllowedCategories.size() < newSize)
+   while((int)mAllowedCategories.size() < newSize)
       mAllowedCategories.push_back(false);
 }
 
