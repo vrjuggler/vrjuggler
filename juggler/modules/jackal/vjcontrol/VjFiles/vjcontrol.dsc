@@ -9,4 +9,8 @@ chunk vjcontrol "VjControl Configuration" "Configuration information for the VjC
   fontsize Int 1 "Font Size" "Font size to use for GUI"
   windowsize Int 2 "Max Window Size" vj_valuelabels { "Width" "Height" } "Maximum size to open vjcontrol windows"
   end
+
+chunk vjIncludeFile "Include File" "File that should be loaded along with this one"
+  Name String 1 "Name" ""
+  end
 End
