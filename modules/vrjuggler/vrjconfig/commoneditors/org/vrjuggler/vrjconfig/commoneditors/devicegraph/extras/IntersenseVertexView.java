@@ -352,15 +352,7 @@ public class IntersenseVertexView
                   for ( int i = 0; i < station_num; ++i )
                   {
                      StationGroup cur_sg = (StationGroup) mStations.get(i);
-
-                     if ( unit_type.equals(UnitConstants.ANALOG) )
-                     {
-                        unit_count += cur_sg.analogUnitCount;
-                     }
-                     else
-                     {
-                        unit_count += cur_sg.digitalUnitCount;
-                     }
+                     unit_count += cur_sg.getUnitCount(unit_type);
                   }
 
                   UnitInfo unit_info = new UnitInfo(unit_type, unit_count);
@@ -403,9 +395,7 @@ public class IntersenseVertexView
 
                   if ( port != null )
                   {
-                     List components = sg.getRow(search_info);
-                     sg.removeRow(search_info);
-                     removeUnitRow(sg, port, components);
+                     removeUnitRow(sg, port);
                      mRemovedUnitInfo = null;
                   }
                   else
@@ -807,7 +797,7 @@ public class IntersenseVertexView
 
          // Find the digital and analog units (if any) associated with the
          // removed station.
-         for ( Iterator u = sg.unitRowMap.keySet().iterator(); u.hasNext(); )
+         for ( Iterator u = sg.getUnits().iterator(); u.hasNext(); )
          {
             UnitInfo unit_info = (UnitInfo) u.next();
 
@@ -855,8 +845,8 @@ public class IntersenseVertexView
          this.remove(sg.stationPanel);
          mMainLayout.deleteRow(tlc.row1);
 
-         int removed_analog  = sg.analogUnitCount;
-         int removed_digital = sg.digitalUnitCount;
+         int removed_analog  = sg.getUnitCount(UnitConstants.ANALOG);
+         int removed_digital = sg.getUnitCount(UnitConstants.DIGITAL);
 
          List changed_pos_info = new ArrayList();
          List changed_ana_info = new ArrayList();
@@ -1042,28 +1032,15 @@ public class IntersenseVertexView
          JLabel name_field = createUnitLabel(unit_info);
 
          TableLayout sg_layout = stationGroup.mainLayout;
-         int row;
 
-         if ( unit_type.equals(UnitConstants.ANALOG) )
-         {
-            // Account for the addition of the new unit to this group.
-            stationGroup.analogUnitCount++;
+         // Add this here to get the unit count updated correctly before we
+         // use that information to add to stationGroup.stationPanel.
+         stationGroup.addUnit(unit_info);
 
-            // Calculate the new row as an offset to the "Add Analog" button.
-            TableLayoutConstraints c =
-               sg_layout.getConstraints(stationGroup.analogAddButton);
-            row = c.row1 + stationGroup.analogUnitCount;
-         }
-         else
-         {
-            // Account for the addition of the new unit to this group.
-            stationGroup.digitalUnitCount++;
-
-            // Calculate the new row as an offset to the "Add Digital" button.
-            TableLayoutConstraints c =
-               sg_layout.getConstraints(stationGroup.digitalAddButton);
-            row = c.row1 + stationGroup.digitalUnitCount;
-         }
+         // Calculate the new row as an offset to the appropriate "Add" button.
+         TableLayoutConstraints c =
+            sg_layout.getConstraints(stationGroup.getAddButton(unit_type));
+         int row = c.row1 + stationGroup.getUnitCount(unit_type);
 
          sg_layout.insertRow(row, TableLayoutConstraints.PREFERRED);
          stationGroup.stationPanel.add(
@@ -1119,12 +1096,6 @@ public class IntersenseVertexView
                }
             }
          );
-
-         List components = new ArrayList(3);
-         components.add(0, port_widget);
-         components.add(1, name_field);
-         components.add(2, remove_btn);
-         stationGroup.addRow(unit_info, components);
 
          stationGroup.stationPanel.add(
             remove_btn,
@@ -1193,9 +1164,31 @@ public class IntersenseVertexView
       /**
        *
        */
-      private void removeUnitRow(StationGroup stationGroup,
-                                 DefaultPort port, List components)
+      private void removeUnitRow(StationGroup stationGroup, DefaultPort port)
       {
+         UnitInfo old_unit_info = (UnitInfo) port.getUserObject();
+         Integer unit_type = old_unit_info.getUnitType();
+
+         int station_num = mStations.indexOf(stationGroup);
+         int prev_station_unit_count = 0;
+
+         // Determine how many units of type unit_type are defined by the
+         // preceding station(s).
+         for ( int i = 0; i < station_num; ++i )
+         {
+            StationGroup cur_sg = (StationGroup) mStations.get(i);
+            prev_station_unit_count += cur_sg.getUnitCount(unit_type);
+         }
+
+         // The row to remove is based on the offset from the appropriate
+         // "Add" button within the given station group panel.
+         TableLayoutConstraints tlc =
+            stationGroup.mainLayout.getConstraints(
+               stationGroup.getAddButton(unit_type)
+            );
+         int row = tlc.row1 + old_unit_info.getUnitNumber().intValue() -
+                      prev_station_unit_count + 1;
+
          // Get the preferred size of the renderer so that we can modify it
          // after the row is removed.
          Dimension pref_size = this.getPreferredSize();
@@ -1206,23 +1199,19 @@ public class IntersenseVertexView
          int height = pref_size.height;
          int max_height = 0;
 
-         // Find the row containing the components being removed.  We expect
-         // that all the components in the given array are in the same row.
-         // XXX: Is there a more robust way to do this?
-         TableLayoutConstraints tlc =
-            stationGroup.mainLayout.getConstraints((JComponent) components.get(0));
-         int row = tlc.row1;
-
-         for ( Iterator c = components.iterator(); c.hasNext(); )
+         // Find the row containing the components being removed.
+         Component[] components = stationGroup.stationPanel.getComponents();
+         for ( int i = 0; i < components.length; ++i )
          {
-            JComponent component = (JComponent) c.next();
+            TableLayoutConstraints cur_tlc =
+               stationGroup.mainLayout.getConstraints(components[i]);
 
-            if ( max_height < component.getPreferredSize().height )
+            if ( cur_tlc.row1 == row )
             {
-               max_height = component.getPreferredSize().height;
+               max_height = Math.max(max_height,
+                                     components[i].getPreferredSize().height);
+               stationGroup.stationPanel.remove(components[i]);
             }
-
-            stationGroup.stationPanel.remove(component);
          }
 
          // The height of the renderer will be decreased by the component
@@ -1243,18 +1232,8 @@ public class IntersenseVertexView
          DefaultGraphCell device_cell = (DefaultGraphCell) mView.getCell();
          device_cell.remove(port);
 
-         UnitInfo old_unit_info = (UnitInfo) port.getUserObject();
-
-         if ( old_unit_info.getUnitType().equals(UnitConstants.ANALOG) )
-         {
-            // Account for the unit removal from its group.
-            stationGroup.analogUnitCount--;
-         }
-         else
-         {
-            // Account for the unit removal from its group.
-            stationGroup.digitalUnitCount--;
-         }
+         // Complete the unit removal by removing it from its station group.
+         stationGroup.removeUnit(old_unit_info);
 
          // Now, we need to update all the other ports that represent units
          // that are (sequentially) after the port that has been removed.
@@ -1277,7 +1256,8 @@ public class IntersenseVertexView
                // know that child_port's unit number comes after unit_value
                // sequentially.  Therefore, it needs to be updated to have its
                // Integer value decremented by one.
-               if ( unit_val.compareTo(unit_info.getUnitNumber()) < 0 )
+               if ( unit_type.equals(unit_info.getUnitType()) &&
+                    unit_val.compareTo(unit_info.getUnitNumber()) < 0 )
                {
                   decrementUnitNumber(child_port, 1);
                }
@@ -1407,62 +1387,120 @@ public class IntersenseVertexView
        * mRemovedUnitInfo hack.
        */
       private transient Stack mAddedUnitRows = new Stack();
+   }
+}
 
-      /**
-       * A helper class used as the value in <code>mStationGroups</code> that
-       * assists with calculating unit numbers when adding and removing unit
-       * rows from the layout.
-       */
-      private static class StationGroup
+/**
+ * A helper class used as the value in <code>mStationGroups</code> that
+ * assists with calculating unit numbers when adding and removing unit
+ * rows from the layout.
+ */
+class StationGroup
+{
+   StationGroup(JPanel stationPanel, TableLayout mainLayout,
+                JButton removeStationButton, JLabel posUnitLabel,
+                JButton anaAddButton, JButton digAddButton)
+   {
+      this.stationPanel        = stationPanel;
+      this.mainLayout          = mainLayout;
+      this.removeStationButton = removeStationButton;
+
+      this.positionUnitLabel = posUnitLabel;
+
+      this.analogAddButton   = anaAddButton;
+      this.digitalAddButton  = digAddButton;
+   }
+
+   public void addUnit(UnitInfo unitInfo)
+   {
+      this.units.add(unitInfo);
+
+      if ( unitInfo.getUnitType().equals(UnitConstants.ANALOG) )
       {
-         StationGroup(JPanel stationPanel, TableLayout mainLayout,
-                      JButton removeStationButton, JLabel posUnitLabel,
-                      JButton anaAddButton, JButton digAddButton)
-         {
-            this.stationPanel        = stationPanel;
-            this.mainLayout          = mainLayout;
-            this.removeStationButton = removeStationButton;
-
-            this.positionUnitLabel = posUnitLabel;
-
-            this.analogAddButton   = anaAddButton;
-            this.digitalAddButton  = digAddButton;
-         }
-
-         public void addRow(UnitInfo unitInfo, List components)
-         {
-            this.unitRowMap.put(unitInfo, components);
-         }
-
-         public List removeRow(UnitInfo unitInfo)
-         {
-            return (List) this.unitRowMap.remove(unitInfo);
-         }
-
-         public List getRow(UnitInfo unitInfo)
-         {
-            return (List) this.unitRowMap.get(unitInfo);
-         }
-
-         public JPanel      stationPanel = null;
-         public TableLayout mainLayout   = null;
-
-         public JButton removeStationButton = null;
-
-         public JLabel positionUnitLabel = null;
-
-         public JButton analogAddButton  = null;
-         public JButton digitalAddButton = null;
-
-         public int analogUnitCount  = 0;
-         public int digitalUnitCount = 0;
-
-         /**
-          * Maps from a UnitInfo object to a List object.  The List instance
-          * contains the JComponents in the row that is identified uniquely by
-          * the UnitInfo key.
-          */
-         private Map unitRowMap = new HashMap();
+         analogUnitCount++;
+      }
+      else
+      {
+         digitalUnitCount++;
       }
    }
+
+   public void removeUnit(UnitInfo unitInfo)
+   {
+      this.units.remove(unitInfo);
+
+      if ( unitInfo.getUnitType().equals(UnitConstants.ANALOG) )
+      {
+         analogUnitCount--;
+      }
+      else
+      {
+         digitalUnitCount--;
+      }
+   }
+
+   /**
+    * Returns the list of all analog and digital units in this station.
+    */
+   public List getUnits()
+   {
+      return this.units;
+   }
+
+   /**
+    * Returns the number of units in this station of the given type (as
+    * defined in <code>UnitConstants</code>.  The type value must be either
+    * <code>UnitConstants.ANALOG</code> or <code>UnitConstants.DIGITAL</code>.
+    * All stations always have exactly one positional unit.
+    *
+    * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.UnitConstants
+    */
+   public int getUnitCount(Integer unitType)
+   {
+      if ( unitType.equals(UnitConstants.ANALOG) )
+      {
+         return this.analogUnitCount;
+      }
+      else
+      {
+         return this.digitalUnitCount;
+      }
+   }
+
+   /**
+    * Returns the JButton instance for adding a new unit of the given type
+    * as defined in <code>UnitConstants</code>.  The type value must be either
+    * <code>UnitConstants.ANALOG</code> or <code>UnitConstants.DIGITAL</code>.
+    *
+    * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.UnitConstants
+    */
+   public JButton getAddButton(Integer unitType)
+   {
+      if ( unitType.equals(UnitConstants.ANALOG) )
+      {
+         return this.analogAddButton;
+      }
+      else
+      {
+         return this.digitalAddButton;
+      }
+   }
+
+   public JPanel      stationPanel = null;
+   public TableLayout mainLayout   = null;
+
+   public JButton removeStationButton = null;
+
+   public JLabel positionUnitLabel = null;
+
+   private JButton analogAddButton  = null;
+   private JButton digitalAddButton = null;
+
+   private int analogUnitCount  = 0;
+   private int digitalUnitCount = 0;
+
+   /**
+    * All the UnitInfo objects associated with this station group.
+    */
+   private List units = new ArrayList();
 }
