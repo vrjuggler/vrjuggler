@@ -143,17 +143,19 @@ public class DisplayWindowEditorPanel
       }
    }
 
-   public void setConfigElement(ConfigElement elt)
-   {
-      mElement = elt;
-      setEditorState();
-      addDisplay(elt);
-   }
-
-   public void setContext(ConfigContext ctx)
+   public void setConfig(ConfigContext ctx, ConfigElement elt)
    {
       mContext = ctx;
-      setEditorState();
+      mElement = elt;
+
+      // A configuration context without a configuration element indicates that
+      // we should operate as a desktop editor rather than a single display
+      // window editor.
+      mIsDesktopEditor = (mContext != null && mElement == null);
+
+      // The button for creating a new display window can only be active when
+      // we are in desktop editor mode.
+      mDisplayCreateButton.setEnabled(mIsDesktopEditor);
 
       // If we are acting as a desktop editor, then we need to pull out all
       // the existing display_window config elements.
@@ -171,20 +173,10 @@ public class DisplayWindowEditorPanel
             }
          }
       }
-   }
-
-   /**
-    * A configuration context without a configuration element indicates that
-    * we should operate as a desktop editor rather than a single display
-    * window editor.
-    */
-   private void setEditorState()
-   {
-      mIsDesktopEditor = (mContext != null && mElement == null);
-
-      // The button for creating a new display window can only be active when
-      // we are in desktop editor mode.
-      mDisplayCreateButton.setEnabled(mIsDesktopEditor);
+      else
+      {
+         addDisplay(elt);
+      }
    }
 
    public Container getPanel()

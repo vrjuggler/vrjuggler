@@ -184,7 +184,7 @@ DPP_PROG_INSTALL
 # -----------------------------------------------------------------------------
 VPR_PATH([0.41.0], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-vrj_min_jccl_ver='0.24.0'
+vrj_min_jccl_ver='0.91.1'
 JCCL_PATH_CXX([$vrj_min_jccl_ver], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
 GADGETEER_PATH([0.22.0], ,
@@ -764,6 +764,9 @@ AC_CONFIG_FILES([
    vrjconfig/customeditors/intersense/build.xml
    vrjconfig/customeditors/intersense/Makefile
    vrjconfig/customeditors/intersense/Makefile.inc
+   vrjconfig/customeditors/motionstar/build.xml
+   vrjconfig/customeditors/motionstar/Makefile
+   vrjconfig/customeditors/motionstar/Makefile.inc
    vrjconfig/customeditors/pinchglove/build.xml
    vrjconfig/customeditors/pinchglove/Makefile
    vrjconfig/customeditors/pinchglove/Makefile.inc

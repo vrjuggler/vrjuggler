@@ -155,18 +155,11 @@ public class IntersensePanel extends JPanel implements CustomEditor
    }
 
    /**
-    * Specify the ConfigContext to use with this CustomEditor.
+    * Specify the ConfigContext and ConfigElement for this Intersense device.
     */
-   public void setContext(ConfigContext ctx)
+   public void setConfig(ConfigContext ctx, ConfigElement elm)
    {
       mConfigContext = ctx;
-   }
-
-   /**
-    * Specify the ConfigElement for this Intersense device.
-    */
-   public void setConfigElement(ConfigElement elm)
-   {
       mConfigElement = elm;
       if(null == mConfigContext)
       {
@@ -286,9 +279,8 @@ public class IntersensePanel extends JPanel implements CustomEditor
                      JDialog dlg = new JDialog(
                         (Frame)SwingUtilities.getAncestorOfClass(Frame.class, IntersensePanel.this),
                         "3D Visualization", true);
-                     // Make sure to set the context first.
-                     pos_editor.setContext(mConfigContext);
-                     pos_editor.setConfigElement(mConfigElement);
+
+                     pos_editor.setConfig(mConfigContext, mConfigElement);
 
                      dlg.getContentPane().add((JPanel)pos_editor);
                      dlg.pack();
