@@ -61,6 +61,13 @@
 #include <osgDB/ReadFile>
 #include <math.h>
 
+#ifdef TWEEK_HAVE_CXX
+#include <tweek/CORBA/CorbaManager.h>
+#endif
+
+#include <cluster/Plugins/ApplicationDataManager/UserData.h>
+#include "nav.h"
+
 #include <vrj/Draw/OSG/OsgApp.h>
 
 /**
@@ -69,10 +76,7 @@
 class OsgNav : public vrj::OsgApp
 {
 public:
-   OsgNav(vrj::Kernel* kern) : vrj::OsgApp(kern)         // Initialize base class
-   {
-      mFileToLoad = std::string("");
-   }
+   OsgNav(vrj::Kernel* kern, int& argc, char** argv);
 
    virtual ~OsgNav()
    {
@@ -111,6 +115,8 @@ public:
 
    void myInit();
 
+   void initTweek( int& argc, char* argv[] );
+      
    virtual osg::Group* getScene()
    {
       return mRootNode;
@@ -181,8 +187,14 @@ private:
 
    float speed;
    float inc;
+   //OsgNavigater mNavigater;
+   cluster::UserData< OsgNavigater >  mNavigater;
 
    std::string mFileToLoad;
+
+#ifdef TWEEK_HAVE_CXX
+   tweek::CorbaManager mCorbaManager;
+#endif
 
 public:
    gadget::PositionInterface  mWand;     // the Wand

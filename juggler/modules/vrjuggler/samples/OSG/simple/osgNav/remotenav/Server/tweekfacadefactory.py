@@ -91,6 +91,7 @@ def main():
             mgr_chosen = False
 
             for item in mgr.getInfo():
+#               print '%s --> %s' % (item.key, item.value)
                # This helps avoid having to pick a Subject Manager explicitly,
                # though you could get a reference to someone else's Subject
                # Manager and not even know it.

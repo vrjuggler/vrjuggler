@@ -44,6 +44,7 @@ omniORB.registerType(RemoteNavSubject._NP_RepositoryId, _0_vrj._d_RemoteNavSubje
 RemoteNavSubject._d_setPosition = ((omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float), (), None)
 RemoteNavSubject._d_getPosition = ((), (omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float), None)
 RemoteNavSubject._d_getOrientation = ((), (omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float), None)
+RemoteNavSubject._d_setOrientation = ((omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float), (), None)
 RemoteNavSubject._d_setVelocity = ((omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float), (), None)
 RemoteNavSubject._d_setRotationalVelocity = ((omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float, omniORB.tcInternal.tv_float), (), None)
 RemoteNavSubject._d_setWalkMode = ((omniORB.tcInternal.tv_boolean, ), (), None)
@@ -64,6 +65,9 @@ class _objref_RemoteNavSubject (_0_tweek._objref_Subject):
     def getOrientation(self, *args):
         return _omnipy.invoke(self, "getOrientation", _0_vrj.RemoteNavSubject._d_getOrientation, args)
 
+    def setOrientation(self, *args):
+        return _omnipy.invoke(self, "setOrientation", _0_vrj.RemoteNavSubject._d_setOrientation, args)
+
     def setVelocity(self, *args):
         return _omnipy.invoke(self, "setVelocity", _0_vrj.RemoteNavSubject._d_setVelocity, args)
 
@@ -73,7 +77,7 @@ class _objref_RemoteNavSubject (_0_tweek._objref_Subject):
     def setWalkMode(self, *args):
         return _omnipy.invoke(self, "setWalkMode", _0_vrj.RemoteNavSubject._d_setWalkMode, args)
 
-    __methods__ = ["setPosition", "getPosition", "getOrientation", "setVelocity", "setRotationalVelocity", "setWalkMode"] + _0_tweek._objref_Subject.__methods__
+    __methods__ = ["setPosition", "getPosition", "getOrientation", "setOrientation", "setVelocity", "setRotationalVelocity", "setWalkMode"] + _0_tweek._objref_Subject.__methods__
 
 omniORB.registerObjref(RemoteNavSubject._NP_RepositoryId, _objref_RemoteNavSubject)
 _0_vrj._objref_RemoteNavSubject = _objref_RemoteNavSubject
@@ -85,7 +89,7 @@ class RemoteNavSubject (_0_tweek__POA.Subject):
     _NP_RepositoryId = _0_vrj.RemoteNavSubject._NP_RepositoryId
 
 
-    _omni_op_d = {"setPosition": _0_vrj.RemoteNavSubject._d_setPosition, "getPosition": _0_vrj.RemoteNavSubject._d_getPosition, "getOrientation": _0_vrj.RemoteNavSubject._d_getOrientation, "setVelocity": _0_vrj.RemoteNavSubject._d_setVelocity, "setRotationalVelocity": _0_vrj.RemoteNavSubject._d_setRotationalVelocity, "setWalkMode": _0_vrj.RemoteNavSubject._d_setWalkMode}
+    _omni_op_d = {"setPosition": _0_vrj.RemoteNavSubject._d_setPosition, "getPosition": _0_vrj.RemoteNavSubject._d_getPosition, "getOrientation": _0_vrj.RemoteNavSubject._d_getOrientation, "setOrientation": _0_vrj.RemoteNavSubject._d_setOrientation, "setVelocity": _0_vrj.RemoteNavSubject._d_setVelocity, "setRotationalVelocity": _0_vrj.RemoteNavSubject._d_setRotationalVelocity, "setWalkMode": _0_vrj.RemoteNavSubject._d_setWalkMode}
     _omni_op_d.update(_0_tweek__POA.Subject._omni_op_d)
 
 RemoteNavSubject._omni_skeleton = RemoteNavSubject

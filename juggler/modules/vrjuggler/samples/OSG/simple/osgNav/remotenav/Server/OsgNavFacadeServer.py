@@ -17,7 +17,7 @@ from Pyro.errors import PyroError,NamingError
 
 print " ---- OsgNavFacadeServer ---- "
 
-use_test_facade = 1       # If true, just use a test version of the facade
+use_test_facade = 0       # If true, just use a test version of the facade
 
 # --- Cmd line params to use
 nameserver_hostname = os.uname()[1];               # What host to use
