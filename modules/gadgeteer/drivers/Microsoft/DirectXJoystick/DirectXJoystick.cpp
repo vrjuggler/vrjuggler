@@ -195,7 +195,7 @@ bool DirectXJoystick::stopSampling()
 void DirectXJoystick::updateData()
 {
    mInputDrv.poll();
-   DIJOYSTATE  mJsData = mInputDrv.getData(); 
+   const DIJOYSTATE& mJsData = mInputDrv.getData(); 
 
    //FIXME: if & only if there is events happen, do setTime
    // for buttons, do update 
