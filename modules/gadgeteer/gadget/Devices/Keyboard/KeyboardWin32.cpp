@@ -160,7 +160,6 @@ int vjKeyboardWin32::onlyModifier(int mod)
 
 void vjKeyboardWin32::updateData()
 {
-  int i;
    //  UpdKeys();
    // update what the last mouse x/y values were.
    oldx = newx;
