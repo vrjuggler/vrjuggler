@@ -53,7 +53,6 @@ import org.vrjuggler.jccl.config.ValType;
  */
 public class PropertyDescEditor
    extends JTabbedPane
-   implements Scrollable
 {
    /**
     * Create a new editor for PropertyDescs. This editor has no PropertyDesc to
@@ -116,7 +115,15 @@ public class PropertyDescEditor
 
    public void setPropertyDesc(PropertyDesc desc)
    {
+      if (propertyDesc != null)
+      {
+         propertyDesc.removePropertyChangeListener(descChangeListener);
+      }
       propertyDesc = desc;
+      if (propertyDesc != null)
+      {
+         propertyDesc.addPropertyChangeListener(descChangeListener);
+      }
       basicTableModel.setPropertyDesc(desc);
       itemsTableModel.setPropertyDesc(desc);
       enumsTableModel.setPropertyDesc(desc);
@@ -128,26 +135,39 @@ public class PropertyDescEditor
       {
          helpTextArea.setText("");
       }
+      revalidate();
+   }
 
+   public void revalidate()
+   {
       // Tweak the max sizes of the components
       Dimension maxSize;
 
-      maxSize = basicTable.getPreferredSize();
-      maxSize.width = Integer.MAX_VALUE;
-      basicTable.setPreferredScrollableViewportSize(maxSize);
-      basicScrollPane.setMaximumSize(maxSize);
+      if (basicTable != null)
+      {
+         maxSize = basicTable.getPreferredSize();
+         maxSize.width = Integer.MAX_VALUE;
+         basicTable.setPreferredScrollableViewportSize(maxSize);
+         basicScrollPane.setMaximumSize(maxSize);
+      }
 
-      maxSize = itemsTable.getPreferredSize();
-      maxSize.width = Integer.MAX_VALUE;
-      itemsTable.setPreferredScrollableViewportSize(maxSize);
-      itemsScrollPane.setMaximumSize(maxSize);
+      if (itemsTable != null)
+      {
+         maxSize = itemsTable.getPreferredSize();
+         maxSize.width = Integer.MAX_VALUE;
+         itemsTable.setPreferredScrollableViewportSize(maxSize);
+         itemsScrollPane.setMaximumSize(maxSize);
+      }
 
-      maxSize = enumTable.getPreferredSize();
-      maxSize.width = Integer.MAX_VALUE;
-      enumTable.setPreferredScrollableViewportSize(maxSize);
-      enumScrollPane.setMaximumSize(maxSize);
+      if (enumTable != null)
+      {
+         maxSize = enumTable.getPreferredSize();
+         maxSize.width = Integer.MAX_VALUE;
+         enumTable.setPreferredScrollableViewportSize(maxSize);
+         enumScrollPane.setMaximumSize(maxSize);
+      }
 
-      updateUI();
+      super.revalidate();
    }
 
    public PropertyDesc getPropertyDesc()
@@ -298,38 +318,6 @@ public class PropertyDescEditor
    }
 
    /**
-    * Gets the preferred size of the viewport on this component.
-    */
-   public Dimension getPreferredScrollableViewportSize()
-   {
-      return basicScrollPane.getPreferredSize();
-   }
-
-   public int getScrollableBlockIncrement(Rectangle visRect, int orientation,
-                                          int direction)
-   {
-      return basicTable.getScrollableBlockIncrement(visRect, orientation,
-                                                    direction);
-   }
-
-   public boolean getScrollableTracksViewportHeight()
-   {
-      return false;
-   }
-
-   public boolean getScrollableTracksViewportWidth()
-   {
-      return true;
-   }
-
-   public int getScrollableUnitIncrement(Rectangle visRect, int orientation,
-                                         int direction)
-   {
-      return basicTable.getScrollableBlockIncrement(visRect, orientation,
-                                                    direction);
-   }
-
-   /**
     * Let Jbuilder init the UI.
     */
    private void jbInit()
@@ -362,6 +350,11 @@ public class PropertyDescEditor
     */
    PropertyDesc propertyDesc = null;
 
+   /**
+    * Listens for changes to the currently active property desc.
+    */
+   PropertyDescChangeListener descChangeListener = new PropertyDescChangeListener();
+
    //--- JBuilder generated GUI variables ---//
    private JScrollPane enumTab = new JScrollPane();
    private JScrollPane enumScrollPane = new JScrollPane();
@@ -377,6 +370,18 @@ public class PropertyDescEditor
    private JButton removeItemBtn = new JButton();
    private JButton addEnumBtn = new JButton();
    private JButton removeEnumBtn = new JButton();
+
+   /**
+    * Listens to changes to the current property description.
+    */
+   class PropertyDescChangeListener
+      implements PropertyChangeListener
+   {
+      public void propertyChange(PropertyChangeEvent evt)
+      {
+         revalidate();
+      }
+   }
 
    /**
     * A table model for the Basic table.
