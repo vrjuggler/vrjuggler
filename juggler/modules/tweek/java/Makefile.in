@@ -119,23 +119,6 @@ VIEWERS_CLASSES	= org/vrjuggler/tweek/iconviewer/*.class	\
                   org/vrjuggler/tweek/treeviewer/*.class
 VIEWERS_EXTRAS	= org/vrjuggler/tweek/iconviewer/*.gif LICENSE-java-laf.txt
 
-# List the packages for which JavaDoc documentation will be generated.
-BASE_PKG	= org.vrjuggler.tweek
-DOC_PKGS	= $(BASE_PKG)			\
-                  $(BASE_PKG).gui		\
-                  $(BASE_PKG).net		\
-                  $(BASE_PKG).beans		\
-                  $(BASE_PKG).beans.loader	\
-                  $(BASE_PKG).event		\
-                  $(BASE_PKG).services		\
-                  $(BASE_PKG).iconviewer	\
-                  $(BASE_PKG).treeviewer
-
-webroot		= $(HOME)/public_html/jugglerweb
-instdir		= tweek/1.0
-doc_prefix	= $(webroot)/$(instdir)
-DOC_ROOT	= programmer.reference.java
-
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
@@ -172,10 +155,6 @@ TweekServices.jar: $(SERVICE_CLASSES)
 Viewers.jar: $(VIEWERS_CLASSES)
 	$(JAR) cvfm $@ $(VIEWERS_MF) $(VIEWERS_CLASSES)
 	cd $(srcdir) && $(JAR) uvf $(topdir)/java/$@ $(VIEWERS_EXTRAS)
-
-docs:
-	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
-          -classpath "$(CLASSPATH)" $(DOC_PKGS)
 
 links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin/beans
@@ -253,11 +232,6 @@ ifneq ($(JAVA_ORB_JAR), none)
                 $$jar $(bindir) ;					\
           done
 endif
-
-install-docs:
-	$(MKINSTALLDIRS) $(doc_prefix)
-	rm -rf $(doc_prefix)/$(DOC_ROOT)
-	mv $(DOC_ROOT) $(doc_prefix)
 
 CLEAN_FILES	+= $(JARS) $(TWEEK_CLASSES) $(BEANS_CLASSES)		\
                    $(NET_CLASSES) $(EVENT_CLASSES) $(SERVICE_CLASSES)	\
