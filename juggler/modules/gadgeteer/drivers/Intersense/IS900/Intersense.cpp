@@ -81,6 +81,7 @@ int Intersense::getStationIndex(int stationNum, int bufferIndex)
 
 
 Intersense::Intersense()
+   : stations(NULL)
 {
     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
        << "*** Intersense::Intersense() ***\n" << vprDEBUG_FLUSH;
@@ -135,13 +136,18 @@ bool Intersense::config(jccl::ConfigElementPtr e)
    }
 
    // load an init script for the tracker and then pass it to mTracker
-   const char* filename = e->getProperty<std::string>("script").c_str();
-   std::stringstream script;
-   std::ifstream scriptFile;
-   scriptFile.open(filename);
-   script<<scriptFile.rdbuf();
-   mTracker.setScript(script.str().c_str());
-   scriptFile.close();
+   std::string script_file = e->getProperty<std::string>("script");
+
+   if ( script_file.length() > 0 )
+   {
+      std::stringstream script;
+      std::ifstream script_stream;
+      script_stream.open(script_file.c_str());
+      script << script_stream.rdbuf();
+      mTracker.setScript(script.str().c_str());
+      script_stream.close();
+   }
+
    mTracker.rVerbose() = e->getProperty<bool>("verbose");
 
    return true;
