@@ -670,7 +670,8 @@ public class MultiUnitDeviceVertexView
          // The ports need to have their contained Integer decremented, and
          // all proxies referring to each of those ports needs to have its
          // UNIT_PROPERTY updated to the new unit value.
-         Integer unit_val = old_unit_info.getUnitNumber();
+         Integer unit_type = old_unit_info.getUnitType();
+         Integer unit_val  = old_unit_info.getUnitNumber();
 
          for ( Enumeration children = device_cell.children();
                children.hasMoreElements(); )
@@ -686,7 +687,8 @@ public class MultiUnitDeviceVertexView
                // know that child_port's unit number comes after unit_value
                // sequentially.  Therefore, it needs to be updated to have its
                // Integer value decremented by one.
-               if ( unit_val.compareTo(unit_info.getUnitNumber()) < 0 )
+               if ( unit_type.equals(unit_info.getUnitType()) &&
+                    unit_val.compareTo(unit_info.getUnitNumber()) < 0 )
                {
                   unit_info.decrementUnitNumber();
 
