@@ -45,6 +45,10 @@ DPP_GEN_RECONFIG
 
 DPP_STD_CPP(yes)
 
+AC_ARG_ENABLE(javaidl,
+              [  --enable-javaidl        Use Java IDL (requires JDK 1.4) [default=no]],
+              _enable_javaidl="$enable_val", _enable_javaidl='no')
+
 # Override the C compiler that configure would otherwise find itself.
 AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
             _alt_cc="$withval", _alt_cc='none')
@@ -68,6 +72,10 @@ AC_ARG_WITH(omnilib, [  --with-omnilib=<PATH>   Path to omniORB libraries ],
 AC_ARG_WITH(omniver,
             [  --with-omniver=<VER>    Major version of omniORB        [default=3]],
             OMNI_VER="$withval", OMNI_VER='3')
+
+AC_ARG_WITH(openorb,
+            [  --with-openorb=<PATH>   Path to OpenORB JAR file(s) ],
+            OPENORB_JAR="$withval", OPENORB_JAR='none')
 
 DPP_ABI_SETUP
 
@@ -327,13 +335,6 @@ int omni_main_i(int argc, char** const argv)
       AC_MSG_ERROR(*** omniORB required for Tweek **)
    fi               
 
-   AC_PATH_PROG(JAVA_IDL, idlj, no, ${PATH}:$JDK_HOME/bin)
-
-   if test "x$JAVA_IDL" = "xno" ; then
-      BUILD_JAVA='N'
-      AC_MSG_WARN(*** Cannot perform IDL-to-Java conversion ***)
-   fi
-
    if test "x$tweek_cv_omniORB__MaxMessageSize_in_omniORB" = "xyes" ; then
       OMNI_INCLUDES="-I$tweek_omni_inc"
       OMNI_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
@@ -356,7 +357,31 @@ int omni_main_i(int argc, char** const argv)
    LDFLAGS="$tweeksave_LDFLAGS"
    LIBS="$tweeksave_LIBS"
 else
+   # XXX: This should not be a fatal error.
    AC_MSG_ERROR(*** omniORB required for Tweek **)
+fi
+
+AC_PATH_PROG(JAVA_IDL, idlj, no, ${PATH}:$JDK_HOME/bin)
+
+if test "x$JAVA_IDL" = "xno" ; then
+   BUILD_JAVA='N'
+   AC_MSG_WARN(*** Cannot perform IDL-to-Java conversion ***)
+fi
+   
+if test "x${_enable_javaidl}" != "xno" ; then
+   # If we are going to use Java IDL, we have to have JDK 1.4 or newer so that
+   # we get an ORB that supports INS.
+   DPP_JDK_VERSION($JDK_HOME, 1.4, ,
+      AC_MSG_ERROR(*** JDK 1.4 or newer required for Java IDL use ***))
+else
+   if test "x$OPENORB_ROOT" != "xnone" ; then
+      DPP_CHECK_JAVA_STATIC_METHOD(org.omg.CORBA.ORB,
+         init(), , ,
+         [ AC_MSG_WARN(*** OpenORB required for Tweek GUI execution ***) ],
+         $OPENORB_JAR)
+   else
+      AC_MSG_WARN(*** OpenORB required for Tweek GUI execution ***)
+   fi
 fi
 
 # -----------------------------------------------------------------------------
@@ -521,6 +546,7 @@ AC_SUBST(EXTRA_LINK_FLAGS)
 
 AC_SUBST(BUILD_JAVA)
 AC_SUBST(JDOM_JAR)
+AC_SUBST(OPENORB_JAR)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
