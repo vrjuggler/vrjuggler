@@ -16,12 +16,10 @@ editor.bookmark.5=
 editor.bookmark.6=
 editor.bookmark.7=
 editor.bookmark.8=
-Root.1=$TGH$/jdk/jre/lib/rt.jar
+Root.1=/usr/java/j2sdk1.4.0/jre/lib/rt.jar
 Root.1.access=import
 Root.1.non_removable=
 Root.1.package_prefix=
-Root.2=$TGH$/modules/com/togethersoft/modules/xml/lib
-Root.2.access=import
 [vcs]
 cvscs.pwd=AZ?E'=0''a
 option.cvs.vendorTag=juggler
