@@ -1,8 +1,8 @@
 #ifndef COMPATIBILITY_HEADER_VJ_POSITION
 #define COMPATIBILITY_HEADER_VJ_POSITION
 
-#include <vrj/Input/Type/Position.h>
+#include <gadget/Type/Position.h>
 
-typedef vrj::Position vjPosition;
+typedef gadget::Position vjPosition;
 
 #endif

@@ -1,8 +1,8 @@
 #ifndef COMPATIBILITY_HEADER_VJ_DIGITAL_PROXY
 #define COMPATIBILITY_HEADER_VJ_DIGITAL_PROXY
 
-#include <vrj/Input/Type/DigitalProxy.h>
+#include <gadget/Type/DigitalProxy.h>
 
-typedef vrj::DigitalProxy vjDigitalProxy;
+typedef gadget::DigitalProxy vjDigitalProxy;
 
 #endif
