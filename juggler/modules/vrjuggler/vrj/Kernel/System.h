@@ -1,5 +1,24 @@
-#ifndef _VJSYSTEM_H_
-#define _VJSYSTEM_H_
+/*
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+
+#ifndef _VJ_SYSTEM_H_
+#define _VJ_SYSTEM_H_
 
 #include <vjConfig.h>
 #include <SharedMem/vjMemory.h>
@@ -58,8 +77,4 @@ private:
     static vjSystem* _instance;
 };
 
-#endif  /* _VJSYSTEM_H_ */
-
-
-
-  
+#endif  /* _VJ_SYSTEM_H_ */

@@ -1,9 +1,24 @@
 /*
- * --------------------------------------------------------------------------
- * vjMemPool_malloc.h
- * $Revision$
- * $Date$
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
  *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+
+/*
+ * --------------------------------------------------------------------------
  * Author:
  *   Patrick Hartling
  * --------------------------------------------------------------------------
@@ -15,8 +30,8 @@
  * --------------------------------------------------------------------------
  */
 
-#ifndef _MEM_POOL_MALLOC_H_
-#define _MEM_POOL_MALLOC_H_
+#ifndef _VJ_MEM_POOL_MALLOC_H_
+#define _VJ_MEM_POOL_MALLOC_H_
 
 #include <vjConfig.h>
 #include <sys/types.h>
@@ -188,4 +203,4 @@ public:
     }
 };
 
-#endif /* _MEM_POOL_MALLOC_H_ */
+#endif /* _VJ_MEM_POOL_MALLOC_H_ */

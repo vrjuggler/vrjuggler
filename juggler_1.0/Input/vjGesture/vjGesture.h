@@ -1,3 +1,22 @@
+/*
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+
 #ifndef _VJ_GESTURE_H_
 #define _VJ_GESTURE_H_
 #pragma once
@@ -6,6 +25,7 @@
 #include <Input/vjInput/vjInput.h>
 
 
+//-------------------------------------------------------------------------
 //: Base Juggler Gesture interface class
 // This class is the base interface for all gesture recognition objects
 //

@@ -1,3 +1,22 @@
+/*
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+
 #ifndef _VJ_CONFIG_H_
 #define _VJ_CONFIG_H_
 #pragma once
@@ -8,8 +27,6 @@
  * files in the VR Juggler source tree.  It must be included at the top of
  * every .h and .cpp file before any other headers because it includes system
  * headers.
- *
- * $Id$
  * ----------------------------------------------------------------------------
  */
 
@@ -51,5 +68,6 @@
 #define VJ_MAX2(x,y) ((x>y)? x : y)
 #define VJ_MAX3(x,y,z) VJ_MAX2(VJ_MAX2(x,y),z)
 #define VJ_MAX4(w,x,y,z) VJ_MAX2(VJ_MAX2(w,x),VJ_MAX2(y,z))
+
 
 #endif	/* _VJ_CONFIG_H_ */

@@ -1,3 +1,22 @@
+/*
+ *  File:	    $Name$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright  - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+
 #include <vjConfig.h>
 #include <strings.h>
 #include <ctype.h>
@@ -228,5 +247,3 @@ bool vjstrncmp (const std::string& a, const std::string& b, int _n) {
 	    return true;
     return false;
 }
-
-
