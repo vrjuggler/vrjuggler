@@ -6,15 +6,18 @@ class MyButtonDevice : public vjDigital
 public:
    MyButtonDevice() : mSampleThread( NULL ) {}
    virtual ~MyButtonDevice() { this->stopSampling(); }
+   virtual bool config(vjConfigChunk* c);
    virtual void  getData();
 public:
-   virtual void  startSampling();
-   virtual void  sample();
-   virtual void  stopSampling();
+   virtual int  startSampling();
+   virtual int  sample();
+   virtual int  stopSampling();
    static std::string getChunkType();
+
+   int getDigitalData(int d = 0);
 private:
    static void   threadedSampleFunction( void* classPointer );
-   int           mDigitalData;
+   int           mDigitalData[3];
    vjThread*     mSampleThread;
    
    // configuration data set by config()
@@ -26,14 +29,14 @@ vjDeviceConstructor<MyButtonDevice>* this_ptr_not_used = new vjDeviceConstructor
 //: What is the name of this device?
 //  This function returns a string that should match this device's 
 //  configchunk name.
-static std::string  MyButtonDevice::getChunkType() 
+std::string  MyButtonDevice::getChunkType() 
 { 
    return std::string("MyButtonDevice");
 }
 
 // spawn a sample thread, 
 // which calls MyButtonDevice::sample() repeatedly
-void MyButtonDevice::startSampling()
+int MyButtonDevice::startSampling()
 {
    mSampleThread = new vjThread( threadedSampleFunction, (void*)this, 0 );
    if (!mSampleThread->valid())
@@ -44,11 +47,12 @@ void MyButtonDevice::startSampling()
    
 //: Record (or sample) the current data
 // this is called repeatedly by the sample thread created by startSampling()
-void MyButtonDevice::sample()
+int MyButtonDevice::sample()
 {
    // here you would add your code to 
    // sample the hardware for a button press:
    mDigitalData[progress] = 1;//rand_number_0_or_1();
+   return 0;
 }
 
 // kill sample thread
