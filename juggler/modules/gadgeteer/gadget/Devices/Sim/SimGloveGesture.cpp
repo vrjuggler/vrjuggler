@@ -72,7 +72,7 @@ void vjSimGloveGesture::UpdateData()
       if(checkKeyPair(mSimKeys[i]) > 0)
       {
          mCurGesture = i;
-         vjDEBUG(0) << "vjSimGloveGesture: Got gesture: " << getGestureString(mCurGesture) << endl << vjDEBUG_FLUSH;
+         vjDEBUG(1) << "vjSimGloveGesture: Got gesture: " << getGestureString(mCurGesture) << endl << vjDEBUG_FLUSH;
 
          // Set the glove to the sample
          mTheData[0][current] = mGestureExamples[mCurGesture];    // Copy over the example
