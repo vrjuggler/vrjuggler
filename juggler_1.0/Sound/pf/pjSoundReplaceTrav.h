@@ -33,6 +33,7 @@ public:
    {
       assert( engine != NULL && node != NULL );
       pjSoundReplaceTrav::mSoundEnginePtr = engine;
+      engine->setPosition( 0.0f, 0.0f, 0.0f );
       
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -57,24 +58,28 @@ protected:
          return PFTRAV_CONT;	    // Return continue 
       }
       
+      // for verbose output (outputs every node's name.)
+      //cout<<"[SoundReplacer] Examining node in graph named \""<<nodeName.c_str()<<"\":\n"<<flush;
+         
       std::string nodeName = currentNode->getName();
-      cout<<"Examining node named \""<<nodeName.c_str()<<"\":\n"<<flush;
       if (nodeName.size() <= keyName.size())
       {
+         // name was too short to even be a match, discard it.
          return PFTRAV_CONT;	    // Return continue 
       }
-        
+      
       int startOfKeyWord = nodeName.size() - keyName.size();
       int endOfKeyWord = nodeName.size() - 1;
       std::string isThisOurKeyWord = nodeName.substr( startOfKeyWord, endOfKeyWord );
       if (isThisOurKeyWord == keyName)   // If node is not a Geode
       {
-         cout<<"    Substring "<<keyName<<" matched\n"<<flush;
+         cout<<"[SoundReplacer] Examining node in graph named \""<<nodeName.c_str()<<"\":\n"<<flush;
+         cout<<"[SoundReplacer]     Substring "<<keyName<<" matched, "<<flush;
          pfGroup* parent = currentNode->getParent( 0 ); // FIXME?? will 0 work for all cases (instanced nodes?)
          if (parent != NULL)
          {
             std::string soundName = nodeName.substr( 0, startOfKeyWord );
-            cout<<"    Extracted sound name: "<<soundName<<"\n"<<flush;
+            cout<<"extracted sound named \""<<soundName<<"\"\n"<<flush;
             assert( mSoundEnginePtr != NULL );
             Sound* sound = mSoundEnginePtr->getHandle( soundName.c_str() );
             
@@ -86,16 +91,21 @@ protected:
             }
             else
             {
-               cout<<"!!! WARNING !!! SOUND NOT FOUND: "<<soundName.c_str()<<"\n"<<flush;
-               cout<<"!!!         !!! You need to enter \""<<soundName.c_str()<<"\" into your sound config file(s)\n"<<flush;
+               cout<<"[SoundReplacer] !!! WARNING !!! SOUND NOT FOUND: "<<soundName.c_str()<<"\n"<<flush;
+               cout<<"[SoundReplacer] !!!         !!! You need to enter \""<<soundName.c_str()<<"\" into your sound config file(s)\n"<<flush;
                return PFTRAV_CONT;	    // Return continue                
             }
          }
+         else
+         {
+            cout<<"but Parent is NULL (nowhere to hang the Sound node!)\n"<<flush;
+         }         
       }
-      else
-      {
-         cout<<"    Substring not matched: \""<<isThisOurKeyWord.c_str()<<"\" != \""<<keyName<<"\"\n"<<flush;
-      }      
+      // for very verbose output...
+      //else
+      //{
+      //   cout<<"[SoundReplacer]     Substring not matched: \""<<isThisOurKeyWord.c_str()<<"\" != \""<<keyName<<"\"\n"<<flush;
+      //}      
       return PFTRAV_CONT;	    // Return continue 
    }
    
