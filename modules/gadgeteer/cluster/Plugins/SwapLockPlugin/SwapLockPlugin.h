@@ -33,9 +33,10 @@
 #ifndef _CLUSTER_SWAP_LOCK_PLUGIN_H
 #define _CLUSTER_SWAP_LOCK_PLUGIN_H
 
-#include <vpr/Util/Singleton.h>
+#include <cluster/Plugins/PluginConfig.h>
 
-#include <gadget/gadgetConfig.h>
+#include <map>
+#include <vpr/Util/Singleton.h>
 
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
@@ -48,13 +49,13 @@
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/RTRC/ConfigChunkHandler.h>
 
-#include <map>
 
 namespace cluster
 {
    class ClusterBarrier;
 
-class GADGET_CLASS_API SwapLockPlugin : public cluster::ClusterPlugin
+class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockPlugin
+   : public cluster::ClusterPlugin
 {
    vprSingletonHeader( SwapLockPlugin );
 

@@ -33,10 +33,9 @@
 #ifndef _CLUSTER_START_BARRIER_PLUGIN_H
 #define _CLUSTER_START_BARRIER_PLUGIN_H
 
-#include <vpr/Util/Singleton.h>
-
-#include <gadget/gadgetConfig.h>
 #include <cluster/Plugins/PluginConfig.h>
+
+#include <vpr/Util/Singleton.h>
 
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
@@ -57,7 +56,8 @@ namespace cluster
 {
    class ClusterBarrier;
 
-class GADGET_CLASS_API StartBarrierPlugin : public cluster::ClusterPlugin
+class GADGET_CLUSTER_PLUGIN_CLASS_API StartBarrierPlugin
+   : public cluster::ClusterPlugin
 {
    vprSingletonHeader( StartBarrierPlugin );
 

@@ -30,7 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vpr/vprConfig.h>
+#include <cluster/Plugins/PluginConfig.h>
+#include <vector>
+#include <boost/static_assert.hpp>
 #include <vpr/System.h>
 
 #include <gadget/Util/Debug.h>
@@ -41,10 +43,8 @@
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/Packets/SyncRequest.h>
 #include <cluster/Packets/SyncAck.h>
-#include <vector>
 
 #include <vpr/Thread/Thread.h>
-#include <boost/static_assert.hpp>
 
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/IO/Socket/SocketStream.h>

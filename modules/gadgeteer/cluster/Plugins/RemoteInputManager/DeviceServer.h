@@ -33,7 +33,7 @@
 #ifndef CLUSTER_DEVICE_SERVER_H
 #define CLUSTER_DEVICE_SERVER_H
 
-#include <gadget/gadgetConfig.h>
+#include <cluster/Plugins/PluginConfig.h>
 #include <cluster/Packets/DataPacket.h>
 #include <gadget/Type/Input.h>
 #include <vpr/Sync/Semaphore.h>
@@ -43,7 +43,7 @@ namespace cluster
 {
    class ClusterNode;
 
-   class GADGET_CLASS_API DeviceServer
+   class GADGET_CLUSTER_PLUGIN_CLASS_API DeviceServer
    {
    public:
       /**
