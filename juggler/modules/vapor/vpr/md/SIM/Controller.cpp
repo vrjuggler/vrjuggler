@@ -86,6 +86,10 @@ vpr::ReturnStatus Controller::constructNetwork (const std::string& graph_file)
 void Controller::addEvent (const vpr::Interval& event_time,
                            const NetworkGraph::net_edge_t edge)
 {
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+      << "Controller::addEvent(): Adding event scheduled for time "
+      << event_time.usec() / 10 << " on edge " << edge << "\n"
+      << vprDEBUG_FLUSH;
    mEvents.insert(std::pair<vpr::Interval, NetworkGraph::net_edge_t>(event_time, edge));
 }
 
@@ -102,6 +106,12 @@ void Controller::processNextEvent ()
       vpr::sim::MessagePtr msg;
       vpr::ReturnStatus status;
 
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "Controller::processNextEvent() [time = "
+         << mClock.getCurrentTime() << "]: Processing event scheduled to "
+         << "occur at time " << event_time.usec() / 10 << "\n"
+         << vprDEBUG_FLUSH;
+
       // ----------------------------------------------------------------------
       // Process event in the line's transmission queue.
       // ----------------------------------------------------------------------
@@ -111,6 +121,11 @@ void Controller::processNextEvent ()
 
       if ( status.success() )
       {
+         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+            << "Controller::processNextEvent(): Event is an arrived message on "
+            << "forward queue of line " << line.getNetworkAddressString()
+            << "\n" << vprDEBUG_FLUSH;
+         mClock.setCurrentTime(event_time);
          moveMessage(msg, event_time);
          event_processed = true;
       }
@@ -121,6 +136,11 @@ void Controller::processNextEvent ()
 
          if ( status.success() )
          {
+            vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+               << "Controller::processNextEvent(): Event is an arrived "
+               << "message on reverse queue of line "
+               << line.getNetworkAddressString() << "\n" << vprDEBUG_FLUSH;
+            mClock.setCurrentTime(event_time);
             moveMessage(msg, event_time);
             event_processed = true;
          }
@@ -139,6 +159,11 @@ void Controller::processNextEvent ()
 
          if ( status.success() )
          {
+            vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+               << "Controller::processNextEvent(): Event is a ready "
+               << "message on forward queue of line "
+               << line.getNetworkAddressString() << "\n" << vprDEBUG_FLUSH;
+            mClock.setCurrentTime(event_time);
             event_processed = true;
             addEvent(msg->whenArrivesFully(), event_edge);
          }
@@ -149,6 +174,11 @@ void Controller::processNextEvent ()
 
             if ( status.success() )
             {
+               vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+                  << "Controller::processNextEvent(): Event is a ready "
+                  << "message on reverse queue of line "
+                  << line.getNetworkAddressString() << "\n" << vprDEBUG_FLUSH;
+               mClock.setCurrentTime(event_time);
                event_processed = true;
                addEvent(msg->whenArrivesFully(), event_edge);
             }
@@ -198,9 +228,9 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
 
          vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
             << "New message times: "
-            << "starts = " << msg->whenStartOnWire().usec() << ", "
-            << "transmitts = " << msg->whenFullyOnWire().usec() << ", "
-            << "arrives = " << msg->whenArrivesFully().usec()
+            << "starts = " << msg->whenStartOnWire().usec() / 10 << ", "
+            << "transmits = " << msg->whenFullyOnWire().usec() / 10 << ", "
+            << "arrives = " << msg->whenArrivesFully().usec() / 10
             << std::endl << vprDEBUG_FLUSH;
 
          next_line_prop.addReadyMessage(msg, dir);
