@@ -46,7 +46,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([VR Juggler Portable Runtime], [0.34],
+AC_INIT([VR Juggler Portable Runtime], [0.35],
         [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([vpr/vprDefines.h])
 AC_PREREQ([2.53])
