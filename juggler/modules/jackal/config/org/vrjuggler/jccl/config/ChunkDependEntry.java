@@ -29,10 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
+package org.vrjuggler.jccl.config;
 
-import VjConfig.ConfigChunk;
-import VjConfig.Property;
 import java.util.Vector;
 
 public class ChunkDependEntry

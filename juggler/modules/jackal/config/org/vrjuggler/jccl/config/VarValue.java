@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
-
-import VjConfig.*;
-import java.lang.Cloneable;
+package org.vrjuggler.jccl.config;
 
 public final class VarValue
 {

@@ -29,11 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-/* ValType - just replaces our valtype enumeration, more or less */
-
-package VjConfig;
+package org.vrjuggler.jccl.config;
 
 /** Identification of the different types of values that VarValues can have.
  *  Each possible ValType is represented by a static public member of this

@@ -29,20 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.config;
 
-
-
-/* This corresponds to the config ChunkDesc class */
-
-package VjConfig;
-
-import java.util.Vector;
-import java.util.List;
 import java.io.*;
+import java.util.List;
+import java.util.Vector;
 import org.w3c.dom.*;
 
-import VjConfig.PropertyDesc;
-
+/** This corresponds to the config ChunkDesc class */
 public class ChunkDesc
    implements Cloneable
 {

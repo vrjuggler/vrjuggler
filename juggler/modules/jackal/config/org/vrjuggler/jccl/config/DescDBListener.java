@@ -29,9 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
-
-import VjConfig.DescDBEvent;
+package org.vrjuggler.jccl.config;
 
 /** Listener for ChunkDescDB modification events.
  *  By registering as a DescDBListener, an object can receive events
@@ -42,7 +40,6 @@ import VjConfig.DescDBEvent;
  *  SwingUtilities.invokeLater or something similar to ensure correct
  *  synchronization.
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public interface DescDBListener

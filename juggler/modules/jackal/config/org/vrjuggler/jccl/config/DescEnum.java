@@ -29,9 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
-
-import VjConfig.VarValue;
+package org.vrjuggler.jccl.config;
 
 /** DescEnum -- an entry in the enum vector of a PropertyDesc */
 public class DescEnum
