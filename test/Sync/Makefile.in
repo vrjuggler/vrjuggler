@@ -11,12 +11,12 @@ srcdir		= @srcdir@
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # NOTE: When compiling against the debugging version of VR Juggler, you
-# *MUST* add -D_DEBUG to ${COMPILE} for these test programs to work properly.
+# *MUST* add -D_DEBUG to $(COMPILE) for these test programs to work properly.
 # If compiling against the optimized version, you must add -D_OPT instead.
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
-LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ -g
-VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@
 
@@ -36,23 +36,24 @@ SYNC_PROGS	= test testBarrier testCond
 # -----------------------------------------------------------------------------
 default: all
 
-all: ${SYNC_PROGS}
+all: $(SYNC_PROGS)
 
 test: test.o
-	${LINK} -o $@ test.o ${VJ_LIBS} ${EXTRA_LIBS}
+	$(LINK) -o $@ test.o $(VJ_LIBS) $(EXTRA_LIBS)
 
 testBarrier: testBarrier.o
-	${LINK} -o $@ testBarrier.o ${VJ_LIBS} ${EXTRA_LIBS}
+	$(LINK) -o $@ testBarrier.o $(VJ_LIBS) $(EXTRA_LIBS)
 
 testCond: testCond.o
-	${LINK} -o $@ testCond.o ${VJ_LIBS} ${EXTRA_LIBS}
+	$(LINK) -o $@ testCond.o $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.o:
-	${COMPILE} -c $<
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend ${SYNC_PROGS} *.o *core so_locations
+	rm -f Makedepend $(SYNC_PROGS) *.exe *.ilk *.o *core *.?db	\
+          so_locations
 	rm -rf ./ii_files
