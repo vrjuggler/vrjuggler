@@ -120,7 +120,7 @@ public class ConfigurationWriter
    private void addElement(ConfigElement elt, Element root)
    {
       // Create the element element
-      Element element_elt = new Element(elt.getDefinition().getToken());
+      Element element_elt = new Element(elt.getDefinition().getToken(), CFG_NS);
       element_elt.setAttribute(NAME, elt.getName());
       element_elt.setAttribute(VERSION, Integer.toString(elt.getDefinition().getVersion()));
       root.addContent(element_elt);
@@ -136,7 +136,7 @@ public class ConfigurationWriter
          for (int i=0; i<elt.getPropertyValueCount(prop_name); ++i)
          {
             Object prop_value = elt.getProperty(prop_name, i);
-            Element prop_elt = new Element(prop_name);
+            Element prop_elt = new Element(prop_name, CFG_NS);
 
             // If the property is a simple type, add it as text
             if (prop_def.getType() != ConfigElement.class)
