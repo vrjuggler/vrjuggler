@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -51,29 +51,6 @@ public sealed class InputManager
       allocDelegates();
    }
 
-   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_InputManager_InputManager__gadget_InputManager([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.InputManagerMarshaler))] gadget.InputManager p0);
-
-   public InputManager(gadget.InputManager p0)
-      : base(new NoInitTag())   // Do not initialize mRawObject in base class
-   {
-      
-      mRawObject   = gadget_InputManager_InputManager__gadget_InputManager(p0);
-      mWeOwnMemory = true;
-      
-   }
-
-   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_InputManager_InputManager__();
-
-   public InputManager()
-      : base(new NoInitTag())   // Do not initialize mRawObject in base class
-   {
-      allocDelegates();
-      mRawObject   = gadget_InputManager_InputManager__();
-      mWeOwnMemory = true;
-   }
-
    // Internal constructor needed for marshaling purposes.
    internal InputManager(IntPtr instPtr, bool ownMemory)
       : base(new NoInitTag())
@@ -84,17 +61,6 @@ public sealed class InputManager
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    private extern static void delete_gadget_InputManager(IntPtr obj);
-
-   // Destructor.
-   ~InputManager()
-   {
-      if ( mWeOwnMemory && IntPtr.Zero != mRawObject )
-      {
-         delete_gadget_InputManager(mRawObject);
-         mWeOwnMemory = false;
-         mRawObject   = IntPtr.Zero;
-      }
-   }
 
    // Operator overloads.
 
