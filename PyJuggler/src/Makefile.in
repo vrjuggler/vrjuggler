@@ -27,8 +27,11 @@
 
 srcdir=		@srcdir@
 prefix=		@prefix@
+scriptdir=	$(top_srcdir)/release/scripts
 topdir=		@topdir@
 top_srcdir=	@top_srcdir@
+
+MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 
 CXX=		@CXX@
 CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@	\
@@ -108,7 +111,7 @@ all:
 modules: $(MODS)
 
 install:
-	-[ ! -d $(PYTHON_PACKAGES) ] && mkdir -p $(PYTHON_PACKAGES)
+	$(MKINSTALLDIRS) $(PYTHON_PACKAGES)
 	cp $(top_srcdir)/dist/__init__.py $(PYTHON_PACKAGES)
 	for mod in $(MODS) ; do			\
             cp -p $$mod $(PYTHON_PACKAGES) ;	\

@@ -25,12 +25,17 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+exec_prefix=	@exec_prefix@
 includedir=	@includedir@/pyjutil
 libdir=		@libdir@
-srcdir=		@srcdir@
 prefix=		@prefix@
+scriptdir=	$(top_srcdir)/release/scripts
 topdir=		@topdir@
 top_srcdir=	@top_srcdir@
+
+srcdir=		@srcdir@
+
+MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 
 CXX=		@CXX@
 CXXFLAGS=	$(shell vpr-config --cxxflags) @PYTHON_INCLUDES@ -I$(srcdir)
@@ -78,9 +83,9 @@ all:
 libs: $(LIBS)
 
 install:
-	-[ ! -d $(includedir) ] && mkdir -p $(includedir)
+	$(MKINSTALLDIRS) $(includedir)
 	cp -p $(srcdir)/*.h $(includedir)
-	-[ ! -d $(libdir) ] && mkdir -p $(libdir)
+	$(MKINSTALLDIRS) $(libdir)
 	for lib in $(LIBS) ; do				\
             cp -p $$lib $(libdir) ;			\
           done

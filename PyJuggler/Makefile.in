@@ -25,24 +25,44 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-SUBDIR=	pyjutil	\
-	src
+default: all
+
+exec_prefix=	@exec_prefix@
+datadir=	@datadir@
+prefix=		@prefix@
+projdatadir=	$(datadir)/pyjuggler
+scriptdir=	$(top_srcdir)/release/scripts
+topdir=		@topdir@
+top_srcdir=	@top_srcdir@
+
+EXEC_PERMS=	@EXEC_PERMS@
+PERL=		@PERL@
+
+SUBDIR=		pyjutil	\
+		src
 
 @SET_MAKE@
 
 # TODO: Come up with a new way to do recursive builds, possibly through the
 # use of some GNU make fanciness.  Doozer++ needs a better way of doing
 # recursion.
-all:
-	@for dir in $(SUBDIR) ; do	\
-           echo "===> $$dir" ;		\
-           $(MAKE) -C $$dir || exit 1;	\
-           echo "<=== $$dir" ;		\
+recursive:
+	@for dir in $(SUBDIR) ; do			\
+           echo "===> $$dir" ;				\
+           $(MAKE) -C $$dir $(RECTARGET) || exit 1;	\
+           echo "<=== $$dir" ;				\
          done
 
+all:
+	$(MAKE) RECTARGET="$@" recursive
+
+# XXX: The chmod thing at the end is pretty lame.
+install:
+	$(MAKE) RECTARGET="$@" recursive
+	$(scriptdir)/mkinstalldirs $(projdatadir)/examples
+	$(PERL) $(scriptdir)/install-dir.pl -o $(projdatadir)/examples	\
+          -i $(top_srcdir)/examples -v "$(topdir)/VARS.pl"
+	-chmod $(EXEC_PERMS) $(projdatadir)/examples/python/simpleGL/simpleGL.py
+
 clean clobber:
-	@for dir in $(SUBDIR) ; do		\
-           echo "===> $$dir" ;			\
-           $(MAKE) -C $$dir $@ || exit 1;	\
-           echo "<=== $$dir" ;			\
-         done
+	$(MAKE) RECTARGET="$@" recursive
