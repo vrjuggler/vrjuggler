@@ -52,5 +52,5 @@ navigation.o: navigation.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend glove ${OBJECTS} core so_locations
+	rm -f Makedepend glove ${OBJECTS} *core so_locations
 	rm -rf ./ii_files

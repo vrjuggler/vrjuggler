@@ -47,5 +47,5 @@ main.o wandApp.o: wandApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend wand ${OBJECTS} core so_locations
+	rm -f Makedepend wand ${OBJECTS} *core so_locations
 	rm -rf ./ii_files

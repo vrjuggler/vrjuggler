@@ -44,5 +44,5 @@ testSeg: testSeg.o
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend ${MATH_PROGS} *.o core so_locations
+	rm -f Makedepend ${MATH_PROGS} *.o *core so_locations
 	rm -rf ./ii_files

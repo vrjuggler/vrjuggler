@@ -44,5 +44,5 @@ matrix.o: matrix.cpp
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend ${MATRIX_PROGS} *.o core so_locations
+	rm -f Makedepend ${MATRIX_PROGS} *.o *core so_locations
 	rm -rf ./ii_files

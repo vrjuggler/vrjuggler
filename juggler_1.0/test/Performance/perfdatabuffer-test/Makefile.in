@@ -47,5 +47,5 @@ PerfDataBufferTest.o: nullApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend PerfDataBufferTest ${OBJECTS} core so_locations
+	rm -f Makedepend PerfDataBufferTest ${OBJECTS} *core so_locations
 	rm -rf ./ii_files

@@ -84,5 +84,5 @@ go-logiclass: main-logiclass.o
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend ${PROGS} *.o core so_locations
+	rm -f Makedepend ${PROGS} *.o *core so_locations
 	rm -rf ./ii_files
