@@ -54,71 +54,70 @@ namespace gadget
 class GADGET_CLASS_API GloveProxy : public TypedProxy<Glove>
 {
 public:
-  /**
-   * Constructs the proxy to point to the given glove device and sub-unit
-   * number.
-   */
-  GloveProxy()
-  {
-     mUnitNum = -1;
-     mVisible = true;
-  }
+   /**
+    * Constructs the proxy to point to the given glove device and sub-unit
+    * number.
+    */
+   GloveProxy()
+   {
+      mUnitNum = -1;
+      mVisible = true;
+   }
 
-  virtual ~GloveProxy()
-  {}
+   virtual ~GloveProxy()
+   {}
 
-  float getAngle(GloveData::GloveComponent component,
-                 GloveData::GloveJoint joint)
-  {
-    if(isStupified())
-       return 0.0f;
-    else
-       return mTypedDevice->getGloveAngle(component, joint, mUnitNum);
-  }
+   gmtl::Vec3f getTipVector(GloveData::GloveComponent component)
+   {
+      if(isStupified())
+         return gmtl::Vec3f(0,0,0);
+      else
+         return mTypedDevice->getTipVector(component,mUnitNum);
+   }
 
+   gmtl::Matrix44f getTipTransform( GloveData::GloveComponent component)
+   {
+      if(isStupified())
+         return gmtl::Matrix44f();
+      else
+         return mTypedDevice->getTipTransform(component,mUnitNum);
+   }
+  
+   gmtl::Matrix44f getJointTransform( GloveData::GloveComponent component, GloveData::GloveJoint joint)
+   {
+      if(isStupified())
+         return gmtl::Matrix44f();
+      else
+         return mTypedDevice->getJointTransform(component, joint, mUnitNum);
+   }
 
-  gmtl::Vec3f getVector(GloveData::GloveComponent component)
-  {
-     if(isStupified())
-        return gmtl::Vec3f(0,0,0);
-     else
-        return mTypedDevice->getGloveVector(component, mUnitNum);
-  }
+   GloveData getData()
+   {
+      if(isStupified())
+         return GloveData();
+      else
+         return mTypedDevice->getGloveData(mUnitNum);
+   }
 
-  gmtl::Matrix44f getPos( GloveData::GloveComponent component = GloveData::WRIST)
-  {
-     if(isStupified())
-        return gmtl::Matrix44f();
-     else
-      return mTypedDevice->getGlovePos(component, mUnitNum);
-  }
+   /** Returns a pointer to the device held by this proxy. */
+   Glove* getGlovePtr()
+   {
+      if(isStupified())
+         return NULL;
+      else
+         return mTypedDevice;
+   }
 
-
-  GloveData getData()
-  {
-     if(isStupified())
-        return GloveData();
-     else
-        return mTypedDevice->getGloveData(mUnitNum);
-  }
-
-
-  /** Returns a pointer to the device held by this proxy. */
-  Glove* getGlovePtr()
-  {
-     if(isStupified())
-        return NULL;
-     else
-      return mTypedDevice;
-  }
-
-
-  /** Returns the subUnit number that this proxy points to. */
-  int getUnit()
-  { return mUnitNum; }
+   /** Returns the subUnit number that this proxy points to. */
+   int getUnit()
+   {
+      return mUnitNum;
+   }
 
    bool isVisible()
-   { return mVisible; }
+   {
+      return mVisible;
+   }
 
    static std::string getElementType();
 
@@ -133,7 +132,6 @@ public:
       vprASSERT((ret_val != NULL) && "Cross-cast in GloveProxy failed");
       return ret_val;
    }
-
 
 private:
    /** Should we be drawn on the screen? */
