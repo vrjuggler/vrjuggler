@@ -69,28 +69,29 @@ void vjGlWindow::updateViewport()
    setDirtyViewport(false);
 }
 
-void vjGlWindow::setLeftEyeProjection()
-{
-   vjASSERT(mDisplay->getType() == vjDisplay::SURFACE);
-   vjSurfaceDisplay* surf_display = dynamic_cast<vjSurfaceDisplay*>(mDisplay);
 
+void vjGlWindow::setViewBuffer(vjDisplay::DisplayView view)
+{
+   if(!isStereo())
+      glDrawBuffer(GL_BACK);
+   else if(vjDisplay::LEFT_EYE == view)
+      glDrawBuffer(GL_BACK_LEFT);
+   else if(vjDisplay::RIGHT_EYE == view)
+      glDrawBuffer(GL_BACK_RIGHT);
+}
+
+void vjGlWindow::setProjection(vjProjection* proj)
+{
    if (!window_is_open)
       return;
 
-   vjProjection* left_proj = surf_display->getLeftProj();
-   float* frust = left_proj->mFrustum.frust;
+   float* frust = proj->mFrustum.frust;
 
-   vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Left Frustum ----\n"
-               << surf_display->getLeftProj()->mFrustum.frust << std::endl
+   vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Frustum ----\n"
+               << proj->mFrustum.frust << std::endl
                << vjDEBUG_FLUSH;
 
-      // --- Set to the correct buffer --- //
-   if(isStereo())
-      glDrawBuffer(GL_BACK_LEFT);
-   else
-      glDrawBuffer(GL_BACK);
-
-      // --- Set up the projection --- //
+   // --- Set up the projection --- //
    glMatrixMode(GL_PROJECTION);
    {
       glLoadIdentity();             // Load identity matrix
@@ -99,58 +100,17 @@ void vjGlWindow::setLeftEyeProjection()
                  frust[vjFrustum::VJ_NEAR],frust[vjFrustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
          // Set camera rotation and position
-      glMultMatrixf(left_proj->mViewMat.getFloatPtr());
+      glMultMatrixf(proj->mViewMat.getFloatPtr());
 #endif
    }
    glMatrixMode(GL_MODELVIEW);
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(left_proj->viewMat.getFloatPtr());
+   glMultMatrixf(proj->viewMat.getFloatPtr());
 #endif
 }
 
-/** Sets the projection matrix for this window to draw the right eye frame */
-void vjGlWindow::setRightEyeProjection()
-{
-   vjASSERT(mDisplay->getType() == vjDisplay::SURFACE);
-   vjSurfaceDisplay* surf_display = dynamic_cast<vjSurfaceDisplay*>(mDisplay);
-
-   if (!window_is_open)
-      return;
-
-   vjProjection* right_proj = surf_display->getRightProj();
-   float* frust = right_proj->mFrustum.frust;
-
-   vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Right Frustum ----\n"
-               << *frust << std::endl << vjDEBUG_FLUSH;
-
-      // --- Set to the correct buffer --- //
-   if(isStereo())
-      glDrawBuffer(GL_BACK_RIGHT);
-   else
-      glDrawBuffer(GL_BACK);
-
-      // --- Set up the projection --- //
-   glMatrixMode(GL_PROJECTION);
-   {
-      glLoadIdentity();             // Load identity matrix
-      glFrustum(frust[vjFrustum::VJ_LEFT],frust[vjFrustum::VJ_RIGHT],
-                 frust[vjFrustum::VJ_BOTTOM],frust[vjFrustum::VJ_TOP],
-                 frust[vjFrustum::VJ_NEAR],frust[vjFrustum::VJ_FAR]);
-#ifdef USE_PROJECTION_MATRIX
-       // Set camera rotation and position
-   glMultMatrixf(right_proj->mViewMat.getFloatPtr());
-#endif
-   }
-   glMatrixMode(GL_MODELVIEW);
-
-#ifndef USE_PROJECTION_MATRIX
-      // Set camera rotation and position
-   glLoadIdentity();
-   glMultMatrixf(right_proj->viewMat.getFloatPtr());
-#endif
-}
 
 
 /** Sets the projection matrix for this window to draw the camera eye frame */
