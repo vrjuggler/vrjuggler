@@ -12,9 +12,10 @@ namespace vprTest
 class LibraryLoaderTest : public CppUnit::TestFixture
 {
 CPPUNIT_TEST_SUITE(LibraryLoaderTest);
-CPPUNIT_TEST(loadAndInitTestRaw);
-CPPUNIT_TEST(loadAndInitTestFunctor);
-CPPUNIT_TEST(findAndInitTest);
+CPPUNIT_TEST(findEntryPointTestRaw);
+CPPUNIT_TEST(findEntryPointTestFunctor);
+CPPUNIT_TEST(findDSOTest);
+CPPUNIT_TEST(findDSOAndLookupTest);
 CPPUNIT_TEST(multiLoadTest);
 CPPUNIT_TEST(loadFailureTest);
 CPPUNIT_TEST(lookupFailureTest);
@@ -24,9 +25,10 @@ CPPUNIT_TEST_SUITE_END();
 public:
    virtual void setUp();
 
-   void loadAndInitTestRaw();
-   void loadAndInitTestFunctor();
-   void findAndInitTest();
+   void findEntryPointTestRaw();
+   void findEntryPointTestFunctor();
+   void findDSOTest();
+   void findDSOAndLookupTest();
    void multiLoadTest();
    void loadFailureTest();
    void lookupFailureTest();

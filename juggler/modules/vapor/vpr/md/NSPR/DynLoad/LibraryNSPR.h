@@ -75,7 +75,9 @@ public:
     *             name of the library (e.g., "mylib.dll" or "libmylib.so").
     *             The name may be an absolute path or a relative path.
     */
-   LibraryNSPR(const std::string& name) : mName(name), mLibrary(NULL)
+   LibraryNSPR(const std::string& name)
+      : mName(name)
+      , mLibrary(NULL)
    {
       ;
    }
@@ -89,7 +91,9 @@ public:
     *
     * @see findSymbolAndLibrary, load
     */
-   LibraryNSPR() : mName(""), mLibrary(NULL)
+   LibraryNSPR()
+      : mName("")
+      , mLibrary(NULL)
    {
       ;
    }
@@ -97,7 +101,9 @@ public:
    /**
     * Copy constructor.
     */
-   LibraryNSPR(const LibraryNSPR& lib) : mName(""), mLibrary(NULL)
+   LibraryNSPR(const LibraryNSPR& lib)
+      : mName("")
+      , mLibrary(NULL)
    {
       copy(lib);
    }
@@ -150,6 +156,17 @@ public:
     * @post The library is unloaded.
     */
    vpr::ReturnStatus unload();
+
+   /**
+    * Returns whether this library has been loaded from local storage.
+    *
+    * @return true is returned if this library has been loaded from local
+    *         storage, false otherwise.
+    */
+   bool isLoaded() const
+   {
+      return mLibrary != NULL;
+   }
 
    //@{
    /**
