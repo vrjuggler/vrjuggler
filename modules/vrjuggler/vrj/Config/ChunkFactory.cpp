@@ -49,7 +49,7 @@ ConfigChunk* ChunkFactory::createChunk (ChunkDesc* d, bool use_defaults) {
 
 
 //: Setup the intial environment needed for creating chunks.
-//  This just loads $VJ_BASE_DIR/VJ_SHARE_DIR/Data/vrj-chunks.desc
+//  This just loads $VJ_BASE_DIR/VJ_SHARE_DIR/data/vrj-chunks.desc
 void ChunkFactory::setupInitialEnvironment() {
     // ------ OPEN vrj-chunks.desc file ----- //
     char* vj_base_dir = getenv("VJ_BASE_DIR");
@@ -62,7 +62,7 @@ void ChunkFactory::setupInitialEnvironment() {
     std::string chunk_desc_file = vj_base_dir;
     chunk_desc_file += "/";
     chunk_desc_file += VJ_SHARE_DIR;
-    chunk_desc_file += "/Data/vrj-chunks.desc";
+    chunk_desc_file += "/data/vrj-chunks.desc";
     vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Loading chunk desc file: ["
                                         << chunk_desc_file << "]\n" << vprDEBUG_FLUSH;
 

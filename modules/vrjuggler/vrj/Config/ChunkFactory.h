@@ -105,7 +105,7 @@ protected:
 
 
     //: Setup the intial environment needed for creating chunks
-    //  This just loads $VJ_BASE_DIR/VJ_SHARE_DIR/Data/chunksDesc
+    //  This just loads $VJ_BASE_DIR/VJ_SHARE_DIR/data/vrj-chunks.desc
     void setupInitialEnvironment();
 
 
