@@ -289,7 +289,7 @@ inline void OsgApp::draw()
 
    //Get the frustrum
    Frustum frustum = project->getFrustum();
-
+    /*
    //Reset the camera
    osg::Camera* the_cam = sv->getCamera();
 
@@ -306,6 +306,12 @@ inline void OsgApp::draw()
    //Set the look at
    // NOTE: This is on the wrong stack !!!!
    the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, osg_proj_xform_mat);
+   */
+   sv->setProjectionMatrixAsFrustum(frustum[Frustum::VJ_LEFT],    frustum[Frustum::VJ_RIGHT],
+                       frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
+                       frustum[Frustum::VJ_NEAR],    frustum[Frustum::VJ_FAR]);
+   
+   sv->setViewMatrix(*osg_proj_xform_mat);
 
    //Draw the scene
    sv->update();
