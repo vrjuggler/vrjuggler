@@ -64,9 +64,7 @@ public:
    // ========================================================================
 
    /**
-    * Constructor.  This takes the address (either hostname or IP address) of
-    * a remote site and a port and stores the values for later use in the
-    * member variables of the object.
+    * Constructor.
     *
     * @pre None.
     * @post The member variables are initialized with the mType variable in
@@ -79,7 +77,9 @@ public:
 
    /**
     * Constructs a stream socket using the given addresses as defaults for
-    * communication channels.
+    * communication channels.  This takes the address (either hostname or IP
+    * address) of a remote site and a port and stores the values for later use
+    * in the member variables of the object.
     *
     * @post The member variables are initialized with the type in particular
     *       set to vpr::SocketTypes::STREAM.
@@ -106,7 +106,7 @@ public:
    {
       mLocalAddr      = sock.mLocalAddr;
       mRemoteAddr     = sock.mRemoteAddr;
-      mHandle          = new FileHandleImplUNIX(sock.mHandle->getName());
+      mHandle         = new FileHandleImplUNIX(sock.mHandle->getName());
       mHandle->mFdesc = sock.mHandle->mFdesc;
    }
 
