@@ -47,14 +47,16 @@ namespace gadget
 
 bool PinchGlove::config(jccl::ConfigChunkPtr c)
 {
-   if(! (Input::config(c) && Glove::config(c) ))
+   if ( ! (Input::config(c) && Glove::config(c) ) )
+   {
       return false;
+   }
 
-    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
-  
-    mGlove = new PinchGloveStandalone();
+   vprASSERT(mThread == NULL);      // This should have been set by Input(c)
 
-    return true;
+   mGlove = new PinchGloveStandalone();
+
+   return true;
 }
 
 PinchGlove::~PinchGlove ()
@@ -68,18 +70,18 @@ int PinchGlove::startSampling()
    vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Begin sampling\n"
                                     << vprDEBUG_FLUSH;
 
-   if (mThread == NULL)
+   if ( mThread == NULL )
    {
       int maxAttempts=0;
       bool result = false;
-      while (result == false && maxAttempts < 5)
+      while ( result == false && maxAttempts < 5 )
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Connecting to "
                                           << mPort << " at "
                                           << mBaudRate << "...\n"
                                           << vprDEBUG_FLUSH;
          result = mGlove->connectToHardware( mPort , mBaudRate);
-         if (result == false)
+         if ( result == false )
          {
             vprDEBUG(gadgetDBG_INPUT_MGR,0)
                << "[Pinch] ERROR: Can't open or it is already opened."
@@ -89,12 +91,12 @@ int PinchGlove::startSampling()
          }
       }
 
-   vprDEBUG(gadgetDBG_INPUT_MGR,0)
-      << "[Pinch] Successfully connected, Now sampling pinch data."
-      << vprDEBUG_FLUSH;
-     
+      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+         << "[Pinch] Successfully connected, Now sampling pinch data."
+         << vprDEBUG_FLUSH;
+
 /* Don't need anymore because SampleBuffers are smarter
-      
+
       DigitalData temp;
       temp=0;
       for (int i=0;i<10;i++)
@@ -105,7 +107,7 @@ int PinchGlove::startSampling()
       mDigitalSamples.addSample(mDigitalData);
       mDigitalSamples.unlock();
       */
-            
+
       // Create a new thread to handle the control
       vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Spawning control thread\n"
                                        << vprDEBUG_FLUSH;
@@ -114,7 +116,7 @@ int PinchGlove::startSampling()
 
       mThread = new vpr::Thread(memberFunctor);
 
-      if (!mThread->valid())
+      if ( !mThread->valid() )
       {
          return 0;
       }
@@ -125,9 +127,9 @@ int PinchGlove::startSampling()
          mActive = true;
          return 1;
       }
-  }
-  else
-     return 0; // already sampling
+   }
+   else
+      return 0; // already sampling
 }
 
 void PinchGlove::controlLoop(void* nullParam)
@@ -135,7 +137,7 @@ void PinchGlove::controlLoop(void* nullParam)
    vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Entered control thread\n"
                                     << vprDEBUG_FLUSH;
 
-   while(1)
+   while ( 1 )
    {
       sample();
    }
@@ -143,65 +145,65 @@ void PinchGlove::controlLoop(void* nullParam)
 
 int PinchGlove::sample()
 {
-    // Tell the glove to resample
-    
-    ///Get data from hardware
-    std::string gesture;
-    mGlove->updateStringFromHardware();
-    mGlove->getSampledString( gesture );
-    
-    unsigned char character[2];
-    int number;
-    int i;
-    for(i=0;i<11;i++)
-    {
-        
-        if(i<5)
-        {
-            character[0]=gesture[i];
-            //character[1]='\0';
-            //number = atoi(character);
-            number = character[0] - '0';
-            mDigitalData[i]=number;
-        }
-        else if(i>5)
-        {
-            character[0]=gesture[i];
-            //character[1]='\0';
-            //number = atoi(character);
-            number = character[0] - '0';
-            mDigitalData[i-1]=number;
-        }
-    }
-    
-    mDigitalSamples.lock();
-    mDigitalSamples.addSample(mDigitalData);
-    mDigitalSamples.unlock();
-    
-    /////////////////////////////
-    // Add Finger Angles LATER //
-    // updateFingerAngles();   //
-    /////////////////////////////
+   // Tell the glove to resample
 
-    /////////////////////////////////////////
-    // Update the xform data               //
-    // mTheData[0][progress].calcXforms(); //
-    // mTheData[1][progress].calcXforms(); //
-    /////////////////////////////////////////
-    
-    return 1;
+   ///Get data from hardware
+   std::string gesture;
+   mGlove->updateStringFromHardware();
+   mGlove->getSampledString( gesture );
+
+   unsigned char character[2];
+   int number;
+   int i;
+   for ( i=0;i<11;i++ )
+   {
+
+      if ( i<5 )
+      {
+         character[0]=gesture[i];
+         //character[1]='\0';
+         //number = atoi(character);
+         number = character[0] - '0';
+         mDigitalData[i]=number;
+      }
+      else if ( i>5 )
+      {
+         character[0]=gesture[i];
+         //character[1]='\0';
+         //number = atoi(character);
+         number = character[0] - '0';
+         mDigitalData[i-1]=number;
+      }
+   }
+
+   mDigitalSamples.lock();
+   mDigitalSamples.addSample(mDigitalData);
+   mDigitalSamples.unlock();
+
+   /////////////////////////////
+   // Add Finger Angles LATER //
+   // updateFingerAngles();   //
+   /////////////////////////////
+
+   /////////////////////////////////////////
+   // Update the xform data               //
+   // mTheData[0][progress].calcXforms(); //
+   // mTheData[1][progress].calcXforms(); //
+   /////////////////////////////////////////
+
+   return 1;
 
 }
 
 void PinchGlove::updateData()
 {
-    mDigitalSamples.swapBuffers();
-    return;
+   mDigitalSamples.swapBuffers();
+   return;
 }
 
 int PinchGlove::stopSampling()
 {
-   if (mThread != NULL)
+   if ( mThread != NULL )
    {
       mThread->kill();
       delete mThread;
@@ -220,7 +222,7 @@ int PinchGlove::stopSampling()
 //TODO: move this function up the hierarchy, since PinchGlove also has this one.
 void PinchGlove::updateFingerAngles()
 {/*
-	
+
     std::string gesture;
     // the the fakespace "gesture", it's a string like this "00000.00000"
     mGlove->getSampledString( gesture );
@@ -323,4 +325,4 @@ void PinchGlove::updateFingerAngles()
     }*/
 }
 
-};
+} // namespace gadget
