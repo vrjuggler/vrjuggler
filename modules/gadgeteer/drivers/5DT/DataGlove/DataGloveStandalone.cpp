@@ -183,7 +183,7 @@ int DataGloveStandalone::mConnectToHardware(const std::string& ttyPort, int baud
       std::cout<<"[dataGlove] Port ("<<ttyPort<<") open success\n"<<std::flush;
       port->clearAll();      
       baud = 9600;
-      port->enableRead();
+      port->setRead(true);
       port->setBufferSize(1);
       port->setOutputBaudRate(baud); // Put me before input to be safe
       port->setInputBaudRate(baud);
