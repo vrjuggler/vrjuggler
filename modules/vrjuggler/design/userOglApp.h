@@ -15,6 +15,8 @@ public:
 
     void postFrame();
 
+    void bufferPreDraw();
+
     void draw();
 
     void contextInit();
