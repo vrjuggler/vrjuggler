@@ -18,8 +18,8 @@
 #  with parts stolen from Greg Woods <woods@most.wierd.com> version.
 #
 
-#require 5.001;		# might work with older perl5
-require "find.pl";
+require 5.005;
+use File::Find ();
 
 ############################################################
 #
@@ -68,6 +68,17 @@ $CVSROOT       = $ENV{'CVSROOT'} || "/home/vr/Juggler/CVSRepos";
 #
 ############################################################
 
+BEGIN {
+    require Cwd;
+    my $cwd = Cwd::cwd();
+}
+
+# for the convenience of &wanted calls, including -eval statements:
+use vars qw/*name *dir *prune/;
+*name   = *File::Find::name;
+*dir    = *File::Find::dir;
+*prune  = *File::Find::prune;
+
 sub cleanup_lockfiles {
     my $base_dir = (split(/\s/, "$ARGV[0]"))[0];
     my $module = (split('/', "$base_dir"))[0];
@@ -76,32 +87,45 @@ sub cleanup_lockfiles {
 }
 
 sub wanted {
-print "file: $_\n";
-    (($dev,$ino,$mode,$nlink,$uid,$gid) = lstat($_)) &&
-    -d _ &&
-    -M _ > 0.08 &&
+    my ($dev,$ino,$mode,$nlink,$uid,$gid);
+
+    /^#cvs.*\z/s &&
+    (
+        (($dev,$ino,$mode,$nlink,$uid,$gid) = lstat($_)) &&
+        -f _
+        ||
+        -d _
+    ) &&
+    (-M _ > 0.08) &&
     ($uid == $<) &&
-    /^#cvs\.lock$/ &&
-    &exec(0, 'rmdir','{}');
-print "$< --> $uid\n";
+    handle();
 }
 
-sub exec {
-    local($ok, @cmd) = @_;
-    foreach $word (@cmd) {
-	$word =~ s#{}#$name#g;
+sub handle {
+    if ( -d "$name" ) {
+        doexec(0, 'rmdir', '{}');
     }
+    else {
+        unlink($_) || warn "$name: $!\n";
+    }
+}
+
+sub doexec {
+    my $ok = shift;
+    my(@cmd) = @_;
+    for my $word (@cmd)
+        { $word =~ s#{}#$name#g }
     if ($ok) {
-	local($old) = select(STDOUT);
-	$| = 1;
-	print "@cmd";
-	select($old);
-	return 0 unless <STDIN> =~ /^y/;
+        my $old = select(STDOUT);
+        $| = 1;
+        print "@cmd";
+        select($old);
+        return 0 unless <STDIN> =~ /^y/;
     }
-    chdir $cwd;         # sigh
+    chdir $cwd; #sigh
     print "@cmd\n";
     system @cmd;
-    chdir $dir;
+    chdir $File::Find::dir;
     return !$?;
 }
 
