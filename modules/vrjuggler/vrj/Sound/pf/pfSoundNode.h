@@ -74,6 +74,8 @@ public:
       mZ = rhs.mZ;
       mSound = rhs.mSound;
       mIsPositional = rhs.mIsPositional;
+
+      return *this;
    }
 
    /** Sets the listener. */
