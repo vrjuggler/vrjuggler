@@ -1,7 +1,7 @@
 dnl #
-dnl #  File:	       $RCSfile$
-dnl #  Date modified:  $Date$
-dnl #  Version:	       $Revision$
+dnl #  File:          $RCSfile$
+dnl #  Date modified: $Date$
+dnl #  Version:       $Revision$
 dnl #
 dnl #
 dnl #                                VR Juggler
@@ -1008,7 +1008,8 @@ dnl # Checks for header files.
 dnl # -------------------------------------------------------------------------
 AC_HEADER_STDC
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
-                 sys/time.h termios.h unistd.h sys/z8530.h sys/stdsyms.h)
+                 sys/time.h termios.h unistd.h sys/z8530.h		\
+                 sys/stdsyms.h sys/capability.h)
 
 dnl # All of the above header file checks may not be necessary ...
 
