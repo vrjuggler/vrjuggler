@@ -106,7 +106,7 @@ private:
       vpr::BaseThread* thread_self = NULL;
       thread_self = Thread::self();
       if(NULL != thread_self)
-      {  table = Thread::self()->getTSTable(); }
+      {  table = thread_self->getTSTable(); }
       else
       {  table = Thread::getGlobalTSTable(); }
 
@@ -121,7 +121,7 @@ private:
       TSBaseObject* object = table->getObject(mObjectKey);                  // get the specific object
 
       // Check if we have not allocated it yet, if not, then allocate
-      if(object == NULL)
+      if(NULL == object)
       {
          TSBaseObject* new_object = new TSObject<T>;                            // Allocate new object
          vprASSERT((new_object != NULL) && "Failed to allocate TSObject<T>");      // NULL is bad
