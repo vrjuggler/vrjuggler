@@ -1,4 +1,3 @@
-
 /****************** <SNX heading BEGIN do not edit this line> *****************
  *
  * sonix
@@ -13,6 +12,7 @@
  * -----------------------------------------------------------------
  *
  ****************** <SNX heading END do not edit this line> ******************/
+
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
@@ -58,7 +58,9 @@
 namespace snx
 {
 
-SoundFactory::SoundFactory() : vpr::Singleton<SoundFactory>()
+vprSingletonImp(SoundFactory);
+
+SoundFactory::SoundFactory()
 {
    std::vector<std::string> search_paths;
    search_paths.push_back( "${SNX_BASE_DIR}/share/sonix/plugins" );

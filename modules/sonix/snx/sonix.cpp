@@ -51,6 +51,9 @@
 #include <snx/SoundFactory.h>
 #include <snx/sonix.h>
 
+
+vprSingletonImp(sonix);
+
 //:  destructor
 sonix::~sonix()
 {

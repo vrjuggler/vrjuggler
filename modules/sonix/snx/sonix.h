@@ -1,4 +1,3 @@
-
 /****************** <SNX heading BEGIN do not edit this line> *****************
  *
  * sonix
@@ -13,6 +12,7 @@
  * -----------------------------------------------------------------
  *
  ****************** <SNX heading END do not edit this line> ******************/
+
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
@@ -55,11 +55,9 @@
 #include "snx/SoundImplementation.h"
 #include "snx/SoundAPIInfo.h"
 
-class SNX_CLASS_API sonix : public vpr::Singleton<sonix>
+class SNX_CLASS_API sonix
 {
 protected:
-   friend class vpr::Singleton<sonix>;
-
    //: default constructor
    sonix() : mImplementation( NULL )
    {
@@ -220,6 +218,8 @@ private:
 
    /** @link dependency */
    /*#  snx::SoundAPIInfo lnksnx::SoundAPIInfo; */
+
+   vprSingletonHeader(sonix);
 };
 
 #endif //SONIX___H

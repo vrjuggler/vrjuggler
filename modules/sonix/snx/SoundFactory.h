@@ -1,4 +1,3 @@
-
 /****************** <SNX heading BEGIN do not edit this line> *****************
  *
  * sonix
@@ -13,6 +12,7 @@
  * -----------------------------------------------------------------
  *
  ****************** <SNX heading END do not edit this line> ******************/
+
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
@@ -56,11 +56,9 @@
 namespace snx
 {
 
-class SNX_CLASS_API SoundFactory : public vpr::Singleton<SoundFactory>
+class SNX_CLASS_API SoundFactory
 {
 public:
-   SoundFactory();
-
    void errorOutput(std::string filename, const char* test);
 
    bool isPlugin(std::string filename);
@@ -88,7 +86,10 @@ public:
 
    std::map< std::string, snx::ISoundImplementation* > mRegisteredImplementations;
    std::vector<xdl::Library> mPlugins;
+
 private:
+   SoundFactory();
+
    /** @link dependency */
    /*#  snx::ISoundImplementation lnkSoundImplementation; */
 
@@ -106,6 +107,8 @@ private:
     * @supplierCardinality 0..*
     * @directed */
    /*#  snx::ISoundImplementation lnkSoundImplementation1; */
+
+   vprSingletonHeader(SoundFactory);
 };
 
 template <class _type>
