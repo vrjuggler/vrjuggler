@@ -74,7 +74,14 @@ public:
    static std::string getChunkType() { return std::string("PosXformFilter"); }
 
 protected:
-   /**< The total xform matrix.  T*R*S  NOTE: world_M_sensor */
+   /** Given Sensor pos xform in sensor coordinate system: Sensor
+   * world - world coordindate system that the transformed sensor "ends up in"
+   * Sensor' - Modified sensor coordinate system
+   */
+   /** The total xform matrix.
+   * Transfrom is: T*R*S
+   * This is an xfrom from world to sensor 
+   * ie. world_M_sensor */
    gmtl::Matrix44f m_worldMsensor;
 };
 
