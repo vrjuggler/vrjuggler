@@ -6,16 +6,16 @@
  *   Allen Bierbaum, Patrick Hartling, Kevin Meinert, Carolina Cruz-Neira
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
+ * File:          SerialPortImplWin32.cpp,v
+ * Date modified: 2002/06/05 21:28:47
+ * Version:       1.25
  * -----------------------------------------------------------------
  *
  ****************** <VPR heading END do not edit this line> ******************/
 
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -61,6 +61,7 @@ SerialPortImplWin32::SerialPortImplWin32 (const std::string& port_name)
    mOpenFlag = GENERIC_READ | GENERIC_WRITE;
    mBlocking = true;
    mParityMark = false;
+   mCurrentTimeout=0;
 }
 
 // ----------------------------------------------------------------------------
@@ -98,7 +99,7 @@ vpr::ReturnStatus SerialPortImplWin32::open ()
    gct.ReadIntervalTimeout =0;
    gct.ReadTotalTimeoutConstant=0;
    gct.ReadTotalTimeoutMultiplier=0;
-   gct.WriteTotalTimeoutConstant=0;
+   gct.WriteTotalTimeoutConstant=5000;
    gct.WriteTotalTimeoutMultiplier=0;
    if ( !SetCommTimeouts(mHandle,&gct) )
    {
@@ -109,6 +110,7 @@ vpr::ReturnStatus SerialPortImplWin32::open ()
    GetCommState(mHandle, &dcb);
    SetCommState(mHandle, &dcb);
 
+   disableHardwareFlowControl();
 
    mOpen = true;
    return status;
@@ -169,7 +171,7 @@ vpr::ReturnStatus SerialPortImplWin32::setBufferSize(const vpr::Uint8 size)
    if ( !SetupComm(mHandle, (int)size, (int)size) )
    {
       s.setCode(vpr::ReturnStatus::Fail);
-      std::cout << "Could not set the minimum buffer size.\n";
+      std::cout << "Could not set the minimum buffer size - "<<GetLastError()<<"\n";
    }
    return s;
 }
@@ -202,13 +204,15 @@ vpr::ReturnStatus SerialPortImplWin32::setTimeout (const vpr::Uint8 timeout)
    vpr::ReturnStatus retval;
    GetCommTimeouts(mHandle, &t);
 
+   mCurrentTimeout=timeout;
+
    t.ReadTotalTimeoutConstant = (int)timeout*100;
    if ( !SetCommTimeouts(mHandle, &t) )
    {
       retval.setCode(vpr::ReturnStatus::Fail);
       std::cout << "Could not set timeout value.\n";
    }
-//        std::cout << t.ReadIntervalTimeout << " : " << t.ReadTotalTimeoutConstant << " : " << t.ReadTotalTimeoutMultiplier << " : " << t.WriteTotalTimeoutConstant << " : " << t.WriteTotalTimeoutMultiplier << std::endl;
+
    return retval;
 }
 
@@ -528,16 +532,43 @@ vpr::ReturnStatus SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 le
    vpr::ReturnStatus s;
    unsigned long bytes;
 
-
+   //Shouldn't be setting this every read, but don't have any other way of specifying the timeout
    if ( vpr::Interval::NoTimeout != timeout )
-      vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+   {
+      COMMTIMEOUTS t;
+      GetCommTimeouts(mHandle, &t);
+      t.ReadTotalTimeoutConstant = (int)timeout.msec();
+      SetCommTimeouts(mHandle, &t);
+   }
 
    if ( !ReadFile( mHandle, buffer, length, &bytes,NULL) )
    {
       s.setCode(vpr::ReturnStatus::Fail);
       bytes_read = bytes;
    }
+   
+   if(bytes==0){
+	   s.setCode(vpr::ReturnStatus::Timeout);
+   }
+
+   //Now set the timeout back
+   if ( vpr::Interval::NoTimeout != timeout )
+   {
+      COMMTIMEOUTS t;
+      GetCommTimeouts(mHandle, &t);
+      t.ReadTotalTimeoutConstant = (int)mCurrentTimeout*100;
+      SetCommTimeouts(mHandle, &t);
+   }
+
    return s;
+}
+
+vpr::ReturnStatus SerialPortImplWin32::readn_i(void* buffer, const vpr::Uint32 length,
+                                              vpr::Uint32& bytes_read,
+                                              const vpr::Interval timeout)
+{
+	//Call read_i for now
+	return read_i(buffer,length,bytes_read,timeout);
 }
 
 // ----------------------------------------------------------------------------
@@ -769,8 +800,15 @@ vpr::ReturnStatus SerialPortImplWin32::setOutputBaudRate (const vpr::Uint32 baud
 vpr::ReturnStatus SerialPortImplWin32::sendBreak (const vpr::Int32 duration)
 {
    vpr::ReturnStatus s;
-   std::cout << "sendBreak Not yet implemented for Win32" << std::endl;
-   s.setCode(vpr::ReturnStatus::Fail);
+   DWORD flags;
+   
+   //Send a break for .5 seconds
+   SetCommBreak(mHandle); 
+   Sleep(500);
+   ClearCommBreak(mHandle);
+   Sleep(35);
+   ClearCommError(mHandle,&flags,NULL);	//Clear the break error
+
    return s;
 }
 
@@ -805,23 +843,41 @@ bool SerialPortImplWin32::getHardwareFlowControlState ()
 vpr::ReturnStatus SerialPortImplWin32::enableHardwareFlowControl ()
 {
    vpr::ReturnStatus s;
-   EscapeCommFunction(mHandle,SETDTR);
-   EscapeCommFunction(mHandle,SETRTS);
+
+   DCB dcb;
+   GetCommState(mHandle, &dcb);
+   dcb.fRtsControl=RTS_CONTROL_ENABLE;
+   dcb.fDtrControl=DTR_CONTROL_ENABLE;
+   SetCommState(mHandle,&dcb);
+
    return s;
 }
 
 vpr::ReturnStatus SerialPortImplWin32::disableHardwareFlowControl ()
 {
    vpr::ReturnStatus s;
-   EscapeCommFunction(mHandle,CLRDTR );
-   EscapeCommFunction(mHandle,CLRRTS);
+
+   DCB dcb;
+   GetCommState(mHandle, &dcb);
+   dcb.fRtsControl=RTS_CONTROL_DISABLE;
+   dcb.fDtrControl=DTR_CONTROL_DISABLE;
+   SetCommState(mHandle,&dcb);
+
    return s;
 }
 
 vpr::ReturnStatus SerialPortImplWin32::flushQueue(vpr::SerialTypes::FlushQueueOption queue)
 {
    vpr::ReturnStatus s;
-   // do nothing
+
+   if(queue==vpr::SerialTypes::INPUT_QUEUE || queue==vpr::SerialTypes::IO_QUEUES){
+		PurgeComm(mHandle, PURGE_RXCLEAR);
+   }
+
+   if(queue==vpr::SerialTypes::OUTPUT_QUEUE || queue==vpr::SerialTypes::IO_QUEUES){
+		PurgeComm(mHandle, PURGE_TXCLEAR);
+   }
+
    return s;
 }
 
