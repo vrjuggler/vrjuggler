@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
@@ -213,7 +213,8 @@
             <example id="Viewers.xml.example">
                <title>Viewers.xml</title>
                <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;beanlist&gt;
+&lt;beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd"&gt;
   &lt;viewer name="Tree Viewer"&gt;
     &lt;file name="${TWEEK_BASE_DIR}/bin/beans/Viewers.jar" 
           class="org.vrjuggler.tweek.treeviewer.BeanTreeViewer" /&gt;
@@ -436,13 +437,13 @@ class SliderSubjectImpl : public POA_networktest::SliderSubject,
                           public tweek::SubjectImpl
 {
 public:
-   SliderSubjectImpl (void)
+   SliderSubjectImpl()
       : tweek::SubjectImpl(), mValue(0)
    {
       /* Do nothing. */ ;
    }
 
-   virtual ~SliderSubjectImpl (void)
+   virtual ~SliderSubjectImpl()
    {
       /* Do nothing. */ ;
    }
@@ -455,7 +456,7 @@ public:
    /**
     * Returns this subject's internal value.
     */
-   virtual long getValue(void);
+   virtual long getValue();
 
    /**
     * This overriding method is needed so that the correct type is returned
@@ -464,7 +465,7 @@ public:
     *
     * XXX: It may be possible to remove this requirement in the future.
     */
-   networktest::SliderSubject_ptr _this (void)
+   networktest::SliderSubject_ptr _this()
    {
       return POA_networktest::SliderSubject::_this();
    }
@@ -519,7 +520,7 @@ private:
 namespace networktest
 {
 
-void SliderSubjectImpl::setValue (long value)
+void SliderSubjectImpl::setValue(long value)
 {
    mValue = value;
 
@@ -528,7 +529,7 @@ void SliderSubjectImpl::setValue (long value)
    tweek::SubjectImpl::notify();
 }
 
-long SliderSubjectImpl::getValue ()
+long SliderSubjectImpl::getValue()
 {
    return mValue;
 }
@@ -587,7 +588,7 @@ import tweek.*;
  */
 public class SliderObserverImpl extends ObserverPOA
 {
-   public SliderObserverImpl (JSlider slider, SliderSubject subject)
+   public SliderObserverImpl(JSlider slider, SliderSubject subject)
    {
       mSlider        = slider;
       mSliderSubject = subject;
@@ -597,7 +598,7 @@ public class SliderObserverImpl extends ObserverPOA
     * Implements the required method in tweek.ObserverPOA.  The remote subject
     * will invoke this method whenever it is notified of a change.
     */
-   public void update ()
+   public void update()
    {
       // If we have a valid slider object, we need to update its value to
       // whatever our subject has.
@@ -614,7 +615,7 @@ public class SliderObserverImpl extends ObserverPOA
     * Detaches this observer from our subject.  This is needed when shutting
     * down a CORBA connection.
     */
-   public void detach ()
+   public void detach()
    {
       mSliderSubject.detach(this._this());
    }
@@ -682,7 +683,7 @@ public class SliderObserverImpl extends ObserverPOA
 /**
  * This application starts the CORBA server for the C++ side of the test.
  */
-int main (int argc, char* argv[])
+int main(int argc, char* argv[])
 {
    tweek::CorbaManager mgr;
 
@@ -941,7 +942,7 @@ private SliderObserverImpl mSliderObserver = null;
  * Implements the Tweek CommunicationListener interface needed for being
  * informed of connections and disconnections with remote CORBA servers.
  */
-public void connectionStateChanged (CommunicationEvent e)
+public void connectionStateChanged(CommunicationEvent e)
 {
    // The first thing to do is get the CORBA service object from the
    // event.  We need this so we know to whom we are are connecting.  Once
@@ -1045,7 +1046,7 @@ public void connectionStateChanged (CommunicationEvent e)
                         <area coords="3" id="NetworkTest.java.frame.close"/>
                         <area coords="7" id="NetworkTest.java.frame.detach"/>
                      </areaspec>
-                     <programlisting>public void frameStateChanged (TweekFrameEvent e)
+                     <programlisting>public void frameStateChanged(TweekFrameEvent e)
 {
    if ( e.getType() == TweekFrameEvent.FRAME_CLOSE )
    {
@@ -1078,12 +1079,12 @@ public void connectionStateChanged (CommunicationEvent e)
                      </areaspec>
                      <programlisting>private class SliderChangeListener implements ChangeListener
 {
-   public SliderChangeListener (SliderSubject subject)
+   public SliderChangeListener(SliderSubject subject)
    {
       mSliderSubject = subject;
    }
 
-   public void stateChanged (javax.swing.event.ChangeEvent e)
+   public void stateChanged(javax.swing.event.ChangeEvent e)
    {
       JSlider source = (JSlider) e.getSource();
 
@@ -1116,7 +1117,8 @@ public void connectionStateChanged (CommunicationEvent e)
                            <area coords="6 65" id="NetworkTestBean.xml.tree"/>
                         </areaspec>
                         <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;beanlist&gt;
+&lt;beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd"&gt;
 &lt;guipanel name="Network Tester"&gt;
 &lt;file name="${TWEEK_BASE_DIR}/bin/beans/NetworkTestBean.jar"
       class="networktest.NetworkTest" /&gt;
@@ -1254,27 +1256,27 @@ import org.vrjuggler.tweek.beans.FileLoader;
                      <area coords="23 70" id="FileOpenTestBean.java.closeRequested"/>
                      <area coords="30 70" id="FileOpenTestBean.java.getOpenFileCount"/>
                   </areaspec>
-                  <programlisting linenumbering="numbered">public String getFileType ()
+                  <programlisting linenumbering="numbered">public String getFileType()
 {
    return "Text";
 }
 
-public boolean canOpenMultiple ()
+public boolean canOpenMultiple()
 {
    return true;
 }
 
-public boolean canSave ()
+public boolean canSave()
 {
    return false;
 }
 
-public boolean saveRequested ()
+public boolean saveRequested()
 {
    return false;
 }
 
-public boolean closeRequested ()
+public boolean closeRequested()
 {
    mTextContainer.remove(mTextContainer.getSelectedComponent());
    openFileCount--;
@@ -1320,7 +1322,7 @@ public int getOpenFileCount ()
                      <area coords="41 75" id="FileOpenTestBean.java.openRequested.scroll-pane"/>
                      <area coords="46 75" id="FileOpenTestBean.java.openRequested.open-inc"/>
                   </areaspec>
-                  <programlisting linenumbering="numbered">public boolean openRequested ()
+                  <programlisting linenumbering="numbered">public boolean openRequested()
 {
    // Initialize this to false since a lot of things can go wrong in the
    // process of opening files.  Once the file is opened and read
@@ -1426,7 +1428,8 @@ public int getOpenFileCount ()
                <example id="FileOpenTestBean.xml.example">
                   <title>FileOpenTestBean.xml</title>
                   <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;beanlist&gt;
+&lt;beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd"&gt;
   &lt;guipanel name="File Open Test Bean"&gt;
     &lt;file name="${TWEEK_BASE_DIR}/bin/beans/FileOpenTestBean.jar" 
           class="fileopentestbean.FileOpenTestBean" /&gt;
