@@ -159,16 +159,25 @@ jccl::ConfigChunkPtr Display::getGlFrameBufferConfig()
    return chunk;
 }
 
-VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, Display& disp)
+std::ostream& operator<<(std::ostream& out, Display& disp)
 {
-   out << std::setw(15) << disp.mName.c_str() << std::endl
-        << "  org:" << disp._xo << ", " << disp._yo
-        << "  sz:" << disp._xs << ", " << disp._ys
-        << "  p:" << disp.mPipe
-        << "  act:" << (disp.mActive ? "Y" : "N") << std::endl;
+   const int pad_width_dot(20);
+   out.setf(std::ios::left);
+
+   out << std::setw(pad_width_dot) << std::setfill('.')
+       << "  Name " << " " << disp.mName.c_str() << std::endl;
+   out << std::setw(pad_width_dot) << std::setfill('.')
+       << "  Origin " << " " << disp._xo << ", " << disp._yo << std::endl;
+   out << std::setw(pad_width_dot) << std::setfill('.')
+       << "  Size " << " " << disp._xs << "x" << disp._ys << std::endl;
+   out << std::setw(pad_width_dot) << std::setfill('.')
+       << "  Pipe number " << " " << disp.mPipe << std::endl;
+   out << std::setw(pad_width_dot) << std::setfill('.')
+       << "  Active " << " " << (disp.mActive ? "Yes" : "No") << std::endl;
+
    for(unsigned i=0;i<disp.mViewports.size();i++)
    {
-      out << "vp: " << i << " " << *(disp.mViewports[i]) << std::endl;
+      out << "  Viewport " << i << ":\n" << *(disp.mViewports[i]) << std::endl;
    }
 
    return out;

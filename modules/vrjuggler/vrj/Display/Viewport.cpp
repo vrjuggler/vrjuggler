@@ -112,11 +112,23 @@ std::ostream& operator<<(std::ostream& out, Viewport& viewport)
 
 std::ostream& Viewport::outStream(std::ostream& out)
 {
-   out << "user: " << getName()
-       << "  org:" << mXorigin << ", " << mYorigin
-       << "  sz:" << mXsize << ", " << mYsize
-       << "  view:" << ((mView == Viewport::LEFT_EYE) ? "Left" : ((mView==Viewport::RIGHT_EYE)?"Right" : "Stereo") )
-       << std::flush;
+   const int pad_width_dot(20);
+   out.setf(std::ios::left);
+
+   out << std::setw(pad_width_dot) << std::setfill('.')
+       << "    Name " <<  " " << getName() << std::endl;
+   out << std::setw(pad_width_dot) << std::setfill('.')
+       << "    User " <<  " " << getUser()->getName() << std::endl;
+   out << std::setw(pad_width_dot) << std::setfill('.')
+       << "    Origin " << " " << mXorigin << ", " << mYorigin << std::endl;
+   out << std::setw(pad_width_dot) << std::setfill('.')
+       << "    Size " << " " << mXsize << "x" << mYsize << std::endl;
+   out << std::setw(pad_width_dot) << std::setfill('.')
+       << "    View " << " "
+       << ((mView == Viewport::LEFT_EYE) ? "Left" : ((mView==Viewport::RIGHT_EYE)?"Right" : "Stereo") )
+       << std::endl;
+
+   out << std::flush;
 
    return out;
 }
