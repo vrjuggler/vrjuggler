@@ -25,6 +25,13 @@ public:
    */
    StatCollector(vpr::Interval staMaxTime=vpr::Interval(5, vpr::Interval::Sec) )
    {
+      mSTAMaxTime = staMaxTime;      
+
+      reset();
+   }
+
+   void reset()
+   {
       mCurTotal = 0;
       mSampleCount = 0;
 
@@ -32,7 +39,7 @@ public:
       mPrevSample1 = 0;
       mPrevSample2 = 0;
 
-      mSTAMaxTime = staMaxTime;
+      mSampleBuffer.clear();      
    }
 
    void addSample(const TYPE sample);

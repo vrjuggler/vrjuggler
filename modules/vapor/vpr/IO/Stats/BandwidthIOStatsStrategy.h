@@ -102,31 +102,11 @@ public:
         mWriteStats.addSample(bytes_written);
   }
 
-public:
-   vpr::Uint32 getTotalBytesSent()
-      { return mWriteStats.getTotal(); }
-   vpr::Uint32 getTotalBytesRead()
-      { return mReadStats.getTotal(); }
-
-   double getAverageSendBW()
-      { return mWriteStats.getMean(); }
-   double getAverageReadBW()
-      { return mReadStats.getMean(); }
-
-   double getSTASendBW()
-      { return mWriteStats.getSTA();}
-   double getSTAReadBW()
-      { return mReadStats.getSTA();}
-
-   double getInstSendBW()
-      { return mWriteStats.getInstAverage(); }
-   double getInstReadBW()
-      { return mReadStats.getInstAverage(); }
-
-   double getMaxSTASendBW()
-      { return mWriteStats.getMaxSTA();}
-   double getMaxSTAReadBW()
-      { return mReadStats.getMaxSTA();}
+public:   
+   vpr::StatCollector<vpr::Uint32>& readStats()
+      { return mReadStats; }
+   vpr::StatCollector<vpr::Uint32>& writeStats()
+      { return mWriteStats; }
 
 private:
    vpr::StatCollector<vpr::Uint32> mReadStats;
