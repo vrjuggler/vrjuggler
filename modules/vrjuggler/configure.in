@@ -718,6 +718,9 @@ if test "x${_with_sl}" != "xno" ; then
                   AC_MSG_WARN(*** SGI Audio headers required for SL ***) ]),
             AC_MSG_WARN(*** SGI Audio library required for SL ***))
 
+        AC_CHECK_FUNC(pthread_attr_setstack,
+            AC_DEFINE(HAVE_PTHREAD_ATTR_SETSTACK, 1))
+
         LIBS="${_vjsave_LIBS}"
     fi
 
@@ -1298,8 +1301,6 @@ AC_OUTPUT(Makefile
           Performance/Makefile
           SharedMem/Makefile
           Sound/Makefile
-          Sound/aw/Makefile
-          Sound/sl/Makefile
           Sound/pf/Makefile
           Sync/Makefile
           Threads/Makefile
