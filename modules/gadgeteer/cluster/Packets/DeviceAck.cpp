@@ -32,7 +32,6 @@
 
 #include <gadget/Util/Debug.h>
 
-#include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/Packets/DeviceAck.h>
 #include <cluster/Packets/PacketFactory.h>
 

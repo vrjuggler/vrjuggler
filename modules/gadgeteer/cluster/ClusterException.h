@@ -40,7 +40,7 @@
 namespace cluster
 {
 /**
- * Basic exception that may be thrown by the ClusterNetwork or any of the Plugins
+ * Basic exception that may be thrown by the ClusterNetwork or any of the Plugins.
  */
 class ClusterException : public std::exception
 {

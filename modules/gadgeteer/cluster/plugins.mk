@@ -38,7 +38,7 @@
 PLUGINS=
 
 # Comment out any of the following to disable building a specific driver.
-PLUGINS+=	RemoteInputManager
+PLUGINS+=	RIMPlugin
 PLUGINS+=	ApplicationDataManager
 PLUGINS+=	StartBarrierPlugin
 PLUGINS+=	SwapLockTCPPlugin

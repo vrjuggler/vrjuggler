@@ -37,11 +37,6 @@
 #include <cluster/Packets/DataPacket.h>
 #include <cluster/Packets/PacketFactory.h>
 
-#include <cluster/ClusterManager.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
-#include <gadget/Type/Input.h>
-
-#include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/System.h>
 #include <vpr/Util/Assert.h>
 

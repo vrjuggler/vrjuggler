@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_RIM_HEADER_H
-#define _GADGET_RIM_HEADER_H
+#ifndef _CLUSTER_HEADER_H
+#define _CLUSTER_HEADER_H
 
 #include <gadget/gadgetConfig.h>
 
@@ -61,44 +61,66 @@ public:
    static const unsigned short RIM_APPDATA_ACK     = 409;
    static const unsigned short RIM_END_BLOCK       = 410;
    static const unsigned short RIM_START_BLOCK     = 411;
-
-   //const unsigned short MSG_DEVICE_NACK       = 404;
-   //const unsigned short MSG_CLOCK_SRC         = 405;
-   //const unsigned short MSG_CLOCK_SYNC        = 406;
-   //const unsigned short MSG_HANDSHAKE         = 407;
-   //const unsigned short MSG_CLUSTER_SYNC      = 408;
-   //const unsigned short MSG_BARRIER           = 5;
    static const unsigned short RIM_PACKET_HEAD_SIZE = 12;
 
 public:      
    /**
     * Directly read the needed header data from socket(blocking), and parse the header 
     */
-   Header(vpr::SocketStream* stream) throw(cluster::ClusterException);
+   Header( vpr::SocketStream* stream ) throw( cluster::ClusterException );
 
-   Header(vpr::Uint16 RIM_code, vpr::Uint16 packet_type, 
-             vpr::Uint32 packet_length, vpr::Uint32 frame);
-
+   Header( vpr::Uint16 RIM_code, vpr::Uint16 packet_type,
+           vpr::Uint32 packet_length, vpr::Uint32 frame );
 
    virtual ~Header()
    {
-      delete mPacketReader;
-      delete mPacketWriter;
-      //delete mData;
+      if ( NULL != mPacketReader )
+      {
+         delete mPacketReader;
+         mPacketReader = NULL;
+      }
+      if ( NULL != mPacketWriter )
+      {
+         delete mPacketWriter;
+         mPacketWriter = NULL;
+      }
    }
+   
    void serializeHeader();
+   
    void parseHeader();
-   vpr::ReturnStatus send(vpr::SocketStream* socket);
+   
+   vpr::ReturnStatus send( vpr::SocketStream* socket );
+   
    void dump();
 
-   vpr::Uint16 getRIMCode() { return mRIMCode; }
-   vpr::Uint16 getPacketType() { return mPacketType; }
-   vpr::Uint32 getPacketLength() { return mPacketLength; }
-   void setPacketLength(vpr::Uint32 length) { mPacketLength = length; }
-   vpr::Uint32 getFrame() { return mFrame; }
-   virtual void printData(int debug_level);
+   vpr::Uint16 getRIMCode()
+   {
+      return mRIMCode;
+   }
+   
+   vpr::Uint16 getPacketType()
+   {
+      return mPacketType;
+   }
+   
+   vpr::Uint32 getPacketLength()
+   {
+      return mPacketLength;
+   }
+   
+   void setPacketLength( const vpr::Uint32 length )
+   {
+      mPacketLength = length;
+   }
+   
+   vpr::Uint32 getFrame()
+   {
+      return mFrame;
+   }
+   
+   virtual void printData( const int debug_level );
 protected:
-   // Needed to construct and parse the header data
    vpr::BufferObjectReader* mPacketReader;
    vpr::BufferObjectWriter* mPacketWriter;
    std::vector<vpr::Uint8> mData;
@@ -108,6 +130,7 @@ protected:
    vpr::Uint32 mPacketLength;
    vpr::Uint32 mFrame;
 };
-}
 
-#endif
+} // End namespace cluster.
+
+#endif /* _CLUSTER_HEADER_H */
