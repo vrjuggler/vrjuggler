@@ -1,133 +1,143 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="http://www.vrjuggler.org/docbook_ab.css" type="text/css"?>
+<?morphon-document-settings
+  morphon.document.settings.whitespaces.amount="3"
+  morphon.document.settings.print.fixed.attributes="true"
+  morphon.document.settings.stylesheetpi.autoupdate="true"
+  morphon.document.settings.print.defaultvalues.attributes="false"
+  morphon.document.settings.relative.systemids="0"
+  morphon.document.settings.endofline.type="2"
+  morphon.document.settings.whitespaces.type="indent"
+  morphon.document.settings.maxlinelength="0"
+?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
-  <bookinfo>
-    <title>Jackal</title>
-    <subtitle>Performance Measurement Guide</subtitle>
-    <releaseinfo>Version 0.9</releaseinfo>
-    <pubdate>$Date$</pubdate>
-  </bookinfo>
-  <preface>
-    <title>Preface</title>
-    <para>This book describes how to use Jackal's performance measurement capabilities.</para>
-  </preface>
-  <chapter>
-    <title>Introduction</title>
-    <para>This document describes the performance measurement features available to VR Juggler and other applications based upon Jackal (the Juggler Configuration and Control Library). It includes a discussion of how to configure performance collection and view the results in Jackal's GUI front-end, VjControl. It also describes how to add performance measurements to applications (including adding fine-grained performance measurement to VR Juggler application objects).</para>
-  </chapter>
-  <chapter>
-    <title>Measuring Application Performance</title>
-    <para>Jackal provides a timestamp-based system for measuring the overall performance of multithreaded applications. Some clarification is needed here: we measure the "wall-clock" time required by various portions of our application's threads. The measurements we take are coarse - we measure the time required for relatively large logical blocks of code, not for individual instructions (for the latter case, other tools such as <command>gprof</command> are more apposite).</para>
-    <para>For example, we might look at the kernel thread in VR Juggler, one of the projects that uses Jackal. The kernel thread executes in a tight loop that synchronizes the drawing of various graphical displays (see <xref linkend="loopdiagram"/>). The framerate of a VR Juggler application is controlled by the total time required for an iteration of this kernel loop. Application developers using VR Juggler want to know the framerate, and also how much time is being spent on the actual drawing (as opposed to other tasks that add overhead to the kernel loop). To do this, we can store a timestamp just before starting to draw (location ts1 in the figure) and again after all the drawing threads have completed. The time between ts1 and ts2 is the time spent drawing the frame - that is, the time from when the various draw threads were told to start, and when all of them signalled the kernel that they had completed.</para>
-    <figure id="loopdiagram" xreflabel="loopdiagram">
-      <title>Thread example - VR Juggler Kernel.</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="figures/loopdiagram.png" format="PNG"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
-    <para>The time between ts2 and the ts1 stamp in the next loop iteration is spent on other tasks such as updating the viewing transformations and (if necessary) calling various application-supplied callback methods.</para>
-    <para>We could take finer-grained measurements if we so desired, perhaps setting a timestamp after every major function call, or even stepping into some of those calls as necessary. The important thing to remember is that the time recorded for a stamp (such as ts2, the "time to draw" stamp in the VR Juggler kernel) is always the difference between that stamp and the stamp immediately preceding it.</para>
-  <section>
-    <title>Measuring Latencies</title>
-    <para>Sometimes - especially in interactive applications - raw speed is not the most pressing concern. Latency - the age of data when it is presented to the user - is more important. Again we use VR Juggler as an example. In a VR application, latency is usually thought of as the time between when a measurement of the user's body is taken, and when a scene generated using that information is presented.</para>
-    <para>This type of latency data can be collected by recording a timestamp when the input data - such as the user's body position - was read, and another when the result of that input data is presented to the user. The difference between these two stamps is the latency measurement.</para>
-  </section>
-  </chapter>
-  <chapter>
-    <title>Viewing Performance Data</title>
-    <para>Once we collect this sort of timing data from a Jackal-enabled application, we can examine it using the performance-monitoring features of VjControl. VjControl can load performance data from a log file or directly from a running application over a network connection. See <xref linkend="configure_chapter"/>, below, for information on how to set up these options.</para>
-    <figure id="perf_summary_figure">
-      <title>Performance data summary panel.</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="figures/perf_summary.png" format="PNG"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
-    <para>When a performance data file is loaded, VjControl displays a summary of the information (<xref linkend="perf_summary_figure"/>). For each thread, it displays the average time associated with each timestamp (remember that this is the time between the named stamp and the stamp preceding it).</para>
-    <para>To simplify the display, VjControl tries to display the stamps in an organized, hierarchical fashion. For example, the three application callback methods that are called in our kernel frame are all collected under the heading "app", so that we can easily see the sum of the times for each of them, as well as the individual averages.</para>
-    <section>
-      <title>Viewing Performance Graphs</title>
-      <para>Of course, averages do not tell the whole story - a few large anomalous readings could seriously skew the averages, for example. Therefore VjControl can also display a graph of the actual data over time. For example, see <xref linkend="perf_graph_figure"/>. Each vertical line on the graph represents the time taken for drawing during one iteration of the loop. As you can see, the graph is mostly smooth, but there is a single anomalously large reading (approx. 295 ms) at the far left. This is a common occurrence when VR Juggler applications start up - the first few frames involve all of the application's configuration, initialization of device drivers, and so forth, before the application eventually settles into its regular routine.</para>
-      <figure float="1" id="perf_graph_figure">
-        <title>Example performance data graph.</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="figures/perf_graph.png" format="PNG"/>
-          </imageobject>
-        </mediaobject>
+   <bookinfo>
+      <title>JCCL</title>
+      <subtitle>Performance Measurement Guide</subtitle>
+      <releaseinfo>Version 0.9</releaseinfo>
+      <pubdate>$Date$</pubdate>
+   </bookinfo>
+   <preface>
+      <title>Preface</title>
+      <para>This book describes how to use JCCL's performance measurement capabilities.</para>
+   </preface>
+   <chapter>
+      <title>Introduction</title>
+      <para>This document describes the performance measurement features available to VR Juggler and other applications based upon JCCL (the Juggler Configuration and Control Library). It includes a discussion of how to configure performance collection and view the results in JCCL's GUI front-end, VjControl. It also describes how to add performance measurements to applications (including adding fine-grained performance measurement to VR Juggler application objects).</para>
+   </chapter>
+   <chapter>
+      <title>Measuring Application Performance</title>
+      <para>JCCL provides a timestamp-based system for measuring the overall performance of multithreaded applications. Some clarification is needed here: we measure the "wall-clock" time required by various portions of our application's threads. The measurements we take are coarse - we measure the time required for relatively large logical blocks of code, not for individual instructions (for the latter case, other tools such as <command>gprof</command> are more apposite).</para>
+      <para>For example, we might look at the kernel thread in VR Juggler, one of the projects that uses JCCL. The kernel thread executes in a tight loop that synchronizes the drawing of various graphical displays (see <xref linkend="loopdiagram"/>). The framerate of a VR Juggler application is controlled by the total time required for an iteration of this kernel loop. Application developers using VR Juggler want to know the framerate, and also how much time is being spent on the actual drawing (as opposed to other tasks that add overhead to the kernel loop). To do this, we can store a timestamp just before starting to draw (location ts1 in the figure) and again after all the drawing threads have completed. The time between ts1 and ts2 is the time spent drawing the frame - that is, the time from when the various draw threads were told to start, and when all of them signalled the kernel that they had completed.</para>
+      <figure id="loopdiagram" xreflabel="loopdiagram">
+         <title>Thread example - VR Juggler Kernel.</title>
+         <mediaobject>
+            <imageobject>
+               <imagedata fileref="figures/loopdiagram.png" format="PNG"/>
+            </imageobject>
+         </mediaobject>
       </figure>
-      <para>It is also possible to view multiple samples in the same graph. In this case, the samples for an individual loop iteration are "stacked" one on top of another - see Figure something or other. The lines are color-coded to the labels on the right side of the graph display. The checkboxes next to the labels can be used to select which samples are displayed and which are hidden. For example, we might want to display only the times associated with our particular application's code.</para>
-    </section>
-    <section>
-      <title>Using the Maximum Stored Samples</title>
-      <para>The performance measurement tools described here can produce huge amounts of data very quickly. This can make analysis difficult, just in terms of the memory required. Frequently, when monitoring an application - especially when doing so live - the average for a stamp over the entire run of the application isn't interesting. We might be more concerned with the recent behavior of our code. The main performance monitoring panel in VjControl includes a "Maximum stored samples" selector. This controls the number of samples (for each thread) that can be stored at one time. Once the maximum is reached, when new samples are added the oldest ones are eliminated. Only the currently stored samples are viewable in the graph panel, and only they contribute to the averages displayed in the summary panel.</para>
-    </section>
-  </chapter>
-  <chapter id="configure_chapter">
-    <title>Configuring Jackal Performance Tests</title>
-    <para>Enabling Jackal's performance monitoring capabilities requires two simple additions to the application's configuration file.</para>
-    <para>First, we need to tell the application which kinds of performance data to gather. Jackal provides multiple "categories" of performance data, so that tests in particular ojbects, or particular threads, can be individually turned on or off. Jackal provides a default category name (PERF_ALL) as well as a category for its own internal usage (PERF_JACKAL). Additionally, application code can define its own categories with unique names.</para>
-    <para>These categories can be individually activated and deactivated with a <property>Performance Measurements</property> ConfigChunk (which you can create under the <guilabel>Environment Manager</guilabel> folder in VjControl's config file editing window) - see <xref linkend="PerformanceChunkFigure"/>.Simply create an entry with the category's name and set it to true or false. If a category isn't named in the configuration, it defaults to false (disabled).</para>
-    <figure float="1" id="PerformanceChunkFigure">
-      <title>ConfigChunk for activating performance measurements.</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="figures/performance_chunk.png" format="PNG" scale="55" width="4in"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
-    <para>Secondly, we must tell VR Juggler where to send the performance data once it is collected. This is determined by the <property>Performance Target</property> property. If we are dynamically reconfiguring VR Juggler so that we can view performance while the application is running, the pulldown menu for the <property>Performance Target</property> property will list the network connection between VjControl and the application as a possible target. If that connection is selected, performance data can be viewed in a panel in VjControl (click on the <guilabel>Performance</guilabel> tab).</para>
-    <para>We can also send performance data to a file for later evaluation. To do this, first create an <property>EM Connection</property> ConfigChunk (found in the <guilabel>Environment Manager</guilabel> folder in VjControl). This chunk is illustrated in <xref linkend="EMConnectionChunkFigure"/>. Here we can select the name of the output file and tell VR Juggler to "activate" it - that is, to open it and write to it. Note that the <property>File Mode</property> property should always be "output" for a log file.</para>
-    <para>Once we have created the <property>EM Connection</property> for our log file, we can return to the <property>Performance Measurements</property> ConfigChunk and select it as our target for performance data. The output file that results from running the application with this configuration can be loaded into VjControl's Performance panel for analysis.</para>
-    <figure float="1" id="EMConnectionChunkFigure">
-      <title>Configuring a log file for VR Juggler performance data.</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="figures/connection_chunk.png" format="PNG" scale="60" width="4in"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
-  </chapter>
-  <chapter>
-    <title>Jackal Performance Measurements in VR Juggler</title>
-    <para>Several components of the VR Juggler software have been instrumented using Jackal. These performance checks are primarily designed for testing the performance and overhead of VR Juggler itself; however, they also provide an easy way to get an overview of application performance. Using these performance checks, an application developer can easily see how much time is being spent in each of the publicly callable methods of a VR Juggler application object. These tests include:</para>
-    <itemizedlist>
-      <listitem>
-        <para>Timing of the VR Juggler kernel thread, which calls application methods such as <methodname>preFrame()</methodname>, <methodname>postFrame()</methodname>, and <methodname>intraFrame()</methodname>.</para>
-      </listitem>
-      <listitem>
-        <para>Timing of the drawing threads for OpenGL-based applications, which call methods such as <methodname>draw()</methodname>, <methodname>contextInit</methodname>, <methodname>pipePreDraw()</methodname>, etc.</para>
-      </listitem>
-      <listitem>
-        <para> Latency measurements for the positional input used to draw each viewport in OpenGL-based applications.</para>
-      </listitem>
-    </itemizedlist>
-    <para>The performance tests built into VR Juggler use the categories PERF_ALL and PERF_HEAD_LATENCY.</para>
-  </chapter>
-  <chapter>
-    <title>Adding Jackal Performance Tests to Your Own Code</title>
-    <para>While Jackal-based performance measurements are built into VR Juggler, they can also be used by non-VR Juggler applications that use Jackal. Moreover, developers of VR Juggler applications may want to use finer-grained measurements than can be accomplished simply by turning on Juggler's built-in measurements.</para>
-    <section>
-      <title>Adding New Timestamps Inside VR Juggler Application classes</title>
-      <para>The simplest example of adding performance measurement code to a program is adding finer-grained measurements to a system that already uses Jackal's performance measurements, such as a VR Juggler application thread. For example, VR Juggler application objects include a method called preFrame() which is called by the Juggler kernel. The kernel itself will measure the time required for the full preFrame() method, but we can also collect timestamps inside preFrame(). To do this, we just select the point in the source code where we want to add a measurement and then insert a line such as:</para>
-      <programlisting>jcclTIMESTAMP (jcclPERF_ALL, "My label");</programlisting>
-      <para>The first argument is a category identifier which is used to activate or deactivate particular tests. See the section on configuring performance measurement features, above. The second argument is a label string. When viewing performance results in VjControl, that label will appear in the summary of timings. The value associated with it will be the time between when that timestamp is collected and when the timestamp immediately preceding it is collected (for the first jcclTIMESTAMP line in the method, the time measured will be the time since shortly before the method was invoked, since VR Juggler's kernel collects a timestamp immediately before calling that method).</para>
-      <para>It is important to choose a useful label, one that accurately describes what the application is doing during the time being measured. VjControl can also attempt to present the individual timing measurements in a hierarchical way - for example, it can present all the application methods called by a thread in a single folder of its performance view, with a total average time. Opening the folder reveals the individual method calls with their individual timings.</para>
-      <para>VjControl constructs this hierarchy using labels - for example, all the labels for the timestamps measuring application method calls are of the form "Kernel/App/preFrame()" (or postFrame, intraFrame, etc.). If you are adding stamps inside a method, and want to continue the hierarchical view, you could use labels of the form "Kernel/App/preFrame()/My Label". It is best not to include the '/' character in labels for any other reason, as this may confuse VjControl's analysis.</para>
-    </section>
-    <section>
-      <title>Instrumenting a Thread</title>
-      <para>Of course, in non-VR Juggler programs, or in VR Juggler programs where you are creating your own threads, you will have to start from scratch. Luckily, all of the difficulties of initializing the performance measurement system, creating buffers for the storage of performance data, and so forth, are taken care of for you. For the most part, all you have to do is decide where to gather timestamps and then insert the <methodname>jcclTIMESTAMP</methodname> calls.</para>
-      <para>There is one helpful convention that you should follow. At the beginning of your thread's main loop, you should insert a timestamp with a particular label:</para>
-      <programlisting>jcclTIMESTAMP (jcclPERF_ALL, "jccl_begin_loop");</programlisting>
-      <para>Having this specially-named stamp in the data helps VjControl with its analysis of performance data in several ways:</para>
-      <para>If explicitly indicates the "top" of the loop. Without this, VjControl can only guess which stamp indicates the beginning of the loop. If the performance collection is activated in the middle of the loop, VjControl's display may list the stamps in the bottom half of the loop before those in the top half, causing confusion.</para>
-      <para>It helps VjControl deal with threads that have inner loops. Consider the following code sample:</para>
-      <programlisting> 
+      <para>The time between ts2 and the ts1 stamp in the next loop iteration is spent on other tasks such as updating the viewing transformations and (if necessary) calling various application-supplied callback methods.</para>
+      <para>We could take finer-grained measurements if we so desired, perhaps setting a timestamp after every major function call, or even stepping into some of those calls as necessary. The important thing to remember is that the time recorded for a stamp (such as ts2, the "time to draw" stamp in the VR Juggler kernel) is always the difference between that stamp and the stamp immediately preceding it.</para>
+      <section>
+         <title>Measuring Latencies</title>
+         <para>Sometimes - especially in interactive applications - raw speed is not the most pressing concern. Latency - the age of data when it is presented to the user - is more important. Again we use VR Juggler as an example. In a VR application, latency is usually thought of as the time between when a measurement of the user's body is taken, and when a scene generated using that information is presented.</para>
+         <para>This type of latency data can be collected by recording a timestamp when the input data - such as the user's body position - was read, and another when the result of that input data is presented to the user. The difference between these two stamps is the latency measurement.</para>
+      </section>
+   </chapter>
+   <chapter>
+      <title>Viewing Performance Data</title>
+      <para>Once we collect this sort of timing data from a JCCL-enabled application, we can examine it using the performance-monitoring features of VjControl. VjControl can load performance data from a log file or directly from a running application over a network connection. See <xref linkend="configure_chapter"/>, below, for information on how to set up these options.</para>
+      <figure id="perf_summary_figure">
+         <title>Performance data summary panel.</title>
+         <mediaobject>
+            <imageobject>
+               <imagedata fileref="figures/perf_summary.png" format="PNG"/>
+            </imageobject>
+         </mediaobject>
+      </figure>
+      <para>When a performance data file is loaded, VjControl displays a summary of the information (<xref linkend="perf_summary_figure"/>). For each thread, it displays the average time associated with each timestamp (remember that this is the time between the named stamp and the stamp preceding it).</para>
+      <para>To simplify the display, VjControl tries to display the stamps in an organized, hierarchical fashion. For example, the three application callback methods that are called in our kernel frame are all collected under the heading "app", so that we can easily see the sum of the times for each of them, as well as the individual averages.</para>
+      <section>
+         <title>Viewing Performance Graphs</title>
+         <para>Of course, averages do not tell the whole story - a few large anomalous readings could seriously skew the averages, for example. Therefore VjControl can also display a graph of the actual data over time. For example, see <xref linkend="perf_graph_figure"/>. Each vertical line on the graph represents the time taken for drawing during one iteration of the loop. As you can see, the graph is mostly smooth, but there is a single anomalously large reading (approx. 295 ms) at the far left. This is a common occurrence when VR Juggler applications start up - the first few frames involve all of the application's configuration, initialization of device drivers, and so forth, before the application eventually settles into its regular routine.</para>
+         <figure float="1" id="perf_graph_figure">
+            <title>Example performance data graph.</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata fileref="figures/perf_graph.png" format="PNG"/>
+               </imageobject>
+            </mediaobject>
+         </figure>
+         <para>It is also possible to view multiple samples in the same graph. In this case, the samples for an individual loop iteration are "stacked" one on top of another - see Figure something or other. The lines are color-coded to the labels on the right side of the graph display. The checkboxes next to the labels can be used to select which samples are displayed and which are hidden. For example, we might want to display only the times associated with our particular application's code.</para>
+      </section>
+      <section>
+         <title>Using the Maximum Stored Samples</title>
+         <para>The performance measurement tools described here can produce huge amounts of data very quickly. This can make analysis difficult, just in terms of the memory required. Frequently, when monitoring an application - especially when doing so live - the average for a stamp over the entire run of the application isn't interesting. We might be more concerned with the recent behavior of our code. The main performance monitoring panel in VjControl includes a "Maximum stored samples" selector. This controls the number of samples (for each thread) that can be stored at one time. Once the maximum is reached, when new samples are added the oldest ones are eliminated. Only the currently stored samples are viewable in the graph panel, and only they contribute to the averages displayed in the summary panel.</para>
+      </section>
+   </chapter>
+   <chapter id="configure_chapter">
+      <title>Configuring JCCL Performance Tests</title>
+      <para>Enabling JCCL's performance monitoring capabilities requires two simple additions to the application's configuration file.</para>
+      <para>First, we need to tell the application which kinds of performance data to gather. JCCL provides multiple "categories" of performance data, so that tests in particular ojbects, or particular threads, can be individually turned on or off. JCCL provides a default category name (PERF_ALL) as well as a category for its own internal usage (PERF_JACKAL). Additionally, application code can define its own categories with unique names.</para>
+      <para>These categories can be individually activated and deactivated with a <property>Performance Measurements</property> ConfigChunk (which you can create under the <guilabel>Environment Manager</guilabel> folder in VjControl's config file editing window) - see <xref linkend="PerformanceChunkFigure"/>.Simply create an entry with the category's name and set it to true or false. If a category isn't named in the configuration, it defaults to false (disabled).</para>
+      <figure float="1" id="PerformanceChunkFigure">
+         <title>ConfigChunk for activating performance measurements.</title>
+         <mediaobject>
+            <imageobject>
+               <imagedata fileref="figures/performance_chunk.png" format="PNG" width="4in" scale="55"/>
+            </imageobject>
+         </mediaobject>
+      </figure>
+      <para>Secondly, we must tell VR Juggler where to send the performance data once it is collected. This is determined by the <property>Performance Target</property> property. If we are dynamically reconfiguring VR Juggler so that we can view performance while the application is running, the pulldown menu for the <property>Performance Target</property> property will list the network connection between VjControl and the application as a possible target. If that connection is selected, performance data can be viewed in a panel in VjControl (click on the <guilabel>Performance</guilabel> tab).</para>
+      <para>We can also send performance data to a file for later evaluation. To do this, first create an <property>EM Connection</property> ConfigChunk (found in the <guilabel>Environment Manager</guilabel> folder in VjControl). This chunk is illustrated in <xref linkend="EMConnectionChunkFigure"/>. Here we can select the name of the output file and tell VR Juggler to "activate" it - that is, to open it and write to it. Note that the <property>File Mode</property> property should always be "output" for a log file.</para>
+      <para>Once we have created the <property>EM Connection</property> for our log file, we can return to the <property>Performance Measurements</property> ConfigChunk and select it as our target for performance data. The output file that results from running the application with this configuration can be loaded into VjControl's Performance panel for analysis.</para>
+      <figure float="1" id="EMConnectionChunkFigure">
+         <title>Configuring a log file for VR Juggler performance data.</title>
+         <mediaobject>
+            <imageobject>
+               <imagedata fileref="figures/connection_chunk.png" format="PNG" width="4in" scale="60"/>
+            </imageobject>
+         </mediaobject>
+      </figure>
+   </chapter>
+   <chapter>
+      <title>JCCL Performance Measurements in VR Juggler</title>
+      <para>Several components of the VR Juggler software have been instrumented using JCCL. These performance checks are primarily designed for testing the performance and overhead of VR Juggler itself; however, they also provide an easy way to get an overview of application performance. Using these performance checks, an application developer can easily see how much time is being spent in each of the publicly callable methods of a VR Juggler application object. These tests include:</para>
+      <itemizedlist>
+         <listitem>
+            <para>Timing of the VR Juggler kernel thread, which calls application methods such as <methodname>preFrame()</methodname>, <methodname>postFrame()</methodname>, and <methodname>intraFrame()</methodname>.</para>
+         </listitem>
+         <listitem>
+            <para>Timing of the drawing threads for OpenGL-based applications, which call methods such as <methodname>draw()</methodname>, <methodname>contextInit</methodname>, <methodname>pipePreDraw()</methodname>, etc.</para>
+         </listitem>
+         <listitem>
+            <para> Latency measurements for the positional input used to draw each viewport in OpenGL-based applications.</para>
+         </listitem>
+      </itemizedlist>
+      <para>The performance tests built into VR Juggler use the categories PERF_ALL and PERF_HEAD_LATENCY.</para>
+   </chapter>
+   <chapter>
+      <title>Adding JCCL Performance Tests to Your Own Code</title>
+      <para>While JCCL-based performance measurements are built into VR Juggler, they can also be used by non-VR Juggler applications that use JCCL. Moreover, developers of VR Juggler applications may want to use finer-grained measurements than can be accomplished simply by turning on Juggler's built-in measurements.</para>
+      <section>
+         <title>Adding New Timestamps Inside VR Juggler Application classes</title>
+         <para>The simplest example of adding performance measurement code to a program is adding finer-grained measurements to a system that already uses JCCL's performance measurements, such as a VR Juggler application thread. For example, VR Juggler application objects include a method called preFrame() which is called by the Juggler kernel. The kernel itself will measure the time required for the full preFrame() method, but we can also collect timestamps inside preFrame(). To do this, we just select the point in the source code where we want to add a measurement and then insert a line such as:</para>
+         <programlisting>jcclTIMESTAMP (jcclPERF_ALL, "My label");</programlisting>
+         <para>The first argument is a category identifier which is used to activate or deactivate particular tests. See the section on configuring performance measurement features, above. The second argument is a label string. When viewing performance results in VjControl, that label will appear in the summary of timings. The value associated with it will be the time between when that timestamp is collected and when the timestamp immediately preceding it is collected (for the first jcclTIMESTAMP line in the method, the time measured will be the time since shortly before the method was invoked, since VR Juggler's kernel collects a timestamp immediately before calling that method).</para>
+         <para>It is important to choose a useful label, one that accurately describes what the application is doing during the time being measured. VjControl can also attempt to present the individual timing measurements in a hierarchical way - for example, it can present all the application methods called by a thread in a single folder of its performance view, with a total average time. Opening the folder reveals the individual method calls with their individual timings.</para>
+         <para>VjControl constructs this hierarchy using labels - for example, all the labels for the timestamps measuring application method calls are of the form "Kernel/App/preFrame()" (or postFrame, intraFrame, etc.). If you are adding stamps inside a method, and want to continue the hierarchical view, you could use labels of the form "Kernel/App/preFrame()/My Label". It is best not to include the '/' character in labels for any other reason, as this may confuse VjControl's analysis.</para>
+      </section>
+      <section>
+         <title>Instrumenting a Thread</title>
+         <para>Of course, in non-VR Juggler programs, or in VR Juggler programs where you are creating your own threads, you will have to start from scratch. Luckily, all of the difficulties of initializing the performance measurement system, creating buffers for the storage of performance data, and so forth, are taken care of for you. For the most part, all you have to do is decide where to gather timestamps and then insert the <methodname>jcclTIMESTAMP</methodname> calls.</para>
+         <para>There is one helpful convention that you should follow. At the beginning of your thread's main loop, you should insert a timestamp with a particular label:</para>
+         <programlisting>jcclTIMESTAMP (jcclPERF_ALL, "jccl_begin_loop");</programlisting>
+         <para>Having this specially-named stamp in the data helps VjControl with its analysis of performance data in several ways:</para>
+         <para>If explicitly indicates the "top" of the loop. Without this, VjControl can only guess which stamp indicates the beginning of the loop. If the performance collection is activated in the middle of the loop, VjControl's display may list the stamps in the bottom half of the loop before those in the top half, causing confusion.</para>
+         <para>It helps VjControl deal with threads that have inner loops. Consider the following code sample:</para>
+         <programlisting> 
 My_thread_function() 
 { 
    for (;;) 
@@ -137,23 +147,23 @@ My_thread_function()
       jcclTIMESTAMP (jcclPERF_ALL, "stamp 2"); 
    } 
 } </programlisting>
-      <para>This method will generate stamps in the order of "stamp 1", "stamp 1", "stamp 2", etc. In reading this data, there is no way for VjControl to determine whether the main loop is composed of "stamp 1" by itself, or "stamp 1", "stamp 1", "stamp 2" (VjControl will assume the former). Adding the explicit indication of when the main loop begins allows VjControl to resolve this ambiguity.</para>
-    </section>
-    <section>
-      <title>Creating new Categories</title>
-      <para>Creating a new category is relatively simple. First, you need to decide on the name of the category and generate a unique GUID to identify it. Next, add the following lines to one of the .cpp files in your application:</para>
-      <programlisting>
+         <para>This method will generate stamps in the order of "stamp 1", "stamp 1", "stamp 2", etc. In reading this data, there is no way for VjControl to determine whether the main loop is composed of "stamp 1" by itself, or "stamp 1", "stamp 1", "stamp 2" (VjControl will assume the former). Adding the explicit indication of when the main loop begins allows VjControl to resolve this ambiguity.</para>
+      </section>
+      <section>
+         <title>Creating new Categories</title>
+         <para>Creating a new category is relatively simple. First, you need to decide on the name of the category and generate a unique GUID to identify it. Next, add the following lines to one of the .cpp files in your application:</para>
+         <programlisting>
 jcclREGISTER_PERF_CATEGORY(my_category_variable, my_category_name);
 const vpr::GUID my_category_variable ("29ecd55b-e68e-40ce-9db2-99e7682b36b4");
 </programlisting>
-      <para>You'll need to include <filename>jccl/PerfMonitor/PerformanceCategories.h</filename> to get this to compile, and you'll need to make sure that the variable my_category_variable is declared in any file where you want to take a timestamp. It may be helpful to put this in a header for your application:</para>
-      <programlisting>
+         <para>You'll need to include <filename>jccl/PerfMonitor/PerformanceCategories.h</filename> to get this to compile, and you'll need to make sure that the variable my_category_variable is declared in any file where you want to take a timestamp. It may be helpful to put this in a header for your application:</para>
+         <programlisting>
 extern const vpr::GUID jcclPERF_ALL;
 </programlisting>
-      <para>The above lines of code create a category identifier variable (my_category_variable) and an identifying string (my_category_name - note that this string should not have quotes). The variable is used when calling <methodname>jcclTIMESTAMP</methodname>, while the string is used in VjControl to activate the category. The string is also written to the performance data file. For example, Jackal includes the declaration:</para>
-      <programlisting>
+         <para>The above lines of code create a category identifier variable (my_category_variable) and an identifying string (my_category_name - note that this string should not have quotes). The variable is used when calling <methodname>jcclTIMESTAMP</methodname>, while the string is used in VjControl to activate the category. The string is also written to the performance data file. For example, JCCL includes the declaration:</para>
+         <programlisting>
 jcclREGISTER_PERF_CATEGORY(jcclPERF_JACKAL, PERF_JACKAL);
 </programlisting>
-    </section>
-  </chapter>
+      </section>
+   </chapter>
 </book>
