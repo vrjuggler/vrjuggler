@@ -50,8 +50,9 @@
 #include <sstream>
 #endif
 
-#if ! defined(__INTEL_COMPILER) && defined(__GNUC__) && \
-    ((__GNUC__ == 3 && __GNUC_MINOR__ >= 3) || __GNUC__ > 3)
+#if (! defined(__INTEL_COMPILER) && defined(__GNUC__) && \
+     ((__GNUC__ == 3 && __GNUC_MINOR__ >= 3) || __GNUC__ > 3)) || \
+    (defined(__INTEL_COMPILER) && __INTEL_COMPILER >= 810 && defined(__GNUC__))
 
 #define USE_CXA_DEMANGLE 1
 #include <cxxabi.h>
