@@ -1,5 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-20-2002 allenb    Remove multi-threading from the case where GLXWindow and 
+                      XWinKeyboard are sharing the window to process it as a 
+                      GFX window and as a keyboard window.
+                      This change should greatly increase the stability of GFX 
+                      window input under X with OpenGL.
 Jun-13-2002 patrickh  Removed vrj::EnvironmentManager.
 May-30-2002 patrickh  Removed the Juggler_utils library.
                       NEW VERSION: 1.1.95
