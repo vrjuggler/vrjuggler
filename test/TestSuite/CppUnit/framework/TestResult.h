@@ -173,3 +173,4 @@ inline void TestResult::setSynchronizationObject (SynchronizationObject *syncObj
 #endif
 
 
+

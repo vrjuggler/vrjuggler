@@ -75,3 +75,4 @@ inline std::string TestSuite::toString ()
 
 
 #endif
+

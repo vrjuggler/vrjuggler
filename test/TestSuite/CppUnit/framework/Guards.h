@@ -10,3 +10,4 @@ private: \
     className& operator= (const className& other); 
 
 #endif
+

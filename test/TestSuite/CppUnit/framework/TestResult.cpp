@@ -15,3 +15,4 @@ TestResult::~TestResult ()
 
     delete m_syncObject;
 }
+
