@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-07-2005 patrickh    Renamed gadget::Proxy::isStupified() to
+                        gadget::Proxy::isStupefied() and
+                        gadget::Proxy::stupify() to gadget::Proxy::stupefy().
+                        NEW VERSION: 0.92.1
+
 [1.0 Beta 2 released - 1.18.2005]==============================================
 Jan-18-2005 patrickh    NEW VERSION: 0.92.0
 

@@ -65,7 +65,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
 void StringProxy::updateData()
 {
-   if (!isStupified())
+   if (!isStupefied())
    {
       std::string old_state = mData.getString();
       mData = mTypedDevice->getStringData(mUnitNum);

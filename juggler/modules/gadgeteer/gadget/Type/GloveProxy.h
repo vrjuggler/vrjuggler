@@ -70,7 +70,7 @@ public:
 
    gmtl::Vec3f getTipVector(GloveData::GloveComponent component)
    {
-      if(isStupified())
+      if(isStupefied())
          return gmtl::Vec3f(0,0,0);
       else
          return mTypedDevice->getTipVector(component,mUnitNum);
@@ -78,7 +78,7 @@ public:
 
    gmtl::Matrix44f getTipTransform( GloveData::GloveComponent component)
    {
-      if(isStupified())
+      if(isStupefied())
          return gmtl::Matrix44f();
       else
          return mTypedDevice->getTipTransform(component,mUnitNum);
@@ -87,7 +87,7 @@ public:
    gmtl::Matrix44f getJointTransform(GloveData::GloveComponent component,
                                      GloveData::GloveJoint joint)
    {
-      if(isStupified())
+      if(isStupefied())
          return gmtl::Matrix44f();
       else
          return mTypedDevice->getJointTransform(component, joint, mUnitNum);
@@ -95,7 +95,7 @@ public:
 
    GloveData getData()
    {
-      if(isStupified())
+      if(isStupefied())
          return GloveData();
       else
          return mTypedDevice->getGloveData(mUnitNum);
@@ -112,7 +112,7 @@ public:
    /** Returns a pointer to the device held by this proxy. */
    Glove* getGlovePtr()
    {
-      if(isStupified())
+      if(isStupefied())
          return NULL;
       else
          return mTypedDevice;
@@ -135,7 +135,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if((NULL == mTypedDevice) || (isStupified()))
+      if((NULL == mTypedDevice) || (isStupefied()))
          return NULL;
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);

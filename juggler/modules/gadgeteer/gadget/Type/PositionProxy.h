@@ -114,7 +114,7 @@ public:
    /// Returns a pointer to the gadget::Position object held by this proxy.
    Position* getPositionPtr()
    {
-      if(!mStupified)
+      if(!mStupefied)
       {
          return mTypedDevice;
       }
@@ -130,7 +130,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if ( NULL == mTypedDevice || mStupified )
+      if ( NULL == mTypedDevice || mStupefied )
       {
          return NULL;
       }
