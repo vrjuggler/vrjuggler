@@ -336,7 +336,7 @@ public:
        // If anything was read into temp_buf, copy it into buffer.
        if ( bytes > -1 ) {
           // Check to make sure we have enough space
-          if (bytes > buffer.size()) {
+          if (bytes > (int)buffer.size()) {
              buffer.resize(bytes);
           }
 
@@ -460,7 +460,7 @@ public:
 
          // If anything was read into temp_buf, copy it into buffer.
          if ( bytes > -1 ) {
-            if(bytes > buffer.size())
+            if(bytes > (int)buffer.size())
                buffer.resize(bytes);
             for ( ssize_t i = 0; i < bytes; i++ ) {
                buffer[i] = temp_buf[i];
