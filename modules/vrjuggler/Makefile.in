@@ -2,6 +2,8 @@
 # $Id$
 #
 # Base Makefile.in for VR Juggler.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 # Targets are:
 #
@@ -897,7 +899,7 @@ install-sample:
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/samples
 	${PERL} ${scriptdir}/makefiles-gen.pl --CXX="${CXX}"		\
           --DEFS="${DEFS}" --CPPFLAGS="${CPPFLAGS}"			\
-          --CXXFLAGS="${CXXFLAGS} ${DBG_FLAGS}"				\
+          --CXXFLAGS="${CXXFLAGS} ${DBG_FLAGS}" --PLATFORM="@PLATFORM@"	\
           --EXTRA_LINK_FLAGS="@EXTRA_LINK_FLAGS@"			\
           --INCLUDES="@INCLUDES@"					\
           --OBJ_NAME_FLAG='@OBJ_NAME_FLAG_SUBST@'			\
@@ -923,7 +925,7 @@ install-test:
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/test
 	${PERL} ${scriptdir}/makefiles-gen.pl --CXX="${CXX}"		\
           --DEFS="${DEFS}" --CPPFLAGS="${CPPFLAGS}"			\
-          --CXXFLAGS="${CXXFLAGS} ${DBG_FLAGS}"				\
+          --CXXFLAGS="${CXXFLAGS} ${DBG_FLAGS}" --PLATFORM="@PLATFORM@"	\
           --EXTRA_LINK_FLAGS="@EXTRA_LINK_FLAGS@"			\
           --INCLUDES="@INCLUDES@" --startdir="${top_srcdir}/test"	\
           --SUBDIRS="${TEST_SUBDIRS}" --mode="${_FILE_PERMS}"		\
