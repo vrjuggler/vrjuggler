@@ -190,6 +190,7 @@ JScrollPane sp;
         nav_tree_root = new DefaultMutableTreeNode (new tscUserObject ("Select a Panel", null, null, tscUserObject.FOLDER), true);
         nav_tree_model = new DefaultTreeModel(nav_tree_root);
         nav_tree = new JTree(nav_tree_model);
+        nav_tree.putClientProperty("JTree.lineStyle", "Angled");
         //nav_tree.setRootVisible(false);
 
         DefaultTreeCellRenderer r = (DefaultTreeCellRenderer)nav_tree.getCellRenderer();
