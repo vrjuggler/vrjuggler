@@ -59,6 +59,9 @@ AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
 AC_ARG_WITH(omniorb, [  --with-omniorb=<PATH>   Path to omniORB installation ],
             OMNI_ROOT="$withval", OMNI_ROOT='none')
 
+AC_ARG_WITH(omnibin, [  --with-omnibin=<PATH>   Path to omniORB executables ],
+            OMNI_BIN_DIR="$withval", OMNI_BIN_DIR='none')
+
 AC_ARG_WITH(omnilib, [  --with-omnilib=<PATH>   Path to omniORB libraries ],
             OMNI_LIB_DIR="$withval", OMNI_LIB_DIR='none')
 
@@ -253,6 +256,10 @@ if test "x$OMNI_ROOT" != "xnone" ; then
    tweeksave_LDFLAGS="$LDFLAGS"
    tweeksave_LIBS="$LIBS"
 
+   if test "x$OMNI_BIN_DIR" = "xnone" ; then
+      OMNI_BIN_DIR="$OMNI_PATH/bin"
+   fi
+
    if test "x$OMNI_LIB_DIR" = "xnone" ; then
       OMNI_LIB_DIR="$OMNI_PATH/lib"
    fi
@@ -287,6 +294,14 @@ int omni_main_i(int argc, char** const argv)
                   [ tweek_cv_omniORB__MaxMessageSize_in_omniORB='yes'
                     rm -rf ./ii_files ],
                   tweek_cv_omniORB__MaxMessageSize_in_omniORB='no'))
+
+   AC_PATH_PROG(CXX_IDL, omniidl,
+                AC_MSG_ERROR(*** omniORB required for Tweek **),
+                ${OMNI_BIN_DIR}:$PATH)
+
+   AC_PATH_PROG(JAVA_IDL, idlj,
+                AC_MSG_WARN(*** Cannot perform IDL-to-Java conversion ***),
+                ${PATH}:$JDK_HOME)
 
    if test "x$tweek_cv_omniORB__MaxMessageSize_in_omniORB" = "xyes" ; then
       OMNI_INCLUDES="-I$tweek_omni_inc"
