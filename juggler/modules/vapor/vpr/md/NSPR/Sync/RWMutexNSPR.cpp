@@ -47,20 +47,20 @@
 namespace vpr
 {
 
-vpr::ReturnStatus RWMutexNSPR::tryAcquireRead ()
+vpr::ReturnStatus RWMutexNSPR::tryAcquireRead()
 {
    vpr::ReturnStatus retVal(vpr::ReturnStatus::Fail);
 
 /*
    if (stateLock.acquire().success())
    {
-      if (refCount == -1 || numWaitingWriters >0)
+      if (mRefCount == -1 || numWaitingWriters >0)
       {
          retVal.setCode(vpr::ReturnStatus::Fail);
       }
       else
       {
-         refCount++;
+         mRefCount++;
          retVal.setCode(vpr::ReturnStatus::Succeed);
       }
       stateLock.release();
@@ -69,16 +69,16 @@ vpr::ReturnStatus RWMutexNSPR::tryAcquireRead ()
    return retVal;
 }
 
-vpr::ReturnStatus RWMutexNSPR::tryAcquireWrite ()
+vpr::ReturnStatus RWMutexNSPR::tryAcquireWrite()
 {
    vpr::ReturnStatus retVal(vpr::ReturnStatus::Fail);
 
 /*
    if (stateLock.acquire().success())
    {
-      if ( retCount == 0 )
+      if ( mRefCount == 0 )
       {
-         refCount = -1;
+         mRefCount = -1;
          retVal.setCode(vpr::ReturnStatus::Succeed);
       }
       stateLock.release();

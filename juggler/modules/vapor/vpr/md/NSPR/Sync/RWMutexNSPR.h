@@ -56,13 +56,13 @@ namespace vpr
 class VPR_CLASS_API RWMutexNSPR
 {
 public:
-   RWMutexNSPR (void) : mRwLock(NULL)
+   RWMutexNSPR() : mRwLock(NULL)
    {
-      mRwLock = PR_NewRWLock(0, "VRP RM Mutex");
-      // Note the second argument "VRP RM Mutex" is for debug purposes only
+      // Note the second argument "VPR RW Mutex" is for debug purposes only
+      mRwLock = PR_NewRWLock(0, "VPR RW Mutex");
    }
 
-   ~RWMutexNSPR (void)
+   ~RWMutexNSPR()
    {
       PR_DestroyRWLock(mRwLock);
    }
@@ -73,7 +73,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the mutex is acquired.
     *         vpr::ReturnStatus::Fail is returned upon error.
     */
-   vpr::ReturnStatus acquire (void)
+   vpr::ReturnStatus acquire()
    {
       return acquireWrite();
    }
@@ -81,7 +81,7 @@ public:
    /**
     * Acquires a read mutex.
     */
-   vpr::ReturnStatus acquireRead (void)
+   vpr::ReturnStatus acquireRead()
    {
       PR_RWLock_Rlock(mRwLock);
       return vpr::ReturnStatus();
@@ -90,7 +90,7 @@ public:
    /**
     * Acquires a write mutex.
     */
-   vpr::ReturnStatus acquireWrite (void)
+   vpr::ReturnStatus acquireWrite()
    {
       PR_RWLock_Wlock(mRwLock);
       return vpr::ReturnStatus();
@@ -106,7 +106,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the mutex is not
     *         acquired.
     */
-   vpr::ReturnStatus tryAcquire (void)
+   vpr::ReturnStatus tryAcquire()
    {
       return tryAcquireWrite();
    }
@@ -114,12 +114,12 @@ public:
    /**
     * Tries to acquire a read mutex.
     */
-   vpr::ReturnStatus tryAcquireRead(void);
+   vpr::ReturnStatus tryAcquireRead();
 
    /**
     * Tries to acquire a write mutex.
     */
-   vpr::ReturnStatus tryAcquireWrite(void);
+   vpr::ReturnStatus tryAcquireWrite();
 
    /**
     * Releases the mutex.
@@ -127,7 +127,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned on success;
     *         vpr::ReturnStatus::Fail on error.
     */
-   vpr::ReturnStatus release (void)
+   vpr::ReturnStatus release()
    {
       PR_RWLock_Unlock(mRwLock);
       return vpr::ReturnStatus();
@@ -149,8 +149,8 @@ public:
    /**
     * Dumps the mutex debug stuff and current state.
     */
-   void dump (FILE* dest = stderr,
-              const char* message = "\n------ Mutex Dump -----\n") const
+   void dump(FILE* dest = stderr,
+             const char* message = "\n------ Mutex Dump -----\n") const
    {
 //        stateLock.dump();
    }
@@ -161,7 +161,7 @@ protected:
 
    // Value is -1 if writer has the lock, else this keeps track of the
    // number of readers holding the lock.
-   int refCount;
+   int mRefCount;
 
    PRRWLock* mRwLock;
 
@@ -171,7 +171,7 @@ protected:
       /* Do nothing. */ ;
    }
 
-   RWMutexNSPR (const RWMutexNSPR &)
+   RWMutexNSPR(const RWMutexNSPR &)
    {
       /* Do nothing. */ ;
    }
