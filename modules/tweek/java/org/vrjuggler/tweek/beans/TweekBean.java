@@ -117,17 +117,17 @@ public abstract class TweekBean
       try
       {
          String class_path = null;
-         List deps = attrs.getDependencies();
+         List deps = attrs.getJarDependencies();
 
          // build up the class path for the dependencies
          if ( deps.size() >= 1 )
          {
-            class_path = ((BeanDependency) deps.get(0)).getPath();
+            class_path = ((JarDependency) deps.get(0)).getPath();
 
             for ( int i = 1; i < deps.size(); i++ )
             {
                class_path = class_path + ";" +
-                            ((BeanDependency) deps.get(i)).getPath();
+                            ((JarDependency) deps.get(i)).getPath();
             }
          }
 
@@ -135,7 +135,7 @@ public abstract class TweekBean
          Vector depJarFiles = new Vector();
          for ( int i = 0; i < deps.size(); i++ )
          {
-            depJarFiles.add(((BeanDependency) deps.get(i)).getFile());
+            depJarFiles.add(((JarDependency) deps.get(i)).getFile());
          }
 
          bean_loader.loadBeanFromJar(getJarURL(), depJarFiles, class_path);
