@@ -53,7 +53,7 @@ namespace vpr {
 //: Wrapper for semaphores implemented using condition variables.
 
 //!PUBLIC_API:
-class SemaphoreNSPR {
+class VPR_CLASS_API SemaphoreNSPR {
 public:
     // -----------------------------------------------------------------------
     //: Custructor for vpr::SemaphoreNSPR class.

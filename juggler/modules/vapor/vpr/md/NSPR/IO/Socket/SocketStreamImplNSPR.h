@@ -43,7 +43,9 @@
 
 namespace vpr {
 
-class SocketStreamImplNSPR : public SocketStreamOpt, public SocketImplNSPR {
+class VPR_CLASS_API SocketStreamImplNSPR : public SocketStreamOpt,
+                                           public SocketImplNSPR
+{
 public:
     // ========================================================================
     // vpr::SocketStreamImp implementation.

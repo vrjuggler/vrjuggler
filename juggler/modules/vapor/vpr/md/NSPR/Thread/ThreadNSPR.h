@@ -56,7 +56,7 @@ namespace vpr {
 
 //: Threads implementation using the NSPR API.
 //!PUBLIC_API:
-class ThreadNSPR : public BaseThread
+class VPR_CLASS_API ThreadNSPR : public BaseThread
 {
 public:
     // -----------------------------------------------------------------------

@@ -42,7 +42,7 @@
 namespace vpr {
 
 //!PUBLIC_API:
-class RWMutexNSPR
+class VPR_CLASS_API RWMutexNSPR
 {
 public:
     RWMutexNSPR (void) : m_rw_lock(NULL) {

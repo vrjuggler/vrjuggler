@@ -33,6 +33,8 @@
 #ifndef _VPR_SOCKET_DATAGRAM_IMPL_NSPR_H_
 #define _VPR_SOCKET_DATAGRAM_IMPL_NSPR_H_
 
+#include <vpr/vprConfig.h>
+
 #include <string>
 
 #include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
@@ -41,7 +43,8 @@
 
 namespace vpr {
 
-class SocketDatagramImplNSPR : public SocketDatagramOpt, public SocketImplNSPR
+class VPR_CLASS_API SocketDatagramImplNSPR : public SocketDatagramOpt,
+                                             public SocketImplNSPR
 {
 public:
     typedef SocketImplNSPR Parent;

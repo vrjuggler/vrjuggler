@@ -57,7 +57,7 @@ namespace vpr {
 
 //: Condition variable wrapper for NSPR condition variables.
 //!PUBLIC_API:
-class CondVarNSPR {
+class VPR_CLASS_API CondVarNSPR {
 public:
     // -----------------------------------------------------------------------
     //: Constructor for vpr::CondVarNSPR class.

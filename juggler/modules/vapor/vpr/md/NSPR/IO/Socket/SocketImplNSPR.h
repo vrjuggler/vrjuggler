@@ -51,7 +51,7 @@
 
 namespace vpr {
 
-class SocketImplNSPR : public BlockIO, public SocketIpOpt
+class VPR_CLASS_API SocketImplNSPR : public BlockIO, public SocketIpOpt
 {
 public:
     // ========================================================================

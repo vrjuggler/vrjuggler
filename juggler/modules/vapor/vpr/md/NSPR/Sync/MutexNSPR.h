@@ -58,7 +58,7 @@ namespace vpr {
 //: Mutex wrapper for NSPR locks.
 
 //!PUBLIC_API:
-class MutexNSPR {
+class VPR_CLASS_API MutexNSPR {
 public:
     // -----------------------------------------------------------------------
     //: Constructor for vpr::MutexNSPR class.
