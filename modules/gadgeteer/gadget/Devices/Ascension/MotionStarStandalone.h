@@ -31,7 +31,6 @@
  * -----------------------------------------------------------------
  */
 
-
 #ifndef _ASCENSION_MOTION_STAR_H_
 #define _ASCENSION_MOTION_STAR_H_
 
@@ -47,104 +46,89 @@
 #define MYPORT 4000 /* Indy port number */
 #define TCP_PORT 6000 /* bird server port */
 
+
 struct SINGLE_BIRD_STATUS {
-  unsigned char status;
-  unsigned char id;
-  unsigned short int            softwareRev;
-  unsigned char         errorCode;
-  unsigned char         setup;
-  unsigned char         dataFormat;
-  unsigned char         reportRate;
-  unsigned short int    scaling;
-  unsigned char         hemisphere;
-  unsigned char         FBBaddress;
-  unsigned short int    spare1;
-  unsigned short int    spare2;
+    unsigned char	status;
+    unsigned char	id;
+    unsigned short int	softwareRev;
+    unsigned char	errorCode;
+    unsigned char	setup;
+    unsigned char	dataFormat;
+    unsigned char	reportRate;
+    unsigned short int	scaling;
+    unsigned char	hemisphere;
+    unsigned char	FBBaddress;
+    unsigned short int	spare1;
+    unsigned short int	spare2;
 };
 
-struct FILTER_TABLE
-{
-  unsigned short int    entry[7];
+struct FILTER_TABLE {
+    unsigned short int	entry[7];
 };
 
-struct ANGLES_TABLE
-{
-  unsigned short int    angle[3];
+struct ANGLES_TABLE {
+    unsigned short int	angle[3];
 };
 
-struct BIRD_STATUS
-{
-  struct SINGLE_BIRD_STATUS     status;
-  struct FILTER_TABLE           alphaMin;
-  struct FILTER_TABLE           alphaMax;
-  struct FILTER_TABLE           Vm;
-  struct ANGLES_TABLE           xyzReferenceFrame;
-  struct ANGLES_TABLE           xyzAngleAlign;
+struct BIRD_STATUS {
+    struct SINGLE_BIRD_STATUS	status;
+    struct FILTER_TABLE		alphaMin;
+    struct FILTER_TABLE		alphaMax;
+    struct FILTER_TABLE		Vm;
+    struct ANGLES_TABLE		xyzReferenceFrame;
+    struct ANGLES_TABLE		xyzAngleAlign;
 };
 
-struct HEADER
-{
-  unsigned short int    sequence;
+struct HEADER {
+    unsigned short int	sequence;
 
-  /*time_t time;   SGI formatted as 6 bytes (see time_t) */
-  /*unsigned short int tm1;
-    unsigned short int tm2;*/
+//    time_t		time;   SGI formatted as 6 bytes (see time_t) */
+//    unsigned short int	tm1;
+//    unsigned short int	tm2;
 
-  unsigned char         time[4];
-  unsigned short int    milliseconds;
+    unsigned char	time[4];
+    unsigned short int	milliseconds;
 
-  unsigned char         type;
-  unsigned char         xtype;
-  unsigned char         protocol;
+    unsigned char	type;
+    unsigned char	xtype;
+    unsigned char	protocol;
 
-  unsigned char         error_code;
-  unsigned short int    error_code_extension;
+    unsigned char	error_code;
+    unsigned short int	error_code_extension;
 
-  unsigned short int    number_bytes;
+    unsigned short int	number_bytes;
 };
 
-struct RSP_GET_STATUS_all
-{
-  unsigned char         all;
-  unsigned char         FBBerror;
-  unsigned char         flockNumber;
-  unsigned char         serverNumber;
-  unsigned char         transmitterNumber;
-  char                  measurementRate[6];
-  unsigned char         chassisNumber;
-  unsigned char         chassisDevices;
-  unsigned char         firstAddress;
-  unsigned short int    softwareRevision;
+struct RSP_GET_STATUS_all {
+    unsigned char	all;
+    unsigned char	FBBerror;
+    unsigned char	flockNumber;
+    unsigned char	serverNumber;
+    unsigned char	transmitterNumber;
+    char		measurementRate[6];
+    unsigned char	chassisNumber;
+    unsigned char	chassisDevices;
+    unsigned char	firstAddress;
+    unsigned short int	softwareRevision;
 };
 
-struct DATAPACKET
-{
-  struct HEADER header;
-  unsigned char buffer[2048];
+struct DATAPACKET {
+    struct HEADER	header;
+    unsigned char	buffer[2048];
 };
 
 class aMotionStar {
-
- public:
-
+public:
     // constructor
-
-      aMotionStar(char* address,
-                  int hemisphere,
-		  unsigned int birdFormat,
-		  unsigned int birdsRequired,
-		  int runMode,
-		  double birdRate,
-                  unsigned char reportRate
-                  );
+    aMotionStar(char* address, int hemisphere, unsigned int birdFormat,
+                unsigned int birdsRequired, int runMode, double birdRate,
+                unsigned char reportRate);
 
     // destructor
-
-      ~aMotionStar();
+    ~aMotionStar();
 
     // returns whether the MotionStar is active
-
-      bool& isActive();
+    bool& isActive();
 
     // ------------------------------------------------------------------------
     //: Initializes the MotionStar, setting the status for each bird.
@@ -162,83 +146,97 @@ class aMotionStar {
     int start();
 
     // gets singleShots # of samplings, if 0 then runs continuously
-
-      void sample();
+    void sample();
 
     // stops the flock
-
-      void stop();
+    void stop();
 
     // return the position/angle of the trackers
-
-      float xPos(int i);
-      float yPos(int i);
-      float zPos(int i);
-      float zRot(int i);
-      float yRot(int i);
-      float xRot(int i);
-
+    float xPos(int i);
+    float yPos(int i);
+    float zPos(int i);
+    float zRot(int i);
+    float yRot(int i);
+    float xRot(int i);
 
     // getters, setters
+    void setHemisphere(int n);
 
-      void setHemisphere ( int n );
-inline unsigned int getHemisphere () {return hemisphere;}
+    inline unsigned int
+    getHemisphere () {
+        return hemisphere;
+    }
 
-      void setAddress( const char* n );
-inline char* getAddress () {return address;}
+    void setAddress(const char* n);
 
-      void setBirdFormat ( unsigned int n );
-inline unsigned int getBirdFormat () {return birdFormat;}
+    inline char*
+    getAddress () {
+        return address;
+    }
 
-      void setNumBirds ( unsigned int n );
-inline unsigned int getNumBirds () {return birdsRequired;}
+    void setBirdFormat(unsigned int n);
 
-      void setBirdRate ( double n );
-inline double getBirdRate () {return birdRate;}
+    inline unsigned int
+    getBirdFormat () {
+        return birdFormat;
+    }
 
-      void setRunMode ( int n );
-inline int getRunMode () {return runMode;}
+    void setNumBirds(unsigned int n);
 
-      void setReportRate ( unsigned char n );
-inline unsigned char getReportRate () {return reportRate;}
+    inline unsigned int
+    getNumBirds () {
+        return birdsRequired;
+    }
+
+    void setBirdRate(double n);
+
+    inline double
+    getBirdRate () {
+        return birdRate;
+    }
+
+    void setRunMode(int n);
+
+    inline int
+    getRunMode () {
+        return runMode;
+    }
+
+    void setReportRate(unsigned char n);
+
+    inline unsigned char
+    getReportRate () {
+        return reportRate;
+    }
 
 //*****************************************************
 
 private:
-  // sends a wakeup call to the MotionStar
-
+    // sends a wakeup call to the MotionStar
     void send_wakeup();
 
-  // tells the MotionStar to sample continuously
-
+    // tells the MotionStar to sample continuously
     void runContinuous();
 
-  // requests a single sampling of the MotionStar
-
+    // requests a single sampling of the MotionStar
     void singleShot();
 
-  // gets the system status
-
+    // gets the system status
     void get_status_all();
 
-  // sets the system status
-
+    // sets the system status
     void set_status_all();
 
-  // prints out the MotionStar information
-
+    // prints out the MotionStar information
     void printInfo();
 
-  // prints out the MotionStar's header information
-
+    // prints out the MotionStar's header information
     void display_hdr();
 
-  // gets the status of an individual bird
-
+    // gets the status of an individual bird
     void get_status_fbb(unsigned char);
 
-  // sets the status of an individual bird
-
+    // sets the status of an individual bird
     void set_status_fbb(unsigned char);
 
     // ------------------------------------------------------------------------
@@ -260,25 +258,25 @@ private:
     // ------------------------------------------------------------------------
     inline short
     toShort (char high_byte, char low_byte) {
-      union {
-        char c[sizeof(short)];
-        short value;
-      } result;
+        union {
+            char c[sizeof(short)];
+            short value;
+        } result;
 
-      // If this is a big-endian host, put the high byte in the first byte of
-      // result.value and the low byte in the second byte.
-      if ( m_big_endian ) {
-        result.c[0] = high_byte;
-        result.c[1] = low_byte;
-      }
-      // Otherwise, put the low byte in the first byte and the high byte in
-      // the second byte.
-      else {
-        result.c[0] = low_byte;
-        result.c[1] = high_byte;
-      }
+        // If this is a big-endian host, put the high byte in the first byte of
+        // result.value and the low byte in the second byte.
+        if ( m_big_endian ) {
+            result.c[0] = high_byte;
+            result.c[1] = low_byte;
+        }
+        // Otherwise, put the low byte in the first byte and the high byte in
+        // the second byte.
+        else {
+            result.c[0] = low_byte;
+            result.c[1] = high_byte;
+        }
 
-      return result.value;
+        return result.value;
     }
 
     // ------------------------------------------------------------------------
@@ -295,10 +293,10 @@ private:
     // ------------------------------------------------------------------------
     inline float
     getXPos (const int offset) {
-      return (m_xmtr_pos_scale *
-               (float) toShort(response.buffer[2 + offset],
-                               response.buffer[3 + offset]) /
-               32767.0);
+        return (m_xmtr_pos_scale *
+                   (float) toShort(response.buffer[2 + offset],
+                                   response.buffer[3 + offset]) /
+                   32767.0);
     }
 
     // ------------------------------------------------------------------------
@@ -315,10 +313,10 @@ private:
     // ------------------------------------------------------------------------
     inline float
     getYPos (const int offset) {
-      return (m_xmtr_pos_scale *
-               (float) toShort(response.buffer[4 + offset],
-                               response.buffer[5 + offset]) /
-               m_xmtr_divisor);
+        return (m_xmtr_pos_scale *
+                   (float) toShort(response.buffer[4 + offset],
+                                   response.buffer[5 + offset]) /
+                   m_xmtr_divisor);
     }
 
     // ------------------------------------------------------------------------
@@ -335,10 +333,10 @@ private:
     // ------------------------------------------------------------------------
     inline float
     getZPos (const int offset) {
-      return (m_xmtr_pos_scale *
-               (float) toShort(response.buffer[6 + offset],
-                               response.buffer[7 + offset]) /
-               m_xmtr_divisor);
+        return (m_xmtr_pos_scale *
+                   (float) toShort(response.buffer[6 + offset],
+                                   response.buffer[7 + offset]) /
+                   m_xmtr_divisor);
     }
 
     // ------------------------------------------------------------------------
@@ -375,10 +373,10 @@ private:
     // ------------------------------------------------------------------------
     inline float
     getAzimuth (const int offset) {
-      return (m_xmtr_rot_scale *
-               (float) toShort(response.buffer[10 + offset],
-                               response.buffer[11 + offset]) /
-                m_xmtr_divisor);
+        return (m_xmtr_rot_scale *
+                   (float) toShort(response.buffer[10 + offset],
+                                   response.buffer[11 + offset]) /
+                    m_xmtr_divisor);
     }
 
     // ------------------------------------------------------------------------
@@ -395,10 +393,10 @@ private:
     // ------------------------------------------------------------------------
     inline float
     getElevation (const int offset) {
-      return (m_xmtr_rot_scale *
-               (float) toShort(response.buffer[12 + offset],
-                               response.buffer[13 + offset]) /
-                m_xmtr_divisor);
+        return (m_xmtr_rot_scale *
+                   (float) toShort(response.buffer[12 + offset],
+                                   response.buffer[13 + offset]) /
+                    m_xmtr_divisor);
     }
 
     // ------------------------------------------------------------------------
@@ -413,69 +411,73 @@ private:
     // ------------------------------------------------------------------------
     void printError(const unsigned char err_code);
 
-float posinfo[3][6];
-bool 			active;
-char*                   address;
-int x;
-unsigned char           all;
-unsigned char           FBBerror;
-unsigned char           flockNumber;
-unsigned char           serverNumber;
-unsigned char           chassisNumber;
-unsigned char           chassisDevices;
-unsigned char           firstAddress;
-unsigned short int      softwareRevision;
-unsigned char           transmitterNumber;
-char                    szRate[7];
-int                     mRate;
-double                  realRate;
-unsigned int            statusSize, temp;
-unsigned char           ertFlag;
-unsigned char           buttonState;
+    float                   posinfo[3][6];
+    bool                    active;
+    char*                   address;
+    int x;
+    unsigned char           all;
+    unsigned char           FBBerror;
+    unsigned char           flockNumber;
+    unsigned char           serverNumber;
+    unsigned char           chassisNumber;
+    unsigned char           chassisDevices;
+    unsigned char           firstAddress;
+    unsigned short int      softwareRevision;
+    unsigned char           transmitterNumber;
+    char                    szRate[7];
+    int                     mRate;
+    double                  realRate;
+    unsigned int            statusSize, temp;
+    unsigned char           ertFlag;
+    unsigned char           buttonState;
 
-struct BIRD_STATUS Bird[120];
-struct HEADER command, *lpCommand;
-struct RSP_GET_STATUS_all RspGetStatAll, *lpRspGetStatAll;
-struct DATAPACKET response, *lpResponse;
-struct sockaddr_in server;
+    struct BIRD_STATUS Bird[120];
+    struct HEADER command, *lpCommand;
+    struct RSP_GET_STATUS_all RspGetStatAll, *lpRspGetStatAll;
+    struct DATAPACKET response, *lpResponse;
+    struct sockaddr_in server;
  
-int s,rtn;
-unsigned  long i,n;
-unsigned int sequenceNumber;
+    int s,rtn;
+    unsigned  long i,n;
+    unsigned int sequenceNumber;
 
-char *newptr;
+    char *newptr;
 
-int errno; // EXTERN!!
+    int errno; // EXTERN!!
 
-int                     numberBytes;
-int                     bytesReceived;
+    int             numberBytes;
+    int             bytesReceived;
 #if defined(__FreeBSD__) || defined(_AIX)
-socklen_t		Size, *lpSize;
+    socklen_t       Size;
+    socklen_t*      lpSize;
 #else
-int                     Size, *lpSize;
+    int             Size;
+    int*            lpSize;
 #endif
-int                     sockfd;
-time_t                  timeSeconds;
-char                    timeChar[64];
-struct tm               newtime;
-int                     digit, no, j;
-char                    rate[7];
+    int             sockfd;
+    time_t          timeSeconds;
+    char            timeChar[64];
+    struct tm       newtime;
+    int             digit;
+    int             no;
+    int             j;
+    char            rate[7];
 
-unsigned int    format;
-int             hemisphere;
-unsigned int    birdFormat;
-unsigned int    birdsRequired;
-double          birdRate;
-int             runMode;
-unsigned char   addr;
-unsigned char   reportRate;
+    unsigned int    format;
+    int             hemisphere;
+    unsigned int    birdFormat;
+    unsigned int    birdsRequired;
+    double          birdRate;
+    int             runMode;
+    unsigned char   addr;
+    unsigned char   reportRate;
 
-float		m_xmtr_pos_scale;	// Transmitter position scaling factor
-float		m_xmtr_rot_scale;	// Transmitter position scaling factor
-float		m_xmtr_divisor;		// Number by which all returned values
-					// must be divided
-bool		m_big_endian;
+    float           m_xmtr_pos_scale;   //: Transmitter position scaling factor
+    float           m_xmtr_rot_scale;   //: Transmitter position scaling factor
+    float           m_xmtr_divisor;     //: Number by which all returned values
+                                        //+ must be divided
+    bool            m_big_endian;
 };
 
 
-#endif
+#endif	/* _ASCENSION_MOTION_STAR_H_ */
