@@ -37,13 +37,26 @@
 
 
 vjInput::vjInput()
+ : sPort(NULL),
+   instName(NULL),
+   port_id(0),
+   myThread(NULL),
+   active(0),
+   current(0),
+   valid(1),
+   progress(2),
+   lock(),
+   baudRate(0),
+   deviceAbilities(0)
 {
    //vjDEBUG(vjDBG_ALL,4)<<"*** vjInput::vjInput()\n"<< vjDEBUG_FLUSH;
+   /*
    deviceAbilities = 0;
    instName = NULL;
    sPort = NULL;
    myThread = NULL;
    active = 0;
+   */
 }
 
 vjInput::~vjInput()
