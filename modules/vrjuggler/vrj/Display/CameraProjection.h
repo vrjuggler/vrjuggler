@@ -63,16 +63,14 @@ public:
    */
    virtual void calcViewMatrix(gmtl::Matrix44f& cameraPos, const float scaleFactor);
 
-   virtual std::ostream& outStream(std::ostream& out)
-   {
-      out << "vjCameraProjection:\n";
-      return out;
-   }
+   virtual std::ostream& outStream(std::ostream& out,
+                                   const unsigned int indentLevel = 0);
 
 public:
    //float mAspectRatio;     // w/h
    float mVertFOV;         // The vertical field of view
 };
 
-};
+}
+
 #endif
