@@ -334,6 +334,7 @@ public class NewConfigDialog
          public void actionPerformed(ActionEvent evt)
          {
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setFileHidingEnabled(false);
             fileChooser.setDialogTitle("Select Directory");
             int result = fileChooser.showOpenDialog(NewConfigDialog.this);
             if (result == JFileChooser.APPROVE_OPTION)
