@@ -114,17 +114,7 @@ public class ConfigToolbar
 
    public void setConfigContext(ConfigContext ctx)
    {
-      this.context.removeConfigContextListener(contextListener);
       this.context = ctx;
-
-      boolean nonempty_context = true;
-      if (context.getResources().size() == 0)
-      {
-         nonempty_context = false;
-      }
-      //saveBtn.setEnabled(nonempty_context);
-      saveAllBtn.setEnabled(nonempty_context);
-      context.addConfigContextListener(contextListener);
    }
 
    public ConfigContext getConfigContext()
@@ -590,7 +580,7 @@ public class ConfigToolbar
       RTRCBtn.setActionCommand("RTRC");
       RTRCBtn.setFocusPainted(false);
       
-      saveAllBtn.setEnabled(false);
+      saveAllBtn.setEnabled(true);
       saveAllBtn.setToolTipText("Save All Open Configurations");
       saveAllBtn.setActionCommand("SaveAll");
       saveAllBtn.setFocusPainted(false);
@@ -753,32 +743,7 @@ public class ConfigToolbar
    private JButton pasteBtn = new JButton();
    private JButton RTRCBtn = new JButton();
    private JFileChooser fileChooser = new JFileChooser();
-
    private ConfigContext context = new ConfigContext();
-   private ContextChangeListener contextListener = new ContextChangeListener();
-
    private EnvironmentService mEnvService = new EnvironmentServiceProxy();
-
    private Container mParentFrame = null;
-
-   /**
-    * Our special context change listener used to toggle the save and expand
-    * toolbar buttons.
-    */
-   private class ContextChangeListener
-      implements ConfigContextListener
-   {
-      public void resourceAdded(ConfigContextEvent evt)
-      {
-         saveAllBtn.setEnabled(true);
-      }
-
-      public void resourceRemoved(ConfigContextEvent evt)
-      {
-         if (context.getResources().size() == 0)
-         {
-            saveAllBtn.setEnabled(false);
-         }
-      }
-   }
 }
