@@ -1318,8 +1318,7 @@ if test "x${_with_sl}" != "xno" ; then
                         [ slScheduler::getCurrent(); ],
                         [ ac_cv_getCurrent_in_sl='yes' ; rm -rf ./ii_files ;
                           SL='Y' ],
-                        [ ac_cv_getCurrent_in_sl='no' ;
-                          AC_MSG_WARN(*** SL library will not be used ***) ]))
+                        ac_cv_getCurrent_in_sl='no'))
 
         CPPFLAGS="${_vjsave_CPPFLAGS}"
         LDFLAGS="${_vjsave_LDFLAGS}"
@@ -1336,6 +1335,8 @@ if test "x${_with_sl}" != "xno" ; then
             if test "$PLATFORM" = "IRIX" ; then
                 _sl_libs="${_sl_libs} -laudio"
             fi
+        else
+            AC_MSG_WARN(*** SL library will not be used ***)
         fi
 
         AC_LANG_RESTORE
