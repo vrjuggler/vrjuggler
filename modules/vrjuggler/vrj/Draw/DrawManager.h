@@ -49,7 +49,7 @@ class vjDisplay;
 // @author Allen Bierbaum
 //  Date: 9-7-97
 //--------------------------------------------------------
-class vjDrawManager : public vjConfigChunkHandler
+class VJ_CLASS_API vjDrawManager : public vjConfigChunkHandler
 {
 public:
    vjDrawManager (void) {

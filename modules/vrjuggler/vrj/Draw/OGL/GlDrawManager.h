@@ -80,7 +80,7 @@ class vjSimViewport;
 //  Date: 1-7-98
 //------------------------------------------------
 //! PUBLIC_API:
-class vjGlDrawManager : public vjDrawManager
+class VJ_CLASS_API vjGlDrawManager : public vjDrawManager
 {
 public:
    friend class vjGlPipe;
@@ -229,6 +229,9 @@ protected:
    }
 
    virtual ~vjGlDrawManager() {}
+
+   vjGlDrawManager(const vjGlDrawManager& o) {;}
+   void operator=(const vjGlDrawManager& o) {;}
 
    vjSingletonHeader(vjGlDrawManager);
 /*
