@@ -328,7 +328,7 @@ fi
 dnl ===================================================
 dnl  Just extra stuff here (non-sonic stuff)
 dnl ===================================================
-snx_extra_cxxflags='$VRJ_CXXFLAGS $VPR_CXXFLAGS'
+snx_extra_cxxflags="$VRJ_CXXFLAGS $VPR_CXXFLAGS"
 snx_extra_include_dirs=''
 snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 snx_extra_libs="$LDFLAGS $VPR_LIBS $VRJ_LIBS $LIBS $APP_EXTRA_LIBS_END"
