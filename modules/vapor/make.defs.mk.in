@@ -118,7 +118,6 @@ EXTRA_DEFS		+= -D_VPR_BUILD_
 EXTRA_INCLUDES		= -I$(top_srcdir) @BOOST_INCLUDES@		\
                           -I$(JUGGLERROOT_ABS)/external/leach-uuid	\
                           -I$(JUGGLERROOT_ABS)/external/md5-c
-EXTRA_INSTALL_ARGS	+= $(SYMLINK)
 
 # -----------------------------------------------------------------------------
 # Makedepend commands.  Doozer++ uses $(MKDEP_C) and $(MKDEP_CXX).
