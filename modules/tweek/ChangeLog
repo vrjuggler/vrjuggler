@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-09-04 patrickh    Fixed bugs relating to registration of event listener
+                       Beans that were not instantiated lazily by the Java GUI.
+                       NEW VERSION: 0.10.3
 2002-08-27 patrickh    The output from 'tweek-config --cxxflags' will include
                        -DTWEEK_HAVE_CXX=1 if the C++ API is available.
                        NEW VERSION: 0.10.2
