@@ -1,5 +1,5 @@
-#ifndef ENDIAN_FUNCS
-#define ENDIAN_FUNCS
+#ifndef AUDIOJUGGLER_ENDIAN_FUNCS
+#define AUDIOJUGGLER_ENDIAN_FUNCS
 
 
 namespace ajEndian
@@ -49,7 +49,8 @@ namespace ajEndian
    //: check the system for endianess
    inline bool isBig()
    {
-      return !isLittle();
+      return !ajEndian::isLittle();
    }   
-};
+
+}; // end namespace.
 #endif

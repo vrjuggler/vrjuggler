@@ -31,17 +31,13 @@ endif
 # STATICLIB_EXT  - File extension for shared libraries.
 
 
-includedir	= @includedir@/aj
+includedir	= @includedir@
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
-#ROOT_DIR    = $(top_srcdir)
-
-
 
 EXTRA_SRCS_PATH = $(srcdir)/plugins
-EXTRA_INCLUDES = -I$(top_srcdir) -I$(srcdir)
-# -I$(AJ_BASE_DIR)
+EXTRA_INCLUDES = 
 LIBS = ${LIBS} -lm
 
 
