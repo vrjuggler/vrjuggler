@@ -1,5 +1,3 @@
-LIBRARY Tweek
-
 EXPORTS
    ??1Subject@POA_tweek@@UAE@XZ
    ??1_impl_Subject@tweek@@UAE@XZ
