@@ -1,2 +1,0 @@
-#!/bin/sh
-cp commit_prep.pl commitcheck log_accum.pl /home/selab/Juggler/CVSRepos/CVSROOT/
