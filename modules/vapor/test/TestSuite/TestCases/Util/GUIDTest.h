@@ -6,7 +6,7 @@
 #include <cppunit/TestCaller.h>
 
 #include <vpr/Util/GUID.h>
-#include <vpr/Util/GUIDFactory.h>
+//#include <vpr/Util/GUIDFactory.h>
 #include <vpr/Util/Interval.h>
 
 #include <vpr/Util/Debug.h>
@@ -42,17 +42,18 @@ public:
         { 0x00, 0x60, 0x97, 0x03, 0xC1, 0x4E }
       };
 
-      vpr::GUID* guid1 = vpr::GUIDFactory::createGUID(guid_str);
+      vpr::GUID* guid1 = new vpr::GUID(guid_str);
       CPPUNIT_ASSERT(guid_str.compare(guid1->toString()) == 0);
 
-      vpr::GUID* guid2 = vpr::GUIDFactory::createGUID(guid_struct);
+      vpr::GUID* guid2 = new vpr::GUID(guid_struct);
       CPPUNIT_ASSERT(*guid1 == *guid2);
 
       vpr::GUID guid1_again("4A781D61-3D28-11D2-8DB8-00609703C14E");
       CPPUNIT_ASSERT(guid1_again == (*guid2));
 
       // Test assignment
-      vpr::GUID guid3(*vpr::GUIDFactory::createRandomGUID()), guid4;
+      vpr::GUID guid3, guid4;
+      guid3.generate();
       guid3 = guid4;
       CPPUNIT_ASSERT(guid3 == guid4);
 
@@ -66,8 +67,8 @@ public:
 
    void testCompare ()
    {
-      vpr::GUID* guid1 = vpr::GUIDFactory::createRandomGUID();
-      vpr::GUID* guid2 = vpr::GUIDFactory::createRandomGUID();
+      vpr::GUID* guid1 = new vpr::GUID; guid1->generate();
+      vpr::GUID* guid2 = new vpr::GUID; guid2->generate();
 
       CPPUNIT_ASSERT(*guid1 != *guid2);
 
@@ -106,7 +107,7 @@ public:
 
       while(loops--)
       {
-        guid1 = *(vpr::GUIDFactory::createRandomGUID());
+        guid1.generate();    // = *(vpr::GUIDFactory::createRandomGUID());
       }
 
       vpr::Interval diff = time_out - time_in;
