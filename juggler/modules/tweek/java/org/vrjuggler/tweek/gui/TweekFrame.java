@@ -41,6 +41,7 @@ import java.awt.event.*;
 import java.net.InetAddress;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.event.EventListenerList;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -483,12 +484,12 @@ public class TweekFrame
 
    public synchronized void addTweekFrameListener(TweekFrameListener l)
    {
-      mFrameListeners.add(l);
+      mFrameListeners.add(TweekFrameListener.class, l);
    }
 
    public synchronized void removeTweekFrameListener(TweekFrameListener l)
    {
-      mFrameListeners.remove(l);
+      mFrameListeners.remove(TweekFrameListener.class, l);
    }
 
    public void windowActivated(WindowEvent e)
@@ -588,30 +589,38 @@ public class TweekFrame
 
    private synchronized void fireFrameOpened(TweekFrameEvent e)
    {
-      for ( Iterator i = mFrameListeners.iterator(); i.hasNext(); )
+      Object[] listeners = mFrameListeners.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
       {
-         TweekFrameListener l = (TweekFrameListener) i.next();
-         l.frameOpened(e);
+         if (listeners[i] == TweekFrameListener.class)
+         {
+            ((TweekFrameListener)listeners[i+1]).frameOpened(e);
+         }
       }
    }
 
    private synchronized void fireFrameClosed(TweekFrameEvent e)
    {
-      for ( Iterator i = mFrameListeners.iterator(); i.hasNext(); )
+      Object[] listeners = mFrameListeners.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
       {
-         TweekFrameListener l = (TweekFrameListener) i.next();
-         l.frameClosed(e);
+         if (listeners[i] == TweekFrameListener.class)
+         {
+            ((TweekFrameListener)listeners[i+1]).frameClosed(e);
+         }
       }
    }
 
    private synchronized boolean fireFrameClosing(TweekFrameEvent e)
    {
       boolean result = true;
-
-      for ( Iterator i = mFrameListeners.iterator(); i.hasNext(); )
+      Object[] listeners = mFrameListeners.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
       {
-         TweekFrameListener l = (TweekFrameListener) i.next();
-         result = (l.frameClosing(e) && result);
+         if (listeners[i] == TweekFrameListener.class)
+         {
+            result = ( ((TweekFrameListener)listeners[i+1]).frameClosing(e) && result);
+         }
       }
 
       return result;
@@ -619,37 +628,49 @@ public class TweekFrame
 
    private synchronized void fireFrameDeiconified(TweekFrameEvent e)
    {
-      for ( Iterator i = mFrameListeners.iterator(); i.hasNext(); )
+      Object[] listeners = mFrameListeners.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
       {
-         TweekFrameListener l = (TweekFrameListener) i.next();
-         l.frameDeiconified(e);
+         if (listeners[i] == TweekFrameListener.class)
+         {
+            ((TweekFrameListener)listeners[i+1]).frameDeiconified(e);
+         }
       }
    }
 
    private synchronized void fireFrameFocused(TweekFrameEvent e)
    {
-      for ( Iterator i = mFrameListeners.iterator(); i.hasNext(); )
+      Object[] listeners = mFrameListeners.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
       {
-         TweekFrameListener l = (TweekFrameListener) i.next();
-         l.frameFocused(e);
+         if (listeners[i] == TweekFrameListener.class)
+         {
+            ((TweekFrameListener)listeners[i+1]).frameFocused(e);
+         }
       }
    }
 
    private synchronized void fireFrameIconified(TweekFrameEvent e)
    {
-      for ( Iterator i = mFrameListeners.iterator(); i.hasNext(); )
+      Object[] listeners = mFrameListeners.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
       {
-         TweekFrameListener l = (TweekFrameListener) i.next();
-         l.frameIconified(e);
+         if (listeners[i] == TweekFrameListener.class)
+         {
+            ((TweekFrameListener)listeners[i+1]).frameIconified(e);
+         }
       }
    }
 
    private synchronized void fireFrameUnfocused(TweekFrameEvent e)
    {
-      for ( Iterator i = mFrameListeners.iterator(); i.hasNext(); )
+      Object[] listeners = mFrameListeners.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
       {
-         TweekFrameListener l = (TweekFrameListener) i.next();
-         l.frameUnfocused(e);
+         if (listeners[i] == TweekFrameListener.class)
+         {
+            ((TweekFrameListener)listeners[i+1]).frameUnfocused(e);
+         }
       }
    }
 
@@ -1238,8 +1259,8 @@ public class TweekFrame
    // ========================================================================
 
    private boolean mPackFrame = false;
-   private java.util.List mFrameListeners = new ArrayList();
-
+   private EventListenerList mFrameListeners = new EventListenerList();
+ 
    // GUI objects.
    private JPanel        mContentPane       = null;    /**< Top-level container */
    private BorderLayout  mContentPaneLayout = new BorderLayout();
