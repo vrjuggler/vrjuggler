@@ -44,11 +44,10 @@
 //      Ported to to 1.1 DR2 and sgi platform Anthony Steed, 10-4-02
 //======================================================
 
-
 #ifndef _GADGET_VRPN_H_
 #define _GADGET_VRPN_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <vector>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
@@ -62,6 +61,13 @@
 
 #include <vrpn_Tracker.h>
 #include <vrpn_Button.h>
+
+namespace gadget
+{
+   class InputManager;
+}
+
+extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {
@@ -79,10 +85,10 @@ namespace gadget
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
 
-  class Vrpn : public InputMixer<InputMixer<Input,Digital>,Position>
-    {
+   class Vrpn : public InputMixer<InputMixer<Input,Digital>,Position>
+   {
     
-    public:
+   public:
     
       // ------------------------------------------------------------------------
       //: Constructor.
@@ -135,8 +141,26 @@ namespace gadget
 	return std::string("Vrpn");
       }
 
+      /**
+       * Invokes the global scope delete operator.  This is required for proper
+       * releasing of memory in DLLs on Win32.
+       */
+      void operator delete(void* p)
+      {
+         ::operator delete(p);
+      }
 
-    private:
+   protected:
+      /**
+       * Deletes this object.  This is an implementation of the pure virtual
+       * gadget::Input::destroy() method.
+       */
+      virtual void destroy()
+      {
+         delete this;
+      }
+
+   private:
       vpr::Thread* mReadThread;
       std::string mTrackerServer;
       std::string mButtonServer;
@@ -169,7 +193,7 @@ namespace gadget
 
       friend void staticHandleTracker(void *userdata, vrpn_TRACKERCB t);
       friend void staticHandleButton(void *userdata, vrpn_BUTTONCB t);
-    };
+   };
 
 } // End of gadget namespace
 
