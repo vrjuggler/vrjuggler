@@ -145,6 +145,7 @@ case $cli_impl in
       ;;
 esac
 
+GMTL_PATH([0.3.4], , , , [AC_MSG_ERROR([*** GMTL is required for VRJ.NET ***])])
 VPR_PATH([0.34.2], , [AC_MSG_ERROR([*** VPR is required for VRJ.NET ***])])
 JCCL_PATH([0.15], ,
           [AC_MSG_ERROR([*** JCCL is required for VRJ.NET ***])])
