@@ -1,9 +1,15 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-#
-# Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+# Doozer++
 #
 # Original Author:
 #   Patrick Hartling
+# -----------------------------------------------------------------------------
+# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Library General Public
@@ -20,10 +26,15 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
+# -----------------------------------------------------------------
+# File:          dpp.idl.mk,v
+# Date modified: 2001/06/29 23:47:52
+# Version:       1.3
+# -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.idl.mk,v 1.2 2001/02/16 22:05:26 patrick Exp
+# dpp.idl.mk,v 1.3 2001/06/29 23:47:52 patrickh Exp
 #
 # This file <dpp.idl.mk> handles compiling a CORBA IDL file into source files
 # for various languages using the appropriate IDL compiler.

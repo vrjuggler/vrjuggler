@@ -1,9 +1,15 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl
-dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl Doozer++
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
+dnl ---------------------------------------------------------------------------
+dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+dnl
+dnl Original Authors:
+dnl   Allen Bierbaum, Christopher Just,
+dnl   Patrick Hartling, Kevin Meinert,
+dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -20,6 +26,11 @@ dnl License along with this library; if not, write to the
 dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 dnl
+dnl -----------------------------------------------------------------
+dnl File:          compiler.m4,v
+dnl Date modified: 2001/06/29 23:47:52
+dnl Version:       1.19
+dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
@@ -44,7 +55,7 @@ dnl     CXXFLAGS_DYNLIB - Position-independent code generation flag for the
 dnl                       C++ compiler.  Substituted automatically.
 dnl ===========================================================================
 
-dnl compiler.m4,v 1.18 2001/05/23 23:00:25 patrickh Exp
+dnl compiler.m4,v 1.19 2001/06/29 23:47:52 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check for the existence and usability of a C compiler (or the given C

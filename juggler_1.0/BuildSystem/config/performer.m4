@@ -1,9 +1,15 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl
-dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl Doozer++
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
+dnl ---------------------------------------------------------------------------
+dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+dnl
+dnl Original Authors:
+dnl   Allen Bierbaum, Christopher Just,
+dnl   Patrick Hartling, Kevin Meinert,
+dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -20,6 +26,11 @@ dnl License along with this library; if not, write to the
 dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 dnl
+dnl -----------------------------------------------------------------
+dnl File:          performer.m4,v
+dnl Date modified: 2001/06/29 23:47:52
+dnl Version:       1.8
+dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
@@ -43,7 +54,7 @@ dnl     PF_INCLUDES - Extra include path for the Performer header directory.
 dnl     PF_LDFLAGS  - Extra linker flags for the Performer library directory.
 dnl ===========================================================================
 
-dnl performer.m4,v 1.7 2001/05/25 17:17:12 patrickh Exp
+dnl performer.m4,v 1.8 2001/06/29 23:47:52 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has IRIS/OpenGL Performer installed.  This

@@ -1,9 +1,15 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-#
-# Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+# Doozer++
 #
 # Original Author:
 #   Patrick Hartling
+# -----------------------------------------------------------------------------
+# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Library General Public
@@ -20,10 +26,15 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
+# -----------------------------------------------------------------
+# File:          dpp.install.mk,v
+# Date modified: 2001/06/29 23:47:52
+# Version:       1.7
+# -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.install.mk,v 1.6 2001/06/18 18:36:38 patrickh Exp
+# dpp.install.mk,v 1.7 2001/06/29 23:47:52 patrickh Exp
 #
 # This include file <dpp.install.mk> handles install operations.  It adds an
 # 'install' target.

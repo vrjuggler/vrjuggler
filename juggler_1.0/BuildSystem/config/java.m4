@@ -1,8 +1,15 @@
-dnl ************* <auto-copyright.pl BEGIN do not edit this line> ************* dnl
-dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
+dnl Doozer++
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
+dnl ---------------------------------------------------------------------------
+dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+dnl
+dnl Original Authors:
+dnl   Allen Bierbaum, Christopher Just,
+dnl   Patrick Hartling, Kevin Meinert,
+dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -19,6 +26,11 @@ dnl License along with this library; if not, write to the
 dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 dnl
+dnl -----------------------------------------------------------------
+dnl File:          java.m4,v
+dnl Date modified: 2001/07/02 20:48:50
+dnl Version:       1.29
+dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
@@ -50,7 +62,7 @@ dnl     JNI_INC  - The include paths necessary for JNI.
 dnl     JNI_LIB  - The library which needs to be statically linked for JNI.
 dnl ===========================================================================
 
-dnl java.m4,v 1.25 2001/06/18 21:39:33 patrickh Exp
+dnl java.m4,v 1.29 2001/07/02 20:48:50 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -214,7 +226,9 @@ AC_DEFUN(DPP_CHECK_JNI,
         AIX)
             : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/aix}
             ;;
-        MacOSX)
+        Darwin)
+            : ${JNI_INC=-F/System/Library/Frameworks/JavaVM.framework}
+            : ${JNI_LIB=-framework JavaVM}
             ;;
         FreeBSD)
             : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/freebsd}
@@ -230,7 +244,7 @@ AC_DEFUN(DPP_CHECK_JNI,
             ;;
         Linux)
             : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/linux}
-            : ${JNI_LIB=-L$JDK_HOME/jre/lib/i386/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/i386/classic -L$JDK_HOME/jre/lib/i386 -ljvm}
+            : ${JNI_LIB=-L$JDK_HOME/jre/lib/i386/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/i386/classic -L$JDK_HOME/jre/lib/i386 -ljvm -lhpi}
             ;;
         alpha-osf)
             ;;

@@ -1,9 +1,15 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl
-dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl Doozer++
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
+dnl ---------------------------------------------------------------------------
+dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+dnl
+dnl Original Authors:
+dnl   Allen Bierbaum, Christopher Just,
+dnl   Patrick Hartling, Kevin Meinert,
+dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -20,6 +26,11 @@ dnl License along with this library; if not, write to the
 dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 dnl
+dnl -----------------------------------------------------------------
+dnl File:          opengl.m4,v
+dnl Date modified: 2001/06/29 23:47:52
+dnl Version:       1.19
+dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
@@ -49,7 +60,7 @@ dnl     X_INCLUDES   - Extra include path for the X11 header directory.
 dnl     X_LDFLAGS    - Extra linker flags for the X11 library directory.
 dnl ===========================================================================
 
-dnl opengl.m4,v 1.17 2001/06/18 21:47:18 patrickh Exp
+dnl opengl.m4,v 1.19 2001/06/29 23:47:52 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenGL (or Mesa3D) installed.  This
@@ -109,14 +120,14 @@ AC_DEFUN(DPP_HAVE_OPENGL,
     dpp_save_INCLUDES="$INCLUDES"
     dpp_save_LDFLAGS="$LDFLAGS"
 
-    if test "x$dpp_platform" = "xMacOSX" ; then
+    if test "x$dpp_platform" = "xDarwin" ; then
         OGLROOT='/System/Library/Frameworks/OpenGL.framework'
     fi
 
     dnl Add the user-specified OpenGL installation directory to these
     dnl paths.  Ensure that /usr/include and /usr/lib are not included
     dnl multiple times if $OGLROOT is "/usr".
-    if test "x$OGLROOT" != "x/usr" -a "x$dpp_platform" != "xMacOSX" ; then
+    if test "x$OGLROOT" != "x/usr" -a "x$dpp_platform" != "xDarwin" ; then
         CPPFLAGS="$CPPFLAGS -I$OGLROOT/include"
         INCLUDES="$INCLUDES -I$OGLROOT/include"
         LDFLAGS="-L$OGLROOT/lib$LIBBITSUF $LDFLAGS"
@@ -165,7 +176,7 @@ AC_DEFUN(DPP_HAVE_OPENGL,
         LIBS="$dpp_save_LIBS"
 
         DPP_LANG_RESTORE
-    elif test "x$dpp_platform" = "xMacOSX" ; then
+    elif test "x$dpp_platform" = "xDarwin" ; then
         AC_LANG_SAVE
         AC_LANG_C
 

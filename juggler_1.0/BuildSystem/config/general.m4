@@ -1,9 +1,15 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl
-dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl Doozer++
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
+dnl ---------------------------------------------------------------------------
+dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+dnl
+dnl Original Authors:
+dnl   Allen Bierbaum, Christopher Just,
+dnl   Patrick Hartling, Kevin Meinert,
+dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -20,6 +26,11 @@ dnl License along with this library; if not, write to the
 dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 dnl
+dnl -----------------------------------------------------------------
+dnl File:          general.m4,v
+dnl Date modified: 2001/07/06 21:42:30
+dnl Version:       1.29
+dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
@@ -39,10 +50,10 @@ dnl     DPP_GEN_RECONFIG      - Generate a script called 'reconfig' that will
 dnl                             reconfigure a build directory from scratch.
 dnl ===========================================================================
 
-dnl general.m4,v 1.27 2001/06/21 15:01:31 patrickh Exp
+dnl general.m4,v 1.29 2001/07/06 21:42:30 patrickh Exp
 
 dnl Set the version of Doozer++.
-define(DPP_DPPVERSION, 1.3.10)
+define(DPP_DPPVERSION, 1.4)
 
 dnl ---------------------------------------------------------------------------
 dnl Change the dots in NUMBER into commas.

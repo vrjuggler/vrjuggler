@@ -1,9 +1,15 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl
-dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl Doozer++
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
+dnl ---------------------------------------------------------------------------
+dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+dnl
+dnl Original Authors:
+dnl   Allen Bierbaum, Christopher Just,
+dnl   Patrick Hartling, Kevin Meinert,
+dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -20,6 +26,11 @@ dnl License along with this library; if not, write to the
 dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 dnl
+dnl -----------------------------------------------------------------
+dnl File:          abi.m4,v
+dnl Date modified: 2001/06/29 23:47:52
+dnl Version:       1.6
+dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
@@ -62,7 +73,7 @@ dnl                    $CFLAGS and $CXXFLAGS.
 dnl     DPP_ABI_TYPE - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.2 2001/02/16 22:05:23 patrick Exp
+dnl abi.m4,v 1.6 2001/06/29 23:47:52 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters
@@ -98,18 +109,19 @@ AC_DEFUN(DPP_ABI_SETUP,
 
     dnl -----------------------------------------------------------------------
     dnl Define the binary format.  Possible values are the following:
-    dnl     N32_M3     - On IRIX, use N32 mips3 binaries
-    dnl     N32_M4     - On IRIX, use N32 mips4 binaries
-    dnl     64_M3      - On IRIX, use 64-bit mips3 binaries
-    dnl     64_M4      - On IRIX, use 64-bit mips4 binaries
-    dnl     ELF_i386   - On an i386 OS (e.g., Linux/i386), use ELF binaries
-    dnl     WIN32_i386 - On an i386 Win32 OS, use Win32 binaries
-    dnl     COFF_ALPHA - On an Alpha, use COFF binaries
-    dnl     ELF_ALPHA  - On an Alpha, use ELF binaries
-    dnl     HP         - On HP-UX, use PA-RISC binaries
+    dnl     N32_M3        - On IRIX, use N32 mips3 binaries
+    dnl     N32_M4        - On IRIX, use N32 mips4 binaries
+    dnl     64_M3         - On IRIX, use 64-bit mips3 binaries
+    dnl     64_M4         - On IRIX, use 64-bit mips4 binaries
+    dnl     ELF_i386      - On an i386 OS (e.g., Linux/i386), use ELF binaries
+    dnl     WIN32_i386    - On an i386 Win32 OS, use Win32 binaries
+    dnl     COFF_ALPHA    - On an Alpha, use COFF binaries
+    dnl     ELF_ALPHA     - On an Alpha, use ELF binaries
+    dnl     HP            - On HP-UX, use PA-RISC binaries
+    dnl     MACINTOSH_PPC - On Macintosh, use PowerPC binaries
     dnl -----------------------------------------------------------------------
     AC_ARG_WITH(abi,
-                [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|ELF_i386|WIN32_i386|COFF_ALPHA|ELF_ALPHA|HP>
+                [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|ELF_i386|WIN32_i386|COFF_ALPHA|ELF_ALPHA|HP|MACINTOSH_PPC>
                           Define the Application Binary
                           Interface to use],
                 DPP_ABI_TYPE="$withval")
@@ -152,6 +164,9 @@ AC_DEFUN(DPP_ABI_SETUP,
             ;;
         xHP)
             DPP_ABI_CFG('HP', 'pa-risc')
+            ;;
+        xMACINTOSH_PPC)
+            DPP_ABI_CFG('MAC', 'powerpc')
             ;;
     esac
 
