@@ -29,7 +29,7 @@ class vjCoord;
 
 //-----------------------------------------------------------------------------
 //: vjMatrix: Scene graph matrix optimized for OpenGL.
-// 
+//
 // C/C++ uses matrices in row major order.  In other words the access
 // indices look like: <br>
 // (0,0) (0,1) (0,2) (0,3)   <=== Array      <br>
@@ -47,7 +47,7 @@ class vjCoord;
 // (0,3) (1,3) (2,3) (3,3)       <br>
 //   ^     ^     ^     ^         <br>
 //   ====================== Arrays     <br>
-// 
+//
 // This is VERY important!!!
 //--------------------------------------------------------------------------------
 class vjMatrix
@@ -70,7 +70,7 @@ public:
       mat[0][0] = a00; mat[1][0] = a01; mat[2][0] = a02; mat[3][0] = a03;
       mat[0][1] = a10; mat[1][1] = a11; mat[2][1] = a12; mat[3][1] = a13;
       mat[0][2] = a10; mat[1][2] = a21; mat[2][2] = a22; mat[3][2] = a23;
-      mat[0][3] = a30; mat[1][3] = a31; mat[2][3] = a32; mat[3][3] = a33;  
+      mat[0][3] = a30; mat[1][3] = a31; mat[2][3] = a32; mat[3][3] = a33;
    }
 
    //: Build matrix from coord
@@ -96,7 +96,7 @@ public:
       mat[0][0] = a00; mat[1][0] = a01; mat[2][0] = a02; mat[3][0] = a03;
       mat[0][1] = a10; mat[1][1] = a11; mat[2][1] = a12; mat[3][1] = a13;
       mat[0][2] = a20; mat[1][2] = a21; mat[2][2] = a22; mat[3][2] = a23;
-      mat[0][3] = a30; mat[1][3] = a31; mat[2][3] = a32; mat[3][3] = a33;  
+      mat[0][3] = a30; mat[1][3] = a31; mat[2][3] = a32; mat[3][3] = a33;
    }
 
 public:
@@ -108,7 +108,7 @@ public:
    //: Zero out the matrix
    //! POST: this' is all zeros
    void zero()
-   { 
+   {
       mat[0][0] = mat[1][0] = mat[2][0] = mat[3][0] = 0.0f;
       mat[0][1] = mat[1][1] = mat[2][1] = mat[3][1] = 0.0f;
       mat[0][2] = mat[1][2] = mat[2][2] = mat[3][2] = 0.0f;
@@ -152,14 +152,14 @@ public:
    //!POST: mat = Matrix specified by Quaternion _quat
    void    makeQuaternion(float* q);
    void    makeQuaternion(vjQuat& q);
-   
+
 
    //: Make rotation matrix around _axis
    void makeRot(float _degrees, vjVec3 _axis);
-   
+
    //: Make translation matrix
    void makeTrans(float _x, float _y, float _z);
-   
+
    //: Sets given translation to current matrix
    //!POST: mat' = mat with the tranlation portion changed to the parameters passed
    void setTrans(float _x, float _y, float _z);
@@ -273,7 +273,7 @@ public:
 
 public:
    // --- Transformation functions --- //
-   
+
    //: Pre translate a matrix
    //!POST: mat' = trans(_x,_y,_z) * _m
    void preTrans(float _x, float _y, float _z, vjMatrix&  _m);
@@ -283,7 +283,7 @@ public:
 
    //!POST: mat' = rot(_degrees, axis) * _m
    void preRot(float _degrees, vjVec3& axis, vjMatrix&  _m);
-   
+
    //!POST: mat' = _m * rot(_degrees, axis)
    void postRot(const vjMatrix&  _m, float _degrees, vjVec3& axis);
 
@@ -299,8 +299,8 @@ public:
 public:
    //: Get a float pointer to the matrix data
    //!RETVAL: Returns a ptr to the head of the matrix data
-   float*   getFloatPtr() { return (float*)mat;} 
-   
+   float*   getFloatPtr() { return (float*)mat;}
+
    // Operators
    /// This accesses in C/C++ way???
    float*       operator [](int i)        { return &mat[i][0];}
@@ -345,7 +345,7 @@ public:
    }
 
    vjMatrix&  operator *=(const vjMatrix&  _m)  {
-      this->postMult(_m); return *this; 
+      this->postMult(_m); return *this;
    }
 
    vjMatrix&  operator *=(float _s)
@@ -360,15 +360,6 @@ public:
    //vjMatrix&  operator /=(float _s);
    //vjMatrix&  operator +=(const vjMatrix&  _m);
    //vjMatrix&  operator -=(const vjMatrix&  _m);
-
-#ifdef VJ_API_PERFORMER    // --- Performer conversion --- //
-public:
-   //: Construct a vjMatrix from a performer Matrix
-   vjMatrix(pfMatrix& perfMat);
-
-   //: Get a pfMatrix from a vjMatrix
-   pfMatrix getPfMatrix();
-#endif
 };
 
 #endif
