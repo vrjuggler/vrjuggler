@@ -92,5 +92,63 @@
 #include <strings.h>
 #endif
 
+/*
+ * ----------------------------------------------------------------------------
+ * DLL-related macros.  These are based on the macros used by NSPR.  Use
+ * VJ_EXTERN for the prototype and VJ_IMPLEMENT for the implementation.
+ * ----------------------------------------------------------------------------
+ */
+#ifdef VJ_OS_Win32
+
+#   if defined(__GNUC__)
+#       undef _declspec
+#       define _declspec(x) __declspec(x)
+#   endif
+
+#   define VJ_EXPORT(__type)      _declspec(dllexport) __type
+#   define VJ_EXPORT_CLASS        _declspec(dllexport)
+#   define VJ_EXPORT_DATA(__type) _declspec(dllexport) __type
+#   define VJ_IMPORT(__type)      _declspec(dllimport) __type
+#   define VJ_IMPORT_DATA(__type) _declspec(dllimport) __type
+#   define VJ_IMPORT_CLASS        _declspec(dllimport)
+
+#   define VJ_EXTERN(__type)         extern _declspec(dllexport) __type
+#   define VJ_IMPLEMENT(__type)      _declspec(dllexport) __type
+#   define VJ_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
+#   define VJ_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
+
+#   define VJ_CALLBACK
+#   define VJ_CALLBACK_DECL
+#   define VJ_STATIC_CALLBACK(__x) static __x
+
+#else   /* UNIX (where this stuff is simple!) */
+
+#   define VJ_EXPORT(__type)      __type
+#   define VJ_EXPORT_CLASS
+#   define VJ_EXPORT_DATA(__type) __type
+#   define VJ_IMPORT(__type)      extern __type
+#   define VJ_IMPORT_DATA(__type) extern __type
+#   define VJ_IMPORT_CLASS
+
+#   define VJ_EXTERN(__type)         extern __type
+#   define VJ_IMPLEMENT(__type)      __type
+#   define VJ_EXTERN_DATA(__type)    extern __type
+#   define VJ_IMPLEMENT_DATA(__type) __type
+
+#   define VJ_CALLBACK
+#   define VJ_CALLBACK_DECL
+#   define VJ_STATIC_CALLBACK(__x) static __x
+
+#endif	/* VJ_OS_Win32 */
+
+#ifdef _VRJ_BUILD_
+#   define VJ_API(__type)	VJ_EXPORT(__type)
+#   define VJ_CLASS_API		VJ_EXPORT_CLASS
+#   define VJ_DATA_API(__type)	VJ_EXPORT_DATA(__type)
+#else
+#   define VJ_API(__type)	VJ_IMPORT(__type)
+#   define VJ_CLASS_API		VJ_IMPORT_CLASS
+#   define VJ_DATA_API(__type)	VJ_IMPORT_DATA(__type)
+#endif
 
 #endif   /* _VJ_CONFIG_H_ */
