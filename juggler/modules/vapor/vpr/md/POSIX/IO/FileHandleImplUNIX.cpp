@@ -60,7 +60,7 @@ namespace vpr {
 // and stores the given file name for later use.
 // ----------------------------------------------------------------------------
 FileHandleImplUNIX::FileHandleImplUNIX (const std::string& file_name)
-    : FileHandle(file_name), m_fdesc(-1)
+    : BlockIO(file_name), m_fdesc(-1)
 {
     /* Do nothing. */ ;
 }

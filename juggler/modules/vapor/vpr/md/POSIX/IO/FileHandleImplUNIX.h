@@ -37,13 +37,13 @@
 #include <string>
 #include <vector>
 
-#include <vpr/IO/FileHandle.h>
+#include <vpr/IO/BlockIO.h>
 #include <vpr/IO/IOSys.h>
 
 
 namespace vpr {
 
-class FileHandleImplUNIX : public FileHandle {
+class FileHandleImplUNIX : public BlockIO {
 public:
     // ------------------------------------------------------------------------
     //: Constructor.  This initializes the member variables to reasonable
@@ -80,7 +80,7 @@ public:
     //! RETURNS: true  - The file handle was opened successfully.
     //! RETURNS: false - The file handle could not be opened for some reason.
     // ------------------------------------------------------------------------
-    virtual Status open(void);
+    Status open(void);
 
     // ------------------------------------------------------------------------
     //: Close the file handle.
@@ -95,7 +95,7 @@ public:
     //+                  An error message is printed explaining what went
     //+                  wrong.
     // ------------------------------------------------------------------------
-    virtual Status close(void);
+    Status close(void);
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that it is in blocking mode.
@@ -107,7 +107,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    virtual Status enableBlocking(void);
+    Status enableBlocking(void);
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that it is in non-blocking mode.
@@ -119,7 +119,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    virtual Status enableNonBlocking(void);
+    Status enableNonBlocking(void);
 
     // ========================================================================
     // vpr::FileHandle implementation.
@@ -134,7 +134,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual Status enableAppend(void);
+    Status enableAppend(void);
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that it is not in append mode.
@@ -145,7 +145,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual Status disableAppend(void);
+    Status disableAppend(void);
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that writes are synchronous.
@@ -156,7 +156,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual Status enableSynchronousWrite(void);
+    Status enableSynchronousWrite(void);
 
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle so that writes are asynchronous.
@@ -167,7 +167,7 @@ public:
     //! RETURNS: true  - The write mode was changed successfully.
     //! RETURNS: false - The write mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    virtual Status enableAsynchronousWrite(void);
+    Status enableAsynchronousWrite(void);
 
 protected:
     // Friends.
@@ -194,7 +194,8 @@ protected:
     //! RETURNS:
     // ------------------------------------------------------------------------
     virtual Status read_i(void* buffer, const size_t length,
-                          ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                          ssize_t& bytes_read,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     //! Read exactly the specified number of bytes from the file handle into
@@ -214,7 +215,8 @@ protected:
     //! RETURNS:
     // ------------------------------------------------------------------------
     virtual Status readn_i(void* buffer, const size_t length,
-                           ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                           ssize_t& bytes_read,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the file handle.
@@ -232,7 +234,8 @@ protected:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     virtual Status write_i(const void* buffer, const size_t length,
-                           ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                           ssize_t& bytes_written,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     //: Get the current file handle flags.
