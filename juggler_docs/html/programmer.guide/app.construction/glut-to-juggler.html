@@ -6,7 +6,7 @@
 <body>
 
 <!--NewPage-->
-<h1>Porting to VR Juggler from GLUT</h1>
+<h2>Porting to VR Juggler from GLUT</h2>
 
 <p>
 <!-- install-web toc-begin -->
@@ -29,7 +29,7 @@
 <b>NOTE</b>: This document explains OpenGL versions of Juggler and GLUT
 </p>
 
-<h2><a name="windows">Window Creation/Managment</a></h2>
+<h3><a name="windows">Window Creation/Managment</a></h3>
 <p>
    In Juggler, window creation is done for you based on your configuration file settings.
    There are two window types, <b>Surface</b>, and <b>Simulator</b>.  
@@ -46,13 +46,13 @@
    <a href="${GLOSSARY}#surface window">Surface Window</a>.
 </p>   
 
-<h2><a name="idf">Init, Draw, and Frame routines</a></h2>
+<h3><a name="idf">Init, Draw, and Frame routines</a></h3>
 <p>
 In GLUT(TM) these routines are "called-back" using function pointers (C-style).
 In VR Juggler, these routines are "called-back" using an application object, a C++ class which defines these
 methods to encapsulate the functionality of the application within one C++ class object.<BR>
    <ul>
-     <h3> In a typical GLUT application </h3>
+     <h4> In a typical GLUT application </h4>
      <dl>
      <dt>Draw: This is where you put OpenGL commands.  <BR>
      <dd>      An application's display callback function is defined by passing a function pointer to glutDisplayFunc(). 
@@ -68,7 +68,7 @@ methods to encapsulate the functionality of the application within one C++ class
      </dl>
    </ul>
   
-  <h3>In VR Juggler</h3>
+  <h4>In VR Juggler</h4>
    <p>
     No C-style function pointers are nessesary, you only pass Juggler a pointer to your "application class", so
      you first derive a new application class from vjGlApp:<BR> <TT>class YourApplication : public vjGlApp { ... };</TT> then...<BR>
@@ -107,9 +107,9 @@ methods to encapsulate the functionality of the application within one C++ class
    </ul>
 </p>
 
-<h2><a name="input">Getting input from devices</a></h2>
+<h3><a name="input">Getting input from devices</a></h3>
 <ul>
-   <h3>In GLUT(tm)</h3>
+   <h4>In GLUT(tm)</h4>
    For keyboard input you used these functions:
    <ul>
    <li>::glutKeyboardFunc( OnKeyboardDown );
@@ -124,7 +124,7 @@ methods to encapsulate the functionality of the application within one C++ class
    <li>::glutPassiveMotionFunc( OnMousePosition );
    </ul>
 
-   <h3>In VR Juggler:</h3>
+   <h4>In VR Juggler:</h4>
    For input, you use a vjDevinceInterface derived class such as:<BR>
    <ul>
       <li>vjPositionInterface&nbsp;(for <a href="${GLOSSARY}#tracker">tracker</a>s and other positional devices)
@@ -133,7 +133,7 @@ methods to encapsulate the functionality of the application within one C++ class
    </ul>
 </ul>
 
-<h2><a name="context">OpenGL Context Data</a></h2>
+<h3><a name="context">OpenGL Context Data</a></h3>
 <p>
 IMPORTANT!  Read this:<BR>
 VR Juggler, like GLUT, can handle drawing multiple displays in one process.  Most people don't use multiple windows
@@ -146,20 +146,20 @@ initializations since it is called once per display context after each has becom
 </p>
 
 
-<h2><a name="memory"> Memory </a></h2>
+<h3><a name="memory"> Memory </a></h3>
 <p>
    VR Juggler is written fully in C++, as such you'll need to use <tt>new</tt> and <tt>delete</tt> 
    instead of <tt>malloc()</tt> or <tt>free()</tt>.
 </p>
 
-<h2><a name="config">Configuration</a></h2>
+<h3><a name="config">Configuration</a></h3>
 <ul>
-   <h3>In GLUT(tm):</h3>
+   <h4>In GLUT(tm):</h4>
    <p>
    There is no built-in configuration system...
    </p>
 
-   <h3>In VRJuggler:</h3>
+   <h4>In VRJuggler:</h4>
    <p>
    Uses configuration files to <a href="broken link">reconfigure</a> a running VR Juggler system.
    All settable parameters could be in one or many files of any name that you want.  
@@ -173,9 +173,9 @@ initializations since it is called once per display context after each has becom
    </p>
 </ul>
 
-<h2><a name="code"> Source Code </a></h2>
+<h3><a name="code"> Source Code </a></h3>
 <ul>
-   <h3><a name="CaveCode">Form of a basic GLUT program</a></h3>
+   <h4><a name="CaveCode">Form of a basic GLUT program</a></h4>
    <pre>
    void main(int argc, char* argv[])
    {
@@ -217,7 +217,7 @@ initializations since it is called once per display context after each has becom
    }
    </pre>
 
-   <h3><a name="JugglerCode">Form of a basic VRJuggler program</a></h3>
+   <h4><a name="JugglerCode">Form of a basic VRJuggler program</a></h4>
    <pre>
    class MyApplication
    {
