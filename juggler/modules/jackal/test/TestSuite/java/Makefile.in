@@ -24,6 +24,7 @@ RUNNER= \
 TESTCASES = \
 	test.ChunkDescTest \
 	test.ChunkDescEventTest \
+	test.ConfigChunkTest \
 	test.DescEnumTest \
 	test.PropertyDescTest \
 	test.ValTypeTest
