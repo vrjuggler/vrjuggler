@@ -118,22 +118,22 @@
             <para>The following is a typical example of a <function>main()</function> function that will start the VR Juggler kernel and hand it an instance of a user application object. The specifics of what is happening in this code are described below.</para>
             <programlistingco>
                <areaspec>
-                  <area coords="5" id="simpleApp.main.body.create-kernel"/>
-                  <area coords="6" id="simpleApp.main.body.app-instantiate"/>
-                  <area coords="8" id="simpleApp.main.body.loadConfigFile"/>
-                  <area coords="9" id="simpleApp.main.body.start"/>
-                  <area coords="10" id="simpleApp.main.body.setApp"/>
+                  <area coords="5 75" id="simpleApp.main.body.create-kernel"/>
+                  <area coords="6 75" id="simpleApp.main.body.app-instantiate"/>
+                  <area coords="8 75" id="simpleApp.main.body.loadConfigFile"/>
+                  <area coords="9 75" id="simpleApp.main.body.start"/>
+                  <area coords="10 75" id="simpleApp.main.body.setApp"/>
                </areaspec>
                <programlisting linenumbering="numbered">#include &lt;simpleApp.h&gt;
 
 int main (int argc, char* argv[])
 {
-   vjKernel* kernel = vjKernel::instance();  // Get the kernel
-   simpleApp* app   = new simpleApp();       // Create the app object
+   vjKernel* kernel = vjKernel::instance(); // Get the kernel
+   simpleApp* app   = new simpleApp();      // Create the app object
 
-   kernel-&gt;loadConfigFile(...);              // Configure the kernel
-   kernel-&gt;start();                          // Start the kernel thread
-   kernel-&gt;setApplication(app);              // Give application to kernel
+   kernel-&gt;loadConfigFile(...);             // Configure the kernel
+   kernel-&gt;start();                         // Start the kernel thread
+   kernel-&gt;setApplication(app);             // Give application to kernel
 
    while ( ! exit )
    {
@@ -158,34 +158,6 @@ int main (int argc, char* argv[])
                   </callout>
                </calloutlist>
             </programlistingco>
-            <section>
-               <title>Get the kernel handle</title>
-               <programlisting>vjKernel* kernel = vjKernel::instance();  // Get the kernel</programlisting>
-               <para>This line finds (and may create) the VR Juggler kernel. The kernel reference is stored in the handle so that we can use it later.</para>
-            </section>
-            <section>
-               <title>Create the application object</title>
-               <programlisting>#include &lt;simpleApp.h&gt;
-...
-simpleApp* app = new simpleApp();    // Create the app object</programlisting>
-               <para>We instantiate a copy of the user application object (simpleApp) here. Notice that we include the header file that defines the simpleApp class.</para>
-            </section>
-            <section>
-               <title>Give configuration files to the kernel</title>
-               <programlisting>kernel-&gt;loadConfigFile(...);         // Configure the kernel</programlisting>
-               <para>This statement represents the code that will be in the <function>main()</function> function for passing configuration files to the kernel's <methodname>loadConfigFile()</methodname> method. These config files may come from the command line or some other source. If reading the files from the command line, it can be as simple as looping through all the arguments and passing each one to the kernel.</para>
-            </section>
-            <section>
-               <title>Start the kernel thread</title>
-               <programlisting>kernel-&gt;start();                    // Start the kernel thread</programlisting>
-               <para>As a result of this statement, the VR Juggler kernel begins running. It creates a new thread of execution for the kernel, and the kernel begins its internal processing. From this point on, any changes made reconfigure the kernel. These changes can come in the form of more configuration files or in the form of an application object to execute.</para>
-               <para>At this point, it is important to notice that the kernel knows nothing about the application. Moreover, it needs to know nothing about the configuration files either. This demonstrates how the VR Juggler kernel executes independently from the user application. The kernel will simply work on its own controlling and configuring the system even without an application to run.</para>
-            </section>
-            <section>
-               <title>Give the kernel an application to run</title>
-               <programlisting>kernel-&gt;setApplication(app);</programlisting>
-               <para>This statement finally tells the kernel what application it should run. The method call reconfigures the kernel so that it will now start invoking the application object's member functions. It is at this time that the application is now running in the VR system.</para>
-            </section>
          </section>
       </section>
       <section>
