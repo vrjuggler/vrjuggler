@@ -31,7 +31,7 @@ Doozer++
 {
    CVSROOT: :pserver:anonymous@cvs.doozer.sourceforge.net:/cvsroot/doozer;
    Module: Doozer++;
-   Tag: RELENG_1_5;
+   Tag: HEAD;
    Path: .;
 };
 
