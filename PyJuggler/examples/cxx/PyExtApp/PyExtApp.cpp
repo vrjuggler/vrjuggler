@@ -35,6 +35,7 @@
 #include <PyExtApp.h>
 
 
+// Simplify (visually) calls to Boost.Python.
 namespace python = boost::python;
 
 PyExtApp::~PyExtApp()
@@ -49,7 +50,6 @@ PyExtApp::~PyExtApp()
       Py_DECREF(mModule);
    }
 }
-
 
 void PyExtApp::init()
 {
@@ -112,6 +112,8 @@ void PyExtApp::bufferPreDraw()
 void PyExtApp::draw()
 {
    glClear(GL_DEPTH_BUFFER_BIT);
+
+   // Render something interesting ...
 }
 
 void PyExtApp::initPython()
@@ -120,26 +122,32 @@ void PyExtApp::initPython()
                         "PyExtApp::initPython() entered\n",
                         "PyExtApp::initPython() done.\n");
 
+   // First, we need to get the module name in a form that Python/C likes.
    PyObject* py_module_name = PyString_FromString(mModuleName.c_str());
 
+   // If py_module_name is non-NULL, the module name converted correctly.
    if ( NULL != py_module_name )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << "Loading module named '" << mModuleName << "'\n" << vprDEBUG_FLUSH;
 
+      // Next, we import the Python module into the Python interpreter.
       mModule = PyImport_Import(py_module_name);
 
+      // If mModule is non-NULL, the import was successful.
       if ( NULL != mModule )
       {
          vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Getting dictionary\n"
                                                    << vprDEBUG_FLUSH;
 
+         // Next, we get the module's dictionary so we can look up functions
+         // and such.
          mModuleDict = PyModule_GetDict(mModule);
 
          vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
             << "Looking up myFunc in dictionary\n" << vprDEBUG_FLUSH;
 
-         // Find the entry point function (arbitrarily) called "myFunc."
+         // Now we find the entry point function (arbitrarily) called "myFunc."
          mPythonFunc = PyDict_GetItemString(mModuleDict, "myFunc");
 
          // Test the results of the dictionary lookup.  If the dictionary
@@ -155,6 +163,7 @@ void PyExtApp::initPython()
             mPythonFunc = NULL; // Just to be safe
          }
       }
+      // Print an error explaining what when wrong with the module import.
       else
       {
          PyErr_Print();
