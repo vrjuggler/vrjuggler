@@ -46,7 +46,7 @@ namespace jccl
 /** List of ConfigChunks.
  *
  */
-class JCCL_CLASS_API ConfigChunkDB : public std::vector<ConfigChunkPtr>
+class JCCL_CLASS_API ConfigChunkDB
 {
 public:
 
@@ -146,6 +146,15 @@ public:
     */
    bool save (const std::string& fname) const;
 
+   /**
+    * Returns a reference to the internal collection of chunk pointers.
+    * Use with care!
+    */
+   std::vector<jccl::ConfigChunkPtr>& vec()
+   {
+      return mChunks;
+   }
+
 public:
    bool loadFromChunkDBNode(cppdom::XMLNodePtr chunkDBNode, std::string currentFile = "");
 
@@ -156,6 +165,8 @@ protected :
     *  locating files named in "Include" chunks.
     */
    std::string mFileName;
+
+   std::vector<ConfigChunkPtr> mChunks;
 };
 
 } // End of jccl namespace

@@ -62,7 +62,7 @@ namespace jccl
  *    <ChunkDesc ...>...</ChunkDesc> (one for each chunk desc)
  *  </ChunkDescDB>
  */
-class JCCL_CLASS_API ChunkDescDB : public std::map<std::string, ChunkDescPtr>
+class JCCL_CLASS_API ChunkDescDB
 {
 public:
 
@@ -111,6 +111,15 @@ public:
    */
    bool save (const std::string& filename);
 
+   /**
+    * Returns a reference to the internal collection of chunk descriptions.
+    * Use with care!
+    */
+   std::map<std::string, ChunkDescPtr>& map()
+   {
+      return mDescs;
+   }
+
 protected:
    /** Load the chunks from a given "ChunkDescDB" element into the db
    * @post All ChunkDesc's that are children of chunkDescDBNode are loaded
@@ -122,6 +131,8 @@ protected:
    * This function is used to create the root descdb node for writing out dbs
    */
    void createChunkDescDBNode(cppdom::XMLNodePtr& chunkDescDBNode) const;
+
+   std::map<std::string, ChunkDescPtr> mDescs;
 };
 
 } // End of jccl namespace

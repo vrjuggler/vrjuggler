@@ -71,7 +71,9 @@ void ConfigManager::addPendingAdds(ConfigChunkDB* db)
    PendingChunk pending;
    pending.mType = PendingChunk::ADD;
 
-   for ( ConfigChunkDB::iterator i=db->begin();i!=db->end();i++ )
+   for ( std::vector<ConfigChunkPtr>::iterator i = db->vec().begin();
+         i != db->vec().end();
+         ++i )
    {
       pending.mChunk = (*i);
       mPendingConfig.push_back(pending);
@@ -119,7 +121,9 @@ void ConfigManager::addPendingRemoves(ConfigChunkDB* db)
    PendingChunk pending;
    pending.mType = PendingChunk::REMOVE;
 
-   for ( ConfigChunkDB::iterator i=db->begin();i!=db->end();i++ )
+   for ( std::vector<ConfigChunkPtr>::iterator i = db->vec().begin();
+         i != db->vec().end();
+         ++i )
    {
       pending.mChunk = (*i);
       mPendingConfig.push_back(pending);
@@ -246,7 +250,7 @@ int ConfigManager::scanForLostDependencies()
    // NOTE: Make the copy of the chunks so that we can iterate without
    // fear of active changing
    mActiveLock.acquire();
-   chunks = mActiveConfig;   // Get a copy of the chunks
+   chunks = mActiveConfig.vec();   // Get a copy of the chunks
    mActiveLock.release();
 
    // Now test them
@@ -326,8 +330,8 @@ bool ConfigManager::isChunkInActiveList(std::string chunk_name)
 {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
 
-   ConfigChunkDB::iterator i;
-   for ( i=mActiveConfig.begin(); i != mActiveConfig.end();i++ )
+   std::vector<ConfigChunkPtr>::iterator i;
+   for ( i = mActiveConfig.vec().begin(); i != mActiveConfig.vec().end(); ++i )
    {
       if ( std::string((*i)->getName()) == chunk_name )
       {
@@ -348,7 +352,7 @@ bool ConfigManager::isChunkTypeInActiveList(std::string chunk_type)
    // std::cout << "isChunkTypeInActiveList ActiveConfig.getChunks().size == " << mActiveConfig.getChunks().size() << std::endl;
 
    std::vector<ConfigChunkPtr>::iterator i;
-   for ( i=mActiveConfig.begin(); i != mActiveConfig.end();i++ )
+   for ( i = mActiveConfig.vec().begin(); i != mActiveConfig.vec().end(); ++i )
    {
       // std::cout << "trying to match " << std::string((*i)->getType()) << " with " << chunk_type << std::endl;
       if ( std::string((*i)->getDescToken()) == chunk_type )
@@ -371,7 +375,7 @@ bool ConfigManager::isChunkTypeInPendingList(std::string chunk_type)
    // std::cout << "isChunkTypeInPendingList(): mPendingConfig.size == " << mPendingConfig.size() << std::endl;
 
    std::list<PendingChunk>::iterator i;
-   for ( i=mPendingConfig.begin(); i != mPendingConfig.end();i++ )
+   for ( i = mPendingConfig.begin(); i != mPendingConfig.end(); ++i )
    {
       // std::cout << "trying to match " << std::string((*i).mChunk->getType()) << " with " << chunk_type << std::endl;
       if ( std::string((*i).mChunk->getDescToken()) == chunk_type )
@@ -392,7 +396,7 @@ void ConfigManager::addActive(ConfigChunkPtr chunk)
 {
    vprASSERT(0 == mActiveLock.test());
    lockActive();
-   mActiveConfig.push_back(chunk);
+   mActiveConfig.vec().push_back(chunk);
    unlockActive();
 }
 
