@@ -62,7 +62,11 @@ config-pkg-links:
 	@$(MAKE) instlinks="$(instlinks)" links
 
 java-install:
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) config-install
+endif
+endif
 
 links:
 	@$(MAKE) -C jccl instlinks="$(instlinks)" links
@@ -70,16 +74,16 @@ ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 ifneq ($(JARS), )
 	cd $(instlinks)/bin && \
-		for jar in $(JARS); do \
-			$(RM_LN) ./$$jar && $(LN_S) $(topdir)/config/$$jar ./$$jar; \
-		done
+          for jar in $(JARS); do \
+              $(RM_LN) ./$$jar && $(LN_S) $(topdir)/config/$$jar ./$$jar || exit 1; \
+          done
 endif
 ifneq ($(BEANS), )
 	cd $(instlinks)/bin/beans && \
-		for bean in $(BEANS); do \
-			$(RM_LN) $$bean.xml && $(LN_S) $(top_srcdir)/config/$$bean.xml . ; \
-			$(RM_LN) $$bean.jar && $(LN_S) $(topdir)/config/$$bean.jar . ; \
-		done
+          for bean in $(BEANS); do \
+              $(RM_LN) $$bean.xml && $(LN_S) $(top_srcdir)/config/$$bean.xml . || exit 1; \
+              $(RM_LN) $$bean.jar && $(LN_S) $(topdir)/config/$$bean.jar . || exit 1; \
+          done
 endif
 endif
 endif
