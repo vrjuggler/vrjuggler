@@ -30,7 +30,7 @@
       is included in <xref linkend="appendix.gfdl" />.</para>
     </legalnotice>
 
-    <releaseinfo>0.16</releaseinfo>
+    <releaseinfo>1.0</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -1570,84 +1570,129 @@ int main(int argc, char* argv[])
         <primary>Java client API</primary>
       </indexterm>
 
-      <para></para>
+      <para>In this chapter, we present the libraries that make up the Tweek
+      Java API. In general, we only provide a general overview of the
+      libraries. Interested readers are referred to the Tweek <emphasis>Java
+      Programmer's Reference</emphasis> for more comprehensive
+      documentation.</para>
 
-      <section>
-        <title>Java Libraries</title>
+      <para>The Tweek Java API is broken up into a collection of Java class
+      libraries, each packaged in a unique JAR file. Programmers can choose
+      the library or libraries they need when writing Java code that uses
+      Tweek. It is possible to write JavaBeans that do not use any of the
+      Tweek Java libraries, but such Beans may not be very full-featured. On
+      the other hand, because the Tweek Java GUI is capable of loading any
+      JavaBean, there is no reason that a fully functional Bean must be
+      written to take advantage of Tweek services and utilities.</para>
 
-        <para>The Tweek Java API is broken up into a collection of Java class
-        libraries, each packaged in a unique JAR file. Programmers can choose
-        the library or libraries they need when writing Java code that uses
-        Tweek. It is possible to write JavaBeans that do not use any of the
-        Tweek Java libraries, but such Beans may not be very full-featured. On
-        the other hand, because the Tweek Java GUI is capable of loading any
-        JavaBean, there is no reason that a fully functional Bean must be
-        written to take advantage of Tweek services and utilities.</para>
+      <section id="gui.library.section">
+        <title>GUI Library</title>
 
-        <section id="bean.library.section">
-          <title>Bean Library</title>
+        <indexterm>
+          <primary>Java libraries</primary>
 
-          <indexterm>
-            <primary>Java libraries</primary>
+          <secondary>GUI</secondary>
+        </indexterm>
 
-            <secondary>Bean</secondary>
-          </indexterm>
+        <para>The GUI Library contains the heart of the Tweek Java GUI.
+        Indeed, this library is what contains the Tweek Java GUI, and it makes
+        use of all the other Tweek Java libraries to do its job. In general,
+        there is not much code in this library that is of interest to Bean
+        developers. The lone exception is the singleton
+        <classname>org.vrjuggler.tweek.gui.MessagePanel</classname>. This
+        class provides access to the message panel at the bottom of the Tweek
+        Java GUI layout. Tweek Bean authors can make use of this singleton to
+        post messages to that panel for users of the Tweek GUI to see. In most
+        cases, this should be the preferred method of printing status messages
+        rather than using <methodname>System.out.print*()</methodname> or
+        <methodname>System.err.print*()</methodname> simply because users of
+        the GUI may not have easy access to the console to see the messages
+        printed there. The GUI Library is found in
+        <filename>$TWEEK_BASE_DIR/share/tweek/java/Tweek.jar</filename>.</para>
+      </section>
 
-          <para></para>
-        </section>
+      <section id="bean.library.section">
+        <title>Bean Library</title>
 
-        <section id="event.library.section">
-          <title>Event Library</title>
+        <indexterm>
+          <primary>Java libraries</primary>
 
-          <indexterm>
-            <primary>Java libraries</primary>
+          <secondary>Bean</secondary>
+        </indexterm>
 
-            <secondary>Event</secondary>
-          </indexterm>
+        <para>The Bean Library is provided to help simplify the process of
+        loading and managing JavaBeans. The internal handling of JavaBeans
+        performed by the Tweek Java GUI uses classes in this library to
+        communicate with other objects when Beans are loaded, instantiated,
+        removed, etc. The Bean Library is found in
+        <filename>$TWEEK_BASE_DIR/share/tweek/java/TweekBeans.jar</filename>.</para>
+      </section>
 
-          <para></para>
-        </section>
+      <section id="event.library.section">
+        <title>Event Library</title>
 
-        <section id="gui.library.section">
-          <title>GUI Library</title>
+        <indexterm>
+          <primary>Java libraries</primary>
 
-          <indexterm>
-            <primary>Java libraries</primary>
+          <secondary>Event</secondary>
+        </indexterm>
 
-            <secondary>GUI</secondary>
-          </indexterm>
+        <para>The Event Library is used by the GUI Library (i.e., by the Tweek
+        Java GUI) to inform Panel Beans about GUI events. This includes events
+        such as GUI iconification, GUI closing, and the gaining and losing of
+        focus by the GUI. The Event Library is found in
+        <filename>$TWEEK_BASE_DIR/share/tweek/java/TweekEvents.jar</filename>.</para>
 
-          <para></para>
-        </section>
+        <para>An interesting part of the Event Library is the Event Listener
+        Registry. Historically, the Tweek Java GUI has performed automatic,
+        run-time registration of Beans as event listeners based on the
+        interface(s) that the Beans implement. That is not always convenient,
+        however. For example, a Panel Bean author may want to use utility
+        classes as event listeners rather than the Panel Bean itself. In this
+        case, the utility classes can be registered manually with the Tweek
+        Java GUI using the Event Listener Registry.</para>
+      </section>
 
-        <section id="network.library.section">
-          <title>Network Library</title>
+      <section id="network.library.section">
+        <title>Network Library</title>
 
-          <indexterm>
-            <primary>Java libraries</primary>
+        <indexterm>
+          <primary>Java libraries</primary>
 
-            <secondary>Network</secondary>
-          </indexterm>
+          <secondary>Network</secondary>
+        </indexterm>
 
-          <para></para>
-        </section>
+        <para>The Network Library abstracts the use of CORBA by the Tweek Java
+        GUI<footnote>
+            <para>This single library is perhaps the reason that people feel
+            compelled to use the <quote>pre-fab</quote> Tweek Java GUI rather
+            than write their own GUI in the language and widget set of their
+            choice.</para>
+          </footnote>. It includes the CORBA Service class that handles all
+        ORB and remote reference management, and it has all the Java classes
+        generated by the IDL-to-Java compiler when the Tweek Java API was
+        compiled. Beyond this, it includes the event listener interface for
+        Tweek Beans that wish to be notified of network connection and
+        disconnection events. The Network Library is found in
+        <filename>$TWEEK_BASE_DIR/share/tweek/java/TweekNet.jar</filename>.</para>
+      </section>
 
-        <section id="beandelivery.library.section">
-          <title>Bean Delivery Library</title>
+      <section id="beandelivery.library.section">
+        <title>Bean Delivery Library</title>
 
-          <indexterm>
-            <primary>Java libraries</primary>
+        <indexterm>
+          <primary>Java libraries</primary>
 
-            <secondary>Bean Delivery</secondary>
-          </indexterm>
+          <secondary>Bean Delivery</secondary>
+        </indexterm>
 
-          <para>The Bean Delivery Library makes use of the Bean Library and
-          the Network Library to allow JavaBeans to be transferred across the
-          network. More specifically, a remote subject, most likely written in
-          C++, can <quote>push</quote> JavaBeans to the Tweek GUI where they
-          can be handled as though they were loaded from the local
-          disk.</para>
-        </section>
+        <para>The Bean Delivery Library makes use of the Bean Library and the
+        Network Library to allow JavaBeans to be transferred across the
+        network. More specifically, a remote subject, most likely written in
+        C++, can <quote>push</quote> JavaBeans to the Tweek GUI where they can
+        be handled as though they were loaded from the local disk. The Bean
+        Delivery Library is found in
+        <filename>$TWEEK_BASE_DIR/share/tweek/java/TweekEventDelivery.jar</filename>.</para>
       </section>
     </chapter>
 
@@ -3456,7 +3501,20 @@ public int getOpenFileCount ()
       <section>
         <title>The CORBA Service</title>
 
-        <para></para>
+        <para>The CORBA Service, implemented in the class
+        <classname>tweek::CorbaService</classname><indexterm>
+            <primary>tweek::CorbaService</primary>
+          </indexterm>, simplifies the use of CORBA for C++ clients. Instances
+        are constructed by providing the host name and port where the CORBA
+        Naming Service is listening for incoming requests. Once constructed,
+        the CORBA Service must be initialized. This creates the local root
+        POA, acquires a reference to the Naming Service, and starts the local
+        ORB thread. At this point, the CORBA Service can be used exactly as it
+        would be used in Java (see <xref linkend="prog.all.chapter" />). For
+        example, the remote Subject Manager reference can be requested and
+        servants (C++ implementations of
+        <interfacename>tweek::Observer</interfacename>) can be
+        registered.</para>
       </section>
 
       <section>
@@ -4515,7 +4573,10 @@ if ( NULL != string_observer )
         <primary>Python client API</primary>
       </indexterm>
 
-      <para></para>
+      <para>The use of Python with Tweek is still being refined. While
+      programmer's can make use of Python with Tweek right now, Tweek includes
+      very little built-in support to ease the use of Python. Such features
+      are planned for Tweek 1.2.</para>
     </chapter>
   </part>
 
