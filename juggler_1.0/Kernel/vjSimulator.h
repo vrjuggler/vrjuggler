@@ -21,8 +21,8 @@ public:
 
       vjInputManager* input_group = vjKernel::instance()->getInputManager();
       mCameraIndex = input_group->GetProxyIndex(proxy_str); 
-      mHeadIndex = input_group->GetProxyIndex("vjHead");
-      mWandIndex = input_group->GetProxyIndex("vjWand");
+      mHeadIndex = input_group->GetProxyIndex("VJHead");
+      mWandIndex = input_group->GetProxyIndex("VJWand");
 
       if((mCameraIndex == -1) || (mHeadIndex == -1) || (mWandIndex == -1))
       {
