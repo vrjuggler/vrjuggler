@@ -36,6 +36,7 @@
 #include <jccl/jcclConfig.h>
 #include <cppdom/cppdom.h>
 
+#include <vpr/Util/Assert.h>
 #include <jccl/Config/ConfigTokens.h>
 
 namespace jccl
