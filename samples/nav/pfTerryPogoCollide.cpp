@@ -95,13 +95,13 @@ bool pfTerryPogoCollide::collideRide( pfVec3 &bounce, pfVec3 &ridexyz, pfVec3 &r
 {
    pfHit** hit[1];
    pfSegSet segset;
-   pfNode* newnode( NULL );
+   pfNode* newnode = NULL;
    pfVec3 originalpoint, oldpoint;
    pfCoord coord;
    pfMatrix collidemat;
    
    // TODO: remove statics.
-   static pfNode* oldnode( NULL );
+   static pfNode* oldnode = NULL;
    static pfMatrix oldmat;
 
    // Make a ray looking "down" at terrain
