@@ -46,11 +46,10 @@ class VJ_CLASS_API GlWindowWin32 : public GlWindow
 {
 public:
    GlWindowWin32()
+      : mMatch(NULL), mWinHandle(NULL), mRenderContext(NULL),
+        mDeviceContext(NULL)
    {
-        match = NULL;       // Initialize all values to null
-        hWnd = NULL;
-        hRC = NULL;
-        hDC = NULL;
+      ;
    }
 
 public:
@@ -89,60 +88,52 @@ public:
    virtual void checkEvents();
 
 protected:
-    // WindowProcedure to deal with the events generated.
-    // Called only for the window that we are controlling
-    LRESULT handleEvent(HWND    hWnd,
-                              UINT  message,
-                              WPARAM    wParam,
-                              LPARAM    lParam);
+   // WindowProcedure to deal with the events generated.
+   // Called only for the window that we are controlling
+   LRESULT handleEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-    /**
-     * Sets the pixel format for the given display context.
-     * @return success
-     */
-    bool setPixelFormat(HDC hDC);
+   /**
+    * Sets the pixel format for the given display context.
+    * @return success
+    */
+   bool setPixelFormat(HDC hDC);
 
-    void sizeChanged(long width, long height);
+   void sizeChanged(long width, long height);
 
 protected:
-    // Register the window class with windows
-    static bool registerWindowClass();
-    static LRESULT CALLBACK WndProc(    HWND    hWnd,
-                                                UINT    message,
-                                                WPARAM  wParam,
-                                                LPARAM  lParam);
+   // Register the window class with windows
+   static bool registerWindowClass();
+   static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam,
+                                   LPARAM lParam);
 
-    static WNDCLASS winClass;           /**< The window class to register */
-    static bool      mWinRegisteredClass;   /**< Have we already registered */
+   static WNDCLASS mWinClass;            /**< The window class to register */
+   static bool     mWinRegisteredClass;  /**< Have we already registered */
 
 protected:
-    // Keep a map of window handles to ogl windows
-    // This can be used by the message handler to call a class specific
-    // message handler for each window
+   // Keep a map of window handles to ogl windows
+   // This can be used by the message handler to call a class specific
+   // message handler for each window
 
-    /** Adds a window to the map. */
-    static void addWindow(HWND handle, GlWindowWin32* glWin);
+   /** Adds a window to the map. */
+   static void addWindow(HWND handle, GlWindowWin32* glWin);
 
-    /** Removes a window from the map. */
-    static void removeWindow(HWND handle);
+   /** Removes a window from the map. */
+   static void removeWindow(HWND handle);
 
-    /** Gets the glWin we are dealing with. */
-    static GlWindowWin32* getGlWin(HWND handle);
+   /** Gets the glWin we are dealing with. */
+   static GlWindowWin32* getGlWin(HWND handle);
 
-   static std::map<HWND, GlWindowWin32*>        glWinMap;
+   static std::map<HWND, GlWindowWin32*> mGlWinMap;
 
 public:
-    HWND    hWnd;   /**< Window handle */
-    HGLRC hRC;      /**< Permenant Rendering context */
-    HDC hDC;        /**< Private GDI Device context */
+    HWND  mWinHandle;      /**< Window handle */
+    HGLRC mRenderContext;  /**< Permenant Rendering context */
+    HDC   mDeviceContext;  /**< Private GDI Device context */
 
-    PIXELFORMATDESCRIPTOR* match;    /**< Points the the found pixel format */
+    PIXELFORMATDESCRIPTOR* mMatch;    /**< Points the the found pixel format */
 };
 
+} // End of vrj namespace
 
 
-
-
-};
 #endif
-
