@@ -27,8 +27,11 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 
-VJINPUT_SRCS	:= vjIbox.cpp	\
-                   vjInput.cpp
+VJINPUT_SRCS	:= vjInput.cpp
+
+ifneq (@OS_TYPE@, Win32)
+VJINPUT_SRCS	+= vjIbox.cpp
+endif
 
 VJINPUT_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJINPUT_SRCS:.cpp=.o}}
 DEPEND_FILES	:= ${VJINPUT_SRCS:.cpp=.d}
