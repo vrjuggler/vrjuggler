@@ -208,15 +208,35 @@ public:
     // ------------------------------------------------------------------------
     //: Get the current blocking state for the I/O device.
     //
-    //! PRE: m_blocking is set correctly to
+    //! PRE: m_blocking is set correctly
     //! POST:
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: true  - The device is in blocking mode.
+    //! RETURNS: false - The device is in non-blocking mode.
     // ------------------------------------------------------------------------
-    inline bool
+    virtual bool
     getBlocking (void) const {
         return m_blocking;
     }
+
+    // ------------------------------------------------------------------------
+    //: Get the current non-blocking state for the I/O device.
+    //
+    //! PRE: m_blocking is set correctly
+    //! POST:
+    //
+    //! RETURNS: true  - The device is in non-blocking mode.
+    //! RETURNS: false - The device is in blocking mode.
+    // ------------------------------------------------------------------------
+    virtual bool
+    getNonBlocking (void) const {
+        return ! m_blocking;
+    }
+
+    // ------------------------------------------------------------------------
+    //! RETURNS: vpr::IOSys::NullHandle
+    // ------------------------------------------------------------------------
+    virtual IOSys::Handle getHandle(void) = 0;
 
     // ------------------------------------------------------------------------
     //: Read at most the specified number of bytes from the I/O device into
