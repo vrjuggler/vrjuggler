@@ -256,6 +256,75 @@
   <xsl:template match="apiPerformer">
   </xsl:template>
 
+  <!-- The plug-in handling in ClusterManager changed. -->
+  <xsl:template match="ClusterManager">
+    <xsl:variable name="barrier_node">
+      <xsl:value-of select="barrier_master"/>
+    </xsl:variable>
+
+    <xsl:element name="ClusterManager">
+      <xsl:attribute name="name">
+        <xsl:value-of select="@name"/>
+      </xsl:attribute>
+      <xsl:value-of select="$newline"/>
+
+      <xsl:element name="barrier_master">
+        <xsl:value-of select="barrier_master"/>
+      </xsl:element>
+      <xsl:value-of select="$newline"/>
+
+      <xsl:for-each select="./cluster_nodes">
+        <xsl:copy-of select="."/>
+        <xsl:value-of select="$newline"/>
+      </xsl:for-each>
+
+      <xsl:for-each select="./clusterPlugin">
+        <xsl:variable name="plugin">
+          <xsl:value-of select="."/>
+        </xsl:variable>
+
+        <xsl:element name="clusterPlugin">
+          <xsl:text>${VJ_BASE_DIR}/lib/gadgeteer/plugins/lib</xsl:text>
+          <xsl:value-of select="."/>
+          <xsl:text>.so</xsl:text>
+        </xsl:element>
+        <xsl:value-of select="$newline"/>
+      </xsl:for-each>
+    </xsl:element>
+    <xsl:value-of select="$newline"/>
+
+    <xsl:element name="SwapLockTCPPlugin">
+      <xsl:attribute name="name">
+        <xsl:text>SwapLockTCPPlugin</xsl:text>
+      </xsl:attribute>
+      <xsl:value-of select="$newline"/>
+
+      <xsl:element name="sync_server">
+        <xsl:value-of select="$barrier_node"/>
+      </xsl:element>
+      <xsl:value-of select="$newline"/>
+
+      <xsl:element name="listen_port">
+        <xsl:text>8001</xsl:text>
+      </xsl:element>
+      <xsl:value-of select="$newline"/>
+    </xsl:element>
+    <xsl:value-of select="$newline"/>
+
+    <xsl:element name="StartBarrierPlugin">
+      <xsl:attribute name="name">
+        <xsl:text>StartBarrierPlugin</xsl:text>
+      </xsl:attribute>
+      <xsl:value-of select="$newline"/>
+
+      <xsl:element name="start_master">
+        <xsl:value-of select="$barrier_node"/>
+      </xsl:element>
+      <xsl:value-of select="$newline"/>
+    </xsl:element>
+    <xsl:value-of select="$newline"/>
+  </xsl:template>
+
   <!--
     XXX: We can't match everything, but we don't have anything specific to
     match because all the elements are user-defined.
