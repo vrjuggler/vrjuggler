@@ -34,10 +34,10 @@
 // Vrpn
 //
 // Purpose:
-//	VR Juggler VRPN Hi-Ball tracking class
+//    VR Juggler VRPN Hi-Ball tracking class
 //
 // Author:
-//	Jason Jerald
+//    Jason Jerald
 // Last Modified:  8-26-02
 //
 // Revisions:
@@ -72,73 +72,69 @@ extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 namespace gadget
 {
 
-//-----------------------------------------------------------------------------
-//: Class interfacing with vrpn sensor data
-//+ located on the local machine in a shared memory arena
-//
-//! NOTE: A note on reciever access:
-//+  Clients of Juggler should access tracker recievers as [0-n].  For
-//+  example, if you have recievers 1,2, and 4 with transmitter on 3, then
-//+  you can access the data, in order, as 0, 1, 2.
-//
-// See also: Digital, Analog, Position
-//-----------------------------------------------------------------------------
-//!PUBLIC_API:
-
+   /**
+    * Class interfacing with vrpn sensor data located on the local machine in
+    * a shared memory arena.
+    *
+    * @note A note on reciever access:
+    *  Clients of Juggler should access tracker recievers as [0-n].  For
+    *  example, if you have recievers 1,2, and 4 with transmitter on 3, then
+    *  you can access the data, in order, as 0, 1, 2.
+    *
+    * @see gadget::Digital, gadget::Analog, gadget::Position
+    */
    class Vrpn : public InputMixer<InputMixer<Input,Digital>,Position>
    {
     
    public:
     
-      // ------------------------------------------------------------------------
-      //: Constructor.
-      // ------------------------------------------------------------------------
+      /** Constructor. */
       Vrpn():mReadThread(NULL){};
     
-      // ------------------------------------------------------------------------
-      //: Destructor.
-      //
-      //! PRE: None.
-      //! POST: Shared memory is released
-      // ------------------------------------------------------------------------
+      /**
+       * Destructor.
+       *
+       * @pre None.
+       * @post Shared memory is released.
+       */
       ~Vrpn();
 
-      // ------------------------------------------------------------------------
-      //: Configure the vrpn  with the given config chunk.
-      //
-      //! PRE: c must be a chunk that has vrpn  config information
-      //! POST: If c is a valid config chunk, the device is configured using its
-      //+       contents.  Otherwise, configuration fails and false is returned
-      //+       to the caller.
-      //
-      //! ARGS: c - A pointer to a config chunk.
-      //
-      //! RETURNS: true - The device was configured succesfully.
-      //! RETURNS: false - The config chunk is invalid.
-      // ------------------------------------------------------------------------
+      /**
+       * Configures the VRPN with the given config chunk.
+       *
+       * @pre c must be a chunk that has vrpn  config information
+       * @post If c is a valid config chunk, the device is configured using its
+       *       contents.  Otherwise, configuration fails and false is returned
+       *       to the caller.
+       *
+       * @param c A pointer to a config chunk.
+       *
+       * @return true is returned if the device was configured succesfully.
+       *         false is returned if the config chunk is invalid.
+       */
       virtual bool config(jccl::ConfigChunkPtr c);
 
-      //: Begin sampling
+      /** Begins sampling. */
       int startSampling();
 
-      //: Stop sampling
+      /** Stops sampling. */
       int stopSampling();
 
-      //: Sample a value
+      /** Samples a value. */
       int sample();
 
-      // ------------------------------------------------------------------------
-      //: Update to the sampled data.
-      //
-      //! PRE: None.
-      //! POST: Most recent value is copied over to temp area
-      // ------------------------------------------------------------------------
+      /**
+       * Update to the sampled data.
+       *
+       * @pre None.
+       * @post Most recent value is copied over to temp area.
+       */
       void updateData();
 
-
-      //: Return what chunk type is associated with this class.
-      static std::string getChunkType () {
-	return std::string("Vrpn");
+      /** Returns what chunk type is associated with this class. */
+      static std::string getChunkType()
+      {
+         return std::string("Vrpn");
       }
 
       /**
@@ -171,8 +167,8 @@ namespace gadget
       void handleButton(vrpn_BUTTONCB b);
 
       void setPreTransform(float xoff, float yoff, float zoff,  
-			   float xrot, float yrot, float zrot,
-			   float xscale, float yscale, float zscale);
+                           float xrot, float yrot, float zrot,
+                           float xscale, float yscale, float zscale);
       void setPostTransform(float xscale, float yscale, float zscale);
 
       void readLoop(void *nullParam);
@@ -183,8 +179,8 @@ namespace gadget
      
       gmtl::Matrix44f   mPreMatrixTransform;
       gmtl::Matrix44f   mPostMatrixTransform;
-      std::vector<DigitalData>  mCurButtons; // The current button states
-      std::vector<PositionData> mCurPositions; // The current button states
+      std::vector<DigitalData>  mCurButtons; /**< The current button states. */
+      std::vector<PositionData> mCurPositions; /**< The current button states. */
 
       // Working space - AJS to remove
       std::vector<gadget::DigitalData> mButtons;
