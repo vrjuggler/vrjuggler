@@ -770,7 +770,7 @@ int omni_main_i(int argc, char** const argv)
                CXX_ORB_INCLUDES="-I$cxx_orb_root/include"
             fi
 
-            CXX_ORB_LIB="-lTAO"
+            CXX_ORB_LIB="-lTAO -lTAO_PortableServer -lTAO_CosNaming"
             CXX_ORB_LDFLAGS="-L$OMNI_LIB_DIR"
 
             AC_DEFINE_UNQUOTED([TWEEK_USE_TAO], ,
