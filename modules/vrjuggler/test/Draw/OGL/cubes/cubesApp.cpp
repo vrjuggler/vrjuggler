@@ -145,7 +145,7 @@ void cubesApp::init()
 {
    vprDEBUG(vprDBG_ALL,0) << "---------- cubes:App:init() ---------------"
                         << std::endl << vprDEBUG_FLUSH;
-   std::vector<vrj::User*> users = kernel->getUsers();
+   std::vector<vrj::User*> users = mKernel->getUsers();
    int num_users = users.size();
    vprASSERT(num_users > 0);      // Make sure that we actually have users defined
 
