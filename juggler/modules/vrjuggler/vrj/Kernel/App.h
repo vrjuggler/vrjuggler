@@ -79,12 +79,7 @@ class vjApp : public vjConfigChunkHandler
 public:
    //: Constructor
    //! ARGS: kern - The vjKernel that is active.  So application has easy access to kernel
-   vjApp(vjKernel* kern)
-   {
-      vjASSERT(kern != NULL);    // We don't want a NULL Kernel
-      kernel = kern;
-      mHaveFocus = true;
-   }
+   vjApp(vjKernel* kern);
 
    // Just call vjApp(vjKernel::instance())
    vjApp();
