@@ -98,10 +98,21 @@ namespace vpr
          child = child->mSibling;
       }
 
-      // We didn't find it, so add it
+      // We didn't find it, so add it to end
       ProfileNode* node = new ProfileNode( profileName, this );
-      node->mSibling = mChild;
-      mChild = node;
+      if(NULL == mChild)
+      {
+         mChild = node;
+         node->mSibling = NULL;
+      }
+      else
+      {
+         ProfileNode* last_child = mChild;
+         while(last_child->mSibling)
+         { last_child = last_child->mSibling; }
+         last_child->mSibling = node;
+         node->mSibling = NULL;
+      }
       return node;
    }
 
@@ -118,10 +129,21 @@ namespace vpr
          child = child->mSibling;
       }
 
-      // We didn't find it, so add it
+      // We didn't find it, so add it at end
       ProfileNode* node = new ProfileNode( profileName, this, queueSize);
-      node->mSibling = mChild;
-      mChild = node;
+      if(NULL == mChild)
+      {
+         mChild = node;
+         node->mSibling = NULL;
+      }
+      else
+      {
+         ProfileNode* last_child = mChild;
+         while(last_child->mSibling)
+         { last_child = last_child->mSibling; }
+         last_child->mSibling = node;
+         node->mSibling = NULL;
+      }
       return node;
    }
 
