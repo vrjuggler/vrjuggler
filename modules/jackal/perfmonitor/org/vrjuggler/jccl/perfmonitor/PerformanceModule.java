@@ -44,7 +44,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 
-import VjConfig.ConfigStreamTokenizer;
 import VjConfig.ConfigChunk;
 import VjControl.*;
 import VjComponents.Network.ProtocolInputStream;
