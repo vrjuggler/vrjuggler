@@ -259,23 +259,6 @@ fi
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
 
-# Check for the JDK.
-DPP_PATH_JAVA
-
-# If there is still no value in $JAVAC, then warn that the GUI will not be
-# built.
-if test "x$JAVAC" = "xno" ; then
-    AC_MSG_WARN(*** VjControl requires javac -- it will not be built ***)
-    BUILD_GUI='N'
-else
-    # Check for JAXP extensions to JDK
-    DPP_CHECK_JAVA_STATIC_METHOD(javax.xml.parsers.DocumentBuilderFactory,
-        newInstance(), ,
-        BUILD_GUI='Y',
-        [ BUILD_GUI='N' ;
-          AC_MSG_WARN(*** VjControl requires JAXP extensions for java -- it will not be built ***) ])
-fi
-
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
 
@@ -831,8 +814,6 @@ AC_SUBST(VJ_SHARE_DIR)
 
 AC_SUBST(EXTRA_LINK_FLAGS)
 
-AC_SUBST(BUILD_GUI)
-
 AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)
 AC_SUBST(OSGROOT)
@@ -879,7 +860,6 @@ AC_OUTPUT(Makefile
           make.defs.mk
           Config/Makefile
           Environment/Makefile
-          GUI/Makefile
           Input/Makefile
           Input/Filter/Makefile
           Input/InputManager/Makefile
