@@ -42,6 +42,7 @@ module tweek
 
 interface SubjectManager
 {
+   void registerSubject(in Subject subject, in string name);
    Subject getSubject(in string name);
 };
 
