@@ -46,13 +46,13 @@ class __tags {
 class __options {
 }/**
 @__positions 
-<oigroup:<oiref:cpp#Class#userOglApp:oiref>=330,250,153,170,1:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=150,250,150,200:oigroup>
-<oigroup:<oiref:cpp#Extends#userOglApp#vrj::GlApp:oiref>=330,335,240,335:oigroup>
+<oigroup:<oiref:cpp#Class#userOglApp:oiref>=330,280,153,183,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=150,280,150,240:oigroup>
+<oigroup:<oiref:cpp#Extends#userOglApp#vrj::GlApp:oiref>=330,355,240,355:oigroup>
 <oigroup:<oiref:cpp#Member#userOglApp#apiInit#(##)#:oiref>=110,130,211,13,1:oigroup>
 <oigroup:<oiref:cpp#Member#userOglApp#preFrame#(##)#:oiref>=110,150,211,13,1:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=60,250,180,210,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,240,190,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=60,280,180,210,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,240,230,0:oigroup>
 */
 class __positions {
 }
