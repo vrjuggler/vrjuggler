@@ -1,9 +1,11 @@
 #ifndef SOUND_h
 #define SOUND_h
 
+#include <vjConfig.h>
+
 #include <iostream.h>
 
-#include <vjVec3.h>
+#include <Math/vjVec3.h>
 
 class SoundEngine;
 class Sound

@@ -1,7 +1,9 @@
-#include "SoundEngine.h"
-#include "Sound.h"
-#include "SoundEngineCreator.h"
+#include <vjConfig.h>
+
 #include <vector>
+#include <Sound/SoundEngine.h>
+#include <Sound/Sound.h>
+#include <Sound/SoundEngineCreator.h>
 
 // use the SoundFactory factory to create a new sound engine.
 // do not create one directly.

@@ -1,13 +1,14 @@
+#include <vjConfig.h>
+
 #include <assert.h>
 #include <stdio.h>
 #include <string>
-#include "sl.h"            // the SL library
-#include "SoundEngine.h"   // engine baseclass
-#include "SlSoundEngine.h" // my engine
-#include "Sound.h"         // bass class...
-#include "fileIO.h"
+#include <sl.h>            // the SL library
+#include <Sound/SoundEngine.h>   // engine baseclass
+#include <Sound/sl/SlSoundEngine.h> // my engine
+#include <Sound/Sound.h>         // bass class...
 
-#include "SlSound.h"       // my header
+#include <Sound/sl/SlSound.h>       // my header
 
 //specify the sound's name in the adf file...
 SlSound::SlSound( SoundEngine& engine ) : Sound( engine )

@@ -1,11 +1,13 @@
+#include <vjConfig.h>
+
 #include <assert.h>
 #include <unistd.h>
 #include <iostream.h>
 #include <aw.h> //audio works
-#include "SoundEngine.h"   // base class
-#include "AwSound.h"       // my sound type...
+#include <Sound/SoundEngine.h>   // base class
+#include <Sound/aw/AwSound.h>       // my sound type...
 
-#include "AwSoundEngine.h" // my header
+#include <Sound/aw/AwSoundEngine.h> // my header
 
 AwSoundEngine::AwSoundEngine() : mObserver( NULL )
 {

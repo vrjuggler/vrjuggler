@@ -1,5 +1,7 @@
-#include <SoundEngine.h>
-#include "Sound.h"
+#include <vjConfig.h>
+
+#include <Sound/SoundEngine.h>
+#include <Sound/Sound.h>
 
 // calculate the sound volume based on the observer position, sound position, falloff, and volume
 void Sound::getPercievedVolume( float& volume ) const

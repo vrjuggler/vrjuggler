@@ -254,6 +254,8 @@ endif
 VJ_LIBRARY	= @LIB_PREFIX@Juggler
 GL_LIBRARY	= @LIB_PREFIX@Juggler_ogl
 PF_LIBRARY	= @LIB_PREFIX@Juggler_pf
+AW_LIBRARY	= @LIB_PREFIX@Juggler_aw
+SL_LIBRARY	= @LIB_PREFIX@Juggler_sl
 
 @SET_MAKE@
 

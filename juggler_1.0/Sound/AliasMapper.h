@@ -1,6 +1,8 @@
 #ifndef ALIASMAPPER
 #define ALIASMAPPER
 
+#include <vjConfig.h>
+
 #include <map>
 #include <fstream.h>
 #include <string>

@@ -1,10 +1,12 @@
+#include <vjConfig.h>
+
 #include <assert.h>
 #include <stdio.h>
 #include <string>
 #include <aw.h> //audio works
-#include "Sound.h"
+#include <Sound/Sound.h>
 
-#include "AwSound.h" // my header
+#include <Sound/aw/AwSound.h> // my header
 
 //specify the sound's name in the adf file...
 AwSound::AwSound( SoundEngine& engine ) : Sound( engine ), mSoundPlayer( NULL ), mSound( NULL )

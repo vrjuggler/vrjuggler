@@ -1,11 +1,13 @@
+#include <vjConfig.h>
+
 #include <assert.h>
 #include <unistd.h>
 #include <iostream.h>
-#include "sl.h"
-#include "SoundEngine.h" // base class..
-#include "SlSound.h"     // my sound handle type...
+#include <sl.h>
+#include <Sound/SoundEngine.h> // base class..
+#include <Sound/sl/SlSound.h>     // my sound handle type...
 
-#include "SlSoundEngine.h" //my header
+#include <Sound/sl/SlSoundEngine.h> //my header
 
 
 SlSoundEngine::SlSoundEngine() : mUpdateThread( NULL ), mScheduler( 8000 ) 

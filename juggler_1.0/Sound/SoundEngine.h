@@ -1,8 +1,10 @@
 #ifndef SOUNDENGINE 
 #define SOUNDENGINE
 
+#include <vjConfig.h>
+
 #include <string>
-#include <vjMatrix.h>
+#include <Math/vjMatrix.h>
 
 class Sound;
 

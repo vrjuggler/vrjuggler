@@ -1,13 +1,15 @@
 #ifndef SLSOUND_H
 #define SLSOUND_H
 
+#include <vjConfig.h>
+
 #include <assert.h>
 #include <stdio.h>
 #include <string>
-#include "sl.h"
-#include "SlSoundEngine.h"
+#include <sl.h>
+#include <Sound/sl/SlSoundEngine.h>
 
-#include "Sound.h" // base class...
+#include <Sound/Sound.h> // base class...
 
 class SlSound : public Sound
 {

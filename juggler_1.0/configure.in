@@ -162,6 +162,20 @@ AC_ARG_WITH(mesa,
             [  --with-mesa             Use Mesa OpenGL implementation  [default=no]],
             _with_mesa="$withval", _with_mesa='no')
 
+dnl # Use AudioWorks (which can be found at the given path) in the sound
+dnl # wrapper.
+dnl # The default is to use it with the path being /usr.
+AC_ARG_WITH(audioworks,
+            [  --with-audioworks=<PATH>
+                          AudioWorks installation         [default=/usr]],
+            _with_aw="$withval", _with_aw='/usr')
+
+dnl # Use SL (which can be found at the given path) in the sound wrapper.
+dnl # The default is to use it with the path being /usr.
+AC_ARG_WITH(sl,
+            [  --with-sl=<PATH>        SL installation                 [default=/usr]],
+            _with_sl="$withval", _with_sl='/usr')
+
 dnl # Specify a directory containing a working Perl 5.004 (or newer) binary.
 dnl # There is no default since standard locations are always available.
 AC_ARG_WITH(perl,
@@ -1216,6 +1230,84 @@ if test "x${_enable_pf_api}" = "xyes" ; then
     fi
 fi
 
+dnl # -----------
+dnl # AudioWorks
+dnl # -----------
+AUDIO_WORKS='N'
+AW_INC=''
+AW_LIB=''
+
+if test "x${_with_aw}" != "xno" ; then
+    AC_LANG_SAVE
+    AC_LANG_CPLUSPLUS
+
+    _vjsave_CPPFLAGS="$CPPFLAGS"
+    _vjsave_LDFLAGS="$LDFLAGS"
+    _vjsave_LIBS="$LIBS"
+
+    CPPFLAGS="$CPPFLAGS -I${_with_aw}/include/PSI"
+    LDFLAGS="$LDFLAGS -L${_with_aw}/lib$LIBBITSUF/PSI"
+
+    AC_CHECK_LIB(aw, awInitSys,
+        AC_CHECK_HEADER(aw.h,
+            AUDIO_WORKS='Y',
+            AC_MSG_WARN(*** AudioWorks will not be used (aw.h not found) ***)),
+        AC_MSG_WARN(*** AudioWorks will not be used (library not found) ***),
+        -lawhwi -lpsi -laudiofile -lm)
+
+    CPPFLAGS="${_vjsave_CPPFLAGS}"
+    LDFLAGS="${_vjsave_LDFLAGS}"
+    LIBS="${_vjsave_LIBS}"
+
+    if test "$AUDIO_WORKS" = "Y" ; then
+        AW_INC="-I${_with_aw}/include/PSI"
+        _aw_libdir='lib${LIBBITSUF}/PSI'
+        AW_LIB="-L${_with_aw}/${_aw_libdir}"
+    fi
+
+    AC_LANG_RESTORE
+fi
+
+dnl # -----------
+dnl # SL Library
+dnl # -----------
+SL='N'
+SL_INC=''
+SL_LIB=''
+
+if test "x${_with_sl}" != "xno" ; then
+    AC_LANG_SAVE
+    AC_LANG_CPLUSPLUS
+
+    _vjsave_CPPFLAGS="$CPPFLAGS"
+    _vjsave_LDFLAGS="$LDFLAGS"
+    _vjsave_LIBS="$LIBS"
+
+    CPPFLAGS="$CPPFLAGS -I${_with_sl}/include/sl"
+    LDFLAGS="$LDFLAGS -L${_with_sl}/lib/sl"
+    LIBS="$LIBS -lsl -laudio -lm"
+
+    AC_CACHE_CHECK(for slScheduler::getCurrent in -lsl,
+        ac_cv_getCurrent_in_sl,
+        AC_TRY_LINK([#include <sl.h> ],
+                    [ slScheduler::getCurrent(); ],
+                    [ ac_cv_getCurrent_in_sl='yes' ; rm -rf ./ii_files ;
+                      SL='Y' ],
+                    [ ac_cv_getCurrent_in_sl='no' ;
+                      AC_MSG_WARN(*** SL library will not be used ***) ]))
+
+    CPPFLAGS="${_vjsave_CPPFLAGS}"
+    LDLFAGS="${_vjsave_LDLFAGS}"
+    LIBS="${_vjsave_LIBS}"
+
+    if test "$SL" = "Y" ; then
+        SL_INC="-I${_with_sl}/include/sl"
+        SL_LIB="-L${_with_sl}/lib/sl"
+    fi
+
+    AC_LANG_RESTORE
+fi
+
 dnl # -------------------------------------------------------------------------
 dnl # Checks for header files.
 dnl # -------------------------------------------------------------------------
@@ -1542,6 +1634,13 @@ AC_SUBST(SHMEM_SYS)
 AC_SUBST(MUTEX_SYS)
 AC_SUBST(THREAD_SYS)
 
+AC_SUBST(AUDIO_WORKS)
+AC_SUBST(AW_INC)
+AC_SUBST(AW_LIB)
+AC_SUBST(SL)
+AC_SUBST(SL_INC)
+AC_SUBST(SL_LIB)
+
 AC_SUBST(TEST_EXTRA_FLAGS)
 AC_SUBST(TEST_VJ_LIBS_BASIC)
 AC_SUBST(TEST_VJ_LIBS_BASIC_INST)
@@ -1649,8 +1748,8 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           Input/vjInput/Makefile Input/vjKeyboard/Makefile
           Input/vjPosition/Makefile Input/vjSim/Makefile Kernel/Makefile
           Kernel/Pf/Makefile Kernel/GL/Makefile Math/Makefile
-          Performance/Makefile SharedMem/Makefile Sync/Makefile
-          Threads/Makefile
+          Performance/Makefile SharedMem/Makefile Sound/Makefile
+          Sound/aw/Makefile Sound/sl/Makefile Sync/Makefile Threads/Makefile
           test/Makefile test/CfgTest/Makefile test/GLWindow/Makefile
           test/Math/Makefile test/Matrix/Makefile test/Performance/Makefile
           test/Performance/analyzer/Makefile

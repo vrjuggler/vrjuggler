@@ -1,6 +1,9 @@
 #ifndef SOUND_ENGINE_CREATOR
 #define SOUND_ENGINE_CREATOR
 
+#include <vjConfig.h>
+
+
 // abstract mini factory
 // used for regging sound engine creators in the SoundFactory.
 // seealso: SoundFactory.h
