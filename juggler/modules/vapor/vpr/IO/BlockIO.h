@@ -651,6 +651,21 @@ public:
 
 protected:
    /**
+    * Default constructor.  This is provided for subclasses where a "named"
+    * device does not make sense.
+    *
+    * @pre None.
+    * @post The open mode is set to blocking; the open state is set to false;
+    *       and the blocking mode for reads and writes is set to true.
+    */
+   BlockIO (void)
+      : m_open_blocking(true), m_open(false), m_blocking(true),
+        mStatsStrategy(NULL)
+   {
+      /* Do nothing. */ ;
+   }
+
+   /**
     * Constructor.
     *
     * @pre None.
