@@ -40,8 +40,9 @@ public class FileControl {
 	homedir = p.getProperty ("user.home", "");
 	if (!homedir.endsWith(fileseparator))
 	    homedir = homedir + fileseparator;
-	System.out.println ("home directory is '" + homedir + "'");
 	getBaseDir();
+	System.out.println ("Looking for global files in '" + basedir + "Data'");
+	System.out.println ("Looking for user files in '" + homedir + ".vjconfig'");
     }
 
 
@@ -103,6 +104,11 @@ public class FileControl {
 	  //ElCheapoRequester fd = new ElCheapoRequester(core.ui);
 	  fd.show();
 	  fname = fd.getFile();
+	  if ((fname == null) || fname.equals(""))
+	      return false;
+	  String dirname = fd.getDirectory();
+	  if (dirname != null)
+	      fname = dirname + fname;
       }
       else {
 	  fname = basedir + "Data/chunksDesc";
@@ -140,6 +146,12 @@ public class FileControl {
     fd.show();
     String name = fd.getFile();
     if ((name == null) || name.equals(""))
+	return false;
+    String dirname = fd.getDirectory();
+    if (dirname != null)
+	name = dirname + name;
+
+    if ((name == null) || name.equals(""))
       return false;
     return saveBaseChunkDescDB(name);
   }
@@ -174,19 +186,23 @@ public class FileControl {
 
 
   public boolean loadUserChunkDescDB () {
-      String fname = null;
+      String name = null;
       if (core.noautoload) {
 	  FileDialog fd = new FileDialog ( core.ui, 
 					   "Load User ChunkDesc File...", 
 					   FileDialog.LOAD);
 	  fd.show();
-	  fname = fd.getFile();
-	  if ((fname == null) || fname.equals(""))
+	  name = fd.getFile();
+	  if ((name == null) || name.equals(""))
 	      return false;
+	  String dirname = fd.getDirectory();
+	  if (dirname != null)
+	      name = dirname + name;
+
       }
       else
-	  fname = homedir + ".vjconfig/chunksDesc";    
-      return loadUserChunkDescDB (fname);
+	  name = homedir + ".vjconfig/chunksDesc";    
+      return loadUserChunkDescDB (name);
   }
 
 
@@ -229,6 +245,10 @@ public class FileControl {
 	String name = fd.getFile();
 	if ((name == null) || name.equals(""))
 	    return false;
+	String dirname = fd.getDirectory();
+	if (dirname != null)
+	    name = dirname + name;
+
 	return saveUserChunkDescDB(name);
     }
 
@@ -315,9 +335,11 @@ public class FileControl {
       */
     fd.show();
     String name = fd.getFile();
-    //System.out.println ("attempting to load '" + name + "'");
     if ((name == null) || name.equals(""))
       return false;
+    String dirname = fd.getDirectory();
+    if (dirname != null)
+	name = dirname + name;
     //return loadUserConfigChunkDB (homedir + "/.vjconfig/" + name);
     return loadUserConfigChunkDB (name);
   }
@@ -349,19 +371,23 @@ public class FileControl {
 
   /************************ global chunk saves ***************************/
 
-  public boolean saveAsBaseConfigChunkDB () {
-    /* opens a file requester & saves to selected name */
-    /*    FileDialog fd = new FileDialog ( core.ui, 
-				     "Save Configuration File As...", 
-				     FileDialog.SAVE);
-    */
-    ElCheapoRequester fd = new ElCheapoRequester(core.ui);
-    fd.show();
-    String name = fd.getFile();
-    if ((name == null) || name.equals(""))
-      return false;
-    return saveBaseConfigChunkDB(name);
-  }
+    public boolean saveAsBaseConfigChunkDB () {
+	/* opens a file requester & saves to selected name */
+	FileDialog fd = new FileDialog ( core.ui, 
+					 "Save Configuration File As...", 
+					 FileDialog.SAVE);
+    
+	//ElCheapoRequester fd = new ElCheapoRequester(core.ui);
+	fd.show();
+	String name = fd.getFile();
+	if ((name == null) || name.equals(""))
+	    return false;
+	String dirname = fd.getDirectory();
+	if (dirname != null)
+	    name = dirname + name;
+
+	return saveBaseConfigChunkDB(name);
+    }
 
 
 
@@ -400,8 +426,12 @@ public class FileControl {
       */
     fd.show();
     String name = fd.getFile();
-      if ((name == null) || name.equals(""))
+    if ((name == null) || name.equals(""))
 	return false;
+    String dirname = fd.getDirectory();
+    if (dirname != null)
+	name = dirname + name;
+
       //return saveUserConfigChunkDB(homedir + "/.vjconfig/" + name);
       return saveUserConfigChunkDB (name);
   }
