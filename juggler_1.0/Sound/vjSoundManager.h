@@ -63,8 +63,7 @@ public:
    virtual void sync();
 
    // given an alias, return the handle.
-   // TODO: if called twice with name alias, should return same pointer.
-   // memory managed by engine...
+   // memory managed internal to manager...
    // returns NULL if invalid name.
    vjSound* getHandle( const char* const alias );
 

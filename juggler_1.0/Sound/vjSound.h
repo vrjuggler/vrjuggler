@@ -55,12 +55,15 @@ public:
    // reutrns false if didn't load.
    virtual bool load( const char* const soundname )
    {
+      mName = soundname;
       // be stupid and return true,
       // this allows use of the Sound class to stub out sound.
       // so... of course the sound loaded - this is a stub,
       // it's always a success!
       return true;
    }
+   
+   const std::string& getName() const { return mName; }
    
    void setEngine( vjSoundEngine& se )
    {
@@ -146,7 +149,7 @@ public:
 protected:
    // my associated engine...
    vjSoundEngine* mEngine;
-   
+   std::string mName;
    vjVec3 mPosition; // position of this sound in distance units where 1 is one unit.
    float mVolume;  // from 0.0 to 1.0
    float mFalloff; // in distance units where 1 is one unit.

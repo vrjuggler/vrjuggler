@@ -76,6 +76,8 @@ public:
    // given an alias, return the handle.
    // TODO: if called twice with name alias, should return same pointer.
    // memory managed by engine...
+   // TODO: keep a list of these handles so engine can clean up. :)
+   //         memory leaks for now.
    // returns NULL if invalid name.
    vjSound* getHandle( const char* const alias );
    
