@@ -146,9 +146,7 @@ int PinchGlove::sample()
    std::string gesture;
    gesture = mGlove->getGestureFromHardware();
    //std::cout << "PinchGlove::sample() " << gesture << std::endl;
-   
-   
-   unsigned char ch;
+
    int num;
    int i;
    //std::cout << "DigitalData: ";
@@ -162,7 +160,6 @@ int PinchGlove::sample()
       }
       else if ( i>5 )
       {
-         ch=gesture[i];
          num = gesture.c_str()[i] - '0';
          mDigitalData[i-1]=num;
    //      std::cout << mDigitalData[i-1].getDigital() << " ";

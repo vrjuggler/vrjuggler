@@ -145,14 +145,12 @@ void FlockStandalone::setBaudRate(const int& baud)
 /** Call this to connect to the Flock device. */
 vpr::ReturnStatus FlockStandalone::start()
 {
-   int retval;
-   
    if ( ! mActive )
    {
       if ( openPort() == vpr::ReturnStatus::Fail )
       {
          vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] **** ERROR, can't open serial port: " <<  mPort << " ****\n" << vprDEBUG_FLUSH;
-         return(vpr::ReturnStatus::Fail);
+         return vpr::ReturnStatus::Fail;
       }
       else
       {
@@ -186,7 +184,7 @@ vpr::ReturnStatus FlockStandalone::start()
       if ( openPort() == vpr::ReturnStatus::Fail )
       {
          vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] **** ERROR, can't open serial port: " <<  mPort << " ****\n" << vprDEBUG_FLUSH;
-         return(vpr::ReturnStatus::Fail);
+         return vpr::ReturnStatus::Fail;
       }
       else
       {
@@ -243,14 +241,11 @@ vpr::ReturnStatus FlockStandalone::start()
          mActive = true;
 
          // return success
-         return(vpr::ReturnStatus::Succeed);
+         return vpr::ReturnStatus::Succeed;
       }
    }
-   else
-   {
-      return(vpr::ReturnStatus::Succeed);
-      retval = 0; // already sampling
-   }
+
+   return vpr::ReturnStatus::Succeed;
 }
 
 /** Call this repeatedly to update the data from the birds. */
