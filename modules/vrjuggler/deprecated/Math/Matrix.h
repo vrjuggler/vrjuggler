@@ -5,7 +5,6 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
-#include <gmtl/Convert.h>
 #include <gmtl/Math.h>
 #include <gmtl/Xforms.h>
 
@@ -48,51 +47,54 @@ public:
    //Make a matrix from 3 Euler angles
    inline void makeXYZEuler(float xRot, float yRot, float zRot)
    {
-      *this = gmtl::makeRot<gmtl::Matrix44f>( gmtl::Math::deg2Rad(xRot), gmtl::Math::deg2Rad(yRot), gmtl::Math::deg2Rad(zRot), gmtl::XYZ );
+      *this = gmtl::makeRot<gmtl::Matrix44f>( gmtl::EulerAngleXYZf(gmtl::Math::deg2Rad(xRot), gmtl::Math::deg2Rad(yRot), gmtl::Math::deg2Rad(zRot)) );
    }
 
    inline void makeZYXEuler(float zRot, float yRot, float xRot)
    {
-      *this = gmtl::makeRot<gmtl::Matrix44f>( gmtl::Math::deg2Rad(zRot), gmtl::Math::deg2Rad(yRot), gmtl::Math::deg2Rad(xRot), gmtl::ZYX );
+      *this = gmtl::makeRot<gmtl::Matrix44f>( gmtl::EulerAngleZYXf(gmtl::Math::deg2Rad(zRot), gmtl::Math::deg2Rad(yRot), gmtl::Math::deg2Rad(xRot)) );
    }
 
    inline void makeZXYEuler(float zRot, float xRot, float yRot)
    {
-      *this = gmtl::makeRot<gmtl::Matrix44f>( gmtl::Math::deg2Rad(zRot), gmtl::Math::deg2Rad(xRot), gmtl::Math::deg2Rad(yRot), gmtl::ZXY );
+      *this = gmtl::makeRot<gmtl::Matrix44f>( gmtl::EulerAngleZXYf(gmtl::Math::deg2Rad(zRot), gmtl::Math::deg2Rad(xRot), gmtl::Math::deg2Rad(yRot)) );
    }
 
    inline void makeXYZEuler(gmtl::Vec3f xyz_vec) //New
    {
-      *this = gmtl::makeRot<gmtl::Matrix44f>( gmtl::Math::deg2Rad(xyz_vec[0]), gmtl::Math::deg2Rad(xyz_vec[1]), gmtl::Math::deg2Rad(xyz_vec[2]), gmtl::XYZ );
+      makeXYZEuler( xyz_vec[0], xyz_vec[1], xyz_vec[2] );
    }
 
 
    //Make a matrix from a rotation about an axis
    inline void makeRot(float degrees, gmtl::Vec3f axis)
    {
-      *this = gmtl::makeRot<gmtl::Matrix44f>(gmtl::Math::deg2Rad(degrees), axis[0], axis[1], axis[2]);
+      *this = gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef(gmtl::Math::deg2Rad(degrees), gmtl::Vec3f(axis[0], axis[1], axis[2])) );
    }
 
    //Get Euler angles from a matrix
    inline void getXYZEuler(float& xRot, float& yRot, float& zRot) const
    {
-      gmtl::setRot( xRot, yRot, zRot, gmtl::XYZ, *this  );
-      xRot = gmtl::Math::rad2Deg(xRot);
-      yRot = gmtl::Math::rad2Deg(yRot);
-      zRot = gmtl::Math::rad2Deg(zRot);
+      gmtl::EulerAngleXYZf angles;
+      gmtl::setRot( angles, *this  );
+      xRot = gmtl::Math::rad2Deg(angles[0]);
+      yRot = gmtl::Math::rad2Deg(angles[1]);
+      zRot = gmtl::Math::rad2Deg(angles[2]);
    }
 
    inline void getZYXEuler(float& zRot, float& yRot, float& xRot) const
    {
-      gmtl::setRot( zRot, yRot, xRot, gmtl::ZYX, *this );
-      xRot = gmtl::Math::rad2Deg(xRot);
-      yRot = gmtl::Math::rad2Deg(yRot);
-      zRot = gmtl::Math::rad2Deg(zRot);
+      gmtl::EulerAngleXYZf angles;
+      gmtl::setRot( angles, *this  );
+      xRot = gmtl::Math::rad2Deg(angles[0]);
+      yRot = gmtl::Math::rad2Deg(angles[1]);
+      zRot = gmtl::Math::rad2Deg(angles[2]);
    }
 
    inline void getZXYEuler( float& zRot, float& xRot, float& yRot ) const
    {
-      gmtl::setRot( zRot, xRot, yRot, gmtl::ZXY, *this );
+      gmtl::EulerAngleXYZf angles;
+      gmtl::setRot( angles, *this  );
       xRot = gmtl::Math::rad2Deg(xRot);
       yRot = gmtl::Math::rad2Deg(yRot);
       zRot = gmtl::Math::rad2Deg(zRot);
@@ -100,19 +102,20 @@ public:
 
    inline gmtl::Vec3f getXYZEuler() const //New
    {
-      float xRot, yRot, zRot;
-      gmtl::setRot( xRot, yRot, zRot, gmtl::XYZ, *this );
-
-      return gmtl::Vec3f( gmtl::Math::rad2Deg(xRot), 
-                   gmtl::Math::rad2Deg(yRot),
-                   gmtl::Math::rad2Deg(zRot) );
+      gmtl::EulerAngleXYZf angles;
+      gmtl::setRot( angles, *this  );
+      return gmtl::Vec3f( gmtl::Math::rad2Deg(angles[0]), 
+                   gmtl::Math::rad2Deg(angles[1]),
+                   gmtl::Math::rad2Deg(angles[2]) );
    }
 
 
    //Extract individual axis rotation info from the matrix
    inline float getXRot() const
    {
-      return gmtl::Math::rad2Deg( gmtl::getXRot( *this ) );
+      gmtl::EulerAngleXYZf angles;
+      gmtl::setRot( angles, *this  );
+      return gmtl::Math::rad2Deg( angles[0] );
    }
 
    inline float getPitch() const
@@ -122,7 +125,9 @@ public:
 
    inline float getYRot() const
    {
-      return gmtl::Math::rad2Deg( gmtl::getYRot( *this ) );
+      gmtl::EulerAngleXYZf angles;
+      gmtl::setRot( angles, *this  );
+      return gmtl::Math::rad2Deg( angles[1] );
    }
 
    inline float getYaw() const
@@ -132,7 +137,9 @@ public:
 
    inline float getZRot() const
    {
-      return gmtl::Math::rad2Deg( gmtl::getZRot( *this ) );
+      gmtl::EulerAngleXYZf angles;
+      gmtl::setRot( angles, *this );
+      return gmtl::Math::rad2Deg( angles[2] );
    }
 
    inline float getRoll() const
@@ -167,13 +174,15 @@ public:
    //Get the translation portion of the matrix
    inline void getTrans(float& x, float& y, float& z) const
    {
-      gmtl::setTrans( x, y, z, *this );
+      gmtl::Vec3f trans;
+      gmtl::setTrans( trans, *this );
+      x = trans[0]; y = trans[1]; z = trans[2];
    }
 
    inline gmtl::Vec3f getTrans() const
    {
       gmtl::Vec3f trans;
-      gmtl::setTrans( trans[0], trans[1], trans[2], *this );
+      gmtl::setTrans( trans, *this );
       return trans;
    }
 
@@ -310,26 +319,26 @@ public:
    inline void preRot(const float& degrees, const gmtl::Vec3f& axis, const Matrix& m)
    {
       *this = m;
-      preMult( gmtl::makeRot<gmtl::Matrix44f>(gmtl::Math::deg2Rad(degrees), axis[0], axis[1], axis[2]) );
+      preMult( gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef(gmtl::Math::deg2Rad(degrees), gmtl::Vec3f(axis[0], axis[1], axis[2]))) ); 
    }
 
    inline void preXYZEuler( float xRot, float yRot, float zRot, const Matrix& m )
    {
       *this = m;
-      preMult( gmtl::makeRot<gmtl::Matrix44f>( gmtl::Math::deg2Rad(xRot), gmtl::Math::deg2Rad(yRot), gmtl::Math::deg2Rad(zRot), gmtl::XYZ));
+      preMult( gmtl::makeRot<gmtl::Matrix44f>( gmtl::EulerAngleXYZf(gmtl::Math::deg2Rad(xRot), gmtl::Math::deg2Rad(yRot), gmtl::Math::deg2Rad(zRot)) ));
    }
 
    //Post rotate a matrix
    inline void postRot( const Matrix& m, const float& degrees, const gmtl::Vec3f& axis )
    {
       *this = m;
-      postMult( gmtl::makeRot<gmtl::Matrix44f>(gmtl::Math::deg2Rad(degrees), axis[0], axis[1], axis[2]) );
+      postMult( gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef(gmtl::Math::deg2Rad(degrees), gmtl::Vec3f(axis[0], axis[1], axis[2]))) );
    }
 
    inline void postXYZEuler( const Matrix& m, float xRot, float yRot, float zRot )
    {
       *this = m;
-      postMult( gmtl::makeRot<gmtl::Matrix44f>( gmtl::Math::deg2Rad(xRot), gmtl::Math::deg2Rad(yRot), gmtl::Math::deg2Rad(zRot), gmtl::XYZ));
+      postMult( gmtl::makeRot<gmtl::Matrix44f>( gmtl::EulerAngleXYZf(gmtl::Math::deg2Rad(xRot), gmtl::Math::deg2Rad(yRot), gmtl::Math::deg2Rad(zRot)) ));
    }
 
 
@@ -370,9 +379,9 @@ public:
    //Make matrix from given quaternion
    inline void makeQuaternion( const gmtl::Quatf& q )
    {
-      float rad, x, y, z;
-      gmtl::setRot( rad, x, y, z, q );
-      *this = gmtl::makeRot<gmtl::Matrix44f>( rad, x, y, z );
+      gmtl::AxisAnglef rot;
+      gmtl::setRot( rot, q );
+      *this = gmtl::makeRot<gmtl::Matrix44f>( rot );
    }
         
 }; //End of class
