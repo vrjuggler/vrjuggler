@@ -1,7 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-21-2004 dshipton    Added in USDigital SerialEncoder driver for Baron table.
 May-08-2004 patrickh    Updated to VPR 0.36.0.
-                        NEW VERSION: 0.15.1
 Apr-26-2004 pallindo    Refactored glove support.
                         NEW VERSION: 0.15.0
 Apr-11-2004 patrickh    Gadgeteer now depends on an installed version of GMTL.
