@@ -37,7 +37,8 @@
 #include <navigator.h>
 #include <collider.h>
 #include <vector>
-#include "StopWatch.h"
+#include <vpr/Util/Interval.h>
+//#include "StopWatch.h"
 
 class velocityNav : public navigator
 {
@@ -155,10 +156,11 @@ private:
    bool  mStopping;
    bool  mResetting;
 
-
+   float mTimeDelta;
+   vpr::Interval mLastTimeStamp;
 
    Units       mUnits;
-   StopWatch   stopWatch;
+   //StopWatch   stopWatch;
    navMode     mMode;
    int         mTimeHack;
 };
@@ -171,11 +173,12 @@ inline velocityNav::velocityNav() :
    mAcceleration(10.0f),
    mUnits( velocityNav::FEET ),
    mMode( velocityNav::DRIVE ),
-   mTimeHack(0)
+   mTimeHack(0),
+   mLastTimeStamp(0,vpr::Interval::Base)
 {
    stop();
-   stopWatch.start();
-   stopWatch.stop();
+   //stopWatch.start();
+   //stopWatch.stop();
 
    setNavPosControl("VJWand");         // Initialize wand device
 
@@ -292,20 +295,32 @@ inline void velocityNav::updateInteraction()
 
 inline void velocityNav::update()
 {
-   stopWatch.stop();
-   stopWatch.start();
+   //stopWatch.stop();
+   //stopWatch.start();
+   
+   vpr::Interval cur_time = mNavWand->getTimeStamp();
+   vpr::Interval diff_time(cur_time-mLastTimeStamp);
+      
+   mTimeDelta = diff_time.secf();
 
-   if(stopWatch.timeInstant > 2.0f)    // If the time is greater than 2 seconds ( 1/2 fps)
+   std::cout << "READANDWRITE Delta: " << diff_time.getBaseVal() << std::endl;
+   std::cout << "READANDWRITE Current: " << cur_time.getBaseVal() << "Last: " << mLastTimeStamp.getBaseVal() << "\n" << std::endl;
+      
+   mLastTimeStamp = cur_time;
+
+
+
+   if(mTimeDelta > 2.0f)    // If the time is greater than 2 seconds ( 1/2 fps)
    {
       vprDEBUG(vprDBG_ALL,0)
          << clrOutNORM(clrCYAN,"VelNav: timeInstant to large: ")
-         << stopWatch.timeInstant << std::endl << vprDEBUG_FLUSH;
-      stopWatch.stop();    // Get a REALLY small delta time
-      stopWatch.start();
+         << mTimeDelta << std::endl << vprDEBUG_FLUSH;
+      //stopWatch.stop();    // Get a REALLY small delta time
+      //stopWatch.start();
    }
 
    //vprDEBUG_BEGIN(vprDBG_ALL,0) << "VelNav: ----- Update ----\n" << vprDEBUG_FLUSH;
-   //vprDEBUG(vprDBG_ALL,0) << "VelNav: timeInstant: " << stopWatch.timeInstant << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,0) << "VelNav: timeInstant: " << mTimeDelta << std::endl << vprDEBUG_FLUSH;
 
    // If we are not supposed to be active, then don't run
    if(!this->isActive())
@@ -373,7 +388,9 @@ inline void velocityNav::update()
 
       // recalculate the current downward velocity from gravity.
       // this vector then is accumulated with the rest of the velocity vectors each frame.
-      mVelocityFromGravityAccumulator += (gravity * stopWatch.timeInstant);
+      
+      //mVelocityFromGravityAccumulator += (gravity * mTimeDelta);
+      mVelocityFromGravityAccumulator += (gravity * mTimeDelta);
 
       //vprDEBUG_CONT(vprDBG_ALL,0) << " new vel: " << velocityAccumulator
       //                          << " new grav: " << mVelocityFromGravityAccumulator << endl << vprDEBUG_FLUSH;
@@ -392,9 +409,9 @@ inline void velocityNav::update()
    // navigation just calculated navigator's next velocity
    // now convert accumulated velocity to distance traveled this frame (by cancelling out time)
    // NOTE: this is not the final distance, since we still have to do collision correction.
-   gmtl::Vec3f distanceToMove = velocityAccumulator * stopWatch.timeInstant;
+   gmtl::Vec3f distanceToMove = velocityAccumulator * mTimeDelta;
 
-   //vprDEBUG(vprDBG_ALL,0) << "velNav: distToMove = velAcum * instant: " << velocityAccumulator << " * " << stopWatch.timeInstant << endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,0) << "velNav: distToMove = velAcum * instant: " << velocityAccumulator << " * " << mTimeDelta << endl << vprDEBUG_FLUSH;
 
    // --- TRANSLATION and COLLISION DETECTION --- //
    bool     did_collide;               // Did we collide with anything
@@ -447,7 +464,7 @@ inline void velocityNav::accelerate(const gmtl::Vec3f& accel)
 {
    if(gmtl::length(mVelocity) < mMaxVelocity)
    {
-      mVelocity += (accel * stopWatch.timeInstant);
+      mVelocity += (accel * mTimeDelta);
    }
 }
 
@@ -469,8 +486,8 @@ inline void velocityNav::reset()
    mVelocityFromGravityAccumulator.set( 0,0,0 );
    gmtl::identity(mRotationalAcceleration);
    navigator::reset();
-   stopWatch.start();   // Reset the stop watch
-   stopWatch.stop();
+   //stopWatch.start();   // Reset the stop watch
+   //stopWatch.stop();
 }
 
 
