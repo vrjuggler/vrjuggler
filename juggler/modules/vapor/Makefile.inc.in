@@ -114,7 +114,7 @@ AFTERBUILD	= afterbuild
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(VPRROOT_ABS)/vpr-config.in -v $(VPRROT_ABS)/VERSION	\
+            -t $(VPRROOT_ABS)/vpr-config.in -v $(VPRROOT_ABS)/VERSION	\
             -o $(topdir)/vpr-config
 	@chmod +x $(topdir)/vpr-config
 
