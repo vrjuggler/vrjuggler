@@ -145,9 +145,11 @@ public class XMLConfigCommunicator
         connected = true;
 
         active_chunkdb = new ConfigChunkDB();
-        active_chunkdb.setName ("Active Configuration");
+        active_chunkdb.setName ("Active (" + nc.getHost() + ":" +
+                                nc.getPort() + ")" );
         active_descdb = new ChunkDescDB();
-        active_descdb.setName ("Active Descriptions");
+        active_descdb.setName ("Active (" + nc.getHost() + ":" +
+                               nc.getPort() + ")" );
         config_module.initConnection (this, active_descdb, active_chunkdb);
 
         getChunkDescs();
