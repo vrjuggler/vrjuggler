@@ -49,7 +49,8 @@ namespace vpr
 
 bool GUID::operator== (const GUID& guid) const
 {
-   return (uuid_compare(&m_guid, &guid.m_guid) == 0 ? true : false);
+   return (uuid_compare(&m_guid.leach_uuid, &guid.m_guid.leach_uuid) == 0 ?
+             true : false);
 }
 
 // ============================================================================
@@ -58,13 +59,13 @@ bool GUID::operator== (const GUID& guid) const
 
 GUID::GUID ()
 {
-   uuid_create(&m_guid);
+   uuid_create(&m_guid.leach_uuid);
 }
 
 GUID::GUID (const GUID& ns_guid, const std::string& name)
 {
-   uuid_create_from_name(&m_guid, ns_guid.m_guid, (void*) name.c_str(),
-                         name.length());
+   uuid_create_from_name(&m_guid.leach_uuid, ns_guid.m_guid.leach_uuid,
+                         (void*) name.c_str(), name.length());
 }
 
 } // End of vpr namespace

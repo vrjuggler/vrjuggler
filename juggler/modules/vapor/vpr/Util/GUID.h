@@ -48,6 +48,8 @@
 #include <uuid/sysdep.h>
 #include <uuid/uuid.h>
 
+#include <vpr/vprTypes.h>
+
 
 namespace vpr
 {
@@ -81,7 +83,27 @@ private:
    GUID (const GUID& obj) {;}
    void operator= (const GUID& obj) {;}
 
-   uuid_t m_guid;
+   union _vpr_guid
+   {
+      uuid_t leach_uuid;
+
+      struct _allen_uuid
+      {
+         vpr::Uint32 first;
+         vpr::Uint16 second;
+         vpr::Uint16 third;
+         vpr::Uint16 fourth;
+         vpr::Uint8  fifth[6];
+      } allen_uuid;
+
+      struct _moz_uuid
+      {
+         vpr::Uint32 m0;
+         vpr::Uint32 m1;
+         vpr::Uint32 m2;
+         vpr::Uint32 m3;
+      } moz_uuid;
+   } m_guid;
 
    friend class vpr::GUIDFactory;
 };
