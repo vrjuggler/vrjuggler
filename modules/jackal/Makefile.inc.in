@@ -183,6 +183,7 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/jccl
 	cd $(instlinks)/include &&					\
           for dir in $(SUBDIR) ; do					\
               rm -f ./$$dir ;						\
@@ -196,12 +197,12 @@ ifneq (@OS_TYPE@, Win32)
           ln -s $(JCCLROOT_ABS)/Data ./Data
 	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./samples &&		\
           ln -s $(JCCLROOT_ABS)/samples ./samples
-	cd $(instlinks)/include && rm -f ./vjConfig.h &&		\
-          $(LN_S) $(JCCROOT_ABS)/vjConfig.h ./vjConfig.h
-	cd $(instlinks)/include && rm -f ./vjDefines.h &&		\
-	  $(LN_S) $(topdir)/vjDefines.h ./vjDefines.h
-	cd $(instlinks)/include && rm -f ./vjParam.h &&			\
-	  $(LN_S) $(topdir)/vjParam.h ./vjParam.h
+	cd $(instlinks)/include/jccl && rm -f ./jcclConfig.h &&		\
+          $(LN_S) $(JCCLROOT_ABS)/jccl/jcclConfig.h ./jcclConfig.h
+	cd $(instlinks)/include/jccl && rm -f ./jcclDefines.h &&	\
+	  $(LN_S) $(topdir)/jccl/jcclDefines.h ./jcclDefines.h
+	cd $(instlinks)/include/jccl && rm -f ./jcclParam.h &&		\
+	  $(LN_S) $(topdir)/jccl/jcclParam.h ./jcclParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
           $(LN_S) $(JCCLROOT_ABS)/tools/catadf.pl ./catadf.pl
