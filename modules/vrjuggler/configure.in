@@ -453,9 +453,8 @@ fi
 # -----------------------------------------------------------------------------
 AC_PATH_X
 AC_HEADER_STDC
-AC_CHECK_HEADERS(fcntl.h limits.h malloc.h strings.h sys/file.h		\
-                 sys/ioctl.h sys/time.h termio.h unistd.h sys/z8530.h	\
-                 sys/stdsyms.h)
+AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
+                 sys/time.h termio.h unistd.h sys/z8530.h sys/stdsyms.h)
 
 dnl # All of the above header file checks may not be necessary ...
 
@@ -563,11 +562,11 @@ AC_SUBST(THREAD_SYS)
 # -----------------------------------------------------------------------------
 # Final file generation step.
 # -----------------------------------------------------------------------------
-AC_OUTPUT(Makefile Makefile.base Config/Makefile Math/Makefile Environment/Makefile
-	  Input/Makefile Input/vjGlove/Makefile Input/vjInput/Makefile
+AC_OUTPUT(Makefile Makefile.base Config/Makefile Math/Makefile
+          Input/Makefile Input/vjGlove/Makefile Input/vjInput/Makefile
           Input/vjPosition/Makefile Input/InputManager/Makefile
-          Input/ibox/Makefile Kernel/Makefile Kernel/Pf/Makefile Kernel/GL/Makefile
-	  SharedMem/Makefile Sync/Makefile
+          Input/ibox/Makefile Kernel/Makefile Kernel/Pf/Makefile
+          Kernel/GL/Makefile SharedMem/Makefile Sync/Makefile
           Threads/Makefile test/Makefile test/CfgTest/Makefile
           test/input/Makefile test/ogl/Makefile test/ogl/cubes/Makefile
           test/pfNav/Makefile test/Sync/Makefile)
