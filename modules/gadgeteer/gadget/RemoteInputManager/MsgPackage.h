@@ -66,6 +66,9 @@ namespace gadget
       std::string mDeviceName;
       std::string mBaseType;
 
+      int mSendDataPacketCount;
+      int mRecvDataPacketCount;
+
    public:
       MsgPackage();
      /**

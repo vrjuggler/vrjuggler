@@ -67,19 +67,27 @@ namespace gadget
       mSyncServer = new vpr::SocketStream(vpr::InetAddr::AnyAddr, inet_addr);
       
          // If we can successfully open the socket and connect to the server
-      if ( mSyncServer->open().success() && mSyncServer->connect().success() )
+      mSyncServer->open();
+      mSyncServer->enableBlocking();
+
+      while (!mSyncServer->connect().success())
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ClusterBarrierTCP: Successfully connected to sync server: " 
-            << mHostname <<":"<< mTCPport << "\n"<< vprDEBUG_FLUSH;
-
-         gadget::MsgPackage* msg_packer = new gadget::MsgPackage;
-            // Send a handshake to initalize communication with remote computer
-         msg_packer->createHandshake(true,mHostname,mTCPport,"Any Manager",true);
-         msg_packer->sendAndClear(mSyncServer);
-         delete msg_packer;
-
-         return(vpr::ReturnStatus::Succeed);
+         std::cout << clrSetBOLD(clrMAGENTA) << "[Remote Input Manager]"
+         << " Waiting for Sync Server: " << mHostname << ":" << mTCPport
+         << "["/* << gadget::spiner() */<< "]" << "\r" << clrRESET;
       }
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ClusterBarrierTCP: Successfully connected to sync server: " 
+         << mHostname <<":"<< mTCPport << "\n"<< vprDEBUG_FLUSH;
+      
+      gadget::MsgPackage* msg_packer = new gadget::MsgPackage;
+         // Send a handshake to initalize communication with remote computer
+      msg_packer->createHandshake(true,mHostname,mTCPport,"Any Manager",true);
+      msg_packer->sendAndClear(mSyncServer);
+      delete msg_packer;
+
+      return(vpr::ReturnStatus::Succeed);
+      
+      /*
       else
       {
          delete mSyncServer;
@@ -87,8 +95,15 @@ namespace gadget
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetNORM(clrRED) 
             << "ClusterBarrierTCP: Could not connect to sync server: " << mHostname 
             <<" : "<< mTCPport << "\n" << clrRESET << vprDEBUG_FLUSH;
+         for (int i=0;i<50;i++)
+         {
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrRED) 
+               << "ClusterBarrierTCP: Could not connect to sync server: " << mHostname 
+               <<" : "<< mTCPport << "\n" << clrRESET << vprDEBUG_FLUSH;
+         }
+
          return vpr::ReturnStatus::Fail;
-      }
+      } */
    }
 
    void ClusterBarrierTCP::MasterSend()
@@ -126,6 +141,7 @@ namespace gadget
                vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ClusterBarrierTCP: Received too many timeouts from a cluster node,"
                   <<" so it was removed from the list of machines to syncronize with." 
                   << std::endl << vprDEBUG_FLUSH;
+               vpr::System::sleep(1);
             }
          }
          //vprASSERT(1==bytes_read && "ClusterBarrierTCP: Master Barrier received timeout");
@@ -146,7 +162,11 @@ namespace gadget
       
       vpr::Uint32 bytes_read;
       vpr::Uint8 temp;
-      mSyncServer->recv(&temp , 1, bytes_read,read_timeout);
+      if (!mSyncServer->recv(&temp , 1, bytes_read,read_timeout).success())
+      {
+         std::cout << "ERROR" << std::endl;
+         vpr::System::sleep(1);
+      }
       //vprASSERT(1==bytes_read && "ClusterBarrierTCP: Slave Barrier received timeout");
    }
 };
