@@ -254,19 +254,15 @@ void vjConnect::readCommand(ifstream& fin) {
    char        c;
    char*       s;
 
-   if (!fin.get(rbuf,buflen,'\n'))
+   if (!fin.getline(rbuf,buflen,'\n'))
        return;
 
    vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect:: read: '" << rbuf
-			<< "'.\n" << vjDEBUG_FLUSH;
-   fin.get(c);
-   if (c != '\n')
-      vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect:: oops - "
-      "didn't completely get command line\n"
-      "from the socket.  This is a bug!\n"
-      << vjDEBUG_FLUSH;
-
+			    << "'.\n" << vjDEBUG_FLUSH;
    s = strtok (rbuf, " \t\n");
+   if (!s) {
+       cout << "couldn't get a token.  something's really wrong in vjConnect" << endl;
+   }
 
    if (!strcasecmp (s, "get"))
    {
@@ -339,7 +335,7 @@ void vjConnect::readCommand(ifstream& fin) {
       {
          vjConfigChunkDB remove_chunk_db;
          fin >> remove_chunk_db;
-         vjDEBUG(vjDBG_ALL,0) << "EM: message to remove chunks:\n" << remove_chunk_db
+         vjDEBUG(vjDBG_ENV_MGR,1) << "EM: message to remove chunks:\n" << remove_chunk_db
 			      << vjDEBUG_FLUSH;
          // ALLEN: THIS IS WHERE THE GUI HAS SENT A COMMAND TO
          // REMOVE A CHUNK - S IS THE NAME OF THE CHUNK
