@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-10-14 patrickh    Added a C++ CORBA client interface that mimics the
+                       equivalent Java client interface very closely.  The new
+                       class is tweek::CorbaService.
+                       NEW VERSION: 0.13.0
 2002-10-11 patrickh    For new users of the Tweek GUI, the default Viewer Bean
                        is now the Tree Viewer.
 2002-10-10 patrickh    Made the IIOP version used when making the initial

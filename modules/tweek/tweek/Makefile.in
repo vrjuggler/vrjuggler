@@ -48,6 +48,7 @@ DIRPRFX		= tweek/
 
 # Subdirectories used for recursion through the source tree.
 SUBDIR		= CORBA		\
+                  Client	\
                   Util		\
                   idl
 
