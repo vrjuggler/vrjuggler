@@ -231,7 +231,7 @@ void reconfigApp::preFrame()
       if (status)
          std::cout << "[TEST PASSED]\n\n" << std::flush;
       else
-         std::cout << "[***TEST FAILED***]\n\n" << std::flush;
+         std::cout << "[ *** TEST FAILED *** ]\n\n" << std::flush;
 
    }
 
@@ -303,7 +303,7 @@ bool reconfigApp::addChunkFile( std::string filename )
    }
    else
    {
-      std::cout << "Failed to load " << filename << std::endl << std::flush;
+      std::cout << "\tError: Failed to load config file: " << filename << std::endl << std::flush;
       delete mNewChunkDB;  
       mNewChunkDB = NULL;
       return false;
@@ -324,7 +324,7 @@ bool reconfigApp::removeChunkFile( std::string filename )
    }
    else
    {
-      std::cout << "Failed to load " << filename << std::endl << std::flush;
+      std::cout << "\tError: Failed to load config file: " << filename << std::endl << std::flush;
       delete mNewChunkDB;  
       mNewChunkDB = NULL;
       return false;
@@ -358,7 +358,7 @@ bool reconfigApp::removeRecentChunkDB()
    }
    else
    {
-      std::cout << "Cannot remove a NULL chunk db\n" << std::flush;
+      std::cout << "\tError: Cannot remove a NULL chunk db\n" << std::flush;
       return false;
    }
 }
@@ -548,7 +548,7 @@ bool reconfigApp::addGFXWindow_check()
 bool reconfigApp::removeGFXWindow_exec()
 {
    std::cout << "Beginning test for removing a graphics window...\n" << std::flush;
-   return removeRecentChunkDB();
+   return removeChunkFile( "./Chunks/sim.extradisplay.01.config" );
 }
 
 bool reconfigApp::removeGFXWindow_check()
@@ -578,22 +578,6 @@ bool reconfigApp::readdGFXWindow_exec()
 {
    std::cout << "Beginning test for readding a graphics window...\n" << std::flush;
 
-   jccl::ConfigChunkDB displayChunkDB;
-   displayChunkDB.clear();
-
-   //First, remove any and all displays
-   std::vector<vrj::Display*> allDisplays = vrj::DisplayManager::instance()->getAllDisplays();
-
-   //Compile a chunk db
-   std::vector<vrj::Display*>::iterator iter;
-   for (iter = allDisplays.begin(); iter != allDisplays.end(); iter++)
-   {
-      displayChunkDB.push_back((*iter)->getConfigChunk());
-   }
-   
-   //Remove it
-   jccl::ConfigManager::instance()->addPendingRemoves( &displayChunkDB );
-
    return (   addChunkFile( "./Chunks/sim.extradisplay.01.config" )
            && addChunkFile( "./Chunks/sim.extradisplay.02.config" ));
 }
@@ -607,9 +591,9 @@ bool reconfigApp::readdGFXWindow_check()
 
    std::vector<vrj::Display*> allDisplays = vrj::DisplayManager::instance()->getAllDisplays();
 
-   if (allDisplays.size() != 2)
+   if (allDisplays.size() < 2)
    {
-      std::cout << "\tError: The number of remaining displays is wrong: " << allDisplays.size() << " displays exist. (Should be 2)" << std::endl << std::flush;
+      std::cout << "\tError: There are only " << allDisplays.size() << " displays left. (Should be at least 2)\n" << std::flush;
       return false;
    }
 
@@ -633,22 +617,8 @@ bool reconfigApp::resizeGFXWindow_exec()
 {
    std::cout << "Beginning test for resizing a graphics window...\n" << std::flush;
 
-   jccl::ConfigChunkDB oldChunks;
-   
-   //Get the SimWindowX02
-   vrj::Display* simDisplay = getDisplay( "SimWindowX02" );
-
-   //If we could not find the window...we have a problem to start with
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX02 to resize it\n" << std::flush;
-      return false;
-   }
-
-   oldChunks.push_back( simDisplay->getConfigChunk() );
-   jccl::ConfigManager::instance()->addPendingRemoves( &oldChunks );
-
-   return addChunkFile( "./Chunks/sim.extradisplay.02.resize.config" );
+   return swapChunkFiles( "./Chunks/sim.extradisplay.02.config",
+                          "./Chunks/sim.extradisplay.02.resize.config" );
 
 }
 
@@ -673,22 +643,9 @@ bool reconfigApp::moveGFXWindow_exec()
 {
    std::cout << "Beginning test for moving a graphics window...\n" << std::flush;
 
-   jccl::ConfigChunkDB oldChunks;
    
-   //Get the SimWindowX01
-   vrj::Display* simDisplay = getDisplay( "SimWindowX01" );
-
-   //If we could not find the window...we have a problem to start with
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX01 to move it\n" << std::flush;
-      return false;
-   }
-
-   oldChunks.push_back( simDisplay->getConfigChunk() );
-   jccl::ConfigManager::instance()->addPendingRemoves( &oldChunks );
-
-   return addChunkFile( "./Chunks/sim.extradisplay.01.move.config" );
+   return swapChunkFiles( "./Chunks/sim.extradisplay.01.config",
+                          "./Chunks/sim.extradisplay.01.move.config" );
 }
 
 bool reconfigApp::moveGFXWindow_check()
@@ -712,24 +669,8 @@ bool reconfigApp::addViewport_exec()
 {
    std::cout << "Beginning test for adding a viewport to a display window...\n" << std::flush;
 
-   jccl::ConfigChunkDB oldChunks;
-   
-   //Get the SimWindowX02
-   vrj::Display* simDisplay = getDisplay( "SimWindowX02" );
-
-   //If we could not find the window...we have a problem to start with
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX02 to add a viewport\n" << std::flush;
-      return false;
-   }
-
-   oldChunks.push_back( simDisplay->getConfigChunk() );
-
-   jccl::ConfigManager::instance()->addPendingRemoves( &oldChunks );
-
-   return addChunkFile( "./Chunks/sim.extradisplay.02.twoviews.config" );
-
+   return swapChunkFiles( "./Chunks/sim.extradisplay.02.resize.config",
+                          "./Chunks/sim.extradisplay.02.twoviews.config" );
 }
 
 bool reconfigApp::addViewport_check()
@@ -758,22 +699,8 @@ bool reconfigApp::removeViewport_exec()
 
    std::cout << "Beginning test for removing a viewport from a graphics window...\n" << std::flush;
 
-   jccl::ConfigChunkDB oldChunks;
-
-   //Get the SimWindowX02
-   vrj::Display* simDisplay = getDisplay( "SimWindowX02" );
-
-   //If we could not find the window...we have a problem to start with
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX02 to remove a viewport\n" << std::flush;
-      return false;
-   }
-
-   oldChunks.push_back( simDisplay->getConfigChunk() );
-   jccl::ConfigManager::instance()->addPendingRemoves( &oldChunks );
-
-   return addChunkFile( "./Chunks/sim.extradisplay.02.oneview.config" );
+   return swapChunkFiles( "./Chunks/sim.extradisplay.02.twoviews.config",
+                          "./Chunks/sim.extradisplay.02.oneview.config" );
 }
 
 bool reconfigApp::removeViewport_check()
@@ -801,22 +728,8 @@ bool reconfigApp::resizeViewport_exec()
 {
    std::cout << "Beginning test for resizing a viewport...\n" << std::flush;
 
-   jccl::ConfigChunkDB oldChunks;
-
-   //Get the SimWindowX02
-   vrj::Display* simDisplay = getDisplay( "SimWindowX02" );
-
-   //If we could not find the window...we have a problem to start with
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX02 to resize a viewport\n" << std::flush;
-      return false;
-   }
-
-   oldChunks.push_back( simDisplay->getConfigChunk() );
-   jccl::ConfigManager::instance()->addPendingRemoves( &oldChunks );
-
-   return addChunkFile( "./Chunks/sim.extradisplay.02.largerview.config" );
+   return swapChunkFiles( "./Chunks/sim.extradisplay.02.oneview.config",
+                          "./Chunks/sim.extradisplay.02.largerview.config" );
 }
 
 bool reconfigApp::resizeViewport_check()
@@ -857,23 +770,8 @@ bool reconfigApp::moveViewport_exec()
 {
    std::cout << "Beginning test for moving a viewport...\n" << std::flush;
 
-   jccl::ConfigChunkDB oldChunks;
-
-   //Get the SimWindowX02
-   vrj::Display* simDisplay = getDisplay( "SimWindowX02" );
-
-   //If we could not find the window...we have a problem to start with
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX02 to move a viewport\n" << std::flush;
-      return false;
-   }
-
-   oldChunks.push_back( simDisplay->getConfigChunk() );
-   jccl::ConfigManager::instance()->addPendingRemoves( &oldChunks );
-
-   return addChunkFile( "./Chunks/sim.extradisplay.02.moveview.config" );
-
+   return swapChunkFiles( "./Chunks/sim.extradisplay.02.largerview.config",
+                          "./Chunks/sim.extradisplay.02.moveview.config" );
 }
 
 bool reconfigApp::moveViewport_check()
@@ -940,8 +838,11 @@ bool reconfigApp::enableStereoSurface_exec()
 
    jccl::ConfigManager::instance()->addPendingRemoves( &oldChunks );
 
-   return addChunkFile( "./Chunks/sim.surfacedisplay.01.stereo.config" );
+   bool status = removeChunkFile( "./Chunks/sim.extradisplay.02.moveview.config" )
+              && removeChunkFile( "./Chunks/sim.extradisplay.01.move.config" )
+              && addChunkFile( "./Chunks/sim.surfacedisplay.01.stereo.config" );
 
+   return status;
 }
 
 bool reconfigApp::enableStereoSurface_check()
@@ -980,24 +881,8 @@ bool reconfigApp::disableStereoSurface_exec()
 {
    std::cout << "Beginning test for disabling stereo on a surface display...\n" << std::flush;
 
-   jccl::ConfigChunkDB oldChunks;
-
-   //Get the SimSurfaceX01
-   vrj::Display* surfaceDisplayX01 = getDisplay( "SimSurfaceX01" );
-
-   //If we could not find the window...we have a problem to start with
-   if (surfaceDisplayX01 == NULL)
-   {
-      std::cout << "\tError: Could not find SimSurfaceX01 to update it\n" << std::flush;
-      return false;
-   }
-
-   oldChunks.push_back( surfaceDisplayX01->getConfigChunk() );
-
-   jccl::ConfigManager::instance()->addPendingRemoves( &oldChunks );
-
-   return addChunkFile( "./Chunks/sim.surfacedisplay.01.mono.config" );
-
+   return swapChunkFiles( "./Chunks/sim.surfacedisplay.01.stereo.config",
+                          "./Chunks/sim.surfacedisplay.01.mono.config" );
 }
 
 bool reconfigApp::disableStereoSurface_check()
