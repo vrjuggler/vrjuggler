@@ -381,8 +381,12 @@ int omni_main_i(int argc, char** const argv)
 
    if test "x$tweek_cv_CORBA__ORB_init_in_omniORB" = "xyes" ; then
       CXX_ORB_INCLUDES="-I$tweek_omni_inc"
-      CXX_ORB_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
+      CXX_ORB_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER"
       CXX_ORB_LDFLAGS="-L$OMNI_LIB_DIR"
+
+      if test "x$OMNI_VER" = "x3" ; then
+	 CXX_ORB_LIB="$CXX_ORB_LIB -lomniGK_stub"
+      fi
 
       CXX_ORB_LIB_MSVCCC="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
       CXX_ORB_LDFLAGS_MSVCCC="-L$OMNI_LIB_DIR"
