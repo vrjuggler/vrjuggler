@@ -45,7 +45,7 @@ include ${srcdir}/VjGUI/util/util.mk
 
 # Search path information.
 vpath
-vpath %.java @srcdir@/VjConfig @srcdir@/VjPerf @srcdir@/VjGUI @srcdir@/VjGUI/chunkdesc @srcdir@/VjGUI/configchunk @srcdir@/VjGUI/util
+vpath %.java @srcdir@ @srcdir@/VjConfig @srcdir@/VjPerf @srcdir@/VjGUI @srcdir@/VjGUI/chunkdesc @srcdir@/VjGUI/configchunk @srcdir@/VjGUI/util
 vpath %.class VjConfig VjPerf VjGUI VjGUI/chunkdesc VjGUI/configchunk VjGUI/util
 
 # -----------------------------------------------------------------------------
@@ -55,8 +55,10 @@ all: VjControl.jar
 
 # there's no way to append to a jar file, so this must all be done in one
 # step.  This is incredibly stupid...
-VjControl.jar: ${VJGUI_OBJS} ${VJCONFIG_OBJS} ${VJPERF_OBJS} ${VJGUICHUNKDESC_OBJS}	\
-               ${VJGUICONFIGCHUNK_OBJS} ${VJGUIUTIL_OBJS} VjFiles
+VjControl.jar: ${VJGUI_SOURCES} ${VJCONFIG_SOURCES} ${VJPERF_SOURCES}   \
+               ${VJGUICHUNKDESC_SOURCES}	\
+               ${VJGUICONFIGCHUNK_SOURCES} ${VJGUIUTIL_SOURCES} VjFiles
+	${JAVAC_CMD} ${srcdir}/*/*.java ${srcdir}/*/*/*.java
 	${JAR} cvf VjControl.jar VjGUI/*.class VjGUI/chunkdesc/*.class	\
             VjGUI/configchunk/*.class VjGUI/util/*.class		\
             VjConfig/*.class VjPerf/*.class VjFiles
@@ -65,22 +67,15 @@ VjFiles:
 	${PERL} ${scriptdir}/install-dir.pl -i ${srcdir}/VjFiles	\
             -o ${topdir}/GUI/VjFiles
 
-VjPerf/%.class: %.java
-	${JAVAC_CMD} $<
-
-VjConfig/%.class: %.java
-	${JAVAC_CMD} $<
-
-VjGUI/%.class: %.java
-	${JAVAC_CMD} $<
-
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-CLEAN_FILES	+= ${VJCONFIG_OBJS} VjConfig/*~ ${VJPERF_OBJS} VjPerf/*~ ${VJGUI_OBJS} VjGUI/*~	\
-                   ${VJGUICHUNKDESC_OBJS} VjGUI/chunkdesc/*~		\
-                   ${VJGUICONFIGCHUNK_OBJS} VjGUI/configchunk/*~	\
-                   ${VJGUIUTIL_OBJS} VjGUI/util/*~
+CLEAN_FILES	+= VjConfig/*.class VjConfig/*~                         \
+                   VjPerf/*.class VjPerf/*~                             \
+                   VjGUI/*.class VjGUI/*~				\
+                   VjGUI/chunkdesc/*.class VjGUI/chunkdesc/*~		\
+                   VjGUI/configchunk/*.class VjGUI/configchunk/*~	\
+                   VjGUI/util/*.class VjGUI/util/*~
 
 # Append VjFiles to ${CLEAN_DIRS} only if ${srcdir} is not the current
 # directory.  If ${srcdir} is the current directory, removing VjFiles would
