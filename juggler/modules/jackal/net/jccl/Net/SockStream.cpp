@@ -57,15 +57,15 @@ int sockstreambuf::underflow () {
     char c;
     //cout << "underflow: gptr is " << (int)gptr() << " and egptr is " << (int)egptr() << endl;
     if (gptr() < egptr()) {
+        // does underflow ever actually get called under this circumstance?
         // there's already a character to read...
         c = *gptr();
-        //gbump(1);
         return c;
     }
     else {
-        //setg (base(), base(), ebuf());
         int nread = recv (sock, base(), BUFSIZE, 0);
-        if (nread != -1) {
+        //cout << "nread = " << nread << endl;
+        if (nread > 0) {
             setg (base(), base(), base()+nread);
             return *base();
         }
