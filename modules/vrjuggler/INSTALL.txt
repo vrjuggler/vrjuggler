@@ -112,7 +112,7 @@ Table of contents:
 
          iv. Compile VR Juggler (using the Autoconf system and GNU make)
 
-              a. Generate aclocal.m4, header template (vjDefines.h.in), and
+              a. Generate aclocal.m4, header template (vrjDefines.h.in), and
                  the configure script
 
                     ./autogen.sh
