@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+May-30-2002 patrickh  Enabled the Fakespace Pinch Glove and 5DT Data Glove
+                      drivers on Win32.
+                      NEW VERSION: 0.2.5
 May-30-2002 patrickh  Enabled the Ascension Flock of BIrds and Immersion Tech
                       Interface Box drivers on Win32.
                       NEW VERSION: 0.2.4

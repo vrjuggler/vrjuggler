@@ -47,12 +47,8 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GADGET_LIBRARY)
 
-SRCS		=
-
-ifneq (@OS_TYPE@, Win32)
-SRCS		+= PinchGloveStandalone.cpp	\
-                   PinchGlove.cpp
-endif
+SRCS		= PinchGloveStandalone.cpp	\
+                  PinchGlove.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

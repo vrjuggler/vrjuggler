@@ -39,6 +39,8 @@
 #include <gadget/Devices/Ascension/MotionStar.h>
 #include <gadget/Devices/Intersense/Intersense.h>
 #include <gadget/Devices/Immersion/Ibox.h>
+#include <gadget/Devices/Fakespace/PinchGlove.h>
+#include <gadget/Devices/5DT/DataGlove.h>
 
 // Sims
 #include <gadget/Devices/Sim/SimAnalog.h>
@@ -60,9 +62,7 @@
 #   ifdef VPR_OS_Darwin
 #      include <gadget/Devices/Keyboard/OSXKeyboard.h>
 #   else
-#      include <gadget/Devices/5DT/DataGlove.h>
 //#      include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
-#      include <gadget/Devices/Fakespace/PinchGlove.h>
 #      include <gadget/Devices/Keyboard/KeyboardXWin.h>
 #      include <gadget/Devices/Keyboard/KeyboardDepCheckerXWin.h>
 #      include <gadget/Devices/Open/Trackd/TrackdController.h>
@@ -112,10 +112,14 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<MotionStar>* motion_star = new DeviceConstructor<MotionStar>;
    DeviceConstructor<Intersense>* intersense = new DeviceConstructor<Intersense>;
    DeviceConstructor<IBox>* ibox = new DeviceConstructor<IBox>;
+   DeviceConstructor<PinchGlove>* pinch_glove = new DeviceConstructor<PinchGlove>;
+   DeviceConstructor<DataGlove>* data_glove = new DeviceConstructor<DataGlove>;
 
    if( (NULL == flock)        ||
        (NULL == intersense)   ||
        (NULL == ibox)         ||
+       (NULL == pinch_glove)  ||
+       (NULL == data_glove)   ||
        (NULL == motion_star)   )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
@@ -153,10 +157,8 @@ void DeviceFactory::hackLoadKnownDevices()
    }
 
 #else
-   DeviceConstructor<DataGlove>* data_glove = new DeviceConstructor<DataGlove>;
    DeviceConstructor<TrackdSensor>* trackd_sensor = new DeviceConstructor<TrackdSensor>;
    DeviceConstructor<TrackdController>* trackd_controller = new DeviceConstructor<TrackdController>;
-   DeviceConstructor<PinchGlove>* pinch_glove = new DeviceConstructor<PinchGlove>;
 //   DeviceConstructor<CyberGlove>* cyber_glove = new DeviceConstructor<CyberGlove>;
    DeviceConstructor<KeyboardXWin>* xwin_key = new DeviceConstructor<KeyboardXWin>;
    jccl::DependencyManager::instance()->registerChecker(new KeyboardDepCheckerXWin());
@@ -164,7 +166,6 @@ void DeviceFactory::hackLoadKnownDevices()
    if( (NULL == trackd_sensor)      ||
        (NULL == trackd_controller)  ||
        (NULL == data_glove)   ||
-       (NULL == pinch_glove)  ||
 //       (NULL == cyber_glove)  ||
        (NULL == xwin_key)     ||
        (NULL == threed_mouse))
