@@ -1,5 +1,10 @@
 # $Id$
 
+default: html
+
+docs: html pdf
+install-docs: install-html install-ps install-pdf
+
 DOXYGEN_FILE=		Tweek.doxy
 HTML_DOXYGEN_FILE=	$(DOXYGEN_FILE)
 LATEX_DOXYGEN_FILE=	Tweek_latex.doxy
