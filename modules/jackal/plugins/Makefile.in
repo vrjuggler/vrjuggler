@@ -109,8 +109,8 @@ include @topdir@/make.defs.mk
 
 STARTTIME:=	$(shell LC_TIME=C date)
 
-BUILD_PROF_C=	@BUILD_PROF_C@
-BUILD_PROF_CXX=	@BUILD_PROF_CXX@
+BUILD_PROF_C=	N
+BUILD_PROF_CXX=	N
 
 # If we can build both C and C++ profiled objects, we will build profiled
 # libraries.
