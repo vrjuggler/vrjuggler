@@ -184,7 +184,7 @@ else
    BOOST_PYTHON_LDFLAGS="-L$BOOST_PYTHON_LIBDIR -lboost_python"
 fi
 
-VRJUGGLER_PATH([1.1.129], ,
+VRJUGGLER_PATH([1.1.135], ,
                [AC_MSG_ERROR([*** VR Juggler is required for PyJuggler ***])])
 
 # -----------------------------------------------------------------------------
