@@ -19,6 +19,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wand", "Draw\OGL\wand\wand.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "applicationData", "Cluster\applicationData\applicationData.vcproj", "{23B853C7-A14E-472E-86F0-9DA205C2A1BA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WallTest", "Draw\OGL\WallTest\WallTest.vcproj", "{D0E43625-21FA-4FD1-9B9C-256E9C451E68}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "collideApp", "PerfMon\collideApp\collideApp.vcproj", "{C3331FBE-8035-4B0D-A41F-713E8FF40C7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		ConfigName.0 = Debug
@@ -67,6 +71,14 @@ Global
 		{23B853C7-A14E-472E-86F0-9DA205C2A1BA}.Debug.Build.0 = Debug|Win32
 		{23B853C7-A14E-472E-86F0-9DA205C2A1BA}.Release.ActiveCfg = Release|Win32
 		{23B853C7-A14E-472E-86F0-9DA205C2A1BA}.Release.Build.0 = Release|Win32
+		{D0E43625-21FA-4FD1-9B9C-256E9C451E68}.Debug.ActiveCfg = Debug|Win32
+		{D0E43625-21FA-4FD1-9B9C-256E9C451E68}.Debug.Build.0 = Debug|Win32
+		{D0E43625-21FA-4FD1-9B9C-256E9C451E68}.Release.ActiveCfg = Release|Win32
+		{D0E43625-21FA-4FD1-9B9C-256E9C451E68}.Release.Build.0 = Release|Win32
+		{C3331FBE-8035-4B0D-A41F-713E8FF40C7B}.Debug.ActiveCfg = Debug|Win32
+		{C3331FBE-8035-4B0D-A41F-713E8FF40C7B}.Debug.Build.0 = Debug|Win32
+		{C3331FBE-8035-4B0D-A41F-713E8FF40C7B}.Release.ActiveCfg = Release|Win32
+		{C3331FBE-8035-4B0D-A41F-713E8FF40C7B}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
