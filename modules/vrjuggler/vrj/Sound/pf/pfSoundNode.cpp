@@ -30,8 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <snx/sonix.h>
 
+#include <vrj/vrjConfig.h>
 #include <vrj/Sound/pf/pfSoundNode.h>
 
 
