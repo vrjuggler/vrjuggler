@@ -328,6 +328,7 @@ case $host_os in
         ISA='i386'
         ABI_LIST='ELF'
         LIBBITSUF=''
+        _EXTRA_FLAGS=''
         PLATFORM='Linux'
         ;;
     dnl # Unkown operating system (to config.guess).
