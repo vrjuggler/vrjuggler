@@ -9,7 +9,9 @@ JADE		= openjade
 JADETEX		= jadetex
 PDFJADETEX	= pdfjadetex
 RM		= rm -f
-XALAN		= $(DOCBOOK_ROOT)/xalan-j_2_2_0/bin/xalan.sh
+#XALAN		= $(DOCBOOK_ROOT)/xalan-j_2_2_0/bin/xalan.sh
+#XALAN		= $(DOCBOOK_ROOT)/xalan-j_2_3_D1/bin/xalan.sh
+XALAN		= $(DOCBOOK_ROOT)/xalan-j_20020214/bin/xalan.sh
 XEP		= sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC	= /usr/bin/xsltproc
 
@@ -29,19 +31,23 @@ html: $(HTML_FILES)
 pdf: $(PDF_FILES)
 
 guide.html: guide.xml
-guide.pdf: guide.xml # guide.fo guide.tex
+guide.pdf: guide.xml guide.fo # guide.tex
 
 # Basic XSL conversions -------------------------------------------------------
 
 .xml.html:
-	$(XALAN) -in $@ -xsl $(XSL_DIR)/html/docbook.xsl -out $<
+	$(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@
 
 .xml.fo:
-	$(XALAN) -in $@ -xsl $(XSL_DIR)/fo/docbook.xsl -out $<
+	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@
+
+# Generate a PDF file from an FO file using FOP.
+.fo.pdf:
+	$(FOP) $< $@
 
 # Generate a PDF file from an XML file using FOP.
-.xml.pdf:
-	$(FOP) -xml $< -xsl $(XSL_DIR)/fo/docbook.xsl -pdf $@
+#.xml.pdf:
+#	$(FOP) -xml $< -xsl $(XSL_DIR)/fo/docbook.xsl -pdf $@
 
 # -----------------------------------------------------------------------------
 
@@ -79,7 +85,7 @@ guide.pdf: guide.xml # guide.fo guide.tex
 
 # Generate a PDF file using XEP from RenderX.  This requires that an FO file
 # be generated first.
-#.xml.pdf:
+#.fo.pdf:
 #	$(XEP) $*.fo
 
 # -----------------------------------------------------------------------------
