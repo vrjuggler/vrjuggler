@@ -33,3 +33,6 @@ AC_ARG_WITH(openorb,
 AC_ARG_WITH(idl-java,
             [  --with-idl-java=<PATH>  Path to Java IDL compiler ],
             _idl_java="$withval", _idl_java='no')
+
+AC_ARG_WITH(junit, [  --with-junit=<PATH>     Path to JUnit JAR file(s) ],
+            JUNIT_JAR="$withval", JUNIT_JAR='none')
