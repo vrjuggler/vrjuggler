@@ -54,17 +54,18 @@ AC_ARG_WITH([python],
             [  --with-python=<PATH>    Path to Python root             [default=/usr/local]],
             [PYTHON_ROOT="$withval"], [PYTHON_ROOT='/usr/local'])
 
-AC_ARG_WITH([bpldir],
-            [  --with-bpldir=<PATH>    Directory containing a built
-                          version of Boost.Python v2      [default=/usr/local/lib]],
-            [BOOST_PYTHON_LIBDIR="$withval"], [BOOST_PYTHON_LIBDIR='/usr/local/lib'])
+AC_ARG_WITH([boost-python],
+            [  --with-boost-python=<PATH>
+                          Path to a Boost.Python V2
+                          installation                    [default=/usr/local]],
+            [BOOST_PYTHON_DIR="$withval"], [BOOST_PYTHON_DIR='/usr/local'])
 
 AC_ARG_WITH([pyste],
-            [  --with-pytse=<PATH>     Full path to pyste.py script   [default=none]],
-            [PYSTE="$withval"], [PYSTE='none'])
+            [  --with-pytse=<PATH>     Full path to pyste.py script    [No default]],
+            [PYSTE="$withval"], [PYSTE='pyste.py'])
 
 AC_ARG_WITH([osg],
-            [ --with-osg=<PATH>        Open Scene Graph installation  [default=$OSGHOME then /usr/local]],
+            [  --with-osg=<PATH>       Open Scene Graph installation   [default=$OSGHOME then /usr/local]],
             [osg_base_dir="$withval"], [osg_base_dir=${OSGHOME-/usr/local}])
 
 # Force the use of GCC as the compiler.
@@ -217,23 +218,51 @@ CPPFLAGS="${_pyj_save_CPPFLAGS}"
 LIBS="${_pyj_save_LIBS}"
 LDFLAGS="${_pyj_save_LDFLAGS}"
 
-BOOST_PYTHON_LIB="boost_python.$DYNAMICLIB_EXT"
+BOOST_PYTHON_LIB="boost_python"
 
-if test "x$OS_TYPE" = "xUNIX" ; then
-   BOOST_PYTHON_LIB="lib$BOOST_PYTHON_LIB"
-fi
-
-# XXX: This is pathetic.
-AC_CHECK_FILE([$BOOST_PYTHON_LIBDIR/$BOOST_PYTHON_LIB], ,
-              [AC_MSG_ERROR([*** Boost.Python v2 is required for PyJuggler ***])])
+DPP_LANG_SAVE
+DPP_LANG_CPLUSPLUS
 
 if test "x$OS_TYPE" = "xWin32" ; then
-   BOOST_PYTHON_LDFLAGS="/libpath:$BOOST_PYTHON_LIBDIR boost_python.lib"
-
-   # XXX: This is a little strange.  I cannot get the modules to link 
-   BOOST_PYTHON_LDFLAGS="/libpath:$PYTHON_ROOT/libs $BOOST_PYTHON_LDFLAGS"
+   bpl_link_option="$BOOST_PYTHON_LIB.lib"
 else
-   BOOST_PYTHON_LDFLAGS="-L$BOOST_PYTHON_LIBDIR -lboost_python"
+   bpl_link_option="-l$BOOST_PYTHON_LIB"
+fi
+
+_pyj_save_CPPFLAGS="$CPPFLAGS"
+_pyj_save_LIBS="$LIBS"
+_pyj_save_LDFLAGS="$LDFLAGS"
+
+CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES -I$BOOST_PYTHON_DIR/include"
+LIBS="$LIBS $bpl_link_option $PYTHON_LIB $UTIL_LIB $PYTHON_LIB_DEPS"
+LDFLAGS="$LDFLAGS -L$BOOST_PYTHON_DIR/lib $PYTHON_LDFLAGS"
+
+AC_CACHE_CHECK([for boost::python::handle<> in $bpl_link_option],
+   ac_cv_boost__python__handle_in_boost_python,
+   [AC_TRY_LINK([
+#include <boost/python.hpp>
+using namespace boost::python;],
+                [handle<> main_module(borrowed(PyImport_AddModule("__main__")));],
+                [ac_cv_boost__python__handle_in_boost_python='yes'
+                 rm -rf ./ii_files],
+                [ac_cv_boost__python__handle_in_boost_python='no'])])
+
+DPP_LANG_RESTORE
+
+CPPFLAGS="${_pyj_save_CPPFLAGS}"
+LIBS="${_pyj_save_LIBS}"
+LDFLAGS="${_pyj_save_LDFLAGS}"
+
+if test "x$ac_cv_boost__python__handle_in_boost_python" = "xyes" ; then
+   BOOST_PYTHON_INCLUDES="-I$BOOST_PYTHON_DIR/include"
+
+   if test "x$OS_TYPE" = "xWin32" ; then
+      BOOST_PYTHON_LDFLAGS="/libpath:$PYTHON_ROOT/libs /libpath:$BOOST_PYTHON_DIR/lib $bpl_link_option"
+   else
+      BOOST_PYTHON_LDFLAGS="-L$BOOST_PYTHON_DIR/lib $bpl_link_option"
+   fi
+else
+   AC_MSG_ERROR([*** Boost.Python v2 is required for PyJuggler ***])
 fi
 
 VPR_PATH([0.27], , [AC_MSG_ERROR([*** VPR is required for PyJuggler ***])])
@@ -335,6 +364,7 @@ AC_SUBST(PYTHON_VERSION)
 
 AC_SUBST(PYSTE)
 
+AC_SUBST(BOOST_PYTHON_INCLUDES)
 AC_SUBST(BOOST_PYTHON_LDFLAGS)
 
 # -----------------------------------------------------------------------------
