@@ -511,7 +511,7 @@
          <port>/dev/ttyd4</port>
          <baud>38400</baud>
          <min>0.0</min>
-         <max>0.0</max>
+         <max>255.0</max>
          <device_host />
       </ibox>
       <display_window name="big wall" version="4">
@@ -521,13 +521,19 @@
          <size>768</size>
          <pipe>0</pipe>
          <frame_buffer_config>
-            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
                <visual_id>-1</visual_id>
                <red_size>1</red_size>
                <green_size>1</green_size>
                <blue_size>1</blue_size>
                <alpha_size>1</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
                <depth_buffer_size>1</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
                <fsaa_enable>false</fsaa_enable>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
