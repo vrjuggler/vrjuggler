@@ -80,20 +80,20 @@ public:
     * @return true if the device was configured succesfully; false if the
     *         configuration element is invalid.
     */
-   virtual bool config(jccl::ConfigChunkPtr e);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /** Begin sampling.
    * Connect to the joystick and prepare to read.
    */
-   int startSampling();
+   bool startSampling();
 
    /** Stops sampling.
    * Drop connection to joystick and clear everything.
    */
-   int stopSampling();
+   bool stopSampling();
 
    /** Samples a value. */
-   int sample()
+   bool sample()
    { return 1;}
 
    /**
@@ -105,7 +105,7 @@ public:
    void updateData();
 
    /** Returns what element type is associated with this class. */
-   static std::string getChunkType();
+   static std::string getElementType();
 
    /** Returns digital data. */
    virtual const DigitalData getDigitalData(int devNum=0)
