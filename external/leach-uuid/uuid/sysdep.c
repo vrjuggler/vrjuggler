@@ -126,14 +126,34 @@ void get_system_time(uuid_time_t *uuid_time)
 void get_random_info(char seed[16]) {
   MD5_CTX c;
   typedef struct {
+#ifdef HAVE_SYS_SYSINFO_H
       struct sysinfo s;
+#else
+      long clock_tick;
+      long open_max;
+      long stream_max;
+      long expr_nest_max;
+      long bc_scale_max;
+      long bc_string_max;
+#endif
       struct timeval t;
       char hostname[257];
   } randomness;
   randomness r;
 
   MD5Init(&c);
+
+#ifdef HAVE_SYS_SYSINFO_H
   sysinfo(&r.s);
+#else
+  r.clock_tick    = sysconf(_SC_CLK_TCK);
+  r.open_max      = sysconf(_SC_OPEN_MAX);
+  r.stream_max    = sysconf(_SC_STREAM_MAX);
+  r.expr_nest_max = sysconf(_SC_EXPR_NEST_MAX);
+  r.bc_scale_max  = sysconf(_SC_BC_SCALE_MAX);
+  r.bc_string_max = sysconf(_SC_BC_STRING_MAX);
+#endif
+
   gettimeofday(&r.t, (struct timezone *)0);
   gethostname(r.hostname, 256);
   MD5Update(&c, &r, sizeof(randomness));
