@@ -67,56 +67,56 @@
 #                 For n32 binaries, it will be 32.  For 64-bit binaries, it
 #                 will be 64.
 #
-# GADGET_LIBRARY - The base name of the core Juggler library that will be built
-#                  with no file extension.
+# GADGET_LIBRARY - The base name of the core Gadgeteer library that will be
+#                  built with no file extension.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
-mtreedir	= $(topdir)/mtree
-projdatadir     = $(datadir)/gadgeteer
-releasedir	= @JUGGLERROOT_ABS@/release
-scriptdir	= $(releasedir)/scripts
-topdir		= @topdir@
-top_srcdir	= @top_srcdir@
-MAKEFLAGS	+= --no-print-directory
-DEPGEN_TOOL_CC	= @CC@
-DEPGEN_TOOL_CXX	= @CXX@
-MKINSTALLDIRS	= $(scriptdir)/mkinstalldirs
-MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
-MTREE_CMD	= @MTREE_CMD@
-PROFLIB_EXT	= _p
-PROF_OPT_FLAGS	= $(DBG_FLAGS)
-RM_LN		= @RM_LN@
-GADGETROOT_ABS	= @GADGETROOT_ABS@
-JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
+mtreedir=		$(topdir)/mtree
+projdatadir=		$(datadir)/gadgeteer
+releasedir=		@JUGGLERROOT_ABS@/release
+scriptdir=		$(releasedir)/scripts
+topdir=			@topdir@
+top_srcdir=		@top_srcdir@
+MAKEFLAGS+=		--no-print-directory
+DEPGEN_TOOL_CC=		@CC@
+DEPGEN_TOOL_CXX=	@CXX@
+MKINSTALLDIRS=		$(scriptdir)/mkinstalldirs
+MKPATH=			$(JUGGLERROOT_ABS)/Doozer++/mk
+MTREE_CMD=		@MTREE_CMD@
+PROFLIB_EXT=		_p
+PROF_OPT_FLAGS=		$(DBG_FLAGS)
+RM_LN=			@RM_LN@
+GADGETROOT_ABS=		@GADGETROOT_ABS@
+JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
 
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
 # -----------------------------------------------------------------------------
-EXTRA_CFLAGS		= $(CFLAGS_DYNLIB)
-EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB)
-EXTRA_DEFS		= -D_GADGET_BUILD_
-EXTRA_DEPEND_FLAGS	= -I$(GADGETROOT_ABS)
-EXTRA_INCLUDES		= -I$(top_srcdir)
+EXTRA_CFLAGS=		$(CFLAGS_DYNLIB)
+EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB)
+EXTRA_DEFS=		-D_GADGET_BUILD_
+EXTRA_DEPEND_FLAGS=	-I$(GADGETROOT_ABS)
+EXTRA_INCLUDES=		-I$(top_srcdir)
 
 # -----------------------------------------------------------------------------
 # Makedepend commands.  Doozer++ uses $(MKDEP_C) and $(MKDEP_CXX).
 # -----------------------------------------------------------------------------
-MKDEP_C 	= $(DEPGEN_TOOL_CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-MKDEP_CXX	= $(DEPGEN_TOOL_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
+MKDEP_C=	$(DEPGEN_TOOL_CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+MKDEP_CXX=	$(DEPGEN_TOOL_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
 # -----------------------------------------------------------------------------
 # Platform- and binary-specific options.
 # -----------------------------------------------------------------------------
 ifdef gadgetABI
-    dppABI	= $(gadgetABI)
+    dppABI=	$(gadgetABI)
 endif
 
 # -----------------------------------------------------------------------------
 # Library names.
 # -----------------------------------------------------------------------------
-GADGET_LIBRARY	= @LIB_PREFIX@gadget
+GADGET_LIBRARY=	@LIB_PREFIX@gadget
 
 include $(topdir)/common.defs.mk
