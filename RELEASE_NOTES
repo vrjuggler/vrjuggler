@@ -8,6 +8,16 @@ For all versions:
     - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
       for the current list of bugs.
 
+Version: 1.0.5
+Released: ????
+
+    Major bug fixes:
+        * vjGlOsgApp class now works correctly in simulator and in
+          multi-pipe setups.  The backport released in v1.0.4 was
+          incomplete and non-functional.
+
+==============================================================================
+
 Version: 1.0.4
 Released: January 22, 2002
 
