@@ -471,7 +471,7 @@
                      </listitem>
                   </varlistentry>
                </variablelist>
-               <para>For more information, refer to the section titled <quote>Environment Varibles</quote> in the <emphasis>Getting Started Guide</emphasis>.</para>
+               <para>For more information, refer to the section titled <quote>Environment Variables</quote> in the <emphasis>Getting Started Guide</emphasis>.</para>
             </section>
             <section>
                <title>Compiling VR Juggler</title>
@@ -505,8 +505,8 @@
          </section>
       </chapter>
       <chapter id="configure.script.chapter">
-         <title>Using the VR Juggler Configure Script</title>
-         <para>The VR Juggler project uses the autoconf utility to stay portable across platforms. This means you will have to <quote>configure</quote> the project before compiling it. To make sense of this documentation, please understand the concepts listed in <xref linkend="intro-req-reading"/>. Posting about these subjects to the mailing list will probably be ignored.</para>
+         <title>Using the VR Juggler Configure Scripts</title>
+         <para>The VR Juggler project uses the Autoconf utility to stay portable across platforms. This means you will have to <quote>configure</quote> the project before compiling it. To make sense of this documentation, please understand the concepts listed in <xref linkend="intro-req-reading"/>. Posting about these subjects to the mailing list will probably be ignored.</para>
          <para>In this chapter, the following conventions are used for text formatting and naming:</para>
          <itemizedlist>
             <listitem>
@@ -552,6 +552,7 @@
             </section>
             <section>
                <title>Overview</title>
+               <para>The script <command>configure.pl</command> is the glue that holds all the individual module build systems together. Given a configuration file (<filename>juggler.cfg</filename>) and a collection of build systems that follow some simple rules, <command>configure.pl</command> is capable of running all the component Autoconf-generated configure scripts in the correct order such that dependencies are satisfied. It completes the configuration process by generating a makefile that builds the individual modules.</para>
                <para>The easiest way to configure VR Juggler is to run <command>configure.pl</command> with no options in the top-level source directory. Doing so will root compiling in that directory. This will use all the default values for the host platform with the script doing its best to make the right choices. In some cases, however, this may not be sufficient.</para>
                <para>Possible situations that may cause <command>configure</command> to report a fatal error or a warning about a feature being disabled include the following:</para>
                <itemizedlist>
@@ -590,9 +591,80 @@
                </itemizedlist>
             </section>
             <section>
-               <title>Options</title>
+               <title>Options for <command>configure.pl</command></title>
+               <para>In this section, we present a description of the arguments that affect the execution of <command>configure.pl</command>. For the most up-to-date documentation, run the script as follows on the command line:</para>
+               <screen>% ./configure.pl --manual</screen>
+               <para>We now present a description of the options recognized by <command>configure.pl</command>. (Note that unrecognized options are passed through to the Autoconf-generated configure scripts which is what makes the whole thing work.)</para>
+               <variablelist>
+                  <varlistentry>
+                     <term>--help</term>
+                     <listitem>
+                        <para>Print usage information of this script and exit.</para>
+                     </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                     <term>--all-help</term>
+                     <listitem>
+                        <para>Print usage information for all the known Autoconf-generated configure scripts. The knowledge of configure scripts scripts comes from the configuration file. The output may be restricted using the <option>--module</option> argument, described below.</para>
+                     </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                     <term>--manual</term>
+                     <listitem>
+                        <para>Print usage information of this script in UNIX manpage format and exit.</para>
+                     </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                     <term>--modlist</term>
+                     <listitem>
+                        <para>Print a list of the available modules that may be configured</para>
+                     </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                     <term>--cfg=&lt;file&gt;</term>
+                     <listitem>
+                        <para>Name the configuration file to be used by this script. If not specified, it defaults to <filename>juggler.cfg</filename>. This file is discovered based on the run-time path to this script, and thus the script and the default configuration file must be in the same directory. For example, if this script is run as:</para>
+                        <screen>../configure.pl</screen>
+                        <para>then <filename>juggler.cfg</filename> will be searched for as <filename>../juggler.cfg</filename>.</para>
+                     </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                     <term>--module=&lt;name&gt;</term>
+                     <listitem>
+                        <para>Limit the work done by this script to what is required by the named module. The given name must correspond to one listed in the aforementioned configuration file. This can be specified in conjunction with <option>--all-help</option> to limit the output to only what is appropriate for the named module.</para>
+                     </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                     <term>--regen</term>
+                     <listitem>
+                        <para>Just regenerate the files previously generated without running the Autoconf-generated configure script(s) again.</para>
+                     </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                     <term>--args=&lt;file&gt;</term>
+                     <listitem>
+                        <para>Name the file containing arguments to pass to the Autoconf-generated configure script(s) that will be executed. If not specified, it defaults to <filename>acdefaults.cfg</filename>, found using the same technique as is used for <filename>juggler.cfg</filename> (see <option>--cfg</option> above).</para>
+                     </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                     <term>--argsmod=&lt;file&gt;</term>
+                     <listitem>
+                        <para>Name a <filename>.pl</filename> file (what could be a Perl script) that will be <quote>imported</quote> into this script. This imported code allows users to write Perl code that will extend the argument list passed to the Autoconf-generated configure scripts. If not specified, it defaults to <filename>acdefaults.pl</filename>, found using the same technique as is used for <filename>juggler.cfg</filename> and <filename>acdefaults.cfg</filename> (see <option>--cfg</option> above).</para>
+                        <para>If both <filename>acdefaults.cfg</filename> and <filename>acdefaults.pl</filename> exist, acdefaults.pl is used, an <filename>acdefaults.cfg</filename> is ignored.</para>
+                     </listitem>
+                  </varlistentry>
+                  <varlistentry>
+                     <term>--os=&lt;name&gt;</term>
+                     <listitem>
+                        <para>Define the host operating system. This can be any string. It will be used to recognize which platform-specific block to load from the Autoconf default arguments file. Use of this argument forcibly overrides automatic detection of the host operating system. <emphasis>Use with caution!</emphasis></para>
+                     </listitem>
+                  </varlistentry>
+               </variablelist>
+            </section>
+            <section>
+               <title>Options for Autoconf-Generated Scripts</title>
                <note>
-                  <para>This has not been updated for VR Juggler 1.1/2.0. Some of the options described below are accurate, but many are not. Until such time as this section is updated, it is best to read the output of running <command>configure.pl</command> with the <option>--all-help</option> option.</para>
+                  <para>This section has not been updated for VR Juggler 1.1/2.0. Some of the options described below are accurate, but many are not. Until such time as this section is updated, it is best to read the output of running <command>configure.pl</command> with the <option>--all-help</option> option.</para>
                </note>
                <para>The following is a list of the current VR Juggler-specific options that can be invoked at configuration time as of Revision 1.273.2.3 of <filename>configure.in</filename> (the revision number can be found at the top of the <filename>configure.in</filename> file and at the top of the configure script). The output for all options is generated by doing <command>configure --help</command>.</para>
                <variablelist>
