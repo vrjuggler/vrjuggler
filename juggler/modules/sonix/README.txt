@@ -29,6 +29,7 @@ Table of contents:
       A. Overview
       B. Details
       C. Advanced topics
+   4. Running sonix tests, and sample apps...
 
 
 ==============================================================================
@@ -229,3 +230,13 @@ Table of contents:
          mkdir <JUGGLER_DIR>/sonix/<BUILD_DIR>
          cd <JUGGLER_DIR>/sonix/<BUILD_DIR>
          <JUGGLER_DIR>/sonix/configure
+
+  4.  Running sonix test and sample applications
+  
+  Make sure you have your LD_LIBRARY_PATHs set...
+  
+  for Linux:
+  setenv LD_LIBRARY_PATH "$VPR_BASE_DIR"/lib:"$GADGET_BASE_DIR"/lib:"$JCCL_BASE_DIR"/lib:"$VJ_BASE_DIR"/lib:"$SNX_BASE_DIR"/lib
+
+  for Irix:
+  setenv LD_LIBRARYN32_PATH "$VPR_BASE_DIR"/lib32:"$GADGET_BASE_DIR"/lib32:"$JCCL_BASE_DIR"/lib32:"$VJ_BASE_DIR"/lib32:"$SNX_BASE_DIR"/lib32
