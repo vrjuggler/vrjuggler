@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
@@ -28,13 +28,13 @@
             <para>Configuration files can be stored in serveral places:</para>
             <itemizedlist>
                <listitem>
-                  <para>The VR Juggler distribution contains a number of sample files in <literal remap="tt">$VJ_BASE_DIR/share/Data/configFiles/</literal>. These include a variety of configuration files for simulator-mode use, as well as a number of files demonstrating how VR Juggler can be configured for various kinds of VR hardware.</para>
+                  <para>The VR Juggler distribution contains a number of sample files in <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles/</filename>. These include a variety of configuration files for simulator-mode use, as well as a number of files demonstrating how VR Juggler can be configured for various kinds of VR hardware.</para>
                </listitem>
                <listitem>
-                  <para>Juggler expects you to have a directory called <literal remap="tt">.vjconfig</literal> in your home directory. This is a good place to put any config files that you've chosen to modify. For example, if you've changed one of the simulator config files because you didn't like the keyboard shortcuts it was using, you should put it in <literal remap="tt">~/.vjconfig</literal>.</para>
+                  <para>Juggler expects you to have a directory called <filename>.vjconfig</filename> in your home directory. This is a good place to put any config files that you've chosen to modify. For example, if you've changed one of the simulator config files because you didn't like the keyboard shortcuts it was using, you should put it in <filename>~/.vjconfig</filename>.</para>
                </listitem>
                <listitem>
-                  <para>Your system administrators may have also created a repository of VR Juggler config files set up to work with your local systems and hardware. For example, VRAC keeps local configurations in the directory <literal remap="tt">/home/vr/vjconfig</literal>.</para>
+                  <para>Your system administrators may have also created a repository of VR Juggler config files set up to work with your local systems and hardware. For example, VRAC keeps local configurations in the directory <filename>/home/vr/vjconfig</filename>.</para>
                </listitem>
             </itemizedlist>
          </section>
@@ -42,7 +42,7 @@
             <title>Using modular configuration files</title>
             <para>One of the difficulties of managing a VR system is the rapid proliferation of configuration files. If the entire configuration is read from a single file, then there must exist separate files for every possible permutation of configurations - simulators, projection systems, projection systems with simulated input devices, or configured with monoscopic displays for photo sessions, or monoscopic displays <emphasis>and</emphasis> simulated input devices, etc. Keeping all these files up-to-date can become a full-time job.</para>
             <para>VR Juggler sidesteps this problem with the concept of <emphasis>modular configuration files</emphasis>. Instead of listing a single configuration file on the application's command line, we list several. Each file contains configuration information relevant to a particular part of the system. For example, one could define all the displays to be used, while another could define the input devices, and a third could describe how those inputs are mapped to a user's head, glove, wand, etc. There could be several variations of each file to choose from: display configs for an HMD, simulator window, desk, monoscopic desk, etc.; input config files for several varieties of hardware, or the user's preferred simulator setup. So long as a consistent set of names are used for input devices and so on, these files could be freely mixed and matched, eliminating the need to have a separate file for every possible combination.</para>
-            <para>The VR Juggler distribution includes several examples of modular configuration files in the directory <filename>$VJ_BASE_DIR/share/Data/configFiles</filename>. The <filename>sim.*.config</filename> files can be used in various combinations to run an application with various kinds of simulator devices. For example, a basic simulator configuration with one display window and a wand would use these files:</para>
+            <para>The VR Juggler distribution includes several examples of modular configuration files in the directory <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>. The <filename>sim.*.config</filename> files can be used in various combinations to run an application with various kinds of simulator devices. For example, a basic simulator configuration with one display window and a wand would use these files:</para>
             <itemizedlist>
                <listitem>
                   <para><filename>sim.base.config</filename></para>
@@ -104,7 +104,7 @@
          </section>
          <section>
             <title>Chunk Description Files</title>
-            <para>For every kind of ConfigChunk there's an object called a <firstterm>ChunkDesc</firstterm> - short for "Chunk Description". ChunkDescs live in ChunkDesc files - and where are they? The primary VR Juggler ChunkDesc file is <filename>$VJ_BASE_DIR/share/Data/chunksDesc</filename> - it defines all the different kinds of chunks that VR Juggler beta1 knows about and needs. When a VR Juggler program starts up, one of the first things it does - even before it reads its config files - is to read the primary chunksDesc file.</para>
+            <para>For every kind of ConfigChunk there's an object called a <firstterm>ChunkDesc</firstterm> - short for "Chunk Description". ChunkDescs live in ChunkDesc files - and where are they? The primary VR Juggler ChunkDesc file is <filename>$VJ_BASE_DIR/share/vrjuggler/data/vrj-chunks.desc</filename> - it defines all the different kinds of chunks that VR Juggler beta1 knows about and needs. When a VR Juggler program starts up, one of the first things it does - even before it reads its config files - is to read the primary <filename>vrj-chunks.desc</filename> file.</para>
             <para>Later in the beta series, VR Juggler will have the ability to load user-specific ChunkDesc files. These might include ChunkDescs for application-specific ConfigChunks.</para>
             <para>If you've read this far, you know what VR Juggler's config files are, and you know what they're made of - lists of ConfigChunks. You also know that there are a lot of different kinds of ConfigChunks. Where do these different kinds of Chunks come from? How does VR Juggler know how to make a "Surface Display" Chunk that's different from a "Position Proxy" Chunk?</para>
          </section>
@@ -448,12 +448,12 @@
             <title>Setup</title>
             <para>Before trying to run VjControl, you should perform the steps discussed under "User Setup" in the VR Juggler <emphasis>Getting Started Guide</emphasis>. In particular, make sure all your environment variables are set correctly.</para>
             <para>It is important that you create a <filename>~/.vjconfig</filename> directory, as this is where VjControl stores its own preferences.</para>
-            <para>You should also find out where the VR Juggler config files you should use are located. The VR Juggler distribution includes a number of sample config files in the directory <filename>$VJ_BASE_DIR/share/Data/configFiles</filename>. Your system administrators may also have a location for customized config files. For ease of use, you may wish to copy commonly-used config files to your ~/.vjconfig directory. This is also a good place to keep any config files that you modify to your own tastes.</para>
+            <para>You should also find out where the VR Juggler config files you should use are located. The VR Juggler distribution includes a number of sample config files in the directory <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>. Your system administrators may also have a location for customized config files. For ease of use, you may wish to copy commonly-used config files to your <filename>~/.vjconfig</filename> directory. This is also a good place to keep any config files that you modify to your own tastes.</para>
          </section>
          <section>
             <title>Starting VjControl</title>
             <para>On Unix/Linux systems, the command is <command>vjcontrol</command>; on Win32, the command is <command>vjcontrol.bat</command>. If <filename>$VJ_BASE_DIR/bin</filename> is not in your search path, you will need to give the entire path to VjControl on the command line.</para>
-            <para>VjControl's <ulink url="Preferences.html">Preferences</ulink> control what files are loaded automatically on startup. There are also <ulink url="cmdline.html">command-line arguments</ulink> that can be used to load files at startup. With the default preferences, VjControl will attempt to load <filename>$VJ_BASE_DIR/share/Data/chunksDesc</filename>, which contains definitions for the basic types of VR Juggler configuration information.</para>
+            <para>VjControl's <ulink url="Preferences.html">Preferences</ulink> control what files are loaded automatically on startup. There are also <ulink url="cmdline.html">command-line arguments</ulink> that can be used to load files at startup. With the default preferences, VjControl will attempt to load <filename>$VJ_BASE_DIR/share/vrjuggler/data/vrj-chunks.desc</filename>, which contains definitions for the basic types of VR Juggler configuration information.</para>
          </section>
          <section>
             <title>The Main Window</title>
@@ -512,10 +512,10 @@
             <para>VR Juggler uses two types of files: Config Files and ChunkDesc Files.</para>
             <itemizedlist>
                <listitem>
-                  <para>Config Files are made of <quote>Chunks</quote> of information. For example, one chunk will describe the setup of a display device while another will describe the setup for a keyboard or tracking system. There will typically be several ready-made config files in the <filename>$VJ_BASE_DIR/share/Data</filename> directory, with names like simulator.config or <filename>C2_4wall.config</filename>.</para>
+                  <para>Config Files are made of <quote>Chunks</quote> of information. For example, one chunk will describe the setup of a display device while another will describe the setup for a keyboard or tracking system. There will typically be several ready-made config files in the <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename> directory, with names like simulator.config or <filename>C2_4wall.config</filename>.</para>
                </listitem>
                <listitem>
-                  <para>ChunkDesc Files define the different kinds of chunks (ie. what kind of information a Keyboard chunk should have, or a Display chunk). The main ChunkDesc file for VR Juggler is usually <filename>$VJ_BASE_DIR/share/Data/chunksDesc</filename>.</para>
+                  <para>ChunkDesc Files define the different kinds of chunks (ie. what kind of information a Keyboard chunk should have, or a Display chunk). The main ChunkDesc file for VR Juggler is usually <filename>$VJ_BASE_DIR/share/vrjuggler/data/vrj-chunks.desc</filename>.</para>
                </listitem>
             </itemizedlist>
             <para>For more information, see (DEAD LINKS!):</para>
@@ -692,7 +692,7 @@
                </imageobject>
             </mediaobject>
          </figure>
-         <para>The ComboBox at the top of the panel lets you choose which of the loaded description files to display (in this case, the file is called ``chunksDesc''). Below that is a list of all the ChunkDescs defined in the file. Click on a name to select it. You can double-click on a name to view or edit the ChunkDesc.</para>
+         <para>The ComboBox at the top of the panel lets you choose which of the loaded description files to display (in this case, the file is called <filename>vrj-chunks.desc</filename>). Below that is a list of all the ChunkDescs defined in the file. Click on a name to select it. You can double-click on a name to view or edit the ChunkDesc.</para>
          <para>There are six buttons along the side of the panel:</para>
          <itemizedlist>
             <listitem>
@@ -764,7 +764,7 @@
                   <para>Inside the VjControl binary itself</para>
                </listitem>
                <listitem>
-                  <para>In <filename>$VJ_BASE_DIR/share/Data/DescHelp</filename></para>
+                  <para>In <filename>$VJ_BASE_DIR/share/vrjuggler/data/DescHelp</filename></para>
                </listitem>
                <listitem>
                   <para>In <filename>$HOME/.vjconfig/DescHelp</filename></para>
@@ -851,7 +851,7 @@
                <listitem>
                   <para>Preload ChunkDesc Files</para>
                   <para>Here you can specify one or more Chunk Description files that will be loaded automatically when VjControl starts up. The arguments are simply pathnames to files. If the strings <varname>$VJ_BASE_DIR</varname> or <varname>$HOME</varname> are included in a path name, they will be replaced with the value of the <varname>$VJ_BASE_DIR</varname> environment variable or the user's home directory, respectively.</para>
-                  <para>It is suggested that you include <filename>$VJ_BASE_DIR/share/Data/chunksDesc</filename>, the main Chunk Description file.</para>
+                  <para>It is suggested that you include <filename>$VJ_BASE_DIR/share/vrjuggler/data/vrj-chunks.desc</filename>, the main Chunk Description file.</para>
                   <para>You can override the automatic loading of files at startup by using the <option>-noautoload</option> command-line argument (refer to <xref linkend="cmd-args-chapter"/> for more information).</para>
                </listitem>
                <listitem>
