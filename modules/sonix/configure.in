@@ -309,6 +309,14 @@ AUDIERE_API='N'
 if test "x$AUDIERE_ENABLED" = "xyes" ; then
    DPP_HAVE_AUDIERE([/usr], AUDIERE_API='Y',
       [AC_MSG_WARN([*** Audiere plug-in cannot be built. ***])])
+
+   if test "x$AUDIERE" = "xyes" ; then
+      if test "x$VPR_SUBSYSTEM" = "xPOSIX" ; then
+         AUDIERE_API='Y'
+      else
+         AC_MSG_WARN([*** Audiere connot be used with a VPR installation that does not use POSIX. ***])
+      fi
+   fi 
 fi
 
 dnl -------------------------------------------------------------
