@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- ---------------------------------------------------------
+Feb-25-2003 aronb       Merged in the new Cluster code from RIM_REFACTOR_POST_SCO2
 Feb-17-2003 allenb      Changed Analog and Digital serialized object form
                         to use timestamp attribute.
 Feb-17-2003 nonchocoboy Fixed bug in the Analog Simulator device where the
