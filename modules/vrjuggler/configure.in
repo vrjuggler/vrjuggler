@@ -583,12 +583,10 @@ if test "$THREADS" = "POSIX" ; then
     AC_DEFINE(RW_MULTI_THREAD,)
     AC_DEFINE(_REENTRANT,)
 
-    dnl # Set to POSIX THREADING
-    THREAD_SYS="POSIX"
-
-    dnl # Nothing for these at this time.
+    dnl # Use POSIX threading, synchronization and shared memory.
+    THREAD_SYS='POSIX'
     SYNC_SYS='POSIX'
-    SHMEM_SYS=''
+    SHMEM_SYS='POSIX'
 elif test "$THREADS" = "SGI_IPC" ; then
     AC_DEFINE(VJ_SGI_IPC,)
 
