@@ -61,10 +61,23 @@ public class ConfigChunkDBEditorIFrame
       this.getContentPane().add(editor,  BorderLayout.CENTER);
    }
 
+   public String getFilename()
+   {
+      return filename;
+   }
+
+   public void setFilename(String filename)
+   {
+      this.filename = filename;
+      setTitle("Configuration Collection: "+filename);
+   }
+
    public ConfigChunkDBEditor getEditor()
    {
       return editor;
    }
+
+   private String filename = "";
 
    // JBuilder GUI variables.
    private ConfigChunkDBEditor editor = new ConfigChunkDBEditor();
