@@ -57,7 +57,7 @@ struct timezone {
 };
 #endif
 
-namespace  {
+namespace vpr {
 
 class SystemWin32 : public SystemBase {
 public:

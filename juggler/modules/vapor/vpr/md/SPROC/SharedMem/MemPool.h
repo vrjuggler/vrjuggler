@@ -37,7 +37,7 @@
 #include <vprConfig.h>
 #include <stdlib.h>
 
-namespace  {
+namespace vpr {
 
 //: Shared memory pool.
 //
