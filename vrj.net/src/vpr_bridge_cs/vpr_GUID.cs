@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.77 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -182,6 +182,11 @@ public sealed class GUID
       bool result;
       result = vpr_GUID_less_than__vpr_GUID(lhs.mRawObject, rhs);
       return result;
+   }
+
+   public static bool operator>(vpr.GUID lhs, vpr.GUID rhs)
+   {
+      return (! (lhs < rhs) && ! (lhs == rhs));
    }
 
    // Converter operators.

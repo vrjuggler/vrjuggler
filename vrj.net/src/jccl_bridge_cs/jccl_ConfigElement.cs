@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.77 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -143,6 +143,11 @@ public sealed class ConfigElement
       bool result;
       result = jccl_ConfigElement_less_than__jccl_ConfigElement(lhs.mRawObject, rhs);
       return result;
+   }
+
+   public static bool operator>(jccl.ConfigElement lhs, jccl.ConfigElement rhs)
+   {
+      return (! (lhs < rhs) && ! (lhs == rhs));
    }
 
    // Converter operators.

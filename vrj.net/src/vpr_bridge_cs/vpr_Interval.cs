@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.77 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -191,6 +191,11 @@ public sealed class Interval
       vpr.Interval result;
       result = vpr_Interval_subtract__vpr_Interval(lhs.mRawObject, rhs);
       return result;
+   }
+
+   public static bool operator>=(vpr.Interval lhs, vpr.Interval rhs)
+   {
+      return (! (lhs <= rhs) || (lhs == rhs));
    }
 
    // Converter operators.
