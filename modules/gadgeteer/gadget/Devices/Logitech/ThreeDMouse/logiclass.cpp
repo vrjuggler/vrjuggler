@@ -66,7 +66,7 @@
 #include <gadget/Devices/Logitech/ThreeDMouse/logiclass.h>   /* classprototypes and data types */
 
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::ThreeDMouse>(inputMgr);
 }

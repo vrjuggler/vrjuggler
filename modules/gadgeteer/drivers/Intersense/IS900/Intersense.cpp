@@ -48,7 +48,7 @@
 
 #include <gadget/Devices/Intersense/IS900/Intersense.h>
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::Intersense>(inputMgr);
 }

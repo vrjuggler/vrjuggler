@@ -47,7 +47,7 @@
 #include <gadget/Devices/Ascension/Flock/Flock.h>
 
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::Flock>(inputMgr);
 }

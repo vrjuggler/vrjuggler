@@ -45,7 +45,7 @@
 #include <gadget/Devices/Fakespace/PinchGlove/PinchGlove.h> /* Gadgeteer pinch driver */
 
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::PinchGlove>(inputMgr);
 }
