@@ -96,6 +96,7 @@
 #   define VPR_EXPORT_DATA(__type) _declspec(dllexport) __type
 #   define VPR_IMPORT(__type)      _declspec(dllimport) __type
 #   define VPR_IMPORT_DATA(__type) _declspec(dllimport) __type
+#   define VPR_IMPORT_CLASS        _declspec(dllimport)
 
 #   define VPR_EXTERN(__type)         extern _declspec(dllexport) __type
 #   define VPR_IMPLEMENT(__type)      _declspec(dllexport) __type
@@ -105,6 +106,16 @@
 #   define VPR_CALLBACK
 #   define VPR_CALLBACK_DECL
 #   define VPR_STATIC_CALLBACK(__x) static __x
+
+#ifdef _VPR_BUILD_
+#   define VPR_API(__type)	VPR_EXPORT(__type)
+#   define VPR_CLASS_API	VPR_EXPORT_CLASS
+#   define VPR_DATA_API(__type)	VPR_EXPORT_DATA(__type)
+#else
+#   define VPR_API(__type)	VPR_IMPORT(__type)
+#   define VPR_CLASS_API	VPR_IMPORT_CLASS
+#   define VPR_DATA_API(__type)	VPR_IMPORT_DATA(__type)
+#endif
 
 #else   /* UNIX (where this stuff is simple!) */
 
