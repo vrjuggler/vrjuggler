@@ -57,7 +57,6 @@ JARS=			CommonEditors.jar
 JOGL_JARS=		@JOGL_JARS@
 
 _LOCAL_CLEAN=		1
-JAVA_AFTERBUILD=	java_afterbuild
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -118,9 +117,3 @@ endif
                 $(GROUP_OPT_UNIX) $$jar $(bundle_vrj_javadir) ;		\
           done
 endif
-
-ifdef GLOBAL_BUILD
-   CLEAN_DIRS+=	$(top_srcdir)/bin
-endif
-
-include Makefile.inc

@@ -57,7 +57,6 @@ JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 BEANS=			DisplayWindowEditor
 
 _LOCAL_CLEAN=		1
-JAVA_AFTERBUILD=	java_afterbuild
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -128,9 +127,3 @@ ifneq ($(BEANS), )
           done
 endif
 endif
-
-ifdef GLOBAL_BUILD
-   CLEAN_DIRS+=	$(top_srcdir)/bin
-endif
-
-include Makefile.inc
