@@ -209,10 +209,12 @@ void vjGlDrawManager::drawSimulator(vjSimulator* sim)
 	glEnable(GL_COLOR_MATERIAL);
 	
 	//-----------------set up a light....
-	GLfloat light_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
+	/*
+   GLfloat light_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
 	GLfloat light_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
 	GLfloat light_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
 	GLfloat light_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
+   */
 	//-----------------Call the light....
 	/*
    glLightfv(GL_LIGHT7, GL_AMBIENT,  light_ambient);
@@ -388,10 +390,12 @@ void vjGlDrawManager::drawGlove(vjGloveProxy* gloveProxy)
       glEnable(GL_COLOR_MATERIAL);
 
       //-----------------set up a light....
+      /*
       GLfloat light_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
       GLfloat light_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
       GLfloat light_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
       GLfloat light_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
+      */
       //-----------------Call the light....
       /*
       glLightfv(GL_LIGHT7, GL_AMBIENT,  light_ambient);

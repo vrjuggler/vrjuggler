@@ -47,7 +47,7 @@ DEPEND_SRCS	:= vjAPI.cpp			\
                    vjFrustum.cpp		\
                    vjKernel.cpp			\
                    vjProjection.cpp		\
-                   vjStreamLock.cpp		\
+		   vjStreamLock.cpp		\
                    vjWallProjection.cpp		\
                    vjSGISystemFactory.cpp
 

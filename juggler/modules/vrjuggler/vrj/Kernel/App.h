@@ -38,6 +38,7 @@ class vjDrawManager;
 //
 // @author Allen Bierbaum
 //  Date: 9-8-97
+//!PUBLIC_API
 //------------------------------------------------------------------
 class vjApp
 {
