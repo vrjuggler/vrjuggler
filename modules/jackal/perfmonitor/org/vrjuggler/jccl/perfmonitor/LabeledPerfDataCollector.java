@@ -38,6 +38,11 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
+//import javax.xml.parsers.*;
+//import org.xml.sax.SAXException;
+//import org.xml.sax.SAXParseException;
+import org.w3c.dom.*;
+
 import VjConfig.*;
 import VjControl.Core;
 import VjConfig.ConfigStreamTokenizer;
@@ -123,13 +128,7 @@ public class LabeledPerfDataCollector {
 //  public int numsamps[];
     public double totalsum;
     public int totalsamps;
-//      public double maxvals[];
-//      public double maxlinetotal;
-//      public double sums[];
-//      int prevplace = -1;
-//      double prevval = 0.0;
     DataLine current_dl = null;
-//    int place;
     int maxdatalines;
     protected List action_listeners;
 
@@ -181,10 +180,6 @@ public class LabeledPerfDataCollector {
 	    while (i.hasNext()) {
 		DataElem de = (DataElem)i.next();
 		IndexInfo ii = (IndexInfo)index_info.get(de.index);
-//  		if (ii == null) {
-//  		    ii = new IndexInfo();
-//  		    index_info.put (de.index, ii);
-//  		}
 		ii.removeSample (de.stamp);
 	    }
 	}
@@ -193,13 +188,13 @@ public class LabeledPerfDataCollector {
 	i = new_dl.iterator();
 	while (i.hasNext()) {
 	    DataElem de = (DataElem)i.next();
-	    IndexInfo ii = (IndexInfo)index_info.get(de.index);
-	    if (ii == null) {
-		ii = new IndexInfo();
-		index_info.put (de.index, ii);
-		num++;
-	    }
-	    ii.addSample (de.stamp);
+// 	    IndexInfo ii = (IndexInfo)index_info.get(de.index);
+// 	    if (ii == null) {
+// 		ii = new IndexInfo();
+// 		index_info.put (de.index, ii);
+// 		num++;
+// 	    }
+// 	    ii.addSample (de.stamp);
 	}
     }
 
@@ -219,6 +214,67 @@ public class LabeledPerfDataCollector {
 	return name;
     }
 
+    public void addDataElem (String label, String category, double time) {
+
+    }
+
+
+    /** doc should be the element node for this labeledbuffer... we just
+     *  extract all the subelements from it...
+     */
+    public void interpretXMLData (Node doc) {
+        String name = doc.getNodeName();
+        String value = doc.getNodeValue();
+        NamedNodeMap attributes;
+        int attrcount;
+        int i;
+        boolean retval = true;
+        Node child;
+
+        switch (doc.getNodeType()) {
+        case Node.DOCUMENT_NODE:
+        case Node.DOCUMENT_FRAGMENT_NODE:
+            child = doc.getFirstChild();
+            while (child != null) {
+                interpretXMLData (child);
+                child = child.getNextSibling();
+            }
+            break;
+        case Node.ELEMENT_NODE:
+            if (name.equalsIgnoreCase ("stamp")) {
+                attributes = doc.getAttributes();
+                attrcount = attributes.getLength();
+		String label = "";
+                String category = "";
+                double time = 0.0;
+                for (i = 0; i < attrcount; i++) {
+                    child = attributes.item(i);
+                    if (child.getNodeName().equals ("label")) {
+			label = child.getNodeValue();
+		    }
+                    else if (child.getNodeName().equals ("category")) {
+                        category = child.getNodeValue();
+                    }
+                    else if (child.getNodeName().equals ("time")) {
+                        time = Double.parseDouble (child.getNodeValue());
+                    }
+                }
+                addDataElem (name, category, time);
+
+            }
+            else {
+                // shouldn't be anything else, eh?
+            }
+        case Node.COMMENT_NODE:
+        case Node.NOTATION_NODE:
+        case Node.PROCESSING_INSTRUCTION_NODE:
+        case Node.TEXT_NODE:
+            break;
+        default:
+	    System.out.println ("unexpected dom node...");
+            //iostatus.addWarning ("Unexpected DOM node type...");
+	}
+    }
 
 //      public void refreshMaxValues () {
 //  	DataLine dl;
