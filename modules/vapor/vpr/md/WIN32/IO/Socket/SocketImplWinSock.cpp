@@ -234,55 +234,6 @@ SocketImpWinSock::recv(void* buffer, const size_t length, const int flags) {
     return ::recv(m_sockfd, (char*) buffer, length, flags);
 }
 
-// ----------------------------------------------------------------------------
-// Receive the specified number of bytes from the remote site to which the
-// local side is connected.
-// ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::recv (std::string& buffer, const size_t length,
-                        const int flags)
-{
-    ssize_t bytes;
-    char* temp_buf;
-
-    temp_buf = (char*) malloc(length);
-    bytes    = recv((void*) temp_buf, length, flags);
-
-    // If anything was read into temp_buf, copy it into buffer.
-    if ( bytes > -1 ) {
-        buffer = temp_buf;
-    }
-
-    free(temp_buf);
-
-    return bytes;
-}
-
-// ----------------------------------------------------------------------------
-// Receive the specified number of bytes from the remote site to which the
-// local side is connected.
-// ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::recv (std::vector<char>& buffer, const size_t length,
-                        const int flags)
-{
-    ssize_t bytes;
-    char* temp_buf;
-
-    temp_buf = (char*) malloc(length);
-    bytes    = recv((void*) temp_buf, length, flags);
-
-    // If anything was read into temp_buf, copy it into buffer.
-    if ( bytes > -1 ) {
-        for ( ssize_t i = 0; i < bytes; i++ ) {
-            buffer[i] = temp_buf[i];
-        }
-    }
-
-    free(temp_buf);
-
-    return bytes;
-}
 
 // ----------------------------------------------------------------------------
 // Send the specified number of bytes contained in the given buffer from the
@@ -295,41 +246,6 @@ SocketImpWinSock::send (const void* buffer, const size_t length,
     return ::send(m_sockfd, (char*) buffer, length, flags);
 }
 
-// ----------------------------------------------------------------------------
-// Send the specified number of bytes contained in the given buffer from the
-// local side to the remote site to which we are connected.
-// ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::send (const std::string& buffer, const size_t length,
-                        const int flags)
-{
-    return send((void*) buffer.c_str(), length, flags);
-}
 
-// ----------------------------------------------------------------------------
-// Send the specified number of bytes contained in the given buffer from the
-// local side to the remote site to which we are connected.
-// ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::send (const std::vector<char>& buffer, const size_t length,
-                        const int flags)
-{
-    ssize_t bytes;
-    char* temp_buf;
-
-    temp_buf = (char*) malloc(length);
-
-    // Copy the contents of buffer into temp_buf.
-    for ( size_t i = 0; i < length; i++ ) {
-        temp_buf[i] = buffer[i];
-    }
-
-    // Write temp_buf to the file handle.
-    bytes = send((void*) temp_buf, length, flags);
-
-    free(temp_buf);
-
-    return bytes;
-}
 
 }; // End of vpr namespace
