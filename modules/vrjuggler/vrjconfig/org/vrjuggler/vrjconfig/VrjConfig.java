@@ -232,7 +232,6 @@ public class VrjConfig
       public void internalFrameDeactivated(InternalFrameEvent evt)
       {
          ConfigIFrame frame = (ConfigIFrame)evt.getInternalFrame();
-         toolbar.setConfigContext(new ConfigContext());
       }
    }
 
@@ -258,14 +257,10 @@ public class VrjConfig
        */
       public void internalFrameClosed(InternalFrameEvent evt)
       {
-         ConfigIFrame frm = (ConfigIFrame)evt.getInternalFrame();
-         ConfigContext ctx = frm.getEditor().getConfigContext();
-         for (Iterator itr = ctx.getResources().iterator(); itr.hasNext(); )
-         {
-            // Close the resource
-            String resource = (String)itr.next();
-            System.err.println("Closing resource "+resource+": Not yet implemented.");
-         }
+         ConfigIFrame frame = (ConfigIFrame)evt.getInternalFrame();
+         toolbar.setConfigContext(frame.getEditor().getConfigContext());
+         toolbar.doClose();
+         toolbar.setConfigContext(new ConfigContext());
       }
    }
 }

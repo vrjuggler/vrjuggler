@@ -49,8 +49,13 @@ import org.vrjuggler.vrjconfig.PopupButton;
 public class ConfigToolbar
    extends JComponent
 {
+   private String mDefaultDefinitionFile = "${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc";
+
    public ConfigToolbar()
    {
+      // Expand the environment variables in the default description file
+      mDefaultDefinitionFile = expandEnvVars(mDefaultDefinitionFile);
+
       try
       {
          jbInit();
@@ -135,16 +140,25 @@ public class ConfigToolbar
       }
    }
 
+   /**
+    * Creates the default configuration context used as the base of all
+    * configurations.
+    */
    private ConfigContext createDefaultConfigContext()
    {
       ConfigContext ctx = new ConfigContext();
 
-      // Add the VR Juggler definitions into the context
-      String default_desc_file = "${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc";
-      default_desc_file = expandEnvVars(default_desc_file);
-      if (getConfigBroker().containsDataSource(default_desc_file))
+      try
       {
-         ctx.add(default_desc_file);
+         // Add the VR Juggler definitions into the context
+         FileDataSource defs_data_source = new FileDataSource(mDefaultDefinitionFile,
+                                                              FileDataSource.DEFINITIONS);
+         getConfigBroker().add(mDefaultDefinitionFile, defs_data_source);
+         ctx.add(mDefaultDefinitionFile);
+      }
+      catch (IOException ioe)
+      {
+         ioe.printStackTrace();
       }
 
       return ctx;
@@ -303,8 +317,14 @@ public class ConfigToolbar
     */
    public boolean doClose()
    {
-      System.err.println("ConfigToolbar.doClose(): not implemented");
-      return false;
+      System.out.println("ConfigToolbar.doClose()");
+      //XXX: Check if we need to save first
+      ConfigBroker broker = new ConfigBrokerProxy();
+      for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
+      {
+         broker.remove((String)itr.next());
+      }
+      return true;
    }
 
    protected void toggleContextEditor()
