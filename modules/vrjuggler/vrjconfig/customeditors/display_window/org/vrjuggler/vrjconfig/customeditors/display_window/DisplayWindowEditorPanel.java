@@ -444,7 +444,6 @@ public class DisplayWindowEditorPanel
 
          elt.setProperty("stereo", 0, dlg.inStereo());
          elt.setProperty("border", 0, dlg.hasBorder());
-         elt.setProperty("act_as_event_source", 0, dlg.isEventSource());
 
          addDisplay(elt);
       }

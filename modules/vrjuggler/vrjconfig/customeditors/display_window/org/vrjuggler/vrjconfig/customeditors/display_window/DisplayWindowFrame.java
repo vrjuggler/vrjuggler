@@ -183,11 +183,6 @@ public class DisplayWindowFrame
 
    public void addSimulatorViewport(ConfigElement simVP)
    {
-      // When we have a simulator viewport, we *have* to act as an event
-      // source.
-      mElement.setProperty("act_as_event_source", 0, Boolean.TRUE);
-      mEventSrcItem.setEnabled(false);
-
       mElement.addProperty("simulator_viewports", simVP);
    }
 
@@ -199,13 +194,6 @@ public class DisplayWindowFrame
    public void removeSimulatorViewport(ConfigElement simVP)
    {
       mElement.removeProperty("simulator_viewports", simVP);
-
-      // If we have reached a point where we no longer have any simulator
-      // viewports, we can allow the user to change the event source status.
-      if ( mElement.getPropertyValueCount("simulator_viewports") == 0 )
-      {
-         mEventSrcItem.setEnabled(true);
-      }
    }
 
    private void jbInit() throws Exception
@@ -220,8 +208,6 @@ public class DisplayWindowFrame
       mPointerItem.addActionListener(new DisplayWindowFrame_mPointerItem_actionAdapter(this));
       mWinStereoItem.setText("Render in stereo");
       mWinStereoItem.addActionListener(new DisplayWindowFrame_mStereoItem_actionAdapter(this));
-      mEventSrcItem.setText("Acts as an event source");
-      mEventSrcItem.addActionListener(new DisplayWindowFrame_mEventSrcItem_actionAdapter(this));
       mViewportPropsItem.setEnabled(false);
       mViewportPropsItem.setText("Viewport Properties ...");
       mViewportPropsItem.addActionListener(new DisplayWindowFrame_mViewportPropsItem_actionAdapter(this));
@@ -246,7 +232,6 @@ public class DisplayWindowFrame
       mContextMenu.add(mBorderItem);
       mContextMenu.add(mPointerItem);
       mContextMenu.add(mWinStereoItem);
-      mContextMenu.add(mEventSrcItem);
       mContextMenu.addSeparator();
       mContextMenu.add(mViewportActiveItem);
       mContextMenu.add(mViewportLeftEyeItem);
@@ -311,9 +296,6 @@ public class DisplayWindowFrame
 
       boolean stereo = ((Boolean) mElement.getProperty("stereo", 0)).booleanValue();
       mWinStereoItem.setSelected(stereo);
-
-      boolean event_src = ((Boolean) mElement.getProperty("act_as_event_source", 0)).booleanValue();
-      mEventSrcItem.setSelected(event_src);
    }
 
    /**
@@ -346,7 +328,6 @@ public class DisplayWindowFrame
    private JCheckBoxMenuItem mBorderItem = new JCheckBoxMenuItem();
    private JCheckBoxMenuItem mPointerItem = new JCheckBoxMenuItem();
    private JCheckBoxMenuItem mWinStereoItem = new JCheckBoxMenuItem();
-   private JCheckBoxMenuItem mEventSrcItem = new JCheckBoxMenuItem();
 
    private JMenuItem mViewportPropsItem = new JMenuItem();
    private JCheckBoxMenuItem mViewportActiveItem = new JCheckBoxMenuItem();
@@ -494,7 +475,6 @@ public class DisplayWindowFrame
 
          mElement.setProperty("stereo", 0, dlg.inStereo());
          mElement.setProperty("border", 0, dlg.hasBorder());
-         mElement.setProperty("act_as_event_source", 0, dlg.isEventSource());
       }
    }
 
@@ -521,12 +501,6 @@ public class DisplayWindowFrame
    {
       mElement.setProperty("stereo", 0,
                            Boolean.valueOf(mWinStereoItem.isSelected()));
-   }
-
-   void eventSrcItemActionPerformed(ActionEvent e)
-   {
-      mElement.setProperty("act_as_event_source", 0,
-                           Boolean.valueOf(mEventSrcItem.isSelected()));
    }
 
    void viewportPropsSelected(ActionEvent e)
@@ -807,20 +781,6 @@ class DisplayWindowFrame_mStereoItem_actionAdapter implements ActionListener
    public void actionPerformed(ActionEvent e)
    {
       adaptee.windowStereoItemActionPerformed(e);
-   }
-}
-
-class DisplayWindowFrame_mEventSrcItem_actionAdapter implements ActionListener
-{
-   private DisplayWindowFrame adaptee;
-
-   DisplayWindowFrame_mEventSrcItem_actionAdapter(DisplayWindowFrame adaptee)
-   {
-      this.adaptee = adaptee;
-   }
-   public void actionPerformed(ActionEvent e)
-   {
-      adaptee.eventSrcItemActionPerformed(e);
    }
 }
 
