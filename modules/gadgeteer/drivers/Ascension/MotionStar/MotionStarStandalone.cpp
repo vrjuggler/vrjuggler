@@ -337,7 +337,7 @@ vpr::ReturnStatus MotionStarStandalone::start()
    vpr::ReturnStatus retval;
 
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-      << "\n[MotionStarStandalone] Connecting to " << m_address << " ..."
+      << "[MotionStarStandalone] Connecting to " << m_address << " ..."
       << std::endl << vprDEBUG_FLUSH;
 
    // Create the socket based on the protocol in use.
