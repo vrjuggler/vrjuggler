@@ -199,22 +199,14 @@ sub loadHTML ($$$$) {
 
         close(INPUT) or warn "WARNING: Cannot close $input_file: $!\n";
 
-        # Strip out the <!doctype...> from $input.
-        $input =~ s/<!doctype.*?>//is;
+        # Extract only the content between the opening and closing body tags.
+        $input =~ /<\s*body.*?>(.*?)<\s*\/body\s*>/is;
+        my $body = "$1";
 
-        # Remove the opening and closing html tags.
-        $input =~ s/<\s*html\s*>(.*?)<\s*\/html\s*>/\1/is;
-
-        # Strip out the <head>...</head> from $input.
-        $input =~ s/<\s*head\s*>.*?<\s*\/head\s*>//is;
-
-        # Remove any body tags.
-        $input =~ s/<\s*\/?body.*?>//gis;
-
-        filterHTML(\$input);
+        filterHTML(\$body);
 
         # At this point, the HTML is suitable for appending.
-        $$data .= "$input";
+        $$data .= "$body";
     }
     else {
         warn "WARNING: Could not open $input_file for reading: $!\n";
