@@ -25,8 +25,6 @@ public:
 
     virtual ~IncludesTest();
 
-    void XMLDefinitionIncludeTest();
-
     void XMLElementIncludeTest();
 
     static CppUnit::Test* suite();
