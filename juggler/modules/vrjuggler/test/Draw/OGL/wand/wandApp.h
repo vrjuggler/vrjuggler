@@ -62,6 +62,10 @@ public:
       : vjGlApp(kern)         // Initialize base class
    {;}
 
+   virtual ~wandApp (void) {
+      /* Do nothing. */ ;
+   }
+
    // Execute any initialization needed before the API is started<BR><BR>
    //
    // This is called once before OGL is initialized
