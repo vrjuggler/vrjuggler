@@ -1,0 +1,76 @@
+package id2mf3rd6gte1fgd6gxgik7;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#gadget::ProxyDepChecker:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#gadget::ProxyConstructor:oiref><oihard>
+@__modelType reference 
+*/
+class reference8 {
+}/**
+@__ref <oiref:design#Class#id64q6cd6gte1fgd6gxgpti.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Util:oiref> 
+*/
+class reference9 {
+}/**
+@__ref <oiref:design#Class#id5ea73d6gte1fgd6gxgpsx.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Type:oiref> 
+*/
+class reference10 {
+}/**
+@__ref <oiref:design#Class#id6nn1jd6gte1fgd6gxgphz.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Devices:oiref> 
+*/
+class reference11 {
+}/**
+@__ref <oiref:design#Class#id1rnund6gte1fgd6gxgpqq.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#RemoteInputManager:oiref> 
+*/
+class reference12 {
+}/**
+@__ref <oiref:cpp#Class#gadget::ProxyConstructorBase:oiref><oihard>
+@__modelType reference 
+*/
+class reference13 {
+}/**
+@__ref <oiref:cpp#Class#gadget::ProxyFactory:oiref><oihard>
+@__modelType reference 
+*/
+class reference14 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#gadget::ProxyDepChecker:oiref>=10,450,200,181,1:oigroup>
+<oigroup:<oiref:cpp#Extends#gadget::ProxyConstructor#gadget::ProxyConstructorBase:oiref>=109,260,109,159:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::ProxyFactory:oiref>=318,10,200,190,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#gadget::ProxyFactory#mConstructors:oiref>=214,64,30,16,0:oigroup>
+<oigroup:<oiref:design#Class#id1rnund6gte1fgd6gxgpqq.diagram:oiref>=10,730,152,308,1:oigroup>
+<oigroup:<oiref:design#Class#id64q6cd6gte1fgd6gxgpti.diagram:oiref>=227,250,53,57,1:oigroup>
+<oigroup:<oiref:design#Class#id6nn1jd6gte1fgd6gxgphz.diagram:oiref>=182,730,138,238,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::ProxyConstructorBase:oiref>=10,10,200,149,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#gadget::ProxyFactory#mConstructors:oiref>=318,84,210,84:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::ProxyConstructor:oiref>=12,260,195,150,1:oigroup>
+<oigroup:<oiref:design#Class#id5ea73d6gte1fgd6gxgpsx.diagram:oiref>=538,10,170,684,1:oigroup> 
+*/
+class __positions {
+}

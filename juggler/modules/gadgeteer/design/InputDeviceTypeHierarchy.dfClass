@@ -1,0 +1,108 @@
+package id8tkccyax23xmcyayxllf;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::Kernel:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@hideOperations 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#gadget::InputManager:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@hideOperations
+@hideProperties*/
+class reference45 {
+}/**
+@__ref <oiref:cpp#Class#gadget::Input:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#gadget::Input#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Input#$$destructor$$#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#gadget::Input#getDeviceName#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#gadget::Input#getChunkType#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#gadget::Input#getBaudRate#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#gadget::Input#getInstanceName#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Input#setPort#(#const char*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Input#getPort#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Input#fDeviceSupport#(#int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Input#isActive#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Input#resetIndexes#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Input#swapCurrentIndexes#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Input#swapValidIndexes#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Input#assertIndexes#(##)#:oiref> 
+*/
+class reference46 {
+}/**
+@__ref <oiref:cpp#Class#gadget::Digital:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference47 {
+}/**
+@__ref <oiref:cpp#Class#gadget::Analog:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#gadget::Analog#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Analog#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Analog#config#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Analog#startSampling#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Analog#stopSampling#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Analog#sample#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Analog#updateData#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Analog#getAnalogData#(#int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Analog#normalizeMinToMax#(#const float&#float&#)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#gadget::Analog#getDeviceName#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#gadget::Analog#getMin#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#gadget::Analog#getMax#(##)#:oiref> 
+*/
+class reference48 {
+}/**
+@__ref <oiref:cpp#Class#gadget::Position:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#gadget::Position#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Position#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Position#config#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Position#startSampling#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Position#stopSampling#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Position#sample#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Position#updateData#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Position#getPosData#(#int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#gadget::Position#getPosUpdateTime#(#int#)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#gadget::Position#getDeviceName#(##)#:oiref> 
+*/
+class reference49 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.d1.state = on 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Extends#gadget::Digital#gadget::Input:oiref>=310,389,270,389:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::Kernel:oiref>=10,30,157,72,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#gadget::InputManager#m_devVector:oiref>=140,192,270,192:oigroup>
+<oigroup:<oiref:cpp#Extends#gadget::Analog#gadget::Input:oiref>=449,440,449,399:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::InputManager:oiref>=0,150,140,85,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::Digital:oiref>=330,370,310,270,0:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::Analog:oiref>=670,370,320,170,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mInputManager:oiref>=75,102,75,150:oigroup>
+<oigroup:<oiref:cpp#Extends#gadget::Position#gadget::Input:oiref>=260,380,270,379:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::Position:oiref>=-10,370,320,180,0:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::Input:oiref>=380,20,220,301,0:oigroup>
+*/
+class __positions {
+}
