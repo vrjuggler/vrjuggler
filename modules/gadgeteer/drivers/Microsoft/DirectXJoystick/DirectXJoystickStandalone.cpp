@@ -107,14 +107,22 @@ HRESULT DirectXJoystickStandalone::init()
    return S_OK;
 }
 
-DWORD DirectXJoystickStandalone::getType()
+void DirectXJoystickStandalone::close()
 {
-   return mType;
-}
+   // Unacquire & release any DirectInputDevice objects.
+   if ( mDxJoystick != NULL )
+   {
+      mDxJoystick->Unacquire();
+      mDxJoystick->Release();
+      mDxJoystick = NULL;
+   }
 
-std::string DirectXJoystickStandalone::getProductName()
-{
-   return mProductName;
+   // Release any DirectInput objects.
+   if ( mDxObject != NULL )
+   {
+      mDxObject->Release();
+      mDxObject = NULL;
+   }
 }
 
 /*
@@ -130,13 +138,13 @@ std::string DirectXJoystickStandalone::getProductName()
    Button 5 = js.rgbButtons[4], Button 6 = js.rgbButtons[5]
    Button 7 = js.rgbButtons[6], Button 8 = js.rgbButtons[7]
 */
-HRESULT DirectXJoystickStandalone::poll()
+bool DirectXJoystickStandalone::poll()
 {
    //DIJOYSTATE  js; // DInput joystick state data-structure
    mDxJoystick->Poll();
    // FIXME: error tracking
    mDxJoystick->GetDeviceState(sizeof(DIJOYSTATE), &mJsData);
-   return S_OK;
+   return true;
 }
 
 /*
@@ -158,27 +166,19 @@ corresponding button is down, and clear if the
 button is up or does not exist.
 */
 
-DIJOYSTATE DirectXJoystickStandalone::getData()
+const DIJOYSTATE& DirectXJoystickStandalone::getData() const
 {
    return mJsData;
 }
 
-void DirectXJoystickStandalone::close()
+DWORD DirectXJoystickStandalone::getType() const
 {
-   // Unacquire & release any DirectInputDevice objects.
-   if ( mDxJoystick != NULL )
-   {
-      mDxJoystick->Unacquire();
-      mDxJoystick->Release();
-      mDxJoystick = NULL;
-   }
+   return mType;
+}
 
-   // Release any DirectInput objects.
-   if ( mDxObject != NULL )
-   {
-      mDxObject->Release();
-      mDxObject = NULL;
-   }
+const std::string& DirectXJoystickStandalone::getProductName() const
+{
+   return mProductName;
 }
 
 BOOL DirectXJoystickStandalone::enumerateJoysticks(const DIDEVICEINSTANCE* dInstance)

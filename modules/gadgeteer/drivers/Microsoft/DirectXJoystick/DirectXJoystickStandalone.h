@@ -48,15 +48,15 @@ public:
 
    HRESULT init();
 
-   DIJOYSTATE  getData();
-
    void close();
 
-   HRESULT poll();
+   bool poll();
 
-   DWORD getType();
+   const DIJOYSTATE& getData() const;
 
-   std::string getProductName();
+   DWORD getType() const;
+
+   const std::string& getProductName() const;
 
    /** @name Direct Input callbacks */
    //@{
