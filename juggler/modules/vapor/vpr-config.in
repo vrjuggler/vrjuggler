@@ -114,6 +114,9 @@ while test $# -gt 0; do
     esac
 
     case $1 in
+        --help)
+            usage 0 1>&2
+            ;;
         --basedir)
             use_base_dir=yes
             ;;
