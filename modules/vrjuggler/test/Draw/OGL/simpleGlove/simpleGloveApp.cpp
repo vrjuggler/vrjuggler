@@ -36,7 +36,9 @@
 
 void simpleGloveApp::myDraw()
 {
-	// Clear the scene
+	//cout<<"simpleGloveApp::myDraw()\n"<<flush;
+   
+   // Clear the scene
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
@@ -85,6 +87,8 @@ void simpleGloveApp::myDraw()
 
 void simpleGloveApp::initGLState()
 {
+   //cout<<"simpleGloveApp::initGLState()\n"<<flush;
+   
    GLfloat light0_ambient[] = { .2,  .2,  .2,  1.0};
    GLfloat light0_diffuse[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat light0_specular[] = { 1.0,  1.0,  1.0,  1.0};

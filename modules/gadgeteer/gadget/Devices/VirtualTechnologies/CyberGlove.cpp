@@ -74,7 +74,7 @@ bool vjCyberGlove::config(vjConfigChunk *c)
     else
        vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: vjCyberGlove::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
 
-    mGlove = new CyberGloveBasic(mCalDir, sPort, baudRate);
+    mGlove = new CyberGloveBasic( mCalDir, sPort, baudRate );
 
     return true;
 };

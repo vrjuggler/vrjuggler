@@ -339,11 +339,11 @@ void vjGlDrawManager::drawObjects()
 
       // Draw all glove Proxies that have drawing flag set
       vjGloveProxy* cur_glove_proxy;
-      for(int glv=0;glv<input_mgr->getNumGloveProxies();glv++)    // For each glove in system
+      for (int glv = 0; glv < input_mgr->getNumGloveProxies(); glv++)    // For each glove in system
       {
          cur_glove_proxy = input_mgr->getGloveProxy(glv);         // Get the glove proxy
-         if(cur_glove_proxy->isVisible())                         // If flag set
-            drawGlove(cur_glove_proxy);                           // draw it
+         if (cur_glove_proxy->isVisible())                         // If flag set
+            drawGlove( cur_glove_proxy );                           // draw it
       }
 
       // Draw any other object that need to be seen
