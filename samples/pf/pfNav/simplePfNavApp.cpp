@@ -458,8 +458,8 @@ void simplePfNavApp::initializeModels()
       // Rotation.  The apparent intent of the config file is for these
       // to be xyz euler values; pfDCS wants yaw/pitch/roll.
       vjMatrix mat;
-      mat.makeXYZEuler (mModelList[x].rot[1],
-                        mModelList[x].rot[0],
+      mat.makeXYZEuler (mModelList[x].rot[0],
+                        mModelList[x].rot[1],
                         mModelList[x].rot[2]);
       mModelList[x].modelDCS->setRot (mat.getYaw(),
                                       mat.getPitch(),
