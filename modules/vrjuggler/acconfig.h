@@ -81,6 +81,13 @@
 /* Define if building on Solaris. */
 #undef VJ_OS_Solaris
 
+/* Define if building on a Win32 platform. */
+#undef VJ_OS_Win32
+#undef WIN32
+#undef _MBCS
+#undef _LIB
+#undef _MT
+
 /* Define if building on a platform not specified above. */
 #undef VJ_OS_GENERIC
 
