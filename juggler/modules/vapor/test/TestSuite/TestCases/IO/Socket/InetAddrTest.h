@@ -66,12 +66,29 @@ public:
       assertTest(1221 == addr1.getAddressValue());
    }
 
+   void testAddressLookup () {
+      vpr::InetAddr addr1("192.49.3.2", 13768);
+      vpr::InetAddr addr2(3224437506, 13768);
+      vpr::InetAddr addr3("cruncher.vrac.iastate.edu", 13768);
+      vpr::InetAddr addr4("129.186.232.58", 13768);
+      vpr::InetAddr addr5("cruncher.vrac.iastate.edu:13768");
+
+      assertTest(addr1.getAddressValue() == 3224437506);
+      assertTest(addr1 == addr2);
+      assertTest(addr3.getAddressValue() == addr4.getAddressValue());
+      assertTest(addr3.getAddressString() == addr4.getAddressString());
+      assertTest(addr3 == addr4);
+      assertTest(addr3 == addr5);
+   }
+
    static Test* suite()
    {
       TestSuite* test_suite = new TestSuite ("InetAddrTest");
       test_suite->addTest( new TestCaller<InetAddrTest>("testCreation", &InetAddrTest::testCreation));
       test_suite->addTest( new TestCaller<InetAddrTest>("testEqual", &InetAddrTest::testEqual));
       test_suite->addTest( new TestCaller<InetAddrTest>("testSets", &InetAddrTest::testSets));
+      test_suite->addTest( new TestCaller<InetAddrTest>("testAddressLookup",
+                                                        &InetAddrTest::testAddressLookup));
 
       return test_suite;
    }
