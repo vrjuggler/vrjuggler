@@ -439,7 +439,7 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
 
    while ( bytes_left > 0 )
    {
-      bytes = ::read(mFdesc, buffer, buffer_size);
+      bytes = ::read(mFdesc, buffer, bytes_left);
 
       // Read error.
       if ( bytes < 0 )
