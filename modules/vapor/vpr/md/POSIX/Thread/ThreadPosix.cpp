@@ -73,7 +73,7 @@ ThreadPosix::ThreadPosix(VPRThreadPriority priority, VPRThreadScope scope,
      mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
      mThreadStartCompleted(false)
 {
-   mScope = posixThreadScopeToVPR(VPR_THREAD_SCOPE);
+   /* Do nothing. */ ;
 }
 
 // Spawning constructor with arguments.  This will start a new thread that will
@@ -85,8 +85,6 @@ ThreadPosix::ThreadPosix(thread_func_t func, void* arg,
      mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
      mThreadStartCompleted(false)
 {
-   mScope = posixThreadScopeToVPR(VPR_THREAD_SCOPE);
-
    // Create the thread functor to start.  This will be deleted in the
    // destructor.
    setFunctor(new ThreadNonMemberFunctor(func, arg));
@@ -103,7 +101,6 @@ ThreadPosix::ThreadPosix(BaseThreadFunctor* functorPtr,
      mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
      mThreadStartCompleted(false)
 {
-   mScope = posixThreadScopeToVPR(VPR_THREAD_SCOPE);
    setFunctor(functorPtr);
    start();
 }
