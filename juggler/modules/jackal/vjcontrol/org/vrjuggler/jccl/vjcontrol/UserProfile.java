@@ -46,13 +46,14 @@ public class UserProfile {
         if (p != null) {
             int i, n = p.getNum();
             for (i = 0; i < n; i++) {
-                user_types[i] = p.getValue(i).getBoolean(); //[p.getValue(i).getInt()] = true;
+                user_types[i] = p.getValue(i).getBoolean();
             }
         }
         else {
             user_types[ALWAYS_SHOW] = true;
             retval = false;
         }
+        System.out.println ("chunk named: " + ch.getName() + "; retval is " + retval);
         return retval;
     }
 
@@ -141,7 +142,9 @@ public class UserProfile {
 
     public boolean accepts (ConfigChunk ch) {
         UserProfile p = new UserProfile();
-        p.setFromConfigChunk (ch);
+        if (!p.setFromConfigChunk (ch))
+            return true; // safety measure; accept it if there's no user
+                         // profile data.
         return accepts (p);
     }
 }
