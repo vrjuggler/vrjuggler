@@ -43,6 +43,7 @@
 #include <gmtl/Output.h>
 
 #include <Rectangle.h>
+#include <VNCDebug.h>
 #include <VNCDesktop.h>
 
 
@@ -225,7 +226,7 @@ void VNCDesktop::updateDesktopParameters()
 
 VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 {
-   vpr::DebugOutputGuard guard(vprDBG_ALL, vprDBG_STATE_LVL,
+   vpr::DebugOutputGuard guard(vrjDBG_VNC, vprDBG_STATE_LVL,
                                "VNCDesktop::update()\n",
                                "VNCDesktop::update() done.\n");
 
@@ -268,7 +269,8 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    // Compute drawing objects
    mWandRay.setDir(mWandRay.getDir()*t_isect);     // Scale it back
 
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "VNC: Isect point: " << mIsectPoint << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_VNC, vprDBG_VERB_LVL)
+      << "VNC: Isect point: " << mIsectPoint << std::endl << vprDEBUG_FLUSH;
 
    // Get button states
    bool select_button_state = mLeftButton->getData();

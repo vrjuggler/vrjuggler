@@ -82,6 +82,7 @@ extern "C" {
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
+#include <VNCDebug.h>
 #include <VNCInterface.h>
 
 // -- Defines
@@ -131,7 +132,7 @@ VNCInterface::VNCInterface(const std::string& host, const vpr::Uint16 port,
    // Create framebuffer
    const int framebuffer_size = mWidth * mHeight * (mPf.size / 8);
 
-   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_CONFIG_LVL)
       << "VNCInterface(): framebuffer_size == " << framebuffer_size
       << std::endl << vprDEBUG_FLUSH;
 
@@ -141,7 +142,7 @@ VNCInterface::VNCInterface(const std::string& host, const vpr::Uint16 port,
    // Define the read buffer to be able to read then entire frame buffer at once
    mReadBufferSize = framebuffer_size;
 
-   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_CONFIG_LVL)
       << "VNCInterface(): mReadBufferSize (row size) == " << mReadBufferSize
       << std::endl << vprDEBUG_FLUSH;
 
@@ -183,7 +184,7 @@ void VNCInterface::run()
       }
       catch (std::exception& ex)
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED, "ERROR")
             << ": Caught an exception from handleVNCServerMessage: "
             << ex.what() << std::endl << vprDEBUG_FLUSH;
@@ -219,7 +220,7 @@ void VNCInterface::pointerEvent(int x, int y, int button_mask)
     rfbPointerEventMsg pe;
 
     /*
-    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+    vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
        << "VNCInterface::pointerEvent(): Pointer event at ("
        << x << ", " << y << ")\n" << vprDEBUG_FLUSH;
        */
@@ -367,10 +368,20 @@ void VNCInterface::copyRectToFramebuffer(char *buf, int x, int y, int w, int h)
 
 void VNCInterface::readData(std::string& data, vpr::Uint32 len)
 {
+   vprDEBUG_OutputGuard(vrjDBG_VNC, vprDBG_STATE_LVL,
+                        "readData(std::string, vpr::Uint32) entered\n",
+                        "readData(std::string, vpr::Uint32) done.\n");
+
    vpr::Uint32 bytes_read;
    vpr::ReturnStatus read_status;
 
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
+      << "Reading " << len << " bytes from socket\n" << vprDEBUG_FLUSH;
+
    read_status = mSock.recvn(data, len, bytes_read);
+
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
+      << "Got " << bytes_read << " bytes from socket\n" << vprDEBUG_FLUSH;
 
    if ( ! read_status.success() || len != bytes_read )
    {
@@ -382,10 +393,20 @@ void VNCInterface::readData(std::string& data, vpr::Uint32 len)
 
 void VNCInterface::readData(void* data, vpr::Uint32 len)
 {
+   vprDEBUG_OutputGuard(vrjDBG_VNC, vprDBG_STATE_LVL,
+                        "readData(void*, vpr::Uint32) entered\n",
+                        "readData(void*, vpr::Uint32) done.\n");
+
    vpr::Uint32 bytes_read;
    vpr::ReturnStatus read_status;
 
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
+      << "Reading " << len << " bytes from socket\n" << vprDEBUG_FLUSH;
+
    mSock.recvn(data, len, bytes_read);
+
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
+      << "Got " << bytes_read << " bytes from socket\n" << vprDEBUG_FLUSH;
 
    if ( ! read_status.success() || len != bytes_read )
    {
@@ -430,7 +451,7 @@ void VNCInterface::handleVNCVersion()
            rfbProtocolMajorVersion, rfbProtocolMinorVersion);
    writeData(pv, msglen);
 
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
       << "Server uses protocol version " << mServerMajor << "."
       << mServerMinor << std::endl << vprDEBUG_FLUSH;
 }
@@ -559,10 +580,10 @@ void VNCInterface::handleVNCInitialization()
    mNativePf.blue_mask   = blue_max << mNativePf.blue_shift;
    mNativePf.blue_bits   = countBits(blue_max);
 
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
       << "Desktop size: " << mWidth << "x" << mHeight << "x"
       << mNativePf.depth << "." << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
       << "Pixel format: red (" << mNativePf.red_bits << ", "
       << mNativePf.red_shift << "), green (" << mNativePf.green_bits
       << ", " << mNativePf.green_shift  << "), blue ("
@@ -572,7 +593,7 @@ void VNCInterface::handleVNCInitialization()
     // Read the name of the desktop
     readData(mName, si.nameLength);
 
-    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Desktop name: " << mName
+    vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL) << "Desktop name: " << mName
                                               << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -664,7 +685,7 @@ void VNCInterface::setVNCEncodings()
 
 void VNCInterface::handleVNCFramebufferUpdate()
 {
-   vpr::DebugOutputGuard guard(vprDBG_ALL, vprDBG_STATE_LVL,
+   vpr::DebugOutputGuard guard(vrjDBG_VNC, vprDBG_STATE_LVL,
                                "VNCInterface::handleVNCFramebufferUpdate()\n",
                                "VNCInterface::handleVNCFramebufferUpdate() done\n");
 
@@ -674,9 +695,9 @@ void VNCInterface::handleVNCFramebufferUpdate()
    readData((char *) &fu + 1, sz_rfbFramebufferUpdateMsg - 1);
    int num_rectangles = Swap16IfLE(fu.nRects);
 
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
       << "fu.nRects == " << fu.nRects << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
       << "num_rectangles == " << num_rectangles << std::endl << vprDEBUG_FLUSH;
 
    // Read the rectangles and update the framebuffer
@@ -695,9 +716,10 @@ void VNCInterface::handleVNCFramebufferUpdate()
 
       rect_u.encoding = Swap32IfLE(rect_u.encoding);
 
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
          << "Read rectangle information: (" << rect_u.r.x << ", " << rect_u.r.y
-         << ") " << rect_u.r.w << "x" << rect_u.r.h << std::endl << vprDEBUG_FLUSH;
+         << ") " << rect_u.r.w << "x" << rect_u.r.h << std::endl
+         << vprDEBUG_FLUSH;
 
       // Sanity checking
       if (rect_u.r.x + rect_u.r.w > mWidth || rect_u.r.y + rect_u.r.h > mHeight)
@@ -720,14 +742,16 @@ void VNCInterface::handleVNCFramebufferUpdate()
             vprASSERT(bytes_in_update <= mReadBufferSize);     // Assert read buffer is large enough
 
             // Read the entire rectangle from the server
-            vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "Reading " << bytes_in_update
-                              << " bytes into the read buffer\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_VNC, vprDBG_HVERB_LVL)
+               << "Reading " << bytes_in_update
+               << " bytes into the read buffer\n" << vprDEBUG_FLUSH;
 
             // Read data from the server
             readData(mReadBuffer, bytes_in_update);
 
             // Copy the rectangle buffer into the framebuffer
-            copyRectToFramebuffer(mReadBuffer, rect_u.r.x, rect_u.r.y, rect_u.r.w, rect_u.r.h);
+            copyRectToFramebuffer(mReadBuffer, rect_u.r.x, rect_u.r.y,
+                                  rect_u.r.w, rect_u.r.h);
          }
          break;
 
@@ -770,24 +794,24 @@ void VNCInterface::handleVNCServerMessage()
    switch (msg)
    {
       case rfbFramebufferUpdate:
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
             << "handleVNCServerMessage(): Handling framebuffer update\n"
             << vprDEBUG_FLUSH;
          handleVNCFramebufferUpdate();
          break;
       case rfbBell:
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
             << "handleVNCServerMessage(): Dropping rfbBell\n"
             << vprDEBUG_FLUSH;
          break;
       case rfbServerCutText:
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
             << "handleVNCServerMessage(): Handling server cut text\n"
             << vprDEBUG_FLUSH;
          handleVNCServerCutText();
          break;
       default:
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
             << "handleVNCServerMessage(): Unexpected message type\n"
             << vprDEBUG_FLUSH;
          throw VNCProtoException("Unknown message type from server.");
