@@ -179,7 +179,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
    {
       sonix::instance()->changeAPI( "Stub" );
       snx::SoundInfo si;
-      si.filename = "../../../data/sol.wav";
+      si.filename = "sol.wav";
       si.ambient = false;
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
@@ -191,7 +191,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
    {
       sonix::instance()->changeAPI( "Stub" );
       snx::SoundInfo si;
-      si.filename = "../../../data/sep.wav";
+      si.filename = "sep.wav";
       si.ambient = false;
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
@@ -208,7 +208,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
    {
       snx::SoundInfo si;
       si.ambient = false;
-      si.filename = "../../../data/sol.wav";
+      si.filename = "sol.wav";
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
       std::cout<<"positional"<<std::endl;
@@ -218,7 +218,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
    {
       snx::SoundInfo si;
       si.ambient = true;
-      si.filename = "../../../data/sep.wav";
+      si.filename = "sep.wav";
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
       kevinSound.setAmbient( true );
@@ -229,7 +229,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
    {
       snx::SoundInfo si;
       si.ambient = false;
-      si.filename = "../../../data/suck.wav";
+      si.filename = "suck.wav";
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
       std::cout<<"positional"<<std::endl;
