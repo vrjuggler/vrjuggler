@@ -129,7 +129,9 @@ public:
 private:
 
    // These are needed to appease Visual C++ in its creation of DLLs.
-   EnvironmentManager(const EnvironmentManager&) {;}
+   EnvironmentManager(const EnvironmentManager&)
+      : ConfigChunkHandler() 
+   {;}
    void operator=(const EnvironmentManager&) {;}
 
 };

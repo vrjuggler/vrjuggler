@@ -272,7 +272,9 @@ protected:
 
    virtual ~GlDrawManager() {}
 
-   GlDrawManager(const GlDrawManager& o) {;}
+   GlDrawManager(const GlDrawManager& o) 
+      : DrawManager()
+   {;}
    void operator=(const GlDrawManager& o) {;}
 
    vprSingletonHeader(GlDrawManager);
