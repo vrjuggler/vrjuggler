@@ -1,5 +1,5 @@
 
-# ***************** <AJ heading BEGIN do not edit this line> *****************
+# ***************** <SNX heading BEGIN do not edit this line> *****************
 #
 # Audio Juggler
 #
@@ -12,7 +12,7 @@
 # Version:       $Revision$
 # -----------------------------------------------------------------
 #
-# ****************** <AJ heading END do not edit this line> ******************
+# ****************** <SNX heading END do not edit this line> ******************
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
 # VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University

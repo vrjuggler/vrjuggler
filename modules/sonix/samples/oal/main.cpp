@@ -25,9 +25,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * Juggler Juggler
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -38,7 +38,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 
 
 #include <stdlib.h>

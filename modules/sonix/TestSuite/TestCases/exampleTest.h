@@ -1,5 +1,5 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
  * Audio Juggler
  *
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 
 
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
@@ -50,7 +50,7 @@
 
 //#include <IO/Socket/InetAddr.h>
 
-namespace ajTest
+namespace snxTest
 {
 
 class exampleTest : public TestCase
