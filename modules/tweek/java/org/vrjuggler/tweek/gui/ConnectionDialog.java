@@ -50,6 +50,7 @@ import org.vrjuggler.tweek.beans.TweekBean;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.GlobalPreferencesService;
 import org.vrjuggler.tweek.net.corba.CorbaService;
+import tweek.SubjectManagerPackage.SubjectMgrInfoItem;
 
 
 /**
@@ -150,8 +151,8 @@ public class ConnectionDialog extends JDialog
       mSubjectMgrBorder = new TitledBorder(new EtchedBorder(EtchedBorder.RAISED,Color.white,new Color(142, 142, 142)),"Subject Manager Choice");
       mNSConnectPanel.setLayout(mNSConnectLayout);
       mNSConnectPanel.setBorder(mNSConnectBorder);
-      mNSConnectPanel.setMinimumSize(new Dimension(450, 150));
-      mNSConnectPanel.setPreferredSize(new Dimension(450, 155));
+      mNSConnectPanel.setMinimumSize(new Dimension(450, 175));
+      mNSConnectPanel.setPreferredSize(new Dimension(450, 175));
 
       mNSHostLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mNSHostLabel.setText("Naming Service Host");
@@ -193,8 +194,8 @@ public class ConnectionDialog extends JDialog
       mButtonPanel.setPreferredSize(new Dimension(450, 33));
       mSubjectMgrListPane.setMinimumSize(new Dimension(100, 90));
       mSubjectMgrListPane.setPreferredSize(new Dimension(180, 90));
-      mSubjectMgrInfo.setMinimumSize(new Dimension(100, 90));
-      mSubjectMgrInfo.setPreferredSize(new Dimension(180, 90));
+      mSubjectMgrInfoPane.setMinimumSize(new Dimension(100, 90));
+      mSubjectMgrInfoPane.setPreferredSize(new Dimension(180, 90));
       mNSPortLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mNamingContextLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mNSConnectPanel.add(mNSHostLabel,         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
@@ -251,7 +252,7 @@ public class ConnectionDialog extends JDialog
       this.getContentPane().add(mSubjectMgrPanel, BorderLayout.CENTER);
       mSubjectMgrPanel.add(mSubjectMgrSplitPane,  BorderLayout.CENTER);
       mSubjectMgrSplitPane.add(mSubjectMgrListPane, JSplitPane.LEFT);
-      mSubjectMgrSplitPane.add(mSubjectMgrInfo, JSplitPane.RIGHT);
+      mSubjectMgrSplitPane.add(mSubjectMgrInfoPane, JSplitPane.RIGHT);
    }
 
    /**
@@ -466,12 +467,13 @@ public class ConnectionDialog extends JDialog
 
             try
             {
-               table_model.addRow(new Object[]{"Hostname",
-                                               mSubjectManager.getHostName()});
-               table_model.addRow(new Object[]{"Application",
-                                               mSubjectManager.getApplicationName()});
-               table_model.addRow(new Object[]{"User",
-                                               mSubjectManager.getUserName()});
+               SubjectMgrInfoItem[] subj_mgr_info = mSubjectManager.getInfo();
+
+               for ( int i = 0; i < subj_mgr_info.length; ++i )
+               {
+                  table_model.addRow(new Object[]{subj_mgr_info[i].key,
+                                                  subj_mgr_info[i].value});
+               }
 
                mSubjectMgrInfo.setModel(table_model);
                mOkayButton.setEnabled(true);
@@ -524,6 +526,7 @@ public class ConnectionDialog extends JDialog
    private JList        mSubjectMgrList      = new JList();
    private JScrollPane  mSubjectMgrListPane  = new JScrollPane(mSubjectMgrList);
    private JTable       mSubjectMgrInfo      = new JTable();
+   private JScrollPane  mSubjectMgrInfoPane  = new JScrollPane(mSubjectMgrInfo);
    private JButton      mNSConnectButton     = new JButton();
 
    // GUI elements for the OK/Cancel button panel.

@@ -32,6 +32,10 @@ int main (int argc, char* argv[])
             // our objects with it.
             if ( status.success() )
             {
+               // Add a test informational item to the Subject Manager.
+               mgr.getSubjectManager()->addInfoItem("My Value",
+                                                    "This is a test");
+
                // First, create real instances of the C++ objects that will
                // be the CORBA servants.  These must be allocated on the heap.
                networktest::SliderSubjectImpl* slider_subj =

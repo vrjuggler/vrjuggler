@@ -43,6 +43,7 @@
 #include <map>
 #include <vpr/vpr.h>
 #include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 #include <vpr/Util/GUID.h>
 
 #include <tweek/CORBA/Subject.h>
@@ -55,42 +56,106 @@ namespace tweek
 class CorbaManager;
 class SubjectImpl;
 
+/**
+ * This class provides a simplified level of access to CORBA references.
+ * C++ implementations of CORBA interfaces (specified with IDL) are registeered
+ * with a Subject Manager.  This process activates the object (a CORBA servant)
+ * within the local ORB.  Once registered, remote code can request references
+ * to the servant through the Subject Manager.  Most details of CORBA reference
+ * management are hidden by this class.
+ */
 class TWEEK_CLASS_API SubjectManagerImpl
    : public POA_tweek::SubjectManager,
      public PortableServer::RefCountServantBase
 {
 public:
+   /**
+    * Registers the given SubjectImpl object (a CORBA servant) with this
+    * Subject Manager instance.  This also performs the necessary steps to
+    * activate the servant with CORBA.
+    *
+    * @pre The given servant has not already been activated with the local
+    *      ORB.
+    * @post The given servant is activated within the local ORB and is
+    *       registered with this Subject Manager instance.  From this point
+    *       forward, remote code can get a reference to the servant through
+    *       this Subject Manager.
+    *
+    * @param subject The implementation object that will be registered with
+    *                the local ORB and this Subject Manager.
+    * @param name    The symbolic name used to request a reference to the
+    *                registered subject.
+    */
    void registerSubject(SubjectImpl* subject, const char* name);
 
+   /**
+    * Attempts to "unregister" the named subject and deactivate it within the
+    * local ORB.
+    *
+    * @post If the named subject was registered with this Subject Manager, it
+    *       is removed from the registry and is deactivated within the local
+    *       ORB.
+    *
+    * @param name The symbolic name used to request a reference to the
+    *             registered subject.
+    */
    vpr::ReturnStatus unregisterSubject(const char* name);
 
+   /**
+    * Returns the named Tweek Subject reference to the caller if the Subject
+    * is registered.  If not, a reference equal to CORBA::nil() is returned.
+    */
    virtual Subject_ptr getSubject(const char* name);
 
-   virtual tweek::SubjectManager::SubjectList* getAllSubjects(void);
+   /**
+    * Returns a sequence of all the registered Tweek Subjects packaged in the
+    * structure RegisteredSubject.
+    */
+   virtual tweek::SubjectManager::SubjectList* getAllSubjects();
 
    /**
-    * Returns the name of the host on which the Subject Manager servant
-    * resides.
+    * Returns a sequence of key/value pairs that provide site-specific
+    * information about a given Subject Manager servant.
     */
-   virtual char* getHostName();
+   virtual tweek::SubjectManager::SubjectManagerInfoList* getInfo();
 
    /**
-    * Returns the name of the application within which the Subject Manager
-    * servant exists.  If the application name is not known, the string
-    * "unknown" is returned.
+    * Assigns the given value for the username informational item.  This can
+    * be used to provide remote users with an application-specific identifier
+    * for this Subject Manager instance.  If this method is not used, the
+    * username setting defaults to "unknown".
+    *
+    * @param userName The username to be added to the collection of custom
+    *                 informational items.
     */
-   virtual char* getApplicationName();
-
    void setApplicationName(const std::string& appName)
    {
-      mAppName = appName;
+      addInfoItem(std::string(APPNAME_KEY), appName);
    }
 
    /**
-    * Returns the name/ID of the user running the application.  If the user's
-    * name cannot be determined, the string "unknown" is returned.
+    * Assigns the given value for the username informational item.  This can
+    * be used to provide remote users with an application-specific identifier
+    * for this Subject Manager instance.  If this method is not used, the
+    * username setting defaults to the value of the $USER environment varaible.
+    *
+    * @param userName The username to be added to the collection of custom
+    *                 informational items.
     */
-   virtual char* getUserName();
+   void setUserName(const std::string& userName)
+   {
+      addInfoItem(USERNAME_KEY, userName);
+   }
+
+   /**
+    * Returns a sequence of key/value pairs that provide site-specific
+    * information about a given Subject Manager servant.
+    */
+   void addInfoItem(const std::string& key, const std::string& value)
+   {
+      vpr::Guard<vpr::Mutex> lock(mInfoMapMutex);
+      mInfoMap[key] = value;
+   }
 
    const vpr::GUID& getGUID() const
    {
@@ -106,16 +171,17 @@ protected:
     * tweek::CorbaManager may create objects of this type.
     */
    SubjectManagerImpl(const CorbaManager& corba_mgr)
-      : mCorbaMgr(corba_mgr), mAppName("unknown"), mGUID()
+      : mCorbaMgr(corba_mgr), mGUID()
    {
       mGUID.generate();
+      initInfoMap();
    }
 
    // These two have to be here because Visual C++ will try to make them
    // exported public symbols.  This causes problems because copying
    // vpr::Mutex objects is not allowed.
    SubjectManagerImpl(const SubjectManagerImpl& sm)
-      : mCorbaMgr(sm.mCorbaMgr)
+      : mCorbaMgr(sm.mCorbaMgr), mInfoMap(sm.mInfoMap)
    {
       /* Do nothing. */ ;
    }
@@ -127,9 +193,14 @@ protected:
 
    void registerSubject(Subject_ptr subject, const std::string& name);
 
+   /**
+    * Intializes the encapsulated map of key/value pairs for this Subject
+    * Manager instance.
+    */
+   void initInfoMap();
+
 private:
    const CorbaManager& mCorbaMgr;
-   std::string         mAppName;
    vpr::GUID           mGUID;
 
    typedef std::map<std::string, Subject_ptr> subject_map_t;
@@ -139,6 +210,12 @@ private:
    typedef std::map<std::string, PortableServer::ObjectId_var> subject_id_map_t;
    subject_id_map_t mSubjectIds;
    vpr::Mutex       mSubjectIdsMutex;
+
+   std::map<std::string, std::string> mInfoMap;
+   vpr::Mutex                         mInfoMapMutex;
+
+   static const std::string USERNAME_KEY;
+   static const std::string APPNAME_KEY;
 };
 
 } // End of tweek namespace
