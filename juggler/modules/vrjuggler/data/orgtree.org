@@ -34,6 +34,7 @@ Begin "Zelda"
             "Digital Simulator"
             "Glove Gesture Simulator"
             "SimRelativePosition"
+            "SimSetablePosition"
         End
         Begin "Remote Input" 
             "Remote Input Manager"
