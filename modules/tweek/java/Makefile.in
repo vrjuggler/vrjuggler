@@ -51,8 +51,8 @@ top_srcdir		= @top_srcdir@
 EXTRA_SRCS_PATH		= $(srcdir)/../tweek/idl
 EXTRA_JAVA_SRCS_PATH	= $(srcdir)/tweek
 INSTALL			= @INSTALL@
-JAVA_IDL_OPTS		= -emitAll -td $(srcdir)
-JAVA_IDL_INCLUDES	= -i $(top_srcdir)
+JAVA_IDL_OPTS		= @JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
+JAVA_IDL_INCLUDES	= @JAVA_IDL_INCFLAG@$(top_srcdir)
 
 JDOM_JAR	= @JDOM_JAR@
 OPENORB_JAR	= @OPENORB_JAR@
@@ -69,7 +69,8 @@ JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
                   org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java	\
                   tweek/SubjectManagerHolder.java			\
                   tweek/SubjectHolder.java				\
-                  tweek/ObserverHolder.java
+                  tweek/ObserverHolder.java				\
+                  tweek/ObserverPOA.java
 
 JARS		= Tweek.jar		\
                   TweekBeans.jar	\
@@ -105,6 +106,9 @@ include $(MKPATH)/dpp.obj.mk
 # Extra targets.
 # -----------------------------------------------------------------------------
 jars: $(JARS) $(addsuffix .jar, $(BEANS))
+
+Observer.java: Observer.idl
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) -fserver $(JAVA_IDL_INCLUDES) $<
 
 Tweek.jar: $(TWEEK_CLASSES)
 	$(JAR) cvf $@ $(TWEEK_CLASSES)
