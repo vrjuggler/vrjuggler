@@ -47,6 +47,8 @@
 //#include <vpr/IO/ObjectReader.h>
 //#include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/SerializableObject.h>
+#include <gadget/Util/DeviceSerializationTokens.h>
+
 
 namespace gadget
 {
@@ -140,7 +142,7 @@ namespace gadget
          mDigitalSamples.addSample(digSample);
          mDigitalSamples.unlock();
       }
-      
+
       /** Swap the digital data buffers.
        * @post If ready has values, then copy values from ready to stable
        *        if not, then stable keeps its old values
@@ -161,34 +163,37 @@ namespace gadget
 
       virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
       {
+         writer->beginTag(Digital::getBaseType());
          //std::cout << "[Remote Input Manager] In Digital write" << std::endl;
          SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
-         writer->writeUint16(MSG_DATA_DIGITAL);                               // Write out the data type so that we can assert if reading in wrong place
+         writer->beginAttribute(gadget::tokens::DataTypeAttrib);
+            writer->writeUint16(MSG_DATA_DIGITAL);                               // Write out the data type so that we can assert if reading in wrong place
+         writer->endAttribute();
+
+         writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+            writer->writeUint16(stable_buffer.size());                           // Write the # of vectors in the stable buffer
+         writer->endAttribute();
+
          if ( !stable_buffer.empty() )
          {
             mDigitalSamples.lock();
-            writer->writeUint16(stable_buffer.size());                                 // Write the # of vectors in the stable buffer
-            //std::cout << "Digital Buffer size: " << stable_buffer.size() << std::endl;
             for ( unsigned j=0;j<stable_buffer.size();j++ )                               // For each vector in the stable buffer
             {
-               writer->writeUint16(stable_buffer[j].size());                           // Write the # of DigitalDatas in the vector
-               //std::cout << "Digital Data Size: "
-               //<< stable_buffer.back().size() << std::endl;
-               //std::cout << "ME: ";
+               writer->beginTag(gadget::tokens::BufferSampleTag);
+               writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+                  writer->writeUint16(stable_buffer[j].size());                           // Write the # of DigitalDatas in the vector
+               writer->endAttribute();
                for ( unsigned i=0;i<stable_buffer[j].size();i++ )                         // For each DigitalData in the vector
                {
                   writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getDigital());  // Write Digital Data(int)
-                  //std::cout << (vpr::Uint32)stable_buffer[j][i].getDigital();
                   writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
                }
-               //std::cout << std::endl;
+               writer->endTag();
             }
             mDigitalSamples.unlock();
          }
-         else        // No data or request out of range, return default value
-         {
-            writer->writeUint16(0);
-         }
+         writer->endTag();
+
          return vpr::ReturnStatus::Succeed;
       }
 
@@ -199,7 +204,11 @@ namespace gadget
          vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
             // ASSERT if this data is really not Digital Data
-         vpr::Uint16 temp = reader->readUint16();
+         reader->beginTag(Digital::getBaseType());
+         reader->beginAttribute(gadget::tokens::DataTypeAttrib);
+            vpr::Uint16 temp = reader->readUint16();
+         reader->endAttribute();
+
          vprASSERT(temp==MSG_DATA_DIGITAL && "[Remote Input Manager]Not Digital Data");
 
          std::vector<DigitalData> dataSample;
@@ -209,31 +218,36 @@ namespace gadget
          vpr::Uint64 timeStamp;
          DigitalData temp_digital_data;
 
-         unsigned numVectors = reader->readUint16();
+         reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+            unsigned numVectors = reader->readUint16();
+         reader->endAttribute();
+
          //std::cout << "Stable Digital Buffer Size: "  << numVectors << std::endl;
          mDigitalSamples.lock();
          for ( unsigned i=0;i<numVectors;i++ )
          {
-            numDigitalDatas = reader->readUint16();
-            //std::cout << "Digital Data Size: "    << numDigitalDatas << std::endl;
+            reader->beginTag(gadget::tokens::BufferSampleTag);
+            reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+               numDigitalDatas = reader->readUint16();
+            reader->endAttribute();
+
             dataSample.clear();
-            //std::cout << "ME: ";
             for ( unsigned j=0;j<numDigitalDatas;j++ )
             {
                value = reader->readUint32();       //Write Digital Data(int)
-               //std::cout << value;
                timeStamp = reader->readUint64();                  //Write Time Stamp vpr::Uint64
                temp_digital_data.setDigital(value);
                temp_digital_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
                dataSample.push_back(temp_digital_data);
             }
-            //std::cout << std::endl;
-
             mDigitalSamples.addSample(dataSample);
-
+            reader->endTag();
          }
          mDigitalSamples.unlock();
          mDigitalSamples.swapBuffers();
+
+         reader->endTag();
+
          return vpr::ReturnStatus::Succeed;
       }
 

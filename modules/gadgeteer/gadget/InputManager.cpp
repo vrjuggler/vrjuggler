@@ -51,6 +51,8 @@
 #include <gadget/RemoteInputManager/RemoteInputManager.h>
 #include <gadget/Type/BaseTypeFactory.h>
 
+#include <gadget/InputLogger.h>
+
 namespace gadget
 {
 
@@ -120,6 +122,10 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       // XXX: Put signal here to tell draw manager to lookup new stuff
       mDisplaySystemChunk = chunk;     // Keep track of the display system chunk
       ret_val = true;
+   }
+   else if(chunk->getDescToken() == std::string("gadget_logger"))
+   {
+      ret_val = configureInputLogger(chunk);
    }
    else if(chunk->getDescToken() == std::string("InputManager"))
    {
@@ -258,7 +264,8 @@ bool InputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
             recognizeProxyAlias(chunk) ||
             mRemoteInputManager->configCanHandle(chunk) ||
             (chunk->getDescToken() == std::string("displaySystem")) ||
-            (chunk->getDescToken() == std::string("InputManager"))
+            (chunk->getDescToken() == std::string("InputManager")) ||
+            (chunk->getDescToken() == std::string("gadget_logger"))
           );
 }
 
@@ -430,17 +437,23 @@ bool InputManager::addDevice(Input* devPtr)
 void InputManager::updateAllData()
 {
    for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); i++)      // all DEVICES
-     if ((*i).second != NULL)
-         i->second->updateData();
+   {
+      if ((*i).second != NULL)
+      {  i->second->updateData(); }
+   }
 
-     // send and receive net device messages
+   // Update Logger - Done here so that device can be "rewritten" by logger
+   //                 before rim or proxies get their hands on the data
+   if(mInputLogger.get() != NULL)
+   {  mInputLogger->process(); }
+
+   // send and receive net device messages
    if (mRemoteInputManager->isActive())
    {
       mRemoteInputManager->updateAll();
    }
 
-
-      // Update proxies MIGHT NOT NEED
+   // Update proxies MIGHT NOT NEED
    for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
        i_p != mProxyTable.end(); i_p++)
    {
@@ -739,6 +752,18 @@ vpr::ReturnStatus InputManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
    }
 
    return status;
+}
+
+bool InputManager::configureInputLogger(jccl::ConfigChunkPtr chunk)
+{
+   // Make sure it is allocated
+   if(mInputLogger.get() == NULL)
+   {
+      mInputLogger = boost::shared_ptr<InputLogger>(new InputLogger);
+   }
+
+   // Configure it
+   return mInputLogger->config(chunk);
 }
 
 } // End of gadget namespace
