@@ -30,11 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Environment/vjNetCommunicator.h>
-//#include <iostream.h>
-//#include <string>
+#include <jccl/JackalServer/vjNetCommunicator.h>
 
-//class vjConnect;
+namespace jccl {
 
 //: Constructor
 vjNetCommunicator::vjNetCommunicator () {
@@ -98,3 +96,4 @@ vjNetCommunicator::vjNetCommunicator () {
     return false;
 }
 
+};

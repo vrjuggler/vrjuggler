@@ -33,12 +33,13 @@
 
 
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 
+namespace jccl {
 
 //---------------------------------------------------------------
-//: Dummy standin for vjPerfDataBuffer
-class vjPerfDataBuffer {
+//: Dummy standin for PerfDataBuffer
+class PerfDataBuffer {
 
 
  public:
@@ -48,12 +49,12 @@ class vjPerfDataBuffer {
     //! POST: self is created and has _numbufs buffers
     //! ARGS: _numbufs - number of buffers to allocate
     //+       (default 0)
-    vjPerfDataBuffer (int _numbufs=0) {
+    PerfDataBuffer (int _numbufs=0) {
     }
 
     //: destructor
     //: POST: all memory & buffers have been freed.
-    ~vjPerfDataBuffer () {
+    ~PerfDataBuffer () {
     }
 
     //: writes a new time entry to the buffer
@@ -88,5 +89,4 @@ class vjPerfDataBuffer {
 
 };
 
-
-
+}; // namespace jccl

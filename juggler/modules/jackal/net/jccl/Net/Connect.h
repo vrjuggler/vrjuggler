@@ -34,14 +34,15 @@
 #ifndef _VJ_CONNECT_H_
 #define _VJ_CONNECT_H_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 #include <queue>
-#include <Environment/vjSocket.h>
-#include <Environment/vjNetCommunicator.h>
+#include <jccl/JackalServer/vjSocket.h>
+#include <jccl/JackalServer/vjNetCommunicator.h>
 #include <vpr/Thread/Thread.h>
-#include <Performance/vjTimeStamp.h>
-#include <Environment/vjCommand.h>
+//#include <jccl/Performance/vjTimeStamp.h>
+#include <jccl/JackalServer/vjCommand.h>
 
+namespace jccl {
 
 class vjTimedUpdate;
 class vjConfigChunk;
@@ -170,5 +171,6 @@ private:
 
 }; // end vjConnect
 
+};
 
 #endif
