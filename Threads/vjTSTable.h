@@ -5,12 +5,19 @@
 #include <vjConfig.h>
 #include <Threads/vjTSObject.h>
 #include <Kernel/vjDebug.h>
+#include <Sync/vjMutex.h>
+#include <Sync/vjGuard.h>
 
 //-----------------------------------------------------------------
 //: This class is the actual TS Table.
 //
 // This class maintains a table that has ptrs to all the TS data
-// in the system.
+// in the system for a specific thread.
+// As new thread specific data is added to the system, a copy is also
+// added to this table. (This is done by the thread manager)
+// The list is protected by a mutex to make it thread safe.  Only one
+// thread and remove, add, or access the list at a time
+// XXX: This should be changed to a read/write mutex
 //-----------------------------------------------------------------
 class vjTSTable
 {
@@ -20,10 +27,12 @@ public:
 
    //-----------------------------------------------------------------
    //: Return a newly created table.
-   //! NOTE: This is not a copy.
+   //! NOTE: This is not a copy. All objects are created by their
+   //+       default constructors
    //-----------------------------------------------------------------
    vjTSTable* createNew()
    {
+   vjGuard<vjMutex>  guard(mListGuard);
       vjTSTable* new_table = new vjTSTable;
 
       // For all elements in the table
@@ -34,6 +43,8 @@ public:
       return new_table;    // Return the newly created table
    }
 
+   //: Delete the table
+   // Delete all objects in the table
    ~vjTSTable()
    {
       // For all elements in the table
@@ -42,8 +53,10 @@ public:
             delete mTSObjects[i];         // Delete them
    }
 
+   //: Get the object with the spcified key
    vjTSBaseObject* getObject(int objectKey)
    {
+   vjGuard<vjMutex>  guard(mListGuard);
       vjASSERT((objectKey >= 0) && (objectKey < mTSObjects.size()));
       return mTSObjects[objectKey];
    }
@@ -54,6 +67,7 @@ public:
    //-----------------------------------------------------------------
    void setObject(vjTSBaseObject* object, long key)
    {
+   vjGuard<vjMutex>  guard(mListGuard);
       vjASSERT(key >= 0);
       while(mTSObjects.size() <= key)
          mTSObjects.push_back(NULL);
@@ -67,6 +81,7 @@ public:
    //-----------------------------------------------------------------
    void releaseObject(long key)
    {
+   vjGuard<vjMutex>  guard(mListGuard);
       vjASSERT( (key>=0) && (key<mTSObjects.size()) );
       if (mTSObjects[key] != NULL)
          delete mTSObjects[key];
@@ -77,6 +92,7 @@ public:
 //   friend vjThreadManager;
 
 private:
+   vjMutex                      mListGuard;  //: Guard access to the list
    std::vector<vjTSBaseObject*> mTSObjects; //: Map object key to TS Object ptr
 };
 

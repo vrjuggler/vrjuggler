@@ -28,7 +28,9 @@ class vjTSObject : public vjTSBaseObject
 {
 public:
    virtual ~vjTSObject()
-   {;}
+   {
+   //   delete mLocalObj;
+   }
 
    //-----------------------------------------------------------------
    //: Return the address of our object

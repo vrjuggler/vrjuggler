@@ -79,18 +79,11 @@
 #endif
 
 #include <Sync/vjMutex.h>
-#include <Threads/vjThread.h>
 #include <Kernel/vjStreamLock.h>
-
-//#include <Sync/vjNullMutex.h>
-
 
 
 // NOTE: Quick Hack for now.  Need to really design something nice. :)
 extern vjMutex DebugLock;
-
-
-
 
 //------------------------------------------
 //: Class to support debug output
@@ -100,120 +93,37 @@ extern vjMutex DebugLock;
 class vjDebug
 {
 private:
-   vjDebug()
-   {
-      indentLevel = 0;     // Initialy don't indent
-      debugLevel = 0;      // Should actually try to read env variable
-
-      char* debug_lev = getenv("VJ_DEBUG_NFY_LEVEL");
-      if(debug_lev != NULL)
-      {
-         debugLevel = atoi(debug_lev);
-         cout << "VJ_DEBUG_NFY_LEVEL: Set to " << debugLevel << endl << flush;
-      } else {
-         cout << "VJ_DEBUG_NFY_LEVEL: Not found. " << endl << flush;
-         cout << "VJ_DEBUG_NFY_LEVEL: Defaults to " << debugLevel << endl << flush;
-      }
-
-      setDefaultCategoryNames();
-      getAllowedCatsFromEnv();
-
-   }
+   // Set default values
+   // Set up default categories
+   // Get debug config from environment
+   vjDebug();
 
 public:
-   ostream& getStream(int cat, int level, int indentChange = 0)
-   {
-      if(indentChange < 0)                // If decreasing indent
-         indentLevel += indentChange;
-
-      //cout << "VG " << level << ": ";
-      cout << vjDEBUG_STREAM_LOCK << setw(6) << vjThread::self() << "  VG: ";
-
-         // Insert the correct number of tabs into the stream for indenting
-      for(int i=0;i<indentLevel;i++)
-         cout << "\t";
-
-      if(indentChange > 0)             // If increasing indent
-         indentLevel += indentChange;
-
-      return cout;
-   }
+   // Get the debug stream to use
+   ostream& getStream(int cat, int level, int indentChange = 0);
 
    int getLevel()
-   {
-      return debugLevel;
-   }
+   { return debugLevel; }
 
    vjMutex& debugLock()
    { return mDebugLock; }
 
-   void addCategoryName(std::string name, int cat)
-   {
-      mCategoryNames[name] = cat;
-   }
+   // Add a category name
+   void addCategoryName(std::string name, int cat);
 
-   void addAllowedCategory(int cat)
-   {
-      if(mAllowedCategories.size() < (cat+1))
-         growAllowedCategoryVector(cat+1);
-
-      mAllowedCategories[cat] = true;
-   }
+   // Allow the given category
+   void addAllowedCategory(int cat);
 
    // Are we allowed to print this category??
-   bool isCategoryAllowed(int cat)
-   {
-      // If now entry for cat, grow the vector
-      if(mAllowedCategories.size() < (cat+1))
-         growAllowedCategoryVector(cat+1);
+   bool isCategoryAllowed(int cat);
 
-      // If I specified to listen to all OR
-      // If it has category of ALL
-      if((mAllowedCategories[vjDBG_ALL]) || (cat == vjDBG_ALL))
-         return true;
-      else
-         return mAllowedCategories[cat];
-   }
+   // Setup the default categories
+   void setDefaultCategoryNames();
 
-   void setDefaultCategoryNames()
-   {
-      addCategoryName(vjDBG_ALLstr,vjDBG_ALL);
-      addCategoryName(vjDBG_ERRORstr,vjDBG_ERROR);
-      addCategoryName(vjDBG_KERNELstr,vjDBG_KERNEL);
-      addCategoryName(vjDBG_INPUT_MGRstr,vjDBG_INPUT_MGR);
-      addCategoryName(vjDBG_DRAW_MGRstr,vjDBG_DRAW_MGR);
-      addCategoryName(vjDBG_DISP_MGRstr,vjDBG_DISP_MGR);
-      addCategoryName(vjDBG_ENV_MGRstr, vjDBG_ENV_MGR);
-      addCategoryName(vjDBG_PERFORMANCEstr, vjDBG_PERFORMANCE);
-      addCategoryName(vjDBG_CONFIGstr, vjDBG_CONFIG);
-   }
+   // Configure the allowed categories from the users environment
+   void getAllowedCatsFromEnv();
 
-   void getAllowedCatsFromEnv()
-   {
-      char* dbg_cats_env = getenv("VJ_DEBUG_CATEGORIES");
-
-      if(dbg_cats_env != NULL)
-      {
-         std::string dbg_cats(dbg_cats_env);
-
-         std::map< std::string, int >::iterator i;
-         for(i=mCategoryNames.begin();i != mCategoryNames.end();i++)
-         {
-            std::string cat_name = (*i).first;
-            if (dbg_cats.find(cat_name) != std::string::npos )    // Found one
-            {
-               cout << "vjDEBUG::getAllowedCatsFromEnv: Allowing: " << (*i).first << " val:" << (*i).second << endl << flush;
-               addAllowedCategory((*i).second);                   // Add the category
-            }
-         }
-      }
-   }
-
-   void growAllowedCategoryVector(int newSize)
-   {
-      while(mAllowedCategories.size() < newSize)
-         mAllowedCategories.push_back(false);
-   }
+   void growAllowedCategoryVector(int newSize);
 
 private:
    int debugLevel;      // Debug level to use
