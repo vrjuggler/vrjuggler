@@ -69,6 +69,10 @@ Builder: JExplorerBuilder V 1. 0. 7
 						link="getting.started/Sample.Applications/running.html" 
 						info="Run the juggler application, to see if everything worked." 
 						image="Leaf.gif">
+					< item title="Using Simulator Mode"
+						link="getting.started/Sample.Applications/setup.for.simulator.html" 
+						info="Using the default VR Juggler simulator interface." 
+						image="Leaf.gif">
 				</folder>
 			
 				< item title="Developing" 
