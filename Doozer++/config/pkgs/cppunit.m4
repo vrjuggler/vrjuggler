@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          cppunit.m4,v
-dnl Date modified: 2004/07/02 11:35:55
-dnl Version:       1.16
+dnl Date modified: 2004/10/21 15:59:18
+dnl Version:       1.17
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -50,7 +50,7 @@ dnl     CPPUNIT_EXTRA_LIBS - Extra libraries that are needed for linking
 dnl                          against the CppUnit library directory.
 dnl ===========================================================================
 
-dnl cppunit.m4,v 1.16 2004/07/02 11:35:55 patrickh Exp
+dnl cppunit.m4,v 1.17 2004/10/21 15:59:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has CppUnit installed.  This
@@ -90,102 +90,104 @@ AC_DEFUN([DPP_HAVE_CPPUNIT],
                [  --with-cppunit=<PATH>   CppUnit installation directory  [default=$2]],
                CPPUNIT_ROOT="$withval", CPPUNIT_ROOT=$2)
 
-   dnl Save these values in case they need to be restored later.
-   dpp_save_CXXFLAGS="$CXXFLAGS"
-   dpp_save_CPPFLAGS="$CPPFLAGS"
-   dpp_save_LDFLAGS="$LDFLAGS"
-   dpp_save_LIBS="$LIBS"
+   if test "x$CPPUNIT_ROOT" != "xno" ; then
+      dnl Save these values in case they need to be restored later.
+      dpp_save_CXXFLAGS="$CXXFLAGS"
+      dpp_save_CPPFLAGS="$CPPFLAGS"
+      dpp_save_LDFLAGS="$LDFLAGS"
+      dpp_save_LIBS="$LIBS"
 
-   dnl Add the user-specified CppUnit installation directory to these
-   dnl paths.  Ensure that /usr/include and /usr/lib are not included
-   dnl multiple times if $CPPUNIT_ROOT is "/usr".
-   if test "x$CPPUNIT_ROOT" != "x/usr" ; then
-      CPPFLAGS="$CPPFLAGS -I$CPPUNIT_ROOT/include"
-
-      if test "x$OS_TYPE" = "xWin32" ; then
-         LDFLAGS="/libpath:$CPPUNIT_ROOT/lib $LDFLAGS"
-      else
-         LDFLAGS="-L$CPPUNIT_ROOT/lib $LDFLAGS"
-      fi
-   fi
-
-   dpp_save_PATH="$PATH"
-
-   if test "x$CPPUNIT_ROOT" != "x" ; then
-      PATH="$CPPUNIT_ROOT/bin:$PATH"
-   fi
-
-   AC_PATH_PROG(CPPUNIT_CONFIG, cppunit-config, no)
-   PATH="$dpp_save_PATH"
-
-   dnl Do a sanity check to ensure that $CPPUNIT_CONFIG actually works.
-   if ! (eval $CPPUNIT_CONFIG --cflags >/dev/null 2>&1) 2>&1 ; then
-      CPPUNIT_CONFIG='no'
-   fi
-
-   if test "x$CPPUNIT_CONFIG" != "xno" ; then
-      min_cppunit_version=ifelse([$1], ,0.0.1,$1)
-      CPPUNIT_VERSION=`$CPPUNIT_CONFIG --version`
-
-      AC_MSG_CHECKING([whether CppUnit version is >= $min_cppunit_version])
-      AC_MSG_RESULT([$CPPUNIT_VERSION])
-      DPP_VERSION_CHECK([$CPPUNIT_VERSION], [$min_cppunit_version], , [$4])
-   fi
-
-   CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
-
-   if test "x$OS_TYPE" = "xWin32" ; then
-      dpp_cppunit_lib='cppunit.lib'
-   else
-      dpp_cppunit_lib='-lcppunit'
-   fi
-
-   LIBS="$LIBS $dpp_cppunit_lib $DYN_LOAD_LIB"
-
-   DPP_LANG_SAVE
-   DPP_LANG_CPLUSPLUS
-
-   AC_CACHE_CHECK([for CppUnit::TestSuite::countTestCases() in $dpp_cppunit_lib],
-      [dpp_cv_CppUnit_TestSuite_countTestCases_in_cppunit],
-      [AC_TRY_LINK([#include <cppunit/TestSuite.h>],
-         [CppUnit::TestSuite t; t.countTestCases();],
-         [dpp_cv_CppUnit_TestSuite_countTestCases_in_cppunit='yes'],
-         [dpp_cv_CppUnit_TestSuite_countTestCases_in_cppunit='no'])])
-
-   DPP_LANG_RESTORE
-
-   dpp_have_cppunit="$dpp_cv_CppUnit_TestSuite_countTestCases_in_cppunit"
-
-   dnl Restore all the variables now that we are done testing.
-   CXXFLAGS="$dpp_save_CXXFLAGS"
-   CPPFLAGS="$dpp_save_CPPFLAGS"
-   LDFLAGS="$dpp_save_LDFLAGS"
-   LIBS="$dpp_save_LIBS"
-
-   if test "x$dpp_have_cppunit" = "xyes" ; then
-      ifelse([$3], , :, [$3])
-   else
-      AC_MSG_WARN([*** CppUnit will not be available (cppunit library not found) ***])
-      ifelse([$4], , :, [$4])
-   fi
-
-   dnl If CppUnit API files were found, define this extra stuff that may be
-   dnl helpful in some Makefiles.
-   if test "x$dpp_have_cppunit" = "xyes" ; then
-      LIBCPPUNIT="$dpp_cppunit_lib"
-      CPPUNIT_EXTRA_LIBS="$DYN_LOAD_LIB"
-
+      dnl Add the user-specified CppUnit installation directory to these
+      dnl paths.  Ensure that /usr/include and /usr/lib are not included
+      dnl multiple times if $CPPUNIT_ROOT is "/usr".
       if test "x$CPPUNIT_ROOT" != "x/usr" ; then
-         CPPUNIT_INCLUDES="-I$CPPUNIT_ROOT/include"
+         CPPFLAGS="$CPPFLAGS -I$CPPUNIT_ROOT/include"
 
          if test "x$OS_TYPE" = "xWin32" ; then
-            CPPUNIT_LDFLAGS="/libpath:$CPPUNIT_ROOT/lib"
+            LDFLAGS="/libpath:$CPPUNIT_ROOT/lib $LDFLAGS"
          else
-            CPPUNIT_LDFLAGS="-L$CPPUNIT_ROOT/lib"
+            LDFLAGS="-L$CPPUNIT_ROOT/lib $LDFLAGS"
          fi
       fi
 
-      CPPUNIT='yes'
+      dpp_save_PATH="$PATH"
+
+      if test "x$CPPUNIT_ROOT" != "x" ; then
+         PATH="$CPPUNIT_ROOT/bin:$PATH"
+      fi
+
+      AC_PATH_PROG(CPPUNIT_CONFIG, cppunit-config, no)
+      PATH="$dpp_save_PATH"
+
+      dnl Do a sanity check to ensure that $CPPUNIT_CONFIG actually works.
+      if ! (eval $CPPUNIT_CONFIG --cflags >/dev/null 2>&1) 2>&1 ; then
+         CPPUNIT_CONFIG='no'
+      fi
+
+      if test "x$CPPUNIT_CONFIG" != "xno" ; then
+         min_cppunit_version=ifelse([$1], ,0.0.1,$1)
+         CPPUNIT_VERSION=`$CPPUNIT_CONFIG --version`
+
+         AC_MSG_CHECKING([whether CppUnit version is >= $min_cppunit_version])
+         AC_MSG_RESULT([$CPPUNIT_VERSION])
+         DPP_VERSION_CHECK([$CPPUNIT_VERSION], [$min_cppunit_version], , [$4])
+      fi
+
+      CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
+
+      if test "x$OS_TYPE" = "xWin32" ; then
+         dpp_cppunit_lib='cppunit.lib'
+      else
+         dpp_cppunit_lib='-lcppunit'
+      fi
+
+      LIBS="$LIBS $dpp_cppunit_lib $DYN_LOAD_LIB"
+
+      DPP_LANG_SAVE
+      DPP_LANG_CPLUSPLUS
+
+      AC_CACHE_CHECK([for CppUnit::TestSuite::countTestCases() in $dpp_cppunit_lib],
+         [dpp_cv_CppUnit_TestSuite_countTestCases_in_cppunit],
+         [AC_TRY_LINK([#include <cppunit/TestSuite.h>],
+            [CppUnit::TestSuite t; t.countTestCases();],
+            [dpp_cv_CppUnit_TestSuite_countTestCases_in_cppunit='yes'],
+            [dpp_cv_CppUnit_TestSuite_countTestCases_in_cppunit='no'])])
+
+      DPP_LANG_RESTORE
+
+      dpp_have_cppunit="$dpp_cv_CppUnit_TestSuite_countTestCases_in_cppunit"
+
+      dnl Restore all the variables now that we are done testing.
+      CXXFLAGS="$dpp_save_CXXFLAGS"
+      CPPFLAGS="$dpp_save_CPPFLAGS"
+      LDFLAGS="$dpp_save_LDFLAGS"
+      LIBS="$dpp_save_LIBS"
+
+      if test "x$dpp_have_cppunit" = "xyes" ; then
+         ifelse([$3], , :, [$3])
+      else
+         AC_MSG_WARN([*** CppUnit will not be available (cppunit library not found) ***])
+         ifelse([$4], , :, [$4])
+      fi
+
+      dnl If CppUnit API files were found, define this extra stuff that may be
+      dnl helpful in some Makefiles.
+      if test "x$dpp_have_cppunit" = "xyes" ; then
+         LIBCPPUNIT="$dpp_cppunit_lib"
+         CPPUNIT_EXTRA_LIBS="$DYN_LOAD_LIB"
+
+         if test "x$CPPUNIT_ROOT" != "x/usr" ; then
+            CPPUNIT_INCLUDES="-I$CPPUNIT_ROOT/include"
+
+            if test "x$OS_TYPE" = "xWin32" ; then
+               CPPUNIT_LDFLAGS="/libpath:$CPPUNIT_ROOT/lib"
+            else
+               CPPUNIT_LDFLAGS="-L$CPPUNIT_ROOT/lib"
+            fi
+         fi
+
+         CPPUNIT='yes'
+      fi
    fi
 
    dnl Export all of the output vars for use by makefiles and configure

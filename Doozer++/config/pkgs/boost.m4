@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          boost.m4,v
-dnl Date modified: 2004/07/02 11:35:55
-dnl Version:       1.23
+dnl Date modified: 2004/10/21 15:59:18
+dnl Version:       1.24
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -43,7 +43,7 @@ dnl     BOOST_INCLUDES - Extra include path for the Boost header directory.
 dnl     BOOST_LDFLAGS  - Extra library path for the Boost libraries.
 dnl ===========================================================================
 
-dnl boost.m4,v 1.23 2004/07/02 11:35:55 patrickh Exp
+dnl boost.m4,v 1.24 2004/10/21 15:59:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has Boost installed.  This adds the
@@ -75,7 +75,7 @@ AC_DEFUN([DPP_HAVE_BOOST],
    AC_REQUIRE([DPP_SYSTEM_SETUP])
    
    dnl initialize returned data...
-   BOOST='n'
+   BOOST='no'
    BOOST_INCLUDES=''
    dpp_have_boost='no'
 
@@ -90,86 +90,90 @@ AC_DEFUN([DPP_HAVE_BOOST],
                [_with_boost_inc="$withval"],
                ifelse([$3], , [_with_boost_inc=no], [_with_boost_inc=$3]))
 
-   dnl Save these values in case they need to be restored later.
-   dpp_save_CPPFLAGS="$CPPFLAGS"
+   if test "x$BOOST_ROOT" != "xno" ; then
+      dnl Save these values in case they need to be restored later.
+      dpp_save_CPPFLAGS="$CPPFLAGS"
 
-   dnl Add the user-specified Boost installation directory to the preprocessor
-   dnl arguments.  Ensure that /usr/include is not included multiple times if
-   dnl $BOOST_ROOT is "/usr".  The goal here is to let the user specify either
-   dnl the Boost root directory, the Boost include directory, or both.
-   if test "x$BOOST_ROOT" != "x/usr" -o "x${_with_boost_inc}" != "xno" ; then
-      dnl No Boost include directory, so append "/include" to $BOOST_ROOT.
-      if test "x${_with_boost_inc}" = "xno" ; then
-         dpp_boost_incdir="$BOOST_ROOT/include"
-      dnl We have a Boost include directory, so we'll use it and hope for
-      dnl the best.
+      dnl Add the user-specified Boost installation directory to the
+      dnl preprocessor arguments.  Ensure that /usr/include is not included
+      dnl multiple times if $BOOST_ROOT is "/usr".  The goal here is to let
+      dnl the user specify either the Boost root directory, the Boost include
+      dnl directory, or both.
+      if test "x$BOOST_ROOT" != "x/usr" -o "x${_with_boost_inc}" != "xno"
+      then
+         dnl No Boost include directory, so append "/include" to $BOOST_ROOT.
+         if test "x${_with_boost_inc}" = "xno" ; then
+            dpp_boost_incdir="$BOOST_ROOT/include"
+         dnl We have a Boost include directory, so we'll use it and hope for
+         dnl the best.
+         else
+            dpp_boost_incdir="${_with_boost_inc}"
+         fi
+
+         CPPFLAGS="$CPPFLAGS -I$dpp_boost_incdir"
+      fi
+
+      DPP_LANG_SAVE
+      DPP_LANG_CPLUSPLUS
+
+      AC_CHECK_HEADER([boost/version.hpp], [dpp_have_boost='yes'], [$5])
+
+      DPP_LANG_RESTORE
+
+      boost_version="$dpp_boost_incdir/boost/version.hpp"
+
+      if test "x$dpp_have_boost" = "xyes" -a -r "$boost_version" ; then
+         dnl This expression passed to grep(1) is not great.  It could stand to
+         dnl test for one or more whitespace characters instead of just one for
+         dnl book-ending BOOST_VERSION.
+         dnl NOTE: Using sed(1) here is done to avoid problems with version.hpp
+         dnl being a Windows text file instead of a UNIX text file.
+         changequote(<<, >>)
+         BOOST_VERSION=`grep 'define BOOST_VERSION ' "$boost_version" | sed -e 's/^[^0-9]*\([0-9][0-9]*\)[^0-9]*$/\1/'`
+         changequote([, ])
+         dpp_boost_patch=`expr $BOOST_VERSION % 100`
+         dpp_boost_minor=`expr $BOOST_VERSION / 100 % 1000`
+         dpp_boost_major=`expr $BOOST_VERSION / 100000`
+         dpp_boost_version="$dpp_boost_major.$dpp_boost_minor.$dpp_boost_patch"
+
+         AC_MSG_CHECKING([whether Boost version is >= $1])
+         AC_MSG_RESULT([$dpp_boost_version])
+         DPP_VERSION_CHECK([$dpp_boost_version], [$1], , [dpp_have_boost=no])
       else
-         dpp_boost_incdir="${_with_boost_inc}"
-      fi
-
-      CPPFLAGS="$CPPFLAGS -I$dpp_boost_incdir"
-   fi
-
-   DPP_LANG_SAVE
-   DPP_LANG_CPLUSPLUS
-
-   AC_CHECK_HEADER([boost/version.hpp], [dpp_have_boost='yes'], [$5])
-
-   DPP_LANG_RESTORE
-
-   boost_version="$dpp_boost_incdir/boost/version.hpp"
-
-   if test "x$dpp_have_boost" = "xyes" -a -r "$boost_version" ; then
-      dnl This expression passed to grep(1) is not great.  It could stand to
-      dnl test for one or more whitespace characters instead of just one for
-      dnl book-ending BOOST_VERSION.
-      dnl NOTE: Using sed(1) here is done to avoid problems with version.hpp
-      dnl being a Windows text file instead of a UNIX text file.
-      changequote(<<, >>)
-      BOOST_VERSION=`grep 'define BOOST_VERSION ' "$boost_version" | sed -e 's/^[^0-9]*\([0-9][0-9]*\)[^0-9]*$/\1/'`
-      changequote([, ])
-      dpp_boost_patch=`expr $BOOST_VERSION % 100`
-      dpp_boost_minor=`expr $BOOST_VERSION / 100 % 1000`
-      dpp_boost_major=`expr $BOOST_VERSION / 100000`
-      dpp_boost_version="$dpp_boost_major.$dpp_boost_minor.$dpp_boost_patch"
-
-      AC_MSG_CHECKING([whether Boost version is >= $1])
-      AC_MSG_RESULT([$dpp_boost_version])
-      DPP_VERSION_CHECK([$dpp_boost_version], [$1], , [dpp_have_boost=no])
-   else
-      dpp_have_boost='no'
-      AC_MSG_WARN([$boost_version is not readable.
+         dpp_have_boost='no'
+         AC_MSG_WARN([$boost_version is not readable.
 Using the option --with-boost-includes may help fix this.])
-      ifelse([$5], , :, [$5])
-   fi
-
-   dnl If Boost API files were found, define this extra stuff that may be
-   dnl helpful in some Makefiles.
-   if test "x$dpp_have_boost" = "xyes" ; then
-      if test "x$dpp_boost_incdir" != "x" ; then
-         BOOST_INCLUDES="-I$dpp_boost_incdir"
+         ifelse([$5], , :, [$5])
       fi
 
-      if test "x$BOOST_ROOT" != "x/usr" ; then
-         BOOST_LDFLAGS="-L$BOOST_ROOT/lib"
+      dnl If Boost API files were found, define this extra stuff that may be
+      dnl helpful in some Makefiles.
+      if test "x$dpp_have_boost" = "xyes" ; then
+         if test "x$dpp_boost_incdir" != "x" ; then
+            BOOST_INCLUDES="-I$dpp_boost_incdir"
+         fi
+
+         if test "x$BOOST_ROOT" != "x/usr" ; then
+            BOOST_LDFLAGS="-L$BOOST_ROOT/lib"
+         fi
+
+         BOOST_LDFLAGS_LINK_EXE="/libpath:$BOOST_ROOT/lib"
+         BOOST='yes'
+
+         ifelse([$4], , :, [$4])
+      else
+         ifelse([$5], , :, [$5])
       fi
 
-      BOOST_LDFLAGS_LINK_EXE="/libpath:$BOOST_ROOT/lib"
-      BOOST='yes'
+      dnl Extend the include path for the Boost C++ C compatibility headers if
+      dnl we are on IRIX and not using g++.
+      if test "x$PLATFORM" = "xIRIX" -a "x$GXX" != "xyes" ; then
+         BOOST_INCLUDES="$BOOST_INCLUDES -I$dpp_boost_incdir/boost/compatibility/cpp_c_headers"
+      fi
 
-      ifelse([$4], , :, [$4])
-   else
-      ifelse([$5], , :, [$5])
+      dnl Restore all the variables now that we are done testing.
+      CPPFLAGS="$dpp_save_CPPFLAGS"
    fi
-
-   dnl Extend the include path for the Boost C++ C compatibility headers if
-   dnl we are on IRIX and not using g++.
-   if test "x$PLATFORM" = "xIRIX" -a "x$GXX" != "xyes" ; then
-      BOOST_INCLUDES="$BOOST_INCLUDES -I$dpp_boost_incdir/boost/compatibility/cpp_c_headers"
-   fi
-
-   dnl Restore all the variables now that we are done testing.
-   CPPFLAGS="$dpp_save_CPPFLAGS"
 
    dnl Export all of the output vars for use by makefiles and configure script.
    AC_SUBST(BOOST_ROOT)

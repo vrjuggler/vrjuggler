@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          audioworks.m4,v
-dnl Date modified: 2004/07/02 11:35:55
-dnl Version:       1.14
+dnl Date modified: 2004/10/21 15:59:18
+dnl Version:       1.15
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -49,7 +49,7 @@ dnl     AUDIOWORKS__LDFLAGS  - Extra linker flags for the AudioWorks library
 dnl                            directory.
 dnl ===========================================================================
 
-dnl audioworks.m4,v 1.14 2004/07/02 11:35:55 patrickh Exp
+dnl audioworks.m4,v 1.15 2004/10/21 15:59:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has AudioWorks installed.  This
@@ -87,61 +87,63 @@ AC_DEFUN([DPP_HAVE_AUDIOWORKS],
                [  --with-audioworks=<PATH> AudioWorks installation directory   [default=$1]],
                AUDIOWORKS_ROOT="$withval", AUDIOWORKS_ROOT=$1)
 
-   dnl Save these values in case they need to be restored later.
-   dpp_save_CXXFLAGS="$CXXFLAGS"
-   dpp_save_CPPFLAGS="$CPPFLAGS"
-   dpp_save_INCLUDES="$INCLUDES"
-   dpp_save_LDFLAGS="$LDFLAGS"
+   if test "x$AUDIOWORKS_ROOT" != "xno" ; then
+      dnl Save these values in case they need to be restored later.
+      dpp_save_CXXFLAGS="$CXXFLAGS"
+      dpp_save_CPPFLAGS="$CPPFLAGS"
+      dpp_save_INCLUDES="$INCLUDES"
+      dpp_save_LDFLAGS="$LDFLAGS"
 
-   dnl Add the user-specified AudioWorks installation directory to these
-   dnl paths.  Ensure that /usr/lib(32|64) is not included multiple times if
-   dnl if $AUDIOWORKS_ROOT is "/usr".
-   if test "x$AUDIOWORKS_ROOT" != "x/usr" ; then
-      LDFLAGS="-L$AUDIOWORKS_ROOT/lib$LIBBITSUF $LDFLAGS"
+      dnl Add the user-specified AudioWorks installation directory to these
+      dnl paths.  Ensure that /usr/lib(32|64) is not included multiple times if
+      dnl if $AUDIOWORKS_ROOT is "/usr".
+      if test "x$AUDIOWORKS_ROOT" != "x/usr" ; then
+         LDFLAGS="-L$AUDIOWORKS_ROOT/lib$LIBBITSUF $LDFLAGS"
+      fi
+
+      CPPFLAGS="$CPPFLAGS -I$AUDIOWORKS_ROOT/include/PSI"
+      CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
+
+      dnl This is necessary because AC_CHECK_LIB() adds -laudioworks to
+      dnl $LIBS.  We want to do that ourselves later.
+      dpp_save_LIBS="$LIBS"
+
+      DPP_LANG_SAVE
+      DPP_LANG_CPLUSPLUS
+
+      AC_CHECK_LIB([aw], [awInitSys],
+         [AC_CHECK_HEADER([aw.h], [dpp_have_audioworks='yes'],
+            [dpp_have_audioworks='no'])],
+         [dpp_have_audioworks='no'],
+         [-lawhwi -lpsi -laudiofile -lm])
+
+      DPP_LANG_RESTORE
+
+      dnl This is necessary because AC_CHECK_LIB() adds -laudioworks to
+      dnl $LIBS.  We want to do that ourselves later.
+      LIBS="$dpp_save_LIBS"
+
+      if test "x$dpp_have_audioworks" = "xyes" ; then
+         ifelse([$2], , :, [$2])
+      else
+         ifelse([$3], , :, [$3])
+      fi
+
+      dnl If AudioWorks API files were found, define this extra stuff that may be
+      dnl helpful in some Makefiles.
+      if test "x$dpp_have_audioworks" = "xyes" ; then
+         LIBAUDIOWORKS="-law -lawhwi -lpsi -laudiofile -lm"
+         AUDIOWORKS_INCLUDES="-I$AUDIOWORKS_ROOT/include/PSI"
+         AUDIOWORKS_LDFLAGS="-L$AUDIOWORKS_ROOT/lib$LIBBITSUF/PSI"
+         AUDIOWORKS='yes'
+      fi
+
+      dnl Restore all the variables now that we are done testing.
+      CXXFLAGS="$dpp_save_CXXFLAGS"
+      CPPFLAGS="$dpp_save_CPPFLAGS"
+      INCLUDES="$dpp_save_INCLUDES"
+      LDFLAGS="$dpp_save_LDFLAGS"
    fi
-
-   CPPFLAGS="$CPPFLAGS -I$AUDIOWORKS_ROOT/include/PSI"
-   CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
-
-   dnl This is necessary because AC_CHECK_LIB() adds -laudioworks to
-   dnl $LIBS.  We want to do that ourselves later.
-   dpp_save_LIBS="$LIBS"
-
-   DPP_LANG_SAVE
-   DPP_LANG_CPLUSPLUS
-
-   AC_CHECK_LIB([aw], [awInitSys],
-      [AC_CHECK_HEADER([aw.h], [dpp_have_audioworks='yes'],
-         [dpp_have_audioworks='no'])],
-      [dpp_have_audioworks='no'],
-      [-lawhwi -lpsi -laudiofile -lm])
-
-   DPP_LANG_RESTORE
-
-   dnl This is necessary because AC_CHECK_LIB() adds -laudioworks to
-   dnl $LIBS.  We want to do that ourselves later.
-   LIBS="$dpp_save_LIBS"
-
-   if test "x$dpp_have_audioworks" = "xyes" ; then
-      ifelse([$2], , :, [$2])
-   else
-      ifelse([$3], , :, [$3])
-   fi
-
-   dnl If AudioWorks API files were found, define this extra stuff that may be
-   dnl helpful in some Makefiles.
-   if test "x$dpp_have_audioworks" = "xyes" ; then
-      LIBAUDIOWORKS="-law -lawhwi -lpsi -laudiofile -lm"
-      AUDIOWORKS_INCLUDES="-I$AUDIOWORKS_ROOT/include/PSI"
-      AUDIOWORKS_LDFLAGS="-L$AUDIOWORKS_ROOT/lib$LIBBITSUF/PSI"
-      AUDIOWORKS='yes'
-   fi
-
-   dnl Restore all the variables now that we are done testing.
-   CXXFLAGS="$dpp_save_CXXFLAGS"
-   CPPFLAGS="$dpp_save_CPPFLAGS"
-   INCLUDES="$dpp_save_INCLUDES"
-   LDFLAGS="$dpp_save_LDFLAGS"
 
    dnl export all of the output vars for use by makefiles and configure script
    AC_SUBST(AUDIOWORKS)

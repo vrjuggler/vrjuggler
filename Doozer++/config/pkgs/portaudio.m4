@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          portaudio.m4,v
-dnl Date modified: 2004/07/02 11:35:55
-dnl Version:       1.12
+dnl Date modified: 2004/10/21 15:59:18
+dnl Version:       1.13
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -48,7 +48,7 @@ dnl     PORTAUDIO_LDFLAGS  - Extra linker flags for the PortAudio library
 dnl                          directory.
 dnl ===========================================================================
 
-dnl portaudio.m4,v 1.12 2004/07/02 11:35:55 patrickh Exp
+dnl portaudio.m4,v 1.13 2004/10/21 15:59:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has PortAudio installed.  This
@@ -93,142 +93,145 @@ AC_DEFUN([DPP_HAVE_PORTAUDIO],
                [  --with-portaudio=<PATH> PortAudio installation dir.     [default=$1]],
                PORTAUDIO_ROOT="$withval", PORTAUDIO_ROOT=$1)
 
-   dnl Save these values in case they need to be restored later.
-   dpp_save_CFLAGS="$CFLAGS"
-   dpp_save_CPPFLAGS="$CPPFLAGS"
-   dpp_save_LDFLAGS="$LDFLAGS"
+   if test "x$PORTAUDIO_ROOT" != "xno" ; then
+      dnl Save these values in case they need to be restored later.
+      dpp_save_CFLAGS="$CFLAGS"
+      dpp_save_CPPFLAGS="$CPPFLAGS"
+      dpp_save_LDFLAGS="$LDFLAGS"
 
-   dnl Add the user-specified PortAudio installation directory to these
-   dnl paths.  Ensure that /usr/include and /usr/lib are not included
-   dnl multiple times if $PORTAUDIO_ROOT is "/usr".
-   if test "x$PORTAUDIO_ROOT" != "x/usr" ; then
-      CPPFLAGS="$CPPFLAGS -I$PORTAUDIO_ROOT/include"
+      dnl Add the user-specified PortAudio installation directory to these
+      dnl paths.  Ensure that /usr/include and /usr/lib are not included
+      dnl multiple times if $PORTAUDIO_ROOT is "/usr".
+      if test "x$PORTAUDIO_ROOT" != "x/usr" ; then
+         CPPFLAGS="$CPPFLAGS -I$PORTAUDIO_ROOT/include"
 
-      if test -d "$PORTAUDIO_ROOT/lib$LIBBITSUF" ; then
-         pa_ldflags="-L$PORTAUDIO_ROOT/lib$LIBBITSUF"
-      else
-         pa_ldflags="-L$PORTAUDIO_ROOT/lib"
+         if test -d "$PORTAUDIO_ROOT/lib$LIBBITSUF" ; then
+            pa_ldflags="-L$PORTAUDIO_ROOT/lib$LIBBITSUF"
+         else
+            pa_ldflags="-L$PORTAUDIO_ROOT/lib"
+         fi
+
+         LDFLAGS="$pa_ldflags $LDFLAGS"
       fi
 
-      LDFLAGS="$pa_ldflags $LDFLAGS"
-   fi
+      CFLAGS="$CFLAGS $ABI_FLABS"
 
-   CFLAGS="$CFLAGS $ABI_FLABS"
+      dnl WIN32 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      if test "x$dpp_os_type" = "xWin32" ; then
+         AC_LANG_SAVE
+         AC_LANG_C
 
-   dnl WIN32 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   if test "x$dpp_os_type" = "xWin32" ; then
-      AC_LANG_SAVE
-      AC_LANG_C
+         LIBS="$LIBS PAStaticDS.lib"
 
-      LIBS="$LIBS PAStaticDS.lib"
+         dpp_cv_Pa_Initialize_pastaticds_lib='no'
 
-      dpp_cv_Pa_Initialize_pastaticds_lib='no'
-
-      AC_CACHE_CHECK([for Pa_Initialize in PAStaticDS.lib],
-                     [dpp_cv_Pa_Initialize_pastaticds_lib],
-                     [AC_TRY_LINK([#include <windows.h>
-#include <portaudio.h>],
-                        [Pa_Initialize();],
-                        [dpp_cv_Pa_Initialize_pastaticds_lib='yes'],
-                        [dpp_cv_Pa_Initialize_pastaticds_lib='no'])])
-
-      if test "x$dpp_cv_Pa_Initialize_pastaticds_lib" = "xyes" ; then
-         ifelse([$2], , :, [$2])
-
-         LIBS="pablio.lib $LIBS"
-
-         AC_CACHE_CHECK([for GetAudioStreamReadable in pablio.lib],
-                        [dpp_cv_GetAudioStreamReadable_pablio_lib],
+         AC_CACHE_CHECK([for Pa_Initialize in PAStaticDS.lib],
+                        [dpp_cv_Pa_Initialize_pastaticds_lib],
                         [AC_TRY_LINK([#include <windows.h>
+#include <portaudio.h>],
+                           [Pa_Initialize();],
+                           [dpp_cv_Pa_Initialize_pastaticds_lib='yes'],
+                           [dpp_cv_Pa_Initialize_pastaticds_lib='no'])])
+
+         if test "x$dpp_cv_Pa_Initialize_pastaticds_lib" = "xyes" ; then
+            ifelse([$2], , :, [$2])
+
+            LIBS="pablio.lib $LIBS"
+
+            AC_CACHE_CHECK([for GetAudioStreamReadable in pablio.lib],
+                           [dpp_cv_GetAudioStreamReadable_pablio_lib],
+                           [AC_TRY_LINK([#include <windows.h>
 #include <stdlib.h>
 #include <pablio.h>],
-                           [GetAudioStreamReadable(NULL);],
-                           [dpp_cv_GetAudioStreamReadable_pablio_lib='yes'],
-                           [dpp_cv_GetAudioStreamReadable_pablio_lib='no'])])
+                              [GetAudioStreamReadable(NULL);],
+                              [dpp_cv_GetAudioStreamReadable_pablio_lib='yes'],
+                              [dpp_cv_GetAudioStreamReadable_pablio_lib='no'])])
 
-         if test "x$dpp_cv_GetAudioStreamReadable_pablio_lib" = "xyes" ; then
-            ifelse([$4], , :, [$4])
+            if test "x$dpp_cv_GetAudioStreamReadable_pablio_lib" = "xyes"
+            then
+               ifelse([$4], , :, [$4])
+            else
+               ifelse([$5], , :, [$5])
+            fi
          else
-            ifelse([$5], , :, [$5])
+            ifelse([$3], , :, [$3])
          fi
+
+         LIBS="$dpp_save_LIBS"
+
+         AC_LANG_RESTORE
+
+      dnl UNIX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       else
-         ifelse([$3], , :, [$3])
-      fi
-
-      LIBS="$dpp_save_LIBS"
-
-      AC_LANG_RESTORE
-
-   dnl UNIX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   else
-      dpp_save_LIBS="$LIBS"
-
-      DPP_LANG_SAVE
-      DPP_LANG_C
-
-      dpp_have_portaudio='no'
-
-      AC_CHECK_LIB([portaudio], [Pa_Initialize],
-         [AC_CHECK_HEADER([portaudio.h], [dpp_have_portaudio='yes'])])
-
-      DPP_LANG_RESTORE
-
-      LIBS="$dpp_save_LIBS"
-
-      if test "x$dpp_have_portaudio" = "xyes" ; then
-         ifelse([$2], , :, [$2])
-
-         # Pablio is optional.
-         # TODO: make an m4 for this...
-         dpp_have_pablio='no'
+         dpp_save_LIBS="$LIBS"
 
          DPP_LANG_SAVE
          DPP_LANG_C
 
-         AC_CHECK_LIB([pablio], [WriteAudioStream],
-            [AC_CHECK_HEADER([pablio.h], [dpp_have_pablio='yes'])])
+         dpp_have_portaudio='no'
+
+         AC_CHECK_LIB([portaudio], [Pa_Initialize],
+            [AC_CHECK_HEADER([portaudio.h], [dpp_have_portaudio='yes'])])
 
          DPP_LANG_RESTORE
 
          LIBS="$dpp_save_LIBS"
 
-         if test "x$dpp_have_pablio" = "xyes" ; then
-            ifelse([$4], , :, [$4])
+         if test "x$dpp_have_portaudio" = "xyes" ; then
+            ifelse([$2], , :, [$2])
+
+            # Pablio is optional.
+            # TODO: make an m4 for this...
+            dpp_have_pablio='no'
+
+            DPP_LANG_SAVE
+            DPP_LANG_C
+
+            AC_CHECK_LIB([pablio], [WriteAudioStream],
+               [AC_CHECK_HEADER([pablio.h], [dpp_have_pablio='yes'])])
+
+            DPP_LANG_RESTORE
+
+            LIBS="$dpp_save_LIBS"
+
+            if test "x$dpp_have_pablio" = "xyes" ; then
+               ifelse([$4], , :, [$4])
+            else
+               ifelse([$5], , :, [$5])
+            fi
          else
-            ifelse([$5], , :, [$5])
+            ifelse([$3], , :, [$3])
          fi
-      else
-         ifelse([$3], , :, [$3])
       fi
+
+      dnl If PortAudio API files were found, define this extra stuff that may
+      dnl be helpful in some Makefiles.
+      if test "x$dpp_have_portaudio" = "xyes" ; then
+         if test "x$OS_TYPE" = "xUNIX" ;  then
+            LIBPORTAUDIO="-lportaudio -lm"
+            if test "x$dpp_have_pablio" = "xyes" ; then
+               LIBPORTAUDIO="$LIBPORTAUDIO -lpablio"
+            fi
+         elif test "x$OS_TYPE" = "xWin32"; then
+            LIBPORTAUDIO='PAStaticDS.lib'
+            if test "x$dpp_have_pablio" = "xyes" ; then
+               LIBPORTAUDIO="$LIBPORTAUDIO pablio.lib"
+            fi
+         fi
+
+         if test "x$PORTAUDIO_ROOT" != "x/usr" ; then
+            PORTAUDIO_INCLUDES="-I$PORTAUDIO_ROOT/include"
+            PORTAUDIO_LDFLAGS="$pa_ldflags"
+         fi
+
+         PORTAUDIO='yes'
+      fi
+
+      dnl Restore all the variables now that we are done testing.
+      CFLAGS="$dpp_save_CFLAGS"
+      CPPFLAGS="$dpp_save_CPPFLAGS"
+      LDFLAGS="$dpp_save_LDFLAGS"
    fi
-
-   dnl If PortAudio API files were found, define this extra stuff that may be
-   dnl helpful in some Makefiles.
-   if test "x$dpp_have_portaudio" = "xyes" ; then
-      if test "x$OS_TYPE" = "xUNIX" ;  then
-         LIBPORTAUDIO="-lportaudio -lm"
-         if test "x$dpp_have_pablio" = "xyes" ; then
-            LIBPORTAUDIO="$LIBPORTAUDIO -lpablio"
-         fi
-      elif test "x$OS_TYPE" = "xWin32"; then
-         LIBPORTAUDIO='PAStaticDS.lib'
-         if test "x$dpp_have_pablio" = "xyes" ; then
-            LIBPORTAUDIO="$LIBPORTAUDIO pablio.lib"
-         fi
-      fi
-
-      if test "x$PORTAUDIO_ROOT" != "x/usr" ; then
-         PORTAUDIO_INCLUDES="-I$PORTAUDIO_ROOT/include"
-         PORTAUDIO_LDFLAGS="$pa_ldflags"
-      fi
-
-      PORTAUDIO='yes'
-   fi
-
-   dnl Restore all the variables now that we are done testing.
-   CFLAGS="$dpp_save_CFLAGS"
-   CPPFLAGS="$dpp_save_CPPFLAGS"
-   LDFLAGS="$dpp_save_LDFLAGS"
 
    dnl Export all of the output vars for use by makefiles and configure script.
    AC_SUBST(PORTAUDIO)

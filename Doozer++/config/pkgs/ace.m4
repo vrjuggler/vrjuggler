@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          ace.m4,v
-dnl Date modified: 2004/07/02 11:35:55
-dnl Version:       1.14
+dnl Date modified: 2004/10/21 15:59:18
+dnl Version:       1.15
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -51,7 +51,7 @@ dnl     ACE_LDFLAGS  - The compiler argument to add the ACE library path and
 dnl                    libraries.
 dnl ===========================================================================
 
-dnl	ace.m4,v 1.14 2004/07/02 11:35:55 patrickh Exp
+dnl	ace.m4,v 1.15 2004/10/21 15:59:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Usage:
@@ -83,76 +83,79 @@ AC_DEFUN([DPP_HAVE_ACE],
                [  --with-ace-libs=<PATH>  Path to ACE libraries           [default=\$ACE_ROOT/lib]],
                ACE_LIBDIR="$withval", ACE_LIBDIR="$ACE_ROOT/lib")
 
-   dnl Check the ACE version if a version number was given.
-   if test "x$1" != "x" ; then
-      DPP_ACE_VER([$ACE_INCDIR $ACE_ROOT], $2, $3, $4)
-   else
-      AC_MSG_ERROR([*** No ACE version given! ***])
-   fi
-
-   dpp_save_CXXFLAGS="$CXXFLAGS"
-   dpp_save_CPPFLAGS="$CPPFLAGS"
-   dpp_save_LDFLAGS="$LDFLAGS"
-   dpp_save_LIBS="$LIBS"
-
-   if test "x$ACE_ROOT" != "x/usr" ; then
-      if test "x$ACE_INCDIR" != "x$dpp_ace_header_dir" ; then
-         ACE_INCLUDES="-I$dpp_ace_header_dir -I$ACE_INCDIR"
-      else
-         ACE_INCLUDES="-I$ACE_INCDIR"
-      fi
-
-      LDFLAGS="-L$ACE_LIBDIR $LDFLAGS"
-   fi
-
-   CPPFLAGS="$CPPFLAGS $ACE_INCLUDES"
-   CXXFLAGS="$CXXFLAGS $ACE_INCLUDES $ABI_FLAGS"
-
-   if test "x$dpp_os_type" = "xWin32" ; then
-      CPPFLAGS="$CPPFLAGS -DACE_HAS_DLL=0 /GX /MT"
-      CXXFLAGS="$CXXFLAGS -DACE_HAS_DLL=0 /GX /MT"
-   fi
-
    dpp_have_ace='no'
 
-   DPP_LANG_SAVE
-   DPP_LANG_CPLUSPLUS
+   if test "x$ACE_ROOT" != "xno" ; then
+      dnl Check the ACE version if a version number was given.
+      if test "x$1" != "x" ; then
+         DPP_ACE_VER([$ACE_INCDIR $ACE_ROOT], $2, $3, $4)
+      else
+         AC_MSG_ERROR([*** No ACE version given! ***])
+      fi
 
-   LIBS="$LIBS -lACE"
+      dpp_save_CXXFLAGS="$CXXFLAGS"
+      dpp_save_CPPFLAGS="$CPPFLAGS"
+      dpp_save_LDFLAGS="$LDFLAGS"
+      dpp_save_LIBS="$LIBS"
 
-   dnl If the ACE library was found, add the API object files to the files
-   dnl to be compiled and enable the Performer API compile-time option.
-   dnl This ace_main_i crap is for Windows.
-   AC_CACHE_CHECK([for ACE_OS::perror in -lACE],
-      [dpp_cv_ACE_OS__perror_in_ACE],
-      [AC_TRY_LINK([#include <ace/OS.h>
-int ace_main_i(int argc, char** const argv) {
+      if test "x$ACE_ROOT" != "x/usr" ; then
+         if test "x$ACE_INCDIR" != "x$dpp_ace_header_dir" ; then
+            ACE_INCLUDES="-I$dpp_ace_header_dir -I$ACE_INCDIR"
+         else
+            ACE_INCLUDES="-I$ACE_INCDIR"
+         fi
+
+         LDFLAGS="-L$ACE_LIBDIR $LDFLAGS"
+      fi
+
+      CPPFLAGS="$CPPFLAGS $ACE_INCLUDES"
+      CXXFLAGS="$CXXFLAGS $ACE_INCLUDES $ABI_FLAGS"
+
+      if test "x$dpp_os_type" = "xWin32" ; then
+         CPPFLAGS="$CPPFLAGS -DACE_HAS_DLL=0 /GX /MT"
+         CXXFLAGS="$CXXFLAGS -DACE_HAS_DLL=0 /GX /MT"
+      fi
+
+      DPP_LANG_SAVE
+      DPP_LANG_CPLUSPLUS
+
+      LIBS="$LIBS -lACE"
+
+      dnl If the ACE library was found, add the API object files to the files
+      dnl to be compiled and enable the Performer API compile-time option.
+      dnl This ace_main_i crap is for Windows.
+      AC_CACHE_CHECK([for ACE_OS::perror in -lACE],
+         [dpp_cv_ACE_OS__perror_in_ACE],
+         [AC_TRY_LINK([#include <ace/OS.h>
+int ace_main_i(int argc, char** const argv)
+{
    return 0;
 }],
-                  [ACE_OS::perror("test");],
-                  [ dpp_cv_ACE_OS__perror_in_ACE='yes'
-                    rm -rf ./ii_files ],
-                  [dpp_cv_ACE_OS__perror_in_ACE='no'])])
+                     [ACE_OS::perror("test");],
+                     [ dpp_cv_ACE_OS__perror_in_ACE='yes'
+                       rm -rf ./ii_files ],
+                     [dpp_cv_ACE_OS__perror_in_ACE='no'])])
 
-   if test "x$dpp_cv_ACE_OS__perror_in_ACE" = "xyes" ; then
-      AC_CHECK_HEADER([ace/OS.h],
-         [ dpp_have_ace='yes' ACE_LDFLAGS="-L$ACE_LIBDIR -lace" ], $4)
+      if test "x$dpp_cv_ACE_OS__perror_in_ACE" = "xyes" ; then
+         AC_CHECK_HEADER([ace/OS.h],
+            [ dpp_have_ace='yes' ACE_LDFLAGS="-L$ACE_LIBDIR -lace" ], $4)
 
-      if test "x$dpp_have_ace" = "xyes" ; then
-         ifelse([$3], , :, [$3])
+         if test "x$dpp_have_ace" = "xyes" ; then
+            ifelse([$3], , :, [$3])
+         fi
+      else
+         AC_MSG_WARN([*** Cannot find ACE library ***])
+         ifelse([$4], , :, [$4])
       fi
-   else
-      AC_MSG_WARN([*** Cannot find ACE library ***])
-      ifelse([$4], , :, [$4])
+
+      DPP_LANG_RESTORE
+
+      CXXFLAGS="$dpp_save_CXXFLAGS"
+      CPPFLAGS="$dpp_save_CPPFLAGS"
+      LDFLAGS="$dpp_save_LDFLAGS"
+      LIBS="$dpp_save_LIBS"
+
    fi
-
-   DPP_LANG_RESTORE
-
-   CXXFLAGS="$dpp_save_CXXFLAGS"
-   CPPFLAGS="$dpp_save_CPPFLAGS"
-   LDFLAGS="$dpp_save_LDFLAGS"
-   LIBS="$dpp_save_LIBS"
-
    dnl -----------------------------------------------------------------------
    dnl Do the substition step for $ACE_ROOT.
    dnl -----------------------------------------------------------------------

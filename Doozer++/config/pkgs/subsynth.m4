@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          subsynth.m4,v
-dnl Date modified: 2004/07/02 11:35:55
-dnl Version:       1.12
+dnl Date modified: 2004/10/21 15:59:18
+dnl Version:       1.13
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -48,7 +48,7 @@ dnl     SUBSYNTH_LDFLAGS  - Extra linker flags for the Subsynth library
 dnl                         directory.
 dnl ===========================================================================
 
-dnl subsynth.m4,v 1.12 2004/07/02 11:35:55 patrickh Exp
+dnl subsynth.m4,v 1.13 2004/10/21 15:59:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has Subsynth installed.  This adds the
@@ -92,116 +92,116 @@ AC_DEFUN([DPP_HAVE_SUBSYNTH],
                [  --with-subsynth=<PATH>  Subsynth installation dir.      [default=$1]],
                SUBSYNTH_ROOT="$withval", SUBSYNTH_ROOT=$1)
 
-   dnl Only continue checking for subsynth if we found port audio
-   if test "x$PORTAUDIO" == "xyes"; then
-      dnl Save these values in case they need to be restored later.
-      dpp_save_CFLAGS="$CFLAGS"
-      dpp_save_CPPFLAGS="$CPPFLAGS"
-      dpp_save_LDFLAGS="$LDFLAGS"
+   if test "x$SUBSYNTH_ROOT" != "xno" ; then
+      dnl Only continue checking for subsynth if we found port audio
+      if test "x$PORTAUDIO" = "xyes"; then
+         dnl Save these values in case they need to be restored later.
+         dpp_save_CFLAGS="$CFLAGS"
+         dpp_save_CPPFLAGS="$CPPFLAGS"
+         dpp_save_LDFLAGS="$LDFLAGS"
 
-      dnl Add the user-specified Subsynth installation directory to these
-      dnl paths.  Ensure that /usr/include and /usr/lib are not included
-      dnl multiple times if $SUBSYNTH_ROOT is "/usr".
-      if test "x$SUBSYNTH_ROOT" != "x/usr" ; then
-         CPPFLAGS="$CPPFLAGS -I$SUBSYNTH_ROOT/include $PA_INCLUDES"
+         dnl Add the user-specified Subsynth installation directory to these
+         dnl paths.  Ensure that /usr/include and /usr/lib are not included
+         dnl multiple times if $SUBSYNTH_ROOT is "/usr".
+         if test "x$SUBSYNTH_ROOT" != "x/usr" ; then
+            CPPFLAGS="$CPPFLAGS -I$SUBSYNTH_ROOT/include $PA_INCLUDES"
 
-         if test -d "$SUBSYNTH_ROOT/lib$LIBBITSUF" ; then
-            LDFLAGS="-L$SUBSYNTH_ROOT/lib$LIBBITSUF $PA_LDFLAGS $LDFLAGS"
-         fi
-      fi
-
-      CFLAGS="$CFLAGS $ABI_FLABS"
-
-      dnl WIN32 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      if test "x$dpp_os_type" = "xWin32" ; then
-         DPP_LANG_SAVE
-         DPP_LANG_CPLUSPLUS
-
-         LIBS="$LIBS subsynth.lib"
-
-         dpp_cv_synisLittle_subsynth_lib='no'
-
-         AC_CACHE_CHECK([for syn::isLittle in subsynth.lib],
-                        [dpp_cv_synisLittle_subsynth_lib],
-                        [AC_TRY_LINK([#include <windows.h>
-#include <syn/Util/Endian.h>],
-                           [syn::isLittle();],
-                           [dpp_cv_synisLittle_subsynth_lib='yes'],
-                           [dpp_cv_synisLittle_subsynth_lib='no'])])
-
-         LIBS="$dpp_save_LIBS"
-         dpp_have_subsynth="$dpp_cv_synisLittle_subsynth_lib"
-
-         DPP_LANG_RESTORE
-
-      dnl UNIX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      else
-         dpp_save_LIBS="$LIBS"
-
-         DPP_LANG_SAVE
-         DPP_LANG_C
-
-         dpp_have_subsynth='no'
-
-         # no C symbols in subsynth,...  there has to be a better way,
-         # but this is good enough for me...
-         echo "checking for Subsynth in $SUBSYNTH_ROOT/lib$LIBBITSUF/libsubsynth.[a|so]..."
-         if test -e "$SUBSYNTH_ROOT/lib$LIBBITSUF/libsubsynth.a" && test -e "$SUBSYNTH_ROOT/lib$LIBBITSUF/libsubsynth.so" ; then
-            echo "checking for Subsynth in $SUBSYNTH_ROOT/include/syn/Util/Endian.h..."
-            if test -e "$SUBSYNTH_ROOT/include/syn/Util/Endian.h" ; then
-               dpp_have_subsynth='yes'
+            if test -d "$SUBSYNTH_ROOT/lib$LIBBITSUF" ; then
+               LDFLAGS="-L$SUBSYNTH_ROOT/lib$LIBBITSUF $PA_LDFLAGS $LDFLAGS"
             fi
          fi
 
-         #AC_CHECK_LIB([subsynth], [sin],
-         #   [AC_CHECK_HEADER([syn/Util/Endian.h], [dpp_have_subsynth='yes'],
-         #      [AC_MSG_WARN([*** Subsynth will not be used (syn/Util/Endian.h not found) ***])])],
-         #   [AC_MSG_WARN([*** Subsynth will not be used (subsynth library not found) ***])],
-         #   [-lm])
+         CFLAGS="$CFLAGS $ABI_FLABS"
 
-         dnl This is necessary because AC_CHECK_LIB() adds -lsubsynth to
-         dnl $LIBS.  We want to do that ourselves later.
-         LIBS="$dpp_save_LIBS"
+         dnl WIN32 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-         DPP_LANG_RESTORE
-      fi
+         if test "x$dpp_os_type" = "xWin32" ; then
+            DPP_LANG_SAVE
+            DPP_LANG_CPLUSPLUS
 
-      if test "x$dpp_have_subsynth" = "xyes" ; then
-         ifelse([$2], , :, [$2])
+            LIBS="$LIBS subsynth.lib"
+
+            dpp_cv_synisLittle_subsynth_lib='no'
+
+            AC_CACHE_CHECK([for syn::isLittle in subsynth.lib],
+                           [dpp_cv_synisLittle_subsynth_lib],
+                           [AC_TRY_LINK([#include <windows.h>
+#include <syn/Util/Endian.h>],
+                              [syn::isLittle();],
+                              [dpp_cv_synisLittle_subsynth_lib='yes'],
+                              [dpp_cv_synisLittle_subsynth_lib='no'])])
+
+            LIBS="$dpp_save_LIBS"
+            dpp_have_subsynth="$dpp_cv_synisLittle_subsynth_lib"
+
+            DPP_LANG_RESTORE
+
+         dnl UNIX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         else
+            dpp_save_LIBS="$LIBS"
+
+            DPP_LANG_SAVE
+            DPP_LANG_C
+
+            dpp_have_subsynth='no'
+
+            # XXX: Fix this crummy test.
+            if test -e "$SUBSYNTH_ROOT/lib$LIBBITSUF/libsubsynth.a" && test -e "$SUBSYNTH_ROOT/lib$LIBBITSUF/libsubsynth.so"
+            then
+               if test -e "$SUBSYNTH_ROOT/include/syn/Util/Endian.h" ; then
+                  dpp_have_subsynth='yes'
+               fi
+            fi
+
+dnl            AC_CHECK_LIB([subsynth], [sin],
+dnl               [AC_CHECK_HEADER([syn/Util/Endian.h], [dpp_have_subsynth='yes'],
+dnl                  [AC_MSG_WARN([*** Subsynth will not be used (syn/Util/Endian.h not found) ***])])],
+dnl               [AC_MSG_WARN([*** Subsynth will not be used (subsynth library not found) ***])],
+dnl               [-lm])
+
+            dnl This is necessary because AC_CHECK_LIB() adds -lsubsynth to
+            dnl $LIBS.  We want to do that ourselves later.
+            LIBS="$dpp_save_LIBS"
+
+            DPP_LANG_RESTORE
+         fi
+
+         if test "x$dpp_have_subsynth" = "xyes" ; then
+            ifelse([$2], , :, [$2])
+         else
+            ifelse([$3], , :, [$3])
+         fi
+
+         dnl If Subsynth API files were found, define this extra stuff that may
+         dnl be helpful in some Makefiles.
+         if test "x$dpp_have_subsynth" = "xyes" ; then
+            if test "x$OS_TYPE" = "xUNIX" ;  then
+               LIBSUBSYNTH="-lsubsynth $LIBPORTAUDIO -lm"
+            else
+               LIBSUBSYNTH='subsynth.lib $LIBPORTAUDIO'
+            fi
+
+            if test "x$SUBSYNTH_ROOT" != "x/usr" ; then
+               SUBSYNTH_INCLUDES="-I$SUBSYNTH_ROOT/include $PA_INCLUDES"
+               SUBSYNTH_LDFLAGS="-L$SUBSYNTH_ROOT/lib$LIBBITSUF $PA_LDFLAGS"
+            fi
+
+            SUBSYNTH='yes'
+         fi
+
+         dnl Restore all the variables now that we are done testing.
+         CFLAGS="$dpp_save_CFLAGS"
+         CPPFLAGS="$dpp_save_CPPFLAGS"
+         LDFLAGS="$dpp_save_LDFLAGS"
+
+         if test "x$PLATFORM" = "xIRIX" ; then
+            SUBSYNTH_INCLUDES="-DNO_METAPROG $SUBSYNTH_INCLUDES"
+         fi
+
+      dnl Failure case when PortAudio is not available.
       else
          ifelse([$3], , :, [$3])
       fi
-
-      dnl If Subsynth API files were found, define this extra stuff that may be
-      dnl helpful in some Makefiles.
-      if test "x$dpp_have_subsynth" = "xyes" ; then
-         if test "x$OS_TYPE" = "xUNIX" ;  then
-            LIBSUBSYNTH="-lsubsynth $LIBPORTAUDIO -lm"
-         else
-            LIBSUBSYNTH='subsynth.lib $LIBPORTAUDIO'
-         fi
-
-         if test "x$SUBSYNTH_ROOT" != "x/usr" ; then
-            SUBSYNTH_INCLUDES="-I$SUBSYNTH_ROOT/include $PA_INCLUDES"
-            SUBSYNTH_LDFLAGS="-L$SUBSYNTH_ROOT/lib$LIBBITSUF $PA_LDFLAGS"
-         fi
-
-         SUBSYNTH='yes'
-      fi
-
-      dnl Restore all the variables now that we are done testing.
-      CFLAGS="$dpp_save_CFLAGS"
-      CPPFLAGS="$dpp_save_CPPFLAGS"
-      LDFLAGS="$dpp_save_LDFLAGS"
-
-      if test "x$PLATFORM" = "xIRIX" ; then
-         SUBSYNTH_INCLUDES="-DNO_METAPROG $SUBSYNTH_INCLUDES"
-      fi
-
-   dnl Failure case when PortAudio is not available.
-   else
-      ifelse([$3], , :, [$3])
    fi
 
    dnl Export all of the output vars for use by makefiles and configure script.
