@@ -30,8 +30,6 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# $Id$
-
 .SUFFIXES: .html .xml .pdf .tex .fo .txt
 
 XALAN_VERSION?=	20020214
@@ -79,7 +77,8 @@ endif # PASSIVE_TEX
 endif # XEP
 endif # FOP
 
-XALAN_HTML_PARAMS=	
+SAXON_HTML_PARAMS=	html.stylesheet=base_style.css
+XALAN_HTML_PARAMS=	-PARAM html.stylesheet "base_style.css"
 
 XALAN_TXT_PARAMS=	-PARAM page.margin.bottom "0in"	\
 			-PARAM page.margin.inner "0in"	\
@@ -94,9 +93,13 @@ DB_SGML_DTD?=	$(DOCBOOK_ROOT)/docbook-sgml-4.1.dtd
 DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.76
 XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.49
 
+ifdef NEED_DB_IMAGES
+LINK_DEPS=	images
+endif
+
 txt: $(TXT_FILES)
 
-html: images $(HTML_FILES)
+html: $(LINK_DEPS) $(HTML_FILES)
 
 chunk-html:
 	for file in $(XML_FILES) ; do \
@@ -109,8 +112,6 @@ chunk-html:
             cd $$cur_dir ; \
         done
 
-LINK_DEPS=	images
-
 pdf: $(LINK_DEPS) $(PDF_FILES)
 
 # The method for specifying a path to the images that come with the DocBook
@@ -119,6 +120,63 @@ pdf: $(LINK_DEPS) $(PDF_FILES)
 # current directory.  This hack with a symlink works around that problem.
 images:
 	ln -s $(XSL_DIR)/images ./
+
+install-txt: $(TXT_FILES)
+ifndef prefix
+	$(error "No prefix set!")
+else
+	if [ ! -d "$(prefix)" ]; then mkdir -p $(prefix); fi
+	cp $(TXT_FILES) $(prefix)/
+endif
+
+install-html: $(LINK_DEPS) $(HTML_FILES)
+ifndef prefix
+	$(error "No prefix set!")
+else
+	if [ ! -d "$(prefix)" ]; then mkdir -p $(prefix); fi
+	cp $(HTML_FILES) $(prefix)/
+ifdef INSTALL_FILES
+	cp $(INSTALL_FILES) $(prefix)/
+endif
+ifdef INSTALL_DIRS
+	cp -r $(INSTALL_DIRS) $(prefix)
+endif
+ifdef NEED_DB_IMAGES
+	cp -rH images $(prefix)/
+endif
+endif
+
+install-chunk-html:
+ifndef prefix
+	$(error "No prefix set!")
+else
+	if [ ! -d "$(prefix)" ]; then mkdir -p $(prefix); fi
+	for file in $(XML_FILES) ; do \
+            dir=`echo $$file | sed -e 's/\.xml//'` ; \
+            cp -r $$dir $(prefix)/ ; \
+            if [ ! -z "$(INSTALL_FILES)" ]; then \
+                cp $(INSTALL_FILES) $(prefix)/$$dir ; \
+            fi ; \
+            if [ ! -z "$(NEED_DB_IMAGES)" ]; then \
+                cp -rH images $(prefix)/$$dir ; \
+            fi ; \
+            if [ ! -z "$(INSTALL_DIRS)" ]; then \
+                cp -r $(INSTALL_DIRS) $(prefix)/$$dir ; \
+            fi ; \
+          done
+endif
+
+install-pdf: $(PDF_FILES)
+ifndef prefix
+	$(error "No prefix set!")
+else
+	cp $(PDF_FILES) $(prefix)/
+endif
+
+install install-all:
+	$(MAKE) install-html
+	$(MAKE) install-chunk-html
+	$(MAKE) install-pdf
 
 # Image conversions -----------------------------------------------------------
 
