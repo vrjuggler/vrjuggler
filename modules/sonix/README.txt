@@ -205,7 +205,7 @@ Table of contents:
       cd $juggler_root/sonix
       autogen.sh
       cd $juggler_root/sonix/build.$HOSTTYPE
-      ../configure  --with-oalroot=$OALROOT --prefix=$install_dir 
+      ../configure  --enable-openal --with-oalroot=$OALROOT --prefix=$install_dir 
       gmake -j 2
       
    C. Advanced topics
