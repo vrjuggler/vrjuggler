@@ -699,26 +699,30 @@ public class ConfigModule extends DefaultCoreModule {
             return null;
 
 	Core.consoleInfoMessage (component_name, "Loading ChunkDB: " + f);
-	try {
-	    ConfigChunkDB chunkdb = new ConfigChunkDB();
-	    chunkdb.setName(f.getName());
-	    chunkdb.setFile(f);
+        ConfigChunkDB chunkdb = new ConfigChunkDB();
+        try {
+            chunkdb.setName(f.getName());
+            chunkdb.setFile(f);
             ConfigIO.readConfigChunkDB (f, chunkdb, ConfigIO.GUESS);
             addChunkDB (chunkdb);
 
             chunkdb.need_to_save = false;
 	    
-	    // load included files...
-	    List v = chunkdb.getOfDescToken("vjIncludeFile");
-	    for (int i = 0; i < v.size(); i++)
-		loadNewChunkDBFile(((ConfigChunk)v.get(i)).getName());
+            // load included files...
+            List v = chunkdb.getOfDescToken("vjIncludeFile");
+            for (int i = 0; i < v.size(); i++)
+                loadNewChunkDBFile(((ConfigChunk)v.get(i)).getName());
 
-	    return chunkdb.name;
+            return chunkdb.name;
 	}
 	catch (FileNotFoundException e) {
-	    Core.consoleErrorMessage (component_name, "File Not Found: " + f);
+	    Core.consoleErrorMessage (component_name, e.getMessage());
 	    return null;
 	}
+        catch (IOException e) {
+            Core.consoleErrorMessage (component_name, "Parsing error: " + e);
+            return null;
+        }
     }
 
 
@@ -761,19 +765,23 @@ public class ConfigModule extends DefaultCoreModule {
 
 	Core.consoleInfoMessage (component_name, 
 				 "Loading Descriptions file: " + f);
-	try {
+ 	try {
 	    ChunkDescDB descdb = new ChunkDescDB();
 	    descdb.setName(f.getName());
 	    descdb.setFile (f);
             ConfigIO.readChunkDescDB (f, descdb, ConfigIO.GUESS);
             descdb.need_to_save = false;
             addDescDB (descdb);
-	    return descdb.name;
+            return descdb.name;
 	}
 	catch (FileNotFoundException e) {
-	    Core.consoleErrorMessage (component_name, "File not found: " + e);
+	    Core.consoleErrorMessage (component_name, e.getMessage());
 	    return null;
 	}
+        catch (IOException e) {
+            Core.consoleErrorMessage (component_name, "Parsing error: " + e);
+            return null;
+        }
     }
 
 
