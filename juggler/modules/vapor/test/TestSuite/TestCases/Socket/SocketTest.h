@@ -180,7 +180,7 @@ public:
    void testOpenCloseOpen()
    {
       //std::cout<<"]==================================================\n"<<std::flush; 
-      std::cout<<" OpenCloseOpen Test: \n"<<std::flush; 
+      //std::cout<<" OpenCloseOpen Test: \n"<<std::flush; 
       
       // spawn an acceptor thread
       vpr::ThreadMemberFunctor<SocketTest> acceptor_functor( this, &SocketTest::testOpenCloseOpen_acceptor );
@@ -320,6 +320,9 @@ public:
    }
    void testSendRecv()
    {
+      //std::cout<<"]==================================================\n"<<std::flush; 
+      //std::cout<<" SendRecv Test: \n"<<std::flush; 
+
       // spawn an acceptor thread
       vpr::ThreadMemberFunctor<SocketTest> acceptor_functor( this, &SocketTest::testSendRecv_acceptor );
       vpr::Thread acceptor_thread( &acceptor_functor );
@@ -348,6 +351,9 @@ public:
    // =========================================================================
    void testOpenClose()
    { 
+      //std::cout<<"]==================================================\n"<<std::flush; 
+      //std::cout<<" OpenClose Test: \n"<<std::flush; 
+
       bool openSuccess( false );
       bool closeSuccess( false );
       bool bindSuccess( false );

@@ -96,6 +96,8 @@
 #include <strings.h>
 #endif
 
+#include <include/vprStatus.h> // for return values, error status.
+
 /*
  * ----------------------------------------------------------------------------
  * DLL-related macros.  These are based on the macros used by NSPR.  Use
