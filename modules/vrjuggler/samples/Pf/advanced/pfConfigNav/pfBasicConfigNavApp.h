@@ -189,10 +189,10 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunkPtr chunk )
 
    // sounds
    mSoundList.clear();//start out clean
-   for (x = 0; x < chunk->getNum( "Sound" ); ++x)
+   for (x = 0; x < chunk->getNum( "Sounds" ); ++x)
    {
       jccl::ConfigChunkPtr sound_chunk =
-         chunk->getProperty<jccl::ConfigChunkPtr>( "Sound", x );
+         chunk->getProperty<jccl::ConfigChunkPtr>( "Sounds", x );
 
       Sound s;
       s.name = sound_chunk->getName();
