@@ -222,8 +222,8 @@ public:
     //! POST: The port associated with this address is returned to the caller
     //+       in host byte order.
     //
-    //! RETURNS: A Uint16 (unsigned 16-bit value) giving the port for this
-    //+          address in host byte order.
+    //! RETURNS: An unsigned 16-bit integer  giving the port for this address
+    //+          in host byte order.
     // ------------------------------------------------------------------------
     inline Uint16
     getPort (void) const {
@@ -236,8 +236,8 @@ public:
     //! PRE: The given port number is in host byte order.
     //! POST: The given port number is stored in the address.
     //
-    //! ARGS: port - A Uint16 (unsigned 16-bit value) port number for this
-    //+              address in host byte order.
+    //! ARGS: port - An unsigned 16-bit integer port number for this address
+    //+              in host byte order.
     // ------------------------------------------------------------------------
     inline void
     setPort (const Uint16 port) {
@@ -261,14 +261,14 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Set this objects's IP address.  The given address must be in host
-    //+ byte order.
+    //: Set this objects's IP address.  The given address must be in host byte
+    //+ order.
     //
     //! PRE: The given IP address is in host byte order.
     //! POST: The given IP address is stored.
     //
-    //! ARGS: port - An unsigned 32-bit integer IP address for this object
-    //+              structure in host byte order.
+    //! ARGS: port - An unsigned 32-bit integer IP address for this object in
+    //+              host byte order.
     // ------------------------------------------------------------------------
     inline void
     setAddressValue (const Uint32 addr_value) {
@@ -295,6 +295,9 @@ public:
     //! PRE: None.
     //! POST: If the address is valid, the object's IP address is updated
     //+       appropriately.
+    //
+    //! ARGS: addr - An address string in dotted-decimal address notation or
+    //+              as a hostname.
     //
     //! RETURNS: true  - The address was valid and the set operation
     //+                  succeeded.
