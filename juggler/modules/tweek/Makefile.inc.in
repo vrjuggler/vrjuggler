@@ -430,6 +430,9 @@ ifeq ($(BUILD_EXTENSIONS), Y)
 endif # if $(BUILD_EXTENSIONS) == Y
 endif	# if $(BUILD_JAVA) == Y
 endif	# ifdef NO_JAVA
+ifeq ($(BUILD_PYTHON_IDL), Y)
+	@$(MAKE) -C python tweek-idl-install
+endif
 ifeq ($(BUILD_PYTHON_GUI), Y)
 	@$(MAKE) -C python tweek-gui-install
 endif

@@ -39,6 +39,3 @@ else
 	@echo "Tweek Python GUI skipped"
 	@echo "------------------------------------------------"
 endif
-
-tweek-gui-install:
-	@$(MAKE) tweek-install
