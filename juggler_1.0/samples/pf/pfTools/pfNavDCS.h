@@ -68,6 +68,18 @@ public:
       mNaver->setActive(state);
    }
 
+   // Get the current position from the navigator
+   // and set the DCS with it
+   void updateTransformMatrix();
+
+   // Reset the navigation DCS to the navigators "home" position
+   void reset()
+   {
+      vjASSERT(mNaver != NULL);
+      mNaver->reset();
+      updateTransformMatrix();
+   }
+
 private:
    bool                 mActive;     // Are we active
    navigator*           mNaver;      // My navigator
@@ -99,6 +111,21 @@ pfNavDCS::pfNavDCS() : pfDCS()
 }
 
 
+// Get the current position from the navigator
+// and set the DCS with it
+void pfNavDCS::updateTransformMatrix()
+{
+   vjASSERT(mNaver != NULL);     // We mut have a naver
+
+   // Set the navigation DCS to the new navigation matrix
+   // cur_pos = modelspace_M_user
+   vjMatrix cur_pos_inv, cur_pos;
+   cur_pos = mNaver->getCurPos();
+   cur_pos_inv.invert(cur_pos);
+   pfMatrix model_move = vjGetPfMatrix( cur_pos_inv );
+   this->setMat( model_move );
+}
+
 // app() - APP traversal function.  This overloads the standard pfNode
 // app() method, which will be called each frame during the APP
 // traversal of the scene graph (*only if* needsApp() (below) returns
@@ -109,19 +136,16 @@ int pfNavDCS::app(pfTraverser *trav)
 {
    if(mNaver != NULL)
    {
-      // Get input and update the state baed upon that input
-      mNaver->updateInteraction();
+      if(isActive())
+      {
+         // Get input and update the state baed upon that input
+         mNaver->updateInteraction();
 
-      // Update the state of the navigation
-      mNaver->update();
+         // Update the state of the navigation
+         mNaver->update();
 
-      // Set the navigation DCS to the new navigation matrix
-      // cur_pos = modelspace_M_user
-      vjMatrix cur_pos_inv, cur_pos;
-      cur_pos = mNaver->getCurPos();
-      cur_pos_inv.invert(cur_pos);
-      pfMatrix model_move = vjGetPfMatrix( cur_pos_inv );
-      this->setMat( model_move );
+         updateTransformMatrix();
+      }
    }
    else
    {
