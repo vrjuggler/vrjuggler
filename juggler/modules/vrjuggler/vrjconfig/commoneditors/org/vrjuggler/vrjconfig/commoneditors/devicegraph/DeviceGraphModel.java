@@ -88,7 +88,8 @@ public class DeviceGraphModel
                accepts =
                   checkProxyDeviceConnection(
                      (ProxyInfo) proxy_cell.getUserObject(),
-                     (DeviceInfo) dev_cell.getUserObject()
+                     (DeviceInfo) dev_cell.getUserObject(),
+                     (UnitInfo) unit_port.getUserObject()
                   );
             }
             // If we catch a ClassCastException at any point, then we are not
@@ -130,7 +131,8 @@ public class DeviceGraphModel
             accepts =
                checkProxyDeviceConnection(
                   (ProxyInfo) proxy_cell.getUserObject(),
-                  (DeviceInfo) dev_cell.getUserObject()
+                  (DeviceInfo) dev_cell.getUserObject(),
+                  (UnitInfo) unit_port.getUserObject()
                );
          }
          // If we catch a ClassCastException at any point, then we are not
@@ -146,9 +148,10 @@ public class DeviceGraphModel
    }
 
    private boolean checkProxyDeviceConnection(ProxyInfo proxyInfo,
-                                              DeviceInfo deviceInfo)
+                                              DeviceInfo deviceInfo,
+                                              UnitInfo unitInfo)
    {
-      boolean valid = false; 
+      boolean valid = false;
 
       ConfigDefinition dev_def   = deviceInfo.getElement().getDefinition();
       ConfigDefinition proxy_def = proxyInfo.getElement().getDefinition();
@@ -157,17 +160,18 @@ public class DeviceGraphModel
          proxy_def.getPropertyDefinition(DEVICE_PROPERTY);
 
       List allowed_types = dev_prop_def.getAllowedTypes();
+      for ( Iterator i = allowed_types.iterator(); i.hasNext(); )
+      {
+         String type = (String) i.next();
 
-      if ( allowed_types.contains(dev_def.getToken()) )
-      {
-         valid = true;
-      }
-      else
-      {
-         for ( Iterator p = dev_def.getParents().iterator();
-               p.hasNext(); )
+         // If the device definition is of a type that the proxy is allowed to
+         // point at, then we need to check the specific unit and make sure
+         // that its type matches the proxy's type.
+         if ( dev_def.isOfType(type) )
          {
-            if ( allowed_types.contains(p.next()) )
+            Integer unit_type = UnitTypeHelpers.getUnitType(type);
+
+            if ( unitInfo.getUnitType().equals(unit_type) )
             {
                valid = true;
                break;
