@@ -50,9 +50,18 @@ FlockStandalone::FlockStandalone(const char* const port, const int& baud,
                                  const int& numBrds, const int& transmit,
                                  const BIRD_HEMI& hemi, const BIRD_FILT& filt,
                                  const char& report, const char* const calfile)
-   : mBaud(baud), mBlocking(block), mNumBirds(numBrds),
-     mAddrMode(UnknownAddressing), mXmitterUnitNumber(transmit), mUsingCorrectionTable(false),
-     mSleepFactor(3), mReportRate(report), mHemisphere(hemi), mFilter( filt ), mSyncStyle(sync)
+   : mSerialPort(NULL)
+   , mBaud(baud)
+   , mBlocking(block)
+   , mUsingCorrectionTable(false)
+   , mAddrMode(UnknownAddressing)
+   , mNumBirds(numBrds)
+   , mXmitterUnitNumber(transmit)
+   , mReportRate(report)
+   , mHemisphere(hemi)
+   , mFilter(filt)
+   , mSyncStyle(sync)
+   , mSleepFactor(3)
 {
    mStatus = FlockStandalone::CLOSED;  // Starts in closed state
 
@@ -60,10 +69,6 @@ FlockStandalone::FlockStandalone(const char* const port, const int& baud,
    {
       mPort = port;
       mSerialPort = new vpr::SerialPort(mPort);
-   }
-   else
-   {
-      mSerialPort = NULL;
    }
 
    // fix the report rate if it makes no sense.
@@ -871,7 +876,9 @@ vpr::ReturnStatus FlockStandalone::printSystemStatus()
    vpr::ReturnStatus ret_val = getSystemStatus(sys_status);
 
    if(!ret_val.success())
-   {  return ret_val; }
+   {
+      return ret_val;
+   }
 
    // Print the info out
    std::cout << "System status:\n";
@@ -886,10 +893,15 @@ vpr::ReturnStatus FlockStandalone::printSystemStatus()
       if(Flock::SystemStatus::hasTransmitter(status))
       {
          label += Transmitter::getTransmitterString(Flock::SystemStatus::getTransmitterType(status));
-         if(has_sensor) label += ", ";
+         if (has_sensor)
+         {
+            label += ", ";
+         }
       }
       if(has_sensor)
-      { label += "sensor"; }
+      {
+         label += "sensor";
+      }
       label += "]";
 
       bool is_accessible = Flock::SystemStatus::isAccessible(status);
@@ -898,6 +910,7 @@ vpr::ReturnStatus FlockStandalone::printSystemStatus()
       std::cout << boost::format("  %s: %|-14|  accessible:%s  running:%s") % i % label % is_accessible % is_running << std::endl;
    }
 
+   return ret_val;
 }
 
 
