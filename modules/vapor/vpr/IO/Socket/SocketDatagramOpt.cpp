@@ -44,13 +44,16 @@
 #include <vpr/IO/Socket/SocketDatagramOpt.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
-SocketDatagramOpt::SocketDatagramOpt () {
+SocketDatagramOpt::SocketDatagramOpt ()
+{
    /* Do nothing. */ ;
 }
 
-SocketDatagramOpt::~SocketDatagramOpt () {
+SocketDatagramOpt::~SocketDatagramOpt ()
+{
    /* Do nothing. */ ;
 }
 

@@ -91,38 +91,38 @@
 #define clrWHITE "37"
 
 #ifdef VPR_OS_Win32
-   #define clrESC ""
-   #define clrCONTROL_CHARS(font, color) ""
-   #define clrSetNORM(color) ""
-   #define clrSetBOLD(color) ""
-   #define clrRESET ""
-   #define clrOutBOLD(color,text) text
-   #define clrOutNORM(color,text) text
+#  define clrESC ""
+#  define clrCONTROL_CHARS(font, color) ""
+#  define clrSetNORM(color) ""
+#  define clrSetBOLD(color) ""
+#  define clrRESET ""
+#  define clrOutBOLD(color,text) text
+#  define clrOutNORM(color,text) text
 #else
-   #define clrESC char(27)
-   #define clrCONTROL_CHARS(font, color) clrESC << "[" << font << ";" << color << "m"
-   #define clrSetNORM(color) clrESC << "[" << color << "m"
-   #define clrSetBOLD(color) clrCONTROL_CHARS(clrBOLD, color)
-   #define clrRESET clrESC << "[" << clrNONE << "m"
-   #define clrOutBOLD(color,text) clrSetBOLD(color) << text << clrRESET
-   #define clrOutNORM(color,text) clrSetNORM(color) << text << clrRESET
+#  define clrESC char(27)
+#  define clrCONTROL_CHARS(font, color) clrESC << "[" << font << ";" << color << "m"
+#  define clrSetNORM(color) clrESC << "[" << color << "m"
+#  define clrSetBOLD(color) clrCONTROL_CHARS(clrBOLD, color)
+#  define clrRESET clrESC << "[" << clrNONE << "m"
+#  define clrOutBOLD(color,text) clrSetBOLD(color) << text << clrRESET
+#  define clrOutNORM(color,text) clrSetNORM(color) << text << clrRESET
 #endif
 
 
 #ifdef VPR_DEBUG
 
-//#   define vprDEBUG(cat,val) if (0) ; else if((val <= vprDebug::instance()->getLevel()) && (vprDebug::instance()->isCategoryAllowed(cat))) vprDebug::instance()->getStream(cat, val)
-//#   define vprDEBUG_BEGIN(cat,val) if (0) ; else if((val <= vprDebug::instance()->getLevel()) && (vprDebug::instance()->isCategoryAllowed(cat))) vprDebug::instance()->getStream(cat, val, true, 1)
-//#   define vprDEBUG_END(cat,val) if (0) ; else if((val <= vprDebug::instance()->getLevel()) && (vprDebug::instance()->isCategoryAllowed(cat))) vprDebug::instance()->getStream(cat, val, true, -1)
-   #define LOCK_DEBUG_STREAM
-   #define VPR_MAX_DBG_LEVEL 100
+//#  define vprDEBUG(cat,val) if (0) ; else if((val <= vprDebug::instance()->getLevel()) && (vprDebug::instance()->isCategoryAllowed(cat))) vprDebug::instance()->getStream(cat, val)
+//#  define vprDEBUG_BEGIN(cat,val) if (0) ; else if((val <= vprDebug::instance()->getLevel()) && (vprDebug::instance()->isCategoryAllowed(cat))) vprDebug::instance()->getStream(cat, val, true, 1)
+//#  define vprDEBUG_END(cat,val) if (0) ; else if((val <= vprDebug::instance()->getLevel()) && (vprDebug::instance()->isCategoryAllowed(cat))) vprDebug::instance()->getStream(cat, val, true, -1)
+#  define LOCK_DEBUG_STREAM
+#  define VPR_MAX_DBG_LEVEL 100
 #else
-   #define LOCK_DEBUG_STREAM
-   #define VPR_MAX_DBG_LEVEL vprDBG_WARNING_LVL
+#  define LOCK_DEBUG_STREAM
+#  define VPR_MAX_DBG_LEVEL vprDBG_WARNING_LVL
 
-//#   define vprDEBUG(cat,val) if (1) ; else std::cout
-//#   define vprDEBUG_BEGIN(cat,val) if (1) ; else std::cout
-//#   define vprDEBUG_END(cat,val) if (1) ; else std::cout
+//#  define vprDEBUG(cat,val) if (1) ; else std::cout
+//#  define vprDEBUG_BEGIN(cat,val) if (1) ; else std::cout
+//#  define vprDEBUG_END(cat,val) if (1) ; else std::cout
 #endif
 
 // #undef LOCK_DEBUG_STREAM
@@ -176,17 +176,18 @@
 
 
 #ifdef LOCK_DEBUG_STREAM
-   #define vprDEBUG_STREAM_LOCK vpr::StreamLock(vpr::Debug::instance()->debugLock())
-   #define vprDEBUG_STREAM_UNLOCK vpr::StreamUnLock(vpr::Debug::instance()->debugLock())
-   #define vprDEBUG_FLUSH vprDEBUG_STREAM_UNLOCK << std::flush
+#  define vprDEBUG_STREAM_LOCK vpr::StreamLock(vpr::Debug::instance()->debugLock())
+#  define vprDEBUG_STREAM_UNLOCK vpr::StreamUnLock(vpr::Debug::instance()->debugLock())
+#  define vprDEBUG_FLUSH vprDEBUG_STREAM_UNLOCK << std::flush
 #else
-   #define vprDEBUG_STREAM_LOCK std::flush
-   #define vprDEBUG_STREAM_UNLOCK std::flush
-   #define vprDEBUG_FLUSH std::flush
+#  define vprDEBUG_STREAM_LOCK std::flush
+#  define vprDEBUG_STREAM_UNLOCK std::flush
+#  define vprDEBUG_FLUSH std::flush
 #endif
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Class to support debug output
@@ -212,10 +213,14 @@ namespace vpr {
                               const bool lockStream = true);
 
       int getLevel()
-      { return debugLevel;}
+      {
+         return debugLevel;
+      }
 
       Mutex& debugLock()
-      { return mDebugLock;}
+      {
+         return mDebugLock;
+      }
 
       /// Adds a category name.
       void addCategory(const vpr::GUID& catId, std::string name, std::string prefix);
@@ -230,7 +235,10 @@ namespace vpr {
       void updateAllowedCategories();
 
       void enableThreadLocalSettings()
-      { mUseThreadLocal = true;}
+      {
+         mUseThreadLocal = true;
+      }
+
       void disableThreadLocalSettings()
       {
          mUseThreadLocal = false;
@@ -281,7 +289,7 @@ namespace vpr {
 
       // GUID, pair( name, prefix )
       typedef std::map<vpr::GUID, CategoryInfo > category_map_t;
-      std::map<vpr::GUID, CategoryInfo > mCategories; //! The names and id of allowed catagories    
+      std::map<vpr::GUID, CategoryInfo > mCategories; //! The names and id of allowed catagories
 
       vprSingletonHeader(Debug);
    };
@@ -290,19 +298,27 @@ namespace vpr {
    struct DebugColumnGuard
    {
       DebugColumnGuard(int col_val)
-      { vprDEBUG_PushColumn(col_val);}
+      {
+         vprDEBUG_PushColumn(col_val);
+      }
 
       ~DebugColumnGuard()
-      { vprDEBUG_PopColumn();}
+      {
+         vprDEBUG_PopColumn();
+      }
    };
 
    struct DebugColorGuard
    {
       DebugColorGuard(std::string color_val)
-      { vprDEBUG_PushTSColor(color_val);}
+      {
+         vprDEBUG_PushTSColor(color_val);
+      }
 
       ~DebugColorGuard()
-      { vprDEBUG_PopTSColor();}
+      {
+         vprDEBUG_PopTSColor();
+      }
    };
 
    /** Helper class that outputs debug information at creation and destruction of the object */
@@ -314,17 +330,25 @@ namespace vpr {
          : mCat(cat), mLevel(level), mEntryText(entryText), mExitText(exitText), mIndent(indent)
       {
          if(mIndent)
+         {
             vprDEBUG_BEGIN(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
+         }
          else
+         {
             vprDEBUG(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
+         }
       }
 
       ~DebugOutputGuard()
       {
          if(mIndent)
+         {
             vprDEBUG_END(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
+         }
          else
+         {
             vprDEBUG(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
+         }
       }
 
       vpr::GUID   mCat;

@@ -49,81 +49,82 @@
 #include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Implementation class for datagram sockets using the BSD sockets interface.
  */
-class SocketDatagramImplBSD : public vpr::SocketImplBSD {
+class SocketDatagramImplBSD : public vpr::SocketImplBSD
+{
 public:
-    typedef SocketImplBSD Parent;
+   typedef SocketImplBSD Parent;
 
-    // ========================================================================
-    // vpr::SocketDatagram interface.
-    // ========================================================================
+   // ========================================================================
+   // vpr::SocketDatagram interface.
+   // ========================================================================
 
-    /**
-     * Default constructor.  This sets the socket type to
-     * vpr::SocketTypes::DATAGRAM.
-     */
-    SocketDatagramImplBSD (void)
-        : SocketImplBSD(vpr::SocketTypes::DATAGRAM)
-    {
-        /* Do nothing. */ ;
-    }
+   /**
+    * Default constructor.  This sets the socket type to
+    * vpr::SocketTypes::DATAGRAM.
+    */
+   SocketDatagramImplBSD (void) : SocketImplBSD(vpr::SocketTypes::DATAGRAM)
+   {
+      /* Do nothing. */ ;
+   }
 
-    /**
-     * Constructs a datagram socket using the given addresses as defaults for
-     * communication channels.
-     *
-     * @post The member variables are initialized with the type in particular
-     *       set to vpr::SocketTypes::DATAGRAM.
-     *
-     * @param local_addr  The local address for this socket.  This is used for
-     *                    binding the socket.
-     * @param remote_addr The remote address for this socket.  This is used to
-     *                    specify a default destination for all packets.
-     */
-    SocketDatagramImplBSD (const InetAddr& local_addr,
-                           const InetAddr& remote_addr)
-        : SocketImplBSD(local_addr, remote_addr, vpr::SocketTypes::DATAGRAM)
-    {
-        /* Do nothing. */ ;
-    }
+   /**
+    * Constructs a datagram socket using the given addresses as defaults for
+    * communication channels.
+    *
+    * @post The member variables are initialized with the type in particular
+    *       set to vpr::SocketTypes::DATAGRAM.
+    *
+    * @param local_addr  The local address for this socket.  This is used for
+    *                    binding the socket.
+    * @param remote_addr The remote address for this socket.  This is used to
+    *                    specify a default destination for all packets.
+    */
+   SocketDatagramImplBSD (const InetAddr& local_addr,
+                          const InetAddr& remote_addr)
+      : SocketImplBSD(local_addr, remote_addr, vpr::SocketTypes::DATAGRAM)
+   {
+      /* Do nothing. */ ;
+   }
 
-    /**
-     * Copy constructor.
-     *
-     * @post This socket is a copy of the given socket.
-     */
-    SocketDatagramImplBSD (const SocketDatagramImplBSD& sock)
-        : SocketImplBSD(SocketTypes::DATAGRAM)
-    {
-        mLocalAddr         = sock.mLocalAddr;
-        mRemoteAddr        = sock.mRemoteAddr;
-        mHandle            = new FileHandleImplUNIX(sock.mHandle->getName());
-        mHandle->mFdesc    = sock.mHandle->mFdesc;
-        mHandle->mOpen     = sock.mHandle->mOpen;
-        mHandle->mBlocking = sock.mHandle->mBlocking;
-    }
+   /**
+    * Copy constructor.
+    *
+    * @post This socket is a copy of the given socket.
+    */
+   SocketDatagramImplBSD (const SocketDatagramImplBSD& sock)
+      : SocketImplBSD(SocketTypes::DATAGRAM)
+   {
+      mLocalAddr         = sock.mLocalAddr;
+      mRemoteAddr        = sock.mRemoteAddr;
+      mHandle            = new FileHandleImplUNIX(sock.mHandle->getName());
+      mHandle->mFdesc    = sock.mHandle->mFdesc;
+      mHandle->mOpen     = sock.mHandle->mOpen;
+      mHandle->mBlocking = sock.mHandle->mBlocking;
+   }
 
-    /**
-     * Receives a message from the specified address.
-     */
-    vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length, const int flags,
-                         vpr::InetAddr& from, vpr::Uint32& bytes_read,
-                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   /**
+    * Receives a message from the specified address.
+    */
+   vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length, const int flags,
+                              vpr::InetAddr& from, vpr::Uint32& bytes_read,
+                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-    /**
-     * Sends a message to the specified address.
-     */
-    vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
-                       const int flags, const vpr::InetAddr& to,
-                       vpr::Uint32& bytes_sent,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   /**
+    * Sends a message to the specified address.
+    */
+   vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
+                            const int flags, const vpr::InetAddr& to,
+                            vpr::Uint32& bytes_sent,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
-}; // End of namespace
+} // End of namespace
 
 
 #endif  /* _VPR_SOCKET_DATAGRAM_IMPL_BSD_H_ */

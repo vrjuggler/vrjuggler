@@ -51,7 +51,8 @@
 #include <boost/smart_ptr.hpp>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Datagram socket interface.
@@ -64,174 +65,172 @@ public:
    typedef SocketConfig_ Config;
    typedef typename Config::SocketDatagramImpl SocketDatagramImpl;
 
-    /**
-     * Default constructor.
-     */
-    SocketDatagram_t (void)
-        : mSocketDgramImpl()
-    {
-       mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>( new SocketDatagramImpl );
-       mSocketImpl = mSocketDgramImpl;
-    }
+   /**
+    * Default constructor.
+    */
+   SocketDatagram_t (void) : mSocketDgramImpl()
+   {
+      mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>( new SocketDatagramImpl );
+      mSocketImpl = mSocketDgramImpl;
+   }
 
-    /**
-     * Constructor.  This takes a reference to a vpr::InetAddr object giving
-     * the local socket address and a reference to a vpr::InetAddr object
-     * giving the remote address.
-     *
-     * @pre addr is a reference to a valid vpr::InetAddr object.
-     * @post A socket is created using the contents of addr.
-     *
-     * @param addr A reference to a vpr::InetAddr object.
-     */
-    SocketDatagram_t (const vpr::InetAddr& local_addr,
-                      const vpr::InetAddr& remote_addr)
-        : Socket_t<Config>()
-    {
-       mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl(local_addr, remote_addr));
-       mSocketImpl = mSocketDgramImpl;
-    }
+   /**
+    * Constructor.  This takes a reference to a vpr::InetAddr object giving
+    * the local socket address and a reference to a vpr::InetAddr object
+    * giving the remote address.
+    *
+    * @pre addr is a reference to a valid vpr::InetAddr object.
+    * @post A socket is created using the contents of addr.
+    *
+    * @param addr A reference to a vpr::InetAddr object.
+    */
+   SocketDatagram_t (const vpr::InetAddr& local_addr,
+                     const vpr::InetAddr& remote_addr)
+      : Socket_t<Config>()
+   {
+      mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl(local_addr, remote_addr));
+      mSocketImpl = mSocketDgramImpl;
+   }
 
-    /**
-     * Copy constructor.
-     *
-     * @param sock The source socket object to be copied.
-     */
-    SocketDatagram_t (const SocketDatagram_t& sock)
-        : mSocketDgramImpl(sock.mSocketDgramImpl)
-    {
-        mSocketImpl = mSocketDgramImpl;
-    }
+   /**
+    * Copy constructor.
+    *
+    * @param sock The source socket object to be copied.
+    */
+   SocketDatagram_t (const SocketDatagram_t& sock)
+      : mSocketDgramImpl(sock.mSocketDgramImpl)
+   {
+      mSocketImpl = mSocketDgramImpl;
+   }
 
-    /**
-     * Destructor.  This currently does nothing.
-     *
-     * @pre None.
-     * @post None.
-     */
-    virtual ~SocketDatagram_t (void)
-    {
-     /* nothing */;
-    }
+   /**
+    * Destructor.  This currently does nothing.
+    *
+    * @pre None.
+    * @post None.
+    */
+   virtual ~SocketDatagram_t (void)
+   {
+      /* nothing */ ;
+   }
 
-    /**
-     * Receives a message from some source.  The source's address is writen
-     * into the by-reference parameter from.
-     */
-    inline ReturnStatus
-    recvfrom (void* msg, const vpr::Uint32 len, const int flags,
-              vpr::InetAddr& from, vpr::Uint32& bytes_read,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        return mSocketDgramImpl->recvfrom(msg, len, flags, from, bytes_read,
-                                           timeout);
-    }
+   /**
+    * Receives a message from some source.  The source's address is writen
+    * into the by-reference parameter from.
+    */
+   vpr::ReturnStatus recvfrom (void* msg, const vpr::Uint32 len,
+                               const int flags, vpr::InetAddr& from,
+                               vpr::Uint32& bytes_read,
+                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      return mSocketDgramImpl->recvfrom(msg, len, flags, from, bytes_read,
+                                        timeout);
+   }
 
-    /**
-     * Receives a message from some source.  The source's address is writen
-     * into the by-reference parameter from.
-     */
-    ReturnStatus
-    recvfrom (std::string& msg, const vpr::Uint32 len, const int flags,
-              vpr::InetAddr& from, vpr::Uint32& bytes_read,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        msg.resize(len);
-        memset(&msg[0], '\0', msg.size());
+   /**
+    * Receives a message from some source.  The source's address is writen
+    * into the by-reference parameter from.
+    */
+   vpr::ReturnStatus recvfrom (std::string& msg, const vpr::Uint32 len,
+                               const int flags, vpr::InetAddr& from,
+                               vpr::Uint32& bytes_read,
+                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      msg.resize(len);
+      memset(&msg[0], '\0', msg.size());
 
-        return recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read,
-                        timeout);
-    }
-
-    /**
-     * Receives a message from some source.  The source's address is writen
-     * into the by-reference parameter from.
-     */
-    ReturnStatus
-    recvfrom (std::vector<vpr::Uint8>& msg, const vpr::Uint32 len,
-              const int flags, vpr::InetAddr& from, vpr::Uint32& bytes_read,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        ReturnStatus retval;
-
-        msg.resize(len);
-
-        memset(&msg[0], '\0', msg.size());
-        retval = recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read,
-                          timeout);
-
-        // Size it down if needed, if (bytes_read==len), then resize does
-        // nothing.
-        if ( bytes_read >= 0 ) {
-            msg.resize(bytes_read);
-        }
-
-        return retval;
-    }
-
-    /**
-     * Sends a message to the designated recipient.
-     */
-    inline ReturnStatus
-    sendto (const void* msg, const vpr::Uint32 len, const int flags,
-            const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
-            const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        return mSocketDgramImpl->sendto(msg, len, flags, to, bytes_sent,
-                                          timeout);
-    }
-
-    /**
-     * Sends a message to the designated recipient.
-     */
-    inline ReturnStatus
-    sendto (const std::string& msg, const vpr::Uint32 len, const int flags,
-            const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
-            const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        vprASSERT(len <= msg.size() && "Length is bigger than data given");
-        return sendto(msg.c_str(), len, flags, to, bytes_sent, timeout);
-    }
-
-    /**
-     * Sends a message to the designated recipient.
-     */
-    inline ReturnStatus
-    sendto (const std::vector<vpr::Uint8>& msg, const vpr::Uint32 len,
-            const int flags, const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
-            const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        vprASSERT(len <= msg.size() && "Length is bigger than data given");
-        return sendto((const void*) &msg[0], len, flags, to, bytes_sent,
+      return recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read,
                       timeout);
-    }
+   }
+
+   /**
+    * Receives a message from some source.  The source's address is writen
+    * into the by-reference parameter from.
+    */
+   vpr::ReturnStatus recvfrom (std::vector<vpr::Uint8>& msg,
+                               const vpr::Uint32 len, const int flags,
+                               vpr::InetAddr& from, vpr::Uint32& bytes_read,
+                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      vpr::ReturnStatus retval;
+
+      msg.resize(len);
+
+      memset(&msg[0], '\0', msg.size());
+      retval = recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read,
+                        timeout);
+
+      // Size it down if needed, if (bytes_read==len), then resize does
+      // nothing.
+      if ( bytes_read >= 0 )
+      {
+         msg.resize(bytes_read);
+      }
+
+      return retval;
+   }
+
+   /**
+    * Sends a message to the designated recipient.
+    */
+   vpr::ReturnStatus sendto (const void* msg, const vpr::Uint32 len,
+                             const int flags, const vpr::InetAddr& to,
+                             vpr::Uint32& bytes_sent,
+                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      return mSocketDgramImpl->sendto(msg, len, flags, to, bytes_sent,
+                                      timeout);
+   }
+
+   /**
+    * Sends a message to the designated recipient.
+    */
+   vpr::ReturnStatus sendto (const std::string& msg, const vpr::Uint32 len,
+                             const int flags, const vpr::InetAddr& to,
+                             vpr::Uint32& bytes_sent,
+                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      vprASSERT(len <= msg.size() && "Length is bigger than data given");
+      return sendto(msg.c_str(), len, flags, to, bytes_sent, timeout);
+   }
+
+   /**
+    * Sends a message to the designated recipient.
+    */
+   vpr::ReturnStatus sendto (const std::vector<vpr::Uint8>& msg,
+                             const vpr::Uint32 len, const int flags,
+                             const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
+                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      vprASSERT(len <= msg.size() && "Length is bigger than data given");
+      return sendto((const void*) &msg[0], len, flags, to, bytes_sent,
+                    timeout);
+   }
 
 protected:
-    virtual vpr::ReturnStatus
-    getOption (const vpr::SocketOptions::Types option,
-               struct vpr::SocketOptions::Data& data)
-    {
-        return mSocketDgramImpl->getOption(option, data);
-    }
+   virtual vpr::ReturnStatus getOption (const vpr::SocketOptions::Types option,
+                                        struct vpr::SocketOptions::Data& data)
+   {
+      return mSocketDgramImpl->getOption(option, data);
+   }
 
-    virtual vpr::ReturnStatus
-    setOption (const vpr::SocketOptions::Types option,
-               const struct vpr::SocketOptions::Data& data)
-    {
-        return mSocketDgramImpl->setOption(option, data);
-    }
+   virtual vpr::ReturnStatus setOption (const vpr::SocketOptions::Types option,
+                                        const struct vpr::SocketOptions::Data& data)
+   {
+      return mSocketDgramImpl->setOption(option, data);
+   }
 
 // Put in back door for simulator
 #if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
 public:
 #endif
-    /// Platform-specific datagram socket implementation object
-    //SocketDatagramImpl mSocketDgramImpl;
-    boost::shared_ptr<SocketDatagramImpl> mSocketDgramImpl;
+   /// Platform-specific datagram socket implementation object
+   //SocketDatagramImpl mSocketDgramImpl;
+   boost::shared_ptr<SocketDatagramImpl> mSocketDgramImpl;
 
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif  /* _VJ_SOCKET_DATAGRAM_BRIDGE_H_ */

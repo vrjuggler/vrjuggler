@@ -47,7 +47,8 @@
 #include <vpr/Sync/Mutex.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Class to lock a stream for multi-process output.
@@ -69,8 +70,6 @@ private:
    Mutex& mMutex;
 };
 
-
-
 /** Class to unlock a stream that has been previously locked.
  * This class can be used to share a stream between two processes
  * It is used by simply outputing in the stream a vpr::StreamUnLock
@@ -90,7 +89,7 @@ private:
    Mutex& mMutex;
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif

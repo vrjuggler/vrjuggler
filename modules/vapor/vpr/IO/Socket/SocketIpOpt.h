@@ -45,69 +45,73 @@
 #include <vpr/IO/Socket/SocketBasicOpt.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * IP-level options for sockets.
  */
-class VPR_CLASS_API SocketIpOpt : public SocketBasicOpt {
+class VPR_CLASS_API SocketIpOpt : public SocketBasicOpt
+{
 public:
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    getTypeOfService (vpr::SocketOptions::TypeOfService& tos) {
-        vpr::SocketOptions::Data option;
-        vpr::ReturnStatus retval;
+   /**
+    *
+    */
+   vpr::ReturnStatus getTypeOfService (vpr::SocketOptions::TypeOfService& tos)
+   {
+      vpr::SocketOptions::Data option;
+      vpr::ReturnStatus retval;
 
-        retval = getOption(vpr::SocketOptions::IpTypeOfService, option);
+      retval = getOption(vpr::SocketOptions::IpTypeOfService, option);
 
-        if ( retval.success() ) {
-            tos = option.type_of_service;
-        }
+      if ( retval.success() )
+      {
+         tos = option.type_of_service;
+      }
 
-        return retval;
-    }
+      return retval;
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    setTypeOfService (const vpr::SocketOptions::TypeOfService& tos) {
-        vpr::SocketOptions::Data option;
-        option.type_of_service = tos;
-        return setOption(vpr::SocketOptions::IpTypeOfService, option);
-    }
+   /**
+    *
+    */
+   vpr::ReturnStatus setTypeOfService (const vpr::SocketOptions::TypeOfService& tos)
+   {
+      vpr::SocketOptions::Data option;
+      option.type_of_service = tos;
+      return setOption(vpr::SocketOptions::IpTypeOfService, option);
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    getTimeToLive (vpr::Int32& ttl) {
-        vpr::SocketOptions::Data option;
-        vpr::ReturnStatus retval;
+   /**
+    *
+    */
+   vpr::ReturnStatus getTimeToLive (vpr::Int32& ttl)
+   {
+      vpr::SocketOptions::Data option;
+      vpr::ReturnStatus retval;
 
-        retval = getOption(vpr::SocketOptions::IpTimeToLive, option);
+      retval = getOption(vpr::SocketOptions::IpTimeToLive, option);
 
-        if ( retval.success() ) {
-            ttl = option.ip_ttl;
-        }
+      if ( retval.success() )
+      {
+         ttl = option.ip_ttl;
+      }
 
-        return retval;
-    }
+      return retval;
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    setTimeToLive (const vpr::Int32 ttl) {
-        vpr::SocketOptions::Data option;
-        option.ip_ttl = ttl;
-        return setOption(vpr::SocketOptions::IpTimeToLive, option);
-    }
+   /**
+    *
+    */
+   vpr::ReturnStatus setTimeToLive (const vpr::Int32 ttl)
+   {
+      vpr::SocketOptions::Data option;
+      option.ip_ttl = ttl;
+      return setOption(vpr::SocketOptions::IpTimeToLive, option);
+   }
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
-#endif	/* _VPR_SOCKET_IP_OPT_H_ */
+#endif  /* _VPR_SOCKET_IP_OPT_H_ */

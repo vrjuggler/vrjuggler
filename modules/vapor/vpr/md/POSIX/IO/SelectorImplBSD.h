@@ -55,7 +55,8 @@
 #include <vpr/Util/Interval.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * BSD Implementation of ---> Cross-platform selection interface.
@@ -230,7 +231,7 @@ protected:
    std::vector<BSDPollDesc> mPollDescs;
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif  /* _VPR_SELECTOR_IMPL_BSD_H_ */

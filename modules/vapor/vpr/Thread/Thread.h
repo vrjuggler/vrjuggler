@@ -48,32 +48,33 @@
 #include <vpr/Thread/BaseThread.h>
 
 
-namespace vpr {
-    /**
-     * Typedef to help with cross-platform abilities.  This type is the basic
-     * function pointer type for all functions initially passed as code to
-     * execute within a separate thread of control.
-     */
-    typedef void (*thread_func_t)(void *);
+namespace vpr
+{
+   /**
+    * Typedef to help with cross-platform abilities.  This type is the basic
+    * function pointer type for all functions initially passed as code to
+    * execute within a separate thread of control.
+    */
+   typedef void (*thread_func_t)(void *);
 };
 
 /* IRIX SPROC */
 #if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
-#   include <vpr/md/SPROC/Thread/ThreadSGI.h>
-#   include <vpr/md/SPROC/Thread/ThreadKeySGI.h>
+#  include <vpr/md/SPROC/Thread/ThreadSGI.h>
+#  include <vpr/md/SPROC/Thread/ThreadKeySGI.h>
 
 /* POSIX */
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #ifndef _POSIX_C_SOURCE
-#   define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE
+#  define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE
 #endif
 
-#   include <vpr/md/POSIX/Thread/ThreadPosix.h>
-#   include <vpr/md/POSIX/Thread/ThreadKeyPosix.h>
+#  include <vpr/md/POSIX/Thread/ThreadPosix.h>
+#  include <vpr/md/POSIX/Thread/ThreadKeyPosix.h>
 
 /* NSPR */
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#   include <vpr/md/NSPR/Thread/ThreadNSPR.h>
+#  include <vpr/md/NSPR/Thread/ThreadNSPR.h>
 #endif  /* VPR_USE_IRIX_SPROC */
 
 

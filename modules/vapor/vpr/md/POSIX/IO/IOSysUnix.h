@@ -45,7 +45,8 @@
 #include <vpr/vprConfig.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Base class for all for the IOSys class.

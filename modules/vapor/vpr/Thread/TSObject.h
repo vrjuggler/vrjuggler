@@ -45,7 +45,8 @@
 #include <vpr/vprConfig.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Base Thread Specific object.
@@ -81,7 +82,7 @@ private:
    T mLocalObj;
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif

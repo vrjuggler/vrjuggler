@@ -46,61 +46,63 @@
 #include <vpr/IO/Socket/InetAddr.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Multicast request wrapper.
  */
-class VPR_CLASS_API McastReq {
+class VPR_CLASS_API McastReq
+{
 public:
-    /**
-     * Default constructor.
-     */
-    McastReq (void)
-        : mMcastAddr(), mIfAddr()
-    {
-        /* Do nothing. */ ;
-    }
+   /**
+    * Default constructor.
+    */
+   McastReq (void) : mMcastAddr(), mIfAddr()
+   {
+      /* Do nothing. */ ;
+   }
 
-    /**
-     *
-     */
-    McastReq (const InetAddr& mcast_addr, const InetAddr& if_addr)
-        : mMcastAddr(mcast_addr), mIfAddr(if_addr)
-    {
-        /* Do nothing. */ ;
-    }
+   /**
+    *
+    */
+   McastReq (const InetAddr& mcast_addr, const InetAddr& if_addr)
+      : mMcastAddr(mcast_addr), mIfAddr(if_addr)
+   {
+      /* Do nothing. */ ;
+   }
 
-    /**
-     * Copy constructor.
-     */
-    McastReq (const McastReq& mcast_addr) {
-        mMcastAddr = mcast_addr.mMcastAddr;
-        mIfAddr    = mcast_addr.mIfAddr;
-    }
+   /**
+    * Copy constructor.
+    */
+   McastReq (const McastReq& mcast_addr)
+   {
+      mMcastAddr = mcast_addr.mMcastAddr;
+      mIfAddr    = mcast_addr.mIfAddr;
+   }
 
-    /**
-     *
-     */
-    inline const InetAddr&
-    getMulticastAddr (void) const {
-        return mMcastAddr;
-    }
+   /**
+    *
+    */
+   const InetAddr& getMulticastAddr (void) const
+   {
+      return mMcastAddr;
+   }
 
-    /**
-     *
-     */
-    inline const InetAddr&
-    getInterfaceAddr (void) const {
-        return mIfAddr;
-    }
+   /**
+    *
+    */
+   const InetAddr& getInterfaceAddr (void) const
+   {
+      return mIfAddr;
+   }
 
 private:
-    InetAddr mMcastAddr;
-    InetAddr mIfAddr;
+   InetAddr mMcastAddr;
+   InetAddr mIfAddr;
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif  /* _VPR_MCAST_REQ_H_ */

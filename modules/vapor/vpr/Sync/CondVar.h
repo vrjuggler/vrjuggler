@@ -45,16 +45,16 @@
 #include <vpr/vprConfig.h>
 
 #if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
-#    include <ulocks.h>
-#    include <vpr/Sync/CondVarGeneric.h>
+#  include <ulocks.h>
+#  include <vpr/Sync/CondVarGeneric.h>
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #ifndef _POSIX_C_SOURCE
-#   define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE
+#  define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE
 #endif
 
-#   include <vpr/md/POSIX/Sync/CondVarPosix.h>
+#  include <vpr/md/POSIX/Sync/CondVarPosix.h>
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#   include <vpr/md/NSPR/Sync/CondVarNSPR.h>
+#  include <vpr/md/NSPR/Sync/CondVarNSPR.h>
 #endif   /* VPR_IRIX_SPROC */
 
 
@@ -62,7 +62,7 @@
 * \code
 *
 * vpr::CondVar mCondVar;   // The condition variable to use
-* 
+*
 * // --- Set a state and signal everyone else about it --- //
 * mCondVar.acquire();
 * {
@@ -70,7 +70,7 @@
 *     mCondVar.signal();
 * }
 * mCondVar.release();
-*   
+*
 *
 * // -- Wait for a condition -- //
 *   mCondVar.acquire();

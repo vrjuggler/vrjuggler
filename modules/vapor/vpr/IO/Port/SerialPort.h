@@ -53,15 +53,15 @@
 #include <vpr/IO/Port/SerialPort_t.h>
 
 #if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#   ifdef VPR_OS_Win32
-#       include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
-#   else
-#       include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
-#   endif  /* VPR_OS_Win32 */
+#  ifdef VPR_OS_Win32
+#     include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
+#  else
+#     include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
+#  endif  /* VPR_OS_Win32 */
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
-#   include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
+#  include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
 #endif
 
 #endif /* ifndef VPR_SIMULATOR */
 
-#endif	/* _VPR_SERIAL_PORT_H_ */
+#endif  /* _VPR_SERIAL_PORT_H_ */

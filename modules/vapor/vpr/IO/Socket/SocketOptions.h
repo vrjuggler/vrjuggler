@@ -49,86 +49,93 @@
 #include <vpr/Util/ReturnStatus.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
-namespace SocketOptions {
-    enum Types {
-        Linger,
-        ReuseAddr,
-        KeepAlive,
-        RecvBufferSize,
-        SendBufferSize,
-        IpTimeToLive,
-        IpTypeOfService,
-        AddMember,
-        DropMember,
-        McastInterface,
-        McastTimeToLive,
-        McastLoopback,
-        NoDelay,
-        MaxSegment
-    };
+namespace SocketOptions
+{
+   enum Types
+   {
+      Linger,
+      ReuseAddr,
+      KeepAlive,
+      RecvBufferSize,
+      SendBufferSize,
+      IpTimeToLive,
+      IpTypeOfService,
+      AddMember,
+      DropMember,
+      McastInterface,
+      McastTimeToLive,
+      McastLoopback,
+      NoDelay,
+      MaxSegment
+   };
 
-    enum TypeOfService {
-        LowDelay,
-        Throughput,
-        Reliability,
-        LowCost
-    };
+   enum TypeOfService
+   {
+      LowDelay,
+      Throughput,
+      Reliability,
+      LowCost
+   };
 
-    struct Linger {
-        bool  enabled;
-        Int32 seconds;
-    };
+   struct Linger
+   {
+      bool  enabled;
+      Int32 seconds;
+   };
 
-    // I really wish this could be a union...
-    struct Data {
-        Uint32        ip_ttl;
-        TypeOfService type_of_service;
-        bool          reuse_addr;
-        bool          keep_alive;
-        bool          no_delay;
-        Uint32        max_segment;
-        Uint32        recv_buffer_size;
-        Uint32        send_buffer_size;
-        struct Linger linger;
-        InetAddr      mcast_if;
-        Uint8         mcast_ttl;
-        Uint8         mcast_loopback;
-        McastReq      mcast_add_member;
-        McastReq      mcast_drop_member;
-    };
+   // I really wish this could be a union...
+   struct Data
+   {
+      Uint32        ip_ttl;
+      TypeOfService type_of_service;
+      bool          reuse_addr;
+      bool          keep_alive;
+      bool          no_delay;
+      Uint32        max_segment;
+      Uint32        recv_buffer_size;
+      Uint32        send_buffer_size;
+      struct Linger linger;
+      InetAddr      mcast_if;
+      Uint8         mcast_ttl;
+      Uint8         mcast_loopback;
+      McastReq      mcast_add_member;
+      McastReq      mcast_drop_member;
+   };
 };
 
-class VPR_CLASS_API SocketOptionWrapper {
+class VPR_CLASS_API SocketOptionWrapper
+{
 protected:
-    /**
-     * Retrieves the value for the given option as set on the socket.
-     *
-     * @param option The option to be queried.
-     * @param data   A data buffer that will be used to store the value of the
-     *               given option.
-     *
-     * @return vpr::ReturnStatus::Succeed is returned if the value for the given
-     *         option was retrieved successfully.<br>
-     *         vpr::ReturnStatus;:Fail is returned otherwise.
-     */
-    virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                                  struct vpr::SocketOptions::Data& data) = 0;
+   /**
+    * Retrieves the value for the given option as set on the socket.
+    *
+    * @param option The option to be queried.
+    * @param data   A data buffer that will be used to store the value of the
+    *               given option.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the value for the given
+    *         option was retrieved successfully.<br>
+    *         vpr::ReturnStatus;:Fail is returned otherwise.
+    */
+   virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
+                                       struct vpr::SocketOptions::Data& data) = 0;
 
-    /**
-     * Sets a value for the given option on the socket using the given data
-     * block.
-     *
-     * @param option The option whose value will be set.
-     * @param data   A data buffer containing the value to be used in setting
-     *               the socket option.
-     */
-    virtual vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
-                                  const struct vpr::SocketOptions::Data& data) = 0;
+   /**
+    * Sets a value for the given option on the socket using the given data
+    * block.
+    *
+    * @param option The option whose value will be set.
+    * @param data   A data buffer containing the value to be used in setting
+    *               the socket option.
+    */
+   virtual vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
+                                       const struct vpr::SocketOptions::Data& data) = 0;
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
-#endif	/* _VPR_SOCKET_OPTIONS_H_ */
+#endif  /* _VPR_SOCKET_OPTIONS_H_ */

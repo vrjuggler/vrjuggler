@@ -44,39 +44,40 @@
 
 
 #ifdef VPR_USE_NSPR
-#include <vpr/md/NSPR/vprTypesNSPR.h>
+#  include <vpr/md/NSPR/vprTypesNSPR.h>
 #else
-namespace vpr {
+namespace vpr
+{
 #if SIZEOF_CHAR == 1
-    typedef char Int8;
-    typedef unsigned char Uint8;
+   typedef char Int8;
+   typedef unsigned char Uint8;
 #endif
 
 #if SIZEOF_SHORT == 2
-    typedef short Int16;
-    typedef unsigned short Uint16;
+   typedef short Int16;
+   typedef unsigned short Uint16;
 #elif SIZEOF_INT == 2
-    typedef int Int16;
-    typedef unsigned int Uint16;
+   typedef int Int16;
+   typedef unsigned int Uint16;
 #endif
 
 #if SIZEOF_INT == 4
-    typedef int Int32;
-    typedef unsigned int Uint32;
+   typedef int Int32;
+   typedef unsigned int Uint32;
 #elif SIZEOF_LONG == 4
-    typedef long Int32;
-    typedef unsigned long Uint32;
+   typedef long Int32;
+   typedef unsigned long Uint32;
 #endif
 
 #if SIZEOF_LONG == 8
-    typedef long Int64;
-    typedef unsigned long Uint64;
+   typedef long Int64;
+   typedef unsigned long Uint64;
 #elif SIZEOF_LONG_LONG == 8
-    typedef long long Int64;
-    typedef unsigned long long Uint64;
+   typedef long long Int64;
+   typedef unsigned long long Uint64;
 #elif SIZEOF_INT == 8
-    typedef int Int64;
-    typedef unsigned int Uint64;
+   typedef int Int64;
+   typedef unsigned int Uint64;
 #endif
 };
 #endif
@@ -86,7 +87,7 @@ namespace vpr {
 // --- HASH Functions ---- //
 #ifdef VPR_HASH_MAP_INCLUDE
 
-#include VPR_HASH_MAP_INCLUDE
+#  include VPR_HASH_MAP_INCLUDE
 
 namespace std
 {
@@ -115,7 +116,6 @@ struct hash<vpr::Uint64>
 } // End of std namespace
 
 #endif   /* ifdef VPR_HASH_MAP_INCLUDE */
-
 
 
 #endif   /* _VPR_TYPES_H_ */

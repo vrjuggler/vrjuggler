@@ -44,17 +44,17 @@
 
 #include <prtypes.h>
 
-namespace vpr {
-    typedef PRInt8 Int8;
-    typedef PRUint8 Uint8;
-    typedef PRInt16 Int16;
-    typedef PRUint16 Uint16;
-    typedef PRInt32 Int32;
-    typedef PRUint32 Uint32;
-    typedef PRInt64 Int64;
-    typedef PRUint64 Uint64;
-
-};
+namespace vpr
+{
+   typedef PRInt8 Int8;
+   typedef PRUint8 Uint8;
+   typedef PRInt16 Int16;
+   typedef PRUint16 Uint16;
+   typedef PRInt32 Int32;
+   typedef PRUint32 Uint32;
+   typedef PRInt64 Int64;
+   typedef PRUint64 Uint64;
+}
 
 
 #endif   /* _VPR_TYPES_H_ */

@@ -49,7 +49,8 @@
 #include <vpr/Sync/Guard.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * A guarded queue.
@@ -70,43 +71,45 @@ public:
 
    bool empty()
    {
-   Guard<Mutex> guard(mMutexGuard);
+      Guard<Mutex> guard(mMutexGuard);
       return mQ.empty();
    }
 
    value_type& front()
    {
-   Guard<Mutex> guard(mMutexGuard);
+      Guard<Mutex> guard(mMutexGuard);
       return mQ.front();
    }
 
    value_type& back()
    {
-   Guard<Mutex> guard(mMutexGuard);
+      Guard<Mutex> guard(mMutexGuard);
       return mQ.back();
    }
 
    void push(const value_type& val)
    {
-    Guard<Mutex> guard(mMutexGuard);
+      Guard<Mutex> guard(mMutexGuard);
       mQ.push(val);
    }
 
    void pop()
    {
-   Guard<Mutex> guard(mMutexGuard);
+      Guard<Mutex> guard(mMutexGuard);
       mQ.pop();
    }
 
    int size() const
-   { return mQ.size(); }
+   {
+      return mQ.size();
+   }
 
 private:
-   Mutex           mMutexGuard;      //! The mutex to guard the queue
+   Mutex           mMutexGuard;      /**< The mutex to guard the queue */
    std::queue<value_type> mQ;
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif
