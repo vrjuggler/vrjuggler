@@ -8,6 +8,16 @@ For all versions:
     - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
       for the current list of bugs.
 
+Version 1.0.7
+Released: April 30, 2003
+
+   Bug fixes:
+       * Corrected a problem in chunksDesc that caused incorrect units of
+         measure to be used with IS-900 configurations.
+       * vjDummyPosition is registered correctly with vjDeviceFactory.
+
+==============================================================================
+
 Version 1.0.6
 Released: July 1, 2002
 
