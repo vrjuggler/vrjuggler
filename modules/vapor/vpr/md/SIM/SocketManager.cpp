@@ -279,7 +279,8 @@ namespace sim
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "vpr::sim::SocketManager: Address " << localName
                << " is already bound by socket "
-               << mBindListAddrUDP[localName]
+               << (handle->getType() == vpr::SocketTypes::STREAM ? mBindListAddrTCP[localName]
+                                                                 : mBindListAddrUDP[localName])
                << " (couldn't bind sock " << handle << ")\n"
                << vprDEBUG_FLUSH;
          }
@@ -818,11 +819,9 @@ namespace sim
       NetworkNode node_prop = net_graph.getNodeProperty(handle->getNetworkNode());
 
       status = node_prop.removeSocket(handle);
+      vprASSERT(status.success() && "Tried to remove a socket from the wrong node");
 
-      if ( status.success() )
-      {
-         net_graph.setNodeProperty(handle->getNetworkNode(), node_prop);
-      }
+      net_graph.setNodeProperty(handle->getNetworkNode(), node_prop);
 
       vprASSERT( isBound( hand ) == false );
       vprASSERT( isBound( addr, hand->getType() ) == false );
