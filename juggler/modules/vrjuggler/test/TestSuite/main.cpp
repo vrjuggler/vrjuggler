@@ -36,8 +36,6 @@
 #include <cppunit/TestSuite.h>
 #include <cppunit/TextTestRunner.h>
 
-//#include <TestCases/Math/QuatSelfTest.h>
-
 #include <vrj/vrjConfig.h>
 #ifdef VJ_API_PERFORMER
 #include <TestCases/Pf/PfUtilTest.h> /* needs performer linked in, doh! */
@@ -59,7 +57,6 @@ int main (int ac, char **av)
    CppUnit::TestSuite* noninteractive_suite = new CppUnit::TestSuite("noninteractive");
 
    // add tests to the suite
-   //noninteractive_suite->addTest(vrjTest::QuatSelfTest::suite());
 
 #ifdef VJ_API_PERFORMER
    noninteractive_suite->addTest(vrjTest::PfUtilTest::suite());
