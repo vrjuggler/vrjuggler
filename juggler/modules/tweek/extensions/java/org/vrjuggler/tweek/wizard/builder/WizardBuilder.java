@@ -127,11 +127,7 @@ public class WizardBuilder
                              true,
                              this.getClass().getClassLoader()));
         WizardStepFactory.registerWizardStep(
-               Class.forName("org.vrjuggler.vrjconfig.wizard.cluster.NodeSettingsStep",
-                             true,
-                             this.getClass().getClassLoader()));
-        WizardStepFactory.registerWizardStep(
-               Class.forName("org.vrjuggler.vrjconfig.wizard.cluster.CreateClusteredSimDevicesStep",
+               Class.forName("org.vrjuggler.vrjconfig.wizard.cluster.SimClusterSequence",
                              true,
                              this.getClass().getClassLoader()));
       }
