@@ -59,6 +59,7 @@
 #   ifdef VPR_OS_Darwin
 #      include <gadget/Devices/Keyboard/OSXKeyboard.h>
 #   else
+#      include <gadget/Devices/5DT/DataGlove.h>
 #      include <gadget/Devices/Immersion/Ibox.h>
 //#      include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
 #      include <gadget/Devices/Fakespace/PinchGlove.h>
@@ -113,14 +114,12 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<SimAnalog>* sim_analog = new DeviceConstructor<SimAnalog>;
    DeviceConstructor<SimDigital>* sim_digital = new DeviceConstructor<SimDigital>;
    DeviceConstructor<SimPosition>* sim_position = new DeviceConstructor<SimPosition>;
-   //vjDeviceConstructor<SimKeyboardDigital>* sim_keyboard_digital = new DeviceConstructor<SimKeyboardDigital>;
+   //DeviceConstructor<SimKeyboardDigital>* sim_keyboard_digital = new DeviceConstructor<SimKeyboardDigital>;
    DeviceConstructor<SimSetablePosition>* sim_setable = new DeviceConstructor<SimSetablePosition>;
    DeviceConstructor<SimRelativePosition>* sim_relative = new DeviceConstructor<SimRelativePosition>;
-   
-   
+
    DeviceConstructor<SimGloveGesture>* sim_glove = new DeviceConstructor<SimGloveGesture>;
    DeviceConstructor<SimDigitalGlove>* simpinch_glove = new DeviceConstructor<SimDigitalGlove>;
-   
 
    if( (NULL == sim_analog)   ||
        (NULL == sim_digital)  ||
@@ -144,6 +143,7 @@ void DeviceFactory::hackLoadKnownDevices()
    }
 
 #else
+   DeviceConstructor<DataGlove>* data_glove = new DeviceConstructor<DataGlove>;
    DeviceConstructor<TrackdSensor>* trackd_sensor = new DeviceConstructor<TrackdSensor>;
    DeviceConstructor<TrackdController>* trackd_controller = new DeviceConstructor<TrackdController>;
    DeviceConstructor<IBox>* ibox = new DeviceConstructor<IBox>;
@@ -155,6 +155,7 @@ void DeviceFactory::hackLoadKnownDevices()
    if( (NULL == trackd_sensor)      ||
        (NULL == trackd_controller)  ||
        (NULL == ibox)         ||
+       (NULL == data_glove)   ||
        (NULL == pinch_glove)  ||
 //       (NULL == cyber_glove)  ||
        (NULL == xwin_key)     ||
