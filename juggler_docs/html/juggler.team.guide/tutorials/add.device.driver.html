@@ -3,52 +3,244 @@
 
 <body>
 <h2>How To Add a Device Driver To Juggler</h2>
-<p>
-First, decide what type of device you need to implement, there are a few to choose from:
-</P>
+
+Table of Contents:
 <ul>
+   <li> <a href="#indepth">In depth</a></li>
+   <ul>
+      <li> <a href="#impl">Implementing the device driver</a></li>
+      <li> <a name="register">Register the device driver</a></li>
+   </ul>
+   <li> <a href="#code">Code example </a></li>
+</ul>
+
+<h3><a name="#indepth">In depth explaination of how to write a VR Juggler driver</a></h3>
+
+<p>
+To create a new device, you must declare a new class that derives 
+from one (or more!) of these types:
+<ul>
+   <li>vjInput <i>(base class of all device drivers)</i>
    <li>vjDigital, vjSimDigital
    <li>vjAnalog, vjSimAnalog
    <li>vjPosition, vjSimPosition
    <li>vjGlove, vjSimDigitalGlove, vjGloveGesture
 </ul>
+For example, if you wanted to make a driver that registers button presses, 
+you would derive from vjDigital:
+<pre>
+   class MyNewButtonDevice : public vjDigital
+</pre>
+</p>
 
 <p>
-Lets take a look at a digital device.  vjDigital derived devices give you 
-a boolean 0 or 1 value.
+Supposed you wanted to write a joystick driver, you would realize that
+you need to have an analog component as well (X and Y axes).  You realize
+that your device is both digital and analog, so you must derive from both
+vjDigital and vjAnalog using multiple inheritance:
+<pre>
+   class MyNewJoystickDevice : public vjDigital, public vjAnalog
+</pre>
+</p>
+
+<h4> <a name="impl">Implementing the device driver</a> </h4>
+
+With this class definition, you also need to define 6 member functions:
+<ul>
+   
+   <li><tt> virtual int   startSampling()</tt><BR>
+      <p>
+      This function starts a new thread with code that looks something like: 
+      <tt>myThread = new <a href="broken thread link 1of3">vjThread</a>( ::sampleFunction, (void*)this, 0 );</tt> 
+      which then calls within the newly spawned thread <tt> ::threadedSampleFunction </tt> which is 
+      defined in the global scope like this:
+      <ul><pre>
+      void threadedSampleFunction( void* classPointer )
+      {
+         MyNewJoystickDevice* this_ptr = static_cast<MyNewJoystickDevice*>( classPointer );
+
+         // spin until someone kills "myThread"
+         while (1)   
+         {
+           this_ptr->sample();
+           sleep(1); //specify some time here, so you don't waste CPU cycles
+         }
+      }
+      </pre></ul>
+      NOTE: you can test if the thread creation was successful with <tt>myThread->valid()</tt><BR>
+      See <a href="broken thread link 2of3">this page</a> for more information on creating threads in VR Juggler.
+      </p>
+
+   <li><tt> virtual int   stopSampling()</tt><BR>
+      <p>
+      This function just kills off the sample thread with a command something like: <tt>myThread->kill()</tt>
+      See <a href="broken thread link 3of3">this page</a> for more information on creating threads in VR Juggler.
+      </p>
+
+   <li><tt> virtual int   sample()</tt><BR>
+      <p>
+      You write this function to read data from your device, then store it to be later read by getDigitalData.<BR>
+
+      NOTE: It is wise to use <a href="${GLOSSARY}#triple buffered data">triple buffered data</a> here, 
+      so that you are not writing to the data as it is being read.  
+      vjInput class defines 3 variables to help you keep track of which of the 3 buffers you're 
+      writting to:
+      <ul>
+         <li><TT>vjInput::current</TT>
+         <li><TT>vjInput::progress</tt>
+         <li><tt>vjInput::valid</TT>
+      </ul>
+
+      For example, create an array to hold your sampled data:<BR>
+      <tt> int mSampledDigitalData[3]; // triple-buffered data (3x the data)</tt><BR>
+      <BR>
+      Then when writing your sampled data to this buffer use <tt>vjInput::progress</tt>:<BR>
+      <tt> mSampledDigitalData[vjInput::progress] = whatever_was_sampled_from_the_joystick;</tt><BR>
+      </p>
+
+   <li><tt> virtual void  updateData()</tt><BR>
+      <p>
+      This function swaps the data and vjInput:: tri-buffered data indicies, you usually write the function this way:<BR>
+      <pre>
+      void MyNewJoystickDevice::updateData()
+      {
+         vjGuard&lt;vjMutex&gt; updateGuard(lock);
+
+         // Copy the valid data to the current data so that both are valid
+         mSampledDigitalData[current] = mSampledDigitalData[valid];   
+
+         // swap the indicies for the tri-buffer pointers
+         vjInput::swapCurrentIndexes();
+      }
+      </pre>
+      </p>
+
+   <li><tt> virtual char* getDeviceName() </tt><BR>
+      <p>
+      Here you just need to return the name of your device as you want it to appear
+      in the .config file:
+      <tt>return "MyNewJoystickDevice";</tt>
+      </p>
+
+   <li><tt> virtual int   getDigitalData(int devNum = 0)</tt><BR>
+      <p>
+      NOTE: It is wise to use <a href="${GLOSSARY}#triple buffered data">triple buffered data</a> here, 
+      so that you are not writing to the data as it is being read.  
+      vjInput class defines 3 variables to help you keep track of which of the 3 buffers you're 
+      writting to.  When reading the data use <tt>vjInput::current</tt>:
+
+      <ul>
+         <pre>
+         int MyNewJoystickDevice::getDigitalData(int d)
+         {
+             return mSampledDigitalData[current];
+         }
+         </pre>
+      </ul>
+      </p>
+</ul>
+
+<h3> <a name="register">Register your device driver with Juggler</a> </h3>
+Device driver registration is done through a templated constructor called 
+vjDeviceConstructor.  
+<pre>
+   #include &lt;Input/InputManager/vjDeviceFactory.h&gt;
+   vjDeviceConstructor&lt;MyButtonDevice&gt;* this_ptr_not_used = new vjDeviceConstructor<MyButtonDevice>;
+</pre>
+You can compile your device driver code along with the vjDeviceConstructor call
+into a library (.a .so .lib or .dll for example) that you staticly link 
+with your applications.  This way you don't need to modify the juggler source 
+code, and can centralize all your driver module code into one area.
+
+<h3> <a name="code">Code Example</a> </h3>
+<p>
+Lets take a look at a simple device driver for reading a button press from 
+some ficticious piece of hardware that only has one button...
 </p>
 <pre>
-class MyDigitalDevice : public vjDigital
+#include &lt;Input/vjInput/vjDigital.h&gt;
+#include &lt;Input/InputManager/vjDeviceFactory.h&gt;
+
+class MyButtonDevice : public vjDigital
 {
 public:
-   virtual void startSampling();
-   virtual void stopSampling();
-   
-   virtual void sample();
-   virtual void getData();
-   
+   MyButtonDevice() : mSampleThread( NULL ) {}
+   virtual ~MyButtonDevice() { this->stopSampling(); }
+   virtual void  getData();
+public:
+   virtual void  startSampling();
+   virtual void  sample();
+   virtual void  stopSampling();
+   virtual char* getDeviceName();
 private:
-   int mDigitalData;
+   static void   threadedSampleFunction( void* classPointer );
+   int           mDigitalData;
+   vjThread*     mSampleThread;
 };
 
-void vjDigital::startSampling()
+vjDeviceConstructor&lt;MyButtonDevice&gt;* this_ptr_not_used = new vjDeviceConstructor<MyButtonDevice>;
+
+//: What is the name of this device?
+//  This function returns a string that should match this device's 
+//  configchunk name.
+char* MyButtonDevice::getDeviceName()
+{ 
+   return "MyButtonDevice"; 
+}
+
+// spawn a sample thread, 
+// which calls MyButtonDevice::sample() repeatedly
+void MyButtonDevice::startSampling()
 {
-   // spawn a sample thread, which calls vjDigital::sample() repeatedly
+   mSampleThread = new vjThread( threadedSampleFunction, (void*)this, 0 );
+   if (!mSampleThread->valid())
+      return 0; // thread creation failed
+   else 
+      return 1; // thread creation success
 }
    
-// this is called repeatedly by your thread
-void vjDigital::sample()
+//: Record (or sample) the current data
+// this is called repeatedly by the sample thread created by startSampling()
+void MyButtonDevice::sample()
 {
+   // here you would add your code to 
+   // sample the hardware for a button press:
+   mDigitalData[progress] = rand_number_0_or_1();
 }
 
-virtual void stopSampling()
+// kill sample thread
+int MyButtonDevice::stopSampling()
 {
-   // kill sample thread
+   if (mSampleThread != NULL)
+   {
+      mSampleThread->kill();
+      delete mSampleThread;
+      mSampleThread = NULL;
+   }
+   return 1;
 }
 
-int vjDigital::getData()
+//: function for users to get the digital data.
+//  here we overload vjDigital::getDigitalData
+int MyButtonDevice::getDigitalData(int d)
 {
-   return mDigitalData;
+   // only one button, so we ignore "d"
+   return mDigitalData[current];
+}
+
+// Our threaded sample function
+// This function is declared as a <b>static</b> member of MyButtonDevice
+// just spins... calling sample() over and over.
+void MyButtonDevice::threadedSampleFunction( void* classPointer )
+{
+   MyButtonDevice* this_ptr = static_cast&lt;MyButtonDevice*&gt;( classPointer );
+
+   // spin until someone kills "mSampleThread"
+   while (1)   
+   {
+     this_ptr->sample();
+     sleep(1); //specify some time here, so you don't waste CPU cycles
+   }
 }
 </pre>
 </body>
