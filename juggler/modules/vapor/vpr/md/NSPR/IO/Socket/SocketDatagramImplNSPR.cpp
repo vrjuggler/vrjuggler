@@ -36,6 +36,7 @@
 #include <prio.h>
 #include <prinrval.h>
 
+#include <Utils/Assert.h>
 #include <md/NSPR/SocketDatagramImpNSPR.h>
 
 
@@ -53,12 +54,13 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpNSPR::recvfrom (void* msg, const size_t len, const int flags,
-                                 InetAddr& from, ssize_t& bytes_read)
+SocketDatagramImpNSPR::recvfrom (void* msg, const size_t length,
+                                 const int flags, InetAddr& from,
+                                 ssize_t& bytes_read)
 {
     Status retval;
 
-    bytes_read = PR_RecvFrom(m_handle, msg, len, flags, from.getPRNetAddr(),
+    bytes_read = PR_RecvFrom(m_handle, msg, length, flags, from.getPRNetAddr(),
                              PR_INTERVAL_NO_TIMEOUT);
 
     if ( bytes_read == -1 ) {
@@ -72,33 +74,35 @@ SocketDatagramImpNSPR::recvfrom (void* msg, const size_t len, const int flags,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpNSPR::recvfrom (std::vector<char>& msg, const int flags,
-                                 InetAddr& from, ssize_t& bytes_read)
+SocketDatagramImpNSPR::recvfrom (std::string& msg, const size_t length,
+                                 const int flags, InetAddr& from,
+                                 ssize_t& bytes_read)
 {
-    return recvfrom(msg, msg.size(), flags, from, bytes_read);
+    msg.resize(length);
+    memset(&msg[0], '\0', msg.size());
+
+    return recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read);
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpNSPR::recvfrom (std::vector<char>& msg, const size_t len,
-                                 const int flags, InetAddr& from,
-                                 ssize_t& bytes_read)
+SocketDatagramImpNSPR::recvfrom (std::vector<vpr::Uint8>& msg,
+                                 const size_t length, const int flags,
+                                 InetAddr& from, ssize_t& bytes_read)
 {
-    char* temp_buf;
     Status retval;
 
-    temp_buf = (char*) malloc(len);
-    retval   = recvfrom(temp_buf, len, flags, from, bytes_read);
+    msg.resize(length);
 
-    // If anything was read into temp_buf, copy it into msg.
-    if ( retval.success() && bytes_read > -1 ) {
-        for ( ssize_t i = 0; i < bytes_read; i++ ) {
-            msg[i] = temp_buf[i];
-        }
+    memset(&msg[0], '\0', msg.size());
+    retval = recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read);
+
+    // Size it down if needed, if (bytes_read==length), then resize does
+    // nothing.
+    if ( bytes_read >= 0 ) {
+        msg.resize(bytes_read);
     }
-
-    free(temp_buf);
 
     return retval;
 }
@@ -106,13 +110,13 @@ SocketDatagramImpNSPR::recvfrom (std::vector<char>& msg, const size_t len,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpNSPR::sendto (const void* msg, const size_t len,
+SocketDatagramImpNSPR::sendto (const void* msg, const size_t length,
                                const int flags, const InetAddr& to,
                                ssize_t& bytes_sent)
 {
     Status retval;
 
-    bytes_sent = PR_SendTo(m_handle, msg, len, flags, to.getPRNetAddr(),
+    bytes_sent = PR_SendTo(m_handle, msg, length, flags, to.getPRNetAddr(),
                            PR_INTERVAL_NO_TIMEOUT);
 
     if ( bytes_sent == -1 ) {
@@ -126,35 +130,23 @@ SocketDatagramImpNSPR::sendto (const void* msg, const size_t len,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpNSPR::sendto (const std::vector<char>& msg, const int flags,
-                               const InetAddr& to, ssize_t& bytes_sent)
+SocketDatagramImpNSPR::sendto (const std::string& msg, const size_t length,
+                               const int flags, const InetAddr& to,
+                               ssize_t& bytes_sent)
 {
-    return sendto(msg, msg.size(), flags, to, bytes_sent);
+    vprASSERT(length <= msg.size() && "Length is bigger than data given");
+    return sendto(msg.c_str(), length, flags, to, bytes_sent);
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpNSPR::sendto (const std::vector<char>& msg, const size_t len,
-                               const int flags, const InetAddr& to,
-                               ssize_t& bytes_sent)
+SocketDatagramImpNSPR::sendto (const std::vector<vpr::Uint8>& msg,
+                               const size_t length, const int flags,
+                               const InetAddr& to, ssize_t& bytes_sent)
 {
-    char* temp_buf;
-    Status retval;
-
-    temp_buf = (char*) malloc(len);
-
-    // Copy the contents of msg into temp_buf.
-    for ( size_t i = 0; i < len; i++ ) {
-        temp_buf[i] = msg[i];
-    }
-
-    // Write temp_buf to the file handle.
-    retval = sendto(temp_buf, len, flags, to, bytes_sent);
-
-    free(temp_buf);
-
-    return retval;
+    vprASSERT(length <= msg.size() && "Length is bigger than data given");
+    return sendto((const void*) &msg[0], length, flags, to, bytes_sent);
 }
 
 } // End of vpr namespace

@@ -95,52 +95,56 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline ssize_t
-    recvfrom (void* msg, const size_t len, const int flags, InetAddr& from) {
-        return m_socket_dgram_imp.recvfrom(msg, len, flags, from);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline ssize_t
-    recvfrom (std::vector<char>& msg, const int flags, InetAddr& from) {
-        return m_socket_dgram_imp.recvfrom(msg, flags, from);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline ssize_t
-    recvfrom (std::vector<char>& msg, const size_t len, const int flags,
-              InetAddr& from)
+    inline Status
+    recvfrom (void* msg, const size_t len, const int flags, InetAddr& from,
+              ssize_t& bytes_read)
     {
-        return m_socket_dgram_imp.recvfrom(msg, len, flags, from);
+        return m_socket_dgram_imp.recvfrom(msg, len, flags, from, bytes_read);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline ssize_t
+    inline Status
+    recvfrom (std::string& msg, const size_t len, const int flags,
+              InetAddr& from, ssize_t& bytes_read)
+    {
+        return m_socket_dgram_imp.recvfrom(msg, len, flags, from, bytes_read);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    inline Status
+    recvfrom (std::vector<vpr::Uint8>& msg, const size_t len, const int flags,
+              InetAddr& from, ssize_t& bytes_read)
+    {
+        return m_socket_dgram_imp.recvfrom(msg, len, flags, from, bytes_read);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    inline Status
     sendto (const void* msg, const size_t len, const int flags,
-            const InetAddr& to)
+            const InetAddr& to, ssize_t& bytes_sent)
     {
-        return m_socket_dgram_imp.sendto(msg, len, flags, to);
+        return m_socket_dgram_imp.sendto(msg, len, flags, to, bytes_sent);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline ssize_t
-    sendto (const std::vector<char>& msg, const int flags,
-            const InetAddr& to)
+    inline Status
+    sendto (const std::string& msg, const size_t len, const int flags,
+            const InetAddr& to, ssize_t& bytes_sent)
     {
-        return m_socket_dgram_imp.sendto(msg, flags, to);
+        return m_socket_dgram_imp.sendto(msg, len, flags, to, bytes_sent);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline ssize_t
-    sendto (const std::vector<char>& msg, const size_t len, const int flags,
-            const InetAddr& to)
+    inline Status
+    sendto (const std::vector<vpr::Uint8>& msg, const size_t len,
+            const int flags, const InetAddr& to, ssize_t& bytes_sent)
     {
-        return m_socket_dgram_imp.sendto(msg, len, flags, to);
+        return m_socket_dgram_imp.sendto(msg, len, flags, to, bytes_sent);
     }
 
     /**
