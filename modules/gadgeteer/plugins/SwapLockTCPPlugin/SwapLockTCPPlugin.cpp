@@ -56,15 +56,16 @@
 #include <boost/concept_check.hpp>
 
 
-cluster::ClusterPlugin* initPlugin()
+extern "C"
 {
-   return cluster::SwapLockTCPPlugin::instance();
+   GADGET_CLUSTER_PLUGIN_EXPORT(void) initPlugin(cluster::ClusterManager* mgr)
+   {
+      mgr->addPlugin(new cluster::SwapLockTCPPlugin());
+   }
 }
 
 namespace cluster
 {
-   vprSingletonImp( SwapLockTCPPlugin );
-
    /** Add the pending element to the configuration.
    *  PRE: configCanHandle (element) == true.
    *  @return true iff element was successfully added to configuration.
@@ -498,7 +499,7 @@ namespace cluster
                mSyncClients.push_back(client_sock);
             }           
             
-            SwapLockTCPPlugin::instance()->setActive(true);
+            setActive(true);
 
             // Get the localhost name.
             vpr::InetAddr local;
