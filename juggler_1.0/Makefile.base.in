@@ -66,6 +66,8 @@
 # LDOPTS          - Extra, often platform-specific, options for the linker.
 # LIBS            - Extra external libraries needed at link time.
 # LN_S            - Working 'ln -s' command.
+# MKDEPS_CC       - Compiler for C dependencies
+# MKDEPS_CXX      - Compiler for CXX dependencies
 # MKPATH          - Path to shared vj.*.mk file directory.
 # MTREE_CMD       - Path to a BSD-compatible mtree.
 # OBJ_FILE_SUFFIX - Suffix for object file names (e.g., "o" or "obj").
@@ -78,6 +80,9 @@
 #
 # C_COMPILE       - Command for compiling C code.
 # CXX_COMPILE     - Command for compiling C++ code.
+#
+# MKDEPS_C_COMPILE    - Command for compiling C dependencies
+# MKDEPS_CXX_COMPILE  - Command for compiling C++ dependencies
 #
 # ABI             - Application Binary Interface type.  This may be used for
 #                   other binary types when supported by the operating
@@ -143,6 +148,8 @@ LDOPTS_OPT	= @LDOPTS_OPT@
 LIBS		= @LIBS@
 LN_S		= @LN_S@
 MAKEFLAGS	+= --no-print-directory
+MKDEPS_CC   = @CC@
+MKDEPS_CXX  = @CXX@
 MKPATH		= ${VJROOT_ABS}/mk
 MTREE_CMD	= @MTREE_CMD@
 OBJ_FILE_SUFFIX	= @OBJ_FILE_SUFFIX@
@@ -170,6 +177,12 @@ endif
 # -----------------------------------------------------------------------------
 C_COMPILE	= ${CC} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CFLAGS}
 CXX_COMPILE	= ${CXX} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CXXFLAGS}
+
+# -----------------------------------------------------------------------------
+# Makedepend commands
+# -----------------------------------------------------------------------------
+MKDEPS_C_COMPILE = ${MKDEPS_CC} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CFLAGS}
+MKDEPS_CXX_COMPILE = ${MKDEPS_CXX} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CXXFLAGS}
 
 # -----------------------------------------------------------------------------
 # Platform- and binary-specific options.  The assignments preceding the
