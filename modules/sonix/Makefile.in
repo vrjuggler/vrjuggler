@@ -72,8 +72,8 @@ SNX_LIB_STATIC        = $(SNX_LIBRARY).$(STATICLIB_EXT)
 SNX_LIB_DYNAMIC       = $(SNX_LIBRARY).$(DYNAMICLIB_EXT)
 SNX_PROF_LIB_STATIC	= $(SNX_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
 SNX_PROF_LIB_DYNAMIC	= $(SNX_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
-DYLIB_DEPS_SNX		= @snx_ldflags_linker@
-DYLIB_PROF_DEPS_SNX	= @snx_ldflags_linker@
+DYLIB_DEPS_SNX		= @DYLIB_DEPS@
+DYLIB_PROF_DEPS_SNX	= @DYLIB_PROF_DEPS@
 
 # setup the list of libs to be built...
 LIBS        = $(SNX_LIBRARY)
@@ -102,7 +102,6 @@ endif
 # Construct the static version of the libraries.
 # -----------------------------------------------
 $(LIBDIR)/$(SNX_LIB_STATIC) $(LIBDIR)/$(SNX_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
-ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -113,7 +112,6 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
-endif
 
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
