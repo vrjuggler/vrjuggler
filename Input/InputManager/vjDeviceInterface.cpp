@@ -92,7 +92,17 @@ void vjDeviceInterface::addDevInterface(vjDeviceInterface* dev)
 { mAllocatedDevices.push_back(dev); }
 
 void vjDeviceInterface::removeDevInterface(vjDeviceInterface* dev)
-{ mAllocatedDevices.push_back(dev); }
+{ 
+   // Attempt to find the device, if found, erase it, if not, then assert
+   std::vector<vjDeviceInterface*>::iterator found_dev 
+         = std::find(mAllocatedDevices.begin(), mAllocatedDevices.end(), dev);
+   vjASSERT(found_dev != mAllocatedDevices.end() && "Tried to remove non-registered interface");
+         
+   if(mAllocatedDevices.end() != found_dev)
+   {
+      mAllocatedDevices.erase(found_dev);
+   }
+}
 
 void vjDeviceInterface::refreshAllDevices()
 {
