@@ -41,6 +41,7 @@ vjDeviceInterface::vjDeviceInterface()
 : mProxyIndex(-1)
 {
    mProxyName = "UnInitialized";
+   mNameSet = false;
    vjDeviceInterface::addDevInterface(this);    // Keep referense to the interface
 }
 
@@ -53,6 +54,7 @@ vjDeviceInterface::~vjDeviceInterface()
 void vjDeviceInterface::init(std::string proxyName)
 {
    mProxyName = proxyName;    // Set the name
+   mNameSet = true;
    refresh();                 // Refresh the name
 }
 
@@ -61,6 +63,10 @@ void vjDeviceInterface::init(std::string proxyName)
 void vjDeviceInterface::refresh()
 {
    int prev_proxy_index = mProxyIndex;    // Keep track of previous value
+
+   // If it is not initialized, then don't try
+   if(!mNameSet)
+   { return; }
 
    mProxyIndex = vjKernel::instance()->getInputManager()->getProxyIndex(mProxyName);
    if (mProxyIndex == -1)
