@@ -235,6 +235,8 @@ public:
    /// Function called after pfSync and before pfDraw
    virtual void preFrame()
    {
+      // Deal with focus based changes
+      mNavigationDCS->setActive(haveFocus());
       if(haveFocus())
       {
          if (0 == (mStatusMessageEmitCount++ % 60))
@@ -256,7 +258,7 @@ public:
    //: Reset the application to initial state
    virtual void reset()
    {
-      mNavigationDCS->getNavigator()->reset();        // Reset navigation
+      mNavigationDCS->reset();        // Reset navigation
    }
 
    //: Called when the focus state changes
@@ -268,14 +270,24 @@ public:
    //
    // This is akin to the way a user can only interact with a GUI window that has focus
    // (ie.The mouse is over the window)
+   //
+   // NOTE: This could be called before init() or even before the kernel has recieved the application
+   /*
    virtual void focusChanged()
    {
       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"simplePfNavApp::focusChanged") << "Focus now: " << haveFocus() << endl << vjDEBUG_FLUSH;
-      if(haveFocus())
-      { mNavigationDCS->setActive(true); }
+
+      if(mNavigationDCS != NULL)
+      {
+         if(haveFocus())
+         { mNavigationDCS->setActive(true); }
+         else
+         { mNavigationDCS->setActive(false); }
+      }
       else
-      { mNavigationDCS->setActive(false); }
+         vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"   focusChanged:NavDCS == NULL") << endl << vjDEBUG_FLUSH;
    }
+   */
 
 public:  // Configure the application
    // These must be set before the kernel starts calling the application
@@ -295,8 +307,8 @@ public:  // Configure the application
    void addSound(Sound s)
    { mSoundList.push_back(s); }
 
-   void addFilePath(const std::string path)     
-   { 
+   void addFilePath(const std::string path)
+   {
       // initScene could be called already,
       // so, delegate to the the static fileIO func
       pfFileIO::addFilePath( mFilePath );
@@ -307,26 +319,26 @@ public:  // Configure the application
       // initScene could be called already,
       // so, delegate to the the static fileIO func
       mFilePath = path;
-      
+
       // set some common paths first...
       pfFileIO::setFilePath( ".:./data:/usr/share/Performer/data:/usr/share/Performer/data/town:");
       pfFileIO::addFilePath( mFilePath );
-      
+
       vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrCYAN,"setFilePath: ") << mFilePath <<"\n"<<vjDEBUG_FLUSH;
-   }   
-   void setInitialNavPos(const vjVec3 initialPos) 
-   { 
+   }
+   void setInitialNavPos(const vjVec3 initialPos)
+   {
       mInitialNavPos = initialPos;
-      
-      // if the navigator is already created, 
+
+      // if the navigator is already created,
       // then initScene has been called,
-      // so we need to set the home pos in the nav, 
+      // so we need to set the home pos in the nav,
       // not just the member var.
       // FIXME: some code duplication here.
       if (mVelNavDrive != NULL)
       {
          vjDEBUG(vjDBG_ALL,0) << "setting pos\n" <<flush;
-      
+
          vjMatrix initial_nav;              // Initial navigation position
          initial_nav.setTrans( mInitialNavPos );
 
@@ -432,7 +444,7 @@ void simplePfNavApp::initializeModels()
    // --- CONSTRUCT SCENE GRAPH --- //
    mCollidableModelGroup->addChild( mConfiguredCollideModels );
    mUnCollidableModelGroup->addChild( mConfiguredNoCollideModels );
-   
+
    // replace all nodes with _Sound_ with pjSoundNodes...
    std::string extension = "_Sound_";
    pjSoundReplaceTrav::traverse( mConfiguredCollideModels, extension );
@@ -518,7 +530,7 @@ void simplePfNavApp::initScene()
    noo->setTrans( 0.0f, 0.0f, 6.0f );
    noo->addChild( no );
    */
-         
+
    // Create the SUN
    mLightGroup = new pfGroup;
    mSun = new pfLightSource;
@@ -572,7 +584,7 @@ void simplePfNavApp::initScene()
    // replace all nodes with _Sound_ with pjSoundNodes...
    std::string extension = "_Sound_";
    pjSoundReplaceTrav::traverse( mRootNode, extension );
-   
+
    // load these files into perfly to see just what your scenegraph
    // looked like. . . . .useful for debugging.
    //cout<<"[pfNav] Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n"<<flush;
