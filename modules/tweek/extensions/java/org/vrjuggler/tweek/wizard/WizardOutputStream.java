@@ -64,15 +64,17 @@ public class WizardOutputStream
    {
       // Get a list of all the classes this wizard needs
       List classes = wizard.getRequiredClasses();
+      stripDuplicates(classes);
 
       // Get a list of all the resources this wizard needs
       List resources = wizard.getRequiredResources();
+      stripDuplicates(resources);
 
       // Start a JAR stream adding all the classes and resources
       JarOutputStream jar_out = new JarOutputStream(this);
       writeClasses(jar_out, classes);
       writeResources(jar_out, resources);
-      
+
       // Add the serialized wizard to the JAR
       jar_out.putNextEntry(new JarEntry("wizard.ser"));
       ObjectOutputStream obj_out = new ObjectOutputStream(jar_out);
@@ -90,10 +92,18 @@ public class WizardOutputStream
    private void writeClasses(JarOutputStream out, List classes)
       throws IOException
    {
-      for (Iterator itr = classes.iterator(); itr.hasNext(); )
+      try
       {
-         Class cls = (Class)itr.next();
-         addFile(out, classToFile(cls.getName()));
+         for (Iterator itr = classes.iterator(); itr.hasNext(); )
+         {
+            String classname = (String)itr.next();
+            Class cls = getClass().getClassLoader().loadClass(classname);
+            addFile(out, classToFile(cls.getName()));
+         }
+      }
+      catch (ClassNotFoundException cnfe)
+      {
+         throw new IOException("Could not get class "+cnfe.getMessage());
       }
    }
 
@@ -160,5 +170,31 @@ public class WizardOutputStream
    private String classToFile(String classname)
    {
       return classname.replace('.', '/') + ".class";
+   }
+
+   /**
+    * Removes all duplicate elements from the given list in place.
+    */
+   private void stripDuplicates(List list)
+   {
+      // Sort the list to put identical items together
+      Collections.sort(list);
+
+      // Remove duplicates
+      Object prev = null;
+      for (Iterator itr = list.iterator(); itr.hasNext(); )
+      {
+         Object cur = itr.next();
+         // If the current item is the same as the previous, remove the current
+         // item.
+         if ((prev != null) && cur.equals(prev))
+         {
+            itr.remove();
+         }
+         else
+         {
+            prev = cur;
+         }
+      }
    }
 }
