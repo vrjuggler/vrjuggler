@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2003-12-08 patrickh    Initial support for using Fnorb or PyORBit 2 as
+                       alternatives to omniORBpy.  This work is not yet done.
 2003-11-07 patrickh    The editor for the global preferences of the Java GUI
                        now saves the correct value for the user's preferred
                        starting directory for file choosers.
