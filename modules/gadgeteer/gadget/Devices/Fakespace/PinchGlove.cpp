@@ -71,6 +71,8 @@ int PinchGlove::startSampling()
 
    if (mThread == NULL)
    {
+      /* Don't need anymore because SampleBuffers are smarter
+      
       DigitalData temp;
       temp=0;
       for (int i=0;i<10;i++)
@@ -80,6 +82,7 @@ int PinchGlove::startSampling()
       mDigitalSamples.lock();
       mDigitalSamples.addSample(mDigitalData);
       mDigitalSamples.unlock();
+      */
             
       // Create a new thread to handle the control
       vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Spawning control thread\n"
