@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
 
 #include <vpr/md/SIM/Controller.h>
 #include <vpr/md/SIM/SocketManager.h>
