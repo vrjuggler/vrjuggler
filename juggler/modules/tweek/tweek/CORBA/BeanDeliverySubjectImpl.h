@@ -43,6 +43,10 @@
 #include <vector>
 #include <string>
 
+#include <vpr/vpr.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
+
 #include <tweek/CORBA/SubjectImpl.h>
 #include <tweek/CORBA/BeanDeliverySubject.h>
 
@@ -130,6 +134,7 @@ public:
     */
    virtual CORBA::Boolean hasActiveBean()
    {
+      vpr::Guard<vpr::Mutex> lock(mActiveBeanLock);
       return mHasActiveBean;
    }
 
@@ -186,11 +191,26 @@ public:
    }
 
 private:
+   // These two have to be here because Visual C++ will try to make them
+   // exported public symbols.  This causes problems because copying
+   // vpr::Mutex objects is not allowed.
+   BeanDeliverySubjectImpl(const BeanDeliverySubjectImpl& subj)
+   {
+      /* Do nothing. */ ;
+   }
+
+   void operator=(const BeanDeliverySubjectImpl& subj)
+   {
+      /* Do nothing. */ ;
+   }
+
    /** The collection of all JavaBeans about which we have been informed. */
    std::map<std::string, BeanData> mBeanCollection;
+   vpr::Mutex mBeanCollectionLock;
 
    CORBA::Boolean mHasActiveBean;  /**< State of the "active" JavaBean */
    std::string    mActiveBean;     /**< The name of the "active" JavaBean */
+   vpr::Mutex     mActiveBeanLock;
 };
 
 } // End of tweek namespace

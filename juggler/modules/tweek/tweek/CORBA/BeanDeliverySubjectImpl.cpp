@@ -39,6 +39,7 @@
 #include <fstream>
 
 #include <vpr/vpr.h>
+#include <vpr/Sync/Guard.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 
@@ -52,14 +53,20 @@ namespace tweek
 BeanNameList* BeanDeliverySubjectImpl::getAllBeanNames()
 {
    BeanNameList* bean_names = new BeanNameList();
-   bean_names->length(mBeanCollection.size());
 
-   std::map<std::string, BeanData>::iterator i;
-   int j;
-
-   for ( i = mBeanCollection.begin(), j = 0; i != mBeanCollection.end(); ++i, ++j )
+   // Lock down the Bean collection before using it.
    {
-      (*bean_names)[j] = CORBA::string_dup((*i).first.c_str());
+      vpr::Guard<vpr::Mutex> lock(mBeanCollectionLock);
+
+      bean_names->length(mBeanCollection.size());
+
+      std::map<std::string, BeanData>::iterator i;
+      int j;
+
+      for ( i = mBeanCollection.begin(), j = 0; i != mBeanCollection.end(); ++i, ++j )
+      {
+         (*bean_names)[j] = CORBA::string_dup((*i).first.c_str());
+      }
    }
 
    return bean_names;
@@ -72,6 +79,11 @@ BeanInfo* BeanDeliverySubjectImpl::getBean(const char* beanName)
 
    // Allocate memory for the object to be returned.
    BeanInfo* bean_info = new BeanInfo();
+
+   // Lock down the Bean collection before accessing it.  We basically have to
+   // hold the lock for the duration of this method because we get back a
+   // reference to data held by the collection (see bean_data below).
+   vpr::Guard<vpr::Mutex> lock(mBeanCollectionLock);
 
    // It's important that this be a reference to avoid copying around the
    // (possibly large) fileContents vector.
@@ -149,6 +161,11 @@ BeanInfo* BeanDeliverySubjectImpl::getActiveBeanInfo()
 {
    BeanInfo* bean_info = new BeanInfo();
 
+   // Lock down the data relating to the active Bean.  We basically have to
+   // hold the lock for the duration of this method because we get back a
+   // reference to data held by the collection (see bean_data below).
+   vpr::Guard<vpr::Mutex> lock(mActiveBeanLock);
+
    // It's important that this be a reference to avoid copying around the
    // (possibly large) fileContents vector unnecessarily.
    BeanData& bean_data = mBeanCollection[mActiveBean];
@@ -175,24 +192,45 @@ BeanInfo* BeanDeliverySubjectImpl::getActiveBeanInfo()
 void BeanDeliverySubjectImpl::addBean(const std::string& beanName,
                                       const BeanData& beanData)
 {
-   mBeanCollection[beanName] = beanData;
+   mBeanCollectionLock.acquire();
+   {
+      mBeanCollection[beanName] = beanData;
+   }
+   mBeanCollectionLock.release();
+
    tweek::SubjectImpl::notify();
 }
 
 void BeanDeliverySubjectImpl::setActiveBean(const std::string& beanName)
 {
-   vprASSERT(mBeanCollection.count(beanName) > 0 && "Tried to make unknown Bean active");
+#ifdef TWEEK_DEBUG
+   mBeanCollectionLock.acquire();
+   {
+      vprASSERT(mBeanCollection.count(beanName) > 0 && "Tried to make unknown Bean active");
+   }
+   mBeanCollectionLock.release();
+#endif
 
-   mHasActiveBean = true;
-   mActiveBean    = beanName;
+   mActiveBeanLock.acquire();
+   {
+      mHasActiveBean = true;
+      mActiveBean    = beanName;
+   }
+   mActiveBeanLock.release();
+
    tweek::SubjectImpl::notify();
 }
 
 void BeanDeliverySubjectImpl::removeActiveBean()
 {
-   vprASSERT(mHasActiveBean && "No active Bean to remove");
-   mHasActiveBean = false;
-   mActiveBean    = std::string("");
+   mActiveBeanLock.acquire();
+   {
+      vprASSERT(mHasActiveBean && "No active Bean to remove");
+      mHasActiveBean = false;
+      mActiveBean    = std::string("");
+   }
+   mActiveBeanLock.release();
+
    tweek::SubjectImpl::notify();
 }
 
