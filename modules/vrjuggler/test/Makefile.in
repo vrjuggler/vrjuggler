@@ -42,11 +42,9 @@
 default: TestSuite
 
 SUBDIRS	= TestSuite	\
-          CfgTest	\
           Input		\
           Math		\
           Matrix	\
-          Performance	\
           Quat
 
 all: $(SUBDIRS)

@@ -914,11 +914,11 @@ AC_OUTPUT(Makefile
           test/Draw/OGL/texture/Makefile
           test/Draw/OGL/torus/Makefile
           test/Draw/OGL/wand/Makefile
+          test/Input/Makefile
           test/Math/Makefile
           test/Matrix/Makefile
           test/Quat/Makefile
           test/TestSuite/Makefile
-          test/input/Makefile
           tools/Makefile
           mtree/VJ.data.dist
           mtree/VJ.include.dist
