@@ -72,6 +72,13 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
    mTexWidth  = getNearestMultipleOfTwo(mVncIf.getWidth());
    mTexHeight = getNearestMultipleOfTwo(mVncIf.getHeight());
 
+   mMaxSize = mDesktopWidth*1.75f;
+   mMinSize = mDesktopWidth*0.50f;
+   mIncSize = 0.02f;
+
+   std::cout << "max size: " << mMaxSize << std::endl;
+   std::cout << "min size: " << mMinSize << std::endl;
+
    updateDesktopParameters();       // Initial update of desktop parameters
 
    // Request the first update.
@@ -325,6 +332,23 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       }
    }
    */
+
+   // Resize it
+   mDesktopWidth += mIncSize;
+   if(mDesktopWidth > mMaxSize)
+   {
+      mDesktopWidth = mMaxSize;
+      mIncSize *= -1.0f;
+   }
+   else if(mDesktopWidth < mMinSize)
+   {
+      mDesktopWidth = mMinSize;
+      mIncSize *= -1.0f;
+   }
+   mDesktopHeight = mDesktopWidth;
+   //std::cout << "Height: " << mDesktopHeight << std::endl;
+
+   updateDesktopParameters();
 
 
    return focus_val;

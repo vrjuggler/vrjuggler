@@ -113,6 +113,7 @@ private:
    */
    //@{
    float mDesktopWidth, mDesktopHeight;      /**< Width and height of the virtual desktop. VRJ units */
+   float mMaxSize, mMinSize, mIncSize;
    int   mTexWidth, mTexHeight;             /**< Width and height of the texture in pixels */
    int   mVncWidth, mVncHeight;              /**< The width and height of the vnc/X desktop */
 
