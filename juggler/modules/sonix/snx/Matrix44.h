@@ -156,6 +156,14 @@ private:
    float mData[16];
 };
 
+inline std::ostream& operator<<( std::ostream& out, Matrix44& mat )
+{
+   out<<mat(0,0)<<" "<<mat(0,0)<<" "<<mat(0,0)<<" "<<mat(0,0)<<" "
+      <<mat(0,1)<<" "<<mat(1,1)<<" "<<mat(2,1)<<" "<<mat(3,1)<<" "
+      <<mat(0,1)<<" "<<mat(1,1)<<" "<<mat(2,1)<<" "<<mat(3,1)<<" "
+      <<mat(0,1)<<" "<<mat(1,1)<<" "<<mat(2,1)<<" "<<mat(3,1)<<"\n"<<std::flush;
+}
+
 }; // end namespace
 
 #endif
