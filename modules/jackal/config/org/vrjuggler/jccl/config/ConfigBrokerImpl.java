@@ -542,11 +542,15 @@ public class ConfigBrokerImpl
          }
       }
 
+      System.out.print("ConfigBroker: Loading config definitions ");
+
       // Load in the definitions for each file and place them in the repository
       for (Iterator itr = def_file_list.iterator(); itr.hasNext(); )
       {
          try
          {
+            System.out.print(".");
+            System.out.flush();
             // Attempt to load in the definitions in the file
             File def_file = (File)itr.next();
             ConfigDefinitionReader reader = new ConfigDefinitionReader(def_file);
@@ -566,6 +570,8 @@ public class ConfigBrokerImpl
             ioe.printStackTrace();
          }
       }
+
+      System.out.println(" done.");
    }
 
    /**
