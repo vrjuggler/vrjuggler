@@ -38,6 +38,7 @@
 
 #include <cluster/ClusterManager.h>
 #include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
+#include <gadget/Util/Debug.h>
 
 namespace cluster
 {
@@ -54,7 +55,19 @@ public:
    ApplicationData(const vpr::GUID& guid, const std::string& host_name) : mIsLocal(false), mId(guid), mHostname(host_name)
    {
       ClusterPlugin* app_data_mgr = ClusterManager::instance()->getPluginByGUID(vpr::GUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5"));
-      app_data_mgr->addSerializableObject(this);
+      if (NULL != app_data_mgr)
+      {
+         app_data_mgr->addSerializableObject(this);
+      }
+      else
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << clrOutBOLD(clrRED,"[ApplicationData] WARNING:")
+            << "Can not register ApplicationData with non existent ApplicationDataManager. "
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
+            << "In order to syncronize ApplicationData across a cluster you must load the ApplicationDataManager ClusterPlugin."
+            << std::endl << vprDEBUG_FLUSH;
+      }
    }
 
    ApplicationData()
