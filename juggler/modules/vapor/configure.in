@@ -58,6 +58,29 @@ DPP_INIT
 DPP_GEN_RECONFIG
 
 # -----------------------------------------------------------------------------
+# Path setup.
+# -----------------------------------------------------------------------------
+DPP_WIN32_SETUP
+
+# $srcdir is the root directory of the juggler source tree.  To get a value
+# for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
+# return to the directory where configure is being run ($topdir).
+cd "$srcdir"
+UNIX_VPRROOT_ABS=`pwd`
+
+cd "$UNIX_VPRROOT_ABS/../.."
+UNIX_JUGGLERROOT_ABS=`pwd`
+cd "$topdir"
+
+if test "x$CYGPATH" != "xno" ; then
+   VPRROOT_ABS=`dospath -p "$UNIX_VPRROOT_ABS"`
+   JUGGLERROOT_ABS=`dospath -p "$UNIX_JUGGLERROOT_ABS"`
+else
+   VPRROOT_ABS="$UNIX_VPRROOT_ABS"
+   JUGGLERROOT_ABS="$UNIX_JUGGLERROOT_ABS"
+fi
+
+# -----------------------------------------------------------------------------
 # Command-line arguments (--enable-option, --with-pkg=package_name).
 # -----------------------------------------------------------------------------
 
@@ -112,10 +135,13 @@ fi
 # Define the binary format.
 DPP_ABI_SETUP
 
+AC_ARG_WITH(cppdom,
+            [  --with-cppdom=<PATH>    CppDOM installation directory   [default=$JUGGLERROOT_ABS/external/cppdom]],
+            CPPDOM_ROOT="$withval", CPPDOM_ROOT="$JUGGLERROOT_ABS/external/cppdom")
+
 # -----------------------------------------------------------------------------
 # System-dependent stuff.
 # -----------------------------------------------------------------------------
-DPP_WIN32_SETUP
  
 # We use AC_CANONICAL SYSTEM so that we can find out information about the
 # build, target and host platforms rather than only the host.
@@ -236,28 +262,6 @@ case $target_os in
 esac
 
 # -----------------------------------------------------------------------------
-# Path setup.
-# -----------------------------------------------------------------------------
-
-# $srcdir is the root directory of the juggler source tree.  To get a value
-# for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
-# return to the directory where configure is being run ($topdir).
-cd "$srcdir"
-UNIX_VPRROOT_ABS=`pwd`
-
-cd "$UNIX_VPRROOT_ABS/../.."
-UNIX_JUGGLERROOT_ABS=`pwd`
-cd "$topdir"
-
-if test "x$CYGPATH" != "xno" ; then
-   VPRROOT_ABS=`dospath -p "$UNIX_VPRROOT_ABS"`
-   JUGGLERROOT_ABS=`dospath -p "$UNIX_JUGGLERROOT_ABS"`
-else
-   VPRROOT_ABS="$UNIX_VPRROOT_ABS"
-   JUGGLERROOT_ABS="$UNIX_JUGGLERROOT_ABS"
-fi
-
-# -----------------------------------------------------------------------------
 # Checks for programs.
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
@@ -296,6 +300,55 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
+
+# -----------
+# cppdom
+# -----------
+_vpr_save_CFLAGS="$CFLAGS"
+_vpr_save_CPPFLAGS="$CPPFLAGS"
+_vpr_save_INCLUDES="$INCLUDES"
+_vpr_save_LDFLAGS="$LDFLAGS"
+
+# XXX: There are problems with the use of $CPPDOM_ROOT for installed versions
+# of cppdom!!!
+
+# Ensure that /usr/include and /usr/lib are not included multiple times
+# if $CPPDOM_ROOT is "/usr".
+# XXX: Should be -I$CPPDOM_ROOT/include
+if test "x$CPPDOM_ROOT" != "x/usr" ; then
+    CPPFLAGS="$STDFLAGS -I$CPPDOM_ROOT $CPPFLAGS"
+    INCLUDES="-I$CPPDOM_ROOT $INCLUDES"
+    LDFLAGS="-L$CPPDOM_ROOT/lib $LDFLAGS"
+fi
+
+CXXFLAGS="$CXXFLAGS $STDFLAGS $INCLUDES ${_EXTRA_FLAGS}"
+
+DPP_LANG_SAVE
+DPP_LANG_CPLUSPLUS
+
+# XXX: $cppdom_include should be set to $CPPDOM_ROOT/include.
+AC_CHECK_HEADER([cppdom/config.h],
+    [cppdom_include="$CPPDOM_ROOT"],
+    [AC_MSG_ERROR([*** CppDOM is required for VPR ***])])
+
+DPP_LANG_RESTORE
+
+CPPDOM_INCLUDES="-I$cppdom_include"
+
+if test "x$CPPDOM_ROOT" != "x$JUGGLERROOT_ABS/external/cppdom" ; then
+    LOCAL_CPPDOM='Y'
+fi
+
+if test "x$CYGPATH" != "xno" ; then
+   UNIX_CPPDOM_ROOT=`cygpath -u $CPPDOM_ROOT`
+else
+   UNIX_CPPDOM_ROOT="$CPPDOM_ROOT"
+fi
+
+CFLAGS="${_vpr_save_CFLAGS}"
+CPPFLAGS="${_vpr_save_CPPFLAGS}"
+INCLUDES="${_vpr_save_INCLUDES}"
+LDFLAGS="${_vpr_save_LDFLAGS}"
 
 DPP_CHECK_DYNLOAD_LIB
 DPP_HAVE_CPPUNIT([1.9.10])
@@ -550,6 +603,15 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 
 vpr_cxxflags="$STDFLAGS"
 
+if test "x$CPPDOM_INCLUDES" != "x" ; then
+   INCLUDES="$INCLUDES $CPPDOM_INCLUDES"
+fi
+
+# If the user has a local copy of CppDOM, add its path to the C++ flags.
+if test "x$LOCAL_CPPDOM" = "xY" ; then
+   vpr_cxxflags="$vpr_cxxflags $CPPDOM_INCLUDES"
+fi
+
 # If the user has a local copy of Boost, add its path to the C++ flags.
 if test "x$LOCAL_BOOST" = "xY" ; then
    vpr_cxxflags="$vpr_cxxflags $BOOST_INCLUDES"
@@ -767,6 +829,11 @@ AC_SUBST(HANDLE_ABS)
 AC_SUBST(SERIAL_PORT_ABS)
 AC_SUBST(SOCKET_ABS)
 
+#AC_SUBST(CPPDOM_ROOT)
+#AC_SUBST(CPPDOM_INCLUDES)
+AC_SUBST(UNIX_CPPDOM_ROOT)
+AC_SUBST(LOCAL_CPPDOM)
+
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
 
@@ -806,6 +873,8 @@ AC_OUTPUT(vpr-config
           Makefile.inc
           common.defs.mk
           make.defs.mk
+          external/Makefile
+          external/cppdom/Makefile
           vpr/Makefile
           vpr/md/Makefile
           vpr/md/NSPR/Makefile

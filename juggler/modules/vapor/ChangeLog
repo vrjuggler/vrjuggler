@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-01-12 patrickh CppDOM is now built into VPR.
+                    NEW VERSION: 0.24.0
 2003-01-11 allenb   Implemented XMLObjectWriter and added test case for it.
 2003-01-10 patrickh Added vpr::ThreadRunFunctor<T>.
                     NEW VERSION: 0.23.2
