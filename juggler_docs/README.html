@@ -146,8 +146,10 @@ that you can then use to build the project (this is recommended).<BR>
 </a>
 Be sure to check out the .XML files.  This is where the tree control is specified.  
 Note that each book has it's own .xml tree specification in the book's root directory.  
-These are dynamically loaded using the <pre><jitfolder></pre> XML tag.  
-For more info see the <a href="${JEXPLORER_DOCS}">JExplorer documentation</a>.
+These are dynamically loaded using the &lt;jitfolder&gt; XML tag.  <BR>
+<BR>
+<img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif"> For more info see the <a href="${JEXPLORER_DOCS}">JExplorer documentation</a>.
+<BR>
 
 <a name="filetypes">
 <H5> File types handled by the build script </H5>
@@ -182,18 +184,18 @@ Example:<BR>
 <a name="install-web">
 <H5> Other install-web script commands </H5>
 </a>
-When specifying an install-web command, place it within the comment brackets
-<b>&lt;!--install-web include <i>[filename]</i> --&gt;</b>
-<LI> Inserts a file named <i>[filename]</i> at this location.</b>
-
-<b>&lt;!--install-web no-css --&gt;</b>
-<LI> Tell the install script to <i>not</i> include the default <i>style sheet</i>. (the -c option to install-web)</li>
-
-<b>&lt;!--install-web no-header --&gt;</b>
-<LI> Tell the install script to <i>not</i> include the default <i>header</i>. (the -e option to install-web)</li>
-
-<b>&lt;!--install-web no-footer --&gt;</b>
-<LI> Tell the install script to <i>not</i> include the default <i>footer</i>. (the -f option to install-web)</li>
-
-<b>&lt;!--install-web ignore --&gt;</b>
-<LI> Tell the install script to simply install (copy) the file, <i>ignoring</i> any tags or other script-recognized things.</li>
+When specifying an install-web command, place it within the comment brackets<BR>
+<b>&lt;!--install-web include <i>[filename]</i> --&gt;</b><BR>
+<LI> Inserts a file named <i>[filename]</i> at this location.</LI><BR>
+<BR>
+<b>&lt;!--install-web no-css --&gt;</b><BR>
+<LI> Tell the install script to <i>not</i> include the default <i>style sheet</i>. (the <b>-c</b> option to install-web)</li><BR>
+<BR>
+<b>&lt;!--install-web no-header --&gt;</b><BR>
+<LI> Tell the install script to <i>not</i> include the default <i>header</i>. (the <b>-e</b> option to install-web)</li><BR>
+<BR>
+<b>&lt;!--install-web no-footer --&gt;</b><BR>
+<LI> Tell the install script to <i>not</i> include the default <i>footer</i>. (the <b>-f</b> option to install-web)</li><BR>
+<BR>
+<b>&lt;!--install-web ignore --&gt;</b><BR>
+<LI> Tell the install script to simply install (copy) the file, <i>ignoring</i> any tags or other script-recognized things.</li><BR>
