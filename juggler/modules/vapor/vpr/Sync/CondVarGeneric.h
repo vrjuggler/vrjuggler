@@ -103,14 +103,14 @@ public:
     * @post The condition has been modifed, but may not be satisfied.
     * @note The call blocks until a condition has been signaled
     */
-   int wait(vpr::Interval time_to_wait = vpr::Interval::NoTimeout);
+   vpr::ReturnStatus wait(vpr::Interval time_to_wait = vpr::Interval::NoTimeout);
 
    /**
     * Signals a condition change.
     * This call tells all waiters that the condition has changed.
     * They can then check to see if it now sarisfies the condition
     */
-   int signal ()
+   vpr::ReturnStatus signal ()
    {
       std::cerr << std::setw(5) << getpid() << "  Signal" << std::endl;
       // ASSERT:  We have been locked
@@ -119,18 +119,19 @@ public:
 
       if (waiters > 0)
       {
-         int ret_val = sema.release();
-         return ret_val;
+         return sema.release();
       }
       else
-         return 0;
+      {
+         return vpr::ReturnStatus();
+      }
    }
 
    /**
     * Signals all waiting threads.
     * This releases all waiting threads.
     */
-   int broadcast ()
+   vpr::ReturnStatus broadcast ()
    {
       // ASSERT:  We have been locked
       if (condMutex->test() == 0)    // Not locked
@@ -139,23 +140,23 @@ public:
       for (int i = waiters;i>0;i--)
          sema.release();
 
-      return 0;
+      return vpr::ReturnStatus();
    }
 
    /// Acquires the condition lock.
-   int acquire()
+   vpr::ReturnStatus acquire()
    {
       return condMutex->acquire();
    }
 
    /// Tries to acquire the condition lock.
-   int tryAcquire()
+   vpr::ReturnStatus tryAcquire()
    {
       return condMutex->tryAcquire();
    }
 
    /// Releases the condition lock.
-   int release()
+   vpr::ReturnStatus release()
    {
       return condMutex->release();
    }

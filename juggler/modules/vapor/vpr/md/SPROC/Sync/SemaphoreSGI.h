@@ -44,7 +44,9 @@
 
 #include <vpr/vprConfig.h>
 #include <ulocks.h>
+
 #include <vpr/md/SPROC/SharedMem/MemPool.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr {
@@ -55,7 +57,7 @@ namespace vpr {
 // This class encapsulates the behavior of a semaphore variable.
 //
 // Author:
-//	Allen Bierbaum
+//  Allen Bierbaum
 //
 // Date: 1-20-97
 //-----------------------------------------------
@@ -117,19 +119,23 @@ public:
    //! RETURNS:  1 - Acquired
    //! RETURNS: -1 - Error
    //---------------------------------------------------------
-   int acquire() const
+   vpr::ReturnStatus acquire() const
    {
-      int ret_val = uspsema(sema);
-      if(ret_val < 0)
-         std::cerr << "vpr::SemphoreSGI::ERROR:" << std::endl;
+      vpr::ReturnStatus status;
 
-      return ret_val;
+      if ( uspsema(sema) < 0 )
+      {
+         std::cerr << "vpr::SemphoreSGI::ERROR:" << std::endl;
+         status.setCode(vpr::ReturnStatus::Fail);
+      }
+
+      return status;
    }
 
    //----------------------------------------------------------
    //: Acquire a read semaphore.
    //----------------------------------------------------------
-   int acquireRead() const
+   vpr::ReturnStatus acquireRead() const
    {
       return this->acquire();     // No special "read" semaphore -- For now
    }
@@ -137,7 +143,7 @@ public:
    //----------------------------------------------------------
    //: Acquire a write semaphore.
    //----------------------------------------------------------
-   int acquireWrite() const
+   vpr::ReturnStatus acquireWrite() const
    {
       return this->acquire();     // No special "write" semaphore -- For now
    }
@@ -149,15 +155,22 @@ public:
    //! RETURNS: 1 - Acquired
    //! RETURNS: 0 - Not acquired
    //---------------------------------------------------------
-   int tryAcquire () const
+   vpr::ReturnStatus tryAcquire () const
    {
-      return uscpsema(sema);
+      if ( uscpsema(sema) == 1 )
+      {
+         return vpr::ReturnStatus();
+      }
+      else
+      {
+         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+      }
    }
 
    //----------------------------------------------------------
    //: Try to acquire a read semaphore.
    //----------------------------------------------------------
-   int tryAcquireRead () const
+   vpr::ReturnStatus tryAcquireRead () const
    {
       return this->tryAcquire();
    }
@@ -165,7 +178,7 @@ public:
    //----------------------------------------------------------
    //: Try to acquire a write semaphore.
    //----------------------------------------------------------
-   int tryAcquireWrite () const
+   vpr::ReturnStatus tryAcquireWrite () const
    {
       return this->tryAcquire();
    }
@@ -176,13 +189,17 @@ public:
    //! RETURNS:  0 - Succeed
    //! RETURNS: -1 - Error
    //---------------------------------------------------------
-   int release() const
+   vpr::ReturnStatus release() const
    {
-      int ret_val = usvsema(sema);
-      if(ret_val < 0)
-         std::cerr << "vpr::SemaphoreSGI::ERROR:" << std::endl;
+      vpr::ReturnStatus status;
 
-      return ret_val;
+      if( usvsema(sema) < 0 )
+      {
+         std::cerr << "vpr::SemaphoreSGI::ERROR:" << std::endl;
+         status.setCode(vpr::ReturnStatus::Fail);
+      }
+
+      return status;
    }
 
    //---------------------------------------------------------
@@ -194,9 +211,16 @@ public:
    //! NOTE: If processes are waiting on the semaphore,
    //+ the results are undefined.
    //---------------------------------------------------------
-   int reset(int val)
+   vpr::ReturnStatus reset(int val)
    {
-      return usinitsema(sema, val);
+      if ( usinitsema(sema, val) == 0 )
+      {
+         return vpr::ReturnStatus();
+      }
+      else
+      {
+         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+      }
    }
 
    //---------------------------------------------------------

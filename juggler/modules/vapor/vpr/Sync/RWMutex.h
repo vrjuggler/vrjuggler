@@ -75,19 +75,19 @@ public:
     /**
      * Locks the mutex.
      *
-     * @return 1 is returned if the mutex is acquired.<br>
-     *         -1 is returned upon error.
+     * @return vpr::ReturnStatus::Succeed is returned if the mutex is acquired.
+     *         vpr::ReturnStatus::Fail is returned upon error.
      */
-    int acquire()
+    vpr::ReturnStatus acquire()
     {
         return acquireWrite();
     }
 
     /// Acquires a read mutex.
-    int acquireRead(void);
+    vpr::ReturnStatus acquireRead(void);
 
     /// Acquires a write mutex.
-    int acquireWrite(void);
+    vpr::ReturnStatus acquireWrite(void);
 
     /**
      * Tries to acquire the mutex.
@@ -95,26 +95,28 @@ public:
      * Then decrement by 1 and return.
      * P operation.
      *
-     * @return 1 is returned if the mutex is acquired.<br>
-     *         0 is returned if the mutex is not acquired.
+     * @return vpr::ReturnStatus::Succeed is returned if the mutex is acquired.
+     *         vpr::ReturnStatus::Fail is returned if the mutex is not
+     *         acquired.
      */
-    int tryAcquire ()
+    vpr::ReturnStatus tryAcquire ()
     {
         return tryAcquireWrite();
     }
 
     /// Tries to acquire a read mutex.
-    int tryAcquireRead (void);
+    vpr::ReturnStatus tryAcquireRead (void);
 
     /// Tries to acquire a write mutex.
-    int tryAcquireWrite (void);
+    vpr::ReturnStatus tryAcquireWrite (void);
 
     /**
      * Releases the mutex.
      *
-     * @return 0 is returned on success; -1 on error.
+     * @return vpr::ReturnStatus::Succeed is returned on success;
+     *         vpr::ReturnStatus::Fail on error.
      */
-    int release(void);
+    vpr::ReturnStatus release(void);
 
     /**
      *Tests the current lock status.
@@ -155,7 +157,7 @@ protected:
 
 }; // End of vpr namespace
 
-#endif	/* ! VPR_USE_NSPR */
+#endif  /* ! VPR_USE_NSPR */
 
 
 #endif

@@ -45,6 +45,7 @@
 #include <vpr/vprConfig.h>
 //#include <vpr/Sync/Semaphore.h>
 //#include <vpr/Sync/Mutex.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr {
@@ -65,48 +66,48 @@ public:
    Guard(LOCK_TYPE &lock, int block = 1)
    : theLock(&lock)
    {
-      lockStatus = block ? acquire() : tryAcquire();
+      lockStatus = block ? acquire().success() : tryAcquire().success();
    }
 
    /// Releases the lock.
    ~Guard()
    {
-      if (lockStatus >= 0)
-      {   // != -1
+      if (lockStatus)
+      {
          theLock->release();
       }
    }
 
    /**
-    * @return 1 is returned if this guard is locked.<br>
-    *         0 is returned if this guard is not locked.
+    * @return true is returned if this guard is locked.
+    *         false is returned if this guard is not locked.
     */
-   int locked() {
-      return (lockStatus >= 0);  // != -1
+   const bool& locked() {
+      return lockStatus;
    }
 
    /// Acquires the lock.
-   int acquire()
+   vpr::ReturnStatus acquire()
    {
       return theLock->acquire();
    }
 
    /// Tries to acquire lock.
-   int tryAcquire()
+   vpr::ReturnStatus tryAcquire()
    {
       return theLock->tryAcquire();
    }
 
    /// Explicity releases the lock.
-   int release()
+   vpr::ReturnStatus release()
    {
       return theLock->release();
    }
 
 
 private:
-   LOCK_TYPE* theLock;	//! The lock that we are using
-   int   lockStatus;	//! Are we locked or not
+   LOCK_TYPE* theLock;    /**< The lock that we are using */
+   bool       lockStatus; /**< Are we locked or not */
 };
 
 }; // End of vpr namespace
