@@ -187,6 +187,7 @@ public class PerformanceModule extends DefaultCoreModule {
 	try {
 	    DocumentBuilder builder = factory.newDocumentBuilder();
 	    doc = builder.parse (instream);
+	    interpretXMLCommands (doc);
 	    //buildChunkDB (db, doc, iostatus);
 	}
 	catch (javax.xml.parsers.ParserConfigurationException e1) {
@@ -197,6 +198,60 @@ public class PerformanceModule extends DefaultCoreModule {
 	}
 	catch (IOException e3) {
 	    //iostatus.addFailure (e3);
+	}
+    }
+
+    void interpretXMLCommands (Node doc) {
+        String name = doc.getNodeName();
+        String value = doc.getNodeValue();
+        NamedNodeMap attributes;
+        int attrcount;
+        int i;
+        boolean retval = true;
+        Node child;
+
+        switch (doc.getNodeType()) {
+        case Node.DOCUMENT_NODE:
+        case Node.DOCUMENT_FRAGMENT_NODE:
+            child = doc.getFirstChild();
+            while (child != null) {
+                interpretXMLCommands (child);
+                child = child.getNextSibling();
+            }
+            break;
+        case Node.ELEMENT_NODE:
+            if (name.equalsIgnoreCase ("protocol")) {
+		// should check to verify it's jccl_protocol...
+		child = doc.getFirstChild();
+		while (child != null) {
+		    interpretXMLCommands (child);
+		    child = child.getNextSibling();
+		}
+	    }
+	    else if (name.equals ("labeledbuffer")) {
+                attributes = doc.getAttributes();
+                attrcount = attributes.getLength();
+		String buffername;
+                for (i = 0; i < attrcount; i++) {
+                    child = attributes.item(i);
+                    if (child.getNodeName().equals ("name")) {
+			buffername = child.getNodeValue();
+		    }
+                }
+//  		LabeledPerfDataCollector c = getCollector (name);
+//  		if (c == null)
+//  		    c = addCollector (name, num);   
+//  		c.read (st);
+		
+	    }
+        case Node.COMMENT_NODE:
+        case Node.NOTATION_NODE:
+        case Node.PROCESSING_INSTRUCTION_NODE:
+        case Node.TEXT_NODE:
+            break;
+        default:
+	    System.out.println ("unexpected dom node...");
+            //iostatus.addWarning ("Unexpected DOM node type...");
 	}
     }
 
