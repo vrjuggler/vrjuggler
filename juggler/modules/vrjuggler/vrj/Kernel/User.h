@@ -84,7 +84,7 @@ public:
    Matrix* getHeadPos()
    { return mHead->getData(); }
 
-   TimeStaMp* getHeadUpdateTime()
+   TimeStamp* getHeadUpdateTime()
    { return mHead->getUpdateTime(); }
 
    float getInterocularDistance()

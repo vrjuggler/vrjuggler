@@ -67,7 +67,7 @@ public:
       return &mPos;
    }
 
-   TimeStaMp* getPosUpdateTime (int devNum = 0) {
+   TimeStamp* getPosUpdateTime (int devNum = 0) {
       return &mUpdateTime;
     }
 
@@ -86,7 +86,7 @@ private:
    PosInterface    mBaseFrame;                   //: The base frame of reference
    PosInterface    mRelativePos;                 //: the relative position
 
-   TimeStaMp   mUpdateTime;                  //: Time of last update
+   TimeStamp   mUpdateTime;                  //: Time of last update
 };
 
 };

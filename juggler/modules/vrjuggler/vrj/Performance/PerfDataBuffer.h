@@ -77,7 +77,7 @@ class VJ_CLASS_API PerfDataBuffer: public TimedUpdate {
         int              phase;
         
         //: time stamp associated with this point.
-        TimeStaMp      ts;
+        TimeStamp      ts;
         
         buf_entry() {
             phase = 0;
@@ -165,7 +165,7 @@ public:
     //+       right after.
     void set(int _phase);
 
-    void set (int _phase, TimeStaMp& _value);
+    void set (int _phase, TimeStamp& _value);
 
     // for below: need a version w/ max # buffers to write
 

@@ -108,7 +108,7 @@ typedef struct
 
     float  Position[3];
     float  Orientation[4];
-    float  TimeStaMp;
+    float  TimeStamp;
 
     int    ButtonState[MAX_NUM_BUTTONS];
     short  AnalogData[MAX_ANALOG_CHANNELS]; 

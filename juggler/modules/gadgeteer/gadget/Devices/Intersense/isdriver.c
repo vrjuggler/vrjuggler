@@ -489,7 +489,7 @@ BOOL ISD_openTracker(InterSenseTrackerType *tracker,
         tracker->station[i].Orientation[2] = 0.0f; 
         tracker->station[i].Orientation[3] = 0.0f; 
 
-        tracker->station[i].TimeStaMp = 0.0f;
+        tracker->station[i].TimeStamp = 0.0f;
 
         memset((void *)tracker->station[i].ButtonState, 0, sizeof(tracker->station[i].ButtonState));
         memset((void *)tracker->station[i].AnalogData, 0, sizeof(tracker->station[i].AnalogData));
@@ -520,7 +520,7 @@ BOOL ISD_openTracker(InterSenseTrackerType *tracker,
         Station.GetAnalogData = FALSE;
 
         /* no time stamp unless requested by application */
-        Station.TimeStaMped = FALSE;
+        Station.TimeStamped = FALSE;
         Station.AngleFormat = ISD_EULER;
 
         ISD_setOutputRecordList(tracker, &Station, i);  
@@ -714,7 +714,7 @@ BOOL ISD_getStationState(InterSenseTrackerType *tracker,
     {
         Station->GetButtons = FALSE;
         Station->GetAnalogData = FALSE;
-        Station->TimeStaMped = FALSE;
+        Station->TimeStamped = FALSE;
         Station->AngleFormat = ISD_EULER;
 
         /* look for the time stamp item in the output record list */
@@ -722,7 +722,7 @@ BOOL ISD_getStationState(InterSenseTrackerType *tracker,
         {
             if(tracker->station[stationNum-1].outputList[i] == 21)
             {
-                Station->TimeStaMped = TRUE;
+                Station->TimeStamped = TRUE;
             }
             if(tracker->station[stationNum-1].outputList[i] == 22)
             {
@@ -831,7 +831,7 @@ BOOL ISD_setOutputRecordList (InterSenseTrackerType *tracker,
                 break;
         }
 
-        if(Station->TimeStaMped) pos += sprintf(&command[pos], ",21");
+        if(Station->TimeStamped) pos += sprintf(&command[pos], ",21");
 
         if(tracker->state.hardwareVersion & IS900)
         {

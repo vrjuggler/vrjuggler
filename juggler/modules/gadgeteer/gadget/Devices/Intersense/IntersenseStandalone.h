@@ -69,7 +69,7 @@ struct isConfig {
     int Sensitivity;
     int Prediction;
     int AngleFormat;
-    bool TimeStaMped;
+    bool TimeStamped;
     bool GetButtons;
     bool GetAnalogData;
 };
@@ -137,8 +137,8 @@ public:
     int& rAngleFormat(int currentStation) { return mLocalConfigData[currentStation].AngleFormat; }
     int AngleFormat(int currentStation) const { return mLocalConfigData[currentStation].AngleFormat; }
 
-    bool& rTimeStaMped(int currentStation) { return mLocalConfigData[currentStation].TimeStaMped; }
-    bool TimeStaMped(int currentStation) const { return mLocalConfigData[currentStation].TimeStaMped; }
+    bool& rTimeStamped(int currentStation) { return mLocalConfigData[currentStation].TimeStamped; }
+    bool TimeStamped(int currentStation) const { return mLocalConfigData[currentStation].TimeStamped; }
 
     bool& rButtons(int currentStation) { return mLocalConfigData[currentStation].GetButtons; }
     bool Buttons(int currentStation) const { return mLocalConfigData[currentStation].GetButtons; }
@@ -161,7 +161,7 @@ public:
        mLocalConfigData[d].Sensitivity = mConfigData[d].Sensitivity;
        mLocalConfigData[d].Prediction = mConfigData[d].Prediction;
        mLocalConfigData[d].AngleFormat = mConfigData[d].AngleFormat;
-       mLocalConfigData[d].TimeStaMped = mConfigData[d].TimeStaMped;
+       mLocalConfigData[d].TimeStamped = mConfigData[d].TimeStamped;
        mLocalConfigData[d].GetButtons = mConfigData[d].GetButtons;
        mLocalConfigData[d].GetAnalogData = mConfigData[d].GetAnalogData;
        mLocalConfigData[d].State = mConfigData[d].State;
@@ -177,7 +177,7 @@ public:
        mConfigData[d].Sensitivity = mLocalConfigData[d].Sensitivity;
        mConfigData[d].Prediction = mLocalConfigData[d].Prediction;
        mConfigData[d].AngleFormat = mLocalConfigData[d].AngleFormat;
-       mConfigData[d].TimeStaMped = mLocalConfigData[d].TimeStaMped;
+       mConfigData[d].TimeStamped = mLocalConfigData[d].TimeStamped;
        mConfigData[d].GetButtons = mLocalConfigData[d].GetButtons;
        mConfigData[d].GetAnalogData = mLocalConfigData[d].GetAnalogData;
 

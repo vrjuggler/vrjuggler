@@ -138,7 +138,7 @@ void PerfDataBuffer::set(int _phase) {
 }
 
 
-void PerfDataBuffer::set (int _phase, TimeStaMp& _value) {
+void PerfDataBuffer::set (int _phase, TimeStamp& _value) {
     int tw;
 
     if (!active)
