@@ -273,8 +273,9 @@ void aMotionStar::runContinuous() {
  
     printf("  | STREAM ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
 
-
+  
       /* receive the header */
+/*   
    int           headerBytesReceived;
    char          *lpBuffer;
 
@@ -289,12 +290,12 @@ void aMotionStar::runContinuous() {
                                lpSize);
       /*  if (bytesReceived < 0){
           perror("recv1"), exit(1);
-          } */
+          } 
  
       headerBytesReceived = headerBytesReceived + bytesReceived;
       lpBuffer = (char *)lpBuffer + bytesReceived;
     }
- 
+*/ 
 } // end aMotionStar::runContinuous()
 
 
@@ -334,8 +335,29 @@ void aMotionStar::sample() {
 */
     int           totalBytesNeeded, totalBytesReceived;
     char          *lpBuffer;
+    int           headerBytesReceived;
  
+       /* receive the header */
  
+    if (runMode == 0) {
+   
+      headerBytesReceived = 0;
+      lpBuffer = (char*)lpResponse;
+      while(headerBytesReceived != 16) {
+        bytesReceived = recvfrom(s,
+                               (void*)lpBuffer,
+                               16,
+                               0,
+                               (struct sockaddr *)&server,
+                               lpSize);
+      /*  if (bytesReceived < 0){
+          perror("recv1"), exit(1);
+          } */
+ 
+        headerBytesReceived = headerBytesReceived + bytesReceived;
+        lpBuffer = (char *)lpBuffer + bytesReceived;
+      }
+    }
     sequenceNumber = response.header.sequence;
  
     //        printf("\n#%6d bytes received:%3d",n ,bytesReceived);
@@ -375,6 +397,7 @@ void aMotionStar::sample() {
     totalBytesReceived = 0;
     totalBytesNeeded = response.header.number_bytes;
     lpBuffer = (char*)lpResponse + 16;
+    
     if (runMode == 0) {
       while(totalBytesReceived != totalBytesNeeded){
         bytesReceived = recvfrom(s,
