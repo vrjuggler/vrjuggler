@@ -33,4 +33,5 @@ compressed xml files - does JExplorer support it?
 
 Allen:
 ------------
+Add tutorials.
 Add vj Arch book
