@@ -11,6 +11,7 @@
 #include <IO/Socket/Socket.h>
 #include <IO/Socket/SocketStream.h>
 #include <IO/Socket/InetAddr.h>
+#include <include/System.h>
 
 #include <Threads/Thread.h>
 #include <Threads/ThreadFunctor.h>
@@ -48,14 +49,131 @@ public:
    {
    }
 
-   virtual void setUp()
+   /*
    {
+      int amount_read = 86;
+      int length = 256;
+      char buffer[length];
+      while (amount_read > 0)
+      {
+         amount_read = connector_socket.read( buffer, length );
+      }
+      
+   }
+   */
+         
+   // =========================================================================
+   // open-close-open test
+   // =========================================================================
+   void testOpenCloseOpen_connector( void* data )
+   {
+      int num_of_times_to_test = 100;
+      vpr::Uint16 port = 6970;
+      const int backlog = 5;
+      bool result = 0;
+      
+      // make a new socket that will connect to port "port"
+      vpr::SocketStream	connector_socket( vpr::InetAddr::AnyAddr, vpr::InetAddr(port) );
+      
+      // run the test many times.
+      for (int x = 0; x < num_of_times_to_test; ++x)
+      {
+         // open socket
+         result = connector_socket.open();
+         assert( result != false && "Socket::open() failed" );
+
+         // connect to the acceptor
+         result = connector_socket.connect();
+         assert( result != false && "Socket::connect() failed" );
+
+         // close the socket
+         result = connector_socket.close();
+         assert( result != false && "Socket::close() failed" );
+
+         // let the acceptor get a chance to start before connecting (sleep a while)
+         vpr::System::usleep( 50000 );
+      }
+   }
+   void testOpenCloseOpen_acceptor( void* data )
+   {
+      int num_of_times_to_test = 10;
+      vpr::Uint16 port = 6970;
+      const int backlog = 5;
+      bool result = 0;
+      
+      // make a new socket listening on port "port"
+      vpr::SocketStream	acceptor_socket( vpr::InetAddr(port), vpr::InetAddr::AnyAddr );
+      
+      // start/stop the acceptor many times...
+      for (int x = 0; x < num_of_times_to_test; ++x)
+      {
+         std::cout << "[acceptor open]" << std::flush;
+
+         // open socket
+         result = acceptor_socket.open();
+         assert( result != false && "Socket::open() failed" );
+
+         result = acceptor_socket.bind();
+         assert( result != false && "Socket::bind() failed" );
+
+         // set the socket to listen
+         result = acceptor_socket.listen( backlog );
+         assert( result != false && "Socket::listen() failed" );
+
+         std::cout << "[accepting "<<num_of_times_to_test<<" connections]" << std::flush;
+
+         // start/stop the child socket many times...
+         for (int xx = 0; xx < num_of_times_to_test; ++xx)
+         {
+            //std::cout << x* num_of_times_to_test + xx << "+\n" << std::flush;
+            std::cout << "+" << std::flush;
+
+            // wait for a connect (blocking)
+            // when someone connects to the server, and we accept the connection, 
+            // spawn a child socket to deal with the connection
+            vpr::SocketStream* child_socket = acceptor_socket.accept();
+            assert( child_socket != NULL && "Socket::accept() failed" );
+
+            // close the child socket
+            result = child_socket->close();
+            assert( result != false && "Socket::close() failed" );
+
+            // clean up any memory i've made...
+            delete child_socket;
+            child_socket = NULL;
+         }
+
+         // close the socket
+         result = acceptor_socket.close();
+         assert( result != false && "Socket::close() failed" );
+
+         std::cout << "[acceptor close]\n" << std::flush;
+      }
+   }
+   void testOpenCloseOpen()
+   {
+      // spawn an acceptor thread
+      vpr::ThreadMemberFunctor<SocketTest> acceptor_functor( this, &SocketTest::testOpenCloseOpen_acceptor );
+      vpr::Thread acceptor_thread( &acceptor_functor );
+      
+      // let the acceptor get a chance to start before connecting (sleep a while)
+      vpr::System::msleep( 500 );
+      
+      // spawn a connector thread
+      vpr::ThreadMemberFunctor<SocketTest> connector_functor( this, &SocketTest::testOpenCloseOpen_connector );
+      vpr::Thread connector_thread( &connector_functor );
+      
+      // wait for both threads to terminate, then continue
+      vpr::System::sleep( 7 );
+
+      std::cout << " done\n" << std::flush;
+
+      //connector_thread.join();
+      //acceptor_thread.join();
    }
 
-   virtual void tearDown()
-   {
-   }
-
+   // =========================================================================
+   
    void openCloseTest()
    {  
       bool openSuccess=false;
@@ -208,6 +326,7 @@ public:
    {
       TestSuite *test_suite = new TestSuite ("SocketTest");
       test_suite->addTest( new TestCaller<SocketTest>("Open/CloseTest", &SocketTest::openCloseTest));
+      test_suite->addTest( new TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
       test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
       return test_suite;
    }
