@@ -657,6 +657,14 @@ void VNCDesktop::draw()
          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
          glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
          vprASSERT(glIsTexture(mTexObjId) && "Invalid texture");
+
+         // Initial texture load
+         // XXX: I don't think GL_RGBA should be hard-coded since VNC may not
+         // actually use 8 bytes per pixel.
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) mTexWidth,
+               (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+               (GLubyte*) mTextureData);
+
       }
       else
       {
@@ -714,18 +722,49 @@ void VNCDesktop::draw()
 */
 void VNCDesktop::updateDesktopTexture()
 {
-   // Compute texture stats
-   const double one_mb(1024.0*1024.0);
-   double tex_size_mb = (mTexWidth*mTexHeight*8.0*1.0)/one_mb;
-   mTextureUploadRate.addSample(tex_size_mb);
-   mTextureUpdateCount.addSample(tex_size_mb);
+#if 1
+   const int bytes_per_pixel(mVncIf.getPixelSize() / 8);
+   Rectangle rect;   // The rectangle for the update
 
+   // While there are rectangle updates to process
+   // - Get the source buffer pointer and compute any other params
+   // - Set the correct pixel transfer params
+   // - Load the texture
+   // - Add to texture stats
+   while( mVncIf.getFramebufferUpdate(rect))
+   {
+      const char* src = mVncIf.getFramebuffer() +
+                        (((rect.y * mVncWidth) + rect.x)*bytes_per_pixel);    // Start of source buffer
+
+      // Set the OpenGL row length.  This is used to skip data after each line
+      // of pixels is read.
+      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+      glPixelStorei(GL_UNPACK_ROW_LENGTH, mVncWidth);
+
+      // Subload the texture
+      glTexSubImage2D(GL_TEXTURE_2D, 0,
+                      (GLint)rect.x, (GLint)rect.y,
+                      (GLsizei)rect.width, (GLsizei)rect.height,
+                      GL_RGBA, GL_UNSIGNED_BYTE, src);
+
+      glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);      // Reset to default since this is a "strange" param
+
+      // Add stats
+      // Compute texture stats
+      const double one_mb(1024.0*1024.0);
+      double tex_size_mb = (rect.width*rect.height*8.0*1.0)/one_mb;
+      mTextureUploadRate.addSample(tex_size_mb);
+      mTextureUpdateCount.addSample(tex_size_mb);
+   }
+
+#else
+   // Initial texture load
    // XXX: I don't think GL_RGBA should be hard-coded since VNC may not
    // actually use 8 bytes per pixel.
-   //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) mTexWidth,
-               (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-               (GLubyte*) mTextureData);
+         (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+         (GLubyte*) mTextureData);
+#endif
 
    GLenum err = glGetError();
 
