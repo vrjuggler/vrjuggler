@@ -37,6 +37,7 @@
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadManager.h>
+#include <vpr/Util/Assert.h>
 #include <vpr/md/SPROC/Thread/ThreadSGI.h>
 
 
@@ -139,11 +140,30 @@ void ThreadSGI::startThread(void* null_param)
 int
 ThreadSGI::join (void** arg)
 {
-    int status;
-    pid_t val = waitpid(mThreadPID, &status, 0);
-//    ((int**) **arg) = status;
+    int status, retval;
+    pid_t pid;
 
-    return val;
+    do {
+        pid = ::waitpid(mThreadPID, &status, 0);
+    } while ( WIFSTOPPED(status) != 0 );
+
+    if ( pid > -1 ) {
+        vprASSERT(pid == mThreadPID);
+
+        if ( WIFEXITED(status) != 0 && arg != NULL ) {
+            **((int**) arg) = WEXITSTATUS(status);
+        }
+        else if ( WIFSIGNALED(status) != 0 && arg != NULL ) {
+            **((int**) arg) = WTERMSIG(status);
+        }
+
+        retval = 0;
+    }
+    else {
+        retval = -1;
+    }
+
+    return retval;
 }
 
 }; // End of vpr namespace
