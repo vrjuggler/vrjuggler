@@ -429,9 +429,6 @@ case $target_os in
         CFLAGS="-nologo"
         CXXFLAGS="-nologo"
         DBG_FLAGS='-Od -GZ'
-        LIB_PREFIX=''
-        STATICLIB_EXT='lib'
-        SHAREDLIB_EXT='dll'
 
         dnl # Use optimization flags based on the type of CPU.
         case $target_cpu in
@@ -448,6 +445,9 @@ case $target_os in
 
         LD='cl'
         LDOPTS="$LDOPTS -nologo"
+        LIB_PREFIX=''
+        STATICLIB_EXT='lib'
+        SHAREDLIB_EXT='dll'
 
         AC_DEFINE(VJ_OS_Win32,)
         ABI_LIST='WIN32'
