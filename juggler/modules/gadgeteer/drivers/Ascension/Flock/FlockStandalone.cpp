@@ -30,25 +30,26 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <iostream>        // for std::cout
-#include <fstream>         // for std::ifstream
+#include <iostream>        /* for std::cout */
+#include <fstream>         /* for std::ifstream */
 #include <string.h>
-
-#include <vpr/vpr.h>
-#include <vpr/Util/Assert.h> /* for vprASSERT */
-#include <gadget/Util/Debug.h>
-#include <vpr/System.h>
+#include <iterator>
+#include <cstddef>
 
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
-#include <iterator>
-
-#include <drivers/Ascension/Flock/FlockStandalone.h>
 
 #include <gmtl/Generate.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Quat.h>
 #include <gmtl/MatrixOps.h>
+
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <vpr/Util/Assert.h> /* for vprASSERT */
+#include <gadget/Util/Debug.h>
+
+#include <drivers/Ascension/Flock/FlockStandalone.h>
 
 namespace Flock
 {
