@@ -1238,6 +1238,7 @@ BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus()
       }
 
       m_birds.resize(flock_number, NULL);
+      mSampleData.resize(flock_number);
 
       // If this is the master chassis, get the extra system information
       // about all of the devices connected to the chassis.  This will tell
