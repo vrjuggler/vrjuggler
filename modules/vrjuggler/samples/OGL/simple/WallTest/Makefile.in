@@ -31,28 +31,23 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/samples/OGL/simple
-#
-# Generated for use on @PLATFORM@
+# Makefile.in for vrjuggler/samples/OGL/simple/WallTest
+# This requires GNU make.
 # -----------------------------------------------------------------------------
 
-# -----------------------------------------------------------------------------
-# Build targets.
-# -----------------------------------------------------------------------------
-default: all
+all: WallTest@EXEEXT@
 
-all: ConfigApp MPApp SimpleApp contextApp simpleInput WallTest
+APP_NAME=	WallTest@EXEEXT@
 
-ConfigApp MPApp SimpleApp contextApp simpleInput WallTest::
-	cd $@ && $(MAKE) all
+# Basic options.
+srcdir=		@srcdir@
+SRCS=		WallTest.cpp main.cpp
+
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 
 # -----------------------------------------------------------------------------
-# Clean-up.
+# Application build targets.
 # -----------------------------------------------------------------------------
-clean:	
-	-cd ConfigApp && $(MAKE) clean
-	-cd MPApp && $(MAKE) clean
-	-cd SimpleApp && $(MAKE) clean
-	-cd contextApp && $(MAKE) clean
-	-cd simpleInput && $(MAKE) clean
-	-cd WallTest && $(MAKE) clean
+WallTest@EXEEXT@: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
