@@ -8,6 +8,7 @@
 #include <Config/vjChunkFactory.h>
 #include <Config/vjPropertyDesc.h>
 #include <Config/vjEnumEntry.h>
+#include <Kernel/vjDebug.h>
 
 vjProperty::vjProperty (vjPropertyDesc *pd):value() {
     int j;
@@ -78,8 +79,6 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
     int i;
 
     description = p.description;
-    //    name = description->token;
-    //num = p.num;
     type = p.type;
     units = p.units;
 
@@ -92,6 +91,16 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
     return *this;
 }
 
+bool vjProperty::operator== (const vjProperty& p) {
+    if (description != p.description)
+	return false;
+    if (value.size() != p.value.size())
+	return false;
+    for (int i = 0; i < value.size(); i++)
+	if (*(value[i]) != *(p.value[i]))
+	    return false;
+    return true;
+}
 
 
 bool vjProperty::applyUnits (CfgUnit u) {
@@ -226,6 +235,7 @@ bool vjProperty::setValue (const std::string& val, int ind) {
 
 bool vjProperty::setValue (vjConfigChunk* val, int ind) {
     if (!preSet(ind)) {
+	vjDEBUG(vjDBG_ALL, 0) << "Preset failed\n" << vjDEBUG_FLUSH;
 	return false;
     }
     *(value[ind]) = val;

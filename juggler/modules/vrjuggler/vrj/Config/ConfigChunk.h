@@ -61,6 +61,18 @@ public:
 
 
 
+    //: tests for equality of two vjConfigChunks
+    bool operator== (const vjConfigChunk& c);
+    inline bool operator != (const vjConfigChunk& c) {
+	return !(*this == c);
+    }
+
+
+    //: Compares two vjConfigChunks based on their instance names
+    bool operator< (vjConfigChunk& c);
+
+
+
     //: writes self to out
     //!POST: self is written to out.  Format is as defined
     //+      in the ConfigFileFormats document.
@@ -171,9 +183,9 @@ public:
     std::vector<std::string> getDependencies();
 
 private:
-  vjProperty *getPropertyPtr (const std::string& name);
+  vjProperty *getPropertyPtrFromName (const std::string& name);
 
-  vjProperty *getPropertyFromToken (const std::string& token);
+  vjProperty *getPropertyPtrFromToken (const std::string& token);
 
   /** Tokenizer for vjConfigChunk read.
    *  Fills in the Token object passed to it with the next token in _in_.
