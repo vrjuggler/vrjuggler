@@ -31,14 +31,20 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <jccl/jcclConfig.h>
+
 #include <fstream>
 #include <ctype.h>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/exception.hpp>
+
 #include <vpr/System.h>
 #include <vpr/Util/FileUtils.h>
 #include <jccl/Util/Debug.h>
 #include <jccl/Config/ConfigTokens.h>
 #include <jccl/Config/ParseUtil.h>
 
+namespace fs     = boost::filesystem;
 namespace tokens = jccl::types_tokens;
 
 namespace jccl
@@ -46,61 +52,46 @@ namespace jccl
 
 ParseUtil::SearchPathData ParseUtil::mSearchInfo;
 
-#ifdef VPR_OS_Win32
-static const std::string sPathSep("\\");
-#else
-static const std::string sPathSep("/");
-#endif
-
-/** Is n an absolute path name? */
-static bool isAbsolutePathName(const std::string& n)
-{
-#ifdef VPR_OS_Win32
-   return((n.length() > 0) && (n[0] == '\\'))
-      || ((n.length() > 2) && (n[1] == ':') && (n[2] == '\\'));
-#else
-   return(n.length() > 0) && (n[0] == '/');
-#endif
-}
-
-std::string ParseUtil::expandFileName(const std::string& n,
+std::string ParseUtil::expandFileName(const std::string& name,
                                       const std::string& parentfile)
 {
-   std::string fname = vpr::replaceEnvVars(n);
+   std::string fname = vpr::replaceEnvVars(name);
 
-   if ( ! isAbsolutePathName(fname) )
+   fs::path fname_path(fname, fs::native);
+
+   // If the given file name does not exist, try searching for it.
+   if ( ! fs::exists(fname_path) )
    {
-      // If the parentfile string is empty, we'll use the search path to find
-      // the file.
-      if ( parentfile.length() == 0 )
+      // If the given file name is not absolute, look it up relative to
+      // parentfile or using the config file search path.
+      if ( ! fname_path.is_complete() )
       {
-         vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
-            << "jccl::ParseUtil::expandFileName(): Looking up '" << n
-            << "' using search path ...\n" << vprDEBUG_FLUSH;
-         findFileUsingPath(n, fname);
-      }
-      else
-      {
-         // It's a relative pathname, so we have to add in the path part
-         // of parentfile.
-         int lastslash(0);
-         for ( unsigned int i = 0; i < parentfile.length(); ++i )
+         // If the parentfile string is empty, we'll use the search path to
+         // find the file.
+         if ( parentfile.empty() )
          {
-            if ( parentfile[i] == sPathSep[0] )
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
+               << "[jccl::ParseUtil::expandFileName()] Looking up '" << fname
+               << "' using search path ...\n" << vprDEBUG_FLUSH;
+
+            std::string absolute_fname;
+            if ( findFileUsingPath(fname, absolute_fname).success() )
             {
-               lastslash = i;
+               fname_path = fs::path(absolute_fname, fs::native);
             }
          }
-
-         if ( lastslash )
+         // parentfile is not empty, so we assume that fname is relative to
+         // parentfile.
+         else
          {
-            std::string s(parentfile, 0, lastslash + 1);
-            fname = s + n;
+            fs::path parentfile_path(parentfile, fs::native);
+            fs::path parentdir = parentfile_path.branch_path();
+            fname_path = parentdir / fname_path;
          }
       }
    }
 
-   return fname;
+   return fname_path.native_file_string();
 }
 
 void ParseUtil::setCfgSearchPath(const std::string& path)
@@ -112,30 +103,30 @@ vpr::ReturnStatus ParseUtil::findFileUsingPath(const std::string& fileName,
                                                std::string& absoluteFile)
 {
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
-   std::ifstream in;
+   fs::path filename_path(fileName, fs::native);
 
    for ( std::vector<std::string>::iterator i = mSearchInfo.mPath.begin();
          i != mSearchInfo.mPath.end();
          ++i )
    {
-      // Clear the flags on in so that we can try opening a new file.
-      in.clear();
-
-      std::string full_path(*i + sPathSep + fileName);
+      fs::path full_path = fs::path(*i, fs::native) / filename_path;
 
       vprDEBUG(jcclDBG_CONFIG, vprDBG_HVERB_LVL)
-         << "jccl::ParseUtil::findFileUsingPath(): Attempting to open file '"
-         << full_path << "'\n" << vprDEBUG_FLUSH;
+         << "[jccl::ParseUtil::findFileUsingPath()] Attempting to open file '"
+         << full_path.native_file_string() << "'\n" << vprDEBUG_FLUSH;
 
-      // Try to open the file name constructed above.
-      in.open(full_path.c_str());
-
-      if ( in )
+      try
       {
-         absoluteFile = full_path;
-         status.setCode(vpr::ReturnStatus::Succeed);
-         in.close();
-         break;
+         if ( fs::exists(full_path) && ! fs::is_directory(full_path) )
+         {
+            status.setCode(vpr::ReturnStatus::Succeed);
+            absoluteFile = full_path.native_file_string();
+            break;
+         }
+      }
+      catch(fs::filesystem_error&)
+      {
+         /* Ignore the exception. */ ;
       }
    }
 
