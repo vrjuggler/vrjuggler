@@ -14,14 +14,14 @@
 
                 Important Note for Win32 Users
 
-   Getting the Source Code
+   Getting the Source Code and the Dependencies
 
-                How to get the Juggler Suite and external package
-                dependencies from CVS
+                How to Get the Juggler Suite and External Dependencies from
+                CVS
 
                 Using cvs-gather
 
-                Downloading binary dependencies
+                Downloading Binary Dependencies
 
    Compiling
 
@@ -29,7 +29,7 @@
 
                 Compiling the Juggler Suite of Tools
 
-                Compiling individual tools in the Juggler Suite
+                Compiling Individual Tools in the Juggler Suite
 
 Introduction
 
@@ -37,8 +37,8 @@ Introduction
    from the source code. We begin by explaining some issues related to
    specific operating systems. We then explain how to get the source code
    from our CVS repository. (Those users who downloaded a pre-packaged source
-   release can skip ahead to the section called "Using configure.pl"). We
-   conclude with instructions on how to build VR Juggler and its individual
+   release can skip ahead to Section , "Using configure.pl"). We conclude
+   with instructions on how to build VR Juggler and its individual
    components.
 
    Before reading further, we recommend that readers take a look at the Wiki
@@ -134,18 +134,18 @@ Introduction
    path so that it adds to the Cygwin environment and does not conflict with
    it.
 
-Getting the Source Code
+Getting the Source Code and the Dependencies
 
-   This section is for those users who want to get the Juggler Project source
-   code from the CVS repository on SourceForge. Those users who have
-   downloaded a pre-packaged version of the source can skip ahead to the
-   section called "Using configure.pl".
+   In this section, we explain how to get the Juggler Project source code and
+   the dependencies required to build Juggler. There are two ways to get the
+   source code: from a pre-packaged source release archive or from the CVS
+   repository on SourceForge. If you got the code from a pre-packaged source
+   archive, that code is a complete "snapshot" of the CVS repository at the
+   time of release. It contains all dependencies that would otherwise have
+   been acquired using CVS. It does not contain binary dependencies that must
+   be downloaded separately (such as NSPR, JDOM, JDK, etc.).
 
-   Getting the source code takes a few steps. You have to first download or
-   check out the Juggler Project source code and some external packages such
-   as GMTL, CppDOM, Boost, and possibly NSPR. The steps are listed in the
-   following subsections. The current list of required software packages is
-   as follows:
+   The current list of required software packages is as follows:
 
      o GMTL (http://ggt.sf.net/): A generic math library that makes use of
        C++ templates and STL paradigms.
@@ -154,11 +154,11 @@ Getting the Source Code
        easy-to-use XML parser written in C++.
 
      o Boost (http://www.boost.org/): A C++ library providing many powerful
-       tools.
+       utility classes and libraries.
 
-     o Doozer++ (http://www.sf.net/projects/doozer/): A foundation the
+     o Doozer++ (http://www.sf.net/projects/doozer/): A foundation for the
        development of complex build systems using Autoconf and GNU make. This
-       is the basis for the entire VR Juggler build system.
+       is the basis for the entire Juggler Project build system.
 
      o Doozer (http://www.sf.net/projects/doozer/): A foundation for rapid
        makefile development based on GNU make. This is needed for building
@@ -184,21 +184,27 @@ Getting the Source Code
      o omniORB (http://omniorb.sourceforge.net/): A C++ implementation of
        CORBA 2.3, required for the Tweek C++ API.
 
-   The following describes how to get all of the above except JDK, JDOM,
-   OpenORB, omniORB, and NSPR. These must be downloaded separately.
+   In the following subsections, we describe how to get all of the above
+   except JDK, JDOM, OpenORB, omniORB, and NSPR. These must be downloaded
+   separately from the sites listed above.
 
-  How to get the Juggler Suite and external package dependencies from CVS
+   This remainder of this section is only for those users who want to get the
+   Juggler Project source code from the CVS repository on SourceForge. Those
+   users who have downloaded a pre-packaged version of the source should skip
+   ahead to Section , "Using configure.pl".
+
+  How to Get the Juggler Suite and External Dependencies from CVS
 
    You can optionally get the Juggler Project as a source code tarball from
    the website (http://www.vrjuggler.org/) or you can follow these steps to
    get the code from our CVS repository.
 
-   1. Check out the 'juggler' module using CVS.
+    1. Check out the 'juggler' module using CVS.
 
  cvs -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login
  cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler co juggler
 
-   2. Get external packages that Juggler depends on. Typically you will run
+    2. Get external packages that Juggler depends on. Typically you will run
        cvs-gather.pl, found in the top-level juggler directory. For most
        users, the follow command will do the job:
 
@@ -213,9 +219,9 @@ Getting the Source Code
        You can use the cvs-gather tool, or you can read the file Gatherrc and
        get the packages manually. If you choose not to use cvs-gather, you
        must be familiar with CVS and with the use of CVS tags to check out
-       code. For more details about cvs-gather, see the section called "Using
+       code. For more details about cvs-gather, see Section , "Using
        cvs-gather". If you choose to follow this step as shown above, you may
-       skip ahead to the section called "Compiling".
+       skip ahead to Section , "Compiling".
 
   Using cvs-gather
 
@@ -227,7 +233,7 @@ Getting the Source Code
  ./cvs-gather.pl --help
  ./cvs-gather.pl --manual
 
-    Standard use of cvs-gather
+    Standard Use of cvs-gather
 
    In most cases, cvs-gather can be used as follows:
 
@@ -239,7 +245,7 @@ Getting the Source Code
 
  ./cvs-gather.pl --verbose
 
-    Advanced use of cvs-gather
+    Advanced Use of cvs-gather
 
    Use of cvs-gather is not required. You can limit what packages are
    downloaded. You can even skip cvs-gather altogether if you already have
@@ -265,11 +271,11 @@ Getting the Source Code
    and then checks each one out locally for use in building the Juggler
    Project. There are three possible default names for a "gather rc" file:
 
-   1. Gatherrc (in the working directory)
+    1. Gatherrc (in the working directory)
 
-   2. .gatherrc (in the working directory)
+    2. .gatherrc (in the working directory)
 
-   3. $HOME/.gatherrc
+    3. $HOME/.gatherrc
 
    cvs-gather searches for these three files by default in the order shown
    above. Alternatively, a user-defined file (deps.gatherrc, for example) can
@@ -298,7 +304,7 @@ Getting the Source Code
 
    If all goes well, you'll get everything you need to compile.
 
-  Downloading binary dependencies
+  Downloading Binary Dependencies
 
    In addition to source the dependencies acquired through CVS, there are
    some third-party dependencies that must be installed separately. As of
@@ -364,8 +370,8 @@ Getting the Source Code
    that contain the actual binaries (except when installed on FreeBSD via the
    Ports Collection). Because of this, several extra options must be
    specified in order to tell the Tweek configure script where to find
-   everything. Please refer to the section called "Tweek (individual)" for
-   more details on this.
+   everything. Please refer to Section , "Tweek (Individual)" for more
+   details on this.
 
 Compiling
 
@@ -399,7 +405,7 @@ Compiling
    source tree. The same holds for the individual autogen.sh scripts in the
    various modules, should you need to run one individually.
 
-      Win32 issues
+      Win32 Issues
 
    The VR Juggler build system is "unified" in that the same build code runs
    on UNIX-based systems as on Windows. However, the build system is very
@@ -470,7 +476,7 @@ Compiling
    configure.pl can run in a different "build" directory or in the directory
    where it resides. Here is how we (the Juggler Team) have been using it:
 
-   1. Make a directory for compiling. There are many good reasons to do this
+    1. Make a directory for compiling. There are many good reasons to do this
        away from the main source tree (though they will not be listed here).
 
  mkdir build.linux.posix
@@ -479,11 +485,11 @@ Compiling
        system and threading subsystem. Other examples could be
        build.irix.sproc, build.solaris.nspr, etc.
 
-   2. Enter the new build directory.
+    2. Enter the new build directory.
 
  cd build.linux.posix
 
-   3. Configure all the modules making up VR Juggler. This is when you must
+    3. Configure all the modules making up VR Juggler. This is when you must
        tell the module configure scripts where all the package dependencies
        are found. For this description, we will use the term <JDOM_PATH> to
        refer to the JDOM installation. Assume that this is an absolute path
@@ -500,7 +506,7 @@ Compiling
    sound in VR Juggler applications. If neither of those packages is found,
    Sonix will "stub out" its sound APIs. This means that Sonix and the VR
    Juggler Sound Manager can still be used in applications, but no audio will
-   be heard at run time. See the section called "Sonix (individual)" for more
+   be heard at run time. See Section , "Sonix (Individual)" for more
    information about how to configure Sonix to use OpenAL or AudioWorks.
 
    For example uses of configure.pl, take a look at the Wiki page relating to
@@ -510,15 +516,15 @@ Compiling
    of the Juggler team configure VR Juggler. It also has information on more
    advanced uses of configure.pl that are beyond the scope of this document.
 
-      Using locally installed software
+      Using Locally Installed Software
 
-   As noted in the section called "Getting the Source Code", VR Juggler
-   depends on several external software packages. The cvs-gather tool
+   As noted in Section , "Getting the Source Code and the Dependencies", VR
+   Juggler depends on several external software packages. The cvs-gather tool
    collects the source code for those packages into the directory
    juggler/external, but some users may already have one or more of these
    installed locally. For those users, they have the option of referring to
    the local installation(s) and limiting the work done by cvs-gather (see
-   the section called "Advanced use of cvs-gather" for more details).
+   Section , "Advanced Use of cvs-gather" for more details).
 
    As an example, consider the case where the Boost C++ library is installed
    in /usr/local with the headers in /usr/local/include. To use this instead
@@ -541,43 +547,40 @@ Compiling
    Once the configuration process is complete, the code can be compiled.
    Remember that we require the use of GNU make 3.78 or newer.
 
-   1. Compile the source tree using GNU make.
+    1. Compile the source tree using GNU make.
 
  gmake build
 
-   2. Once this completes, you will have a full build of VR Juggler. For
+    2. Once this completes, you will have a full build of VR Juggler. For
        those who are not interested in developing VR Juggler or its component
        modules, it is recommended that you install the software and use the
        installed version for application development. Do this as follows:
 
  gmake install
 
-  Compiling individual tools in the Juggler Suite
+  Compiling Individual Tools in the Juggler Suite
 
    Sometimes you do not want to build everything in the Juggler Suite. Here
    are steps for configuring/building each package individually.
 
-    VPR (individual)
+    VPR (Individual)
 
    VPR can be configured a number of ways. Except when building on Win32, no
    external packages are required. For Win32, NSPR (www.mozilla.org) is
    required. To build VPR, do the following from the top-level juggler
    directory:
 
-   1. mkdir build.vpr
+ mkdir build.vpr
  cd build.vpr
-
-   2. ../configure.pl --module=VPR --prefix=$HOME/vpr-inst
-
-   3. gmake debug install-debug
-
-   4. setenv VPR_BASE_DIR $HOME/vpr-inst
+ ../configure.pl --module=VPR --prefix=$HOME/vpr-inst
+ gmake debug install-debug
+ setenv VPR_BASE_DIR $HOME/vpr-inst
 
    If you want to use NSPR, make sure a binary version is installed. In step
    2, add the arguments --enable-subsystem=NSPR and --with-nspr=<path to
    NSPR>. Once that is done, proceed with steps 3 and 4 as normal.
 
-    Sonix (individual)
+    Sonix (Individual)
 
    Sonix requires a third-party software package called GMTL (ggt.sf.net).
    Sonix wraps other audio subsystems such as OpenAL (www.openal.org) or
@@ -586,50 +589,44 @@ Compiling
    package installations, to the following from the top-level juggler
    directory:
 
-   1. mkdir build.sonix
+    1. mkdir build.sonix
  cd build.sonix
 
-   2. Choose one of the following depending on which subsystem (or both) you
+    2. Choose one of the following depending on which subsystem (or both) you
        want to enable in sonix...
 
  ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
  ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks
 
-   3. gmake debug install-debug
+    3. gmake debug install-debug
 
-   4. setenv SNX_BASE_DIR $HOME/sonix-inst
+    4. setenv SNX_BASE_DIR $HOME/sonix-inst
 
-    JCCL (individual)
+    JCCL (Individual)
 
    JCCL requires VPR, CppDOM (http://www.sf.net/projects/xml-cppdom/), and
    JDOM B7 or newer (http://www.jdom.org/). To build JCCL, do the following
    from the top-level juggler directory:
 
-   1. mkdir build.jccl
+ mkdir build.jccl
  cd build.jccl
+ ../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOMPATH>/lib/xerces.jar"
+ gmake debug install-debug
+ setenv JCCL_BASE_DIR $HOME/jccl-inst
 
-   2. ../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOMPATH>/lib/xerces.jar"
-
-   3. gmake debug install-debug
-
-   4. setenv JCCL_BASE_DIR $HOME/jccl-inst
-
-    Gadgeteer (individual)
+    Gadgeteer (Individual)
 
    Gadgeteer depends on JCCL and on VPR. It also needs the third-party math
    library GMTL (http://ggt.sf.net/). Assuming you have all the source code,
    do the following from the top-level juggler directory:
 
-   1. mkdir build.gadgeteer
+ mkdir build.gadgeteer
  cd build.gadgeteer
+ ../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst
+ gmake debug install-debug
+ setenv GADGET_BASE_DIR $HOME/gadgeteer-inst
 
-   2. ../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst --with-jdom="<JDOMPATH>/build/jdom.jar:<JDOMPATH>/lib/xerces.jar"
-
-   3. gmake debug install-debug
-
-   4. setenv GADGET_BASE_DIR $HOME/gadgeteer-inst
-
-    Tweek (individual)
+    Tweek (Individual)
 
    Tweek depends on VPR. It needs JDK 1.3.1, JDOM B7 or newer, and the
    third-party CORBA implementations omniORB 3.0.4 or newer (C++) and OpenORB
@@ -655,14 +652,11 @@ Compiling
    Assuming you have the external packages installed, do the following from
    the top-level juggler directory:
 
-   1. mkdir build.tweek
+ mkdir build.tweek
  cd build.tweek
-
-   2. ../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=<JDOMPATH>/jdom.jar:<JDOMPATH>/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=<OMNIORBPATH> --with-java-orb=OpenORB --with-java-orb-jar=<OPENORBPATH>/lib/openorb-1.2.0.jar
-
-   3. gmake debug install-debug
-
-   4. setenv TWEEK_BASE_DIR $HOME/tweek-inst
+ ../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=<JDOMPATH>/jdom.jar:<JDOMPATH>/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=<OMNIORBPATH> --with-java-orb=OpenORB --with-java-orb-jar=<OPENORBPATH>/lib/openorb-1.2.0.jar
+ gmake debug install-debug
+ setenv TWEEK_BASE_DIR $HOME/tweek-inst
 
    If JDK 1.4.0 is used, you do not need OpenORB (or any other third-party
    CORBA implementation for Java). In that case, pass --with-java-orb=JDK to
