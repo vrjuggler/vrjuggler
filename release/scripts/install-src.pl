@@ -140,7 +140,7 @@ sub recurseAction ($) {
     # List of installable file extensions.  These are checked with a
     # case-insensitive regular expression.
     my (@exts) = qw(.txt .c .h .cxx .cpp .pl .desc .dsc .mk .htm .html .gif
-                    .jpg .dsw .dsp);
+                    .jpg .dsw .dsp .java .jar);
 
     my $installed = 0;
 
