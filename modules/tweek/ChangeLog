@@ -1,5 +1,10 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-07-14 patrickh    org.vrjuggler.tweek.gui.MessagePanel is no longer a
+                       singleton.  Further, it now uses a custom document,
+                       org.vrjuggler.tweek.text.MessageDocument, an
+                       instance of which is held by the TweekCore singleton.
+                       NEW VERSION: 0.6.0
 2002-07-05 nonchocoboy Added support for programmtic focusing of PanelBeans in
                        BeanModelViewers. The --defaultbean command-line
                        argument has been added.
