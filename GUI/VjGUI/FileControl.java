@@ -315,7 +315,7 @@ public class FileControl {
       */
     fd.show();
     String name = fd.getFile();
-System.out.println ("attempting to load '" + name + "'");
+    //System.out.println ("attempting to load '" + name + "'");
     if ((name == null) || name.equals(""))
       return false;
     //return loadUserConfigChunkDB (homedir + "/.vjconfig/" + name);
