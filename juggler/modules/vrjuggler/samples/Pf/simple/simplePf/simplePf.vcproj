@@ -23,8 +23,9 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)/include/nspr&quot;;&quot;$(VJ_BASE_DIR)/include&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Include&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Include/Performer&quot;"
 				PreprocessorDefinitions="_DEBUG,_CONSOLE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Debug/simplePf.pch"
@@ -32,7 +33,7 @@
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
 				WarningLevel="3"
-				DebugInformationFormat="4"
+				DebugInformationFormat="1"
 				CompileAs="0"
 				ForcedIncludeFiles="vrj/vrjConfig.h"/>
 			<Tool
@@ -79,7 +80,7 @@
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)/include/nspr&quot;;&quot;$(VJ_BASE_DIR)/include&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Include&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Include/Performer&quot;"
 				PreprocessorDefinitions="_OPT,_CONSOLE"
 				StringPooling="TRUE"
-				RuntimeLibrary="4"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Release/simplePf.pch"
