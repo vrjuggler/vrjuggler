@@ -46,6 +46,7 @@ DIRPRFX=	vrj/
 SUBDIR=		Display	\
 		Draw	\
 		Kernel	\
+		Performance \
 		Sound	\
 		Test	\
 		Util

@@ -40,6 +40,7 @@
 #include <vrj/Kernel/App.h>
 #include <vrj/Kernel/User.h>
 #include <vrj/Kernel/Exceptions.h>
+#include <vrj/Performance/PerformanceMediator.h>
 #include <vrj/Sound/SoundManager.h>
 
 #include <vpr/vpr.h>
@@ -376,6 +377,9 @@ void Kernel::initConfig()
 
    mClusterManager = cluster::ClusterManager::instance();
 
+
+   mPerformanceMediator = new PerformanceMediator();
+   
    //??// processPending() // Should I do this here
 
    // hook dynamically-reconfigurable managers up to config manager
@@ -593,6 +597,7 @@ Kernel::Kernel()
    , mSoundManager(NULL)
    , mDisplayManager(NULL)
    , mClusterManager(NULL)
+   , mPerformanceMediator(NULL)
 {
    // Print out the Juggler version number when the kernel is created.
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)

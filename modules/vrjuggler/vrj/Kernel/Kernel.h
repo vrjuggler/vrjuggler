@@ -61,6 +61,7 @@ namespace vrj
 {
 
 class DisplayManager;
+class PerformanceMediator;
 class DrawManager;
 class SoundManager;
 class User;
@@ -267,6 +268,7 @@ protected:
    SoundManager*              mSoundManager;          /**< The Audio Manager we are currently using  */
    DisplayManager*            mDisplayManager;        /**< The Display Manager we are currently using */
    cluster::ClusterManager*   mClusterManager;        /**< The Cluster Manager for the system*/
+   PerformanceMediator*       mPerformanceMediator;
    //@}
 
    /** @name Multi-user information */

@@ -681,6 +681,7 @@ AC_CONFIG_FILES([
    vrj/Draw/OpenSG/Makefile
    vrj/Draw/Pf/Makefile
    vrj/Kernel/Makefile
+   vrj/Performance/Makefile
    vrj/Sound/Makefile
    vrj/Test/Makefile
    vrj/Util/Makefile
