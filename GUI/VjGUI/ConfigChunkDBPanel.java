@@ -27,7 +27,7 @@ public class ConfigChunkDBPanel extends MainWindowPanel
     Panel buttonspanel;
     String nullchoice;
     Label helplabel;
-
+Panel centerpanel;
 
 
     public ConfigChunkDBPanel (ClientGlobals c ) {
@@ -47,11 +47,13 @@ public class ConfigChunkDBPanel extends MainWindowPanel
 	     "North");
 
 	/*************** Center Panel ****************/
+centerpanel = new Panel();
+centerpanel.setLayout (new BorderLayout());
 	list = new List (10, false);
 	list.addActionListener(this);
 	list.addItemListener(this);
-	add(list,"Center");
-
+	centerpanel.add(list,"Center");
+add (centerpanel, "Center");
 	/*************** East Panel *****************/
 	buttonspanel = new BorderedPanel (20, 5, 10, 10, 0, 0);
 	bp_layout = new GridBagLayout();
@@ -97,11 +99,11 @@ public class ConfigChunkDBPanel extends MainWindowPanel
 	bp_layout.setConstraints(savebutton,bp_constraints);
 	buttonspanel.add(savebutton);
     
-	add(buttonspanel,"East");
+	add(buttonspanel,"South");
 
 	/***************** South Panel *******************/
 	helplabel = new Label ("  ");
-	add (helplabel, "South");
+	centerpanel.add (helplabel, "South");
 
 	/***************** Menus *********************/
 	filemenu = new Menu("File");
@@ -196,7 +198,7 @@ public class ConfigChunkDBPanel extends MainWindowPanel
 
 
     private void updateHelpLabel() {
-	remove (helplabel);
+	centerpanel.remove (helplabel);
 
 	String name = list.getSelectedItem();
 	if (name == null) 
@@ -211,7 +213,7 @@ public class ConfigChunkDBPanel extends MainWindowPanel
 	    ConfigChunk c = core.chunks.get(name);
 	    helplabel = new Label (c.desc.help);
 	}
-	add (helplabel,"South");
+	centerpanel.add (helplabel,"South");
 	validate();
     }
 

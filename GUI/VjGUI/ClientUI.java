@@ -129,6 +129,8 @@ public class ClientUI extends Frame
 
 	pack();
 	//	setVisible(true);
+	Dimension d = getSize();
+	setSize (d.width, (d.height > 500)?d.height:500);
 	show();
     }
 
