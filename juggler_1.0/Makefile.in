@@ -1155,7 +1155,6 @@ install-headers:
 	@${MAKE} RECTARGET="install" recursive
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${VJROOT_ABS}/vjConfig.h ${includedir}/vjConfig.h
-	@-rm -f ./vjConfig.tmp
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${topdir}/vjDefines.h ${includedir}
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
