@@ -88,6 +88,7 @@ bool vjPfDrawManager::configAdd(vjConfigChunk* chunk)
 
 bool vjPfDrawManager::configDisplaySystem(vjConfigChunk* chunk)
 {   
+   vjASSERT(chunk != NULL);
    vjASSERT((std::string)chunk->getType() == std::string("displaySystem"));
    
    // ---- SETUP PipeStr's ---- //          
@@ -434,9 +435,12 @@ void vjPfDrawManager::initPerformerApp()
 {
    app->initScene();
    sceneRoot = new pfScene;
+   /*
    mSceneGroup = app->getScene();
    sceneRoot->addChild(mSceneGroup);      // Create the base scene without sim
-   mRootWithSim->addChild(mSceneGroup);   // Create base scene with sim
+   */
+   //**//mRootWithSim->addChild(mSceneGroup);   // Create base scene with sim
+   mRootWithSim = sceneRoot;
 }
 
 void vjPfDrawManager::initLoaders()
@@ -449,6 +453,7 @@ void vjPfDrawManager::initLoaders()
 
 void vjPfDrawManager::initSimulator()
 {
+   /*
    pfNode* head_node(NULL);
    pfNode* wand_node(NULL);
    
@@ -473,18 +478,29 @@ void vjPfDrawManager::initSimulator()
    mSimTree->addChild(mHeadDCS);
    mSimTree->addChild(mWandDCS);
    if(NULL != head_node)
+   {
       mHeadDCS->addChild(head_node);
+   }
    if(NULL != wand_node)
+   {
       mWandDCS->addChild(wand_node);
-   mRootWithSim->addChild(mSimTree);      // Put sim stuff in the graph
+   }
+   
+   if((head_node != NULL) && (wand_node != NULL))
+   {
+      mRootWithSim->addChild(mSimTree);      // Put sim stuff in the graph
+   }
+   */
 }
 
 void vjPfDrawManager::updateSimulator(vjSimDisplay* sim)
 {
    pfMatrix head_mat = vjGetPfMatrix(sim->getHeadPos());
    pfMatrix wand_mat = vjGetPfMatrix(sim->getWandPos());
+   /*
    mHeadDCS->setMat(head_mat);
    mWandDCS->setMat(wand_mat);
+   */
 }
 
 void vjPfDrawManager::closeAPI()

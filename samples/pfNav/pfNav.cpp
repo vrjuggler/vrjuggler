@@ -85,8 +85,8 @@ public:
    {
       // Setup the state like we need
 
-      int cur_light_state = pfGetEnable(PFEN_LIGHTING);
-      vjDEBUG(vjDBG_ALL,0) << "initScene: Current lighting state: " << cur_light_state << endl << vjDEBUG_FLUSH;
+      //int cur_light_state = pfGetEnable(PFEN_LIGHTING);
+      //vjDEBUG(vjDBG_ALL,0) << "initScene: Current lighting state: " << cur_light_state << endl << vjDEBUG_FLUSH;
 
       // Load the scene
       vjDEBUG(vjDBG_ALL, 0) << "app::initScene\n" << vjDEBUG_FLUSH;
