@@ -110,17 +110,6 @@ public:
         return std::string("TrackdSensor");
     }
 
-    /** Get current data from the receiver.
-     *  @arg dev - the receiver number.  Clients of juggler should access
-     *             tracker receivers as [0-n].  For example, if you have
-     *             receivers 1, 2, and 4, with transmitter on 3, then
-     *             you can access them as devs 0, 1, and 2.
-     *  @return a pointer to the receiver's current PositionData, or NULL
-     *          if the device is not active.
-     */
-    PositionData* getPositionData (int dev=0);
-
-
 private:
     TrackdSensorStandalone* mTrackdSensors; // The sensors that we are dealing with
     std::vector<PositionData>   mCurSensorValues; // The current (up-to-date) values
