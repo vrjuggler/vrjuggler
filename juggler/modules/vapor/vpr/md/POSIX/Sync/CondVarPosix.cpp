@@ -41,6 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <string.h>
 #include <sys/time.h>
 
 #include <vpr/Util/Debug.h>
@@ -73,8 +74,12 @@ vpr::ReturnStatus CondVarPosix::wait(vpr::Interval timeToWait)
          int retcode = pthread_cond_wait(&mCondVar, &(mCondMutex->mMutex));
          if ( retcode != 0 )
          {
+#ifdef HAVE_STRERROR_R
             char error_str[255];
             strerror_r(retcode, error_str, 254);
+#else
+            char* error_str = strerror(retcode);
+#endif
             vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
                << "[vpr::CondVarPosix::wait()] Unexpected error: "
                << error_str << std::endl << vprDEBUG_FLUSH;
@@ -132,8 +137,12 @@ vpr::ReturnStatus CondVarPosix::wait(vpr::Interval timeToWait)
          }
          else
          {
+#ifdef HAVE_STRERROR_R
             char error_str[255];
             strerror_r(retcode, error_str, 254);
+#else
+            char* error_str = strerror(retcode);
+#endif
             vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
                << "[vpr::CondVarPosix::wait()] Unexpected error: "
                << error_str << std::endl << vprDEBUG_FLUSH;
