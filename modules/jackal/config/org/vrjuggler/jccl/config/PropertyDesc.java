@@ -202,18 +202,10 @@ public class PropertyDesc {
 
 
 
-    public VarValue getEnumValue(String val) 
-	throws java.util.NoSuchElementException {
-	/* returns the int value associated with this enum el */
+    public VarValue getEnumValue(String val) {
+	/* returns the value associated with this enum el */
 	DescEnum t;
-	VarValue v;
-	
-	if (valtype.equals(ValType.t_string) || 
-	    valtype.equals(ValType.t_chunk)) {
-	    v = new VarValue(valtype);
-	    v.set(val);
-	    return v;   // no need for translation
-	}
+ 	VarValue v;
 	
 	for (int i = 0; i < enums.size(); i++) {
 	    t = (DescEnum)enums.elementAt(i);
@@ -222,48 +214,30 @@ public class PropertyDesc {
 		return v;
 	    }
 	}
-	throw new java.util.NoSuchElementException();
+	v = new VarValue (valtype);
+	v.set(val);
+	return v;
     }
 
 
 
-    public String getEnumString(int val) 
-	throws java.util.NoSuchElementException {
+
+    public String getEnumString(VarValue val) {
 	/* does the reverse mapping of getEnumVal - maps a value 
 	 * back to the name of the enum entry 
 	 */
 	DescEnum t;
 
-	if (!valtype.equals(ValType.t_int))
-	    throw new java.util.NoSuchElementException();
 	for (int i = 0; i < enums.size(); i++) {
 	    t = (DescEnum)enums.elementAt(i);
-	    if (t.val.getInt() == val) {
+	    if (t.val.equals(val)) {
 		return t.str;
 	    }
 	}
-	throw new java.util.NoSuchElementException();
+	return val.toString();
     }
 
 
-
-    public String getEnumString(float val) 
-	throws java.util.NoSuchElementException {
-	/* does the reverse mapping of getEnumVal - maps a 
-	 * value back to the name of the enum entry 
-	 */
-	DescEnum t;
-
-	if (!valtype.equals(ValType.t_float))
-	    throw new java.util.NoSuchElementException();
-	for (int i = 0; i < enums.size(); i++) {
-	    t = (DescEnum)enums.elementAt(i);
-	    if (t.val.getFloat() == val) {
-		return t.str;
-	    }
-	}
-	throw new java.util.NoSuchElementException();
-    }
 
 
 
@@ -316,11 +290,6 @@ public class PropertyDesc {
 	    System.err.println ("error in ParseEnumerations");
 	    System.err.println (e);
 	}
-// 	catch (NumberFormatException e2) {
-// 	    System.err.println ("PropertyDesc.<init>(): Invalid" 
-// 				+ " number format: " + st.sval);
-// 	    System.err.println (e2);
-// 	}
 
 	return new Vector(); // if we had an exception
     }

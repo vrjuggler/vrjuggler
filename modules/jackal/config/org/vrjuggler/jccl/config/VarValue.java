@@ -139,27 +139,32 @@ public class VarValue {
      */
     public void set (String s) {
 	try {
-	    if (valtype.equals (ValType.t_string))
+	    switch (valtype.getInt()) {
+	    case ValType.t_string:
 		strval = s;
-	    else if (valtype.equals (ValType.t_chunk))
+		break;
+	    case ValType.t_chunk:
 		strval = s;
-	    else if (valtype.equals (ValType.t_bool))
+		break;
+	    case ValType.t_bool:
 		boolval = s.equalsIgnoreCase("true")? true:false;
-	    else if (valtype.equals (ValType.t_int)) {
-		intval = 0;
+		break;
+	    case ValType.t_int:
 		intval = Integer.parseInt(s);
-	    }
-	    else if (valtype.equals (ValType.t_float)) {
-		floatval = 0;
+		break;
+	    case ValType.t_float:
 		floatval = new Float(s).floatValue();
 		/* why doesn't Float have something analogous to 
 		 * Integer.parseInt()? 
 		 */
-	    }
-	    else if (valtype.equals (ValType.t_embeddedchunk)) {
+		break;
+	    case ValType.t_embeddedchunk:
 		embeddedchunkval = null;
 		throw (new VarValueException ("Error assigning string to " +
 					      "embeddedchunk VarValue"));
+		//break;
+	    default:
+		break;
 	    }
 	}
 	catch (NumberFormatException e) {
@@ -167,7 +172,9 @@ public class VarValue {
 	     * values to 0
 	     */
 	    intval = 0;
-	    floatval = 0;
+	    floatval = 0.0f;
+	    if (s.equals (""))
+		return;
 	    throw (new VarValueException ("Error assigning '" + s 
 					  + "' to VarValue"));
 	}
@@ -184,10 +191,19 @@ public class VarValue {
 
 
     public void set (int s) {
-	if (valtype.equals(ValType.t_int))
+	switch (valtype.getInt()) {
+	case ValType.t_int:
 	    intval = s;
-	else
+	    break;
+	case ValType.t_float:
+	    floatval = (float)s;
+	    break;
+	case ValType.t_bool:
+	    boolval = (s==0)?false:true;
+	    break;
+	default:
 	    throw (new VarValueException ("Error assigning to Integer VarValue"));
+	}
     }
 
 
@@ -220,10 +236,16 @@ public class VarValue {
 
 
     public int getInt() {
-	if (valtype.equals(ValType.t_int))
+	switch (valtype.getInt()) {
+	case ValType.t_int:
 	    return intval;
-	else
+	case ValType.t_float:
+	    return (int)floatval;
+	case ValType.t_bool:
+	    return boolval?1:0;
+	default:
 	    throw (new VarValueException ("Error in getInt()"));
+	}
     }
 
 

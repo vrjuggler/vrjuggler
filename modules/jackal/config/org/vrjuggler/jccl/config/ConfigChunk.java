@@ -118,20 +118,11 @@ public class ConfigChunk {
 
 
 
-    public void setPropertyFromToken (String n, String s, int v) {
-	// sets the vth value of property w/ token n to s.
-	Property p = getPropertyFromToken (n);
+    public void setPropertyFromToken (String tok, VarValue val, int i) {
+	// sets the ith value in property tok to val
+	Property p = getPropertyFromToken (tok);
 	if (p != null)
-	    p.setValue (s, v);
-    }
-
-
-
-    public void setPropertyFromToken (String n, int s, int v) {
-	// sets the vth value of property n to s.
-	Property p = getPropertyFromToken (n);
-	if (p != null)
-	    p.setValue (s, v);
+	    p.setValue (val, i);
     }
 
 
