@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-16-2003 patrickh    VRJConfig now depends on Tweek 0.15.
 Jul-10-2003 nonchocoboy Updated to JCCL 0.12.0 API for both Java and C++.
                         This involved breaking vrj-chunks.desc into individual
                         files for each configuration definition.

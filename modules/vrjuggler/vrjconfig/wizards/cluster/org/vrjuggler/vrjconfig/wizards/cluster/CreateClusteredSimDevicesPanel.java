@@ -45,6 +45,7 @@ import org.vrjuggler.tweek.wizard.*;
 import java.awt.event.*;
 import javax.swing.border.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
 public class CreateClusteredSimDevicesPanel extends JPanel
 {
@@ -233,8 +234,9 @@ public class CreateClusteredSimDevicesPanel extends JPanel
       String wand_path = this.mConfigFilePath + "/sim.wand.mixin.config";
 
       // Expand in the cas of enviroment variables
-      base_path = EnvironmentService.expandEnvVars(base_path);
-      wand_path = EnvironmentService.expandEnvVars(wand_path);
+      EnvironmentService env_service = new EnvironmentServiceProxy();
+      base_path = env_service.expandEnvVars(base_path);
+      wand_path = env_service.expandEnvVars(wand_path);
 
       // Load sim.base.config
       FileDataSource base_filesource = FileDataSource.open(base_path, mBroker.getRepository());
