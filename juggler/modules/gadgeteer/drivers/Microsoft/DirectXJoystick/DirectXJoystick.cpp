@@ -211,33 +211,23 @@ void DirectXJoystick::updateData()
 {
    if ( mInputDrv.poll() )
    {
-      const DIJOYSTATE& mJsData = mInputDrv.getData(); 
-
-      const DWORD num_buttons(mInputDrv.getNumButtons());
-      for ( unsigned int i = 0; i < num_buttons; ++i )
+      // Get button values.  We cannot use mCurButtons.size() here because that
+      // value includes any axis buttons that were configured.
+      for ( unsigned int i = 0; i < mInputDrv.getNumButtons(); ++i )
       {
-         mCurButtons[i].setDigital(mJsData.rgbButtons[i]);
+         mCurButtons[i].setDigital(mInputDrv.getButtonValue(i));
          mCurButtons[i].setTime();
       }
-   
-/*
-      // Handle axis buttons.
-      for ( unsigned int i = num_buttons; i < mNumButtons.size(); ++i )
-      {
-         mCurButtons[i].setTime();
-      }
-*/
 
       for ( unsigned int i = 0; i < mCurAxes.size(); ++i )
       {
          mCurAxes[i].setTime();
+
+         float norm_value;
+         normalizeMinToMax(mInputDrv.getAxisValue(i), norm_value);
+         mCurAxes[i].setAnalog(norm_value);
       }
 
-      float norm_value;
-      normalizeMinToMax(mJsData.lX, norm_value);
-      mCurAxes[0] = norm_value;
-      normalizeMinToMax(mJsData.lY, norm_value);
-      mCurAxes[1] = norm_value;
 /*
       // use axes as button, only first 3 are tested.
       for ( unsigned int axis_number = 0; axis_number < mCurAxes.size(); ++axis_number )
