@@ -216,10 +216,10 @@ void OpenSGNav::initScene(void)
    osg::endEditCP(mSceneScale);
 
    // Set the root node
-   osg::beginEditCP(mRootNode)
+   osg::beginEditCP(mRootNode);
       mRootNode->setCore(mSceneScale);
       mRootNode->addChild(mSceneRoot);
-   ost::endEditCP(mRootNode);
+   osg::endEditCP(mRootNode);
    
    osg::beginEditCP(mSceneRoot);
       mSceneRoot->setCore(mSceneTransform);
