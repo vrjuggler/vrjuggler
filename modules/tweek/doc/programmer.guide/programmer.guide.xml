@@ -15,7 +15,7 @@
       </author>
     </authorgroup>
 
-    <releaseinfo>0.14</releaseinfo>
+    <releaseinfo>0.16</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -360,11 +360,16 @@
           <title>Supported Languages</title>
 
           <para>As discussed above, a very powerful feature of CORBA is its
-          language independence. Tweek itself supports only C++ and Java as of
-          this writing. There is no restriction, other than time and
+          language independence. As of this writing, Tweek itself includes
+          support for C++ and Java as the primary langauges. Support for
+          generating the stub code needed to access Tweek Subjects through
+          Python was added in early August 2003, and a PyQt-based GUI is being
+          written so that developers can use Python and Qt for making GUI
+          panels instead of Java. There is no restriction, other than time and
           resources, that prevents the addition of support for other
           languages. In this section, we explain how C++ and Java are used in
-          Tweek.</para>
+          Tweek. As the Python support evolves, more documentation about its
+          use will be added.</para>
 
           <section>
             <title>C++</title>
@@ -1546,6 +1551,16 @@ id="TweekApp.cpp.loop" linkends="TweekApp.cpp.loop.co" />
           can be handled as though they were loaded from the local disk.</para>
         </section>
       </section>
+    </chapter>
+
+    <chapter>
+      <title>Python</title>
+
+      <indexterm>
+        <primary>Python client API</primary>
+      </indexterm>
+
+      <para></para>
     </chapter>
 
     <chapter id="prog.all.chapter">
