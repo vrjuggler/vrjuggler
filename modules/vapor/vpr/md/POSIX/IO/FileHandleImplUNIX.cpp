@@ -394,6 +394,8 @@ vpr::ReturnStatus FileHandleImplUNIX::read_i (void* buffer,
       // message.
       else if ( bytes == 0 && errno != 0 )
       {
+         // XXX: Failure status may not be exactly what we want to return.
+         status.setCode(ReturnStatus::Fail);
          bytes_read = 0;
 //     errno != ENOENT
          vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
@@ -446,10 +448,10 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i (void* buffer,
          {
             continue;
          }
-         // Otherwise, we have an error situation, so return the value
-         // returned by read(2).
+         // Otherwise, we have an error situation, so return failure status.
          else
          {
+            status.setCode(ReturnStatus::Fail);
             break;
          }
       }
