@@ -97,54 +97,83 @@ public:
     // ------------------------------------------------------------------------
     inline Status
     recvfrom (void* msg, const size_t len, const int flags, InetAddr& from,
-              ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+              ssize_t& bytes_read,
+              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_dgram_imp.recvfrom(msg, len, flags, from, bytes_read, timeout);
+        return m_socket_dgram_imp.recvfrom(msg, len, flags, from, bytes_read,
+                                           timeout);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline Status
+    Status
     recvfrom (std::string& msg, const size_t len, const int flags,
-              InetAddr& from, ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+              InetAddr& from, ssize_t& bytes_read,
+              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_dgram_imp.recvfrom(msg, len, flags, from, bytes_read, timeout);
+        msg.resize(length);
+        memset(&msg[0], '\0', msg.size());
+
+        return recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read,
+                        timeout);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline Status
+    Status
     recvfrom (std::vector<vpr::Uint8>& msg, const size_t len, const int flags,
-              InetAddr& from, ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+              InetAddr& from, ssize_t& bytes_read,
+              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_dgram_imp.recvfrom(msg, len, flags, from, bytes_read, timeout);
+        Status retval;
+
+        msg.resize(length);
+
+        memset(&msg[0], '\0', msg.size());
+        retval = recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read,
+                          timeout);
+
+        // Size it down if needed, if (bytes_read==length), then resize does
+        // nothing.
+        if ( bytes_read >= 0 ) {
+            msg.resize(bytes_read);
+        }
+
+        return retval;
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline Status
     sendto (const void* msg, const size_t len, const int flags,
-            const InetAddr& to, ssize_t& bytes_sent const vpr::Interval timeout = vpr::Interval::NoTimeout)
+            const InetAddr& to, ssize_t& bytes_sent,
+            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_dgram_imp.sendto(msg, len, flags, to, bytes_sent, timeout);
+        return m_socket_dgram_imp.sendto(msg, len, flags, to, bytes_sent,
+                                         timeout);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline Status
     sendto (const std::string& msg, const size_t len, const int flags,
-            const InetAddr& to, ssize_t& bytes_sent, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+            const InetAddr& to, ssize_t& bytes_sent,
+            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_dgram_imp.sendto(msg, len, flags, to, bytes_sent, timeout);
+        vprASSERT(length <= msg.size() && "Length is bigger than data given");
+        return sendto(msg.c_str(), length, flags, to, bytes_sent, timeout);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline Status
     sendto (const std::vector<vpr::Uint8>& msg, const size_t len,
-            const int flags, const InetAddr& to, ssize_t& bytes_sent, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+            const int flags, const InetAddr& to, ssize_t& bytes_sent,
+            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_dgram_imp.sendto(msg, len, flags, to, bytes_sent, timeout);
+        vprASSERT(length <= msg.size() && "Length is bigger than data given");
+        return sendto((const void*) &msg[0], length, flags, to, bytes_sent,
+                      timeout);
     }
 
     /**
