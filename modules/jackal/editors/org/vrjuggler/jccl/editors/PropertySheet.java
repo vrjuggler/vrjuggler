@@ -249,9 +249,9 @@ public class PropertySheet extends PropertyComponent
             // Normal Property.
             String label =
                prop_def.getPropertyValueDefinition(list_number).getLabel();
-            ++list_number;
             
             addNormalEditor(value, prop_def, label, row, list_number);
+            ++list_number;
          }
          ++row;
       }
