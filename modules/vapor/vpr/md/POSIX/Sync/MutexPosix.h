@@ -56,6 +56,8 @@
 #include <pthread.h>
 #include <errno.h>
 
+#include <vpr/Util/ReturnStatus.h>
+
 
 namespace vpr {
 
@@ -106,31 +108,28 @@ public:
      *       lock has already been acquired by another process/thread, the
      *       caller blocks until the mutex has been freed.
      *
-     * @return 1 is returned if the lock is acquired.<br>
-     *         -1 is returned if an error occurred.
+     * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
+     *         vpr::ReturnStatus::Fail is returned if an error occurred.
      */
-    inline int
+    inline vpr::ReturnStatus
     acquire (void) {
-        int retval;
-
-        retval = pthread_mutex_lock(&mMutex);
+        int retval = pthread_mutex_lock(&mMutex);
 
         // Locking succeeded.
         if ( retval == 0 ) {
-            return 1;
+            return vpr::ReturnStatus();
         }
 #ifdef _DEBUG
         // This thread tried to lock the mutex twice and a deadlock condition
         // was reported.
         else if ( retval == EDEADLK ) {
-            perror("Tried to lock mutex twice (MutexPosix.h:110)");
-
-            return -1;
+            perror("Tried to lock mutex twice (MutexPosix.h:118)");
+            return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
         }
 #endif
         // Some other error occurred.
         else {
-            return -1;
+           return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
         }
     }
 
@@ -142,12 +141,12 @@ public:
      *       lock has already been acquired by another process/thread, the
      *       caller blocks until the mutex has been freed.
      *
-     * @return 1 is returned if the lock is acquired.<br>
-     *         -1 is returned if an error occurred.
+     * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
+     *         vpr::ReturnStatus::Fail is returned if an error occurred.
      *
      * @note No special read lock has been defined for now.
      */
-    inline int
+    inline vpr::ReturnStatus
     acquireRead (void) {
         return this->acquire();
     }
@@ -160,12 +159,12 @@ public:
      *       lock has already been acquired by another process/thread, the
      *       caller blocks until the mutex has been freed.
      *
-     * @return 1 is returned if the lock is acquired.<br>
-     *         -1 is returned if an error occurred.
+     * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
+     *         vpr::ReturnStatus::Fail is returned if an error occurred.
      *
      * @note No special write lock has been defined for now.
      */
-    inline int
+    inline vpr::ReturnStatus
     acquireWrite (void) {
         return this->acquire();
     }
@@ -178,15 +177,16 @@ public:
      *       lock has already been acquired by another process/thread, the
      *       caller returns does not wait for it to be unlocked.
      *
-     * @return 1 is returned if the lock is acquired.<br>
-     *         0 is returned if the mutex is already locked.
+     * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
+     *         vpr::ReturnStatus::Fail is returned if the mutex is already
+     *         locked.
      */
-    inline int
+    inline vpr::ReturnStatus
     tryAcquire (void) {
         if ( pthread_mutex_trylock(&mMutex) == 0 ) {
-            return 1;
+            return vpr::ReturnStatus();
         } else {
-            return 0;
+            return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
         }
     }
 
@@ -198,10 +198,11 @@ public:
      *       lock has already been acquired by another process/thread, the
      *       caller returns does not wait for it to be unlocked.
      *
-     * @return 1 is returned if the read lock is acquired.<br>
-     *         0 is returned if the mutex is already locked.
+     * @return vpr::ReturnStatus::Succeed is returned if the read lock is
+     *         acquired.  vpr::ReturnStatus::Fail is returned if the mutex is
+     *         already locked.
      */
-    inline int
+    inline vpr::ReturnStatus
     tryAcquireRead (void) {
         return this->tryAcquire();
     }
@@ -214,10 +215,11 @@ public:
      *       lock has already been acquired by another process/thread, the
      *       caller returns does not wait for it to be unlocked.
      *
-     * @return 1 is returned if the write lock is acquired.<br>
-     *         0 is returned if the mutex is already locked.
+     * @return vpr::ReturnStatus::Succeed is returned if the write lock is
+     *         acquired.  vpr::ReturnStatus::Fail is returned if the mutex is
+     *         already locked.
      */
-    inline int
+    inline vpr::ReturnStatus
     tryAcquireWrite (void) {
         return this->tryAcquire();
     }
@@ -228,12 +230,19 @@ public:
      * @pre The mutex variable must be locked.
      * @post The mutex variable is unlocked.
      *
-     * @return 0 is returned if the lock is released successfully.<br>
+     * @return vpr::ReturnStatus::Succeed is returned if the lock is released successfully.<br>
      *         -1 is returned otherwise.
      */
-    inline int
+    inline vpr::ReturnStatus
     release (void) {
-        return pthread_mutex_unlock(&mMutex);
+        if ( pthread_mutex_unlock(&mMutex) == 0 )
+        {
+           return vpr::ReturnStatus();
+        }
+        else
+        {
+           return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+        }
     }
 
     /**
@@ -243,7 +252,7 @@ public:
      * @post The state of the mutex variable is returned.
      *
      * @return 0 is returned if this mutex is not currently locked.<br>
-     *         0 is returned if this mutex is locked.
+     *         1 is returned if this mutex is locked.
      */
     int test(void);
 

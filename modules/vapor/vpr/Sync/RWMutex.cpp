@@ -47,127 +47,129 @@
 namespace vpr {
 
 /// Acquires a read mutex.
-int
+vpr::ReturnStatus
 RWMutex::acquireRead () {
-    int retVal = 0;
+    vpr::ReturnStatus status;
 
-    if (stateLock.acquire() == -1)
-        retVal = -1;			// Didn't get the lock
+    if ( stateLock.acquire().failure() )
+    {
+       status.setCode(vpr::ReturnStatus::Fail);  // Didn't get the lock
+    }
     else
     {
         // let those writers who are waiting have first shot
         while(refCount < 0 || numWaitingWriters > 0)
         {
-            numWaitingReaders++;	    // Another one waiting
-            waitingReaders.wait();	    // So wait until something changes
-            numWaitingReaders--;	    //
+            numWaitingReaders++;        // Another one waiting
+            waitingReaders.wait();      // So wait until something changes
+            numWaitingReaders--;        //
         }
     }
 
-    if (retVal == 0) {
+    if ( status.success() ) {
         refCount++;
         stateLock.release();
     }
 
-    return retVal;
+    return status;
 }
 
 /// Acquire a write mutex.
-int
+vpr::ReturnStatus
 RWMutex::acquireWrite() {
-    int retVal = 0;
+    vpr::ReturnStatus status;
 
-    if (stateLock.acquire() == -1)
-        retVal = -1;			// Didn't get the lock
+    if ( stateLock.acquire().failure() )
+    {
+       status.setCode(vpr::ReturnStatus::Fail);    // Didn't get the lock
+    }
     else
     {
-        while(refCount != 0)	    // While there are readers
+        while(refCount != 0)        // While there are readers
         {
-            numWaitingWriters++;	// One more waiting
-            waitingWriters.wait();	// Wait for soemthing to change
-            numWaitingWriters--;	// Not waiting any more
+            numWaitingWriters++;    // One more waiting
+            waitingWriters.wait();  // Wait for soemthing to change
+            numWaitingWriters--;    // Not waiting any more
         }
     }
 
-    if(retVal == 0)
+    if( status.success() )
     {
-        refCount = -1;		// Tell everyone that there is a writer
+        refCount = -1;      // Tell everyone that there is a writer
         stateLock.release();
     }
 
-    return retVal;
+    return status;
 }
 
 /// Tries to acquire a read mutex.
-int
+vpr::ReturnStatus
 RWMutex::tryAcquireRead () {
-    int retVal = -1;
+    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
 
-    if (stateLock.acquire() != -1)
+    if ( stateLock.acquire().success() )
     {
-        if(refCount == -1 || numWaitingWriters >0)
-            retVal = -1;
-        else
+        if ( ! (refCount == -1 || numWaitingWriters > 0) )
         {
             refCount++;
-            retVal = 0;
+            status.setCode(vpr::ReturnStatus::Succeed);
         }
         stateLock.release();
     }
-    return retVal;
+    return status;
 }
 
 /// Tries to acquire a write mutex.
-int
+vpr::ReturnStatus
 RWMutex::tryAcquireWrite () {
-    int retVal = -1;
+    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
 
-    if (stateLock.acquire() != -1)
+    if ( stateLock.acquire().success() )
     {
-        if(refCount != 0)
-            retVal = -1;
-        else
+        if ( refCount == 0 )
         {
             refCount = -1;
-            retVal = 0;
+            status.setCode(vpr::ReturnStatus::Fail);
         }
         stateLock.release();
     }
 
-    return retVal;
+    return status;
 }
 
 /// Releases the mutex.
-int
+vpr::ReturnStatus
 RWMutex::release () {
-    int retVal = 0;
+    vpr::ReturnStatus status;
 
-    if (stateLock.acquire() == -1)
-        return -1;
+    if ( stateLock.acquire().failure() )
+        return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
 
-    if(refCount > 0)	    // We have a reader to release
+    if(refCount > 0)        // We have a reader to release
         refCount--;
-    else if (refCount == -1)	// We have writer
+    else if (refCount == -1)    // We have writer
         refCount = 0;
-    else			// We have an error
+    else            // We have an error
         std::cerr << "vpr::RWMutex::release: Should not have refCount of 0!!!"
                   << std::endl;
 
     // Preference to writers
     if (numWaitingWriters > 0)
     {
-        retVal = waitingWriters.signal();
+        status = waitingWriters.signal();
     }
     else if (numWaitingReaders > 0)
     {
-        retVal = waitingReaders.broadcast();
+        status = waitingReaders.broadcast();
     }
     else
-        retVal = 0;
+    {
+        status.setCode(vpr::ReturnStatus::Succeed);
+    }
 
     stateLock.release();
 
-    return retVal;	
+    return status;
 }
 
 }; // End of vpr namespace

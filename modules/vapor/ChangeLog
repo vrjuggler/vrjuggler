@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-01-28 patrickh Updated synchronization primitive classes to return
+                    vpr::ReturnStatus objects instead of integers.
+                    NEW VERSION: 0.11.0
 2001-01-10 allenb   Fixed up the debug output category filters.
                     Added category prefix settings.
                     NEW VERSION: 0.10.1
