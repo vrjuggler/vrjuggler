@@ -77,6 +77,15 @@ public class ChunkDescChooser
          e.printStackTrace();
       }
 
+      // Make sure the browse search text field gets the initial focus
+      SwingUtilities.invokeLater(new Runnable()
+      {
+         public void run()
+         {
+            browseSearchTextField.requestFocus();
+         }
+      });
+
       // Setup the default UI texts
       setDialogTitle("Choose a Chunk Desc");
       setApproveButtonText("OK");
@@ -177,6 +186,7 @@ public class ChunkDescChooser
    {
       ChunkDesc old = selectedChunkDesc;
       selectedChunkDesc = desc;
+      approveBtn.setEnabled(selectedChunkDesc != null);
       firePropertyChange("selectedChunkDesc", old, desc);
    }
 
@@ -246,6 +256,30 @@ public class ChunkDescChooser
    }
 
    /**
+    * This method takes the text in the browse search text field and tries to
+    * select the first ChunkDesc in the browseList whose name begins with that
+    * string.
+    */
+   private void searchBrowseList()
+   {
+      String search_str = browseSearchTextField.getText();
+      for (int i=0; i<browseListModel.getSize(); ++i)
+      {
+         ChunkDesc desc = (ChunkDesc)browseListModel.getElementAt(i);
+         if (desc.getName().startsWith(search_str))
+         {
+            browseList.setSelectedIndex(i);
+            browseList.ensureIndexIsVisible(i);
+            return;
+         }
+      }
+
+      // Looks like we didn't find a match, clear the selection
+      browseList.getSelectionModel().clearSelection();
+      browseList.ensureIndexIsVisible(0);
+   }
+
+   /**
     * JBuilder GUI initialization.
     */
    private void jbInit()
@@ -260,16 +294,38 @@ public class ChunkDescChooser
       browseTab.setLayout(browseTabLayout);
       browseSearchLbl.setText("Chunk Desc Name:");
       approveBtn.setText("OK");
+      approveBtn.setEnabled(false);
       cancelBtn.setText("Cancel");
       browseTab.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
       browseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      this.add(tabPane,  BorderLayout.CENTER);
-      tabPane.add(browseTab,  "Browse");
-      tabPane.add(searchTab,  "Search");
-      browseTab.add(browseSearchBox,  BorderLayout.NORTH);
-      browseSearchBox.add(browseSearchLbl, null);
-      browseSearchBox.add(browseSearchBoxSpacer, null);
-      browseSearchBox.add(browseSearchTextField, null);
+      browseSearchTextField.getDocument().addDocumentListener(new DocumentListener()
+      {
+         public void changedUpdate(DocumentEvent evt)
+         {
+            searchBrowseList();
+         }
+
+         public void insertUpdate(DocumentEvent evt)
+         {
+            searchBrowseList();
+         }
+
+         public void removeUpdate(DocumentEvent evt)
+         {
+            searchBrowseList();
+         }
+      });
+      browseSearchTextField.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            // If an item in the browse list is selected, approve it
+            if (browseList.getSelectedIndex() != -1)
+            {
+               approveSelection();
+            }
+         }
+      });
       browseList.addListSelectionListener(new ListSelectionListener()
       {
          public void valueChanged(ListSelectionEvent evt)
@@ -278,10 +334,7 @@ public class ChunkDescChooser
             {
                JList list = (JList)evt.getSource();
                ChunkDesc desc = (ChunkDesc)list.getSelectedValue();
-               if (desc != null)
-               {
-                  setSelectedChunkDesc(desc);
-               }
+               setSelectedChunkDesc(desc);
             }
          }
       });
@@ -315,6 +368,13 @@ public class ChunkDescChooser
             cancelSelection();
          }
       });
+      this.add(tabPane,  BorderLayout.CENTER);
+      tabPane.add(browseTab,  "Browse");
+      tabPane.add(searchTab,  "Search");
+      browseTab.add(browseSearchBox,  BorderLayout.NORTH);
+      browseSearchBox.add(browseSearchLbl, null);
+      browseSearchBox.add(browseSearchBoxSpacer, null);
+      browseSearchBox.add(browseSearchTextField, null);
       this.add(buttonBox, BorderLayout.SOUTH);
       buttonBox.add(buttonBoxGlue, null);
       buttonBox.add(approveBtn, null);
