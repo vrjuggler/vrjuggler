@@ -890,10 +890,12 @@ AC_OUTPUT(tweek-config
           java/tweek-base.sh
           tweek/Makefile
           tweek/CORBA/Makefile
+          tweek/Client/Makefile
           tweek/Util/Makefile
           tweek/idl/Makefile
           test/Makefile
           test/BeanDeliveryTest/Makefile
+          test/CxxClient/Makefile
           test/FileOpenTestBean/Makefile
           test/NetworkTestBean/Makefile
           test/PrefsTestBean/Makefile
