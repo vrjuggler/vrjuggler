@@ -71,30 +71,6 @@ public:
    { return std::string("BaseConstructor: Invalid type"); }
 };
 
-
-template <class DEV>
-class DeviceConstructor : public DeviceConstructorBase
-{
-public:
-   DeviceConstructor();
-
-   Input* createDevice(jccl::ConfigChunkPtr chunk)
-   {
-      DEV* new_dev = new DEV;
-      bool success = new_dev->config(chunk);
-      if(success)
-      {
-         return new_dev;
-      } else {
-         delete new_dev;
-         return NULL;
-      }
-   }
-
-   virtual std::string getChunkType()
-   { return DEV::getChunkType(); }
-};
-
 /**
  * Object used for creating devices.
  * @note Singleton
@@ -150,6 +126,35 @@ private:
    std::vector<DeviceConstructorBase*> mConstructors;  /**<  List of the device constructors */
 
    vprSingletonHeaderWithInitFunc(DeviceFactory, hackLoadKnownDevices);
+};
+
+template <class DEV>
+class DeviceConstructor : public DeviceConstructorBase
+{
+public:
+   DeviceConstructor()
+   {
+      vprASSERT(DeviceFactory::instance() != NULL);
+      DeviceFactory::instance()->registerDevice(this);
+   }
+
+   Input* createDevice(jccl::ConfigChunkPtr chunk)
+   {
+      DEV* new_dev = new DEV;
+      bool success = new_dev->config(chunk);
+      if(success)
+      {
+         return new_dev;
+      }
+      else
+      {
+         delete new_dev;
+         return NULL;
+      }
+   }
+
+   virtual std::string getChunkType()
+   { return DEV::getChunkType(); }
 };
 
 } // end namespace gadget
