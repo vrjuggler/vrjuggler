@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-25-2003 patrickh    Allow the use of X11 and GLX on Mac OS X instead of
+                        Carbon and the OpenGL framework.
+                        NEW VERSION: 1.1.142
 Jun-03-2003 aronb       Created Draw Manager-specific simulator factories.
                         NEW VERSION: 1.1.141
 Apr-29-2003 patrickh    configure.in requries Autoconf 2.53 or newer.
