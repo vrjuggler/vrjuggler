@@ -1073,15 +1073,15 @@ dnl #       with the Performer API.
 dnl #
 if test "$OS_TYPE" = "UNIX" ; then
     if test "$PLATFORM" = "SGI" ; then
-        TEST_VJ_LIBS_BASIC="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
-        TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
+        TEST_VJ_LIBS_BASIC="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
+        TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\$(VJ_BASE_DIR)/lib\$(LIBBITSUF) -lJuggler"
         TEST_LIBS_BASIC="-B dynamic -lm -lC"
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
         dnl # is only the case on non-SGI platforms.
-        TEST_VJ_LIBS_BASIC="-L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
-        TEST_VJ_LIBS_BASIC_SUBST="-L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
+        TEST_VJ_LIBS_BASIC="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
+        TEST_VJ_LIBS_BASIC_SUBST="-L$\$(VJ_BASE_DIR)/lib\$(LIBBITSUF) -lJuggler"
         TEST_LIBS_BASIC="-lm"
     fi
 
@@ -1090,11 +1090,11 @@ if test "$OS_TYPE" = "UNIX" ; then
     TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     TEST_EXTRA_LIBS_BASIC_SUBST="$LDFLAGS $LIBS"
     TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} ${_SYSTEM_OPENGL}"
-    TEST_EXTRA_LIBS_GL_SUBST="-L${OGLROOT}/lib\${LIBBITSUF} ${_SYSTEM_OPENGL}"
+    TEST_EXTRA_LIBS_GL_SUBST="-L${OGLROOT}/lib\$(LIBBITSUF) ${_SYSTEM_OPENGL}"
     TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
 elif test "$OS_TYPE" = "Win32" ; then
-    TEST_VJ_LIBS_BASIC="-link -nodefaultlib:libc -libpath:\${VJ_BASE_DIR}/lib/debug Juggler.lib"
-    TEST_VJ_LIBS_BASIC_SUBST="-link -nodefaultlib:libc -libpath:$\${VJ_BASE_DIR}/lib/debug Juggler.lib"
+    TEST_VJ_LIBS_BASIC="-link -nodefaultlib:libc -libpath:\$(VJ_BASE_DIR)/lib/debug Juggler.lib"
+    TEST_VJ_LIBS_BASIC_SUBST="-link -nodefaultlib:libc -libpath:$\$(VJ_BASE_DIR)/lib/debug Juggler.lib"
     TEST_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib libcmtd.lib'
     TEST_VJ_LIBS_GL='Juggler_ogl.lib'
     TEST_VJ_LIBS_PF='Juggler_pf.lib'

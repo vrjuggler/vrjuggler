@@ -11,11 +11,11 @@ default: all
 all: ogl pfNav
 
 ogl pfNav::
-	cd $@ && ${MAKE} all
+	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:	
-	-cd ogl     && ${MAKE} clean
-	-cd pfNav   && ${MAKE} clean	
+	-cd ogl   && $(MAKE) clean
+	-cd pfNav && $(MAKE) clean	

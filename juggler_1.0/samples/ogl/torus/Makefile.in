@@ -7,9 +7,9 @@
 
 srcdir		= @srcdir@
 
-COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
-VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@
 
@@ -35,19 +35,19 @@ default: all
 
 all: torus
 
-torus: ${OBJECTS}
-	${LINK} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
+torus: $(OBJECTS)
+	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 torus.o: torusApp.h
 torusApp.o: torusApp.h
 
 .cpp.o:
-	${COMPILE} @OBJ_NAME_FLAG@ -c $<
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend torus torus.exe torus.ilk ${OBJECTS} *core	\
+	rm -f Makedepend torus torus.exe torus.ilk $(OBJECTS) *core	\
           so_locations *.?db
 	rm -rf ./ii_files

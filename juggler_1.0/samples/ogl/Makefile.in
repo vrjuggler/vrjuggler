@@ -11,15 +11,15 @@ default: all
 all: cubes wand simpleGlove glove torus
 
 cubes glove simpleGlove wand torus combo::
-	cd $@ && ${MAKE} all
+	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	-cd cubes        && ${MAKE} clean
-	-cd wand         && ${MAKE} clean
-	-cd glove        && ${MAKE} clean
-	-cd simpleGlove  && ${MAKE} clean
-	-cd torus	 && ${MAKE} clean
-	-cd combo	 && ${MAKE} clean
+	-cd cubes        && $(MAKE) clean
+	-cd wand         && $(MAKE) clean
+	-cd glove        && $(MAKE) clean
+	-cd simpleGlove  && $(MAKE) clean
+	-cd torus	 && $(MAKE) clean
+	-cd combo	 && $(MAKE) clean

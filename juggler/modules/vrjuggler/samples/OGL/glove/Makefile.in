@@ -7,9 +7,9 @@
 
 srcdir		= @srcdir@
 
-COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
-VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@
 
@@ -35,23 +35,23 @@ default: all
 
 all: glove
 
-glove: ${OBJECTS}
-	${LINK} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
+glove: $(OBJECTS)
+	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 main.o: gloveApp.h
 gloveApp.o: gloveApp.h navigation.h
 navigation.o: navigation.h
 
 .cpp.o:
-	${COMPILE} @OBJ_NAME_FLAG@ -c $<
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 .cxx.o:
-	${COMPILE} @OBJ_NAME_FLAG@ -c $<
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend glove glove.exe glove.ilk ${OBJECTS} *core	\
+	rm -f Makedepend glove glove.exe glove.ilk $(OBJECTS) *core	\
           so_locations *.?db
 	rm -rf ./ii_files
