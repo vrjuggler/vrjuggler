@@ -45,8 +45,8 @@ if test "x$TWEEK_BASE_DIR" = "x" ; then
     export TWEEK_BASE_DIR
 fi
 
-EXTRA_JDK_ARGS="-DVJ_BASE_DIR=${VJ_BASE_DIR}"
+EXTRA_JDK_ARGS="-DVJ_BASE_DIR=${VJ_BASE_DIR} -DJCCL_DEFINITION_PATH=${JCCL_DEFINITION_PATH}"
 
-. $TWEEK_BASE_DIR/bin/tweek-base.sh --defaultbean=VRJConfig $*
+. $TWEEK_BASE_DIR/bin/tweek-base.sh --defaultbean="Configuration Editor" $*
 
 exit $status
