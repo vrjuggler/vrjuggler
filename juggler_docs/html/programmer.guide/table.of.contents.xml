@@ -39,6 +39,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 </folder>
 
 <folder title="Helper Classes"
+	link="helper.classes/index.html"
 	info="High-level descriptions of common helper classes"
 	image="Leaf_Script2.gif">
 	<item title="vjVec3 and vjVec4"
