@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-04-03 allenb   Fixed bug in replaceEnvVars.  Removed ThreadTest from suite
+                    because of threading bugs in exception handling.
 2002-04-02 allenb   Added replaceEnvVars function for replacing environment
                     variables in a given string.
 2002-03-28 patrickh Turned on exceptions by default when using GCC 3.  This is
