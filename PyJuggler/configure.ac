@@ -342,12 +342,14 @@ GADGETEER_PATH([0.13], ,
 VRJUGGLER_PATH([1.1.148], ,
                [AC_MSG_ERROR([*** VR Juggler is required for PyJuggler ***])])
 
-pyjsave_CFLAGS="$CFLAGS"
-pyjsave_CPPFLAGS="$CPPFLAGS"
-pyjsave_LDFLAGS="$LDFLAGS"
-pyjsave_LIBS="$LIBS"
+HAVE_OSG='N'
 
 if test "x$osg_base_dir" != "xno" ; then
+   pyjsave_CFLAGS="$CFLAGS"
+   pyjsave_CPPFLAGS="$CPPFLAGS"
+   pyjsave_LDFLAGS="$LDFLAGS"
+   pyjsave_LIBS="$LIBS"
+
    # Ensure that /usr/include and /usr/lib are not included multiple times
    # if $OSGROOT is "/usr".
    if test "x$osg_base_dir" != "x/usr" ; then
@@ -361,35 +363,35 @@ if test "x$osg_base_dir" != "xno" ; then
          OSG_LIBS='-losg -losgProducer -losgUtil -losgDB'
       fi
    fi
-fi
 
-AC_PATH_X
+   AC_PATH_X
 
-if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
-   X_LDFLAGS="-L$x_libraries"
-fi
+   if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
+      X_LDFLAGS="-L$x_libraries"
+   fi
 
-DPP_LANG_SAVE
-DPP_LANG_CPLUSPLUS
+   DPP_LANG_SAVE
+   DPP_LANG_CPLUSPLUS
 
-CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
-CPPFLAGS="$CPPFLAGS $OSG_INCLUDES $STDFLAGS"
-LDFLAGS="$LDFLAGS $OSG_LDFLAGS"
+   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CPPFLAGS="$CPPFLAGS $OSG_INCLUDES $STDFLAGS"
+   LDFLAGS="$LDFLAGS $OSG_LDFLAGS"
 
-AC_CHECK_LIB([osg], [osgGetVersion],
-   [AC_CHECK_HEADER([osg/Vec3], [HAVE_OSG='Y'], [HAVE_OSG='N'])],
-   [HAVE_OSG='N'], [$X_LDFLAGS -lX11 -lXext])
+   AC_CHECK_LIB([osg], [osgGetVersion],
+      [AC_CHECK_HEADER([osg/Vec3], [HAVE_OSG='Y'], [HAVE_OSG='N'])],
+      [HAVE_OSG='N'], [$X_LDFLAGS -lX11 -lXext])
 
-DPP_LANG_RESTORE
+   DPP_LANG_RESTORE
 
-CFLAGS="$pyjsave_CFLAGS"
-CPPFLAGS="$pyjsave_CPPFLAGS"
-LDFLAGS="$pyjsave_LDFLAGS"
-LIBS="$pyjsave_LIBS"
+   CFLAGS="$pyjsave_CFLAGS"
+   CPPFLAGS="$pyjsave_CPPFLAGS"
+   LDFLAGS="$pyjsave_LDFLAGS"
+   LIBS="$pyjsave_LIBS"
 
-if test "x$HAVE_OSG" = "xY" ; then
-   AC_DEFINE([PYJUGGLER_HAVE_OSG], 1,
-   	     [Define if the Open Scene Graph is available.])
+   if test "x$HAVE_OSG" = "xY" ; then
+      AC_DEFINE([PYJUGGLER_HAVE_OSG], 1,
+                [Define if the Open Scene Graph is available.])
+   fi
 fi
 
 # -----------------------------------------------------------------------------
