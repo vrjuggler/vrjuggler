@@ -45,12 +45,7 @@
 //
 // This class maintains a table that has ptrs to all the TS data
 // in the system for a specific thread.
-// As new thread specific data is added to the system, a copy is also
-// added to this table. (This is done by the thread manager)
-// The list is protected by a mutex to make it thread safe.  Only one
-// thread and remove, add, or access the list at a time
-// XXX: This should be changed to a read/write mutex
-// Q: If I am only accessing it from one thread, then it should already be thread safe???
+// Only the owning thread may actually access the table
 //-----------------------------------------------------------------
 class vjTSTable
 {
@@ -58,21 +53,22 @@ public:
    vjTSTable()
    {;}
 
-   //-----------------------------------------------------------------
-   //: Return a new table of "fresh" objects.
-   //! NOTE: This is NOT a copy. All objects are created by their
-   //+       default constructors
-   //-----------------------------------------------------------------
-   vjTSTable* createNew();
-
    //: Delete the table
    // Delete all objects in the table
    ~vjTSTable();
 
+public:
+   // Returns true if the table contains the given key
+   // If false, then the user should setObject(...,key) before
+   // attempting to access the object
+   bool containsKey(long key)
+   {
+      return ((key>=0)&&((unsigned)key<mTSObjects.size()));
+   }
+   
    //: Get the object with the spcified key
    vjTSBaseObject* getObject(unsigned int objectKey);
-
-public:
+   
    //-----------------------------------------------------------------
    //: Set an object entry in the table.
    //-----------------------------------------------------------------
@@ -85,11 +81,7 @@ public:
    //-----------------------------------------------------------------
    void releaseObject(unsigned long key);
 
-public:
-//   friend vjThreadManager;
-
 private:
-   vjMutex                      mListGuard;  //: Guard access to the list
    std::vector<vjTSBaseObject*> mTSObjects; //: Map object key to TS Object ptr
 };
 
