@@ -516,12 +516,12 @@ void Kernel::loadConfigFile(std::string filename)
 }
 
 /**
- * Loads a configuration definition file.
- * @post The element factory can now manage elements with the given types.
+ * Scans the given directory (or directories) for .jdef files and loads all
+ * discovered files into the JCCL Element Factory.
  */
-void Kernel::loadConfigDefinitionFile(std::string filename)
+void Kernel::scanForConfigDefinitions(const std::string& path)
 {
-   jccl::ElementFactory::instance()->loadDefs(filename);
+   jccl::ElementFactory::instance()->loadDefs(path);
 }
 
 /**
