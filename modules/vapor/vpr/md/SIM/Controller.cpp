@@ -64,7 +64,6 @@ vpr::TSObjectProxy<Controller::ControllerTS> Controller::mInstance;
 // ============================================================================
 
 Controller::Controller ()
-   : m_started(false)
 {
    /* Do nothing. */ ;
 }
