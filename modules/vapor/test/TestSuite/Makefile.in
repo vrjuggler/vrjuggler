@@ -121,7 +121,7 @@ DEPDIR =
 INCLUDE_PATHS = 
 PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases 				\
                $(CPP_UNIT)/CppUnit.old/framework $(CPP_UNIT)/CppUnit.old/textui
-MK_DIR = $(srcdir)/mk
+MK_DIR = $(srcdir)/../../../../share/mk
 
 include $(MK_DIR)/objs.mk
 
