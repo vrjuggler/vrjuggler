@@ -36,6 +36,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				< item title="Working with ChunkDesc files" link="${VJCONTROL}/DescDBPanel.html" info="Working with Chunk Description files" target="Body" image="Leaf.gif" >
 				< item title="Working with Chunk Org Trees" link="${VJCONTROL}/OrgTreePanel.html" info="Working with Chunk Org Trees" target="Body" image="Leaf.gif" >
 				< item title="VjControl Preferences" link="${VJCONTROL}/Preferences.html" info="VjControl Preferences" target="Body" image="Leaf.gif" >
+				< item title="Dynamic Reconfiguration" link="${VJCONTROL}/DynamicReconfiguration.html" info="Dynamic Reconfiguration" target="Body" image="Leaf.gif" >
 				< item title="Known Bugs" link="${BUGS}/known.bugs.vjcontrol.html" info="Known VJ Control Bugs" target="Body" image="Leaf.gif" >
 
 			</folder>
