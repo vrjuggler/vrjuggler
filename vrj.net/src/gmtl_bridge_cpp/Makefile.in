@@ -67,7 +67,9 @@ SRCS=		gmtl_AABoxd.cpp			\
 		gmtl_LineSegd.cpp		\
 		gmtl_LineSegf.cpp		\
 		gmtl_Math.cpp			\
+		gmtl_Matrix33d.cpp		\
 		gmtl_Matrix33f.cpp		\
+		gmtl_Matrix44d.cpp		\
 		gmtl_Matrix44f.cpp		\
 		gmtl_Planed.cpp			\
 		gmtl_Planef.cpp			\
@@ -77,6 +79,9 @@ SRCS=		gmtl_AABoxd.cpp			\
 		gmtl_Point3d.cpp		\
 		gmtl_Point3f.cpp		\
 		gmtl_Point3i.cpp		\
+		gmtl_Point4d.cpp		\
+		gmtl_Point4f.cpp		\
+		gmtl_Point4i.cpp		\
 		gmtl_Quatd.cpp			\
 		gmtl_Quatf.cpp			\
 		gmtl_Rayd.cpp			\
