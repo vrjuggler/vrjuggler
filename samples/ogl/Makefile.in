@@ -8,7 +8,7 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: cubes wand
+all: cubes wand simpleGlove
 
 cubes wand::
 	cd $@ && ${MAKE} all
