@@ -151,7 +151,7 @@ void NavGrabApp::updateNavigation()
    if(mRotateButton->getData())
    {
       const float rot_scale(0.01f);
-      float y_rot = gmtl::makeYRot<float>(wandMatrix);
+      float y_rot = gmtl::makeYRot<float, 4, 4>(wandMatrix);
       rotation = -1.0f * y_rot * rot_scale;
       gmtl::preMult(mNavMatrix,
                     gmtl::makeRot<gmtl::Matrix44f>(gmtl::EulerAngleXYZf(0.0f,rotation,0.0f)));
