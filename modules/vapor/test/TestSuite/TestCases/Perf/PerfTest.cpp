@@ -30,6 +30,29 @@ void PerfTest::testConstructTree ()
    CPPUNIT_ASSERT(first_one_node->getParent() == first_node);
 }
 
+void PerfTest::testNamedLookupSample ()
+{
+   vpr::ProfileManager::startProfile("myNamedProfile");
+   
+   //do something so there is a little time in the profile
+   int i=0;
+   int j=1;
+   for(; i++; i<10000)
+   {
+      j=j+1;
+   }
+   for(; j--; j>0)
+   {
+      i = i-1;
+   }
+   vpr::ProfileManager::stopProfile();
+
+   float f = vpr::ProfileManager::getNamedNodeSample("myNamedProfile");
+   CPPUNIT_ASSERT(f != 0.0f);
+}
+
+   
+
 void PerfTest::testReset ()
 {
 
