@@ -81,18 +81,88 @@ instdir		= jccl/config/1.0
 doc_prefix	= $(webroot)/$(instdir)
 DOC_ROOT		= programmer.reference.java
 
-
 JAVA_AFTERBUILD = jars
+
+# Hack to make sure we build Java sources after the C++ library is built
+AFTERBUILD = java
+
+include $(MKPATH)/dpp.compile.mk
 
 # -----------------------------------------------------------------------------
 # C++-related setup
-# 		Just recurse to the sub directories
+# 		Just recurse to the sub directories and then link to a static library.
+# -----------------------------------------------------------------------------
+STATICLIB_EXT	= @STATICLIB_EXT@
+DYNAMICLIB_EXT = @DYNAMICLIB_EXT@
+
+LIBS 				= $(JCCL_CONFIG_LIBRARY)
+STATIC_LIBS		= $(LIBS)
+DYNAMIC_LIBS	= $(LIBS)
+
+JCCL_CONFIG_LIB_STATIC		= $(JCCL_CONFIG_LIBRARY).$(STATICLIB_EXT)
+JCCL_CONFIG_LIB_DYNAMIC		= $(JCCL_CONFIG_LIBRARY).$(DYNAMICLIB_EXT)
+JCCL_CONFIG_PROF_LIB_STATIC	= $(JCCL_CONFIG_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+JCCL_CONFIG_PROF_LIB_DYNAMIC	= $(JCCL_CONFIG_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
+
+
+include $(MKPATH)/dpp.libs-basic.mk
+include $(MKPATH)/dpp.obj-common.mk
+
+# -----------------------------------------------------------------------------
+# Recursive make setup
 # -----------------------------------------------------------------------------
 DIRPRFX	= config/
 SUBDIR	= jccl
-
 $(RECTARGET): recursive
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.subdir.mk
+
+# -----------------------------------------------
+# Construct the static version of the libraries.
+# -----------------------------------------------
+$(LIBDIR)/$(JCCL_CONFIG_LIB_STATIC) $(LIBDIR)/$(JCCL_CONFIG_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+ifneq (@OS_TYPE@, Win32)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
+	$(RANLIB) $@
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+endif
+
+# ------------------------------------------------
+# Construct the dynamic version of the libraries.
+# ------------------------------------------------
+$(LIBDIR)/$(JCCL_CONFIG_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_CONFIG_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+
+# -----------------------------------------------------------------------------
+# Duplicate from dpp.obj.mk
+# -----------------------------------------------------------------------------
+java: do-beforebuild
+ifdef BEFOREBUILD
+	@$(MAKE) $(BEFOREBUILD)
+endif
+ifdef JAVA_BEFOREBUILD
+	@$(MAKE) $(JAVA_BEFOREBUILD)
+endif
+	@$(MAKE) do-java-build
+ifdef JAVA_AFTERBUILD
+	@$(MAKE) $(JAVA_AFTERBUILD)
+endif
+
 
 # -----------------------------------------------------------------------------
 # Extra targets.
