@@ -35,70 +35,86 @@
 #include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
 #include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
 
-namespace jccl {
-
-    PerformanceCategories::PerformanceCategories () {
-        mActive = false;
-
-	addCategory (jcclPERF_ALL, "PERF_ALL");
-	activateCategory ("PERF_ALL");
-    }
+namespace jccl
+{
 
 
-    void PerformanceCategories::addCategory (const vpr::GUID& catId, const std::string& name)
-    {
-        // can't use vprDEBUG here, because this may get called before
-        // the debug categories are fully initialized.
+PerformanceCategories::PerformanceCategories ()
+{
+   mActive = false;
+
+   addCategory (jcclPERF_ALL, "PERF_ALL");
+   activateCategory ("PERF_ALL");
+}
+
+
+
+void PerformanceCategories::addCategory (const vpr::GUID& catId, const std::string& name)
+{
+   // can't use vprDEBUG here, because this may get called before
+   // the debug categories are fully initialized.
 //          std::cout << "Adding category named '" << name << "' at " << &catId 
 //              << ".\n";
-        mCategories.insert( std::pair<const vpr::GUID*,CategoryInfo>(&catId, CategoryInfo(name, false)));
-        //updateAllowedCategories();   
-    }
+   mCategories.insert( std::pair<const vpr::GUID*,CategoryInfo>(&catId, CategoryInfo(name, false)));
+   //updateAllowedCategories();   
+}
 
 
-    void PerformanceCategories::activateCategory (const std::string& catname) {
-        category_map_t::iterator cat = mCategories.begin();
-        while (cat != mCategories.end()) {
-            if (cat->second.mName == catname) {
-                cat->second.mActive = true;
-                return;
-            }
-	    cat++;
-        }
-    }
+
+void PerformanceCategories::activateCategory (const std::string& catname)
+{
+   category_map_t::iterator cat = mCategories.begin();
+   while (cat != mCategories.end())
+   {
+      if (cat->second.mName == catname)
+      {
+         cat->second.mActive = true;
+         return;
+      }
+      cat++;
+   }
+}
 
 
-    void PerformanceCategories::deactivateCategory (const std::string& catname) {
-        category_map_t::iterator cat = mCategories.begin();
-        while (cat != mCategories.end()) {
-            if (cat->second.mName == catname) {
-                cat->second.mActive = false;
-                return;
-            }
-	    cat++;
-        }
-    }
+
+void PerformanceCategories::deactivateCategory (const std::string& catname)
+{
+   category_map_t::iterator cat = mCategories.begin();
+   while (cat != mCategories.end())
+   {
+      if (cat->second.mName == catname)
+      {
+         cat->second.mActive = false;
+         return;
+      }
+      cat++;
+   }
+}
 
 
-    bool PerformanceCategories::isCategoryActive (const vpr::GUID& category) {
-        if (!mActive)
-            return false;
-        // do something with categories
-        //std::cout << "Finding category named at " << &category << "." << std::endl;
-        
-        category_map_t::iterator cat = mCategories.find(&category);
-        vprASSERT(cat != mCategories.end());  // cat is valid
-        return (*cat).second.mActive;   
-    }
+
+bool PerformanceCategories::isCategoryActive (const vpr::GUID& category)
+{
+   if (!mActive) 
+   {
+      return false;
+   }
+   
+   category_map_t::iterator cat = mCategories.find(&category);
+   vprASSERT(cat != mCategories.end());  // cat is valid
+   return (*cat).second.mActive;   
+}
 
 
-    void PerformanceCategories::addBuffer (LabeledPerfDataBuffer* buffer) {
-        mBuffersLock.acquire();
-	// need to make sure the buffer gets a unique name
-	char s[64];
-	snprintf (s, 64, "%s [%d]", buffer->getName().c_str(), mBuffers.size());
-	std::string name(s);
-	buffer->setName (name);
+
+void PerformanceCategories::addBuffer (LabeledPerfDataBuffer* buffer)
+{
+   mBuffersLock.acquire();
+   // need to make sure the buffer gets a unique name
+   char s[64];
+   snprintf (s, 64, "%s [%d]", buffer->getName().c_str(), mBuffers.size());
+   std::string name(s);
+   buffer->setName (name);
 
 //  	std::string base_name = buffer->getName();
 //  	if (getBufferNoLock (base_name)) {
@@ -113,52 +129,62 @@ namespace jccl {
 //  	    buffer->setName (name);
 //  	}
 
-        mBuffers.push_back (buffer);
-        mBuffersLock.release();
-    }
+   mBuffers.push_back (buffer);
+   mBuffersLock.release();
+}
 
 
-    void PerformanceCategories::removeBuffer (LabeledPerfDataBuffer* buffer) {
-        mBuffersLock.acquire();
-        std::vector<LabeledPerfDataBuffer*>::iterator i = mBuffers.begin();
-        while (i != mBuffers.end()) {
-            if (*i == buffer) {
-                mBuffers.erase(i);
-                break;
-            }
-        }
-        mBuffersLock.release();
-    }
+
+void PerformanceCategories::removeBuffer (LabeledPerfDataBuffer* buffer)
+{
+   mBuffersLock.acquire();
+   std::vector<LabeledPerfDataBuffer*>::iterator i = mBuffers.begin();
+   while (i != mBuffers.end())
+   {
+      if (*i == buffer)
+      {
+         mBuffers.erase(i);
+         break;
+      }
+   }
+   mBuffersLock.release();
+}
 
 
-    LabeledPerfDataBuffer* PerformanceCategories::getBufferNoLock (const std::string& n) {
-	std::vector<LabeledPerfDataBuffer*>::iterator i = mBuffers.begin();
-        while (i != mBuffers.end()) {
-	    if ((*i)->getName() == n)
-		return *i;
-        }
-	return NULL;
-    }
+LabeledPerfDataBuffer* PerformanceCategories::getBufferNoLock (const std::string& n)
+{
+   std::vector<LabeledPerfDataBuffer*>::iterator i = mBuffers.begin();
+   while (i != mBuffers.end())
+   {
+      if ((*i)->getName() == n)
+         return *i;
+   }
+   return NULL;
+}
 
 
-    void PerformanceCategories::writeAllBuffers (std::ostream& out, 
-                                                 const std::string& pad /*=""*/) {
-        out << pad << "<jcclstream>\n";
-        mBuffersLock.acquire();
-        for (unsigned int i = 0; i < mBuffers.size(); i++) {
-            mBuffers[i]->write (out, pad);
-        }
-        mBuffersLock.release();
-        out << pad << "</jcclstream>\n";
-    }
+void PerformanceCategories::writeAllBuffers (std::ostream& out, 
+                                             const std::string& pad /*=""*/)
+{
+   out << pad << "<jcclstream>\n";
+   mBuffersLock.acquire();
+   for (unsigned int i = 0; i < mBuffers.size(); i++)
+   {
+      mBuffers[i]->write (out, pad);
+   }
+   mBuffersLock.release();
+   out << pad << "</jcclstream>\n";
+}
 
 
-    vprSingletonImp (PerformanceCategories);
+vprSingletonImp (PerformanceCategories);
 
-    jcclREGISTER_PERF_CATEGORY(jcclPERF_JACKAL, PERF_JACKAL);
+jcclREGISTER_PERF_CATEGORY(jcclPERF_JACKAL, PERF_JACKAL);
 
 
 }; // namespace jccl
 
 const vpr::GUID jcclPERF_JACKAL ("29ecd55b-e68e-40ce-9db2-99e7682b36b4");
 const vpr::GUID jcclPERF_ALL ("0b6b599c-f90c-43f6-8fbb-08454dd78872");
+
+
