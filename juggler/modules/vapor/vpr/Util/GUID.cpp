@@ -198,8 +198,6 @@ void GUID::generate(const GUID& ns_guid, const std::string& name)
    net_ns_guid.mGuid.standard.m2 = vpr::System::Htons(net_ns_guid.mGuid.standard.m2);
 
    // The following uses the MD5 implementation in juggler/external/md5-c.
-   // Using that version is undesirable, however, because it generates files
-   // in the working directory.  Argh!
    MD5_CTX c;
    unsigned char hash[16];
 
