@@ -47,13 +47,15 @@ public class ConfigDefinition
     * Creates a new configuration definition using the given metadata.
     */
    public ConfigDefinition(String name, String token, String icon_location, 
-                           int version, List parents, String help, 
-                           List categories, List propDefs, Element xslt_element)
+                           int version, boolean isAbstract, List parents,
+                           String help, List categories, List propDefs,
+                           Element xslt_element)
    {
       mName = name;
       mToken = token;
       mIconLocation = icon_location;
       mVersion = version;
+      mIsAbstract = isAbstract;
       mParents = parents;
       mHelp = help;
       mCategories = categories;
@@ -123,6 +125,18 @@ public class ConfigDefinition
    public int getVersion()
    {
       return mVersion;
+   }
+
+   public boolean isAbstract()
+   {
+      return mIsAbstract;
+   }
+
+   public void setAbstract(boolean b)
+   {
+      boolean old_is_abstract = mIsAbstract;
+      mIsAbstract = b;
+      fireAbstractChanged(Boolean.valueOf(old_is_abstract));
    }
 
    /**
@@ -371,6 +385,7 @@ public class ConfigDefinition
              mToken.equals(d.mToken) &&
              mIconLocation.equals(d.mIconLocation) &&
              mVersion == d.mVersion &&
+             mIsAbstract == d.mIsAbstract &&
              mCategories.equals(d.mCategories) &&
              mHelp.equals(d.mHelp) &&
              mParents.equals(d.mParents) &&
@@ -437,6 +452,26 @@ public class ConfigDefinition
                evt = new ConfigDefinitionEvent(this, old_token);
             }
             ((ConfigDefinitionListener)listeners[i+1]).tokenChanged(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that this definition's abstract state has changed.
+    */
+   protected void fireAbstractChanged(Boolean oldIsAbstract)
+   {
+      ConfigDefinitionEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ConfigDefinitionListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigDefinitionEvent(this, oldIsAbstract);
+            }
+            ((ConfigDefinitionListener)listeners[i+1]).abstractChanged(evt);
          }
       }
    }
@@ -554,6 +589,9 @@ public class ConfigDefinition
    
    /** The version string for this definition. */
    private int mVersion;
+   
+   /** Whether this definition can be instantiated as a config element. */
+   private boolean mIsAbstract;
    
    /** The short help string for this definition. */
    private String mHelp;

@@ -127,6 +127,9 @@
          <xsl:attribute name="label">
             <xsl:value-of select="@label" />
          </xsl:attribute>
+         <xsl:element name="abstract">
+            <xsl:text>false</xsl:text>
+         </xsl:element>
          <xsl:apply-templates />
       </xsl:element>
    </xsl:template>

@@ -119,6 +119,17 @@ public class ConfigDefinitionParser
          throw new MissingAttributeException(LABEL);
       }
 
+      boolean is_abstract;
+      if ( root.getChildren(ABSTRACT, DEF_NS).size() > 0 )
+      {
+         String abstract_str = root.getChildTextTrim(ABSTRACT, DEF_NS);
+         is_abstract = Boolean.valueOf(abstract_str).booleanValue();
+      }
+      else
+      {
+         is_abstract = false;
+      }
+
       // Grok the help
       String help = root.getChildTextTrim(HELP, DEF_NS);
       
@@ -184,6 +195,7 @@ public class ConfigDefinitionParser
                                   name,
                                   icon_location,
                                   version,
+                                  is_abstract,
                                   parent_definitions,
                                   help,
                                   categories,
@@ -408,6 +420,7 @@ public class ConfigDefinitionParser
 
    private static final Namespace DEF_NS = Namespace.getNamespace("http://www.vrjuggler.org/jccl/xsd/3.1/definition");
 
+   private static final String ABSTRACT               = "abstract";
    private static final String ALLOWED_TYPE           = "allowed_type";
    private static final String CATEGORY               = "category";
    private static final String DEFAULTVALUE           = "defaultvalue";

@@ -44,6 +44,8 @@ public interface ConfigDefinitionListener
 
    public void tokenChanged(ConfigDefinitionEvent evt);
 
+   public void abstractChanged(ConfigDefinitionEvent evt);
+
    public void helpChanged(ConfigDefinitionEvent evt);
 
    public void categoryAdded(ConfigDefinitionEvent evt);
