@@ -556,7 +556,7 @@ public class TweekFrame
          };
 
          // Fire every half second.
-         Timer timer = new Timer(500, task);
+         javax.swing.Timer timer = new javax.swing.Timer(500, task);
 
          // First delay 2 seconds.
          timer.setInitialDelay(2000);
