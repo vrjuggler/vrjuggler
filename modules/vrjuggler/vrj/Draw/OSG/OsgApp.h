@@ -268,12 +268,12 @@ inline void OsgApp::draw()
 
    // Copy the matrix
    Projection* project = userData->getProjection();
-   float* vj_proj_view_mat = project->mViewMat.mData;
+   const float* vj_proj_view_mat = project->getViewMatrix().mData;
    osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
    osg_proj_xform_mat->set( vj_proj_view_mat );
 
    //Get the frustrum
-   Frustum frustum = project->mFrustum;
+   Frustum frustum = project->getFrustum();
 
    //Reset the camera
    osg::Camera* the_cam = sv->getCamera();
