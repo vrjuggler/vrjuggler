@@ -63,6 +63,12 @@ AC_ARG_WITH(oglroot,
             [  --with-oglroot=[PATH]   OpenGL installation directory [default=/usr]],
             OGLROOT="$withval", OGLROOT='/usr')
 
+dnl # Specify a directory containing a working Perl 5.004 (or newer) binary.
+dnl # There is no default since standard locations are always available.
+AC_ARG_WITH(perl,
+            [  --with-perl=[PATH]      Directory containing Perl 5.004 or newer binary],
+            _user_perl_path="$withval")
+
 dnl # ------------------------------------------------------ #
 dnl # --enable-feature[=arg] and --disable-feature arguments #
 dnl # ------------------------------------------------------ #
@@ -458,6 +464,13 @@ chkPerl ( ) {
 }
 
 _PERL_PATH='/usr/local/bin /usr/bin'
+
+dnl # If ${_user_perl_path} has a value, prepend that on ${_PERL_PATH} so that
+dnl # it will be checked before the standard places.
+if test ! -z "${_user_perl_path}" ; then
+    _PERL_PATH="${_user_perl_path} ${_PERL_PATH}"
+fi
+
 AC_CACHE_CHECK(for Perl version >= 5.004,
                ac_cv_perl_version,
                [ ac_cv_perl_version='no' ;
