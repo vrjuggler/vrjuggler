@@ -38,8 +38,9 @@
 // Platform-independent devices.
 #include <gadget/Type/Input.h>
 #include <gadget/Devices/Sim/SimInput.h>
-#include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/Glove.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/EventWindow.h>
 #include <gadget/Type/SpeechRecogDigital.h>
@@ -121,6 +122,14 @@ void BaseTypeFactory::hackLoadKnownDevices()
    // Input SpeechRecogDigital
    BaseTypeConstructor< InputMixer<Input, SpeechRecogDigital>::MixedPlaceholderType >* input_speech_digital
          = new BaseTypeConstructor< InputMixer<Input, SpeechRecogDigital>::MixedPlaceholderType >;
+   
+   // Input Glove
+   BaseTypeConstructor< InputMixer<Input,Glove>::MixedPlaceholderType >* input_glove
+         = new BaseTypeConstructor< InputMixer<Input,Glove>::MixedPlaceholderType >;
+   
+   // Input Glove Digital
+   BaseTypeConstructor< InputMixer< InputMixer<Input, Glove> , Digital>::MixedPlaceholderType >* input_glove_digital
+         = new BaseTypeConstructor< InputMixer< InputMixer<Input, Glove> , Digital>::MixedPlaceholderType >;
 
    if( (NULL == input_digital) ||
        (NULL == input_analog) ||
@@ -134,7 +143,9 @@ void BaseTypeFactory::hackLoadKnownDevices()
        (NULL == siminput_input_analog) ||
        (NULL == input_keyboard) ||
        (NULL == input_speech_string) ||
-       (NULL == input_speech_digital) )
+       (NULL == input_speech_digital) ||
+       (NULL == input_glove) ||
+       (NULL == input_glove_digital) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrRED,"ERROR:") << " Failed to load a known device\n"
