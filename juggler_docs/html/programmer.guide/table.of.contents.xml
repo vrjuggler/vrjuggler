@@ -119,6 +119,16 @@ Builder: JExplorerBuilder V 1. 0. 7
 			link="${PROGRAMMERGUIDE}/app.construction/vtk/creating_vtk_apps.html"
 			info="VTK Applications">			
 	</folder>
+
+        < item title="Porting CAVElib" 
+	    link="${PROGRAMMERGUIDE}/app.construction/cave-to-juggler.html" 
+	    info="Converting a CAVElib application to a VR Juggler application" 
+	    image="Leaf.gif" >
+        < item title="Porting GLUT" 
+    	    link="${PROGRAMMERGUIDE}/app.construction/glut-to-juggler.html" 
+	    info="Converting a GLUT application to a VR Juggler application" 
+	    image="Leaf.gif" >
+
 	
 </folder>
 <folder title="Adv Topics"
@@ -160,16 +170,6 @@ Builder: JExplorerBuilder V 1. 0. 7
 </folder>
 
 
-
-
-< item title="Porting from CAVElib" 
-	link="${PROGRAMMERGUIDE}/app.construction/cave-to-juggler.html" 
-	info="Converting a CAVElib application to a VR Juggler application" 
-	image="Leaf.gif" >
-< item title="Porting from GLUT" 
-	link="${PROGRAMMERGUIDE}/app.construction/glut-to-juggler.html" 
-	info="Converting a GLUT application to a VR Juggler application" 
-	image="Leaf.gif" >
 
 </rootfolder>
 </idefault>

@@ -19,26 +19,26 @@ F.A.Q.</H2>
   <ul>
     <li><a href="#general"> General</a>
       <ul>
-        <li> <a href="#isthereafaq">Is there a FAQ for VR Juggler?</a></li>
+        <li> <a href="#isthereafaq">Is there a FAQ for VR Juggler?</a>
 
         <li> <a href="#anyapps">Are there any applications (other than the
-            demos) that can be downloaded for vrjuggler?</a></li>
+            demos) that can be downloaded for vrjuggler?</a>
 
-	<li><a href="#WhatIs">What is VR Juggler?</a></li>
-	<li><a href="#WhatIsNot">What is VR Juggler not?</a></li>
-	<li><a href="#getstarted">Great, where do I begin?</a></li>
+	<li><a href="#WhatIs">What is VR Juggler?</a>
+	<li><a href="#WhatIsNot">What is VR Juggler not?</a>
+	<li><a href="#getstarted">Great, where do I begin?</a>
         <li>
           <a href="#whatdoineed">What do I need to run a VR Juggler
           application?</a>
-        </li>
+        
         <li>
           <a href="#supported_compilers">What C++ compilers are
           supported?</a>
-        </li>
+        
         <li>
 	  <a href="#compilejugglerwin32">How do I compile the juggler source
 	  code under Win32?</a>
-        </li>
+        
       </ul>
     </LI>
 
@@ -46,10 +46,10 @@ F.A.Q.</H2>
       <ul>
         <li>
 	  <a href="#vjcontrolDoesntRun">Why doesn't VjControl run?</a>
-	</li>
+	
         <li>
 	  <a href="#swingall-jar">What's <TT>swingall.jar</TT>?</a>
-	</li>
+	
       </ul>
     </LI>
 
@@ -58,61 +58,51 @@ F.A.Q.</H2>
       <ul>
         <LI><A HREF="#head_wand">Why is there a blue sphere and a green cone
         in my way when I run in simulator mode?</A></LI>
-        <li><a href="#cavelib2dxform"> 2D Projections </a></li>
+        <li><a href="#cavelib2dxform"> 2D Projections </a>
         <li><a href="#portingcaveapps"> How do I port a CAVElib application
-	to VR Juggler?</a></li>
+	to VR Juggler?</a>
+        <li><a href="#portingglutapps"> How do I port a GLUT application to VR Juggler?</a>
         <li>
 	  <a href="#c++compiler">When I compile, the file <TT>vector</TT>
           (or <TT>algorithm</TT> or <TT>iostream</TT> etc.) cannot be found</a>
-        </li>
+        
       </ul>
-    </li>
+    
 
-    <li><a href="#dev"> Juggler Development</a></LI>
-
-    <li>
-      <a href="#troubleshooting"> Troubleshooting</a> 
-
+   <li><a href="#dev"> Juggler Development</a></LI>
+   <ul>
+      <li><a href="#dev-patches"> How can I submit changes/patches?
+      <li><a href="#dev-join"> How do I join the VR Juggler Development Team? 
+   </ul>
+   <li><a href="#troubleshooting"> Troubleshooting</a> 
+   <ul>
+	   <li><a href="#general_compile">General Compiling</a> 
+	   <UL>
+	      <LI><A HREF="#no_includes">When I compile a sample application,
+	           the compiler cannot find any VR Juggler headers</A>
+	      <LI><A HREF="#no_libs">When I compile a sample application, the
+	          compiler cannot find any VR Juggler libraries</A>
+	      <LI> <A HREF="#makefile">I just compiled on Platform X, but now my
+               application's makefile does not work at all on Platform Y</A>
+      </UL>
+      <li><a href="#performer"> Performer</a>
       <ul>
-	<li><a href="#general_compile">General Compiling</a> 
-	  <UL>
-	    <LI>
-	      <A HREF="#no_includes">When I compile a sample application,
-	      the compiler cannot find any VR Juggler headers</A>
-	    </LI>
-	    <LI>
-	      <A HREF="#no_libs">When I compile a sample application, the
-	      compiler cannot find any VR Juggler libraries</A>
-	    </LI>
-	    <LI>
-	      <A HREF="#makefile">I just compiled on Platform X, but now my
-	      application's makefile does not work at all on Platform Y</A>
-	    </LI>
-	  </UL>
-	</LI>
-	<li><a href="#performer"> Performer</a> 
-	  <ul>
-	    <li><a href="#pftexturing"> Why does texturing not work?  I
-	    copied the <TT>pfNav</TT> sample!</a>
-	  </ul>
-          <li><a href="#linuxandperformer"> LiNUX and Performer</a> 
-	    <ul>
-	      <li><a href="#lnpnotcompile"> Why don't my LiNUX/Performer Juggler applications compile?</a> 
-	    </ul>
-	  <li><a href="#SGI"> SGI</a>
-	      <ul>
-		<li><a href="#sginotcompile"> Why don't my SGI Juggler applications compile?</a> 
-	      </ul>
-	  </li>
+         <li><a href="#pftexturing"> Why does texturing not work?  I
+              copied the <TT>pfNav</TT> sample!</a>
       </ul>
-    </LI>
+      <li><a href="#linuxandperformer"> LiNUX and Performer</a> 
+	   <ul>
+	      <li><a href="#lnpnotcompile"> Why don't my LiNUX/Performer Juggler applications compile?</a> 
+	   </ul>
+	   <li><a href="#SGI"> SGI</a>
+	   <ul>
+		   <li><a href="#sginotcompile"> Why don't my SGI Juggler applications compile?</a> 
+	   </ul>
+ </ul>
+ <li><a href="#misc">Misc</a>
 
-    <li>
-      <a href="#misc">Misc</a>
-    </li>
-
-    <LI><font size=1>Can't find your answer here? <a href="${MAILTO_JUGGLER_MAILING_LIST}">Contact The User List</a></font></li>
-  </ul>
+ <LI><font size=1>Can't find your answer here? <a href="${MAILTO_JUGGLER_MAILING_LIST}">Contact The User List</a></font>
+</ul>
 
 <HR><!-- ----------------------------------------- -->
 <!-- table of contents end -->
@@ -379,8 +369,9 @@ F.A.Q.</H2>
 	VR Juggler?  Or please summerize a Juggler application so I can
 	better understand how to port my app.</b></a>
       <DD>
-	The sample code and header for vjGlApp illustrates this, but here's
-	an overview:
+   
+   1.) See our <a href="${PROGRAMMERGUIDE}/app.construction/cave-to-juggler.html">CAVElib-to-Juggler porting guide</a> for details and code examples.<BR>
+   2.) Otherwise, here's a quick overview:
 
 	<BLOCKQUOTE>
 	  <P>
@@ -458,8 +449,17 @@ F.A.Q.</H2>
 	</BLOCKQUOTE>
 
 	<P> </P>
+
       </DD>
 
+   <DT><a name="portingcaveapps"><b>How do I port a CAVElib application to
+	VR Juggler?  Or please summerize a Juggler application so I can
+	better understand how to port my app.</b></a>
+      <DD>
+   
+   See our <a href="${PROGRAMMERGUIDE}/app.construction/cave-to-juggler.html">CAVElib-to-Juggler porting guide</a> for details and code examples.<BR>
+   </dd>
+   
     <DT><a name="c++compiler"><B>When I compile, the file <TT>vector</TT>
 	(or <TT>algorithm</TT> or <TT>iostream</TT> etc.) cannot be
 	found</B></a>
@@ -486,7 +486,7 @@ F.A.Q.</H2>
 <h3><a name="dev">Juggler Development</a></h3>
 
   <DL>
-    <DT><B>How can I submit changes/patches?</B>
+    <DT><B><a name="dev-patches">How can I submit changes/patches?</B>
       <DD>
 	This question is too broad to be answered concisely here.  Lucky
 	for you, there is an entire
@@ -496,7 +496,7 @@ F.A.Q.</H2>
 	<P> </P>
       </DD>
 
-    <DT><b>How do I join the VR Juggler Development Team?</b>
+    <DT><b><a name="dev-join">How do I join the VR Juggler Development Team?</b>
       <DD>
 	It's easy.  Just <a href="${CONTACT_US_DIRECTLY}">email us</a>.
 	Currently there is much to be done, especially in the device driver 

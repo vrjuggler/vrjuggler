@@ -53,6 +53,12 @@ vjDigital and vjAnalog using multiple inheritance:
    class MyNewJoystickDevice : public vjDigital, public vjAnalog
 </pre>
 
+<p>
+<b>NOTE</b>: to use your joystick in place of a tracker, you should derive instead from vjPosition.  This way you
+can replace real trackers with your joystick pseudo tracker.  Basically if you ever want one device to be able to
+replace another device, then you need to make sure it derives from the same base classes as that device..
+</p>
+
 <h4> <a name="impl">Implementing the device driver</a> </h4>
 
 <p>
@@ -64,7 +70,7 @@ With this class definition, you also need to define 6 member functions:
    <li><tt> virtual int   startSampling()</tt><BR>
       <p>
       This function starts a new thread with code that looks something like: 
-      <tt>myThread = new <a href="broken thread link 1of3">vjThread</a>( ::sampleFunction, (void*)this, 0 );</tt> 
+      <pre>myThread = new <a href="broken thread link 1of3">vjThread</a>( ::sampleFunction, (void*)this, 0 );</pre> 
       which then calls within the newly spawned thread <tt> ::threadedSampleFunction </tt> which is 
       defined in the global scope like this:
       </p>
@@ -127,7 +133,7 @@ With this class definition, you also need to define 6 member functions:
 <pre>
    void MyNewJoystickDevice::updateData()
    {
-      vjGuard&lt;vjMutex&gt; updateGuard(lock);
+      vjGuard&lt;vjMutex&gt; updateGuard( lock );
 
       // Copy the valid data to the current data so that both are valid
       mSampledDigitalData[current] = mSampledDigitalData[valid];   
@@ -144,7 +150,7 @@ With this class definition, you also need to define 6 member functions:
       <tt>return "MyNewJoystickDevice";</tt>
       </p>
 
-   <li><tt> virtual int   getDigitalData(int devNum = 0)</tt><BR>
+   <li><tt> virtual int   getDigitalData( int devNum = 0 )</tt><BR>
       <p>
       NOTE: It is wise to use <a href="${GLOSSARY}#triple buffered data">triple buffered data</a> here, 
       so that you are not writing to the data as it is being read.  
@@ -153,9 +159,26 @@ With this class definition, you also need to define 6 member functions:
       </p>
 
 <pre>
-   int MyNewJoystickDevice::getDigitalData(int d)
+   int MyNewJoystickDevice::getDigitalData( int d )
    {
        return mSampledDigitalData[current];
+   }
+</pre>
+
+   <li><tt> virtual float   getAnalogData(int devNum = 0)</tt><BR>
+     For our joystick, this is the function that the client would use to get the values for the X and Y axes.
+     Our data here is a little more complex, it is a 2D (for 2 axes) 
+     <a href="${GLOSSARY}#triple buffered data">triple buffered</a> float.  NOTE: to use your joystick in place of
+a tracker, you should derive instead from vjPosition.  This way you can replace real trackers with your
+joystick pseudo tracker.  Basically if you ever want one device to be able to replace another device, then you
+need
+to make sure it derives from the same base classes as that device..
+
+<pre>
+   float MyNewJoystickDevice::getAnalogData( int axis )
+   {
+       assert( axis >= 0 && axis <=1 && "only 2 - x and y - axes available" );
+       return mSampledAnalogData[current][axis]; // 
    }
 </pre>
 </ul>

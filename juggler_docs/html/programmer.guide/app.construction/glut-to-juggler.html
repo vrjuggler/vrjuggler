@@ -34,8 +34,8 @@
    In Juggler, window creation is done for you based on your configuration file settings.
    There are two window types, <b>Surface</b>, and <b>Simulator</b>.  
    
-   A <a href="${GLOSSARY}#surface window">Surface Window</a> can be put into <tt>stereo</tt>, <tt>right eye</tt>, or 
-   <tt>left eye</tt> display modes.  Most interesting is the stereo mode since it requires 
+   A <a href="${GLOSSARY}#surface window">Surface Window</a> can be put into [<tt>stereo</tt>], [<tt>right eye</tt>], or 
+   [<tt>left eye</tt>] display modes.  Most interesting is the stereo mode since it requires 
    special hardware to display stereo, and creates the most immersive experience.  
    
    A <a href="${GLOSSARY}#simulator window">Simulator Window</a> is special because 
@@ -109,7 +109,7 @@ methods to encapsulate the functionality of the application within one C++ class
 
 <h3><a name="input">Getting input from devices</a></h3>
 <ul>
-   <h4>In GLUT(tm)</h4>
+   <h4>In GLUT</h4>
    For keyboard input you used these functions:
    <ul>
    <li>::glutKeyboardFunc( OnKeyboardDown );
@@ -154,9 +154,10 @@ initializations since it is called once per display context after each has becom
 
 <h3><a name="config">Configuration</a></h3>
 <ul>
-   <h4>In GLUT(tm):</h4>
+   <h4>In GLUT:</h4>
    <p>
-   There is no built-in configuration system...
+   There is no built-in configuration system...  All system settings
+   are coded using the glut API.
    </p>
 
    <h4>In VRJuggler:</h4>
@@ -179,34 +180,36 @@ initializations since it is called once per display context after each has becom
    <pre>
    void main(int argc, char* argv[])
    {
-      // initialize the application data here
+      //: initialize the application data here
       OnApplicationInit();
 
-      // create a window to render graphics in
-      // In Juggler, window creation is done for you based on your configuration file settings.
+      //: create a window to render graphics in
+      //  In Juggler, window creation is done for you based on your configuration file settings.
       ::glutInitWindowSize( 640, 480 );
       ::glutInit( &argc, argv );
       ::glutInitDisplayMode( GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE );
       ::glutCreateWindow( "GLUT application" );
 
-      // display callbacks.
-      // NOTE: the first time OnIdle is called is when you should initialize each display context
-      //       this is analogous to VR Juggler's <b>vjGlApp::contextInit()</b> function
+      //: display callbacks.
+      // NOTE: the first time OnIdle is called is when you should 
+      //       initialize the display context for each window
+      //       (doing this is analogous to VR Juggler's 
+      //       <b>vjGlApp::contextInit()</b> function)
       ::glutReshapeFunc( OnReshape );
       ::glutIdleFunc( OnIdle );
       ::glutDisplayFunc( OnIdle );
 
-      // tell glut to not call the keyboard callback repeatedly 
+      //: tell glut to not call the keyboard callback repeatedly 
       // when holding down a key. (uses edge triggering, like the mouse does)
       ::glutIgnoreKeyRepeat( 1 );
 
-      // keyboard callback functions.
+      //: keyboard callback functions.
       ::glutKeyboardFunc( OnKeyboardDown );
       ::glutKeyboardUpFunc( OnKeyboardUp );
       ::glutSpecialFunc( OnSpecialKeyboardDown );
       ::glutSpecialUpFunc( OnSpecialKeyboardUp );
 
-      // mouse callback functions...
+      //: mouse callback functions...
       ::glutMouseFunc( OnMouseClick );
       ::glutMotionFunc( OnMousePos );
       ::glutPassiveMotionFunc( OnMousePos );
@@ -222,20 +225,20 @@ initializations since it is called once per display context after each has becom
    class MyApplication
    {
    public:
-   // Data callbacks  (Do not put OpenGL code here)
+   //: Data callbacks  (Do not put OpenGL code here)
       virtual void init();
       virtual void preFrame();
       virtual void intraFrame();
       virtual void postFrame();
       
-   // OpenGL callbacks (put only OpenGL code here)
+   //: OpenGL callbacks (put only OpenGL code here)
       virtual void contextInit();
       virtual void draw();
    };
 
    int main(int argc, char* argv[]) 
    {
-      // configure kernel with *.config files
+      //: configure kernel with *.config files
       vjKernel* kernel = vjKernel::instance(); // Get the kernel
       for(int i=1;i&lt;argc;i++)
       {
@@ -243,14 +246,14 @@ initializations since it is called once per display context after each has becom
          kernel-&gt;loadConfigFile(argv[i]);
       }
 
-      // start the kernel
+      //: start the kernel
       kernel-&gt;start();
 
-      // set the application for the kernel to run
+      //: set the application for the kernel to run
       MyApplication* application = new MyApplication();
       kernel-&gt;setApplication(application);
 
-      // hit CTRL-C to exit.
+      //: hit CTRL-C to exit.
       while (1)
       {
          // Juggler executes within other threads, so sleep here.
