@@ -37,67 +37,70 @@
 # -----------------------------------------------------------------------------
 # Targets are:
 #
-# world           - Build and install everything.
-# world-all-abi   - Build and install everything using all supported ABIs.
-# buildworld      - Build everything (same as 'all').
-# installworld    - Install everything (same as 'install-all').  This requires 
-#                   that 'buildworld' be successfully completed beforehand.
-# release         - Build and install a release version.
+# world             - Build and install everything.
+# world-all-abi     - Build and install everything using all supported ABIs.
+# buildworld        - Build everything (same as 'all').
+# installworld      - Install everything (same as 'install-all').  This
+#                     requires  that 'buildworld' be successfully completed
+#                     beforehand.
+# release           - Build and install a release version.
 #
-# all             - Build everything.
-# all-abi         - Build everything using all supported ABIs.
-# debug           - Build the VR Juggler libraries (dynamic and static) with
-#                   debugging symbols turned on.
-# dbg             - Build the debugging, static copy of the libraries.
-# ddso            - Build the debugging, dynamic shared object version of the
-#                   libraries.
-# optim           - Build the VR Juggler libraries (dynamic and static) with
-#                   optimization flags enabled.
-# opt             - Build the optimized, static version of the libraries.
-# dso             - Build the dynamic shared object version of the libraries.
-# obj             - Build the object files using the default value for
-#                   $(OBJDIR).
-# gui             - Build VjControl, the Java-based configuration GUI.
+# all               - Build everything.
+# all-abi           - Build everything using all supported ABIs.
+# debug             - Build the VR Juggler libraries (dynamic and static) with
+#                     debugging symbols turned on.
+# dbg               - Build the debugging, static copy of the libraries.
+# ddso              - Build the debugging, dynamic shared object version of
+#                     the libraries.
+# optim             - Build the VR Juggler libraries (dynamic and static) with
+#                     optimization flags enabled.
+# opt               - Build the optimized, static version of the libraries.
+# dso               - Build the dynamic shared object version of the
+#                     libraries.
+# obj               - Build the object files using the default value for
+#                     $(OBJDIR).
+# vjcontrol         - Build VjControl, the Java-based configuration GUI.
 #
-# links           - Define links (for developer use only) that provide
-#                   functionality allowing the use of the $VJ_BASE_DIR
-#                   environment variable.
-# clean-links     - Remove the symlinks created by 'links'.
+# links             - Define links (for developer use only) that provide
+#                     functionality allowing the use of the $VJ_BASE_DIR
+#                     environment variable.
+# clean-links       - Remove the symlinks created by 'links'.
 #
-# hier            - Make the full directory hierarchy for the installation.
-# install-all     - Install all versions of the libraries, all header files,
-#                   the Data directory, the configuration GUI and the test
-#                   code.
-# install-all-abi - Install every ABI possible on the target platform.
-# install         - Install the full debugging version of VR Juggler (with
-#                   both static and dynamic libraries). 
-# install-debug   - Same as 'install'.
-# install-dbg     - Install the debugging, static version of the libraries.
-# install-ddso    - Install the debugging, dynamic shared object version of
-#                   the libraries.
-# install-optim   - Install the full optimized version of VR Juggler (with
-#                   both static and dynamic libraries).
-# install-opt     - Install the optimized, static version of the libraries.
-# install-dso     - Install the dynamic shared object version of the libraries.
-# install-headers - Install only the header files.
-# install-samples - Install only the sample applications.
-# install-test    - Install only the test code.
-# install-tools   - Install only the user tools code.
-# install-data    - Install only the Data directory.
-# install-gui     - Install only the configuration GUI.
+# hier              - Make the full directory hierarchy for the installation.
+# install-all       - Install all versions of the libraries, all header files,
+#                     the Data directory, the configuration GUI and the test
+#                     code.
+# install-all-abi   - Install every ABI possible on the target platform.
+# install           - Install the full debugging version of VR Juggler (with
+#                     both static and dynamic libraries). 
+# install-debug     - Same as 'install'.
+# install-dbg       - Install the debugging, static version of the libraries.
+# install-ddso      - Install the debugging, dynamic shared object version of
+#                     the libraries.
+# install-optim     - Install the full optimized version of VR Juggler (with
+#                     both static and dynamic libraries).
+# install-opt       - Install the optimized, static version of the libraries.
+# install-dso       - Install the dynamic shared object version of the
+#                     libraries.
+# install-headers   - Install only the header files.
+# install-samples   - Install only the sample applications.
+# install-test      - Install only the test code.
+# install-tools     - Install only the user tools code.
+# install-data      - Install only the Data directory.
+# install-vjcontrol - Install only VjControl.
 #
-# docs            - Build the internal and the public documentation.
-# doc-internal    - Build only the internal documentation.
-# doc-public      - Build only the public documentation.
+# docs              - Build the internal and the public documentation.
+# doc-internal      - Build only the internal documentation.
+# doc-public        - Build only the public documentation.
 #
-# clean           - Clean up everything (uses common 'clean' target).
-# cleandepend     - Clean up the dependency files (uses common 'cleandepend'
-#                   target).
-# clobber         - Clean up everything and remove the directories containing
-#                   the compiled libraries and its object files.
+# clean             - Clean up everything (uses common 'clean' target).
+# cleandepend       - Clean up the dependency files (uses common 'cleandepend'
+#                     target).
+# clobber           - Clean up everything and remove the directories
+#                     containing the compiled libraries and its object files.
 #
-# info            - Print out information about the build process that may be
-#                   useful to the user.
+# info              - Print out information about the build process that may
+#                     be useful to the user.
 #
 # The default target is 'debug'.  'install' will install the debugging, static
 # version of the libraries.
@@ -158,7 +161,7 @@ ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
 	@$(MAKE) $(BEFOREBUILD)
-	@$(MAKE) libs gui
+	@$(MAKE) libs vjcontrol
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler installation process"
 	@echo "---------------------------------------------------------------"
@@ -187,7 +190,7 @@ endif
             echo "------------------------------------------------" ;	\
             $(MAKE) vjABI=$$abi libs ;					\
           done
-	@$(MAKE) gui
+	@$(MAKE) vjcontrol
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler installation process"
 	@echo "---------------------------------------------------------------"
@@ -217,7 +220,7 @@ ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
 	@$(MAKE) $(BEFOREBUILD)
-	@$(MAKE) libs gui
+	@$(MAKE) libs vjcontrol
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler release installation process"
 	@echo "---------------------------------------------------------------"

@@ -65,31 +65,31 @@ Build targets are:
                       libraries.
     obj             - Build the object files using the default value for
                       $(OBJDIR).
-    gui             - Build the Java-based configuration GUI.
+    vjcontrol       - Build VjControl, the Java-based configuration GUI.
 
 Install targets are:
-    hier            - Make the full directory hierarchy for the installation.
-    install-all     - Install all versions of the libraries, all header files,
-                      the Data directory, the configuration GUI and the test
-                      code.
-    install-all-abi - Install every ABI possible on the target platform.
-    install         - Install the full debugging version of VR Juggler (with
-                      both static and dynamic libraries). 
-    install-debug   - Same as 'install'.
-    install-dbg     - Install the debugging, static version of the libraries.
-    install-ddso    - Install the debugging, dynamic shared object version of
-                      the libraries.
-    install-optim   - Install the full optimized version of VR Juggler (with
-                      both static and dynamic libraries).
-    install-opt     - Install the optimized, static version of the libraries.
-    install-dso     - Install the dynamic shared object version of the
-                      libraries.
-    install-headers - Install only the header files.
-    install-samples - Install only the sample applications.
-    install-test    - Install only the test code.
-    install-tools   - Install only the user tools code.
-    install-data    - Install only the Data directory.
-    install-gui     - Install only the configuration GUI.
+    hier              - Make the full directory hierarchy for the installation.
+    install-all       - Install all versions of the libraries, all header
+                        files, the Data directory, the configuration GUI and
+                        the test code.
+    install-all-abi   - Install every ABI possible on the target platform.
+    install           - Install the full debugging version of VR Juggler (with
+                        both static and dynamic libraries). 
+    install-debug     - Same as 'install'.
+    install-dbg       - Install the debugging, static version of the libraries.
+    install-ddso      - Install the debugging, dynamic shared object version of
+                        the libraries.
+    install-optim     - Install the full optimized version of VR Juggler (with
+                        both static and dynamic libraries).
+    install-opt       - Install the optimized, static version of the libraries.
+    install-dso       - Install the dynamic shared object version of the
+                        libraries.
+    install-headers   - Install only the header files.
+    install-samples   - Install only the sample applications.
+    install-test      - Install only the test code.
+    install-tools     - Install only the user tools code.
+    install-data      - Install only the Data directory.
+    install-vjcontrol - Install only VjControl.
 
 Documentation generation targets:
     docs            - Build the internal and the public documentation.
