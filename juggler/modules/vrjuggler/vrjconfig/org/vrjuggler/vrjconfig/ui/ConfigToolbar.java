@@ -187,7 +187,7 @@ public class ConfigToolbar
     */
    public boolean doNew()
    {
-      NewConfigDialog new_dlg = new NewConfigDialog(fileChooser);
+      NewConfigDialog new_dlg = new NewConfigDialog(fileChooser.getCurrentDirectory());
       int option = new_dlg.showDialog(this);
       if (option == NewConfigDialog.APPROVE_OPTION)
       {
