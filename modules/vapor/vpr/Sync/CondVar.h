@@ -35,29 +35,17 @@
 
 #include <vpr/vprConfig.h>
 
-#if defined(VPR_USE_IRIX_SPROC)
+#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
 #    include <ulocks.h>
 #    include <vpr/Sync/CondVarGeneric.h>
-
-namespace vpr {
-    typedef CondVarGeneric CondVar;
-};
-#elif defined(VPR_USE_PTHREADS)
+#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #ifndef _POSIX_C_SOURCE
 #   define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE
 #endif
 
 #   include <vpr/md/POSIX/Sync/CondVarPosix.h>
-
-namespace vpr {
-    typedef CondVarPosix CondVar;
-};
-#else
+#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #   include <vpr/md/NSPR/Sync/CondVarNSPR.h>
-
-namespace vpr {
-    typedef CondVarNSPR CondVar;
-};
 #endif   /* VPR_IRIX_SPROC */
 
 #endif

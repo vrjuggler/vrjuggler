@@ -36,7 +36,6 @@
 #include <vpr/vprConfig.h>
 
 // include bridge class
-#include <vpr/IO/Socket/SocketConfiguration.h>
 #include <vpr/IO/Socket/Socket_t.h>
 
 namespace vpr

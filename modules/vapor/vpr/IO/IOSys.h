@@ -1,5 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
- *
+/*************** <auto-copyright.pl BEGIN do not edit this line> ************** *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
  * Original Authors:
@@ -35,19 +34,11 @@
 
 #include <vpr/vprConfig.h>
 
-// determine which implementation of vprSystem to include.
-#if defined(VPR_USE_NSPR)
+// determine which implementation of vpr::IOSys to include.
+#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #   include <vpr/md/NSPR/IO/IOSysNSPR.h>
-
-namespace vpr {
-    typedef IOSysNSPR IOSys;
-};
-#elif defined(VPR_USE_IRIX_SPROC) || defined(VPR_USE_PTHREADS)
+#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #   include <vpr/md/POSIX/IO/IOSysUnix.h>
-
-namespace vpr {
-    typedef IOSysUnix IOSys;
-};
 #endif
 
 #endif   /* _VPR_IOSYS_FAKE_H_ */

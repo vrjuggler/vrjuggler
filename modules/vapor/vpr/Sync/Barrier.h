@@ -35,16 +35,11 @@
 
 #include <vpr/vprConfig.h>
 
-#ifdef VPR_USE_IRIX_SPROC    // ---- SGI IPC Barrier ------ //
+#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
 #   include <ulocks.h>
 #   include <vpr/md/SPROC/Sync/BarrierSGI.h>
-
-namespace vpr {
-    typedef  vprBarrierSGI vprBarrier;
-};
-
-#else
-
+#elif (VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR) || \
+      (VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX)
 #include <vpr/Sync/CondVar.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>

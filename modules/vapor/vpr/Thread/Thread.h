@@ -35,7 +35,6 @@
 //#pragma once
 
 #include <vpr/vprConfig.h>
-//#include <unistd.h>
 
 #include <vpr/Thread/BaseThread.h>
 
@@ -46,25 +45,12 @@ namespace vpr {
 };
 
 /* IRIX SPROC */
-#if defined(VPR_USE_IRIX_SPROC)
-namespace vpr {
-    typedef struct cancel_state cancel_state_t;
-
-    typedef class ThreadSGI    Thread;
-    typedef class ThreadKeySGI KeyId;
-};
-
+#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
 #   include <vpr/md/SPROC/Thread/ThreadSGI.h>
 #   include <vpr/md/SPROC/Thread/ThreadKeySGI.h>
 
 /* POSIX */
-#elif defined(VPR_USE_PTHREADS)
-namespace vpr {
-    typedef int cancel_state_t;
-    typedef class ThreadPosix    Thread;
-    typedef class ThreadKeyPosix KeyId;
-};
-
+#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #ifndef _POSIX_C_SOURCE
 #   define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE
 #endif
@@ -73,13 +59,8 @@ namespace vpr {
 #   include <vpr/md/POSIX/Thread/ThreadKeyPosix.h>
 
 /* NSPR */
-#else
+#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #   include <vpr/md/NSPR/Thread/ThreadNSPR.h>
-
-namespace vpr {
-    typedef class ThreadNSPR    Thread;
-//    typedef class ThreadKeyNSPR KeyId;
-};
 #endif  /* VPR_USE_IRIX_SPROC */
 
 
