@@ -42,7 +42,7 @@ ECHO [ERR] check the path and try again.
 GOTO ERREXIT
 :TEST_TWEEK_BASE
 IF NOT "%TWEEK_BASE_DIR%" == "" GOTO TEST_TWEEK_EXIST
-ECHO  WARNING: Setting TWEEK_BASE_DIR to "%VJ_BASE_DIR%"
+ECHO  NOTE: Setting TWEEK_BASE_DIR to "%VJ_BASE_DIR%"
 set TWEEK_BASE_DIR=%VJ_BASE_DIR%
 :TEST_TWEEK_EXIST
 IF EXIST "%TWEEK_BASE_DIR%" GOTO TEST_JCCL_DEF
@@ -51,7 +51,7 @@ ECHO [ERR] check the path and try again.
 GOTO ERREXIT
 :TEST_JCCL_DEF
 IF NOT "%JCCL_DEFINITION_PATH%" == "" GOTO RUNJAVA
-ECHO  WARNING: Setting JCCL_DEFINITION_PATH to "%VJ_BASE_DIR%\share\vrjuggler\data\definitions"
+ECHO  NOTE: Setting JCCL_DEFINITION_PATH to "%VJ_BASE_DIR%\share\vrjuggler\data\definitions"
 set JCCL_DEFINITION_PATH=%VJ_BASE_DIR%\share\vrjuggler\data\definitions
 :RUNJAVA
 java -DTWEEK_BASE_DIR="%TWEEK_BASE_DIR%" -DVJ_BASE_DIR="%VJ_BASE_DIR%" -DJCCL_DEFINITION_PATH="%JCCL_DEFINITION_PATH%" -Djava.security.policy="%TWEEK_BASE_DIR%/bin/java.security.policy.txt" -cp "%TWEEK_BASE_DIR%/bin/jdom.jar;%TWEEK_BASE_DIR%/bin/xerces.jar;%TWEEK_BASE_DIR%/bin/Tweek.jar;%TWEEK_BASE_DIR%/bin/TweekBeans.jar;%TWEEK_BASE_DIR%/bin/TweekEvents.jar;%TWEEK_BASE_DIR%/bin/TweekNet.jar;%TWEEK_BASE_DIR%/bin/TweekBeanDelivery.jar;%TWEEK_BASE_DIR%/bin/TweekServices.jar;%TWEEK_BASE_DIR%/bin/kunststoff-mod.jar;%TWEEK_BASE_DIR%/bin/liquidlnf.jar;%TWEEK_BASE_DIR%/bin/metouia.jar;%TWEEK_BASE_DIR%/bin/looks.jar" org.vrjuggler.tweek.Tweek --defaultbean="Configuration Editor" %*
