@@ -35,12 +35,13 @@
 #include <ctype.h>
 #include <drivers/Intersense/IntersenseAPI/IntersenseAPIStandalone.h>
 
-bool IntersenseAPIStandalone::open(const std::string& dso_location)
+bool IntersenseAPIStandalone::open(const std::string& dsoLocation)
 {
    if(!mActive)
    {
       int port_num = convertPort(mPort); 
-      mHandle = ISD_OpenTracker( (Hwnd) NULL, port_num, true, true , dso_location.c_str());
+      mHandle = ISD_OpenTracker((Hwnd) NULL, port_num, true, true,
+                                dsoLocation.c_str());
       if (-1 != mHandle) 
       {
          mActive = true;
@@ -67,7 +68,8 @@ int IntersenseAPIStandalone::convertPort(const std::string& port)
    {
       result = "0";
    }
-   std::cout << "Converted port: " << port << " to port #" << result << std::endl;
+   std::cout << "Converted port: " << port << " to port #" << result
+             << std::endl;
    return(atoi(result.c_str()));
 }
 
