@@ -57,6 +57,8 @@ import org.vrjuggler.tweek.beans.HelpProvider;
 import org.vrjuggler.tweek.beans.UndoHandler;
 import org.vrjuggler.tweek.beans.XMLBeanFinder;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.tweek.net.CommunicationEvent;
+import org.vrjuggler.tweek.net.CommunicationListener;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.tweek.text.MessageDocument;
 import org.vrjuggler.tweek.wizard.*;
@@ -73,6 +75,7 @@ public class ControlPanelView
    implements HelpProvider
             , FileLoader
             , UndoHandler
+            , CommunicationListener
 {
    public ControlPanelView()
    {
@@ -244,6 +247,18 @@ public class ControlPanelView
       }
 
       mHelpBrowserFrame.setVisible(true);
+   }
+
+   public void connectionOpened(CommunicationEvent e)
+   {
+      mOrbList.add(e.getCorbaService());
+      mToolbar.setRemoteReconfigEnabled(true);
+   }
+
+   public void connectionClosed(CommunicationEvent e)
+   {
+      mOrbList.remove(e.getCorbaService());
+      mToolbar.setRemoteReconfigEnabled(mOrbList.size() > 0);
    }
 
    /**
@@ -648,4 +663,6 @@ public class ControlPanelView
 
    private Stack mBackStack = new Stack();
    private Stack mForwardStack = new Stack();
+
+   private List mOrbList = new ArrayList();
 }
