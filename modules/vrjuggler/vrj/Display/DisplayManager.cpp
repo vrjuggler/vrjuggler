@@ -65,9 +65,9 @@ jccl::ConfigElementPtr DisplayManager::getDisplaySystemElement()
       cfg_mgr->lockActive();
       {
          std::vector<jccl::ConfigElementPtr>::iterator i;
-         for(i=cfg_mgr->getActiveBegin(); i != cfg_mgr->getActiveEnd();++i)
+         for (i = cfg_mgr->getActiveBegin() ; i != cfg_mgr->getActiveEnd() ; ++i)
          {
-            if( (*i)->getID() == std::string("display_system") )
+            if ( (*i)->getID() == std::string("display_system") )
             {
                mDisplaySystemElement = *i;
                break;         // This guarantees that we get the first displaySystem element.
@@ -80,9 +80,9 @@ jccl::ConfigElementPtr DisplayManager::getDisplaySystemElement()
       cfg_mgr->lockPending();
       {
          std::list<jccl::ConfigManager::PendingElement>::iterator i;
-         for(i=cfg_mgr->getPendingBegin(); i != cfg_mgr->getPendingEnd();++i)
+         for (i = cfg_mgr->getPendingBegin() ; i != cfg_mgr->getPendingEnd() ; ++i)
          {
-            if( (*i).mElement->getID() == std::string("display_system") )
+            if ( (*i).mElement->getID() == std::string("display_system") )
             {
                mDisplaySystemElement = (*i).mElement;
                break;         // This guarantees that we get the first displaySystem element.
@@ -105,9 +105,9 @@ void DisplayManager::setDrawManager(DrawManager* drawMgr)
    mDrawManager = drawMgr;
 
    // Alert the draw manager about all the active windows currently configured
-   if(mDrawManager != NULL)
+   if (mDrawManager != NULL)
    {
-      for(unsigned int i=0;i<mActiveDisplays.size();i++)
+      for (unsigned int i=0;i<mActiveDisplays.size();i++)
       {
          mDrawManager->addDisplay(mActiveDisplays[i]);
       }
@@ -124,8 +124,8 @@ bool DisplayManager::configAdd(jccl::ConfigElementPtr element)
 
    const std::string element_type(element->getID());
 
-   if(   (element_type == std::string("surfaceDisplay"))
-      || (element_type == std::string("simDisplay")) )
+   if ( (element_type == std::string("surfaceDisplay")) ||
+        (element_type == std::string("simDisplay")) )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "Element of type: " << element_type
@@ -133,11 +133,11 @@ bool DisplayManager::configAdd(jccl::ConfigElementPtr element)
          << vprDEBUG_FLUSH;
       return false;
    }
-   else if( (element_type == std::string("display_window")))
+   else if ( (element_type == std::string("display_window")))
    {
       return configAddDisplay(element);
    }
-   else if(element_type == std::string("display_system"))
+   else if (element_type == std::string("display_system"))
    {
       // XXX: Put signal here to tell draw manager to lookup new stuff
       mDisplaySystemElement = element; // Keep track of the display system element
@@ -158,8 +158,8 @@ bool DisplayManager::configRemove(jccl::ConfigElementPtr element)
 
    const std::string element_type(element->getID());
 
-   if(  (element_type == std::string("surfaceDisplay"))
-     || (element_type == std::string("simDisplay")) )
+   if ( (element_type == std::string("surfaceDisplay")) ||
+        (element_type == std::string("simDisplay")) )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "Element of type: " << element_type
@@ -167,11 +167,11 @@ bool DisplayManager::configRemove(jccl::ConfigElementPtr element)
          << vprDEBUG_FLUSH;
       return false;
    }
-   else if(element_type == std::string("display_window"))
+   else if (element_type == std::string("display_window"))
    {
       return configRemoveDisplay(element);
    }
-   else if(element_type == std::string("display_system"))
+   else if (element_type == std::string("display_system"))
    {
       // XXX: Put signal here to tell draw manager to lookup new stuff
       mDisplaySystemElement.reset();   // Keep track of the display system element
@@ -179,7 +179,9 @@ bool DisplayManager::configRemove(jccl::ConfigElementPtr element)
                                        // This tell processPending to remove it to the active config
    }
    else
-   { return false; }
+   {
+      return false;
+   }
 
 }
 
@@ -216,14 +218,14 @@ bool DisplayManager::configAddDisplay(jccl::ConfigElementPtr element)
    // If so, then close it before we open a new one of the same name
    // This basically allows re-configuration of a window
    Display* cur_disp = findDisplayNamed(element->getName());
-   if(cur_disp != NULL)                         // We have an old display
+   if (cur_disp != NULL)                         // We have an old display
    {
       vprDEBUG(vrjDBG_DISP_MGR,vprDBG_CONFIG_LVL) << "Removing old window: " << cur_disp->getName().c_str() << vprDEBUG_FLUSH;
       closeDisplay(cur_disp,true);              // Close the display and notify the draw manager to close the window
    }
 
    // --- Add a display (of the correct type) ---- //
-   if(element->getID() == std::string("display_window"))       // Display window
+   if (element->getID() == std::string("display_window"))       // Display window
    {
       Display* newDisp = new Display();        // Create the display
       newDisp->config(element);
@@ -250,10 +252,10 @@ bool DisplayManager::configRemoveDisplay(jccl::ConfigElementPtr element)
 
    bool success_flag(false);
 
-   if(element->getID() == std::string("display_window"))      // It is a display
+   if (element->getID() == std::string("display_window"))      // It is a display
    {
       Display* remove_disp = findDisplayNamed(element->getName());
-      if(remove_disp != NULL)
+      if (remove_disp != NULL)
       {
          closeDisplay(remove_disp, true);                            // Remove it
          success_flag = true;
@@ -275,14 +277,20 @@ int DisplayManager::addDisplay(Display* disp, bool notifyDrawMgr)
    // Test if active or not, to determine correct list
    // The place it in the list
    // --- Update Local Display structures
-   if(disp->isActive())
+   if (disp->isActive())
+   {
       mActiveDisplays.push_back(disp);
+   }
    else
+   {
       mInactiveDisplays.push_back(disp);
+   }
 
    // If we are supposed to notify about, and valid draw mgr, and disp is active
-   if((notifyDrawMgr) && (mDrawManager != NULL) && (disp->isActive()))
+   if ((notifyDrawMgr) && (mDrawManager != NULL) && (disp->isActive()))
+   {
       mDrawManager->addDisplay(disp);;    // Tell Draw Manager to add dislay;
+   }
 
    return 1;
 }
@@ -303,8 +311,10 @@ int DisplayManager::closeDisplay(Display* disp, bool notifyDrawMgr)
 
    // Notify the draw manager to get rid of it
    // Note: if it is not active, then the draw manager doesn't know about it
-   if((notifyDrawMgr) && (mDrawManager != NULL) && (disp->isActive()))
+   if ((notifyDrawMgr) && (mDrawManager != NULL) && (disp->isActive()))
+   {
       mDrawManager->removeDisplay(disp);
+   }
 
    // Remove it from local data structures
    unsigned int num_before_close = mActiveDisplays.size() + mInactiveDisplays.size();
@@ -331,12 +341,16 @@ bool DisplayManager::isMemberDisplay(Display* disp)
    std::vector<Display*>::iterator i;
 
    i = std::find(mActiveDisplays.begin(),mActiveDisplays.end(),disp);
-   if(i != mActiveDisplays.end())
+   if (i != mActiveDisplays.end())
+   {
       return true;
+   }
 
    i = std::find(mInactiveDisplays.begin(),mInactiveDisplays.end(),disp);
-   if(i != mInactiveDisplays.end())
+   if (i != mInactiveDisplays.end())
+   {
       return true;
+   }
 
    return false;  // Didn't find any
 }
@@ -349,13 +363,21 @@ Display* DisplayManager::findDisplayNamed(std::string name)
 {
    std::vector<Display*>::iterator i;
 
-   for(i = mActiveDisplays.begin();i!=mActiveDisplays.end();i++)
-      if((*i)->getName() == name)
+   for (i = mActiveDisplays.begin();i!=mActiveDisplays.end();i++)
+   {
+      if ((*i)->getName() == name)
+      {
          return (*i);
+      }
+   }
 
-   for(i = mInactiveDisplays.begin();i!=mInactiveDisplays.end();i++)
-      if((*i)->getName() == name)
+   for (i = mInactiveDisplays.begin();i!=mInactiveDisplays.end();i++)
+   {
+      if ((*i)->getName() == name)
+      {
          return (*i);
+      }
+   }
 
    return NULL;  // Didn't find any
 }
@@ -364,12 +386,17 @@ Display* DisplayManager::findDisplayNamed(std::string name)
 void DisplayManager::updateProjections(const float scaleFactor)
 {
    // for (all displays) update the projections
-   for (std::vector<Display*>::iterator i = mActiveDisplays.begin(); i != mActiveDisplays.end(); i++)
+   for (std::vector<Display*>::iterator i = mActiveDisplays.begin();
+        i != mActiveDisplays.end(); i++)
+   {
       (*i)->updateProjections(scaleFactor);
+   }
 
-   for (std::vector<Display*>::iterator j = mInactiveDisplays.begin(); j != mInactiveDisplays.end(); j++)
+   for (std::vector<Display*>::iterator j = mInactiveDisplays.begin();
+        j != mInactiveDisplays.end(); j++)
+   {
       (*j)->updateProjections(scaleFactor);
+   }
 }
-
 
 };
