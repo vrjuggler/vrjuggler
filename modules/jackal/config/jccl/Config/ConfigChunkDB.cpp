@@ -413,24 +413,38 @@ bool ConfigChunkDB::loadFromChunkDBNode(cppdom::NodePtr chunkDBNode,
    for(cppdom::NodeList::iterator cur_child = chunkDBNode->getChildren().begin();
         cur_child != chunkDBNode->getChildren().end(); cur_child++)
    {
-      ConfigChunkPtr new_chunk(new ConfigChunk( *cur_child ) );     // New chunk
+      ConfigChunkPtr new_chunk(new ConfigChunk());                // New chunk
+      bool init_status = new_chunk->initFromNode(*cur_child);     // Initialize it
 
-      // Before we can add new_chunk to the database, we have to determine
-      // if there is already a chunk with the same name.
-      std::vector<ConfigChunkPtr>::iterator iter =
-         std::find_if(mChunks.begin(), mChunks.end(),
-                      ChunkNamePred(new_chunk->getName()));
-
-      // If no existing chunk has the same name as new_chunk, then we can
-      // just add it to the end.
-      if ( iter == mChunks.end() )
+      // Make sure that there were no problems creating the new chunk (ex: invalid desc)
+      if(!init_status)
       {
-         mChunks.push_back(new_chunk);
+         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+            << "  Config element load problem in file: " << currentFile
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+            << "  Skipping element: " << (*cur_child)->getAttribute(name_TOKEN).getString()
+            << std::endl << vprDEBUG_FLUSH;
       }
-      // Otherwise, overwrite the old version.
       else
       {
-         *iter = new_chunk;
+         // Before we can add new_chunk to the database, we have to determine
+         // if there is already a chunk with the same name.
+         std::vector<ConfigChunkPtr>::iterator iter =
+            std::find_if(mChunks.begin(), mChunks.end(),
+                         ChunkNamePred(new_chunk->getName()));
+
+         // If no existing chunk has the same name as new_chunk, then we can
+         // just add it to the end.
+         if ( iter == mChunks.end() )
+         {
+            mChunks.push_back(new_chunk);
+         }
+         // Otherwise, overwrite the old version.
+         else
+         {
+            *iter = new_chunk;
+         }
       }
    }
 

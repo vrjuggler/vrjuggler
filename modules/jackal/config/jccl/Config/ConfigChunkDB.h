@@ -156,7 +156,7 @@ public:
    }
 
 public:
-   bool loadFromChunkDBNode(cppdom::NodePtr chunkDBNode, std::string currentFile = "");
+   bool loadFromChunkDBNode(cppdom::NodePtr chunkDBNode, std::string currentFile = "<unknown>");
 
    void createChunkDBNode(cppdom::NodePtr& chunkDBNode) const;
 

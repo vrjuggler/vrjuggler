@@ -47,38 +47,53 @@
 namespace jccl
 {
 
+ConfigChunk::ConfigChunk()
+{
+   mValid = true;
+}
+
 ConfigChunk::ConfigChunk(ChunkDescPtr desc)
 {
-   mValidation = true;
+   mValid = true;
    setDesc(desc);
    mNode = ChunkFactory::instance()->createXMLNode(); // Create a fresh node
 }
 
-ConfigChunk::ConfigChunk(cppdom::NodePtr chunkNode)
-{
-   vprASSERT(chunkNode.get() != NULL);    // Make sure we have a valid node
-
-   // Lookup the chunk desc
-   std::string chunk_desc_token = chunkNode->getName();
-   ChunkDescPtr chunk_desc_ptr = ChunkFactory::instance()->getChunkDesc(chunk_desc_token);
-
-   vprASSERT( chunk_desc_ptr.get() != NULL && "Trying to construct chunk with no chunk description available");
-
-   mNode = chunkNode;
-   mValidation = true;
-   setDesc(chunk_desc_ptr);
-}
-
 ConfigChunk::ConfigChunk(const ConfigChunk& c)
 {
-   mValidation = true;
+   mValid = true;
    *this = c;
 }
 
 ConfigChunk::~ConfigChunk()
 {
    assertValid();
-   mValidation = false;
+   mValid = false;
+}
+
+bool ConfigChunk::initFromNode(cppdom::NodePtr chunkNode)
+{
+   bool ret_val(false);
+   vprASSERT(chunkNode.get() != NULL);    // Make sure we have a valid node
+
+   // Lookup the chunk desc
+   std::string chunk_desc_token = chunkNode->getName();
+   ChunkDescPtr chunk_desc_ptr = ChunkFactory::instance()->getChunkDesc(chunk_desc_token);
+
+   if(chunk_desc_ptr.get() == NULL)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "WARNING: Failed to get chunk_desc for token: " << chunk_desc_token
+                                                << " --- You may have an invalid configuration element.\n" << vprDEBUG_FLUSH;
+      ret_val = false;
+   }
+   else
+   {
+      mNode = chunkNode;
+      mValid = true;
+      setDesc(chunk_desc_ptr);
+      ret_val = true;
+   }
+   return ret_val;
 }
 
 ConfigChunk& ConfigChunk::operator=(const ConfigChunk& c)
@@ -90,7 +105,7 @@ ConfigChunk& ConfigChunk::operator=(const ConfigChunk& c)
    {
       mNode = c.mNode;
       mDesc = c.mDesc;
-      mValidation = c.mValidation;
+      mValid = c.mValid;
    }
 
    return *this;
@@ -194,7 +209,9 @@ ConfigChunkPtr ConfigChunk::getChildChunk(const std::string &path)
 
    if ( root.get() != NULL )
    {
-      return ConfigChunkPtr(new ConfigChunk(root));
+      ConfigChunkPtr ret_node(new ConfigChunk());
+      ret_node->initFromNode(root);
+      return ret_node;
    }
    else
    {
@@ -254,7 +271,15 @@ ConfigChunkPtr ConfigChunk::getProperty_ChunkPtr(const std::string& prop, int in
    ConfigChunkPtr ret_val;
    if(embedded_node.get() != NULL)
    {
-      ret_val = ConfigChunkPtr( new ConfigChunk(embedded_node));     // Create a new config chunk refrencing the embedded node
+      ret_val = ConfigChunkPtr( new ConfigChunk());     // Create a new config chunk refrencing the embedded node
+      bool init_status = ret_val->initFromNode(embedded_node);
+      // check for failure
+      if(!init_status)
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Failed to initialize embedded config element: for prop:"
+                                                   << prop << std::endl << vprDEBUG_FLUSH;
+         ret_val = ConfigChunkPtr();      // Set to NULL
+      }
    }
 
    return ret_val;

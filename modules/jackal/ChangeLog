@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-21-2003 allenb      Fixed bug where chunks with invalid descs would cause
+                        assertions.
+                        This fix also introduces a new method for initializaing
+                        chunks from XML nodes.
 Jan-23-2003 nonchocoboy Removed jccl-chunks.desc.
 Jan-15-2003 nonchocoboy Description files now use a new "allowedtype" token
                         rather than overloading the "enumeration" token to
