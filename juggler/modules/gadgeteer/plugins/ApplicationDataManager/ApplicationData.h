@@ -50,25 +50,34 @@ public:
     * Construct a new ApplicationData object.
     *
     * @param guid      The GUID used to reference this object.
-    * @param host_name The hostname of the node that should be responsible for
+    * @param hostName  The hostname of the node that should be responsible for
     *                  updating this object.
     */
-   ApplicationData(const vpr::GUID& guid, const std::string& host_name) : mIsLocal(false), mId(guid), mHostname(host_name)
+   ApplicationData(const vpr::GUID& guid, const std::string& hostName)
+      : mIsLocal(false)
+      , mId(guid)
+      , mHostname(hostName)
    {
       ClusterPlugin* app_data_mgr =
-         ClusterManager::instance()->getPluginByGUID(vpr::GUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5"));
+         ClusterManager::instance()->getPluginByGUID(
+            vpr::GUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5")
+         );
+
       if (NULL != app_data_mgr)
       {
          app_data_mgr->addSerializableObject(this);
       }
       else
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << clrOutBOLD(clrRED,"[ApplicationData] WARNING:")
-            << "Can not register ApplicationData with non existent ApplicationDataManager. "
+         vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Can not register ApplicationData with non-existent "
+            << "Application Data Manager." << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+            << "In order to synchronize ApplicationData across a cluster, "
+            << "you must load the ApplicationDataManager cluster plug-in."
             << std::endl << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
-            << "In order to synchronize ApplicationData across a cluster you must load the ApplicationDataManager ClusterPlugin."
-            << std::endl << vprDEBUG_FLUSH;
+
          // If we are not using the cluster, then we want the data to be local,
          // even if the hostnames do not match. This will allow us to run the
          // apps anywhere without recompiling.
@@ -94,12 +103,14 @@ public:
     * should be responsible for updating this object.
     */
    void setIsLocal(bool local)
-   { mIsLocal = local; }
-   
+   {
+      mIsLocal = local;
+   }
+
    /**
     * Return the GUID for this object.
     */
-   vpr::GUID getId()
+   const vpr::GUID& getId() const
    {
       return mId;
    }
@@ -107,7 +118,7 @@ public:
    /**
     * Return the hostname of the node that should update this object.
     */
-   std::string getHostname()
+   const std::string& getHostname() const
    {
       return mHostname;
    }
@@ -119,6 +130,7 @@ public:
    {
       mHostname = hostname;
    }
+
 private:
    bool        mIsLocal;   /**< True if this object is to be updated by the local node. */
    vpr::GUID   mId;        /**< GUID for this object */
