@@ -1,6 +1,10 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
-2004-08-12 patrickh    The method getBean() in the class
+2003-08-16 patrickh    Refactored the built-in Tweek Service Beans to be
+                       accessed via proxies.  This makes acquisition of the
+                       service reference dramatically simpler.
+                       NEW VERSION: 0.15.0
+2003-08-12 patrickh    The method getBean() in the class
                        org.vrjuggler.tweek.beans.BeanInstantiationEvent is now
                        getTweekBean().
                        NEW VERSION: 0.14.0

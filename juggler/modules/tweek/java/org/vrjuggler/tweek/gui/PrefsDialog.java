@@ -568,7 +568,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
       // ----------------------------------------------------------------------
       // Handle the file chooser starting directory box stuff.
-      Iterator i = GlobalPreferencesService.getStartDirList().iterator();
+      Iterator i = mPrefs.getStartDirList().iterator();
 
       boolean has_start_dir = false;
 

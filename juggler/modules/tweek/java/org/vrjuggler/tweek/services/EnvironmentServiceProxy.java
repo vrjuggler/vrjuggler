@@ -36,44 +36,63 @@
 
 package org.vrjuggler.tweek.services;
 
+import org.vrjuggler.tweek.beans.BeanRegistry;
+import org.vrjuggler.tweek.beans.TweekBean;
+
 
 /**
- * The Environment Service interface.  This is the interface that must be
- * implemented in order to get access to the Tweek Environment Service.
- *
- * @since 1.0
+ * A proxy to the built-in Tweek Environment Service.  Instantiate this class
+ * to get access to the Environment Service.
  */
-public interface EnvironmentService
+public class EnvironmentServiceProxy
+   implements EnvironmentService
 {
    /**
-    * Stores the command-line arguments passed to the application when it was
-    * started.
-    */
-   public void setCommandLineArgs(String[] args);
-
-   /**
-    * Returns the array of command-line arguments.
-    */
-   public String[] getCommandLineArgs();
-
-   /**
-    * Expands environment variables in the input string.  Environment variables
-    * may be specified using either $(variable_name) or ${variable_name}
-    * everything between the parentheses or braces will be considered the name
-    * of the variables.
+    * Creates a new EnvironmentService proxy to the Tweek Environment Service.
     *
-    * @param inputStr  the string in which to look for and expand environment
-    *                  variables.
-    *
-    * @return  the input string with the variables replaced by their values.
+    * @throws RuntimeException if the EnvironmentService Bean could not be
+    *                          found.
     */
-   public String expandEnvVars(String inputStr);
+   public EnvironmentServiceProxy()
+      throws RuntimeException
+   {
+      TweekBean bean = BeanRegistry.instance().getBean("Environment");
 
-   /**
-    * Gets the user's HOME environment variable using the JVM instead of the
-    * environment variable.
-    *
-    * @return  the path to the user's home directory
-    */
-   public String getUserHome();
+      if ( null == bean )
+      {
+         throw new RuntimeException("Could not find Environment Service");
+      }
+
+      if ( bean instanceof EnvironmentService )
+      {
+         mEnvService = (EnvironmentService) bean;
+      }
+      else
+      {
+         throw new RuntimeException("The Bean registered as 'Environment' is not an EnvironmentService implementation.");
+      }
+   }
+
+   public void setCommandLineArgs(String[] args)
+   {
+      mEnvService.setCommandLineArgs(args);
+   }
+
+   public String[] getCommandLineArgs()
+   {
+      return mEnvService.getCommandLineArgs();
+   }
+
+   public String expandEnvVars(String inputStr)
+   {
+      return mEnvService.expandEnvVars(inputStr);
+   }
+
+   public String getUserHome()
+   {
+      return mEnvService.getUserHome();
+   }
+
+   /** The EnvironmentService instance to which this object is proxy. */
+   private EnvironmentService mEnvService = null;
 }

@@ -47,8 +47,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.TweekBean;
-import org.vrjuggler.tweek.services.EnvironmentService;
-import org.vrjuggler.tweek.services.GlobalPreferencesService;
+import org.vrjuggler.tweek.services.*;
 import org.vrjuggler.tweek.net.corba.CorbaService;
 import tweek.SubjectManagerPackage.SubjectMgrInfoItem;
 
@@ -82,11 +81,19 @@ public class ConnectionDialog extends JDialog
       this.mSubjectMgrList.addListSelectionListener(new SubjectMgrListSelectionListener());
 
       // Set defaults for the Naming Service host and the port number.
-      GlobalPreferencesService prefs =
-         (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
-      mNSHostField.setText(prefs.getDefaultCorbaHost());
-      mNSPortField.setText(String.valueOf(prefs.getDefaultCorbaPort()));
-      mNSIiopVerField.setText(String.valueOf(prefs.getDefaultIiopVersion()));
+      try
+      {
+         GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
+
+         mNSHostField.setText(prefs.getDefaultCorbaHost());
+         mNSPortField.setText(String.valueOf(prefs.getDefaultCorbaPort()));
+         mNSIiopVerField.setText(String.valueOf(prefs.getDefaultIiopVersion()));
+      }
+      // D'oh!  No defaults can be set.
+      catch(RuntimeException ex)
+      {
+         ex.printStackTrace();
+      }
 
       // At this point, we may have valid Naming Service connection
       // information, so we should validate the network address.
@@ -313,20 +320,19 @@ public class ConnectionDialog extends JDialog
                                               this.getNameServiceIiopVersion(),
                                               this.getNamingSubcontext());
 
-      TweekBean service = BeanRegistry.instance().getBean("Environment");
-
       try
       {
          // If we have the Tweek Environment Service, and we should, initialize
          // the new CORBA service with the command line arguments passed when
          // the Tweek GUI was started.
-         if ( null != service )
+         try
          {
-            EnvironmentService env_service = (EnvironmentService) service;
+            EnvironmentService env_service = new EnvironmentServiceProxy();
             new_orb.init(env_service.getCommandLineArgs());
          }
-         else
+         catch(RuntimeException ex)
          {
+            ex.printStackTrace();
             new_orb.init(null);
          }
 

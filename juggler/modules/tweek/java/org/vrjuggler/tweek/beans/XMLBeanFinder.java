@@ -39,6 +39,7 @@
 package org.vrjuggler.tweek.beans;
 
 import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -201,8 +202,7 @@ public class XMLBeanFinder
       BeanAttributes attrs = BeanAttributes.parseXMLElement( bean );
       System.out.println("Working on " + attrs.getJarURL());
 
-      EnvironmentService env =
-         (EnvironmentService)BeanRegistry.instance().getBean( "Environment" );
+      EnvironmentService env = new EnvironmentServiceProxy();
 
       // The rest are specific to <guipanel>.
       String icon_path = null;
