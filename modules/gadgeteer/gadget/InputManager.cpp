@@ -84,11 +84,13 @@ InputManager::InputManager()
 InputManager::~InputManager()
 {
    for (tDevTableType::iterator a = mDevTable.begin(); a != mDevTable.end(); a++)    // Stop all devices
+   {
       if ((*a).second != NULL)
       {
          (*a).second->stopSampling();
          delete (*a).second;
       }
+   }
 
    // Delete all the proxies
    for(std::map<std::string, Proxy*>::iterator j = mProxyTable.begin(); j != mProxyTable.end(); j++)
@@ -97,16 +99,36 @@ InputManager::~InputManager()
    }
 }
 
+/**
+ * This struct implements a callable object (a functor, basically).  An
+ * instance can be passed in where a boost::function1<bool, void*> is expected.
+ * In gadget::InputManager::configAdd(), instances are used to handle dynamic
+ * loading of device drivers via vpr::LibraryLoader.
+ */
 struct Callable
 {
    Callable(gadget::InputManager* inputMgr) : mgr(inputMgr)
    {
    }
 
+   /**
+    * This will be invoked as a callback by methods of vpr::LibraryLoader.
+    *
+    * @param func A function pointer for the entry point in a dynamically
+    *             loaded device driver.  This must be cast to the correct
+    *             signature before being invoked.
+    */
    bool operator()(void* func)
    {
       void (*init_func)(InputManager*);
+
+      // Cast the entry point function to the correct signature so that we can
+      // call it.  All dynamically loaded drivers must have an entry point
+      // function that takes a pointer to a gadget::InputManager instance and
+      // returns nothing.
       init_func = (void (*)(InputManager*)) func;
+
+      // Call the entry point function.
       (*init_func)(mgr);
 
       return true;
@@ -152,98 +174,124 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    else if(element->getID() == std::string("input_manager"))
    {
       vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                                       std::string("Handling InputManager element:\n"),
+                                       std::string("Handling input_manager element:\n"),
                                        std::string("-- end state -- \n"));
 
-      const std::string driver_path_prop_name("driver_path");
-      int path_count = element->getNum(driver_path_prop_name);
-      std::vector<std::string> search_path(path_count);
+      // Keep this up to date with the version of the element definition we're
+      // expecting to handle.
+      const unsigned int cur_version(2);
 
-      for ( unsigned int i = 0; i < search_path.size(); ++i )
+      // If the element version is less than cur_version, we will not try to
+      // proceed.  Instead, we'll print an error message and return false so
+      // that the Config Manager knows this element wasn't consumed.
+      if ( element->getVersion() < cur_version )
       {
-         search_path[i] =
-            vpr::replaceEnvVars(element->getProperty<std::string>(driver_path_prop_name, i));
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << " [gadget::InputManager::configAdd()]: Element named '"
+            << element->getName() << "'" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << "is version " << element->getVersion()
+            << ", but we require at least version " << cur_version
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << "Ignoring this element and moving on." << std::endl
+            << vprDEBUG_FLUSH;
+         ret_val = false;
       }
-
-      // --- Load device driver dsos -- //
-      // - Load individual drivers
-      const std::string driver_prop_name("driver");
-      const std::string driver_init_func("initDevice");
-      int driver_count = element->getNum(driver_prop_name);
-      std::string driver_dso;
-
-      for ( int i = 0; i < driver_count; ++i )
+      // We got the right version of the config element and can proceed.
+      else
       {
-         driver_dso = element->getProperty<std::string>(driver_prop_name, i);
+         const std::string driver_path_prop_name("driver_path");
+         const int path_count(element->getNum(driver_path_prop_name));
+         std::vector<std::string> search_path(path_count);
 
-         if ( ! driver_dso.empty() )
+         for ( unsigned int i = 0; i < search_path.size(); ++i )
          {
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-               << "InputMgr::config: Loading driver DSO '" << driver_dso
-               << "'\n" << vprDEBUG_FLUSH;
-
-            Callable functor(this);
-            mDriverLoader.findAndInitDSO(driver_dso, search_path,
-                                         driver_init_func, functor);
+            search_path[i] =
+               vpr::replaceEnvVars(element->getProperty<std::string>(driver_path_prop_name, i));
          }
-      }
 
-      // - Load driver directory
-      const std::string dir_prop_name("driver_scan_path");
-      int dir_count = element->getNum(dir_prop_name);
-      std::string driver_dir;
+         // --- Load device driver dsos -- //
+         // - Load individual drivers
+         const std::string driver_prop_name("driver");
+         const std::string driver_init_func("initDevice");
+         int driver_count = element->getNum(driver_prop_name);
+         std::string driver_dso;
+
+         for ( int i = 0; i < driver_count; ++i )
+         {
+            driver_dso = element->getProperty<std::string>(driver_prop_name, i);
+
+            if ( ! driver_dso.empty() )
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                  << "InputMgr::config: Loading driver DSO '" << driver_dso
+                  << "'\n" << vprDEBUG_FLUSH;
+
+               Callable functor(this);
+               mDriverLoader.findAndInitDSO(driver_dso, search_path,
+                                            driver_init_func, functor);
+            }
+         }
+
+         // - Load driver directory
+         const std::string dir_prop_name("driver_scan_path");
+         int dir_count = element->getNum(dir_prop_name);
+         std::string driver_dir;
 
 #if defined(VPR_OS_Win32)
-      const std::string driver_ext("dll");
+         const std::string driver_ext("dll");
 #elif defined(VPR_OS_Darwin)
-      const std::string driver_ext("dylib");
+         const std::string driver_ext("dylib");
 #else
-      const std::string driver_ext("so");
+         const std::string driver_ext("so");
 #endif
 
-      for ( int i = 0; i < dir_count; ++i )
-      {
-         driver_dir = vpr::replaceEnvVars(element->getProperty<std::string>(dir_prop_name, i));
-
-         // The vpr::LibraryFinder will throw an exception if driver_dir is
-         // (somehow) an invalid path.
-         try
+         for ( int i = 0; i < dir_count; ++i )
          {
-            if (boost::filesystem::exists(driver_dir))
+            driver_dir = vpr::replaceEnvVars(element->getProperty<std::string>(dir_prop_name, i));
+
+            // The vpr::LibraryFinder will throw an exception if driver_dir is
+            // (somehow) an invalid path.
+            try
             {
-               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                  << "Searching for driver DSOs in '" << driver_dir << "'\n"
-                  << vprDEBUG_FLUSH;
-
-               vpr::LibraryFinder finder(driver_dir, driver_ext);
-               vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
-               Callable functor(this);
-
-               for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
-                     lib != libs.end();
-                     ++lib )
+               if (boost::filesystem::exists(driver_dir))
                {
-                  mDriverLoader.loadAndInitDSO(*lib, driver_init_func, functor);
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                     << "Searching for driver DSOs in '" << driver_dir << "'\n"
+                     << vprDEBUG_FLUSH;
+
+                  vpr::LibraryFinder finder(driver_dir, driver_ext);
+                  vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
+                  Callable functor(this);
+
+                  for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
+                        lib != libs.end();
+                        ++lib )
+                  {
+                     mDriverLoader.loadAndInitDSO(*lib, driver_init_func, functor);
+                  }
+               }
+               else
+               {
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                     << clrOutBOLD(clrYELLOW, "WARNING:")
+                     << " Invalid directory for driver dso's: " << driver_dir
+                     << std::endl << vprDEBUG_FLUSH;
                }
             }
-            else
+            catch (boost::filesystem::filesystem_error& fsEx)
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                  << clrOutBOLD(clrYELLOW, "WARNING:")
-                  << " Invalid directory for driver dso's: " << driver_dir
+                  << clrOutNORM(clrRED, "ERROR:")
+                  << " File system exception caught: " << fsEx.what()
                   << std::endl << vprDEBUG_FLUSH;
             }
          }
-         catch (boost::filesystem::filesystem_error& fsEx)
-         {
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-               << clrOutNORM(clrRED, "ERROR:")
-               << " File system exception caught: " << fsEx.what()
-               << std::endl << vprDEBUG_FLUSH;
-         }
-      }
 
-      ret_val = true;
+         ret_val = true;
+      }
    }
 
    //DumpStatus();                      // Dump the status
