@@ -261,6 +261,16 @@
       </xsl:element>
    </xsl:template>
 
+   <!-- Drop ClusterManager property "barrier_master"; it is not used. -->
+   <xsl:template match="ClusterManager/barrier_master" />
+
+   <!-- ClusterManager property "cluster_nodes". -->
+   <xsl:template match="ClusterManager/cluster_nodes">
+      <xsl:element name="cluster_node">
+         <xsl:value-of select="." />
+      </xsl:element>
+   </xsl:template>
+
    <!-- ClusterManager property "clusterPlugin". -->
    <xsl:template match="ClusterManager/clusterPlugin">
       <xsl:variable name="no_ext">
