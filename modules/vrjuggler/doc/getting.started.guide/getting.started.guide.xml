@@ -539,11 +539,11 @@ value</screen>
                   </row>
                   <row>
                      <entry>Rotate wand up</entry>
-                     <entry>SHIFT+move mouse forward</entry>
+                     <entry>SHIFT+move mouse backward</entry>
                   </row>
                   <row>
                      <entry>Rotate wand down</entry>
-                     <entry>SHIFT+move mouse backward</entry>
+                     <entry>SHIFT+move mouse forward</entry>
                   </row>
                   <row>
                      <entry>Rotate wand clockwise</entry>
