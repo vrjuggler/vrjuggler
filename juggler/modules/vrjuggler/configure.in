@@ -67,13 +67,6 @@ dnl # ------------------------------------------------------ #
 dnl # --enable-feature[=arg] and --disable-feature arguments #
 dnl # ------------------------------------------------------ #
 
-dnl # Enable debugging.  Possible values are "yes" or "no".  "yes" is set
-dnl # with --enable-debug and "no" is set with --disable-debug.
-dnl # The default is "yes".
-AC_ARG_ENABLE(debug,
-              [  --enable-debug          enable debugging [default=yes]],
-              _enable_debug="$enableval", _enable_debug="yes")
-
 dnl # Enable compilation of the OpenGL API.  Possible values are "yes" or
 dnl # "no".  "yes" is set with --enable-opengl and "no" is set with
 dnl # --disable-opengl.
@@ -89,11 +82,6 @@ dnl # The default is "yes".
 AC_ARG_ENABLE(perf,
               [  --enable-perf           use Perfromer API [default=yes]],
               _enable_perf="$enableval", _enable_perf='yes')
-
-# Enable compile-time debugging blocks.
-if test "x${_enable_debug}" = "xyes" ; then
-    AC_DEFINE(VJ_DEBUG,)
-fi
 
 # Set default values for these before checking $abi_type.  Currently, these
 # are for non-SGI platforms.
@@ -160,6 +148,7 @@ LD=''			# Shared library command (usually ld(1))
 LDOPTS=''		# More options for shared library generator
 SHAREDLIB_EXT=''	# Extension for shared libraries (usually 'so')
 
+DBG_FLAGS=''		# Compiler debugging flags
 OPT_FLAGS=''		# Compiler optimization flags
 
 DSOREGFILE=''
@@ -189,6 +178,7 @@ case $host in
         ARFLAGS='-ar -WR,-v -o'
         CFLAGS="$CFLAGS"
         CXXFLAGS="-ptv $CXXFLAGS"
+        DBG_FLAGS="-g"
         INCLUDES="$INCLUDES -I/usr/include/CC -I/usr/include"
         LD='${CXX} -shared'
         LDFLAGS="$LDFLAGS"
@@ -223,6 +213,7 @@ case $host in
         LD='ld'
         LDFLAGS="$LDFLAGS -L/usr/lib/X11R6"
         LDOPTS='-b'
+        DBG_FLAGS='-g'
         OPT_FLAGS='+inline_level 3'
         SHAREDLIB_EXT='sl'
 
@@ -723,6 +714,7 @@ AC_SUBST(INCLUDES)
 AC_SUBST(LD)
 AC_SUBST(LIBS)
 AC_SUBST(LDOPTS)
+AC_SUBST(DBG_FLAGS)
 AC_SUBST(OPT_FLAGS)
 AC_SUBST(SHAREDLIB_EXT)
 

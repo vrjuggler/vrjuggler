@@ -30,6 +30,12 @@ using std::string;
 using std::wstring;
 #endif
 
+#ifdef _DEBUG
+#   define VJ_DEBUG
+#else
+#   define VJ_OPT
+#endif
+
 /* --- Macros ---- */
 #define VJ_DEG2RAD(x) ((x)*M_PI/180.0)
 #define VJ_RAD2DEG(x) ((x)*180.0/M_PI)

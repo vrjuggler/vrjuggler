@@ -93,7 +93,8 @@ VJ_SRCDIR	= @VJ_SRCDIR@
 WORKDIR		= ${topdir}
 
 # Extra compiler and linker options needed only by this file.
-OPT_FLAGS	= -O @OPT_FLAGS@
+DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
+OPT_FLAGS	= -D_OPT -O @OPT_FLAGS@
 
 # SGI-specific dynamic-shared-object information.
 DSOREGFILE	= @DSOREGFILE@
@@ -438,7 +439,7 @@ _build_dbg_obj:
 	@echo "Building object files with debugging symbols"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_DBG_BUILDDIR}
-	@${MAKE} RECTARGET="dbg" OPTIMIZER="-g"				\
+	@${MAKE} RECTARGET="dbg" OPTIMIZER="${DBG_FLAGS}"		\
           BASE_OBJDIR="${_DBG_BUILDDIR}" recursive
 
 # Build the object files with the optimization flags enabled.
@@ -456,14 +457,14 @@ _build_dbg_lib_static:
 	@echo "Building static debugging libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
-          ${VJ_LIB_STATIC}
+          EXTRA_ARFLAGS="${DBG_FLAGS}" ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
-          LIBDIR="${_DBG_LIBDIR}" ${GL_LIB_STATIC}
+          LIBDIR="${_DBG_LIBDIR}" EXTRA_ARFLAGS="${DBG_FLAGS}" ${GL_LIB_STATIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
-          LIBDIR="${_DBG_LIBDIR}" ${PF_LIB_STATIC}
+          LIBDIR="${_DBG_LIBDIR}" EXTRA_ARFLAGS="${DBG_FLAGS}" ${PF_LIB_STATIC}
 endif
 
 # Build the shared libraries with the debugging flags enabled.
@@ -472,14 +473,14 @@ _build_dbg_lib_shared:
 	@echo "Building shared debugging libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
-          ${VJ_LIB_DYNAMIC}
+          EXTRA_LDFLAGS="${DBG_FLAGS}" ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
-          LIBDIR="${_DBG_LIBDIR}" ${GL_LIB_DYNAMIC}
+          LIBDIR="${_DBG_LIBDIR}" EXTRA_LDFLAGS="${DBG_FLAGS}" ${GL_LIB_DYNAMIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
-          LIBDIR="${_DBG_LIBDIR}" ${PF_LIB_DYNAMIC}
+          LIBDIR="${_DBG_LIBDIR}" EXTRA_LDFLAGS="${DBG_FLAGS}" ${PF_LIB_DYNAMIC}
 endif
 
 # Build the static libraries with the optimization flags enabled.
@@ -488,14 +489,14 @@ _build_opt_lib_static:
 	@echo "Building static optmized libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
-          ${VJ_LIB_STATIC}
+          EXTRA_ARFLAGS="${OPT_FLAGS}" ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
-          LIBDIR="${_OPT_LIBDIR}" ${GL_LIB_STATIC}
+          LIBDIR="${_OPT_LIBDIR}" EXTRA_ARFLAGS="${OPT_FLAGS}" ${GL_LIB_STATIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
-          LIBDIR="${_OPT_LIBDIR}" ${PF_LIB_STATIC}
+          LIBDIR="${_OPT_LIBDIR}" EXTRA_ARFLAGS="${OPT_FLAGS}" ${PF_LIB_STATIC}
 endif
 
 # Build the shared libraries with the optimization flags enabled.
@@ -504,14 +505,14 @@ _build_opt_lib_shared:
 	@echo "Building shared optmized libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
-          ${VJ_LIB_DYNAMIC}
+          EXTRA_LDFLAGS="${OPT_FLAGS}" ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
-          LIBDIR="${_OPT_LIBDIR}" ${GL_LIB_DYNAMIC}
+          LIBDIR="${_OPT_LIBDIR}" EXTRA_LDFLAGS="${OPT_FLAGS}" ${GL_LIB_DYNAMIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
-          LIBDIR="${_OPT_LIBDIR}" ${PF_LIB_DYNAMIC}
+          LIBDIR="${_OPT_LIBDIR}" EXTRA_LDFLAGS="${OPT_FLAGS}" ${PF_LIB_DYNAMIC}
 endif
 
 # --------------------------------------------------------------------
