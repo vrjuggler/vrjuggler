@@ -78,9 +78,14 @@ public:
 
        this->initRenderer();
        this->initScene();
+       vprASSERT(getSceneRoot().getCPtr() != NULL);    // I don't know if this is even valid
     }
 
     virtual void initScene();
+    virtual OSG::NodePtr getSceneRoot()
+    { return mSceneRoot; }
+
+    void initAppGraph();
 
     void myInit(void);
     void initRenderer();
@@ -127,12 +132,12 @@ public:
     OSG::NodePtr              mLightNode;       /**< The light node */
     OSG::NodePtr              mLightCart;       /**< The cart for the light */
 
-    OSG::NodePtr              mRoot;            /**< The root of the scene graph.  Applicatin must add it's nodes to this one */
-    OSG::GroupPtr             mRootGroupCore;   /**< The group core of the root */
+    // App class stuff //
+    //OSG::NodePtr              mRoot;            /**< A pointer to the scene graph root*/
 
-    OSG::ImageForegroundPtr   _foreground;
-    OSG::NodePtr              _internalRoot;
-    OSG::DirectionalLightPtr  _headlight;
+    //OSG::ImageForegroundPtr   _foreground;
+    //OSG::NodePtr              _internalRoot;
+    //OSG::DirectionalLightPtr  _headlight;
     OSG::RenderAction*        mRenderAction;    /**< The render action for the scene */
 
     vrj::GlContextData<context_data>  mContextData;

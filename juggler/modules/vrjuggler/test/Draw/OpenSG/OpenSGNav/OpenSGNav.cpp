@@ -79,21 +79,15 @@ void OpenSGNav::contextInit()
 
 void OpenSGNav::contextPreDraw()
 {
-   /*
    context_data* c_data = &(*mContextData);
    c_data->mWin->frameInit();
-   */
 }
 
 void OpenSGNav::contextPostDraw()
 {
-   /*
    context_data* c_data = &(*mContextData);
    c_data->mWin->frameExit();
-   */
 }
-
-
 
 
 void OpenSGNav::draw()
@@ -156,7 +150,7 @@ void OpenSGNav::draw()
    mRenderAction->setCamera(c_data->mCamera.getCPtr());
    mRenderAction->setFrustumCulling(false);    // Turn off culling for now because I don't trust the frustum setup
 
-   mRenderAction->apply(mRoot);                // Actually do the rendering
+   mRenderAction->apply(getSceneRoot());                // Actually do the rendering
 
    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
      // Set material color
@@ -233,13 +227,13 @@ void OpenSGNav::initRenderer()
     mRenderAction = OSG::RenderAction::create();
     mRenderAction->setAutoFrustum(false);         // Turn off auto frustum
 
-    mRoot = OSG::Node::create();
-    mRootGroupCore = OSG::Group::create();
+    //mRoot = OSG::Node::create();
+    //mRootGroupCore = OSG::Group::create();
 
-    OSG::addRefCP(mRoot);
-    OSG::beginEditCP(mRoot);
-      mRoot->setCore(mRootGroupCore);
-    OSG::endEditCP(mRoot);
+    //OSG::addRefCP(mRoot);
+    //OSG::beginEditCP(mRoot);
+    //  mRoot->setCore(mRootGroupCore);
+    //OSG::endEditCP(mRoot);
 
     std::cout << "OpenSGNav::initRenderer finished.\n";
 }
@@ -252,7 +246,7 @@ void OpenSGNav::initScene(void)
    mWand.init(wand);
 
    // Load a graph
-   if (1)
+   if (mFileToLoad ==  std::string("none"))
     {
         std::cout << "OpenSGNav::myInit beforetorusmake\n";
         mSceneRoot = OSG::makeTorus(.5, 2, 16, 16);
@@ -272,29 +266,40 @@ void OpenSGNav::initScene(void)
     OSG::DirectionalLightPtr light_core = OSG::DirectionalLight::create();
     OSG::TransformPtr cart_core = OSG::Transform::create();
 
-    // Setup light cart node
-    OSG::beginEditCP(mLightCart);
-      mLightCart->setCore(cart_core);
-    OSG::endEditCP(mLightCart);
+    osg::Matrix light_pos;
+    light_pos.setTransform(osg::Vec3f( 2.0f, 5.0f, 4.0f));
 
-    OSG::addRefCP(mLightNode);
-    OSG::beginEditCP(mLightNode);
+   osg::beginEditCP(cart_core, OSG::Transform::MatrixFieldMask);
+   {
+       cart_core->setMatrix(light_pos);
+   }
+   osg::endEditCP(cart_core, osg::Transform::MatrixFieldMask);
+
+    // Setup light cart node
+    osg::beginEditCP(mLightCart);
+      mLightCart->setCore(cart_core);
+    osg::endEditCP(mLightCart);
+
+    osg::addRefCP(mLightNode);
+    osg::beginEditCP(mLightNode);
       mLightNode->setCore(light_core);
       mLightNode->addChild(mLightCart);
-    OSG::endEditCP(mLightNode);
+    osg::endEditCP(mLightNode);
 
-    OSG::beginEditCP(light_core);
-      light_core->setAmbient   (.3, .3, .3, 1);
-      light_core->setDiffuse   ( 1,  1,  1, 1);
+    osg::beginEditCP(light_core);
+      light_core->setAmbient   (.9, .2, .2, 1);
+      light_core->setDiffuse   ( 0.5,  0.5,  0.9, 1);
       light_core->setSpecular  ( 1,  1,  1, 1);
       light_core->setDirection ( 0,  0,  1);
       light_core->setBeacon    (mLightNode);
-    OSG::endEditCP(light_core);
+    osg::endEditCP(light_core);
 
-    OSG::addRefCP(mSceneRoot);
-    OSG::beginEditCP(mSceneRoot);
+    osg::addRefCP(mSceneRoot);
+    osg::beginEditCP(mSceneRoot);
       mSceneRoot->addChild(mLightNode);
-    OSG::endEditCP(mSceneRoot);
+    osg::endEditCP(mSceneRoot);
+
+    // --- Add scene to root node --- //
 
     std::cout << "OpenSGNav::initScene finished\n";
 }
