@@ -29,17 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol;
 
-/*
+import java.util.EventObject;
+
+/**
  * Event type for sending log, notification and error type messages
  * to VjControl components that need it (e.g. the ControlUI to display
  * in the status bar or the console panel for logging).
  */
-
-package VjControl;
-
-import java.util.EventObject;
-
 public class LogMessageEvent extends EventObject {
     String source_name;
     String message;

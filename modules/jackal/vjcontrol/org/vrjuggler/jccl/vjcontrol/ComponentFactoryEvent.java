@@ -29,14 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjControl;
+package org.vrjuggler.jccl.vjcontrol;
 
 import java.util.EventObject;
 
-import VjConfig.ChunkDescDB;
-import VjConfig.ConfigChunkDB;
+import org.vrjuggler.jccl.config.ChunkDescDB;
+import org.vrjuggler.jccl.config.ConfigChunkDB;
 
 
 /** Event for notification of new classes added to ComponentFactory.

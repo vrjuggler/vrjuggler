@@ -29,11 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjControl;
-
-import VjControl.VjComponent;
+package org.vrjuggler.jccl.vjcontrol;
 
 /** Base interface for all CoreModules.
  *  This is a tag interface.  It does not define any additional
@@ -41,7 +37,6 @@ import VjControl.VjComponent;
  *  Essentially, any component that is to be added directly as a child
  *  of Core should implement this interface.
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public interface CoreModule

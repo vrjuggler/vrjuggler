@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-package VjControl;
-
-import VjControl.ComponentFactoryEvent;
+package org.vrjuggler.jccl.vjcontrol;
 
 /** Listener for ComponentFactory registration events.
  *  By registering with the ComponentFactory, a class can receive 
