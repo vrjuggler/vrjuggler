@@ -63,10 +63,10 @@ public:
 
    // general ray collision routine with a scene.
    // correctionVector - should be added to whereYouWantToBe after calling this function
-   bool testRayCollision( pfVec3& intersectionPt, 
-                        pfVec3& whereYouReallyAre, 
-                        pfNode *objNode, int mask, 
-                        pfVec3 whereYouAre, 
+   bool testRayCollision( pfVec3& intersectionPt,
+                        pfVec3& whereYouReallyAre,
+                        pfNode *objNode, int mask,
+                        pfVec3 whereYouAre,
                         pfVec3 whereYouWantToBe );
 
    // data structure to get intersection result back from pfHit::mQuery
@@ -78,8 +78,8 @@ public:
        pfVec3  point;
        pfVec3  normal;
    };
-   
-   
+
+
 protected:
    pfNode* mWorldNode;        // The world to collide with
 };
@@ -91,11 +91,11 @@ bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whereYouRe
    pfHit **hit[1];
    pfSegSet segset;
    pfMatrix collidemat;
-    
+
    pfVec3 dir = whereYouWantToBe - whereYouAre;
    float length = dir.length();
    dir.normalize();
-   
+
    // Make a ray looking "down" at terrain
    segset.segs[0].pos = whereYouAre;
    segset.segs[0].dir = dir;
@@ -112,32 +112,32 @@ bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whereYouRe
    if (objNode->isect(&segset, hit) > 0)
    {
       cout<<"testRayCollision: Collided\n"<<flush;
-      
-	   pfHitQueryResult isectResult;
+
+      pfHitQueryResult isectResult;
       uint query[] = {PFQHIT_FLAGS, PFQHIT_SEGNUM, PFQHIT_POINT, PFQHIT_NORM, NULL};
-	   hit[0][0]->mQuery( query, &isectResult );
-	   if(isectResult.flags & PFHIT_XFORM)
-      {    
+      hit[0][0]->mQuery( query, &isectResult );
+      if(isectResult.flags & PFHIT_XFORM)
+      {
          // correct for DCS transformations
-	      hit[0][0]->query( PFQHIT_XFORM, &collidemat );
-	      isectResult.point.xformPt( isectResult.point, collidemat );
+         hit[0][0]->query( PFQHIT_XFORM, &collidemat );
+         isectResult.point.xformPt( isectResult.point, collidemat );
          isectResult.normal.xformVec(isectResult.normal, collidemat);
          isectResult.normal.normalize();
-	   }
+      }
       // save the intersection point (returned from function)
       intersectionPt = isectResult.point;
-      
+
       // calculate where you really are.
       pfVec3 correctionVector;
-	   correctionVector = whereYouWantToBe - intersectionPt;
+      correctionVector = whereYouWantToBe - intersectionPt;
       //whereYouReallyAre = intersectionPt;
-      
+
       whereYouReallyAre = isectResult.normal * correctionVector.length();
-      
+
       //pfVec3 bounceDirection = correctionVector;
       //bounceDirection.normalize();
       //whereYouReallyAre += bounceDirection * 2;
-	   return true;
+      return true;
    }
    return false;
 }
@@ -148,15 +148,16 @@ bool pfRayCollider::testMove(vjVec3 _whereYouAre, vjVec3 _delta, vjVec3& correct
    pfVec3 whereYouAre = vjGetPfVec(_whereYouAre);
    pfVec3 delta = vjGetPfVec(_delta);
    pfVec3 whereYouWantToBe = whereYouAre + delta;
-   
+
    pfVec3 intersectionPt;
    pfVec3 whereYouReallyAre;
    if (this->testRayCollision(intersectionPt, whereYouReallyAre, mWorldNode,0x1, whereYouAre, whereYouWantToBe))
    {
-      correction = vjGetVjVec( whereYouReallyAre - whereYouWantToBe );
+      pfVec3 pf_correction = (whereYouReallyAre - whereYouWantToBe);
+      correction = vjGetVjVec( pf_correction);
 
       cout<<"pfRayCollider: Collided "<<correction<<"\n"<<flush;
-      
+
       setDidCollide(true);
       return true;
    }
