@@ -196,11 +196,11 @@ vpr::ReturnStatus SocketImplSIM::setRemoteAddr(const vpr::InetAddr& addr)
    return status;
 }
 
-vpr::Uint32 SocketImplSIM::availableBytes()
+vpr::Uint32 SocketImplSIM::availableBytes() const
 {
    vprASSERT(mBound && "We must be bound first");
 
-   vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
+//   vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
    vpr::Uint32 bytes(0);
 
    if ( ! mArrivedQueue.empty() )
