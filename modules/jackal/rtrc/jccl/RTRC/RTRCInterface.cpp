@@ -13,12 +13,14 @@ void RTRCInterface::init()
    //TODO: How do we get a unique instance name?
    mInterfaceName = "RTRCInterface";
 
+   vpr::ReturnStatus status;
+
    try
    {
       int dummy_int = 0 ;
 
       //Attempt to initialize the corba manager
-      vpr::ReturnStatus status = mCorbaManager.init("corba_test", dummy_int, NULL);
+      status = mCorbaManager->init("corba_test", dummy_int, NULL);
 
    }
    catch (...)
@@ -47,7 +49,7 @@ void RTRCInterface::init()
    try
    {
       //Attempt to create the subject manager
-      status = mCorbaManager.createSubjectManager();
+      status = mCorbaManager->createSubjectManager();
    }
    catch (CORBA::Exception& ex)
    {
@@ -88,7 +90,7 @@ void RTRCInterface::enable()
    try
    {
       //Attempt to register the subject
-      mCorbaManager.getSubjectManager()->registerSubject(mInterface, mInterfaceName.c_str());
+      mCorbaManager->getSubjectManager()->registerSubject(mInterface, mInterfaceName.c_str());
    }
    catch (...)
    {
@@ -96,18 +98,6 @@ void RTRCInterface::enable()
          << "RTRCInterface::enable: Caught an exception while trying to register subject\n" 
          << vprDEBUG_FLUSH ;
    }
-
-   if ( !status.success() )
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "RTRCInterface::enable: Failed to register subject\n" 
-         << vprDEBUG_FLUSH ;
-
-      delete mInterface;
-      mInterface = NULL;
-      return;
-   }
-
 }
 
 void RTRCInterface::disable()
@@ -128,7 +118,7 @@ void RTRCInterface::disable()
    try
    {
       //Attempt to register the subject
-      status = mCorbaManager.getSubjectManager()->unregisterSubject(mInterfaceName.c_str());
+      status = mCorbaManager->getSubjectManager()->unregisterSubject(mInterfaceName.c_str());
    }
    catch (...)
    {
