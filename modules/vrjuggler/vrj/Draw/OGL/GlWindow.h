@@ -39,7 +39,9 @@
 #include <GL/gl.h>
 
 #include <Kernel/vjDisplay.h>
+#include <Kernel/vjViewport.h>
 class vjProjection;
+class vjCameraProjection;
 
 //-------------------------------------------------------
 //: Represent cross-platform interface to OpenGL windows
@@ -81,7 +83,7 @@ public:
 
    //: Configure the window
    //! POST: this' is configured based on the data in display
-   virtual void config(vjDisplay* _display);
+   virtual void config(vjDisplay* displayWindow);
 
    //: Performs an OpenGL swap buffers command
    //! POST: a glFlush must be called explicitly by the implementation
@@ -105,10 +107,10 @@ public:
    void setRightEyeProjection();
 
    // Set the view buffer for the window (issues glDrawBuffer command)
-   void setViewBuffer(vjDisplay::DisplayView view);
+   void setViewBuffer(vjViewport::View view);
 
    //: Sets the projection matrix for this window to the one for simulator
-   void setCameraProjection();
+   void setCameraProjection(vjCameraProjection* camProj);
 
    //: Updates the viewport and does any viewport cleaning
    void updateViewport();

@@ -75,7 +75,7 @@ public:
     int close();
     bool makeCurrent();
 
-   void config(vjDisplay* _display);
+   void config(vjDisplay* disp);
 
 public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<vjGlWindow*> wins);

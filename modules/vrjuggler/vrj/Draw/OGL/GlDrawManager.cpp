@@ -38,8 +38,9 @@
 #include <Kernel/vjKernel.h>
 
 #include <Kernel/vjDisplay.h>
-#include <Kernel/vjSimDisplay.h>
-#include <Kernel/vjSurfaceDisplay.h>
+#include <Kernel/vjViewport.h>
+#include <Kernel/vjSimViewport.h>
+#include <Kernel/vjSurfaceViewport.h>
 
 #include <Kernel/GL/vjGlApp.h>
 #include <Input/vjGlove/vjGlove.h>
@@ -365,7 +366,7 @@ void vjGlDrawManager::drawObjects()
 //!POST: Draws the projections
 //+      If withApex, then it draws the frustums with different colors
 //+      If !withApex, then just draws the surfaces in all white
-void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
+void vjGlDrawManager::drawProjections(bool drawFrustum, vjVec3 surfColor)
 {
    const float ALPHA_VALUE(0.25f);
 
@@ -374,50 +375,54 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
    vjVec3 apex, ur, lr, ul, ll;
    vjProjection* proj; proj = NULL;
 
-   for(unsigned int i=0;i<disps.size();i++)
+   for (unsigned int i=0;i<disps.size();i++)
    {
-      if(disps[i]->isSurface())
+      for (unsigned int v=0;v<disps[i]->getNumViewports();v++)
       {
-         // Get a pointer to the surface
-         vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>(disps[i]);
-         vjASSERT(surf_disp != NULL);
-         proj = surf_disp->getLeftProj();
+         vjViewport* view_port = disps[i]->getViewport(v);
 
-         // Create color values that are unique
-         // Basically count in binary (skipping 0), and use the first 3 digits.  That will give six colors
-         int red_on = (i & 0x1); int green_on = ((i >> 1) & 0x1); int blue_on = ((i >> 2) & 0x1);
-
-         float red(0.0f), green(0.0f), blue(0.0f);
-         if(red_on > 0) red = 1.0f;
-         if(green_on > 0) green = 1.0f;
-         if(blue_on > 0) blue = 1.0f;
-
-         if((!red_on) && (!blue_on) && (!green_on))      // Case of 0's (black is bad)
-            red = blue = green = 0.75f;
-
-         vjVec3 surf_color;
-         if(sim->shouldDrawProjections())
+         if (view_port->isSurface())
          {
-            surf_color = vjVec3(red,blue,green);
-         }
-         else
-         {
-            surf_color = sim->getSurfaceColor();
-         }
+            // Get a pointer to the surface
+            vjSurfaceViewport* surf_vp = dynamic_cast<vjSurfaceViewport*>(view_port);
+            vjASSERT(surf_vp != NULL);
+            proj = surf_vp->getLeftProj();
 
-         // Compute scaled colors for the corners
-         // ll is going to be lighter and upper right is going to be darker
-         const float ll_scale(0.10f); const float ul_scale(0.55); const float ur_scale(1.0f);
-         vjVec4 ll_clr(ll_scale*surf_color[0],ll_scale*surf_color[1],ll_scale*surf_color[2],ALPHA_VALUE);
-         vjVec4 ul_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
-         vjVec4 lr_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
-         vjVec4 ur_clr(ur_scale*surf_color[0],ur_scale*surf_color[1],ur_scale*surf_color[2],ALPHA_VALUE);
+            // Create color values that are unique
+            // Basically count in binary (skipping 0), and use the first 3 digits.  That will give six colors
+            int red_on = (i & 0x1); int green_on = ((i >> 1) & 0x1); int blue_on = ((i >> 2) & 0x1);
 
-         // Draw the thingy
-         proj->getFrustumApexAndCorners(apex, ur, lr, ul, ll);
-         glColor4fv(ur_clr.vec);
-         glPushMatrix();
-            if(sim->shouldDrawProjections())
+            float red(0.0f), green(0.0f), blue(0.0f);
+            if (red_on > 0) red = 1.0f;
+            if (green_on > 0) green = 1.0f;
+            if (blue_on > 0) blue = 1.0f;
+
+            if ((!red_on) && (!blue_on) && (!green_on))      // Case of 0's (black is bad)
+               red = blue = green = 0.75f;
+
+            vjVec3 surf_color;
+            if (drawFrustum)
+            {
+               surf_color = vjVec3(red,blue,green);
+            }
+            else
+            {
+               surf_color = surfColor;
+            }
+
+            // Compute scaled colors for the corners
+            // ll is going to be lighter and upper right is going to be darker
+            const float ll_scale(0.10f); const float ul_scale(0.55); const float ur_scale(1.0f);
+            vjVec4 ll_clr(ll_scale*surf_color[0],ll_scale*surf_color[1],ll_scale*surf_color[2],ALPHA_VALUE);
+            vjVec4 ul_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
+            vjVec4 lr_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
+            vjVec4 ur_clr(ur_scale*surf_color[0],ur_scale*surf_color[1],ur_scale*surf_color[2],ALPHA_VALUE);
+
+            // Draw the thingy
+            proj->getFrustumApexAndCorners(apex, ur, lr, ul, ll);
+            glColor4fv(ur_clr.vec);
+            glPushMatrix();
+            if (drawFrustum)
             {
                drawLine(apex, ur); drawLine(apex, lr); drawLine(apex, ul); drawLine(apex, ll);
             }
@@ -429,23 +434,24 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glBegin(GL_TRIANGLES);
-               glColor4fv(ll_clr.vec);  glVertex3fv(ll.vec);
-               glColor4fv(lr_clr.vec);  glVertex3fv(lr.vec);
-               glColor4fv(ur_clr.vec);  glVertex3fv(ur.vec);
+            glColor4fv(ll_clr.vec);  glVertex3fv(ll.vec);
+            glColor4fv(lr_clr.vec);  glVertex3fv(lr.vec);
+            glColor4fv(ur_clr.vec);  glVertex3fv(ur.vec);
 
-               glColor4fv(ur_clr.vec); glVertex3fv(ur.vec);
-               glColor4fv(ul_clr.vec); glVertex3fv(ul.vec);
-               glColor4fv(ll_clr.vec); glVertex3fv(ll.vec);
+            glColor4fv(ur_clr.vec); glVertex3fv(ur.vec);
+            glColor4fv(ul_clr.vec); glVertex3fv(ul.vec);
+            glColor4fv(ll_clr.vec); glVertex3fv(ll.vec);
             glEnd();
             glDisable(GL_BLEND);
-         glPopMatrix();
-      }
-   }
+            glPopMatrix();
+         }  // if surface
+      }  // for viewports
+   }  // for disps
 }
 
 //: Draw a simulator using OpenGL commands
 //! NOTE: This is called internally by the library
-void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
+void vjGlDrawManager::drawSimulator(vjSimViewport* sim_vp)
 {
    const float head_radius(0.60f);      // 7.2 inches
    const float eye_vertical(0.22f);
@@ -488,7 +494,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
       glEnable(GL_LIGHTING);
       // Draw the user's head
       glPushMatrix();
-         glMultMatrixf(sim->getHeadPos().getFloatPtr());
+         glMultMatrixf(sim_vp->getHeadPos().getFloatPtr());
 
          //glEnable(GL_BLEND);
          //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -512,7 +518,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 
       // Draw the wand
       glPushMatrix();
-         glMultMatrixf(sim->getWandPos().getFloatPtr());
+         glMultMatrixf(sim_vp->getWandPos().getFloatPtr());
          glColor3f(0.0f, 1.0f, 0.0f);
          drawCone(0.2f, 0.6f, 6, 1);
       glPopMatrix();
@@ -520,7 +526,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
        // Draw a The display surfaces
       glDisable(GL_LIGHTING);
       glPushMatrix();
-         drawProjections(sim);
+         drawProjections(sim_vp->shouldDrawProjections(), sim_vp->getSurfaceColor());
       glPopMatrix();
    }
    glPopAttrib();

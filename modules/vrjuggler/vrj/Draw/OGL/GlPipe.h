@@ -39,7 +39,6 @@
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/GL/vjGlDrawManager.h>
 class vjGlDrawManager;
-class vjDisplay;
 
 #include <VPR/Sync/vjCond.h>
 #include <VPR/Sync/vjSemaphore.h>
@@ -68,9 +67,9 @@ public:
    {
       mThreadRunning = false;
       char namebuf[42];  // careful with that buffer, eugene
-      
-      sprintf( namebuf, "vjGlPipe %d", mPipeNum ); 
-      
+
+      sprintf( namebuf, "vjGlPipe %d", mPipeNum );
+
       // we need to check if we should be enabled... It looks like vjGlPipe
       // is gonna need a configure method, though...
       mPerfBuffer = new vjPerfDataBuffer( namebuf, 500, 40 );
@@ -157,7 +156,7 @@ private:
 private:
    vjThread*   mActiveThread;      //: The thread running this object
    bool        mThreadRunning;      //: Do we have a running thread?
-   
+
    int   mPipeNum;                     //: The id of the pipe
 
    std::vector<vjGlWindow*> newWins;  //: List of windows still to be opened on current pipe

@@ -37,7 +37,6 @@
 #include <Math/vjSeg.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjDisplay.h>
-#include <Kernel/vjSurfaceDisplay.h>
 #include <Config/vjConfigChunk.h>
 
 bool vjSimPosition::config(vjConfigChunk* chunk)
@@ -266,13 +265,13 @@ bool vjSimPosition::isTransAllowed(vjVec3 trans)
 {
    // check if the movement is goign to intersect with any of the surface displays
    // If it does, then return false
+   /*
    vjVec3 ll, lr, ur, ul;
    vjSeg trans_seg;
    float t_dist;
    vjVec3 src_pt;
    mPos.getTrans(src_pt[0],src_pt[1], src_pt[2]);
    trans_seg.makePts(src_pt, (src_pt+trans));
-
 
    std::vector<vjDisplay*> disps = vjDisplayManager::instance()->getAllDisplays();
 
@@ -296,6 +295,7 @@ bool vjSimPosition::isTransAllowed(vjVec3 trans)
               return false;                             // Hit tri
       }
    }
+   */
 
    return true;
 

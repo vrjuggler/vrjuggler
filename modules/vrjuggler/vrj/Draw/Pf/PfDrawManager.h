@@ -50,7 +50,6 @@
 class vjPfApp;
 class vjProjection;
 class vjConfigChunkDB;
-class vjSimDisplay;
 
     // Performer Config function called in draw proc after window is set up
 void vjPFconfigPWin(pfPipeWindow* pWin);

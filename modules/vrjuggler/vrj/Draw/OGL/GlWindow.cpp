@@ -37,10 +37,12 @@
 
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/vjProjection.h>
+#include <Kernel/vjCameraProjection.h>
 #include <Kernel/vjFrustum.h>
 #include <Utils/vjDebug.h>
-#include <Kernel/vjSimDisplay.h>
-#include <Kernel/vjSurfaceDisplay.h>
+#include <Kernel/vjViewport.h>
+//#include <Kernel/vjSimViewport.h>
+//#include <Kernel/vjSurfaceViewport.h>
 #include <Config/vjConfigChunk.h>
 
 // This variable determines which matrix stack we put the viewing transformation
@@ -52,10 +54,10 @@
 int vjGlWindow::mCurMaxWinId = 0;
 
 
-void vjGlWindow::config(vjDisplay* _display)
+void vjGlWindow::config(vjDisplay* displayWindow)
 {
-   vjASSERT(_display != NULL);      // We can't config to a NULL display
-   mDisplay = _display;
+   vjASSERT(displayWindow != NULL);      // We can't config to a NULL display
+   mDisplay = displayWindow;
    mDisplay->getOriginAndSize( origin_x, origin_y, window_width, window_height);
    border = mDisplay->shouldDrawBorder();
 
@@ -70,13 +72,13 @@ void vjGlWindow::updateViewport()
 }
 
 
-void vjGlWindow::setViewBuffer(vjDisplay::DisplayView view)
+void vjGlWindow::setViewBuffer(vjViewport::View view)
 {
    if(!isStereo())
       glDrawBuffer(GL_BACK);
-   else if(vjDisplay::LEFT_EYE == view)
+   else if(vjViewport::LEFT_EYE == view)
       glDrawBuffer(GL_BACK_LEFT);
-   else if(vjDisplay::RIGHT_EYE == view)
+   else if(vjViewport::RIGHT_EYE == view)
       glDrawBuffer(GL_BACK_RIGHT);
 }
 
@@ -114,20 +116,16 @@ void vjGlWindow::setProjection(vjProjection* proj)
 
 
 /** Sets the projection matrix for this window to draw the camera eye frame */
-void vjGlWindow::setCameraProjection()
+void vjGlWindow::setCameraProjection(vjCameraProjection* camProj)
 {
-   vjASSERT(mDisplay->getType() == vjDisplay::SIM);
-   vjSimDisplay* sim_display = dynamic_cast<vjSimDisplay*>(mDisplay);
-
    if (!window_is_open)
       return;
 
-   vjCameraProjection* cam_proj = dynamic_cast<vjCameraProjection*>(sim_display->getCameraProj());
-   vjASSERT(cam_proj != NULL && "Trying to use a non-camera projection with a sim view");
-   float* frust = cam_proj->mFrustum.frust;
+   vjASSERT(camProj != NULL && "Trying to use a non-camera projection with a sim view");
+   float* frust = camProj->mFrustum.frust;
 
    vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Camera Frustrum ----\n"
-               << cam_proj->mFrustum.frust << std::endl
+               << camProj->mFrustum.frust << std::endl
                << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
@@ -143,11 +141,11 @@ void vjGlWindow::setCameraProjection()
                  frust[vjFrustum::NEAR],frust[vjFrustum::FAR]);
       */
 
-      gluPerspective(cam_proj->mVertFOV, cam_proj->mAspectRatio*((window_width)/float(window_height)),
+      gluPerspective(camProj->mVertFOV, camProj->mAspectRatio*((window_width)/float(window_height)),
                      frust[vjFrustum::VJ_NEAR], frust[vjFrustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
        // Set camera rotation and position
-   glMultMatrixf(sim_display->getCameraProj()->mViewMat.getFloatPtr());
+   glMultMatrixf(camProj->mViewMat.getFloatPtr());
 #endif
    }
    glMatrixMode(GL_MODELVIEW);
@@ -155,7 +153,7 @@ void vjGlWindow::setCameraProjection()
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(sim_display->getCameraProj()->mViewMat.getFloatPtr());
+   glMultMatrixf(camProj->mViewMat.getFloatPtr());
 #endif
 }
 
