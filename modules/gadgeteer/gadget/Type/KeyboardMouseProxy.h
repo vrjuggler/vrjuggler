@@ -65,7 +65,7 @@ public:
     */
    KeyboardMouse* getKeyboardMousePtr()
    {
-      if(isStupified())
+      if(isStupefied())
       {
          return NULL;
       }
@@ -78,7 +78,7 @@ public:
    /** Returns the time of the last update. */
    virtual vpr::Interval getTimeStamp() const
    {
-      if ( isStupified() || (mTypedDevice == NULL) )
+      if ( isStupefied() || (mTypedDevice == NULL) )
       {
          return vpr::Interval();
       }
@@ -101,7 +101,7 @@ public:
     */
    bool modifierOnly(gadget::Keys modKey)
    {
-      if ( isStupified() || (mTypedDevice == NULL) )
+      if ( isStupefied() || (mTypedDevice == NULL) )
       {
          return false;
       }
@@ -122,7 +122,7 @@ public:
     */
    int keyPressed(gadget::Keys keyId)
    {
-      if ( isStupified() || (mTypedDevice == NULL) )
+      if ( isStupefied() || (mTypedDevice == NULL) )
       {
          return 0;
       }
@@ -137,7 +137,7 @@ public:
     */
    KeyboardMouse::EventQueue getEventQueue()
    {
-      if ( isStupified() || (mTypedDevice == NULL) )
+      if ( isStupefied() || (mTypedDevice == NULL) )
       {
          return KeyboardMouse::EventQueue();
       }
@@ -153,7 +153,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if ( NULL == mTypedDevice || isStupified() )
+      if ( NULL == mTypedDevice || isStupefied() )
       {
          return NULL;
       }

@@ -68,7 +68,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 void DigitalProxy::updateData()
 {
 
-   if (!isStupified())
+   if (!isStupefied())
    {
       int old_state = mData.getDigital();
       mData = mTypedDevice->getDigitalData(mUnitNum);

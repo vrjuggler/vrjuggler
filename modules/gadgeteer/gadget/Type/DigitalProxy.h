@@ -91,9 +91,9 @@ public:
     */
    gadget::Digital::State getData() const
    {
-      // If we're stupified, return gadget::Digital::OFF.  Otherwise, return
+      // If we're stupefied, return gadget::Digital::OFF.  Otherwise, return
       // the current digital value.
-      return (isStupified() ? Digital::OFF
+      return (isStupefied() ? Digital::OFF
                             : (gadget::Digital::State) mData.getDigital());
    }
 
@@ -105,8 +105,8 @@ public:
    /** Returns a pointer to the gadget::Digital object that we are proxying. */
    Digital* getDigitalPtr()
    {
-      // If we're stupified, return NULL.  Otherwise, return mTypedDevice.
-      return (isStupified() ? NULL : mTypedDevice);
+      // If we're stupefied, return NULL.  Otherwise, return mTypedDevice.
+      return (isStupefied() ? NULL : mTypedDevice);
    }
 
    /**
@@ -124,7 +124,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if((NULL == mTypedDevice) || (mStupified))
+      if((NULL == mTypedDevice) || (mStupefied))
       {
          return NULL;
       }

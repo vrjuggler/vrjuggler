@@ -55,7 +55,7 @@ namespace gadget
    public:
       Proxy()
          : mName("")
-         , mStupified(true)
+         , mStupefied(true)
       {
          ;
       }
@@ -115,23 +115,58 @@ namespace gadget
       }
 
       /**
-       * Is the proxy currently stupified?
+       * Is the proxy currently stupefied?
        * If the device we are proxying does not exist, then this will return
        * true.
+       *
+       * @since 0.92.1
+       *
+       * @note Renamed from isStupified() in version 0.92.1.
        */
-      virtual bool isStupified() const
+      virtual bool isStupefied() const
       {
-         return mStupified;
+         return mStupefied;
       }
 
       /**
-       * Sets the stupification state of this proxy.
+       * Sets the stupefication state of this proxy.
        *
-       * @param newState The new state of stupification.
+       * @param newState The new state of stupefication.
+       *
+       * @since 0.92.1
+       *
+       * @note Renamed from stupify() in version 0.92.1.
+       */
+      void stupefy(const bool newState = true)
+      {
+         mStupefied = newState;
+      }
+
+      /**
+       * Is the proxy currently stupefied?
+       * If the device we are proxying does not exist, then this will return
+       * true.
+       *
+       * @deprecated The name of this method is spelled incorrectly, and it
+       *             will be removed in Gadgeteer 1.2.  Use isStupefied()
+       *             instead.
+       */
+      virtual bool isStupified() const
+      {
+         return isStupefied();
+      }
+
+      /**
+       * Sets the stupefication state of this proxy.
+       *
+       * @param newState The new state of stupefication.
+       *
+       * @deprecated The name of this method is spelled incorrectly, and it
+       *             will be removed in Gadgeteer 1.2.  Use stupefy() instead.
        */
       void stupify(const bool newState = true)
       {
-         mStupified = newState;
+         stupefy(newState);
       }
 
       /** Returns the time of last update. */
@@ -139,7 +174,7 @@ namespace gadget
 
    protected:
       std::string mName;         /**< The name of the proxy */
-      bool        mStupified;    /**< Is the proxy current stupified (returns default data) */
+      bool        mStupefied;    /**< Is the proxy current stupefied (returns default data) */
    };
 
    /** \class TypedProxy Proxy.h gadget/Type/Proxy.h
@@ -173,7 +208,7 @@ namespace gadget
          if(NULL != devPtr)
          {
             mDeviceName = devName;
-            stupify(false);
+            stupefy(false);
          }
          else
          {
@@ -183,7 +218,7 @@ namespace gadget
 
       /**
        * Refreshes the proxy.  This attempts to lookup the device that we are
-       * proxying.  If the lookup fails, then we become stupified.  If not,
+       * proxying.  If the lookup fails, then we become stupefied.  If not,
        * then the proxy is pointed at this potentially new device.
        */
       virtual bool refresh()
@@ -191,13 +226,13 @@ namespace gadget
          Input* input_dev = NULL;
          input_dev = InputManager::instance()->getDevice(mDeviceName);
 
-         if ( NULL == input_dev )       // Not found, so stupify
+         if ( NULL == input_dev )       // Not found, so stupefy
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
                << "[gadget::TypedProxy::refresh()] Could not find device '"
                << mDeviceName << "' pointed to by '" << mName << "'"
                << std::endl << vprDEBUG_FLUSH;
-            stupify(true);
+            stupefy(true);
          }
          else
          {
@@ -208,14 +243,14 @@ namespace gadget
                   << "[gadget::TypedProxy::config()] Device was of wrong type: "
                   << mDeviceName << " it was type:" << typeid(input_dev).name()
                   << std::endl << vprDEBUG_FLUSH;
-               stupify(true);
+               stupefy(true);
                return false;
             }
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
                << "   Proxy '" << mName << "' configured" << std::endl
                << vprDEBUG_FLUSH;
             mTypedDevice = typed_dev;    // Set the proxy
-            stupify(false);
+            stupefy(false);
          }
          return true;
       }

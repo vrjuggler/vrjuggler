@@ -74,7 +74,7 @@ public:
    /** Updates the cached data copy from the device. */
    virtual void updateData()
    {
-      if(!isStupified())
+      if(!isStupefied())
       {
          mData = mTypedDevice->getAnalogData(mUnitNum);
       }
@@ -93,7 +93,7 @@ public:
    float getData() const
    {
       const float analogDefault(0.0f);
-      if(isStupified())
+      if(isStupefied())
       {
          return analogDefault;
       }
@@ -106,7 +106,7 @@ public:
    /** Returns a pointer to the gadget::Analog object that we are proxying. */
    Analog* getAnalogPtr()
    {
-      if(isStupified())
+      if(isStupefied())
       {
          return NULL;
       }
@@ -131,7 +131,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if((NULL == mTypedDevice) || (mStupified))
+      if((NULL == mTypedDevice) || (mStupefied))
       {
          return NULL;
       }

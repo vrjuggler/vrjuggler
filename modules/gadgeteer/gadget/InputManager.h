@@ -110,7 +110,7 @@ public:
     * Removes the element from the current configuration.
     * @pre configCanHandle(element) == true
     * @post (element is proxy) ==> (returns == false)<br>
-    *       (element is device) ==> (device is removed && proxies are stupified)<br>
+    *       (element is device) ==> (device is removed && proxies are stupefied)<br>
     *       (element is proxy_alias) ==> (proxy_alias is removed && devInterfaces.refreshAll())
     * @return success
     */

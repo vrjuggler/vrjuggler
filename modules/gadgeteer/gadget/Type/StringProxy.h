@@ -88,9 +88,9 @@ public:
     */
    std::string getData() const
    {
-      // If we're stupified, return empty string.  Otherwise, return
+      // If we're stupefied, return empty string.  Otherwise, return
       // the current string value.
-      return (isStupified() ? ""
+      return (isStupefied() ? ""
                             : mData.getString());
    }
 
@@ -104,8 +104,8 @@ public:
     */
    String* getStringPtr()
    {
-      // If we're stupified, return NULL.  Otherwise, return mTypedDevice.
-      return (isStupified() ? NULL : mTypedDevice);
+      // If we're stupefied, return NULL.  Otherwise, return mTypedDevice.
+      return (isStupefied() ? NULL : mTypedDevice);
    }
 
    /**
@@ -123,7 +123,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if((NULL == mTypedDevice) || (mStupified))
+      if((NULL == mTypedDevice) || (mStupefied))
       {
          return NULL;
       }
