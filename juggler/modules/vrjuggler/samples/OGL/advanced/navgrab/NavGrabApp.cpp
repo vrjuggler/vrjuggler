@@ -52,11 +52,14 @@ void NavGrabApp::init()
 
    mHead.init("VJHead");
    mWand.init("VJWand");
-   mGrabButton.init("VJButton0");
-   mResetButton.init("VJButton1");
-   mDumpStateButton.init("VJButton2");
 
-   mLoggerPlayButton.init("LoggerPlayButton");
+   mForwardButton.init("VJButton0");
+   mRotateButton.init("VJButton1");
+   mGrabButton.init("VJButton2");
+   
+   // Uncomment these lines when setting up logger tests
+   //mDumpStateButton.init("VJButton2");
+   //mLoggerPlayButton.init("LoggerPlayButton");
 }
 
 void NavGrabApp::contextInit()
@@ -65,6 +68,18 @@ void NavGrabApp::contextInit()
 }
 
 void NavGrabApp::preFrame()
+{
+   // Update the grabbing state
+   updateGrabbing();
+   
+   // Update the state of navigation
+   updateNavigation();
+
+   // Update the logger state information
+   updateLogger();
+}
+
+void NavGrabApp::updateGrabbing()
 {
    gmtl::Matrix44f wand_matrix = mWand->getData();
 
@@ -75,18 +90,12 @@ void NavGrabApp::preFrame()
    mSphereIsect = gmtl::isInVolume(mSphere, wand_point);
    mCubeIsect   = gmtl::isInVolume(mCube, wand_point);
 
-   // If the reset button is pressed, reset the state of the application.
-   // This button takes precedence over all others.
-   if ( mResetButton->getData() == gadget::Digital::ON )
-   {
-      this->reset();
-   }
    // If button 0 is pressed, check to see if we are grabbing anything.
-   else if ( mGrabButton->getData() == gadget::Digital::ON )
+   if ( mGrabButton->getData() == gadget::Digital::ON )
    {
-      // If we are intersecting with the sphere, update its center to match
-      // the center of the wand.
-      if ( mSphereIsect )
+      // If we are intersecting with the sphere or already have it grabbed
+      // update its center to match the center of the wand.
+      if ( mSphereIsect || mSphereSelected )
       {
          mSphereSelected = true;
          mSphere.setCenter(wand_point);
@@ -96,18 +105,15 @@ void NavGrabApp::preFrame()
          mSphereSelected = false;
       }
 
-      // If we are intersecting with the cube, update its center to match
-      // the center of the wand.  This is done by changing the cube's
-      // minimum and maximum points.
-      if ( mCubeIsect )
+      // If we are intersecting with the cube or grabbing it
+      // update its center to match the center of the wand.
+      if ( mCubeIsect || mCubeSelected )
       {
          mCubeSelected = true;
-         mCube.setMin(gmtl::Point3f(wand_point[0] - 2.5f,
-                                    wand_point[1] - 2.5f,
-                                    wand_point[2] - 2.5f));
-         mCube.setMax(gmtl::Point3f(wand_point[0] + 2.5f,
-                                    wand_point[1] + 2.5f,
-                                    wand_point[2] + 2.5f));
+         
+         gmtl::Point3f corner_offset(mCubeEdgeLength, mCubeEdgeLength, mCubeEdgeLength);
+         mCube.setMin(wand_point - corner_offset);   // Bottom rear left corner
+         mCube.setMax(wand_point + corner_offset);   // Top front right corner
       }
       else
       {
@@ -120,7 +126,45 @@ void NavGrabApp::preFrame()
       mSphereSelected = false;
       mCubeSelected   = false;
    }
+}
 
+void NavGrabApp::updateNavigation()
+{
+   gmtl::Matrix44f wandMatrix = mWand->getData();      // Get the wand matrix
+
+   // Update navigation
+   // - Find forward direction of wand
+   // - Translate along that direction
+   float velocity(0.05f);
+   float rotation(0.0f);
+   if(mForwardButton->getData())
+   {
+      gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, velocity);
+      gmtl::Vec3f direction(wandMatrix * Zdir);
+      gmtl::preMult(mNavMatrix, gmtl::makeTrans<gmtl::Matrix44f>(direction));
+   }   
+
+   if(mRotateButton->getData())
+   {
+      const float rot_scale(0.01f);
+      float y_rot = gmtl::makeYRot<float>(wandMatrix);
+      rotation = -1.0f * y_rot * rot_scale;
+      gmtl::preMult(mNavMatrix,
+                    gmtl::makeRot<gmtl::Matrix44f>(gmtl::EulerAngleXYZf(0.0f,rotation,0.0f)));
+   }
+
+   // ---- RESET ---- //
+   // If the reset button is pressed, reset the state of the application.
+   // This button takes precedence over all others.
+   if ( mForwardButton->getData() && mRotateButton->getData())
+   {
+      this->reset();
+   }
+
+}
+
+void NavGrabApp::updateLogger()
+{
    // If the dump state button has just been pressed, dump the current state
    // information.
    if ( mDumpStateButton->getData() == gadget::Digital::TOGGLE_ON )
@@ -146,7 +190,7 @@ void NavGrabApp::preFrame()
       logger->play();
    }
 
-   // Test runner info
+   // Sleep several frames before starting up the logger
    if(mFramesToSleep != 0)
    {
       mFramesToSleep--;
@@ -156,7 +200,6 @@ void NavGrabApp::preFrame()
    {
       mTestRunner->processTests();
    }
-
 }
 
 void NavGrabApp::bufferPreDraw()
@@ -180,13 +223,25 @@ void NavGrabApp::draw()
 
 void NavGrabApp::reset()
 {
-   mSphere.setCenter(mSphereCenter);
-   mSphere.setRadius(mSphereRadius);  // Not strictly necessary
-   mCube.setMin(mCubeMin);
-   mCube.setMax(mCubeMax);
+   // Initialize the sphere.  This creates a sphere with radius 1 and center
+   // (2.5, 3, -2.5).
+   gmtl::Point3f sphere_center = gmtl::Point3f(2.5f, 3.0f, -2.5f);
+   mSphere.setCenter(sphere_center);
+   mSphere.setRadius(1.0f);
 
+   // Initialize the cube.  This creates a cube with sides of length 2 centered
+   // at (-2.5, 3, -2.5).
+   mCubeEdgeLength = 0.75f;
+   gmtl::Point3f cube_center(-2.5, 3, -2.5);
+   gmtl::Point3f corner_offset(mCubeEdgeLength, mCubeEdgeLength, mCubeEdgeLength);
+   mCube.setMin(cube_center - corner_offset);   // Bottom rear left corner
+   mCube.setMax(cube_center + corner_offset);   // Top front right corner
+   mCube.setEmpty(false);
+   
    mSphereSelected = false;
    mCubeSelected   = false;
+
+   gmtl::identity(mNavMatrix);      // Set Nav matrix to identity
 }
 
 void NavGrabApp::dumpState()
@@ -215,23 +270,11 @@ void NavGrabApp::initTesting()
 
 void NavGrabApp::initShapes()
 {
-   // Initialize the sphere.  This creates a sphere with radius 1 and center
-   // (2.5, 3, -2.5).
-   mSphereCenter = gmtl::Point3f(2.5f, 3.0f, -2.5f);
-   mSphereRadius = 1.0f;
-   mSphere.setCenter(mSphereCenter);
-   mSphere.setRadius(mSphereRadius);
+   // Set to initial shape positions
+   reset();
 
    // Allocate a new quadric that will be used to render the sphere.
    mSphereQuad = gluNewQuadric();
-
-   // Initialize the cube.  This creates a cube with sides of length 2 centered
-   // at (-2.5, 3, -2.5).
-   mCubeMin = gmtl::Point3f(-3.5f, 2.0f, -3.5f);
-   mCubeMax = gmtl::Point3f(-1.5f, 4.0f, -1.5f);
-   mCube.setMin(mCubeMin); // Bottom rear left corner
-   mCube.setMax(mCubeMax); // Top front right corner
-   mCube.setEmpty(false);
 }
 
 void NavGrabApp::initGLState()

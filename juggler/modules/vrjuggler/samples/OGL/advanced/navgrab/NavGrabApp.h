@@ -90,6 +90,16 @@ public:
 
    friend class SphereTestCase;     // Make friends with our test case so it can poke our internals
 
+protected:
+   /** Update any selection and grabbing information */
+   void updateGrabbing();
+
+   /** Update the state of the current navigation */
+   void updateNavigation();
+
+   /** Update any logger playback that is being used */
+   void updateLogger();
+
 private:
    void initShapes();
 
@@ -105,24 +115,27 @@ private:
 
    gadget::PositionInterface mHead;
    gadget::PositionInterface mWand;
-   gadget::DigitalInterface  mGrabButton;
-   gadget::DigitalInterface  mResetButton;
-   gadget::DigitalInterface  mDumpStateButton;
+   
+   gadget::DigitalInterface  mForwardButton;       /**< Button to go forward */
+   gadget::DigitalInterface  mRotateButton;        /**< Button to rotate */
+
+   gadget::DigitalInterface  mGrabButton;          /**< Button to grab an object */
+   gadget::DigitalInterface  mDumpStateButton;     /**< Button to dump the current state */
+      
+   // Sphere information
+   gmtl::Spheref mSphere;                          /**< State of the sphere */
+   GLUquadric*   mSphereQuad;                      /**< GL Quadric for drawing the sphere */
+   bool          mSphereIsect;                     /**< If true, the wand is isecting with the sphere */
+   bool          mSphereSelected;                  /**< If true, then the user is grabbing the sphere */
+
+   float         mCubeEdgeLength;                  /**< Length of an edge on the cube */
+   gmtl::AABoxf  mCube;                            /**< State of the cube */
+   bool          mCubeIsect;                       /**< If true, then the wand is isecting with the cube */
+   bool          mCubeSelected;                    /**< If true, then the cube is selected */
+
+   gmtl::Matrix44f   mNavMatrix;                   /**< Navigation matrix: world_M_virtualworld */
 
    gadget::DigitalInterface     mLoggerPlayButton;   // Playback log file when pressed
-
-   gmtl::Point3f mSphereCenter;
-   float         mSphereRadius;
-   gmtl::Spheref mSphere;
-   GLUquadric*   mSphereQuad;
-   bool          mSphereIsect;
-   bool          mSphereSelected;
-
-   gmtl::Point3f mCubeMin;
-   gmtl::Point3f mCubeMax;
-   gmtl::AABoxf  mCube;
-   bool          mCubeIsect;
-   bool          mCubeSelected;
 
    unsigned                mFramesToSleep;         /**< Number of frames to sleep at start up */
    vrj::test::TestRunner*  mTestRunner;            /**< Test runner for this appliation */
