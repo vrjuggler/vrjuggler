@@ -56,11 +56,9 @@ namespace vpr
 {
 
 /**
- * Manager that maintains data about all threads.
+ * Holds list of all threads in system
  *
- * This class holds data on: <br>
- * - List of all threads in system <br>
- * - Thread Specific data items
+ * @deprecated This class may go away in the future.
  */
 class VPR_CLASS_API ThreadManager
 {
@@ -102,27 +100,12 @@ private:
    Mutex                    mThreadVectorMutex;  //! Mutex to protect the threads vector
    std::vector<BaseThread*> mThreads;            //! List of all threads in system
 
-public:
-   /**
-    * Generates a unique key for Thread Specific data.
-    * This value will be used locally by each thread in the system.
-    */
-   long generateNewTSKey()
-   {
-      Guard<Mutex> guard(mTSKeyMutex);
-      return mNextTSObjectKey++;
-   }
-
-private:
-   Mutex     mTSKeyMutex;       //! Mutex to protect allocate of TS keys
-   long      mNextTSObjectKey;  //! The next available object key
-
    // ----------------------- //
    // --- SINGLETON STUFF --- //
    // ----------------------- //
 protected:
    /// Constructor.  Hidden, so no instantiation is allowed.
-   ThreadManager() : mNextTSObjectKey(0)
+   ThreadManager()
    {;}
 
    // These two have to be here because Visual C++ will try to make them
