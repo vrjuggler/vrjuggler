@@ -40,8 +40,6 @@
 #include <jccl/RTRC/ConfigChunkHandler.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
-#include <cluster/IdGenerator.h>
-                                           
 #include <vpr/IO/Socket/SocketStream.h>
 //#include <list>
 
@@ -306,7 +304,6 @@ private:
    vpr::InetAddr                          mListenAddr;         /**< Address to listen for incoming connections on. */
    std::string                            mLocalHostnameShort; /**< Local hostname with domain included */
    std::string                            mLocalHostnameLong;  /**< Local hostname without domain */
-   IdGenerator<vpr::Uint16>               mLocalIdGen;         /**< Keeps track of used/free virtual ids. */
 };
 
 } // end namespace gadget

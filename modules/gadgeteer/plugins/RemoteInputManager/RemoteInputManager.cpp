@@ -387,7 +387,6 @@ namespace cluster
            return false;
         }
         
-        //vpr::Uint16 new_id = ClusterNetwork::instance()->generateLocalId();
         vpr::GUID new_id;
         new_id.generate();
 
