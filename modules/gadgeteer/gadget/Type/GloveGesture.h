@@ -12,7 +12,7 @@
 //: Abstract base class for all glove gesture recognition
 //
 //
-class vjGloveGesture : public vjGesture
+class vjGloveGesture : virtual public vjGesture
 {
 public:
    vjGloveGesture(vjConfigChunk* c) : vjGesture(c)

@@ -14,10 +14,10 @@ class vjGesture : virtual public vjInput
 {
 public:
    vjGesture(vjConfigChunk* c) : vjInput(c)
-   {;}
+   {deviceAbilities = deviceAbilities | DEVICE_GESTURE;}
 
    vjGesture()
-   {;}
+   {deviceAbilities = deviceAbilities | DEVICE_GESTURE;}
 
    ~vjGesture()
    {;}

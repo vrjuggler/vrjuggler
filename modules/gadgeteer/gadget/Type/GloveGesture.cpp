@@ -47,6 +47,8 @@ void vjGloveGesture::loadFileHeader(ifstream& infile)
    int num_gestures;
    infile >> num_gestures;          // Get the number of gestures
 
+   infile.ignore(4096, '\n');       // Ignore the rest of the line
+
    // Get gesture names
    int i;
    char gest_name[512];
