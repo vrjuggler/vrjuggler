@@ -48,30 +48,30 @@ public:
    //! POST: this.context is active context
    virtual bool makeCurrent(){return false;}
 
-   //: Sets the projection matrix for this window to draw the left eye frame
-   void setLeftEye();
-
-   //: Sets the projection matrix for this window to draw the right eye frame
-   void setRightEye();
-
-   //: Sets the projection matrix for this window to the one for simulator
-   void setCameraEye();
-
-   //: Configure the window
+    //: Configure the window
    //! POST: this' is configured based on the data in display
    virtual void config(vjDisplay* _display)
    {
-      display = _display;
-      try_stereo = false;
-      /* ^--------- shouldn't there be something in vjDisplay about this? */
-      display->originAndSize( origin_x, origin_y, window_width, window_height);
-      border = display->drawBorder();
+      mDisplay = _display;
+      mDisplay->getOriginAndSize( origin_x, origin_y, window_width, window_height);
+      border = mDisplay->shouldDrawBorder();
 
       /// Other stuff
    }
 
    //: Performs an OpenGL swap buffers command
    virtual void swapBuffers(){;}
+
+public:
+   //: Sets the projection matrix for this window to draw the left eye frame
+   void setLeftEyeProjection();
+
+   //: Sets the projection matrix for this window to draw the right eye frame
+   void setRightEyeProjection();
+
+   //: Sets the projection matrix for this window to the one for simulator
+   void setCameraProjection();
+
 
    //: Query wether the window is open
    //! RETURNS: true - If window is open
@@ -85,7 +85,7 @@ public:
    { return in_stereo;}
 
    vjDisplay* getDisplay()
-   { return display;}
+   { return mDisplay;}
 
    //!RETURNS: A unique window id
    int getId()
@@ -101,19 +101,15 @@ public:  /**** Static Helpers *****/
    }
 
 protected:
-	      // we store a pointer to the display that we're
-        // created from, to config & to get the viewing
-        // transforms from.
-   vjDisplay* display;
-	
-	   // reflects stereo settings in config information;
-        // tells us wether or not to try for a stereo display
-   bool try_stereo;
+     // we store a pointer to the display that we're
+     // created from, to config & to get the viewing
+     // transforms from.
+   vjDisplay* mDisplay;
 
-      // when the window is open, this tells us whether the
-        // display opened actually is in stereo - if we wanted
-        // a stereo display but couldn't open it we fall back
-        // to mono, and this will be false.
+     // when the window is open, this tells us whether the
+     // display opened actually is in stereo - if we wanted
+     // a stereo display but couldn't open it we fall back
+     // to mono, and this will be false.
    bool in_stereo;
    bool border;
    char* display_name;

@@ -14,7 +14,7 @@ class vjGlApp;
 #include <Kernel/GL/vjGlUserData.h>
 
 class vjConfigChunkDB;
-class vjSimulator;
+class vjSimDisplay;
 class vjGloveProxy;
 
 //#include <Sync/vjCond.h>
@@ -71,10 +71,11 @@ public:
    //: Draw any objects that the manager needs to display
    // i.e. Gloves, etc
    void drawObjects();
+   void drawProjections();
 
    //: Draw a simulator using OpenGL commands
    //! NOTE: This is called internally by the library
-   void drawSimulator(vjSimulator* sim);
+   void drawSimulator(vjSimDisplay* sim);
 
    //: Set the app the draw should interact with.
    virtual void setApp(vjApp* _app);
