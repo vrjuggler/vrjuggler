@@ -33,17 +33,21 @@ package org.vrjuggler.jccl.config.event;
 
 import java.util.EventObject;
 
+import org.vrjuggler.jccl.config.ConfigElement;
+
+
 public class ConfigElementEvent
    extends EventObject
 {
    /**
-    * Creates a new ConfigElement event from the given source object relating to
-    * the given property, the index into that property, and the value of such
-    * property.
+    * Creates a new ConfigElement event from the given source eelemnt relating
+    * to the given property, the index into that property, and the value of
+    * such property.
     */
-   public ConfigElementEvent(Object src, String property, int index, Object value)
+   public ConfigElementEvent(ConfigElement srcElt, String property, int index,
+                             Object value)
    {
-      super(src);
+      super(srcElt);
       this.property = property;
       this.index = index;
       this.value = value;
