@@ -346,7 +346,7 @@ namespace Flock
          else return "Unknown format";
       }
       /** Returns the size in bytes of a data record for the given format */
-      inline unsigned getDataSize(Format format)
+      inline unsigned int getDataSize(Format format)
       {
          if(Position == format) return 6;
          else if(Angle == format) return 6;
@@ -485,7 +485,7 @@ public:
    void sample();
 
    /** Return the position of a bird sensor */
-   gmtl::Matrix44f getSensorPosition(unsigned sensorNumber)
+   gmtl::Matrix44f getSensorPosition(unsigned int sensorNumber)
    {
       vprASSERT(sensorNumber < mNumSensors);
       return mSensorData[sensorNumber];
@@ -529,12 +529,12 @@ public:
     * @param n An integer number not more than the number of
     *          birds attached to the system.
     */
-   void setNumSensors( const unsigned& n );
+   void setNumSensors( const unsigned int& n );
 
    /**
     * Gets the number of birds to use in the Flock.
     */
-   unsigned getNumSensors() const
+   unsigned int getNumSensors() const
    { return mNumSensors; }
 
    /**
@@ -603,7 +603,7 @@ public:
     * @param respSize Expected size of the response.
     * @param respData Returned data.
     */
-   void getAttribute(vpr::Uint8 attrib, unsigned respSize, std::vector<vpr::Uint8>& respData);
+   void getAttribute(vpr::Uint8 attrib, unsigned int respSize, std::vector<vpr::Uint8>& respData);
 
    /**
     * Change an attribute.
@@ -615,7 +615,7 @@ public:
 
 public:  // ---- Query methods for flock state ---- //
    /** Find the software revision */
-   std::pair<unsigned,unsigned> querySoftwareRevision();
+   std::pair<unsigned int,unsigned int> querySoftwareRevision();
 
    /** Find the model id string */
    std::string queryModelIdString();
@@ -627,7 +627,7 @@ public:  // ---- Query methods for flock state ---- //
    vpr::Uint8 queryAddress();
 
    /** Get the bird status */
-   vpr::Uint16 queryBirdStatus(unsigned addr=0);
+   vpr::Uint16 queryBirdStatus(unsigned int addr=0);
 
    /** Get the system status information */
    std::vector<vpr::Uint8> querySystemStatus();
@@ -655,7 +655,7 @@ public:  // ---- Query methods for flock state ---- //
       mAddrMode = mode;
    }
 
-   void setMasterAddress(const unsigned addr)
+   void setMasterAddress(const unsigned int addr)
    {
       mMasterAddr = addr;
    }
@@ -716,7 +716,7 @@ protected: // -- Helpers --- //
    void setupFlockUnitsDataStructure();
 
    /** Get the maximum bird address for the current mode */
-   unsigned getMaxBirdAddr();
+   unsigned int getMaxBirdAddr();
 
    std::string getStatusString()
    {
@@ -739,7 +739,7 @@ public:
            mTransmitterType(Transmitter::None), mHasError(false), mHasBeenInitialized(false)
       {;}
 
-      unsigned mAddr;         /**< Address of this unit on the fbb */
+      unsigned int mAddr;         /**< Address of this unit on the fbb */
       bool     mIsMaster;
       bool     mAccessible;
       bool     mIsRunning;
@@ -765,9 +765,8 @@ private:  // --- Data members --- //
    Flock::AddressingMode mAddrMode;       /**< The addressing mode of the flock */
    float                 mSwRevision;     /**< Software revision of the flock */
    std::string           mModelId;        /**< Model id for the system we are connected to */
-   unsigned              mMasterAddr;     /**< Address of the master */
-
-   unsigned              mNumSensors;     /**< Number of sensors in the flock */
+   unsigned int          mMasterAddr;     /**< Address of the master */
+   unsigned int          mNumSensors;     /**< Number of sensors in the flock */
 
    Flock::Output::Format mOutputFormat;   /**< The output format to configure the flock to use */
    Flock::ReportRate     mReportRate;     /**< The report rate we to use when configuring the flock */
@@ -777,7 +776,7 @@ private:  // --- Data members --- //
 
    typedef std::vector<FlockUnit>   flock_units_t; /**< Type of the flock units sequence */
    flock_units_t           mFlockUnits;              /**< List of all the flock units we have */
-   unsigned                mActiveUnitEndIndex;      /**< Index of end of active units (one past last active) */
+   unsigned int            mActiveUnitEndIndex;      /**< Index of end of active units (one past last active) */
    std::vector<vpr::Uint8> mXmitterIndices;          /**< Indices into mFlockUnits of the transmitters */
 
    /** Maps the addr of a unit (flock addr) to the index of the associated sensor in mSensorData (vrj unit). -1 means no sensor at that addr */
