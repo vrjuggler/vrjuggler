@@ -45,6 +45,7 @@
 
 #include <vpr/vprConfig.h>
 #include <typeinfo>
+#include <vpr/Thread/Thread.h>
 #include <vpr/Thread/TSObject.h>
 #include <vpr/Thread/ThreadManager.h>
 #include <vpr/Util/Assert.h>
