@@ -211,6 +211,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 
     /** Utility method for interpretXMLData. */
     protected void addDataElem (String index, String category, double stamp) {
+	System.out.println ("addDataElem called");
 	if (index.endsWith ("startframe")) {
 	    // start a new data line...
 	    addDataLine (current_dl);
@@ -218,6 +219,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	}
 	IndexInfo ii = (IndexInfo)index_info.get(index);
 	if (ii == null) {
+	    System.out.println ("adding indexinfo for " + index);
 	    ii = new IndexInfo(category, index);
 	    index_info.put (index, ii);
             ordered_index_info.add (ii);
@@ -231,6 +233,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
      *  extract all the subelements from it...
      */
     public void interpretXMLData (Node doc) {
+	System.out.println ("labeledpdc.interpretXMLData");
         String name = doc.getNodeName();
         String value = doc.getNodeValue();
         NamedNodeMap attributes;
@@ -249,7 +252,15 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
             }
             break;
         case Node.ELEMENT_NODE:
-            if (name.equalsIgnoreCase ("stamp")) {
+            if (name.equalsIgnoreCase ("labeledbuffer")) {
+		// should check to verify it's got the right name
+		child = doc.getFirstChild();
+		while (child != null) {
+		    interpretXMLData (child);
+		    child = child.getNextSibling();
+		}
+	    }
+            else if (name.equalsIgnoreCase ("stamp")) {
                 attributes = doc.getAttributes();
                 attrcount = attributes.getLength();
 		String label = "";
@@ -282,6 +293,8 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	    System.out.println ("unexpected dom node...");
             //iostatus.addWarning ("Unexpected DOM node type...");
 	}
+
+	notifyActionListenersUpdate();
     }
 
       public void refreshMaxValues () {
