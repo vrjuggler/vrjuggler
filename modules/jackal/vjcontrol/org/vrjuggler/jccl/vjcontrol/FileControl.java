@@ -103,7 +103,6 @@ public class FileControl {
                 s = getEnvVar (s.substring(1));
         }
 
-	System.out.println ("stringReplacement: '" + s + "'");
 	return s;
     }
 
