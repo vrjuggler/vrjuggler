@@ -89,8 +89,9 @@ BEANS		= Viewers
 # For the following, *.class is used so that these variables may be used as
 # dependencies of .jar targets.
 
-TWEEK_CLASSES	= org/vrjuggler/tweek/*.class
-TWEEK_EXTRAS	= org/vrjuggler/tweek/*.gif
+TWEEK_CLASSES	= org/vrjuggler/tweek/*.class			\
+                  org/vrjuggler/tweek/gui/*.class
+TWEEK_EXTRAS	= org/vrjuggler/tweek/gui/*.gif
 
 BEANS_MF	= $(srcdir)/beans.MF
 BEANS_CLASSES	= org/vrjuggler/tweek/beans/*.class		\
