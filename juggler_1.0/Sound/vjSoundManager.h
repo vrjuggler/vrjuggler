@@ -40,6 +40,12 @@
 
 class vjSoundManager : public vjConfigChunkHandler
 {
+public:
+   vjSoundManager()
+   {
+      mSoundEngine = NULL;
+   }
+
 public:     // --- Config stuff -- //
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
@@ -61,17 +67,17 @@ public:
    //: Blocks until the end of the frame
    //! POST: The frame has been drawn
    virtual void sync();
-  
+
    // given an alias, return the handle.
    // TODO: if called twice with name alias, should return same pointer.
    // memory managed by engine...
    // returns NULL if invalid name.
    vjSound* getHandle( const char* const alias );
-   
+
    //: Factory function to create a new sound.
    // memory managed by engine
    virtual vjSound* newSound();
-   
+
    vjSoundEngine* mSoundEngine;
 
 public:
@@ -91,4 +97,4 @@ private:
    static vjSoundManager* _instance;   //: The instance
 };
 
-#endif	/* _VJ_SOUND_MANAGER_H_ */
+#endif   /* _VJ_SOUND_MANAGER_H_ */

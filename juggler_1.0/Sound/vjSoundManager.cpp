@@ -45,39 +45,40 @@ vjSoundManager::vjSoundManager () {
 //! PRE: configCanHandle(chunk) == true
 bool vjSoundManager::configAdd(vjConfigChunk* chunk)
 {
-	if (!configCanHandle( chunk ))
-	{
-		return false;
-	}
-	
-	if (mSoundEngine != NULL)
-	{
-		//TODO: add to it
-		vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "WARNING: Trying to configure sound manager when we already have one configured.\n" << vjDEBUG_FLUSH;
-		return false;
-	}
-
-	// Allocate new engine, configure it, init it
-	mSoundEngine = vjSoundFactory::loadEngine(chunk);
-	if(mSoundEngine != NULL)
-	{
-		mSoundEngine->init();			// Initialize the new puppy *woof*
-      return true;
-	}
-	else
-	{
-		vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) 
-					<< clrOutNORM(clrRED,"ERROR:")
-					<< "Failed to load sound engine\n" << vjDEBUG_FLUSH;
+   if (!configCanHandle( chunk ))
+   {
       return false;
-	}
+   }
+
+   if (mSoundEngine != NULL)
+   {
+      //TODO: add to it
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrMAGENTA,"WARNING:")
+                                          << "Trying to configure sound manager when we already have one configured.\n" << vjDEBUG_FLUSH;
+      return false;
+   }
+
+   // Allocate new engine, configure it, init it
+   mSoundEngine = vjSoundFactory::loadEngine(chunk);
+   if(mSoundEngine != NULL)
+   {
+      mSoundEngine->init();         // Initialize the new puppy *woof*
+      return true;
+   }
+   else
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+               << clrOutNORM(clrRED,"ERROR:")
+               << "Failed to load sound engine\n" << vjDEBUG_FLUSH;
+      return false;
+   }
 }
 
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
 bool vjSoundManager::configRemove(vjConfigChunk* chunk)
 {
-	return false;
+   return false;
 }
 
 //: Can the handler handle the given chunk?
@@ -85,22 +86,22 @@ bool vjSoundManager::configRemove(vjConfigChunk* chunk)
 //+          false - Can't handle it
 bool vjSoundManager::configCanHandle(vjConfigChunk* chunk)
 {
-	return vjSoundFactory::recognizeEngine( chunk );
+   return vjSoundFactory::recognizeEngine( chunk );
 }
 
 //: Enable a frame to be drawn
 void vjSoundManager::update()
 {
-	if(mSoundEngine != NULL)
-		mSoundEngine->update();
+   if(mSoundEngine != NULL)
+      mSoundEngine->update();
 }
 
 //: Blocks until the end of the frame
 //! POST: The frame has been drawn
 void vjSoundManager::sync()
 {
-	if(mSoundEngine != NULL)
-		mSoundEngine->sync();
+   if(mSoundEngine != NULL)
+      mSoundEngine->sync();
 }
 
 // given an alias, return the handle.
@@ -109,8 +110,8 @@ void vjSoundManager::sync()
 // returns NULL if invalid name.
 vjSound* vjSoundManager::getHandle( const char* const alias )
 {
-	if(mSoundEngine != NULL)
-		return mSoundEngine->getHandle( alias );
+   if(mSoundEngine != NULL)
+      return mSoundEngine->getHandle( alias );
    else
       return NULL;
 }
@@ -119,8 +120,8 @@ vjSound* vjSoundManager::getHandle( const char* const alias )
 // memory managed by engine
 vjSound* vjSoundManager::newSound()
 {
-	if(mSoundEngine != NULL)
-		return mSoundEngine->newSound();
+   if(mSoundEngine != NULL)
+      return mSoundEngine->newSound();
    else
       return NULL;
 }
