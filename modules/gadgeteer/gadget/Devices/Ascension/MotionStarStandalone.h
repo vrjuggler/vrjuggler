@@ -131,12 +131,14 @@ class aMotionStar {
 
     // constructor
 
-      aMotionStar(int hemisphere,
+      aMotionStar(char* ipAddress,
+                  int hemisphere,
 		  unsigned int birdFormat,
 		  unsigned int birdsRequired,
 		  int runMode,
 		  double birdRate,
-		  unsigned char reportRate);
+                  unsigned char reportRate
+                  );
 
     // destructor
 
@@ -145,7 +147,6 @@ class aMotionStar {
     // returns whether the MotionStar is active
 
       bool& isActive();
-
     // initializes the MotionStar, setting the status for each bird
 
       void start();
@@ -172,6 +173,9 @@ class aMotionStar {
 
       void setHemisphere ( int n );
 inline unsigned int getHemisphere () {return hemisphere;}
+      
+      void setIpAddress( const char* n );
+inline char* getIpAddress () {return ipAddress;}
 
       void setBirdFormat ( unsigned int n );
 inline unsigned int getBirdFormat () {return birdFormat;}
@@ -234,7 +238,7 @@ private:
 
 float posinfo[3][6]; 
 bool 			active;
-char                    ip_address[16];
+char                    ipAddress[16];
 int x;
 unsigned char           all;
 unsigned char           FBBerror;
