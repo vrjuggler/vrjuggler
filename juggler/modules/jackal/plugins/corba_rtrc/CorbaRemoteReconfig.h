@@ -57,10 +57,9 @@ class JCCL_CLASS_API RTRCInterface
 
 public:
    RTRCInterface()
+      : mCorbaManager(NULL), mInterface(NULL), mInterfaceName("RTRCInterface")
    {
-      mCorbaManager = NULL;
-      mInterface = NULL;
-      mInterfaceName = "RTRCInterface";
+      ;
    }
 
    ~RTRCInterface()
