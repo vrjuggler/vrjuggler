@@ -140,10 +140,28 @@ namespace snx
          return sonix::instance()->isAmbient( mAlias );
       }
 
-      /** alters the frequency of the sample, 0 is no change. */
+      /** alters the frequency of the sample.
+       *  1 is no change
+       *  < 1 is low
+       *  > 1 is high.
+       */
       virtual void setPitchBend( float amount )
       {
          sonix::instance()->setPitchBend( mAlias, amount );
+      }
+      
+      /** affect volume.  set to a value between [0..1]. */
+      virtual void setVolume( float amount )
+      {
+         sonix::instance()->setVolume( mAlias, amount );
+      }
+
+      /** affect cutoff.
+       *  set to a value between [0..1]... 1 is no change.  0 is total cutoff.
+       */
+      virtual void setCutoff( float amount )
+      {
+         sonix::instance()->setCutoff( mAlias, amount );
       }
       
       /**stop the sound.
