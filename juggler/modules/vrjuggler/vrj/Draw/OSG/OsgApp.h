@@ -188,41 +188,18 @@ inline void OsgApp::draw()
    //Get the frustrum
    Frustum frustum = project->mFrustum;
 
-   // Get the viewport
-   Viewport* vp = userData->getViewport();
-
    //Reset the camera
    osg::Camera* the_cam = sv->getCamera();
-   CameraProjection* sim_cam_proj(NULL);     // Sim camera.  Used if we need it.
-   
-   switch(vp->getType())
-   {
-   case Viewport::SURFACE:
-      the_cam->home();
-      the_cam->setAdjustAspectRatioMode(osg::Camera::ADJUST_NONE);      // Tell it not to adjust the aspect ratio at all
-   
-      //Set the frustrum (this is set with the matrix below)
-      //float near_val = frustum[Frustum::VJ_NEAR];
-      the_cam->setFrustum(frustum[Frustum::VJ_LEFT],   frustum[Frustum::VJ_RIGHT],
-                          frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
-                          frustum[Frustum::VJ_NEAR],             frustum[Frustum::VJ_FAR]);
-      break;
 
-   case Viewport::SIM:
-      sim_cam_proj = dynamic_cast<CameraProjection*>(project);
-      vprASSERT(sim_cam_proj != NULL && "Trying to use non-camera projection for simulator");
-      the_cam->home();
-      the_cam->setAdjustAspectRatioMode(osg::Camera::ADJUST_HORIZONTAL);
-      //chan->setNearFar(frustum[Frustum::VJ_NEAR], frustum[Frustum::VJ_FAR]);
-      //chan->setFOV(0.0f, cam_proj->mVertFOV);
-      the_cam->setPerspective( sim_cam_proj->mVertFOV, sim_cam_proj->mAspectRatio,
-                               frustum[Frustum::VJ_NEAR], frustum[Frustum::VJ_FAR]);
-      break;
+   // Setup the camera
+   the_cam->home();
+   the_cam->setAdjustAspectRatioMode(osg::Camera::ADJUST_NONE);      // Tell it not to adjust the aspect ratio at all
 
-   default:
-      vprASSERT(false);
-      break;
-   }
+   //Set the frustrum (this is set with the matrix below)
+   //float near_val = frustum[Frustum::VJ_NEAR];
+   the_cam->setFrustum(frustum[Frustum::VJ_LEFT],   frustum[Frustum::VJ_RIGHT],
+                       frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
+                       frustum[Frustum::VJ_NEAR],             frustum[Frustum::VJ_FAR]);
 
    //Set the look at
    // NOTE: This is on the wrong stack !!!!
