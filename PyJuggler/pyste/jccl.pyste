@@ -25,8 +25,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# XXX: How can I tell the boost::python::class_<T> constructor that
-# jccl::ConfigChunkPtr can act as a stand-in for jccl::ConfigChunk?
-Class('jccl::ConfigChunk', 'jccl/Config/ConfigChunk.h')
-#Class('jccl::ConfigChunkPtr', 'jccl/Config/ConfigChunkPtr.h')
+ConfigChunk = Class('jccl::ConfigChunk', 'jccl/Config/ConfigChunk.h')
+use_shared_ptr(ConfigChunk)
+
 Class('jccl::ConfigChunkHandler', 'jccl/RTRC/ConfigChunkHandler.h')
