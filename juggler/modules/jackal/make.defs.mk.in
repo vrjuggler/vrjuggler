@@ -108,6 +108,7 @@ EXTRA_DEPEND_FLAGS	= -I$(JCCLROOT_ABS)
 EXTRA_DEFS	        += -DJCCL_SHARE_DIR="\"$(JCCL_SHARE_DIR)\""     \
                            -D_JCCL_BUILD_
 EXTRA_INCLUDES		= -I$(top_srcdir)
+EXTRA_LDFLAGS		= @EXTRA_LINK_FLAGS@
 
 # -----------------------------------------------------------------------------
 # Makedepend commands.  Doozer++ uses $(MKDEP_C) and $(MKDEP_CXX).
