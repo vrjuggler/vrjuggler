@@ -14,6 +14,7 @@
 #include <Threads/vjThread.h>
 #include <Sync/vjGuard.h>
 #include <Kernel/vjDebug.h>
+#include <GL/gl.h>
 
 
 /** Start the pipe running
@@ -168,5 +169,6 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
       glManager->drawSimulator(win->getDisplay()->mSim);
    }
 
+   glFlush();              // Flush the OpenGL commands
    win->swapBuffers();     // Swap those buffers
 }
