@@ -11,6 +11,14 @@
 
 cat <<EOF
 
+Primary build/install targets are:
+    world           - Build and install everything.
+    world-all-abi   - Build and install everything usnig all supported ABIs.
+    buildworld      - Build everything (same as 'all').
+    installworld    - Install everything (same as 'install-all').  This
+                      requirs that 'buildworld' be successfully completed
+                      beforehand.
+
 Build targets are:
     all             - Build everything.
     all-abi         - Build everything using all supported ABIs.
