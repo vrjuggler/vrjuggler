@@ -87,7 +87,7 @@ public:
       if(mStupified)
          return analogDefault;
       else
-         return (float)m_data;
+         return m_data.getAnalogData();
    }
 
    Analog* getAnalogPtr()
