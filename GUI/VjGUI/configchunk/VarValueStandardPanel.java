@@ -80,15 +80,16 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	    String s;
 
 	    choice = new JComboBox();
+            choice.setEditable(true);
 	    ListBoxModel bm = new ListBoxModel();
-	    bm.addObject ("<No Selection>");
+	    bm.addElement ("<No Selection>");
 	    if (desc.enums.size() == 0) {
 		/* no listed types we use as a wildcard - show all chunks */
 		for (i = 0; i < Core.chunkdbs.size(); i++) {
 		    db = (ConfigChunkDB)Core.chunkdbs.elementAt(i);
 		    for (j = 0; j < db.size(); j++) {
 			ch = (ConfigChunk)db.elementAt(j);
-			bm.addObject (db.getName() + ": " + ch.getName());
+			bm.addElement (db.getName() + ": " + ch.getName());
 		    }
 		}
 	    }
@@ -99,7 +100,7 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 			ch = (ConfigChunk)db.elementAt(j);
 			for (k = 0; k < desc.enums.size(); k++) {
 			    if (ch.getDescToken().equalsIgnoreCase (((DescEnum)desc.enums.elementAt(k)).str)) {
-				bm.addObject (db.getName() + ": " + ch.getName());
+				bm.addElement (db.getName() + ": " + ch.getName());
 				break;
 			    }
 			}
@@ -116,7 +117,7 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	    ListBoxModel bm = new ListBoxModel();
 	    //bm.addObject ("<No Selection>"); may not be safe for enums
 	    for (i = 0; i < desc.enums.size(); i++)
-		bm.addObject(((DescEnum)desc.enums.elementAt(i)).str);
+		bm.addElement(((DescEnum)desc.enums.elementAt(i)).str);
 	    choice.setModel(bm);
 	    choice.setSelectedItem ("<No Selection>");
 	    add(choice, "Center");
@@ -168,7 +169,9 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	VarValue v = new VarValue(desc.valtype);
 	if (choice != null) {
 	    /* enumeration */
-	    String s = desc.getEnumValue((String)choice.getSelectedItem()).toString();
+            String s = (String)choice.getSelectedItem();
+            if (s != null)
+                s = desc.getEnumValue(s).toString();
 	    if ((s == null) || (s.equals("<No Selection>")))
 		s = "";
 
