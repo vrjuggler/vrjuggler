@@ -138,7 +138,11 @@ public class ConfigDefinitionParser
       for (Iterator itr = root.getChildren(PARENT, DEF_NS).iterator(); itr.hasNext(); )
       {
          Element elt = (Element)itr.next();
-         parent_definitions.add(elt.getTextTrim());
+         String parent_name = elt.getTextTrim();
+         if ( ! parent_name.equals("") )
+         {
+            parent_definitions.add(parent_name);
+         }
       }
 
       // Grok the categories
