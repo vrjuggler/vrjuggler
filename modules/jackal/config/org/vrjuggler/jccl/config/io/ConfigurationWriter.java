@@ -71,7 +71,7 @@ public class ConfigurationWriter
       {
          String file = (String)itr.next();
          Element include_elt = new Element(INCLUDE, CFG_NS);
-         include_elt.setAttribute(FILE, file);
+         include_elt.setText(file);
          doc.getRootElement().addContent(include_elt);
       }
 
