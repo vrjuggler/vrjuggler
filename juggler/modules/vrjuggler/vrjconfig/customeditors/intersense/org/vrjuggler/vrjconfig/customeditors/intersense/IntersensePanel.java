@@ -213,6 +213,10 @@ public class IntersensePanel extends JPanel implements CustomEditor
       return null;
    }
 
+   public void editorClosing()
+   {
+   }
+
    /**
     * Initialize the GUI created with JBuilder.
     */

@@ -170,6 +170,10 @@ public class Editor
       return null;
    }
 
+   public void editorClosing()
+   {
+   }
+
    private LayoutController controller = new SpringEmbeddedLayoutController();
    private boolean mApplyToAll = true;
    private Properties mLayoutConfig = controller.getConfiguration();
