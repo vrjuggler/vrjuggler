@@ -84,11 +84,13 @@ AC_DEFUN([_TWEEK_PATH_SETUP],
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl _TWEEK_VERSION_CHECK(MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
+dnl _TWEEK_VERSION_CHECK(minimum-version, [action-if-found [, action-if-not-found]])
 dnl NOTE: This should not be called by external code.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([_TWEEK_VERSION_CHECK],
 [
+   DPP_PREREQ([2.0.1])
+
    AC_REQUIRE([_TWEEK_PATH_SETUP])
 
    if test "x$TWEEK_CONFIG" = "xno" ; then
@@ -97,14 +99,13 @@ AC_DEFUN([_TWEEK_VERSION_CHECK],
       TWEEK_VERSION=`$TWEEK_CONFIG --version`
 
       min_tweek_version=ifelse([$1], , 0.0.1, $1)
-      AC_MSG_CHECKING([whether Tweek version is >= $min_tweek_version])
-      AC_MSG_RESULT([$TWEEK_VERSION])
-      DPP_VERSION_CHECK([$TWEEK_VERSION], [$min_tweek_version], $2, $3)
+      DPP_VERSION_CHECK_MSG_NO_CACHE([Tweek], [$TWEEK_VERSION],
+                                     [$min_tweek_version], [$2], [$3])
    fi
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl TWEEK_PATH_CXX([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl TWEEK_PATH_CXX([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Tests for Tweek C++ API and then defines the following variables:
 dnl     TWEEK_CXXFLAGS
@@ -242,7 +243,7 @@ AC_DEFUN([TWEEK_PATH_CXX],
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl TWEEK_PATH_JAVA([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl TWEEK_PATH_JAVA([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Tests for Tweek Java API and then defines the following variables:
 dnl     TWEEK_JAVA_IDL
@@ -301,7 +302,7 @@ AC_DEFUN([TWEEK_PATH_JAVA],
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl TWEEK_PATH_PYTHON([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl TWEEK_PATH_PYTHON([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Tests for Tweek Python API and then defines the following variables:
 dnl     TWEEK_PYTHON_IDL
@@ -355,7 +356,7 @@ AC_DEFUN([TWEEK_PATH_PYTHON],
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl TWEEK_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl TWEEK_PATH([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Tests for Tweek C++, Java, and Python APIs and then defines the following
 dnl variables:
@@ -385,10 +386,10 @@ dnl     TWEEK_PYTHON_IDL_INCFLAG
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([TWEEK_PATH],
 [
-   TWEEK_PATH_CXX($1, [tweek_have_cxx='yes'], $3, $4)
+   TWEEK_PATH_CXX($1, [tweek_have_cxx='yes'], $3)
 
    if test "x$tweek_have_cxx" = "xyes" ; then
-      TWEEK_PATH_JAVA($1, $2, $3, $4)
-      TWEEK_PATH_PYTHON($1, $2, $3, $4)
+      TWEEK_PATH_JAVA($1, $2, $3)
+      TWEEK_PATH_PYTHON($1, $2, $3)
    fi
 ])

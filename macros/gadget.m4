@@ -31,7 +31,7 @@ dnl
 dnl ************* <auto-copyright.pl END do not edit this line> *************
 
 dnl ---------------------------------------------------------------------------
-dnl GADGETEER_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl GADGETEER_PATH([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Test for Gadgeteer and then define the following variables:
 dnl     GADGET_CXXFLAGS
@@ -52,6 +52,8 @@ dnl     GADGET_USE_X11
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([GADGETEER_PATH],
 [
+    DPP_PREREQ([2.0.1])
+
     dnl Get the cflags and libraries from the gadgeteer-config script
     AC_ARG_WITH(gadgeteer,
                 [  --with-gadgeteer=<PATH> Directory where Gadgeteer is
@@ -128,9 +130,8 @@ AC_DEFUN([GADGETEER_PATH],
         GADGET_EXTRA_LIBS_LD_MIN=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI --min --linker`
         GADGET_USE_X11=`$GADGETEER_CONFIG $gadget_config_args --use-x11`
 
-        AC_MSG_CHECKING([whether Gadgeteer version is >= $min_gadget_version])
-        AC_MSG_RESULT([$GADGET_VERSION])
-        DPP_VERSION_CHECK([$GADGET_VERSION], [$min_gadget_version], $2, $3)
+        DPP_VERSION_CHECK_MSG_NO_CACHE([Gadgeteer], [$GADGET_VERSION],
+                                       [$min_gadget_version], [$2], [$3])
     fi
 
     if test "x$no_gadgeteer" != x ; then

@@ -40,7 +40,7 @@ dnl
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ---------------------------------------------------------------------------
-dnl SNX_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl SNX_PATH([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Test for SNX and then define the following variables:
 dnl     SNX_CXXFLAGS
@@ -60,6 +60,8 @@ dnl     SNX_EXTRA_LIBS_LD
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([SNX_PATH],
 [
+    DPP_PREREQ([2.0.1])
+
     dnl Get the cflags and libraries from the sonix-config script
     AC_ARG_WITH(sonix,
                 [  --with-sonix=<PATH>     Directory where Sonix is
@@ -134,9 +136,8 @@ AC_DEFUN([SNX_PATH],
         SNX_EXTRA_LIBS_CC_MIN=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --min`
         SNX_EXTRA_LIBS_LD_MIN=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --min --linker`
 
-        AC_MSG_CHECKING([whether Sonix version is >= $min_sonix_version])
-        AC_MSG_RESULT([$SNX_VERSION])
-        DPP_VERSION_CHECK([$SNX_VERSION], [$min_sonix_version], [$2], [$3])
+        DPP_VERSION_CHECK_MSG_NO_CACHE([Sonix], [$SNX_VERSION],
+                                       [$min_sonix_version], [$2], [$3])
     fi
 
     if test "x$no_sonix" != x ; then
