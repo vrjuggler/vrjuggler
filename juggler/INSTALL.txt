@@ -478,18 +478,25 @@ Compiling
     Tweek (individual)
 
    Tweek depends on VPR. It needs JDK 1.3.1, JDOM B7 or newer, and the
-   third-party CORBA implementations omniORB 3.0.4 (C++) and OpenORB 1.2.0
-   (Java). These packages can be downloaded from the following websites:
+   third-party CORBA implementations omniORB 3.0.4 or newer (C++) and OpenORB
+   1.2.0 or newer (Java). These packages can be downloaded from the following
+   websites:
 
      o JDOM: http://www.jdom.org/
 
-     o omniORB: http://www.omniorb.org/
+     o omniORB: http://www.omniorb.org/ or http://omniorb.sourceforge.net/
 
-     o OpenORB: http://www.openorb.org/
+     o OpenORB: http://openorb.exolab.org/ or http://openorb.sourceforge.net/
 
    For the following steps, assume that you have omniORB installed in
    <OMNIORBPATH>, OpenORB is installed in <OPENORBPATH>, and JDOM is
    installed in <JDOMPATH>.
+
+   IRIX users must configure Tweek (and its VPR dependency) to use the POSIX
+   subsystem or the NSPR subsystem. omniORB will not work with SPROC threads.
+   To configure VPR to use either POSIX threads or NSPR threads, pass either
+   --enable-subsystem=POSIX or --enable-subsystem=NSPR to configure.pl
+   respectively.
 
    Assuming you have the external packages installed, do the following from
    the top-level juggler directory:
