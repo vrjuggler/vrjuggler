@@ -102,7 +102,7 @@ public:
     //+                  wrong.
     // ------------------------------------------------------------------------
     inline bool
-    listen (const int backlog) {
+    listen (const int backlog = 5) {
         return m_socket_stream_imp.listen(backlog);
     }
 
