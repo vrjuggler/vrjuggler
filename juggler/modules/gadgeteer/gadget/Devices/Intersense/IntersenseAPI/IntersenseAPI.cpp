@@ -35,6 +35,9 @@
 #include <sstream>
 #include <fstream>
 
+#include <vpr/vprConfig.h>
+#include <vpr/System.h>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
