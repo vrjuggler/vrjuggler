@@ -20,7 +20,7 @@
             <surname>Hartling</surname>
          </author>
       </authorgroup>
-      <releaseinfo>0.0.4</releaseinfo>
+      <releaseinfo>0.0.5</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <preface>
@@ -202,8 +202,8 @@
                   <primary>XML</primary>
                </indexterm>. The XML file can contain information about many Beans or about a single Bean. The XML file itself is a <quote>beanlist</quote> document. The four Bean categories, described above, each have an XML element that has children giving information about the specific Bean. The elements are <sgmltag>&lt;service&gt;</sgmltag>, <sgmltag>&lt;viewer&gt;</sgmltag>, <sgmltag>&lt;guipanel&gt;</sgmltag>, and <sgmltag>&lt;generic&gt;</sgmltag>.</para>
             <para>All Bean XML entries must contain a <sgmltag>&lt;file&gt;</sgmltag> element. Through its <literal>source</literal> attribute, this element provides the path to the JAR file that contains the full Bean code. When specifying the JAR file path, environment variables may be used. They must use the syntax <varname>${ENV_VAR}</varname> (the curly braces are required). The <literal>class</literal> element gives the fully qualified name of the class stored within the JAR file that will be instantiated. The extension <filename>.class</filename> must not be specified. This is to allow the use of serialized classes which have the extension <filename>.ser</filename>. The Tweek Bean-loading code will figure out what is available and take the right actions.</para>
-            <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, a &lt;depedencies&gt; element may be specified. Dependencies of the Bean named as external JAR files or other beans may be listed therein. The &lt;dependencies&gt; element may contain zero of more elements of type &lt;jar&gt; and &lt;bean&gt;. The &lt;jar&gt; element has a single attribute, <literal>path</literal>, which gives the path (a semi-colon separated list of directories) where the JAR file may be found. The contents of the &lt;jar&gt; element defines the name of the JAR file. The &lt;bean&gt; element's contents defines the name of the bean that the current bean depends on.</para>
-            <para>Of the four Bean categories, the XML for Panel Beans can contain the most information. In addition to the previously mentioned elements, Panel Bean entries may have two optional elements: <sgmltag>&lt;tree&gt;</sgmltag> and <sgmltag>&lt;icon&gt;</sgmltag>. The element <sgmltag>&lt;tree&gt;</sgmltag> specifies the path within the Bean tree hierarchy where the Panel Bean will be placed. The path is given as a /-separated list of directories. If the named path does not exist when the Bean is loaded, it will be created. The element <sgmltag>&lt;icon&gt;</sgmltag> names a custom icon for the Bean and a tool-tip. An example of a Panel Bean XML entry is shown in <xref linkend="PlexusGraphView.xml.example"/>. Note that this is not the full file--it is only the <sgmltag>&lt;guipanel&gt;</sgmltag> element for a single Bean.</para>
+            <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, a &lt;depedencies&gt; element may be specified. Dependencies of the Bean may be named as external JAR files or other Beans may be listed therein. The &lt;dependencies&gt; element may contain zero of more elements of type &lt;jar&gt; and/or &lt;bean&gt;. The &lt;jar&gt; element has a single attribute, <literal>path</literal>, which gives the path (a semi-colon separated list of directories) where the JAR file may be found. The contents of the &lt;jar&gt; element defines the name of the JAR file. The &lt;bean&gt; element's contents defines the name of the Bean that the current Bean depends on.</para>
+            <para>Of the four Bean categories, the XML for Panel Beans can contain the most information. In addition to the previously mentioned elements, Panel Bean entries may have two optional elements: <sgmltag>&lt;tree&gt;</sgmltag> and <sgmltag>&lt;icon&gt;</sgmltag>. The element <sgmltag>&lt;tree&gt;</sgmltag> specifies the path within the Bean tree hierarchy where the Panel Bean will be placed. The path is given as a /-separated list of directories. If the named path does not exist when the Bean is loaded, it will be created. The element <sgmltag>&lt;icon&gt;</sgmltag> names a custom icon for the Bean and a tool-tip. An example of a Panel Bean XML entry is shown in <xref linkend="PlexusGraphView.xml.example"/>. Note that this is not the full file&mdash;it is only the <sgmltag>&lt;guipanel&gt;</sgmltag> element for a single Bean.</para>
             <example id="PlexusGraphView.xml.example">
                <title>PlexusGraphView.xml snippet</title>
                <programlisting>&lt;guipanel name="Graph View"&gt;
@@ -225,7 +225,7 @@
                <title>Viewers.xml</title>
                <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd"&gt;
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd"&gt;
   &lt;viewer name="Tree Viewer"&gt;
     &lt;file name="${TWEEK_BASE_DIR}/bin/beans/Viewers.jar" 
           class="org.vrjuggler.tweek.treeviewer.BeanTreeViewer" /&gt;
@@ -1398,7 +1398,7 @@ public void connectionStateChanged(CommunicationEvent e)
                      <title>NetworkTestBean.xml</title>
                      <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;                               <co linkends="NetworkTestBean.xml.version.co" id="NetworkTestBean.xml.version"/>
 &lt;beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"      <co linkends="NetworkTestBean.xml.beanlist.co" id="NetworkTestBean.xml.beanlist"/>
-          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd"&gt;
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd"&gt;
   &lt;guipanel name="Network Tester"&gt;                                   <co linkends="NetworkTestBean.xml.guipanel.co" id="NetworkTestBean.xml.guipanel"/>
     &lt;file name="${TWEEK_BASE_DIR}/bin/beans/NetworkTestBean.jar"     <co linkends="NetworkTestBean.xml.file.co" id="NetworkTestBean.xml.file"/>
           class="networktest.NetworkTest" /&gt;
@@ -1663,7 +1663,7 @@ public int getOpenFileCount ()
                   <title>FileOpenTestBean.xml</title>
                   <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd"&gt;
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd"&gt;
   &lt;guipanel name="File Open Test Bean"&gt;
     &lt;file name="${TWEEK_BASE_DIR}/bin/beans/FileOpenTestBean.jar" 
           class="fileopentestbean.FileOpenTestBean" /&gt;
