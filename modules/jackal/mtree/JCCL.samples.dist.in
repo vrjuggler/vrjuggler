@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # This file defines the specification for the sample code directory tree for
-# the VR Juggler installation.
+# the JCCL installation.
 #
 # $Id$
 
@@ -40,20 +40,6 @@
     samples
         jccl
             serverdemo
-            ..
-        ..
-        vjcontrol
-            AudioPlayer
-                src
-                    AudioPlayer
-                    ..
-                ..
-            ..
-            DisplayWindowEditor
-                src
-                    DisplayWindowEditor
-                    ..
-                ..
             ..
         ..
     ..
