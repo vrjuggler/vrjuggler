@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
-#include <vrj/Draw/Pf/PfUtil.h>
 #include <gmtl/Vec.h>
-
 #include <gmtl/Generate.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/VecOps.h>
 #include <gmtl/Math.h>
+
+#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/PfUtil.h>
 
 namespace vrj
 {
