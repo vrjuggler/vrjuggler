@@ -35,22 +35,21 @@
 
 #pragma warning(disable:4786)  // identifier truncated to 255 characters in the debug information
 
-#include <vrj/vrjConfig.h>
 #include <GL/gl.h>
+
+#include <gadget/Devices/Keyboard/KeyboardWin32.h>
+
+#include <vrj/vrjConfig.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 
 namespace vrj
 {
 
-class VJ_CLASS_API GlWindowWin32 : public GlWindow
+class VJ_CLASS_API GlWindowWin32 : public GlWindow, public gadget::KeyboardWin32
 {
 public:
-   GlWindowWin32()
-      : mMatch(NULL), mWinHandle(NULL), mRenderContext(NULL),
-        mDeviceContext(NULL)
-   {
-      ;
-   }
+   GlWindowWin32();
+   virtual ~GlWindowWin32();
 
 public:
 
@@ -86,6 +85,8 @@ public:
     * @post All win32 events have ben dispatched and dealt with.
     */
    virtual void checkEvents();
+
+   void config( vrj::Display* disp );
 
 protected:
    // WindowProcedure to deal with the events generated.
@@ -125,12 +126,32 @@ protected:
 
    static std::map<HWND, GlWindowWin32*> mGlWinMap;
 
+   /**
+    * Called with any events to process from win keyboard.
+    * Called from seperate process (keyboard device update).
+    */
+   virtual void processEvent( UINT message, UINT wParam, LONG lParam );
+
+   /** do the stuff needed to become a gadgeteer device.
+    *  @pre can be called any time
+    */
+   void becomeKeyboardDevice();
+
+   /** do the stuff to make this not a gadgeteer device. 
+    *  @pre can be called any time
+    */
+   void removeKeyboardDevice();
 public:
     HWND  mWinHandle;      /**< Window handle */
     HGLRC mRenderContext;  /**< Permenant Rendering context */
     HDC   mDeviceContext;  /**< Private GDI Device context */
 
+    std::string    window_name;
+    int            mPipe;
+    std::string    mXDisplayName;       /**<  Name of the x display to use */
+
     PIXELFORMATDESCRIPTOR* mMatch;    /**< Points the the found pixel format */
+    bool           mAreKeyboardDevice;  /**< Should we act as a keyboard device too? */
 };
 
 } // End of vrj namespace
