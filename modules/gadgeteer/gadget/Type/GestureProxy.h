@@ -78,7 +78,7 @@ public:
    {
       const int defaultGesture(-1);
 
-      if(mStupified)
+      if(isStupified())
          return defaultGesture;
       else
          return mTypedDevice->getGesture();
@@ -92,7 +92,7 @@ public:
    int getGestureIndex(std::string name)
    {
       const int defaultGestureIndex(-1);
-      if(mStupified)
+      if(isStupified())
          return defaultGestureIndex;
       else
          return mTypedDevice->getGestureIndex(name);
@@ -105,7 +105,7 @@ public:
     */
    std::string getGestureString(int gestureId = -1)
    {
-      if(mStupified)
+      if(isStupified())
          return std::string("");
       else
          return mTypedDevice->getGestureString(gestureId);
@@ -114,7 +114,7 @@ public:
    /** Returns a pointer to the device held by this proxy. */
    Gesture* getGesturePtr()
    {
-      if(mStupified)
+      if(isStupified())
          return NULL;
       else
          return mTypedDevice;
@@ -126,7 +126,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if(NULL == mTypedDevice)
+      if((NULL == mTypedDevice) || (isStupified)())
          return NULL;
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);

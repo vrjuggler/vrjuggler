@@ -98,7 +98,7 @@ public:
    void stupify(bool newState = true)
    { mStupified = newState; }
 
-   bool isStupified() { return mStupified; }
+   virtual bool isStupified() const { return mStupified; }
 
 protected:
    std::string mName;         /**< The name of the proxy */
