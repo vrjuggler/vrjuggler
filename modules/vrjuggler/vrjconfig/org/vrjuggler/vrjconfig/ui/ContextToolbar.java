@@ -200,7 +200,7 @@ public class ContextToolbar
          // Create the new config file
          try
          {
-            File new_file = new File(new_dlg.getDirectory(), new_dlg.getName());
+            File new_file = new File(new_dlg.getDirectory(), new_dlg.getFileName());
             String new_filename = new_file.getAbsolutePath();
             FileDataSource data_source = FileDataSource.create(new_filename, getBroker().getRepository());
             getBroker().add(new_filename, data_source);
