@@ -52,6 +52,7 @@ namespace tokens
 
    const std::string PosValue("PosValue");
    const std::string DigitalValue("DigValue");
+   const std::string StringValue("StrValue");
    const std::string AnalogValue("AnaValue");
    const std::string GloveValue("GloValue");
 
