@@ -202,6 +202,9 @@ AC_CHECK_FILE([$BOOST_PYTHON_LIBDIR/$BOOST_PYTHON_LIB], ,
 
 if test "x$OS_TYPE" = "xWin32" ; then
    BOOST_PYTHON_LDFLAGS="/libpath:$BOOST_PYTHON_LIBDIR boost_python.lib"
+
+   # XXX: This is a little strange.  I cannot get the modules to link 
+   BOOST_PYTHON_LDFLAGS="/libpath:$PYTHON_ROOT/libs $BOOST_PYTHON_LDFLAGS"
 else
    BOOST_PYTHON_LDFLAGS="-L$BOOST_PYTHON_LIBDIR -lboost_python"
 fi
