@@ -20,10 +20,24 @@ public:
    {
       char* proxy_str = NULL;
       proxy_str  = chunk->getProperty("simCamera");
+      char* head_str = NULL;
+      head_str  = chunk->getProperty("headPos");
 
-      mCamera.init(proxy_str); 
-      mHead.init("VJHead");
+      mCamera.init(proxy_str);
+      mHead.init(head_str);
       mWand.init("VJWand");
+
+      if(mCamera.getProxyIndex() == -1)
+      {
+         cerr << "vjSimulator:: Fatal Error: Camera not found: " << head_str << endl;
+         exit(1);
+      }
+
+      if(mHead.getProxyIndex() == -1)
+      {
+         cerr << "vjSimulator:: Fatal Error: Head not found: " << head_str << endl;
+         exit(1);
+      }
    }
 
    //: Update internal simulator data
