@@ -82,7 +82,7 @@ DYNAMIC_LIBS	= $(LIBS)
 endif
 
 # Dependencies for each of the various dynamic libraries we build.
-DYLIB_DEPS		= @DYLIB_DEPS@
+#DYLIB_DEPS		= @DYLIB_DEPS@
 
 GADGET_LIB_STATIC	= $(GADGET_LIBRARY).$(STATICLIB_EXT)
 GADGET_LIB_DYNAMIC	= $(GADGET_LIBRARY).$(DYNAMICLIB_EXT)
