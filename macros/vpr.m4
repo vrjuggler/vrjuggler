@@ -1,6 +1,21 @@
+dnl **************** <VPR heading BEGIN do not edit this line> ****************
+dnl
+dnl VR Juggler Portable Runtime
+dnl
+dnl Original Authors:
+dnl   Allen Bierbaum, Patrick Hartling, Kevin Meinert, Carolina Cruz-Neira
+dnl
+dnl -----------------------------------------------------------------
+dnl File:          $RCSfile$
+dnl Date modified: $Date$
+dnl Version:       $Revision$
+dnl -----------------------------------------------------------------
+dnl
+dnl ***************** <VPR heading END do not edit this line> *****************
+
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
 dnl
-dnl VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
 dnl
 dnl Original Authors:
 dnl   Allen Bierbaum, Christopher Just,
@@ -21,12 +36,6 @@ dnl You should have received a copy of the GNU Library General Public
 dnl License along with this library; if not, write to the
 dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
-dnl
-dnl -----------------------------------------------------------------
-dnl File:          $RCSfile$
-dnl Date modified: $Date$
-dnl Version:       $Revision$
-dnl -----------------------------------------------------------------
 dnl
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
