@@ -99,7 +99,7 @@ snx::SoundFactoryReg<AudiereSoundImplementation> audiereRegistrator( "audiere" )
 void AudiereSoundImplementation::step( const float & timeElapsed )
 {
    vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
-   
+
    snx::SoundImplementation::step( timeElapsed );
 }
 
@@ -118,7 +118,7 @@ AudiereSoundImplementation::AudiereSoundImplementation() : snx::SoundImplementat
 AudiereSoundImplementation::~AudiereSoundImplementation()
 {
    this->shutdownAPI();
-}  
+}
 
 /**
  * @input alias of the sound to trigger, and number of times to play
@@ -128,21 +128,21 @@ AudiereSoundImplementation::~AudiereSoundImplementation()
  */
 void AudiereSoundImplementation::trigger( const std::string& alias, const int& looping )
 {
-   
    vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
-   
+
    vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "Audiere| playing sound\n") << vprDEBUG_FLUSH;
-   
+
    snx::SoundImplementation::trigger( alias, looping );
-   
+
    snx::SoundInfo si = this->lookup(alias);
 
    if(si.streaming)
    {
       this->bind(alias);
  //     mCurrentTrack->play();
- 		// Set audiere to loop indefinly if that is requested other wise play only once
-		trackMap[alias]->setRepeat(looping == -1);
+      // Set audiere to loop indefinly if that is requested other wise play
+      // only once.
+      trackMap[alias]->setRepeat(looping == -1);
       trackMap[alias]->play();
    }
    else
@@ -157,37 +157,34 @@ void AudiereSoundImplementation::trigger( const std::string& alias, const int& l
 
 bool AudiereSoundImplementation::isPlaying( const std::string& alias )
 {
-	vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
-	boost::ignore_unused_variable_warning(alias);   
-	
-	snx::SoundInfo si = this->lookup(alias);
+   vprASSERT(mDev.get() != NULL && "startAPI must be called prior to this function");
+   boost::ignore_unused_variable_warning(alias);
 
-	if(si.streaming)
-	{
-		if(trackMap.count(alias) > 0)
-		{
-			return trackMap[alias]->isPlaying();
-		}
-	}
-	else
-	{
-		return false;
-		/*.
-		if(effectMap.count(alias) > 0)
-		{
-			
-		}
-		*/
-	}
+   snx::SoundInfo si = this->lookup(alias);
 
-
+   if(si.streaming)
+   {
+      if(trackMap.count(alias) > 0)
+      {
+         return trackMap[alias]->isPlaying();
+      }
+   }
+   else
+   {
+      return false;
+      /*
+      if(effectMap.count(alias) > 0)
+      {
+      }
+      */
+   }
 }
 
 /** if the sound is paused, then return true. */
 bool AudiereSoundImplementation::isPaused( const std::string& alias )
 {
    vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
-   boost::ignore_unused_variable_warning(alias);   
+   boost::ignore_unused_variable_warning(alias);
    return false;
 }
 
@@ -197,7 +194,7 @@ bool AudiereSoundImplementation::isPaused( const std::string& alias )
 void AudiereSoundImplementation::pause( const std::string& alias )
 {
    vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
-   boost::ignore_unused_variable_warning(alias);   
+   boost::ignore_unused_variable_warning(alias);
 }
 
 /**
@@ -206,7 +203,7 @@ void AudiereSoundImplementation::pause( const std::string& alias )
 void AudiereSoundImplementation::unpause( const std::string& alias )
 {
    vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
-   boost::ignore_unused_variable_warning(alias);   
+   boost::ignore_unused_variable_warning(alias);
 }
 
 /**
@@ -216,7 +213,7 @@ void AudiereSoundImplementation::unpause( const std::string& alias )
 void AudiereSoundImplementation::stop( const std::string& alias )
 {
    vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
-   
+
    if(this->lookup(alias).streaming)
    {
       if(trackMap.count(alias) > 0)
@@ -238,7 +235,6 @@ void AudiereSoundImplementation::stop( const std::string& alias )
 void AudiereSoundImplementation::setAmbient( const std::string& alias, bool ambient )
 {
    snx::SoundImplementation::setAmbient( alias, ambient );
-   
 }
 
 /**
@@ -249,12 +245,11 @@ void AudiereSoundImplementation::setAmbient( const std::string& alias, bool ambi
  */
 void AudiereSoundImplementation::configure( const std::string& alias, const snx::SoundInfo& description )
 {
-   
    snx::SoundImplementation::configure( alias, description );
 }
 
 /**
- * set sound's 3D position 
+ * set sound's 3D position
  */
 void AudiereSoundImplementation::setPosition( const std::string& alias, float x, float y, float z )
 {
@@ -279,7 +274,7 @@ void AudiereSoundImplementation::getPosition( const std::string& alias, float& x
 void AudiereSoundImplementation::setListenerPosition( const gmtl::Matrix44f& mat )
 {
    vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
-   
+
    snx::SoundImplementation::setListenerPosition( mat );
 }
 
@@ -300,37 +295,37 @@ void AudiereSoundImplementation::setPitchBend( const std::string& alias, float a
 /** 0 - 1.  use 0 for mute, use 1 for unmute... */
 void AudiereSoundImplementation::setVolume( const std::string& alias, float amount )
 {
-   snx::SoundImplementation::setVolume( alias, amount );
-	
-	snx::SoundInfo si = this->lookup(alias);
+   snx::SoundImplementation::setVolume(alias, amount);
 
-	if(si.streaming)
-	{
-		if(trackMap.count(alias) > 0)
-		{
-			trackMap[alias]->setVolume(amount);
-		}
-	}
-	else
-	{
-		if(effectMap.count(alias) > 0)
-		{
-			effectMap[alias]->setVolume(amount);
-		}	
-	}
+   snx::SoundInfo si = this->lookup(alias);
+
+   if(si.streaming)
+   {
+      if(trackMap.count(alias) > 0)
+      {
+         trackMap[alias]->setVolume(amount);
+      }
+   }
+   else
+   {
+      if(effectMap.count(alias) > 0)
+      {
+         effectMap[alias]->setVolume(amount);
+      }
+   }
 }
 
 /** 1 is no change.  0 is total cutoff. */
 void AudiereSoundImplementation::setCutoff( const std::string& alias, float amount )
 {
    snx::SoundImplementation::setCutoff( alias, amount );
-}  
+}
 
 
 /**
  * start the sound API, creating any contexts or other configurations at startup
  * @postconditions sound API is ready to go.
- * 
+ *
  * @semantics this function should be called before using the other functions in the class.
  */
 int AudiereSoundImplementation::startAPI()
@@ -339,7 +334,7 @@ int AudiereSoundImplementation::startAPI()
    {
       // open the device for output
       mDev = audiere::OpenDevice();
-      if (!mDev.get()) 
+      if (!mDev.get())
       {
          vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "Audiere| ERROR: Could not open device\n") << vprDEBUG_FLUSH;
          return 0;
@@ -350,7 +345,7 @@ int AudiereSoundImplementation::startAPI()
    else
    {
       vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "Audiere| WARNING: startAPI called when API is already started\n") << vprDEBUG_FLUSH;
-   }      
+   }
 
    return 1;
 }
@@ -370,7 +365,7 @@ void AudiereSoundImplementation::shutdownAPI()
          << std::hex << mDev.get() << std::dec << "]\n" << vprDEBUG_FLUSH;
       return;
    }
-   
+
    this->unbindAll();
 
    mDev = NULL;
@@ -379,7 +374,7 @@ void AudiereSoundImplementation::shutdownAPI()
       << clrOutNORM(clrYELLOW, "Audiere| NOTICE:")
       << " Audiere API closed: [dev="
       << std::hex << mDev.get() << std::dec << "]\n" << vprDEBUG_FLUSH;
-}   
+}
 
 /**
  * clear all associate()tions.
@@ -388,7 +383,7 @@ void AudiereSoundImplementation::shutdownAPI()
 void AudiereSoundImplementation::clear()
 {
    snx::SoundImplementation::clear();
-}   
+}
 
 
 
@@ -408,7 +403,7 @@ void AudiereSoundImplementation::bind( const std::string& alias )
       vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "[snx]Audiere| ERROR: API not started, bind() failed\n") << vprDEBUG_FLUSH;
       return;
    }
-   
+
    snx::SoundInfo& soundInfo = this->lookup( alias );
 
    // are we streaming this sound from disk?
@@ -428,7 +423,7 @@ void AudiereSoundImplementation::bind( const std::string& alias )
       vpr::DebugOutputGuard output6(snxDBG, vprDBG_CONFIG_LVL, std::string("NOTIFY: triggering reconfigured sound\n"), std::string("\n"));
       this->trigger( alias, soundInfo.repeat );
    }
-}   
+}
 
 /**
  * unload/deallocate the sound data this alias refers from the sound API
@@ -441,21 +436,21 @@ void AudiereSoundImplementation::unbind( const std::string& alias )
       vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "[snx]Audiere| ERROR: API not started, unbind() failed\n") << vprDEBUG_FLUSH;
       return;
    }
- 
+
    // is it currently playing?  if so, stop it
    if (this->isPlaying( alias ) == true)
    {
       this->stop( alias );
-      
+
       // should trigger next time, since we just stopped it
       if (mSounds.count( alias ) > 0)
       {
-         mSounds[alias].triggerOnNextBind = true; 
+         mSounds[alias].triggerOnNextBind = true;
       }
       else
       {
          vpr::DebugOutputGuard output7(snxDBG, vprDBG_CONFIG_LVL, std::string("ERROR: can't trigger on next bind. alias not registered when it should be\n"), std::string("\n"));
-      }      
+      }
    }
 }
 
