@@ -193,7 +193,7 @@ protected:
     //! RETURNS:
     // ------------------------------------------------------------------------
     virtual Status read_i(void* buffer, const size_t length,
-                          ssize_t& bytes_read);
+                          ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     //! Read exactly the specified number of bytes from the file handle into
@@ -213,7 +213,7 @@ protected:
     //! RETURNS:
     // ------------------------------------------------------------------------
     virtual Status readn_i(void* buffer, const size_t length,
-                           ssize_t& bytes_read);
+                           ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the file handle.
@@ -231,7 +231,7 @@ protected:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     virtual Status write_i(const void* buffer, const size_t length,
-                           ssize_t& bytes_written);
+                           ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     //: Get the current file handle flags.

@@ -149,7 +149,7 @@ SelectorImplBSD::getOut (IOSys::Handle handle) {
 //+                       have events
 //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
 Status
-SelectorImplBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
+SelectorImplBSD::select (vpr::Uint16& numWithEvents, const vpr::Interval timeout) {
    vpr::Status ret_val;
    int result, last_fd;
    fd_set read_set, write_set, exception_set;
@@ -188,19 +188,19 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
    // larger than 1 second, so if timeout (given in milliseconds) is larger
    // than 1000, we have to split it up between the seconds and microseconds
    // members.
-   if ( timeout >= 1000 ) {
-      timeout_obj.tv_sec  = timeout / 1000;
-      timeout_obj.tv_usec = (timeout % 1000) * 1000000;
+   if ( timeout.msec() >= 1000 ) {
+      timeout_obj.tv_sec  = timeout.msec() / 1000;
+      timeout_obj.tv_usec = (timeout.msec() % 1000) * 1000000;
    }
    else {
       timeout_obj.tv_sec  = 0;
-      timeout_obj.tv_usec = timeout * 1000;
+      timeout_obj.tv_usec = timeout.msec() * 1000;
    }
 
    // If timeout is 0, this will be the same as polling the descriptors.  To
    // get no timeout, NULL must be passed to select(2).
    result = ::select(last_fd + 1, &read_set, &write_set, &exception_set,
-                     (timeout > 0) ? &timeout_obj : NULL);
+                     (timeout.usec() > 0) ? &timeout_obj : NULL);
 
    // D'oh!
    if ( -1 == result ) {

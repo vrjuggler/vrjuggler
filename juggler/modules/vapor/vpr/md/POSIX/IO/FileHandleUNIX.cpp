@@ -44,6 +44,7 @@
 #endif
 
 #include <vpr/md/POSIX/IO/FileHandleUNIX.h>
+#include <vpr/Util/Debug.h>
 
 
 extern int errno;
@@ -376,9 +377,14 @@ FileHandleUNIX::enableAsynchronousWrite () {
 // bufer.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::read_i (void* buffer, const size_t length, ssize_t& bytes_read)
+FileHandleUNIX::read_i (void* buffer, const size_t length,
+                        ssize_t& bytes_read, const vpr::Interval timeout)
 {
     Status status;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+
 
     bytes_read = ::read(m_fdesc, buffer, length);
 
@@ -414,10 +420,13 @@ FileHandleUNIX::read_i (void* buffer, const size_t length, ssize_t& bytes_read)
 // ----------------------------------------------------------------------------
 Status
 FileHandleUNIX::readn_i (void* buffer, const size_t length,
-                         ssize_t& bytes_read)
+                         ssize_t& bytes_read, const vpr::Interval timeout)
 {
     size_t count;
     Status status;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     count = length;
 
@@ -454,9 +463,12 @@ FileHandleUNIX::readn_i (void* buffer, const size_t length,
 // ----------------------------------------------------------------------------
 Status
 FileHandleUNIX::write_i (const void* buffer, const size_t length,
-                         ssize_t& bytes_written)
+                         ssize_t& bytes_written, const vpr::Interval timeout)
 {
     Status status;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     bytes_written = ::write(m_fdesc, buffer, length);
 

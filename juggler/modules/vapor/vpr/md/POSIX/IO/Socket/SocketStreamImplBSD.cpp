@@ -38,6 +38,7 @@
 #include <errno.h>
 
 #include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
+#include <vpr/Util/Debug.h>
 
 
 // ============================================================================
@@ -75,11 +76,14 @@ SocketStreamImplBSD::listen (const int backlog) {
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
 Status
-SocketStreamImplBSD::accept (SocketStreamImplBSD& sock) {
+SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
     int accept_sock;
     Status retval;
     InetAddr addr;
     socklen_t addrlen;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     // Accept an incoming connection request.
     addrlen = addr.size();
