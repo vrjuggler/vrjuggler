@@ -245,8 +245,8 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           <screen>./cvs-gather.pl --verbose</screen>
 
           <para>Ideally, users can just let the command run, but sometimes a
-          password must be entered. The CVS password prompt will appear at
-          such times. Each of the projects downloaded using
+          password must be entered. In that event, the usual CVS password
+          prompt will appear. Each of the projects downloaded using
           <command>cvs-gather</command> come from SourceForge, and for
           anonymous CVS access there is no password. Hence, simply pressing
           the <keysym>ENTER</keysym> key will allow the download to continue.</para>
@@ -309,22 +309,22 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         <command>cvs-gather</command>, use the <option>--target</option>
         option, as shown below:</para>
 
-        <screen>./cvs-gather --target Boost,Doozer++</screen>
+        <screen>./cvs-gather --target GMTL,Doozer++</screen>
 
         <para>or</para>
 
-        <screen>./cvs-gather --target Boost --target Doozer++</screen>
+        <screen>./cvs-gather --target GMTL --target Doozer++</screen>
 
         <para>The names given as arguments to <option>--target</option> are
         the module names listed in <filename>juggler/Gatherrc</filename>. Any
         number of target module names may be listed.</para>
 
         <para>For <command>cvs-gather</command> to work, it uses a
-        <quote>gather rc</quote> file. This<filename></filename> file
-        specifies the external project CVS locations. <command>cvs-gather</command>
-        reads these CVS locations and then checks each one out locally for use
-        in building the Juggler Project. There are three possible default
-        names for a <quote>gather rc</quote> file:</para>
+        <quote>gather rc</quote> file. This file specifies the external
+        project CVS locations. <command>cvs-gather</command> reads these CVS
+        locations and then checks each one out locally for use in building the
+        Juggler Project. There are three possible default names for a
+        <quote>gather rc</quote> file:</para>
 
         <orderedlist>
           <listitem>
@@ -609,6 +609,20 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
               be simplified to the following:</para>
 
               <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-java-orb=JDK</screen>
+
+              <note>
+                <para>You will probably have to specify the paths to your
+                local CppDOM and Boost installations using the options
+                <option>--with-cppdom</option> and <option>--with-boost</option>
+                unless they are installed in the default location (<filename>/usr/local</filename>).
+                By default, Boost 1.31 installs its header files in a
+                subdirectory of include called <filename>boost-1_31</filename>.
+                That is, if Boost is installed in <filename>/home/user1/pkgs/boost</filename>,
+                the header files will be in <filename>/home/user1/pkgs/boost/include/boost-1_31</filename>.
+                In this case, you must also specify the option
+                <option>--with-boost-includes=/home/user1/pkgs/boost/include/boost-1_31</option>
+                when running <command>configure.pl</command>.</para>
+              </note>
             </listitem>
           </orderedlist>
 
@@ -645,25 +659,19 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           <command>cvs-gather</command> (see <xref
           linkend="cvs-gather.advanced.section" /> for more details).</para>
 
-          <para>As an example, consider the case where the Boost C++ library
-          is installed in <filename>/usr/local</filename> with the headers in
+          <para>As an example, consider the case where the GMTL library is
+          installed in <filename>/usr/local</filename> with the headers in
           <filename>/usr/local/include</filename>. To use this instead of the
           version downloaded into <filename>juggler/external</filename>, run
           <command>configure.pl</command> as follows:</para>
 
-          <screen>../configure.pl --with-boost=/usr/local</screen>
+          <screen>../configure.pl --with-gmtl=/usr/local</screen>
 
           <para>This option could of course be mixed in with those shown in
-          the previous section. In this situation, all paths for the Boost
+          the previous section. In this situation, all paths for the GMTL
           headers will reference <filename>/usr/local/include</filename>;
-          everything in <filename>juggler/external/boost</filename> will be
+          everything in <filename>juggler/external/GMTL</filename> will be
           ignored.</para>
-
-          <para>There are similar options for GMTL and CppDOM. Other external
-          dependencies not downloaded with <command>cvs-gather</command>, such
-          as NSPR and OpenORB, require the use of such command-line arguments.
-          Refer to the output from running <command>configure.pl --all-help</command>
-          for more detailed information.</para>
         </section>
       </section>
 
@@ -705,13 +713,18 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
 
         <para>VPR can be configured a number of ways. Except when building on
         Win32, no external packages are required. For Win32, NSPR (<ulink
-        url="http://www.mozilla.org/">www.mozilla.org</ulink>) is required. To
-        build VPR, do the following from the top-level <filename>juggler</filename>
-        directory:</para>
+        url="http://www.mozilla.org/">www.mozilla.org</ulink>) is required.
+        For this description, we will use the terms <filename>&#60;CPPDOM_PATH&#62;</filename>
+        and <filename>&#60;BOOST_PATH&#62;</filename> to refer to the
+        installation directories containing compiled versions of CppDOM and
+        Boost respectively. Assume that this is an absolute path (e.g.,
+        <filename>&#60;CPPDOM_PATH&#62;</filename> = <filename>/home/user1/pkgs/cppdom</filename>).
+        To build VPR, do the following from the top-level
+        <filename>juggler</filename> directory:</para>
 
         <screen>mkdir build.vpr
 cd build.vpr
-../configure.pl --module=VPR --prefix=$HOME/vpr-inst
+../configure.pl --module=VPR --prefix=$HOME/vpr-inst --with-cppdom=&#60;CPPDOM_PATH&#62; --with-boost=&#60;BOOST_PATH&#62; --with-boost-includes=&#60;BOOST_PATH&#62;/include/boost-1_31
 gmake debug install-debug
 setenv VPR_BASE_DIR $HOME/vpr-inst</screen>
 
@@ -811,8 +824,8 @@ setenv GADGET_BASE_DIR $HOME/gadgeteer-inst</screen>
         required if you are using a version of the JDK older than 1.4.0.</para>
 
         <para>For the following steps, assume that you have omniORB installed
-        in <filename>&#60;OMNIORBPATH&#62;</filename> and OpenORB is installed
-        in <filename>&#60;OPENORBPATH&#62;</filename>.</para>
+        in <filename>&#60;OMNIORB_PATH&#62;</filename> and OpenORB is
+        installed in <filename>&#60;OPENORB_PATH&#62;</filename>.</para>
 
         <para>IRIX users must configure Tweek (and its VPR dependency) to use
         the POSIX subsystem or the NSPR subsystem. omniORB
@@ -826,14 +839,14 @@ setenv GADGET_BASE_DIR $HOME/gadgeteer-inst</screen>
 
         <screen>mkdir build.tweek
 cd build.tweek
-../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-cxx-orb=omniORB3 --with-cxx-orb-root=&#60;OMNIORBPATH&#62; --with-java-orb=OpenORB --with-java-orb-jar=&#60;OPENORBPATH&#62;/lib/openorb-1.2.0.jar
+../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-cxx-orb=omniORB4 --with-cxx-orb-root=&#60;OMNIORB_PATH&#62; --with-java-orb=OpenORB --with-java-orb-jar=&#60;OPENORB_PATH&#62;/lib/openorb-1.2.0.jar
 gmake debug install-debug
 setenv TWEEK_BASE_DIR $HOME/tweek-inst</screen>
 
         <para>If JDK 1.4.0 or newer is used, you do not need OpenORB (or any
         other third-party CORBA implementation for Java). In that case, pass
         <option>--with-java-orb=JDK</option> to <command>configure.pl</command>.
-        If you are using omniORB 4.x, pass <option>--with-cxx-orb=omniORB4</option>
+        If you are using omniORB 3.x, pass <option>--with-cxx-orb=omniORB3</option>
         instead.</para>
 
         <para>Depending on your omniORB installation, you may have to pass
@@ -843,7 +856,7 @@ setenv TWEEK_BASE_DIR $HOME/tweek-inst</screen>
         omniORB 3.0.x, the following arguments must be specified in addition
         to the above:</para>
 
-        <screen>--with-cxx-orb-bin=&#60;OMNIORBPATH&#62;/bin/i586_linux_2.0_glibc --with-cxx-orb-lib=&#60;OMNIORBPATH&#62;/lib/i586_linux_2.0_glibc</screen>
+        <screen>--with-cxx-orb-bin=&#60;OMNIORB_PATH&#62;/bin/i586_linux_2.0_glibc --with-cxx-orb-lib=&#60;OMNIORB_PATH&#62;/lib/i586_linux_2.0_glibc</screen>
       </section>
     </section>
   </section>
