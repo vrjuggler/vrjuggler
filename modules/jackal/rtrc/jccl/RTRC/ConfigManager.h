@@ -52,13 +52,12 @@ namespace jccl {
 
     class ConfigChunkHandler;
 
-//: Configuration manager class
-//
-//
-//
-//! Created: Jan-13-2000
-//! Author: Allen Bierbaum
-//
+    /** Dynamic reconfiguration management plugin for Jackal.
+     *
+     *  Created: Jan-13-2000
+     *  @author Allen Bierbaum
+     */
+
 class ConfigManager: public JackalControl 
 {
 public:
@@ -96,14 +95,14 @@ public:   // ----- PENDING LIST ----- //
    //! PRE: The pending list can NOT be locked
    //! POST: pendinglist = old(pendinglist) += db
    //! NOTE: The entries are copied
-   void addPending (ConfigChunkDB* db);
+   void addPendingAdds (ConfigChunkDB* db);
 
 
    //: Add the given chunks to the db as pending removes
    //! PRE: The pending list can NOT be locked
    //! POST: pendinglist = old(pendinglist) += db
    //! NOTE: The entries are copied
-   void removePending (ConfigChunkDB* db);
+   void addPendingRemoves (ConfigChunkDB* db);
 
 
     //: Erase an item from the list
@@ -239,12 +238,12 @@ public:
    int scanForLostDependencies();
 
 
-    //------------------ DynamicReconfig Stuff ------------------------------
+    //------------ Default DynamicReconfig Handling Stuff -------------------
 
     void addConfigChunkHandler (ConfigChunkHandler* h);
     void removeConfigChunkHandler (ConfigChunkHandler* h);
     int attemptReconfiguration ();
-    int attemptHandlerReconfiguration (ConfigChunkHandler* h, bool lockIt);
+    //int attemptHandlerReconfiguration (ConfigChunkHandler* h);
 
     //------------------ JackalControl Stuff --------------------------------
 
