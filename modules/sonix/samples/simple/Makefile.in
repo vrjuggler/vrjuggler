@@ -1,18 +1,3 @@
-# ***************** <SNX heading BEGIN do not edit this line> *****************
-#
-# sonix
-#
-# Original Authors:
-#   Kevin Meinert, Carolina Cruz-Neira
-#
-# -----------------------------------------------------------------
-# File:          $RCSfile$
-# Date modified: $Date$
-# Version:       $Revision$
-# -----------------------------------------------------------------
-#
-# ****************** <SNX heading END do not edit this line> ******************
-
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
 # VR Juggler is (C) Copyright 1998-2003 by Iowa State University
@@ -37,46 +22,32 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# project name...
-PROJECT_NAME = sample
+# -----------------------------------------------------------------------------
+# Makefile.in for sonix/samples/simple/simple
+# This requires GNU make.
+# -----------------------------------------------------------------------------
 
-OBJECTS		= main.@OBJEXT@
-APP_INCLUDES	= @sample_application_includes@
-APP_LIBS		= @snx_extra_ldflags@ @snx_extra_libs@ @sample_application_libs@
-APP_LDFLAGS       = @sample_application_ldflags@
-VPATH		= @srcdir@
+all: simple@EXEEXT@
 
-#########################################################################
-.SUFFIXES: .cpp .@OBJEXT@
+APP_NAME=	simple@EXEEXT@
 
-srcdir		= @srcdir@
+# Basic options.
+srcdir=		@srcdir@
+SRCS=		main.cpp
 
-COMPILE		= @CXX@ @DEFS@ @CPPFLAGS@ @CXXFLAGS@ @snx_extra_cxxflags@ @DBG_FLAGS@ 
-LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
-
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 
 # -----------------------------------------------------------------------------
-# Targets.
+# Application build targets.
 # -----------------------------------------------------------------------------
-default: all
-
-all: sample@EXEEXT@
-
-sample@EXEEXT@: $(OBJECTS)
-	$(LINK) @EXE_NAME_FLAG@ $(OBJECTS) $(APP_LDFLAGS) $(APP_LIBS)
-
-.cpp.@OBJEXT@:
-	$(COMPILE) $(APP_INCLUDES) @OBJ_BUILD_FLAG@ @OBJ_NAME_FLAG@ $<
-	
-# -----------------------------------------------------------------------------
-# Clean-up.
-# -----------------------------------------------------------------------------
-clean:
-	rm -rf Makedepend sample@EXEEXT@ sample.ilk ii_files $(OBJECTS) *core \
-          so_locations *.?db
-
-clobber: clean
-	rm -rf ./ii_files
-
+simple@EXEEXT@: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
