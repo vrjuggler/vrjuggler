@@ -153,7 +153,7 @@ public:
     }
 
     // -----------------------------------------------------------------------
-    //: Try to aquire a lock on the mutex variable associated with the
+    //: Try to acquire a lock on the mutex variable associated with the
     //+ condition variable.
     //
     //! PRE: None.
