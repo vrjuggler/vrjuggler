@@ -130,13 +130,13 @@ void vjInput::swapCurrentIndexes()
 {
    // Removed the lock acquisition because there
    // is device specific code that must be within the lock as well
-   lock.acquire();
-   vjASSERT(lock.test());       // Make sure that we have the lock when we are called
-   assertIndexes();
+  //lock.acquire();
+  vjASSERT(lock.test());       // Make sure that we have the lock when we are called
+  assertIndexes();
   int tmp = current;
   current = valid;
   valid = tmp;
-  lock.release();
+  //lock.release();
 }
 
 //: Swap the valid and progress indexes (thread safe)

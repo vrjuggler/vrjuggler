@@ -261,10 +261,9 @@ int vjIBox::getDigitalData(int d)
 *********************************************** ahimberg */
 void vjIBox::updateData()
 {
-//vjGuard<vjMutex> updateGuard(lock);
-
+   vjGuard<vjMutex> updateGuard(lock);
    // Copy the valid data to the current data so that both are valid
-   swapValidIndexes();
+   //swapValidIndexes();
    // swap the indicies for the pointers
    swapCurrentIndexes();
 
