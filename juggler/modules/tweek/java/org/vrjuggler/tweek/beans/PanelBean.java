@@ -36,6 +36,7 @@
 
 package org.vrjuggler.tweek.beans;
 
+import java.util.List;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import org.vrjuggler.tweek.beans.loader.*;
@@ -60,15 +61,19 @@ public class PanelBean extends TweekBean
     *                        (if it has one).
     * @param tool_tip        A tooltip for this Bean suitable for being
     *                        displayed in a Bean viewer of some sort.
-    * 
+    * @param paths           The paths relative to the root of a tree structure
+    *                        in which this bean should belong
+    *
     * @see BeanAttributes
     */
-   public PanelBean( BeanAttributes attrs, String icon_url, String tool_tip )
+   public PanelBean( BeanAttributes attrs, String icon_url, String tool_tip,
+                     List paths )
    {
       super( attrs );
 
       m_icon_url = icon_url;
       toolTip    = tool_tip;
+      this.paths = paths;
    }
 
    public String toString ()
@@ -78,7 +83,7 @@ public class PanelBean extends TweekBean
 
    public JComponent getComponent ()
    {
-      return component;
+      return (JComponent)getBean();
    }
 
    public void setIcon (Icon _icon)
@@ -118,6 +123,11 @@ public class PanelBean extends TweekBean
       return toolTip;
    }
 
+   public List getPaths ()
+   {
+      return paths;
+   }
+
    /**
     * Instantiates the encapsulated JavaBean.  This process involves first
     * loading the Bean JAR file and then getting an instance of the contained
@@ -125,21 +135,12 @@ public class PanelBean extends TweekBean
     */
    public void instantiate () throws BeanInstantiationException
    {
-      try
-      {
-         component = (JComponent) doInstantiation();
-      }
-      catch (ClassCastException e)
-      {
-         throw new BeanInstantiationException("javax.swing.JComponent is " +
-                                              "not a superclass of " +
-                                              getName().replace('/', '.'));
-      }
+      doInstantiation();
    }
 
-   protected JComponent component = null;
    protected String     toolTip   = null;
 
    protected String  m_icon_url = null;
    protected Icon    icon       = null;
+   protected List    paths      = null;
 }

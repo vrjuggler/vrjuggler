@@ -36,6 +36,8 @@
 
 package org.vrjuggler.tweek.services;
 
+import org.vrjuggler.tweek.beans.*;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
@@ -51,15 +53,29 @@ import org.jdom.output.XMLOutputter;
  * @since 1.0
  */
 public class GlobalPreferencesService
+   extends ServiceBean
+   implements BeanInstantiationListener
 {
-   public static GlobalPreferencesService instance ()
+   /**
+    * Creates a new global preferences service.
+    */
+   public GlobalPreferencesService( BeanAttributes attr )
    {
-      if ( m_instance == null )
-      {
-         m_instance = new GlobalPreferencesService();
-      }
+      super( attr );
+      load();
+      BeanInstantiationCommunicator.instance().addBeanInstantiationListener( this );
+   }
 
-      return m_instance;
+   /**
+    * Called by the BeanInstantiationCommunicator singleton whenever a new bean
+    * is instantiated.
+    */
+   public void beanInstantiation( BeanInstantiationEvent evt )
+   {
+      Object bean = evt.getBean();
+      if ( bean instanceof ViewerBean ) {
+         addBeanViewer( ((ViewerBean)bean).getName() );
+      }
    }
 
    public void setUserLevel (int level)
@@ -220,38 +236,20 @@ public class GlobalPreferencesService
    }
 
    // =========================================================================
-   // Protected methods
-   // =========================================================================
-
-   /**
-    * This exists as a protected member to ensure that instantiation cannot
-    * be done except through the instance() method.
-    */
-   protected GlobalPreferencesService ()
-   {
-   }
-
-   // =========================================================================
-   // Protected data members
-   // =========================================================================
-
-   protected static GlobalPreferencesService m_instance = null;
-
-   // =========================================================================
    // Private methods
    // =========================================================================
 
    private String getUserHome ()
    {
-      Object o = ServiceRegistry.instance().getService("Environment");
+      TweekBean bean = BeanRegistry.instance().getBean( "Environment" );
       String path = null;
 
-      if ( o != null )
+      if ( bean != null )
       {
          try
          {
-            EnvironmentService env_service = (EnvironmentService) o;
-            path = EnvironmentService.getUserHome();
+            EnvironmentService env_service = (EnvironmentService) bean;
+            path = env_service.getUserHome();
          }
          catch (ClassCastException e)
          {

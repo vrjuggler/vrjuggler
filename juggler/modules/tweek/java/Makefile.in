@@ -62,9 +62,12 @@ IDL_JAVA_FILES	= SubjectManager.java	\
                   Subject.java		\
                   Observer.java
 
+#JAVA_SRCS   = $(shell find $(srcdir) -name '*.java')
+
 JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
                   org/vrjuggler/tweek/net/CommException.java    	\
-                  org/vrjuggler/tweek/beans/BeanCollectionBuilder.java	\
+                  org/vrjuggler/tweek/beans/BeanRegistry.java \
+                  org/vrjuggler/tweek/beans/XMLBeanFinder.java \
                   org/vrjuggler/tweek/services/EnvironmentService.java	\
                   org/vrjuggler/tweek/iconviewer/BeanIconViewer.java	\
                   org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java	\

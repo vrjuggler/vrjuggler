@@ -202,6 +202,11 @@ public class BeanContainer extends JScrollPane
    {
       Object bean = event.getBean();
 
+      if ( ! (bean instanceof PanelBean) ) {
+         return;
+      }
+      bean = ((PanelBean)bean).getComponent();
+
       try
       {
          if ( Beans.isInstanceOf(bean, Class.forName("org.vrjuggler.tweek.net.CommunicationListener")) )

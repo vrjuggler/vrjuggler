@@ -48,6 +48,17 @@ import org.jdom.Element;
 public class BeanAttributes
 {
    /**
+    * Creates a new bean attributes object with the given name and empty values
+    * for all other attributes.
+    *
+    * @param name          the name of the bean
+    */
+   public BeanAttributes( String name )
+   {
+      this( name, "", "", new ArrayList() );
+   }
+
+   /**
     * Creates a new bean attributes object with the given attributes.
     *
     * @param name          the name of the bean

@@ -60,13 +60,6 @@ public class GenericBean extends TweekBean
    public void instantiate ()
        throws org.vrjuggler.tweek.beans.loader.BeanInstantiationException
    {
-      bean = doInstantiation();
+      doInstantiation();
    }
-
-   public Object getBean ()
-   {
-      return bean;
-   }
-
-   protected Object bean     = null;
 }

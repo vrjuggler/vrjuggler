@@ -87,19 +87,32 @@ public abstract class TweekBean
    }
 
    /**
+    * Gets the actual bean object that this class wraps. This method will return
+    * null if the bean has not yet been instantiated.
+    *
+    * @return  the bean this class wraps or null if the bean has not yet been
+    *          instantiated
+    */
+   public Object getBean()
+   {
+      return beanObject;
+   }
+
+   /**
     * Creates a new TweekBean with the given attributes.
     *
     * @param attrs      the attributes to assign to this bean
     */
    protected TweekBean( BeanAttributes attrs )
    {
+      beanObject = null;
       this.attrs = attrs;
    }
 
-   protected Object doInstantiation () throws BeanInstantiationException
+   protected void doInstantiation () throws BeanInstantiationException
    {
       BeanLoader bean_loader = new BeanLoader();
-      Object bean = null;
+      beanObject = null;
 
       try
       {
@@ -126,12 +139,12 @@ public abstract class TweekBean
          }
 
          bean_loader.loadBeanFromJar(getJarURL(), depJarFiles, class_path);
-         bean = bean_loader.instantiate(BeanJarClassLoader.instance(),
+         beanObject = bean_loader.instantiate(BeanJarClassLoader.instance(),
                                         attrs.getEntry());
 
          instantiated = true;
 
-         BeanInstantiationCommunicator.instance().fireBeanInstantiationEvent(bean);
+         BeanInstantiationCommunicator.instance().fireBeanInstantiationEvent( this );
       }
       catch (java.net.MalformedURLException e)
       {
@@ -141,14 +154,17 @@ public abstract class TweekBean
       {
          throw new BeanInstantiationException(e.getMessage());
       }
-
-      return bean;
    }
 
    /**
     * The common attributes to all Tweek Beans.
     */
    protected BeanAttributes attrs;
+
+   /**
+    * The actual bean object that this class wraps.
+    */
+   protected Object beanObject;
 
    protected boolean instantiated = false;
 }
