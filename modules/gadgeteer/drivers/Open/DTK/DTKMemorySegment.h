@@ -34,7 +34,7 @@
 #define _VRJ_DTK_MEMORY_SEGMENT_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Devices/Open/DTK/DTK.h>
+#include <gad/Devices/Open/DTK/DTK.h>
 
 namespace vrj
 {

@@ -34,9 +34,9 @@
 #define _VRJ_CYBER_GLOVE_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Glove.h>
-#include <vrj/Input/Devices/VirtualTechnologies/CyberGloveBasic.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Glove.h>
+#include <gad/Devices/VirtualTechnologies/CyberGloveBasic.h>
 
 namespace vrj
 {

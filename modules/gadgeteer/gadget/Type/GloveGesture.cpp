@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/GloveGesture.h>
+#include <gad/Type/GloveGesture.h>
 
 namespace vrj
 {

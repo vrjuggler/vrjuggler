@@ -38,8 +38,8 @@
 #include <typeinfo>
 
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Input/InputManager.h>
-#include <vrj/Input/Type/Input.h>
+#include <gad/InputManager.h>
+#include <gad/Type/Input.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vrj/Util/Debug.h>
 

@@ -38,7 +38,7 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Config/ConfigChunk.h>
-#include <vrj/Input/Devices/Sim/SimPosition.h>
+#include <gad/Devices/Sim/SimPosition.h>
 
 namespace vrj
 {

@@ -16,9 +16,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <vrj/Input/Devices/VirtualTechnologies/CyberGlove.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_globals.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_init.h>
+#include <gad/Devices/VirtualTechnologies/CyberGlove.h>
+#include <gad/Devices/VirtualTechnologies/vt_globals.h>
+#include <gad/Devices/VirtualTechnologies/vt_init.h>
 
 #define True 1
 #define False 0

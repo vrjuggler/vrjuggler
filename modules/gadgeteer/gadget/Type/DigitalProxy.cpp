@@ -32,7 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Input/Type/DigitalProxy.h>
+#include <gad/Type/DigitalProxy.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj

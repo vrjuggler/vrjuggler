@@ -35,7 +35,7 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Input.h>
+#include <gad/Type/Input.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vpr/Util/Singleton.h>
 

@@ -34,7 +34,7 @@
 #define _VJ_HAND_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Finger.h>
+#include <gad/Type/Finger.h>
 
 namespace vrj
 {

@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Input/Type/PosFilter.h>
+#include <gad/Type/PosFilter.h>
 #include <vrj/Math/Quat.h>
 
 namespace vrj

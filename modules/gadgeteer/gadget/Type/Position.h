@@ -41,7 +41,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <typeinfo>
-#include <vrj/Input/Type/Input.h>
+#include <gad/Type/Input.h>
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Matrix.h>
 #include <vrj/Performance/TimeStamp.h>

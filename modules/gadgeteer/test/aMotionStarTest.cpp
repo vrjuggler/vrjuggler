@@ -33,7 +33,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sys/types.h>
-#include <vrj/Input/Devices/Ascension/MotionStarStandalone.h>
+#include <gad/Devices/Ascension/MotionStarStandalone.h>
 
 
 int

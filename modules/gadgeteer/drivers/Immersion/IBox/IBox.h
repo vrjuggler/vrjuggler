@@ -40,11 +40,11 @@
 #define _VRJ_IBOX_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Digital.h>
-#include <vrj/Input/Type/Analog.h>
-#include <vrj/Input/Devices/Immersion/hci.h>
-#include <vrj/Input/Devices/Immersion/iboxStandalone.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Digital.h>
+#include <gad/Type/Analog.h>
+#include <gad/Devices/Immersion/hci.h>
+#include <gad/Devices/Immersion/iboxStandalone.h>
 
 namespace vrj
 {

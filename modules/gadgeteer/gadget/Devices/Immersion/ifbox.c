@@ -14,9 +14,9 @@
 
 #include <vrj/vrjConfig.h>
 #include <stdio.h>
-#include <vrj/Input/Devices/Immersion/hci.h>
-#include <vrj/Input/Devices/Immersion/iboxStandalone.h>
-#include <vrj/Input/Devices/Immersion/driveunx.h>
+#include <gad/Devices/Immersion/hci.h>
+#include <gad/Devices/Immersion/iboxStandalone.h>
+#include <gad/Devices/Immersion/driveunx.h>
 
 
 

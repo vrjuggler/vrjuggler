@@ -47,7 +47,7 @@
 #include <strstream>
 #include <fstream>
 
-#include <vrj/Input/Devices/Intersense/Intersense.h>
+#include <gad/Devices/Intersense/Intersense.h>
 #include <vrj/Math/Coord.h>
 #include <vrj/Math/Quat.h>
 #include <vrj/Util/Debug.h>

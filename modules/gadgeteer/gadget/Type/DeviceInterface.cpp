@@ -31,9 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/DeviceInterface.h>
+#include <gad/Type/DeviceInterface.h>
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Input/InputManager.h>
+#include <gad/InputManager.h>
 
 namespace vrj
 {

@@ -32,7 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <vpr/Util/Assert.h>
-#include <vrj/Input/Devices/Sim/SimDigitalGlove.h>
+#include <gad/Devices/Sim/SimDigitalGlove.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj

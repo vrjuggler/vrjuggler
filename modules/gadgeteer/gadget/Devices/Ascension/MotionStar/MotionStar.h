@@ -38,9 +38,9 @@
 #include <string>
 #include <vpr/Thread/Thread.h>
 
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Position.h>
-#include <vrj/Input/Devices/Ascension/MotionStarStandalone.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Position.h>
+#include <gad/Devices/Ascension/MotionStarStandalone.h>
 
 namespace vrj
 {

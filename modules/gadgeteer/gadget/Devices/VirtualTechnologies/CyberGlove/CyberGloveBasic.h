@@ -42,9 +42,9 @@
 #   include <limits>
 #endif
 
-#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_glove-types.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_virtual_hand-types.h>
+#include <gad/Devices/VirtualTechnologies/vt_types.h>
+#include <gad/Devices/VirtualTechnologies/vt_glove-types.h>
+#include <gad/Devices/VirtualTechnologies/vt_virtual_hand-types.h>
 
 struct CYBER_GLOVE_DATA {
   float joints[MAX_SENSOR_GROUPS][MAX_SENSOR_VALUES];

@@ -34,9 +34,9 @@
 #define _VRJ_SIM_RELATIVE_POSITION_H
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Position.h>
-#include <vrj/Input/Type/PosInterface.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Position.h>
+#include <gad/Type/PosInterface.h>
 
 namespace vrj
 {

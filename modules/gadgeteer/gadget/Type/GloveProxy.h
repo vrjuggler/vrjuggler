@@ -42,8 +42,8 @@
 #include <vrj/vrjConfig.h>
 #include <math.h>
 
-#include <vrj/Input/Type/Glove.h>
-#include <vrj/Input/Type/Proxy.h>
+#include <gad/Type/Glove.h>
+#include <gad/Type/Proxy.h>
 
 namespace vrj
 {

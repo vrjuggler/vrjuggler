@@ -56,7 +56,7 @@
 #include <sys/time.h>
 
 #include <vpr/System.h>
-#include <vrj/Input/Devices/Logitech/logiclass.h>   /* classprototypes and data types */
+#include <gad/Devices/Logitech/logiclass.h>   /* classprototypes and data types */
 
 // uncommenting the following will produce debug print statements */
 //

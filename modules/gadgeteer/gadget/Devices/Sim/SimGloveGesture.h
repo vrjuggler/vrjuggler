@@ -34,12 +34,12 @@
 #define _VRJ_SIM_GLOVE_GESTURE_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Digital.h>
-#include <vrj/Input/Type/GloveGesture.h>
-#include <vrj/Input/Type/Glove.h>
-#include <vrj/Input/Type/Gesture.h>
-#include <vrj/Input/Devices/Sim/SimInput.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Digital.h>
+#include <gad/Type/GloveGesture.h>
+#include <gad/Type/Glove.h>
+#include <gad/Type/Gesture.h>
+#include <gad/Devices/Sim/SimInput.h>
 
 namespace vrj
 {

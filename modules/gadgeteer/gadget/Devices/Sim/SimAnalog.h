@@ -35,9 +35,9 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Analog.h>
-#include <vrj/Input/Devices/Sim/SimInput.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Analog.h>
+#include <gad/Devices/Sim/SimInput.h>
 #include <vrj/Util/Debug.h>
 
 namespace vrj

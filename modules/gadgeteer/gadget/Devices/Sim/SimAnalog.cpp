@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Devices/Sim/SimAnalog.h>
+#include <gad/Devices/Sim/SimAnalog.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj

@@ -37,7 +37,7 @@
 #include <unistd.h>        // for sleep, and ioctl
 #include <assert.h>        // for assert
 
-#include <vrj/Input/Devices/Ascension/FlockStandalone.h>
+#include <gad/Devices/Ascension/FlockStandalone.h>
 
 const int FlockStandalone::MAXCHARSTRINGSIZE = 256;
 

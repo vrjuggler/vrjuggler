@@ -34,10 +34,10 @@
 #define _VRJ_DIVERSE_TOOLKIT_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Digital.h>
-#include <vrj/Input/Type/Analog.h>
-#include <vrj/Input/Type/Position.h>
-#include <vrj/Input/Devices/Open/DTK/DTKMemorySegment.h>
+#include <gad/Type/Digital.h>
+#include <gad/Type/Analog.h>
+#include <gad/Type/Position.h>
+#include <gad/Devices/Open/DTK/DTKMemorySegment.h>
 
 namespace vrj
 {

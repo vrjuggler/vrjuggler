@@ -31,11 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
-#include <vrj/Input/InputManager.h>
-#include <vrj/Input/Devices/Immersion/hci.h>
-#include <vrj/Input/Devices/Immersion/iboxStandalone.h>
-#include <vrj/Input/Devices/Ascension/Flock.h>
-#include <vrj/Input/Devices/Immersion/Ibox.h>
+#include <gad/InputManager.h>
+#include <gad/Devices/Immersion/hci.h>
+#include <gad/Devices/Immersion/iboxStandalone.h>
+#include <gad/Devices/Ascension/Flock.h>
+#include <gad/Devices/Immersion/Ibox.h>
 #include <vpr/System.h>
 
 int main()

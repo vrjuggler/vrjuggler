@@ -45,7 +45,7 @@
 #include <arpa/inet.h>  /* For inet_addr(3) */
 #include <errno.h>
 
-#include <vrj/Input/Devices/Ascension/MotionStarStandalone.h>
+#include <gad/Devices/Ascension/MotionStarStandalone.h>
 
 #define RAD2DEG(x) ((x) * 180.0 / M_PI)
 

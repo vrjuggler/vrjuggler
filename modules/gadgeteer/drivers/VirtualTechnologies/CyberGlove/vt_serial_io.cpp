@@ -44,9 +44,9 @@
 #include <stdlib.h>
 #include <X11/Intrinsic.h>
 
-#include <vrj/Input/Devices/VirtualTechnologies/CyberGlove.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_globals.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_error.h>
+#include <gad/Devices/VirtualTechnologies/CyberGlove.h>
+#include <gad/Devices/VirtualTechnologies/vt_globals.h>
+#include <gad/Devices/VirtualTechnologies/vt_error.h>
 
 /* UNIX allows a max of 20 file descriptors ... really should use */
 /* getdtablesize() to determine this but 20 should be fine.       */

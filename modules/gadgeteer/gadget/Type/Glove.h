@@ -35,9 +35,9 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Input.h>
-//#include <vrj/Input/Type/DeviceInterface.h>
-#include <vrj/Input/Type/PosProxy.h>
+#include <gad/Type/Input.h>
+//#include <gad/Type/DeviceInterface.h>
+#include <gad/Type/PosProxy.h>
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Matrix.h>
 

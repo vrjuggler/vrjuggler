@@ -36,13 +36,13 @@
 #include <vrj/vrjConfig.h>
 #include <string>
 
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Glove.h>
-#include <vrj/Input/Type/Digital.h>
-#include <vrj/Input/Devices/Fakespace/PinchGloveStandalone.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Glove.h>
+#include <gad/Type/Digital.h>
+#include <gad/Devices/Fakespace/PinchGloveStandalone.h>
 
-#include <vrj/Input/Type/Finger.h>
-#include <vrj/Input/Type/Hand.h>
+#include <gad/Type/Finger.h>
+#include <gad/Type/Hand.h>
 
 namespace vrj
 {

@@ -31,11 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/PosProxy.h>
+#include <gad/Type/PosProxy.h>
 #include <vrj/Config/ConfigChunk.h>
 
-#include <vrj/Input/Type/PosFilter.h>
-#include <vrj/Input/Type/LinearSigmoidPosFilter.h>
+#include <gad/Type/PosFilter.h>
+#include <gad/Type/LinearSigmoidPosFilter.h>
 
 namespace vrj
 {

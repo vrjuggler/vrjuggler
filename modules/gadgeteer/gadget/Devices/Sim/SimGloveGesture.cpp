@@ -33,7 +33,7 @@
 #include <vrj/vrjConfig.h>
 
 #include <vrj/Util/FileIO.h>
-#include <vrj/Input/Devices/Sim/SimGloveGesture.h>
+#include <gad/Devices/Sim/SimGloveGesture.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj

@@ -13,7 +13,7 @@
 
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h> /* Included for Boolean declaration */
+#include <gad/Devices/VirtualTechnologies/vt_types.h> /* Included for Boolean declaration */
 
 enum
 {

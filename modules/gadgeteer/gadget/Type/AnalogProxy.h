@@ -41,8 +41,8 @@
 
 #include <vrj/vrjConfig.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Input/Type/Analog.h>
-#include <vrj/Input/Type/Proxy.h>
+#include <gad/Type/Analog.h>
+#include <gad/Type/Proxy.h>
 
 namespace vrj
 {
