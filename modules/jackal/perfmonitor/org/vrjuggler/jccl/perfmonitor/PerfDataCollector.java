@@ -35,18 +35,18 @@
 package VjComponents.PerfMonitor;
 
 import java.io.*;
-import java.util.List;
+import java.util.*;
 
 import VjComponents.PerfMonitor.DataLine;
 import VjConfig.*;
 import VjControl.Core;
-import VjComponents.UI.Widgets.*;
+//import VjComponents.UI.Widgets.*;
 import VjConfig.ConfigStreamTokenizer;
 
 public class PerfDataCollector {
     // stores all performance data coming from a particular buffer
     public String name;
-    public LinkedList datalines; // vector of DataLines & MissingCounts
+    public List datalines; // vector of DataLines & MissingCounts
     public int num; // # of different indices used for datapoints.
     public int numsamps[];
     public double totalsum;
@@ -92,7 +92,7 @@ public class PerfDataCollector {
 	    dl.linetotal += dl.diffs[i];
 
 	while (datalines.size() > maxdatalines) {
-	    DataLine tmp = (DataLine)datalines.removeFirst();
+	    DataLine tmp = (DataLine)datalines.remove(0);
 	    for (i = 0; i < num; i++) {
 		if (!Double.isNaN (tmp.diffs[i])) {
 		    sums[i] -= tmp.diffs[i];
