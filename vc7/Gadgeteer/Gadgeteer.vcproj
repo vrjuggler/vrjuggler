@@ -226,6 +226,9 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Input.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Devices\EventWindow\InputAreaWin32.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\InputLogger.cpp">
 			</File>
 			<File
@@ -482,6 +485,9 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Input.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Devices\EventWindow\InputAreaWin32.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputData.h">
 			</File>
 			<File
@@ -651,9 +657,6 @@
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 			<File
-				RelativePath=".\gadgeteer.ico">
-			</File>
-			<File
 				RelativePath=".\Gadgeteer.rc">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -667,6 +670,9 @@
 						Name="VCResourceCompilerTool"
 						AdditionalIncludeDirectories=""/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\gadgeteer.ico">
 			</File>
 		</Filter>
 	</Files>
