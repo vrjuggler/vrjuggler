@@ -140,13 +140,28 @@ bool LinuxJoydev::startSampling()
          << "   joystick name: " << mPhysicalJsName << std::endl
          << "            axes: " << mNumAxes << std::endl
          << "         buttons: " << mNumButtons << std::endl
-         << "      driver ver: " << version << std::endl << vprDEBUG_FLUSH;
+         << "      driver ver: " << version << std::endl
+         << "    axis buttons: ";
 
+   for(unsigned i=0;i<mAxisButtonIndices.size(); ++i)
+   { vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL) << mAxisButtonIndices[i] << " "; }
+   vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL) << std::endl << vprDEBUG_FLUSH;
 
    // Allocate initial device data
    // - By default this will clear them out
    mCurAxes.resize(mNumAxes);
-   mCurButtons.resize(mNumButtons);
+   mCurButtons.resize(mNumButtons + mAxisButtonIndices.size());
+
+   // Setup axis as button stuff
+   mAxisToButtonIndexLookup.clear();
+   mAxisToButtonIndexLookup.resize(mNumAxes, -1);            // Default to -1, meaning no axis button
+   for(unsigned i=0;i<mAxisButtonIndices.size(); ++i)       // For each configured axis index
+   {
+      unsigned virtual_btn_index = (mNumButtons+i);                     // Index of the virtual button from the axis
+      vprASSERT(virtual_btn_index < mCurButtons.size() && "Virtual button index out of range");
+      unsigned axis_index = mAxisButtonIndices[i];                      // Index of the axis we are mapping
+      mAxisToButtonIndexLookup[axis_index] = int(virtual_btn_index);    // Setup the mapping
+   }
 
    return true;
 }
@@ -196,6 +211,17 @@ void LinuxJoydev::updateData()
          float norm_value = (float(cur_event.value) + max_value)/(2.0f*max_value);
          mCurAxes[axis_number] = norm_value;
          mCurAxes[axis_number].setTime();
+
+         // Check for axis buttons
+         // - If we have a mapping
+         // - If axis is gt 0.5, then btn is down
+         if(mAxisToButtonIndexLookup[axis_number] != -1)    // If we map to a virtual button
+         {
+            unsigned vir_btn_index = mAxisToButtonIndexLookup[axis_number];
+            vprASSERT(vir_btn_index < mCurButtons.size() && "Virtual button index out of range");
+            mCurButtons[vir_btn_index] = ( (norm_value > 0.5f) ? 1 : 0);
+            mCurButtons[vir_btn_index].setTime();
+         }
       }
    }
 

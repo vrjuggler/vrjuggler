@@ -147,15 +147,17 @@ protected:
    }
 
 private:
-   std::vector<AnalogData>       mCurAxes;         /**< The current (up-to-date) values. */
-   std::vector<DigitalData>      mCurButtons;      /**< The current button states. */
    std::string                   mPortName;        /**< Name of the port to connect to */
    std::vector<unsigned>         mAxisButtonIndices;  /**< Indices of the axis buttons */
 
+   std::vector<AnalogData>    mCurAxes;               /**< The current (up-to-date) values. */
+   std::vector<DigitalData>   mCurButtons;            /**< The current button states. */
+   std::vector<int>           mAxisToButtonIndexLookup;   /**< Maps axis number to button index (-1 means none) */
+
    std::string       mJsLabel;         /**< The VR Juggler name of the joystick device */
    std::string       mPhysicalJsName;  /**< Name of the joystick */
-   unsigned          mNumAxes;         /**< Number of axes we have */
-   unsigned          mNumButtons;      /**< Number of buttons that we have */
+   unsigned          mNumAxes;         /**< Number of axes we have on the joystick */
+   unsigned          mNumButtons;      /**< Number of buttons that we have on the joystick */
 
    int               mJsFD;            /**< File descriptor for the joystick */
 };
