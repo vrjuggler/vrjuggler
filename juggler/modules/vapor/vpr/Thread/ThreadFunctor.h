@@ -45,6 +45,8 @@
 #include <vpr/vprConfig.h>
 #include <stdlib.h>
 
+#include <vpr/Util/Assert.h>
+
 
 namespace vpr {
 
@@ -56,6 +58,10 @@ namespace vpr {
 class VPR_CLASS_API BaseThreadFunctor
 {
 public:
+
+   virtual ~BaseThreadFunctor()
+   {;}
+
     /**
      * Overloaded operator() used for invoking the function encapsulated by
      * this object.  This version takes no argument and instead passes the
@@ -101,6 +107,13 @@ public:
     	mArgument = arg;
     }
 
+    virtual ~ThreadMemberFunctor()
+    {
+    	mObject = (OBJ_TYPE*)0xDEADBEEF;
+    	//mFunction = 0xDEADBEEF;
+    	mArgument = (void*)0xDEADBEEF;
+    }
+
     void
     operator() (void* arg) {
         (mObject->*mFunction)(arg);
@@ -118,8 +131,12 @@ public:
 
     bool isValid()
     {
-       if(NULL == mObject)
+       if((NULL == mObject) || ((OBJ_TYPE*)0xDEADBEEF == mObject))
+       {
+          vprASSERT( NULL != mObject);
+          vprASSERT( (OBJ_TYPE*)0xDEADBEEF != mObject);
           return false;
+       }
        /*
        else if(NULL == mFunction)
           return false;
@@ -155,6 +172,12 @@ public:
        : mFunc(f), mArgument(a)
     {;}
 
+    virtual ~ThreadNonMemberFunctor()
+    {
+      mFunc = (NonMemFunPtr)0xDEADBEEF;
+      mArgument = (void*)0xDEADBEEF;
+    }
+
     virtual void operator() (void* arg) {
         (*mFunc)(arg);
     }
@@ -169,7 +192,9 @@ public:
 
     bool isValid()
     {
-       return ( mFunc != NULL );
+       vprASSERT(mFunc != NULL);
+       vprASSERT( mArgument != (void*)0xDEADBEEF);
+       return ( (mFunc != NULL) && (mArgument != (void*)0xDEADBEEF) );
     }
 
     // private:
