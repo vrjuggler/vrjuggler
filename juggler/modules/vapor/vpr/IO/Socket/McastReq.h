@@ -52,7 +52,7 @@ namespace vpr
 /**
  * Multicast request wrapper.
  */
-class VPR_CLASS_API McastReq
+class McastReq
 {
 public:
    /**
