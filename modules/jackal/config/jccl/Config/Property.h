@@ -142,7 +142,7 @@ public:
 
 
 
-    /** Returns the PropertyDesc used to instantiate self. *?
+    /** Returns the PropertyDesc used to instantiate self. */
     PropertyDesc* getPropertyDesc () const {
         return mDescription;
     }
