@@ -81,8 +81,8 @@ void OpenSGNav::preFrame()
    // Update velocity
    if(mButton0->getData() == gadget::Digital::ON)
    {
-     velocity += inc_vel;
-     std::cout << "vel: " << velocity << std::endl;
+      velocity += inc_vel;
+      std::cout << "vel: " << velocity << std::endl;
    }
    else if(velocity > 0)
    {
@@ -92,12 +92,18 @@ void OpenSGNav::preFrame()
 
    // Restrict range
    if(velocity < 0)
-      { velocity = 0;}
+   {
+      velocity = 0;
+   }
    if(velocity > max_vel)
-      { velocity = max_vel; }
+   {
+      velocity = max_vel;
+   }
 
    if(mButton1->getData() == gadget::Digital::ON)
-   { velocity = 0; }
+   {
+      velocity = 0;
+   }
 
    // Travel in model
    // - Find forward direction of wand

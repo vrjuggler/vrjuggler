@@ -60,68 +60,71 @@
 class OpenSGNav : public vrj::OpenSGApp
 {
 public:
-    OpenSGNav(vrj::Kernel* kern)
-       : vrj::OpenSGApp(kern), velocity(0.0f)
-    {
-        std::cout << "OpenSGNav::OpenSGNav called\n";
-        mFileToLoad = std::string("");
-    }
+   OpenSGNav(vrj::Kernel* kern)
+      : vrj::OpenSGApp(kern), velocity(0.0f)
+   {
+      std::cout << "OpenSGNav::OpenSGNav called\n";
+      mFileToLoad = std::string("");
+   }
 
-    virtual ~OpenSGNav (void)
-    {
-        std::cout << "OpenSGNav::~OpenSGNav called\n";
-    }
+   virtual ~OpenSGNav()
+   {
+      std::cout << "OpenSGNav::~OpenSGNav called\n";
+   }
 
-    // Handle any initialization needed before API
-    virtual void init();
+   /** Handles any initialization needed before API. */
+   virtual void init();
         
-    /** Initialize the scene graph */
-    virtual void initScene();
+   /** Initialize the scene graph. */
+   virtual void initScene();
 
-    /** Return the scene root for this application */
-    virtual OSG::NodePtr getSceneRoot()
-    { return mSceneRoot; }
+   /** Returns the scene root for this application. */
+   virtual OSG::NodePtr getSceneRoot()
+   {
+      return mSceneRoot;
+   }
 
-    void initRenderer();
+   void initRenderer();
 
-    virtual void draw();
+   virtual void draw();
 
-    virtual void contextInit();
+   virtual void contextInit();
 
-    virtual void preFrame();
+   virtual void preFrame();
 
-    void setModelFileName(std::string filename)
-    {
-        std::cout << "OpenSGNav::setModelFileName: Set filename: [" << filename << "]\n";
-        mFileToLoad = filename;
-    }
+   void setModelFileName(std::string filename)
+   {
+      std::cout << "OpenSGNav::setModelFileName: Set filename: ["
+                << filename << "]\n";
+      mFileToLoad = filename;
+   }
 
-  private:
-    void initGLState();
+private:
+   void initGLState();
 
-  private:
-    std::string         mFileToLoad;      /**< Filename of the file to load */
+private:
+   std::string mFileToLoad;      /**< Filename of the file to load */
 
-    //   mSceneRoot:[mSceneTransform]
-    //         |
-    //   mLightNode:[DirectionalLight]
-    //         |
-    //   mLightBeacon:[Transform]
-    //         |
-    //     mModelRoot
-    OSG::NodePtr        mSceneRoot;       /**< The root of the scene */
-    OSG::TransformPtr   mSceneTransform;  /**< Transform core */
-    OSG::NodePtr        mModelRoot;       /**< Root of the loaded model */
+   //   mSceneRoot:[mSceneTransform]
+   //         |
+   //   mLightNode:[DirectionalLight]
+   //         |
+   //   mLightBeacon:[Transform]
+   //         |
+   //     mModelRoot
+   OSG::NodePtr        mSceneRoot;       /**< The root of the scene */
+   OSG::TransformPtr   mSceneTransform;  /**< Transform core */
+   OSG::NodePtr        mModelRoot;       /**< Root of the loaded model */
 
-    OSG::NodePtr  mLightNode;       /**< Light node to use */
-    OSG::NodePtr  mLightBeacon;     /**< A beacon for the light */
+   OSG::NodePtr  mLightNode;       /**< Light node to use */
+   OSG::NodePtr  mLightBeacon;     /**< A beacon for the light */
 
-  public:
-    gadget::PositionInterface  mWandPos;     /**< The position of the wand */
-    gadget::DigitalInterface   mButton0;     /**< Wand button 0 */
-    gadget::DigitalInterface   mButton1;     /**< Wand button 1 */
-    gadget::DigitalInterface   mButton2;     /**< Wand button 2 */
-    float  velocity;
+public:
+   gadget::PositionInterface  mWandPos;     /**< The position of the wand */
+   gadget::DigitalInterface   mButton0;     /**< Wand button 0 */
+   gadget::DigitalInterface   mButton1;     /**< Wand button 1 */
+   gadget::DigitalInterface   mButton2;     /**< Wand button 2 */
+   float  velocity;
 };
 
 
