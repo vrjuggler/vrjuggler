@@ -39,6 +39,7 @@
 #include <jccl/JackalServer/Socket.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>
+#include <vpr/Util/Singleton.h>
 
 namespace jccl {
 
@@ -84,54 +85,50 @@ public:
 
 
 
-    //: is the EM accepting connections across the network?
-    //! RETURNS: true - EM is accepting connections
-    //! RETURNS: false - EM is not accepting connections
+    /** Returns if the JackalServer is accepting network connections.
+     *  @return True if accepting connections, false otherwise.
+     */
     bool isAccepting();
 
 
 
-    //: registers a Jackal control unit. 
+    /** Registers a JackalControl. */
     void addJackalControl (JackalControl* jc);
 
 
-    //: unregisters a Jackal control unit.
+    /** Removes a JackalControl. */
     void removeJackalControl (JackalControl* jc);
 
 
 
-    //: tells EM that a connection has died (ie by gui disconnecting)
+    /** Notification that a connection has died (e.g. by having the other
+     *  side drop).
+     */
     void connectHasDied (Connect* con);
 
 
-    //: sends a 'refresh' message to all open connections
-    void sendRefresh();
+
+    /** Acquires the master list of connections.
+     *  Note: Calling this function locks the connections mutex.  The
+     *  caller MUST use releaseConnections() when finished with the 
+     *  vector.
+     */
+    std::vector<Connect*>& getConnections();
+
+    void releaseConnections();
 
 
+    //------------------- ConfigChunkHandler Stuff ---------------------
 
-    //: ConfigChunkHandler stuff
-    //! PRE: configCanHandle(chunk) == true
-    //! RETURNS: success
     virtual bool configAdd(ConfigChunk* chunk);
 
-
-
-    //: Remove the chunk from the current configuration
-    //! PRE: configCanHandle(chunk) == true
-    //!RETURNS: success
     virtual bool configRemove(ConfigChunk* chunk);
 
-
-    
-    //: Can the handler handle the given chunk?
-    //! RETURNS: true - Can handle it
-    //+          false - Can't handle it
     virtual bool configCanHandle(ConfigChunk* chunk);
 
 
 
 private:
-//      std::string                  perf_target_name;
     std::vector<Connect*>        connections;
     std::vector<JackalControl*>  jackal_controls;
     vpr::Thread*                 listen_thread;
@@ -172,6 +169,8 @@ private:
     // These are needed to appease Visual C++ in its creation of DLLs.
     JackalServer(const JackalServer&) {;}
     void operator=(const JackalServer&) {;}
+
+    vprSingletonHeader(JackalServer);
 
 }; // end JackalServer
 

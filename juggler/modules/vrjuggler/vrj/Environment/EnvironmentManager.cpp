@@ -42,7 +42,7 @@ namespace vrj {
 
 EnvironmentManager::EnvironmentManager() {
 
-    jackal_server = new jccl::JackalServer();
+    jackal_server = jccl::JackalServer::instance();
     config_manager = jccl::ConfigManager::instance();
     performance_monitor = new jccl::PerformanceMonitor();
 

@@ -113,6 +113,10 @@ namespace jccl {
         bool interpretDOM_Node (Connect* con, DOM_Node& doc);
 
 
+        //----------------------- ConfigStatus Stuff ------------------------
+    
+        void configChanged ();
+
     };
 
 }; // namespace jccl

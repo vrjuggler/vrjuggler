@@ -34,6 +34,7 @@
 #include <jccl/Plugins/ConfigManager/ConfigManager.h>
 #include <jccl/Plugins/ConfigManager/ConfigCommand.h>
 #include <jccl/JackalServer/Connect.h>
+#include <jccl/JackalServer/JackalServer.h>
 #include <jccl/XMLUtil/XercesXMLParserPool.h>
 #include <jccl/Config/ConfigIO.h>
 #include <jccl/Config/XMLConfigIOHandler.h>
@@ -208,5 +209,22 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc) {
     }
     return retval;
 } // interpretDOM_Node ();
+
+
+    //----------------------- ConfigStatus Stuff ----------------------------
+    
+    void XMLConfigCommunicator::configChanged () {
+
+        config_manager->lockActive();
+        ConfigChunkDB* db = new ConfigChunkDB(*(config_manager->getActiveConfig()));   // Make a copy
+        config_manager->unlockActive();
+
+        std::vector<Connect*>& connections 
+            = JackalServer::instance()->getConnections();
+        for (unsigned int i = 0, n = connections.size(); i < n; i++)
+            connections[i]->addCommand (new CommandSendChunkDB (db, true));
+        JackalServer::instance()->releaseConnections();
+    }
+
 
 };

@@ -359,6 +359,10 @@ namespace jccl {
             unlockPending();
         }
 
+        if (chunks_processed > 0) {
+            config_communicator->configChanged();
+        }
+
         return chunks_processed;
     }
 
