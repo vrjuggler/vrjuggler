@@ -9,9 +9,9 @@ JADE		= openjade
 JADETEX		= jadetex
 PDFJADETEX	= pdfjadetex
 RM		= rm -f
-#XALAN		= $(DOCBOOK_ROOT)/xalan-j_2_2_0/bin/xalan.sh
-#XALAN		= $(DOCBOOK_ROOT)/xalan-j_2_3_D1/bin/xalan.sh
+#XALAN		= $(DOCBOOK_ROOT)/xalan-j_2_3_0/bin/xalan.sh
 XALAN		= $(DOCBOOK_ROOT)/xalan-j_20020214/bin/xalan.sh
+#XALAN		= $(DOCBOOK_ROOT)/xalan-j_20020219/bin/xalan.sh
 XEP		= sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC	= /usr/bin/xsltproc
 
