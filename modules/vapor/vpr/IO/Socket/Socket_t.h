@@ -58,6 +58,8 @@
 
 #include <vpr/IO/Stats/BaseIOStatsStrategy.h>
 
+#include <boost/smart_ptr.hpp>
+
 #include <typeinfo>
 
 
@@ -706,8 +708,8 @@ protected:
            delete m_socket_imp;
         */
 
-        m_socket_imp = NULL;  // Don't destory because it is a member of the child class
-                              // it will get destroyed on it's own
+        //m_socket_imp = NULL;  // Don't destory because it is a member of the child class
+        //                      // it will get destroyed on it's own
     }
 
     /**
@@ -843,7 +845,9 @@ protected:
     }
 
     /// Platform-specific socket implementation object
-    SocketImpl* m_socket_imp;
+    //SocketImpl* m_socket_imp;
+    boost::shared_ptr<SocketImpl> m_socket_imp;
+
 };
 
 }; // End of vpr namespace
