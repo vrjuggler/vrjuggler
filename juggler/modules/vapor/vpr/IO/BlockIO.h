@@ -46,6 +46,7 @@
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Status.h>
 #include <vpr/Util/Interval.h>
+#include <vpr/IO/IOSys.h>
 
 
 namespace vpr {
@@ -230,7 +231,7 @@ public:
     // ------------------------------------------------------------------------
     virtual bool
     getNonBlocking (void) const {
-        return ! m_blocking;
+        return (!m_blocking);
     }
 
     // ------------------------------------------------------------------------
