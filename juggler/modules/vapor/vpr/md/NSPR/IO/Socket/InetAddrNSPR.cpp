@@ -120,6 +120,7 @@ InetAddrNSPR::setAddress (const std::string& address) {
 
    if(ret_status == PR_FAILURE)
    {
+      setAddressValue(0);           // Error on lookup, so zero the address
       std::string error_msg("InetAddrNSPR::setAddress: Failure to look up host: ");
       error_msg += address;
 

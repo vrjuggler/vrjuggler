@@ -408,6 +408,7 @@ public:
    }
    // =========================================================================
    // different-address-open-bind-close test
+   // - Try to open, close, and bind on a large range of ports
    // =========================================================================
    void differentAddressOpenBindCloseTest()
    { 
