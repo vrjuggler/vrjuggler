@@ -315,7 +315,7 @@ bool GlWindowXWin::close()
 
    //vprASSERT( !mXfuncLock.test() && "Attempting to close a display window that is locked" );
    // Assert that we have not impllemented correct shutdown for the case that we
-   // are an event window as well
+   // are an event source as well
    //vprASSERT(!mIsEventSource  && "Need to implement GLX window close with gadget::EventWindow");
 
    // Remove any event device from the input manager
