@@ -177,6 +177,23 @@ public class ConfigChunkDB
       }
    }
 
+   /**
+    * Builds the database from the given XML document. If the document's root
+    * element is a ConfigChunkDB, the children are examined for ConfigChunks.
+    * ConfigChunks found in the node's tree are added to this ConfigChunkDB.
+    *
+    * @param document      the XML document in which to look for ConfigChunks
+    *
+    * @throws IOException  if there is an error while building the database
+    */
+   public void build(Document document)
+      throws IOException
+   {
+      this.inputFile = null;
+      mDoc = document;
+      loadChunks(mDoc.getRootElement());
+   }
+
    public void build(Element elem)
       throws IOException
    {
@@ -393,6 +410,15 @@ public class ConfigChunkDB
       }
       return null;
    }
+
+   /**
+    * Gets a list of all ConfigChunks in this DB.
+    */
+   public List getAll()
+   {
+      return chunks;
+   }
+
 
    /** Gets all ConfigChunks using a particular ChunkDesc.
     *  @param typename A ChunkDesc name.
