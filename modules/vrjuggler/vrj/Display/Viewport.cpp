@@ -113,17 +113,18 @@ std::ostream& operator<<(std::ostream& out, Viewport& viewport)
 std::ostream& Viewport::outStream(std::ostream& out)
 {
    const int pad_width_dot(20);
-   out.setf(std::ios::left);
 
-   out << std::setw(pad_width_dot) << std::setfill('.')
+   out << std::setw(pad_width_dot)
        << "    Name " <<  " " << getName() << std::endl;
-   out << std::setw(pad_width_dot) << std::setfill('.')
+   out << std::setw(pad_width_dot)
+       << "    Active " <<  " " << (mActive ? "Yes" : "No") << std::endl;
+   out << std::setw(pad_width_dot)
        << "    User " <<  " " << getUser()->getName() << std::endl;
-   out << std::setw(pad_width_dot) << std::setfill('.')
+   out << std::setw(pad_width_dot)
        << "    Origin " << " " << mXorigin << ", " << mYorigin << std::endl;
-   out << std::setw(pad_width_dot) << std::setfill('.')
+   out << std::setw(pad_width_dot)
        << "    Size " << " " << mXsize << "x" << mYsize << std::endl;
-   out << std::setw(pad_width_dot) << std::setfill('.')
+   out << std::setw(pad_width_dot)
        << "    View " << " "
        << ((mView == Viewport::LEFT_EYE) ? "Left" : ((mView==Viewport::RIGHT_EYE)?"Right" : "Stereo") )
        << std::endl;
@@ -133,5 +134,4 @@ std::ostream& Viewport::outStream(std::ostream& out)
    return out;
 }
 
-
-};
+}
