@@ -56,10 +56,12 @@ import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
  */
 public class BeanIconViewer
    extends DefaultBeanModelViewer
-   implements BeanRegistrationListener, InternalFrameListener
+   implements BeanRegistrationListener, InternalFrameListener, BeanPreferences,
+              PrefsEventListener
 {
    public BeanIconViewer ()
    {
+      mEditorPanel.addPrefsEventListener(this);
    }
 
    public void setModel (BeanTreeModel model)
@@ -87,13 +89,17 @@ public class BeanIconViewer
    /**
     * @pre setDataModel has been called.
     */
-   public void initGUI ()
+   public void initGUI()
    {
+      // Make sure that our preferences are loaded before the GUI is set up.
+      load();
+
       try
       {
          jbInit();
+         setNavigationIcons(mEditorPanel.isSmallGui());
       }
-      catch(Exception e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -120,6 +126,43 @@ public class BeanIconViewer
       {
          refreshDataModel();
       }
+   }
+
+   /**
+    * This does nothing.  initGUI() handles all the interface configuration.
+    */
+   public void initPrefsGUI()
+   {
+   }
+
+   public boolean canCommit()
+   {
+      return true;
+   }
+
+   public JComponent getEditor()
+   {
+      return mEditorPanel;
+   }
+
+   public String getEditorName()
+   {
+      return mEditorPanel.getName();
+   }
+
+   public void load()
+   {
+      mEditorPanel.load();
+   }
+
+   public void save()
+   {
+      mEditorPanel.save();
+   }
+
+   public void prefsChanged(PrefsEvent e)
+   {
+      setNavigationIcons(e.isSmallGui());
    }
 
    /**
@@ -257,19 +300,6 @@ public class BeanIconViewer
       viewer.setLayout(mIconPanelLayout);
 
       mHomeButton.setToolTipText("Home");
-
-      String icon_name = "org/vrjuggler/tweek/iconviewer/home.gif";
-
-      try
-      {
-         mHomeButton.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
-      }
-      catch (NullPointerException e)
-      {
-         mHomeButton.setText("Home");
-         System.err.println("WARNING: Failed to load icon " + icon_name);
-      }
-
       mHomeButton.setVerticalTextPosition(JLabel.BOTTOM);
       mHomeButton.setHorizontalTextPosition(JLabel.CENTER);
       mHomeButton.addActionListener(new ActionListener ()
@@ -282,19 +312,6 @@ public class BeanIconViewer
 
       mBackButton.setEnabled(false);
       mBackButton.setToolTipText("Back");
-
-      icon_name = "org/vrjuggler/tweek/iconviewer/back.gif";
-
-      try
-      {
-         mBackButton.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
-      }
-      catch (NullPointerException e)
-      {
-         mBackButton.setText("Back");
-         System.err.println("WARNING: Failed to load icon " + icon_name);
-      }
-
       mBackButton.setVerticalTextPosition(JLabel.BOTTOM);
       mBackButton.setHorizontalTextPosition(JLabel.CENTER);
       mBackButton.addActionListener(new ActionListener ()
@@ -307,19 +324,6 @@ public class BeanIconViewer
 
       mForwButton.setEnabled(false);
       mForwButton.setToolTipText("Forward");
-
-      icon_name = "org/vrjuggler/tweek/iconviewer/forward.gif";
-
-      try
-      {
-         mForwButton.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
-      }
-      catch (NullPointerException e)
-      {
-         mForwButton.setText("Forward");
-         System.err.println("WARNING: Failed to load icon " + icon_name);
-      }
-
       mForwButton.setVerticalTextPosition(JLabel.BOTTOM);
       mForwButton.setHorizontalTextPosition(JLabel.CENTER);
       mForwButton.addActionListener(new ActionListener ()
@@ -353,6 +357,72 @@ public class BeanIconViewer
 
       viewer.add(mViewContainer,  BorderLayout.CENTER);
       mViewContainer.getViewport().add(mCurPanel.getComponent(), null);
+   }
+
+   private void setNavigationIcons(boolean smallGui)
+   {
+      String icon_name = "org/vrjuggler/tweek/iconviewer/";
+
+      if ( smallGui )
+      {
+         icon_name += "home-small.gif";
+      }
+      else
+      {
+         icon_name += "home.gif";
+      }
+
+      try
+      {
+         mHomeButton.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
+      }
+      catch (NullPointerException e)
+      {
+         mHomeButton.setText("Home");
+         System.err.println("WARNING: Failed to load icon " + icon_name);
+      }
+
+      icon_name = "org/vrjuggler/tweek/iconviewer/";
+
+      if ( smallGui )
+      {
+         icon_name += "back-small.gif";
+      }
+      else
+      {
+         icon_name += "back.gif";
+      }
+
+      try
+      {
+         mBackButton.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
+      }
+      catch (NullPointerException e)
+      {
+         mBackButton.setText("Back");
+         System.err.println("WARNING: Failed to load icon " + icon_name);
+      }
+
+      icon_name = "org/vrjuggler/tweek/iconviewer/";
+
+      if ( smallGui )
+      {
+         icon_name += "forward-small.gif";
+      }
+      else
+      {
+         icon_name += "forward.gif";
+      }
+
+      try
+      {
+         mForwButton.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
+      }
+      catch (NullPointerException e)
+      {
+         mForwButton.setText("Forward");
+         System.err.println("WARNING: Failed to load icon " + icon_name);
+      }
    }
 
    /**
@@ -751,4 +821,6 @@ public class BeanIconViewer
 
    private Stack mBackStack = new Stack();
    private Stack mForwStack = new Stack();
+
+   private PrefsEditor mEditorPanel = new PrefsEditor();
 }
