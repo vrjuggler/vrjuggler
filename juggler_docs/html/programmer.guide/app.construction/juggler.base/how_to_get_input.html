@@ -10,8 +10,8 @@
 
 <body>
 
-<h1>How to get input</h1>
-<h2>Use helper classes</h2>
+<h2>Getting input from VR Juggler</h2>
+<h3>Use helper classes</h3>
 <p>VR Juggler maintains a set of named devices. &nbsp;Each of these devices is
 running in their own thread and is executing asynchronously from the rest of the
 system. &nbsp;Once each frame, the kernel updates a local copy of the input data
@@ -28,12 +28,10 @@ reference to a vjMatrix because the &quot;VJWand&quot; is a positional device.</
 flexibility in how the devices in the system are handled and how the device data
 is returned. &nbsp;The device a handle refers to can be changed at run-time.
 &nbsp;This change can occur without the application ever knowing it took place.</p>
-<h2>Tutorial: Application that receives and prints head &amp; wand location</h2>
-<p>[Code here]</p>
 <h3>How does an app get input&nbsp;</h3>
-<h3>Data members</h3>
-<h3>Member functions</h3>
-<p>preFrame, postFrame, intraFrame</p>
+<h3>Where should input be handled</h3>
+<p>Latency critical should be in preFrame()</p>
+<p>Computations based upon input should be in postFrame()</p>
 
 </body>
 
