@@ -52,7 +52,7 @@
 #include <commctrl.h>
 
 #include <Input/vjInput/vjKeyboard.h>
-#include <Threads\vjThread.h>
+#include <Threads/vjThread.h>
 
 
 class vjKeyboardWin32 : public vjKeyboard
