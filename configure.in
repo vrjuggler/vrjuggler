@@ -427,7 +427,9 @@ case $target_os in
 
         AR='ar'
         ARFLAGS='ru'
+        CFLAGS_DYNLIB="$CFLAGS_DYNLIB +Z"
         CXXFLAGS="-AA -mt $CXXFLAGS"
+        CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB +Z"
         DEP_GEN_FLAG='-E +m'
         LD='aCC'
         LDFLAGS="$LDFLAGS -mt -L/usr/lib/X11R6"

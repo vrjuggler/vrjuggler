@@ -466,14 +466,10 @@ afterbuild:
 _libs:
 	@${MAKE} _build_opt_obj
 	@${MAKE} _build_opt_lib_static
-ifneq (${PLATFORM}, HP) 
 	@${MAKE} _build_opt_lib_shared
-endif
 	@${MAKE} _build_dbg_obj
 	@${MAKE} _build_dbg_lib_static
-ifneq (${PLATFORM}, HP) 
 	@${MAKE} _build_dbg_lib_shared
-endif
 	@${MAKE} _LIB_LINK_DIR="${_LIBDIR}" _lib_links
 
 # Make symlinks in ${_LIB_LINK_DIR} pointing to the library binaries in
@@ -526,9 +522,7 @@ debug:
 	@${MAKE} beforebuild
 	@${MAKE} _build_dbg_obj gui
 	@${MAKE} _build_dbg_lib_static
-ifneq (${PLATFORM}, HP) 
 	@${MAKE} _build_dbg_lib_shared
-endif
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -575,9 +569,7 @@ optim:
 	@${MAKE} beforebuild
 	@${MAKE} _build_opt_obj gui
 	@${MAKE} _build_opt_lib_static
-ifneq (${PLATFORM}, HP) 
 	@${MAKE} _build_opt_lib_shared
-endif
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -985,13 +977,9 @@ install-all-abi:
 # the use of the ${NOLINK} variable.
 _install_libs:
 	@${MAKE} NOLINK=1 install-opt
-ifneq (${PLATFORM}, HP) 
 	@${MAKE} NOLINK=1 install-dso
-endif
 	@${MAKE} NOLINK=1 install-dbg
-ifneq (${PLATFORM}, HP) 
 	@${MAKE} NOLINK=1 install-ddso
-endif
 	@${MAKE} _install_lib_links
 
 # Do everything needed after installing the library binaries.
