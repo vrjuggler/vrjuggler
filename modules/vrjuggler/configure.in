@@ -676,6 +676,7 @@ AC_OUTPUT(vrjuggler-config
           samples/OGL/advanced/Makefile
           samples/OGL/advanced/glove/Makefile
           samples/OGL/simple/Makefile
+          samples/OGL/simple/ConfigApp/Makefile
           samples/OGL/simple/MPApp/Makefile
           samples/OGL/simple/SimpleApp/Makefile
           samples/OGL/simple/contextApp/Makefile
