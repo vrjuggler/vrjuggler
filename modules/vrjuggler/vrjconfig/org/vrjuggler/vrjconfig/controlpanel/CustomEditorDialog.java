@@ -66,7 +66,7 @@ public class CustomEditorDialog
          if ( env_svc.getOS() == EnvironmentService.Windows )
          {
             mButtonLayout.setAlignment(FlowLayout.CENTER);
-            mButtonPanel.add(mSaveButton);
+            mButtonPanel.add(mOkayButton);
             mButtonPanel.add(mCancelButton);
             mButtonPanel.add(mHelpButton);
          }
@@ -75,7 +75,7 @@ public class CustomEditorDialog
             mButtonLayout.setAlignment(FlowLayout.RIGHT);
             mButtonPanel.add(mHelpButton);
             mButtonPanel.add(mCancelButton);
-            mButtonPanel.add(mSaveButton);
+            mButtonPanel.add(mOkayButton);
          }
 
          mHelpActionListener = mEditor.getHelpActionListener();
@@ -100,9 +100,9 @@ public class CustomEditorDialog
    {
       this.getContentPane().setLayout(mMainLayout);
       mButtonPanel.setLayout(mButtonLayout);
-      mSaveButton.setText("OK");
-      mSaveButton.addActionListener(
-         new CustomEditorDialog_mSaveButton_actionAdapter(this)
+      mOkayButton.setText("OK");
+      mOkayButton.addActionListener(
+         new CustomEditorDialog_mOkayButton_actionAdapter(this)
       );
       mCancelButton.setText("Cancel");
       mCancelButton.addActionListener(
@@ -123,7 +123,7 @@ public class CustomEditorDialog
    private BorderLayout mMainLayout = new BorderLayout();
    private JPanel mButtonPanel = new JPanel();
    private FlowLayout mButtonLayout = new FlowLayout();
-   private JButton mSaveButton = new JButton();
+   private JButton mOkayButton = new JButton();
    private JButton mCancelButton = new JButton();
    private JButton mHelpButton = new JButton();
 
@@ -133,7 +133,7 @@ public class CustomEditorDialog
       dispose();
    }
 
-   void mSaveButton_actionPerformed(ActionEvent actionEvent)
+   void mOkayButton_actionPerformed(ActionEvent actionEvent)
    {
       status = OK_OPTION;
       dispose();
@@ -200,17 +200,17 @@ class CustomEditorDialog_mHelpButton_actionAdapter
    }
 }
 
-class CustomEditorDialog_mSaveButton_actionAdapter
+class CustomEditorDialog_mOkayButton_actionAdapter
    implements ActionListener
 {
    private CustomEditorDialog adaptee;
-   CustomEditorDialog_mSaveButton_actionAdapter(CustomEditorDialog adaptee)
+   CustomEditorDialog_mOkayButton_actionAdapter(CustomEditorDialog adaptee)
    {
       this.adaptee = adaptee;
    }
 
    public void actionPerformed(ActionEvent actionEvent)
    {
-      adaptee.mSaveButton_actionPerformed(actionEvent);
+      adaptee.mOkayButton_actionPerformed(actionEvent);
    }
 }
