@@ -219,17 +219,11 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
     // if it's an open file afterwards.
 
     bool found = false;
-    
-    char* path_string_tmp;
     std::string path_string;
     std::string retval;
     
-    // Read the value in the config path environment variable.  If it is
-    // non-NULL, store the value in cfg_path since std::string's are
-    // easier to use.
-    if ( (path_string_tmp = getenv(env_name.c_str())) != NULL ) {
-        path_string = path_string_tmp;
-        
+    // Read the value in the config path environment variable.
+    if ( vpr::System::getenv (env_name, path_string).success() ) {
         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
             << "Falling back on " << env_name << ": " << path_string << "\n"
             << vprDEBUG_FLUSH;
@@ -243,19 +237,18 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
 // Define the separator character for the elements of $VJ_CFG_PATH.  On Win32,
 // we use ";", and on everything else, we use ":".
 #ifdef VPR_OS_Win32
-        char elem_sep[] = ";";
-        char ostype_var[] = "OSTYPE";
-        char* ostype;
+        char elem_sep = ';';
+        std::string ostype;
 
         // If we are in a Cygwin environment, use ":" as the element
         // separator.
-        if ( (ostype = getenv(ostype_var)) != NULL ) {
-            if ( strcmp(ostype, "cygwin") == 0 ) {
-                elem_sep[0] = ':';
+        if ( vpr::System::getenv("OSTYPE", ostype).success() ) {
+            if ( strcmp(ostype.c_str(), "cygwin") == 0 ) {
+                elem_sep = ':';
             }
         }
 #else
-        char elem_sep[] = ":";
+        char elem_sep = ':';
 #endif
         
         while ( ! found ) {
