@@ -104,7 +104,7 @@ namespace SocketOptions
       McastReq      mcast_add_member;
       McastReq      mcast_drop_member;
    };
-};
+}
 
 class VPR_CLASS_API SocketOptionWrapper
 {
