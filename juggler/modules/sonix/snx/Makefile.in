@@ -46,7 +46,7 @@ default: all
 
 include @topdir@/make.defs.mk
 
-SRCS = Matrix44.cpp SoundFactory.cpp 
+SRCS = SoundFactory.cpp 
 
 ifeq (@OPENAL_API@, Y)
     SRCS        += OpenALSoundImplementation.cpp

@@ -52,12 +52,12 @@
 #include "snx/SoundFactory.h"
 #include "snx/SoundImplementation.h"
 #include "snx/SoundAPIInfo.h"
-#include "snx/Singleton.h"
+#include "vpr/Util/Singleton.h"
 
-class sonix : public Isonix, public snx::Singleton<sonix>
+class sonix : public Isonix, public vpr::Singleton<sonix>
 {
 protected:
-   friend class snx::Singleton<sonix>;
+   friend class vpr::Singleton<sonix>;
 
    //: default constructor
    sonix() : Isonix(), mImplementation( NULL )
@@ -177,7 +177,7 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const snx::Matrix44& mat )
+   virtual void setListenerPosition( const vrj::Matrix& mat )
    {
       this->impl().setListenerPosition( mat );
    }
@@ -185,7 +185,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( snx::Matrix44& mat )
+   virtual void getListenerPosition( vrj::Matrix& mat )
    {
       this->impl().getListenerPosition( mat );
    }
@@ -208,7 +208,7 @@ public:
       std::cout<<"NOTIFY: Changing API from "<<oldImpl.name();
       
       // change the current api to the newly requested one.
-      snx::SoundFactory::instance().createImplementation( apiName, mImplementation );
+      snx::SoundFactory::instance()->createImplementation( apiName, mImplementation );
 
       std::cout<<" to "<<mImplementation->name()<<".\n"<<std::flush;
       
@@ -276,7 +276,7 @@ protected:
    {
       if (mImplementation == NULL)
       {
-         snx::SoundFactory::instance().createImplementation( "stub", mImplementation );
+         snx::SoundFactory::instance()->createImplementation( "stub", mImplementation );
          mImplementation->startAPI();
          mImplementation->bindAll();
       }

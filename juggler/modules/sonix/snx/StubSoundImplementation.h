@@ -123,7 +123,7 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const snx::Matrix44& mat )
+   virtual void setListenerPosition( const vrj::Matrix& mat )
    {
       snx::SoundImplementation::setListenerPosition( mat );
    }
@@ -131,7 +131,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( snx::Matrix44& mat )
+   virtual void getListenerPosition( vrj::Matrix& mat )
    {
       snx::SoundImplementation::getListenerPosition( mat );
    }

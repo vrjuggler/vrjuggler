@@ -53,9 +53,9 @@
 #include <AL/alext.h>
 #include <AL/alut.h>
 
-#include "snx/Matrix44.h"
-#include "snx/Vec3.h"
-#include "snx/MatVec.h"
+#include "vrj/Math/Matrix.h"
+#include "vrj/Math/Vec3.h"
+#include "snx/Extend.h"
 #include "snx/FileIO.h"
 #include "snx/SoundImplementation.h"
 #include "snx/SoundInfo.h"
@@ -124,20 +124,20 @@ bool OpenALSoundImplementation::isPlaying( const std::string& alias )
       assert( alIsSource( mBindLookup[alias].source ) != AL_FALSE && "weird, shouldn't happen...\n" );
 
       ALint state( AL_INITIAL ); // initialized
-	   alGetSourceiv( mBindLookup[alias].source, AL_SOURCE_STATE, &state );
+      alGetSourceiv( mBindLookup[alias].source, AL_SOURCE_STATE, &state );
 
       switch(state) 
       {
-		   case AL_PLAYING:
-		   case AL_PAUSED:
-		     return true;
-		   default:
+         case AL_PLAYING:
+         case AL_PAUSED:
+           return true;
+         default:
            return false;
-		     break;
-	   }
+           break;
+      }
    }
 
-	return false;
+   return false;
 }
 
 /**
@@ -195,7 +195,7 @@ void OpenALSoundImplementation::getPosition( const std::string& alias, float& x,
 /**
  * set the position of the listener
  */
-void OpenALSoundImplementation::setListenerPosition( const snx::Matrix44& mat )
+void OpenALSoundImplementation::setListenerPosition( const vrj::Matrix& mat )
 {
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
    
@@ -206,9 +206,9 @@ void OpenALSoundImplementation::setListenerPosition( const snx::Matrix44& mat )
    mat.getTrans( position[0], position[1], position[2] );
 
    // extract orientation from the matrix
-   const snx::Vec3 forward( 0.0f, 0.0f, -1.0f );
-   const snx::Vec3 up( 0.0f, 1.0f, 0.0f );
-   snx::Vec3 forward_modified, up_modified;
+   const vrj::Vec3 forward( 0.0f, 0.0f, -1.0f );
+   const vrj::Vec3 up( 0.0f, 1.0f, 0.0f );
+   vrj::Vec3 forward_modified, up_modified;
    forward_modified = snx::xformVec( mat, forward );
    up_modified = snx::xformVec( mat, up );
 
@@ -220,13 +220,13 @@ void OpenALSoundImplementation::setListenerPosition( const snx::Matrix44& mat )
    alListenerfv( AL_POSITION, position );
 
    // set orientation
-	alListenerfv( AL_ORIENTATION, orientation );
+   alListenerfv( AL_ORIENTATION, orientation );
 }
 
 /**
  * get the position of the listener
  */
-void OpenALSoundImplementation::getListenerPosition( snx::Matrix44& mat )
+void OpenALSoundImplementation::getListenerPosition( vrj::Matrix& mat )
 {
    snx::SoundImplementation::getListenerPosition( mat );
 }
@@ -242,26 +242,26 @@ void OpenALSoundImplementation::startAPI()
    if (mContextId == NULL && mDev == NULL)
    {
       mDev = alcOpenDevice( NULL );
-	   if (mDev == NULL) 
+      if (mDev == NULL) 
       {
-		   std::cerr << "[snx]OpenAL| ERROR: Could not open device\n" << std::flush;
-   	   return;
-	   }
+         std::cerr << "[snx]OpenAL| ERROR: Could not open device\n" << std::flush;
+         return;
+      }
 
       // Initialize ALUT
       int attrlist[] = { ALC_FREQUENCY, 22050, ALC_INVALID };
 
       // create context
-	   mContextId = alcCreateContext( mDev, attrlist );
+      mContextId = alcCreateContext( mDev, attrlist );
       if (mContextId == NULL) 
       {
          std::string err = (char*)alGetString( alcGetError( mDev ) );
-		   std::cerr << "[snx]OpenAL| ERROR: Could not open context: " << err.c_str() << "\n" << std::flush;
-		   return;
-	   }
+         std::cerr << "[snx]OpenAL| ERROR: Could not open context: " << err.c_str() << "\n" << std::flush;
+         return;
+      }
 
       // make context active...
-	   alcMakeContextCurrent( mContextId );
+      alcMakeContextCurrent( mContextId );
       
       std::cerr<<"[snx]OpenAL| NOTICE: OpenAL API started: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
    }
@@ -276,7 +276,7 @@ void OpenALSoundImplementation::startAPI()
    this->setListenerPosition( mListenerPos );
 
    // ALfloat velocity[] = { 0.0f, 0.0f,  0.0f };
-	// alListenerfv( AL_VELOCITY, velocity );
+   // alListenerfv( AL_VELOCITY, velocity );
 }
 
 /**
@@ -359,18 +359,18 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          ALuint sourceID( 0 );
 
          // open the file as readonly binary
-	      if (!snxFileIO::fileExists( soundInfo.filename.c_str() )) 
+         if (!snxFileIO::fileExists( soundInfo.filename.c_str() )) 
          {
-		      std::cerr<<"[snx]OpenAL| file doesn't exist: "<<soundInfo.filename<<"\n" << std::flush;
+            std::cerr<<"[snx]OpenAL| file doesn't exist: "<<soundInfo.filename<<"\n" << std::flush;
             break;
-	      }
+         }
 
          // read the data from the file.
          std::cout<<"[snx]OpenAL| NOTIFY: loading: "<<soundInfo.filename<<"... " << std::flush;
          snxFileIO::fileLoad( soundInfo.filename.c_str(), mBindLookup[alias].data );
          std::cout<<"done("<<mBindLookup[alias].data.size()<<")\n" << std::flush;
 
-	      // create a new buffer to put our loaded data into...
+         // create a new buffer to put our loaded data into...
          alGenBuffers( 1, &bufferID );
          err = alGetError();
          if (err != AL_NO_ERROR)
@@ -412,10 +412,10 @@ void OpenALSoundImplementation::bind( const std::string& alias )
                default:
                   std::cout<<"       unknown error\n"<<std::flush;
             }            
-		      alDeleteBuffers( 1, &bufferID );
+            alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
-		      break;
-	      }
+            break;
+         }
          
          else
          {
@@ -424,16 +424,16 @@ void OpenALSoundImplementation::bind( const std::string& alias )
 
       
          // associate a source with the buffer
-	      alGenSources( 1, &sourceID );
+         alGenSources( 1, &sourceID );
          if (alGetError() != AL_NO_ERROR)
          {
-		      std::cerr << "[snx]OpenAL| ERROR: Could not generate a source\n" << std::flush;
+            std::cerr << "[snx]OpenAL| ERROR: Could not generate a source\n" << std::flush;
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
-		      break;
-	      }
-	      alSourcei( sourceID, AL_BUFFER, bufferID );
-	      alSourcei( sourceID, AL_LOOPING, AL_FALSE );
+            break;
+         }
+         alSourcei( sourceID, AL_BUFFER, bufferID );
+         alSourcei( sourceID, AL_LOOPING, AL_FALSE );
 
          this->setPosition( alias, soundInfo.position[0], soundInfo.position[1], soundInfo.position[2] );
          

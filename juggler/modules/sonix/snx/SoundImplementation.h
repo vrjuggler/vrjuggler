@@ -48,7 +48,7 @@
 #define SNXSOUNDIMPLEMENTATION_H
 #include <string>
 #include <map>
-#include "snx/Matrix44.h"
+#include "vrj/Math/Matrix.h"
 #include "snx/SoundInfo.h"
 #include "snx/SoundAPIInfo.h"
 
@@ -199,7 +199,7 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const snx::Matrix44& mat )
+   virtual void setListenerPosition( const vrj::Matrix& mat )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       mListenerPos.copy( mat );
@@ -208,7 +208,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( snx::Matrix44& mat )
+   virtual void getListenerPosition( vrj::Matrix& mat )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       
@@ -373,7 +373,7 @@ protected:
    /*
     * position of the observer/listener
     */
-   snx::Matrix44 mListenerPos;
+   vrj::Matrix mListenerPos;
    
    /** This class uses a std::map of sound infos for alias lookup
     * @link aggregation

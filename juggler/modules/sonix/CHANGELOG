@@ -1,5 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-24-2001 subatomic Sonix uses juggler math and vapor singleton now.
+                      NOTE, because of this change you'll need to link against
+                      Juggler, jccl, gadgeteer, and vpr libs...
+                      Once Juggler math is separated, these dependancies
+                      will drastically reduce. 
 Oct-22-2001 subatomic renamed project to sonix
 Jun-21-2001 subatomic Newest Juggler Audio is born.  Based on my previous two 
                       revisions, I've refactored the vjSoundManager into two parts.  
