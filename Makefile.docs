@@ -63,12 +63,15 @@ all:
           done
 	$(MAKE) -C modules/tweek/java -f Makefile.docs docs
 	$(MAKE) -C modules/jackal -f Makefile.docs docs
+	$(MAKE) -C modules/vrjuggler -f Makefile.docs docs
 
 install:
 	for dir in $(SUBDIR) ; do					\
             $(MAKE) -C $$dir webroot=$(webroot) install-docs || exit 1;	\
           done
 	$(MAKE) -C modules/tweek/java -f Makefile.docs install-docs
+	$(MAKE) -C modules/jackal -f Makefile.docs install-docs
+	$(MAKE) -C modules/vrjuggler -f Makefile.docs install-docs
 
 .PHONY: release
 
