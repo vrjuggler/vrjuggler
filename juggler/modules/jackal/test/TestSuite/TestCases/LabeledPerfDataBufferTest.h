@@ -10,6 +10,8 @@
 #include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
 #include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 #include <jccl/Util/Debug.h>
+#include <vpr/Thread/TSObjectProxy.h>
+#include <vpr/Thread/Thread.h>
 // #include <jccl/Config/VarValue.h>
 // #include <jccl/Config/ConfigChunk.h>
 // #include <jccl/Config/ChunkDesc.h>
@@ -58,6 +60,24 @@ public:
         double average = (ts2.usecs() - ts1.usecs())/n;
 
         std::cout << "jccl::LabeledPerfDataBuffer::set()\n";
+        std::cout << "\tOverhead = " << average << " us per call" << std::endl;
+
+        vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer> tsbuffer;
+        tsbuffer->activate();
+
+        i = n;
+
+        ts1.set();
+
+        while(i--) {
+            tsbuffer->set(jcclDBG_PERFORMANCE, "foobar");
+        }
+
+        ts2.set();
+
+        average = (ts2.usecs() - ts1.usecs())/n;
+
+        std::cout << "jccl::LabeledPerfDataBuffer::set() (Thread-specific)\n";
         std::cout << "\tOverhead = " << average << " us per call" << std::endl;
 
     }
