@@ -37,6 +37,9 @@ import java.util.Iterator;
 import javax.swing.event.EventListenerList;
 import javax.swing.undo.UndoableEditSupport;
 
+import org.vrjuggler.jccl.config.event.ConfigContextEvent;
+import org.vrjuggler.jccl.config.event.ConfigContextListener;
+
 /**
  * The ConfigContext describes a view into the resources managed by the
  * ConfigBroker. By using a context, different views may manipulate the
@@ -141,9 +144,9 @@ public class ConfigContext extends UndoableEditSupport
     *
     * @param listener      the listener to add
     */
-   public void addContextListener(ContextListener listener)
+   public void addConfigContextListener(ConfigContextListener listener)
    {
-      mListenerList.add(ContextListener.class, listener);
+      mListenerList.add(ConfigContextListener.class, listener);
    }
 
    /**
@@ -152,9 +155,9 @@ public class ConfigContext extends UndoableEditSupport
     *
     * @param listener      the listener to remove
     */
-   public void removeContextListener(ContextListener listener)
+   public void removeConfigContextListener(ConfigContextListener listener)
    {
-      mListenerList.remove(ContextListener.class, listener);
+      mListenerList.remove(ConfigContextListener.class, listener);
    }
 
    /**
@@ -165,17 +168,17 @@ public class ConfigContext extends UndoableEditSupport
     */
    protected void fireResourceAdded(String resource)
    {
-      ContextEvent evt = null;
+      ConfigContextEvent evt = null;
       Object[] listeners = mListenerList.getListenerList();
       for (int i=listeners.length-2; i>=0; i-=2)
       {
-         if (listeners[i] == ContextListener.class)
+         if (listeners[i] == ConfigContextListener.class)
          {
             if (evt == null)
             {
-               evt = new ContextEvent(this, resource);
+               evt = new ConfigContextEvent(this, resource);
             }
-            ((ContextListener)listeners[i+1]).resourceAdded(evt);
+            ((ConfigContextListener)listeners[i+1]).resourceAdded(evt);
          }
       }
    }
@@ -188,17 +191,17 @@ public class ConfigContext extends UndoableEditSupport
     */
    protected void fireResourceRemoved(String resource)
    {
-      ContextEvent evt = null;
+      ConfigContextEvent evt = null;
       Object[] listeners = mListenerList.getListenerList();
       for (int i=listeners.length-2; i>=0; i-=2)
       {
-         if (listeners[i] == ContextListener.class)
+         if (listeners[i] == ConfigContextListener.class)
          {
             if (evt == null)
             {
-               evt = new ContextEvent(this, resource);
+               evt = new ConfigContextEvent(this, resource);
             }
-            ((ContextListener)listeners[i+1]).resourceRemoved(evt);
+            ((ConfigContextListener)listeners[i+1]).resourceRemoved(evt);
          }
       }
    }
@@ -206,7 +209,7 @@ public class ConfigContext extends UndoableEditSupport
    /**
     *The list of resources in this context.
     * @link aggregation
-    *      @associates <{ContextListener}>
+    *      @associates <{ConfigContextListener}>
     */
    private List mResources;
 

@@ -35,10 +35,10 @@ import java.util.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.jccl.config.event.*;
+import org.vrjuggler.jccl.config.event.ConfigContextEvent;
+import org.vrjuggler.jccl.config.event.ConfigContextListener;
 import org.vrjuggler.jccl.config.event.ConfigElementEvent;
-import org.vrjuggler.jccl.config.ConfigEvent;
-import org.vrjuggler.jccl.config.ContextEvent;
+import org.vrjuggler.jccl.config.event.ConfigElementListener;
 
 /**
  * A data model for a configuration context. For a tree view, this
@@ -76,10 +76,10 @@ public class ConfigContextModel
       // Change the context.
       if (mContext != null)
       {
-         mContext.removeContextListener(mContextListener);
+         mContext.removeConfigContextListener(mConfigContextListener);
       }
       mContext = context;
-      mContext.addContextListener(mContextListener);
+      mContext.addConfigContextListener(mConfigContextListener);
 
       rebuildTree();
    }
@@ -491,7 +491,7 @@ public class ConfigContextModel
    private BrokerChangeListener mBrokerListener = new BrokerChangeListener();
 
    /** The custom listener for changes to the config context. */
-   private ContextChangeListener mContextListener = new ContextChangeListener();
+   private ContextChangeListener mConfigContextListener = new ContextChangeListener();
 
    /** The custom listener for changes to the elements in the context. */
    private ElementChangeListener mElementListener = new ElementChangeListener();
@@ -551,15 +551,15 @@ public class ConfigContextModel
     * Custom listener for changes to the configuration context.
     */
    private class ContextChangeListener
-      implements ContextListener
+      implements ConfigContextListener
    {
-      public void resourceAdded(ContextEvent evt)
+      public void resourceAdded(ConfigContextEvent evt)
       {
          String resource = evt.getResource();
          addElements(getBroker().getElementsIn(resource));
       }
 
-      public void resourceRemoved(ContextEvent evt)
+      public void resourceRemoved(ConfigContextEvent evt)
       {
          String resource = evt.getResource();
          removeElements(getBroker().getElementsIn(resource));
