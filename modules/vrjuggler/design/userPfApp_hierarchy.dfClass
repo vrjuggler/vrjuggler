@@ -20,6 +20,11 @@ class diagram {
 @__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigChunkPtr#)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigChunkPtr#)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
 */
 class reference {
 }/**
@@ -30,6 +35,10 @@ class reference {
 @__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::PfApp#getFrameBufferAttrs#(##)#:oiref>
 @__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::PfApp#getDrawManager#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#getFrameBufferAttrs#(##)#:oiref>
 */
 class reference3 {
 }/**
@@ -49,11 +58,11 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=130,260,130,230:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=10,260,260,230,0:oigroup>
-<oigroup:<oiref:cpp#Extends#userPfApp#vrj::PfApp:oiref>=340,368,270,368:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,240,220,0:oigroup>
-<oigroup:<oiref:cpp#Class#userPfApp:oiref>=340,290,122,157,1:oigroup>
+@__positions <oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=110,200,110,160:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=20,200,180,170,0:oigroup>
+<oigroup:<oiref:cpp#Extends#userPfApp#vrj::PfApp:oiref>=280,278,200,278:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=20,10,180,150,0:oigroup>
+<oigroup:<oiref:cpp#Class#userPfApp:oiref>=280,200,122,157,1:oigroup>
 */
 class __positions {
 }
