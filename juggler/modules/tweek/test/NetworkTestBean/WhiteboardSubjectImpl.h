@@ -55,27 +55,32 @@ class WhiteboardSubjectImpl : public POA_networktest::WhiteboardSubject,
                               public tweek::SubjectImpl
 {
 public:
-   WhiteboardSubjectImpl (void)
-      : tweek::SubjectImpl(), mText(""), mLastOffset(0), mLastLength(0),
-        mLastChange("")
+   WhiteboardSubjectImpl()
+      : tweek::SubjectImpl()
+      , mText("")
+      , mLastOffset(0)
+      , mLastLength(0)
+      , mLastChange("")
    {
       /* Do nothing. */ ;
    }
 
-   virtual ~WhiteboardSubjectImpl (void)
+   virtual ~WhiteboardSubjectImpl()
    {
       /* Do nothing. */ ;
    }
 
    virtual void insertText(CORBA::Long offset, CORBA::Long length,
-                           const char* text);
+                           const char* text)
+      throw(CORBA::SystemException);
 
    virtual void getLastChange(CORBA::Long& offset, CORBA::Long& length,
-                              CORBA::String_out text);
+                              CORBA::String_out text)
+      throw(CORBA::SystemException);
 
-   virtual char* getAllText(void);
+   virtual char* getAllText() throw(CORBA::SystemException);
 
-   WhiteboardSubject_ptr _this (void)
+   WhiteboardSubject_ptr _this()
    {
       return POA_networktest::WhiteboardSubject::_this();
    }

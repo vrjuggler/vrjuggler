@@ -58,11 +58,12 @@ IDL_CXX_FILES=	SliderSubject.cpp SliderSubject.h		\
 IDL_JAVA_FILES=	SliderSubject.java	\
 		WhiteboardSubject.java
 
-SRCS=		SliderSubject.cpp		\
-		SliderSubjectImpl.cpp		\
-		WhiteboardSubject.cpp		\
+base_srcs=	SliderSubjectImpl.cpp		\
 		WhiteboardSubjectImpl.cpp	\
 		main.cpp
+idl_srcs=	$(filter-out $(base_srcs), $(notdir $(wildcard $(CXX_GEN_DIR)/*.cpp)))
+
+SRCS=		$(base_srcs) $(idl_srcs)
 JAVA_SRCS=	networktest/NetworkTest.java			\
 		networktest/SliderObserverImpl.java		\
 		networktest/SliderSubjectHolder.java		\
