@@ -43,7 +43,16 @@ public class ChunkDescDB extends Vector {
     return false;
   }
 
-
+    public Vector getTokenBegins (String tok) {
+	ChunkDesc d;
+	Vector v = new Vector();
+	for (int i = 0; i < size(); i++) {
+	    d = (ChunkDesc)elementAt(i);
+	    if (d.token.startsWith (tok))
+		v.addElement(d);
+	}
+	return v;
+    }
 
   public ChunkDesc get (String tok) {
     for (int i = 0; i < size(); i++) {

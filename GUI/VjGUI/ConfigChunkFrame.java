@@ -28,7 +28,7 @@ GridBagLayout playout;
 GridBagConstraints pconstraints;
 
   public ConfigChunkFrame (ClientGlobals c, ConfigChunkDBPanel par, ConfigChunk ch) {
-    super("Edit " + ch.descName() + ": " + ch.chunkName());
+    super("Edit " + ch.getDescName() + ": " + ch.getName());
     Panel northpanel, southpanel, centerpanel;
 
     proppanels = new Vector();
@@ -54,7 +54,7 @@ GridBagConstraints pconstraints;
     Label l = new Label ("Instance Name: ");
     playout.setConstraints (l, pconstraints);
     northpanel.add(l);
-    namef = new TextField (chunk.chunkName(), 25);
+    namef = new TextField (chunk.getName(), 25);
     pconstraints.gridwidth = GridBagConstraints.REMAINDER;
     playout.setConstraints (namef, pconstraints);
     northpanel.add(namef);
@@ -103,6 +103,9 @@ GridBagConstraints pconstraints;
     /* this slightly convoluted process is needed in order to open a window
      * that is wide enough to show the full PropertyPanels, regardless of
      * font & label sizes etc.
+     *
+     * Window.pack() doesn't always handle the width of scrollpanels as
+     * well as I'd like.
      */
     setSize(500,500);
     setVisible(true);
@@ -112,8 +115,8 @@ GridBagConstraints pconstraints;
     //System.out.println ("panel size: " + properties.getPreferredSize());
   }
 
-  public String chunkName () {
-    return chunk.chunkName();
+  public String getName () {
+    return chunk.getName();
   }
 
   public ConfigChunk getValue() {

@@ -148,6 +148,8 @@ System.out.println ("newvalues size is " + newvalues.size());
     }
   }
 
+
+
   public void setSelected(boolean v) {
     selected = v;
     if (selected)
@@ -157,14 +159,20 @@ System.out.println ("newvalues size is " + newvalues.size());
     repaint();
   }
 
+
+
   public void toggleSelected() {
     if (!desc.name.equalsIgnoreCase("Name"))
       setSelected (!selected);
   }
 
+
+
   public boolean getSelected() {
     return selected;
   }
+
+
 
   public void itemStateChanged (ItemEvent e) {
     if (e.getSource() == varbox) {
@@ -174,6 +182,8 @@ System.out.println ("newvalues size is " + newvalues.size());
 	numfield.setEnabled(true);
     }
   }
+
+
 
   public void actionPerformed (ActionEvent e) {
     if (e.getSource() == valuelabelsbutton) {
@@ -198,6 +208,8 @@ System.out.println ("newvalues size is " + newvalues.size());
     }
   }
 
+
+
   public void closeFrames () {
     if (enumsframe != null) {
       enumsframe.closeFrame();
@@ -208,6 +220,8 @@ System.out.println ("newvalues size is " + newvalues.size());
       valuesframe = null;
     }
   }
+
+
 
   /* MouseListener stuff */
 

@@ -118,11 +118,13 @@ public class ChunkDescFrame extends Frame implements ActionListener,
      * that is wide enough to show the full PropertyPanels, regardless of
      * font & label sizes etc.
      */
-    setSize(900,500);
+    //    setSize(900,500);
+pack();
+    setSize (getSize().width, 600);
     setVisible(true);
     Dimension dim = properties.getPreferredSize();
-    setSize(dim.width + 54, 600);
-    validate();
+    //setSize(dim.width + 54, 600);
+    //validate();
 
   }
 
