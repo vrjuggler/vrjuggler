@@ -174,9 +174,15 @@ public class TweekFrame
                new GlobalPreferencesServiceProxy();
             prefs.setBeanViewer(mBeanViewer.getName());
          }
+         catch(java.io.IOException ex)
+         {
+            System.err.println("WARNING: No preferred viewer Bean can be loaded");
+            System.err.println(ex.getMessage());
+         }
          catch(RuntimeException ex)
          {
             System.err.println("WARNING: No preferred viewer Bean can be loaded");
+            System.err.println(ex.getMessage());
          }
       }
       else
@@ -324,22 +330,7 @@ public class TweekFrame
             mStatusMsgButton.setForeground(Color.red);
          }
 
-         // If the user's skill level is below intermediate, give them a hint
-         // that there is a message printed in the message panel.  They may not
-         // have noticed the icon change made above.
-         try
-         {
-            GlobalPreferencesService prefs =
-               new GlobalPreferencesServiceProxy();
-            if ( prefs.getUserLevel() <= 5 )
-            {
-               mStatusMsgLabel.setText("New message in message panel");
-            }
-         }
-         catch(RuntimeException ex)
-         {
-            ex.printStackTrace();
-         }
+         mStatusMsgLabel.setText("New message in message panel");
       }
    }
 
@@ -371,80 +362,90 @@ public class TweekFrame
 
    public void globalPrefsSaved(GlobalPrefsUpdateEvent e)
    {
-      // XXX: It might be good to catch the exception thrown if this cannot be
-      // instantiated ...
-      GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
-
-      // Save this for later.
-      int old_level = prefs.getUserLevel();
-
-      String viewer = prefs.getBeanViewer();
-
-      ViewerBean bean = (ViewerBean)BeanRegistry.instance().getBean( viewer );
-
-      // Verify that the viewer lookup did not fail.
-      // XXX: There should be a check here to compare the existing viewer
-      // with the selected viewer.  If they are the same, do not do the
-      // replacement.
-      if ( null != bean )
+      try
       {
-         mBeanContainer.replaceViewer(bean.getViewer());
-      }
+         GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
 
-      String new_laf = prefs.getLookAndFeel();
-      String old_laf = UIManager.getLookAndFeel().getName();
+         // Save this for later.
+         int old_level = prefs.getUserLevel();
 
-      if ( ! old_laf.equals(new_laf) )
-      {
-         try
+         String viewer = prefs.getBeanViewer();
+
+         ViewerBean bean = (ViewerBean)BeanRegistry.instance().getBean(viewer);
+
+         // Verify that the viewer lookup did not fail.
+         // XXX: There should be a check here to compare the existing viewer
+         // with the selected viewer.  If they are the same, do not do the
+         // replacement.
+         if ( null != bean )
          {
-            UIManager.setLookAndFeel(new_laf);
-            SwingUtilities.updateComponentTreeUI(this);
+            mBeanContainer.replaceViewer(bean.getViewer());
+         }
 
-            // Update all the loaded Beans.
-            List beans = BeanRegistry.instance().getBeansOfType(PanelBean.class.getName());
-            Iterator i = beans.iterator();
-            PanelBean cur_bean;
+         String new_laf = prefs.getLookAndFeel();
+         String old_laf = UIManager.getLookAndFeel().getName();
 
-            while ( i.hasNext() )
+         if ( ! old_laf.equals(new_laf) )
+         {
+            try
             {
-               cur_bean = (PanelBean) i.next();
+               UIManager.setLookAndFeel(new_laf);
+               SwingUtilities.updateComponentTreeUI(this);
 
-               if ( null != cur_bean.getComponent() )
+               // Update all the loaded Beans.
+               List beans =
+                  BeanRegistry.instance().getBeansOfType(PanelBean.class.getName());
+               Iterator i = beans.iterator();
+               PanelBean cur_bean;
+
+               while ( i.hasNext() )
                {
-                  SwingUtilities.updateComponentTreeUI(cur_bean.getComponent());
+                  cur_bean = (PanelBean) i.next();
+
+                  if ( null != cur_bean.getComponent() )
+                  {
+                     SwingUtilities.updateComponentTreeUI(cur_bean.getComponent());
+                  }
                }
             }
+            catch (Exception laf_e)
+            {
+               // Set the look and feel back to the old value because the
+               // newly chosen setting isn't valid.
+               prefs.setLookAndFeel(old_laf);
+               prefs.save();
+               JOptionPane.showMessageDialog(this,
+                                             "Invalid look and feel '" +
+                                                new_laf + "'",
+                                             "Bad Look and Feel Setting",
+                                             JOptionPane.ERROR_MESSAGE);
+            }
          }
-         catch (Exception laf_e)
+
+         // If the user level changed, fire an event saying as much.
+         if ( old_level != prefs.getUserLevel() )
          {
-            // Set the look and feel back to the old value because the
-            // newly chosen setting isn't valid.
-            prefs.setLookAndFeel(old_laf);
-            prefs.save();
-            JOptionPane.showMessageDialog(null,
-                                          "Invalid look and feel '" + new_laf + "'",
-                                          "Bad Look and Feel Setting",
-                                          JOptionPane.ERROR_MESSAGE);
+            mBeanContainer.fireUserLevelChange(old_level,
+                                               prefs.getUserLevel());
+         }
+
+         // Handle resizing this frame if necessary.
+         int window_width  = prefs.getWindowWidth();
+         int window_height = prefs.getWindowHeight();
+
+         Dimension cur_size = this.getSize();
+
+         if ( cur_size.width != window_width ||
+              cur_size.height != window_height )
+         {
+            this.setSize(window_width, window_height);
          }
       }
-
-      // If the user level changed, fire an event saying as much.
-      if ( old_level != prefs.getUserLevel() )
+      catch(Exception ex)
       {
-         mBeanContainer.fireUserLevelChange(old_level,
-                                            prefs.getUserLevel());
-      }
-
-      // Handle resizing this frame if necessary.
-      int window_width  = prefs.getWindowWidth();
-      int window_height = prefs.getWindowHeight();
-
-      Dimension cur_size = this.getSize();
-
-      if ( cur_size.width != window_width || cur_size.height != window_height )
-      {
-         this.setSize(window_width, window_height);
+         // There is no need to do anything here.  If the GlobalPreferences
+         // Bean is not available, the menu option will be disabled, thus
+         // preventing this method from ever being executed.
       }
    }
 
@@ -537,7 +538,19 @@ public class TweekFrame
       // Define the Edit Global option in the Preferences menu.
       if ( ! mMacOS )
       {
+         boolean global_prefs_enabled = true;
+
+         try
+         {
+            new GlobalPreferencesServiceProxy();
+         }
+         catch(Exception ex)
+         {
+            global_prefs_enabled = false;
+         }
+
          mMenuPrefsGlobalEdit.setText("Edit Global ...");
+         mMenuPrefsGlobalEdit.setEnabled(global_prefs_enabled);
          mMenuPrefsGlobalEdit.addActionListener(new ActionListener()
             {
                public void actionPerformed (ActionEvent e)
@@ -924,14 +937,24 @@ public class TweekFrame
     */
    private void prefsEditGlobal(ActionEvent e)
    {
-      GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
+      try
+      {
+         GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
 
-      // Save this for later.
-      int old_level = prefs.getUserLevel();
+         // Save this for later.
+         int old_level = prefs.getUserLevel();
 
-      PrefsDialog dialog = new PrefsDialog(this, "Global Preferences", prefs);
-      dialog.addGlobalPrefsUpdateListener(this);
-      dialog.show();
+         PrefsDialog dialog = new PrefsDialog(this, "Global Preferences",
+                                              prefs);
+         dialog.addGlobalPrefsUpdateListener(this);
+         dialog.show();
+      }
+      catch(Exception ex)
+      {
+         // There is no need to do anything here.  If the GlobalPreferences
+         // Bean is not available, the menu option will be disabled, thus
+         // preventing this method from ever being executed.
+      }
    }
 
    private void prefsEditBean (ActionEvent e)

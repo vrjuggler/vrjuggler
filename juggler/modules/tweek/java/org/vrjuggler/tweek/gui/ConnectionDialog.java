@@ -80,7 +80,7 @@ public class ConnectionDialog extends JDialog
       mNSHostField.getDocument().addDocumentListener(new AddressFieldValidator());
       mNSPortField.getDocument().addDocumentListener(new AddressFieldValidator());
 
-      this.mSubjectMgrList.addListSelectionListener(new SubjectMgrListSelectionListener());
+      this.mSubjectMgrList.addListSelectionListener(new SubjectMgrListSelectionListener(this));
 
       // Set defaults for the Naming Service host and the port number.
       try
@@ -92,9 +92,12 @@ public class ConnectionDialog extends JDialog
          mNSIiopVerField.setText(String.valueOf(prefs.getDefaultIiopVersion()));
       }
       // D'oh!  No defaults can be set.
-      catch(RuntimeException ex)
+      catch(Exception ex)
       {
-         ex.printStackTrace();
+         JOptionPane.showMessageDialog(this, "Could not set defaults '" +
+                                       ex.getMessage() + "'",
+                                       "Tweek GlobalPreferences Exception",
+                                       JOptionPane.WARNING_MESSAGE);
       }
 
       // At this point, we may have valid Naming Service connection
@@ -460,7 +463,7 @@ public class ConnectionDialog extends JDialog
          mNSRefreshButton.setEnabled(false);
 
          // Pop up a dialog stating that the connection failed.
-         JOptionPane.showMessageDialog(null, "CORBA System Exception: '" +
+         JOptionPane.showMessageDialog(this, "CORBA System Exception: '" +
                                        sys_ex.getMessage() + "'",
                                        "CORBA System Exception",
                                        JOptionPane.ERROR_MESSAGE);
@@ -615,6 +618,11 @@ public class ConnectionDialog extends JDialog
    private class SubjectMgrListSelectionListener
       implements ListSelectionListener
    {
+      public SubjectMgrListSelectionListener(JDialog parent)
+      {
+         mParentDialog = parent;
+      }
+
       public void valueChanged(ListSelectionEvent e)
       {
          // Pull the tweek.SubjectManager reference from the list.
@@ -661,12 +669,14 @@ public class ConnectionDialog extends JDialog
                   msg += ": '" + commEx.getMessage() + "'";
                }
 
-               JOptionPane.showMessageDialog(null, msg,
+               JOptionPane.showMessageDialog(mParentDialog, msg,
                                              "CORBA Communication Exception",
                                              JOptionPane.ERROR_MESSAGE);
             }
          }
       }
+
+      private JDialog mParentDialog = null;
    }
 
    // Attributes that may be queried by the class that instantiated us.

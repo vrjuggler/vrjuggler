@@ -37,6 +37,7 @@
 package org.vrjuggler.tweek.mac;
 
 import com.apple.eawt.*;
+import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
 import org.vrjuggler.tweek.gui.TweekFrame;
 
 
@@ -47,7 +48,18 @@ public class TweekAppListener extends ApplicationAdapter
       mFrame = f;
       Application app = Application.getApplication();
       app.addApplicationListener(this);
-      app.setEnabledPreferencesMenu(true);
+
+      // Only enable the "Preferences" menu if the GlobalPreferences Service
+      // Bean is available.
+      try
+      {
+         new GlobalPreferencesServiceProxy();
+         app.setEnabledPreferencesMenu(true);
+      }
+      catch(Exception)
+      {
+         app.setEnabledPreferencesMenu(false);
+      }
    }
 
    public void handleAbout(ApplicationEvent e)

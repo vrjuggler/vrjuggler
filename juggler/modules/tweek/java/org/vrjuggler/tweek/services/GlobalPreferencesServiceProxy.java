@@ -57,6 +57,7 @@ public class GlobalPreferencesServiceProxy
     */
    public GlobalPreferencesServiceProxy()
       throws RuntimeException
+           , java.io.IOException
    {
       TweekBean bean = BeanRegistry.instance().getBean("GlobalPreferences");
 

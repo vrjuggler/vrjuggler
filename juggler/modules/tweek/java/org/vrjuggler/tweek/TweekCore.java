@@ -104,15 +104,23 @@ public class TweekCore
       // GlobalPreferencesService class does not load them automatically.  This
       // must happen after the command line arguments have been parsed so that
       // the user can specify an alternate preferences file.
-      GlobalPreferencesService global_prefs =
-         new GlobalPreferencesServiceProxy();
-      global_prefs.load();
+      try
+      {
+         GlobalPreferencesService global_prefs =
+            new GlobalPreferencesServiceProxy();
+         global_prefs.load();
 
-      // Set the look and feel now so that any GUI components that are
-      // instantiated hereafter will have the correct look and feel.
-      // XXX: If there are GUI components loaded statically (see above), they
-      // will need to be updated.
-      setLookAndFeel(global_prefs);
+         // Set the look and feel now so that any GUI components that are
+         // instantiated hereafter will have the correct look and feel.
+         // XXX: If there are GUI components loaded statically (see above),
+         // they will need to be updated.
+         setLookAndFeel(global_prefs);
+      }
+      catch(java.io.IOException ex)
+      {
+         // This exception should never be thrown because failure to
+         // register to GlobalPreferences Service Bean is a fatal error.
+      }
 
       // Register the command-line arguments with the Environment Service (if
       // it is available).
@@ -200,9 +208,18 @@ public class TweekCore
             new BeanAttributes( "Environment" ) ) );
 
       // global preferences service
-      registry.registerBean( new GlobalPreferencesServiceImpl(
-            new BeanAttributes( "GlobalPreferences" ) ) );
-
+      try
+      {
+         registry.registerBean( new GlobalPreferencesServiceImpl(
+               new BeanAttributes( "GlobalPreferences" ) ) );
+      }
+      catch(java.io.IOException ex)
+      {
+         System.err.println("FATAL ERROR: Could not register " +
+                            "GlobalPreferences Service Bean!");
+         System.err.println(ex.getMessage());
+         System.exit(1);
+      }
    }
 
    /**
@@ -265,15 +282,24 @@ public class TweekCore
          // Try to instantiate the Bean.
          try
          {
+            boolean lazy_inst = true;
+
             // This service is loaded statically, so we do not have to worry
             // about finding the Bean first.
-            GlobalPreferencesService prefs =
-               new GlobalPreferencesServiceProxy();
+            try
+            {
+               GlobalPreferencesService prefs =
+                  new GlobalPreferencesServiceProxy();
+               lazy_inst = prefs.getLazyPanelBeanInstantiation();
+            }
+            catch(java.io.IOException ioEx)
+            {
+            }
 
             // If the current Bean is not a Panel Bean or the user has disabled
             // lazy Panel Bean instantiation, we can instantiate the Bean.
             if ( ! (bean instanceof org.vrjuggler.tweek.beans.PanelBean) ||
-                 ! prefs.getLazyPanelBeanInstantiation() )
+                 ! lazy_inst )
             {
                bean.instantiate();
             }
