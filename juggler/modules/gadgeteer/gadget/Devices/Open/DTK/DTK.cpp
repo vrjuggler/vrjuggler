@@ -38,8 +38,6 @@
 #include <dtk.h>
 #include <dlfcn.h>
 
-#include <Math/vjCoord.h>
-#include <Math/vjQuat.h>
 #include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
 #include <Input/vjDTK/vjDTK.h>
