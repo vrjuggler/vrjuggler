@@ -39,6 +39,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef __APPLE__
+
 #include <string>
 #include <iostream>
 #include "snx/ISoundImplementation.h"
@@ -73,3 +75,5 @@ void SoundFactory::createImplementation( const std::string& apiName,
 }
 
 }; // end namespace
+
+#endif //stub out on OS X
