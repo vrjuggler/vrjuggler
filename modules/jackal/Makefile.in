@@ -126,8 +126,9 @@ BUILD_VJCONTROL	= @BUILD_VJCONTROL@
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR          = VjControl          \
-                  jccl/Config      
+SUBDIR		= jccl
+#SUBDIR          = VjControl          \
+#                  jccl/Config      
 # \
 #                  jccl/JackalServer \
 #                  jccl/Performance  \

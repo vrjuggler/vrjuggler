@@ -548,7 +548,7 @@ AC_SUBST(jccl_extra_libs)
 # Final file generation step.
 # -----------------------------------------------------------------------------
 
-VJ_MTREE_LIB_GEN(VJ, release/mtree, $PLATFORM, $ISA)
+VJ_MTREE_LIB_GEN(JCCL, mtree, $PLATFORM, $ISA)
 
 AC_OUTPUT(Makefile
           Makefile.inc
@@ -556,6 +556,7 @@ AC_OUTPUT(Makefile
           make.defs.mk
           jccl/Makefile
           jccl/Config/Makefile
+          jccl/XMLUtil/Makefile
           jccl/JackalServer/Makefile
           jccl/Performance/Makefile
           VjControl/Makefile
@@ -565,6 +566,12 @@ AC_OUTPUT(Makefile
           test/Makefile 
           test/TestSuite/Makefile
           test/CfgTest/Makefile
+          mtree/JCCL.data.dist
+          mtree/JCCL.include.dist
+          mtree/JCCL.install.dist
+          mtree/JCCL.samples.dist
+          mtree/JCCL.test.dist
+          mtree/JCCL.tools.dist
           VARS.pl)
 
 cat <<BUILD_INFO

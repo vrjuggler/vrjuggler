@@ -287,10 +287,10 @@ pre-install:
 
 # Do everything needed after installing the library binaries.
 post-install:
-	@$(MAKE) install-samples
-	@$(MAKE) install-test
-	@$(MAKE) install-tools
-	@$(MAKE) install-data
+#	@$(MAKE) install-samples
+#	@$(MAKE) install-test
+#	@$(MAKE) install-tools
+#	@$(MAKE) install-data
 	@$(MAKE) install-vjcontrol
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/jccl-config $(bindir)
@@ -303,11 +303,11 @@ pre-install-headers:
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/jccl/jcclConfig.h $(includedir)
+          $(JCCLROOT_ABS)/jccl/jcclConfig.h $(includedir)/jccl/
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/jccl/jcclDefines.h $(includedir)
+          $(topdir)/jccl/jcclDefines.h $(includedir)/jccl/
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/jccl/jcclParam.h $(includedir)
+          $(topdir)/jccl/jcclParam.h $(includedir)/jccl/
 
 # Install the sample applications.
 install-samples:
@@ -337,20 +337,20 @@ install-test:
           --startdir="$(top_srcdir)/test" $(_GROUP_OPT_PL) --srcdir="."
 
 # Install the user tools code.
-#install-tools:
-#	@echo "------------------------------------------------"
-#	@echo "Installing user tools"
-#	@echo "------------------------------------------------"
-#	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-#	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.tools.dist -p $(datadir)
-#	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/tools	\
-#          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/tools
-#	$(PERL) $(scriptdir)/makefiles-gen.pl				\
-#          --prefix="$(datadir)/tools" --vars="$(topdir)/VARS.pl"	\
-#          --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
-#          $(_GROUP_OPT_PL) --srcdir="."
-#	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-#          $(JCCLROOT_ABS)/tools/catadf.pl $(bindir)/catadf.pl
+install-tools:
+	@echo "------------------------------------------------"
+	@echo "Installing user tools"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.tools.dist -p $(datadir)
+	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/tools	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/tools
+	$(PERL) $(scriptdir)/makefiles-gen.pl				\
+          --prefix="$(datadir)/tools" --vars="$(topdir)/VARS.pl"	\
+          --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
+          $(_GROUP_OPT_PL) --srcdir="."
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(JCCLROOT_ABS)/tools/catadf.pl $(bindir)/catadf.pl
 
 # Install the standard data files.
 install-data:
