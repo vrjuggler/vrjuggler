@@ -197,11 +197,13 @@ namespace vpr
 
    struct DebugCategory
    {
-      DebugCategory(vpr::GUID guid, std::string name, std::string prefix)
+      DebugCategory(const vpr::GUID& guid, const std::string& name,
+                    const std::string& prefix)
+         : mGuid(guid)
+         , mName(name)
+         , mPrefix(prefix)
       {
-         mGuid = guid;
-         mName = name;
-         mPrefix = prefix;
+         /* Do nothing. */ ;
       }
 
       vpr::GUID   mGuid;
@@ -210,9 +212,9 @@ namespace vpr
    };
 
 
-/**
- * Class to support debug output
- */
+   /**
+    * Class to support debug output
+    */
    class VPR_CLASS_API Debug
    {
    protected:
@@ -222,8 +224,8 @@ namespace vpr
       Debug();
 
       // These two have to be here because Visual C++ will try to make them
-      // exported public symbols.  This causes problems because copying vpr::Mutex
-      // objects is not allowed.
+      // exported public symbols.  This causes problems because copying
+      // vpr::Mutex objects is not allowed.
       Debug(const Debug& d) {;}
       void operator= (const Debug& d) {;}
 
@@ -233,10 +235,12 @@ namespace vpr
    public:
 
       void setOutputFile(const std::string& output);
-      
+
       // Get the debug stream to use
-      std::ostream& getStream(const vpr::DebugCategory& cat, const int level, const bool show_thread_info = true,
-                              const bool use_indent = true, const int indentChange = 0,
+      std::ostream& getStream(const vpr::DebugCategory& cat, const int level,
+                              const bool show_thread_info = true,
+                              const bool use_indent = true,
+                              const int indentChange = 0,
                               const bool lockStream = true);
 
       int getLevel()
@@ -272,20 +276,30 @@ namespace vpr
          std::cout << clrRESET;     // Reset colors
       }
 
-      // Thread local settings: Columns and color
+      //@{
+      /** Thread local settings: Columns and color. */
       void pushThreadLocalColumn(int column);
       void popThreadLocalColumn();
       void pushThreadLocalColor(std::string color);
       void popThreadLocalColor();
+      //@}
 
       //@{
-      /** Is debuging enabled */
+      /** Is debugging enabled? */
       bool isDebugEnabled()
-      { return mDebugEnabled;}
+      {
+         return mDebugEnabled;
+      }
+
       void enableOutput()
-      { mDebugEnabled = true;}
+      {
+         mDebugEnabled = true;
+      }
+
       void disableOutput()
-      { mDebugEnabled = false;}
+      {
+         mDebugEnabled = false;
+      }
       //@}
 
       /** Dump the current status to screen. */
@@ -306,19 +320,22 @@ namespace vpr
 
       bool  mUseThreadLocal;  //! Whether to use thread local info or not
 
-      Mutex          mDebugLock;
+      Mutex mDebugLock;
 
       //std::vector<bool> mAllowedCategories;      //! The categories we allow
-   
-      
+
       struct CategoryInfo
       {
          /*CategoryInfo()
           : mName("un-named"), mPrefix("unset"), mAllowed(false)
          {;}*/
 
-         CategoryInfo(std::string name, std::string prefix, bool allowed, bool disallowed)
-          : mName(name), mPrefix(prefix), mAllowed(allowed), mDisallowed(disallowed)
+         CategoryInfo(const std::string& name, const std::string& prefix,
+                      const bool allowed, const bool disallowed)
+            : mName(name)
+            , mPrefix(prefix)
+            , mAllowed(allowed)
+            , mDisallowed(disallowed)
          {;}
 
          std::string mName;         /**< What is the name of the category */
@@ -386,7 +403,6 @@ namespace vpr
 
 namespace vpr
 {
-   
 /*
    struct DebugCatRegistrator
    {
@@ -395,7 +411,7 @@ namespace vpr
          vpr::Debug::instance()->addCategory(catGuid, catName, catPrefix);
       }
    };
-   */
+*/
 } // namespace
 
 /** Helper macro for registering category
@@ -413,5 +429,5 @@ const vpr::DebugCategory vprDBG_ALL(vpr::GUID("660b4b06-1f5b-4e4b-abb8-d44229ce1
 const vpr::DebugCategory vprDBG_ERROR(vpr::GUID("b081eb68-0a61-4a65-a0a1-dd3ccc90a82b"), "DBG_ERROR", "ERR:");   /* Error output */
 const vpr::DebugCategory vprDBG_SIM(vpr::GUID("64872313-a5b7-4d1d-b7a3-5f269b4adde4"), "DBG_SIM", "SIM:");   /* Sim output */
 const vpr::DebugCategory vprDBG_VPR(vpr::GUID("28648014-ec63-4707-90e3-76a3ea450036"), "DBG_VPR", "VPR:");
-                                     
+
 #endif
