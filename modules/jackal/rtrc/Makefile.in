@@ -31,171 +31,22 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for rtrc.  It requires GNU make.
+# Makefile.in for jackal/rtrc.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-default: all
-
-# This is a hack to deal with GNU make's ignorance about defined targets.
-# Without this, the 'default' set in dpp.subdir.mk becomes the default
-# target, and that's not what we want.
-DEFAULT_SET=	1
-
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-STARTTIME:=	$(shell LC_TIME=C date)
-
-BUILD_PROF_C=	@BUILD_PROF_C@
-BUILD_PROF_CXX=	@BUILD_PROF_CXX@
-
-# If we can build both C and C++ profiled objects, we will build profiled
-# libraries.
-ifeq ($(BUILD_PROF_C), Y)
-ifeq ($(BUILD_PROF_CXX), Y)
-   BUILD_PROF_LIBS=	1
-endif
-endif
-
-beandir=		$(bindir)/beans
-srcdir=			@srcdir@
-top_srcdir=		@top_srcdir@
-EXTRA_SRCS_PATH=	$(srcdir)/jccl/RTRC
-INSTALL=		@INSTALL@
-INSTALL_FILES=		
-
-IDL_GENDIR=		.
-JAVA_IDL_OPTS=		@TWEEK_JAVA_IDL_OPTS@ @TWEEK_JAVA_IDL_GENDIR_OPT@$(IDL_GENDIR)
-
-EXTRA_JAVA_SRCS_PATH=	$(IDL_GENDIR)/jccl
-
-#include $(MKPATH)/dpp.compile.mk
-
-# -----------------------------------------------------------------------------
-# Java-related setup
-# -----------------------------------------------------------------------------
-JARS=		
-BEANS=	        jccl_rtrc
-
-IDL_JAVA_FILES=	RTRCInterfaceSubject.java
-
-_LOCAL_CLEAN=	1
-
-# -----------------------------------------------------------------------------
-# C++-related setup
-# Just recurse to the sub directories and then link to a static library.
-# -----------------------------------------------------------------------------
-STATICLIB_EXT=	@STATICLIB_EXT@
-DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
-
-#LIBS=		$(JCCL_RTRC_LIBRARY)
-#STATIC_LIBS=	$(LIBS)
-#DYNAMIC_LIBS=	$(LIBS)
-
-JCCL_RTRC_LIB_STATIC=		$(JCCL_RTRC_LIBRARY).$(STATICLIB_EXT)
-JCCL_RTRC_LIB_DYNAMIC=		$(JCCL_RTRC_LIBRARY).$(DYNAMICLIB_EXT)
-JCCL_RTRC_PROF_LIB_STATIC=	$(JCCL_RTRC_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
-JCCL_RTRC_PROF_LIB_DYNAMIC=	$(JCCL_RTRC_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
-
-
-include $(MKPATH)/dpp.libs-basic.mk
-include $(MKPATH)/dpp.obj-common.mk
-include $(MKPATH)/dpp.idl.mk
-include $(MKPATH)/dpp.clean.mk
-
-# -----------------------------------------------------------------------------
-# Recursive make setup
-# -----------------------------------------------------------------------------
+# Prefix for recursive stuff.
 DIRPRFX=	rtrc/
+
+# Subdirectories used for recursion through the source tree.
 SUBDIR=		jccl
+
 $(RECTARGET): recursive
+
 include $(MKPATH)/dpp.subdir.mk
 
-# -----------------------------------------------
-# Construct the static version of the libraries.
-# -----------------------------------------------
-$(LIBDIR)/$(JCCL_RTRC_LIB_STATIC) $(LIBDIR)/$(JCCL_RTRC_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
-ifneq (@OS_TYPE@, Win32)
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
-	$(RANLIB) $@
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
-	cd $(OBJDIR) && rm -rf ii_files
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-endif
-
-# ------------------------------------------------
-# Construct the dynamic version of the libraries.
-# ------------------------------------------------
-$(LIBDIR)/$(JCCL_RTRC_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_RTRC_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
-	cd $(OBJDIR) && rm -rf ii_files
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-
-# -----------------------------------------------------------------------------
-# Uses ant to build the java classes and JARs
-# -----------------------------------------------------------------------------
-java:
-	@echo "------------------------------------------------"
-	@echo "Building java sources"
-	@echo "------------------------------------------------"
-	$(ANT)
-
-BUILD_JAVA=	@BUILD_JAVA@
-
-_clean:
-ifeq ($(BUILD_JAVA), Y)
-	$(ANT) clean
-endif
-
-RTRCInterfaceSubject.java: RTRCInterfaceSubject.idl
-	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $<
-
-# -----------------------------------------------------------------------------
-# Extra targets.
-# -----------------------------------------------------------------------------
-# This cannot be named 'install' because Doozer++ already defines that.
-rtrc-install:
-	@echo "------------------------------------------------"
-	@echo "Installing the JCCL config Java code base"
-	@echo "------------------------------------------------"
-ifneq ($(JARS), )
-	for jar in $(JARS) ; \
-          do \
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(EXTRA_INSTALL_ARGS) $(topdir)/rtrc/$$jar $(bindir) \
-              || exit 1; \
-          done
-endif
-ifneq ($(BEANS), )
-	for bean in $(BEANS) ; \
-          do \
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(EXTRA_INSTALL_ARGS) $(topdir)/rtrc/$$bean.jar $(beandir) \
-              || exit 1; \
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(EXTRA_INSTALL_ARGS) $(top_srcdir)/rtrc/$$bean.xml \
-                  $(beandir) || exit 1; \
-          done
-endif
-
-
-ifdef GLOBAL_BUILD
-   CLEAN_DIRS+=	$(top_srcdir)/bin
-endif
-
-include Makefile.inc
+java-install:

@@ -42,7 +42,7 @@ import org.vrjuggler.jccl.config.io.*;
 import jccl.*;
 
 /**
- * This is a DataSource implementation that uses the RTRCInterfaceSubject to
+ * This is a DataSource implementation that uses the RemoteReconfigSubject to
  * communicate with a running VR Juggler application in order reconfigure it.
  *
  * @version 1.0
@@ -51,9 +51,10 @@ public class RTRCDataSource
    implements DataSource, ConfigElementListener, ConfigListener
 {
    /**
-    * Creates a data source for a new RTRCInterfaceSubject.
+    * Creates a data source for a new RemoteReconfigSubject.
     */
-   public RTRCDataSource(ConfigDefinitionRepository repos, RTRCInterfaceSubject subject)
+   public RTRCDataSource(ConfigDefinitionRepository repos,
+                         RemoteReconfigSubject subject)
    {
       mDefinitionRepos = repos;
       mSubject = subject;
@@ -85,7 +86,7 @@ public class RTRCDataSource
    }
 
    /**
-    * Loads the data from the application using the RTRCInferfaceSubject.
+    * Loads the data from the application using the RemoteReconfigSubject.
     *
     * @throws IOException
     *             if there was a problem parsing the string from CORBA
@@ -381,5 +382,5 @@ public class RTRCDataSource
    /** The repository from which configuration definitions are retrieved. */
    private ConfigDefinitionRepository mDefinitionRepos = null;
    /** The CORBA Subject that is used to communicate with the appliation */
-   private RTRCInterfaceSubject mSubject = null;
+   private RemoteReconfigSubject mSubject = null;
 }

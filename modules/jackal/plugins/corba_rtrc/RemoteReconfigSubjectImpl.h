@@ -30,14 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _JCCL_RTRC_INTERFACE_SUBJECT_IMPL_H_
-#define _JCCL_RTRC_INTERFACE_SUBJECT_IMPL_H_
-
-#include <jccl/jcclConfig.h>
+#ifndef _JCCL_REMOTE_RECONFIG_SUBJECT_IMPL_H_
+#define _JCCL_REMOTE_RECONFIG_SUBJECT_IMPL_H_
 
 #include <tweek/CORBA/SubjectImpl.h>
 
-#include <jccl/RTRC/RTRCInterfaceSubject.h>
+#include <RemoteReconfigSubject.h>
 
 
 namespace jccl 
@@ -45,19 +43,20 @@ namespace jccl
 
 /** CORBA interface subject implementation to the dynamic reconfiguration 
  *  management plugin. Use these functions to view and modify the elements in
- *  the config manager.
+ *  the Config Manager.
  *
  *  @date July 31, 2002
  */
-class JCCL_CLASS_API RTRCInterfaceSubjectImpl
-   : public POA_jccl::RTRCInterfaceSubject, public tweek::SubjectImpl
+class RemoteReconfigSubjectImpl
+   : public POA_jccl::RemoteReconfigSubject
+   , public tweek::SubjectImpl
 {
 public:
 
-   RTRCInterfaceSubjectImpl()
+   RemoteReconfigSubjectImpl()
    {;}
 
-   ~RTRCInterfaceSubjectImpl()
+   ~RemoteReconfigSubjectImpl()
    {;}
 
    /**
@@ -93,9 +92,9 @@ public:
     *
     * XXX: It may be possible to remove this requirement in the future.
     */
-   jccl::RTRCInterfaceSubject_ptr _this()
+   jccl::RemoteReconfigSubject_ptr _this()
    {
-      return POA_jccl::RTRCInterfaceSubject::_this();
+      return POA_jccl::RemoteReconfigSubject::_this();
    }
 
 //private:

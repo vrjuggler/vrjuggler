@@ -30,23 +30,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _RTRC_SUBJECT_IDL_
-#define _RTRC_SUBJECT_IDL_
+#ifndef _REMOTE_RECONFIG_SUBJECT_IDL
+#define _REMOTE_RECONFIG_SUBJECT_IDL
 
 #include <tweek/idl/Subject.idl>
 
 module jccl
 {
 
-   interface RTRCInterfaceSubject : tweek::Subject
+   interface RemoteReconfigSubject : tweek::Subject
    {
-      void add( in string configurationString );
-      void remove( in string configurationString );
-      void swap( in string addConfigurationString,
-                 in string removeConfigurationString );
+      void add(in string configurationString);
+      void remove(in string configurationStrin );
+      void swap(in string addConfigurationString,
+                in string removeConfigurationString);
       string getElements();
       string getDefinitions();
-
    };
 
 };
