@@ -272,7 +272,7 @@ public:
      *         
      * @see vpr::SerialTypes::UpdateActionOption
      */
-    inline SerialTypes::UpdateActionOption
+    inline vpr::SerialTypes::UpdateActionOption
     getUpdateAction (void) {
         return m_sio_imp.getUpdateAction();
     }
@@ -290,7 +290,7 @@ public:
      * @see vpr::SerialTypes::UpdateActionOption
      */
     inline void
-    setUpdateAction (SerialTypes::UpdateActionOption action) {
+    setUpdateAction (vpr::SerialTypes::UpdateActionOption action) {
         m_sio_imp.setUpdateAction(action);
     }
 
@@ -391,7 +391,7 @@ public:
      * @see vpr::SerialTypes::CharacterSizeOption
      */
     inline vpr::Status
-    getCharacterSize (SerialTypes::CharacterSizeOption& size) {
+    getCharacterSize (vpr::SerialTypes::CharacterSizeOption& size) {
         return m_sio_imp.getCharacterSize(size);
     }
 
@@ -412,7 +412,7 @@ public:
      * @see vpr::SerialTypes::CharacterSizeOption
      */
     inline vpr::Status
-    setCharacterSize (const SerialTypes::CharacterSizeOption bpb) {
+    setCharacterSize (const vpr::SerialTypes::CharacterSizeOption bpb) {
         return m_sio_imp.setCharacterSize(bpb);
     }
 
