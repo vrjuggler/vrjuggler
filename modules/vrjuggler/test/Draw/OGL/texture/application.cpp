@@ -34,7 +34,7 @@
 
 //: Constructor
 TextureDemoApplication::TextureDemoApplication( vrj::Kernel* kern )
-   : timer(), vrj::GlApp( kern ), x( 0.0f )
+   : vrj::GlApp(kern), x(0.0f), timer()
 {
    // associate the textureObj ID with the actual texture.
    TextureDemoApplication::setTexObjID( mCubeTexture, mCubeTextureObj );

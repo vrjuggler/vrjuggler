@@ -70,12 +70,9 @@ void torusApp::draw()
    gmtl::Vec4f wand_trans( gmtl::makeTrans<gmtl::Vec4f>(wand_pos) );
 
    // Set light position
-   GLfloat light0_position[] = {6.0, 6,0, 6.0, 1.0};
-   //glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
-   glLightfv(GL_LIGHT0, GL_POSITION,  wand_trans.mData);
-
-   //// Draw a doughnut on the wand
-
+   //GLfloat light0_position[] = {6.0, 6,0, 6.0, 1.0};
+   //glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
+   glLightfv(GL_LIGHT0, GL_POSITION, wand_trans.mData);
 
    // Set material color
    float onyx_red = 59.0f/255.0f;

@@ -139,7 +139,7 @@ void simpleGloveApp::initGLState()
    GLfloat mat_diffuse[] = { 1.0,  0.5,  0.8,  1.0};
    GLfloat mat_specular[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat mat_shininess[] = { 50.0};
-   GLfloat mat_emission[] = { 1.0,  1.0,  1.0,  1.0};
+//   GLfloat mat_emission[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat no_mat[] = { 0.0,  0.0,  0.0,  1.0};
 
    glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
