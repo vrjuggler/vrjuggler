@@ -46,7 +46,8 @@
 #include <vpr/md/NSPR/IO/Socket/InetAddrNSPR.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
 
-namespace vpr {
+namespace vpr
+{
 
 const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults to ANY addr
 
@@ -55,70 +56,70 @@ const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults t
 // form <address>:<port> where <address> can be a hostname or a dotted-decimal
 // IP address.
 // ----------------------------------------------------------------------------
-ReturnStatus
-InetAddrNSPR::setAddress (const std::string& address) {
+vpr::ReturnStatus InetAddrNSPR::setAddress (const std::string& address)
+{
    std::string::size_type pos;
    std::string host_addr, host_port;
-   Uint16 port;
-   ReturnStatus retval;
+   vpr::Uint16 port;
+   vpr::ReturnStatus retval;
 
    // Extract the address and the port number from the given string.
    pos       = address.find(":");
    host_addr = address.substr(0, pos);
    host_port = address.substr(pos + 1);
-   port      = (Uint16) atoi(host_port.c_str());
+   port      = (vpr::Uint16) atoi(host_port.c_str());
 
    retval = lookupAddress(host_addr);
    setPort(port);
-   setFamily(SocketTypes::INET);
+   setFamily(vpr::SocketTypes::INET);
    return retval;
 }
 
 // ----------------------------------------------------------------------------
 // Get the protocol family of this address structure.
 // ----------------------------------------------------------------------------
-SocketTypes::Domain
-InetAddrNSPR::getFamily (void) const
+vpr::SocketTypes::Domain InetAddrNSPR::getFamily (void) const
 {
-    SocketTypes::Domain family;
+   vpr::SocketTypes::Domain family;
 
-    switch ( PR_NetAddrFamily(&mAddr))
-    {
-    case PR_AF_INET:
-        family = SocketTypes::INET;
-        break;
-    case PR_AF_LOCAL:
-       family = SocketTypes::LOCAL;
-       break;
-    case PR_AF_INET6:
-       family = SocketTypes::INET6;
-       break;
-    }
+   switch ( PR_NetAddrFamily(&mAddr) )
+   {
+      case PR_AF_INET:
+         family = vpr::SocketTypes::INET;
+         break;
+      case PR_AF_LOCAL:
+         family = vpr::SocketTypes::LOCAL;
+         break;
+      case PR_AF_INET6:
+         family = vpr::SocketTypes::INET6;
+         break;
+   }
 
-    return family;
+   return family;
 }
 
 // ----------------------------------------------------------------------------
 // Set the protocol family of this address structure.
 // ----------------------------------------------------------------------------
-void
-InetAddrNSPR::setFamily (const SocketTypes::Domain family) {
-    switch (family) {
-      case SocketTypes::LOCAL:
+void InetAddrNSPR::setFamily (const vpr::SocketTypes::Domain family)
+{
+   switch ( family )
+   {
+      case vpr::SocketTypes::LOCAL:
          PR_NetAddrFamily(&mAddr) = PR_AF_LOCAL;
          break;
-      case SocketTypes::INET:
-        PR_NetAddrFamily(&mAddr) = PR_AF_INET;
-        break;
-      case SocketTypes::INET6:
-        PR_NetAddrFamily(&mAddr) = PR_AF_INET6;
-        break;
+      case vpr::SocketTypes::INET:
+         PR_NetAddrFamily(&mAddr) = PR_AF_INET;
+         break;
+      case vpr::SocketTypes::INET6:
+         PR_NetAddrFamily(&mAddr) = PR_AF_INET6;
+         break;
       default:
-        fprintf(stderr,
-                "[vpr::InetAddrNSPR] ERROR: Unknown socket family value %d\n",
-                family);
-        break;
-    }
+         fprintf(stderr,
+                 "[vpr::InetAddrNSPR] ERROR: Unknown socket family value %d\n",
+                 family);
+         break;
+   }
 }
 
 // ----------------------------------------------------------------------------
@@ -180,9 +181,9 @@ std::vector<std::string> InetAddrNSPR::getHostnames () const
 // ----------------------------------------------------------------------------
 // Look up the address in m_name and store the address in m_remote_addr.
 // ----------------------------------------------------------------------------
-ReturnStatus
-InetAddrNSPR::lookupAddress (const std::string& address) {
-   ReturnStatus retval;
+vpr::ReturnStatus InetAddrNSPR::lookupAddress (const std::string& address)
+{
+   vpr::ReturnStatus retval;
    PRStatus ret_status;
    PRHostEnt host_entry;
    char buffer[PR_NETDB_BUF_SIZE];
@@ -190,7 +191,7 @@ InetAddrNSPR::lookupAddress (const std::string& address) {
    ret_status = PR_GetHostByName(address.c_str(), buffer, sizeof(buffer),
                                  &host_entry);
 
-   if(ret_status == PR_FAILURE)
+   if ( ret_status == PR_FAILURE )
    {
       setAddressValue(0);           // Error on lookup, so zero the address
       std::string error_msg("[InetAddrNSPR::lookupAddress] Fail to look up host: ");
@@ -199,12 +200,15 @@ InetAddrNSPR::lookupAddress (const std::string& address) {
       NSPR_PrintError(error_msg);
       retval.setCode(ReturnStatus::Fail);
    }
-   else {
-      if ( PR_EnumerateHostEnt(0, &host_entry, 0, &mAddr) == -1 ) {
+   else
+   {
+      if ( PR_EnumerateHostEnt(0, &host_entry, 0, &mAddr) == -1 )
+      {
          retval.setCode(ReturnStatus::Fail);
       }
 
-      if ( retval.failure() ) {
+      if ( retval.failure() )
+      {
          NSPR_PrintError(std::string("[InetAddrNSPR::lookupAddress] Could not enumerate host entry"));
       }
    }
@@ -212,4 +216,4 @@ InetAddrNSPR::lookupAddress (const std::string& address) {
    return retval;
 }
 
-}; // End of vpr namespace
+} // End of vpr namespace
