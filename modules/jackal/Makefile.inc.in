@@ -280,7 +280,6 @@ post-install:
 #	@$(MAKE) install-tools
 	@$(MAKE) install-data
 	@$(MAKE) install-m4
-	@$(MAKE) install-vjcontrol
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/jccl-config $(bindir)
 
@@ -372,36 +371,6 @@ install-data:
 	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
           -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/data	\
           -v "$(topdir)/VARS.pl"
-
-# Install the Java-based config editor if possible.
-install-vjcontrol:
-ifdef NO_JAVA
-	@echo "------------------------------------------------"
-	@echo "Skipping installation of editor Beans (not built)"
-	@echo "------------------------------------------------"
-else
-ifeq ($(BUILD_JAVA), Y)
-	@echo "------------------------------------------------"
-	@echo "Installing configuration editor Beans"
-	@echo "------------------------------------------------"
-ifeq (@OS_TYPE@, UNIX)
-	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
-          $(JCCLROOT_ABS)/vjcontrol/vjcontrol.sh > vjcontrol.tmp
-	@jars=`echo $(JDOM_JAR) | sed -e 's,[^:][^:]*/\([^/][^/]*\.jar\),$$JCCL_BASE_DIR/bin/\1,g'` && \
-          sed -e "s,#JDOM_JAR#,$$jars," vjcontrol.tmp > vjcontrol.sh
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          vjcontrol.sh $(bindir)/vjcontrol && rm -f vjcontrol.sh vjcontrol.tmp
-else
-	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
-          $(JCCLROOT_ABS)/vjcontrol/vjcontrol.bat > vjcontrol.bat
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) 			\
-          vjcontrol.bat $(bindir)/vjcontrol.bat && rm -f vjcontrol.bat
-endif	# if OS_TYPE == UNIX
-	for dir in $(SUBDIR); do \
-            $(MAKE) -C $$dir java-install ; \
-          done
-endif	# if $(BUILD_JAVA) == Y
-endif	# ifdef NO_JAVA
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  
