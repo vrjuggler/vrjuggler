@@ -4,6 +4,7 @@
   <property category="idl" name="ProcessIDL" value="false"/>
   <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
   <property category="runtime.0" name="application.class" value="org.vrjuggler.tweek.Tweek"/>
+  <property category="runtime.0" name="test.harness" value="junit.textui.TestRunner"/>
   <property category="sys" name="AuthorLabel" value="@author"/>
   <property category="sys" name="BackupPath" value="bak"/>
   <property category="sys" name="BeansInstantiate" value="false"/>
@@ -37,6 +38,7 @@
   <property category="sys" name="VersionLabel" value="@since"/>
   <property category="sys" name="WorkingDirectory" value="."/>
   <file path="org/vrjuggler/tweek/AboutBox.java"/>
+  <file path="org/vrjuggler/tweek/beans/BeanAttributes.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanCollectionBuilder.java"/>
   <file path="org/vrjuggler/tweek/BeanContainer.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanDependency.java"/>
