@@ -110,6 +110,9 @@ namespace snx
          mAlias = myUniqueName;
       }
       
+      /** get the handle name */
+      std::string getName() const { return mAlias; }
+      
       //: virtual destructor
       virtual ~SoundHandle()
       {
