@@ -40,6 +40,10 @@
 #   include <unistd.h>
 #endif
 
+#ifdef VPR_OS_Win32
+#   include <process.h>
+#endif
+
 #include <prthread.h>
 #include <prtypes.h>
 #include <prinrval.h>
