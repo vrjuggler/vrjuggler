@@ -37,7 +37,7 @@
 #include <vpr/vpr.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
-#include <gadget/RemoteInputManager/SerializableDevice.h>
+#include <vpr/IO/SerializableObject.h>
 
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
@@ -106,7 +106,7 @@ class InputMixer : public ComposedParent, public NewParent
 {
 private:
    // Make sure that we are using serializable objects
-   BOOST_STATIC_ASSERT((::boost::is_base_and_derived<SerializableDevice,NewParent>::value));
+   BOOST_STATIC_ASSERT((::boost::is_base_and_derived<vpr::SerializableObject,NewParent>::value));
 
 public:
    /** Type of the placeholder object that can be used to represent us */
@@ -119,10 +119,10 @@ public:
      return(vpr::ReturnStatus::Succeed);
    }
 
-   vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
+   vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
-     ComposedParent::readObject(reader, delta);
-     NewParent::readObject(reader, delta);
+     ComposedParent::readObject(reader);
+     NewParent::readObject(reader);
      return(vpr::ReturnStatus::Succeed);
    }
 

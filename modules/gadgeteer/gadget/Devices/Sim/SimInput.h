@@ -40,7 +40,7 @@
 #include <gadget/Type/KeyboardInterface.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
-#include <gadget/RemoteInputManager/SerializableDevice.h>
+#include <vpr/IO/SerializableObject.h>
 
 
 namespace gadget
@@ -50,7 +50,7 @@ namespace gadget
  * Base class for all simulated input devices.
  * Has the common routines for accessing and seting up keyboard interface.
  */
-class SimInput : public SerializableDevice
+class SimInput : public vpr::SerializableObject
 {
 public:
    class KeyModPair
@@ -99,7 +99,7 @@ public:
    }
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
    {return(vpr::ReturnStatus::Succeed);}
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {return(vpr::ReturnStatus::Succeed);}
 
 protected:

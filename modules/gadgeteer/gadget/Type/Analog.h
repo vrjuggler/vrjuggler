@@ -39,7 +39,7 @@
 #include <gadget/Type/SampleBuffer.h>
 
 #include <jccl/Config/ConfigChunk.h>
-#include <gadget/RemoteInputManager/SerializableDevice.h>
+#include <vpr/IO/SerializableObject.h>
 
 
 namespace gadget
@@ -58,7 +58,7 @@ const unsigned short MSG_DATA_ANALOG = 421;
  * Analog adds one new pure virtual function, GetAnalogData for retreiving
  * the analog data, similar to the addition for Position and Digital.
  */
-class GADGET_CLASS_API Analog : public SerializableDevice
+class GADGET_CLASS_API Analog : public vpr::SerializableObject
 {
 public:
    typedef gadget::SampleBuffer<AnalogData> SampleBuffer_t;
@@ -81,8 +81,7 @@ public:
 
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader,
-                                        vpr::Uint64* delta);
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
    /**
     * Just call base class config.

@@ -34,9 +34,7 @@
 #define _GADGET_KEYBOARD_H_
 
 #include <gadget/gadgetConfig.h>
-
-#include <gadget/RemoteInputManager/SerializableDevice.h>
-
+#include <vpr/IO/SerializableObject.h>
 
 
 // --------- VJKEY's ------------ //
@@ -113,7 +111,7 @@ namespace gadget
  * That is to say, that Keyboard counts the number of keypresses between
  * updates.  Updates in Juggler occur once per frame.
  */
-class Keyboard : public SerializableDevice
+class Keyboard : public vpr::SerializableObject
 {
 public:
    Keyboard()
@@ -141,10 +139,12 @@ public:
       return vpr::ReturnStatus::Succeed;
    }
 
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
       //std::cout << "[Remote Input Manager] In Keyboard read" << std::endl;
-
+      //vprASSERT(reader->attribExists("rim.timestamp.delta"));
+      //vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
+            
       // ASSERT if this data is really not Digital Data
       vpr::Uint16 temp = reader->readUint16();
       vprASSERT(temp==MSG_DATA_KEYBOARD && "[Remote Input Manager]Not Digital Data");

@@ -659,9 +659,9 @@ namespace gadget
                vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Receiving data for: " << net_device_recvr->getSourceName() << "\n" << vprDEBUG_FLUSH;
 
                //std::cout << "READ: " << net_device_recvr->getSourceName() << std::endl;
+               data_reader->setAttrib("rim.timestamp.delta", this->getDelta());
                mMsgPackage.receiveDeviceDataPacket(data_reader,
-                                                    net_device_recvr->getRealDevice(),
-                                                    this->getDelta());
+                                                    net_device_recvr->getRealDevice());
             }
          }
          vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] END DEVICE_DATA\n") << vprDEBUG_FLUSH;
