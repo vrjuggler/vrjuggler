@@ -30,14 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _VJ_DISPLAY_WINDOW_H_
 #define _VJ_DISPLAY_WINDOW_H_
 
+#include <vrj/vjConfig.h>
 #include <vector>
-
-#include <vjConfig.h>
-#include <Kernel/vjViewport.h>
+#include <vrj/Display/Viewport.h>
 
 namespace vrj
 {

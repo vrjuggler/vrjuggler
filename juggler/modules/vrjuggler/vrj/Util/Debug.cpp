@@ -30,15 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
+
 #include <stdlib.h>
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
 
-#include <vjConfig.h>
-#include <Utils/vjStreamLock.h>
-//#include <Kernel/vjStreamLock.h>
-#include <Utils/vjDebug.h> // my header
+#include <vpr/Util/StreamLock.h>
+#include <vrj/Util/Debug.h> /* my header */
 
 namespace vrj
 {

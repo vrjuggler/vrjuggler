@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "vjXercesXMLParser.h"
+#include <vrj/vjConfig.h>
 
 #include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
@@ -46,9 +46,11 @@
 //#include <string.h>
 #include <stdlib.h>
 
-#include <Utils/vjXercesStreamInputSource.h>
-#include <Utils/vjXercesXMLError.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Util/XercesStreamInputSource.h>
+#include <vrj/Util/XercesXMLError.h>
+#include <vrj/Util/Debug.h>
+
+#include <vrj/Util/XercesXMLParser.h>
 
 namespace vrj
 {
@@ -190,7 +192,7 @@ bool XercesXMLParser::writeFile (const std::string& file_name, DOM_Node& doc) {
 
 
 bool XercesXMLParser::writeStream (std::ostream& output, DOM_Node& doc) {
-    output << "<Not_Implemented/>" << endl;
+    output << "<Not_Implemented/>" << std::endl;
     return false;
 }
 

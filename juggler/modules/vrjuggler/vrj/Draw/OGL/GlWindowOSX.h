@@ -30,15 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_GLOSX_WIN_H
-#define _VJ_GLOSX_WIN_H
+#ifndef _VRJ_GLOSX_WIN_H
+#define _VRJ_GLOSX_WIN_H
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
-#include <Kernel/GL/vjGlWindow.h>
-#include <Kernel/vjKernel.h>
-#include <Utils/vjDebug.h>
-#include <Kernel/vjDisplay.h>
+#include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Display/Display.h>
 
 #ifdef __APPLE_CC__
 #   include <Carbon/Carbon.h>

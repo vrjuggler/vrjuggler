@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef FILE___IO_STUFF
-#define FILE___IO_STUFF
+#ifndef _VRJ_FILE___IO_STUFF
+#define _VRJ_FILE___IO_STUFF
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <stdlib.h>
 #include <string>

@@ -41,18 +41,19 @@
 // Andy Himberger:    v0.0 - 12-1-97 - Inital version
 // Allen Bierbaum:    v1.0 -  7-23-99 - Refactored to use new keyboard method
 ////////////////////////////////////////////////////////////////////////////
-#ifndef _vj_KEYBOARD_H_
-#define _vj_KEYBOARD_H_
 
-#include <vjConfig.h>
+#ifndef _vrj_KEYBOARD_H_
+#define _vrj_KEYBOARD_H_
+
+#include <vrj/vjConfig.h>
 
 
 // Get windows stuff
 #include <windows.h>
 #include <commctrl.h>
 
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjInput/vjKeyboard.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Keyboard.h>
 #include <vpr/Thread/Thread.h>
 
 namespace vrj

@@ -1,4 +1,4 @@
- /*************** <auto-copyright.pl BEGIN do not edit this line> **************
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 //===============================================================
-// aFlock
+// FlockStandalone
 //
 // Purpose:
 //      Ascention Flock of birds tracking class
@@ -42,8 +41,9 @@
 //
 // Last Modified: 4-22-99
 //===============================================================
-#ifndef _ASCENSION_FLOCKOFBIRD_H_
-#define _ASCENSION_FLOCKOFBIRD_H_
+
+#ifndef _VRJ_ASCENSION_FLOCKOFBIRD_STANDALONE_H_
+#define _VRJ_ASCENSION_FLOCKOFBIRD_STANDALONE_H_
 
 #include <vpr/IO/Port/SerialPort.h>
 
@@ -62,9 +62,9 @@ enum BIRD_HEMI  {FRONT_HEM, AFT_HEM, UPPER_HEM, LOWER_HEM, LEFT_HEM, RIGHT_HEM};
 enum BIRD_FILT  {AC_NARROW, AC_WIDE, DC_FILTER};
 
 //: class for running a Flock of Birds.
-//  aFlock is a positional device driver for the Flock of Birds <br>
+//  FlockStandalone is a positional device driver for the Flock of Birds <br>
 //!PUBLIC_API
-class aFlock
+class FlockStandalone
 {
 public:
 	//: Configure Constructor
@@ -81,20 +81,20 @@ public:
 	//                                                       <BR>
 	//! POST: configures internal data members,
 	//+         doesn't actually talk to the FOB yet.
-	aFlock(const char* const port = "/dev/ttyd3",
-		const int& baud = 38400,
-		const int& sync = 1,
-		const int& block = 0,
-		const int& numBrds = 3,
-		const int& transmit = 3,
-		const BIRD_HEMI& hemi = LOWER_HEM,
-		const BIRD_FILT& filt = AC_NARROW,
-		const char& report = 'R',
-		const char* const calfile = "");
+	FlockStandalone(const char* const port = "/dev/ttyd3",
+		        const int& baud = 38400,
+		        const int& sync = 1,
+		        const int& block = 0,
+		        const int& numBrds = 3,
+		        const int& transmit = 3,
+		        const BIRD_HEMI& hemi = LOWER_HEM,
+		        const BIRD_FILT& filt = AC_NARROW,
+		        const char& report = 'R',
+		        const char* const calfile = "");
 	
 	
 	//: Destructor
-	~aFlock();
+	~FlockStandalone();
 
 	
 	//: call this to connect to the flock device.

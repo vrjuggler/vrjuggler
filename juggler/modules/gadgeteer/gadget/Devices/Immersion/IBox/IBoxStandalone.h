@@ -30,8 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <string>
 #include <vpr/IO/Port/SerialPort.h>
 

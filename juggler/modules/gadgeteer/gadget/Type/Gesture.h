@@ -30,12 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_GESTURE_H_
-#define _VJ_GESTURE_H_
+#ifndef _VRJ_GESTURE_H_
+#define _VRJ_GESTURE_H_
 //#pragma once
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 
 namespace vrj

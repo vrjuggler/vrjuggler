@@ -30,17 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_GLOVE_H_
-#define _VJ_GLOVE_H_
+#ifndef _VRJ_GLOVE_H_
+#define _VRJ_GLOVE_H_
 //#pragma once
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-//#include <Input/InputManager/vjDeviceInterface.h>
-#include <Input/InputManager/vjPosProxy.h>
-#include <Math/vjVec3.h>
-#include <Math/vjMatrix.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Input.h>
+//#include <vrj/Input/Type/DeviceInterface.h>
+#include <vrj/Input/Type/PosProxy.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Matrix.h>
 
 // TODO: 2 devs here is a hack until we make
 //       the pinch glove act more like the flock of birds.

@@ -30,10 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
-
-#include <Kernel/vjFrustum.h>
+#include <vrj/Display/Frustum.h>
 
 namespace vrj
 {

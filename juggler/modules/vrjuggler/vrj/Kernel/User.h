@@ -30,13 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_USER_H_
+#define _VRJ_USER_H_
 
-#ifndef _VJ_USER_H_
-#define _VJ_USER_H_
-
-#include <vjConfig.h>
-//#include <Config/vjConfigChunk.h>
-#include <Input/InputManager/vjPosInterface.h>
+#include <vrj/vjConfig.h>
+//#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Input/Type/PosInterface.h>
 
 
 namespace vrj

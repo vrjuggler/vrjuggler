@@ -30,16 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_VEC4_
-#define _VJ_VEC4_
+#ifndef _VRJ_VEC4_H_
+#define _VRJ_VEC4_H_
 //#pragma once
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <math.h>
 
-#include <Math/vjMatrix.h>
-#include <Math/vjMath.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Math/Math.h>
 
 // --- Define access reps --- //
 #define VJ_X 0

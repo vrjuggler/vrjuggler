@@ -30,16 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
-#include <Config/vjProperty.h>
-#include <Config/vjConfigChunk.h>
-#include <Config/vjChunkFactory.h>
-#include <Config/vjPropertyDesc.h>
-#include <Config/vjEnumEntry.h>
-#include <Config/vjParseUtil.h>
-#include <Config/vjConfigTokens.h>
-#include <Utils/vjDebug.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Config/ChunkFactory.h>
+#include <vrj/Config/PropertyDesc.h>
+#include <vrj/Config/EnumEntry.h>
+#include <vrj/Config/ParseUtil.h>
+#include <vrj/Config/ConfigTokens.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Config/Property.h>
 
 namespace vrj
 {

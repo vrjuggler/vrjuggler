@@ -38,11 +38,7 @@
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     samples
-        OSG
-            osgNav
-            ..
-        ..
-        ogl
+        OGL
             analog
             ..
             combo
@@ -66,7 +62,11 @@
             glove
             ..
         ..
-        pf
+        OSG
+            osgNav
+            ..
+        ..
+        Pf
             advanced
                 nav
                 ..

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 //#include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
@@ -40,13 +40,13 @@
 
 #include <stdlib.h>
 
-#include <Config/vjConfigChunkDB.h>
-#include <Config/vjChunkFactory.h>
-#include <Config/vjParseUtil.h>
-#include <Utils/vjXercesXMLParserPool.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Config/ConfigChunkDB.h>
+#include <vrj/Config/ChunkFactory.h>
+#include <vrj/Config/ParseUtil.h>
+#include <vrj/Util/XercesXMLParserPool.h>
+#include <vrj/Util/Debug.h>
 
-#include <Config/vjXMLConfigIOHandler.h>
+#include <vrj/Config/XMLConfigIOHandler.h>
 
 
 namespace vrj

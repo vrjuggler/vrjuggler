@@ -30,21 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 // Glove proxy class
 //
 ////////////////////////////////////////////////////////////////////////
-#ifndef _VJ_GLOVE_PROXY_H_
-#define _VJ_GLOVE_PROXY_H_
 
-#include <vjConfig.h>
+#ifndef _VRJ_GLOVE_PROXY_H_
+#define _VRJ_GLOVE_PROXY_H_
+
+#include <vrj/vjConfig.h>
 #include <math.h>
-#include <assert.h>
 
-#include <Input/vjGlove/vjGlove.h>
-#include <Input/InputManager/vjProxy.h>
+#include <vrj/Input/Type/Glove.h>
+#include <vrj/Input/Type/Proxy.h>
 
 namespace vrj
 {

@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_DISPLAY_MANAGER_H_
+#define _VRJ_DISPLAY_MANAGER_H_
 
-#ifndef _VJ_DISPLAY_MANAGER_
-#define _VJ_DISPLAY_MANAGER_
+#include <vrj/vjConfig.h>
 
 #include <vpr/Util/Singleton.h>
 
-#include <vjConfig.h>
-#include <Input/vjPosition/vjPosition.h>
-#include <Utils/vjDebug.h>
-#include <Kernel/vjConfigChunkHandler.h>
+#include <vrj/Input/Type/Position.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Kernel/ConfigChunkHandler.h>
 
 namespace vrj
 {

@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
-#include <Environment/vjSocket.h>
+#include <vrj/Environment/Socket.h>
 
 #ifndef VJ_OS_Win32
 
@@ -45,7 +45,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#include <Environment/vjSockStream.h>
+#include <vrj/Environment/SockStream.h>
 
 namespace vrj
 {
@@ -154,7 +154,7 @@ SocketPosix* SocketPosix::accept () {
 /****************************** Winsock2 Version ***************************/
 
 #include <winsock2.h>
-#include <Environment/vjSockStream.h>
+#include <vrj/Environment/SockStream.h>
 
 namespace vrj
 {

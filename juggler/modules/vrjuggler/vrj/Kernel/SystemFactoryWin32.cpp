@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
-#include <Kernel/vjWin32SystemFactory.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Kernel/Win32SystemFactory.h>
 
 namespace vrj
 {

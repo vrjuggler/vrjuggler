@@ -30,11 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
-#include <Kernel/vjKernel.h>
-#include <Input/InputManager/vjAnalogProxy.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Input/Type/AnalogProxy.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {

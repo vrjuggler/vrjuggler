@@ -1,13 +1,13 @@
-#ifndef _A_TRACKD_SENSOR_H_
-#define _A_TRACKD_SENSOR_H_
+#ifndef _VRJ_TRACKD_SENSOR_STANDALONE_H_
+#define _VRJ_TRACKD_SENSOR_STANDALONE_H_
 
-#include <Input/Multi/trackdmem.h>
-#include <Math/vjMatrix.h>
+#include <vrj/Input/Devices/Open/Trackd/trackdmem.h>
+#include <vrj/Math/Matrix.h>
 
-class aTrackdSensor
+class TrackdSensorStandalone
 {
 public:
-   aTrackdSensor(int shmKey)
+   TrackdSensorStandalone(int shmKey)
    {
       mShmKey = shmKey;
       mMem = NULL;
@@ -16,7 +16,7 @@ public:
       attachToMem();
    }
 
-   ~aTrackdSensor()
+   ~TrackdSensorStandalone()
    {
       releaseMem();
    }

@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 //===============================================================
-// fsPinchGlove
+// PinchGloveStandalone
 //
 // Purpose:
 //    software interface to Fakespace Pinchglove hardware
@@ -46,16 +45,17 @@
 //
 // Date: 1-23-99
 //===============================================================
-#ifndef PINCH_GLOVE_INCLUDED
-#define PINCH_GLOVE_INCLUDED
+
+#ifndef _VRJ_PINCH_GLOVE_STANDALONE_H_
+#define _VRJ_PINCH_GLOVE_STANDALONE_H_
 
 #include <string>
 
-class fsPinchGlove
+class PinchGloveStandalone
 {
 public:
     // Default constructor.
-    fsPinchGlove();
+    PinchGloveStandalone();
     
     //: Connect to the pinch glove hardware
     bool    connectToHardware( const char* const ttyPort );

@@ -121,14 +121,7 @@ STARTTIME	:= $(shell LC_TIME=C date)
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= Config	\
-                  Environment	\
-                  Input		\
-                  Kernel	\
-                  Math		\
-                  Performance	\
-                  Sound		\
-                  Utils
+SUBDIR		= vrj
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
@@ -201,8 +194,6 @@ endif
 # -------------------------------------------------------------
 # Build and install everything (i.e., the world) for a release.
 # -------------------------------------------------------------
-.PHONY: release
-
 release:
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make release started on $(STARTTIME)"

@@ -30,15 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <sys/time.h>
-
-#include <Input/vjInput/vjIbox.h>
 #include <vpr/Thread/Thread.h>
-#include <Utils/vjDebug.h>
-#include <Config/vjConfigChunk.h>
 #include <vpr/System.h>
+
+#include <vrj/Input/Devices/Immersion/Ibox.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {

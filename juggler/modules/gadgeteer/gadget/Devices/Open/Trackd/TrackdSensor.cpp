@@ -30,13 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Devices/Open/Trackd/TrackdSensorStandalone.h>
+#include <vrj/Input/Devices/Open/Trackd/TrackdSensor.h>
+#include <vrj/Config/ConfigChunk.h>
 
-#include <vjConfig.h>
-#include <Input/Multi/aTrackdSensor.h>
-#include <Input/Multi/vjTrackdSensor.h>
-#include <Config/vjConfigChunk.h>
-
-#include <Utils/vjDebug.h>
+#include <vrj/Util/Debug.h>
 
 
 namespace vrj
@@ -77,7 +76,7 @@ namespace vrj
        vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "vjTrackdSensor::config: Bad shm_key sent: Had value of 0.\n" << vjDEBUG_FLUSH;
        return false;
     }
-    mTrackdSensors = new aTrackdSensor(shm_key);
+    mTrackdSensors = new TrackdSensorStandalone(shm_key);
 
     // set to active
     active = 1;

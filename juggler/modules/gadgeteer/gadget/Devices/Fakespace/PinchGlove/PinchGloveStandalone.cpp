@@ -32,7 +32,7 @@
 
 
 //===============================================================
-// fsPinchGlove
+// PinchGloveStandalone
 //
 // Purpose:
 //    software interface to Fakespace Pinchglove hardware
@@ -65,16 +65,16 @@
 #include <sys/file.h>
 #endif
 
-#include <Input/vjGlove/fsPinchGlove.h>
+#include <vrj/Input/Devices/Fakespace/PinchGloveStandalone.h>
 
-const std::string fsPinchGlove::mOpenHandString = "00000.00000";
+const std::string PinchGloveStandalone::mOpenHandString = "00000.00000";
 
 ///////////////////////////////////////////////////////////
 // Public Methods
 ///////////////////////////////////////////////////////////
 
 // Constructor
-fsPinchGlove::fsPinchGlove() : pinchfd( -1 )
+PinchGloveStandalone::PinchGloveStandalone() : pinchfd( -1 )
 {
     mGestureString = mOpenHandString;
     mPreviousGestureString = mOpenHandString;
@@ -82,7 +82,7 @@ fsPinchGlove::fsPinchGlove() : pinchfd( -1 )
 }
 
 // Connect to the pinch glove hardware
-bool fsPinchGlove::connectToHardware(const char* const ttyPort)
+bool PinchGloveStandalone::connectToHardware(const char* const ttyPort)
 {
     std::cout<<"\n[pinch] Connecting To Fakespace Hardware\n"<<std::flush;
     
@@ -99,13 +99,13 @@ bool fsPinchGlove::connectToHardware(const char* const ttyPort)
 
 // get the last sampled string, 
 // NOTE: call ReSampleData to get most current pinch data.
-void fsPinchGlove::getSampledString(std::string& gestureString)
+void PinchGloveStandalone::getSampledString(std::string& gestureString)
 {
 	gestureString = mGestureString;
 }
 
 // call ReSampleData to get most current pinch data. 
-void fsPinchGlove::updateStringFromHardware()
+void PinchGloveStandalone::updateStringFromHardware()
 {
     // make a copy into the previous string.
     mPreviousGestureString = mGestureString;
@@ -125,7 +125,7 @@ void fsPinchGlove::updateStringFromHardware()
 
 // send to hardware methods:
 
-int fsPinchGlove::mConnectToHardware(const char* const ttyPort)
+int PinchGloveStandalone::mConnectToHardware(const char* const ttyPort)
 {
     struct termios data;
     const int BUFFER_LEN = 100;
@@ -202,7 +202,7 @@ int fsPinchGlove::mConnectToHardware(const char* const ttyPort)
     return 1;
 }
 
-int fsPinchGlove::mSendCommandToHardware(const char* const command, char *reply)
+int PinchGloveStandalone::mSendCommandToHardware(const char* const command, char *reply)
 {
    char buf[100];
    static int first = 1;
@@ -235,7 +235,7 @@ int fsPinchGlove::mSendCommandToHardware(const char* const command, char *reply)
 // read from hardware methods:
 
 
-int fsPinchGlove::mReadRecordsFromHardware(const int& rec_max_len, char *records)
+int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, char *records)
 {
     int s;
     int numbytes = 0;
@@ -287,7 +287,7 @@ int fsPinchGlove::mReadRecordsFromHardware(const int& rec_max_len, char *records
    return numbytes;
 }
 
-void fsPinchGlove::mGetStringFromHardware(char* gesture)
+void PinchGloveStandalone::mGetStringFromHardware(char* gesture)
 {
     const int BUFFER_LEN = 100;
     char rec[BUFFER_LEN];

@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
-#include <Input/vjPosition/aMotionStar.h>
-#include <Input/vjPosition/vjMotionStar.h>
-#include <Math/vjCoord.h>
-#include <Utils/vjDebug.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/Math/Coord.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Input/Devices/Ascension/MotionStar.h>
+
 
 namespace vrj
 {
@@ -71,8 +71,8 @@ sampleBirds (void* arg) {
 // ============================================================================
 
 // ----------------------------------------------------------------------------
-// Constructor.  This invokes the aMotionStar constructor and initializes
-// member variables.
+// Constructor.  This invokes the MotionStarStandalone constructor and
+// initializes member variables.
 // ----------------------------------------------------------------------------
 MotionStar::MotionStar (const char* address, const unsigned short port,
                             const BIRDNET::protocol proto,
@@ -169,8 +169,8 @@ MotionStar::startSampling () {
             // Proper startup.
             case 0:
                break;
-            // Connection to server failed.  aMotionStar prints out the system
-            // error message about why.
+            // Connection to server failed.  MotionStarStandalone prints out
+            // the system error message about why.
             case -1:
                vjDEBUG(vjDBG_INPUT_MGR, 0)
                   << "vjMotionStar failed to connect to server\n"
@@ -192,10 +192,10 @@ MotionStar::startSampling () {
                   << vjDEBUG_FLUSH;
                retval = 1;
                break;
-            // Unkonwn return value from aMotionStar::start().
+            // Unkonwn return value from MotionStarStandalone::start().
             default:
                vjDEBUG(vjDBG_INPUT_MGR, 0)
-                  << "Abnormal return from aMotionStar::start()\n"
+                  << "Abnormal return from MotionStarStandalone::start()\n"
                   << vjDEBUG_FLUSH;
                retval = 1;
                break;

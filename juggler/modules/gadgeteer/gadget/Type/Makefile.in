@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Input/InputManager.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Input/Type.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,23 +41,24 @@ default: all
 # Include common definitions
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Input/InputManager
+includedir	= @includedir@/vrj/Input/Type
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS		= vjAnalogProxy.cpp	\
-                  vjDeviceFactory.cpp	\
-                  vjDeviceInterface.cpp	\
-                  vjDigitalProxy.cpp	\
-                  vjGestureProxy.cpp	\
-                  vjGloveProxy.cpp	\
-                  vjInputManager.cpp	\
-                  vjKeyboardProxy.cpp	\
-                  vjPosProxy.cpp	\
-                  vjProxyDepChecker.cpp	\
-                  vjProxyFactory.cpp
+SRCS		= AnalogProxy.cpp	\
+                  DeviceFactory.cpp	\
+                  DeviceInterface.cpp	\
+                  DigitalProxy.cpp	\
+                  GestureProxy.cpp	\
+                  Glove.cpp		\
+                  GloveGesture.cpp	\
+                  GloveProxy.cpp	\
+                  Input.cpp		\
+                  KeyboardProxy.cpp	\
+                  Position.cpp		\
+                  PosProxy.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

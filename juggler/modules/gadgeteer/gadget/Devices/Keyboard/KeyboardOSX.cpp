@@ -29,14 +29,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <vjConfig.h>
-#include <Input/vjKeyboard/vjOSXKeyboard.h>
-#include <Utils/vjDebug.h>
-#include <Kernel/vjDisplayManager.h>
+
+#include <vrj/vjConfig.h>
+
 #include <vpr/Thread/Thread.h>
-#include <Config/vjConfigChunk.h>
 #include <vpr/System.h>
+
+#include <vrj/Utils/Debug.h>
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Config/ConfigChunk.h>
 #include <ApplicationServices/ApplicationServices.h>
+
+#include <vrj/Input/Devices/Keyboard/OSXKeyboard.h>
 
 namespace vrj
 {

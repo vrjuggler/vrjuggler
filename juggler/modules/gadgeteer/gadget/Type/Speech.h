@@ -30,9 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_SPEECH_H_
+#define _VRJ_SPEECH_H_
 
-#ifndef _VJ_SPEECH_H_
-#define _VJ_SPEECH_H_
+#include <vrj/vjConfig.h>
 
 namespace vrj
 {

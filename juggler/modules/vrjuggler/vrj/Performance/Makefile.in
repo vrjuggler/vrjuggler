@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Performance.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Performance.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,14 +41,14 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Performance
+includedir	= @includedir@/vrj/Performance
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS		= vjPerfDataBuffer.cpp	\
-                  vjTimeStamp.cpp
+SRCS		= PerfDataBuffer.cpp	\
+                  TimeStamp.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

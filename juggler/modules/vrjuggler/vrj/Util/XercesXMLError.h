@@ -30,12 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXERCESXMLERROR_H_
-#define _VJXERCESXMLERROR_H_
+#ifndef _VRJ_XERCESXMLERROR_H_
+#define _VRJ_XERCESXMLERROR_H_
+
+#include <vrj/vjConfig.h>
 
 #include <util/XercesDefs.hpp>
 #include <sax/ErrorHandler.hpp>
-#include <iostream.h>
 
 namespace vrj
 {

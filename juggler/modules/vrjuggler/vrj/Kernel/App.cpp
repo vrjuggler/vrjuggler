@@ -28,8 +28,9 @@
  * -----------------------------------------------------------------
  */
 
-#include <Kernel/vjApp.h>
-#include <Kernel/vjKernel.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Kernel/App.h>
+#include <vrj/Kernel/Kernel.h>
 
 namespace vrj
 {

@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <Utils/vjXercesXMLParserPool.h>
+#include <vrj/vjConfig.h>
 #include <util/PlatformUtils.hpp>
+#include <vrj/Util/XercesXMLParserPool.h>
 
 namespace vrj
 {

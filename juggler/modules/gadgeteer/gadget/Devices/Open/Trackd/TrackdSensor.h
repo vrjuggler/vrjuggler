@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_TRACKD_SENSOR_H_
-#define _VJ_TRACKD_SENSOR_H_
+#ifndef _VRJ_TRACKD_SENSOR_H_
+#define _VRJ_TRACKD_SENSOR_H_
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjPosition/vjPosition.h>
-#include <Input/Multi/aTrackdSensor.h>
+#include <vrj/vjConfig.h>
 #include <vector>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Position.h>
+#include <vrj/Input/Devices/Open/Trackd/TrackdSensorStandalone.h>
 
 
 namespace vrj
@@ -123,7 +123,7 @@ public:
     Matrix* getPosData(int dev = 0);
 
 private:
-    aTrackdSensor*         mTrackdSensors;      // The sensors that we are dealing with
+    TrackdSensorStandalone* mTrackdSensors; // The sensors that we are dealing with
     std::vector<Matrix>   mCurSensorValues; // The current (up-to-date) values
 };
 

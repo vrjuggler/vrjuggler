@@ -30,15 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_SIM_INPUT_H
-#define _VJ_SIM_INPUT_H
+#ifndef _VRJ_SIM_INPUT_H
+#define _VRJ_SIM_INPUT_H
 //#pragma once
 
-
-#include <vjConfig.h>
-#include <Input/InputManager/vjKeyboardInterface.h>
-#include <Config/vjVarValue.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/KeyboardInterface.h>
+#include <vrj/Config/VarValue.h>
 
 namespace vrj
 {

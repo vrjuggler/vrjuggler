@@ -30,12 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_TIMESTAMP_POSIX_H_
+#define _VRJ_TIMESTAMP_POSIX_H_
 
-
-#ifndef _VJ_TIMESTAMP_POSIX_
-#define _VJ_TIMESTAMP_POSIX_
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <sys/time.h>
 
 namespace vrj

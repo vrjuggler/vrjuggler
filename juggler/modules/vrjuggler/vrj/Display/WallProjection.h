@@ -30,14 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_WALL_PROJECTION_H_
+#define _VRJ_WALL_PROJECTION_H_
 
-#ifndef _VJ_WALL_PROJECTION_
-#define _VJ_WALL_PROJECTION_
-
-#include <vjConfig.h>
-#include <Kernel/vjProjection.h>
-//#include <Input/vjPosition/vjPosition.h>
-//#include <Math/vjCoord.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Display/Projection.h>
+//#include <vrj/Input/Type/Position.h>
+//#include <vrj/Math/Coord.h>
 
 namespace vrj
 {

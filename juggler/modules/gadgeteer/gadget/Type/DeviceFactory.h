@@ -30,17 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_DEVICE_FACTORY_H_
-#define _VJ_DEVICE_FACTORY_H_
+#ifndef _VRJ_DEVICE_FACTORY_H_
+#define _VRJ_DEVICE_FACTORY_H_
 //#pragma once
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Config/ConfigChunk.h>
 #include <vpr/Util/Singleton.h>
 
-#include <Utils/vjDebug.h>
+#include <vrj/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
 namespace vrj

@@ -30,22 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_GLX_WIN_H
-#define _VJ_GLX_WIN_H
+#ifndef _VRJ_GLX_WIN_H
+#define _VRJ_GLX_WIN_H
 //#pragma once
+
+#include <vrj/vjConfig.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <GL/glx.h>
 
-#include <vjConfig.h>
-
-#include <Kernel/GL/vjGlWindow.h>
-#include <Kernel/vjKernel.h>
-#include <Utils/vjDebug.h>
-#include <Kernel/vjDisplay.h>
-#include <Input/vjKeyboard/vjXWinKeyboard.h>
+#include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Display/Display.h>
+#include <vrj/Input/Devices/Keyboard/XWinKeyboard.h>
 
 
 namespace vrj

@@ -30,11 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _VJ_CONFIG_CHUNK_HANDLER_H_
 #define _VJ_CONFIG_CHUNK_HANDLER_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 namespace vrj
 {

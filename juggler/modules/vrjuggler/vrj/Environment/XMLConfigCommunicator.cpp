@@ -30,15 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Environment/vjXMLConfigCommunicator.h>
-#include <Environment/vjConnect.h>
-#include <Environment/vjNetCommunicator.h>
-#include <iostream.h>
-#include <Kernel/vjConfigManager.h>
-#include <Utils/vjXercesXMLParserPool.h>
-#include <Config/vjConfigIO.h>
-#include <Config/vjXMLConfigIOHandler.h>
-#include <Config/vjChunkFactory.h>
+#include <vrj/vjConfig.h>
+
+#include <vrj/Environment/XMLConfigCommunicator.h>
+#include <vrj/Environment/Connect.h>
+#include <vrj/Environment/NetCommunicator.h>
+#include <vrj/Kernel/ConfigManager.h>
+#include <vrj/Util/XercesXMLParserPool.h>
+#include <vrj/Config/ConfigIO.h>
+#include <vrj/Config/XMLConfigIOHandler.h>
+#include <vrj/Config/ChunkFactory.h>
 
 
 namespace vrj
@@ -130,11 +131,11 @@ bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
 //     int i;
     //vjConfigChunk* ch = 0;
     ConfigChunkDB newchunkdb;
-    //      cout << "ok, we've got a node named '" << name << "' with a value of '" << node_value << "'." << endl;
+    //      std::cout << "ok, we've got a node named '" << name << "' with a value of '" << node_value << "'." << std::endl;
     
     switch (doc.getNodeType()) {
     case DOM_Node::DOCUMENT_NODE:
-        cout << "document node..." << endl;
+	std::cout << "document node..." << std::endl;
         child = doc.getFirstChild();
         while (child != 0) {
             retval = retval && (interpretDOM_Node(child));
@@ -142,7 +143,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
         }
         break;
     case DOM_Node::ELEMENT_NODE:
-        cout << "command is '" << name << "'." << endl;
+	std::cout << "command is '" << name << "'." << std::endl;
         if (!strcasecmp (name, "apply_chunks")) {
             // we've received a set of configchunks to apply.
             newchunkdb.erase();
@@ -191,7 +192,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
         }
         break; // ELEMENT_NODE
     default:
-        cout << "confused" << endl;
+	std::cout << "confused" << std::endl;
         break;
     }
     return retval;

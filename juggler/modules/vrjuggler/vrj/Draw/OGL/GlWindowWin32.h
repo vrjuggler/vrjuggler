@@ -30,15 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GL_WIN_WIN32_
-#define _GL_WIN_WIN32_
+#ifndef _VRJ_GL_WIN_WIN32_H_
+#define _VRJ_GL_WIN_WIN32_H_
 
 #pragma warning(disable:4786)  // identifier truncated to 255 characters in the debug information
 
-
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <GL/gl.h>
-#include <Kernel/GL/vjGlWindow.h>
+#include <vrj/Draw/OGL/GlWindow.h>
 
 namespace vrj
 {

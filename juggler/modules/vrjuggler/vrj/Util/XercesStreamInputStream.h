@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXERCESSTREAMINPUTSTREAM_H_
-#define _VJXERCESSTREAMINPUTSTREAM_H_
+#ifndef _VRJ_XERCESSTREAMINPUTSTREAM_H_
+#define _VRJ_XERCESSTREAMINPUTSTREAM_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <util/BinInputStream.hpp>
 
 namespace vrj

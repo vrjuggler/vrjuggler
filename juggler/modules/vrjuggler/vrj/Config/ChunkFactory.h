@@ -30,15 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_CHUNKFACTORY_H_
+#define _VRJ_CHUNKFACTORY_H_
 
-
-#ifndef _VJ_CHUNKFACTORY_H_
-#define _VJ_CHUNKFACTORY_H_
-
-#include <vjConfig.h>
-#include <Config/vjConfigChunk.h>
-#include <Config/vjChunkDescDB.h>
-#include <Utils/vjDebug.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Config/ChunkDescDB.h>
+#include <vrj/Util/Debug.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Singleton.h>
 

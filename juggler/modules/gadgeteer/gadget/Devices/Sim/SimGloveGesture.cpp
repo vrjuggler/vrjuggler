@@ -30,12 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
-
-#include <Utils/vjFileIO.h>
-#include <Input/vjSim/vjSimGloveGesture.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/Util/FileIO.h>
+#include <vrj/Input/Devices/Sim/SimGloveGesture.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {

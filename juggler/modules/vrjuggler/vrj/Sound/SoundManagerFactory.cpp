@@ -1,23 +1,25 @@
+#include <vrj/vjConfig.h>
+
 #ifdef USE_AUDIOJUGGLER
-#include <Sound/ajSoundManager.h>
+#include <vrj/Sound/ajSoundManager.h>
 #else
-#include <Sound/SoundManager.h>
+#include <vrj/Sound/SoundManager.h>
 #endif
 
-#include <Sound/SoundManagerFactory.h>
+#include <vrj/Sound/SoundManagerFactory.h>
 
 namespace vrj
 {
 
 SoundManager&    SoundManagerFactory::get()
 {
-   #ifdef USE_AUDIOJUGGLER
+#ifdef USE_AUDIOJUGGLER
     static vrj::ajSoundManager temp;
     return temp;
-   #else
+#else
     static SoundManager temp;
     return temp;
-   #endif
+#endif
 }
 
 };

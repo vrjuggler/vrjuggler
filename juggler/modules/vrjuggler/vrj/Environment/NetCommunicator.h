@@ -30,14 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJNETCOMMUNICATOR_H_
-#define _VJNETCOMMUNICATOR_H_
+#ifndef _VRJ_NETCOMMUNICATOR_H_
+#define _VRJ_NETCOMMUNICATOR_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
-//#include <Environment/vjConnect.h>
-//#include <iostream.h>
 //#include <string>
+//#include <vrj/Environment/Connect.h>
 
 namespace vrj
 {

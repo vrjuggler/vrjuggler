@@ -30,16 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_PROJECTION_H_
+#define _VRJ_PROJECTION_H_
 
-#ifndef _VJ_PROJECTION_
-#define _VJ_PROJECTION_
-
-#include <vjConfig.h>
-#include <Math/vjMatrix.h>
-#include <Kernel/vjFrustum.h>
-#include <Utils/vjDebug.h>
-#include <Math/vjVec3.h>
-#include <Input/vjPosition/vjPosition.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Display/Frustum.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Input/Type/Position.h>
 
 namespace vrj
 {

@@ -51,11 +51,11 @@ SRCS		=
 
 ifneq (@OS_TYPE@, Win32)
 ifneq (@OS_TYPE@, Darwin)
-SRCS		+= aTrackdController.cpp	\
-                   aTrackdSensor.cpp		\
-                   trackdmem.cpp		\
-                   vjTrackdSensor.cpp		\
-                   vjTrackdController.cpp
+SRCS		+= TrackdController.cpp			\
+                   TrackdControllerStandalone.cpp	\
+                   TrackdSensor.cpp			\
+                   TrackdSensorStandalone.cpp		\
+                   trackdmem.cpp
 endif
 endif
 

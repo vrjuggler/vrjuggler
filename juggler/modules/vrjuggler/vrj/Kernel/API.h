@@ -30,12 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_API_
-#define _VJ_API_
+#ifndef _VRJ_API_H_
+#define _VRJ_API_H_
 //#pragma once
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 namespace vrj
 {

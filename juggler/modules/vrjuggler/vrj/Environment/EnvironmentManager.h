@@ -30,15 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_ENVIRONMENT_MANAGER_H_
+#define _VRJ_ENVIRONMENT_MANAGER_H_
 
-#ifndef _VJ_ENVIRONMENT_MANAGER_H_
-#define _VJ_ENVIRONMENT_MANAGER_H_
-
-#include <vjConfig.h>
-#include <Kernel/vjConfigChunkHandler.h>
-#include <vpr/Thread/Thread.h>
-#include <Environment/vjSocket.h>
+#include <vrj/vjConfig.h>
 #include <vpr/Sync/Mutex.h>
+#include <vpr/Thread/Thread.h>
+#include <vrj/Kernel/ConfigChunkHandler.h>
+#include <vrj/Environment/Socket.h>
 
 namespace vrj
 {

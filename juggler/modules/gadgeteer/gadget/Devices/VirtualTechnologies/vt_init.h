@@ -12,8 +12,8 @@
 /*  ================================================================  */
 
 
-#include <vjConfig.h>
-#include <Input/vjGlove/vt_types.h>	/* Included for Boolean declaration */
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h>	/* Included for Boolean declaration */
 
 enum
 {

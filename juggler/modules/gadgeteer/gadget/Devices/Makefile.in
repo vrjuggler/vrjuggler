@@ -1,0 +1,62 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for vrjuggler/vrj/Input/Devices.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+# Include common definitions.
+include @topdir@/make.defs.mk
+
+# Prefix for recursive stuff.
+DIRPRFX		= vrj/Input/Devices/
+
+# Subdirectories to compile.
+SUBDIR		= Ascension		\
+                  Fakespace		\
+                  Immersion		\
+                  Intersense		\
+                  Keyboard		\
+                  Logitech		\
+                  Open			\
+                  Sim			\
+                  VirtualTechnologies
+
+# This is a hack until I can figure out a better way to do this automatically
+# in Doozer++.  The problem is that GNU make doesn't offer much in the way
+# of execution logic, and when recursion gets to this point, I don't know a
+# good way to tell it to continue recursing with the given arguments.
+$(RECTARGET): recursive
+
+include $(MKPATH)/dpp.subdir.mk

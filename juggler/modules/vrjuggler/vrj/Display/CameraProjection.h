@@ -30,13 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_CAMERA_PROJECTION_H_
+#define _VRJ_CAMERA_PROJECTION_H_
 
-#ifndef _VJ_CAMERA_PROJECTION_H_
-#define _VJ_CAMERA_PROJECTION_H_
-
-#include <vjConfig.h>
-#include <Kernel/vjProjection.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Display/Projection.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {

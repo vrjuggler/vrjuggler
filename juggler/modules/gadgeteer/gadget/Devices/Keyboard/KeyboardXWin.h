@@ -29,8 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VJ_XWIN_KEYBOARD_H_
-#define _VJ_XWIN_KEYBOARD_H_
+
+#ifndef _VRJ_XWIN_KEYBOARD_H_
+#define _VRJ_XWIN_KEYBOARD_H_
+
+#include <vrj/vjConfig.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -38,9 +41,8 @@
 
 #include <vpr/Sync/Mutex.h>
 
-#include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
-#include <Input/vjInput/vjKeyboard.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Input/Type/Keyboard.h>
 
 namespace vrj
 {

@@ -30,9 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _VJ_GL_WINDOW_H_
 #define _VJ_GL_WINDOW_H_
+
+#include <vrj/vjConfig.h>
 
 #include <stdio.h>
 #ifdef VJ_OS_Darwin
@@ -41,9 +42,8 @@
 #   include <GL/gl.h>
 #endif
 
-#include <vjConfig.h>
-#include <Kernel/vjDisplay.h>
-#include <Kernel/vjViewport.h>
+#include <vrj/Display/Display.h>
+#include <vrj/Display/Viewport.h>
 
 
 namespace vrj

@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //===============================================================
-// Isense (a Wrapper for isIntersense)
+// Isense (a Wrapper for IntersenseStandalone)
 //
 // Purpose:
 //      VR Juggler Intersense tracking class
@@ -41,16 +41,17 @@
 //
 // Date: 4-22-99
 //===============================================================
-#include <vjConfig.h>
+
+#include <vrj/vjConfig.h>
 
 #include <strstream>
 #include <fstream>
 
-#include <Input/vjPosition/vjIsense.h>
-#include <Math/vjCoord.h>
-#include <Math/vjQuat.h>
-#include <Utils/vjDebug.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/Input/Devices/Intersense/Isense.h>
+#include <vrj/Math/Coord.h>
+#include <vrj/Math/Quat.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {
@@ -88,7 +89,8 @@ bool Isense::config(ConfigChunk *c)
    if(! (Input::config(c) && Position::config(c) && Digital::config(c) && Analog::config(c) ))
       return false;
 
-// keep isIntersense's port and baud members in sync with Input's port and baud members.
+// keep IntersenseStandalone's port and baud members in sync with Input's port
+// and baud members.
     vjDEBUG(vjDBG_INPUT_MGR,1) << "   Isense::Isense(ConfigChunk*) -> Input::getPort() = " << Input::getPort() << std::endl << vjDEBUG_FLUSH;
     mTracker.setPortName( Input::getPort() );
     mTracker.rBaudRate() = Input::getBaudRate();

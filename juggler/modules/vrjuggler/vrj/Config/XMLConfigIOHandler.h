@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXMLCONFIGIOHANDLER_H_
-#define _VJXMLCONFIGIOHANDLER_H_
+#ifndef _VRJ_XMLCONFIGIOHANDLER_H_
+#define _VRJ_XMLCONFIGIOHANDLER_H_
 
-#include <vjConfig.h>
-#include <Config/vjConfigIOHandler.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/ConfigIOHandler.h>
 
 #include <util/PlatformUtils.hpp>
 #include <parsers/DOMParser.hpp>
@@ -43,12 +43,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <Config/vjConfigChunkDB.h>
-//#include <Config/vjChunkFactory.h>
+#include <vrj/Config/ConfigChunkDB.h>
+//#include <vrj/Config/ChunkFactory.h>
 
 namespace vrj
 {
-   
+
 //: Config IO handler for the new XML-based cfgfile format.
 //  This particular class is dependent on the Xerces representation of
 //  DOM_Nodes.  (It should probably be renamed XercesXMLConfigIOHandler

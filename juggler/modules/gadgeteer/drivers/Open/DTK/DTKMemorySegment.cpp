@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <dtk.h>
 
-#include <Config/vjConfigChunk.h>
-#include <Input/vjDTK/vjDTKMemorySegment.h>
+#include <vrj/Config/ConfigChunk.h>
+#include <vrj/Input/Devices/Open/DTK/DTKMemorySegment.h>
 
 namespace vrj
 {

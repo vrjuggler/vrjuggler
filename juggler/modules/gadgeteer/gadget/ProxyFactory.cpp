@@ -30,17 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
-#include <vjConfig.h>
-#include <Input/InputManager/vjProxyFactory.h>
-
-#include <Input/InputManager/vjAnalogProxy.h>
-#include <Input/InputManager/vjDigitalProxy.h>
-#include <Input/InputManager/vjPosProxy.h>
-#include <Input/InputManager/vjGloveProxy.h>
-#include <Input/InputManager/vjGestureProxy.h>
-#include <Input/InputManager/vjKeyboardProxy.h>
-#include <Input/InputManager/vjProxyDepChecker.h>
+#include <vrj/Input/Type/AnalogProxy.h>
+#include <vrj/Input/Type/DigitalProxy.h>
+#include <vrj/Input/Type/PosProxy.h>
+#include <vrj/Input/Type/GloveProxy.h>
+#include <vrj/Input/Type/GestureProxy.h>
+#include <vrj/Input/Type/KeyboardProxy.h>
+#include <vrj/Input/ProxyDepChecker.h>
+#include <vrj/Input/ProxyFactory.h>
 
 #include <typeinfo>
 

@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXERCESXMLPARSER_H_
-#define _VJXERCESXMLPARSER_H_
+#ifndef _VRJ_XERCESXMLPARSER_H_
+#define _VRJ_XERCESXMLPARSER_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <dom/DOM.hpp>
 

@@ -29,11 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VJ_DEVICE_INTERFACE_H_
-#define _VJ_DEVICE_INTERFACE_H_
 
-#include <vjConfig.h>
-#include <Utils/vjDebug.h>
+#ifndef _VRJ_DEVICE_INTERFACE_H_
+#define _VRJ_DEVICE_INTERFACE_H_
+
+#include <vrj/vjConfig.h>
+#include <vrj/Util/Debug.h>
 
 namespace vrj
 {

@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJSTANDARDCONFIGIO_H_
-#define _VJSTANDARDCONFIGIO_H_
+#ifndef _VJ_STANDARDCONFIGIO_H_
+#define _VJ_STANDARDCONFIGIO_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 //#include <string.h>
 //#include <stdlib.h>
 
-#include <Config/vjConfigIOHandler.h>
-#include <Config/vjConfigChunkDB.h>
+#include <vrj/Config/ConfigIOHandler.h>
+#include <vrj/Config/ConfigChunkDB.h>
 
 namespace vrj
 {

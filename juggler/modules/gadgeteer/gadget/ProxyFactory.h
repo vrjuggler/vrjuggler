@@ -30,16 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_PROXY_FACTORY_H_
-#define _VJ_PROXY_FACTORY_H_
+#ifndef _VRJ_PROXY_FACTORY_H_
+#define _VRJ_PROXY_FACTORY_H_
 //#pragma once
 
-#include <vjConfig.h>
-#include <Input/InputManager/vjProxy.h>
-#include <Config/vjConfigChunk.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Input/Type/Proxy.h>
+#include <vrj/Config/ConfigChunk.h>
 #include <vpr/Util/Singleton.h>
-#include <Kernel/vjDependencyManager.h>
+#include <vrj/Kernel/DependencyManager.h>
 
 
 namespace vrj

@@ -30,10 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
-#include <Kernel/Pf/vjPfUtil.h>
-#include <Math/vjVec3.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Draw/Pf/PfUtil.h>
+#include <vrj/Math/Vec3.h>
 
 namespace vrj
 {

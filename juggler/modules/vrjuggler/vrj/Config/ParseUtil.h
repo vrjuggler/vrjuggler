@@ -30,13 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VRJ_PARSEUTIL_H_
+#define _VRJ_PARSEUTIL_H_
 
-
-#ifndef _PARSEUTIL_H_
-#define _PARSEUTIL_H_
-
-#include <vjConfig.h>
-#include <Config/vjVarValue.h>
+#include <vrj/vjConfig.h>
+#include <vrj/Config/VarValue.h>
 
 namespace vrj
 {

@@ -31,35 +31,40 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Input.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Input.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+default: all
+
 # Include common definitions.
 include @topdir@/make.defs.mk
 
+includedir	= @includedir@/vrj/Input
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+INSTALL		= @INSTALL@
+SUBOBJDIR	= $(VJ_LIBRARY)
+
 # Prefix for recursive stuff.
-DIRPRFX		= Input/
+DIRPRFX	= vrj/Input/
 
 # Subdirectories to compile.
-SUBDIR		= Filter	\
-                  InputManager	\
-                  Multi		\
-                  ibox		\
-                  intersense    \
-                  vjDTK		\
-                  vjGesture	\
-                  vjGlove	\
-                  vjInput	\
-                  vjKeyboard	\
-                  vjPosition	\
-                  vjSim
+SUBDIR	= Devices	\
+          Type
 
-# This is a hack until I can figure out a better way to do this automatically
-# in Doozer++.  The problem is that GNU make doesn't offer much in the way
-# of execution logic, and when recursion gets to this point, I don't know a
-# good way to tell it to continue recursing with the given arguments.
-$(RECTARGET): recursive
+SRCS	= InputManager.cpp	\
+          ProxyDepChecker.cpp	\
+          ProxyFactory.cpp
 
-include $(MKPATH)/dpp.subdir.mk
+include $(MKPATH)/dpp.obj-subdir.mk
+
+# -----------------------------------------------------------------------------
+# Include dependencies generated automatically.
+# -----------------------------------------------------------------------------
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+    include $(DEPEND_FILES)
+endif
+endif

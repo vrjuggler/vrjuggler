@@ -30,14 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _VJ_GL_USER_DATA_H_
-#define _VJ_GL_USER_DATA_H_
+#ifndef _VRJ_GL_USER_DATA_H_
+#define _VRJ_GL_USER_DATA_H_
 //#pragma once
 
-#include <Kernel/vjUser.h>
-#include <Kernel/vjProjection.h>
-#include <Kernel/vjViewport.h>
+#include <vrj/vjConfig.h>
+
+#include <vrj/Kernel/User.h>
+#include <vrj/Display/Projection.h>
+#include <vrj/Display/Viewport.h>
 
 namespace vrj
 {

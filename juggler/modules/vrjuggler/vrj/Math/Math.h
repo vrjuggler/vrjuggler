@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_MATH_H_
-#define _VJ_MATH_H_
+#ifndef _VRJ_MATH_H_
+#define _VRJ_MATH_H_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 #include <math.h>
 
 // some math.h do not have M_PI defined.

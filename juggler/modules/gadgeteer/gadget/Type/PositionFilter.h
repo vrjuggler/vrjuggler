@@ -33,7 +33,9 @@
 #ifndef _VJ_POS_FILTER_H_
 #define _VJ_POS_FILTER_H_
 
-#include <Math/vjMatrix.h>
+#include <vrj/vjConfig.h>
+
+#include <vrj/Math/Matrix.h>
 
 namespace vrj
 {

@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_CONFIG_TOKENS_H_
-#define _VJ_CONFIG_TOKENS_H_
+#ifndef _VRJ_CONFIG_TOKENS_H_
+#define _VRJ_CONFIG_TOKENS_H_
 
 namespace vrj
 {

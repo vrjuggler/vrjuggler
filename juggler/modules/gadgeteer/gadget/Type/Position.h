@@ -30,21 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 // positional tracker base class
 //
 ////////////////////////////////////////////////////////////////////////
-#ifndef _VJ_POSITION_H_
-#define _VJ_POSITION_H_
 
-#include <vjConfig.h>
+#ifndef _VRJ_POSITION_H_
+#define _VRJ_POSITION_H_
+
+#include <vrj/vjConfig.h>
 #include <typeinfo>
-#include <Input/vjInput/vjInput.h>
-#include <Math/vjVec3.h>
-#include <Math/vjMatrix.h>
-#include <Performance/vjTimeStamp.h>
+#include <vrj/Input/Type/Input.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Performance/TimeStamp.h>
 
 namespace vrj
 {

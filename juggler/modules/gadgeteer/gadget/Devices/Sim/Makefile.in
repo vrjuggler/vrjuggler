@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Input/vjSim.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Input/Devices/Sim.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,19 +41,19 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Input/vjSim
+includedir	= @includedir@/vrj/Input/Devices/Sim
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS		= vjSimAnalog.cpp		\
-                  vjSimDigital.cpp		\
-                  vjSimDigitalGlove.cpp		\
-                  vjSimGloveGesture.cpp		\
-                  vjSimInput.cpp		\
-                  vjSimPosition.cpp		\
-                  vjSimRelativePosition.cpp
+SRCS		= SimAnalog.cpp			\
+                  SimDigital.cpp		\
+                  SimDigitalGlove.cpp		\
+                  SimGloveGesture.cpp		\
+                  SimInput.cpp			\
+                  SimPosition.cpp		\
+                  SimRelativePosition.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

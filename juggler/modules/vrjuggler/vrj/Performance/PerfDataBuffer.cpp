@@ -30,10 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vjConfig.h>
 
-#include <Performance/vjPerfDataBuffer.h>
-#include <Utils/vjDebug.h>
-#include <Math/vjMath.h>
+#include <vrj/Performance/PerfDataBuffer.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Math/Math.h>
 
 namespace vrj
 {
