@@ -89,7 +89,6 @@ void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
 
     vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName()
 				   << "\n" << vjDEBUG_FLUSH;
-
     b->deactivate();
     if (perf_target)
 	perf_target->removeTimedUpdate (b);
@@ -129,7 +128,7 @@ void vjEnvironmentManager::sendRefresh() {
 
 
 
-//: ConfigChunkHandler stuff
+//: ConfigChunkHandler interface
 //! PRE: configCanHandle(chunk) == true
 //! RETURNS: success
 bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
@@ -236,10 +235,15 @@ bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
 	connections_mutex.acquire();
  	vjConnect* c = getConnect (chunk->getProperty ("Name"));
  	if (c) {
- 	    removeConnect (c);
+ 	    if (removeConnect (c))
+		vjDEBUG(vjDBG_ENV_MGR,3) << "EM connection removal succeeded\n"
+					 << vjDEBUG_FLUSH;
+	    else
+		vjDEBUG(vjDBG_ENV_MGR,1) << "EM connection removal - not found - "
+					 << chunk->getProperty ("Name") << endl
+					 << vjDEBUG_FLUSH;
  	}
 	connections_mutex.release();
-	vjDEBUG (vjDBG_ENV_MGR,4) << "EM completed connection removal\n" << vjDEBUG_FLUSH;
 	return true;
     }
 
@@ -263,9 +267,9 @@ bool vjEnvironmentManager::configCanHandle(vjConfigChunk* chunk) {
 //-------------------- PRIVATE MEMBER FUNCTIONS -------------------------
 
 // should only be called when we own connections_mutex
-void vjEnvironmentManager::removeConnect (vjConnect* con) {
+bool vjEnvironmentManager::removeConnect (vjConnect* con) {
     if (!con)
-	return;
+	return false;
     if (con == perf_target)
 	setPerformanceTarget (NULL);
     std::vector<vjConnect*>::iterator i;
@@ -273,8 +277,9 @@ void vjEnvironmentManager::removeConnect (vjConnect* con) {
 	if (con == *i) {
 	    connections.erase (i);
 	    delete con;
-	    break;
+	    return true;
 	}
+    return false;
 }
 
 
