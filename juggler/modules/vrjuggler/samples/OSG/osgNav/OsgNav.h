@@ -136,7 +136,7 @@ public:
    // This is called once for each display (twice for each stereo display)
    virtual void contextInit()
    {
-      OsgApp::contextInit();    // MUST call base class version
+      vrj::OsgApp::contextInit();    // MUST call base class version
       initGLState();       // Initialize the GL state information. (lights, shading, etc)
    }
 
