@@ -48,11 +48,12 @@
 #include <sys/socket.h>
 #include <errno.h>
 
-#include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 // ============================================================================
 // Public methods.
@@ -61,75 +62,82 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
-ReturnStatus
-SocketStreamImplBSD::listen (const int backlog) {
-    ReturnStatus retval;
+vpr::ReturnStatus SocketStreamImplBSD::listen (const int backlog)
+{
+   vpr::ReturnStatus retval;
 
-    // Put the socket into listning mode.  If that fails, print an error and
-    // return error status.
-    if ( ::listen(m_handle->m_fdesc, backlog) == -1 ) {
-        fprintf(stderr,
-                "[vpr::SocketStreamImplBSD] Cannot listen on socket: %s\n",
-                strerror(errno));
-        retval.setCode(ReturnStatus::Fail);
-    }
+   // Put the socket into listning mode.  If that fails, print an error and
+   // return error status.
+   if ( ::listen(m_handle->m_fdesc, backlog) == -1 )
+   {
+      fprintf(stderr,
+              "[vpr::SocketStreamImplBSD] Cannot listen on socket: %s\n",
+              strerror(errno));
+      retval.setCode(ReturnStatus::Fail);
+   }
 
-    return retval;
+   return retval;
 }
 
 // ----------------------------------------------------------------------------
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
-ReturnStatus
-SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
-    int accept_sock;
-    ReturnStatus retval;
-    InetAddr addr;
-    socklen_t addrlen;
+vpr::ReturnStatus SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout)
+{
+   int accept_sock;
+   vpr::ReturnStatus retval;
+   InetAddr addr;
+   socklen_t addrlen;
 
-    retval = m_handle->isReadable(timeout);
+   retval = m_handle->isReadable(timeout);
 
-    if ( retval.success() ) {
-        m_blocking_fixed = true;
+   if ( retval.success() )
+   {
+      m_blocking_fixed = true;
 
-        // Accept an incoming connection request.
-        addrlen = addr.size();
-        accept_sock = ::accept(m_handle->m_fdesc,
-                               (struct sockaddr*) &addr.m_addr, &addrlen);
+      // Accept an incoming connection request.
+      addrlen = addr.size();
+      accept_sock = ::accept(m_handle->m_fdesc,
+                             (struct sockaddr*) &addr.m_addr, &addrlen);
 
-        // If accept(2) failed, print an error message and return error stauts.
-        if ( accept_sock == -1 ) {
-            if ( errno == EWOULDBLOCK && getNonBlocking() ) {
-                retval.setCode(ReturnStatus::WouldBlock);
-            }
-            else {
-                fprintf(stderr,
-                        "[vpr::SocketStreamImplBSD] Error while accepting "
-                        "incoming connection: %s\n", strerror(errno));
-                retval.setCode(ReturnStatus::Fail);
-            }
-        }
-        // Otherwise, put the new socket in the passed socket object.
-        else {
-            sock.setRemoteAddr(addr);
-            sock.m_handle          = new FileHandleImplUNIX(addr.getAddressString());
-            sock.m_handle->m_fdesc = accept_sock;
-            sock.m_open            = true;
+      // If accept(2) failed, print an error message and return error stauts.
+      if ( accept_sock == -1 )
+      {
+         if ( errno == EWOULDBLOCK && getNonBlocking() )
+         {
+            retval.setCode(ReturnStatus::WouldBlock);
+         }
+         else
+         {
+            fprintf(stderr,
+                    "[vpr::SocketStreamImplBSD] Error while accepting "
+                    "incoming connection: %s\n", strerror(errno));
+            retval.setCode(ReturnStatus::Fail);
+         }
+      }
+      // Otherwise, put the new socket in the passed socket object.
+      else
+      {
+         sock.setRemoteAddr(addr);
+         sock.m_handle          = new FileHandleImplUNIX(addr.getAddressString());
+         sock.m_handle->m_fdesc = accept_sock;
+         sock.m_open            = true;
 
-            // Inherit the blocking state from the accepting socket.  This
-            // must be done after m_open is set to true to satisfy the
-            // pre-condition.
-            if ( getNonBlocking() ) {
-                sock.enableNonBlocking();
-            }
+         // Inherit the blocking state from the accepting socket.  This
+         // must be done after m_open is set to true to satisfy the
+         // pre-condition.
+         if ( getNonBlocking() )
+         {
+            sock.enableNonBlocking();
+         }
 
-            sock.m_bound          = true;
-            sock.m_connected      = true;
-            sock.m_blocking_fixed = true;
-        }
-    }
+         sock.m_bound          = true;
+         sock.m_connected      = true;
+         sock.m_blocking_fixed = true;
+      }
+   }
 
-    return retval;
+   return retval;
 }
 
-}; // End of vpr namespace
+} // End of vpr namespace
