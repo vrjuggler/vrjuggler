@@ -141,7 +141,7 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
 
    // Exit, cleanup code
    XDestroyWindow(m_display,m_window);
-   XFree(m_visual);
+   //XFree(m_visual);
    XCloseDisplay((Display*) m_display);
 }
 
@@ -551,14 +551,14 @@ int vjXWinKeyboard::openTheWindow()
    }
    m_screen = DefaultScreen(m_display);
 
-   XVisualInfo vTemplate;
+   XVisualInfo vTemplate, *vis_infos;
    long vMask = VisualScreenMask;
    vTemplate.screen = m_screen;
    int nVisuals;
 
-   m_visual = XGetVisualInfo( m_display, vMask, &vTemplate, &nVisuals);
+   vis_infos = XGetVisualInfo( m_display, vMask, &vTemplate, &nVisuals);
    XVisualInfo* p_visinfo;
-   for (i = 0, p_visinfo = m_visual; i < nVisuals; i++, p_visinfo++)
+   for (i = 0, p_visinfo = vis_infos; i < nVisuals; i++, p_visinfo++)
    {
       if (p_visinfo->depth > 8)
       {
@@ -602,6 +602,8 @@ int vjXWinKeyboard::openTheWindow()
               << "vjXWinKeyboard::openTheWindow() : done." << endl
               << vjDEBUG_FLUSH;
 
+   XFree (vis_infos);
+
    return 1;
 }
 
@@ -633,8 +635,6 @@ void vjXWinKeyboard::setHints(Window window,
          1, /* 1 string to convert */
          &i_name);
 
-    sizehints.x           = m_x;        /* -- Obsolete in R4 */
-    sizehints.y           = m_y;        /* -- Obsolete in R4 */
     sizehints.width       = m_width;    /* -- Obsolete in R4 */
     sizehints.height      = m_height;   /* -- Obsolete in R4 */
     sizehints.base_width  = m_width;    /* -- New in R4 */
@@ -684,9 +684,14 @@ Window vjXWinKeyboard::createWindow (Window parent, unsigned int border, unsigne
   //UnUsed// attributes.event_mask = event_mask;
   //UnUsed// attribute_mask = CWBackPixel | CWBorderPixel | CWEventMask;
 
+  // need screen size so we can convert origin from lower-left
+  XWindowAttributes winattrs;
+  XGetWindowAttributes (m_display, RootWindow (m_display, DefaultScreen(m_display)), &winattrs);
+
   // create it
   window = XCreateWindow( m_display, parent,
-           m_x,m_y,m_width,m_height, border,
+           m_x, winattrs.height - m_y - m_height,
+           m_width,m_height, border,
            m_visual->depth, /*depth*/
            InputOutput, /*window class*/
            m_visual->visual,CWBorderPixel|CWColormap|CWEventMask, &m_swa);
