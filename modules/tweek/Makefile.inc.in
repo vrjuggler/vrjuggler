@@ -130,7 +130,7 @@ beforebuild:
 	@$(MAKE) tweek-java
 	@$(MAKE) extensions-java
 
-$(PARAM_HEADER):
+$(PARAM_HEADER): $(TWEEKROOT_ABS)/$(PARAM_HEADER).in $(TWEEKROOT_ABS)/VERSION
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 
 cxx-idl:
