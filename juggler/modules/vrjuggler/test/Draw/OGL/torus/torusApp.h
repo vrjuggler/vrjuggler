@@ -38,7 +38,11 @@
 #include <vrj/Draw/OGL/GlApp.h>
 
 #include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/DigitalInterface.h>
 
+
+namespace vrjTest
+{
 
 //--------------------------------------------------
 // Torus test OpenGL application class
@@ -59,7 +63,8 @@ public:
    // initialization here.
    virtual void init()
    {
-      mWand.init("VJWand");
+      mWand.init("VJWand");            // Handle to the wand device
+      mAppExit.init("VJAppExit");      // App exit key
    }
 
    // Execute any initialization needed <b>after</b> API is started
@@ -78,7 +83,13 @@ public:
    // Function called after tracker update but before start of drawing.  Do
    // calculations and state modifications here.
    virtual void preFrame()
-   {;}
+   {
+      // Did we ask for an app exit
+      if(mAppExit->getData())
+      {
+         mKernel->stop();     // trigger a kernel stop
+      }
+   }
 
    virtual void bufferPreDraw();
 
@@ -103,6 +114,9 @@ private:
 private:
    gadget::PositionInterface    mWand;
    float                        mTorusRotation;
+   gadget::DigitalInterface     mAppExit;
 };
+
+}; // namespace vrjTest
 
 #endif
