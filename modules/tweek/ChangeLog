@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-02-05 patrickh Added support for editing Bean-specific preferences.
+                    NEW VERSION: 0.2.0
 2002-01-22 patrickh Started a test suite for the Java code using JUnit.
 2001-12-09 patrickh Added the capability to "unregister" subjects previously
                     registered with the Subject Manager.
