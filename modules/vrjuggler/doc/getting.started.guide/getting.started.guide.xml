@@ -230,7 +230,7 @@ value</screen>
                   <listitem>
                      <para>This variable can be used to control which components of VR Juggler are allowed to output diagnostic data. If for some reason you set <varname>VJ_DEBUG_NFY_LEVEL</varname> to 5 or higher, this variable can be used to filter the output. The value of <varname>VJ_DEBUG_CATEGORIES</varname> is a space-separated list of Juggler debug component names (defined in <filename>$VJ_BASE_DIR/include/Kernel/vjDebug.h</filename>). The default value is <quote>DBG_ALL</quote>, which performs no filtering whatsoever. Examples of setting it are as follows:</para>
                      <screen>% VJ_DEBUG_CATAGORIES = DBG_ERROR
-% VJ_DEBUG_CATAGORIES = "DBG_KERENEL DBG_INPUT"
+% VJ_DEBUG_CATAGORIES = "DBG_KERNEL DBG_INPUT"
 % VJ_DEBUG_CATAGORIES = "DBG_CONFIGDB DBG_ENV_MGR"</screen>
                   </listitem>
                </varlistentry>
