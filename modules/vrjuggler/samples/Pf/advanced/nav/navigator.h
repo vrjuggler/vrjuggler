@@ -142,7 +142,7 @@ protected:
 };
 
 
-void navigator::navTranslate(vrj::Vec3 trans, bool& didCollide, vrj::Vec3& totalCorrection)
+inline void navigator::navTranslate(vrj::Vec3 trans, bool& didCollide, vrj::Vec3& totalCorrection)
 {
    /*
    vrj::Coord cur_pos(mCurPos);
@@ -177,7 +177,7 @@ void navigator::navTranslate(vrj::Vec3 trans, bool& didCollide, vrj::Vec3& total
 }
 
 
-void navigator::navRotate( vrj::Matrix rot_mat )
+inline void navigator::navRotate( vrj::Matrix rot_mat )
 {
    //rot_mat.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], rot_mat );
 
@@ -203,7 +203,7 @@ void navigator::navRotate( vrj::Matrix rot_mat )
 // Checks the given translation (in model cordinate space) against
 // the collidors given
 // returns the modified trans, and the total correction that was applied
-void navigator::navCollideTransCorrect(vrj::Vec3& trans, bool& didCollide, vrj::Vec3& totalCorrection)
+inline void navigator::navCollideTransCorrect(vrj::Vec3& trans, bool& didCollide, vrj::Vec3& totalCorrection)
 {
    didCollide = false;
    totalCorrection.set(0,0,0);
@@ -244,7 +244,7 @@ void navigator::navCollideTransCorrect(vrj::Vec3& trans, bool& didCollide, vrj::
 }
 
 
-void navigator::setRotAxis(bool allowX, bool allowY, bool allowZ)
+inline void navigator::setRotAxis(bool allowX, bool allowY, bool allowZ)
 {
    allowAxis[0] = allowX;
    allowAxis[1] = allowY;
@@ -253,7 +253,7 @@ void navigator::setRotAxis(bool allowX, bool allowY, bool allowZ)
 
 // HELPER
 // returns true if the action state is true
-bool navigator::checkForAction( std::vector<gadget::DigitalInterface*> btns, std::vector<navigator::ActionState> state_combo)
+inline bool navigator::checkForAction( std::vector<gadget::DigitalInterface*> btns, std::vector<navigator::ActionState> state_combo)
 {
    bool ret_val( true );
 
