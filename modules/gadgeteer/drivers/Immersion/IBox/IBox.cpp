@@ -147,7 +147,7 @@ int vjIBox::Sample()
 	theData[progress].analog[2] = thingie.analog[2];
 	theData[progress].analog[3] = thingie.analog[3];
 
-	swapValidIndices();     // Swap the buffers since we just read in a complete value
+	swapValidIndexes();     // Swap the buffers since we just read in a complete value
      }
      return 1;
 }
