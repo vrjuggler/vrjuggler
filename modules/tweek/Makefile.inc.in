@@ -53,6 +53,7 @@ JACORB_DIR=	$(JUGGLERROOT_ABS)/external/JacORB
 
 BUILD_CXX=		@BUILD_CXX@
 BUILD_JAVA=		@BUILD_JAVA@
+BUILD_PYTHON=		@BUILD_PYTHON@
 BUILD_EXTENSIONS=	@BUILD_EXTENSIONS@
 
 # Extra compiler and linker options needed only by this file.
@@ -140,7 +141,8 @@ beforebuild:
 	@echo "------------------------------------------------"
 	@$(MAKE) cxx-idl
 	@$(MAKE) java-idl
-	@$(MAKE) tweek-java
+	@$(MAKE) python-idl
+	@$(MAKE) tweek-gui
 	@$(MAKE) extensions-java
 
 $(PARAM_HEADER): $(TWEEKROOT_ABS)/$(PARAM_HEADER).in $(TWEEKROOT_ABS)/VERSION
@@ -154,6 +156,11 @@ endif
 java-idl:
 ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) -C java DO_IDL=1 java_idl
+endif
+
+python-idl:
+ifeq ($(BUILD_PYTHON), Y)
+	@$(MAKE) -C python DO_IDL=1 python_idl
 endif
 
 # Things to do after the object files and library are built.
@@ -222,8 +229,9 @@ endif
 # Build the Tweek GUI code base and the JAR files.
 tweek-gui:
 	@$(MAKE) tweek-java
+	@$(MAKE) tweek-python
 
-# Build the Java-based monitor application, associated code, and the JAR files.
+# Build the Java-based GUI, associated code, and the JAR files.
 tweek-java:
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
@@ -232,7 +240,7 @@ ifeq ($(BUILD_JAVA), Y)
 	@echo "<=== java"
 else
 	@echo "------------------------------------------------"
-	@echo "Tweek GUI build skipped"
+	@echo "Tweek Java GUI build skipped"
 	@echo "------------------------------------------------"
 endif
 endif	# ifndef NO_JAVA
@@ -254,6 +262,17 @@ else
 	@echo "------------------------------------------------"
 endif
 endif	# ifndef NO_JAVA
+
+tweek-python:
+ifeq ($(BUILD_PYTHON), Y)
+	@echo "===> python"
+	@$(MAKE) -C python $@
+	@echo "<=== python"
+else
+	@echo "------------------------------------------------"
+	@echo "Tweek Python GUI build skipped"
+	@echo "------------------------------------------------"
+endif
 
 # =============================================================================
 # Make links for developer use that provide the needed functionality for
@@ -402,7 +421,7 @@ post-install-headers:
 post-install-headers-idl:
 	$(MAKE) -C tweek/idl install
 
-# Install the Java-based software if possible.
+# Install the Java- and Python-based software if possible.
 install-tweek-gui:
 ifdef NO_JAVA
 	@echo "------------------------------------------------"
@@ -416,6 +435,9 @@ ifeq ($(BUILD_EXTENSIONS), Y)
 endif # if $(BUILD_EXTENSIONS) == Y
 endif	# if $(BUILD_JAVA) == Y
 endif	# ifdef NO_JAVA
+ifeq ($(BUILD_PYTHON), Y)
+	@$(MAKE) -C python tweek-gui-install
+endif
 
 install-data:
 	@echo "------------------------------------------------"
