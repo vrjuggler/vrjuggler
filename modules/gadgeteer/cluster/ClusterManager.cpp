@@ -34,6 +34,7 @@
 
 #include <vpr/vprTypes.h>
 #include <vpr/System.h>
+#include <vpr/DynLoad/LibraryLoader.h>
 #include <vpr/Util/FileUtils.h>
 
 #include <gadget/Util/Debug.h>
@@ -584,22 +585,33 @@ namespace cluster
             const std::string plugin_prop_name( "plugin" );
             const std::string plugin_init_func( "initPlugin" );
             int plugin_count = element->getNum( plugin_prop_name );
-            std::string plugin_dso;
+            std::string plugin_dso_name;
 
             for ( int i = 0; i < plugin_count; ++i )
             {
-               plugin_dso = element->getProperty<std::string>( plugin_prop_name, i );
+               plugin_dso_name =
+                  element->getProperty<std::string>(plugin_prop_name, i);
 
-               if ( !plugin_dso.empty() )
+               if ( !plugin_dso_name.empty() )
                {
                   vprDEBUG( gadgetDBG_RIM, vprDBG_STATE_LVL )
                      << "[cluster::ClusterManager::configAdd()] Loading "
-                     << "plugin DSO '" << plugin_dso << "'"
+                     << "plugin DSO '" << plugin_dso_name << "'"
                      << std::endl << vprDEBUG_FLUSH;
 
+                  vpr::ReturnStatus load_status;
                   Callable functor( this );
-                  mPluginLoader.findAndInitDSO( plugin_dso, search_path,
-                                                plugin_init_func, functor );
+                  vpr::LibraryPtr dso;
+                  load_status =
+                     vpr::LibraryLoader::findDSOAndLookup(plugin_dso_name,
+                                                          search_path,
+                                                          plugin_init_func,
+                                                          functor, dso);
+
+                  if ( load_status.success() )
+                  {
+                     mLoadedPlugins.push_back(dso);
+                  }
                }
             }
 
