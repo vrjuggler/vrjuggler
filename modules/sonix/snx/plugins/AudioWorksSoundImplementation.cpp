@@ -106,6 +106,7 @@ namespace snx
          else
          {
             awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
+            awProp(mBindTable[alias].mSound, AWSND_ENABLE, AW_ON);
             
             // @todo, this only works with "loop points"... grrr....
             awProp(mBindTable[alias].mSound, AWSND_NLOOPS, looping );
@@ -118,6 +119,20 @@ namespace snx
       }
    }
 
+    /**
+     * is the sound currently playing?
+     */
+   bool AudioWorksSoundImplementation::isPlaying( const std::string& alias )
+   {
+      if (mBindTable.count( alias ) > 0)
+      {
+         int notpaused = (bool)awGetProp( mBindTable[alias].mSound, AWSND_ENABLE );
+         int playing = (bool)awGetProp( mBindTable[alias].mSound, AWSND_STATE );
+         return (notpaused == AW_ON) && (playing == AW_ON);
+      }
+      return false;
+   }
+   
    /**
     * pause the sound, use unpause to return playback where you left off...
     */
