@@ -29,33 +29,29 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol.ui;
 
-
-package VjComponents.UI;
-
-import java.net.*;
-import java.io.*;
-import java.awt.event.*;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Container;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.text.html.*;
-import javax.swing.border.EmptyBorder;
-import java.util.*;
 
-import VjControl.Core;
-import VjComponents.UI.Widgets.ChildFrame;
-
+import org.vrjuggler.jccl.vjcontrol.Core;
+import org.vrjuggler.jccl.vjcontrol.ui.Widgets.ChildFrame;
 
 /**
  * A frame for displaying a URL with active hyperlinks, eg for help info.
  *
  *  An HTMLFrame is a source of ActionEvents with the action command "Close".
  *
- * @author Christopher Just
  * @version $Revision$
  */
 public class HTMLFrame extends JFrame 

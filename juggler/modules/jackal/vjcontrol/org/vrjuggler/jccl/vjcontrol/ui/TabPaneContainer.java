@@ -29,17 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.UI;
+package org.vrjuggler.jccl.vjcontrol.ui;
 
 import javax.swing.*;
 
-import VjControl.*;
-import VjControl.VjComponentException;
-import VjComponents.UI.PlugPanel;
-import VjComponents.UI.PlugPanelContainer;
-import VjConfig.*;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.config.*;
 
 public class TabPaneContainer
     extends JTabbedPane 

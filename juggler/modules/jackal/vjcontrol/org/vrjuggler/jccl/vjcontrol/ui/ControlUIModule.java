@@ -29,9 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.UI;
+package org.vrjuggler.jccl.vjcontrol.ui;
 
 import java.io.*;
 import java.awt.*;
@@ -43,12 +41,9 @@ import java.util.Vector;
 import java.util.List;
 import java.util.HashMap;
 
-import VjComponents.UI.*;
-import VjComponents.UI.Widgets.*;
-import VjControl.*;
-import VjConfig.*;
-
-
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 /** Base UI for VjControl.
  * 
@@ -64,18 +59,16 @@ import VjConfig.*;
  *  The utilities provided by ControlUIModule include an IconFactory,
  *  the EasyMenuBar, and an EasyFileDialog.
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ControlUIModule
     extends JFrame 
     implements ActionListener, 
                WindowListener, 
-	       LogMessageListener, 
+               LogMessageListener, 
                ChunkDBListener,  
-               CoreModule {
-
-
+               CoreModule
+{
     protected JPanel      main_panel;
 
     protected String component_name;
