@@ -186,8 +186,7 @@
       writing client/server code easier: <classname>vpr::SocketConnector</classname><indexterm><primary>classes</primary><secondary>vpr::SocketConnector</secondary></indexterm>
       and <classname>vpr::SocketAcceptor</classname><indexterm><primary>classes</primary><secondary>vpr::SocketAcceptor</secondary></indexterm>.
       Finally, VPR provides cross-platform data conversion functions (see
-      <xref linkend="chapter.object.serialization" />) to deal with endian
-      issues.</para>
+      <xref linkend="chapter.data.marshaling" />) to deal with endian issues.</para>
 
       <para>We begin our discussion by diving right into the common features
       of sockets, as collected in the class <classname>vpr::Socket</classname><indexterm><primary>classes</primary><secondary>vpr::Socket</secondary></indexterm>.
@@ -310,7 +309,7 @@
           abstraction contains a slight variation of the behavior that is
           available on UNIX-based systems. In Windows, once a call to
           <methodname>read()</methodname>, <methodname>write()</methodname>,
-          <methodname>accept()</methodname>, etc. is made, the blocking state
+          <methodname>accept()</methodname>, etc., is made, the blocking state
           of the socket is fixed<footnote><para>UNIX-based systems allow the
           blocking state to be changed from blocking to non-blocking or vice
           versa at any time.</para></footnote>. That is, if the socket is a
@@ -492,14 +491,145 @@
       abstraction.</para>
     </chapter>
 
-    <chapter id="chapter.object.serialization">
-      <title>Object Serialization</title>
+    <chapter id="chapter.data.marshaling">
+      <title>Data Marshaling</title>
 
       <indexterm zone="chapter.vpr.serial-ports">
         <primary>object serialization</primary>
       </indexterm>
 
-      <para></para>
+      <para>Network communication involves the transfer of data between
+      computers, and for it to work, the two computers must be able to talk to
+      each other using the same language. This must occur even if the two have
+      different internal representations of the data they hold. Thus, the data
+      must be marshaled into a common format when it is sent out and
+      demarshaled into the local native format when it is received. VPR
+      provides some helper functions and utility classes to simplify the
+      efforts of network programmers.</para>
+
+      <section>
+        <title>Endian Conversion</title>
+
+        <indexterm>
+          <primary>byte order</primary>
+
+          <secondary>host/network conversion</secondary>
+        </indexterm>
+
+        <para>A very common data marshaling activity is the conversion of a
+        multi-byte data unit from host byte order to network byte order. Such
+        conversions are necessary for elements of data that occupy 16 or more
+        bits. In VPR terms, that means the types <type>vpr::Int16</type>,
+        <type>vpr::int32</type>, <type>vpr::Int64</type>, and the unsigned
+        variants thereof. The interface <classname>vpr::System</classname><indexterm><primary>classes</primary><secondary>vpr::System</secondary></indexterm>
+        provides conversion functions from host to network byte order and vice
+        versa for all of these types. All the functions operate in terms of
+        the unsigned version of the aforementioned integer types, but they
+        work with the signed versions as well since they simply manipulate the
+        actual bits. The full list of functions is as follows:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><methodname>vpr::System::Htons()</methodname>: Converts a
+            16-bit integer from host to network byte order.</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>vpr::System::Ntohs()</methodname>: Converts a
+            16-bit integer from network to host byte order.</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>vpr::System::Htonl()</methodname>: Converts a
+            32-bit integer from host to network byte order.</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>vpr::System::Ntohl()</methodname>: Converts a
+            32-bit integer from network to host byte order.</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>vpr::System::Htonll()</methodname>: Converts a
+            64-bit integer from host to network byte order.</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>vpr::System::Ntohll()</methodname>: Converts a
+            64-bit integer from network to host byte order.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Single-precision floating-point values (which occupy 32 bits of
+        memory) can be converted using <methodname>vpr::System::Htonl()</methodname>
+        and <methodname>vpr::System::Ntohl()</methodname>. Similarly,
+        double-precision floating-point values (which occupy 64 bits of
+        memory) can be converted using <methodname>vpr::System::Htonll()</methodname>
+        and <methodname>vpr::System::Nothll()</methodname>.</para>
+
+        <note>
+          <para>Programmers already familiar with the operating system-level
+          calls such as <function>ntohs(3)</function> and
+          <function>htonl(3)</function> may wonder why the above functions are
+          named with a capital letter (i.e., <methodname>vpr::System::Htonl()</methodname>
+          versus <methodname>vpr::System::htonl()</methodname>). We have used
+          this naming convention because the byte order conversion functions
+          are preprocessor macros on some platforms, and the C preprocessor
+          cannot tell the difference between a method declaration and the use
+          of a macro. In other words, the code would not compile on platforms
+          where the functions are really macros.</para>
+        </note>
+      </section>
+
+      <section>
+        <title>Object Serialization</title>
+
+        <indexterm>
+          <primary>object serialization</primary>
+        </indexterm>
+
+        <para>Serializing objects is more complicated than dealing with
+        individual integer variables, but ultimately, a class is composed of
+        other data types. If the internal data types can be serialized, then
+        the object that holds them can be serialized as well. To enable this
+        functionality, VPR defines the interface <classname>vpr::SerializableObject</classname><indexterm><primary>classes</primary><secondary>vpr::SerializableObject</secondary></indexterm>.
+        It operates in terms of two other interfaces: <classname>vpr::ObjectReader</classname><indexterm><primary>classes</primary><secondary>vpr::ObjectReader</secondary></indexterm>
+        and <classname>vpr::ObjectWriter</classname><indexterm><primary>classes</primary><secondary>vpr::ObjectWriter</secondary></indexterm>.
+        Together, these allow an object and all the data it aggregates to be
+        serialized into an array of bytes that can be sent over the network.
+        Once received, the array can be de-serialized into a duplicate of the
+        original object.</para>
+
+        <para>The basic idea behind the object serialization interface in VPR
+        is the same as in Java (see the API documentation on
+        <classname>java.io.Serializable</classname>). An class identifies
+        itself as being serializable by adding <classname>vpr::SerializableObject</classname>
+        to its list of parent classes. Two pure virtual methods must then be
+        implemented: <methodname>readObject()</methodname> and
+        <methodname>writeObject()</methodname>. When a class instance must be
+        serialized, <methodname>writeObject()</methodname> is invoked with an
+        argument that provides the class with a <classname>vpr::ObjectWriter</classname>
+        instance. The implementation of <methodname>writeObject()</methodname>
+        would then add the instance data to the object writer and return.
+        De-serializing an object occurs in <methodname>readObject()</methodname>
+        using an instance of <classname>vpr::ObjectReader</classname>. A full
+        class hierarchy can be serialized and de-serialized through
+        polymorphism. The derived classes must simply call the parent
+        class&#39; <methodname>writeObject()</methodname> and
+        <methodname>readObject()</methodname> methods, thus following the
+        class hierarchy up to the first class that identified itself as
+        serializable.</para>
+
+        <para>Because vpr::ObjectReader and vpr::ObjectWriter are abstract
+        types, the actual implementation of these may vary. This is similar to
+        the way that Java can serialize an object to a variety of data
+        streams. Currently, VPR can serialize a class to an array of bytes (<classname>vpr::BufferObjectReader</classname><indexterm><primary>classes</primary><secondary>vpr::BufferObjectReader</secondary></indexterm>
+        and <classname>vpr::BufferObjectWriter</classname><indexterm><primary>classes</primary><secondary>vpr::BufferObjectWriter</secondary></indexterm>)
+        or to XML (<classname>vpr::XMLObjectReader</classname><indexterm><primary>classes</primary><secondary>vpr::XMLObjectReader</secondary></indexterm>
+        and <classname>vpr::XMLObjectWriter</classname><indexterm><primary>classes</primary><secondary>vpr::XMLObjectWriter</secondary></indexterm>).
+        The array of bytes is suitable for network transmission and makes
+        sharing of classes between hosts easy.</para>
+      </section>
     </chapter>
   </part>
 
@@ -1755,7 +1885,7 @@ thread = new vpr::Thread(my_functor);</programlisting>
           This is because every instance of <classname>vpr::CondVar</classname>
           contains an instance of <classname>vpr::Mutex</classname>. Thus,
           acquiring and releasing a condition variable actually acquires and
-          releases the contained mutex. </para>
+          releases the contained mutex.</para>
 
           <para>The header file to include for using <classname>vpr::CondVar</classname>
           is <filename>vpr/Sync/CondVar.h</filename>. As with other classes
