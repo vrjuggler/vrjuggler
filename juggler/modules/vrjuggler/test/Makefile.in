@@ -19,8 +19,6 @@ CfgTest input ogl pfNav Quat threads::
 clean:
 	-cd CfgTest && ${MAKE} clean
 	-cd input   && ${MAKE} clean
-	-cd ogl     && ${MAKE} clean
-	-cd pfNav   && ${MAKE} clean
 	-cd Quat    && ${MAKE} clean
 	-cd threads && ${MAKE} clean
 	-cd Math    && ${MAKE} clean
