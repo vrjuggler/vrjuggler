@@ -80,9 +80,12 @@ public class BeanContainer extends JScrollPane
 
    public void replaceViewer (org.vrjuggler.tweek.beans.BeanModelViewer v)
    {
-      this.getViewport().removeAll();
-      this.getViewport().add(v.getViewer(), null);
-      this.repaint();
+      if ( v != null )
+      {
+         this.getViewport().removeAll();
+         this.getViewport().add(v.getViewer(), null);
+         this.repaint();
+      }
    }
 
    public synchronized void addUserLevelChangeListener (UserLevelChangeListener listener)
