@@ -115,6 +115,7 @@ public:
     // ------------------------------------------------------------------------
     inline virtual bool
     enableBlocking (void) {
+       assert( m_open && "precondition says you must open() the socket first" );
         return m_handle->enableBlocking();
     }
 
@@ -122,6 +123,7 @@ public:
     // ------------------------------------------------------------------------
     inline virtual bool
     enableNonBlocking (void) {
+       assert( m_open && "precondition says you must open() the socket first" );
         return m_handle->enableNonBlocking();
     }
 

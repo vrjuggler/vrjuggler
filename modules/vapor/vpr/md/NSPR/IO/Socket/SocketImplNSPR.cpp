@@ -143,6 +143,9 @@ SocketImpNSPR::bind () {
 // ------------------------------------------------------------------------
 Status
 SocketImpNSPR::enableBlocking () {
+
+   assert( m_open && "precondition says you must open() the socket first" );
+       
    Status retval;
 
    if (m_bound) {
@@ -175,6 +178,8 @@ Status
 SocketImpNSPR::enableNonBlocking () {
    Status retval;
 
+   assert( m_open && "precondition says you must open() the socket first" );
+   
    if(m_bound)
    {
       vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't diable blocking after socket is bound\n"
