@@ -202,7 +202,7 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([0.15.0], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
+VPR_PATH([0.24.0], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
 
 if test "x$enable_corba_rtrc" = "xyes" ; then
    TWEEK_PATH_CXX([0.10.1],
