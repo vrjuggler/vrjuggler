@@ -68,14 +68,14 @@ $Win32 = 1 if $ENV{'OS'} =~ /Windows/;
 
 # Ensure that there are four command-line arguments.  If not, exit with
 # error status.
-if ( $#ARGV < 3 || $#ARGV > 9 ) {
+if ( $#ARGV < 3 ) {
     warn "Usage: $0 -i <source directory> -o <destination directory>\n";
     exit 1;
 }
 
 # Get the -i and -o options and store their values in $opt_i and $opt_o
 # respectively.
-getopt('e:g:i:m:o:v:');
+getopts('e:g:i:lm:o:v:');
 
 my(@exts)    = split(/,/, "$opt_e") if $opt_e;
 my $src_dir  = "$opt_i";
@@ -100,6 +100,8 @@ if ( $opt_g && ! $Win32 ) {
 }
 
 $mode = "$opt_m" if $opt_m;
+
+my $make_symlink = ($opt_l ? 1 : 0);
 
 umask(002);
 mkpath("$dest_dir", 0, 0755);	# Make sure that $dest_dir exists
@@ -134,7 +136,8 @@ sub recurseAction {
     if ( $#exts != -1 ) {
         foreach ( @exts ) {
             if ( $curfile =~ /$_$/ ) {
-                installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+                installFile("$curfile", $uid, $gid, "$mode", "$dest_dir",
+                            $make_symlink);
                 last;
             }
         }
@@ -168,7 +171,8 @@ sub recurseAction {
                     or warn "WARNING: Could not delete $workfile: $!";
             }
 
-            installFile("$filename", $uid, $gid, "$mode", "$dest_dir");
+            installFile("$filename", $uid, $gid, "$mode", "$dest_dir",
+                        $make_symlink);
 
             # Delete the generated file now that we are done with it.
             unlink("$filename")
@@ -176,7 +180,8 @@ sub recurseAction {
         }
         # Otherwise, install it as-is.
         else {
-            installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+            installFile("$curfile", $uid, $gid, "$mode", "$dest_dir",
+                        $make_symlink);
         }
     }
 }
