@@ -39,6 +39,7 @@
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
 
+#define TRACKD_DLL_EXPORTS 0
 #include <trackdAPI.h>
 #include <gmtl/Matrix.h>
 
