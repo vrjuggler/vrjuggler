@@ -149,7 +149,7 @@ vpr::ReturnStatus LibraryLoader::loadAndInitDSO(vpr::LibraryPtr dso,
 
    const int lib_name_width(50);
 
-   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
       << "Loading library: " << std::setiosflags(std::ios::right)
       << std::setfill(' ') << std::setw(lib_name_width) << dso->getName()
       << std::resetiosflags(std::ios::right) << "     " << vprDEBUG_FLUSH;
@@ -159,7 +159,7 @@ vpr::ReturnStatus LibraryLoader::loadAndInitDSO(vpr::LibraryPtr dso,
 
    if ( status.success() )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << "Loaded DSO successfully.\n" << vprDEBUG_FLUSH;
 
       // Look up the DSO's init function and store it in the pointer
@@ -171,7 +171,7 @@ vpr::ReturnStatus LibraryLoader::loadAndInitDSO(vpr::LibraryPtr dso,
          vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
             << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n"
             << vprDEBUG_FLUSH;
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
             << "Got pointer to DSO initialization function.\n"
             << vprDEBUG_FLUSH;
 
