@@ -88,7 +88,7 @@ JCCL_PROF_LIB_DYNAMIC	= $(JCCL_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 BRANCH		= HEAD
 CANON_NAME	= Kenny
 VER_ARGS	= -f $(JCCLROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-                  -i $(JCCLROOT_ABS)/jccl/jcclParam.h.in -o jccl/jcclParam.h		\
+                  -i $(JCCLROOT_ABS)/common/jccl/jcclParam.h.in -o common/jccl/jcclParam.h		\
                   -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
 
 ifdef VERSION
@@ -148,25 +148,6 @@ $(LIBDIR)/$(JCCL_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(
 #            $(LN_S) $(LIBDIR)/$(JCCL_LIBRARY).exp ./
 #endif
 
-
-# =============================================================================
-# VjControl targets.
-# =============================================================================
-EXTRA_OBJ_TARGETS	= vjcontrol
-
-# Build the Java-based configuration GUI.
-vjcontrol:
-ifndef NO_JAVA_GUI
-ifeq ($(BUILD_VJCONTROL), Y)
-	@echo "===> GUI"
-	@$(MAKE) -C VjControl VjControl.jar
-	@echo "<=== GUI"
-else
-	@echo "------------------------------------------------"
-	@echo "VjControl build skipped"
-	@echo "------------------------------------------------"
-endif
-endif	# ifndef NO_JAVA_GUI
 
 # =============================================================================
 # Make links for developer use that provide the needed functionality for
