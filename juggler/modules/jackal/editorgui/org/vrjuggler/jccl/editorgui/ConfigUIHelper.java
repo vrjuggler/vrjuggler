@@ -43,7 +43,6 @@ import java.util.HashMap;
 
 import VjComponents.UI.*;
 import VjComponents.UI.Widgets.ChildFrame;
-import VjComponents.UI.Widgets.ChildFrameParent;
 import VjComponents.UI.Widgets.GenericEditorFrame;
 import VjComponents.UI.Widgets.EasyMenuBar;
 import VjComponents.ConfigEditor.ChunkDescUI.ChunkDescPanel;
@@ -77,7 +76,6 @@ public class ConfigUIHelper
     extends DefaultCoreModule
     implements ActionListener,
                ConfigModuleListener,
-               ChildFrameParent,
                DescDBListener {
 
 
@@ -288,7 +286,8 @@ public class ConfigUIHelper
 
     public void loadDescHelp (String s) {
         String url = "DescHelp/" + s + ".html";
-	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", null);
+	HTMLFrame help_frame = new HTMLFrame ("VjControl Help", null);
+        help_frame.addActionListener (this);
         help_frame.setURL (url);
         help_frame.setContentsURL (ClassLoader.getSystemResource ("VjFiles/VjControlIndex.html"));
 	child_frames.addElement (help_frame);
@@ -323,7 +322,8 @@ public class ConfigUIHelper
             ConfigChunkPanel p = configchunkpanel_factory.createConfigChunkPanel (ch.getDescToken());
             if (p != null) {
                 p.setChunk (ch, chunkdb);
-                f = new GenericEditorFrame (this, p);
+                f = new GenericEditorFrame (p);
+                f.addActionListener (this);
                 addChildFrame (f);
 	    }
             else
@@ -342,7 +342,8 @@ public class ConfigUIHelper
         if (f == null) {
             ChunkDescPanel p = new ChunkDescPanel (desc, db, this, editable);
             if (p != null) {
-                f = new GenericEditorFrame (this, p);
+                f = new GenericEditorFrame (p);
+                f.addActionListener (this);
                 addChildFrame (f);
 	    }
             else
@@ -350,50 +351,6 @@ public class ConfigUIHelper
         }
         else
             f.show();
-    }
-
-
-
-    /** Callback when one of ConfigUIHelper's children is closed.
-     */
-    public void closeChild (ChildFrame frame) {
-	if (frame instanceof GenericEditorFrame) {
-	    child_frames.removeElement(frame);
-	    frame.destroy();
-	}
-        else if (frame instanceof HTMLFrame) {
-            child_frames.removeElement (frame);
-            frame.destroy();
-        }
-        else 
-            System.out.println ("totally unidentified child frame");
-    }
-
-
-    /**
-     * Callback when one of ControlUI's children is applied (this sucks)
-     */
-    public void applyChild (ChildFrame frame) {
-	if (frame instanceof GenericEditorFrame) {
-            EditorPanel ep = ((GenericEditorFrame)frame).getEditorPanel();
-            if (ep instanceof ConfigChunkPanel) {
-                ConfigChunkPanel p = (ConfigChunkPanel)ep;
-                ConfigChunk newc, oldc;
-                oldc = p.getOldValue();
-                newc = p.getNewValue();
-                ConfigChunkDB chunkdb = p.getChunkDB();
-                config_module.replaceChunk (chunkdb, oldc, newc);
-            }
-            else if (ep instanceof ChunkDescPanel) {
-                ChunkDescPanel dp = (ChunkDescPanel)ep;
-                ChunkDesc oldc = dp.getOldValue();
-                ChunkDesc newc = dp.getNewValue();
-                ChunkDescDB descdb = dp.getDescDB();
-                config_module.replaceDesc (descdb, oldc, newc);
-            }
-	}
-        else
-            System.out.println ("Don't know what to do with this frame...");
     }
 
 
@@ -457,6 +414,35 @@ public class ConfigUIHelper
 	    if (d != null)
 		loadDescHelp (d.getToken());
 	}
+        else if (o instanceof GenericEditorFrame) {
+            GenericEditorFrame frame = (GenericEditorFrame)o;
+            if (e.getActionCommand().equals ("Apply")) {
+                EditorPanel ep = frame.getEditorPanel();
+                if (ep instanceof ConfigChunkPanel) {
+                    ConfigChunkPanel p = (ConfigChunkPanel)ep;
+                    ConfigChunk newc, oldc;
+                    oldc = p.getOldValue();
+                    newc = p.getNewValue();
+                    ConfigChunkDB chunkdb = p.getChunkDB();
+                    config_module.replaceChunk (chunkdb, oldc, newc);
+                }
+                else if (ep instanceof ChunkDescPanel) {
+                    ChunkDescPanel dp = (ChunkDescPanel)ep;
+                    ChunkDesc oldc = dp.getOldValue();
+                    ChunkDesc newc = dp.getNewValue();
+                    ChunkDescDB descdb = dp.getDescDB();
+                    config_module.replaceDesc (descdb, oldc, newc);
+                }
+            }
+            else if (e.getActionCommand().equals ("Close")) {
+                child_frames.removeElement(frame);
+                frame.destroy();     
+            }
+        }
+        else if (o instanceof HTMLFrame) {
+            child_frames.removeElement (o);
+            ((HTMLFrame)o).destroy();
+        }
         else
             Core.consoleErrorMessage ("ConfigUIHelper", "actionPerformed is confused by its arguments.");
     }

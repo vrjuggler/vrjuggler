@@ -56,8 +56,7 @@ public class ChunkDescPanel
     extends JPanel
     implements EditorPanel,
                ActionListener,
-               DescDBListener,
-               ChildFrameParent { 
+               DescDBListener { 
 
     ChunkDesc desc;
     ChunkDescDB descdb;
@@ -254,14 +253,26 @@ public class ChunkDescPanel
                 else {
                     // we're bypassing configuihelper's panel factory cuz it
                     // isn't safe to try to use a specific panel in this 
-                    // case... since we're editing 
+                    // case... since we're editing the desc
                     p = new DefaultConfigChunkPanel();
                 }
                 p.setChunk (new_default_chunk, null);
-                default_chunk_frame = new GenericEditorFrame (this, p);
+                default_chunk_frame = new GenericEditorFrame (p);
+                default_chunk_frame.addActionListener (this);
             }
             else
                 default_chunk_frame.show();
+        }
+        else if (source == default_chunk_frame) {
+            if (e.getActionCommand().equals ("Apply")) {
+                ConfigChunkPanel p = (ConfigChunkPanel)default_chunk_frame.getEditorPanel();
+                new_default_chunk = p.getNewValue();
+            }
+            else if (e.getActionCommand().equals ("Close")) {
+                default_chunk_frame.destroy();
+                //default_chunk_frame.dispose();
+                default_chunk_frame = null;
+            }
         }
     }
 
@@ -399,24 +410,6 @@ public class ChunkDescPanel
     }
     public void removeAllDescs (DescDBEvent e) {;}
 
-
-    //------------------ ChildFrameParent stuff ------------------------
-
-    public void closeChild (ChildFrame frame) {
-        if (frame == default_chunk_frame) {
-            default_chunk_frame.destroy();
-            //default_chunk_frame.dispose();
-            default_chunk_frame = null;
-        }
-    }
-
-
-    public void applyChild (ChildFrame frame) {
-        if (frame == default_chunk_frame) {
-            ConfigChunkPanel p = (ConfigChunkPanel)default_chunk_frame.getEditorPanel();
-            new_default_chunk = p.getNewValue();
-        }
-    }
 
 
 }

@@ -61,8 +61,7 @@ import VjComponents.UI.Widgets.*;
 
 public class VarValueBigChunkPanel 
     extends VarValuePanel 
-    implements ActionListener, 
-               ChildFrameParent {
+    implements ActionListener {
 
 
     protected Property           prop;
@@ -131,13 +130,15 @@ public class VarValueBigChunkPanel
 
 
     public void actionPerformed (ActionEvent e) {
-	if (e.getSource() == remove_button)
+        Object source = e.getSource();
+	if (source == remove_button)
             notifyActionListenersRemove();
-	else if (e.getSource() == edit_button) {
+	else if (source == edit_button) {
 	    if (chunkframe == null) {
                 ConfigChunkPanel p = uihelper_module.configchunkpanel_factory.createConfigChunkPanel (chunk.getDescToken());
                 p.setChunk (chunk, null);
-                chunkframe = new GenericEditorFrame (this, p);
+                chunkframe = new GenericEditorFrame (p);
+                chunkframe.addActionListener (this);
                 //ui_module.addChildFrame (f);
             }
             else
@@ -145,6 +146,18 @@ public class VarValueBigChunkPanel
 	    // BUG!!! that call to p.setChunk ought to pass the
 	    // chunkdb, but this panel doesn't know what it is!!!
 	}
+        else if (source instanceof GenericEditorFrame) {
+            if (e.getActionCommand().equals ("Close")) {
+                chunkframe.destroy();
+                chunkframe.dispose();
+                chunkframe = null;
+            }
+            else if (e.getActionCommand().equals ("Apply")) {
+                ConfigChunkPanel p = 
+                    (ConfigChunkPanel)chunkframe.getEditorPanel();
+                chunk = p.getNewValue();
+            }
+        }
     }
 
 
@@ -177,24 +190,24 @@ public class VarValueBigChunkPanel
     }
 
 
-    /******************** JFrameParent Stuff *****************************/
+//     /******************** JFrameParent Stuff *****************************/
 
-    public void closeChild (ChildFrame frame) {
-	if (chunkframe != frame) {
-	    Core.consoleErrorMessage ("VarValueBigChunkPanel", 
-				      "Got a closedChunkFrame for a ChunkFrame I never made!!! EEEK!");
-	}
-        chunkframe.destroy();
-	chunkframe.dispose();
-	chunkframe = null;
-    }
+//     public void closeChild (ChildFrame frame) {
+// 	if (chunkframe != frame) {
+// 	    Core.consoleErrorMessage ("VarValueBigChunkPanel", 
+// 				      "Got a closedChunkFrame for a ChunkFrame I never made!!! EEEK!");
+// 	}
+//         chunkframe.destroy();
+// 	chunkframe.dispose();
+// 	chunkframe = null;
+//     }
 
 
-    public void applyChild (ChildFrame frame) {
-        ConfigChunkPanel p = (ConfigChunkPanel)chunkframe.getEditorPanel();
-        chunk = p.getNewValue();
-        //edit_button.setText ("Edit " + chunk.getLastNameComponent());
-    }
+//     public void applyChild (ChildFrame frame) {
+//         ConfigChunkPanel p = (ConfigChunkPanel)chunkframe.getEditorPanel();
+//         chunk = p.getNewValue();
+//         //edit_button.setText ("Edit " + chunk.getLastNameComponent());
+//     }
 
 }
 

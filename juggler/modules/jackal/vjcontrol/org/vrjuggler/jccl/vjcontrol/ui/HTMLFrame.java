@@ -44,15 +44,16 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.text.html.*;
 import javax.swing.border.EmptyBorder;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.*;
 
 import VjControl.Core;
 import VjComponents.UI.Widgets.ChildFrame;
-import VjComponents.UI.Widgets.ChildFrameParent;
+
 
 /**
  * A frame for displaying a URL with active hyperlinks, eg for help info.
+ *
+ *  An HTMLFrame is a source of ActionEvents with the action command "Close".
  *
  * @author Christopher Just
  * @version $Revision$
@@ -68,25 +69,25 @@ public class HTMLFrame extends JFrame
 
     JScrollPane sp;
     JEditorPane pane;
-    ChildFrameParent parent;
 
     protected JButton contents_button;
     protected JButton forward_button;
     protected JButton back_button;
     protected JButton close_button;
 
+    private java.util.List action_listeners;
+
 
     /**
      * Constructor
      *
-     * @param _parent The "owner" of this frame, who receives close
-     *                messages.
      * @param s       Title for the new frame
      * @param url     A URL to display.  May be null.
      */
-    public HTMLFrame (ChildFrameParent _parent, String s, URL url) {
+    public HTMLFrame (String s, URL url) {
 	super (s);
-	parent = _parent;
+
+        action_listeners = new ArrayList();
 
         contents_url = null;
         back_buffer = new Vector();
@@ -312,7 +313,7 @@ public class HTMLFrame extends JFrame
             setURL (contents_url);
         }
         else if (e.getSource() == close_button) {
-            parent.closeChild (this);
+            notifyActionListenersClose();
         }
         else if (e.getSource() == back_button) {
             URL new_url = (URL)back_buffer.lastElement();
@@ -337,13 +338,47 @@ public class HTMLFrame extends JFrame
 
     public void windowActivated(WindowEvent e) {}
     public void windowClosed(WindowEvent e) {
-	parent.closeChild (this);
+        notifyActionListenersClose();
     }
     public void windowClosing(WindowEvent e) {}
     public void windowDeactivated(WindowEvent e) {}
     public void windowDeiconified(WindowEvent e) {}
     public void windowIconified(WindowEvent e) {}
     public void windowOpened(WindowEvent e) {}
+
+
+    //--------------------- ActionEvent Stuff ------------------------
+
+    public void addActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.add (l);
+	}
+    }
+
+    public void removeActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.remove (l);
+	}
+    }
+
+
+    private void notifyActionListenersClose () {
+        ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
+                                         "Close");
+        notifyActionListeners (e);
+    }
+
+    private void notifyActionListeners (ActionEvent e) {
+        ActionListener l;
+        int i, n;
+        synchronized (action_listeners) {
+            n = action_listeners.size();
+            for (i = 0; i < n; i++) {
+                l = (ActionListener)action_listeners.get(i);
+                l.actionPerformed (e);
+            }
+        }
+    }
 
 
     /********************** ChildFrame Stuff **********************/
