@@ -48,7 +48,7 @@
 // TODO rename to vjInputProxy
 //
 //!PUBLIC_API:
-class vjProxy
+class VJ_CLASS_API vjProxy
 {
 public:
    vjProxy()
@@ -94,7 +94,7 @@ protected:
 
 
 template <class DEV_TYPE>
-class vjTypedProxy : public vjProxy
+class VJ_CLASS_API vjTypedProxy : public vjProxy
 {
 public:
    vjTypedProxy() : mDeviceName("Unknown"), mTypedDevice(NULL)

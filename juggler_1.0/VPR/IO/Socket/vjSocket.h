@@ -33,6 +33,8 @@
 #ifndef _VJ_SOCKET_H_
 #define _VJ_SOCKET_H_
 
+#include <vjConfig.h>
+
 #include <string>
 
 #include <VPR/IO/vjBlockIO.h>
@@ -45,7 +47,7 @@
 //+ instantiated.  Instead, see vjSocketStream and vjSocketDatagram.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjSocket : public vjBlockIO {
+class VJ_CLASS_API vjSocket : public vjBlockIO {
 public:
     // ========================================================================
     // Block I/O interface.

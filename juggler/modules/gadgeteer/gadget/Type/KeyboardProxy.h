@@ -40,7 +40,7 @@
 
 //: Proxy class to vjKeyboard based devices.
 //!PUBLIC_API:
-class vjKeyboardProxy : public vjTypedProxy<vjKeyboard>
+class VJ_CLASS_API vjKeyboardProxy : public vjTypedProxy<vjKeyboard>
 {
 public:
    vjKeyboardProxy()

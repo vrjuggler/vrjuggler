@@ -39,8 +39,8 @@
 #include <VPR/md/WIN32/vjSocketImpWinSock.h>
 
 
-class vjSocketDatagramImpWinSock : virtual public vjSocketImpWinSock,
-                                   virtual public vjSocketDatagramImp
+class VJ_CLASS_API vjSocketDatagramImpWinSock :
+    virtual public vjSocketImpWinSock, virtual public vjSocketDatagramImp
 {
 public:
     // ========================================================================

@@ -33,11 +33,13 @@
 #ifndef FILE___IO_STUFF
 #define FILE___IO_STUFF
 
+#include <vjConfig.h>
+
 #include <stdlib.h>
 #include <string>
 #include <vector>
 
-class vjFileIO
+class VJ_CLASS_API vjFileIO
 {
 public:
    // == "." by default

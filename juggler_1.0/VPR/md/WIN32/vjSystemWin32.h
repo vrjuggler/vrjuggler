@@ -57,7 +57,7 @@ struct timezone {
 };
 #endif
 
-class vjSystem : public vjSystemBase {
+class VJ_CLASS_API vjSystem : public vjSystemBase {
 public:
     // ------------------------------------------------------------------------
     // NOTE:

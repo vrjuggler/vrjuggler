@@ -32,6 +32,8 @@
 #ifndef _VJ_SOCKET_STREAM_FACTORY_H_
 #define _VJ_SOCKET_STREAM_FACTORY_H_
 
+#include <vjConfig.h>
+
 #include <string>
 
 #ifdef WIN32
@@ -44,7 +46,7 @@
 // ----------------------------------------------------------------------------
 //: Stream socket implementation abstract factory.
 // ----------------------------------------------------------------------------
-class vjSocketStreamFactory {
+class VJ_CLASS_API vjSocketStreamFactory {
 public:
     // ------------------------------------------------------------------------
     //: Create a platform-specific object that is a subclass of

@@ -227,7 +227,7 @@ bool vjInputManager::removeDevice(vjConfigChunk* chunk)
   the devices, proxies and internal settings
 
 *********************************************** ahimberg */
-std::ostream& operator<<(std::ostream& out, vjInputManager& iMgr)
+VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, vjInputManager& iMgr)
 {
   out << "\n=============== vjInputManager Status: ===============================" << std::endl;
 

@@ -42,7 +42,7 @@
 #include <VPR/IO/Socket/vjInetAddr.h>
 
 
-class vjSocketImpWinSock : virtual public vjSocketImp {
+class VJ_CLASS_API vjSocketImpWinSock : virtual public vjSocketImp {
 public:
     // ========================================================================
     // vjBlockIO overrides.

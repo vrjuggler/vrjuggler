@@ -285,7 +285,7 @@ private:
 };
 
 // Ouput operator
-std::ostream& operator<<(std::ostream& out, vjBaseThread* threadPtr);
+VJ_API(std::ostream&) operator<<(std::ostream& out, vjBaseThread* threadPtr);
 
 
 //: Helper class fot vjThread that maintains a list of threads and ides

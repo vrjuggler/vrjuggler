@@ -33,6 +33,8 @@
 #ifndef _VJ_BLOCK_IO_H_
 #define _VJ_BLOCK_IO_H_
 
+#include <vjConfig.h>
+
 #ifdef __FreeBSD__
 #include <sys/types.h>
 #endif
@@ -49,7 +51,7 @@ typedef int ssize_t;
 //: Block-style (as opposed to streaming) I/O interface.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjBlockIO {
+class VJ_CLASS_API vjBlockIO {
 public:
     enum _open_mode {
         READ_ONLY,        // Open read-only

@@ -33,6 +33,8 @@
 #ifndef _VJ_SOCKET_DATAGRAM_H_
 #define _VJ_SOCKET_DATAGRAM_H_
 
+#include <vjConfig.h>
+
 #include <VPR/IO/Socket/vjSocket.h>
 #include <VPR/IO/Socket/vjSocketDatagramImp.h>
 #include <VPR/IO/Socket/vjInetAddr.h>
@@ -42,7 +44,7 @@
 //: Datagram socket interface.
 // ----------------------------------------------------------------------------
 //! PUBLIC_API:
-class vjSocketDatagram : public vjSocket {
+class VJ_CLASS_API vjSocketDatagram : public vjSocket {
 public:
     // ------------------------------------------------------------------------
     //: Default constructor.

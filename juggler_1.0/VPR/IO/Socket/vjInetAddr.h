@@ -33,6 +33,8 @@
 #ifndef _VJ_INET_ADDR_H_
 #define _VJ_INET_ADDR_H_
 
+#include <vjConfig.h>
+
 #include <string.h>
 #include <string>
 
@@ -53,7 +55,7 @@
 //: Cross-platform abstraction to Internet address structures.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjInetAddr {
+class VJ_CLASS_API vjInetAddr {
 public:
     // ------------------------------------------------------------------------
     //: Default constructor.  This initializes the memory for the encapsulated

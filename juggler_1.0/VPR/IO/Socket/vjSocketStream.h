@@ -33,6 +33,8 @@
 #ifndef _VJ_SOCKET_STREAM_H_
 #define _VJ_SOCKET_STREAM_H_
 
+#include <vjConfig.h>
+
 #include <VPR/IO/Socket/vjSocket.h>
 #include <VPR/IO/Socket/vjSocketStreamImp.h>
 #include <VPR/IO/Socket/vjInetAddr.h>
@@ -44,7 +46,7 @@
 //: Stream socket interface.
 // ----------------------------------------------------------------------------
 //! PUBLIC_API:
-class vjSocketStream : public vjSocket {
+class VJ_CLASS_API vjSocketStream : public vjSocket {
 public:
     // ------------------------------------------------------------------------
     //: Default constructor.

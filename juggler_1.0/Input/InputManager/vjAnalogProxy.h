@@ -54,7 +54,7 @@
 // See also: vjAnalog
 //
 //!PUBLIC_API:
-class vjAnalogProxy : public vjTypedProxy<vjAnalog>
+class VJ_CLASS_API vjAnalogProxy : public vjTypedProxy<vjAnalog>
 {
 
 public:

@@ -35,7 +35,7 @@
 #include <VPR/md/WIN32/vjThreadWin32.h>
 
 
-vjThreadTable<DWORD> vjThreadWin32::mThreadTable;
+VJ_IMPLEMENT_DATA(vjThreadTable<DWORD>) vjThreadWin32::mThreadTable;
 
 
 //: Spawning constructor

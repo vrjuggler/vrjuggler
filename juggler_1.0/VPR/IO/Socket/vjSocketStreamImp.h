@@ -33,6 +33,8 @@
 #ifndef _VJ_SOCKET_STREAM_IMP_H_
 #define _VJ_SOCKET_STREAM_IMP_H_
 
+#include <vjConfig.h>
+
 #include <string>
 
 #include <VPR/IO/Socket/vjSocketImp.h>
@@ -44,7 +46,7 @@
 // ----------------------------------------------------------------------------
 //: Stream socket implementation interface.
 // ----------------------------------------------------------------------------
-class vjSocketStreamImp : virtual public vjSocketImp {
+class VJ_CLASS_API vjSocketStreamImp : virtual public vjSocketImp {
 public:
     // ------------------------------------------------------------------------
     //: Default constructor.  This does nothing.

@@ -33,6 +33,8 @@
 #ifndef _VJ_SOCKET_DATAGRAM_IMP_H_
 #define _VJ_SOCKET_DATAGRAM_IMP_H_
 
+#include <vjConfig.h>
+
 #include <string>
 
 #include <VPR/IO/Socket/vjSocketImp.h>
@@ -42,7 +44,7 @@
 // ----------------------------------------------------------------------------
 //: Datagram socket implementation interface.
 // ----------------------------------------------------------------------------
-class vjSocketDatagramImp : virtual public vjSocketImp {
+class VJ_CLASS_API vjSocketDatagramImp : virtual public vjSocketImp {
 public:
     // ------------------------------------------------------------------------
     //: Default constructor.  This does nothing.

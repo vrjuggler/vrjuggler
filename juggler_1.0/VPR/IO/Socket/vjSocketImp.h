@@ -33,6 +33,8 @@
 #ifndef _VJ_SOCKET_IMP_H_
 #define _VJ_SOCKET_IMP_H_
 
+#include <vjConfig.h>
+
 #include <stdio.h>	/* XXX: Debugging only */
 #include <string>
 
@@ -44,7 +46,7 @@
 // ----------------------------------------------------------------------------
 //: Socket interface.
 // ----------------------------------------------------------------------------
-class vjSocketImp : public vjBlockIO {
+class VJ_CLASS_API vjSocketImp : public vjBlockIO {
 public:
     // ------------------------------------------------------------------------
     //: Destructor.  This currently does nothing.

@@ -61,13 +61,14 @@ class vjInput;
 //  (for speed)
 //-------------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjInputManager : public vjConfigChunkHandler
+class VJ_CLASS_API vjInputManager : public vjConfigChunkHandler
 {
 public:
    vjInputManager();
    virtual ~vjInputManager();
 
-   friend std::ostream& operator<<(std::ostream& out, vjInputManager& iMgr);
+   friend VJ_API(std::ostream&) operator<<(std::ostream& out,
+                                           vjInputManager& iMgr);
 
  //---------------------------//
  //      CONFIG               //

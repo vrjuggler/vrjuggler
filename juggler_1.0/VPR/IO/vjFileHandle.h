@@ -33,6 +33,8 @@
 #ifndef _VJ_FILE_HANDLE_H_
 #define _VJ_FILE_HANDLE_H_
 
+#include <vjConfig.h>
+
 #include <string>
 #include <vector>
 
@@ -44,7 +46,7 @@
 //+ interface.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjFileHandle : public vjBlockIO {
+class VJ_CLASS_API vjFileHandle : public vjBlockIO {
 public:
     // ------------------------------------------------------------------------
     //: Reconfigure the file handle to be in append mode.
