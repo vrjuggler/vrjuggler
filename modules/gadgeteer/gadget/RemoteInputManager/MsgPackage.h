@@ -61,7 +61,7 @@ namespace gadget
 
    public:
       MsgPackage();
-
+      void sendString(std::string str);
      /**
       * Send contents of current ObjectWriter to the specified socket and 
       * clear the ObjectWriter.
