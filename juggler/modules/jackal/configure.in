@@ -288,7 +288,7 @@ fi
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
-jccl_cxxflags=''
+jccl_cxxflags="$STD_FLAGS"
 jccl_cxxflags_all="$VPR_CXXFLAGS"
 
 # If the user has a local copy of CppDOM, add its path to the C++ flags.
@@ -301,11 +301,13 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
-    CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
-    CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    vc_cxxflags='/W3 /GR /GX /EHc /QIfdiv /QI0f'
+    CFLAGS="$CFLAGS $vc_flags"
+    CXXFLAGS="$CXXFLAGS $vc_flags"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
     DBG_FLAGS="$DBG_FLAGS /MDd"
     OPT_FLAGS="$OPT_FLAGS /MD"
+    jccl_cxxflags="$vc_flags $jccl_cxxflags"
 fi
 
 DPP_SYSTEM_SUBST
