@@ -87,7 +87,9 @@ public:
 
    /** Samples a value. */
    bool sample()
-   { return 1;}
+   {
+      return true;
+   }
 
    /**
     * Updates to the sampled data.
@@ -103,7 +105,9 @@ public:
    /** Returns digital data. */
    virtual const DigitalData getDigitalData(int devNum=0)
    {
-      vprASSERT(devNum < (int)mCurButtons.size() && "Digital index out of range");    // Make sure we have enough space
+      // Make sure we have enough space.
+      vprASSERT(devNum < (int)mCurButtons.size() &&
+                "Digital index out of range");
       return (mCurButtons[devNum]);
    }
 
@@ -117,7 +121,8 @@ public:
     */
    virtual AnalogData* getAnalogData(int devNum=0)
    {
-      vprASSERT(devNum < (int)mCurAxes.size() && "Analog index out of range");    // Make sure we have enough space
+      // Make sure we have enough space
+      vprASSERT(devNum < (int)mCurAxes.size() && "Analog index out of range");
       return &(mCurAxes[devNum]);
    }
 

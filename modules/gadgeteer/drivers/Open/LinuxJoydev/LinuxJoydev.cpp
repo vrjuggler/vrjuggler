@@ -69,10 +69,11 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-
 /** Constructor. */
 LinuxJoydev::LinuxJoydev()
-{;}
+{
+   /* Do nothing. */ ;
+}
 
 /**
  * Destructor.
@@ -82,6 +83,7 @@ LinuxJoydev::LinuxJoydev()
  */
 LinuxJoydev::~LinuxJoydev()
 {
+   /* Do nothing. */ ;
 }
 
 std::string LinuxJoydev::getElementType()
@@ -102,29 +104,33 @@ bool LinuxJoydev::config(jccl::ConfigElementPtr e)
    mJsLabel = e->getName();
    mPortName = e->getProperty<std::string>("port_name");
 
-   unsigned num_axis_buttons = e->getNum("axis_buttons");
-   for(unsigned i=0;i<num_axis_buttons;++i)
+   unsigned int num_axis_buttons = e->getNum("axis_buttons");
+   for ( unsigned int i = 0; i < num_axis_buttons; ++i )
    {
-      unsigned idx = e->getProperty<int>("axis_buttons", i);
+      unsigned int idx = e->getProperty<unsigned int>("axis_buttons", i);
       mAxisButtonIndices.push_back(idx);
    }
 
    return true;
 }
 
-
 /** Begin sampling.
 * Connect to the joystick and prepare to read.
 */
 bool LinuxJoydev::startSampling()
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL) << "Opening Linux Joystick driver on port: " << mPortName << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL)
+      << "Opening Linux Joystick driver on port: " << mPortName << std::endl
+      << vprDEBUG_FLUSH;
 
-   mJsFD = open(mPortName.c_str(), O_RDONLY | O_NONBLOCK);   // Open the joystick non-blocking
+   // Open the joystick non-blocking.
+   mJsFD = open(mPortName.c_str(), O_RDONLY | O_NONBLOCK);
 
    if(mJsFD < 0)
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "ERROR: Failed to open Linux Joystick: " << mPortName << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "ERROR: Failed to open Linux Joystick: " << mPortName << std::endl
+         << vprDEBUG_FLUSH;
       return false;
    }
 
@@ -152,12 +158,12 @@ bool LinuxJoydev::startSampling()
 
    // Get joystick name
    if ( ioctl(mJsFD, JSIOCGNAME(sizeof(js_name)), js_name) < 0 )
-   {  
-      mPhysicalJsName = std::string("Unknown"); 
+   {
+      mPhysicalJsName = std::string("Unknown");
    }
    else
-   {  
-      mPhysicalJsName = js_name; 
+   {
+      mPhysicalJsName = js_name;
    }
 
    // Output joystick description
@@ -169,10 +175,10 @@ bool LinuxJoydev::startSampling()
          << "  Driver version: " << version << std::endl
          << "    Axis buttons: ";
 
-   for(unsigned i=0;i<mAxisButtonIndices.size(); ++i)
-   { 
+   for ( unsigned int i = 0; i < mAxisButtonIndices.size(); ++i )
+   {
       vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-         << mAxisButtonIndices[i] << " "; 
+         << mAxisButtonIndices[i] << " ";
    }
    vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << std::endl
                                                            << vprDEBUG_FLUSH;
@@ -186,11 +192,12 @@ bool LinuxJoydev::startSampling()
    // Setup axis as button stuff
    mAxisToButtonIndexLookup.clear();
    mAxisToButtonIndexLookup.resize(mNumAxes, -1);            // Default to -1, meaning no axis button
-   for(unsigned i=0;i<mAxisButtonIndices.size(); ++i)       // For each configured axis index
+   for ( unsigned int i = 0; i < mAxisButtonIndices.size(); ++i )       // For each configured axis index
    {
-      unsigned virtual_btn_index = (mNumButtons+i); // Index of the virtual button from the axis
-      vprASSERT(virtual_btn_index < mCurButtons.size() && "Virtual button index out of range");
-      unsigned axis_index = mAxisButtonIndices[i];                      // Index of the axis we are mapping
+      unsigned int virtual_btn_index = (mNumButtons + i); // Index of the virtual button from the axis
+      vprASSERT(virtual_btn_index < mCurButtons.size() &&
+                "Virtual button index out of range");
+      unsigned int axis_index = mAxisButtonIndices[i];                      // Index of the axis we are mapping
       mAxisToButtonIndexLookup[axis_index] = int(virtual_btn_index);    // Setup the mapping
    }
 
@@ -227,7 +234,8 @@ void LinuxJoydev::updateData()
    {
       if(cur_event.type & JS_EVENT_BUTTON)
       {
-         //std::cout << "ljs: btn: " << unsigned(cur_event.number) << " val:" << cur_event.value << std::endl;
+         //std::cout << "ljs: btn: " << unsigned(cur_event.number) << " val:"
+         //          << cur_event.value << std::endl;
          unsigned btn_number = unsigned(cur_event.number);
          vprASSERT(btn_number < mCurButtons.size() && "Button out of range");
          mCurButtons[btn_number] = cur_event.value;         // Assign the new button value (0,1)
@@ -235,7 +243,8 @@ void LinuxJoydev::updateData()
       }
       else if(cur_event.type & JS_EVENT_AXIS)
       {
-         //std::cout << "ljs: axis: " << unsigned(cur_event.number) << " val:" << cur_event.value << std::endl;
+         //std::cout << "ljs: axis: " << unsigned(cur_event.number) << " val:"
+         //          << cur_event.value << std::endl;
          unsigned axis_number = unsigned(cur_event.number);
          vprASSERT(axis_number < mCurAxes.size() && "Axis out of range");
          vprASSERT(axis_number < mCurAxesRanges.size() && "Axis out of range");
@@ -248,7 +257,7 @@ void LinuxJoydev::updateData()
             axis_range.first = cur_event.value;
             mCurAxesRanges[axis_number] = axis_range;
          }
-         
+
          else if(cur_event.value > axis_range.second)
          {
             axis_range.second = cur_event.value;
@@ -257,9 +266,11 @@ void LinuxJoydev::updateData()
 
          else
          {
-            norm_value = (float(cur_event.value) - axis_range.first)/(axis_range.second-axis_range.first);
+            norm_value =
+               (float(cur_event.value) - axis_range.first) /
+                  (axis_range.second - axis_range.first);
          }
-         
+
          mCurAxes[axis_number] = norm_value;
          mCurAxes[axis_number].setTime();
 
@@ -269,7 +280,8 @@ void LinuxJoydev::updateData()
          if(mAxisToButtonIndexLookup[axis_number] != -1)    // If we map to a virtual button
          {
             unsigned vir_btn_index = mAxisToButtonIndexLookup[axis_number];
-            vprASSERT(vir_btn_index < mCurButtons.size() && "Virtual button index out of range");
+            vprASSERT(vir_btn_index < mCurButtons.size() &&
+                      "Virtual button index out of range");
             mCurButtons[vir_btn_index] = ( (norm_value > 0.5f) ? 1 : 0);
             mCurButtons[vir_btn_index].setTime();
          }
@@ -279,7 +291,8 @@ void LinuxJoydev::updateData()
    // Check to make sure error was just no-pending events
    if(errno != EAGAIN)
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "ERROR: Error reading linux joystick.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "ERROR: Error reading linux joystick.\n" << vprDEBUG_FLUSH;
       return;
    }
 
@@ -289,6 +302,5 @@ void LinuxJoydev::updateData()
    addAnalogSample(mCurAxes);
    swapAnalogBuffers();
 }
-
 
 } // End of gadget namespace
