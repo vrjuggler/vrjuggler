@@ -43,6 +43,8 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
     vjDEBUG_BEGIN(vjDBG_INPUT_MGR, vjDBG_STATE_LVL)
                      << "vjXWinKeyboard::config:\n" << vjDEBUG_FLUSH;
 
+    const char neg_one_STRING[] = "-1";
+
     if(!vjKeyboard::config(c))
       return false;
 
@@ -70,7 +72,7 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
     else
        mXDisplayString = std::string("-1");
 
-    if((mXDisplayString.empty()) || (strcmp(mXDisplayString.c_str(), "-1") == 0))    // Use display env
+    if((mXDisplayString.empty()) || (strcmp(mXDisplayString.c_str(), neg_one_STRING) == 0))    // Use display env
       mXDisplayString = (std::string)getenv("DISPLAY");
 
     // Get the lock information
@@ -165,6 +167,7 @@ int vjXWinKeyboard::startSampling()
 
    vjThread* new_thread;
    new_thread = new vjThread(memberFunctor, 0);
+   myThread = new_thread;
 
    return 1;
 }
