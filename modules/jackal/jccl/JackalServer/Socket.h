@@ -85,7 +85,11 @@ public:
     vjSocketPosix* accept () {
 	sockaddr_in servaddr;
 	int servsock;
+#ifdef __FreeBSD__
+ 	socklen_t len = sizeof (struct sockaddr_in);
+#else
  	int len = sizeof (struct sockaddr_in);
+#endif
  	servsock = ::accept (sockid,
  			   (sockaddr*)&servaddr, &len);
 	if (servsock != -1)
