@@ -169,68 +169,14 @@ void simplePfNavApp::init()
    mNavCycleButton.init( std::string( "VJButton3" ) );
    mStopButton.init( std::string( "VJButton1" ) );
    mGoButton.init( std::string( "VJButton0" ) );
-   
+
 #ifdef USE_SONIX
-   snx::SoundInfo single_shot;
-   single_shot.ambient = true;
-   single_shot.retriggerable = true;
-   single_shot.datasource = snx::SoundInfo::FILESYSTEM;
-
-   snx::SoundInfo looping;
-   looping.ambient = true;
-   looping.retriggerable = false;
-   looping.datasource = snx::SoundInfo::FILESYSTEM;
-
-   std::string filename;
-   filename = "bump.wav";
-   if (std::ifstream( filename.c_str() ).good())
-   {
-      single_shot.filename = filename;
       mBumpSound.init( "bump" );
-      mBumpSound.configure( single_shot );
-   }
-   
-   filename = "land.wav";
-   if (std::ifstream( filename.c_str() ).good())
-   {
-      single_shot.filename = filename;
       mLandSound.init( "land" );
-      mLandSound.configure( single_shot );
-   }
-   
-   filename = "ambience.wav";
-   if (std::ifstream( filename.c_str() ).good())
-   {
-      looping.filename = filename;
       mAmbientSound.init( "ambience" );
-      mAmbientSound.configure( looping );
-      mAmbientSound.trigger( -1 );
-   }
-   
-   filename = "accel.wav";
-   if (std::ifstream( filename.c_str() ).good())
-   {
-      looping.filename = filename;
       mAccelSound.init( "accel" );
-      mAccelSound.configure( looping );
-   }
-   
-   filename = "stop.wav";
-   if (std::ifstream( filename.c_str() ).good())
-   {
-      looping.filename = filename;
       mStopSound.init( "stop" );
-      mStopSound.configure( looping );
-   }
-
-   filename = "footstep.wav";
-   if (std::ifstream( filename.c_str() ).good())
-   {
-      single_shot.filename = filename;
       mWalkingSound.init( "step" );
-      mWalkingSound.configure( single_shot );
-   }
-
 #endif
 }
 
@@ -418,7 +364,9 @@ void simplePfNavApp::preFrame()
       if (mWalkingCount > amount)
       {
          mWalkingCount -= amount;
+      #ifdef USE_SONIX
          mWalkingSound.trigger();
+      #endif
       }
    }
 
@@ -436,7 +384,9 @@ void simplePfNavApp::preFrame()
       #endif
    }
    //std::cout << speed << std::endl;
+      #ifdef USE_SONIX
    mStopSound.setPitchBend( 0.2f + speed / 15.0f );
+      #endif
    
    // play sound while accelerating...
    if (mGoButton->getData() == gadget::Digital::TOGGLE_ON)
@@ -451,8 +401,10 @@ void simplePfNavApp::preFrame()
          mAccelSound.stop();
       #endif
    }
+      #ifdef USE_SONIX
    mAccelSound.setPitchBend( 0.2f + speed / 15.0f );
    mAmbientSound.trigger( -1 );
+      #endif
    
    // show stats...
    if (mUseStats && haveFocus())
