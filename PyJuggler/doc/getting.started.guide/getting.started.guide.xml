@@ -282,6 +282,40 @@
     </section>
 
     <section>
+      <title>contextApp</title>
+
+      <para>This pure-Python application demonstrates the use of
+      context-specific data through PyJuggler. The application can be found
+      under the directory
+      <filename>share/pyjuggler/examples/python/contextApp</filename>. It
+      contains a single file <filename>contextApp.py</filename>. To execute
+      this application, the following will work in a UNIX-based
+      environment:</para>
+
+      <screen>% ./contextApp.py standalone.jconf</screen>
+
+      <para>For a DOS/Win32 environment, the command is similar:</para>
+
+      <screen>&gt; python contextApp.py standalone.jconf</screen>
+
+      <para>This opens a single graphics window showing the default VR Juggler
+      simulator environment and a gray box attached to the wand. To exit the
+      application, press the <keysym>ESC</keysym> key. To see the
+      multi-context support in action, run the application as follows:</para>
+
+      <screen>% ./contextApp.py sim.base.jconf sim.wand.mixin.jconf sim.c6displays.mixin.jconf</screen>
+
+      <caution>
+        <para>The above will open <emphasis>nine</emphasis> OpenGL windows,
+        which can be very taxing on the graphics hardware. In some cases, it
+        may even crash the computer. The multi-context behavior can be
+        demonstrated through less abusive measures by using
+        <filename>sim.c6viewports.mixin.jconf</filename> instead of
+        <filename>sim.c6displays.mixin.jconf</filename>.</para>
+      </caution>
+    </section>
+
+    <section>
       <title>PyAppLoader</title>
 
       <para>PyAppLoader is a C++ application that demonstrates how to load
@@ -303,6 +337,310 @@
       code can be found in
       <filename>share/pyjuggler/examples/cxx/PyExtApp</filename> under the
       base PyJuggler installation directory.</para>
+    </section>
+  </chapter>
+
+  <chapter>
+    <title>Writing Code</title>
+
+    <para>In creating PyJuggler and PyGMTL, a conscious effort has been made
+    to keep the Python class interfaces the same, or nearly the same, as the
+    backend C++ class. Reading the VR Juggler <emphasis>Programmer's
+    Guide</emphasis> should be more than sufficient for programmers to learn
+    how to use PyJuggler. The most notable syntactic difference from C++ to
+    Python will be the lack of the <literal>::</literal> and
+    <literal>-&gt;</literal> operators. This difference is illustrated in the
+    following two code blocks. While this example is overly simple, it
+    illustrates the point that the Python interface to a given C++ classes
+    uses the same basic interface.</para>
+
+    <example id="example.Interval.cxx">
+      <title>C++ Use of <classname>vpr::Interval</classname></title>
+
+      <programlisting>#include &lt;iostream&gt;
+#include &lt;vpr/Util/Interval.h&gt;
+
+void func()
+{
+   vpr::Interval i = vpr::Interval::now();
+   std::cout &lt;&lt; i.sec() &lt;&lt; " seconds" &lt;&lt; std::endl;
+}</programlisting>
+    </example>
+
+    <example id="example.Interval.python">
+      <title>Python Use of
+      <classname>PyJuggler.vpr.Interval</classname></title>
+
+      <programlisting>import PyJuggler.vpr as vpr
+
+def func():
+   i = vpr.Interval.now()
+   print i.sec(), "seconds"</programlisting>
+    </example>
+
+    <para>With that in mind, there are some important parts of the Juggler C++
+    interface that do not map well to Python. For example, the
+    context-specific data handler
+    <classname>vrj::GlContextData&lt;T&gt;</classname> relies on
+    language-level support for templates (more accurately, generic types) and
+    the higher level concept of a smart pointer. Python does not have generic
+    types; indeed, it is an untyped language. In some cases, Python language
+    features have been exploited to make the interfaces more Python-esque so
+    that experienced Python programmers can take advantage of the Python
+    features they know and love. The remainder of this chapter will explain
+    the specific instances where the PyJuggler classes differ from the C++
+    Juggler classes.</para>
+
+    <section id="section.context.specific.data">
+      <title>Context-Specific Data
+      (<classname>vrj::GlContextData&lt;T&gt;</classname>)</title>
+
+      <para>Context-specfic data is an important aspect of utilizing the VR
+      Juggler OpenGL Draw Manager. As such, it must be available for authors
+      of VR Juggler application objects who write their application objects in
+      Python. We will not get into the details of context-specific data here
+      and instead refer readers to the relevant parts of the VR Juggler
+      <emphasis>Programmer's Guide</emphasis>.</para>
+
+      <para>In a C++ application object, we would define a type instantiation
+      of the generic type <classname>vrj::GlContextData&lt;T&gt;</classname>.
+      As stated above, Python does not have generic types, so we cannot define
+      our own instantiations of
+      <classname>vrj::GlContextData&lt;T&gt;</classname> in a Python
+      application object. We can, however, take advantage of the dynamic
+      nature of Python to mimic the semantics of a C++ instantiation of
+      <classname>vrj::GlContextData&lt;T&gt;</classname>. The result is an
+      easy-to-use Python class that allows dynamic context-specific type
+      construction, conveniently named
+      <classname>PyJuggler.vrj.GlContextData</classname>.</para>
+
+      <para>For each piece of context-specific data that is required by the
+      application object, an instance of
+      <classname>PyJuggler.vrj.GlContextData</classname> (referred to
+      henceforth as <classname>vrj.GlContextData</classname>) must exist as a
+      data member in the application object. The
+      <classname>vrj.GlContextData</classname> instances can then have any
+      number of attributes added to them dynamically. This usage is shown in
+      <xref linkend="example.vrj.GlContextData" />.</para>
+
+      <example id="example.vrj.GlContextData">
+        <title>Using
+        <classname>PyJuggler.vrj.GlContextData</classname></title>
+
+        <programlisting linenumbering="numbered">from OpenGL.GL import *
+import PyJuggler.vrj as vrj
+
+class MyApp(vrj.GlApp):
+   def __init__(self):
+      vrj.GlApp.__init__(self)
+
+      # Allocate the context-specific objects.
+      self.cube_display_list = vrj.GlContextData()
+      self.texture_obj       = vrj.GlContextData()
+
+   def contextInit(self):
+      # Add an attribute named 'id' that stores a display list ID
+      # for this context.
+      self.cube_display_list.id = glGenList(1)
+      glNewList(self.cube_display_list.id, GL_COMPILE)
+      # Define the OpenGL commands for the display list...
+      glEndList()
+
+      # Add an attribute named 'id' that stores a texture object ID
+      # for this context.
+      self.texture_obj.id = glGenTextures(1)
+      glBindTexture(GL_TEXTURE_2D, self.texture_obj.id)
+
+   def draw(self):
+      # Requests the display list ID for this context.
+      glCallList(self.cube_display_list.id)
+
+      # Set up texture coordinates...
+      # Render the texture using the texture object ID for this context.
+      glBindTexture(GL_TEXTURE_2D, self.texture_obj.id)</programlisting>
+      </example>
+
+      <para>Using instances of <classname>vrj.GlContextData</classname> has
+      the same basic restrictions as in C++. Reads and writes to the
+      attributes of the <classname>vrj.GlContextData</classname> instances can
+      only occur when an OpenGL context is active. That is, context-specific
+      data attribute access can occur only in the application object overrides
+      of <methodname>contextInit()</methodname>,
+      <methodname>contextPreDraw()</methodname>,
+      <methodname>draw()</methodname>,
+      <methodname>contextPostDraw()</methodname>, and
+      <methodname>contextClose()</methodname>. This usage is shown in more
+      detail in the example Python application
+      <filename>share/pyjuggler/examples/contextApp/contextApp.py</filename>.</para>
+
+      <sidebar>
+        <para>The use of context-specific data from a Python application
+        object is implemented as a regular C++ class exposed to Python via
+        Boost.Python. The special aspect is that this class makes use of a
+        context-specific dictionary. We take advantage of the dynamic nature
+        of Python to graft attributes on to objects at run time. Accesses
+        (sets and gets) are intercepted and re-routed to the context-specific
+        dictionary behind the scenes (in C++, no less).</para>
+
+        <para>This implementation preserves the features and the semantic
+        behavior of using <classname>vrj::GlContextData&lt;T&gt;</classname>
+        directly in C++, and it does it in a way that is largely transparent
+        to Python programmers. In a sense, it makes for a good balance between
+        the features of C++ and Python simultaneously. The big down side is
+        the restricted attribute access that must be correlated with an active
+        OpenGL context. Of course, this same limitation exists when using
+        <classname>vrj::GlContextData&lt;T&gt;</classname> directly in
+        C++.</para>
+      </sidebar>
+    </section>
+
+    <section id="section.cluster.user.data">
+      <title>Clustered Application Data
+      (<classname>cluster::UserData&lt;T&gt;</classname>)</title>
+
+      <para>The cluster feature of VR Juggler includes support for sharing
+      user-defined data types across the nodes of the cluster. This is
+      achieved through the use of the generic type
+      <classname>cluster::UserData&lt;T&gt;</classname> where
+      <classname>T</classname> must be a subclass of
+      <classname>vpr::SerializableObject</classname>. Programmers must
+      implement overrides of the pure virtual methods
+      <methodname>vpr::SerializableObject::readObject()</methodname> and
+      <methodname>vpr::SerializableObject::writeObject()</methodname>, which
+      serialize and de-serialize the object respectively. In Python terms,
+      this corresponds directly to pickling and unpickling an object. This
+      correlation provides the foundation for the access to
+      <classname>cluster::UserData&lt;T&gt;</classname> through
+      PyJuggler<footnote>
+          <para>It is assumed that the reader is already familiar with the use
+          of <classname>cluster::UserData&lt;T&gt;</classname> in C++. Those
+          readers who are not familiar with this class should refer to the
+          appropriate chapter of the VR Juggler <emphasis>Programmer's
+          Guide</emphasis> for details.</para>
+        </footnote>.</para>
+
+      <para>Clustered application data is implemented using the class
+      <classname>PyJuggler.cluster.UserData</classname>, henceforth referred
+      to as <classname>cluster.UserData</classname>. This class takes
+      advantage of Python language features to provide a more powerful,
+      flexible data sharing mechanism that is easier to use than its C++
+      counterpart. An instance of <classname>cluster.UserData</classname> can
+      share any Python data structure that can be pickled. Since most Python
+      types can be pickled automatically, there is no need for application
+      programmers to write any code for serializing and de-serializing their
+      data structures. Furthermore, the dynamic nature of Python types allows
+      the shared data structures to change at run time. Multiple instances of
+      <classname>cluster.UserData</classname> can be used to share multiple
+      data structures, or the multiple data structures can be aggregated into
+      a single Python object that is shared via a single
+      <classname>cluster.UserData</classname> instance.</para>
+
+      <para>The use of <classname>cluster.UserData</classname> is shown in
+      <xref linkend="example.cluster.UserData" />. Just as with
+      <classname>cluster::UserData&lt;T&gt;</classname>, the clustered data
+      must be initialized in the application object's
+      <methodname>init()</methodname> method using a GUID. After the
+      <classname>cluster.UserData</classname> object is initialized, the
+      Python object to be shared must be registered through the method
+      <methodname>cluster.UserData.setPickleObject()</methodname>. All nodes
+      in the cluster must perform these actions.</para>
+
+      <example id="example.cluster.UserData">
+        <title>Sharing Application Data with
+        <classname>PyJuggler.cluster.UserData</classname></title>
+
+        <programlisting linenumbering="numbered">import gmtl
+from PyJuggler import *
+
+class ClusterApp(vrj.GlApp):
+   def __init__(self):
+      self.user_data = cluster.UserData()
+      self.nav_matrix = gmtl.Matrix44f()
+
+   def init(self):
+      self.user_data.init(vpr.GUID("2bbad1af-27c4-11d9-bd0d-00045a86e9cd"))
+      self.user_data.setPickleObject(self.nav_matrix)
+
+   def preFrame(self):
+      if self.user_data.isLocal():
+         nav_delta = gmtl.Matrix44f()
+         # Calculate navigation change...
+         gmtl.postMult(self.nav_matrix, nav_delta)
+
+   def draw(self):
+      glPushMatrix()
+      glMultMatrixf(self.nav_matrix.getData())
+      # Render the scene...
+      glPopMatrix()</programlisting>
+      </example>
+
+      <para>Once the shared data is registered with the
+      <classname>cluster.UserData</classname> instance, only the application
+      data host node should be allowed to write to the shared data. If any
+      other node writes to the shared data, the changes will be lost the next
+      time the shared data is unpickled. The application data host node can be
+      determined using the method
+      <methodname>cluster.UserData.isLocal()</methodname>, just as in the C++
+      counterpart. Any node can read from the shared data. Note that, unlike
+      the of <classname>cluster::UserData&lt;T&gt;</classname> in C++, the
+      shared data can be accessed directly. Indeed, it
+      <emphasis>must</emphasis> be accessed directly as there is no smart
+      pointer semantics associated with
+      <classname>cluster.UserData</classname>. While this makes shared
+      application data use easier in Python than in C++, it is also more
+      efficient because there is no extra level of indirection.</para>
+
+      <para>As noted above, most shared data structures will not require any
+      special code to allow pickling and unpickling. Refer to the <ulink
+      url="http://docs.python.org/lib/module-pickle.html">Python object
+      pickling documentation</ulink>. More specifically, refer to the
+      documentation on <ulink
+      url="http://docs.python.org/lib/node65.html">what can be pickled and
+      unpickled</ulink>.</para>
+
+      <note>
+        <para>As of this writing, the only PyJuggler classes that can be
+        pickled are <classname>PyJuggler.vpr.Interval</classname> and
+        <classname>PyJuggler.vpr.GUID</classname>. If any other PyJuggler
+        class instances are stored in an object shared across the cluster via
+        <classname>cluster.UserData</classname>, pickling will fail. All data
+        types in PyGMTL can be pickled.</para>
+      </note>
+
+      <sidebar>
+        <para>The backed C++ implementation of
+        <classname>cluster.UserData</classname> utilizes
+        <classname>cluster::UserData&lt;T&gt;</classname> and a subclass of
+        <classname>vpr::SerializableObject</classname> called
+        <classname>pyj::PickleObject</classname>.
+        <classname>pyj::PickleObject</classname> makes use of the
+        <interfacename>pickle</interfacename> module from C++ through
+        Boost.Python. Every instance of
+        <classname>pyj::PickleObject</classname> holds a local
+        <classname>boost::python::object</classname> instance that is the
+        Python object registered through
+        <methodname>cluster.UserData.setPickleObject()</methodname>. In
+        <methodname>pyj::PickleObject::readObject()</methodname>, the
+        <classname>boost::python::object</classname> instance is pickled using
+        <function>pickle.dumps()</function>. In
+        <methodname>pyj::PickleObject::writeObject()</methodname>, the
+        received pickled object is unpickled using
+        <methodname>pickle.loads()</methodname>. The full dictionary of the
+        freshly unpickled <classname>boost::python::object</classname>
+        instance is copied into the local
+        <classname>boost::python::object</classname> instance. This allows
+        dynamic structural changes to be propagated from the application data
+        host node to the rest of the cluster nodes.</para>
+
+        <para>The current backend C++ implementation for
+        <classname>cluster.UserData</classname> makes use of the basic, slow
+        Python pickling protocol. This protocol pickles objects into strings.
+        It is not known at the time of this writing if the binary pickling
+        support would allow for heterogeneous communication that is supported
+        by VR Juggler's clustering capabilities. In other words, it is not
+        known if the binary pickling protocol would allow for cross-version
+        and/or cross-platform data transfer.</para>
+      </sidebar>
     </section>
   </chapter>
 
