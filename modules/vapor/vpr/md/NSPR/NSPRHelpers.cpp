@@ -30,17 +30,23 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_NSPR_HELPER_H_
-#define _VPR_NSPR_HELPER_H_
+#include <stdio.h>
+#include <prerror.h>
 
-#include <string>
+#include <md/NSPR/NSPRHelpers.h>
 
-namespace vpr
-{
+
+namespace vpr {
 
 // Print out the current NSPR error message to stderr
-extern void NSPR_PrintError(const std::string error_prefix_string);
+void NSPR_PrintError(const std::string error_prefix_string )
+{
+   PRInt32 textLength = PR_GetErrorTextLength();
+   char *text = (char*)malloc(textLength);
+   (void)PR_GetErrorText(text);
+   fprintf(stderr, "%s (%d, %d, %s)\n",
+           error_prefix_string.c_str(), PR_GetError(), PR_GetOSError(), text);
+   free(text);
+}
 
-}; // namespace
-
-#endif
+};
