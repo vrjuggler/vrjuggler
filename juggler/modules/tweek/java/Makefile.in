@@ -206,8 +206,10 @@ endif	# if OS_TYPE == UNIX
                 $$jar $(bindir) ;					\
           done
 
-CLEAN_FILES	+= $(JARS)
-CLEAN_DIRS	+= org tweek $(srcdir)/tweek
+CLEAN_FILES	+= $(JARS) $(TWEEK_CLASSES) $(BEANS_CLASSES)		\
+                   $(NET_CLASSES) $(EVENT_CLASSES) $(SERVICE_CLASSES)	\
+                   $(VIEWERS_CLASSES)
+CLEAN_DIRS	+= tweek $(srcdir)/tweek
 
 
 include Makefile.inc
