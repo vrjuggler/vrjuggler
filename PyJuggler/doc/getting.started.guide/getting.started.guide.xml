@@ -171,12 +171,23 @@
     <title>Configuring the Environment</title>
 
     <para>PyJuggler needs all the environment variables required for execution
-    of normal C++ VR Juggler applications. With the addition of Python into
-    the mix, it may be necessary to set the <varname>PYTHONPATH</varname>
-    environment variable. This environment variable tells Python where to look
-    for modules outside of its default path. In other words, it
-    <emphasis>augments</emphasis> the Python module search path to use the
-    directories listed therein.</para>
+    of normal C++ VR Juggler applications. Additionally, the PyJuggler
+    <filename>lib</filename> directory must be included in the shared library
+    (DLL) search path so that the library <filename>libpyjutil.so</filename>
+    (or <filename>pyjutil.dll</filename> or
+    <filename>libpyjutil.dylib</filename>) can be found at module load time.
+    This is normally accomplished by modifying the environment variable
+    <envar>LD_LIBRARY_PATH</envar>, <envar>PATH</envar>, or
+    <envar>DYLD_LIBRARY_PATH</envar>, depending on the operating system. If
+    PyJuggler is installed so that its <filename>lib</filename> directory is
+    already in the shared library search path, then the library search path
+    does not have to be changed.</para>
+
+    <para>With the addition of Python into the mix, it may be necessary to set
+    the <varname>PYTHONPATH</varname> environment variable. This environment
+    variable tells Python where to look for modules outside of its default
+    path. In other words, it <emphasis>augments</emphasis> the Python module
+    search path to use the directories listed therein.</para>
 
     <para>The need for <varname>PYTHONPATH</varname> depends on where
     PyJuggler is installed. If PyJuggler is installed where Python modules are
@@ -193,8 +204,8 @@
     <screen>% setenv PYTHONPATH $HOME/pyjuggler/lib/python2.2/site-packages</screen>
 
     <para>For more information about Python, Python modules, and environment
-    variables read by the Python interpreter, refer to the <ulink
-    url="http://www.python.org/doc/">onilne Python
+    variables utilized by the Python interpreter, refer to the <ulink
+    url="http://www.python.org/doc/">on-line Python
     documentation</ulink>.</para>
 
     <tip>
