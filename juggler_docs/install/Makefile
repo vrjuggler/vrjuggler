@@ -14,7 +14,7 @@ prefix		= /home/wwwadm/www-vrjuggler/docs
 book_srcdir	= $(prefix)/html/books
 book_distdir	= $(book_srcdir)
 
-PSGEN		= /home/users/patrick/bin/html2ps
+PSGEN		= /usr/freeware/bin/perl /home/vr/Juggler/bin/html2ps
 PSGEN_FLAGS	= -f $(BOOK_CFG_FILE)
 PDFGEN		= ps2pdf13
 PDFGEN_FLAGS	=
