@@ -37,7 +37,7 @@
 #include <Sound/vjSoundEngine.h>   // base class
 #include <Sound/aw/AwSound.h>       // my sound type...
 #include <Config/vjParseUtil.h>
-
+#include <Utils/vjFileIO.h>
 #include <Sound/aw/AwSoundEngine.h> // my header
 
 AwSoundEngine::AwSoundEngine() : vjSoundEngine(), mObserver( NULL ), mInitialized( false )
@@ -56,7 +56,9 @@ void AwSoundEngine::init()
    tmpFile += ".AwSoundEngine.adf";
    
    
-   std::string command = "/home/vr/apps/bin/catadf.pl -o ";
+   std::string command = "${VJ_BASE_DIR}/bin/catadf.pl";
+   command = vjFileIO::demangleFileName( command, "" );
+   command += " -o ";
    command += tmpFile;
    command += " ";
    command += mAdfFileList;
