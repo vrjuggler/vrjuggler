@@ -105,7 +105,8 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<SimDigital>* sim_digital = new DeviceConstructor<SimDigital>;
    DeviceConstructor<SimPosition>* sim_position = new DeviceConstructor<SimPosition>;
    //vjDeviceConstructor<SimKeyboardDigital>* sim_keyboard_digital = new DeviceConstructor<SimKeyboardDigital>;
-   DeviceConstructor<SimSetablePosition>* sim_relative = new DeviceConstructor<SimSetablePosition>;
+   DeviceConstructor<SimSetablePosition>* sim_setable = new DeviceConstructor<SimSetablePosition>;
+   DeviceConstructor<SimRelativePosition>* sim_relative = new DeviceConstructor<SimRelativePosition>;
    
    
    DeviceConstructor<SimGloveGesture>* sim_glove = new DeviceConstructor<SimGloveGesture>;
@@ -117,6 +118,7 @@ void DeviceFactory::hackLoadKnownDevices()
        (NULL == sim_position) ||
        (NULL == sim_glove)    ||
        (NULL == simpinch_glove) ||
+       (NULL == sim_setable) ||
        (NULL == sim_relative) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
