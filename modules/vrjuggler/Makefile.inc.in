@@ -80,8 +80,7 @@ STATICLIB_EXT	= @STATICLIB_EXT@
 DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 
 # Full list of the libraries to build.
-LIBS		= $(UTILS_LIBRARY)	\
-                  $(VJ_LIBRARY)
+LIBS		= $(VJ_LIBRARY)
 
 ifeq ($(GL_API), Y)
     LIBS	+= $(GL_LIBRARY)
@@ -96,7 +95,6 @@ DYNAMIC_LIBS	= $(LIBS)
 
 # Dependencies for each of the various dynamic libraries we build.
 DYLIB_DEPS_VJ		= @DYLIB_DEPS_VJ@
-DYLIB_DEPS_UTILS	= @DYLIB_DEPS_UTILS@
 DYLIB_DEPS_GL		= @DYLIB_DEPS_GL@
 DYLIB_DEPS_PF		= @DYLIB_DEPS_PF@
 
@@ -104,10 +102,6 @@ VJ_LIB_STATIC		= $(VJ_LIBRARY).$(STATICLIB_EXT)
 VJ_LIB_DYNAMIC		= $(VJ_LIBRARY).$(DYNAMICLIB_EXT)
 VJ_PROF_LIB_STATIC	= $(VJ_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
 VJ_PROF_LIB_DYNAMIC	= $(VJ_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
-UTILS_LIB_STATIC	= $(UTILS_LIBRARY).$(STATICLIB_EXT)
-UTILS_LIB_DYNAMIC	= $(UTILS_LIBRARY).$(DYNAMICLIB_EXT)
-UTILS_PROF_LIB_STATIC	= $(UTILS_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
-UTILS_PROF_LIB_DYNAMIC	= $(UTILS_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 GL_LIB_STATIC		= $(GL_LIBRARY).$(STATICLIB_EXT)
 GL_LIB_DYNAMIC		= $(GL_LIBRARY).$(DYNAMICLIB_EXT)
 GL_PROF_LIB_STATIC	= $(GL_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
@@ -157,7 +151,6 @@ afterbuild:
 # Construct the static version of the libraries.
 # -----------------------------------------------
 $(LIBDIR)/$(VJ_LIB_STATIC) $(LIBDIR)/$(VJ_PROF_LIB_STATIC)		\
-$(LIBDIR)/$(UTILS_LIB_STATIC) $(LIBDIR)/$(UTILS_PROF_LIB_STATIC)	\
 $(LIBDIR)/$(GL_LIB_STATIC) $(LIBDIR)/$(GL_PROF_LIB_STATIC)		\
 $(LIBDIR)/$(PF_LIB_STATIC) $(LIBDIR)/$(PF_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 ifneq (@OS_TYPE@, Win32)
@@ -189,24 +182,6 @@ ifeq (@OS_TYPE@, Win32)
             $(LN_S) $(LIBDIR)/$(VJ_LIB_STATIC) ./
 	cd $(LIBDIR_BASE) && $(RM_LN) $(VJ_LIBRARY).exp &&		\
             $(LN_S) $(LIBDIR)/$(VJ_LIBRARY).exp ./
-endif
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-
-$(LIBDIR)/$(UTILS_LIB_DYNAMIC) $(LIBDIR)/$(UTILS_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_DEPS_UTILS)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
-ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(UTILS_LIB_STATIC) &&		\
-            $(LN_S) $(LIBDIR)/$(UTILS_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && $(RM_LN) $(UTILS_LIBRARY).exp &&		\
-            $(LN_S) $(LIBDIR)/$(UTILS_LIBRARY).exp ./
 endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"

@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+May-30-2002 patrickh  Removed the Juggler_utils library.
+                      NEW VERSION: 1.1.95
 May-29-2002 patrickh  Installed dynamic libraries are now named based on the
                       VR Juggler version.
 May-23-2002 patrickh  Updated to JCCL 0.2.0 API.
