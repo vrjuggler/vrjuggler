@@ -44,7 +44,7 @@
 // @author Allen Bierbaum
 //  Date: 10-1-97
 //------------------------------
-class vjFrustum
+class VJ_CLASS_API vjFrustum
 {
 public:
    enum entry
