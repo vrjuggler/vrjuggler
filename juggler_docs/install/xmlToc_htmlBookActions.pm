@@ -76,32 +76,6 @@ sub popFolder_action ($$$$$) {
     outputIndents($xmlToc_data_out, $indent_level);
 
     if ( $whatAmI =~ /rootfolder/ ) {
-        # Insert header.
-        $$xmlToc_data_out =~ s|</head>|\n${InstallWeb::html_header}\n</head>\n|ois;
-
-        # CSS header insert.  If there is </head> then insert before it.
-        if ( $$xmlToc_data_out =~ s/<\/head>/\n${InstallWeb::css_header}\n<\/head>\n/ois )
-        {
-#           print "added css (</head>)...";
-        }
-        # If not, then look for <html> and insert after it with
-        # <head>...</head> around it.
-        elsif ( $$xmlToc_data_out =~ s/<html>/<html>\n<head>\n${InstallWeb::css_header}\n<\/head>\n/ois )
-        {
-#           print "added css (<html>)...";
-        }
-        else
-        {
-#           print "did NOT add css...";
-        }
-
-        my $html_install_prefix = $InstallWeb::html_install_prefix;
-
-        # Edit the CSS link path.
-        # ASSERT: The path in the css file is relative to the
-        #         root directory of the web install
-        $$xmlToc_data_out =~ s/<link(.*?)\"stylesheet\"(.*?)href(.*?)\"/$&$html_install_prefix/gis;
-
         # Loop over all the HTML files and process each one.
         foreach ( @{$book{'files'}} ) {
             print "+";
