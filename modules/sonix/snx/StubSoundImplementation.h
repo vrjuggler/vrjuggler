@@ -97,7 +97,7 @@ public:
    {
       snx::SoundImplementation::trigger( alias, looping );
       // do nothing
-      std::cout << "[snx]Stub::trigger (does nothing)\n"<<std::flush;
+      //std::cout << "[snx]Stub::trigger (does nothing)\n"<<std::flush;
    }
 
    /**
@@ -108,7 +108,7 @@ public:
    {
       snx::SoundImplementation::stop( name );
       // do nothing
-      std::cout << "[snx]Stub::stop (does nothing)\n"<<std::flush;
+      //std::cout << "[snx]Stub::stop (does nothing)\n"<<std::flush;
    }
 
    /**
