@@ -473,7 +473,7 @@ public:
     }
 
     inline Status
-    setLocalAddri (const InetAddr& addr) {
+    setLocalAddr (const InetAddr& addr) {
       return m_socket_imp->setLocalAddr(addr);
     }
 
