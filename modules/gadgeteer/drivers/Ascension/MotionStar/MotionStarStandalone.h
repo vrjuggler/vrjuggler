@@ -254,7 +254,11 @@ int errno; // EXTERN!!
  
 int                     numberBytes;
 int                     bytesReceived;
+#ifdef __FreeBSD__
+socklen_t		Size, *lpSize;
+#else
 int                     Size, *lpSize;
+#endif
 int                     sockfd;
 time_t                  timeSeconds;
 char                    timeChar[64];
