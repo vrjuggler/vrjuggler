@@ -47,6 +47,7 @@ includedir=	@includedir@/tweek
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
+INSTALL_FILES=	$(srcdir)/*.h tweekDefines.h tweekParam.h
 SUBOBJDIR=	$(TWEEK_LIBRARY)
 
 # Prefix for recursive stuff.
