@@ -315,7 +315,8 @@ sub mail_notification {
     if ($debug) {
 	open(MAIL, "| /usr/sbin/sendmail -odb -oem patrick\@vrac.iastate.edu");
     } else {
-	open(MAIL, "| /usr/sbin/sendmail -odb -oem -t");
+	open(MAIL, "| /usr/sbin/sendmail -odb -oem -t") or
+	    die "ERROR: Could not open pipe to /usr/sbin/sendmail: $!\n";
     }
 
 #    print(MAIL 'To: cvs-committers' . $dom . ", cvs-all" . $dom);
