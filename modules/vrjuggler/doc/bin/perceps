@@ -1187,6 +1187,7 @@ sub GENTEXT {
 		getMemberVars("$cname", "$arg[2]") ) ||
 	      ( ("$arg[1]" eq "constructor") &&
 		getConstructors("$cname", "$arg[2]") ) ||
+	      ( ("$arg[1]" eq "method") && getMethods("$cname", "$arg[2]") ) ||
 	      ( ("$arg[1]" eq "mconstructor") && $mnm &&
 		isconstructor("$cname", "$mnm") ) ||
 	      ( ("$arg[1]" eq "mpublic") && $mname &&
@@ -1197,10 +1198,6 @@ sub GENTEXT {
 		isprotected("$cname", "$mname") ) ||
 	      ( ("$arg[1]" eq "mfriend") && $mname &&
 		isfriend("$cname", "$mname") ) ||
-	      ( ("$arg[1]" eq "overrides") && $mname && $parents{"$cname"} &&
-		overrides("$cname", "$mname") ) ||
-	      ( ("$arg[1]" eq "overridden") && $mname && $parents{"$cname"} &&
-		overridden("$cname", "$mname") ) ||
               ($mname && ${"$var_name"}{"$mloc","$mnm"})  ||
               (!$mname && ${"$var_name"}{"$cname"})  ||
               ($curglob && ($arg[1] eq $curglob) && $curglobval{$curglob})){
@@ -3064,6 +3061,45 @@ sub getConstructors ($;$) {
   }
 
   return @constructors;
+}
+
+sub getMethods ($;$) {
+  my $class_name = shift;
+  my $type = shift || 'member';
+
+  my $neg = 0;
+
+  if ( $type =~ /^!\s*(\S\w+)$/ ) {
+    $neg = 1;
+    $type = "$1";
+  }
+
+  my(@members) = ();
+
+  if ( $neg ) {
+    if ( "$type" eq "private" ) {
+      @members = GETMEMBERS("$class_name", 'public', 1);
+      push(@members, GETMEMBERS("$class_name", 'protected', 1));
+    } elsif ( "$type" eq "protected" ) {
+      @members = GETMEMBERS("$class_name", 'public', 1);
+      push(@members, GETMEMBERS("$class_name", 'private', 1));
+    } else {
+      @members = GETMEMBERS("$class_name", 'private', 1);
+      push(@members, GETMEMBERS("$class_name", 'protected', 1));
+    }
+  } else {
+    @members = GETMEMBERS("$class_name", "$type", 1);
+  }
+
+  my(@methods) = ();
+
+  foreach ( @members ) {
+    my $member = (split($;, "$_"))[1];
+    push(@methods, "$_") unless isvar("$member") ||
+    				isconstructor("$class_name", "$member");
+  }
+
+  return @methods;
 }
 
 sub ispublic ($$) {
