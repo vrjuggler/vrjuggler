@@ -47,12 +47,6 @@
 #include <IO/Socket/SocketIpOpt.h>
 #include <Utils/Assert.h>
 
-/*
-#if defined(sgi) && defined(host_mips) && !defined(socklen_t)
-typedef int socklen_t;
-#endif
-*/
-
 
 namespace vpr {
 
