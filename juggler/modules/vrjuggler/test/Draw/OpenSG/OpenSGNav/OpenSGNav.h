@@ -33,11 +33,11 @@
 
 #include <vjOSGApp.h>
 
-class OpenSGNav : public vjOSGApp
+class OpenSGNav : public vrj::OpenSGApp
 {
 public:
     OpenSGNav(vrj::Kernel* kern)
-       : vjOSGApp(kern)
+       : OpenSGApp(kern)
     {
         std::cout << "OpenSGNav::OpenSGNav called\n";
         mFileToLoad = std::string("");
@@ -52,14 +52,17 @@ public:
             delete _action;
     }
 
+
     virtual void initScene()
     {
         std::cout << "OpenSGNav::initScene called\n";
         std::string wand("VJWand");
         mWand.init(wand);
         //OSG::osgInit(0,0);
-        initRenderer();
-        myInit();
+
+        //initRenderer();
+        //myInit();
+
     }
 
     void myInit(void);
@@ -77,14 +80,15 @@ public:
 
     virtual void contextInit()
     {
-        vjOSGApp::contextInit();
+        //vjOSGApp::contextInit();
         initGLState();
     }
 
     void bufferPreDraw();
 
-    virtual void preFrame();
+    //virtual void preFrame();
 
+    /*
     virtual void intraFrame()
     {
         //std::cout << "OpenSGNav::intraFrame called\n";
@@ -96,6 +100,7 @@ public:
         //std::cout << "OpenSGNav::postFrame called\n";
         // Put your post frame computations here.
     }
+    */
 
     void setModelFileName(std::string filename)
     {
