@@ -33,10 +33,8 @@
 #ifndef _SIMPLE_PF_NAV_APP_H_
 #define _SIMPLE_PF_NAV_APP_H_
 
-#include <iostream>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 #include <math.h>
 #include <Performer/pf/pfLightSource.h>
 #include <Performer/pf/pfNode.h>
@@ -47,7 +45,6 @@
 // --- VR Juggler Stuff --- //
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/Pf/PfApp.h>    // the performer application base type
-#include <vrj/Util/Debug.h>
 #include <vrj/Display/Projection.h>  // for setNearFar (for setting clipping planes)
 
 // Declare my application class
@@ -98,37 +95,5 @@ public:
    pfNode*        mModelRoot;                // Root of the model
 };
 
-// ------- SCENE GRAPH ----
-// a standard organized interface for derived applications:
-//
-//            /-- mLightGroup -- mSun
-// mRootNode -- mModelRoot
-//
-void simplePfApp::initScene()
-{
-   // Load the scene
-   vprDEBUG(vprDBG_ALL, 0) << "simplePfApp::initScene\n" << vprDEBUG_FLUSH;
-
-   // Allocate all the nodes needed
-   mRootNode             = new pfGroup;            // Root of our graph
-
-   // Create the SUN light source
-   mLightGroup = new pfGroup;
-   mSun = new pfLightSource;
-   mLightGroup->addChild( mSun );
-   mSun->setPos( 0.3f, 0.0f, 0.3f, 0.0f );
-   mSun->setColor( PFLT_DIFFUSE,1.0f,1.0f,1.0f );
-   mSun->setColor( PFLT_AMBIENT,0.3f,0.3f,0.3f );
-   mSun->setColor( PFLT_SPECULAR, 1.0f, 1.0f, 1.0f );
-   mSun->on();
-
-   // --- LOAD THE MODEL --- //
-   mModelRoot = pfdLoadFile(mModelFileName.c_str());
-
-   // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
-   mRootNode->addChild( mModelRoot );
-   mRootNode->addChild(mLightGroup);
-}
 
 #endif
-
