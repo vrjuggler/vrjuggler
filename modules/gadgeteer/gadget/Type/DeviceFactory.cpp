@@ -64,7 +64,8 @@
 
 // Initialize the singleton ptr
 //vjDeviceFactory* vjDeviceFactory::mInstance = NULL;
-vjSingletonImp(vjDeviceFactory);
+//vjSingletonImp( vjDeviceFactory ); //kevin
+vjSingletonImpWithInitFunc( vjDeviceFactory, hackLoadKnownDevices );
 
 template <class DEV>
 vjDeviceConstructor<DEV>::vjDeviceConstructor()
