@@ -14,27 +14,50 @@ import VjGUI.configchunk.ConfigChunkFrame;
 import VjConfig.*;
 
 public class ControlUI  extends JFrame 
-  implements ActionListener, WindowListener, ConfigChunkFrame.ConfigChunkFrameParent, JFrameParent {
+    implements ActionListener, WindowListener, JFrameParent {
 
 
-    JPanel main_panel;
+    JPanel      main_panel;
     ConfigurePane configure_pane;
     ConnectionPane connection_pane;
     DescDBPanel descdb_pane;
     ConsolePane console_pane;
     ChunkOrgTreePane orgtree_pane;
 
-    JMenuBar main_menubar;
-    JMenu file_menu, options_menu, help_menu, looknfeel_menu, preferences_menu, helptech_menu, helpdesc_menu;
-    JMenuItem quit_mi, lnf_win_mi, lnf_java_mi, lnf_motif_mi, lnf_mac_mi;
-    JMenuItem lnf_organic1_mi;
-    JMenuItem editprefs_mi, saveprefs_mi;
-    JMenuItem helpbugs_mi, helpabout_mi, helpstart_mi, helpchunk_mi, helpdesc_mi, helporgtree_mi, helpcmdline_mi, descformat_mi, chunkformat_mi, orgtreeformat_mi, helpprefs_mi;
-    JLabel status_label;
+    JMenuBar    main_menubar;
+    JMenu       file_menu, 
+                options_menu, 
+                help_menu, 
+                looknfeel_menu, 
+                preferences_menu, 
+                helptech_menu, 
+                helpdesc_menu;
+    JMenuItem   quit_mi, 
+                lnf_win_mi, 
+                lnf_java_mi, 
+                lnf_motif_mi, 
+                lnf_mac_mi;
+    JMenuItem   lnf_organic1_mi;
+    JMenuItem   editprefs_mi, 
+                saveprefs_mi;
+    JMenuItem   helpbugs_mi, 
+                helpabout_mi, 
+                helpstart_mi, 
+                helpchunk_mi, 
+                helpdesc_mi, 
+                helporgtree_mi, 
+                helpcmdline_mi, 
+                descformat_mi, 
+                chunkformat_mi, 
+                orgtreeformat_mi, 
+                helpprefs_mi;
+
+    JLabel      status_label;
+
     ConfigChunkFrame prefs_frame;
 
-    //HTMLFrame help_frame;
     Vector help_frames;
+
 
     public ControlUI () {
 	super ("VR Juggler Control Program");
@@ -259,14 +282,32 @@ public class ControlUI  extends JFrame
     }
 
 
+
+    //: utility for loadDescHelp()
+    private URL getFileURL (String fname) {
+	URL url = null;
+	try {
+	    url = new URL ("file", "localhost", -1, fname);
+	    // make sure it's really there.
+	    if (url.openConnection().getContentLength() == -1)
+		url = null;
+	}
+	catch (Exception e) {
+	    url = null;
+	}
+	return url;
+    }
+
+
+
     public void loadDescHelp (String s) {
 	// where does desc help come from???
 	URL url;
-	url = ClassLoader.getSystemResource (System.getProperty ("user.dir") + "/.vjconfig/DescHelp/" + s + ".html");
+	url = getFileURL (System.getProperty ("user.dir") + "/.vjconfig/DescHelp/" + s + ".html");
 	if (url == null)
-	    url = ClassLoader.getSystemResource (System.getProperty ("VJ_BASE_DIR") + "/Data/DescHelp/" + s + ".html");
+	    url = getFileURL (System.getProperty ("VJ_BASE_DIR") + "/Data/DescHelp/" + s + ".html");
 	if (url == null)
-	    url = ClassLoader.getSystemResource ("Data/DescHelp/" +s + ".html");
+	    url = getFileURL ("Data/DescHelp/" +s + ".html");
 	if (url == null)
 	    url = ClassLoader.getSystemResource ("VjFiles/DescHelp/" + s + ".html");
 	if (url == null)
@@ -295,18 +336,17 @@ public class ControlUI  extends JFrame
 	    help_frames.removeElement (f);
 	    f.dispose();
 	}
-    }
-
-
-    public void closedChunkFrame (ConfigChunkFrame f, boolean ok) {
-	if (ok) {
-	    ConfigChunk newc = f.getValue();
-	    Core.gui_chunkdb.replace (Core.vjcontrol_preferences, newc);
-	    Core.vjcontrol_preferences = newc;
-	    Core.reconfigure();
+	else if (f instanceof ConfigChunkFrame) {
+	    if (ok) {
+		ConfigChunk newc = ((ConfigChunkFrame)f).getValue();
+		Core.gui_chunkdb.replace (Core.vjcontrol_preferences, newc);
+		Core.vjcontrol_preferences = newc;
+		Core.reconfigure();
+	    }
+	    prefs_frame = null;
 	}
-	prefs_frame = null;
     }
+
 
 
     public void setLookNFeel (String s) {
