@@ -439,6 +439,7 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
                                               << vprDEBUG_FLUSH;
    }
 
+   bytes_read = 0;
    bytes_left = buffer_size;
 
    while ( bytes_left > 0 )
@@ -465,17 +466,15 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
       // buffer_size).
       else if ( bytes == 0 )
       {
-         bytes_read = buffer_size - bytes_left;
          return status;
       }
       else
       {
          buffer = (void*) ((char*) buffer + bytes);
          bytes_left -= bytes;
+         bytes_read += bytes;
       }
    }
-
-   bytes_read = buffer_size;
 
    return status;
 }
