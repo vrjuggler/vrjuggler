@@ -1817,10 +1817,6 @@ if test "$OS_TYPE" = "UNIX" ; then
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
     APP_EXTRA_LIBS_PF="$LIBPERFORMER"
-
-    if test "x$PLATFORM" = "xLinux" ; then
-        APP_EXTRA_FLAGS_PF="-O $APP_EXTRA_FLAGS_PF"
-    fi
 elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_BEGIN="-link -libpath:\$(VJ_BASE_DIR)/lib/debug"
     APP_VJ_LIBS_END=''

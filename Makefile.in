@@ -232,12 +232,6 @@ SL		= @SL@
 SL_LIB_STATIC	= ${SL_LIBRARY}.@STATICLIB_EXT@
 SL_LIB_DYNAMIC	= ${SL_LIBRARY}.@SHAREDLIB_EXT@
 
-# On Linux, we have to compile the Performer library with -O for things to
-# link properly.
-ifeq (${PLATFORM}, Linux)
-    _PF_EXTRA_LDOPTS = -O
-endif
-
 # Version information.
 BRANCH		= RELENG_1_0
 VER_ARGS	= -f ${VJROOT_ABS}/VERSION -s @THREAD_SYS@ -b ${BRANCH}	\
