@@ -32,12 +32,12 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Draw/DrawSimInterfaceFactory.h>
+#include <vrj/Draw/OGL/GlSimInterfaceFactory.h>
 
 
 namespace vrj
 {
 
-vprSingletonImp(DrawSimInterfaceFactory)
+vprSingletonImp(GlSimInterfaceFactory)
 
 }

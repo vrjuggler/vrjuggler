@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_DRAW_SIM_INTERFACE_FACTORY_H_
-#define _VRJ_DRAW_SIM_INTERFACE_FACTORY_H_
+#ifndef _VRJ_GL_SIM_INTERFACE_FACTORY_H_
+#define _VRJ_GL_SIM_INTERFACE_FACTORY_H_
 
 #include <vrj/vrjConfig.h>
 #include <string>
@@ -39,46 +39,31 @@
 #include <vpr/Util/Singleton.h>
 #include <vrj/Draw/DrawSimInterface.h>
 
-
-/**
- * Registers a creator for the DrawSimInterface implementation classes.  The
- * given name is used to look up the creator in the factory.
- *
- * Ex: VRJ_REGISTER_SIM_INTERFACE_CREATOR("Basic", vrj::GlBasicSimulator)
- */
-/*
-#define VRJ_REGISTER_NAMED_SIM_INTERFACE_CREATOR(name, SimIfType) \
-class SimIfType; \
-const bool reg_ctr_ ## SimIfType = \
-   vrj::DrawSimInterfaceFactory::instance()-> \
-      registerCreator(name, vpr::CreateProduct<DrawSimInterface, SimIfType>);
-*/
-
 /**
  * Registers a creator for the DrawSimInterface implementation classes.
  *
  * @pre Requires that the method std::string getChunkType() be defined for
  *      class SimIfType.
  *
- * Ex: VRJ_REGISTER_SIM_INTERFACE_CREATOR(simulators::PySim)
+ * Ex: VRJ_REGISTER_GL_SIM_INTERFACE_CREATOR(simulators::PySim)
  */
-#define VRJ_REGISTER_SIM_INTERFACE_CREATOR(SimIfType) \
+#define VRJ_REGISTER_GL_SIM_INTERFACE_CREATOR(SimIfType) \
 class SimIfType; \
 const bool reg_ctr_ ## SimIfType = \
-   vrj::DrawSimInterfaceFactory::instance()-> \
+   vrj::GlSimInterfaceFactory::instance()-> \
       registerCreator(SimIfType::getChunkType(), \
                       vpr::CreateProduct<vrj::DrawSimInterface, SimIfType>);
 
 namespace vrj
 {
 
-class VJ_CLASS_API DrawSimInterfaceFactory :
+class VJ_CLASS_API GlSimInterfaceFactory :
    public vpr::Factory<DrawSimInterface, std::string>
 {
 public:
-   vprSingletonHeader(DrawSimInterfaceFactory);
+   vprSingletonHeader(GlSimInterfaceFactory);
 };
 
 } // End of vrj namespace
 
-#endif /* _VRJ_DRAW_SIM_INTERFACE_FACTORY_H_ */
+#endif /* _VRJ_GL_SIM_INTERFACE_FACTORY_H_ */
