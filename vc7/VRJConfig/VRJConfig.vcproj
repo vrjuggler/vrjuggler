@@ -11,18 +11,6 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
-			ConfigurationType="0">
-			<Tool
-				Name="VCNMakeTool"
-				BuildCommandLine="nmake all"
-				ReBuildCommandLine="nmake clean all"
-				CleanCommandLine="nmake clean"
-				Output="VRJConfig.jar"/>
-		</Configuration>
-		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
