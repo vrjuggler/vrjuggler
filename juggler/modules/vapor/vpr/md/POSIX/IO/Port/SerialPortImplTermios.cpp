@@ -751,11 +751,11 @@ SerialPortImpTermios::getParity () {
 
     // Odd parity if PARODD is set.
     if ( getBit(PARODD, SerialPortImpTermios::CFLAG) ) {
-        retval = SerialTypes::PARITY_ODD;
+        retval = SerialTypes::PORT_PARITY_ODD;
     }
     // Even parity if PARODD is not set.
     else {
-        retval = SerialTypes::PARITY_EVEN;
+        retval = SerialTypes::PORT_PARITY_EVEN;
     }
 
     return retval;
