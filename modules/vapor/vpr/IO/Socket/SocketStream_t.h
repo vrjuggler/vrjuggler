@@ -102,7 +102,7 @@ public:
     * @param sock The source stream socket to be copied into this object.
     */
    SocketStream_t(const SocketStream_t& sock)
-      : mSocketStreamImpl(sock.mSocketStreamImpl)
+      : Socket_t<SocketConfig_>(), SocketStreamOpt(), mSocketStreamImpl(sock.mSocketStreamImpl)
    {
       this->mSocketImpl = mSocketStreamImpl;
    }

@@ -18,6 +18,8 @@
 
 #include <TestCases/Socket/SocketConnectorAcceptorTest.h>
 
+#include <boost/concept_check.hpp>
+
 
 namespace vprTest
 {
@@ -99,6 +101,8 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor ()
 
 void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::InetAddr local_acceptor_addr;
    local_acceptor_addr.setAddress("localhost", mRendevousPort);
    vpr::SocketAcceptor acceptor;
@@ -148,6 +152,8 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor (void* arg)
 
 void SocketConnectorAcceptorTest::testSpawnedAcceptor_connector (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::ReturnStatus ret_val;
    vpr::Uint32 bytes_read;
    vpr::InetAddr remote_addr;

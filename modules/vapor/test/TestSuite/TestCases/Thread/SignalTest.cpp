@@ -4,15 +4,19 @@
 #include <vpr/Thread/Signal.h>
 
 #include <TestCases/Thread/SignalTest.h>
+#include <boost/concept_check.hpp>
 
 
 static RETSIGTYPE handlerSIGSEGV
 #if defined(VPR_OS_IRIX) && defined(__GNUC__)
    (void)
+{
 #else
    (int signum)
-#endif
 {
+   boost::ignore_unused_variable_warning(signum);
+#endif
+
 //   std::cout << "\n\n\nSignal caught\n" << std::flush;
 //   throw new CppUnit::Exception("stuff");
    return;

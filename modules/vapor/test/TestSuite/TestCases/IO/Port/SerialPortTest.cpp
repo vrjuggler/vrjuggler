@@ -7,6 +7,8 @@
 
 #include <TestCases/IO/Port/SerialPortTest.h>
 
+#include <boost/concept_check.hpp>
+
 
 namespace vprTest
 {
@@ -572,6 +574,8 @@ void SerialPortTest::testSendRecv ()
 
 void SerialPortTest::testSendRecv_receiver (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::SerialPort recv_port(mRecvPortName);
    vpr::ReturnStatus status;
 
@@ -629,6 +633,8 @@ void SerialPortTest::testSendRecv_receiver (void* arg)
 
 void SerialPortTest::testSendRecv_sender (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    vpr::SerialPort send_port(mSendPortName);
    vpr::ReturnStatus status;
 

@@ -12,6 +12,8 @@
 
 #include <TestCases/Socket/SocketCopyConstructorTest.h>
 
+#include <boost/concept_check.hpp>
+
 
 namespace vprTest
 {
@@ -73,6 +75,8 @@ void SocketCopyConstructorTest::testCopyConnectedSocket ()
 
 void SocketCopyConstructorTest::testCopyConstructor_connector (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    const vpr::Uint16 port(13579);
    vpr::InetAddr remote_addr;
    bool result = 0;
@@ -126,6 +130,8 @@ void SocketCopyConstructorTest::testCopyConstructor_connector (void* arg)
 
 void SocketCopyConstructorTest::testCopyConstructor_acceptor(void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    const vpr::Uint16 port(13579);
    bool result = 0;
    char buffer[]="Hello!";

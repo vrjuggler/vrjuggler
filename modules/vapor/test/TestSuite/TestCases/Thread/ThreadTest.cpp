@@ -16,6 +16,8 @@
 
 #include <math.h>
 
+#include <boost/concept_check.hpp>
+
 
 namespace vprTest
 {
@@ -30,6 +32,7 @@ public:
 
    void doSomething(void* arg)
    {
+      boost::ignore_unused_variable_warning(arg);
       vprASSERT(vpr::Thread::self() != NULL && "We should know ourselves by now");
 
       for ( vpr::Uint32 i = 0; i < mMaxInc; ++i )
@@ -167,6 +170,7 @@ void ThreadTest::testCreateJoin()
 
 void ThreadTest::incCounter(void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
    for(vpr::Uint32 i=0;i<ThreadTest_INC_COUNT;i++)
    {
       mItemProtectionMutex.acquire();
@@ -183,6 +187,7 @@ void ThreadTest::incCounter(void* arg)
 
 void ThreadTest::counter1Func(void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
    for(int i=0;i<10000;i++)
    {
       vpr::System::msleep(10);    // Sleep for 20 micro seconds
@@ -261,6 +266,7 @@ void ThreadTest::testSuspendResume()
 
 void ThreadTest::counter2Func(void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
    for(int i=0;i<10000;i++)
    {
       vpr::System::msleep(10);    // Sleep for 20 micro seconds
@@ -376,6 +382,7 @@ void ThreadTest::interactiveTestCPUGrind()
 // This function just grinds the CPU and waits for the flag to flip
 void ThreadTest::grindCPUWorker(void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
    double bogus_sum(0.0);
    double da_arg(0.1);
    const double inc(0.005);
