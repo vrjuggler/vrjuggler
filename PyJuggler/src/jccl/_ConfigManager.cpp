@@ -22,7 +22,39 @@ using namespace boost::python;
 void _Export_ConfigManager()
 {
    scope* jccl_ConfigManager_scope = new scope(
-   class_<jccl::ConfigManager, boost::noncopyable>("ConfigManager", no_init)
+   class_<jccl::ConfigManager, boost::noncopyable>("ConfigManager",
+       "Dynamic reconfiguration management for JCCL.  The Config Manager\n"
+       "provides a complete solution for configuration an application via\n"
+       "JCCL's ConfigElement type.  The Config Manager can configure based\n"
+       "on static configuration files or dynamically via a network\n"
+       "interface.\n\n"
+       "The Config Manager can be used in a number of ways.  It provices a\n"
+       "complete default solution to configuration, but it also exposes\n"
+       "enough of its inner workings to allow applications to implement\n"
+       "their own dynamic configuration algorithms.\n\n"
+       "The simplest way to use the Config Manager is to create one or more\n"
+       "types that implement the jccl.ConfigElementHandler interfaces and\n"
+       "register instances of these using the method\n"
+       "jccl.ConfigManager.addConfigElementHandler().\n\n"
+       "Requests to add config elements can be added via the network\n"
+       "connection or by the addPending*() methods of this class.  These\n"
+       "requests are added to the Config Manager's \"pending\" list.  The\n"
+       "Config Manager also maintains an \"active\" list that contains all\n"
+       "the config elements that have been handled successfully.\n\n"
+       "Once config element handlers have been registered with the Config\n"
+       "Manager, the application should periodically call the method\n"
+       "attemptReconfiguration().  This will try to match items in the\n"
+       "pending list with instances of jccl.ConfigElementHandler that know\n"
+       "how to handle them.\n\n"
+       "For more advanced uses, jccl.ConfigManager provides accessor\n"
+       "functions that allow direct manipulation of the pending and active\n"
+       "lists.  This allows an application to decide on its own when and how\n"
+       "to process requests in the pending list.  However, the\n"
+       "attemptReconfiguration() interface should be sufficient for almost\n"
+       "all uses."
+       ,
+       no_init
+      )
       .def("getElementFromActive", &jccl::ConfigManager::getElementFromActive,
            "getElementFromActive(elementName) -> ConfigElement object\n"
            "Attempts to find a config element matching the given name in the\n"
