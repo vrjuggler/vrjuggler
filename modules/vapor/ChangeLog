@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-09-23 allenb   Added RWMutexPoix.  This just wraps the standard posix
+                    rwmutex methods.
+                    NEW VERSION: 0.28.1
 2003-09-18 patrickh Refactored vpr::LibraryLoader to use Boost.Function as a
                     callback mechanism for initializing DSOs.
                     Removed vpr::DsoLoader, which has been superceded by
