@@ -65,8 +65,6 @@ namespace vpr {
 
 /**
  * Wrapper around UNIX file descriptors.
- *
- * @author Patrick Hartling
  */
 class FileHandleImplUNIX {
 public:

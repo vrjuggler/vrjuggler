@@ -62,8 +62,6 @@ namespace vpr {
 /**
  * Mutex wrapper for POSIX-compliant systems using pthreads mutex variables
  * for the implementation.
- *
- * @author Patrick Hartling
  */
 class MutexPosix {
 public:

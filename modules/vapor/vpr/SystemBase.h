@@ -55,9 +55,6 @@ namespace vpr {
  * vpr::SystemBase is a base class for vpr::System so, for xplatform system
  * functions, use vpr::System (don't use vpr::SystemBase).
  *
- * @author Kevin Meinert
- * @author Patrick Hartling
- *
  * @see vpr::SystemPosix
  * @see vpr::SystemNSPR
  */

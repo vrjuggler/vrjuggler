@@ -60,8 +60,6 @@ namespace vpr {
 
 /**
  * vpr::SerialPort implementation for Win32.
- *
- * @author Josh Brown
  */
 class VPR_CLASS_API SerialPortImplWin32 {
 public:

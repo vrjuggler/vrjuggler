@@ -53,8 +53,6 @@ namespace vpr {
 
 /**
  * Implementation class for datagram sockets using the BSD sockets interface.
- *
- * @author Patrick Hartling
  */
 class SocketDatagramImplBSD : public vpr::SocketImplBSD {
 public:

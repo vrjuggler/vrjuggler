@@ -46,7 +46,6 @@
  * Defines a mutex wrapper.  No base class because
  *  we don't want to have to use virtual functions.
  *
- * @author Allen Bierbaum
  * @date 1-20-97
  */
 

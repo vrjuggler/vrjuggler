@@ -66,8 +66,6 @@ namespace vpr
     *   obj.unrefDelete(); // count == 0, memory is deleted
     * 
     * class Object : public vpr::RefCountMemory
-    *
-    * @author Kevin Meinert
     */
    class RefCountMemory
    {

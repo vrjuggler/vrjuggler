@@ -54,8 +54,6 @@ namespace vpr {
 
 /**
  * Implementation of the stream socket wrapper using BSD sockets.
- *
- * @author Patrick Hartling
  */
 class SocketStreamImplBSD : public SocketImplBSD {
 public:

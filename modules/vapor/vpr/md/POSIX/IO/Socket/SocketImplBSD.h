@@ -61,8 +61,6 @@ namespace vpr {
 
 /**
  * Basic socket wrapper implementation for BSD sockets.
- *
- * @author Patrick Hartling
  */
 class SocketImplBSD {
 public:

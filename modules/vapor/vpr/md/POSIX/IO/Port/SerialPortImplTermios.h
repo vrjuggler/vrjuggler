@@ -58,8 +58,6 @@ namespace vpr {
 
 /**
  * vpr::SerialPort implementation using termios.
- *
- * @author Patrick Hartling
  */
 class SerialPortImplTermios {
 public:

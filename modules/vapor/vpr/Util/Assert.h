@@ -48,8 +48,6 @@
  * Assert wrapper.  If debugging is enabled, <code>vprASSERT</code> will
  * trigger an assertion when the given expression evaluates to false.  If
  * debugging is disabled, <code>vprASSERT</code> is a null operation.
- *
- * @author Allen Bierbaum
  */
 #ifdef VPR_DEBUG
 #   include <assert.h>

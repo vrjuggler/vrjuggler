@@ -51,8 +51,6 @@ namespace vpr {
 /**
  * Simple class to take timings and give averages.
  * NOTE: All times are in seconds
- *
- * @author Allen Bierbaum
  */
 class Timer
 {

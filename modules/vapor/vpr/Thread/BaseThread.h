@@ -53,8 +53,6 @@ namespace vpr {
 
 /**
  * This is used as the base class for all thread classes.
- *
- * @author Allen Bierbaum
  */
 class VPR_CLASS_API BaseThread
 {
@@ -307,8 +305,6 @@ private:
  *
  * Used internally because we can have many types of indexes for the thread
  * list depending upon the type of threads being used.
- *
- * @author Allen Bierbaum
  */
 template <class IdxType>
 class VPR_CLASS_API ThreadTable

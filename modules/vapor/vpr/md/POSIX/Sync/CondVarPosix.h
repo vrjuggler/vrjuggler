@@ -63,8 +63,6 @@ namespace vpr
 /**
  * Condition variable wrapper for POSIX-compliant systems using pthreads
  * condition variables for the implementation.
- *
- * @author Patrick Hartling
  */
 class CondVarPosix
 {

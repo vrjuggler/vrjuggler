@@ -61,8 +61,6 @@ namespace vpr {
  * NOTE: The object used for type T must have a default constructor
  *       This class creates each instance of the real objects
  *       using this default constructor.
- *
- * @author Allen Bierbaum
  */
 template <class T>
 class TSObjectProxy

@@ -58,8 +58,6 @@ namespace vpr {
 
 /**
  * Helper class for vpr::Barrier.
- *
- * @author Allen Bierbaum
  */
 class SubBarrier
 {
@@ -95,8 +93,6 @@ public:
  *    the barrier correct.  This code is based on an article from
  *    SunOpsis Vol. 4, No. 1 by Richard Marejka
  *    (Richard.Marejka@canada.sun.com).
- *
- * @author Allen Bierbaum
  */
 class Barrier
 {

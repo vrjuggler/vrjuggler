@@ -64,8 +64,6 @@ namespace vpr {
 
 /**
  * Semaphore wrapper for POSIX.4-compliant systems.
- *
- * @author Patrick Hartling
  */
 class SemaphorePosix {
 public:

@@ -50,8 +50,6 @@ namespace vpr
    /**
     * Class used to represent the status of a function or method upon its
     * return.
-    *
-    * @author Kevin Meinert
     */
    class VPR_CLASS_API ReturnStatus
    {

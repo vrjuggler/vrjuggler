@@ -62,8 +62,6 @@ namespace vpr {
  * This class holds data on: <br>
  * - List of all threads in system <br>
  * - Thread Specific data items
- *
- * @author Allen Bierbaum
  */
 class VPR_CLASS_API ThreadManager
 {

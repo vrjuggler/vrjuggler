@@ -53,8 +53,6 @@ namespace vpr {
  * Used so that we can have an array of heterogenous TS objects.
  * (ie. We get some type safety)
  * Also defines some members that all TS Objects need.
- *
- * @author Allen Bierbaum
  */
 class TSBaseObject
 {
@@ -65,8 +63,6 @@ public:
 
 /**
  * This is the object actually stored in the system.
- *
- * @author Allen Bierbaum
  *
  * @see vpr::TSTable
  */
