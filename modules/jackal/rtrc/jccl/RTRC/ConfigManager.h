@@ -89,7 +89,7 @@ public:   // ----- PENDING LIST ----- //
      *  items on a stale pending list to be processed (e.g. if a
      *  new Manager is added to the system).
      */
-    void ConfigManager::refreshPendingList ();
+    void refreshPendingList ();
 
 
     /** Add the ConfigChunks in db to pending list as adds.
