@@ -294,7 +294,7 @@ namespace snx
    void AudioWorksSoundImplementation::setListenerPosition( const gmtl::Matrix44f& mat )
    {
       snx::SoundImplementation::setListenerPosition( mat );
-      std::cout << "WARNING: setListenerPosition not implemented yet\n" << std::endl;
+      vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("WARNING: setListenerPosition not implemented yet\n"), std::string("\n"));
    }
 
    /**
@@ -459,7 +459,7 @@ namespace snx
       result = awConfigSys(1);
      if (result != 0)         //Attempt to configure the system
      {    
-       std::cout << "[snx]AudioWorks| ERROR: ConfigSys() failed (retval="<<result<<")!\n" << std::flush;
+         vpr::DebugOutputGuard output2(snxDBG, vprDBG_CONFIG_LVL, std::string("ERROR: ConfigSys() failed\n"), std::string("\n"));
    //    awPrint(mEngine);
        return;
      }
@@ -557,13 +557,13 @@ namespace snx
       awName( &wav, filename.c_str() );       //Set the aifc filename
       if (awLoadWav( &wav ) != 0)               //Load the aifc file
       {
-          std::cout << "[snx]AudioWorks| \nfailed to open wave file\nwave dump:\n" << std::flush;
+          vpr::DebugOutputGuard output3(snxDBG, vprDBG_CONFIG_LVL, std::string("ERROR: failed to open wave file\nwave dump:\n"), std::string("\n"));
           awPrint( &wav );
           return;
       }
       else
       {
-         std::cout << "[snx]AudioWorks| NOTICE: loaded: "<<filename<<"\n" << std::flush;
+         vpr::DebugOutputGuard output4(snxDBG, vprDBG_CONFIG_LVL, std::string("NOTICE: loaded: ")+filename+std::string("\n"), std::string("\n"));
       }
       
       awPrint( &wav );
@@ -642,12 +642,12 @@ namespace snx
       this->setVolume( alias, sinfo.volume );
       this->setRetriggerable( alias, sinfo.retriggerable );
       
-      std::cout<<"                        bind() done...\n"<<std::flush;
+      vpr::DebugOutputGuard output5(snxDBG, vprDBG_CONFIG_LVL, std::string("bind() done...\n"), std::string("\n"));
       // was it playing?  if so, then start it up again...
       if (sinfo.triggerOnNextBind == true)
       {
          sinfo.triggerOnNextBind = false; // done...
-         std::cout<<"[snx]AudioWorks| NOTIFY: triggering reconfigured sound x" << sinfo.repeat << "\n"<<std::flush;
+         vpr::DebugOutputGuard output6(snxDBG, vprDBG_CONFIG_LVL, std::string("[snx]AudioWorks| NOTIFY: triggering reconfigured sound x\n"), std::string("\n"));
          this->trigger( alias, sinfo.repeat );
       }
 

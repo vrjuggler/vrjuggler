@@ -147,8 +147,12 @@ AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 saveCXXFLAGS="$CXXFLAGS"
 saveINCLUDES="$INCLUDES"
 
-#VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for sonix***))
-#CXXFLAGS="$VPR_CXXFLAGS $CXXFLAGS"
+VPR_PATH(0.15.0, , AC_MSG_ERROR(*** VPR required for sonix***))
+INCLUDES="$INCLUDES $VPR_INCLUDES"
+LIBS="$LIBS $VPR_LIBS"
+
+CXXFLAGS="$VPR_CXXFLAGS $CXXFLAGS"
+
 
 dnl ignore the nasty paths appended by the config scripts...
 #CXXFLAGS="$saveCXXFLAGS"
@@ -320,6 +324,9 @@ sample_application_includes="$sample_application_includes -I\${SNX_BASE_DIR}/inc
 sample_application_ldflags="$sample_application_ldflags $LDFLAGS"
 
 
+APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
+APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
+
 if test "x$OS_TYPE" = "xWin32" ; then
    snx_ldflags_compiler="$snx_ldflags_compiler /link /libpath:\$prefix/lib"
    snx_ldflags_linker="$snx_ldflags_linker /libpath:\$prefix/lib"
@@ -347,6 +354,8 @@ else
    DYLIB_DEPS=''
    DYLIB_PROF_DEPS="$DYLIB_DEPS"
 fi
+DYLIB_DEPS="$DYLIB_DEPS $APP_EXTRA_LIBS"
+DYLIB_PROF_DEPS="$DYLIB_PROF_DEPS $APP_EXTRA_LIBS"
 
 #sample_application_libs="$sample_application_libs"
 
@@ -413,6 +422,8 @@ AC_OUTPUT(
           snx/plugins/AudioWorks/Makefile
           snx/plugins/OpenAL/Makefile
           snx/plugins/Subsynth/Makefile
+          snx/Util/Makefile
+          snx/snxParam.h
           samples/Makefile
           samples/opengl/Makefile
           test/Makefile

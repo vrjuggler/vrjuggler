@@ -56,6 +56,7 @@
 #include "snx/ReplaceEnvVars.h"
 #include "snx/Singleton.h"
 #include "snx/ISoundImplementation.h"
+#include "snx/Util/Debug.h"
 
 namespace snx
 {
@@ -73,16 +74,17 @@ public:
       for (unsigned int x = 0; x < search_paths.size(); ++x)
       {
          search_paths[x] = snx::replaceEnvVars( search_paths[x] );
-         std::cout << "[snx]SoundFactory| Finding plugins in: \n"
-                   << " + " << search_paths[x].c_str() << std::endl;
-      //   std::string test_file = search_paths[x] + "/.testjunk";
+         vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("Finding plugins in: \n"), std::string(""));
+         vpr::DebugOutputGuard output2(snxDBG, vprDBG_CONFIG_LVL, search_paths[x]+ std::string("\n"), std::string(""));
          if (xdl::isDir(search_paths[x].c_str()))
          {
             xdl::dirlist( search_paths[x].c_str(), filelist );
             this->filterOutPluginFileNames( search_paths[x].c_str(), filelist, filelist );
             this->loadPlugins( search_paths[x], filelist );
+            
+            vpr::DebugOutputGuard output3(snxDBG, vprDBG_CONFIG_LVL, std::string("filelist: \n"), std::string(""));
             for(unsigned int i=0;i<filelist.size();i++){
-               std::cout << "filelist: " << filelist[i] << ", " << std::endl;
+               vpr::DebugOutputGuard output4(snxDBG, vprDBG_CONFIG_LVL, filelist[i]+std::string("\n"), std::string(""), false);
             }
          }
       }
@@ -90,40 +92,47 @@ public:
 
    void errorOutput(std::string filename, const char* test)
    {
-      std::cout << "[snx]Plugin: " << filename << " does not export symbol: " << test << std::endl;
+      vpr::DebugOutputGuard output4(snxDBG, vprDBG_CONFIG_LVL, std::string("Plugin: ") + filename + std::string("\n"), std::string(""));
+      vpr::DebugOutputGuard output5(snxDBG, vprDBG_CONFIG_LVL, std::string(" does not export symbol: ") + std::string(test), std::string(""));
    }
    
    
    bool isPlugin( std::string filename )
    {  
       xdl::Library lib;
-      if (lib.open( filename.c_str(), xdl::NOW ) == false){
-         std::cout << "Plugin: " << filename << " has invalid name." << std::endl;
+      if (lib.open( filename.c_str(), xdl::NOW ) == false)
+      {
+         vpr::DebugOutputGuard output6(snxDBG, vprDBG_CONFIG_LVL, std::string("Plugin: " + filename + " has invalid name.\n"), std::string(""));
          return false;
       }
-      if (lib.lookup( "newPlugin" ) == NULL){
+      if (lib.lookup( "newPlugin" ) == NULL)
+      {
          errorOutput(filename, "newPlugin");
          return false;
       }  
-      if (lib.lookup( "deletePlugin" ) == NULL){
+      if (lib.lookup( "deletePlugin" ) == NULL)
+      {
          errorOutput(filename, "deletePlugin");
          return false;
       }
-      if (lib.lookup( "getVersion" ) == NULL){
+      if (lib.lookup( "getVersion" ) == NULL)
+      {
          errorOutput(filename, "getVersion");
          return false;
       }
-      if (lib.lookup( "getName" ) == NULL){
+      if (lib.lookup( "getName" ) == NULL)
+      {
          errorOutput(filename, "getName");
          return false;
       }
+      
 
       // @todo give sonix an internal version number string!
       //getVersionFunc getVersion = (getVersionFunc)lib.lookup( "getVersion" );
       //if (getVersion != NULL && getVersion() != snx::version) return false;
 
       lib.close();
-      std::cout << "Plugin: " << filename << " is a valid sonix plugin." << std::endl;
+      vpr::DebugOutputGuard output7(snxDBG, vprDBG_CONFIG_LVL, std::string("Plugin: ") + filename + std::string(" is a valid sonix plugin.\n"), std::string(""),false); 
       return true;
    }
 
@@ -134,13 +143,17 @@ public:
       destlist.clear();
       std::string temp;
       
-      std::cout << "[snx]Checking Plugins validity..." << std::endl;
+      vpr::DebugOutputGuard output8(snxDBG, vprDBG_CONFIG_LVL, std::string("Checking Plugins validity...\n"), std::string(""));
       for (unsigned int x = 0; x < srclist.size(); ++x)
       {
-         temp = dir + std::string("/") + srclist[x];
-         if (this->isPlugin( temp/*srclist[x]*/ ))
+         if(srclist[x] != "." && srclist[x] != "..")
          {
-            destlist.push_back( srclist[x] );
+            vpr::DebugOutputGuard output9(snxDBG, vprDBG_CONFIG_LVL, srclist[x]+std::string("\n"), std::string(""), false);
+            temp = dir + std::string("/") + srclist[x];
+            if (this->isPlugin( temp/*srclist[x]*/ ))
+            {
+               destlist.push_back( srclist[x] );
+            }
          }
       }
    }
@@ -163,7 +176,8 @@ public:
          if (getName != NULL)
          {
             name = getName();
-            std::cout << "   o  Got plugin: " << name << " registering..." << std::endl;
+            vpr::DebugOutputGuard output9(snxDBG, vprDBG_CONFIG_LVL, std::string("Got plugin: ")+ name+std::string(" registering...\n"), std::string(""));
+            
          
             // create the implementation
             newPluginFunc newPlugin = (newPluginFunc)mPlugins[x].lookup( "newPlugin" );
@@ -223,14 +237,16 @@ public:
    {
       if (impl != NULL)
       {
-         std::cout<<"[snx]SoundFactory| NOTICE: Registering sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
+         vpr::DebugOutputGuard output10(snxDBG, vprDBG_CONFIG_LVL, std::string("NOTICE: Registering sound API: ")+apiName+std::string("\n"), std::string(""));
+               //std::string(" [")+(int)impl+"]\n", std::string("\n"));
          impl->setName( apiName );
          mRegisteredImplementations[apiName] = impl;
       }
       else
       {
          mRegisteredImplementations.erase( apiName );
-         std::cout<<"[snx]SoundFactory| NOTICE: UnRegistered sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
+         vpr::DebugOutputGuard output11(snxDBG, vprDBG_CONFIG_LVL, std::string("NOTICE: UnRegistered sound API: ")+apiName+std::string("\n"), std::string(""));
+            //   +std::string(" [")+(int)impl+std::string("]\n") std::string("\n"));
       }      
       
    }
