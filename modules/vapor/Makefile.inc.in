@@ -279,18 +279,6 @@ pre-install-headers:
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/System.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/SystemBase.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/vpr.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/vprConfig.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/vprDomain.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/vprTypes.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/vpr/vprDefines.h $(includedir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/vpr/vprParam.h $(includedir)
