@@ -62,7 +62,7 @@
 {if class}
   {if constructor !private}
     <!-- Index of non-private class constructor(s). -->
-    <H3>Constructor Summary</H3>
+    <FONT SIZE="+1"><B>Constructor Summary</B></FONT>
 
       <DL>
 	{foreach member}
@@ -82,7 +82,7 @@
 
   {if method !private}
     <!-- Index of non-private class method(s). -->
-    <H3>Method Summary</H3>
+    <FONT SIZE="+1"><B>Method Summary</B></FONT>
 
       <DL>
 	{foreach member all}
@@ -124,7 +124,7 @@
 
   {if membervar public}
     <!-- Index of non-private class member variable(s). -->
-    <H3>Member Variable Summary</H3>
+    <FONT SIZE="+1"><B>Member Variable Summary</B></FONT>
 
       <DL>
 	{foreach member all}
@@ -151,13 +151,13 @@
 
   {if constructor !private}
     <!-- Class constructor(s). -->
-    <H3>Constructor Detail</H3>
+    <FONT SIZE="+1"><B>Constructor Detail</B></FONT>
 
       {foreach member}
 	{if !mprivate}
 	  {if mconstructor}
 	    {nolink true}
-	    <H4><A NAME="{memberef}">{mname}</A></H4>
+	    <H3><A NAME="{memberef}">{mname}</A></H3>
 	    {nolink false}
 	    {include ../common/method_description_book.html.inc}
 	  {endif}
@@ -169,13 +169,13 @@
 
   {if method !private}
     <!-- Class method(s). -->
-    <H3>Method Detail</H3>
+    <FONT SIZE="+1"><B>Method Detail</B></FONT>
 
     {foreach member}
       {if !mprivate}
 	{if func}
 	  {if !mconstructor}
-	    <H4><A NAME="{memberef}">{mname}</A></H4>
+	    <H3><A NAME="{memberef}">{mname}</A></H3>
 	    {include ../common/method_description_book.html.inc}
 	  {endif}
 	{endif}
@@ -188,7 +188,7 @@
 {else}
   <!-- Index of struct/union element(s). -->
   {private false}
-    <H3>Element Information</H3>
+    <B>Element Information</B>
 
       <DL>
 	{foreach member}
