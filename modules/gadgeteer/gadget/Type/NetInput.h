@@ -21,7 +21,7 @@ protected:
     std::string mDeviceName;
     VJ_NETID_TYPE mLocalId;  // unsigned short
     VJ_NETID_TYPE mRemoteId;
-    char* mSendBuffer;  
+    std::vector<char> mSendBuffer;  
    
    // constructor used when a device has been requested from us (and remote id has been given)
    NetInput(const std::string& device_name, Input* input_ptr);
