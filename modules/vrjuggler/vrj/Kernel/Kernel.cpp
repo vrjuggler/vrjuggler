@@ -185,16 +185,23 @@ void Kernel::controlLoop(void* nullParam)
          mPerfBuffer->set(7);
    }
 
+   vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::controlLoop: Exiting. \n" << vprDEBUG_FLUSH;
+
    // Set the running status to false
-   mIsRunning = false;
+   mExitWaitCondVar.acquire();
+   {
+      mIsRunning = false;
+      mExitWaitCondVar.signal();
+   }
+   mExitWaitCondVar.release();   
 }
 
 // Set the application to run
 // XXX: Should have protection here
-void Kernel::setApplication(App* _app)
+void Kernel::setApplication(App* newApp)
 {
    vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL) << "vjKernel::setApplication: New application set\n" << vprDEBUG_FLUSH;
-   mNewApp = _app;
+   mNewApp = newApp;
    mNewAppSet = true;
 }
 
@@ -221,7 +228,7 @@ void Kernel::checkForReconfig()
    // check for a new applications
    if(mNewAppSet)
    {
-      if(mNewApp->depSatisfied())
+      if((mNewApp == NULL) || (mNewApp->depSatisfied()) )   // If app is NULL or dependencies satisfied
       {
          vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL) << "vjKernel: New application dependencies: Satisfied.\n" << vprDEBUG_FLUSH;
          mNewAppSet = false;
@@ -237,17 +244,17 @@ void Kernel::checkForReconfig()
 // Changes the application in use
 //  If there is another app active, it has to stop that
 //  application first then restart all API specific Managers.
-//! ARGS: _app - If NULL, stops current application
+//! ARGS: newApp - If NULL, stops current application
 //! NOTE: This can only be called from the kernel thread
 // app = NULL ==> stop draw manager and null out app
 // app != NULL ==>
 //             Get the draw manager needed
 //             Start it
 //             Give it the application
-void Kernel::changeApplication(App* _app)
+void Kernel::changeApplication(App* newApp)
 {
    vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::changeApplication: Changing to:"
-                           << _app << std::endl << vprDEBUG_FLUSH;
+                           << newApp << std::endl << vprDEBUG_FLUSH;
 
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
@@ -264,9 +271,9 @@ void Kernel::changeApplication(App* _app)
    }
 
    // SET NEW APPLICATION
-   if(_app != NULL)        // We were given an app
+   if(newApp != NULL)        // We were given an app
    {
-      mApp = _app;
+      mApp = newApp;
       DrawManager* new_draw_mgr = mApp->getDrawManager();
       vprASSERT(NULL != new_draw_mgr);
 
@@ -518,6 +525,7 @@ void Kernel::startDrawManager(bool newMgr)
 // Stop the draw manager and close it's resources, then delete it
 //! POST: draw mgr resources are closed
 //+       draw mgr is deleted, display manger set to NULL draw mgr
+// XXX: @todo Make stop draw manager reconfigure the draw manager to close all the windows
 void Kernel::stopDrawManager()
 {
    if(mDrawManager != NULL)
