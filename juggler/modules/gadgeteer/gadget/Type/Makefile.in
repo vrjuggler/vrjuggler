@@ -58,11 +58,12 @@ SRCS		= AnalogProxy.cpp			\
                   NetDigitalData.cpp                    \
                   NetPositionData.cpp                   \
                   Position.cpp				\
-                  PositionProxy.cpp
+                  PositionProxy.cpp			\
+                  Glove.cpp				\
+                  GloveProxy.cpp			
 #                  GestureProxy.cpp			\
-#                  Glove.cpp				\
 #                  GloveGesture.cpp			\
-#                  GloveProxy.cpp			\
+
 
 include $(MKPATH)/dpp.obj.mk
 
