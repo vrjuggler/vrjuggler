@@ -26,6 +26,7 @@ class vjConfigChunkDB;
 class vjSimulator;
 
 #include <Sync/vjCond.h>
+#include <Sync/vjSemaphore.h>
 
 //-----------------------------------------------
 //: Concrete Singleton Class for OpenGL drawing
