@@ -36,6 +36,12 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Output.h>
 
+#include <gadget/InputManager.h>
+#include <gadget/InputLogger.h>
+
+#include <string>
+#include <iostream>
+
 #include "NavGrabApp.h"
 
 
@@ -48,6 +54,8 @@ void NavGrabApp::init()
    mGrabButton.init("VJButton0");
    mResetButton.init("VJButton1");
    mDumpStateButton.init("VJButton2");
+
+   mLoggerPlayButton.init("LoggerPlayButton");
 }
 
 void NavGrabApp::contextInit()
@@ -118,6 +126,25 @@ void NavGrabApp::preFrame()
    {
       dumpState();
    }
+
+   // Playing of logs
+   // Check logger play button
+   if(mLoggerPlayButton->getData() == gadget::Digital::TOGGLE_ON)
+   {
+      std::cout << "\n\n------ Log Play Button hit ----\n" << std::flush;
+      gadget::InputManager* input_mgr = gadget::InputManager::instance();
+      gadget::InputLoggerPtr logger = input_mgr->getInputLogger();
+
+      std::string log_filename;
+      std::cout << "Enter filename to load:" << std::flush;
+      std::cin >> log_filename;
+      std::cout << std::endl << "Using file:" << log_filename << std::endl;
+
+      vprASSERT(logger.get() != NULL);
+      logger->load(log_filename);
+      logger->play();
+   }
+
 }
 
 void NavGrabApp::bufferPreDraw()
