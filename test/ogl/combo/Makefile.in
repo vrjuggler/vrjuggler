@@ -1,14 +1,16 @@
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/test/ogl/torus
+# Makefile.in for juggler/test/ogl/combo
 # $Id$
 # -----------------------------------------------------------------------------
+
+.SUFFIXES: .cpp
 
 srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
 VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir} -I${srcdir}/../torus -I${srcdir}/../wand -I${srcdir}/../cubes
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
-VPATH		= @srcdir@
+VPATH		= @srcdir@:@srcdir@/../cubes:@srcdir@/../wand:@srcdir@/../torus
 
 # This test program requires the following libraries to be linked:
 #
@@ -23,7 +25,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= combo.o torusApp.o 
+OBJECTS		= combo.o torusApp.o
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -35,11 +37,13 @@ all: combo
 combo: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-combo.o: combo.cpp ../torus/torusApp.h ../wand/wandApp.h ../cubes/cubesApp.h
-	${COMPILE} -c -o $@ ${srcdir}/combo.cpp
-	
-torusApp.o: ../torus/torusApp.cpp ../torus/torusApp.h
+combo.o: combo.cpp torusApp.h wandApp.h cubesApp.h
+
+torusApp.o: torusApp.cpp torusApp.h
 	${COMPILE} -c -o $@ ${srcdir}/../torus/torusApp.cpp
+
+.cpp.o:
+	${COMPILE} -c ${srcdir}/$<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
