@@ -104,6 +104,18 @@
 /* Define to `unsigned int' if the u_int type is not available. */
 #undef u_int
 
+/* Define if you have the sinf function.  */
+#undef HAVE_SINF
+
+/* Define if you have the sqrtf function.  */
+#undef HAVE_SQRTF
+
+/* Define if you have the asinf function.  */
+#undef HAVE_ASINF
+
+/* Define if you have the atan2f function.  */
+#undef HAVE_ATAN2F
+
 @BOTTOM@
 
 #endif	/* _VJ_DEFINES_H_ */

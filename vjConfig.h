@@ -99,6 +99,22 @@ typedef UINT u_int;
 #   define sginap(x) (usleep(x * 333333))
 #endif
 
+#ifndef HAVE_SINF
+#   define sinf(x) ((float) sin(x))
+#endif
+
+#ifndef HAVE_ASINF
+#   define asinf(x) ((float) asin(x))
+#endif
+
+#ifndef HAVE_ATAN2F
+#   define atan2f(x, y) ((float) atan2(x, y))
+#endif
+
+#ifndef HAVE_SQRTF
+#   define sqrtf(x) ((float) sqrt(x))
+#endif
+
 #define VJ_EPS 1e-8
 #define VJ_DEG2RAD(x) ((x)*M_PI/180.0)
 #define VJ_RAD2DEG(x) ((x)*180.0/M_PI)
