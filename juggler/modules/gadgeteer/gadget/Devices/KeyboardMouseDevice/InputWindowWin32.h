@@ -63,9 +63,7 @@ public:
    InputWindowWin32()
       : mControlLoopDone(false)
       , mExitFlag(false)
-   {
-      //mKeyboardMouseDevice = this;
-   }
+   {;}
 
    virtual ~InputWindowWin32()
    {
@@ -78,16 +76,29 @@ public:
    void controlLoop( void* nullParam );
 
    /* Pure Virtuals required by gadget::Input. */
+
+  /**
+   * Create a win32 window and start a thread
+   * processing it's messages.
+   */
    bool startSampling();
    bool stopSampling();
 
-   /**
-    * Processes the current events.
-    * Called repetatively by the controlLoop.
+	/**
+    * Process the current window events.
+    *
+    * @note - Called repeatedly by the controlLoop.
     */
    bool sample();
-   void updateData();
-   static std::string getElementType();
+   
+	/**
+	 * Do nothing since we are only sending events to
+	 * a KeyboardMouseDevice.
+	 */
+	void updateData()
+	{;}
+   
+	static std::string getElementType();
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -112,6 +123,10 @@ protected:
    {
    }
 
+	/** 
+    * Window function for the main application window. Processes all 
+    * the menu selections and oter messages.
+    */
    friend LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam,
                                     LONG lParam);
 
@@ -133,11 +148,7 @@ protected:
    //InputAreaWin32::InputAreaRegistry::InputAreaInfo mRemoteInputAreaInfo;
 
    int mScreen, mX, mY;     /**< screen id, x-origin, y-origin. */
-
    bool  mExitFlag;         /**< Should we exit? */
-
-   float mMouseSensitivity;
-   int   mSleepTimeMS;      /**< Amount of time to sleep in milliseconds between updates. */
    bool  mControlLoopDone;
 };
 
