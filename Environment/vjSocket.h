@@ -7,9 +7,9 @@
 //#include <Environment/sockstream.h>
 #include <strings.h>    // For bzero()
 #include <sys/types.h>
+#include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <netdb.h>
 
 
 typedef int vjSocketIDPosix;
