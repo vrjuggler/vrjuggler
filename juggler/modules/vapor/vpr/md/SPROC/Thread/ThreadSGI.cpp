@@ -143,7 +143,7 @@ void ThreadSGI::startThread(void* null_param)
 //: Make the calling thread wait for the termination of the specified
 //+ thread.
 //! NOTE:  Not implemented.
-//! RETURNS:  0 - Successful completion
+//! RETURNS:  0 - Succeedful completion
 //! RETURNS: -1 - Error
 // -----------------------------------------------------------------------
 int

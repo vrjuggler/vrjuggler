@@ -139,7 +139,7 @@ SocketImplBSD::open () {
         fprintf(stderr,
                 "[vpr::SocketImplBSD] Could not create socket (%s): %s\n",
                 getName().c_str(), strerror(errno));
-        retval.setCode(vpr::ReturnStatus::Failure);
+        retval.setCode(vpr::ReturnStatus::Fail);
     }
     // Otherwise, return success.
     else {
@@ -211,7 +211,7 @@ SocketImplBSD::bind () {
         fprintf(stderr,
                 "[vpr::SocketImplBSD] Cannot bind socket to address: %s\n",
                 strerror(errno));
-        retval.setCode(vpr::ReturnStatus::Failure);
+        retval.setCode(vpr::ReturnStatus::Fail);
     }
     else {
         m_bound = true;
@@ -261,7 +261,7 @@ SocketImplBSD::connect (vpr::Interval timeout) {
         else {
             fprintf(stderr, "[vpr::SocketImplBSD] Error connecting to %s: %s\n",
                     m_remote_addr.getAddressString().c_str(), strerror(errno));
-            retval.setCode(vpr::ReturnStatus::Failure);
+            retval.setCode(vpr::ReturnStatus::Fail);
         }
     }
     // Otherwise, return success.
@@ -335,7 +335,7 @@ SocketImplBSD::setLocalAddr (const InetAddr& addr) {
         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
             << "SocketImplBSD::setLocalAddr: Can't set address of a "
             << "bound or connected socket.\n" << vprDEBUG_FLUSH;
-        status.setCode(vpr::ReturnStatus::Failure);
+        status.setCode(vpr::ReturnStatus::Fail);
     }
     else {
       m_local_addr = addr;
@@ -349,7 +349,7 @@ SocketImplBSD::setRemoteAddr (const InetAddr& addr) {
     vpr::ReturnStatus status;
 
     if ( m_connected ) {
-        status.setCode(vpr::ReturnStatus::Failure);
+        status.setCode(vpr::ReturnStatus::Fail);
     }
     else {
         m_remote_addr = addr;
@@ -527,7 +527,7 @@ SocketImplBSD::getOption (const vpr::SocketOptions::Types option,
         }
     }
     else {
-        retval.setCode(vpr::ReturnStatus::Failure);
+        retval.setCode(vpr::ReturnStatus::Fail);
         fprintf(stderr,
                 "[vpr::SocketImplBSD] ERROR: Could not get socket option for socket %s: %s\n",
                 m_handle->getName().c_str(), strerror(errno));
@@ -666,7 +666,7 @@ SocketImplBSD::setOption (const vpr::SocketOptions::Types option,
 
     if ( ::setsockopt(m_handle->m_fdesc, opt_level, opt_name, &opt_data, opt_size) != 0 )
     {
-        retval.setCode(vpr::ReturnStatus::Failure);
+        retval.setCode(vpr::ReturnStatus::Fail);
     }
 
     return retval;

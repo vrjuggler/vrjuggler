@@ -122,9 +122,9 @@ public:
      *
      * @param backlog The maximum length of th queue of pending connections.
      *
-     * @return vpr::ReturnStatus::Success is returned if this socket is now in a
+     * @return vpr::ReturnStatus::Succeed is returned if this socket is now in a
      *         listening state.<br>
-     *         vpr::ReturnStatus::Failure is returned otherwise.
+     *         vpr::ReturnStatus::Fail is returned otherwise.
      */
     vpr::ReturnStatus listen(const int backlog = 5);
 
@@ -141,14 +141,14 @@ public:
      * @param timeout The length of time to wait for the accept call to
      *                return.
      *
-     * @return vpr::ReturnStatus::Success is returned if the incoming request has
+     * @return vpr::ReturnStatus::Succeed is returned if the incoming request has
      *         been handled, and the given SocketStream object is a valid,
      *         connected socket.<br>
      *         vpr::ReturnStatus::WouldBlock is returned if this is a non-blocking
      *         socket, and there are no waiting connection requests.<br>
      *         vpr::ReturnStatus::Timeout is returned when no connections requests
      *         arrived within the given timeout period.<br>
-     *         vpr::ReturnStatus::Failure is returned if the accept failed.  The
+     *         vpr::ReturnStatus::Fail is returned if the accept failed.  The
      *         given vpr::SocketStream object is not modified in this case.
      */
     vpr::ReturnStatus accept(SocketStreamImplBSD& sock,

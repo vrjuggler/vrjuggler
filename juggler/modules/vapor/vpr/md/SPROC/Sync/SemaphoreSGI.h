@@ -173,7 +173,7 @@ public:
    //---------------------------------------------------------
    //: Release the semaphore.
    //
-   //! RETURNS:  0 - Success
+   //! RETURNS:  0 - Succeed
    //! RETURNS: -1 - Error
    //---------------------------------------------------------
    int release() const
@@ -188,7 +188,7 @@ public:
    //---------------------------------------------------------
    //: Reset the semaphore.
    //
-   //! RETURNS:  0 - Success
+   //! RETURNS:  0 - Succeed
    //! RETURNS: -1 - Error
    //
    //! NOTE: If processes are waiting on the semaphore,

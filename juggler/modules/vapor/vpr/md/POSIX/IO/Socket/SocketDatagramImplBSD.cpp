@@ -97,7 +97,7 @@ SocketDatagramImplBSD::recvfrom (void* msg, const vpr::Uint32 length,
                         "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
                         m_remote_addr.getAddressString().c_str(),
                         m_remote_addr.getPort(), strerror(errno));
-                retval.setCode(ReturnStatus::Failure);
+                retval.setCode(ReturnStatus::Fail);
             }
         }
         else {
@@ -140,7 +140,7 @@ SocketDatagramImplBSD::sendto (const void* msg, const vpr::Uint32 length,
                         to.getAddressString().c_str(), to.getPort(),
                         m_remote_addr.getAddressString().c_str(),
                         m_remote_addr.getPort(), strerror(errno));
-                retval.setCode(ReturnStatus::Failure);
+                retval.setCode(ReturnStatus::Fail);
             }
         }
         else {
