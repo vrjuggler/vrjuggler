@@ -56,11 +56,6 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-# XXX: This is a hack to work around the fact that we are treating the Boost
-# Filesystem Library as a normal Boost library despite the fact that it is
-# not installed with the rest of Boost.
-EXTRA_INCLUDES+=	-I$(JUGGLERROOT_ABS)/external/boost_fs
-
 SRCS=		DsoLoader.cpp		\
 		LibraryFinder.cpp	\
 		LoaderError.cpp
