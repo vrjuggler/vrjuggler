@@ -333,7 +333,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Accept Connections" defaultvalue="1" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="Fastrak" name="Polhemus Fastrak">
+  <ChunkDesc token="Fastrak" name="Fastrak">
     <help>Polhemus Fastrak 3D tracker.</help>
     <category>Devices</category>
     <PropertyDesc token="port" name="Device" type="string" variable="0">
