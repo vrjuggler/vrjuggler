@@ -51,7 +51,7 @@ public class ConfigChunkDB
    implements Cloneable
             , ConfigTokens
 {
-   public static final double CONFIG_VERSION_VALUE = 2.0;
+   public static final double CONFIG_VERSION_VALUE = 2.1;
 
    private static final String CONFIG_VERSION_ATTR = "config.db.version";
 
