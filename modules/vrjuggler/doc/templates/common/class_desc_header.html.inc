@@ -16,7 +16,7 @@
     </TD>
     <TD ALIGN="RIGHT" BGCOLOR="#008000">
       <FONT COLOR="#ffffff"><B><I>VR Juggler<BR>
-      Alpha 4</I></B></FONT>
+      Beta 1</I></B></FONT>
       <BR>
     </TD>
   </TR>
