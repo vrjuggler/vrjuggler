@@ -1,6 +1,8 @@
 #ifndef _GLOVE_APP_
 #define _GLOVE_APP_
 
+#include <vjConfig.h>
+
 #include <Kernel/GL/vjGlApp.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
