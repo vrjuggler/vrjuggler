@@ -81,28 +81,28 @@ void OpenSGNav::preFrame()
    // Update velocity
    if(mButton0->getData() == gadget::Digital::ON)
    {
-      velocity += inc_vel;
-      std::cout << "vel: " << velocity << std::endl;
+      mVelocity += inc_vel;
+      std::cout << "vel: " << mVelocity << std::endl;
    }
-   else if(velocity > 0)
+   else if(mVelocity > 0)
    {
-      std::cout << "vel: " << velocity << std::endl;
-      velocity -= inc_vel;
+      std::cout << "vel: " << mVelocity << std::endl;
+      mVelocity -= inc_vel;
    }
 
    // Restrict range
-   if(velocity < 0)
+   if(mVelocity < 0)
    {
-      velocity = 0;
+      mVelocity = 0;
    }
-   if(velocity > max_vel)
+   if(mVelocity > max_vel)
    {
-      velocity = max_vel;
+      mVelocity = max_vel;
    }
 
    if(mButton1->getData() == gadget::Digital::ON)
    {
-      velocity = 0;
+      mVelocity = 0;
    }
 
    // Travel in model
@@ -110,12 +110,12 @@ void OpenSGNav::preFrame()
    // - Translate along that direction
    gmtl::Matrix44f wand_mat;
    wand_mat = mWandPos->getData();      // Get the wand matrix
-   gmtl::Vec3f z_dir = gmtl::Vec3f(0.0f, 0.0f, velocity);
+   gmtl::Vec3f z_dir = gmtl::Vec3f(0.0f, 0.0f, mVelocity);
    gmtl::Vec3f trans = wand_mat * z_dir;
 
    osg::Matrix trans_mat(osg::Matrix::identity());
    trans_mat.setTranslate(trans[0], trans[1], trans[2]);
-      
+
    osg::beginEditCP(mSceneTransform);
       mSceneTransform->getMatrix().multLeft(trans_mat);
    osg::endEditCP(mSceneTransform);
@@ -124,16 +124,17 @@ void OpenSGNav::preFrame()
 /** Initialize GL state. Hold over from regular OGL apps */
 void OpenSGNav::initGLState()
 {
-    // OpenSG does not handle this yet, being smart about it is not 
+    // OpenSG does not handle this yet, being smart about it is not
     // that trivial...
-    
     glEnable(GL_NORMALIZE);
 }
 
-void OpenSGNav::initScene(void)
+void OpenSGNav::initScene()
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "OpenSGNav::initScene: Called.\n" << vprDEBUG_FLUSH;
-   
+   vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_CRITICAL_LVL,
+                        "OpenSGNav::initScene() called.\n",
+                        "OpenSGNav::initScene() exiting.\n");
+
    // --- Initialize vrj devices --- //
    std::string wand("VJWand");
    std::string but0("VJButton0");
@@ -147,13 +148,18 @@ void OpenSGNav::initScene(void)
    // Load the model to use
    if (mFileToLoad ==  std::string("none"))
    {
-      std::cout << "OpenSGNave::initScene: No model specified!!! Loading torus.\n";
-      mModelRoot = osg::makeTorus(.5, 2, 16, 16);      
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[OpenSGNav::initScene()] No model specified; creating torus."
+         << std::endl << vprDEBUG_FLUSH;
+      mModelRoot = osg::makeTorus(.5, 2, 16, 16);
    }
    else
    {
-      std::cout << "OpenSGNav::initScene: Loading [" << mFileToLoad.c_str() << "]\n";
-      mModelRoot = osg::SceneFileHandler::the().read((osg::Char8 *)(mFileToLoad.c_str()));
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[OpenSGNavGrab::initScene()] Loading '" << mFileToLoad << "' ..."
+         << std::endl << vprDEBUG_FLUSH;
+      mModelRoot =
+         osg::SceneFileHandler::the().read((osg::Char8*) (mFileToLoad.c_str()));
    }
 
    // --- Light setup --- //
@@ -163,41 +169,41 @@ void OpenSGNav::initScene(void)
    mLightBeacon = osg::Node::create();
    osg::DirectionalLightPtr light_core = osg::DirectionalLight::create();
    osg::TransformPtr light_beacon_core = osg::Transform::create();
-   
+
    // Setup light beacon
    osg::Matrix light_pos;
-   light_pos.setTransform(osg::Vec3f( 2.0f, 5.0f, 4.0f));
-   
+   light_pos.setTransform(osg::Vec3f(2.0f, 5.0f, 4.0f));
+
    osg::beginEditCP(light_beacon_core, osg::Transform::MatrixFieldMask);
       light_beacon_core->setMatrix(light_pos);
    osg::endEditCP(light_beacon_core, osg::Transform::MatrixFieldMask);
-   
+
    osg::beginEditCP(mLightBeacon);
       mLightBeacon->setCore(light_beacon_core);
    osg::endEditCP(mLightBeacon);
-   
+
    // Setup light node
    osg::addRefCP(mLightNode);
    osg::beginEditCP(mLightNode);
       mLightNode->setCore(light_core);
       mLightNode->addChild(mLightBeacon);
    osg::endEditCP(mLightNode);
-   
+
    osg::beginEditCP(light_core);
-      light_core->setAmbient   (.9, .8, .8, 1);
-      light_core->setDiffuse   ( 0.6,  0.6,  0.6, 1);
-      light_core->setSpecular  ( 1,  1,  1, 1);
-      light_core->setDirection ( 0,  0,  1);
+      light_core->setAmbient   (0.9, 0.8, 0.8, 1);
+      light_core->setDiffuse   (0.6, 0.6, 0.6, 1);
+      light_core->setSpecular  (1, 1, 1, 1);
+      light_core->setDirection (0, 0, 1);
       light_core->setBeacon    (mLightNode);
    osg::endEditCP(light_core);
-   
+
    // --- Setup Scene -- //
    // add the loaded scene to the light node, so that it is lit by the light
    osg::addRefCP(mModelRoot);
    osg::beginEditCP(mLightNode);
       mLightNode->addChild(mModelRoot);
    osg::endEditCP(mLightNode);
-   
+
    // create the root part of the scene
    mSceneRoot = osg::Node::create();
    mSceneTransform = osg::Transform::create();
@@ -207,8 +213,4 @@ void OpenSGNav::initScene(void)
       mSceneRoot->setCore(mSceneTransform);
       mSceneRoot->addChild(mLightNode);
    osg::endEditCP(mSceneRoot);
-   
-   // --- Add scene to root node --- //
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "OpenSGNav::initScene finished\n" << vprDEBUG_FLUSH;
 }
-
