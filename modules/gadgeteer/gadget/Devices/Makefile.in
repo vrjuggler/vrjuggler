@@ -54,3 +54,4 @@ SUBDIR=		$(DRIVERS)
 $(RECTARGET): recursive
 
 include $(MKPATH)/dpp.subdir.mk
+include $(MKPATH)/dpp.clean.mk

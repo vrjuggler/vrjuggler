@@ -373,16 +373,22 @@ install-m4:
           $(datadir)/aclocal
 
 # =============================================================================
-# Clean-up targets.  '_clean' removes all the files in the build directories.  
-# '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME) directories.
+# Clean-up targets.  '_cleandepend' removes all the .d files in the Devices
+# directories.  '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME)
+# directories.
 # =============================================================================
+_cleandepend:
+	@$(MAKE) -C gadget/Devices cleandepend
+
 _clobber:
 	@$(MAKE) cleandepend
 	@$(MAKE) clean-links
 
+
 # Define $(_LOCAL_CLOBBER) to inform the shared 'clobber' target that there is
 # a '_clobber' target to be run besides the standard target.
 _LOCAL_CLOBBER	= 1
+_LOCAL_CLEANDEP	= 1
 
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
