@@ -87,6 +87,23 @@ typedef struct {
 } vjISStationConfig;
 
 
+enum {
+    vjIsense_Units_Inches = 0, 
+    vjIsense_Units_Feet, 
+    vjIsense_Units_Centimeters,
+    vjIsense_Units_Meters, 
+    vjIsense_Units_COUNT
+};
+
+// Conversion table to convert from (units) to meters
+float vjIsense_Conversion_Factors[vjIsense_Units_COUNT] = { 
+	0.0254, // Inches to meters
+	0.3048, // Feet to meters
+	0.01, // Centimeters to meters
+	1.0, // Meters to meters
+};
+
+
 // XXX: It should be virtual public, but that causes an assertion failure.  This needs to be debugged
 //class vjIsense : virtual public vjPosition, virtual public vjDigital, virtual public vjAnalog
 
@@ -193,7 +210,9 @@ private:
     
     std::vector<int> mDigitalData;
     std::vector<int> mAnalogData;
-
+    
+    float curConvFactor;
+    
 //KLUDGE: work around the inherent difference between vjPosition and vjDigital (and vjAnalog)
 // Motivation: vjPositional expects multiple positional devices to be connected to the same
 // port and provides a means for accesses each positional device.  So, if there are four wands

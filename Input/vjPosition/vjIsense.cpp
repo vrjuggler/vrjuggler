@@ -111,7 +111,19 @@ bool vjIsense::config(vjConfigChunk *c)
 	 stations[i].ana_min = static_cast<int>(stationConfig->getProperty("analogFirst"));
 	 stations[i].ana_num = static_cast<int>(stationConfig->getProperty("analogNum"));
     }
-    
+
+    int jugglerUnits = static_cast<int>(c->getProperty("vjUnits"));
+    int intersenseUnits = static_cast<int>(c->getProperty("isUnits"));
+    if(jugglerUnits >= vjIsense_Units_COUNT || jugglerUnits < 0 || intersenseUnits >= vjIsense_Units_COUNT || intersenseUnits < 0)
+    {
+	vjDEBUG(vjDBG_INPUT_MGR,1) << "   vjIsense::vjIsense(vjConfigChunk*)  Invalid units specified... no conversion applied!" << std::endl << vjDEBUG_FLUSH;
+	curConvFactor = 1.0;
+    }
+    else
+    {
+	curConvFactor = vjIsense_Conversion_Factors[intersenseUnits]/vjIsense_Conversion_Factors[jugglerUnits];
+    }
+
 // load an init script for the tracker and then pass it to mTracker
     char* filename = c->getProperty("script").cstring();
     std::strstream        script;
@@ -248,9 +260,9 @@ int vjIsense::sample()
 	    theData[index].makeZYXEuler(mTracker.zRot( stationIndex ),
 					mTracker.yRot( stationIndex ),
 					mTracker.xRot( stationIndex ));
-	    theData[index].setTrans(mTracker.xPos( stationIndex ),
-  	                            mTracker.yPos( stationIndex ),
-  	                            mTracker.zPos( stationIndex ));
+	    theData[index].setTrans(curConvFactor*mTracker.xPos( stationIndex ),
+  	                            curConvFactor*mTracker.yPos( stationIndex ),
+  	                            curConvFactor*mTracker.zPos( stationIndex ));
 	} else {
 
 	    vjQuat quatValue(mTracker.xQuat( stationIndex ),
@@ -272,7 +284,7 @@ int vjIsense::sample()
 	min = stations[i].ana_min;
 	num = min + stations[i].ana_num;
 	if(stations[i].useAnalog) {
-	    for( j = 0, k = min; (j < MAX_ANALOG_CHANNELS) && (k < IS_ANALOG_NUM) && (k < num); j++)
+	    for( j = 0, k = min; (j < MAX_ANALOG_CHANNELS) && (k < IS_ANALOG_NUM) && (k < num); j++, k++)
 		mInput[current].analog[k] = mTracker.analogData(stationIndex, j);
 	}
 	mDataTimes[index] = sampletime;
