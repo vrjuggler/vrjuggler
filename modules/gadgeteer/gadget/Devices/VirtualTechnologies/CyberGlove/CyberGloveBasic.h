@@ -265,27 +265,27 @@ private:
     int reply_tail_check(CbGlove glove);
     int command_reply_check(CbGlove glove, char command_char);
     int read_and_decode_timestamp(int portfd, unsigned long *timestamp);
-    int get_max_num_sensors(CbGlove glove, void *address_arg1);
+    int get_max_num_sensors(CbGlove glove, va_list args);
     CbGlove allocate_CbGlove(void);
     int glove_boot(CbGlove glove);
-    int set_baud_rate(CbGlove glove, void *address_arg1);
-    int enable_timestamp(CbGlove glove, void *address_arg1);
-    int enable_filter(CbGlove glove, void *address_arg1);
-    int request_single_sample(CbGlove glove, void *address_arg1);
-    int request_sample_stream(CbGlove glove, void *address_arg1);
-    int enable_switch_controls_light(CbGlove glove, void *address_arg1);
-    int set_sensor_mask(CbGlove glove, void *address_arg1);
-    int set_num_values_returned(CbGlove glove, void *address_arg1);
-    int set_param_flags(CbGlove glove, void *address_arg1);
-    int reboot_CGIU(CbGlove glove, void *address_arg1);
+    int set_baud_rate(CbGlove glove, va_list args);
+    int enable_timestamp(CbGlove glove, va_list args);
+    int enable_filter(CbGlove glove, va_list args);
+    int request_single_sample(CbGlove glove, va_list args);
+    int request_sample_stream(CbGlove glove, va_list args);
+    int enable_switch_controls_light(CbGlove glove, va_list args);
+    int set_sensor_mask(CbGlove glove, va_list args);
+    int set_num_values_returned(CbGlove glove, va_list args);
+    int set_param_flags(CbGlove glove, va_list args);
+    int reboot_CGIU(CbGlove glove, va_list args);
 
-    int glove_ok_query(CbGlove glove, void *address_arg1);
-    int get_glove_info(CbGlove glove, void *address_arg1);
-    int get_avail_sensor_mask(CbGlove glove, void *address_arg1);
-    int get_sensor_mask(CbGlove glove, void *address_arg1);
-    int get_num_values_returned(CbGlove glove, void *address_arg1);
-    int read_param_flags(CbGlove glove, void *address_arg1);
-    int right_hand_glove_query(CbGlove glove, void *address_arg1);
+    int glove_ok_query(CbGlove glove, va_list args);
+    int get_glove_info(CbGlove glove, va_list args);
+    int get_avail_sensor_mask(CbGlove glove, va_list args);
+    int get_sensor_mask(CbGlove glove, va_list args);
+    int get_num_values_returned(CbGlove glove, va_list args);
+    int read_param_flags(CbGlove glove, va_list args);
+    int right_hand_glove_query(CbGlove glove, va_list args);
     void abduct_18 (void);
 
     // vt_serial_io.h

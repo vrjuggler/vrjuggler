@@ -4,9 +4,9 @@
 #                       Virtual Reality Applications Center (VRAC)
 #
 # Contributors (Alphabetically): 
-#               Albert Baker, Allen Bierbaum, Carolina Cruz-Neira, 
-#               Patrick Hartling, Andrew Himberger, Chris Johanson,
-#               Christopher Just, Kevin Meinert, Ben Thompson
+#     Albert Baker, Allen Bierbaum, Aaron Bryden, Carolina Cruz-Neira, 
+#     Patrick Hartling, Andrew Himberger, Chris Johanson, Christopher Just,
+#     Kevin Meinert, Kevin Puetz, Nicolas Tarrin, Ben Thompson
 # 
 
 ------------------
@@ -45,11 +45,12 @@ Table of contents:
         Gadgeteer is known to work on the following platforms (but is
         not officially supported):
 
-            HP-UX 11.00
+            Debian Linux/PowerPC
             FreeBSD 4.2 and 5.0-CURRENT (x86)
+            HP-UX 11.00
+            Mac OS X
             Sun Solaris 7 (x86) with patches up through June 6, 2001
             Sun Solaris 8 (x86 and SPARC) with patches up through June 25, 2001
-            Mac OS X
 
     B. Minimum requirements (by operating system)
 
