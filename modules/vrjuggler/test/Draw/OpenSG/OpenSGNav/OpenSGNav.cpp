@@ -4,8 +4,13 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Coord.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Coord.h>
+#include <gmtl/Xforms.h>
+
 #include <vrj/Display/Projection.h>
 #include <vrj/Display/CameraProjection.h>
 
@@ -101,11 +106,11 @@ void OpenSGNav::preFrame()
 
    // Travel in model
    // -- Get wand info -- //
-   vrj::Matrix wandMatrix;
+   gmtl::Matrix44f wandMatrix;
    wandMatrix = (*mWand->getData());      // Get the wand matrix
-   vrj::Vec3 direction;
-   vrj::Vec3 Zdir = vrj::Vec3(0.0f, 0.0f, velocity);
-   direction.xformVec(wandMatrix, Zdir);
+   gmtl::Vec3f direction;
+   gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, velocity);
+   direction = wandMatrix * Zdir;
 
    osg::Matrix osg_trans_mat( osg::Matrix::identity());
    osg_trans_mat.setTranslate(direction[0], direction[1], direction[2]);
