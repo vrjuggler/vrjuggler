@@ -407,9 +407,6 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Devices\EventWindow\EventWindowWin32.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\Finger.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Gesture.h">
 			</File>
 			<File
@@ -432,9 +429,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\GloveProxy.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\Hand.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\Header.h">
