@@ -388,8 +388,12 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
             //cerr << "read chunk: " << *ch << endl;
             
             if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
+                // this is another one of those bits of code where we need to make some
+                // real decisions about memory management of ConfigChunks
                 std::string s = ch->getProperty ("Name");
-                self.load (s);
+                vjConfigChunkDB newdb;
+                newdb.load (s, self.file_name);
+                self.addChunks(&newdb);
             }
             else {
                 /* OK.  If this chunk has the same instancename as a chunk
@@ -408,40 +412,98 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
 }
 
 
-std::string vjConfigChunkDB::demangleFileName (const std::string& n) {
-    if (!vjstrncmp (n, "$HOME", 5)) {
-        std::string s1 = getenv ("HOME");
-        std::string s2 (n, 5, std::string::npos);
-        return (s1 + s2);
+
+//: Returns a copy of s with all environment variable names replaced
+//+ with their values.
+std::string replaceEnvVars (const std::string& s) {
+    int i, j;
+    int lastpos = 0;
+    std::string result = "";
+    for (i = 0; i < s.length(); i++) {
+        if (s[i] == '$') {
+            //process an env var
+            result += std::string(s, lastpos, i - lastpos);
+            i++; // skip $
+            if (s[i] == '{') {
+                for (j = i; j < s.length(); j++)
+                    if (s[j] == '}')
+                        break;
+                std::string var(s,i+1,j-i-1);
+                cout << "searching for env var '" << var << '\'' << endl;
+                std::string res = getenv (var.c_str());
+                result += res;
+                i = j+1;
+                lastpos = i;
+            }
+            else {
+                for (j = i; j < s.length(); j++)
+                    if (s[j] == '/' || s[j] == '\\')
+                        break;
+                std::string var(s,i,j-i);
+                cout << "searching for env var '" << var << '\'' << endl;
+                std::string res = getenv (var.c_str());
+                result += res;
+                i = j;
+                lastpos = i;
+            }
+        }
     }
-    else if (!vjstrncmp (n, "$VJ_BASE_DIR", 12)) {
-        std::string s1 = getenv ("VJ_BASE_DIR");
-        std::string s2 (n, 12, std::string::npos);
-        return (s1 + s2);
-    }
-    else {
-        return n;
-    }
+    result += std::string(s, lastpos, s.length() - lastpos);
+    return result;
 }
 
 
 
-bool vjConfigChunkDB::load (const std::string& filename) {
-    std::string fname = demangleFileName (filename);
+//: is n an absolute path name?
+bool isAbsolutePathName (const std::string& n) {
+#ifdef WIN32
+    return ((n.length() > 0) && (n[0] == '\\'))
+        || ((n.length() > 2) && (n[1] == ':') && (n[2] == '\\'));
+#else
+    return (n.length() > 0) && (n[0] == '/');
+#endif
+}
 
-    ifstream in(fname.c_str());
 
-    vjDEBUG(vjDBG_CONFIG,3) << "vjConfigChunkDB::load(): opening file " << fname.c_str() << " -- " << vjDEBUG_FLUSH;
+
+std::string vjConfigChunkDB::demangleFileName (const std::string& n, std::string parentfile) {
+
+    std::string fname = replaceEnvVars (n);
+
+    if (!isAbsolutePathName(fname)) {
+        // it's a relative pathname... so we have to add in the path part
+        // of parentfile...
+        int lastslash = 0;
+        for (int i = 0; i < parentfile.length(); i++)
+            if (parentfile[i] == '/')
+                lastslash = i;
+        if (lastslash) {
+            std::string s(parentfile, 0, lastslash+1);
+            fname = s + n;
+        }
+    }
+
+    return fname;
+}
+
+
+
+bool vjConfigChunkDB::load (const std::string& filename, const std::string& parentfile) {
+    file_name = demangleFileName (filename, parentfile);
+
+    ifstream in(file_name.c_str());
+
+    vjDEBUG(vjDBG_CONFIG,3) << "vjConfigChunkDB::load(): opening file " << file_name.c_str() << " -- " << vjDEBUG_FLUSH;
 
 
     if (!in) {
         vjDEBUG(vjDBG_ALL,0) << "\nvjConfigChunkDB::load(): Unable to open file '"
-                             << fname.c_str() << "'" << endl << vjDEBUG_FLUSH;
+                             << file_name.c_str() << "'" << endl << vjDEBUG_FLUSH;
         return false;
     }
-    vjDEBUG(vjDBG_CONFIG,3) << " succeeded.\n" << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_CONFIG,5) << " succeeded.\n" << vjDEBUG_FLUSH;
     in >> *this;
-    vjDEBUG(vjDBG_CONFIG,5) << " finished.. read " << chunks.size() << " chunks\n"
+    vjDEBUG(vjDBG_CONFIG,3) << " finished.. read " << chunks.size() << " chunks\n"
                             << vjDEBUG_FLUSH;
     //cout << *this;
     return true;
