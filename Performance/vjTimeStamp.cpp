@@ -14,7 +14,7 @@
 
 #include <sys/syssgi.h>
 #include <sys/errno.h>
-
+#include <Kernel/vjDebug.h>
 
 void vjTimeStamp::initialize() {
     int cyclevalue;
@@ -47,13 +47,16 @@ void vjTimeStamp::initialize() {
 	initval = *(unsigned long long*)iotimer_addr;
     else
 	initval = *(unsigned int*)iotimer_addr;
+
+    vjDEBUG(3) << "vjTimeStamp system initialized.\n"
+	       << vjDEBUG_FLUSH;
 }
 
 
 
 float vjTimeStamp::usecs () {
     /* returns timestamp value in usecs from intialize() */
-    return (val - initval) * resolution;
+    return val*resolution;
 }
 
 
