@@ -73,7 +73,7 @@
 namespace gadget
 {
 
-class ClusterSync
+class GADGET_CLASS_API ClusterSync
 {
 public:
 	ClusterSync() : syncPacket(12)
