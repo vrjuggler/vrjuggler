@@ -188,17 +188,19 @@ public:
         return m_local_addr;
     }
 
-    bool setLocalAddr(const InetAddr& addr)
+    Status setLocalAddr(const InetAddr& addr)
     {
+       Status status;
+
       if (m_bound)
        {
           vprDEBUG(0,0) << "SocketImpNSPR::setLocalAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
-          return false;
+          return status.setCode(Status::Failure);
        }
        else
           m_local_addr = addr;
 
-       return true;
+       return status;
     }
 
     // ------------------------------------------------------------------------
