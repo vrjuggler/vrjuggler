@@ -30,8 +30,20 @@ def usage():
           host_data_read - Perform the host data read bird test.
    --set_rts=<new val>
    --info=basic - Print basic information about the flock
+   --scan - Scan for what birds are connected.
     """
 
+def scanFbb():
+    print "Scanning bird bus:"
+    fob = FOB.Flock()
+    fob.open()
+    
+    for i in range(14):
+       print "bird: ", i,
+       fob.setCmdAddr(i)
+       bstatus = fob.getBirdStatus()
+       print bstatus
+       
 def printBasicFlockInfo():
     " Print basic flock information "
     print "Getting basic flock info:"
@@ -40,9 +52,25 @@ def printBasicFlockInfo():
     fob.open()
     
     sw_ver = fob.getSoftwareRevision()
+    cur_error_code = fob.getCurrentError()
+    addr_mode = fob.getAddressingMode()
+    bird_status = fob.getBirdStatus()
+    bird_addr = fob.getBirdAddress()
+    
         
     print "  Software revision: ", sw_ver
-
+    print "  Current error code: ", cur_error_code
+    print "  Addr mode: ", addr_mode
+    print "  Bird addr: ", bird_addr
+    print "  bird status: ", bird_status
+    fob.printFlockSystemStatus()
+    
+    print "Auto-configing the flock...."
+    fob.autoConfig(3)
+    
+    fob.printFlockSystemStatus()
+    
+   
 
 def test_output():
     print "---- Testing output -----"
@@ -110,7 +138,7 @@ def set_rts(arg):
 def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], "h", 
-                                   ["test=", "help", "set_rts=", "info="])
+                                   ["test=", "help", "set_rts=", "info=", "scan"])
     except getopt.GetoptError:
         # print help information and exit:
         usage()
@@ -139,6 +167,8 @@ def main():
                 printBasicFlockInfo()
             else:
                 printBasicFlockInfo()
+        if o in ("--scan",):
+            scanFbb()
 
 if __name__=='__main__':
     #print "Found ports:"
