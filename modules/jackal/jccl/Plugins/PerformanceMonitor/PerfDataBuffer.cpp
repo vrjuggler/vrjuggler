@@ -93,7 +93,7 @@ void PerfDataBuffer::set(int _phase) {
 	return;
 
     if (write_pos == read_begin) {
-	if (lost_lock.acquire() != -1) {
+	if (lost_lock.acquire().success()) {
 	    lost++;
 	    lost_lock.release();
 	}
