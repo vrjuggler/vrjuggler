@@ -64,7 +64,8 @@ SUBDIR		= Network	\
                   IO
 
 ifeq (@SIMULATOR@, Y)
-    SRCS	= Controller.cpp	\
+    SRCS	= Clock.cpp		\
+                  Controller.cpp	\
                   SocketManager.cpp
 endif
 
