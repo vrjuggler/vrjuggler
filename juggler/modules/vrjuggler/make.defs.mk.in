@@ -43,6 +43,8 @@
 #
 # mtreedir      - Base directory containing the mtree directory hierarchy
 #                 specifications.
+# projdatadir   - Project-specific data directory.  This is a subdirectory
+#                 of $(datadir).
 # releasedir    - The absolute path to the release directory.
 # scriptdir     - The path to the directory containing scripts used in the
 #                 build and install/release process.
@@ -83,6 +85,7 @@
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
 mtreedir	= $(topdir)/mtree
+projdatadir     = $(datadir)/vrjuggler
 releasedir	= @JUGGLERROOT_ABS@/release
 scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@

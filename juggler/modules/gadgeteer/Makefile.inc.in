@@ -229,11 +229,11 @@ hier:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.install.dist -p $(prefix)
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.data.dist -p $(datadir)
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.data.dist -p $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.include.dist -p $(prefix)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.lib.dist -p $(prefix)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.test.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.test.dist -p $(projdatadir)
 
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.
@@ -276,12 +276,12 @@ install-test:
 	@echo "------------------------------------------------"
 	@echo "Installing test programs"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.test.dist -p $(datadir)
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.test.dist -p $(projdatadir)
 	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/test	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/test
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/test
 	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
-          --prefix="$(datadir)/test" --vars="$(topdir)/VARS.pl"		\
+          --prefix="$(projdatadir)/test" --vars="$(topdir)/VARS.pl"	\
           --startdir="$(top_srcdir)/test" $(_GROUP_OPT_PL) --srcdir="."
 
 # Install the standard data files.
@@ -289,10 +289,10 @@ install-data:
 	@echo "------------------------------------------------"
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.data.dist -p $(datadir)
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.data.dist -p $(projdatadir)
 	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/data		\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/data	\
           -v "$(topdir)/VARS.pl"
 
 install-tools:
