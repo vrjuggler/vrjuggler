@@ -1,11 +1,14 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
-Mar-21-2002 allenb    Port to GMTL.
+Apr-09-2002 allenb    The cyclic dependency between VR Juggler and Gadgeteer
+            patrickh  has been broken.  VR Juggler and Gadgeteer have both
+                      been ported to GMTL.
+                      NEW VERSION: 1.1.92
 Feb-27-2002 allenb    Added simple navigation to OpenSGNav app.
 Feb-26-2002 istoynov  OpenSG application class added.  The OpenSG application
             reiners   class currently factors out all the commonality for
-			allenb    OpenSG-based Juggler applications.
-			          contributors: Ivan Stoynov & Dirk Reiners
+            allenb    OpenSG-based Juggler applications.
+                      contributors: Ivan Stoynov & Dirk Reiners
 Feb-22-2002 allenb    OpenSG app now uses MatrixCamera to render displays.
 Jan-31-2002 allenb    Added SignalButtons init and check functions to the
                       Kernel.  The only "signal" being checked currently
