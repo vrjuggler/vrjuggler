@@ -140,9 +140,9 @@ void vjQuat::getRot( float& rad, float& xx, float& yy, float& zz ) const
    // avoid NAN
    else 
    {
-      xx = 1.0f;  // one of these should be a 1,
-      yy = 0.0f;  // so we can maintain unit-ness
-      zz = 0.0f;  // in case w is 0 (which here w is 0)
+      xx = 1.0f - quat.vec[VJ_W]; // one of the terms should be a 1,
+      yy = 0.0f;                  // so we can maintain unit-ness
+      zz = 0.0f;                  // in case w is 0 (which here w is 0)
    }
 }
 
