@@ -7,7 +7,7 @@
 
     <subtitle>Getting Started Guide</subtitle>
 
-    <releaseinfo>Version 2.0 Alpha 1</releaseinfo>
+    <releaseinfo>Version 2.0 Beta 1</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -916,8 +916,8 @@ value</screen>
         The <envar>VJ_BASE_DIR</envar> environment variable cannot be used
         here, unfortunately, so the <emphasis>full path</emphasis> to
         <emphasis>every</emphasis> file must be used. The following shows the
-        beginning of the program arguments listing <filename>sim.base.config</filename>
-        and <filename>sim.wand.mixin.config</filename>:</para>
+        beginning of the program arguments listing <filename>sim.base.jconf</filename>
+        and <filename>sim.wand.mixin.jconf</filename>:</para>
 
         <figure id="visual.studio.project-settings.dialog.figure">
           <title>Project Settings Dialog</title>
@@ -990,14 +990,10 @@ value</screen>
     program. In <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>,
     you can find many basic configuration files including those for running in
     simulator using a mouse and keyboard to simulate VR input devices and some
-    example files based on those used for the old VRAC C2 system<footnote><para>The
-    VRAC C2 has been replaced, and the files in <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>
-    are maintained primarily as an example of how to configure a multi-wall
-    projection system. They do not necessarily work, but they can be used as a
-    starting point.</para></footnote>. In the directory, you will see some
-    files with names containing <quote>mixin</quote>. These are special files
-    that provide a specific capability not necessarily needed by all
-    applications. They can be mixed in (hence the name) with other
+    example files based on those used for the VRAC C4 system. In the directory,
+    you will see some files with names containing <quote>mixin</quote>. These
+    are special files that provide a specific capability not necessarily needed
+    by all applications. They can be mixed in (hence the name) with other
     configuration files as needed. The configuration files found in the
     <filename>configFiles</filename> directory will be referenced in the
     examples provided, so be sure you know where they are.</para>
@@ -1050,7 +1046,7 @@ value</screen>
 
       <itemizedlist>
         <listitem>
-          <para><filename>sim.base.config</filename> - The basic configuration
+          <para><filename>sim.base.jconf</filename> - The basic configuration
           file needed by all applications when run in simulator mode. It
           defines commonly used VR Juggler concepts that are beyond the scope
           of this particular book. It also defines simulated head movement
@@ -1066,7 +1062,7 @@ value</screen>
         </listitem>
 
         <listitem>
-          <para><filename>sim.analog.wandmixin.config</filename> - A
+          <para><filename>sim.analog.wandmixin.jconf</filename> - A
           <quote>mix-in</quote> configuration file that defines simulated
           analog input using the keyboard. This is only required for
           applications where analog input is used and needs to be simulated
@@ -1074,13 +1070,13 @@ value</screen>
         </listitem>
 
         <listitem>
-          <para><filename>sim.analog.mixin.config</filename> - This version of
-          the analog simulator opens its own window. See the previous file (<filename>sim.analog.wandmixin.config</filename>)
+          <para><filename>sim.analog.mixin.jconf</filename> - This version of
+          the analog simulator opens its own window. See the previous file (<filename>sim.analog.wandmixin.jconf</filename>)
           for other details.</para>
         </listitem>
 
         <listitem>
-          <para><filename>sim.c6displays.mixin.config</filename> - A
+          <para><filename>sim.c6displays.mixin.jconf</filename> - A
           <quote>mix-in</quote> configuration file that defines the surface
           displays of VRAC&#39;s C6. This is not required for any application
           but can be used to test opening multiple display windows (each
@@ -1089,7 +1085,7 @@ value</screen>
         </listitem>
 
         <listitem>
-          <para><filename>sim.digital.glove.mixin.config</filename> - A
+          <para><filename>sim.digital.glove.mixin.jconf</filename> - A
           <quote>mix-in</quote> configuration file that defines simulated
           digital glove input using the keyboard. This is only required for
           applications where digital glove input is used and needs to be
@@ -1097,7 +1093,7 @@ value</screen>
         </listitem>
 
         <listitem>
-          <para><filename>sim.glove.mixin.config</filename> - A
+          <para><filename>sim.glove.mixin.jconf</filename> - A
           <quote>mix-in</quote> configuration file that defines simulated
           gesture-based glove input using the keyboard. This is only required
           for applications where gesture-based glove input is used and needs
@@ -1105,16 +1101,16 @@ value</screen>
         </listitem>
 
         <listitem>
-          <para><filename>sim.wand.mixin.config</filename> - A <quote>mix-in</quote>
+          <para><filename>sim.wand.mixin.jconf</filename> - A <quote>mix-in</quote>
           configuration file that defines simulated wand input using the
           mouse. This is only required for applications where wand input is
           used and needs to be simulated when in simulator mode.</para>
         </listitem>
 
         <listitem>
-          <para><filename>standalone.config</filename> - A configuration file
+          <para><filename>standalone.jconf</filename> - A configuration file
           that stands on its own and combines the functionality of
-          <filename>sim.base.config</filename> and <filename>sim.wand.mixin.config</filename>.
+          <filename>sim.base.jconf</filename> and <filename>sim.wand.mixin.jconf</filename>.
           Note that it uses a single display window for all input.</para>
 
           <note>
@@ -1137,7 +1133,7 @@ value</screen>
         application and all the configuration files it needs. An example of
         this is:</para>
 
-        <screen>% MPApp sim.base.config sim.wand.mixin.config</screen>
+        <screen>% MPApp sim.base.jconf sim.wand.mixin.jconf</screen>
 
         <para>You will notice that no paths are specified for finding the
         three configuration files. This is intentional to shorten the command
@@ -1192,7 +1188,7 @@ value</screen>
         for graphics and for input. To use such a configuration, execute MPApp
         as follows:</para>
 
-        <screen>% MPApp standalone.config</screen>
+        <screen>% MPApp standalone.jconf</screen>
 
         <para>This time, only a single window opens, as shown in <xref
         linkend="MPApp.running.single.figure" />. It shows the same graphics
@@ -1581,7 +1577,7 @@ value</screen>
       <section>
         <title>Using a Simulated Glove</title>
 
-        <para>If you include the <filename>sim.glove.mixin.config</filename>
+        <para>If you include the <filename>sim.glove.mixin.jconf</filename>
         file, your application will also have access to a simulated glove,
         with position and gesture inputs. The glove is controlled by a window
         titled <quote>Glove Keyboard</quote>. This window lets you control the
@@ -1595,7 +1591,7 @@ value</screen>
       <section>
         <title>Using a Simulated Analog Device</title>
 
-        <para>If you include the <filename>sim.analog.wandmixin.config</filename>
+        <para>If you include the <filename>sim.analog.wandmixin.jconf</filename>
         file, your application will also have access to a set of four analog
         devices (devices with a value in a range from 0.0 to 1.0). The analog
         devices are also controlled using the <quote>Wand Keyboard</quote>
@@ -1603,7 +1599,7 @@ value</screen>
         configuration file.</para>
 
         <note>
-          <para>A separate file, <filename>sim.analog.mixin.config</filename>,
+          <para>A separate file, <filename>sim.analog.mixin.jconf</filename>,
           is provided for analog input from a separate simulator window.</para>
         </note>
 
@@ -1684,7 +1680,7 @@ value</screen>
       VR systems tend to differ in configuration and in available hardware. VR
       Juggler is flexible enough to handle most any configuration you throw at
       it, but those configurations need to be put together first. Examples of
-      configuration files used in VRAC&#39;s C2 system are provided, and they
+      configuration files used in VRAC&#39;s C4 system are provided, and they
       are used in this documentation. It should be noted, however, that for
       any particular system, custom configuration files will probably have to
       be written. The idea behind this section is to provide a basic
@@ -1693,47 +1689,66 @@ value</screen>
 
       <para>The example configuration files in the directory
       <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>
-      modeled after those used for VRAC&#39;s C2 system are as follows:</para>
+      modeled after those used for VRAC&#39;s C4 system are as follows:</para>
 
       <itemizedlist>
         <listitem>
-          <para><filename>C2.base.config</filename> - The basic configuration
-          file needed by all applications when run in the C2. It defines
+          <para><filename>C4.closed.jconf</filename> - The single
+          configuration file that includes the other configuration files
+          necessary for loading a VR Juggler application in the C4 in its
+          closed configuration with full tracking and stereoscopic
+          graphics.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>C4.closed.mono.jconf</filename> - The single
+          configuration file that includes the other configuration files
+          necessary for loading a VR Juggler application in the C4 in its
+          closed configuration with full tracking and monoscopic
+          graphics.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>C4.base.jconf</filename> - The basic configuration
+          file needed by all applications when run in the C4. It defines
           commonly used VR Juggler concepts that are beyond the scope of this
           particular book.</para>
         </listitem>
 
         <listitem>
-          <para><filename>C2.displays.config</filename> - The basic display
-          configuration file needed to run with all four walls active and
-          rendering stereo graphics. This defines only the four surface
-          displays to be opened.</para>
+          <para><filename>C4.displays.closed.jconf</filename> - The basic
+          display configuration file needed to run with all four walls active
+          and rendering stereoscopic graphics. This defines only the four
+          surface displays to be opened. The corners are configured for the
+          closed position of the moveable walls.</para>
         </listitem>
 
         <listitem>
-          <para><filename>C2.flock.config</filename> - The Ascension Flock of
-          Birds configuration file that defines which bird provides input for
-          the head and for the wand.</para>
+          <para><filename>C4.displays.closed.mono.jconf</filename> - The basic
+          display configuration file needed to run with all four walls active
+          and rendering monoscopic graphics. This defines only the four surface
+          displays to be opened. The corners are configured for the closed
+          position of the moveable walls.</para>
         </listitem>
 
         <listitem>
-          <para><filename>C2.ibox_buttons.config</filename> - The IBox
-          configuration file that handles the digital wand button inputs.</para>
+          <para><filename>C4.mstar.jconf</filename> - The Ascension MotionStar
+          configuration file that defines which bird provides input for the
+          head and for the wand.</para>
         </listitem>
 
         <listitem>
-          <para><filename>C2.mono.displays.config</filename> - The same
-          configuration as <filename>C2.displays.config</filename> except that
-          the walls are opened to render mono graphics.</para>
+          <para><filename>C4.rfwand.jconf</filename> - The radio frequency
+          wireless mouse that acts as a wand.</para>
         </listitem>
       </itemizedlist>
 
       <para>Running the application is the same as in simulator mode except
       that the configuration files given on the command line are different.
-      For example, to run MPApp in the C2 with stereo graphics, the following
-      command would be used:</para>
+      For example, to run MPApp in the C4 with stereoscopic graphics, the
+      following command would be used:</para>
 
-      <screen>% MPApp C2.base.config C2.displays.config C2.flock.config C2.ibox_buttons.config</screen>
+      <screen>% MPApp C4.closed.jconf</screen>
     </section>
   </chapter>
 </book>
