@@ -230,25 +230,6 @@ $(LIBDIR)/$(PF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 
 # =============================================================================
-# VjControl targets.
-# =============================================================================
-EXTRA_OBJ_TARGETS	= vjcontrol
-
-# Build the Java-based configuration GUI.
-vjcontrol:
-ifndef NO_JAVA_GUI
-ifeq ($(BUILD_GUI), Y)
-	@echo "===> GUI"
-	@$(MAKE) -C GUI VjControl.jar
-	@echo "<=== GUI"
-else
-	@echo "------------------------------------------------"
-	@echo "VjControl build skipped"
-	@echo "------------------------------------------------"
-endif
-endif	# ifndef NO_JAVA_GUI
-
-# =============================================================================
 # Make links for developer use that provide the needed functionality for
 # the $VJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
 # should be set to $(instlinks).
@@ -285,10 +266,6 @@ ifneq (@OS_TYPE@, Win32)
 ifndef NO_JAVA_GUI
 	cd $(instlinks)/bin && rm -f ./VjControl.jar &&			\
           $(LN_S) $(topdir)/GUI/VjControl.jar ./
-	cd $(instlinks)/bin && rm -f ./vjcontrol &&			\
-          sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
-              ${VJROOT_ABS}/GUI/vjcontrol.sh > vjcontrol &&		\
-          chmod ${EXEC_PERMS} vjcontrol
 endif
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(VJROOT_ABS)/juggler-config.in -p 'use_base_dir=yes'	\
@@ -367,7 +344,6 @@ post-install:
 	@$(MAKE) install-test
 	@$(MAKE) install-tools
 	@$(MAKE) install-data
-	@$(MAKE) install-vjcontrol
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/juggler-config $(bindir)
 
@@ -438,33 +414,6 @@ install-data:
 	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/Data	\
           -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/Data		\
           -v "$(topdir)/VARS.pl"
-
-# Install the Java-based config editor if possible.
-install-vjcontrol:
-ifdef NO_JAVA_GUI
-	@echo "------------------------------------------------"
-	@echo "Skipping installation of VjControl (not built)"
-	@echo "------------------------------------------------"
-else
-ifeq ($(BUILD_GUI), Y)
-	@echo "------------------------------------------------"
-	@echo "Installing VjControl"
-	@echo "------------------------------------------------"
-ifeq (@OS_TYPE@, UNIX)
-	@sed -e 's,#VJ_SHARE_DIR#,$(VJ_SHARE_DIR),g'			\
-          $(VJROOT_ABS)/GUI/vjcontrol.sh > vjcontrol
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          vjcontrol $(bindir)/vjcontrol && rm -f vjcontrol
-else
-	@sed -e 's,#VJ_SHARE_DIR#,$(VJ_SHARE_DIR),g'			\
-          $(VJROOT_ABS)/GUI/vjcontrol.bat > vjcontrol.bat
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) 			\
-          vjcontrol.bat $(bindir)/vjcontrol.bat && rm -f vjcontrol.bat
-endif	# if OS_TYPE == UNIX
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/GUI/VjControl.jar $(bindir)
-endif	# if $(BUILD_GUI) == Y
-endif	# ifdef NO_JAVA_GUI
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  
