@@ -627,13 +627,6 @@ public class ProxyEditorUI
                           (int) mCurrentPoint.getX(),
                           (int) mCurrentPoint.getY());
             }
-/*
-            else if ( this.selectionEnabled )
-            {
-               g.drawRect((int) mBounds.getX(), (int) mBounds.getY(),
-                          (int) mBounds.getWidth(), (int) mBounds.getHeight());
-            }
-*/
          }
       }
 
