@@ -225,10 +225,6 @@ public class ChunkDescDBEditor
          DefaultMutableTreeNode desc_node = (DefaultMutableTreeNode)itr.next();
          DefaultMutableTreeNode prop_node = new DefaultMutableTreeNode(prop_desc);
          addNode(desc_node, prop_node);
-
-         // Let the tree know that the new node has been inserted
-         int idx = treeModel.getIndexOfChild(desc_node, prop_node);
-         treeModel.nodesWereInserted(desc_node, new int[] { idx });
       }
    }
 
@@ -366,6 +362,10 @@ public class ChunkDescDBEditor
     */
    private void addDesc(ChunkDesc desc)
    {
+      // Make ourselves a listener to changes on the desc
+      desc.addPropertyChangeListener(this);
+      desc.addChunkDescListener(this);
+
       // Add the desc to each of its categories
       for (Iterator itr = desc.getCategories(); itr.hasNext(); )
       {
@@ -628,6 +628,10 @@ public class ChunkDescDBEditor
     */
    private void removeDesc(ChunkDesc desc)
    {
+      // Stop listening to changes on the desc
+      desc.removePropertyChangeListener(this);
+      desc.removeChunkDescListener(this);
+
       for (Iterator itr = getNodesFor(desc).iterator(); itr.hasNext(); )
       {
          MutableTreeNode desc_node = (MutableTreeNode)itr.next();
