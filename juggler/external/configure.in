@@ -57,27 +57,12 @@ cd "$EXTROOT_ABS/.."
 JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
-# Enable/disable installation of GMTL from juggler/external.
-AC_ARG_ENABLE([gmtl-install],
-              [  --disable-gmtl-install
-                          Disable installation of
-                          juggler/external/GMTL],
-              [install_gmtl="$enableval"], [install_gmtl='yes'])
-
 # Enable/disable installation of Doozer from juggler/external.
 AC_ARG_ENABLE([doozer-install],
               [  --disable-doozer-install
                           Disable installation of
                           juggler/external/Doozer],
               [install_doozer="$enableval"], [install_doozer='yes'])
-
-# Name the path to a GMTL installation.  This defaults to juggler/external/GMTL
-# (using an absolute path).
-AC_ARG_WITH([gmtl-prefix],
-            [  --with-gmtl-prefix=<PATH>
-                          GMTL installation directory],
-            [GMTL_ROOT="$withval"],
-            [GMTL_ROOT="$JUGGLERROOT_ABS/external/GMTL"])
 
 # Name the path to a Doozer installation.  This defaults to
 # juggler/external/Doozer (using an absolute path).
@@ -106,19 +91,11 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # -----------------------------------------------------------------------------
 # Deal with installing our fun external software.
 # -----------------------------------------------------------------------------
-if test "x$GMTL_ROOT" != "x$JUGGLERROOT_ABS/external/GMTL" ; then
-   install_gmtl='no'
-fi
-
 if test "x$DOOZER_ROOT" != "x$JUGGLERROOT_ABS/external/Doozer" ; then
    install_doozer='no'
 fi
 
 TARGETS=''
-
-if test "x$install_gmtl" != "xno" ; then
-   TARGETS="$TARGETS gmtl"
-fi
 
 if test "x$install_doozer" != "xno" ; then
    TARGETS="$TARGETS doozer"
