@@ -111,7 +111,8 @@ vpr::ReturnStatus SubjectManagerImpl::unregisterSubject(const char* name)
    else
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "ERROR: No subject registered under the name '" << name_str
+         << clrOutBOLD(clrRED, "ERROR:")
+         << " No subject registered under the name '" << name_str
          << "'\n" << vprDEBUG_FLUSH;
       status.setCode(vpr::ReturnStatus::Fail);
    }
@@ -154,13 +155,9 @@ Subject_ptr SubjectManagerImpl::getSubject(const char* name)
    {
       subject = Subject::_nil();
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "No registered subject named '" << name << "'!\n"
-         << vprDEBUG_FLUSH;
+         << clrOutBOLD(clrYELLOW, "WARNING:") << " No subject named '" << name
+         << "' registered with Subject Manager!\n" << vprDEBUG_FLUSH;
    }
-
-   vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
-      << "tweek::SubjectManagerImpl::getSubject() returning ...\n"
-      << vprDEBUG_FLUSH;
 
    return subject;
 }
@@ -202,9 +199,6 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects()
 
       (*subjects)[j] = rs;
    }
-
-   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
-      << "Returning all subjects to caller\n" << vprDEBUG_FLUSH;
 
    return subjects;
 }
