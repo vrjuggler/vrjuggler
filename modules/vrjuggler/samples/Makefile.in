@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples
+# Makefile.in for vrjuggler/samples
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,16 +41,17 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: tutorials OGL OSG Pf
+all: tutorials OGL OSG OpenSG Pf
 
-tutorials OGL OSG Pf::
+tutorials OGL OSG OpenSG Pf::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:	
+clean:
 	-cd tutorials && $(MAKE) clean
 	-cd OGL && $(MAKE) clean
 	-cd OSG && $(MAKE) clean
+	-cd OpenSG && $(MAKE) clean
 	-cd Pf  && $(MAKE) clean	

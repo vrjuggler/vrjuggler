@@ -31,29 +31,28 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/samples/OpenSG/simple/OpenSGNav
-# This requires GNU make.
+# Makefile.in for vrjuggler/samples/OpenSG/simple
+#
+# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-all: OpenSGNav@EXEEXT@
-
-APP_NAME=	OpenSGNav@EXEEXT@
-
-# Basic options.
-srcdir=		@srcdir@
-SRCS=		OpenSGNav.cpp app.cpp
-
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
-
-OPENSG_LIBS=	$(shell osg-config --libs) -lOSGBase -lOSGSystem
-OPENSG_CFLAGS=	$(shell osg-config --cflags)
-
-EXTRA_CXXFLAGS+=	$(OPENSG_CFLAGS)
-EXTRA_LIBS+=		$(OPENSG_LIBS)
+APPS=	OpenSGNav
 
 # -----------------------------------------------------------------------------
-# Application build targets.
+# Build targets.
 # -----------------------------------------------------------------------------
-OpenSGNav@EXEEXT@: $(OBJS)
-	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+default: all
+
+all: $(APPS)
+
+$(APPS)::
+	cd $@ && $(MAKE)
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+clean:
+	@for app in $(APPS) ; do		\
+            cd $$app && $(MAKE) clean ;		\
+            cd .. ;				\
+        done
