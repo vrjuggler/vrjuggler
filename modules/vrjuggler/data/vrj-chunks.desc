@@ -97,7 +97,7 @@
       <help>Useful if a computer has multiple networks and network names.</help>
       <item label="Forced Hostname" defaultvalue="" />
     </PropertyDesc>
-    <PropertyDesc token="host_name"  name="Host Name" type="string" variable="0">
+    <PropertyDesc token="host_name" name="Host Name" type="string" variable="0">
       <help>Host name for this specific machine.</help>
       <item label="Host Name" defaultvalue="" />
     </PropertyDesc>
@@ -267,7 +267,7 @@
     </PropertyDesc>
     <PropertyDesc token="xpipes" name="xpipes" type="string" variable="1">
       <help>The x-display strings for the pipes.  NOTE: This is a zero-based list.</help>
-      <item label="X11 Pipe" defaultvalue="0:0" />
+      <item label="X11 Pipe" defaultvalue=":0.0" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="displayWindow" name="Display Window">
