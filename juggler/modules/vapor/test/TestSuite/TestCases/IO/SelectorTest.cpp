@@ -364,6 +364,45 @@ void SelectorTest::testSendThenPoll_acceptor (void* arg)
     }
 }
 
+#ifdef VPR_OS_Win32
+// SGI STL extension adapted from GCC's ext/algorithm.
+template<typename _InputIter, typename _RandomAccessIter, typename _Distance>
+_RandomAccessIter
+__random_sample(_InputIter __first, _InputIter __last,
+		_RandomAccessIter __out,
+		const _Distance __n)
+{
+   _Distance __m = 0;
+   _Distance __t = __n;
+   for ( ; __first != __last && __m < __n; ++__m, ++__first) 
+   {
+      __out[__m] = *__first;
+   }
+
+   while (__first != __last)
+   {
+      ++__t;
+      _Distance __M = rand() % __t;
+      if (__M < __n)
+      {
+         __out[__M] = *__first;
+      }
+      ++__first;
+   }
+
+   return __out + __m;
+}
+
+template<typename _InputIter, typename _RandomAccessIter>
+_RandomAccessIter
+random_sample(_InputIter __first, _InputIter __last,
+              _RandomAccessIter __out_first, _RandomAccessIter __out_last) 
+{
+   return __random_sample(__first, __last, __out_first,
+                          __out_last - __out_first);
+}
+#endif
+
 void SelectorTest::testSendThenPoll_connector (void* arg)
 {
    boost::ignore_unused_variable_warning(arg);
@@ -375,7 +414,20 @@ void SelectorTest::testSendThenPoll_connector (void* arg)
    vpr::SocketConnector connector;           // Connect to acceptor
    std::vector<vpr::SocketStream> sockets;                        // The sockets that we are using.
    std::vector<vpr::Uint16> port_indicies(mNumRendevousPorts);     // This vector holds a list of valid indices to send data to
+#ifdef VPR_OS_Win32
+   std::vector<vpr::Uint16>::iterator k;
+   vpr::Uint16 val;
+
+   // Fill with (0..n)
+   for ( k = port_indicies.begin(), val = 0;
+         k != port_indicies.end();
+         ++k, ++val )
+   {
+      *k = val;
+   }
+#else
    std::iota(port_indicies.begin(), port_indicies.end(), 0);    // Fill with (0...n)
+#endif
 
    // WAIT for READY
    mCondVar.acquire();
@@ -413,8 +465,14 @@ void SelectorTest::testSendThenPoll_connector (void* arg)
          num_ports = 1;                                                 // Make sure we always send some
 
       mSelectedPorts = std::vector<vpr::Uint16>(num_ports, 0);          // Replace old data with new of given size
+
+#ifdef VPR_OS_Win32
+      random_sample(port_indicies.begin(), port_indicies.end(),      // Select the random subset
+                    mSelectedPorts.begin(), mSelectedPorts.end());
+#else
       std::random_sample(port_indicies.begin(), port_indicies.end(),      // Select the random subset
                          mSelectedPorts.begin(), mSelectedPorts.end());
+#endif
 
       //std::cout << "writing on: ";
 
