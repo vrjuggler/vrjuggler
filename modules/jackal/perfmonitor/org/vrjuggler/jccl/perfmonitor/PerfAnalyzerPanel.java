@@ -39,10 +39,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.*;
 
-import VjControl.*;
-import VjComponents.UI.*;
 import org.vrjuggler.jccl.config.*;
-
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.*;
 
 /** PlugPanel for displaying data from PerformanceModule
  *  This panel is connected to a PerfDataCollection object.
@@ -50,7 +49,7 @@ import org.vrjuggler.jccl.config.*;
  *  to show, a scrollpane for displaying text or graphics, and some other
  *  gadgest to control what gets displayed.
  *
- *  @see VjComponents.PerfMonitor.PerformanceModule
+ *  @see PerformanceModule
  * 
  *  @version $Revision$
  */

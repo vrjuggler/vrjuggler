@@ -35,8 +35,8 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
-import VjControl.Core;
-import VjComponents.UI.Widgets.ChildFrame;
+import org.vrjuggler.jccl.vjcontrol.Core;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.ChildFrame;
 
 public class GenericGraphFrame extends JFrame 
     implements ChildFrame, WindowListener {

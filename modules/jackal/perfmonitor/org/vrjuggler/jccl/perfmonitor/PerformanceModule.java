@@ -41,8 +41,8 @@ import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 
 import org.vrjuggler.jccl.config.ConfigChunk;
-import VjControl.*;
-import VjComponents.Network.ProtocolInputStream;
+import org.vrjuggler.jccl.net.ProtocolInputStream;
+import org.vrjuggler.jccl.vjcontrol.*;
 
 /** Core Module for storing VR Juggler performance data.
  * 
