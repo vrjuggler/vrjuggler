@@ -17,6 +17,7 @@ import java.io.File;
 import gleem.*;
 import gleem.linalg.*;
 import javax.swing.border.*;
+import info.clearthought.layout.*;
 
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
@@ -32,7 +33,7 @@ public class PositionalDeviceEditor extends JPanel
    private CameraParameters params = new CameraParameters();
    private MovableObject mTracker = null;
 
-   private JPanel mPosPanel = new JPanel();
+   private JPanel mTransformPanel = new JPanel();
 
    private Texture mCurrentFloorTexture = null;
    private int mCurrentFloorIndex = 0;
@@ -49,17 +50,29 @@ public class PositionalDeviceEditor extends JPanel
 
    private void updatePosition(ActionEvent evt)
    {
-      if (evt.getSource() == mX)
+      if (evt.getSource() == mTranslateX)
       {
-         mConfigElement.setProperty("pre_translate", 0, mX.getValue());
+         mPosFilterConfigElement.setProperty("pre_translate", 0, mTranslateX.getValue());
       }
-      else if (evt.getSource() == mY)
+      else if (evt.getSource() == mTranslateY)
       {
-         mConfigElement.setProperty("pre_translate", 1, mY.getValue());
+         mPosFilterConfigElement.setProperty("pre_translate", 1, mTranslateY.getValue());
       }
-      else if (evt.getSource() == mZ)
+      else if (evt.getSource() == mTranslateZ)
       {
-         mConfigElement.setProperty("pre_translate", 2, mZ.getValue());
+         mPosFilterConfigElement.setProperty("pre_translate", 2, mTranslateZ.getValue());
+      }
+      else if (evt.getSource() == mRotateX)
+      {
+         mPosFilterConfigElement.setProperty("pre_rotation", 0, mRotateX.getValue());
+      }
+      else if (evt.getSource() == mRotateY)
+      {
+         mPosFilterConfigElement.setProperty("pre_rotation", 1, mRotateY.getValue());
+      }
+      else if (evt.getSource() == mRotateZ)
+      {
+         mPosFilterConfigElement.setProperty("pre_rotation", 2, mRotateZ.getValue());
       }
    }
 
@@ -127,37 +140,61 @@ public class PositionalDeviceEditor extends JPanel
    
 
    private ConfigElement mConfigElement = null;
+   private ConfigElement mPosFilterConfigElement = null;
    private ConfigContext mConfigContext = null;
    
    public void setConfigElement(ConfigElement elm)
    {
       mConfigElement = elm;
+      ConfigDefinition def = mConfigElement.getDefinition();
+     
+      boolean valid = false;
+
+      for (Iterator itr = def.getParents().iterator() ; itr.hasNext() ; )
+      {
+         if (itr.next().equals("positional_device"))
+         {
+            valid = true;
+         }
+      }
+
+      if (!valid)
+      {
+         System.out.println("ERROR: This editor can only be used with positional devices.");
+      }
+      
+      mPosFilterConfigElement = (ConfigElement)mConfigElement.getProperty("position_filters", 0);
       if(null == mConfigContext)
       {
          System.out.println("ERROR: You must set the ConfigContext before you set the ConfigElement.");
       }
 
-      mConfigElement.addConfigElementListener(new ConfigElementAdapter()
+      mPosFilterConfigElement.addConfigElementListener(new ConfigElementAdapter()
             {
                public void propertyValueChanged(ConfigElementEvent evt)
                {
                   elementChanged();
                }
             });
-
-      
-      elementChanged();
    }
 
    public void elementChanged()
    {
-      Float x_pos = (Float)mConfigElement.getProperty("pre_translate", 0);
-      Float y_pos = (Float)mConfigElement.getProperty("pre_translate", 1);
-      Float z_pos = (Float)mConfigElement.getProperty("pre_translate", 2);
+      Float x_pos = (Float)mPosFilterConfigElement.getProperty("pre_translate", 0);
+      Float y_pos = (Float)mPosFilterConfigElement.getProperty("pre_translate", 1);
+      Float z_pos = (Float)mPosFilterConfigElement.getProperty("pre_translate", 2);
       
-      mX.setValue(x_pos);
-      mY.setValue(y_pos);
-      mZ.setValue(z_pos);
+      mTranslateX.setValue(x_pos);
+      mTranslateY.setValue(y_pos);
+      mTranslateZ.setValue(z_pos);
+      
+      Float x_rot = (Float)mPosFilterConfigElement.getProperty("pre_rotation", 0);
+      Float y_rot = (Float)mPosFilterConfigElement.getProperty("pre_rotation", 1);
+      Float z_rot = (Float)mPosFilterConfigElement.getProperty("pre_rotation", 2);
+      
+      mRotateX.setValue(x_rot);
+      mRotateY.setValue(y_rot);
+      mRotateZ.setValue(z_rot);
 
       System.out.println("Edit in progress...");
       
@@ -165,6 +202,23 @@ public class PositionalDeviceEditor extends JPanel
       {
          mTracker.setPosition(new Vec3f(x_pos.floatValue(), y_pos.floatValue(), z_pos.floatValue()));
       }
+      
+      if (null != mTracker)
+      {
+         Rotf x_rotation = new Rotf(new Vec3f(1.0f, 0.0f, 0.0f), toRad(x_rot.floatValue()));
+         Rotf y_rotation = new Rotf(new Vec3f(0.0f, 1.0f, 0.0f), toRad(y_rot.floatValue()));
+         Rotf z_rotation = new Rotf(new Vec3f(0.0f, 0.0f, 1.0f), toRad(z_rot.floatValue()));
+         
+         Rotf temp1 = x_rotation.times(y_rotation);
+         Rotf temp2 = temp1.times(z_rotation);
+
+         mTracker.setRotation(temp2);
+      }
+   }
+
+   private float toRad(float in)
+   {
+      return((float)Math.toRadians(in));
    }
 
    /**
@@ -189,7 +243,6 @@ public class PositionalDeviceEditor extends JPanel
    private void jbInit() throws Exception
    {
       GLCanvas canvas = GLDrawableFactory.getFactory().createGLCanvas(new GLCapabilities());
-      titledBorder1 = new TitledBorder(BorderFactory.createLineBorder(new Color(153, 153, 153),2),"Translation");
       canvas.addGLEventListener(this);
 
       // Use debug pipeline
@@ -197,29 +250,67 @@ public class PositionalDeviceEditor extends JPanel
       System.err.println("CANVAS GL IS: " + canvas.getGL().getClass().getName());
       System.err.println("CANVAS GLU IS: " + canvas.getGLU().getClass().getName());
 
-      mPosPanel.setLayout(new GridLayout(3, 2));
-      mTranslatePanel.setBorder(titledBorder1);
-      mTranslatePanel.setLayout(gridLayout1);
+      double size[][] =
+         {{-2.0, 0.25, 0.25, 0.25, -1.0},  // Columns
+         {-2.0, 0.75, 0.25, -1.0}}; // Rows
+
+      mTransformPanel.setLayout (new TableLayout(size));
+        
+      //mTransformPanel.setLayout(new BorderLayout());
       
-      mXLbl.setText("X:");
-      mYLabel.setText("Y:");
-      mZLabel.setText("Z:");
+      mTranslatePanel.setLayout(new GridLayout(3, 2));
+      mTranslatePanel.setBorder(new TitledBorder(
+               BorderFactory.createLineBorder(new Color(153, 153, 153),2),"Translation"));
       
-      mX.addActionListener(new ActionListener()
+      mRotatePanel.setLayout(new GridLayout(3, 2));
+      mRotatePanel.setBorder(new TitledBorder(
+               BorderFactory.createLineBorder(new Color(153, 153, 153),2),"Rotation"));
+      
+      mTranslateXLbl.setText("X:");
+      mTranslateYLbl.setText("Y:");
+      mTranslateZLbl.setText("Z:");
+
+      mRotateXLbl.setText("X:");
+      mRotateYLbl.setText("Y:");
+      mRotateZLbl.setText("Z:");
+      
+      mTranslateX.addActionListener(new ActionListener()
              {
                 public void actionPerformed(ActionEvent evt)
                 {
                    updatePosition(evt);
                 }
              });
-      mY.addActionListener(new ActionListener()
+      mTranslateY.addActionListener(new ActionListener()
              {
                 public void actionPerformed(ActionEvent evt)
                 {
                    updatePosition(evt);
                 }
              });
-      mZ.addActionListener(new ActionListener()
+      mTranslateZ.addActionListener(new ActionListener()
+             {
+                public void actionPerformed(ActionEvent evt)
+                {
+                   updatePosition(evt);
+                }
+             });
+
+      mRotateX.addActionListener(new ActionListener()
+             {
+                public void actionPerformed(ActionEvent evt)
+                {
+                   updatePosition(evt);
+                }
+             });
+      mRotateY.addActionListener(new ActionListener()
+             {
+                public void actionPerformed(ActionEvent evt)
+                {
+                   updatePosition(evt);
+                }
+             });
+      mRotateZ.addActionListener(new ActionListener()
              {
                 public void actionPerformed(ActionEvent evt)
                 {
@@ -227,14 +318,27 @@ public class PositionalDeviceEditor extends JPanel
                 }
              });
       
-      mPosPanel.add(mTranslatePanel, null);
-      mTranslatePanel.add(mXLbl, null);
-      mTranslatePanel.add(mX, null);
-      mTranslatePanel.add(mYLabel, null);
-      mTranslatePanel.add(mY, null);
-      mTranslatePanel.add(mZLabel, null);
-      mTranslatePanel.add(mZ, null);
-      mTranslatePanel.add(mChangeTex, 0);
+      mTranslatePanel.add(mTranslateXLbl, null);
+      mTranslatePanel.add(mTranslateX, null);
+      mTranslatePanel.add(mTranslateYLbl, null);
+      mTranslatePanel.add(mTranslateY, null);
+      mTranslatePanel.add(mTranslateZLbl, null);
+      mTranslatePanel.add(mTranslateZ, null);
+      
+      mRotatePanel.add(mRotateXLbl, null);
+      mRotatePanel.add(mRotateX, null);
+      mRotatePanel.add(mRotateYLbl, null);
+      mRotatePanel.add(mRotateY, null);
+      mRotatePanel.add(mRotateZLbl, null);
+      mRotatePanel.add(mRotateZ, null);
+     
+      //mTransformPanel.add(mChangeTex, BorderLayout.SOUTH);
+      mTransformPanel.add(mChangeTex, "2, 2, 3, 2");
+      
+      //mTransformPanel.add(mTranslatePanel, BorderLayout.WEST);
+      mTransformPanel.add(mTranslatePanel, "1, 1, 2, 1");
+      mTransformPanel.add(mRotatePanel, "3, 1, 4, 1");
+      //mTransformPanel.add(mRotatePanel, BorderLayout.EAST);
 
       mChangeTex.addActionListener(new ActionListener()
             {
@@ -249,7 +353,7 @@ public class PositionalDeviceEditor extends JPanel
 
        setLayout(new BorderLayout());
        add(canvas, BorderLayout.CENTER);
-       add(mPosPanel, BorderLayout.SOUTH);
+       add(mTransformPanel, BorderLayout.SOUTH);
 
              final Animator animator = new Animator(canvas);
              /*
@@ -282,16 +386,23 @@ public class PositionalDeviceEditor extends JPanel
    }
 
    private static GLUT mGlut = new GLUT();
+   
    protected JPanel mTranslatePanel = new JPanel();
-   protected TitledBorder titledBorder1;
-   protected JFormattedTextField mZ = new JFormattedTextField("0.0");
-   protected JLabel mZLabel = new JLabel();
-   protected JFormattedTextField mX = new JFormattedTextField("0.0");
-   protected JLabel mXLbl = new JLabel();
-   protected JFormattedTextField mY = new JFormattedTextField("0.0");
-   protected JLabel mYLabel = new JLabel();
-   protected GridLayout gridLayout1 = new GridLayout();
+   protected JFormattedTextField mTranslateZ = new JFormattedTextField("0.0");
+   protected JLabel mTranslateZLbl = new JLabel();
+   protected JFormattedTextField mTranslateX = new JFormattedTextField("0.0");
+   protected JLabel mTranslateXLbl = new JLabel();
+   protected JFormattedTextField mTranslateY = new JFormattedTextField("0.0");
+   protected JLabel mTranslateYLbl = new JLabel();
 
+   protected JPanel mRotatePanel = new JPanel();
+   protected JFormattedTextField mRotateZ = new JFormattedTextField("0.0");
+   protected JLabel mRotateZLbl = new JLabel();
+   protected JFormattedTextField mRotateX = new JFormattedTextField("0.0");
+   protected JLabel mRotateXLbl = new JLabel();
+   protected JFormattedTextField mRotateY = new JFormattedTextField("0.0");
+   protected JLabel mRotateYLbl = new JLabel();
+   
    /**
     * Called by drawable to initiate drawing.
     */
@@ -318,6 +429,8 @@ public class PositionalDeviceEditor extends JPanel
          {
             mTracker = new Ascension(gl, glu);
          }
+         // Update the GUI to reflect new tracker configuration.
+         elementChanged();
       }
       
       // Clear the GL context
