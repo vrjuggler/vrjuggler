@@ -46,7 +46,7 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(JCCL_COMMON_LIBRARY)
 
-SRCS=
+SRCS=		Version.cpp
 
 EXTRA_INCLUDES=	-I$(top_srcdir)/common	\
 		-I$(topdir)/common
