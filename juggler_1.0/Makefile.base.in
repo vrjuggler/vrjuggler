@@ -52,6 +52,7 @@
 # CPPFLAGS       - Flags for ${CPP} and ${CXXCPP}.
 # CXXFLAGS       - Flags for ${CXX}.
 # DEFS           - Command-line preprocessor definitions (-Dvariable=value).
+# DEP_GEN_FLAG   - Flag passed to the compiler to generate dependencies.
 # DEPENDFLAGS    - Flags passed to makedepend(1) (or equivalent program for
 #                  generating dependencies).
 # DEPEND_EXTRAS  - Flags not recognized by makedepend(1) that may be necessary
@@ -123,6 +124,7 @@ CFLAGS		= @CFLAGS@ ${OPTIMIZER}
 CPPFLAGS	= @CPPFLAGS@
 CXXFLAGS	= @CXXFLAGS@ ${OPTIMIZER}
 DEFS		= @DEFS@
+DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPENDFLAGS	= @DEPENDFLAGS@ @INCLUDES@ -I${VJROOT_ABS} -I${topdir}
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ ${DEFS}
 INCLUDES	= @INCLUDES@ -I${VJROOT} -I${topdir}
