@@ -33,7 +33,6 @@
 
 
 #include <jccl/JackalServer/Command.h>
-#include <jccl/JackalServer/TimedUpdate.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigIO.h>

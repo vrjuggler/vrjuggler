@@ -42,7 +42,6 @@
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ParseUtil.h>
-#include <jccl/JackalServer/TimedUpdate.h>
 
 #include <jccl/ConfigManager/ConfigManager.h>
 

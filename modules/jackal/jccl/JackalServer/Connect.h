@@ -44,7 +44,6 @@
 
 namespace jccl {
 
-class TimedUpdate;
 class ConfigChunk;
 
 enum ConnectMode { VJC_INTERACTIVE, VJC_INPUT, VJC_OUTPUT };
@@ -120,18 +119,12 @@ class VJ_CLASS_API Connect {
 
     void addCommand (Command* cmd);
 
+    //: Attaches a PeriodicCommand object to this connection
+    //! ARGS: cmd - a non-NULL PeriodicCommand 
     void addPeriodicCommand (PeriodicCommand* cmd);
 
+    //: Detaches a PeriodicCommand object from this connection
     void removePeriodicCommand (PeriodicCommand* cmd);
-
-//      //: Attaches a timed update object to this connection
-//      //! ARGS: _tu - a vjTimedUpdate* 
-//      //! ARGS: _refresh_time - time between refreshes, in milliseconds
-//      void addTimedUpdate (TimedUpdate* _tu, float _refresh_time);
-
-
-//      //: Detaches a timed update object from this connection
-//      void removeTimedUpdate (TimedUpdate* _tu);
 
 
 private:
