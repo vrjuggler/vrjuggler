@@ -2,11 +2,13 @@
 
 default: html
 
-XML_FILES=	guide.xml
-HTML_FILES=	guide.html
-PDF_FILES=	guide.pdf
+NAME=		guide
 
-guide.html: guide.xml
-guide.pdf: guide.xml guide.fo # guide.tex
+XML_FILES=	$(NAME).xml
+HTML_FILES=	$(NAME).html
+PDF_FILES=	$(NAME).pdf
+
+$(NAME).html: $(NAME).xml
+$(NAME).pdf: $(NAME).xml $(NAME).fo
 
 include ../../../../docs/docbook.mk
