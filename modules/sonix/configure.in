@@ -116,70 +116,19 @@ DPP_SYSTEM_SETUP
 # -----------------------------------------------------------------------------
 # Checks for programs.
 # -----------------------------------------------------------------------------
-CC_ERR=''
-CXX_ERR=''
-
-# If no alternate C compiler was specified, check to see if it is necessary
-# to force the use of a specific compiler on a given platform.
-if test "x${_alt_cc}" = "xnone" ; then
-    CC_IRIX='cc'
-    CC_PIC_IRIX='-KPIC'
-
-    # On IRIX, we have to use cc (not gcc).
-    if test "$PLATFORM" = "IRIX" ; then
-        CC_ERR='*** The library requires the IRIX MIPSpro C compiler ***'
-    fi
-# Otherwise, force the use of the alternate C compiler.
-else
-    CC="${_alt_cc}"
-fi
-
-# If no alternate C++ compiler was specified, check to see if it is
-# necessary to force the use of a specific compiler on a given platform.
-if test "x${_alt_cxx}" = "xnone" ; then
-    CXX_HP='aCC'
-    CXX_IRIX='CC'
-    CXX_PIC_IRIX='-KPIC'
-
-    # On HP-UX, we have to use the aCC C++ compiler.
-    if test "$PLATFORM" = "HP" ; then
-        CXX_ERR='*** The library requires the HP-UX aCC C++ compiler ***'
-    # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
-    elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
-        CXX='cl'
-        CC="$CXX"
-        CXX_ERR='*** The library requires the MS Visual C++ compiler ***'
-    # On IRIX, we have to use CC (not g++).
-    elif test "x$PLATFORM" = "xIRIX" ; then
-        CXX_ERR='*** The library requires the IRIX MIPSpro C++ compiler ***'
-    fi
-# Otherwise, force the use of the alternate C++ compiler.
-else
-    CXX="${_alt_cxx}"
-fi
-
-DPP_PROG_CC($CC, , AC_MSG_ERROR($CC_ERR))
-DPP_GET_EXT
-DPP_PROG_CXX($CXX, , AC_MSG_ERROR($CXX_ERR))
-
+VJ_COMPILER_SETUP
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
-DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** project requires C++ namespace support ***))
-DPP_CXX_TEMPLATES(AC_MSG_ERROR(*** project requires C++ template support ***))
-DPP_CXX_INLINE(AC_MSG_ERROR(*** project requires C++ inline support ***))
-
-if test "x$GXX" = "xyes" ; then
-    # If we are using GCC as the compiler, we need to be using at least
-    # egcs 1.1.2.  A newer version (e.g., 2.95.2) is even better.
-    DPP_GPLUSPLUS_MODERN(AC_MSG_ERROR(*** project requires a modern G++ ***))
-fi
+DPP_CXX_NAMESPACE([AC_MSG_ERROR([*** Sonix requires C++ namespace support ***])])
+DPP_CXX_TEMPLATES([AC_MSG_ERROR([*** Sonix requires C++ template support ***])])
+DPP_CXX_INLINE([AC_MSG_ERROR([*** Sonix requires C++ inline support ***])])
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 
-dnl ignore the nasty paths appended by the config scripts...
+# ignore the nasty paths appended by the config scripts...
 saveCXXFLAGS="$CXXFLAGS"
 saveINCLUDES="$INCLUDES"
 
