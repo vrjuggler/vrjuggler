@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="file://localhost/home/users/kevn/Open/juggler_xml_docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?morphon-document-settings
+  morphon.document.settings.whitespaces.amount="3"
+  morphon.document.settings.print.fixed.attributes="true"
+  morphon.document.settings.stylesheetpi.autoupdate="true"
+  morphon.document.settings.print.defaultvalues.attributes="false"
+  morphon.document.settings.relative.systemids="2"
+  morphon.document.settings.endofline.type="2"
+  morphon.document.settings.whitespaces.type="indent.attr"
+?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article lang="en">
+   <articleinfo>
+      <title>Travel Systems for Virtual Environments</title>
+      <subtitle>Course notes for Open source VR - IEEEVR2002</subtitle>
+      <authorgroup>
+         <author>
+            <firstname>Kevin</firstname>
+            <surname>Meinert</surname>
+         </author>
+      </authorgroup>
+      <pubdate>$Date$</pubdate>
+      <address><email>kevn@vrjuggler.org</email></address>
+   </articleinfo>
+   <section>
+      <title>Introduction</title>
+      <para>The concepts discussed here can also apply to 3rd person control, even though certain groups of Virtual Reality (VR) users focus mainly on 1st person travel methods.</para>
+      <section>
+         <title>Why Travel?</title>
+         <para>Travel allows users to gain access to areas or regions of their environment otherwise not available to them. This is, of course, also true in real life. Humans travel every day using methods such as walking, driving, flying, clicking, and typing. In VR and other 3D interactive applications we need many of the same travel methods as we do in real life, along with additional methods that cannot exist in the physical world, but which allow easier access.</para>
+      </section>
+   </section>
+   <bibliography>
+      <title>References</title>
+      <biblioentry
+        id = "watt93"
+      >
+         <abbrev>watt93</abbrev>
+         <biblioset
+           relation = "book"
+         >
+            <author>
+               <surname>Watt</surname>
+               <firstname>Alan</firstname>
+            </author>
+            <title>3D Computer Graphics (second ed.)</title>
+            <publishername>Addison Wesley Publishing Company Inc.</publishername>
+            <pubdate>1996</pubdate>
+            <pagenums>10</pagenums>
+            <copyright>
+               <year>1993</year>
+               <holder>Addison Wesley Publishing Company Inc.</holder>
+            </copyright>
+         </biblioset>
+      </biblioentry>
+   </bibliography>
+</article>
