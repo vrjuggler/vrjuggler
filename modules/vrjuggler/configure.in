@@ -1835,7 +1835,8 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           Input/InputManager/Makefile Input/ibox/Makefile
           Input/vjGesture/Makefile Input/vjGlove/Makefile
           Input/vjInput/Makefile Input/vjKeyboard/Makefile
-          Input/vjPosition/Makefile Input/vjSim/Makefile Kernel/Makefile
+          Input/vjPosition/Makefile Input/Multi/Makefile
+          Input/vjSim/Makefile Kernel/Makefile
           Kernel/Pf/Makefile Kernel/GL/Makefile Math/Makefile
           Performance/Makefile SharedMem/Makefile Sound/Makefile
           Sound/aw/Makefile Sound/pf/Makefile Sound/sl/Makefile Sync/Makefile
