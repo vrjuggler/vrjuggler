@@ -13,7 +13,7 @@
       </dependencies>
       <tree path="/VRJConfig/" />
    </guipanel>
-   <guipanel name="ConfigDefinition Editor">
+   <guipanel name="Config Definition Editor">
       <file name="${JCCL_BASE_DIR}/share/jccl/beans/jccl_editors.jar"
             class="org.vrjuggler.jccl.editors.ConfigDefinitionRepositoryEditor" />
       <dependencies>
@@ -23,7 +23,7 @@
       </dependencies>
       <tree path="/VRJConfig/" />
    </guipanel>
-   <guipanel name="ControlPanel">
+   <guipanel name="Control Panel">
       <file name="${VJ_BASE_DIR}/share/vrjuggler/beans/VRJConfig.jar"
             class="org.vrjuggler.vrjconfig.controlpanel.ControlPanelView" />
       <dependencies>
