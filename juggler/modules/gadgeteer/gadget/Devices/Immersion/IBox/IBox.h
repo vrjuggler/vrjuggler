@@ -36,16 +36,16 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef _VRJ_IBOX_H_
-#define _VRJ_IBOX_H_
+#ifndef _GADGET_IBOX_H_
+#define _GADGET_IBOX_H_
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Input.h>
-#include <gad/Type/Digital.h>
-#include <gad/Type/Analog.h>
-#include <gad/Devices/Immersion/ibox2.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/Analog.h>
+#include <gadget/Devices/Immersion/ibox2.h>
 
-namespace vrj
+namespace gadget
 {
 
 struct IBOX_DATA {

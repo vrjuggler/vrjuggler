@@ -10,7 +10,7 @@
 /*  --    Author: Larry Edwards                                 --  */
 /*  ==============================================================  */
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -18,11 +18,11 @@
 
 #include <X11/Intrinsic.h>
 
-#include <gad/Devices/VirtualTechnologies/CyberGlove.h>
-#include <gad/Devices/VirtualTechnologies/vt_globals.h>
-#include <gad/Devices/VirtualTechnologies/vt_math3d.h>
-#include <gad/Devices/VirtualTechnologies/vt_error.h>
-#include <gad/Devices/VirtualTechnologies/vt_read_object-types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
+#include <gadget/Devices/VirtualTechnologies/vt_globals.h>
+#include <gadget/Devices/VirtualTechnologies/vt_math3d.h>
+#include <gadget/Devices/VirtualTechnologies/vt_error.h>
+#include <gadget/Devices/VirtualTechnologies/vt_read_object-types.h>
 
 int
 vt_prev_index(int current_index, int numelems)

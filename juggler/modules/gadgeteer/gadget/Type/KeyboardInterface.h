@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_KEYBOARD_INTERFACE_H_
-#define _VRJ_KEYBOARD_INTERFACE_H_
+#ifndef _GADGET_KEYBOARD_INTERFACE_H_
+#define _GADGET_KEYBOARD_INTERFACE_H_
 
-#include <gad/Type/KeyboardProxy.h>
-#include <gad/Type/DeviceInterface.h>
+#include <gadget/Type/KeyboardProxy.h>
+#include <gadget/Type/DeviceInterface.h>
 
 #endif

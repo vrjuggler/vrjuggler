@@ -30,21 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_PINCH_GLOVE_H_
-#define _VRJ_PINCH_GLOVE_H_
+#ifndef _GADGET_PINCH_GLOVE_H_
+#define _GADGET_PINCH_GLOVE_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <string>
 
-#include <gad/Type/Input.h>
-#include <gad/Type/Glove.h>
-#include <gad/Type/Digital.h>
-#include <gad/Devices/Fakespace/PinchGloveStandalone.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Glove.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Devices/Fakespace/PinchGloveStandalone.h>
 
-#include <gad/Type/Finger.h>
-#include <gad/Type/Hand.h>
+#include <gadget/Type/Finger.h>
+#include <gadget/Type/Hand.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Fakespace Pinchglove Device
@@ -101,4 +101,4 @@ protected:
 
 };
 
-#endif   /* _VRJ_PINCH_GLOVE_H_ */
+#endif   /* _GADGET_PINCH_GLOVE_H_ */

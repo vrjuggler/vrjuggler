@@ -30,15 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SIM_RELATIVE_POSITION_H
-#define _VRJ_SIM_RELATIVE_POSITION_H
+#ifndef _GADGET_SIM_RELATIVE_POSITION_H
+#define _GADGET_SIM_RELATIVE_POSITION_H
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Input.h>
-#include <gad/Type/Position.h>
-#include <gad/Type/PositionInterface.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Position.h>
+#include <gadget/Type/PositionInterface.h>
 
-namespace vrj
+namespace gadget
 {
    class ConfigChunk;
 

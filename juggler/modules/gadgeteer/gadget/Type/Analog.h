@@ -35,14 +35,14 @@
 // positional tracker base class
 //
 ////////////////////////////////////////////////////////////////////////
-#ifndef _VRJ_ANALOG_H_
-#define _VRJ_ANALOG_H_
+#ifndef _GADGET_ANALOG_H_
+#define _GADGET_ANALOG_H_
 
-#include <gad/gadConfig.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/gadgetConfig.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <vrj/Util/Debug.h>
 
-namespace vrj
+namespace gadget
 {
 
 //-----------------------------------------------------------------------------
@@ -72,7 +72,7 @@ public:
 
    // Just call base class config
    //! NOTE: Let constructor set device abilities
-   virtual bool config(ConfigChunk* c)
+   virtual bool config(jccl::ConfigChunk* c)
    {
       mMin = static_cast<float>( c->getProperty("min") );
       mMax = static_cast<float>( c->getProperty("max") );
@@ -138,4 +138,4 @@ private:
 
 };
 
-#endif   /* _VJ_ANALOG_H_ */
+#endif   /* _GADGET_ANALOG_H_ */

@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_POS_FILTER_H_
-#define _VJ_POS_FILTER_H_
+#ifndef _GADGET_POS_FILTER_H_
+#define _GADGET_POS_FILTER_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <vrj/Math/Matrix.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Base class for all position filters in VR Juggler
@@ -46,7 +46,7 @@ class PositionFilter
 public:
    // Get the position to use
    // ARGS: newPos - The new postion this frame of the physical device
-   virtual Matrix getPos(const Matrix newPos) = 0;
+   virtual vrj::Matrix getPos(const vrj::Matrix newPos) = 0;
 
 };
 

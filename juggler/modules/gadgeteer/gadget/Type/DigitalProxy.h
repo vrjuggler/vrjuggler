@@ -36,15 +36,15 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef _VRJ_DIGITALPROXY_H_
-#define _VRJ_DIGITALPROXY_H_
+#ifndef _GADGET_DIGITALPROXY_H_
+#define _GADGET_DIGITALPROXY_H_
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Digital.h>
-#include <gad/Type/Proxy.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/Proxy.h>
 #include <vpr/Util/Assert.h>
 
-namespace vrj
+namespace gadget
 {
 
 //--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ namespace vrj
 //  subDevice's amount of data.  (one int)
 //!PUBLIC_API:
 //--------------------------------------------------------------------------
-class GAD_CLASS_API DigitalProxy : public TypedProxy<Digital>
+class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
 {
 
 public:
@@ -104,7 +104,7 @@ public:
 
    static std::string getChunkType() { return "DigProxy"; }
 
-   bool config(ConfigChunk* chunk);
+   bool config(jccl::ConfigChunk* chunk);
 
    virtual Input* getProxiedInputDevice()
    {
@@ -125,6 +125,6 @@ private:
 
 };
 
-};
+} // End of gadget namespace
 
 #endif

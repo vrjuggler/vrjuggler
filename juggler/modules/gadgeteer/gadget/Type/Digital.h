@@ -36,12 +36,12 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef _VRJ_DIGITAL_H_
-#define _VRJ_DIGITAL_H_
+#ifndef _GADGET_DIGITAL_H_
+#define _GADGET_DIGITAL_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
-namespace vrj
+namespace gadget
 {
 
 //-----------------------------------------------------------------------------
@@ -96,4 +96,4 @@ public:
 
 };
 
-#endif   /* _VJ_DIGITAL_H_ */
+#endif   /* _GADGET_DIGITAL_H_ */

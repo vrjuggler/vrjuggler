@@ -42,16 +42,16 @@
 // Last Modified: 4-22-99
 //===============================================================
 
-#ifndef _VRJ_ASCENSION_FLOCK_OF_BIRDS_H_
-#define _VRJ_ASCENSION_FLOCK_OF_BIRDS_H_
+#ifndef _GADGET_ASCENSION_FLOCK_OF_BIRDS_H_
+#define _GADGET_ASCENSION_FLOCK_OF_BIRDS_H_
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vpr/Thread/Thread.h>
-#include <gad/Type/Input.h>
-#include <gad/Type/Position.h>
-#include <gad/Devices/Ascension/FlockStandalone.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Position.h>
+#include <gadget/Devices/Ascension/FlockStandalone.h>
 
-namespace vrj
+namespace gadget
 {
 
 //----------------------------------------------------------------------------

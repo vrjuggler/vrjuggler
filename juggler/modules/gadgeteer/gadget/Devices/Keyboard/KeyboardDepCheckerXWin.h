@@ -30,17 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_KEYBOARD_DEP_CHECKER_XWIN_H_
-#define _VRJ_KEYBOARD_DEP_CHECKER_XWIN_H_
+#ifndef _GADGET_KEYBOARD_DEP_CHECKER_XWIN_H_
+#define _GADGET_KEYBOARD_DEP_CHECKER_XWIN_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 // Dependency checker includes
 #include <vrj/Kernel/DependencyManager.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Kernel/DepChecker.h>
 
-namespace vrj
+namespace gadget
 {
    //: Dependency checker for XWin keyboard
 // Implement the basic stuff plus a check for wether
@@ -54,7 +54,7 @@ public:
    //: Return a string name of the checker
    // Used to output messages in checker listings
    virtual std::string getCheckerName()
-   { return std::string("vrj::KeyboardXWin Checker"); }
+   { return std::string("gadget::KeyboardXWin Checker"); }
 
    // We can handle only keyboard configuration information
    virtual bool canHandle(ConfigChunk* chunk)

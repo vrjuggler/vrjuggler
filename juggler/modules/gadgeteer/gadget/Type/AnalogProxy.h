@@ -36,15 +36,15 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef _VRJ_ANALOGPROXY_H_
-#define _VRJ_ANALOGPROXY_H_
+#ifndef _GADGET_ANALOGPROXY_H_
+#define _GADGET_ANALOGPROXY_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vrj/Util/Debug.h>
-#include <gad/Type/Analog.h>
-#include <gad/Type/Proxy.h>
+#include <gadget/Type/Analog.h>
+#include <gadget/Type/Proxy.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: A proxy class to analog devices, used by the InputManager.
@@ -57,7 +57,7 @@ namespace vrj
 // See also: Analog
 //
 //!PUBLIC_API:
-class GAD_CLASS_API AnalogProxy : public TypedProxy<Analog>
+class GADGET_CLASS_API AnalogProxy : public TypedProxy<Analog>
 {
 
 public:
@@ -100,7 +100,7 @@ public:
 
    static std::string getChunkType() { return "AnaProxy";}
 
-   bool config(ConfigChunk* chunk);
+   bool config(jccl::ConfigChunk* chunk);
 
    virtual Input* getProxiedInputDevice()
    {
@@ -117,6 +117,6 @@ private:
    float       m_data;
 };
 
-};
+} // End of gadget namespace
 
 #endif

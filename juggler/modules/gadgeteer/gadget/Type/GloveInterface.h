@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_GLOVE_INTERFACE_H_
-#define _VRJ_GLOVE_INTERFACE_H_
+#ifndef _GADGET_GLOVE_INTERFACE_H_
+#define _GADGET_GLOVE_INTERFACE_H_
 
-#include <gad/Type/GloveProxy.h>
-#include <gad/Type/DeviceInterface.h>
+#include <gadget/Type/GloveProxy.h>
+#include <gadget/Type/DeviceInterface.h>
 
 #endif

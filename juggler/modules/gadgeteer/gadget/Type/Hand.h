@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_HAND_H_
-#define _VJ_HAND_H_
+#ifndef _GADGET_HAND_H_
+#define _GADGET_HAND_H_
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Finger.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Finger.h>
 
-namespace vrj
+namespace gadget
 {
 
 //  DIJ = Distal Interphalangeal Joint  --- Finger tip

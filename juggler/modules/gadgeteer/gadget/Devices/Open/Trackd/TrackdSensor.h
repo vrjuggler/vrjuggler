@@ -30,17 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_TRACKD_SENSOR_H_
-#define _VRJ_TRACKD_SENSOR_H_
+#ifndef _GADGET_TRACKD_SENSOR_H_
+#define _GADGET_TRACKD_SENSOR_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vector>
-#include <gad/Type/Input.h>
-#include <gad/Type/Position.h>
-#include <gad/Devices/Open/Trackd/TrackdSensorStandalone.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Position.h>
+#include <gadget/Devices/Open/Trackd/TrackdSensorStandalone.h>
 
 
-namespace vrj
+namespace gadget
 {
 
 //-----------------------------------------------------------------------------

@@ -30,21 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
-#include <gad/Type/AnalogProxy.h>
-#include <gad/Type/DigitalProxy.h>
-#include <gad/Type/PositionProxy.h>
-#include <gad/Type/GloveProxy.h>
-#include <gad/Type/GestureProxy.h>
-#include <gad/Type/KeyboardProxy.h>
-#include <gad/ProxyDepChecker.h>
-#include <gad/ProxyFactory.h>
+#include <gadget/Type/AnalogProxy.h>
+#include <gadget/Type/DigitalProxy.h>
+#include <gadget/Type/PositionProxy.h>
+#include <gadget/Type/GloveProxy.h>
+#include <gadget/Type/GestureProxy.h>
+#include <gadget/Type/KeyboardProxy.h>
+#include <gadget/ProxyDepChecker.h>
+#include <gadget/ProxyFactory.h>
 
 #include <typeinfo>
 
 
-namespace vrj
+namespace gadget
 {
 
 // Initialize the singleton ptr
@@ -80,7 +80,7 @@ void ProxyFactory::loadKnownProxies()
    }
 
 
-   DependencyManager::instance()->registerChecker(new ProxyDepChecker());
+   jccl::DependencyManager::instance()->registerChecker(new ProxyDepChecker());
 }
 
 void ProxyFactory::registerProxy(ProxyConstructorBase* constructor)
@@ -95,7 +95,7 @@ void ProxyFactory::registerProxy(ProxyConstructorBase* constructor)
 
 // Simply query all proxy constructors registered looking
 // for one that knows how to load the proxy
-bool ProxyFactory::recognizeProxy(ConfigChunk* chunk)
+bool ProxyFactory::recognizeProxy(jccl::ConfigChunk* chunk)
 {
    if(findConstructor(chunk) == -1)
       return false;
@@ -108,7 +108,7 @@ bool ProxyFactory::recognizeProxy(ConfigChunk* chunk)
 //!ARGS: chunk - specification of the proxy to load
 //!RETURNS: null - Proxy failed to load
 //+         other - Pointer to the loaded proxy
-Proxy* ProxyFactory::loadProxy(ConfigChunk* chunk)
+Proxy* ProxyFactory::loadProxy(jccl::ConfigChunk* chunk)
 {
    vprASSERT(recognizeProxy(chunk));
 
@@ -124,7 +124,7 @@ Proxy* ProxyFactory::loadProxy(ConfigChunk* chunk)
    return new_dev;
 }
 
-int ProxyFactory::findConstructor(ConfigChunk* chunk)
+int ProxyFactory::findConstructor(jccl::ConfigChunk* chunk)
 {
    std::string chunk_type;
    chunk_type = (std::string)chunk->getType();

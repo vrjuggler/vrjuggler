@@ -30,25 +30,25 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
-#include <gad/Type/Proxy.h>
+#include <gadget/Type/Proxy.h>
 #include <vrj/Util/Debug.h>
 
-#include <gad/Type/DeviceFactory.h>
-#include <gad/ProxyFactory.h>
-#include <gad/Type/DeviceInterface.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/Type/DeviceFactory.h>
+#include <gadget/ProxyFactory.h>
+#include <gadget/Type/DeviceInterface.h>
+#include <jccl/Config/ConfigChunk.h>
 
-#include <gad/InputManager.h> // my header...
+#include <gadget/InputManager.h> // my header...
 
 
 
-namespace vrj
+namespace gadget
 {
 
 // Local helpers
-bool recognizeProxyAlias( ConfigChunk* chunk );
+bool recognizeProxyAlias( jccl::ConfigChunk* chunk );
 
 /**********************************************************
   InputManager::InputManager()
@@ -84,7 +84,7 @@ InputManager::~InputManager()
 
 
 //: Add the given config chunk to the input system
-bool InputManager::configAdd(ConfigChunk* chunk)
+bool InputManager::configAdd(jccl::ConfigChunk* chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "\nInputManager: Adding pending config chunk... " << std::endl << vprDEBUG_FLUSH;
    vprASSERT(configCanHandle(chunk));
@@ -121,7 +121,7 @@ bool InputManager::configAdd(ConfigChunk* chunk)
 //+       (chunk is device) ==> (devices is removed && proxies are stupified)
 //+       (chunk is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
 //!RETURNS: success
-bool InputManager::configRemove(ConfigChunk* chunk)
+bool InputManager::configRemove(jccl::ConfigChunk* chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "\nInputManager: Removing config... " << std::endl << vprDEBUG_FLUSH;
    vprASSERT(configCanHandle(chunk));
@@ -151,7 +151,7 @@ bool InputManager::configRemove(ConfigChunk* chunk)
 
 // Return true if:
 //  It is recognized device, proxy, or alias.
-bool InputManager::configCanHandle(ConfigChunk* chunk)
+bool InputManager::configCanHandle(jccl::ConfigChunk* chunk)
 {
    return ( DeviceFactory::instance()->recognizeDevice(chunk) ||
             ProxyFactory::instance()->recognizeProxy(chunk) ||
@@ -159,7 +159,7 @@ bool InputManager::configCanHandle(ConfigChunk* chunk)
 }
 
 // Check if the device factory or proxy factory can handle the chunk
-bool InputManager::configureDevice(ConfigChunk* chunk)
+bool InputManager::configureDevice(jccl::ConfigChunk* chunk)
 {
    bool ret_val;
    std::string dev_name = chunk->getProperty("name");
@@ -187,7 +187,7 @@ bool InputManager::configureDevice(ConfigChunk* chunk)
 }
 
 // Check if the device factory or proxy factory can handle the chunk
-bool InputManager::configureProxy(ConfigChunk* chunk)
+bool InputManager::configureProxy(jccl::ConfigChunk* chunk)
 {
    std::string proxy_name = chunk->getProperty("name");
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjInputManager::configureProxy: Named: " << proxy_name.c_str() << std::endl << vprDEBUG_FLUSH;
@@ -218,7 +218,7 @@ bool InputManager::configureProxy(ConfigChunk* chunk)
 
 //: Remove the device associated with the given chunk
 //!RETURNS: true - Device was removed
-bool InputManager::removeDevice(ConfigChunk* chunk)
+bool InputManager::removeDevice(jccl::ConfigChunk* chunk)
 {
    char* dev_name = chunk->getProperty("name").cstring();      // Get the name of the device
    return removeDevice(dev_name);
@@ -232,7 +232,7 @@ bool InputManager::removeDevice(ConfigChunk* chunk)
   the devices, proxies and internal settings
 
 *********************************************** ahimberg */
-GAD_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr)
+GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr)
 {
   out << "\n=============== InputManager Status: ===============================" << std::endl;
 
@@ -384,7 +384,7 @@ bool InputManager::removeDevice(std::string instName)
 
 
 // Is it a proxy alias
-bool recognizeProxyAlias(ConfigChunk* chunk)
+bool recognizeProxyAlias(jccl::ConfigChunk* chunk)
 {
    return (((std::string)chunk->getType()) == std::string("proxyAlias"));
 }
@@ -393,7 +393,7 @@ bool recognizeProxyAlias(ConfigChunk* chunk)
 // PRE: none
 // POST: (alias not already in list) ==> Alias is added to proxyAlias list
 //+      (alias was already is list) ==> Alias is set to point to the new proxy instead
-bool InputManager::configureProxyAlias(ConfigChunk* chunk)
+bool InputManager::configureProxyAlias(jccl::ConfigChunk* chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjInputManager::Configuring proxy alias" << std::endl << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "proxyAlias");
@@ -414,7 +414,7 @@ bool InputManager::configureProxyAlias(ConfigChunk* chunk)
 // PRE: none
 // POST: (alias not in list) ==> returns = false
 //+      (alias is in list) ==> (alias is removed from list) returns true
-bool InputManager::removeProxyAlias(ConfigChunk* chunk)
+bool InputManager::removeProxyAlias(jccl::ConfigChunk* chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjInputManager::RemoveProxyAlias" << std::endl << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "proxyAlias");
@@ -525,7 +525,7 @@ bool InputManager::removeProxy(std::string proxyName)
    return true;
 }
 
-bool InputManager::removeProxy(ConfigChunk* chunk)
+bool InputManager::removeProxy(jccl::ConfigChunk* chunk)
 {
    std::string proxy_name;
    proxy_name = (std::string)chunk->getProperty("name");

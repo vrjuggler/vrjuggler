@@ -30,18 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_TRACKD_CONTROLLER_H_
-#define _VRJ_TRACKD_CONTROLLER_H_
+#ifndef _GADGET_TRACKD_CONTROLLER_H_
+#define _GADGET_TRACKD_CONTROLLER_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vector>
-#include <gad/Type/Input.h>
-#include <gad/Type/Digital.h>
-#include <gad/Type/Analog.h>
-#include <gad/Devices/Sim/SimInput.h>
-#include <gad/Devices/Open/Trackd/TrackdControllerStandalone.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/Analog.h>
+#include <gadget/Devices/Sim/SimInput.h>
+#include <gadget/Devices/Open/Trackd/TrackdControllerStandalone.h>
 
-namespace vrj
+namespace gadget
 {
 
 

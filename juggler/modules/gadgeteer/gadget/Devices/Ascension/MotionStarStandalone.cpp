@@ -44,7 +44,7 @@
 #include <vpr/IO/Socket/SocketDatagram.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <gad/Devices/Ascension/MotionStarStandalone.h>
+#include <gadget/Devices/Ascension/MotionStarStandalone.h>
 
 #define RAD2DEG(x) ((x) * 180.0 / M_PI)
 

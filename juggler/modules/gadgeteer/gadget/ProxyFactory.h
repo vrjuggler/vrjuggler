@@ -30,18 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_PROXY_FACTORY_H_
-#define _VRJ_PROXY_FACTORY_H_
+#ifndef _GADGET_PROXY_FACTORY_H_
+#define _GADGET_PROXY_FACTORY_H_
 //#pragma once
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Proxy.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Proxy.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <vpr/Util/Singleton.h>
-#include <vrj/Kernel/DependencyManager.h>
+#include <jccl/Plugins/ConfigManager/DependencyManager.h>
 
 
-namespace vrj
+namespace gadget
 {
 
 //: Base class for virtual construction of proxies
@@ -56,7 +56,7 @@ public:
 
    //: Create the proxy
    //! RETURNS: NULL - Proxy failed creation or configuration
-   virtual Proxy* createProxy(ConfigChunk* chunk) const = 0;
+   virtual Proxy* createProxy(jccl::ConfigChunk* chunk) const = 0;
 
    //: Get the string desc of the type of chunk we can create
    virtual std::string    getChunkType() const = 0;
@@ -71,7 +71,7 @@ public:
 
    //: Create the proxy
    //! RETURNS: NULL - Proxy failed creation or configuration
-   Proxy* createProxy(ConfigChunk* chunk) const
+   Proxy* createProxy(jccl::ConfigChunk* chunk) const
    {
       PROXY* new_proxy = new PROXY;             // Create new proxy
       bool success = new_proxy->config(chunk);  // Attempt to configure it
@@ -113,21 +113,21 @@ public:
    //!ARGS: chunk - chunk we are requesting about knowledge to create
    //!RETURNS: true - factory knows how to create the proxy
    //+          false - factory does not know how to create the proxy
-   bool recognizeProxy(ConfigChunk* chunk);
+   bool recognizeProxy(jccl::ConfigChunk* chunk);
 
    //: Load the specified proxy
    //!PRE: recognizeDevice(chunk) == true
    //!ARGS: chunk - specification of the proxy to load
    //!RETURNS: null - Proxy failed to load
    //+         other - Pointer to the loaded proxy
-   Proxy* loadProxy(ConfigChunk* chunk);
+   Proxy* loadProxy(jccl::ConfigChunk* chunk);
 
 private:
 
    //: Find a constructor for the given proxy type
    //!RETURNS: -1 - Not found
    //+            - Index of the constructorck
-   int   findConstructor(ConfigChunk* chunk);
+   int   findConstructor(jccl::ConfigChunk* chunk);
 
 private:
    std::vector<ProxyConstructorBase*> mConstructors;   //: List of the proxy constructors

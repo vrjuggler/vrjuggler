@@ -30,17 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SIM_ANALOG_H
-#define _VRJ_SIM_ANALOG_H
+#ifndef _GADGET_SIM_ANALOG_H
+#define _GADGET_SIM_ANALOG_H
 //#pragma once
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Input.h>
-#include <gad/Type/Analog.h>
-#include <gad/Devices/Sim/SimInput.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Analog.h>
+#include <gadget/Devices/Sim/SimInput.h>
 #include <vrj/Util/Debug.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Simulated analog device

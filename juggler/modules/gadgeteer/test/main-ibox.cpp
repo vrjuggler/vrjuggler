@@ -34,16 +34,16 @@
 #include <iomanip>
 #include <unistd.h>
 
-#include <gad/Devices/Immersion/Ibox.h>
-#include <gad/Devices/Immersion/hci.h>
-#include <gad/Devices/Immersion/iboxStandalone.h>
+#include <gadget/Devices/Immersion/Ibox.h>
+#include <gadget/Devices/Immersion/hci.h>
+#include <gadget/Devices/Immersion/iboxStandalone.h>
 #include <vpr/System.h>
 
 int main()
 {
-  vrj::IBox* t1 = new vrj::IBox;
- 
-  vrj::IBOX_DATA *data;
+  gadget::IBox* t1 = new gadget::IBox;
+
+  gadget::IBOX_DATA *data;
 
   char achar;
   std::cout << "U - Update\n"
@@ -59,16 +59,16 @@ int main()
      case 'u':case 'U': t1->updateData(); break;
      case 's':case 'S': t1->startSampling(); break;
      case 'x':case 'X': t1->stopSampling(); break;
-     case 'o':case 'O': 
+     case 'o':case 'O':
      for(int z = 0; z < 10; z++){
          t1->updateData();
-         
-	
-	std::cout << t1->getDigitalData(0);
-	std::cout << t1->getDigitalData(1);
-	std::cout << t1->getDigitalData(2);
-	std::cout << t1->getDigitalData(3);        
-         std::cout << std::endl; 
+
+
+    std::cout << t1->getDigitalData(0);
+    std::cout << t1->getDigitalData(1);
+    std::cout << t1->getDigitalData(2);
+    std::cout << t1->getDigitalData(3);
+         std::cout << std::endl;
          vpr::System::sleep(2);
     }
      break;

@@ -9,7 +9,7 @@
 /*  --  Copyright (C) 1991,92,93 Virtual Technologies       --  */
 /*  ==========================================================  */
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #ifndef FALSE
 #define FALSE 0

@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_KEYBOARD_H_
-#define _VRJ_KEYBOARD_H_
+#ifndef _GADGET_KEYBOARD_H_
+#define _GADGET_KEYBOARD_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 
 // --------- VJKEY's ------------ //
@@ -95,7 +95,7 @@ const int VJMBUTTON2   = LAST_KEY + 6;
 const int VJMBUTTON3   = LAST_KEY + 7;
 
 
-namespace vrj
+namespace gadget
 {
 
 //----------------------------------------------------------------------------

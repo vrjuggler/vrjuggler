@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_ASCENSION_MOTION_STAR_STANDALONE_H_
-#define _VRJ_ASCENSION_MOTION_STAR_STANDALONE_H_
+#ifndef _GADGET_ASCENSION_MOTION_STAR_STANDALONE_H_
+#define _GADGET_ASCENSION_MOTION_STAR_STANDALONE_H_
 
 #include <iostream>
 #include <string>
@@ -191,7 +191,7 @@ extern const unsigned char MSG_RUN_CONTINUOUS; //: Request continuous data
 extern const unsigned char MSG_STOP_DATA;      //: Stop continuous data
 extern const unsigned char RSP_GET_STATUS;     //: Response of system status
 extern const unsigned char RSP_SEND_SETUP;     //: Response to sent setup
-extern const unsigned char RSP_RUN_CONTINUOUS; //: Response to continuous data 
+extern const unsigned char RSP_RUN_CONTINUOUS; //: Response to continuous data
                                                //+ request
 extern const unsigned char RSP_STOP_DATA;      //: Response to continuous data
                                                //+ stop request
@@ -612,7 +612,7 @@ public:
    //! PRE: None.
    //! POST: The current value of m_proto is returned to the caller.
    //
-   //! RETURNS: 
+   //! RETURNS:
    // ------------------------------------------------------------------------
    const BIRDNET::protocol& getProtocol (void) const
    {
@@ -1480,7 +1480,7 @@ private:
    bool              m_active;            //: Active state of the driver
 
    // Server chassis member variables.
-   vpr::InetAddr     m_address;           //: Address of the server 
+   vpr::InetAddr     m_address;           //: Address of the server
    vpr::Socket*      m_socket;            //: Socket to the server
    BIRDNET::protocol m_proto;             //: Transmission protocol in use
    bool              m_master;            //: Flag stating if this server is a
@@ -1520,4 +1520,4 @@ private:
 };
 
 
-#endif  /* _VRJ_ASCENSION_MOTION_STAR_STANDALONE_H_ */
+#endif  /* _GADGET_ASCENSION_MOTION_STAR_STANDALONE_H_ */

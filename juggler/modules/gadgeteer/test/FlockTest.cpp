@@ -32,7 +32,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include <gad/Devices/Ascension/Flock.h>
+#include <gadget/Devices/Ascension/Flock.h>
 #include <vrj/Math/Coord.h>
 #include <vpr/System.h>
 
@@ -74,9 +74,9 @@ int main()
   std::cin >> transmitter;
 
 
-  vrj::Flock* flock = new vrj::Flock (port, baud, sync, blocking, numBirds,
-		                      transmitter, hemi, filt, report,
-                                      calfile);
+  gadget::Flock* flock = new gadget::Flock (port, baud, sync, blocking,
+                                            numBirds, transmitter, hemi, filt,
+                                            report, calfile);
 
   char achar;
   bool birds_running(false);      // Are the birds currently running

@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_DEVICE_INTERFACE_H_
-#define _VRJ_DEVICE_INTERFACE_H_
+#ifndef _GADGET_DEVICE_INTERFACE_H_
+#define _GADGET_DEVICE_INTERFACE_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vrj/Util/Debug.h>
 
-namespace vrj
+namespace gadget
 {
 
 class Proxy;
@@ -59,7 +59,7 @@ class PositionProxy;
 //+         application
 //!PUBLIC_API:
 //------------------------------------------------------------------------------
-class GAD_CLASS_API BaseDeviceInterface
+class GADGET_CLASS_API BaseDeviceInterface
 {
 protected:
    BaseDeviceInterface(const BaseDeviceInterface& other) {;}
@@ -107,7 +107,7 @@ private:    // Static information
 // ---- Type specific interfaces ----
 
 template<class PROXY_TYPE>
-class GAD_CLASS_API DeviceInterface : public BaseDeviceInterface
+class GADGET_CLASS_API DeviceInterface : public BaseDeviceInterface
 {
 protected:
    DeviceInterface(DeviceInterface& other) {;}

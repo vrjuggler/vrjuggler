@@ -30,19 +30,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_DEVICE_FACTORY_H_
-#define _VRJ_DEVICE_FACTORY_H_
+#ifndef _GADGET_DEVICE_FACTORY_H_
+#define _GADGET_DEVICE_FACTORY_H_
 //#pragma once
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Input.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Input.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <vpr/Util/Singleton.h>
 
 #include <vrj/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Base class for virtual construction of devices
@@ -56,7 +56,7 @@ public:
    DeviceConstructorBase() {;}
 
    //: Create the device
-   virtual Input* createDevice(ConfigChunk* chunk)
+   virtual Input* createDevice(jccl::ConfigChunk* chunk)
    {
       vprDEBUG(vprDBG_ALL,0) << "ERROR: DeviceConstructorBase::createDevice: Should never be called" << vprDEBUG_FLUSH;
       return NULL;
@@ -74,7 +74,7 @@ class DeviceConstructor : public DeviceConstructorBase
 public:
    DeviceConstructor();
 
-   Input* createDevice(ConfigChunk* chunk)
+   Input* createDevice(jccl::ConfigChunk* chunk)
    {
       DEV* new_dev = new DEV;
       bool success = new_dev->config(chunk);
@@ -115,20 +115,20 @@ public:
    //!ARGS: chunk - chunk we are requesting about knowledge to create
    //!RETURNS: true - factory knows how to create the device
    //+          false - factory does not know how to create the device
-   bool recognizeDevice(ConfigChunk* chunk);
+   bool recognizeDevice(jccl::ConfigChunk* chunk);
 
    //: Load the specified device
    //!PRE: recognizeDevice(chunk) == true
    //!ARGS: chunk - specification of the device to load
    //!RETURNS: null - Device failed to load
    //+         other - Pointer to the loaded device
-   Input* loadDevice(ConfigChunk* chunk);
+   Input* loadDevice(jccl::ConfigChunk* chunk);
 
 private:
    //: Find a constructor for the given device type
    //!RETURNS: -1 - Not found
    //+            - Index of the constructorck
-   int   findConstructor(ConfigChunk* chunk);
+   int   findConstructor(jccl::ConfigChunk* chunk);
 
    void debugDump();
 
@@ -139,6 +139,6 @@ private:
    vprSingletonHeaderWithInitFunc(DeviceFactory, hackLoadKnownDevices);
 };
 
-} // end namespace vrj
+} // end namespace gadget
 
 #endif

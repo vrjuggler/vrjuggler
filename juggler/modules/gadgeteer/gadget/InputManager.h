@@ -36,16 +36,16 @@
 // Group manager for vj input devices and proxies
 //
 ////////////////////////////////////////////////////////////////////////////
-#ifndef VRJ_INPUT_MANAGER_H
-#define VRJ_INPUT_MANAGER_H
+#ifndef GADGET_INPUT_MANAGER_H
+#define GADGET_INPUT_MANAGER_H
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <map>
 
-#include <vrj/Kernel/ConfigChunkHandler.h>
+#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 
-namespace vrj
+namespace gadget
 {
 
 // Proxies
@@ -65,13 +65,13 @@ class Input;
 //  (for speed)
 //-------------------------------------------------------------------------------
 //!PUBLIC_API:
-class GAD_CLASS_API InputManager : public ConfigChunkHandler
+class GADGET_CLASS_API InputManager : public jccl::ConfigChunkHandler
 {
 public:
    InputManager();
    virtual ~InputManager();
 
-   friend GAD_API(std::ostream&) operator<<(std::ostream& out,
+   friend GADGET_API(std::ostream&) operator<<(std::ostream& out,
                                            InputManager& iMgr);
 
  //---------------------------//
@@ -80,7 +80,7 @@ public:
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   bool configAdd(ConfigChunk* chunk);
+   bool configAdd(jccl::ConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
@@ -88,25 +88,25 @@ public:
    //+       (chunk is device) ==> (devices is removed && proxies are stupified)
    //+       (chunk is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
    //!RETURNS: success
-   bool configRemove(ConfigChunk* chunk);
+   bool configRemove(jccl::ConfigChunk* chunk);
 
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   bool configCanHandle(ConfigChunk* chunk);
+   bool configCanHandle(jccl::ConfigChunk* chunk);
 
 private:
    //: Load the device for the given chunk
    //!RETURNS: true - Device was configured and added
-   bool configureDevice(ConfigChunk* chunk);
+   bool configureDevice(jccl::ConfigChunk* chunk);
 
    //: Load the Proxy for the given chunk
    //!RETURNS: true - Proxy was configured and added
-   bool configureProxy(ConfigChunk* chunk);
+   bool configureProxy(jccl::ConfigChunk* chunk);
 
    //: Remove the device associated with the given chunk
    //!RETURNS: true - Device was removed
-   bool removeDevice(ConfigChunk* chunk);
+   bool removeDevice(jccl::ConfigChunk* chunk);
 
 
    // ------------------------------- //
@@ -165,7 +165,7 @@ public:
 
 protected:
    bool removeProxy(std::string proxyName);
-   bool removeProxy(ConfigChunk* chunk);
+   bool removeProxy(jccl::ConfigChunk* chunk);
 
 protected:
    typedef std::map<std::string,Input*> tDevTableType;
@@ -179,17 +179,17 @@ protected:
 
 private:
    //: Function to configure the proxy Alias array
-   bool configureProxyAlias(ConfigChunk* chunk);
+   bool configureProxyAlias(jccl::ConfigChunk* chunk);
 
    //: Remove a proxy alias
-   bool removeProxyAlias(ConfigChunk* chunk);
+   bool removeProxyAlias(jccl::ConfigChunk* chunk);
 
    //: Add a proxy alias
    void addProxyAlias(std::string alias_name, std::string proxy_name);
 };
 
 // Write out the status of the input manager
-GAD_API(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr);
+GADGET_API(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr);
 
 } // end namespace
 

@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Assert.h>
 
-#include <gad/Type/Input.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/Type/Input.h>
+#include <jccl/Config/ConfigChunk.h>
 
 
-namespace vrj
+namespace gadget
 {
 
 Input::Input()

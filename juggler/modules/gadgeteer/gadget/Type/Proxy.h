@@ -30,20 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_PROXY_H_
-#define _VJ_PROXY_H_
+#ifndef _GADGET_PROXY_H_
+#define _GADGET_PROXY_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <typeinfo>
 
-#include <vrj/Kernel/Kernel.h>
-#include <gad/InputManager.h>
-#include <gad/Type/Input.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/InputManager.h>
+#include <gadget/Type/Input.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <vrj/Util/Debug.h>
+#include <vrj/Kernel/Kernel.h>
 
-namespace vrj
+namespace gadget
 {
 
 //class Input;
@@ -53,7 +53,7 @@ namespace vrj
 // TODO rename to InputProxy
 //
 //!PUBLIC_API:
-class GAD_CLASS_API Proxy
+class GADGET_CLASS_API Proxy
 {
 public:
    Proxy()
@@ -65,7 +65,7 @@ public:
    //! POST:
    //+  Proxy is configured (it is not registered yet though)
    //! RETURNS: success
-   virtual bool config(ConfigChunk* chunk)
+   virtual bool config(jccl::ConfigChunk* chunk)
    {
       mName = (std::string)chunk->getProperty("name");
       return true;
@@ -99,7 +99,7 @@ protected:
 
 
 template <class DEV_TYPE>
-class GAD_CLASS_API TypedProxy : public Proxy
+class GADGET_CLASS_API TypedProxy : public Proxy
 {
 public:
    TypedProxy() : mDeviceName("Unknown"), mTypedDevice(NULL)
@@ -117,7 +117,7 @@ public:
 
    virtual bool refresh()
    {
-      Input* input_dev = Kernel::instance()->getInputManager()->getDevice(mDeviceName);
+      Input* input_dev = vrj::Kernel::instance()->getInputManager()->getDevice(mDeviceName);
       if(NULL == input_dev)       // Not found, so stupify
       {
          vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "vjTypedProxy::refresh: Could not find device: " << mDeviceName << std::endl << vprDEBUG_FLUSH;

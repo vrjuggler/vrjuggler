@@ -65,7 +65,7 @@
 #include <sys/file.h>
 #endif
 
-#include <gad/Devices/Fakespace/PinchGloveStandalone.h>
+#include <gadget/Devices/Fakespace/PinchGloveStandalone.h>
 
 const std::string PinchGloveStandalone::mOpenHandString = "00000.00000";
 

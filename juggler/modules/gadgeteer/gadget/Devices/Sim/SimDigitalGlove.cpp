@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vpr/Util/Assert.h>
-#include <gad/Devices/Sim/SimDigitalGlove.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/Devices/Sim/SimDigitalGlove.h>
+#include <jccl/Config/ConfigChunk.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Default Constructor
@@ -68,9 +68,9 @@ bool SimDigitalGlove::config( ConfigChunk* chunk )
    mDigitalData = std::vector< int >( num_pairs, 0 );      // Initialize to all zeros
 
    ////////////////  left posProxy
-   vprASSERT( VJ_MAX_GLOVE_DEVS >= 2 );
+   vprASSERT( GADGET_MAX_GLOVE_DEVS >= 2 );
    const int LEFT_INDEX = 0, RIGHT_INDEX = 1;
-   if (LEFT_INDEX < VJ_MAX_GLOVE_DEVS)
+   if (LEFT_INDEX < GADGET_MAX_GLOVE_DEVS)
    {
       std::string glove_pos_proxy = chunk->getProperty( "glovePos" );    // Get the name of the pos_proxy
       if (glove_pos_proxy == std::string(""))
@@ -96,7 +96,7 @@ bool SimDigitalGlove::config( ConfigChunk* chunk )
 
    ////////////////  right posProxy
 
-   if (RIGHT_INDEX < VJ_MAX_GLOVE_DEVS)
+   if (RIGHT_INDEX < GADGET_MAX_GLOVE_DEVS)
    {
       std::string glove_pos_proxy = chunk->getProperty( "rightGlovePos" );    // Get the name of the pos_proxy
       if (glove_pos_proxy == std::string(""))
@@ -182,8 +182,8 @@ void SimDigitalGlove::updateFingerAngles()
     const int RIGHT_HAND = 1;
 
     vprASSERT( progress < 3 && progress >= 0 );
-    vprASSERT( LEFT_HAND < VJ_MAX_GLOVE_DEVS );
-    vprASSERT( RIGHT_HAND < VJ_MAX_GLOVE_DEVS );
+    vprASSERT( LEFT_HAND < GADGET_MAX_GLOVE_DEVS );
+    vprASSERT( RIGHT_HAND < GADGET_MAX_GLOVE_DEVS );
 
     // use the digital data set the angles for each joint.
     mLeftHand.setFingers( mDigitalData[LPINKY] == 1,
@@ -200,7 +200,7 @@ void SimDigitalGlove::updateFingerAngles()
     //Now, set the ugly ambiguously named array, mTheData:
 
     // if that assert failed, then at least the code will still run...
-    if ( LEFT_HAND < VJ_MAX_GLOVE_DEVS )
+    if ( LEFT_HAND < GADGET_MAX_GLOVE_DEVS )
     {
        //vprDEBUG(vprDBG_ALL,0)<<"Lpinky:"<<mLeftHand.pinky().mpj()<<","<<mLeftHand.pinky().pij()<<","<<mLeftHand.pinky().dij()<<","<<mLeftHand.pinky().abduct()<<"\n"<<vprDEBUG_FLUSH;
        // Left Pinky
@@ -239,7 +239,7 @@ void SimDigitalGlove::updateFingerAngles()
     }
 
     // if that assert failed, then at least the code will still run...
-    if ( RIGHT_HAND < VJ_MAX_GLOVE_DEVS )
+    if ( RIGHT_HAND < GADGET_MAX_GLOVE_DEVS )
     {
        //vprDEBUG(vprDBG_ALL,0)<<"Rpinky:"<<mRightHand.pinky().mpj()<<","<<mRightHand.pinky().pij()<<","<<mRightHand.pinky().dij()<<","<<mRightHand.pinky().abduct()<<"   "<<vprDEBUG_FLUSH;
        // Right Pinky

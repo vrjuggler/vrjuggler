@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
-#include <gad/Type/GloveGesture.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/GloveGesture.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Get a gesture name

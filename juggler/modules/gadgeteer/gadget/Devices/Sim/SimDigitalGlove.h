@@ -30,19 +30,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SIM_DIGITALGLOVE_H
-#define _VRJ_SIM_DIGITALGLOVE_H
+#ifndef _GADGET_SIM_DIGITALGLOVE_H
+#define _GADGET_SIM_DIGITALGLOVE_H
 //#pragma once
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Input.h>
-#include <gad/Devices/Fakespace/PinchGlove.h>
-#include <gad/Devices/Sim/SimInput.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Devices/Fakespace/PinchGlove.h>
+#include <gadget/Devices/Sim/SimInput.h>
 
-#include <gad/Type/Finger.h>
-#include <gad/Type/Hand.h>
+#include <gadget/Type/Finger.h>
+#include <gadget/Type/Hand.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Simulated digital device

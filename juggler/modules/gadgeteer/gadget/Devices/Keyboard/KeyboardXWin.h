@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_KEYBOARD_XWIN_H_
-#define _VRJ_KEYBOARD_XWIN_H_
+#ifndef _GADGET_KEYBOARD_XWIN_H_
+#define _GADGET_KEYBOARD_XWIN_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -41,10 +41,10 @@
 
 #include <vpr/Sync/Mutex.h>
 
-#include <gad/Type/Input.h>
-#include <gad/Type/Keyboard.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Keyboard.h>
 
-namespace vrj
+namespace gadget
 {
 
    class ConfigChunk;

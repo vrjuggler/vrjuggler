@@ -30,18 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_KEYBOARD_OSX_H_
-#define _VRJ_KEYBOARD_OSX_H_
+#ifndef _GADGET_KEYBOARD_OSX_H_
+#define _GADGET_KEYBOARD_OSX_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
-#include <gad/Type/Input.h>
-#include <gad/Type/Keyboard.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Keyboard.h>
 #include <vpr/Sync/Mutex.h>
 #include <Carbon/Carbon.h>
 #include <vrj/Kernel/OSXSystemFactory.h>
 
-namespace vrj
+namespace gadget
 {
 
    class ConfigChunk;
