@@ -30,6 +30,8 @@ public:
    */
 	static	void						startProfile( const char * name );
 
+	static	void						startProfile( const char * name, const unsigned int queue_size);
+
    /**
     * Stop timing and record the results.
     */
@@ -87,7 +89,12 @@ public:
 	{ 
 		ProfileManager::startProfile( name ); 
 	}
-	
+
+	ProfileSample( const char * name, const unsigned int queue_size)
+	{ 
+		ProfileManager::startProfile( name, queue_size); 
+	}
+
 	~ProfileSample( void )					
 	{ 
 		ProfileManager::stopProfile(); 
@@ -98,6 +105,18 @@ public:
 #define	VPR_PROFILE( name )			vpr::ProfileSample __profile( name )
 #else
 #define	VPR_PROFILE( name )
+#endif
+
+#if defined(DEBUG) || defined(_DEBUG)
+#define	VPR_PROFILE_HISTORY( name, queue_size )			vpr::ProfileSample __profile( name, queue_size)
+#else
+#define	VPR_PROFILE_HISTORY( name, queue_size )
+#endif
+
+#if defined(DEBUG) || defined(_DEBUG)
+#define	VPR_PROFILE_RESULTS( )			*vpr::ProfileManager::getIterator()->printTree(*vpr::ProfileManager::getIterator());
+#else
+#define	VPR_PROFILE_RESULTS( )
 #endif
 
 } // end vpr namespace
