@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 
 #include <cstdlib>
 #include <string>
@@ -47,7 +47,7 @@
 #include <gadget/Devices/Tweek/TweekGadget.h>
 
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+GADGET_DRIVER_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::TweekGadget>(inputMgr);
 }
@@ -324,23 +324,9 @@ int TweekGadget::sample()
          ana_samples[i] = mAnalogDevs[i].first->getValue();
       }
 
-      mPosSamples.lock();
-      {
-         mPosSamples.addSample(pos_samples);
-      }
-      mPosSamples.unlock();
-
-      mDigitalSamples.lock();
-      {
-         mDigitalSamples.addSample(dig_samples);
-      }
-      mDigitalSamples.unlock();
-
-      mAnalogSamples.lock();
-      {
-         mAnalogSamples.addSample(ana_samples);
-      }
-      mAnalogSamples.unlock();
+      addPositionSample(pos_samples);
+      addDigitalSample(dig_samples);
+      addAnalogSample(ana_samples);
 
       status = 1;
    }
@@ -352,9 +338,9 @@ void TweekGadget::updateData()
 {
    if ( isActive() )
    {
-      mPosSamples.swapBuffers();
-      mDigitalSamples.swapBuffers();
-      mAnalogSamples.swapBuffers();
+      swapPositionBuffers();
+      swapDigitalBuffers();
+      swapAnalogBuffers();
    }
 }
 
