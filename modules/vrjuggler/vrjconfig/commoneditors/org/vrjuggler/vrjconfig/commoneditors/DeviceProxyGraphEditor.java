@@ -58,8 +58,7 @@ import org.vrjuggler.vrjconfig.commoneditors.devicegraph.*;
  * This editor handles all the details of setting up a
  * <code>org.vrjuggler.vrjconfig.commoneditors.DeviceGraph</code> that
  * instance based on a given configuration.  The graph is populated by
- * invoking <i>one</i> of the <code>setConfig()</code> methods
- * <i>exactly once</i>.
+ * invoking the <code>setConfig()</code> method <i>exactly once</i>.
  *
  * <p>
  * This editor can create a graph that allows the relationships between all
@@ -71,8 +70,6 @@ import org.vrjuggler.vrjconfig.commoneditors.devicegraph.*;
  * level editors would provide that part of the user interface.
  * </p>
  *
- * @see #setConfig(ConfigContext)
- * @see #setConfig(List,ConfigContext)
  * @see #setConfig(ConfigContext,ConfigElement)
  */
 public class DeviceProxyGraphEditor
