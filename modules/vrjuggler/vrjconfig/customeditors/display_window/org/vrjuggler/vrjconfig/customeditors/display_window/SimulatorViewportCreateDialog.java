@@ -46,7 +46,41 @@ public class SimulatorViewportCreateDialog
 {
    public SimulatorViewportCreateDialog()
    {
-      super("Basic Simulator Viewport Parameters");
+      this(null);
+   }
+
+   public SimulatorViewportCreateDialog(ConfigElement viewportElt)
+   {
+      super("Basic Simulator Viewport Parameters", viewportElt);
+
+      ConfigBrokerProxy broker = new ConfigBrokerProxy();
+      ConfigDefinition vp_def = broker.getRepository().get("default_simulator");
+
+      ConfigElement sim_elt;
+
+      if ( viewportElt == null )
+      {
+         ConfigElementFactory factory =
+            new ConfigElementFactory(broker.getRepository().getAllLatest());
+         sim_elt = factory.create("Junk", vp_def);
+      }
+      else
+      {
+         sim_elt =
+            (ConfigElement) viewportElt.getProperty("simulator_plugin", 0);
+      }
+
+      sim_elt.addConfigElementListener(this);
+
+      mCameraPosEditor =
+         new PropertyEditorPanel(sim_elt.getProperty("camera_pos", 0),
+                                 vp_def.getPropertyDefinition("camera_pos"),
+                                 sim_elt, 0, Color.white);
+      mWandPosEditor =
+         new PropertyEditorPanel(sim_elt.getProperty("wand_pos", 0),
+                                 vp_def.getPropertyDefinition("wand_pos"),
+                                 sim_elt, 0, Color.white);
+
       initUI();
       this.pack();
    }
@@ -96,22 +130,6 @@ public class SimulatorViewportCreateDialog
    protected void initUI()
    {
       super.initUI();
-
-      ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      ConfigDefinition vp_def = broker.getRepository().get("default_simulator");
-      ConfigElementFactory factory =
-         new ConfigElementFactory(broker.getRepository().getAllLatest());
-      ConfigElement elt = factory.create("Junk", vp_def);
-      elt.addConfigElementListener(this);
-
-      mCameraPosEditor =
-         new PropertyEditorPanel(elt.getProperty("camera_pos", 0),
-                                 vp_def.getPropertyDefinition("camera_pos"),
-                                 elt, 0, Color.white);
-      mWandPosEditor =
-         new PropertyEditorPanel(elt.getProperty("wand_pos", 0),
-                                 vp_def.getPropertyDefinition("wand_pos"),
-                                 elt, 0, Color.white);
 
       double main_size[][] = {{TableLayout.PREFERRED},
                               {TableLayout.PREFERRED, TableLayout.PREFERRED,
