@@ -33,7 +33,6 @@
  * Boston, MA 02111-1307, USA.
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 package org.vrjuggler.tweek;
 
 import java.io.File;
@@ -303,10 +302,12 @@ public class TweekCore
          }
          else if ( args[i].startsWith("--defaultbean=") )
          {
-            mValidateXML = true;
+            int start = args[i].indexOf('=') + 1;
+            defaultBean = args[i].substring(start);
          }
          else if ( args[i].startsWith("--validate") )
          {
+            mValidateXML = true;
          }
          else
          {
