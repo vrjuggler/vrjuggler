@@ -45,8 +45,8 @@
 #include <vpr/vprConfig.h>
 
 #include <string>
-#include <uuid/sysdep.h>
-#include <uuid/uuid.h>
+//#include <uuid/sysdep.h>
+//#include <uuid/uuid.h>
 
 #include <vpr/vprTypes.h>
 
@@ -110,7 +110,7 @@ public:
 
    union _vpr_guid
    {
-      uuid_t leach;
+      //uuid_t leach;
 
       struct _moz
       {
