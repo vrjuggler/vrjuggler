@@ -56,7 +56,7 @@ default: echo_info $(PROJECT_NAME)
 srcdir		= @srcdir@
 topdir		= @topdir@
 #top_srcdir	= @top_srcdir@
-CPP_UNIT	= $(srcdir)/../../../external
+CPP_UNIT	?= $(srcdir)/../../../external/cppunit
 
 CXX		= @CXX@
 CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
@@ -69,9 +69,7 @@ DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
 EXTRA_FLAGS	= 
 INCLUDES	= @INCLUDES@ -I$(topdir) \
                  -I$(srcdir) -I$(srcdir)/TestCases			\
-                 -I$(CPP_UNIT)/cppunit/CppUnit				\
-                 -I$(CPP_UNIT)/cppunit/CppUnit/framework			\
-                 -I$(CPP_UNIT)/cppunit/CppUnit/textui
+                 -I$(CPP_UNIT)/include
 OPTIMIZER	= @DBG_FLAGS@ -D_DEBUG
 LD		= @LD@
 LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF)
@@ -98,8 +96,11 @@ CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 # objects to be included in the project....
 # SRC Files
 TEST_SRCS = 
-CPPUNIT_TEXTUI_SRCS = TestRunner.cpp TextTestResult.cpp
-CPPUNIT_SRCS	= TestCase.cpp		\
+CPPUNIT_TEXTUI_SRCS = TextTestRunner.cpp TextTestResult.cpp
+CPPUNIT_SRCS	= Exception.cpp		\
+                  NotEqualException.cpp	\
+                  TestAssert.cpp	\
+                  TestCase.cpp		\
                   TestResult.cpp	\
                   TestFailure.cpp	\
                   TestSuite.cpp
@@ -115,7 +116,7 @@ DEPDIR =
 
 INCLUDE_PATHS = 
 PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases 				\
-               $(CPP_UNIT)/cppunit/CppUnit/framework $(CPP_UNIT)/cppunit/CppUnit/textui
+               $(CPP_UNIT)/src/cppunit
 MK_DIR = $(srcdir)/mk
 
 include ${MK_DIR}/mk.objs
