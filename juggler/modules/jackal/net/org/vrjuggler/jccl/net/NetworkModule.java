@@ -470,8 +470,10 @@ public class NetworkModule
             // not its parent input stream.
             if (e instanceof EOFException)
                 return;
-            else
+            else {
                 Core.consoleInfoMessage (component_name, e.toString());
+                e.printStackTrace();
+            }
         }
     }
 
