@@ -69,6 +69,8 @@ public:
 
    static std::string getChunkType() { return std::string("SimDigital");}
 
+   virtual std::vector<KeyModPair> getKeys() { return mSimKeys; }
+
 private:   
    std::vector<KeyModPair> mSimKeys;       //: The keys to press for digital simulation
 };
