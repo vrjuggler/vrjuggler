@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.ConfigEditor.ChunkDescUI;
+package org.vrjuggler.jccl.editorgui.chunkdescui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -40,16 +37,15 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import VjConfig.*;
-import VjControl.*;
-import VjComponents.UI.Widgets.*;
-import VjComponents.UI.EditorPanel;
-import VjComponents.ConfigEditor.*;
-import VjComponents.ConfigEditor.ConfigChunkUI.*;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.*;
+import org.vrjuggler.jccl.editorgui.configchunkui.*;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.EditorPanel;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 /** A panel for viewing/editing a single ChunkDesc
  *
- * @author Christopher Just
  * @version $Revision$
  */
 public class ChunkDescPanel

@@ -29,9 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor.ChunkDescUI;
+package org.vrjuggler.jccl.editorgui.chunkdescui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -39,13 +37,12 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import VjConfig.*;
-import VjComponents.UI.Widgets.*;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 
 /** Panel for displaying a single Property of a ConfigChunk.
  *
- * @author Christopher Just
  * @version $Revision$
  */
 public class PropertyDescPanel extends JPanel 
