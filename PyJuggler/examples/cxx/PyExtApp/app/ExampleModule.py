@@ -25,7 +25,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-from PyJuggler import gmtl
+import gmtl
 
 def myFunc(vec):
    print "Wand position:", vec
