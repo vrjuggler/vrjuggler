@@ -53,6 +53,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdlib.h>
+#include <string.h>
 #include <string>
 #include <sys/time.h>
 
@@ -65,6 +66,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <sys/param.h>
+#include <sys/utsname.h>
 
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/SystemBase.h>
@@ -135,6 +137,34 @@ public:
       }
 
       return status;
+   }
+
+   /**
+    * Returns the name of the host.
+    * For example the hostname of: vapor.vrjuggler.org is "vapor"
+    */
+   static std::string getHostname (void)
+   {
+      struct utsname buffer;
+
+      if ( uname(&buffer) == 0 )
+      {
+         char* temp;
+         temp = strchr(buffer.nodename, '.');
+
+         // If the node name contains the full host, dots and all, truncate it
+         // at the first dot.
+         if ( temp != NULL )
+         {
+            *temp = '\0';
+         }
+
+         return std::string(buffer.nodename);
+      }
+      else
+      {
+         return std::string("<hostname-lookup failed>");
+      }
    }
 };
 
