@@ -767,6 +767,16 @@ private:
     }
 
     // ------------------------------------------------------------------------
+    //: Print the system status as read from the server.
+    //
+    //! PRE: The system status has been read from the server using
+    //+      getSystemStatus().
+    //! POST: The system status information is printed to stdout in a
+    //        human-readable format.
+    // ------------------------------------------------------------------------
+    void printSystemStatus(void);
+
+    // ------------------------------------------------------------------------
     //: Print out the MotionStar information.
     //
     //! PRE: mPosinfo has valid data in it.
@@ -808,6 +818,7 @@ private:
     unsigned int            mTemp;
     unsigned char           mErtFlag;
     unsigned char           mButtonState;
+    unsigned char           mBirdCount;
 
     struct BIRDNET::BIRD_STATUS mBird[120];
     struct BIRDNET::HEADER      mCommand;
