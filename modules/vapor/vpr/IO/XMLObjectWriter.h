@@ -46,6 +46,7 @@
 #include <vector>
 
 #include <vpr/IO/ObjectWriter.h>
+#include <cppdom/cppdom.h>
 #include <string>
 #include <sstream>
 
@@ -62,38 +63,38 @@ class XMLObjectWriter : public ObjectWriter
 {
 public:
    XMLObjectWriter()
+      : mCurNode(NULL), mCurTarget(CdataTarget)
+   {;}
+
+   XMLObjectWriter(cppdom::NodePtr rootNode, cppdom::Node* curNode)
+      : mCurTarget(CdataTarget)
    {
-      mData = new std::vector<vpr::Uint8>;
-      mCurHeadPos = 0;
+      mRootNode = rootNode;
+      mCurNode = curNode;
    }
 
-   XMLObjectWriter(std::vector<vpr::Uint8>* data, unsigned curPos=0)
-   {
-      mData = data;
-      mCurHeadPos = curPos;
-   }
+   /** Get the data buffer.
+   * Return the data buffer representation of the current object tree 
+   */
+   std::vector<vpr::Uint8> getData();
 
-   std::vector<vpr::Uint8> getData()
-   { return mData; }
+   cppdom::NodePtr getRootNode()
+   { return mRootNode; }
 
    /** @name Tag and attribute handling */
    //@{
    /** Starts a new section/element of name tagName.
    */
-   virtual vpr::ReturnStatus beginTag(std::string tagName)
-   {;}
+   virtual vpr::ReturnStatus beginTag(std::string tagName);
    
    /** Ends the most recently named tag. */
-   virtual vpr::ReturnStatus endTag()
-   {;}
+   virtual vpr::ReturnStatus endTag();
 
    /** Starts an attribute of the name attributeName */
-   virtual vpr::ReturnStatus beginAttribute(std::string attributeName)
-   {;}
+   virtual vpr::ReturnStatus beginAttribute(std::string attributeName);
 
    /** Ends the most recently named attribute */
-   virtual vpr::ReturnStatus endAttribute()
-   {;}
+   virtual vpr::ReturnStatus endAttribute();
    //@}
 
    virtual vpr::ReturnStatus writeUint8(vpr::Uint8 val);
@@ -105,83 +106,207 @@ public:
    virtual vpr::ReturnStatus writeString(std::string val);
    virtual vpr::ReturnStatus writeBool(bool val);
 
-   /* Write raw data of length len */
-   vpr::ReturnStatus writeRaw(vpr::Uint8* data, unsigned len=1);
+protected:
+   enum CurTarget 
+   { AttribTarget, /**< We are currently targetting an attribute */
+     CdataTarget /**< We are currently targetting cdata */
+    };
 
-public:
-   std::stringstream    mStringData;
-   
+    /** Helper to write the data to the current string */
+    template<class T>
+    vpr::ReturnStatus writeValueStringRep(const T& val)
+    {
+       std::ostringstream oss;
+       oss << val;
+       if(AttribTarget == mCurTarget)
+       { 
+          if(!mCurAttribData.empty())  // Add spacing
+          { mCurAttribData += ' '; }
+          mCurAttribData += oss.str();
+          //std::cout << "writingValueStringRep: Attrib\nval:" << val << std::endl
+          //          << "str rep:" << oss.str() << std::endl
+          //          << "new attrib data:" << mCurAttribData << std::endl;
+       }
+       else
+       { 
+          if(!mCurCData.empty())  // Add spacing
+          { mCurCData += ' '; }
+          mCurCData += oss.str();
+          //std::cout << "writingValueStringRep: Cdata\nval:" << val << std::endl
+          //          << "str rep:" << oss.str() << std::endl
+          //          << "new cdata data:" << mCurCData << std::endl;
+       }
+
+       return vpr::ReturnStatus::Succeed;
+    }
+
+protected:
+   /* cppdom nodes
+   * When constructed, these are both null.
+   */
+   cppdom::NodePtr   mRootNode;        /**< Base node of the tree */
+   cppdom::Node*     mCurNode;         /**< Element we are currently working with. (ptr since getParent is weak) */
+   std::string       mCurCData;        /**< Temporary place to store the value of the current cdata */
+   std::string       mCurAttribData;   /**< Temporary place to store the current attribute data */
+   std::string       mCurAttribName;   /**< The name of the current attribute we are working on */
+   CurTarget         mCurTarget;       /**< Are we currently writing to attributes or cdata */
 };
 
-/* Write out the single byte.
-* @post: data = old(data)+val, mCurHeadPos advaced 1
+inline std::vector<vpr::Uint8> XMLObjectWriter::getData()
+{
+   vprASSERT(mRootNode.get() != NULL);
+   std::stringstream oss;
+   mRootNode->save(oss, 0);
+   std::string str_rep = oss.str();
+   std::vector<vpr::Uint8> ret_buffer(str_rep.begin(), str_rep.end());
+   return ret_buffer;
+}
+
+/** Starts a new section/element of name tagName.
+* When mCurNode is Null, then we need to allocated a new node in its place.
+* And also check the Root node to set it to (this is the first call to beginTag)
 */
-inline vpr::ReturnStatus BufferObjectWriter::writeUint8(vpr::Uint8 val)
+inline vpr::ReturnStatus XMLObjectWriter::beginTag(std::string tagName)
 {
-   return writeRaw(&val, 1);
-}
-
-inline vpr::ReturnStatus BufferObjectWriter::writeUint16(vpr::Uint16 val)
-{
-   vpr::Uint16 nw_val = vpr::System::Htons(val);
-
-   return writeRaw((vpr::Uint8*)&nw_val, 2);
-}
-
-inline vpr::ReturnStatus BufferObjectWriter::writeUint32(vpr::Uint32 val)
-{
-   vpr::Uint32 nw_val = vpr::System::Htonl(val);
-
-   return writeRaw((vpr::Uint8*)&nw_val, 4);
-}
-
-inline vpr::ReturnStatus BufferObjectWriter::writeUint64(vpr::Uint64 val)
-{
-   vpr::Uint64 nw_val = vpr::System::Htonll(val);
-
-   return writeRaw((vpr::Uint8*)&nw_val, 8);
-}
-
-inline vpr::ReturnStatus BufferObjectWriter::writeFloat(float val)
-{
-   // We are writing the float as a 4 byte value
-   BOOST_STATIC_ASSERT(sizeof(float) == 4);
-   vpr::Uint32 nw_val = vpr::System::Htonl(*((vpr::Uint32*)&val));
-
-   return writeRaw((vpr::Uint8*)&nw_val, 4);
-}
-
-inline vpr::ReturnStatus BufferObjectWriter::writeDouble(double val)
-{
-   // We are writing the double as a 8 byte value
-   BOOST_STATIC_ASSERT(sizeof(double) == 8);
-   vpr::Uint64 nw_val = vpr::System::Htonll(*((vpr::Uint64*)&val));
-
-   return writeRaw((vpr::Uint8*)&nw_val, 8);
-}
-
-
-inline vpr::ReturnStatus BufferObjectWriter::writeString(std::string val)
-{
-   for(unsigned i=0; i<val.length();++i)
+   cppdom::NodePtr new_node;
+   
+   if(mCurNode == NULL)    // First node created, so initialize everything
    {
-      writeRaw((vpr::Uint8*)&(val[i]),1);
+      cppdom::ContextPtr cxt(new cppdom::Context);
+      new_node = cppdom::NodePtr(new cppdom::Node(tagName, cxt));
+      vprASSERT(mRootNode.get() == NULL && "Tried to root the writer twice");
+      mRootNode = new_node;
+      mCurNode = new_node.get();
+   }
+   else                          // Create new child of current node
+   {
+      // Check for pending cdata to write
+      // - If there is some, then write it out
+      if(!mCurCData.empty())
+      {
+         mCurNode->setCdata(mCurCData);
+         mCurCData.clear();
+      }
+
+      // Add new child node
+      new_node = cppdom::NodePtr(new cppdom::Node(tagName, mRootNode->getContext()));
+      mCurNode->addChild(new_node);
+      mCurNode = new_node.get();
+   }
+   return vpr::ReturnStatus::Succeed;
+}
+
+/** Ends the most recently named tag. 
+* Close off the current node and set current to it's parent.
+*/
+inline vpr::ReturnStatus XMLObjectWriter::endTag()
+{
+   vprASSERT(mCurNode != NULL);
+   //vprASSERT(mCurNode->getParent() != NULL);
+
+   // Write out the cdata
+   if(!mCurCData.empty())
+   {
+      mCurNode->setCdata(mCurCData);
+      mCurCData.clear();
+   }
+
+   cppdom::Node* cur_parent = mCurNode->getParent();     // Get cur node's parent node
+   mCurNode = cur_parent;                                // Set to new current node
+
+   // If it had some cdata, then get it to initialize the current cdata 
+   // so we can write more data to it
+   if(NULL != mCurNode)
+   {
+      mCurCData = mCurNode->getCdata();
    }
 
    return vpr::ReturnStatus::Succeed;
 }
 
-inline vpr::ReturnStatus BufferObjectWriter::writeBool(bool val)
+/** Starts an attribute of the name attributeName */
+inline vpr::ReturnStatus XMLObjectWriter::beginAttribute(std::string attributeName)
 {
-   return writeRaw((vpr::Uint8*)&val, 1);
+   // Make sure that we have not called beginAttribute without an endAttribute
+   vprASSERT(mCurAttribData.empty() && "There should not be any attribute data now.  It should have been flushed");
+   vprASSERT(mCurAttribName.empty() && "Didn't close previous attribute");
+
+   mCurAttribName = attributeName;
+   mCurTarget = AttribTarget;
+   return vpr::ReturnStatus::Succeed;
 }
 
-inline vpr::ReturnStatus BufferObjectWriter::writeRaw(vpr::Uint8* data, unsigned len)
+/** Ends the most recently named attribute */
+inline vpr::ReturnStatus XMLObjectWriter::endAttribute()
 {
-   for(unsigned i=0;i<len;++i)
-      mData->push_back(data[i]);
-   mCurHeadPos += len;
+   vprASSERT(AttribTarget == mCurTarget);
+
+   mCurNode->setAttribute(mCurAttribName, mCurAttribData);
+   //std::cout << "Setting attrib:[" << mCurAttribName << "] value:[" << mCurAttribData << "]\n";
+
+   mCurAttribName.clear();
+   mCurAttribData.clear();
+
+   mCurTarget = CdataTarget;
+   
    return vpr::ReturnStatus::Succeed;
+}
+//@}
+
+/* Write out the single byte.
+* @post: data = old(data)+val, mCurHeadPos advaced 1
+*/
+inline vpr::ReturnStatus XMLObjectWriter::writeUint8(vpr::Uint8 val)
+{
+   // Cast to uint16 so it doesn't get written as a char
+   return writeValueStringRep(vpr::Uint16(val));
+}
+
+inline vpr::ReturnStatus XMLObjectWriter::writeUint16(vpr::Uint16 val)
+{
+   return writeValueStringRep(val);
+}
+
+inline vpr::ReturnStatus XMLObjectWriter::writeUint32(vpr::Uint32 val)
+{
+   return writeValueStringRep(val);
+}
+
+inline vpr::ReturnStatus XMLObjectWriter::writeUint64(vpr::Uint64 val)
+{
+   return writeValueStringRep(val);
+}
+
+inline vpr::ReturnStatus XMLObjectWriter::writeFloat(float val)
+{
+   return writeValueStringRep(val);
+}
+
+inline vpr::ReturnStatus XMLObjectWriter::writeDouble(double val)
+{
+   return writeValueStringRep(val);
+}
+
+inline vpr::ReturnStatus XMLObjectWriter::writeString(std::string val)
+{
+   if(AttribTarget == mCurTarget)
+   { 
+      vprASSERT(mCurAttribData.empty() && "Can't add string to non-empty attribute");    
+      mCurAttribData = val;
+   }
+   else
+   { 
+      if(!mCurCData.empty())  // Add spacing
+         mCurCData += ' ';
+      mCurCData += '"' + val + '"';    // Add string in quotes
+   }
+   
+   return vpr::ReturnStatus::Succeed;
+}
+
+inline vpr::ReturnStatus XMLObjectWriter::writeBool(bool val)
+{
+   return writeValueStringRep(val);
 }
 
 } // namespace vpr
