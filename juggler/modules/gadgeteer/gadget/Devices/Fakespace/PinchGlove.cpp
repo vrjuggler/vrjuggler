@@ -47,6 +47,7 @@ namespace gadget
 
 bool PinchGlove::config(jccl::ConfigChunkPtr c)
 {
+   Input::config(c);
    mPortName = c->getProperty<std::string>("port");
    mBaudRate = c->getProperty<int>("baud");
    vprASSERT(mThread == NULL);      // This should have been set by Input(c)

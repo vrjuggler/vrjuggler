@@ -265,7 +265,7 @@ int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, unsig
    records[0] = 0;
    written = 0;
 
-   status = mPort->read(&buf[0], 1, written, vpr::Interval::NoWait);
+   status = mPort->read(&buf[0], 1, written);
 
    while ( (records[numbytes-written] != END_BYTE) && status == vpr::ReturnStatus::Succeed )
    {
