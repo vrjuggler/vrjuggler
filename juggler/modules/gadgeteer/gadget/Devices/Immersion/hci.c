@@ -11,7 +11,7 @@
  *      Requires HCI firmware version 2.0 or later
  */
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <stdio.h>
 #include <gad/Devices/Immersion/hci.h>
 #include <gad/Devices/Immersion/driveunx.h>
