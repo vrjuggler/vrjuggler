@@ -537,40 +537,7 @@ public class TweekFrame
    {
       if ( fireFrameClosing(new TweekFrameEvent(e.getWindow(), e.getID())) )
       {
-         // Note: When the last displayable window within the Java virtual
-         //       machine (VM) is disposed of, the VM may terminate. See AWT
-         //       Threading Issues for more information:
-         //
-         // http://java.sun.com/j2se/1.4.2/docs/api/java/awt/Window.html#dispose()
-         // http://java.sun.com/j2se/1.4.2/docs/api/java/awt/doc-files/AWTThreadIssues.html
-         // http://java.sun.com/docs/books/tutorial/uiswing/events/windowlistener.html 
-
-         // A pause so user can see the message before the window actually
-         // closes.
-         ActionListener task = new ActionListener()
-         {
-            boolean alreadyDisposed = false;
-            public void actionPerformed(ActionEvent e)
-            {
-               if (!alreadyDisposed)
-               {
-                  alreadyDisposed = true;
-                  dispose();
-               }
-               else
-               {
-                  // Make sure the program exits.
-                  System.exit(0);
-               }
-            }
-         };
-
-         // Fire every half second.
-         javax.swing.Timer timer = new javax.swing.Timer(500, task);
-
-         // First delay 2 seconds.
-         timer.setInitialDelay(2000);
-         timer.start();
+         shutdown();
       }
    }
 
@@ -771,6 +738,49 @@ public class TweekFrame
       }
 
       mBeanPrefsDialog.addPrefsBean(bean);
+   }
+
+   private void shutdown()
+   {
+      for ( int i = 0; i < mORBs.size(); i++ )
+      {
+         ((CorbaService) mORBs.elementAt(i)).shutdown(true);
+      }
+
+      // Note: When the last displayable window within the Java virtual
+      //       machine (VM) is disposed of, the VM may terminate. See AWT
+      //       Threading Issues for more information:
+      //
+      // http://java.sun.com/j2se/1.4.2/docs/api/java/awt/Window.html#dispose()
+      // http://java.sun.com/j2se/1.4.2/docs/api/java/awt/doc-files/AWTThreadIssues.html
+      // http://java.sun.com/docs/books/tutorial/uiswing/events/windowlistener.html 
+
+      // A pause so user can see the message before the window actually
+      // closes.
+      ActionListener task = new ActionListener()
+      {
+         boolean alreadyDisposed = false;
+         public void actionPerformed(ActionEvent e)
+         {
+            if (!alreadyDisposed)
+            {
+               alreadyDisposed = true;
+               dispose();
+            }
+            else
+            {
+               // Make sure the program exits.
+               System.exit(0);
+            }
+         }
+      };
+
+      // Fire every half second.
+      javax.swing.Timer timer = new javax.swing.Timer(500, task);
+
+      // First delay 2 seconds.
+      timer.setInitialDelay(2000);
+      timer.start();
    }
 
    /**
@@ -1243,14 +1253,11 @@ public class TweekFrame
     */
    private void fileQuitAction(ActionEvent e)
    {
-      fireFrameClosing(new TweekFrameEvent(this, WindowEvent.WINDOW_CLOSING));
-
-      for ( int i = 0; i < mORBs.size(); i++ )
+      if ( fireFrameClosing(new TweekFrameEvent(this, WindowEvent.WINDOW_CLOSING)) )
       {
-         ((CorbaService) mORBs.elementAt(i)).shutdown(true);
+         shutdown();
+         System.exit(0);
       }
-
-      System.exit(0);
    }
 
    /**
