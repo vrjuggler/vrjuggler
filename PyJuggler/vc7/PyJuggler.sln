@@ -31,6 +31,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PyJuggler.cluster module", 
 		{9A13DC64-2EB4-40CF-95A8-5B17965D771A} = {9A13DC64-2EB4-40CF-95A8-5B17965D771A}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PyJuggler.snx module", "snx\snx.vcproj", "{F8FDFE2C-4471-433A-A7A4-3F2ECCB55BE0}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -65,6 +69,10 @@ Global
 		{8C2E7E34-24C3-499A-85D0-F3A989803CE9}.Debug.Build.0 = Debug|Win32
 		{8C2E7E34-24C3-499A-85D0-F3A989803CE9}.Release.ActiveCfg = Release|Win32
 		{8C2E7E34-24C3-499A-85D0-F3A989803CE9}.Release.Build.0 = Release|Win32
+		{F8FDFE2C-4471-433A-A7A4-3F2ECCB55BE0}.Debug.ActiveCfg = Debug|Win32
+		{F8FDFE2C-4471-433A-A7A4-3F2ECCB55BE0}.Debug.Build.0 = Debug|Win32
+		{F8FDFE2C-4471-433A-A7A4-3F2ECCB55BE0}.Release.ActiveCfg = Release|Win32
+		{F8FDFE2C-4471-433A-A7A4-3F2ECCB55BE0}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		README.html = README.html
