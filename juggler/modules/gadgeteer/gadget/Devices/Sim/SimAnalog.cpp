@@ -74,18 +74,31 @@ void SimAnalog::updateData()
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::updateData()\n"<< vprDEBUG_FLUSH;
 
    // -- Update analog data --- //
-   for (unsigned int i = 0; i < mSimKeysUp.size(); i++)
+   for (unsigned int i = 0; i < mSimKeysUp.size(); ++i)
    {
-      mAnaData[i] = (float)mAnaData[i] + (float)checkKeyPair(mSimKeysUp[i]) * mAnaStep;
-      mAnaData[i] = (float)mAnaData[i] - (float)checkKeyPair(mSimKeysDown[i]) * mAnaStep;
+      mAnaData[i].setAnalogData(mAnaData[i].getAnalogData()
+                                + (float)checkKeyPair(mSimKeysUp[i]) * mAnaStep);
+      mAnaData[i].setAnalogData(mAnaData[i].getAnalogData()
+                                - (float)checkKeyPair(mSimKeysDown[i]) * mAnaStep);
 
-      if ((float)mAnaData[i] < 0.0f) mAnaData[i] = 0.0f;
-      if ((float)mAnaData[i] > 255.0f) mAnaData[i] = 255.0f;
+      if (mAnaData[i].getAnalogData() < 0.0f)
+      {   mAnaData[i].setAnalogData(0.0f); }
+      if (mAnaData[i].getAnalogData() > 255.0f)
+      {  mAnaData[i].setAnalogData(255.0f); }
 
       float f;
-      this->normalizeMinToMax( (float)mAnaData[i], f );
+      this->normalizeMinToMax( mAnaData[i].getAnalogData(), f );
       mAnaData[i] = f;
+
+      mAnaData[i].setTime();     // Set the sample time
    }
+
+   // Locks and then swaps the indices.
+   mAnalogSamples.lock();
+   mAnalogSamples.addSample(mAnaData);
+   mAnalogSamples.unlock();
+
+   mAnalogSamples.swapBuffers();
 }
 
 };
