@@ -41,6 +41,7 @@
 #include <gadget/Devices/Immersion/Ibox.h>
 #include <gadget/Devices/Fakespace/PinchGlove.h>
 #include <gadget/Devices/5DT/DataGlove.h>
+#include <gadget/Devices/Polhemus/Fastrack.h>
 
 // Sims
 #include <gadget/Devices/Sim/SimAnalog.h>
@@ -106,12 +107,14 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<IBox>* ibox = new DeviceConstructor<IBox>;
    DeviceConstructor<PinchGlove>* pinch_glove = new DeviceConstructor<PinchGlove>;
    DeviceConstructor<DataGlove>* data_glove = new DeviceConstructor<DataGlove>;
+   DeviceConstructor<Fastrack>* fastrack = new DeviceConstructor<Fastrack>;
 
    if( (NULL == flock)        ||
        (NULL == intersense)   ||
        (NULL == ibox)         ||
        (NULL == pinch_glove)  ||
        (NULL == data_glove)   ||
+       (NULL == fastrack)     ||
        (NULL == motion_star)   )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
