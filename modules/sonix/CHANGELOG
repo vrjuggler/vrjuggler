@@ -9,14 +9,14 @@ Dec-05-2000 subatomic rewrote vjSoundManager to allow run-time reconfiguration
                       like all the other components of VR Juggler.
                       this code is a prototype, and is not yet good enough to go 
                       into the main distribution of VR Juggler.
-Jun-21-2001 subatomic AudioJuggler is born.  Based on my previous two revisions, 
-                      I've refactored the vjSoundManager into two parts.  One 
-                      part (core) that can stand alone as a useful reconfigurable 
+Jun-21-2001 subatomic Newest Juggler Audio is born.  Based on my previous two 
+                      revisions, I've refactored the vjSoundManager into two parts.  
+                      One part (core) that can stand alone as a useful reconfigurable 
                       sound adapter, and one part that allows VR Juggler to 
                       communicate with the core.  This newest derivitive of the 
                       VR Juggler sound manager finally allows runtime 
                       reconfiguration of the sounds and their respective sound 
                       implementations.  Also it allows extension of available 
                       sound drivers at runtime to help facilitate an always 
-                      running system.  This iteration of the sound code will be 
-                      called AudioJuggler.
+                      running system.  This iteration of the VR Juggler sound code 
+                      will be called AudioJuggler.

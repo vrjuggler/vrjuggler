@@ -1,16 +1,19 @@
 # What is this: AudioJuggler
 #
 # Organization Credits: Iowa State University
-#                  Virtual Reality Applications Center (VRAC)
+#                       Virtual Reality Applications Center (VRAC)
 #
 # Contributors: 
-#            Kevin Meinert, Patrick Hartling, Carolina Cruz-Neira
-# 
+#                       Kevin Meinert, Carolina Cruz-Neira
+#
 
 ------------------
 Table of contents:
 ------------------
 
+   0. Introduction
+      A. What is AudioJuggler?
+      B. Audio APIs supported (compatability)
    1. Getting started
       A. Supported platforms
       B. Minimum requirements (compiler, libraries, etc.)
@@ -26,6 +29,35 @@ Table of contents:
       A. Overview
       B. Details
       C. Advanced topics
+
+
+==============================================================================
+0. Introduction
+==============================================================================
+
+   A. What is AudioJuggler? 
+      
+      AudioJuggler is a project designed to: 
+      - Allow reconfiguration of Sound API 
+        (from AudioWorks to OpenAL to OpenML? for example) 
+      - Allow reconfiguration of sound resources 
+        (from Bang==bang.wav to Bang==bigbang.wav for example). 
+      - Allow access to many audio APIs so that an application can simply 
+        program to one interface. This effectively moves the Sound API 
+        descision to the application user or sysadmin.
+
+   B. Audio APIs supported (compatability)
+
+      - Currently AudioJuggler implements: 
+        - OpenAL interface 
+        - AudioWorks interface 
+      - Future plans to implement: 
+        - OpenML? interface 
+        - UCLA's mac sound server interface. 
+      - Also wanted: 
+        - If someone wants to volunteer, we're also interested in writing 
+          an interface to Lake's sound API (contact me: kevn@vrac.iastate.edu) 
+
 
 ==============================================================================
 1. Getting started
