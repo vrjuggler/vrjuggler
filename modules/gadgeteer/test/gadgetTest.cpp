@@ -33,17 +33,12 @@
 #include <iostream>
 #include <string>
 #include <unistd.h> // for usleep
-#include <stdlib>
-
-//#include <gadget/Devices/Fakespace/PinchGloveStandalone.h>
-//#include <gadget/Devices/Immersion/IboxStandalone.h>
 
 #include "PinchGloveAdaptor.h"
 #include "IboxAdaptor.h"
 #include "FlockAdaptor.h"
 
 #include <iomanip>
-//#include <vrj/Math/Coord.h>
 #include <vpr/System.h>
 ////////////////////////////////////////////////////////////////////////////////
 ////         Adaptor Includes
