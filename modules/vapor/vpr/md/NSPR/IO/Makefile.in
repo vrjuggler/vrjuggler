@@ -50,21 +50,21 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/md/NSPR/IO
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VPR_LIBRARY)
+includedir=	@includedir@/vpr/md/NSPR/IO
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
 
 # Prefix for recursive stuff.
-DIRPRFX		= vpr/md/NSPR/IO/
+DIRPRFX=	vpr/md/NSPR/IO/
 
-SUBDIR		= Socket
+SUBDIR=		Socket
 
 ifneq (@SIMULATOR@, Y)
 ifeq (@SUBSYSTEM@, NSPR)
-SRCS		= IOSysNSPR.cpp			\
-                  SelectorImplNSPR.cpp
+   SRCS=	IOSysNSPR.cpp		\
+		SelectorImplNSPR.cpp
 endif
 endif
 
@@ -75,6 +75,6 @@ include $(MKPATH)/dpp.obj-subdir.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif

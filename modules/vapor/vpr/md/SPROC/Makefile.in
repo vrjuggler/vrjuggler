@@ -49,11 +49,11 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= vpr/md/SPROC/
+DIRPRFX=	vpr/md/SPROC/
 
-SUBDIR		= SharedMem	\
-                  Sync		\
-                  Thread
+SUBDIR=		SharedMem	\
+		Sync		\
+		Thread
 
 $(RECTARGET): recursive
 
