@@ -210,7 +210,7 @@ namespace jccl {
         std::vector<ConfigChunkPtr> chunks;
         int num_lost_deps(0);
 
-        // NOTE: can't hold this lock because the depSatisfied routines make use of the activeLock as well
+        // NOTE: can't hold this lock because the isSatisfied routines make use of the activeLock as well
         // NOTE: Make the copy of the chunks so that we can iterate without fear of active changing
         mActiveLock.acquire();
         chunks = mActiveConfig.getChunks();   // Get a copy of the chunks
@@ -218,7 +218,7 @@ namespace jccl {
 
         // Now test them
         for(unsigned int i=0;i<chunks.size();i++) {
-            if(!dep_mgr->depSatisfied(chunks[i])) {     // We are not satisfied
+            if(!dep_mgr->isSatisfied(chunks[i])) {     // We are not satisfied
       
                 vprDEBUG_NEXT(vprDBG_ALL,1) << chunks[i]->getProperty("name")
                                             << " type: " << ((std::string)chunks[i]->getType()).c_str()

@@ -42,63 +42,68 @@
 
 namespace jccl {
 
-//: Object used for creating devices
-//!NOTE: Singleton
+    /** A dependency checker for dynamically added components.
+     *  The DependencyManager works in conjunction with the
+     *  ConfigManager, and checks for dependencies for any
+     *  configuration add request.
+     *  The default behavior is to simply check the ConfigManager's
+     *  active list for all ConfigChunk's that the request's
+     *  ConfigChunk refers to.  However, additional DepCheckers 
+     *  can be registered to provide specialized functionality.
+     *
+     *  Note that this class is a singleton - primarily so that the 
+     *  master list of DepCheckers can be appended to by any entity
+     *  in the system.
+     */
 class JCCL_CLASS_API DependencyManager
 {
+
 private:
-   // Singleton so must be private
-   DependencyManager() : mDepCheckers(), mDefaultChecker()
-   {
-      mDepCheckers = std::vector<DepChecker*>(0);
-      vprASSERT(mDepCheckers.size() == 0);
-      //debugDump();
-   }
+    /** Constructor. Private since this is a singleton. */
+    DependencyManager ();
+
 
 public:
-   // Called to register a new checker with the system
-   void registerChecker(DepChecker* checker)
-   {
-      vprASSERT(checker != NULL);
-      mDepCheckers.push_back(checker);          // Add the checker to the list
-      vprDEBUG(jcclDBG_RECONFIGURATION,vprDBG_CONFIG_LVL)
-              << "DependencyManager: Registered: "
-              << std::setiosflags(std::ios::right) << std::setw(25) << std::setfill(' ') << checker->getCheckerName().c_str() << std::resetiosflags(std::ios::right)
-              << "  type: " << typeid(*checker).name() << std::endl
-              << vprDEBUG_FLUSH;
-      debugDump();
-   }
+
+    /** registers a new dependency checker. */
+    void registerChecker (DepChecker* checker);
 
 
+    /** Checks if dependencies are satisfied for the given chunk.
+     *  @return true iff dependencies for chunk are satisfied.
+     */
+    bool isSatisfied (ConfigChunkPtr chunk);
 
-   //: Are the dependencies satisfied for the given chunk?
-   //
-   //!RETURNS: true - dependencies are currently satisifed for the chunk
-   bool depSatisfied(ConfigChunkPtr chunk)
-   {
-      vprASSERT(NULL != chunk.get());
-      DepChecker* checker = findDepChecker(chunk);
-      return checker->depSatisfied(chunk);
-   }
 
-   void debugOutDependencies(ConfigChunkPtr chunk,int dbg_lvl)
-   {
-      vprASSERT(NULL != chunk.get());
-      DepChecker* checker = findDepChecker(chunk);
-      checker->debugOutDependencies(chunk,dbg_lvl);
-   }
+    /** Prints information about chunk's dependencies. */
+    void debugOutDependencies (ConfigChunkPtr chunk, int dbg_lvl);
+    
 
 private:
-   //: Returns a dependency checker for the given chunk
-   //! RETURNS: If checker found, it is returned
-   //+          Otherwise, it returns the default checker
-   DepChecker* findDepChecker(ConfigChunkPtr chunk);
 
-   void debugDump();
+    /** Finds a DepChecker that can handle chunk.
+     *  DepCheckers list the ConfigChunk types that they know how to 
+     *  handle; this is checked versus chunk.getDescToken().
+     *  @return A DepChecker that knows how to handle chunk.  If no
+     *          specific checker is found, the default checker is
+     *          returned.  If multiple specific DepCheckers claim to
+     *          be able to handle chunk, the choice is implementation
+     *          dependent.
+     */
+    DepChecker* findDepChecker(ConfigChunkPtr chunk);
 
+
+    /** Prints information about the DependencyManager's state to vprDEBUG. */
+    void debugDump();
+
+    
 private:
-   std::vector<DepChecker*> mDepCheckers;     //: List of the device constructors
-   DepChecker               mDefaultChecker;  //: The default checker
+
+    /** List of dependency checkers. */
+    std::vector<DepChecker*> mDepCheckers;
+
+    /** Default dependency checker. */
+    DepChecker               mDefaultChecker;  
 
     vprSingletonHeader(DependencyManager);
 
