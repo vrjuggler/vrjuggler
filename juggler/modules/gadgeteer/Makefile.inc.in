@@ -86,6 +86,8 @@ endif
 
 GADGET_LIB_STATIC	= $(GADGET_LIBRARY).$(STATICLIB_EXT)
 GADGET_LIB_DYNAMIC	= $(GADGET_LIBRARY).$(DYNAMICLIB_EXT)
+GADGET_PROF_LIB_STATIC	= $(GADGET_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+GADGET_PROF_LIB_DYNAMIC	= $(GADGET_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # On Linux, we have to compile the Performer library with -O for things to
 # link properly.
@@ -123,7 +125,7 @@ afterbuild:
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-$(LIBDIR)/$(GADGET_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(GADGET_LIB_STATIC) $(LIBDIR)/$(GADGET_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 #ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
@@ -140,7 +142,7 @@ $(LIBDIR)/$(GADGET_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(GADGET_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(GADGET_LIB_DYNAMIC) $(LIBDIR)/$(GADGET_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
