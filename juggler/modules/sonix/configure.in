@@ -63,8 +63,8 @@ DPP_SYSTEM_SETUP
 CC_ERR=''
 CXX_ERR=''
 
-_plx_save_CFLAGS="$CFLAGS"
-_plx_save_CXXFLAGS="$CXXFLAGS"
+_aj_save_CFLAGS="$CFLAGS"
+_aj_save_CXXFLAGS="$CXXFLAGS"
 
 # If no alternate C compiler was specified, check to see if it is necessary
 # to force the use of a specific compiler on a given platform.
@@ -162,10 +162,27 @@ elif test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
 
+# $srcdir is the root directory of the AJ source tree.  To get a value
+# for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
+# return to the directory where configure is being run ($topdir).
+cd "$srcdir"
+AJROOT_ABS=`pwd`
+
+cd "$AJROOT_ABS/../.."
+JUGGLERROOT_ABS=`pwd`
+cd "$topdir"
+
+# Define the base path to the source directory using $AJROOT_ABS as an
+# alternative to using $srcdir.
+AJ_SRCDIR='$(AJROOT_ABS)'
+UNIX_AJROOT_ABS="$AJROOT_ABS"
+UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
-    SAFE_PLXROOT_ABS=`unix2dos -p "$PLXROOT_ABS"`
-    PLX_SRCDIR=`unix2dos "$PLX_SRCDIR"`
+    SAFE_AJROOT_ABS=`unix2dos -p "$AJROOT_ABS"`
+    SAFE_JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
+    AJ_SRCDIR=`unix2dos "$AJ_SRCDIR"`
 
     if test "x$DEPEND_EXTRAS" != "x" ; then
         DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
@@ -183,7 +200,8 @@ if test "x$OS_TYPE" = "xWin32" ; then
 
     APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
 else
-    SAFE_PLXROOT_ABS="$PLXROOT_ABS"
+    SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+    SAFE_AJROOT_ABS="$AJROOT_ABS"
 fi
 
 
@@ -249,6 +267,8 @@ AC_SUBST(application_ldflags)
 AC_SUBST(application_libs)
 AC_SUBST(AUDIOWORKS_API)
 AC_SUBST(OPENAL_API)
+AC_SUBST(SAFE_AJROOT_ABS)
+AC_SUBST(SAFE_JUGGLERROOT_ABS)
 
 dnl debugging output...
 dnl echo "+ setting aj_includes == $aj_includes"

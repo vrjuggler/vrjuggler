@@ -70,6 +70,7 @@
 # RANLIB          - Path to ranlib(1) binary if it is available. ':'
 #                   otherwise.
 # ROOT_ABS      - checked out project dir
+# JUGGLERROOT_ABS - The absolute path to the root of the juggler source tree.
 #
 # C_COMPILE     - Command for compiling C code.
 # CXX_COMPILE   - Command for compiling C++ code.
@@ -133,7 +134,7 @@ LDOPTS          = @LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)          \
                   $(DSOVERSIONOPTS)
 LDOPTS_DBG      = @LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
 LDOPTS_OPT      = @LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
-MKPATH		?= @projectdir@/Doozer++/mk
+MKPATH		?= $(JUGGLERROOT_ABS)/Doozer++/mk
 OBJEXT		= @OBJEXT@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 OBJ_BUILD_FLAG	= @OBJ_BUILD_FLAG@
@@ -143,6 +144,8 @@ PERL            = @PERL@
 RANLIB          = @RANLIB@
 MKINSTALLDIRS = @projectdir@/mkinstalldirs
 ROOT_ABS      = @projectdir@
+JUGGLERROOT_ABS	= @SAFE_JUGGLERROOT_ABS@
+releasedir     = @SAFE_JUGGLERROOT_ABS@/release
 
 # SGI-specific dynamic-shared-object information.
 DSOREGFILE	= @DSOREGFILE@
