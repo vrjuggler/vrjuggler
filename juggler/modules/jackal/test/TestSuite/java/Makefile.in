@@ -44,6 +44,9 @@ all:
 run: $(CLASSES)
 	java -classpath "$(CLASSPATH)$(JCPS)." AllTests
 
+run-text: $(CLASSES)
+	java -classpath "$(CLASSPATH)$(JCPS)." junit.textui.TestRunner AllTests
+
 java:
 	$(MAKE) tests
 	$(MAKE) runner
