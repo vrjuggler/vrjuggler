@@ -67,7 +67,7 @@ main (int argc, char* argv[]) {
         while ( 1 ) {
             // Wait for an incoming connection.
             status = sock.accept(client_sock,
-                                 vpr::Interval(60, vpr::Interval::SEC));
+                                 vpr::Interval(60, vpr::Interval::VPR_SEC));
 
             if ( status.success() ) {
                 // Using the new socket, send the buffer to the client and close

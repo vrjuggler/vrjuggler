@@ -254,7 +254,7 @@ public:
 
       // block until connection request goes through
       vpr::Uint16 num_events;
-      status = selector.select( num_events, vpr::Interval(50000,vpr::Interval::MSEC) );
+      status = selector.select( num_events, vpr::Interval(50000,vpr::Interval::VPR_MSEC) );
       for (int j = 0; j < selector.getNumHandles(); ++j)
       {
          if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::VPR_READ | vpr::Selector::VPR_EXCEPT))
