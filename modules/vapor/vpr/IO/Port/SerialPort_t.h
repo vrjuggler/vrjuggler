@@ -597,235 +597,246 @@ public:
       return mSioImpl.enableBadByteIgnore();
    }
 
-   // ------------------------------------------------------------------------
-   //: Disable ignoring of received bytes with framing errors or parity
-   //+ errors.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Erroneous byte ignoring is disabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Disables ignoring of received bytes with framing errors or parity
+    * errors.
+    *
+    * @pre The serial port is open.
+    * @post Erroneous byte ignoring is disabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus disableBadByteIgnore (void)
    {
       return mSioImpl.disableBadByteIgnore();
    }
 
-   // ------------------------------------------------------------------------
-   //: Get the state of parity checking for input.
-   //
-   //! PRE: The serial port is open.
-   //! POST: The state of input parity checking is returned to the caller.
-   //
-   //! RETURNS: true  - Input parity checking is enabled.
-   //! RETURNS: false - Input parity checking is disabled.
-   // ------------------------------------------------------------------------
+   /**
+    * Gets the state of parity checking for input.
+    *
+    * @pre The serial port is open.
+    * @posr The state of input parity checking is returned to the caller.
+    *
+    * @return true is returned if input parity checking is enabled.  false is
+    *         returned if input parity checking is disabled.
+    */
    bool getInputParityCheckState (void)
    {
       return mSioImpl.getInputParityCheckState();
    }
 
-   // ------------------------------------------------------------------------
-   //: Enable input parity checking.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Input parity checking is enabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Enables input parity checking.
+    *
+    * @pre The serial port is open.
+    * @post Input parity checking is enabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus enableInputParityCheck (void)
    {
       return mSioImpl.enableInputParityCheck();
    }
 
-   // ------------------------------------------------------------------------
-   //: Disable input parity checking.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Input parity checking is disabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Disables input parity checking.
+    *
+    * @pre The serial port is open.
+    * @post Input parity checking is disabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus disableInputParityCheck (void)
    {
       return mSioImpl.disableInputParityCheck();
    }
 
-   // ------------------------------------------------------------------------
-   //: Get the current state of bit stripping.  When enabled, input bytes are
-   //+ stripped to seven bits.  Otherwise, all eight bits are processed.
-   //
-   //! PRE: The serial port is open.
-   //! POST: The current bit stripping state is returned to the caller.
-   //
-   //! RETURNS: true  - Input bytes are stripped to seven bits.
-   //! RETURNS: false - Input bytes are not stripped.
-   // ------------------------------------------------------------------------
+   /**
+    * Gets the current state of bit stripping.  When enabled, input bytes are
+    * stripped to seven bits.  Otherwise, all eight bits are processed.
+    *
+    * @pre The serial port is open.
+    * @post The current bit stripping state is returned to the caller.
+    *
+    * @return true is returned if input bytes are stripped to seven bits.
+    *         false is returned if input bytes are not stripped.
+    */
    bool getBitStripState (void)
    {
       return mSioImpl.getBitStripState();
    }
 
-   // ------------------------------------------------------------------------
-   //: Enable stripping of input bytes to seven bits.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Input bit stripping is enabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Enables stripping of input bytes to seven bits.
+    *
+    * @pre The serial port is open.
+    * @post Input bit stripping is enabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus enableBitStripping (void)
    {
       return mSioImpl.enableBitStripping();
    }
 
-   // ------------------------------------------------------------------------
-   //: Disable stripping of input bytes to seven bits.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Input bit stripping is disabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Disables stripping of input bytes to seven bits.
+    *
+    * @pre The serial port is open.
+    * @post Input bit stripping is disabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus disableBitStripping (void)
    {
       return mSioImpl.disableBitStripping();
    }
 
-   // ------------------------------------------------------------------------
-   //: Get the state of start-stop input control.  When enabled, if the
-   //+ terminal driver sees that the receive buffer is getting full, a STOP
-   //+ command is sent to the serial device.  The device should respond by
-   //+ halting its data flow.  When the input queue has been processed, a
-   //+ START command is sent to the serial device which should cause it to
-   //+ resume putting bytes onto the input queue.
-   //
-   //! PRE: The serial port is open.
-   //! POST: The current state of start-stop input control is returned to the
-   //+       caller.
-   //
-   //! RETURNS: true  - Start-stop input control is enabled.
-   //! RETURNS: true  - Start-stop input control is not enabled.
-   // ------------------------------------------------------------------------
+   /**
+    * Gets the state of start-stop input control.  When enabled, if the
+    * terminal driver sees that the receive buffer is getting full, a STOP
+    * command is sent to the serial port.  The device should respond by
+    * halting its data flow.  When the input queue has been processed, a
+    * START command is sent to the serial port which should cause it to
+    * resume putting bytes onto the input queue.
+    *
+    * PRE: The serial port is open.
+    * POST: The current state of start-stop input control is returned to the
+    *       caller.
+    *
+    * @return true is returned if start-stop input control is enabled.  false
+    *         is returned if start-stop input control is not enabled.
+    */
    bool getStartStopInputState (void)
    {
       return mSioImpl.getStartStopInputState();
    }
 
-   // ------------------------------------------------------------------------
-   //: Enable start-stop input control.  See getStartStopInputState() for
-   //+ more information.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Start-stop input control is enabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Enables start-stop input control.  See getStartStopInputState() for
+    * more information.
+    *
+    * @pre The serial port is open.
+    * @post Start-stop input control is enabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus enableStartStopInput (void)
    {
       return mSioImpl.enableStartStopInput();
    }
 
-   // ------------------------------------------------------------------------
-   //: Disable start-stop input control.  See getStartStopInputState() for
-   //+ more information.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Start-stop input control is disabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Disables start-stop input control.  See getStartStopInputState() for
+    * more information.
+    *
+    * @pre The serial port is open.
+    * @post Start-stop input control is disabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus disableStartStopInput (void)
    {
       return mSioImpl.disableStartStopInput();
    }
 
-   // ------------------------------------------------------------------------
-   //: Get the state of start-stop output control.  When enabled, when the
-   //+ terminal driver receives a STOP command, output stops.  When it
-   //+ receives a START command, output resumes.  If disabled, these
-   //+ commands are read as normal characters.
-   //
-   //! PRE: The serial port is open.
-   //! POST: The current state of start-stop output control is returned to
-   //+       the caller.
-   //
-   //! RETURNS: true  - Start-stop output control is enabled.
-   //! RETURNS: true  - Start-stop output control is not enabled.
-   // ------------------------------------------------------------------------
+   /**
+    * Gets the state of start-stop output control.  When enabled, when the
+    * terminal driver receives a STOP command, output stops.  When it
+    * receives a START command, output resumes.  If disabled, these
+    * commands are read as normal characters.
+    *
+    * PRE: The serial port is open.
+    * POST: The current state of start-stop output control is returned to
+    *       the caller.
+    *
+    * @return true is returned if start-stop output control is enabled.  false
+    *         is returned if start-stop output control is not enabled.
+    */
    bool getStartStopOutputState (void)
    {
       return mSioImpl.getStartStopOutputState();
    }
 
-   // ------------------------------------------------------------------------
-   //: Disable start-stop input control.  See getStartStopInputState() for
-   //+ more information.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Start-stop input control is disabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Disables start-stop input control.  See getStartStopInputState() for
+    * more information.
+    *
+    * @pre The serial port is open.
+    * @post Start-stop input control is disabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus enableStartStopOutput (void)
    {
       return mSioImpl.enableStartStopOutput();
    }
 
-   // ------------------------------------------------------------------------
-   //: Disable start-stop output control.  See getStartStopOutputState() for
-   //+ more information.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Start-stop output control is disabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Disables start-stop output control.  See getStartStopOutputState() for
+    * more information.
+    *
+    * @pre The serial port is open.
+    * @post Start-stop output control is disabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus disableStartStopOutput (void)
    {
       return mSioImpl.disableStartStopOutput();
    }
 
-   // ------------------------------------------------------------------------
-   //: Get the current state of parity generation for outgoing bytes and
-   //+ parity checking for incoming bytes.
-   //
-   //! PRE: The serial port is open.
-   //! POST: The current parity generation/checking state is returned to the
-   //+       caller.
-   //
-   //! RETURNS: true  - Parity generation and checking are enabled for
-   //+                  outgoing and incoming bytes respectively.
-   //! RETURNS: false - Parity generation and checking are disabled.
-   // ------------------------------------------------------------------------
+   /**
+    * Gets the current state of parity generation for outgoing bytes and
+    * parity checking for incoming bytes.
+    *
+    * @pre The serial port is open.
+    * @post The current parity generation/checking state is returned to the
+    *       caller.
+    *
+    * @return true is returned if parity generation and checking are enabled
+    *         for outgoing and incoming bytes respectively.  false is returned
+    *         if parity generation and checking are disabled.
+    */
    bool getParityGenerationState (void)
    {
       return mSioImpl.getParityGenerationState();
    }
 
-   // ------------------------------------------------------------------------
-   //: Enable parity generation for outgoing bytes and parity checking for
-   //+ incoming bytes.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Parity generation and checking are enabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Enables parity generation for outgoing bytes and parity checking for
+    * incoming bytes.
+    *
+    * @pre The serial port is open.
+    * @post Parity generation and checking are enabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus enableParityGeneration (void)
    {
       return mSioImpl.enableParityGeneration();
    }
 
-   // ------------------------------------------------------------------------
-   //: Disable parity generation for outgoing bytes and parity checking for
-   //+ incoming bytes.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Parity generation and checking are disabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Disables parity generation for outgoing bytes and parity checking for
+    * incoming bytes.
+    *
+    * 2pre The serial port is open.
+    * @post Parity generation and checking are disabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus disableParityGeneration (void)
    {
       return mSioImpl.disableParityGeneration();
@@ -881,134 +892,142 @@ public:
       return mSioImpl.disableParityErrorMarking();
    }
 
-   // ------------------------------------------------------------------------
-   //: Get the current parity checking type (either odd or even).
-   //
-   //! PRE: The serial port is open.
-   //! POST: The parity type is returned to the caller.
-   //
-   //! RETURNS: A vpr::SerialTypes::ParityType value giving the parity
-   //+          checking being done.
-   // ------------------------------------------------------------------------
+   /**
+    * Gets the current parity checking type (either odd or even).
+    *
+    * @pre The serial port is open.
+    * @post The parity type is returned to the caller.
+    *
+    * @return A vpr::SerialTypes::ParityType value giving the parity
+    *         checking being done.
+    */
    vpr::SerialTypes::ParityType getParity (void)
    {
       return mSioImpl.getParity();
    }
 
-   // ------------------------------------------------------------------------
-   //: Enable odd parity.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Odd parity is enabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Enables odd parity.
+    *
+    * @pre The serial port is open.
+    * @post Odd parity is enabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus setOddParity (void)
    {
       return mSioImpl.setOddParity();
    }
 
-   // ------------------------------------------------------------------------
-   //: Enable even parity.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Even parity is enabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Enables even parity.
+    *
+    * @pre The serial port is open.
+    * @psot Even parity is enabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus setEvenParity (void)
    {
       return mSioImpl.setEvenParity();
    }
 
-   // ------------------------------------------------------------------------
-   //: Get the current input baud rate.
-   //
-   //! PRE: The serial port is open.
-   //! POST: The current input baud rate is returned to the caller via the
-   //+       by-reference parameter.
-   //
-   //! ARGS: rate - A reference to a vpr::Uint32 to be used as storage for
-   //+              the current input baud rate.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Gets the current input baud rate.
+    *
+    * @pre The serial port is open.
+    * @post The current input baud rate is returned to the caller via the
+    *       by-reference parameter.
+    *
+    * @param rate A reference to a vpr::Uint32 to be used as storage for the
+    *             current input baud rate.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus getInputBaudRate (vpr::Uint32& rate)
    {
       return mSioImpl.getInputBaudRate(rate);
    }
 
-   // ------------------------------------------------------------------------
-   //: Set the current input baud rate.
-   //
-   //! PRE: The serial port is open, and the rate is a valid baud rate.
-   //! POST: The input baud rate is updated to use the given value.
-   //
-   //! ARGS: rate - The new input baud rate.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Sets the current input baud rate.
+    *
+    * @pre The serial port is open, and the rate is a valid baud rate.
+    * @post The input baud rate is updated to use the given value.
+    *
+    * @param rate The new input baud rate.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus setInputBaudRate (const vpr::Uint32 baud)
    {
       return mSioImpl.setInputBaudRate(baud);
    }
 
-   // ------------------------------------------------------------------------
-   //: Get the current output baud rate.
-   //
-   //! PRE: The serial port is open.
-   //! POST: The current output baud rate is returned to the caller via the
-   //+       by-reference parameter.
-   //
-   //! ARGS: rate - A reference to a vpr::Uint32 to be used as storage for
-   //+              the current output baud rate.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Gets the current output baud rate.
+    *
+    * @pre The serial port is open.
+    * @post The current output baud rate is returned to the caller via the
+    *       by-reference parameter.
+    *
+    * @param rate A reference to a vpr::Uint32 to be used as storage for the
+    *             current output baud rate.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    * operation.
+    */
    vpr::ReturnStatus getOutputBaudRate (vpr::Uint32& rate)
    {
       return mSioImpl.getOutputBaudRate(rate);
    }
 
-   // ------------------------------------------------------------------------
-   //: Set the current output baud rate.
-   //
-   //! PRE: The serial port is open, and the rate is a valid baud rate.
-   //! POST: The output baud rate is updated to use the given value.
-   //
-   //! ARGS: rate - The new output baud rate.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Sets the current output baud rate.
+    *
+    * @pre The serial port is open, and the rate is a valid baud rate.
+    * @post The output baud rate is updated to use the given value.
+    *
+    * @param rate - The new output baud rate.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus setOutputBaudRate (const vpr::Uint32 baud)
    {
       return mSioImpl.setOutputBaudRate(baud);
    }
 
-   // ------------------------------------------------------------------------
-   //: Wait for all output to be transmitted.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Waits for all output to be transmitted.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus drainOutput (void)
    {
       return mSioImpl.drainOutput();
    }
 
-   // ------------------------------------------------------------------------
-   //: Alter the input or output flow control.  Based on the
-   //+ vpr::SerialTypes::FlowActionOption argument, output can be suspended
-   //+ and restarted or the terminal device can be told to stop or to resume
-   //+ sending data.
-   //
-   //! PRE: The serial device is open.
-   //! POST: Based on the argument value, the input or output flow control is
-   //+       updated.
-   //
-   //! ARGS: opt - The flow control change.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Alters the input or output flow control.  Based on the
+    * vpr::SerialTypes::FlowActionOption argument, output can be suspended
+    * and restarted or the terminal device can be told to stop or to resume
+    * sending data.
+    *
+    * @pre The serial port is open.
+    * @post Based on the argument value, the input or output flow control is
+    *       updated.
+    *
+    * @param opt The flow control change.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus controlFlow (SerialTypes::FlowActionOption opt)
    {
       return mSioImpl.controlFlow(opt);
@@ -1061,40 +1080,42 @@ public:
       return mSioImpl.disableHardwareFlowControl();
    }
 
-   // ------------------------------------------------------------------------
-   //: Discard either the input buffer (unread data received from the
-   //+ terminal device) or the output buffer (data written but not yet
-   //+ transmitted to the terminal device).  The argument tells which queue
-   //+ (or queues) to flush.
-   //
-   //! PRE: The serial device is open.
-   //! POST: Based on the argument, the appropriate queue is flushed of its
-   //+       current contents.
-   //
-   //! ARGS: queue - The queue (or queues) to be flushed.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Discards either the input buffer (unread data received from the
+    * terminal device) or the output buffer (data written but not yet
+    * transmitted to the terminal device).  The argument tells which queue
+    * (or queues) to flush.
+    *
+    * @pre The serial port is open.
+    * @post Based on the argument, the appropriate queue is flushed of its
+    *       current contents.
+    *
+    * @param queue The queue (or queues) to be flushed.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus flushQueue (SerialTypes::FlushQueueOption queue)
    {
       return mSioImpl.flushQueue(queue);
    }
 
-   // ------------------------------------------------------------------------
-   //: Transmit a continuous stream of zero bits for the given duration.  If
-   //+ the argument is 0, the transmission will last between 0.25 and 0.5
-   //+ seconds.  Otherwise, the duration specfies the number of seconds to
-   //+ send the zero bit stream.
-   //
-   //! PRE: The serial device is open.
-   //! POST: A stream of zero bits are sent to the serial device for the
-   //+       given duration.
-   //
-   //! ARGS: duration - The length of time to send a zero bit stream to the
-   //+                  serial device.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Transmit a continuous stream of zero bits for the given duration.  If
+    * the argument is 0, the transmission will last between 0.25 and 0.5
+    * seconds.  Otherwise, the duration specfies the number of seconds to
+    * send the zero bit stream.
+    *
+    * @pre The serial port is open.
+    * @post A stream of zero bits are sent to the serial port for the
+    *       given duration.
+    *
+    * @param duration The length of time to send a zero bit stream to the
+    *                 serial port.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    */
    vpr::ReturnStatus sendBreak (const int duration)
    {
       return mSioImpl.sendBreak(duration);
