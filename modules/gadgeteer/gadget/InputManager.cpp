@@ -141,38 +141,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
          // the allocated memory.
          vpr::LibraryPtr driver_library =
             vpr::LibraryPtr(new vpr::Library(driver_dso));
-
-         if ( driver_library->load().success() )
-         {
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-               << "Loaded driver DSO successfully\n" << vprDEBUG_FLUSH;
-
-            void (*creator)(gadget::InputManager*);
-
-            creator = (void (*)(gadget::InputManager*)) driver_library->findSymbol("initDevice");
-
-            if ( NULL != creator )
-            {
-               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                  << "Got pointer to driver factory\n" << vprDEBUG_FLUSH;
-               mDeviceDrivers.push_back(driver_library);
-               (*creator)(this);
-            }
-            else
-            {
-               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-                  << clrOutNORM(clrYELLOW, "WARNING")
-                  << ": Failed to look up factory function in driver DSO '"
-                  << driver_dso << "'\n" << vprDEBUG_FLUSH;
-            }
-         }
-         else
-         {
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-               << clrOutNORM(clrYELLOW, "WARNING")
-               << ": Failed to load driver DSO '" << driver_dso << "'\n"
-               << vprDEBUG_FLUSH;
-         }
+         this->loadDriverDSO(driver_library);
       }
 
       ret_val = true;
@@ -688,6 +657,48 @@ bool InputManager::removeProxy(jccl::ConfigChunkPtr chunk)
    std::string proxy_name;
    proxy_name = chunk->getFullName();
    return removeProxy(proxy_name);
+}
+
+vpr::ReturnStatus InputManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
+{
+   vprASSERT(driverDSO.get() != NULL && "Invalid vpr::LibraryPtr object");
+   vpr::ReturnStatus status;
+
+   status = driverDSO->load();
+
+   if ( status.success() )
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "Loaded driver DSO successfully\n" << vprDEBUG_FLUSH;
+
+      void (*creator)(gadget::InputManager*);
+
+      creator = (void (*)(gadget::InputManager*)) driverDSO->findSymbol("initDevice");
+
+      if ( NULL != creator )
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << "Got pointer to driver factory\n" << vprDEBUG_FLUSH;
+         mDeviceDrivers.push_back(driverDSO);
+         (*creator)(this);
+      }
+      else
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << clrOutNORM(clrYELLOW, "WARNING")
+            << ": Failed to look up factory function in driver DSO '"
+            << driverDSO << "'\n" << vprDEBUG_FLUSH;
+      }
+   }
+   else
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << clrOutNORM(clrYELLOW, "WARNING")
+         << ": Failed to load driver DSO '" << driverDSO << "'\n"
+         << vprDEBUG_FLUSH;
+   }
+
+   return status;
 }
 
 } // End of gadget namespace
