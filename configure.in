@@ -406,7 +406,6 @@ case $target_os in
 
         AR='ar'
         ARFLAGS='-ruv'
-        INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
         LDOPTS=''
         OPT_FLAGS='-O2'
@@ -427,7 +426,6 @@ case $target_os in
         AR='ar'
         ARFLAGS='-ruv'
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
         LDOPTS=''
         DBG_FLAGS='-g'
@@ -455,7 +453,6 @@ case $target_os in
         AR='ar'
         ARFLAGS='-ruv'
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
         LDFLAGS="$LDFLAGS -L/usr/X11R6/lib"
         LDOPTS=''
