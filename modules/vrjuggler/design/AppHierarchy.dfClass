@@ -18,6 +18,10 @@ class diagram {
 @__hiddenMember <oiref:cpp#Member#vrj::App#depSatisfied#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigChunkPtr#)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigChunkPtr#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
 */
 class reference {
 }/**
@@ -26,6 +30,10 @@ class reference {
 @__imported
 @__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#pipePreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref>
 */
 class reference55 {
 }/**
@@ -39,18 +47,26 @@ class reference55 {
 @__hiddenMember <oiref:cpp#Member#vrj::PfApp#getFrameBufferAttrs#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::PfApp#preDrawChan#(#pfChannel*#void*#)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::PfApp#postDrawChan#(#pfChannel*#void*#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#Kernel*#)#:oiref>
 */
 class reference56 {
 }/**
 @__ref <oiref:cpp#Class#vrj::OsgApp:oiref><oihard>
 @__modelType reference
-@__imported 
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#pipePreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#configSceneView#(#osgUtil::SceneView*#)#:oiref>
 */
 class reference {
 }/**
 @__ref <oiref:cpp#Class#vrj::OpenSGApp:oiref><oihard>
 @__modelType reference
-@__imported 
+@__imported
+@hideClasses 
 */
 class reference7 {
 }}/**
@@ -67,15 +83,15 @@ filter.d2.state = off
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:cpp#Extends#vrj::OsgApp#vrj::GlApp:oiref>=335,530,335,490:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=30,290,230,150,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::OpenSGApp:oiref>=410,530,200,238,0:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=460,530,460,490:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=205,290,205,240:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=280,290,230,200,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::OsgApp:oiref>=220,530,170,222,0:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=340,290,340,240:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=150,30,250,210,0:oigroup>
+@__positions <oigroup:<oiref:cpp#Extends#vrj::OsgApp#vrj::GlApp:oiref>=335,420,335,380:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=30,230,230,110,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OpenSGApp:oiref>=410,420,200,230,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=460,420,460,380:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=205,230,205,190:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=280,230,230,150,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OsgApp:oiref>=220,420,170,170,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=340,230,340,190:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=150,30,250,160,0:oigroup>
 
 */
 class __positions {
