@@ -31,8 +31,8 @@
  * -----------------------------------------------------------------
  */
 
-#ifndef SOUNDENGINE 
-#define SOUNDENGINE
+#ifndef _VJ_SOUNDENGINE 
+#define _VJ_SOUNDENGINE
 
 #include <string>
 #include <Math/vjMatrix.h>

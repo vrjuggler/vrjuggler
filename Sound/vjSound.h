@@ -31,8 +31,8 @@
  * -----------------------------------------------------------------
  */
 
-#ifndef SOUND_h
-#define SOUND_h
+#ifndef _VJ_SOUND_h
+#define _VJ_SOUND_h
 
 #include <iostream.h>
 #include <Math/vjVec3.h>
