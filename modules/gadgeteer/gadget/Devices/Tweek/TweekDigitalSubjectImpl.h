@@ -40,7 +40,7 @@
 #include <vpr/Sync/Guard.h>
 #include <tweek/CORBA/SubjectImpl.h>
 
-#include <gadget/Devices/Tweek/TweekDigitalSubject.h>
+#include <TweekDigitalSubject.h>
 
 
 namespace gadget

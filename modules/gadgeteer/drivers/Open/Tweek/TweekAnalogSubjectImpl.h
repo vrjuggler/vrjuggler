@@ -40,7 +40,7 @@
 #include <vpr/Sync/Guard.h>
 #include <tweek/CORBA/SubjectImpl.h>
 
-#include <gadget/Devices/Tweek/TweekAnalogSubject.h>
+#include <TweekAnalogSubject.h>
 
 
 namespace gadget
