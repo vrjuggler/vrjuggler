@@ -72,7 +72,7 @@ public:
     * Calulates all the xform matrices
     * This is calculated based upon the angles in the data structure
     */
-   int GloveData::calcXforms();
+   int calcXforms();
 
    /**
     * Returns the transform matrix of the specified joint
