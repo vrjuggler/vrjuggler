@@ -114,7 +114,7 @@ public class ConfigContextEditor
                   return;
                }
 
-               removeBtn.setEnabled(true);
+               removeBtn.setEnabled(! ((ConfigElement) value).isReadOnly());
                Color start_color = getStartColor();
 
                // Create a new PropertySheet for the given ConfigElement.
