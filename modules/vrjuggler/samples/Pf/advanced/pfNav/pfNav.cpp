@@ -31,9 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <string>
 
 #include <gmtl/Vec.h>
 
@@ -62,7 +60,8 @@ public:
    }
 
    // Empty virtual destructor.
-   virtual ~myPfNavApp (void) {
+   virtual ~myPfNavApp (void)
+   {
       /* Do nothing. */ ;
    }
 };
@@ -111,11 +110,6 @@ int main(int argc, char* argv[])
 
     kernel->setApplication( application );    // Set up the kernel
 
-    //while(!kernel->done())
-   while (1)
-   {
-      usleep( 100000 );
-   }
+   kernel->waitForKernelStop();
+   return 0;
 }
-
-

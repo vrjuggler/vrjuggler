@@ -29,10 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <string>
 
  // --- VR Juggler Stuff --- //
 #include <vrj/Kernel/Kernel.h>
@@ -80,10 +79,7 @@ int main(int argc, char* argv[])
    application->setModel( model_filename );
    kernel->setApplication( application );    // Set up the kernel
 
-   while (1)
-   {
-      usleep( 100000 );
-   }
+   kernel->waitForKernelStop();
+
+   return 0;
 }
-
-
