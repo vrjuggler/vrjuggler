@@ -161,7 +161,7 @@ C:\WINDOWS;C:\bin;C:\</screen>
             <para>To avoid tying this documentation to a single style of environment variable creation, assignment and reference, the following syntax will be used exclusively from this point onward. Please read this carefully before proceeding.</para>
             <section>
                <title>Naming Environment Variables</title>
-               <para>When naming an environment variable in the plain text of this document, the variable will be referred to by its name only. For example, to talk about the environment variable containing your path, we will talk about it as <varname>PATH</varname>.</para>
+               <para>When naming an environment variable in the plain text of this document, the variable will be referred to by its name only. For example, to talk about the environment variable containing your path, we will talk about it as <envar>PATH</envar>.</para>
             </section>
             <section>
                <title>Creating/Setting Environment Variables</title>
@@ -179,7 +179,7 @@ value</screen>
                <title>Referring to the Value of an Environment Variable</title>
                <para>To get the value of an environment variable when it needs to be expanded, the following syntax will be used:</para>
                <screen>% cd $VARIABLE_NAME/bin</screen>
-               <para>Here, the reference to the value is <varname>$VARIABLE_NAME</varname>.</para>
+               <para>Here, the reference to the value is <envar>$VARIABLE_NAME</envar>.</para>
             </section>
          </section>
       </section>
@@ -189,18 +189,18 @@ value</screen>
             <varlistentry>
                <term>VJ_BASE_DIR</term>
                <listitem>
-                  <para>The environment variable <varname>VJ_BASE_DIR</varname> tells a VR Juggler application where to find important data files. It is required to compile and run any Juggler app. It should be set to the base directory of the installed VR Juggler library. For example, if you downloaded a UNIX version of VR Juggler 2.0 and extracted it to the directory <filename>/home/software/</filename>, you would set <varname>VJ_BASE_DIR</varname> with this command:</para>
+                  <para>The environment variable <envar>VJ_BASE_DIR</envar> tells a VR Juggler application where to find important data files. It is required to compile and run any Juggler app. It should be set to the base directory of the installed VR Juggler library. For example, if you downloaded a UNIX version of VR Juggler 2.0 and extracted it to the directory <filename>/home/software/</filename>, you would set <envar>VJ_BASE_DIR</envar> with this command:</para>
                   <screen>% VJ_BASE_DIR = /home/software/vrjuggler-2.0</screen>
                   <para>The last component of the path depends on the particular version of Juggler you have downloaded.</para>
                   <para>If you downloaded and built VR Juggler from the source code, the compilation creates a directory called <filename>instlinks</filename> which can be used as a VR Juggler base:</para>
                   <screen>% VJ_BASE_DIR = $HOME/juggler/my_build_dir/instlinks</screen>
-                  <para>In any case, on a Win32 platform, you should use /'s as the path separator for <varname>VJ_BASE_DIR</varname> rather than \'s. The compiler tools can handle either, and the utilities in <filename>juggler-tools</filename> will behave much better if UNIX-style paths are used. It is safe to use the drive letter at the start of the path (e.g., <filename>C:/software/vrjuggler-2.0</filename>).</para>
+                  <para>In any case, on a Win32 platform, you should use /'s as the path separator for <envar>VJ_BASE_DIR</envar> rather than \'s. The compiler tools can handle either, and the utilities in <filename>juggler-tools</filename> will behave much better if UNIX-style paths are used. It is safe to use the drive letter at the start of the path (e.g., <filename>C:/software/vrjuggler-2.0</filename>).</para>
                </listitem>
             </varlistentry>
             <varlistentry>
                <term>PATH</term>
                <listitem>
-                  <para>To compile any of the sample applications, the <varname>$VJ_BASE_DIR/bin</varname> directory must be added to your <varname>PATH</varname> as follows:</para>
+                  <para>To compile any of the sample applications, the <envar>$VJ_BASE_DIR/bin</envar> directory must be added to your <envar>PATH</envar> as follows:</para>
                   <screen>% PATH = $PATH:$VJ_BASE_DIR/bin</screen>
                   <para>Depending on your shell, you may need to run the <command>rehash</command> command after executing the above.</para>
                </listitem>
@@ -208,7 +208,7 @@ value</screen>
             <varlistentry>
                <term>JDK_HOME</term>
                <listitem>
-                  <para>The <varname>JDK_HOME</varname> environment variable is required by the script that starts VrjConfig, the VR Juggler configuration program. If Java is installed on your system, <varname>JDK_HOME</varname> may already be set. If not, it needs to be set to the base of the Java installation.</para>
+                  <para>The <envar>JDK_HOME</envar> environment variable is required by the script that starts VrjConfig, the VR Juggler configuration program. If Java is installed on your system, <envar>JDK_HOME</envar> may already be set. If not, it needs to be set to the base of the Java installation.</para>
                </listitem>
             </varlistentry>
             <varlistentry>
@@ -216,7 +216,7 @@ value</screen>
                <term>LD_LIBRARYN32_PATH (IRIX only)</term>
                <term>LD_LIBRARY64_PATH (IRIX only)</term>
                <listitem>
-                  <para>UNIX/Linux systems use these environment variables to find dynamically loaded libraries, such as <filename>libJuggler.so</filename>. Unless you are building everything with static libraries, you will need to set these to include the VR Juggler library directory (under <varname>VJ_BASE_DIR</varname>). IRIX supports several Application Binary Interfaces (ABIs). VR Juggler supports only the N32 and 64 formats, and there are different library path variables for each. The N32 ABI uses the <varname>LD_LIBRARYN32_PATH</varname> variable, and the 64 ABI uses <varname>LD_LIBRARY64_PATH</varname>. An example of setting the library path is as follows:</para>
+                  <para>UNIX/Linux systems use these environment variables to find dynamically loaded libraries, such as <filename>libJuggler.so</filename>. Unless you are building everything with static libraries, you will need to set these to include the VR Juggler library directory (under <envar>VJ_BASE_DIR</envar>). IRIX supports several Application Binary Interfaces (ABIs). VR Juggler supports only the N32 and 64 formats, and there are different library path variables for each. The N32 ABI uses the <envar>LD_LIBRARYN32_PATH</envar> variable, and the 64 ABI uses <envar>LD_LIBRARY64_PATH</envar>. An example of setting the library path is as follows:</para>
                   <screen>% LD_LIBRARY_PATH = $VJ_BASE_DIR/lib</screen>
                   <note>
                      <para>On some SGI systems running IRIX, users of the MIPSpro Compilers (version 7.3) will need to add another directory as follows:</para>
@@ -239,7 +239,7 @@ value</screen>
             <varlistentry>
                <term>VPR_DEBUG_CATEGORIES</term>
                <listitem>
-                  <para>This variable can be used to control which components of VR Juggler are allowed to output diagnostic data. If for some reason you set <varname>VPR_DEBUG_NFY_LEVEL</varname> to 5 or higher, this variable can be used to filter the output. The value of <varname>VPR_DEBUG_CATEGORIES</varname> is a space-separated list of Juggler debug component names (defined in <filename>$VJ_BASE_DIR/include/vrj/Util/Debug.h</filename>, <filename>$VJ_BASE_DIR/include/vpr/Util/Debug.h</filename>, <filename>$VJ_BASE_DIR/include/jccl/Util/Debug.h</filename>, and <filename>$VJ_BASE_DIR/include/gadget/Util/Debug.h</filename>). The default value is <quote>DBG_ALL</quote>, which performs no filtering whatsoever. Examples of setting it are as follows:</para>
+                  <para>This variable can be used to control which components of VR Juggler are allowed to output diagnostic data. If for some reason you set <envar>VPR_DEBUG_NFY_LEVEL</envar> to 5 or higher, this variable can be used to filter the output. The value of <envar>VPR_DEBUG_CATEGORIES</envar> is a space-separated list of Juggler debug component names (defined in <filename>$VJ_BASE_DIR/include/vrj/Util/Debug.h</filename>, <filename>$VJ_BASE_DIR/include/vpr/Util/Debug.h</filename>, <filename>$VJ_BASE_DIR/include/jccl/Util/Debug.h</filename>, and <filename>$VJ_BASE_DIR/include/gadget/Util/Debug.h</filename>). The default value is <quote>DBG_ALL</quote>, which performs no filtering whatsoever. Examples of setting it are as follows:</para>
                   <screen>% VPR_DEBUG_CATAGORIES = DBG_ERROR
 % VPR_DEBUG_CATAGORIES = "DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR"
 % VPR_DEBUG_CATAGORIES = "DBG_CONFIG DBG_RECONFIGURATION"</screen>
@@ -288,7 +288,7 @@ value</screen>
       <para>Now that you have VR Juggler installed and you have your environment all configured, it is time for the fun to begin. No, seriously. You are now ready to compile and run VR Juggler applications, and that is the whole point, right? This chapter explains how to compile the applications provided in the directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple</filename>.</para>
       <section>
          <title>Required Reading </title>
-         <para>Before reading any further, make sure you have already read the instructions on how to install VR Juggler (in <xref linkend="install.vrj.chapter"/>) and on how to configure your environment (in <xref linkend="envvar.chapter"/>). That information will not be repeated, and it is assumed that you already know what we mean by <varname>VJ_BASE_DIR</varname>. You should also have a basic understanding of how <command>make</command>(1) works, but in these examples, nothing more will be necessary than typing <literal>make</literal> on the command line. Refer to the <command>make</command>(1) manual page for more information about it.</para>
+         <para>Before reading any further, make sure you have already read the instructions on how to install VR Juggler (in <xref linkend="install.vrj.chapter"/>) and on how to configure your environment (in <xref linkend="envvar.chapter"/>). That information will not be repeated, and it is assumed that you already know what we mean by <envar>VJ_BASE_DIR</envar>. You should also have a basic understanding of how <command>make</command>(1) works, but in these examples, nothing more will be necessary than typing <literal>make</literal> on the command line. Refer to the <command>make</command>(1) manual page for more information about it.</para>
       </section>
       <section>
          <title>Compiling an Application </title>
@@ -333,7 +333,7 @@ value</screen>
                   </imageobject>
                </mediaobject>
             </figure>
-            <para>Selecting this item opens the <quote>Project Settings</quote> dialog, shown in <xref linkend="visual.studio.project-settings.dialog.figure"/>. In this window, choose the <guilabel>Debug</guilabel> tab. There will be an empty text entry field under the heading <guilabel>Project arguments</guilabel>. Here, enter the full paths to the VR Juggler configuration files that will be used to run the torus application. The <varname>VJ_BASE_DIR</varname> environment variable cannot be used here, unfortunately, so the <emphasis>full path</emphasis> to <emphasis>every</emphasis> file must be used. The following shows the beginning of the program arguments listing <filename>sim.base.config</filename> and <filename>sim.wand.mixin.config</filename>:</para>
+            <para>Selecting this item opens the <quote>Project Settings</quote> dialog, shown in <xref linkend="visual.studio.project-settings.dialog.figure"/>. In this window, choose the <guilabel>Debug</guilabel> tab. There will be an empty text entry field under the heading <guilabel>Project arguments</guilabel>. Here, enter the full paths to the VR Juggler configuration files that will be used to run the torus application. The <envar>VJ_BASE_DIR</envar> environment variable cannot be used here, unfortunately, so the <emphasis>full path</emphasis> to <emphasis>every</emphasis> file must be used. The following shows the beginning of the program arguments listing <filename>sim.base.config</filename> and <filename>sim.wand.mixin.config</filename>:</para>
             <figure id="visual.studio.project-settings.dialog.figure">
                <title>Project Settings Dialog</title>
                <mediaobject>
@@ -369,7 +369,7 @@ value</screen>
       <para>It is important to note that the same VR Juggler application can be run in simulator mode or in a full-scale VR system with no modifications. What does change is the configuration files used when starting the program. In <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>, you can find many basic configuration files including those for running in simulator using a mouse and keyboard to simulate VR input devices and some example files based on those used for the VRAC C2 system. In the directory, you will see some files with names containing <quote>mixin</quote>. These are special files that provide a specific capability not necessarily needed by all applications. They can be mixed in (hence the name) with other configuration files as needed. The configuration files found in the <filename>configFiles</filename> directory will be referenced in the examples provided, so be sure you know where they are.</para>
       <section>
          <title><anchor id="reading"/>Required Reading </title>
-         <para>Before reading any further, make sure you have already read the instructions on how to install VR Juggler (see <xref linkend="install.vrj.chapter"/>) and on how to configure your environment (see <xref linkend="envvar.chapter"/>). That information will not be repeated, and it is assumed that you already know what we mean by <varname>VJ_BASE_DIR</varname> and <varname>LD_LIBRARY_PATH</varname>, to name two environment variables. At this point, it is also assumed that you already have compiled an application (MPApp in the case of the examples provided), so you should be sure to have read about how to compile a sample VR Juggler application (in <xref linkend="app.compile.chapter"/>) before proceeding.</para>
+         <para>Before reading any further, make sure you have already read the instructions on how to install VR Juggler (see <xref linkend="install.vrj.chapter"/>) and on how to configure your environment (see <xref linkend="envvar.chapter"/>). That information will not be repeated, and it is assumed that you already know what we mean by <envar>VJ_BASE_DIR</envar> and <envar>LD_LIBRARY_PATH</envar>, to name two environment variables. At this point, it is also assumed that you already have compiled an application (MPApp in the case of the examples provided), so you should be sure to have read about how to compile a sample VR Juggler application (in <xref linkend="app.compile.chapter"/>) before proceeding.</para>
       </section>
       <section>
          <title><anchor id="simulator"/>Running an Application in Simulator Mode </title>
@@ -411,7 +411,7 @@ value</screen>
          <para>You will notice that no paths are specified for finding the three configuration files. This is intentional to shorten the command line given in the example. In general, you always have to give the full path to the files<footnote>
                <para>This is being remedied for VR Juggler 1.1 and beyond.</para>
             </footnote>. Beginning users will typically want to reference the example configuration files in <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>. As you get more comfortable with VR Juggler and its configuration system, you may want to make your own modified files and put them in the directory <filename>$HOME/.vjconfig</filename>. To simplify running applications, you may want to make a shell script (or batch file as appropriate) that does all the work of passing configuration files and common command-line arguments. For now, though, use the path <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename> for each of the configuration files you pass on the command line.</para>
-         <para>As the application starts, you will see a plethora of output (more or less depending on how you have <varname>$VPR_DEBUG_NFY_LEVEL</varname> and <varname>$VPR_DEBUG_CATAGORIES</varname> set), and then one moderately sized simulator display window will open on the left side of your screen while three blank keyboard input windows open on the right side of your screen. The display window will be titled <quote>SimWindow1</quote>, and the keyboard input windows will be titled <quote>Head Keyboard</quote>, <quote>Sim View Cameras Control</quote> and <quote>Wand Keyboard</quote> (in order from the top of the display to the bottom). Do not worry that the keyboard windows are black&mdash;that is normal. The display window will have an animated blue mesh, a cyan sphere, and a green pointer. The mesh is what you have come to see; the sphere is the simulated user's head; and the pointer is the simulated user's wand. In <xref linkend="MPApp.running.figure"/>, we show what this looks on an IRIX 6.5 desktop for comparison with what you are seeing. Note that the head and wand are only rendered in the simulator windows. They are present because head and wand input are being simulated, and it is typically quite helpful to see the results of that simulated input. To exit the application, press <keysym>ESC</keysym> in the window titled <quote>Head Window</quote>.</para>
+         <para>As the application starts, you will see a plethora of output (more or less depending on how you have <envar>$VPR_DEBUG_NFY_LEVEL</envar> and <envar>$VPR_DEBUG_CATAGORIES</envar> set), and then one moderately sized simulator display window will open on the left side of your screen while three blank keyboard input windows open on the right side of your screen. The display window will be titled <quote>SimWindow1</quote>, and the keyboard input windows will be titled <quote>Head Keyboard</quote>, <quote>Sim View Cameras Control</quote> and <quote>Wand Keyboard</quote> (in order from the top of the display to the bottom). Do not worry that the keyboard windows are black&mdash;that is normal. The display window will have an animated blue mesh, a cyan sphere, and a green pointer. The mesh is what you have come to see; the sphere is the simulated user's head; and the pointer is the simulated user's wand. In <xref linkend="MPApp.running.figure"/>, we show what this looks on an IRIX 6.5 desktop for comparison with what you are seeing. Note that the head and wand are only rendered in the simulator windows. They are present because head and wand input are being simulated, and it is typically quite helpful to see the results of that simulated input. To exit the application, press <keysym>ESC</keysym> in the window titled <quote>Head Window</quote>.</para>
          <figure id="MPApp.running.figure">
             <title>MPApp running on a Linux desktop with multiple input windows</title>
             <mediaobject>
