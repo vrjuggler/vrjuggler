@@ -10,7 +10,7 @@ For all versions:
 
 ===============================================================================
 
-Version: 2.0 Alpha 3 (1.1.144)
+Version: 2.0 Alpha 3 (1.1.143-1)
 Released: September 22, 2003
     
     Please refer to the following to get started with VR Juggler 2.0 Alpha 3:
