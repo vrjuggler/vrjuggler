@@ -5,7 +5,7 @@
    <title>VR Juggler Programmer's Guide</title>
    <chapter id="ch1">
       <title>Introduction</title>
-      <para>In this book, we present a "how-to" for writing VR Juggler applications. We will explain concepts used in VR Juggler and present carefully annotated example code whenever we can. There are two groups of people who should read this book:</para>
+      <para>In this book, we present a "how-to" for writing VR Juggler applications. We will explain concepts used in VR Juggler and present carefully annotated example code whenever appropriate. There are two groups of people who should read this book:</para>
       <orderedlist>
          <listitem>
             <para>Those who are required to read it in order to do a project for work. To those in this category, fear not--VR Juggler is very simple to use after getting through the initial learning stages. It is a very powerful tool that will allow the creation of interesting and powerful applications very quickly.</para>
@@ -62,19 +62,56 @@
    </chapter>
    <chapter id="ch2">
       <title>Application Basics</title>
-      <para>In VR Juggler, all applications are written as objects that are handled by the kernel. The objects are known as "application objects", and we will use that term frequently throughout this text. Application objects are introduced and explained within this section.</para>
-      <section>
+      <indexterm zone="ch2">
+         <primary>applications</primary>
+         <secondary>basics</secondary>
+      </indexterm>
+      <para>In VR Juggler, all applications are written as objects that are handled by the kernel. The objects are known as <firstterm>application objects</firstterm><indexterm>
+            <primary>application object</primary>
+         </indexterm>, and we will use that term frequently throughout this text. Application objects are introduced and explained within this chapter.</para>
+      <section id="app-obj-overview">
          <title>Application Object Overview</title>
-         <para>VR Juggler uses the application object to create the VR environment with which the users interact. The application object implements interfaces needed by the VR Juggler virtual platform. (An interface is a collection of operations used to specify a service of a class or a component.)</para>
-         <section>
+         <indexterm zone="app-obj-overview">
+            <primary>applications</primary>
+            <secondary>application object overview</secondary>
+         </indexterm>
+         <indexterm zone="app-obj-overview">
+            <primary>application object</primary>
+            <secondary>overview</secondary>
+         </indexterm>
+         <para>VR Juggler uses the application object<indexterm>
+               <primary>application object</primary>
+            </indexterm> to create the VR environment with which the users interact. The application object implements interfaces needed by the VR Juggler <firstterm>virtual platform</firstterm><indexterm>
+               <primary>virtual platform</primary>
+            </indexterm>. (An interface is a collection of operations used to specify a service of a class or a component.)</para>
+         <section id="main-func-intro-sect">
             <title>No <function>main()</function> -- "Don't call me, I'll call you"</title>
+            <indexterm zone="main-func-intro-sect">
+               <primary>main function</primary>
+            </indexterm>
             <para>Since VR Juggler applications are objects, developers do not write the traditional <function>main()</function> function. Instead, developers create an application object that implements a set of pre-defined interfaces. The VR Juggler kernel controls the application's processing time by calling the object's interface implementation methods.</para>
-            <para>In common programs, the <function>main()</function> function defines the point where the thread of control enters the application. After the <function>main()</function> function is called, the application starts performing any necessary processing. When the operating system (OS) starts the program, it gives the <function>main()</function> function some unit of processing time. After the time unit (quantum) for the process expires, the OS performs what is called a "context switch" to change control to another process. VR Juggler accomplishes similar functionality but in a slightly different manner.</para>
+            <para>In traditional programs, the <function>main()</function> function defines the point where the <firstterm>thread of control</firstterm> enters the application. After the <function>main()</function> function is called, the application starts performing any necessary processing. When the operating system (OS) starts the program, it gives the <function>main()</function> function some unit of processing time. After the time unit (quantum) for the process expires, the OS performs what is called a "context switch" to change control to another process. VR Juggler accomplishes similar functionality but in a slightly different manner.</para>
             <para>The application objects correspond to processes in a normal OS. The kernel is the scheduler, and it allocations time to an application by invoking the methods of the application object. Because the kernel has additional information about the resources needed and used by the applications, it maintains a very strict schedule to define when the application is granted processing time. This is the basis to maintain coherence across the system.</para>
          </section>
          <section>
-            <title>Application Objects Derive from Base Classes Specific Graphics APIs</title>
-            <para>The first step in defining an application object is to implement the basic interfaces defined by the kernel and the Draw Managers. There is a base class for the interface that the kernel expects (<classname>vjApp</classname>) and a base class for each Draw Manager interface (<classname>vjPfApp</classname>, <classname>vjGlApp</classname>, etc.). See <xref linkend="vjApp-hier-fig"/> for a visual representation of the application interface hierarchy. The kernel interface defined in <classname>vjApp</classname> specifies methods for initialization, shutdown, and execution of the application. The Draw Manager interfaces specified in the <classname>vj*App</classname> classes define the API-specific functions necessary to render the virtual environment. For example, a Draw Manager interface could have functions for drawing the scene and for initializing context-specific information.</para>
+            <title>Application Objects Derive from Base Classes for Specific Graphics APIs</title>
+            <para>The first step in defining an application object<indexterm>
+                  <primary>application object</primary>
+               </indexterm> is to implement the basic interfaces defined by the kernel and the Draw Managers<indexterm>
+                  <primary>Draw Manager</primary>
+               </indexterm>. There is a base class for the interface that the kernel expects (<classname>vjApp</classname><indexterm>
+                  <primary>classes</primary>
+                  <secondary>vjApp</secondary>
+               </indexterm>) and a base class for each Draw Manager interface (<classname>vjPfApp</classname><indexterm>
+                  <primary>classes</primary>
+                  <secondary>vjPfApp</secondary>
+               </indexterm>, <classname>vjGlApp</classname><indexterm>
+                  <primary>classes</primary>
+                  <secondary>vjGlApp</secondary>
+               </indexterm>, etc.). See <xref linkend="vjApp-hier-fig"/> for a visual representation of the application interface hierarchy. The kernel interface defined in <classname>vjApp</classname><indexterm>
+                  <primary>classes</primary>
+                  <secondary>vjApp</secondary>
+               </indexterm> specifies methods for initialization, shutdown, and execution of the application. The Draw Manager interfaces specified in the <classname>vj*App</classname> classes define the API-specific functions necessary to render the virtual environment. For example, a Draw Manager interface could have functions for drawing the scene and for initializing context-specific information.</para>
             <figure float="1" id="vjApp-hier-fig">
                <title><classname>vjApp</classname> hierarchy</title>
                <mediaobject>
@@ -91,7 +128,11 @@
       </section>
       <section>
          <title>Benefits of Application Objects</title>
-         <para>The most common approach for VR application development is one where the application defines the <function>main()</function> function, and that <function>main()</function> function in turn calls library functions when needed. The library in this model only executes code when directed to do so by the application. As a result, the application developer is responsible for coordinating the execution of the different VR system components, and this can lead to complex applications.</para>
+         <indexterm>
+            <primary>application object</primary>
+            <secondary>benefits of</secondary>
+         </indexterm>
+         <para>The most common approach for VR application development is one where the application defines the <function>main()</function> function, and that <function>main()</function> function in turn calls library functions when needed. The library in this model only executes code when directed to do so by the application. As a result, the application developer is responsible for coordinating the execution of the different VR system components. This can lead to complex applications.</para>
          <section>
             <title>Allow for Run-Time Changes</title>
             <para>As a virtual platform, VR Juggler does not use the model described above because VR Juggler needs to maintain control of the system components. This control is necessary to make changes to the virtual platform at run time. As the controller of the execution, the kernel always knows the current state of the applications, and therefore, it can manage safely the run-time reconfigurations of the virtual environment.With run-time reconfiguration, it is possible to switch applications, start new devices, reconfigure running devices, and send reconfiguration information to the application object.</para>
@@ -106,15 +147,28 @@
             <para>Since applications use a distinct interface to communicate with the virtual platform, changes to the implementation of the virtual platform do not affect the application. Changes could include bug fixes, performance tuning, or new device support.</para>
          </section>
       </section>
-      <section>
+      <section id="app-startup">
          <title>VR Juggler Startup</title>
-         <para></para>
-         <section>
+         <indexterm zone="app-startup">
+            <primary>applications</primary>
+            <secondary>starting</secondary>
+         </indexterm>
+         <section id="app-startup-no-main">
             <title>No <function>main()</function>--Sort Of</title>
+            <indexterm zone="app-startup-no-main">
+               <primary>applications</primary>
+               <secondary>main function</secondary>
+               <tertiary>use</tertiary>
+            </indexterm>
             <para>Previously, we explained how VR Juggler applications do not have a <function>main()</function> function. Further explanation is required. While it is true that user applications do not have a <function>main()</function> function because they are objects, there must still be a <function>main()</function> somewhere that starts the system. This is because the operating system uses <function>main()</function> as the starting point for all applications. In simple VR Juggler applications, there is a <function>main()</function>, but it only starts the VR Juggler kernel and gives the kernel the application to run.</para>
          </section>
-         <section>
+         <section id="app-startup-main-structure">
             <title>Structure of a <function>main()</function> Function</title>
+            <indexterm zone="app-startup-main-structure">
+               <primary>applications</primary>
+               <secondary>main function</secondary>
+               <tertiary>structure</tertiary>
+            </indexterm>
             <para>The following is a typical example of a <function>main()</function> function that will start the VR Juggler kernel and hand it an instance of a user application object. The specifics of what is happening in this code are described below.</para>
             <programlistingco>
                <areaspec>
@@ -162,7 +216,9 @@ int main (int argc, char* argv[])
       </section>
       <section>
          <title>Kernel Loop</title>
-         <para>Before proceeding into application object details, we must understand how VR Juggler calls the application, and we must know what a frame is. In the code above, the statement kernel-&gt;start() tells the kernel thread to start running. When the kernel begins its execution, it follows the sequence shown in <xref linkend="Kernel-seq-diag"/>. The specific methods being called are described in more detail in the following section. This diagram will be useful in understanding the order in which the application object methods are invoked.</para>
+         <para>Before proceeding into application object details, we must understand how VR Juggler calls the application, and we must know what a <firstterm>frame</firstterm><indexterm>
+               <primary>frame</primary>
+            </indexterm> is. In the code above, the statement on line 9 tells the kernel thread to start running. When the kernel begins its execution, it follows the sequence shown in <xref linkend="Kernel-seq-diag"/>. The specific methods being called are described in more detail in the following section. This diagram will be useful in understanding the order in which the application object methods are invoked.</para>
          <figure float="1" id="Kernel-seq-diag">
             <title>Kernel loop sequence</title>
             <mediaobject>
@@ -171,16 +227,29 @@ int main (int argc, char* argv[])
                </imageobject>
             </mediaobject>
          </figure>
-         <section>
+         <section id="frame-definition-sect">
             <title>Definition of a Frame</title>
-            <para>The VR Juggler kernel calls each of the methods in the application object based on a strictly scheduled <firstterm>frame of execution</firstterm>. The frame of execution is shown in <xref linkend="Kernel-seq-diag"/>; it makes up all the lines within the while(running) clause.</para>
+            <indexterm zone="frame-definition-sect">
+               <primary>frame</primary>
+               <secondary>definition of</secondary>
+            </indexterm>
+            <para>The VR Juggler kernel calls each of the methods in the application object based on a strictly scheduled <firstterm>frame of execution</firstterm><indexterm>
+                  <primary>frame of execution</primary>
+               </indexterm>. The frame of execution is shown in <xref linkend="Kernel-seq-diag"/>; it makes up all the lines within the "while(running)" clause.</para>
             <para>During the frame of execution, the kernel calls the application methods and performs internal updates (the <methodname>updateAllData()</methodname> data call). Because the kernel has complete control over the frame, it can make changes at pre-defined "safe" times when the application is not doing any processing. At these times, the kernel can change the virtual platform configuration as long as the interface remains the same.</para>
             <para>The frame of execution also serves as a framework for the application. That is, the application can expect that when <methodname>preFrame()</methodname> is called, the devices have just been updated. Applications can rely upon the system being in well-defined stages of the frame when the kernel invokes the application object's methods.</para>
          </section>
       </section>
-      <section>
+      <section id="base-app-obj-if-sect">
          <title>Base Application Object Interface</title>
-         <para>Within this chapter, we provide a brief overview of the member functions from the base VR Juggler application interface. This interface is defined by <classname>vjApp</classname>, and the member functions are shown in <xref linkend="App-if-diag"/>. Refer to <xref linkend="Kernel-seq-diag"/> for a visual presentation of the order in which the methods are invoked.</para>
+         <indexterm zone="base-app-obj-if-sect">
+            <primary>application object</primary>
+            <secondary>base interfce of</secondary>
+         </indexterm>
+         <para>Within this chapter, we provide a brief overview of the member functions from the base VR Juggler application interface. This interface is defined by <classname>vjApp</classname><indexterm>
+               <primary>classes</primary>
+               <secondary>vjApp</secondary>
+            </indexterm>, and the member functions are shown in <xref linkend="App-if-diag"/>. Refer to <xref linkend="Kernel-seq-diag"/> for a visual presentation of the order in which the methods are invoked.</para>
          <para>The base interface of the application object defines the following functions:</para>
          <itemizedlist>
             <listitem>
@@ -208,8 +277,12 @@ int main (int argc, char* argv[])
                </imageobject>
             </mediaobject>
          </figure>
-         <section>
+         <section id="app-object-init">
             <title>Initialization</title>
+            <indexterm zone="app-object-init">
+               <primary>application object</primary>
+               <secondary>initialization</secondary>
+            </indexterm>
             <para>The following is a description of the application objects related to the initialization of a VR Juggler application. The order of presentation is the same as the order of execution when the application is executed by the kernel.</para>
             <section>
                <title><methodname>vjApp::init()</methodname></title>
@@ -238,8 +311,12 @@ int main (int argc, char* argv[])
                </section>
             </section>
          </section>
-         <section>
+         <section id="app-object-frame-funcs">
             <title>Frame Functions</title>
+            <indexterm zone="app-object-frame-funcs">
+               <primary>application object</primary>
+               <secondary>frame functions</secondary>
+            </indexterm>
             <para>Once the application object has been initialized by the VR Juggler kernel, the kernel frame loop begins. Each frame, there are specific application object methods that are invoked, and understanding the timing and potential uses of these methods can improve the functionality of the immersive application. In some cases, it is possible to use these member functions to optimize the application to improve the frame rate and the level of interactivity.</para>
             <section>
                <title><methodname>vjApp::preFrame()</methodname></title>
@@ -279,12 +356,30 @@ int main (int argc, char* argv[])
             </section>
          </section>
       </section>
-      <section>
+      <section id="draw-mgr-classes-sect">
          <title>Draw Manager-Specific Application Classes</title>
-         <para>Beyond the basic methods common to all applications, there are methods that are specific to a given Draw Manager. The application classes are extended for each of the specific Draw Managers. The graphics API-specific application classes derive from <classname>vjApp</classname> and extend this interface further. They adding extra "hooks" that support the abilities of that specific API.</para>
-         <section>
+         <indexterm>
+            <primary>Draw Manager</primary>
+            <secondary>application classes</secondary>
+         </indexterm>
+         <para>Beyond the basic methods common to all applications, there are methods that are specific to a given Draw Manager. The application classes are extended for each of the specific Draw Managers. The graphics API-specific application classes derive from <classname>vjApp</classname><indexterm>
+               <primary>classes</primary>
+               <secondary>vjApp</secondary>
+            </indexterm> and extend this interface further. They adding extra "hooks" that support the abilities of that specific API.</para>
+         <section id="draw-mgr-classes-opengl-sect">
             <title>OpenGL Application Class</title>
-            <para>The OpenGL application base class adds several methods to the application interface that allow rendering of OpenGL graphics. The extensions to the base <classname>vjApp</classname> class are shown in <xref linkend="vjGlApp-class-diag"/>. In the following, we describe the method <methodname>vjGlApp::draw()</methodname>, the most important component of the interface. More details about the <classname>vjGlApp</classname> class are provided in a later chapter.</para>
+            <indexterm zone="draw-mgr-classes-opengl-sect">
+               <primary>Draw Manager</primary>
+               <secondary>application classes</secondary>
+               <tertiary>OpenGL</tertiary>
+            </indexterm>
+            <para>The OpenGL application base class adds several methods to the application interface that allow rendering of OpenGL graphics. The extensions to the base <classname>vjApp</classname><indexterm>
+                  <primary>classes</primary>
+                  <secondary>vjApp</secondary>
+               </indexterm> class are shown in <xref linkend="vjGlApp-class-diag"/>. In the following, we describe the method <methodname>vjGlApp::draw()</methodname>, the most important component of the interface. More details about the <classname>vjGlApp</classname><indexterm>
+                  <primary>classes</primary>
+                  <secondary>vjGlApp</secondary>
+               </indexterm> class are provided in a later chapter.</para>
             <figure float="1" id="vjGlApp-class-diag">
                <title><classname>vjGlApp</classname> interface extensions to <classname>vjApp</classname></title>
                <mediaobject>
@@ -298,9 +393,17 @@ int main (int argc, char* argv[])
                <para>The "draw function" is called by the OpenGL Draw Manager when it needs to render the current scene in an OpenGL graphics window.It is called for each active OpenGL context.</para>
             </section>
          </section>
-         <section>
+         <section id="draw-mgr-classes-performer-sect">
             <title>OpenGL Performer Application Class</title>
-            <para>The OpenGL Performer application base class adds interface functions that deal with OpenGL Performer scene graph. Some of the interface extensions are shown in <xref linkend="vjPfApp-class-diag"/>. The following is a description of only two methods in the <classname>vjPfApp</classname> interface. More detailed discussion on this class is provided in later sections.</para>
+            <indexterm zone="draw-mgr-classes-performer-sect">
+               <primary>Draw Manager</primary>
+               <secondary>application classes</secondary>
+               <tertiary>OpenGL Performer</tertiary>
+            </indexterm>
+            <para>The OpenGL Performer application base class adds interface functions that deal with OpenGL Performer scene graph. Some of the interface extensions are shown in <xref linkend="vjPfApp-class-diag"/>. The following is a description of only two methods in the <classname>vjPfApp</classname><indexterm>
+                  <primary>classes</primary>
+                  <secondary>vjPfApp</secondary>
+               </indexterm> interface. More detailed discussion on this class is provided in later sections.</para>
             <figure float="1" id="vjPfApp-class-diag">
                <title><classname>vjPfApp</classname> interface extensions to <classname>vjApp</classname></title>
                <mediaobject>
@@ -325,7 +428,13 @@ int main (int argc, char* argv[])
       <para>Within this chapter, we present information on some helper classes that are provided with VR Juggler. These classes are intended to make it easier for application programmers to write their code. Ultimately, we want application programmers to focus more on compelling immersive content and less on the many details that are involved with 3D graphics programming. The classes presented in this section focus on mathematical computations and on input from hardware devices. In particular, special attention is paid to the VR Juggler Input Manager device interfaces and proxies.</para>
       <section>
          <title><classname>vjVec3</classname> and <classname>vjVec4</classname></title>
-         <para>This section is intended to provide an introduction to how the helper classes <classname>vjVec3</classname> and <classname>vjVec4</classname> work and how they can be used in VR Juggler applications. It begins with a high-level description of the classes which forms the necessary basis for understanding them in detail. Then, examples of how to use all the available operations in the interfaces for these classes are provided. It concludes with a description of the internal details of the classes.</para>
+         <para>This section is intended to provide an introduction to how the helper classes <classname>vjVec3</classname><indexterm>
+               <primary>classes</primary>
+               <secondary>vjVec3</secondary>
+            </indexterm> and <classname>vjVec4</classname><indexterm>
+               <primary>classes</primary>
+               <secondary>vjVec4</secondary>
+            </indexterm> work and how they can be used in VR Juggler applications. It begins with a high-level description of the classes which forms the necessary basis for understanding them in detail. Then, examples of how to use all the available operations in the interfaces for these classes are provided. It concludes with a description of the internal details of the classes.</para>
          <section>
             <title>High-Level Description</title>
             <para>The classes <classname>vjVec3</classname> and <classname>vjVec4</classname> are designed to work the same was as three- and four-dimensional mathematical vectors. That is, a <classname>vjVec3</classname> object can be thought of as a vector of the form &lt;x, y, z&gt;. Similarly, a <classname>vjVec4</classname> can be thought of as a vector of the form &lt;x, y, z, w&gt;. An existing understanding of mathematical vectors is sufficient to know how these classes can be used. The question then becomes, how are they used? We will get to that later, and you can skip ahead if you already understand such vectors. If vectors are an unfamiliar topic, you can also think of these classes as three- and four-element C++ arrays of floats respectively, but most benefits of the vector concept are lost with that simpler idea. Therefore, if you need to think of them as arrays, you should probably just use arrays until you feel more comfortable with vectors. Once you do, you are encouraged to come back and read further.</para>
@@ -2468,17 +2577,24 @@ int main(int argc, char* argv[])
       </section>
    </chapter>
    <chapter>
-      <title>Advanced Topics</title>
+      <title id="index">Advanced Topics</title>
       <para></para>
       <section>
          <title>System Interaction</title>
          <para></para>
       </section>
-      <section>
+      <section id="multi-threading-sect">
          <title>Multi-Threading</title>
+         <indexterm zone="multi-threading-sect">
+            <primary>multi-threading</primary>
+         </indexterm>
          <para>VR Juggler is a multi-threaded software system. We have built up a cross-platform abstraction for threads and synchronization primitives as part of making VR Juggler more portable. This abstraction is available to application developers. In addition, the basic VR Juggler application object interface provides a mechanism for inherent parallel programming in applications. In this section, we provide a more detailed description of these techniques and how to put them into use.</para>
-         <section>
+         <section id="multi-threading-techniques">
             <title>Techniques</title>
+            <indexterm zone="multi-threading-techniques">
+               <primary>multi-threading</primary>
+               <secondary>techniques</secondary>
+            </indexterm>
             <para>To begin the discussion on multi-threaded programming with VR Juggler, we describe the techniques available to application programmers. There are three options from which programmers may choose:</para>
             <orderedlist>
                <listitem>
@@ -2492,11 +2608,22 @@ int main(int argc, char* argv[])
                </listitem>
             </orderedlist>
          </section>
-         <section>
+         <section id="multi-threading-classes">
             <title>Helper Classes</title>
+            <indexterm zone="multi-threading-classes">
+               <primary>multi-threading</primary>
+               <secondary>helper classes</secondary>
+            </indexterm>
             <para>All the techniques presented in the previous section require some form of synchronization to protect the data accessed by multiple threads. Developers who choose the third option and use separate threads they manage must learn the VR Juggler thread API. This section presents all of the helper classes available for multi-threaded VR Juggler application programming. We begin with the thread API and then move on to the synchronization primitive API.</para>
             <section id="using-vjThread-sect">
                <title>Using the <classname>vjThread</classname> Interface</title>
+               <indexterm zone="using-vjThread-sect">
+                  <primary>multi-threading</primary>
+                  <secondary>vjThread</secondary>
+               </indexterm>
+               <indexterm zone="using-vjThread-sect">
+                  <primary>vjThread</primary>
+               </indexterm>
                <para>When considering multi-threaded programming, it is important to know that with great power comes great responsibility. The power is being able to provide multiple threads of control in a single application. The responsibility is making sure those threads get along with each other and do not step on each other's data. VR Juggler is a multi-threaded library which makes it very powerful and very complex.</para>
                <para>As a cross-platform framework, VR Juggler uses an internal threading abstraction that provides a uniform interface to platform-specific threading implementations. That cross-platform interface is available to programmers to make applications multi-threaded without tying them to a specific operating system's threading implementation.</para>
                <section>
@@ -2514,15 +2641,23 @@ int main(int argc, char* argv[])
                      </listitem>
                   </itemizedlist>
                </section>
-               <section>
+               <section id="vjThread-desc">
                   <title>High-Level Description</title>
+                  <indexterm zone="vjThread-desc">
+                     <primary>vjThread</primary>
+                     <secondary>description of</secondary>
+                  </indexterm>
                   <para>The threading interface in VR Juggler is modeled after the POSIX thread specification of POSIX.1b (formerly POSIX.4). The main difference is that VR Juggler's interface is object-oriented while POSIX threads (pthreads) are procedural. The basic principles are exactly the same, however. A function (or class method) is provided to the <classname>vjThread</classname> class, and that function is executed in a thread of control that is independent of the creating thread.</para>
                   <para>Threads are spawned (initialized and begin execution) when the <classname>vjThread</classname> constructor is called. That is, when instantiating a <classname>vjThread</classname> object, a new thread of execution is created. The semantics of threads says that a thread can begin execution at any time after being created, and this is true with <classname>vjThread</classname>s. Do not make any assumptions about when the thread will begin running. It may happen before or after the constructor returns the <classname>vjThread</classname> object.</para>
                   <para>To pass arguments to threads, the common mechanism of encapsulating them in a C++ <type>struct</type> must be used. The function executed by the thread takes only a single argument of type <type>void*</type>. An argument is not required, of course, but to pass more than one argument to a thread, the best way to do this is to create a structure and pass a pointer to it to the <classname>vjThread</classname> constructor.</para>
                   <para>Once a <classname>vjThread</classname> object is created, it acts as an interface into controlling the thread it encapsulates. Thread signals can be sent, priority changes can be made, execution can be suspended, etc. This interface is the focus of this section.</para>
                </section>
-               <section>
+               <section id="vjThread-use">
                   <title>Using <classname>vjThread</classname></title>
+                  <indexterm zone="vjThread-use">
+                     <primary>vjThread</primary>
+                     <secondary>use</secondary>
+                  </indexterm>
                   <para>Use of <classname>vjThread</classname> is intended to be easy. Multi-threaded programming has enough complications without having a difficult API as well. In almost all cases, thread creation can be done in a single step, executed one of two ways:</para>
                   <orderedlist>
                      <listitem>
@@ -3214,4 +3349,5 @@ bool MyButtonDevice::config(vjConfigChunk *c)
          </section>
       </section>
    </chapter>
+   <index/>
 </book>
