@@ -134,7 +134,9 @@ public:
        int currentGesture = mGesture->getGesture();
        
        // lookup the name of that gesture, and output it.
-       cout<<"gestureID["<<currentGesture<<"]:"<<mGesture->getGestureString( currentGesture )<<"\n"<<flush;
+       cout << "gestureID[" << currentGesture << "]:"
+            << mGesture->getGestureString(currentGesture).c_str()
+            << "\n" <<flush;
    
        if (mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
        {
