@@ -2,6 +2,6 @@
 #define COMPATIBILITY_HEADER_VJ_CONFIG
 
 #include <vrj/vrjConfig.h>
-#include <deprecated/Utils/vjAssert.h>
+#include <deprecated/Kernel/vjAssert.h>
 
 #endif
