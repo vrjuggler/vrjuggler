@@ -3,6 +3,8 @@
 # $Id$
 # -----------------------------------------------------------------------------
 
+.SUFFIXES: .cpp
+
 srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
@@ -36,10 +38,10 @@ torus: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
 torus.o: torus.cpp torusApp.h
-	${COMPILE} -c -o $@ ${srcdir}/torus.cpp
-	
 torusApp.o: torusApp.cpp torusApp.h
-	${COMPILE} -c -o $@ ${srcdir}/torusApp.cpp
+
+.cpp.o:
+	${COMPILE} -c ${srcdir}/$<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
