@@ -30,9 +30,9 @@ Builder: JExplorerBuilder V 1. 0. 7
 					link="${DOWNLOAD}/index.html" 
 					info="Download it." 
 					image="Leaf.gif" >
-				< item title="Compiling Juggler" 
+				< item title="Building Juggler" 
 					link="${TEAMGUIDE}/build/juggler/quick.start.html" 
-					info="Downloaded the source instead of the binaries?  Here's how to build it." 
+					info="Downloaded the source instead of the binaries?  Here's how to build your juggler distribution." 
 					image="Leaf.gif" >
 				< item title="Installing Juggler" 
 					link="getting.started/installing.html" 

@@ -56,60 +56,61 @@ Posting about these subjects to the mailing list will probably be ignored.<BR>
 <ol>
 <a name="one">
 <li> Choose a directory to put Juggler.</a> <BR>
-	setenv source_code_dir /home/users/joeuser/src<BR>
+<b><font color="#ff0000">setenv source_code_dir /home/users/joeuser/src</font></b><BR>
 <BR>
 </li>
 
 <a name="two">
 <li> Goto that directory and checkout juggler using CVS</a><BR>
     <B>NOTE: make sure CVS is set up, and pointing to the Juggler repository.</b><BR>
-cd "$source_code_dir"<BR>
-cvs checkout juggler<BR>
+<b><font color="#ff0000">cd "$source_code_dir"</font></b><BR>
+<b><font color="#ff0000">cvs checkout juggler</font></b><BR>
 <BR>
 </li>
 
 <a name="three">
 <li> Enter the newly checked out Juggler source directory</a><BR>
-cd "$source_code_dir"/juggler
-<BR>
+<b><font color="#ff0000">cd "$source_code_dir"/juggler</font></b><BR>
 </li>
+<BR>
 
 <a name="four">
 <li> Set the environment variable VJ_BASE_DIR </a> <BR>
-    NOTE: This is required by Juggler's build system (makefiles, etc..) 
-    NOTE: 1.) The directory "instlinks" is semi-important. 
-              What does the word "instlinks" mean? 
-	      It is a working distribution of the Juggler library.
-	      After "gmake" is done, you'll be able to use this directory 
-	      to compile your code against.
-          2.) It also determines where juggler files will be created:
-	      Juggler files will be created in (some-directory)/instlinks/..
-	      (in other words, files are created one dir back from instlinks)
-    NOTE: Make sure this line is in your .tcshrc or .cshrc file.
-setenv VJ_BASE_DIR "$source_code_dir"/juggler/instlinks
+    NOTE: This is required by Juggler's build system (makefiles, etc..) <BR>
+    NOTE: 1.) The directory "instlinks" is semi-important. <BR>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;What does the word "instlinks" mean? <BR>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It is a working distribution of the Juggler library.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After "gmake" is done, you'll be able to use this directory <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to compile your code against.<BR>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.) It also determines where juggler files will be created:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Juggler files will be created in (some-directory)/instlinks/..<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(in other words, files are created one dir back from instlinks)<BR>
+    NOTE: Make sure this line is in your .tcshrc or .cshrc file.<BR><BR>
+<b><font color="#ff0000">setenv VJ_BASE_DIR "$source_code_dir"/juggler/instlinks</font></b><BR>
 <BR>
 </li>
+<BR>
 
 <a name="five">
 <li> Compile juggler (using the autoconf system, and gnu-make):</a><BR>
 	<ol>
 		<li> Auto-Generate Headers<BR>
-		autoheader
+		<b><font color="#ff0000">autoheader</font></b>
 		</li>
 		
 		<li> Auto-Generate the configuration script "configure"<BR>
-		autoconf
+		<b><font color="#ff0000">autoconf</font></b>
 		</li>
 
 		<li> Probe the system for capabilities, generate Makefiles, etc...<BR>
         		this "configures" the source tree for the current system<BR>
-		"$source_code_dir"/juggler/configure
+		<b><font color="#ff0000">"$source_code_dir"/juggler/configure</font></b>
 		</li>
 
 		<li> "Make" the distribution using gnu-make.<BR>
         		This compiles, links, and creates the final distribution tree <BR>
         		(in the form of sym-links).<BR>
-		gmake
+		<b><font color="#ff0000">gmake</font></b>
 		</li>
 	</ol>
 <BR>
@@ -121,10 +122,10 @@ setenv VJ_BASE_DIR "$source_code_dir"/juggler/instlinks
         Run this in the directory you want compiler output to go to.<BR>
 	NOTE: You can change the word "myBuildDirectory" to a name of
 	      your choice. <BR> <BR>
-setenv a_different_build_dir myBuildDirectory <BR>
-mkdir "$source_code_dir"/juggler/"$a_different_build_dir" <BR>
-cd "$source_code_dir"/juggler/"$a_different_build_dir" <BR>
-"$source_code_dir"/juggler/configure <BR>
+<b><font color="#ff0000">setenv a_different_build_dir myBuildDirectory </font></b><BR>
+<b><font color="#ff0000">mkdir "$source_code_dir"/juggler/"$a_different_build_dir"</font></b> <BR>
+<b><font color="#ff0000">cd "$source_code_dir"/juggler/"$a_different_build_dir"</font></b> <BR>
+<b><font color="#ff0000">"$source_code_dir"/juggler/configure</font></b> <BR>
 <BR>
 </li>
 <HR>
