@@ -17,6 +17,12 @@
       <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
+    <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <enumeration name="PosXformFilter" />
+      <help>This is a list of all the filters that are to be applied to the postional device data.
+
+The filters are applied in the order that they are specified in this configuration.</help>
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="AnaProxy" name="Analog Proxy">
     <category>Proxies</category>
@@ -103,18 +109,6 @@
   <ChunkDesc token="DTK" name="DTK">
     <category>Devices</category>
     <help>Provides input services multiple machines</help>
-    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
-      <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
-      <item label="Z" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
-      <help>(world_T_transmitter) Rotation (in degrees) of the tranmitter from the Juggler coord system.</help>
-      <item label="X Axis" defaultvalue="0.0" />
-      <item label="Y Axis" defaultvalue="0.0" />
-      <item label="Z Axis" defaultvalue="0.0" />
-    </PropertyDesc>
     <PropertyDesc token="min" name="min" type="float" variable="0">
       <help>the actual analog data values range - lower bound</help>
       <item label="Range Minimum" defaultvalue="0.0" />
@@ -127,6 +121,12 @@
       <help>Configuration for a shared memory segment.</help>
       <item label="Segments" />
       <enumeration name="DTKsegment" />
+    </PropertyDesc>
+    <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <enumeration name="PosXformFilter" />
+      <help>This is a list of all the filters that are to be applied to the postional device data.
+
+The filters are applied in the order that they are specified in this configuration.</help>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DTKsegment" name="DTK Memory Segment">
@@ -518,17 +518,11 @@
       <help>Number of birds in the Flock</help>
       <item label="Number of Birds" defaultvalue="2" />
     </PropertyDesc>
-    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
-      <help>Translation used to get pt from tracker coordinates to Juggler coordinate system. world_T_transmitter = T*R*pt</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
-      <item label="Z" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
-      <help>Rotation (in degrees) used to get pt from tracker coordinates to Juggler coordinate system. world_T_tranmitter = T*R*pt</help>
-      <item label="X Axis" defaultvalue="0.0" />
-      <item label="Y Axis" defaultvalue="0.0" />
-      <item label="Z Axis" defaultvalue="0.0" />
+    <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <enumeration name="PosXformFilter" />
+      <help>This is a list of all the filters that are to be applied to the postional device data.
+
+The filters are applied in the order that they are specified in this configuration.</help>
     </PropertyDesc>
     <PropertyDesc token="calfile" name="Calibration file" type="string" variable="0">
       <help>Name of a tracker calibration file</help>
@@ -680,17 +674,11 @@
       <help>Serial port speed</help>
       <item label="Baud Rate" defaultvalue="115200" />
     </PropertyDesc>
-    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
-      <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
-      <item label="Z" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
-      <help>(world_T_transmitter) Rotation (in degrees) of the tranmitter from the Juggler coord system.</help>
-      <item label="X Axis" defaultvalue="0.0" />
-      <item label="Y Axis" defaultvalue="0.0" />
-      <item label="Z Axis" defaultvalue="0.0" />
+    <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <enumeration name="PosXformFilter" />
+      <help>This is a list of all the filters that are to be applied to the postional device data.
+
+The filters are applied in the order that they are specified in this configuration.</help>
     </PropertyDesc>
     <PropertyDesc token="stations" name="Stations" type="embeddedchunk" variable="1">
       <help>Settings for each Station.</help>
@@ -955,17 +943,11 @@
       <enumeration name="Left" value="4" />
       <enumeration name="Right" value="5" />
     </PropertyDesc>
-    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
-      <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
-      <item label="Z" defaultavlue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
-      <help>(world_T_transmitter) Rotation of the tranmitter from the Juggler coord system.</help>
-      <item label="X Axis" defaultvalue="0.0" />
-      <item label="Y Axis" defaultvalue="0.0" />
-      <item label="Z Axis" defaultavlue="0.0" />
+    <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <enumeration name="PosXformFilter" />
+      <help>This is a list of all the filters that are to be applied to the postional device data.
+
+The filters are applied in the order that they are specified in this configuration.</help>
     </PropertyDesc>
     <PropertyDesc token="num" name="Number of Birds" type="int" variable="0">
       <help>Number of birds connected to this chassis.</help>
@@ -1078,15 +1060,15 @@
   </ChunkDesc>
   <ChunkDesc token="PosXformFilter" name="Pos Xform Filter">
     <category>Gadgeteer</category>
-    <help>Configure the positional offset information.</help>
+    <help>Configure the positional transformation matrix.  Applied as: Sensor_base = T*R*S*Sensor</help>
     <PropertyDesc token="translate" name="Translation" type="float" variable="0">
-      <help>(recv_T_modRecv) Proxy translation (in the reciever's coord system)</help>
+      <help>base_T_sensor translation. In gadget base units of meters.</help>
       <item label="Trans X" defaultvalue="0.0" />
       <item label="Trans Y" defaultvalue="0.0" />
       <item label="Trans Z" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="rotation" name="Rotation" type="float" variable="0">
-      <help>(recv_T_modRecv) Proxy rotation (Euler angles in the reciever's coord system)</help>
+      <help>base_T_sensor rotation (euler angles in the base coordinate system)</help>
       <item label="Rot X" defaultvalue="0.0" />
       <item label="Rot Y" defaultvalue="0.0" />
       <item label="Rot Z" defaultvalue="0.0" />
@@ -1094,6 +1076,7 @@
     <PropertyDesc name="Scale" token="scalar" type="float" variable="0">
       <help>This is the value used if the device units are set to custom.
             When the device data is scaled by this value, it should result in units of meters (which is what VR Juggler uses internally).</help>
+      <item label="" defaultvalue="" />
     </PropertyDesc>
     <PropertyDesc name="Device Units" token="dev_units" type="float" variable="0">
       <enumeration name="Custom" value="0.0" />
@@ -1101,6 +1084,7 @@
       <enumeration name="Centimeters" value="100" />
       <enumeration name="Feet" value="0.3048" />
       <enumeration name="Inches" value="0.0254" />
+      <item label="" defaultvalue="" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="PosProxy" name="Position Proxy">
@@ -1139,9 +1123,11 @@
       <item label="Y" defaultvalue="0.0" />
       <item label="Z" defaultvalue="0.0" />
     </PropertyDesc>
-    <PropertyDesc token="useFilter" name="Use Filter" type="bool" variable="0">
-      <help>If true, use the sigmoid filter.</help>
-      <item label="Use Filter" defaultvalue="false" />
+    <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <enumeration name="PosXformFilter" />
+      <help>This is a list of all the filters that are to be applied to the postional device data.
+
+The filters are applied in the order that they are specified in this configuration.</help>
     </PropertyDesc>
     <PropertyDesc token="sigmoidParams" name="sigmoidParams" type="embeddedchunk" variable="0">
       <help>TODO: Insert help here!</help>
@@ -1204,6 +1190,12 @@
       <item label="Rotation Coordinate System" defaultvalue="0" />
       <enumeration name="Local" value="0" />
       <enumeration name="Global" value="1" />
+    </PropertyDesc>
+    <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <enumeration name="PosXformFilter" />
+      <help>This is a list of all the filters that are to be applied to the postional device data.
+
+The filters are applied in the order that they are specified in this configuration.</help>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="proxyAlias" name="Proxy Alias">
@@ -1500,6 +1492,12 @@
       <help>This is the shared memory key for the trackd information.</help>
       <item label="Shared Memory Key" defaultvalue="4126" />
     </PropertyDesc>
+    <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <enumeration name="PosXformFilter" />
+      <help>This is a list of all the filters that are to be applied to the postional device data.
+
+The filters are applied in the order that they are specified in this configuration.</help>
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="TrackdController" name="TrackdController">
     <category>Devices</category>
@@ -1528,6 +1526,12 @@
     <PropertyDesc token="shm_key" name="SharedMemoryKey" type="int" variable="0">
       <help>This is the shared memory key for the trackd information.</help>
       <item label="Shared Memory Key" defaultvalue="4126" />
+    </PropertyDesc>
+    <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <enumeration name="PosXformFilter" />
+      <help>This is a list of all the filters that are to be applied to the postional device data.
+
+The filters are applied in the order that they are specified in this configuration.</help>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="juggler_audio_manager" name="VR Juggler Sonix Sound Manager">
