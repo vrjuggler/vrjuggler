@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 import javax.swing.event.EventListenerList;
+import javax.swing.undo.UndoableEditSupport;
 
 /**
  * The ConfigContext describes a view into the resources managed by the
@@ -48,7 +49,7 @@ import javax.swing.event.EventListenerList;
  *
  * @see ConfigBroker
  */
-public class ConfigContext
+public class ConfigContext extends UndoableEditSupport
 {
    /**
     * Creates a new configuration context with no resources.
@@ -57,6 +58,8 @@ public class ConfigContext
    {
       mResources = new ArrayList();
       mListenerList = new EventListenerList();
+      mUndoManager = new ConfigUndoManager();
+      addUndoableEditListener(mUndoManager);
    }
 
    /**
@@ -103,6 +106,15 @@ public class ConfigContext
    public List getResources()
    {
       return mResources;
+   }
+
+   /**
+    * Get the ConfigUndoManager responsible for keeping
+    * track of edits to this context.
+    */
+   public ConfigUndoManager getConfigUndoManager()
+   {
+      return mUndoManager;
    }
    
    /**
@@ -202,4 +214,9 @@ public class ConfigContext
     * All of the listeners interested in this context.
     */
    private EventListenerList mListenerList;
+
+   /**
+    * ConfigUndoManager to manage edits to this context.
+    */
+   private ConfigUndoManager mUndoManager = null;
 }
