@@ -139,7 +139,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DummyPosition" name="Dummy Position">
-    <category>Devices</category>
+    <category>NoClue</category>
     <help>A 'dummy' position device</help>
     <PropertyDesc token="position" name="Position" type="float" variable="0">
       <help>Initial Dummy Position</help>
@@ -349,10 +349,6 @@
     <PropertyDesc token="transmitter" name="Transmitter" type="int" variable="0">
       <help>Id of the transmitter</help>
       <item label="Transmitter ID" defaultvalue="3" />
-    </PropertyDesc>
-    <PropertyDesc token="extendedRange" name="Transmitter is ERT" type="bool" variable="0">
-      <help>Is the transmitter an extended-range transmitter?</help>
-      <item label="Is transmitter ERT?" defaultvalue="1" />
     </PropertyDesc>
     <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
       <help />
@@ -716,7 +712,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="EnvironmentManager" name="Environment Manager">
-    <category>System</category>
+    <category>NoClue</category>
     <help>Application-side of connection to vjcontrol GUI</help>
     <PropertyDesc token="Port" name="Port" type="int" variable="0">
       <help>Networking port to listen on</help>
@@ -728,7 +724,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="FileConnect" name="EM Connection">
-    <category>Performance</category>
+    <category>NoClue</category>
     <help>A file for outputing Environment Manager data</help>
     <PropertyDesc token="FileName" name="Filename" type="string" variable="0">
       <help>The name of the file to dump output to.</help>
@@ -747,7 +743,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="JugglerUser" name="VR Juggler User">
-    <category>General</category>
+    <category>NoClue</category>
     <help>This is a user in VR Juggler.  This is used for multi-user applications</help>
     <PropertyDesc token="headPos" name="Head Position" type="chunk" variable="0">
       <help>This is the source of head position information.</help>
@@ -953,7 +949,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Vec3" name="Vec3">
-    <category>General</category>
+    <category>NoClue</category>
     <PropertyDesc token="x" name="x" type="float" variable="0">
       <item label="X" defaultvalue="0.0" />
     </PropertyDesc>
@@ -965,11 +961,11 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="vjIncludeFile" name="Include File">
-    <category>Unknown</category>
+    <category>NoClue</category>
     <help>File that should be loaded along with this one</help>
   </ChunkDesc>
   <ChunkDesc token="vjIncludeDescFile" name="Include Descriptions File">
-    <category>Unknown</category>
+    <category>NoClue</category>
     <help>Chunk Descriptions File that should be loaded before processing the rest of this file</help>
   </ChunkDesc>
   <ChunkDesc token="vjcontrol" name="VjControl Configuration">
@@ -1048,7 +1044,7 @@
     <help>A positional device simulator for one device relative to another.</help>
   </ChunkDesc>
   <ChunkDesc token="sigmoid_linear_pos_filter" name="SigmoidLinearPosFilter">
-    <category>Devices</category>
+    <category>NoClue</category>
     <PropertyDesc token="minDist" name="minDist" type="float" variable="0">
       <help>Low point of the sigmoid.  Anything below this is ignored.  Anything larger is interpolated.</help>
       <item label="Minimum Distance" defaultvalue="0.0" />
@@ -1218,7 +1214,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DTK" name="DTK">
-    <category>Devices</category>
+    <category>NoClue</category>
     <help>Provides input services multiple machines</help>
     <PropertyDesc token="translate" name="Translation" type="float" variable="0">
       <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
@@ -1397,10 +1393,15 @@
   <ChunkDesc token="cluster_machine" name="Cluster Machine">
     <help />
     <category>RIM</category>
-    <PropertyDesc name="Display System" token="system_specific" type="embeddedchunk" variable="1">
+    <PropertyDesc name="Display System" token="display_system" type="embeddedchunk" variable="0">
       <help />
-      <item label="System Specific Chunks" />
+      <item label="Display System" />
       <enumeration name="displaySystem" />
+    </PropertyDesc>
+    <PropertyDesc name="Display Windows" token="display_windows" type="embeddedchunk" variable="1">
+      <help />
+      <item label="Display Window" />
+      <enumeration name="displayWindow" />
     </PropertyDesc>
     <PropertyDesc name="Listen Port" token="listen_port" type="int" variable="0">
       <help>Port on which to listen for connections</help>
@@ -1413,6 +1414,18 @@
     <PropertyDesc name="Host Name" token="host_name" type="string" variable="0">
       <help />
       <item label="Host Name" defaultvalue="" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="RIMChunk" name="Remote Input Manager Chunk">
+    <help />
+    <category>RIM</category>
+    <PropertyDesc name="Sync Device" token="sync_device" type="chunk" variable="0">
+      <help />
+      <item label="Device" defaultvalue="" />
+      <enumeration name="SimAnalog" />
+      <enumeration name="SimDigital" />
+      <enumeration name="SimPosition" />
+      <enumeration name="Isense" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Fastrack" name="Fastrack">
