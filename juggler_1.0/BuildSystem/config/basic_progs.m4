@@ -5,7 +5,7 @@ dnl ranlib(1) (except on IRIX) and for a working 'ln -s' command.  It also
 dnl determines whether make(1) sets $(MAKE).
 dnl ===========================================================================
 
-dnl basic_progs.m4,v 1.3 2001/01/10 00:09:27 patrick Exp
+dnl basic_progs.m4,v 1.4 2001/01/16 21:00:05 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Test for basic programs need by most, if not all, build systems.
@@ -36,7 +36,7 @@ AC_DEFUN(DPP_BASIC_PROGS,
     dnl archives.  We also do not want to use the Cygwin ranlib(1) with the
     dnl Visual C++ LINK.EXE command.
     if test "x$dpp_platform" = "xIRIX" -o "x$1" = "xIRIX" -o	\
-            "x$dpp_os_type" = "xWin32 -o "x$2" = "xWin32" ; then
+            "x$dpp_os_type" = "xWin32" -o "x$2" = "xWin32" ; then
         RANLIB=':'
     else
         AC_PROG_RANLIB
