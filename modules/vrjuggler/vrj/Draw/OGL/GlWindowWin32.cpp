@@ -30,11 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vrjConfig.h>
 
 #include <jccl/Config/ConfigChunk.h>
 
-#include <vrj/vrjConfig.h>
 #include <vpr/Util/Assert.h>
+#include <gadget/InputManager.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Display/Display.h>
