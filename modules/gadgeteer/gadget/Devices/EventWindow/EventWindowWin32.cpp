@@ -233,6 +233,7 @@ bool EventWindowWin32::startSampling()
       << std::endl << vprDEBUG_FLUSH;
 
    // Create a new thread to handle the control
+   mExitFlag = false;
    vpr::ThreadMemberFunctor<EventWindowWin32>* memberFunctor =
       new vpr::ThreadMemberFunctor<EventWindowWin32>(this,
                                                      &EventWindowWin32::controlLoop,
@@ -567,12 +568,7 @@ bool EventWindowWin32::stopSampling()
    {
       mExitFlag = true;
       ::PostMessage( m_hWnd, WM_USER, 0, 0 );// send a dummy message to the window to close
-      // 1000000 usec timeout before we give up and kill the thread...
-      for ( int x = 0; x < 100000 && !mControlLoopDone; ++x )
-      {
-         // give the window thread a chance before we delete...
-         vpr::System::usleep( 10 );
-      }
+      mThread->join();
       delete mThread;
       mThread = NULL;
       //std::cout << "Stopping event window.." << std::endl;

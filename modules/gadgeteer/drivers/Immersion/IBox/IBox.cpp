@@ -45,24 +45,26 @@ void initDevice(gadget::InputManager* inputMgr)
    new gadget::DeviceConstructor<gadget::IBox>(inputMgr);
 }
 
+
+namespace gadget
+{
+
 /**********************************************************
-  void sampleBox(void*)
+  void controlLoop(void*)
 
   The spawned thread just loops from here
 
 *********************************************** ahimberg */
-static void sampleBox(void* pointer)
+void IBox::controlLoop(void* nullParam)
 {
-   gadget::IBox* devPointer = (gadget::IBox*) pointer;
+   boost::ignore_unused_variable_warning(nullParam);
 
-   for (;;)
+   while(!mDoneFlag)
    {
-     devPointer->sample();
+     sample();
    }
 }
 
-namespace gadget
-{
 
 std::string IBox::getElementType()
 {
@@ -140,8 +142,12 @@ bool IBox::startSampling()
          return 0;
       }
       mPhysicalIbox.std_cmd(0,4,0);
-
-      mThread = new vpr::Thread(sampleBox, (void*) this);
+      
+      // Set exit flag and spawn sample thread
+      mDoneFlag = false;
+      vpr::ThreadMemberFunctor<IBox>* memberFunctor = 
+         new vpr::ThreadMemberFunctor<IBox>(this, &IBox::controlLoop, NULL);
+      mThread = new vpr::Thread(memberFunctor);
 
       if ( ! mThread->valid() )
       {
@@ -229,18 +235,20 @@ bool IBox::sample()
 *********************************************** ahimberg */
 bool IBox::stopSampling()
 {
-  if (mThread != NULL)
-  {
-    mThread->kill();
-    delete(mThread);
-    mThread = NULL;
+   if( mThread != NULL )
+   {
+      // Set flag to exit and wait for it exit
+      mDoneFlag = true;
+      mThread->join();
+      delete(mThread);
+      mThread = NULL;
 
-    vpr::System::usleep(100);        // 100 uSec pause
+      vpr::System::usleep(100);        // 100 uSec pause
 
-    mPhysicalIbox.disconnect();
-    std::cout << "stopping the ibox.." << std::endl;
+      mPhysicalIbox.disconnect();
+      std::cout << "stopping the ibox.." << std::endl;
+   }
 
-  }
   return 1;
 }
 

@@ -113,10 +113,13 @@ CyberGlove::getElementType()
 int
 CyberGlove::startSampling()
 {
+   
    if (mThread == NULL)
    {
       resetIndexes();
-
+      
+      //Reset Exit flag in case of a shutdown and restart of the driver
+      mExitFlag = false;
       // Create a new thread to handle the control
       vpr::ThreadMemberFunctor<CyberGlove>* memberFunctor =
          new vpr::ThreadMemberFunctor<CyberGlove>(this, &CyberGlove::controlLoop, NULL);
@@ -143,6 +146,8 @@ CyberGlove::startSampling()
 // -Starts sampling the glove
 void CyberGlove::controlLoop(void* nullParam)
 {
+   boost::ignore_unused_variable_warning(nullParam);
+
    // Open the port and run with it
    if(mGlove->open() == 0)
    {
@@ -154,7 +159,7 @@ void CyberGlove::controlLoop(void* nullParam)
    }
 
    // Spin in the sampling
-   while(1)
+   while(!mExitFlag)
    {
       sample();
    }
@@ -185,9 +190,12 @@ vpr::Guard<vpr::Mutex> updateGuard(lock);
 
 bool CyberGlove::stopSampling()
 {
+
    if (mThread != NULL)
    {
-      mThread->kill();
+      //Signal for the thread to exit..
+      mExitFlag = true;
+      mThread->join();
       delete mThread;
       mThread = NULL;
       vpr::System::usleep(100);

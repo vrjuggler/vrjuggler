@@ -89,9 +89,12 @@ void FastrakStandalone::trackerFinish()
    mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
    mSerialPort->close();
 
+   mExitFlag = true;
    if ( NULL != mReadThread )
    {
-      mReadThread->kill();
+      mReadThread->join();
+      delete mReadThread;
+      mReadThread = NULL;
    }
 }
 
@@ -142,7 +145,7 @@ void FastrakStandalone::readloop(void *unused)
 #endif
 */
 
-   for ( ;; )
+   while ( !mExitFlag )
    {
       if ( mDoFlush )
       {
@@ -479,6 +482,7 @@ void FastrakStandalone::checkchild()
                                                        NULL);
    mReadThread = new vpr::Thread(read_func);
 */
+   mExitFlag = false;
    if ( NULL == mReadThread )
    {
       vpr::ThreadMemberFunctor<FastrakStandalone>* read_func =

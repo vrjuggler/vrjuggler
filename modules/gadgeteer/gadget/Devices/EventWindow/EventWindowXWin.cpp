@@ -184,6 +184,9 @@ void EventWindowXWin::controlLoop(void* nullParam)
       vpr::System::usleep(usleep_time);
    }
 
+   XResizeWindow(mDisplay, mWindow, 1,1); //Dummy event
+   XFlush(mDisplay);
+
    if ( mEmptyCursorSet )
    {
       XFreeCursor(mDisplay, mEmptyCursor);
@@ -192,7 +195,7 @@ void EventWindowXWin::controlLoop(void* nullParam)
    // Exit, cleanup code
    XDestroyWindow(mDisplay, mWindow);
    XCloseDisplay((::Display*) mDisplay);
-   mControlLoopDone = true;
+
 }
 
 
@@ -206,7 +209,8 @@ bool EventWindowXWin::startSampling()
          << vprDEBUG_FLUSH;
       vprASSERT(false);
    }
-
+   
+   mExitFlag =false;
    // Create a new thread to handle the control
    vpr::ThreadMemberFunctor<EventWindowXWin>* memberFunctor =
       new vpr::ThreadMemberFunctor<EventWindowXWin>(this, &EventWindowXWin::controlLoop, NULL);
@@ -683,16 +687,7 @@ bool EventWindowXWin::stopSampling()
    {
       mExitFlag = true;
 
-      vpr::System::sleep(1);
-
-      XResizeWindow(mDisplay, mWindow, 1,1); //Dummy event
-      XFlush(mDisplay);
-
-      while( !mControlLoopDone )
-      {
-         // give the window thread a chance before we delete...
-         vpr::System::usleep( 20 );
-      }
+      mThread->join();
 
       delete mThread;
       mThread = NULL;

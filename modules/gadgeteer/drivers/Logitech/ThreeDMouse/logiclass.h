@@ -101,12 +101,18 @@ class ThreeDMouse : public InputMixer<Input,Position>
 {
 public:
    /** Default constructor. */
-   ThreeDMouse()
+   ThreeDMouse() : mExitFlag(false)
    {
       mThreadID = NULL;
    }
 
+   ~ThreeDMouse()
+   {
+      stopSampling();
+   }
+
    virtual bool config(jccl::ConfigElementPtr e);
+   void controlLoop(void* nullParam);
 
    /** Input pure virtual functions **/
    bool startSampling();
@@ -173,6 +179,7 @@ protected:
 
 private:
    int mouseFD;
+   bool mExitFlag;
 
    //gadget::PositionData mData[3];
 

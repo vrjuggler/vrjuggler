@@ -96,7 +96,7 @@ protected:
 
 public:
    /** Construction/Destruction */
-   IBox() //: Input(), Digital(), Analog()  <<<<< HERE
+   IBox() : mDoneFlag(false) //: Input(), Digital(), Analog()  <<<<< HERE
    {
       // re-set Analog min/max values to ibox defaults.
       this->setMin( 0.0f );
@@ -113,6 +113,7 @@ public:
    void updateData();
 
    static std::string getElementType();
+   void controlLoop(void* nullParam);
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -133,6 +134,7 @@ protected:
       delete this;
    }
 
+
 private:
    // juggler ibox data in the range of [0..255]
    //IBOX_DATA   theData[3];
@@ -141,6 +143,7 @@ private:
    IboxStandalone mPhysicalIbox;
    std::string    mPortName;
    long           mBaudRate;
+   bool           mDoneFlag;
 };
 
 } // End of gadget namespace

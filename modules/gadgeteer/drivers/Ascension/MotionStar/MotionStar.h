@@ -207,7 +207,7 @@ public:
    /**
     * Samples data.
     *
-    * @pre mMotionStar has been initialized.
+    * @pre mMotionStar has been initia,lized.
     * @post If the device is active, a sample is made from it.  Data are
     *       read from each of the birds into the current read buffer, and
     *       transforms are constructed based on what was received.  Once
@@ -565,6 +565,11 @@ public:
    }
 
    /**
+    * Control loop for sampling. Waits on flag.
+    */
+   void controlLoop(void* nullParam);
+
+   /**
     * Invokes the global scope delete operator.  This is required for proper
     * releasing of memory in DLLs on Win32.
     */
@@ -596,6 +601,7 @@ private:
 
    vpr::Thread*         mMyThread;   /**< The thread doing the flock sampling */
    MotionStarStandalone mMotionStar; /**< Actual MotionStar device driver */
+   bool                 mExitFlag;
 
     //PositionData*       mData;
 };

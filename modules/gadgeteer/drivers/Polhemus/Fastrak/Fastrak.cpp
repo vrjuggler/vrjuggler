@@ -430,8 +430,12 @@ bool Fastrak::startSampling()
    {
       if (mFastrakDev.trackerInit().failure())
 	      return status;
-
-      mSampleThread = new vpr::Thread(threadedSampleFunction, (void*)this);
+   
+      
+      mExitFlag = false;
+      vpr::ThreadMemberFunctor<Fastrak>* member_thread =
+         new vpr::ThreadMemberFunctor<Fastrak>(this, &Fastrak::controlLoop, NULL);
+      mSampleThread = new vpr::Thread(member_thread);
 
       if ( mSampleThread->valid() )
       {
@@ -492,9 +496,11 @@ void Fastrak::updateData()
 // kill sample thread
 bool Fastrak::stopSampling()
 {
+
    if ( mSampleThread != NULL )
    {
-      mSampleThread->kill();
+      mExitFlag = true;
+      mSampleThread->join();
       delete mSampleThread;
       mSampleThread = NULL;
    }
@@ -545,14 +551,14 @@ gmtl::Matrix44f Fastrak::getPosData( int station )
    return position_matrix;
 }
 
-void Fastrak::threadedSampleFunction( void* classPointer )
+void Fastrak::controlLoop( void* nullParam )
 {
-   Fastrak* this_ptr = static_cast<Fastrak*>( classPointer );
+   boost::ignore_unused_variable_warning(nullParam);
 
-   // XXX: I can never exit!
-   while ( 1 )
+   // Exit when flag is set...
+   while ( !mExitFlag )
    {
-      this_ptr->sample();
+      sample();
       vpr::System::msleep(10);
    }
 }

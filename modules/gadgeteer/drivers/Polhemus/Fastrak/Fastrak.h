@@ -126,12 +126,13 @@ protected:
    }
 
 private:
-   static void threadedSampleFunction(void* classPointer);
+   void controlLoop(void* nullParam);
 
    int mButtonState;                   /**< only one button on station 0 */
    float mTrackersPosition[4][3];      /**< 4 stations, 3 coordinates */
    float mTrackersOrientation[4][3];   /**< 4 stations, 3 orientations */
    vpr::Thread* mSampleThread;
+   bool mExitFlag;
 
    char* mConfigFile;
 

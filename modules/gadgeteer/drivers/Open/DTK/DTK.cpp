@@ -227,7 +227,7 @@ void DTK::controlLoop(void* nullParam)
 //    resetIndexes();
 
 // Loop through and keep sampling
-   for ( ;; )
+   while(!mExitFlag)
    {
       this->sample();
    }
@@ -261,6 +261,8 @@ bool DTK::startSampling()
             << vprDEBUG_FLUSH;
          return 0;
       }
+
+      mExitFlag = false;
 
       // Create a new thread to handle the control
       vpr::ThreadMemberFunctor<DTK>* memberFunctor =
@@ -375,13 +377,16 @@ bool DTK::stopSampling()
       return 0;
    }
 
-   if ( mThread != NULL )
+   if( mThread != NULL)
    {
+
+      mExitFlag = true;
+
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "gadget::DTK::stopSampling(): Stopping the DTK thread... "
          << vprDEBUG_FLUSH;
 
-      mThread->kill();
+      mThread->join();
       delete mThread;
       mThread = NULL;
 
@@ -390,7 +395,6 @@ bool DTK::stopSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "stopped." << std::endl << vprDEBUG_FLUSH;
    }
-
    return 1;
 }
 
