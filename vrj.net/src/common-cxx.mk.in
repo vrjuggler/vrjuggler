@@ -29,6 +29,7 @@ include @topdir@/src/common.mk
 
 CXX=		@CXX@
 CXX_PLUGIN=	@CXX_PLUGIN@
+DEFS=		@DEFS@
 
 ifeq (@OS_TYPE@, Win32)
    ARFLAGS+=	$(LDFLAGS)
@@ -90,7 +91,7 @@ debug:
 	$(MAKE) BUILD_TYPE=DEBUG $(DLL)
 
 $(OBJDIR)/%.$(OBJEXT): %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OBJ_NAME_FLAG) -c $<
+	$(CXX) $(DEFS) $(CXXFLAGS) $(INCLUDES) $(OBJ_NAME_FLAG) -c $<
 
 $(DLL): $(OBJS) $(DLL_DEPS)
 	$(CXX_PLUGIN) $(OBJ_NAME_FLAG) $(OBJS) $(LDFLAGS) $(LIBS)	\
