@@ -8,9 +8,9 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: CfgTest input ogl pfNav Quat
+all: CfgTest input ogl pfNav Quat threads
 
-CfgTest input ogl pfNav Quat::
+CfgTest input ogl pfNav Quat threads::
 	cd $@ && ${MAKE} all
 
 # -----------------------------------------------------------------------------
@@ -22,3 +22,4 @@ clean:
 	-cd ogl     && ${MAKE} clean
 	-cd pfNav   && ${MAKE} clean
 	-cd Quat    && ${MAKE} clean
+	-cd threads && ${MAKE} clean
