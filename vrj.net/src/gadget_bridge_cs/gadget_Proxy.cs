@@ -55,6 +55,7 @@ public abstract class Proxy
       m_updateDataDelegate = new updateDataDelegate(updateData);
       m_getProxiedInputDeviceDelegate = new getProxiedInputDeviceDelegate(getProxiedInputDeviceAdapter);
       m_isStupifiedDelegate = new isStupifiedDelegate(isStupified);
+      m_getTimeStampDelegate = new getTimeStampDelegate(getTimeStampAdapter);
    }
 
    // Constructors.
@@ -64,12 +65,12 @@ public abstract class Proxy
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_Proxy_Proxy__0([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d0, [MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d2, [MarshalAs(UnmanagedType.FunctionPtr)] getProxiedInputDeviceDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] isStupifiedDelegate d4);
+   private extern static IntPtr gadget_Proxy_Proxy__0([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d0, [MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d2, [MarshalAs(UnmanagedType.FunctionPtr)] getProxiedInputDeviceDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] isStupifiedDelegate d4, [MarshalAs(UnmanagedType.FunctionPtr)] getTimeStampDelegate d5);
 
    public Proxy()
    {
       allocDelegates();
-      mRawObject   = gadget_Proxy_Proxy__0(m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_refreshDelegate, m_updateDataDelegate, m_getProxiedInputDeviceDelegate, m_isStupifiedDelegate);
+      mRawObject   = gadget_Proxy_Proxy__0(m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_refreshDelegate, m_updateDataDelegate, m_getProxiedInputDeviceDelegate, m_isStupifiedDelegate, m_getTimeStampDelegate);
       mWeOwnMemory = true;
    }
 
@@ -204,6 +205,18 @@ public abstract class Proxy
    }
 
 
+   // Delegate for the getTimeStamp() callback.
+   protected IntPtr getTimeStampAdapter()
+   {
+      return getTimeStamp().mRawObject;
+   }
+
+   public delegate IntPtr getTimeStampDelegate();
+   protected getTimeStampDelegate m_getTimeStampDelegate;
+
+   public abstract vpr.Interval getTimeStamp();
+
+
    // End of virtual methods.
 
    // Start of static methods.
@@ -259,6 +272,18 @@ public class ProxyMarshaler : ICustomMarshaler
       {
          gadget.Input result;
          result = gadget_Proxy_getProxiedInputDevice__0(mRawObject);
+         return result;
+      }
+
+      [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
+      [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                          MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
+      private extern static vpr.Interval gadget_Proxy_getTimeStamp__0(IntPtr obj);
+
+      public override vpr.Interval getTimeStamp()
+      {
+         vpr.Interval result;
+         result = gadget_Proxy_getTimeStamp__0(mRawObject);
          return result;
       }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.17 of RCSfile: class_cxx_adapter.tmpl,v
+// Generated from Revision: 1.18 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __GADGET_TYPEDPROXY_GADGET__ANALOG_ADAPTER__
@@ -81,9 +81,19 @@ public:
    isStupified_callback_t isStupified_callback;
 
    /// Override for virtual function gadget::Proxy::isStupified.
-   virtual bool isStupified()
+   virtual bool isStupified() const
    {
       bool result = isStupified_callback();
+      return result;
+   }
+
+   typedef vpr::Interval* (*getTimeStamp_callback_t)();
+   getTimeStamp_callback_t getTimeStamp_callback;
+
+   /// Override for virtual function gadget::Proxy::getTimeStamp.
+   virtual vpr::Interval getTimeStamp() const
+   {
+      vpr::Interval result = *(getTimeStamp_callback());
       return result;
    }
 
@@ -101,7 +111,7 @@ public:
    getDeviceName_callback_t getDeviceName_callback;
 
    /// Override for virtual function gadget::TypedProxy<gadget::Analog>::getDeviceName.
-   virtual std::basic_string<char,std::char_traits<char>,std::allocator<char> > getDeviceName()
+   virtual std::basic_string<char,std::char_traits<char>,std::allocator<char> > getDeviceName() const
    {
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > result = getDeviceName_callback();
       return result;

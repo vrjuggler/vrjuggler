@@ -148,7 +148,7 @@ esac
 VPR_PATH([0.34.2], , [AC_MSG_ERROR([*** VPR is required for VRJ.NET ***])])
 JCCL_PATH([0.15], ,
           [AC_MSG_ERROR([*** JCCL is required for VRJ.NET ***])])
-GADGETEER_PATH([0.14.2], ,
+GADGETEER_PATH([0.15.1], ,
                [AC_MSG_ERROR([*** Gadgeteer is required for VRJ.NET ***])])
 VRJUGGLER_PATH([1.1.148], ,
                [AC_MSG_ERROR([*** VR Juggler is required for VRJ.NET ***])])

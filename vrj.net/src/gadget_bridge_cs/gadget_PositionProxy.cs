@@ -102,19 +102,6 @@ public sealed class PositionProxy
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
-                       MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
-   private extern static vpr.Interval gadget_PositionProxy_getTimeStamp__0(IntPtr obj);
-
-   public  vpr.Interval getTimeStamp()
-   {
-      vpr.Interval result;
-      result = gadget_PositionProxy_getTimeStamp__0(mRawObject);
-      return result;
-   }
-
-
-   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Matrix44fMarshaler))]
    private extern static gmtl.Matrix44f gadget_PositionProxy_getData__float0(IntPtr obj);
 
@@ -162,6 +149,19 @@ public sealed class PositionProxy
    public override void updateData()
    {
       gadget_PositionProxy_updateData__0(mRawObject);
+   }
+
+
+   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
+   private extern static vpr.Interval gadget_PositionProxy_getTimeStamp__0(IntPtr obj);
+
+   public override vpr.Interval getTimeStamp()
+   {
+      vpr.Interval result;
+      result = gadget_PositionProxy_getTimeStamp__0(mRawObject);
+      return result;
    }
 
 

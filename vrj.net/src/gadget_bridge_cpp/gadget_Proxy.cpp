@@ -36,7 +36,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_Proxy_Adapter* gadget_Proxy_Proxy__0(gadget_Proxy_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Proxy_Adapter::refresh_callback_t cb1, gadget_Proxy_Adapter::updateData_callback_t cb2, gadget_Proxy_Adapter::getProxiedInputDevice_callback_t cb3, gadget_Proxy_Adapter::isStupified_callback_t cb4)
+   SHARPPY_API gadget_Proxy_Adapter* gadget_Proxy_Proxy__0(gadget_Proxy_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Proxy_Adapter::refresh_callback_t cb1, gadget_Proxy_Adapter::updateData_callback_t cb2, gadget_Proxy_Adapter::getProxiedInputDevice_callback_t cb3, gadget_Proxy_Adapter::isStupified_callback_t cb4, gadget_Proxy_Adapter::getTimeStamp_callback_t cb5)
    {
       gadget_Proxy_Adapter* obj = new gadget_Proxy_Adapter();
       obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb0;
@@ -44,6 +44,7 @@ extern "C"
       obj->updateData_callback = cb2;
       obj->getProxiedInputDevice_callback = cb3;
       obj->isStupified_callback = cb4;
+      obj->getTimeStamp_callback = cb5;
       return obj;
    }
 
@@ -122,6 +123,15 @@ extern "C"
    {
       bool result;
       result = self_->gadget::Proxy::isStupified();
+      return result;
+   }
+
+
+   // Wrapper for virtual method gadget::Proxy::getTimeStamp()
+   SHARPPY_API vpr::Interval* gadget_Proxy_getTimeStamp__0(gadget_Proxy_Adapter* self_)
+   {
+      vpr::Interval* result;
+      result = new vpr::Interval(self_->getTimeStamp());
       return result;
    }
 

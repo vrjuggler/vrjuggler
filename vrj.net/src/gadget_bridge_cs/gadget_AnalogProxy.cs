@@ -101,19 +101,6 @@ public sealed class AnalogProxy
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   [return : MarshalAs(UnmanagedType.CustomMarshaler,
-                       MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
-   private extern static vpr.Interval gadget_AnalogProxy_getTimeStamp__0(IntPtr obj);
-
-   public  vpr.Interval getTimeStamp()
-   {
-      vpr.Interval result;
-      result = gadget_AnalogProxy_getTimeStamp__0(mRawObject);
-      return result;
-   }
-
-
-   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    private extern static float gadget_AnalogProxy_getData__0(IntPtr obj);
 
    public  float getData()
@@ -160,6 +147,19 @@ public sealed class AnalogProxy
    public override void updateData()
    {
       gadget_AnalogProxy_updateData__0(mRawObject);
+   }
+
+
+   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
+   private extern static vpr.Interval gadget_AnalogProxy_getTimeStamp__0(IntPtr obj);
+
+   public override vpr.Interval getTimeStamp()
+   {
+      vpr.Interval result;
+      result = gadget_AnalogProxy_getTimeStamp__0(mRawObject);
+      return result;
    }
 
 

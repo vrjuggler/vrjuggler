@@ -101,19 +101,6 @@ public sealed class DigitalProxy
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   [return : MarshalAs(UnmanagedType.CustomMarshaler,
-                       MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
-   private extern static vpr.Interval gadget_DigitalProxy_getTimeStamp__0(IntPtr obj);
-
-   public  vpr.Interval getTimeStamp()
-   {
-      vpr.Interval result;
-      result = gadget_DigitalProxy_getTimeStamp__0(mRawObject);
-      return result;
-   }
-
-
-   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    private extern static gadget.Digital.State gadget_DigitalProxy_getData__0(IntPtr obj);
 
    public  gadget.Digital.State getData()
@@ -173,6 +160,19 @@ public sealed class DigitalProxy
    public override void updateData()
    {
       gadget_DigitalProxy_updateData__0(mRawObject);
+   }
+
+
+   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
+   private extern static vpr.Interval gadget_DigitalProxy_getTimeStamp__0(IntPtr obj);
+
+   public override vpr.Interval getTimeStamp()
+   {
+      vpr.Interval result;
+      result = gadget_DigitalProxy_getTimeStamp__0(mRawObject);
+      return result;
    }
 
 

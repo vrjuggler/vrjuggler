@@ -37,7 +37,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_TypedProxy_gadget__Position_Adapter* gadget_TypedProxy_gadget_Position__TypedProxy__0(gadget_TypedProxy_gadget__Position_Adapter::refresh_callback_t cb0, gadget_TypedProxy_gadget__Position_Adapter::getDeviceName_callback_t cb1, gadget_TypedProxy_gadget__Position_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, gadget_TypedProxy_gadget__Position_Adapter::updateData_callback_t cb3, gadget_TypedProxy_gadget__Position_Adapter::getProxiedInputDevice_callback_t cb4, gadget_TypedProxy_gadget__Position_Adapter::isStupified_callback_t cb5)
+   SHARPPY_API gadget_TypedProxy_gadget__Position_Adapter* gadget_TypedProxy_gadget_Position__TypedProxy__0(gadget_TypedProxy_gadget__Position_Adapter::refresh_callback_t cb0, gadget_TypedProxy_gadget__Position_Adapter::getDeviceName_callback_t cb1, gadget_TypedProxy_gadget__Position_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, gadget_TypedProxy_gadget__Position_Adapter::updateData_callback_t cb3, gadget_TypedProxy_gadget__Position_Adapter::getProxiedInputDevice_callback_t cb4, gadget_TypedProxy_gadget__Position_Adapter::isStupified_callback_t cb5, gadget_TypedProxy_gadget__Position_Adapter::getTimeStamp_callback_t cb6)
    {
       gadget_TypedProxy_gadget__Position_Adapter* obj = new gadget_TypedProxy_gadget__Position_Adapter();
       obj->refresh_callback = cb0;
@@ -46,6 +46,7 @@ extern "C"
       obj->updateData_callback = cb3;
       obj->getProxiedInputDevice_callback = cb4;
       obj->isStupified_callback = cb5;
+      obj->getTimeStamp_callback = cb6;
       return obj;
    }
 
