@@ -41,7 +41,7 @@ namespace jccl {
     class Connect;
     class JackalServer;
     
-    class JackalControl {
+    class VJ_CLASS_API JackalControl {
         
     public:
         

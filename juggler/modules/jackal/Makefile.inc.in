@@ -78,7 +78,6 @@ STATIC_LIBS	= $(LIBS)
 DYNAMIC_LIBS	= $(LIBS)
 
 # Dependencies for each of the various dynamic libraries we build.
-DYLIB_DEPS		= @DYLIB_DEPS@
 DYLIB_DEPS_JCCL         = @DYLIB_DEPS_JCCL@
 JCCL_LIB_STATIC	        = $(JCCL_LIBRARY).$(STATICLIB_EXT)
 JCCL_LIB_DYNAMIC	= $(JCCL_LIBRARY).$(DYNAMICLIB_EXT)
@@ -139,7 +138,7 @@ $(LIBDIR)/$(JCCL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_DEPS) $(DYLIB_DEPS_JCCL)
+            $(DYLIB_DEPS_JCCL)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && rm -f $(JCCL_LIB_STATIC) &&		\
