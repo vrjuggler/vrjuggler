@@ -5,6 +5,8 @@
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjSimulator.h>
 #include <Kernel/GL/vjGlApp.h>
+#include <Input/vjGlove/vjGlove.h>
+#include <Input/InputManager/vjGloveProxy.h>
 
 vjGlDrawManager* vjGlDrawManager::_instance = NULL;
 
@@ -161,6 +163,25 @@ void vjGlDrawManager::closeAPI()
     // Close and delete all glWindows
 }
 
+// Draw any objects that we need to display in the scene
+// from the system.  (i.e. Gloves, etc)
+// XXX: Performance Critical problems here
+void vjGlDrawManager::drawObjects()
+{
+   vjInputManager*  input_mgr = vjKernel::instance()->getInputManager();
+
+   // Draw all glove Proxies that have drawing flag set
+   vjGloveProxy* cur_glove_proxy;
+   for(int glv=0;glv<input_mgr->getNumGloveProxies();glv++)    // For each glove in system
+   {
+      cur_glove_proxy = input_mgr->GetGloveProxy(glv);         // Get the glove proxy
+      if(cur_glove_proxy->isVisible())                         // If flag set
+         drawGlove(cur_glove_proxy);                           // draw it
+   }
+
+   // Draw any other object that need to be seen
+}
+
 //: Draw a simulator using OpenGL commands
 //! NOTE: This is called internally by the library
 void vjGlDrawManager::drawSimulator(vjSimulator* sim)
@@ -171,7 +192,7 @@ void vjGlDrawManager::drawSimulator(vjSimulator* sim)
    const float interoccular(0.27);
    const float eye_radius(0.08f);
 
-      // Draw a vj-like outline
+      // Draw a cave-like outline
    glPushMatrix();
       glColor3f(1.0f, 1.0f, 1.0f);
       glTranslatef(0.0f, 5.0f, 0.0f);      // Center it on 0,0,0
@@ -223,6 +244,14 @@ void vjGlDrawManager::initQuadObj()
 {
    if (mQuadObj == NULL)
       mQuadObj = gluNewQuadric();
+}
+
+void vjGlDrawManager::drawLine(vjVec3& start, vjVec3& end)
+{
+   glBegin(GL_LINES);
+      glVertex3fv(start.vec);
+      glVertex3fv(end.vec);
+   glEnd();
 }
 
 void vjGlDrawManager::drawSphere(float radius, int slices, int stacks)
@@ -295,6 +324,100 @@ void vjGlDrawManager::drawWireCube(float size)
 void vjGlDrawManager::drawSolidCube(float size)
 {
   drawBox(size, GL_QUADS);
+}
+
+// Draw a glove outline for the user
+// This may be ugly for now.
+// For each finger, step down it's xforms drawing the finger
+// links as you go.
+void vjGlDrawManager::drawGlove(vjGloveProxy* gloveProxy)
+{
+   vjMatrix    base_glove_pos = gloveProxy->getPos();    // Get the location of the base coord system
+   vjGloveData gd = gloveProxy->getData();       // Get the glove data
+   vjVec3      origin(0.0f,0.0f,0.0f);
+
+   glColor3f(0.0f, 1.0f, 0.0f);
+
+   glPushMatrix();
+   {
+      // Get to hand coord system to start drawing
+      glMultMatrixf(base_glove_pos.getFloatPtr());
+
+      // Draw PALM
+      glPushMatrix();
+      {
+         drawSphere((1.5f/12.0f), 6, 6);
+      }
+      glPopMatrix();
+
+      // Draw INDEX finger
+      glPushMatrix();
+      {
+         glMultMatrixf(gd.xforms[vjGloveData::INDEX][vjGloveData::MPJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::INDEX][vjGloveData::PIJ]);
+         glMultMatrixf(gd.xforms[vjGloveData::INDEX][vjGloveData::PIJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::INDEX][vjGloveData::DIJ]);
+         glMultMatrixf(gd.xforms[vjGloveData::INDEX][vjGloveData::DIJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::INDEX][vjGloveData::DIJ+1]);
+      }
+      glPopMatrix();
+
+      // Draw MIDDLE finger
+      glPushMatrix();
+      {
+         glMultMatrixf(gd.xforms[vjGloveData::MIDDLE][vjGloveData::MPJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::MIDDLE][vjGloveData::PIJ]);
+         glMultMatrixf(gd.xforms[vjGloveData::MIDDLE][vjGloveData::PIJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::MIDDLE][vjGloveData::DIJ]);
+         glMultMatrixf(gd.xforms[vjGloveData::MIDDLE][vjGloveData::DIJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::MIDDLE][vjGloveData::DIJ+1]);
+      }
+      glPopMatrix();
+
+      // Draw RING finger
+      glPushMatrix();
+      {
+         glMultMatrixf(gd.xforms[vjGloveData::RING][vjGloveData::MPJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::RING][vjGloveData::PIJ]);
+         glMultMatrixf(gd.xforms[vjGloveData::RING][vjGloveData::PIJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::RING][vjGloveData::DIJ]);
+         glMultMatrixf(gd.xforms[vjGloveData::RING][vjGloveData::DIJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::RING][vjGloveData::DIJ+1]);
+      }
+      glPopMatrix();
+
+      // Draw PINKY finger
+      glPushMatrix();
+      {
+         glMultMatrixf(gd.xforms[vjGloveData::PINKY][vjGloveData::MPJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::PINKY][vjGloveData::PIJ]);
+         glMultMatrixf(gd.xforms[vjGloveData::PINKY][vjGloveData::PIJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::PINKY][vjGloveData::DIJ]);
+         glMultMatrixf(gd.xforms[vjGloveData::PINKY][vjGloveData::DIJ].getFloatPtr());
+         drawSphere((0.1f/12.0f), 6, 6);
+         drawLine(origin, gd.dims[vjGloveData::PINKY][vjGloveData::DIJ+1]);
+      }
+      glPopMatrix();
+
+      // Draw THUMB
+      glPushMatrix();
+      {
+
+      }
+      glPopMatrix();
+   }
+   glPopMatrix();
 }
 
 
