@@ -230,26 +230,26 @@ public class CreateClusteredSimDevicesPanel extends JPanel
   {
     try{
       // Set the paths to the known config files.
-      String base_path = this.mConfigFilePath + "/sim.base.config";
-      String wand_path = this.mConfigFilePath + "/sim.wand.mixin.config";
+      String base_path = this.mConfigFilePath + "/sim.base.jconf";
+      String wand_path = this.mConfigFilePath + "/sim.wand.mixin.jconf";
 
       // Expand in the cas of enviroment variables
       EnvironmentService env_service = new EnvironmentServiceProxy();
       base_path = env_service.expandEnvVars(base_path);
       wand_path = env_service.expandEnvVars(wand_path);
 
-      // Load sim.base.config
+      // Load sim.base.jconf
       FileDataSource base_filesource = FileDataSource.open(base_path, mBroker.getRepository());
-      mBroker.add("sim.base.config", base_filesource);
+      mBroker.add("sim.base.jconf", base_filesource);
 
-      // Load sim.wand.minxin.config
+      // Load sim.wand.minxin.jconf
       FileDataSource wand_filesource = FileDataSource.open(wand_path, mBroker.getRepository());
-      mBroker.add("sim.wand.mixin.config", wand_filesource);
+      mBroker.add("sim.wand.mixin.jconf", wand_filesource);
 
       // Create a new context and add both file sources to it
       ConfigContext ctx = new ConfigContext();
-      ctx.add("sim.base.config");
-      ctx.add("sim.wand.mixin.config");
+      ctx.add("sim.base.jconf");
+      ctx.add("sim.wand.mixin.jconf");
 
       // Get all elements from the two files
       java.util.List temp_list = mBroker.getElements(ctx);
@@ -271,8 +271,8 @@ public class CreateClusteredSimDevicesPanel extends JPanel
           //mBroker.add(mContext, new ConfigChunk(chunk));
         }
       }
-      mBroker.remove("sim.base.config");
-      mBroker.remove("sim.wand.mixin.config");
+      mBroker.remove("sim.base.jconf");
+      mBroker.remove("sim.wand.mixin.jconf");
     }
     catch(java.io.IOException exp)
     {
