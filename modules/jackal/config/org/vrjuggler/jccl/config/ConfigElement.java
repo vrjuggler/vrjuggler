@@ -273,7 +273,6 @@ public class ConfigElement implements ConfigElementPointerListener
          ConfigElementPropertyEdit new_edit =
             new ConfigElementPropertyEdit(this, name, index, old_value, value);
          setProperty(name, index, value);
-         System.out.println("Adding: " + new_edit);
          ctx.postEdit(new_edit);
       }
    }
