@@ -105,6 +105,12 @@ public class TweekCore
          System.err.println("WARNING: Failed to register command-line arguments");
       }
 
+      // Explicitly load the global preferences now.  The
+      // GlobalPreferencesService class does not load them automatically.
+      GlobalPreferencesService global_prefs =
+         (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
+      global_prefs.load();
+
       m_gui = new TweekFrame();
 
       // Now we need to register the TweekFrame instance as a listener for
@@ -221,6 +227,14 @@ public class TweekCore
             {
                System.out.println("WARNING: Invalid path " + path);
             }
+         }
+         else if ( args[i].startsWith("--prefs=") )
+         {
+            int start   = args[i].indexOf('=') + 1;
+            String path = args[i].substring(start);
+            GlobalPreferencesService prefs =
+               (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
+            prefs.setFileName(path);
          }
          else
          {
