@@ -23,14 +23,6 @@ CPPUNIT_TEST( ReplaceEnvVarsTest );
 CPPUNIT_TEST_SUITE_END();
 
 public:
-   FileUtilsTest() : CppUnit::TestCase ()
-   {
-   }
-
-   FileUtilsTest(std::string name) : CppUnit::TestCase (name)
-   {
-   }
-
    virtual ~FileUtilsTest()
    {
    }
