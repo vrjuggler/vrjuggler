@@ -49,9 +49,15 @@
 
 #include <linux/joystick.h>      // Get the joystick abilities
 
-void initDevice(gadget::InputManager* inputMgr)
+
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::LinuxJoydev>(inputMgr);
+}
+
 }
 
 namespace gadget

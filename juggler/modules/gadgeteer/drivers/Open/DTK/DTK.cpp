@@ -44,9 +44,14 @@
 #include <drivers/Open/DTK/DTK.h>
 
 
-void initDevice(gadget::InputManager* inputMgr)
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::DTK>(inputMgr);
+}
+
 }
 
 // Helper to return the index for theData array

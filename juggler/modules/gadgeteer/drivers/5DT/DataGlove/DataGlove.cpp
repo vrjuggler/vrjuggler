@@ -42,9 +42,14 @@
 #include <drivers/5DT/DataGlove/DataGlove.h> /* Gadgeteer dataglove driver */
 
 
-void initDevice(gadget::InputManager* inputMgr)
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::DataGlove>(inputMgr);
+}
+
 }
 
 namespace gadget

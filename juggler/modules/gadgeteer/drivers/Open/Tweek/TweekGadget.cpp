@@ -48,9 +48,14 @@
 #include <drivers/Open/Tweek/TweekGadget.h>
 
 
-void initDevice(gadget::InputManager* inputMgr)
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::TweekGadget>(inputMgr);
+}
+
 }
 
 namespace gadget

@@ -60,12 +60,6 @@
 #define IS_BUTTON_NUM MAX_NUM_BUTTONS*MAX_NUM_STATIONS
 #define IS_ANALOG_NUM MAX_ANALOG_CHANNELS*MAX_NUM_STATIONS
 
-namespace gadget
-{
-   class InputManager;
-}
-
-extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {

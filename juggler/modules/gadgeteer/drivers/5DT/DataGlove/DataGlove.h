@@ -46,13 +46,6 @@
 
 namespace gadget
 {
-   class InputManager;
-}
-
-extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
-
-namespace gadget
-{
 
 /**
  * Software interface to 5DT Dataglove hardware.

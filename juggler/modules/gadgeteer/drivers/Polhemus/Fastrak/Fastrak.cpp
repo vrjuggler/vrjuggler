@@ -50,9 +50,14 @@
 #include <gadget/Type/DeviceConstructor.h>
 #include <drivers/Polhemus/Fastrak/Fastrak.h>
 
-void initDevice(gadget::InputManager* inputMgr)
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::Fastrak>(inputMgr);
+}
+
 }
 
 static void printError(std::string errorMsg)

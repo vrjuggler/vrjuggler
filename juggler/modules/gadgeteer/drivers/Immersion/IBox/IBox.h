@@ -47,12 +47,6 @@
 #include <gadget/Type/InputMixer.h>
 #include <drivers/Immersion/IBox/IBoxStandalone.h>
 
-namespace gadget
-{
-   class InputManager;
-}
-
-extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {

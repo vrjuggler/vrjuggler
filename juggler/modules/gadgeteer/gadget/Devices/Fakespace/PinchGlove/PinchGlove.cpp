@@ -46,9 +46,14 @@
 #include <gadget/Devices/Fakespace/PinchGlove/PinchGlove.h> /* Gadgeteer pinch driver */
 
 
-void initDevice(gadget::InputManager* inputMgr)
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::PinchGlove>(inputMgr);
+}
+
 }
 
 namespace gadget
