@@ -34,61 +34,70 @@ public class ChunkDesc {
 
 
 
-  public boolean equals (ChunkDesc c) {
-    PropertyDesc p1, p2;
-    if (!token.equals(c.token))
-      return false;
-
-    /* This next part is O(n^2) <sigh> */
-    for (int i = 0; i < props.size(); i++) {
-      p1 = (PropertyDesc) props.elementAt(i);
-      p2 = c.getPropertyDesc(p1.token);
-      if ((p2 == null) || (!p1.equals(p2)))
-        return false;
+    public String getName () {
+	return name;
     }
-    return true;
-  }
 
 
-
-  public void addNameProperty () {
-    /* quick little function to add in a name property if it isn't already
-     * in the ChunkDesc.
-     */
-    PropertyDesc named;
-    named = getPropertyDesc("Name");
-    if (named == null) {
-      named = new PropertyDesc();
-      named.name = named.token = "Name";
-      named.help = "Unique name of an instance of this chunk type";
-      named.valtype = new ValType("string");
-      props.insertElementAt (named,0);
+    public boolean equals (ChunkDesc c) {
+	PropertyDesc p1, p2;
+	if (!token.equals(c.token))
+	    return false;
+	
+	/* This next part is O(n^2) <sigh> */
+	for (int i = 0; i < props.size(); i++) {
+	    p1 = (PropertyDesc) props.elementAt(i);
+	    p2 = c.getPropertyDesc(p1.token);
+	    if ((p2 == null) || (!p1.equals(p2)))
+		return false;
+	}
+	return true;
     }
-    else
-      named.help = "Unique name of an instance of this chunk type";
-  }
 
 
 
-  public String toString() {
-    String s = "chunk " + token + " \""
- + name + "\" \"" + help + "\"\n";
-    for (int i = 0; i < props.size(); i++)
-      s += "  " + ((PropertyDesc)props.elementAt(i)).toString() + "\n";
-    s += "  end\n";
-    System.out.println ("string rep is:\n" + s);
-    return s;
-  }
-
-  public PropertyDesc getPropertyDesc (String tok) {
-    PropertyDesc p;
-    for (int i = 0; i < props.size(); i++) {
-      p = (PropertyDesc)props.elementAt(i);
-      if (p.token.equalsIgnoreCase(tok))
-	return p;
+    private void addNameProperty () {
+	/* quick little function to add in a name property if it isn't already
+	 * in the ChunkDesc.
+	 */
+	PropertyDesc named;
+	named = getPropertyDesc("Name");
+	if (named == null) {
+	    named = new PropertyDesc();
+	    named.name = named.token = "Name";
+	    named.help = "Unique name of an instance of this chunk type";
+	    named.valtype = new ValType("string");
+	    props.insertElementAt (named,0);
+	}
+	else
+	    named.help = "Unique name of an instance of this chunk type";
     }
-    return null;
-  }
+
+
+
+    public String toString() {
+	String s = "chunk " + token + " \""
+	    + name + "\" \"" + help + "\"\n";
+	for (int i = 0; i < props.size(); i++)
+	    s += "  " + ((PropertyDesc)props.elementAt(i)).toString() + "\n";
+	s += "  end\n";
+	//System.out.println ("string rep is:\n" + s);
+	return s;
+    }
+
+
+
+    public PropertyDesc getPropertyDesc (String tok) {
+	PropertyDesc p;
+	for (int i = 0; i < props.size(); i++) {
+	    p = (PropertyDesc)props.elementAt(i);
+	    if (p.token.equalsIgnoreCase(tok))
+		return p;
+	}
+	return null;
+    }
+
+
 
   public boolean read (ConfigStreamTokenizer st) {
     /* the first line of the description ("chunk name") has already been
@@ -124,3 +133,4 @@ public class ChunkDesc {
   }
   
 }
+

@@ -3,27 +3,31 @@ package VjConfig;
 
 import java.util.Vector;
 import VjConfig.ConfigChunk;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import VjConfig.ConfigStreamTokenizer;
-import java.io.InputStreamReader;
 
 public class ConfigChunkDB extends Vector {
 
     private ChunkDescDB descs;
-  public String name;
-  public String directory;
+    public String name;
+    public File file;
+
+    /* note: it's generally assumed that name will be the last component of file,
+     * but that won't always be the case - e.g. 2 dbs named "config" in different
+     * directories might get their names set to "config <1>" and "config <2>"
+     * by the GUI.
+     */
 
     public ConfigChunkDB (ChunkDescDB d) {
 	super();
 	descs = d;
-	name = "Unnamed";
-	directory = "";
+	name = "Untitled";
+	file = new File("Untitled");
     }
 
 
-  public void setDirectory (String _dir) {
-    directory = _dir;
+  public void setFile (File f) {
+    file = f;
   }
 
   public void setName (String _name) {
