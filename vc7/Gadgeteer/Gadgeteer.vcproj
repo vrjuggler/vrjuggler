@@ -199,16 +199,7 @@
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\EndBlock.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\Event.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindowProxy.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Devices\EventWindow\EventWindowWin32.cpp">
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Event.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\GestureProxy.cpp">
@@ -232,7 +223,7 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Input.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Devices\EventWindow\InputAreaWin32.cpp">
+				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputAreaWin32.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\InputLogger.cpp">
@@ -241,10 +232,22 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\InputManager.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\KeyEvent.cpp">
+				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputWindowWin32.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\MouseEvent.cpp">
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\KeyboardMouseDevice.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseProxy.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEvent.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Node.cpp">
@@ -443,25 +446,13 @@
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\EndBlock.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\Event.h">
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Event.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\EventFactory.h">
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventFactory.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\EventPtr.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindowInterface.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindowProxy.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Devices\EventWindow\EventWindowWin32.h">
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventPtr.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Gesture.h">
@@ -494,7 +485,10 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Input.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Devices\EventWindow\InputAreaWin32.h">
+				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputArea.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputAreaWin32.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputData.h">
@@ -512,22 +506,37 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputMixer.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\KeyEvent.h">
+				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputWindowWin32.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\KeyEventPtr.h">
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\Keys.h">
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEventPtr.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\KeyboardMouseDevice.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseInterface.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseProxy.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Keys.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\LinearSigmoidPositionFilter.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\MouseEvent.h">
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEvent.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\EventWindow\MouseEventPtr.h">
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEventPtr.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\NetworkManager.h">
