@@ -60,7 +60,6 @@ ifeq ($(HAVE_TWEEK_CXX), Y)
    CXX_IDL_OPTS=	@TWEEK_CXX_IDL_OPTS@ @TWEEK_CXX_IDL_GENDIR_OPT@$(srcdir)
    CXX_IDL_INCLUDES=	@TWEEK_CXX_IDL_INCFLAG@$(top_srcdir)
    IDL_CXX_FILES=	RTRCInterfaceSubject.cpp RTRCInterfaceSubject.h
-   INSTALL_FILES+=	$(srcdir)/*.idl
 
    SRCS+=		RTRCInterfaceSubjectImpl.cpp	\
 			RTRCInterfaceSubject.cpp	\
@@ -77,6 +76,7 @@ EXTRA_INCLUDES+= \
 include $(MKPATH)/dpp.obj.mk
 
 ifeq ($(HAVE_TWEEK_CXX), Y)
+   INSTALL_FILES+=	$(srcdir)/*.idl
    CLEAN_FILES+=	$(addprefix $(srcdir)/, $(IDL_CXX_FILES))
 endif
 
