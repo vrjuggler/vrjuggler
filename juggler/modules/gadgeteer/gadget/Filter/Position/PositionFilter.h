@@ -36,6 +36,7 @@
 #include <typeinfo>
 #include <vector>
 
+#include <jccl/Config/ConfigChunkPtr.h>
 #include <gadget/Type/PositionData.h>
 //#include <gadget/Type/SampleBuffer.h>
 
