@@ -248,10 +248,10 @@ std::ostream& operator<<(std::ostream& out, vjInputManager& iMgr)
 
   for (unsigned i = 0; i < iMgr.m_devVector.size(); i++)      // Dump DEVICES
      if (iMgr.m_devVector[i] != NULL)
-       out << std::setw(2) << i << ":"
-           << "  name:" << std::setw(30) << iMgr.m_devVector[i]->getInstanceName()
-           << "  type:" << std::setw(12) << typeid(*(iMgr.m_devVector[i])).name()
-           << "  port:" << std::setw(10) << iMgr.m_devVector[i]->getPort()
+       out << std::setw(2) << std::setfill(' ') << i << ":"
+           << "  name:" << std::setw(30) << std::setfill(' ') << iMgr.m_devVector[i]->getInstanceName()
+           << "  type:" << std::setw(12) << std::setfill(' ') << typeid(*(iMgr.m_devVector[i])).name()
+           << "  port:" << std::setw(10) << std::setfill(' ') << iMgr.m_devVector[i]->getPort()
            << "  baud:" << iMgr.m_devVector[i]->getBaudRate() << std::endl;
 
   out << "\nProxies:\n";
@@ -483,7 +483,7 @@ bool vjInputManager::removeProxyAlias(vjConfigChunk* chunk)
 // POST: Alias list has alias str refering to proxyName
 void vjInputManager::addProxyAlias(std::string alias_name, std::string proxy_name)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "Proxy alias [" << alias_name.c_str() << "] added.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "Proxy alias [" << alias_name.c_str() << "] added.\n" << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_VERB_LVL)   << "   proxy:" << proxy_name << std::endl << vjDEBUG_FLUSH;
 
    mProxyAliases[alias_name] = proxy_name;
