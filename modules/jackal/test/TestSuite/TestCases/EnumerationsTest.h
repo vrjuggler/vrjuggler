@@ -37,10 +37,10 @@ public:
    void ReadTests () {
       std::string file_path(TESTFILES_PATH);
 
-      jccl::ElementFactory::instance()->loadDefs(file_path + "EnumerationsTest/enumerations_test.desc");
+      jccl::ElementFactory::instance()->loadDefs(file_path + "EnumerationsTest");
 
       jccl::Configuration configuration;
-      configuration.load(file_path + "EnumerationsTest/enumerations_test.config");
+      configuration.load(file_path + "EnumerationsTest/enumerations_test.jconf");
 
       jccl::ConfigElementPtr ch = configuration.get("Motion Star master");
       CPPUNIT_ASSERT(ch.get() != NULL);
