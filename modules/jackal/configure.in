@@ -356,21 +356,6 @@ else
     JCCLROOT_ABS="$JCCLROOT_ABS"
 fi
 
-# Set up some sed expressions that will help separate the share directory from
-# the full installation prefix.
-if test "x$prefix" = "xNONE" ; then
-    _prefix_exp="s|^$ac_default_prefix/||"
-else
-    _prefix_exp="s|^$prefix/||"
-fi
-
-# Make a best-effort attempt to extract the actual share directory from the
-# full installation prefix.  This is not foolproof, but it will work in almost
-# all cases.  A person would have to be doing something malicious or foolish
-# to make it break.
-JCCL_SHARE_DIR=`echo "$datadir/jccl" | sed -e 's|^${prefix}/||'`
-JCCL_SHARE_DIR=`echo "$JCCL_SHARE_DIR" | sed -e "${_prefix_exp}"`
-
 # Information needed to generate jccl-config.
 case $OS_TYPE in
     UNIX)
@@ -433,7 +418,6 @@ AC_SUBST(UNIX_JCCLROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(JCCLROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
-AC_SUBST(JCCL_SHARE_DIR)
 AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(BUILD_CXX)
