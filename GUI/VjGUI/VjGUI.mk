@@ -17,6 +17,7 @@ VJGUI_SOURCES = VjGUI/VjControl.java		\
 		VjGUI/ChunkDBTreeCellRenderer.java \
 		VjGUI/ChunkDBTreeModel.java     \
 		VjGUI/ChunkOrgTree.java         \
+		VjGUI/OrgTreeElem.java          \
 		VjGUI/ChunkOrgTreePane.java     \
 		VjGUI/ChunkTreeNodeInfo.java    \
                 VjGUI/ConfigurePane.java        \
