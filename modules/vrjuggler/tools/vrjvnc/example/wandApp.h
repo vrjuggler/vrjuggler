@@ -70,7 +70,8 @@ class wandApp : public vrj::GlApp
 {
 public:
    // Constructor.
-   wandApp(vrj::Kernel* kern) : vrj::GlApp(kern), mEmbeddedGUI(false)
+   wandApp(vrj::Kernel* kern)
+      : vrj::GlApp(kern), mEmbeddedGUI(false), mFrameRate(vpr::Interval(1, vpr::Interval::Sec))
    {
       ;
    }
