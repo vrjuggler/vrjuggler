@@ -30,55 +30,48 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//#include <gadget/gadgetConfig.h>
 #include <cluster/Packets/ApplicationDataRequest.h>
 #include <gadget/Util/Debug.h>
-
-#include <cluster/ClusterNetwork/ClusterNode.h>
 
 namespace cluster
 {
    ApplicationDataRequest::ApplicationDataRequest(Header* packet_head, vpr::SocketStream* stream)
    {
+      // Receive the data needed for this packet from the given SocketStream.
       recv(packet_head,stream);
+
+      // Parse the new data into member variables.
       parse();
    }
    ApplicationDataRequest::ApplicationDataRequest(const vpr::GUID plugin_guid, const vpr::GUID& id)
    {
-      // Given the input, create the packet and then serialize the packet(which includes the header)
-      // - Set member variables
-      // - Create the correct packet header
-      // - Serialize the packet
-
-      // Set local variables
+      // Set the local member variables using the given values.
       mPluginId = plugin_guid;
       mId = id;
 
-      // Header vars (Create Header)
+      // Create a Header for this packet with the correect type and size.
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_APPDATA_REQ,
                                       Header::RIM_PACKET_HEAD_SIZE 
                                       + 16/*Plugin GUID*/
                                       + 16/*Object GUID*/,
-                                      0);
+                                      0/*Field not curently used*/);
+      // Serialize the given data.
       serialize();
    }
    void ApplicationDataRequest::serialize()
    {
-      // - Clear
-      // - Write Header
-      // - Write data
-      
+      // Clear the data stream.
       mPacketWriter->getData()->clear();
       mPacketWriter->setCurPos(0);
 
-      // Create the header information
+      // Serialize the header.
       mHeader->serializeHeader();
       
-      // Serialize plugin GUID
+      // Serialize plugin GUID.
       mPluginId.writeObject(mPacketWriter);
 
-      // Serialize ApplicationData GUID
+      // Serialize ApplicationData object GUID
       mId.writeObject(mPacketWriter);
    }
    void ApplicationDataRequest::parse()
@@ -86,7 +79,7 @@ namespace cluster
       // De-Serialize plugin GUID
       mPluginId.readObject(mPacketReader);
       
-      // De-Serialize ApplicationData GUID
+      // De-Serialize ApplicationData object GUID
       mId.readObject(mPacketReader);
    }
    

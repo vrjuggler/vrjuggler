@@ -30,108 +30,71 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//#include <gadget/gadgetConfig.h>
-#include <cluster/Packets/ConnectionAck.h>
-#include <cluster/ClusterNetwork/ClusterNetwork.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
 #include <gadget/Util/Debug.h>
+#include <cluster/Packets/ConnectionAck.h>
 
 namespace cluster
 {
    ConnectionAck::ConnectionAck(Header* packet_head, vpr::SocketStream* stream)
    {
+      // Receive the data needed for this packet from the given SocketStream.
       recv(packet_head,stream);
+      
+      // Parse the new data into member variables.
       parse();
    }
-   ConnectionAck::ConnectionAck(std::string host_name, vpr::Uint16 port, std::string manager_id, bool ack)
+   
+   ConnectionAck::ConnectionAck(std::string host_name, vpr::Uint16 port, bool ack)
    {
-      // Given the input, create the packet and then serialize the packet(which includes the header)
-      // - Set member variables
-      // - Create the correct packet header
-      // - Serialize the packet
-
-      // Device Request Vars
+      // Set the local member variables using the given values.
       mHostname = host_name;
       mPort = port;
-      mManagerId = manager_id;
       mAck = ack;
-
-      // string -> string.size()
-      // Uint8 -> 1
-      // Uint16 -> 2
-      // Uint32 -> 4
       
-      // 2 + mHostname.size() + 2 + 2 + mMacnagerId.size()
-
-      
-      // Header vars (Create Header)
+      // Create a Header for this packet with the correect type and size.
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_CONNECTION_ACK,
                                       Header::RIM_PACKET_HEAD_SIZE 
-                                      + 2 /* data for length*/
+                                      + 2 /* Uint16 for length*/
                                       + mHostname.size()
                                       + 2 /*mPort*/
-                                      + 2 /* data for length*/
-                                      + mManagerId.size()
-                                      + 1 /*mAck*/,0);
+                                      + 1 /*mAck*/,
+                                      0/*Field not curently used*/);
+      // Serialize the given data.
       serialize();
    }
+   
    void ConnectionAck::serialize()
    {
-      // - Clear
-      // - Write Header
-      // - Write data
-      
+      // Clear the data stream.
       mPacketWriter->getData()->clear();
       mPacketWriter->setCurPos(0);
 
-      // Create the header information
+      // Serialize the header.
       mHeader->serializeHeader();
       
-      // =============== Packet Specific =================
-      //
-         
-         // Host Name
-//      mPacketWriter->writeUint16(mHostname.size());
+      // Serialize the hostname of the acknowledging node
       mPacketWriter->writeString(mHostname);
                
-         // Port
+      // Serialize the listening port of the acknowledging node
       mPacketWriter->writeUint16(mPort);
          
-         // ManagerID
-//      mPacketWriter->writeUint16(mManagerId.size());
-      mPacketWriter->writeString(mManagerId);
-
-         // Ack
+      // Serialize the Ack boolean
       mPacketWriter->writeBool(mAck);
-         
-      //
-      // =============== Packet Specific =================
    }
+   
    void ConnectionAck::parse()
    {
-      // =============== Packet Specific =================
-      //
-
-         // Host Name
-//      vpr::Uint16 temp_string_len = mPacketReader->readUint16();
-//      mHostname = mPacketReader->readString(temp_string_len);
+      // De-Serialize the hostname of the acknowledging node
       mHostname = mPacketReader->readString();
          
-         // Port
+      // De-Serialize the listening port of the acknowledging node
       mPort = mPacketReader->readUint16();
 
-         // Manager ID
-//      temp_string_len = mPacketReader->readUint16();
-//      mManagerId = mPacketReader->readString(temp_string_len);
-      mManagerId = mPacketReader->readString();
-
-         //
+      // De-Serialize the Ack boolean
       mAck = mPacketReader->readBool();
-
-      //
-      // =============== Packet Specific =================
    }
+   
    void ConnectionAck::printData(int debug_level)
    {
       vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
@@ -146,24 +109,10 @@ namespace cluster
          << clrOutBOLD(clrYELLOW, "Port:         ") << mPort
          << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Manager ID:   ") << mManagerId 
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
          << clrOutBOLD(clrYELLOW, "Ack or Nack:  ") << (mAck ? "Ack" : "Nack")
          << std::endl << vprDEBUG_FLUSH;
 
       vprDEBUG_END(gadgetDBG_RIM,debug_level) 
          <<  clrOutBOLD(clrYELLOW,"====================================\n") << vprDEBUG_FLUSH;
-
-      /*
-      Packet::printData();
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-      << clrOutBOLD(clrCYAN,"\n==== Connection Ack Packet Data ====")
-      << "\nHost Name:    " << mHostname
-      << "\nPort:         " << mPort
-      << "\nManager ID:   " << mManagerId 
-      << "\nAck or Nack:      " << (mAck ? "Ack" : "Nack")  << std::endl
-      << vprDEBUG_FLUSH;      
-      */      
    }
 }   // end namespace gadget

@@ -45,52 +45,68 @@
 
 namespace cluster
 {
-
    class GADGET_CLASS_API ConnectionAck : public Packet
    {
    public:
       /**
-       * packet_head: Given a packet that has been parsed, and found to be a device request
-       * stream: A socket that the connection is on
-       * 
-       * Create a deviceRequest packet
+       * Create a ConnectionAck packet
+       *   
+       * @param packet_head -Header which has already been received and 
+       *                     determined to be for a ConnectionAck.
+       * @param stream -A SocketStream that we will use to receive the packet data.
        */
       ConnectionAck(Header* packet_head, vpr::SocketStream* stream);
 
       /**
-       * Given a sender ID(self) and a requested device name
+       * Create a ConnectionAck packet to acknowledge a ConnectionRequest.
        *
-       * Create a device request to be sent
+       * @param host_name -The hostname of the machine that is acknowledging the connection.
+       * @param port -The port that the acknowledging machine is listening on.
+       * @param ack -Boolean determining if this is a positive(ACK) or a negative(NACK) responce.
        */
-      ConnectionAck(std::string host_name, vpr::Uint16 port, std::string manager_id, bool ack);
-
+      ConnectionAck(std::string host_name, vpr::Uint16 port, bool ack);
 
       /**
-       * Helper for the above creation of a device request to be sent
+       * Serializes member variables into a data stream.
        */
       void serialize();
 
       /**
-       * After reading in the remaining bytes from the socket, create a new parse the data
+       * Parses the data stream into the local member variables.
        */
       void parse();
 
+      /**
+       * Print the data to the screen in a readable form.
+       */
       virtual void printData(int debug_level);
+      
+      /**
+       * Return the type of this packet.
+       */
       static vpr::Uint16 getBaseType()
       {
          return(Header::RIM_CONNECTION_ACK);
       }
 
+      /**
+       * Return the hostname of the machine that is acknowledging the connection.
+       */
       std::string getHostname() { return mHostname;}
-      vpr::Uint16 getPort() { return mPort;}
-      std::string getManagerId() { return mManagerId;}
-      bool getAck() { return mAck;}
 
+      /**
+       * Return the port that the acknowledging machine is listening on.
+       */
+      vpr::Uint16 getPort() { return mPort;}
+      
+      /**
+       * Return a boolean determining if this is a positive(ACK) or a negative(NACK) responce.
+       */
+      bool getAck() { return mAck;}
    private:
-      std::string mHostname;
-      vpr::Uint16 mPort;
-      std::string mManagerId;
-      bool        mAck;
+      std::string mHostname;  /**< The hostname of the machine that is acknowledging the connection. */
+      vpr::Uint16 mPort;      /**< The port that the acknowledging machine is listening on. */
+      bool        mAck;       /**< Boolean determining if this is a positive(ACK) or a negative(NACK) responce. */
    };
 }
 

@@ -530,7 +530,7 @@ namespace cluster
             return false;
          }
 
-         DeviceRequest* device_req = new DeviceRequest(device_name, getPluginGUID());
+         DeviceRequest* device_req = new DeviceRequest(getPluginGUID(), device_name);
          //device_req->send(node->getSockStream());
          //delete device_req;
          //node->addDeviceRequest(device_req);

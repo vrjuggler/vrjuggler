@@ -50,67 +50,80 @@ class GADGET_CLASS_API DeviceAck : public Packet
 {
 public:
    /**
-    * packet_head: Given a packet that has been parsed, and found to be a device request
-    * stream: A socket that the connection is on
-    * 
-    * Create a deviceRequest packet
+    * Create a DeviceAck packet
+    *   
+    * @param packet_head -Header which has already been received and 
+    *                     determined to be for a DeviceAck.
+    * @param stream -A SocketStream that we will use to receive the packet data.
     */
    DeviceAck(Header* packet_head, vpr::SocketStream* stream);
 
-   // =============== Packet Specific =================
-   //
-
    /**
-    * Given a sender ID(self) and a requested device name
+    * Create a DeviceAck packet to acknowledge a ApplicationDataRequest.
     *
-    * Create a device request to be sent
+    * @param plugin_guid -GUID of the ClusterPlugin that should handle this packet.
+    * @param id -GUID of the Device that we are acknowledging.
+    * @param device_name -Name of the device that we are acknowledging.
+    * @param device_base_type -Basetype of the device that we are acknowledging.
+    * @param ack -Boolean determining if this is a positive(ACK) or a negative(NACK) responce.
     */
    DeviceAck(const vpr::GUID& plugin_id, const vpr::GUID& id, 
              const std::string& device_name, 
              const std::string& device_base_type, bool ack);
    
-   //
-   // =============== Packet Specific =================
-
    /**
-    * Helper for the above creation of a device request to be sent
+    * Serializes member variables into a data stream.
     */
    void serialize();
 
    /**
-    * After reading in the remaining bytes from the socket, create a new parse the data
+    * Parses the data stream into the local member variables.
     */
    void parse();
    
+   /**
+    * Print the data to the screen in a readable form.
+    */
    virtual void printData(int debug_level);
+
+   /**
+    * Return the type of this packet.
+    */
    static vpr::Uint16 getBaseType()
    {
        return(Header::RIM_DEVICE_ACK);
    }
    
-   // =============== Packet Specific =================
-   //
-   
+   /**
+    * Return the GUID of the Device that we are acknowledging.
+    */
    vpr::GUID getId() { return mId; }
-   std::string getDeviceName() { return mDeviceName; }
-   std::string getDeviceBaseType() { return mDeviceBaseType; }
-   std::string getHostname() { return mHostname; }
-   bool getAck() { return mAck; }
    
-   //
-   // =============== Packet Specific =================
-private:
-   // =============== Packet Specific =================
-   //
-   vpr::GUID   mId;
-   std::string mDeviceName;
-   std::string mDeviceBaseType;
-   std::string mHostname;
-   // true = ACK  & false = NACK
-   bool        mAck;    
-   //
-   // =============== Packet Specific =================
+   /**
+    * Return the name of the device that we are acknowledging.
+    */
+   std::string getDeviceName() { return mDeviceName; }
+   
+   /**
+    * Return the basetype of the device that we are acknowledging.
+    */
+   std::string getDeviceBaseType() { return mDeviceBaseType; }
 
+   /**
+    * Return the hostname of the node that is acknowledging the DeviceRequest
+    */
+   std::string getHostname() { return mHostname; }
+
+   /**
+    * Return a boolean determining if this is a positive(ACK) or a negative(NACK) responce.
+    */
+   bool getAck() { return mAck; }
+private:
+   vpr::GUID   mId;              /**< GUID of the Device that we are acknowledging. */
+   std::string mDeviceName;      /**< Name of the device that we are acknowledging. */
+   std::string mDeviceBaseType;  /**< Basetype of the device that we are acknowledging. */
+   std::string mHostname;        /**< The hostname of the node that is acknowledging the DeviceRequest */
+   bool        mAck;             /**< Boolean determining if this is a positive(ACK) or a negative(NACK) responce. */
 };
 }
 

@@ -44,35 +44,56 @@ namespace cluster
 class ApplicationData : public vpr::SerializableObject
 {
 public:
-   ApplicationData(const vpr::GUID& guid, const std::string& host) : mIsLocal(false)
+   /**
+    * Construct a new ApplicationData object.
+    *
+    * @param guid - The GUID used to reference this object.
+    * @param host_name - The hostname of the node that should be responsible for updating this object.
+    */
+   ApplicationData(const vpr::GUID& guid, const std::string& host_name) : mIsLocal(false), mId(guid), mHostname(host_name)
    {
-      mId = guid;
-      mHostname = host;
       cluster::ApplicationDataManager::instance()->addApplicationData(this);
    }
+
    virtual ~ApplicationData()
    {
       ;
    }
+
+   /**
+    * Returns true if this object should be updated by the local node.
+    */
    bool isLocal()
    {
       return mIsLocal;
    }
+
+   /**
+    * Set the boolean value that determines if the local node
+    * should be responsible for updating this object.
+    */
    void setIsLocal(bool local)
    { mIsLocal = local; }
    
+   /**
+    * Return the GUID for this object.
+    */
    vpr::GUID getId()
    {
       return mId;
    }
+
+   /**
+    * Return the hostname of the node that should update this object
+    */
    std::string getHostname()
    {
       return mHostname;
    }
 private:
-   bool        mIsLocal;
-   vpr::GUID   mId;
-   std::string mHostname;
+   bool        mIsLocal;   /**< True if this object is to be updated by the local node. */
+   vpr::GUID   mId;        /**< GUID for this object */
+   std::string mHostname;  /**< Hostname of the machine that should update this object */
 };
 
 } // end namespace gadget

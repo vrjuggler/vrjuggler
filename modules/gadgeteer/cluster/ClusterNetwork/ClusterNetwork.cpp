@@ -93,11 +93,9 @@ namespace cluster
          }
          std::string host_name   = temp_connection_request->getHostname();
          vpr::Uint16 port        = temp_connection_request->getPort();
-         std::string manager_id  = temp_connection_request->getManagerId();
-
+         
          node->setHostname(host_name);
          node->setPort(port);
-         node->setRemoteManagerId(manager_id);
          // Does not do anything here since it all happens in the acceptLoop
          //node->setConnected(true);
 
@@ -116,12 +114,10 @@ namespace cluster
          if ( temp_connection_ack->getAck() )
          {
             std::string host_name   = temp_connection_ack->getHostname();
-            std::string manager_id  = temp_connection_ack->getManagerId();
-
+            
             //node->setConnected(ClusterNode::CONNECTED);
             node->setConnected(ClusterNode::NEWCONNECTION);
             node->setHostname(host_name);
-            node->setRemoteManagerId(manager_id);
          }
          else
          {
@@ -445,7 +441,7 @@ namespace cluster
                temp_packet = NULL;
                
                responce_packet = new ConnectionAck(ClusterNetwork::instance()->getLocalHostname(),
-                                                                  mListenAddr.getPort(), std::string("NONE")/*mManagerId*/,true); 
+                                                                  mListenAddr.getPort(),true); 
             }
             else
             {
@@ -464,7 +460,7 @@ namespace cluster
                   << " Adding new Cluster Node to ClusterNetwork." << std::endl << vprDEBUG_FLUSH;           
                addClusterNode(node);               
                responce_packet = new ConnectionAck(ClusterNetwork::instance()->getLocalHostname(),
-                                                                  mListenAddr.getPort(), std::string("NONE")/*mManagerId*/,true);            
+                                                                  mListenAddr.getPort(),true);            
             }
 
             // Try to send a responce packet
