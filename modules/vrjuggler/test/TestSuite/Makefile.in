@@ -43,23 +43,27 @@ default: $(PROJECT_NAME)
 srcdir          = @srcdir@
 topdir          = @topdir@
 #top_srcdir     = @top_srcdir@
+VJ_BASE_DIR	?= @APP_BASE_DIR@
+CPP_UNIT	= $(srcdir)/../../../../external
 
 CXX             = @CXX@
-CFLAGS          = @CFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
+CFLAGS          = @CFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
 CPPFLAGS        = @CPPFLAGS@
-CXXFLAGS        = @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
+CXXFLAGS        = @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
 DEFS            = @DEFS@
 DEP_GEN_FLAG    = @DEP_GEN_FLAG@
 DEPEND_FLAGS    = @DEPEND_FLAGS@ $(INCLUDES)
 DEPEND_EXTRAS   = @DEPEND_EXTRAS@ $(DEFS)
-EXTRA_FLAGS     = @APP_EXTRA_FLAGS@
-INCLUDES        = @INCLUDES@ -I$(topdir) -I$(VPR_BASE_DIR)/include      \
-                 -I$(srcdir) -I$(srcdir)/TestCases                      \
-                 -I$(srcdir)/CppUnit/framework -I$(srcdir)/CppUnit/textui
-OPTIMIZER       = @vjDBG_FLAGS@ -D_DEBUG
+EXTRA_CFLAGS    = @APP_EXTRA_CFLAGS@
+EXTRA_LFLAGS    = @APP_EXTRA_LFLAGS@
+INCLUDES        = @INCLUDES@ -I$(topdir) -I$(VJ_BASE_DIR)/include	\
+                  -I$(srcdir) -I$(srcdir)/TestCases			\
+                  -I$(CPP_UNIT)/CppUnit.old				\
+                  -I$(CPP_UNIT)/CppUnit.old/framework			\
+                  -I$(CPP_UNIT)/CppUnit.old/textui
+OPTIMIZER       = @DBG_FLAGS@ -D_DEBUG
 LD              = @LD@
-LDFLAGS         = @LDFLAGS@ -L/usr/lib$(LIBBITSUF)              \
-                  -L$(VPR_BASE_DIR)/lib$(LIBBITSUF)
+LDFLAGS         = @LDFLAGS@ -L/usr/lib$(LIBBITSUF)
 LIBBITSUF       = @LIBBITSUF@
 LIBS            = @LIBS@ $(VJ_LIBS)
 MAKEDEPEND      = @MAKEDEPEND@
@@ -70,11 +74,14 @@ OS_TYPE         = @OS_TYPE@
 USE_MAKEDEPEND  = @USE_MAKEDEPEND@
 
 LINK            = $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@     \
-                  $(EXTRA_FLAGS)
+                  $(EXTRA_LFLAGS)
 
-VJ_LIBS         = -L${VJ_BASE_DIR}/lib32 -L${VJ_BASE_DIR}/lib -lJuggler
-BASIC_LIBS	= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@ @APP_BASIC_EXT_LIBS@ @APP_VJ_LIBS_GL@ @APP_BASIC_LIBS_END@
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS@ @APP_EXTRA_LIBS_END@ 
+VJ_LIBS         = @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
+                  @APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@		\
+                  $(NULL)
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@		\
+                  @APP_EXTRA_LIBS_X11@ @APP_EXTRA_LIBS_END@		\
+                  $(NULL)
 
 # -----------------------------------------------------------------------------
 # Compiler command lines.
@@ -86,29 +93,33 @@ CXX_COMPILE     = $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 # SRC Files
 TEST_SRCS =
 CPPUNIT_TEXTUI_SRCS = TestRunner.cpp TextTestResult.cpp
-CPPUNIT_SRCS = TestCase.cpp \
-               TestResult.cpp \
-               TestFailure.cpp \
-               TestSuite.cpp
-RUNNER_SRCS = main.cpp
-SRCS    := $(TEST_SRCS) $(CPPUNIT_TEXTUI_SRCS) $(CPPUNIT_SRCS) $(RUNNER_SRCS)
+CPPUNIT_SRCS	= TestCase.cpp		\
+                  TestResult.cpp	\
+                  TestFailure.cpp	\
+                  TestSuite.cpp
+RUNNER_SRCS	= main.cpp
+SRCS		= $(TEST_SRCS)			\
+                  $(CPPUNIT_TEXTUI_SRCS)	\
+                  $(CPPUNIT_SRCS)		\
+                  $(RUNNER_SRCS)
 
 OBJDIR = .
 DEPDIR =
 
-INCLUDE_PATHS = @APP_INCLUDES@ -I${VJ_BASE_DIR}/include
-PATH_TO_SRCS = ${srcdir} ${srcdir}/TestCases ${srcdir}/CppUnit/framework ${srcdir}/CppUnit/textui
-MK_DIR = ${srcdir}/mk
+INCLUDE_PATHS =
+PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases				\
+               $(CPP_UNIT)/CppUnit.old/framework $(CPP_UNIT)/CppUnit.old/textui
+MK_DIR = $(srcdir)/../../../../share/mk
 
-include ${MK_DIR}/mk.objs
+include $(MK_DIR)/objs.mk
 
 # Compile then Link
-$(PROJECT_NAME): $(OBJS)
+$(PROJECT_NAME): $(OBJS) $(VJ_BASE_DIR)/lib$(LIBBITSUF)/libJuggler.a
 	@echo ""
 	@echo "-------------------------------------------"
 	@echo "Linking... (.$(OBJEXT)'s --> executable)"
 	@echo "-------------------------------------------"
-	$(LINK) -o $@ $(OBJS) $(LDFLAGS) $(LIBS) $(BASIC_LIBS) $(EXTRA_LIBS)
+	$(LINK) -o $@ $(OBJS) $(LDFLAGS) $(LIBS) $(EXTRA_LIBS)
 	@echo ""
 	@echo "-------------------------------------------"
 	@echo "$(PROJECT_NAME) done"
@@ -126,7 +137,4 @@ clean:
 clobber: clean
 	rm -f *.d
 
-include ${MK_DIR}/mk.depend
-
-
-
+include $(MK_DIR)/depend.mk
