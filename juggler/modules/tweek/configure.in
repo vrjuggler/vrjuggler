@@ -557,6 +557,7 @@ done
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN"
 INCLUDES="$INCLUDES $CXX_ORB_INCLUDES"
+DEPEND_FLAGS="$VPR_INCLUDES_MIN"
 tweek_cxxflags="$STDFLAGS $EXTRA_DEFS $INCLUDES $tweek_idl_gen_includes"
 
 # List the scripts vrjuggler-config will call to get flags.  This should be
