@@ -35,18 +35,18 @@
       <b>Enabled</b>
     </td>
     <td>
-      Lets you turn this particular file on or off.  If Enabled is false,
-      Juggler will not open the file and won't write anything to it.
+      This property is currently unused.
     </td>
   </tr>
   <tr>
     <td align="right">
-      <b>Readable</b>
+      <b>File Mode</b>
     </td>
     <td>
-      Currently, this should always be false.  Internally, Juggler has some
-      ability to read instructions from files or pipes.  In the future, this
-      may allow the use of input instruction files.
+      For any EM Connection you are creating for a config file, this should
+      be "Output".  Internally, Juggler has some
+      ability to read instructions from files or sockets.  In the future, this
+      may also allow the use of input instruction files.
     </td>
   </tr>
 </table>
@@ -54,11 +54,12 @@
 <h3>File Connection chunk definition</h3>
 
 <pre>
-chunk FileConnect "EM File Output" ""
-  Name String 1 "Name" ""
+chunk FileConnect "EM Connection" "A file for outputing Environment Manager data"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
   FileName String 1 "File Name" ""
-  Enabled Bool 1 "Enabled" ""
-  Readable Bool 1 "Readable" ""
+  Enabled Bool 1 "Enabled" "Should file be opened & used?"
+  Mode Int 1 "File Mode" vj_enumeration { "Interactive=0" "Input=1" "Output=2" } 
+         "Is the file readable, writeable, or interactive (e.g. socket or pipe)"
   end
 </pre>
 
