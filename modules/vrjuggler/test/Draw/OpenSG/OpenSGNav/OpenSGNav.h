@@ -7,7 +7,9 @@
 /*-----------------------------Juggler includes-------------------------------*/
 #include <vrj/vrjConfig.h>
 #include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Math/Matrix.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/AnalogInterface.h>
