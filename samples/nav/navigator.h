@@ -48,7 +48,7 @@ class navigator
 public:
    enum ActionState { OFF = 0, ON = 1, EITHER  = 2 };
 
-   navigator() : mAllowRot( true ), mAllowTrans( true )
+   navigator() : mAllowRot( true ), mAllowTrans( true ), mIsActive(true)
    {
       allowAxis[0] = allowAxis[1] = allowAxis[2] = true;    // Initialize to rot in all axes
    }
@@ -91,6 +91,7 @@ public:
    { mColliders.push_back( val ); }
 
    // Should allow testing to see if the navigator is currently active
+   // If the navigator is not active, then we should not be updating
    bool isActive() const { return mIsActive; }
    void setActive(bool state) { mIsActive = state; }
 
