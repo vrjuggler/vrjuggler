@@ -53,7 +53,8 @@ const float VJ_PI_2 = 1.57079632679489661923f;
 const float VJ_PI_4 = 0.78539816339744830962f;
 
 //: default epsillon used by some juggler math routines...
-const float VJ_EPSILLON_DEFAULT = 1e-6f;
+// const float VJ_EPSILLON_DEFAULT = 1e-6f;
+#define VJ_EPSILLON_DEFAULT 1e-6f
 
 //: x-platform standard math routines.
 class vjMath 
