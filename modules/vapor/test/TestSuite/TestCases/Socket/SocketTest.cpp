@@ -967,7 +967,7 @@ void SocketTest::testIsConnected_acceptor (void* arg)
    status = acceptor.accept(client_sock);
    assertTestThread(status.success() && "Accept failed");
    assertTestThread(client_sock.isOpen() && "Accepted socket should be open");
-   //assertTestThread(client_sock.isConnected() && "Connector not connected");
+   assertTestThread(client_sock.isConnected() && "Connector not connected");
 
    // --- STATE: Acceptor Tested --- //
    mCondVar.acquire();
@@ -1007,7 +1007,7 @@ void SocketTest::testIsConnected_acceptor (void* arg)
 
    assertTestThread(!ret_val.success());
 
-   //assertTestThread(! client_sock.isConnected() && "Connector not disconnected");
+   assertTestThread(! client_sock.isConnected() && "Connector not disconnected");
 
    /*
    status = client_sock.close();
@@ -1064,7 +1064,7 @@ void SocketTest::testIsConnected_connector (void* arg)
    }
    mCondVar.release();
 
-   //assertTestThread(! con_sock.isConnected() && "Connect didn't disconnect?");
+   assertTestThread(! con_sock.isConnected() && "Connect didn't disconnect?");
 }
 
 
