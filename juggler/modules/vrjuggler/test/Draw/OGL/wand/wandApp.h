@@ -47,8 +47,8 @@
 #include <Input/InputManager/vjDigitalInterface.h>
 
 // Utility function to draw a cube
-void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
-                GLdouble z0, GLdouble z1, GLenum type);
+void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
+                GLdouble z0, GLdouble z1, GLenum type );
 
 //----------------------------------------------------
 //: Demonstration OpenGL application class
@@ -62,7 +62,9 @@ public:
       : vjGlApp(kern)         // Initialize base class
    {;}
 
-   // Execute any initialization needed before the API is started
+   // Execute any initialization needed before the API is started<BR><BR>
+   // 
+   // This is called once before OGL is initialized
    virtual void init()
    {
       //cout << "---------- App:init() ---------------" << endl;
@@ -72,12 +74,16 @@ public:
    }
 
    // Execute any initialization needed after API is started
-   //  but before the drawManager starts the drawing loops.
+   //  but before the drawManager starts the drawing loops.<BR><BR>
+   //
+   // This is called once after OGL is initialized
    virtual void apiInit()
    {;}
 
    //: Function that is called immediately after a new OGL context is created
-   // Initialize GL state here. Also used to create context specific information
+   // Initialize GL state here. Also used to create context specific information<BR>
+   //
+   // This is called once for each display (twice for each stereo display)
    virtual void contextInit()
    {
       initGLState();       // Initialize the GL state information. (lights, shading, etc)
@@ -85,9 +91,12 @@ public:
 
    //: Function to draw the scene
    //! PRE: OpenGL state has correct transformation and buffer selected
-   //! POST: The current scene has been drawn
+   //! POST: The current scene has been drawn<BR><BR>
+   //
+   // called [once * number of displays] per frame 
    virtual void draw()
    {
+      //call your openGL drawing code here.
       myDraw();
    }
 
@@ -107,17 +116,30 @@ public:
    //  }
    //------------------------------------
 
-   //: Function called before updating trackers but after the frame is drawn
-   virtual void postFrame()
-   {;}
-
-   //: Function called after tracker update but before start of drawing
+   
+   //: Function called after tracker update but before start of drawing<BR><BR>
+   //
+   // called once before every frame.
    virtual void preFrame()
-   {;}
+   {
+      // Put your pre frame computations here.
+   }
 
-   //: Function called after drawing has been triggered but BEFORE it completes
+   //: Function called after drawing has been triggered but BEFORE it completes<BR><BR>
+   //
+   // called once during each frame
    virtual void intraFrame()
-   {;}
+   {
+      // Put your intra frame computations here.
+   }
+
+   //: Function called before updating trackers but after the frame is drawn<BR><BR>
+   //
+   // called once after every frame
+   virtual void postFrame()
+   {
+      // Put your post frame computations here.
+   }
 
 private:
    //------------------------------------------------
