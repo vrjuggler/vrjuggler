@@ -46,6 +46,7 @@ import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
 import org.vrjuggler.vrjconfig.ui.ConfigToolbar;
 
@@ -64,6 +65,11 @@ public class VrjConfig
       {
          e.printStackTrace();
       }
+   }
+
+   static
+   {
+      mEnvService = new EnvironmentServiceProxy();
    }
 
    //--------------------------------------------------------------------------
@@ -169,7 +175,7 @@ public class VrjConfig
     */
    private static String expandEnvVars(String str)
    {
-      return EnvironmentService.expandEnvVars(str);
+      return mEnvService.expandEnvVars(str);
    }
 
    /**
@@ -208,6 +214,8 @@ public class VrjConfig
 
    /** Our listener for close notifications from the internal frames. */
    private InternalFrameListener mCloseListener = new CloseListener();
+
+   private static EnvironmentService mEnvService;
 
    /**
     * The special internal frame used to hold configuration editors.

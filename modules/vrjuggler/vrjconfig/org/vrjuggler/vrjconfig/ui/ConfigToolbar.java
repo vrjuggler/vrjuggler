@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.Stack;
 import javax.swing.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.PopupButton;
 import org.vrjuggler.vrjconfig.VrjConfigConstants;
@@ -535,7 +536,7 @@ public class ConfigToolbar
     */
    private String expandEnvVars(String str)
    {
-      return EnvironmentService.expandEnvVars(str);
+      return mEnvService.expandEnvVars(str);
    }
 
    /**
@@ -682,6 +683,8 @@ public class ConfigToolbar
    private ConfigContext context = new ConfigContext();
    private EditContextPopup contextEditor;
    private ContextChangeListener contextListener = new ContextChangeListener();
+
+   private EnvironmentService mEnvService = new EnvironmentServiceProxy();
 
    /**
     * Our special context change listener used to toggle the save and expand

@@ -43,6 +43,7 @@ import javax.swing.table.*;
 
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.vrjconfig.VrjConfigConstants;
 
 /**
@@ -264,7 +265,7 @@ public class NewConfigDialog
     */
    private String expandEnvVars(String str)
    {
-      return EnvironmentService.expandEnvVars(str);
+      return mEnvService.expandEnvVars(str);
    }
 
    /**
@@ -459,6 +460,8 @@ public class NewConfigDialog
    private JButton cancelBtn = new JButton();
    private JButton okBtn = new JButton();
    private JFileChooser fileChooser = new JFileChooser();
+
+   private EnvironmentService mEnvService = new EnvironmentServiceProxy();
 
    /**
     * The return value from the last time the dialog was shown.
