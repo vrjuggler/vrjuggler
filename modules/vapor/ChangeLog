@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-06-18 patrickh Fixed a problem where bools were not serialized correctly
+                    on Darwin/Mac OS X.
+                    NEW VERSION: 0.27.4
 2003-05-30 pallindo Fixed a problem where serial ports on Win32 would open in
                     the wrong blocking mode sometimes.
                     NEW VERSION: 0.27.3
