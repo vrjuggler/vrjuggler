@@ -49,7 +49,7 @@
 
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/SimViewport.h>
-//#include <vrj/Environment/EnvironmentManager.h>
+#include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
 
 namespace vrj
 {
@@ -147,12 +147,10 @@ void GlPipe::controlLoop(void* nullParam)
 {
    mThreadRunning = true;     // We are running so set flag
 
-   char namebuf[42];  // careful with that buffer, eugene
-   sprintf( namebuf, "vjGlPipe %d", mPipeNum );
-   mPerfBuffer = Kernel::instance()->getEnvironmentManager()->getPerformanceMonitor()->getPerfDataBuffer (namebuf, 500, 50);
-
    while (!controlExit)
    {
+         jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/startframe");
+
       checkForWindowsToClose();  // Checks for closing windows
       checkForNewWindows();      // Checks for new windows to open
 
@@ -170,19 +168,16 @@ void GlPipe::controlLoop(void* nullParam)
 
          GlApp* theApp = glManager->getApp();
 
-            mPerfBuffer->set(mPerfPhase = 0);
+            jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/window events and render sema");
          // --- pipe PRE-draw function ---- //
          theApp->pipePreDraw();      // Can't get a context since I may not be guaranteed a window
-            mPerfBuffer->set(++mPerfPhase);
+            jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/app/pipePreDraw()");
 
          // Render the windows
-         ++ mPerfPhase;
          for (unsigned int winId=0;winId < openWins.size();winId++) {
             renderWindow(openWins[winId]);
-            mPerfPhase += 10;
          }
          renderCompleteSema.release();
-         mPerfBuffer->set(mPerfPhase = 45);
       }
 
       // ----- SWAP the windows ------ //
@@ -196,12 +191,10 @@ void GlPipe::controlLoop(void* nullParam)
          swapCompleteSema.release();
       }
 
-      mPerfBuffer->set(mPerfPhase = 46);
+      jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/finish swap");
    }
 
    mThreadRunning = false;     // We are not running
-
-   Kernel::instance()->getEnvironmentManager()->getPerformanceMonitor()->releasePerfDataBuffer (mPerfBuffer);
 
 }
 
@@ -287,7 +280,6 @@ void GlPipe::renderWindow(GlWindow* win)
 {
    float vp_ox, vp_oy, vp_sx, vp_sy;            // Viewport origin and size
    Viewport::View  view;                      // The view for the active viewport
-   int perf_phase = mPerfPhase;
 
    GlApp* theApp = glManager->getApp();       // Get application for easy access
    Display* theDisplay = win->getDisplay();   // Get the display for easy access
@@ -305,7 +297,7 @@ void GlPipe::renderWindow(GlWindow* win)
    if(win->hasDirtyViewport())
       win->updateViewport();
 
-   mPerfBuffer->set(perf_phase++);
+   jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/setup");
 
 
    // CONTEXT INIT(): Check if we need to call contextInit()
@@ -320,6 +312,7 @@ void GlPipe::renderWindow(GlWindow* win)
       theApp->contextInit();              // Call context init function
       win->setDirtyContext(false);        // All clean now
    }
+   jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/context setup");
 
    // BUFFER PRE DRAW: Check if we need to clear stereo buffers
    if(win->isStereo())
@@ -332,11 +325,11 @@ void GlPipe::renderWindow(GlWindow* win)
    else
       theApp->bufferPreDraw();
 
-   mPerfBuffer->set(perf_phase++);
+   jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/bufferPreDraw");
 
    theApp->contextPreDraw();                 // Do any context pre-drawing
 
-   mPerfBuffer->set(perf_phase++);
+   jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/contextPreDraw");
 
 
    // --- FOR EACH VIEWPORT -- //
@@ -361,7 +354,7 @@ void GlPipe::renderWindow(GlWindow* win)
          glManager->currentUserData()->setUser(viewport->getUser());         // Set user data
          glManager->currentUserData()->setViewport(viewport);                // Set the viewport
 
-         mPerfBuffer->set(perf_phase++);
+         jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set viewport and user");
 
          // ---- SURFACE & Simulator --- //
          // if (viewport->isSurface())
@@ -380,11 +373,11 @@ void GlPipe::renderWindow(GlWindow* win)
                win->setProjection(viewport->getLeftProj());
                glManager->currentUserData()->setProjection(viewport->getLeftProj());
 
-               mPerfBuffer->set(perf_phase++);
+               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set left buffer and projection");
 
                theApp->draw();
 
-               mPerfBuffer->set(perf_phase++);
+               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/left draw()");
 
                glManager->drawObjects();
                if(NULL != sim_vp)
@@ -392,7 +385,7 @@ void GlPipe::renderWindow(GlWindow* win)
                   glManager->drawSimulator(sim_vp);
                }
 
-               mPerfBuffer->set(perf_phase++);
+               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/left draw objects and sim");
 
             }
             if ((Viewport::STEREO == view) || (Viewport::RIGHT_EYE == view))    // RIGHT EYE
@@ -401,11 +394,11 @@ void GlPipe::renderWindow(GlWindow* win)
                win->setProjection(viewport->getRightProj());
                glManager->currentUserData()->setProjection(viewport->getRightProj());
 
-               mPerfBuffer->set(perf_phase++);
+               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set right buffer and projection");
 
                theApp->draw();
 
-               mPerfBuffer->set(perf_phase++);
+               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/right draw()");
 
                glManager->drawObjects();
                if(NULL != sim_vp)
@@ -413,16 +406,16 @@ void GlPipe::renderWindow(GlWindow* win)
                   glManager->drawSimulator(sim_vp);
                }
 
-               mPerfBuffer->set(perf_phase++);
+               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/right draw objects and sim");
             }
-            else
-               perf_phase += 3;
          }
       }  // should viewport be rendered
    }     // for each viewport
 
    // -- Post context stuff --- //
    theApp->contextPostDraw();
+
+   jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/contextPostDraw()");
 
 }
 
