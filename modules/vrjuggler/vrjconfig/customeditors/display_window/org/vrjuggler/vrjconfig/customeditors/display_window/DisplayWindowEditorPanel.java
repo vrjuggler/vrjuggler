@@ -435,6 +435,7 @@ public class DisplayWindowEditorPanel
          ConfigDefinition fb_def = broker.getRepository().get("opengl_frame_buffer_config");
          ConfigElement fb_cfg = factory.create("OpenGL Frame Buffer Configuration",
                                                fb_def);
+         fb_cfg.setProperty("visual_id", 0, dlg.getVisualID());
          fb_cfg.setProperty("red_size", 0, dlg.getRedDepth());
          fb_cfg.setProperty("green_size", 0, dlg.getGreenDepth());
          fb_cfg.setProperty("blue_size", 0, dlg.getBlueDepth());
