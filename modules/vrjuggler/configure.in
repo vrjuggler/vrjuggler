@@ -163,7 +163,7 @@ case "x$_abi_type" in
         ABI='ELF'
         ISA='i386'
         LIBBITSUF=''
-        _EXTRA_FLAGS='-elf'
+        _EXTRA_FLAGS=''
         ;;
 esac
 
