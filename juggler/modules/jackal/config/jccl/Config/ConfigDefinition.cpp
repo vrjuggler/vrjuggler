@@ -123,6 +123,52 @@ std::string ConfigDefinition::getHelp() const
    return help_str;
 }
 
+bool ConfigDefinition::isParent(const std::string& token) const
+{
+      cppdom::NodeList parents = mNode->getChildren(tokens::PARENT);
+
+      // Iterate over each parent
+      for ( cppdom::NodeList::iterator p = parents.begin(); p != parents.end(); ++p )
+      {
+         const std::string p_name((*p)->getCdata());
+
+         // Minor optimization for empty <parent> XML nodes.  There may be a
+         // nicer way of doing this via the cppdom::Node interface.
+         if ( p_name == std::string("") )
+         {
+            continue;
+         }
+
+         if(p_name == token)
+         {
+            return true;
+         }
+
+         vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
+            << "[ConfigDefinition::isParent()] Checking parent '"
+            << p_name << "' for property '" << token << "'\n"
+            << vprDEBUG_FLUSH;
+
+         ConfigDefinitionPtr parent_def =
+            ElementFactory::instance()->getConfigDefinition(p_name);
+
+         if ( parent_def.get() != NULL )
+         {
+            return (parent_def->isParent(token));
+         }
+         else
+         {
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL)
+               << "[ConfigDefinition::isParent()] WARNING: "
+               << "Failed to find parent of '" << this->getName()
+               << "' named '" << p_name << "'\n" << vprDEBUG_FLUSH;
+         }
+      }
+
+      // We failed to find the requested parent token.
+      return false;
+}
+
 PropertyDefinition ConfigDefinition::getPropertyDefinition(const std::string& token) const
 {
    assertValid();

@@ -510,6 +510,11 @@ void ConfigElement::setDefinition(ConfigDefinitionPtr def)
    mDef = def;
 }
 
+ConfigDefinitionPtr ConfigElement::getConfigDefinition()
+{
+   return mDef;
+}
+
 cppdom::NodePtr ConfigElement::getNode() const
 {
    return mNode;
