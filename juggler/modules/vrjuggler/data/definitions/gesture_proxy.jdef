@@ -7,7 +7,7 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="Gesture Proxy">
       <help>A Gesture Proxy points to a gesture device.</help>
-      <parent/>
+      <parent>proxy</parent>
       <category>/Proxies</category>
       <property valuetype="configelementpointer" variable="false" name="device">
          <help>The gesture device to hook the proxy to.</help>

@@ -8,6 +8,7 @@
    <definition_version version="1" label="DataGlove">
       <help>Configuration for a DataGlove device.</help>
       <parent>glove_device</parent>
+      <parent>digital_device</parent>
       <category>/Devices/Glove</category>
       <property valuetype="string" variable="false" name="port">
          <help>The serial port this device is connected to.</help>

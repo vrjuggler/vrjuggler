@@ -7,7 +7,7 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="TrackdAPI Sensor">
       <help>Configure the interface to a trackd sensor memory area</help>
-      <parent/>
+      <parent>positional_device</parent>
       <category>/Devices</category>
       <property valuetype="integer" variable="false" name="shared_memory_key">
          <help>This is the shared memory key for the trackd information.</help>

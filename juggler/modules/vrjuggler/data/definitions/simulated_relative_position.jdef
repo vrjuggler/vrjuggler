@@ -7,7 +7,7 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="Simulated Relative Position">
       <help>A positional device simulator for one device relative to another.</help>
-      <parent/>
+      <parent>positional_device</parent>
       <category>/Devices/Simulator</category>
          <property valuetype="configelementpointer" variable="false" name="base_frame_proxy">
          <help>Position proxy that devices the base frame of reference.</help>

@@ -7,7 +7,7 @@
             xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd">
    <definition_version version="1" label="Flock of Birds">
       <help>Configuration for Ascension Flock of Birds</help>
-      <parent/>
+      <parent>positional_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="port">
          <help>Serial port the Flock is attached to</help>

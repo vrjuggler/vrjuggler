@@ -7,7 +7,9 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="Intersense">
       <help>Intersense Tracking Devices</help>
-      <parent/>
+      <parent>positional_device</parent>
+      <parent>digital_device</parent>
+      <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="port">
          <help>Serial port the Flock is attached to</help>

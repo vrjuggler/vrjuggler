@@ -7,8 +7,9 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="Pinch Glove">
       <help>Configuration for the PinchGlove</help>
-      <parent/>
-      <category>/Devices</category>
+      <parent>glove_device</parent>
+      <parent>digital_device</parent>
+      <category>/Devices/Glove</category>
       <property valuetype="string" variable="false" name="port">
          <help>Serial port that the PinchGlove is connected to</help>
          <value label="Port" defaultvalue="/dev/ttyd1"/>

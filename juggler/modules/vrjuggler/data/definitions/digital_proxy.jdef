@@ -7,26 +7,12 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="Digital Proxy">
       <help>A proxy to a single digital device input source used to access the data within that device.</help>
-      <parent />
+      <parent>proxy</parent>
       <category>/Proxies</category>
       <property valuetype="configelementpointer" variable="false" name="device">
          <help>The device to which this proxy attaches.</help>
          <value label="Digital Device" />
-         <allowed_type>data_glove</allowed_type>
-         <allowed_type>fastrak</allowed_type>
-         <allowed_type>ibox</allowed_type>
-         <allowed_type>intersense</allowed_type>
-         <allowed_type>intersense_api</allowed_type>
-         <allowed_type>linux_joydev</allowed_type>
-         <allowed_type>pinch_glove</allowed_type>
-         <allowed_type>pysim</allowed_type>
-         <allowed_type>simulated_digital_device</allowed_type>
-         <allowed_type>simulated_digital_glove</allowed_type>
-         <allowed_type>three_d_mouse</allowed_type>
-         <allowed_type>trackd_controller</allowed_type>
-         <allowed_type>trackd_api_controller</allowed_type>
-         <allowed_type>tweek_gadget</allowed_type>
-         <allowed_type>vrpn</allowed_type>
+         <allowed_type>digital_device</allowed_type>
       </property>
       <property valuetype="integer" variable="false" name="unit">
          <help>The unit in the device to which this proxy attaches.</help>

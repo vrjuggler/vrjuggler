@@ -7,7 +7,8 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="VRPN">
       <help>Configure an interface to an external VRPN server.</help>
-      <parent/>
+      <parent>positional_device</parent>
+      <parent>digital_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="tracker_server">
          <help>Tracker server.</help>
