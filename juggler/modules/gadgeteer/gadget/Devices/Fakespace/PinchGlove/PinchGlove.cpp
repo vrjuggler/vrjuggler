@@ -31,12 +31,14 @@
  * -----------------------------------------------------------------
  */
 
-
-#include <vjConfig.h>
+#include <string>
 #include <sys/time.h>
 #include <stdio.h>                      // need stdio for sprintf
+
+#include <vjConfig.h>
 #include <Input/vjGlove/fsPinchGlove.h> //fakespace pinch driver
 #include <Input/vjGlove/vjPinchGlove.h> //vrjuggler pinch driver
+#include <Kernel/vjKernel.h>
 
 
 bool vjPinchGlove::mLookupInitialized = false;
@@ -52,24 +54,37 @@ bool vjPinchGlove::config(vjConfigChunk *c)
     if (vjPinchGlove::mLookupInitialized == false)
       vjPinchGlove::mInitLookupTable();
 
-    char* home_dir = c->getProperty("homedir");
+    vjASSERT(myThread == NULL);      // This should have been set by vjInput(c)
+
+    char* home_dir = c->getProperty("calDir").cstring();
     if (home_dir != NULL)
     {
         mCalDir = new char [strlen(home_dir) + 1];
         strcpy(mCalDir,home_dir);
     }
 
-    myThread = NULL;
+    std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
+    if(glove_pos_proxy == std::string(""))
+    {
+       vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: fsPinchGlove has no posProxy." << endl << vjDEBUG_FLUSH;
+       return false;
+    }
+
+    // init glove proxy interface
+    int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
+    if(proxy_index != -1)
+       mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
+    else
+       vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: fsPinchGlove::fsPinchGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
+
     mGlove = new fsPinchGlove();
 
-    // these params are available, i only need sPort:
-    // mCalDir, sPort, baudRate
-    vjASSERT( mGlove != NULL );
+    return true;
 }
 
 vjPinchGlove::~vjPinchGlove ()
 {
-   StopSampling();      // Stop the glove
+   stopSampling();      // Stop the glove
    delete mGlove;       // Delete the glove
 }
 
@@ -79,17 +94,11 @@ int vjPinchGlove::startSampling()
    {
       resetIndexes();
 
-      if (mGlove->connectToHardware( sPort ) == false)
-      {
-         vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: Can't open Pinchglove or it is already opened." << vjDEBUG_FLUSH;
-         return 0;
-      }
-
       // Create a new thread to handle the control
       vjThreadMemberFunctor<vjPinchGlove>* memberFunctor =
          new vjThreadMemberFunctor<vjPinchGlove>(this, &vjPinchGlove::controlLoop, NULL);
 
-      mControlThread = new vjThread(memberFunctor, 0);
+      myThread = new vjThread(memberFunctor, 0);
 
       if (!myThread->valid())
       {
@@ -108,14 +117,22 @@ int vjPinchGlove::startSampling()
 
 void vjPinchGlove::controlLoop(void* nullParam)
 {
-   while(1)
-   sample();
+	if (mGlove->connectToHardware( sPort ) == false)
+	{
+		vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: Can't open Pinchglove or it is already opened." << vjDEBUG_FLUSH;
+		return;
+	}
+
+	while(1)
+	{
+		sample();
+	}
 }
 
 int vjPinchGlove::sample()
 {
     // Tell the glove to resample
-    mGlove->reSampleStringFromHardware();
+    mGlove->updateStringFromHardware();
 
     // Copy the data from the fsPinchGlove to myself.
     copyDataFromGlove();
@@ -145,11 +162,11 @@ vjGuard<vjMutex> updateGuard(lock);
 
 int vjPinchGlove::stopSampling()
 {
-   if (mControlThread != NULL)
+   if (myThread != NULL)
    {
-      mControlThread->kill();
-      delete mControlThread;
-      mControlThread = NULL;
+      myThread->kill();
+      delete myThread;
+      myThread = NULL;
       usleep(100);
 
       // XXX: there is no "close"
@@ -221,11 +238,13 @@ void vjPinchGlove::mInitLookupTable()
     mOffLookupTable[ vjGloveData::PIJ ][ fsPinchGlove::RTHUMB ] = -45;
     mOffLookupTable[ vjGloveData::MPJ ][ fsPinchGlove::RTHUMB ] = -45;
     mOffLookupTable[ vjGloveData::ABDUCT ][ fsPinchGlove::RTHUMB ] = 0;
+	
+	vjPinchGlove::mLookupInitialized = true;
 }
 
 void vjPinchGlove::copyDataFromGlove()
 {
-    char gesture[12];
+    std::string gesture;
     // get fakespace's idea of a "pinch gesture"
     mGlove->getSampledString( gesture );
 

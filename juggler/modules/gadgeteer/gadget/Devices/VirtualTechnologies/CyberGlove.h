@@ -39,16 +39,15 @@
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/vjGlove/CyberGloveBasic.h>
 
-//: Cyberglove dcevice
+//: Cyberglove device
 //!PUBLIC_API:
 class vjCyberGlove : virtual public vjGlove
 {
 public:
    //: Construct using chunk
-   vjCyberGlove()
+   vjCyberGlove() : mGlove( NULL ), mCalDir( NULL )
    {
-      mGlove = NULL;
-      mCalDir = NULL;
+      
    }
 
    //: Destroy the glove
@@ -57,14 +56,14 @@ public:
    virtual bool config(vjConfigChunk* c);
 
    virtual char* getDeviceName() { return "vjCyberGlove";}
-
+   static std::string getChunkType() { return std::string("CyberGlove");}
+	
    virtual int startSampling();
    virtual int stopSampling();
    virtual int sample();
    virtual void updateData ();
 
-   static std::string getChunkType() { return std::string("CyberGlove");}
-
+   
 protected:
 	//: The main control loop for the object
    void controlLoop(void* nullParam);
