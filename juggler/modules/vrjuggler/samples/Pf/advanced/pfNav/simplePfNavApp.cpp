@@ -55,8 +55,8 @@
 
 #include <vrj/Util/FileIO.h>
 
-#ifdef USE_AUDIOJUGGLER
-#include <aj/AudioJuggler.h>
+#ifdef USE_SONIX
+#include <snx/sonix.h>
 #endif
 
 #include <vrj/Sound/pf/pfSoundNode.h> //performer-juggler sound node.
@@ -585,8 +585,8 @@ void simplePfNavApp::initializeSounds()
 
       pfSoundNode* nextSound = new pfSoundNode( mSoundList[x].alias, mSoundList[x].positional );
 
-      #ifdef USE_AUDIOJUGGLER
-      AudioJuggler::instance().trigger( mSoundList[x].alias );
+      #ifdef USE_SONIX
+      sonix::instance().trigger( mSoundList[x].alias );
       #endif
       
       nextSoundDCS->addChild( nextSound );
