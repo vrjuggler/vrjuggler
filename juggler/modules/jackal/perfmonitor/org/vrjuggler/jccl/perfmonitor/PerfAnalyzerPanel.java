@@ -55,7 +55,6 @@ import VjConfig.*;
  *
  *  @see VjComponents.PerfMonitor.PerformanceModule
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class PerfAnalyzerPanel 
@@ -484,6 +483,16 @@ public class PerfAnalyzerPanel
             GenericGraphFrame f = (GenericGraphFrame)source;
             child_frames.removeElement(f);
             f.destroy();
+        }
+        else if (source instanceof LabeledPanelButton) {
+            LabeledPanelButton b = (LabeledPanelButton)e.getSource();
+            if (e.getActionCommand().equals ("Graph")) {
+                GenericGraphPanel gp = new LabeledSummaryGraphPanel (b.collector, b.index_info);
+                GenericGraphFrame gf = new GenericGraphFrame (gp, "Graph of " + b.collector.getName() + " label = " + b.index_info.index);
+                gf.addActionListener (this);
+                child_frames.addElement (gf);
+                gf.show();
+            }
         }
 	else if (source instanceof AnomaliesButton) {
 	    System.out.println ("not implemented");
