@@ -54,13 +54,17 @@ namespace vrj
       }
 
       std::string manager_name = chunk->getName();
+      vprDEBUG(vprDBG_ALL, 2) << "My Name: " << manager_name << "\n" << vprDEBUG_FLUSH;
       std::string api_to_use = chunk->getProperty<std::string>( "api" );
+      vprDEBUG(vprDBG_ALL, 2) << "Use API: " << api_to_use << "\n" << vprDEBUG_FLUSH;
       float listener_position[3];
       listener_position[0] = (float)chunk->getProperty<float>( "listener_position", 0 );
       listener_position[1] = (float)chunk->getProperty<float>( "listener_position", 1 );
       listener_position[2] = (float)chunk->getProperty<float>( "listener_position", 2 );
+      vprDEBUG(vprDBG_ALL, 2) << "Listener Position: " << listener_position[0] << "," << listener_position[1] << "," << listener_position[2] << "\n" << vprDEBUG_FLUSH;
       std::string file_search_path = chunk->getProperty<std::string>( "file_search_path" );
-
+      vprDEBUG(vprDBG_ALL, 2) << "Search path: " << file_search_path << "\n" << vprDEBUG_FLUSH;
+      
       // configure sonix
       sonix::instance()->changeAPI( api_to_use );
       gmtl::Matrix44f mat;
@@ -69,32 +73,42 @@ namespace vrj
 
       // read the list of sounds
       int size = chunk->getNum( "Sounds" );
-      vprDEBUG(vprDBG_ALL, 2) << "Configuring " << size << " sounds" << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, 2) << "Configuring " << size << " sounds.\n" << vprDEBUG_FLUSH;
       for (int x = 0; x < size; ++x)
       {
          jccl::ConfigChunkPtr sound_chunk = chunk->getProperty<jccl::ConfigChunkPtr>( "Sounds", x );
-         std::string alias = (std::string)sound_chunk->getName();
-         std::string filename = (std::string)sound_chunk->getProperty<std::string>( "filename" );
-         bool ambient = (bool)sound_chunk->getProperty<bool>( "ambient" );
-         bool retriggerable = (bool)sound_chunk->getProperty<bool>( "retriggerable" );
-         int loop = (int)sound_chunk->getProperty<int>( "loop" );
+         std::string alias = sound_chunk->getName();
+         std::string filename = sound_chunk->getProperty<std::string>( "filename" );
+         bool ambient = sound_chunk->getProperty<bool>( "ambient" );
+         bool retriggerable = sound_chunk->getProperty<bool>( "retriggerable" );
+         int loop = sound_chunk->getProperty<int>( "loop" );
+         float cutoff = sound_chunk->getProperty<float>( "cutoff" );
+         float volume = sound_chunk->getProperty<float>( "volume" );
+         float pitchbend = sound_chunk->getProperty<float>( "pitchbend" );
          float position[3];
-         position[0] = (float)chunk->getProperty<float>( "position", 0 );
-         position[1] = (float)chunk->getProperty<float>( "position", 1 );
-         position[2] = (float)chunk->getProperty<float>( "position", 2 );
+         position[0] = sound_chunk->getProperty<float>( "position", 0 );
+         position[1] = sound_chunk->getProperty<float>( "position", 1 );
+         position[2] = sound_chunk->getProperty<float>( "position", 2 );
 
          // configure the sound...
          snx::SoundInfo si;
          si.datasource = snx::SoundInfo::FILESYSTEM;
          si.filename = filename;
+         si.cutoff = cutoff;
+         si.volume = volume;
+         si.pitchbend = pitchbend;
          si.repeat = loop;
          si.ambient = ambient;
          si.retriggerable = retriggerable;
          si.position[0] = position[0];
          si.position[1] = position[1];
          si.position[2] = position[2];
+         vprDEBUG(vprDBG_ALL, 2) << "- Configuring " << alias << " (" << filename << ")\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, 3) << "  + pos(" << position[0] << "," << position[1] << "," << position[2] << ")," << "loop(" << loop << "),\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, 3) << "  + amb(" << ambient << ")," << "ct(" << cutoff << ")," << "vl(" << volume << "),\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, 3) << "  + freq(" << pitchbend << ")," << "retrig(" << retriggerable << ")\n" << vprDEBUG_FLUSH;
+
          sonix::instance()->configure( alias, si );
-         vprDEBUG(vprDBG_ALL, 2) << "- Configuring " << alias << " to file " << filename << " at pos:" << position[0] << "," << position[1] << "," << position[2] << "\n" << vprDEBUG_FLUSH;
       }
       vprDEBUG(vprDBG_ALL, 2) << "======================================" << "\n" << vprDEBUG_FLUSH;
 
