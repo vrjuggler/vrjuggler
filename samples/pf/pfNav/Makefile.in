@@ -7,7 +7,7 @@ srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
 VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
-VJ_LIBS		= @TEST_VJ_LIBS@
+VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@
 VPATH		= @srcdir@
 
 # This test program requires the following libraries to be linked:
@@ -22,7 +22,7 @@ VPATH		= @srcdir@
 # Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
 # appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
 # use -L/usr/lib64.
-EXTRA_LIBS	= @TEST_EXTRA_LIBS@
+EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@ @TEST_EXTRA_LIBS_PF@
 
 OBJECTS		= pfNav.o
 
