@@ -63,8 +63,8 @@ Miscellaneous targets are:
 
 Clean-up targets are:
     clean           - Clean up everything (uses common 'clean' target).
-    clobber         - Clean up everything and remove the directory containing
-                      the compiled libraries.
+    clobber         - Clean up everything and remove the directories containing
+                      the compiled libraries and its object files.
 
 The default target is 'dbg'.  'install' will install the debugging, static
 version of the libraries.
