@@ -83,7 +83,30 @@ namespace ReportRate
    const vpr::Uint8 EveryOther(0x52);
    const vpr::Uint8 Every8(0x53);
    const vpr::Uint8 Every32(0x54);
-};
+}
+
+namespace Transmitter
+{
+   /** Type of transmitter */
+   enum Type
+   { Ert0 = 0, Ert1 = 1, Ert2 = 2, Ert3 = 3, Standard, None };
+
+   inline std::string getTransmitterString(Type type)
+   {
+      if(Ert0 == type)
+      { return "Ert 0"; }
+      else if(Ert1 == type)
+      { return "Ert 1"; }
+      else if(Ert2 == type)
+      { return "Ert 2"; }
+      else if(Ert3 == type)
+      { return "Ert 3"; }
+      else if(Standard == type)
+      { return "Standard"; }
+
+      return "None";
+   }
+}
 
 namespace Flock
 {
@@ -126,9 +149,97 @@ namespace Flock
       const vpr::Uint8 GroupMode(0x23);
       const vpr::Uint8 FlockSystemStatus(0x24);
       const vpr::Uint8 FbbAutoConfig(0x32);
-   };
+   }
 
+   // Masks for bird status return value
+   namespace BirdStatus
+   {
+      const vpr::Uint16 MasterBit(1<<15);
+      const vpr::Uint16 BirdInitBit(1<<14);
+      const vpr::Uint16 ErrorBit(1<<13);
+      const vpr::Uint16 RunningBit(1<<12);
+      const vpr::Uint16 HostSyncBit(1<<11);
+      const vpr::Uint16 AddressModeBit(1<<10);
+      const vpr::Uint16 CrtSyncBit(1<<9);
+      const vpr::Uint16 SyncModeBit(1<<8);
+      const vpr::Uint16 FactoryTestBit(1<<7);
+      const vpr::Uint16 XonXoffBit(1<<6);
+      const vpr::Uint16 SleepBit(1<<5);
+      //const vpr::Uint16 PositionMask(0
+      const vpr::Uint16 PointModeBit(1<<0);
+
+      inline bool isMaster(vpr::Uint16 status)
+      { return (MasterBit & status); }
+   }
+
+   namespace SystemStatus
+   {
+      const vpr::Uint8 AccessibleBit(1<<7);
+      const vpr::Uint8 RunningBit(1<<6);
+      const vpr::Uint8 SensorBit(1<<5);
+      const vpr::Uint8 ErtBit(1<<4);
+      const vpr::Uint8 Ert3Bit(1<<3);
+      const vpr::Uint8 Ert2Bit(1<<2);
+      const vpr::Uint8 Ert1Bit(1<<1);
+      const vpr::Uint8 TransmitterBit(1<<0);
+
+      inline bool isAccessible(vpr::Uint8 bstatus)
+      { return (AccessibleBit & bstatus); }
+
+      /** Is the bird running.  Running --> power on, auto-configed and awake */
+      inline bool isRunning(vpr::Uint8 bstatus)
+      { return (RunningBit & bstatus); }
+
+      /** Does the unit have a sensor? */
+      inline bool hasSensor(vpr::Uint8 bstatus)
+      { return (AccessibleBit & bstatus); }
+
+      inline bool isErt(vpr::Uint8 bstatus)
+      { return (ErtBit && bstatus); }
+
+      inline bool hasStandardTransmitter(vpr::Uint8 bstatus)
+      { return ((TransmitterBit & bstatus) && (!isErt(bstatus)) ); }
+
+      inline bool hasTransmitter(vpr::Uint8 bstatus)
+      { return (isErt(bstatus) || hasStandardTransmitter(bstatus)); }
+
+      inline Transmitter::Type getTransmitterType(vpr::Uint8 bstatus)
+      {
+         if(!hasTransmitter(bstatus))
+         {  return Transmitter::None; }
+         else if(hasStandardTransmitter(bstatus))
+         {  return Transmitter::Standard; }
+         else
+         {
+            if (Ert1Bit & bstatus)
+            { return Transmitter::Ert1; }
+            else if (Ert2Bit & bstatus)
+            { return Transmitter::Ert2; }
+            else if (Ert3Bit & bstatus)
+            { return Transmitter::Ert3; }
+            else if (TransmitterBit & bstatus)
+            { return Transmitter::Ert0; }
+         }
+      }
+
+
+   }
+}
+
+enum AddressingMode
+{
+   NormalAddressing = 0,
+   ExpandedAddressing = 1,
+   SuperExpandedAddressing = 3,
+   UnknownAddressing = 16
 };
+inline std::string getAddressingModeString(AddressingMode addrMode)
+{
+   if(NormalAddressing == addrMode) return "Normal Addressing";
+   else if(ExpandedAddressing == addrMode) return "Expanded Addressing";
+   else if(SuperExpandedAddressing == addrMode) return "Super Expanded Addressing";
+   else return "Uknown addressing";
+}
 
 /**
  * class for running a Flock of Birds.
@@ -173,9 +284,16 @@ public:
    */
    vpr::ReturnStatus sendCommand(vpr::Uint8 cmd);
 
+   /** Open the flock on the configured port.
+   * @note Calls readFlockConfiguration to find out current flock settings.
+   */
    vpr::ReturnStatus openPort(void);
 
-
+   /** Read the current configuration of the flock.
+   * Asks the flock for it's current configuration.
+   * This sets internal vars like addressing mode, software rev, etc.
+   */
+   vpr::ReturnStatus readFlockConfiguration();
 
    /**
     * Call this to connect to the Flock device.
@@ -483,14 +601,25 @@ public:
    void setDeviceReportRate(char rate);
 
    vpr::ReturnStatus readStatus(const int birdNum = 1);
-   vpr::ReturnStatus readSoftwareRevision();
 
+   // ---- Getters for flock state ---- //
    vpr::ReturnStatus getSoftwareRevision(unsigned& major, unsigned& minor);
+   vpr::ReturnStatus getModelIdString(std::string& modelId);
+   vpr::ReturnStatus getAddressingMode(AddressingMode& model);
+   vpr::ReturnStatus getBirdStatus(vpr::Uint16& status);
+   vpr::ReturnStatus getSystemStatus(std::vector<vpr::Uint8>& sysStatus);
+
+   // ---- Helpers for printing information of interest to users --- //
+   vpr::ReturnStatus printSystemStatus();
 
    void printError( unsigned char ErrCode, unsigned char ExpandedErrCode );
    int checkError();
    vpr::ReturnStatus readSystemModel();
    vpr::ReturnStatus readHemisphere();
+
+   // ---- Attribute getters ------ //
+   AddressingMode getAddressingMode()
+   {  return mAddrMode; }
 
    /** Clears the reads bytes till buffer is zeroed. */
 //  void clearBuffer();
@@ -509,22 +638,26 @@ private:
    FlockStandalone::Status    mStatus;    /**< Current status of the flock */
 
    CalStruct   mCalTable;
-   char        mReportRate;
-   BIRD_HEMI   mHemisphere;
-   BIRD_FILT   mFilter;
 
    std::string mPort;
    std::string mCalibrationFileName;
 
    vpr::SerialPort* mSerialPort;
    int     mBaud;
-   int     mSyncStyle;
    bool    mBlocking;
-   bool    mExtendedRange;
-   int     mNumBirds;
-   int     mXmitterUnitNumber;
+
    bool    mUsingCorrectionTable;
 
+   AddressingMode mAddrMode;           /**< The addressing mode of the flock */
+   bool           mExtendedRange;      /**< True when using extended range flock */
+
+   int            mNumBirds;           /**< Number of birds in flock */
+   int            mXmitterUnitNumber;
+
+   char           mReportRate;
+   BIRD_HEMI      mHemisphere;
+   BIRD_FILT      mFilter;
+   int            mSyncStyle;
 
    //    x,y,z,        r,y,p
    float mPosition[MAX_SENSORS][3], mOrientation[MAX_SENSORS][3];

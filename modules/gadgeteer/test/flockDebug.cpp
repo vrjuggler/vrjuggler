@@ -48,6 +48,7 @@ void printSettings();
 void changeSettings();
 void openBird();
 void printBirdDetails();
+void setRtsValue();
 
 FlockStandalone* flock(NULL);
 
@@ -128,6 +129,8 @@ int main()
          << "2 - Change settings\n"
          << "3 - Open bird using current settings.\n"
          << "4 - Print bird details.\n"
+         << "5 - Set RTS line value.\n"
+         << "6 - Print system status.\n"
          << "S - Start (needs to be done first)\n"
          << "Q - Quit\n"
          << "O - Output (formatted, 2000 repetitions)\n"
@@ -166,6 +169,15 @@ int main()
 
       case '4':
          printBirdDetails();
+         break;
+
+      case '5':
+         setRtsValue();
+         break;
+
+      case '6':
+         std::cout << "\n\n";
+         flock->printSystemStatus();
          break;
 
          // Start the flock. Needs to be done first
@@ -423,11 +435,47 @@ void printBirdDetails()
 {
    // Query all the parameters
    unsigned ver_major, ver_minor;
+   std::string model_id;
+   AddressingMode addr_mode;
+   vpr::Uint16 bird_status;
+
    flock->getSoftwareRevision(ver_major, ver_minor);
+   flock->getModelIdString(model_id);
+   flock->getAddressingMode(addr_mode);
+   flock->getBirdStatus(bird_status);
+
 
    std::cout << "--- Flock details --- \n";
-   std::cout << "sw ver:" << ver_major << "." << ver_minor << std::endl;
+   std::cout << "      model:" << model_id << std::endl;
+   std::cout << "      sw ver:" << ver_major << "." << ver_minor << std::endl;
+   std::cout << "   addr mode:" << getAddressingModeString(addr_mode) << std::endl;
+   std::cout << " bird status:" << std::endl
+             << "      master:" << Flock::BirdStatus::isMaster(bird_status) << std::endl;
 
+}
+
+void setRtsValue()
+{
+   unsigned new_val;
+   std::cout << "Setting rts on port: " << fconfig.port << std::endl;
+   std::cout << "  new value: >";
+   std::cin >> new_val;
+
+   vpr::SerialPort ser(fconfig.port);
+   if (!(ser.open().success() ))
+   {
+      std::cerr << "ERROR: Could not open serial port.\n";
+      return;
+   }
+   bool val(true);
+   if (new_val == 0)
+      val = false;
+
+   std::cout << "Setting RTS to: " << val << " ...";
+   ser.setRequestToSend(val);
+   std::cout << "done.\n";
+
+   ser.close();
 }
 
 

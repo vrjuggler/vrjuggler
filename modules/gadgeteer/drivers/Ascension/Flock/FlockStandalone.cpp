@@ -39,6 +39,8 @@
 #include <gadget/Util/Debug.h>
 #include <vpr/System.h>
 
+#include <boost/format.hpp>
+
 #include <drivers/Ascension/Flock/FlockStandalone.h>
 
 
@@ -48,10 +50,9 @@ FlockStandalone::FlockStandalone(const char* const port, const int& baud,
                                  const int& numBrds, const int& transmit,
                                  const BIRD_HEMI& hemi, const BIRD_FILT& filt,
                                  const char& report, const char* const calfile)
-   : mReportRate(report), mHemisphere(hemi), mFilter( filt ), mBaud(baud),
-     mSyncStyle(sync), mBlocking(block), mNumBirds(numBrds),
-     mXmitterUnitNumber(transmit), mUsingCorrectionTable(false),
-     mSleepFactor(3)
+   : mBaud(baud), mBlocking(block), mNumBirds(numBrds),
+     mAddrMode(UnknownAddressing), mXmitterUnitNumber(transmit), mUsingCorrectionTable(false),
+     mSleepFactor(3), mReportRate(report), mHemisphere(hemi), mFilter( filt ), mSyncStyle(sync)
 {
    mStatus = FlockStandalone::CLOSED;  // Starts in closed state
 
@@ -176,7 +177,7 @@ vpr::ReturnStatus FlockStandalone::start()
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
          << "============================================================================\n" << vprDEBUG_FLUSH;
 
-      this->readSoftwareRevision();
+      //this->readSoftwareRevision();
 
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] Restarting the flock.\n" << vprDEBUG_FLUSH;
 
@@ -200,9 +201,14 @@ vpr::ReturnStatus FlockStandalone::start()
       }
       else
       {
-         this->readSoftwareRevision();
-         this->readSystemModel();
+         unsigned ver_major, ver_minor;
+         getSoftwareRevision(ver_major, ver_minor);
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << " [FlockStandalone] Software version: " << ver_major << "." << ver_minor << std::endl << vprDEBUG_FLUSH;
+
+         //this->readSystemModel();
          this->readStatus();
+         //std::cout << "Initial status:\n:";
+         //printSystemStatus();
 
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting Serial Port blocking state ("
                    << (mBlocking ? "" : "non-") << "blocking)\n"
@@ -225,6 +231,9 @@ vpr::ReturnStatus FlockStandalone::start()
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting autoconfig\n" << vprDEBUG_FLUSH;
          sendAutoconfig();
          //vpr::System::sleep(1);
+
+         //std::cout << "After auto-config:\n:";
+         //printSystemStatus();
 
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting transmitter\n" << vprDEBUG_FLUSH;
          sendTransmitter();
@@ -792,95 +801,108 @@ float FlockStandalone::rawToFloat (char& MSchar, char& LSchar)
    return( ( (float)returnVal ) / 0x7fff );
 }
 
+/** Get the software revision on the bird */
 vpr::ReturnStatus FlockStandalone::getSoftwareRevision(unsigned& major, unsigned& minor)
 {
    std::vector<vpr::Uint8> resp(2);
    vpr::ReturnStatus ret_val = getAttribute(Flock::Parameter::SoftwareRevision, 2, resp);
-   major = resp[1];
-   minor = resp[0];
+   major = resp[0];
+   minor = resp[1];
+
+   return ret_val;
+}
+
+/** Get the model id string */
+vpr::ReturnStatus FlockStandalone::getModelIdString(std::string& modelId)
+{
+   std::vector<vpr::Uint8> resp(10);
+   vpr::ReturnStatus ret_val = getAttribute(Flock::Parameter::ModelIdentification, 10, resp);
+   modelId = "";
+   for(unsigned i=0;i<10;++i)
+   { modelId += char(resp[i]); }
+
+   return ret_val;
+}
+
+/** Get the model id string */
+vpr::ReturnStatus FlockStandalone::getAddressingMode(AddressingMode& model)
+{
+   std::vector<vpr::Uint8> resp(1);
+   vpr::ReturnStatus ret_val = getAttribute(Flock::Parameter::AddressingMode, 1, resp);
+   model = AddressingMode(resp[0]);
+   return ret_val;
+}
+
+/** Get status of the bird */
+vpr::ReturnStatus FlockStandalone::getBirdStatus(vpr::Uint16& status)
+{
+   std::vector<vpr::Uint8> resp(2);
+   vpr::ReturnStatus ret_val = getAttribute(Flock::Parameter::BirdStatus, 2, resp);
+
+   vpr::Uint16 msb(resp[1]), lsb(resp[0]);
+   status = (msb<<8)|lsb;
+   return ret_val;
+}
+
+/** Get status of the bird */
+vpr::ReturnStatus FlockStandalone::getSystemStatus(std::vector<vpr::Uint8>& sysStatus)
+{
+   vprASSERT(UnknownAddressing != mAddrMode && "No addressing mode set.  Has bird been opened?");
+
+   // Find number of addresses that will be returned
+   unsigned num_addrs(14);
+   if(ExpandedAddressing == mAddrMode)
+      num_addrs = 30;
+   if(SuperExpandedAddressing == mAddrMode)
+      num_addrs = 126;
+
+   sysStatus.clear();
+   sysStatus.resize(num_addrs);
+   vpr::ReturnStatus ret_val = getAttribute(Flock::Parameter::FlockSystemStatus, num_addrs, sysStatus);
 
    return ret_val;
 }
 
 
-vpr::ReturnStatus FlockStandalone::readSoftwareRevision()
+vpr::ReturnStatus FlockStandalone::printSystemStatus()
 {
-   vpr::Uint32 written;
-   if ( mSerialPort != NULL )
+   std::vector<vpr::Uint8> sys_status;
+
+   vpr::ReturnStatus ret_val = getSystemStatus(sys_status);
+
+   if(!ret_val.success())
+   {  return ret_val; }
+
+   // Print the info out
+   std::cout << "System status:\n";
+
+   for(unsigned i=0;i<sys_status.size();++i)
    {
-      vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
-      vpr::Uint32 num_read;
-      char buff[2];
+      vpr::Uint8 status = sys_status[i];
 
-      // pickBird(1);
-
-      buff[0] = 0x4F;
-      buff[1] = 0x1;
-
-      vpr::System::msleep(600);
-      mSerialPort->write(&buff, sizeof(buff), written);
-
-      vpr::ReturnStatus status = mSerialPort->read(&buff,2,num_read,vpr::Interval(timeout, vpr::Interval::Msec));
-      if (!status.success())
+      // build label
+      std::string label("[");
+      bool has_sensor = Flock::SystemStatus::hasSensor(status);
+      if(Flock::SystemStatus::hasTransmitter(status))
       {
-         return(status);
+         label += Transmitter::getTransmitterString(Flock::SystemStatus::getTransmitterType(status));
+         if(has_sensor) label += ", ";
       }
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)  << " [FlockStandalone] Software Revision is: " << (int)buff[0] << "." << (int)buff[1] << std::endl << vprDEBUG_FLUSH;
+      if(has_sensor)
+      { label += "sensor"; }
+      label += "]";
 
-      return(vpr::ReturnStatus::Succeed);
+      bool is_accessible = Flock::SystemStatus::isAccessible(status);
+      bool is_running = Flock::SystemStatus::isRunning(status);
+
+      std::cout << boost::format("  %s: %|-14|  accessible:%s  running:%s") % i % label % is_accessible % is_running << std::endl;
    }
-   else
-   {
-      return(vpr::ReturnStatus::Fail);
-   }
-}
 
-vpr::ReturnStatus FlockStandalone::readSystemModel()
-{
-   // Look on p. 121 of manual to get meanings
-   // 6DFOB       = Stand Alone
-   // 6DERC       = Extended Range Controller
-   // 6DBOF       = MotionStar (old name)
-   // PCBIRD      = pcBIRD
-   // SPACEPAD    = SpacePad
-   // MOTIONSTAR  = MotionStar (new name)
-   // WIRELESS    = MotionStar Wireless
-
-   vpr::Uint32 written;
-   if ( mSerialPort != NULL )
-   {
-      vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
-      vpr::Uint32 num_read;
-      char buff[2];
-      char model_id[10];
-      memset(model_id,' ',10);
-
-      buff[0] = 0x4F;
-      buff[1] = 0xF;
-
-      // pickBird(1);
-
-      vpr::System::msleep(600);
-      mSerialPort->write(&buff, sizeof(buff), written);
-
-      vpr::ReturnStatus status = mSerialPort->read(&model_id,10,num_read,vpr::Interval(timeout, vpr::Interval::Msec));
-      if (!status.success())
-      {
-         return(status);
-      }
-
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] System ID is: " << model_id << std::endl << vprDEBUG_FLUSH;
-
-      return(vpr::ReturnStatus::Succeed);
-   }
-   else
-   {
-      return(vpr::ReturnStatus::Fail);
-   }
 }
 
 
-   // Does not work properly
+
+// Does not work properly
 vpr::ReturnStatus FlockStandalone::readStatus(const int birdNum)
 {
 
@@ -1112,14 +1134,9 @@ vpr::ReturnStatus FlockStandalone::openPort ()
 
          if ( mSerialPort->open().success() )
          {
-            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port opened successfully\n"
-               << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port opened successfully\n" << vprDEBUG_FLUSH;
 
             mSerialPort->clearAll();
-
-            mSerialPort->disableHardwareFlowControl();
-            mSerialPort->disableParityGeneration();         // No parity checking
-            mSerialPort->setRequestToSend(false);           // Lower the RTS bit otherwise bird is in reset mode
 
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting read stuff\n" << vprDEBUG_FLUSH;
             mSerialPort->enableRead();
@@ -1144,9 +1161,16 @@ vpr::ReturnStatus FlockStandalone::openPort ()
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Setting character size\n" << vprDEBUG_FLUSH;
             mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
 
-            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port setup correctly\n" << vprDEBUG_FLUSH;
+            mSerialPort->disableHardwareFlowControl();
+            mSerialPort->disableParityGeneration();         // No parity checking
+            mSerialPort->setRequestToSend(false);           // Lower the RTS bit otherwise bird is in reset mode
+
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port setup completed.\n" << vprDEBUG_FLUSH;
 
             mStatus = FlockStandalone::OPEN;
+
+            vpr::System::msleep(600*3);         // Let connection finish
+            readFlockConfiguration();
 
             return vpr::ReturnStatus::Succeed;
          }
@@ -1169,6 +1193,18 @@ vpr::ReturnStatus FlockStandalone::openPort ()
       return(vpr::ReturnStatus::Fail);
    }
    vprDEBUG_END(vprDBG_ALL,vprDBG_CONFIG_LVL) << "====================================================\n" << vprDEBUG_FLUSH;
+}
+
+vpr::ReturnStatus FlockStandalone::readFlockConfiguration()
+{
+   vprASSERT(( mSerialPort != NULL ) && (FlockStandalone::CLOSED != mStatus));
+
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Asking the flock for it's configuration.\n" << vprDEBUG_FLUSH;
+
+   getAddressingMode(mAddrMode);
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "   addr mode: " << getAddressingModeString(mAddrMode) << std::endl << vprDEBUG_FLUSH;
+
+   return vpr::ReturnStatus::Succeed;
 }
 
 void FlockStandalone::setBlocking ()
