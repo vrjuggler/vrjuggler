@@ -93,7 +93,7 @@ public:
 
    // process the current x-events
    // Called repetatively by the controlLoop
-   int sample() { updKeys();}
+   int sample() { updKeys(); return 1; }
    void updateData();
 
    char* getDeviceName() { return "vjXwinKeyboard";}
