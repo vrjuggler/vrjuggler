@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 //
-// File:     logiclass.C
+// File:     logiclass.cpp
 //
 // Contains: Driver for the Logitech 3D mouse. This driver is based on
 //	    Logitech's "logidrvr.c" (from Jim Barnes), but does not have
@@ -33,7 +33,7 @@
 int vjThreeDMouse::StartSampling()
 {
   if (myThreadID == 0) {
-   int i;
+   //int i;
    current = 0; valid = 1; progress = 2;
    OpenMouse(sPort);
    vjThreeDMouse* devicePtr = this;

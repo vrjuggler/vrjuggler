@@ -23,14 +23,14 @@ include ${MKPATH}/vj.install.mk
 #--- Search path -------
 vpath
 vpath %.c @srcdir@
-vpath %.C @srcdir@
+vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
 
-DEPEND_SRCS	:= vjTimeStamp.C	\
-                   vjPerfDataBuffer.C
+DEPEND_SRCS	:= vjTimeStamp.cpp	\
+                   vjPerfDataBuffer.cpp
 
-PERFORMANCE_OBJECTS	:= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
+PERFORMANCE_OBJECTS	:= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
 # -----------------------------------------------------------------------------
 # Library targets.

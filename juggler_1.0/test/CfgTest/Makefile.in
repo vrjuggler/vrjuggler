@@ -31,8 +31,8 @@ all: CfgTest
 CfgTest: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-CfgTest.o: CfgTest.C
-	${COMPILE} -c -o $@ ${srcdir}/CfgTest.C
+CfgTest.o: CfgTest.cpp
+	${COMPILE} -c -o $@ ${srcdir}/CfgTest.cpp
 
 # -----------------------------------------------------------------------------
 # Clean-up.

@@ -103,6 +103,11 @@ void vjKernel::config(vjConfigChunkDB* chunkDB)
    // Update config database
 }
 
+void vjKernel::configRemove(vjConfigChunkDB* chunkDB)
+{
+   ;
+}
+
 // --- STARTUP ROUTINES --- //
 void vjKernel::loadConfigFile()
 {
@@ -127,7 +132,7 @@ void vjKernel::loadConfigFile()
       exit(1);
    }
 
-   chunkDB = new vjConfigChunkDB(configDesc);      // Create config database
+   mChunkDB = new vjConfigChunkDB(configDesc);      // Create config database
 
    // ------- OPEN User Config file ----------- //
       /*
@@ -145,7 +150,7 @@ void vjKernel::loadConfigFile()
    // ------- OPEN Program specified Config file ------ //
    if(!mProgramConfigFile.empty())   // We have a filename
    {
-      if (!chunkDB->load(mProgramConfigFile.c_str()))
+      if (!mChunkDB->load(mProgramConfigFile.c_str()))
       {
          cerr << "vjKernel::loadConfig: DB Load failed to load file: " << mProgramConfigFile << endl;
          exit(1);
@@ -153,7 +158,7 @@ void vjKernel::loadConfigFile()
    }
 
    vjDEBUG(2) << "------------  Config Chunks ----------" << vjDEBUG_FLUSH;
-   vjDEBUG(2) << (*chunkDB) << vjDEBUG_FLUSH;
+   vjDEBUG(2) << (*mChunkDB) << vjDEBUG_FLUSH;
 
 }
 
@@ -161,7 +166,7 @@ void vjKernel::setupInputManager()
 {
    vjDEBUG(0) << "   vjKernel::setupInputManager\n" << vjDEBUG_FLUSH;
    data.inputManager = new (sharedMemPool) vjInputManager;
-   data.inputManager->FNewInput(chunkDB);
+   data.inputManager->FNewInput(mChunkDB);
 
    vjDEBUG(0) << "      Input manager has passed. (Andy did good)" << endl << vjDEBUG_FLUSH;
 
@@ -179,7 +184,7 @@ void vjKernel::setupDisplayManager()
 
    // Get the vector of display chunks
    vector<vjConfigChunk*>* displayChunks;
-   displayChunks = chunkDB->getMatching("display");
+   displayChunks = mChunkDB->getMatching("display");
 
    // For each display in vector,
    //	   -- Create display
@@ -205,7 +210,7 @@ void vjKernel::setupDrawManager()
 
    //drawManager = apiFactory->getDrawManager();
    drawManager = app->getDrawManager();
-   drawManager->config(chunkDB);     // Give it the chunk DB to extract API specific info
+   drawManager->config(mChunkDB);     // Give it the chunk DB to extract API specific info
    drawManager->setApp(app);
    drawManager->setDisplayManager(displayManager);
 

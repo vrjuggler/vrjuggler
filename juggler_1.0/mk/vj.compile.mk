@@ -15,8 +15,8 @@
 ${OBJDIR}/%.o : %.c
 	${C_COMPILE} -c -o $@ $<
 
-${OBJDIR}/%.o : %.C
+${OBJDIR}/%.o : %.cpp
 	${CXX_COMPILE} -c -o $@ $<
 
-${OBJDIR}/%.o : %.cpp
+${OBJDIR}/%.o : %.C
 	${CXX_COMPILE} -c -o $@ $<

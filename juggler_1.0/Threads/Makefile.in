@@ -23,25 +23,25 @@ include ${MKPATH}/vj.install.mk
 #--- Search path -------
 vpath
 vpath %.c @srcdir@
-vpath %.C @srcdir@
+vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
 
-DEPEND_SRCS	:= vjThreadFunctor.C \
-		   vjBaseThread.C \
-		   vjThreadManager.C
+DEPEND_SRCS	:= vjThreadFunctor.cpp \
+		   vjBaseThread.cpp \
+		   vjThreadManager.cpp
 
 ifeq (@THREAD_SYS@,POSIX)
-    DEPEND_SRCS += vjThreadPosix.C
+    DEPEND_SRCS += vjThreadPosix.cpp
 endif
 ifeq (@THREAD_SYS@,SGI_IPC)
-    DEPEND_SRCS += vjThreadSGI.C
+    DEPEND_SRCS += vjThreadSGI.cpp
 endif
 ifeq (@THREAD_SYS@,WIN32)
-    DEPEND_SRCS += vjThreadWin32.C
+    DEPEND_SRCS += vjThreadWin32.cpp
 endif
 
-THREAD_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
+THREAD_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
 # -----------------------------------------------------------------------------
 # Library targets.

@@ -2,7 +2,7 @@
 
 /*
  * ---------------------------------------------------------------------------
- * vjThreadFunctor.C
+ * vjThreadFunctor.cpp
  * $Revision$
  * $Date$
  * ---------------------------------------------------------------------------
@@ -17,14 +17,14 @@
 // This is the actual function that is called.
 //--------------------------------------------
 #ifdef VJ_SGI_IPC   // ---- SGI IPC Barrier ------ //
-    void 
+    void
     ThreadFunctorFunction (void* args) {
         vjBaseThreadFunctor& func = *(vjBaseThreadFunctor*)args;
         func();	// Call the functor's operator ()
     }
 #else
 #ifdef WIN32
-    unsigned int __stdcall 
+    unsigned int __stdcall
     ThreadFunctorFunction (void* args) {
          vjBaseThreadFunctor& func = *(vjBaseThreadFunctor*)args;
          func();
@@ -55,7 +55,7 @@
         }
 
 #else
-    void 
+    void
     ThreadFunctorFunction (void* args) {
         vjBaseThreadFunctor& func = *(vjBaseThreadFunctor*)args;
         func();

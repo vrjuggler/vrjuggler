@@ -35,8 +35,8 @@ all: cubes
 cubes: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-cubes.o: cubes.C
-	${COMPILE} -c -o $@ ${srcdir}/cubes.C
+cubes.o: cubes.cpp
+	${COMPILE} -c -o $@ ${srcdir}/cubes.cpp
 
 # -----------------------------------------------------------------------------
 # Clean-up.

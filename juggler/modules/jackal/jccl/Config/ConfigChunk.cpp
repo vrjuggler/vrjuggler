@@ -1,4 +1,4 @@
-/* vjConfigChunk.C */
+/* vjConfigChunk.cpp */
 
 
 
@@ -34,7 +34,7 @@ vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props() {
 vjConfigChunk& vjConfigChunk::operator = (vjConfigChunk& c) {
     int i;
     desc = c.desc;
-    for (i = 0; i < props.size(); i++) 
+    for (i = 0; i < props.size(); i++)
         delete (props[i]);
     props.erase (props.begin(), props.end());
     for (i = 0; i < c.props.size(); i++) {
@@ -105,7 +105,7 @@ bool vjConfigChunk::getToken (istream& in, Token& tok) {
   int i,j;
   bool dbl = false, alpha = false;
   bool quoted;
-  
+
   if (readString(in,  tok.strval,  1024,  &quoted) == 0) {
     tok.type = TK_End;
     return true;
@@ -129,7 +129,7 @@ bool vjConfigChunk::getToken (istream& in, Token& tok) {
 
   // Is it a number?
   for (i = 0; i <strlen(tok.strval); i++) {
-    if (!(isdigit (tok.strval[i]) || (tok.strval[i] == '.') 
+    if (!(isdigit (tok.strval[i]) || (tok.strval[i] == '.')
 	  || (tok.strval[i] == '+')
 	  || (tok.strval[i] == '-'))) {
       alpha = true;
@@ -152,7 +152,7 @@ bool vjConfigChunk::getToken (istream& in, Token& tok) {
   tok.type = TK_Int;
   tok.intval = atoi (tok.strval);
   return true;
-  
+
 }
 
 
@@ -161,15 +161,15 @@ bool vjConfigChunk::tryassign (vjProperty *p, Token &tok, int i) {
   /* This does some type-checking and translating before just
    * doing an assign into the right value entry of p. Some of
    * this functionality ought to just be subsumed by vjVarValue
-   * itself, but this way we get back some feedback about 
+   * itself, but this way we get back some feedback about
    * wether a type mismatch occurred (ie we return false if
    * a type mismatch occurs ).
-   * 
+   *
    * Incidentally, this is also where string values get mangled into
    * enumeration entries when assigning strings to T_INTs.
    */	
   vjEnumEntry *e;
-  
+
   switch (tok.type) {
 
   case TK_Int:
@@ -241,7 +241,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
   int i;
 
   self.getToken (in, tok);
-  
+
   while (tok.type != TK_End) {
 
     if (tok.type != TK_String) {
@@ -267,10 +267,10 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
       while ((tok.type != TK_CloseBracket) && (tok.type != TK_End)) {
 	if (tok.type == TK_Unit) {
 	  p->applyUnits (tok.unitval);
-	} 
+	}
 	else {
 	  if (!self.tryassign (p, tok, i++))
-	    vjDEBUG(3) << "ERROR: Assigning to property " 
+	    vjDEBUG(3) << "ERROR: Assigning to property "
 		       << p->name << endl << vjDEBUG_FLUSH;
 	}
 	self.getToken (in, tok);
@@ -279,7 +279,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 	vjDEBUG(3) << "ERROR: vjProperty " << p->name << " should have "
 		   << p->num << " values; " << i << " found" << endl << vjDEBUG_FLUSH;
       if (tok.type != TK_CloseBracket)
-	vjDEBUG(3) << "ERROR: vjProperty " << p->name << ": '}' expected" 
+	vjDEBUG(3) << "ERROR: vjProperty " << p->name << ": '}' expected"
 		   << endl << vjDEBUG_FLUSH;
       self.getToken (in,tok);
     }
@@ -292,7 +292,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
       if (tok.type == TK_Unit) {
 	p->applyUnits (tok.unitval);
 	self.getToken (in, tok);
-      } 
+      }
       if (p->num > 1) {
 	vjDEBUG(3) << "ERROR: Property " << p->name
 		   << " expects " << p->num << " values." << endl << vjDEBUG_FLUSH;
@@ -306,8 +306,8 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 
 
 int vjConfigChunk::getNum (char *property) {
-  for (int i = 0; i < props.size(); i++) 
-    if (!strcasecmp(props[i]->name, property)) 
+  for (int i = 0; i < props.size(); i++)
+    if (!strcasecmp(props[i]->name, property))
       return props[i]->getNum();
   return 0;
 }
@@ -319,8 +319,8 @@ vjVarValue& vjConfigChunk::getType () {
   vjVarValue v(T_STRING);
   v = desc->token;
   return v;
-} 
- 
+}
+
 
 
 vjVarValue& vjConfigChunk::getProperty (char *property, int ind) {

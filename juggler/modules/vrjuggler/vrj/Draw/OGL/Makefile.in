@@ -24,21 +24,21 @@ include ${MKPATH}/vj.install.mk
 #--- Search path -------
 vpath
 vpath %.c @srcdir@
-vpath %.C @srcdir@
+vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
 
 OGL_API		:= @OPENGL_API@
-OGL_SRCS 	:= vjGlDrawManager.C	\
-                   vjGlPipe.C		\
-                   vjGlWindow.C
+OGL_SRCS 	:= vjGlDrawManager.cpp	\
+                   vjGlPipe.cpp		\
+                   vjGlWindow.cpp
 DEPEND_SRCS	:=
 
 ifeq ($(OGL_API),Y)
     DEPEND_SRCS += $(OGL_SRCS)
 endif
 
-GL_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
+GL_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
 # -----------------------------------------------------------------------------
 # Library targets.

@@ -1,7 +1,7 @@
 //----------------------------------------
 // Test OpenGL C2Lib program
 //
-// cubes.C
+// cubes.cpp
 //----------------------------------------
 #include <cubesApp.h>
 
@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
    cubesApp* application = new cubesApp(kernel);   // Declare an instance of the app
 
    kernel->setApplication(application);         // Set application
-   
+
    if(argc > 1)
       kernel->setProgramSpecifiedConfigFile(argv[1]);
 

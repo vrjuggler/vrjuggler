@@ -1,5 +1,5 @@
 
-// vjConfigChunkDB.C
+// vjConfigChunkDB.cpp
 // Implementation of vjConfigChunk DB
 //
 // Author: Christopher Just
@@ -81,7 +81,7 @@ vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (char *property, char *valu
     c = chunks[i]->getProperty(property);
     if (!strcasecmp (c, value))
       v->push_back(chunks[i]);
-  } 
+  }
   return v;
 }
 
@@ -229,9 +229,9 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
 	self.removeMatching ("name", (char*)ch->getProperty ("name"));
       self.chunks.push_back(ch);
     }
-  } while (!in.eof());    
-  
-  vjDEBUG(3) << "vjConfigChunkDB::>> : Finished - " << self.chunks.size() << " chunks read." << endl << vjDEBUG_FLUSH; 
+  } while (!in.eof());
+
+  vjDEBUG(3) << "vjConfigChunkDB::>> : Finished - " << self.chunks.size() << " chunks read." << endl << vjDEBUG_FLUSH;
 
   return in;
 }
@@ -248,7 +248,7 @@ bool vjConfigChunkDB::load (const char *fname) {
     return false;
   }
   if (!in) {
-    vjDEBUG(1) << "\nvjConfigChunkDB::load(): Unable to open file '" 
+    vjDEBUG(1) << "\nvjConfigChunkDB::load(): Unable to open file '"
 	       << fname << "'" << endl << vjDEBUG_FLUSH;
     return false;
   }

@@ -79,7 +79,7 @@
 # -----------------------------------------------------------------------------
 # Targets defined here are:
 #
-# Suffix rules for .c => .o and .C => .o.
+# Suffix rules for .c => .o and .cpp => .o.
 # clean: Standard directory clean-up target.
 # -----------------------------------------------------------------------------
 

@@ -36,8 +36,8 @@ all: pfNav
 pfNav: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-pfNav.o: pfNav.C
-	${COMPILE} -c -o $@ ${srcdir}/pfNav.C
+pfNav.o: pfNav.cpp
+	${COMPILE} -c -o $@ ${srcdir}/pfNav.cpp
 
 # -----------------------------------------------------------------------------
 # Clean-up.

@@ -1,6 +1,6 @@
 
 /*
- * vjTimedUpdate.C
+ * vjTimedUpdate.cpp
  * Implementation of TimedUpdate and its children,
  *   TrackerTimedUpdate
  *
@@ -26,21 +26,21 @@ void vjTrackerTimedUpdate::controlLoop(void* nullParam) {
   vjInputManager* im;
   int i;
 
-  vjDEBUG(2) << "EM TimedUpdate:: started controlLoop\n" 
+  vjDEBUG(2) << "EM TimedUpdate:: started controlLoop\n"
 	     << vjDEBUG_FLUSH;
   // get desc
   desc = vjKernel::instance()->getChunkDB()->getChunkDescDB()->
     getChunkDesc("position_timed_update");
   if (!desc) {
     vjDEBUG(1) << "EM TimedUpdate:: couldn't find chunktype"
-	       << "\"position_timed_update\"\n" 
+	       << "\"position_timed_update\"\n"
 	       << vjDEBUG_FLUSH;
     return;
   }
-  
+
   im = vjKernel::instance()->getInputManager();
   if (!im) {
-    vjDEBUG(1) << "EM TimedUpdate:: couldn't find Input Manager\n" 
+    vjDEBUG(1) << "EM TimedUpdate:: couldn't find Input Manager\n"
 	       << vjDEBUG_FLUSH;
     return;
   }
@@ -66,7 +66,7 @@ void vjTrackerTimedUpdate::controlLoop(void* nullParam) {
     results.push_back(p);
   }
     // gather data
-    vjDEBUG(2) << "EM TimedUpdate:: in controlLoop main loop" 
+    vjDEBUG(2) << "EM TimedUpdate:: in controlLoop main loop"
 	       << vjDEBUG_FLUSH;
     // xmit
     // lock parent output
@@ -83,7 +83,7 @@ void vjTrackerTimedUpdate::controlLoop(void* nullParam) {
     //  delete results[i];
     results.erase(results.begin(),results.end());
   }
-    
+
     sginap (refresh_time);            // HACK!!! NOT PORTABLE!!!
   }
 }
