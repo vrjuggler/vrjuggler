@@ -89,12 +89,20 @@ GUID::GUID (const struct vpr::GUID::StdGUID& guid)
 
 GUID::GUID (const std::string& guid_string)
 {
+   vpr::Uint32 m3[8];
+
+   // The array of vpr::Uint32's is used to avoid alignment problems on
+   // architectures such as MIPS.
    sscanf(guid_string.c_str(),
-          "%08X-%04hX-%04hX-%02X%02X-%02X%02X%02X%02X%02X%02X",
+          "%08x-%04hx-%04hx-%02x%02x-%02x%02x%02x%02x%02x%02x",
           &m_guid.moz.m0, &m_guid.moz.m1, &m_guid.moz.m2,
-          &m_guid.moz.m3[0], &m_guid.moz.m3[1], &m_guid.moz.m3[2],
-          &m_guid.moz.m3[3], &m_guid.moz.m3[4], &m_guid.moz.m3[5],
-          &m_guid.moz.m3[6], &m_guid.moz.m3[7]);
+          &m3[0], &m3[1], &m3[2], &m3[3], &m3[4], &m3[5], &m3[6], &m3[7]);
+
+   // Fill the m_guid struct with the values read into m3[] above.
+   for ( int i = 0; i < 8; i++ )
+   {
+      m_guid.moz.m3[i] = (vpr::Uint8) m3[i];
+   }
 }
 
 GUID::GUID (const GUID& ns_guid, const std::string& name)
