@@ -94,9 +94,15 @@ public:
      *         If 0.0 (zero) is returned, this object has not been initialized
      *         using setNow.
      */
-    inline float
+    inline double
     getSecondsf (void) {
-        return ((float) m_seconds) + ((float) m_micro_seconds) / 1000000.0f;
+        double sec_f, usec_f, usec_f_div;
+
+        sec_f      = (double) m_seconds;
+        usec_f     = (double) m_micro_seconds;
+        usec_f_div = usec_f / 1000000.0f;
+
+        return sec_f + usec_f_div;
     }
 
     /**
@@ -119,7 +125,7 @@ public:
      *         If 0.0 (zero) is returned, this object has not been initialized
      *         using setNow.
      */
-    inline float
+    inline double
     getMinutesf (void) {
         return getSecondsf() / 60.0f;
     }
@@ -144,7 +150,7 @@ public:
      *         If 0.0 (zero) is returned, this object has not been initialized
      *         using setNow.
      */
-    inline float
+    inline double
     getHoursf (void) {
         return getSecondsf() / 3600.0f;
     }
@@ -169,7 +175,7 @@ public:
      *         If 0.0 (zero) is returned, this object has not been initialized
      *         using setNow.
      */
-    inline float
+    inline double
     getDaysf (void) {
         return getSecondsf() / 86400.0f;
     }
@@ -194,7 +200,7 @@ public:
      *         If 0.0 (zero) is returned, this object has not been initialized
      *         using setNow.
      */
-    inline float
+    inline double
     getWeeksf (void) {
         return getSecondsf() / 608400.0f;
     }
