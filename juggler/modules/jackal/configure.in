@@ -334,6 +334,8 @@ fi
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
+jccl_cxxflags=''
+jccl_cxxflags_all="$VPR_CXXFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -456,14 +458,14 @@ case $OS_TYPE in
 	jccl_ldflags_linker="$jccl_ldflags_compiler"
         jccl_libs='-ljccl'
         jccl_lib='-ljccl'
-
+        jccl_libs_all=''
         ;;
     Win32)
         jccl_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
         jccl_ldflags_linker="/libpath:\$prefix/lib/debug"
         jccl_libs='jccl.lib'
         jccl_lib='jccl.lib'
-
+        jccl_libs_all=''
         ;;
 esac
 
@@ -504,10 +506,13 @@ AC_SUBST(APP_EXTRA_LIBS)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
+AC_SUBST(jccl_cxxflags)
+AC_SUBST(jccl_cxxflags_all)
 AC_SUBST(jccl_ldflags_compiler)
 AC_SUBST(jccl_ldflags_linker)
 AC_SUBST(jccl_libs)
 AC_SUBST(jccl_lib)
+AC_SUBST(jccl_libs_all)
 AC_SUBST(jccl_extra_cxxflags)
 AC_SUBST(jccl_extra_include_dirs)
 AC_SUBST(jccl_extra_ldflags)
