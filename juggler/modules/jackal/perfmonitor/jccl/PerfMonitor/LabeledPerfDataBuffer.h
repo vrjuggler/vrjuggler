@@ -77,7 +77,7 @@ class JCCL_CLASS_API LabeledPerfDataBuffer
 
       const std::string*  mIndexString;
       char*               mIndexCString;
-      const vpr::GUID*    mCategory;
+      const PerformanceCategory*    mCategory;
         
       vpr::Interval       mStamp;
         
@@ -149,9 +149,9 @@ public:
     *  @param index_name A name indicating where in the calling
     *                    thread's code the data point was gathered.
     */
-   void set (const vpr::GUID &category, const std::string& index_name);
+   void set (PerformanceCategory &category, const std::string& index_name);
 
-   void set (const vpr::GUID &category, char* index_name);
+   void set (PerformanceCategory &category, char* index_name);
 
 
    /** Records a new data point.
@@ -166,10 +166,10 @@ public:
     *                    thread's code the data point was gathered.
     *  @param _value A TimeStamp.
     */
-   void set (const vpr::GUID &category, const std::string& index_name,
+   void set (PerformanceCategory &category, const std::string& index_name,
              vpr::Interval& _value);
    
-   void set (const vpr::GUID &category, char* index_name,
+   void set (PerformanceCategory &category, char* index_name,
              vpr::Interval& _value);
 
 
@@ -202,3 +202,4 @@ private:
 }; // namespace jccl
 
 #endif
+
