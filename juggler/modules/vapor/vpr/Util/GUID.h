@@ -68,7 +68,7 @@ public:
 public:
    virtual ~GUID (void) {;}
 
-   GUID(const GenerateTag tag)
+   GUID(const GenerateTag& tag)
    {
       boost::ignore_unused_variable_warning(tag);
       generate();
