@@ -1,0 +1,37 @@
+<html>
+<title>File Connection</title>
+
+<body bgcolor="#ffffcc">
+<h2>File Connection Chunk</h2>
+
+The <b>File Connection</b> chunk (token "FileConnect") defines an output
+(or, in the future, input) file for the VR Juggler Environment Manager.
+Its most common use is to define a file which can be used as a destination
+for performance measurement data.
+
+<p>
+The <b>File Name</b> property gives the pathname for this file.  Exactly
+what constitutes a valid name depends on the underlying filesystem.  On
+Unix systems, this might be something like "output_data" or 
+"~cjust/tmp/perfdata.txt".
+
+<p>
+<b>Enabled</b> lets you turn this particular file on or off.  If Enabled is
+false, Juggler will not open the file and won't write anything to it.
+
+<p>
+<b>Readable.</b> Currently, this should always be false.  Internally,
+Juggler has some ability to read instructions from files or pipes.  In the
+future, this may allow the use of input instruction files.
+
+<h3>File Connection chunk definition</h3>
+<pre>
+chunk FileConnect "EM File Output" ""
+  Name String 1 "Name" ""
+  FileName String 1 "File Name" ""
+  Enabled Bool 1 "Enabled" ""
+  Readable Bool 1 "Readable" ""
+  end
+</pre>
+
+</html>
