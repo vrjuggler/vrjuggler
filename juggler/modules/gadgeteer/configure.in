@@ -394,7 +394,7 @@ case $OS_TYPE in
         gad_ldflags="/link /libpath:\$prefix/lib/debug "
         gad_libs='gadget.lib'
 
-        Gadgeteer_lib='gad.lib'
+        Gadgeteer_lib='gadget.lib'
         ;;
 esac
 
