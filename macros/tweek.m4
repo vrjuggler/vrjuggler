@@ -116,8 +116,10 @@ AC_DEFUN(TWEEK_PATH,
         TWEEK_JARS="`$TWEEK_CONFIG $tweek_config_args --jars`"
 
         TWEEK_VERSION=`$TWEEK_CONFIG --version`
-        DPP_VERSION_CHECK_MSG(Tweek, $TWEEK_VERSION, $min_tweek_version,
-                              tweek_cv_tweek_version, $2, $3)
+
+        AC_MSG_CHECKING(whether Tweek version is >= $min_tweek_version)
+        AC_MSG_RESULT($TWEEK_VERSION)
+        DPP_VERSION_CHECK($TWEEK_VERSION, $min_tweek_version, $2, $3)
     fi
 
     if test "x$no_tweek" != x ; then
