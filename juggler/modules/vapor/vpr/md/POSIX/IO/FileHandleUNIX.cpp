@@ -513,20 +513,25 @@ FileHandleUNIX::isReadable (const vpr::Interval timeout) {
     ready = true;
 
     if ( timeout == vpr::Interval::NoTimeout ) {
-        vpr::Selector selector;
-        vpr::IOSys::Handle handle;
-        vpr::Uint16 num_events;
+        fd_set read_set;
+        int num_events;
+        struct timeval timeout_obj;
 
-        handle = getHandle();
-        selector.addHandle(handle);
-        selector.setIn(handle, vpr::Selector::VPR_READ);
-
-        if ( selector.select(num_events, timeout).success() ) {
-            ready = (num_events == 1);
+        if ( timeout.msec() >= 1000 ) {
+            timeout_obj.tv_sec  = timeout.msec() / 1000;
+            timeout_obj.tv_usec = (timeout.msec() % 1000) * 1000000;
         }
         else {
-            ready = false;
+            timeout_obj.tv_sec  = 0;
+            timeout_obj.tv_usec = timeout.msec() * 1000;
         }
+
+        FD_ZERO(&read_set);
+
+        num_events = select(m_fdesc + 1, &read_set, NULL, NULL,
+                            (timeout.usec() > 0) ? &timeout_obj: NULL);
+
+        ready = (num_events == 1);
     }
 
     return ready;
@@ -541,20 +546,25 @@ FileHandleUNIX::isWriteable (const vpr::Interval timeout) {
     ready = false;
 
     if ( timeout == vpr::Interval::NoTimeout ) {
-        vpr::Selector selector;
-        vpr::IOSys::Handle handle;
+        fd_set write_set;
         vpr::Uint16 num_events;
+        struct timeval timeout_obj;
 
-        handle = getHandle();
-        selector.addHandle(handle);
-        selector.setIn(handle, vpr::Selector::VPR_WRITE);
-
-        if ( selector.select(num_events, timeout).success() ) {
-            ready = (num_events == 1);
+        if ( timeout.msec() >= 1000 ) {
+            timeout_obj.tv_sec  = timeout.msec() / 1000;
+            timeout_obj.tv_usec = (timeout.msec() % 1000) * 1000000;
         }
         else {
-            ready = false;
+            timeout_obj.tv_sec  = 0;
+            timeout_obj.tv_usec = timeout.msec() * 1000;
         }
+
+        FD_ZERO(&write_set);
+
+        num_events = select(m_fdesc + 1, NULL, &write_set, NULL,
+                            (timeout.usec() > 0) ? &timeout_obj: NULL);
+
+        ready = (num_events == 1);
     }
 
     return ready;
