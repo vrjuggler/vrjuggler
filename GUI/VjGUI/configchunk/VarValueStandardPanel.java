@@ -99,11 +99,11 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	    /* just add a type label & the text string */
 	    add (new JLabel ("(" + desc.valtype.toString() + ")"), "West");
 	    if (desc.valtype.equals(ValType.t_int))
-		text = new IntegerTextField (20);
+		text = new IntegerTextField (5);
 	    else if (desc.valtype.equals(ValType.t_float))
-		text = new FloatTextField (20);
+		text = new FloatTextField (5);
 	    else
-		text = new StringTextField (25);
+		text = new StringTextField (10);
 	    add(text,"Center");
 	}
 
