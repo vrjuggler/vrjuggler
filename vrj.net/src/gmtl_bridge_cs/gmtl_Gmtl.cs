@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.1 of RCSfile: free_types_cs.tmpl,v
+// Generated from Revision: 1.2 of RCSfile: free_types_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 
@@ -34,6 +34,15 @@ namespace gmtl
 
 public sealed abstract class Gmtl
 {
+   const float GMTL_EPSILON = 9.999999974752427078783512115478515625e-7f;
+   const float GMTL_MAT_EQUAL_EPSILON = 1.000000047497451305389404296875e-3f;
+   const float GMTL_VEC_EQUAL_EPSILON = 9.99999974737875163555145263671875e-5f;
+
+   public enum VectorIndex
+   {
+      Xelt = 0, Yelt = 1, Welt = 3, Zelt = 2
+   }
+
    public enum PlaneSide
    {
       NEG_SIDE = 2, POS_SIDE = 1, ON_PLANE = 0
