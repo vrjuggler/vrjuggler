@@ -175,7 +175,7 @@ public class ConfigContext extends UndoableEditSupport
     * Notifies all listeners that the given resource has been added to this
     * context.
     *
-    * @param name    the name of the resource added
+    * @param resource The name of the resource added.
     */
    protected void fireResourceAdded(String resource)
    {
@@ -198,7 +198,7 @@ public class ConfigContext extends UndoableEditSupport
     * Notifies all listeners that the given resource has been removed from this
     * context.
     *
-    * @param name    the name of the resource removed
+    * @param resource The name of the resource removed.
     */
    protected void fireResourceRemoved(String resource)
    {

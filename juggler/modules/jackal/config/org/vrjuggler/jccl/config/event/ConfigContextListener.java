@@ -37,7 +37,7 @@ import java.util.EventListener;
  * Interface for an observer to receive notifications of changes to a
  * configuration context.
  *
- * @see ConfigContext
+ * @see org.vrjuggler.jccl.config.ConfigContext
  */
 public interface ConfigContextListener
    extends EventListener

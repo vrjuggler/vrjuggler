@@ -391,8 +391,8 @@ public class ProxyTreeModel extends DefaultTreeModel implements ConfigListener, 
    }
 
    /**
-    * ConfigElementListener interface to catch all changes in existing proxies by
-    * calling a helper method, elementChanged.
+    * ConfigElementListener interface to catch all changes in existing proxies
+    * by calling a helper method, elementChanged.
     *
     * @see ConfigElementListener
     * @see #elementChanged

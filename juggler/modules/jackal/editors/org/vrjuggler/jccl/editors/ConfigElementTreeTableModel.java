@@ -492,9 +492,10 @@ public class ConfigElementTreeTableModel
     * The length of the returned array gives the node's depth in the
     * tree.
     *
-    * @param aNode the TreeNode to get the path for
-    * @param an array of TreeNodes giving the path from the root to the
-    *        specified node.
+    * @param aNode The TreeNode to get the path for.
+    *
+    * @return An array of TreeNodes giving the path from the root to the
+    *         specified node.
     */
    public TreeNode[] getPathToRoot(TreeNode aNode)
    {
