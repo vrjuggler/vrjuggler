@@ -71,7 +71,7 @@ import org.vrjuggler.jccl.config.event.*;
 
       return new ConfigDefinition("Person",
                                   "person",
-                                  "1.0",
+                                  1,
                                   "A person on the VR Juggler team.",
                                   categories,
                                   prop_defs);
@@ -90,7 +90,7 @@ import org.vrjuggler.jccl.config.event.*;
       ConfigDefinition def = makeConfigDef();
       assertEquals(def.getName(), "Person");
       assertEquals(def.getToken(), "person");
-      assertEquals(def.getVersion(), "1.0");
+      assertEquals(def.getVersion(), 1);
       assertEquals(def.getHelp(), "A person on the VR Juggler team.");
       assertEquals(def.getCategories(), categories);
       assertEquals(def.getPropertyDefinitions(), prop_defs);
@@ -115,7 +115,7 @@ import org.vrjuggler.jccl.config.event.*;
       def.setName("Juggler Person");
       // Make sure the name was actually changed
       assertEquals(def.getName(), "Juggler Person");
-      
+
       // Make sure an event was posted
       assertTrue(l.fired);
    }
@@ -139,7 +139,7 @@ import org.vrjuggler.jccl.config.event.*;
       def.setToken("juggler_person");
       // Make sure the token was actually changed
       assertEquals(def.getToken(), "juggler_person");
-      
+
       // Make sure an event was posted
       assertTrue(l.fired);
    }
@@ -163,7 +163,7 @@ import org.vrjuggler.jccl.config.event.*;
       def.setHelp("Help me!");
       // Make sure the help was actually changed
       assertEquals(def.getHelp(), "Help me!");
-      
+
       // Make sure an event was posted
       assertTrue(l.fired);
    }
@@ -187,7 +187,7 @@ import org.vrjuggler.jccl.config.event.*;
       def.addCategory("Personnel");
       // Make sure the category was actually added
       assertEquals(def.getCategories().get(1), "Personnel");
-      
+
       // Make sure an event was posted
       assertTrue(l.fired);
    }
@@ -211,7 +211,7 @@ import org.vrjuggler.jccl.config.event.*;
       def.removeCategory("VRAC");
       // Make sure the category was actually removed
       assertEquals(def.getCategories().size(), 0);
-      
+
       // Make sure an event was posted
       assertTrue(l.fired);
    }
