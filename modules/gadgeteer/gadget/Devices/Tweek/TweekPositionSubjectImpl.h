@@ -46,6 +46,8 @@
 namespace gadget
 {
 
+class TweekGadget;
+
 /**
  */
 class TweekPositionSubjectImpl : public POA_gadget::TweekPositionSubject,
@@ -55,7 +57,7 @@ public:
    /**
     * Default constructor.
     */
-   TweekPositionSubjectImpl()
+   TweekPositionSubjectImpl(TweekGadget* device) : mMyDev(device)
    {
       ;
    }
@@ -107,6 +109,8 @@ private:
    {
       /* Do nothing. */ ;
    }
+
+   TweekGadget* mMyDev;
 
    /** */
    gmtl::Matrix<CORBA::Float, 4, 4> mMatrix;

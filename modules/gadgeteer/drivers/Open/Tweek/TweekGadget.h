@@ -40,6 +40,7 @@
 #include <vector>
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
+#include <vpr/Sync/CondVar.h>
 #include <tweek/CORBA/CorbaManager.h>
 
 #include <gadget/Type/Input.h>
@@ -115,6 +116,21 @@ public:
    }
 
 protected:
+   friend class gadget::TweekPositionSubjectImpl;
+   friend class gadget::TweekDigitalSubjectImpl;
+   friend class gadget::TweekAnalogSubjectImpl;
+
+   void notifySample()
+   {
+      mSampleCondVar.acquire();
+      {
+         mSampleReady = true;
+      }
+      mSampleCondVar.release();
+
+      mSampleCondVar.signal();
+   }
+
    /**
     * Deletes this object.  This is an implementation of the pure virtual
     * gadget::Input::destroy() method.
@@ -147,6 +163,8 @@ protected:
    bool                                   mThreadRunning;
    vpr::ThreadMemberFunctor<TweekGadget>* mFunctor;
    vpr::Thread*                           mThread;
+   bool                                   mSampleReady;
+   vpr::CondVar                           mSampleCondVar;
    //@}
 
    /** @name Device collections */

@@ -37,6 +37,7 @@
 #include <vpr/Util/Debug.h>
 
 #include <gadget/Util/Debug.h>
+#include <gadget/Devices/Tweek/TweekGadget.h>
 #include <gadget/Devices/Tweek/TweekAnalogSubjectImpl.h>
 
 
@@ -54,6 +55,8 @@ void TweekAnalogSubjectImpl::setValue(CORBA::Float value)
       mValue = value;
    }
    mValueLock.release();
+
+   mMyDev->notifySample();
 
    tweek::SubjectImpl::notify();
 }

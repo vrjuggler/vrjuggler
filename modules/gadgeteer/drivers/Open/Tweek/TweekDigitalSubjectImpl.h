@@ -45,6 +45,8 @@
 namespace gadget
 {
 
+class TweekGadget;
+
 /**
  */
 class TweekDigitalSubjectImpl : public POA_gadget::TweekDigitalSubject,
@@ -54,7 +56,7 @@ public:
    /**
     * Default constructor.
     */
-   TweekDigitalSubjectImpl() : mState(false)
+   TweekDigitalSubjectImpl(TweekGadget* device) : mMyDev(device), mState(false)
    {
       ;
    }
@@ -93,6 +95,8 @@ private:
    {
       /* Do nothing. */ ;
    }
+
+   TweekGadget* mMyDev;
 
    /** */
    CORBA::Boolean mState;

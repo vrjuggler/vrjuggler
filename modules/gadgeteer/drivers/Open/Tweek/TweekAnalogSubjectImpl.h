@@ -45,6 +45,8 @@
 namespace gadget
 {
 
+class TweekGadget;
+
 /**
  */
 class TweekAnalogSubjectImpl : public POA_gadget::TweekAnalogSubject,
@@ -54,7 +56,7 @@ public:
    /**
     * Default constructor.
     */
-   TweekAnalogSubjectImpl() : mValue(0.0f)
+   TweekAnalogSubjectImpl(TweekGadget* device) : mMyDev(device), mValue(0.0f)
    {
       ;
    }
@@ -93,6 +95,8 @@ private:
    {
       /* Do nothing. */ ;
    }
+
+   TweekGadget* mMyDev;
 
    /** */
    CORBA::Float mValue;
