@@ -357,7 +357,7 @@ sub mail_notification {
     print (MAIL "\n");
 
     print(MAIL join("\n", @text));
-    close(MAIL);
+    close(MAIL) or die "ERROR: Could not close pipe to sendmail (to send the mail): $!\n";
 }
 
 # Return the length of the longest value in the list.
