@@ -642,6 +642,11 @@ def installTweekJava(prefix):
       destdir = os.path.join(prefix, 'bin')
       shutil.copy2(os.path.join(srcdir, 'tweek.bat'), destdir)
 
+      # Install JacORB IDL compiler.
+      srcdir = os.path.join(juggler_dir, 'external', 'JacORB')
+      installDir(srcdir, destdir, ['.jar'])
+      shutil.copy2(os.path.join(srcdir, 'idl.bat'), destdir)
+
       # Install JDOM.
       srcdir = os.path.join(juggler_dir, 'external', 'jdom')
       installDir(srcdir, destdir, ['.jar'])
@@ -899,17 +904,25 @@ def installVRJConfig(prefix):
    if os.path.exists(os.path.join(srcdir, 'VRJConfig.jar')):
       print "Installing VRJConfig ..."
 
-      destdir = os.path.join(prefix, 'bin', 'beans')
-      jars = [
-         'VRJConfig.jar',
+      lib_jars = [
          'Devices.jar',
-         'ClusterWizard.jar',
+         'ClusterWizard.jar'
+      ]
+      bean_jars = [
+         'VRJConfig.jar',
          'IntersenseEditor.jar',
          'ProxyEditor.jar',
          'SurfaceDisplayEditor.jar'
       ]
 
-      for j in jars:
+      destdir = os.path.join(prefix, 'bin')
+      for j in lib_jars:
+         jar_file = os.path.join(srcdir, j)
+         if os.path.exists(jar_file):
+            shutil.copy2(jar_file, destdir)
+
+      destdir = os.path.join(prefix, 'bin', 'beans')
+      for j in bean_jars:
          jar_file = os.path.join(srcdir, j)
          if os.path.exists(jar_file):
             shutil.copy2(jar_file, destdir)
