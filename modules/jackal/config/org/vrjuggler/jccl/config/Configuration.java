@@ -181,7 +181,11 @@ public class Configuration
    {
       if (mElements.contains(elt))
       {
-         throw new IllegalArgumentException("Element is already a part of this configuration.");
+         throw new IllegalArgumentException("Element '" + elt.getName() +
+                                            "' (type " +
+                                            elt.getDefinition().getToken() +
+                                            ") is already a part of this " +
+                                            "configuration.");
       }
       mElements.add(elt);
    }
@@ -199,7 +203,11 @@ public class Configuration
    {
       if (!mElements.contains(elt))
       {
-         throw new IllegalArgumentException("Element is not a part of this configuration.");
+         throw new IllegalArgumentException("Element '" + elt.getName() +
+                                            "' (type " +
+                                            elt.getDefinition().getToken() +
+                                            ") is not a part of this " +
+                                            "configuration.");
       }
       mElements.remove(elt);
    }
