@@ -404,8 +404,9 @@ void GlWindowXWin::configWindow(vrj::Display* disp)
          mXDisplayName = std::string( d );
       }
    }
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "glxWindow::config: display name is: "
-      << mXDisplayName << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+      << "[vrj::GlWindowXWin::config] Display name is '" << mXDisplayName
+      << "'" << std::endl << vprDEBUG_FLUSH;
 
    mAreEventSource = display_elt->getProperty<bool>("act_as_event_source");
 
@@ -494,8 +495,17 @@ void GlWindowXWin::checkEvents()
     *       GLX
     */
 
+   if ( !glXQueryExtension(display, NULL, NULL) )
+   {
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ERROR:") << " X Display '" << mXDisplayName
+         << "' doesn't support GLX.\n" << vprDEBUG_FLUSH;
+      return NULL;
+   }
+
    // Using 1 here requests the *largest* available size for each of these
    // buffers.  Refer to the glXChooseVisual() manual page for more details.
+   int visual_id(-1);
    int red_size(1), green_size(1), blue_size(1), alpha_size(1), db_size(1);
    bool want_fsaa(false);
 
@@ -503,6 +513,7 @@ void GlWindowXWin::checkEvents()
 
    if ( gl_fb_elt.get() != NULL )
    {
+      visual_id  = gl_fb_elt->getProperty<int>("visual_id");
       red_size   = gl_fb_elt->getProperty<int>("red_size");
       green_size = gl_fb_elt->getProperty<int>("green_size");
       blue_size  = gl_fb_elt->getProperty<int>("blue_size");
@@ -551,129 +562,141 @@ void GlWindowXWin::checkEvents()
       }
    }
 
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-      << "Frame buffer visual settings for " << mVrjDisplay->getName()
-      << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
-      << " A:" << alpha_size << " DB:" << db_size << std::endl
-      << vprDEBUG_FLUSH;
-
-   ::XVisualInfo *vi;
-   std::vector<int> viattrib;
-   viattrib.push_back(GLX_DOUBLEBUFFER);
-   viattrib.push_back(GLX_RGBA);
-   viattrib.push_back(GLX_DEPTH_SIZE); viattrib.push_back(db_size);
-   viattrib.push_back(GLX_RED_SIZE); viattrib.push_back(red_size);
-   viattrib.push_back(GLX_GREEN_SIZE); viattrib.push_back(green_size);
-   viattrib.push_back(GLX_BLUE_SIZE); viattrib.push_back(blue_size);
-   viattrib.push_back(GLX_ALPHA_SIZE); viattrib.push_back(alpha_size);
-   const unsigned int AlphaAttribIndex = 11;
-
-   // Enable full-screen anti-aliasing if it is available and it was requested.
-#ifdef GLX_SAMPLES_SGIS
-   // Save the current attribute vector size so we can try disabling FSAA if
-   // necessary.
-   const unsigned int fsaa_attrib_index = viattrib.size();
-
-   if ( want_fsaa )
-   {
-      viattrib.push_back(GLX_SAMPLES_SGIS); viattrib.push_back(1);
-      viattrib.push_back(GLX_SAMPLE_BUFFERS_SGIS); viattrib.push_back(1);
-   }
-#else
-   if ( want_fsaa )
+   if ( visual_id != -1 )
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-         << "WARNING: Full-screen anti-aliasing is not available\n"
-         << vprDEBUG_FLUSH;
-   }
-#endif
+         << "Requesting visual 0x" << std::hex << visual_id << std::dec
+         << " from GLX." << std::endl << vprDEBUG_FLUSH;
 
-   /* Notes on viattrib:  by using 1 for GLX_RED_SIZE et.al. we ask
-    * for the _largest_ available buffers.  If this fails,  we might
-    * want to try setting alpha size to 0 (smallest possible, maybe 0)
-    * which is required eg. for alpha on the indys.
-    *
-    * Implementation note: the code below makes assumptions about the
-    * exact order of the arguments in viattrib.  Alter those, & you'll
-    * Need to redo the indices used.
-    */
+      XVisualInfo vinfo_template;
+      long mask(VisualIDMask);
+      int nitems;
 
-   if ( !glXQueryExtension(display, NULL, NULL) )
-   {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED, "ERROR:") << " X Display '" << mXDisplayName
-         << "' doesn't support GLX.\n" << vprDEBUG_FLUSH;
-      return NULL;
-   }
+      vinfo_template.visualid = visual_id;
 
-   if ( mVrjDisplay->isStereoRequested() )
-   {
-      viattrib.push_back(GLX_STEREO);
-      in_stereo = true;
+      return XGetVisualInfo(display, mask, &vinfo_template, &nitems);
    }
    else
    {
-      in_stereo = false;
-   }
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << "Frame buffer visual settings for " << mVrjDisplay->getName()
+         << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
+         << " A:" << alpha_size << " DB:" << db_size << std::endl
+         << vprDEBUG_FLUSH;
 
-   // Add terminator
-   viattrib.push_back(None);
+      // Notes on viattrib:  by using 1 for GLX_RED_SIZE et.al. we ask
+      // for the _largest_ available buffers.  If this fails,  we might
+      // want to try setting alpha size to 0 (smallest possible, maybe 0)
+      // which is required eg. for alpha on the indys.
+      //
+      // Implementation note: the code below makes assumptions about the
+      // exact order of the arguments in viattrib.  Alter those, and you'll
+      // need to redo the indices used.
+      // XXX: This is bad.  -PH 7/19/2004
+      std::vector<int> viattrib;
+      viattrib.push_back(GLX_DOUBLEBUFFER);
+      viattrib.push_back(GLX_RGBA);
+      viattrib.push_back(GLX_DEPTH_SIZE); viattrib.push_back(db_size);
+      viattrib.push_back(GLX_RED_SIZE); viattrib.push_back(red_size);
+      viattrib.push_back(GLX_GREEN_SIZE); viattrib.push_back(green_size);
+      viattrib.push_back(GLX_BLUE_SIZE); viattrib.push_back(blue_size);
+      viattrib.push_back(GLX_ALPHA_SIZE); viattrib.push_back(alpha_size);
+      const unsigned int AlphaAttribIndex = 11;
 
-   // first, see if we can get exactly what we want.
-   if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
-   {
-      return vi;
-   }
+      // Enable full-screen anti-aliasing if it is available and it was
+      // requested.
+#ifdef GLX_SAMPLES_SGIS
+      // Save the current attribute vector size so we can try disabling FSAA if
+      // necessary.
+      const unsigned int fsaa_attrib_index = viattrib.size();
 
-   // still no luck. if we were going for stereo, let's try without.
-   if ( mVrjDisplay->isStereoRequested() )
-   {
+      if ( want_fsaa )
+      {
+         viattrib.push_back(GLX_SAMPLES_SGIS); viattrib.push_back(1);
+         viattrib.push_back(GLX_SAMPLE_BUFFERS_SGIS); viattrib.push_back(1);
+      }
+#else
+      if ( want_fsaa )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+            << "WARNING: Full-screen anti-aliasing is not available\n"
+            << vprDEBUG_FLUSH;
+      }
+#endif
+
+      if ( mVrjDisplay->isStereoRequested() )
+      {
+         viattrib.push_back(GLX_STEREO);
+         in_stereo = true;
+      }
+      else
+      {
+         in_stereo = false;
+      }
+
+      // Add terminator
+      viattrib.push_back(None);
+
+      XVisualInfo *vi;
+
+      // first, see if we can get exactly what we want.
+      if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
+      {
+         return vi;
+      }
+
+      // still no luck. if we were going for stereo, let's try without.
+      if ( mVrjDisplay->isStereoRequested() )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+            << "WARNING: Display process for '" << mXDisplayName
+            << "' couldn't get display in stereo - trying mono.\n"
+            << vprDEBUG_FLUSH;
+         in_stereo = false;
+
+         // This should be a reasonable 'ignore' tag
+         viattrib[viattrib.size() - 1] = GLX_USE_GL;
+
+         if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
+         {
+            return vi;
+         }
+      }
+
+      // if we reach here, we didn't.  Maybe we should make alpha optional.
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
          << "WARNING: Display process for '" << mXDisplayName
-         << "' couldn't get display in stereo - trying mono.\n"
+         << "' couldn't get display with alpha channel - trying without.\n"
          << vprDEBUG_FLUSH;
-      in_stereo = false;
-      viattrib[viattrib.size() - 1] = GLX_USE_GL; // should be a reasonable 'ignore' tag
+      viattrib[AlphaAttribIndex] = 0;
 
       if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
       {
          return vi;
       }
-   }
-
-   // if we reach here, we didn't.  Maybe we should make alpha optional.
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-      << "WARNING: Display process for '" << mXDisplayName
-      << "' couldn't get display with alpha channel - trying without.\n"
-      << vprDEBUG_FLUSH;
-   viattrib[AlphaAttribIndex] = 0;
-
-   if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
-   {
-      return vi;
-   }
 
 #ifdef GLX_SAMPLES_SGIS
-   // Last-ditch effort: try disabling FSAA if it was enabled.
-   // XXX: It might be better to try disabling FSAA *first* instead of last.
-   if ( want_fsaa )
-   {
-      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-         << "WARNING: Display process for '" << mXDisplayName
-     << "' couldn't get FSAA - trying without it.\n" << vprDEBUG_FLUSH;
-
-      // Disabling is achieved by moving the terminator for the attribute
-      // array up to the beginning of the FSAA attributes.  This effectively
-      // blocks off anything that was added to the vector after the FSAA
-      // attribute settings, so this isn't necessarily a good thing...
-      viattrib[fsaa_attrib_index] = None;
-
-      if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
+      // Last-ditch effort: try disabling FSAA if it was enabled.
+      // XXX: It might be better to try disabling FSAA *first* instead of last.
+      if ( want_fsaa )
       {
-         return vi;
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+            << "WARNING: Display process for '" << mXDisplayName
+            << "' couldn't get FSAA - trying without it.\n" << vprDEBUG_FLUSH;
+
+         // Disabling is achieved by moving the terminator for the attribute
+         // array up to the beginning of the FSAA attributes.  This effectively
+         // blocks off anything that was added to the vector after the FSAA
+         // attribute settings, so this isn't necessarily a good thing...
+         viattrib[fsaa_attrib_index] = None;
+
+         if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
+         {
+            return vi;
+         }
       }
-   }
 #endif
+   }
 
    // Failed, so return NULL
    return NULL;
