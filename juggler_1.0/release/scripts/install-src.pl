@@ -82,12 +82,14 @@ my($uid, $gid, $mode) = ($<, (getpwuid($<))[3], "0644") unless $Win32;
 
 if ( $opt_u ) {
     $uname = "$opt_u" if $opt_u;
-    $uid = (getpwnam("$uname"))[2] or die "getpwnam($uname): $!\n";
+    my(@user_info) = getpwnam("$uname") or die "getpwnam($uname): $!\n";
+    $uid = $user_info[2];
 }
 
 if ( $opt_g && ! $Win32 ) {
     $gname = "$opt_g" if $opt_g;
-    $gid = (getgrnam("$gname"))[2] or die "getgrnam($gname): $!\n";
+    my(@group_info) = getgrnam("$gname") or die "getgrnam($gname): $!\n";
+    $gid = $group_info[2];
 }
 
 $mode = "$opt_m" if $opt_m;

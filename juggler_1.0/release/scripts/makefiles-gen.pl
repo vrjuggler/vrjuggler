@@ -115,11 +115,13 @@ $basedir = cwd();
 my($uid, $gid, $mode_bits) = ($<, (getpwuid($<))[3], "0644") unless $Win32;
 
 if ( $uname ) {
-    $uid = (getpwnam("$uname"))[2] or die "getpwnam($uname): $!\n";
+    my(@user_info) = getpwnam("$uname") or die "getpwnam($uname): $!\n";
+    $uid = $user_info[2];
 }
 
 if ( $gname && ! $Win32 ) {
-    $gid = (getgrnam("$gname"))[2] or die "getgrnam($gname): $!\n";
+    my(@group_info) = getgrnam("$gname") or die "getgrnam($gname): $!\n";
+    $gid = $group_info[2];
 }
 
 $mode_bits = "$mode" if $mode;
