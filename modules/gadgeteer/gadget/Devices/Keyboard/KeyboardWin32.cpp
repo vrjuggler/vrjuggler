@@ -32,7 +32,6 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <assert.h>
 #include <sys/types.h>
 
 #include <jccl/Config/ConfigChunk.h>
@@ -159,7 +158,7 @@ void KeyboardWin32::handleEvents()
    {
       // block until message received.
       int retval = ::GetMessage( &msg, m_hWnd, 0, 0 );
-      assert( retval != -1 && "invalid m_hWnd window handle or invalid lpMsg pointer" );
+      vprASSERT( retval != -1 && "invalid m_hWnd window handle or invalid lpMsg pointer" );
       if (retval == -1) return; // for opt mode...
       have_events_to_check = true;
    }
