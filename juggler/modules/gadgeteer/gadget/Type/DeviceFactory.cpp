@@ -36,6 +36,7 @@
 
 // Platform-independent devices.
 #include <gadget/Devices/Ascension/MotionStar.h>
+#include <gadget/Devices/Intersense/Intersense.h>
 
 // Sims
 #include <gadget/Devices/Sim/SimAnalog.h>
@@ -54,7 +55,6 @@
 /* Physical devices */
 #ifndef VPR_OS_Win32
 #   include <gadget/Devices/Ascension/Flock.h>
-#   include <gadget/Devices/Intersense/Intersense.h>
 
 #   ifdef VPR_OS_Darwin
 #      include <gadget/Devices/Keyboard/OSXKeyboard.h>
@@ -106,6 +106,7 @@ void DeviceFactory::hackLoadKnownDevices()
 
    // Platform-independent devices.
    DeviceConstructor<MotionStar>* motion_star = new DeviceConstructor<MotionStar>;
+   DeviceConstructor<Intersense>* intersense = new DeviceConstructor<Intersense>;
 
    DeviceConstructor<SimAnalog>* sim_analog = new DeviceConstructor<SimAnalog>;
    DeviceConstructor<SimDigital>* sim_digital = new DeviceConstructor<SimDigital>;
@@ -162,7 +163,6 @@ void DeviceFactory::hackLoadKnownDevices()
 
 #endif
    DeviceConstructor<Flock>* flock = new DeviceConstructor<Flock>;
-   DeviceConstructor<Intersense>* intersense = new DeviceConstructor<Intersense>;
 
    if( (NULL == flock)        ||
        (NULL == intersense)   ||
