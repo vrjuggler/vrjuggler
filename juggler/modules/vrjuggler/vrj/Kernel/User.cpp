@@ -52,7 +52,7 @@ std::string User::getName()
 bool User::config(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(chunk.get() != NULL);
-   vprASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
+   vprASSERT(chunk->getDescToken() == std::string("JugglerUser"));
 
    vprDEBUG_BEGIN(vrjDBG_KERNEL,3) << "vjUser::config: Creating a new user\n" << vprDEBUG_FLUSH;
 
@@ -60,14 +60,14 @@ bool User::config(jccl::ConfigChunkPtr chunk)
    mUserId = mNextUserId++;
 
    // Setup user name
-   mName = (std::string)chunk->getProperty("Name");
+   mName = chunk->getName();
 
    // Initialize the head stuff
-   std::string head_alias = (std::string)chunk->getProperty("headPos");
+   std::string head_alias = chunk->getProperty<std::string>("headPos");
    mHead.init(head_alias);
 
    // Initialize interocular distance
-   mInterocularDist = chunk->getProperty("interocular_distance");
+   mInterocularDist = chunk->getProperty<float>("interocular_distance");
 
    if(mInterocularDist == 0.0f)
    {

@@ -77,7 +77,7 @@ vprSingletonImp(PfDrawManager);
  */
 bool PfDrawManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 {
-   std::string chunk_type = chunk->getType();
+   std::string chunk_type = chunk->getDescToken();
    return ( chunk_type == std::string("apiPerformer"));
 }
 
@@ -90,7 +90,7 @@ bool PfDrawManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));
 
-   std::string chunk_type = chunk->getType();
+   std::string chunk_type = chunk->getDescToken();
 
    if(chunk_type == std::string("apiPerformer"))
    {
@@ -107,29 +107,30 @@ bool PfDrawManager::configAdd(jccl::ConfigChunkPtr chunk)
 bool PfDrawManager::configDisplaySystem(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(chunk.get() != NULL);
-   vprASSERT((std::string)chunk->getType() == std::string("displaySystem"));
+   vprASSERT(chunk->getDescToken() == std::string("displaySystem"));
 
    // ---- SETUP PipeStr's ---- //
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
       << "------------- PfDrawManager::config ----------------" << std::endl
       << vprDEBUG_FLUSH;
-   mNumPipes = (unsigned int)(int)chunk->getProperty("numpipes");
+   mNumPipes = chunk->getProperty<unsigned int>("numpipes");
 
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "NumPipes: " << mNumPipes
                                             << std::endl << vprDEBUG_FLUSH;
    for (unsigned int i=0;i<mNumPipes;i++)
    {
-      char cur_disp_name[] = "-1";
+      std::string cur_disp_name = "-1";
 
-      mPipeStrs.push_back(chunk->getProperty("xpipes", i).cstring());
+      mPipeStrs.push_back(chunk->getProperty<std::string>("xpipes", i));
 
-      if(strcmp(mPipeStrs[i], cur_disp_name) == 0)    // Use display env
+      if(mPipeStrs[i] == cur_disp_name)    // Use display env
       {
-         char env_var[] = "DISPLAY";
+         const char env_var[] = "DISPLAY";
          char* display_env = getenv(env_var);
-         char* xpipe_name  = new char[strlen(display_env)+1];
-         strcpy(xpipe_name, display_env);
-         mPipeStrs[i] = xpipe_name;
+         if ( display_env != NULL )
+         {
+            mPipeStrs[i] = display_env;
+         }
       }
       vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "Pipe:" << i << ": "
                                                << mPipeStrs[i] << std::endl
@@ -141,22 +142,26 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigChunkPtr chunk)
 /** Configures the Performer API stuff. */
 bool PfDrawManager::configPerformerAPI(jccl::ConfigChunkPtr chunk)
 {
-   vprASSERT((std::string)chunk->getType() == std::string("apiPerformer"));
+   vprASSERT(chunk->getDescToken() == std::string("apiPerformer"));
 
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager::configPerformerAPI:"
                                             << " Configuring Performer\n" << vprDEBUG_FLUSH;
 
    // --- Get simulator model info --- //
-   char* head_file = chunk->getProperty("simHeadModel").cstring();
-   char* wand_file = chunk->getProperty("simWandModel").cstring();
-   if(head_file == NULL)
+   std::string head_file = chunk->getProperty<std::string>("simHeadModel");
+   std::string wand_file = chunk->getProperty<std::string>("simWandModel");
+   if(head_file.empty())
+   {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
          << "WARNING: PfDrawManager::config: simHeadModel not set."
          << std::endl << vprDEBUG_FLUSH;
-   if(wand_file == NULL)
+   }
+   if(wand_file.empty())
+   {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
          << "WARNING: PfDrawManager::config: simWandModel not set."
          << std::endl << vprDEBUG_FLUSH;
+   }
 
    mHeadModel = vpr::replaceEnvVars(head_file);
    mWandModel = vpr::replaceEnvVars(wand_file);
@@ -303,7 +308,7 @@ void PfDrawManager::initPipes()
       vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "\tpipe:" << pipe_num << ": " << mPipeStrs[pipe_num] << std::endl << vprDEBUG_FLUSH;
 
       mPipes[pipe_num] = pfGetPipe(pipe_num);
-      mPipes[pipe_num]->setWSConnectionName(mPipeStrs[pipe_num]);
+      mPipes[pipe_num]->setWSConnectionName(mPipeStrs[pipe_num].c_str());
       mPipes[pipe_num]->setScreen(pipe_num);
 
       pfPipeWindow* pw = allocatePipeWin(pipe_num);   // new pfPipeWindow(mPipes[pipe_num]);

@@ -415,7 +415,7 @@ void Kernel::updateFrameData()
 
 bool Kernel::configCanHandle(jccl::ConfigChunkPtr chunk)
 {
-   std::string chunk_type = (std::string)chunk->getType();
+   std::string chunk_type = chunk->getDescToken();
 
    if(std::string("JugglerUser") == chunk_type)
       return true;
@@ -425,7 +425,7 @@ bool Kernel::configCanHandle(jccl::ConfigChunkPtr chunk)
 
 bool Kernel::configAdd(jccl::ConfigChunkPtr chunk)
 {
-   std::string chunk_type = (std::string)chunk->getType();
+   std::string chunk_type = chunk->getDescToken();
 
    vprASSERT(configCanHandle(chunk));
 
@@ -439,7 +439,7 @@ bool Kernel::configAdd(jccl::ConfigChunkPtr chunk)
 
 bool Kernel::configRemove(jccl::ConfigChunkPtr chunk)
 {
-   std::string chunk_type = (std::string)chunk->getType();
+   std::string chunk_type = chunk->getDescToken();
 
    vprASSERT(configCanHandle(chunk));
 
@@ -454,7 +454,7 @@ bool Kernel::configRemove(jccl::ConfigChunkPtr chunk)
 //: Add a new user to the kernel
 bool Kernel::addUser(jccl::ConfigChunkPtr chunk)
 {
-   vprASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
+   vprASSERT(chunk->getDescToken() == std::string("JugglerUser"));
 
    User* new_user = new User;
    bool success = new_user->config(chunk);
@@ -462,9 +462,9 @@ bool Kernel::addUser(jccl::ConfigChunkPtr chunk)
    if(!success)
    {
       vprDEBUG(vrjDBG_KERNEL,vprDBG_CRITICAL_LVL)
-                     << clrOutNORM(clrRED,"ERROR:") << "Failed to add new User: "
-                     << chunk->getProperty("name") << std::endl
-                     << vprDEBUG_FLUSH;
+         << clrOutNORM(clrRED,"ERROR:") << "Failed to add new User: "
+         << chunk->getName() << std::endl
+         << vprDEBUG_FLUSH;
       delete new_user;
    }
    else

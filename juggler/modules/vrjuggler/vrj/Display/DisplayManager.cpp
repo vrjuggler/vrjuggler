@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/SurfaceViewport.h>
@@ -38,7 +39,6 @@
 #include <vrj/Draw/DrawManager.h>
 #include <vrj/Kernel/Kernel.h>
 
-#include <jccl/Config/ConfigChunk.h>
 
 namespace vrj
 {
@@ -65,7 +65,7 @@ jccl::ConfigChunkPtr DisplayManager::getDisplaySystemChunk()
          std::vector<jccl::ConfigChunkPtr>::iterator i;
          for(i=cfg_mgr->getActiveBegin(); i != cfg_mgr->getActiveEnd();++i)
          {
-            if(std::string((*i)->getType()) == std::string("displaySystem"))
+            if((*i)->getDescToken() == std::string("displaySystem"))
             {
                mDisplaySystemChunk = *i;
                break;         // This guarantees that we get the first displaySystem chunk.
@@ -103,7 +103,7 @@ bool DisplayManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));
 
-   std::string chunk_type = (std::string)chunk->getType();
+   std::string chunk_type = chunk->getDescToken();
 
    if(   (chunk_type == std::string("surfaceDisplay"))
       || (chunk_type == std::string("simDisplay")) )
@@ -132,7 +132,7 @@ bool DisplayManager::configRemove(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));
 
-   std::string chunk_type = (std::string)chunk->getType();
+   std::string chunk_type = chunk->getDescToken();
 
    if(  (chunk_type == std::string("surfaceDisplay"))
      || (chunk_type == std::string("simDisplay")) )
@@ -162,10 +162,10 @@ bool DisplayManager::configRemove(jccl::ConfigChunkPtr chunk)
 //+          false - We don't
 bool DisplayManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 {
-   return (    ((std::string)chunk->getType() == std::string("surfaceDisplay"))
-            || ((std::string)chunk->getType() == std::string("simDisplay"))
-            || ((std::string)chunk->getType() == std::string("displaySystem"))
-            || ((std::string)chunk->getType() == std::string("displayWindow"))
+   return (    (chunk->getDescToken() == std::string("surfaceDisplay"))
+            || (chunk->getDescToken() == std::string("simDisplay"))
+            || (chunk->getDescToken() == std::string("displaySystem"))
+            || (chunk->getDescToken() == std::string("displayWindow"))
            );
 }
 
@@ -186,7 +186,7 @@ bool DisplayManager::configAddDisplay(jccl::ConfigChunkPtr chunk)
    // Find out if we already have a window of this name
    // If so, then close it before we open a new one of the same name
    // This basically allows re-configuration of a window
-   Display* cur_disp = findDisplayNamed(chunk->getProperty("name"));
+   Display* cur_disp = findDisplayNamed(chunk->getName());
    if(cur_disp != NULL)                         // We have an old display
    {
       vprDEBUG(vrjDBG_DISP_MGR,vprDBG_CONFIG_LVL) << "Removing old window: " << cur_disp->getName().c_str() << vprDEBUG_FLUSH;
@@ -194,7 +194,7 @@ bool DisplayManager::configAddDisplay(jccl::ConfigChunkPtr chunk)
    }
 
    // --- Add a display (of the correct type) ---- //
-   if((std::string)chunk->getType() == std::string("displayWindow"))       // Display window
+   if(chunk->getDescToken() == std::string("displayWindow"))       // Display window
    {
       Display* newDisp = new Display();        // Create the display
       newDisp->config(chunk);
@@ -218,9 +218,9 @@ bool DisplayManager::configRemoveDisplay(jccl::ConfigChunkPtr chunk)
 
    bool success_flag(false);
 
-   if((std::string)chunk->getType() == std::string("displayWindow"))      // It is a display
+   if(chunk->getDescToken() == std::string("displayWindow"))      // It is a display
    {
-      Display* remove_disp = findDisplayNamed(chunk->getProperty("name"));
+      Display* remove_disp = findDisplayNamed(chunk->getName());
       if(remove_disp != NULL)
       {
          closeDisplay(remove_disp, true);                            // Remove it

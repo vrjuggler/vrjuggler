@@ -32,6 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <jccl/Config/ConfigChunk.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/SimViewport.h>
@@ -62,15 +63,15 @@ void Display::configDisplayWindow(jccl::ConfigChunkPtr chunk)
    vprASSERT(chunk.get() != NULL);
 
    // -- Get config info from chunk -- //
-    int originX = chunk->getProperty("origin", 0);
-    int originY = chunk->getProperty("origin", 1);
-    int sizeX   = chunk->getProperty("size", 0);
-    int sizeY   = chunk->getProperty("size", 1);
-    std::string name  = chunk->getProperty("name");
-    mBorder     = chunk->getProperty("border");
-    int pipe    = chunk->getProperty("pipe");
-    mActive  = chunk->getProperty("active");
-    mInStereo  = chunk->getProperty("stereo");
+    int originX = chunk->getProperty<int>("origin", 0);
+    int originY = chunk->getProperty<int>("origin", 1);
+    int sizeX   = chunk->getProperty<int>("size", 0);
+    int sizeY   = chunk->getProperty<int>("size", 1);
+    std::string name  = chunk->getName();
+    mBorder     = chunk->getProperty<bool>("border");
+    int pipe    = chunk->getProperty<int>("pipe");
+    mActive     = chunk->getProperty<bool>("active");
+    mInStereo   = chunk->getProperty<bool>("stereo");
 
    // -- Check for error in configuration -- //
    // NOTE: If there are errors, set them to some default value
@@ -123,7 +124,7 @@ void Display::configViewports(jccl::ConfigChunkPtr chunk)
    // - Configure it
    for(i=0;i<num_sim_vps;i++)
    {
-      vp_chunk = chunk->getProperty("sim_viewports",i);
+      vp_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("sim_viewports",i);
       sim_vp = new SimViewport;
       sim_vp->setDisplay(this);
       sim_vp->config(vp_chunk);
@@ -135,7 +136,7 @@ void Display::configViewports(jccl::ConfigChunkPtr chunk)
    // - Configure it
    for(i=0;i<num_surface_vps;i++)
    {
-      vp_chunk = chunk->getProperty("surface_viewports",i);
+      vp_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("surface_viewports",i);
       surf_vp = new SurfaceViewport;
       surf_vp->setDisplay(this);
       surf_vp->config(vp_chunk);

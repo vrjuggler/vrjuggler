@@ -33,6 +33,8 @@
 #include <vrj/vrjConfig.h>
 //#include <sys/types.h>
 
+#include <jccl/Config/ConfigChunk.h>
+
 #include <vrj/Display/WallProjection.h>
 #include <vrj/Kernel/Kernel.h>
 
@@ -42,11 +44,8 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Xforms.h>
 
-
 //#include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
-
-#include <jccl/Config/ConfigChunk.h>
 
 namespace vrj
 {
@@ -55,8 +54,8 @@ namespace vrj
 // Just call the base class constructor
 void WallProjection::config(jccl::ConfigChunkPtr chunk)
 {
-   vprASSERT( ((std::string)chunk->getType() == std::string("surfaceDisplay")) ||
-             ((std::string)chunk->getType() == std::string("surfaceViewport")) );
+   vprASSERT( (chunk->getDescToken() == std::string("surfaceDisplay")) ||
+              (chunk->getDescToken() == std::string("surfaceViewport")) );
 
    Projection::config(chunk);        // Call base class config first
 }

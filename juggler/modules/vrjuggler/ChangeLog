@@ -1,13 +1,15 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
-May-22-2002 allenb   Updated to work with Boost 0.1.28.
+May-23-2002 patrickh  Updated to JCCL 0.2.0 API.
+                      NEW VERSION: 1.1.94
+May-22-2002 allenb    Updated to work with Boost 0.1.28.
 May-03-2002 patrickh  Remvoed catadf.pl which has been obsoleted by Sonix
                       functionality.
 Apr-23-2002 patrickh  Data files now install into $VJ_BASE_DIR/share/vrjuggler
                       by default.  This is done so that they do not conflict
                       with data files from other Juggler modules or system
                       data files.
-                      NEW VERSION: 1.1.92
+                      NEW VERSION: 1.1.93
 Apr-09-2002 allenb    The cyclic dependency between VR Juggler and Gadgeteer
             patrickh  has been broken.  VR Juggler and Gadgeteer have both
                       been ported to GMTL.
