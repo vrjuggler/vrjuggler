@@ -35,19 +35,26 @@
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 
-void testMakeXYZ(float x, float y, float z);
-void testMakeZYX(float z, float y, float x);
-void compareMats(vjMatrix mat1, vjMatrix mat2);
+bool testMakeXYZ(float x, float y, float z);
+bool testMakeZYX(float z, float y, float x);
+bool compareMats(vjMatrix mat1, vjMatrix mat2, vjMatrix& difMat);
 
+#define testIt(test_desc, test_case) cout << test_desc; if((test_case)) { cout << "\t [ok]\n"; } else { cout << "\t [FAILED]\n";}
 
 int main(void)
 {
    vjMatrix testMat;
    vjMatrix testMat2;
+   vjMatrix diff_mat;
+   const vjVec3 x_axis(1.0f,0.0f,0.0f);
+   const vjVec3 y_axis(0.0f,1.0f,0.0f);
+   const vjVec3 z_axis(0.0f,0.0f,1.0f);
+
+   bool     tests_pass(false);
 
    // ---- Test Matrix set ---- //
    cout << "\n---- Testing Set Matrix ---" << endl;
-   
+
    testMat.set(0.0f, 0.1f, 0.2f, 0.3f,
                1.0f, 1.1f, 1.2f, 1.3f,
                2.0f, 2.1f, 2.2f, 2.3f,
@@ -105,7 +112,7 @@ int main(void)
    cout << "Command issued:" << " makeXYZEuler(-90, -180, 0)" << endl;
    cout << "Result:" << endl << testMat << endl;
 
-   
+
    // --------------------------------------- //
    float x_deg, y_deg, z_deg;
    vjMatrix XYZMat;
@@ -126,7 +133,7 @@ int main(void)
    cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
 
    // --------------------------------------- //
-   
+
 
    XYZMat.makeXYZEuler(0, 45, 0);
    cout << "makeXYZEuler(0, 45, 0):" << endl
@@ -135,7 +142,7 @@ int main(void)
    cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
 
    // --------------------------------------- //
-   
+
 
    XYZMat.makeXYZEuler(45, -30, 0);
    cout << "makeXYZEuler(45, -30, 0):" << endl
@@ -152,45 +159,47 @@ int main(void)
    cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
 
    // --------------------------------------- //
-   testMakeXYZ(175, -20, 35);
-   cout << endl;
-   
-   // --------------------------------------- //
-   testMakeXYZ(-135, 20, 15);
-   cout << endl;
+   testIt("testMakeXYZ(175, -20, 35): ",(testMakeXYZ(175,-20,35)));
+   testIt("testMakeXYZ(-135, 20, 15)",(testMakeXYZ(-135, 20, 15)));
+   testIt("testMakeXYZ(0, 90, 90)",(testMakeXYZ(0, 90, 90)));
 
-   // --------------------------------------- //
-   testMakeXYZ(0, 90, 90);
-   cout << endl;
+   // ------------ Test random XYZ values ----------------- //
+   cout << "Random XYZ Eulers: " << endl;
+   tests_pass = false;
 
-   // ------------ Test random values ----------------- //
-   cout << "\nRandom XYZ Eulers:" << endl;
-   
    for(int x=0;x<50;x++)
    {
       int xRot = (rand()%360)-180;
       int yRot = (rand()%360)-180;
       int zRot = (rand()%360)-180;
-      
-      testMakeXYZ(xRot, yRot, zRot);
 
-      cout << endl;
+      if(false == testMakeXYZ(xRot, yRot, zRot))
+      { tests_pass = false; }
    }
+   if(tests_pass)
+   { cout << "\t[ok]\n"; }
+   else
+   { cout << "\t[FAILED]\n"; }
 
+
+   // -------------------------------------------
    cout << "\nRandom ZYX Eulers:" << endl;
-   
+   tests_pass = false;
    for(x=0;x<50;x++)
    {
       int xRot = (rand()%360)-180;
       int yRot = (rand()%360)-180;
       int zRot = (rand()%360)-180;
-      
-      testMakeZYX(zRot, yRot, xRot);
 
-      cout << endl;
+      if(false == testMakeZYX(zRot, yRot, xRot))
+      { tests_pass = false; }
    }
+   if(tests_pass)
+   { cout << "\t[ok]\n"; }
+   else
+   { cout << "\t[FAILED]\n"; }
 
-   
+
    // --------------------------------------- //
    // --- Test serial of transforms --------- //
    // --------------------------------------- //
@@ -201,9 +210,9 @@ int main(void)
    {
       XYZMat.getXYZEuler(x_deg, y_deg, z_deg);
       cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
-      XYZMat.preRot(1.0f, vjVec3(1.0f, 0.0f, 0.0f), XYZMat);
+      XYZMat.preRot(1.0f, x_axis, XYZMat);
    }
-   
+
    // --------------------------------------- //
    // ---- Create transform matrix ---------- //
    // --------------------------------------- //
@@ -227,24 +236,24 @@ int main(void)
    tracker_x_axis.set(1.0, 0.0, 0.0);
    tracker_y_axis.set(0.0, 1.0, 0.0);
    tracker_z_axis.set(0.0, 0.0, 1.0);
-      
+
    cout << "\n--------- Tracker axis transforms -------\n";
-   
+
    temp_axis.xformVec(transRotMat, tracker_x_axis);
    cout << "X Axis:"
         << "\t   orig:" << tracker_x_axis
         << "\txformed:" << temp_axis << endl;
-   
+
    temp_axis.xformVec(transRotMat, tracker_y_axis);
    cout << "Y Axis:"
         << "\t   orig:" << tracker_y_axis
         << "\txformed:" << temp_axis << endl;
-   
+
    temp_axis.xformVec(transRotMat, tracker_z_axis);
    cout << "Z Axis:"
         << "\t   orig:" << tracker_z_axis
         << "\txformed:" << temp_axis << endl;
-  
+
    cout << "\n\n\n";
 
    // ----------------------------------------- //
@@ -252,24 +261,24 @@ int main(void)
    // ----------------------------------------- //
    vjVec3 tracker_base_dir, new_dir;
    tracker_base_dir.set(1.0f, 0.0f, 0.0f);         // Set the same base dir in both coord systems
-   
+
    vjMatrix tTr;     // Transformation of the reciever in tracker coord system
    vjMatrix wTt;     // Transformation of the world coord system to the tracker coord system
    vjMatrix wTr;     // Transformation of the reciever in the world coord system
-   
+
    wTt = rotMat;     // Set the World to tracker coord system rotation matrix
 
    tTr.makeZYXEuler(0.0, 90.0, 0.0f);            // Ry(90)
-   cout << "\n-------- Test tracker Or transform ----------------\n" 
+   cout << "\n-------- Test tracker Or transform ----------------\n"
         << "tracker XYZ: 0.0, 90.0, 0.0" << endl;
-   
+
    new_dir.xformVec(tTr, tracker_base_dir);      // Rotate the base
    cout << " tracker rot (tTr):\n" << tTr << endl;
    cout << "   Base Tracker dir: " << tracker_base_dir << endl;
    cout << "Xformed Tracker dir (in T): " << new_dir << endl;
 
    cout << "\nTest system transform\n";
-   
+
      // --- Test World (c2) coord system rotations --- //
    cout << "wTt:\n" << wTt << endl;
    cout << "tTr:\n" << tTr << endl;
@@ -278,103 +287,208 @@ int main(void)
 
    cout << "wTr rotation\n" << wTr << endl;
    new_dir.xformVec(wTr, tracker_base_dir);           // Rotate the base into the C2 coord system
-   cout << "\nBase tracker dir: " << tracker_base_dir << endl; 
+   cout << "\nBase tracker dir: " << tracker_base_dir << endl;
    cout << "  Xformed tracker dir (in W): " << new_dir << endl;
-  
+
       // --- Get reciever orientation --- //
    float rot_z, rot_y, rot_x;
    wTr.getZYXEuler(rot_z, rot_y, rot_x);
-   
+
    cout << "\n\nGet ZYX Euler: z:" << rot_z << "\ty:" << rot_y << "\tx:" << rot_x << endl;
-   
+
    vjMatrix test_mat;
    test_mat.makeZYXEuler(rot_z, rot_y, rot_x);
 
    cout << "Test extraction of same matrix: ";
-   compareMats(test_mat, wTr);
+   if(compareMats(test_mat, wTr, diff_mat) == true)
+   {
+      cout << " Same.";
+   }
+   else
+   {
+      cout << "Different: \n" << diff_mat << endl;
+   }
    cout << endl;
 
 
    vjMatrix known_mat;
    known_mat.makeZYXEuler(90, 0, 90);
    cout << "Test against known matrix: ";
-   compareMats(known_mat, wTr);
+
+   if(compareMats(known_mat, wTr, diff_mat))
+   {
+      cout << " Same.";
+   } else {
+      cout << "Different: \n" << diff_mat;
+   }
 
    cout << endl << endl;
 
-   
-   
+
+
    // ---------------------------------- //
    // ----- Test Pt transformation  ---- //
    // ---------------------------------- //
    vjVec3   original_pt, transformed_pt;
 
    cout << "\n---- Test pt conversion ----\n";
-   
+
    original_pt.set(0.0f, 1.0f, -1.0f);       // This pt is in the tracker coord system
    cout << "orig: " << original_pt << endl;
-   
+
    transformed_pt.xformFull(wTt, original_pt);
    cout << "new pt:" << transformed_pt << endl;
 
    // ------------------------------------------ //
-   
+
    vjMatrix dir_cos_test;
    dir_cos_test.makeDirCos(vjVec3(0,1,0), vjVec3(-1,0,0), vjVec3(0,0,1));
    cout << "\nmakeDirCos(vjVec3(0,1,0), vjVec3(-1,0,0), vjVec3(0,0,1))" << endl
         << dir_cos_test << endl;
 
-   return 1;    
+   // -----------------------------------
+   // Test get?Rot funcs
+   //
+   testMat2.makeRot(47.0,vjVec3(1,0,0));
+   testIt("getXRot..",((testMat2.getXRot() == 47.0f) && (testMat2.getYRot() == 0.0f) && (testMat2.getZRot() == 0.0f)));
+
+   testMat2.makeRot(-56.0,vjVec3(0,1,0));
+   testIt("getYRot..",((testMat2.getXRot() == 0.0f) && (testMat2.getYRot() == -56.0f) && (testMat2.getZRot() == 0.0f)));
+   //cout << "x: " << testMat2.getXRot() << ", y:" << testMat2.getYRot() << ", z:" << testMat2.getZRot() << endl;
+
+   testMat2.makeRot(78.0, vjVec3(0,0,1));
+   testIt("getZRot..",((testMat2.getXRot() == 0.0f) && (testMat2.getYRot() == 0.0f) && (testMat2.getZRot() == 78.0f)));
+   /*
+   cout << "roll  only: " << "y:" << testMat2.getYaw()
+                             << " p:" << testMat2.getPitch()
+                             << " r:" << testMat2.getRoll() << endl;
+   */
+   // ------------------------------------
+   // ---- Test axis constraints ---------
+   // ------------------------------------
+   // Idea: Create a matrix, contrain an axis, then check if the axis has a value
+   {
+      float pitch(0),yaw(0),roll(0);
+
+      cout << "contrainMat: makeXYZEuler(47.0,67.0,-76.0)\n";
+      testMat.makeXYZEuler(47.0,67.0,-76.0);
+      cout << "Original Matrix: " << "x:" << testMat.getXRot()
+                             << " y:" << testMat.getYRot()
+                             << " z:" << testMat.getZRot() << endl;
+
+      testMat.constrainRotAxis(true,false,false,testMat2);
+      cout << "x rot only: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
+
+      testMat.constrainRotAxis(false,true,false,testMat2);
+      cout << "y rot only: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
+      testMat.constrainRotAxis(false,false,true,testMat2);
+      cout << "z rot only: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
+
+      testMat.constrainRotAxis(true,true,false,testMat2);
+      cout << "x and y rot: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
+
+      testMat.constrainRotAxis(true,false,true,testMat2);
+      cout << "x and z rot: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
+      testMat.constrainRotAxis(false,true,true,testMat2);
+      cout << "y and z rot: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
+
+
+
+      // Kevin original
+      /*
+      testMat._kevn_constrainRotAxis(true,false,false,testMat2);
+      cout << "pitch  only: " << "y:" << testMat2.getYaw()
+                             << " p:" << testMat2.getPitch()
+                             << " r:" << testMat2.getRoll() << endl;
+
+      testMat._kevn_constrainRotAxis(false,true,false,testMat2);
+      cout << "yaw only: " << "y:" << testMat2.getYaw()
+                             << " p:" << testMat2.getPitch()
+                             << " r:" << testMat2.getRoll() << endl;
+      testMat._kevn_constrainRotAxis(false,false,true,testMat2);
+      cout << "roll  only: " << "y:" << testMat2.getYaw()
+                             << " p:" << testMat2.getPitch()
+                             << " r:" << testMat2.getRoll() << endl;
+      */
+   }
+
+
+   return 1;
 }
 
 
-void testMakeXYZ(float x, float y, float z)
+bool testMakeXYZ(float x, float y, float z)
 {
    vjMatrix XYZMat;
    vjMatrix temp_mat;
    vjMatrix diff_mat;
    float x_deg, y_deg, z_deg;
 
-   cout << "XYZ: " << x << ", " << y << ", " << z;
-   
    XYZMat.makeXYZEuler(x, y, z);
-
    XYZMat.getXYZEuler(x_deg, y_deg, z_deg);
-   cout << "\tGot: " <<  x_deg << ", " << y_deg << ", " << z_deg;
-
    temp_mat.makeXYZEuler(x_deg, y_deg, z_deg);
-   
-   compareMats(temp_mat, XYZMat);
+
+   if(compareMats(temp_mat, XYZMat, diff_mat))
+   {
+      return true;
+   }
+   else
+   {
+      cout << "testMakeXYZ failed on: XYZ: " << x << ", " << y << ", " << z
+           << "\tGot: " <<  x_deg << ", " << y_deg << ", " << z_deg << endl
+           << "diff: \n" << diff_mat << endl;
+      return false;
+   }
 }
 
-void testMakeZYX(float z, float y, float x)
+bool testMakeZYX(float z, float y, float x)
 {
    vjMatrix ZYXMat;
    vjMatrix temp_mat;
    vjMatrix diff_mat;
    float x_deg, y_deg, z_deg;
 
-   cout << "ZYX: " << z << ", " << y << ", " << x;
-   
    ZYXMat.makeZYXEuler(z, y, x);
-
    ZYXMat.getZYXEuler(z_deg, y_deg, x_deg);
-   cout << "\tGot: " <<  z_deg << ", " << y_deg << ", " << x_deg;
-
    temp_mat.makeZYXEuler(z_deg, y_deg, x_deg);
-   
-   compareMats(temp_mat, ZYXMat);
-}
 
-void compareMats(vjMatrix mat1, vjMatrix mat2)
-{
-   if(mat1 == mat2)
+   if(compareMats(temp_mat, ZYXMat, diff_mat))
    {
-      cout << "\tMatch.";
+      return true;
    }
    else
    {
-      cout << "\tDifferent.";
+      cout << "testMakeZYX failed on: ZYX: " << z << ", " << y << ", " << x
+           << "\tGot: " <<  z_deg << ", " << y_deg << ", " << x_deg
+           << "diff: \n" << diff_mat << endl;
+      return false;
+   }
+}
+
+// Compares the matrices
+// If equal (within tolerance), then returns true
+// Else returns false and sets the diff matrix
+bool compareMats(vjMatrix mat1, vjMatrix mat2, vjMatrix& difMat)
+{
+   if(mat1 == mat2)
+   {
+      return true;
+   }
+   else
+   {
+      //cout << "\tDifferent.";
       vjMatrix diff_mat;
       diff_mat = mat1 - mat2;
 
@@ -388,9 +502,17 @@ void compareMats(vjMatrix mat1, vjMatrix mat2)
       }
 
       if(i==16)
-         cout << "  Within tolerance of 1e-5.";
+      {
+         //cout << "  Within tolerance of 1e-5.";
+         return true;
+      }
       else
-         cout << "diff:\n" << diff_mat << endl;
+      {
+         //cout << "Matrices are diff by:\n" << diff_mat << endl;
+         difMat = diff_mat;
+         return false;
+      }
+
    }
 }
 
