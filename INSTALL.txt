@@ -523,7 +523,7 @@ Compiling
    of the version downloaded into juggler/external, run configure.pl as
    follows:
 
- ../configure.pl --with-boostroot=/usr/local
+ ../configure.pl --with-boost=/usr/local
 
    This option could of course be mixed in with those shown in the previous
    section. In this situation, all paths for the Boost headers will reference
@@ -585,9 +585,9 @@ Compiling
  cd build.sonix
 
    2. Choose one of the following depending on which subsystem (or both) you
-       want to enable in sonix...
+       want to enable in Sonix:
 
- ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
+ ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-openal=/usr/local
  ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks
 
    3. gmake debug install-debug

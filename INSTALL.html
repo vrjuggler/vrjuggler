@@ -290,7 +290,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           is installed in <tt class="filename">/usr/local</tt> with the headers in
           <tt class="filename">/usr/local/include</tt>. To use this instead of the
           version downloaded into <tt class="filename">juggler/external</tt>, run
-          <span><b class="command">configure.pl</b></span> as follows:</p><pre class="screen">../configure.pl --with-boostroot=/usr/local</pre><p>This option could of course be mixed in with those shown in
+          <span><b class="command">configure.pl</b></span> as follows:</p><pre class="screen">../configure.pl --with-boost=/usr/local</pre><p>This option could of course be mixed in with those shown in
           the previous section. In this situation, all paths for the Boost
           headers will reference <tt class="filename">/usr/local/include</tt>;
           everything in <tt class="filename">juggler/external/boost</tt> will be
@@ -323,7 +323,7 @@ setenv VPR_BASE_DIR $HOME/vpr-inst</pre><p>If you want to use NSPR, make sure a 
         installations, to the following from the top-level
         <tt class="filename">juggler</tt> directory:</p><div class="orderedlist"><ol type="1"><li><pre class="screen">mkdir build.sonix
 cd build.sonix</pre></li><li><p>Choose one of the following depending on which subsystem (or
-            both) you want to enable in sonix...</p><pre class="screen">../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
+            both) you want to enable in Sonix:</p><pre class="screen">../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-openal=/usr/local
 ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks</pre></li><li><pre class="screen">gmake debug install-debug</pre></li><li><pre class="screen">setenv SNX_BASE_DIR $HOME/sonix-inst</pre></li></ol></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e814"></a>JCCL (Individual)</h4></div></div><div></div></div><p>The JCCL C++ code requires VPR. The JCCL Java code requires
         Tweek. To build JCCL, do the following from the top-level
         <tt class="filename">juggler</tt> directory:</p><pre class="screen">mkdir build.jccl
