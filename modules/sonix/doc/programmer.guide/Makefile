@@ -1,8 +1,19 @@
 # $Id$
 
-NAME = sonix.ieeevr2002
+NAME =  programmer.guide
 MK_PATH=../../../../docs/
 default: html pdf
+
+docs: html chunk-html pdf
+install-docs: install-html install-chunk-html install-pdf
+
+# Fill these in!!  Together, they make up the installation prefix.
+webroot=	$(HOME)/public_html/phpjug
+instdir=	sonix/0.0.3/programmer.guide
+
+prefix=		$(webroot)/$(instdir)
+#INSTALL_DIRS=	figures
+INSTALL_FILES=	$(webroot)/base_style.css *.png
 
 # comment these out if you don't want to use renderX
 XSLT_TOOL=Saxon 
@@ -11,6 +22,7 @@ FO_VERSION=XEP
 
 #########################################################
 #EXTRA_XALAN_FO_PARAMS= -PARAM draft.watermark.image " " -PARAM draft.watermark.image.frag " " -PARAM background-image " "
+XML_FILES=    $(NAME).xml
 TXT_FILES=    ${NAME}.txt
 HTML_FILES=   ${NAME}.html
 PDF_FILES=    ${NAME}.pdf
