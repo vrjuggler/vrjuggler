@@ -40,23 +40,64 @@
 #include <prio.h>
 #include <prerror.h>
 
-#include <vpr/IO/BlockIO.h>
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/IO/IOSys.h>
+#include <vpr/Util/Status.h>
 
 #include <vpr/Util/Debug.h>
 
 namespace vpr {
 
-class VPR_CLASS_API SocketImplNSPR : public BlockIO
+class VPR_CLASS_API SocketImplNSPR
 {
 public:
     // ========================================================================
-    // vpr::BlockIO overrides.
+    // vpr::BlockIO basics.
     // ========================================================================
+
+    /**
+     * Gets the "name" of this socket.  It is typically the address of the
+     * peer host.
+     *
+     * @pre None.
+     * @post
+     *
+     * @return An object containing the "name" of this socket.
+     */
+    inline const std::string&
+    getName (void) {
+        return m_name;
+    }
+
+    /**
+     * Sets the blocking flags so that the socket is opened in blocking mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the socket is opened, it
+     *       is opened in blocking mode.  If the socket is already open, this
+     *       has no effect.
+     */
+    inline void
+    setOpenBlocking (void) {
+        m_open_blocking = true;
+    }
+
+    /**
+     * Sets the blocking flags so that the socket is opened in non-blocking
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the socket is opened, it
+     *       is opened in non-blocking mode.  If the socket is already open,
+     *       this has no effect.
+     */
+    inline void
+    setOpenNonBlocking (void) {
+        m_open_blocking = false;
+    }
 
     // ------------------------------------------------------------------------
     // Open the socket.  This creates a new socket using the domain and type
@@ -70,7 +111,7 @@ public:
     //     false - The socket could not be opened for some reason (an error
     //             message is printed explaining why).
     // ------------------------------------------------------------------------
-    virtual Status open(void);
+    vpr::Status open(void);
 
     // ------------------------------------------------------------------------
     //: Close the socket.
@@ -83,7 +124,22 @@ public:
     //! RETURNS: true  - The socket was closed successfully.
     //! RETURNS: false - The socket could not be closed for some reason.
     // ------------------------------------------------------------------------
-    virtual Status close(void);
+    vpr::Status close(void);
+
+    /**
+     * Gets the open state of this socket.
+     *
+     * @pre None.
+     * @post The boolean value giving the open state is returned to the
+     *       caller.
+     *
+     * @return <code>true</code> is returned if this socket is open;
+     *         <code>false</code> otherwise.
+     */
+    inline bool
+    isOpen (void) {
+        return m_open;
+    }
 
     // ------------------------------------------------------------------------
     // Bind this socket to the address in the host address member variable.
@@ -97,23 +153,45 @@ public:
     //             m_host_addr.  An error message is printed explaining what
     //             went wrong.
     // ------------------------------------------------------------------------
-    virtual Status bind(void);
+    vpr::Status bind(void);
 
     // ---------------------------------------
     //: Return the contained handle
     // --------------------------------------
-    IOSys::Handle getHandle()
+    vpr::IOSys::Handle getHandle()
     {
        return m_handle;
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status enableBlocking(void);
+    vpr::Status enableBlocking(void);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status enableNonBlocking(void);
+    vpr::Status enableNonBlocking(void);
+
+    /**
+     * Gets the current blocking state for the socket.
+     *
+     * @return <code>true</code> is returned if the socket is in blocking
+     *         mode.  Otherwise, <code>false</code> is returned.
+     */
+    inline bool
+    getBlocking (void) const {
+        return m_blocking;
+    }
+
+    /**
+     * Gets the current non-blocking state for the socket.
+     *
+     * @return <code>true</code> is returned if the socket is in non-blocking
+     *         mode.  Otherwise, <code>false</code> is returned.
+     */
+    inline bool
+    getNonBlocking (void) const {
+        return ! m_blocking;
+    }
 
     // ========================================================================
     // vpr::SocketImp interface implementation.
@@ -136,7 +214,7 @@ public:
     //     false - The connect could not be made.  An error message is
     //             printed explaining what happened.
     // ------------------------------------------------------------------------
-    virtual Status connect(const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status connect(const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------
     //: Get the status of a possibly connected socket
@@ -227,21 +305,19 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status read_i(void* buffer, const size_t length,
-                          ssize_t& bytes_read,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status read_i(void* buffer, const size_t length, ssize_t& bytes_read,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status readn_i(void* buffer, const size_t length,
-                           ssize_t& bytes_read,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status readn_i(void* buffer, const size_t length, ssize_t& bytes_read,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status write_i(const void* buffer, const size_t length,
-                           ssize_t& bytes_written,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status write_i(const void* buffer, const size_t length,
+                        ssize_t& bytes_written,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
      * Retrieves the value for the given option as set on the socket.
@@ -254,8 +330,8 @@ public:
      *         option was retrieved successfully.<br>
      *         vpr::Status;:Failure is returned otherwise.
      */
-    virtual Status getOption(const SocketOptions::Types option,
-                             struct SocketOptions::Data& data);
+    vpr::Status getOption(const vpr::SocketOptions::Types option,
+                          struct vpr::SocketOptions::Data& data);
 
     /**
      * Sets a value for the given option on the socket using the given data
@@ -265,8 +341,8 @@ public:
      * @param data   A data buffer containing the value to be used in setting
      *               the socket option.
      */
-    virtual Status setOption(const SocketOptions::Types option,
-                             const struct SocketOptions::Data& data);
+    vpr::Status setOption(const vpr::SocketOptions::Types option,
+                          const struct vpr::SocketOptions::Data& data);
 
 protected:
     // ------------------------------------------------------------------------
@@ -297,13 +373,16 @@ protected:
     // Copy constructor.
     // XXX: We need to have a reference count here
     // ------------------------------------------------------------------------
-    SocketImplNSPR (const SocketImplNSPR& sock) : BlockIO(sock)
+    SocketImplNSPR (const SocketImplNSPR& sock)
     {
         m_local_addr      = sock.m_local_addr;
         m_remote_addr     = sock.m_remote_addr;
         m_handle          = sock.m_handle;
-        m_bound           = sock.m_bound;
         m_type            = sock.m_type;
+        m_open            = sock.m_open;
+        m_open_blocking   = sock.m_open_blocking;
+        m_bound           = sock.m_bound;
+        m_blocking        = sock.m_blocking;
         m_blocking_fixed  = sock.m_blocking_fixed;
     }
 
@@ -313,19 +392,24 @@ protected:
     // PRE: None.
     // POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketImplNSPR(void);
+    ~SocketImplNSPR(void);
 
+    std::string       m_name;
     PRFileDesc*       m_handle;      //: Handle to the socket
-    InetAddr          m_local_addr;  //: The local site's address structure
-    InetAddr          m_remote_addr; //: The remote site's address structure
-    SocketTypes::Type m_type;        //:
-    bool              m_bound;       //: Is the socket bound to a port yet
-                                     //+ (connect and bind do this)
+    vpr::InetAddr     m_local_addr;  //: The local site's address structure
+    vpr::InetAddr     m_remote_addr; //: The remote site's address structure
 
-    bool              m_blocking_fixed;
+    vpr::SocketTypes::Type m_type;        //:
+
+    bool m_open;
+    bool m_open_blocking;
+    bool m_bound;          /**< Is the socket bound to a port yet (connect
+                                and bind do this */
+    bool m_blocking;
+    bool m_blocking_fixed;
 };
 
 }; // End of vpr namespace
 
 
-#endif   /* _VPR_SOCKET_IMP_BSD_H_ */
+#endif   /* _VPR_SOCKET_IMPL_BSD_H_ */

@@ -40,12 +40,12 @@
 #include <string>
 #include <vector>
 
-#include <vpr/IO/BlockIO.h>
 #include <vpr/IO/IOSys.h>
 #include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Status.h>
 
 
 namespace vpr {
@@ -55,11 +55,52 @@ namespace vpr {
  *
  * @author Patrick Hartling
  */
-class SocketImplBSD : public BlockIO {
+class SocketImplBSD {
 public:
     // ========================================================================
-    // vpr::BlockIO overrides.
+    // vpr::BlockIO basics.
     // ========================================================================
+
+    /**
+     * Gets the "name" of this socket.  It is typically the address of the
+     * peer host.
+     *
+     * @pre None.
+     * @post
+     *
+     * @return An object containing the "name" of this socket.
+     */
+    inline const std::string&
+    getName (void) {
+        return m_handle->getName();
+    }
+
+    /**
+     * Sets the blocking flags so that the socket is opened in blocking mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the socket is opened, it
+     *       is opened in blocking mode.  If the socket is already open, this
+     *       has no effect.
+     */
+    inline void
+    setOpenBlocking (void) {
+        m_open_blocking = true;
+    }
+
+    /**
+     * Sets the blocking flags so that the socket is opened in non-blocking
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the socket is opened, it
+     *       is opened in non-blocking mode.  If the socket is already open,
+     *       this has no effect.
+     */
+    inline void
+    setOpenNonBlocking (void) {
+        m_open_blocking = false;
+    }
 
     /**
      * Opens the socket.  This creates a new socket using the domain and type
@@ -74,7 +115,7 @@ public:
      *         successfully.<br>
      *         vpr::Status::Failure is returned otherwise.
      */
-    virtual Status open(void);
+    vpr::Status open(void);
 
     /**
      * Close the socket.
@@ -86,14 +127,29 @@ public:
      * @return vpr::Status::Success is returned if the socket was closed
      *         successfully; vpr::Status::Failure otherwise.
      */
-    inline virtual Status
+    inline vpr::Status
     close (void) {
-        Status retval;
+        vpr::Status retval;
 
         retval = m_handle->close();
         m_open = (retval.success() ? false : true);
 
         return retval;
+    }
+
+    /**
+     * Gets the open state of this socket.
+     *
+     * @pre None.
+     * @post The boolean value giving the open state is returned to the
+     *       caller.
+     *
+     * @return <code>true</code> is returned if this socket is open;
+     *         <code>false</code> otherwise.
+     */
+    inline bool
+    isOpen (void) {
+        return m_open;
     }
 
     /**
@@ -107,14 +163,14 @@ public:
      *         vpr::Status::Failure is returned if the socket could not be
      *         bound to the address in m_host_addr.
      */
-    virtual Status bind(void);
+    vpr::Status bind(void);
 
     /**
      * Returns the contained handle.
      */
-    inline IOSys::Handle
+    inline vpr::IOSys::Handle
     getHandle (void) {
-       return m_handle->m_fdesc;
+       return m_handle->getHandle();
     }
 
     /**
@@ -126,7 +182,7 @@ public:
      * @return vpr::Status::Success is returned if the blocking mode was
      *         changed successfully; vpr::Status::Failure otherwise.
      */
-    virtual Status enableBlocking(void);
+    vpr::Status enableBlocking(void);
 
     /**
      * Reconfigures the socket so that it is in non-blocking mode.
@@ -137,10 +193,32 @@ public:
      * @return vpr::Status::Success is returned if the blocking mode was
      *         changed successfully; vpr::Status::Failure otherwise.
      */
-    virtual Status enableNonBlocking(void);
+    vpr::Status enableNonBlocking(void);
+
+    /**
+     * Gets the current blocking state for the socket.
+     *
+     * @return <code>true</code> is returned if the socket is in blocking
+     *         mode.  Otherwise, <code>false</code> is returned.
+     */
+    inline bool
+    getBlocking (void) const {
+        return m_handle->getBlocking();
+    }
+
+    /**
+     * Gets the current non-blocking state for the socket.
+     *
+     * @return <code>true</code> is returned if the socket is in non-blocking
+     *         mode.  Otherwise, <code>false</code> is returned.
+     */
+    inline bool
+    getNonBlocking (void) const {
+        return m_handle->getNonBlocking();
+    }
 
     // ========================================================================
-    // vpr::SocketImp interface implementation.
+    // vpr::Socket interface.
     // ========================================================================
 
     /**
@@ -165,7 +243,7 @@ public:
      *         vpr::Status::Failure is returned if the connection could not be
      *         made.
      */
-    virtual Status connect(vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status connect(vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
      * Gets the type of this socket (e.g., vpr::SocketTypes::STREAM).
@@ -176,7 +254,7 @@ public:
      * @return A vpr::SocketTypes::Type value giving the socket type for this
      *         socket.
      */
-    inline const SocketTypes::Type&
+    inline const vpr::SocketTypes::Type&
     getType (void) const {
         return m_type;
     }
@@ -190,7 +268,7 @@ public:
      * @return A vpr::SocketTypes::Type value giving the socket type for this
      *         socket.
      */
-    inline const InetAddr&
+    inline const vpr::InetAddr&
     getLocalAddr (void) const {
         return m_local_addr;
     }
@@ -201,13 +279,13 @@ public:
      * @pre This socket is not already bound.
      * @post m_local_addr is updated to use the given vpr::InetAddr object.
      */
-    Status setLocalAddr(const InetAddr& addr);
+    vpr::Status setLocalAddr(const vpr::InetAddr& addr);
 
     /**
      * Returns the remote address for this socket.  This is typically the
      * address to which this socket is connected.
      */
-    inline const InetAddr&
+    inline const vpr::InetAddr&
     getRemoteAddr (void) const {
         return m_remote_addr;
     }
@@ -218,7 +296,7 @@ public:
      * @pre This socket is not already connected.
      * @post m_local_addr is updated to use the given vpr::InetAddr object.
      */
-    Status setRemoteAddr(const InetAddr& addr);
+    vpr::Status setRemoteAddr(const vpr::InetAddr& addr);
 
     /**
      * Implementation of the <code>read</code> template method.  This reads at
@@ -247,7 +325,7 @@ public:
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
      */
-    virtual vpr::Status
+    inline vpr::Status
     read_i (void* buffer, const size_t length, ssize_t& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -283,7 +361,7 @@ public:
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
      */
-    virtual vpr::Status
+    inline vpr::Status
     readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -316,7 +394,7 @@ public:
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the write operation failed.
      */
-    virtual vpr::Status
+    inline vpr::Status
     write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -335,8 +413,8 @@ public:
      *         option was retrieved successfully.<br>
      *         vpr::Status;:Failure is returned otherwise.
      */
-    virtual Status getOption(const SocketOptions::Types option,
-                             struct SocketOptions::Data& data);
+    vpr::Status getOption(const vpr::SocketOptions::Types option,
+                          struct vpr::SocketOptions::Data& data);
 
     /**
      * Sets a value for the given option on the socket using the given data
@@ -346,8 +424,8 @@ public:
      * @param data   A data buffer containing the value to be used in setting
      *               the socket option.
      */
-    virtual Status setOption(const SocketOptions::Types option,
-                             const struct SocketOptions::Data& data);
+    vpr::Status setOption(const vpr::SocketOptions::Types option,
+                          const struct vpr::SocketOptions::Data& data);
 
 protected:
     /**
@@ -357,17 +435,17 @@ protected:
      * @post The member variables are initialized accordingly to reasonable
      *       defaults.
      */
-    SocketImplBSD (const SocketTypes::Type sock_type)
-        : BlockIO(std::string("INADDR_ANY")), m_bound(false),
-          m_connected(false), m_handle(NULL), m_type(sock_type),
-          m_blocking_fixed(false)
+    SocketImplBSD (const vpr::SocketTypes::Type sock_type)
+        : m_open(false), m_open_blocking(true), m_bound(false),
+          m_connected(false), m_blocking_fixed(false), m_handle(NULL),
+          m_type(sock_type)
     {
         m_handle = new FileHandleImplUNIX("INADDR_ANY");
     }
 
     /**
-     * Standard constructor.  This takes two InetAddr objects, a local address
-     * and a remote address.
+     * Standard constructor.  This takes two vpr::InetAddr objects, a local
+     * address and a remote address.
      *
      * @post The member variables are initialized with the given values.
      *
@@ -375,14 +453,15 @@ protected:
      * @param remote_addr The remote address for the socket.
      * @param sock_type   The type for this socket (stream, datagram, etc.).
      */
-    SocketImplBSD (const InetAddr& local_addr, const InetAddr& remote_addr,
-                   const SocketTypes::Type sock_type)
-        : BlockIO(std::string("INADDR_ANY")), m_bound(false),
-          m_connected(false), m_handle(NULL), m_local_addr(local_addr),
-          m_remote_addr(remote_addr), m_type(sock_type),
-          m_blocking_fixed(false)
+    SocketImplBSD (const vpr::InetAddr& local_addr,
+                   const vpr::InetAddr& remote_addr,
+                   const vpr::SocketTypes::Type sock_type)
+        : m_open(false), m_open_blocking(true), m_bound(false),
+          m_connected(false), m_blocking_fixed(false), m_handle(NULL),
+          m_local_addr(local_addr), m_remote_addr(remote_addr),
+          m_type(sock_type)
     {
-        m_handle = new FileHandleImplUNIX(m_name);
+        m_handle = new FileHandleImplUNIX(remote_addr.getAddressString());
     }
 
     /**
@@ -392,17 +471,24 @@ protected:
      * @pre If m_handle is NULL, its memory has already been deleted.
      * @post The memory for m_handle is deleted.
      */
-    virtual ~SocketImplBSD(void);
+    ~SocketImplBSD(void);
 
 protected:
-    bool                m_bound;
-    bool                m_connected;
-    FileHandleImplUNIX* m_handle;      /**< The OS handle for this socket */
-    InetAddr            m_local_addr;  /**< The local site's address structure */
-    InetAddr            m_remote_addr; /**< The remote site's address structure */
-    SocketTypes::Type   m_type;        /**< The type for this socket */
+    // XXX: This class should not need m_open and should instead use the one
+    // in FileHandleUNIX.  For some reason, doing that causes all kinds of
+    // problems in SocketStreamImplBSD::accept().
+    bool m_open;
+    bool m_open_blocking;
+    bool m_bound;
+    bool m_connected;
+    bool m_blocking_fixed;
 
-    bool                m_blocking_fixed;
+    vpr::FileHandleImplUNIX* m_handle; /**< The OS handle for this socket */
+
+    vpr::InetAddr m_local_addr;  /**< The local site's address structure */
+    vpr::InetAddr m_remote_addr; /**< The remote site's address structure */
+
+    vpr::SocketTypes::Type m_type; /**< The type for this socket */
 };
 
 }; // End of vpr namespace
