@@ -60,9 +60,7 @@ public:
    // Stops the current application but leaves the kernel running.
    // It closes all API specific stuff (DrawManager,  etc.)
    int stopApplication()
-   {
-      return 1;
-   }
+   { return 1; }
 
 public:  // --- Config interface --- //
    void config(vjConfigChunkDB* chunkDB);
@@ -102,7 +100,7 @@ public:
 
 protected:
 
-   vjApp* app;                         //: The app object
+   vjApp*      app;                        //: The app object
    vjThread*   mControlThread;             //: The thread in control of me.
 
    /// Factories and Managers
