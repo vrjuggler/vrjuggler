@@ -33,6 +33,8 @@
 #ifndef _PERFORMER_JUGGLER_SOUND_NODE
 #define _PERFORMER_JUGGLER_SOUND_NODE
 
+#include <vrj/vrjConfig.h>
+
 #include <Performer/pr/pfLinMath.h>
 
 //#include <vrj/Math/Coord.h>
