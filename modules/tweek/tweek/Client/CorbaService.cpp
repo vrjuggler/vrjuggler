@@ -332,7 +332,23 @@ void CorbaService::addSubjectManagers(const CosNaming::BindingList& bindingList,
             {
                CORBA::Object_var ref = mLocalContext->resolve(name_comp);
                tweek::SubjectManager_var mgr = tweek::SubjectManager::_narrow(ref);
-               mgrList.push_back(mgr);
+
+               try
+               {
+                  // Filter out any references that we know are not usable.
+                  if ( ! mgr->_non_existent() )
+                  {
+                     mgrList.push_back(mgr);
+                  }
+               }
+               // XXX: Figure out what exception(s) can be thrown by
+               // CORBA::Object::_non_existent()!
+               catch (...)
+               {
+                  vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+                     << "addSubjectManagers(): Caught unknown exception from _non_existent\n"
+                     << vprDEBUG_FLUSH;
+               }
             }
             catch (CosNaming::NamingContext::InvalidName& nameEx)
             {
