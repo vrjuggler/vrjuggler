@@ -208,7 +208,7 @@ public class TweekFrame
       try
       {
          jbInit();
-         mMenuPrefsBeanEdit.setEnabled(mBeanPrefsDialog.getPrefsBeanCount() > 0);
+         mMenuEditPrefsBean.setEnabled(mBeanPrefsDialog.getPrefsBeanCount() > 0);
 
          if ( mMacOS )
          {
@@ -504,7 +504,7 @@ public class TweekFrame
 
    public void handlePrefs()
    {
-      prefsEditGlobal(null);
+      editGlobalPrefs(null);
    }
 
    public void handleQuit()
@@ -654,7 +654,7 @@ public class TweekFrame
       if ( obj instanceof BeanPreferences )
       {
          addPrefsBean((BeanPreferences) obj);
-         mMenuPrefsBeanEdit.setEnabled(true);
+         mMenuEditPrefsBean.setEnabled(true);
       }
 
       if ( obj instanceof TweekFrameListener )
@@ -792,7 +792,10 @@ public class TweekFrame
 
       // Define the Connect option in the Network menu.
       mMenuNetConnect.setText("Connect to ORB ...");
-      mMenuNetConnect.setAccelerator(javax.swing.KeyStroke.getKeyStroke(67, shortcut_mask | KeyEvent.SHIFT_MASK, false));
+      mMenuNetConnect.setAccelerator(
+         KeyStroke.getKeyStroke(KeyEvent.VK_C,
+                                shortcut_mask | KeyEvent.SHIFT_MASK, false)
+      );
       mMenuNetConnect.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
@@ -812,44 +815,10 @@ public class TweekFrame
             }
          });
 
-      // Define the Edit Global option in the Preferences menu.
-      if ( ! mMacOS )
-      {
-         boolean global_prefs_enabled = true;
-
-         try
-         {
-            new GlobalPreferencesServiceProxy();
-         }
-         catch(Exception ex)
-         {
-            global_prefs_enabled = false;
-         }
-
-         mMenuPrefsGlobalEdit.setText("Edit Global ...");
-         mMenuPrefsGlobalEdit.setEnabled(global_prefs_enabled);
-         mMenuPrefsGlobalEdit.addActionListener(new ActionListener()
-            {
-               public void actionPerformed (ActionEvent e)
-               {
-                  prefsEditGlobal(e);
-               }
-            });
-      }
-
-      // Define the Edit Local option in the Preferences menu.
-      mMenuPrefsBeanEdit.setText("Edit Bean-Specific ...");
-      mMenuPrefsBeanEdit.setEnabled(false);
-      mMenuPrefsBeanEdit.addActionListener(new ActionListener()
-         {
-            public void actionPerformed (ActionEvent e)
-            {
-               prefsEditBean(e);
-            }
-         });
-
       mMenuBeansLoad.setText("Load Beans ...");
-      mMenuBeansLoad.setAccelerator(javax.swing.KeyStroke.getKeyStroke(66, shortcut_mask, false));
+      mMenuBeansLoad.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B,
+                                                           shortcut_mask,
+                                                           false));
       mMenuBeansLoad.addActionListener(new ActionListener ()
          {
             public void actionPerformed (ActionEvent e)
@@ -859,7 +828,10 @@ public class TweekFrame
          });
 
       mMenuBeansStatus.setText("Beans Status ...");
-      mMenuBeansStatus.setAccelerator(javax.swing.KeyStroke.getKeyStroke(83, shortcut_mask, false));
+      mMenuBeansStatus.setAccelerator(
+         KeyStroke.getKeyStroke(KeyEvent.VK_B,
+                                shortcut_mask | KeyEvent.SHIFT_MASK, false)
+      );
       mMenuBeansStatus.addActionListener(new ActionListener ()
          {
             public void actionPerformed (ActionEvent e)
@@ -893,7 +865,9 @@ public class TweekFrame
 
       mMenuFileOpen.setText("Open ...");
       mMenuFileOpen.setEnabled(false);
-      mMenuFileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(79, shortcut_mask, false));
+      mMenuFileOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
+                                                          shortcut_mask,
+                                                          false));
       mMenuFileOpen.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -904,7 +878,9 @@ public class TweekFrame
 
       mMenuFileClose.setEnabled(false);
       mMenuFileClose.setText("Close");
-      mMenuFileClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(87, shortcut_mask, false));
+      mMenuFileClose.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W,
+                                                           shortcut_mask,
+                                                           false));
       mMenuFileClose.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -917,7 +893,9 @@ public class TweekFrame
       if ( ! mMacOS )
       {
          mMenuFileQuit.setText("Quit");
-         mMenuFileQuit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(81, shortcut_mask, false));
+         mMenuFileQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
+                                                             shortcut_mask,
+                                                             false));
          mMenuFileQuit.addActionListener(new ActionListener()
             {
                public void actionPerformed(ActionEvent e)
@@ -932,7 +910,9 @@ public class TweekFrame
       mMenuFile.setText("File");
       mMenuFileSave.setEnabled(false);
       mMenuFileSave.setText("Save");
-      mMenuFileSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(83, shortcut_mask, false));
+      mMenuFileSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+                                                          shortcut_mask,
+                                                          false));
       mMenuFileSave.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -951,6 +931,10 @@ public class TweekFrame
       });
       mMenuFileSaveAll.setEnabled(false);
       mMenuFileSaveAll.setText("Save All");
+      mMenuFileSaveAll.setAccelerator(
+         KeyStroke.getKeyStroke(KeyEvent.VK_A,
+                                shortcut_mask | KeyEvent.SHIFT_MASK, false)
+      );
       mMenuFileSaveAll.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -970,18 +954,124 @@ public class TweekFrame
          mMenuFile.add(mMenuFileQuit);
       }
 
+      mMenuEdit.setText("Edit");
+      mMenuEditUndo.setEnabled(false);
+      mMenuEditUndo.setText("Undo");
+      mMenuEditUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+                                                          shortcut_mask,
+                                                          false));
+      mMenuEditUndo.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            editUndoAction(e);
+         }
+      });
+      mMenuEditRedo.setEnabled(false);
+      mMenuEditRedo.setText("Redo");
+      mMenuEditRedo.setAccelerator(
+         KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+                                shortcut_mask | KeyEvent.SHIFT_MASK, false)
+      );
+      mMenuEditRedo.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            editRedoAction(e);
+         }
+      });
+      mMenuEditCut.setEnabled(false);
+      mMenuEditCut.setText("Cut");
+      mMenuEditCut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+                                                         shortcut_mask,
+                                                         false));
+      mMenuEditCut.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            editCutAction(e);
+         }
+      });
+      mMenuEditCopy.setEnabled(false);
+      mMenuEditCopy.setText("Copy");
+      mMenuEditCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+                                                          shortcut_mask,
+                                                          false));
+      mMenuEditCopy.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            editCopyAction(e);
+         }
+      });
+      mMenuEditPaste.setEnabled(false);
+      mMenuEditPaste.setText("Paste");
+      mMenuEditPaste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
+                                                           shortcut_mask,
+                                                           false));
+      mMenuEditPaste.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            editPasteAction(e);
+         }
+      });
+
+      // Define the Edit Global option in the Preferences menu.
+      if ( ! mMacOS )
+      {
+         boolean global_prefs_enabled = true;
+
+         try
+         {
+            new GlobalPreferencesServiceProxy();
+         }
+         catch(Exception ex)
+         {
+            global_prefs_enabled = false;
+         }
+
+         mMenuEditPrefsGlobal.setText("Preferences ...");
+         mMenuEditPrefsGlobal.setEnabled(global_prefs_enabled);
+         mMenuEditPrefsGlobal.addActionListener(new ActionListener()
+            {
+               public void actionPerformed (ActionEvent e)
+               {
+                  editGlobalPrefs(e);
+               }
+            });
+      }
+
+      mMenuEditPrefsBean.setText("Bean-Specific Preferences ...");
+      mMenuEditPrefsBean.setEnabled(false);
+      mMenuEditPrefsBean.addActionListener(new ActionListener()
+         {
+            public void actionPerformed (ActionEvent e)
+            {
+               editBeanPrefs(e);
+            }
+         });
+
+      // Set up the Edit menu.
+      mMenuEdit.add(mMenuEditUndo);
+      mMenuEdit.add(mMenuEditRedo);
+      mMenuEdit.add(new JSeparator());
+      mMenuEdit.add(mMenuEditCut);
+      mMenuEdit.add(mMenuEditCopy);
+      mMenuEdit.add(mMenuEditPaste);
+      mMenuEdit.add(new JSeparator());
+
+      if ( ! mMacOS )
+      {
+         mMenuEdit.add(mMenuEditPrefsGlobal);
+      }
+
+      mMenuEdit.add(mMenuEditPrefsBean);
+
       // Set up the Network menu.
       mMenuNetwork.setText("Network");
       mMenuNetwork.add(mMenuNetConnect);
       mMenuNetwork.add(mMenuNetDisconnect);
-
-      // Set up the Preferences menu.
-      mMenuPrefs.setText("Preferences");
-      if ( ! mMacOS )
-      {
-         mMenuPrefs.add(mMenuPrefsGlobalEdit);
-      }
-      mMenuPrefs.add(mMenuPrefsBeanEdit);
 
       // Set up the Beans menu.
       mMenuBeans.setText("Beans");
@@ -998,8 +1088,8 @@ public class TweekFrame
 
       // Add the menus to the menu bar.
       mMenuBar.add(mMenuFile);
+      mMenuBar.add(mMenuEdit);
       mMenuBar.add(mMenuNetwork);
-      mMenuBar.add(mMenuPrefs);
       mMenuBar.add(mMenuBeans);
       mMenuBar.add(mMenuHelp);
 
@@ -1071,8 +1161,7 @@ public class TweekFrame
    {
       mMenuNetConnect.setMnemonic('C');
       mMenuNetDisconnect.setMnemonic('D');
-      mMenuPrefsGlobalEdit.setMnemonic('G');
-      mMenuPrefsBeanEdit.setMnemonic('B');
+      mMenuEditPrefsBean.setMnemonic('B');
       mMenuBeansLoad.setMnemonic('L');
       mMenuBeansStatus.setMnemonic('S');
       mMenuHelpAbout.setMnemonic('A');
@@ -1081,9 +1170,8 @@ public class TweekFrame
       mMenuFileQuit.setMnemonic('Q');
       mMenuFile.setMnemonic('F');
       mMenuFileSave.setMnemonic('S');
-      mMenuFileSaveAs.setMnemonic('A');
+      mMenuEdit.setMnemonic('E');
       mMenuNetwork.setMnemonic('N');
-      mMenuPrefs.setMnemonic('P');
       mMenuBeans.setMnemonic('B');
       mMenuHelp.setMnemonic('H');
    }
@@ -1166,6 +1254,41 @@ public class TweekFrame
    }
 
    /**
+    * Edit | Undo action performed.
+    */
+   private void editUndoAction(ActionEvent e)
+   {
+   }
+
+   /**
+    * Edit | Redo action performed.
+    */
+   private void editRedoAction(ActionEvent e)
+   {
+   }
+
+   /**
+    * Edit | Cut action performed.
+    */
+   private void editCutAction(ActionEvent e)
+   {
+   }
+
+   /**
+    * Edit | Copy action performed.
+    */
+   private void editCopyAction(ActionEvent e)
+   {
+   }
+
+   /**
+    * Edit | Paste action performed.
+    */
+   private void editPasteAction(ActionEvent e)
+   {
+   }
+
+   /**
     * Network | Connect action performed.
     */
    private void networkConnectAction (ActionEvent e)
@@ -1228,7 +1351,7 @@ public class TweekFrame
     * Opens a dialog box used for editing the user's global preferences
     * visually.
     */
-   private void prefsEditGlobal(ActionEvent e)
+   private void editGlobalPrefs(ActionEvent e)
    {
       try
       {
@@ -1250,7 +1373,7 @@ public class TweekFrame
       }
    }
 
-   private void prefsEditBean (ActionEvent e)
+   private void editBeanPrefs(ActionEvent e)
    {
       mBeanPrefsDialog.setLocationRelativeTo(this);
       mBeanPrefsDialog.setVisible(true);
@@ -1418,15 +1541,20 @@ public class TweekFrame
    private JMenuItem mMenuFileSaveAll     = new JMenuItem();
    private JMenuItem mMenuFileClose       = new JMenuItem();
    private JMenuItem mMenuFileQuit        = new JMenuItem();
+   private JMenu mMenuEdit                = new JMenu();
+   private JMenuItem mMenuEditUndo        = new JMenuItem();
+   private JMenuItem mMenuEditRedo        = new JMenuItem();
+   private JMenuItem mMenuEditCut         = new JMenuItem();
+   private JMenuItem mMenuEditCopy        = new JMenuItem();
+   private JMenuItem mMenuEditPaste       = new JMenuItem();
+   private JMenuItem mMenuEditPrefsGlobal = new JMenuItem();
+   private JMenuItem mMenuEditPrefsBean   = new JMenuItem();
    private JMenu mMenuNetwork             = new JMenu();
    private JMenuItem mMenuNetConnect      = new JMenuItem();
    private JMenuItem mMenuNetDisconnect   = new JMenuItem();
-   private JMenu mMenuPrefs               = new JMenu();
-   private JMenuItem mMenuPrefsGlobalEdit = new JMenuItem();
-   private JMenuItem mMenuPrefsBeanEdit   = new JMenuItem();
    private JMenu mMenuBeans               = new JMenu();
    private JMenuItem mMenuBeansLoad       = new JMenuItem();
-   private JMenuItem mMenuBeansStatus       = new JMenuItem();
+   private JMenuItem mMenuBeansStatus     = new JMenuItem();
    private JMenu mMenuHelp                = new JMenu();
    private JMenuItem mMenuHelpAbout       = new JMenuItem();
    private JMenuItem mMenuHelpBean        = new JMenuItem();
