@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <vpr/Util/Interval.h>
+#include <vpr/md/SIM/Clock.h>
 
 
 namespace vpr
