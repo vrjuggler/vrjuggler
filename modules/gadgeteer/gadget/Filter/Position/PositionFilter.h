@@ -63,7 +63,7 @@ public:
    {;}
 
    /** Configuration for the filter
-   * @return Returns truee if configured correctly
+   * @return Returns true if configured correctly
    */
    virtual bool config(jccl::ConfigChunkPtr c) = 0;   
 
