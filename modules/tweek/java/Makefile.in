@@ -44,9 +44,8 @@ default: all
 
 # Include common definitions.
 include @topdir@/make.defs.mk
+include @topdir@/java.defs.mk
 
-beandir=		$(projdatadir)/beans
-javadir=		$(projdatadir)/java
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
 
@@ -170,6 +169,50 @@ endif
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
                 $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
           done
+ifeq (@PLATFORM@, Darwin)
+	@echo "------------------------------------------------"
+	@echo "Installing the Mac OS X Tweek application bundle"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_bindir)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_javadir)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_beandir)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(EXEC_PERMS)		\
+          $(releasedir)/mac/JavaApplicationStub $(bundle_bindir)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(topdir)/java/Info.plist $(bundleroot)/Contents
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(top_srcdir)/java/tweek.icns $(bundleroot)/Contents/Resources
+	echo 'AAPL????' > $(bundleroot)/Contents/PkgInfo
+	/Developer/Tools/SetFile -a B $(bundleroot)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) $(srcdir)/java.security.policy.txt		\
+          $(bundle_javadir)
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $(topdir)/java/$$jar			\
+                $(bundle_javadir) ;					\
+          done
+	for jar in $(JDOM_JARS) ;					\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(bundle_javadir) ;		\
+          done
+	for bean in $(BEANS) ;						\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $(topdir)/java/$$bean.jar		\
+                $(bundle_beandir) ;					\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $(top_srcdir)/java/$$bean.xml		\
+                $(bundle_beandir) ;					\
+          done
+	for jar in `echo "$(LAF_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(bundle_javadir) ;		\
+          done
+endif
 
 CLEAN_DIRS+=	tweek $(srcdir)/tweek
 
