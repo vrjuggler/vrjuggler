@@ -19,7 +19,9 @@ void SimSelectorTest::singleThreadTest ()
    vpr::Selector selector;
    vpr::ReturnStatus status;
 
-   status = acceptor.setLocalAddr(vpr::InetAddr(5556));
+   vpr::InetAddr temp_addr;
+   temp_addr.setPort(5556);
+   status = acceptor.setLocalAddr(temp_addr);
    CPPUNIT_ASSERT(status.success() && "Acceptor failed to set local address");
 
    status = acceptor.open();

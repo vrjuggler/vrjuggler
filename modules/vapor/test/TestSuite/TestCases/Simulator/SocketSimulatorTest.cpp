@@ -46,7 +46,9 @@ void SocketSimulatorTest::singleThreadTest ()
    vpr::SocketStream sender, acceptor, receiver;
    vpr::ReturnStatus status;
 
-   status = acceptor.setLocalAddr(vpr::InetAddr(5556));
+   vpr::InetAddr temp_addr;
+   temp_addr.setPort(5556);
+   status = acceptor.setLocalAddr(temp_addr);
    CPPUNIT_ASSERT(status.success() && "Acceptor failed to set local address");
 
    status = acceptor.open();
@@ -472,7 +474,8 @@ void SocketSimulatorTest::multiThreadTest_acceptor (void* arg)
    vpr::Uint32 bytes_written;
    vpr::SocketAcceptor acceptor;
    vpr::SocketStream client_sock;
-   vpr::InetAddr acceptor_addr(mAcceptorPort);
+   vpr::InetAddr acceptor_addr;
+   acceptor_addr.setPort(mAcceptorPort);
 
    status = acceptor.open(acceptor_addr);
    assertTestThread(status.success() && "Failed to open acceptor");
