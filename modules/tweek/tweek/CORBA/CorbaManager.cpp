@@ -227,7 +227,16 @@ void CorbaManager::shutdown(bool waitForCompletion)
 
    if ( ! CORBA::is_nil(mORB) )
    {
-      mORB->shutdown(waitForCompletion);
+      try
+      {
+         mORB->shutdown(waitForCompletion);
+      }
+      catch (...)
+      {
+         vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+            << "Caught unknown exception during ORB shutdown." << std::endl
+            << vprDEBUG_FLUSH;
+      }
    }
 }
 
