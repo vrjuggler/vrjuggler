@@ -1,7 +1,7 @@
 /*
- *  File:	    $RCSfile$
+ *  File:       $RCSfile$
  *  Date modified:  $Date$
- *  Version:	    $Revision$
+ *  Version:       $Revision$
  *
  *
  *                                VR Juggler
@@ -32,7 +32,7 @@ class vjKernel;
 //----------------------------------------------------------------
 //: Encapsulates the actually application.
 //
-//	    This class defines the class that all API specific
+//     This class defines the class that all API specific
 //  application classes should be derived from.  The interface
 //  given is the interface that the Kernel expects in order to
 //  interface with the application.  Most of the application's
@@ -45,16 +45,17 @@ class vjKernel;
 //  the application programmer uses to interface with VR Juggler.
 //
 //  The control loop will look similar to this: <br> <br>
+//  NOTE: One time through the loop is a Juggler Frame <br>
 //
 //  while (drawing)          <br>
 //  {                        <br>
-//       <b>preDraw()</b>;   <br>
-//	      draw();             <br>
-//	      <b>postDraw()</b>;  <br>
+//       <b>preFrame()</b>;   <br>
+//       draw();             <br>
+//       <b>intraFrame()</b>;  <br>
 //       sync();             <br>
-//       <b>postSync()</b>;  <br>
+//       <b>postFrame()</b>;  <br>
 //                           <br>
-//	      UpdateTrackers();   <br>
+//       UpdateTrackers();   <br>
 //  }                        <br>
 //
 // @author Allen Bierbaum
@@ -88,14 +89,15 @@ public:
    virtual void exit()
    {;}
 
-   //: Function called after tracker update but before start of drawing
-   virtual void preDraw()
+   //: Function called before juggler frame starts.
+   // Called after tracker update but before start of a new frame
+   virtual void preFrame()
    {;}
-   //: Function called after drawing has been triggered but BEFORE it completes
-   virtual void postDraw()
+   //: Function called <b>during</b> the application's drawing time
+   virtual void intraFrame()
    {;}
-   //: Function called before updating trackers but after the frame is drawn
-   virtual void postSync()
+   //: Function called before updating trackers but after the frame is complete
+   virtual void postFrame()
    {;}
 
 public:

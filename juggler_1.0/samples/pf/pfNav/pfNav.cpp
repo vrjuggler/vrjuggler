@@ -143,9 +143,9 @@ public:
    }
 
    /// Function called after pfSync and before pfDraw
-   virtual void preDraw()
+   virtual void preFrame()
    {
-      //vjDEBUG(vjDBG_ALL, 1) << "app::preDraw\n" << vjDEBUG_FLUSH;
+      //vjDEBUG(vjDBG_ALL, 1) << "app::preFrame\n" << vjDEBUG_FLUSH;
       static float x=10;
       static float y=-5;
       static float z=3;
@@ -171,9 +171,9 @@ public:
    }
 
    /// Function called after pfDraw
-   virtual void postDraw()
+   virtual void intraFrame()
    {
-      //vjDEBUG(vjDBG_ALL,1) << "app::postDraw\n" << vjDEBUG_FLUSH;
+      //vjDEBUG(vjDBG_ALL,1) << "app::intraFrame\n" << vjDEBUG_FLUSH;
    }
 
 public:
@@ -189,8 +189,8 @@ float transSpeed = 0.1;
 
 int main(int argc, char* argv[])
 {
-    vjKernel* kernel = vjKernel::instance();	// Declare a new Kernel
-    myApp* application = new myApp(kernel);	// Delcare an instance of my application
+    vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
+    myApp* application = new myApp(kernel);  // Delcare an instance of my application
 
     for ( int i = 1; i < argc; i++ ) {
         kernel->loadConfigFile(argv[i]);

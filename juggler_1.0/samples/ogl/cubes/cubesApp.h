@@ -119,36 +119,36 @@ public:
     *
     *  while (drawing)
     *  {
-    *        preDraw();
-    *	      draw();
-    *	       postDraw();      // Drawing is happening while here
+    *        preFrame();
+    *       draw();
+    *        intraFrame();      // Drawing is happening while here
     *       sync();
-    *        postSync();      // Drawing is now done
+    *        postFrame();      // Drawing is now done
     *
-    *	      UpdateTrackers();
+    *       UpdateTrackers();
     *  }
     *
     */
 
    /// Function called after tracker update but before start of drawing
-   virtual void preDraw()
+   virtual void preFrame()
    {
-       vjDEBUG(vjDBG_ALL,2) << "cubesApp::preDraw()" << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ALL,2) << "cubesApp::preFrame()" << endl << vjDEBUG_FLUSH;
 
        for(int i=0;i<mUserData.size();i++)
           mUserData[i]->updateNavigation();       // Update the navigation matrix
    }
 
    /// Function called after drawing has been triggered but BEFORE it completes
-   virtual void postDraw()
+   virtual void intraFrame()
    {
-      vjDEBUG(vjDBG_ALL,2) << "cubesApp::postDraw()" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "cubesApp::intraFrame()" << endl << vjDEBUG_FLUSH;
    }
 
    /// Function called before updating trackers but after the frame is drawn
-   virtual void postSync()
+   virtual void postFrame()
    {
-      vjDEBUG(vjDBG_ALL,2) << "cubesApp::postSync" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "cubesApp::postFrame" << endl << vjDEBUG_FLUSH;
    }
 
 private:

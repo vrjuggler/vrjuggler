@@ -1,7 +1,7 @@
 /*
- *  File:	    $RCSfile$
+ *  File:       $RCSfile$
  *  Date modified:  $Date$
- *  Version:	    $Revision$
+ *  Version:       $Revision$
  *
  *
  *                                VR Juggler
@@ -41,7 +41,7 @@ int vjGlPipe::start()
 
     // Create a new thread to handle the control loop
     vjThreadMemberFunctor<vjGlPipe>* memberFunctor =
-	      new vjThreadMemberFunctor<vjGlPipe>(this, &vjGlPipe::controlLoop, NULL);
+         new vjThreadMemberFunctor<vjGlPipe>(this, &vjGlPipe::controlLoop, NULL);
 
     mActiveThread = new vjThread(memberFunctor, 0);
 
@@ -127,28 +127,30 @@ void vjGlPipe::controlLoop(void* nullParam)
       checkForNewWindows();      // Checks for new windows to open
 
       // --- handle EVENTS for the windows --- //
+      // XXX: This may have to be here because of need to get open window event (Win32)
+      // otherwise I would like to move it to being after the swap to get better performance
       {
          for(int winId=0;winId<openWins.size();winId++)
             openWins[winId]->checkEvents();
-      }      
-      
+      }
+
       // --- RENDER the windows ---- //
       {
          renderTriggerSema.acquire();
 
          vjGlApp* theApp = glManager->getApp();
 
-	         mPerfBuffer->set(mPerfPhase = 0);
-         // --- pipe PRE-draw function ---- //                                   
+            mPerfBuffer->set(mPerfPhase = 0);
+         // --- pipe PRE-draw function ---- //
          theApp->pipePreDraw();      // Can't get a context since I may not be guaranteed a window
-	         mPerfBuffer->set(++mPerfPhase);
+            mPerfBuffer->set(++mPerfPhase);
 
          // Render the windows
          for (int winId=0;winId < openWins.size();winId++)
             renderWindow(openWins[winId]);
 
          renderCompleteSema.release();
-	         mPerfBuffer->set(35);
+            mPerfBuffer->set(35);
       }
 
       // ----- SWAP the windows ------ //
@@ -287,14 +289,14 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
          glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
          glManager->currentUserData()->setProjection(surface_disp->getRightProj());
 
-	         mPerfBuffer->set(++mPerfPhase);
+            mPerfBuffer->set(++mPerfPhase);
          theApp->draw();
-	         mPerfBuffer->set(++mPerfPhase);
+            mPerfBuffer->set(++mPerfPhase);
 
          glManager->drawObjects();
       }
       else
-	      mPerfPhase += 2;
+         mPerfPhase += 2;
    }
    // ---- SIMULATOR ---------- //
    else if(theDisplay->isSimulator())
