@@ -32,7 +32,3 @@ DPP_ENABLE_NSPR_THREADS(no)
 # NOTE: This is not fully implemented yet for any platform, but it is
 # partially usable on Windows.
 DPP_WITH_GCC(no)
-
-AC_ARG_WITH(boost,
-            [  --with-boost=<PATH>     Boost installation              [default=<JUGGLER>]],
-            _with_boost="$withval", _with_boost='no')

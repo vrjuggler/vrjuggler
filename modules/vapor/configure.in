@@ -50,7 +50,7 @@ AC_REVISION($Revision$)
 AC_INIT(vpr/vprConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(vpr/vprDefines.h)
-DPP_PREREQ(1.4.98)
+DPP_PREREQ(1.4.100)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -201,6 +201,20 @@ case $target_os in
         AC_DEFINE(VPR_OS_GENERIC,)
         ;;
 esac
+
+# -----------------------------------------------------------------------------
+# Path setup.
+# -----------------------------------------------------------------------------
+
+# $srcdir is the root directory of the juggler source tree.  To get a value
+# for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
+# return to the directory where configure is being run ($topdir).
+cd "$srcdir"
+VPRROOT_ABS=`pwd`
+
+cd "$VPRROOT_ABS/../.."
+JUGGLERROOT_ABS=`pwd`
+cd "$topdir"
 
 # -----------------------------------------------------------------------------
 # Checks for programs.
@@ -416,18 +430,14 @@ AC_CHECK_HEADERS(bstring.h fcntl.h limits.h signal.h strings.h sys/file.h \
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(hash_map hash_map.h)
-
-LOCAL_BOOST='N'
-BOOST_DIR='$(JUGGLERROOT_ABS)/external/boost'
-
-if test "x${_with_boost}" != "xno" ; then
-    _vpr_save_CPPFLAGS="$CPPFLAGS -I${_with_boost}/include"
-    AC_CHECK_HEADER(boost/utility.hpp,
-                    BOOST_DIR="${_with_boost}/include" LOCAL_BOOST='Y')
-    CPPFLAGS="${_vpr_save_CPPFLAGS}"
-fi
-
 DPP_LANG_RESTORE
+
+DPP_HAVE_BOOST($JUGGLERROOT_ABS/external/boost, $JUGGLERROOT_ABS/external/boost,
+               , AC_MSG_ERROR(*** Boost is required for VPR ***))
+
+if test "x$BOOST_ROOT" != "x$JUGGLERROOT_ABS/external/boost" ; then
+    LOCAL_BOOST='Y'
+fi
 
 # -----------------------------------------------------------------------------
 # Checks for library functions.
@@ -504,16 +514,6 @@ if test "x$PLATFORM" = "xHP" ; then
 elif test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
-
-# $srcdir is the root directory of the juggler source tree.  To get a value
-# for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
-# return to the directory where configure is being run ($topdir).
-cd "$srcdir"
-VPRROOT_ABS=`pwd`
-
-cd "$VPRROOT_ABS/../.."
-JUGGLERROOT_ABS=`pwd`
-cd "$topdir"
 
 # Define the base path to the source directory using $VPRROOT_ABS as an
 # alternative to using $srcdir.
