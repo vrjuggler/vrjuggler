@@ -44,8 +44,8 @@ vjThreadPool::vjThreadPool (int numToStartWith) : readyThreads(0) {
 }
 
 
-// Why did I have to hard code number in sproc group?
-//  Why aren't I tracking the number of threads started?
+/* Why did I have to hard code number in sproc group?
+  Why aren't I tracking the number of threads started? */
 
 // ---------------------------------------------------------------------------
 // Body of a general-purpose child process. The argument, which must be
@@ -55,48 +55,50 @@ vjThreadPool::vjThreadPool (int numToStartWith) : readyThreads(0) {
 // ---------------------------------------------------------------------------
 void
 vjThreadPool::threadLoop(void* theThreadAsVoid) {
-    DebugLock.acquire();
-      vjDEBUG(6) << vjThread::self() << " vjThreadPool::threadLoop: Entering."
-                 << endl << vjDEBUG_FLUSH;
+   DebugLock.acquire();
+   vjDEBUG(6) << vjThread::self() << " vjThreadPool::threadLoop: Entering."
+   << endl << vjDEBUG_FLUSH;
 //      vjDEBUG(5) << vjThread::self()
 //      << " vjThreadPool::threadLoop: theThreadAsVoid:"
 //      << theThreadAsVoid << endl << vjDEBUG_FLUSH;
-    DebugLock.release();
+   DebugLock.release();
 
-    listLock.acquire();
-    listLock.release();	    // Do this to make sure addThread is done
+   listLock.acquire();
+   listLock.release();     // Do this to make sure addThread is done
 
-    vjOneThread* myThread = (vjOneThread*)theThreadAsVoid;
+   vjOneThread* myThread = (vjOneThread*)theThreadAsVoid;
 
 #ifdef VJ_SGI_IPC
-        // --- SIGNAL Handlers ---- //
-    prctl(PR_TERMCHILD);	    // What should I do with. FIX - Allen
+   // --- SIGNAL Handlers ---- //
+   prctl(PR_TERMCHILD);       // What should I do with. FIX - Allen
 #endif
 
-    for(;;)
-    {
-    	// --- WAIT FOR WORK --- //
-        threadSleep(myThread);
-    	// ASSERT:  We now have work to do...
-    	// --- PROCESS ENTRY OVERHEAD --- //
-        workingCountLock.acquire();	    // Get access to the working thread count
-    	if (workingCount == 0) {
-    	    finishedLock.acquire();	    // Now there are threads working
-    	}
-    	workingCount = workingCount + 1;    // Update thread count
-        workingCountLock.release();
+   for (;;)
+   {
+      // --- WAIT FOR WORK --- //
+      threadSleep(myThread);
+      // ASSERT:  We now have work to do...
+      // --- PROCESS ENTRY OVERHEAD --- //
+      workingCountLock.acquire();     // Get access to the working thread count
+      if (workingCount == 0)
+      {
+         finishedLock.acquire();       // Now there are threads working
+      }
+      workingCount = workingCount + 1;    // Update thread count
+      workingCountLock.release();
 
-    	// --- DO THE WORK --- //
-        myThread->functor->operator()();
+      // --- DO THE WORK --- //
+      myThread->functor->operator()();
 
-    	// --- PROCESS EXIT OVERHEAD --- //
-        workingCountLock.acquire();	    // Get access to the working count
-    	workingCount = workingCount - 1;
-    	if (workingCount == 0) {
-    	    finishedLock.release();	    // Now there are no threads working
-    	}
-        workingCountLock.release();
-    }
+      // --- PROCESS EXIT OVERHEAD --- //
+      workingCountLock.acquire();     // Get access to the working count
+      workingCount = workingCount - 1;
+      if (workingCount == 0)
+      {
+         finishedLock.release();       // Now there are no threads working
+      }
+      workingCountLock.release();
+   }
 }
 
 // ---------------------------------------------------------------------------
@@ -152,8 +154,8 @@ vjThreadPool::printList (void) {
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-vjOneThread*
-vjThreadPool::addThread (void) {
+vjOneThread* vjThreadPool::addThread (void)
+{
     static int numTimes = 0;
     DebugLock.acquire();
       vjDEBUG(6) << vjThread::self() << " vjThreadPool::addThread: Entering: "
@@ -168,10 +170,10 @@ vjThreadPool::addThread (void) {
 //    vjThreadMemberFunctor<vjThreadPool>* memberFunctor = new vjThreadMemberFunctor<vjThreadPool>(this, vjThreadPool::threadLoop, (void*)newThread);
     vjThreadMemberFunctor<vjThreadPool>* memberFunctor = new vjThreadMemberFunctor<vjThreadPool>(this, &vjThreadPool::threadLoop, (void*)newThread);
 
-    newThread->threadId = vjThread::spawn(memberFunctor, 0);
+    newThread->thread = new vjThreadspawn(memberFunctor, 0);
 
     DebugLock.acquire();
-        vjDEBUG(5) << *(newThread->threadId)
+        vjDEBUG(5) << newThread->thread
                    << " vjThreadPool::addThread: List at end\n" << vjDEBUG_FLUSH;
         printList();
     DebugLock.release();
@@ -179,9 +181,8 @@ vjThreadPool::addThread (void) {
     return listHead;
 }
 
-ostream&
-operator<< (ostream& outfile, vjOneThread& thread) {
-    outfile << *thread.threadId;
-
+ostream& operator<< (ostream& outfile, vjOneThread& thread)
+{
+    outfile << thread.thread;
     return outfile;
 }

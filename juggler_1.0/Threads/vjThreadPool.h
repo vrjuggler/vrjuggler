@@ -13,15 +13,15 @@
 class vjOneThread
 {
 public:
-    vjOneThread() : threadId(0), next(NULL), functor(NULL), threadWait(0) {
+    vjOneThread() : thread(NULL), next(NULL), functor(NULL), threadWait(0) {
         next = NULL;
     }
 
 public:
-    vjThreadId* threadId;	      //: Handle of the thread process
+    vjThread* thread;	            //: Handle of the thread process
     vjOneThread* next;		         //: -> next vjOneThread ready to run
-     vjBaseThreadFunctor* functor;	//: -> function thread is to call
-    vjSemaphore threadWait;	   //: thread waits for work here
+    vjBaseThreadFunctor* functor;	//: -> function thread is to call
+    vjSemaphore threadWait;	      //: thread waits for work here
 };
 
 ostream& operator<< (ostream&, vjOneThread&);
@@ -53,24 +53,24 @@ public:
     //: Give a function to the processes.  Start a function going
     //+ asynchronously.  Called by master process.
     // -----------------------------------------------------------------------
-    void
-    startFunc (THREAD_FUNC func, void* arg = NULL) {
+    void startFunc (THREAD_FUNC func, void* arg = NULL)
+    {
         vjThreadNonMemberFunctor* NonMemFunctor = new vjThreadNonMemberFunctor(func, arg);
         this->startFunc(NonMemFunctor);
     }
 
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
-    void
-    startFunc( vjBaseThreadFunctor* theFunctor, void* argument) {
+    void startFunc( vjBaseThreadFunctor* theFunctor, void* argument)
+    {
         theFunctor->setArg(argument);
         this->startFunc(theFunctor);
     }
 
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
-    void
-    startFunc( vjBaseThreadFunctor* theFunctor) {
+    void startFunc( vjBaseThreadFunctor* theFunctor)
+    {
         vjOneThread* theThread = getThread();
 
         theThread->functor = theFunctor;     /* set address of func to exec */

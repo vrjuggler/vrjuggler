@@ -18,18 +18,6 @@
 
 typedef struct sched_param	sched_param_t;
 
-int vjThreadPosix::thread_count = 1;
-
-// ---------------------------------------------------------------------------
-// Overload the << operator so that the PID and address of this vjThreadPosix
-// structure can be output in a readable format.
-// ---------------------------------------------------------------------------
-ostream&
-operator<< (ostream& outfile, vjThreadPosix& thread) {
-    outfile << "[PID " << thread.getpid() << ":" << thread.gettid() << "]";
-
-    return outfile;
-}
 
 // ---------------------------------------------------------------------------
 //: Create a new thread that will execute functorPtr.
@@ -41,7 +29,7 @@ operator<< (ostream& outfile, vjThreadPosix& thread) {
 //+      beginning execution.
 // ---------------------------------------------------------------------------
 int
-vjThreadPosix::create (vjBaseThreadFunctor* functorPtr, long flags,
+vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
                        u_int priority, void* stack_addr, size_t stack_size)
 {
     int ret_val;
@@ -113,6 +101,68 @@ vjThreadPosix::create (vjBaseThreadFunctor* functorPtr, long flags,
     return ret_val;
 }
 
+
+
+
+
+// ---------------------------------------------------------------------------
+// Get this thread's priority.
+//
+// PRE: None.
+// POST: The priority of this thread is returned in the integer pointer
+//       variable.
+// ---------------------------------------------------------------------------
+int
+vjThreadPosix::getPrio (int* prio) {
+#ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
+    int policy, ret_val;
+    sched_param_t fifo_sched_param;
+
+    ret_val = pthread_getschedparam(threadID, &policy, &fifo_sched_param);
+    *prio = fifo_sched_param.sched_priority;
+
+    return ret_val;
+#else
+    cerr << "vjThreadPosix::getprio(): Not supported\n";
+
+    return -1;
+#endif
+}
+
+// ---------------------------------------------------------------------------
+// Set this thread's priority.
+//
+// PRE: None.
+// POST: This thread has its priority set to the specified value.
+// ---------------------------------------------------------------------------
+int
+vjThreadPosix::setPrio (int prio) {
+#ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
+    sched_param_t fifo_sched_param;
+
+    fifo_sched_param.sched_priority = prio;
+
+    return pthread_setschedparam(threadID, SCHED_FIFO, &fifo_sched_param);
+#else
+    cerr << "vjThreadPosix::setprio(): Not supported\n";
+
+    return -1;
+#endif
+}
+
+/*
+
+// ---------------------------------------------------------------------------
+// Overload the << operator so that the PID and address of this vjThreadPosix
+// structure can be output in a readable format.
+// ---------------------------------------------------------------------------
+ostream&
+operator<< (ostream& outfile, vjThreadPosix& thread) {
+    outfile << "[PID " << thread.getpid() << ":" << thread.gettid() << "]";
+
+    return outfile;
+}
+
 // ---------------------------------------------------------------------------
 // Create n new threads that execute func() with the argument arg if given.
 //
@@ -135,7 +185,7 @@ vjThreadPosix::create_n (vjThreadPosix thread_ids[], int n, THREAD_FUNC func,
     }
 
     return i;
-} 
+}
 
 // ---------------------------------------------------------------------------
 // Wait for one or more threads to exit.
@@ -162,47 +212,4 @@ vjThreadPosix::join (vjThreadPosix thread_array[], int n, void** ret_val) {
     return join_val;
 }
 
-// ---------------------------------------------------------------------------
-// Get this thread's priority.
-//
-// PRE: None.
-// POST: The priority of this thread is returned in the integer pointer
-//       variable.
-// ---------------------------------------------------------------------------
-int
-vjThreadPosix::getprio (int* prio) {
-#ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
-    int policy, ret_val;
-    sched_param_t fifo_sched_param;
-
-    ret_val = pthread_getschedparam(threadID, &policy, &fifo_sched_param);
-    *prio = fifo_sched_param.sched_priority;
-
-    return ret_val;
-#else
-    cerr << "vjThreadPosix::getprio(): Not supported\n";
-
-    return -1;
-#endif
-}
-
-// ---------------------------------------------------------------------------
-// Set this thread's priority.
-//
-// PRE: None.
-// POST: This thread has its priority set to the specified value.
-// ---------------------------------------------------------------------------
-int
-vjThreadPosix::setprio (int prio) {
-#ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
-    sched_param_t fifo_sched_param;
-
-    fifo_sched_param.sched_priority = prio;
-        
-    return pthread_setschedparam(threadID, SCHED_FIFO, &fifo_sched_param);
-#else
-    cerr << "vjThreadPosix::setprio(): Not supported\n";
-
-    return -1;
-#endif
-}
+*/
