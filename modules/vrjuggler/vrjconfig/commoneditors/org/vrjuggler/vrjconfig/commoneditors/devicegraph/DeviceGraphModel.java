@@ -32,17 +32,17 @@
 
 package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.Edge;
 
-import org.vrjuggler.jccl.config.ConfigDefinition;
-import org.vrjuggler.jccl.config.ConfigElement;
-import org.vrjuggler.jccl.config.PropertyDefinition;
+import org.vrjuggler.jccl.config.*;
 
 
 /**
@@ -145,6 +145,128 @@ public class DeviceGraphModel
       }
 
       return accepts;
+   }
+
+   /**
+    * Removes all the given roots from this model and any
+    * <code>ConfigElement</code> objects associated with those roots.  For
+    * (somewhat) finer grained control of this, see
+    * <a href="#remove(Object[],boolean)">the overload of
+    * <code>remove()</code></a> that takes a <code>booelan</code> parameter.
+    *
+    * @param roots      the roots of the graph model to remove
+    *
+    * @see #remove(Object[],boolean)
+    */
+   public void remove(Object[] roots)
+   {
+      this.remove(roots, true);
+   }
+
+   /**
+    * Removes all the given roots from this model and, depending on the value
+    * of <code>removeElements</code>, any <code>ConfigElement</code> objects
+    * associated with those roots.
+    *
+    * @param roots              the roots of the graph model to remove
+    * @param removeElements     a flag indicating whether config elements
+    *                           associated with the given graph roots should
+    *                           be removed from their context and their data
+    *                           source
+    */
+   public void remove(Object[] roots, boolean removeElements)
+   {
+      Set removed_edges = new HashSet(), removed_vertices = new HashSet();
+
+      for ( int i = 0; i < roots.length; ++i )
+      {
+         if ( roots[i] instanceof Edge )
+         {
+            removed_edges.add(roots[i]);
+         }
+         else if ( roots[i] instanceof DefaultGraphCell )
+         {
+            removed_vertices.add(roots[i]);
+
+            DefaultGraphCell cur_cell = (DefaultGraphCell) roots[i];
+
+            // Remove edges connected to the port(s) of the cell.
+            for ( Iterator c = cur_cell.getChildren().iterator(); c.hasNext(); )
+            {
+               for ( Iterator e = this.edges(c.next()); e.hasNext(); )
+               {
+                  removed_edges.add(e.next());
+               }
+            }
+         }
+      }
+
+      this.remove(removed_edges.toArray(), removed_vertices.toArray(),
+                  removeElements);
+   }
+
+   /**
+    * Removes all the given edge and vertex roots from this model and,
+    * depending on the value of <code>removeElements</code>, any
+    * <code>ConfigElement</code> objects associated with those roots.
+    *
+    * @param edges              the edge roots of the graph model to remove
+    * @param vertices           the vertex roots of the graph model to remove
+    *                           (must be instances of
+    *                           <code>org.jgraph.graph.DefaultGraphCell</code>)
+    * @param removeElements     a flag indicating whether config elements
+    *                           associated with the given graph roots should
+    *                           be removed from their context and their data
+    *                           source
+    *
+    * @see org.jgraph.graph.DefaultGraphCell
+    */
+   public void remove(Object[] edges, Object[] vertices,
+                      boolean removeElements)
+   {
+      if ( edges.length > 0 )
+      {
+         super.remove(edges);
+      }
+
+      if ( vertices.length > 0 )
+      {
+         if ( removeElements )
+         {
+            ConfigBroker broker = new ConfigBrokerProxy();
+
+            for ( int i = 0; i < vertices.length; ++i )
+            {
+               DefaultGraphCell cell = (DefaultGraphCell) vertices[i];
+
+               if ( cell.getUserObject() instanceof ConfigElementHolder )
+               {
+                  ConfigElementHolder holder =
+                     (ConfigElementHolder) cell.getUserObject();
+
+                  if ( holder instanceof ProxyInfo )
+                  {
+                     ProxyInfo proxy_info = (ProxyInfo) holder;
+                     List aliases = proxy_info.getAliases();
+                     for ( Iterator a = aliases.iterator(); a.hasNext(); )
+                     {
+                        broker.remove(proxy_info.getContext(),
+                                      (ConfigElement) a.next());
+                     }
+                  }
+
+                  broker.remove(holder.getContext(), holder.getElement());
+               }
+            }
+         }
+
+         for ( int i = 0; i < vertices.length; ++i )
+         {
+            ((DefaultGraphCell) vertices[i]).removeAllChildren();
+         }
+
+         super.remove(vertices);
+      }
    }
 
    private boolean checkProxyDeviceConnection(ProxyInfo proxyInfo,
