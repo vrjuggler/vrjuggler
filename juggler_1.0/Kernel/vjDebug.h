@@ -90,7 +90,7 @@ private:
 public:
    ostream& getStream(int level, int indentChange = 0)
    {
-      if(indentChange < 0)
+      if(indentChange < 0)                // If decreasing indent
          indentLevel += indentChange;
 
       //cout << "VG " << level << ": ";
@@ -100,7 +100,7 @@ public:
       for(int i=0;i<indentLevel;i++)
          cout << "\t";
 
-      if(indentChange > 0)
+      if(indentChange > 0)             // If increasing indent
          indentLevel += indentChange;
 
       return cout;

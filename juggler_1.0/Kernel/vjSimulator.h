@@ -29,13 +29,13 @@ public:
 
       if(mCamera.getProxyIndex() == -1)
       {
-         cerr << "vjSimulator:: Fatal Error: Camera not found: " << head_str << endl;
+         cerr << "vjSimulator:: Fatal Error: Camera not found named: " << proxy_str << endl;
          exit(1);
       }
 
       if(mHead.getProxyIndex() == -1)
       {
-         cerr << "vjSimulator:: Fatal Error: Head not found: " << head_str << endl;
+         cerr << "vjSimulator:: Fatal Error: Head not found named: " << head_str << endl;
          exit(1);
       }
    }
