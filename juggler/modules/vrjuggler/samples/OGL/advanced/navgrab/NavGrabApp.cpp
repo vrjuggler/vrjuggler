@@ -45,7 +45,8 @@ void NavGrabApp::init()
 
    mHead.init("VJHead");
    mWand.init("VJWand");
-   mButton0.init("VJButton0");
+   mGrabButton.init("VJButton0");
+   mResetButton.init("VJButton1");
 }
 
 void NavGrabApp::contextInit()
@@ -64,8 +65,14 @@ void NavGrabApp::preFrame()
    mSphereIsect = gmtl::isInVolume(mSphere, wand_point);
    mCubeIsect   = gmtl::isInVolume(mCube, wand_point);
 
+   // If the reset button is pressed, reset the state of the application.
+   // This button takes precedence over all others.
+   if ( mResetButton->getData() == gadget::Digital::ON )
+   {
+      this->reset();
+   }
    // If button 0 is pressed, check to see if we are grabbing anything.
-   if ( mButton0->getData() == gadget::Digital::ON )
+   else if ( mGrabButton->getData() == gadget::Digital::ON )
    {
       // If we are intersecting with the sphere, update its center to match
       // the center of the wand.
@@ -98,7 +105,7 @@ void NavGrabApp::preFrame()
       }
    }
    // Nothing can be selected when the button state toggles from on to off.
-   else if ( mButton0->getData() == gadget::Digital::TOGGLE_OFF )
+   else if ( mGrabButton->getData() == gadget::Digital::TOGGLE_OFF )
    {
       mSphereSelected = false;
       mCubeSelected   = false;
@@ -124,20 +131,35 @@ void NavGrabApp::draw()
    glPopMatrix();
 }
 
+void NavGrabApp::reset()
+{
+   mSphere.setCenter(mSphereCenter);
+   mSphere.setRadius(mSphereRadius);  // Not strictly necessary
+   mCube.setMin(mCubeMin);
+   mCube.setMax(mCubeMax);
+
+   mSphereSelected = false;
+   mCubeSelected   = false;
+}
+
 void NavGrabApp::initShapes()
 {
    // Initialize the sphere.  This creates a sphere with radius 2 and center
    // (5, 5, -2.5).
-   mSphere.setCenter(gmtl::Point3f(5.0f, 5.0f, -2.0f));
-   mSphere.setRadius(3.0f);
+   mSphereCenter = gmtl::Point3f(5.0f, 5.0f, -2.0f);
+   mSphereRadius = 3.0f;
+   mSphere.setCenter(mSphereCenter);
+   mSphere.setRadius(mSphereRadius);
 
    // Allocate a new quadric that will be used to render the sphere.
    mSphereQuad = gluNewQuadric();
 
    // Initialize the cube.  This creates a cube with sides of length 5 centered
    // at (-5, 5, -2.5).
-   mCube.setMin(gmtl::Point3f(-7.5f, 2.5f, -5.0f)); // Bottom rear left corner
-   mCube.setMax(gmtl::Point3f(-2.5f, 7.5f, 0.0f)); // Top front right corner
+   mCubeMin = gmtl::Point3f(-7.5f, 2.5f, -5.0f);
+   mCubeMax = gmtl::Point3f(-2.5f, 7.5f, 0.0f);
+   mCube.setMin(mCubeMin); // Bottom rear left corner
+   mCube.setMax(mCubeMax); // Top front right corner
    mCube.setEmpty(false);
 }
 
