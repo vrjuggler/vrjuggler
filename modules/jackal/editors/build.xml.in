@@ -16,7 +16,8 @@
 
    <property name="tweek.classpath" refid="tweek.classpath" />
    <property name="jccl_config.classpath" refid="jccl_config.classpath" />
-
+   <property name="table_layout_dir" value="@JUGGLERROOT_ABS@/external/TableLayout" />
+   
    <!-- Compile all java sources -->
    <target name="compile">
       <javac destdir="."
@@ -28,6 +29,7 @@
          <classpath>
             <pathelement path="${tweek.classpath}" />
             <pathelement path="${jccl_config.classpath}" />
+            <pathelement path="${table_layout_dir}/TableLayout.jar" />
          </classpath>
       </javac>
    </target>
