@@ -39,14 +39,13 @@
 
 
 /*
- * Define to the 9-digit Plexus version integer.  This is the "internal
- * version number" that is intended for internal feature checks by Plexus
- * itself.
+ * Define to the 9-digit Tweek version integer.  This is the "internal version
+ * number" that is intended for internal feature checks by Tweek itself.
  */
 #define __TWEEK_version @VER_NUMBER@
 
 /*
- * This is the "human-readable" Plexus version _string_.  It is of the form
+ * This is the "human-readable" Tweek version _string_.  It is of the form
  * <major>.<minor>.<days since last major release>.
  */
 #define TWEEK_VERSION @VER_STRING@
