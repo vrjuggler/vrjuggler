@@ -29,7 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 package org.vrjuggler.vrjconfig.ui;
 
 import java.awt.*;
@@ -217,7 +216,7 @@ public class ConfigToolbar
             ioe.printStackTrace();
             return false;
          }
-         
+
          setConfigContext(ctx);
          fireAction("New");
          return true;
@@ -276,12 +275,23 @@ public class ConfigToolbar
     */
    public boolean doOpen(ConfigContext ctx)
    {
+      // Only allow the user to choose files
+      fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
       int result = fileChooser.showOpenDialog(this);
       if (result == JFileChooser.APPROVE_OPTION)
       {
          try
          {
+            // Make sure the selected file actually exists
             File file = fileChooser.getSelectedFile();
+            if (! file.exists())
+            {
+               JOptionPane.showMessageDialog(this, "You must open an existing file.",
+                                             "Error", JOptionPane.ERROR_MESSAGE);
+               return false;
+            }
+
             ConfigBroker broker = new ConfigBrokerProxy();
 
             ChunkFactory.setDescs(broker.getDescs(ctx));
