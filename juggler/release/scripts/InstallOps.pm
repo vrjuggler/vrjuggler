@@ -214,7 +214,12 @@ sub installFile ($$$$$) {
     print "$inst_path/$src_file ==> $inst_dir/$filename\n";
 
     umask(002);
-    mkpath("$inst_dir", 0, 0755) or warn "mkpath: $!\n";
+
+    if ( ! -d "$inst_dir" )
+    {
+       mkpath("$inst_dir", 0, 0755) or warn "mkpath: $!\n";
+    }
+
     copy("$src_file", "$inst_dir") or warn "copy: $!\n";
     chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
     chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
