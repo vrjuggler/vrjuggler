@@ -58,10 +58,7 @@ public:
    /**
     * Default constructor.
     */
-   CorbaManager (void) : m_my_thread(NULL), m_subj_mgr(NULL)
-   {
-      /* Do nothing. */ ;
-   }
+   CorbaManager(void);
 
    /**
     * This will destroy the Subject Manager associated with this CORBA

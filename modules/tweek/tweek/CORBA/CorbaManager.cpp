@@ -41,12 +41,29 @@
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
+#include <tweek/Util/Version.h>
 #include <tweek/CORBA/SubjectManager.h>
 #include <tweek/CORBA/CorbaManager.h>
 
 
 namespace tweek
 {
+
+CorbaManager::CorbaManager () : m_my_thread(NULL), m_subj_mgr(NULL)
+{
+   std::string tweek_ver = getVersionString();
+
+   // Print out the Tweek version information.
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << std::string(tweek_ver.length() + 7, '=') << std::endl
+      << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << clrOutNORM(clrGREEN, "Tweek: ") << clrOutNORM(clrGREEN, tweek_ver)
+      << clrRESET << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << std::string(tweek_ver.length() + 7, '=') << std::endl
+      << vprDEBUG_FLUSH;
+}
 
 vpr::ReturnStatus CorbaManager::init (const std::string& local_id, int& argc,
                                       char** argv)
