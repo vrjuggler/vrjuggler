@@ -37,6 +37,7 @@
 #endif
 
 #include <iostream.h>
+#include <stdio.h>
 #include <string.h>
 #include <strings.h>
 #include <assert.h>
@@ -44,6 +45,7 @@
 #include <netdb.h>
 
 #include <Input/vjPosition/aMotionStar.h>
+
 
 aMotionStar::aMotionStar(char* _address,
 			 int _hemisphere,
@@ -89,7 +91,7 @@ void aMotionStar::start () {
 
   struct hostent* host_ent;
 
-  cout << "In start" << endl;
+//  cout << "In start" << endl;
   assert(!active);
 
   rate[0] = 57; // 48
@@ -138,8 +140,12 @@ void aMotionStar::start () {
    * Open a TCP socket.
    */
 
-  if (( s = socket(AF_INET,SOCK_STREAM,0))<0)
-    printf("client: can't open stream socket");
+  printf("\nConnecting to %s ...\n", address);
+
+  if (( s = socket(AF_INET,SOCK_STREAM,0))<0) {
+    perror("client: can't open stream socket");
+    assert(false);
+  }
 
   /* Fill in the structure with the address of the
    * server that we want to connect to.
@@ -165,11 +171,12 @@ void aMotionStar::start () {
     server.sin_addr.s_addr = inet_addr(address);
   }
 
-  cout << "connecting..." << endl;
   rtn = connect(s, (struct sockaddr *) &server, sizeof(server));
+/*
   printf("connect = %4d, connect error = %4d, ", rtn, errno);
   perror(NULL);
   printf("\n");
+*/
 
   newptr =(char*)(&response);
   lpCommand = &command;
@@ -242,7 +249,7 @@ void aMotionStar::stop() {
 void aMotionStar::send_wakeup()
 {
   /***** send a command to the server wakeup *****/
-  printf("WAKEUP:");
+//  printf("WAKEUP:");
 
   command.sequence              = sequenceNumber++;
   command.type                  = 10;
@@ -255,20 +262,20 @@ void aMotionStar::send_wakeup()
   /*n++;*/
   numberBytes = send(s,(void*)lpCommand, sizeof(command), 0);
 
-  printf(" - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
+//  printf(" - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
 
   bytesReceived = recv( s,
                         (void*)lpResponse,
                         sizeof(response),
                         0);
 
-  printf("  | WAKEUP ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
+//  printf("  | WAKEUP ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
 
 } // end void aMotionStar::send_wakeup ()
 
 
 void aMotionStar::runContinuous() {
-  cout << "runContinous" << endl;
+//  cout << "runContinous" << endl;
 
   command.type=104;
 // MSG_RUN CONTINIOUS - request server to send packets continuously
@@ -281,14 +288,14 @@ void aMotionStar::runContinuous() {
                        sizeof(command),
                        0);
 
-    printf("\n\nSTREAM: - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
+//    printf("\n\nSTREAM: - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
 
   bytesReceived = recv( s,
                         (void*)lpResponse,
                         sizeof(response),
                         0);
 
-    printf("  | STREAM ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
+//    printf("  | STREAM ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
 
 
       /* receive the header */
@@ -472,7 +479,7 @@ void aMotionStar::get_status_all()
   command.xtype=0;
   numberBytes = sendto(s,(void*)lpCommand, sizeof(command), 0,
                        (struct sockaddr *)&server, sizeof(server));
-  printf("\nGET STATUS - number bytes sent = %5d errorno %d", numberBytes,errno)
+//  printf("\nGET STATUS - number bytes sent = %5d errorno %d", numberBytes,errno)
 ;
 
   /***** Receive packet from the server *****/
@@ -497,10 +504,10 @@ void aMotionStar::get_status_all()
     }
 
   statusSize = headerBytes + dataBytes;
-  printf("\nSYSTEM STATUS RECEIVED - number bytes received = %5d,", bytesReceived);
-  printf("  type %d\n",response.header.type);
+//  printf("\nSYSTEM STATUS RECEIVED - number bytes received = %5d,", bytesReceived);
+//  printf("  type %d\n",response.header.type);
 
-  printf("\n\n============================================================\n\n");
+  printf("\n============================================================\n\n");
 
   /* now print out the details of the status packet */
 
@@ -509,10 +516,10 @@ void aMotionStar::get_status_all()
   FBBerror = response.buffer[1];
 
   flockNumber = response.buffer[2];
-  printf("Number of FBB devices in system = %d,  ", flockNumber);
+  printf("Number of FBB devices in system = %d\n", flockNumber);
 
   transmitterNumber = (response.buffer[4]>>4) & 0x0F;
-  printf("Transmitter is at FBB address %d,  ", transmitterNumber);
+  printf("Transmitter is at FBB address %d\n", transmitterNumber);
 
   szRate[0] = response.buffer[5];
   szRate[1] = response.buffer[6];
@@ -534,20 +541,21 @@ void aMotionStar::get_status_all()
   realRate = (double)(mRate)/1000;
   printf("Measurement rate = %6.1f\n", realRate);
 
-  printf("Number of chassis in system = %d, \n", serverNumber);
-  printf("Chassis# = %d, ", chassisNumber);
-  printf("Number of FBB devices in this chassis = %d, ", chassisDevices);
-  printf("First FBB device in this chassis = %d, \n", firstAddress);
-  printf("SERVER Software Version = %d\n\n============================================================\n\n",
-         softwareRevision);
-  printf("\n\n");
+  printf("Number of chassis in system = %d\n", serverNumber);
+  printf("Chassis# = %d\n", chassisNumber);
+  printf("Number of FBB devices in this chassis = %d\n", chassisDevices);
+  printf("First FBB device in this chassis = %d\n", firstAddress);
+  printf("SERVER Software Version = %d\n\n", softwareRevision);
+  printf("============================================================\n\n");
 
 
+/*
   for(i= 0;i<16;i++) printf(" %2x", response.buffer[i]);
   printf("  |  ");
   for(i=16;i<48;i++) printf(" %2x", response.buffer[i]);
 
   printf("\n\n");
+*/
 
 
   for(i=0;i<flockNumber;i++)
@@ -562,10 +570,10 @@ void aMotionStar::get_status_all()
         (response.buffer[23+i*8]*256);
       // Lew
       Bird[i].status.hemisphere = response.buffer[26+i*8];
-      printf("Bird hemisphere = %2x \n", Bird[i].status.hemisphere);
+//      printf("Bird hemisphere = %2x \n", Bird[i].status.hemisphere);
     }
 
-  printf("");
+//  printf("");
 
   /*
     for (i=0;i<bytesReceived;++i)
@@ -594,14 +602,14 @@ void aMotionStar::set_status_all()
      numberBytes = sendto(s,(void*)lpResponse, statusSize, 0,
                  (struct sockaddr *)&server, sizeof(server));
 
-     printf("\nSEND STATUS - number bytes sent = %5d errorNumber %d", numberBytes,errno);
+//     printf("\nSEND STATUS - number bytes sent = %5d errorNumber %d", numberBytes,errno);
 
      /***** Receive packet from the server *****/
 
      bytesReceived = recvfrom(s, (void*)lpResponse, sizeof(response), 0,
                               (struct sockaddr *)&server, lpSize);
-     printf("\nSEND STATUS ACK - number bytes received = %5d,", bytesReceived);
-     printf("  type %d\n",response.header.type);
+//     printf("\nSEND STATUS ACK - number bytes received = %5d,", bytesReceived);
+//     printf("  type %d\n",response.header.type);
 
 } // end void aMotionStar::set_status_all()
 
@@ -619,7 +627,7 @@ void aMotionStar::get_status_fbb(unsigned char fbb_addr)
 
   numberBytes = sendto(s,(void*)lpCommand, sizeof(command), 0,
                        (struct sockaddr *)&server, sizeof(server));
-  printf("\n\nGET STATUS #%d; number bytes sent = %5d errorno %d ",fbb_addr, numberBytes,errno);
+//  printf("\n\nGET STATUS #%d; number bytes sent = %5d errorno %d ",fbb_addr, numberBytes,errno);
 
   /***** Receive packet from the server *****/
 
@@ -644,10 +652,12 @@ void aMotionStar::get_status_fbb(unsigned char fbb_addr)
 
   bytesReceived = dataBytes + headerBytes;
 
+/*
   printf("\nSTATUS RECEIVED - number bytes received = %5d ", bytesReceived);
   printf("type %d ",response.header.type);
   for (i=0;i<bytesReceived;++i)
     printf("%4d",*(newptr+i));
+*/
 
 } // end void aMotionStar::get_status_fbb()
 
@@ -672,17 +682,18 @@ void aMotionStar::set_status_fbb(unsigned char fbb_addr)
 
   numberBytes = sendto(s,(void*)lpResponse, 86, 0,
                        (struct sockaddr *)&server, sizeof(server));
-  printf("\nSEND SETUP #%d; number bytes sent = %5d errorno %d ",fbb_addr, numberBytes,errno);
+//  printf("\nSEND SETUP #%d; number bytes sent = %5d errorno %d ",fbb_addr, numberBytes,errno);
 
   /***** Receive packet from the server *****/
 
   bytesReceived = recvfrom(s, (void*)lpResponse, sizeof(response), 0,
                            (struct sockaddr *)&server, lpSize);
+/*
   printf("\nSETUP ACKNOWLEDGED - number bytes received = %5d ", bytesReceived);
   printf("type %d ",response.header.type);
   for (i=0;i<bytesReceived;++i)
     printf("%4d",*(newptr+i));
-
+*/
 } // end void aMotionStar::set_status_fbb()
 
 
