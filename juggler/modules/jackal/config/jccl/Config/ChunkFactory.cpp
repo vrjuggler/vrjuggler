@@ -36,55 +36,55 @@
 namespace jccl {
 
 
-    //: Adds descriptions in file 'filename' to the factory
-    bool ChunkFactory::loadDescs (const std::string& filename) {
-        //vjConfigIO::instance->readChunkDescDB (filename, descdb);
-        bool retval = descdb.load(filename.c_str());
-        if (!retval) {
-            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Failed to load ChunkDesc file: '" << filename.c_str() << "'.\n" << vprDEBUG_FLUSH;
+    ChunkFactory::ChunkFactory () {
+        // try to load a defaul "jccl-chunks.desc" file, but don't complain
+        // if it's not there.
+
+        std::string file_name = "${JCCL_BASE_DIR}/";
+        file_name += JCCL_SHARE_DIR;
+        file_name += "data/jccl-chunks.desc";
+        bool retval = descdb.load(file_name.c_str());
+        if (retval) {
+            vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL) 
+                << "Loaded ChunkDesc file: '" << file_name.c_str() << "'.\n"
+                << vprDEBUG_FLUSH;
+        }
+    }
+
+
+
+    //: Adds descriptions in file 'file_name' to the factory
+    bool ChunkFactory::loadDescs (const std::string& file_name) {
+        //vjConfigIO::instance->readChunkDescDB (file_name, descdb);
+        bool retval = descdb.load(file_name.c_str());
+        if (retval) {
+            vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL) 
+                << "Loaded ChunkDesc file: '" << file_name.c_str() << "'.\n"
+                << vprDEBUG_FLUSH;
+        }
+        else {
+            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) 
+                << "Failed to load ChunkDesc file: '" << file_name.c_str() 
+                << "'.\n" << vprDEBUG_FLUSH;
         }
         return retval;
     }
 
 
    
-//: Creates a Chunk using the given description
-ConfigChunk* ChunkFactory::createChunk (ChunkDesc* d, bool use_defaults) {
-    if (d) {
-        d->assertValid();
-        return new ConfigChunk (d, use_defaults);
+    //: Creates a Chunk using the given description
+    ConfigChunk* ChunkFactory::createChunk (ChunkDesc* d, bool use_defaults) {
+        if (d) {
+            d->assertValid();
+            return new ConfigChunk (d, use_defaults);
+        }
+        else
+            return 0;
     }
-    else
-        return 0;
-}
 
 
 
-//: Setup the intial environment needed for creating chunks.
-//  This just loads $VJ_BASE_DIR/VJ_SHARE_DIR/Data/chunksDesc
-void ChunkFactory::setupInitialEnvironment() {
-    // ------ OPEN chunksDesc file ----- //
-    char* vj_base_dir = getenv("JCCL_BASE_DIR");
-    if(vj_base_dir == NULL) {
-        vj_base_dir = "";
-//         vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << "ChunkFactory::setupInitialEnvironment:\n" << vprDEBUG_FLUSH;
-//         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) <<  "Env var VJ_BASE_DIR not defined." << std::endl << vprDEBUG_FLUSH;
-//         exit(1);
-    }
-    
-    std::string chunk_desc_file = vj_base_dir;
-    chunk_desc_file += "/";
-    chunk_desc_file += JCCL_SHARE_DIR;
-    chunk_desc_file += "/Data/chunksDesc";
-    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Loading chunk desc file: ["
-                                        << chunk_desc_file << "]\n" << vprDEBUG_FLUSH;
-    
-    this->loadDescs(chunk_desc_file);
-
-   }
+    vprSingletonImp(ChunkFactory);
 
 
-
-vprSingletonImp(ChunkFactory);
-
-};
+}; // namespace jccl
