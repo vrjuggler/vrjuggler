@@ -7,7 +7,7 @@ DIE=0
 
 : ${DPP_PATH=../../Doozer++}
 : ${MACRO_PATH=../../macros}
-: ${GGT_MACRO_PATH=../../macros.GGT}
+: ${GGT_MACRO_PATH=../../external/macros}
 
 if [ -n "$DPP_PATH" ]; then
    ACLOCAL_FLAGS="-I $DPP_PATH/config -I $DPP_PATH/config/pkgs $ACLOCAL_FLAGS"
