@@ -40,5 +40,7 @@
     tools
         common
         ..
+        pfStatLinux
+        ..
     ..
 ..
