@@ -166,13 +166,6 @@ private:
    vpr::ReturnStatus createChildPOA(const std::string& local_id);
 
    /**
-    * Gets the root context for the naming service and ensures that a
-    * sub-context exists for this memory space.
-    */
-   vpr::ReturnStatus initNamingService(const std::string& ref_name,
-                                       const std::string& local_id);
-
-   /**
     * Runs the server.
     */
    void run(void* args);

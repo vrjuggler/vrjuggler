@@ -37,7 +37,7 @@
 #include <tweek/tweekConfig.h>
 
 #include <vpr/vpr.h>
-#include <vpr/System.h>
+//#include <vpr/System.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
@@ -45,6 +45,7 @@
 #include <tweek/Util/Debug.h>
 #include <tweek/CORBA/SubjectManager.h>
 #include <tweek/CORBA/BeanDeliverySubjectImpl.h>
+#include <tweek/CORBA/CorbaHelpers.h>
 #include <tweek/CORBA/CorbaManager.h>
 
 
@@ -94,7 +95,16 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
 
       try
       {
-         status = initNamingService("NameService", local_id);
+         mRootContext = tweek::getRootNamingContext(mORB,
+                                                    std::string("NameService"));
+
+         if ( ! CORBA::is_nil(mRootContext) )
+         {
+            mLocalContext = tweek::bindLocalNamingContext(mRootContext,
+                                                          std::string("tweek"));
+
+            // XXX: Still need to do something with user-specified context...
+         }
       }
       catch (CORBA::ORB::InvalidName& ex)
       {
@@ -446,80 +456,6 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
 
    uniq_policy->destroy();
    retain_policy->destroy();
-
-   return status;
-}
-
-/**
- *
- * @post The root context is retrieved through mORB, and a sub-context is
- *       created for use within this memory space.
- */
-vpr::ReturnStatus CorbaManager::initNamingService(const std::string& refName,
-                                                  const std::string& localId)
-{
-   CORBA::Object_var name_obj;
-   vpr::ReturnStatus status;
-
-#ifdef OMNIORB_VER
-   // If the user does not have the OMNIORB_CONFIG environment variable set,
-   // there will most likely be problems finding and/or contacting the
-   // Naming Service.  To that end, print a warning saying as much when the
-   // variable is not set.
-   std::string temp;
-   if ( vpr::System::getenv("OMNIORB_CONFIG", temp).failure() )
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << clrOutBOLD(clrYELLOW, "WARNING: OMNIORB_CONFIG not set!")
-         << "  Expect problems contacting the Naming Service\n"
-         << vprDEBUG_FLUSH;
-   }
-#endif
-
-   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Requesting Name Service\n"
-                                              << vprDEBUG_FLUSH;
-   name_obj     = mORB->resolve_initial_references(refName.c_str());
-   mRootContext = CosNaming::NamingContext::_narrow(name_obj);
-
-   if ( CORBA::is_nil(mRootContext) )
-   {
-      status.setCode(vpr::ReturnStatus::Fail);
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "Failed to narrow Naming Service root context\n"
-         << vprDEBUG_FLUSH;
-   }
-   else
-   {
-      std::string id("tweek");
-      std::string kind("context");
-      CosNaming::Name tweek_context_name;
-
-//      id.append(local_id);
-
-      tweek_context_name.length(1);
-      tweek_context_name[0].id   = CORBA::string_dup(id.c_str());
-      tweek_context_name[0].kind = CORBA::string_dup(kind.c_str());
-
-      try
-      {
-         mLocalContext = mRootContext->bind_new_context(tweek_context_name);
-      }
-      catch (CosNaming::NamingContext::AlreadyBound& ex)
-      {
-         CORBA::Object_var temp_obj;
-
-         temp_obj      = mRootContext->resolve(tweek_context_name);
-         mLocalContext = CosNaming::NamingContext::_narrow(temp_obj);
-
-         if ( CORBA::is_nil(mLocalContext) )
-         {
-            status.setCode(vpr::ReturnStatus::Fail);
-            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "Failed to narrow Naming Service local Tweek context\n"
-               << vprDEBUG_FLUSH;
-         }
-      }
-   }
 
    return status;
 }
