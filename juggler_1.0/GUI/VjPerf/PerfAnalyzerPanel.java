@@ -56,7 +56,7 @@ import VjGUI.FileControl;
 import VjGUI.util.*;
 import VjGUI.Core;
 
-public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameParent {
+public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListener, JFrameParent {
 
 
     private class CollectorSummaryButton extends JButton {
@@ -448,6 +448,9 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 
     public String getName () {
         return "Performance";
+    }
+
+    public void rebuildDisplay () {
     }
 
 

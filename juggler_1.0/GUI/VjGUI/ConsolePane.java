@@ -41,8 +41,9 @@ import javax.swing.text.*;
 import VjGUI.LogMessageListener;
 import VjGUI.LogMessageEvent;
 import VjGUI.Core;
+import VjGUI.util.PlugPanel;
 
-public class ConsolePane extends JPanel implements LogMessageListener {
+public class ConsolePane extends JPanel implements PlugPanel, LogMessageListener {
 
     JTextArea textarea;
     JScrollPane sp;
@@ -78,6 +79,9 @@ public class ConsolePane extends JPanel implements LogMessageListener {
 
     public String getName () {
         return "Messages";
+    }
+
+    public void rebuildDisplay () {
     }
 
 

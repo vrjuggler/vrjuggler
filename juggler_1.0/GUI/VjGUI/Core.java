@@ -70,6 +70,7 @@ public class Core implements NetControlListener, ChunkDBListener {
     static private Core instance; // dummy instance used as source for CoreDBEvents
     static private Vector coredb_targets;
     static private Vector logmessage_targets;
+    static private Vector GUIrefresh_targets;
 
     static final private boolean info_msg_to_stdout = false;
     static final private boolean error_msg_to_stdout = true;
@@ -121,6 +122,7 @@ public class Core implements NetControlListener, ChunkDBListener {
 	chunkdbs = new Vector();
 	coredb_targets = new Vector();
 	logmessage_targets = new Vector();
+        GUIrefresh_targets = new Vector();
 	perf_collection = new PerfDataCollection();
 	chunkorgtree = new ChunkOrgTree();
 	descdb = new ChunkDescDB();
@@ -410,6 +412,48 @@ public class Core implements NetControlListener, ChunkDBListener {
 	    lis.logMessage (e);
 	}
     }
+
+
+
+    /******************** GUIrefresh Target Stuff *********************/
+
+//      static public synchronized void addGUIRefreshListener (GUIRefreshListener l) {
+//  	synchronized (GUIrefresh_targets) {
+//  	    GUIrefresh_targets.addElement (l);
+//  	}
+//      }
+
+//      static public void removeGUIRefreshListener (GUIRefreshListener l) {
+//  	synchronized (GUIrefresh_targets) {
+//  	    GUIrefresh_targets.removeElement (l);
+//  	}
+//      }
+
+//      static protected void notifyGUIRefreshTargets (int msgtype) {
+//  	Vector l;
+//  	GUIRefreshEvent e = new GUIRefreshEvent (msgtype);
+//  	synchronized (GUIrefresh_targets) {
+//  	    l = (Vector) GUIrefresh_targets.clone();
+//  	}
+//  	for (int i = 0; i < l.size(); i++) {
+//  	    GUIRefreshListener lis = (CoreDBListener)l.elementAt (i);
+//              lis.refreshChunkDBDisplay(e);
+//  //  	    switch (msgtype) {
+//  //  	    case fpp:
+//  //  		lis.addChunkDB (e);
+//  //  		break;
+//  //  	    case REMOVE_CHUNKDB:
+//  //  		lis.removeChunkDB (e);
+//  //  		break;
+//  //  	    case ADD_DESCDB:
+//  //  		lis.addDescDB (e);
+//  //  		break;
+//  //  	    case REMOVE_DESCDB:
+//  //  		lis.removeDescDB (e);
+//  //  		break;
+//  //  	    }
+//  	}
+//      }
 
 
 

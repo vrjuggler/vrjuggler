@@ -368,6 +368,9 @@ public class DescDBPanel extends JPanel
     }
 
 
+    public void rebuildDisplay () {
+    }
+
 
 }
 

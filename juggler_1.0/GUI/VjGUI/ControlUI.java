@@ -46,6 +46,7 @@ import java.util.Vector;
 import VjGUI.*;
 import VjGUI.util.JFrameParent;
 import VjGUI.util.ChildFrame;
+import VjGUI.util.PlugPanel;
 import VjGUI.configchunk.ConfigChunkFrame;
 import VjGUI.chunkdesc.ChunkDescFrame;
 import VjConfig.*;
@@ -69,6 +70,7 @@ public class ControlUI
                 helpdesc_menu;
     JMenuItem   quit_mi, 
 	        network_refresh_mi,
+                tree_rebuild_kludge_mi,
                 lnf_win_mi, 
                 lnf_java_mi, 
                 lnf_motif_mi, 
@@ -93,7 +95,7 @@ public class ControlUI
 
     Vector child_frames;
 
-    //Vector help_frames;
+    JTabbedPane tabpane;
 
 
     public ControlUI () {
@@ -104,7 +106,6 @@ public class ControlUI
 	//help_frames = new Vector();
 	child_frames = new Vector();
 
-	JTabbedPane tabpane;
 	main_panel = new JPanel();
 	main_panel.setLayout (new BorderLayout (5,5));
 	getContentPane().add (main_panel);
@@ -138,13 +139,13 @@ public class ControlUI
         }
 
 
-
 	// --------------------- MENUS -------------------------------------------
 
 	main_menubar = new JMenuBar();
 
 	main_menubar.add (file_menu = new JMenu("File"));
 	file_menu.add (network_refresh_mi = new JMenuItem ("Refresh Active Config"));
+        file_menu.add (tree_rebuild_kludge_mi = new JMenuItem ("Rebuild ChunkDB Trees"));
 	file_menu.add (quit_mi = new JMenuItem ("Quit"));
 
 	main_menubar.add (options_menu = new JMenu("Options"));
@@ -181,6 +182,7 @@ public class ControlUI
 
 	quit_mi.addActionListener (this);
 	network_refresh_mi.addActionListener (this);
+        tree_rebuild_kludge_mi.addActionListener (this);
 	lnf_win_mi.addActionListener (this);
 	lnf_java_mi.addActionListener (this);
 	lnf_motif_mi.addActionListener (this);
@@ -232,6 +234,16 @@ public class ControlUI
 
 
 
+    public void rebuildAllPanels() {
+        PlugPanel p;
+        for (int i = 0; i < tabpane.getTabCount(); i++) {
+            p = (PlugPanel)tabpane.getComponentAt(i);
+            p.rebuildDisplay();
+        }
+    }
+    
+
+
     public void addChildFrame (ChildFrame f) {
 	child_frames.addElement(f);
     }
@@ -274,6 +286,9 @@ public class ControlUI
 	    quit();
 	else if (o == network_refresh_mi)
 	    Core.net.getChunks();
+        else if (o == tree_rebuild_kludge_mi) {
+            rebuildAllPanels();
+        }
 	else if (o == lnf_win_mi)
 	    setLookNFeel("windows");
 	else if (o == lnf_java_mi)

@@ -37,9 +37,10 @@ package VjGUI;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import VjGUI.util.PlugPanel;
 
 public class ConnectionPane extends JPanel 
-    implements ActionListener, NetControlListener {
+    implements PlugPanel, ActionListener, NetControlListener {
 
     JButton connect_button;
     JButton disconnect_button;
@@ -118,6 +119,9 @@ public class ConnectionPane extends JPanel
 
     public String getName () {
         return "Connections";
+    }
+
+    public void rebuildDisplay () {
     }
 
 
