@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-25-2002 nonchocoboy ConfigChunk property sheet now pays attention to
+                        external changes to the chunk being edited. This
+                        completes functionality necessary for adding/removing
+                        values for variable-length properties.
+                        NEW VERSION: 0.8.4
 Aug-22-2002 nonchocoboy Changed the property sheet for ConfigChunks so that
                         properties (and embedded chunks) can be expanded in
                         place.
