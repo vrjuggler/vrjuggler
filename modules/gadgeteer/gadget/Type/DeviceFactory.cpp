@@ -89,14 +89,6 @@ namespace gadget
 //vjSingletonImp( DeviceFactory ); //kevin
 vprSingletonImpWithInitFunc( DeviceFactory, hackLoadKnownDevices );
 
-template <class DEV>
-DeviceConstructor<DEV>::DeviceConstructor()
-{
-   vprASSERT(DeviceFactory::instance() != NULL);
-   DeviceFactory::instance()->registerDevice(this);
-}
-
-
 /**
  * Registers all the devices that I know about.
  * @note This should really be moved to dynamic library loading code.
