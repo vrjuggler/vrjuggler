@@ -11,6 +11,11 @@ XML_FILES=	$(NAME).xml
 HTML_FILES=	$(NAME).html
 PDF_FILES=	$(NAME).pdf
 
+SVG_IMAGES=	figures/Kernel_Loop_Call_Sequence.svg		\
+		figures/userOglApp_hierarchy.svg		\
+		figures/userPfApp_hierarchy.svg
+IMAGES=		$(SVG_IMAGES:%.svg=%.png)
+
 # Fill these in!!  Together, they make up the installation prefix.
 webroot=	$(HOME)/public_html/phpjug
 instdir=	vrjuggler/1.0/programmer.guide
@@ -21,7 +26,7 @@ INSTALL_FILES=	$(webroot)/base_style.css
 
 NEED_DB_IMAGES=	1
 
-$(NAME).html: $(NAME).xml
-$(NAME).pdf: $(NAME).xml $(NAME).fo
+$(NAME).html: $(NAME).xml $(IMAGES)
+$(NAME).pdf: $(NAME).xml $(NAME).fo $(IMAGES)
 
 include ../../../../docs/docbook.mk
