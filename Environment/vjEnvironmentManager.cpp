@@ -4,19 +4,19 @@
 // author: Christopher Just
 
 
-#include <Environment/vjEnvironmentManager.h>
-#include <Environment/vjConnect.h>
-#include <Performance/vjPerfDataBuffer.h>
-#include <Config/vjChunkDescDB.h>
-#include <Config/vjConfigChunkDB.h>
-#include <Environment/vjTimedUpdate.h>
-
 // needed for network cruft
 #include <strings.h>    // For bzero()
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+
+#include <Environment/vjEnvironmentManager.h>
+#include <Environment/vjConnect.h>
+#include <Performance/vjPerfDataBuffer.h>
+#include <Config/vjChunkDescDB.h>
+#include <Config/vjConfigChunkDB.h>
+#include <Environment/vjTimedUpdate.h>
 
 vjEnvironmentManager::vjEnvironmentManager():
                           connections(),
