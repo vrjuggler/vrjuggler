@@ -218,13 +218,8 @@ void ThreadNSPR::startThread(void* null_param)
 }
 
 
-// ---------------------------------------------------------------------------
 // Set this thread's priority.
-//
-// PRE: None.
-// POST: This thread has its priority set to the specified value.
-// ---------------------------------------------------------------------------
-int ThreadNSPR::setPrio (VPRThreadPriority prio)
+int ThreadNSPR::setPrio(VPRThreadPriority prio)
 {
    int retval;
 
@@ -246,12 +241,10 @@ int ThreadNSPR::setPrio (VPRThreadPriority prio)
 // Private methods follow.
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
 // Check the status of the thread creation in order to determine if this
 // thread should be registered in the thread table or not.
-// ---------------------------------------------------------------------------
 /*
-void ThreadNSPR::checkRegister (const int status)
+void ThreadNSPR::checkRegister(const int status)
 {
    if ( status == 0 )
    {
@@ -265,9 +258,7 @@ void ThreadNSPR::checkRegister (const int status)
 }
 */
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-PRThreadPriority ThreadNSPR::vprThreadPriorityToNSPR (const VPRThreadPriority priority)
+PRThreadPriority ThreadNSPR::vprThreadPriorityToNSPR(const VPRThreadPriority priority)
 {
    PRThreadPriority nspr_prio;
 
@@ -290,9 +281,7 @@ PRThreadPriority ThreadNSPR::vprThreadPriorityToNSPR (const VPRThreadPriority pr
    return nspr_prio;
 }
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-PRThreadScope ThreadNSPR::vprThreadScopeToNSPR (const VPRThreadScope scope)
+PRThreadScope ThreadNSPR::vprThreadScopeToNSPR(const VPRThreadScope scope)
 {
    PRThreadScope nspr_scope;
 
@@ -309,9 +298,7 @@ PRThreadScope ThreadNSPR::vprThreadScopeToNSPR (const VPRThreadScope scope)
    return nspr_scope;
 }
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-PRThreadState ThreadNSPR::vprThreadStateToNSPR (const VPRThreadState state)
+PRThreadState ThreadNSPR::vprThreadStateToNSPR(const VPRThreadState state)
 {
    PRThreadState nspr_state;
 
@@ -328,9 +315,7 @@ PRThreadState ThreadNSPR::vprThreadStateToNSPR (const VPRThreadState state)
    return nspr_state;
 }
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-BaseThread::VPRThreadPriority ThreadNSPR::nsprThreadPriorityToVPR (const PRThreadPriority priority)
+BaseThread::VPRThreadPriority ThreadNSPR::nsprThreadPriorityToVPR(const PRThreadPriority priority)
 {
    VPRThreadPriority vpr_prio;
 
@@ -353,9 +338,7 @@ BaseThread::VPRThreadPriority ThreadNSPR::nsprThreadPriorityToVPR (const PRThrea
    return vpr_prio;
 }
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-BaseThread::VPRThreadScope ThreadNSPR::nsprThreadScopeToVPR (const PRThreadScope scope)
+BaseThread::VPRThreadScope ThreadNSPR::nsprThreadScopeToVPR(const PRThreadScope scope)
 {
    VPRThreadScope vpr_scope;
 
@@ -372,9 +355,7 @@ BaseThread::VPRThreadScope ThreadNSPR::nsprThreadScopeToVPR (const PRThreadScope
    return vpr_scope;
 }
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-BaseThread::VPRThreadState ThreadNSPR::nsprThreadStateToVPR (const PRThreadState state)
+BaseThread::VPRThreadState ThreadNSPR::nsprThreadStateToVPR(const PRThreadState state)
 {
    VPRThreadState vpr_state;
 
