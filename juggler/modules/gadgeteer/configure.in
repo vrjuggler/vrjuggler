@@ -466,6 +466,7 @@ AC_OUTPUT(Makefile
           gadget/Devices/Sim/Makefile
           gadget/Devices/VirtualTechnologies/Makefile
           gadget/Type/Makefile
+          test/Makefile
           mtree/GADGET.data.dist
           mtree/GADGET.include.dist
           mtree/GADGET.install.dist
