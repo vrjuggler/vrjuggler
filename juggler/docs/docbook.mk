@@ -77,7 +77,7 @@ chunk-html:
             cd $$cur_dir ; \
         done
 
-LINK_DEPS=	images # pdfxmltex.fmt
+LINK_DEPS=	images
 
 pdf: $(LINK_DEPS) $(PDF_FILES)
 
@@ -87,11 +87,6 @@ pdf: $(LINK_DEPS) $(PDF_FILES)
 # current directory.  This hack with a symlink works around that problem.
 images:
 	ln -s $(XSL_DIR)/images ./
-
-ifeq ($(FO_VERSION), PASSIVE_TEX)
-pdfxmltex.fmt:
-	ln -s $(DOCBOOK_ROOT)/latex/base/pdfxmltex.fmt ./
-endif
 
 # Image conversions -----------------------------------------------------------
 
