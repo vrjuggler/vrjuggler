@@ -42,8 +42,7 @@
       <property valuetype="configelement" variable="true" name="simulator_plugin">
          <help>Configuration of a simulator plug-in.</help>
          <value label="Simulator Plugin"/>
-         <allowed_type>default_simulator</allowed_type>
-         <allowed_type>py_sim</allowed_type>
+         <allowed_type>simulator_plugin</allowed_type>
       </property>
       <upgrade_transform/>
    </definition_version>
