@@ -37,7 +37,8 @@
 #include <gadget/Type/PositionProxy.h>
 #include <gadget/Type/GloveProxy.h>
 #include <gadget/Type/GestureProxy.h>
-#include <gadget/Type/EventWindowProxy.h>
+//#include <gadget/Type/EventWindowProxy.h>
+#include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/ProxyDepChecker.h>
 
 namespace gadget
@@ -52,7 +53,7 @@ bool ProxyDepChecker::canHandle(jccl::ConfigElementPtr element)
               (element_type == DigitalProxy::getElementType()) ||
               (element_type == GestureProxy::getElementType()) ||
               (element_type == GloveProxy::getElementType()) ||
-              (element_type == EventWindowProxy::getElementType()) ||
+              (element_type == KeyboardMouseProxy::getElementType()) ||
               (element_type == PositionProxy::getElementType()));
 
    return ret_val;

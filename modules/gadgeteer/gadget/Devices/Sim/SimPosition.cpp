@@ -188,8 +188,8 @@ void SimPosition::updateData()
       rotRollCCW( -amt );
    }
 
-   // Set the time for the position data to the EventWindow timestamp
-   mPos.setTime(mEventWin->getTimeStamp());
+   // Set the time for the position data to the KeyboardMouse timestamp
+   mPos.setTime(mKeyboardMouse->getTimeStamp());
    addPositionSample(std::vector< gadget::PositionData>(1, mPos) );
 
    swapPositionBuffers();  // Swap the buffers

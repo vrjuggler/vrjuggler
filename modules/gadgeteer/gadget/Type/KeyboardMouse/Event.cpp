@@ -30,10 +30,28 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_EVENT_WINDOW_INTERFACE_H_
-#define _GADGET_EVENT_WINDOW_INTERFACE_H_
+#include <gadget/gadgetConfig.h>
+#include <vpr/System.h>   /* XXX: Why is this needed? */
+#include <vpr/IO/ObjectWriter.h>
+#include <vpr/IO/ObjectReader.h>
+#include <gadget/Type/KeyboardMouse/Event.h>
 
-#include <gadget/Type/EventWindowProxy.h>
-#include <gadget/Type/DeviceInterface.h>
 
-#endif
+namespace gadget
+{
+
+vpr::ReturnStatus Event::writeObject(vpr::ObjectWriter* writer)
+{
+   writer->writeUint8(mType);
+   writer->writeUint64(mTime);
+   return vpr::ReturnStatus::Succeed;
+}
+
+vpr::ReturnStatus Event::readObject(vpr::ObjectReader* reader)
+{
+   mType = (EventType)reader->readUint8();
+   mTime = reader->readUint64();
+   return vpr::ReturnStatus::Succeed;
+}
+
+} // End of gadget namespace

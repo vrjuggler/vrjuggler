@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_EVENT_WINDOW_H_
-#define _GADGET_EVENT_WINDOW_H_
+#ifndef _GADGET_KEYBOARD_MOUSE_H_
+#define _GADGET_KEYBOARD_MOUSE_H_
 
 #include <gadget/gadgetConfig.h>
 
@@ -45,8 +45,8 @@
 #include <vpr/Util/Interval.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
-#include <gadget/Type/EventWindow/Keys.h>
-#include <gadget/Type/EventWindow/EventPtr.h>
+#include <gadget/Type/KeyboardMouse/Keys.h>
+#include <gadget/Type/KeyboardMouse/EventPtr.h>
 
 namespace gadget
 {
@@ -54,22 +54,22 @@ namespace gadget
 const unsigned short MSG_DATA_EVENT_WINDOW = 420;
 
 /**
- * gadget::EventWindow is an abstract class for interfacing with keyboard (and
+ * gadget::KeyboardMouse is an abstract class for interfacing with keyboard (and
  * other key-based) devices.  Informally, an event window can be thought of as
  * a map of keyboard and mouse events (presses, releases, and movements) to
  * integers.  The integers indicate the number of times the event occurred
- * since the last update.  That is to say, gadget::EventWindow counts the
+ * since the last update.  That is to say, gadget::KeyboardMouse counts the
  * number of keyboard and mouse events between updates.  Updates in Juggler
  * occur once per frame.
  */
-class GADGET_CLASS_API EventWindow : public vpr::SerializableObject
+class GADGET_CLASS_API KeyboardMouse : public vpr::SerializableObject
 {
 public:
    typedef std::vector<gadget::EventPtr> EventQueue;
 
-   EventWindow();
+   KeyboardMouse();
 
-   virtual ~EventWindow()
+   virtual ~KeyboardMouse()
    {
       /* Do nothing. */ ;
    }
@@ -152,11 +152,11 @@ public:
 
 protected:
    // vpr::Mutex is not copyable, so neither are we.
-   EventWindow(const EventWindow& w) 
+   KeyboardMouse(const KeyboardMouse& w) 
       : vpr::SerializableObject(w)
    {;}
 
-   void operator=(const EventWindow&) {;}
+   void operator=(const KeyboardMouse&) {;}
 
    /**
     * (0,*): Copy of keys for this frame that the user reads from between

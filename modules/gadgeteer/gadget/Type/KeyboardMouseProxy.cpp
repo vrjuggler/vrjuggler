@@ -31,59 +31,36 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-
-#include <vpr/IO/ObjectWriter.h>
-#include <vpr/IO/ObjectReader.h>
-#include <gadget/Type/EventWindow/KeyEvent.h>
+#include <jccl/Config/ConfigElement.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/Type/KeyboardMouseProxy.h>
 
 
 namespace gadget
 {
 
-KeyEvent::KeyEvent(const gadget::EventType type, const gadget::Keys key,
-                   int mask, unsigned long time, char asciiKey)
-   : gadget::Event(type, time)
-   , mKey(key)
-   , mModifierMask(mask)
-   , mAsciiKey(asciiKey)
+std::string KeyboardMouseProxy::getElementType()
 {
+   return "keyboard_mouse_proxy";
 }
 
-KeyEvent::KeyEvent() 
-   : gadget::Event(NoEvent, 0)
-   , mKey(gadget::KEY_SPACE)
-   , mModifierMask(0)
-   , mAsciiKey(' ')
+bool KeyboardMouseProxy::config(jccl::ConfigElementPtr element)
 {
-}
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+      std::string("------------------ KeyboardMouse PROXY config() -----------------\n"),
+      std::string("\n"));
+   vprASSERT(element->getID() == getElementType());
 
-// Serializes this event using the given ObjectWriter.
-vpr::ReturnStatus KeyEvent::writeObject(vpr::ObjectWriter* writer)
-{
-   writer->writeUint16(mType);
+   if( ! Proxy::config(element) )
+   {
+      return false;
+   }
 
-   // Serialize all member variables
-   writer->writeUint32(mKey);
-   writer->writeUint32(mModifierMask);
-   writer->writeUint64(mTime);
-   writer->writeUint8(mAsciiKey);
-      
-   return vpr::ReturnStatus::Succeed;
-}
+   mDeviceName = element->getProperty<std::string>("device");
 
-// De-serializes this event using the given ObjectReader.
-vpr::ReturnStatus KeyEvent::readObject(vpr::ObjectReader* reader)
-{
-   // We have already read the type in EventWindow to decide
-   // if we should construct a KeyEvent or a MouseEvent
-   //mType = reader->readUint16();
+   refresh();
 
-   // De-Serialize all member variables
-   mKey = (gadget::Keys)reader->readUint32();
-   mModifierMask = reader->readUint32();
-   mTime = reader->readUint64();
-   mAsciiKey = reader->readUint8();
-   return vpr::ReturnStatus::Succeed;
+   return true;
 }
 
 } // End of gadget namespace

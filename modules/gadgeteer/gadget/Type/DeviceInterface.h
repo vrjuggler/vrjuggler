@@ -47,7 +47,7 @@ class AnalogProxy;
 class DigitalProxy;
 class GestureProxy;
 class GloveProxy;
-class EventWindowProxy;
+class KeyboardMouseProxy;
 class PositionProxy;
 class StringProxy;
 class CommandProxy;
@@ -212,6 +212,7 @@ public:
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << "[gadget::DeviceInterface::refresh()] Tried to point at "
                << "proxy of incorrect type named '" << mProxyName << "'"
+               << " it was type:" << typeid(mProxyPtr).name()
                << std::endl << vprDEBUG_FLUSH;
          }
       }
@@ -233,7 +234,7 @@ typedef DeviceInterface<AnalogProxy>      AnalogInterface;
 typedef DeviceInterface<DigitalProxy>     DigitalInterface;
 typedef DeviceInterface<GestureProxy>     GestureInterface;
 typedef DeviceInterface<GloveProxy>       GloveInterface;
-typedef DeviceInterface<EventWindowProxy> EventWindowInterface;
+typedef DeviceInterface<KeyboardMouseProxy> KeyboardMouseInterface;
 typedef DeviceInterface<PositionProxy>    PositionInterface;
 typedef DeviceInterface<CommandProxy>     CommandInterface;
 typedef DeviceInterface<StringProxy>      StringInterface;

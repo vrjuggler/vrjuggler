@@ -31,67 +31,58 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/ObjectReader.h>
-#include <gadget/Type/EventWindow/MouseEvent.h>
+#include <gadget/Type/KeyboardMouse/KeyEvent.h>
+
 
 namespace gadget
 {
 
-MouseEvent::MouseEvent(const gadget::EventType type, const gadget::Keys button,
-                       int x, int y, int globalX, int globalY, int state,
-                       unsigned long time)
+KeyEvent::KeyEvent(const gadget::EventType type, const gadget::Keys key,
+                   int mask, unsigned long time, char asciiKey)
    : gadget::Event(type, time)
-   , mButton(button)
-   , mRelativeX(x)
-   , mRelativeY(y)
-   , mGlobalX(globalX)
-   , mGlobalY(globalY)
-   , mState(state)
+   , mKey(key)
+   , mModifierMask(mask)
+   , mAsciiKey(asciiKey)
 {
 }
 
-MouseEvent::MouseEvent()
+KeyEvent::KeyEvent() 
    : gadget::Event(NoEvent, 0)
-   , mButton(gadget::NO_MBUTTON)
-   , mRelativeX(0)
-   , mRelativeY(0)
-   , mGlobalX(0)
-   , mGlobalY(0)
-   , mState(0)
+   , mKey(gadget::KEY_SPACE)
+   , mModifierMask(0)
+   , mAsciiKey(' ')
 {
 }
 
 // Serializes this event using the given ObjectWriter.
-vpr::ReturnStatus MouseEvent::writeObject(vpr::ObjectWriter* writer)
+vpr::ReturnStatus KeyEvent::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint16(mType);
 
    // Serialize all member variables
-   writer->writeUint32(mButton);
-   writer->writeUint32(mRelativeX);
-   writer->writeUint32(mRelativeY);
-   writer->writeUint32(mGlobalX);
-   writer->writeUint32(mGlobalY);
-   writer->writeUint32(mState);
-   
+   writer->writeUint32(mKey);
+   writer->writeUint32(mModifierMask);
+   writer->writeUint64(mTime);
+   writer->writeUint8(mAsciiKey);
+      
    return vpr::ReturnStatus::Succeed;
 }
 
 // De-serializes this event using the given ObjectReader.
-vpr::ReturnStatus MouseEvent::readObject(vpr::ObjectReader* reader)
+vpr::ReturnStatus KeyEvent::readObject(vpr::ObjectReader* reader)
 {
-   // We have already read the type in EventWindoe to decide
+   // We have already read the type in KeyboardMouse to decide
    // if we should construct a KeyEvent or a MouseEvent
    //mType = reader->readUint16();
 
    // De-Serialize all member variables
-   mButton = (gadget::Keys)reader->readUint32();
-   mRelativeX = reader->readUint32();
-   mRelativeY = reader->readUint32();
-   mGlobalX = reader->readUint32();
-   mGlobalY = reader->readUint32();
-   mState = reader->readUint32();
+   mKey = (gadget::Keys)reader->readUint32();
+   mModifierMask = reader->readUint32();
+   mTime = reader->readUint64();
+   mAsciiKey = reader->readUint8();
    return vpr::ReturnStatus::Succeed;
 }
 
