@@ -39,49 +39,45 @@
 
 namespace gadget {
 
-    /** InputData subclass for positional data. */
+/** InputData subclass for positional data. */
 class GADGET_CLASS_API DigitalData: public InputData {
 
 public:
 
     /** Constructor. */
-    DigitalData (): InputData() {
-        mDigitalData = 0;
-    }
+    DigitalData (): InputData()
+    { mDigitalData = 0; }
 
 
-    int getDigitalData () {
-        return mDigitalData;
-    }
+    int getDigitalData ()
+    { return mDigitalData; }
 
 
-    void setDigitalData (int d) {
-        mDigitalData = d;
-    }
+    void setDigitalData (int d)
+    { mDigitalData = d; }
 
 
-    DigitalData& operator= (const DigitalData& pd) {
+    DigitalData& operator= (const DigitalData& pd)
+    {
         InputData::copy (pd);
         mDigitalData = pd.mDigitalData;
         return *this;
     }
 
 
-    DigitalData& operator= (int data) {
-        mDigitalData = data;
-        return *this;
+    DigitalData& operator= (int data)
+    {
+       mDigitalData = data;
+       return *this;
     }
 
-
-    operator int() const {
-        return mDigitalData;
-    }
-
+    /*
+    operator int() const
+    { return mDigitalData; }
+    */
 
 protected:
-
     int mDigitalData;
-
 
 }; // class DigitalData
 
