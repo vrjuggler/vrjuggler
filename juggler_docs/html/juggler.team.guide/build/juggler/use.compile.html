@@ -33,8 +33,8 @@
     The makefiles used employ many features that are unique to GNU make
     thus requiring that people who wish to compile Juggler from its source
     are required to have it installed.  The Juggler makefiles are known to
-    to work with versions 3.76.1, 3.77.x and 3.78.1 of GNU make.  To make
-    sense of this documentation, please understand the concepts listed in
+    to work with GNU make versions 3.78 and newer.  To make sense of this
+    documentation, please understand the concepts listed in
     <A HREF="#required">Required Reading</A>.  Posting about these subjects
     to the mailing list will probably be ignored.
   </P>
@@ -390,9 +390,7 @@
     building, specify the <TT>-j</TT> argument on the command line.  With
     no argument, there is no limit to the number of jobs that are spawned
     by the build process.  An integer argument limits the number of jobs
-    to that value.  (<I>NOTE: Thus far, we have not had any success in
-    using this argument to limit the number of jobs and instead have had to
-    limit the load on the machine.</I>)
+    to that value.
   </P>
 
   <P>
