@@ -70,6 +70,7 @@
 #include <Sync/vjGuard.h>
 #include <Threads/vjThread.h>
 #include <Config/vjConfigChunkDB.h>
+#include <Kernel/vjDebug.h>
 
 
 typedef unsigned char byte;
