@@ -175,20 +175,23 @@ std::istream& operator>>(std::istream& in, Configuration& self)
 
 bool Configuration::load(const std::string& filename, const std::string& parentfile)
 {
-   vprDEBUG_OutputGuard(jcclDBG_CONFIG, vprDBG_CONFIG_LVL,
-                        std::string("Loading config file ")+filename+std::string("\n"),
-                        std::string("\n"));
+   vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
+      << "[jccl::Configuration::load()] Loading file '" << filename
+      << "' with parent file '" << parentfile << "'\n" << vprDEBUG_FLUSH;
 
-   std::string absolute_filename = ParseUtil::expandFileName(filename,
-                                                             parentfile);
-   mFileName = absolute_filename;
+   mFileName = ParseUtil::expandFileName(filename, parentfile);
+
+   vprDEBUG_OutputGuard(jcclDBG_CONFIG, vprDBG_CONFIG_LVL,
+                        std::string("Loading config file ") + mFileName +
+                           std::string("\n"),
+                        std::string(""));
 
    cppdom::DocumentPtr cfg_doc(ElementFactory::instance()->createXMLDocument());
    bool status(false);
 
    try
    {
-      cfg_doc->loadFile(absolute_filename);
+      cfg_doc->loadFile(mFileName);
 
       cppdom::NodePtr cfg_node(cfg_doc->getChild(tokens::CONFIGURATION));
       vprASSERT(cfg_node.get() != NULL);
