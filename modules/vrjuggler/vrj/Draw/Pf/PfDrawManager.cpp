@@ -599,6 +599,12 @@ pfPipeWindow* PfDrawManager::allocatePipeWin(unsigned pipeNum)
 {
    pfPipeWindow* ret_val;
 
+   // Grow the pipe window vector to the size we need for pipeNum.
+   if ( mPipeWindows.size() <= pipeNum )
+   {
+      mPipeWindows.resize(pipeNum + 1);
+   }
+
    if(mPipeWindows[pipeNum].size() > 0)   // Is one available
    {
       ret_val = mPipeWindows[pipeNum].back();
