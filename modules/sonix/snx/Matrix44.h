@@ -2,22 +2,24 @@
 #ifndef AUDIOJUGGLER_32BIT_4X4_MATRIX
 #define AUDIOJUGGLER_32BIT_4X4_MATRIX
 
+namespace aj
+{
 
 //: 4x4 matrix oriented in columnar order
-class ajMatrix44
+class Matrix44
 {
 // Constructors
 public:
    //: Default Constructor
    //  NOTE: does no initialization, call makeIdentity() to init to identity matrix
-   //        or use the copy constructor instead with ajMatrix44::identity()
-   ajMatrix44();
+   //        or use the copy constructor instead with Matrix44::identity()
+   Matrix44();
 
 	//: Copy constructor
-	ajMatrix44( const ajMatrix44& M );
+	Matrix44( const Matrix44& M );
 	
 	//: Construct 4x4 matrix from 16 floats
-	ajMatrix44( float a0, float a4, float a8,  float a12,
+	Matrix44( float a0, float a4, float a8,  float a12,
 		 float a1, float a5, float a9,  float a13,
 		 float a2, float a6, float a10, float a14,
 		 float a3, float a7, float a11, float a15 );
@@ -32,7 +34,7 @@ public:
 	
 	//: get the inverse of this matrix
    // TODO: invertAff, invertOrtho, invertOrthoN, invertIdent
-	bool			invertFull( const ajMatrix44& M );
+	bool			invertFull( const Matrix44& M );
 	
    
    // all euler funcs take and return angles in radians
@@ -48,7 +50,7 @@ public:
 	void			makeIdent();
 
    //: returns an identity matrix.
-   inline static const ajMatrix44& identity() { static ajMatrix44 im( 1.0f,0.0f,0.0f,0.0f, 0.0f,1.0f,0.0f,0.0f,
+   inline static const Matrix44& identity() { static Matrix44 im( 1.0f,0.0f,0.0f,0.0f, 0.0f,1.0f,0.0f,0.0f,
                                                                  0.0f,0.0f,1.0f,0.0f, 0.0f,0.0f,0.0f,1.0f);
                                              return im; }
 	
@@ -59,13 +61,13 @@ public:
 	
 	//: this = a * b
 	// required: c, a, and b must each point to 16 floats
-	void             mult( const ajMatrix44& a, const ajMatrix44& b );
+	void             mult( const Matrix44& a, const Matrix44& b );
 	
 	//: this = M * this
-	void                    preMult( const ajMatrix44& M );
+	void                    preMult( const Matrix44& M );
 	
 	//: this = this * M
-	void                    postMult( const ajMatrix44& M );
+	void                    postMult( const Matrix44& M );
 	
 	//: returns memory element i(out of [0..15])
 	inline float&           operator[]( int i ) { return mData[i]; }
@@ -80,7 +82,7 @@ public:
 	inline const float&     operator()( const int& i, const int& j ) const { return mData[i*4+j]; }
 
 	//: this = M
-	ajMatrix44&               operator=( const ajMatrix44& M );
+	Matrix44&               operator=( const Matrix44& M );
 	
 	//: set the twist about an arbitrary axis.
 	// NOTE: this erases any translation in this matrix
@@ -91,7 +93,7 @@ public:
    void					makeTrans( float x, float y, float z );
 
 	//: set the matrix
-   void              copy( const ajMatrix44& M );
+   void              copy( const Matrix44& M );
 
    //: set the matrix with a float pointer
    // required: float pointer must point to a user-allocated array of 16 floats
@@ -109,5 +111,7 @@ private:
 	// the matrix data.
 	float mData[16];
 };
+
+}; // end namespace
 
 #endif

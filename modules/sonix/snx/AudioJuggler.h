@@ -3,11 +3,11 @@
 #ifndef AUDIOJUGGLER_H
 #define AUDIOJUGGLER_H
 #include <string>
-#include "aj/ajSoundInfo.h"
+#include "aj/SoundInfo.h"
 #include "aj/IAudioJuggler.h"
-#include "aj/ajSoundFactory.h"
-#include "aj/ajSoundImplementation.h"
-#include "aj/ajSoundAPIInfo.h"
+#include "aj/SoundFactory.h"
+#include "aj/SoundImplementation.h"
+#include "aj/SoundAPIInfo.h"
 
 class AudioJuggler : public IAudioJuggler
 {
@@ -127,7 +127,7 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const ajMatrix44& mat )
+   virtual void setListenerPosition( const aj::Matrix44& mat )
    {
       this->impl().setListenerPosition( mat );
    }
@@ -135,7 +135,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( ajMatrix44& mat )
+   virtual void getListenerPosition( aj::Matrix44& mat )
    {
       this->impl().getListenerPosition( mat );
    }
@@ -152,8 +152,8 @@ public:
     */
    virtual void changeAPI( const std::string& apiName )
    {
-      ajSoundImplementation* oldImpl = mImplementation;
-      ajSoundFactory::instance().createImplementation( apiName, mImplementation );
+      aj::SoundImplementation* oldImpl = mImplementation;
+      aj::SoundFactory::instance().createImplementation( apiName, mImplementation );
 
       // copy sound state (doesn't do binding here)
       mImplementation->copy( *oldImpl );
@@ -179,7 +179,7 @@ public:
    /*
     * configure the sound API global settings
     */
-   virtual void configure( const ajSoundAPIInfo& sai )
+   virtual void configure( const aj::SoundAPIInfo& sai )
    {
       this->impl().configure( sai );
    }   
@@ -192,7 +192,7 @@ public:
      * @postconditions alias will point to loaded sound data
      * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
      */
-   virtual void configure( const std::string& alias, const ajSoundInfo& description )
+   virtual void configure( const std::string& alias, const aj::SoundInfo& description )
    {
       this->impl().configure( alias, description );
    }   
@@ -216,11 +216,11 @@ public:
    }
    
 protected:
-   ajSoundImplementation& impl()
+   aj::SoundImplementation& impl()
    {
       if (mImplementation == NULL)
       {
-         ajSoundFactory::instance().createImplementation( "stub", mImplementation );
+         aj::SoundFactory::instance().createImplementation( "stub", mImplementation );
          mImplementation->startAPI();
          mImplementation->bindAll();
       }
@@ -228,18 +228,18 @@ protected:
    }
 private:
    /** @link dependency */
-   /*#  ajSoundFactory lnkSoundFactory; */
+   /*#  aj::SoundFactory lnkSoundFactory; */
 
    /** @link aggregation 
     * @clientCardinality 1
     * @supplierCardinality 1*/
-   ajSoundImplementation* mImplementation;
+   aj::SoundImplementation* mImplementation;
         
    /** AudioJuggler API includes objects of this type
     * @link dependency */
-   /*#  ajSoundInfo lnkSoundInfo; */
+   /*#  aj::SoundInfo lnkSoundInfo; */
 
    /** @link dependency */
-   /*#  ajSoundAPIInfo lnkajSoundAPIInfo; */
+   /*#  aj::SoundAPIInfo lnkaj::SoundAPIInfo; */
 };
 #endif //AUDIOJUGGLER_H

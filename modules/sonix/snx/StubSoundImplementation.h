@@ -3,30 +3,34 @@
 #ifndef AJSTUBSOUNDIMPLEMENTATION_H
 #define AJSTUBSOUNDIMPLEMENTATION_H
 #include <string>
-#include "aj/ajSoundImplementation.h"
-#include "aj/ajSoundInfo.h"
-#include "aj/ajSoundAPIInfo.h"
-class ajStubSoundImplementation : public ajSoundImplementation
+#include "aj/SoundImplementation.h"
+#include "aj/SoundInfo.h"
+#include "aj/SoundAPIInfo.h"
+
+namespace aj
+{
+
+class StubSoundImplementation : public aj::SoundImplementation
 {
 public:
    /**
     * constructor for the OpenAL implementation 
     */
-   ajStubSoundImplementation() : ajSoundImplementation() {}
+   StubSoundImplementation() : aj::SoundImplementation() {}
 
    /**
     * destructor for the OpenAL implementation
     */
-   virtual ~ajStubSoundImplementation()
+   virtual ~StubSoundImplementation()
    {
    }
 
    /**
      * every implementation can return a new copy of itself
      */
-   virtual void clone( ajSoundImplementation* &newCopy )
+   virtual void clone( aj::SoundImplementation* &newCopy )
    {
-      newCopy = new ajStubSoundImplementation;
+      newCopy = new StubSoundImplementation;
       
       // copy state, so that we return a true "clone"
       newCopy->copy( *this );
@@ -40,7 +44,7 @@ public:
     */
    virtual void trigger(const std::string & alias, const unsigned int & looping = 0)
    {
-      ajSoundImplementation::trigger( alias, looping );
+      aj::SoundImplementation::trigger( alias, looping );
       // do nothing
    }
 
@@ -50,7 +54,7 @@ public:
     */
    virtual void stop(const std::string & name)
    {
-      ajSoundImplementation::stop( name );
+      aj::SoundImplementation::stop( name );
       // do nothing
    }
 
@@ -59,7 +63,7 @@ public:
     */
    virtual void setPosition( const std::string& alias, float x, float y, float z )
    {
-      ajSoundImplementation::setPosition( alias, x, y, z );
+      aj::SoundImplementation::setPosition( alias, x, y, z );
    }
 
    /**
@@ -69,23 +73,23 @@ public:
     */
    virtual void getPosition( const std::string& alias, float& x, float& y, float& z )
    {
-      ajSoundImplementation::getPosition( alias, x, y, z );
+      aj::SoundImplementation::getPosition( alias, x, y, z );
    }
    
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const ajMatrix44& mat )
+   virtual void setListenerPosition( const aj::Matrix44& mat )
    {
-      ajSoundImplementation::setListenerPosition( mat );
+      aj::SoundImplementation::setListenerPosition( mat );
    }
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( ajMatrix44& mat )
+   virtual void getListenerPosition( aj::Matrix44& mat )
    {
-      ajSoundImplementation::getListenerPosition( mat );
+      aj::SoundImplementation::getListenerPosition( mat );
    }
    
    /**
@@ -123,9 +127,9 @@ public:
      * @postconditions alias will point to loaded sound data
      * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
      */
-   virtual void configure( const std::string& alias, const ajSoundInfo& description )
+   virtual void configure( const std::string& alias, const aj::SoundInfo& description )
    {
-      ajSoundImplementation::configure( alias, description );
+      aj::SoundImplementation::configure( alias, description );
       // do nothing
    }
 
@@ -135,7 +139,7 @@ public:
      */
    virtual void remove( const std::string alias )
    {
-      ajSoundImplementation::remove( alias );
+      aj::SoundImplementation::remove( alias );
       // do nothing
    }
 
@@ -186,16 +190,19 @@ public:
     */
    virtual void step( const float & timeElapsed )
    {
-      ajSoundImplementation::step( timeElapsed );
+      aj::SoundImplementation::step( timeElapsed );
       // do nothing
    }
 
 private:  
 
    /** @link dependency */
-   /*#  ajSoundInfo lnkSoundInfo; */
+   /*#  aj::SoundInfo lnkSoundInfo; */
 
    /** @link dependency */
-   /*#  ajSoundAPIInfo lnkajSoundAPIInfo; */
+   /*#  aj::SoundAPIInfo lnkSoundAPIInfo; */
 };
+
+}; // end namespace
+
 #endif //AJSTUBSOUNDIMPLEMENTATION_H

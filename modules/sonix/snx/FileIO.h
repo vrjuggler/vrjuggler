@@ -31,13 +31,14 @@
 #ifndef CFILEIO_INCLUDED
 #define CFILEIO_INCLUDED
 
-#include "Endian.h" //needed for kev::bigEndian/kev::littleEndian funcs
 #include <fstream.h>
 #include <string>
 #include <vector>
 #include <stdio.h> // for FILE
 
-namespace CFileIO
+#include "aj/Endian.h" //needed for ajEndian::isBig, ajEndian::isLittle funcs
+
+namespace ajFileIO
 {
 	//: true - 
 	inline bool fileExists( const char* const name )
@@ -119,10 +120,10 @@ namespace CFileIO
 		int size = ::fread( &data, sizeof(typeT), 1, fp );
 
 		// if we're not on a little endian machine (intel is little endian) then reverse the bytes.
-		if (fileByteOrdering == LITTLE && kev::bigEndian() ||
-         fileByteOrdering == BIG && kev::littleEndian())
+		if (fileByteOrdering == LITTLE && ajEndian::isBig() ||
+         fileByteOrdering == BIG && ajEndian::isLittle())
       {
-         kev::byteReverse( data );
+         ajEndian::byteReverse( data );
 		}
 
 		return size;
@@ -137,10 +138,10 @@ namespace CFileIO
 
 		// if we're not on a little endian machine (i.e. intel is little endian, mips is big) 
       // then reverse the bytes.
-		if (fileByteOrdering == LITTLE && kev::bigEndian() ||
-         fileByteOrdering == BIG && kev::littleEndian())
+		if (fileByteOrdering == LITTLE && ajEndian::isBig() ||
+         fileByteOrdering == BIG && ajEndian::isLittle())
       {
-			kev::byteReverse( tempData );
+			ajEndian::byteReverse( tempData );
 		}
 			
 		int size = ::fwrite( &tempData, 1, sizeof(typeT), fp );

@@ -1,9 +1,12 @@
 
-#include "aj/ajMath.h"
-#include "aj/ajMatrix44.h"
+#include "aj/Math.h"
+#include "aj/Matrix44.h"
+
+namespace aj
+{
 
 //: set the matrix with 16 floats
-void ajMatrix44::set( float a0, float a4, float a8,  float a12,
+void Matrix44::set( float a0, float a4, float a8,  float a12,
        float a1, float a5, float a9,  float a13,
        float a2, float a6, float a10, float a14,
        float a3, float a7, float a11, float a15 )
@@ -15,7 +18,7 @@ void ajMatrix44::set( float a0, float a4, float a8,  float a12,
 }
 
 //: set the matrix with a pointer to 16 floats
-void ajMatrix44::set( const float* m )
+void Matrix44::set( const float* m )
 {
    this->set( m[0], m[4], m[8],  m[12],
               m[1], m[5], m[9],  m[13],
@@ -23,13 +26,13 @@ void ajMatrix44::set( const float* m )
               m[3], m[7], m[11], m[15] );
 }
 
-void ajMatrix44::copy( const ajMatrix44& mat )
+void Matrix44::copy( const Matrix44& mat )
 {
    this->set( mat.mData );
 }
 
 //: this = M
-ajMatrix44& ajMatrix44::operator=( const ajMatrix44& mat )
+Matrix44& Matrix44::operator=( const Matrix44& mat )
 {
    this->copy( mat );
    return *this;
@@ -37,20 +40,20 @@ ajMatrix44& ajMatrix44::operator=( const ajMatrix44& mat )
 
 //: Default Constructor
 //  NOTE: does no initialization, call identity() to init to identity matrix
-ajMatrix44::ajMatrix44()
+Matrix44::Matrix44()
 {
    this->makeIdent();
 }
 
      
 //: Copy constructor
-ajMatrix44::ajMatrix44( const ajMatrix44& mat )
+Matrix44::Matrix44( const Matrix44& mat )
 {
    this->copy( mat );
 }
 
 //: Construct 4x4 matrix from 16 floats
-ajMatrix44::ajMatrix44( float a0, float a4, float a8,  float a12,
+Matrix44::Matrix44( float a0, float a4, float a8,  float a12,
        float a1, float a5, float a9,  float a13,
        float a2, float a6, float a10, float a14,
        float a3, float a7, float a11, float a15 )
@@ -62,10 +65,10 @@ ajMatrix44::ajMatrix44( float a0, float a4, float a8,  float a12,
 }
 
 //: get the inverse of this matrix
-bool ajMatrix44::invertFull( const ajMatrix44& mat )
+bool Matrix44::invertFull( const Matrix44& mat )
 {
-   ajMatrix44  a = mat;   // source
-   ajMatrix44&  b = *this; // dest
+   Matrix44  a = mat;   // source
+   Matrix44&  b = *this; // dest
    
    int   n = 4;
    int    i, j, k;
@@ -113,7 +116,7 @@ bool ajMatrix44::invertFull( const ajMatrix44& mat )
             pivot = m[ r[ k] ][ c[ k] ];
 
 
-            if (fabs( pivot) <= 1e-20)
+            if (ajMath::abs( pivot) <= 1e-20)
             {
                   //cerr << "*** pivot = %f in mat_inv. ***\n";
                   //exit( 0);
@@ -158,7 +161,7 @@ bool ajMatrix44::invertFull( const ajMatrix44& mat )
 }
 
 // takes angles in radians..
-void ajMatrix44::getEulerXYZ( float& xRot, float& yRot, float& zRot ) const
+void Matrix44::getEulerXYZ( float& xRot, float& yRot, float& zRot ) const
 {
    float cz;
 
@@ -169,7 +172,7 @@ void ajMatrix44::getEulerXYZ( float& xRot, float& yRot, float& zRot ) const
 }   
 
 // takes angles in radians..
-void ajMatrix44::getEulerZYX(  float& zRot, float& yRot, float& xRot ) const
+void Matrix44::getEulerZYX(  float& zRot, float& yRot, float& xRot ) const
 {
    float sx;
 
@@ -180,7 +183,7 @@ void ajMatrix44::getEulerZYX(  float& zRot, float& yRot, float& xRot ) const
 }  
 
 // takes angles in radians..
-void ajMatrix44::makeEulerXYZ( const float& xRot, const float& yRot, const float& zRot )
+void Matrix44::makeEulerXYZ( const float& xRot, const float& yRot, const float& zRot )
 {
    float sx = ajMath::sin( xRot );  float cx = ajMath::cos( xRot );
    float sy = ajMath::sin( yRot );  float cy = ajMath::cos( yRot );
@@ -195,7 +198,7 @@ void ajMatrix44::makeEulerXYZ( const float& xRot, const float& yRot, const float
 }   
 
 // takes angles in radians..
-void ajMatrix44::makeEulerZYX( const float& zRot, const float& yRot, const float& xRot )
+void Matrix44::makeEulerZYX( const float& zRot, const float& yRot, const float& xRot )
 {
    float sz = ajMath::sin( zRot);  float cz = ajMath::cos( zRot );
    float sy = ajMath::sin( yRot);  float cy = ajMath::cos( yRot );
@@ -210,7 +213,7 @@ void ajMatrix44::makeEulerZYX( const float& zRot, const float& yRot, const float
 }   
 
 //: get the translation component of this matrix
-void ajMatrix44::getTrans( float& tx, float& ty, float& tz ) const
+void Matrix44::getTrans( float& tx, float& ty, float& tz ) const
 {
    tx = mData[12];
    ty = mData[13];
@@ -218,7 +221,7 @@ void ajMatrix44::getTrans( float& tx, float& ty, float& tz ) const
 }
 
 //: make matrix an identity matrix
-void ajMatrix44::makeIdent()
+void Matrix44::makeIdent()
 {
    mData[0] = 1.0f; mData[4] = 0.0f; mData[8]  = 0.0f; mData[12] = 0.0f;
    mData[1] = 0.0f; mData[5] = 1.0f; mData[9]  = 0.0f; mData[13] = 0.0f;
@@ -229,7 +232,7 @@ void ajMatrix44::makeIdent()
 //: c = a * b
 // required: c, a, and b must each point to 16 floats
 // WARNING: This function is dangerous since you could pass a bad pointer, use at your own risk
-void ajMatrix44::mult( const float* a, const float* b )
+void Matrix44::mult( const float* a, const float* b )
 {
    float* c = this->mData;
    c[0]  = a[0] * b[0]  + a[4] * b[1]  + a[8]  * b[2]  + a[12] * b[3];
@@ -254,23 +257,23 @@ void ajMatrix44::mult( const float* a, const float* b )
 }
 
 //: c = a * b
-void ajMatrix44::mult( const ajMatrix44& a, const ajMatrix44& b )
+void Matrix44::mult( const Matrix44& a, const Matrix44& b )
 {
    this->mult( a.data(), b.data() );
 }
 
 //: this = M * this
-void ajMatrix44::preMult( const ajMatrix44& mat )
+void Matrix44::preMult( const Matrix44& mat )
 {
-   ajMatrix44 result;
+   Matrix44 result;
    result.mult( mat, *this );
    this->copy( result );
 }
 
 //: this = this * M
-void ajMatrix44::postMult( const ajMatrix44& mat )
+void Matrix44::postMult( const Matrix44& mat )
 {
-   ajMatrix44 result;
+   Matrix44 result;
    result.mult( *this, mat );
    this->copy( result );
 }
@@ -278,7 +281,7 @@ void ajMatrix44::postMult( const ajMatrix44& mat )
 
 //: set the twist about an arbitrary axis.
 // NOTE: this erases any translation in this matrix
-void ajMatrix44::makeRot( const float& rad, const float& x, const float& y, const float& z )
+void Matrix44::makeRot( const float& rad, const float& x, const float& y, const float& z )
 {
    float cosine = ajMath::cos( rad );
    float sine = ajMath::sin( rad );
@@ -309,14 +312,14 @@ void ajMatrix44::makeRot( const float& rad, const float& x, const float& y, cons
    mData[15] = 1;
 }
 
-void ajMatrix44::setTrans( float tx, float ty, float tz )
+void Matrix44::setTrans( float tx, float ty, float tz )
 {
    mData[12] = tx;
    mData[13] = ty;
    mData[14] = tz;
 }
 
-void ajMatrix44::makeTrans( float tx, float ty, float tz )
+void Matrix44::makeTrans( float tx, float ty, float tz )
 {
    this->makeIdent();
    this->setTrans( tx, ty, tz );
@@ -326,7 +329,7 @@ void ajMatrix44::makeTrans( float tx, float ty, float tz )
 
 /*
 //: make this matrix equal to it's transpose
-void ajMatrix44::transpose()
+void Matrix44::transpose()
 {
    // Make a transposed copy(don't do the diagonals).
 
@@ -345,3 +348,7 @@ void ajMatrix44::transpose()
 }
 
 */
+
+      
+}; // end namespace
+

@@ -4,17 +4,20 @@
 #define AJSOUNDIMPLEMENTATION_H
 #include <string>
 #include <map>
-#include "aj/ajMatrix44.h"
-#include "aj/ajSoundInfo.h"
-#include "aj/ajSoundAPIInfo.h"
+#include "aj/Matrix44.h"
+#include "aj/SoundInfo.h"
+#include "aj/SoundAPIInfo.h"
 
-class ajSoundImplementation
+namespace aj
+{
+
+class SoundImplementation
 {
 public:
    /**
     * @semantics default constructor 
     */
-   ajSoundImplementation() : mSounds()
+   SoundImplementation() : mSounds()
    {
       mListenerPos[0] = 0.0f;
       mListenerPos[1] = 0.0f;
@@ -24,12 +27,12 @@ public:
    /**
      * every implementation can return a new copy of itself
      */
-   virtual void clone( ajSoundImplementation* &newCopy ) = 0; 
+   virtual void clone( SoundImplementation* &newCopy ) = 0; 
    
    /**
     * @semantics destructor 
     */
-   virtual ~ajSoundImplementation()
+   virtual ~SoundImplementation()
    {
       // make sure the API has gracefully exited.
       this->shutdownAPI();
@@ -39,7 +42,7 @@ public:
     * copies current state of the system from one API to another.
     * @semantics copies sound state.  doesn't do binding here, you must do that separately
     */
-   void copy( const ajSoundImplementation& si )
+   void copy( const SoundImplementation& si )
    {
       // copy over the current state
       mSounds = si.mSounds;
@@ -72,7 +75,7 @@ public:
     */
    virtual void setRetriggerable( const std::string& alias, bool onOff )
    {
-      // todo, maybe set a flag within ajSoundInfo?
+      // todo, maybe set a flag within aj::SoundInfo?
    }
 
    /**
@@ -155,7 +158,7 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const ajMatrix44& mat )
+   virtual void setListenerPosition( const aj::Matrix44& mat )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       mListenerPos.copy( mat );
@@ -164,7 +167,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( ajMatrix44& mat )
+   virtual void getListenerPosition( aj::Matrix44& mat )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       
@@ -194,7 +197,7 @@ public:
    /*
     * configure/reconfigure the sound API global settings
     */
-   virtual void configure( const ajSoundAPIInfo& sai )
+   virtual void configure( const aj::SoundAPIInfo& sai )
    {
       mSoundAPIInfo = sai;
    }
@@ -207,7 +210,7 @@ public:
      * @postconditions alias will point to loaded sound data
      * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
      */
-   virtual void configure( const std::string& alias, const ajSoundInfo& description )
+   virtual void configure( const std::string& alias, const aj::SoundInfo& description )
    {
       mSounds[alias] = description;
       if (this->isStarted())
@@ -272,23 +275,26 @@ public:
     */
    virtual void unbind( const std::string& alias ) = 0;
 
-   ajSoundInfo& lookup( const std::string& alias )
+   aj::SoundInfo& lookup( const std::string& alias )
    {
       return mSounds[alias];
    }
 
 protected:
-   ajSoundAPIInfo mSoundAPIInfo;
-   std::map<std::string, ajSoundInfo> mSounds;
+   aj::SoundAPIInfo mSoundAPIInfo;
+   std::map<std::string, aj::SoundInfo> mSounds;
    /*
     * position of the observer/listener
     */
-   ajMatrix44 mListenerPos;
+   aj::Matrix44 mListenerPos;
    
    /** This class uses a std::map of sound infos for alias lookup
     * @link aggregation
     * @supplierCardinality 0..*
     * @clientCardinality 1*/
-   //ajSoundInfo lnkSoundInfo_not_used_see_one_above;
+   //aj::SoundInfo lnkSoundInfo_not_used_see_one_above;
 };
+
+}; // end namespace
+
 #endif //AJSOUNDIMPLEMENTATION_H

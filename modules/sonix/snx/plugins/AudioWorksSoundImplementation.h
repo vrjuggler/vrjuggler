@@ -4,29 +4,32 @@
 #define AJAUDIOWORKSSOUNDIMPLEMENTATION_H
 #include <iostream> // std::cout std::cerr
 #include <string>
-#include "aj/ajSoundImplementation.h"
-#include "aj/ajSoundInfo.h"
-#include "aj/ajSoundAPIInfo.h"
+#include "aj/SoundImplementation.h"
+#include "aj/SoundInfo.h"
+#include "aj/SoundAPIInfo.h"
 
 #include <PSI/aw.h> // for audioworks
 
-class ajAudioWorksSoundImplementation : public ajSoundImplementation
+namespace aj
+{
+
+class AudioWorksSoundImplementation : public aj::SoundImplementation
 {
 public:
    /**
     * constructor for the OpenAL implementation 
     */
-   ajAudioWorksSoundImplementation();
+   AudioWorksSoundImplementation();
 
    /**
     * destructor for the OpenAL implementation
     */
-   virtual ~ajAudioWorksSoundImplementation();
+   virtual ~AudioWorksSoundImplementation();
 
    /**
      * every implementation can return a new copy of itself
      */
-   virtual void clone( ajSoundImplementation* &newCopy );
+   virtual void clone( aj::SoundImplementation* &newCopy );
    
    /**
     * @input alias of the sound to trigger, and number of times to play
@@ -83,12 +86,12 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const ajMatrix44& mat );
+   virtual void setListenerPosition( const aj::Matrix44& mat );
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( ajMatrix44& mat );
+   virtual void getListenerPosition( aj::Matrix44& mat );
 
    /**
     * start the sound API, creating any contexts or other configurations at startup
@@ -113,7 +116,7 @@ public:
    /**
     * configure the sound API global settings
     */
-   virtual void configure( const ajSoundAPIInfo& sai );
+   virtual void configure( const aj::SoundAPIInfo& sai );
 
    /**
      * configure/reconfigure a sound
@@ -123,7 +126,7 @@ public:
      * @postconditions alias will point to loaded sound data
      * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
      */
-   virtual void configure( const std::string& alias, const ajSoundInfo& description );
+   virtual void configure( const std::string& alias, const aj::SoundInfo& description );
 
    /**
      * remove a configured sound, any future reference to the alias will not
@@ -169,11 +172,11 @@ public:
    virtual void step( const float & timeElapsed );
 
     /** @link dependency */
-    /*#  ajSoundInfo lnkSoundInfo; */
+    /*#  aj::SoundInfo lnkSoundInfo; */
 protected:
    float mTotalTimeElapsed;
    
-   class ajAWSoundInfo
+   class AWSoundInfo
    {
    public:
       awWave *myWave;   // Each wave must have a sound
@@ -181,7 +184,7 @@ protected:
       awPlayer* mPlayer; // the player (so we can support non-positional sounds, attach the sound to the listener)
    };   
    
-   std::map<std::string, ajAWSoundInfo> mBindTable;
+   std::map<std::string, AWSoundInfo> mBindTable;
 
    awEngine *myEngine;
    awChannel *myChannel;
@@ -190,9 +193,11 @@ protected:
    awObserver *myObs;
 
    /** @link dependency */
-   /*#  ajSoundAPIInfo lnkajSoundAPIInfo; */
+   /*#  aj::SoundAPIInfo lnkaj::SoundAPIInfo; */
 
 };
+
+}; // end namespace 
 
 
 #endif //AJAUDIOWORKSSOUNDIMPLEMENTATION_H

@@ -6,33 +6,36 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "aj/ajSoundImplementation.h"
-#include "aj/ajSoundInfo.h"
+#include "aj/SoundImplementation.h"
+#include "aj/SoundInfo.h"
+#include "aj/SoundAPIInfo.h"
 
 #include <AL/al.h>
 #include <AL/alc.h>
-#include "aj/ajSoundAPIInfo.h"
 
-class ajOpenALSoundImplementation : public ajSoundImplementation
+namespace aj
+{
+
+class OpenALSoundImplementation : public aj::SoundImplementation
 {
 public:
     
    /**
     * constructor for the OpenAL implementation 
     */
-   ajOpenALSoundImplementation();
+   OpenALSoundImplementation();
 
    /**
     * destructor for the OpenAL implementation
     */
-   virtual ~ajOpenALSoundImplementation();
+   virtual ~OpenALSoundImplementation();
 
    /**
      * every implementation can return a new copy of itself
      */
-   virtual void clone( ajSoundImplementation* &newCopy )
+   virtual void clone( aj::SoundImplementation* &newCopy )
    {
-      newCopy = new ajOpenALSoundImplementation;
+      newCopy = new OpenALSoundImplementation;
       
       // copy state, so that we return a true "clone"
       newCopy->copy( *this );
@@ -53,7 +56,7 @@ public:
     */
    virtual void setRetriggerable( const std::string& alias, bool onOff )
    {
-      ajSoundImplementation::setRetriggerable( alias, onOff );
+      aj::SoundImplementation::setRetriggerable( alias, onOff );
    }
 
    /**
@@ -92,12 +95,12 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const ajMatrix44& mat );
+   virtual void setListenerPosition( const aj::Matrix44& mat );
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( ajMatrix44& mat );
+   virtual void getListenerPosition( aj::Matrix44& mat );
    
 public:
    /**
@@ -127,9 +130,9 @@ public:
       return mDev != NULL && mContextId != NULL;
    }
 
-   virtual void configure( const ajSoundAPIInfo& sai )
+   virtual void configure( const aj::SoundAPIInfo& sai )
    {
-      ajSoundImplementation::configure( sai );
+      aj::SoundImplementation::configure( sai );
       // TODO: configure the engine based on the settings!!
    }
 
@@ -141,7 +144,7 @@ public:
      * @postconditions alias will point to loaded sound data
      * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
      */
-   virtual void configure( const std::string& alias, const ajSoundInfo& description );
+   virtual void configure( const std::string& alias, const aj::SoundInfo& description );
 
    /**
      * remove a configured sound, any future reference to the alias will not
@@ -190,23 +193,26 @@ public:
 
 private:
     /** @link dependency */
-    /*#  ajSoundInfo lnkSoundInfo; */
+    /*#  aj::SoundInfo lnkSoundInfo; */
    
-   struct ajAlSoundInfo
+   struct AlSoundInfo
    {
-      ajAlSoundInfo() : data(), source( 0 ), buffer( 0 ) 
+      AlSoundInfo() : data(), source( 0 ), buffer( 0 ) 
       {
       }
 
       ALuint source, buffer;
-      std::vector<unsigned char> data; // TODO: use the source ajSoundInfo
+      std::vector<unsigned char> data; // TODO: use the source aj::SoundInfo
                                        // instead of this separate copy of the data...
    };
-   std::map< std::string, ajAlSoundInfo > mBindLookup;
+   std::map< std::string, AlSoundInfo > mBindLookup;
    void*       mContextId;
    ALCdevice*  mDev;
 
    /** @link dependency */
-   /*#  ajSoundAPIInfo lnkajSoundAPIInfo; */
+   /*#  aj::SoundAPIInfo lnkaj::SoundAPIInfo; */
 };
+
+}; // end namespace
+
 #endif //AJOPENALSOUNDIMPLEMENTATION_H
