@@ -77,7 +77,7 @@ typedef u_int32_t thread_id_t;
 //!PUBLIC_API:
 class vjThreadPosix : public vjBaseThread
 {
-public:  // ---- Thread CREATION and SPAWNING ----- //
+public:  // ---- Thread CREATION and SPAWNING -----
     // -----------------------------------------------------------------------
     //: Spawning constructor.
     //
@@ -140,7 +140,7 @@ public:  // ---- Thread CREATION and SPAWNING ----- //
 private:
    vjBaseThreadFunctor* mUserThreadFunctor;     // The functor to call when the thread starts
 
-public:  // ----- Various other thread functions ------ //
+public:  // ----- Various other thread functions ------
 
     // -----------------------------------------------------------------------
     //: Make the calling thread wait for the termination of this thread.
