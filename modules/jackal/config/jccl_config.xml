@@ -9,4 +9,8 @@
       <file name="${TWEEK_BASE_DIR}/bin/beans/jccl_config.jar"
          class="org.vrjuggler.jccl.config.ConfigManagerService"/>
    </service>
+   <service name="ConfigBroker">
+      <file name="${TWEEK_BASE_DIR}/bin/beans/jccl_config.jar"
+            class="org.vrjuggler.jccl.config.ConfigBrokerImpl" />
+   </service>
 </beanlist>
