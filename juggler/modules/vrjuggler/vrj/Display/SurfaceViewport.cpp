@@ -63,26 +63,18 @@ void SurfaceViewport::config(jccl::ConfigElementPtr element)
    mType = SURFACE;
 
    // Read in the corners
-   jccl::ConfigElementPtr ll_corner_elt =
-      element->getProperty<jccl::ConfigElementPtr>("corners",0);
-   jccl::ConfigElementPtr lr_corner_elt =
-      element->getProperty<jccl::ConfigElementPtr>("corners",1);
-   jccl::ConfigElementPtr ur_corner_elt =
-      element->getProperty<jccl::ConfigElementPtr>("corners",2);
-   jccl::ConfigElementPtr ul_corner_elt =
-      element->getProperty<jccl::ConfigElementPtr>("corners",3);
-   mLLCorner.set(ll_corner_elt->getProperty<float>("x"),
-                 ll_corner_elt->getProperty<float>("y"),
-                 ll_corner_elt->getProperty<float>("z"));
-   mLRCorner.set(lr_corner_elt->getProperty<float>("x"),
-                 lr_corner_elt->getProperty<float>("y"),
-                 lr_corner_elt->getProperty<float>("z"));
-   mURCorner.set(ur_corner_elt->getProperty<float>("x"),
-                 ur_corner_elt->getProperty<float>("y"),
-                 ur_corner_elt->getProperty<float>("z"));
-   mULCorner.set(ul_corner_elt->getProperty<float>("x"),
-                 ul_corner_elt->getProperty<float>("y"),
-                 ul_corner_elt->getProperty<float>("z"));
+   mLLCorner.set(element->getProperty<float>("lower_left_corner", 0),
+                 element->getProperty<float>("lower_left_corner", 1),
+                 element->getProperty<float>("lower_left_corner", 2));
+   mLRCorner.set(element->getProperty<float>("lower_right_corner", 0),
+                 element->getProperty<float>("lower_right_corner", 1),
+                 element->getProperty<float>("lower_right_corner", 2));
+   mURCorner.set(element->getProperty<float>("upper_right_corner", 0),
+                 element->getProperty<float>("upper_right_corner", 1),
+                 element->getProperty<float>("upper_right_corner", 2));
+   mULCorner.set(element->getProperty<float>("upper_left_corner", 0),
+                 element->getProperty<float>("upper_left_corner", 1),
+                 element->getProperty<float>("upper_left_corner", 2));
 
    // Calculate the rotation and the pts
 //   calculateSurfaceRotation();
