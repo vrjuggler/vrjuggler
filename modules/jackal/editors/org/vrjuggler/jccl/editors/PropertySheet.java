@@ -55,7 +55,9 @@ public class PropertySheet extends PropertyComponent
 {
    public static final int LABEL_COLUMN       = 0;
    public static final int EDITOR_COLUMN      = 1;
-   public static final int DELETE_ICON_COLUMN = 2;
+   public static final int UP_ICON_COLUMN     = 2;
+   public static final int DOWN_ICON_COLUMN   = 3;
+   public static final int DELETE_ICON_COLUMN = 4;
 
    public static final int START_ROW                = 1;
    public static final int VAR_LIST_VALUE_START_ROW = 2;
@@ -76,7 +78,7 @@ public class PropertySheet extends PropertyComponent
       double f = TableLayout.FILL;
       double p = TableLayout.PREFERRED;
       double size[][] =
-         {{f, f, 16},    // Columns
+         {{f, f, 16, 16, 16},    // Columns
           {p, p}};   // Rows
 
       this.setLayout(new TableLayout(size)); 

@@ -624,6 +624,67 @@ public class ConfigContextModel
          }
       }
 
+      public void propertyValueOrderChanged(ConfigElementEvent evt)
+      {
+         ConfigElement elt = (ConfigElement) evt.getSource();
+         PropertyDefinition prop_def =
+            elt.getDefinition().getPropertyDefinition(evt.getProperty());
+
+         // If the property is not an embedded element type, we don't care
+         // about it.
+         if ( prop_def.getType() != ConfigElement.class )
+         {
+            return;
+         }
+
+         // Add the new property to each element node in the tree.
+         for (Iterator itr = getNodesFor(elt).iterator(); itr.hasNext(); )
+         {
+            DefaultMutableTreeNode elt_node =
+               (DefaultMutableTreeNode)itr.next();
+
+            // Go through the children of this node looking for the property
+            // that maches.
+            for ( Enumeration e = elt_node.children(); e.hasMoreElements(); )
+            {
+               DefaultMutableTreeNode prop_node =
+                  (DefaultMutableTreeNode) e.nextElement();
+               
+               String property_token =
+                  ((PropertyDefinition) prop_node.getUserObject()).getToken();
+               String changed_property = evt.getProperty();
+               
+               if ( property_token.equals(changed_property) )
+               {
+                  int start_index = Math.min(evt.getIndex0(), evt.getIndex1());
+                  int end_index   = Math.max(evt.getIndex0(), evt.getIndex1());
+
+                  List removed_children = new ArrayList();
+                  for ( int c = start_index; c <= end_index; ++c )
+                  {
+                     removed_children.add(getChild(prop_node, c));
+                  }
+
+                  for ( Iterator c = removed_children.iterator();
+                        c.hasNext(); )
+                  {
+                     removeNodeFromParent((MutableTreeNode) c.next());
+                  }
+
+                  for ( int v = start_index; v <= end_index; ++v )
+                  {
+                     // Create a new node for the reordered property value.
+                     DefaultMutableTreeNode new_node =
+                        new DefaultMutableTreeNode(elt.getProperty(property_token, v));
+
+                     // Add the new node into the tree.
+                     insertNodeInto(new_node, prop_node, v);
+                  }
+               }
+            }
+         }
+      }
+
       public void propertyValueAdded(ConfigElementEvent evt)
       {
          ConfigElement elt = (ConfigElement)evt.getSource();

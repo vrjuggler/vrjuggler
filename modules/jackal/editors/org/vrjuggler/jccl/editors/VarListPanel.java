@@ -142,6 +142,25 @@ public class VarListPanel
       repaint();
    }
 
+   /**
+    * @since 0.92.11
+    */
+   public void propertyValueOrderChanged(ConfigElementEvent evt)
+   {
+      // XXX: We could also test against mConfigElement == elm
+      ConfigElement elm = (ConfigElement)evt.getSource();
+      PropertyDefinition prop_def =
+         elm.getDefinition().getPropertyDefinition(evt.getProperty());
+
+      PropertySheetFactory f = PropertySheetFactory.instance();
+      f.updateValueOrdering((PropertySheet) mComponent, elm, prop_def,
+                            Math.min(evt.getIndex0(), evt.getIndex1()),
+                            Math.max(evt.getIndex0(), evt.getIndex1()));
+
+      revalidate();
+      repaint();
+   }
+
    public void propertyValueRemoved(ConfigElementEvent evt)
    {
       revalidate();

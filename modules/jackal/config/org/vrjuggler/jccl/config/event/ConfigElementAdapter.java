@@ -40,6 +40,11 @@ public abstract class ConfigElementAdapter
 {
    public void nameChanged(ConfigElementEvent evt) {}
    
+   /**
+    * @since 0.92.11
+    */
+   public void propertyValueOrderChanged(ConfigElementEvent evt) {}
+   
    public void propertyValueChanged(ConfigElementEvent evt) {}
    
    public void propertyValueAdded(ConfigElementEvent evt) {}
