@@ -1,11 +1,11 @@
 <HTML>
 <HEAD>
-<TITLE>Include File Chunk</TITLE>
+<TITLE>Include Descriptions File Chunk</TITLE>
 </HEAD>
 
 <BODY BGCOLOR="#ffffcc">
 
-<H2>Include File Chunk</H2>
+<H2>Include Descriptions File Chunk</H2>
 
 <TABLE BORDER="1">
   <TR>
@@ -13,8 +13,8 @@
       <B>Include File</B>
     </TD>
     <TD>
-      Chunk token: ``<TT>vjIncludeFile</TT>''<BR>
-      Give the name of an additional config file to be loaded.
+      Chunk token: ``<TT>vjIncludeDescFile</TT>''<BR>
+      Give the name of an additional ChunkDesc file to be loaded.
     </TD>
   </TR>
   <TR>
@@ -33,23 +33,22 @@
       File names can be prefixed with the strings <TT>$HOME</TT> or
       <TT>$VJ_BASE_DIR</TT>.  These strings will be replaced with the
       user's home directory and the VR Juggler install directory, respectively.
-      For example, a name might be ``<TT>$HOME/.vjconfig/simulator.config</TT>''
-      or ``<TT>$VJ_BASE_DIR/Data/configFile/C2.config</TT>''.
+      For example, a name might be ``<TT>$HOME/myapp/myapp.desc</TT>''.
       <p>
-      File names in include chunks may be relative pathnames (e.g. 
-      ``../foo.config'').  <i>The name is relative to the location of the 
-      file that contains the vjIncludeFile chunk</i>.
+      File names in vjIncludeDescFile chunks may be relative pathnames (e.g. 
+      ``../foo.desc'').  <i>The name is relative to the location of the 
+      file that contains the vjIncludeDescFile chunk</i>.
     </TD>
   </TR>
 </TABLE>
 
-<H3>Include File chunk definition</H3>
+<H3>Include Descriptions File chunk definition</H3>
 
 <PRE>
-chunk vjIncludeFile "Include File" "File that should be loaded along with this one"
+chunk vjIncludeDescFile "Include Descriptions File" "Chunk Descriptions File 
+                that should be loaded before processing the rest of this file"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   end
-
 </PRE>
 
 </BODY>
