@@ -70,6 +70,8 @@ public class TweekCore
       findBeans(System.getProperty("TWEEK_BASE_DIR") + File.separator +
                 "bin" + File.separator + "beans");
 
+      String[] new_args = parseTweekArgs(args);
+
       // Load the service Beans into the services registry.
       buildServiceRegistry();
 
@@ -82,7 +84,7 @@ public class TweekCore
 
          if ( service != null )
          {
-            service.setCommandLineArgs(args);
+            service.setCommandLineArgs(new_args);
          }
       }
       catch (ClassCastException e)
@@ -127,12 +129,49 @@ public class TweekCore
    {
       try
       {
-         BeanCollectionBuilder.instance().build(path, true);
+         BeanCollectionBuilder.instance().build(path, ! path.endsWith(".xml"));
       }
       catch (org.vrjuggler.tweek.beans.BeanPathException e)
       {
          System.out.println("WARNING: Invalid path " + path);
       }
+   }
+
+   /**
+    * Looks through the given array of arguments for any that are specific to
+    * the Tweek Java GUI.  Those that are recognized are removed and handled
+    * here.  Unrecognized options are left in the array.  The remaining
+    * arguments are returned to the caller in a new array.
+    *
+    * @post Any Tweek-specific arguments are removed and a new array without
+    *       those arguments is returned.
+    */
+   protected String[] parseTweekArgs (String[] args)
+   {
+      Vector save_args = new Vector();
+
+      for ( int i = 0; i < args.length; i++ )
+      {
+         if ( args[i].startsWith("--beanpath=") )
+         {
+            int start = args[i].indexOf('=') + 1;
+            String path = args[i].substring(start);
+            findBeans(path);
+         }
+         else
+         {
+            save_args.add(args[i]);
+         }
+      }
+
+      String[] new_args = null;
+
+      if ( save_args.size() > 0 )
+      {
+         new_args = (String[]) save_args.toArray();
+      }
+
+      return new_args;
    }
 
    protected void buildServiceRegistry ()
