@@ -45,6 +45,9 @@
 /* Define if using POSIX threads Draft 10 (the "final" draft). */
 #undef _PTHREADS_DRAFT_10
 
+/* Define to use POSIX semaphores. */
+#undef VJ_POSIX_SEMAPHORES
+
 /* Define to use the IRIX sproc(2) threading model instead of POSIX threads. */
 #undef VJ_IRIX_SPROC
 
