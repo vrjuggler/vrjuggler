@@ -34,6 +34,8 @@ VJGLOVE_SRCS	:= vjGlove.cpp
 ifneq (@OS_TYPE@, Win32)
 VJGLOVE_SRCS	+= CyberGloveBasic.cpp		\
                    vjCyberGlove.cpp		\
+                   fsPinchGlove.cpp		\
+                   vjPinchGlove.cpp		\
                    vt_glove.cpp			\
         	   vt_error.cpp			\
                    vt_init.cpp			\
