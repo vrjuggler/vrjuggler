@@ -312,7 +312,7 @@ public:
    BaseThread* getThread(IdxType index)
    {
       //std::hash_map<IdxType, BaseThread*>::iterator i;
-      std::map<IdxType, BaseThread*>::iterator i;
+      typename std::map<IdxType, BaseThread*>::iterator i;
       i = mThreadMap.find(index);
       if(i == mThreadMap.end())
          return NULL;

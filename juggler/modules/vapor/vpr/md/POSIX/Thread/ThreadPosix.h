@@ -452,8 +452,6 @@ private:
     hash (void) {
 #if defined(VPR_OS_IRIX)
         return mThread;
-#elif defined(VPR_OS_HPUX)
-        return mThread.field1;
 #else
         // This works on Linux, Solaris and FreeBSD.
         return (thread_id_t) mThread;
@@ -476,8 +474,6 @@ private:
     hash (pthread_t thread) {
 #ifdef VPR_OS_IRIX
         return thread;
-#elif defined(VPR_OS_HPUX)
-        return thread.field1;
 #else
         // This works on Linux, Solaris and FreeBSD.
         return (thread_id_t) thread;
