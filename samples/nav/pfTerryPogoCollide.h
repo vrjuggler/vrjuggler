@@ -9,11 +9,13 @@
 #include <iostream.h>
 #include <math.h>
 
+#include "pfTerryCollide.h" // my base class
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Down vector "Pogostick" (or ground) collision
 /////////////////////////////////
 
-class pfTerryPogostickCollide : public pfTerryCollide
+class pfTerryPogoCollide : public pfTerryCollide
 {
 public:
    //: For collisions with the ground, use collide(

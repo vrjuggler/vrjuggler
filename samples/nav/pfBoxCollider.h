@@ -31,11 +31,11 @@
  * -----------------------------------------------------------------
  */
 
-#ifndef JUGGLER_PFVOLUME_COLLIDER
-#define JUGGLER_PFVOLUME_COLLIDER
+#ifndef JUGGLER_PFBOX_COLLIDER
+#define JUGGLER_PFBOX_COLLIDER
 
 #include <collider.h>
-#include <collide.h>
+#include <pfTerryBoxCollide.h>
 
 //: Collider class for testing collisions in Performer
 //
@@ -45,12 +45,12 @@
 //     in Juggler (OpenGL) coordinates, not in Performer coords.
 //     So there is some coord system conversion that will be
 //     going on here.
-class pfVolumeCollider : public collider
+class pfBoxCollider : public collider
 {
 public:
    // ARGS: world - The node to start collision with
    //       it should be the one under the one being used for navigation ( ie. pfNaver)
-   pfVolumeCollider(pfNode* world) : terryCollide( 0x1 )
+   pfBoxCollider(pfNode* world) : terryCollide( 0x1 )
    {
       mWorldNode = world;
    }
@@ -64,11 +64,11 @@ public:
 
 public:
    pfNode* mWorldNode;        // The world to collide with
-   pfTerryVCollide terryCollide;
+   pfTerryBoxCollide terryCollide;
 };
 
 
-bool pfVolumeCollider::testMove(vjVec3 whereYouAre, vjVec3 delta, vjVec3& correction, bool whereYouAreWithDelta)
+bool pfBoxCollider::testMove(vjVec3 whereYouAre, vjVec3 delta, vjVec3& correction, bool whereYouAreWithDelta)
 {
    //cout<<"Pos["<<whereYouAre<<"] :|: Vel["<<delta<<"]\n"<<flush;
    pfVec3 pf_cur_pos = vjGetPfVec(whereYouAre);
@@ -91,9 +91,9 @@ bool pfVolumeCollider::testMove(vjVec3 whereYouAre, vjVec3 delta, vjVec3& correc
    if(vol_radius < 1.0f)
       vol_radius = 1.0f;
       
-   terryCollide.setVolumeRadius( vol_radius );    // Setup collision volume
+   terryCollide.setRadius( vol_radius );    // Setup collision volume
 
-   if (terryCollide.collideVolume( pf_correction, mWorldNode, pf_new_pos) )
+   if (terryCollide.collide( pf_correction, mWorldNode, pf_new_pos) )
    {
       correction = vjGetVjVec(pf_correction);
 

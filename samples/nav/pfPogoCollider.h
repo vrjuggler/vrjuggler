@@ -35,7 +35,7 @@
 #define JUGGLER_PFRIDE_COLLIDER
 
 #include <collider.h>
-#include <collide.h>
+#include <pfTerryPogoCollide.h>
 
 //: Collider class for testing collisions in Performer
 //
@@ -45,12 +45,12 @@
 //     in Juggler (OpenGL) coordinates, not in Performer coords.
 //     So there is some coord system conversion that will be
 //     going on here.
-class pfRideCollider : public collider
+class pfPogoCollider : public collider
 {
 public:
    // ARGS: world - The node to start collision with
    //       it should be the one under the one being used for navigation ( ie. pfNaver)
-   pfRideCollider(pfNode* world)
+   pfPogoCollider(pfNode* world)
    {
       mWorldNode = world;
    }
@@ -64,11 +64,11 @@ public:
 
 protected:
    pfNode* mWorldNode;        // The world to collide with
-   pfTerryRCollide terryCollide;
+   pfTerryPogoCollide terryCollide;
 };
 
 
-bool pfRideCollider::testMove(vjVec3 whereYouAre, vjVec3 delta, vjVec3& correction, bool whereYouAreWithDelta)
+bool pfPogoCollider::testMove(vjVec3 whereYouAre, vjVec3 delta, vjVec3& correction, bool whereYouAreWithDelta)
 {
    pfVec3 pf_cur_pos = vjGetPfVec(whereYouAre);
    pfVec3 pf_delta = vjGetPfVec(delta);
@@ -80,7 +80,7 @@ bool pfRideCollider::testMove(vjVec3 whereYouAre, vjVec3 delta, vjVec3& correcti
    pf_new_pos = (pf_cur_pos + pf_delta);
    float delta_mag = pf_delta.length();
    if(delta_mag > height)
-      cerr << "ERROR: pfRideCollider: Trying to move faster than the vector is checking.\n";
+      cerr << "ERROR: pfPogoCollider: Trying to move faster than the vector is checking.\n";
 
    // This function tests to make sure that for height straight down, there is no collision
    // from the position we are testing.
@@ -88,7 +88,7 @@ bool pfRideCollider::testMove(vjVec3 whereYouAre, vjVec3 delta, vjVec3& correcti
    // XXX: This is because of hacks in the collision code
    pf_new_pos += pfVec3(0,0,height);
 
-   if (terryCollide.collideGround(pf_correction,mWorldNode,0x1,pf_new_pos, height))
+   if (terryCollide.collide( pf_correction, mWorldNode, 0x1, pf_new_pos, height))
    {
       correction = vjGetVjVec(pf_correction);
 

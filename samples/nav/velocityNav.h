@@ -34,6 +34,7 @@
 #include <vjQuat.h>
 #include <navigator.h>
 #include <collider.h>
+#include <vector>
 #include "StopWatch.h"
 
 class velocityNav : public navigator
@@ -87,9 +88,12 @@ public:
    void setMode(navMode new_mode)
    { mMode = new_mode; }
 
-   void setGravityCollider(collider* val) { mGravCollider = val;}
-   void setCorrectingCollider(collider* val) { mCorrectingCollider = val;}
-
+   //: yes! you can add any number of colliders!
+   void addCollider( collider* val )
+   { 
+      mCollider.push_back( val );
+   }
+  
    // query the current speed.
    float speed() const;
 
@@ -124,6 +128,8 @@ private:
    StopWatch stopWatch;
    navMode  mMode;
    int mTimeHack;
+   
+   std::vector<collider*> mCollider;
 };
 
 velocityNav::velocityNav() : mTimeHack(0), mDamping( 1.0f ), mRotVelocity( 0.0f ),
@@ -253,29 +259,24 @@ void velocityNav::update()
    //vjVec3 totalCorrections;
    
    
-   // Begin collision testing:::
-   // TODO: collision is limited to 2 colliders for now.  This could easily be expanded.
-   // TODONOTE: if you do expand, then you'll need to fix the HACK(!)
-   
-   if ((mGravCollider != NULL) && mGravCollider->testMove( whereYouAre, mcDist2Move, correction))
+   ////////////////////////////////////////////////////////////
+   // Test for collisions with all registered colliders
+   ////////////////////////////////////////////////////////////
+   for (int x = 0; x < mCollider.size(); ++x)
    {
-      //cout<<"Collide Grav!\n"<<flush;
-      mcDist2Move += correction;
-      //totalCorrections += correction;
-      
-      // HACK(!) - use the correction vectors to decide how much velocity from gravity to remove
-      //        here i'm just zeroing it out.
-      mVelocityFromGravityAccumulator.set( 0.0f, 0.0f, 0.0f );
-   } 
-   
-   if ((mCorrectingCollider != NULL) && mCorrectingCollider->testMove( whereYouAre, mcDist2Move, correction))
-   {
-      //cout<<"Collide Ray!\n"<<flush;
-      mcDist2Move += correction;
-      //totalCorrections += correction;
+      // If collision, then ...
+      if (mCollider[x]->testMove( whereYouAre, mcDist2Move, correction ))
+      {
+         // ... apply the correction.
+         mcDist2Move += correction;
+         //totalCorrections += correction;
+
+         // HACK(!) - use the correction vectors to decide how much velocity from gravity to remove
+         //        here i'm just zeroing it out... sometimes many times per frame!!! (real bad)
+         //    this should really only be affected by the Y component of the correction vector.
+         mVelocityFromGravityAccumulator.set( 0.0f, 0.0f, 0.0f );
+      } 
    }
-   
-   // End collision testing:::
 
    
    // HACK(!) - yes, this was my (small) attempt to fix the hack above (depicted with a (!))
@@ -289,9 +290,9 @@ void velocityNav::update()
    //subtractfromGravVel[2] = (localSpaceCorrections[2] / stopWatch.timeInstant);
    //mVelocityFromGravityAccumulator += subtractfromGravVel;
    
+   
    // the navTranslate() function requires a translation in local coordinates
    // move the vector back from modelspace to localspace
-   
    distanceToMove.xformFull( IcurrentRotation, mcDist2Move );
    this->navTranslate( distanceToMove );
 }
