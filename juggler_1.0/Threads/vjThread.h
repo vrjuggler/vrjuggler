@@ -77,8 +77,5 @@ typedef void (*THREAD_FUNC)(void *);
 #   include <Threads/vjThreadFunctor.h>
 #endif  /* VJ_IRIX_SPROC */
 
-   // Other thread related classes //
-#include <Threads/vjThreadManager.h>
-
 
 #endif  /* _VJ_THREAD_H_ */
