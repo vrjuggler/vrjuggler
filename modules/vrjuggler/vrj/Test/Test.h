@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include "TestFailure.h"
 
 namespace vrj {
 namespace test
@@ -49,8 +50,14 @@ public:
    */
    virtual bool isDone() = 0;
 
-   /** Get the name of the test */
+   /** Get the name of the test
+   */
    virtual std::string getName() = 0;
+private:            
+
+   /** @link dependency 
+    * @stereotype throws*/
+   /*# TestFailure lnkTestFailure; */
 };
 
 } }
