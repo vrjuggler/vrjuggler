@@ -162,13 +162,13 @@ public class PrefsDialog extends JDialog implements TableModelListener
          }
       });
 
-      mSaveButton.setMnemonic('A');
-      mSaveButton.setText("Apply");
-      mSaveButton.addActionListener(new ActionListener()
+      mApplyButton.setMnemonic('A');
+      mApplyButton.setText("Apply");
+      mApplyButton.addActionListener(new ActionListener()
       {
-         public void actionPerformed (ActionEvent e)
+         public void actionPerformed(ActionEvent e)
          {
-            saveButtonAction(e);
+            applyButtonAction(e);
          }
       });
 
@@ -309,7 +309,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
       mWinSizeTablePane.setMinimumSize(new Dimension(150, 45));
       mWinSizeTablePane.setPreferredSize(new Dimension(150, 45));
       mButtonPanel.add(mOkButton, null);
-      mButtonPanel.add(mSaveButton, null);
+      mButtonPanel.add(mApplyButton, null);
       mButtonPanel.add(mCancelButton, null);
       this.getContentPane().add(mContentPane,  BorderLayout.CENTER);
       mContentPane.add(mGeneralPanel,   "General");
@@ -478,7 +478,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
       setVisible(false);
    }
 
-   private void saveButtonAction (ActionEvent e)
+   private void applyButtonAction(ActionEvent e)
    {
       commit();
       mPrefs.save();
@@ -666,7 +666,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
    private JPanel  mButtonPanel  = new JPanel();
    private JButton mCancelButton = new JButton();
-   private JButton mSaveButton   = new JButton();
+   private JButton mApplyButton  = new JButton();
    private JButton mOkButton     = new JButton();
 
    private JTabbedPane mContentPane = new JTabbedPane();
