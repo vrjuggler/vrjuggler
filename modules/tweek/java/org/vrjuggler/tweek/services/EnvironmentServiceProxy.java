@@ -73,41 +73,98 @@ public class EnvironmentServiceProxy
       }
    }
 
+   /**
+    * Stores the command-line arguments passed to the application when it was
+    * started.
+    */
    public void setCommandLineArgs(String[] args)
    {
       mEnvService.setCommandLineArgs(args);
    }
 
+   /**
+    * Returns the array of command-line arguments.
+    */
    public String[] getCommandLineArgs()
    {
       return mEnvService.getCommandLineArgs();
    }
 
+   /**
+    * Expands environment variables in the input string.  Environment variables
+    * may be specified using either $(variable_name) or ${variable_name}
+    * everything between the parentheses or braces will be considered the name
+    * of the variables.
+    *
+    * @param inputStr  the string in which to look for and expand environment
+    *                  variables.
+    *
+    * @return  the input string with the variables replaced by their values.
+    */
    public String expandEnvVars(String inputStr)
    {
       return mEnvService.expandEnvVars(inputStr);
    }
 
+   /**
+    * Gets the user's HOME environment variable using the JVM instead of the
+    * environment variable.
+    *
+    * @return  the path to the user's home directory
+    */
    public String getUserHome()
    {
       return mEnvService.getUserHome();
    }
 
+   /**
+    * Returns the absolute path to the platfom-specific directory where
+    * preferences files and other application data should be stored.
+    */
    public String getAppDataDir()
    {
       return mEnvService.getAppDataDir();
    }
 
+   /**
+    * Returns an identifier for the host operationg system.  The value will be
+    * one of EnvironmentService.UNIX, EnvironmentService.MacOS, or
+    * EnvironmentService.Windows.
+    */
    public int getOS()
    {
       return mEnvService.getOS();
    }
 
+   /**
+    * Returns the value of the named environment variable or null if the
+    * variable is not set in the user's environment.
+    *
+    * @param envVarName The name of the variable to look up in the user's
+    *                   environment.
+    *
+    * @return A String object containing the value of the named environment
+    *         variable if the variable exists in the user's environment.  If
+    *         it does not exist, null is returned.
+    */
    public String getenv(String envVarName)
    {
       return mEnvService.getenv(envVarName);
    }
 
+   /**
+    * Returns the value of the named environment variable or the given
+    * default value if the variable is not set in the user's environment.
+    *
+    * @param envVarName   The name of the variable to look up in the user's
+    *                     environment.
+    * @param defaultValue The value to return if the named variable is not
+    *                     found in the user's environment.
+    *
+    * @return A String object containing the value of the named environment
+    *         variable if the variable exists in the user's environment.  If
+    *         it does not exist, the given default value is returned.
+    */
    public String getenv(String envVarName, String defaultValue)
    {
       return mEnvService.getenv(envVarName, defaultValue);
