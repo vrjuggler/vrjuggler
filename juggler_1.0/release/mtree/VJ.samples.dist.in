@@ -51,6 +51,8 @@
 	    ..
 	    simpleGlove
 	    ..
+	    texture
+	    ..
 	    torus
 	    ..
 	    wand
