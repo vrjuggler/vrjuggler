@@ -533,7 +533,8 @@ AC_SUBST(XERCESROOT)
 
 AC_SUBST(DYLIB_DEPS)
 
-AC_SUBST(APP_VJ_LIBS_UTILS)
+AC_SUBST(APP_BASIC_LIBS)
+AC_SUBST(APP_EXTRA_LIBS)
 
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
@@ -564,6 +565,8 @@ AC_OUTPUT(Makefile
           samples/Makefile
           samples/vjcontrol/Makefile
           samples/vjcontrol/AudioPlayer/Makefile
+          samples/jccl/Makefile
+          samples/jccl/serverdemo/Makefile
           test/Makefile 
           test/TestSuite/Makefile
           test/CfgTest/Makefile
