@@ -122,17 +122,19 @@ implements ActionListener {
     }
 
 
-  private boolean inList (String name) {
-    int n = list.getItemCount();
-    for (int i = 0; i < n; i++)
-      if (name.equals (list.getItem(i)))
-	return true;
-    return false;
-  }
+    private boolean inList (String name) {
+	int n = list.getItemCount();
+	for (int i = 0; i < n; i++)
+	    if (name.equals (list.getItem(i)))
+		return true;
+	return false;
+    }
 
-  public void actionPerformed (ActionEvent e) {
-    System.out.println ("panel event called");
-    int i;
+
+
+    public void actionPerformed (ActionEvent e) {
+	//System.out.println ("panel event called");
+	int i;
 
     if (e.getSource() == savebutton) {
       System.out.println ("saving file");

@@ -263,7 +263,7 @@ public class ConfigChunkDBPanel extends MainWindowPanel
 	/********************* Menus ****************************/
 	else {
 	    String s = e.getActionCommand();
-	    System.out.println ("got menu command: " + s);
+	    //System.out.println ("got menu command: " + s);
 	    if (s.equalsIgnoreCase ("save user config")) {
 		core.fileio.saveUserConfigChunkDB();
 	    }
