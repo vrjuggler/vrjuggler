@@ -42,56 +42,17 @@
 
 @TOP@
 
-/* Define all of the following if building on IRIX. */
-#undef JCCL_OS_IRIX
+/* Define all of the following if building on IRIX or darwin. */
 #undef _BSD_TYPES
 
-/* Define to be either IRIX5 or IRIX6 depending on your system. */
-#undef IRIXREL
-
-// /* Define to match the output of running 'uname -r. */
-// #undef JCCL_OS_RELEASE
-
-// /*
-//  * Define to match the numeric version number of the target operating system.
-//  * For example, on HP-UX 10.20:
-//  *     #define JCCL_OS_RELEASE_MAJOR 10
-//  *     #define JCCL_OS_RELEASE_MINOR 20
-//  */
-// #undef JCCL_OS_RELEASE_MAJOR
-// #undef JCCL_OS_RELEASE_MINOR
-
 /* Define all of the following if building on HP-UX. */
-#undef JCCL_OS_HPUX
 #undef JCCL_HPUX_VERSION
 #undef _INCLUDE_TERMIO
 #undef _CMA_NOWRAPPERS_
 
-/* Define if building on Digital UNIX. */
-#undef JCCL_OS_DUX
-
-/* Define if building on FreeBSD. */
-#undef JCCL_OS_FreeBSD
-
-/* Define if building on Linux. */
-#undef JCCL_OS_Linux
-
-/* Define if building on Solaris. */
-#undef JCCL_OS_Solaris
-
-/* Define if building on AIX. */
-#undef JCCL_OS_AIX
-
 /* Define if building on a Win32 platform. */
-#undef JCCL_OS_Win32
 #undef WIN32
 #undef _MBCS
-
-/* Define if building on Darwin (aka, Mac OS X). */
-#undef JCCL_OS_Darwin
-
-/* Define if building on a platform not specified above. */
-#undef JCCL_OS_GENERIC
 
 /* Define to unique values used for defining JCCL_PERFORMANCE. */
 #undef JCCL_PERF_NONE
@@ -101,34 +62,8 @@
 /* Define to one of the above values to enable performance testing. */
 #undef JCCL_PERFORMANCE
 
-// /* Definte if DTK is installed. */
-// #undef JCCL_HAVE_DTK
-
 /* Define to `int' if the socklen_t type is not available.  */
 #undef socklen_t
-
-// /*
-//  * Define to `unsigned int' if the u_int and/or u_int32_t types are not
-//  * available.  On Windows when using Visual C++, define to UINT.
-//  */
-// #undef u_int
-// #undef uint32_t
-
-// /*
-//  * Define to the sizeof a memory address if the type caddr_t is not available.
-//  * char* is most likely going to be a safe substitute.
-//  */
-// #undef caddr_t
-
-// /* 
-//  * On Windows when using Visual C++, define to __int32 and __int64
-//  * respectively if these two are not available.
-//  */
-// #undef int32_t
-// #undef int64_t
-
-// /* Define if you have the sched_yield function.  */
-// #undef HAVE_SCHED_YIELD
 
 /* Define if you have the sinf function.  */
 #undef HAVE_SINF
