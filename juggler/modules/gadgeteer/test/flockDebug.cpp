@@ -54,14 +54,13 @@ FlockStandalone* flock(NULL);
 
 struct flock_config
 {
-   std::string    port;
-   int            baud;
-   int            numBirds;
-   BIRD_HEMI      hemi;
-   BIRD_FILT      filt;
-   int            blocking;
-   vpr::Uint8     report_rate;
-   int            transmitter;
+   std::string       port;
+   int               baud;
+   int               numBirds;
+   BIRD_HEMI         hemi;
+   BIRD_FILT         filt;
+   Flock::ReportRate report_rate;
+   int               transmitter;
 };
 
 flock_config fconfig;
@@ -104,8 +103,7 @@ int main()
    //std::string calfile = "/var/tmp/nothing.txt";
    fconfig.hemi = UPPER_HEM;
    fconfig.filt = AC_NARROW;
-   fconfig.blocking = 0;
-   fconfig.report_rate = ReportRate::EveryOther;
+   fconfig.report_rate = Flock::EveryOther;
    fconfig.transmitter = 3;
 
 
@@ -177,7 +175,7 @@ int main()
 
       case '6':
          std::cout << "\n\n";
-         flock->printSystemStatus();
+         flock->printFlockStatus();
          break;
 
          // Start the flock. Needs to be done first
@@ -306,12 +304,13 @@ int main()
          // R = every other cycle (default)
          // S = every 8th cycle
          // T = every 32nd cycle
-      case 'w':
+      /*case 'w':
       case 'W':
          std::cout << "Enter report rate (Q,R,S,T): ";
          std::cin >> rep_rate;
          flock->setReportRate(rep_rate);
          break;
+         */
 
          // Have the flock read some output.
          // This uses the regulation flock.sample() function.
@@ -365,7 +364,6 @@ void printSettings()
              << "         baud:" << fconfig.baud << std::endl
              << "         hemi:" << getHemiString(fconfig.hemi) << std::endl
              << "         filt:" << getFiltString(fconfig.filt) << std::endl
-             << "        block:" << fconfig.blocking << std::endl
              << "         rate:" << fconfig.report_rate << std::endl
              << "     numbirds:" << fconfig.numBirds << std::endl
              << "  transmitter:" << fconfig.transmitter << std::endl;
@@ -383,9 +381,6 @@ void changeSettings()
 
    std::cout << "baud: [" << fconfig.baud << "] :";
    std::cin >> fconfig.baud;
-
-   std::cout << "blocking: [" << fconfig.blocking << "] :";
-   std::cin >> fconfig.blocking;
 
    std::cout << "num birds: [" << fconfig.numBirds << "] :";
    std::cin >> fconfig.numBirds;
@@ -408,16 +403,14 @@ void openBird()
 {
    std::cout << "Instantiating flock...\n";
 
-   flock = new FlockStandalone( fconfig.port.c_str(),
-                                fconfig.baud,
-                                1,
-                                fconfig.blocking,
+   flock = new FlockStandalone( fconfig.port,
                                 fconfig.numBirds,
                                 fconfig.transmitter,
+                                fconfig.baud,
+                                1,
                                 fconfig.hemi,
                                 fconfig.filt,
-                                fconfig.report_rate,
-                                NULL );
+                                fconfig.report_rate);
 
    std::cout << "Opening flock...";
 
@@ -434,22 +427,22 @@ void openBird()
 void printBirdDetails()
 {
    // Query all the parameters
-   unsigned ver_major, ver_minor;
+   float sw_ver;
    std::string model_id;
    AddressingMode addr_mode;
    vpr::Uint16 bird_status;
 
-   flock->getSoftwareRevision(ver_major, ver_minor);
-   flock->getModelIdString(model_id);
-   flock->getAddressingMode(addr_mode);
-   flock->getBirdStatus(bird_status);
+   sw_ver = flock->getSoftwareRevision();
+   model_id = flock->getModelId();
+   addr_mode = flock->getAddressingMode();
+   bird_status = flock->queryBirdStatus();
 
 
    std::cout << "--- Flock details --- \n";
    std::cout << "      model:" << model_id << std::endl;
-   std::cout << "      sw ver:" << ver_major << "." << ver_minor << std::endl;
+   std::cout << "      sw ver:" << sw_ver << std::endl;
    std::cout << "   addr mode:" << getAddressingModeString(addr_mode) << std::endl;
-   std::cout << " bird status:" << std::endl
+   std::cout << " bird status:" << bird_status << std::endl
              << "      master:" << Flock::BirdStatus::isMaster(bird_status) << std::endl;
 
 }
