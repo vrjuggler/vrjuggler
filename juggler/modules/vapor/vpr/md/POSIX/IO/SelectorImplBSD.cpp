@@ -220,9 +220,9 @@ SelectorImpBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
             (*i).out_flags |= SelectorBase::VPR_EXCEPT;
          }
       }
-   }
 
-   numWithEvents = result;
+      numWithEvents = result;
+   }
 
    return ret_val;
 }
