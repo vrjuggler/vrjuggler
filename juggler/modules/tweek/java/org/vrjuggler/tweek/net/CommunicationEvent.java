@@ -66,12 +66,12 @@ public class CommunicationEvent extends java.util.EventObject
 
    public String getHostAddress ()
    {
-      return corbaRegistry.getInitHost();
+      return corbaRegistry.getHost();
    }
 
    public int getHostPort ()
    {
-      return corbaRegistry.getInitPort();
+      return corbaRegistry.getPort();
    }
 
    public CorbaService getCorbaRegistry ()
