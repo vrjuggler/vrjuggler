@@ -54,6 +54,8 @@ public:
    //: Configure the simulator
    virtual void config(vjConfigChunk* chunk)
    {
+      vjASSERT((std::string)chunk->getType() == std::string("simDisplay"));
+
       vjDisplay::config(chunk);
 
       mType = SIM;

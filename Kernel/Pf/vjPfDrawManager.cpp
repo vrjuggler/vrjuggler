@@ -48,6 +48,7 @@
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjProjection.h>
+#include <Kernel/vjCameraProjection.h>
 #include <Config/vjConfigChunk.h>
 #include <Kernel/vjSimDisplay.h>
 #include <Kernel/vjSurfaceDisplay.h>
@@ -633,9 +634,11 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
       chan->makePersp(proj->mFrustum[vjFrustum::VJ_LEFT], proj->mFrustum[vjFrustum::VJ_RIGHT],
                       proj->mFrustum[vjFrustum::VJ_BOTTOM], proj->mFrustum[vjFrustum::VJ_TOP]);
    } else {
-      chan->setAutoAspect(PFFRUST_CALC_VERT);
+      vjCameraProjection* cam_proj = dynamic_cast<vjCameraProjection*>(proj);
+      vjASSERT(cam_proj != NULL && "Trying to use non-camera projection for simulator");
+      chan->setAutoAspect(PFFRUST_CALC_HORIZ);
       chan->setNearFar(proj->mFrustum[vjFrustum::VJ_NEAR], proj->mFrustum[vjFrustum::VJ_FAR]);
-      chan->setFOV(80.0f, 0.0f);
+      chan->setFOV(0.0f, cam_proj->mVertFOV);
    }
 
    vjDEBUG(vjDBG_DRAW_MGR,7) << "Frustum: l:" << proj->mFrustum[vjFrustum::VJ_LEFT]
