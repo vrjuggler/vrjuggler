@@ -61,19 +61,25 @@ namespace vpr {
  * NOTE: The object used for type T must have a default constructor
  *       This class creates each instance of the real objects
  *       using this default constructor.
+ *
+ * Uses TSObject<> internally to keep some type information
+ *
+ *
+ * @usage   vpr::TSObjectProxy<obj_type> var;
+ *          (*var).method();
  */
 template <class T>
 class TSObjectProxy
 {
 public:
-   /// Constructor for proxy.
+   /** Constructor for proxy. */
    TSObjectProxy() : mObjectKey(-1)
    {
       // Get a TS key for the object(s) that this will proxy
       mObjectKey = ThreadManager::instance()->generateNewTSKey();
    }
 
-   /// Destructor.  This does nothing.
+   /** Destructor.  This does nothing. */
    ~TSObjectProxy()
    {;}
 
@@ -94,7 +100,7 @@ private:
    {
       TSTable* table = NULL;
 
-      // Get the correct TS data table
+      // --- GET TS TABLE --- //
       // - If have self, get mine.  Otherwise use global one
       vpr::BaseThread* thread_self = NULL;
       thread_self = Thread::self();
@@ -122,9 +128,9 @@ private:
          object = new_object;                                                       // Reference the new one
       }
 
-      TSObject<T>* real_object = dynamic_cast< TSObject<T>* >(object);    // try dynamic casting it
+     vprASSERT((object != NULL) && "Bad object ptr.  It is NULL.");    // We should not have NULL objects
 
-      vprASSERT((object != NULL) && "TS Object is NULL!!!");    // We should not have NULL objects
+      TSObject<T>* real_object = dynamic_cast< TSObject<T>* >(object);    // try dynamic casting it
 
 #ifdef VPR_DEBUG
       if(real_object == NULL)    // Failed cast
@@ -141,7 +147,7 @@ private:
          return NULL;
       else
       */
-         return real_object->getObject();                                   // return the ptr;
+      return real_object->getObject();                                   // return the ptr;
    }
 
    // Don't allow copy construction
