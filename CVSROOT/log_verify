@@ -1,12 +1,7 @@
 #! /bin/sh
-#
-#
-# Do cool stuff
-# Note: Do not hold Allen accountable for any damages incurred
-#
 
 # If the script succeeds, then we fail.
-if /usr/bin/perl $CVSROOT/CVSROOT/log_verify.pl ${1+"$@"}
+if /usr/bin/perl /cvsroot/vrjuggler/CVSROOT/log_verify.pl ${1+"$@"}
 then
   exit 0
 else
