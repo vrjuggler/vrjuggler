@@ -1,10 +1,26 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Aug-04-2002 subatomic Use abstract interface class ISoundImplementation
+                      so that plugins can be loaded at runtime instead of 
+                      compiled statically.
+Aug-03-2002 subatomic Added subsynth plugin.
 Aug-01-2002 patrickh  Enabled compiling of profiled libraries.
 Jul-30-2002 patrickh  Fixed problems with building on IRIX wherein the Sonix
                       library was not put into lib{32,64} correctly.
+Jul-20-2002 subatomic Added plugin loading support with xdl (cross platform
+                      dlopen).  There currently are no plugins that work with
+                      this, stay tuned...  Sonix will scan 3 directories for 
+                      plugins: "${SNX_BASE_DIR}/lib/modules/sonix"
+                               "${SNX_BASE_DIR}/share/sonix/plugins"
+                               "${HOME}/.sonix/plugins"
 Jun-24-2002 patrickh  The sonix-config script is now written in Perl.  It is
                       capable of determining its installation path at runtime.
+Apr-16-2002 subatomic Added grouping in doxygen autodocumentation
+Apr-12-2002 subatomic pause, unpause, set volume, pitch, and retriggerable
+Apr-12-2002 subatomic Added isPaused, isRetriggerable, isPlaying
+Apr-12-2002 subatomic Sonix uses GMTL for math.  Vapor dependency is removed.
+Dec-28-2001 subatomic SoundHandle is now available.  Use it to allocate and 
+                      access sound objects.
 Oct-24-2001 subatomic Sonix uses juggler math and vapor singleton now.
                       NOTE, because of this change you'll need to link against
                       Juggler, jccl, gadgeteer, and vpr libs...
