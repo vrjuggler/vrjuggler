@@ -9,7 +9,7 @@
 {if func}
   {if !inherited}
     <NOBR>
-    &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="{class}_desc.html#{memberef}">{mname}</A>({args})
+    &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="{class}.html#{memberef}">{mname}</A>({args})
     </NOBR>
     <BR>
   {endif}
@@ -17,7 +17,7 @@
     {if !overridden}
       {nolink true}
       <NOBR>
-      &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="{defclass}_desc.html#{memberef}">{mname}</A>({args})
+      &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="{defclass}.html#{memberef}">{mname}</A>({args})
       </NOBR>
       <BR>
       {nolink false}
