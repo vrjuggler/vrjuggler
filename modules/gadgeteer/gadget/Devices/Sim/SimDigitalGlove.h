@@ -94,7 +94,16 @@ public:
    virtual int startSampling()
    {
      //vprDEBUG(vprDBG_ALL,3)<<"start\n"<<vprDEBUG_FLUSH;
-     return 1;
+       DigitalData temp;
+       temp=0;
+       for (int i=0;i<10;i++)
+       {
+           mDigitalData.push_back(temp);
+       }
+       mDigitalSamples.lock();
+       mDigitalSamples.addSample(mDigitalData);
+       mDigitalSamples.unlock();
+       return 1;
    }
    virtual int stopSampling()
    {
