@@ -48,7 +48,7 @@ EXTRA_DEFS=	-D_GADGET_DRIVER_BUILD_
 # -----------------------------------------------------------------------------
 # Common code for driver DSOs.
 # -----------------------------------------------------------------------------
-DRIVER_DSO=	@LIB_PREFIX@$(DRIVER_NAME).$(DYNAMICLIB_EXT)
+DRIVER_DSO=	$(DRIVER_NAME)_drv.$(DYNAMICLIB_EXT)
 DYLIB_DEPS=	$(PRE_DSO_DRIVER_DEPS) @DSO_DRIVER_DEPS@ $(POST_DSO_DRIVER_DEPS)
 
 driver-dso: $(DSO_DRIVER_DIR)/$(DRIVER_DSO)
