@@ -39,11 +39,6 @@
          <help>Serial port speed</help>
          <value label="Baud Rate" defaultvalue="38400"/>
       </property>
-      <property valuetype="configelement" variable="true" name="shared_device">
-         <help>This contains all devices on this node to be shared accross the cluster.</help>
-         <value label="Shared Device"/>
-         <allowed_type>event_window</allowed_type>
-      </property>
       <upgrade_transform/>
    </definition_version>
 </definition>
