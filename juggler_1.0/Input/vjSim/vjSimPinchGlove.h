@@ -40,6 +40,9 @@
 #include <Input/vjGlove/vjPinchGlove.h>
 #include <Input/vjSim/vjSimInput.h>
 
+#include <Input/vjGlove/vjFinger.h>
+#include <Input/vjGlove/vjHand.h>
+
 //: Simulated digital device
 // Simulates a digital device from a keyboard device.
 // It allows any number of simulated digital devices to be created.
@@ -81,10 +84,11 @@ public:
 	   LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4, 
 	   RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
    };
-   virtual int getDigitalData( int finger = 0 )
+   // dev = finger (see finger enum above)
+   virtual int getDigitalData( int dev = 0 )
    {
-      vjASSERT(finger < (int)mDigitalData.size());    // Make sure we have enough space
-      return mDigitalData[finger];
+      vjASSERT( dev < (int)mDigitalData.size() );    // Make sure we have enough space
+      return mDigitalData[dev];
    }
 
    /* These functions don't do anything */
@@ -95,6 +99,8 @@ public:
    //: Update the data
    virtual void updateData();
 
+   void updateFingerAngles();
+
    //: Get the name of the digital device
    char* getDeviceName() { return "vjSimPinchGlove";}
    static std::string getChunkType() { return std::string("SimPinchGlove");}
@@ -102,6 +108,8 @@ public:
 private:
    std::vector<int>          mDigitalData;   //: The digital data that we have
    std::vector<vjKeyModPair> mSimKeys;       //: The keys to press for digital simulation
+
+   vjHand left, right;   
 };
 
 #endif

@@ -41,6 +41,11 @@
 #include <Input/vjGlove/fsPinchGlove.h>
 #include <string>
 
+#include <Input/vjGlove/vjFinger.h>
+#include <Input/vjGlove/vjHand.h>
+
+
+
 //: Fakespace Pinchglove Device
 //!PUBLIC_API:
 class vjPinchGlove : public vjGlove, public vjDigital
@@ -72,7 +77,7 @@ public:
    //
    //  Use one of these indices to get the glove's digital data<BR>
    //  EX: int result = mGlove.getDigitalData( vjPinchGlove::LTHUMB );
-   enum finger 
+   enum vjFinger 
    {
 	   LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4, 
 	   RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
@@ -89,15 +94,9 @@ protected:
 protected:
    //vjThread*         mControlThread;      // The thread of control for the object
    fsPinchGlove*      mGlove;              // The actual glove
-
-   //char*             mCalDir;             // Calibration file directory
-
-private:
-    //lookup tables for the finger angles.
-   static float	    mOnLookupTable[4][11];
-   static float	    mOffLookupTable[4][11];
-   static bool	       mLookupInitialized; // false by default, set true when lookup table has been initialized.
-   static void	       mInitLookupTable();
+   
+   vjHand left, right;
 };
+
 
 #endif	/* _VJ_PINCH_GLOVE_H_ */
