@@ -63,6 +63,7 @@ IDL_JAVA_FILES	= SubjectManager.java	\
                   Observer.java
 
 JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
+                  org/vrjuggler/tweek/net/CommException.java    	\
                   org/vrjuggler/tweek/beans/BeanCollectionBuilder.java	\
                   org/vrjuggler/tweek/services/EnvironmentService.java	\
                   org/vrjuggler/tweek/iconviewer/BeanIconViewer.java	\
