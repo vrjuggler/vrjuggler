@@ -64,10 +64,6 @@ Builder: JExplorerBuilder V 1. 0. 7
 				link="${TEAMGUIDE}/contribute/index.html"
 				info="Why contribute to Juggler? (A compelling argument)"
 				image="Chat.gif" >
-			   < item title="Why"
-					link="${TEAMGUIDE}/contribute/index.html"
-					info="Why contribute to Juggler? (A compelling argument)"
-					image="Leaf.gif" >
 				< item title="Rules"
 					link="${TEAMGUIDE}/contribute/rules.html"
 					info="Rules for making submissions"
