@@ -162,12 +162,12 @@ namespace cluster
       return "application_data_manager";
    }
 
-	/** Add the pending element to the configuration.
-	 *  @pre configCanHandle(element) == true.
-	 *  @return true iff element was successfully added to configuration.
-	 */
-	bool ApplicationDataManager::configAdd(jccl::ConfigElementPtr element)
-	{
+   /** Add the pending element to the configuration.
+    *  @pre configCanHandle(element) == true.
+    *  @return true iff element was successfully added to configuration.
+    */
+   bool ApplicationDataManager::configAdd(jccl::ConfigElementPtr element)
+   {
       if (recognizeApplicationDataManagerConfig(element))
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
@@ -197,7 +197,7 @@ namespace cluster
 
                   (*i)->setHostname(hostname);
 
-                  if (hostname == ClusterNetwork::instance()->getLocalHostname())
+                  if (ClusterNetwork::isLocalHost(hostname))
                   {
                      // This application data is local.
                      (*i)->setIsLocal(true);
@@ -229,22 +229,22 @@ namespace cluster
 
          return false;
       }
-	  else
-	  {
-	     vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) 
+      else
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) 
             << "[ApplicationDataManager::ConfigAdd()] " 
             << clrOutBOLD(clrRED, "WARNING: ") << "Don't know how to handle the configuration element: " 
             << element->getName() << std::endl << vprDEBUG_FLUSH;
          return(false);
-	  }
-	}
+      }
+   }
 
 
-	/** Remove the pending element from the current configuration.
-	 *  @pre configCanHandle(element) == true.
-	 *  @return true iff the element (and any objects it represented)
-	 *          were successfully removed.
-	 */
+  /** Remove the pending element from the current configuration.
+   *  @pre configCanHandle(element) == true.
+   *  @return true iff the element (and any objects it represented)
+   *          were successfully removed.
+   */
    bool ApplicationDataManager::configRemove(jccl::ConfigElementPtr element)
    {
       if (recognizeApplicationDataManagerConfig(element))
@@ -433,7 +433,7 @@ namespace cluster
       }
       else
       {
-         if (hostname == ClusterNetwork::instance()->getLocalHostname())
+         if (ClusterNetwork::isLocalHost(hostname))
          {
             // This application data is local.
             new_app_data->setIsLocal(true);
