@@ -75,7 +75,7 @@ jccl::PerformanceMonitor* EnvironmentManager::getPerformanceMonitor() {
 //: jccl::ConfigChunkHandler stuff
 //! PRE: configCanHandle(chunk) == true
 //! RETURNS: success
-bool EnvironmentManager::configAdd(jccl::ConfigChunk* chunk) {
+bool EnvironmentManager::configAdd(jccl::ConfigChunkPtr chunk) {
     return false;
 }
 
@@ -84,7 +84,7 @@ bool EnvironmentManager::configAdd(jccl::ConfigChunk* chunk) {
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
 //!RETURNS: success
-bool EnvironmentManager::configRemove(jccl::ConfigChunk* chunk) {
+bool EnvironmentManager::configRemove(jccl::ConfigChunkPtr chunk) {
     return false;
 }
 
@@ -93,7 +93,7 @@ bool EnvironmentManager::configRemove(jccl::ConfigChunk* chunk) {
 //: Can the handler handle the given chunk?
 //! RETURNS: true - Can handle it
 //+          false - Can't handle it
-bool EnvironmentManager::configCanHandle(jccl::ConfigChunk* chunk) {
+bool EnvironmentManager::configCanHandle(jccl::ConfigChunkPtr chunk) {
     return false;
 }
 

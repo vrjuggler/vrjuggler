@@ -150,7 +150,7 @@ public:
 
 public:  // --- DEfault config handlers: (inherited from jccl::ConfigChunkHandler) --- //
    // Default to not handling anything
-   virtual bool configCanHandle(jccl::ConfigChunk* chunk)
+   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
    { return false; }
 
    //: Are any application dependencies satisfied
@@ -163,10 +163,10 @@ public:  // --- DEfault config handlers: (inherited from jccl::ConfigChunkHandle
 
 protected:
    //! NOTE: Inherited from jccl::ConfigChunkHandler
-   virtual bool configAdd(jccl::ConfigChunk* chunk)
+   virtual bool configAdd(jccl::ConfigChunkPtr chunk)
    { vprASSERT(false);  return false; }
    //! NOTE: INherited from jccl::ConfigChunkHandler
-   virtual bool configRemove(jccl::ConfigChunk* chunk)
+   virtual bool configRemove(jccl::ConfigChunkPtr chunk)
    { vprASSERT(false); return false; }
 
 public:

@@ -81,7 +81,7 @@ public:
 
    virtual ~TrackedWallProjection() {}
 
-   virtual void config(jccl::ConfigChunk* chunk)
+   virtual void config(jccl::ConfigChunkPtr chunk)
    {
       Projection::config(chunk);        // Call base class config first
    }

@@ -50,7 +50,7 @@ namespace vrj
 
 
 // Just call the base class constructor
-void WallProjection::config(jccl::ConfigChunk* chunk)
+void WallProjection::config(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT( ((std::string)chunk->getType() == std::string("surfaceDisplay")) ||
              ((std::string)chunk->getType() == std::string("surfaceViewport")) );

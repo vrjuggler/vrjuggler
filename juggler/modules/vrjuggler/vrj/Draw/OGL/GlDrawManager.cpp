@@ -286,7 +286,7 @@ void GlDrawManager::closeAPI()
 //: Add the chunk to the draw manager config
 //! PRE: configCanHandle(chunk) == true
 //! POST: The chunks have reconfigured the system
-bool GlDrawManager::configAdd(jccl::ConfigChunk* chunk)
+bool GlDrawManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
    return false;
 }
@@ -294,14 +294,14 @@ bool GlDrawManager::configAdd(jccl::ConfigChunk* chunk)
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
 //!RETURNS: success
-bool GlDrawManager::configRemove(jccl::ConfigChunk* chunk)
+bool GlDrawManager::configRemove(jccl::ConfigChunkPtr chunk)
 {
    return false;
 }
 
 //: Can the handler handle the given chunk?
 //! RETURNS: false - We can't handle anything
-bool GlDrawManager::configCanHandle(jccl::ConfigChunk* chunk)
+bool GlDrawManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 {
    return false;
 }

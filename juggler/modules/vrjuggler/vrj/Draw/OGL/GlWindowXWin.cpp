@@ -60,7 +60,7 @@ GlWindowXWin::GlWindowXWin():GlWindow() {
    mPipe = -1;
    mXDisplayName = std::string("");
    mAreKeyboardDevice = false;
-   KeyboardXWin::mShared = true;       // Window is shared
+   gadget::KeyboardXWin::mShared = true;       // Window is shared
 }
 
 
@@ -339,8 +339,8 @@ void GlWindowXWin::config(vrj::Display* disp)
    vrj::GlWindow::config(disp);
 
     // Get the vector of display chunks
-   jccl::ConfigChunk* dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
-   jccl::ConfigChunk* displayChunk = disp->getConfigChunk();
+   jccl::ConfigChunkPtr dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
+   jccl::ConfigChunkPtr displayChunk = disp->getConfigChunk();
 
    window_name = disp->getName();
    mPipe = disp->getPipe();
@@ -362,16 +362,16 @@ void GlWindowXWin::config(vrj::Display* disp)
       mAreKeyboardDevice = true;       // Set flag saying that we need to have the local device
 
       // Configure keyboard device portion
-      jccl::ConfigChunk* keyboard_chunk = displayChunk->getProperty("keyboard_device_chunk");
+      jccl::ConfigChunkPtr keyboard_chunk = displayChunk->getProperty("keyboard_device_chunk");
 
       // Set the name of the chunk to the same as the parent chunk (so we can point at it)
       //keyboard_chunk->setProperty("name", (std::string)displayChunk->getProperty("name"));
 
-      KeyboardXWin::config(keyboard_chunk);
+      gadget::KeyboardXWin::config(keyboard_chunk);
 
       // Custom configuration
-      KeyboardXWin::m_width = GlWindowXWin::window_width;
-      KeyboardXWin::m_height = GlWindowXWin::window_height;
+      gadget::KeyboardXWin::m_width = GlWindowXWin::window_width;
+      gadget::KeyboardXWin::m_height = GlWindowXWin::window_height;
 
       mWeOwnTheWindow = false;      // Keyboard device does not own window
    }

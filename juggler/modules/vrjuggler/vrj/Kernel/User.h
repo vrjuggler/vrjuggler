@@ -34,7 +34,7 @@
 #define _VRJ_USER_H_
 
 #include <vrj/vrjConfig.h>
-//#include <vrj/Config/ConfigChunk.h>
+//#include <vrj/Config/ConfigChunkPtr.h>
 #include <gadget/Type/PositionInterface.h>
 
 namespace jccl {
@@ -82,7 +82,7 @@ public:
    //: Configure the user object
    //! POST: User has valid ids (int and string)
    //! POST: Positional device for user location has been set
-   virtual bool config(jccl::ConfigChunk* chunk);
+   virtual bool config(jccl::ConfigChunkPtr chunk);
 
    Matrix* getHeadPos()
    { return mHead->getData(); }

@@ -36,7 +36,7 @@
 #include <vrj/vrjConfig.h>
 #include <vector>
 #include <vrj/Display/Viewport.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 
 
 namespace vrj
@@ -71,10 +71,10 @@ public:
       //+       and "fix" the error.
       //! NOTE: All derived display classes MUST call this function
       //+       after doing local configuration.
-   virtual void config(jccl::ConfigChunk* chunk);
+   virtual void config(jccl::ConfigChunkPtr chunk);
 
-   void configDisplayWindow(jccl::ConfigChunk* chunk);
-   void configViewports(jccl::ConfigChunk* chunk);
+   void configDisplayWindow(jccl::ConfigChunkPtr chunk);
+   void configViewports(jccl::ConfigChunkPtr chunk);
 
    //: Updates the projection data for each contained viewport
    void updateProjections();
@@ -111,7 +111,7 @@ public:
    { return mInStereo; }
 
    //: Get the config chunk that configured this display window
-   jccl::ConfigChunk* getConfigChunk()
+   jccl::ConfigChunkPtr getConfigChunk()
    { return mDisplayChunk; }
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);
@@ -130,7 +130,7 @@ protected:
    int            mPipe;                  //: Hardware pipe. Index of the rendering hardware
    bool           mActive;                //: Is the display active or not
    bool           mInStereo;              //: Is the window in stereo mode?
-   jccl::ConfigChunk* mDisplayChunk;       //: The chunk data for this display
+   jccl::ConfigChunkPtr mDisplayChunk;       //: The chunk data for this display
 
    std::vector<vrj::Viewport*>   mViewports;    //: Contained viewports
 };
