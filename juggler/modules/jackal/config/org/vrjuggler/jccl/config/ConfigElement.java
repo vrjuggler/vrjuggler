@@ -222,8 +222,13 @@ public class ConfigElement implements ConfigElementPointerListener
     *
     * @param name    the name of the property to set
     * @param index   the index of the property value to set
+    * @param value   the enw value for the property index
+    * @param ctx     the context
+    *
+    * @see #setProperty(String, int, Object)
     */  
-   public synchronized void setProperty(String name, int index, Object value, ConfigContext ctx)
+   public synchronized void setProperty(String name, int index, Object value,
+                                        ConfigContext ctx)
    {
       Object old_value = getProperty(name, index);
       
@@ -249,9 +254,33 @@ public class ConfigElement implements ConfigElementPointerListener
 
    /**
     * Sets the value for the property with the given name at the given index.
+    * The type of <code>value</code> must match the type of the property as
+    * specified by the property definition for the named property.  The mapping
+    * is fairly straightfoward:
+    *
+    * <ul>
+    *   <li>Property type string: <code>value</code> type must be
+    *       java.lang.String</li>
+    *   <li>Property type integer: <code>value</code> type must be
+    *       java.lang.Integer</li>
+    *   <li>Property type float: <code>value</code> type must be
+    *       java.lang.Float</li>
+    *   <li>Property type config element (i.e., embedded element):
+    *       <code>value</code> type must be ConfigElement</li>
+    *   <li>Property type config element pointer: <code>value</code> type
+    *       must be java.lang.String<br>
+    *       <blockquote>
+    *       <b>NOTE:</b> Using ConfigElementPointer for the type of
+    *       <code>value</code> will result in a ClassCastException being
+    *       thrown.  The translation from java.lang.String to
+    *       ConfigElementPointer is performed internally by this method.
+    *       </blockquote>
+    *   </li>
+    * </ul>
     *
     * @param name    the name of the property to set
     * @param index   the index of the property value to set
+    * @param value   the new value for the property index
     */
    public synchronized void setProperty(String name, int index, Object value)
       throws IllegalArgumentException,
