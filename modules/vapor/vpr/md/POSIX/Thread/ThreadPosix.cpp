@@ -90,7 +90,7 @@ ThreadPosix::ThreadPosix (thread_func_t func, void* arg,
                                            NULL);
 
    // START THREAD
-   // NOTE: Automagically registers thread UNLESS failure
+   // NOTE: Automagically registers thread (inside ThreadPosix::startThread) UNLESS failure
    int ret_val = spawn(start_functor, priority, scope, state, stack_size);
 
    if ( ret_val )
