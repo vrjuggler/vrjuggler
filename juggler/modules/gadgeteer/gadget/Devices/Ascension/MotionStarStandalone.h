@@ -111,8 +111,8 @@ struct HEADER {
 //    unsigned short int	tm1;
 //    unsigned short int	tm2;
 
-    unsigned char	time[4];  //: Seconds since 00:00:00 Jan. 1, 1970 (GMT)
     unsigned short int	milliseconds; //: Interval time between packets
+    unsigned char	time[4];  //: Seconds since 00:00:00 Jan. 1, 1970 (GMT)
 
     unsigned char	type;     //: Command/response code
     unsigned char	xtype;    //: Extension to command/response code
