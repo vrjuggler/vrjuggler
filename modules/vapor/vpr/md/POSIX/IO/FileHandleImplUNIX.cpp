@@ -133,7 +133,7 @@ FileHandleImplUNIX::close () {
     ReturnStatus status;
 
     if ( ::close(m_fdesc) == -1 ) {
-        vprDEBUG(0, vprDBG_WARNING_LVL)
+        vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "[vpr::FileHandleImplUNIX] Could not close " << m_name << ": "
             << strerror(errno) << std::endl << vprDEBUG_FLUSH;
         status.setCode(ReturnStatus::Fail);
@@ -293,7 +293,7 @@ FileHandleImplUNIX::enableSynchronousWrite () {
         status.setCode(ReturnStatus::Fail);
     }
 #else
-    vprDEBUG(0, vprDBG_CRITICAL_LVL)
+    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
         << "[vpr::FileHandleImplUNIX] Cannot enable synchronous writes on this platform!\n"
         << vprDEBUG_FLUSH;
     status.setCode(ReturnStatus::Fail);
@@ -326,7 +326,7 @@ FileHandleImplUNIX::enableAsynchronousWrite () {
         status.setCode(ReturnStatus::Fail);
     }
 #else
-    vprDEBUG(0, vprDBG_CRITICAL_LVL)
+    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
         << "[vpr::FileHandleImplUNIX] Cannot enable asynchronous writes on this platform!\n"
         << vprDEBUG_FLUSH;
     status.setCode(ReturnStatus::Fail);
@@ -406,7 +406,7 @@ FileHandleImplUNIX::readn_i (void* buffer, const vpr::Uint32 length,
     ReturnStatus status;
 
     if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+       vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     count = length;
 

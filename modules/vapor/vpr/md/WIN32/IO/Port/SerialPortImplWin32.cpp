@@ -396,7 +396,7 @@ vpr::ReturnStatus SerialPortImplWin32::write_i (const void* buffer,
     unsigned long bytes;
 
    if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+       vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
    if(!WriteFile(m_handle, buffer, length, &bytes, NULL)){
         s.setCode(vpr::ReturnStatus::Fail);
@@ -415,7 +415,7 @@ vpr::ReturnStatus SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 le
     unsigned long bytes;
 
    if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+       vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     if(!ReadFile( m_handle, buffer, length, &bytes,NULL)){
         s.setCode(vpr::ReturnStatus::Fail);

@@ -290,7 +290,7 @@ public:
 
       if (m_bound)
        {
-          vprDEBUG(0,0) << "SocketImplNSPR::setLocalAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
+          vprDEBUG(vprDBG_ALL,0) << "SocketImplNSPR::setLocalAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
           status.setCode(ReturnStatus::Fail);
        }
        else
@@ -312,7 +312,7 @@ public:
 
        if (m_connected)
        {
-           vprDEBUG(0,0) << "SocketImplNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
+           vprDEBUG(vprDBG_ALL,0) << "SocketImplNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
            status.setCode(ReturnStatus::Fail);
        }
        else
