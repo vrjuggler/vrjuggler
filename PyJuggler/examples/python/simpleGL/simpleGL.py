@@ -38,6 +38,7 @@ from OpenGL.GL import *
 import vrj
 import gadget
 import jccl
+import gmtl
 
 class SimplGlApp(vrj.GlApp):
    mButton0 = gadget.DigitalInterface()
@@ -45,6 +46,8 @@ class SimplGlApp(vrj.GlApp):
    mButton2 = gadget.DigitalInterface()
    mWand    = gadget.PositionInterface()
    mHead    = gadget.PositionInterface()
+
+   mGrabbed = 0
 
    def __init__(self):
       vrj.GlApp.__init__(self)
@@ -62,16 +65,27 @@ class SimplGlApp(vrj.GlApp):
    def preFrame(self):
       if self.mButton0.getData() == gadget.Digital.State.ON:
          print "Button 0 is pressed!"
+      elif self.mButton0.getData() == gadget.Digital.State.TOGGLE_ON:
+         print "Grabbing box ..."
+         self.mGrabbed = 1
+      else:
+         self.mGrabbed = 0
 
    def bufferPreDraw(self):
       glClearColor(0.0, 0.0, 0.0, 0.0)
       glClear(GL_COLOR_BUFFER_BIT)
 
    def draw(self):
-#      wand_offset = self.mWand.getData()
+      box_offset = gmtl.Vec3f(0.0, 6.0, 0.0)
+
+      # Move the box to the wand's position if the box is grabbed.
+      if self.mGrabbed:
+         wand_transform = self.mWand.getData()
+         box_offset     = gmtl.makeTransVec3(wand_transform)
+
       glClear(GL_DEPTH_BUFFER_BIT)
       glPushMatrix()
-      glTranslatef(0.0, 6.0, 0.0)
+      glTranslatef(box_offset[0], box_offset[1], box_offset[2])
       self.drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS)
       glPopMatrix()
 
