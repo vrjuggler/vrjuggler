@@ -89,7 +89,7 @@ public:
    }
 
     //: returns time of last update...
-    jccl::TimeStamp getTimeStamp () {
+    vpr::Interval getTimeStamp () {
         return mPositionData.getTime();
     }
 
