@@ -259,7 +259,31 @@ public class PropertyEditorPanel extends PropertyComponent
    protected JComponent createComboBox()
    {
       // Populate the box with the tags
-      JComboBox box = new JComboBox(mEditor.getTags());
+      JComboBox box;
+
+      if ( mPropDef.getType() == ConfigElementPointer.class )
+      {
+         final PropertyEditor editor = mEditor;
+         box = new JComboBox(
+            new DefaultComboBoxModel()
+            {
+               public Object getElementAt(int index)
+               {
+                  return editor.getTags()[index];
+               }
+
+               public int getSize()
+               {
+                  return editor.getTags().length;
+               }
+            }
+         );
+      }
+      else
+      {
+         box = new JComboBox(mEditor.getTags());
+      }
+
       mEditorComponent = box;
       //box.setBorder(BorderFactory.createLoweredBevelBorder());
       box.setEditable(mPropDef.enumIsEditable());
