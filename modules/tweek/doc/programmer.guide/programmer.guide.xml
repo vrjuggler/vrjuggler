@@ -2558,10 +2558,11 @@ linkends="NetworkTest.java.addChangeListener.co" />
 public void connectionClosed(ConnectEvent e)                              <co
 id="NetworkTest.java.disconnect" linkends="NetworkTest.java.shutdown.co" />
 {
-   if ( slider_subject != null )
+   if ( mSliderObserver != null )
    {
-      slider_subject.detach(mSliderObserver._this());                     <co
+      mSliderObserver.detach();                              <co
 id="NetworkTest.java.observer.detach" linkends="NetworkTest.java.shutdown.co" />
+      mSliderObserver = null;
    }
 }</programlisting>
 
