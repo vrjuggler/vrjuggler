@@ -12,7 +12,7 @@
 #include <fstream.h>
 #include <iostream.h>
 
-#include "aFlock.h"
+#include <Input/vjPosition/aFlock.h>
 
 const int aFlock::MAXCHARSTRINGSIZE = 256;
 
@@ -79,6 +79,12 @@ aFlock::~aFlock()
     this->stop();
 }
 
+//: see if the flock is active or not
+const bool& aFlock::isActive() const
+{
+	return _active;
+}
+
 //: set the port to use
 //  this will be a string in the form of the native OS descriptor <BR>
 //  ex: unix - "/dev/ttyd3", win32 - "COM3" <BR>
@@ -97,7 +103,7 @@ void aFlock::setPort(const char* const serialPort)
 //: get the port used
 //  this will be a string in the form of the native OS descriptor <BR>
 //  ex: unix - "/dev/ttyd3", win32 - "COM3"
-const char* const aFlock::getPort()
+const char* const aFlock::getPort() const
 {
     return _port;
 }
@@ -259,11 +265,11 @@ void aFlock::setHemisphere( const BIRD_HEMI& h )
 
 //: Set the type of filtering that the flock uses
 //  NOTE: flock.isActive() must be false to use this function
-void aFlock::setFilters( const BIRD_FILT& f )
+void aFlock::setFilterType( const BIRD_FILT& f )
 {
     if (_active) 
     {
-	cout << "Flock: Cannot change filters while active\n" << flush;
+	cout << "Flock: Cannot change filter type while active\n" << flush;
 	return;
     } else {
 	// Set it.
