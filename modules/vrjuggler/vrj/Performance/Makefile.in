@@ -46,14 +46,7 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VJ_LIBRARY)
 
-SRCS= 	PerformanceMediator.cpp
-
-#EXTRA_INCLUDES+= \
-	-I$(top_srcdir)/common	\
-	-I$(top_srcdir)/config	\
-	-I$(top_srcdir)/net	\
-	-I$(top_srcdir)/rtrc	\
-	-I$(topdir)/common
+SRCS=		PerformanceMediator.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -61,7 +54,7 @@ include $(MKPATH)/dpp.obj.mk
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
-ifndef DO_IDL
+ifndef DO_BEFOREBUILD
    -include $(DEPEND_FILES)
 endif
 endif
