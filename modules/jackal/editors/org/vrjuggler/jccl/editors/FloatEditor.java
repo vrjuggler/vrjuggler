@@ -73,7 +73,7 @@ public class FloatEditor
          catch (NumberFormatException nfe)
          {
             // Man ... don't people know what a number looks like?!
-            throw new IllegalArgumentException(nfe.getMessage()+" is not a number");
+            throw new IllegalArgumentException(text + " is not a number");
          }
       }
    }

@@ -63,7 +63,7 @@ public class PropertySheetFactory extends PropertyComponent
     * Gets the singleton instance of this class. This implementation is thread
     * safe.
     */
-   public static PropertySheetFactory instance ()
+   public static PropertySheetFactory instance()
    {
       synchronized (PropertySheetFactory.class)
       {
