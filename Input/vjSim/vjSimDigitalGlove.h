@@ -52,7 +52,7 @@
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimDigitalGlove : virtual public vjDigital, virtual public vjGlove, virtual public vjSimInput
+class vjSimDigitalGlove : virtual public vjDigital, virtual public vjSimInput, virtual public vjGlove
 {
 public:
    //: Default Constructor
@@ -114,11 +114,22 @@ public:
    virtual char* getDeviceName() { return "vjSimDigitalGlove";}
    static std::string getChunkType() { return std::string("SimDigitalGlove");}
 
+// vjGesture stuff:
+   //: Load trained data for the gesture object
+   // Loads the file for trained data
+   //void loadTrainedFile(std::string fileName);
+   
+   //: Get the current gesture.
+   //! RETURNS: id of current gesture
+   //virtual int getGesture();
+   
 private:
    std::vector<int>          mDigitalData;   //: The digital data that we have
    std::vector<vjKeyModPair> mSimKeys;       //: The keys to press for digital simulation
 
-   vjHand left, right;   
+   vjHand                     mLeftHand, mRightHand;   
+   
+   //int                     mCurGesture;   //: The current gesture id
 };
 
 #endif
