@@ -1574,7 +1574,7 @@ dnl #     * APP_VJ_LIBS_AW: The VR Juggler AudioWorks API library.
 dnl #     * APP_VJ_LIBS_SL: The VR Juggler SL API library.
 dnl #     * APP_VJ_LIBS_UTILS: The VR Juggler general utilities library.
 dnl #     * APP_LIBS_BASIC: The _most basic_ basic libraries needed for
-dnl #       compiling (e.g., -lC).
+dnl #       compiling (e.g., -lm).
 dnl #     * APP_EXTRA_LIBS_BEGIN: Options used at the beginning of the list
 dnl #       of extra libraries.
 dnl #     * APP_EXTRA_LIBS_END: Options used at the end of the list of extra
@@ -1622,7 +1622,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_VJ_LIBS_BASIC="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
         APP_VJ_LIBS_BASIC_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
-        APP_EXTRA_LIBS_END='-lm -lC'
+        APP_EXTRA_LIBS_END='-lm'
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
