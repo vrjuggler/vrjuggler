@@ -30,16 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Environment/vjXMLConfigCommunicator.h>
-#include <Environment/vjConnect.h>
-#include <Environment/vjNetCommunicator.h>
+#include <jccl/JackalServer/vjXMLConfigCommunicator.h>
+#include <jccl/JackalServer/vjConnect.h>
+#include <jccl/JackalServer/vjNetCommunicator.h>
 #include <iostream.h>
-#include <Kernel/vjConfigManager.h>
-#include <Utils/vjXercesXMLParserPool.h>
-#include <Config/vjConfigIO.h>
-#include <Config/vjXMLConfigIOHandler.h>
-#include <Config/vjChunkFactory.h>
+//#include <Kernel/vjConfigManager.h>
+#include <jccl/XMLUtil/vjXercesXMLParserPool.h>
+#include <jccl/Config/vjConfigIO.h>
+#include <jccl/Config/vjXMLConfigIOHandler.h>
+#include <jccl/Config/vjChunkFactory.h>
 
+namespace jccl {
 
 //: Constructor
 vjXMLConfigCommunicator::vjXMLConfigCommunicator ():vjNetCommunicator() {
@@ -148,8 +149,9 @@ bool vjXMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
                 retval = retval && config_xml_handler->buildChunkDB (newchunkdb, child);
                 child = child.getNextSibling();
             }
-            if (retval)
-                vjConfigManager::instance()->addChunkDB(&newchunkdb);
+            if (retval) {
+                //vjConfigManager::instance()->addChunkDB(&newchunkdb);
+            }
         }
         else if (!strcasecmp (name, "remove_chunks")) {
             child = doc.getFirstChild();
@@ -159,17 +161,18 @@ bool vjXMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
                 retval = retval && config_xml_handler->buildChunkDB (newchunkdb, child);
                 child = child.getNextSibling();
             }
-            if (retval)
-                vjConfigManager::instance()->removeChunkDB (&newchunkdb);
+            if (retval) {
+                //vjConfigManager::instance()->removeChunkDB (&newchunkdb);
+            }
         }
         else if (!strcasecmp (name, "remove_descs")) {
             // that could be dangerous, so we quietly refuse to honor
             // this request.
         }
         else if (!strcasecmp (name, "request_current_chunks")) {
-            vjConfigManager::instance()->lockActive();
-            vjConfigChunkDB* db = new vjConfigChunkDB((*(vjConfigManager::instance()->getActiveConfig())));   // Make a copy
-            vjConfigManager::instance()->unlockActive();
+//              vjConfigManager::instance()->lockActive();
+//              vjConfigChunkDB* db = new vjConfigChunkDB((*(vjConfigManager::instance()->getActiveConfig())));   // Make a copy
+//              vjConfigManager::instance()->unlockActive();
             
             //vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdb.\n" << vjDEBUG_FLUSH;
             //vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
@@ -193,3 +196,5 @@ bool vjXMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
     }
     return retval;
 } // interpretDOM_Node ();
+
+};

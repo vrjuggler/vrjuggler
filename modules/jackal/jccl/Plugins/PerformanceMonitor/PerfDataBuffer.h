@@ -36,11 +36,13 @@
 #ifndef _VJ_PERF_DATA_BUFFER_H_
 #define _VJ_PERF_DATA_BUFFER_H_
 
-#include <vjConfig.h>
-#include <Environment/vjTimedUpdate.h>
-#include <Performance/vjTimeStamp.h>
+#include <jccl/jcclConfig.h>
+#include <jccl/Environment/TimedUpdate.h>
+#include <jccl/Performance/TimeStamp.h>
 #include <vpr/Sync/Mutex.h>
-#include <Utils/vjDebug.h>
+#include <vpr/Util/Debug.h>
+
+namespace jccl {
 
 //---------------------------------------------------------------
 //: temporary storage for performance data
@@ -49,7 +51,7 @@
 //          to wherever should happen independently of the 
 //          process that's generating the data.
 // <p>
-// Solution: the vjPerfDataBuffer is used as a temporary storage
+// Solution: the PerfDataBuffer is used as a temporary storage
 //           for perfdata.  Each unit in the buffer contains
 //           an integer index and a timestamp. the index is used
 //           in case there are multiple points inside the 
@@ -69,7 +71,7 @@
 // write() call.
 //
 //----------------------------------------------------------------
-class VJ_CLASS_API vjPerfDataBuffer: public vjTimedUpdate {
+class _CLASS_API PerfDataBuffer: public TimedUpdate {
 
     struct buf_entry {
 
@@ -77,7 +79,7 @@ class VJ_CLASS_API vjPerfDataBuffer: public vjTimedUpdate {
         int              phase;
         
         //: time stamp associated with this point.
-        vjTimeStamp      ts;
+        TimeStamp      ts;
         
         buf_entry() {
             phase = 0;
@@ -109,17 +111,17 @@ public:
     //! POST: self is created and has _numbufs buffers
     //! ARGS: _numbufs - number of buffers to allocate
     //+       (default 50)
-    vjPerfDataBuffer (char* _name, int _numbufs, int _nindex) {
+    PerfDataBuffer (char* _name, int _numbufs, int _nindex) {
         init (_name, _numbufs, _nindex);
     }
 
-    vjPerfDataBuffer (const std::string& _name, int _numbufs, int _nindex) {
+    PerfDataBuffer (const std::string& _name, int _numbufs, int _nindex) {
         init (_name.c_str(), _numbufs, _nindex);
     }
 
     //: destructor
     //: POST: all memory & buffers have been freed.
-    virtual ~vjPerfDataBuffer ();
+    virtual ~PerfDataBuffer ();
 
 
 
@@ -165,7 +167,7 @@ public:
     //+       right after.
     void set(int _phase);
 
-    void set (int _phase, vjTimeStamp& _value);
+    void set (int _phase, TimeStamp& _value);
 
     // for below: need a version w/ max # buffers to write
 
@@ -198,10 +200,10 @@ public:
 private:
     void init (const char* _name, int _numbufs, int _nindex);
    
-    vjPerfDataBuffer (const vjPerfDataBuffer& o) {;}
-    void operator= (const vjPerfDataBuffer& o) {;}
+    PerfDataBuffer (const PerfDataBuffer& o) {;}
+    void operator= (const PerfDataBuffer& o) {;}
 };
 
-
+}; // namespace jccl
 
 #endif

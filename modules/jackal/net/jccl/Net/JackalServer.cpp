@@ -36,18 +36,20 @@
 // author: Christopher Just
 
 
-#include <Environment/vjEnvironmentManager.h>
-#include <Kernel/vjKernel.h>
-#include <Environment/vjConnect.h>
-#include <Performance/vjPerfDataBuffer.h>
-#include <Config/vjChunkDescDB.h>
-#include <Config/vjConfigChunkDB.h>
-#include <Config/vjParseUtil.h>
-#include <Environment/vjTimedUpdate.h>
+#include <jccl/JackalServer/vjEnvironmentManager.h>
+//#include <Kernel/vjKernel.h>
+#include <jccl/JackalServer/vjConnect.h>
+//#include <Performance/vjPerfDataBuffer.h>
+#include <jccl/Config/vjChunkDescDB.h>
+#include <jccl/Config/vjConfigChunkDB.h>
+#include <jccl/Config/vjParseUtil.h>
+#include <jccl/JackalServer/vjTimedUpdate.h>
 
-#include <Kernel/vjConfigManager.h>
+//#include <Kernel/vjConfigManager.h>
 
-vjEnvironmentManager::vjEnvironmentManager():
+namespace jccl {
+
+JackalServer::JackalServer():
                           connections(),
                           perf_buffers(),
                           connections_mutex(),
@@ -67,7 +69,7 @@ vjEnvironmentManager::vjEnvironmentManager():
 
 
 
-vjEnvironmentManager::~vjEnvironmentManager() {
+JackalServer::~JackalServer() {
     rejectConnections();
     connections_mutex.acquire();
     killConnections();
@@ -76,13 +78,13 @@ vjEnvironmentManager::~vjEnvironmentManager() {
 
 
 
-bool vjEnvironmentManager::isAccepting() {
+bool JackalServer::isAccepting() {
     return (listen_thread != NULL);
 }
 
 
 
-void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *b) {
+void JackalServer::addPerfDataBuffer (vjPerfDataBuffer *b) {
     vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM adding perf data buffer " << b->getName().c_str() << "\n"
                                    << vjDEBUG_FLUSH;
     perf_buffers_mutex.acquire();
@@ -94,7 +96,7 @@ void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *b) {
 
 
 
-void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
+void JackalServer::removePerfDataBuffer (vjPerfDataBuffer *b) {
     std::vector<vjPerfDataBuffer*>::iterator it;
 
     vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName().c_str()
@@ -119,7 +121,7 @@ void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
 
 //: tells EM that a connection has died (ie by gui disconnecting)
 //  not for the case of removal by configRemove
-void vjEnvironmentManager::connectHasDied (vjConnect* con) {
+void JackalServer::connectHasDied (vjConnect* con) {
     std::string s = con->getName();
 
     connections_mutex.acquire();
@@ -133,7 +135,7 @@ void vjEnvironmentManager::connectHasDied (vjConnect* con) {
 
 
 
-void vjEnvironmentManager::sendRefresh() {
+void JackalServer::sendRefresh() {
    connections_mutex.acquire();
    for (unsigned int i = 0; i < connections.size(); i++) {
        connections[i]->sendRefresh();
@@ -146,7 +148,7 @@ void vjEnvironmentManager::sendRefresh() {
 //: ConfigChunkHandler stuff
 //! PRE: configCanHandle(chunk) == true
 //! RETURNS: success
-bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
+bool JackalServer::configAdd(vjConfigChunk* chunk) {
     bool networkingchanged = false;
     int newport;
 
@@ -217,7 +219,7 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
 //!RETURNS: success
-bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
+bool JackalServer::configRemove(vjConfigChunk* chunk) {
 
     std::string s = chunk->getType();
     if (!vjstrcasecmp (s, "EnvironmentManager")) {
@@ -262,7 +264,7 @@ bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
 //: Can the handler handle the given chunk?
 //! RETURNS: true - Can handle it
 //+          false - Can't handle it
-bool vjEnvironmentManager::configCanHandle(vjConfigChunk* chunk) {
+bool JackalServer::configCanHandle(vjConfigChunk* chunk) {
     std::string s = chunk->getType();
     return (!vjstrcasecmp (s, "EnvironmentManager") ||
             !vjstrcasecmp (s, "PerfMeasure") ||
@@ -274,7 +276,7 @@ bool vjEnvironmentManager::configCanHandle(vjConfigChunk* chunk) {
 //-------------------- PRIVATE MEMBER FUNCTIONS -------------------------
 
 // should only be called when we own connections_mutex
-void vjEnvironmentManager::removeConnect (vjConnect* con) {
+void JackalServer::removeConnect (vjConnect* con) {
     if (!con)
         return;
     if (con == perf_target)
@@ -291,7 +293,7 @@ void vjEnvironmentManager::removeConnect (vjConnect* con) {
 
 
 // should only be called when we own connections_mutex
-void vjEnvironmentManager::setPerformanceTarget (vjConnect* con) {
+void JackalServer::setPerformanceTarget (vjConnect* con) {
     if (con == perf_target)
         return;
     perf_buffers_mutex.acquire();
@@ -304,7 +306,7 @@ void vjEnvironmentManager::setPerformanceTarget (vjConnect* con) {
 
 
 // should only be called when we own connections_mutex
-vjConnect* vjEnvironmentManager::getConnect (const std::string& s) {
+vjConnect* JackalServer::getConnect (const std::string& s) {
     for (unsigned int i = 0; i < connections.size(); i++)
         if (s == connections[i]->getName())
             return connections[i];
@@ -313,21 +315,21 @@ vjConnect* vjEnvironmentManager::getConnect (const std::string& s) {
 
 
 
-void vjEnvironmentManager::controlLoop (void* nullParam) {
+void JackalServer::controlLoop (void* nullParam) {
     // Child process used to listen for new network connections
     //struct sockaddr_in servaddr;
     vjSocket* servsock;
     //int len;
     vjConnect* connection;
 
-    vjDEBUG(vjDBG_ENV_MGR,4) << "vjEnvironmentManager started control loop.\n"
+    vjDEBUG(vjDBG_ENV_MGR,4) << "JackalServer started control loop.\n"
           << vjDEBUG_FLUSH;
 
     for (;;) {
         servsock = listen_socket->accept();
         char name[128];
         //sprintf (name, "Network Connect %d", servsock->getID());
-        vjDEBUG(vjDBG_ENV_MGR,vjDBG_CONFIG_LVL) << "vjEnvironmentManager: Accepted connection: id: "
+        vjDEBUG(vjDBG_ENV_MGR,vjDBG_CONFIG_LVL) << "JackalServer: Accepted connection: id: "
                                                 << servsock->getID() << " on port: N/A\n" << vjDEBUG_FLUSH;
         connection = new vjConnect (servsock, (std::string)name);
         connections_mutex.acquire();
@@ -340,7 +342,7 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
 
 
 // should only be called while we have the connections mutex...
-void vjEnvironmentManager::deactivatePerfBuffers () {
+void JackalServer::deactivatePerfBuffers () {
     std::vector<vjPerfDataBuffer*>::iterator i;
     for (i = perf_buffers.begin(); i != perf_buffers.end(); i++) {
         (*i)->deactivate();
@@ -352,7 +354,7 @@ void vjEnvironmentManager::deactivatePerfBuffers () {
 
 
 // should only be called while we own connections_mutex
-void vjEnvironmentManager::activatePerfBuffers () {
+void JackalServer::activatePerfBuffers () {
     // activates all perf buffers configured to do so
     // this is still a bit on the big and bulky side.
 
@@ -396,7 +398,7 @@ void vjEnvironmentManager::activatePerfBuffers () {
 
 
 
-bool vjEnvironmentManager::acceptConnections() {
+bool JackalServer::acceptConnections() {
 
     if (listen_thread != NULL)
         return true;
@@ -414,9 +416,9 @@ bool vjEnvironmentManager::acceptConnections() {
             << vjDEBUG_FLUSH;
 
     /* now we ought to spin off a thread to do the listening */
-    vpr::ThreadMemberFunctor<vjEnvironmentManager>* memberFunctor =
-        new vpr::ThreadMemberFunctor<vjEnvironmentManager>(this,
-                                                        &vjEnvironmentManager::controlLoop,
+    vpr::ThreadMemberFunctor<JackalServer>* memberFunctor =
+        new vpr::ThreadMemberFunctor<JackalServer>(this,
+                                                        &JackalServer::controlLoop,
                                                         NULL);
     listen_thread = new vpr::Thread(memberFunctor);
 
@@ -426,7 +428,7 @@ bool vjEnvironmentManager::acceptConnections() {
 
 
 
-bool vjEnvironmentManager::rejectConnections () {
+bool JackalServer::rejectConnections () {
     if (listen_thread) {
         listen_thread->kill();
         listen_thread = NULL;
@@ -439,7 +441,7 @@ bool vjEnvironmentManager::rejectConnections () {
 
 
 // should only be called while we own connections_mutex
-void vjEnvironmentManager::killConnections() {
+void JackalServer::killConnections() {
     unsigned int i;
 
     //connections_mutex.acquire();
@@ -451,5 +453,5 @@ void vjEnvironmentManager::killConnections() {
     //connections_mutex.release();
 }
 
-
+};
 

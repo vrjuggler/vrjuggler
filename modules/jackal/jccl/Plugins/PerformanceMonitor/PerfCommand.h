@@ -37,12 +37,14 @@
 #ifndef _VJ_COMMAND_H_
 #define _VJ_COMMAND_H_
 
-#include <vjConfig.h>
-#include <Performance/vjTimeStamp.h>
+#include <jccl/jcclConfig.h>
+#include <jccl/Performance/vjTimeStamp.h>
+
+namespace jccl {
 
 class vjTimedUpdate;
-class vjConfigChunkDB;
-class vjChunkDescDB;
+class ConfigChunkDB;
+class ChunkDescDB;
 
 class VJ_CLASS_API vjCommand {
 public:
@@ -77,12 +79,12 @@ public:
 
 class VJ_CLASS_API vjCommandSendChunkDB: public vjCommand {
 private:
-    vjConfigChunkDB* db;
+    ConfigChunkDB* db;
     bool all;
     static const std::string command_name;
     
 public:
-    vjCommandSendChunkDB (vjConfigChunkDB* _db, bool _all = false);
+    vjCommandSendChunkDB (ConfigChunkDB* _db, bool _all = false);
 
     virtual void call (std::ostream& out) const;
 
@@ -93,12 +95,12 @@ public:
 
 class VJ_CLASS_API vjCommandSendDescDB: public vjCommand {
 private:
-    vjChunkDescDB* db;
+    ChunkDescDB* db;
     bool all;
     static const std::string command_name;
 
 public:
-    vjCommandSendDescDB (vjChunkDescDB* _db, bool _all = false);
+    vjCommandSendDescDB (ChunkDescDB* _db, bool _all = false);
     
     virtual void call (std::ostream& out) const;
 
@@ -119,5 +121,6 @@ public:
     virtual const std::string& getName () const;
 };
 
+};
 
 #endif

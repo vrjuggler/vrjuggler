@@ -33,8 +33,9 @@
 #ifndef _VJ_SOCKSTREAM_H_
 #define _VJ_SOCKSTREAM_H_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 
+namespace jccl {
 
 class VJ_CLASS_API sockstreambuf:public std::streambuf {
 public:
@@ -68,5 +69,6 @@ public:
     virtual int sync();
 };
 
+};
 
 #endif

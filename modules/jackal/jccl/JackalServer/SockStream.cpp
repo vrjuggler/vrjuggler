@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 
 #ifdef VJ_OS_Win32
 #include <winsock2.h>
@@ -39,8 +39,9 @@
 #include <sys/socket.h>
 #endif
 
-#include <Environment/vjSockStream.h>
+#include <jccl/JackalServer/vjSockStream.h>
 
+namespace jccl {
 
 const size_t sockstreambuf::BUFSIZE = 128;
 
@@ -106,3 +107,4 @@ int sockstreambuf::sync() {
     //return streambuf::sync();
 }
 
+};

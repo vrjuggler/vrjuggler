@@ -30,9 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
-
-#include <Environment/vjSocket.h>
+#include <jccl/JackalServer/vjSocket.h>
 
 #ifndef VJ_OS_Win32
 
@@ -45,7 +43,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#include <Environment/vjSockStream.h>
+#include <jccl/JackalServer/vjSockStream.h>
+
+namespace jccl {
 
 const int vjSOCKID_INVALID = -1;
 
@@ -142,7 +142,7 @@ vjSocketPosix* vjSocketPosix::accept () {
         return NULL;
 }
 
-
+};
 
 #else
 
@@ -150,8 +150,9 @@ vjSocketPosix* vjSocketPosix::accept () {
 /****************************** Winsock2 Version ***************************/
 
 #include <winsock2.h>
-#include <Environment/vjSockStream.h>
+#include <jccl/JackalServer/vjSockStream.h>
 
+namespace jccl {
 
 const int vjSOCKID_INVALID = -1;
 
@@ -261,7 +262,7 @@ vjSocketWin32* vjSocketWin32::accept () {
         return NULL;
 }
 
-
+};
 
 #endif //ifndef VJ_OS_Win32
 

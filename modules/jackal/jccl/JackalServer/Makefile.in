@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Environment.  It requires GNU make.
+# Makefile.in for jccl/JackalServer.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,13 +41,11 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Environment
+includedir	= @includedir@/jccl/JackalServer
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VJ_LIBRARY)
-VJROOT		= $(top_srcdir)
-VJ_SRCDIR	= @VJ_SRCDIR@/Environment
+SUBOBJDIR	= $(JCCL_LIBRARY)
 
 SRCS		= vjCommand.cpp			\
                   vjConnect.cpp			\
