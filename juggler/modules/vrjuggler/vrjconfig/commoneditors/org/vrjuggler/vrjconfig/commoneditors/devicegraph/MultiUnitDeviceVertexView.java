@@ -529,7 +529,8 @@ public class MultiUnitDeviceVertexView
          height -= max_height;
 
          mMainLayout.deleteRow(row);
-         List removed_edges = new ArrayList();
+         List removed_edges    = new ArrayList();
+         List removed_vertices = new ArrayList();
 
          Frame parent = (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
                                                                   this);
@@ -574,14 +575,16 @@ public class MultiUnitDeviceVertexView
                }
 
                broker.remove(ctx, proxy_elt);
-               this.graph.getModel().remove(new Object[]{proxy_cell});
+               removed_vertices.add(proxy_cell);
             }
-
-            proxy_cell.setUserObject(null);
          }
 
-         // Remove all the connections to port that have now been broken.
+         // Remove the edges first to break the vertex connections.
+         // Then remove the vertices.  The order is important here to ensure
+         // that the source and target of the removed edges still have parents
+         // when the edges are removed.
          this.graph.getModel().remove(removed_edges.toArray());
+         this.graph.getModel().remove(removed_vertices.toArray());
 
          // Remove port as a child of our cell.
          DefaultGraphCell device_cell = (DefaultGraphCell) mView.getCell();
