@@ -39,13 +39,13 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
             </listitem>
             <listitem>
                <para>Get external packages that Juggler depends on. Typically you will run cvs-gather.pl, found in the top-level <filename>juggler</filename> directory.</para>
-               <para>The syntax will be similar to the following (you may have to edit the file <filename>deps.esrc</filename>, see also <xref linkend="aquire"/>):</para>
+               <para>The syntax will be similar to the following (you may have to edit the file <filename>deps.esrc</filename>, see also <xref linkend="acquire"/>):</para>
                <screen>./cvs-gather.pl --verbose --cfg=deps.esrc</screen>
-               <para>You can use the <command>cvs-gather</command> tool, or you can read the file <filename>deps.esrc</filename> and get the packages manually. For more details about this, see <xref linkend="aquire"/>.</para>
+               <para>You can use the <command>cvs-gather</command> tool, or you can read the file <filename>deps.esrc</filename> and get the packages manually. For more details about this, see <xref linkend="acquire"/>.</para>
             </listitem>
          </orderedlist>
       </section>
-      <section id="aquire">
+      <section id="acquire">
          <title>Aquire third-party packages</title>
          <para><command>cvs-gather</command> is a utility we include in the root directory of Juggler to help you collect third-party (external) source code that Juggler needs in order to build. In short, <command>cvs-gather</command> makes it easier to acquire the packages that Juggler needs.</para>
          <para>To get help on using this tool, use one of the following (the second version gives much more detailed output):</para>
@@ -192,6 +192,41 @@ cd build.gadgeteer</screen></para>
                      <para><screen>setenv GADGET_BASE_DIR $HOME/gadgeteer-inst</screen></para>
                   </listitem>
                </orderedlist>
+            </section>
+            <section>
+               <title>Tweek (individual)</title>
+               <para>Tweek depends on VPR. It needs JDK 1.3.1, JDOM B7 or newer, and the third-party CORBA implementations omniORB 3.0.4 (C++) and OpenORB 1.2.0 (Java). These packages can be downloaded from the following websites:</para>
+               <itemizedlist>
+                  <listitem>
+                     <para>JDOM: <ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink></para>
+                  </listitem>
+                  <listitem>
+                     <para>omniORB: <ulink url="http://www.jdom.org/">http://www.omniorb.org/</ulink></para>
+                  </listitem>
+                  <listitem>
+                     <para>OpenORB: <ulink url="http://www.jdom.org/">http://www.openorb.org/</ulink></para>
+                  </listitem>
+               </itemizedlist>
+               <para>For the following steps, assume that you have omniORB installed in <filename>&lt;OMNIORBPATH&gt;</filename>, OpenORB is installed in <filename>&lt;OPENORBPATH&gt;</filename>, and JDOM is installed in <filename>&lt;JDOMPATH&gt;</filename>.</para>
+               <para>Assuming you have the external packages installed, do the following from the top-level <filename>juggler</filename> directory:</para>
+               <orderedlist>
+                  <listitem>
+                     <para><screen>mkdir build.tweek
+cd build.tweek</screen></para>
+                  </listitem>
+                  <listitem>
+                     <para><screen>../configure.pl --cfg=../juggler.cfg --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=&lt;JDOMPATH&gt;/jdom.jar:&lt;JDOMPATH&gt;/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=&lt;OMNIORBPATH&gt; --with-java-orb=OpenORB --with-java-orb-jar=&lt;OPENORBPATH&gt;/lib/openorb-1.2.0.jar</screen></para>
+                  </listitem>
+                  <listitem>
+                     <para><screen>gmake debug install</screen></para>
+                  </listitem>
+                  <listitem>
+                     <para><screen>setenv TWEEK_BASE_DIR $HOME/tweek-inst</screen></para>
+                  </listitem>
+               </orderedlist>
+               <para>If JDK 1.4.0 is used, you do not need OpenORB (or any other third-party CORBA implementation for Java). In that case, pass <option>--with-java-orb=JDK</option> to <command>configure.pl</command>.</para>
+               <para>Depending on your omniORB installation, you may have to pass extra arguments to <command>configure.pl</command> so that the configuration process can find the <command>omniidl</command> binary and the omniORB libraries. For example, on RedHat Linux 7.2, the following arguments must be specified in addition to the above:</para>
+               <screen>--with-cxx-orb-bin=&lt;OMNIORBPATH&gt;/bin/i586_linux_2.0_glibc --with-cxx-orb-lib=&lt;OMNIORBPATH&gt;/lib/i586_linux_2.0_glibc</screen>
             </section>
          </section>
       </section>
