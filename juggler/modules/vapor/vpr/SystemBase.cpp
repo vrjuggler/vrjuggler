@@ -41,7 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
-#if defined(VPR_OS_FreeBSD) || defined(VPR_OS_Linux)
+#if defined(VPR_OS_Linux)
 #include <sys/types.h>
 #include <unistd.h>
 #include <execinfo.h>
@@ -61,14 +61,14 @@ std::string SystemBase::getCallStack()
    std::string ret_stack("<Call stack not supported>");
 
    // XXX: should come up with better test for glib
-#if defined(VPR_OS_FreeBSD) || defined(VPR_OS_Linux)
+#if defined(VPR_OS_Linux)
    void* trace_syms[100];
    size_t size;
    char **strings;
 
    pid_t cur_pid = getpid();
-   size = backtrace (trace_syms, 100);
-   strings = backtrace_symbols (trace_syms, size);
+   size = backtrace(trace_syms, 100);
+   strings = backtrace_symbols(trace_syms, size);
 
    std::ostringstream trace_stream;
    trace_stream << "Stack trace: thread: " << cur_pid << std::endl;
