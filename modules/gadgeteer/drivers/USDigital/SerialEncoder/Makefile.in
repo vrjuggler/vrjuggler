@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/drivers/Fakespace/PinchGlove.  It requires
+# Makefile.in for gadgeteer/drivers/USDigital/SerialEncoder.  It requires
 # GNU make.
 #
 # Generated for use on @PLATFORM@
