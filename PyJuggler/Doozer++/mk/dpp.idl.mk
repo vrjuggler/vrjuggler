@@ -21,52 +21,57 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.idl.mk,v
-# Date modified: 2003/02/22 03:23:19
-# Version:       1.9.2.1
+# Date modified: 2003/06/08 16:11:36
+# Version:       1.9.2.2
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.idl.mk,v 1.9.2.1 2003/02/22 03:23:19 patrickh Exp
+# dpp.idl.mk,v 1.9.2.2 2003/06/08 16:11:36 patrickh Exp
 #
 # This file <dpp.idl.mk> handles compiling a CORBA IDL file into source files
 # for various languages using the appropriate IDL compiler.
 # -----------------------------------------------------------------------------
 # The makefile including this file must define the following variables:
 #
-# srcdir         - The directory containing the source files (IDL, C++, Java,
-#                  etc.) to compile.
-# C_IDL          - The IDL compiler for generating C code.
-# CXX_IDL        - The IDL compiler for generating C++ code.
-# JAVA_IDL       - The IDL compiler for generating Java code.
-# IDL_C_FILES    - The list of C files that the IDL compiler will generate.
-#                  The order is very important.  For an IDL file called
-#                  myIf.idl, the first generated file should be myIf.cpp.
-#                  This is required so that make(1) will know what to do with
-#                  what files.  Files corresponding to multiple IDL files can
-#                  be listed in this variable as long as they follow this
-#                  rule.
-# IDL_CXX_FILES  - The list of C++ files that the IDL compiler will generate.
-#                  The same rule for ordering of file names in
-#                  $(IDL_C_FILES) applies here.
-# IDL_JAVA_FILES - The list of Java files that the Java IDL compiler will
-#                  generate.  The same rule for ordering of file names in
-#                  $(IDL_C_FILES) applies here.
+# srcdir           - The directory containing the source files (IDL, C++, Java,
+#                    etc.) to compile.
+# C_IDL            - The IDL compiler for generating C code.
+# CXX_IDL          - The IDL compiler for generating C++ code.
+# JAVA_IDL         - The IDL compiler for generating Java code.
+# IDL_C_FILES      - The list of C files that the IDL compiler will generate.
+#                    The order is very important.  For an IDL file called
+#                    myIf.idl, the first generated file should be myIf.cpp.
+#                    This is required so that make(1) will know what to do with
+#                    what files.  Files corresponding to multiple IDL files can
+#                    be listed in this variable as long as they follow this
+#                    rule.
+# IDL_CXX_FILES    - The list of C++ files that the IDL compiler will generate.
+#                    The same rule for ordering of file names in
+#                    $(IDL_C_FILES) applies here.
+# IDL_JAVA_FILES   - The list of Java files that the Java IDL compiler will
+#                    generate.  The same rule for ordering of file names in
+#                    $(IDL_C_FILES) applies here.
+# IDL_PYTHON_FILES - The list of Python files that the Python IDL compiler will
+#                    generate.
 #
 # Optionally, the following variables can be defined:
 #
-# EXTRA_SRCS_PATH   - Directories besides $(srcdir) where source files may be
-#                     found.
-# C_IDL_OPTS        - General options to pass to the IDL-to-C compiler.
-# CXX_IDL_OPTS      - General options to pass to the IDL-to-C++ compiler.
-# JAVA_IDL_OPTS     - General options to pass to the IDL-to-Java compiler.
+# EXTRA_SRCS_PATH     - Directories besides $(srcdir) where source files may be
+#                       found.
+# C_IDL_OPTS          - General options to pass to the IDL-to-C compiler.
+# CXX_IDL_OPTS        - General options to pass to the IDL-to-C++ compiler.
+# JAVA_IDL_OPTS       - General options to pass to the IDL-to-Java compiler.
+# PYTHON_IDL_OPTS     - General options to pass to the IDL-to-Python compiler.
 #
-# CXX_IDL_INCLUDES  - Paths to extend the include path for the IDL-to-C++
-#                     compiler.
-# CXX_IDL_INCLUDES  - Paths to extend the include path for the IDL-to-C++
-#                     compiler.
-# JAVA_IDL_INCLUDES - Paths to extend the include path for the IDL-to-Java
-#                     compiler.
+# C_IDL_INCLUDES      - Paths to extend the include path for the IDL-to-C
+#                       compiler.
+# CXX_IDL_INCLUDES    - Paths to extend the include path for the IDL-to-C++
+#                       compiler.
+# JAVA_IDL_INCLUDES   - Paths to extend the include path for the IDL-to-Java
+#                       compiler.
+# PYTHON_IDL_INCLUDES - Paths to extend the include path for the IDL-to-Python
+#                       compiler.
 # =============================================================================
 
 vpath %.idl $(srcdir) $(EXTRA_SRCS_PATH) $(EXTRA_JAVA_SRCS_PATH)
@@ -111,4 +116,18 @@ endif
 ifdef IDL_JAVA_FILES
 %.java: %.idl
 	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_INCLUDES) $<
+endif
+
+# -----------------------------------------------------------------------------
+# Generate Python code (the files listed in $(IDL_PYTHON_FILES) from the
+# corresponding IDL file.
+# -----------------------------------------------------------------------------
+python_idl: $(IDL_PYTHON_FILES)
+ifdef _LOCAL_PYTHON_IDL
+	@$(MAKE) _python_idl
+endif
+
+ifdef IDL_PYTHON_FILES
+%_idl.py: %.idl
+	$(PYTHON_IDL) $(PYTHON_IDL_OPTS) $(PYTHON_IDL_INCLUDES) $<
 endif

@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          common.defs.mk.in,v
-# Date modified: 2003/02/22 03:23:19
-# Version:       1.30.2.4
+# Date modified: 2003/06/23 19:40:08
+# Version:       1.30.2.6
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.30.2.4 2003/02/22 03:23:19 patrickh Exp
+# common.defs.mk.in,v 1.30.2.6 2003/06/23 19:40:08 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.  It is distributed
@@ -76,6 +76,10 @@
 # CXXFLAGS_DYLINB - Special flags used only when building dynamically linked
 #                   libraries with the C++ compiler.
 # CXX_PROF_FLAGS  - Flag(s) to enable compiling profiled C++ objects.
+# C_DLL           - Command for linking a DLL from C object files.
+# CXX_DLL         - Command for linking a DLL from C++ object files.
+# C_PLUGIN        - Command for linking a plug-in from C object files.
+# CXX_PLUGIN      - Command for linking a plug-in from C++ object files.
 # DEFS            - Command-line preprocessor definitions (-Dvariable=value).
 # DEP_GEN_FLAG    - Flag passed to the compiler to generate dependencies.
 # DEPEND_FLAGS    - Flags passed to makedepend(1) (or equivalent program for
@@ -123,6 +127,9 @@
 # RANLIB          - Path to ranlib(1) binary if it is available.  ':'
 #                   otherwise.
 # RMIC            - Java RMI compiler utility.
+#
+# C_WARNS_LEVEL_[0-5]   - Warning levels for C code.
+# CXX_WARNS_LEVEL_[0-5] - Warning levels for C++ code.
 #
 # USE_MAKEDEPEND      - Tell the dependency-generation code whether to use
 #                       makedepend(1).  The value will be either 'Y' or 'N'.
@@ -172,6 +179,10 @@ CPPFLAGS=		@CPPFLAGS@ $(EXTRA_CPPFLAGS)
 CXXFLAGS=		@CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CXXFLAGS)
 CXXFLAGS_DYNLIB=	@CXXFLAGS_DYNLIB@
 CXX_PROF_FLAGS= 	@CXX_PROF_FLAGS@
+C_DLL=			@C_DLL@
+CXX_DLL=		@CXX_DLL@
+C_PLUGIN=		@C_PLUGIN@
+CXX_PLUGIN=		@CXX_PLUGIN@
 DEFS=			@DEFS@ $(EXTRA_DEFS)
 DEP_GEN_FLAG=		@DEP_GEN_FLAG@
 DEPEND_FLAGS=		@DEPEND_FLAGS@ $(INCLUDES) $(EXTRA_DEPEND_FLAGS)
@@ -210,6 +221,20 @@ PERL=			@PERL@
 RANLIB=			@RANLIB@
 RMIC=			@RMIC@
 
+# Warning levels for C and C++ needed by dpp.obj-common.mk.
+C_WARNS_LEVEL_0=	@C_WARNS_LEVEL_0@
+C_WARNS_LEVEL_1=	@C_WARNS_LEVEL_1@
+C_WARNS_LEVEL_2=	@C_WARNS_LEVEL_2@
+C_WARNS_LEVEL_3=	@C_WARNS_LEVEL_3@
+C_WARNS_LEVEL_4=	@C_WARNS_LEVEL_4@
+C_WARNS_LEVEL_5=	@C_WARNS_LEVEL_5@
+CXX_WARNS_LEVEL_0=	@CXX_WARNS_LEVEL_0@
+CXX_WARNS_LEVEL_1=	@CXX_WARNS_LEVEL_1@
+CXX_WARNS_LEVEL_2=	@CXX_WARNS_LEVEL_2@
+CXX_WARNS_LEVEL_3=	@CXX_WARNS_LEVEL_3@
+CXX_WARNS_LEVEL_4=	@CXX_WARNS_LEVEL_4@
+CXX_WARNS_LEVEL_5=	@CXX_WARNS_LEVEL_5@
+
 # SGI-specific dynamic-shared-object information.
 DSOREGFILE=		@DSOREGFILE@
 DSOVERSION=		@DSOVERSION@
@@ -236,8 +261,10 @@ endif
 # -----------------------------------------------------------------------------
 # Compiler command lines.
 # -----------------------------------------------------------------------------
-C_COMPILE=		$(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-CXX_COMPILE=		$(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
+C_COMPILE=		$(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS)		\
+			$(CFLAGS) $(C_WARN_FLAGS)
+CXX_COMPILE=		$(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS)		\
+			$(CXXFLAGS) $(CXX_WARN_FLAGS)
 
 # -----------------------------------------------------------------------------
 # Platform- and binary-specific options.  The assignments preceding the

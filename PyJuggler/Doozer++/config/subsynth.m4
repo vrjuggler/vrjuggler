@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          subsynth.m4,v
-dnl Date modified: 2003/02/22 03:23:18
-dnl Version:       1.1.2.11
+dnl Date modified: 2003/06/23 22:07:19
+dnl Version:       1.1.2.13
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -48,7 +48,7 @@ dnl     SUBSYNTH_LDFLAGS  - Extra linker flags for the Subsynth library
 dnl                         directory.
 dnl ===========================================================================
 
-dnl subsynth.m4,v 1.1.2.11 2003/02/22 03:23:18 patrickh Exp
+dnl subsynth.m4,v 1.1.2.13 2003/06/23 22:07:19 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has Subsynth installed.  This adds the
@@ -81,7 +81,11 @@ AC_DEFUN(DPP_HAVE_SUBSYNTH,
    SUBSYNTH_LDFLAGS=''
    dpp_have_subsynth='no'
 
-   DPP_HAVE_PORTAUDIO( /usr, AC_MSG_RESULT(+ Found PortAudio), AC_MSG_RESULT(+ PortAudio not found, skipping use of Subsynth), )
+   dnl XXX: This isn't valid because the caller of this macro has no way to
+   dnl specify where to look for PortAudio by default.  The default (/usr) is
+   dnl hard coded, which is undesireable.
+   DPP_HAVE_PORTAUDIO([/usr], ,
+      [AC_MSG_WARN([*** Subsynth requires PortAudio ***])])
 
    dnl Define the root directory for the Subsynth installation.
    AC_ARG_WITH(subsynth,
@@ -93,7 +97,6 @@ AC_DEFUN(DPP_HAVE_SUBSYNTH,
       dnl Save these values in case they need to be restored later.
       dpp_save_CFLAGS="$CFLAGS"
       dpp_save_CPPFLAGS="$CPPFLAGS"
-      dpp_save_INCLUDES="$INCLUDES"
       dpp_save_LDFLAGS="$LDFLAGS"
 
       dnl Add the user-specified Subsynth installation directory to these
@@ -101,7 +104,7 @@ AC_DEFUN(DPP_HAVE_SUBSYNTH,
       dnl multiple times if $SUBSYNTH_ROOT is "/usr".
       if test "x$SUBSYNTH_ROOT" != "x/usr" ; then
          CPPFLAGS="$CPPFLAGS -I$SUBSYNTH_ROOT/include $PA_INCLUDES"
-         INCLUDES="$INCLUDES -I$SUBSYNTH_ROOT/include $PA_INCLUDES"
+
          if test -d "$SUBSYNTH_ROOT/lib$LIBBITSUF" ; then
             LDFLAGS="-L$SUBSYNTH_ROOT/lib$LIBBITSUF $PA_LDFLAGS $LDFLAGS"
          fi
@@ -127,17 +130,8 @@ AC_DEFUN(DPP_HAVE_SUBSYNTH,
                            [dpp_cv_synisLittle_subsynth_lib='yes'],
                            [dpp_cv_synisLittle_subsynth_lib='no'])])
 
-         if test "x$dpp_cv_synisLittle_subsynth_lib" = "xno" ; then
-            ifelse([$3], , :, [$3])
-         fi
-
          LIBS="$dpp_save_LIBS"
-
-         if test "x$dpp_cv_synisLittle_subsynth_lib" = "xyes" ; then
-            ifelse([$2], , :, [$2])
-         else
-            ifelse([$3], , :, [$3])
-         fi
+         dpp_have_subsynth="$dpp_cv_synisLittle_subsynth_lib"
 
          DPP_LANG_RESTORE
 
@@ -145,8 +139,8 @@ AC_DEFUN(DPP_HAVE_SUBSYNTH,
       else
          dpp_save_LIBS="$LIBS"
 
-         AC_LANG_SAVE
-         AC_LANG_C
+         DPP_LANG_SAVE
+         DPP_LANG_C
 
          dpp_have_subsynth='no'
 
@@ -170,14 +164,13 @@ AC_DEFUN(DPP_HAVE_SUBSYNTH,
          dnl $LIBS.  We want to do that ourselves later.
          LIBS="$dpp_save_LIBS"
 
-         if test "x$dpp_have_subsynth" = "xno" ; then
-            ifelse([$3], , :, [$3])
-         fi
-         if test "x$dpp_have_subsynth" = "xyes" ; then
-            ifelse([$2], , :, [$2])
-         fi
+         DPP_LANG_RESTORE
+      fi
 
-         AC_LANG_RESTORE
+      if test "x$dpp_have_subsynth" = "xyes" ; then
+         ifelse([$2], , :, [$2])
+      else
+         ifelse([$3], , :, [$3])
       fi
 
       dnl If Subsynth API files were found, define this extra stuff that may be
@@ -200,13 +193,15 @@ AC_DEFUN(DPP_HAVE_SUBSYNTH,
       dnl Restore all the variables now that we are done testing.
       CFLAGS="$dpp_save_CFLAGS"
       CPPFLAGS="$dpp_save_CPPFLAGS"
-      INCLUDES="$dpp_save_INCLUDES"
       LDFLAGS="$dpp_save_LDFLAGS"
-      
+
       if test "x$PLATFORM" = "xIRIX" ; then
          SUBSYNTH_INCLUDES="-DNO_METAPROG $SUBSYNTH_INCLUDES"
       fi
 
+   dnl Failure case when PortAudio is not available.
+   else
+      ifelse([$3], , :, [$3])
    fi
 
    dnl Export all of the output vars for use by makefiles and configure script.

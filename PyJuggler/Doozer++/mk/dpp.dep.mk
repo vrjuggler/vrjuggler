@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.dep.mk,v
-# Date modified: 2003/02/22 03:23:19
-# Version:       1.10.2.2
+# Date modified: 2003/06/06 15:37:28
+# Version:       1.10.2.3
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.dep.mk,v 1.10.2.2 2003/02/22 03:23:19 patrickh Exp
+# dpp.dep.mk,v 1.10.2.3 2003/06/06 15:37:28 patrickh Exp
 #
 # This include file <dpp.dep.mk> handles source code dependencies.  It
 # generates makefiles corresponding to each source file (ending in .c or .cpp)
@@ -112,9 +112,9 @@ ifeq ($(USE_MAKEDEPEND), Y)
    CXX_DEPGEN=	$(_DEPGEN_MKDEP)
 else
    C_DEPGEN=	$(SHELL) -ec '$(MKDEP_C) $(DEP_GEN_FLAG) $< |		\
-		   sed $(_CC_SED_EXP) > $@'
+		   sed $(_CC_SED_EXP) > $@' 2>/dev/null
    CXX_DEPGEN=	$(SHELL) -ec '$(MKDEP_CXX) $(DEP_GEN_FLAG) $< |		\
-		   sed $(_CC_SED_EXP) > $@'
+		   sed $(_CC_SED_EXP) > $@' 2>/dev/null
 endif
 
 $(DEPDIR)/%.d: %.c

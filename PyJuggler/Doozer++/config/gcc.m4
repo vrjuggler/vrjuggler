@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          gcc.m4,v
-dnl Date modified: 2003/02/22 03:23:17
-dnl Version:       1.8.2.5
+dnl Date modified: 2003/06/23 19:40:08
+dnl Version:       1.8.2.8
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -56,7 +56,7 @@ dnl               be "no" or the empty string.  This is set by the
 dnl               DPP_WITH_GCC macro.
 dnl ===========================================================================
 
-dnl gcc.m4,v 1.8.2.5 2003/02/22 03:23:17 patrickh Exp
+dnl gcc.m4,v 1.8.2.8 2003/06/23 19:40:08 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Force the use of GCC as the compiler suite.
@@ -89,10 +89,24 @@ AC_DEFUN(DPP_SETUP_GCC,
    ARFLAGS='-ruv'
    LD='$(CXX) -shared'
    LDOPTS=''
+   C_DLL='$(CC) -shared'
+   CXX_DLL='$(CXX) -shared'
+   C_PLUGIN='$(CC) -shared'
+   CXX_PLUGIN='$(CXX) -shared'
    OPT_FLAGS="-O$1"
    DBG_FLAGS='-g'
    LDFLAGS_STATIC='-static'
    LDFLAGS_DYNAMIC=''
+
+   # These are based on the FreeBSD 5.x build system settings.
+   C_WARNS_LEVEL_0='-w'
+   C_WARNS_LEVEL_1='-Wsystem-headers'
+   C_WARNS_LEVEL_2="$C_WARNS_LEVEL_1 -Wall -Wno-format-y2k"
+   C_WARNS_LEVEL_3="$C_WARNS_LEVEL_2 -W -Wstrict-prototypes -Wmissing-prototypes -Wpointer-arith"
+   C_WARNS_LEVEL_4="$C_WARNS_LEVEL_3 -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wshadow -Wcast-align"
+   C_WARNS_LEVEL_5="$C_WARNS_LEVEL_4"
+
+   CXX_WARNS_LEVEL_0='-w'
 ])
 
 dnl ---------------------------------------------------------------------------

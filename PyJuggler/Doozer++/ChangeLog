@@ -1,5 +1,11 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2003-06-23 patrickh     Added individual commands for use in makefiles that
+                        generate shared libraries and plug-ins from C or C++
+                        object files.
+2003-06-08 patrickh     Added support for generating Python code from IDL.
+2003-05-22 patrickh     Added a "warning level" feature for compiling with
+                        different degrees of strictness.
 2003-01-15 patrickh     Added the cygcl.pl Perl script as a replacement for
                         msvccc.  Using cygcl, the NSPR and OpenGL Performer
                         macros are now safe to use when the installation

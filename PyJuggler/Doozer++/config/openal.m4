@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          openal.m4,v
-dnl Date modified: 2003/02/22 03:23:18
-dnl Version:       1.4.2.7
+dnl Date modified: 2003/06/17 23:13:55
+dnl Version:       1.4.2.8
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -44,7 +44,7 @@ dnl     AL_INCLUDES - Extra include path for the OpenAL header directory.
 dnl     AL_LDFLAGS  - Extra linker flags for the OpenAL library directory.
 dnl ===========================================================================
 
-dnl openal.m4,v 1.4.2.7 2003/02/22 03:23:18 patrickh Exp
+dnl openal.m4,v 1.4.2.8 2003/06/17 23:13:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenAL installed.  This
@@ -160,8 +160,8 @@ dnl      LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
 
       AC_CHECK_LIB([openal], [alEnable],
          [AC_CHECK_HEADER([AL/al.h], [dpp_have_openal='yes'],
-            [AC_MSG_WARN([*** OpenAL will not be used (AL/al.h not found) ***])])],
-         [AC_MSG_WARN([*** OpenAL will not be used (openal library not found) ***])],
+            [dpp_have_openal='no'])],
+         [dpp_have_openal='no'],
          [-lm])
 
       dnl This is necessary because AC_CHECK_LIB() adds -lopenal to

@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          compiler.m4,v
-dnl Date modified: 2003/02/22 03:23:17
-dnl Version:       1.29.2.6
+dnl Date modified: 2003/06/23 19:40:08
+dnl Version:       1.29.2.8
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -80,6 +80,16 @@ dnl     CXXFLAGS             - All options passed to the C++ compiler.
 dnl     CXXFLAGS_DYNLIB      - Position-independent code generation flag for
 dnl                            the C++ compiler.  Substituted automatically.
 dnl     CXXCPP               - The C++ compiler's preprocessor.
+dnl     C_DLL                - The command to generate a DLL (shared library)
+dnl                            from C object files.
+dnl     CXX_DLL              - The command to generate a DLL (shared library)
+dnl                            from C++ object files.
+dnl     C_PLUGIN             - The command to generate a C plug-in (code loaded
+dnl                            at runtime, usually with dlopen(3) or equivalent
+dnl                            system call).
+dnl     CXX_PLUGIN           - The command to generate a C++ plug-in (code
+dnl                            loaded at runtime, usually with dlopen(3) or
+dnl                            equivalent system call).
 dnl     DEP_GEN_FLAG         - Compiler flag for generating source file
 dnl                            dependencies.
 dnl     DEPEND_FLAGS         - Flags for building dependencies (typically with
@@ -122,7 +132,7 @@ dnl     WIN32
 dnl     _MBCS
 dnl ===========================================================================
 
-dnl compiler.m4,v 1.29.2.6 2003/02/22 03:23:17 patrickh Exp
+dnl compiler.m4,v 1.29.2.8 2003/06/23 19:40:08 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check if the given compiler accepts a given flag.  This can be used for
@@ -176,6 +186,10 @@ AC_DEFUN(DPP_SETUP_COMPILER,
    LDOPTS_DBG=''
    LDOPTS_OPT=''
    LDOPTS_PROF=''
+   C_DLL=''
+   CXX_DLL=''
+   C_PLUGIN=''
+   CXX_PLUGIN=''
 
    dnl Flag used for naming a compiled object file.
    OBJ_NAME_FLAG='-o $[@]'
@@ -193,6 +207,21 @@ AC_DEFUN(DPP_SETUP_COMPILER,
    dnl respectively.
    DBG_FLAGS=''
    OPT_FLAGS=''
+
+   dnl Initialize these here just to be safe.  Subsequent code will fill in
+   dnl the details.
+   C_WARNS_LEVEL_0=''
+   C_WARNS_LEVEL_1=''
+   C_WARNS_LEVEL_2=''
+   C_WARNS_LEVEL_3=''
+   C_WARNS_LEVEL_4=''
+   C_WARNS_LEVEL_5=''
+   CXX_WARNS_LEVEL_0=''
+   CXX_WARNS_LEVEL_1=''
+   CXX_WARNS_LEVEL_2=''
+   CXX_WARNS_LEVEL_3=''
+   CXX_WARNS_LEVEL_4=''
+   CXX_WARNS_LEVEL_5=''
 
    dnl IRIX junk.
    DSOREGFILE=''
@@ -228,6 +257,10 @@ AC_DEFUN(DPP_SETUP_COMPILER,
             LDOPTS="$LDOPTS /nologo"
             LDOPTS_DBG='/DEBUG'
             LDOPTS_OPT='/RELEASE'
+            C_DLL='link /dll'
+            CXX_DLL='link /dll'
+            C_PLUGIN='link /dll'
+            CXX_PLUGIN='link /dll'
             OBJ_NAME_FLAG='/Fo$[@]'
             OBJ_BUILD_FLAG='/c'
             EXE_NAME_FLAG='/OUT:$[@]'
@@ -250,6 +283,10 @@ AC_DEFUN(DPP_SETUP_COMPILER,
          ARFLAGS='-ruv'
          LD='$(CXX) -dynamiclib'
          LDOPTS=''
+         C_DLL='$(CC) -dynamiclib'
+         CXX_DLL='$(CXX) -dynamiclib'
+         C_PLUGIN='$(CC) -bundle'
+         CXX_PLUGIN='$(CXX) -bundle'
          OPT_FLAGS="-O$dpp_opt_level"
          DBG_FLAGS='-g'
          DYNAMICLIB_EXT='dylib'
@@ -271,6 +308,10 @@ AC_DEFUN(DPP_SETUP_COMPILER,
          fi
 
          LD='ld'
+         C_DLL='ld'
+         CXX_DLL='ld'
+         C_PLUGIN='ld'
+         CXX_PLUGIN='ld'
          LDFLAGS="$LDFLAGS -L/usr/lib/X11R6"
          LDOPTS='-b'
          OPT_FLAGS='+inline_level 3'
@@ -285,9 +326,17 @@ AC_DEFUN(DPP_SETUP_COMPILER,
             CXXFLAGS="-AA $CXXFLAGS"
             DEP_GEN_FLAG='-E +m'
             LD='$(CXX)'
+            C_DLL='$(CC)'
+            CXX_DLL='$(CXX)'
+            C_PLUGIN='$(CC)'
+            CXX_PLUGIN='$(CXX)'
             LDOPTS='-b'
          else
             LD='ld'
+            C_DLL='ld'
+            CXX_DLL='ld'
+            C_PLUGIN='ld'
+            CXX_PLUGIN='ld'
          fi
 
          LDFLAGS="$LDFLAGS -L/usr/lib/X11R6"
@@ -372,6 +421,10 @@ dnl            _LD_REGOPTS='-check_registry $(DSOREGFILE)'
          fi
 
          LD='$(CXX) -shared'
+         C_DLL='$(CC) -shared'
+         CXX_DLL='$(CXX) -shared'
+         C_PLUGIN='$(CC) -shared'
+         CXX_PLUGIN='$(CXX) -shared'
          DYNAMICLIB_EXT='so'
          ;;
       dnl A machine running Linux.
@@ -410,6 +463,10 @@ dnl            _LD_REGOPTS='-check_registry $(DSOREGFILE)'
          fi
 
          LD='$(CXX) -G'
+         C_DLL='$(CC) -G'
+         CXX_DLL='$(CXX) -G'
+         C_PLUGIN='$(CC) -G'
+         CXX_PLUGIN='$(CXX) -G'
          DYNAMICLIB_EXT='so'
          ;;
    esac
@@ -419,6 +476,10 @@ dnl            _LD_REGOPTS='-check_registry $(DSOREGFILE)'
    AC_SUBST(AR_NAME_FLAG)
    AC_SUBST(CFLAGS)
    AC_SUBST(CXXFLAGS)
+   AC_SUBST(C_DLL)
+   AC_SUBST(CXX_DLL)
+   AC_SUBST(C_PLUGIN)
+   AC_SUBST(CXX_PLUGIN)
    AC_SUBST(DEP_GEN_FLAG)
    AC_SUBST(DEPEND_FLAGS)
    AC_SUBST(DEPEND_EXTRAS)
@@ -443,6 +504,19 @@ dnl            _LD_REGOPTS='-check_registry $(DSOREGFILE)'
    AC_SUBST(LIB_PREFIX)
    AC_SUBST(STATICLIB_EXT)
    AC_SUBST(DYNAMICLIB_EXT)
+
+   AC_SUBST(C_WARNS_LEVEL_0)
+   AC_SUBST(C_WARNS_LEVEL_1)
+   AC_SUBST(C_WARNS_LEVEL_2)
+   AC_SUBST(C_WARNS_LEVEL_3)
+   AC_SUBST(C_WARNS_LEVEL_4)
+   AC_SUBST(C_WARNS_LEVEL_5)
+   AC_SUBST(CXX_WARNS_LEVEL_0)
+   AC_SUBST(CXX_WARNS_LEVEL_1)
+   AC_SUBST(CXX_WARNS_LEVEL_2)
+   AC_SUBST(CXX_WARNS_LEVEL_3)
+   AC_SUBST(CXX_WARNS_LEVEL_4)
+   AC_SUBST(CXX_WARNS_LEVEL_5)
 
    AC_SUBST(DSOREGFILE)
    AC_SUBST(DSOVERSION)

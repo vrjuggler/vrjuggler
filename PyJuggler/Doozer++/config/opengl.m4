@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          opengl.m4,v
-dnl Date modified: 2003/02/22 03:23:18
-dnl Version:       1.20.2.3
+dnl Date modified: 2003/05/26 16:22:13
+dnl Version:       1.20.2.4
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -60,7 +60,7 @@ dnl     X_INCLUDES   - Extra include path for the X11 header directory.
 dnl     X_LDFLAGS    - Extra linker flags for the X11 library directory.
 dnl ===========================================================================
 
-dnl opengl.m4,v 1.20.2.3 2003/02/22 03:23:18 patrickh Exp
+dnl opengl.m4,v 1.20.2.4 2003/05/26 16:22:13 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenGL (or Mesa3D) installed.  This
@@ -271,7 +271,7 @@ AC_DEFUN(DPP_HAVE_OPENGL,
       fi
 
       AC_CHECK_LIB([${MESA}GL], [glEnable], , $4,
-                   [-lX11 -lXext -lm $optional_threading])
+                   [-lX11 -lm $optional_threading])
 
       dnl This is necessary because AC_CHECK_LIB() adds -l${MESA}GL to
       dnl $LIBS.  We want to do that ourselves later.
@@ -295,7 +295,7 @@ AC_DEFUN(DPP_HAVE_OPENGL,
       AC_CHECK_HEADER([GL/gl.h], , $4)
 
       AC_CHECK_LIB([${MESA}GLU], [gluNewQuadric], , $4,
-         [-l${MESA}GL -lm -lX11 -lXext -lXt $optional_threading])
+         [-l${MESA}GL -lm -lX11 -lXt $optional_threading])
 
       dnl This is necessary again because AC_CHECK_LIB() adds -l${MESA}GLU
       dnl to $LIBS.
@@ -314,7 +314,7 @@ AC_DEFUN(DPP_HAVE_OPENGL,
    dnl helpful in some Makefiles.
    if test "x$dpp_have_opengl" = "xyes" ; then
       if test "x$OS_TYPE" = "xUNIX" ;  then
-         LIBOPENGL="-l${MESA}GLU -l${MESA}GL $X_LDFLAGS -lX11 -lXext $optional_threading"
+         LIBOPENGL="-l${MESA}GLU -l${MESA}GL $X_LDFLAGS -lX11 $optional_threading"
          GL_LIB="-l${MESA}GL"
          GLU_LIB="-l${MESA}GLU"
       else
