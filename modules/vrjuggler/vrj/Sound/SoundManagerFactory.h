@@ -48,6 +48,6 @@ public:
    static SoundManager& get();
 };
 
-};
+}
 
 #endif
