@@ -90,6 +90,11 @@ public:
     */
    virtual void trigger( const std::string & alias, const int & looping = 0 );
 
+   /**
+     * is the sound currently playing?
+     */
+   virtual bool isPlaying( const std::string& alias );
+   
    /*
     * when sound is already playing then you call trigger,
     * does the sound restart from beginning?

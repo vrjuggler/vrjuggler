@@ -122,6 +122,14 @@ namespace snx
          sonix::instance()->trigger( mAlias, repeat );
       }
       
+      /**
+        * is the sound currently playing?
+        */
+      virtual bool isPlaying()
+      {
+         return sonix::instance()->isPlaying( mAlias );
+      }  
+
       /* specify whether sound retriggers from beginning when triggered while playing.
        * when sound is already playing then you call trigger,
        * does the sound restart from beginning?
