@@ -66,10 +66,12 @@ import org.vrjuggler.tweek.text.*;
  *
  * @see org.vrjuggler.tweek.BeanContainer
  */
-public class TweekFrame extends JFrame implements BeanFocusChangeListener,
-                                                  MessageAdditionListener,
-                                                  BeanInstantiationListener,
-                                                  GlobalPrefsUpdateListener
+public class TweekFrame
+   extends JFrame
+   implements BeanFocusChangeListener
+            , MessageAdditionListener
+            , BeanInstantiationListener
+            , GlobalPrefsUpdateListener
 {
    public TweekFrame(MessageDocument msgDocument)
    {
@@ -202,6 +204,31 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       {
          jbInit();
          mMenuPrefsBeanEdit.setEnabled(mBeanPrefsDialog.getPrefsBeanCount() > 0);
+
+         if ( mMacOS )
+         {
+            try
+            {
+               ClassLoader loader = getClass().getClassLoader();
+               String class_name = "org.vrjuggler.tweek.mac.TweekAppListener";
+               final Class mac_app_class = loader.loadClass(class_name);
+               java.lang.reflect.Constructor[] ctors =
+                  mac_app_class.getConstructors();
+               mMacAppListener = ctors[0].newInstance(new Object[] {this});
+            }
+            catch(InstantiationException e)
+            {
+               e.printStackTrace();
+            }
+            catch(ClassNotFoundException e)
+            {
+               e.printStackTrace();
+            }
+         }
+         else
+         {
+            setMnemonics();
+         }
       }
       catch (Exception e)
       {
@@ -421,6 +448,26 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       }
    }
 
+   public void handleAbout()
+   {
+      helpAboutAction(null);
+   }
+
+   public void handleOpenFile()
+   {
+      fileOpenAction(null);
+   }
+
+   public void handlePrefs()
+   {
+      prefsEditGlobal(null);
+   }
+
+   public void handleQuit()
+   {
+      fileQuitAction(null);
+   }
+
    // =========================================================================
    // Private methods.
    // =========================================================================
@@ -454,6 +501,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
     */
    private void jbInit() throws Exception
    {
+      int shortcut_mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
       GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
       setBeanViewer( prefs.getBeanViewer() );
 
@@ -464,9 +513,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       this.setTitle("Tweek JavaBean Loader");
 
       // Define the Connect option in the Network menu.
-      mMenuNetConnect.setMnemonic('C');
       mMenuNetConnect.setText("Connect to ORB ...");
-      mMenuNetConnect.setAccelerator(javax.swing.KeyStroke.getKeyStroke(67, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, false));
+      mMenuNetConnect.setAccelerator(javax.swing.KeyStroke.getKeyStroke(67, shortcut_mask | KeyEvent.SHIFT_MASK, false));
       mMenuNetConnect.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
@@ -477,7 +525,6 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
       // Define the Disconnect option in the Network menu.
       mMenuNetDisconnect.setEnabled(false);
-      mMenuNetDisconnect.setMnemonic('D');
       mMenuNetDisconnect.setText("Disconnect from ORB ...");
       mMenuNetDisconnect.addActionListener(new ActionListener()
          {
@@ -488,18 +535,19 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          });
 
       // Define the Edit Global option in the Preferences menu.
-      mMenuPrefsGlobalEdit.setMnemonic('G');
-      mMenuPrefsGlobalEdit.setText("Edit Global ...");
-      mMenuPrefsGlobalEdit.addActionListener(new ActionListener()
-         {
-            public void actionPerformed (ActionEvent e)
+      if ( ! mMacOS )
+      {
+         mMenuPrefsGlobalEdit.setText("Edit Global ...");
+         mMenuPrefsGlobalEdit.addActionListener(new ActionListener()
             {
-               prefsEditGlobal(e);
-            }
-         });
+               public void actionPerformed (ActionEvent e)
+               {
+                  prefsEditGlobal(e);
+               }
+            });
+      }
 
       // Define the Edit Local option in the Preferences menu.
-      mMenuPrefsBeanEdit.setMnemonic('B');
       mMenuPrefsBeanEdit.setText("Edit Bean-Specific ...");
       mMenuPrefsBeanEdit.setEnabled(false);
       mMenuPrefsBeanEdit.addActionListener(new ActionListener()
@@ -510,9 +558,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
             }
          });
 
-      mMenuBeansLoad.setMnemonic('L');
       mMenuBeansLoad.setText("Load Beans ...");
-      mMenuBeansLoad.setAccelerator(javax.swing.KeyStroke.getKeyStroke(66, KeyEvent.CTRL_MASK, false));
+      mMenuBeansLoad.setAccelerator(javax.swing.KeyStroke.getKeyStroke(66, shortcut_mask, false));
       mMenuBeansLoad.addActionListener(new ActionListener ()
          {
             public void actionPerformed (ActionEvent e)
@@ -521,9 +568,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
             }
          });
 
-      mMenuBeansStatus.setMnemonic('S');
       mMenuBeansStatus.setText("Beans Status ...");
-      mMenuBeansStatus.setAccelerator(javax.swing.KeyStroke.getKeyStroke(83, KeyEvent.CTRL_MASK, false));
+      mMenuBeansStatus.setAccelerator(javax.swing.KeyStroke.getKeyStroke(83, shortcut_mask, false));
       mMenuBeansStatus.addActionListener(new ActionListener ()
          {
             public void actionPerformed (ActionEvent e)
@@ -534,7 +580,6 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
 
       // Define the About option in the Help menu.
-      mMenuHelpAbout.setMnemonic('A');
       mMenuHelpAbout.setText("About ...");
       mMenuHelpAbout.addActionListener(new ActionListener ()
          {
@@ -546,8 +591,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
       mMenuFileOpen.setText("Open ...");
       mMenuFileOpen.setEnabled(false);
-      mMenuFileOpen.setMnemonic('O');
-      mMenuFileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(79, java.awt.event.KeyEvent.CTRL_MASK, false));
+      mMenuFileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(79, shortcut_mask, false));
       mMenuFileOpen.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -557,9 +601,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       });
 
       mMenuFileClose.setEnabled(false);
-      mMenuFileClose.setMnemonic('C');
       mMenuFileClose.setText("Close ...");
-      mMenuFileClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(87, java.awt.event.KeyEvent.CTRL_MASK, false));
+      mMenuFileClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(87, shortcut_mask, false));
       mMenuFileClose.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -569,25 +612,25 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       });
 
       // Define the Quit option in the File menu.
-      mMenuFileQuit.setText("Quit");
-      mMenuFileQuit.setMnemonic('Q');
-      mMenuFileQuit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(81, java.awt.event.KeyEvent.CTRL_MASK, false));
-      mMenuFileQuit.addActionListener(new ActionListener ()
-         {
-            public void actionPerformed(ActionEvent e)
+      if ( ! mMacOS )
+      {
+         mMenuFileQuit.setText("Quit");
+         mMenuFileQuit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(81, shortcut_mask, false));
+         mMenuFileQuit.addActionListener(new ActionListener()
             {
-               fileQuitAction(e);
-            }
-         });
+               public void actionPerformed(ActionEvent e)
+               {
+                  fileQuitAction(e);
+               }
+            });
+      }
 
       // Set up the File menu.  This adds the Open option, a separator, and
       // the Quit option.
       mMenuFile.setText("File");
-      mMenuFile.setMnemonic('F');
       mMenuFileSave.setEnabled(false);
-      mMenuFileSave.setMnemonic('S');
       mMenuFileSave.setText("Save");
-      mMenuFileSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(83, java.awt.event.KeyEvent.CTRL_MASK, false));
+      mMenuFileSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(83, shortcut_mask, false));
       mMenuFileSave.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -596,7 +639,6 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          }
       });
       mMenuFileSaveAs.setEnabled(false);
-      mMenuFileSaveAs.setMnemonic('A');
       mMenuFileSaveAs.setText("Save As ...");
       mMenuFileSaveAs.addActionListener(new java.awt.event.ActionListener()
       {
@@ -609,30 +651,33 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       mMenuFile.add(mMenuFileSave);
       mMenuFile.add(mMenuFileSaveAs);
       mMenuFile.add(mMenuFileClose);
-      mMenuFile.addSeparator();
-      mMenuFile.add(mMenuFileQuit);
+
+      if ( ! mMacOS )
+      {
+         mMenuFile.addSeparator();
+         mMenuFile.add(mMenuFileQuit);
+      }
 
       // Set up the Network menu.
       mMenuNetwork.setText("Network");
-      mMenuNetwork.setMnemonic('N');
       mMenuNetwork.add(mMenuNetConnect);
       mMenuNetwork.add(mMenuNetDisconnect);
 
       // Set up the Preferences menu.
       mMenuPrefs.setText("Preferences");
-      mMenuPrefs.setMnemonic('P');
-      mMenuPrefs.add(mMenuPrefsGlobalEdit);
+      if ( ! mMacOS )
+      {
+         mMenuPrefs.add(mMenuPrefsGlobalEdit);
+      }
       mMenuPrefs.add(mMenuPrefsBeanEdit);
 
       // Set up the Beans menu.
       mMenuBeans.setText("Beans");
-      mMenuBeans.setMnemonic('B');
       mMenuBeans.add(mMenuBeansLoad);
       mMenuBeans.add(mMenuBeansStatus);
 
       // Add the About option to the Help menu.
       mMenuHelp.setText("Help");
-      mMenuHelp.setMnemonic('H');
       mMenuHelp.add(mMenuHelpAbout);
 
       // Add the menus to the menu bar.
@@ -704,6 +749,27 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       mStatusBar.add(mStatusMsgLabel,  BorderLayout.CENTER);
       mStatusBar.add(mProgressBar, BorderLayout.WEST);
       mMainPanel.setDividerLocation(500);
+   }
+
+   private void setMnemonics()
+   {
+      mMenuNetConnect.setMnemonic('C');
+      mMenuNetDisconnect.setMnemonic('D');
+      mMenuPrefsGlobalEdit.setMnemonic('G');
+      mMenuPrefsBeanEdit.setMnemonic('B');
+      mMenuBeansLoad.setMnemonic('L');
+      mMenuBeansStatus.setMnemonic('S');
+      mMenuHelpAbout.setMnemonic('A');
+      mMenuFileOpen.setMnemonic('O');
+      mMenuFileClose.setMnemonic('C');
+      mMenuFileQuit.setMnemonic('Q');
+      mMenuFile.setMnemonic('F');
+      mMenuFileSave.setMnemonic('S');
+      mMenuFileSaveAs.setMnemonic('A');
+      mMenuNetwork.setMnemonic('N');
+      mMenuPrefs.setMnemonic('P');
+      mMenuBeans.setMnemonic('B');
+      mMenuHelp.setMnemonic('H');
    }
 
    // =========================================================================
@@ -1030,4 +1096,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    private MessageDocument mMsgDocument     = null;
    private FileLoader      mFileLoader      = null;
    private BeanPrefsDialog mBeanPrefsDialog = null;
+
+   private static boolean mMacOS = (System.getProperty("mrj.version") != null);
+   private Object mMacAppListener = null;
 }
