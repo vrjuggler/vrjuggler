@@ -46,7 +46,7 @@ namespace gadget
  * This class is the base interface for all gesture recognition objects.
  *
  * All gesture objects have two parts to their interfaces.
- * Getting gestures and Trainging new gestures.
+ * Getting gestures and training new gestures.
  *
  * In order to retrieve gesture information from the device,
  * the user call the get functions to get the index, or
