@@ -54,6 +54,3 @@ endif	# ifndef NO_JAVA
 
 vrjconfig-gui-links:
 	@$(MAKE) instlinks="$(instlinks)" links
-
-vrjconfig-gui-install:
-	@$(MAKE) vrjconfig-install

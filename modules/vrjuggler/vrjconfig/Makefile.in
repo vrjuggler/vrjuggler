@@ -100,16 +100,6 @@ include $(MKPATH)/dpp.obj.mk
 # Extra targets.
 # -----------------------------------------------------------------------------
 jars: $(JARS) $(addsuffix .jar, $(BEANS))
-ifdef GLOBAL_BUILD
-	@$(MKINSTALLDIRS) $(top_srcdir)/bin
-	@$(MKINSTALLDIRS) $(top_srcdir)/bin/beans
-ifneq ($(JARS), )
-	cp $(JARS) $(top_srcdir)/bin
-endif
-ifneq ($(BEANS), )
-	cp $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin/beans
-endif
-endif
 
 VRJConfig.jar: $(VRJCONFIG_CLASSES) $(UI_CLASSES) $(PLACER_CLASSES) $(WIZARD_CLASSES)
 	$(JAR) cvf $@ \
@@ -162,16 +152,16 @@ ifneq ($(JARS), )
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(topdir)/vrjconfig/$$jar $(bindir) ;			\
+                $(topdir)/vrjconfig/$$jar $(bindir) || exit 1;		\
           done
 endif
 ifneq ($(BEANS), )
 	for bean in $(BEANS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(topdir)/vrjconfig/$$bean.jar $(beandir) ;			\
+                $(topdir)/vrjconfig/$$bean.jar $(beandir) || exit 1 ;	\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(top_srcdir)/vrjconfig/$$bean.xml $(beandir) ;		\
+                $(top_srcdir)/vrjconfig/$$bean.xml $(beandir) || exit 1; \
           done
 endif
 
