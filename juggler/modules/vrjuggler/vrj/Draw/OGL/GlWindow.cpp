@@ -143,7 +143,7 @@ void GlWindow::finishSetup()
          }
          else
          {
-            vprASSERT(false && "You configured a simulator window and I can find now DrawSimInterface for it");
+            vprASSERT(false && "You configured a simulator viewport, but I cannot find a DrawSimInterface for it");
          }
       }
    }
