@@ -60,7 +60,7 @@ public:
                     float toRight, float toLeft,
                     float toTop, float toBottom)
    {
-      mType = Projection::SURFACE;
+      //mType = Projection::SURFACE;
 
       mWallRotationMatrix = surfaceRot;
       mOriginToScreen = toScr;

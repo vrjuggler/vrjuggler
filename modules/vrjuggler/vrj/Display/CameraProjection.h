@@ -49,7 +49,7 @@ class CameraProjection : public Projection
 public:
    CameraProjection()
    {
-      mType = Projection::SIM;
+      //mType = Projection::SIM;
    }
 
    virtual void config(jccl::ConfigChunkPtr chunk)
