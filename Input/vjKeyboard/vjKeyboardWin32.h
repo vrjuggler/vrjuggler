@@ -4,7 +4,7 @@
 // Keyboard input device, simulates 2 positional, 4 digital, and 4 analog
 //          devices.
 //
-// History:  
+// History:
 //
 // Andy Himberger:    v0.0 - 12-1-97 - Inital version
 ////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@
 #include <Input\vjInput\vjAnalog.h>
 #include <Threads\vjThread.h>
 
-/** @name type-checked constants for the Keyboard and mouse 
+/** @name type-checked constants for the Keyboard and mouse
  */
 //@{
 const int vjKEY_NONE   = 0;
@@ -71,8 +71,8 @@ const int vjKEY_ESC    = 44;
 
 #define LAST_KEY 44  // Don't forget to change this when new keys are added
 
-const int VJMOUSE_POSX = LAST_KEY + 1;  
-const int VJMOUSE_NEGX = LAST_KEY + 2; 
+const int VJMOUSE_POSX = LAST_KEY + 1;
+const int VJMOUSE_NEGX = LAST_KEY + 2;
 const int VJMOUSE_POSY = LAST_KEY + 3;
 const int VJMOUSE_NEGY = LAST_KEY + 4;
 const int VJMBUTTON1   = LAST_KEY + 5; // left button
@@ -100,15 +100,15 @@ const int ROT_ROLL_CW = 11;
 #define NUM_POS_CONTROLS 12      // How many do we need space for??
 //@}
 
-class vjKeyboard : public vjPosition, public vjDigital, public vjAnalog
+class vjWin32Keyboard : public vjPosition, public vjDigital, public vjAnalog
 {
   public:
     /** @name Construction/Destruction
       */
     //@{
-    vjKeyboard(vjConfigChunk *c);
+    vjWin32Keyboard(vjConfigChunk *c);
 	
-   vjKeyboard()
+   vjWin32Keyboard()
    {
       myThreadID = NULL;
       for (int i =0; i < 256; i++)
@@ -116,7 +116,7 @@ class vjKeyboard : public vjPosition, public vjDigital, public vjAnalog
       m_realkeys[0] = m_keys[0] = 1;
       m_dtrans = 0.1; m_drot = 1;
    }
-   ~vjKeyboard() { StopSampling();}
+   ~vjWin32Keyboard() { StopSampling();}
 
    /* Pure Virtuals required by vjInput */
    int StartSampling();
@@ -146,7 +146,7 @@ class vjKeyboard : public vjPosition, public vjDigital, public vjAnalog
    // catch the actual number..
    int IsKeyPressed(int vjKey)
    {  return m_keys[vjKey];}
-    
+
       void CreateWindowWin32 ();
 	  void UpdKeys(	UINT message,	UINT wParam, LONG lParam);
   private:
@@ -162,7 +162,7 @@ class vjKeyboard : public vjPosition, public vjDigital, public vjAnalog
    void RotLeft(float, int);
    void RotRollCCW(float amt, int n);
    //@}
-   
+
    /** @name Windows utility functions */
    //@{
    int VKKeyTovjKey(int vkKey);
@@ -170,7 +170,7 @@ class vjKeyboard : public vjPosition, public vjDigital, public vjAnalog
 
 	BOOL MenuInit (HINSTANCE hInstance);
    //@}
-   
+
 	HINSTANCE	m_hInst;
 	HWND		m_hWnd;
 
@@ -181,7 +181,7 @@ class vjKeyboard : public vjPosition, public vjDigital, public vjAnalog
 
    int		m_screen, m_x, m_y;
    unsigned int m_width,m_height;
-   
+
    /** @name Keyboard state holders */
    //@{
    /// The keyboard state during an UpdateData, without KeyUp events included
@@ -189,7 +189,7 @@ class vjKeyboard : public vjPosition, public vjDigital, public vjAnalog
    /// The real keyboard state, all events processed
    int m_realkeys[256];
    //@}
-   
+
    /* Control key holders */
    int m_pos0key[NUM_POS_CONTROLS];
    int m_pos0mod[NUM_POS_CONTROLS];
@@ -203,9 +203,9 @@ class vjKeyboard : public vjPosition, public vjDigital, public vjAnalog
    int m_digmods[4];
    int m_anamodsup[4];
    int m_anamodsdn[4];
-   
+
    int m_anastep;
-   
+
    float m_dtrans, m_drot;
    float m_mouse_sensitivity;
    int m_toggleoff;  // digital data is toggled or just while key is down

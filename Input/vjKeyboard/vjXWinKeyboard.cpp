@@ -1,12 +1,13 @@
 #include <vjConfig.h>
-#include <Input/vjInput/vjKeyboard.h>
+#include <Input/vjKeyboard/vjXWinKeyboard.h>
 #include <Kernel/vjDebug.h>
 
-vjKeyboard::vjKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
-				vjAnalog(c), vjInput(c)
+vjXWinKeyboard::vjXWinKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
+				vjAnalog(c), vjInput(c), vjKeyboard(c)
 {
     cout << "     vjKeyboard::vjKeyboard(vjConfigChunk*c) " << endl;
     myThread = NULL;
+
     int i;
     for(i =0; i < 256; i++)
          m_realkeys[i] = m_keys[i] = 0;
@@ -83,7 +84,7 @@ vjKeyboard::vjKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
 
 }
 
-int vjKeyboard::StartSampling()
+int vjXWinKeyboard::StartSampling()
 {
 
 if (myThread == NULL) {
@@ -162,7 +163,7 @@ if (myThread == NULL) {
 
 }
 
-int vjKeyboard::OnlyModifier(int mod)
+int vjXWinKeyboard::OnlyModifier(int mod)
 {
   switch (mod) {
      case VJKEY_NONE:
@@ -181,7 +182,7 @@ int vjKeyboard::OnlyModifier(int mod)
 
 }
 
-void vjKeyboard::UpdateData()
+void vjXWinKeyboard::UpdateData()
 {
   int i;
   UpdKeys();
@@ -275,47 +276,47 @@ void vjKeyboard::UpdateData()
 
 // Move forward the given amount on position data n
 // Forward is in th -Z direction
-void vjKeyboard::MoveFor(float amt, int n)
+void vjXWinKeyboard::MoveFor(float amt, int n)
 {
    m_posdata[n].postTrans(m_posdata[n], 0.0, 0.0, -amt*m_dtrans);
 }
 
 // Move left the given amount on position data n
 // Left is -X dir
-void vjKeyboard::MoveLeft(float amt, int n)
+void vjXWinKeyboard::MoveLeft(float amt, int n)
 {
     m_posdata[n].postTrans(m_posdata[n], -amt*m_dtrans, 0.0, 0.0);
 }
 
 // Move up the given amount on position data n
 // Up is in th +Y dir
-void vjKeyboard::MoveUp(float amt, int n)
+void vjXWinKeyboard::MoveUp(float amt, int n)
 {
   m_posdata[n].postTrans(m_posdata[n], 0.0, amt*m_dtrans, 0.0);
 }
 
 // Pitch up - rot +x axis
-void vjKeyboard::RotUp(float amt, int n)
+void vjXWinKeyboard::RotUp(float amt, int n)
 {
    static vjVec3 x_axis(1.0,0.0,0.0);
    m_posdata[n].postRot(m_posdata[n], amt*m_drot, x_axis);
 }
 
 // Yaw left - rot +Y axis
-void vjKeyboard::RotLeft(float amt, int n)
+void vjXWinKeyboard::RotLeft(float amt, int n)
 {
    static vjVec3 y_axis(0.0, 1.0, 0.0);
    m_posdata[n].postRot(m_posdata[n], amt*m_drot, y_axis);
 }
 
 // Roll Left - rot -z axis
-void vjKeyboard::RotRollCCW(float amt, int n)
+void vjXWinKeyboard::RotRollCCW(float amt, int n)
 {
    static vjVec3 neg_z_axis(0.0, 0.0, -1.0);
    m_posdata[n].postRot(m_posdata[n], amt*m_drot, neg_z_axis);
 }
 
-void vjKeyboard::UpdKeys()
+void vjXWinKeyboard::UpdKeys()
 {
    XEvent event;
    KeySym key;
@@ -337,14 +338,14 @@ void vjKeyboard::UpdKeys()
          key = XLookupKeysym((XKeyEvent*)&event,0);
          m_realkeys[XKeyTovjKey(key)] = 1;
          m_keys[XKeyTovjKey(key)] += 1;
-         vjDEBUG(1) << "KeyPress:  " << hex << key
-         << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
+         vjDEBUG(4) << "KeyPress:  " << hex << key
+                    << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
       case KeyRelease:
          key = XLookupKeysym((XKeyEvent*)&event,0);
          m_realkeys[XKeyTovjKey(key)] = 0;
-         vjDEBUG(1) << "KeyRelease:" << hex << key
-         << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
+         vjDEBUG(4) << "KeyRelease:" << hex << key
+                    << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
       }
    }
@@ -381,7 +382,7 @@ void vjKeyboard::UpdKeys()
 
 }
 
-int vjKeyboard::StopSampling()
+int vjXWinKeyboard::StopSampling()
 {
   if (myThread != NULL)
   {
@@ -401,7 +402,7 @@ int vjKeyboard::StopSampling()
 
 }
 
-int vjKeyboard::XKeyTovjKey(KeySym xKey)
+int vjXWinKeyboard::XKeyTovjKey(KeySym xKey)
 {
    switch (xKey)
    {
@@ -503,7 +504,7 @@ int vjKeyboard::XKeyTovjKey(KeySym xKey)
 /*****************************************************************/
 /*****************************************************************/
 /* Sets basic window manager hints for a window. */
-void vjKeyboard::SetHints(Window window,
+void vjXWinKeyboard::SetHints(Window window,
     char*  window_name,
     char*  icon_name,
     char*  class_name,
@@ -566,7 +567,7 @@ void vjKeyboard::SetHints(Window window,
 
 }
 
-Window vjKeyboard::CreateWindow (Window parent, unsigned int border, unsigned long
+Window vjXWinKeyboard::CreateWindow (Window parent, unsigned int border, unsigned long
      fore, unsigned long back, unsigned long event_mask)
 {
   Window window;
@@ -589,7 +590,7 @@ Window vjKeyboard::CreateWindow (Window parent, unsigned int border, unsigned lo
   return window;
 } /*CreateWindow*/
 
-void vjKeyboard::CheckGeometry()
+void vjXWinKeyboard::CheckGeometry()
 {
   char* geo_string;
   int status;
@@ -609,7 +610,7 @@ void vjKeyboard::CheckGeometry()
   }
 } /*CheckGeometry*/
 
-char* vjKeyboard::CheckArgs(char* look_for)
+char* vjXWinKeyboard::CheckArgs(char* look_for)
 {
   //Unused//int i, l;
 
@@ -630,7 +631,7 @@ char* vjKeyboard::CheckArgs(char* look_for)
   return ((char*) NULL);
 } /*CheckArgs*/
 
-int vjKeyboard::FilterEvent( XEvent* event, int want_exposes,
+int vjXWinKeyboard::FilterEvent( XEvent* event, int want_exposes,
 		  int width, int height)
 {
     int status = 1;
