@@ -51,8 +51,10 @@ FlockStandalone::FlockStandalone(const char* const port, const int& baud,
    : mReportRate(report), mHemisphere(hemi), mFilter( filt ), mBaud(baud),
      mSyncStyle(sync), mBlocking(block), mNumBirds(numBrds),
      mXmitterUnitNumber(transmit), mUsingCorrectionTable(false),
-     mActive(false), mSleepFactor(3)
+     mSleepFactor(3)
 {
+   mStatus = FlockStandalone::CLOSED;  // Starts in closed state
+
    if ( port != NULL )
    {
       mPort = port;
@@ -82,9 +84,10 @@ FlockStandalone::FlockStandalone(const char* const port, const int& baud,
 
 FlockStandalone::~FlockStandalone()
 {
-   if ( mActive )
+   if ( FlockStandalone::CLOSED != mStatus )
    {
       this->stop();
+      mStatus = FlockStandalone::CLOSED;
    }
 
    if ( mSerialPort != NULL )
@@ -95,15 +98,15 @@ FlockStandalone::~FlockStandalone()
 }
 
 /** Checks if the flock is active. */
-const bool& FlockStandalone::isActive() const
+bool FlockStandalone::isActive() const
 {
-   return mActive;
+   return (FlockStandalone::STREAMING == mStatus);
 }
 
 /** Sets the port to use. */
 void FlockStandalone::setPort(const std::string& serialPort)
 {
-   if ( mActive )
+   if ( FlockStandalone::STREAMING == mStatus )
    {
       std::cout << "Flock: Cannot change the serial Port while active\n";
       return;
@@ -131,7 +134,7 @@ const std::string& FlockStandalone::getPort() const
 /** Sets the baud rate. */
 void FlockStandalone::setBaudRate(const int& baud)
 {
-   if ( mActive )
+   if ( FlockStandalone::STREAMING == mStatus )
    {
       std::cerr << "Flock: Cannot change the baud rate while active\n";
       return;
@@ -142,44 +145,53 @@ void FlockStandalone::setBaudRate(const int& baud)
    }
 }
 
-/** Call this to connect to the Flock device. */
+/** Call this to connect to the Flock device.
+* - If closed, open port
+* - If not streaming, start streaming
+*
+*/
+
 vpr::ReturnStatus FlockStandalone::start()
 {
-   if ( ! mActive )
+   // If port closed right now
+   if ( FlockStandalone::CLOSED == mStatus)
    {
       if ( openPort() == vpr::ReturnStatus::Fail )
       {
          vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] **** ERROR, can't open serial port: " <<  mPort << " ****\n" << vprDEBUG_FLUSH;
          return vpr::ReturnStatus::Fail;
       }
-      else
-      {
-         vpr::Uint32 written;
-         char stop_command;
+   }
 
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-            << "============================================================================\n" << vprDEBUG_FLUSH;
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-            << " NOTE: Version number below might be wrong if we need to restart the flock!\n" << vprDEBUG_FLUSH;
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-            << "============================================================================\n" << vprDEBUG_FLUSH;
+   // If open, but not streaming yet
+   if (FlockStandalone::OPEN == mStatus)
+   {
+      vpr::Uint32 written;
+      char stop_command;
 
-         this->readSoftwareRevision();
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+         << "============================================================================\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+         << " NOTE: Version number below might be wrong if we need to restart the flock!\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+         << "============================================================================\n" << vprDEBUG_FLUSH;
 
-         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] Restarting the flock.\n" << vprDEBUG_FLUSH;
+      this->readSoftwareRevision();
 
-         //vpr::System::msleep(500);
-         stop_command = 'B';
-         mSerialPort->write(&stop_command, 1, written);
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] Restarting the flock.\n" << vprDEBUG_FLUSH;
 
-         //vpr::System::msleep(500);
-         stop_command = 'G';
-         mSerialPort->write(&stop_command, 1, written);
+      //vpr::System::msleep(500);
+      stop_command = 'B';
+      mSerialPort->write(&stop_command, 1, written);
 
-         mSerialPort->close();
-         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)  << " [FlockStandalone] Flock has been Stopped." << std::endl << vprDEBUG_FLUSH;
-         vpr::System::sleep(3);
-      }
+      //vpr::System::msleep(500);
+      stop_command = 'G';
+      mSerialPort->write(&stop_command, 1, written);
+
+      mSerialPort->close();
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)  << " [FlockStandalone] Flock has been Stopped." << std::endl << vprDEBUG_FLUSH;
+      vpr::System::sleep(3);
+
 
       if ( openPort() == vpr::ReturnStatus::Fail )
       {
@@ -238,7 +250,7 @@ vpr::ReturnStatus FlockStandalone::start()
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Ready to go!\n\n" << vprDEBUG_FLUSH;
 
          // flock is active.
-         mActive = true;
+         mStatus = FlockStandalone::STREAMING;
 
          // return success
          return vpr::ReturnStatus::Succeed;
@@ -328,7 +340,7 @@ int FlockStandalone::stop ()
       mSerialPort->close();
 
       // flock is not active now.
-      mActive = false;
+      mStatus = FlockStandalone::CLOSED;
 
       std::cout << " [FlockStandalone] Stopped." << std::endl << std::flush;
 
@@ -345,7 +357,7 @@ int FlockStandalone::stop ()
 /** Sets the hemisphere that the transmitter transmits from. */
 void FlockStandalone::setHemisphere( const BIRD_HEMI& h )
 {
-   if ( mActive )
+   if ( mStatus == FlockStandalone::STREAMING )
    {
       std::cout << "Flock: Cannot change the hemisphere\n" << std::flush;
       return;
@@ -360,7 +372,7 @@ void FlockStandalone::setHemisphere( const BIRD_HEMI& h )
 /** Sets the type of filtering that the Flock uses. */
 void FlockStandalone::setFilterType( const BIRD_FILT& f )
 {
-   if ( mActive )
+   if (  mStatus == FlockStandalone::STREAMING )
    {
       std::cout << "Flock: Cannot change filter type while active\n"
                 << std::flush;
@@ -376,7 +388,7 @@ void FlockStandalone::setFilterType( const BIRD_FILT& f )
 /** Set the report rate that the Flock uses. */
 void FlockStandalone::setReportRate( const char& rRate )
 {
-   if ( mActive )
+   if ( FlockStandalone::STREAMING == mStatus )
    {
       std::cout << "Flock: Cannot change report rate while active\n"
                 << std::flush;
@@ -392,7 +404,7 @@ void FlockStandalone::setReportRate( const char& rRate )
 /** Sets the unit number of the transmitter. */
 void FlockStandalone::setTransmitter( const int& Transmit )
 {
-   if ( mActive )
+   if ( FlockStandalone::STREAMING == mStatus )
    {
       std::cout << "Flock: Cannot change transmitter while active\n"
                 << std::flush;
@@ -408,7 +420,7 @@ void FlockStandalone::setTransmitter( const int& Transmit )
 /** Sets the number of birds to use in the Flock. */
 void FlockStandalone::setNumBirds( const int& n )
 {
-   if ( mActive )
+   if ( FlockStandalone::STREAMING == mStatus )
    {
       std::cout << "Flock: Cannot change num birds while active\n"
                 << std::flush;
@@ -424,7 +436,7 @@ void FlockStandalone::setNumBirds( const int& n )
 /** Sets the video sync type. */
 void FlockStandalone::setSync(const int& sync)
 {
-   if ( mActive )
+   if ( FlockStandalone::STREAMING == mStatus )
    {
       std::cout << "Flock: Cannot change report rate while active\n"
                 << std::flush;
@@ -440,7 +452,7 @@ void FlockStandalone::setSync(const int& sync)
 /** Sets blocking of Flock. */
 void FlockStandalone::setBlocking( const bool& blVal )
 {
-   if ( mActive )
+   if ( FlockStandalone::STREAMING == mStatus )
    {
       std::cout << "Flock: Cannot change blocking while active\n" << std::flush;
       return;
@@ -454,7 +466,7 @@ void FlockStandalone::setBlocking( const bool& blVal )
 
 void FlockStandalone::setExtendedRange( const bool& blVal )
 {
-   if ( mActive )
+   if ( FlockStandalone::STREAMING == mStatus )
    {
       std::cout << "Flock: Cannot extended range\n" << std::flush;
       return;
@@ -780,6 +792,17 @@ float FlockStandalone::rawToFloat (char& MSchar, char& LSchar)
    return( ( (float)returnVal ) / 0x7fff );
 }
 
+vpr::ReturnStatus FlockStandalone::getSoftwareRevision(unsigned& major, unsigned& minor)
+{
+   std::vector<vpr::Uint8> resp(2);
+   vpr::ReturnStatus ret_val = getAttribute(Flock::Parameter::SoftwareRevision, 2, resp);
+   major = resp[1];
+   minor = resp[0];
+
+   return ret_val;
+}
+
+
 vpr::ReturnStatus FlockStandalone::readSoftwareRevision()
 {
    vpr::Uint32 written;
@@ -788,7 +811,6 @@ vpr::ReturnStatus FlockStandalone::readSoftwareRevision()
       vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
       vpr::Uint32 num_read;
       char buff[2];
-
 
       // pickBird(1);
 
@@ -1043,6 +1065,24 @@ void FlockStandalone::pickBird (const int birdID)
    }
 }
 
+
+/** Send command.
+* @param cmd - cmd to send
+*/
+vpr::ReturnStatus FlockStandalone::sendCommand(vpr::Uint8 cmd)
+{
+   if ( mSerialPort != NULL )
+   {
+      unsigned bytes_written;
+      return mSerialPort->write(&cmd, 1, bytes_written);
+   }
+   else
+   {
+      return vpr::ReturnStatus::Fail;
+   }
+}
+
+
 // Open the port.
 //  give - a serial port
 //  give - a baud rate
@@ -1077,6 +1117,10 @@ vpr::ReturnStatus FlockStandalone::openPort ()
 
             mSerialPort->clearAll();
 
+            mSerialPort->disableHardwareFlowControl();
+            mSerialPort->disableParityGeneration();         // No parity checking
+            mSerialPort->setRequestToSend(false);           // Lower the RTS bit otherwise bird is in reset mode
+
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting read stuff\n" << vprDEBUG_FLUSH;
             mSerialPort->enableRead();
 
@@ -1101,19 +1145,22 @@ vpr::ReturnStatus FlockStandalone::openPort ()
             mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
 
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port setup correctly\n" << vprDEBUG_FLUSH;
-            return(vpr::ReturnStatus::Succeed);
+
+            mStatus = FlockStandalone::OPEN;
+
+            return vpr::ReturnStatus::Succeed;
          }
          else
          {
             vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Port open failed\n" << vprDEBUG_FLUSH;
-            return(vpr::ReturnStatus::Fail);
+            return vpr::ReturnStatus::Fail;
          }
       }
       else
       {
          vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Port reset failed (because port "
             << "open failed)\n" << vprDEBUG_FLUSH;
-         return(vpr::ReturnStatus::Fail);
+         return vpr::ReturnStatus::Fail;
       }
    }
    else
@@ -1532,45 +1579,42 @@ void FlockStandalone::checkDataReadyChar()
 }
 
 
-void FlockStandalone::examineValue(char exam, int data, int reps, int format)
+/**
+ * Examines an attribute.
+ *
+ * @param attrib - Attribute to query for - see the Flock manual.
+ * @param respSize - Expected size of the response
+ * @param respData   - Returned data
+ */
+vpr::ReturnStatus FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned respSize, std::vector<vpr::Uint8>& respData)
 {
-   char exam1[1];
-   char exam2[1];
-   exam1[0] = 'O';
-   exam2[0] = exam;
-   vpr::Uint32 buf=0;
-   char in[1] = {'a'};
-   int i = 0, j = 0;
+   vpr::Uint8 exam_cmd[2];       // The command to send for the examine
+   exam_cmd[0] = Flock::Command::ExamineValue;
+   exam_cmd[1] = attrib;
+   vpr::Uint32 bytes_written;
+   vpr::Uint32 bytes_read;
+   vpr::Interval read_timeout(2,vpr::Interval::Sec);
 
-
-   i = 1;
-   while ( i < reps )
+   if ( NULL == mSerialPort )
    {
-      i++;
-      mSerialPort->write(exam1, sizeof(char), buf);
-      mSerialPort->write(exam2, sizeof(char), buf);
-      while ( j < data )
-      {
-         mSerialPort->readn(in, sizeof(char), buf);
-         //mSerialPort->readn(&in, sizeof(char), buf1);
-         if ( format == 1 )
-         {
-            std::cout << in[0];
-         }
-         else
-         {
-            showbits(in[0]);
-         }
-
-         std::cout << std::endl;
-         j++;
-      }
-      j = 0;
-      // mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      // vpr::System::usleep(500 * mSleepFactor);
+      return vpr::ReturnStatus::Fail;
    }
+
+   // Send command
+   mSerialPort->write(exam_cmd, sizeof(exam_cmd), bytes_written);
+
+   if(bytes_written != sizeof(exam_cmd))
+   { return vpr::ReturnStatus::Fail; }
+
+   // Read response and then flush the port to make sure we don't leave anything extra
+   mSerialPort->readn(respData,respSize,bytes_read, read_timeout);
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-   vpr::System::usleep(500 * mSleepFactor);
+
+   // Check response size
+   if(bytes_read == respSize)
+   {  return vpr::ReturnStatus::Succeed; }
+   else
+   {  return vpr::ReturnStatus::Fail; }
 }
 
 
