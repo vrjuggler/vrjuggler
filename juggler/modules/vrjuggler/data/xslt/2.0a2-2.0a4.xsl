@@ -2037,6 +2037,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -2052,6 +2055,13 @@
    <xsl:template match="TrackdSensor/position_filters">
       <xsl:element name="position_filters">
          <xsl:apply-templates select="./*" />
+      </xsl:element>
+   </xsl:template>
+
+   <!-- TrackdSensor property "deviceHost". -->
+   <xsl:template match="TrackdSensor/deviceHost">
+      <xsl:element name="device_host">
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
