@@ -182,7 +182,7 @@ public:
     * @postconditions sound API is ready to go.
     * @semantics this function should be called before using the other functions in the class.
     */
-   virtual void startAPI();
+   virtual int startAPI();
 
    /*
     * configure the sound API global settings

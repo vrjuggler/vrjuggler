@@ -343,8 +343,9 @@ void SubsynthSoundImplementation::setCutoff( const std::string& alias, float amo
  * start the sound API, creating any contexts or other configurations at startup
  * @postconditions sound API is ready to go.
  * @semantics this function should be called before using the other functions in the class.
+ * @return value: 1 if success 0 otherwise
  */
-void SubsynthSoundImplementation::startAPI()
+int SubsynthSoundImplementation::startAPI()
 {
    if (this->isStarted() == true) return;
 
@@ -362,7 +363,7 @@ void SubsynthSoundImplementation::startAPI()
    if (result == false) 
    { 
       vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("[snx]Subsynth| sink couldn't open\n"), std::string("\n"));
-      return;
+      return 0;
    }
    
    // mixer
@@ -375,7 +376,7 @@ void SubsynthSoundImplementation::startAPI()
    if (result == false) 
    { 
       vpr::DebugOutputGuard output2(snxDBG, vprDBG_CONFIG_LVL, std::string("mix couldn't open\n"), std::string("\n"));
-      return;
+      return 0;
    }
 
    vpr::DebugOutputGuard output3(snxDBG, vprDBG_CONFIG_LVL, std::string("make connections\n"), std::string("\n"));
@@ -386,13 +387,13 @@ void SubsynthSoundImplementation::startAPI()
    if (result == false) 
    { 
       vpr::DebugOutputGuard output5(snxDBG, vprDBG_CONFIG_LVL, std::string("couldn't get mixer out-term\n"), std::string("\n"));
-      return; 
+      return 0; 
    }
    result = sink->getInput( "mono audio", input );
    if (result == false) 
    { 
       vpr::DebugOutputGuard output6(snxDBG, vprDBG_CONFIG_LVL, std::string("couldn't get audioport in-term\n"), std::string("\n"));
-      return; 
+      return 0; 
    }
    syn::Terminal::connect( input, output );
 //   syn::SampleBufferRepos::instance()->setBlockSize( blocksize );
@@ -406,6 +407,7 @@ void SubsynthSoundImplementation::startAPI()
    mRunner.run( 1 );
      
    mIsOpen = true;
+   return 1;
 }
 
 /**
