@@ -17,7 +17,7 @@ public class AllTests
     */
    public static Test suite()
    {
-      TestSuite suite = new TestSuite( "All VjControl JUnit Tests" );
+      TestSuite suite = new TestSuite( "All VrjConfig JUnit Tests" );
 
       suite.addTestSuite( ValTypeTest.class );
       suite.addTestSuite( DescEnumTest.class );
@@ -30,6 +30,7 @@ public class AllTests
       suite.addTestSuite( ConfigDefinitionTest.class );
       suite.addTestSuite( PropertyDefinitionTest.class );
       suite.addTestSuite( ConfigElementFactoryTest.class );
+      suite.addTestSuite( ConfigDefinitionRepositoryTest.class );
 
       return suite;
    }
