@@ -1,0 +1,116 @@
+
+package VjGUI;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Vector;
+import VjConfig.Property;
+import VjConfig.PropertyDesc;
+import VjConfig.VarValue;
+import VjGUI.ConfigChunkFrame;
+import VjGUI.VarValuePanel;
+import VjGUI.BorderedPanel;
+
+public class PropertyPanel extends BorderedPanel implements ActionListener {
+
+    public Property prop;
+    public ConfigChunkFrame parent;
+    Vector valuepanels;  // vector of VarValuePanel
+    Panel northpanel, centerpanel, eastpanel;
+    Button addbutton;
+    ClientGlobals core;
+
+    GridBagLayout eastpanellayout;
+    GridBagConstraints eastpanelconstraints;
+
+    public PropertyPanel (Property pr, ConfigChunkFrame par, 
+			  ClientGlobals c) {
+	super(3,2,3,2);
+	core = c;
+	prop = pr;
+	parent = par;
+	int i;
+
+	setLayout(new BorderLayout (1,1));
+	valuepanels = new Vector();
+
+	northpanel = new Panel();
+	northpanel.setLayout(new BorderLayout(2,2));
+	northpanel.add (new Label(pr.name),"Center");
+	if (pr.desc.num == -1) {
+	    addbutton = new Button ("Add Value");
+	    northpanel.add(addbutton, "East");
+	    addbutton.addActionListener(this);
+	}
+	add(northpanel,"West");
+
+	/* add help message, if there is one */
+	if (!pr.desc.help.equals("")) {
+	    TextArea helparea;
+	    if (pr.desc.help.length() < 50)
+		helparea = new TextArea(pr.desc.help,2,10,
+					TextArea.SCROLLBARS_NONE);
+	    else
+		helparea = new TextArea(pr.desc.help,1,10,
+					TextArea.SCROLLBARS_HORIZONTAL_ONLY);
+	    helparea.setEditable(false);
+	    add(helparea, "South");
+	}
+	
+	/* east panel holds the individual PropertyPanels */
+	eastpanel = new Panel();
+	eastpanellayout = new GridBagLayout();
+	eastpanelconstraints = new GridBagConstraints();
+	eastpanelconstraints.gridwidth = GridBagConstraints.REMAINDER;
+	eastpanelconstraints.fill = GridBagConstraints.HORIZONTAL;
+
+	eastpanel.setLayout(eastpanellayout);
+	for (i = 0; i < pr.vals.size(); i++) {
+	    VarValuePanel p = new VarValuePanel(this, pr.desc, core);
+	    p.setValue((VarValue)pr.vals.elementAt(i));
+	    valuepanels.addElement(p);
+	    eastpanellayout.setConstraints(p,eastpanelconstraints);
+	    eastpanel.add (p);
+	}
+	//eastpanel.validate();
+	add(eastpanel,"East");
+	//validate();
+    }
+
+
+
+    public void removePanel (VarValuePanel p) {
+	valuepanels.removeElement(p);
+	eastpanel.remove(p);
+	parent.validate();
+    }
+
+
+
+    public Property getValue() {
+	Property p = new Property (prop.desc);
+	p.vals.removeAllElements();
+	for (int i = 0; i < valuepanels.size(); i++) {
+	    p.vals.addElement (((VarValuePanel)valuepanels.elementAt(i)).getValue());
+	}
+	return p;
+    }
+
+
+
+    public void actionPerformed (ActionEvent e) {
+	if (e.getSource() == addbutton) {
+	    VarValuePanel p = new VarValuePanel(this, prop.desc, core);
+	    valuepanels.addElement(p);
+	    eastpanellayout.setConstraints(p,eastpanelconstraints);
+	    eastpanel.add (p);
+	    parent.validate();
+	}
+    }
+
+}
+
+
+
+
+
