@@ -27,6 +27,14 @@ int vjKernel::start()
    return 1;
 }
 
+void vjKernel::setApplication(vjApp* _app)
+{
+   app = _app;
+   drawManager = app->getDrawManager();
+   displayManager = vjDisplayManager::instance();  // Get display manager
+   displayManager->setDrawManager(drawManager);
+}
+
 //-----------------------------------------------
 // Initialize Shared Memory
 // Load config
@@ -44,18 +52,27 @@ void vjKernel::initConfig()
    // --- Make sure chunks have been initialized --- //
    //loadConfigFile(std::string(""));
 
+   // ASSERT that everything is setup correctly
+   vjASSERT(app != NULL);
+   vjASSERT(displayManager != NULL);
+   vjASSERT(drawManager != NULL);
+
    // Setup initial environments.
    initialSetupInputManager();
    initialSetupDisplayManager();
    setupEnvironmentManager();
+   initialSetupDrawManager();
 
-   configAdd(mChunkDB);       // Setup the configuration
+   configAdd(mInitialChunkDB);       // Setup the configuration
 
    //apiFactory = app->api.getAPIFactory();
    sysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
 
       vjDEBUG(0) << "vjKernel::initConfig: Calling setupDrawManager.\n" << vjDEBUG_FLUSH;
-   setupDrawManager();
+
+   // Setup the draw manager
+   // Calls app init and app initAPI
+   startDrawManager();
    displayManager->setDrawManager(drawManager);
       vjDEBUG_END(0) << "vjKernel::initConfig: Exiting.\n" << vjDEBUG_FLUSH;
 }
@@ -69,7 +86,7 @@ void vjKernel::controlLoop(void* nullParam)
 
    // setup performance buffer
    performanceEnabled = 0;
-   std::vector<vjConfigChunk*>* perfchunks = mChunkDB->getMatching ("PerfMeasure");
+   std::vector<vjConfigChunk*>* perfchunks = mInitialChunkDB->getMatching ("PerfMeasure");
    if (perfchunks->size() > 0) {
        vjConfigChunk* perfchunk = (*perfchunks)[0];
        performanceEnabled = (*perfchunks)[0]->getProperty ("KernelEnabled");
@@ -85,30 +102,30 @@ void vjKernel::controlLoop(void* nullParam)
    {
        // perfBuffer->set (0);
          vjDEBUG(3) << "vjKernel::controlLoop: app->preDraw()\n" << vjDEBUG_FLUSH;
-      app->preDraw();         // Do Any application pre-draw stuff
-      perfBuffer->set (0);
+      app->preDraw();         // PREDRAW: Do Any application pre-draw stuff
+         perfBuffer->set (0);
          vjDEBUG(3) << "vjKernel::controlLoop: drawManager->draw()\n" << vjDEBUG_FLUSH;
-      drawManager->draw();    // Trigger the beginning of frame drawing
-      perfBuffer->set (1);
+      drawManager->draw();    // DRAW: Trigger the beginning of frame drawing
+         perfBuffer->set (1);
          vjDEBUG(3) << "vjKernel::controlLoop: app->postDraw\n" << vjDEBUG_FLUSH;
-      app->postDraw();        // Do computations that can be done while drawing.  This should be for next frame.
-      perfBuffer->set (2);
+      app->postDraw();        // POST DRAW: Do computations that can be done while drawing.  This should be for next frame.
+         perfBuffer->set (2);
          vjDEBUG(3) << "vjKernel::controlLoop: drawManager->sync()\n" << vjDEBUG_FLUSH;
-      drawManager->sync();    // Block until drawing is done
-      perfBuffer->set (3);
+      drawManager->sync();    // SYNC: Block until drawing is done
+         perfBuffer->set (3);
          vjDEBUG(3) << "vjKernel::controlLoop: app->postSync()\n" << vjDEBUG_FLUSH;
-      app->postSync();        // Do processing after drawing is complete
-      perfBuffer->set (4);
+      app->postSync();        // POST SYNC: Do processing after drawing is complete
+         perfBuffer->set (4);
       // Sync should be here for Kernel changes from
       // the environment manager
 
-      //Tell trackers to swap buffers;
+
          vjDEBUG(3) << "vjKernel::controlLoop: Update Trackers\n" << vjDEBUG_FLUSH;
-      getInputManager()->UpdateAllData();
-      perfBuffer->set(5);
+      getInputManager()->UpdateAllData();    // Update the trackers
+         perfBuffer->set(5);
          vjDEBUG(3) << "vjKernel::controlLoop: Update Projections\n" << vjDEBUG_FLUSH;
-      drawManager->updateProjections();
-      perfBuffer->set(6);
+      updateFrameData();         // Update the projections, etc.
+         perfBuffer->set(6);
    }
 }
 
@@ -123,7 +140,7 @@ void vjKernel::updateFrameData()
 void vjKernel::configAdd(vjConfigChunkDB* chunkDB)
 {
    // Dependency sort the items
-   int dep_result = chunkDB->dependencySort();
+   int dep_result = chunkDB->dependencySort(getChunkDB());
 
    // If sort fails, exit with error
    if(dep_result == -1)
@@ -132,27 +149,36 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB)
       return;
    }
 
-   // Get sorted list
+   // Get sorted list of chunks to add
    std::vector<vjConfigChunk*> chunks = chunkDB->getChunks();
 
-   // For each element
+   // For each element in chunk list
    for(int i=0;i<chunks.size();i++)
    {
-      bool added_chunk = false;
+      bool added_chunk = false;        // Flag: true - chunk was added
 
       vjDEBUG(1) << "vjKernel::configAdd: chunk: " << (char*)chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
+
+      // Find manager to handle them
       if(this->configKernelHandle(chunks[i]))            // Kernel
          added_chunk = this->configKernelAdd(chunks[i]);
       if(getInputManager()->configCanHandle(chunks[i]))  // inputMgr
          added_chunk = getInputManager()->configAdd(chunks[i]);
       if(displayManager->configCanHandle(chunks[i]))     // displayMgr
          added_chunk = displayManager->configAdd(chunks[i]);
-      // drawMgr
-      // app
+      if(drawManager->configCanHandle(chunks[i]))        // drawMgr
+         added_chunk = drawManager->configAdd(chunks[i]);
+      if(app->configCanHandle(chunks[i]))                // App
+         added_chunk = app->configAdd(chunks[i]);
 
       // --- Check for adding to active config --- //
-      if(added_chunk)      // if added: add to config database
-      {}
+      if(added_chunk)      // if added => add to config database
+      {
+         vjASSERT(mChunkDB != NULL);
+         mChunkDB->addChunk(chunks[i]);
+         int num_chunks = mChunkDB->getChunks().size();
+         vjDEBUG(0) << "vjKernel::configAdd: Added chunk: Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
+      }
       else                 // Else: Give unrecognized error
       {
          vjDEBUG(0) << "vjKernel::configAdd: Unrecognized chunk.\n"
@@ -239,14 +265,19 @@ void vjKernel::loadConfigFile(std::string filename)
       }
    }
 
+   // Create chunk Data bases
+   if(NULL == mInitialChunkDB)
+      mInitialChunkDB = new vjConfigChunkDB(mConfigDesc);      // Create config database
+
    if(NULL == mChunkDB)
       mChunkDB = new vjConfigChunkDB(mConfigDesc);      // Create config database
+
 
 
    // ------- OPEN Program specified Config file ------ //
    if(!filename.empty())   // We have a filename
    {
-      if (!mChunkDB->load(filename.c_str()))
+      if (!mInitialChunkDB->load(filename.c_str()))
       {
          vjDEBUG(0) << "ERROR: vjKernel::loadConfig: DB Load failed to load file: " << filename << endl << vjDEBUG_FLUSH;
          exit(1);
@@ -254,7 +285,7 @@ void vjKernel::loadConfigFile(std::string filename)
    }
 
    vjDEBUG(5) << "------------  Config Chunks ----------" << vjDEBUG_FLUSH;
-   vjDEBUG(5) << (*mChunkDB) << vjDEBUG_FLUSH;
+   vjDEBUG(5) << (*mInitialChunkDB) << vjDEBUG_FLUSH;
 }
 
 
@@ -262,27 +293,30 @@ void vjKernel::initialSetupInputManager()
 {
    vjDEBUG(0) << "   vjKernel::initialSetupInputManager\n" << vjDEBUG_FLUSH;
    mInputManager = new (sharedMemPool) vjInputManager;
-   mInputManager->ConfigureInitial(mChunkDB);
+   mInputManager->ConfigureInitial(mInitialChunkDB);
 }
 
 
 void vjKernel::initialSetupDisplayManager()
 {
    vjDEBUG_BEGIN(0) << "------- vjKernel::initialSetupDisplayManager\n -------" << vjDEBUG_FLUSH;
-
-   // Get display manager
-   displayManager = vjDisplayManager::instance();
 }
 
-void vjKernel::setupDrawManager()
+void vjKernel::initialSetupDrawManager()
 {
-   vjDEBUG_BEGIN(0) << "   vjKernel::setupDrawManager" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(0) << "------- vjKernel::initialSetupDrawManager\n -------" << vjDEBUG_FLUSH;
 
    //drawManager = apiFactory->getDrawManager();
-   drawManager = app->getDrawManager();
-   drawManager->config(mChunkDB);     // Give it the chunk DB to extract API specific info
+   drawManager->configInitial(mInitialChunkDB);     // Give it the chunk DB to extract API specific info
    drawManager->setApp(app);
    drawManager->setDisplayManager(displayManager);
+}
+
+// This starts up the draw manager given
+// All processes and data should be created by draw manager after this is done
+void vjKernel::startDrawManager()
+{
+   vjDEBUG_BEGIN(0) << "   vjKernel::setupDrawManager" << endl << vjDEBUG_FLUSH;
 
    app->init();                     // Init the app
    drawManager->initAPI();          // Just sets up API type stuff
