@@ -357,6 +357,9 @@ public class ContextToolbar
          // Inform the ConfigUndoManager that we have saved changes.
          context.getConfigUndoManager().saveHappened();
          mConfigIFrame.setTitle("Configuration Editor");
+
+         // Disable the save button now that the save operation is done.
+         saveBtn.setEnabled(false);
       }
       catch (IOException ioe)
       {
