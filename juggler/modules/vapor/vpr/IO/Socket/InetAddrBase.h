@@ -43,177 +43,180 @@
 
 namespace vpr {
 
-// ----------------------------------------------------------------------------
-//: Cross-platform abstraction to Internet address structures.
-// ----------------------------------------------------------------------------
+/**
+ * Cross-platform abstraction to Internet address structures.
+ *
+ * @author Allen Bierbaum
+ */
 class VPR_CLASS_API InetAddrBase {
 public:
     //static const InetAddr AnyAddr;  -- NEED An AnyAddr defined
-/*
+#if 0
   Comment out the conscturctors.  These need to be implemented in the final versions
 
-    // ------------------------------------------------------------------------
-    //: Default constructor.  This initializes the memory for the encapsulated
-    //+ address structure.
-    //
-    //! PRE: None.
-    //! POST: Zero out the address and set everything to wildcard values.
-    //
-    //! ARGS: port - An unsigned 16-bit integer port number for this address
-    //+              in host byte order.
-    // ------------------------------------------------------------------------
-    InetAddr (const Uint16 port = 0)
+    /**
+     * Default constructor.  This initializes the memory for the encapsulated
+     * address structure.
+     *
+     * @pre None.
+     * @post Zero out the address and set everything to wildcard values.
+     *
+     * @param port An unsigned 16-bit integer port number for this address
+     *              in host byte order.
+     */
+    InetAddr (const vpr::Uint16 port = 0)
     { vprASSERT(false && "Implement me");}
 
-    // ------------------------------------------------------------------------
-    //: Copy constructor.
-    //
-    //! PRE: None.
-    //! POST: A copy of the given vpr::InetAddr object is made in this object.
-    //
-    //! ARGS: addr - The vpr::InetAddr object to be copied into this object.
-    // ------------------------------------------------------------------------
+    /**
+     * Copy constructor.
+     *
+     * @pre None.
+     * @post A copy of the given vpr::InetAddr object is made in this object.
+     *
+     * @param addr The vpr::InetAddr object to be copied into this object.
+     */
     InetAddr (const InetAddr& addr)
     {vprASSERT(false && "Implement me");}
-*/
+#endif
 
-    // ------------------------------------------------------------------------
-    //: Get the protocol family of this address structure.
-    //
-    //! PRE: The protocol family has been properly initialized.
-    //! POST: The protocol family is returned as a vpr::SocketTypes::Domain
-    //+       value.
-    //
-    //! RETURNS: A vpr::SocketTypes::Domain value representing this object's
-    //+          protocol family.
-    // ------------------------------------------------------------------------
-    SocketTypes::Domain getFamily(void) const
-    { vprASSERT(false && "Implement me");  return SocketTypes::LOCAL; }
+    /**
+     * Get the protocol family of this address structure.
+     *
+     * @pre The protocol family has been properly initialized.
+     * @post The protocol family is returned as a vpr::SocketTypes::Domain
+     *       value.
+     *
+     * @return A vpr::SocketTypes::Domain value representing this object's
+     *         protocol family.
+     */
+    vpr::SocketTypes::Domain getFamily(void) const
+    { vprASSERT(false && "Implement me");  return vpr::SocketTypes::LOCAL; }
 
-    // ------------------------------------------------------------------------
-    //: Set the protocol family of this address.
-    //
-    //! PRE: None.
-    //! POST: The given protocol family (a vpr::SocketTypes::Domain value) is
-    //+       mapped to the appropriate platform-specific protocol family
-    //+       value and stored.
-    //
-    //! ARGS: family - The protocol family value.
-    // ------------------------------------------------------------------------
-    void setFamily(const SocketTypes::Domain family)
+    /**
+     * Set the protocol family of this address.
+     *
+     * @pre None.
+     * @post The given protocol family (a vpr::SocketTypes::Domain value) is
+     *       mapped to the appropriate platform-specific protocol family
+     *       value and stored.
+     *
+     * @param family The protocol family value.
+     */
+    void setFamily(const vpr::SocketTypes::Domain family)
     { vprASSERT(false && "Implement me");}
 
-    // ------------------------------------------------------------------------
-    //: Get this address' port in host byte order.
-    //
-    //! PRE: The port has been initialized properly in network byte order.
-    //! POST: The port associated with this address structure is returned to
-    //+       the caller in host byte order.
-    //
-    //! RETURNS: An integer giving the port for this address structure in host
-    //+          byte order.
-    // ------------------------------------------------------------------------
-    Uint16
+    /**
+     * Get this address' port in host byte order.
+     *
+     * @pre The port has been initialized properly in network byte order.
+     * @post The port associated with this address structure is returned to
+     *       the caller in host byte order.
+     *
+     * @return An integer giving the port for this address structure in host
+     *         byte order.
+     */
+    vpr::Uint16
     getPort (void) const
     {vprASSERT(false && "Implement me"); return 0; }
 
-    // ------------------------------------------------------------------------
-    //: Set this address' port.  The given port must be in host byte order.
-    //
-    //! PRE: The given port number is in host byte order.
-    //! POST: The given port number is stored in the address.
-    //
-    //! ARGS: port - A port number for this address in host byte order.
-    // ------------------------------------------------------------------------
+    /**
+     * Set this address' port.  The given port must be in host byte order.
+     *
+     * @pre The given port number is in host byte order.
+     * @post The given port number is stored in the address.
+     *
+     * @param port A port number for this address in host byte order.
+     */
     inline void
-    setPort (const Uint16 port)
+    setPort (const vpr::Uint16 port)
     {vprASSERT(false && "Implement me");}
 
-    // ------------------------------------------------------------------------
-    //: Get this address structure's Internet address in host byte order.
-    //
-    //! PRE: The IP address has been initialized properly in network byte
-    //+      order.
-    //! POST: The IP address associated with this address structure is
-    //+       returned to the caller in host byte order.
-    //
-    //! RETURNS: An unsigned 32-bit integer giving the IP address for this
-    //+          object in host byte order.
-    // ------------------------------------------------------------------------
-    inline Uint32
+    /**
+     * Get this address structure's Internet address in host byte order.
+     *
+     * @pre The IP address has been initialized properly in network byte
+     *      order.
+     * @post The IP address associated with this address structure is
+     *       returned to the caller in host byte order.
+     *
+     * @return An unsigned 32-bit integer giving the IP address for this
+     *         object in host byte order.
+     */
+    inline vpr::Uint32
     getAddressValue (void) const
     {vprASSERT(false && "Implement me"); return 0;}
 
-    // ------------------------------------------------------------------------
-    //: Get the IP address associated with this object as a human-readable
-    //+ string.
-    //
-    //! PRE: The structure contains a valid IP address.
-    //! POST: The integer IP address is converted to dotted-decmial notation
-    //+       and returned as a string.
-    //
-    //! RETURNS: A std::string object containing this structure's IP address
-    //+          in the human-readable "dotted-decimal" notation.
-    // ------------------------------------------------------------------------
+    /**
+     * Get the IP address associated with this object as a human-readable
+     * string.
+     *
+     * @pre The structure contains a valid IP address.
+     * @post The integer IP address is converted to dotted-decmial notation
+     *       and returned as a string.
+     *
+     * @return A std::string object containing this structure's IP address
+     *         in the human-readable "dotted-decimal" notation.
+     */
     std::string getAddressString(void) const
     {vprASSERT(false && "Implement me"); return std::string("");}
 
-    // ------------------------------------------------------------------------
-    //: Set the address for this object using the given address.  It must be
-    //+ of the form <address>:<port> where <address> can be a hostname or a
-    //+ dotted-decimal IP address.
-    //! ARGS: address - A string giving the address (either hostname or IP
-    //+                 address).
-    //! ARGS: port    - The port to associate with the IP address.
-    //
-    //! RETURNS: true  - The address was valid and the set operation
-    //+                  succeeded.
-    //! RETURNS: false - The address could not be looked up.  An error message
-    //+                  is printed to stderr explaining what went wrong.
-    // ------------------------------------------------------------------------
-    Status setAddress (const std::string& addr)
-    {vprASSERT(false && "Implement me"); return Status(Status::Failure); }
+    /**
+     * Set the address for this object using the given address.  It must be
+     * of the form <address>:<port> where <address> can be a hostname or a
+     * dotted-decimal IP address.
+     *
+     * @param address A string giving the address (either hostname or IP
+     *                 address).
+     * @param port    The port to associate with the IP address.
+     *
+     * @return <code>vpr::Status::Success</code> is returned if the address
+     *         was valid and the set operation succeeded.<br>
+     *         <code>vpr::Status::Failure</code> is returned if the address
+     *         could not be looked up.
+     */
+    vpr::Status setAddress (const std::string& addr)
+    {vprASSERT(false && "Implement me"); return vpr::Status(vpr::Status::Failure); }
 
-    // ------------------------------------------------------------------------
-    //: Set the address for this object using the given address and port
-    //+ number.  The address string can be a hostname or a dotted-decimal IP
-    //+ address.
-    //
-    //! ARGS: addr - an address string in IP format or hostname formant
-    //
-    //! RETURNS: true  - The address was valid and the set operation
-    //+                  succeeded.
-    //! RETURNS: false - The address could not be looked up.  An error message
-    //+                  is printed to stderr explaining what went wrong.
-    // ------------------------------------------------------------------------
-    Status setAddress (const std::string& addr, const Uint16 port)
-    {vprASSERT(false && "Implement me"); return Status(Status::Failure); }
+    /**
+     * Set the address for this object using the given address and port
+     * number.  The address string can be a hostname or a dotted-decimal IP
+     * address.
+     *
+     * @param addr an address string in IP format or hostname formant
+     *
+     * @return <code>vpr::Status::Success</code> is returned if the address was
+     *         valid and the set operation succeeded.<br>
+     *         <code>vpr::Status::Failure</code> is returned if the address
+     *         could not be looked up.
+     */
+    vpr::Status setAddress (const std::string& addr, const Uint16 port)
+    {vprASSERT(false && "Implement me"); return vpr::Status(vpr::Status::Failure); }
 
-    // ------------------------------------------------------------------------
-    //: Set the address for this object using the given address and port
-    //+ number.  The address must be the actual 32-bit integer value.
-    //
-    //! PRE: None.
-    //! POST:
-    //
-    //! ARGS: address - A 32-bit integer IP address.
-    //! ARGS: port    - The port to associate with the IP address.
-    // ------------------------------------------------------------------------
-    Status setAddress (const Uint32 address, const Uint16 port)
-    {vprASSERT(false && "Implement me"); return Status(Status::Failure); }
+    /**
+     * Set the address for this object using the given address and port
+     * number.  The address must be the actual 32-bit integer value.
+     *
+     * @pre None.
+     * @post
+     *
+     * @param address A 32-bit integer IP address.
+     * @param port    The port to associate with the IP address.
+     */
+    vpr::Status setAddress (const vpr::Uint32 address, const vpr::Uint16 port)
+    {vprASSERT(false && "Implement me"); return vpr::Status(vpr::Status::Failure); }
 
-    // ------------------------------------------------------------------------
-    //: Overloaded assignment operator to ensure that assignments work
-    //+ correctly.
-    //
-    //! PRE: None.
-    //! POST: A copy of the given vpr::InetAddr object is made in this object
-    //+       which is then returned to the caller.
-    //
-    //! ARGS: addr - The vpr::InetAddr object to be copied into this object.
-    //
-    //! RETURNS: A reference to this object.
-    // ------------------------------------------------------------------------
+    /**
+     * Overloaded assignment operator to ensure that assignments work
+     * correctly.
+     *
+     * @pre None.
+     * @post A copy of the given vpr::InetAddr object is made in this object
+     *       which is then returned to the caller.
+     *
+     * @param addr The vpr::InetAddr object to be copied into this object.
+     *
+     * @return A reference to this object.
+     */
     /*
     inline InetAddr&
     operator= (const InetAddr& addr)

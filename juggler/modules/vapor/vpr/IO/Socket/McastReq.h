@@ -39,6 +39,11 @@
 
 namespace vpr {
 
+/**
+ * Multicast request wrapper.
+ *
+ * @author Patrick Hartling
+ */
 class VPR_CLASS_API McastReq {
 public:
     /**
@@ -60,9 +65,7 @@ public:
     }
 
     /**
-     * ------------------------------------------------------------------------
      * Copy constructor.
-     * ------------------------------------------------------------------------
      */
     McastReq (const McastReq& mcast_addr) {
         m_mcast_addr = mcast_addr.m_mcast_addr;
