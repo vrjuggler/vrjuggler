@@ -151,9 +151,9 @@ private:
       wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
 
 
-      vjDEBUG(1) << "===================================\n" << vjDEBUG_FLUSH;
+      vjDEBUG(2) << "===================================\n" << vjDEBUG_FLUSH;
       vjDEBUG(2) << "Wand:\n" << *wand_matrix << endl << vjDEBUG_FLUSH;
-      vjDEBUG(1) << "Wand XYZ: " << xyzAngles << endl << vjDEBUG_FLUSH;
+      vjDEBUG(2) << "Wand XYZ: " << xyzAngles << endl << vjDEBUG_FLUSH;
 
       goal_rot.makeQuat(*wand_matrix);    // Create the goal rotation quaternion
 
@@ -167,7 +167,7 @@ private:
 
       vjDEBUG(2) << "Transform:\n" << transform << endl << vjDEBUG_FLUSH;
       transform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
-      vjDEBUG(1) << "Transform XYZ: " << xyzAngles << endl << vjDEBUG_FLUSH;
+      vjDEBUG(2) << "Transform XYZ: " << xyzAngles << endl << vjDEBUG_FLUSH;
 
       vjDEBUG(2) << "Nav:\n" << mNavMatrix << endl << endl << vjDEBUG_FLUSH;
 
@@ -208,9 +208,9 @@ private:
 
       local_xform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
       local_xform.getTrans(xyzTrans[0], xyzTrans[1], xyzTrans[2]);
-      vjDEBUG(1) << "Transform   Rot: " << xyzAngles << endl << vjDEBUG_FLUSH;
-      vjDEBUG(1) << "Transform Trans: " << xyzTrans << endl << vjDEBUG_FLUSH;
-      vjDEBUG(1) << "-------------------------------------------" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(2) << "Transform   Rot: " << xyzAngles << endl << vjDEBUG_FLUSH;
+      vjDEBUG(2) << "Transform Trans: " << xyzTrans << endl << vjDEBUG_FLUSH;
+      vjDEBUG(2) << "-------------------------------------------" << endl << vjDEBUG_FLUSH;
 
 
       /*
