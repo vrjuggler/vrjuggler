@@ -430,6 +430,22 @@ vjMotionStar::setAddress (const char* n) {
 // ============================================================================
 
 // ----------------------------------------------------------------------------
+// Unimplemented!
+// ----------------------------------------------------------------------------
+void
+vjMotionStar::positionCorrect (float& x, float& y, float& z) {
+   /* Implement me! */ ;
+}
+
+// ----------------------------------------------------------------------------
+// Unimplemented!
+// ----------------------------------------------------------------------------
+void
+vjMotionStar::initCorrectionTable (const char* table_file) {
+   /* Implement me! */ ;
+}
+
+// ----------------------------------------------------------------------------
 // Helper to return the index for theData array given the birdNum we are
 // dealing with and the bufferIndex to read.
 //
