@@ -321,7 +321,7 @@ double XMLObjectReader::readDouble()
 
 std::string XMLObjectReader::readString()
 {
-   std::string ret_val("");
+   std::string ret_val("");   
 
    if(AttribSource == mCurSource)   // Just return a copy of the attribute source
    {
@@ -340,12 +340,15 @@ std::string XMLObjectReader::readString()
       }
 
       // Get the contents of the string
-      bool done_reading(false);
+      char next_char = mCurNodeStack.back().cdataSource.peek();
+      bool done_reading(next_char == '"');                           // If next char is already ", then we are done reading empty string
+            
       while(!done_reading)
       {
          mCurNodeStack.back().cdataSource.get(char_buffer,1024, '"');      // Copy over to target until we have second "
          ret_val += char_buffer;                                           // append onto end
-         done_reading = (mCurNodeStack.back().cdataSource.peek() == '"');     // Done reading if got to a "
+         next_char = mCurNodeStack.back().cdataSource.peek();
+         done_reading = (next_char == '"');     // Done reading if got to a "
       }
       mCurNodeStack.back().cdataSource.ignore(1);                    // Ignore that " as well
    }
