@@ -40,111 +40,6 @@
 
 namespace jccl {
    
-/* a utility function that probably belongs elsewhere */
-bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
-    /* reads a string from in.  a string is either " delimited
-     * or contains no whitespace.
-     *
-     * returns true if a string is correctly read.  This could be a 0-length
-     * quoted string...
-     *
-     * Quoted is set true if the string read was in quotes.
-     */
-
-    size = size-5; // this is just cheezy reassurance
-    int i;
-    bool retval = false;
-    char c, vj;
-    buffer[0] = '\0';
-
-    if (quoted)
-        *quoted = false;
-
-    // read whitespace, comments
-    for (;;) {
-        if (!in.get(c))
-            break;
-        if (isspace(c))
-            continue;
-        if (c == '#') {            // shell type comment
-            while (c != '\n')
-                in.get(c);
-            continue;
-        }
-        if ((c == '/') && in.get(vj)) {
-            /* it might be one or the other type of comment */
-            if (vj == '/') {
-                // single line comment.
-                while (c != '\n')
-                    if (!in.get(c))
-                        break;
-                continue;
-            }
-            else if (vj == '*') {
-                // multiline comment.
-                while (true) {
-                    if (!in.get(vj))
-                        break;
-                    if (vj == '*') {
-                        in.get(vj);
-                        if (vj == '/')
-                            break;
-                    }
-                }
-                continue;
-            }
-            else
-                in.putback(vj);
-        }
-        break; // we read the / character and it wasn't part of a comment
-    }
-    buffer[0] = c;
-
-    if ((buffer[0] == '{') || (buffer[0] == '}')) {
-        buffer[1] = '\0';
-        retval = true;
-    }
-    else if (buffer[0] == '"') {
-        /* do a quoted string */
-        if (quoted)
-            *quoted = true;
-        for (i = 0; i < size; i++) {
-            in.get(buffer[i]);
-            if (buffer[i] == '"') {
-                buffer[i] = '\0';
-                break;
-            }
-        }
-        if (i == size) {
-            i--; // so that we're writing to the last element of buffer
-            while (in.get(buffer[i]) && (buffer[i] != '"'))
-                ;
-            buffer[i] = '\0';
-            vprDEBUG (vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Truncated string in config file: '"
-                                    << buffer << "'\n" << vprDEBUG_FLUSH;
-        }
-        retval = true;
-    }
-    else {
-        // should add cleaner overflow handling like above...
-        for (i = 1; i < size-1; i++) {
-            in.get(buffer[i]);
-            if (buffer[i] == '}') {
-                // wanna push back
-                in.putback(buffer[i]);
-                break;
-            }
-            if (isspace(buffer[i]))
-                break;
-        }
-        buffer[i] = '\0';
-        retval = true;
-    }
-    //cout << "readString: read string: '" << buffer << "'" << endl;
-    if (!retval)
-        buffer[0] = '\0'; // so it's safe to read it...
-    return retval;
-}
 
 VarType stringToVarType (const char* str) {
     if (!strcasecmp (str, int_TOKEN))
@@ -167,16 +62,6 @@ VarType stringToVarType (const char* str) {
         return T_EMBEDDEDCHUNK;
 
     return VJ_T_INVALID;
-}
-
-
-VarType readType (std::istream &in) {
-    char str[256];
-
-    if (!readString (in, str, 256))
-        return VJ_T_INVALID;
-
-    return stringToVarType (str);
 }
 
 

@@ -41,10 +41,8 @@
 namespace jccl
 {
    
-bool readString (std::istream& in, char* buffer, int size, bool *quoted = NULL);
 
 VarType stringToVarType (const char* str);
-VarType readType (std::istream &ip);
 char *typeString (VarType t);
 char *unitString (CfgUnit t);
 float toFeet (float val, CfgUnit unit);
