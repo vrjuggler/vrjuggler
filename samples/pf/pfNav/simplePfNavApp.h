@@ -561,8 +561,8 @@ void simplePfNavApp::initScene()
    this->configProcessPending();
 
    // replace all nodes with _Sound_ with pjSoundNodes...
-   std::string extension = "_Sound_";
-   pjSoundReplaceTrav::traverse( mRootNode, extension );
+   //std::string extension = "_Sound_";
+   //pjSoundReplaceTrav::traverse( mRootNode, extension );
 
    // load these files into perfly to see just what your scenegraph
    // looked like. . . . .useful for debugging.
