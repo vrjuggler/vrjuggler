@@ -606,7 +606,7 @@ void ISD_initTracker(InterSenseTrackerType *tracker)
 *   Comments:       
 *
 ******************************************************************************/
-BOOL ISD_openTracker(InterSenseTrackerType *tracker, 
+BOOL ISD_openTrackerOld(InterSenseTrackerType *tracker, 
                      DWORD commPort, BOOL infoScreen, BOOL verbose)
 {
     WORD i;
@@ -682,7 +682,7 @@ BOOL ISD_openTracker(InterSenseTrackerType *tracker,
 
 ///////////////////////////////////////////////////
 
-BOOL ISD_openTrackerJuggler(InterSenseTrackerType *tracker, 
+BOOL ISD_openTracker(InterSenseTrackerType *tracker, 
                      std::string commPort, int baudRate, BOOL infoScreen, BOOL verbose)
 {
     WORD i;

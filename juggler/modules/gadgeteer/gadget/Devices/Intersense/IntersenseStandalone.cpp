@@ -75,9 +75,11 @@ bool IntersenseStandalone::updateData()
   bool is_data = false;
 
   if (FALSE != ISD_GetTrackerData(mHandle, &mData))
+  {
       is_data = true;
-
-      return is_data;
+  }
+  
+  return is_data;
 
 }
 
