@@ -36,6 +36,7 @@ require 5.004;
 
 use strict 'vars';
 use vars qw($dir_prfx $exp_file $gmake $sub_objdir);
+use vars qw(@includes);
 use vars qw(%VARS);
 
 use File::Basename;
@@ -78,20 +79,23 @@ my @nosrcs  = ();
 
 $dir_prfx   = '';
 $sub_objdir = '';
+@includes   = ();
 
 GetOptions('app=s' => \$app, 'apps=s' => \%apps, 'dirprefix=s' => \$dir_prfx,
            'dotin!' => \$dotin, 'expfile=s' => \$exp_file, 'gmake' => \$gmake,
-           'help' => \$help, 'nosrcs=s' => \@nosrcs, 'srcdir=s' => \@srcdirs,
+           'help' => \$help, 'includes=s' => \@includes,
+           'nosrcs=s' => \@nosrcs, 'srcdir=s' => \@srcdirs,
            'subdirs=s' => \@subdirs, 'subobjdir=s' => \$sub_objdir)
     or printHelp() && exit(1);
 
 printHelp() && exit(0) if $help;
 
-# This allows source directories to be specified using multiple --srcdir
-# options and/or using the form --srcdir=dir1,dir2,...,dirN.
-@srcdirs = split(/,/, join(',', @srcdirs));
-@subdirs = split(/,/, join(',', @subdirs));
-@nosrcs  = split(/,/, join(',', @nosrcs));
+# This allows source directories to be specified using multiple options
+# and/or using the form --<option>=opt1,opt2,...,optN.
+@includes = split(/,/, join(',', @includes));
+@nosrcs   = split(/,/, join(',', @nosrcs));
+@srcdirs  = split(/,/, join(',', @srcdirs));
+@subdirs  = split(/,/, join(',', @subdirs));
 
 my $all_src = findSources(\@srcdirs, \@nosrcs);
 
@@ -259,6 +263,8 @@ srcdir		= \@srcdir\@
 top_srcdir	= \@top_srcdir\@
 INSTALL		= \@INSTALL\@
 MK_START
+
+    print $handle "EXTRA_INCLUDES\t+= @includes" if @includes;
 
     my($has_objs, $has_subdirs) = (0, 0);
 
@@ -444,6 +450,9 @@ sub printAppMakefileStart_in ($$) {
 
     # Construct the complete list of include paths.
     my $inc_line = '@APP_INCLUDES@';
+    $inc_line .= " @includes" if @includes;
+
+    # Add each of the source directories to the include path.
     foreach ( @dirs ) {
         if ( "$_" eq "." ) {
             $inc_line .= ' -I$(srcdir)';
