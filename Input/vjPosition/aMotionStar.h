@@ -31,7 +31,7 @@
  * -----------------------------------------------------------------
  */
 
- 
+
 #ifndef _ASCENSION_MOTION_STAR_H_
 #define _ASCENSION_MOTION_STAR_H_
 
@@ -44,13 +44,13 @@
 #include <arpa/inet.h>
 #include <time.h>
 
-#define MYPORT 4000 /* Indy port number */ 
+#define MYPORT 4000 /* Indy port number */
 #define TCP_PORT 6000 /* bird server port */
 #define TRUE 1 /* true value */
-#define FALSE 0 /* false value */ 
+#define FALSE 0 /* false value */
 
-struct SINGLE_BIRD_STATUS { 
-  unsigned char status; 
+struct SINGLE_BIRD_STATUS {
+  unsigned char status;
   unsigned char id;
   unsigned short int            softwareRev;
   unsigned char         errorCode;
@@ -63,17 +63,17 @@ struct SINGLE_BIRD_STATUS {
   unsigned short int    spare1;
   unsigned short int    spare2;
 };
-  
+
 struct FILTER_TABLE
 {
   unsigned short int    entry[7];
 };
- 
+
 struct ANGLES_TABLE
 {
   unsigned short int    angle[3];
 };
- 
+
 struct BIRD_STATUS
 {
   struct SINGLE_BIRD_STATUS     status;
@@ -83,28 +83,28 @@ struct BIRD_STATUS
   struct ANGLES_TABLE           xyzReferenceFrame;
   struct ANGLES_TABLE           xyzAngleAlign;
 };
- 
+
 struct HEADER
 {
   unsigned short int    sequence;
- 
+
   /*time_t time;   SGI formatted as 6 bytes (see time_t) */
   /*unsigned short int tm1;
     unsigned short int tm2;*/
- 
+
   unsigned char         time[4];
   unsigned short int    milliseconds;
- 
+
   unsigned char         type;
   unsigned char         xtype;
   unsigned char         protocol;
- 
+
   unsigned char         error_code;
   unsigned short int    error_code_extension;
- 
+
   unsigned short int    number_bytes;
 };
- 
+
 struct RSP_GET_STATUS_all
 {
   unsigned char         all;
@@ -118,12 +118,12 @@ struct RSP_GET_STATUS_all
   unsigned char         firstAddress;
   unsigned short int    softwareRevision;
 };
- 
+
 struct DATAPACKET
 {
   struct HEADER header;
   unsigned char buffer[2048];
-}; 
+};
 
 class aMotionStar {
 
@@ -173,7 +173,7 @@ class aMotionStar {
 
       void setHemisphere ( int n );
 inline unsigned int getHemisphere () {return hemisphere;}
-      
+
       void setIpAddress( const char* n );
 inline char* getIpAddress () {return ipAddress;}
 
@@ -193,7 +193,7 @@ inline int getRunMode () {return runMode;}
 inline unsigned char getReportRate () {return reportRate;}
 
 //*****************************************************
- 
+
 private:
   // sends a wakeup call to the MotionStar
 
@@ -236,7 +236,7 @@ private:
     float rawToFloat(char r1, char r2);
 
 
-float posinfo[3][6]; 
+float posinfo[3][6];
 bool 			active;
 char                    ipAddress[16];
 int x;
@@ -255,21 +255,21 @@ double                  realRate;
 unsigned int            statusSize, temp;
 unsigned char           ertFlag;
 unsigned char           buttonState;
- 
+
 struct BIRD_STATUS Bird[120];
 struct HEADER command, *lpCommand;
 struct RSP_GET_STATUS_all RspGetStatAll, *lpRspGetStatAll;
 struct DATAPACKET response, *lpResponse;
 struct sockaddr_in client,server;
- 
+
 int s,rtn;
 unsigned  long i,n;
 unsigned int sequenceNumber;
- 
+
 char *newptr;
- 
+
 int errno; // EXTERN!!
- 
+
 int                     numberBytes;
 int                     bytesReceived;
 #if defined(__FreeBSD__) || defined(_AIX)
@@ -292,9 +292,9 @@ double          birdRate;
 int             runMode;
 unsigned char   addr;
 unsigned char   reportRate;
- 
+
 
 };
 
 
-#endif 
+#endif
