@@ -49,7 +49,7 @@ public class ConfigElementTreeTableModel
    extends AbstractTreeTableModel
 {
    /**
-    * Creates a new table model with no config chunk for its data.
+    * Creates a new table model with no config element for its data.
     */
    public ConfigElementTreeTableModel()
    {
@@ -96,7 +96,7 @@ public class ConfigElementTreeTableModel
    }
 
    /**
-    * Gets the config chunk this table model represents.
+    * Gets the config element this table model represents.
     */
    public ConfigElement getElement()
    {
@@ -178,8 +178,8 @@ public class ConfigElementTreeTableModel
                                    ConfigElement elt, int index)
    {
       elt.addConfigElementListener(mElementListener);
-//      System.out.println("Adding embedded chunk node for chunk: "+
-//                         chunk.getName()+"["+index+"]");
+//      System.out.println("Adding embedded element node for element: "+
+//                         elt.getName()+"["+index+"]");
       DefaultMutableTreeNode elt_node = new DefaultMutableTreeNode(elt);
       insertNodeInto(elt_node, parent, index);
 
@@ -718,11 +718,11 @@ public class ConfigElementTreeTableModel
          ConfigElement src = (ConfigElement)evt.getSource();
          int idx = evt.getIndex();
          PropertyDefinition prop_def = src.getDefinition().getPropertyDefinition(evt.getProperty());
-         DefaultMutableTreeNode chunk_node = getNodeFor(src);
+         DefaultMutableTreeNode elt_node = getNodeFor(src);
 
          // Get the node containing the property description under the source
          // ConfigElement node
-         for (Enumeration e = chunk_node.children(); e.hasMoreElements(); )
+         for (Enumeration e = elt_node.children(); e.hasMoreElements(); )
          {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
             if (node.getUserObject().equals(prop_def))
@@ -754,11 +754,11 @@ public class ConfigElementTreeTableModel
          ConfigElement src = (ConfigElement)evt.getSource();
          int idx = evt.getIndex();
          PropertyDefinition prop_def = src.getDefinition().getPropertyDefinition(evt.getProperty());
-         DefaultMutableTreeNode chunk_node = getNodeFor(src);
+         DefaultMutableTreeNode elt_node = getNodeFor(src);
 
          // Get the node containing the property description under the source
          // ConfigElement node
-         for (Enumeration e = chunk_node.children(); e.hasMoreElements(); )
+         for (Enumeration e = elt_node.children(); e.hasMoreElements(); )
          {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
             if (node.getUserObject().equals(prop_def))

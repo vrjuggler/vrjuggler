@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _JCCL_CONFIG_CHUNK_HANDLER_H_
-#define _JCCL_CONFIG_CHUNK_HANDLER_H_
+#ifndef _JCCL_CONFIG_ELEMENT_HANDLER_H_
+#define _JCCL_CONFIG_ELEMENT_HANDLER_H_
 
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/ConfigElementPtr.h>

@@ -78,7 +78,7 @@ public class ConfigDefinitionChooser
          e.printStackTrace();
       }
 
-      // Make sure the focus and selected chunk desc get updated appropriately
+      // Make sure the focus and selected definition get updated appropriately
       // for the currently visible tab when the tab selection changes.
       browseTab.addComponentListener(new ComponentAdapter()
       {
@@ -350,7 +350,7 @@ public class ConfigDefinitionChooser
       searchSearchBoxSpacer = Box.createHorizontalStrut(8);
       this.setLayout(baseLayout);
       browseTab.setLayout(browseTabLayout);
-      browseSearchLbl.setText("Chunk Desc Name:");
+      browseSearchLbl.setText("Config Element Type:");
       approveBtn.setText("OK");
       approveBtn.setEnabled(false);
       cancelBtn.setText("Cancel");

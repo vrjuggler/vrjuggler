@@ -124,7 +124,7 @@ public class ConfigElementPointerEditor
       {
          List elements = broker.getElementsIn((String)itr.next());
 
-         // Get the chunks embedded within the current element
+         // Get the elements embedded within the current element
          for (Iterator elt_itr = elements.iterator(); elt_itr.hasNext(); )
          {
             ConfigElement elt = (ConfigElement)elt_itr.next();
@@ -202,7 +202,7 @@ public class ConfigElementPointerEditor
    }
 
    /**
-    * The String name of the Chunk pointer being edited.
+    * The String name of the Element pointer being edited.
     */
    //private String mValue = null;
    private ConfigElementPointer mValue = null;

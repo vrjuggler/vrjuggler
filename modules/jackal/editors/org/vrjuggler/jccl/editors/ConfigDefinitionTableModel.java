@@ -63,7 +63,7 @@ public class ConfigDefinitionTableModel
    }
 
    /**
-    * Gets the chunk definition this table model represents.
+    * Gets the config definition this table model represents.
     */
    public ConfigDefinition getDefinition()
    {
@@ -75,7 +75,7 @@ public class ConfigDefinitionTableModel
     */
    public void propertyChange(PropertyChangeEvent evt)
    {
-      System.out.println("ChunkDefinitionTableModel.propertyChanged("+evt.getPropertyName()+")");
+      System.out.println("ConfigDefinitionTableModel.propertyChanged("+evt.getPropertyName()+")");
       for (int i=0; i<getRowCount(); ++i)
       {
          PropertyDefinition prop_def = getPropertyDefinition(i);
