@@ -358,9 +358,10 @@ void InputLogger::playNextSample()
       gadget::Input* dev_ptr = input_mgr->getDevice(dev_name);
       if(NULL != dev_ptr)
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Reading device: " << dev_name << std::endl;
+         vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Reading device: " << dev_name << std::endl << vprDEBUG_FLUSH;
 
          vpr::XMLObjectReader xml_reader(serial_dev_node);     // Create XML reader
+         xml_reader.setAttrib("rim.timestamp.delta", 0);       // Hack for now to work around RIM
          dev_ptr->readObject(&xml_reader);                     // Deserialize the device
       }
       else
@@ -377,11 +378,13 @@ void InputLogger::playNextSample()
    if(mNextSample_i == mEndSample_i)   // If done playing
    {
       mCurState = Inactive;
+      vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Logger: Done playing.\n" << vprDEBUG_FLUSH;
    }
    else if( (*mNextSample_i)->getName() == std::string("stamp"))
    {
       mActiveStamp = (*mNextSample_i)->getAttribute("id").getValue<std::string>();
       mNextSample_i++;
+      vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Logger: Got stamp: [" << mActiveStamp << "]\n" << vprDEBUG_FLUSH;
    }
 
 }
