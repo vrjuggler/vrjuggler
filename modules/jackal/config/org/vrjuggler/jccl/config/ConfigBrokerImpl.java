@@ -287,7 +287,8 @@ public class ConfigBrokerImpl
       fireConfigElementAdded(data_source_name, elt);
       
       // Inform everyone of the new edit.
-      ConfigContextEdit new_edit = new ConfigContextEdit(context, elt, true);
+      ConfigContextEdit new_edit = new ConfigContextEdit(context, elt,
+                                                         dataSource, true);
       context.postEdit(new_edit);
       return true;
    }
@@ -372,7 +373,7 @@ public class ConfigBrokerImpl
          
          // Inform everyone of the new edit.
          ConfigContextEdit new_edit = new ConfigContextEdit(context, elt,
-                                                            false);
+                                                            dataSource, false);
          context.postEdit(new_edit);
          return true;
       }
