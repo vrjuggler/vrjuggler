@@ -7,7 +7,7 @@
 #ifndef _VJ_POSPROXY_H_
 #define _VJ_POSPROXY_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <math.h>
 #include <assert.h>
 

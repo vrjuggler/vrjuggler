@@ -1,5 +1,5 @@
-#include <config.h>
-#include <config.h>
+#include <vjConfig.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <new.h>
 #include <stdlib.h>

@@ -1,7 +1,7 @@
 #ifndef _vjCondGeneric_h_
 #define _vjCondGeneric_h_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Sync/vjSemaphore.h>
 #include <Sync/vjMutex.h>
 #include <Kernel/vjDebug.h>

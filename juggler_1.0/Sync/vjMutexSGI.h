@@ -13,7 +13,7 @@
 // Date: 1-20-97
 //-----------------------------------------------
 
-#include <config.h>
+#include <vjConfig.h>
 #include <ulocks.h>
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolSGI.h>

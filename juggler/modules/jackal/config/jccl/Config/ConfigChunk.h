@@ -8,7 +8,7 @@
 #ifndef _VJ_CONFIGCHUNK_H_
 #define _VJ_CONFIGCHUNK_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>

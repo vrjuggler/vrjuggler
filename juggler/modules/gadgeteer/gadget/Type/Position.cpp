@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 #include <float.h>
 #include <Input/vjPosition/vjPosition.h>
 

@@ -1,7 +1,7 @@
 #ifndef _VJ_CAMERA_PROJECTION_H_
 #define _VJ_CAMERA_PROJECTION_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Kernel/vjProjection.h>
 class vjMatrix;
 

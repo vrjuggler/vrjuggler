@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 #include <Kernel/Pf/vjPfDrawManager.h>
 #include <Kernel/Pf/vjPfApp.h>
 #include <Kernel/vjDebug.h>

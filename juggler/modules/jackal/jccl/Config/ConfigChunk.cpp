@@ -2,7 +2,7 @@
 
 
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Config/vjConfigChunk.h>
 #include <Config/vjParseUtil.h>
 #include <Kernel/vjDebug.h>

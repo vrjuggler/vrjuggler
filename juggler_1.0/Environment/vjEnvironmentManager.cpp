@@ -1,5 +1,5 @@
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <fstream.h>
 #include <strings.h>    // For bzero()

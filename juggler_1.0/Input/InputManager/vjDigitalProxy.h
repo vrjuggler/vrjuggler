@@ -7,7 +7,7 @@
 #ifndef _VJ_DIGITALPROXY_H_
 #define _VJ_DIGITALPROXY_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <assert.h>
 #include <Input/vjInput/vjDigital.h>
 

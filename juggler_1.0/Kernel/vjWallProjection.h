@@ -1,7 +1,7 @@
 #ifndef _VJ_WALL_PROJECTION_
 #define _VJ_WALL_PROJECTION_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Kernel/vjProjection.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Math/vjCoord.h>

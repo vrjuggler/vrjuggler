@@ -2,7 +2,7 @@
 #define _VJ_DISPLAY_MANAGER_
 #pragma once
 
-#include <config.h>
+#include <vjConfig.h>
 
 class vjDrawManager;
 class vjDisplay;

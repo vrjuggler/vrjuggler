@@ -2,7 +2,7 @@
 #ifndef _VJ_VARVALUE_H_
 #define _VJ_VARVALUE_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <ctype.h>
 #include <string.h>
 #include <iostream.h>

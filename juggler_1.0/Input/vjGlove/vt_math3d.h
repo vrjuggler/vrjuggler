@@ -12,7 +12,7 @@
 /*  --    Authors:  Larry Edwards, William L. Chapin        --  */
 /*  ==========================================================  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <math.h>
 
 #define epsilon 0.000001

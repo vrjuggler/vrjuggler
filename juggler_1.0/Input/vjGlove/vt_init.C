@@ -10,7 +10,7 @@
 /*  --    Further modified by Larry Edwards                       --  */
 /*  ================================================================  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

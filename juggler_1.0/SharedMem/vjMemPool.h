@@ -1,7 +1,7 @@
 #ifndef _MemPool_h_
 #define _MemPool_h_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <stdlib.h>
 

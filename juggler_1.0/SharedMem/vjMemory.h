@@ -3,7 +3,7 @@
 
 //class vjMemory;
 
-#include <config.h>
+#include <vjConfig.h>
 #include <sys/types.h>
 #include <stdlib.h>
 

@@ -14,7 +14,7 @@
 #ifndef VJ_INPUT_H
 #define VJ_INPUT_H
 
-#include <config.h>
+#include <vjConfig.h>
 
 #ifndef WIN32
 #include <unistd.h>

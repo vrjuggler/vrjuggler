@@ -7,7 +7,7 @@
 /*  --    Authors: Larry Edwards and William Chapin         --  */
 /*  ==========================================================  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <math.h>
 #include <Input/vjGlove/vt_math3d.h>
 

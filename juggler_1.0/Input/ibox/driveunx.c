@@ -9,7 +9,7 @@
  * Rev 2.1
  */
 
-#include <config.h>
+#include <vjConfig.h>
 
 #ifdef HAVE_SYS_STDSYMS_H
 #   include <sys/stdsyms.h>

@@ -1,7 +1,7 @@
 #ifndef _VJ_API_
 #define _VJ_API_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 
 //---------------------------------------------------------

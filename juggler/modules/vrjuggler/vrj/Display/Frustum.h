@@ -1,7 +1,7 @@
 #ifndef _VJ_FRUSTUM_H_
 #define _VJ_FRUSTUM_H_
 
-#include <config.h>
+#include <vjConfig.h>
 
 //------------------------------
 //: A frustum object.

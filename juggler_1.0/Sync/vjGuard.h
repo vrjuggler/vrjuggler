@@ -13,7 +13,7 @@
 // Date: 1-31-97
 //-----------------------------------------------
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Sync/vjSemaphore.h>
 #include <Sync/vjMutex.h>
 

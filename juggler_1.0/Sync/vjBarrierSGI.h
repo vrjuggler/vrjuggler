@@ -1,6 +1,6 @@
 #ifndef _vjBarrierSGI_h_
 #define _vjBarrierSGI_h_
-#include <config.h>
+#include <vjConfig.h>
 #include <ulocks.h>
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolSGI.h>

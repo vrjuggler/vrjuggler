@@ -12,7 +12,7 @@
 #ifndef _VJ_DUMMYDIGITAL_H_
 #define _VJ_DUMMYDIGITAL_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Input/vjInput/vjDigital.h>
 
 //: A dummy Digital device for Digital proxies to default to.

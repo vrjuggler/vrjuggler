@@ -1,7 +1,7 @@
 #ifndef _VJ_THREAD_FUNCTOR_H_
 #define _VJ_THREAD_FUNCTOR_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <stdlib.h>
 
 class  vjBaseThreadFunctor

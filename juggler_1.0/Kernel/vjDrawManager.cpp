@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 #include <Kernel/vjDrawManager.h>
 #include <Kernel/vjDisplayManager.h>
 

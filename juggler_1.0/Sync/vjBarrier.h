@@ -1,7 +1,7 @@
 #ifndef _VJBarrier_h_
 #define _VJBarrier_h_
 
-#include <config.h>
+#include <vjConfig.h>
 
 #ifdef VJ_SGI_IPC    // ---- SGI IPC Barrier ------ //
 #   include <ulocks.h>

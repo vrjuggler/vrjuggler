@@ -11,7 +11,7 @@
 #ifndef _VJ_CHUNKDESC_H_
 #define _VJ_CHUNKDESC_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <strings.h>
 
 #ifdef VJ_OS_HPUX

@@ -1,7 +1,7 @@
 #ifndef _VJ_PF_DRAW_MANAGER_
 #define _VJ_PF_DRAW_MANAGER_
 
-#include <config.h>
+#include <vjConfig.h>
 
 #if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
 #   define _PTHREADS

@@ -2,7 +2,7 @@
 #define _VJ_KERNEL_
 #pragma once
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <mstring.h>
 #include <Kernel/vjApp.h>

@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 
 #ifdef VJ_OS_HPUX
 #   include <algorithm>

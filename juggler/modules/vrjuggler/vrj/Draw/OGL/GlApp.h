@@ -1,7 +1,7 @@
 #ifndef _VJ_GL_APP_
 #define _VJ_GL_APP_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Kernel/vjApp.h>
 
 #include <Kernel/GL/vjGlDrawManager.h>

@@ -6,7 +6,7 @@
 
 
 
-#include <config.h>
+#include <vjConfig.h>
 #include <fstream.h>
 #include <sys/types.h>
 

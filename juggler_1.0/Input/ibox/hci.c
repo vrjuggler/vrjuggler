@@ -11,7 +11,7 @@
  *      Requires HCI firmware version 2.0 or later
  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <stdio.h>
 #include <Input/ibox/hci.h>
 #include <Input/ibox/driveunx.h>

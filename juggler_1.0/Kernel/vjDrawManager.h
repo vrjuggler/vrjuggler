@@ -1,7 +1,7 @@
 #ifndef _VJ_DRAW_MANAGER_
 #define _VJ_DRAW_MANAGER_
 
-#include <config.h>
+#include <vjConfig.h>
 
 class vjDisplayManager;
 class vjApp;

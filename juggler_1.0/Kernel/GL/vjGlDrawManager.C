@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 #include <Kernel/GL/vjGlDrawManager.h>
 #include <Threads/vjThread.h>
 #include <Kernel/vjDisplayManager.h>

@@ -26,7 +26,7 @@
 // Date: 1-9-97
 //-----------------------------------------------
 
-#include <config.h>
+#include <vjConfig.h>
 #include <stdio.h>
 #include <iostream.h>
 #include <unistd.h>

@@ -15,7 +15,7 @@
 #ifndef _HCI_H
 #define _HCI_H
 
-#include <config.h>
+#include <vjConfig.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,7 +1,7 @@
 #ifndef _Integer_h_
 #define _Integer_h_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <SharedMem/C2Memory.h>
 
 class Integer : public C2Memory {

@@ -4,7 +4,7 @@
 #ifndef _MEMPOOL_ALLOC_H_
 #define _MEMPOOL_ALLOC_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <alloc.h>
 #include <SharedMem/vjMemPool.h>
 

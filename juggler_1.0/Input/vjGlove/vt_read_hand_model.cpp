@@ -9,7 +9,7 @@
 /*  --    Author: Larry Edwards                                 --  */
 /*  ==============================================================  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>

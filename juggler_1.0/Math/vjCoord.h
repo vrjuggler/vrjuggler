@@ -1,7 +1,7 @@
 #ifndef _VJ_COORD_
 #define _VJ_COORD_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <Math/vjVec3.h>
 class vjMatrix;

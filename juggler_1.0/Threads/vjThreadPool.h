@@ -2,7 +2,7 @@
 #define _VJTHREAD_POOL_H
 
 
-#include <config.h>
+#include <vjConfig.h>
 
 #include <Threads/vjThread.h>
 #include <SharedMem/vjMemory.h>
