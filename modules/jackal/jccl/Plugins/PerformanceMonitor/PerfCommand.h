@@ -32,96 +32,15 @@
 
 
 
-// commands used by connections...
+// commands used by Performance Control
 
-#ifndef _JCCL_COMMAND_H_
-#define _JCCL_COMMAND_H_
+#ifndef _JCCL_PERF_COMMAND_H_
+#define _JCCL_PERF_COMMAND_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Performance/TimeStamp.h>
+#include <jccl/JackalServer/Command.h>
 
 namespace jccl {
-
-    //class TimedUpdate;
-class ConfigChunkDB;
-class ChunkDescDB;
-
-    class VJ_CLASS_API Command {
-
-    public:
-        
-        Command ();
-
-        virtual void call (std::ostream& out) const = 0;
-
-        virtual const std::string& getProtocolName () const = 0;
-
-    };
-
-    
-    class VJ_CLASS_API PeriodicCommand: public Command {
-
-    public:
-
-        float next_fire_time;
-        const float refresh_time;
-
-        PeriodicCommand (float _refresh_time);
-
-        void resetFireTime (TimeStamp& ts);
-
-        int operator < (const PeriodicCommand& cmd2) const;
-
-    };
-
-
-    //------------- ConfigurationManager Commands -------------------
-
-
-    class VJ_CLASS_API CommandRefresh: public Command {
-    private:
-        static const std::string protocol_name;
-
-    public:
-        CommandRefresh();
-    
-        virtual void call (std::ostream& out) const;
-
-        virtual const std::string& getProtocolName() const;
-    };
-
-
-
-    class VJ_CLASS_API CommandSendChunkDB: public Command {
-    private:
-        ConfigChunkDB* db;
-        bool all;
-        static const std::string protocol_name;
-        
-    public:
-        CommandSendChunkDB (ConfigChunkDB* _db, bool _all = false);
-        
-        virtual void call (std::ostream& out) const;
-        
-        virtual const std::string& getProtocolName() const;
-    };
-
-
-
-    class VJ_CLASS_API CommandSendDescDB: public Command {
-    private:
-        ChunkDescDB* db;
-        bool all;
-        static const std::string protocol_name;
-        
-    public:
-        CommandSendDescDB (ChunkDescDB* _db, bool _all = false);
-        
-        virtual void call (std::ostream& out) const;
-        
-        virtual const std::string& getProtocolName() const;
-    };
-
 
 
     //------------------ PerfManager Commands --------------------------

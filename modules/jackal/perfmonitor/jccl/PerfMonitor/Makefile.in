@@ -49,6 +49,7 @@ SUBOBJDIR	= $(JCCL_LIBRARY)
 
 SRCS		= PerformanceManager.cpp \
 		  PerfDataBuffer.cpp	\
+		  PerfCommand.cpp	\
                   TimeStamp.cpp
 
 include $(MKPATH)/dpp.obj.mk
