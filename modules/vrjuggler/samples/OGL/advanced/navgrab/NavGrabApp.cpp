@@ -134,7 +134,7 @@ void NavGrabApp::updateGrabbing()
 
 void NavGrabApp::updateNavigation()
 {
-   gmtl::Matrix44f wandMatrix = mWand->getData();      // Get the wand matrix
+   gmtl::Matrix44f wand_matrix = mWand->getData();      // Get the wand matrix
 
    // Update navigation
    // - Find forward direction of wand
@@ -151,7 +151,7 @@ void NavGrabApp::updateNavigation()
    if(mRotateButton->getData())
    {
       const float rot_scale(0.01f);
-      float y_rot = gmtl::makeYRot<float, 4, 4>(wandMatrix);
+      float y_rot = gmtl::makeYRot<float, 4, 4>(wand_matrix);
       rotation = -1.0f * y_rot * rot_scale;
       gmtl::preMult(mNavMatrix,
                     gmtl::makeRot<gmtl::Matrix44f>(gmtl::EulerAngleXYZf(0.0f,rotation,0.0f)));
