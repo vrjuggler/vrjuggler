@@ -1,9 +1,6 @@
 #include <vpr/IO/Stats/BandwidthIOStatsStrategy.h>
 
-namespace vpr
-{
-
-double BandwidthIOStatsStrategy::getAverageSendBW()
+double vpr::BandwidthIOStatsStrategy::getAverageSendBW()
 { 
    if(0 == mSentBytes)
       return 0.0f;
@@ -24,7 +21,7 @@ double BandwidthIOStatsStrategy::getAverageSendBW()
    return av_sent_bw;
 }
 
-double BandwidthIOStatsStrategy::getAverageReadBW()
+double vpr::BandwidthIOStatsStrategy::getAverageReadBW()
 { 
    if(0 == mReadBytes)
       return 0.0f;
@@ -46,7 +43,7 @@ double BandwidthIOStatsStrategy::getAverageReadBW()
 }
 
 
-void BandwidthIOStatsStrategy::incrementBytesRead(vpr::Uint32 bytes)
+void vpr::BandwidthIOStatsStrategy::incrementBytesRead(vpr::Uint32 bytes)
 {
    mReadBytes += bytes;
    mReadCount += 1;
@@ -89,7 +86,7 @@ void BandwidthIOStatsStrategy::incrementBytesRead(vpr::Uint32 bytes)
    mPrevReadTime = cur_time;        // Set the prev time to use next time  
 }
 
-void BandwidthIOStatsStrategy::incrementBytesSent(vpr::Uint32 bytes)
+void vpr::BandwidthIOStatsStrategy::incrementBytesSent(vpr::Uint32 bytes)
 {
    mSentBytes += bytes;
    mSendCount += 1;
@@ -131,6 +128,3 @@ void BandwidthIOStatsStrategy::incrementBytesSent(vpr::Uint32 bytes)
 
    mPrevSendTime = cur_time;        // Set the prev time to use next time
 }
-
-}; // namespace vpr
-
