@@ -23,7 +23,7 @@
 # Cross-platform mtree based on the FreeBSD 3.0 version of mtree(8) which is
 # based on the 4.3 BSD-Reno version of the utility.
 #
-#     Patrick Hartling <patrick@icemt.iastate.edu>
+#     Patrick Hartling <patrick@vrac.iastate.edu>
 #     October/November 1998
 # -----------------------------------------------------------------------------
 # This file contains a modified version of the wrap() function included with
