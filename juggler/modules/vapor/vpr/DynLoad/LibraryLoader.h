@@ -55,7 +55,8 @@
 namespace vpr
 {
 
-/**
+/** \class LibraryLoader LibraryLoader.h vpr/DynLoad/LibraryLoader.h
+ *
  * A helper for loading a specific class of dynamic shared objects (DSOs).
  * Through (relatively) high-level methods, this class introduces a uniform
  * naming scheme for DSOs.  More details are provided in the documentation for
@@ -115,7 +116,7 @@ public:
     *                    (i.e., native) paths.
     * @param funcName    The name of the initialization function in the DSO
     *                    that will be invoked to initialize the DSO's code.
-    * @param func        A Boost.Function object (that is, a callable object)
+    * @param callback    A Boost.Function object (that is, a callable object)
     *                    that will be invoked as a callback to initialize the
     *                    DSO.  It will be passed a void* pointer to the
     *                    initialization function looked up in the DSO.
@@ -144,7 +145,7 @@ public:
     *                    path objects) where the target DSO may exist.
     * @param funcName    The name of the initialization function in the DSO
     *                    that will be invoked to initialize the DSO's code.
-    * @param func        A Boost.Function object (that is, a callable object)
+    * @param callback    A Boost.Function object (that is, a callable object)
     *                    that will be invoked as a callback to initialize the
     *                    DSO.  It will be passed a void* pointer to the
     *                    initialization function looked up in the DSO.

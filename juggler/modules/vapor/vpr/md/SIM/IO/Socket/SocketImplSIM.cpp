@@ -41,6 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <iomanip>
 #include <stdlib.h>
 #include <string.h>
 #include <boost/concept_check.hpp>
@@ -213,7 +214,7 @@ vpr::Uint32 SocketImplSIM::availableBytes() const
 
 vpr::ReturnStatus SocketImplSIM::read_i(void* buffer,
                                         const vpr::Uint32 length,
-                                        vpr::Uint32& data_read,
+                                        vpr::Uint32& bytesRead,
                                         vpr::Interval timeout )
 {
    boost::ignore_unused_variable_warning(timeout);
@@ -241,7 +242,7 @@ vpr::ReturnStatus SocketImplSIM::read_i(void* buffer,
 
          // Complete the read operation.
          memcpy(buffer, message->getBody(), copy_len);
-         data_read = copy_len;
+         bytesRead = copy_len;
 
          // If there was no resizing performed on the message (the resize value
          // is 0), then we have read the entire message into our buffer.
@@ -255,7 +256,7 @@ vpr::ReturnStatus SocketImplSIM::read_i(void* buffer,
       else
       {
          status.setCode(vpr::ReturnStatus::WouldBlock);
-         data_read = 0;
+         bytesRead = 0;
       }
    }
    mArrivedQueueMutex.release();
@@ -263,11 +264,10 @@ vpr::ReturnStatus SocketImplSIM::read_i(void* buffer,
    return status;
 }
 
-/** Exactly like read_i except takes MessageDataPtr directly for zero copy networking
-* Updates msgData to point at the new message data.
-*/
+// Exactly like read_i except takes MessageDataPtr directly for zero copy
+// networking.  Updates msgData to point at the new message data.
 vpr::ReturnStatus SocketImplSIM::read_i(vpr::sim::Message::MessageDataPtr& msgData,
-                                        vpr::Uint32& data_read,
+                                        vpr::Uint32& bytesRead,
                                         vpr::Interval timeout)
 {
    boost::ignore_unused_variable_warning(timeout);
@@ -284,7 +284,7 @@ vpr::ReturnStatus SocketImplSIM::read_i(vpr::sim::Message::MessageDataPtr& msgDa
          // Get copy of message data, then
          // Remove the message from the arrival queue.
          msgData = mArrivedQueue.front()->getMessageData();
-         data_read = msgData->size();
+         bytesRead = msgData->size();
          mArrivedQueue.pop_front();
       }
       // Nothing is in the queue, so we tell the caller that the operation is
@@ -292,7 +292,7 @@ vpr::ReturnStatus SocketImplSIM::read_i(vpr::sim::Message::MessageDataPtr& msgDa
       else
       {
          status.setCode(vpr::ReturnStatus::WouldBlock);
-         data_read = 0;
+         bytesRead = 0;
       }
    }
    mArrivedQueueMutex.release();
@@ -302,7 +302,7 @@ vpr::ReturnStatus SocketImplSIM::read_i(vpr::sim::Message::MessageDataPtr& msgDa
 
 vpr::ReturnStatus SocketImplSIM::write_i(const void* buffer,
                                          const vpr::Uint32 length,
-                                         vpr::Uint32& data_written,
+                                         vpr::Uint32& bytesWritten,
                                          vpr::Interval timeout)
 {
    boost::ignore_unused_variable_warning(timeout);
@@ -315,11 +315,11 @@ vpr::ReturnStatus SocketImplSIM::write_i(const void* buffer,
    {
       vprASSERT(false && "Trying to write to NULL peer");      // XXX: This may not be a good way to do this
       status.setCode(vpr::ReturnStatus::Fail);
-      data_written = 0;
+      bytesWritten = 0;
    }
    else
    {
-      data_written = length;
+      bytesWritten = length;
 
 #ifdef VPR_DEBUG
       vpr::Uint32 remainder;
@@ -364,9 +364,10 @@ vpr::ReturnStatus SocketImplSIM::write_i(const void* buffer,
    return status;
 }
 
-/** Exactly like write_i except takes MessageDataPtr directly for zero copy networking */
+// Exactly like write_i except takes MessageDataPtr directly for zero copy
+// etworking.
 vpr::ReturnStatus SocketImplSIM::write_i(vpr::sim::Message::MessageDataPtr msgData,
-                                         vpr::Uint32& data_written,
+                                         vpr::Uint32& bytesWritten,
                                          vpr::Interval timeout)
 {
    boost::ignore_unused_variable_warning(timeout);
@@ -380,12 +381,12 @@ vpr::ReturnStatus SocketImplSIM::write_i(vpr::sim::Message::MessageDataPtr msgDa
    {
       vprASSERT(false && "Trying to write to NULL peer");      // XXX: This may not be a good way to do this
       status.setCode(vpr::ReturnStatus::Fail);
-      data_written = 0;
+      bytesWritten = 0;
    }
    else
    {
       vprASSERT(!mPathToPeer->empty() && "Path not set");
-      data_written = msgData->size();
+      bytesWritten = msgData->size();
       vpr::sim::MessagePtr msg(new vpr::sim::Message(msgData));
       msg->setPath(mPathToPeer, this, mPeer);
       vpr::sim::Controller::instance()->getSocketManager().sendMessage(msg);
@@ -523,11 +524,11 @@ vpr::ReturnStatus SocketImplSIM::inExceptState()
 // Protected methods.
 // ============================================================================
 
-SocketImplSIM::SocketImplSIM(const vpr::SocketTypes::Type sock_type)
+SocketImplSIM::SocketImplSIM(const vpr::SocketTypes::Type sockType)
    : mOpen(false)
    , mBound(false)
    , mBlocking(false)
-   , mType(sock_type)
+   , mType(sockType)
    , mReuseAddr(false)
    , mConnected(false)
    , mPeer(NULL)
@@ -535,15 +536,15 @@ SocketImplSIM::SocketImplSIM(const vpr::SocketTypes::Type sock_type)
    /* Do nothing. */ ;
 }
 
-SocketImplSIM::SocketImplSIM(const vpr::InetAddr& local_addr,
-                             const vpr::InetAddr& remote_addr,
-                             const vpr::SocketTypes::Type sock_type)
+SocketImplSIM::SocketImplSIM(const vpr::InetAddr& localAddr,
+                             const vpr::InetAddr& remoteAddr,
+                             const vpr::SocketTypes::Type sockType)
    : mOpen(false)
    , mBound(false)
    , mBlocking(false)
-   , mLocalAddr(local_addr)
-   , mRemoteAddr(remote_addr)
-   , mType(sock_type)
+   , mLocalAddr(localAddr)
+   , mRemoteAddr(remoteAddr)
+   , mType(sockType)
    , mConnected(false)
    , mPeer(NULL)
 {

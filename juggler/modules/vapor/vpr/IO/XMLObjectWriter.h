@@ -54,12 +54,12 @@
 namespace vpr
 {
 
-/** Object writer for data buffers.
-*
-* Write directly to a data buffer.
-*
-* @todo: Add smart buffering for type sizes
-*/
+/** \class XMLObjectWriter XMLObjectWriter.h vpr/IO/XMLObjectWriter.h
+ *
+ * Object writer for data buffers.  Writes directly to a data buffer.
+ *
+ * @todo Add smart buffering for type sizes
+ */
 class XMLObjectWriter : public ObjectWriter
 {
 public:
@@ -74,30 +74,36 @@ public:
       mCurNode = curNode;
    }
 
-   /** Get the data buffer.
-   * Return the data buffer representation of the current object tree
-   */
+   /**
+    * Gets the data buffer.
+    * Returns the data buffer representation of the current object tree.
+    */
    std::vector<vpr::Uint8> getData();
 
    cppdom::NodePtr getRootNode()
-   { return mRootNode; }
+   {
+      return mRootNode;
+   }
 
    /** @name Tag and attribute handling */
    //@{
-   /** Starts a new section/element of name tagName.
-   */
-   virtual vpr::ReturnStatus beginTag(std::string tagName);
+   /** Starts a new section/element of name \p tagName. */
+   virtual vpr::ReturnStatus beginTag(const std::string& tagName);
 
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag();
 
-   /** Starts an attribute of the name attributeName */
-   virtual vpr::ReturnStatus beginAttribute(std::string attributeName);
+   /** Starts an attribute of the name \p attributeName. */
+   virtual vpr::ReturnStatus beginAttribute(const std::string& attributeName);
 
-   /** Ends the most recently named attribute */
+   /** Ends the most recently named attribute. */
    virtual vpr::ReturnStatus endAttribute();
    //@}
 
+   /**
+    * Writes out the single byte.
+    * @post data = old(data)+val, \c mCurHeadPos advaced 1.
+    */
    virtual vpr::ReturnStatus writeUint8(vpr::Uint8 val);
    virtual vpr::ReturnStatus writeUint16(vpr::Uint16 val);
    virtual vpr::ReturnStatus writeUint32(vpr::Uint32 val);
@@ -109,11 +115,12 @@ public:
 
 protected:
    enum CurTarget
-   { AttribTarget, /**< We are currently targetting an attribute */
-     CdataTarget /**< We are currently targetting cdata */
-    };
+   {
+      AttribTarget, /**< We are currently targetting an attribute */
+      CdataTarget   /**< We are currently targetting cdata */
+   };
 
-    /** Helper to write the data to the current string */
+    /** Helper to write the data to the current string. */
     template<class T>
     vpr::ReturnStatus writeValueStringRep(const T& val)
     {
@@ -122,7 +129,9 @@ protected:
        if(AttribTarget == mCurTarget)
        {
           if(!mCurAttribData.empty())  // Add spacing
-          { mCurAttribData += ' '; }
+          {
+             mCurAttribData += ' ';
+          }
           mCurAttribData += oss.str();
           //std::cout << "writingValueStringRep: Attrib\nval:" << val << std::endl
           //          << "str rep:" << oss.str() << std::endl
@@ -131,7 +140,9 @@ protected:
        else
        {
           if(!mCurCData.empty())  // Add spacing
-          { mCurCData += ' '; }
+          {
+             mCurCData += ' ';
+          }
           mCurCData += oss.str();
           //std::cout << "writingValueStringRep: Cdata\nval:" << val << std::endl
           //          << "str rep:" << oss.str() << std::endl
@@ -142,15 +153,17 @@ protected:
     }
 
 protected:
-   /* cppdom nodes
-   * When constructed, these are both null.
-   */
+   /** @name CppDOM nodes
+    * When constructed, these are both null.
+    */
+   //@{
    cppdom::NodePtr   mRootNode;        /**< Base node of the tree */
    cppdom::Node*     mCurNode;         /**< Element we are currently working with. (ptr since getParent is weak) */
    std::string       mCurCData;        /**< Temporary place to store the value of the current cdata */
    std::string       mCurAttribData;   /**< Temporary place to store the current attribute data */
    std::string       mCurAttribName;   /**< The name of the current attribute we are working on */
    CurTarget         mCurTarget;       /**< Are we currently writing to attributes or cdata */
+   //@}
 };
 
 inline std::vector<vpr::Uint8> XMLObjectWriter::getData()
@@ -163,11 +176,11 @@ inline std::vector<vpr::Uint8> XMLObjectWriter::getData()
    return ret_buffer;
 }
 
-/** Starts a new section/element of name tagName.
-* When mCurNode is Null, then we need to allocated a new node in its place.
-* And also check the Root node to set it to (this is the first call to beginTag)
-*/
-inline vpr::ReturnStatus XMLObjectWriter::beginTag(std::string tagName)
+// Starts a new section/element of name tagName.
+// When mCurNode is Null, then we need to allocated a new node in its place.
+// And also check the Root node to set it to (this is the first call to
+// beginTag).
+inline vpr::ReturnStatus XMLObjectWriter::beginTag(const std::string& tagName)
 {
    cppdom::NodePtr new_node;
 
@@ -197,9 +210,8 @@ inline vpr::ReturnStatus XMLObjectWriter::beginTag(std::string tagName)
    return vpr::ReturnStatus::Succeed;
 }
 
-/** Ends the most recently named tag.
-* Close off the current node and set current to it's parent.
-*/
+// Ends the most recently named tag.
+// Close off the current node and set current to its parent.
 inline vpr::ReturnStatus XMLObjectWriter::endTag()
 {
    vprASSERT(mCurNode != NULL);
@@ -225,8 +237,8 @@ inline vpr::ReturnStatus XMLObjectWriter::endTag()
    return vpr::ReturnStatus::Succeed;
 }
 
-/** Starts an attribute of the name attributeName */
-inline vpr::ReturnStatus XMLObjectWriter::beginAttribute(std::string attributeName)
+// Starts an attribute of the name attributeName.
+inline vpr::ReturnStatus XMLObjectWriter::beginAttribute(const std::string& attributeName)
 {
    // Make sure that we have not called beginAttribute without an endAttribute
    vprASSERT(mCurAttribName.empty() && "Didn't close previous attribute");
@@ -237,7 +249,7 @@ inline vpr::ReturnStatus XMLObjectWriter::beginAttribute(std::string attributeNa
    return vpr::ReturnStatus::Succeed;
 }
 
-/** Ends the most recently named attribute */
+// Ends the most recently named attribute.
 inline vpr::ReturnStatus XMLObjectWriter::endAttribute()
 {
    vprASSERT(AttribTarget == mCurTarget);
@@ -253,9 +265,6 @@ inline vpr::ReturnStatus XMLObjectWriter::endAttribute()
    return vpr::ReturnStatus::Succeed;
 }
 
-/* Write out the single byte.
-* @post: data = old(data)+val, mCurHeadPos advaced 1
-*/
 inline vpr::ReturnStatus XMLObjectWriter::writeUint8(vpr::Uint8 val)
 {
    // Cast to uint16 so it doesn't get written as a char

@@ -55,8 +55,15 @@
 namespace vpr
 {
 
-/**
- * Cross-platform stream socket class.
+/** \class SocketStream_t SocketStream_t.h vpr/IO/Socket/SocketStream_t.h
+ *
+ * Cross-platform stream socket class.  Given a SocketConfiguration
+ * declaration, this class is typedef'd to vpr::SocketStream.
+ *
+ * @param SocketConfig_ The SocketConfiguration type that matches the
+ *                      platform-specific socket implementation to use.
+ *
+ * @see vpr::SocketStreamImplNSPR, vpr::SocketStreamImplBSD
  */
 //template<class RealSocketStreamImpl, class RealSocketStreamImplParent, class IO_STATS_STRATEGY = NullIOStatsStrategy>
 //class SocketStream_t : public Socket_t<RealSocketStreamImplParent, IO_STATS_STRATEGY>,
@@ -82,8 +89,10 @@ public:
     * the local socket address and a reference to a vpr::InetAddr object
     * giving the remote address.
     *
-    * @pre addr is a reference to a valid vpr::InetAddr object.
-    * @post A socket is created using the contents of addr.
+    * @pre \p localAddr and \p remoteAddr are references to valid vpr::InetAddr
+    *      objects.
+    * @post A socket is created using the contents of \p localAddr and
+    *       \p remoteAddr.
     *
     * @param localAddr  A reference to a vpr::InetAddr object for the
     *                   local socket address.
@@ -113,9 +122,6 @@ public:
 
    /**
     * Destructor.  This currently does nothing.
-    *
-    * @pre None.
-    * @post Delete impl
     */
    virtual ~SocketStream_t()
    {
@@ -126,15 +132,15 @@ public:
     * Puts this socket into the listening state where it listens for
     * incoming connection requests.
     *
-    * @pre The socket has been opened and bound to the address in mAddr.
+    * @pre The socket has been opened and bound to the address in \c mAddr.
     * @post The socket is in a listening state waiting for incoming
     *       connection requests.
     *
     * @param backlog The maximum length of th queue of pending connections.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if this socket is now in a
-    *         listening state.<br>
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    * @return vpr::ReturnStatus::Succeed is returned if this socket is now in
+    *         a listening state.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus listen(const int backlog = 5)
    {
@@ -142,27 +148,30 @@ public:
    }
 
    /**
-    * Accepts an incoming connection request and return the connected socket
+    * Accepts an incoming connection request and returns the connected socket
     * to the caller in the given socket object reference.
     *
-    * @pre The socket is open and is in a listening state.
-    * @post When a connection is established, the given vpr::SocketStream
-    *       object is assigned the newly connected socket.
+    * @pre This socket is open, bound, and in a listening state.
+    * @post When a connection is established, the given socket \p sock will
+    *       be set up to communicate with the newly accepted connection.
     *
     * @param sock    A reference to a vpr::SocketStream object that will
-    *                be used to return the connected socket created.
+    *                be used to return the newly connected socket.
     * @param timeout The length of time to wait for the accept call to
     *                return.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the incoming request has
-    *         been handled, and the given SocketStream object is a valid,
-    *         connected socket.<br>
-    *         vpr::ReturnStatus::WouldBlock is returned if this is a non-blocking
-    *         socket, and there are no waiting connection requests.<br>
-    *         vpr::ReturnStatus::Timeout is returned when no connections requests
-    *         arrived within the given timeout period.<br>
-    *         vpr::ReturnStatus::Fail is returned if the accept failed.  The
-    *         given vpr::SocketStream object is not modified in this case.
+    * @return vpr::ReturnStatus::Succeed is returned if the new connection was
+    *         accepted succesfully.
+    * @return vpr::ReturnStatus::WouldBlock is returned if this is a
+    *         non-blocking socket, and there are no waiting connection
+    *         requests.
+    * @return vpr::ReturnStatus::Timeout is returned when no connections
+    *         requests arrived within the given timeout period.
+    * @return vpr::ReturnStatus::Fail is returned if the connection was not
+    *         accepted.  An error message is printed explaining what went
+    *         wrong.
+    *
+    * @see open, bind, listen
     */
    vpr::ReturnStatus accept(SocketStream_t& sock,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -184,11 +193,11 @@ public:
     *                  This argument is optional and defaults to true.
     * @param backlog   The maximum length of the pending connection queue.
     *
-    * @return <code>vpr::ReturnStatus::Succeed</code> is returned if the server
-    *         socket is in the listening state and ready to accept incoming
-    *         connection requests.<br>
-    *         <code>vpr::ReturnStatus::Fail</code> is returned if the server
-    *         socket could not be set up.
+    * @return vpr::ReturnStatus::Succeed is returned if the server socket is
+    *         in the listening state and ready to accept incoming connection
+    *         requests.
+    * @return vpr::ReturnStatus::Fail is returned if the server socket could
+    *         not be set up.
     */
    vpr::ReturnStatus openServer(const bool reuseAddr = true,
                                 const int backlog = 5)
@@ -221,12 +230,12 @@ public:
 protected:
    /**
     * Constructor.  Create a vpr::SocketStream object using the given
-    * vpr::SocketStreamImpl object pointer.  This is needed by accept().
+    * SocketStreamImpl object pointer.  This is needed by accept().
     *
-    * @pre sockImp points to a valid vpr::SocketStreamImpl object.
-    * @post sockImp is copied into mSocketStreamImpl.
+    * @pre \p sockImp points to a valid SocketStreamImpl object.
+    * @post \p sockImp is copied into mSocketStreamImpl.
     *
-    * @param sockImp A pointer to a vpr::SocketStreamImpl object.
+    * @param sockImp A pointer to a SocketStreamImpl object.
     */
    SocketStream_t(SocketStreamImpl* sockImp)
       : Socket_t<Config>()
@@ -236,7 +245,8 @@ protected:
    }
 
    virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                                       struct vpr::SocketOptions::Data& data) const
+                                       struct vpr::SocketOptions::Data& data)
+      const
    {
       return mSocketStreamImpl->getOption(option, data);
    }
@@ -252,7 +262,6 @@ protected:
 public:
 #endif
    /// Platform-specific stream socket implementation
-   //SocketStreamImpl mSocketStreamImpl;
    boost::shared_ptr<SocketStreamImpl> mSocketStreamImpl;
 };
 

@@ -39,12 +39,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/*
- * ---------------------------------------------------------------------------
- * NOTES:
- *    - This file (ThreadPosix.h) MUST be included by Thread.h, not the other
- *      way around.
- * ---------------------------------------------------------------------------
+/**
+ * \file
+ *
+ * @note This file MUST be included by Thread.h, not the other way around.
  */
 
 #ifndef _VPR_THREAD_POSIX_H_
@@ -67,15 +65,18 @@ namespace vpr
 
 typedef vpr::Uint32 thread_id_t;
 
-/**
+/** \class ThreadPosix ThreadPosix.h vpr/Thread/Thread.h
+ *
  * Threads implementation using POSIX threads (both Draft 4 and the "final"
  * draft of the standard are supported).
  *
- * Functions by recieving a function in the constructor that is the function
- * to call when the new thread is created.  This function is stored internally
+ * This works by recieving a function in the constructor that is the function
+ * to call when the new thread is created.  The function is stored internally
  * to the class, then the class is "boot-strapped" by spawning a call to the
- * startThread function with in turn will call the previously set thread
- * function
+ * startThread() function with in turn will call the previously set thread
+ * function.
+ *
+ * This is typedef'd to vpr::Thread.
  */
 class ThreadPosix : public BaseThread
 {
@@ -109,7 +110,6 @@ public:  // ---- Thread CREATION and SPAWNING -----
    /**
     * Destructor.
     *
-    * @pre None.
     * @post This thread is removed from the thread table and from the local
     *       thread hash.
     */
@@ -138,7 +138,6 @@ protected:
    /**
     * Creates a new thread that will execute functorPtr.
     *
-    * @pre None.
     * @post A thread (with any specified attributes) is created that begins
     *       executing func().  Depending on the scheduler, it may begin
     *       execution immediately, or it may block for a short time before
@@ -178,7 +177,6 @@ public:  // ----- Various other thread functions ------
    /**
     * Makes the calling thread wait for the termination of this thread.
     *
-    * @pre None.
     * @post The caller blocks until this thread finishes its execution
     *       (i.e., calls the exit() method).  This routine may return
     *       immediately if this thread has already exited.
@@ -189,7 +187,7 @@ public:  // ----- Various other thread functions ------
     * @return 0 is returned if this thread is "joined" successfully.<br>
     *         -1 is returned on an error condition.
     */
-   virtual int join (void** status = 0)
+   virtual int join(void** status = 0)
    {
       return pthread_join(mThread, status);
    }
@@ -203,12 +201,12 @@ public:  // ----- Various other thread functions ------
     * @post This thread is sent the SIGCONT signal and is allowed to begin
     *       executing again.
     *
-    * @return 0 is returned if this thread resumes execuation successfully.<br>
-    *         -1 is returned otherwise.
+    * @return 0 is returned if this thread resumes execuation successfully.
+    * @return -1 is returned otherwise.
     *
     * @note This is not currently supported on HP-UX 10.20.
     */
-   virtual int resume (void)
+   virtual int resume()
    {
       return kill(SIGCONT);
    }
@@ -216,12 +214,11 @@ public:  // ----- Various other thread functions ------
    /**
     * Suspends the execution of this thread.
     *
-    * @pre None.
     * @post This thread is sent the SIGSTOP signal and is thus suspended
     *       from execution until the member function resume() is called.
     *
-    * @return 0 is returned if this thread is suspended successfully.<br>
-    *         -1 is returned otherwise.
+    * @return 0 is returned if this thread is suspended successfully.
+    * @return -1 is returned otherwise.
     *
     * @note This is not currently supported on HP-UX 10.20.
     */
@@ -233,15 +230,14 @@ public:  // ----- Various other thread functions ------
    /**
     * Gets this thread's priority.
     *
-    * @pre None.
     * @post The priority of this thread is returned in the integer pointer
     *       variable.
     *
     * @param prio Pointer to an int variable that will have the thread's
     *             priority stored in it.
     *
-    * @return 0 is returned if the priority was retrieved successfully.<br>
-    *         -1 is returned if the priority could not be read.
+    * @return 0 is returned if the priority was retrieved successfully.
+    * @return -1 is returned if the priority could not be read.
     *
     * @note This is only supported on systems that support thread priority
     *       scheduling in their pthreads implementation.
@@ -251,15 +247,14 @@ public:  // ----- Various other thread functions ------
    /**
     * Sets this thread's priority.
     *
-    * @pre None.
     * @post This thread has its priority set to the specified value.
     *
     * @param prio The new priority for this thread.
     *
-    * @return 0 is returned if this thread's priority was set successfully.<br>
-    *         -1 is returned otherwise.
+    * @return 0 is returned if this thread's priority was set successfully.
+    * @return -1 is returned otherwise.
     *
-    * NOTE: This is only supported on systems that support thread priority
+    * @note This is only supported on systems that support thread priority
     *       scheduling in their pthreads implementation.
     */
    virtual int setPrio(VPRThreadPriority prio);
@@ -273,8 +268,8 @@ public:  // ----- Various other thread functions ------
     *
     * @param cpu The CPU on which this thread will run exclusively.
     *
-    * @return 0 is returned if the affinity is set successfully.<br>
-    *         -1 is returned otherwise.
+    * @return 0 is returned if the affinity is set successfully.
+    * @return -1 is returned otherwise.
     *
     * @note This is currently only available on IRIX 6.5 and is non-portable.
     */
@@ -292,11 +287,10 @@ public:  // ----- Various other thread functions ------
     * @param cur_cpu The CPU affinity for this thread (set by a previous
     *                call to setRunOn().
     *
-    * @return 0 is returned if the affinity is retrieved successfully.<br>
-    *         -1 is returned otherwise.
+    * @return 0 is returned if the affinity is retrieved successfully.
+    * @return -1 is returned otherwise.
     *
-    * @note This is currently only available on IRIX 6.5 and is
-    *       non-portable.
+    * @note This is currently only available on IRIX 6.5 and is non-portable.
     */
    virtual int getRunOn(int* cur_cpu);
 
@@ -304,7 +298,6 @@ public:  // ----- Various other thread functions ------
     * Yields execution of the calling thread to allow a different blocked
     * thread to execute.
     *
-    * @pre None.
     * @post The caller yields its execution control to another thread or
     *       process.
     */
@@ -316,13 +309,12 @@ public:  // ----- Various other thread functions ------
    /**
     * Sends the specified signal to this thread (not necessarily SIGKILL).
     *
-    * @pre None.
     * @post This thread receives the specified signal.
     *
     * @param signum The signal to send to the specified thread.
     *
-    * @return 0 is returned if the signal was sent successfully.<br>
-    *         -1 is returned otherwise.
+    * @return 0 is returned if the signal was sent successfully.
+    * @return -1 is returned otherwise.
     *
     * @note This is not currently supported with Pthreads Draft 4.
     */
@@ -331,7 +323,6 @@ public:  // ----- Various other thread functions ------
    /**
     * Kills (cancels) this thread.
     *
-    * @pre None.
     * @post This thread is cancelled.  Depending on the cancellation
     *       attributes of the specified thread, it may terminate
     *       immediately, it may wait until a pre-defined cancel point to
@@ -349,10 +340,10 @@ public:  // ----- Various other thread functions ------
    }
 
    /**
-    * Get a ptr to the thread we are in.
+    * Get a pointer to the thread we are in.
     *
-    * @return NULL is returned if this thread is not in the global table.<br>
-    *         A non-NULL pointer is returned that points to the thread in
+    * @return NULL is returned if this thread is not in the global table.
+    * @return A non-NULL pointer is returned that points to the thread in
     *         which we are currently running.
     */
    static Thread* self();
@@ -405,7 +396,9 @@ private:
 
    struct staticWrapper
    {
-      staticWrapper() : mStaticsInitialized(1221), mThreadIdKey(NULL)
+      staticWrapper()
+         : mStaticsInitialized(1221)
+         , mThreadIdKey(NULL)
       {;}
 
       unsigned       mStaticsInitialized;    // Just a debug helper to help find when called before initialized

@@ -48,12 +48,12 @@
 namespace vpr
 {
 
-/**
- * Base Thread Specific object.
+/** \class TSBaseObject TSObject.h vpr/Thread/TSObject.h
  *
- * Used so that we can have an array of heterogenous TS objects.
- * (ie. We get some type safety)
- * Also defines some members that all TS Objects need.
+ * Base thread-specific object.
+ *
+ * Used so that we can have an array of heterogenous TS objects.  (We get some
+ * type safety.)  This also defines some members that all TS Objects need.
  */
 class VPR_CLASS_API TSBaseObject
 {
@@ -61,24 +61,25 @@ public:
    virtual ~TSBaseObject();
 };
 
-/**
- * Wrapper template for storing TS Objects.
- * Used so we can stay type safe with a dynamic cast
- * up from Base object to this type wrapper.
+/** \class TSObject TSObject.h vpr/Thread/TSObject.h
  *
- * @see vpr::TSTable
- * @see vpr::TSObjectProxy
+ * Wrapper template for storing thread-specific objects.  Used so we can stay
+ * type safe with a dynamic cast up from the base object to this type wrapper.
+ *
+ * @see vpr::TSTable, vpr::TSObjectProxy
  */
-template <class T>
+template<class T>
 class TSObject : public TSBaseObject
 {
 public:
    virtual ~TSObject()
    {;}
 
-   /// Returns the address of our object.
+   /** Returns the address of our object. */
    T* getObject()
-   { return &mLocalObj; }
+   {
+      return &mLocalObj;
+   }
 
 private:
    T mLocalObj;

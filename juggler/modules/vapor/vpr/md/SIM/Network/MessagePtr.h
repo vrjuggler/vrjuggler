@@ -45,6 +45,14 @@
 #include <vpr/vprConfig.h>
 #include <boost/smart_ptr.hpp>
 
+/**
+ * \file
+ *
+ * Include this file to get a forward declaration of the pointer type
+ * vpr::sim::MessagePtr.  To get the full declaration of vpr::sim::Message,
+ * vpr/md/SIM/Network/Message.h must be included, too.
+ */
+
 namespace vpr
 {
 

@@ -50,8 +50,11 @@
 namespace vpr
 {
 
-// Base class for all for the IOSys class.
-// The "real" impl is in an included file.
+/** \class IOSysNSPR IOSysNSPR.h vpr/IO/IOSys.h
+ *
+ * Wrapper around NSPR file descriptors.  This class is typedef'd to
+ * vpr::IOSys.
+ */
 class VPR_CLASS_API IOSysNSPR : public IOSysBase
 {
 public:

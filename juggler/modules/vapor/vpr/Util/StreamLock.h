@@ -50,13 +50,18 @@
 namespace vpr
 {
 
-/**
+/** \class StreamLock StreamLock.h vpr/Util/StreamLock.h
+ *
  * Class to lock a stream for multi-process output.
  * This class can be used to share a stream between two processes.
  * It is used by simply outputing in the stream a vpr::StreamLock constructed
- * using a mutex.<br>
- * <br>
- * EX: cout << vpr::StreamLock(mutex) << "Hello world" << flush << vpr::StreamUnLock(mutex);
+ * using a mutex.
+ *
+ * Example:
+ * \code
+ * std::cout << vpr::StreamLock(mutex) << "Hello world" << std::flush
+ *           << vpr::StreamUnLock(mutex);
+ * \endcode
  */
 class StreamLock
 {
@@ -70,12 +75,18 @@ private:
    Mutex& mMutex;
 };
 
-/** Class to unlock a stream that has been previously locked.
+/** \class StreamUnLock StreamLock.h vpr/Util/StreamLock.h
+ *
+ * Class to unlock a stream that has been previously locked.
  * This class can be used to share a stream between two processes
  * It is used by simply outputing in the stream a vpr::StreamUnLock
- * constructed using a mutex <br>
- * <br>
- * EX: cout << vpr::StreamLock(mutex) << "Hello world" << flush << vpr::StreamUnLock(mutex);
+ * constructed using a mute.
+ *
+ * Examle:
+ * \code
+ * std::cout << vpr::StreamLock(mutex) << "Hello world" << std::flush
+ *           << vpr::StreamUnLock(mutex);
+ * \endcode
  */
 class StreamUnLock
 {

@@ -52,7 +52,8 @@
 namespace vpr
 {
 
-/**
+/** \class SocketBasicOpt SocketBasicOpt.h vpr/IO/Socket/SocketBasicOpt.h
+ *
  * Options common to all types of sockets.
  */
 class VPR_CLASS_API SocketBasicOpt : public vpr::SocketOptionWrapper

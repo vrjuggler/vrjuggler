@@ -54,12 +54,20 @@
 namespace vpr
 {
 
-/**
- * Datagram socket interface.
+/** \class SocketDatagram_t SocketDatagram_t.h vpr/IO/Socket/SocketDatagram_t.h
+ *
+ * Datagram socket interface.  Given a SocketConfiguration declaration, this
+ * class is typedef'd to vpr::SocketDatagram.
+ *
+ * @param SocketConfig_ The SocketConfiguration type that matches the
+ *                      platform-specific socket implementation to use.
+ *
+ * @see vpr::SocketDatagramImplNSPR, vpr::SocketDatagramImplBSD
  */
 template<class SocketConfig_>
-class SocketDatagram_t : public Socket_t<SocketConfig_>,
-                         public SocketDatagramOpt
+class SocketDatagram_t
+   : public Socket_t<SocketConfig_>
+   , public SocketDatagramOpt
 {
 public:
    typedef SocketConfig_ Config;
@@ -73,7 +81,8 @@ public:
       , SocketDatagramOpt()
       , mSocketDgramImpl()
    {
-      mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl);
+      mSocketDgramImpl =
+         boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl);
       Socket_t<SocketConfig_>::mSocketImpl = mSocketDgramImpl;
    }
 
@@ -82,17 +91,21 @@ public:
     * the local socket address and a reference to a vpr::InetAddr object
     * giving the remote address.
     *
-    * @pre addr is a reference to a valid vpr::InetAddr object.
-    * @post A socket is created using the contents of addr.
+    * @pre \p localAddr and \p remoteAddr are references to valid vpr::InetAddr
+    *      objects.
+    * @post A socket is created using \p localAddr and \p remoteAddr.
     *
-    * @param addr A reference to a vpr::InetAddr object.
+    * @param localAddr  Our local address.
+    * @param remoteAddr The remote address with which we will communicate.
     */
-   SocketDatagram_t(const vpr::InetAddr& local_addr,
-                    const vpr::InetAddr& remote_addr)
+   SocketDatagram_t(const vpr::InetAddr& localAddr,
+                    const vpr::InetAddr& remoteAddr)
       : Socket_t<Config>()
       , SocketDatagramOpt()
    {
-      mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl(local_addr, remote_addr));
+      mSocketDgramImpl =
+         boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl(localAddr,
+                                                                      remoteAddr));
       Socket_t<SocketConfig_>::mSocketImpl = mSocketDgramImpl;
    }
 
@@ -111,9 +124,6 @@ public:
 
    /**
     * Destructor.  This currently does nothing.
-    *
-    * @pre None.
-    * @post None.
     */
    virtual ~SocketDatagram_t()
    {
@@ -122,19 +132,18 @@ public:
 
    /**
     * Receives a message from some source.  The source's address is writen
-    * into the by-reference parameter from.
+    * into the by-reference parameter \p from.
     */
    vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 len,
                               vpr::InetAddr& from, vpr::Uint32& bytesRead,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return mSocketDgramImpl->recvfrom(msg, len, from, bytesRead,
-                                        timeout);
+      return mSocketDgramImpl->recvfrom(msg, len, from, bytesRead, timeout);
    }
 
    /**
     * Receives a message from some source.  The source's address is writen
-    * into the by-reference parameter from.
+    * into the by-reference parameter \p from.
     */
    vpr::ReturnStatus recvfrom(std::string& msg, const vpr::Uint32 len,
                               vpr::InetAddr& from, vpr::Uint32& bytesRead,
@@ -143,13 +152,12 @@ public:
       msg.resize(len);
       memset(&msg[0], '\0', msg.size());
 
-      return recvfrom((void*) &msg[0], msg.size(), from, bytesRead,
-                      timeout);
+      return recvfrom((void*) &msg[0], msg.size(), from, bytesRead, timeout);
    }
 
    /**
     * Receives a message from some source.  The source's address is writen
-    * into the by-reference parameter from.
+    * into the by-reference parameter \p from.
     */
    vpr::ReturnStatus recvfrom(std::vector<vpr::Uint8>& msg,
                               const vpr::Uint32 len, vpr::InetAddr& from,
@@ -208,7 +216,8 @@ public:
 
 protected:
    virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                                       struct vpr::SocketOptions::Data& data) const
+                                       struct vpr::SocketOptions::Data& data)
+      const
    {
       return mSocketDgramImpl->getOption(option, data);
    }
@@ -224,9 +233,7 @@ protected:
 public:
 #endif
    /// Platform-specific datagram socket implementation object
-   //SocketDatagramImpl mSocketDgramImpl;
    boost::shared_ptr<SocketDatagramImpl> mSocketDgramImpl;
-
 };
 
 } // End of vpr namespace

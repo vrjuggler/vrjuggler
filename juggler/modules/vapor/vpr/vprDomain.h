@@ -64,6 +64,10 @@ namespace vpr
 #ifdef VPR_SIMULATOR
 #  define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_SIMULATOR
 
+   /** \struct SocketConfiguration vprDomain.h vpr/vprDomain.h
+    *
+    * Socket configuration for simulator sockets.
+    */
    struct SocketConfiguration
    {
       typedef class SocketImplSIM           SocketImpl;
@@ -93,6 +97,9 @@ namespace vpr
 #ifdef VPR_USE_NSPR
 #  define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_NSPR
 
+   /**
+    * Socket configuration for NSPR sockets.
+    */
    struct SocketConfiguration
    {
       typedef class SocketImplNSPR           SocketImpl;
@@ -132,6 +139,9 @@ namespace vpr
 #else
 #  define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_POSIX
 
+   /**
+    * Socket configuration for BSD sockets.
+    */
    struct SocketConfiguration
    {
       typedef class SocketImplBSD           SocketImpl;

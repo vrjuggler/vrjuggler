@@ -54,24 +54,27 @@
 namespace vpr
 {
 
-/** Statistics collection class
-*
-* STA - Short Term Average (a time limited average)
-*
-* @param TimeBased  Should the return values be /per second or just "normal" stats
-*
-*  This is basically the difference between discrete and continuous values (or interpretation of the values)
-*/
+/** \class StatCollector StatCollector.h vpr/Util/StatCollector.h
+ *
+ * Statistics collection class.
+ *
+ * STA: Short Term Average (a time-limited average).
+ *
+ * @param TYPE      The sample type.
+ * @param TimeBased Should the return values be /per second or just "normal"
+ *                  stats?  This is basically the difference between discrete
+ *                  and continuous values (or interpretation of the values).
+ */
 template<class TYPE, bool TimeBased>
 class StatCollector
 {
 public:
    /** Constructor
-   * @param staMaxTime  The max age for samples in the sta computation
-   */
-   StatCollector(vpr::Interval staMaxTime=vpr::Interval(5, vpr::Interval::Sec) )
+    * @param staMaxTime  The max age for samples in the sta computation
+    */
+   StatCollector(vpr::Interval staMaxTime = vpr::Interval(5, vpr::Interval::Sec) )
+      : mSTAMaxTime(staMaxTime)
    {
-      mSTAMaxTime = staMaxTime;
       reset();
    }
 
@@ -90,51 +93,62 @@ public:
    void addSample(const TYPE sample);
 
    TYPE getTotal() const
-   { return mCurTotal; }
+   {
+      return mCurTotal;
+   }
+
    vpr::Uint32 getNumSamples() const
-   { return mSampleCount; }
+   {
+      return mSampleCount;
+   }
 
    /** Return Mean (value/second) */
    double getMean();
    double getInstAverage();
    double getSTA();
    double getMaxSTA() const
-   {  return mMaxSTA; }
+   {
+      return mMaxSTA;
+   }
 
    void print(std::ostream& out);
 
 private:
-   TYPE        mCurTotal;     // Running total of the data
-   vpr::Uint32 mSampleCount;  // Number of samples taken
+   TYPE        mCurTotal;     /**< Running total of the data */
+   vpr::Uint32 mSampleCount;  /**< Number of samples taken */
 
-   vpr::Interval  mSTAMaxTime;   // Max age of a value used in short term average (STA)
+   vpr::Interval  mSTAMaxTime;   /**< Max age of a value used in short term average (STA) */
    double         mMaxSTA;
 
-   vpr::DateTime mInitialSampleTime;   // Time of first sample
-   vpr::Interval mPrevSampleTime1, mPrevSampleTime2;      // Time of last 2 samples (mPrevST1 < mPrevSt2)
-   TYPE          mPrevSample1, mPrevSample2;              // Previous samples
+   vpr::DateTime mInitialSampleTime;   /**< Time of first sample */
+   vpr::Interval mPrevSampleTime1, mPrevSampleTime2; /**< Time of last 2 samples (mPrevST1 < mPrevSt2) */
+   TYPE          mPrevSample1, mPrevSample2;         /**< Previous samples */
 
-   std::deque< std::pair<TYPE,vpr::Interval> >  mSampleBuffer;    // Buffer of samples used to calc STA
+   std::deque< std::pair<TYPE,vpr::Interval> >  mSampleBuffer;    /**< Buffer of samples used to calc STA */
 };
 
 template <class TYPE, bool TimeBased>
 void StatCollector<TYPE, TimeBased>::print(std::ostream& out)
 {
-   out << "type: " << typeid(TYPE).name() << "   time based:" << ( TimeBased ? "Y" : "N" ) << std::endl
+   out << "type: " << typeid(TYPE).name() << "   time based:"
+       << (TimeBased ? "Y" : "N") << std::endl
        << "total: " << mCurTotal << "   samples:" << mSampleCount << std::endl
        << "mean: " << getMean() << std::endl
-       << "staMaxTime: " << mSTAMaxTime.secf() << "s    Initial Sample Time:" << mInitialSampleTime.getMinutesf() << std::endl
-       << "prev sampTime: " << mPrevSampleTime1.secf() << "s   prev sampTime2:" << mPrevSampleTime2.secf() << std::endl
-       << "prev samp: " << mPrevSample1 << "   prev samp2:" << mPrevSample2 << std::endl
+       << "staMaxTime: " << mSTAMaxTime.secf() << "s    Initial Sample Time:"
+       << mInitialSampleTime.getMinutesf() << std::endl
+       << "prev sampTime: " << mPrevSampleTime1.secf() << "s   prev sampTime2:"
+       << mPrevSampleTime2.secf() << std::endl
+       << "prev samp: " << mPrevSample1 << "   prev samp2:" << mPrevSample2
+       << std::endl
        << " --- data --- time --- " << std::endl;
 
-   for(typename std::deque< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
-       i!= mSampleBuffer.end(); ++i)
+   for ( typename std::deque< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
+          i != mSampleBuffer.end();
+          ++i )
    {
       out << (*i).first << "   " << (*i).second.msec() << "ms\n";
    }
 }
-
 
 template <class TYPE, bool TimeBased>
 void StatCollector<TYPE, TimeBased>::addSample(const TYPE sample)
@@ -294,8 +308,7 @@ double StatCollector<TYPE, TimeBased>::getSTA()
    return sta_value;
 }
 
-
-}; // namespace vpr
+} // namespace vpr
 
 
 #endif

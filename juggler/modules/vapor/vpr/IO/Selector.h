@@ -42,6 +42,13 @@
 #ifndef _VPR_SELECTOR_H_
 #define _VPR_SELECTOR_H_
 
+/**
+ * \file
+ *
+ * Include this file to get the full declaration of the platform-specific
+ * class that is typedef'd to vpr::Selector.
+ */
+
 #include <vpr/vprConfig.h>
 
 // include bridge class

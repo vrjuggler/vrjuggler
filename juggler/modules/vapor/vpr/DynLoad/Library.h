@@ -42,6 +42,15 @@
 #ifndef _VPR_LIBRARY_H_
 #define _VPR_LIBRARY_H_
 
+/**
+ * \file
+ *
+ * Include this file to get the full declaration of the platform-specific
+ * class that is typedef'd to vpr::Library.
+ *
+ * @see vpr::LibraryDYLD, vpr::LibraryNSPR, vpr::LibraryUNIX
+ */
+
 #include <vpr/vprConfig.h>
 
 #include <boost/shared_ptr.hpp>

@@ -52,8 +52,11 @@
 namespace vpr
 {
 
-/**
+/** \class SocketDatagramImplBSD SocketDatagramImplBSD.h vpr/IO/Socket/SocketDatagram.h
+ *
  * Implementation class for datagram sockets using the BSD sockets interface.
+ * This is used in conjunction with vpr::SocketConfiguration to create the
+ * BSD implementation of the typedef vpr::SocketDatagram.
  */
 class SocketDatagramImplBSD : public vpr::SocketImplBSD
 {
@@ -77,13 +80,12 @@ public:
     * @post The member variables are initialized with the type in particular
     *       set to vpr::SocketTypes::DATAGRAM.
     *
-    * @param local_addr  The local address for this socket.  This is used for
-    *                    binding the socket.
-    * @param remote_addr The remote address for this socket.  This is used to
-    *                    specify a default destination for all packets.
+    * @param localAddr  The local address for this socket.  This is used for
+    *                   binding the socket.
+    * @param remoteAddr The remote address for this socket.  This is used to
+    *                   specify a default destination for all packets.
     */
-   SocketDatagramImplBSD(const InetAddr& local_addr,
-                         const InetAddr& remote_addr);
+   SocketDatagramImplBSD(const InetAddr& localAddr, const InetAddr& remoteAddr);
 
    /**
     * Copy constructor.
@@ -96,14 +98,14 @@ public:
     * Receives a message from the specified address.
     */
    vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length,
-                              vpr::InetAddr& from, vpr::Uint32& bytes_read,
+                              vpr::InetAddr& from, vpr::Uint32& bytesRead,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Sends a message to the specified address.
     */
    vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
-                            const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
+                            const vpr::InetAddr& to, vpr::Uint32& bytesSent,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 

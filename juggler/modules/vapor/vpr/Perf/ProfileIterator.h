@@ -48,15 +48,15 @@
 namespace vpr
 {
 
-/**
- * An iterator to navigate through the Profile tree
- */
+   /** \class ProfileIterator ProfileIterator.h vpr/Perf/ProfileIterator.h
+    *
+    * An iterator to navigate through the Profile tree.
+    */
    class VPR_CLASS_API ProfileIterator
    {
    public:
-      /* Constructor.  Returns iterator starting at "start" node.
-      */
-      ProfileIterator( ProfileNode* start );
+      /** Constructor.  Returns iterator starting at "start" node. */
+      ProfileIterator(ProfileNode* start);
 
       /** Copy constructor. */
       ProfileIterator(const ProfileIterator& rhs)
@@ -66,7 +66,7 @@ namespace vpr
          mDepth = rhs.mDepth;
       }
 
-      /** Go to next element. */
+      /** Goes to the next element. */
       void operator++();
 
       ProfileNode& operator*()
@@ -79,7 +79,7 @@ namespace vpr
          return mCurrentNode;
       }
 
-      /** Return the current depth in the traversal. */
+      /** Returns the current depth in the traversal. */
       unsigned int depth()
       {
          return mDepth;
@@ -98,18 +98,18 @@ namespace vpr
       }
 
    protected:
-      ProfileNode*   mCurrentParent;   /** The current parent of the node we are holding. */
-      ProfileNode*   mCurrentNode;     /** The current node we are holding on to. */
+      ProfileNode*   mCurrentParent;   /**< The current parent of the node we are holding. */
+      ProfileNode*   mCurrentNode;     /**< The current node we are holding on to. */
 
-      unsigned int   mDepth;           /** The current depth in the tree. */
+      unsigned int   mDepth;           /**< The current depth in the tree. */
 
       friend class ProfileManager;
       friend class ProfileNode;
    };
 
-/**
- * Overloaded output operator for outputting the current statistics
- */
+   /**
+    * Overloaded output operator for outputting the current statistics.
+    */
    VPR_API(std::ostream&) operator<< (std::ostream& out, ProfileIterator& iter);
 
 } // end vpr namespace

@@ -52,7 +52,8 @@ namespace vpr
 class ObjectWriter;
 class ObjectReader;
 
-/**
+/** \class WriteableObject SerializableObject.h vpr/IO/SerializableObject.h
+ *
  * The abstract base class for all types that can be written to a stream.
  * Instances of this type can be serialized to a stream (also known as
  * marshalling).
@@ -71,7 +72,6 @@ public:
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer) = 0;
 
 protected:
-
    WriteableObject()
    {;}
 
@@ -79,13 +79,13 @@ protected:
    {;}
 
 private:
-
    /** @link dependency
     * @stereotype use*/
    /*#  ObjectWriter lnkObjectWriter; */
 };
 
-/**
+/** \class ReadableObject SerializableObject.h vpr/IO/SerializableObject.h
+ *
  * The abstract base class for all types that can be read from a stream.
  * Instances of this type can be de-serialized from a stream (also known as
  * de-marshalling).
@@ -104,7 +104,6 @@ public:
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader) = 0;
 
 protected:
-
    ReadableObject()
    {;}
 
@@ -112,13 +111,13 @@ protected:
    {;}
 
 private:
-
    /** @link dependency
     * @stereotype use*/
    /*#  ObjectReader lnkObjectReader; */
 };
 
-/**
+/** \class SerializableObject SerializableObject.h vpr/IO/SerializableObject.h
+ *
  * The abstract base class for all types that support serialization.
  * Instances of this type can be serialized to and de-serialized from data
  * streams.  This is based on a concept that is very similar to the notion
@@ -138,7 +137,8 @@ protected:
    {;}
 };
 
-/**
+/** \class SerializableObjectMixin SerializableObject.h vpr/IO/SerializableObject.h
+ *
  * Mix-in type to add serialization capabilities to an existing type, usually
  * one that is defined in third-party code and therefore cannot have its base
  * type list modified.  Users can add serialization capabilities to an

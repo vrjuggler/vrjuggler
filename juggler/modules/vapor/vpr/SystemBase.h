@@ -49,12 +49,12 @@
 namespace vpr
 {
 
-/**
- * vpr::SystemBase is a base class for vpr::System so, for xplatform system
- * functions, use vpr::System (don't use vpr::SystemBase).
+/** \class SystemBase SystemBase.h vpr/SystemBase.h
  *
- * @see vpr::SystemPosix
- * @see vpr::SystemNSPR
+ * vpr::SystemBase is a base class for vpr::System.  For cross-platform system
+ * functions, use vpr::System.  Never use this class directly.
+ *
+ * @see vpr::SystemPosix, vpr::SystemNSPR
  */
 class VPR_CLASS_API SystemBase
 {
@@ -64,8 +64,8 @@ public:
     * means that the host uses little-endian byte order.  A return value of
     * 1 means that the host uses big-endian byte order.
     *
-    * @return 0 is returned for little-endian hosts<br>
-    *         1 is returned for big-endian hosts
+    * @return 0 is returned for little-endian hosts.
+    * @return 1 is returned for big-endian hosts.
     */
    static int getEndian()
    {
@@ -86,8 +86,8 @@ public:
    /**
     * Tells if the host uses little-endian byte order or not.
     *
-    * @return <code>true</code> is returned on a little-endian host.<br>
-    *         <code>false</code> is returned on a big-endian host.<br>
+    * @return \c true is returned on a little-endian host.
+    * @return \c false is returned on a big-endian host.
     */
    static bool isLittleEndian()
    {
@@ -97,8 +97,8 @@ public:
    /**
     * Tells if the host uses big-endian byte order or not.
     *
-    * @return <code>true</code> is returned on a big-endian host.<br>
-    *         <code>false</code> is returned on a little-endian host.<br>
+    * @return \c true is returned on a big-endian host.
+    * @return \c false is returned on a little-endian host.
     */
    static bool isBigEndian()
    {
@@ -107,6 +107,7 @@ public:
 
    /**
     * Returns a stack trace.
+    *
     * @post If supported, returns a string describing the current call stack.
     */
    static std::string getCallStack();

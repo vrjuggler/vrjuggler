@@ -56,7 +56,8 @@
 namespace vpr
 {
 
-/**
+/** \class InetAddrBase InetAddrBase.h vpr/IO/Socket/InetAddrBase.h
+ *
  * Cross-platform abstraction to Internet address structures.
  */
 class VPR_CLASS_API InetAddrBase
@@ -64,13 +65,13 @@ class VPR_CLASS_API InetAddrBase
 public:
    //static const InetAddr AnyAddr;  -- NEED An AnyAddr defined
 #if 0
-   Comment out the conscturctors.  These need to be implemented in the final versions
+   Comment out the conscturctors.  These need to be implemented in the final
+   versions.
 
    /**
     * Default constructor.  This initializes the memory for the encapsulated
     * address structure.
     *
-    * @pre None.
     * @post Zero out the address and set everything to wildcard values.
     */
    InetAddr()
@@ -81,7 +82,6 @@ public:
    /**
     * Copy constructor.
     *
-    * @pre None.
     * @post A copy of the given vpr::InetAddr object is made in this object.
     *
     * @param addr The vpr::InetAddr object to be copied into this object.
@@ -119,7 +119,6 @@ public:
    /**
     * Set the protocol family of this address.
     *
-    * @pre None.
     * @post The given protocol family (a vpr::SocketTypes::Domain value) is
     *       mapped to the appropriate platform-specific protocol family
     *       value and stored.
@@ -218,19 +217,19 @@ public:
 
    /**
     * Set the address for this object using the given address.  It must be
-    * of the form <address>:<port> where <address> can be a hostname or a
+    * of the form \c address:port where \c address can be a hostname or a
     * dotted-decimal IP address.
     *
-    * @param address A string giving the address (either hostname or IP
-    *                 address).
-    * @param port    The port to associate with the IP address.
+    * @param addr A string giving the address and port number separated by
+    *             a colon.  The address can be a hostname or a dotted-decimal
+    *             IP address.
     *
-    * @return <code>vpr::ReturnStatus::Succeed</code> is returned if the address
-    *         was valid and the set operation succeeded.<br>
-    *         <code>vpr::ReturnStatus::Fail</code> is returned if the address
-    *         could not be looked up.
+    * @return vpr::ReturnStatus::Succeed is returned if the address was valid
+    *         and the set operation succeeded.
+    * @return vpr::ReturnStatus::Fail is returned if the address could not be
+    *         looked up.
     */
-   const vpr::ReturnStatus setAddress(const std::string& addr)
+   vpr::ReturnStatus setAddress(const std::string& addr)
    {
       boost::ignore_unused_variable_warning(addr);
       vprASSERT(false && "Implement me");
@@ -242,12 +241,13 @@ public:
     * number.  The address string can be a hostname or a dotted-decimal IP
     * address.
     *
-    * @param addr an address string in IP format or hostname formant
+    * @param addr An address string in IP format or hostname format.
+    * @param port The new port number for this socket.
     *
-    * @return <code>vpr::ReturnStatus::Succeed</code> is returned if the address was
-    *         valid and the set operation succeeded.<br>
-    *         <code>vpr::ReturnStatus::Fail</code> is returned if the address
-    *         could not be looked up.
+    * @return vpr::ReturnStatus::Succeed is returned if the address was valid
+    *         and the set operation succeeded.
+    * @return vpr::ReturnStatus::Fail is returned if the address could not be
+    *         looked up.
     */
    vpr::ReturnStatus setAddress(const std::string& addr, const Uint16 port)
    {
@@ -260,9 +260,6 @@ public:
    /**
     * Set the address for this object using the given address and port
     * number.  The address must be the actual 32-bit integer value.
-    *
-    * @pre None.
-    * @post
     *
     * @param address A 32-bit integer IP address.
     * @param port    The port to associate with the IP address.
@@ -280,7 +277,6 @@ public:
     * Overloaded assignment operator to ensure that assignments work
     * correctly.
     *
-    * @pre None.
     * @post A copy of the given vpr::InetAddr object is made in this object
     *       which is then returned to the caller.
     *

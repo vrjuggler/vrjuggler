@@ -51,9 +51,10 @@
 namespace vpr
 {
 
-/** NSPR Implementation of ---> Cross-platform Error reporting class.
-*
-*/
+/** \class ErrorImplNSPR ErrorImplNSPR.h vpr/Util/Error.h
+ *
+ * NSPR Implementation of a cross-platform error reporting class.
+ */
 class VPR_CLASS_API ErrorImplNSPR : public ErrorBase
 {
 public:
@@ -69,14 +70,16 @@ public:
       char* os_str = strerror(PR_GetOSError());
       */
    
-      out << "Error (NSPR): " << prefix
-                << " (" << err;
+      out << "Error (NSPR): " << prefix << " (" << err;
       if(err_name != NULL)
+      {
           out << ":" << err_name;
-       
+      } 
+
       if(err_str != NULL)
+      {
           out << ", " << err_str;
-   
+      }
       out << ")" << std::endl;
    }
 
@@ -87,9 +90,14 @@ public:
 
 protected:
    static PRErrorCode convertErrorVprToNspr(ErrorType mask)
-   { return PR_MAX_ERROR; }
+   {
+      return PR_MAX_ERROR;
+   }
+
    static ErrorType convertErrorNsprToVpr(PRErrorCode mask)
-   { return NoError; }
+   {
+      return NoError;
+   }
 };
 
 } // End of vpr namespace

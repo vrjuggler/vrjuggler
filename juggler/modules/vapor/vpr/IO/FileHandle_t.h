@@ -55,9 +55,16 @@
 namespace vpr
 {
 
-/**
+/** \class FileHandle_t FileHandle_t.h vpr/IO/FileHandle.h
+ *
  * Extension to the vpr::BlockIO interface defining a cross-platform file
- * handle interface.
+ * handle interface.  Given a platform-specific wrapper class, this is
+ * typedef'd to vpr::FileHandle.
+ *
+ * @param RealFileHandleImpl The type that serves as the true wrapper around
+ *                           the platform-specific file handle implementation.
+ *
+ * @see vpr::FileHandleNSPR, vpr::FileHandleUNIX
  */
 template<class RealFileHandleImpl>
 class FileHandle_t : public BlockIO
@@ -71,10 +78,12 @@ public:
     * @post All member variables are initialized including mName that is
     *       assigned the string in file_name.
     *
-    * @param file_name The name of the file to be handled.
+    * @param fileName The name of the file to be handled.
     */
-   FileHandle_t(const std::string& file_name)
-      : BlockIO(file_name), mOpenMode(READ_WRITE), mHandleImpl(file_name)
+   FileHandle_t(const std::string& fileName)
+      : BlockIO(file_name)
+      , mOpenMode(READ_WRITE)
+      , mHandleImpl(fileName)
    {
       /* Do nothing. */ ;
    }
@@ -112,10 +121,10 @@ public:
     *       returned to the caller.  If opened successfully, this file is
     *       ready for use.
     *
-    * @return <code>vpr::ReturnStatus::Succeed</code> is returned when the file
-    *         was opened successfully.<br>
-    *         <code>vpr::ReturnStatus::Fail</code> is returned if the file
-    *         could not be opened for some reason.
+    * @return vpr::ReturnStatus::Succeed is returned when the file was
+    *         opened successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the file could not be
+    *         opened for some reason.
     */
    virtual vpr::ReturnStatus open()
    {
@@ -130,10 +139,10 @@ public:
     * @post An attempt is made to close the file.  The resulting status is
     *       returned to the caller.
     *
-    * @return <code>vpr::ReturnStatus::Succeed</code> is returned if the file
-    *         was closed successfully.<br>
-    *         <code>vpr::ReturnStatus::Fail</code> is returned if the file
-    *         could not be closed.
+    * @return vpr::ReturnStatus::Succeed is returned if the file was closed
+    *         successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the file could not be
+    *         closed.
     */
    virtual vpr::ReturnStatus close()
    {
@@ -170,11 +179,10 @@ public:
    }
 
    /**
-    * Gets the <code>vpr::IOSys::Handle</code> object for this file.
+    * Gets the vpr::IOSys::Handle object for this file.
     *
-    * @return <code>vpr::IOSys::NullHandle</code> is returned if the file
-    *         has no handle or if the handle could not be returned for some
-    *         reason.
+    * @return vpr::IOSys::NullHandle is returned if the file has no handle
+    *         or if the handle could not be returned for some reason.
     */
    virtual IOSys::Handle getHandle() const
    {
@@ -272,8 +280,8 @@ public:
     * @post The access mode is tested for read-only mode, and the result is
     *       returned to the caller.
     *
-    * @return <code>true</code> is returned if the device is in read-only
-    *         mode; <code>false</code> otherwise.
+    * @return \c true is returned if the device is in read-only mode;
+    *         \c false otherwise.
     */
    bool isReadOnly() const
    {
@@ -287,8 +295,8 @@ public:
     * @post The access mode is tested for write-only mode, and the result is
     *       returned to the caller.
     *
-    * @return <code>true</code> is returned if the device is in write-only
-    *         mode; <code>false</code> otherwise.
+    * @return \c true is returned if the device is in write-only mode;
+    *         \c false otherwise.
     */
    bool isWriteOnly() const
    {
@@ -302,8 +310,8 @@ public:
     * @post The access mode is tested for read/write mode, and the result is
     *       returned to the caller.
     *
-    * @return <code>true</code> is returned if the device is in read/write
-    *         mode; <code>false</code> otherwise.
+    * @return \c true is returned if the device is in read/write mode;
+    *         \c false otherwise.
     */
    bool isReadWrite() const
    {
@@ -321,28 +329,28 @@ protected:
     *       bufffer, and the number of bytes read successfully is returned
     *       to the caller.
     *
-    * @param buffer     A pointer to the buffer where the file's buffer
-    *                   contents are to be stored.
-    * @param length     The number of bytes to be read.
-    * @param bytes_read A reference to a variable where the number of bytes
-    *                   successfully read from the file will be stored.
-    *                   The value will be -1 if an error occurred.
-    * @param timeout    The amount of time to wait before returning to the
-    *                   caller.  This argument is optional and defaults to
-    *                   vpr::Interval::NoTimeout.
+    * @param buffer    A pointer to the buffer where the file's buffer
+    *                  contents are to be stored.
+    * @param length    The number of bytes to be read.
+    * @param bytesRead A reference to a variable where the number of bytes
+    *                  successfully read from the file will be stored.
+    *                  The value will be -1 if an error occurred.
+    * @param timeout   The amount of time to wait before returning to the
+    *                  caller.  This argument is optional and defaults to
+    *                  vpr::Interval::NoTimeout.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.<br>
-    *         vpr::ReturnStatus::Fail is returned if the read operation
-    *         failed.<br>
-    *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
+    *         completed successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the read operation
+    *         failed.
+    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
     *         non-blocking mode, and there is no data to read.
     */
    vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytes_read,
+                            vpr::Uint32& bytesRead,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return mHandleImpl.read_i(buffer, length, bytes_read, timeout);
+      return mHandleImpl.read_i(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -355,25 +363,25 @@ protected:
     *       buffer, and the number of bytes read successfully is returned to
     *       the caller.
     *
-    * @param buffer     A pointer to the buffer where the file's buffer
-    *                   contents are to be stored.
-    * @param length     The number of bytes to be read.
-    * @param bytes_read A reference to a variable where the number of bytes
-    *                   successfully read from the file will be stored.
-    *                   The value will be -1 if an error occurred.
-    * @param timeout    The amount of time to wait before returning to the
-    *                   caller.  This argument is optional and defaults to
-    *                   vpr::Interval::NoTimeout.
+    * @param buffer    A pointer to the buffer where the file's buffer
+    *                  contents are to be stored.
+    * @param length    The number of bytes to be read.
+    * @param bytesRead A reference to a variable where the number of bytes
+    *                  successfully read from the file will be stored.
+    *                  The value will be -1 if an error occurred.
+    * @param timeout   The amount of time to wait before returning to the
+    *                  caller.  This argument is optional and defaults to
+    *                  vpr::Interval::NoTimeout.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.<br>
-    *         vpr::ReturnStatus::Fail is returned if the read operation failed.
+    *         completed successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
    vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytes_read,
+                             vpr::Uint32& bytesRead,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return mHandleImpl.readn_i(buffer, length, bytes_read, timeout);
+      return mHandleImpl.readn_i(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -383,29 +391,29 @@ protected:
     * @post The given buffer is written to the file, and the number of
     *       bytes written successfully is returned to the caller.
     *
-    * @param buffer        A pointer to the buffer to be written.
-    * @param length        The length of the buffer.
-    * @param bytes_written A reference to a variable where the number of
-    *                      bytes successfully written to the file will be
-    *                      stored.  The value will be -1 if an error
-    *                      occurred.
-    * @param timeout       The amount of time to wait before returning to the
-    *                      caller.  This argument is optional and defaults to
-    *                      vpr::Interval::NoTimeout.
+    * @param buffer       A pointer to the buffer to be written.
+    * @param length       The length of the buffer.
+    * @param bytesWritten A reference to a variable where the number of
+    *                     bytes successfully written to the file will be
+    *                     stored.  The value will be -1 if an error
+    *                     occurred.
+    * @param timeout      The amount of time to wait before returning to the
+    *                     caller.  This argument is optional and defaults to
+    *                     vpr::Interval::NoTimeout.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.<br>
-    *         vpr::ReturnStatus::Fail is returned if the write operation
-    *         failed.<br>
-    *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
+    *         completed successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the write operation
+    *         failed.
+    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
     *         non-blocking mode, and the write operation could not be
     *         completed.
     */
    vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytes_written,
+                             vpr::Uint32& bytesWritten,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return mHandleImpl.write_i(buffer, length, bytes_written, timeout);
+      return mHandleImpl.write_i(buffer, length, bytesWritten, timeout);
    }
 
    /// Platform-specific file hanlde implementation instance.

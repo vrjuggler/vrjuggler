@@ -53,7 +53,8 @@
 namespace vpr
 {
 
-/**
+/** \class LibraryFinder LibraryFinder.h vpr/DynLoad/LibraryFinder.h
+ *
  * Helper class that will perform dynamic library discovery based on a file
  * extension (e.g., .so or .dll) in a specific directory.  A vector of all
  * discovered dynamic libraries will be created.

@@ -52,41 +52,58 @@
 namespace vpr
 {
 
+/** Socket-level options. */
 namespace SocketOptions
 {
+   /**
+    * Socket option types.  These are used to identify what option is being
+    * set or requested.
+    *
+    * @see vpr::SocketOptions::Data, vpr::SocketOptionsWrapper
+    */
    enum Types
    {
-      Linger,
-      ReuseAddr,
-      KeepAlive,
-      RecvBufferSize,
-      SendBufferSize,
-      IpTimeToLive,
-      IpTypeOfService,
-      AddMember,
-      DropMember,
-      McastInterface,
-      McastTimeToLive,
-      McastLoopback,
-      NoDelay,
-      MaxSegment
+      Linger,           /**< IP linger option */
+      ReuseAddr,        /**< IP resuse address option */
+      KeepAlive,        /**< IP keep-alive option */
+      RecvBufferSize,   /**< Receive buffer size option */
+      SendBufferSize,   /**< Send buffer size option */
+      IpTimeToLive,     /**< IP time to live (TTL) option */
+      IpTypeOfService,  /**< IP type of service option */
+      AddMember,        /**< Multicast "add member" option */
+      DropMember,       /**< Multicast "remove member" option */
+      McastInterface,   /**< Multicast interface option */
+      McastTimeToLive,  /**< Multicast time to live (TTL) option */
+      McastLoopback,    /**< Multicast loopback option */
+      NoDelay,          /**< TCP "no delay" option (Nagle Algorithm) */
+      MaxSegment        /**< TCP maximum segment size option */
    };
 
+   /** Socket type of service options. */
    enum TypeOfService
    {
-      LowDelay,
-      Throughput,
-      Reliability,
-      LowCost
+      LowDelay,     /**< Low delay service */
+      Throughput,   /**< Optimal throughput service */
+      Reliability,  /**< Optimal reliability service */
+      LowCost       /**< Low cost service */
    };
 
+   /** \struct Linger SocketOptions.h vpr/IO/Socket/SocketOptions.h
+    *
+    * IP linger data structure.
+    */
    struct Linger
    {
-      bool  enabled;
-      Int32 seconds;
+      bool       enabled;
+      vpr::Int32 seconds;
    };
 
-   // I really wish this could be a union...
+   /** \struct Data SocketOptions.h vpr/IO/Socket/SocketOptions.h
+    *
+    * Socket options data block.
+    *
+    * @see vpr::SocketOptions::Types, vpr::SocketOptionWrapper
+    */
    struct Data
    {
       Uint32        ip_ttl;
@@ -106,6 +123,10 @@ namespace SocketOptions
    };
 }
 
+/** \class SocketOptionWrapper SocketOptions.h vpr/IO/Socket/SocketOptions.h
+ *
+ * Simple interface for setting and querying socket options.
+ */
 class VPR_CLASS_API SocketOptionWrapper
 {
 protected:
@@ -117,8 +138,8 @@ protected:
     *               given option.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the value for the given
-    *         option was retrieved successfully.<br>
-    *         vpr::ReturnStatus;:Fail is returned otherwise.
+    *         option was retrieved successfully.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
                                        struct vpr::SocketOptions::Data& data) const = 0;

@@ -50,7 +50,8 @@
 namespace vpr
 {
 
-/**
+/** \class SocketAcceptor SocketAcceptor.h vpr/IO/Socket/SocketAcceptor.h
+ *
  * Socket connection acceptor factory.
  * Wraps all the nitty-gritty details of accepting a connection.
  */
@@ -59,8 +60,7 @@ class VPR_CLASS_API SocketAcceptor
 public:
    /**
     * Default constructor.  This does nothing.  If this constructor is used
-    * when creating an acceptor, the <code>open</code> method must be
-    * called.
+    * when creating an acceptor, the open() method must be called.
     *
     * @see open
     */
@@ -124,7 +124,7 @@ public:
     *
     * @pre This acceptor is open and listening for incoming connections.
     * @post A connected socket is returned via the by-reference parameter
-    *       <code>sock</code> if a connection is successfully accepted.
+    *       \p sock if a connection is successfully accepted.
     *
     * @param sock    A reference to a vpr::SocketStream object that will be
     *                used as storage for the connected socket object if a
@@ -134,11 +134,11 @@ public:
     *                vpr::Interval::NoTimeout.
     *
     * @return vpr::ReturnStatus::Succeed is returned when a connection is
-    *         completed successfully.  In this case, the <code>sock</code>
-    *         argument returned is the newly created connected socket.<br>
-    *         vpr::ReturnStatus::WouldBlock is returned if this is a
-    *         non-blocking acceptor and there are no pending connections.<br>
-    *         vpr::ReturnStatus::Fail is returned if the socket failed to
+    *         completed successfully.  In this case, the \p sock argument
+    *         returned is the newly created connected socket.
+    * @return vpr::ReturnStatus::WouldBlock is returned if this is a
+    *         non-blocking acceptor and there are no pending connections.
+    * @return vpr::ReturnStatus::Fail is returned if the socket failed to
     *         accept.
     */
    vpr::ReturnStatus accept(vpr::SocketStream& sock,

@@ -39,12 +39,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/*
- * ----------------------------------------------------------------------------
- * NOTES:
- *    - This file (SemaphorePosix.h) must be included by vpr/Sync/Semaphore.h,
- *      not the other way around.
- * ----------------------------------------------------------------------------
+/**
+ * \file
+ *
+ * @note This file must be included by vpr/Sync/Semaphore.h, not the other way
+ *       around.
  */
 
 #ifndef _VPR_SEMAPHORE_POSIX_H_
@@ -72,8 +71,10 @@
 namespace vpr
 {
 
-/**
- * Semaphore wrapper for POSIX.4-compliant systems.
+/** \class SemaphorePosix SemaphorePosix.h vpr/Sync/Semaphore.h
+ *
+ * Semaphore wrapper for POSIX.4-compliant systems.  This is typedef'd to
+ * vpr::Semaphore.
  */
 class SemaphorePosix
 {
@@ -81,7 +82,6 @@ public:
    /**
     * Constructor for vpr::SemaphorePosix class.
     *
-    * @pre None.
     * @post The semaphore variable for this object is initialized as an
     *       unnamed semaphore on all platforms except Darwin (Mac OS X).
     *       On Darwin 7.5 and earlier, unnamed semaphores are not
@@ -121,7 +121,6 @@ public:
    /**
     * Destructor for vpr::SemaphorePosix class.
     *
-    * @pre None.
     * @post The resources used by the semaphore variable are freed.
     */
    ~SemaphorePosix()
@@ -148,14 +147,13 @@ public:
    /**
     * Locks this semaphore.
     *
-    * @pre None.
     * @post The calling thread either acquires the semaphore until
     *       release() is called, or the caller is put at the tail of a wait
     *       and is suspended until such time as it can be freed and allowed
     *       to acquire the semaphore itself.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
-    *         vpr::ReturnStatus::Fail is returnd if an error occurred.
+    * @return vpr::ReturnStatus::Fail is returnd if an error occurred.
     */
    vpr::ReturnStatus acquire() const
    {
@@ -173,15 +171,14 @@ public:
    /**
     * Acquires a read lock on this semaphore.
     *
-    * @pre None.
     * @post The calling thread either acquires the semaphore until
     *       release() is called, or the caller is put at the tail of a wait
     *       and is suspended until such time as it can be freed and allowed
     *       to acquire the semaphore itself.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the read lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returnd if an error
-    *         occurred.
+    *         acquired.
+    * @return vpr::ReturnStatus::Fail is returnd if an error occurred.
     *
     * @note There is no special read lock for now.
     */
@@ -193,15 +190,14 @@ public:
    /**
     * Acquires a write lock on this semaphore.
     *
-    * @pre None.
     * @post The calling thread either acquires the semaphore until
     *       release() is called, or the caller is put at the tail of a wait
     *       and is suspended until such time as it can be freed and allowed
     *       to acquire the semaphore itself.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the write lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returnd if an error
-    *         occurred.
+    *         acquired.
+    * @return vpr::ReturnStatus::Fail is returnd if an error occurred.
     *
     * @note There is no special write lock for now.
     */
@@ -213,15 +209,14 @@ public:
    /**
     * Tries to acquire the semaphore immediately (does not block).
     *
-    * @pre None.
     * @post If the semaphore could be acquired by the caller, the caller
     *       gets control of the semaphore.  If the semaphore was already
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the lock on this
-    *         semaphore is acquired.  vpr::ReturnStatus::Fail is returned if
-    *         the lock is not acquired.
+    *         semaphore is acquired.
+    * @return vpr::ReturnStatus::Fail is returned if the lock is not acquired.
     */
    vpr::ReturnStatus tryAcquire() const
    {
@@ -238,15 +233,14 @@ public:
    /**
     * Tries to acquire a read lock on this semaphore (does not block).
     *
-    * @pre None.
     * @post If the semaphore could be acquired by the caller, the caller
     *       gets control of the semaphore.  If the semaphore was already
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the lock on this
-    *         semaphore is acquired.  vpr::ReturnStatus::Fail is returned if
-    *         the lock is not acquired.
+    *         semaphore is acquired.
+    * @return vpr::ReturnStatus::Fail is returned if the lock is not acquired.
     */
    vpr::ReturnStatus tryAcquireRead() const
    {
@@ -256,15 +250,14 @@ public:
    /**
     * Tries to acquire a write lock on this semaphore (does not block).
     *
-    * @pre None.
     * @post If the semaphore could be acquired by the caller, the caller
     *       gets control of the semaphore.  If the semaphore was already
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the lock on this
-    *         semaphore is acquired.  vpr::ReturnStatus::Fail is returned if
-    *         the lock is not acquired.
+    *         semaphore is acquired.
+    * @return vpr::ReturnStatus::Fail is returned if the lock is not acquired.
     */
    vpr::ReturnStatus tryAcquireWrite() const
    {
@@ -279,8 +272,8 @@ public:
     *       wait queue is allowed to execute again.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the lock on this
-    *         semaphore is released.  vpr::ReturnStatus::Fail is returned if
-    *         an error occurred.
+    *         semaphore is released.
+    * @return vpr::ReturnStatus::Fail is returned if an error occurred.
     */
    vpr::ReturnStatus release() const
    {
@@ -297,14 +290,13 @@ public:
    /**
     * Resets the semaphore using the given value.
     *
-    * @pre None.
     * @post The semaphore's count is set to the specified value.
     *
     * @param val The value to which the semaphore is reset.
     *
     * @return vpr::ReturnStatus::Succeed is returned if this semaphore is
     *         reset with the given value successfully.
-    *         vpr::ReturnStatus::Fail is returned if this semaphore could not
+    * @return vpr::ReturnStatus::Fail is returned if this semaphore could not
     *         be reset.
     *
     * @note If processes are waiting on the semaphore, the results are
@@ -343,7 +335,6 @@ public:
    /**
     * Dumps the semaphore debug stuff and current state.
     *
-    * @pre None.
     * @post All important data and debugging information related to the
     *       semaphore is dumped to the specified file descriptor (or to
     *       stderr if none is given).

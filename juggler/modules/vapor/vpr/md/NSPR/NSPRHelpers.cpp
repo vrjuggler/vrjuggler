@@ -39,20 +39,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <stdio.h>
-#include <string.h>
-#include <iostream>
+#include <vpr/vprConfig.h>
 
+#include <iostream>
 #include <prerror.h>
 #include <prerr.h>
 
 #include <vpr/md/NSPR/NSPRHelpers.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 // Print out the current NSPR error message to stderr
-void NSPR_PrintError(const std::string error_prefix_string, std::ostream& out )
+void NSPR_PrintError(const std::string& errorPrefixString, std::ostream& out)
 {
    PRErrorCode  err = PR_GetError();
    const char* err_name = PR_ErrorToName(err);
@@ -63,16 +63,19 @@ void NSPR_PrintError(const std::string error_prefix_string, std::ostream& out )
    char* os_str = strerror(PR_GetOSError());
    */
 
-   out << "Error (NSPR): " << error_prefix_string
-             << "(" << err;
+   out << "Error (NSPR): " << errorPrefixString << "(" << err;
+
    if(err_name != NULL)
+   {
        out << ":" << err_name;
-    
+   }
+
    if(err_str != NULL)
+   {
        out << ", " << err_str;
+   }
 
    out << ")" << std::endl;
 }
 
 }   // namespace
-

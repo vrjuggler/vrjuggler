@@ -39,12 +39,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/*
- * --------------------------------------------------------------------------
- * NOTES:
- *    - This file (vprSystemNSPR.h) MUST be included by vprSystemBase.h,
- *      not the other way around.
- * --------------------------------------------------------------------------
+/**
+ * \file
+ *
+ * @note This file MUST be included by vpr/SystemBase.h, not the other way
+ *       around.
  */
 
 #ifndef _VPR_SYSTEM_NSPR_H_
@@ -73,17 +72,35 @@
 
 #ifndef HAVE_GETTIMEOFDAY
 #  ifndef VPR_OS_Win32
+/** \struct timeval SystemNSPR.h vpr/System.h
+ *
+ * A data structure for storing the time value returned by
+ * vpr::SystemNSPR::gettimeofday().  This is only defined on Windows where
+ * there is no timeval struct.
+ *
+ * @note This is in the global namespace to mimic the POSIX visibility and
+ *       usage.
+ */
 struct timeval
 {
-   long tv_sec;           /* seconds since Jan. 1, 1970 */
-   long tv_usec;          /* and microseconds */
+   long tv_sec;           /**< Seconds since Jan. 1, 1970 */
+   long tv_usec;          /**< and microseconds */
 };
 #  endif
 
+/** \struct timezone SystemNSPR.h vpr/System.h
+ *
+ * A data structure for storing the time zone returned by
+ * vpr::SystemNSPR::gettimeofday().  This is only defined on platforms that
+ * do not defined the \c gettimeofday(3) function.
+ *
+ * @note This is in the global namespace to mimic the POSIX visibility and
+ *       usage.
+ */
 struct timezone
 {
-   int tv_minuteswest;    /* minutes west of Greenwich */
-   int tv_dsttime;        /* type of dst correction */
+   int tv_minuteswest;    /**< Minutes west of Greenwich */
+   int tv_dsttime;        /**< Type of dst correction */
 };
 #else
 #  include <sys/time.h>
@@ -93,6 +110,11 @@ struct timezone
 namespace vpr
 {
 
+/** \class SystemNSPR SystemNSPR.h vpr/System.h
+ *
+ * Low-level operating system feature abstractions using NSPR functionality.
+ * This is typedef'd to vpr::System.
+ */
 class SystemNSPR : public SystemBase
 {
 public:
@@ -109,7 +131,7 @@ public:
    /**
     * Sleeps for the given number of milliseconds.
     *
-    * @param micro The number of milliseconds to sleep.
+    * @param milli The number of milliseconds to sleep.
     */
    static int msleep(vpr::Uint32 milli)
    {
@@ -119,13 +141,20 @@ public:
    /**
     * Sleeps for the given number of seconds.
     *
-    * @param micro The number of seconds to sleep.
+    * @param seconds The number of seconds to sleep.
     */
    static int sleep(vpr::Uint32 seconds)
    {
       return PR_Sleep(PR_SecondsToInterval(seconds));
    }
 
+   /**
+    * Gets the current time of day in seconds since January 1, 1970.
+    *
+    * @param tp  Storage for the timeval data structure.
+    * @param tzp Storage for the time zone.  This parameter is optional and
+    *            is ignored by this implementation.
+    */
    static int gettimeofday(struct timeval* tp, struct timezone* tzp = NULL)
    {
       boost::ignore_unused_variable_warning(tzp);
@@ -137,16 +166,33 @@ public:
       return 0;
    }
 
+   /** @name Host-to-network byte order conversions */
+   //@{
+   /**
+    * Converts the given 16-bit value (a short) from native byte ordering to
+    * network byte ordering.  This is safe to use with signed and unsigned
+    * values.
+    */
    static vpr::Uint16 Ntohs(vpr::Uint16 conversion)
    {
       return PR_ntohs(conversion);
    }
 
+   /**
+    * Converts the given 32-bit value (a long) from native byte ordering to
+    * network byte ordering.  This is safe to use with signed and unsigned
+    * values.
+    */
    static vpr::Uint32 Ntohl(vpr::Uint32 conversion)
    {
       return PR_ntohl(conversion);
    }
 
+   /**
+    * Converts the given 64-bit value (a long long) from native byte ordering
+    * to network byte ordering.  This is safe to use with signed and unsigned
+    * values.
+    */
    static vpr::Uint64 Ntohll(vpr::Uint64 conversion)
    {
       vpr::Uint64 ret_val;
@@ -162,17 +208,35 @@ public:
       }
       return ret_val;
    }
+   //@}
 
+   /** @name Host-to-network byte order conversions */
+   //@{
+   /**
+    * Converts the given 16-bit value (a short) from network byte ordering to
+    * native byte ordering.  This is safe to use with signed and unsigned
+    * values.
+    */
    static vpr::Uint16 Htons(vpr::Uint16 conversion)
    {
       return PR_htons(conversion);
    }
 
+   /**
+    * Converts the given 32-bit value (a long) from network byte ordering to
+    * native byte ordering.  This is safe to use with signed and unsigned
+    * values.
+    */
    static vpr::Uint32 Htonl(vpr::Uint32 conversion)
    {
       return PR_htonl(conversion);
    }
 
+   /**
+    * Converts the given 64-bit value (a long long) from network byte ordering
+    * to native byte ordering.  This is safe to use with signed and unsigned
+    * values.
+    */
    static vpr::Uint64 Htonll(vpr::Uint64 conversion)
    {
       vpr::Uint64 ret_val;
@@ -188,8 +252,22 @@ public:
       }
       return ret_val;
    }
+   //@}
 
-   static ReturnStatus getenv(const std::string& name, std::string& result)
+   /**
+    * Queries the run-time environment for the value of the named environment
+    * variable.
+    *
+    * @param name   The name of the environment variable to query.
+    * @param result Storage for the value of the named environment variable.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the named environment
+    *         variable is defined in the run-time environment and lookup of
+    *         the variable succeeded.
+    * @return vpr::ReturnStatus::Succeed is returned if the named environment
+    *         variable could not be found in the run-time environment.
+    */
+   static vpr::ReturnStatus getenv(const std::string& name, std::string& result)
    {
       char* val;
       ReturnStatus status;
@@ -209,10 +287,26 @@ public:
       return status;
    }
 
-   /*
-   * If value is "" then it either unsets the variable or clears it
-   */
-   static ReturnStatus setenv(const std::string& name, const std::string& value)
+   /**
+    * Sets the value of the named environment variable in the run-time
+    * environment.  If \p value is "", then it either unsets the variable or
+    * clears it.
+    *
+    * @post On successful completion, the named environment variable has the
+    *       given value in the run-time environment.  If the named environment
+    *       variable does not exist in the run-time environment, it will be
+    *       created.
+    *
+    * @param name  The name of the environment variable to set.
+    * @param value The value to assign to the named environment variable.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the named environment
+    *         was set to the new value successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the environment variable
+    *         set operation failed.
+    */
+   static vpr::ReturnStatus setenv(const std::string& name,
+                                   const std::string& value)
    {
       // NSPR requires form of "name=value"
       // NSPR takes possesion of the string memory, so we just leak here
@@ -236,8 +330,9 @@ public:
       return status;
    }
 
-   /** Returns the name of the host
-    * For example the hostname of: vapor.vrjuggler.org is "vapor"
+   /**
+    * Returns the name of the local host.
+    * For example, the hostname of vapor.vrjuggler.org is "vapor".
     */
    static std::string getHostname()
    {

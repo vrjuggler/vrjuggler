@@ -54,7 +54,8 @@
 namespace vpr
 {
 
-/**
+/** \class SocketDatagramOpt SocketDatagramOpt.h vpr/IO/Socket/SocketDatagramOpt.h
+ *
  * Options for datagram sockets.
  */
 class VPR_CLASS_API SocketDatagramOpt : public vpr::SocketOptionWrapper

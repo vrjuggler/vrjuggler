@@ -62,7 +62,8 @@ namespace vpr
 namespace sim
 {
 
-/**
+/** \class NetworkLine NetworkLine.h vpr/md/SIM/Network/NetworkLine.h
+ *
  * A container class for the little collection of properties that are assigned
  * to edges (network lines) in the network graph.  Grouping them into a class
  * this way makes it easier for developers to manage the BGL property stuff,
@@ -89,23 +90,28 @@ public:
    /**
     * Default constructor.
     */
-   NetworkLine (void)
-      : mLength(0.0f), mCapacity(0.0f), mDelay(0.0f), mNetworkType(LAN),
-        mNetworkID(0), mNetworkIP(0), mLatency(0.0f)
+   NetworkLine()
+      : mLength(0.0f)
+      , mCapacity(0.0f)
+      , mDelay(0.0f)
+      , mNetworkType(LAN)
+      , mNetworkID(0)
+      , mNetworkIP(0)
+      , mLatency(0.0f)
    {
       /* Do nothing. */ ;
    }
 
    NetworkLine(const double miles, const double Mbps, const double delay,
-               const std::string& net_type, const vpr::Uint8 net_id,
-               const std::string& net_ip);
+               const std::string& netType, const vpr::Uint8 netID,
+               const std::string& netIP);
 
    /**
     * Returns a value designating the "weight" of this line (edge) in the
     * network (graph).  Currently, the weight of this edge is its length cast
     * to an integer (the round-off error is acceptable).
     */
-   int getWeight (void) const
+   int getWeight() const
    {
       return (int) mLength;
    }
@@ -113,28 +119,28 @@ public:
    /**
     * Returns the length in miles of this network line.
     */
-   double getLength (void) const
+   double getLength() const
    {
       return mLength;
    }
 
-   void setLength (const double miles)
+   void setLength(const double miles)
    {
       mLength  = miles;
       mLatency = 5.0f * miles;
    }
 
-   double getCapacity (void) const
+   double getCapacity() const
    {
       return mCapacity;
    }
 
-   void setCapacity (const double Mbps)
+   void setCapacity(const double Mbps)
    {
       mCapacity = Mbps;
    }
 
-   double getPropagationDelay (void) const
+   double getPropagationDelay() const
    {
       return mLatency;
    }
@@ -143,7 +149,7 @@ public:
     * Calculates the amount of time needed to put the given number of bits
     * on the wire.
     */
-   vpr::Interval getWireAccessTime (const vpr::Uint32 bits) const
+   vpr::Interval getWireAccessTime(const vpr::Uint32 bits) const
    {
       // This gets the number of microseconds required to transmit the given
       // number of bits.  This works because mCapacity is measured in
@@ -156,7 +162,7 @@ public:
       return vpr::Interval((vpr::Uint32) time, vpr::Interval::Usec);
    }
 
-   const std::string& getNetworkAddressString (void) const
+   const std::string& getNetworkAddressString() const
    {
       return mNetworkIPStr;
    }
@@ -165,24 +171,24 @@ public:
     * Calculates the amount of time required to get a single bit down the
     * wire.
     */
-   vpr::Interval getBitTransmissionTime (void) const
+   vpr::Interval getBitTransmissionTime() const
    {
       // Round up since vpr::Interval objects deal in whole numbers.
       return vpr::Interval((vpr::Uint32) ceil(getPropagationDelay()),
                            vpr::Interval::Usec);
    }
 
-   void calculateMessageEventTimes (vpr::sim::MessagePtr msg,
-                                    const vpr::Interval& cur_time,
-                                    const LineDirection direction)
+   void calculateMessageEventTimes(vpr::sim::MessagePtr msg,
+                                   const vpr::Interval& curTime,
+                                   const LineDirection direction)
    {
       switch (direction)
       {
          case FORWARD:
-            calculateMessageEventTimes(msg, cur_time, mForwardLineQueue);
+            calculateMessageEventTimes(msg, curTime, mForwardLineQueue);
             break;
          case REVERSE:
-            calculateMessageEventTimes(msg, cur_time, mReverseLineQueue);
+            calculateMessageEventTimes(msg, curTime, mReverseLineQueue);
             break;
       }
    }
@@ -190,7 +196,7 @@ public:
    /**
     *
     */
-   void addMessage (vpr::sim::MessagePtr msg, const LineDirection direction)
+   void addMessage(vpr::sim::MessagePtr msg, const LineDirection direction)
    {
       switch (direction)
       {
@@ -203,36 +209,36 @@ public:
       }
    }
 
-   void removeActiveMessages (const vpr::SocketImplSIM* sock,
-                              std::vector<vpr::Interval>& event_times,
-                              const LineDirection direction)
+   void removeActiveMessages(const vpr::SocketImplSIM* sock,
+                             std::vector<vpr::Interval>& eventTimes,
+                             const LineDirection direction)
    {
       switch (direction)
       {
          case FORWARD:
-            removeMessagesFromQueue(sock, event_times, mForwardLineQueue);
+            removeMessagesFromQueue(sock, eventTimes, mForwardLineQueue);
             break;
          case REVERSE:
-            removeMessagesFromQueue(sock, event_times, mReverseLineQueue);
+            removeMessagesFromQueue(sock, eventTimes, mReverseLineQueue);
             break;
       }
    }
 
    /**
     */
-   vpr::ReturnStatus getArrivedMessage (const vpr::Interval& event_time,
-                                        vpr::sim::MessagePtr& msg,
-                                        const LineDirection direction)
+   vpr::ReturnStatus getArrivedMessage(const vpr::Interval& eventTime,
+                                       vpr::sim::MessagePtr& msg,
+                                       const LineDirection direction)
    {
       vpr::ReturnStatus status;
 
       if ( direction == FORWARD )
       {
-         status = getArrivedMessageFromQueue(event_time, msg, mForwardLineQueue);
+         status = getArrivedMessageFromQueue(eventTime, msg, mForwardLineQueue);
       }
       else
       {
-         status = getArrivedMessageFromQueue(event_time, msg, mReverseLineQueue);
+         status = getArrivedMessageFromQueue(eventTime, msg, mReverseLineQueue);
       }
 
       return status;
@@ -242,18 +248,18 @@ private:
    typedef std::pair<vpr::Interval, vpr::sim::MessagePtr> msg_queue_entry_t;
    typedef std::deque<msg_queue_entry_t> msg_queue_t;
 
-   vpr::ReturnStatus getArrivedMessageFromQueue(const vpr::Interval& event_time,
+   vpr::ReturnStatus getArrivedMessageFromQueue(const vpr::Interval& eventTime,
                                                 vpr::sim::MessagePtr& msg,
                                                 msg_queue_t& queue);
 
    void calculateMessageEventTimes(vpr::sim::MessagePtr msg,
-                                   const vpr::Interval& cur_time,
+                                   const vpr::Interval& curTime,
                                    msg_queue_t& queue);
 
    void addMessageToQueue(vpr::sim::MessagePtr msg, msg_queue_t& queue);
 
    void removeMessagesFromQueue(const vpr::SocketImplSIM* sock,
-                                std::vector<vpr::Interval>& event_times,
+                                std::vector<vpr::Interval>& eventTimes,
                                 msg_queue_t& queue);
 
    double      mLength;       /**< Length in miles */

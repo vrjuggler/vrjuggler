@@ -42,6 +42,13 @@
 #ifndef _VPR_SERIAL_PORT_H_
 #define _VPR_SERIAL_PORT_H_
 
+/**
+ * \file
+ *
+ * Include this class to get the full declaration of the platform-specific
+ * class that is typedef'd to vpr::SerialPort.
+ */
+
 #include <vpr/vprConfig.h>
 
 #ifndef VPR_SIMULATOR

@@ -51,8 +51,9 @@
 namespace vpr
 {
 
-/**
- * POSIX Implementation of ---> Cross-platform Error reporting class.
+/** \class ErrorImplPosix ErrorImplPosix.h vpr/Util/Error.h
+ *
+ * POSIX Implementation of cross-platform error reporting class.
  */
 class VPR_CLASS_API ErrorImplPosix : public ErrorBase
 {

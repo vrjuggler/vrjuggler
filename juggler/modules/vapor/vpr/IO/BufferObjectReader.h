@@ -56,34 +56,47 @@
 namespace vpr
 {
 
-/** Object reader that reads out of a data buffer
-*
-* @todo: Add smart buffering for type sizes
-*/
+/** \class BufferObjectReader BufferObjectReader.h vpr/IO/BufferObjectReader.h
+ *
+ * Object reader that reads out of a data buffer.
+ *
+ * @todo Add smart buffering for type sizes.
+ */
 class BufferObjectReader : public ObjectReader
 {
 public:
-   BufferObjectReader(std::vector<vpr::Uint8>* data, unsigned curPos=0)
+   BufferObjectReader(std::vector<vpr::Uint8>* data,
+                      const unsigned int curPos = 0)
+      : mData(data)
+      , mCurHeadPos(curPos)
    {
       mIsBinary = true;
-      mData = data;
-      mCurHeadPos = curPos;
    }
 
-   void setCurPos(unsigned val)
-   { mCurHeadPos = val; }
-   unsigned getCurPos()
-   { return mCurHeadPos; }
+   void setCurPos(const unsigned int val)
+   {
+      mCurHeadPos = val;
+   }
+
+   unsigned int getCurPos()
+   {
+      return mCurHeadPos;
+   }
 
    /** Reset the reading head to the start position. */
    virtual void resetReading()
-   { setCurPos(0); }
+   {
+      setCurPos(0);
+   }
 
    virtual void pushState()
-   { mHeadPosStateStack.push_back(mCurHeadPos); }
+   {
+      mHeadPosStateStack.push_back(mCurHeadPos);
+   }
+
    virtual void popState()
    {
-      unsigned new_head_pos = mHeadPosStateStack.back();
+      unsigned int new_head_pos = mHeadPosStateStack.back();
       mHeadPosStateStack.pop_back();
       setCurPos(new_head_pos);
    }
@@ -91,9 +104,8 @@ public:
 
    /** @name Tag and attribute handling */
    //@{
-   /** Starts a new section/element of name tagName.
-   */
-   virtual vpr::ReturnStatus beginTag(std::string tagName)
+   /** Starts a new section/element of name \p tagName. */
+   virtual vpr::ReturnStatus beginTag(const std::string& tagName)
    {
       boost::ignore_unused_variable_warning(tagName);
       return vpr::ReturnStatus::Succeed;
@@ -105,8 +117,8 @@ public:
       return vpr::ReturnStatus::Succeed;
    }
 
-   /** Starts an attribute of the name attributeName */
-   virtual vpr::ReturnStatus beginAttribute(std::string attributeName)
+   /** Starts an attribute of the name \p attributeName. */
+   virtual vpr::ReturnStatus beginAttribute(const std::string& attributeName)
    {
       boost::ignore_unused_variable_warning(attributeName);
       return vpr::ReturnStatus::Succeed;
@@ -120,6 +132,10 @@ public:
    //@}
 
 
+   /**
+    * Reads out the single byte.
+    * @post data = old(data)+val, \c mCurHeadPos advaced 1
+    */
    inline virtual vpr::Uint8 readUint8();
    inline virtual vpr::Uint16 readUint16();
    inline virtual vpr::Uint32 readUint32();
@@ -129,40 +145,65 @@ public:
    inline virtual std::string readString();
    inline virtual bool readBool();
 
-   /* Helper methods */
+   /** @name Helper methods */
+   //@{
    virtual void readUint8(vpr::Uint8& val)
-   { val = this->readUint8(); }
-   virtual void readUint16(vpr::Uint16& val)
-   { val = this->readUint16(); }
-   virtual void readUint32(vpr::Uint32& val)
-   { val = this->readUint32(); }
-   virtual void readUint64(vpr::Uint64& val)
-   { val = this->readUint64(); }
-   virtual void readFloat(float& val)
-   { val = this->readFloat(); }
-   virtual void readDouble(double& val)
-   { val = this->readDouble(); }
-   virtual void readString(std::string& str)
-   { str = this->readString(); }
-   virtual void readBool(bool& val)
-   { val = this->readBool(); }
+   {
+      val = this->readUint8();
+   }
 
-   /* Read raw data of length len
-   * POST: Pointer to data returned
-   * NOTE: data points to data owned elsewhere.
-   * DO NOT MODIFY THE DATA and DO NOT RELY ON THE DATA STAYING THERE LONG.
-   */
-   inline vpr::Uint8* readRaw(unsigned len=1);
+   virtual void readUint16(vpr::Uint16& val)
+   {
+      val = this->readUint16();
+   }
+
+   virtual void readUint32(vpr::Uint32& val)
+   {
+      val = this->readUint32();
+   }
+
+   virtual void readUint64(vpr::Uint64& val)
+   {
+      val = this->readUint64();
+   }
+
+   virtual void readFloat(float& val)
+   {
+      val = this->readFloat();
+   }
+
+   virtual void readDouble(double& val)
+   {
+      val = this->readDouble();
+   }
+
+   virtual void readString(std::string& str)
+   {
+      str = this->readString();
+   }
+
+   virtual void readBool(bool& val)
+   {
+      val = this->readBool();
+   }
+   //@}
+
+   /**
+    * Reads raw data of length \p len.
+    *
+    * @post Pointer to data returned.
+    * @note data points to data owned elsewhere.
+    *       DO NOT MODIFY THE DATA and DO NOT RELY ON THE DATA STAYING THERE
+    *       LONG.
+    */
+   inline vpr::Uint8* readRaw(const unsigned int len = 1);
 
 public:
    std::vector<vpr::Uint8>*   mData;
-   unsigned                   mCurHeadPos;
-   std::vector<unsigned>      mHeadPosStateStack;  /**< Store pushed and popped state information */
+   unsigned int               mCurHeadPos;
+   std::vector<unsigned int>  mHeadPosStateStack;  /**< Store pushed and popped state information */
 };
 
-/* Read out the single byte.
-* @post: data = old(data)+val, mCurHeadPos advaced 1
-*/
 vpr::Uint8 BufferObjectReader::readUint8()
 {
    vpr::Uint8 temp_data;
@@ -220,7 +261,6 @@ double BufferObjectReader::readDouble()
    return d_val;
 }
 
-
 std::string BufferObjectReader::readString()
 {
    vpr::Uint16 str_len = readUint16();
@@ -239,8 +279,7 @@ bool BufferObjectReader::readBool()
    return (bool)*(readRaw(1));
 }
 
-
-vpr::Uint8* BufferObjectReader::readRaw(unsigned len)
+vpr::Uint8* BufferObjectReader::readRaw(const unsigned int len)
 {
    mCurHeadPos += len;
    vprASSERT((mCurHeadPos-len) < mData->size());

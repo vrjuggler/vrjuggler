@@ -52,12 +52,13 @@
 namespace vpr
 {
 
-/**
+/** \class BarrierSGI BarrierSGI.h vpr/Sync/Barrier.h
+ *
  * Barrier wrapper for SGI.
  * A barrier is a primitive that allows several processes to wait at a sync
- * point.
+ * point.  This is typedef'd to vpr::Barrier.
  *
- * @date 1-30-97
+ * @date January 30, 1997
  */
 class BarrierSGI
 {

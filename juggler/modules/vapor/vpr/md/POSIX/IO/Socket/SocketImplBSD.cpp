@@ -381,14 +381,14 @@ vpr::ReturnStatus SocketImplBSD::setRemoteAddr(const InetAddr& addr)
 
 vpr::ReturnStatus SocketImplBSD::read_i(void* buffer,
                                         const vpr::Uint32 length,
-                                        vpr::Uint32& bytes_read,
+                                        vpr::Uint32& bytesRead,
                                         const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
    mBlockingFixed = true;
-   status = mHandle->read_i(buffer, length, bytes_read, timeout);
+   status = mHandle->read_i(buffer, length, bytesRead, timeout);
 
-   if ( bytes_read == 0 )
+   if ( bytesRead == 0 )
    {
       status.setCode(vpr::ReturnStatus::NotConnected);
    }
@@ -398,14 +398,14 @@ vpr::ReturnStatus SocketImplBSD::read_i(void* buffer,
 
 vpr::ReturnStatus SocketImplBSD::readn_i(void* buffer,
                                          const vpr::Uint32 length,
-                                         vpr::Uint32& bytes_read,
+                                         vpr::Uint32& bytesRead,
                                          const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
    mBlockingFixed = true;
-   status = mHandle->readn_i(buffer, length, bytes_read, timeout);
+   status = mHandle->readn_i(buffer, length, bytesRead, timeout);
 
-   if ( bytes_read == 0 )
+   if ( bytesRead == 0 )
    {
       status.setCode(vpr::ReturnStatus::NotConnected);
    }
@@ -415,12 +415,12 @@ vpr::ReturnStatus SocketImplBSD::readn_i(void* buffer,
 
 vpr::ReturnStatus SocketImplBSD::write_i(const void* buffer,
                                          const vpr::Uint32 length,
-                                         vpr::Uint32& bytes_written,
+                                         vpr::Uint32& bytesWritten,
                                          const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
    mBlockingFixed = true;
-   status = mHandle->write_i(buffer, length, bytes_written, timeout);
+   status = mHandle->write_i(buffer, length, bytesWritten, timeout);
 
    if ( status.failure() )
    {
@@ -777,30 +777,30 @@ SocketImplBSD::~SocketImplBSD()
 // Protected methods.
 // ============================================================================
 
-SocketImplBSD::SocketImplBSD(const vpr::SocketTypes::Type sock_type)
+SocketImplBSD::SocketImplBSD(const vpr::SocketTypes::Type sockType)
    : mOpenBlocking(true)
    , mBound(false)
    , mConnected(false)
    , mBlockingFixed(false)
    , mHandle(NULL)
-   , mType(sock_type)
+   , mType(sockType)
 {
    mHandle = new FileHandleImplUNIX();
 }
 
-SocketImplBSD::SocketImplBSD(const vpr::InetAddr& local_addr,
-                             const vpr::InetAddr& remote_addr,
-                             const vpr::SocketTypes::Type sock_type)
+SocketImplBSD::SocketImplBSD(const vpr::InetAddr& localAddr,
+                             const vpr::InetAddr& remoteAddr,
+                             const vpr::SocketTypes::Type sockType)
    : mOpenBlocking(true)
    , mBound(false)
    , mConnected(false)
    , mBlockingFixed(false)
    , mHandle(NULL)
-   , mLocalAddr(local_addr)
-   , mRemoteAddr(remote_addr)
-   , mType(sock_type)
+   , mLocalAddr(localAddr)
+   , mRemoteAddr(remoteAddr)
+   , mType(sockType)
 {
-   mHandle = new FileHandleImplUNIX(remote_addr.getAddressString());
+   mHandle = new FileHandleImplUNIX(remoteAddr.getAddressString());
 }
 
 } // End of vpr namespace

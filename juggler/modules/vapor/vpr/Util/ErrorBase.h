@@ -51,8 +51,9 @@
 namespace vpr
 {
 
-/**
- * Common base for platform specific error management
+/** \class ErrorBase ErrorBase.h vpr/Util/ErrorBase.h
+ *
+ * Common base for platform-specific error management.
  */
 class VPR_CLASS_API ErrorBase
 {

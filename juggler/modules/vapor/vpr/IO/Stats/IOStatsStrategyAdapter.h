@@ -48,46 +48,44 @@
 namespace vpr
 {
 
-/**
- * This is a template adapter that combines two IO Stats strategies together
+/** \class IOStatsStrategyAdapter IOStatsStrategyAdapter.h vpr/IO/Stats/IOStatsStrategyAdapter.h
+ *
+ * This is a template adapter that combines two I/O Stats strategies together
  * into a single class.  It multiply inherits a new class from the two classes
- * to create a single new class.  It overrides the virtual functions read_i,
- * readn_i, and write_i to create new functions that call the parent functions
- * in the order that they were specified as template parameters.  It does this
- * by over riding the virtual functions read_i, readn_i, and write_i.
- * All types here must be based on the BaseIOStatsStrategy_i interface.
+ * to create a single new class.  It overrides the virtual functions read_s(),
+ * readn_s(), and write_s() to create new functions that call the parent
+ * functions in the order that they were specified as template parameters.
+ * All types here must be based on the vpr::BaseIOStatsStrategy_i interface.
+ *
+ * @param BASE_ONE The first base class.
+ * @param BASE_TWO The second base class.
  */
 template < class BASE_ONE, class BASE_TWO >
 class IOStatsStrategyAdapter : public BASE_ONE, public BASE_TWO
 {
 public:
-
-
-   virtual void read_s(ReturnStatus& status,
-                         void* buffer, const vpr::Uint32 length,
-                          vpr::Uint32& bytes_read,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual void read_s(vpr::ReturnStatus& status, void* buffer,
+                       const vpr::Uint32 length, vpr::Uint32& bytesRead,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      BASE_ONE::read_s(status, buffer, length, bytes_read, timeout);
-      BASE_TWO::read_s(status, buffer, length, bytes_read, timeout);
+      BASE_ONE::read_s(status, buffer, length, bytesRead, timeout);
+      BASE_TWO::read_s(status, buffer, length, bytesRead, timeout);
    }
 
-   virtual void readn_s(ReturnStatus& status,
-                          void* buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytes_read,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual void readn_s(vpr::ReturnStatus& status, void* buffer,
+                        const vpr::Uint32 length, vpr::Uint32& bytesRead,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      BASE_ONE::readn_s(status, buffer, length, bytes_read, timeout);
-      BASE_TWO::readn_s(status, buffer, length, bytes_read, timeout);
+      BASE_ONE::readn_s(status, buffer, length, bytesRead, timeout);
+      BASE_TWO::readn_s(status, buffer, length, bytesRead, timeout);
    }
 
-   virtual void write_s(ReturnStatus& status,
-                          const void* buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytes_written,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual void write_s(vpr::ReturnStatus& status, const void* buffer,
+                        const vpr::Uint32 length, vpr::Uint32& bytesWritten,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      BASE_ONE::write_s(status, buffer, length, bytes_written, timeout);
-      BASE_TWO::write_s(status, buffer, length, bytes_written, timeout);
+      BASE_ONE::write_s(status, buffer, length, bytesWritten, timeout);
+      BASE_TWO::write_s(status, buffer, length, bytesWritten, timeout);
    }
 };
 

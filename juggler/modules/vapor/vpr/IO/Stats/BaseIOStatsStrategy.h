@@ -93,10 +93,11 @@ protected:
     vpr::BlockIO*   mRealObject;
 };
 
-/**
- * NULL strategy.
+/** \class NullIOStatsStrategy BaseIOStatsStrategy.h vpr/IO/Stats/BaseIOStatsStrategy.h
  *
- * @note Must derive from BaseIOStatsStrategy because the compiler still
+ * Null strategy.
+ *
+ * @note Must derive from vpr::BaseIOStatsStrategy because the compiler still
  *       expects that interface.
  */
 class NullIOStatsStrategy : public BaseIOStatsStrategy
@@ -106,5 +107,6 @@ public:
 };
 
 } // namespace vpr
+
 
 #endif //_VPR_BASEIOSTATS_H

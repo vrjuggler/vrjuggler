@@ -49,9 +49,11 @@
 namespace vpr
 {
 
-/**
+/** \class MemPool MemPool.h vpr/md/SPROC/SharedMem/MemPool.h
+ *
  * Shared memory pool.
- * Base class that defines how all memory pools should behave.
+ * Base class that defines how all memory pools should behave.  This class is
+ * for exclusive use within VPR.
  *
  * @date 1-9-97
  */
@@ -59,9 +61,6 @@ class MemPool
 {
 
 public:
-   // ---> This is a prototype for what all derived constructors should take
-   // as params
-   // MemPool(size_t initialSize,  int numProcs, char* staticTempName)
    virtual ~MemPool()
    {
       ;

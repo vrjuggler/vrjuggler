@@ -50,6 +50,12 @@
 namespace vpr
 {
 
+/** \class SocketDatagramImplNSPR SocketDatagramImplNSPR.h vpr/IO/Socket/SocketDatagram.h
+ *
+ * NSPR implementation of the datagram socket interface.  This is used in
+ * conjunction with vpr::SocketConfiguration to create the typedef
+ * vpr::SocketDatagram.
+ */
 class VPR_CLASS_API SocketDatagramImplNSPR : public SocketImplNSPR
 {
 public:
@@ -60,7 +66,10 @@ public:
    // ========================================================================
 
    /**
-    * Default constructor.  This does nothing.
+    * Default constructor.
+    *
+    * @post The member variables are initialized to default values.  The
+    *       socket type is set to vpr::SocketTypes::DATAGRAM.
     */
    SocketDatagramImplNSPR() : SocketImplNSPR(SocketTypes::DATAGRAM)
    {
@@ -70,12 +79,16 @@ public:
    /**
     * Constructor.
     *
-    * @post The member variables are initialized with the type in particular
-    *       set to vpr::SocketTypes::DATAGRAM.
+    * @post The member variables are initialized to default values.  The
+    *       socket type is set to vpr::SocketTypes::DATAGRAM.
+    *
+    * @param localAddr  The local address to which this socket will be bound.
+    * @param remoteAddr The remote address whith which this socket will
+    *                   communicate.
     */
-   SocketDatagramImplNSPR(const InetAddr& local_addr,
-                          const InetAddr& remote_addr)
-      : SocketImplNSPR(local_addr, remote_addr, SocketTypes::DATAGRAM)
+   SocketDatagramImplNSPR(const InetAddr& localAddr,
+                          const InetAddr& remoteAddr)
+      : SocketImplNSPR(localAddr, remoteAddr, SocketTypes::DATAGRAM)
    {
       /* Do nothing. */ ;
    }
@@ -89,11 +102,11 @@ public:
    }
 
    vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length,
-                              vpr::InetAddr& from, vpr::Uint32& bytes_read,
+                              vpr::InetAddr& from, vpr::Uint32& bytesRead,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
-                            const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
+                            const vpr::InetAddr& to, vpr::Uint32& bytesSent,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 

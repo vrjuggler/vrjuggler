@@ -64,14 +64,17 @@ namespace sim
 
 class Message;
 
-/**
+/** \class NetworkNode NetworkNode.h vpr/md/SIM/Network/NetworkNode.h
+ *
  * This class must be default constrible, assignable, and copy constructible.
  */
 class NetworkNode
 {
 public:
-   NetworkNode (void)
-      : mIndex(0), mType(0), mIpAddr(0)
+   NetworkNode()
+      : mIndex(0)
+      , mType(0)
+      , mIpAddr(0)
    {
       /* Do nothing. */ ;
    }
@@ -84,7 +87,7 @@ public:
    NetworkNode(const vpr::Uint32 index, const vpr::Uint8 type,
                const std::string& ip_str);
 
-   ~NetworkNode (void)
+   ~NetworkNode()
    {
       /* Do nothing. */ ;
    }
@@ -103,22 +106,22 @@ public:
    vpr::SocketImplSIM* getSocket(const vpr::Uint32 port,
                                  const vpr::SocketTypes::Type type);
 
-   const vpr::Uint32& getIndex (void) const
+   const vpr::Uint32& getIndex() const
    {
       return mIndex;
    }
 
-   void setIndex (const vpr::Uint32 index)
+   void setIndex(const vpr::Uint32 index)
    {
       mIndex = index;
    }
 
-   const vpr::Uint8& getType (void) const
+   const vpr::Uint8& getType() const
    {
       return mType;
    }
 
-   void setType (const vpr::Uint8 type)
+   void setType(const vpr::Uint8 type)
    {
       mType = type;
    }
@@ -126,12 +129,12 @@ public:
    /**
     * Retrieves the 32-bit IPv4 address for this network node.
     */
-   const vpr::Uint32& getIpAddress (void) const
+   const vpr::Uint32& getIpAddress() const
    {
       return mIpAddr;
    }
 
-   const std::string& getIpAddressString (void) const
+   const std::string& getIpAddressString() const
    {
       return mIpStr;
    }

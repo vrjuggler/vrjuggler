@@ -48,9 +48,9 @@
 namespace vpr
 {
 
-/**
- * Base class for all for the IOSys class.
- * The "real" impl is in an included file.
+/** \class IOSysUnix IOSysUnix.h vpr/IO/IOSys.h
+ *
+ * Wrapper around UNIX file descriptors.  This is typedef'd to vpr::IOSys.
  */
 class IOSysUnix
 {

@@ -54,14 +54,17 @@
 namespace vpr
 {
 
-/**
+/** \class LibraryNSPR LibraryNSPR.h vpr/DynLoad/Library.h
+ *
  * Low-level class for loading symbols dynamically.  This implementation wraps
  * NSPR's existing abstraction for loading symbols.  The idea of this class is
  * to provide the basic features needed to load a single shared/dynamic library
  * and to get symbols from it.  No features for path extension are provided
  * here.
  *
- * @date 9-6-2002
+ * This class is typedef'd to vpr::Library.
+ *
+ * @date September 7, 2002
  */
 class VPR_CLASS_API LibraryNSPR
 {

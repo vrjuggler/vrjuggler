@@ -62,8 +62,10 @@ namespace vpr
 // not be included by this file.
 struct InetAddrHash;
 
-/**
- * Cross-platform abstraction to Internet address structures.
+/** \class InetAddrBSD InetAddrBSD.h vpr/IO/Socket/InetAddr.h
+ *
+ * Cross-platform abstraction to Internet address structures.  This is
+ * typedef'd to vpr::InetAddr.
  */
 class InetAddrBSD : public InetAddrBase
 {
@@ -76,7 +78,6 @@ public:
     * Default constructor.  This initializes the memory for the encapsulated
     * address structure.
     *
-    * @pre None.
     * @post The mAddr structure has its memory zeroed, and the port and
     *       internet address are set to wildcard values.
     */
@@ -85,7 +86,6 @@ public:
    /**
     * Copy constructor.
     *
-    * @pre None.
     * @post A copy of the given vpr::InetAddrBSD object is made in this
     *       object.
     *
@@ -99,16 +99,16 @@ public:
    /**
     * Returns the local host's address via the given object reference.
     *
-    * @param host_addr Storage for the returned address object.
+    * @param hostAddr Storage for the returned address object.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the local host has an
     *         an address.  Otherwise, vpr::ReturnStatus::Fail is returned.
     */
-   static vpr::ReturnStatus getLocalHost(vpr::InetAddrBSD& host_addr);
+   static vpr::ReturnStatus getLocalHost(vpr::InetAddrBSD& hostAddr);
 
    /**
     * Sets the address for this object using the given address.  It must be
-    * of the form <address>:<port> where <address> can be a hostname or a
+    * of the form \c address:port where \c address can be a hostname or a
     * dotted-decimal IP address.
     *
     * @param address A string giving the address and port number separated by
@@ -124,7 +124,7 @@ public:
     *
     * @param address A string giving the address (either hostname or IP
     *                address).
-    * @param port    The port to associate with the IP address.
+    * @param port    The port to associate with this IP address.
     */
    vpr::ReturnStatus setAddress(const std::string& address, const Uint16 port);
 
@@ -133,7 +133,7 @@ public:
     * number.  The address must be the actual 32-bit integer value.
     *
     * @param address A 32-bit integer IP address.
-    * @param port    The port to associate with the IP address.
+    * @param port    The port to associate with this IP address.
     */
    vpr::ReturnStatus setAddress(const vpr::Uint32 address,
                                 const vpr::Uint16 port);
@@ -194,7 +194,7 @@ public:
     * @post The port associated with this address is returned to the caller
     *       in host byte order.
     *
-    * @return An unsigned 16-bit integer  giving the port for this address
+    * @return An unsigned 16-bit integer giving the port for this address
     *         in host byte order.
     */
    vpr::Uint16 getPort() const;
@@ -307,10 +307,10 @@ protected:
     *      order.
     * @post The bytes are copied into this structure's IP address value.
     *
-    * @param addr_value The A record contianing an IP address in network
-    *                   byte order.
+    * @param addrValue The A record contianing an IP address in network
+    *                  byte order.
     */
-   void copyAddressValue(const char* addr_value);
+   void copyAddressValue(const char* addrValue);
 
    /**
     * Sets this objects's IP address.  The given address must be in host byte
@@ -319,10 +319,10 @@ protected:
     * @pre The given IP address is in host byte order.
     * @post The given IP address is stored.
     *
-    * @param port An unsigned 32-bit integer IP address for this object in
-    *             host byte order.
+    * @param addrValue An unsigned 32-bit integer IP address for this object in
+    *                  host byte order.
     */
-   void setAddressValue(const vpr::Uint32 addr_value);
+   void setAddressValue(const vpr::Uint32 addrValue);
 
    /**
     * Gets the size of this object's encapsulated address structure.

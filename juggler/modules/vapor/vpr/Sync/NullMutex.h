@@ -50,67 +50,70 @@
 namespace vpr
 {
 
-/**
+/** \class NullMutex NullMutex.h vpr/Sync/NullMutex.h
+ *
  * Null mutex wrapper.  Used to pass a do nothing mutex as a template type.
  *
- * @date 1-21-97
+ * @date January 21, 1997
  */
 class VPR_CLASS_API NullMutex
 {
 public:
-   NullMutex () {}
+   NullMutex()
+   {;}
 
-   ~NullMutex() {}
+   ~NullMutex()
+   {;}
 
    /**
     * Locks the mutex.
     *
-    * @return 1 is returned if the mutex is acquired.<br>
-    *         -1 is returned if an error occurs.
+    * @return 1 is returned if the mutex is acquired.
+    * @return -1 is returned if an error occurs.
     */
    vpr::ReturnStatus acquire() const
    {
       return vpr::ReturnStatus();
    }
 
-   /// Acquires a read mutex.
+   /** Acquires a read mutex. */
    vpr::ReturnStatus acquireRead() const
    {
       return this->acquire();     // No special "read" semaphore -- For now
    }
 
-   /// Acquires a write mutex.
+   /** Acquires a write mutex. */
    vpr::ReturnStatus acquireWrite() const
    {
       return this->acquire();     // No special "write" semaphore -- For now
    }
 
    /**
-    * Try to acquire the lock.  Returns immediately even if we don't acquire
+    * Tries to acquire the lock.  Returns immediately even if we don't acquire
     * the lock.
     *
-    * @return 1 is returned if the mutex is acquired.<br>
-    *         0 is returned if the mutex is not acquired.
+    * @return 1 is returned if the mutex is acquired.
+    * @return 0 is returned if the mutex is not acquired.
     */
-   vpr::ReturnStatus tryAcquire () const
+   vpr::ReturnStatus tryAcquire() const
    {
       return vpr::ReturnStatus();
    }
 
-   /// Tries to acquire a read mutex.
-   vpr::ReturnStatus tryacquire_read () const
+   /** Tries to acquire a read mutex. */
+   vpr::ReturnStatus tryacquire_read() const
    {
       return this->tryAcquire();
    }
 
-   /// Tries to acquire a write mutex.
-   vpr::ReturnStatus tryacquire_write () const
+   /** Tries to acquire a write mutex. */
+   vpr::ReturnStatus tryacquire_write() const
    {
       return this->tryAcquire();
    }
 
    /**
-    * Release the mutex.
+    * Releases the mutex.
     *
     * @return 0 is returned on success; -1 is returned otherwise.
     */
@@ -122,15 +125,15 @@ public:
    /**
     * Tests the current lock status.
     *
-    * @return 0 is returned if the mutex is not locked.<br>
-    *         1 is returend if the mutex is locked.
+    * @return 0 is returned if the mutex is not locked.
+    * @return 1 is returend if the mutex is locked.
     */
    int test()
    {
       return 0;     // Just return 0 since it is a null lock
    }
 
-   /// Dumps the mutex debug stuff and current state.
+   /** Dumps the mutex debug stuff and current state. */
    void dump(FILE* dest = stderr,
              const char* message = "\n------ Mutex Dump -----\n") const
    {

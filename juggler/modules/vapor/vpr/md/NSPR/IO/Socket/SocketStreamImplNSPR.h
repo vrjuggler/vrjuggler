@@ -52,6 +52,12 @@
 namespace vpr
 {
 
+/** \class SocketStreamImplNSPR SocketStreamImplNSPR.h vpr/IO/Socket/SocketStream.h
+ *
+ * NSPR implementation of the stream-oriented socket interface.  This is used
+ * in conjunction with vpr::SocketConfiguration to create the typedef
+ * vpr::SocketStream.
+ */
 class VPR_CLASS_API SocketStreamImplNSPR : public SocketImplNSPR
 {
 public:
@@ -59,60 +65,84 @@ public:
    // vpr::SocketStreamImp implementation.
    // ========================================================================
 
-   // ------------------------------------------------------------------------
-   // Constructor.  This takes the address (either hostname or IP address) of
-   // a remote site and a port and stores the values for later use in the
-   // member variables of the object.
-   //
-   // PRE: None.
-   // POST: The member variables are initialized with the mType variable in
-   //       particular set to SOCK_STREAM.
-   // ------------------------------------------------------------------------
-   SocketStreamImplNSPR(void);
+   /**
+    * Default constructor.  This initializes the member variables.
+    */
+   SocketStreamImplNSPR();
 
-   // ------------------------------------------------------------------------
-   // ------------------------------------------------------------------------
-   SocketStreamImplNSPR(const vpr::InetAddr& local_addr,
-                        const vpr::InetAddr& remote_addr);
+   /**
+    * Constructor.  This takes the local and remote addresses for this socket.
+    * The local address is the address to which this socket will be bound.
+    * The remote address is the address which with this socket will
+    * communicate.
+    *
+    * @post The member variables are initialized to default values.  The
+    *       socket type is set to vpr::SocketTypes::STREAM.
+    *
+    * @param localAddr  The local address to which this socket will be bound.
+    * @param remoteAddr The remote address whith which this socket will
+    *                   communicate.
+    *
+    * @see bind, connect
+    */
+   SocketStreamImplNSPR(const vpr::InetAddr& localAddr,
+                        const vpr::InetAddr& remoteAddr);
 
-   // ------------------------------------------------------------------------
-   // Copy constructor.
-   // XXX: We need to have a reference count here
-   // ------------------------------------------------------------------------
-   SocketStreamImplNSPR (const SocketStreamImplNSPR& sock)
+   /**
+    * Copy constructor.
+    * XXX: We need to have a reference count here
+    */
+   SocketStreamImplNSPR(const SocketStreamImplNSPR& sock)
       : SocketImplNSPR(sock)
    {
       /* Just call base class */ ;
    }
 
-   // ------------------------------------------------------------------------
-   // Listen on the socket for incoming connection requests.
-   //
-   // PRE: The socket has been opened and bound to the address in
-   //      mLocalAddr.
-   // POST: The socket is in a listening state waiting for incoming
-   //       connection requests.
-   //
-   // Arguments:
-   //     backlog - The maximum length of th queue of pending connections.
-   //
-   // Returns:
-   //     true  - The socket is in a listening state.
-   //     false - The socket could not be put into a listening state.  An
-   //             error message is printed explaining what went wrong.
-   // ------------------------------------------------------------------------
+   /**
+    * Listens on the socket for incoming connection requests.
+    *
+    * @pre The socket has been opened and bound to the address in
+    *      \c mLocalAddr.
+    * @post The socket is in a listening state waiting for incoming
+    *       connection requests.
+    *
+    * @param backlog The maximum length of the queue of pending connections.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if this socket is now in a
+    *         listening state.
+    * @return vpr::ReturnStatus::Fail is returned if this socket could not be
+    *         put into a listening state.  An error message is printed
+    *         explaining what went wrong.
+    *
+    * @see open, bind
+    */
    vpr::ReturnStatus listen(const int backlog = 5);
 
-   // ------------------------------------------------------------------------
-   // Accept an incoming connection request.
-   //
-   // PRE: The socket is open and is in a listening state.
-   // POST: When a connection is established, a new vpr::SocketStreamImp
-   //       object will be created that can be used for further communication
-   //       with the remote site.
-   //
-   // Returns:
-   // ------------------------------------------------------------------------
+   /**
+    * Accepts an incoming connection request and returns the connected socket
+    * to the caller in the given socket object reference.
+    *
+    * @pre This socket is open, bound, and in a listening state.
+    * @post When a connection is established, the given socket \p sock will
+    *       be set up to communicate with the newly accepted connection.
+    *
+    * @param sock    A reference to a vpr::SocketStream object that will be
+    *                used to return the newly connected socket.
+    * @param timeout The length of time to wait for the accept call to return.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the new connection was
+    *         accepted succesfully.
+    * @return vpr::ReturnStatus::WouldBlock is returned if this is a
+    *         non-blocking socket, and there are no waiting connection
+    *         requests.
+    * @return vpr::ReturnStatus::Timeout is returned when no connections
+    *         requests arrived within the given timeout period.
+    * @return vpr::ReturnStatus::Fail is returned if the connection was not
+    *         accepted.  An error message is printed explaining what went
+    *         wrong.
+    *
+    * @see open, bind, listen
+    */
    vpr::ReturnStatus accept(SocketStreamImplNSPR& sock,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };

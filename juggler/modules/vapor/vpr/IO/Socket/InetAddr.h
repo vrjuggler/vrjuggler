@@ -42,6 +42,13 @@
 #ifndef _VPR_INET_ADDR_H_
 #define _VPR_INET_ADDR_H_
 
+/**
+ * \file
+ *
+ * Include this file to get the full declaration of the class that is
+ * typedef'd to vpr::InetAddr.
+ */
+
 #include <vpr/vprConfig.h>
 
 #if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
@@ -59,7 +66,10 @@
 namespace vpr
 {
 
-/// Nice little helper class for hashing a <code>vpr::InetAddr</code>
+/** \struct InetAddrHash InetAddr.h vpr/IO/Socket/InetAddr.h
+ *
+ * Nice little helper class for hashing a vpr::InetAddr.
+ */
 struct InetAddrHash
 {
    size_t operator() (vpr::InetAddr addr) const
@@ -68,7 +78,7 @@ struct InetAddrHash
    }
 };
 
-} // End of std namespace
+} // End of vpr namespace
 
 inline bool operator<(const vpr::InetAddr& addr1, const vpr::InetAddr& addr2)
 {

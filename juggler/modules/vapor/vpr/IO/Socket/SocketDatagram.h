@@ -42,6 +42,13 @@
 #ifndef _VPR_SOCKET_DATAGRAM_H_
 #define _VPR_SOCKET_DATAGRAM_H_
 
+/**
+ * \file
+ *
+ * Include this file to get the full declaration of the platform-specific
+ * class that is typedef'd to vpr::SocketDatagram.
+ */
+
 #include <vpr/vprConfig.h>
 
 #include <vpr/IO/Stats/BandwidthIOStatsStrategy.h>
