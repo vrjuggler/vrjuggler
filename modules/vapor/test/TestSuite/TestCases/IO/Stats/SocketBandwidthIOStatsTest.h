@@ -138,7 +138,7 @@ public:
            mCondVar.release();
 
            vpr::BaseIOStatsStrategy<>* stats = sock->getIOStatStrategy();
-           BandwidthIOStatsStrategy* bw_interface = dynamic_cast<BandwidthIOStatsStrategy*>(stats );
+           vpr::BandwidthIOStatsStrategy* bw_interface = dynamic_cast<vpr::BandwidthIOStatsStrategy*>(stats );
 
            if(bw_interface != NULL)
            {
@@ -150,7 +150,7 @@ public:
                         << "        STA send: " << bw_interface->writeStats().getSTA()/1024.0f << " k/s" << std::endl
                         << "       Inst send: " << bw_interface->writeStats().getInstAverage()/1024.0f << " k/s" << std::endl
                         << "    Max STA send: " << bw_interface->writeStats().getMaxSTA()/1024.0f << " k/s" << std::endl
-                        
+
                         << "      read bytes: " << bw_interface->readStats().getTotal() << std::endl
                         << "         av read: " << bw_interface->readStats().getMean()/1024.0f << " k/s" << std::endl
                         << "        STA read: " << bw_interface->readStats().getSTA()/1024.0f << " k/s" << std::endl
@@ -198,7 +198,7 @@ public:
          }
 
          vpr::BaseIOStatsStrategy<>* stats = con_sock.getIOStatStrategy();
-          BandwidthIOStatsStrategy* bw_interface = dynamic_cast<BandwidthIOStatsStrategy*>(stats );
+         vpr::BandwidthIOStatsStrategy* bw_interface = dynamic_cast<vpr::BandwidthIOStatsStrategy*>(stats );
 
            if(bw_interface != NULL)
            {
@@ -210,7 +210,7 @@ public:
                         << "        STA send: " << bw_interface->writeStats().getSTA()/1024.0f << " k/s" << std::endl
                         << "       Inst send: " << bw_interface->writeStats().getInstAverage()/1024.0f << " k/s" << std::endl
                         << "    Max STA send: " << bw_interface->writeStats().getMaxSTA()/1024.0f << " k/s" << std::endl
-                        
+
                         << "      read bytes: " << bw_interface->readStats().getTotal() << std::endl
                         << "         av read: " << bw_interface->readStats().getMean()/1024.0f << " k/s" << std::endl
                         << "        STA read: " << bw_interface->readStats().getSTA()/1024.0f << " k/s" << std::endl
