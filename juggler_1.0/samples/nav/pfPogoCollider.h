@@ -56,11 +56,11 @@ public:
    }
 
    //: test a movement
-   //!ARGS: whereYouAre - The current position we are at
+   //!ARGS: feetPosition - The current position we are at
    //!ARGS: delta - The amount we want to move
    //!ARGS: correction - The amount to correct the movement so that we do not collide
    //!RETURNS: true - There was a hit.
-   virtual bool testMove(vjVec3 whereYouAre, vjVec3 delta, vjVec3& correction, bool whereYouAreWithDelta = false);
+   virtual bool testMove(vjVec3 feetPosition, vjVec3 delta, vjVec3& correction, bool feetPositionWithDelta = false);
 
 protected:
    pfNode* mWorldNode;        // The world to collide with
@@ -68,27 +68,26 @@ protected:
 };
 
 
-bool pfPogoCollider::testMove(vjVec3 whereYouAre, vjVec3 delta, vjVec3& correction, bool whereYouAreWithDelta)
+// height corrector keeps feet position above all polys
+// feetPosition: current position of feet
+// feetDelta: distance you want to move user's feet.
+// correction: return value to correct feetDelta upon collision with polys.
+// returns true on collide
+// NOTE: not a robust collider, use in combination with a ray collider, or robust volume collider.
+bool pfPogoCollider::testMove( vjVec3 feetPosition, vjVec3 feetDelta, vjVec3& correction, bool feetPositionWithDelta )
 {
-   pfVec3 pf_cur_pos = vjGetPfVec(whereYouAre);
-   pfVec3 pf_delta = vjGetPfVec(delta);
-   pfVec3 pf_correction;         // Needs to be set
-
-   float height(6.0f);
-
-   pfVec3 pf_new_pos;
-   pf_new_pos = (pf_cur_pos + pf_delta);
-   float delta_mag = pf_delta.length();
-   if(delta_mag > height)
-      cerr << "ERROR: pfPogoCollider: Trying to move faster than the vector is checking.\n";
-
-   // This function tests to make sure that for height straight down, there is no collision
-   // from the position we are testing.
-   // So I need to move that position up in the air to make "room" for the collision vector
-   // XXX: This is because of hacks in the collision code
-   pf_new_pos += pfVec3(0,0,height);
-
-   if (terryCollide.collide( pf_correction, mWorldNode, 0x1, pf_new_pos, height))
+   pfVec3 pf_feet_position    = vjGetPfVec(feetPosition);
+   pfVec3 pf_feet_delta       = vjGetPfVec(feetDelta);
+   pfVec3 pf_feet_destination = pf_feet_position + pf_feet_delta;
+   pfVec3 pf_correction;      // Needs to be set
+   
+   // whats the maximum step height?
+   float step_height( 3.5f ); // value picked out of my ass.
+   pfVec3 up( 0.0f, 0.0f, 1.0f );
+   // whats the ray start position that would test for that step height?
+   pfVec3 pf_step_destination = pf_feet_destination + up * step_height;
+   
+   if (terryCollide.collide( pf_correction, mWorldNode, 0x1, pf_step_destination, step_height))
    {
       correction = vjGetVjVec(pf_correction);
 

@@ -37,29 +37,27 @@ const int pfTerryBoxCollide::COLLIDE_SEGMENTS( 8 );
 
 pfTerryBoxCollide::pfTerryBoxCollide( int isectMask )
 {
+   mUnitBox[0] = pfVec3(0.57735, 0.57735, 0.57735);
+   mUnitBox[1] = pfVec3(0.57735, 0.57735, -0.57735);
+   mUnitBox[2] = pfVec3(0.57735, -0.57735, 0.57735);
+   mUnitBox[3] = pfVec3(0.57735, -0.57735, -0.57735);
+   mUnitBox[4] = pfVec3(-0.57735, 0.57735, 0.57735);
+   mUnitBox[5] = pfVec3(-0.57735, 0.57735, -0.57735);
+   mUnitBox[6] = pfVec3(-0.57735, -0.57735, 0.57735);
+   mUnitBox[7] = pfVec3(-0.57735, -0.57735, -0.57735);
+   
     mCollideVolume.mode = PFTRAV_IS_PRIM|PFTRAV_IS_NORM|PFTRAV_IS_CULL_BACK;
     mCollideVolume.userData = NULL;
     mCollideVolume.isectMask = isectMask;
     mCollideVolume.activeMask = 0xff;		    // test all segments
     mCollideVolume.bound = NULL;
     mCollideVolume.discFunc = NULL;
-    mCollideVolume.segs[0].dir = pfVec3(0.57735, 0.57735, 0.57735);
-    mCollideVolume.segs[1].dir = pfVec3(0.57735, 0.57735, -0.57735);
-    mCollideVolume.segs[2].dir = pfVec3(0.57735, -0.57735, 0.57735);
-    mCollideVolume.segs[3].dir = pfVec3(0.57735, -0.57735, -0.57735);
-    mCollideVolume.segs[4].dir = pfVec3(-0.57735, 0.57735, 0.57735);
-    mCollideVolume.segs[5].dir = pfVec3(-0.57735, 0.57735, -0.57735);
-    mCollideVolume.segs[6].dir = pfVec3(-0.57735, -0.57735, 0.57735);
-    mCollideVolume.segs[7].dir = pfVec3(-0.57735, -0.57735, -0.57735);
-    mCollideVolume.segs[0].length = 1.0f;
-    mCollideVolume.segs[1].length = 1.0f;
-    mCollideVolume.segs[2].length = 1.0f;
-    mCollideVolume.segs[3].length = 1.0f;
-    mCollideVolume.segs[4].length = 1.0f;
-    mCollideVolume.segs[5].length = 1.0f;
-    mCollideVolume.segs[6].length = 1.0f;
-    mCollideVolume.segs[7].length = 1.0f;
-}   
+    for (int x = 0; x < 8; ++x)
+    {
+       mCollideVolume.segs[x].dir = mUnitBox[x];
+       mCollideVolume.segs[x].length = 1.0f;
+    }
+}
 
 // set the intersect mask of this volume
 // needs to match every node tht you want to intersect with
@@ -80,9 +78,25 @@ void pfTerryBoxCollide::setRadius( float radius )
    }
 }
 
+void pfTerryBoxCollide::setVelocity( pfVec3 velocityVec )
+{
+   int i;
+   
+   for (i = 0; i < COLLIDE_SEGMENTS; i++)
+   {
+      pfVec3 warpedBox;
+      warpedBox[0] = (mUnitBox[i])[0] * velocityVec[0];
+      warpedBox[1] = (mUnitBox[i])[1] * velocityVec[1];
+      warpedBox[2] = (mUnitBox[i])[2] * velocityVec[2];
+      float warpedBoxLength = warpedBox.length();
+      warpedBox.normalize(); // normalize, mCollideVolume uses warpedLength, 
+                             // so we only need the unit vector.
+      mCollideVolume.segs[i].dir = warpedBox;
+      mCollideVolume.segs[i].length = warpedBoxLength;
+   }
+}
 
-
-int pfTerryBoxCollide::collide(pfVec3 &bounce, pfNode *objNode, pfVec3 pos)
+int pfTerryBoxCollide::collide(pfVec3& correction, pfNode* objNode, pfVec3 pos )
 {   
    int i, j, returnval = 0;
    float distance;
@@ -101,9 +115,11 @@ int pfTerryBoxCollide::collide(pfVec3 &bounce, pfNode *objNode, pfVec3 pos)
    }
 
    // Query for collision data
-   bounce = pfVec3(0, 0, 0);
+   correction = pfVec3(0, 0, 0);
    if (objNode->isect(&mCollideVolume, hits) > 0)
    {
+      cout<<"Box: Hit "<<flush;
+            
       for (i = 0; i < COLLIDE_SEGMENTS; i++)
       {
          // get the intersection results.
@@ -130,28 +146,30 @@ int pfTerryBoxCollide::collide(pfVec3 &bounce, pfNode *objNode, pfVec3 pos)
             {     // Add on only necessary vector components
                if (tempvec[j] > 0)
                {
-                  if (bounce[j] <= 0)
-                     bounce[j] += tempvec[j];
+                  if (correction[j] <= 0)
+                     correction[j] += tempvec[j];
                   else
                   {
-                     if (tempvec[j] > bounce[j])
-                        bounce[j] = tempvec[j];
+                     if (tempvec[j] > correction[j])
+                        correction[j] = tempvec[j];
                   }
                }
                else
                {
-                  if (bounce[j] >= 0)
-                     bounce[j] += tempvec[j];
+                  if (correction[j] >= 0)
+                     correction[j] += tempvec[j];
                   else
                   {
-                     if (tempvec[j] < bounce[j])
-                        bounce[j] = tempvec[j];
+                     if (tempvec[j] < correction[j])
+                        correction[j] = tempvec[j];
                   }
                }
             }
             returnval++;
          }
       }
+      cout<<(pos+correction)[0]<<" "<<(pos+correction)[1]<<" "<<(pos+correction)[2]<<"\n"<<flush;
+   
    }
    return returnval;
 }

@@ -41,6 +41,7 @@
 #include <Performer/pfutil.h>
 #include <iostream.h>
 #include <math.h>
+#include <vector>
 
 #include "pfTerryCollide.h" // my base class
 
@@ -52,8 +53,9 @@ class pfTerryBoxCollide : public pfTerryCollide
 {
 public:
    static const int COLLIDE_SEGMENTS;
-   pfSegSet mCollideVolume;
-   
+   pfSegSet                mCollideVolume;
+   pfVec3                  mUnitBox[8];
+      
    pfTerryBoxCollide( int isectMask = 0x01 );
 
    // set the intersect mask of this volume
@@ -65,6 +67,8 @@ public:
    
    // set the radius of the simulated box/sphere volume
    void setRadius(float radius);
+   
+   void setVelocity( pfVec3 velocityVec );
    
    //: To collide with objects using the simulated volume
    //: routine, call collide(displacement vector, the whole
