@@ -36,9 +36,11 @@
 namespace gadget
 {
 
-//: Get a gesture name
-//! RETURNS: (gestureId in range) - string desc of gesture
-//! RETURNS: (gesture not in range) - empty string
+/**
+ * Gets a gesture name.
+ * @return (gestureId in range) - string desc of gesture
+ * @return (gesture not in range) - empty string
+ */
 std::string GloveGesture::getGestureString(int gestureId)
 {
    if(gestureId < 0)
@@ -49,9 +51,11 @@ std::string GloveGesture::getGestureString(int gestureId)
       return std::string("");
 }
 
-//: Create a new gesture
-// Pushes the gesture onto the list of gesture names
-// Also pushes an example on the vector
+/**
+ * Creates a new gesture.
+ * Pushes the gesture onto the list of gesture names.
+ * Also pushes an example on the vector.
+ */
 int GloveGesture::createGesture(std::string gestureName)
 {
    mGestureNames.push_back(gestureName);        // Push it back
@@ -61,17 +65,20 @@ int GloveGesture::createGesture(std::string gestureName)
    return (mGestureExamples.size() -1);
 }
 
-//: Load the header of a glove data file.
-// This is both for the samples and for the trained files.
-//
-// The header format is:
-//   -Comments -- # starting
-//   - <num gestures>
-//   -Gesture names
-//   -Gesture samples
-// infile is a file that is already open and ready for reading.
-// After running, this routines will leave the file pointer immedately after
-// the header.
+/**
+ * Loads the header of a glove data file.
+ * This is both for the samples and for the trained files.
+ *
+ * The header format is:
+ *   -Comments -- # starting<br>
+ *   - num gestures<br>
+ *   -Gesture names<br>
+ *   -Gesture samples<br>
+ *
+ * @param infile A file that is already open and ready for reading.
+ *               After running, this routines will leave the file pointer
+ *               immedately after the header.
+ */
 void GloveGesture::loadFileHeader(std::ifstream& infile)
 {
    // skip comments
@@ -103,9 +110,11 @@ void GloveGesture::loadFileHeader(std::ifstream& infile)
 }
 
 
-//: Save a file header
-//! NOTE: The client of this routine may add their own initial lines to the
-//+ header as long as they remove them before calling loadFileHeader.
+/**
+ * Saves a file header.
+ * @note The client of this routine may add their own initial lines to the
+ *       header as long as they remove them before calling loadFileHeader.
+ */
 void GloveGesture::saveFileHeader(std::ofstream& outFile)
 {
    vprASSERT(mGestureNames.size() == mGestureExamples.size());     // The must be same size
@@ -128,7 +137,7 @@ void GloveGesture::saveFileHeader(std::ofstream& outFile)
    }
 }
 
-//: Return the gesture identifier of the gesture.
+/** Returns the gesture identifier of the gesture. */
 int GloveGesture::getGestureIndex(std::string gestureName)
 {
    unsigned i = 0;

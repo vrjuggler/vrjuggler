@@ -84,118 +84,114 @@ class CyberGloveBasic
 {
 public:
 
-     //: Construct a cyber glove
-     // initializes hand & opens hand on serport
-     //! ARGS:  calFileDir - directory with glove data files,
-     //+           e.g. "/home/vr/CAVE/glove"
-     //! ARGS: serport - e.g. "/dev/ttyd2".  the named port must
-     //+   actually exist, but it's ok if there's no glove attached
-     //+   to it - initialization will give a warning, and all values
-     //+   will be 0.0 unless set by hand
-     //! ARGS: baud - baud rate, set on the back of the glove box.
-     //+   Usually 38400.
-    CyberGloveBasic (char* calFileDir, char *serport, int baud);
+   /**
+    * Constructs a CyberGlove.  Initializes hand and opens hand on serport.
+    *
+    * @param calFileDir Directory with glove data files, e.g.
+    *                   "/home/vr/CAVE/glove".
+    * @param serport    The serial port for the device (e.g. "/dev/ttyd2").
+    *                   The named port must actually exist, but it is okay if
+    *                   there is no glove attached to it.  In that case,
+    *                   initialization will give a warning, and all values
+    *                   will be 0.0 unless set by hand.
+    * @param baud       Baud rate, set on the back of the glove box--usually
+    *                   38400.
+    */
+   CyberGloveBasic(char* calFileDir, char *serport, int baud);
 
+    /** destroys virtualhand. */
+   ~CyberGloveBasic ();
 
-     /** destroys virtualhand
-      */
-    ~CyberGloveBasic ();
+   /**
+    * Opens the glove.
+    * @return 0 is returned if the glove is already open.
+    */
+   int open();
 
+   int close();
 
-    //: Open the glove
-    //! RETURNS: 0 - Already open
-    int open();
+   int sample();
 
-    int close();
+   CYBER_GLOVE_DATA* getData();
 
-    int sample();
+   /**
+    * The digit transforms are a [5][3] array of matrix4x4's used when drawing
+    * the glove.  They represent an unflexed transform to successive joints.
+    * Also used when calulating the fingertip positions.
+    */
+   matrix4x4** getDigitXForms();
 
-    CYBER_GLOVE_DATA* getData();
+   /** returns the thumb roll (in radians). */
+   float getThumbRoll();
 
+   /** Reads the actual surface object file (eg "hires-hand.surf").
+    * Better be called before calling GetSurfaceModel...
+    * Not necessary if you don't want to actually draw the hand.
+    * @param resolution 0 (lowres) or 1 (hires).
+    * @param dir        The glove files directory.
+    * @param name       The filename of the surface file - usually
+    *                   "lowres-hand.surf" or "hires-hand.surf".
+    */
+   void readSurfaceModel(int resolution, char *dir, char *name);
 
-     /** An the digit transforms are a [5][3] array of matrix4x4's
-       * used when drawing the glove - they represent an unflexed
-       * transform to successive joints.  Also used when calulating
-       * the fingertip positions.
-       */
-    matrix4x4** getDigitXForms ();
+   /** returns a pointer to the surface model struct, defined in
+    * vt_read_hand_model-types.h, used to draw a glove.
+    * This struct basically contains a bunch of GL lists to
+    * draw the hand.
+    */
+   SurfaceModel getSurfaceModel();
 
+   /**
+    * Returns the state vec is used in the CAVE code which calculates
+    * fingertip positions.  Indices are TR_AZ, TR_EL, TR_ROLL, in that order.
+    *
+    * @note state_vec and digit_xform are used in the Get[finger]TipPosition
+    *       functions of cave.glove.c.  That functionality could be stuck
+    *       into this class, with a function that takes the
+    *       wand x y z az el roll as args... with a cleaner interface to
+    *       boot...
+    */
+   volatile float *getStateVec();
 
-      /** returns the thumb roll (in radians).
-       */
-    float getThumbRoll ();
+   /**
+    * Gets unflexed abduction value of the thumb; used when
+    * calculating thumbtip position.
+    */
+   float getThumbUnflexedAbduction();
 
-     /** reads the actual surface object file (eg "hires-hand.surf")
-      * Better be called before calling GetSurfaceModel...
-      * Not necessary if you don't want to actually draw the hand.
-      * resolution is 0 (lowres) or 1 (hires)
-      * dir is the glove files directory
-      * name is the filename of the surface file - usually
-      * "lowres-hand.surf" or "hires-hand.surf"
-      */
-    void readSurfaceModel (int resolution, char *dir, char *name);
-
-      /** returns a pointer to the surface model struct, defined in
-       * vt_read_hand_model-types.h, used to draw a glove.
-       * This struct basically contains a bunch of GL lists to
-       * draw the hand.
-       */
-    SurfaceModel getSurfaceModel();
-
-
-
-      /** the state vec is used in the CAVE code which calculates
-       * fingertip positions.
-       * indices are TR_AZ, TR_EL, TR_ROLL, in that order.
-       */
-      /* Note: state_vec & digit_xform are used in the Get[finger]TipPosition
-       * functions of cave.glove.c.  That functionality could be stuck
-       * into this class, with a function that takes the
-       * wand x y z az el roll as args... with a cleaner interface to
-       * boot...
-       */
-    volatile float *getStateVec();
-
-      /** gets unflexed abduction value of the thumb; used when
-       * calculating thumbtip position.
-       */
-    float getThumbUnflexedAbduction();
-
-      /** quick function to determine position of a finger
-       * return values:
-       * 0 finger open
-       * 1 finger closed
-       * 2 finger inbetween/relaxed (whatever isn't zero or one)
-       */
-    int getFingerState (int finger);
-
-
-  private:
-    CYBER_GLOVE_DATA theData;    //[MAX_SENSOR_GROUPS][MAX_GROUP_VALUES];
-
-    /* we're gonna start out with all the old glove stuff still global...*/
-    VirtualHand hand;
-    CbGlove current_glove;
-    CbGlovePrivate current_glove_private;
-    volatile float *joints[MAX_SENSOR_GROUPS];
-    matrix4x4 *xforms[5];
-
-    int     needToClosePorts;
-
-    // Config params
-    // XXX: We should allow the user to specify a config file
-    char*   mCalFileDir;          // The directory with the calibration file
-    char*   mSerialPort;         // The serial port to use
-    int     mBaudRate;           // The baud rate to use
-
-    bool    mItsOpen;            //: Is the glove open
-
+   /**
+    * Quick function to determine position of a finger
+    * @return 0 is returned to indicate that the finger is open.<br>
+    *         1 is returned when the finger is closed.<br>
+    *         2 is returned when the finger is "in between" or relaxed.
+    */
+   int getFingerState(int finger);
 
 private:
-  /* private member functions */
-  /** @name the VirtualHand utility functions
-   *  Utility functions provided by Virtual Technologies
-   */
+   CYBER_GLOVE_DATA theData;    //[MAX_SENSOR_GROUPS][MAX_GROUP_VALUES];
+
+   /* we're gonna start out with all the old glove stuff still global...*/
+   VirtualHand hand;
+   CbGlove current_glove;
+   CbGlovePrivate current_glove_private;
+   volatile float *joints[MAX_SENSOR_GROUPS];
+   matrix4x4 *xforms[5];
+
+   int     needToClosePorts;
+
+   // Config params
+   // XXX: We should allow the user to specify a config file
+   char*   mCalFileDir;         /**< The directory with the calibration file */
+   char*   mSerialPort;         /**< The serial port to use */
+   int     mBaudRate;           /**< The baud rate to use */
+
+   bool    mItsOpen;            /**< Is the glove open */
+
+private:
+   /* private member functions */
+   /** @name the VirtualHand utility functions.
+    *  Utility functions provided by Virtual Technologies.
+    */
    //@{
 
    // vt_init.cpp

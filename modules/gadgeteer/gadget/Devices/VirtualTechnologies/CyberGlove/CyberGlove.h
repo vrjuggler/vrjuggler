@@ -49,17 +49,16 @@ extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
 namespace gadget
 {
 
-//: Cyberglove device
-//!PUBLIC_API:
+/** Cyberglove device. */
 class CyberGlove : virtual public Input, public Glove
 {
 public:
-   //: Construct using chunk
+   /** Default constructor. */
    CyberGlove() : mGlove( NULL ), mCalDir( NULL )
    {
    }
 
-   //: Destroy the glove
+   /** Destroys the glove. */
    virtual ~CyberGlove();
 
    virtual bool config(jccl::ConfigChunkPtr c);
@@ -90,14 +89,14 @@ protected:
       delete this;
    }
 
-   //: The main control loop for the object
+   /** The main control loop for the object. */
    void controlLoop(void* nullParam);
 
    void copyDataFromGlove();
 
 protected:
-   CyberGloveBasic*  mGlove;              // The actual glove
-   char*             mCalDir;             // Calibration file directory
+   CyberGloveBasic*  mGlove;              /**< The actual glove */
+   char*             mCalDir;             /**< Calibration file directory */
    std::string       mPortName;
    int               mBaudRate;
 };
