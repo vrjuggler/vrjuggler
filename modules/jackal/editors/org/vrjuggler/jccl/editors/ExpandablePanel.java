@@ -113,42 +113,6 @@ public class ExpandablePanel extends PropertyComponent
       add(mTypeButton, ct);
    }
    
-   public void updateMyRow()
-   {
-      if(getParent() != null && getParent() instanceof PropertyComponent)
-      {
-         PropertyComponent temp = (PropertyComponent)getParent();
-         
-         if(temp.getParent() != null && temp.getParent() instanceof ExpandablePanel)
-         {
-            ExpandablePanel temp_list = (ExpandablePanel)temp.getParent();
-            temp_list.updateMyRow();
-            System.out.println("Updating recursively.");
-         }
-         if(temp.getLayout() instanceof TableLayout)
-         {
-            TableLayout tl = (TableLayout)temp.getLayout();
-            // Get the row that this panel is in.
-            TableLayoutConstraints tlc = tl.getConstraints(this);
-            int row = tlc.row1;
-         
-            Dimension pref_size = this.getPreferredSize();
-            int height = (int)pref_size.getHeight();
-         
-            tl.setRow(row, height);
-            temp.doLayout();
-            temp.repaint();
-            //refresh();
-            //System.out.println("Adjusting row: " + row + " to " + height);
-         
-            //temp.doLayout();
-            //temp.repaint();
-         }
-         temp.invalidate();
-         temp.validate();
-      }
-   }
-
    public void refresh()
    {
       updateMyRow();
