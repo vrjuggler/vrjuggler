@@ -46,6 +46,10 @@ DPP_GEN_RECONFIG
 
 DPP_STD_CPP([yes])
 
+# -------------------------------------------- #
+# --with-pkg[=arg] and --without-pkg arguments #
+# -------------------------------------------- #
+
 AC_ARG_WITH([python],
             [  --with-python=<PATH>    Path to Python root             [default=/usr/local]],
             [PYTHON_ROOT="$withval"], [PYTHON_ROOT='/usr/local'])
@@ -66,10 +70,6 @@ AC_ARG_WITH([pyste],
 AC_ARG_WITH([vjavatar],
             [  --with-vjavatar=<PATH>  vjAvatar installation path     [default=none]],
             [VJ_AVATAR_ROOT="$withval"], [VJ_AVATAR_ROOT='none'])
-
-# -------------------------------------------- #
-# --with-pkg[=arg] and --without-pkg arguments #
-# -------------------------------------------- #
 
 # Force the use of GCC as the compiler.
 # NOTE: This is not fully implemented yet for any platform, but it is partially

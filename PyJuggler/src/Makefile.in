@@ -36,6 +36,7 @@ MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 CXX=		@CXX@
 CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@	\
 		-I$(top_srcdir) -I$(srcdir)
+CXX_PLUGIN=	@CXX_PLUGIN@
 INCLUDES=	$(shell vrjuggler-config --includes) -I$(top_srcdir)	\
 		-I$(srcdir)
 PYTHON=		@PYTHON@
@@ -60,8 +61,10 @@ BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS@
 LDFLAGS=		@EXTRA_LINK_FLAGS@ $(BOOST_PYTHON_LDFLAGS)	\
 			$(PYTHON_LDFLAGS)
 
-OBJEXT=		@OBJEXT@
-DLLEXT=		@DYNAMICLIB_EXT@
+DLLEXT=			@DYNAMICLIB_EXT@
+DYLIB_NAME_FLAG=	@DYLIB_NAME_FLAG@
+OBJEXT=			@OBJEXT@
+OBJ_NAME_FLAG=		@OBJ_NAME_FLAG@
 
 PYSTE_FILES=	vpr.pyste	\
 		jccl.pyste	\
@@ -95,6 +98,8 @@ PYJUTIL_LIB=	-L$(topdir)/lib -lpyjutil
 vpath %.cpp $(srcdir)
 vpath %.pyste $(srcdir)/../pyste
 
+@SET_MAKE@
+
 # -----------------------------------------------------------------------------
 # Targets
 # -----------------------------------------------------------------------------
@@ -122,30 +127,30 @@ install:
 	$(PYSTE) --module=$(basename $(@F)) $<
 
 %.$(OBJEXT): %.cpp
-	$(CXX) $(CXXFLAGS) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(OBJ_NAME_FLAG) -c $<
 
 %.$(DLLEXT): %.$(OBJEXT)
-	$(CXX) -shared -o $@ $< $(LDFLAGS) $(LIBS) $(EXTRA_LIBS)
+	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $< $(LDFLAGS) $(LIBS) $(EXTRA_LIBS)
 
 vpr.$(DLLEXT): $(VPR_OBJS)
-	$(CXX) -shared -o $@ $(VPR_OBJS) $(LDFLAGS) $(VPR_LIBS)		\
-          $(VPR_EXTRA_LIBS)
+	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(VPR_OBJS) $(LDFLAGS)		\
+          $(VPR_LIBS) $(VPR_EXTRA_LIBS)
 
 jccl.$(DLLEXT): $(JCCL_OBJS)
-	$(CXX) -shared -o $@ $(JCCL_OBJS) $(LDFLAGS) $(JCCL_LIBS)	\
-          $(JCCL_EXTRA_LIBS)
+	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(JCCL_OBJS) $(LDFLAGS)	\
+          $(JCCL_LIBS) $(JCCL_EXTRA_LIBS)
 
 gadget.$(DLLEXT): $(GADGET_OBJS)
-	$(CXX) -shared -o $@ $(GADGET_OBJS) $(LDFLAGS) $(GADGET_LIBS)	\
-          $(GADGET_EXTRA_LIBS)
+	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(GADGET_OBJS) $(LDFLAGS)	\
+          $(GADGET_LIBS) $(GADGET_EXTRA_LIBS)
 
 vrj.$(DLLEXT): $(VRJ_OBJS)
-	$(CXX) -shared -o $@ $(VRJ_OBJS) $(PYJUTIL_LIB) $(LDFLAGS)	\
-          $(VJ_LIBS) $(VJ_EXTRA_LIBS)
+	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(VRJ_OBJS) $(PYJUTIL_LIB)	\
+          $(LDFLAGS) $(VJ_LIBS) $(VJ_EXTRA_LIBS)
 
 vjAvatar.$(DLLEXT): $(VJ_AVATAR_OBJS)
-	$(CXX) -shared -o $@ $(VJ_AVATAR_OBJS) $(PYJUTIL_LIB)		\
-          $(LDFLAGS) $(VJ_AVATAR_LIBS)
+	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(VJ_AVATAR_OBJS)		\
+          $(PYJUTIL_LIB) $(LDFLAGS) $(VJ_AVATAR_LIBS)
 
 clean:
 	rm -f $(OBJS)
