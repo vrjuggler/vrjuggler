@@ -41,7 +41,7 @@ void SerializableTest::testReaderWriter()
    writer->writeUint16(data_uint16);
    writer->writeUint32(data_uint32);
    writer->writeUint64(data_uint64);
-   
+
    writer->writeUint8(data_int8);
    writer->writeUint16(data_int16);
    writer->writeUint32(data_int32);
@@ -183,7 +183,7 @@ void SerializableTest::testReadWriteSimple()
    obj1.shortVal = 0xCAFE;
    obj1.longVal = 0xDEADBEEF;
    obj1.longlongVal = 0xFACEBEEFCAFEDEAD;
-   
+
    obj1.scharVal = -10;
    obj1.sshortVal = -233;
    obj1.slongVal = -10000;
@@ -210,7 +210,7 @@ void SerializableTest::testReadWriteSimple()
 
 void SerializableTest::testReadWriteNested()
 {
-   Class2 obj1, obj2, obj3;
+   Class2 obj1, obj2;
 
    obj1.mObj1.charVal = 0xAB;
    obj1.mObj1.shortVal = 0xCAFE;
@@ -239,9 +239,16 @@ void SerializableTest::testReadWriteNested()
 
    vpr::ObjectReader* reader;
    reader = new vpr::BufferObjectReader(writer->getData());
-   obj3.readObject(reader);
 
-   CPPUNIT_ASSERT(obj2 == obj3);
+   // Test for re-initialization
+   for(unsigned iter=0;iter<10;iter++)
+   {
+      Class2 obj3;
+      obj3.readObject(reader);
+
+      CPPUNIT_ASSERT(obj2 == obj3);
+      reader->resetReading();             // Reset the reading source ro iter test
+   }
 }
 
 /*

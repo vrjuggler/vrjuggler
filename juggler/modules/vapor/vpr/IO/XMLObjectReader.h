@@ -86,6 +86,8 @@ public:
    virtual vpr::ReturnStatus endAttribute();
    //@}
 
+   virtual void resetReading();
+
    virtual vpr::Uint8 readUint8();
    virtual vpr::Uint16 readUint16();
    virtual vpr::Uint32 readUint32();
@@ -123,7 +125,7 @@ protected:
     /** Get the current string source we are reading from.
     */
     std::stringstream* getCurSource();
-        
+
     /** Initialize the members based on a serialized version of something in the data buffer */
     void initCppDomTree(std::vector<vpr::Uint8> data);
 
