@@ -30,6 +30,8 @@
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
+#include <gmtl/Vec.h>
+#include <gmtl/VecOps.h>
 
 namespace gmtl
 {
@@ -104,6 +106,89 @@ namespace gmtl
    template bool isEqual(const gmtl::Matrix33f&, const gmtl::Matrix33f&,
                          const float&);
 // =================================================== gmtl::Matrix<> functions
+
+// gmtl::Vec<> functions ======================================================
+   typedef gmtl::VecBase<float, 3> VecBase3f;
+   typedef gmtl::VecBase<float, 4> VecBase4f;
+
+   template Vec3f operator-(const VecBase3f&);
+   template Vec4f operator-(const VecBase4f&);
+
+   template VecBase3f& operator+=(VecBase3f&, const VecBase3f&);
+   template VecBase4f& operator+=(VecBase4f&, const VecBase4f&);
+
+   template VecBase3f operator+(const VecBase3f&, const VecBase3f&);
+   template VecBase4f operator+(const VecBase4f&, const VecBase4f&);
+
+   template VecBase3f& operator-=(VecBase3f&, const VecBase3f&);
+   template VecBase4f& operator-=(VecBase4f&, const VecBase4f&);
+
+   template Vec3f operator-(const VecBase3f&, const VecBase3f&);
+   template Vec4f operator-(const VecBase4f&, const VecBase4f&);
+
+   template VecBase3f& operator*=(VecBase3f&, const int&);
+   template VecBase3f& operator*=(VecBase3f&, const float&);
+   template VecBase4f& operator*=(VecBase4f&, const int&);
+   template VecBase4f& operator*=(VecBase4f&, const float&);
+
+   template VecBase3f operator*(const VecBase3f&, const int&);
+   template VecBase3f operator*(const VecBase3f&, const float&);
+   template VecBase4f operator*(const VecBase4f&, const int&);
+   template VecBase4f operator*(const VecBase4f&, const float&);
+
+   template VecBase3f operator*(const int&, const VecBase3f&);
+   template VecBase3f operator*(const float&, const VecBase3f&);
+   template VecBase4f operator*(const int&, const VecBase4f&);
+   template VecBase4f operator*(const float&, const VecBase4f&);
+
+   template VecBase3f& operator/=(VecBase3f&, const int&);
+   template VecBase3f& operator/=(VecBase3f&, const float&);
+   template VecBase4f& operator/=(VecBase4f&, const int&);
+   template VecBase4f& operator/=(VecBase4f&, const float&);
+
+   template VecBase3f operator/(const VecBase3f&, const int&);
+   template VecBase3f operator/(const VecBase3f&, const float&);
+   template VecBase4f operator/(const VecBase4f&, const int&);
+   template VecBase4f operator/(const VecBase4f&, const float&);
+
+   template float dot(const gmtl::Vec3f&, const gmtl::Vec3f&);
+   template float dot(const gmtl::Vec4f&, const gmtl::Vec4f&);
+
+   template float length(const gmtl::Vec3f&);
+   template float length(const gmtl::Vec4f&);
+
+   template float lengthSquared(const gmtl::Vec3f&);
+   template float lengthSquared(const gmtl::Vec4f&);
+
+   template float normalize(gmtl::Vec3f&);
+   template float normalize(gmtl::Vec4f&);
+
+   template bool isNormalized(const gmtl::Vec3f&, const float);
+   template bool isNormalized(const gmtl::Vec4f&, const float);
+
+   template gmtl::Vec3f cross(const gmtl::Vec3f&, const gmtl::Vec3f&);
+   template gmtl::Vec3f& cross(gmtl::Vec3f&, const gmtl::Vec3f&,
+                               const gmtl::Vec3f&);
+
+   template VecBase3f& reflect(VecBase3f&, const VecBase3f&, const Vec3f&);
+   template VecBase4f& reflect(VecBase4f&, const VecBase4f&, const Vec4f&);
+
+   template VecBase3f& lerp(VecBase3f&, const float&, const VecBase3f&,
+                            const VecBase3f&);
+   template VecBase4f& lerp(VecBase4f&, const float&, const VecBase4f&,
+                            const VecBase4f&);
+
+   template bool operator==(const gmtl::VecBase3f&, const gmtl::VecBase3f&);
+   template bool operator==(const gmtl::VecBase4f&, const gmtl::VecBase4f&);
+
+   template bool operator!=(const gmtl::VecBase3f&, const gmtl::VecBase3f&);
+   template bool operator!=(const gmtl::VecBase4f&, const gmtl::VecBase4f&);
+
+   template bool isEqual(const gmtl::VecBase4f&, const gmtl::VecBase4f&,
+                         const float&);
+   template bool isEqual(const gmtl::VecBase3f&, const gmtl::VecBase3f&,
+                         const float&);
+// ====================================================== gmtl::Vec<> functions
 }
 
 #endif /* _PYJUGGLER_GMTL_FUNCTIONS_H_ */

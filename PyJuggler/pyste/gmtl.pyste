@@ -67,19 +67,48 @@ set_policy(Matrix_invertFull, return_internal_reference())
 
 Matrix_invert = Function('gmtl::invert', 'gmtl-functions.h')
 set_policy(Matrix_invert, return_internal_reference())
-
-Matrix_mult_op = Function('gmtl::operator*', 'gmtl-functions.h')
-Matrix_eq_op = Function('gmtl::operator==', 'gmtl-functions.h')
-Matrix_ineq_op = Function('gmtl::operator!=', 'gmtl-functions.h')
-
-Matrix_isEqual = Function('gmtl::isEqual', 'gmtl-functions.h')
 # ============================================================== gmtl::Matrix<>
 
 # gmtl::Vec<> =================================================================
+VecBase = Template('gmtl::VecBase', 'gmtl/Vec.h')
+
+VecBase3f = VecBase('float 3')
+rename(VecBase3f, 'VecBase3f')
+exclude(VecBase3f.getData)
+exclude(VecBase3f.mData)
+
+VecBase4f = VecBase('float 4')
+rename(VecBase4f, 'VecBase4f')
+exclude(VecBase4f.getData)
+exclude(VecBase4f.mData)
+
 Vec = Template('gmtl::Vec', 'gmtl/Vec.h')
+
 Vec3f = Vec('float 3')
 rename(Vec3f, 'Vec3f')
 exclude(Vec3f.getData)
+
+Vec4f = Vec('float 4')
+rename(Vec4f, 'Vec4f')
+exclude(Vec4f.getData)
+
+Function('gmtl::dot', 'gmtl-functions.h')
+Function('gmtl::length', 'gmtl-functions.h')
+Function('gmtl::lengthSquared', 'gmtl-functions.h')
+Function('gmtl::normalize', 'gmtl-functions.h')
+Function('gmtl::isNormalized', 'gmtl-functions.h')
+
+# XXX: This isn't quite right.  One version of gmtl::cross() returns a
+# reference, and the other does not.  This generates code that would indicate
+# that both return a reference.
+set_policy(Function('gmtl::cross', 'gmtl-functions.h'),
+           return_internal_reference())
+
+set_policy(Function('gmtl::reflect', 'gmtl-functions.h'),
+           return_internal_reference())
+
+set_policy(Function('gmtl::lerp', 'gmtl-functions.h'),
+           return_internal_reference())
 # ================================================================= gmtl::Vec<>
 
 # gmtl::Quat<> ================================================================
@@ -89,6 +118,20 @@ rename(Quatf, 'Quatf')
 exclude(Quatf.getData)
 # ================================================================ gmtl::Quat<>
 
+# gmtl::Point<> ===============================================================
 Point = Template('gmtl::Point', 'gmtl/Point.h')
 Point3f = Point('float 3')
 rename(Point3f, 'Point3f')
+# =============================================================== gmtl::Point<>
+
+# General operations.
+set_policy(Function('gmtl::operator+=', 'gmtl-functions.h'),
+           return_internal_reference())
+Function('gmtl::operator+', 'gmtl-functions.h')
+Function('gmtl::operator-', 'gmtl-functions.h')
+Function('gmtl::operator*', 'gmtl-functions.h')
+Function('gmtl::operator/', 'gmtl-functions.h')
+Function('gmtl::operator==', 'gmtl-functions.h')
+Function('gmtl::operator!=', 'gmtl-functions.h')
+
+Function('gmtl::isEqual', 'gmtl-functions.h')
