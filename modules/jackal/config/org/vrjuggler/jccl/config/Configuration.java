@@ -171,7 +171,7 @@ public class Configuration
    /**
     * Adds the given configuration element to this configuration.
     *
-    * @param element       the configuration element to add
+    * @param elt The configuration element to add.
     *
     * @throws IllegalArgumentException
     *             if the element is already a part of this configuration
@@ -189,7 +189,7 @@ public class Configuration
    /**
     * Removes the given configuration element to this configuration.
     *
-    * @param element       the configuration element to remove
+    * @param elt The configuration element to remove.
     *
     * @throws IllegalArgumentException
     *             if the element is not a part of this configuration

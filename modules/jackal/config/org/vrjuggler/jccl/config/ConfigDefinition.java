@@ -299,7 +299,6 @@ public class ConfigDefinition
 
    /**
     * Get a list of all ConfigDefinitions that derive from this definition.
-    * @param defs - A list that will be modified 
     */
    public synchronized List getSubDefinitions()
    {
