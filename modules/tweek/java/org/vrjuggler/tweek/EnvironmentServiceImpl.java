@@ -288,10 +288,11 @@ class EnvironmentServiceImpl
          value = tweekJniGetenv(envVarName);
       }
 
-      // If value is still null, then return defaultValue.
+      // As a last resort, try System.getProperty().
       if ( null == value )
       {
-         value = defaultValue;
+         // If value is still null, then return defaultValue.
+         value = System.getProperty(envVarName, defaultValue);
       }
 
       return value;

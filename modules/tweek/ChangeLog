@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2004-12-22 patrickh    EnvironmentService.getenv() now falls back on
+                       System.getProperty() as a last resort attempt to give
+                       back a non-default value.
+                       NEW VERSION: 0.21.1
 2004-12-08 patrickh    Allow the use of TAO as the C++ CORBA implementation.
                        User code must now include tweek/idl/Subject.h rather
                        than tweek/CORBA/Subject.h.
