@@ -108,10 +108,12 @@ public:
    std::string mNameOfAPI;
    SoundFactoryReg( const std::string& apiName ) : mSoundAPI(), mNameOfAPI( apiName )
    {
+      mSoundAPI.setName( mNameOfAPI );
       snx::SoundFactory::instance()->reg( mNameOfAPI, &mSoundAPI );
    }
    virtual ~SoundFactoryReg()
    {
+      mSoundAPI.setName( "unavailable/deleted/nomore" );
       snx::SoundFactory::instance()->reg( mNameOfAPI, NULL );
    }   
 };
