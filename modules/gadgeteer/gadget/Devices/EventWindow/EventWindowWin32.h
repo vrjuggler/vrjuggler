@@ -30,18 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-/////////////////////////////////////////////////////////////////////////////
-// EventWindowWin32.h
-//
-// Event window input device for win32
-//
-// History:
-//
-// Andy Himberger:    v0.0 - 12-1-97 - Inital version
-// Allen Bierbaum:    v1.0 -  7-23-99 - Refactored to use new keyboard method
-////////////////////////////////////////////////////////////////////////////
-
 #ifndef _GADGET_EVENT_WINDOW_WIN32_H_
 #define _GADGET_EVENT_WINDOW_WIN32_H_
 
@@ -62,34 +50,25 @@
 #include <gadget/Type/EventWindow/Keys.h>
 #include <gadget/Type/EventWindow/Event.h>
 
+#include <gadget/Devices/EventWindow/InputAreaWin32.h>
+
 
 namespace gadget
 {
 
 class GADGET_CLASS_API EventWindowWin32
 #if _MSC_VER < 1310  // 1310 == VC++ 7.1
-   : public Input, public EventWindow
+   : public Input, public EventWindow, public InputAreaWin32
 #else
-   : public InputMixer<Input, EventWindow>
+   : public InputMixer<Input, EventWindow>, public InputAreaWin32
 #endif
 {
 public:
-   /** Enum to keep track of current lock state for state machine. */
-   enum lockState
-   {
-      Unlocked,     /**< The mouse is free. */
-      Lock_LockKey, /**< The mouse is locked due to lock toggle key press. */
-      Lock_KeyDown  /**< The mouse is locked due to a key being held down. */
-   };
-
    EventWindowWin32()
       : mControlLoopDone(false),
-        mPrevX(0),
-        mPrevY(0),
-        mLockState(Unlocked),
-        mExitFlag(false),
-        mWeOwnTheWindow(true)
+        mExitFlag(false)
    {
+		mEventDelegate = this;
    }
 
    virtual ~EventWindowWin32()
@@ -137,57 +116,28 @@ protected:
    {
    }
 
-   void addKeyEvent(const gadget::Keys& key, const gadget::EventType& type,
-                    const MSG& message);
-
-   void addMouseButtonEvent(const gadget::Keys& button,
-                            const gadget::EventType& type, const MSG& message);
-
-   void addMouseMoveEvent(const MSG& message);
-
-   void lockMouse();
-   void unlockMouse();
    friend LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam);
 
    HINSTANCE   m_hInst;
-   HWND        m_hWnd;
    void createWindowWin32();
-   void updKeys(const MSG& message);
-
-   /**
-    * Handles any events in the system.
-    * Copies mKeys to mCurKeys.
-    */
-   void handleEvents();
 
    /** @name Windows utility functions */
    //@{
-   gadget::Keys VKKeyToKey(int vkKey);
    char* checkArgs(char* look_for);
 
    BOOL MenuInit(HINSTANCE hInstance);
    //@}
 
-   bool         mWeOwnTheWindow; /**< True if this class owns the window (is reposible for opening, closing, and event processing). */
+   // --- Used with remote window --- //
+   std::string							mRemoteDisplayName; /**< Name of the remote display window (index in registry). */
+	InputAreaWin32::InputAreaRegistry::InputAreaInfo	mRemoteInputAreaInfo;     /**< Info structure for remote window. */
+
    int          mScreen, mX, mY; /**< screen id, x-origin, y-origin. */
-   unsigned int mWidth,mHeight;
 
-      /* Event window state holders */
-   // NOTE: This driver does not use the normal triple buffering mechanism.
-   // Instead, it just uses a modified double buffering system.
-   int      mKeys[gadget::LAST_KEY];         /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
-   int      mRealkeys[gadget::LAST_KEY];     /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
-
-   vpr::Mutex  mKeysLock;        /**< Must hold this lock when accessing mKeys. */
    bool     mExitFlag;           /**< Should we exit? */
-
-   lockState   mLockState;       /**< The current state of locking. */
-   int         mLockStoredKey;   /**< The key that was pressed down. */
-   int         mLockToggleKey;   /**< The key that toggles the locking. */
 
    float mMouseSensitivity;
    int   mSleepTimeMS;            /**< Amount of time to sleep in milliseconds between updates. */
-   int   mPrevX, mPrevY;          /**< Previous mouse location. */
    bool  mControlLoopDone;
 };
 
