@@ -475,6 +475,7 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     DBG_FLAGS="$DBG_FLAGS /MTd"
     OPT_FLAGS="$OPT_FLAGS /MT"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
+    UUID_DEFS='-DWININC'
     vpr_cxxflags="$CXXFLAGS"
 fi
 
@@ -716,6 +717,8 @@ AC_SUBST(APP_EXTRA_LIBS_BASIC)
 
 AC_SUBST(DYLIB_DEPS)
 
+AC_SUBST(UUID_DEFS)
+
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
@@ -767,6 +770,8 @@ AC_OUTPUT(Makefile
           vpr/Sync/Makefile
           vpr/Thread/Makefile
           vpr/Util/Makefile
+          vpr/Util/md5/Makefile
+          vpr/Util/uuid/Makefile
           test/Makefile
           test/TestSuite/Makefile
           test/SerialPort/Makefile

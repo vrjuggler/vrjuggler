@@ -50,25 +50,18 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/Util
-srcdir		= @srcdir@
+includedir	= @includedir@/vpr/Util/uuid
+srcdir		= @srcdir@/../../../../../external/leach-uuid/uuid
 top_srcdir	= @top_srcdir@
 EXTRA_DEFS	+= @UUID_DEFS@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 VPRROOT		= $(top_srcdir)
-VPR_SRCDIR	= @VPR_SRCDIR@/vpr/Util
 
-DIRPRFX		= vpr/Util/
-SUBDIR		= md5		\
-                  uuid
+SRCS		= uuid.c	\
+                  sysdep.c
 
-SRCS 		= Debug.cpp		\
-                  GUID.cpp		\
-                  Interval.cpp		\
-                  StreamLock.cpp
-
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
