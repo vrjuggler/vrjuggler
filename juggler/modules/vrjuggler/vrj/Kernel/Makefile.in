@@ -51,16 +51,6 @@ SRCS		= App.cpp			\
                   Kernel.cpp			\
                   User.cpp
 
-ifeq (@OS_TYPE@, Win32)
-    SRCS	+= SystemFactoryWin32.cpp
-else
-    ifeq (@PLATFORM@, Darwin)
-	SRCS    += SystemFactoryOSX.cpp
-    else
-	SRCS	+= SystemFactoryUNIX.cpp
-    endif
-endif
-
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
