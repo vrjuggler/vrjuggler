@@ -162,7 +162,7 @@ public:
 
       mState        = NOT_READY;                        // Initialize
       mAcceptorPort = 34567;
-      mMessage      = "The sixth shiek's sixth sheep's sick";
+      mMessage      = "The sixth sheik's sixth sheep's sick";
       mMessageLen   = mMessage.length();
 
       // Spawn acceptor thread
