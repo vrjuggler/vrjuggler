@@ -15,7 +15,7 @@ class FailureTestCase : public vrj::test::TestCase
 {
 public:
    FailureTestCase()
-      : TestCase("FailureTestCase")
+      : vrj::test::TestCase("FailureTestCase")
    {;}
 
    /** Do any setup needed before the test starts */
