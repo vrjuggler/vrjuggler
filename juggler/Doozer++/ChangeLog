@@ -1,5 +1,9 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2004-11-03 patrickh     Changed DPP_HAVE_OPENGL to use AC_PATH_XTRA instead of
+                        AC_PATH_X.  Use X_CFLAGS and X_LIBS instead of
+                        X_INCLUDES and X_LDFLAGS.
+                        NEW VERSION: 1.99.17
 2004-10-21 patrickh     Fixed the macros in config/pkgs so that tests can now
                         be disallowed using the --without-<pkg> option variant.
                         NEW VERSION: 1.99.16
