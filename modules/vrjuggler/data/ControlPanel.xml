@@ -36,6 +36,9 @@
          <type label="MotionStar Wireless"
                title="Choose a MotionStar Wireless device" token="motion_star"
                icon="org/vrjuggler/vrjconfig/images/positional_devices64.png"/>
+         <type label="Flock of Birds" title="Choose a Flock of Birds device"
+               token="flock"
+               icon="org/vrjuggler/vrjconfig/images/positional_devices64.png"/>
       </category>
    </category>
    <editor label="Audio" class=""
