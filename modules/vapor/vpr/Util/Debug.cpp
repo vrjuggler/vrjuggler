@@ -173,7 +173,34 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level, c
    if(use_indent)
    {
       for(int i=0;i<indentLevel;i++)
+      {
          std::cout << "\t";
+      }
+
+      ///* For debugging indentation
+      // Output the indent level that we are going to of coming from
+      if(getLevel() >= 3)
+      {
+         if(indentChange >0)  // Not incremented yet
+         {
+            std::cout << " ind-";
+            for(int i=0;i<indentLevel+indentChange;++i)
+            {
+               std::cout << indentLevel+indentChange << "-";
+            }
+            std::cout << "> ";
+         }
+         else if(indentChange < 0) // Already decremented
+         {
+            std::cout << " ind-";
+            for(int i=0;i<indentLevel-indentChange;++i)
+            {
+               std::cout << indentLevel-indentChange << "-";
+            }
+            std::cout << "< ";
+         }
+      }
+      //*/
    }
 
    // If we have thread local stuff to do
