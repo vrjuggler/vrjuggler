@@ -114,7 +114,7 @@ AFTERBUILD	= afterbuild
 # Things to do before the object files and library are built.
 beforebuild: $(PARAM_HEADER)
 
-$(PARAM_HEADER):
+$(PARAM_HEADER): $(GADGETROOT_ABS)/$(PARAM_HEADER).in $(GADGETROOT_ABS)/VERSION
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 
 # Things to do after the object files and library are built.
