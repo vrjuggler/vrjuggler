@@ -599,6 +599,14 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>proxyAlias</allowedtype>
       <item label="Stamp Log" defaultvalue="" />
     </PropertyDesc>
+    <PropertyDesc name="Max Framerate" token="max_framerate" type="int" variable="0">
+      <help>Maximum number of frames per second that you want the application to execute at while collecting logging data.
+
+This is useful for decreasing the amount of data logged (ie. keeps the file smaller).
+
+A value of -1 means do not limit the frame rate.  Run as fast as possible.</help>
+      <item label="Max Framerate" defaultvalue="-1" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="GestureProxy" name="Gesture Proxy">
     <category>Proxies</category>
