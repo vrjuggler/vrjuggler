@@ -1,5 +1,10 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-03-14 patrickh Fixed a bug in the vpr::ThreadPosix constructors where the
+                    scope parameter was ignored.  Set the default value for the
+                    parameter to be VPR_GLOBAL_SCOPE for all thread abstraction
+                    implementations.
+                    NEW VERSION: 0.26.4
 2003-02-27 pallindo Fixed bugs in the Win32 serial port wrapper.  It works now.
                     NEW VERSION: 0.26.3
 2003-01-22 patrickh Fixed race condition in vpr::ThreadPosix.
