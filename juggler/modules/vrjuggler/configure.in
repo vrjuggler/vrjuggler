@@ -416,6 +416,17 @@ elif test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
 
+# Remove duplicated arguments from each of the following.  This can help speed
+# up compile times, and it reduces the (perceived) complexity of the commands.
+# These steps are performed here because no further additions are made to any
+# of these variables after this point.
+VJ_STRIP_DUPLICATE_ARGS(CFLAGS, [$CFLAGS])
+VJ_STRIP_DUPLICATE_ARGS(CXXFLAGS, [$CXXFLAGS])
+VJ_STRIP_DUPLICATE_ARGS(INCLUDES, [$INCLUDES])
+VJ_STRIP_DUPLICATE_ARGS(DEPEND_FLAGS, [$DEPEND_FLAGS])
+VJ_STRIP_DUPLICATE_ARGS(DEPEND_EXTRAS, [$DEPEND_EXTRAS])
+VJ_STRIP_DUPLICATE_ARGS(vrj_cxxflags, [$vrj_cxxflags])
+
 VJ_APP_CXXFLAGS='$(VRJ_CXX_FLAGS)'
 VJ_APP_EXTRA_LIBS='$(VRJ_EXTRA_LIBS_STATIC)'
 VJ_APP_EXTRA_LIBS_INST='$(VRJ_EXTRA_LIBS)'
