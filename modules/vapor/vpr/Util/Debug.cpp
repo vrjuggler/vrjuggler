@@ -43,6 +43,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <boost/concept_check.hpp>
 
 #include <vpr/Sync/Mutex.h>
@@ -232,17 +233,20 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
 
    vprASSERT(mCategories.find(cat.mGuid) != mCategories.end() && "Failed to auto-register");
 
+   std::stringstream sstream;
+   sstream << "[" << vpr::Thread::self() << "] "
+           << (*mCategories.find(cat.mGuid)).second.mPrefix;
+
    // Ouput thread info
    // If not, then output space if we are also using indent (assume this means
    // new line used)
    if(show_thread_info)
    {
-      os << "[" << vpr::Thread::self() << "] "
-         << (*mCategories.find(cat.mGuid)).second.mPrefix;
+      os << sstream.str();
    }
    else if(use_indent)
    {
-      os << "                  ";
+      os << std::string(sstream.str().length(), ' ');
    }
 
    // Insert the correct number of tabs into the stream for indenting
