@@ -6,9 +6,10 @@
 vjTuPerfBufReader::vjTuPerfBufReader( vjConnect *_target, 
 				      float _refresh_time ):
             vjTimedUpdate(_target, _refresh_time),
-            buffers() {
+            buffers(), bufferslock() {
 
     control_thread = NULL;
+    name = strdup ("unnamed_perf_buffer_reader");
 }
 
 
@@ -20,11 +21,29 @@ vjTuPerfBufReader::~vjTuPerfBufReader () {
 
 
 void vjTuPerfBufReader::addBuffer (vjPerfDataBuffer *b) {
+    bufferslock.acquire();
     buffers.push_back (b);
+    bufferslock.release();
     if (control_thread)
 	b->activate();
     else
 	b->deactivate();
+}
+
+
+void vjTuPerfBufReader::removeBuffer (vjPerfDataBuffer *b) {
+    std::vector<vjPerfDataBuffer*>::iterator it;
+
+    b->deactivate();
+    bufferslock.acquire();
+    // this is one of those things I really hate:
+    for (it = buffers.begin(); it != buffers.end(); it++) {
+	if (*it == b) {
+	    buffers.erase(it);
+	    break;
+	}
+    }
+    bufferslock.release();
 }
 
 
@@ -34,7 +53,7 @@ bool vjTuPerfBufReader::startProcess() {
     int i;
 
     if (control_thread != NULL) 
-	return false;
+	return true;
 
     vjThreadMemberFunctor<vjTimedUpdate> *memberFunctor = 
 	new vjThreadMemberFunctor<vjTimedUpdate>(this, &vjTimedUpdate::controlLoop, NULL);
@@ -68,17 +87,20 @@ bool vjTuPerfBufReader::stopProcess() {
 
 void vjTuPerfBufReader::controlLoop(void* nullParam) {
     std::vector<vjPerfDataBuffer*>::iterator p;
-
     for (;;) {
 	sginap (50);
-
 	if (target == NULL)
 	    continue;
+	bufferslock.acquire();
 	target->output.lock();
 	for (p = buffers.begin(); p != buffers.end(); p++) {
+	    //cout << "writing a buffer whose obj. location is " << (*p) << endl;
 	    (*p)->write (target->output);
+	    //cout << "done writing buffer" << endl;
 	}
+	target->output << flush;
 	target->output.unlock();
+	bufferslock.release();
     }
 }
 
