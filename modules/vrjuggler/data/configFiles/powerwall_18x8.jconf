@@ -472,10 +472,13 @@
          <driver_path>${VJ_BASE_DIR}/lib32/gadgeteer/drivers</driver_path>
          <driver>Flock_drv</driver>
       </input_manager>
-      <flock name="Flock_o_Birds" version="1">
+      <flock name="Flock_o_Birds" version="2">
          <port>/dev/ttyd3</port>
          <baud>38400</baud>
-         <number_of_birds>2</number_of_birds>
+         <hemisphere>Right</hemisphere>
+         <master_address>1</master_address>
+         <addressing_mode>Normal</addressing_mode>
+         <filter>0</filter>
          <position_filters>
             <position_transform_filter name="Position Filters" version="1">
                <pre_translate>0.0</pre_translate>
@@ -494,14 +497,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <calibration_file />
-         <hemisphere>RIGHT_HEM</hemisphere>
-         <filter>0</filter>
-         <sync_style>0</sync_style>
-         <blocking>false</blocking>
-         <report>R</report>
-         <transmitter_id>3</transmitter_id>
-         <extended_range>false</extended_range>
          <device_host />
       </flock>
       <ibox name="IBox1" version="1">
