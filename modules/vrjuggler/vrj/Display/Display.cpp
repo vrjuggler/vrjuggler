@@ -138,7 +138,7 @@ std::ostream& operator<<(std::ostream& out, vjDisplay& disp)
         << "  org:" << disp._xo << ", " << disp._yo
         << "  sz:" << disp._xs << ", " << disp._ys
         << "  p:" << disp.mPipe
-        << "  act:" << (disp.mActive ? "Y" : "N");
+        << "  act:" << (disp.mActive ? "Y" : "N") << std::endl;
    for(unsigned i=0;i<disp.mViewports.size();i++)
    {
       out << "vp: " << i << " " << *(disp.mViewports[i]) << std::endl;
