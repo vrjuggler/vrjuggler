@@ -273,6 +273,28 @@ case $target_os in
 esac
 
 # -----------------------------------------------------------------------------
+# Path setup.
+# -----------------------------------------------------------------------------
+
+# $srcdir is the root directory of the juggler source tree.  To get a value
+# for $TWEEKROOT_ABS, we cd there and save the value of running pwd.  Then
+# return to the directory where configure is being run ($topdir).
+cd "$srcdir"
+UNIX_TWEEKROOT_ABS=`pwd`
+
+cd "$TWEEKROOT_ABS/../.."
+UNIX_JUGGLERROOT_ABS=`pwd`
+cd "$topdir"
+
+if test "x$CYGPATH" != "xno" ; then
+   TWEEKROOT_ABS=`unix2dos -p "$UNIX_TWEEKROOT_ABS"`
+   JUGGLERROOT_ABS=`unix2dos -p "$UNIX_JUGGLERROOT_ABS"`
+else
+   TWEEKROOT_ABS="$UNIX_TWEEKROOT_ABS"
+   JUGGLERROOT_ABS="$UNIX_JUGGLERROOT_ABS"
+fi
+
+# -----------------------------------------------------------------------------
 # Checks for programs.
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
@@ -327,6 +349,16 @@ if test "x$tweek_have_java" = "xY" ; then
          [ AC_MSG_WARN(*** JUnit required for Tweek Java test suite ***)
            BUILD_JAVA_TEST_SUITE='N' ],
          $JUNIT_JAR)
+   fi
+fi
+
+# Check for the ant build program
+if test "x$BUILD_JAVA" = "xY"; then
+   ANT_HOME=$JUGGLERROOT_ABS/external/ant
+   AC_PATH_PROG([ANT], [ant], [no], [${ANT_HOME}/bin])
+   if test "x$ANT" == "xno"; then
+      AC_MSG_WARN([*** Can't find the java build tool ant. The Tweek Java API will not be built ***])
+      BUILD_JAVA='N'
    fi
 fi
 
@@ -617,21 +649,6 @@ elif test "x$OS_TYPE" = "xWin32" ; then
    DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
 
-# $srcdir is the root directory of the juggler source tree.  To get a value
-# for $TWEEKROOT_ABS, we cd there and save the value of running pwd.  Then
-# return to the directory where configure is being run ($topdir).
-cd "$srcdir"
-TWEEKROOT_ABS=`pwd`
-
-cd "$TWEEKROOT_ABS/../.."
-JUGGLERROOT_ABS=`pwd`
-cd "$topdir"
-
-# Define the base path to the source directory using $TWEEKROOT_ABS as an
-# alternative to using $srcdir.
-UNIX_TWEEKROOT_ABS="$TWEEKROOT_ABS"
-UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
-
 if test "x$OS_TYPE" = "xWin32" ; then
    APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB_LINK_EXE $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
 else
@@ -650,8 +667,8 @@ APP_BASE_DIR_INST='$(TWEEK_BASE_DIR)'
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
-   SAFE_TWEEKROOT_ABS=`unix2dos -p "$TWEEKROOT_ABS"`
-   SAFE_JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
+   TWEEKROOT_ABS=`unix2dos -p "$TWEEKROOT_ABS"`
+   JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
 
    if test "x$DEPEND_EXTRAS" != "x" ; then
       DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
@@ -672,8 +689,6 @@ if test "x$OS_TYPE" = "xWin32" ; then
 #   APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
 else
    RM_LN='rm -f'
-   SAFE_TWEEKROOT_ABS="$TWEEKROOT_ABS"
-   SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
 # Dependencies for dynamic/shared libraries.
@@ -770,8 +785,8 @@ DPP_SUBST
 AC_SUBST(topdir)
 AC_SUBST(UNIX_TWEEKROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
-AC_SUBST(SAFE_TWEEKROOT_ABS)
-AC_SUBST(SAFE_JUGGLERROOT_ABS)
+AC_SUBST(TWEEKROOT_ABS)
+AC_SUBST(JUGGLERROOT_ABS)
 
 AC_SUBST(BUILD_CXX)
 AC_SUBST(CXX_IDL_OPTS)
@@ -852,6 +867,7 @@ AC_OUTPUT(tweek-config
           common.defs.mk
           make.defs.mk
           extensions/Makefile
+          extensions/java/build.xml
           extensions/java/Makefile
           extensions/java/Makefile.inc
           java/Makefile
