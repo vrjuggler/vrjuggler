@@ -42,6 +42,27 @@ public:
 
 const vpr::Uint32 Tester::mMaxInc = 500;
 
+class RunnableTest
+{
+public:
+   RunnableTest() : mValue(0)
+   {
+   }
+
+   void run()
+   {
+      for ( vpr::Uint32 i = 0; i < mMaxInc; ++i )
+      {
+         mValue++;
+      }
+   }
+
+   static const vpr::Uint32 mMaxInc;
+   vpr::Uint32 mValue;
+};
+
+const vpr::Uint32 RunnableTest::mMaxInc = 1000;
+
 static const vpr::Uint32 ThreadTest_INC_COUNT = 5000;
 
 void ThreadTest::testNoSpawnCtor()
@@ -88,6 +109,20 @@ void ThreadTest::testAutoSpawnCtor()
       my_thread.join();
       CPPUNIT_ASSERT_EQUAL(test_obj.mValue, (start_val + Tester::mMaxInc));
    }
+}
+
+void ThreadTest::testRunnableFunctor()
+{
+   const vpr::Uint32 start_val = 500;
+   RunnableTest obj;
+   obj.mValue = start_val;
+
+   vpr::ThreadRunFunctor<RunnableTest> runnable(&obj);
+   vpr::Thread thread(&runnable);
+   CPPUNIT_ASSERT(thread.valid() && "Thread did not start");
+
+   thread.join();
+   CPPUNIT_ASSERT(obj.mValue == (start_val + obj.mMaxInc));
 }
 
 void ThreadTest::testCreateJoin()
