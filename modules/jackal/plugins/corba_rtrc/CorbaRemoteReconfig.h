@@ -42,7 +42,12 @@
 #include <jccl/RTRC/RemoteReconfig.h>
 
 
-extern "C" JCCL_PLUGIN_API(jccl::RemoteReconfig*) initPlugin();
+namespace jccl 
+{
+   class ConfigManager;
+}
+
+extern "C" JCCL_PLUGIN_API(jccl::RemoteReconfig*) initPlugin(jccl::ConfigManager* configMgr);
 
 namespace jccl 
 {
@@ -60,7 +65,7 @@ class CorbaRemoteReconfig : public jccl::RemoteReconfig
 {
 
 public:
-   CorbaRemoteReconfig();
+   CorbaRemoteReconfig(jccl::ConfigManager* configMgr);
 
    virtual ~CorbaRemoteReconfig();
 
@@ -97,6 +102,10 @@ protected:
    }
 
 private:
+   // XXX: We hold a pointer to the Config Manager because we can get into a
+   // deadlock state by trying to access the Config Manager through its
+   // singleton interface.
+   jccl::ConfigManager* mConfigManager;
    tweek::CorbaManager* mCorbaManager;
    RemoteReconfigSubjectImpl* mInterface;
    bool mEnabled;
