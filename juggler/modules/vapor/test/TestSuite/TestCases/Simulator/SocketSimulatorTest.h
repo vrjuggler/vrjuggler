@@ -40,6 +40,8 @@ public:
 
    void networkCommTest(void);
 
+   void networkFlushTest(void);
+
    void multiThreadTest(void);
 
    void multiThreadTest_acceptor(void* arg);
@@ -52,6 +54,7 @@ public:
       test_suite->addTest( new CppUnit::TestCaller<SocketSimulatorTest>("graphConstructionTest", &SocketSimulatorTest::graphConstructionTest));
       test_suite->addTest( new CppUnit::TestCaller<SocketSimulatorTest>("singleThreadTest", &SocketSimulatorTest::singleThreadTest));
       test_suite->addTest( new CppUnit::TestCaller<SocketSimulatorTest>("networkCommTest", &SocketSimulatorTest::networkCommTest));
+      test_suite->addTest( new CppUnit::TestCaller<SocketSimulatorTest>("networkFlushTest", &SocketSimulatorTest::networkFlushTest));
 //      test_suite->addTest(new CppUnit::TestCaller<SocketSimulatorTest>("multiThreadTest", &SocketSimulatorTest::multiThreadTest));
 
       return test_suite;

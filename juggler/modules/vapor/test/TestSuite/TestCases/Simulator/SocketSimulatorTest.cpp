@@ -210,6 +210,113 @@ void SocketSimulatorTest::networkCommTest ()
    }
 }
 
+void SocketSimulatorTest::networkFlushTest ()
+{
+   vpr::ReturnStatus status;
+   vpr::sim::NetworkGraph::AddressList addrs;
+   vpr::Uint32 event_count;
+
+   vpr::sim::Controller* controller = new vpr::sim::Controller;
+   vpr::sim::Controller::setInstance(controller);
+
+   status = constructGraph();
+   CPPUNIT_ASSERT(status.success() && "Could not construct network");
+
+   status =
+      vpr::sim::Controller::instance()->getNetworkGraph().getAllAddresses(addrs);
+   CPPUNIT_ASSERT(status.success() && "Could not request all addresses");
+
+   const unsigned int node_count =
+      vpr::sim::Controller::instance()->getNetworkGraph().getNodeCount();
+   CPPUNIT_ASSERT(node_count > 0 && "No nodes in the graph");
+
+   std::vector<vpr::Uint32> addr_vec;
+   addr_vec.resize(node_count);
+   std::iota(addr_vec.begin(), addr_vec.end(), 0);
+   std::random_shuffle(addr_vec.begin(), addr_vec.end());
+
+   vpr::sim::NetworkGraph::net_vertex_t node;
+   vpr::sim::NetworkNodePtr node_prop;
+
+   node = vpr::sim::Controller::instance()->getNetworkGraph().getNode(addr_vec[0]);
+   node_prop = vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(node);
+
+   // Get a node and address for the first socket (the acceptor).
+   // Both the sockets can have the same port number because they will be
+   // on different nodes in the network.
+   vpr::InetAddr local_addr;
+   local_addr.setAddress(node_prop->getIpAddress(), 40000);
+
+   vpr::SocketStream acceptor(local_addr, vpr::InetAddr::AnyAddr);
+   CPPUNIT_ASSERT(acceptor.getLocalAddr() == local_addr && "Address assignment failed");
+
+   status = acceptor.open();
+   CPPUNIT_ASSERT(status.success() && "Failed to open receiver socket");
+
+   status = acceptor.bind();
+   CPPUNIT_ASSERT(status.success() && "Failed to bind socket to local address");
+
+   status = acceptor.listen();
+   CPPUNIT_ASSERT(status.success() && "Failed to go into listening state");
+
+   // Get a node and address for the second socket (the connector).
+   node = vpr::sim::Controller::instance()->getNetworkGraph().getNode(addr_vec[1]);
+   node_prop = vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(node);
+   local_addr.setAddress(node_prop->getIpAddress(), 40000);
+
+   vpr::SocketStream sender(local_addr, acceptor.getLocalAddr());
+   CPPUNIT_ASSERT(sender.getLocalAddr() == local_addr && "Address assignment failed");
+
+   status = sender.open();
+   CPPUNIT_ASSERT(status.success() && "Failed to open sender socket");
+
+   status = sender.connect();
+   CPPUNIT_ASSERT(status == vpr::ReturnStatus::InProgress &&
+                  "Connection to acceptor should be in progress");
+
+   vpr::SocketStream receiver;
+   status = acceptor.accept(receiver);
+   CPPUNIT_ASSERT(status.success() && "Failed to accept waiting connection");
+
+   // Process the connection events.
+   vpr::sim::Controller::instance()->processNextEvent();
+   vpr::sim::Controller::instance()->processNextEvent();
+
+   event_count = vpr::sim::Controller::instance()->getNumPendingEvents();
+   CPPUNIT_ASSERT(event_count == 0 && "Connection events were not processed");
+
+   // XXX: Sending a unique packet each time might help in debugging.
+   std::string msg("Here is a packet");
+
+   vpr::Uint32 bytes_written;
+   status = sender.send(msg, msg.length(), bytes_written);
+   CPPUNIT_ASSERT(status.success() && "Failed to send first buffer to receiver");
+   status = sender.send(msg, msg.length(), bytes_written);
+   CPPUNIT_ASSERT(status.success() && "Failed to send second buffer to receiver");
+   status = sender.send(msg, msg.length(), bytes_written);
+   CPPUNIT_ASSERT(status.success() && "Failed to send third buffer to receiver");
+
+   event_count = vpr::sim::Controller::instance()->getNumPendingEvents();
+   CPPUNIT_ASSERT(event_count == 3 && "Message events were not queued");
+
+   // Move the messages along a little.
+   vpr::sim::Controller::instance()->processNextEvent();
+   vpr::sim::Controller::instance()->processNextEvent();
+
+   // This should flush the above three messages--they have already arrived.
+   status = receiver.close();
+   CPPUNIT_ASSERT(status.success() && "Failed to close receiving socket");
+
+   event_count = vpr::sim::Controller::instance()->getNumPendingEvents();
+   CPPUNIT_ASSERT(event_count == 0 && "Message events were not flushed");
+
+   acceptor.close();
+   sender.close();
+
+   vpr::sim::Controller::setInstance(NULL);
+   delete controller;
+}
+
 void SocketSimulatorTest::multiThreadTest ()
 {
    vpr::sim::Controller simulator;
