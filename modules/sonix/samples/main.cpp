@@ -93,35 +93,35 @@ int main( int argc, char* argv[] )
   
    //snx.startAPI();
    std::cout<<"associate: \n" << std::flush;
-   sonix::instance().configure( "kevin", si );
+   sonix::instance()->configure( "kevin", si );
    
    std::cout<<"trigger: \n" << std::flush;
-   sonix::instance().trigger( "kevin" );
+   sonix::instance()->trigger( "kevin" );
    
    std::cout<<"sleep: \n" << std::flush;
    sleep( 1 );
    
-   sonix::instance().changeAPI( api );
+   sonix::instance()->changeAPI( api );
    
    std::cout<<"trigger: \n" << std::flush;
-   sonix::instance().trigger( "kevin" );
+   sonix::instance()->trigger( "kevin" );
    
    std::cout<<"sleep: \n" << std::flush;
    sleep( 3 );
    
-   sonix::instance().changeAPI( "stub" );
+   sonix::instance()->changeAPI( "stub" );
    
    sleep( 1 );
    
-   sonix::instance().changeAPI( api );
+   sonix::instance()->changeAPI( api );
    
    std::cout<<"trigger: \n" << std::flush;
-   sonix::instance().trigger( "kevin" );
+   sonix::instance()->trigger( "kevin" );
    
    std::cout<<"sleep: \n" << std::flush;
    sleep( 3 );
    
-   sonix::instance().changeAPI( "stub" );
+   sonix::instance()->changeAPI( "stub" );
    
    return 1;
 }

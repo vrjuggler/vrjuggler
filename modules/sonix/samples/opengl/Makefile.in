@@ -43,18 +43,34 @@
 PROJECT_NAME = sample
 
 OBJECTS		= main.@OBJEXT@
-APP_INCLUDES	= @application_includes@ -I/home/users/kevn/include
-APP_LIBS		= @application_libs@ -L/home/users/kevn/lib -lglut -lGLU -lGL -L/usr/X11R6/lib -lXmu -lXext -lX11 -lXi -lm
-APP_LDFLAGS		= @application_ldflags@
+APP_INCLUDES	= @sample_application_includes@
+APP_LIBS		= @snx_extra_ldflags@ @snx_extra_libs@ @sample_application_libs@
+APP_LDFLAGS       = @sample_application_ldflags@
 VPATH		= @srcdir@
+
+# if you're kevin, and you're on irix, then your glut is not in the usual place.
+WHOAMI:=$(shell whoami)
+ifeq ($(WHOAMI), kevn)
+ifneq ($(HOSTTYPE), Win32)
+   APP_INCLUDES += -I/home/users/kevn/software/${HOSTTYPE}/include
+   APP_LIBS += -L/home/users/kevn/software/${HOSTTYPE}/lib$(LIBBITSUF)
+endif
+endif
+
+# default libs
+ifeq ($(HOSTTYPE), Win32)
+   APP_LIBS += Glut32.lib Glu32.lib OpenGL32.lib 
+else
+   APP_LIBS += -lglut -lGLU -lGL -L/usr/X11R6/lib -lXmu -lXext -lX11 -lXi -lm
+endif
 
 ########################################################################3
 .SUFFIXES: .cpp .@OBJEXT@
 
 srcdir		= @srcdir@
 
-COMPILE		= @CXX@ @DEFS@ @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@
-LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(APP_LDFLAGS)
+COMPILE		= @CXX@ @DEFS@ @CPPFLAGS@ @CXXFLAGS@ @snx_extra_cxxflags@ @DBG_FLAGS@ 
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
 
 
 # -----------------------------------------------------------------------------
@@ -65,7 +81,7 @@ default: all
 all: sample@EXEEXT@
 
 sample@EXEEXT@: $(OBJECTS)
-	$(LINK) @EXE_NAME_FLAG@ $(OBJECTS) $(APP_LIBS)
+	$(LINK) @EXE_NAME_FLAG@ $(OBJECTS) $(APP_LDFLAGS) $(APP_LIBS)
 
 .cpp.@OBJEXT@:
 	$(COMPILE) $(APP_INCLUDES) @OBJ_BUILD_FLAG@ @OBJ_NAME_FLAG@ $<

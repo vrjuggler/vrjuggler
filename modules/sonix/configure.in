@@ -304,20 +304,20 @@ fi
 dnl -------------------------------------------------------------
 dnl external stuff (like sample apps, also for those who use sonix-config)....
 dnl -------------------------------------------------------------
-application_includes="-I\$(SNX_BASE_DIR)/include $INCLUDES"
-application_ldflags="$LDFLAGS"
+sample_application_includes="-I\$(SNX_BASE_DIR)/include $INCLUDES"
+sample_application_ldflags="$LDFLAGS"
 if test "x$dpp_os_type" = "xWin32" ; then
-   application_libs="/LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF/sonix.lib $LIBS"
    snx_ldflags_compiler="/link /libpath:\$prefix/lib"
    snx_ldflags_linker="/libpath:\$prefix/lib"
    snx_lib='sonix.lib'
    snx_libs='sonix.lib'
+   sample_application_libs="/LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF/sonix.lib $LIBS"
 else
-   application_libs="-L\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS -lm"
    snx_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
    snx_ldflags_linker="$snx_ldflags_compiler"
    snx_lib='-lsonix'
    snx_libs='-lsonix'
+   sample_application_libs="-L\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS -lm"
 fi
 
 if test "x$PLATFORM" = "xIRIX" ; then
@@ -325,6 +325,9 @@ if test "x$PLATFORM" = "xIRIX" ; then
     snx_64_flags='-64'
 fi
 
+dnl ===================================================
+dnl  Just extra stuff here (non-sonic stuff)
+dnl ===================================================
 snx_extra_cxxflags='$VRJ_CXXFLAGS $VPR_CXXFLAGS'
 snx_extra_include_dirs=''
 snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
@@ -341,9 +344,9 @@ AC_SUBST(snx_extra_ldflags)
 AC_SUBST(snx_extra_libs)
 AC_SUBST(snx_ldflags_compiler)
 AC_SUBST(snx_ldflags_linker)
-AC_SUBST(application_includes)
-AC_SUBST(application_ldflags)
-AC_SUBST(application_libs)
+AC_SUBST(sample_application_includes)
+AC_SUBST(sample_application_ldflags)
+AC_SUBST(sample_application_libs)
 AC_SUBST(AUDIOWORKS_API)
 AC_SUBST(OPENAL_API)
 AC_SUBST(SAFE_SNXROOT_ABS)

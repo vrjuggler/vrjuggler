@@ -42,59 +42,49 @@
 
 
 
-#ifndef AUDIOJUGGLER_ENDIAN_FUNCS
-#define AUDIOJUGGLER_ENDIAN_FUNCS
+#ifndef SONIX_EXTEND_EXTERNAL_APIS
+#define SONIX_EXTEND_EXTERNAL_APIS
 
+#include "vrj/Math/Math.h"
+#include "vrj/Math/Matrix.h"
+#include "vrj/Math/Vec3.h"
 
-namespace snxEndian
+namespace snx
 {
-   //: Swap the bytes in any data type.
-   // Motorola and Intel store their bytes in reversed formats <BR>
-   // ex: An SGI image is native to the SGI system,            <BR>
-   // to be read on an intel machine, it's bytes need to be reversed <BR>
-   // NOTE: chars aren't affected by this since it only        <BR>
-   // affects the order of bytes, not bits.
-   template< class Type >
-   inline void  byteReverse(Type& bytes)
-   {    	
-      const int size = sizeof(Type);
-      Type buf = 0;
-      int x, y;
-
-      //we want to index the bytes in the buffer
-      unsigned char* buffer = (unsigned char*) &buf;
-
-      for ( x = 0, y = size-1; 
-         x < size;
-         ++x, --y )
-      {
-         buffer[x] |= ((unsigned char*)&bytes)[y];
-      }
-      bytes = buf;
+   // result[4] = mat * vec[4]
+   inline void xform( float* result, const vrj::Matrix& mat, const float* vec )
+   {
+      for (int j = 0; j < 4; ++j)
+         for (int k = 0; k < 4; ++k)
+            result[j] += vec[k] * mat( k, j );
    }
 
-   //: check the system for endianess
-   inline bool isLittle() 
+   inline vrj::Vec3 xformFull( const vrj::Matrix& mat, const vrj::Vec3& vec )
    {
-      union 
-      {
-         short   val;
-         char    ch[sizeof(short)];
-      } un;
-
-      // initialize the memory that we'll probe
-      un.val = 256;       // 0x10
-
-      // If the 1 byte is in the low-order position (un.ch[1]), this is a
-      // little-endian system.  Otherwise, it is a big-endian system.
-      return un.ch[1] == 1;
+      float vec4[4] = { vec[0], vec[1], vec[2], 1.0f };
+      float result[4];
+      xform( result, mat, vec4 );
+      float w_inv = 1.0f / result[3];
+      return vrj::Vec3( result[0] * w_inv, result[1] * w_inv, result[2] * w_inv );
    }
 
-   //: check the system for endianess
-   inline bool isBig()
+   inline vrj::Vec3 xformVec( const vrj::Matrix& mat, const vrj::Vec3& vec )
    {
-      return !snxEndian::isLittle();
-   }   
+      float vec4[4] = { vec[0], vec[1], vec[2], 0.0f };
+      float result[4];
+      xform( result, mat, vec4 );
+      return vrj::Vec3( result[0], result[1], result[2] );
+   }
 
-}; // end namespace.
+   // Linear Interpolation between two vectors.
+   inline void Lerp(const vrj::Vec3& from, 
+         const vrj::Vec3& to, 
+         const float &lerp, 
+         vrj::Vec3& lerpedValue )
+   {
+       vrj::Vec3 offset = to - from;
+       lerpedValue = from + offset*lerp;
+   }
+};
+
 #endif

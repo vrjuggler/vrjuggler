@@ -48,13 +48,13 @@
 #define SNXSOUNDFACTORY_H
 #include <iostream>
 #include <string>
-#include "snx/Singleton.h"
+#include "vpr/Util/Singleton.h"
 #include "snx/SoundImplementation.h"
 
 namespace snx
 {
 
-class SoundFactory : public snx::Singleton<SoundFactory>
+class SoundFactory : public vpr::Singleton<SoundFactory>
 {
 public:
 
@@ -108,11 +108,11 @@ public:
    std::string mNameOfAPI;
    SoundFactoryReg( const std::string& apiName ) : mNameOfAPI( apiName ), mSoundAPI()
    {
-      SoundFactory::instance().reg( mNameOfAPI, &mSoundAPI );
+      snx::SoundFactory::instance()->reg( mNameOfAPI, &mSoundAPI );
    }
    virtual ~SoundFactoryReg()
    {
-      SoundFactory::instance().reg( mNameOfAPI, NULL );
+      snx::SoundFactory::instance()->reg( mNameOfAPI, NULL );
    }   
 };
 
