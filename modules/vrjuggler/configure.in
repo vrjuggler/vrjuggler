@@ -89,15 +89,15 @@ fi
 if test "x$enable_vjstyle" = "x64" ; then
     OBJECT_STYLE='64'
     LIBBITSUF='64'
-    VJRELEASE='N64'
+    ABI='N64'
 elif test "x$enable_vjstyle" = "x32" ; then
     OBJECT_STYLE='32'
     LIBBITSUF=''
-    VJRELEASE='O32'
+    ABI='O32'
 else
     OBJECT_STYLE='N32_M3'
     LIBBITSUF='32'
-    VJRELEASE='N32'
+    ABI='N32'
 fi
 
 # -----------------------------------------------------------------------------
@@ -539,7 +539,7 @@ AC_SUBST(SHAREDLIB_EXT)
 
 AC_SUBST(VJSTYLE)
 AC_SUBST(OBJECT_STYLE)
-AC_SUBST(VJRELEASE)
+AC_SUBST(ABI)
 AC_SUBST(LIBBITSUF)
 AC_SUBST(PLATFORM)
 AC_SUBST(DSOREGFILE)
