@@ -54,19 +54,15 @@ DIRPRFX		= Sound/
 
 SUBDIR		= pf
 
+
 # Subdirectories to compile.
-ifeq (@AUDIO_WORKS@, Y)
-    SUBDIR	+= aw
-endif
+#ifeq (@USE_AUDIOJUGGLER@, Y)
+    INCLUDES += -I${AJ_BASE_DIR}/include
+    SRCS += ajSoundManager.cpp
+    CXXFLAGS += -DUSE_AUDIOJUGGLER
+#endif
 
-ifeq (@SL@, Y)
-    SUBDIR	+= sl
-endif
-
-SRCS		= vjSound.cpp		\
-                  vjSoundEngine.cpp	\
-                  vjSoundFactory.cpp	\
-                  vjSoundManager.cpp
+SRCS += SoundManagerFactory.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

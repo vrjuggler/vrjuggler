@@ -65,6 +65,19 @@ AC_ARG_ENABLE(subsystem,
                           Define OS abstraction subsystem],
               SUBSYSTEM="$enableval", SUBSYSTEM='none')
 
+AC_ARG_ENABLE(subsystem,
+              [  --enable-sound          Enable or disable AudioJuggler sound [default=yes]],
+              AJSOUNDMANAGER="$enableval", AJSOUNDMANAGER='no')
+
+if test "$AJSOUNDMANAGER" = "yes" ; then
+   USE_AUDIOJUGGLER='Y'
+else
+   USE_AUDIOJUGGLER='N'
+fi
+AC_SUBST(USE_AUDIOJUGGLER)
+
+
+
 # Enable compilation of the OpenGL API.  Possible values are "yes" or "no".
 # "yes" is set with --enable-gl-api and "no" is set with --disable-gl-api.
 # The default is "yes".
@@ -1181,6 +1194,7 @@ vrj_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 vrj_extra_libs="$APP_EXTRA_LIBS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_END"
 
 DPP_SUBST
+
 
 AC_SUBST(topdir)
 AC_SUBST(UNIX_VJROOT_ABS)

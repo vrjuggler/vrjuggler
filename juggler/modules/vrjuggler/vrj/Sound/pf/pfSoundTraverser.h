@@ -46,7 +46,6 @@
 #include <string>
 #include <assert.h>
 #include <Sound/pf/pfSoundNode.h>
-#include <Sound/vjSoundManager.h>
 #include <Utils/vjDebug.h>
 
 //: This is a collection of Performer traversers...
@@ -61,7 +60,7 @@ public:
    // preForkInit() member function.  Your app is likely to crash otherwise!!
    static void preForkInit()
    {
-      vjDEBUG(vjDBG_ALL,1)<<"[pfSoundTraverser] pfSoundTraverser::preForkInit(): Initializing sound node type with performer\n"<<vjDEBUG_FLUSH;
+      vjDEBUG( vjDBG_ALL, 1 )<<"[pfSoundTraverser] pfSoundTraverser::preForkInit(): Initializing sound node class type with performer\n"<<vjDEBUG_FLUSH;
       pfSoundNode::init();
    }
 
@@ -73,8 +72,7 @@ public:
    //
    static void replace( pfNode* node, const std::string& keyName = "_Sound_" )
    {
-      //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
-      vjDEBUG(vjDBG_ALL,1)<<clrOutNORM(clrGREEN,"pfSoundTraverser: ") <<"Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<vjDEBUG_FLUSH;
+      vjDEBUG( vjDBG_ALL, 1 )<<clrOutNORM( clrGREEN,"pfSoundTraverser: " ) <<"Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<vjDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -89,8 +87,7 @@ public:
    // enable the sound, keeping the state whether it is triggered or stopped.
    static void enable( pfNode* node )
    {
-      //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
-      vjDEBUG(vjDBG_ALL,1)<<clrOutNORM(clrGREEN,"pfSoundTraverser: [enable]")<<" Enabling sounds in subgraph.\n"<<vjDEBUG_FLUSH;
+      vjDEBUG( vjDBG_ALL, 1 )<<clrOutNORM( clrGREEN,"pfSoundTraverser: [enable]" ) << " Enabling sounds in subgraph.\n"<<vjDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -106,8 +103,7 @@ public:
    // after this, an enable would respect the previous triggered/stopped state.
    static void disable( pfNode* node )
    {
-      //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
-      vjDEBUG(vjDBG_ALL,1)<< clrOutNORM(clrGREEN,"pfSoundTraverser: [disable]") <<" Disabling sounds in subgraph.\n"<<vjDEBUG_FLUSH;
+      vjDEBUG( vjDBG_ALL, 1 ) << clrOutNORM( clrGREEN, "pfSoundTraverser: [disable]" ) <<" Disabling sounds in subgraph.\n"<<vjDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -122,8 +118,7 @@ public:
    // trigger the sound
    static void trigger( pfNode* node )
    {
-      //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
-      vjDEBUG(vjDBG_ALL,1)<<clrOutNORM(clrGREEN,"pfSoundTraverser: [soundOn]")<<" Triggering sounds in subgraph.\n"<<vjDEBUG_FLUSH;
+      vjDEBUG( vjDBG_ALL, 1 ) << clrOutNORM( clrGREEN, "pfSoundTraverser: [soundOn]" ) << " Triggering sounds in subgraph.\n"<<vjDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -138,8 +133,7 @@ public:
    // stop the sound
    static void stop( pfNode* node )
    {
-      //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
-      vjDEBUG(vjDBG_ALL,1)<< clrOutNORM(clrGREEN,"pfSoundTraverser: [soundOff]") <<" Stopping sounds in subgraph.\n"<<vjDEBUG_FLUSH;
+      vjDEBUG( vjDBG_ALL, 1 ) << clrOutNORM( clrGREEN,"pfSoundTraverser: [soundOff]" ) << " Stopping sounds in subgraph.\n"<<vjDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -160,10 +154,22 @@ protected:
       if (currentNode->isOfType( pfSoundNode::getClassType() ))
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
-         soundNode->sound().trigger();
-         vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundTrigger] ")
-            << "Setting the " << soundNode->sound().getName().c_str()
-            << " sound node to on\n" << vjDEBUG_FLUSH;
+         
+         // get the name
+         const char* nodeNameChar = soundNode->getName();
+         std::string nodeName;
+         if (nodeNameChar == NULL)
+              nodeName = "";
+         else
+              nodeName = nodeNameChar;
+         
+         // unpause the sound, unmute it too
+         #ifdef USE_AUDIOJUGGLER
+         AudioJuggler::instance().trigger( nodeName );
+         #endif
+         vjDEBUG(vjDBG_ALL,0) << clrOutNORM( clrYELLOW, "[SoundTrigger] " )
+            << "Setting the " << nodeName
+            << " sound to <triggered>\n" << vjDEBUG_FLUSH;
       }
       else
       {
@@ -180,10 +186,23 @@ protected:
       if (currentNode->isOfType( pfSoundNode::getClassType() ))
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
-         soundNode->sound().stop();
+         
+         // get the name
+         const char* nodeNameChar = soundNode->getName();
+         std::string nodeName;
+         if (nodeNameChar == NULL)
+              nodeName = "";
+         else
+              nodeName = nodeNameChar;
+         
+         // unpause the sound, unmute it too
+         #ifdef USE_AUDIOJUGGLER
+         AudioJuggler::instance().stop( nodeName );
+         #endif
+         
          vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundStop] ")
-            << "Setting the " << soundNode->sound().getName().c_str()
-            << " sound node to off\n" << vjDEBUG_FLUSH;
+            << "Setting the " << nodeName
+            << " sound to <stopped>\n" << vjDEBUG_FLUSH;
       }
       else
       {
@@ -200,10 +219,24 @@ protected:
       if (currentNode->isOfType( pfSoundNode::getClassType() ))
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
-         soundNode->sound().enable( true );
+         
+         // get the name
+         const char* nodeNameChar = soundNode->getName();
+         std::string nodeName;
+         if (nodeNameChar == NULL)
+              nodeName = "";
+         else
+              nodeName = nodeNameChar;
+         
+         // unpause the sound, unmute it too
+         #ifdef USE_AUDIOJUGGLER
+         AudioJuggler::instance().unpause( nodeName );
+         AudioJuggler::instance().unmute( nodeName );
+         #endif
+            
          vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundEnable] ")
-            << "Setting the " << soundNode->sound().getName().c_str()
-            << " sound node to enabled\n" << vjDEBUG_FLUSH;
+            << "Setting the " << nodeName
+            << " sound to <enabled>\n" << vjDEBUG_FLUSH;
       }
       else
       {
@@ -220,10 +253,24 @@ protected:
       if (currentNode->isOfType( pfSoundNode::getClassType() ))
       {
          pfSoundNode* soundNode = static_cast<pfSoundNode*>( currentNode );
-         soundNode->sound().enable( false );
+         
+         // get the name
+         const char* nodeNameChar = soundNode->getName();
+         std::string nodeName;
+         if (nodeNameChar == NULL)
+              nodeName = "";
+         else
+              nodeName = nodeNameChar;
+         
+         // pause the sound, mute it too in case it is triggered again
+         #ifdef USE_AUDIOJUGGLER
+         AudioJuggler::instance().pause( nodeName );
+         AudioJuggler::instance().mute( nodeName );
+         #endif
+         
          vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundDisable] ")
-            << "Setting the " << soundNode->sound().getName().c_str()
-            << " sound node to disabled\n" << vjDEBUG_FLUSH;
+            << "Setting the " << nodeName
+            << " sound to <disabled>\n" << vjDEBUG_FLUSH;
       }
       else
       {
@@ -274,16 +321,15 @@ protected:
             vjDEBUG_CONT( vjDBG_ALL, vjDBG_STATE_LVL )
                << "extracted sound named \"" << soundName.c_str()
                << "\"\n" << vjDEBUG_FLUSH;
-            vjSound* sound = vjSoundManager::instance()->getHandle( soundName.c_str() );
-
+            
             // replace the found node with a sound node.
             // note: only replace if the sound is valid.
-            //        this way, the users can see where the sounds are.
-            if (sound != NULL)
+            //        this way, the users can see where the sounds are (in case the geoset is a sphere)
+            if (soundName != "")
             {
                parent->removeChild( currentNode );
                bool positional_sound_true( true );
-               pfSoundNode* sn = new pfSoundNode( sound, positional_sound_true );
+               pfSoundNode* sn = new pfSoundNode( soundName, positional_sound_true );
                int resuln = sn->setName( nodeName.c_str() );
                if (resuln == 0)
                {
@@ -292,7 +338,10 @@ protected:
                   sn->setName( newName.c_str() );
                }
                parent->addChild( sn );
-               sound->trigger();
+               #ifdef USE_AUDIOJUGGLER
+               AudioJuggler::instance().trigger( soundName );
+               #endif
+               
                vjDEBUG( vjDBG_ALL, vjDBG_CONFIG_LVL )
                    << clrOutNORM( clrGREEN,"[SoundReplacer]     " )
                    << "Replaced " << clrOutNORM(clrGREEN, sn->getName())

@@ -1,7 +1,7 @@
 #include "Sound/pf/pfSoundNode.h"
 
 
-pfSoundNode::pfSoundNode( vjSound* sound, bool isPositional ) : mIsPositional( true )
+pfSoundNode::pfSoundNode( const std::string& sound, bool isPositional ) : mIsPositional( true )
 {
    this->setPositional( isPositional );
    this->setSound( sound );
@@ -20,7 +20,7 @@ int pfSoundNode::app(pfTraverser *trav)
    // update the sound attributes (position) based on the current
    // position of this node.
    // only do it if the sound is a positional sound.
-   if (mSound != NULL && mIsPositional == true)
+   if (mSound != "" && mIsPositional == true)
    {
       // get position of this sound in relation to the user's orientation and position
       // NOTE: the sound will change position if the user rotates without translation.
@@ -51,8 +51,10 @@ int pfSoundNode::app(pfTraverser *trav)
 
       // set my sound's position.
       vjVec3 soundPosition = vjGetVjVec( pf_soundPosition );
-      mSound->setPosition( soundPosition[0], soundPosition[1], soundPosition[2] );
-
+      #ifdef USE_AUDIOJUGGLER
+      AudioJuggler::instance().setPosition( mSound, soundPosition[0], soundPosition[1], soundPosition[2] );
+      #endif
+      
       // Engine's update should be called by the app's frame process,
       // or in juggler's manager (not both, of course)...
 
@@ -63,11 +65,12 @@ int pfSoundNode::app(pfTraverser *trav)
    {
       // redundant (fixme), but make sure it's 0.0f,0.0f,0.0f
       // this makes the sound the same as the observer.
-      mSound->setPosition( 0.0f, 0.0f, 0.0f );
-      //std::cout<<"["<<mSound->getName()<<"] No position\n"<<std::flush;
+      #ifdef USE_AUDIOJUGGLER
+      AudioJuggler::instance().setPosition( mSound, 0.0f, 0.0f, 0.0f );
+      #endif
    }
 
-   return pfDCS::app(trav);  // call the parent class's app()
+   return pfDCS::app( trav );  // call the parent class's app()
 
 }
 

@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/pf/advanced/pfNav.  It requires GNU make.
+# Makefile.in for juggler/samples/pf/pfNav.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,39 +41,23 @@
 srcdir		= @srcdir@
 
 EXTRA_FLAGS	= @APP_EXTRA_FLAGS@ @APP_EXTRA_FLAGS_PF@
-COMPILE		= @APP_CXX@ @APP_DEFS@ @APP_CXXFLAGS@ @APP_DEBUG_FLAGS@	\
-                  $(VJ_INCLUDES) $(EXTRA_FLAGS)
-LINK		= @APP_LINK@ @APP_LINK_FLAGS@ $(EXTRA_FLAGS)
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 
-VJ_INCLUDES	= @APP_INCLUDES@ $(AW_INCLUDES) -I$(srcdir)		\
-                  -I$(VJ_BASE_DIR)/include				\
-                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/nav \
-                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfTools
-VJ_LIBS		= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
-                  @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) \
-                  @APP_BASIC_LIBS_END@
-
-
-#ifeq (@USE_AUDIOJUGGLER@, Y)
-    VJ_INCLUDES +=  -I$(AJ_BASE_DIR)/include
-    VJ_LIBS += -L$(AJ_BASE_DIR)/lib@LIBBITSUF@ -lAudioJuggler
-    CXXFLAGS += -DUSE_AUDIOJUGGLER
-#endif
-
+AW_INCLUDES 	= @APP_EXTRA_INC_AW@
+AW_LIBS		= @APP_EXTRA_LIBS_AW@
+VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDES) -I$(VJ_BASE_DIR)/include	\
+                  -I$(srcdir) -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/nav \
+                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/pfTools
+VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ @APP_VJ_LIBS_AW@ @APP_VJ_LIBS_END@  @APP_LIBS_BASIC@ 
 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
                   $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_ogl.a	\
                   $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_pf.a
 
-# Uncomment all of the following lines if you have AudioWorks and your
-# application needs audio.
-#AW_INCLUDES 	= @APP_EXTRA_INC_AW@
-#AW_LIBS		= @APP_EXTRA_LIBS_AW@
-#VJ_AUDIO_LIBS	= @APP_VJ_LIBS_AW@
-  
-vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/nav
+vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/nav
 vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/tools
-vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfTools
+vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/pfTools
 
 # This Performer sample program requires the following libraries to be linked:
 #
@@ -86,8 +70,7 @@ vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfTools
 # The proper library path must be specified depending on the Application
 # Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
 # 64-bit binaries, use -L/usr/lib64.
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@ $(AW_LIBS)	\
-                  @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS)  @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_END@
 
 COMMON_OBJECTS	= simplePfNavApp.@OBJEXT@        \
                   pfFileIO.@OBJEXT@             \
@@ -106,10 +89,10 @@ default: pfNav
 all: pfNav
 
 pfNav: $(PFNAV_OBJECTS) $(VJ_LIB_DEPS)
-	$(LINK) @EXE_NAME_FLAG@ $(PFNAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
+	$(LINK) -o $@ $(PFNAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJEXT@:
-	$(COMPILE) @OBJ_NAME_FLAG@ @OBJ_BUILD_FLAG@ $<
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.

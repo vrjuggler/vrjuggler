@@ -52,8 +52,6 @@
 #include <Config/vjConfigChunk.h>
 #include <Config/vjChunkFactory.h>
 
-#include <Sound/vjSoundManager.h>
-
 
 // Get the system factory we need
 #if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_AIX) ||   \
@@ -123,7 +121,6 @@ void vjKernel::controlLoop(void* nullParam)
             perfBuffer->set (0);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vjDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
-         vjASSERT(mSoundManager != NULL);
          mSoundManager->update();
             perfBuffer->set (1);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vjDEBUG_FLUSH;
@@ -245,6 +242,7 @@ void vjKernel::changeApplication(vjApp* _app)
       {
          stopDrawManager();                           // Stop old one
          mDrawManager = mApp->getDrawManager();       // Get the new one
+         mSoundManager = mApp->getSoundManager();       // Get the new one
          startDrawManager(true);                      // Start the new one
       }
       else     // SAME draw manager
@@ -282,9 +280,6 @@ void vjKernel::initConfig()
    //initialSetupDisplayManager();
    mDisplayManager = vjDisplayManager::instance();  // Get display manager
    vjASSERT(mDisplayManager != NULL);                 // Did we get an object
-
-   mSoundManager = vjSoundManager::instance();
-   vjASSERT(mSoundManager != NULL);
 
    //setupEnvironmentManager();
    environmentManager = new vjEnvironmentManager();
@@ -503,9 +498,6 @@ void vjKernel::stopDrawManager()
 vjInputManager* vjKernel::getInputManager()
 { return mInputManager; }
 
-vjSoundManager* vjKernel::getSoundManager()
-{ return mSoundManager; }
-
 
 vjUser* vjKernel::getUser(std::string userName)
 {
@@ -525,9 +517,9 @@ vjKernel::vjKernel()
    mSysFactory = NULL;
    mInputManager = NULL;
    mDrawManager = NULL;
-   mDisplayManager = NULL;
    mSoundManager = NULL;
-
+   mDisplayManager = NULL;
+   
    environmentManager = NULL;
    perfBuffer = NULL;
 

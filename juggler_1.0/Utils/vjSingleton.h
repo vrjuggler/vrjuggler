@@ -81,6 +81,59 @@ public:                                                       \
       return the_instance2;                                   \
    }
 
+namespace vrj
+{
+       
+   // you can use this coolio class to make a singleton,
+   // just inherit like so...
+   //
+   // class myClass : public vpr::Singleton<myClass>
+   //
+   template< class singleClass >
+   class Singleton
+   {
+   public:
+      // use the macro from above... kludgy yeah, but...
+      // NOTE: it might not be good to have the imp inline
+      //       in the header???
+      // NOTE: currently, func is thread safe after first call to instance().
+      // if first call to instance happens multiple times simultaneously
+      // then don't be surprised when something dies because of a mutex..
+      // this bug can be caused by spawning two threads immediately after
+      // entering main()
+      inline static singleClass* instance( void )
+      {
+         // WARNING! race condition possibility, creation of static vars
+         // are not thread safe.  This is only an issue when creating
+         // your first thread, since it uses a singleton thread manager,
+         // the two threads might both try to call instance at the same time
+         // which then the creation of the following mutex would not be certain.
+         static vjMutex singleton_lock1;
+         static singleClass* the_instance1 = NULL;
+
+         if (the_instance1 == NULL)
+         {
+            vjGuard<vjMutex> guard( singleton_lock1 );
+            if (the_instance1 == NULL)
+            { the_instance1 = new singleClass; }
+         }
+         return the_instance1;
+      }
+
+   protected:
+      // dont create a singleton with new!
+      // use instance()
+      Singleton()
+      {
+      }
+
+      // don't delete a singleton!
+      virtual ~Singleton()
+      {
+      }
+   };
+}; // end of namespace vpr
+
 
 //
 // Non-locking version
