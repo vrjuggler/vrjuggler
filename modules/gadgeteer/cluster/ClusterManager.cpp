@@ -32,6 +32,11 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/exception.hpp>
+
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vpr/DynLoad/Library.h>
 #include <vpr/Util/FileUtils.h>
 
@@ -59,6 +64,8 @@
 
 #include <cluster/ClusterManager.h> // my header...
 
+
+namespace fs = boost::filesystem;
 
 namespace cluster
 {
@@ -446,8 +453,6 @@ namespace cluster
     */
    bool ClusterManager::configAdd(jccl::ConfigElementPtr element)
    {
-
-
       vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM, vprDBG_STATE_LVL,
                               std::string("Cluster Manager: Adding config element.\n"),
                               std::string("...done adding element.\n"));
@@ -527,12 +532,73 @@ namespace cluster
          {
             const std::string plugin_path_prop_name("plugin_path");
             const int path_count(element->getNum(plugin_path_prop_name));
-            std::vector<std::string> search_path(path_count);
+            std::vector<fs::path> search_path(path_count);
 
             for ( unsigned int i = 0; i < search_path.size(); ++i )
             {
-               search_path[i] =
+               std::string temp_str =
                   vpr::replaceEnvVars(element->getProperty<std::string>(plugin_path_prop_name, i));
+
+               try
+               {
+                  search_path[i] = fs::path(temp_str, fs::native);
+               }
+               catch(fs::filesystem_error& fsEx)
+               {
+                  vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                     << clrOutNORM(clrRED, "ERROR:")
+                     << "[cluster::ClusterManager::configAdd()] File system "
+                     << "exception caught while converting\n"
+                     << vprDEBUG_FLUSH;
+                  vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                     << "'" << temp_str << "'\n" << vprDEBUG_FLUSH;
+                  vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                     << "to a Boost.Filesystem path.\n" << vprDEBUG_FLUSH;
+                  vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                     << fsEx.what() << std::endl << vprDEBUG_FLUSH;
+               }
+            }
+
+            // Append a default driver search path to search_path.
+            const std::string gadget_base_dir("GADGET_BASE_DIR");
+            const std::string vj_base_dir("VJ_BASE_DIR");
+            std::string base_dir;
+            bool append_default(true);
+
+            // Try get to the value of $GADGET_BASE_DIR first.  If that fails,
+            // fall back on $VJ_BASE_DIR.
+            if ( ! vpr::System::getenv(gadget_base_dir, base_dir).success() )
+            {
+               if ( ! vpr::System::getenv(vj_base_dir, base_dir).success() )
+               {
+                  // If neither $GADGET_BASE_DIR nor $VJ_BASE_DIR is set, then
+                  // we cannot append a default driver search path.
+                  append_default = false;
+               }
+            }
+
+            if ( append_default )
+            {
+#if defined(VPR_OS_IRIX) && defined(_ABIN32)
+               const std::string bit_suffix("32");
+#elif defined(VPR_OS_IRIX) && defined(_ABI64)
+               const std::string bit_suffix("64");
+#else
+               const std::string bit_suffix("");
+#endif
+
+               fs::path default_search_dir =
+                  fs::path(base_dir, fs::native) /
+                     (std::string("lib") + bit_suffix) /
+                     std::string("gadgeteer") / std::string("plugins");
+
+               vprDEBUG(gadgetDBG_RIM, vprDBG_VERB_LVL)
+                  << "[cluster::ClusterManager::configAdd()] Appending "
+                  << "default search path '"
+                  << default_search_dir.native_directory_string() << "'\n"
+                  << vprDEBUG_FLUSH;
+
+               search_path.push_back(default_search_dir);
             }
 
             // --- Load cluster plugin dsos -- //
@@ -549,8 +615,9 @@ namespace cluster
                if ( ! plugin_dso.empty() )
                {
                   vprDEBUG(gadgetDBG_RIM, vprDBG_STATE_LVL)
-                     << "ClusterManager::configAdd(): Loading plugin DSO '" << plugin_dso
-                     << "'\n" << vprDEBUG_FLUSH;
+                     << "[cluster::ClusterManager::configAdd()] Loading "
+                     << "plugin DSO '" << plugin_dso << "'\n"
+                     << vprDEBUG_FLUSH;
 
                   Callable functor(this);
                   mPluginLoader.findAndInitDSO(plugin_dso, search_path,
