@@ -351,8 +351,13 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
 # If we are not using POSIX threads, we must be using the IRIX sproc(2) model,
 # but we test $SUBSYSTEM just to be sure it is set right.
 elif test "x$SUBSYSTEM" = "xSPROC" ; then
+    AC_CHECK_HEADERS([sys/types.h])
     AC_CHECK_HEADERS([sys/prctl.h], ,
-        [AC_MSG_ERROR([*** IRIX sproc(2) threading will not be used (no headers found) ***])])
+        [AC_MSG_ERROR([*** IRIX sproc(2) threading will not be used (no headers found) ***])],
+[#if HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+])
 
     AC_DEFINE(VPR_USE_IRIX_SPROC, , [Define if using IRIX SPROC threads.])
 
