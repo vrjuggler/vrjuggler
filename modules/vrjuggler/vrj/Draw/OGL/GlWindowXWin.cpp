@@ -617,11 +617,6 @@ void GlWindowXWin::checkEvents()
       // for the _largest_ available buffers.  If this fails,  we might
       // want to try setting alpha size to 0 (smallest possible, maybe 0)
       // which is required eg. for alpha on the indys.
-      //
-      // Implementation note: the code below makes assumptions about the
-      // exact order of the arguments in viattrib.  Alter those, and you'll
-      // need to redo the indices used.
-      // XXX: This is bad.  -PH 7/19/2004
       std::vector<int> viattrib;
       viattrib.push_back(GLX_DOUBLEBUFFER);
       viattrib.push_back(GLX_RGBA);
@@ -629,8 +624,11 @@ void GlWindowXWin::checkEvents()
       viattrib.push_back(GLX_RED_SIZE); viattrib.push_back(red_size);
       viattrib.push_back(GLX_GREEN_SIZE); viattrib.push_back(green_size);
       viattrib.push_back(GLX_BLUE_SIZE); viattrib.push_back(blue_size);
+
+      // Record the index for the alpha attribute using the current size of the
+      // vector *before* the attribute is actually added.
+      const unsigned int alpha_attrib_index = viattrib.size();
       viattrib.push_back(GLX_ALPHA_SIZE); viattrib.push_back(alpha_size);
-      const unsigned int AlphaAttribIndex = 11;
 
       // Enable full-screen anti-aliasing if it is available and it was
       // requested.
@@ -653,6 +651,11 @@ void GlWindowXWin::checkEvents()
       }
 #endif
 
+      // Record the index for the stereo attribute using the current size of
+      // the vector *before* the attribute is actually added.  If stereo is
+      // not added, this variable will just be ignored.
+      const unsigned int stereo_attrib_index = viattrib.size();
+
       if ( mVrjDisplay->isStereoRequested() )
       {
          viattrib.push_back(GLX_STEREO);
@@ -666,15 +669,17 @@ void GlWindowXWin::checkEvents()
       // Add terminator
       viattrib.push_back(None);
 
-      XVisualInfo *vi;
+      XVisualInfo* vi(NULL);
 
-      // first, see if we can get exactly what we want.
+      // First, see if we can get exactly what we want.
       if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
       {
          return vi;
       }
 
-      // still no luck. if we were going for stereo, let's try without.
+      // If we have reached this point, our first attempt to get a visual
+      // failed.  If stereo is enabled, we try disabling it and requesting
+      // another visual.
       if ( mVrjDisplay->isStereoRequested() )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
@@ -683,8 +688,8 @@ void GlWindowXWin::checkEvents()
             << vprDEBUG_FLUSH;
          mInStereo = false;
 
-         // This should be a reasonable 'ignore' tag
-         viattrib[viattrib.size() - 1] = GLX_USE_GL;
+         // GLX_USE_GL will be ignored by glXChooseVisual(3).
+         viattrib[stereo_attrib_index] = GLX_USE_GL;
 
          if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
          {
@@ -692,12 +697,16 @@ void GlWindowXWin::checkEvents()
          }
       }
 
-      // if we reach here, we didn't.  Maybe we should make alpha optional.
+      // If we reached this point, we still do not have a usable GLX visual.
+      // Disabling the alpha channel may give us something usable.
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
          << "WARNING: Display process for '" << mXDisplayName
          << "' couldn't get display with alpha channel - trying without.\n"
          << vprDEBUG_FLUSH;
-      viattrib[AlphaAttribIndex] = 0;
+
+      // There are two values in viattrib related to the alpha channel.
+      viattrib[alpha_attrib_index    ] = GLX_USE_GL;
+      viattrib[alpha_attrib_index + 1] = GLX_USE_GL;
 
       if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
       {
@@ -713,11 +722,11 @@ void GlWindowXWin::checkEvents()
             << "WARNING: Display process for '" << mXDisplayName
             << "' couldn't get FSAA - trying without it.\n" << vprDEBUG_FLUSH;
 
-         // Disabling is achieved by moving the terminator for the attribute
-         // array up to the beginning of the FSAA attributes.  This effectively
-         // blocks off anything that was added to the vector after the FSAA
-         // attribute settings, so this isn't necessarily a good thing...
-         viattrib[fsaa_attrib_index] = None;
+         // There are four values in viattrib related to FSAA.
+         viattrib[fsaa_attrib_index    ] = GLX_USE_GL;
+         viattrib[fsaa_attrib_index + 1] = GLX_USE_GL;
+         viattrib[fsaa_attrib_index + 2] = GLX_USE_GL;
+         viattrib[fsaa_attrib_index + 3] = GLX_USE_GL;
 
          if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
          {
