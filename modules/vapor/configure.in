@@ -143,6 +143,13 @@ AC_ARG_WITH(cppdom,
             [  --with-cppdom=<PATH>    CppDOM installation directory   [default=/usr/local]],
             cppdom_root="$withval", cppdom_root="/usr/local")
 
+AC_ARG_WITH([boost-fs-lib],
+            [  --with-boost-fs-lib=<LIB NAME>
+                          The name of the Boost.Filesystem
+                          library binary for linking      [default=Auto-detect]
+                          *** USE WITH CAUTION! ***],
+            [given_boost_fs_libname="$withval"], [given_boost_fs_libname=''])
+
 # -----------------------------------------------------------------------------
 # System-dependent stuff.
 # -----------------------------------------------------------------------------
@@ -587,44 +594,51 @@ if test "x$ac_cv_has_backtrace" = "xyes" ; then
              [Define if the GLIBC backtrace() function is available.])
 fi
 
-case $CC in
-   gcc)
-      toolset='gcc'
-      ;;
-   icc)
-      if test "x$OS_TYPE" = "xWin32" ; then
-         toolset='iw'
-      else
-         toolset='il'
-      fi
-      ;;
-   cygcl|msvccc|cl*|CL*)
-      toolset=${BOOST_TOOL:=vc7}
-      ;;
-   cc)
-      if test "x$GCC" = "xyes" ; then
+# Construct the Boost.Filesystem library name automatically based on Boost
+# naming conventions if the user did not provide a library name.
+if test "x$given_boost_fs_libname" = "x" ; then
+   case $CC in
+      gcc)
          toolset='gcc'
-      else
-         case $PLATFORM in
-            IRIX)
-               toolset='mp'
-               ;;
-            Solaris)
-               toolset='sw'
-               ;;
-         esac
-      fi
-      ;;
-esac
+         ;;
+      icc)
+         if test "x$OS_TYPE" = "xWin32" ; then
+            toolset='iw'
+         else
+            toolset='il'
+         fi
+         ;;
+      cygcl|msvccc|cl*|CL*)
+         toolset=${BOOST_TOOL:=vc7}
+         ;;
+      cc)
+         if test "x$GCC" = "xyes" ; then
+            toolset='gcc'
+         else
+            case $PLATFORM in
+               IRIX)
+                  toolset='mp'
+                  ;;
+               Solaris)
+                  toolset='sw'
+                  ;;
+            esac
+         fi
+         ;;
+   esac
 
-# We can only use multi-threading versions of Boost libraries if we are not
-# using SPROC threads.  Boost does not support SPROC.
-if test "x$SUBSYSTEM" != "xSPROC" -a "x$ABI" != "x64" ; then
-   threading='-mt'
+   # We can only use multi-threading versions of Boost libraries if we are not
+   # using SPROC threads.  Boost does not support SPROC.
+   if test "x$SUBSYSTEM" != "xSPROC" -a "x$ABI" != "x64" ; then
+      threading='-mt'
+   fi
+
+   boost_fs_name="boost_filesystem-$toolset$threading"
+else
+   boost_fs_name="$given_boost_fs_libname"
 fi
 
 # Ensure that a compiled version of the Boost.Filesystem library is available.
-boost_fs_name="boost_filesystem-$toolset$threading"
 vprsave_CXXFLAGS="$CXXFLAGS"
 vprsave_CPPFLAGS="$CPPFLAGS"
 vprsave_LIBS="$LIBS"
