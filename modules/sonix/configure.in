@@ -349,7 +349,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
    snx_ldflags_compiler="$snx_ldflags_compiler /link /libpath:\$prefix/lib"
    snx_ldflags_linker="$snx_ldflags_linker /libpath:\$prefix/lib"
    snx_lib='sonix.lib'
-   snx_libs='$snx_libs sonix.lib'
+   snx_libs="$snx_libs sonix.lib"
    sample_application_libs="$sample_application_libs /LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF/sonix.lib $LIBS"
 else
    if test "x$GXX" = "xyes" ; then
