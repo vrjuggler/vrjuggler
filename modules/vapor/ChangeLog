@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-05-30 pallindo Fixed a problem where serial ports on Win32 would open in
+                    the wrong blocking mode sometimes.
+                    NEW VERSION: 0.27.3
 2003-04-26 patrickh configure.in requries Autoconf 2.53 or newer.
 2003-04-25 patrickh Fixed a problem in vpr::LibraryUNIX::load() where
                     dynamically loaded code could not dynamically load other
