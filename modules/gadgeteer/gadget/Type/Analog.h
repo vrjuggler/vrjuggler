@@ -66,6 +66,9 @@ namespace gadget
 class Analog
 {
 public:
+   typedef gadget::SampleBuffer<AnalogData> SampleBuffer_t;
+
+public:
 
    //: Constructor
    //! POST: Set device abilities
@@ -108,7 +111,7 @@ public:
    // XXX: Add a "sample" filter that does the normalization in here instead of in the driver
    AnalogData getAnalogData(int devNum = 0)
    {
-      gadget::SampleBuffer<AnalogData>::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
+      SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
 
       if((!stable_buffer.empty()) &&
          (stable_buffer.back().size() > (unsigned)devNum))  // If Have entry && devNum in range
@@ -127,6 +130,11 @@ public:
          }
          return mDefaultValue;
       }
+   }
+
+   const SampleBuffer_t::buffer_t& getAnalogDataBuffer()
+   {
+      return mAnalogSamples.stableBuffer();
    }
 
 protected:
@@ -164,8 +172,8 @@ private:
    float mMin, mMax;
 
 protected:
-   gadget::SampleBuffer<AnalogData>  mAnalogSamples;   /**< Position samples */
-   AnalogData                        mDefaultValue;   /**< Default analog value to return */
+   SampleBuffer_t    mAnalogSamples;   /**< Position samples */
+   AnalogData        mDefaultValue;   /**< Default analog value to return */
 };
 
 
