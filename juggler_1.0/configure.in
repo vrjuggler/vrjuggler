@@ -718,7 +718,7 @@ if test "x${_enable_gl_api}" = "xyes" ; then
     dnl # If OpenGL API files were added, define this extra stuff that is
     dnl # used in some Makefiles.
     if test "x$OPENGL_API" != "x" ; then
-        if test "x" == "x$x_libraries" ; then
+        if test "x" = "x$x_libraries" ; then
             _x_lib_path=''
         else
             _x_lib_path="-L$x_libraries"
