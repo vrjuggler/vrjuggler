@@ -51,21 +51,21 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<double,3>* gmtl_VecBase_double_3__VecBase__double_double(const double& p0, const double& p1)
+   SHARPPY_API gmtl::VecBase<double,3>* gmtl_VecBase_double_3__VecBase__double_double(const double p0, const double p1)
    {
       gmtl::VecBase<double,3>* obj = new gmtl::VecBase<double,3>(p0, p1);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<double,3>* gmtl_VecBase_double_3__VecBase__double_double_double(const double& p0, const double& p1, const double& p2)
+   SHARPPY_API gmtl::VecBase<double,3>* gmtl_VecBase_double_3__VecBase__double_double_double(const double p0, const double p1, const double p2)
    {
       gmtl::VecBase<double,3>* obj = new gmtl::VecBase<double,3>(p0, p1, p2);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<double,3>* gmtl_VecBase_double_3__VecBase__double_double_double_double(const double& p0, const double& p1, const double& p2, const double& p3)
+   SHARPPY_API gmtl::VecBase<double,3>* gmtl_VecBase_double_3__VecBase__double_double_double_double(const double p0, const double p1, const double p2, const double p3)
    {
       gmtl::VecBase<double,3>* obj = new gmtl::VecBase<double,3>(p0, p1, p2, p3);
       return obj;
@@ -84,28 +84,28 @@ extern "C"
 
 /*
    // Wrapper for non-virtual method gmtl::VecBase<double,3>::set()
-   SHARPPY_API void gmtl_VecBase_double_3__set__double1(gmtl::VecBase<double,3>* self_, const double& p0)
+   SHARPPY_API void gmtl_VecBase_double_3__set__double1(gmtl::VecBase<double,3>* self_, const double p0)
    {
       self_->set(p0);
    }
 */
 
    // Wrapper for non-virtual method gmtl::VecBase<double,3>::set()
-   SHARPPY_API void gmtl_VecBase_double_3__set__double_double2(gmtl::VecBase<double,3>* self_, const double& p0, const double& p1)
+   SHARPPY_API void gmtl_VecBase_double_3__set__double_double2(gmtl::VecBase<double,3>* self_, const double p0, const double p1)
    {
       self_->set(p0, p1);
    }
 
 
    // Wrapper for non-virtual method gmtl::VecBase<double,3>::set()
-   SHARPPY_API void gmtl_VecBase_double_3__set__double_double_double3(gmtl::VecBase<double,3>* self_, const double& p0, const double& p1, const double& p2)
+   SHARPPY_API void gmtl_VecBase_double_3__set__double_double_double3(gmtl::VecBase<double,3>* self_, const double p0, const double p1, const double p2)
    {
       self_->set(p0, p1, p2);
    }
 
 
    // Wrapper for non-virtual method gmtl::VecBase<double,3>::set()
-   SHARPPY_API void gmtl_VecBase_double_3__set__double_double_double_double4(gmtl::VecBase<double,3>* self_, const double& p0, const double& p1, const double& p2, const double& p3)
+   SHARPPY_API void gmtl_VecBase_double_3__set__double_double_double_double4(gmtl::VecBase<double,3>* self_, const double p0, const double p1, const double p2, const double p3)
    {
       self_->set(p0, p1, p2, p3);
    }

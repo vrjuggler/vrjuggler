@@ -66,7 +66,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__gmtl_Vec3f_float(const gmtl::Vec3f* p0, const float& p1)
+   SHARPPY_API gmtl::Planef* gmtl_Plane_float__Plane__gmtl_Vec3f_float(const gmtl::Vec3f* p0, const float p1)
    {
       const gmtl::Vec3f& marshal_p0 = *p0; // Pre-call marshaling for p0
       gmtl::Planef* obj = new gmtl::Planef(marshal_p0, p1);
@@ -115,7 +115,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method gmtl::Plane<float>::setOffset()
-   SHARPPY_API void gmtl_Plane_float__setOffset__float1(gmtl::Planef* self_, const float& p0)
+   SHARPPY_API void gmtl_Plane_float__setOffset__float1(gmtl::Planef* self_, const float p0)
    {
       self_->setOffset(p0);
    }

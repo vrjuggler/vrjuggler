@@ -51,14 +51,14 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__double_double_double_double(const double& p0, const double& p1, const double& p2, const double& p3)
+   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__double_double_double_double(const double p0, const double p1, const double p2, const double p3)
    {
       gmtl::AxisAngled* obj = new gmtl::AxisAngled(p0, p1, p2, p3);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__double_gmtl_Vec3d(const double& p0, const gmtl::Vec3d* p1)
+   SHARPPY_API gmtl::AxisAngled* gmtl_AxisAngle_double__AxisAngle__double_gmtl_Vec3d(const double p0, const gmtl::Vec3d* p1)
    {
       const gmtl::Vec3d& marshal_p1 = *p1; // Pre-call marshaling for p1
       gmtl::AxisAngled* obj = new gmtl::AxisAngled(p0, marshal_p1);
@@ -72,14 +72,14 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::AxisAngle<double>::set()
-   SHARPPY_API void gmtl_AxisAngle_double__set__double_double_double_double4(gmtl::AxisAngled* self_, const double& p0, const double& p1, const double& p2, const double& p3)
+   SHARPPY_API void gmtl_AxisAngle_double__set__double_double_double_double4(gmtl::AxisAngled* self_, const double p0, const double p1, const double p2, const double p3)
    {
       self_->set(p0, p1, p2, p3);
    }
 
 
    // Wrapper for non-virtual method gmtl::AxisAngle<double>::set()
-   SHARPPY_API void gmtl_AxisAngle_double__set__double_gmtl_Vec3d2(gmtl::AxisAngled* self_, const double& p0, const gmtl::Vec3d* p1)
+   SHARPPY_API void gmtl_AxisAngle_double__set__double_gmtl_Vec3d2(gmtl::AxisAngled* self_, const double p0, const gmtl::Vec3d* p1)
    {
       const gmtl::Vec3d& marshal_p1 = *p1;
       self_->set(p0, marshal_p1);
@@ -95,7 +95,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method gmtl::AxisAngle<double>::setAngle()
-   SHARPPY_API void gmtl_AxisAngle_double__setAngle__double1(gmtl::AxisAngled* self_, const double& p0)
+   SHARPPY_API void gmtl_AxisAngle_double__setAngle__double1(gmtl::AxisAngled* self_, const double p0)
    {
       self_->setAngle(p0);
    }

@@ -42,7 +42,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Sphered* gmtl_Sphere_double__Sphere__gmtl_Point3d_double(const gmtl::Point3d* p0, const double& p1)
+   SHARPPY_API gmtl::Sphered* gmtl_Sphere_double__Sphere__gmtl_Point3d_double(const gmtl::Point3d* p0, const double p1)
    {
       const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
       gmtl::Sphered* obj = new gmtl::Sphered(marshal_p0, p1);
@@ -91,7 +91,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method gmtl::Sphere<double>::setRadius()
-   SHARPPY_API void gmtl_Sphere_double__setRadius__double1(gmtl::Sphered* self_, const double& p0)
+   SHARPPY_API void gmtl_Sphere_double__setRadius__double1(gmtl::Sphered* self_, const double p0)
    {
       self_->setRadius(p0);
    }

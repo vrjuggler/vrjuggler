@@ -755,7 +755,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_Planed_gmtl_Planed_double3(const gmtl::Planed* p0, const gmtl::Planed* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_Planed_gmtl_Planed_double3(const gmtl::Planed* p0, const gmtl::Planed* p1, const double p2)
    {
       const gmtl::Planed& marshal_p0 = *p0;
       const gmtl::Planed& marshal_p1 = *p1;
@@ -766,7 +766,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_Planef_gmtl_Planef_float3(const gmtl::Planef* p0, const gmtl::Planef* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_Planef_gmtl_Planef_float3(const gmtl::Planef* p0, const gmtl::Planef* p1, const float p2)
    {
       const gmtl::Planef& marshal_p0 = *p0;
       const gmtl::Planef& marshal_p1 = *p1;
@@ -777,7 +777,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_Spheref_gmtl_Spheref_float3(const gmtl::Spheref* p0, const gmtl::Spheref* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_Spheref_gmtl_Spheref_float3(const gmtl::Spheref* p0, const gmtl::Spheref* p1, const float p2)
    {
       const gmtl::Spheref& marshal_p0 = *p0;
       const gmtl::Spheref& marshal_p1 = *p1;
@@ -788,7 +788,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_Sphered_gmtl_Sphered_double3(const gmtl::Sphered* p0, const gmtl::Sphered* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_Sphered_gmtl_Sphered_double3(const gmtl::Sphered* p0, const gmtl::Sphered* p1, const double p2)
    {
       const gmtl::Sphered& marshal_p0 = *p0;
       const gmtl::Sphered& marshal_p1 = *p1;
@@ -809,7 +809,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_Matrix44d_gmtl_Matrix44d_double3(const gmtl::Matrix44d* p0, const gmtl::Matrix44d* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_Matrix44d_gmtl_Matrix44d_double3(const gmtl::Matrix44d* p0, const gmtl::Matrix44d* p1, const double p2)
    {
       const gmtl::Matrix44d& marshal_p0 = *p0;
       const gmtl::Matrix44d& marshal_p1 = *p1;
@@ -830,7 +830,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleZYXf_gmtl_EulerAngleZYXf_float3(const gmtl::EulerAngleZYXf* p0, const gmtl::EulerAngleZYXf* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleZYXf_gmtl_EulerAngleZYXf_float3(const gmtl::EulerAngleZYXf* p0, const gmtl::EulerAngleZYXf* p1, const float p2)
    {
       const gmtl::EulerAngleZYXf& marshal_p0 = *p0;
       const gmtl::EulerAngleZYXf& marshal_p1 = *p1;
@@ -851,7 +851,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleZXYf_gmtl_EulerAngleZXYf_float3(const gmtl::EulerAngleZXYf* p0, const gmtl::EulerAngleZXYf* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleZXYf_gmtl_EulerAngleZXYf_float3(const gmtl::EulerAngleZXYf* p0, const gmtl::EulerAngleZXYf* p1, const float p2)
    {
       const gmtl::EulerAngleZXYf& marshal_p0 = *p0;
       const gmtl::EulerAngleZXYf& marshal_p1 = *p1;
@@ -872,7 +872,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleXYZd_gmtl_EulerAngleXYZd_double3(const gmtl::EulerAngleXYZd* p0, const gmtl::EulerAngleXYZd* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleXYZd_gmtl_EulerAngleXYZd_double3(const gmtl::EulerAngleXYZd* p0, const gmtl::EulerAngleXYZd* p1, const double p2)
    {
       const gmtl::EulerAngleXYZd& marshal_p0 = *p0;
       const gmtl::EulerAngleXYZd& marshal_p1 = *p1;
@@ -893,7 +893,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleZXYd_gmtl_EulerAngleZXYd_double3(const gmtl::EulerAngleZXYd* p0, const gmtl::EulerAngleZXYd* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleZXYd_gmtl_EulerAngleZXYd_double3(const gmtl::EulerAngleZXYd* p0, const gmtl::EulerAngleZXYd* p1, const double p2)
    {
       const gmtl::EulerAngleZXYd& marshal_p0 = *p0;
       const gmtl::EulerAngleZXYd& marshal_p1 = *p1;
@@ -914,7 +914,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleXYZf_gmtl_EulerAngleXYZf_float3(const gmtl::EulerAngleXYZf* p0, const gmtl::EulerAngleXYZf* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleXYZf_gmtl_EulerAngleXYZf_float3(const gmtl::EulerAngleXYZf* p0, const gmtl::EulerAngleXYZf* p1, const float p2)
    {
       const gmtl::EulerAngleXYZf& marshal_p0 = *p0;
       const gmtl::EulerAngleXYZf& marshal_p1 = *p1;
@@ -1282,7 +1282,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_Trif_gmtl_Trif_float3(const gmtl::Trif* p0, const gmtl::Trif* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_Trif_gmtl_Trif_float3(const gmtl::Trif* p0, const gmtl::Trif* p1, const float p2)
    {
       const gmtl::Trif& marshal_p0 = *p0;
       const gmtl::Trif& marshal_p1 = *p1;
@@ -1377,7 +1377,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_Trid_gmtl_Trid_double3(const gmtl::Trid* p0, const gmtl::Trid* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_Trid_gmtl_Trid_double3(const gmtl::Trid* p0, const gmtl::Trid* p1, const double p2)
    {
       const gmtl::Trid& marshal_p0 = *p0;
       const gmtl::Trid& marshal_p1 = *p1;
@@ -1398,7 +1398,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleZYXd_gmtl_EulerAngleZYXd_double3(const gmtl::EulerAngleZYXd* p0, const gmtl::EulerAngleZYXd* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_EulerAngleZYXd_gmtl_EulerAngleZYXd_double3(const gmtl::EulerAngleZYXd* p0, const gmtl::EulerAngleZYXd* p1, const double p2)
    {
       const gmtl::EulerAngleZYXd& marshal_p0 = *p0;
       const gmtl::EulerAngleZYXd& marshal_p1 = *p1;
@@ -1419,7 +1419,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_Matrix44f_gmtl_Matrix44f_float3(const gmtl::Matrix44f* p0, const gmtl::Matrix44f* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_Matrix44f_gmtl_Matrix44f_float3(const gmtl::Matrix44f* p0, const gmtl::Matrix44f* p1, const float p2)
    {
       const gmtl::Matrix44f& marshal_p0 = *p0;
       const gmtl::Matrix44f& marshal_p1 = *p1;
@@ -1451,7 +1451,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_AABoxf_gmtl_AABoxf_float3(const gmtl::AABoxf* p0, const gmtl::AABoxf* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_AABoxf_gmtl_AABoxf_float3(const gmtl::AABoxf* p0, const gmtl::AABoxf* p1, const float p2)
    {
       const gmtl::AABoxf& marshal_p0 = *p0;
       const gmtl::AABoxf& marshal_p1 = *p1;
@@ -1462,7 +1462,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_AABoxd_gmtl_AABoxd_double3(const gmtl::AABoxd* p0, const gmtl::AABoxd* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_AABoxd_gmtl_AABoxd_double3(const gmtl::AABoxd* p0, const gmtl::AABoxd* p1, const double p2)
    {
       const gmtl::AABoxd& marshal_p0 = *p0;
       const gmtl::AABoxd& marshal_p1 = *p1;
@@ -1473,7 +1473,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_VecBase_float_4_gmtl_VecBase_float_4_float3(const gmtl::VecBase<float,4>* p0, const gmtl::VecBase<float,4>* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_VecBase_float_4_gmtl_VecBase_float_4_float3(const gmtl::VecBase<float,4>* p0, const gmtl::VecBase<float,4>* p1, const float p2)
    {
       const gmtl::VecBase<float,4>& marshal_p0 = *p0;
       const gmtl::VecBase<float,4>& marshal_p1 = *p1;
@@ -1484,7 +1484,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_VecBase_double_4_gmtl_VecBase_double_4_double3(const gmtl::VecBase<double,4>* p0, const gmtl::VecBase<double,4>* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_VecBase_double_4_gmtl_VecBase_double_4_double3(const gmtl::VecBase<double,4>* p0, const gmtl::VecBase<double,4>* p1, const double p2)
    {
       const gmtl::VecBase<double,4>& marshal_p0 = *p0;
       const gmtl::VecBase<double,4>& marshal_p1 = *p1;
@@ -1495,7 +1495,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_VecBase_float_3_gmtl_VecBase_float_3_float3(const gmtl::VecBase<float,3>* p0, const gmtl::VecBase<float,3>* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_VecBase_float_3_gmtl_VecBase_float_3_float3(const gmtl::VecBase<float,3>* p0, const gmtl::VecBase<float,3>* p1, const float p2)
    {
       const gmtl::VecBase<float,3>& marshal_p0 = *p0;
       const gmtl::VecBase<float,3>& marshal_p1 = *p1;
@@ -1506,7 +1506,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_VecBase_double_3_gmtl_VecBase_double_3_double3(const gmtl::VecBase<double,3>* p0, const gmtl::VecBase<double,3>* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_VecBase_double_3_gmtl_VecBase_double_3_double3(const gmtl::VecBase<double,3>* p0, const gmtl::VecBase<double,3>* p1, const double p2)
    {
       const gmtl::VecBase<double,3>& marshal_p0 = *p0;
       const gmtl::VecBase<double,3>& marshal_p1 = *p1;
@@ -1527,7 +1527,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_Matrix33d_gmtl_Matrix33d_double3(const gmtl::Matrix33d* p0, const gmtl::Matrix33d* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_Matrix33d_gmtl_Matrix33d_double3(const gmtl::Matrix33d* p0, const gmtl::Matrix33d* p1, const double p2)
    {
       const gmtl::Matrix33d& marshal_p0 = *p0;
       const gmtl::Matrix33d& marshal_p1 = *p1;
@@ -1548,7 +1548,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_Matrix33f_gmtl_Matrix33f_float3(const gmtl::Matrix33f* p0, const gmtl::Matrix33f* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_Matrix33f_gmtl_Matrix33f_float3(const gmtl::Matrix33f* p0, const gmtl::Matrix33f* p1, const float p2)
    {
       const gmtl::Matrix33f& marshal_p0 = *p0;
       const gmtl::Matrix33f& marshal_p1 = *p1;
@@ -1569,7 +1569,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_AxisAngled_gmtl_AxisAngled_double3(const gmtl::AxisAngled* p0, const gmtl::AxisAngled* p1, const double& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_AxisAngled_gmtl_AxisAngled_double3(const gmtl::AxisAngled* p0, const gmtl::AxisAngled* p1, const double p2)
    {
       const gmtl::AxisAngled& marshal_p0 = *p0;
       const gmtl::AxisAngled& marshal_p1 = *p1;
@@ -1590,7 +1590,7 @@ extern "C"
    }
 
    // Wrapper for free function gmtl::isEqual()
-   SHARPPY_API bool gmtl_isEqual__gmtl_AxisAnglef_gmtl_AxisAnglef_float3(const gmtl::AxisAnglef* p0, const gmtl::AxisAnglef* p1, const float& p2)
+   SHARPPY_API bool gmtl_isEqual__gmtl_AxisAnglef_gmtl_AxisAnglef_float3(const gmtl::AxisAnglef* p0, const gmtl::AxisAnglef* p1, const float p2)
    {
       const gmtl::AxisAnglef& marshal_p0 = *p0;
       const gmtl::AxisAnglef& marshal_p1 = *p1;
@@ -1819,7 +1819,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::lerp()
-   SHARPPY_API gmtl::VecBase<double,3>* gmtl_lerp__gmtl_VecBase_double_3_double_gmtl_VecBase_double_3_gmtl_VecBase_double_34(gmtl::VecBase<double,3>* p0, const double& p1, const gmtl::VecBase<double,3>* p2, const gmtl::VecBase<double,3>* p3)
+   SHARPPY_API gmtl::VecBase<double,3>* gmtl_lerp__gmtl_VecBase_double_3_double_gmtl_VecBase_double_3_gmtl_VecBase_double_34(gmtl::VecBase<double,3>* p0, const double p1, const gmtl::VecBase<double,3>* p2, const gmtl::VecBase<double,3>* p3)
    {
       gmtl::VecBase<double,3>& marshal_p0 = *p0;
       const gmtl::VecBase<double,3>& marshal_p2 = *p2;
@@ -1831,7 +1831,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::lerp()
-   SHARPPY_API gmtl::VecBase<float,3>* gmtl_lerp__gmtl_VecBase_float_3_float_gmtl_VecBase_float_3_gmtl_VecBase_float_34(gmtl::VecBase<float,3>* p0, const float& p1, const gmtl::VecBase<float,3>* p2, const gmtl::VecBase<float,3>* p3)
+   SHARPPY_API gmtl::VecBase<float,3>* gmtl_lerp__gmtl_VecBase_float_3_float_gmtl_VecBase_float_3_gmtl_VecBase_float_34(gmtl::VecBase<float,3>* p0, const float p1, const gmtl::VecBase<float,3>* p2, const gmtl::VecBase<float,3>* p3)
    {
       gmtl::VecBase<float,3>& marshal_p0 = *p0;
       const gmtl::VecBase<float,3>& marshal_p2 = *p2;
@@ -1867,7 +1867,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::lerp()
-   SHARPPY_API gmtl::VecBase<float,4>* gmtl_lerp__gmtl_VecBase_float_4_float_gmtl_VecBase_float_4_gmtl_VecBase_float_44(gmtl::VecBase<float,4>* p0, const float& p1, const gmtl::VecBase<float,4>* p2, const gmtl::VecBase<float,4>* p3)
+   SHARPPY_API gmtl::VecBase<float,4>* gmtl_lerp__gmtl_VecBase_float_4_float_gmtl_VecBase_float_4_gmtl_VecBase_float_44(gmtl::VecBase<float,4>* p0, const float p1, const gmtl::VecBase<float,4>* p2, const gmtl::VecBase<float,4>* p3)
    {
       gmtl::VecBase<float,4>& marshal_p0 = *p0;
       const gmtl::VecBase<float,4>& marshal_p2 = *p2;
@@ -1879,7 +1879,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::lerp()
-   SHARPPY_API gmtl::VecBase<double,4>* gmtl_lerp__gmtl_VecBase_double_4_double_gmtl_VecBase_double_4_gmtl_VecBase_double_44(gmtl::VecBase<double,4>* p0, const double& p1, const gmtl::VecBase<double,4>* p2, const gmtl::VecBase<double,4>* p3)
+   SHARPPY_API gmtl::VecBase<double,4>* gmtl_lerp__gmtl_VecBase_double_4_double_gmtl_VecBase_double_4_gmtl_VecBase_double_44(gmtl::VecBase<double,4>* p0, const double p1, const gmtl::VecBase<double,4>* p2, const gmtl::VecBase<double,4>* p3)
    {
       gmtl::VecBase<double,4>& marshal_p0 = *p0;
       const gmtl::VecBase<double,4>& marshal_p2 = *p2;
@@ -1957,7 +1957,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::mult()
-   SHARPPY_API gmtl::Matrix44d* gmtl_mult__gmtl_Matrix44d_gmtl_Matrix44d_double3(gmtl::Matrix44d* p0, const gmtl::Matrix44d* p1, const double& p2)
+   SHARPPY_API gmtl::Matrix44d* gmtl_mult__gmtl_Matrix44d_gmtl_Matrix44d_double3(gmtl::Matrix44d* p0, const gmtl::Matrix44d* p1, const double p2)
    {
       gmtl::Matrix44d& marshal_p0 = *p0;
       const gmtl::Matrix44d& marshal_p1 = *p1;
@@ -1968,7 +1968,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::mult()
-   SHARPPY_API gmtl::Matrix44f* gmtl_mult__gmtl_Matrix44f_gmtl_Matrix44f_float3(gmtl::Matrix44f* p0, const gmtl::Matrix44f* p1, const float& p2)
+   SHARPPY_API gmtl::Matrix44f* gmtl_mult__gmtl_Matrix44f_gmtl_Matrix44f_float3(gmtl::Matrix44f* p0, const gmtl::Matrix44f* p1, const float p2)
    {
       gmtl::Matrix44f& marshal_p0 = *p0;
       const gmtl::Matrix44f& marshal_p1 = *p1;
@@ -2055,7 +2055,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::mult()
-   SHARPPY_API gmtl::Matrix33d* gmtl_mult__gmtl_Matrix33d_gmtl_Matrix33d_double3(gmtl::Matrix33d* p0, const gmtl::Matrix33d* p1, const double& p2)
+   SHARPPY_API gmtl::Matrix33d* gmtl_mult__gmtl_Matrix33d_gmtl_Matrix33d_double3(gmtl::Matrix33d* p0, const gmtl::Matrix33d* p1, const double p2)
    {
       gmtl::Matrix33d& marshal_p0 = *p0;
       const gmtl::Matrix33d& marshal_p1 = *p1;
@@ -2066,7 +2066,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::mult()
-   SHARPPY_API gmtl::Matrix33f* gmtl_mult__gmtl_Matrix33f_gmtl_Matrix33f_float3(gmtl::Matrix33f* p0, const gmtl::Matrix33f* p1, const float& p2)
+   SHARPPY_API gmtl::Matrix33f* gmtl_mult__gmtl_Matrix33f_gmtl_Matrix33f_float3(gmtl::Matrix33f* p0, const gmtl::Matrix33f* p1, const float p2)
    {
       gmtl::Matrix33f& marshal_p0 = *p0;
       const gmtl::Matrix33f& marshal_p1 = *p1;
@@ -2471,7 +2471,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::whichSide()
-   SHARPPY_API gmtl::PlaneSide gmtl_whichSide__gmtl_Planed_gmtl_Point3d_double3(const gmtl::Planed* p0, const gmtl::Point3d* p1, const double& p2)
+   SHARPPY_API gmtl::PlaneSide gmtl_whichSide__gmtl_Planed_gmtl_Point3d_double3(const gmtl::Planed* p0, const gmtl::Point3d* p1, const double p2)
    {
       const gmtl::Planed& marshal_p0 = *p0;
       const gmtl::Point3d& marshal_p1 = *p1;
@@ -2482,7 +2482,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::whichSide()
-   SHARPPY_API gmtl::PlaneSide gmtl_whichSide__gmtl_Planef_gmtl_Point3f_float3(const gmtl::Planef* p0, const gmtl::Point3f* p1, const float& p2)
+   SHARPPY_API gmtl::PlaneSide gmtl_whichSide__gmtl_Planef_gmtl_Point3f_float3(const gmtl::Planef* p0, const gmtl::Point3f* p1, const float p2)
    {
       const gmtl::Planef& marshal_p0 = *p0;
       const gmtl::Point3f& marshal_p1 = *p1;
@@ -3092,7 +3092,7 @@ extern "C"
 
 
    // Wrapper for free function gmtlWrappers::makeScaleMatrix44()
-   SHARPPY_API gmtl::Matrix44f* gmtlWrappers_makeScaleMatrix44__float1(const float& p0)
+   SHARPPY_API gmtl::Matrix44f* gmtlWrappers_makeScaleMatrix44__float1(const float p0)
    {
       gmtl::Matrix44f* result;
       result = new gmtl::Matrix44f(gmtlWrappers::makeScaleMatrix44(p0));
@@ -3101,7 +3101,7 @@ extern "C"
 
 
    // Wrapper for free function gmtlWrappers::makeScaleMatrix44()
-   SHARPPY_API gmtl::Matrix44d* gmtlWrappers_makeScaleMatrix44__double1(const double& p0)
+   SHARPPY_API gmtl::Matrix44d* gmtlWrappers_makeScaleMatrix44__double1(const double p0)
    {
       gmtl::Matrix44d* result;
       result = new gmtl::Matrix44d(gmtlWrappers::makeScaleMatrix44(p0));
@@ -3167,12 +3167,12 @@ extern "C"
 
 
    // Wrapper for free function gmtl::setRot()
-   SHARPPY_API gmtl::Quatd* gmtl_setRot__gmtl_Quatd_gmtl_AxisAngled2(gmtl::Quatd* p0, const gmtl::AxisAngled* p1)
+   SHARPPY_API gmtl::Quatf* gmtl_setRot__gmtl_Quatf_gmtl_AxisAnglef2(gmtl::Quatf* p0, const gmtl::AxisAnglef* p1)
    {
-      gmtl::Quatd& marshal_p0 = *p0;
-      const gmtl::AxisAngled& marshal_p1 = *p1;
-      gmtl::Quatd* result;
-      result = new gmtl::Quatd(gmtl::setRot(marshal_p0, marshal_p1));
+      gmtl::Quatf& marshal_p0 = *p0;
+      const gmtl::AxisAnglef& marshal_p1 = *p1;
+      gmtl::Quatf* result;
+      result = new gmtl::Quatf(gmtl::setRot(marshal_p0, marshal_p1));
       return result;
    }
 
@@ -3412,12 +3412,12 @@ extern "C"
 
 
    // Wrapper for free function gmtl::setRot()
-   SHARPPY_API gmtl::Quatf* gmtl_setRot__gmtl_Quatf_gmtl_AxisAnglef2(gmtl::Quatf* p0, const gmtl::AxisAnglef* p1)
+   SHARPPY_API gmtl::Quatd* gmtl_setRot__gmtl_Quatd_gmtl_AxisAngled2(gmtl::Quatd* p0, const gmtl::AxisAngled* p1)
    {
-      gmtl::Quatf& marshal_p0 = *p0;
-      const gmtl::AxisAnglef& marshal_p1 = *p1;
-      gmtl::Quatf* result;
-      result = new gmtl::Quatf(gmtl::setRot(marshal_p0, marshal_p1));
+      gmtl::Quatd& marshal_p0 = *p0;
+      const gmtl::AxisAngled& marshal_p1 = *p1;
+      gmtl::Quatd* result;
+      result = new gmtl::Quatd(gmtl::setRot(marshal_p0, marshal_p1));
       return result;
    }
 
@@ -5398,7 +5398,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isOnVolume()
-   SHARPPY_API bool gmtl_isOnVolume__gmtl_Sphered_gmtl_Point3d_double3(const gmtl::Sphered* p0, const gmtl::Point3d* p1, const double& p2)
+   SHARPPY_API bool gmtl_isOnVolume__gmtl_Sphered_gmtl_Point3d_double3(const gmtl::Sphered* p0, const gmtl::Point3d* p1, const double p2)
    {
       const gmtl::Sphered& marshal_p0 = *p0;
       const gmtl::Point3d& marshal_p1 = *p1;
@@ -5409,7 +5409,7 @@ extern "C"
 
 
    // Wrapper for free function gmtl::isOnVolume()
-   SHARPPY_API bool gmtl_isOnVolume__gmtl_Spheref_gmtl_Point3f_float3(const gmtl::Spheref* p0, const gmtl::Point3f* p1, const float& p2)
+   SHARPPY_API bool gmtl_isOnVolume__gmtl_Spheref_gmtl_Point3f_float3(const gmtl::Spheref* p0, const gmtl::Point3f* p1, const float p2)
    {
       const gmtl::Spheref& marshal_p0 = *p0;
       const gmtl::Point3f& marshal_p1 = *p1;
@@ -5792,7 +5792,7 @@ extern "C"
       return result;
    }
 
-/*
+
    // Wrapper for free function gmtl::xform()
    SHARPPY_API gmtl::Vec4f* gmtl_xform__gmtl_Vec4f_gmtl_Matrix44f_gmtl_Vec4f3(gmtl::Vec4f* p0, const gmtl::Matrix44f* p1, const gmtl::Vec4f* p2)
    {
@@ -5804,7 +5804,7 @@ extern "C"
       return result;
    }
 
-
+/*
    // Wrapper for free function gmtl::xform()
    SHARPPY_API gmtl::Vec4d* gmtl_xform__gmtl_Vec4d_gmtl_Matrix44d_gmtl_Vec4d3(gmtl::Vec4d* p0, const gmtl::Matrix44d* p1, const gmtl::Vec4d* p2)
    {
@@ -5827,7 +5827,7 @@ extern "C"
       result = new gmtl::Vec3d(gmtl::xform(marshal_p0, marshal_p1, marshal_p2));
       return result;
    }
-
+*/
 
    // Wrapper for free function gmtl::xform()
    SHARPPY_API gmtl::Vec3f* gmtl_xform__gmtl_Vec3f_gmtl_Matrix33f_gmtl_Vec3f3(gmtl::Vec3f* p0, const gmtl::Matrix33f* p1, const gmtl::Vec3f* p2)
@@ -5839,7 +5839,7 @@ extern "C"
       result = new gmtl::Vec3f(gmtl::xform(marshal_p0, marshal_p1, marshal_p2));
       return result;
    }
-*/
+
 
    // Wrapper for free function gmtl::xform()
    SHARPPY_API gmtl::Point4d* gmtl_xform__gmtl_Point4d_gmtl_Matrix44d_gmtl_Point4d3(gmtl::Point4d* p0, const gmtl::Matrix44d* p1, const gmtl::Point4d* p2)
@@ -5876,7 +5876,7 @@ extern "C"
       return result;
    }
 
-
+/*
    // Wrapper for free function gmtl::xform()
    SHARPPY_API gmtl::Vec3f* gmtl_xform__gmtl_Vec3f_gmtl_Matrix33f_gmtl_Vec3f3(gmtl::Vec3f* p0, const gmtl::Matrix33f* p1, const gmtl::Vec3f* p2)
    {
@@ -5899,7 +5899,7 @@ extern "C"
       result = new gmtl::Vec4f(gmtl::xform(marshal_p0, marshal_p1, marshal_p2));
       return result;
    }
-
+*/
 
    // Wrapper for free function gmtl::xform()
    SHARPPY_API gmtl::Vec3f* gmtl_xform__gmtl_Vec3f_gmtl_Matrix44f_gmtl_Vec3f3(gmtl::Vec3f* p0, const gmtl::Matrix44f* p1, const gmtl::Vec3f* p2)

@@ -51,21 +51,21 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<int,3>* gmtl_VecBase_int_3__VecBase__int_int(const int& p0, const int& p1)
+   SHARPPY_API gmtl::VecBase<int,3>* gmtl_VecBase_int_3__VecBase__int_int(const int p0, const int p1)
    {
       gmtl::VecBase<int,3>* obj = new gmtl::VecBase<int,3>(p0, p1);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<int,3>* gmtl_VecBase_int_3__VecBase__int_int_int(const int& p0, const int& p1, const int& p2)
+   SHARPPY_API gmtl::VecBase<int,3>* gmtl_VecBase_int_3__VecBase__int_int_int(const int p0, const int p1, const int p2)
    {
       gmtl::VecBase<int,3>* obj = new gmtl::VecBase<int,3>(p0, p1, p2);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<int,3>* gmtl_VecBase_int_3__VecBase__int_int_int_int(const int& p0, const int& p1, const int& p2, const int& p3)
+   SHARPPY_API gmtl::VecBase<int,3>* gmtl_VecBase_int_3__VecBase__int_int_int_int(const int p0, const int p1, const int p2, const int p3)
    {
       gmtl::VecBase<int,3>* obj = new gmtl::VecBase<int,3>(p0, p1, p2, p3);
       return obj;
@@ -84,28 +84,28 @@ extern "C"
 
 /*
    // Wrapper for non-virtual method gmtl::VecBase<int,3>::set()
-   SHARPPY_API void gmtl_VecBase_int_3__set__int1(gmtl::VecBase<int,3>* self_, const int& p0)
+   SHARPPY_API void gmtl_VecBase_int_3__set__int1(gmtl::VecBase<int,3>* self_, const int p0)
    {
       self_->set(p0);
    }
 */
 
    // Wrapper for non-virtual method gmtl::VecBase<int,3>::set()
-   SHARPPY_API void gmtl_VecBase_int_3__set__int_int2(gmtl::VecBase<int,3>* self_, const int& p0, const int& p1)
+   SHARPPY_API void gmtl_VecBase_int_3__set__int_int2(gmtl::VecBase<int,3>* self_, const int p0, const int p1)
    {
       self_->set(p0, p1);
    }
 
 
    // Wrapper for non-virtual method gmtl::VecBase<int,3>::set()
-   SHARPPY_API void gmtl_VecBase_int_3__set__int_int_int3(gmtl::VecBase<int,3>* self_, const int& p0, const int& p1, const int& p2)
+   SHARPPY_API void gmtl_VecBase_int_3__set__int_int_int3(gmtl::VecBase<int,3>* self_, const int p0, const int p1, const int p2)
    {
       self_->set(p0, p1, p2);
    }
 
 
    // Wrapper for non-virtual method gmtl::VecBase<int,3>::set()
-   SHARPPY_API void gmtl_VecBase_int_3__set__int_int_int_int4(gmtl::VecBase<int,3>* self_, const int& p0, const int& p1, const int& p2, const int& p3)
+   SHARPPY_API void gmtl_VecBase_int_3__set__int_int_int_int4(gmtl::VecBase<int,3>* self_, const int p0, const int p1, const int p2, const int p3)
    {
       self_->set(p0, p1, p2, p3);
    }

@@ -60,21 +60,21 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Point3i* gmtl_Point_int_3__Point__int_int(const int& p0, const int& p1)
+   SHARPPY_API gmtl::Point3i* gmtl_Point_int_3__Point__int_int(const int p0, const int p1)
    {
       gmtl::Point3i* obj = new gmtl::Point3i(p0, p1);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Point3i* gmtl_Point_int_3__Point__int_int_int(const int& p0, const int& p1, const int& p2)
+   SHARPPY_API gmtl::Point3i* gmtl_Point_int_3__Point__int_int_int(const int p0, const int p1, const int p2)
    {
       gmtl::Point3i* obj = new gmtl::Point3i(p0, p1, p2);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Point3i* gmtl_Point_int_3__Point__int_int_int_int(const int& p0, const int& p1, const int& p2, const int& p3)
+   SHARPPY_API gmtl::Point3i* gmtl_Point_int_3__Point__int_int_int_int(const int p0, const int p1, const int p2, const int p3)
    {
       gmtl::Point3i* obj = new gmtl::Point3i(p0, p1, p2, p3);
       return obj;

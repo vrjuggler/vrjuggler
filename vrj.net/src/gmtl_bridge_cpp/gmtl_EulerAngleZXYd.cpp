@@ -63,7 +63,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::EulerAngle<double,gmtl::ZXY>::set()
-   SHARPPY_API void gmtl_EulerAngle_double_gmtl_ZXY__set__double_double_double3(gmtl::EulerAngleZXYd* self_, const double& p0, const double& p1, const double& p2)
+   SHARPPY_API void gmtl_EulerAngle_double_gmtl_ZXY__set__double_double_double3(gmtl::EulerAngleZXYd* self_, const double p0, const double p1, const double p2)
    {
       self_->set(p0, p1, p2);
    }

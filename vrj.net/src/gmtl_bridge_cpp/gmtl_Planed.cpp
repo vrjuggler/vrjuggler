@@ -66,7 +66,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Planed* gmtl_Plane_double__Plane__gmtl_Vec3d_double(const gmtl::Vec3d* p0, const double& p1)
+   SHARPPY_API gmtl::Planed* gmtl_Plane_double__Plane__gmtl_Vec3d_double(const gmtl::Vec3d* p0, const double p1)
    {
       const gmtl::Vec3d& marshal_p0 = *p0; // Pre-call marshaling for p0
       gmtl::Planed* obj = new gmtl::Planed(marshal_p0, p1);
@@ -115,7 +115,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method gmtl::Plane<double>::setOffset()
-   SHARPPY_API void gmtl_Plane_double__setOffset__double1(gmtl::Planed* self_, const double& p0)
+   SHARPPY_API void gmtl_Plane_double__setOffset__double1(gmtl::Planed* self_, const double p0)
    {
       self_->setOffset(p0);
    }

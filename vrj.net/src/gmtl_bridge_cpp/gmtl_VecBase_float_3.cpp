@@ -51,21 +51,21 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<float,3>* gmtl_VecBase_float_3__VecBase__float_float(const float& p0, const float& p1)
+   SHARPPY_API gmtl::VecBase<float,3>* gmtl_VecBase_float_3__VecBase__float_float(const float p0, const float p1)
    {
       gmtl::VecBase<float,3>* obj = new gmtl::VecBase<float,3>(p0, p1);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<float,3>* gmtl_VecBase_float_3__VecBase__float_float_float(const float& p0, const float& p1, const float& p2)
+   SHARPPY_API gmtl::VecBase<float,3>* gmtl_VecBase_float_3__VecBase__float_float_float(const float p0, const float p1, const float p2)
    {
       gmtl::VecBase<float,3>* obj = new gmtl::VecBase<float,3>(p0, p1, p2);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::VecBase<float,3>* gmtl_VecBase_float_3__VecBase__float_float_float_float(const float& p0, const float& p1, const float& p2, const float& p3)
+   SHARPPY_API gmtl::VecBase<float,3>* gmtl_VecBase_float_3__VecBase__float_float_float_float(const float p0, const float p1, const float p2, const float p3)
    {
       gmtl::VecBase<float,3>* obj = new gmtl::VecBase<float,3>(p0, p1, p2, p3);
       return obj;
@@ -84,28 +84,28 @@ extern "C"
 
 /*
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
-   SHARPPY_API void gmtl_VecBase_float_3__set__float1(gmtl::VecBase<float,3>* self_, const float& p0)
+   SHARPPY_API void gmtl_VecBase_float_3__set__float1(gmtl::VecBase<float,3>* self_, const float p0)
    {
       self_->set(p0);
    }
 */
 
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
-   SHARPPY_API void gmtl_VecBase_float_3__set__float_float2(gmtl::VecBase<float,3>* self_, const float& p0, const float& p1)
+   SHARPPY_API void gmtl_VecBase_float_3__set__float_float2(gmtl::VecBase<float,3>* self_, const float p0, const float p1)
    {
       self_->set(p0, p1);
    }
 
 
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
-   SHARPPY_API void gmtl_VecBase_float_3__set__float_float_float3(gmtl::VecBase<float,3>* self_, const float& p0, const float& p1, const float& p2)
+   SHARPPY_API void gmtl_VecBase_float_3__set__float_float_float3(gmtl::VecBase<float,3>* self_, const float p0, const float p1, const float p2)
    {
       self_->set(p0, p1, p2);
    }
 
 
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
-   SHARPPY_API void gmtl_VecBase_float_3__set__float_float_float_float4(gmtl::VecBase<float,3>* self_, const float& p0, const float& p1, const float& p2, const float& p3)
+   SHARPPY_API void gmtl_VecBase_float_3__set__float_float_float_float4(gmtl::VecBase<float,3>* self_, const float p0, const float p1, const float p2, const float p3)
    {
       self_->set(p0, p1, p2, p3);
    }

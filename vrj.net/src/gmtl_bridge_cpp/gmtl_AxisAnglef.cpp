@@ -51,14 +51,14 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__float_float_float_float(const float& p0, const float& p1, const float& p2, const float& p3)
+   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__float_float_float_float(const float p0, const float p1, const float p2, const float p3)
    {
       gmtl::AxisAnglef* obj = new gmtl::AxisAnglef(p0, p1, p2, p3);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__float_gmtl_Vec3f(const float& p0, const gmtl::Vec3f* p1)
+   SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__float_gmtl_Vec3f(const float p0, const gmtl::Vec3f* p1)
    {
       const gmtl::Vec3f& marshal_p1 = *p1; // Pre-call marshaling for p1
       gmtl::AxisAnglef* obj = new gmtl::AxisAnglef(p0, marshal_p1);
@@ -72,14 +72,14 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::AxisAngle<float>::set()
-   SHARPPY_API void gmtl_AxisAngle_float__set__float_float_float_float4(gmtl::AxisAnglef* self_, const float& p0, const float& p1, const float& p2, const float& p3)
+   SHARPPY_API void gmtl_AxisAngle_float__set__float_float_float_float4(gmtl::AxisAnglef* self_, const float p0, const float p1, const float p2, const float p3)
    {
       self_->set(p0, p1, p2, p3);
    }
 
 
    // Wrapper for non-virtual method gmtl::AxisAngle<float>::set()
-   SHARPPY_API void gmtl_AxisAngle_float__set__float_gmtl_Vec3f2(gmtl::AxisAnglef* self_, const float& p0, const gmtl::Vec3f* p1)
+   SHARPPY_API void gmtl_AxisAngle_float__set__float_gmtl_Vec3f2(gmtl::AxisAnglef* self_, const float p0, const gmtl::Vec3f* p1)
    {
       const gmtl::Vec3f& marshal_p1 = *p1;
       self_->set(p0, marshal_p1);
@@ -95,7 +95,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method gmtl::AxisAngle<float>::setAngle()
-   SHARPPY_API void gmtl_AxisAngle_float__setAngle__float1(gmtl::AxisAnglef* self_, const float& p0)
+   SHARPPY_API void gmtl_AxisAngle_float__setAngle__float1(gmtl::AxisAnglef* self_, const float p0)
    {
       self_->setAngle(p0);
    }

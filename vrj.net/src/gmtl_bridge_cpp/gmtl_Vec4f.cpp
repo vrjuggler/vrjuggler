@@ -60,21 +60,21 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Vec4f* gmtl_Vec_float_4__Vec__float_float(const float& p0, const float& p1)
+   SHARPPY_API gmtl::Vec4f* gmtl_Vec_float_4__Vec__float_float(const float p0, const float p1)
    {
       gmtl::Vec4f* obj = new gmtl::Vec4f(p0, p1);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Vec4f* gmtl_Vec_float_4__Vec__float_float_float(const float& p0, const float& p1, const float& p2)
+   SHARPPY_API gmtl::Vec4f* gmtl_Vec_float_4__Vec__float_float_float(const float p0, const float p1, const float p2)
    {
       gmtl::Vec4f* obj = new gmtl::Vec4f(p0, p1, p2);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API gmtl::Vec4f* gmtl_Vec_float_4__Vec__float_float_float_float(const float& p0, const float& p1, const float& p2, const float& p3)
+   SHARPPY_API gmtl::Vec4f* gmtl_Vec_float_4__Vec__float_float_float_float(const float p0, const float p1, const float p2, const float p3)
    {
       gmtl::Vec4f* obj = new gmtl::Vec4f(p0, p1, p2, p3);
       return obj;
