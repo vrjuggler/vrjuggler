@@ -177,7 +177,16 @@ public class BeanContainer extends JPanel
       for ( int i = 0; i < listeners.size(); i++ )
       {
          l = (CommunicationListener) listeners.elementAt(i);
-         l.connectionOpened(e);
+
+         try
+         {
+            l.connectionOpened(e);
+         }
+         catch (Exception open_ex)
+         {
+            System.err.println("Caught exception when notifying listener of opened connection");
+            System.err.println(open_ex.getMessage());
+         }
       }
    }
 
@@ -198,7 +207,16 @@ public class BeanContainer extends JPanel
       for ( int i = 0; i < listeners.size(); i++ )
       {
          l = (CommunicationListener) listeners.elementAt(i);
-         l.connectionClosed(e);
+
+         try
+         {
+            l.connectionClosed(e);
+         }
+         catch (Exception close_ex)
+         {
+            System.err.println("Caught exception when notifying listener of closed connection");
+            System.err.println(close_ex.getMessage());
+         }
       }
    }
 
