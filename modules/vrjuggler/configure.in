@@ -148,15 +148,13 @@ DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
 DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***))
 DPP_CXX_DYNAMIC_CAST(AC_MSG_ERROR(*** The library requires C++ dynamic_cast<> ***))
 
-# Check for the JDK
-DPP_PATH_JAVA
+# Check for the JDK.
+DPP_PATH_JAVA( , [BUILD_JAVA='Y'], [BUILD_JAVA='N'])
 
 # If there is still no value in $JAVAC, then warn that VRJConfig will not be
 # built
-BUILD_JAVA='Y'
-if test "x$JAVAC" = "xno" ; then
-    AC_MSG_WARN([*** VRJConfig requires javac -- it will not be built ***])
-    BUILD_JAVA='N'
+if test "x$BUILD_JAVA" = "xN" ; then
+   AC_MSG_WARN([*** VRJConfig requires the JDK -- it will not be built ***])
 fi
 
 # Make sure ant is available to build the java sources
@@ -243,13 +241,23 @@ fi
 
 DPP_HAVE_CPPUNIT([1.9.10])
 
-# --------------------
-# Java3D.
-# --------------------
-
+# --------------------------
+# JDK 1.4 for Proxy Editor.
+# --------------------------
+BUILD_PROXY_EDITOR='N'
 if test "x$BUILD_JAVA" = "xY" ; then
-   # If we are building the Tweek Java code, we should try to enable building
-   # the Java test suite too.
+   DPP_JDK_VERSION([$JDK_HOME], [1.4], [BUILD_PROXY_EDITOR='Y'],
+      [AC_MSG_WARN([*** JDK 1.4 or newer required for the VRJConfig Proxy Editor ***])
+       BUILD_PROXY_EDITOR='N'])
+fi
+
+# --------
+# Java3D.
+# --------
+BUILD_JAVA_3D_EDITOR='N'
+if test "x$BUILD_JAVA" = "xY" ; then
+   # If we are building VRJConfig, we can try to enable building the
+   # Java3D-based editor(s).
    if test "x$BUILD_JAVA" = "xY" ; then
       DPP_CHECK_JAVA_STATIC_METHOD(javax.media.j3d.VirtualUniverse, getJ3DThreadPriority() , ,
          BUILD_JAVA_3D_EDITOR='Y',
@@ -596,7 +604,7 @@ AC_SUBST(RM_LN)
 AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(BUILD_JAVA)
-
+AC_SUBST(BUILD_PROXY_EDITOR)
 AC_SUBST(BUILD_JAVA_3D_EDITOR)
 AC_SUBST(JAVA3D_JAR)
 
