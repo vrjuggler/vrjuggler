@@ -238,6 +238,9 @@ public:
 
 // testing functions
 public:
+	//: read in data from the flock
+	void read_data();
+	
 	//: check the group state
 	//  result - group state is output to screen
 	void check_group();
