@@ -39,11 +39,11 @@
 
 class vjSoundEngine;
 class vjSound
-{
+{  
 public:
    vjSound( vjSoundEngine& engine )
      : mLooping( 0 ),  mEngine(&engine), mPosition( 0.0f, 0.0f, 0.0f ),
-       mVolume( 1.0f ), mFalloff( 20.0f )
+       mVolume( 1.0f ), mFalloff( 20.0f ), mEnabled( true )
    {
    }
    
@@ -84,21 +84,21 @@ public:
    {
       mLooping = times;
    } 
+      
+   // allows a user to enable (restart) or disable (pause) a sound 
+   // without worring about its state set by start or stop.
+   // NOTE: to hear a sound enable() and trigger() must be active.
+   //       default is true
+   virtual void enable( const bool& state = true ) { mEnabled = state; }
    
-   enum BinaryState
-   {
-      ON, OFF
-   };   
+   // returns vjSound::ON or vjSound::OFF
+   const bool& isEnabled() const { return mEnabled; }
    
-   // allows a user to enable or disable a sound without worring about its state set by start or stop.
-   // NOTE: to hear a sound enable() and play() must be active.
-   //       default is ON
-   virtual void enable( BinaryState state = ON ) {}
-    
+   // trigger (play) the sound
    virtual void trigger() {}
    
    // stop the sound.
-   // useful when a sound has been set to LOOP, this will stop it
+   // stops the sound before it finishes playing
    virtual void stop() {}
    
    // change the position of the sound.
@@ -149,6 +149,7 @@ public:
 protected:
    // my associated engine...
    vjSoundEngine* mEngine;
+   bool mEnabled;
    std::string mName;
    vjVec3 mPosition; // position of this sound in distance units where 1 is one unit.
    float mVolume;  // from 0.0 to 1.0
