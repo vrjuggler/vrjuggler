@@ -230,7 +230,7 @@ public class ConfigIO {
 
 
     public static void writeConfigChunkDB (File file, ConfigChunkDB db, int handler_type) throws IOException {
-        ConfigIOHandler handler = getHandler (handler_type);
+        ConfigIOHandler handler = getHandler (XML);
         if (handler == null)
             throw new IOException ("Couldn't find file format handler.");
 
@@ -240,7 +240,7 @@ public class ConfigIO {
 
 
     public static void writeConfigChunkDB (DataOutputStream output, ConfigChunkDB db, int handler_type) throws IOException {
-        ConfigIOHandler handler = getHandler (handler_type);
+        ConfigIOHandler handler = getHandler (XML);
         if (handler == null)
             throw new IOException ("Couldn't find file format handler.");
 
@@ -331,7 +331,7 @@ public class ConfigIO {
 
 
     public static void writeChunkDescDB (File file, ChunkDescDB db, int handler_type) throws IOException {
-        ConfigIOHandler handler = getHandler (handler_type);
+        ConfigIOHandler handler = getHandler (XML);
         if (handler == null)
             throw new IOException ("Couldn't find file format handler.");
 
@@ -341,7 +341,7 @@ public class ConfigIO {
 
 
     public static void writeChunkDescDB (DataOutputStream output, ChunkDescDB db, int handler_type) throws IOException {
-        ConfigIOHandler handler = getHandler (handler_type);
+        ConfigIOHandler handler = getHandler (XML);
         if (handler == null)
             throw new IOException ("Couldn't find file format handler.");
 
