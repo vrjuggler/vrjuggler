@@ -336,6 +336,7 @@ pre-install:
 post-install:
 	@$(MAKE) install-tweek-gui
 	@$(MAKE) install-test
+	@$(MAKE) install-data
 	@$(MAKE) install-m4
 	@$(MAKE) install-java-idl
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
@@ -396,6 +397,16 @@ ifeq ($(BUILD_EXTENSIONS), Y)
 endif # if $(BUILD_EXTENSIONS) == Y
 endif	# if $(BUILD_JAVA) == Y
 endif	# ifdef NO_JAVA
+
+install-data:
+	@echo "------------------------------------------------"
+	@echo "Installing standard data files"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.data.dist -p $(projdatadir)
+	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/data	\
+          -v "$(topdir)/VARS.pl" $(EXTRA_INSTALL_ARGS)
 
 # Install the test programs.
 install-test:
