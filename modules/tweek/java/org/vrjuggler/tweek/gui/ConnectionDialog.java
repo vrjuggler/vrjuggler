@@ -113,6 +113,7 @@ public class ConnectionDialog extends JDialog
 
       this.setModal(true);
       this.pack();
+      this.setLocationRelativeTo(owner);
    }
 
    public int getStatus ()
