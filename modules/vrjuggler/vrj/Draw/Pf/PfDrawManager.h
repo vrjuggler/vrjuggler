@@ -9,8 +9,7 @@
 
 #include <function.h>
 #include <vector.h>
-
-#include <mstring.h>
+#include <algorithm>
 
 #include <Performer/pf/pfChannel.h>
 
@@ -135,7 +134,7 @@ protected:
    //! RETURNS: NULL - Not found
    pfDisp* getPfDisp(pfChannel* chan)
    {
-      vector<pfDisp>::iterator theDisp = find_if(disps.begin(), disps.end(), findPfDispChan(chan));
+      vector<pfDisp>::iterator theDisp = std::find_if(disps.begin(), disps.end(), findPfDispChan(chan));
       if(theDisp == disps.end())
          return NULL;
       else
