@@ -80,8 +80,6 @@ class SocketManager;
 /**
  * Implementation class for simulated sockets.  This can be used in the
  * vpr::Socket_t bridge template.
- *
- * @author Kevin Meinert
  */
 class VPR_CLASS_API SocketImplSIM
 {
@@ -89,7 +87,7 @@ public:
    /**
     * Destructor.  This will close the socket.
     */
-   virtual ~SocketImplSIM(void);
+   virtual ~SocketImplSIM();
 
    // =========================================================================
    // vpr::BlockIO basics.
@@ -103,7 +101,7 @@ public:
     *
     * @return An object containing the "name" of this socket.
     */
-   const std::string& getName (void)
+   const std::string& getName()
    {
       return mName;
    }
@@ -116,7 +114,7 @@ public:
     *       is opened in blocking mode.  If the socket is already open, this
     *       has no effect.
     */
-   void setOpenBlocking (void)
+   void setOpenBlocking()
    {
       mOpenBlocking = true;
    }
@@ -130,7 +128,7 @@ public:
     *       is opened in non-blocking mode.  If the socket is already open,
     *       this has no effect.
     */
-   void setOpenNonBlocking (void)
+   void setOpenNonBlocking()
    {
       mOpenBlocking = false;
    }
@@ -148,7 +146,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the socket could not be
     *         opened.
     */
-   vpr::ReturnStatus open( void )
+   vpr::ReturnStatus open()
    {
       mOpen = true;
 
@@ -171,7 +169,9 @@ public:
    }
 
    bool isBound() const
-   {  return mBound; }
+   {
+      return mBound;
+   }
 
    /**
     * Closes the socket.
@@ -186,16 +186,16 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the socket could not be
     *         closed for some reason.
     */
-   vpr::ReturnStatus close( void );
+   vpr::ReturnStatus close();
 
    /// Gets the handle to this socket.
-   vpr::IOSysSIM::Handle getHandle ( void )
+   vpr::IOSysSIM::Handle getHandle()
    {
       return this;
    }
 
    // set it.
-   vpr::ReturnStatus setReuseAddr( bool adr )
+   vpr::ReturnStatus setReuseAddr(bool adr)
    {
       mReuseAddr = adr;
       return vpr::ReturnStatus();
@@ -212,7 +212,7 @@ public:
     *         vpr::ReturnStatus::Fail if the socket could not be bound to
     *         the address in mLocalAddr.
     */
-   vpr::ReturnStatus bind(void);
+   vpr::ReturnStatus bind();
 
    /**
     * Reconfigures the socket so that it is in blocking mode.
@@ -224,7 +224,7 @@ public:
     *         blocking mode is set to blocking.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus enableBlocking( void )
+   vpr::ReturnStatus enableBlocking()
    {
       mBlocking = true;
       return vpr::ReturnStatus(); // success
@@ -240,7 +240,7 @@ public:
     *         blocking mode is set to non-blocking.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus enableNonBlocking( void )
+   vpr::ReturnStatus enableNonBlocking()
    {
       mBlocking = false;
       return vpr::ReturnStatus(); // success
@@ -252,7 +252,7 @@ public:
     * @return true is returned if the socket is in blocking
     *         mode.  Otherwise, false is returned.
     */
-   bool getBlocking (void) const
+   bool getBlocking() const
    {
       return mBlocking;
    }
@@ -263,7 +263,7 @@ public:
     * @return true is returned if the socket is in non-blocking
     *         mode.  Otherwise, false is returned.
     */
-   bool getNonBlocking (void) const
+   bool getNonBlocking() const
    {
       return ! mBlocking;
    }
@@ -292,15 +292,14 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the connect could not
     *         be made.
     */
-   vpr::ReturnStatus connect( vpr::Interval timeout = vpr::Interval::NoTimeout );
+   vpr::ReturnStatus connect(vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /** Completes a previously started connection to a given peer
    *
    * NOTE: UDP sockets can use this function as well.  It lets them set a remote
    *       sockets peer and connection status.
    */
-   vpr::ReturnStatus completeConnection( SocketImplSIM* connectedPeer);
-
+   vpr::ReturnStatus completeConnection(SocketImplSIM* connectedPeer);
 
    /**
     * Gets the status of a possibly connected socket.
@@ -310,7 +309,7 @@ public:
     * @return true is returned if this socket is still connected.<br>
     *         false is returned if this socket is not currently connected.
     */
-   bool isConnected (void)
+   bool isConnected()
    {
       return mPeer != NULL;
    }
@@ -324,19 +323,19 @@ public:
     * @return A vpr::SocketTypes::Type value giving the socket type for this
     *         socket.
     */
-   const vpr::SocketTypes::Type& getType( void ) const
+   const vpr::SocketTypes::Type& getType() const
    {
       return mType;
    }
 
-   const vpr::InetAddr& getLocalAddr( void ) const
+   const vpr::InetAddr& getLocalAddr() const
    {
       return mLocalAddr;
    }
 
    vpr::ReturnStatus setLocalAddr(const vpr::InetAddr& addr);
 
-   const vpr::InetAddr& getRemoteAddr( void ) const
+   const vpr::InetAddr& getRemoteAddr() const
    {
       return mRemoteAddr;
    }
@@ -346,7 +345,7 @@ public:
    /**
     * Returns the number of bytes currently available for reading.
     */
-   virtual vpr::Uint32 availableBytes(void);
+   virtual vpr::Uint32 availableBytes();
 
    /**
     * Implementation of the read template method.  This reads at
@@ -376,16 +375,16 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the read operation
     *         ailed.
     */
-   vpr::ReturnStatus read_i( void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& data_read,
-                             vpr::Interval timeout = vpr::Interval::NoTimeout );
+   vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
+                            vpr::Uint32& data_read,
+                            vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /** Exactly like read_i except takes MessageDataPtr directly for zero copy networking
    * Updates msgData to point at the new message data.
    */
-   vpr::ReturnStatus read_i( boost::shared_ptr<std::vector<vpr::Uint8> >& msgData,
-                             vpr::Uint32& data_read,
-                             vpr::Interval timeout = vpr::Interval::NoTimeout );
+   vpr::ReturnStatus read_i(boost::shared_ptr<std::vector<vpr::Uint8> >& msgData,
+                            vpr::Uint32& data_read,
+                            vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 
    /**
@@ -417,19 +416,20 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the read operation
     *         failed.
     */
-   vpr::ReturnStatus readn_i( void* buffer, const vpr::Uint32 length,
-                              vpr::Uint32& data_read,
-                              vpr::Interval timeout = vpr::Interval::NoTimeout )
+   vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
+                             vpr::Uint32& data_read,
+                             vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return read_i(buffer, length, data_read, timeout);
    }
 
-   /** Exactly like read_i except takes MessageDataPtr directly for zero copy networking
-   * Updates msgData to point at the new message data.
-   */
-   vpr::ReturnStatus readn_i( boost::shared_ptr<std::vector<vpr::Uint8> >& msgData,
+   /**
+    * Exactly like read_i except takes MessageDataPtr directly for zero copy
+    * networking.  Updates msgData to point at the new message data.
+    */
+   vpr::ReturnStatus readn_i(boost::shared_ptr<std::vector<vpr::Uint8> >& msgData,
                              vpr::Uint32& data_read,
-                             vpr::Interval timeout = vpr::Interval::NoTimeout )
+                             vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return read_i(msgData, data_read, timeout);
    }
@@ -461,16 +461,16 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the write operation
     *         failed.
     */
-   vpr::ReturnStatus write_i( const void* buffer, const vpr::Uint32 length,
-                              vpr::Uint32& data_written,
-                              vpr::Interval timeout = vpr::Interval::NoTimeout );
+   vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
+                             vpr::Uint32& data_written,
+                             vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /** Exactly like write_i except takes MessageDataPtr directly for zero copy networking
     * Starts passing a shared copy of msgData across the network
     */
-   vpr::ReturnStatus write_i( boost::shared_ptr<std::vector<vpr::Uint8> > msgData,
-                              vpr::Uint32& data_written,
-                              vpr::Interval timeout = vpr::Interval::NoTimeout );
+   vpr::ReturnStatus write_i(boost::shared_ptr<std::vector<vpr::Uint8> > msgData,
+                             vpr::Uint32& data_written,
+                             vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Retrieves the value for the given option as set on the socket.
@@ -541,21 +541,21 @@ public:
     *         excptional state.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus inExceptState(void);
+   vpr::ReturnStatus inExceptState();
 
-   void addArrivedMessage (vpr::sim::MessagePtr msg)
+   void addArrivedMessage(vpr::sim::MessagePtr msg)
    {
       vprASSERT(msg->getDestinationSocket() == this && "Message delivered to incorrect destination");
       vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
       mArrivedQueue.push_back(msg);
    }
 
-   void setPathToPeer (vpr::sim::NetworkGraph::VertexListPtr path)
+   void setPathToPeer(vpr::sim::NetworkGraph::VertexListPtr path)
    {
       mPathToPeer = path;
    }
 
-   void setNetworkNode (const vpr::sim::NetworkGraph::net_vertex_t& node)
+   void setNetworkNode(const vpr::sim::NetworkGraph::net_vertex_t& node)
    {
       mNetworkNode  = node;
    }
@@ -569,7 +569,7 @@ public:
 protected:
    friend class vpr::sim::SocketManager;
 
-   void disconnect(void);
+   void disconnect();
 
    /**
     * This just initializes member variables to reasonable defaults.
