@@ -16,8 +16,12 @@
 #         --CPPFLAGS=<C preprocessor flags>
 #         --CXXFLAGS=<C++ compiler flags>
 #         --INCLUDES=<Extra include dirs>
-#         --TEST_VJ_LIBS=<Libraries needed for test code>
-#         --TEST_EXTRA_LIBS=<Extra libraries needed for test code>
+#         --TEST_VJ_LIBS_BASIC=<Basic libraries needed for test code>
+#         --TEST_VJ_LIBS_GL=<OpenGL API libraries needed for test code>
+#         --TEST_VJ_LIBS_PF=<Performer API libraries needed for test code>
+#         --TEST_EXTRA_LIBS_BASIC=<Basic extra libraries needed for test code>
+#         --TEST_EXTRA_LIBS_GL=<Extra OpenGL libraries needed for test code>
+#         --TEST_EXTRA_LIBS_PF=<Extra Performer libraries needed for test code>
 #         --srcdir=<Location of source code>
 #         --prefix=<Base directory where Makefile will go>
 #         --startdir=<Directory where search begins>
@@ -57,8 +61,12 @@ Usage:
         --srcdir=<Location of source code>
         --prefix=<Base directory where Makefile will go>
         --startdir=<Directory where search begins>
-        --TEST_VJ_LIBS=<Extra libraries needed for test code>
-        --TEST_EXTRA_LIBS=<Libraries needed for test code>
+        --TEST_VJ_LIBS_BASIC=<Basic libraries needed for test code>
+        --TEST_VJ_LIBS_GL=<OpenGL API libraries needed for test code>
+        --TEST_VJ_LIBS_PF=<Performer API libraries needed for test code>
+        --TEST_EXTRA_LIBS_BASIC=<Basic extra libraries needed for test code>
+        --TEST_EXTRA_LIBS_GL=<Extra OpenGL libraries needed for test code>
+        --TEST_EXTRA_LIBS_PF=<Extra Performer libraries needed for test code>
         --SUBDIRS=<Directories containing Makefile.in's>
 USAGE_EOF
 }
@@ -69,8 +77,12 @@ GetOptions("CXX=s" => \$VARS{'CXX'}, "DEFS:s" => \$VARS{'DEFS'},
 	   "CPPFLAGS:s" => \$VARS{'CPPFLAGS'},
 	   "CXXFLAGS:s" => \$VARS{'CXXFLAGS'},
 	   "INCLUDES:s" => \$VARS{'INCLUDES'},
-	   "TEST_VJ_LIBS=s" => \$VARS{'TEST_VJ_LIBS'},
-	   "TEST_EXTRA_LIBS=s" => \$VARS{'TEST_EXTRA_LIBS'},
+	   "TEST_VJ_LIBS_BASIC=s" => \$VARS{'TEST_VJ_LIBS_BASIC'},
+	   "TEST_VJ_LIBS_GL=s" => \$VARS{'TEST_VJ_LIBS_GL'},
+	   "TEST_VJ_LIBS_PF=s" => \$VARS{'TEST_VJ_LIBS_PF'},
+	   "TEST_EXTRA_LIBS_BASIC=s" => \$VARS{'TEST_EXTRA_LIBS_BASIC'},
+	   "TEST_EXTRA_LIBS_GL=s" => \$VARS{'TEST_EXTRA_LIBS_GL'},
+	   "TEST_EXTRA_LIBS_PF=s" => \$VARS{'TEST_EXTRA_LIBS_PF'},
 	   "srcdir=s" => \$VARS{'srcdir'}, "SUBDIRS=s" => \$VARS{'SUBDIRS'},
 	   "prefix=s" => \$prefix, "startdir=s" => \$startdir);
 
