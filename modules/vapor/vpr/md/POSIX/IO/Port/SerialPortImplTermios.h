@@ -208,71 +208,6 @@ public:
        return m_handle->enableNonBlocking();
     }
 
-    // ------------------------------------------------------------------------
-    //! Read up to the specified number of bytes from the serial port into the
-    //+ given buffer.
-    //
-    //! PRE: The port's file handle is valid, and the buffer is at least
-    //+      length bytes long.
-    //! POST: The given buffer has length bytes copied into it from the serial
-    //+       port, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer where the data read from the
-    //+                port is to be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the serial
-    //+                port.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    read (void* buffer, const size_t length) {
-        return m_handle->read(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    //: Read exactly the specified number of bytes from the serial port into
-    //+ the given buffer.
-    //
-    //! PRE: The port's file handle is valid, and the buffer is at least
-    //+      length bytes long.
-    //! POST: The given buffer has length bytes copied into it from the serial
-    //+       port, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer where the port's buffer
-    //+                contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the serial
-    //+                port.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    readn (void* buffer, const size_t length) {
-        return m_handle->readn(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    //: Write the buffer to the serial port.
-    //
-    //! PRE: The port's file handle is valid.
-    //! POST: The given buffer is written to the serial port, and the number
-    //+       of bytes written successfully is returned to the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer to be written.
-    //! ARGS: length - The length of the buffer.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully written to the serail
-    //+                port.
-    //! RETURNS:  -1 - An error occurred when writing.
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    write (const void* buffer, const size_t length) {
-        return m_handle->write(buffer, length);
-    }
-
     // ========================================================================
     // vpr::SerialPortImp interface implementation.
     // ========================================================================
@@ -610,6 +545,71 @@ protected:
         CFLAG,		// Control flag
         LFLAG		// Local flag
     };
+
+    // ------------------------------------------------------------------------
+    //! Read up to the specified number of bytes from the serial port into the
+    //+ given buffer.
+    //
+    //! PRE: The port's file handle is valid, and the buffer is at least
+    //+      length bytes long.
+    //! POST: The given buffer has length bytes copied into it from the serial
+    //+       port, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer where the data read from the
+    //+                port is to be stored.
+    //! ARGS: length - The number of bytes to be read.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the serial
+    //+                port.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    read_i (void* buffer, const size_t length) {
+        return m_handle->read(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Read exactly the specified number of bytes from the serial port into
+    //+ the given buffer.
+    //
+    //! PRE: The port's file handle is valid, and the buffer is at least
+    //+      length bytes long.
+    //! POST: The given buffer has length bytes copied into it from the serial
+    //+       port, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer where the port's buffer
+    //+                contents are to be stored.
+    //! ARGS: length - The number of bytes to be read.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the serial
+    //+                port.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    readn_i (void* buffer, const size_t length) {
+        return m_handle->readn(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Write the buffer to the serial port.
+    //
+    //! PRE: The port's file handle is valid.
+    //! POST: The given buffer is written to the serial port, and the number
+    //+       of bytes written successfully is returned to the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer to be written.
+    //! ARGS: length - The length of the buffer.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully written to the serail
+    //+                port.
+    //! RETURNS:  -1 - An error occurred when writing.
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    write_i (const void* buffer, const size_t length) {
+        return m_handle->write(buffer, length);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
