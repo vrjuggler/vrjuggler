@@ -33,6 +33,8 @@
 #include <gadget/gadgetConfig.h>
 
 #include <boost/concept_check.hpp>
+#include <vpr/IO/ObjectWriter.h>
+#include <vpr/IO/ObjectReader.h>
 #include <vpr/Util/Debug.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Util/DeviceSerializationTokens.h>

@@ -35,6 +35,8 @@
 #include <boost/concept_check.hpp>
 #include <vpr/vpr.h>
 #include <vpr/Sync/Guard.h>
+#include <vpr/IO/ObjectWriter.h>
+#include <vpr/IO/ObjectReader.h>
 #include <vpr/Util/Assert.h>
 
 #include <gadget/Type/EventWindow.h>
