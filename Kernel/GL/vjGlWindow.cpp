@@ -105,7 +105,7 @@ void vjGlWindow::setLeftEyeProjection()
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(left_proj->viewMat.getFloatPtr());
+   glMultMatrixf(left_proj->mViewMat.getFloatPtr());
 #endif
 }
 
@@ -147,7 +147,7 @@ void vjGlWindow::setRightEyeProjection()
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(right_proj->viewMat.getFloatPtr());
+   glMultMatrixf(right_proj->mViewMat.getFloatPtr());
 #endif
 }
 
