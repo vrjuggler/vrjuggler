@@ -324,9 +324,6 @@ public class PropertySheetFactory extends PropertyComponent
                }
             }
          );
-
-         refreshOrderingButtons(sheet, PropertySheet.VAR_LIST_VALUE_START_ROW,
-                                row);
       }
 
       sheet.add(up_button,
@@ -337,6 +334,12 @@ public class PropertySheetFactory extends PropertyComponent
                 new TableLayoutConstraints(PropertySheet.DOWN_ICON_COLUMN, row,
                                            PropertySheet.DOWN_ICON_COLUMN, row,
                                            TableLayout.LEFT, TableLayout.TOP));
+
+      if ( propDef.isVariable() )
+      {
+         refreshOrderingButtons(sheet, PropertySheet.VAR_LIST_VALUE_START_ROW,
+                                row);
+      }
    }
 
    /**
@@ -453,8 +456,6 @@ public class PropertySheetFactory extends PropertyComponent
                   components[i].setEnabled(
                      tlc.row1 != PropertySheet.VAR_LIST_VALUE_START_ROW
                   );
-                  System.out.println("Up button in row #" + tlc.row1 +
-                                     " enabled? " + components[i].isEnabled());
                }
                // The "Down" button must be disabled when it is in the last
                // row of the layout for a variable list of values.  Otherwise,
@@ -462,8 +463,6 @@ public class PropertySheetFactory extends PropertyComponent
                else if ( tlc.col1 == PropertySheet.DOWN_ICON_COLUMN )
                {
                   components[i].setEnabled(tlc.row1 != last_row);
-                  System.out.println("Down button in row #" + tlc.row1 +
-                                     " enabled? " + components[i].isEnabled());
                }
             }
          }
