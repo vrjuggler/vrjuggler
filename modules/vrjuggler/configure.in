@@ -134,7 +134,6 @@ RELEASE=`uname -r`	# Operating system version number
 
 AR=''			# Archive library command (generally ar(1))
 LD=''			# Shared library command (usually ld(1))
-LIBOPTS=''		# Options for shared library generator
 LDOPTS=''		# More options for shared library generator
 SHAREDLIB_EXT=''	# Extension for shared libraries (usually 'so')
 
@@ -193,8 +192,7 @@ case $host in
         CFLAGS="-ptv $CFLAGS"
         CXXFLAGS="-ptv $CXXFLAGS"
         INCLUDES="$INCLUDES -I/usr/include/CC -I/usr/include"
-        LD='${CXX} -shared'
-        LIBOPTS='-check_registry'
+        LD='${CXX} -shared -check_registry'
         LDFLAGS="$LDFLAGS"
         LDOPTS="$LDOPTS -all"
         SHAREDLIB_EXT='so'
@@ -214,7 +212,6 @@ case $host in
         CXXFLAGS="+p $CXXFLAGS"
         LD='ld'
         LDFLAGS="$LDFLAGS -L/usr/lib/X11R6"
-        LIBOPTS=''
         LDOPTS='-b'
         OPT_FLAGS='+inline_level 3'
         SHAREDLIB_EXT='sl'
@@ -632,7 +629,6 @@ AC_SUBST(DEPENDFLAGS)
 AC_SUBST(DEPEND_EXTRAS)
 AC_SUBST(INCLUDES)
 AC_SUBST(LD)
-AC_SUBST(LIBOPTS)
 AC_SUBST(LIBS)
 AC_SUBST(LDOPTS)
 AC_SUBST(OPT_FLAGS)
