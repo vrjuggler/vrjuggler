@@ -27,7 +27,7 @@ public class PrefsTestBean extends JPanel implements java.io.Serializable,
       editor.addPreferencesEditListener(this);
    }
 
-   public void initGUI ()
+   public void initPrefsGUI()
    {
       editor.initGUI();
    }
