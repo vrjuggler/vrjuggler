@@ -50,14 +50,18 @@ desc-update-2.1-2.2:
 desc-update-2.2-2.3:
 	$(MAKE) XSL_FILE=desc_2.2-2.3.xsl $(XSLT_TARGET)
 
+desc-update-2.3-3.0:
+	$(MAKE) XSL_FILE=desc_2.3-3.0.xsl $(XSLT_TARGET)
+
 desc-update-2.0-2.2:
 	$(MAKE) desc-update-2.0-2.1
 	$(MAKE) desc-update-2.1-2.2
 
-desc-update-2.0-2.3:
+desc-update-2.0-3.0:
 	$(MAKE) desc-update-2.0-2.1
 	$(MAKE) desc-update-2.1-2.2
 	$(MAKE) desc-update-2.2-2.3
+	$(MAKE) desc-update-2.3-3.0
 
 # Generate $(OUTPUT_FILE) from $(INPUT_FILE) using xsltproc and $(XSL_FILE) for
 # the stylesheet.
