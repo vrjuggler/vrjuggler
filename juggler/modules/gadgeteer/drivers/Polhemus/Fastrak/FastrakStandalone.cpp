@@ -37,8 +37,6 @@
 #include <vpr/Util/Assert.h>
 
 #include <gadget/Devices/Polhemus/Fastrak/FastrakStandalone.h>
-#include <jccl/PerfMonitor/PerformanceCategories.h>
-#include <jccl/PerfMonitor/PerformanceMonitor.h>
 
 vpr::ReturnStatus FastrakStandalone::open()
 {
@@ -154,13 +152,11 @@ void FastrakStandalone::readloop(void *unused)
       }
 
       Read(mConf.len);
-      jcclTIMESTAMP(jcclPERF_ALL, "gadget/Devices/Polhemus/Fastrak/end read cycle");
 
       vpr::System::msleep(10);  //The Polhemus docs state that you won't get more
       				//than 100 samples a second best case (with one
       				//station), so I figure this is safe, and it help
       				//with performance.
-      jcclTIMESTAMP(jcclPERF_ALL, "gadget/Devices/Polhemus/Fastrak/start read cycle");
       mDoFlush = false;
 //      if ( getppid() == 1 )
 //      {
