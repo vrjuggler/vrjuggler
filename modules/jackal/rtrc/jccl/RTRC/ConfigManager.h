@@ -75,6 +75,7 @@ public:
 
 
 public: // -- Query functions --- //
+
    //: Is the chunk in the active configuration??
    //! CONCURRENCY: concurrent
    //! NOTE: This locks the active list to do processing
@@ -92,77 +93,31 @@ public: // -- Query functions --- //
       return false;     // Not found, so return false
    }
 
-   // Add the given chunk db to the pending list as adds
-   //! PRE: The pending list can NOT be locked
-   //! POST: pendinglist = old(pendinglist) += db
-   //! NOTE: The entries are copied
-   void addChunkDB(ConfigChunkDB* db);
-
-   //: Add the given chunks to the db as pending removes
-   //! PRE: The pending list can NOT be locked
-   //! POST: pendinglist = old(pendinglist) += db
-   //! NOTE: The entries are copied
-   void removeChunkDB(ConfigChunkDB* db);
 
 
 public:   // ----- PENDING LIST ----- //
-   //: Do we need to check the pending list
-   //! CONCURRENCY: concurrent
-   // Implements some logic that allows the pending list to become "stale"
-   // If the pending list has been check a bunch of times and has had no
-   // changes in size, then we start telling people not to check it because
-   bool pendingNeedsChecked();
 
-   //: Get the size of the pending list
-   //! CONCURRENCY: concurrent
-   int getNumPending()
-   { return mPendingConfig.size(); }
 
    //: Add a pending entry
    //! PRE: pending must NOT be locked
    //! POST: A copy of the pendingChunk is placed on the pending list
    //! concurrency: gaurded
-   void addPending(PendingChunk& pendingChunk)
-   {
-      vprASSERT(0 == mPendingLock.test());
-      lockPending();
-      mPendingConfig.push_back(pendingChunk);
-      unlockPending();
-
-      // Reset pending count
-      mPendingCountMutex.acquire();
-      mPendingCheckCount = 0;
-      mPendingCountMutex.release();
-   }
+   void addPending(PendingChunk& pendingChunk);
 
 
-   //: Lock the pending list
-   // This function blocks until it can get a lock on the pending list
-   //! CONCURRENCY: gaurded
-   void lockPending()
-   { mPendingLock.acquire(); }
+   // Add the given chunk db to the pending list as adds
+   //! PRE: The pending list can NOT be locked
+   //! POST: pendinglist = old(pendinglist) += db
+   //! NOTE: The entries are copied
+   void addPending (ConfigChunkDB* db);
 
-   //: Unlock the pending list
-   // Unlocks the mutex held on the pending list
-   //! CONCURRENCY: gaurded
-   void unlockPending()
-   { mPendingLock.release(); }
 
-   //: Get the beginning of the pending list
-   //! PRE: Pending list must be locked
-   std::list<PendingChunk>::iterator getPendingBegin()
-   {
-      vprASSERT(1 == mPendingLock.test());     // ASSERT: We must have the lock
-      return mPendingConfig.begin();
-   }
+   //: Add the given chunks to the db as pending removes
+   //! PRE: The pending list can NOT be locked
+   //! POST: pendinglist = old(pendinglist) += db
+   //! NOTE: The entries are copied
+   void removePending (ConfigChunkDB* db);
 
-   //: Get the end of the pending list
-   //! PRE: Pending list must be locked
-   std::list<PendingChunk>::iterator getPendingEnd()
-   {
-      vprASSERT(1 == mPendingLock.test());
-      return mPendingConfig.end();
-   }
 
    //: Erase an item from the list
    //! PRE: Pending list must be locked && item must be in list
@@ -173,15 +128,65 @@ public:   // ----- PENDING LIST ----- //
       mPendingConfig.erase(item);
    }
 
+
+   //: Do we need to check the pending list
+   //! CONCURRENCY: concurrent
+   // Implements some logic that allows the pending list to become "stale"
+   // If the pending list has been check a bunch of times and has had no
+   // changes in size, then we start telling people not to check it because
+   bool pendingNeedsChecked();
+
+
+   //: Lock the pending list
+   // This function blocks until it can get a lock on the pending list
+   //! CONCURRENCY: gaurded
+   void lockPending()
+   { mPendingLock.acquire(); }
+
+
+   //: Unlock the pending list
+   // Unlocks the mutex held on the pending list
+   //! CONCURRENCY: gaurded
+   void unlockPending()
+   { mPendingLock.release(); }
+
+
+   //: Get the beginning of the pending list
+   //! PRE: Pending list must be locked
+   std::list<PendingChunk>::iterator getPendingBegin()
+   {
+      vprASSERT(1 == mPendingLock.test());     // ASSERT: We must have the lock
+      return mPendingConfig.begin();
+   }
+
+
+   //: Get the end of the pending list
+   //! PRE: Pending list must be locked
+   std::list<PendingChunk>::iterator getPendingEnd()
+   {
+      vprASSERT(1 == mPendingLock.test());
+      return mPendingConfig.end();
+   }
+
+
    //: Send a copy of the pending list to debug output
    //! PRE: Pending must be locked
    void debugDumpPending(int debug_level);
 
 
+   //: Get the size of the pending list
+   //! CONCURRENCY: concurrent
+   int getNumPending()
+   { return mPendingConfig.size(); }
+
+
+
 public:   // ----- ACTIVE LIST ----- //
+
    //: Are there items in current   //! CONCURRENCY: concurrent
    bool isActiveEmpty()
    { return mActiveConfig.isEmpty(); }
+
 
    //: Lock the current list
    // This function blocks until it can get a lock on the current list
@@ -189,11 +194,13 @@ public:   // ----- ACTIVE LIST ----- //
    void lockActive()
    { mActiveLock.acquire(); }
 
+
    //: Unlock the current list
    // Unlocks the mutex held on the current list
    //! CONCURRENCY: gaurded
    void unlockActive()
    { mActiveLock.release(); }
+
 
    //: Get the beginning of the current list
    //! PRE: Pending list must be locked
@@ -203,6 +210,7 @@ public:   // ----- ACTIVE LIST ----- //
       return mActiveConfig.begin();
    }
 
+
    //: Get the end of the pending list
    //! PRE: Active list must be locked
    std::vector<ConfigChunk*>::iterator getActiveEnd()
@@ -211,16 +219,18 @@ public:   // ----- ACTIVE LIST ----- //
       return mActiveConfig.end();
    }
 
+
    //: Erase an item from the list
    //! PRE: Active list must be locked && item must be in list
    //! POST: list = old(list).erase(item) && item is invalid
-   void removeActive(std::string chunk_name)
+   void removeActive(const std::string& chunk_name)
    {
       vprASSERT(0 == mActiveLock.test());
       lockActive();
       mActiveConfig.removeNamed(chunk_name);
       unlockActive();
    }
+
 
    //: Add an item to the active configuration
    //! NOTE: This DOES NOT process the chunk
@@ -234,6 +244,7 @@ public:   // ----- ACTIVE LIST ----- //
       unlockActive();
    }
 
+
    //: Return ptr to the active config dhunk db
    //! PRE: active must be locked
    //! NOTE: The pointer is only valid until active is unlocked
@@ -243,6 +254,7 @@ public:   // ----- ACTIVE LIST ----- //
       vprASSERT(1 == mActiveLock.test());
       return &mActiveConfig;
    }
+
 
 public:
    //: Scan the active list for items that don't have their dependencies filled
@@ -259,6 +271,8 @@ public:
 
     //------------------ JackalControl Stuff --------------------------------
 
+public:
+
     virtual void setJackalServer (JackalServer* js);
     virtual void addConnect (Connect *c);
     virtual void removeConnect (Connect* c);
@@ -267,34 +281,33 @@ public:
 
 
 private:
-   ConfigChunkDB            mActiveConfig;   //: List of current configuration
-   std::list<PendingChunk>  mPendingConfig;   //: List of pending configuration changes
-   vpr::Mutex                    mPendingLock;     //: Lock on pending list
-   vpr::Mutex                    mActiveLock;     //: Lock for current config list
+    ConfigChunkDB            mActiveConfig;   //: List of current configuration
+    std::list<PendingChunk>  mPendingConfig;  //: List of pending configuration
+                                              //  changes
+    vpr::Mutex               mPendingLock;    //: Lock on pending list
+    vpr::Mutex               mActiveLock;     //: Lock for current config list
 
-   // The following variables are used to implment some logic
-   // that "stales" the pending list.   (see pendingNeedsChecked)
-   vpr::Mutex                    mPendingCountMutex;
-   int                        mPendingCheckCount;  //: How many pending checks since last change to pending
-   int                        mLastPendingSize;    //: The size of pending at last check
 
-    JackalServer*             jackal_server;
-    XMLConfigCommunicator*     config_communicator;
+    // The following variables are used to implement some logic
+    // that "stales" the pending list.   (see pendingNeedsChecked)
+    vpr::Mutex               mPendingCountMutex;
+    int                      mPendingCheckCount;  //: How many pending checks since last change to pending
+    int                      mLastPendingSize;    //: The size of pending at last check
+
+    JackalServer*            jackal_server;
+    XMLConfigCommunicator*   config_communicator;
+
 
 protected:
-    ConfigManager() {
-        mPendingCheckCount = 0;
-        mLastPendingSize = 0;
-        jackal_server = 0;
-        config_communicator = new XMLConfigCommunicator(this);
-    }
 
-    virtual ~ConfigManager () {
-        ;
-    }
+    ConfigManager();
+    virtual ~ConfigManager ();
 
-   vprSingletonHeader(ConfigManager);
-};
+    vprSingletonHeader(ConfigManager);
+
+
+}; // class ConfigManager
+
 
 }; // namespace jccl
 
