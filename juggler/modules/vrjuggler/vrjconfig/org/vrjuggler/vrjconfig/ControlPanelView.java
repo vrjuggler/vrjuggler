@@ -43,6 +43,7 @@ import javax.swing.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.tweek.services.GlobalPreferencesService;
 import org.vrjuggler.vrjconfig.ui.*;
 
 /**
@@ -60,6 +61,31 @@ public class ControlPanelView
       catch(Exception e)
       {
          e.printStackTrace();
+      }
+
+
+      GlobalPreferencesService prefs =
+         (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
+
+      // If we were able to get a handle to the global user preferences, set
+      // the start directory for fileChooser.
+      if ( null != prefs )
+      {
+         String start_dir = prefs.getChooserStartDir();
+         System.out.println("Opening in " + start_dir);
+
+         File f;
+
+         if ( start_dir.equals(GlobalPreferencesService.CWD_START) )
+         {
+            f = new File(System.getProperty("user.dir"));
+         }
+         else
+         {
+            f = new File(System.getProperty("user.home"));
+         }
+
+         fileChooser.setCurrentDirectory(f);
       }
 
       // Add forward and back buttons to the toolbar
