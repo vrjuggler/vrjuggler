@@ -29,14 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
  // --- VR Juggler Stuff --- //
-#include <Kernel/vjKernel.h>
+#include <vrj/Kernel/Kernel.h>
 #include <simplePfApp.h>
+
+using namespace vrj;
 
 void usage(char** argv)
 {
