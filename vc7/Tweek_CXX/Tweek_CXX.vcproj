@@ -42,7 +42,7 @@
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/tweek_d.pdb"
-				SubSystem="0"
+				SubSystem="2"
 				ImportLibrary="$(OutDir)/tweek_d.lib"
 				TargetMachine="1"/>
 			<Tool
