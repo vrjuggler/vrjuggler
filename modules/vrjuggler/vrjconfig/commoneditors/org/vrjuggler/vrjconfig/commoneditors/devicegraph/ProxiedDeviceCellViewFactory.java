@@ -47,6 +47,7 @@ public class ProxiedDeviceCellViewFactory
 {
    public ProxiedDeviceCellViewFactory()
    {
+      this(new HashMap());
    }
 
    public ProxiedDeviceCellViewFactory(Map creatorMap)
@@ -139,5 +140,5 @@ public class ProxiedDeviceCellViewFactory
       return view;
    }
 
-   private Map mCreatorMap = new HashMap();
+   private Map mCreatorMap = null;
 }
