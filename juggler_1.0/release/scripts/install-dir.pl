@@ -1,9 +1,9 @@
 #!/usr/local/bin/perl
 
 #
-#  File:	   $RCSfile$
-#  Date modified:  $Date$
-#  Version:	   $Revision$
+#  File:          $RCSfile$
+#  Date modified: $Date$
+#  Version:       $Revision$
 #
 #
 #                                 VR Juggler
