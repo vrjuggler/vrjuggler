@@ -101,6 +101,9 @@ public class PropertyEditorPanel extends PropertyComponent
       mColor = color;
       
       fillEditorComponent(value, prop_def);
+
+      // Disable the editor component if the ConfigElement is read only.
+      mEditorComponent.setEnabled(!mConfigElement.isReadOnly());
      
       mConfigElement.addConfigElementListener(this);
       
