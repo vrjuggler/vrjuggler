@@ -44,7 +44,7 @@
 #include <gadget/Devices/Open/DTK/DTK.h>
 
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::DTK>(inputMgr);
 }

@@ -47,7 +47,7 @@
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Devices/Polhemus/Fastrack/Fastrack.h>
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::Fastrack>(inputMgr);
 }

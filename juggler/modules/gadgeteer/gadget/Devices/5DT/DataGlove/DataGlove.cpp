@@ -41,7 +41,7 @@
 #include <gadget/Devices/5DT/DataGlove/DataGlove.h> /* Gadgeteer dataglove driver */
 
 
-GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::DataGlove>(inputMgr);
 }
