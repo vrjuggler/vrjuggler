@@ -12,16 +12,18 @@ As with building anything that depends on VR Juggler, you must have the
 environment variable $VJ_BASE_DIR set, and $VJ_BASE_DIR/bin must be in
 your path.
 
-There are two ways to build PyJuggler:
+There are three ways to build PyJuggler:
 
-   1) Using Boost.Build (bjam)
-   2) Using configure and GNU make
+   1) Using Visual Studio
+   2) Using Boost.Build (bjam)
+   3) Using configure and GNU make
 
-The first option requires that you have the Boost source tree locally.
-This will probably be the case since you have to build Boost.Python
-from source.  If getting the Boost source is not an option, you can use
-the second build process.  However, only the Boost.Build method is known
-to compile the bindings correctly on Windows.
+The second option requires that you have the Boost source tree locally.
+This will probably be the case if you have to build Boost.Python from source.
+If getting the Boost source is not an option, you can use the first or the
+third build processes depending on your target platform.  However, only the
+Visual Studio build works on Windows right now.  The Boost.Build build
+is currently broken on all platforms.
 
 BUILD REQUIREMENTS
 ==================
@@ -51,8 +53,22 @@ for compiling PyJuggler on your local operating system.
         headers, and it must contain a subdirectory named 'lib' that contains
         the natively compiled NSPR and CppDOM libraries.
 
+Using Visual Studio
+===================
+
+To build PyJuggler on Windows, it is currently recommended that the
+Visual Studio solution be used.  More information about it can be found
+in the file README.html in the vc7 subdirectory.
+
 Using Boost.Build
 =================
+
+*** NOTICE ***
+
+Using Boost.Build to compile PyJuggler is currently broken due to unexpected
+complications with the managing of Boost installations.  Do not use it!
+
+*** NOTICE ***
 
    NOTE: If you use this method for compiling PyJuggler, you do not have
          to build and install Boost.Python separately.  Boost.Python is
