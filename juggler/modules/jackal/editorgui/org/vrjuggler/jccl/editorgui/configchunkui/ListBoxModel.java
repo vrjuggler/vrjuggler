@@ -29,14 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.editorgui.configchunkui;
 
-
-
-package VjComponents.ConfigEditor.ConfigChunkUI;
-
+import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.*;
-import java.util.Vector;
 
 public class ListBoxModel extends DefaultComboBoxModel {
 
@@ -50,4 +47,3 @@ public class ListBoxModel extends DefaultComboBoxModel {
         super.setSelectedItem (s);
     }
 }
-
