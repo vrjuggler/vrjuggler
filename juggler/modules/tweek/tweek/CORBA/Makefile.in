@@ -61,7 +61,6 @@ IDL_CXX_FILES	= SubjectManager.cpp SubjectManager.h	\
 
 SRCS		= CorbaManager.cpp		\
                   Observer.cpp			\
-                  ObserverImpl.cpp		\
                   SubjectManager.cpp		\
                   SubjectManagerImpl.cpp	\
                   Subject.cpp			\
