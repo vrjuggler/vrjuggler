@@ -29,18 +29,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 package org.vrjuggler.jccl.editors;
 
-import org.vrjuggler.jccl.config.*;
-import java.awt.*;
+import java.awt.Container;
+import org.vrjuggler.jccl.config.ConfigContext;
+import org.vrjuggler.jccl.config.ConfigElement;
+
 
 /**
  * Defines an interface for objects who are custom editors.
  */
 public interface CustomEditor
 {
-   public void setConfigElement(ConfigElement elm);
+   public void setConfig(ConfigContext ctx, ConfigElement elm);
+
    public Container getPanel();
    public String getTitle();
-   public void setContext(ConfigContext ctx);
 }
