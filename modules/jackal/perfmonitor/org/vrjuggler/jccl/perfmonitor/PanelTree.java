@@ -29,13 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-package VjComponents.PerfMonitor;
+package org.vrjuggler.jccl.perfmonitor;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.tree.*;
 import javax.swing.event.*;
+import javax.swing.tree.*;
 
 public class PanelTree extends JComponent implements TreeModelListener {
 

@@ -29,13 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.perfmonitor;
 
-
-package VjComponents.PerfMonitor;
-
-import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.event.*;
+import javax.swing.*;
 
 public class PanelTreeFolder extends JPanel implements ActionListener {
 

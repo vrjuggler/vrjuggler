@@ -29,15 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.PerfMonitor;
+package org.vrjuggler.jccl.perfmonitor;
 
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
-import VjConfig.*;
+import org.vrjuggler.jccl.config.*;
 
 /** Class for storing performance data from a single source.
  *  A source is, for example, a jccl::PerfDataBuffer.

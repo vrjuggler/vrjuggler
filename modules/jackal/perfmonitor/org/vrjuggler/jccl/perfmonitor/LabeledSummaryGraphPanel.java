@@ -29,14 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.PerfMonitor;
-
-
-/* displays a summary of a PerfDataCollector, being a bar graph sort of like
- * what xload shows, with each index separately color-coded
- */
+package org.vrjuggler.jccl.perfmonitor;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -44,8 +37,9 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import VjComponents.PerfMonitor.*;
-
+/** displays a summary of a PerfDataCollector, being a bar graph sort of like
+ * what xload shows, with each index separately color-coded
+ */
 public class LabeledSummaryGraphPanel 
     extends GenericGraphPanel 
     implements ActionListener {
