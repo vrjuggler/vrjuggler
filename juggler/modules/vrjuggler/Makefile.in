@@ -569,6 +569,7 @@ ${LIBDIR}/${GL_LIB_STATIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	@echo "------------------------------------------------"
 	@${SHELL} ${scriptdir}/mkinstalldirs ${LIBDIR}
 	${AR} ${AR_NAME_FLAG}$@ ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
+	${RANLIB} $@
 	cd ${_LIBDIR_BASE} && ln -sf $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
