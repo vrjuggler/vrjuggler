@@ -53,10 +53,15 @@ namespace cluster
       // This is done by the ClusterManager
       //jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
       mFrameNumber = 0;
+      mBarrier = NULL;
    }
    SwapLockPlugin::~SwapLockPlugin()
    {
-      ;
+      if (NULL != mBarrier)
+      {
+         delete mBarrier;
+         mBarrier = NULL;
+      }
    }
    
    /** Add the pending chunk to the configuration.
@@ -256,7 +261,7 @@ namespace cluster
       // - for each slave
       //   - send ready
 
-      if (/*mConfigured && mBarrier != NULL &&*/ mBarrier->isActive())
+      if (/*mConfigured &&*/ mBarrier != NULL && mBarrier->isActive())
       {
          //vpr::Interval first_time, second_time;
          //first_time.setNow();

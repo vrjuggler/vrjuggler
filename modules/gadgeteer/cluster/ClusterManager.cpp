@@ -67,7 +67,7 @@ namespace cluster
       jccl::ConfigManager::instance()->addConfigChunkHandler(ClusterNetwork::instance());
       jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
       mBarrierMachineName = std::string("Barrier Machine Not Set");
-      mStatus = NOTHING;
+      mStatus = PRE_CLUSTER_CONFIG;
    }
    ClusterManager::~ClusterManager()
    {
@@ -133,11 +133,11 @@ namespace cluster
          for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
               i != mPlugins.end() ; i++)
          {
-            if ((*i)->isActive())
-            {
+            //if ((*i)->isActive())
+            //{
                (*i)->preDraw();
                updateNeeded = true;
-            }                  
+            //}                  
          }
          if (updateNeeded)
          {
@@ -156,11 +156,11 @@ namespace cluster
          for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
               i != mPlugins.end() ; i++)
          {
-            if ((*i)->isActive())
-            {
+            //if ((*i)->isActive())
+            //{
                (*i)->postPostFrame();      
                updateNeeded = true;
-            }
+            //}
          }  
          if (updateNeeded)
          {
@@ -178,15 +178,15 @@ namespace cluster
          for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
               i != mPlugins.end() ; i++)
          {
-            if ((*i)->isActive())
-            {  // As soon as we find a plug-in that creates 
+            //if ((*i)->isActive())
+            //{  // As soon as we find a plug-in that creates 
                // a barrier, we can continue. Maybe not since 
                // this will not match up on different machines
                if((*i)->createBarrier())
                {
                   return; 
                }
-            }
+            //}
          }
       }
    }
@@ -288,11 +288,11 @@ namespace cluster
          /////////////////////////////////////////
          //  Starting Barrier Stuff
          //
-         // -Set flag we have started configuring
+         // -Set flag we have started configuring the cluster
          // -Get Sync Machine Chunk Name
          // -Get ChunkPtr to this chunk
          // -Get the Hostname of this node
-         mStatus = CONFIGURING;
+         mStatus = POST_CLUSTER_CONFIG;
          std::string barrier_machine_chunk_name = chunk->getProperty<std::string>(std::string("sync_machine"));
          jccl::ConfigChunkPtr barrier_machine_chunk = getConfigChunkPointer(barrier_machine_chunk_name);
          mBarrierMachineName = barrier_machine_chunk->getProperty<std::string>(std::string("host_name"));
@@ -380,13 +380,13 @@ namespace cluster
          break;
       case RUNNING:
          break;
-      case NOTHING:
+      case PRE_CLUSTER_CONFIG:
          {
             if (jccl::ConfigManager::instance()->isPendingStale())
             {
                mStatus = NOTUSED;
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[BARRIER] ")
-                  << "Changing to RUNNING, because we never configured a ClusterManager chunk" << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
+                  << "Changing state to RUNNING, because we never configured a ClusterManager chunk" << std::endl << vprDEBUG_FLUSH;
             }
             else
             {
@@ -394,7 +394,7 @@ namespace cluster
             }
             break;
          }
-      case CONFIGURING:
+      case POST_CLUSTER_CONFIG:
          {
             if (jccl::ConfigManager::instance()->isPendingStale())
             {
@@ -403,8 +403,8 @@ namespace cluster
                {
                   //Wait for all to get here
                   mStatus = WAITING;
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[BARRIER] ")
-                     << "Changing to WAITING, because I am the server and I should." << std::endl << vprDEBUG_FLUSH;
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
+                     << "Changing state to WAITING, because I am the server and I am waiting for my clients." << std::endl << vprDEBUG_FLUSH;
                }
                else
                {
@@ -412,25 +412,21 @@ namespace cluster
                   ClusterNode* barrierMachine = ClusterNetwork::instance()->getClusterNodeByHostname(mBarrierMachineName);
                   if (NULL == barrierMachine)
                   {
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[BARRIER] ")
-                        << "ERROR: Barrier machine is not in cutrrent configuration." << std::endl << vprDEBUG_FLUSH;
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
+                        << clrOutBOLD(clrRED,"[Start Barrier] ERROR: Barrier machine is not in current configuration.")
+                        << std::endl << vprDEBUG_FLUSH;
                      exit(1);
                   }
-                  if (barrierMachine->isConnected())
+                  else if (barrierMachine->isConnected())
                   {
                      //Send packet to server machine
                      StartBlock temp_start_block(0);
-                     // DOESNT PRINT ANYTHING temp_start_block.printData(1);
                      temp_start_block.send(barrierMachine->getSockStream());
                      mStatus = WAITING;
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[BARRIER] ")
-                        << "Changing to WAITING, because I am the slave and I have sent my start block" << std::endl << vprDEBUG_FLUSH;
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
+                        << "Changing State to WAITING, because I am the slave and I have sent my start block" << std::endl << vprDEBUG_FLUSH;
                   }
-                  else
-                  {
-                     //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[BARRIER] ")
-                     //   << "Staying at CONFIGURE, because I am the slave I have not connected to the master yet." << std::endl << vprDEBUG_FLUSH;
-                  }
+                  // Else I am waiting to connect to the server
                }
             }
             else
@@ -448,8 +444,9 @@ namespace cluster
                   //Send packet to all nodes
                   sendStartPacketToAllNodes();
                   mStatus = RUNNING;
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[BARRIER] ")
-                     << "Changing to RUNNING becasue we are the server and I have recieved all." << std::endl << vprDEBUG_FLUSH;
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
+                     << "Changing State to RUNNING becasue we are the server and I have recieved all start blocks." 
+                     << std::endl << vprDEBUG_FLUSH;
                }
                else
                {
@@ -462,8 +459,9 @@ namespace cluster
                ClusterNode* barrierMachine = ClusterNetwork::instance()->getClusterNodeByHostname(mBarrierMachineName);
                if (NULL == barrierMachine)
                {
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[BARRIER] ")
-                     << "ERROR: Barrier machine is not in cutrrent configuration." << std::endl << vprDEBUG_FLUSH;
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
+                     << clrOutBOLD(clrRED,"[Start Barrier] ERROR: Barrier machine is not in current configuration.")
+                     << std::endl << vprDEBUG_FLUSH;
                   exit(1);
                }
                
@@ -471,8 +469,8 @@ namespace cluster
                if (barrierMachine->isRunning())
                {
                   mStatus = RUNNING;
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[BARRIER] ")
-                     << "Changing to RUNNING, because I am a slave and the server is running" << std::endl << vprDEBUG_FLUSH;
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
+                     << "Changing to State RUNNING, because I am a slave and the server is now running." << std::endl << vprDEBUG_FLUSH;
                }
                else
                {
@@ -493,15 +491,15 @@ namespace cluster
    
       for(std::vector<cluster::ClusterNode*>::iterator i=begin_cluster_nodes;i!=end_cluster_nodes;i++)
       {
-         //if ((*i)->isConnected() && !(*i)->isRunning())
+         // If the node is not connected or not running
          if (!(*i)->isConnected() || !(*i)->isRunning())
          {
             ClusterNetwork::instance()->unlockClusterNodes();
             return false;
          }               
       }
-      // Do not delete socketstream
       ClusterNetwork::instance()->unlockClusterNodes();
+      return true;
    }
 
    void ClusterManager::processPackets()
@@ -516,18 +514,16 @@ namespace cluster
          if ((*i)->isConnected())
          {
               //Block waiting for all packets to be received
-            vpr::SocketStream* node_stream = (*i)->getSockStream();
             cluster::Packet* temp_packet = NULL;
-            while (node_stream->availableBytes() > 0)
+            while ((*i)->getSockStream()->availableBytes() > 0)
             {
-               temp_packet = PacketFactory::instance()->recvPacket(node_stream);
+               temp_packet = PacketFactory::instance()->recvPacket((*i)->getSockStream());
                temp_packet->printData(1);
                temp_packet->action(*i);
             }
             delete temp_packet;
          }               
       }
-      // Do not delete socketstream
       ClusterNetwork::instance()->unlockClusterNodes();
    }
    
@@ -538,8 +534,7 @@ namespace cluster
       std::vector<cluster::ClusterNode*>::iterator begin_cluster_nodes = ClusterNetwork::instance()->getClusterNodesBegin();
       std::vector<cluster::ClusterNode*>::iterator end_cluster_nodes = ClusterNetwork::instance()->getClusterNodesEnd();
       StartBlock temp_start_block(0);
-      //DOENT PRINT ANYTHING temp_start_block.printData(1);
-
+      
       for(std::vector<cluster::ClusterNode*>::iterator i=begin_cluster_nodes;i!=end_cluster_nodes;i++)
       {
          if ((*i)->isConnected())
@@ -547,7 +542,6 @@ namespace cluster
             temp_start_block.send((*i)->getSockStream());
          }                                               
       }
-      // Do not delete socketstream
       ClusterNetwork::instance()->unlockClusterNodes();
    }
 
@@ -555,9 +549,6 @@ namespace cluster
    // STARTING BARRIER
    //////////////////////////////////////////////
    
-   
-   
-    
    
    // ---- Configuration Helper Functions ----   
    jccl::ConfigChunkPtr ClusterManager::getConfigChunkPointer(std::string& name)

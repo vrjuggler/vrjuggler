@@ -304,9 +304,7 @@ namespace cluster
       }
       if (connect == CONNECTED)
       {
-         ClusterNetwork::instance()->lockPendingNodes();
          ClusterNetwork::instance()->removePendingNode(mHostname);
-         ClusterNetwork::instance()->unlockPendingNodes();
       }
       mConnected = connect;
    }

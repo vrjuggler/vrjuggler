@@ -52,11 +52,11 @@ class GADGET_CLASS_API ClusterManager : public jccl::ConfigChunkHandler
 {      
    enum Status
    {
-      NOTHING     = 0,
-      CONFIGURING = 1,
-      WAITING     = 2,
-      RUNNING     = 3,
-      NOTUSED     = 4
+      PRE_CLUSTER_CONFIG   = 0,
+      POST_CLUSTER_CONFIG  = 1,
+      WAITING              = 2,
+      RUNNING              = 3,
+      NOTUSED              = 4
    };
    vprSingletonHeader( ClusterManager );
 public:
