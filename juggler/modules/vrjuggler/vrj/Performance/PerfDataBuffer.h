@@ -1,7 +1,9 @@
 
 
 #include "vjTimeStamp.h"
+#include <Sync/vjMutex.h>
 #include <iostream.h>
+#include <Kernel/vjDebug.h>
 
 //---------------------------------------------------------------
 //: temporary storage for performance data
@@ -53,6 +55,7 @@ class vjPerfDataBuffer {
     buf_entry*  buffer;
     int         numbufs;
     int         lost;
+    vjMutex     lost_lock;
 
     int         read_begin;
     int         write_pos;
@@ -89,8 +92,13 @@ class vjPerfDataBuffer {
     //+       right after.
     void set(int _phase) {
 	if (write_pos == read_begin) {
-	    buffer[write_pos].lost++;
-	    lost++;
+	    if (lost_lock.acquire() != -1) {
+		lost++;
+		lost_lock.release();
+	    }
+	    else
+		vjDEBUG(2) << "vjPerfDataBuffer: lock acquire "
+			   << "failed\n" << vjDEBUG_FLUSH;
 	}
 	else {
 	    buffer[write_pos].phase = _phase;
@@ -115,7 +123,7 @@ class vjPerfDataBuffer {
     //+       <br>3 27
     //+       <br>1 42
     void write (ostream& out) {
-	int begin, end, i;
+	int begin, end, i, tlost;
 	buf_entry* b;
 	begin = read_begin;
 	end = (write_pos - 1 + numbufs)%numbufs;
@@ -136,23 +144,26 @@ cout << "begin/end are " << begin <<' '<< end << endl;
 		b = &(buffer[i]);
 		out <<i<<' '<< b->phase << ' ' << b->lost << ' ' 
 		    << b->ts.usecs() << '\n';
-		b->lost = 0;
 	    }
 	    for (i = 0; i < end; i++) {
 		b = &(buffer[i]);
 		out <<i<<' '<< b->phase << ' ' << b->lost << ' ' 
 		    << b->ts.usecs() << '\n';
-		b->lost = 0;
 	    }
 	    //read_begin = end;
 
 	}
-	    out << -1 << ' ' << lost << '\n';
-	    lost = 0;
-	    read_begin = end;
+
+	lost_lock.acquire();
+	tlost = lost;
+	lost = 0;
+	lost_lock.release();
+	read_begin = end;
+
+	out << -1 << ' ' << tlost << '\n';
     }
 
-    /* problem.. lost count not entirely accurate */
+
 };
 
 
