@@ -117,7 +117,21 @@ vpr::ReturnStatus SerialPortImplWin32::open ()
    return status;
 }
 
-vpr::SerialTypes::UpdateActionOption getUpdateAction(void)
+vpr::ReturnStatus SerialPortImplWin32::close()
+{
+   vpr::ReturnStatus retval;
+
+   if ( !CloseHandle(mHandle) )
+   {
+      retval.setCode(vpr::ReturnStatus::Fail);
+   }
+
+   mHandle=NULL;
+
+   return retval;
+}
+
+vpr::SerialTypes::UpdateActionOption SerialPortImplWin32::getUpdateAction(void)
 {
    std::cout << "Update Action is always NOW in Win32" << std::endl;
    vpr::SerialTypes::UpdateActionOption update;

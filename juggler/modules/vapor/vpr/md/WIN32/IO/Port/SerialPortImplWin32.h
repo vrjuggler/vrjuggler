@@ -179,7 +179,7 @@ public:
     *         opened successfully.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus open(void);
+   vpr::ReturnStatus open (void);
 
    /**
     * Closes the serial port.
@@ -193,16 +193,7 @@ public:
     *         closed successfully.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus close (void)
-   {
-      vpr::ReturnStatus retval;
-
-      if ( !CloseHandle(mHandle) )
-      {
-         retval.setCode(vpr::ReturnStatus::Fail);
-      }
-      return retval;
-   }
+   vpr::ReturnStatus close (void);
 
    /**
     * Reconfigures the serial port so that it is in blocking mode.
