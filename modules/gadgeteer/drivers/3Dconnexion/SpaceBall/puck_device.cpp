@@ -354,7 +354,15 @@ void basePuck::puckSleep(const float seconds)
 #endif
 }
 
-bool basePuck::portOpen(const char *name, int opts, HandleType &handle)
+
+//----------------------------------------------------------------------------
+//--  basePuckSerial   -------------------------------------------------------
+//----------------------------------------------------------------------------
+basePuckSerial::~basePuckSerial()
+{
+}
+
+bool basePuckSerial::portOpen(const char *name, int opts, HandleType &handle)
 {
 #if defined(WIN32)
 
@@ -388,7 +396,7 @@ bool basePuck::portOpen(const char *name, int opts, HandleType &handle)
 #endif
 }
 
-bool basePuck::portClose(HandleType handle)
+bool basePuckSerial::portClose(HandleType handle)
 {
 #if defined(WIN32)
 
@@ -407,14 +415,6 @@ bool basePuck::portClose(HandleType handle)
     return true;
 
 #endif
-}
-
-
-//----------------------------------------------------------------------------
-//--  basePuckSerial   -------------------------------------------------------
-//----------------------------------------------------------------------------
-basePuckSerial::~basePuckSerial()
-{
 }
 
 int basePuckSerial::portRead(HandleType handle, unsigned char* buffer, 
@@ -580,6 +580,42 @@ basePuckUSB::~basePuckUSB()
 {
 }
 
+bool basePuckUSB::portOpen(const char *name, int opts, HandleType &handle)
+{
+#if defined(VPR_OS_Linux) || defined(linux_x86_64)
+    handle = open(name, opts);
+    if (handle < 0)
+    {
+ 	return false;
+    }
+    else
+    {
+	return true;
+    }
+
+#else
+
+    return false;
+    
+#endif              /* defined(VPR_OS_Linux) || defined(linux_x86_64) */
+}
+
+bool basePuckUSB::portClose(HandleType handle)
+{
+#if defined(VPR_OS_Linux) || defined(linux_x86_64)
+
+    // discard pending output to avoid handshaking interference
+    tcflush(handle, TCIOFLUSH);
+    close(handle);
+    return true;
+
+#else
+
+    return false;
+    
+#endif              /* defined(VPR_OS_Linux) || defined(linux_x86_64) */
+}
+
 int basePuckUSB::portRead(HandleType handle, int buffer[], int bufferSize)
 {
 #if defined(VPR_OS_Linux) || defined(linux_x86_64)
@@ -683,7 +719,7 @@ int spaceMouse::processBuffer(analogData &ana, digitalData &dig)
     const int size_buffer = 512;
     unsigned char buffer[size_buffer];
     int rc = portRead(_file, buffer, size_buffer);
-    buffer[rc] == '\0';
+    buffer[rc] = '\0';
     if (rc != 0)
 	return handleRead(buffer, rc, ana, dig);
     return 0;
@@ -1511,7 +1547,6 @@ void spaceBall4000FLX::writeSettings()
 
 void spaceBall4000FLX::puckMode()
 {
-    unsigned char buffer[256];
 //    int n = write(_file, "CB\rP@r@r\rMSSV\rZ\r", 16);
 //    int n = write(_file, "CB\rNT\rFTp\rFRp\rP@r@r\rMSSV\rZ\rBcCcC\r", 33);
 //    int n = write(_file, "CB\rNT\rFTp\rFRp\rP32\rMSSV\rZ\rBcCcC\r", 31);
@@ -1551,7 +1586,6 @@ string spaceBall4000FLX::puckVersion()
 
 void spaceBall4000FLX::puckNullRadius()
 {
-     unsigned char buffer[256];
      int n = portWrite(_file, (unsigned char *) "NT\r", 3);
      if (n < 0)
 	 cerr << WRITE_FAIL(3) << endl;
@@ -1560,7 +1594,6 @@ void spaceBall4000FLX::puckNullRadius()
 
 void spaceBall4000FLX::puckZeroCap()
 {
-    unsigned char buffer[256];
     int n = portWrite(_file, (unsigned char *) "Z\r", 2);
     if (n < 0)
 	cerr << WRITE_FAIL(2) << endl;
@@ -1570,7 +1603,6 @@ void spaceBall4000FLX::puckZeroCap()
  
 void spaceBall4000FLX::puckBeep()
 {
-     unsigned char buffer[256];
      int n = portWrite(_file, (unsigned char *) "BcCcC\r", 6);
      if (n < 0)
 	 cerr << WRITE_FAIL(6) << endl;
@@ -1579,7 +1611,6 @@ void spaceBall4000FLX::puckBeep()
 
 void spaceBall4000FLX::puckSensitivity()
 {
-     unsigned char buffer[256];
      int n = portWrite(_file, (unsigned char *) "FTp\rFRp\r", 8);
      if (n < 0)
 	 cerr << WRITE_FAIL(8) << endl;
@@ -1901,7 +1932,6 @@ int spaceBall2003B::puckConfigure()
 
 void spaceBall2003B::puckMode()
 {
-    unsigned char buffer[256];
 //    int n = write(_file, "CB\rP@r@r\rMSSV\rZ\r", 16);
 //    int n = write(_file, "CB\rNT\rFTp\rFRp\rP@r@r\rMSSV\rZ\rBcCcC\r", 33);
 //    int n = write(_file, "CB\rNT\rFTp\rFRp\rP32\rMSSV\rZ\rBcCcC\r", 31);
