@@ -98,7 +98,7 @@ F.A.Q.</H2>
 	   </ul>
 	   <li><a href="#SGI"> SGI</a>
 	   <ul>
-		   <li><a href="#sginotcompile"> Why don't my SGI Juggler applications compile?</a> 
+		   <li><a href="#sginotcompile"> Why don't my SGI Juggler applications compile?</a> (<tt>be.so</tt> not found)
 	   </ul>
  </ul>
  <li><a href="#misc">Misc</a>
@@ -672,15 +672,18 @@ to see when the button is first pressed.
 	<DD>
 	  Some SGI systems, specifically those using the MIPSpro Compiler
 	  version 7.3, need another directory added to the
-	  <TT>$LD_LIBRARY_PATH</TT> environmental variable.  It can be set
-	  as follows:
+	  <TT>$LD_LIBRARY_PATH</TT>
+          <A HREF="${GLOSSARY}#environment_variable">environment variable</A>.
+          It can be set as follows:
 
 <PRE>
     % <B>setenv LD_LIBRARY_PATH $VJ_BASE_DIR/lib:/usr/lib32/cmplrs</B>
 </PRE>
 
-	  You'll need to set this if your compiler reports it has trouble
-	  finding the file <TT>be.so</TT>.
+	  You will need to set this if your compiler reports it has trouble
+	  finding the file <TT>be.so</TT>.  For more information on
+          environment variables, refer to the
+          <A HREF="${GETTINGSTARTED}"><I>Getting Started Guide</I></A>.
 
 	  <P> </P>
 	</DD>
