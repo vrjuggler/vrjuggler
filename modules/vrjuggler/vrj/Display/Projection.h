@@ -65,15 +65,22 @@ public:
    };
 
 public:
-   Projection() : mEye(LEFT), mViewport(NULL), mFocusPlaneDist(1.0f)
+   Projection()
+      : mEye(LEFT)
+      , mViewport(NULL)
+      , mFocusPlaneDist(1.0f)
    {
       ;
    }
 
    Projection(const Projection& p)
-      : mViewMat(p.mViewMat), mFrustum(p.mFrustum), mEye(p.mEye),
-        mViewport(p.mViewport), mFocusPlaneDist(p.mFocusPlaneDist)
+      : mViewMat(p.mViewMat)
+      , mFrustum(p.mFrustum)
+      , mEye(p.mEye)
+      , mViewport(p.mViewport)
+      , mFocusPlaneDist(p.mFocusPlaneDist)
    {
+      ;
    }
 
    virtual ~Projection()
@@ -87,21 +94,31 @@ public:
    virtual void config(jccl::ConfigElementPtr element);
 
    void setEye(Projection::Eye _eye)
-   { mEye = _eye; }
+   {
+      mEye = _eye;
+   }
 
-   int getEye()
-   { return mEye;}
+   int getEye() const
+   {
+      return mEye;
+   }
 
    void setViewport(Viewport* vp)
-   { mViewport = vp; }
-   Viewport* getViewport()
-   { return mViewport; }
+   {
+      mViewport = vp;
+   }
+
+   Viewport* getViewport() const
+   {
+      return mViewport;
+   }
 
    /**
     * @pre eyePos is scaled by position factor.
     * @pre scaleFactor is the scale current used.
     */
-   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor) = 0;
+   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos,
+                               const float scaleFactor) = 0;
 
    /** Helper to the frustum apex and corners in model coordinates.
     * @note This function is meant for debugging purposes.
