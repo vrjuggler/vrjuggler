@@ -40,6 +40,7 @@ import org.vrjuggler.jccl.config.event.ConfigListener;
 import org.vrjuggler.jccl.config.event.ConfigBrokerEvent;
 import org.vrjuggler.jccl.config.event.ConfigBrokerListener;
 import org.vrjuggler.jccl.config.io.*;
+import org.vrjuggler.jccl.config.undo.ConfigContextEdit;
 
 /**
  * Implementation of the ConfigBroker interface for the server side.
@@ -209,9 +210,13 @@ public class ConfigBrokerImpl
          String data_source_name = (String)resources.get(0);
          target_ds = get(data_source_name);
       }
-      
+     
       target_ds.add(elt);
       fireConfigElementAdded(getNameFor(target_ds), elt);
+      
+      // Inform everyone of the new edit.
+      ConfigContextEdit new_edit = new ConfigContextEdit(context, elt, true);
+      context.postEdit(new_edit);
       return true;
    }
 
@@ -239,6 +244,10 @@ public class ConfigBrokerImpl
          {
             data_source.remove(elt);
             fireConfigElementRemoved(getNameFor(data_source), elt);
+            
+            // Inform everyone of the new edit.
+            ConfigContextEdit new_edit = new ConfigContextEdit(context, elt, false);
+            context.postEdit(new_edit);
             return true;
          }
       }
