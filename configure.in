@@ -1737,6 +1737,7 @@ if test "$OS_TYPE" = "Win32" ; then
     DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
     INCLUDES=`unix2dos "$INCLUDES"`
     LIBS=`unix2dos "$LIBS"`
+    LN_S='cp'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
     JDK_HOME=`unix2dos "$JDK_HOME"`

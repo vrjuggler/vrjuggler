@@ -1150,20 +1150,20 @@ ifndef NOLINK
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${VJ_LIB_STATIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+	-cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${VJ_LIB_DYNAMIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${UTILS_LIB_STATIC} &&				\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${UTILS_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+	-cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${UTILS_LIB_DYNAMIC} &&				\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${UTILS_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${GL_LIB_STATIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+	-cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${GL_LIB_DYNAMIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
@@ -1171,7 +1171,7 @@ ifeq (${PF_API}, Y)
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${PF_LIB_STATIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+	-cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${PF_LIB_DYNAMIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
@@ -1179,7 +1179,7 @@ ifeq (${AUDIO_WORKS}, Y)
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${AW_LIB_STATIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${AW_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+	-cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${AW_LIB_DYNAMIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${AW_LIB_DYNAMIC} ./
 endif
@@ -1187,7 +1187,7 @@ ifeq (${SL}, Y)
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${SL_LIB_STATIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${SL_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+	-cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           rm -f ./${SL_LIB_DYNAMIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${SL_LIB_DYNAMIC} ./
 endif
@@ -1197,20 +1197,20 @@ endif
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ./${VJ_LIB_STATIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+	-cd ${_install_libdir_abs} && umask ${_UMASK} &&		\
           rm -f ${VJ_LIB_DYNAMIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ./${UTILS_LIB_STATIC} &&				\
           ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+	-cd ${_install_libdir_abs} && umask ${_UMASK} &&		\
           rm -f ${UTILS_LIB_DYNAMIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
 	  rm -f ${GL_LIB_STATIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+	-cd ${_install_libdir_abs} && umask ${_UMASK} &&		\
 	  rm -f ${GL_LIB_DYNAMIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
@@ -1218,7 +1218,7 @@ ifeq (${PF_API}, Y)
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ${PF_LIB_STATIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+	-cd ${_install_libdir_abs} && umask ${_UMASK} &&		\
           rm -f ${PF_LIB_DYNAMIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
@@ -1226,7 +1226,7 @@ ifeq (${AUDIO_WORKS}, Y)
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ${AW_LIB_STATIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+	-cd ${_install_libdir_abs} && umask ${_UMASK} &&		\
           rm -f ${AW_LIB_DYNAMIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_DYNAMIC} ./
 endif
@@ -1234,7 +1234,7 @@ ifeq (${SL}, Y)
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ${SL_LIB_STATIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+	-cd ${_install_libdir_abs} && umask ${_UMASK} &&		\
           rm -f ${SL_LIB_DYNAMIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_DYNAMIC} ./
 endif
