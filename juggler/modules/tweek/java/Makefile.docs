@@ -49,6 +49,7 @@ DOC_PKGS=	$(BASE_PKG)			\
 		$(BASE_PKG).gui			\
 		$(BASE_PKG).net			\
 		$(BASE_PKG).net.corba		\
+		$(BASE_PKG).beandelivery	\
 		$(BASE_PKG).beans		\
 		$(BASE_PKG).beans.loader	\
 		$(BASE_PKG).event		\
