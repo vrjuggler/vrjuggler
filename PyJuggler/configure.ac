@@ -70,7 +70,6 @@ DPP_ABI_SETUP
 # -----------------------------------------------------------------------------
 # System-dependent stuff.
 # -----------------------------------------------------------------------------
-DPP_WIN32_SETUP
 
 # We use AC_CANONICAL SYSTEM so that we can find out information about the
 # build, target and host platforms rather than only the host.
@@ -95,12 +94,7 @@ DPP_HAVE_GNU_MAKE([3.78], ,
 DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 DPP_PROG_INSTALL
 
-if test "x$OS_TYPE" = "xWin32" ; then
-   python_root_cyg=`$CYGPATH -u $PYTHON_ROOT`
-   python_path="$python_root_cyg:$python_root_cyg/bin:$PATH"
-else
-   python_path="$PYTHON_ROOT/bin:$PATH"
-fi
+python_path="$PYTHON_ROOT/bin:$PATH"
 
 USE_OBJCOPY='no'
 if test "x$GXX" = "xyes" ; then
@@ -165,22 +159,15 @@ AC_CHECK_FUNC([openpty], [UTIL_LIB=''],
     [AC_CHECK_LIB([util], [openpty], [UTIL_LIB='-lutil'])])
 LIBS="${_pyj_save_LIBS}"
 
-if test "x$OS_TYPE" = "xWin32" ; then
-   py_ver=`echo $PYTHON_VERSION | sed -e 's/\.//g'`
-   PYTHON_INCLUDES="-I$PYTHON_ROOT/include"
-   PYTHON_LDFLAGS="-L$PYTHON_ROOT/libs"
-   PYTHON_LIB="python$py_ver"
-else
-   python_incdir=`$PYTHON -c "import distutils.sysconfig; print distutils.sysconfig.get_config_var('INCLUDEDIR')"`
-   PYTHON_INCLUDES="-I$python_incdir/python$PYTHON_VERSION"
+python_incdir=`$PYTHON -c "import distutils.sysconfig; print distutils.sysconfig.get_config_var('INCLUDEDIR')"`
+PYTHON_INCLUDES="-I$python_incdir/python$PYTHON_VERSION"
 
-   if test "x$PLATFORM" = "xDarwin" ; then
-      PYTHON_LDFLAGS=''
-      PYTHON_LIB=''
-   else
-      PYTHON_LDFLAGS="-L$PYTHON_ROOT/lib/python$PYTHON_VERSION/config"
-      PYTHON_LIB="python$PYTHON_VERSION"
-   fi
+if test "x$PLATFORM" = "xDarwin" ; then
+   PYTHON_LDFLAGS=''
+   PYTHON_LIB=''
+else
+   PYTHON_LDFLAGS="-L$PYTHON_ROOT/lib/python$PYTHON_VERSION/config"
+   PYTHON_LIB="python$PYTHON_VERSION"
 fi
 
 _pyj_save_CPPFLAGS="$CPPFLAGS"
@@ -224,11 +211,7 @@ DPP_LANG_RESTORE
 
 # Convert the string given to AC_CHECK_LIB() as a library to something that
 # the linker can use later on.
-if test "x$OS_TYPE" = "xWin32" ; then
-   PYTHON_LIB="$PYTHON_LIB.lib"
-   PYTHON_LIB_OPT="$PYTHON_LIB.lib"
-   PYTHON_LIB_DBG="${PYTHON_LIB}_d.lib"
-elif test "x$PLATFORM" = "xDarwin" ; then
+if test "x$PLATFORM" = "xDarwin" ; then
    PYTHON_LIB="-framework Python"
    PYTHON_LIB_OPT="$PYTHON_LIB"
    PYTHON_LIB_DBG="$PYTHON_LIB_OPT"
@@ -331,11 +314,7 @@ LDFLAGS="${_pyj_save_LDFLAGS}"
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 
-if test "x$OS_TYPE" = "xWin32" ; then
-   bpl_link_option="$BOOST_PYTHON_LIB.lib"
-else
-   bpl_link_option="-l$BOOST_PYTHON_LIB"
-fi
+bpl_link_option="-l$BOOST_PYTHON_LIB"
 
 _pyj_save_CPPFLAGS="$CPPFLAGS"
 _pyj_save_LIBS="$LIBS"
@@ -381,15 +360,9 @@ if test "x$ac_cv_boost__python__handle_in_boost_python" = "xyes" ; then
       BOOST_PYTHON_INCLUDES="$BOOST_PYTHON_INCLUDES -I$BOOST_PYTHON_HEADER_DIR/compatibility/cpp_c_headers"
    fi
 
-   if test "x$OS_TYPE" = "xWin32" ; then
-      bpl_dir="/libpath:$PYTHON_ROOT/libs /libpath:$BOOST_PYTHON_DIR/lib"
-      BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir $BOOST_PYTHON_LIB.lib"
-      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir $BASE_BP_LIBNAME$boost_debug_suffix$BPL_VER_SUFFIX.lib"
-   else
-      bpl_dir="-L$BOOST_PYTHON_DIR/lib"
-      BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir -l$BOOST_PYTHON_LIB"
-      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir -l$BASE_BP_LIBNAME$boost_debug_suffix$BPL_VER_SUFFIX"
-   fi
+   bpl_dir="-L$BOOST_PYTHON_DIR/lib"
+   BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir -l$BOOST_PYTHON_LIB"
+   BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir -l$BASE_BP_LIBNAME$boost_debug_suffix$BPL_VER_SUFFIX"
 else
    AC_MSG_ERROR([*** Boost.Python v2 is required for PyJuggler ***])
 fi
@@ -415,14 +388,8 @@ if test "x$osg_base_dir" != "xno" ; then
    # if $OSGROOT is "/usr".
    if test "x$osg_base_dir" != "x/usr" ; then
       OSG_INCLUDES="-I$osg_base_dir/include"
-
-      if test "x$OS_TYPE" = "xWin32" ; then
-         OSG_LDFLAGS="/libpath:$osg_base_dir/lib"
-         OSG_LIBS='osg.lib osgProducer.lib osgUtil.lib osgDB.lib osgText.lib osgGA.lib Producer.lib OpenThreads.lib'
-      else
-         OSG_LDFLAGS="-L$osg_base_dir/lib"
-         OSG_LIBS='-losg -losgProducer -losgUtil -losgDB -losgText -losgGA -lProducer -lOpenThreads'
-      fi
+      OSG_LDFLAGS="-L$osg_base_dir/lib"
+      OSG_LIBS='-losg -losgProducer -losgUtil -losgDB -losgText -losgGA -lProducer -lOpenThreads'
    fi
 
    AC_PATH_X
@@ -466,13 +433,8 @@ if test "x$USE_GCC" != "xyes" ; then
    fi
 fi
 
-if test "x$OS_TYPE" = "xWin32" ; then
-   PYJUTIL_LDFLAGS_OPT='/libpath:$(topdir)/lib pyjutil.lib'
-   PYJUTIL_LDFLAGS_DBG='/libpath:$(topdir)/lib pyjutil_d.lib'
-else
-   PYJUTIL_LDFLAGS_OPT='-L$(topdir)/lib -lpyjutil'
-   PYJUTIL_LDFLAGS_DBG="$PYJUTIL_LDFLAGS_OPT"
-fi
+PYJUTIL_LDFLAGS_OPT='-L$(topdir)/lib -lpyjutil'
+PYJUTIL_LDFLAGS_DBG="$PYJUTIL_LDFLAGS_OPT"
 
 DPP_PTHREAD_FINISH
 
