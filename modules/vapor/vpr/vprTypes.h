@@ -117,5 +117,24 @@ struct hash<vpr::Uint64>
 
 #endif   /* ifdef VPR_HASH_MAP_INCLUDE */
 
+// XXX: The following is a hack to deal with GCC on IRIX not knowing how to
+// deal with an unsigned long long being passed to operator<<.  This code
+// should be removed as soon as possible!
+#if defined(VPR_OS_IRIX) && defined(__GNUC__)
+
+#include <iostream>
+
+namespace std
+{
+
+inline std::ostream& operator<< (std::ostream& out, const vpr::Uint64& v)
+{
+   out << (vpr::Uint32) v;
+   return out;
+}
+
+}
+#endif /* defined(VPR_OS_IRIX) && defined(__GNUC__) */
+
 
 #endif   /* _VPR_TYPES_H_ */
