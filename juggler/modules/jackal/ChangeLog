@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-09-2005 patrickh    Merged the methods setContext() and setConfigElement()
+                        in org.vrjuggler.jccl.editors.CustomEditor into the
+                        single method setConfig().
+                        NEW VERSION: 0.91.1
+
 [1.0 Beta 1 released - 12.24.2004]=============================================
 Dec-23-2004 patrickh    NEW VERSION: 0.91.0
 Nov-30-2004 patrickh    Extended the config definition file markup to allow
