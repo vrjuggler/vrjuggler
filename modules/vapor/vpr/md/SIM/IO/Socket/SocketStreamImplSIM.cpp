@@ -41,6 +41,8 @@
 
 #include <vpr/vprConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 
@@ -60,6 +62,7 @@ vpr::ReturnStatus SocketStreamImplSIM::listen( const int backlog )
 vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
                                                vpr::Interval timeout )
 {
+   boost::ignore_unused_variable_warning(timeout);
    vpr::ReturnStatus status;
 
    mConnectorQueueMutex.acquire();
