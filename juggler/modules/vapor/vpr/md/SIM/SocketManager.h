@@ -216,10 +216,12 @@ protected:  // -- Internal helpers -- //
    */
    vpr::ReturnStatus ensureNetworkNodeIsRegistered(const vpr::Uint32& ipAddr);
 
-   vpr::sim::NetworkGraph::net_vertex_t getLocalhostVertex(void);
+   
+   //vpr::sim::NetworkGraph::net_vertex_t getLocalhostVertex(void);
 
    /** Get the ip address value for the "localhost" node that we are using */
-   vpr::Uint32 getLocalhostIpAddrValue();
+   //vpr::Uint32 getLocalhostIpAddrValue();
+   
 
 protected:
    bool mActive;
