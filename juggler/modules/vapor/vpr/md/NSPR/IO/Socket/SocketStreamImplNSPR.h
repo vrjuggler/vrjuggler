@@ -100,7 +100,7 @@ public:
     //     false - The socket could not be put into a listening state.  An
     //             error message is printed explaining what went wrong.
     // ------------------------------------------------------------------------
-    virtual bool listen(const int backlog);
+    virtual bool listen(const int backlog = 5);
 
     // ------------------------------------------------------------------------
     // Accept an incoming connection request.
