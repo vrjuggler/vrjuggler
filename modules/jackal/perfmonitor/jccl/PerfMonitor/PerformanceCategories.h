@@ -126,7 +126,7 @@ private:
     
 };
 
-
+#ifdef USE_JCCL_PERF
 #define jcclTIMESTAMP(cat, id)                                               \
     if (jccl::PerformanceCategories::instance()->isCategoryActive(cat)) {    \
         jccl::PerformanceMonitor::instance()->                               \
@@ -135,7 +135,9 @@ private:
     else {                                                                   \
         ;                                                                    \
     }
-
+#else
+#define jcclTIMESTAMP(cat, id) ((void)0)
+#endif
 
 /** Utility class for auto-registering a category.  Use the macros
  *  below instead of using this class directly.
