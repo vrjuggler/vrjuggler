@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               name="Test Configuration"
+               xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"
+               xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+   <elements>
+     <dep_test_element name="Test Element 1" version="1">
+       <child_element>
+         <child_test_elt_1 name="Child Element Prop 0" version="1">
+           <prop1>251</prop1>
+         </child_test_elt_1>
+       </child_element>
+       <eltPtrProp>Dependent Element 2</eltPtrProp>
+       <childEltWithPtrProp>
+         <child_elt_test_3 name="Yet Another Child Element 0" version="1">
+           <otherEltProp>Dependent Element 1</otherEltProp>
+         </child_elt_test_3>
+       </childEltWithPtrProp>
+     </dep_test_element>
+     <dependent_elt_1 name="Dependent Element 1" version="1">
+       <boolProp>true</boolProp>
+     </dependent_elt_1>
+     <dependent_elt_2 name="Dependent Element 2" version="1">
+       <stringProp>Someone depends on me</stringProp>
+     </dependent_elt_2>
+     <dep_test_element name="External Test Element 1" version="1">
+       <child_element>
+         <child_test_elt_1 name="Child Element Prop 0" version="1">
+           <prop1>152</prop1>
+         </child_test_elt_1>
+       </child_element>
+       <eltPtrProp>Ext Dependent Element 1</eltPtrProp>
+       <childEltWithPtrProp>
+         <child_test_elt_3 name="Yet Another Child Element 0" version="1">
+           <otherEltProp>Ext Dependent Element 3</otherEltProp>
+         </child_test_elt_3>
+       </childEltWithPtrProp>
+     </dep_test_element>
+     <dependent_elt_3 name="Dependent Element 3" version="1">
+       <child_elt>
+         <child_test_elt_1 name="Child chunk property 0" version="1">
+           <prop1>251</prop1>
+         </child_test_elt_1>
+       </child_elt>
+     </dependent_elt_3>
+     <ptr_to_child_elt name="Child Element Ptr Test" version="1">
+       <eltPtr>Test Element 1/child_elt/Child Element Prop 0</eltPtr>
+     </ptr_to_child_elt>
+   </elements>
+</configuration>
