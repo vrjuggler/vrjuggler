@@ -1,3 +1,6 @@
+#ifndef _NETWORK_TEST_SLIDER_SUBJECT_IDL_
+#define _NETWORK_TEST_SLIDER_SUBJECT_IDL_
+
 #include <tweek/idl/Subject.idl>
 
 module networktest
@@ -8,3 +11,5 @@ module networktest
       long getValue();
    };
 };
+
+#endif /* _NETWORK_TEST_SLIDER_SUBJECT_IDL_ */
