@@ -43,7 +43,8 @@ public class ControlUI  extends JFrame
     JMenuItem   lnf_organic1_mi;
     JMenuItem   editprefs_mi, 
                 saveprefs_mi;
-    JMenuItem   helpbugs_mi, 
+    JMenuItem   helpindex_mi,
+	        helpbugs_mi, 
                 helpabout_mi, 
                 helpstart_mi, 
                 helpchunk_mi, 
@@ -119,6 +120,7 @@ public class ControlUI  extends JFrame
 	preferences_menu.add (saveprefs_mi = new JMenuItem ("Save Preferences"));
 
 	main_menubar.add (help_menu = new JMenu ("Help"));
+	help_menu.add (helpindex_mi = new JMenuItem ("Help Index"));
 	help_menu.add (helpabout_mi = new JMenuItem ("About VjControl"));
 	help_menu.add (helpstart_mi = new JMenuItem ("Getting Started"));
 	help_menu.add (helpcmdline_mi = new JMenuItem ("Command Line Arguments"));
@@ -145,6 +147,7 @@ public class ControlUI  extends JFrame
 	lnf_organic1_mi.addActionListener (this);
 	editprefs_mi.addActionListener (this);
 	saveprefs_mi.addActionListener (this);
+	helpindex_mi.addActionListener (this);
 	helpabout_mi.addActionListener (this);
 	helpstart_mi.addActionListener (this);
 	helpchunk_mi.addActionListener (this);
@@ -259,6 +262,8 @@ public class ControlUI  extends JFrame
 	    //System.out.println ("need to add save prefs");
 	    FileControl.saveChunkDBFile (Core.gui_chunkdb);
 	}
+	else if (o == helpindex_mi)
+	    loadHelp ("VjFiles/VjControlIndex.html");
 	else if (o == helpbugs_mi)
 	    loadHelp ("VjFiles/bugs.html");
 	else if (o == helpabout_mi)

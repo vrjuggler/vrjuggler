@@ -36,7 +36,8 @@ public class FileControl {
 	    Core.descdb.read (new ConfigStreamTokenizer (inr));
 	}
 	catch (IOException e2) {
-	    Core.consoleErrorMessage ("FileControl","Couldn't load " +descurl);
+	    Core.consoleErrorMessage ("FileControl","Couldn't load " +descurl
+				      + "- vjcontrol.jar may be corrupt");
 	}
 		
 	try {
@@ -49,8 +50,19 @@ public class FileControl {
 	    Core.gui_chunkdb.read (new ConfigStreamTokenizer (r));
 	}
 	catch (FileNotFoundException e2) {
-	    Core.consoleErrorMessage ("FileControl","Couldn't load " + f2);
-	    return;
+	    try {
+		homedir = System.getProperty (basedir_varname);
+		f1 = new File (homedir, "Data");
+		f2 = new File (f1, "vjcontrol.cfg");
+		Core.gui_chunkdb.setName (f2.getName());
+		Core.gui_chunkdb.setFile (f2);
+		r = new FileReader (f2);
+		Core.gui_chunkdb.read (new ConfigStreamTokenizer (r));
+	    }
+	    catch (FileNotFoundException e3) {
+		Core.consoleErrorMessage ("FileControl","Couldn't load " + f2);
+		return;
+	    }
 	}
     }
 
