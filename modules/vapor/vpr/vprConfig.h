@@ -77,8 +77,6 @@
 /* Put here for pre-compiled headers. */
 #ifdef __cplusplus
 #include <iostream>
-#include <iomanip>
-#include <fstream>
 
 #if defined(__GNUC__) && \
     ((__GNUC__ == 3 && __GNUC_MINOR__ >= 1) || __GNUC__ > 3)
@@ -120,10 +118,6 @@ namespace std
 #   define VPR_HAVE_HASH_SET  1
 #endif
 
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 
 /*
  * ----------------------------------------------------------------------------
