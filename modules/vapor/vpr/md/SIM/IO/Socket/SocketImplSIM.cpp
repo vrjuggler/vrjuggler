@@ -262,7 +262,8 @@ vpr::ReturnStatus SocketImplSIM::isReadReady (const vpr::Interval timeout)
    if ( vpr::Interval::NoWait == timeout )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "Timeouts not supported with sim sockets yet!\n" << vprDEBUG_FLUSH;
+         << "SocketImplSIM::isReadReady(): Timeouts not supported with sim "
+         << "sockets--yet\n" << vprDEBUG_FLUSH;
    }
 
 //   if ( vpr::Interval::NoWait == timeout )
@@ -294,7 +295,8 @@ vpr::ReturnStatus SocketImplSIM::isWriteReady (const vpr::Interval timeout)
    if ( vpr::Interval::NoWait == timeout )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "Timeouts not supported with sim sockets yet!\n" << vprDEBUG_FLUSH;
+         << "SocketImplSIM::isWriteReady(): Timeouts not supported with sim "
+         << "sockets--yet\n" << vprDEBUG_FLUSH;
    }
 
 //   if ( vpr::Interval::NoWait == timeout )
