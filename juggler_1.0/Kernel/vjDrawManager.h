@@ -73,10 +73,4 @@ protected:
    vjDisplayManager* displayManager;  //: The display manager dealing with
 };
 
-ostream& operator<<(ostream& out, vjDrawManager& drawMgr)
-{
-   drawMgr.outStream(out);
-   return out;
-}
-
 #endif
