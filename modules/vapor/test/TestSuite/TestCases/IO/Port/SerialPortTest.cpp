@@ -557,10 +557,12 @@ void SerialPortTest::testSendRecv ()
    vpr::ThreadMemberFunctor<SerialPortTest>* receiver_functor =
       new vpr::ThreadMemberFunctor<SerialPortTest>(this, &SerialPortTest::testSendRecv_receiver);
    vpr::Thread receiver_thread(receiver_functor);
+   receiver_thread.start();
 
    vpr::ThreadMemberFunctor<SerialPortTest>* sender_functor =
       new vpr::ThreadMemberFunctor<SerialPortTest>(this, &SerialPortTest::testSendRecv_sender);
    vpr::Thread sender_thread(sender_functor);
+   sender_thread.start();
 
    receiver_thread.join();
    sender_thread.join();

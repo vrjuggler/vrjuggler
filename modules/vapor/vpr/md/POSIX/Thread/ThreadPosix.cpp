@@ -72,35 +72,18 @@ ThreadPosix::staticWrapper ThreadPosix::statics;
 // This will actually start a new thread that will execute the specified
 // function.
 // ---------------------------------------------------------------------------
-ThreadPosix::ThreadPosix (thread_func_t func, void* arg,
-                          VPRThreadPriority priority, VPRThreadScope scope,
-                          VPRThreadState state, size_t stack_size)
-   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false)
+ThreadPosix::ThreadPosix(thread_func_t func, void* arg,
+                         VPRThreadPriority priority, VPRThreadScope scope,
+                         VPRThreadState state, size_t stackSize)
+   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false),
+     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize)
 {
-   ThreadManager* vpr_tm_inst;
+   mScope = posixThreadScopeToVPR(VPR_THREAD_SCOPE);
 
-   mScope = VPR_THREAD_SCOPE;
-   vpr_tm_inst = ThreadManager::instance();
-
-   // Create the thread functor to start
+   // Create the thread functor to start.  This will be deleted in the
+   // destructor.
    mUserThreadFunctor = new ThreadNonMemberFunctor(func, arg);
    mDeleteThreadFunctor = true;
-   ThreadMemberFunctor<ThreadPosix>* start_functor =
-      new ThreadMemberFunctor<ThreadPosix>(this, &ThreadPosix::startThread,
-                                           NULL);
-
-   // START THREAD
-   // NOTE: Automagically registers thread (inside ThreadPosix::startThread) UNLESS failure
-   int ret_val = spawn(start_functor, priority, scope, state, stack_size);
-
-   if ( ret_val )
-   {
-      vpr_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
-      {
-         registerThread(false);
-      }
-      vpr_tm_inst->unlock();
-   }
 }
 
 // ---------------------------------------------------------------------------
@@ -108,34 +91,13 @@ ThreadPosix::ThreadPosix (thread_func_t func, void* arg,
 //
 // This will start a new thread that will execute the specified function.
 // ---------------------------------------------------------------------------
-ThreadPosix::ThreadPosix (BaseThreadFunctor* functorPtr,
-                          VPRThreadPriority priority, VPRThreadScope scope,
-                          VPRThreadState state, size_t stack_size)
-   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false)
+ThreadPosix::ThreadPosix(BaseThreadFunctor* functorPtr,
+                         VPRThreadPriority priority, VPRThreadScope scope,
+                         VPRThreadState state, size_t stackSize)
+   : mUserThreadFunctor(functorPtr), mDeleteThreadFunctor(false),
+     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize)
 {
-   ThreadManager* vpr_tm_inst;
-
-   mScope = VPR_THREAD_SCOPE;
-   vpr_tm_inst = ThreadManager::instance();
-
-   // Create the thread functor to start
-   mUserThreadFunctor = functorPtr;
-   ThreadMemberFunctor<ThreadPosix>* start_functor =
-      new ThreadMemberFunctor<ThreadPosix>(this, &ThreadPosix::startThread,
-                                           NULL);
-
-   // Start thread
-   // NOTE: Automagically registers thread UNLESS failure
-   int ret_val = spawn(start_functor, priority, scope, state, stack_size);
-
-   if ( ret_val )
-   {
-      vpr_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
-      {
-         registerThread(false);
-      }
-      vpr_tm_inst->unlock();
-   }
+   mScope = posixThreadScopeToVPR(VPR_THREAD_SCOPE);
 }
 
 // ---------------------------------------------------------------------------
@@ -153,6 +115,32 @@ ThreadPosix::~ThreadPosix()
    }
 }
 
+vpr::ReturnStatus ThreadPosix::start()
+{
+   ThreadManager* vpr_tm_inst = ThreadManager::instance();
+
+   // XXX: Memory leak.
+   ThreadMemberFunctor<ThreadPosix>* start_functor =
+      new ThreadMemberFunctor<ThreadPosix>(this, &ThreadPosix::startThread,
+                                           NULL);
+
+   // Spawn the thread.
+   // NOTE: Automagically registers thread (inside ThreadPosix::startThread)
+   // UNLESS failure.
+   vpr::ReturnStatus status = spawn(start_functor);
+
+   if ( ! status.success() )
+   {
+      vpr_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
+      {
+         registerThread(false);
+      }
+      vpr_tm_inst->unlock();
+   }
+
+   return status;
+}
+
 // ---------------------------------------------------------------------------
 // Create a new thread that will execute functorPtr.
 //
@@ -162,15 +150,13 @@ ThreadPosix::~ThreadPosix()
 //       execution immediately, or it may block for a short time before
 //       beginning execution.
 // ---------------------------------------------------------------------------
-int ThreadPosix::spawn (BaseThreadFunctor* functorPtr,
-                        VPRThreadPriority priority, VPRThreadScope scope,
-                        VPRThreadState state, size_t stack_size)
+vpr::ReturnStatus ThreadPosix::spawn(BaseThreadFunctor* functorPtr)
 {
+   vpr::ReturnStatus status;
    int ret_val;
    pthread_attr_t thread_attrs;
-   int pthread_prio;
 
-   pthread_prio = vprThreadPriorityToPOSIX(priority);
+   int pthread_prio = vprThreadPriorityToPOSIX(mPriority);
 
    // Initialize thread_attrs and set the priority of the thread if it is
    // supported.  HP-UX requires a slightly different syntax than other
@@ -193,6 +179,8 @@ int ThreadPosix::spawn (BaseThreadFunctor* functorPtr,
    // If thread priority scheduling is available, set the thread's priority
    // if it is set to be higher than 0.
 #  ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
+   int thread_scope = vprThreadScopeToPOSIX(mScope);
+
 #  if defined(HAVE_SYS_CAPABILITY_H) && ! defined(VPR_OS_FreeBSD) && \
       ! defined(VPR_OS_Linux)
    cap_t capabilities = cap_get_proc();
@@ -201,11 +189,11 @@ int ThreadPosix::spawn (BaseThreadFunctor* functorPtr,
    // to system scope.
    if ( capabilities->cap_effective & CAP_SCHED_MGT )
    {
-      mScope = PTHREAD_SCOPE_SYSTEM;
+      thread_scope = PTHREAD_SCOPE_SYSTEM;
    }
 #  endif   /* HAVE_SYS_CAPABILITY_H */
 
-   pthread_attr_setscope(&thread_attrs, mScope);
+   pthread_attr_setscope(&thread_attrs, thread_scope);
 
    if ( pthread_prio > 0 )
    {
@@ -221,11 +209,11 @@ int ThreadPosix::spawn (BaseThreadFunctor* functorPtr,
    // _POSIX_THREAD_ATTR_STACKSIZE is defined before trying to test its
    // value.
 #ifdef _POSIX_THREAD_ATTR_STACKSIZE
-   if ( stack_size > 0 )
+   if ( mStackSize > 0 )
    {
-      // ** STACK SIZE CHECK NEEDED **
+      // XXX: ** STACK SIZE CHECK NEEDED **
 
-      pthread_attr_setstacksize(&thread_attrs, stack_size);
+      pthread_attr_setstacksize(&thread_attrs, mStackSize);
    }
 #endif
 
@@ -242,13 +230,13 @@ int ThreadPosix::spawn (BaseThreadFunctor* functorPtr,
    // Inform the caller if the thread was not created successfully.
    if ( ret_val != 0 )
    {
+      status.setCode(vpr::ReturnStatus::Fail);
       std::cerr << "vpr::ThreadPosix::spawn() - Cannot create thread:"
                 << strerror(ret_val) << std::endl;
    }
 
-   return ret_val;
+   return status;
 }
-
 
 /**
  * Called by the spawn routine to start the user thread function.

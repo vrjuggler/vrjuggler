@@ -39,8 +39,9 @@ void ThreadTest::testCreateJoin()
    {
       functors[t] = new vpr::ThreadMemberFunctor<ThreadTest>(this,&ThreadTest::incCounter);
 
-      // Spawns thread here
       threads[t] = new vpr::Thread(functors[t]);
+      // Spawns thread here
+      threads[t]->start();
    }
 
    for(int t=0;t<num_threads;t++)
@@ -133,6 +134,7 @@ void ThreadTest::testSuspendResume()
    vpr::ThreadMemberFunctor<ThreadTest>* counter_functor =
       new vpr::ThreadMemberFunctor<ThreadTest>( this, &ThreadTest::counter1Func );
    vpr::Thread counter_thread( counter_functor);
+   counter_thread.start();
 
    vpr::System::msleep(100 );
 
@@ -183,11 +185,13 @@ void ThreadTest::testPriority()
    vpr::ThreadMemberFunctor<ThreadTest>* counter1_functor =
       new vpr::ThreadMemberFunctor<ThreadTest>( this, &ThreadTest::counter1Func );
    vpr::Thread counter1_thread( counter1_functor);
+   counter1_thread.start();
    vpr::System::msleep(500 );
 
    vpr::ThreadMemberFunctor<ThreadTest>* counter2_functor =
       new vpr::ThreadMemberFunctor<ThreadTest>( this, &ThreadTest::counter2Func );
    vpr::Thread counter2_thread( counter2_functor);
+   counter2_thread.start();
 //   counter2_thread.suspend();
    vpr::System::msleep(500 );
 //   counter2_thread.resume();
@@ -243,7 +247,9 @@ void ThreadTest::interactiveTestCPUGrind()
    for(int t=0;t<num_threads;t++)
    {
       functors.push_back( new vpr::ThreadMemberFunctor<ThreadTest>(this,&ThreadTest::grindCPUWorker));
-      threads.push_back( new vpr::Thread(functors[t]) );
+      vpr::Thread* cur_thread = new vpr::Thread(functors[t]);
+      cur_thread->start();
+      threads.push_back(cur_thread);
    }
 
    // -- ASK FOR USER STOP -- //
@@ -295,6 +301,7 @@ void ThreadTest::testThreadStackSize()
 
    the_thread = new vpr::Thread(functor, vpr::BaseThread::VPR_PRIORITY_NORMAL, vpr::BaseThread::VPR_LOCAL_THREAD, vpr::BaseThread::VPR_JOINABLE_THREAD, stack_size);
    CPPUNIT_ASSERT(the_thread != NULL);
+   the_thread->start();
 
    CPPUNIT_ASSERT(the_thread->join() && "Failed to join with testThreadStackSize thread");
 
@@ -346,8 +353,9 @@ void ThreadTest::testThreadSpecificData()
 
       functors[t] = new vpr::ThreadMemberFunctor<ThreadTest>(this,&ThreadTest::tsIncCounter, thread_names[t]);
 
-      // Spawns thread here
       threads[t] = new vpr::Thread(functors[t]);
+      // Spawns thread here
+      threads[t]->start();
    }
 
    for(int t=0;t<num_threads;t++)

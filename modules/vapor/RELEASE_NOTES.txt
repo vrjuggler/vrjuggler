@@ -9,7 +9,15 @@ For all versions:
 ===============================================================================
 
  Version: 1.0.0
-Released: <month> <day>, 2002
+Released: <month> <day>, 2003
+
+ Version: 0.21.0
+Released: December 24, 2002
+    Required changes when upgrading from all previous versions:
+        * When creating a vpr::Thread object, the thread will not be spawned
+          by the constructor.  Instead, user code must invoke the
+          vpr::Thread::start() method on the newly created object to tell
+          the thread to begin execution.
 
  Version: 0.14.0
 Released: May 23, 2002

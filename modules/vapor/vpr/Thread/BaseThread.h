@@ -89,6 +89,9 @@ public:
       ;
    }
 
+   /** Starts the thread's execution. */
+   virtual vpr::ReturnStatus start() = 0;
+
 public:     // Thread specific data caching
    /**
     * Gets the Thread specific data table.
@@ -132,7 +135,6 @@ protected:
     */
    void registerThread(bool succesfulCreation);
 
-public:
    /**
     * Creates a new thread that will execute functorPtr.
     *
@@ -154,16 +156,19 @@ public:
     * @return A non-zero value is returned to indicate that the thread was
     *         created successfully.  -1 is returned otherwise.
     */
-   virtual int spawn (BaseThreadFunctor* functorPtr,
-                      VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-                      VPRThreadScope scope = VPR_GLOBAL_THREAD,
-                      VPRThreadState state = VPR_JOINABLE_THREAD,
-                      size_t stack_size = 0)
+/*
+   virtual vpr::ReturnStatus spawn(BaseThreadFunctor* functorPtr,
+                                   VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
+                                   VPRThreadScope scope = VPR_GLOBAL_THREAD,
+                                   VPRThreadState state = VPR_JOINABLE_THREAD,
+                                   size_t stack_size = 0)
    {
       std::cerr << "Base spawn.  Should NOT be called." << std::endl;
-      return -1;
+      return vpr::ReturnStatus::Fail;
    }
+*/
 
+public:
    /**
     * Causes the calling thread wait for the termination of this thread.
     *

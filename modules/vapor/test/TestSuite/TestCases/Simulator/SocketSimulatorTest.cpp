@@ -452,10 +452,12 @@ void SocketSimulatorTest::multiThreadTest ()
    vpr::ThreadMemberFunctor<SocketSimulatorTest>* acceptor_func =
       new vpr::ThreadMemberFunctor<SocketSimulatorTest>(this, &SocketSimulatorTest::multiThreadTest_acceptor);
    vpr::Thread acceptor(acceptor_func);
+   acceptor.start();
 
    vpr::ThreadMemberFunctor<SocketSimulatorTest>* connector_func =
       new vpr::ThreadMemberFunctor<SocketSimulatorTest>(this, &SocketSimulatorTest::multiThreadTest_connector);
    vpr::Thread connector(connector_func);
+   connector.start();
 
    // Run, Lola, run.
    while ( vpr::sim::Controller::instance()->isRunning() ) {
