@@ -1,0 +1,147 @@
+
+//=====================================================
+// vjVrpn
+//
+// Purpose:
+//	VR Juggler VRPN Hi-Ball tracking class
+//
+// Author:
+//	Jason Jerald
+// Last Modified:  8-26-02
+//
+// Revisions:
+//      Ported to to 1.1 DR2 and sgi platform Anthony Steed, 10-4-02
+//======================================================
+
+
+#ifndef _GADGET_VRPN_H_
+#define _GADGET_VRPN_H_
+
+#include <gadget/gadgetConfig.h>
+#include <vector>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Position.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/InputMixer.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Quat.h>
+
+#include <vrpn_Tracker.h>
+#include <vrpn_Button.h>
+
+namespace gadget
+{
+
+//-----------------------------------------------------------------------------
+//: Class interfacing with vrpn sensor data
+//+ located on the local machine in a shared memory arena
+//
+//! NOTE: A note on reciever access:
+//+  Clients of Juggler should access tracker recievers as [0-n].  For
+//+  example, if you have recievers 1,2, and 4 with transmitter on 3, then
+//+  you can access the data, in order, as 0, 1, 2.
+//
+// See also: Digital, Analog, Position
+//-----------------------------------------------------------------------------
+//!PUBLIC_API:
+
+  class Vrpn : public InputMixer<InputMixer<Input,Digital>,Position>
+    {
+    
+    public:
+    
+      // ------------------------------------------------------------------------
+      //: Constructor.
+      // ------------------------------------------------------------------------
+      Vrpn():mReadThread(NULL){};
+    
+      // ------------------------------------------------------------------------
+      //: Destructor.
+      //
+      //! PRE: None.
+      //! POST: Shared memory is released
+      // ------------------------------------------------------------------------
+      ~Vrpn();
+
+      // ------------------------------------------------------------------------
+      //: Configure the vrpn  with the given config chunk.
+      //
+      //! PRE: c must be a chunk that has vrpn  config information
+      //! POST: If c is a valid config chunk, the device is configured using its
+      //+       contents.  Otherwise, configuration fails and false is returned
+      //+       to the caller.
+      //
+      //! ARGS: c - A pointer to a config chunk.
+      //
+      //! RETURNS: true - The device was configured succesfully.
+      //! RETURNS: false - The config chunk is invalid.
+      // ------------------------------------------------------------------------
+      virtual bool config(jccl::ConfigChunkPtr c);
+
+      //: Begin sampling
+      int startSampling();
+
+      //: Stop sampling
+      int stopSampling();
+
+      //: Sample a value
+      int sample();
+
+      // ------------------------------------------------------------------------
+      //: Update to the sampled data.
+      //
+      //! PRE: None.
+      //! POST: Most recent value is copied over to temp area
+      // ------------------------------------------------------------------------
+      void updateData();
+
+
+      //: Return what chunk type is associated with this class.
+      static std::string getChunkType () {
+	return std::string("Vrpn");
+      }
+
+
+    private:
+      vpr::Thread* mReadThread;
+      std::string mTrackerServer;
+      std::string mButtonServer;
+      int mTrackerNumber;
+      int mButtonNumber;
+   
+      void handleTracker(vrpn_TRACKERCB t);
+      void handleButton(vrpn_BUTTONCB b);
+
+      void setPreTransform(float xoff, float yoff, float zoff,  
+			   float xrot, float yrot, float zrot,
+			   float xscale, float yscale, float zscale);
+      void setPostTransform(float xscale, float yscale, float zscale);
+
+      void readLoop(void *nullParam);
+
+
+      gmtl::Matrix44f getSensorPos(int d);
+      gadget::DigitalData getDigitalData(int d);
+     
+      gmtl::Matrix44f   mPreMatrixTransform;
+      gmtl::Matrix44f   mPostMatrixTransform;
+      std::vector<DigitalData>  mCurButtons; // The current button states
+      std::vector<PositionData> mCurPositions; // The current button states
+
+      // Working space - AJS to remove
+      std::vector<gadget::DigitalData> mButtons;
+      std::vector<gmtl::Quatf> mQuats;
+      std::vector<gmtl::Vec3f> mPositions; 
+
+      friend void staticHandleTracker(void *userdata, vrpn_TRACKERCB t);
+      friend void staticHandleButton(void *userdata, vrpn_BUTTONCB t);
+    };
+
+};
+
+
+#endif
+
