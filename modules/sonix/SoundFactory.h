@@ -9,7 +9,8 @@ public:
 private:    
 
     /**
-     * @clientCardinality 0..* 
+     * @clientCardinality 1
+     * @supplierCardinality 0..*
      */
     ISoundImplementation lnkISoundImplementation;
 };
