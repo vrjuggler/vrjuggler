@@ -562,7 +562,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
 
         dnl # Define the appropriate value for _POSIX_C_SOURCE on the current
         dnl # platform.
-        if test "$PLATFORM" = "SGI" ; then
+        if test "$PLATFORM" = "SGI" -o "$PLATFORM" = "Linux" ; then
             AC_DEFINE(VJ_POSIX_C_SOURCE, 199506L)
         else
             AC_DEFINE(VJ_POSIX_C_SOURCE, 2)
