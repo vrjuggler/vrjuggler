@@ -122,15 +122,42 @@ public class DefaultDeviceGraphCellCreator
                                               attributes, x, y, false);
       }
       // The IS-900 and IntersenseAPI drivers have a variable number of
-      // properties...
-      // XXX: This is not complete because it does not take into account hte
-      // untis types.  Adding and removing units with an Intersense is hard...
+      // position, analog, and digital properties.  They are maintained in a
+      // manner totally unlike any other device's config element, however.
       else if ( token.equals(INTERSENSE_TYPE) ||
                 token.equals(INTERSENSE_API_TYPE) )
       {
-         cell = GraphHelpers.createDeviceCell(devElt, context,
-                                              STATIONS_PROPERTY, attributes,
-                                              x, y, false);
+         List unit_types = new ArrayList(3);
+         unit_types.add(0, UnitConstants.POSITION);
+         unit_types.add(1, UnitConstants.ANALOG);
+         unit_types.add(2, UnitConstants.DIGITAL);
+         cell = GraphHelpers.createBaseDeviceCell(
+            new DeviceInfo(devElt, context, unit_types),
+            attributes, x, y, false
+         );
+
+         int station_count = devElt.getPropertyValueCount(STATIONS_PROPERTY);
+         int analog_count = 0, digital_count = 0;
+
+         for ( int i = 0; i < station_count; ++i )
+         {
+            ConfigElement station_elt =
+               (ConfigElement) devElt.getProperty(STATIONS_PROPERTY, i);
+            Integer analog_value =
+               (Integer) station_elt.getProperty(ANALOG_COUNT_PROPERTY, 0);
+            Integer digital_value =
+               (Integer) station_elt.getProperty(DIGITAL_COUNT_PROPERTY, 0);
+
+            analog_count  += analog_value.intValue();
+            digital_count += digital_value.intValue();
+         }
+
+         // There is one positional unit per station.
+         GraphHelpers.addDevicePorts(cell, UnitConstants.POSITION,
+                                     station_count);
+         GraphHelpers.addDevicePorts(cell, UnitConstants.ANALOG, analog_count);
+         GraphHelpers.addDevicePorts(cell, UnitConstants.DIGITAL,
+                                     digital_count);
       }
       // The Linux and Direct Input game controllers have a variable number of
       // analog and digital units.  The number is dependent upon the game
