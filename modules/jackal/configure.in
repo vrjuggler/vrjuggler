@@ -244,6 +244,8 @@ fi
 
 if test "x$CYGPATH" != "xno" ; then
    UNIX_CPPDOM_ROOT=`cygpath -u $CPPDOM_ROOT`
+else
+   UNIX_CPPDOM_ROOT="$CPPDOM_ROOT"
 fi
 
 CFLAGS="${_vjsave_CFLAGS}"
