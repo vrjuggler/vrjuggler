@@ -46,6 +46,8 @@
 
 #include <Input/InputManager/vjPosInterface.h>
 #include <Input/InputManager/vjGloveInterface.h>
+#include <Input/InputManager/vjDigitalInterface.h>
+
 
 //----------------------------------------------------
 //: Demonstration OpenGL application class
@@ -67,6 +69,18 @@ public:
    virtual void init()
    {
       mGlove.init("VJGlove");
+      
+      // for the digital glove fingers.
+      mLeftThumb.init("LeftThumb");
+      mLeftIndex.init("LeftIndex");
+      mLeftMiddle.init("LeftMiddle");
+      mLeftRing.init("LeftRing");
+      mLeftPinky.init("LeftPinky");
+      mRightThumb.init("RightThumb");
+      mRightIndex.init("RightIndex");
+      mRightMiddle.init("RightMiddle");
+      mRightRing.init("RightRing");
+      mRightPinky.init("RightPinky");
    }
 
    // Execute any initialization needed after API is started
@@ -105,7 +119,18 @@ public:
 
    /// Function called after tracker update but before start of drawing
    virtual void preFrame()
-   {;}
+   {
+      cout<<mLeftThumb->getData()
+          <<mLeftIndex->getData()
+          <<mLeftMiddle->getData()
+          <<mLeftRing->getData()
+          <<mLeftPinky->getData()<<"."
+          <<mRightThumb->getData()
+          <<mRightIndex->getData()
+          <<mRightMiddle->getData()
+          <<mRightRing->getData()
+          <<mRightPinky->getData()<<"\n"<<flush;
+   }
 
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
@@ -142,6 +167,18 @@ protected:
 
 public:
    vjGloveInterface    mGlove;      // the glove
+
+   // for the glove fingers
+   vjDigitalInterface  mLeftThumb;
+   vjDigitalInterface  mLeftIndex;
+   vjDigitalInterface  mLeftMiddle;
+   vjDigitalInterface  mLeftRing;
+   vjDigitalInterface  mLeftPinky;
+   vjDigitalInterface  mRightThumb;
+   vjDigitalInterface  mRightIndex;
+   vjDigitalInterface  mRightMiddle;
+   vjDigitalInterface  mRightRing;
+   vjDigitalInterface  mRightPinky;
 };
 
 
