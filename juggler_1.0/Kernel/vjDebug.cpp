@@ -53,7 +53,7 @@ vjDebug* vjDebug::_instance = NULL;
 vjDebug::vjDebug()
 {
    indentLevel = 0;     // Initialy don't indent
-   debugLevel = 0;      // Should actually try to read env variable
+   debugLevel = 1;      // Should actually try to read env variable
 
    char* debug_lev = getenv("VJ_DEBUG_NFY_LEVEL");
    if(debug_lev != NULL)

@@ -80,6 +80,15 @@ public:
       vjDEBUG(vjDBG_ALL,1) << "app::apiInit\n" << vjDEBUG_FLUSH;
    }
 
+   virtual void preForkInit()
+   {
+      // Initialize type system
+      vjDEBUG(vjDBG_ALL,1) << "app::preForkInit: Initializing new types.\n" << vjDEBUG_FLUSH;
+      pfNaver::init();
+
+      // Initialize loaders
+   }
+
    /// Initialize the scene graph
    virtual void initScene()
    {
@@ -95,32 +104,35 @@ public:
       naver = new pfNaver();
 
       sun1 = new pfLightSource;
-      pfDCS* fake_dcs = new pfDCS;
       sun1->setPos(0.3f, 0.0f, 0.3f, 0.0f);
       sun1->setColor(PFLT_DIFFUSE,0.3f,0.0f,0.95f);
       sun1->setColor(PFLT_AMBIENT,0.4f,0.4f,0.4f);
       sun1->setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
+      sun1->on();
       naver->addChild(sun1);
 
-      fake_dcs->addChild(sun1);
+      // Light the root node
+      ///*
+      pfDCS* sun_position = new pfDCS;
+      sun_position->addChild(sun1);
+      rootNode->addChild(sun_position);
+      //*/
+
       //sun1->on();     // By default
 
-      //rootNode->addChild(new pfLightSource);
-
-      /// Load SIMPLE geometry
+            /// Load SIMPLE geometry
       ///*
       pfFilePath("/usr/share/Performer/data");
-      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/chamber.0.lsa");
+      //pfNode* obj = new pfGroup;
       pfNode* obj = pfdLoadFile("/usr/share/Performer/data/klingon.flt");
-      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/geom.sv");
-      pfDCS* world_model = new pfDCS;    // The node with the world under it
       //rootNode->addChild(naver);
-      rootNode->addChild(world_model);
-      rootNode->addChild(fake_dcs);
 
+      pfDCS* world_model = new pfDCS;    // The node with the world under it
+      rootNode->addChild(world_model);
       world_model->addChild(obj);
       world_model->setScale(0.25f);
       world_model->setTrans(0.0,5.0,-5.0);
+
       vjMatrix initial_pos;
       initial_pos.setTrans(0,0,0);
       //naver->getNavigator()->setCurPos(initial_pos);

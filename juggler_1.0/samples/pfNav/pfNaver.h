@@ -71,17 +71,17 @@ public:  // APP traversal
 
    // Required for Performer class
 public:
-   static void init(void);
-   static pfType* getClassType(void){ return mClassType;}
+   static void init();
+   static pfType* getClassType(void){ return classType;}
 private:
-   static pfType* mClassType;
+   static pfType* classType;
 };
 
 
 
-pfNaver::pfNaver()
+pfNaver::pfNaver() : pfDCS()
 {
-   setType(mClassType);  // Set the type
+   setType(classType);  // Set the type
    mKern = vjKernel::instance();    // Store the kernel
    mWand.init("VJWand");
    mButton0.init("VJButton0");
@@ -109,7 +109,7 @@ int pfNaver::app(pfTraverser *trav)
                          << "b1: " << button1_state
                          << "b2: " << button2_state
                          << "\t" << vjDEBUG_FLUSH;
-                       
+
    mVNav.update(*wand_mat, button0_state, button1_state);    // mat, trans, rot
 
    if(1 == button0_state)     // Translate
@@ -137,14 +137,14 @@ int pfNaver::app(pfTraverser *trav)
 // is derived from a Performer class.  It creates a new pfType
 // which identifies objects of this class.  All constructors for
 // this class must then call setType(classType_).
-pfType *pfNaver::mClassType = NULL;
+pfType *pfNaver::classType = NULL;
 
 void pfNaver::init(void)
 {
- if (mClassType == NULL)
+ if (classType == NULL)
    {
         pfDCS::init();           // Initialize my parent
-        mClassType =  new pfType(pfDCS::getClassType(), "pfNaver");  // Create the new type
+        classType =  new pfType(pfDCS::getClassType(), "pfNaver");  // Create the new type
    }
 }
 //----------------------------------------------------------------------//
