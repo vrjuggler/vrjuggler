@@ -168,15 +168,15 @@ PRUint16 SelectorImpNSPR::convertMaskVprToNspr(vpr::Uint16 mask)
 {
    PRUint16 ret_mask(0);
    if(mask & READ)
-      ret_mask &= PR_POLL_READ;
+      ret_mask |= PR_POLL_READ;
    if(mask & WRITE)
-      ret_mask &= PR_POLL_WRITE;
+      ret_mask |= PR_POLL_WRITE;
    if(mask & EXCEPT)
-      ret_mask &= PR_POLL_EXCEPT;
+      ret_mask |= PR_POLL_EXCEPT;
    if(mask & ERR)
-      ret_mask &= PR_POLL_ERR;
+      ret_mask |= PR_POLL_ERR;
    if(mask & INVALID)
-      ret_mask &= PR_POLL_NVAL;
+      ret_mask |= PR_POLL_NVAL;
 
    return ret_mask;
 }
@@ -185,15 +185,15 @@ vpr::Uint16 SelectorImpNSPR::convertMaskNsprToVpr(PRUint16 mask)
 {
    vpr::Uint16 ret_mask(0);
    if(mask & PR_POLL_READ)
-      ret_mask &= READ;
+      ret_mask |= READ;
    if(mask & PR_POLL_WRITE)
-      ret_mask &= WRITE;
+      ret_mask |= WRITE;
    if(mask & PR_POLL_EXCEPT)
-      ret_mask &= EXCEPT;
+      ret_mask |= EXCEPT;
    if(mask & PR_POLL_ERR)
-      ret_mask &= ERR;
+      ret_mask |= ERR;
    if(mask & PR_POLL_NVAL)
-      ret_mask &= INVALID;
+      ret_mask |= INVALID;
 
    return ret_mask;
 }
