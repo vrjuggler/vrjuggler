@@ -33,7 +33,7 @@
 #ifndef _CUBES_APP_
 #define _CUBES_APP_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #ifdef VJ_OS_Darwin
 #include <OpenGL/gl.h>
@@ -45,19 +45,19 @@
 
 #include <vector>
 
-#include <Kernel/vjKernel.h>
-#include <Kernel/GL/vjGlApp.h>
-#include <Kernel/GL/vjGlContextData.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OGL/GlContextData.h>
 
-#include <Math/vjMatrix.h>
-#include <Math/vjVec3.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Util/Debug.h>
 
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjAnalogInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Input/Type/AnalogInterface.h>
+#include <vrj/Input/Type/DigitalInterface.h>
 
-#include <Kernel/vjUser.h>
+#include <vrj/Kernel/User.h>
 
 
 
