@@ -9,7 +9,7 @@
          <bean>RTRCDataSourceBroker</bean>
          <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">TableLayout.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/share/tweek/java">ui.jar</jar>
       </dependencies>
       <tree path="/VRJConfig/" />
    </guipanel>
@@ -19,7 +19,7 @@
       <dependencies>
          <bean>ConfigBroker</bean>
          <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/share/tweek/java">ui.jar</jar>
       </dependencies>
       <tree path="/VRJConfig/" />
    </guipanel>
@@ -31,7 +31,7 @@
          <bean>RTRCDataSourceBroker</bean>
          <bean>WizardBuilder</bean>
          <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/share/tweek/java">ui.jar</jar>
       </dependencies>
       <tree path="/VRJConfig/" />
    </guipanel>
