@@ -41,6 +41,8 @@
 
 #include <vpr/vprConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <vpr/Util/Assert.h>
 //#include <vpr/Thread/Thread.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
@@ -173,6 +175,12 @@ vpr::ReturnStatus ThreadNSPR::start()
    }
 
    return status;
+}
+
+int ThreadNSPR::join(void** status = NULL)
+{
+   boost::ignore_unused_variable_warning(status);
+   return PR_JoinThread(mThread);
 }
 
 /**
