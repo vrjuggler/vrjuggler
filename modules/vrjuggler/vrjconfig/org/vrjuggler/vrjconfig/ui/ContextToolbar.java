@@ -96,9 +96,9 @@ public class ContextToolbar
          ClassLoader loader = getClass().getClassLoader();
          String img_root = "org/vrjuggler/vrjconfig/images";
          newBtn.setIcon(new ImageIcon(loader.getResource(img_root +
-                                                         "/newchunk.gif")));
+                                                         "/Add16.gif")));
          openBtn.setIcon(new ImageIcon(loader.getResource(img_root +
-                                                          "/open.gif")));
+                                                          "/OpenAdd16.gif")));
          saveBtn.setIcon(new ImageIcon(loader.getResource(img_root +
                                                           "/save.gif")));
          saveAsBtn.setIcon(new ImageIcon(loader.getResource(img_root +
@@ -625,30 +625,32 @@ public class ContextToolbar
       this.setLayout(new BorderLayout());
       toolbar.setBorder(BorderFactory.createEtchedBorder());
       toolbar.setFloatable(false);
-      newBtn.setToolTipText("Add New File");
+      newBtn.setToolTipText("Add a new file to this configuration context");
       newBtn.setActionCommand("New");
       newBtn.setFocusPainted(false);
-      openBtn.setToolTipText("Add Existing File");
+      openBtn.setToolTipText("Add an existing file to this configuration " +
+                             "context");
       openBtn.setActionCommand("Open");
       openBtn.setFocusPainted(false);
       saveBtn.setEnabled(false);
-      saveBtn.setToolTipText("Save Configuration");
+      saveBtn.setToolTipText("Save this configuration");
       saveBtn.setActionCommand("Save");
       saveBtn.setFocusPainted(false);
       saveAsBtn.setEnabled(false);
-      saveAsBtn.setToolTipText("Save Configuration As");
+      saveAsBtn.setToolTipText("Save this whole configuration as a single " +
+                               "new file");
       saveAsBtn.setActionCommand("SaveAs");
       saveAsBtn.setFocusPainted(false);
       undoBtn.setEnabled(true);
-      undoBtn.setToolTipText("Undo");
+      undoBtn.setToolTipText("Undo the last edit");
       undoBtn.setActionCommand("Undo");
       undoBtn.setFocusPainted(false);
       redoBtn.setEnabled(true);
-      redoBtn.setToolTipText("Redo");
+      redoBtn.setToolTipText("Redo the last edit");
       redoBtn.setActionCommand("Redo");
       redoBtn.setFocusPainted(false);
       expandBtn.setEnabled(false);
-      expandBtn.setToolTipText("Expand Toolbar");
+      expandBtn.setToolTipText("Show the files in this configuration context");
       expandBtn.setActionCommand("Expand");
       expandBtn.setFocusPainted(false);
 
