@@ -47,14 +47,15 @@
 #include <snx/snxConfig.h>
 
 #include <string>
+#include <vpr/Util/Singleton.h>
+
 #include "snx/xdl.h"
-#include "snx/Singleton.h"
 #include "snx/ISoundImplementation.h"
 
 namespace snx
 {
 
-class SNX_CLASS_API SoundFactory : public snx::Singleton<SoundFactory>
+class SNX_CLASS_API SoundFactory : public vpr::Singleton<SoundFactory>
 {
 public:
    SoundFactory();
