@@ -103,8 +103,8 @@ namespace cluster
       for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin();
            i != mClients.end() ; i++)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Sending data to: "
-            << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Sending data to: "
+         //   << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
          try
          {
             (*i)->send(mDataPacket);
@@ -158,7 +158,6 @@ namespace cluster
 
    void ApplicationDataServer::debugDump(int debug_level)
    {
-      vprASSERT(0 == mClientsLock.test());
       vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
       vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
