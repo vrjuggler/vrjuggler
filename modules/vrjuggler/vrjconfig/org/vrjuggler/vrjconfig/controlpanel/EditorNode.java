@@ -40,7 +40,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class EditorNode extends ControlPanelNode
 {
    /**
-    * Constructs a ConntrolPanel category.
+    * Constructs a ControlPanel editor.
     *
     * @param label      label shown under icon
     * @param class_name class of the editor to be loaded
