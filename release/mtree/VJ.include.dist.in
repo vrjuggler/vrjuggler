@@ -11,6 +11,8 @@
 	Environment
 	..
 	Input
+	    Filter
+	    ..
 	    InputManager
 	    ..
 	    ibox
