@@ -89,14 +89,12 @@ aMotionStar::aMotionStar(char* _address, int _hemisphere,
 // Destructor.
 // ----------------------------------------------------------------------------
 aMotionStar::~aMotionStar() {
-
   this->stop();
 
   if ( address != NULL ) {
     free(address);
     address = NULL;
   }
-
 } // end aMotionStar::~aMotionStar()
 
 // ----------------------------------------------------------------------------
@@ -250,110 +248,21 @@ aMotionStar::start () {
 // ----------------------------------------------------------------------------
 // Stops the driver.
 // ----------------------------------------------------------------------------
-void aMotionStar::stop() {
+void
+aMotionStar::stop () {
     /* put in a STOP COMMAND here */
 
     command.sequence      = sequenceNumber;
     command.type          = 105;
     numberBytes           = send(s, (void*)lpCommand, sizeof(command), 0);
-
 } // end void aMotionStar::stop()
-
-// ----------------------------------------------------------------------------
-// Send a wakeup call to the MotionStar server.
-// ----------------------------------------------------------------------------
-void aMotionStar::send_wakeup()
-{
-  /***** send a command to the server wakeup *****/
-//  printf("WAKEUP:");
-
-  command.sequence              = sequenceNumber++;
-  command.type                  = 10;
-  command.xtype                 = 0;
-  command.protocol              = 1;
-  command.number_bytes          = 0;
-  command.error_code            = 0;
-  command.error_code_extension  = 0;
-
-  /*n++;*/
-  numberBytes = send(s,(void*)lpCommand, sizeof(command), 0);
-
-//  printf(" - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
-
-  bytesReceived = recv(s, (void*)lpResponse, sizeof(response), 0);
-
-//  printf("  | WAKEUP ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
-
-} // end void aMotionStar::send_wakeup ()
-
-// ----------------------------------------------------------------------------
-// Tell the MotionStar server to sample continuously.
-// ----------------------------------------------------------------------------
-void aMotionStar::runContinuous() {
-//  cout << "runContinous" << endl;
-
-  command.type=104;
-// MSG_RUN CONTINIOUS - request server to send packets continuously
-
-  command.xtype = 0;
-  command.sequence = sequenceNumber++;
-  n++;
-  numberBytes   = send(s, (void*)lpCommand, sizeof(command), 0);
-
-//    printf("\n\nSTREAM: - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
-
-  bytesReceived = recv(s, (void*)lpResponse, sizeof(response), 0);
-
-//    printf("  | STREAM ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
-
-
-      /* receive the header */
-/*
-   int           headerBytesReceived;
-   char          *lpBuffer;
-
-    headerBytesReceived = 0;
-    lpBuffer = (char*)lpResponse;
-    while(headerBytesReceived != 16) {
-      bytesReceived = recv(s, (void*)lpBuffer, 16, 0);
-
-      if (bytesReceived < 0) {
-          perror("recv1"), exit(1);
-      }
-
-      headerBytesReceived = headerBytesReceived + bytesReceived;
-      lpBuffer = (char *)lpBuffer + bytesReceived;
-    }
-*/
-} // end aMotionStar::runContinuous()
-
-// ----------------------------------------------------------------------------
-// Request a single sampling of the MotionStar server.
-// ----------------------------------------------------------------------------
-void aMotionStar::singleShot()
-{
-  /* send a request for a single shot packet */
-  command.type=103; /* MSG_SINGLE_SHOT - request server to send single packet of data */
-  command.xtype = 0;
-  command.sequence = sequenceNumber++;
-  numberBytes = send(s,(void*) lpCommand, sizeof(command), 0);
-
-    //printf("bytes sent = %d errno %d\n", numberBytes,errno);
-
-  /* wait for the packet to come back */
-
-  bytesReceived = recv(s, (void*) lpResponse, sizeof(response), 0);
-
-    //printf("  >>> %3d; sequence=%4d; type=%4d; bytes received=%4d\n",n,response.header.sequence
-	//	,response.header.type, bytesReceived);
-
-} // end void aMotionStar::singleShot()
 
 // ----------------------------------------------------------------------------
 // Based on the current run mode, a single sample is taken (run mode is
 // 1), or continuous samples are taken (run mode is 0).
 // ----------------------------------------------------------------------------
-void aMotionStar::sample() {
+void
+aMotionStar::sample () {
 //    cout << "Sampling..." << endl;
     if (runMode == 1) {singleShot();}
 //    cout << "After singleShot() " << endl;
@@ -467,29 +376,121 @@ void aMotionStar::sample() {
       posinfo[bnum][4] = getAzimuth(o);		// Y rotation (azimuth)
       posinfo[bnum][5] = getElevation(o);	// X rotatoin (elevation)
     } // end for loop
-
-
 } // end void aMotionStar::sample()
 
 // ----------------------------------------------------------------------------
-// Print out the MotionStar information.
+// Set the address (either IP address or hostname) for the server.
 // ----------------------------------------------------------------------------
-void aMotionStar::printInfo(){
-  int i;
+void
+aMotionStar::setAddress (const char* n) {
+  if ( n != NULL ) {
+    // Free the old memory before duplicating the new address string.
+    if ( address != NULL ) {
+      free(address);
+    }
 
-  for (i = 0; i < 3; i++){
-    printf("P = %f, %f, %f  A = %f, %f, %f \n", posinfo[i][0], posinfo[i][1],
-           posinfo[i][2], posinfo[i][3], posinfo[i][4],posinfo[i][5]);
+    address = strdup(n);
   }
-  printf ("\n");
+}
 
-} // end void aMotionStar::printinfo()
+// ============================================================================
+// Private methods.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Send a wakeup call to the MotionStar server.
+// ----------------------------------------------------------------------------
+void
+aMotionStar::send_wakeup () {
+  /***** send a command to the server wakeup *****/
+//  printf("WAKEUP:");
+
+  command.sequence              = sequenceNumber++;
+  command.type                  = 10;
+  command.xtype                 = 0;
+  command.protocol              = 1;
+  command.number_bytes          = 0;
+  command.error_code            = 0;
+  command.error_code_extension  = 0;
+
+  /*n++;*/
+  numberBytes = send(s,(void*)lpCommand, sizeof(command), 0);
+
+//  printf(" - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
+
+  bytesReceived = recv(s, (void*)lpResponse, sizeof(response), 0);
+
+//  printf("  | WAKEUP ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
+} // end void aMotionStar::send_wakeup ()
+
+// ----------------------------------------------------------------------------
+// Tell the MotionStar server to sample continuously.
+// ----------------------------------------------------------------------------
+void
+aMotionStar::runContinuous () {
+//  cout << "runContinous" << endl;
+
+  command.type=104;
+// MSG_RUN CONTINIOUS - request server to send packets continuously
+
+  command.xtype = 0;
+  command.sequence = sequenceNumber++;
+  n++;
+  numberBytes   = send(s, (void*)lpCommand, sizeof(command), 0);
+
+//    printf("\n\nSTREAM: - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
+
+  bytesReceived = recv(s, (void*)lpResponse, sizeof(response), 0);
+
+//    printf("  | STREAM ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
+
+
+      /* receive the header */
+/*
+   int           headerBytesReceived;
+   char          *lpBuffer;
+
+    headerBytesReceived = 0;
+    lpBuffer = (char*)lpResponse;
+    while(headerBytesReceived != 16) {
+      bytesReceived = recv(s, (void*)lpBuffer, 16, 0);
+
+      if (bytesReceived < 0) {
+          perror("recv1"), exit(1);
+      }
+
+      headerBytesReceived = headerBytesReceived + bytesReceived;
+      lpBuffer = (char *)lpBuffer + bytesReceived;
+    }
+*/
+} // end aMotionStar::runContinuous()
+
+// ----------------------------------------------------------------------------
+// Request a single sampling of the MotionStar server.
+// ----------------------------------------------------------------------------
+void
+aMotionStar::singleShot () {
+  /* send a request for a single shot packet */
+  command.type=103; /* MSG_SINGLE_SHOT - request server to send single packet of data */
+  command.xtype = 0;
+  command.sequence = sequenceNumber++;
+  numberBytes = send(s,(void*) lpCommand, sizeof(command), 0);
+
+    //printf("bytes sent = %d errno %d\n", numberBytes,errno);
+
+  /* wait for the packet to come back */
+
+  bytesReceived = recv(s, (void*) lpResponse, sizeof(response), 0);
+
+    //printf("  >>> %3d; sequence=%4d; type=%4d; bytes received=%4d\n",n,response.header.sequence
+	//	,response.header.type, bytesReceived);
+} // end void aMotionStar::singleShot()
 
 // ----------------------------------------------------------------------------
 // Get the system status.
 // ----------------------------------------------------------------------------
-void aMotionStar::get_status_all()
-{
+void
+aMotionStar::get_status_all () {
   void                  *lpBuffer;
   int                   headerBytes, dataBytes;
   int                   bytesReceived;
@@ -545,16 +546,15 @@ void aMotionStar::get_status_all()
   szRate[5] = response.buffer[10];
   szRate[6] = 0;
 
- serverNumber = response.buffer[3];
+  serverNumber = response.buffer[3];
   chassisNumber = response.buffer[11];
   chassisDevices = response.buffer[12];
   firstAddress = response.buffer[13];
   softwareRevision = (((unsigned short)(response.buffer[14])<<8) & 0xFF00)
     | ((unsigned short)(response.buffer[15]));
-
-
   mRate = atoi(szRate);
   realRate = (double)(mRate)/1000;
+
   printf("Measurement rate = %6.1f\n", realRate);
   printf("Number of chassis in system = %d\n", serverNumber);
   printf("Chassis# = %d\n", chassisNumber);
@@ -563,7 +563,6 @@ void aMotionStar::get_status_all()
   printf("SERVER Software Version = %d\n\n", softwareRevision);
   printf("============================================================\n\n");
 
-
 /*
   for(i= 0;i<16;i++) printf(" %2x", response.buffer[i]);
   printf("  |  ");
@@ -571,7 +570,6 @@ void aMotionStar::get_status_all()
 
   printf("\n\n");
 */
-
 
   for(i=0;i<flockNumber;i++)
     {
@@ -597,14 +595,13 @@ void aMotionStar::get_status_all()
     }
     printf("\n");
 */
-
 } // end void aMotionStar::get_status_all()
 
 // ----------------------------------------------------------------------------
 // Set the system status.
 // ----------------------------------------------------------------------------
-void aMotionStar::set_status_all()
-{
+void
+aMotionStar::set_status_all () {
      int i;
      response.header.type=102;
      response.header.xtype=0;
@@ -631,11 +628,10 @@ void aMotionStar::set_status_all()
 // ----------------------------------------------------------------------------
 // Get the status of an individual bird.
 // ----------------------------------------------------------------------------
-void aMotionStar::get_status_fbb(unsigned char fbb_addr)
-{
+void
+aMotionStar::get_status_fbb (unsigned char fbb_addr) {
   int headerBytes, dataBytes;
   void * lpBuffer;
-
 
   command.type=101;
   command.xtype=fbb_addr;
@@ -672,26 +668,13 @@ void aMotionStar::get_status_fbb(unsigned char fbb_addr)
   for (i=0;i<bytesReceived;++i)
     printf("%4d",*(newptr+i));
 */
-
 } // end void aMotionStar::get_status_fbb()
-
-// ----------------------------------------------------------------------------
-// Print out the MotionStar's header information.
-// ----------------------------------------------------------------------------
-void aMotionStar::display_hdr()
-{
-
-
-  /*printf("sequence=%6d time= %8d milliseconds=%6d type= %4d "
-	,response.header.sequence);*/
-
-} // end void aMotionStar::display_hdr()
 
 // ----------------------------------------------------------------------------
 // Set the status of an individual bird.
 // ----------------------------------------------------------------------------
-void aMotionStar::set_status_fbb(unsigned char fbb_addr)
-{
+void
+aMotionStar::set_status_fbb (unsigned char fbb_addr) {
   response.header.type = 102;
   response.header.xtype = fbb_addr;
   response.header.number_bytes = 70;
@@ -713,23 +696,28 @@ void aMotionStar::set_status_fbb(unsigned char fbb_addr)
 } // end void aMotionStar::set_status_fbb()
 
 // ----------------------------------------------------------------------------
-// Set the address (either IP address or hostname) for the server.
+// Print out the MotionStar information.
 // ----------------------------------------------------------------------------
 void
-aMotionStar::setAddress (const char* n) {
-  if ( n != NULL ) {
-    // Free the old memory before duplicating the new address string.
-    if ( address != NULL ) {
-      free(address);
-    }
+aMotionStar::printInfo () {
+  int i;
 
-    address = strdup(n);
+  for (i = 0; i < 3; i++){
+    printf("P = %f, %f, %f  A = %f, %f, %f \n", posinfo[i][0], posinfo[i][1],
+           posinfo[i][2], posinfo[i][3], posinfo[i][4],posinfo[i][5]);
   }
-}
+  printf ("\n");
 
-// ============================================================================
-// Private methods.
-// ============================================================================
+} // end void aMotionStar::printinfo()
+
+// ----------------------------------------------------------------------------
+// Print out the MotionStar's header information.
+// ----------------------------------------------------------------------------
+void
+aMotionStar::display_hdr () {
+  /*printf("sequence=%6d time= %8d milliseconds=%6d type= %4d "
+	,response.header.sequence);*/
+} // end void aMotionStar::display_hdr()
 
 // ----------------------------------------------------------------------------
 // Print the error message that corresponds to the given error code.  The
