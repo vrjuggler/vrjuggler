@@ -552,100 +552,137 @@ void MotionStarStandalone::sample()
             unsigned int rec_data_words;
             size_t rec_data_size;
 
-            try
+            vpr::ReturnStatus resp_status;
+
+            // Try to read the bird data from the packet based on the number
+            // of bytes the header claims are available.  If an exceptoin that
+            // derives from mstar::MotionStarException is thrown, this loop
+            // will repeat.  All other exceptions are rethrown to the caller
+            // of this method.
+            do
             {
-               getRsp(&recv_pkt.buffer,
-                      vpr::System::Ntohs(recv_pkt.header.number_bytes));
-
-               // Use a char* for doing pointer arithmetic.  It starts at the
-               // beginning of the received packet's buffer field.
-               base_ptr = (char*) &recv_pkt.buffer[0];
-
-               for ( unsigned char bird = 0; bird < m_birds_active; bird++ )
+               try
                {
-                  // Set the record pointer to the current data record's address
-                  // as defined by base_ptr.
-                  rec_ptr = (BIRDNET::DATA_RECORD*) base_ptr;
+                  resp_status = getRsp(&recv_pkt.buffer,
+                                       vpr::System::Ntohs(recv_pkt.header.number_bytes));
+               }
+               // Catch exceptions relating to the lack of data.  If this
+               // happens, something is very wrong because we were able to
+               // read the header data from the packet.
+               catch (mstar::NoDataReadException ex)
+               {
+                  resp_status.setCode(vpr::ReturnStatus::Fail);  // Retry read
+                  vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+                     << "[MotionStarStandalone] WARNING: Failed to read "
+                     << vpr::System::Ntohs(recv_pkt.header.number_bytes)
+                     << " bytes of data--trying again ..." << std::endl
+                     << vprDEBUG_FLUSH;
+               }
+               // Catch the general mstar::MotionStarException type and print
+               // the message (if it has one).
+               catch (mstar::MotionStarException ex)
+               {
+                  resp_status.setCode(vpr::ReturnStatus::Fail);  // Retry read
+                  vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                     << "[MotionStarStandalone] ERROR: MotionStarException caught: "
+                     << ex.getMessage() << std::endl << vprDEBUG_FLUSH;
+               }
+               // Any other exceptions are rethrown to the caller.  Basically,
+               // anything less specific than a mstar::MotionStarException is
+               // an error from which we cannot recover.
+               catch (...)
+               {
+                  vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                     << "[MotionStarStandalone] ERROR: Generic xception occurred when reading bird data, rethrowing"
+                     << std::endl << vprDEBUG_FLUSH;
+                  throw;
+               }
+            }
+            while ( ! resp_status.success() );
 
-                  // The least significant four bits of the data_info field
-                  // contain the number of words (2 bytes) of formatted data.
-                  // m_birds[bird]->data_words already has this value, but we
-                  // read it from the packet to be safe.
-                  rec_data_words = (rec_ptr->data_info) & 0x0f;
-                  rec_data_size  = rec_data_words * 2;
+            // At this point, we have the bird data in recv_pkt.
 
-                  if ( rec_data_words != m_birds[bird]->data_words )
-                  {
-                     // XXX: Figure out how to print this out neatly using vprDEBUG.
-                     fprintf(stderr,
-                             "[MotionStarStandalone] WARNING: Expecting %u data words from bird %u, got %u\n"
-                             "                       You may have requested more birds than you\n"
-                             "                       have connected, or the birds may not be\n"
-                             "                       connected sequentially\n"
-                             "                       Verify that your configuration is correct\n",
-                             m_birds[bird]->data_words, bird, rec_data_words);
-                  }
+            // Use a char* for doing pointer arithmetic.  It starts at the
+            // beginning of the received packet's buffer field.
+            base_ptr = (char*) &recv_pkt.buffer[0];
 
-                  // Get the four most significant bits of the data_info field.
-                  // This gives the format code.  See page 134 of the Operation
-                  // Guide for more information.  m_birds[bird]->format already
-                  // has this set, but again, we read it from the current packet
-                  // just to be safe.  This is especially important because an
-                  // error may have occurred thus giving a format code of 15.
-                  format_code = (rec_ptr->data_info >> 4) & 0x0f;
+            for ( unsigned char bird = 0; bird < m_birds_active; bird++ )
+            {
+               // Set the record pointer to the current data record's address
+               // as defined by base_ptr.
+               rec_ptr = (BIRDNET::DATA_RECORD*) base_ptr;
 
-                  if ( format_code != m_birds[bird]->format )
-                  {
-                     vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               // The least significant four bits of the data_info field
+               // contain the number of words (2 bytes) of formatted data.
+               // m_birds[bird]->data_words already has this value, but we
+               // read it from the packet to be safe.
+               rec_data_words = (rec_ptr->data_info) & 0x0f;
+               rec_data_size  = rec_data_words * 2;
+
+               if ( rec_data_words != m_birds[bird]->data_words )
+               {
+                  // XXX: Figure out how to print this out neatly using vprDEBUG.
+                  fprintf(stderr,
+                          "[MotionStarStandalone] WARNING: Expecting %u data words from bird %u, got %u\n"
+                          "                       You may have requested more birds than you\n"
+                          "                       have connected, or the birds may not be\n"
+                          "                       connected sequentially\n"
+                          "                       Verify that your configuration is correct\n",
+                          m_birds[bird]->data_words, bird, rec_data_words);
+               }
+
+               // Get the four most significant bits of the data_info field.
+               // This gives the format code.  See page 134 of the Operation
+               // Guide for more information.  m_birds[bird]->format already
+               // has this set, but again, we read it from the current packet
+               // just to be safe.  This is especially important because an
+               // error may have occurred thus giving a format code of 15.
+               format_code = (rec_ptr->data_info >> 4) & 0x0f;
+
+               if ( format_code != m_birds[bird]->format )
+               {
+                  vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
                         << "[MotionStarStandalone] WARNING: Expecting format "
                         << (unsigned int) m_birds[bird]->format << " from bird "
                         << (unsigned int) bird << ", got "
                         << (unsigned int) format_code << std::endl
                         << vprDEBUG_FLUSH;
-                  }
-
-                  // If the format code is 15, an error occurred in sampling the
-                  // data, and therefore the data block is invalid and should be
-                  // ignored.
-                  if ( format_code == 15 )
-                  {
-                     vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-                        << "[MotionStarStandalone] An error occurred in sampling"
-                        << std::endl << vprDEBUG_FLUSH;
-                  }
-                  // Now that we have the size of the data block in the current
-                  // record, we can read it into the current bird's data block.
-                  // Since it uses a union, we can just read into its base
-                  // address.
-                  else
-                  {
-                     memcpy(&m_birds[bird]->data, &rec_ptr->data, rec_data_size);
-                  }
-
-                  // The size of each record may vary depending on the data
-                  // format in use.  Increment the address of the current
-                  // record by the statically known sizes and by the size of
-                  // the current record's data block (each bird may have a
-                  // different sized data block).
-                  base_ptr += sizeof(rec_ptr->address) +
-                                 sizeof(rec_ptr->data_info) + rec_data_size;
-
-                  // If the most significant bit is set in address, then there
-                  // is also button data for this record.  We always ignore that
-                  // information, but it's important for getting the proper size
-                  // of this data block.
-                  if ( rec_ptr->address & 0x80 )
-                  {
-                     base_ptr += sizeof(rec_ptr->button_data);
-                  }
                }
-            }
-            catch (mstar::MotionStarException ex)
-            {
-               vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                  << "[MotionStarStandalone] ERROR: Network read error in "
-                  << "sample() when reading bird data buffer!" << std::endl
-                  << vprDEBUG_FLUSH;
+
+               // If the format code is 15, an error occurred in sampling the
+               // data, and therefore the data block is invalid and should be
+               // ignored.
+               if ( format_code == 15 )
+               {
+                  vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+                     << "[MotionStarStandalone] An error occurred in sampling"
+                     << std::endl << vprDEBUG_FLUSH;
+               }
+               // Now that we have the size of the data block in the current
+               // record, we can read it into the current bird's data block.
+               // Since it uses a union, we can just read into its base
+               // address.
+               else
+               {
+                  memcpy(&m_birds[bird]->data, &rec_ptr->data, rec_data_size);
+               }
+
+               // The size of each record may vary depending on the data
+               // format in use.  Increment the address of the current
+               // record by the statically known sizes and by the size of
+               // the current record's data block (each bird may have a
+               // different sized data block).
+               base_ptr += sizeof(rec_ptr->address) +
+                              sizeof(rec_ptr->data_info) + rec_data_size;
+
+               // If the most significant bit is set in address, then there
+               // is also button data for this record.  We always ignore that
+               // information, but it's important for getting the proper size
+               // of this data block.
+               if ( rec_ptr->address & 0x80 )
+               {
+                  base_ptr += sizeof(rec_ptr->button_data);
+               }
             }
          }
          // It's unlikely that we will have received the wrong packet type at
