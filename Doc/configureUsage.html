@@ -19,7 +19,7 @@ The following example illustrates the typical way to use the <I>configure</I>
 script:
 <OL>
 <LI>
-<B><TT>cd <I>path/to/source/c2lib/lib</I></TT></B></LI>
+<B><TT>cd <I>path/to/source/juggler/lib</I></TT></B></LI>
 
 <LI>
 <B><TT>mkdir <I>build</I></TT></B></LI>
@@ -43,20 +43,21 @@ nothing gets built in the directory named "build" in the above example.
 However, this is where the Makefiles for all the directories in the source
 tree go. What <I>make</I>(1) will do is recursively go through the tree
 rooted at ``<TT>build</TT>'' and do The Right Thing<SUP><FONT SIZE=-2>TM</FONT></SUP>
-by finding the source files in <TT>c2lib/Config</TT> or <TT>c2lib/Kernel</TT>
-for example and build the object files in a directory given by the <TT>${OBJDIR}</TT>
-macro. The default value is to build the object files in the current directory,
-but the recursive calls to <I>make</I>(1) provide alternate values for
-the macro (i.e., the path to <TT>DBG.N32.SGI</TT> in this case). Hopefully
-this little diagram will clarify this a bit:
+by finding the source files in <TT>juggler/Config</TT> or
+<TT>juggler/Kernel</TT> for example and build the object files in a directory
+given by the <TT>${OBJDIR}</TT> macro. The default value is to build the
+object files in the current directory, but the recursive calls to
+<I>make</I>(1) provide alternate values for the macro (i.e., the path to
+<TT>DBG.N32.SGI</TT> in this case). Hopefully this little diagram will clarify
+this a bit:
 <PRE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B>Directories created by <I>configure</I>:
 
-</B>&nbsp;&nbsp;&nbsp; c2lib -+-- lib -+-- DBG.N32.SGI
+</B>&nbsp;&nbsp;&nbsp; juggler -+-- lib -+-- DBG.N32.SGI
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \-- build -------\
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- Config
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- Config&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- Environment
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- Environment&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- Kernel
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- Kernel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- Input -------+-- C2Glove
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- Kernel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- Input -------+-- vjGlove
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- ...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- SharedMem&nbsp;&nbsp;&nbsp; +-- ...
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- Sync&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +-- Threads
@@ -72,7 +73,7 @@ be in the same location. You can also call ``<TT>build</TT>'' whatever
 you want. Once done building the library, the ``<TT>build</TT>'' directory
 can be safely removed if so desired.
 
-<P>Running <I>configure</I> directly from the base <TT>c2lib</TT> directory
+<P>Running <I>configure</I> directly from the base <TT>juggler</TT> directory
 instead of making the ``<TT>build</TT>'' directory will work fine. However,
 it will blow away all the Makefiles currently in the tree with its automatically
 generated copies. I will address this later.
@@ -116,7 +117,7 @@ is N32.</DD>
 <DD>
 Enable the OpenGL API. This is on by default. If this is enabled and the
 libraries and header files are found, the OpenGL API code in the <TT>Kernel</TT>
-directory is compiled in. This also defines <B><TT>C2_API_OPENGL</TT></B>
+directory is compiled in. This also defines <B><TT>VJ_API_OPENGL</TT></B>
 in <TT>config.h</TT>.</DD>
 
 <DT>
@@ -124,7 +125,7 @@ in <TT>config.h</TT>.</DD>
 
 <DD>
 Enable the Performer API. This is on by default. The same stuff holds true
-here as with the OpenGL API. It defines <B><TT>C2_API_PERFORMER</TT></B>
+here as with the OpenGL API. It defines <B><TT>VJ_API_PERFORMER</TT></B>
 in <TT>config.h</TT>.</DD>
 
 <DT>
@@ -187,13 +188,13 @@ CPP macro using <I>usleep</I>(2) is defined in config.h.</TT></LI>
 
 <LI>
 <TT>A check for the header file sys/z8530.h is made. This a file that is
-needed by Input/C2Glove/vt_serial_io.C but only exists on SGIs.</TT></LI>
+needed by Input/vjGlove/vt_serial_io.C but only exists on SGIs.</TT></LI>
 
 <LI>
 <TT>Related to the above check, a check is made for sys/stdsyms.h. This
 is a file that defines a lot of CPP macros and such (on HP-UX at least)
 so that they do not need to be defined in our source files. At present,
-this file is only included by Input/C2Glove/vt_serial_io.C.</TT></LI>
+this file is only included by Input/vjGlove/vt_serial_io.C.</TT></LI>
 
 <LI>
 <TT>Miscellaneous checks are made for several header files and system calls
