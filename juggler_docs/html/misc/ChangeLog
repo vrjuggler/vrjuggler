@@ -1,5 +1,16 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+[Version 1.0.1 - 6.14.2001]====================================================
+Jun-13-2001 patrick   Added a script called juggler-config that users can run
+                      to get compiler and linker options needed for building
+                      against VR Juggler
+May-29-2001 patrick   Fixed a major bug in the MotionStar driver that was
+                      preventing proper system configuration when the server
+                      was in a bad state
+May-17-2001 patrick   Added support for HP-UX 11.00 (submitted by Daniel Heath
+                      <DHeath@fueltechnv.com>)
+
+[Version 1.0.0 - 4.13.2001]====================================================
 Apr-13-2001 patrick   Polhemus Fastrack driver added (IRIX SPROC only)
 Apr-12-2001 patrick   The MotionStar driver now supports setting the
                       measurement rate

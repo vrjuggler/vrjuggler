@@ -8,10 +8,20 @@ For all versions:
     - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
       for the current list of bugs.
 
+ Version: 1.0.1
+Released: June 14, 2001
+
+    Major bug fixes:
+        * The MotionStar driver has had several bugs fixed.  In particular,
+          it can now recover when the server system is in a bad state.
+
+    New features:
+        * Support for HP-UX 11.00.
+
 ===============================================================================
 
  Version: 1.0.0
-Released: Friday, April 13, 2001
+Released: April 13, 2001
 
     Required application and configuration changes for upgrading from older
     beta versions:
