@@ -82,13 +82,13 @@ vprREGISTER_DBG_CATEGORY(vprDBG_VPR, DBG_VPR, "VPR:");
 vprSingletonImpWithInitFunc(Debug, init);
 
 Debug::Debug()
-   : mFile(0), mStreamPtr(&std::cout)
+   : mFile(NULL)
+   , mStreamPtr(&std::cout)
 {
    indentLevel = 0;     // Initialy don't indent
    debugLevel = 2;      // Should actually try to read env variable
    mUseThreadLocal = false;   // Initially set to false
 
-   
    char* debug_lev = getenv("VPR_DEBUG_NFY_LEVEL");
    if(debug_lev != NULL)
    {
@@ -130,11 +130,11 @@ Debug::Debug()
       std::cout << "VPR_DEBUG_ENABLE: Defaults to " << mDebugEnabled
                 << std::endl << std::flush;
    }
-   
+
    // Check to see if there is a default Debug target
    char* debug_file_ptr = getenv("VPR_DEBUG_FILE");
-   
-   if (0 != debug_file_ptr)
+
+   if (NULL != debug_file_ptr)
    {
       std::string debug_file(debug_file_ptr);
       if ("stderr" == debug_file)
@@ -153,8 +153,7 @@ Debug::Debug()
    }
 }
 
-bool 
-Debug::setOutputFile(const std::string& filename)
+bool Debug::setOutputFile(const std::string& filename)
 {
    // Attempt to open the file first.
    mFile = new std::ofstream(filename.c_str());
@@ -162,10 +161,10 @@ Debug::setOutputFile(const std::string& filename)
    {
       // We couldn't open the file
       delete mFile;
-      mFile = 0;
+      mFile = NULL;
       return false;
    }
-   
+
    // Successfully opened the file, so switch the output handler
    mStreamPtr = mFile;
    return true;
@@ -186,8 +185,7 @@ void Debug::init()
    addCategory(vprDBG_VPR, "DBG_VPR", "VPR:");
    */
 }
-   
-   
+
 std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
                                const bool show_thread_info,
                                const bool use_indent, const int indentChange,
@@ -239,7 +237,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
    // new line used)
    if(show_thread_info)
    {
-      os << "[" << vpr::Thread::self() << "] " 
+      os << "[" << vpr::Thread::self() << "] "
          << (*mCategories.find(cat.mGuid)).second.mPrefix;
    }
    else if(use_indent)
@@ -556,7 +554,7 @@ DebugOutputGuard::DebugOutputGuard(const vpr::DebugCategory& cat,
       vprDEBUG(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
    }
 }
-   
+
 DebugOutputGuard::~DebugOutputGuard()
 {
    if(mIndent)
@@ -567,7 +565,7 @@ DebugOutputGuard::~DebugOutputGuard()
          vprDEBUG_DECREMENT_INDENT(mCat, mLevel);
       }
       else
-      {     
+      {
          vprDEBUG_END(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
       }
    }
