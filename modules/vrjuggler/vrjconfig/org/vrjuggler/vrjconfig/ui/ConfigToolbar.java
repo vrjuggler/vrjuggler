@@ -225,13 +225,16 @@ public class ConfigToolbar
             ChunkFactory.setDescs(broker.getDescs(ctx));
 
             // We want to automatically follow include directives. Keep track of
-            // all the files on a stack and read them one at a time in the order
+            // all the URLs on a stack and read them one at a time in the order
             // that we come across them
-            Stack files = new Stack();
-            files.push(file.getAbsolutePath());
-            while (! files.isEmpty())
+            Stack urls = new Stack();
+            urls.push(file.getAbsolutePath());
+            while (! urls.isEmpty())
             {
-               String res_name = (String)files.pop();
+               // Expand env vars in the URL
+               String res_name = (String)urls.pop();
+               res_name = expandEnvVars(res_name);
+
                FileDataSource data_source = new FileDataSource(res_name,
                                                                FileDataSource.ELEMENTS);
                broker.add(res_name, data_source);
@@ -239,12 +242,10 @@ public class ConfigToolbar
 
                // Look through the chunks in the newly loaded file and see if
                // any of them are include directives
-               java.util.List include_chunks = ConfigUtilities.getChunksWithDescToken(
-                                          broker.getChunksIn(res_name), "vjIncludeFile");
-               for (Iterator itr = include_chunks.iterator(); itr.hasNext(); )
+               java.util.List includes = data_source.getIncludes();
+               for (Iterator itr = includes.iterator(); itr.hasNext(); )
                {
-                  ConfigChunk include_chk = (ConfigChunk)itr.next();
-                  files.push(include_chk.getName());
+                  urls.push(itr.next());
                }
             }
 

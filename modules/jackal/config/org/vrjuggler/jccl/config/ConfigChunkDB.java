@@ -51,9 +51,10 @@ public class ConfigChunkDB
    implements Cloneable
             , ConfigTokens
 {
-   public static final double CONFIG_VERSION_VALUE = 2.0;
+   public static final double CONFIG_VERSION_VALUE = 2.1;
 
    private static final String CONFIG_VERSION_ATTR = "config.db.version";
+   private static final String URL_ATTR            = "url";
 
    /**
     * Creates a new ConfigChunk database initially empty and the name
@@ -326,7 +327,7 @@ public class ConfigChunkDB
    /** Removes the ConfigChunk at index i and notifies ChunkDBListeners.
     *  @return The object that was removed
     */
-   public ConfigChunk remove (int i)
+   public ConfigChunk remove(int i)
       throws IndexOutOfBoundsException
    {
       ConfigChunk ch = (ConfigChunk)chunks.get(i);
@@ -567,6 +568,97 @@ public class ConfigChunkDB
          ChunkDBEvent e = new ChunkDBEvent(this, ChunkDBEvent.INSERT, c);
          notifyChunkDBTargets(e);
       }
+   }
+
+   /**
+    * Adds an include URL directive to this DB.
+    */
+   public void addInclude(String url)
+   {
+      ProcessingInstruction include = new
+         ProcessingInstruction(INCLUDE_INSTRUCTION, new HashMap());
+
+      include.setValue(URL_ATTR, url);
+      mDoc.addContent(include);
+   }
+
+   /**
+    * Removes an include url directive from this DB.
+    */
+   public void removeFileInclude(String url)
+   {
+      List instructions = mDoc.getContent();
+      for (Iterator itr = instructions.iterator(); itr.hasNext(); )
+      {
+         Object next = itr.next();
+         if (next instanceof ProcessingInstruction)
+         {
+            // Found a processing instruction, see if it's of the correct type
+            ProcessingInstruction pi = (ProcessingInstruction)next;
+            if (pi.getTarget().equals(INCLUDE_INSTRUCTION))
+            {
+               // If this PI is an include for the target file, remove it
+               if (pi.getValue(URL_ATTR).equals(url))
+               {
+                  mDoc.removeContent(pi);
+                  break;
+               }
+            }
+         }
+      }
+   }
+
+   /**
+    * Gets a list of all the URLs included in this DB.
+    */
+   public List getIncludes()
+   {
+      List result = new ArrayList();
+
+      List instructions = mDoc.getContent();
+      for (Iterator itr = instructions.iterator(); itr.hasNext(); )
+      {
+         Object next = itr.next();
+         if (next instanceof ProcessingInstruction)
+         {
+            // Found a processing instruction, see if it's of the correct type
+            ProcessingInstruction pi = (ProcessingInstruction)next;
+            if (pi.getTarget().equals(INCLUDE_INSTRUCTION))
+            {
+               result.add(pi.getValue(URL_ATTR));
+            }
+         }
+      }
+
+      return result;
+   }
+
+   /**
+    * Tests if this DB includes the given url.
+    */
+   public boolean isURLIncluded(String url)
+   {
+      boolean included = false;
+
+      List instructions = mDoc.getContent();
+      for (Iterator itr = instructions.iterator(); itr.hasNext(); )
+      {
+         Object next = itr.next();
+         if (next instanceof ProcessingInstruction)
+         {
+            // Found a processing instruction, see if it's of the correct type
+            ProcessingInstruction pi = (ProcessingInstruction)next;
+            if (pi.getTarget().equals(INCLUDE_INSTRUCTION))
+            {
+               if (pi.getValue(URL_ATTR).equals(url))
+               {
+                  included = true;
+               }
+            }
+         }
+      }
+
+      return included;
    }
 
    /** Generates a name that won't conflict with anything in self.

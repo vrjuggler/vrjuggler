@@ -319,6 +319,25 @@ public class FileDataSource
    }
 
    /**
+    * Gets a list of the URLs for the resources included by this data source.
+    *
+    * @return  a list of URLs for the included resources
+    */
+   public List getIncludes()
+   {
+      List includes = new ArrayList();
+      if (acceptsElements())
+      {
+         includes.addAll(mElements.getIncludes());
+      }
+      if (acceptsDefinitions())
+      {
+//XXX         includes.addAll(mDefinitions.getIncludes());
+      }
+      return includes;
+   }
+
+   /**
     * Loads the DOM document from the given input stream.
     *
     * @param input      the stream to read from
