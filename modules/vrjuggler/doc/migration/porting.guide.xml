@@ -739,6 +739,39 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
     </section>
 
     <section>
+      <title>Keyboard Windows as Event Sources</title>
+
+      <para>In Gadgeteer 0.10.0 (stamped about six weeks after VR Juggler 2.0
+      Alpha 1 was released), the keyboard code was refactored so that
+      keyboards could be thought of as event sources. The most significant
+      change is that all <classname>gadget::Keyboard*</classname> classes have
+      been renamed to use the base name <classname>EventWindow</classname>
+      instead of <classname>Keyboard</classname>. For user applications,
+      instances of <classname>gadget::KeyboardInterface</classname> (or
+      <classname>vjKeybardInterface</classname>) must be renamed to
+      <classname>gadget::EventWindowInterface</classname>. Similarly, any
+      instances of <classname>gadget::KeyboardProxy</classname> (or
+      <classname>vjKeyboardProxy</classname>) must be renamed to
+      <classname>gadget::EventWindowProxy</classname>.</para>
+
+      <para>Names of properties and configuration elements have changed as a
+      result of this work. Some XSLT code is available to update VR Juggler
+      2.0 Alpha 1 configuration files automatically to use the new names. The
+      code is found in the file <filename>$VJ_BASE_DIR/share/vrjuggler/data/xlst/2.0a1-2.0a2.xsl</filename>.
+      To update a configuration file using the <command>xsltproc</command>
+      command (installed as part of the <ulink url="http://www.gnome.org/">GNOME
+      desktop</ulink>), run the following command:</para>
+
+      <screen>xsltproc -o output.config 2.0a1-2.0a2.xsl input.config</screen>
+
+      <para>Other XSLT 1.0 processors such as <ulink
+      url="http://xml.apache.org/xalan-j/">Xalan</ulink> or <ulink
+      url="http://saxon.sourceforge.net/">Saxon</ulink> can be used instead of
+      <command>xsltproc</command> if it is not avaialble. Consult the
+      documentation for specific tool you use for usage information.</para>
+    </section>
+
+    <section>
       <title>Configuration System</title>
 
       <para>The configuration system in VR Juggler has been separated into a
@@ -850,7 +883,7 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
           properly. If your code gets assertion failures similar to the
           following:</para>
 
-          <screen>  Assertion failed: (1 == mPendingLock.test()), file
+          <screen>Assertion failed: (1 == mPendingLock.test()), file
 &#60;some path&#62;/modules/jackal/rtrc/jccl/RTRC/ConfigManager.h, line 214, pid 165370</screen>
 
           <para>then you need to verify that you lock and unlock the pending
