@@ -61,7 +61,7 @@ public class SimulatorViewportCreateDialog
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
          mSimElt = factory.create("Default Simulator Plug-in", sim_def);
-         mViewportElement.addProperty("simulator_plugin", mSimElt);
+         mViewportElement.addProperty("simulator_plugin", mSimElt, ctx);
       }
       else
       {

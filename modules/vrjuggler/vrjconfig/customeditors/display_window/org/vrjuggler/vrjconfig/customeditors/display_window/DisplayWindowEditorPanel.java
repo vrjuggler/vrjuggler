@@ -426,9 +426,13 @@ public class DisplayWindowEditorPanel
          java.util.List all_elts = broker.getElements(mContext);
          String title = checkElementName(dlg.getDisplayWindowTitle(), all_elts);
 
-         // Create a new config element based on the initial information we have.
+         // Create a new config element based on the initial information we
+         // have.
          ConfigElement elt = factory.create(title, window_def);
 
+         // We do not use the undoable form of ConfigElement.setProperty()
+         // here because elt is a freshly created config element.  Hence, the
+         // act of creating the config element is what needs to be undone.
          Rectangle bounds  = dlg.getDisplayWindowBounds();
          elt.setProperty("origin", 0, new Integer(bounds.x));
          elt.setProperty("origin", 1, new Integer(bounds.y));
@@ -535,7 +539,8 @@ public class DisplayWindowEditorPanel
          int sim_vps = display_elt.getPropertyValueCount("surface_viewports");
          String title = "Surface Viewport " + sim_vps;
 
-         // Create a new config element based on the initial information we have.
+         // Create a new config element based on the initial information we
+         // have.
          ConfigElement elt = factory.create(title, vp_def);
 
          Rectangle bounds = dlg.getViewportBounds();
@@ -544,6 +549,10 @@ public class DisplayWindowEditorPanel
          float width    = (float) bounds.width / 100.0f;
          float height   = (float) bounds.height / 100.0f;
 
+         // We do not use the undoable form of ConfigElement.setProperty()
+         // here because elt is a freshly created config element.  Hence, the
+         // act of adding the config element as a property value to display_elt
+         // is what needs to be undone.
          elt.setProperty("origin", 0, new Float(origin_x));
          elt.setProperty("origin", 1, new Float(origin_y));
          elt.setProperty("size", 0, new Float(width));
@@ -572,7 +581,7 @@ public class DisplayWindowEditorPanel
             elt.setProperty("tracker_proxy", 0, dlg.getTrackerProxy());
          }
 
-         display_elt.addProperty("surface_viewports", elt);
+         display_elt.addProperty("surface_viewports", elt, mContext);
       }
    }
 
@@ -599,7 +608,8 @@ public class DisplayWindowEditorPanel
          int sim_vps = display_elt.getPropertyValueCount("simulator_viewports");
          String title = "Simulator Viewport " + sim_vps;
 
-         // Create a new config element based on the initial information we have.
+         // Create a new config element based on the initial information we
+         // have.
          ConfigElement elt = factory.create(title, vp_def);
 
          Rectangle bounds = dlg.getViewportBounds();
@@ -608,6 +618,10 @@ public class DisplayWindowEditorPanel
          float width    = (float) bounds.width / 100.0f;
          float height   = (float) bounds.height / 100.0f;
 
+         // We do not use the undoable form of ConfigElement.setProperty()
+         // here because elt is a freshly created config element.  Hence, the
+         // act of adding the config element as a property value to display_elt
+         // is what needs to be undone.
          elt.setProperty("origin", 0, new Float(origin_x));
          elt.setProperty("origin", 1, new Float(origin_y));
          elt.setProperty("size", 0, new Float(width));
@@ -632,7 +646,7 @@ public class DisplayWindowEditorPanel
          sim_elt.setProperty("camera_pos", 0, dlg.getCameraPosition());
          sim_elt.setProperty("wand_pos", 0, dlg.getWandPosition());
 
-         display_elt.addProperty("simulator_viewports", elt);
+         display_elt.addProperty("simulator_viewports", elt, mContext);
       }
    }
 
