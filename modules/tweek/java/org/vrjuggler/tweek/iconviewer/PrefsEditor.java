@@ -46,6 +46,7 @@ import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 
@@ -119,8 +120,9 @@ public class PrefsEditor extends JPanel
 
    public void save()
    {
-      XMLOutputter outputter = new XMLOutputter("  ", true);
-      outputter.setLineSeparator(System.getProperty("line.separator"));
+      Format f = Format.getPrettyFormat();
+      f.setLineSeparator(System.getProperty("line.separator"));
+      XMLOutputter outputter = new XMLOutputter(f);
 
       try
       {
