@@ -74,4 +74,71 @@ extern "C"
    }
 
 
+   // Wrapper for free function gmtl::Math::ceil()
+   SHARPPY_API double gmtl_Math_ceil__double(double p0)
+   {
+      double result;
+      result = gmtl::Math::ceil(p0);
+
+      return result;
+   }
+
+
+   // Wrapper for free function gmtl::Math::ceil()
+   SHARPPY_API float gmtl_Math_ceil__float(float p0)
+   {
+      float result;
+      result = gmtl::Math::ceil(p0);
+
+      return result;
+   }
+
+
+   // Wrapper for free function gmtl::Math::floor()
+   SHARPPY_API double gmtl_Math_floor__double(double p0)
+   {
+      double result;
+      result = gmtl::Math::floor(p0);
+
+      return result;
+   }
+
+
+   // Wrapper for free function gmtl::Math::floor()
+   SHARPPY_API float gmtl_Math_floor__float(float p0)
+   {
+      float result;
+      result = gmtl::Math::floor(p0);
+
+      return result;
+   }
+
+
+   // Wrapper for free function gmtl::Math::seedRandom()
+   SHARPPY_API void gmtl_Math_seedRandom__unsigned_int(unsigned int p0)
+   {
+      gmtl::Math::seedRandom(p0);
+   }
+
+
+   // Wrapper for free function gmtl::Math::unitRandom()
+   SHARPPY_API float gmtl_Math_unitRandom__()
+   {
+      float result;
+      result = gmtl::Math::unitRandom();
+
+      return result;
+   }
+
+
+   // Wrapper for free function gmtl::Math::rangeRandom()
+   SHARPPY_API float gmtl_Math_rangeRandom__float_float(float p0, float p1)
+   {
+      float result;
+      result = gmtl::Math::rangeRandom(p0, p1);
+
+      return result;
+   }
+
+
 } // extern "C" for free functions

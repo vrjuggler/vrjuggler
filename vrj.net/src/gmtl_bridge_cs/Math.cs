@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.1 of RCSfile: free_function_cs.tmpl,v
+// Generated from Revision: 1.2 of RCSfile: free_function_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 
@@ -34,7 +34,7 @@ namespace gmtl
 
 public sealed abstract class Math
 {
-   [DllImport("gmtl", CharSet = CharSet.Ansi)]
+   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static double gmtl_Math_deg2Rad__double(double p0);
 
    public static double deg2Rad(double p0)
@@ -44,7 +44,7 @@ public sealed abstract class Math
       return result;
    }
 
-   [DllImport("gmtl", CharSet = CharSet.Ansi)]
+   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static float gmtl_Math_deg2Rad__float(float p0);
 
    public static float deg2Rad(float p0)
@@ -54,7 +54,7 @@ public sealed abstract class Math
       return result;
    }
 
-   [DllImport("gmtl", CharSet = CharSet.Ansi)]
+   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static double gmtl_Math_rad2Deg__double(double p0);
 
    public static double rad2Deg(double p0)
@@ -64,13 +64,82 @@ public sealed abstract class Math
       return result;
    }
 
-   [DllImport("gmtl", CharSet = CharSet.Ansi)]
+   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static float gmtl_Math_rad2Deg__float(float p0);
 
    public static float rad2Deg(float p0)
    {
       float result;
       result = gmtl_Math_rad2Deg__float(p0);
+      return result;
+   }
+
+   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
+   private extern static double gmtl_Math_ceil__double(double p0);
+
+   public static double ceil(double p0)
+   {
+      double result;
+      result = gmtl_Math_ceil__double(p0);
+      return result;
+   }
+
+   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
+   private extern static float gmtl_Math_ceil__float(float p0);
+
+   public static float ceil(float p0)
+   {
+      float result;
+      result = gmtl_Math_ceil__float(p0);
+      return result;
+   }
+
+   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
+   private extern static double gmtl_Math_floor__double(double p0);
+
+   public static double floor(double p0)
+   {
+      double result;
+      result = gmtl_Math_floor__double(p0);
+      return result;
+   }
+
+   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
+   private extern static float gmtl_Math_floor__float(float p0);
+
+   public static float floor(float p0)
+   {
+      float result;
+      result = gmtl_Math_floor__float(p0);
+      return result;
+   }
+
+   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
+   private extern static void gmtl_Math_seedRandom__unsigned_int(uint p0);
+
+   public static void seedRandom(uint p0)
+   {
+      gmtl_Math_seedRandom__unsigned_int(p0);
+   }
+
+   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
+   private extern static float gmtl_Math_unitRandom__();
+
+   public static float unitRandom()
+   {
+      float result;
+      result = gmtl_Math_unitRandom__();
+      return result;
+   }
+
+   [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
+   private extern static float gmtl_Math_rangeRandom__float_float(float p0,
+	float p1);
+
+   public static float rangeRandom(float p0, float p1)
+   {
+      float result;
+      result = gmtl_Math_rangeRandom__float_float(p0, p1);
       return result;
    }
 

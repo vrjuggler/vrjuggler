@@ -35,12 +35,70 @@ MOD_NAME=	gmtl
 
 SRCS=		Gmtl.cpp			\
 		Math.cpp			\
+		gmtl_AABoxd.cpp			\
+		gmtl_AABoxf.cpp			\
+		gmtl_AxisAngled.cpp		\
+		gmtl_AxisAnglef.cpp		\
+		gmtl_Coord3dAxisAngle.cpp	\
+		gmtl_Coord3dQuat.cpp		\
+		gmtl_Coord3dXYZ.cpp		\
+		gmtl_Coord3dZXY.cpp		\
+		gmtl_Coord3dZYX.cpp		\
+		gmtl_Coord3fAxisAngle.cpp	\
+		gmtl_Coord3fQuat.cpp		\
+		gmtl_Coord3fXYZ.cpp		\
+		gmtl_Coord3fZXY.cpp		\
+		gmtl_Coord3fZYX.cpp		\
+		gmtl_Coord4dAxisAngle.cpp	\
+		gmtl_Coord4dQuat.cpp		\
+		gmtl_Coord4dXYZ.cpp		\
+		gmtl_Coord4dZXY.cpp		\
+		gmtl_Coord4dZYX.cpp		\
+		gmtl_Coord4fAxisAngle.cpp	\
+		gmtl_Coord4fQuat.cpp		\
+		gmtl_Coord4fXYZ.cpp		\
+		gmtl_Coord4fZXY.cpp		\
+		gmtl_Coord4fZYX.cpp		\
+		gmtl_EulerAngleXYZd.cpp		\
+		gmtl_EulerAngleXYZf.cpp		\
+		gmtl_EulerAngleZXYd.cpp		\
+		gmtl_EulerAngleZXYf.cpp		\
+		gmtl_EulerAngleZYXd.cpp		\
+		gmtl_EulerAngleZYXf.cpp		\
+		gmtl_LineSegd.cpp		\
+		gmtl_LineSegf.cpp		\
 		gmtl_Matrix33f.cpp		\
 		gmtl_Matrix44f.cpp		\
+		gmtl_Planed.cpp			\
+		gmtl_Planef.cpp			\
+		gmtl_Point2d.cpp		\
+		gmtl_Point2f.cpp		\
+		gmtl_Point2i.cpp		\
+		gmtl_Point3d.cpp		\
+		gmtl_Point3f.cpp		\
+		gmtl_Point3i.cpp		\
+		gmtl_Quatd.cpp			\
 		gmtl_Quatf.cpp			\
+		gmtl_Rayd.cpp			\
+		gmtl_Rayf.cpp			\
+		gmtl_Sphered.cpp		\
+		gmtl_Spheref.cpp		\
+		gmtl_Trid.cpp			\
+		gmtl_Trif.cpp			\
+		gmtl_Vec3d.cpp			\
+		gmtl_Vec3f.cpp			\
+		gmtl_Vec3i.cpp			\
+		gmtl_Vec4d.cpp			\
+		gmtl_Vec4f.cpp			\
+		gmtl_Vec4i.cpp			\
+		gmtl_VecBase_double_2.cpp	\
+		gmtl_VecBase_double_3.cpp	\
+		gmtl_VecBase_double_4.cpp	\
+		gmtl_VecBase_float_2.cpp	\
 		gmtl_VecBase_float_3.cpp	\
 		gmtl_VecBase_float_4.cpp	\
-		gmtl_Vec3f.cpp			\
-		gmtl_Vec4f.cpp
+		gmtl_VecBase_int_2.cpp		\
+		gmtl_VecBase_int_3.cpp		\
+		gmtl_VecBase_int_4.cpp
 
 include ../common-cxx.mk
