@@ -1,20 +1,32 @@
-chunk flockobirds
-  samplewenum int 1 sample { firstenum secenum fourthenum=4 } "no help"
+chunk chunkinchunktest "chunk in chunk test" ""
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  thechunk EmbeddedChunk -1 "the chunk" vj_enumeration { "innerchunk" } ""
+  bigchunk EmbeddedChunk 2 "big chunk" vj_valuelabels { "first display" "second display" } vj_enumeration { "display" } ""
+  end
+chunk innerchunk "inner chunk" ""
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  KeyMod Int 1 "Key Modifier" ""
+  KeyPress Int 1 "Key Press" ""
+  end   
+chunk flockobirds "flock of birds" ""
+  samplewenum int 1 sample vj_enumeration { firstenum secenum fourthenum=4 } "no help"
   port string 1 port ""
   offset float 3 offset  ""
   baudrate int 1 baud ""
   end
 
-chunk ptrtest
-  ptr chunk 1 ptr { PosProxy DigProxy AnaProxy } "test chunk pointers"
+chunk ptrtest "ptrtest" ""
+  ptr chunk 1 ptr vj_enumeration { PosProxy DigProxy AnaProxy } "test chunk pointers"
   unit int 1 unit "device unit?"
   end
 
-chunk enumtest
+chunk enumtest "enumtest" ""
   end
 
+
+
 # here's some real stuff
-chunk display
+chunk display "Display CFG" ""
   name string 1 name ""
   projectiontype string 1 projectiontype ""
   origin int 2 origin "Window origin"
@@ -28,7 +40,7 @@ chunk display
   upperleft float 3 upperleft ""
   end
 
-chunk InputGroup
+chunk InputGroup "InputGroup" ""
   name string 1 name ""
   head int 1 head "The Position Proxy # for the head"
   wand int 1 wand "The Position Proxy # for the wand"
@@ -38,7 +50,7 @@ chunk InputGroup
   
   end
 
-chunk IBox
+chunk IBox "Ibox" ""
   name string 1 name ""
   port string 1 port ""
   portnum int 1 portnum "" # the IBox takes a port NUMBER, I think its from /dev/ttyd##
@@ -46,7 +58,7 @@ chunk IBox
   
   end
 
-chunk Flock
+chunk Flock "Flock" ""
   name string 1 name ""
   port string 1 port ""
   baud int 1 baud ""
@@ -67,7 +79,7 @@ chunk Flock
   calfile string 1 calfile ""
   end
 
-chunk PosProxy
+chunk PosProxy "PosProxy" ""
   # is number the best identification?
   number int 1 number ""
   device string 1 device ""
@@ -78,7 +90,7 @@ chunk PosProxy
   enabletransform bool 1 enabletransform ""
   end
 
-chunk DigProxy
+chunk DigProxy "DigProxy" ""
   # Digital Proxy 
   number int 1 number "Which digital proxy # we're configuring"
   device string 1 device "The device name to hook up the proxy to"
@@ -86,7 +98,7 @@ chunk DigProxy
   
   end
   
-chunk AnaProxy
+chunk AnaProxy "anaproxy" ""
   # Analog Proxy 
   number int 1 number "Which analog proxy # we're configuring"
   device string 1 device "The device name to hook up the proxy to"
@@ -94,7 +106,7 @@ chunk AnaProxy
   
   end
 
-chunk C2Setup
+chunk C2Setup "c2 setup" ""
   walls string -1 walls "" #this'd be a good place for an enumeration.
   # ^--- I guess that's ok, but whoever uses this chunk will have to 
   #      interpret the wall names.
@@ -103,7 +115,7 @@ chunk C2Setup
   c2depth float 1 c2depth ""  #???
   end
 
-chunk varvaltest
+chunk varvaltest "varvaltest" ""
   name string 1 name ""
   boolprop boolean 1 boolprop ""
   end
