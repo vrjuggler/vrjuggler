@@ -40,10 +40,12 @@
 //#include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
+#include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
 #include <vpr/Thread/TSObjectProxy.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Singleton.h>
+
 
 namespace jccl {
 
@@ -137,6 +139,24 @@ private:
     vprSingletonHeader(PerformanceMonitor);
 
 }; // end PerformanceMonitor
+
+
+// #define jcclTIMESTAMP(cat, id) jccl::PerformanceMonitor::instance()->getLabeledTSBuffer()->set (cat, id)
+
+// namespace jccl
+// {
+
+//    struct PerfCatRegistrator
+//    {
+//       PerfCatRegistrator(vpr::GUID catGuid, std::string catName, std::string catPrefix);
+// //       {
+// //          jccl::PerformanceCategories::instance()->addCategory(catGuid, catName);
+// //       }
+//    };
+// }; // namespace
+
+// #define jcclREGISTER_PERF_CATEGORY(CAT, NAME, PREFIX ) jccl::PerfCatRegistrator NAME ## _registrator (CAT, #NAME);
+
 
 };
 
