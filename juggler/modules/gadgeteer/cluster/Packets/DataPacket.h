@@ -73,7 +73,7 @@ public:
    {
        return(Header::RIM_DATA_PACKET);
    }
-   vpr::GUID getId() { return mDeviceId; }
+   vpr::GUID getObjectId() { return mDeviceId; }
    
    std::vector<vpr::Uint8>* getDeviceData() { return mDeviceData; }
    
