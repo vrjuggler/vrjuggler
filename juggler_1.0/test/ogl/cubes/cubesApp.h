@@ -23,7 +23,6 @@
 #include <Kernel/vjUser.h>
 
 
-#include </home/users/allenb/Source/tools/abTimer.h>
 
 // Class to hold all context specific data
 class ContextData
@@ -217,7 +216,11 @@ public:
       int num_dls = rand()%50;
       glGenLists(num_dls);        // Generate some random lists.  NOTE: Needed for testing only
 
-      mDlData->cubeDLIndex = glGenLists(1);     
+      mDlData->cubeDLIndex = glGenLists(1);
+      glNewList(mDlData->cubeDLIndex, GL_COMPILE);
+	drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
+      glEndList();	
+           
       vjDEBUG(vjDBG_ALL,0) << "Creating DL:" << mDlData->cubeDLIndex << endl << vjDEBUG_FLUSH;
       cerr << "created displays lists:" << num_dls+1 << endl;
 
@@ -230,7 +233,7 @@ public:
     */
    virtual void draw()
    {
-      //initGLState();    // This should really be in another function
+      initGLState();    // This should really be in another function
 
       myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
    }
@@ -259,8 +262,6 @@ public:
 
        for(int i=0;i<mUserData.size();i++)
           mUserData[i]->updateNavigation();       // Update the navigation matrix
-
-       mDrawTimer.startTiming();
    }
 
    /// Function called after drawing has been triggered but BEFORE it completes
@@ -272,12 +273,6 @@ public:
    /// Function called before updating trackers but after the frame is drawn
    virtual void postSync()
    {
-      mDrawTimer.stopTiming();
-      if((mDrawTimer.getTimeCount() % 60) == 0)
-      {
-         vjDEBUG(vjDBG_ALL,0) << "mDraw time: " << 1.0f/mDrawTimer.getTiming()  << " (per/sec)\n" << vjDEBUG_FLUSH;
-      }
-
       vjDEBUG(vjDBG_ALL,2) << "cubesApp::postSync" << endl << vjDEBUG_FLUSH;
    }
 
@@ -394,7 +389,6 @@ public:
    vjGlContextData<ContextData>  mDlData;       // Data for display lists
    std::vector<UserData*>        mUserData;     // All the users in the program
 
-   abTimer                       mDrawTimer;    // Timing of the draw function
 };
 
 
