@@ -66,10 +66,13 @@ vpr::ReturnStatus LibraryUNIX::load()
 
    if ( NULL == mLibrary )
    {
+      vprDEBUG_CONT(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << clrOutNORM(clrYELLOW, "WARNING:")
-         << " Could not load '" << mName << "' -- " << dlerror() << std::endl
-         << vprDEBUG_FLUSH;
+         << clrOutNORM(clrYELLOW, "WARNING:") << " Could not load '" << mName
+         << "'\n" << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << dlerror() << std::endl << vprDEBUG_FLUSH;
       status.setCode(vpr::ReturnStatus::Fail);
    }
 
