@@ -41,9 +41,9 @@
 #define _VJ_DIGITALPROXY_H_
 
 #include <vjConfig.h>
-#include <assert.h>
 #include <Input/vjInput/vjDigital.h>
 #include <Input/InputManager/vjProxy.h>
+#include <Kernel/vjAssert.h>
 
 //--------------------------------------------------------------------------
 //: A proxy class to digital devices, used by the vjInputManager.
@@ -69,7 +69,7 @@ public:
 
    void set(vjDigital* digPtr, int subNum)
    {
-      assert( digPtr->fDeviceSupport(DEVICE_DIGITAL) );
+      vjASSERT( digPtr->fDeviceSupport(DEVICE_DIGITAL) );
       m_digPtr = digPtr;
       m_unitNum = subNum;
       m_data = m_digPtr->getDigitalData(m_unitNum);
