@@ -76,7 +76,7 @@ struct Callable
     * This will be invoked as a callback by methods of vpr::LibraryLoader.
     *
     * @param func A function pointer for the entry point in a dynamically
-    *             loaded plug-in.  This must be cast to the correct siggntaure
+    *             loaded plug-in.  This must be cast to the correct signature
     *             before being invoked.
     */
    bool operator()(void* func)
@@ -225,57 +225,12 @@ void ConfigManager::addPendingAdds(Configuration* db)
    PendingElement pending;
    pending.mType = PendingElement::ADD;
 
-   // Begin Machine Specific Code
-   if(mCachedLocalHostName.empty())
-   {
-      // Get Local Host Name
-      vpr::InetAddr local_addr;
-      vpr::InetAddr::getLocalHost(local_addr);
-      std::string host_name = local_addr.getHostname();
-      if ( host_name.find('.') != std::string::npos )
-      {
-         host_name = host_name.substr(0, host_name.find('.'));
-      }
-      if ( host_name.find(':') != std::string::npos )
-      {
-         host_name = host_name.substr(0, host_name.find('.'));
-      }
-      mCachedLocalHostName = host_name;
-   }
-   // End Machine Specific Code
-
    for ( std::vector<ConfigElementPtr>::iterator i = db->vec().begin();
          i != db->vec().end();
          ++i )
    {
       pending.mElement = (*i);
       mPendingConfig.push_back(pending);
-
-      // Begin Machine Specific Code
-      if ( (*i)->getID() == "machine_specific" )
-      {
-         if ( (*i)->getProperty<std::string>("host_name") == mCachedLocalHostName ||
-              (*i)->getProperty<std::string>("host_name") == "localhost")
-         {
-            // NOTE: Add all machine dependent ConfigElementPtr's here
-            vprASSERT((*i)->getNum("display_system") == 1 && "A Cluster System element must have exactly 1 display_system element");
-
-            std::vector<jccl::ConfigElementPtr> machine_specific_elements = (*i)->getChildElements();
-
-            for (std::vector<jccl::ConfigElementPtr>::iterator i = machine_specific_elements.begin();
-                 i != machine_specific_elements.end();
-                 i++)
-            {
-               PendingElement pending;
-               pending.mType = PendingElement::ADD;
-               pending.mElement = (*i);
-               mPendingConfig.push_back(pending);
-               vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN)
-                  << "[ConfigManager] Adding Machine specific ConfigElement: "
-                  << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
-            }
-         }
-      } // End Machine Specific Code
    }
 
    unlockPending();
@@ -506,7 +461,7 @@ void ConfigManager::debugDumpPending(int debug_level)
 //: Is the element in the active configuration??
 //! CONCURRENCY: concurrent
 //! NOTE: This locks the active list to do processing
-bool ConfigManager::isElementInActiveList(std::string element_name)
+bool ConfigManager::isElementInActiveList(const std::string& element_name)
 {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
 
@@ -525,46 +480,36 @@ bool ConfigManager::isElementInActiveList(std::string element_name)
 //: Is there an element of this type in the active configuration?
 //! CONCURRENCY: concurrent
 //! NOTE: This locks the active list to do processing
-bool ConfigManager::isElementTypeInActiveList(std::string elementType)
+bool ConfigManager::isElementTypeInActiveList(const std::string& elementType)
 {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
-
-   // std::cout << "isElementTypeInActiveList ActiveConfig.getElements().size == " << mActiveConfig.getElements().size() << std::endl;
 
    std::vector<ConfigElementPtr>::iterator i;
    for ( i = mActiveConfig.vec().begin(); i != mActiveConfig.vec().end(); ++i )
    {
-      // std::cout << "trying to match " << std::string((*i)->getType()) << " with " << elementType << std::endl;
       if ( std::string((*i)->getID()) == elementType )
       {
-         // std::cout << "match!" << std::endl;
          return true;
       }
    }
-   // std::cout << "no match!" << std::endl;
    return false;     // Not found, so return false
 }
 
 //: Is there an element of this type in the pending list??
 //! CONCURRENCY: concurrent
 //! NOTE: This locks the pending list to do processing
-bool ConfigManager::isElementTypeInPendingList(std::string elementType)
+bool ConfigManager::isElementTypeInPendingList(const std::string& elementType)
 {
-   vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
-
-   // std::cout << "isElementTypeInPendingList(): mPendingConfig.size == " << mPendingConfig.size() << std::endl;
+   vpr::Guard<vpr::Mutex> guard(mPendingLock);     // Lock the current list
 
    std::list<PendingElement>::iterator i;
    for ( i = mPendingConfig.begin(); i != mPendingConfig.end(); ++i )
    {
-      // std::cout << "trying to match " << std::string((*i).mElement->getType()) << " with " << elementType << std::endl;
       if ( std::string((*i).mElement->getID()) == elementType )
       {
-         // std::cout << "match!" << std::endl;
          return true;
       }
    }
-   // std::cout << "no match!" << std::endl;
    return false;     // Not found, so return false
 }
 

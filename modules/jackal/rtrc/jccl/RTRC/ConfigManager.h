@@ -109,18 +109,24 @@ public: // -- Query functions --- //
 
    /** Checks if the named ConfigElement is in the active configuration.
     *  This locks the active list to do processing.
+    *
+    *  Note: This should not be used often. Use this at your own risk.
     */
-   bool isElementInActiveList(std::string elementName);
+   bool isElementInActiveList(const std::string& elementName);
 
    /** Is the element of this type in the active configuration?
     *  This locks the active list to do processing.
+    *
+    *  Note: This should not be used often. Use this at your own risk.
     */
-   bool isElementTypeInActiveList(std::string elementName);
+   bool isElementTypeInActiveList(const std::string& elementName);
 
    /** Is there a element of this type in the pending list??
     *  This locks the pending list to do processing
+    *
+    *  Note: This should not be used often. Use this at your own risk.
     */
-   bool isElementTypeInPendingList(std::string elementType);
+   bool isElementTypeInPendingList(const std::string& elementType);
 
 public:   // ----- PENDING LIST ----- //
 
