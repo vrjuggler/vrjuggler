@@ -35,21 +35,18 @@
 #define _JCCL_CONFIG_MANGER_H_
 
 #include <jccl/jcclConfig.h>
-#include <vpr/Util/Debug.h>
-#include <vpr/Util/Assert.h>
-//#include <Config/vjConfigChunk.h>
-class ConfigChunk;
-
 #include <jccl/JackalServer/JackalControl.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
-#include <jccl/JackalServer/XMLConfigCommunicator.h>
-//#include <Config/vjChunkFactory.h>
+#include <jccl/ConfigManager/XMLConfigCommunicator.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/Util/Singleton.h>
+
 #include <list>
 
-#include <vpr/Util/Singleton.h>
 
 namespace jccl {
 

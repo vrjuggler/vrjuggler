@@ -52,8 +52,7 @@ SRCS		= Command.cpp			\
                   JackalServer.cpp		\
 		  NetCommunicator.cpp		\
                   Socket.cpp			\
-                  SockStream.cpp		\
-		  XMLConfigCommunicator.cpp	
+                  SockStream.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
