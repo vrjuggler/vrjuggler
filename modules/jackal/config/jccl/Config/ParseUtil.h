@@ -34,7 +34,9 @@
 #define _JCCL_PARSEUTIL_H_
 
 #include <jccl/jcclConfig.h>
+#include <vpr/vpr.h>
 #include <jccl/Config/ConfigTokens.h>
+
 
 namespace jccl
 {
@@ -75,19 +77,21 @@ float toFeet (float val, CfgUnit unit);
 std::string demangleFileName (const std::string& n, std::string parentfile);
 
 /** Looks for a file in a path, and opens it if found.
- *  @param in An input stream.  If the file is found during the path
- *            search, the in will be open for reading.
- *  @param file_name The name of a file to search for.
- *  @param env_name The environment variable containing a path.  The
- *                  path is a set of directories separated by a delimiter
- *                  character (';' on windows, ':' on real operating
- *                  systems).
- *  @return The full name of the file if it was found, or empty string
- *          if it was not found.
+ *
+ *  @param file_name     The name of a file to search for.
+ *  @param env_name      The environment variable containing a path.  The
+ *                       path is a set of directories separated by a delimiter
+ *                       character (';' on windows, ':' on real operating
+ *                       systems).
+ *  @param absolute_file Storage for the absolute path to the file if it was
+ *                       found in the path.
+ *
+ *  @return vpr::ReturnStatus::Succeed is returned if a file is found in the
+ *          path; vpr::ReturnStatus::Fail otherwise.
  */
-const std::string findFileUsingPathVar (std::ifstream& in,
-                                        const std::string& file_name,
-                                        const std::string& env_name);
+JCCL_API(vpr::ReturnStatus) findFileUsingPathVar(const std::string& file_name,
+                                                 const std::string& env_name,
+                                                 std::string& absolute_file);
 
 /** Does the given path have a separator */
 bool hasSeparator (const std::string &path);
