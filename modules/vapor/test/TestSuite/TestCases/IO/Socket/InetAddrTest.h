@@ -72,7 +72,9 @@ public:
       vpr::InetAddr addr3("cruncher.vrac.iastate.edu", 13768);
       vpr::InetAddr addr4("129.186.232.58", 13768);
       vpr::InetAddr addr5("cruncher.vrac.iastate.edu:13768");
+      vpr::InetAddr local_addr("localhost");
 
+      assertTest(local_addr.getAddressValue() > 0);
       assertTest(addr1.getAddressValue() == vpr::System::Ntohl(3224437506u));
       assertTest(addr1 == addr2);
       assertTest(addr3.getAddressValue() == addr4.getAddressValue());
