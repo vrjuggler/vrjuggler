@@ -35,6 +35,13 @@
 
 #include <boost/smart_ptr.hpp>
 
+/**
+ * \file
+ *
+ * Include this file to get a forward declaration of the pointer type
+ * jccl::ConfigElementPtr.  To get the full declaration of jccl::ConfigElement
+ * jccl/Config/ConfigElement.h must be included, too.
+ */
 
 namespace jccl
 {
