@@ -161,6 +161,19 @@ public class ConfigBrokerProxy
    {
       return mBroker.getElements(context);
    }
+   
+   /**
+    * Gets a list of all the configuration elements within the given context
+    * includeing embedded elements.
+    *
+    * @param context    the context from which to retrieve elements
+    *
+    * @return  a list of the configuration elements
+    */
+   public List getElementsIncludingEmbedded(ConfigContext context)
+   {
+      return mBroker.getElementsIncludingEmbedded(context);
+   }
 
    /**
     * Gets a list of all the configuration elements within the given
