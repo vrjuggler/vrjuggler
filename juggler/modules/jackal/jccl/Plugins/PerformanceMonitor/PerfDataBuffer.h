@@ -1,6 +1,6 @@
 
 
-#include "vjTimeStamp.h"
+#include <Performance/vjTimeStamp.h>
 #include <Sync/vjMutex.h>
 #include <iostream.h>
 #include <Kernel/vjDebug.h>
