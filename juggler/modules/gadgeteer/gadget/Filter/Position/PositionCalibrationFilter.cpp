@@ -159,17 +159,17 @@ namespace gadget
             }
             else
             {
-               // XXX: This is a workaround for GMTL CVS Head which supports template 
-               //      meta-programming for vectors; unfortunately, 
-               //      gmtl::length(v1 - v2) will not compile since the types are 
-               //      NOT gmtl::Vec.
+               // XXX: This is a workaround for GMTL CVS Head which supports 
+               //      template meta-programming for vectors; unfortunately, 
+               //      gmtl::length(v1 - v2) will not compile since the types 
+               //      are NOT gmtl::Vec.
                gmtl::Vec3f difference = mTable[i].second - mTable[j].second;
                float length = gmtl::length( difference );
                mWMatrix[i][j] = gmtl::Math::sqrt( 
                                 length * length + 
                                 r_squared );
             }
-            vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+            vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
                << "[PositionCalibrationFilter::config()] Assigning " << mWMatrix[i][j]
                << " to mWMatrix( " << i << ", " << j << ").\n"
                << vprDEBUG_FLUSH;
@@ -249,6 +249,10 @@ namespace gadget
    void
    PositionCalibrationFilter::apply(std::vector< PositionData >& posSample)
    {
+      vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+         << "[PositionCalibrationFilter::apply()] Received " << posSample.size()
+         << " samples.\n"
+         << vprDEBUG_FLUSH;
       std::vector< PositionData >::iterator itr;
       for (itr = posSample.begin(); itr != posSample.end(); ++itr)
       {
@@ -256,7 +260,8 @@ namespace gadget
          // 
          // Right now, we only calibrate the position, not the orientation, so
          // first, we need to pull out the translation matrix of posSample.
-         // We do this using the standard method:  pull the rotation matrix R out
+         // We do this using the standard method:  
+         // pull the rotation matrix R out
          // of the transformation matrix Tr and multiply R-inverse by Tr, ie,
          // inverse(R) * Tr = T
          // and since rotation matrices are orthogonal,
@@ -267,6 +272,20 @@ namespace gadget
          rotation[1][3] = 0;
          rotation[2][3] = 0;
          rotation[3][3] = 1;
+         
+         // Verify this is still a rotation matrix.
+         float square_sum = (rotation[0][0] * rotation[0][0]) +
+                            (rotation[0][1] * rotation[0][1]) + 
+                            (rotation[0][2] * rotation[0][2]) + 
+                            (rotation[0][3] * rotation[0][3]);
+         if (square_sum != 1.0)
+         {
+            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+               << "[PositionCalibrationFilter::apply()] Invalid rotation "
+               << "matrix; the sum of the squares of the first row is "
+               << square_sum << ", but it should be 1!\n"
+               << vprDEBUG_FLUSH;
+         }
          gmtl::Matrix44f translation = gmtl::transpose(rotation) * itr->getPosition();
          gmtl::Vec3f tracked_pos( translation[0][3], 
                                   translation[1][3], 
@@ -279,40 +298,45 @@ namespace gadget
          // where 10 <= R^2 <= 1000.
          gmtl::Vec3f real_pos;
          float r_squared = 100.0f;
+         vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+            << "[PositionCalibrationFilter::apply()] Summing real position...\n"
+            << vprDEBUG_FLUSH;
          for (unsigned int i = 0; i < mTable.size(); ++i)
          {
-            // XXX: This is a workaround for GMTL CVS Head which supports template 
-            //      meta-programming for vectors; unfortunately, 
+            // XXX: This is a workaround for GMTL CVS Head which supports 
+            //      template meta-programming for vectors; unfortunately, 
             //      gmtl::length(v1 - v2) will not compile since the types are 
             //      NOT gmtl::Vec.
-            gmtl::Vec3f difference = tracked_pos = mTable[i].second;
+            gmtl::Vec3f difference = tracked_pos - mTable[i].second;
             float length = gmtl::length(difference);
-            real_pos = mAlphaVec[i] * gmtl::Math::sqrt( length * length + r_squared ); 
+            real_pos = mAlphaVec[i] * 
+                       gmtl::Math::sqrt( length * length + r_squared ); 
+            vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+               << "[PositionCalibrationFilter::apply()] real_pos: "
+               << real_pos << "\n" << vprDEBUG_FLUSH;
          }
 
-         vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
-            << "[PositionCalibrationFilter::apply()] Replaced " << translation
-            << " with ";
          
-         // Now we clobber the old transformation and replace it with a translation to
-         // our real position.
-         translation[0][3] = real_pos[0];
-         translation[1][3] = real_pos[1];
-         translation[2][3] = real_pos[2];
-         translation[3][3] = 1;
+         // Now we clobber the old transformation and replace it with a 
+         // translation to our real position.
+         gmtl::Matrix44f new_translation;
+         new_translation[0][3] = real_pos[0];
+         new_translation[1][3] = real_pos[1];
+         new_translation[2][3] = real_pos[2];
          
          vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
-            << translation << "\n"
+            << "[PositionCalibrationFilter::apply()] Replaced \n" << translation
+            << "\nwith " << new_translation
             << vprDEBUG_FLUSH;
 
          // Rebuild the position sample (transformation matrix).
-         itr->setPosition(rotation * translation);
+         itr->setPosition(rotation * new_translation);
       }
    }
      
    void 
    PositionCalibrationFilter::luBacksubstitution(float** decomposedA, 
-                                                 unsigned int size, 
+                                                 int size, 
                                                  int* permutation, float* solution)
    {
       int ii(0);
@@ -349,7 +373,7 @@ namespace gadget
    }
    
    void 
-   PositionCalibrationFilter::luDecomposition(float** matrix, unsigned int size, 
+   PositionCalibrationFilter::luDecomposition(float** matrix, int size, 
                                               int* permutation) 
    {
       const float TINY(0.0f);
