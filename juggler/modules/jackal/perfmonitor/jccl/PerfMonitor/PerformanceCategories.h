@@ -75,9 +75,8 @@ private:
     vpr::Mutex mBuffersLock;
 
 protected:
-    PerformanceCategories () {
-        mActive = false;
-    }
+
+    PerformanceCategories ();
     
 public:
 
@@ -93,48 +92,18 @@ public:
         return mActive;
     }
 
-    void addCategory (const vpr::GUID& catId, const std::string& name)
-    {
-        std::cout << "Adding category named '" << name << "'." << std::endl;
-        mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId, CategoryInfo(name, false)));
-        //updateAllowedCategories();   
-    }
+    void addCategory (const vpr::GUID& catId, const std::string& name);
 
-    void activateCategory (const std::string& catname) {
-        category_map_t::iterator cat = mCategories.begin();
-        while (cat != mCategories.end()) {
-            if (cat->second.mName == catname) {
-                cat->second.mActive = true;
-                return;
-            }
-        }
-    }
+    void activateCategory (const std::string& catname);
 
-    void deactivateCategory (const std::string& catname) {
-        category_map_t::iterator cat = mCategories.begin();
-        while (cat != mCategories.end()) {
-            if (cat->second.mName == catname) {
-                cat->second.mActive = false;
-                return;
-            }
-        }
-    }
+    void deactivateCategory (const std::string& catname);
 
 
     /** Returns whether the given category is active.
      *  @return True iff the category is active.
      */
-    bool isCategoryActive (const vpr::GUID& category) {
-        if (!mActive)
-            return false;
-        // do something with categories
-        
-        category_map_t::iterator cat = mCategories.find(category);
-        vprASSERT(cat != mCategories.end());  // cat is valid
-        return (*cat).second.mActive;   
-    }
+    bool isCategoryActive (const vpr::GUID& category);
     
-
 
     void addBuffer (LabeledPerfDataBuffer* buffer);
 
@@ -183,6 +152,6 @@ struct PerfCatRegistrator
 
 // Perf measurement internal to jackal itself
 const vpr::GUID jcclPERF_JACKAL ("29ecd55b-e68e-40ce-9db2-99e7682b36b4");
-
+const vpr::GUID jcclPERF_ALL ("0b6b599c-f90c-43f6-8fbb-08454dd78872");
 
 #endif

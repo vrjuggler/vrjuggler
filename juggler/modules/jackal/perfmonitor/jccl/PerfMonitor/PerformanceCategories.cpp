@@ -37,11 +37,63 @@
 
 namespace jccl {
 
+    PerformanceCategories::PerformanceCategories () {
+        mActive = false;
+
+	addCategory (jcclPERF_ALL, "PERF_ALL");
+	activateCategory ("PERF_ALL");
+    }
+
+
+    void PerformanceCategories::addCategory (const vpr::GUID& catId, const std::string& name)
+    {
+        std::cout << "Adding category named '" << name << "'." << std::endl;
+        mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId, CategoryInfo(name, false)));
+        //updateAllowedCategories();   
+    }
+
+
+    void PerformanceCategories::activateCategory (const std::string& catname) {
+        category_map_t::iterator cat = mCategories.begin();
+        while (cat != mCategories.end()) {
+            if (cat->second.mName == catname) {
+                cat->second.mActive = true;
+                return;
+            }
+	    cat++;
+        }
+    }
+
+
+    void PerformanceCategories::deactivateCategory (const std::string& catname) {
+        category_map_t::iterator cat = mCategories.begin();
+        while (cat != mCategories.end()) {
+            if (cat->second.mName == catname) {
+                cat->second.mActive = false;
+                return;
+            }
+	    cat++;
+        }
+    }
+
+
+    bool PerformanceCategories::isCategoryActive (const vpr::GUID& category) {
+        if (!mActive)
+            return false;
+        // do something with categories
+        
+        category_map_t::iterator cat = mCategories.find(category);
+        vprASSERT(cat != mCategories.end());  // cat is valid
+        return (*cat).second.mActive;   
+    }
+
+
     void PerformanceCategories::addBuffer (LabeledPerfDataBuffer* buffer) {
         mBuffersLock.acquire();
         mBuffers.push_back (buffer);
         mBuffersLock.release();
     }
+
 
     void PerformanceCategories::removeBuffer (LabeledPerfDataBuffer* buffer) {
         mBuffersLock.acquire();
@@ -54,6 +106,7 @@ namespace jccl {
         }
         mBuffersLock.release();
     }
+
 
     void PerformanceCategories::writeAllBuffers (std::ostream& out, 
                                                  const std::string& pad /*=""*/) {
