@@ -434,7 +434,7 @@ value</screen>
          </figure>
          <para>So now you are probably wondering what you can do with this fancy application. Interaction is done through the keyboard windows on the right side of your desktop. Moving the head is done with the keyboard in <quote>Head Keyboard</quote>; moving the camera is done with with the keyboard int <quote>Sim View Cameras Control</quote>; and moving the wand is done with the mouse in <quote>Wand Keyboard</quote>. As noted above, this information is current as of this writing. For information on how to verify these settings and to view the current configuration, refer to the <emphasis>VjControl Guide</emphasis>. The following list of tables provides all the keyboard and mouse controls for the simulator when using these particular configuration files. Note that it is possible to reconfigure the simulator to suit your preferences. This is provided mainly for those who just want something that works now.</para>
          <table>
-            <title>Moving the simulated wand</title>
+            <title>Moving the simulated head</title>
             <tgroup cols="2">
                <thead>
                   <row>
