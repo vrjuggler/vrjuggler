@@ -48,13 +48,8 @@
 /* Define the following if building on HP-UX. */
 #undef _CMA_NOWRAPPERS_
 
-/* Define to unique values used for defining JCCL_PERFORMANCE. */
-#undef JCCL_PERF_NONE
-#undef JCCL_PERF_SGI
-#undef JCCL_PERF_POSIX
-
-/* Define to one of the above values to enable performance testing. */
-#undef JCCL_PERFORMANCE
+/* Define if performance-gathering code will be used. */
+#undef USE_JCCL_PERF
 
 @BOTTOM@
 
