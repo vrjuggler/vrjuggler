@@ -1,6 +1,8 @@
 #ifndef _CUBES_APP_
 #define _CUBES_APP_
 
+#include <vjConfig.h>
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <vector>
