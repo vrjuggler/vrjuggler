@@ -113,7 +113,7 @@
       <I>configure</I> will check for the existence of
       <TT>Config/ChunkDesc.C</TT>.  Finally, the header file created when
       done with the configuration process is named.  This will most likely
-      always be <TT>config.h</TT>.
+      always be <TT>vjDefines.h</TT>.
 
       <P>
   <DT><B>Custom arguments</B>
@@ -257,7 +257,7 @@
       Checks for standard header files and user-specified header files are
       made here.  The user-specified list is a space-separated list of
       header files that may not exist on all systems.  If a header file is
-      found, <TT>HAVE_<I>FILENAME</I>_H</TT> is defined in <TT>config.h</TT>
+      found, <TT>HAVE_<I>FILENAME</I>_H</TT> is defined in <TT>vjDefines.h</TT>
       when it is generated.
 
       <P>
@@ -288,7 +288,7 @@
       not exist on all systems.  As with other sections, the user-specified
       list of functions to check is the space-separated parameter passed to
       the <I>AC_CHECK_FUNCS</I> macro.  If found, <TT>HAVE_<I>FUNCNAME</I></TT>
-      will be defined in <TT>config.h</TT>.
+      will be defined in <TT>vjDefines.h</TT>.
 
       <P>
   <DT><B>Makefile substitution</B>
@@ -342,7 +342,7 @@
       <I>AC_OUTPUT</I> macro.  It iterates through its space-separated list
       of files and finds the associated <TT>.in</TT> template file.  In
       general, this step is only used for generating Makefiles
-      (<TT>config.h</TT> is defined automatically due to the
+      (<TT>vjDefines.h</TT> is defined automatically due to the
       <I>AC_CONFIG_HEADER</I> call at the top of <TT>configure.in</TT>).
       When a new directory and corresponding <TT>Makefile.in</TT> are added
       to the source tree, an entry for it must be added to this list.
