@@ -8,13 +8,15 @@ extern "C"
 
 void handleSerializableObject(vpr::SerializableObject* obj)
 {
+   std::cout << vpr::System::getCallStack() << std::endl;
    vpr::ReturnStatus status;
 
    std::vector<vpr::Uint8> data(8);
    vpr::BufferObjectReader reader = vpr::BufferObjectReader(&data);
    std::cout << "[C++] Address of reader: " << std::hex << &reader << std::dec
              << std::endl;
-   std::cout << "[C++] Reading from object ..." << std::endl;
+   std::cout << "[C++] Reading from object " << std::hex << obj << std::dec
+             << " ..." << std::endl;
    status = obj->readObject(&reader);
 
    if ( status.success() )

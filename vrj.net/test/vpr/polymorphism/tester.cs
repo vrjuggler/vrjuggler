@@ -13,14 +13,15 @@ public class Tester
    {
       Console.WriteLine("[C#] Starting");
       vpr.GUID g = new vpr.GUID();
-      Console.WriteLine("[C#] vpr.GUID created");
+      Console.WriteLine("[C#] vpr.GUID g created");
       Console.WriteLine("[C#] g before vpr.GUID.generate(): " + g);
       g.generate();
       Console.WriteLine("[C#] g after vpr.GUID.generate(): " + g);
 
-      const string guid_str = "a1ede580-8186-4453-86b8-108ecd421da6";
+      string guid_str = "a1ede580-8186-4453-86b8-108ecd421da6";
 
       // Test string marshaling.
+      Console.WriteLine("[C#] Constructing vpr.GUID g2 from " + guid_str);
       vpr.GUID g2 = new vpr.GUID(guid_str);
       Console.WriteLine("[C#] g2: " + g2);
       handleSerializableObject(g2);
