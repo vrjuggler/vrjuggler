@@ -49,7 +49,8 @@
 namespace tweek
 {
 
-/**
+/** \class SubjectImpl SubjectImpl.h tweek/CORBA/SubjectImpl.h
+ *
  * CORBA servant for the tweek::Subject interface (the implementation of the
  * interface).  Methods here should be invoked only via a reference to an
  * Subject object (Subject_ptr, Subject_var).
