@@ -25,14 +25,17 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-CXXFLAGS=	$(shell jccl-config --cxxflags)
-INCLUDES=	-I. -I..
+srcdir=		@srcdir@
 LIBDIR=		../lib
-LDFLAGS=	$(shell jccl-config --libs) $(shell jccl-config --extra-libs)
-MOD_NAME=	jccl
 
-SRCS=		jccl_ConfigDefinition.cpp	\
-		jccl_ConfigElement.cpp		\
-		jccl_ConfigElementHandler.cpp
+CXXFLAGS=	@VRJ_CXXFLAGS@ @CLI_CFLAGS@
+INCLUDES=	-I$(srcdir) -I@top_srcdir@/src
+LDFLAGS=	@CLI_LDFLAGS@ @CLI_LIBS@ @VRJ_LIBS_CC@ @VRJ_EXTRA_LIBS_CC@
+MOD_NAME=	vrj
+
+SRCS=		vrj_App.cpp		\
+		vrj_GlApp.cpp		\
+		vrj_Kernel.cpp		\
+		vrj_User.cpp
 
 include ../common-cxx.mk

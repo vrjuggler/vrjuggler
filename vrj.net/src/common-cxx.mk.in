@@ -25,18 +25,30 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-CXXFLAGS=	
-INCLUDES=	-I. -I.. $(shell vpr-config --includes)
-LIBDIR=		../lib
-LDFLAGS=	
-MOD_NAME=	gmtl
+CXX=		@CXX@
 
-SRCS=		gmtl_Matrix33f.cpp		\
-		gmtl_Matrix44f.cpp		\
-		gmtl_Quatf.cpp			\
-		gmtl_VecBase_float_3.cpp	\
-		gmtl_VecBase_float_4.cpp	\
-		gmtl_Vec3f.cpp			\
-		gmtl_Vec4f.cpp
+DLLEXT=		@DYNAMICLIB_EXT@
+LIB_PREFIX=	@LIB_PREFIX@
+OBJDIR=		.
+OBJEXT=		@OBJEXT@
 
-include ../common-cxx.mk
+#OBJS=	$(addprefix $(shell pwd)/, $(SRCS:.cpp=.$(OBJEXT)))
+OBJS=	$(SRCS:.cpp=.$(OBJEXT))
+DLL=	$(LIBDIR)/$(LIB_PREFIX)$(MOD_NAME)_bridge.$(DLLEXT)
+
+vpath %.cpp $(srcdir)
+
+all: $(DLL)
+
+$(OBJDIR)/%.$(OBJEXT): %.cpp
+	$(CXX) -Wall -W $(CXXFLAGS) $(INCLUDES) -c $<
+
+$(DLL): $(OBJS)
+	$(CXX) -shared -o $@ $(OBJS) $(LDFLAGS) $(LIBS)
+
+clean:
+	rm -f $(OBJS)
+
+clobber:
+	$(MAKE) clean
+	rm -f $(DLL)

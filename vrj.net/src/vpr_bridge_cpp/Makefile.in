@@ -25,10 +25,12 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-CXXFLAGS=	$(shell vpr-config --cxxflags)
-INCLUDES=	-I. -I..
+srcdir=		@srcdir@
 LIBDIR=		../lib
-LDFLAGS=	$(shell vpr-config --libs) $(shell vpr-config --extra-libs)
+
+CXXFLAGS=	@VPR_CXXFLAGS@
+INCLUDES=	-I$(srcdir) -I@top_srcdir@/src
+LDFLAGS=	@VPR_LIBS_CC@ @VPR_EXTRA_LIBS_CC@
 MOD_NAME=	vpr
 
 SRCS=		vpr_GUID.cpp			\

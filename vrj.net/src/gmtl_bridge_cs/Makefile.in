@@ -25,20 +25,17 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-OBJS=	$(SRCS:.cpp=.o)
-DLL=	$(LIBDIR)/lib$(MOD_NAME)_bridge.so
+srcdir=		@srcdir@
+LIBDIR=		../lib
 
-all: $(DLL)
+MOD_NAME=	gmtlnet
 
-%.o: %.cpp
-	c++ -Wall -W $(CXXFLAGS) $(INCLUDES) -c $<
+SRCS=		gmtl_Matrix33f.cs	\
+		gmtl_Matrix44f.cs	\
+		gmtl_Quatf.cs		\
+		gmtl_VecBase_float_3.cs	\
+		gmtl_VecBase_float_4.cs	\
+		gmtl_Vec3f.cs		\
+		gmtl_Vec4f.cs
 
-$(DLL): $(OBJS)
-	c++ -shared -o $@ $(OBJS) $(LDFLAGS)
-
-clean:
-	rm -f $(OBJS)
-
-clobber:
-	$(MAKE) clean
-	rm -f $(DLL)
+include ../common-csharp.mk

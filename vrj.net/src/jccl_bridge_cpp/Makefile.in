@@ -25,16 +25,16 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+srcdir=		@srcdir@
 LIBDIR=		../lib
-MOD_NAME=	vprnet
 
-SRCS=		vpr_GUID.cs			\
-		vpr_Interval.cs			\
-		vpr_ObjectReader.cs		\
-		vpr_ObjectWriter.cs		\
-		vpr_ReadableObject.cs		\
-		vpr_ReturnStatus.cs		\
-		vpr_SerializableObject.cs	\
-		vpr_WriteableObject.cs
+CXXFLAGS=	@JCCL_CXXFLAGS@
+INCLUDES=	-I$(srcdir) -I@top_srcdir@/src
+LDFLAGS=	@JCCL_LIBS_CC@ @JCCL_EXTRA_LIBS_CC@
+MOD_NAME=	jccl
 
-include ../common-csharp.mk
+SRCS=		jccl_ConfigDefinition.cpp	\
+		jccl_ConfigElement.cpp		\
+		jccl_ConfigElementHandler.cpp
+
+include ../common-cxx.mk

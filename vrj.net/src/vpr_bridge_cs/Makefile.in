@@ -25,15 +25,18 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-CSC=		mcs
-ASSEMBLY=	$(LIBDIR)/$(MOD_NAME).dll
+srcdir=		@srcdir@
+LIBDIR=		../lib
 
-all: $(ASSEMBLY)
+MOD_NAME=	vprnet
 
-$(ASSEMBLY): $(SRCS)
-	$(CSC) /target:library /out:$@ $(SRCS) $(DLL_DEPS)
+SRCS=		vpr_GUID.cs			\
+		vpr_Interval.cs			\
+		vpr_ObjectReader.cs		\
+		vpr_ObjectWriter.cs		\
+		vpr_ReadableObject.cs		\
+		vpr_ReturnStatus.cs		\
+		vpr_SerializableObject.cs	\
+		vpr_WriteableObject.cs
 
-clean:
-
-clobber:
-	rm -f $(ASSEMBLY)
+include ../common-csharp.mk

@@ -25,32 +25,42 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-CXXFLAGS=	$(shell gadgeteer-config --cxxflags)
-INCLUDES=	-I. -I..
-LIBDIR=		../lib
-LDFLAGS=	$(shell gadgeteer-config --libs)		\
-		$(shell gadgeteer-config --extra-libs)
-MOD_NAME=	gadget
+default: debug
 
-SRCS=		gadget_Analog.cpp			\
-		gadget_AnalogData.cpp			\
-		gadget_AnalogInterface.cpp		\
-		gadget_AnalogProxy.cpp			\
-		gadget_BaseDeviceInterface.cpp		\
-		gadget_Digital.cpp			\
-		gadget_DigitalData.cpp			\
-		gadget_DigitalInterface.cpp		\
-		gadget_DigitalProxy.cpp			\
-		gadget_Input.cpp			\
-		gadget_InputData.cpp			\
-		gadget_InputManager.cpp			\
-		gadget_Position.cpp			\
-		gadget_PositionData.cpp			\
-		gadget_PositionInterface.cpp		\
-		gadget_PositionProxy.cpp		\
-		gadget_Proxy.cpp			\
-		gadget_TypedProxy_gadget__Analog.cpp	\
-		gadget_TypedProxy_gadget__Digital.cpp	\
-		gadget_TypedProxy_gadget__Position.cpp
+exec_prefix=	@exec_prefix@
+datadir=	@datadir@
+prefix=		@prefix@
+projdatadir=	$(datadir)/vrjnet
+scriptdir=	$(top_srcdir)/release/scripts
+topdir=		@topdir@
+top_srcdir=	@top_srcdir@
 
-include ../common-cxx.mk
+EXEC_PERMS=	@EXEC_PERMS@
+PERL=		@PERL@
+
+SUBDIR=		src
+
+@SET_MAKE@
+
+# TODO: Come up with a new way to do recursive builds, possibly through the
+# use of some GNU make fanciness.  Doozer++ needs a better way of doing
+# recursion.
+recursive:
+	@for dir in $(SUBDIR) ; do			\
+           echo "===> $$dir" ;				\
+           $(MAKE) -C $$dir $(RECTARGET) || exit 1;	\
+           echo "<=== $$dir" ;				\
+         done
+
+all debug optim:
+	$(MAKE) RECTARGET="$@" recursive
+
+# XXX: The chmod thing at the end is pretty lame.
+install:
+	$(MAKE) RECTARGET="$@" recursive
+	$(scriptdir)/mkinstalldirs $(projdatadir)/examples
+	$(PERL) $(scriptdir)/install-dir.pl -o $(projdatadir)/examples	\
+          -i $(top_srcdir)/examples -v "$(topdir)/VARS.pl"
+
+clean clobber:
+	$(MAKE) RECTARGET="$@" recursive

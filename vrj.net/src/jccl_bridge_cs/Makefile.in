@@ -25,15 +25,14 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+srcdir=		@srcdir@
 LIBDIR=		../lib
-MOD_NAME=	gmtlnet
 
-SRCS=		gmtl_Matrix33f.cs	\
-		gmtl_Matrix44f.cs	\
-		gmtl_Quatf.cs		\
-		gmtl_VecBase_float_3.cs	\
-		gmtl_VecBase_float_4.cs	\
-		gmtl_Vec3f.cs		\
-		gmtl_Vec4f.cs
+MOD_NAME=	jcclnet
+DLL_DEPS=	/lib:$(LIBDIR) /r:vprnet.dll
+
+SRCS=		jccl_ConfigDefinition.cs	\
+		jccl_ConfigElement.cs		\
+		jccl_ConfigElementHandler.cs
 
 include ../common-csharp.mk

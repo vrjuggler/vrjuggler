@@ -25,18 +25,17 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-LIBDIR=		../lib
-MOD_NAME=	vrjnet
-DLL_DEPS=	/r:$(LIBDIR)/vprnet.dll		\
-		/r:$(LIBDIR)/jcclnet.dll	\
-		/r:$(LIBDIR)/gmtlnet.dll	\
-		/r:$(LIBDIR)/gadgetnet.dll
+CSC=		@CSC@
+ASSEMBLY=	$(LIBDIR)/$(MOD_NAME).dll
 
-SRCS=		vrj_App.cs		\
-		vrj_DrawManager.cs	\
-		vrj_GlApp.cs		\
-		vrj_Kernel.cs		\
-		vrj_SoundManager.cs	\
-		vrj_User.cs
+SRC_LIST=	$(addprefix $(srcdir)/, $(SRCS)) 
 
-include ../common-csharp.mk
+all: $(ASSEMBLY)
+
+$(ASSEMBLY): $(SRC_LIST)
+	$(CSC) /target:library /out:$@ $(SRC_LIST) $(DLL_DEPS)
+
+clean:
+
+clobber:
+	rm -f $(ASSEMBLY)

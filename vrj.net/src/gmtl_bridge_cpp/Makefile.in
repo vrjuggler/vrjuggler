@@ -25,16 +25,20 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-CXXFLAGS=	$(shell vrjuggler-config --cxxflags)
-INCLUDES=	-I. -I..
+srcdir=		@srcdir@
 LIBDIR=		../lib
-LDFLAGS=	$(shell vrjuggler-config --libs)	\
-		$(shell vrjuggler-config --extra-libs)
-MOD_NAME=	vrj
 
-SRCS=		vrj_App.cpp		\
-		vrj_GlApp.cpp		\
-		vrj_Kernel.cpp		\
-		vrj_User.cpp
+CXXFLAGS=	
+INCLUDES=	-I$(srcdir) -I@top_srcdir@/src $(shell vpr-config --includes)
+LDFLAGS=	
+MOD_NAME=	gmtl
+
+SRCS=		gmtl_Matrix33f.cpp		\
+		gmtl_Matrix44f.cpp		\
+		gmtl_Quatf.cpp			\
+		gmtl_VecBase_float_3.cpp	\
+		gmtl_VecBase_float_4.cpp	\
+		gmtl_Vec3f.cpp			\
+		gmtl_Vec4f.cpp
 
 include ../common-cxx.mk
