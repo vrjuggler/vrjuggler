@@ -3,7 +3,8 @@
 #ifndef STUBSOUNDIMPLEMENTATION_H
 #define STUBSOUNDIMPLEMENTATION_H
 #include "ISoundImplementation.h"
-class StubSoundImplementation : ISoundImplementation
+#include "SoundImplementation.h"
+class StubSoundImplementation : public SoundImplementation
 {
 };
 #endif //STUBSOUNDIMPLEMENTATION_H

@@ -6,9 +6,8 @@
 #include "ISoundImplementation.h"
 
 /** @interface*/
-class ISoundInterface 
+class ISoundInterface
 {
-
 public:
 
    ISoundInterface() {}
@@ -49,12 +48,12 @@ public:
 
    virtual void attachAPI( const std::string& apiName, bool& result ) = 0;
    virtual void detachAPI() = 0;
-private:   
+private:
 
    /** @link dependency */
    /*#  SoundFactory lnkSoundFactory; */
 
-   /** @link aggregation 
+   /** @link aggregation
     * @clientCardinality 1
     * @supplierCardinality 1*/
    /*#  ISoundImplementation lnkISoundImplementation; */

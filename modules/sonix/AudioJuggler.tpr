@@ -7,6 +7,15 @@ Root.0.package_prefix=
 Root.0.srcControlEnabled=false
 Root.0.srcControlProject=
 Version=3.0
+editor.bookmark.0=
+editor.bookmark.1=
+editor.bookmark.2=
+editor.bookmark.3=
+editor.bookmark.4=
+editor.bookmark.5=
+editor.bookmark.6=
+editor.bookmark.7=
+editor.bookmark.8=
 [vcs]
 cvscs.pwd=AZ?E'=0''a
 option.cvs.vendorTag=juggler
@@ -16,3 +25,7 @@ option.cvs.repository=kevn@cruncher.vrac.iastate.edu:/home/users/kevn/.repositor
 option.defaultOffline=false
 [project]
 default.InitialDiagram=UseCaseDiagram
+[model]
+alphaSort=true
+showDiagramContents=false
+showPackagesFirst=true

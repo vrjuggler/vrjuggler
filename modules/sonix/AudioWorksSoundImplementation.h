@@ -2,8 +2,11 @@
 
 #ifndef AUDIOWORKSSOUNDIMPLEMENTATION_H
 #define AUDIOWORKSSOUNDIMPLEMENTATION_H
-#include "ISoundImplementation.h"
-class AudioWorksSoundImplementation : public ISoundImplementation 
+#include "SoundImplementation.h"
+
+class AudioWorksSoundImplementation : public SoundImplementation
 {
 };
+
+
 #endif //AUDIOWORKSSOUNDIMPLEMENTATION_H
