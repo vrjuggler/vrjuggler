@@ -36,7 +36,8 @@
 #include <gadget/gadgetConfig.h>
 
 #include <string>
-#include <queue>
+//#include <queue>
+#include <vector>
 #include <boost/concept_check.hpp>
 
 #include <vpr/IO/SerializableObject.h>
@@ -66,7 +67,8 @@ const unsigned short MSG_DATA_EVENT_WINDOW = 420;
 class GADGET_CLASS_API EventWindow : public vpr::SerializableObject
 {
 public:
-   typedef std::queue<gadget::EventPtr> EventQueue;
+   //typedef std::queue<gadget::EventPtr> EventQueue;
+   typedef std::vector<gadget::EventPtr> EventQueue;
 
    EventWindow()
    {
