@@ -135,7 +135,7 @@ public:
 
    void cuResetControlUnit ();
 
-   void getDiagnostics (char data[]);
+   void getDiagnostics (unsigned char data[]);
    int  getRecord (gadget::PositionData *data);
    void resetControlUnit ();
 
