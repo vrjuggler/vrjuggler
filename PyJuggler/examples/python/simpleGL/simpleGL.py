@@ -48,6 +48,9 @@ class SimplGlApp(PyJuggler.GlApp):
       self.mWand.init("VJWand")
       self.mHead.init("VJHead")
 
+   def contextInit(self):
+      self.initGLState()
+
    def preFrame(self):
       if self.mButton0.getData() == PyJuggler.DigitalState.ON:
          print "Button 0 is pressed!"
@@ -102,6 +105,36 @@ class SimplGlApp(PyJuggler.GlApp):
          glNormal3d(n[i][0], n[i][1], n[i][2])
          glVertex3d(v[faces[i][3]][0], v[faces[i][3]][1], v[faces[i][3]][2])
          glEnd()
+
+   def initGLState(self):
+      light0_ambient  = [ 0.1, 0.1, 0.1, 1.0 ]
+      light0_diffuse  = [ 0.8, 0.8, 0.8, 1.0 ]
+      light0_specular = [ 1.0, 1.0, 1.0, 1.0 ]
+      light0_position = [ 0.0, 0.75, 0.75, 0.0 ]
+
+#      mat_ambient   = [ 0.7, 0,7, 0.7, 1.0 ]
+#      mat_diffuse   = [ 1.0, 0,5, 0.8, 1.0 ]
+#      mat_specualr  = [ 1.0, 1,0, 1.0, 1.0 ]
+#      mat_shininess = [ 50.0 ]
+#      no_mat        = [ 0.0, 0,0, 0.0, 1.0 ]
+
+      glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient)
+      glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse)
+      glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular)
+      glLightfv(GL_LIGHT0, GL_POSITION, light0_position)
+
+#      glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient)
+#      glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse)
+#      glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular)
+#      glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess)
+#      glMaterialfv(GL_FRONT, GL_EMISSION, no_mat)
+
+      glEnable(GL_DEPTH_TEST)
+      glEnable(GL_NORMALIZE)
+      glEnable(GL_LIGHTING)
+      glEnable(GL_LIGHT0)
+#      glEnable(GL_COLOR_MATERIAL)
+      glShadeModel(GL_SMOOTH)
 
 app    = SimplGlApp()
 kernel = PyJuggler.KernelWrap().getInstance()
