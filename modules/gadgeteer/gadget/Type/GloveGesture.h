@@ -34,7 +34,7 @@
 #define _VRJ_GLOVE_GESTURE_H_
 //#pragma once
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Type/Input.h>
 #include <gad/Type/Gesture.h>
 #include <gad/Type/Glove.h>

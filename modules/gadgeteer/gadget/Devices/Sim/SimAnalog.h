@@ -34,7 +34,7 @@
 #define _VRJ_SIM_ANALOG_H
 //#pragma once
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Type/Input.h>
 #include <gad/Type/Analog.h>
 #include <gad/Devices/Sim/SimInput.h>

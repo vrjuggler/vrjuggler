@@ -37,7 +37,7 @@
 #ifndef _VRJ_INTERSENSE_H_
 #define _VRJ_INTERSENSE_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <vector>
 #include <vpr/Thread/Thread.h>
 #include <gad/Type/Input.h>

@@ -33,7 +33,7 @@
 #ifndef _VRJ_CYBER_GLOVE_H_
 #define _VRJ_CYBER_GLOVE_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Type/Input.h>
 #include <gad/Type/Glove.h>
 #include <gad/Devices/VirtualTechnologies/CyberGloveBasic.h>

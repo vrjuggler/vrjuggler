@@ -39,7 +39,7 @@
 #ifndef _VRJ_DIGITALPROXY_H_
 #define _VRJ_DIGITALPROXY_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Type/Digital.h>
 #include <gad/Type/Proxy.h>
 #include <vpr/Util/Assert.h>

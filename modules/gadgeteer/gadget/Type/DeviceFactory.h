@@ -34,7 +34,7 @@
 #define _VRJ_DEVICE_FACTORY_H_
 //#pragma once
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Type/Input.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vpr/Util/Singleton.h>

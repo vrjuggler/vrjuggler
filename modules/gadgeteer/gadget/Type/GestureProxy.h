@@ -40,7 +40,7 @@
 #ifndef _VRJ_GESTURE_PROXY_H_
 #define _VRJ_GESTURE_PROXY_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <math.h>
 
 #include <gad/Type/Gesture.h>

@@ -39,7 +39,7 @@
 #ifndef _VRJ_POSPROXY_H_
 #define _VRJ_POSPROXY_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <math.h>
 
 #include <gad/Type/Position.h>

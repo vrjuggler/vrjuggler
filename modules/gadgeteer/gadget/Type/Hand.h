@@ -33,7 +33,7 @@
 #ifndef _VJ_HAND_H_
 #define _VJ_HAND_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Type/Finger.h>
 
 namespace vrj

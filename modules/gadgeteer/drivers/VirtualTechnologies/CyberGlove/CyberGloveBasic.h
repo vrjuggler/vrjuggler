@@ -33,7 +33,7 @@
 #ifndef _CYBER_GLOVE_BASIC_H_
 #define _CYBER_GLOVE_BASIC_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 #include <stdio.h>
 

@@ -14,7 +14,7 @@
 /*  --    Author: Larry Edwards                             --  */
 /*  ==========================================================  */
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <ctype.h>
 
 #include <gad/Devices/VirtualTechnologies/vt_read_user_cal-types.h>

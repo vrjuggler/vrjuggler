@@ -33,7 +33,7 @@
 #ifndef _VRJ_KEYBOARD_XWIN_H_
 #define _VRJ_KEYBOARD_XWIN_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>

@@ -33,7 +33,7 @@
 #ifndef _VRJ_PINCH_GLOVE_H_
 #define _VRJ_PINCH_GLOVE_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <string>
 
 #include <gad/Type/Input.h>

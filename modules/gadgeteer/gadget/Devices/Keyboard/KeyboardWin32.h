@@ -45,7 +45,7 @@
 #ifndef _VRJ_KEYBOARD_WIN32_H_
 #define _VRJ_KEYBOARD_WIN32_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 
 // Get windows stuff

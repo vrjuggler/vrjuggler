@@ -34,7 +34,7 @@
 #define _VRJ_SIM_INPUT_H
 //#pragma once
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Type/KeyboardInterface.h>
 #include <vrj/Config/VarValue.h>
 

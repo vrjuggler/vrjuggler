@@ -33,7 +33,7 @@
 #ifndef _VJ_PROXY_H_
 #define _VJ_PROXY_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 #include <typeinfo>
 

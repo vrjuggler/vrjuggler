@@ -33,7 +33,7 @@
 #ifndef _VRJ_LINEAR_SIGMOID_POS_FILTER_H_
 #define _VRJ_LINEAR_SIGMOID_POS_FILTER_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 #include <gad/Type/PosFilter.h>
 #include <vrj/Math/Quat.h>
