@@ -31,9 +31,12 @@
  * -----------------------------------------------------------------
  */
 
+#include <vjConfig.h>
 
 #include <Config/vjChunkDesc.h>
 #include <Config/vjParseUtil.h>
+#include <Kernel/vjAssert.h>
+
 
 vjChunkDesc::vjChunkDesc () :plist() {
     validation = 1;
@@ -64,7 +67,7 @@ vjChunkDesc::~vjChunkDesc() {
 
 #ifdef VJ_DEBUG
 void vjChunkDesc::assertValid () const {
-    assert (validation == 1 && "Trying to use deleted vjChunkDesc");
+    vjASSERT (validation == 1 && "Trying to use deleted vjChunkDesc");
      for (unsigned int i = 0; i < plist.size(); i++)
          plist[i]->assertValid();
 }
