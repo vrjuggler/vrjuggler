@@ -95,7 +95,15 @@ public class ConfigDefinitionEditor
          public void actionPerformed(ActionEvent evt)
          {
             // Save everything.
-            getBroker().saveDefinition("input_manager");
+            ConfigDefinition def =
+               getBroker().getRepository().get("input_manager");
+            try
+            {
+               getBroker().saveDefinition(def);
+            }
+            catch(Exception ex)
+            {
+            }
          }
       });
       
@@ -110,7 +118,7 @@ public class ConfigDefinitionEditor
       mTitleLbl.setBorder(BorderFactory.createRaisedBevelBorder());
       mTitleLbl.setOpaque(true);
       mTitleLbl.setHorizontalAlignment(SwingConstants.RIGHT);
-      mTitleLbl.setText("VRJConfig");
+      mTitleLbl.setText("VRJConfig Config Definition Editor");
       
       mToolbarPanel.add(mTitleLbl, BorderLayout.NORTH);
       mToolbarPanel.add(mToolbar, BorderLayout.CENTER);
