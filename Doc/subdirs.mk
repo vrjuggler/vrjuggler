@@ -11,9 +11,35 @@
 #                  code to be parsed can be found.
 # -----------------------------------------------------------------------------
 
-SUBDIRS		= $(top_srcdir)/Config $(top_srcdir)/Environment	\
-                  $(top_srcdir)/Input $(top_srcdir)/Kernel		\
-                  $(top_srcdir)/Math $(top_srcdir)/Performance		\
-                  $(top_srcdir)/SharedMem $(top_srcdir)/Sound		\
-                  $(top_srcdir)/Sync $(top_srcdir)/Threads		\
-                  $(top_srcdir)/Utils
+GROUPS			= Config	\
+                          Input		\
+                          Kernel	\
+                          Math		\
+                          Primitives	\
+                          Sound		\
+                          Utils
+
+CONFIG_GROUP_DIRS	= $(top_srcdir)/Config		\
+                          $(top_srcdir)/Environment	\
+                          $(top_srcdir)/Performance
+
+INPUT_GROUP_DIRS	= $(top_srcdir)/Input
+
+KERNEL_GROUP_DIRS	= $(top_srcdir)/Kernel
+
+MATH_GROUP_DIRS		= $(top_srcdir)/Math
+
+PRIMITIVES_GROUP_DIRS	= $(top_srcdir)/Sync		\
+                          $(top_srcdir)/Threads
+
+SOUND_GROUP_DIRS	= $(top_srcdir)/Sound
+
+UTILS_GROUP_DIRS	= $(top_srcdir)/Utils
+
+SUBDIRS			= $(CONFIG_GROUP_DIRS)		\
+                          $(INPUT_GROUP_DIRS)		\
+                          $(KERNEL_GROUP_DIRS)		\
+                          $(MATH_GROUP_DIRS)		\
+                          $(PRIMITIVES_GROUP_DIRS)	\
+                          $(SOUND_GROUP_DIRS)		\
+                          $(UTILS_GROUP_DIRS)

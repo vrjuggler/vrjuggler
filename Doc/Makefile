@@ -3,7 +3,7 @@ include subdirs.mk
 top_srcdir = ..
 
 PERCEPS_DIR = .
-PERCEPS= $(PERCEPS_DIR)/bin/perceps
+PERCEPS= perl $(PERCEPS_DIR)/bin/perceps
 FILTERS = ./filters
 TEMPLATES_INT = ./templates/internal
 TEMPLATES_PUB = ./templates/public
@@ -22,9 +22,41 @@ doc-internal:
 	cp $(JAVA_CLASS)/*.class $(OUT_INT)
 
 doc-public:
-	$(PERCEPS) -a -b -c -h -f -d $(OUT_PUB) -F $(FILTERS)		\
-          -t $(TEMPLATES_PUB) $(SUBDIRS)
-	cp $(JAVA_CLASS)/*.class $(OUT_PUB)
+	$(MAKE) BASE_OUT="$(OUT_PUB)" TEMPLATES="$(TEMPLATES_PUB)"	\
+          all-doc $(GROUPS)
+
+all-doc:
+	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT) -F $(FILTERS)		\
+          -t $(TEMPLATES) $(SUBDIRS)
+	cp $(JAVA_CLASS)/*.class $(BASE_OUT)
+
+Config:
+	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
+          -t $(TEMPLATES)_xml $(CONFIG_GROUP_DIRS)
+
+Input:
+	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
+          -t $(TEMPLATES)_xml $(INPUT_GROUP_DIRS)
+
+Kernel:
+	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
+          -t $(TEMPLATES)_xml $(KERNEL_GROUP_DIRS)
+
+Math:
+	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
+          -t $(TEMPLATES)_xml $(MATH_GROUP_DIRS)
+
+Primitives:
+	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
+          -t $(TEMPLATES)_xml $(PRIMITIVES_GROUP_DIRS)
+
+Sound:
+	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
+          -t $(TEMPLATES)_xml $(SOUND_GROUP_DIRS)
+
+Utils:
+	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
+          -t $(TEMPLATES)_xml $(UTILS_GROUP_DIRS)
 
 example:
 	$(PERCEPS) -a -b -c -h -d $(OUT_EX) -t $(TEMPLATES) $(SRC_EX)
