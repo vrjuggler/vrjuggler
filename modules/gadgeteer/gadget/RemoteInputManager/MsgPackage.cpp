@@ -616,7 +616,7 @@ namespace gadget
       mObjectWriter->writeUint16(10);
    }
 
-   bool MsgPackage::createHandshake(bool accept_reject, const std::string& host, const vpr::Uint16& port, std::string manager_id)
+   bool MsgPackage::createHandshake(bool accept_reject, const std::string& host, const vpr::Uint16& port, std::string manager_id, bool sync)
    {
       ///////////////////////////////////////////////////////////////////////
       //													               //
@@ -645,8 +645,8 @@ namespace gadget
       /////////////////
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "SEND BOOL: " << accept_reject << "\n" << clrRESET << vprDEBUG_FLUSH;
-      mTempWriter->writeBool(accept_reject);    //Must use two because of alignment issues
-//      mTempWriter->writeBool(sync);    //Must use two because of alignment issues
+      mTempWriter->writeBool(accept_reject);
+      mTempWriter->writeBool(sync);    
       
       // Write hostname
       mTempWriter->writeUint16(host.size());
@@ -688,7 +688,7 @@ namespace gadget
       return true;
    }
 
-   bool MsgPackage::receiveHandshake(std::string& receivedHostname, vpr::Uint16& receivedPort,std::string& received_manager_id, vpr::SocketStream* newStream)
+   bool MsgPackage::receiveHandshake(std::string& receivedHostname, vpr::Uint16& receivedPort,std::string& received_manager_id, vpr::SocketStream* newStream, bool& sync)
    {
       ///////////////////////////////////////////////////////////////////////
       //														           //
@@ -766,7 +766,7 @@ namespace gadget
       if ( rimcode == RIM_PACKET_MSG && opcode == MSG_HANDSHAKE )
       {
          accept_reject = reader->readBool();
-         //sync = reader->readBool();
+         sync = reader->readBool();
          vpr::Uint16 temp_string_len = reader->readUint16();
          receivedHostname = reader->readString(temp_string_len);
          receivedPort = reader->readUint16();
