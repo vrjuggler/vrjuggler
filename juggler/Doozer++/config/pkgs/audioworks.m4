@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          audioworks.m4,v
-dnl Date modified: 2004/01/29 04:28:27
-dnl Version:       1.12
+dnl Date modified: 2004/04/19 00:01:43
+dnl Version:       1.13
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -49,7 +49,7 @@ dnl     AUDIOWORKS__LDFLAGS  - Extra linker flags for the AudioWorks library
 dnl                            directory.
 dnl ===========================================================================
 
-dnl audioworks.m4,v 1.12 2004/01/29 04:28:27 patrickh Exp
+dnl audioworks.m4,v 1.13 2004/04/19 00:01:43 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has AudioWorks installed.  This
@@ -88,7 +88,7 @@ AC_DEFUN(DPP_HAVE_AUDIOWORKS,
                AUDIOWORKS_ROOT="$withval", AUDIOWORKS_ROOT=$1)
 
    dnl Save these values in case they need to be restored later.
-   dpp_save_CFLAGS="$CFLAGS"
+   dpp_save_CXXFLAGS="$CXXFLAGS"
    dpp_save_CPPFLAGS="$CPPFLAGS"
    dpp_save_INCLUDES="$INCLUDES"
    dpp_save_LDFLAGS="$LDFLAGS"
@@ -101,7 +101,7 @@ AC_DEFUN(DPP_HAVE_AUDIOWORKS,
    fi
 
    CPPFLAGS="$CPPFLAGS -I$AUDIOWORKS_ROOT/include/PSI"
-   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
 
    dnl This is necessary because AC_CHECK_LIB() adds -laudioworks to
    dnl $LIBS.  We want to do that ourselves later.
@@ -138,7 +138,7 @@ AC_DEFUN(DPP_HAVE_AUDIOWORKS,
    fi
 
    dnl Restore all the variables now that we are done testing.
-   CFLAGS="$dpp_save_CFLAGS"
+   CXXFLAGS="$dpp_save_CXXFLAGS"
    CPPFLAGS="$dpp_save_CPPFLAGS"
    INCLUDES="$dpp_save_INCLUDES"
    LDFLAGS="$dpp_save_LDFLAGS"
