@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          common.defs.mk.in,v
-# Date modified: 2002/04/06 20:24:55
-# Version:       1.30.2.1
+# Date modified: 2002/07/31 23:08:45
+# Version:       1.30.2.3
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.30.2.1 2002/04/06 20:24:55 patrickh Exp
+# common.defs.mk.in,v 1.30.2.3 2002/07/31 23:08:45 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.  It is distributed
@@ -131,8 +131,10 @@
 #                   otherwise.
 # RMIC            - Java RMI compiler utility.
 #
-# USE_MAKEDEPEND  - Tell the dependency-generation code whether to use
-#                   makedepend(1).  The value will be either 'Y' or 'N'.
+# USE_MAKEDEPEND      - Tell the dependency-generation code whether to use
+#                       makedepend(1).  The value will be either 'Y' or 'N'.
+# USE_DPP_BSD_INSTALL - Indicate that the Doozer++ BSD-compatible install(1)
+#                       script will be used.
 #
 # C_COMPILE       - Command for compiling C code.
 # CXX_COMPILE     - Command for compiling C++ code.
@@ -179,8 +181,7 @@ CXXFLAGS_DYNLIB=	@CXXFLAGS_DYNLIB@
 CXX_PROF_FLAGS= 	@CXX_PROF_FLAGS@
 DEFS=			@DEFS@ $(EXTRA_DEFS)
 DEP_GEN_FLAG=		@DEP_GEN_FLAG@
-DEPEND_FLAGS=		@DEPEND_FLAGS@ @INCLUDES@ -I$(topdir)		\
-			$(EXTRA_DEPEND_FLAGS)
+DEPEND_FLAGS=		@DEPEND_FLAGS@ $(INCLUDES) $(EXTRA_DEPEND_FLAGS)
 DEPEND_EXTRAS=		@DEPEND_EXTRAS@ $(DEFS)
 DYLIB_NAME_FLAG=	@DYLIB_NAME_FLAG@
 EXEEXT=			@EXEEXT@
@@ -222,6 +223,7 @@ DSOVERSION=		@DSOVERSION@
 DSOVERSIONOPTS=		@DSOVERSIONOPTS@
 
 USE_MAKEDEPEND=		@USE_MAKEDEPEND@
+USE_DPP_BSD_INSTALL=    @USE_DPP_BSD_INSTALL@
 
 # Installation information (permissions, ownership).
 OWNER_NAME=		@OWNER_NAME@
