@@ -35,6 +35,7 @@
 
 #include <Kernel/vjUser.h>
 #include <Kernel/vjDebug.h>
+#include <Config/vjConfigChunk.h>
 
 
 int vjUser::mNextUserId = 0;

@@ -50,6 +50,7 @@
 #include <Math/vjCoord.h>
 #include <Math/vjQuat.h>
 #include <Kernel/vjDebug.h>
+#include <Config/vjConfigChunk.h>
 
 // Helper to return the index for theData array
 // given the stationNum we are dealing with and the bufferIndex

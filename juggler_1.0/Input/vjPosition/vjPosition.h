@@ -81,10 +81,7 @@ public:
     /* New pure virtual functions */
     //: Get Position data
     virtual vjMatrix* getPosData(int devNum = 0) = 0;
-    virtual vjTimeStamp* getPosUpdateTime (int devNum = 0) {
-      vjDEBUG(vjDBG_PERFORMANCE,2) << "vjPosition::getPosUpdateTime: Get update time function not implemented for this class: " << typeid(this).name() << std::endl << vjDEBUG_FLUSH;
-   return NULL;
-    }
+    virtual vjTimeStamp* getPosUpdateTime (int devNum = 0);
 
 public:
     /* XXX: Some of this stuff should be removed */

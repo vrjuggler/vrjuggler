@@ -42,6 +42,9 @@
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjDisplay.h>
+#include <Kernel/vjDisplayManager.h>
+
+#include <Config/vjConfigChunk.h>
 
 
 vjGlxWindow::vjGlxWindow():vjGlWindow() {

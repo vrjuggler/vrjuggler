@@ -40,6 +40,7 @@
 #define _VJ_ANALOG_H_
 
 #include <vjConfig.h>
+#include <Config/vjConfigChunk.h>
 
 //-----------------------------------------------------------------------------
 //: vjAnalog is the abstract base class that devices with digital data derive

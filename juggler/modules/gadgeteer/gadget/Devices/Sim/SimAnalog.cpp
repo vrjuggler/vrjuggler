@@ -33,6 +33,7 @@
 
 #include <vjConfig.h>
 #include <Input/vjSim/vjSimAnalog.h>
+#include <Config/vjConfigChunk.h>
 
 //: Default Constructor
 vjSimAnalog::vjSimAnalog() : vjAnalog(), vjSimInput()

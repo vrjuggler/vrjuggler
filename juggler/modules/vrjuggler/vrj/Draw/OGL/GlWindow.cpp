@@ -41,6 +41,7 @@
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjSimDisplay.h>
 #include <Kernel/vjSurfaceDisplay.h>
+#include <Config/vjConfigChunk.h>
 
 // This variable determines which matrix stack we put the viewing transformation
 // If it is on the proj matrix, then lighting and env maps work but fog breaks.

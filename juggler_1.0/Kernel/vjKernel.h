@@ -37,28 +37,22 @@
 
 #include <vjConfig.h>
 #include <vjParam.h>
-#include <Kernel/vjApp.h>
-class vjApp;
 #include <Kernel/vjSystemFactory.h>
-//#include <Kernel/vjAPIFactory.h>
-#include <Kernel/vjDisplayManager.h>
-#include <Kernel/vjDrawManager.h>
-#include <Threads/vjThread.h>
-#include <Kernel/vjDebug.h>
-#include <Input/InputManager/vjInputManager.h>
-#include <Kernel/vjSystemData.h>
 #include <Performance/vjPerfDataBuffer.h>
-#include <Kernel/vjUser.h>
-#include <Sound/vjSoundManager.h>
 
     // Config stuff
-//#include <Config/vjConfigChunkDB.h>
-//#include <Config/vjChunkDescDB.h>
-// #include <Kernel/vjQueuedConfigChunkHandler.h>
 #include <Kernel/vjConfigChunkHandler.h>
 #include <Utils/vjSingleton.h>
 
+class vjBaseThread;
+class vjDisplayManager;
+class vjDrawManager;
 class vjEnvironmentManager;
+class vjInputManager;
+class vjSoundManager;
+class vjUser;
+class vjApp;
+
 
 //-------------------------------------------------------
 //: Main control class for all vj applications.
@@ -172,17 +166,14 @@ public:      // Global "get" interface
    vjSystemFactory* getSysFactory()
    { return mSysFactory; }
 
-      //: Get the input manager
-   vjInputManager* getInputManager()
-   { return mInputManager; }
+   //: Get the input manager
+   vjInputManager* getInputManager();
 
     //: Get the Environment Manager
-
     vjEnvironmentManager* getEnvironmentManager()
     { return environmentManager; }
 
-    vjSoundManager* getSoundManager()
-    { return mSoundManager; }
+    vjSoundManager* getSoundManager();
 
    //: Get the user associated with given name
    //! RETURNS: NULL - Not found
@@ -195,9 +186,6 @@ public:      // Global "get" interface
    const vjBaseThread* getThread()
    { return mControlThread; }
 
-private:
-   vjSystemData    data;   //: Global system data
-
 protected:
    vjApp*      mApp;                        //: The app object
    vjApp*      mNewApp;                      //: New application to set
@@ -206,23 +194,17 @@ protected:
    vjBaseThread*   mControlThread;             //: The thread in control of me.
 
    /// Factories and Managers
-   vjSystemFactory*  mSysFactory;          //: The current System factory
-   vjInputManager*   mInputManager;       //: The input manager for the system
-   vjDrawManager*    mDrawManager;         //: The Draw Manager we are currently using
-   vjDisplayManager* mDisplayManager;      //: The Display Manager we are currently using
-   vjEnvironmentManager* environmentManager; //: The Environment Manager object
-   vjSoundManager*   mSoundManager;
+   vjSystemFactory*        mSysFactory;            //: The current System factory
+   vjInputManager*         mInputManager;          //: The input manager for the system
+   vjDrawManager*          mDrawManager;           //: The Draw Manager we are currently using
+   vjDisplayManager*       mDisplayManager;        //: The Display Manager we are currently using
+   vjEnvironmentManager*   environmentManager;     //: The Environment Manager object
+   vjSoundManager*         mSoundManager;
 
    /// Performance information
    vjPerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
    bool              performanceEnabled;
 
-   /// Config Stuff
-   //**//vjChunkDescDB*    mConfigDesc;
-   //**//vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
-   //**//vjConfigChunkDB*  mInitialChunkDB;     //: Initial chunks added to system before it is started
-   //vjSemaphore       mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
-                                          //+ is acquired can run-time config occur
    /// Multi-user information
    std::vector<vjUser*>   mUsers;         //: A list of user objects in system
 
@@ -231,33 +213,7 @@ protected:
    // ----------------------- //
 protected:
    //: Constructor:  Hidden, so no instantiation is allowed
-   vjKernel()
-   {
-      mApp = NULL;
-      mNewApp = NULL;
-      mNewAppSet = false;
-      mControlThread = NULL;
-      mSysFactory = NULL;
-      mInputManager = NULL;
-      mDrawManager = NULL;
-      mDisplayManager = NULL;
-      mSoundManager = NULL;
-
-      environmentManager = NULL;
-      perfBuffer = NULL;
-
-      //mInitialChunkDB = NULL;
-      //mChunkDB = NULL;
-
-      // Print out the Juggler version number when the kernel is created.
-      vjDEBUG(vjDBG_BASE, 0) << "======================================"
-                             << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_BASE, 0) << clrOutNORM(clrGREEN, "VR Juggler version: ")
-                             << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
-                             << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_BASE, 0) << "======================================"
-                             << std::endl << vjDEBUG_FLUSH;
-   }
+   vjKernel();
 
    virtual ~vjKernel()
    {;}

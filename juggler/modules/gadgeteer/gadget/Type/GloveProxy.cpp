@@ -34,6 +34,7 @@
 #include <vjConfig.h>
 #include <Kernel/vjKernel.h>
 #include <Input/InputManager/vjGloveProxy.h>
+#include <Config/vjConfigChunk.h>
 
 bool vjGloveProxy::config(vjConfigChunk* chunk)
 {
@@ -41,7 +42,7 @@ bool vjGloveProxy::config(vjConfigChunk* chunk)
    vjASSERT(((std::string)chunk->getType()) == "GloveProxy");
 
    mUnitNum = chunk->getProperty("unit");
-   mDeviceName = chunk->getProperty("device");
+   mDeviceName = (std::string)chunk->getProperty("device");
 
    refresh();
 

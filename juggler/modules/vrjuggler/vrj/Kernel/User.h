@@ -35,8 +35,10 @@
 #define _VJ_USER_H_
 
 #include <vjConfig.h>
-#include <Config/vjConfigChunk.h>
+//#include <Config/vjConfigChunk.h>
 #include <Input/InputManager/vjPosInterface.h>
+
+class vjConfigChunk;
 
 //-----------------------------------------
 //: Representation for Juggler user in multi-user environments

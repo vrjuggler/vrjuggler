@@ -40,6 +40,9 @@
 #include <Config/vjConfigChunk.h>
 #include <Utils/vjSingleton.h>
 
+#include <Kernel/vjDebug.h>
+#include <Kernel/vjAssert.h>
+
 //: Base class for virtual construction of devices
 // Implementations of this class are registered with the device factory
 // for each device in the system

@@ -52,6 +52,7 @@
 #include <Kernel/vjDebug.h>
 #include <Utils/vjFileIO.h>
 #include <Input/vjPosition/aFlock.h>
+#include <Config/vjConfigChunk.h>
 
 // Helper to return the index for theData array
 // given the birdNum we are dealing with and the bufferIndex

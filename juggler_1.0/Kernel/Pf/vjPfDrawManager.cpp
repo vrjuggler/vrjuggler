@@ -51,6 +51,9 @@
 #include <Config/vjConfigChunk.h>
 #include <Kernel/vjSimDisplay.h>
 #include <Kernel/vjSurfaceDisplay.h>
+
+#include <Config/vjConfigChunk.h>
+
 #include <Utils/vjFileIO.h>
 
 // Draw Callbacks

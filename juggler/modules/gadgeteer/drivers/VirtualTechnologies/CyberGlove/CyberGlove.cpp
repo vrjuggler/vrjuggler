@@ -43,7 +43,7 @@
 #include <Input/vjGlove/vt_types.h>
 #include <Input/vjGlove/vt_error.h>
 #include <Kernel/vjKernel.h>
-
+#include <Config/vjConfigChunk.h>
 
 bool vjCyberGlove::config(vjConfigChunk *c)
 {

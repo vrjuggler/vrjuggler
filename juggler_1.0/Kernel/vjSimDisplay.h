@@ -42,6 +42,8 @@
 #include <Kernel/vjDisplay.h>
 #include <Kernel/vjCameraProjection.h>
 
+#include <Config/vjConfigChunk.h>
+
 class vjSimDisplay : public vjDisplay
 {
 public:

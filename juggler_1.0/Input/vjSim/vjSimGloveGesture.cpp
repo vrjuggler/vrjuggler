@@ -35,6 +35,7 @@
 
 #include <Utils/vjFileIO.h>
 #include <Input/vjSim/vjSimGloveGesture.h>
+#include <Config/vjConfigChunk.h>
 
 //: Construct the vjSimGloveGesture
 // -Set the keyboard key pairs <b>

@@ -42,7 +42,8 @@
 #include <Kernel/vjUser.h>
 
     // Config stuff
-#include <Config/vjConfigChunkDB.h>
+class vjConfigChunk;
+
 
 //---------------------------------------------------------------------
 //: Base class for Display windows.

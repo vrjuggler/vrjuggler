@@ -40,6 +40,8 @@
 #include <Kernel/vjKernel.h>
 #include <Math/vjCoord.h>
 
+#include <Config/vjConfigChunk.h>
+
 //vjDisplayManager* vjDisplayManager::_instance = NULL;
 vjSingletonImp(vjDisplayManager);
 

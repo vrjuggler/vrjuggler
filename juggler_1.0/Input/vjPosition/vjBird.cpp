@@ -38,6 +38,7 @@
 #include <termios.h>
 
 #include <Input/vjPosition/vjBird.h>
+#include <Config/vjConfigChunk.h>
 
 
 inline int getReading(vjMatrix* data, int port);

@@ -35,11 +35,23 @@
 #include <string.h>
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>
-#include <Config/vjChunkFactory.h>
 #include <Kernel/vjConfigManager.h>
+#include <Kernel/vjDrawManager.h>
+#include <Kernel/vjDisplayManager.h>
+#include <Kernel/vjApp.h>
+#include <Kernel/vjUser.h>
+
 #include <Threads/vjThread.h>
 #include <Environment/vjEnvironmentManager.h>
 #include <SharedMem/vjMemPool.h>
+
+#include <Input/InputManager/vjInputManager.h>
+
+#include <Config/vjConfigChunk.h>
+#include <Config/vjChunkFactory.h>
+
+#include <Sound/vjSoundManager.h>
+
 
 // Get the system factory we need
 #if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_AIX) ||   \
@@ -261,6 +273,7 @@ void vjKernel::initConfig()
    // ---- ALLOCATE MANAGERS --- //
    //initialSetupInputManager();
    mInputManager = new vjInputManager;
+
    //initialSetupDisplayManager();
    mDisplayManager = vjDisplayManager::instance();  // Get display manager
    vjASSERT(mDisplayManager != NULL);                 // Did we get an object
@@ -479,6 +492,14 @@ void vjKernel::stopDrawManager()
 }
 
 
+//: Get the input manager
+vjInputManager* vjKernel::getInputManager()
+{ return mInputManager; }
+
+vjSoundManager* vjKernel::getSoundManager()
+{ return mSoundManager; }
+
+
 vjUser* vjKernel::getUser(std::string userName)
 {
    for(unsigned int i=0;i<mUsers.size();i++)
@@ -486,5 +507,33 @@ vjUser* vjKernel::getUser(std::string userName)
          return mUsers[i];
 
    return NULL;
+}
+
+vjKernel::vjKernel()
+{
+   mApp = NULL;
+   mNewApp = NULL;
+   mNewAppSet = false;
+   mControlThread = NULL;
+   mSysFactory = NULL;
+   mInputManager = NULL;
+   mDrawManager = NULL;
+   mDisplayManager = NULL;
+   mSoundManager = NULL;
+
+   environmentManager = NULL;
+   perfBuffer = NULL;
+
+   //mInitialChunkDB = NULL;
+   //mChunkDB = NULL;
+
+   // Print out the Juggler version number when the kernel is created.
+   vjDEBUG(vjDBG_BASE, 0) << "======================================"
+                          << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_BASE, 0) << clrOutNORM(clrGREEN, "VR Juggler version: ")
+                          << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
+                          << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_BASE, 0) << "======================================"
+                          << std::endl << vjDEBUG_FLUSH;
 }
 

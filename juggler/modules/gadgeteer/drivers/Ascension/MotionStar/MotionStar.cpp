@@ -36,6 +36,7 @@
 #include <Input/vjPosition/vjMotionStar.h>
 #include <Math/vjCoord.h>
 #include <Kernel/vjDebug.h>
+#include <Config/vjConfigChunk.h>
 
 
 // ============================================================================

@@ -37,7 +37,8 @@
 #include <vjConfig.h>
 #include <Input/vjGlove/fsPinchGlove.h> //fakespace pinch driver
 #include <Input/vjGlove/vjPinchGlove.h> //vrjuggler pinch driver
-#include <Kernel/vjKernel.h>
+//#include <Kernel/vjKernel.h>
+#include <Config/vjConfigChunk.h>
 
 bool vjPinchGlove::config(vjConfigChunk *c)
 {

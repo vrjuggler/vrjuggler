@@ -33,7 +33,7 @@
 
 #include <vjConfig.h>
 #include <Input/InputManager/vjPosProxy.h>
-#include <Kernel/vjKernel.h>
+#include <Config/vjConfigChunk.h>
 
 #include <Input/Filter/vjPosFilter.h>
 #include <Input/Filter/vjLinearSigmoidPosFilter.h>
@@ -69,7 +69,7 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
    vjASSERT(((std::string)chunk->getType()) == "PosProxy");
 
    mUnitNum = chunk->getProperty("unit");
-   mDeviceName = chunk->getProperty("device");
+   mDeviceName = (std::string)chunk->getProperty("device");
 
    if (true == (bool)chunk->getProperty("etrans") )
    {

@@ -36,6 +36,7 @@
 
 #include <Kernel/vjDisplay.h>
 #include <Kernel/vjKernel.h>
+#include <Config/vjConfigChunk.h>
 
 
 void vjDisplay::config(vjConfigChunk* chunk)

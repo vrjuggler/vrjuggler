@@ -67,8 +67,8 @@
 #include <Sync/vjMutex.h>
 #include <Sync/vjGuard.h>
 #include <Threads/vjThread.h>
-#include <Config/vjConfigChunkDB.h>
-#include <Kernel/vjDebug.h>
+
+class vjConfigChunk;
 
 
 typedef unsigned char byte;
@@ -215,13 +215,8 @@ protected:  // Helpers
    //: Swap the valid and progress indexes (thread safe)
    void swapValidIndexes();
 
-   void assertIndexes()
-   {
-      vjASSERT((current != progress) && (current != valid) && (progress != valid));
-      vjASSERT((current >= 0) && (current <= 3));
-      vjASSERT((progress >= 0) && (progress <= 3));
-      vjASSERT((valid >= 0) && (valid <= 3));
-   }
+   //: Assert that the indices currently have valid values
+   void assertIndexes();
 
 protected:
    char*       sPort;

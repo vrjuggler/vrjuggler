@@ -33,7 +33,10 @@
 
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
+#include <Threads/vjThread.h>
+#include <Config/vjConfigChunk.h>
 
+#include <Kernel/vjAssert.h>
 
 vjInput::vjInput()
  : sPort(NULL),
@@ -152,5 +155,13 @@ void vjInput::swapValidIndexes()
    progress = tmp;
    assertIndexes();
    lock.release();
+}
+
+void vjInput::assertIndexes()
+{
+   vjASSERT((current != progress) && (current != valid) && (progress != valid));
+   vjASSERT((current >= 0) && (current <= 3));
+   vjASSERT((progress >= 0) && (progress <= 3));
+   vjASSERT((valid >= 0) && (valid <= 3));
 }
 
