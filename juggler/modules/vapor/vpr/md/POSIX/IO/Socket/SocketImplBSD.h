@@ -54,7 +54,7 @@
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/Util/Assert.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr {
@@ -120,11 +120,11 @@ public:
      * @post A new socket is created with its file handle stored in the
      *       m_fdesc member variable.
      *
-     * @return vpr::Status::Success is returned if the socket was opened
+     * @return vpr::ReturnStatus::Success is returned if the socket was opened
      *         successfully.<br>
-     *         vpr::Status::Failure is returned otherwise.
+     *         vpr::ReturnStatus::Failure is returned otherwise.
      */
-    vpr::Status open(void);
+    vpr::ReturnStatus open(void);
 
     /**
      * Close the socket.
@@ -133,12 +133,12 @@ public:
      * @post An attempt is made to close the socket.  The resulting status is
      *       returned to the caller.
      *
-     * @return vpr::Status::Success is returned if the socket was closed
-     *         successfully; vpr::Status::Failure otherwise.
+     * @return vpr::ReturnStatus::Success is returned if the socket was closed
+     *         successfully; vpr::ReturnStatus::Failure otherwise.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     close (void) {
-        vpr::Status retval;
+        vpr::ReturnStatus retval;
 
         retval = m_handle->close();
         m_open = (retval.success() ? false : true);
@@ -167,12 +167,12 @@ public:
      * @pre The socket is open, and m_host_addr has been initialized properly.
      * @post The socket is bound to the address in m_host_addr.
      *
-     * @return vpr::Status::Sucess is returned if the socket was bound to the
+     * @return vpr::ReturnStatus::Sucess is returned if the socket was bound to the
      *         address successfully.<br>
-     *         vpr::Status::Failure is returned if the socket could not be
+     *         vpr::ReturnStatus::Failure is returned if the socket could not be
      *         bound to the address in m_host_addr.
      */
-    vpr::Status bind(void);
+    vpr::ReturnStatus bind(void);
 
     /**
      * Returns the contained handle.
@@ -197,10 +197,10 @@ public:
      * @pre The socket is open.
      * @post Processes will block when accessing the socket.
      *
-     * @return vpr::Status::Success is returned if the blocking mode was
-     *         changed successfully; vpr::Status::Failure otherwise.
+     * @return vpr::ReturnStatus::Success is returned if the blocking mode was
+     *         changed successfully; vpr::ReturnStatus::Failure otherwise.
      */
-    vpr::Status enableBlocking(void);
+    vpr::ReturnStatus enableBlocking(void);
 
     /**
      * Reconfigures the socket so that it is in non-blocking mode.
@@ -208,10 +208,10 @@ public:
      * @pre The socket is open.
      * @post Processes will not block when accessing the socket.
      *
-     * @return vpr::Status::Success is returned if the blocking mode was
-     *         changed successfully; vpr::Status::Failure otherwise.
+     * @return vpr::ReturnStatus::Success is returned if the blocking mode was
+     *         changed successfully; vpr::ReturnStatus::Failure otherwise.
      */
-    vpr::Status enableNonBlocking(void);
+    vpr::ReturnStatus enableNonBlocking(void);
 
     /**
      * Gets the current blocking state for the socket.
@@ -251,17 +251,17 @@ public:
      *       communication has been established.  For a datagram socket, the
      *       default destination for all packets is now m_host_addr.
      *
-     * @return vpr::Status::Success is returned if the connection
+     * @return vpr::ReturnStatus::Success is returned if the connection
      *         succeeded.<br>
-     *         vpr::Status::InProgress is returned if this is a non-blocking
+     *         vpr::ReturnStatus::InProgress is returned if this is a non-blocking
      *         socket and the connection is still in progress.  The connection
      *         will be completed "in the background".<br>
-     *         vpr::Status::Timeout is returned if the connection could not be
+     *         vpr::ReturnStatus::Timeout is returned if the connection could not be
      *         made within the given timeout interval.<br>
-     *         vpr::Status::Failure is returned if the connection could not be
+     *         vpr::ReturnStatus::Failure is returned if the connection could not be
      *         made.
      */
-    vpr::Status connect(vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::ReturnStatus connect(vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
      * Gets the status of a possibly connected socket.
@@ -307,7 +307,7 @@ public:
      * @pre This socket is not already bound.
      * @post m_local_addr is updated to use the given vpr::InetAddr object.
      */
-    vpr::Status setLocalAddr(const vpr::InetAddr& addr);
+    vpr::ReturnStatus setLocalAddr(const vpr::InetAddr& addr);
 
     /**
      * Returns the remote address for this socket.  This is typically the
@@ -324,7 +324,7 @@ public:
      * @pre This socket is not already connected.
      * @post m_local_addr is updated to use the given vpr::InetAddr object.
      */
-    vpr::Status setRemoteAddr(const vpr::InetAddr& addr);
+    vpr::ReturnStatus setRemoteAddr(const vpr::InetAddr& addr);
 
     /**
      * Implementation of the <code>read</code> template method.  This reads at
@@ -345,15 +345,15 @@ public:
      *                   available for reading.  This argument is optional and
      *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read operation
+     * @return vpr::ReturnStatus::Success is returned if the read operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     read_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -381,15 +381,15 @@ public:
      *                   available for reading.  This argument is optional and
      *                   defaults to <code>vpr::Interval::NoTimeout</code>
      *
-     * @return vpr::Status::Success is returned if the read operation
+     * @return vpr::ReturnStatus::Success is returned if the read operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     readn_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -414,16 +414,16 @@ public:
      *                      and defaults to
      *                      <code>vpr::Interval::NoTimeout</code>.
      *
-     * @return vpr::Status::Success is returned if the write operation
+     * @return vpr::ReturnStatus::Success is returned if the write operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock is returned if the handle is in
+     *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
      *         non-blocking mode, and the write operation could not be
      *         completed.<br>
-     *         vpr::Status::Timeout is returned if the write could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the write could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the write operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the write operation failed.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     write_i (const void* buffer, const vpr::Uint32 length,
              vpr::Uint32& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -439,11 +439,11 @@ public:
      * @param data   A data buffer that will be used to store the value of the
      *               given option.
      *
-     * @return vpr::Status::Success is returned if the value for the given
+     * @return vpr::ReturnStatus::Success is returned if the value for the given
      *         option was retrieved successfully.<br>
-     *         vpr::Status;:Failure is returned otherwise.
+     *         vpr::ReturnStatus;:Failure is returned otherwise.
      */
-    vpr::Status getOption(const vpr::SocketOptions::Types option,
+    vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
                           struct vpr::SocketOptions::Data& data);
 
     /**
@@ -454,7 +454,7 @@ public:
      * @param data   A data buffer containing the value to be used in setting
      *               the socket option.
      */
-    vpr::Status setOption(const vpr::SocketOptions::Types option,
+    vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
                           const struct vpr::SocketOptions::Data& data);
 
 protected:

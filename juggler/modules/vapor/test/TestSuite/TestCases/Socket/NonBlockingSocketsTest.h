@@ -20,7 +20,7 @@
 
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/Selector.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 #include <vpr/System.h>
 
@@ -105,7 +105,7 @@ public:
       int port = 6275;
       //bool result = false;
       vpr::InetAddr local_addr;
-      vpr::Status status;
+      vpr::ReturnStatus status;
       local_addr.setPort( port );
       vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
       vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, local_addr );
@@ -185,7 +185,7 @@ public:
    }
 
    void testNonBlockingTransfer_acceptor (void* arg) {
-      vpr::Status status;
+      vpr::ReturnStatus status;
       vpr::Uint32 bytes_written;
       vpr::SocketAcceptor acceptor;
       vpr::SocketStream client_sock;
@@ -209,7 +209,7 @@ public:
 
       do {
          status = acceptor.accept(client_sock);
-      } while ( status == vpr::Status::WouldBlock );
+      } while ( status == vpr::ReturnStatus::WouldBlock );
 
       assertTestThread(status.success() && "Accept failed");
 
@@ -235,7 +235,7 @@ public:
    }
 
    void testNonBlockingTransfer_connector (void* arg) {
-      vpr::Status status;
+      vpr::ReturnStatus status;
       vpr::InetAddr remote_addr;
       vpr::SocketConnector connector;
       vpr::SocketStream con_sock;
@@ -305,7 +305,7 @@ public:
       int port = 6275;
       //bool result = false;
       vpr::InetAddr local_addr;
-      vpr::Status status;
+      vpr::ReturnStatus status;
       local_addr.setPort( port );
       vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
       vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, local_addr );

@@ -55,12 +55,12 @@ const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults t
 // form <address>:<port> where <address> can be a hostname or a dotted-decimal
 // IP address.
 // ----------------------------------------------------------------------------
-Status
+ReturnStatus
 InetAddrNSPR::setAddress (const std::string& address) {
    std::string::size_type pos;
    std::string host_addr, host_port;
    Uint16 port;
-   Status retval;
+   ReturnStatus retval;
 
    // Extract the address and the port number from the given string.
    pos       = address.find(":");
@@ -135,9 +135,9 @@ InetAddrNSPR::getAddressString (void) const {
 // ----------------------------------------------------------------------------
 // Look up the address in m_name and store the address in m_remote_addr.
 // ----------------------------------------------------------------------------
-Status
+ReturnStatus
 InetAddrNSPR::lookupAddress (const std::string& address) {
-   Status retval;
+   ReturnStatus retval;
    PRStatus ret_status;
    PRHostEnt host_entry;
    char buffer[PR_NETDB_BUF_SIZE];
@@ -152,11 +152,11 @@ InetAddrNSPR::lookupAddress (const std::string& address) {
       error_msg += address;
 
       NSPR_PrintError(error_msg);
-      retval.setCode(Status::Failure);
+      retval.setCode(ReturnStatus::Failure);
    }
    else {
       if ( PR_EnumerateHostEnt(0, &host_entry, 0, &mAddr) == -1 ) {
-         retval.setCode(Status::Failure);
+         retval.setCode(ReturnStatus::Failure);
       }
 
       if ( retval.failure() ) {

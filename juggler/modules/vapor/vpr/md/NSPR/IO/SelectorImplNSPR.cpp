@@ -133,9 +133,9 @@ vpr::Uint16 SelectorImplNSPR::getOut(IOSys::Handle handle)
 //: Select
 //! ARGS: numWithEvents - Upon completion, this holds the number of items that have events
 //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
-Status SelectorImplNSPR::select(vpr::Uint16& numWithEvents,  const vpr::Interval timeout)
+ReturnStatus SelectorImplNSPR::select(vpr::Uint16& numWithEvents,  const vpr::Interval timeout)
 {
-   vpr::Status ret_val;
+   vpr::ReturnStatus ret_val;
 
    PRInt32 result;
 
@@ -146,12 +146,12 @@ Status SelectorImplNSPR::select(vpr::Uint16& numWithEvents,  const vpr::Interval
    {
       NSPR_PrintError("SelectorImplNSPR::select: Error selecting. ");
       numWithEvents = 0;
-      ret_val.setCode(Status::Failure);
+      ret_val.setCode(ReturnStatus::Failure);
    }
    else if(0 == result)    // Timeout
    {
       numWithEvents = 0;
-      ret_val.setCode(Status::Timeout);
+      ret_val.setCode(ReturnStatus::Timeout);
    }
    //else                    // Got some
 

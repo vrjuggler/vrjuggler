@@ -59,7 +59,7 @@
 #include <prnetdb.h>
 #include <prenv.h>
 
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 #include <vpr/SystemBase.h>
 
 #ifndef HAVE_GETTIMEOFDAY
@@ -79,7 +79,7 @@ struct timezone {
 
 namespace vpr {
 
-class VPR_CLASS_API SystemNSPR 
+class VPR_CLASS_API SystemNSPR
      : public SystemBase
 {
 public:
@@ -102,10 +102,10 @@ public:
     static vpr::Uint32 Htonl(vpr::Uint32 conversion)
     { return PR_htonl(conversion); }
 
-    inline static Status
+    inline static ReturnStatus
     getenv (const std::string& name, std::string& result) {
         char* val;
-        Status status;
+        ReturnStatus status;
 
         val = PR_GetEnv(name.c_str());
 
@@ -113,7 +113,7 @@ public:
             result = val;
         }
         else {
-            status.setCode(Status::Failure);
+            status.setCode(ReturnStatus::Failure);
         }
 
         return status;

@@ -71,12 +71,12 @@ const InetAddrBSD InetAddrBSD::AnyAddr;      // Default constructor defaults to 
 // form <address>:<port> where <address> can be a hostname or a
 // dotted-decimal IP address.
 // ----------------------------------------------------------------------------
-Status
+ReturnStatus
 InetAddrBSD::setAddress (const std::string& address) {
     std::string::size_type pos;
     std::string host_addr, host_port;
     Uint16 port;
-    Status retval;
+    ReturnStatus retval;
 
     // Extract the address and the port number from the given string.
     pos       = address.find(":");
@@ -194,9 +194,9 @@ InetAddrBSD::getAddressString (void) const {
 // ----------------------------------------------------------------------------
 // Look up the given address and store the address in m_addr.
 // ----------------------------------------------------------------------------
-Status
+ReturnStatus
 InetAddrBSD::lookupAddress (const std::string& address) {
-    Status retval;
+    ReturnStatus retval;
     struct hostent* host_entry;
 
     // First, try looking the host up by name.
@@ -219,7 +219,7 @@ InetAddrBSD::lookupAddress (const std::string& address) {
             fprintf(stderr,
                     "[vpr::InetAddrBSD] Could not find address for '%s': %s\n",
                     address.c_str(), strerror(errno));
-            retval.setCode(Status::Failure);
+            retval.setCode(ReturnStatus::Failure);
         }
         // Otherwise, we found the integer address successfully.
         else {

@@ -46,7 +46,7 @@ public:
 
    virtual void tearDown()
    {;}
-   
+
    // Test the acceptor wrapper construction
    // Things to test
    //  -- Opening acceptor
@@ -135,7 +135,7 @@ public:
        local_acceptor_addr.setAddress("localhost", mRendevousPort);
        vpr::SocketAcceptor acceptor;
        vpr::SocketStream* sock(NULL);
-       vpr::Status ret_val;
+       vpr::ReturnStatus ret_val;
        vpr::Uint32 bytes_written;
 
        // Open the acceptor
@@ -179,7 +179,7 @@ public:
    }
    void testSpawnedAcceptor_connector(void* arg)
    {
-      vpr::Status ret_val;
+      vpr::ReturnStatus ret_val;
       vpr::Uint32 bytes_read;
       vpr::InetAddr remote_addr;
       remote_addr.setAddress("localhost", mRendevousPort);

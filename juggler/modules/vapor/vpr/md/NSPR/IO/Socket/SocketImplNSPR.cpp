@@ -60,13 +60,13 @@ namespace vpr {
 // Open the socket.  This creates a new socket using the domain and type
 // options set through member variables.
 // ----------------------------------------------------------------------------
-vpr::Status
+vpr::ReturnStatus
 SocketImplNSPR::open () {
-   vpr::Status retval;
+   vpr::ReturnStatus retval;
    PRFileDesc* new_sock = NULL;
 
    if(NULL != m_handle) {
-      retval.setCode(vpr::Status::Failure);
+      retval.setCode(vpr::ReturnStatus::Failure);
    }
    else {
       // NSPR has not concept of domain in socket creation
@@ -89,7 +89,7 @@ SocketImplNSPR::open () {
       // If socket(2) failed, print an error message and return error status.
       if ( new_sock == NULL ) {
          NSPR_PrintError("[vpr::SocketImplNSPR] Could not create socket");
-         retval.setCode(vpr::Status::Failure);
+         retval.setCode(vpr::ReturnStatus::Failure);
       }
       // Otherwise, return success.
       else {
@@ -108,9 +108,9 @@ SocketImplNSPR::open () {
 // ----------------------------------------------------------------------------
 // Close the socket.
 // ----------------------------------------------------------------------------
-vpr::Status
+vpr::ReturnStatus
 SocketImplNSPR::close () {
-    vpr::Status retval;
+    vpr::ReturnStatus retval;
     PRStatus status;
 
     status = PR_Close(m_handle);
@@ -118,10 +118,10 @@ SocketImplNSPR::close () {
     if (status == PR_SUCCESS) {
        m_open = false;
        m_bound = false;
-       retval.setCode(vpr::Status::Success);
+       retval.setCode(vpr::ReturnStatus::Success);
     }
     else {
-       retval.setCode(vpr::Status::Failure);
+       retval.setCode(vpr::ReturnStatus::Failure);
     }
 
     return retval;
@@ -130,9 +130,9 @@ SocketImplNSPR::close () {
 // ----------------------------------------------------------------------------
 // Bind this socket to the address in the host address member variable.
 // ----------------------------------------------------------------------------
-vpr::Status
+vpr::ReturnStatus
 SocketImplNSPR::bind () {
-    vpr::Status retval;
+    vpr::ReturnStatus retval;
     PRStatus status;
 
     // Bind the socket to the address in m_local_addr.
@@ -141,7 +141,7 @@ SocketImplNSPR::bind () {
     // If that fails, print an error and return error status.
     if ( status == PR_FAILURE )
     {
-       retval.setCode(vpr::Status::Failure);
+       retval.setCode(vpr::ReturnStatus::Failure);
        NSPR_PrintError("SocketImplNSPR::bind: Failed to bind.");
     }
     // Otherwise, return success.
@@ -154,12 +154,12 @@ SocketImplNSPR::bind () {
 
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
-vpr::Status
+vpr::ReturnStatus
 SocketImplNSPR::enableBlocking () {
    vprASSERT( m_open && "precondition says you must open() the socket first" );
    vprASSERT(! m_blocking_fixed && "Can't enable blocking after blocking call");
 
-   vpr::Status retval;
+   vpr::ReturnStatus retval;
 
    PRStatus status;
    PRSocketOptionData option_data;
@@ -172,7 +172,7 @@ SocketImplNSPR::enableBlocking () {
    if ( status == PR_FAILURE )
    {
       NSPR_PrintError("SocketImplNSPR::enableBlocking: Failed to set.");
-      retval.setCode(vpr::Status::Failure);
+      retval.setCode(vpr::ReturnStatus::Failure);
    }
    else
    {
@@ -184,9 +184,9 @@ SocketImplNSPR::enableBlocking () {
 
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
-vpr::Status
+vpr::ReturnStatus
 SocketImplNSPR::enableNonBlocking () {
-   vpr::Status retval;
+   vpr::ReturnStatus retval;
 
    vprASSERT( m_open && "precondition says you must open() the socket first" );
    vprASSERT(! m_blocking_fixed && "Can't diable blocking after blocking call");
@@ -202,7 +202,7 @@ SocketImplNSPR::enableNonBlocking () {
    if ( status == PR_FAILURE )
    {
       NSPR_PrintError("SocketImplNSPR::enableNonBlocking: Failed to set.");
-      retval.setCode(vpr::Status::Failure);
+      retval.setCode(vpr::ReturnStatus::Failure);
    }
    else
    {
@@ -218,16 +218,16 @@ SocketImplNSPR::enableNonBlocking () {
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
-vpr::Status
+vpr::ReturnStatus
 SocketImplNSPR::connect (vpr::Interval timeout) {
-   vpr::Status retval;
+   vpr::ReturnStatus retval;
    PRStatus status;
 
    if(m_bound)
    {
       vprDEBUG(0,0) << "SocketImplNSPR::connect: Socket alreay bound.  Can't connect"
                     << vprDEBUG_FLUSH;
-      retval.setCode(vpr::Status::Failure);
+      retval.setCode(vpr::ReturnStatus::Failure);
    }
    else {
       // Attempt to connect to the address in m_addr.
@@ -243,7 +243,7 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
          // This is a non-blocking connection.
          if ( err == PR_WOULD_BLOCK_ERROR || err == PR_IN_PROGRESS_ERROR  ) {
             if ( vpr::Interval::NoWait == timeout ) {
-               retval.setCode( vpr::Status::InProgress );
+               retval.setCode( vpr::ReturnStatus::InProgress );
             }
             // Use the timeout to wait for the connection to complete.
             else {
@@ -258,16 +258,16 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
                // Since we are a non-blocking socket, we tell the caller that
                // the connection is still in progress.
                if ( ! poll_desc.out_flags & PR_POLL_WRITE ) {
-                  retval.setCode(vpr::Status::InProgress);
+                  retval.setCode(vpr::ReturnStatus::InProgress);
                }
             }
          }
          else if ( err == PR_IO_TIMEOUT_ERROR ) {
-            retval.setCode(vpr::Status::Timeout);
+            retval.setCode(vpr::ReturnStatus::Timeout);
          }
          else {
             NSPR_PrintError("SocketImplNSPR::connect: Failed to connect.");
-            retval.setCode(vpr::Status::Failure);
+            retval.setCode(vpr::ReturnStatus::Failure);
          }
       }
       // Otherwise, return success.
@@ -283,12 +283,12 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
 
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
-vpr::Status
+vpr::ReturnStatus
 SocketImplNSPR::read_i (void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytes_read,
                         const vpr::Interval timeout)
 {
-   vpr::Status retval;
+   vpr::ReturnStatus retval;
    PRInt32 bytes;
 
    m_blocking_fixed = true;
@@ -302,13 +302,13 @@ SocketImplNSPR::read_i (void* buffer, const vpr::Uint32 length,
       bytes_read = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-         retval.setCode(vpr::Status::WouldBlock);
+         retval.setCode(vpr::ReturnStatus::WouldBlock);
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
-         retval.setCode(vpr::Status::Timeout);
+         retval.setCode(vpr::ReturnStatus::Timeout);
       }
       else {
-         retval.setCode(vpr::Status::Failure);
+         retval.setCode(vpr::ReturnStatus::Failure);
       }
    }
    else {
@@ -320,12 +320,12 @@ SocketImplNSPR::read_i (void* buffer, const vpr::Uint32 length,
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-vpr::Status
+vpr::ReturnStatus
 SocketImplNSPR::readn_i (void* buffer, const vpr::Uint32 length,
                          vpr::Uint32& bytes_read,
                          const vpr::Interval timeout)
 {
-   vpr::Status retval;
+   vpr::ReturnStatus retval;
    PRInt32 bytes;
 
    m_blocking_fixed = true;
@@ -339,13 +339,13 @@ SocketImplNSPR::readn_i (void* buffer, const vpr::Uint32 length,
       bytes_read = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-         retval.setCode(vpr::Status::WouldBlock);
+         retval.setCode(vpr::ReturnStatus::WouldBlock);
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
-         retval.setCode(vpr::Status::Timeout);
+         retval.setCode(vpr::ReturnStatus::Timeout);
       }
       else {
-         retval.setCode(vpr::Status::Failure);
+         retval.setCode(vpr::ReturnStatus::Failure);
       }
    }
    else {
@@ -357,12 +357,12 @@ SocketImplNSPR::readn_i (void* buffer, const vpr::Uint32 length,
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-vpr::Status
+vpr::ReturnStatus
 SocketImplNSPR::write_i (const void* buffer, const vpr::Uint32 length,
                          vpr::Uint32& bytes_written,
                          const vpr::Interval timeout)
 {
-   vpr::Status retval;
+   vpr::ReturnStatus retval;
    PRInt32 bytes;
 
    m_blocking_fixed = true;
@@ -375,13 +375,13 @@ SocketImplNSPR::write_i (const void* buffer, const vpr::Uint32 length,
       bytes_written = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-         retval.setCode(vpr::Status::WouldBlock);
+         retval.setCode(vpr::ReturnStatus::WouldBlock);
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
-         retval.setCode(vpr::Status::Timeout);
+         retval.setCode(vpr::ReturnStatus::Timeout);
       }
       else {
-         retval.setCode(vpr::Status::Failure);
+         retval.setCode(vpr::ReturnStatus::Failure);
       }
    }
    else {
@@ -394,11 +394,11 @@ SocketImplNSPR::write_i (const void* buffer, const vpr::Uint32 length,
 /**
  *
  */
-vpr::Status
+vpr::ReturnStatus
 SocketImplNSPR::getOption (const vpr::SocketOptions::Types option,
                            struct vpr::SocketOptions::Data& data)
 {
-    vpr::Status retval;
+    vpr::ReturnStatus retval;
     PRSocketOptionData opt_data;
     bool get_opt;
 
@@ -520,12 +520,12 @@ SocketImplNSPR::getOption (const vpr::SocketOptions::Types option,
             }
         }
         else {
-            retval.setCode(vpr::Status::Failure);
+            retval.setCode(vpr::ReturnStatus::Failure);
             NSPR_PrintError("[vpr::SocketImplNSPR] ERROR: Could not get socket option for socket");
         }
     }
     else {
-        retval.setCode(vpr::Status::Failure);
+        retval.setCode(vpr::ReturnStatus::Failure);
     }
 
     return retval;
@@ -534,7 +534,7 @@ SocketImplNSPR::getOption (const vpr::SocketOptions::Types option,
 /**
  *
  */
-vpr::Status
+vpr::ReturnStatus
 SocketImplNSPR::setOption (const vpr::SocketOptions::Types option,
                            const struct vpr::SocketOptions::Data& data)
 {
@@ -625,14 +625,14 @@ SocketImplNSPR::setOption (const vpr::SocketOptions::Types option,
 
     vprASSERT((m_handle != NULL) && "Trying to set option on NULL handle");
     if(m_handle == NULL) {
-        return vpr::Status(vpr::Status::Failure);
+        return vpr::ReturnStatus(vpr::ReturnStatus::Failure);
     }
     else {
         if ( PR_SetSocketOption(m_handle, &opt_data) == PR_SUCCESS ) {
-            return vpr::Status();
+            return vpr::ReturnStatus();
         }
         else {
-            return vpr::Status(vpr::Status::Failure);
+            return vpr::ReturnStatus(vpr::ReturnStatus::Failure);
         }
     }
 }

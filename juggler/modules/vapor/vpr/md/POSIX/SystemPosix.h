@@ -66,7 +66,7 @@
 #include <netinet/in.h>
 #include <sys/param.h>
 
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 #include <vpr/SystemBase.h>
 
 namespace vpr {
@@ -99,10 +99,10 @@ public:
         return htonl(conversion);
     }
 
-    inline static Status
+    inline static ReturnStatus
     getenv (const std::string& name, std::string& result) {
         char* val;
-        Status status;
+        ReturnStatus status;
 
         val = ::getenv(name.c_str());
 
@@ -110,7 +110,7 @@ public:
             result = val;
         }
         else {
-            status.setCode(Status::Failure);
+            status.setCode(ReturnStatus::Failure);
         }
 
         return status;

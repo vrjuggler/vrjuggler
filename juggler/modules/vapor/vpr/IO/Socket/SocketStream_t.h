@@ -45,7 +45,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 #include <vpr/IO/Socket/SocketStreamOpt.h>
 #include <vpr/IO/Socket/Socket_t.h> /* base bridge class.. */
 
@@ -128,11 +128,11 @@ public:
      *
      * @param backlog The maximum length of th queue of pending connections.
      *
-     * @return vpr::Status::Success is returned if this socket is now in a
+     * @return vpr::ReturnStatus::Success is returned if this socket is now in a
      *         listening state.<br>
-     *         vpr::Status::Failure is returned otherwise.
+     *         vpr::ReturnStatus::Failure is returned otherwise.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     listen (const int backlog = 5) {
         return m_socket_stream_imp.listen(backlog);
     }
@@ -150,17 +150,17 @@ public:
      * @param timeout The length of time to wait for the accept call to
      *                return.
      *
-     * @return vpr::Status::Success is returned if the incoming request has
+     * @return vpr::ReturnStatus::Success is returned if the incoming request has
      *         been handled, and the given SocketStream object is a valid,
      *         connected socket.<br>
-     *         vpr::Status::WouldBlock is returned if this is a non-blocking
+     *         vpr::ReturnStatus::WouldBlock is returned if this is a non-blocking
      *         socket, and there are no waiting connection requests.<br>
-     *         vpr::Status::Timeout is returned when no connections requests
+     *         vpr::ReturnStatus::Timeout is returned when no connections requests
      *         arrived within the given timeout period.<br>
-     *         vpr::Status::Failure is returned if the accept failed.  The
+     *         vpr::ReturnStatus::Failure is returned if the accept failed.  The
      *         given vpr::SocketStream object is not modified in this case.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     accept (SocketStream_t& sock,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -181,15 +181,15 @@ public:
      *                   This argument is optional and defaults to true.
      * @param backlog    The maximum length of the pending connection queue.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the server
+     * @return <code>vpr::ReturnStatus::Success</code> is returned if the server
      *         socket is in the listening state and ready to accept incoming
      *         connection requests.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the server
+     *         <code>vpr::ReturnStatus::Failure</code> is returned if the server
      *         socket could not be set up.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     openServer (const bool reuse_addr = true, const int backlog = 5) {
-        vpr::Status status;
+        vpr::ReturnStatus status;
 
         // First, open the socket.
         status = open();
@@ -227,14 +227,14 @@ protected:
         m_socket_imp = &m_socket_stream_imp;
     }
 
-    virtual vpr::Status
+    virtual vpr::ReturnStatus
     getOption (const vpr::SocketOptions::Types option,
                struct vpr::SocketOptions::Data& data)
     {
         return m_socket_stream_imp.getOption(option, data);
     }
 
-    virtual vpr::Status
+    virtual vpr::ReturnStatus
     setOption (const vpr::SocketOptions::Types option,
                const struct vpr::SocketOptions::Data& data)
     {
