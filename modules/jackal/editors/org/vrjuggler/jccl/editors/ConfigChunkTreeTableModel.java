@@ -72,6 +72,15 @@ public class ConfigChunkTreeTableModel
       this.chunk = chunk;
       setRoot(new DefaultMutableTreeNode(this.chunk));
 
+      // First node is name
+      DefaultMutableTreeNode name_node = new DefaultMutableTreeNode(chunk.getName());
+      insertNodeInto(name_node, (MutableTreeNode)getRoot(), 0);
+
+      // Second node is type
+      DefaultMutableTreeNode type_node = new DefaultMutableTreeNode(
+                                                chunk.getDesc().getName());
+      insertNodeInto(type_node, (MutableTreeNode)getRoot(), 1);
+
       for (Iterator itr = this.chunk.getDesc().getPropertyDescs().iterator(); itr.hasNext(); )
       {
          PropertyDesc prop_desc = (PropertyDesc)itr.next();
@@ -124,7 +133,8 @@ public class ConfigChunkTreeTableModel
             {
 //               System.out.println("Adding property value: "+propDesc.getToken()+"["+i+"]");
                DefaultMutableTreeNode child = new DefaultMutableTreeNode(value);
-               insertNodeInto(child, parent, i);
+               int prop_idx = parent.getChildCount();
+               insertNodeInto(child, parent, prop_idx);
             }
             else
             {
@@ -242,7 +252,16 @@ public class ConfigChunkTreeTableModel
       // Value
       case 1:
          DefaultMutableTreeNode parent_node = (DefaultMutableTreeNode)tree_node.getParent();
-         if (node_value instanceof PropertyDesc)
+
+         // First child of root is always the chunk name
+         if (parent_node == getRoot() && parent_node.getIndex((TreeNode)node) == 0)
+         {
+            ConfigChunk chunk = (ConfigChunk)parent_node.getUserObject();
+            chunk.setName((String)value);
+            tree_node.setUserObject(value);
+         }
+
+         else if (node_value instanceof PropertyDesc)
          {
             // Hey, we're editing a property desc. If it's not of an embedded
             // chunk type, we're probably editing a summary list of the values
@@ -314,6 +333,13 @@ public class ConfigChunkTreeTableModel
             {
                ConfigChunk chunk = (ConfigChunk)parent_node.getUserObject();
                int desc_idx = parent_node.getIndex(tree_node);
+
+               // If the parent is the root, take into account the extra name
+               // and type nodes
+               if (parent_node == getRoot())
+               {
+                  desc_idx -= 2;
+               }
                PropertyDesc prop_desc = chunk.getDesc().getPropertyDesc(desc_idx);
                setProperty(value, chunk, prop_desc.getToken(), 0);
                tree_node.setUserObject(value);

@@ -65,6 +65,7 @@ public class ConfigChunkPropertySheet
       setIntercellSpacing(new Dimension(1,1));
       setBackground(UIManager.getColor("Menu"));
       setRowHeight(getRowHeight()+4);
+      getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
       // Setup the tree
       getTree().setCellRenderer(new ChunkTreeCellRenderer());
@@ -105,7 +106,12 @@ public class ConfigChunkPropertySheet
          DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
          Object value = node.getUserObject();
 
-         if (value instanceof PropertyDesc)
+         // First row is the chunk name, second is chunk type
+         if (row == 0 || row == 1)
+         {
+            return new DefaultTableCellRenderer();
+         }
+         else if (value instanceof PropertyDesc)
          {
             if (getTree().isExpanded(path))
             {
@@ -164,6 +170,12 @@ public class ConfigChunkPropertySheet
       if (col == 0)
       {
          return super.isCellEditable(row, col);
+      }
+
+      // The second row is always the chunk type ... and is not editable
+      if (row == 1)
+      {
+         return false;
       }
 
       // Get the value stored in the node for the row in question
@@ -348,6 +360,7 @@ public class ConfigChunkPropertySheet
          // Get the default settings from the UI LAF
          super.getTreeCellRendererComponent(tree, node, selected,
                                             expanded, leaf, row, focused);
+         setFont(tree.getFont());
 
          setBackgroundNonSelectionColor(tree.getBackground());
 
@@ -355,6 +368,26 @@ public class ConfigChunkPropertySheet
          DefaultMutableTreeNode tree_node = (DefaultMutableTreeNode)node;
          DefaultMutableTreeNode parent_node = (DefaultMutableTreeNode)tree_node.getParent();
          Object value = ((DefaultMutableTreeNode)node).getUserObject();
+
+         // Check if this is the first or second child of the root (special cases)
+         if (parent_node == tree.getModel().getRoot())
+         {
+            int idx = parent_node.getIndex(tree_node);
+            if (idx == 0)
+            {
+               setFont(tree.getFont().deriveFont(Font.BOLD));
+               setText("Name");
+               setIcon(null);
+               return this;
+            }
+            else if (idx == 1)
+            {
+               setFont(tree.getFont().deriveFont(Font.BOLD));
+               setText("Type");
+               setIcon(null);
+               return this;
+            }
+         }
 
          // Display the name of ConfigChunks
          if (value instanceof ConfigChunk)
@@ -391,6 +424,14 @@ public class ConfigChunkPropertySheet
             {
                Object parent = parent_node.getUserObject();
                int idx = parent_node.getIndex(tree_node);
+
+               // If the parent node is the root node, we need to account for
+               // there being the two extra nodes at the beginning of this tree
+               if (parent_node == tree.getModel().getRoot())
+               {
+                  idx -= 2;
+               }
+
                if (parent instanceof ConfigChunk)
                {
                   String name = ((ConfigChunk)parent).getDesc().getPropertyDesc(idx).getName();
