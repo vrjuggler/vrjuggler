@@ -335,10 +335,11 @@ public class DisplayWindowStartDialog
          }
       });
 */
-      mPositionXLabel.setText("\u00D7");
+      mPositionXLabel.setText(",");
       mPositionYField.setMinimumSize(new Dimension(40, 21));
       mPositionYField.setPreferredSize(new Dimension(40, 21));
       mPositionYField.setValue(new Integer(0));
+      mPositionYField.setHorizontalAlignment(SwingConstants.TRAILING);
 /*
       mPositionYField.addFocusListener(new FocusAdapter() {
          public void focusLost(FocusEvent e)
