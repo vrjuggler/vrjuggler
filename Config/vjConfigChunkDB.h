@@ -25,6 +25,9 @@ private:
     //: vector of ConfigChunks
     std::vector<vjConfigChunk*> chunks;
 
+    //: utility for load() - replaces $HOME and $VJ_BASE_DIR
+    std::string demangleFileName (const std::string& n);
+
 public:
 
     //: Constructor
