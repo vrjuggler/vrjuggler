@@ -1,9 +1,0 @@
-
-sub filter {
-  
-  local($str)=@_;
-  local ($day,$month,$date)=split(" ",$str);
-  return "$month $date";
-    
-}
-  
