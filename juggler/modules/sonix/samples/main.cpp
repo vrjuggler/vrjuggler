@@ -25,9 +25,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * Juggler Juggler
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -38,19 +38,19 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 
 #include <iostream>
 
 #include <unistd.h>
-#include "aj/AudioJuggler.h"    // interface
-#include "aj/FileIO.h"
+#include "snx/sonix.h"    // interface
+#include "snx/FileIO.h"
 
 void usage( int argc, char* argv[] )
 {
    std::cout<<"Usage: "<<argv[0]<<" apiname filename\n"<<std::flush;
    std::cout<<"       "<<argv[0]<<" OpenAL sample.wav\n"<<std::flush;
-   std::cout<<"       "<<argv[0]<<" AudioWorks sample.aifc\n"<<std::flush;
+   std::cout<<"       "<<argv[0]<<" JugglerWorks sample.aifc\n"<<std::flush;
 }
 
 int main( int argc, char* argv[] )
@@ -78,50 +78,50 @@ int main( int argc, char* argv[] )
       return 0;
    }
 
-   if (!ajFileIO::fileExists( filename.c_str() ))
+   if (!snxFileIO::fileExists( filename.c_str() ))
    {
       std::cout << "File not found: " << filename << "\n" << std::flush;
       return 0;
    }
    
-   aj::SoundInfo si;
+   snx::SoundInfo si;
    si.filename = filename;
-   si.datasource = aj::SoundInfo::FILESYSTEM;
+   si.datasource = snx::SoundInfo::FILESYSTEM;
       
    
-   std::cout<<"AudioJuggler: \n" << std::flush;
+   std::cout<<"sonix: \n" << std::flush;
   
-   //aj.startAPI();
+   //snx.startAPI();
    std::cout<<"associate: \n" << std::flush;
-   AudioJuggler::instance().configure( "kevin", si );
+   sonix::instance().configure( "kevin", si );
    
    std::cout<<"trigger: \n" << std::flush;
-   AudioJuggler::instance().trigger( "kevin" );
+   sonix::instance().trigger( "kevin" );
    
    std::cout<<"sleep: \n" << std::flush;
    sleep( 1 );
    
-   AudioJuggler::instance().changeAPI( api );
+   sonix::instance().changeAPI( api );
    
    std::cout<<"trigger: \n" << std::flush;
-   AudioJuggler::instance().trigger( "kevin" );
+   sonix::instance().trigger( "kevin" );
    
    std::cout<<"sleep: \n" << std::flush;
    sleep( 3 );
    
-   AudioJuggler::instance().changeAPI( "stub" );
+   sonix::instance().changeAPI( "stub" );
    
    sleep( 1 );
    
-   AudioJuggler::instance().changeAPI( api );
+   sonix::instance().changeAPI( api );
    
    std::cout<<"trigger: \n" << std::flush;
-   AudioJuggler::instance().trigger( "kevin" );
+   sonix::instance().trigger( "kevin" );
    
    std::cout<<"sleep: \n" << std::flush;
    sleep( 3 );
    
-   AudioJuggler::instance().changeAPI( "stub" );
+   sonix::instance().changeAPI( "stub" );
    
    return 1;
 }
@@ -129,11 +129,11 @@ int main( int argc, char* argv[] )
 
 /*
 
-#include "ajSoundFactory.h"
-#include "ajSoundImplementation.h"
-#include "ajAudioWorksSoundImplementation.h"  
-#include "ajSoundInfo.h"
-#include "ajOpenALSoundImplementation.h"      
-#include "ajStubSoundImplementation.h"
+#include "snxSoundFactory.h"
+#include "snxSoundImplementation.h"
+#include "snxJugglerWorksSoundImplementation.h"  
+#include "snxSoundInfo.h"
+#include "snxOpenALSoundImplementation.h"      
+#include "snxStubSoundImplementation.h"
 
 */

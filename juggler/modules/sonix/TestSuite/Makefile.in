@@ -1,6 +1,6 @@
-# ***************** <AJ heading BEGIN do not edit this line> *****************
+# ***************** <SNX heading BEGIN do not edit this line> *****************
 #
-# Audio Juggler
+# sonix
 #
 # Original Authors:
 #   Kevin Meinert, Carolina Cruz-Neira
@@ -11,7 +11,7 @@
 # Version:       $Revision$
 # -----------------------------------------------------------------
 #
-# ****************** <AJ heading END do not edit this line> ******************
+# ****************** <SNX heading END do not edit this line> ******************
 
 
 
@@ -56,7 +56,6 @@ default: echo_info $(PROJECT_NAME)
 srcdir		= @srcdir@
 topdir		= @topdir@
 #top_srcdir	= @top_srcdir@
-AJ_BASE_DIR	?= @APP_BASE_DIR@
 CPP_UNIT	= $(srcdir)/../../../external
 
 CXX		= @CXX@
@@ -77,7 +76,7 @@ OPTIMIZER	= @DBG_FLAGS@ -D_DEBUG
 LD		= @LD@
 LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF)
 LIBBITSUF	= @LIBBITSUF@
-LIBS		= @LIBS@ -L$(AJ_BASE_DIR)/lib$(LIBBITSUF) -lAudioJuggler
+LIBS		= @LIBS@ -L$(SNX_BASE_DIR)/lib$(LIBBITSUF) -lsonix
 MAKEDEPEND	= @MAKEDEPEND@
 OBJEXT		= @OBJEXT@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
@@ -136,7 +135,7 @@ $(PROJECT_NAME): $(OBJS)
 echo_info:
 	@echo ""
 	@echo "Building $(PROJECT_NAME)"
-	@echo "Using AJ_BASE_DIR: $(AJ_BASE_DIR)"
+	@echo "Using SNX_BASE_DIR: $(SNX_BASE_DIR)"
 	@echo ""
 
 # Remove the compiled stuff from the system

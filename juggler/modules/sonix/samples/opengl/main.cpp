@@ -25,9 +25,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * Juggler Juggler
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -38,7 +38,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 
 // Kevin Meinert
 // simple glut skeleton application: look for the !!!TODO!!!s, 
@@ -53,7 +53,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
-#include "aj/AudioJuggler.h"    // interface
+#include "snx/sonix.h"    // interface
 
 #include <iostream.h>
 #include <stdlib.h>
@@ -129,7 +129,7 @@ static void OnIdle()
    glutPostRedisplay();
    
    usleep( 10000 );
-   AudioJuggler::instance().step( 0.1 );
+   sonix::instance().step( 0.1 );
 }
 
 /////////////////////////////////////////////
@@ -165,72 +165,72 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
 		break;
    case '1':
 {
-   AudioJuggler::instance().changeAPI( "Stub" );
-   aj::SoundInfo si;
+   sonix::instance().changeAPI( "Stub" );
+   snx::SoundInfo si;
    si.filename = "../../../data/sample.wav";
-   si.datasource = aj::SoundInfo::FILESYSTEM;
-AudioJuggler::instance().configure( "kevin", si );
+   si.datasource = snx::SoundInfo::FILESYSTEM;
+sonix::instance().configure( "kevin", si );
 
-AudioJuggler::instance().changeAPI( "OpenAL" );
+sonix::instance().changeAPI( "OpenAL" );
 }
 break;
    case '2':
 {
-   AudioJuggler::instance().changeAPI( "Stub" );
-   aj::SoundInfo si;
+   sonix::instance().changeAPI( "Stub" );
+   snx::SoundInfo si;
    si.filename = "../../../data/suck1.aiff";
-   si.datasource = aj::SoundInfo::FILESYSTEM;
-   AudioJuggler::instance().configure( "kevin", si );
+   si.datasource = snx::SoundInfo::FILESYSTEM;
+   sonix::instance().configure( "kevin", si );
 
-AudioJuggler::instance().changeAPI( "AudioWorks" );
+sonix::instance().changeAPI( "JugglerWorks" );
 }
 break;
    case '3':
 {
-AudioJuggler::instance().changeAPI( "Stub" );
+sonix::instance().changeAPI( "Stub" );
 }
 break;
    case 'a':
 {
-aj::SoundInfo si;
+snx::SoundInfo si;
    si.filename = "../../../data/sample.wav";
-   si.datasource = aj::SoundInfo::FILESYSTEM;
-AudioJuggler::instance().configure( "kevin", si );
+   si.datasource = snx::SoundInfo::FILESYSTEM;
+sonix::instance().configure( "kevin", si );
 }
 break;
    case 'b':
 {
-aj::SoundInfo si;
+snx::SoundInfo si;
    si.filename = "../../../data/sample-drumsolo-2bars.wav";
-   si.datasource = aj::SoundInfo::FILESYSTEM;
-AudioJuggler::instance().configure( "kevin", si );
+   si.datasource = snx::SoundInfo::FILESYSTEM;
+sonix::instance().configure( "kevin", si );
 }
 break;
       case 't':
 {
-AudioJuggler::instance().trigger( "kevin" );
+sonix::instance().trigger( "kevin" );
 }
 break;
 case 'p':
 {
-AudioJuggler::instance().pause( "kevin" );
+sonix::instance().pause( "kevin" );
 }
 break;
 case 's':
 {
-AudioJuggler::instance().stop( "kevin" );
+sonix::instance().stop( "kevin" );
 }
 break;
 
 case ',':
 {
-AudioJuggler::instance().setPosition( "kevin", -60, 0, 0 );
+sonix::instance().setPosition( "kevin", -60, 0, 0 );
 }
 break;
 
 case '.':
 {
-AudioJuggler::instance().setPosition( "kevin", 60, 0, 0 );
+sonix::instance().setPosition( "kevin", 60, 0, 0 );
 }
 break;
 

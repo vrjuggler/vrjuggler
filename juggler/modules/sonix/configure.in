@@ -1,7 +1,7 @@
 
-# ***************** <AJ heading BEGIN do not edit this line> *****************
+# ***************** <SNX heading BEGIN do not edit this line> *****************
 #
-# Audio Juggler
+# sonix
 #
 # Original Authors:
 #   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
 # Version:       $Revision$
 # -----------------------------------------------------------------
 #
-# ****************** <AJ heading END do not edit this line> ******************
+# ****************** <SNX heading END do not edit this line> ******************
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
 # VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -104,8 +104,8 @@ DPP_SYSTEM_SETUP
 CC_ERR=''
 CXX_ERR=''
 
-_aj_save_CFLAGS="$CFLAGS"
-_aj_save_CXXFLAGS="$CXXFLAGS"
+_snx_save_CFLAGS="$CFLAGS"
+_snx_save_CXXFLAGS="$CXXFLAGS"
 
 # If no alternate C compiler was specified, check to see if it is necessary
 # to force the use of a specific compiler on a given platform.
@@ -203,27 +203,27 @@ elif test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
 
-# $srcdir is the root directory of the AJ source tree.  To get a value
+# $srcdir is the root directory of the SNX source tree.  To get a value
 # for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
 # return to the directory where configure is being run ($topdir).
 cd "$srcdir"
-AJROOT_ABS=`pwd`
+SNXROOT_ABS=`pwd`
 
-cd "$AJROOT_ABS/../.."
+cd "$SNXROOT_ABS/../.."
 JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
-# Define the base path to the source directory using $AJROOT_ABS as an
+# Define the base path to the source directory using $SNXROOT_ABS as an
 # alternative to using $srcdir.
-AJ_SRCDIR='$(AJROOT_ABS)'
-UNIX_AJROOT_ABS="$AJROOT_ABS"
+SNX_SRCDIR='$(SNXROOT_ABS)'
+UNIX_SNXROOT_ABS="$SNXROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
-    SAFE_AJROOT_ABS=`unix2dos -p "$AJROOT_ABS"`
+    SAFE_SNXROOT_ABS=`unix2dos -p "$SNXROOT_ABS"`
     SAFE_JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
-    AJ_SRCDIR=`unix2dos "$AJ_SRCDIR"`
+    SNX_SRCDIR=`unix2dos "$SNX_SRCDIR"`
 
     if test "x$DEPEND_EXTRAS" != "x" ; then
         DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
@@ -242,7 +242,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
 else
     SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
-    SAFE_AJROOT_ABS="$AJROOT_ABS"
+    SAFE_SNXROOT_ABS="$SNXROOT_ABS"
 fi
 
 
@@ -295,12 +295,12 @@ fi
 dnl -------------------------------------------------------------
 dnl project specific stuff....
 dnl -------------------------------------------------------------
-application_includes="-I\$(AJ_BASE_DIR)/include $INCLUDES"
+application_includes="-I\$(SNX_BASE_DIR)/include $INCLUDES"
 application_ldflags="$LDFLAGS"
 if test "x$dpp_os_type" = "xWin32" ; then
-   application_libs="/LIBPATH:\$(AJ_BASE_DIR)/lib$LIBBITSUF -lAudioJuggler $LIBS"
+   application_libs="/LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS"
 else
-   application_libs="-L\$(AJ_BASE_DIR)/lib$LIBBITSUF -lAudioJuggler $LIBS -lm"
+   application_libs="-L\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS -lm"
 fi
 
 AC_SUBST(application_includes)
@@ -308,13 +308,13 @@ AC_SUBST(application_ldflags)
 AC_SUBST(application_libs)
 AC_SUBST(AUDIOWORKS_API)
 AC_SUBST(OPENAL_API)
-AC_SUBST(SAFE_AJROOT_ABS)
+AC_SUBST(SAFE_SNXROOT_ABS)
 AC_SUBST(SAFE_JUGGLERROOT_ABS)
 
 dnl debugging output...
-dnl echo "+ setting aj_includes == $aj_includes"
-dnl echo "+ setting aj_ldflags == $aj_ldflags"
-dnl echo "+ setting aj_libs == $aj_libs"
+dnl echo "+ setting snx_includes == $snx_includes"
+dnl echo "+ setting snx_ldflags == $snx_ldflags"
+dnl echo "+ setting snx_libs == $snx_libs"
 dnl -------------------------------------------------------------
 
 DPP_SUBST
@@ -326,13 +326,13 @@ AC_SUBST(EXTRA_LINK_FLAGS)
 
 
 AC_OUTPUT(vj/Makefile 
-          aj/Makefile
+          snx/Makefile
           samples/Makefile
           samples/opengl/Makefile
           TestSuite/Makefile
           Makefile 
           make.defs.mk
-          audiojuggler-config)
+          sonix-config)
 
 cat <<BUILD_INFO
 

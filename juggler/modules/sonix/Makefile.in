@@ -1,7 +1,7 @@
 
-# ***************** <AJ heading BEGIN do not edit this line> *****************
+# ***************** <SNX heading BEGIN do not edit this line> *****************
 #
-# Audio Juggler
+# sonix
 #
 # Original Authors:
 #   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
 # Version:       $Revision$
 # -----------------------------------------------------------------
 #
-# ****************** <AJ heading END do not edit this line> ******************
+# ****************** <SNX heading END do not edit this line> ******************
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
 # VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -47,17 +47,17 @@ include @topdir@/make.defs.mk
 includedir           = @includedir@
 instlinks            = $(topdir)/install-clone
 
-AJ_LIBRARY           = @LIB_PREFIX@AudioJuggler
-AJ_LIB_STATIC        = $(AJ_LIBRARY).$(STATICLIB_EXT)
-AJ_LIB_DYNAMIC       = $(AJ_LIBRARY).$(DYNAMICLIB_EXT)
+SNX_LIBRARY           = @LIB_PREFIX@sonix
+SNX_LIB_STATIC        = $(SNX_LIBRARY).$(STATICLIB_EXT)
+SNX_LIB_DYNAMIC       = $(SNX_LIBRARY).$(DYNAMICLIB_EXT)
 
 # setup the list of libs to be built...
-LIBS        = $(AJ_LIBRARY)
+LIBS        = $(SNX_LIBRARY)
 STATIC_LIBS    = $(LIBS)
 DYNAMIC_LIBS   = $(LIBS)
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR          = aj vj
+SUBDIR          = snx
 
 # needed for compiling the DSO
 EXTRA_LIBS      = @LIBS@ -lm
@@ -66,7 +66,7 @@ EXTRA_LIBS      = @LIBS@ -lm
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-$(LIBDIR)/$(AJ_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(SNX_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -81,7 +81,7 @@ $(LIBDIR)/$(AJ_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(AJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -104,7 +104,7 @@ AFTERBUILD	= afterbuild
 
 # Things to do before the object files and library are built.
 beforebuild:
-	@chmod +x $(topdir)/audiojuggler-config
+	@chmod +x $(topdir)/sonix-config
 
 # Things to do after the object files and library are built.
 afterbuild:
@@ -112,7 +112,7 @@ afterbuild:
    
 # =============================================================================
 # Make links for developer use that provide the needed functionality for
-# the $AJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
+# the $SNX_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
 # should be set to $(instlinks).
 # =============================================================================
 links:
@@ -129,13 +129,13 @@ links:
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&                    \
       	  ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
 	cd $(instlinks) && rm -rf ./share &&                  \
-       	  $(SHELL) $(MKINSTALLDIRS) ./share/AudioJuggler && \
-           ln -s $(ROOT_ABS)/data ./share/AudioJuggler/data
-	cd $(instlinks)/share/AudioJuggler &&                          \
+       	  $(SHELL) $(MKINSTALLDIRS) ./share/sonix && \
+           ln -s $(ROOT_ABS)/data ./share/sonix/data
+	cd $(instlinks)/share/sonix &&                          \
           ln -s $(topdir)/samples ./src
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
-	@echo 'You should now set $$AJ_BASE_DIR to:'
+	@echo 'You should now set $$SNX_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
 
@@ -175,12 +175,12 @@ hier:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
 	$(SHELL) $(MKINSTALLDIRS) $(bindir)
-	$(SHELL) $(MKINSTALLDIRS) $(includedir)/aj
+	$(SHELL) $(MKINSTALLDIRS) $(includedir)/snx
 	$(SHELL) $(MKINSTALLDIRS) $(includedir)/vj
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)/AudioJuggler/src
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)/AudioJuggler/data
-	$(SHELL) $(MKINSTALLDIRS) $(includedir)/share/AudioJuggler/data
-	$(SHELL) $(MKINSTALLDIRS) $(includedir)/share/AudioJuggler/src
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)/sonix/src
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)/sonix/data
+	$(SHELL) $(MKINSTALLDIRS) $(includedir)/share/sonix/data
+	$(SHELL) $(MKINSTALLDIRS) $(includedir)/share/sonix/src
 	@for lib in $(ABI_LIST) ; do					\
             $(MAKE) dppABI=$$lib hier-abi ;   \
           done
@@ -193,7 +193,7 @@ hier-abi:
 # independent of the current ABI.
 afterinstall:
 	@echo "==============================================================="
-	@echo "Audio Juggler installation complete"
+	@echo "sonix installation complete"
 	@echo "==============================================================="
 
 
@@ -211,11 +211,11 @@ post-install:
 #          $(topdir)/juggler-config $(bindir)
 
 install-data:
-	cp -r $(ROOT_ABS)/data/*.wav $(datadir)/AudioJuggler/data
-	cp -r $(ROOT_ABS)/data/*.aiff $(datadir)/AudioJuggler/data
+	cp -r $(ROOT_ABS)/data/*.wav $(datadir)/sonix/data
+	cp -r $(ROOT_ABS)/data/*.aiff $(datadir)/sonix/data
 
 install-samples:
-	cp -r $(ROOT_ABS)/samples/*.cpp $(topdir)/samples/Makefile $(datadir)/AudioJuggler/src
+	cp -r $(ROOT_ABS)/samples/*.cpp $(topdir)/samples/Makefile $(datadir)/sonix/src
 
 install-test:
 

@@ -1,5 +1,8 @@
-here is some "glue" to make AudioJuggler work better with the VR toolkit 
+here is some "glue" to make sonix work better with the VR toolkit 
 VR Juggler.
 
-This allows VR Juggler to sync, and configure AudioJuggler through
+This allows VR Juggler to sync, and configure sonix through
 the VR juggler Kernel
+
+
+(note: code moved into vrjuggler project...)
