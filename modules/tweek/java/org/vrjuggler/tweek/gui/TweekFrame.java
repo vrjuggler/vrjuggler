@@ -180,6 +180,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
          });
 
       // Define the Disconnect option in the Network menu.
+      m_menu_net_disconnect.setEnabled(false);
       m_menu_net_disconnect.setMnemonic('D');
       m_menu_net_disconnect.setText("Disconnect from ORB ...");
       m_menu_net_disconnect.addActionListener(new ActionListener()
@@ -360,6 +361,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
                m_bean_container.fireConnectionEvent(new_orb);
                m_orbs.add(new_orb);
+               m_menu_net_disconnect.setEnabled(true);
             }
             catch (org.omg.CORBA.SystemException sys_ex)
             {
@@ -375,6 +377,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
     */
    private void networkDisconnectAction (ActionEvent e)
    {
+      m_menu_net_disconnect.setEnabled(false);
 /*
       try
       {
