@@ -96,6 +96,10 @@ public:
    //  an error to a log or console - but will not ASSERT.<BR>
    DigitalData* getDigitalData(int devNum = 0)
    {
+      vprASSERT(!mDigitalSamples.stableBuffer().empty() && "Empty stable buffer, can't get sample");
+      vprASSERT((mDigitalSamples.stableBuffer().back().size() > (unsigned)devNum) && 
+                "Trying to get out of range device. No sample available.");
+      
       // XXX: Fill in;
       return &(mDigitalSamples.stableBuffer().back()[devNum]);
    }
