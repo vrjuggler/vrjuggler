@@ -37,7 +37,6 @@
 #include <string.h>
 #include <strings.h>    /* Needed for bzero(3) on some platforms */
 #include <math.h>
-#include <errno.h>
 
 #include <vpr/vpr.h>
 #include <vpr/vprTypes.h>
@@ -177,8 +176,6 @@ const unsigned char BN_PROTOCOL = 3;
 
 } // End of BIRDNET namespace
 
-//extern int errno;
-
 
 // ============================================================================
 // Public methods.
@@ -304,8 +301,7 @@ int MotionStarStandalone::start ()
    {
       fprintf(stderr,
               "[MotionStarStandalone] Could not open %s socket: %s\n",
-              ((m_proto == BIRDNET::UDP) ? "datagram" : "stream"),
-              strerror(errno));
+              ((m_proto == BIRDNET::UDP) ? "datagram" : "stream"));
       retval = -2;
    }
    // Otherwise, keep on truckin'.
@@ -1589,7 +1585,7 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus (const unsigned char dev
    {
       fprintf(stderr,
               "[MotionStarStandalone] WARNING: Could not set device status for "
-              "device %u: %s\n", device, strerror(errno));
+              "device %u\n", device);
    }
    else
    {
@@ -1599,8 +1595,7 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus (const unsigned char dev
       {
          fprintf(stderr,
                  "[MotionStarStandalone] WARNING: Could not read server "
-                 "response to device %u setup: %s\n", device,
-                 strerror(errno));
+                 "response to device %u setup\n", device);
       }
    }
 
@@ -1799,15 +1794,15 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg (const void* packet,
    // Nothing was sent.
    if ( bytes == 0 )
    {
-      fprintf(stderr, "[MotionStarStandalone] Sent 0 bytes to %s: %s\n",
-             m_address.getAddressString().c_str(), strerror(errno));
+      fprintf(stderr, "[MotionStarStandalone] Sent 0 bytes to %s\n",
+             m_address.getAddressString().c_str());
    }
    // An error occurred while trying to send the packet.
    else if ( bytes == -1 )
    {
       fprintf(stderr,
-              "[MotionStarStandalone] Could not send message to %s: %s\n",
-              m_address.getAddressString().c_str(), strerror(errno));
+              "[MotionStarStandalone] Could not send message to %s\n",
+              m_address.getAddressString().c_str());
    }
 
    return status;
@@ -1828,15 +1823,15 @@ vpr::ReturnStatus MotionStarStandalone::getRsp (void* packet,
    // Nothing was read.
    if ( bytes == 0 )
    {
-      fprintf(stderr, "[MotionStarStandalone] Read 0 bytes from %s: %s\n",
-              m_address.getAddressString().c_str(), strerror(errno));
+      fprintf(stderr, "[MotionStarStandalone] Read 0 bytes from %s\n",
+              m_address.getAddressString().c_str());
    }
    // An error occurred while trying to receive the packet.
    else if ( bytes == -1 )
    {
       fprintf(stderr,
-              "[MotionStarStandalone] Could not read message from %s: %s\n",
-              m_address.getAddressString().c_str(), strerror(errno));
+              "[MotionStarStandalone] Could not read message from %s\n",
+              m_address.getAddressString().c_str());
    }
 
    return status;
