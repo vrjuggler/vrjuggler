@@ -36,7 +36,7 @@ default: all
 all: test
 
 test: test.o
-	${COMPILE} -o $@ ${TEST_OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
+	${COMPILE} -o $@ test.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 test.o: test.cpp
 
