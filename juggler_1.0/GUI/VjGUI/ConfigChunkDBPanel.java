@@ -305,7 +305,7 @@ implements ActionListener, ItemListener {
 	name = name.trim();
 	for (int j = 0; j < chunkframes.size(); j++) {
 	    if (((ConfigChunkFrame)chunkframes.elementAt(j))
-		.chunkName().equals(name))
+		.getName().equals(name))
 		return false; // cuz this window is already open.
 	}
 	ConfigChunkFrame ccf = new ConfigChunkFrame (core, this,

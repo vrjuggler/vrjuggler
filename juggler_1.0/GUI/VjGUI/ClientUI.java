@@ -34,8 +34,9 @@ implements ActionListener, WindowListener, ItemListener {
 	super("VR Juggler Configuration Editor");
 	core = c;
 
-	windowfont = new Font ("Courier", Font.PLAIN, 16);
-	windowfontbold = new Font ("Courier", Font.BOLD, 16);
+windowfont = new Font ("Courier", Font.PLAIN, 12);
+	//	windowfont = new Font ("Courier", Font.PLAIN, 16);
+       	windowfontbold = new Font ("Courier", Font.BOLD, 16);
 	setFont (windowfont);
 
 	datadisplayframes = new Vector();
