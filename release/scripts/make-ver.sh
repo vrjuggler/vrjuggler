@@ -140,6 +140,9 @@ number=`printf "%03d%03d%03d\n" $major $minor $patch | sed -e 's/^[0]*\([^0].*\)
 # Create the temporary ouptut file.
 cat $input | sed -e "s/@VER_STRING@/\"$string\"/"	\
                  -e "s/@VER_NUMBER@/$number/"		\
+                 -e "s/@MAJOR_VER_NUMBER@/$major/"	\
+                 -e "s/@MINOR_VER_NUMBER@/$minor/"	\
+                 -e "s/@PATCH_VER_NUMBER@/$patch/"	\
            > ${output}.temp
 
 # If the output file already exists, compare it with the temporary version.
