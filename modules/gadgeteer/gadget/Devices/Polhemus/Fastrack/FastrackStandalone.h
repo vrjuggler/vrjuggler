@@ -25,18 +25,23 @@ extern "C" int getNewButtonStatus(unsigned int station);
 extern "C" void trackerFinish();
 
 // bits positions of bits in flag word "config.found"
-enum conf { DEV, BAUD, BUTTON,
-	    REC, REC1, REC2, REC3,
-	    TIP, TIP1, TIP2, TIP3,
-	    INC, INC1, INC2, INC3,
-	    HEM, HEM1, HEM2, HEM3,
-	    ARF, ARF1, ARF2, ARF3,
-	    TMF, TMF1, TMF2, TMF3,
+enum conf
+{
+   DEV, BAUD, BUTTON,
+   REC, REC1, REC2, REC3,
+   TIP, TIP1, TIP2, TIP3,
+   INC, INC1, INC2, INC3,
+   HEM, HEM1, HEM2, HEM3,
+   ARF, ARF1, ARF2, ARF3,
+   TMF, TMF1, TMF2, TMF3,
 };
 
 // each reportable thing is identified by a bit in config.perstation[n].rec
 // the following enum defines the bit positions
-enum rec { Pos, Ang, Quat, But };
+enum rec
+{
+   Pos, Ang, Quat, But
+};
 
 static int trackerfd;
 
@@ -44,29 +49,30 @@ static volatile unsigned char TrackerBuf[256];
 static volatile int DoFlush;
 static pid_t ReadPid;
 
-struct perstation {
-  int begin;
-  int posoff;
-  int angoff;
-  int quatoff;
-  int butoff;
-  int rec;
-  float tip[XYZ];
-  float inc;
-  float hem[XYZ];
-  float arf[3*XYZ];
-  float tmf[XYZ];
+struct perstation
+{
+   int begin;
+   int posoff;
+   int angoff;
+   int quatoff;
+   int butoff;
+   int rec;
+   float tip[XYZ];
+   float inc;
+   float hem[XYZ];
+   float arf[3*XYZ];
+   float tmf[XYZ];
 };
 
-static
-struct {
-  int found;         // flags: one bit for each feature found in the chunk
-  int len;           // total length of a message sent by the tracker
-  char port[20];     // port the tracker is attached to
-  int baud;          // port speed
-  char button;
-  char cont;
-  struct perstation perstation[NSTATION];
+static struct
+{
+   int found;         // flags: one bit for each feature found in the chunk
+   int len;           // total length of a message sent by the tracker
+   char port[20];     // port the tracker is attached to
+   int baud;          // port speed
+   char button;
+   char cont;
+   struct perstation perstation[NSTATION];
 } conf;
 
 // end driver R.E.
