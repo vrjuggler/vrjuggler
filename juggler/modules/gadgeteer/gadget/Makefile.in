@@ -53,6 +53,7 @@ DIRPRFX=	gadget/
 # Subdirectories to compile.
 SUBDIR=		Devices/Keyboard	\
 		Devices/Sim		\
+		Filter                  \
 		RemoteInputManager	\
 		Type			\
 		Util
