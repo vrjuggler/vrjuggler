@@ -216,7 +216,12 @@ ConfigManager::~ConfigManager()
 
 //-------------------- Pending List Stuff -------------------------------
 
-// Add the given configuration to the pending list as adds
+/**
+ * Add the given configuration to the pending list as adds
+ *
+ * @post - ConfigElements are copied out of configuration. So db pointer may be
+ *         deleted by calling method.
+ */
 void ConfigManager::addPendingAdds(Configuration* db)
 {
    vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
