@@ -59,7 +59,6 @@ namespace gadget
       std::list<NetDevice*> mReceivingDevices;     /**< devices on remote machines*/
       std::list<NetDevice*> mTransmittingDevices;  /**< devices on local machine sending data*/
       MsgPackage mMsgPackage;                      /**< packet building/parsing class*/
-      IdGenerator<VJ_NETID_TYPE> mRemoteIdGen;     /**< unique device ID generator*/
       bool mAllPacketsReceived;                    /**< flag for when all packets are recieved*/
       vpr::GUID mManagerId;                        /**< remote RIM manager ID */
 
@@ -120,7 +119,6 @@ namespace gadget
       void addTransmittingNetDevice(NetDevice* net_device);
 
       void addReceivingNetDevice(NetDevice* net_device);
-      NetDevice* createReceivingNetDevice(jccl::ConfigChunkPtr chunk);
       NetDevice* findReceivingNetDevice(const std::string& device_name);
       NetDevice* findReceivingNetDeviceByLocalId(VJ_NETID_TYPE local_id);
 
@@ -134,9 +132,6 @@ namespace gadget
       void setAllPacketsReceived()
       { mAllPacketsReceived = true; }
       
-      VJ_NETID_TYPE generateLocalId()
-      { return mRemoteIdGen.generateNewId(); }
-
    };
 
 } // end namespace gadget

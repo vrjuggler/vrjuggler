@@ -51,7 +51,6 @@ namespace gadget
       mSockStream = NULL;
       //mRecvBuffer = new RecvBuffer;
       //mObjectReader = new vpr::ObjectReader(new std::vector<vpr::Uint8>);
-      mRemoteIdGen.setMaxId(399);
       mSendIterations = 0;
       mRecvIterations = 0;
    }
@@ -72,7 +71,6 @@ namespace gadget
       mSockStream = sock_stream;
       //mRecvBuffer = new RecvBuffer;
       //mObjectReader = new vpr::ObjectReader(new std::vector<vpr::Uint8>);
-      mRemoteIdGen.setMaxId(399);         // DO NOT NEED A MAX NOW!!!!!!
       mSendIterations = 0;
       mRecvIterations = 0;
    }
@@ -108,7 +106,6 @@ namespace gadget
    {
       if ( std::find(mTransmittingDevices.begin(), mTransmittingDevices.end(), net_device) == mTransmittingDevices.end() )
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Adding transmitting NetDevice to NetConnection" << vprDEBUG_FLUSH;
          mTransmittingDevices.push_back(net_device);
       }
    }
@@ -121,27 +118,9 @@ namespace gadget
       {
          mReceivingDevices.push_back(net_device);
       }
-     
-      sendDeviceRequest(net_device);              //<<<<<<<<<<<<<<<<<<<<<LOOK INTO
-      // net_input->addDependency();
    }
 
 
-
-   //+++++++++++++++
-   NetDevice* NetConnection::createReceivingNetDevice(jccl::ConfigChunkPtr chunk)
-   {
-      NetDevice* net_device;
-      std::string dev_name = chunk->getFullName();
-      net_device = new NetDevice(dev_name, this->generateLocalId());
-      //mReceivingDevices.push_back(net_device);
-      //sendDeviceRequest(net_device);          
-      //mReceivingDevices.push_back(net_device);
-      net_device->addDependency();
-      return net_device;
-      /////////////////////////////////////////
-   }
-   //+++++++++++++++
 
    NetDevice* NetConnection::findReceivingNetDevice(const std::string& device_name)
    {
@@ -183,7 +162,8 @@ namespace gadget
             << net_device->getLocalId()<< "-" << net_device->getSourceName() 
             << "\n"<< vprDEBUG_FLUSH;
       mMsgPackage.createDeviceRequest(net_device->getLocalId(), net_device->getSourceName());
-      //sendMsg(mMsgPackage);
+      mMsgPackage.sendAndClear(mSockStream);
+      mMsgPackage.createEndBlock();
       mMsgPackage.sendAndClear(mSockStream);
    }
 

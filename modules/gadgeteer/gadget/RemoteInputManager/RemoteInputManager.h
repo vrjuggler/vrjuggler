@@ -262,7 +262,7 @@ namespace gadget{
        * @param   net_device     NetDevice we are adding
        * @param   net_connection NetConnection that it is using
        */
-      void addReceivingNetDevice(NetDevice* net_device, NetConnection* net_connection);
+      void addReceivingNetDevice(NetDevice* net_device);
 
       /**
        * Configures a new NetDevice for sending data from a local device.
@@ -316,7 +316,7 @@ namespace gadget{
          return mLocalIdGen.generateNewId();
       }
 
-      NetDevice* findDeviceByLocalId(VJ_NETID_TYPE local_id);
+      NetDevice* findNetDeviceByLocalId(VJ_NETID_TYPE local_id);
 
       void resendRequestsForNackedDevices();
       
