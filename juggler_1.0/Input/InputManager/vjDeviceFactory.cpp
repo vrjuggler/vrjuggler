@@ -114,7 +114,7 @@ void vjDeviceFactory::registerDevice(vjDeviceConstructorBase* constructor)
    mConstructors.push_back(constructor);     // Add the constructor to the list
    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDeviceFactory::registerDevice: Device registered for: "
               << constructor->getChunkType()
-              << "   :" << (void*)constructor
+              //<< "   :" << (void*)constructor
               << " type:" << typeid(*constructor).name() << std::endl
               << vjDEBUG_FLUSH;
 }

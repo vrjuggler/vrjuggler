@@ -75,7 +75,7 @@ vjDebug::vjDebug()
 }
 
 std::ostream& vjDebug::getStream(int cat, int level, bool show_thread_info,
-                                 bool use_indent, int indentChange)
+                                 bool use_indent, int indentChange, bool lockStream)
 {
    if(indentChange < 0)                // If decreasing indent
       indentLevel += indentChange;
@@ -84,7 +84,10 @@ std::ostream& vjDebug::getStream(int cat, int level, bool show_thread_info,
 
    // Lock the stream
 #ifdef LOCK_DEBUG_STREAM
-   debugLock().acquire();     // Get the lock
+   if(lockStream)
+   {
+      debugLock().acquire();     // Get the lock
+   }
 #endif
 
    // --- Create stream header --- //

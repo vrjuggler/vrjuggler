@@ -375,7 +375,8 @@ public:  // ----- Various other thread functions ------
     // -----------------------------------------------------------------------
     std::ostream&
     outStream (std::ostream& out) {
-        out << "pThrd: [" << getpid() << "] ";
+        //out << "pThrd:[" << getpid() << "] ";
+        out << "p:[" << getpid() << "] ";
         vjBaseThread::outStream(out);
         return out;
     }

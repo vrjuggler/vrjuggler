@@ -86,25 +86,25 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
                      current++;                          // Goto next item
                      cfg_mgr->removePending(remove_me);  // Delete previous item
                      cfg_mgr->addActive(cur_chunk);      // Add it to the current config
-                     vjDEBUG_NEXT(vjDBG_ALL,vjDBG_CONFIG_LVL)
+                     vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
                                                  << "Pending item [ADD]: " << clrSetNORM(clrGREEN)
                                                  << cur_chunk->getProperty("name") << clrRESET
                                                  << " type: " << ((std::string)cur_chunk->getType()).c_str()
-                                                 << "  --> Successfully added.\n\n"  << vjDEBUG_FLUSH;
+                                                 << "  --> Successfully added.\n"  << vjDEBUG_FLUSH;
                   }
                   else  // FAILED adding
                   {
-                     vjDEBUG_NEXT(vjDBG_ALL,vjDBG_CONFIG_LVL)
+                     vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
                                                  << "Pending item [ADD]: " << clrSetNORM(clrRED)
                                                  << cur_chunk->getProperty("name") << clrRESET
                                                  << " type: " << ((std::string)cur_chunk->getType()).c_str()
-                                                 << "  --> failed to add correctly.\n\n" << vjDEBUG_FLUSH;
+                                                 << "  --> failed to add.\n" << vjDEBUG_FLUSH;
                      current++;
                   }
                }
                else     // Dependency failed
                {
-                  vjDEBUG_NEXT(vjDBG_ALL,vjDBG_WARNING_LVL)
+                  vjDEBUG(vjDBG_ALL,vjDBG_WARNING_LVL)
                                                  << "Pending item [ADD]: " << clrSetNORM(clrCYAN)
                                                  << cur_chunk->getProperty("name") << clrRESET
                                                  << " type: " << ((std::string)cur_chunk->getType()).c_str()

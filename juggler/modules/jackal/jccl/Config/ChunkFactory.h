@@ -112,14 +112,15 @@ protected:
       char* vj_base_dir = getenv("VJ_BASE_DIR");
       if(vj_base_dir == NULL)
       {
-         vjDEBUG(vjDBG_ERROR,0) << "vjChunkFactory::setupInitialEnvironment: Env var VJ_BASE_DIR not defined." << std::endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "vjChunkFactory::setupInitialEnvironment:\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  "Env var VJ_BASE_DIR not defined." << std::endl << vjDEBUG_FLUSH;
          exit(1);
       }
 
       char chunk_desc_file[250];
       strcpy(chunk_desc_file, vj_base_dir);
       strcat(chunk_desc_file, "/Data/chunksDesc");
-      vjDEBUG(vjDBG_ALL,0) << "vjChunkFactory::setupInitialEnvironment: Loading chunk description file: ["
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "Loading chunk desc file: ["
                            << chunk_desc_file << "]\n" << vjDEBUG_FLUSH;
 
       this->loadDescs(std::string(chunk_desc_file));

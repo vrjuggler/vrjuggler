@@ -86,7 +86,6 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
 
    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "Mouse Sensititivty: "
    << m_mouse_sensitivity << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << std::endl << vjDEBUG_FLUSH;
 
    mSleepTimeMS = c->getProperty("sleep_time");
 
@@ -100,12 +99,12 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
 // Main thread of control for this active object
 void vjXWinKeyboard::controlLoop(void* nullParam)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "vjXWinKeyboard::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
 
    while (NULL == vjThread::self())
    {
       usleep(50);
-      vjDEBUG(vjDBG_ALL,1) << "vjXWinKeyboard: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "vjXWinKeyboard: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
    }
    myThread = (vjThread*) vjThread::self();
 
@@ -115,7 +114,7 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
    // If we have initial locked, then we need to lock the system
    if(mLockState == Lock_LockKey)      // Means that we are in the initially locked state
    {
-      vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "vjXWinKeyboard::controlLoop: Mouse set to initial lock. Locking it now.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard::controlLoop: Mouse set to initial lock. Locking it now.\n" << vjDEBUG_FLUSH;
       lockMouse();                     // Lock the mouse
    }
 

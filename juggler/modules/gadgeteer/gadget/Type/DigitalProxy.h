@@ -72,6 +72,10 @@ public:
       m_digPtr = digPtr;
       m_unitNum = subNum;
       m_data = m_digPtr->getDigitalData(m_unitNum);
+
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "digPtr: " << digPtr << std::endl
+              << "subNum: " << subNum << std::endl << std::endl
+              << vjDEBUG_FLUSH;
    }
 
    void updateData();

@@ -939,7 +939,8 @@ bool vjInputManager::removeProxyAlias(vjConfigChunk* chunk)
 //             char*.
 void vjInputManager::addProxyAlias(std::string aliasStr, int proxyIndex)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "AddProxyAlias: alias:" << aliasStr.c_str() << "   index:" << proxyIndex << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "Proxy alias [" << aliasStr.c_str() << "] added.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_VERB_LVL)   << "   index:" << proxyIndex << std::endl << vjDEBUG_FLUSH;
    proxyAliases[aliasStr] = proxyIndex;
 }
 

@@ -52,7 +52,7 @@ private:
    {
       mDepCheckers = std::vector<vjDepChecker*>(0);
       vjASSERT(mDepCheckers.size() == 0);
-      debugDump();
+      //debugDump();
    }
 
 public:

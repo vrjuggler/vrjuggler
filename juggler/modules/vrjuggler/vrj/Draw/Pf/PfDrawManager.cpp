@@ -255,11 +255,11 @@ void vjPfDrawManager::initDrawing()
    unsigned int i;
    vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "vjPfDrawManager::initDrawing: Got Stereo FB config\n" << vjDEBUG_FLUSH;
    for(i=0;i<stereo_fb_config.size();i++)
-      vjDEBUGlg(vjDBG_DRAW_MGR,vjDBG_VERB_LVL,false,false) << "  " << stereo_fb_config[i] << vjDEBUG_FLUSH;
+      vjDEBUG_CONT(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "  " << stereo_fb_config[i] << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "\nvjPfDrawManager::initDrawing: Got Mono FB config\n" << vjDEBUG_FLUSH;
    for(i=0;i<mono_fb_config.size();i++)
-      vjDEBUGlg(vjDBG_DRAW_MGR,vjDBG_VERB_LVL,false,false) << "  " << mono_fb_config[i] << std::endl << vjDEBUG_FLUSH;
-   vjDEBUGlg(vjDBG_DRAW_MGR,vjDBG_VERB_LVL,false,false) << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG_CONT(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "  " << mono_fb_config[i] << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_CONT(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << std::endl << vjDEBUG_FLUSH;
 
    //  For each display:
    //     -Create a pWin for it
@@ -439,7 +439,7 @@ void vjPfDrawManager::initChanGroupAttribs(pfChannel* masterChan)
    unsigned turn_off = (   PFCHAN_FOV |
                            PFCHAN_VIEW |
                            PFCHAN_VIEW_OFFSETS);
-   
+
    masterChan->setShare((cur_share | turn_on) &(~turn_off));
 
    //masterChan->setTravFunc(PFTRAV_APP, vjPfAppFunc);

@@ -146,16 +146,28 @@ const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 // vjDEBUG_NEXT_BEGIN - Output more infor on next line AND indent one level more
 // vjDEBUG_NEXT_END - Ouput more info on the next line AND decrease indent one level
 #define vjDEBUG(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true)
-#define vjDEBUGlg(cat,val,show_thread,use_indent) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent)
+#define vjDEBUGlg(cat,val,show_thread,use_indent,lockIt) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent, 0, lockIt)
 #define vjDEBUG_BEGIN(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true, true, 1)
-#define vjDEBUG_BEGINlg(cat,val,show_thread,use_indent) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent, 1)
+#define vjDEBUG_BEGINlg(cat,val,show_thread,use_indent,lockIt) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent, 1, lockIt)
 #define vjDEBUG_END(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true, true, -1)
-#define vjDEBUG_ENDlg(cat,val,show_thread,use_indent) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent, -1)
-#define vjDEBUG_CONT(cat,val) vjDEBUGlg(cat,val,false,false)
-#define vjDEBUG_CONT_END(cat,val) vjDEBUG_ENDlg(cat,val,false,false)
-#define vjDEBUG_NEXT(cat,val) vjDEBUGlg(cat,val,false,true)
-#define vjDEBUG_NEXT_BEGIN(cat,val) vjDEBUG_BEGINlg(cat,val,false,true)
-#define vjDEBUG_NEXT_END(cat,val) vjDEBUG_ENDlg(cat,val,false,true)
+#define vjDEBUG_ENDlg(cat,val,show_thread,use_indent,lockIt) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent, -1, lockIt)
+
+#define vjDEBUG_CONT(cat,val) vjDEBUGlg(cat,val,false,false,true)
+#define vjDEBUG_CONT_END(cat,val) vjDEBUG_ENDlg(cat,val,false,false,true)
+#define vjDEBUG_NEXT(cat,val) vjDEBUGlg(cat,val,false,true,true)
+#define vjDEBUG_NEXT_BEGIN(cat,val) vjDEBUG_BEGINlg(cat,val,false,true,true)
+#define vjDEBUG_NEXT_END(cat,val) vjDEBUG_ENDlg(cat,val,false,true,true)
+
+// Versions that don't lock the stream
+// NOTE: USE WITH EXTREME RISK
+#define vjDEBUGnl(cat,val) vjDEBUGlg(cat,val,true,true,false)
+#define vjDEBUG_ENDnl(cat,val) vjDEBUG_ENDlg(cat,val,true,true,false)
+#define vjDEBUG_BEGINnl(cat,val) vjDEBUG_BEGINlg(cat,val,true,true,false)
+#define vjDEBUG_CONTnl(cat,val) vjDEBUGlg(cat,val,false,false,false)
+#define vjDEBUG_CONT_ENDnl(cat,val) vjDEBUG_ENDlg(cat,val,false,false,false)
+#define vjDEBUG_NEXTnl(cat,val) vjDEBUGlg(cat,val,false,true,false)
+#define vjDEBUG_NEXT_BEGINnl(cat,val) vjDEBUG_BEGINlg(cat,val,false,true,false)
+#define vjDEBUG_NEXT_ENDnl(cat,val) vjDEBUG_ENDlg(cat,val,false,true,false)
 
 
 #ifdef LOCK_DEBUG_STREAM
@@ -187,7 +199,8 @@ private:
 
 public:
    // Get the debug stream to use
-   std::ostream& getStream(int cat, int level, bool show_thread_info = true, bool use_indent = true, int indentChange = 0);
+   std::ostream& getStream(int cat, int level, bool show_thread_info = true,
+                           bool use_indent = true, int indentChange = 0, bool lockStream = true);
 
    int getLevel()
    { return debugLevel; }
