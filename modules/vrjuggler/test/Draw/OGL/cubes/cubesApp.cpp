@@ -227,7 +227,7 @@ void cubesApp::contextClose()
 //----------------------------------------------
 void cubesApp::myDraw(vjUser* user)
 {
-   vjDEBUG(vjDBG_ALL,2) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,5) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
 
    static const float SCALE = 100;
    //static const float SCALE = 10;
