@@ -125,11 +125,12 @@ InetAddrNSPR::setFamily (const SocketTypes::Domain family) {
 // Get the IP address associated with this structure as a human-readable
 // string.
 // ----------------------------------------------------------------------------
-std::string
-InetAddrNSPR::getAddressString (void) const {
-    char ip_str[256];
-    PR_NetAddrToString(&mAddr, ip_str, sizeof(PRNetAddr));
-    return std::string(ip_str);
+std::string InetAddrNSPR::getAddressString (void) const
+{
+   char ip_str[256];
+   PR_NetAddrToString(&mAddr, ip_str, sizeof(PRNetAddr));
+   std::string temp(ip_str);
+   return temp;
 }
 
 // ----------------------------------------------------------------------------
