@@ -121,7 +121,7 @@ DPP_PROG_INSTALL
 
 if test "x$BUILD_JAVA" = "xY" ; then
    TWEEK_PATH_JAVA([0.92.4],
-      [JCCL_PATH_JAVA([0.92.10], ,
+      [JCCL_PATH_JAVA([0.92.11], ,
          [AC_MSG_WARN([*** JCCL Java API required for VRJConfig ***])
           BUILD_JAVA='N'])],
       [AC_MSG_WARN(*** Tweek Java API required for VRJConfig ***)

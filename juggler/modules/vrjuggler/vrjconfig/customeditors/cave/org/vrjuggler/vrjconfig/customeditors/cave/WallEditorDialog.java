@@ -315,6 +315,10 @@ public class WallEditorDialog
       validateUserInput();
    }
 
+   public void propertyValueOrderChanged(ConfigElementEvent e)
+   {
+   }
+
    public void propertyValueAdded(ConfigElementEvent e)
    {
    }
