@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-22-2004 patrickh    Updated to Gadgeteer 0.22.0.
+                        NEW VERSION: 0.17.0
 Nov-20-2004 patrickh    Removed PyJuggler.snx.SoundFactory.
                         NEW VERSION: 0.16.2
 Nov-17-2004 patrickh    Added PyJuggler.snx, a module that makes Sonix C++

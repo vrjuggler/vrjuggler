@@ -37,7 +37,7 @@ set_policy(Digital.getDigitalDataBuffer, return_internal_reference())
 Position = Class('gadget::Position', 'gadget/Type/Position.h')
 set_policy(Position.getPositionDataBuffer, return_internal_reference())
 
-EventWindow = Class('gadget::EventWindow', 'gadget/Type/EventWindow.h')
+Class('gadget::KeyboardMouse', 'gadget/Type/KeyboardMouse.h')
 
 SpeechRecogDigital = Class('gadget::SpeechRecogDigital',
                            'gadget/Type/SpeechRecogDigital.h')
@@ -66,10 +66,10 @@ set_policy(PositionProxy.getPositionData, return_internal_reference())
 set_policy(PositionProxy.getPositionPtr, return_internal_reference())
 exclude(PositionProxy.getProxiedInputDevice)
 
-EventWindowProxy = Class('gadget::EventWindowProxy',
-                         'gadget/Type/EventWindowProxy.h')
-set_policy(EventWindowProxy.getEventWindowPtr, return_internal_reference())
-exclude(EventWindowProxy.getProxiedInputDevice)
+KeyboardMouseProxy = Class('gadget::KeyboardMouseProxy',
+                           'gadget/Type/KeyboardMouseProxy.h')
+set_policy(KeyboardMouseProxy.getKeyboardMousePtr, return_internal_reference())
+exclude(KeyboardMouseProxy.getProxiedInputDevice)
 
 SpeechRecogDigitalProxy = Class('gadget::SpeechRecogDigitalProxy',
                                 'gadget/Type/SpeechRecogDigitalProxy.h')
@@ -101,9 +101,9 @@ PositionInterface = Class('gadgetWrapper::PositionInterface',
                           'gadgeteer-wrappers.h')
 set_policy(PositionInterface.getProxy, return_internal_reference())
 
-EventWindowInterface = Class('gadgetWrapper::EventWindowInterface',
-                             'gadgeteer-wrappers.h')
-set_policy(EventWindowInterface.getProxy, return_internal_reference())
+KeyboardMouseInterface = Class('gadgetWrapper::KeyboardMouseInterface',
+                               'gadgeteer-wrappers.h')
+set_policy(KeyboardMouseInterface.getProxy, return_internal_reference())
 
 SpeechRecogDigitalInterface = Class('gadgetWrapper::SpeechRecogDigitalInterface',
                                     'gadgeteer-wrappers.h')
@@ -148,10 +148,11 @@ set_policy(SpeechRecogStringInterface.getProxy, return_internal_reference())
 # ============================================================== Smart pointers
 
 # Event handling ==============================================================
-AllFromHeader('gadget/Type/EventWindow/Keys.h')
-Enum('gadget::EventType', 'gadget/Type/EventWindow/Event.h')
-use_shared_ptr(Class('gadget::Event', 'gadget/Type/EventWindow/Event.h'))
-use_shared_ptr(Class('gadget::KeyEvent', 'gadget/Type/EventWindow/KeyEvent.h'))
+AllFromHeader('gadget/Type/KeyboardMouse/Keys.h')
+Enum('gadget::EventType', 'gadget/Type/KeyboardMouse/Event.h')
+use_shared_ptr(Class('gadget::Event', 'gadget/Type/KeyboardMouse/Event.h'))
+use_shared_ptr(Class('gadget::KeyEvent',
+                     'gadget/Type/KeyboardMouse/KeyEvent.h'))
 use_shared_ptr(Class('gadget::MouseEvent',
-                     'gadget/Type/EventWindow/MouseEvent.h'))
+                     'gadget/Type/KeyboardMouse/MouseEvent.h'))
 # ============================================================== Event handling

@@ -17,24 +17,24 @@
 using namespace boost::python;
 
 // Module ======================================================================
-void _Export_EventWindowInterface()
+void _Export_KeyboardMouseInterface()
 {
-    class_< gadgetWrapper::EventWindowInterface >("EventWindowInterface",
-         "Wrapper to provide an easier way to access event window proxy\n"
+    class_< gadgetWrapper::KeyboardMouseInterface >("KeyboardMouseInterface",
+         "Wrapper to provide an easier way to access keyboard/mouse proxy\n"
          "objects from within user applications.  Users can simply declare\n"
          "a local interface variable and use it as a smart pointer for the\n"
          "proxy."
          ,
          init<  >()
         )
-        .def(init< const gadgetWrapper::EventWindowInterface& >())
-        .def("init", &gadgetWrapper::EventWindowInterface::init,
+        .def(init< const gadgetWrapper::KeyboardMouseInterface& >())
+        .def("init", &gadgetWrapper::KeyboardMouseInterface::init,
              "init(proxyName)\n"
              "Initializes this object.\n"
              "Arguments:\n"
-             "proxyName -- String name of the event window proxy to connect to."
+             "proxyName -- String name of the keyboard/mouse proxy to connect to."
          )
-        .def("refresh", &gadgetWrapper::EventWindowInterface::refresh,
+        .def("refresh", &gadgetWrapper::KeyboardMouseInterface::refresh,
              "refresh()\n"
              "Refreshes the interface based on the current configuration.\n"
              "Post-conditions:\n"
@@ -44,27 +44,27 @@ void _Export_EventWindowInterface()
              "                        position device."
          )
         .def("getProxyName",
-             &gadgetWrapper::EventWindowInterface::getProxyName,
+             &gadgetWrapper::KeyboardMouseInterface::getProxyName,
              "getProxyName() -> string object\n"
              "Returns the name of the proxy."
          )
-        .def("isConnected", &gadgetWrapper::EventWindowInterface::isConnected,
+        .def("isConnected", &gadgetWrapper::KeyboardMouseInterface::isConnected,
              "isConnected() -> Boolean\n"
              "Identifies whether this device interface is connected to a\n"
              "proxy."
          )
-        .def("getProxy", &gadgetWrapper::EventWindowInterface::getProxy,
+        .def("getProxy", &gadgetWrapper::KeyboardMouseInterface::getProxy,
              return_internal_reference< 1 >(),
-             "getProxy() -> gadget.EventWindowProxy object\n"
+             "getProxy() -> gadget.KeyboardMouseProxy object\n"
              "Returns the underlying proxy to which we are connected."
          )
         .def("getTimeStamp",
-             &gadgetWrapper::EventWindowInterface::getTimeStamp,
+             &gadgetWrapper::KeyboardMouseInterface::getTimeStamp,
              "getTimeStamp() -> vpr.Interval object\n"
              "Returns the time of the last update."
          )
         .def("modifierOnly",
-             &gadgetWrapper::EventWindowInterface::modifierOnly,
+             &gadgetWrapper::KeyboardMouseInterface::modifierOnly,
              "modifierOnly(modKey) -> Boolean\n"
              "Determines if the given modifier key is the only modifier\n"
              "pressed.\n"
@@ -80,7 +80,7 @@ void _Export_EventWindowInterface()
              "True is returned if the given modifier is the only modifier\n"
              "key pressed."
          )
-        .def("keyPressed", &gadgetWrapper::EventWindowInterface::keyPressed,
+        .def("keyPressed", &gadgetWrapper::KeyboardMouseInterface::keyPressed,
              "keyPressed(keyId) -> int\n"
              "Returns the number of times the given key was pressesd during\n"
              "the last frame.  This can be used in a conditional expression\n"
@@ -93,10 +93,10 @@ void _Export_EventWindowInterface()
              "update."
          )
         .def("getEventQueue",
-             &gadgetWrapper::EventWindowInterface::getEventQueue,
+             &gadgetWrapper::KeyboardMouseInterface::getEventQueue,
              "getEventQueue() -> list of gadget.Event objects\n"
              "Returns a copy of the current queue of events for the proxied\n"
-             "window."
+             "device."
          )
     ;
 

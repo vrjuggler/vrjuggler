@@ -11,7 +11,7 @@
 
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DigitalInterface.h>
-#include <gadget/Type/EventWindowInterface.h>
+#include <gadget/Type/KeyboardMouseInterface.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/CommandInterface.h>
 #include <gadget/Type/StringInterface.h>
@@ -145,7 +145,7 @@ namespace gadgetWrapper
       gadget::PositionInterface mInter;
    };
 
-   class EventWindowInterface
+   class KeyboardMouseInterface
    {
    public:
       void init(const std::string& proxyName)
@@ -168,7 +168,7 @@ namespace gadgetWrapper
          return mInter.isConnected();
       }
 
-      gadget::EventWindowProxy* getProxy()
+      gadget::KeyboardMouseProxy* getProxy()
       {
          return mInter.getProxy();
       }
@@ -188,13 +188,13 @@ namespace gadgetWrapper
          return mInter->keyPressed(keyId);
       }
 
-      gadget::EventWindow::EventQueue getEventQueue()
+      gadget::KeyboardMouse::EventQueue getEventQueue()
       {
          return mInter->getEventQueue();
       }
 
    private:
-      gadget::EventWindowInterface mInter;
+      gadget::KeyboardMouseInterface mInter;
    };
 
    class CommandInterface

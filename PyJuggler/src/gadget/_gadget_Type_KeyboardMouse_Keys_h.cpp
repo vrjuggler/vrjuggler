@@ -11,13 +11,13 @@
 #include <boost/cstdint.hpp>
 
 // Includes ====================================================================
-#include <gadget/Type/EventWindow/Keys.h>
+#include <gadget/Type/KeyboardMouse/Keys.h>
 
 // Using =======================================================================
 using namespace boost::python;
 
 // Module ======================================================================
-void _Export_gadget_Type_EventWindow_Keys_h()
+void _Export_gadget_Type_KeyboardMouse_Keys_h()
 {
     enum_< gadget::Keys >("Keys")
         .value("KEY_END", gadget::KEY_END)

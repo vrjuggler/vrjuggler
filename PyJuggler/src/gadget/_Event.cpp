@@ -13,7 +13,7 @@
 // Includes ====================================================================
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
-#include <gadget/Type/EventWindow/Event.h>
+#include <gadget/Type/KeyboardMouse/Event.h>
 
 // Using =======================================================================
 using namespace boost::python;
