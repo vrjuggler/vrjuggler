@@ -414,10 +414,16 @@ enum run_mode
    SINGLE_SHOT     /**< Read a single asynchronous packet of data */
 };
 
-/**<  Possible units being used by the data read from the server. */
+/**
+ * Possible units being used by the data read from the server.  We list more
+ * values than are actually supported at this time in the event that Ascension
+ * extends the capabilities of the hardware.
+ */
 enum units
 {
-   INCHES
+   INCHES, /**< The hardware returns inches.  This is the only supported type at this time. */
+   FEET,   /**< The hardware returns feet. */
+   METERS  /**< The hardware returns meters. */
 };
 
 }  // namspace BIRDNET
@@ -840,6 +846,11 @@ public:
    const unsigned char& getReportRate() const
    {
       return m_report_rate;
+   }
+
+   void setExpectedUnits(const BIRDNET::units units)
+   {
+      mExpectedUnits = units;
    }
 
    /**
@@ -1624,13 +1635,15 @@ private:
 
    std::vector<FBB::Device*> m_erc_vec; /**< Vector of ERC devices */
    std::vector<FBB::Device*> m_birds;   /**< Vector of all devices (birds)
-                                            connected to the server chassis */
+                                             connected to the server chassis */
+
+   /** Expected units of position data.  Used for debugging. */
+   BIRDNET::units mExpectedUnits;
 
    // Data management member variables.
    BIRDNET::units m_units;             /**< Units in which data are read */
-   float          m_unit_conv;         /**< Data unit conversion factor */
    float          m_xmtr_pos_scale;    /**< Transmitter position scaling factor */
-   float          m_xmtr_rot_scale;    /**< Transmitter position scaling factor */
+   float          m_xmtr_rot_scale;    /**< Transmitter rotation scaling factor */
    float          m_xmtr_divisor;      /**< Number by which all returned values must be divided */
    bool           m_big_endian;        /**< If true, the host system is big-endian */
 };

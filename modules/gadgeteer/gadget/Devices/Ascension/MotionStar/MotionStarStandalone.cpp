@@ -224,6 +224,24 @@ static std::ostream& operator<<(std::ostream& out,
 }
 */
 
+static std::ostream& operator<<(std::ostream& out,
+                                const BIRDNET::units& unitValue)
+{
+   switch (unitValue)
+   {
+      case BIRDNET::INCHES:
+         out << "inches";
+         break;
+      case BIRDNET::FEET:
+         out << "feet";
+         break;
+      case BIRDNET::METERS:
+         out << "meters";
+         break;
+   }
+
+   return out;
+}
 
 // ============================================================================
 // Public methods.
@@ -248,7 +266,7 @@ MotionStarStandalone::MotionStarStandalone(const std::string& address,
      m_measurement_rate(measurementRate), m_run_mode(runMode),
      m_hemisphere(hemisphere), m_bird_format(birdFormat),
      m_report_rate(reportRate), m_birds_requested(birdsRequested),
-     m_birds_active(0), m_unit_conv(1.0)
+     m_birds_active(0), mExpectedUnits(BIRDNET::INCHES)
 {
    union
    {
@@ -931,7 +949,7 @@ float MotionStarStandalone::getXPos(const unsigned int i) const
       // Ahh, the beauty of a union is is that this statement works for
       // any of these data formats since the memory address is the same in
       // all cases.
-      x_pos = toXPos((unsigned char*) &m_birds[i]->data) / m_unit_conv;
+      x_pos = toXPos((unsigned char*) &m_birds[i]->data);
    }
    else
    {
@@ -962,7 +980,7 @@ float MotionStarStandalone::getYPos(const unsigned int i) const
       // Ahh, the beauty of a union is is that this statement works for
       // any of these data formats since the memory address is the same in
       // all cases.
-      y_pos = toYPos((unsigned char*) &m_birds[i]->data) / m_unit_conv;
+      y_pos = toYPos((unsigned char*) &m_birds[i]->data);
    }
    else
    {
@@ -993,7 +1011,7 @@ float MotionStarStandalone::getZPos(const unsigned int i) const
       // Ahh, the beauty of a union is is that this statement works for
       // any of these data formats since the memory address is the same in
       // all cases.
-      z_pos = toZPos((unsigned char*) &m_birds[i]->data) / m_unit_conv;
+      z_pos = toZPos((unsigned char*) &m_birds[i]->data);
    }
    else
    {
@@ -2025,14 +2043,25 @@ void MotionStarStandalone::getUnitInfo(const unsigned int bird,
    // Determine the measurement units from the value in units.
    if ( units == 0 )
    {
-      m_units     = BIRDNET::INCHES;
-      m_unit_conv = 12.0;
+      m_units = BIRDNET::INCHES;
    }
-   else {
+   else
+   {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "[MotionStarStandalone] WARNING: Unknown units value "
          << (unsigned int) units << " read from scaling factor on bird "
          << bird << std::endl << vprDEBUG_FLUSH;
+   }
+
+   if ( m_units != mExpectedUnits )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "[MotionStarStandalone] "
+         << clrOutBOLD(clrYELLOW, "WARNING") << ": We are expecting "
+         << mExpectedUnits << " from the hardware, but it is returning "
+         << m_units << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "Check your configuration for errors.\n" << vprDEBUG_FLUSH;
    }
 
    // Mask out the most significant four bits of the high byte because they
