@@ -29,14 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-#include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
-
+#include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
 
 namespace jccl
 {
-
 
 LabeledPerfDataBuffer::LabeledPerfDataBuffer ()
 {

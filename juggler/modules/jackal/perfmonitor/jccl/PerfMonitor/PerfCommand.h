@@ -29,9 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
 // commands used by Performance Control
 
 #ifndef _JCCL_PERF_COMMAND_H_

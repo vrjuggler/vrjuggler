@@ -29,10 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-
 #ifndef _JCCL_PERFORMANCE_CATEGORIES_H_
 #define _JCCL_PERFORMANCE_CATEGORIES_H_
 

@@ -29,17 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 // implementation of Performance Monitor
 //
-
-
-#include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
-#include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
+#include <jccl/PerfMonitor/PerformanceMonitor.h>
+#include <jccl/PerfMonitor/PerformanceCategories.h>
 #include <jccl/JackalServer/JackalServer.h>
 #include <jccl/JackalServer/Connect.h>
-#include <jccl/Plugins/PerformanceMonitor/PerfCommand.h>
+#include <jccl/PerfMonitor/PerfCommand.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>
 
