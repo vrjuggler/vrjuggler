@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          main.cpp,v
- * Date modified: 2000/10/30 16:06:10
- * Version:       1.13
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -35,21 +35,20 @@
 //
 // main.cpp
 //----------------------------------------
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+
 #include <OsgNav.h>
 
       // --- Lib Stuff --- //
-#include <Kernel/vjKernel.h>
-
-#ifndef WIN32
-#include <sched.h>
-#endif
+#include <vrj/Kernel/Kernel.h>
 
 //#define OSG_USE_IO_DOT_H
 
 
 int main(int argc, char* argv[])
 {
-   Kernel* kernel = Kernel::instance();           // Get the kernel
+   vrj::Kernel* kernel = vrj::Kernel::instance();  // Get the kernel
    OsgNav* application = new OsgNav(kernel);       // Instantiate an instance of the app
 
    if (argc <= 2)
@@ -87,7 +86,7 @@ int main(int argc, char* argv[])
 
    while(1)
    {
-      usleep(250000);
+      vpr::System::usleep(250000);
    }
    return (1);
 }
