@@ -657,6 +657,7 @@ public class ContextToolbar
       toolbar.add(openBtn, null);
       toolbar.add(saveBtn, null);
       toolbar.add(saveAsBtn, null);
+      toolbar.addSeparator();
       toolbar.add(undoBtn, null);
       toolbar.add(redoBtn, null);
       toolbar.addSeparator();
