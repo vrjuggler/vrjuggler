@@ -266,6 +266,8 @@ public:
       
       vjConfigChunk *cfg = display->configChunk();
       display_name = (*dispSysChunk)[0]->getProperty("xpipes", pipe);
+      if(strcmp(display_name, "-1") == 0)    // Use display env
+         strcpy(display_name, getenv("DISPLAY"));
       vjDEBUG(0) << "glxWindow display name is: " << display_name << endl << vjDEBUG_FLUSH;
       try_stereo = display->inStereo();
    }
