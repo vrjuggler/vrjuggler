@@ -2428,6 +2428,11 @@ public:
                   <primary>vjPfApp</primary>
                   <secondary>initScene() method</secondary>
                </indexterm>
+               <indexterm>
+                  <primary>application programming</primary>
+                  <secondary>OpenGL Performer</secondary>
+                  <tertiary>scenegraph initialization</tertiary>
+               </indexterm>
                <para>In an application using OpenGL Performer, the scene graph must be initialized before it can be used. The method <methodname>vjPfApp::initScene()</methodname> is provided for that purpose. Within this method, the root of the application scene graph should be created, and any required models should be loaded and attached to the root in some way. The exact mechanisms for accomplishing this will vary depending on what the application will do.</para>
                <para>During the initialization of OpenGL Performer by VR Juggler, <methodname>vjPfApp::initScene()</methodname> is invoked after the Performer functions <function>pfInit()</function> and <function>pfConfig()</function> but before <methodname>vjApp::apiInit()</methodname>.</para>
             </section>
@@ -2436,6 +2441,11 @@ public:
                <indexterm>
                   <primary>vjPfApp</primary>
                   <secondary>getScene() method</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>application programming</primary>
+                  <secondary>OpenGL Performer</secondary>
+                  <tertiary>scenegraph access</tertiary>
                </indexterm>
                <para>In order for Performer to render the application scene graph, it must get access to the scene graph root. The method <methodname>vjPfApp::getScene()</methodname> will be called by the Performer Draw Manager so that it can give the scene graph root node to Performer. Since the job of <methodname>getScene()</methodname> is straightforward, its implementation can be very simple. A typical implementation will have a single statement that returns a member variable that holds a pointer to the application scene graph root node.<note>
                      <para>Make sure that the node return is <emphasis>not</emphasis> a <classname>pfScene</classname> object. If it is, then lighting will not work.</para>
@@ -3196,7 +3206,7 @@ int main(int argc, char* argv[])
                   <primary>multi-threading</primary>
                   <secondary>helper classes</secondary>
                </indexterm>
-               <para>All the techniques presented in the previous section require some form of synchronization to protect the data accessed by multiple threads. Developers who choose the third option and use separate threads they manage must learn the VR Juggler thread API. This section presents all of the helper classes available for multi-threaded VR Juggler application programming. We begin with the thread API and then move on to the synchronization primitive API.</para>
+               <para>All the techniques presented in the previous section require some form of synchronization to protect the data accessed by multiple threads. Developers who choose the third option and use separate threads must learn the VR Juggler thread API. This section presents all the helper classes available for multi-threaded VR Juggler application programming. We begin with the thread API and then move on to the synchronization primitive API.</para>
                <section id="using-vjThread-sect">
                   <title>Using the <classname>vjThread</classname> Interface</title>
                   <indexterm zone="using-vjThread-sect">
