@@ -754,16 +754,23 @@ vpr::ReturnStatus InputManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
    return status;
 }
 
-bool InputManager::configureInputLogger(jccl::ConfigChunkPtr chunk)
-{
-   // Make sure it is allocated
+/** Get the input logger connected to the system */
+gadget::InputLoggerPtr InputManager::getInputLogger()
+{ 
+   // Make sure it is allocated -- Lazy allocation
    if(mInputLogger.get() == NULL)
    {
       mInputLogger = boost::shared_ptr<InputLogger>(new InputLogger);
    }
 
+   return mInputLogger; 
+}
+
+
+bool InputManager::configureInputLogger(jccl::ConfigChunkPtr chunk)
+{
    // Configure it
-   return mInputLogger->config(chunk);
+   return getInputLogger()->config(chunk);
 }
 
 } // End of gadget namespace

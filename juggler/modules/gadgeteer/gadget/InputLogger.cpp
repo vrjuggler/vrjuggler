@@ -226,7 +226,7 @@ void InputLogger::load(std::string logFilename)
    }
    catch(...)
    {
-      std::cerr << "Unknown error saving file." << std::endl;
+      std::cerr << "Unknown error loading file." << std::endl;
    }
 
    vprDEBUG(vprDBG_ALL,0) << "InputLogger: Loaded file: num_samples:" << mRootNode->getChildren().size() << std::endl << vprDEBUG_FLUSH;
