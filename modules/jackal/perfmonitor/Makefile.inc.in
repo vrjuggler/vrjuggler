@@ -57,3 +57,6 @@ perfmonitor-pkg-links:
 
 perfmonitor-pkg-install:
 	@$(MAKE) perfmonitor-install
+
+links:
+	@$(MAKE) -C jccl instlinks="$(instlinks)" links
