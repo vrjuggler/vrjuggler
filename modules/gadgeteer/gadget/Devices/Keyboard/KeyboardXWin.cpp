@@ -39,13 +39,13 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Config/ConfigChunk.h>
 
-#include <vrj/Input/Devices/Keyboard/XWinKeyboard.h> // my header
+#include <vrj/Input/Devices/Keyboard/KeyboardXWin.h> // my header
 
 namespace vrj
 {
    
 //: Constructor
-bool XWinKeyboard::config(ConfigChunk *c)
+bool KeyboardXWin::config(ConfigChunk *c)
 {
    if(! (Input::config(c) && Keyboard::config(c)))
       return false;
@@ -108,14 +108,14 @@ bool XWinKeyboard::config(ConfigChunk *c)
 }
 
 // Main thread of control for this active object
-void XWinKeyboard::controlLoop(void* nullParam)
+void KeyboardXWin::controlLoop(void* nullParam)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
 
    while (NULL == vpr::Thread::self())
    {
       vpr::System::usleep(50);
-      vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "vjXWinKeyboard: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "vrj::KeyboardXWin: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
    }
    myThread = (vpr::Thread*) vpr::Thread::self();
 
@@ -129,7 +129,7 @@ void XWinKeyboard::controlLoop(void* nullParam)
    // If we have initial locked, then we need to lock the system
    if(mLockState == Lock_LockKey)      // Means that we are in the initially locked state
    {
-      vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard::controlLoop: Mouse set to initial lock. Locking it now.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin::controlLoop: Mouse set to initial lock. Locking it now.\n" << vjDEBUG_FLUSH;
       lockMouse();                     // Lock the mouse
    }
 
@@ -153,20 +153,20 @@ void XWinKeyboard::controlLoop(void* nullParam)
 }
 
 
-int XWinKeyboard::startSampling()
+int KeyboardXWin::startSampling()
 {
    if(myThread != NULL)
    {
       vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-                                              << "vjXWinKeyboard: startSampling called, when already sampling.\n" << vjDEBUG_FLUSH;
+                                              << "vrj::KeyboardXWin: startSampling called, when already sampling.\n" << vjDEBUG_FLUSH;
       vprASSERT(false);
    }
 
    resetIndexes();      // Reset the buffering variables
 
    // Create a new thread to handle the control
-   vpr::ThreadMemberFunctor<XWinKeyboard>* memberFunctor =
-      new vpr::ThreadMemberFunctor<XWinKeyboard>(this, &XWinKeyboard::controlLoop, NULL);
+   vpr::ThreadMemberFunctor<KeyboardXWin>* memberFunctor =
+      new vpr::ThreadMemberFunctor<KeyboardXWin>(this, &KeyboardXWin::controlLoop, NULL);
 
    vpr::Thread* new_thread;
    new_thread = new vpr::Thread(memberFunctor);
@@ -175,7 +175,7 @@ int XWinKeyboard::startSampling()
    return 1;
 }
 
-int XWinKeyboard::onlyModifier(int mod)
+int KeyboardXWin::onlyModifier(int mod)
 {
   switch (mod) {
      case VJKEY_NONE:
@@ -192,7 +192,7 @@ int XWinKeyboard::onlyModifier(int mod)
   }
 }
 
-void XWinKeyboard::updateData()
+void KeyboardXWin::updateData()
 {
 vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
    if(mHandleEventsHasBeenCalled)            // If we haven't updated anything, then don't swap stuff
@@ -206,7 +206,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
       m_keys[VJMOUSE_NEGY] = int(float(m_keys[VJMOUSE_NEGY]) * m_mouse_sensitivity);
 
       /*
-      vjDEBUG(vjDBG_ALL,0)   << "vjXWinKeyboard::updateData:" << instName << " -- "
+      vjDEBUG(vjDBG_ALL,0)   << "vrj::KeyboardXWin::updateData:" << instName << " -- "
                              << "mouse_keys: px:" << m_keys[VJMOUSE_POSX]
                                         << " nx:" << m_keys[VJMOUSE_NEGX]
                                         << " py:" << m_keys[VJMOUSE_POSY]
@@ -225,7 +225,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
    }
 }
 
-void XWinKeyboard::HandleEvents()
+void KeyboardXWin::HandleEvents()
 {
    XEvent event;
    KeySym key;
@@ -272,16 +272,16 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
          // lock_keylock[key==lockKey] -> Unlocked
          if (vj_key == VJKEY_ESC)       // Check for Escape from bad state
          {
-            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: Trying to ESCAPE from current state.\n" << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: Trying to ESCAPE from current state.\n" << vjDEBUG_FLUSH;
             if(mLockState != Unlocked)
             {
-               vjDEBUG_NEXT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: <ESCAPE> --> Unlocked\n" << vjDEBUG_FLUSH;
+               vjDEBUG_NEXT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: STATE switch: <ESCAPE> --> Unlocked\n" << vjDEBUG_FLUSH;
                mLockState = Unlocked;
                unlockMouse();
             }
             else
             {
-               vjDEBUG_NEXT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: Already unlocked.  Cannot ESCAPE." << vjDEBUG_FLUSH;
+               vjDEBUG_NEXT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: Already unlocked.  Cannot ESCAPE." << vjDEBUG_FLUSH;
             }
          }
          else if(mLockState == Unlocked)
@@ -290,25 +290,25 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
             {
                mLockState = Lock_KeyDown;       // Switch state
                mLockStoredKey = vj_key;         // Store the VJ key that is down
-               vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Unlocked --> Lock_KeyDown\n" << vjDEBUG_FLUSH;
+               vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: STATE switch: Unlocked --> Lock_KeyDown\n" << vjDEBUG_FLUSH;
                lockMouse();
             }
             else if(vj_key == mLockToggleKey)
             {
                mLockState = Lock_LockKey;
-               vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Unlocked --> Lock_LockKey\n" << vjDEBUG_FLUSH;
+               vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: STATE switch: Unlocked --> Lock_LockKey\n" << vjDEBUG_FLUSH;
                lockMouse();
             }
          }
          else if((mLockState == Lock_KeyDown) && (vj_key == mLockToggleKey))     // Just switch the current locking state
          {
             mLockState = Lock_LockKey;
-            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Lock_KeyDown --> Lock_LockKey\n" << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: STATE switch: Lock_KeyDown --> Lock_LockKey\n" << vjDEBUG_FLUSH;
          }
          else if((mLockState == Lock_LockKey) && (vj_key == mLockToggleKey))
          {
             mLockState = Unlocked;
-            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Lock_LockKey --> Unlocked\n" << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: STATE switch: Lock_LockKey --> Unlocked\n" << vjDEBUG_FLUSH;
             unlockMouse();
          }
 
@@ -331,7 +331,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
          if((mLockState == Lock_KeyDown) && (vj_key == mLockStoredKey))
          {
             mLockState = Unlocked;
-            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Lock_KeyDown --> Unlocked\n" << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: STATE switch: Lock_KeyDown --> Unlocked\n" << vjDEBUG_FLUSH;
             unlockMouse();
          }
 
@@ -444,7 +444,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
 
 }
 
-int XWinKeyboard::stopSampling()
+int KeyboardXWin::stopSampling()
 {
   if (myThread != NULL)
   {
@@ -455,7 +455,7 @@ int XWinKeyboard::stopSampling()
   return 1;
 }
 
-int XWinKeyboard::xKeyToKey(KeySym xKey)
+int KeyboardXWin::xKeyToKey(KeySym xKey)
 {
    switch (xKey)
    {
@@ -557,7 +557,7 @@ int XWinKeyboard::xKeyToKey(KeySym xKey)
 /*****************************************************************/
 /*****************************************************************/
 // Open the X window to sample from
-int XWinKeyboard::openTheWindow()
+int KeyboardXWin::openTheWindow()
 {
    int i;
 
@@ -566,7 +566,7 @@ int XWinKeyboard::openTheWindow()
    {
       vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL)
          <<  clrOutNORM(clrRED,"ERROR:")
-         << "vjKeyboard::StartSampling() : failed to open display"
+         << "vrj::Keyboard::StartSampling() : failed to open display"
          << std::endl << vjDEBUG_FLUSH;
       return 0;
    }
@@ -602,7 +602,7 @@ int XWinKeyboard::openTheWindow()
    // If we didn't get a matching visual, we're in trouble.
    else {
       vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:")
-                  << "vjKeyboard::startSampling() : find visual failed"
+                  << "vrj::Keyboard::startSampling() : find visual failed"
                   << std::endl << vjDEBUG_FLUSH;
       return 0;
    }
@@ -633,7 +633,7 @@ int XWinKeyboard::openTheWindow()
    XClearWindow(m_display,m_window);    // Try to clear the background
 
    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL)
-              << "vjXWinKeyboard::openTheWindow() : done." << std::endl
+              << "vrj::KeyboardXWin::openTheWindow() : done." << std::endl
               << vjDEBUG_FLUSH;
 
    XFree (vis_infos);
@@ -644,7 +644,7 @@ int XWinKeyboard::openTheWindow()
 
 
 /* Sets basic window manager hints for a window. */
-void XWinKeyboard::setHints(Window window,
+void KeyboardXWin::setHints(Window window,
     char*  window_name,
     char*  icon_name,
     char*  class_name,
@@ -705,7 +705,7 @@ void XWinKeyboard::setHints(Window window,
 
 }
 
-Window XWinKeyboard::createWindow (Window parent, unsigned int border, unsigned long
+Window KeyboardXWin::createWindow (Window parent, unsigned int border, unsigned long
      fore, unsigned long back, unsigned long event_mask)
 {
   Window window;
@@ -736,9 +736,9 @@ Window XWinKeyboard::createWindow (Window parent, unsigned int border, unsigned 
 
 // Called when locking states
 // - Recenter the mouse
-void XWinKeyboard::lockMouse()
+void KeyboardXWin::lockMouse()
 {
-   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: LOCKING MOUSE..." << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: LOCKING MOUSE..." << vjDEBUG_FLUSH;
 
    // Center the mouse
    int win_center_x(m_width/2),win_center_y(m_height/2);
@@ -768,9 +768,9 @@ void XWinKeyboard::lockMouse()
 }
 
 // Called when locking ends
-void XWinKeyboard::unlockMouse()
+void KeyboardXWin::unlockMouse()
 {
-   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: UN-LOCKING MOUSE..." << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: UN-LOCKING MOUSE..." << vjDEBUG_FLUSH;
 
    // Un-grab the keyboard now
    XUngrabKeyboard(m_display, CurrentTime);

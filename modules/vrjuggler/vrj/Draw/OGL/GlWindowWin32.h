@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_GL_WIN_WIN32_H_
-#define _VRJ_GL_WIN_WIN32_H_
+#ifndef _VRJ_GL_WINDOW_WIN32_H_
+#define _VRJ_GL_WINDOW_WIN32_H_
 
 #pragma warning(disable:4786)  // identifier truncated to 255 characters in the debug information
 
@@ -42,10 +42,10 @@
 namespace vrj
 {
    
-class VJ_CLASS_API GlWinWin32 : public GlWindow
+class VJ_CLASS_API GlWindowWin32 : public GlWindow
 {
 public:
-   GlWinWin32()
+   GlWindowWin32()
    {
 		match = NULL;		// Initialize all values to null
 		hWnd = NULL;
@@ -109,13 +109,13 @@ protected:
 	// message handler for each window
 
 	// Add a window to the map
-	static void addWindow(HWND handle, GlWinWin32* glWin);
+	static void addWindow(HWND handle, GlWindowWin32* glWin);
 	// Remove a window from the map
 	static void removeWindow(HWND handle);
 	// Get the glWin we are dealing with
-	static GlWinWin32* getGlWin(HWND handle);
+	static GlWindowWin32* getGlWin(HWND handle);
 
-   static std::map<HWND, GlWinWin32*>		glWinMap;
+   static std::map<HWND, GlWindowWin32*>		glWinMap;
 
 public:
 	HWND	hWnd;		// Window handle

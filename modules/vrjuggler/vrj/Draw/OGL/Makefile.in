@@ -52,12 +52,12 @@ SRCS 		= GlDrawManager.cpp		\
                   GlWindow.cpp
 
 ifeq (@OS_TYPE@, Win32)
-    SRCS	+= GlWinWin32.cpp
+    SRCS	+= GlWindowWin32.cpp
 else
     ifeq (@PLATFORM@, Darwin)
-        SRCS    += GlOSXWindow.cpp
+        SRCS    += GlWindowOSX.cpp
     else
-    	SRCS	+= GlxWindow.cpp
+    	SRCS	+= GlWindowXWin.cpp
     endif
 endif
 

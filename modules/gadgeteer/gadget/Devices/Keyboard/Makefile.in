@@ -51,9 +51,9 @@ ifeq (@OS_TYPE@, Win32)
     SRCS	= KeyboardWin32.cpp
 else
     ifeq (@PLATFORM@, Darwin)
-	SRCS	= OSXKeyboard.cpp
+	SRCS	= KeyboardOSX.cpp
     else
-	SRCS	= XWinKeyboard.cpp
+	SRCS	= KeyboardXWin.cpp
     endif
 endif
 

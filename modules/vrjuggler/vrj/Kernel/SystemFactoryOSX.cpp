@@ -36,7 +36,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include <vrj/Kernel/OSXSystemFactory.h>
+#include <vrj/Kernel/SystemFactoryOSX.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 #include <vrj/Util/Debug.h>
@@ -45,7 +45,7 @@
 namespace vrj
 {
    
-vprSingletonImp(OSXSystemFactory);
+vprSingletonImp(SystemFactoryOSX);
 
 // This function comes from Carbon SetupGL 1.5 distributed by Apple
 // Corporation.  Its use is here is permitted by the license.
@@ -62,7 +62,7 @@ static Boolean PreflightGL (Boolean checkFullscreen)
    return true;
 }
 
-void OSXSystemFactory::CarbonApplicationThread(void* nullData)
+void SystemFactoryOSX::CarbonApplicationThread(void* nullData)
 {
     Initialize();
     PreflightGL (false);
@@ -71,11 +71,11 @@ void OSXSystemFactory::CarbonApplicationThread(void* nullData)
     EventLoop(); // This is where we will put the main loop to retrieve events from carbon
 }
 
-OSXSystemFactory::OSXSystemFactory()
+SystemFactoryOSX::SystemFactoryOSX()
 {
     InitComplete = false; //We haven't initialized yet!
 
-    vpr::ThreadMemberFunctor<OSXSystemFactory>* memberFunctor = new vpr::ThreadMemberFunctor<OSXSystemFactory>(this, &OSXSystemFactory::CarbonApplicationThread, NULL);
+    vpr::ThreadMemberFunctor<SystemFactoryOSX>* memberFunctor = new vpr::ThreadMemberFunctor<SystemFactoryOSX>(this, &SystemFactoryOSX::CarbonApplicationThread, NULL);
     vpr::Thread* new_thread;
     new_thread = new vpr::Thread(memberFunctor);
 
@@ -110,11 +110,11 @@ OSXSystemFactory::OSXSystemFactory()
 
 static OSErr QuitAppleEventHandler( const AppleEvent *appleEvt, AppleEvent* reply, UInt32 refcon )
 {
-    OSXSystemFactory::instance()->setQuitFlag(true);
+    SystemFactoryOSX::instance()->setQuitFlag(true);
     return noErr;
 }
 
-void OSXSystemFactory::Initialize()
+void SystemFactoryOSX::Initialize()
 {
     OSErr	err;
 
@@ -142,9 +142,9 @@ void OSXSystemFactory::Initialize()
     myBundle = CFBundleCreate(kCFAllocatorDefault, bundleURL);
 
     if( CreateNibReferenceWithCFBundle(myBundle, CFSTR("mainmenu"), &mainmenu) != 0 )
-        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjOSXSystemFactory::Initialize():  Error finding mainmenu in the bundle!" << std::endl << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::Initialize():  Error finding mainmenu in the bundle!" << std::endl << vjDEBUG_FLUSH;
     else if( SetMenuBarFromNib(mainmenu, CFSTR("MainMenu") ) != 0 )
-        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjOSXSystemFactory::Initialize():  Error setting the menubar!" << std::endl << vjDEBUG_FLUSH;;
+        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::Initialize():  Error setting the menubar!" << std::endl << vjDEBUG_FLUSH;;
 
     CFRelease(bundleURL);
     CFRelease(bundle_path_cfstr); */
@@ -171,13 +171,13 @@ void OSXSystemFactory::Initialize()
     DrawMenuBar();
 }
 
-void OSXSystemFactory::EventLoop()
+void SystemFactoryOSX::EventLoop()
 {
     Boolean	gotEvent;
     EventRecord	event;
 
     gQuitFlag = false;
-    //vjDEBUG(vjDBG_INPUT_MGR,0) << "vjOSXSystemFactory::EventLoop()" << std::endl << vjDEBUG_FLUSH;
+    //vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::EventLoop()" << std::endl << vjDEBUG_FLUSH;
     do
     {
         gotEvent = WaitNextEvent(everyEvent,&event,36000,nil);
@@ -192,7 +192,7 @@ void OSXSystemFactory::EventLoop()
     ExitToShell();					
 }
 
-void OSXSystemFactory::DoEvent(EventRecord *event)
+void SystemFactoryOSX::DoEvent(EventRecord *event)
 {
     char	key;
     short	part;
@@ -223,7 +223,7 @@ void OSXSystemFactory::DoEvent(EventRecord *event)
     }
 }
 
-void OSXSystemFactory::DoMenuCommand(long menuResult)
+void SystemFactoryOSX::DoMenuCommand(long menuResult)
 {
     short	menuID;		/* the resource ID of the selected menu */
     short	menuItem;	/* the item number of the selected menu */
@@ -237,7 +237,7 @@ void OSXSystemFactory::DoMenuCommand(long menuResult)
             switch (menuItem)
             {
                 case iAbout:
-                    vjDEBUG(vjDBG_INPUT_MGR,0) << "vjOSXSystemFactory::DoMenuCommand()" << "   AboutBox Menu selected" << std::endl << vjDEBUG_FLUSH;
+                    vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::DoMenuCommand()" << "   AboutBox Menu selected" << std::endl << vjDEBUG_FLUSH;
                     break;
 
                 case iQuit:

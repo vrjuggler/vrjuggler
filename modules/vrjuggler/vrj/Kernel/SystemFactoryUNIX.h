@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SGI_SYSTEM_FACTORY_H_
-#define _VRJ_SGI_SYSTEM_FACTORY_H_
+#ifndef _VRJ_SYSTEM_FACTORY_UNIX_H_
+#define _VRJ_SYSTEM_FACTORY_UNIX_H_
 
 #include <vrj/vjConfig.h>
 #include <vrj/Kernel/SystemFactory.h>
@@ -41,24 +41,24 @@ namespace vrj
 {
    
 //---------------------------------------------------
-//: Concrete class for SGI System specific Factory.
+//: Concrete class for UNIX System specific Factory.
 //
-//	Concrete class to create SGI system specific objects.
+//	Concrete class to create UNIX system specific objects.
 //
 // @author Allen Bierbaum
 //  Date: 9-9-97
 //----------------------------------------------------
-class SGISystemFactory : public SystemFactory
+class SystemFactoryUNIX : public SystemFactory
 {
 public:
 
       // --- Singleton stuff --- //
 protected:
    /// Constructor:  Hidden, so no instantiation is allowed
-   SGISystemFactory()   // Do nothing, but hide
+   SystemFactoryUNIX()   // Do nothing, but hide
    {;}
 
-   vprSingletonHeader(SGISystemFactory);
+   vprSingletonHeader(SystemFactoryUNIX);
 };
 
 };

@@ -44,7 +44,7 @@
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Display.h>
-#include <vrj/Input/Devices/Keyboard/XWinKeyboard.h>
+#include <vrj/Input/Devices/Keyboard/KeyboardXWin.h>
 
 
 namespace vrj
@@ -67,11 +67,11 @@ typedef struct {
 // to dealing with a GLX window
 // in OpenGL
 //------------------------------------
-class GlxWindow: public vrj::GlWindow, public vrj::XWinKeyboard
+class GlWindowXWin: public vrj::GlWindow, public vrj::KeyboardXWin
 {
 public:
-    GlxWindow();
-    ~GlxWindow();
+    GlWindowXWin();
+    ~GlWindowXWin();
 
     void swapBuffers();
     int open();

@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_XWIN_KEYBOARD_H_
-#define _VRJ_XWIN_KEYBOARD_H_
+#ifndef _VRJ_KEYBOARD_XWIN_H_
+#define _VRJ_KEYBOARD_XWIN_H_
 
 #include <vrj/vjConfig.h>
 
@@ -67,7 +67,7 @@ namespace vrj
 //
 // See also: Keyboard, KeyboardProxy
 //--------------------------------------------------------------
-class XWinKeyboard : public Input, public Keyboard
+class KeyboardXWin : public Input, public Keyboard
 {
 public:
    // Enum to keep track of current lock state for state machine
@@ -76,7 +76,7 @@ public:
    // Lock_LockKeyDown - The mouse is locked due to a key being held down
    enum lockState { Unlocked, Lock_LockKey, Lock_KeyDown};
 
-   XWinKeyboard()
+   KeyboardXWin()
    {
       m_visual = NULL;
       m_display = NULL;
@@ -88,7 +88,7 @@ public:
       mHandleEventsHasBeenCalled = false;      // Initialize it to not being called yet
       mWeOwnTheWindow = true;
    }
-   ~XWinKeyboard() { stopSampling();}
+   ~KeyboardXWin() { stopSampling();}
 
    virtual bool config(ConfigChunk* c);
 

@@ -31,13 +31,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vjConfig.h>
-#include <vrj/Kernel/Win32SystemFactory.h>
+#include <vrj/Kernel/SystemFactoryWin32.h>
 
 namespace vrj
 {
    
 
-//vjWin32SystemFactory* Win32SystemFactory::_instance = NULL;
-vprSingletonImp(Win32SystemFactory);
+//SystemFactoryWin32* SystemFactoryWin32::_instance = NULL;
+vprSingletonImp(SystemFactoryWin32);
 
 };

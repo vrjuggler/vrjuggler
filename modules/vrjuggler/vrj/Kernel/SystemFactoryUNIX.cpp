@@ -31,13 +31,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vjConfig.h>
-#include <vrj/Kernel/SGISystemFactory.h>
+#include <vrj/Kernel/SystemFactoryUNIX.h>
 
 namespace vrj
 {
    
-//vjSGISystemFactory* SGISystemFactory::_instance = NULL;
-vprSingletonImp(SGISystemFactory);
+//SystemFactoryUNIX* SystemFactoryUNIX::_instance = NULL;
+vprSingletonImp(SystemFactoryUNIX);
 
 
 };
