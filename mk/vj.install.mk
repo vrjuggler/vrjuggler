@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # $Id$
 #
-# This include file <vj.clean.mk> handles install operations.  It adds an
+# This include file <vj.install.mk> handles install operations.  It adds an
 # 'install' target.
 # -----------------------------------------------------------------------------
 # The Makefile including this file must define the following variables:
@@ -22,4 +22,4 @@ INSTALL_DEPS	?=
 
 install: ${INSTALL_DEPS}
 	${scriptdir}/mkinstalldirs ${includedir}
-	${INSTALL} -m 644 ${srcdir}/*.h ${includedir}
+	${INSTALL} -m 664 ${srcdir}/*.h ${includedir}
