@@ -23,15 +23,21 @@
 #include <sys/timeb.h>
 #endif
 
+/* Old InterSense Code
 static struct timeb t;
 static unsigned long initialTime;
+*/
+static vpr::Interval initialTime;
 
 
 /************************************************************************/
 void initTimer()
 {
-    //ftime(&t);
-    //initialTime = t.time;
+   /* Old InterSense Code
+   ftime(&t);
+   initialTime = t.time;
+   */
+   initialTime.setNow();
 }
 
 
@@ -39,9 +45,13 @@ void initTimer()
 /* Returns current time in seconds */
 float timeNow()
 {
-    //ftime(&t);
-    return(vpr::Interval::now().secf());
-    //return ((float)(t.time - initialTime) + (float)t.millitm/1000.0f);
+   /* Old InterSense Code
+   ftime(&t);
+   return ((float)(t.time - initialTime) + (float)t.millitm/1000.0f);
+   */
+   vpr::Interval currentTime;
+   currentTime.setNow();
+   return((float)(currentTime.getBaseVal()-initialTime.getBaseVal())/1000000);
 }
 
 
