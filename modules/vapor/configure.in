@@ -424,6 +424,7 @@ if test "x${_with_boost}" != "xno" ; then
     _vpr_save_CPPFLAGS="$CPPFLAGS -I${_with_boost}/include"
     AC_CHECK_HEADER(boost/utility.hpp,
                     BOOST_DIR="${_with_boost}/include" LOCAL_BOOST='Y')
+    CPPFLAGS="${_vpr_save_CPPFLAGS}"
 fi
 
 DPP_LANG_RESTORE
