@@ -173,6 +173,7 @@ public class XMLConfigIOHandler
          String xml = db.xmlRep();
          DataOutputStream ostream = new DataOutputStream(new FileOutputStream(out));
          ostream.writeBytes("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+         ostream.writeBytes("<?org-vrjuggler-jccl-settings config.db.version=\"2.0\"?>\n");
          ostream.writeBytes(xml);
       }
       catch (Exception e)
@@ -407,6 +408,7 @@ public class XMLConfigIOHandler
          String xml = db.xmlRep();
          DataOutputStream ostream = new DataOutputStream (new FileOutputStream (out));
          ostream.writeBytes("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+         ostream.writeBytes("<?org-vrjuggler-jccl-settings desc.db.version=\"2.0\"?>\n");
          ostream.writeBytes(xml);
       }
       catch (Exception e)
