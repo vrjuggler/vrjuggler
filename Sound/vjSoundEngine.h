@@ -45,13 +45,18 @@ class vjConfigChunk;
 class vjSoundEngine
 {
 public:
+   vjSoundEngine();
    virtual void init() {}
    
    // your application must call this once per main loop.
-   virtual void update() {}
+   virtual void update()
+   {
+      //cout<<"[SoundEngine] Update\n"<<flush;
+   }
 
 	virtual void sync() 
 	{
+      //cout<<"[SoundEngine] Sync\n"<<flush;
 	}
    
    // lookup a filename, given the sound's alias.

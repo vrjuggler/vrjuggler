@@ -93,8 +93,8 @@ public:
 template <class ENGINE>
 vjSoundEngineConstructor<ENGINE>::vjSoundEngineConstructor()
 {
-   //vjASSERT(vjSoundFactory::instance() != NULL);
-   vjSoundFactory::registerConstructor( this );
+   vjASSERT(vjSoundFactory::instance() != NULL);
+   vjSoundFactory::instance()->registerConstructor( this );
 }
 
 #endif

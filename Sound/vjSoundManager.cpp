@@ -37,9 +37,9 @@
 
 vjSoundManager* vjSoundManager::_instance = NULL;   //: The instance ptr
 
-vjSoundManager::vjSoundManager ()
+vjSoundManager::vjSoundManager() : mSoundEngine( NULL )
 {
-    mSoundEngine = NULL;
+    
 }
 
 
@@ -61,9 +61,12 @@ bool vjSoundManager::configAdd(vjConfigChunk* chunk)
    }
 
    // Allocate new engine, configure it, init it
-   mSoundEngine = vjSoundFactory::loadEngine(chunk);
+   mSoundEngine = vjSoundFactory::instance()->loadEngine(chunk);
    if(mSoundEngine != NULL)
    {
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"SUCCESS:")
+                                          << "Initializing SoundEngine\n" << vjDEBUG_FLUSH;
+      
       mSoundEngine->init();         // Initialize the new puppy *woof*
       return true;
    }
@@ -88,12 +91,20 @@ bool vjSoundManager::configRemove(vjConfigChunk* chunk)
 //+          false - Can't handle it
 bool vjSoundManager::configCanHandle(vjConfigChunk* chunk)
 {
-   return vjSoundFactory::recognizeEngine( chunk );
+   return vjSoundFactory::instance()->recognizeEngine( chunk );
 }
 
 //: Enable a frame to be drawn
 void vjSoundManager::update()
 {
+   if(mSoundEngine == NULL)
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+               << clrOutNORM(clrRED,"[SoundEngine] ERROR: ")
+               << " Engine wasn't created yet, using stubbed out version (run-time reconfigure at this point may fail or crash the system).\n" << vjDEBUG_FLUSH;
+      mSoundEngine = new vjSoundEngine;
+   }
+   
    if(mSoundEngine != NULL)
       mSoundEngine->update();
 }
@@ -102,6 +113,14 @@ void vjSoundManager::update()
 //! POST: The frame has been drawn
 void vjSoundManager::sync()
 {
+   if(mSoundEngine == NULL)
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+               << clrOutNORM(clrRED,"[SoundEngine] ERROR: ")
+               << " Engine wasn't created yet, using stubbed out version (run-time reconfigure at this point may fail or crash the system).\n" << vjDEBUG_FLUSH;
+      mSoundEngine = new vjSoundEngine;
+   }
+   
    if(mSoundEngine != NULL)
       mSoundEngine->sync();
 }
@@ -112,6 +131,14 @@ void vjSoundManager::sync()
 // returns NULL if invalid name.
 vjSound* vjSoundManager::getHandle( const char* const alias )
 {
+   if(mSoundEngine == NULL)
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+               << clrOutNORM(clrRED,"[SoundEngine] ERROR: ")
+               << " Engine wasn't created yet, using stubbed out version (run-time reconfigure at this point may fail or crash the system).\n" << vjDEBUG_FLUSH;
+      mSoundEngine = new vjSoundEngine;
+   }
+   
    if(mSoundEngine != NULL)
       return mSoundEngine->getHandle( alias );
    else
@@ -122,6 +149,14 @@ vjSound* vjSoundManager::getHandle( const char* const alias )
 // memory managed by engine
 vjSound* vjSoundManager::newSound()
 {
+   if(mSoundEngine == NULL)
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+               << clrOutNORM(clrRED,"[SoundEngine] ERROR: ")
+               << " Engine wasn't created yet, using stubbed out version (run-time reconfigure at this point may fail or crash the system).\n" << vjDEBUG_FLUSH;
+      mSoundEngine = new vjSoundEngine;
+   }
+   
    if(mSoundEngine != NULL)
       return mSoundEngine->newSound();
    else
