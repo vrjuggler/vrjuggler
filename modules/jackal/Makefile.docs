@@ -46,11 +46,16 @@ DOC_PKGS=	$(BASE_PKG).config		\
 		$(BASE_PKG).config.io		\
 		$(BASE_PKG).config.undo		\
 		$(BASE_PKG).editors		\
-		$(BASE_PKG).editors.event
-SRC_PATH=	$(srcdir)/config:$(srcdir)/editors
+		$(BASE_PKG).editors.event	\
+		$(BASE_PKG).rtrc		\
+		jccl
+SRC_PATH=	$(srcdir)/config:$(srcdir)/editors:$(srcdir)/plugins/corba_rtrc
 JDOM_DIR=	../../external/jdom
 TL_DIR=		../../external/TableLayout
 CLASSPATH=	$(TL_DIR)/TableLayout.jar:$(JDOM_DIR)/build/jdom.jar
+
+JACORB_DIR=	../../external/JacORB
+IDL=		$(JACORB_DIR)/idl
 
 include doc/version.mk
 
@@ -60,8 +65,13 @@ doc_prefix=	$(webroot)/$(instdir)
 DOC_ROOT=	programmer.reference.java
 
 docs:
-	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(SRC_PATH)	\
-          -classpath "$(CLASSPATH)" $(DOC_PKGS)
+	JAVA_HOME=$(JDK_HOME) JACORB_PATH=$(JACORB_DIR) $(IDL)		\
+          -d temp -I../tweek plugins/corba_rtrc/idl/*.idl
+	@echo '<html><body>Contains classes that are generated automatically by an IDL-to-Java compiler from the JCCL remote run-time reconfiguration IDL sources.</body></html>' >temp/jccl/package.html
+	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT)				\
+          -sourcepath $(SRC_PATH):temp -classpath "$(CLASSPATH)"	\
+          $(DOC_PKGS)
+	rm -rf temp
 
 install-docs:
 	mkdir -p $(doc_prefix)
