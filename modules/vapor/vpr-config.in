@@ -1,4 +1,4 @@
-#!@PERL@ -w
+#!/usr/bin/env perl
 
 # ***************** <VPR heading BEGIN do not edit this line> *****************
 #

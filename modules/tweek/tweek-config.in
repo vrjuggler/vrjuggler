@@ -1,4 +1,4 @@
-#!@PERL@ -w
+#!/usr/bin/env perl
 
 # **************** <Tweek heading BEGIN do not edit this line> ****************
 #  Tweek
