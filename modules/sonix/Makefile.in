@@ -2,8 +2,8 @@ default: all
 
 include @topdir@/make.defs.mk
 
-DEVELOPER_TREE       = ${topdir}/developer.tree
-includedir           = ${DEVELOPER_TREE}/lib${LIBBITSUF}
+includedir           = @includedir@
+instlinks            = $(topdir)/install-clone
 
 AJ_LIBRARY           = @LIB_PREFIX@AudioJuggler
 AJ_LIB_STATIC        = $(AJ_LIBRARY).$(STATICLIB_EXT)
@@ -16,53 +16,6 @@ DYNAMIC_LIBS   = $(LIBS)
 
 # Subdirectories used for recursion through the source tree.
 SUBDIR          = aj 
-#samples
-
-#- Name of the directory where debugging objects and libraries
-#                  are built.
-DBG_DIR        = dbg
-
-#- Name of the directory where optimized objects and libraries
-#                  are built.
-OPT_DIR        = opt
-
-#- Default diretory for installations.
-DEFAULT_DIR     = $(OPT_DIR)
-
-# Extra compiler and linker options needed only by this file.
-DBG_FLAGS       = -D_DEBUG @DBG_FLAGS@
-OPT_FLAGS       = -D_OPT @OPT_FLAGS@
-
-#- Full destination path for the compiled objects.
-BUILDDIR       = ${topdir}/developer.tree
-
-#- Full destination path for the compiled debugging
-#                  objects.
-#DBG_BUILDDIR   
-
-#- Full destination path for the compiled optimizied
-#                  objects.
-#OPT_BUILDDIR   
-
-#- Full destination path for the compiled libraries.
-LIBDIR_BASE               = ${BUILDDIR}/lib${LIBBITSUF}
-#LIBDIR               = ${BUILDDIR}/lib${LIBBITSUF}
-
-#- Full destination path for the compiled debugging
-#                  libraries.
-DBG_LIBDIR           = ${LIBDIR}/dbg
-
-#- Full destination path for the compiled optimized
-#                 libraries.
-OPT_LIBDIR           = ${LIBDIR}/opt
-
-#- The permissions mask to use when installing files.
-UMASK          = 022
-
-
-
-include $(MKPATH)/dpp.libs.mk
-
 
 # needed for compiling the DSO
 EXTRA_LIBS      = @LIBS@ -lm
@@ -77,7 +30,7 @@ $(LIBDIR)/$(AJ_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
-	$(RANLIB) $@"
+	$(RANLIB) $@
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -97,9 +50,27 @@ $(LIBDIR)/$(AJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
+
+# =============================================================================
+# Library targets.
+# =============================================================================
+
+
+# libs.mk calls these two...
+BEFOREBUILD	= beforebuild
+AFTERBUILD	= afterbuild
+
+# Things to do before the object files and library are built.
+beforebuild:
+	@chmod +x $(topdir)/audiojuggler-config
+
+# Things to do after the object files and library are built.
+afterbuild:
+	@$(MAKE) links
+   
 # =============================================================================
 # Make links for developer use that provide the needed functionality for
-# the $VJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
+# the $AJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
 # should be set to $(instlinks).
 # =============================================================================
 links:
@@ -133,22 +104,60 @@ clean-links:
 	@echo "------------------------------------------------"
 	rm -rf $(instlinks)
 
-pre-install-headers:
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.include.dist -p $(prefix)
 
-post-install-headers:
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)                   \
-       	  $(VJROOT_ABS)/vjConfig.h $(includedir)/vjConfig.h
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)                   \
-          $(topdir)/vjDefines.h $(includedir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)                   \
-          $(topdir)/vjParam.h $(includedir)
+# =============================================================================
+# Installation targets.  The default (what is done by 'install') is to install
+# the static debugging version of the libraries.  The steps taken for a full
+# installation are:
+#
+#     1) Create the full installation directory hierarchy.
+#     2) Install the libraries.
+#     3) Install the header files.
+#     4) Install the test programs.
+#     5) Install the contents of the Data directory.
+#     6) Install the Java-based config editor (if possible).
+# =============================================================================
+
+BEFOREINSTALL	= beforeinstall
+AFTERINSTALL	= afterinstall
+
+# Steps to take before beginning the installation process.  This target is
+# independent of the current ABI.
+beforeinstall:
+	@$(MAKE) hier
+
+# Make the full directory hierarchy for the installation.
+hier:
+	@echo "------------------------------------------------"
+	@echo "Making hierarchy"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(prefix)
+	$(SHELL) $(MKINSTALLDIRS) $(bindir)
+	$(SHELL) $(MKINSTALLDIRS) $(includedir)/aj
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)/samples
+	@for lib in $(ABI_LIST) ; do					\
+            $(MAKE) dppABI=$$lib hier-abi ;   \
+          done
+
+hier-abi:
+	$(SHELL) $(MKINSTALLDIRS) $(prefix)/$(LIBDIR_NAME)/$(ISA)/$(DBG_DIR)
+	$(SHELL) $(MKINSTALLDIRS) $(prefix)/$(LIBDIR_NAME)/$(ISA)/$(OPT_DIR)
+
+# Steps to take after the installation process is complete.  This target is
+# independent of the current ABI.
+afterinstall:
+	@echo "==============================================================="
+	@echo "VPR installation complete"
+	@echo "==============================================================="
+
+
+include $(MKPATH)/dpp.libs.mk
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 include $(MKPATH)/dpp.clean.mk
-CLEAN_DIRS      += $(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLEAN_DIRS      += $(BUILDDIR_BASE) $(LIBDIR_NAME) $(instlinks)
 CLOBBER_DIRS    += $(BUILDDIR_BASE) $(LIBDIR_NAME)
 
 
