@@ -50,24 +50,13 @@ SUBOBJDIR	= $(JCCL_LIBRARY)
 # Prefix for recursive stuff.
 #DIRPRFX		= Utils/
 
-SRCS 		= vjDebug.cpp			\
-                  vjFileIO.cpp			\
-                  vjStreamLock.cpp		\
-                  vjXercesStreamInputSource.cpp	\
+SRCS 		= vjXercesStreamInputSource.cpp	\
                   vjXercesStreamInputStream.cpp	\
                   vjXercesXMLError.cpp		\
                   vjXercesXMLParser.cpp		\
                   vjXercesXMLParserPool.cpp
 
-BEFOREBUILD	= beforebuild
-
-include $(MKPATH)/dpp.obj-subdir.mk
-
-# -----------------------------------------------------------------------------
-# Library targets.
-# -----------------------------------------------------------------------------
-beforebuild:
-	@$(SHELL) $(scriptdir)/mkinstalldirs $(OBJDIR)
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.

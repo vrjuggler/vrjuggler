@@ -39,14 +39,14 @@
 
 namespace jccl {
 
-class vjXercesXMLError : public ErrorHandler
+class XercesXMLError : public ErrorHandler
 {
 public:
-    vjXercesXMLError()
+    XercesXMLError()
     {
     }
 
-    ~vjXercesXMLError()
+    ~XercesXMLError()
     {
     } 
 
