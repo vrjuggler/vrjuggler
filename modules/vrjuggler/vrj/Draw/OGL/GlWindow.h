@@ -204,7 +204,8 @@ protected:
    int  mWindowId;                  //: A unique window id to identify us
 
 private:
-   static int mCurMaxWinId;             // The current maximum window id
+   static vpr::Mutex mWinIdMutex;
+   static int        mCurMaxWinId;             // The current maximum window id
 
    static int getNextWindowId();
 };
