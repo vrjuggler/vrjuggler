@@ -294,6 +294,14 @@ public:
     */
    vpr::ReturnStatus connect( vpr::Interval timeout = vpr::Interval::NoTimeout );
 
+   /** Completes a previously started connection to a given peer
+   *
+   * NOTE: UDP sockets can use this function as well.  It lets them set a remote
+   *       sockets peer and connection status.
+   */
+   vpr::ReturnStatus completeConnection( SocketImplSIM* connectedPeer);
+
+
    /**
     * Gets the status of a possibly connected socket.
     *

@@ -167,7 +167,7 @@ public:
    /**
     * @param connector The socket making the connection.
     */
-   vpr::ReturnStatus addConnector(vpr::SocketStreamImplSIM* connector);
+   vpr::ReturnStatus addConnector(vpr::SocketImplSIM* peerSock);
 
    /**
     * Gets the current number of connectors waiting to connect to this
@@ -183,8 +183,8 @@ public:
    virtual vpr::ReturnStatus isWriteReady() const;
 
 protected:
-   std::queue<SocketStreamImplSIM*> mConnectorQueue; /**< Queue of pending
-                                                          connection requests */
+   /**< Queue of pending connection requests.This is a list of the requesting connectors */
+   std::queue<SocketStreamImplSIM*> mConnectorQueue;
    vpr::Mutex              mConnectorQueueMutex; /**< Mutex for connector queue */
 
    bool mNoDelay;
