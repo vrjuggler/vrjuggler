@@ -37,28 +37,89 @@
 package org.vrjuggler.tweek.services;
 
 import javax.swing.filechooser.*;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 
 /**
+ * A filter for file dialogs and directories that will accept only files that
+ * have extensions the filter supports. This filter works with both the Swing
+ * FileChooser FileFilter and the standard java.io.FileFilter interface.
+ *
+ * @see java.io.FileFilter
+ * @see javax.swing.filechooser.FileFilter
  * @since 1.0
  */
-public class ExtensionFileFilter extends FileFilter
+public class ExtensionFileFilter
+   extends javax.swing.filechooser.FileFilter
+   implements java.io.FileFilter
 {
+   /**
+    * Creates a new extension file filter with an empty description and no
+    * supported extensions.
+    */
+   public ExtensionFileFilter ()
+   {
+      this("");
+   }
+
+   /**
+    * Creates a new extension file filter with the given description and no
+    * supported extensions.
+    *
+    * @param desc    a short description of this filter
+    */
    public ExtensionFileFilter (String desc)
    {
+      this( desc, new ArrayList() );
+   }
+
+   /**
+    * Creates a new extension file filter with an empty description and an
+    * initial set of supported extensions.
+    *
+    * @param extensions    a list of the extensions without the leading '.'
+    */
+   public ExtensionFileFilter (List extensions)
+   {
+      this( "", extensions );
+   }
+
+   /**
+    * Creates a new extension file filter with the given description and an
+    * initial set of supported extensions.
+    *
+    * @param desc          a short description of this filter
+    * @param extensions    a list of the extensions without the leading '.'
+    */
+   public ExtensionFileFilter (String desc, List extensions )
+   {
       description = desc;
+      for ( Iterator itr=extensions.iterator(); itr.hasNext(); ) {
+         addExtension( (String)itr.next() );
+      }
    }
 
    /**
     * Adds the given extension (without ".") to this object's known file
     * extensions.
+    *
+    * @param ext  the extension to add
     */
    public void addExtension (String ext)
    {
       m_exts.add(ext);
    }
 
+   /**
+    * Tests whether the given file is accepted by this filter.
+    *
+    * @return  true if the file has an extensions supported by this filter;
+    *          false otherwise
+    */
    public boolean accept (java.io.File f)
    {
       boolean status = false;
@@ -89,6 +150,9 @@ public class ExtensionFileFilter extends FileFilter
       return status;
    }
 
+   /**
+    * Gets the textual description of this filter.
+    */
    public String getDescription ()
    {
       String full_desc = description;
@@ -117,7 +181,11 @@ public class ExtensionFileFilter extends FileFilter
    }
 
    /**
-    * Gets the extension of the given file.
+    * Gets the extension of the given file without the leading '.'.
+    *
+    * @param f    the file from which to get the extension
+    *
+    * @return  the extension of the file without the leading '.'
     */
    private String getExtension (java.io.File f)
    {
@@ -133,6 +201,13 @@ public class ExtensionFileFilter extends FileFilter
       return ext;
    }
 
+   /**
+    * The description of this filter.
+    */
    private String description = null;
+
+   /**
+    * A list of all the extensions supported by this filter.
+    */
    private Vector m_exts      = new Vector();
 }

@@ -36,6 +36,8 @@
 
 package org.vrjuggler.tweek.beans;
 
+import org.vrjuggler.tweek.services.ExtensionFileFilter;
+
 import java.io.File;
 import java.io.FilenameFilter;
 
@@ -61,7 +63,9 @@ public class FileFinder
       }
 
       // Search the directory for the files matching the given extension.
-      m_files = m_directory.listFiles(new ExtensionFilter(ext));
+      ExtensionFileFilter filter = new ExtensionFileFilter( "" );
+      filter.addExtension( ext );
+      m_files = m_directory.listFiles( filter );
    }
 
    public int getFileCount ()
@@ -77,29 +81,6 @@ public class FileFinder
    public File getFile (int index)
    {
       return m_files[index];
-   }
-
-   // =========================================================================
-   // Private classes.
-   // =========================================================================
-
-   /**
-    * Extension to FilenameFilter that only accepts files matching a given
-    * extension.
-    */
-   private class ExtensionFilter implements FilenameFilter
-   {
-      public ExtensionFilter (String ext)
-      {
-         m_ext = ext;
-      }
-
-      public boolean accept (File dir, String name)
-      {
-         return name.endsWith(m_ext);
-      }
-
-      private String m_ext;
    }
 
    // =========================================================================
