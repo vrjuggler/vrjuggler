@@ -303,20 +303,6 @@ SocketImplBSD::setRemoteAddr (const InetAddr& addr) {
     return status;
 }
 
-// ============================================================================
-// Protected methods.
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Destructor.  This currently does nothing.
-// ----------------------------------------------------------------------------
-SocketImplBSD::~SocketImplBSD () {
-    if ( m_handle != NULL ) {
-        delete m_handle;
-        m_handle = NULL;
-    }
-}
-
 /**
  * Define a simple union used as the optval argument to [gs]etsockopt(2).
  */
@@ -629,6 +615,20 @@ SocketImplBSD::setOption (const SocketOptions::Types option,
     }
 
     return retval;
+}
+
+// ============================================================================
+// Protected methods.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Destructor.  This currently does nothing.
+// ----------------------------------------------------------------------------
+SocketImplBSD::~SocketImplBSD () {
+    if ( m_handle != NULL ) {
+        delete m_handle;
+        m_handle = NULL;
+    }
 }
 
 }; // End of vpr namespace

@@ -48,12 +48,12 @@ public:
     /**
      *
      */
-    inline Status
-    getTypeOfService (SocketOptions::TypeOfService& tos) {
-        SocketOptions::Data option;
-        Status retval;
+    inline vpr::Status
+    getTypeOfService (vpr::SocketOptions::TypeOfService& tos) {
+        vpr::SocketOptions::Data option;
+        vpr::Status retval;
 
-        retval = getOption(SocketOptions::IpTypeOfService, option);
+        retval = getOption(vpr::SocketOptions::IpTypeOfService, option);
 
         if ( retval.success() ) {
             tos = option.type_of_service;
@@ -65,22 +65,22 @@ public:
     /**
      *
      */
-    inline Status
-    setTypeOfService (const SocketOptions::TypeOfService& tos) {
-        SocketOptions::Data option;
+    inline vpr::Status
+    setTypeOfService (const vpr::SocketOptions::TypeOfService& tos) {
+        vpr::SocketOptions::Data option;
         option.type_of_service = tos;
-        return setOption(SocketOptions::IpTypeOfService, option);
+        return setOption(vpr::SocketOptions::IpTypeOfService, option);
     }
 
     /**
      *
      */
-    inline Status
-    getTimeToLive (Int32& ttl) {
-        SocketOptions::Data option;
-        Status retval;
+    inline vpr::Status
+    getTimeToLive (vpr::Int32& ttl) {
+        vpr::SocketOptions::Data option;
+        vpr::Status retval;
 
-        retval = getOption(SocketOptions::IpTimeToLive, option);
+        retval = getOption(vpr::SocketOptions::IpTimeToLive, option);
 
         if ( retval.success() ) {
             ttl = option.ip_ttl;
@@ -92,11 +92,11 @@ public:
     /**
      *
      */
-    inline Status
-    setTimeToLive (const Int32 ttl) {
-        SocketOptions::Data option;
+    inline vpr::Status
+    setTimeToLive (const vpr::Int32 ttl) {
+        vpr::SocketOptions::Data option;
         option.ip_ttl = ttl;
-        return setOption(SocketOptions::IpTimeToLive, option);
+        return setOption(vpr::SocketOptions::IpTimeToLive, option);
     }
 };
 

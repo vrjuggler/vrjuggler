@@ -38,13 +38,11 @@
 #include <string>
 
 #include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-#include <vpr/IO/Socket/SocketDatagramOpt.h>
 
 
 namespace vpr {
 
-class VPR_CLASS_API SocketDatagramImplNSPR : public SocketDatagramOpt,
-                                             public SocketImplNSPR
+class VPR_CLASS_API SocketDatagramImplNSPR : public SocketImplNSPR
 {
 public:
     typedef SocketImplNSPR Parent;
@@ -111,25 +109,6 @@ public:
                           const int flags, const InetAddr& to,
                           ssize_t& bytes_sent,
                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
-
-protected:
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual Status
-    getOption (const SocketOptions::Types option,
-               struct SocketOptions::Data& data)
-    {
-        return SocketImplNSPR::getOption(option, data);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual Status
-    setOption (const SocketOptions::Types option,
-               const struct SocketOptions::Data& data)
-    {
-        return SocketImplNSPR::setOption(option, data);
-    }
 };
 
 }; // End of namespace

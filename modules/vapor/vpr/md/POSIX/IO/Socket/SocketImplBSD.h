@@ -44,7 +44,7 @@
 #include <vpr/IO/IOSys.h>
 #include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
 #include <vpr/IO/Socket/InetAddr.h>
-#include <vpr/IO/Socket/SocketIpOpt.h>
+#include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/Util/Assert.h>
 
 
@@ -55,8 +55,7 @@ namespace vpr {
  *
  * @author Patrick Hartling
  */
-class SocketImplBSD : public BlockIO, public SocketIpOpt
-{
+class SocketImplBSD : public BlockIO {
 public:
     // ========================================================================
     // vpr::BlockIO overrides.
@@ -325,6 +324,31 @@ public:
         return m_handle->write_i(buffer, length, bytes_written, timeout);
     }
 
+    /**
+     * Retrieves the value for the given option as set on the socket.
+     *
+     * @param option The option to be queried.
+     * @param data   A data buffer that will be used to store the value of the
+     *               given option.
+     *
+     * @return vpr::Status::Success is returned if the value for the given
+     *         option was retrieved successfully.<br>
+     *         vpr::Status;:Failure is returned otherwise.
+     */
+    virtual Status getOption(const SocketOptions::Types option,
+                             struct SocketOptions::Data& data);
+
+    /**
+     * Sets a value for the given option on the socket using the given data
+     * block.
+     *
+     * @param option The option whose value will be set.
+     * @param data   A data buffer containing the value to be used in setting
+     *               the socket option.
+     */
+    virtual Status setOption(const SocketOptions::Types option,
+                             const struct SocketOptions::Data& data);
+
 protected:
     /**
      * Default constructor.  This just initializes member variables to
@@ -370,12 +394,7 @@ protected:
      */
     virtual ~SocketImplBSD(void);
 
-    virtual Status getOption(const SocketOptions::Types option,
-                             struct SocketOptions::Data& data);
-
-    virtual Status setOption(const SocketOptions::Types option,
-                             const struct SocketOptions::Data& data);
-
+protected:
     bool                m_bound;
     bool                m_connected;
     FileHandleImplUNIX* m_handle;      /**< The OS handle for this socket */

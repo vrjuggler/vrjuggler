@@ -33,7 +33,13 @@
 #ifndef _VPR_SOCKET_DATAGRAM_OPT_H_
 #define _VPR_SOCKET_DATAGRAM_OPT_H_
 
+#include <vpr/vprConfig.h>
+
+#include <vpr/vprTypes.h>
+#include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/IO/Socket/SocketIpOpt.h>
+#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/Util/Status.h>
 
 
 namespace vpr {
@@ -43,15 +49,15 @@ namespace vpr {
  *
  * @author Patrick Hartling
  */
-class VPR_CLASS_API SocketDatagramOpt : public SocketIpOpt {
+class VPR_CLASS_API SocketDatagramOpt : public vpr::SocketOptionWrapper {
 public:
     /**
      * Gets the multicast interface for this datagram socket.
      */
-    inline Status
-    getMcastInterface (InetAddr& mcast_if) {
-        SocketOptions::Data option;
-        Status retval;
+    inline vpr::Status
+    getMcastInterface (vpr::InetAddr& mcast_if) {
+        vpr::SocketOptions::Data option;
+        vpr::Status retval;
 
         retval = getOption(SocketOptions::McastInterface, option);
 
@@ -65,9 +71,9 @@ public:
     /**
      * Sets the multicast interface for this datagram socket.
      */
-    inline Status
-    setMcastInterface (const InetAddr& mcast_if) {
-        SocketOptions::Data option;
+    inline vpr::Status
+    setMcastInterface (const vpr::InetAddr& mcast_if) {
+        vpr::SocketOptions::Data option;
         option.mcast_if = mcast_if;
         return setOption(SocketOptions::McastInterface, option);
     }
@@ -76,10 +82,10 @@ public:
      * Gets the multicast time-to-live parameter for packets sent on this
      * socket.
      */
-    inline Status
-    getMcastTimeToLive (Uint8& ttl) {
-        SocketOptions::Data option;
-        Status retval;
+    inline vpr::Status
+    getMcastTimeToLive (vpr::Uint8& ttl) {
+        vpr::SocketOptions::Data option;
+        vpr::Status retval;
 
         retval = getOption(SocketOptions::McastTimeToLive, option);
 
@@ -91,11 +97,12 @@ public:
     }
 
     /**
-     *
+     * Sets the multicast time-to-live parameter for packets sent on this
+     * socket.
      */
-    inline Status
-    setMcastTimeToLive (const Uint8 ttl) {
-        SocketOptions::Data option;
+    inline vpr::Status
+    setMcastTimeToLive (const vpr::Uint8 ttl) {
+        vpr::SocketOptions::Data option;
         option.mcast_ttl = ttl;
         return setOption(SocketOptions::McastTimeToLive, option);
     }
@@ -103,10 +110,10 @@ public:
     /**
      *
      */
-    inline Status
-    getMcastLoopback (Uint8& loop) {
-        SocketOptions::Data option;
-        Status retval;
+    inline vpr::Status
+    getMcastLoopback (vpr::Uint8& loop) {
+        vpr::SocketOptions::Data option;
+        vpr::Status retval;
 
         retval = getOption(SocketOptions::McastLoopback, option);
 
@@ -120,9 +127,9 @@ public:
     /**
      *
      */
-    inline Status
-    setMcastLoopback (const Uint8 loop) {
-        SocketOptions::Data option;
+    inline vpr::Status
+    setMcastLoopback (const vpr::Uint8 loop) {
+        vpr::SocketOptions::Data option;
         option.mcast_loopback = loop;
         return setOption(SocketOptions::McastLoopback, option);
     }
@@ -130,9 +137,9 @@ public:
     /**
      *
      */
-    inline Status
-    addMcastMember (const McastReq& request) {
-        SocketOptions::Data option;
+    inline vpr::Status
+    addMcastMember (const vpr::McastReq& request) {
+        vpr::SocketOptions::Data option;
         option.mcast_add_member = request;
         return setOption(SocketOptions::AddMember, option);
     }
@@ -140,9 +147,9 @@ public:
     /**
      *
      */
-    inline Status
-    dropMcastMember (const McastReq& request) {
-        SocketOptions::Data option;
+    inline vpr::Status
+    dropMcastMember (const vpr::McastReq& request) {
+        vpr::SocketOptions::Data option;
         option.mcast_drop_member = request;
         return setOption(SocketOptions::DropMember, option);
     }
