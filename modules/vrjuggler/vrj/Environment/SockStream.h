@@ -35,7 +35,7 @@
 #define _VJ_SOCKSTREAM_H_
 
 #include <vjConfig.h>
-#include <iostream.h>
+//#include <iostream>
 
 class sockstreambuf:public streambuf {
 public:
@@ -45,13 +45,13 @@ public:
     char* buf;
 
 
-    sockstreambuf (int _sock/*, char* c, int l*/);
+    sockstreambuf (int _sock);
 
 
     sockstreambuf ();
 
 
-    virtual int doallocate ();
+    virtual int doallocate () {}
 
 
     virtual int overflow (int c=EOF);

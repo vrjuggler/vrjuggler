@@ -36,6 +36,7 @@
 #define _VJ_SOCKET_H_
 
 #include <vjConfig.h>
+#include <iostream>
 
 #ifndef WIN32
 

@@ -61,8 +61,6 @@ vjSocketPosix::vjSocketPosix() {
 
 vjSocketPosix::vjSocketPosix(vjSocketIDPosix id) {
     sockid = id;
-    //sockstreambuf* s = new sockstreambuf (id);
-    //s->doallocate();
     out = new ostream (new sockstreambuf (id));
     in = new istream (new sockstreambuf(id));
 }
