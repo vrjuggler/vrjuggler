@@ -149,8 +149,6 @@ void aMotionStar::start () {
   server.sin_family=AF_INET;
   server.sin_port=htons(TCP_PORT);                              /* Server port number */
 
-printf("Looking up %s\n", address);
-
   // Try to look up address by name.  This will work for an IP address too,
   // but we fall back on inet_addr(3) below just to be safe.
   host_ent = gethostbyname(address);
