@@ -137,6 +137,13 @@ public:
    void addEvent(gadget::EventPtr e);
 
 protected:
+   // vpr::Mutex is not copyable, so neither are we.
+   EventWindow(const EventWindow& w) 
+      : vpr::SerializableObject(w)
+   {;}
+
+   void operator=(const EventWindow&) {;}
+
    /**
     * (0,*): Copy of keys for this frame that the user reads from between
     * updates.
