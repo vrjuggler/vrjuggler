@@ -111,6 +111,10 @@ TimeStampSGI::TimeStampSGI() {
     set();
 }
 
+TimeStampSGI::TimeStampSGI(const float usecs) {
+    TimeStampInitializer::instance();
+    val = usecs / resolution; 
+}
 
 float TimeStampSGI::operator - (const TimeStampSGI& t2) const {
     /* returns self - t2, in usecs */
@@ -160,6 +164,10 @@ namespace jccl {
 	set();
     }
 
+    TimeStampPosix::TimeStampPosix(const float usecs) {
+        TimeStampInitializer::instance();
+        val = initval + usecs; 
+    }
 
 TimeStampPosix& TimeStampPosix::operator= (const TimeStampPosix& t2) {
     val = t2.val;

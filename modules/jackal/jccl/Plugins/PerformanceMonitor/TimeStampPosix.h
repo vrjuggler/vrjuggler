@@ -87,7 +87,7 @@ public:
 
     TimeStampPosix();
 
-
+    TimeStampPosix(const float usecs);
 
     TimeStampPosix& operator= (const TimeStampPosix& t2);
 

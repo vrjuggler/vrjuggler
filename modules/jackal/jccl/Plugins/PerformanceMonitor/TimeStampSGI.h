@@ -76,7 +76,7 @@ public:
     //! POST: self is created and set to the current counter val.
     TimeStampSGI();
 
-
+    TimeStampSGI(const float usecs);
 
     //: stamps the timestamp with the current time
     //! PRE: true
