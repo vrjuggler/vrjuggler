@@ -62,6 +62,10 @@
 //       Sir William Rowan Hamilton, Philosophical Magazine, xxv,      <br>
 //       pp. 10-13 (July 1844)                                         <br>
 //    Quaternion Calculus for Animation,  Ken Shoemake SIGGRAPH course notes 1989  <br>
+//    You also can find more on quaternions at
+//       http://www.gamasutra.com/features/19980703/quaternions_01.htm and at
+//       http://archive.ncsa.uiuc.edu/VEG/VPS/emtc/quaternions/index.html
+//    Or search on google....
 //
 //!PUBLIC_API:
 class VJ_CLASS_API vjQuat
@@ -74,20 +78,24 @@ public:
    //: Construct self from another vjQuat 
    vjQuat( const vjQuat& quat );
 
-   //: Construct Quat from a pure quaternion 
-   // NOTE: a pure quaternion is one with scalar component set to 0
-   //vjQuat( const vjVec3& pure_quat );
-   
    //: Construct Quat from 4 floats
    vjQuat( const float w,
            const float x,
            const float y,
            const float z );
    
-   //: set self to 0 rotation
+   //: multiplication identity 
+   // So any quaternion multiplied with this identity quaternion will 
+   // not be changed.
+   // sets self to multiplication identity quat: 0 rotation [1,0,0,0]
+   // NOTE: addition identity is [0,0,0,0]
    void makeIdent();
    
-   //: an initialized (no rotation) quaternion
+   //: multiplication identity 
+   // So any quaternion multiplied with this identity quaternion will 
+   // not be changed.
+   // returns quaternion set to 0 rotation [1,0,0,0]
+   // NOTE: addition identity is [0,0,0,0]
    static const vjQuat& identity();
    
    //: copy the quaternion data from scalar: [w]  vec: [x y z]
@@ -99,9 +107,8 @@ public:
    void copy( const vjQuat& quat );
    
    //: Copy a pure quaternion to self
-   // NOTE: a pure quaternion is one with scalar component set to 0
-   //!POST: self = pure_quat
-   void copy( const vjVec3& pure_quat );
+   //!POST: self = [0,p]
+   void makePure( const vjVec3& p );
    
    //: return the scalar component
    const float& scalar() const;
@@ -137,6 +144,9 @@ public:
    //: set self to the unit quaternion of quat. fast, imprecise
    void normalizeFast( const vjQuat& quat );
    
+   // jdsfjdfdsj
+   void normalizeVec();
+   
    //: set self to the normalized quaternion of self.
    //!POST: self = normalize(self), where normalize makes quat.length() == 1
    void normalize();
@@ -153,17 +163,20 @@ public:
    void invert( const vjQuat& quat );
 
 public:
-   //: product of two quaternions
+   //: product of two quaternions (quaternion product)
    //!POST: this' = q1 * q2
    void mult( const vjQuat& q1, const vjQuat& q2 );
 
-   //: scalar multiplication
+   //: scalar multiplication 
+   // each element (4 total) scaled by s
    //!POST: this' = q1 * s
    void mult( const vjQuat& q1, const float& s );
-   
-   //: quaternion product of a pure quaternion [0,x,y,z] and a quaternion
-   void mult( const vjVec3& pure_quat, const vjQuat& quat );
 
+   //: scale the rotation angle
+   // [angle,x,y,z] = [angle*s,x,y,z]
+   // NOTE: this function will probably fail in certain cases...
+   void scaleAngle( const vjQuat& q1, const float& s );
+   
    //: quotient of two quaternions
    //!POST: this' = q1 / q2
    void div( const vjQuat& q1, const vjQuat& q2 );
@@ -224,10 +237,10 @@ public:
    //!POST: temporary return value = self * quat 
    vjQuat operator*( const vjQuat& quat ) const;
    
-   //: multiply by a vector
-   //  returns a vector as temporary                       <BR>
+   //: rotate a vector
+   //  returns a vector rotated by "self" as a temporary object     <BR>
    //!PRE: give a vector
-   //!POST: vector = self * vector
+   //!POST: vector' = self * vector
    vjVec3 operator*( const vjVec3& vector ) const;
    
    //: mult by scalar (order independant)
@@ -270,10 +283,6 @@ public:
    //: set self to quat
    vjQuat& operator=( const vjQuat& quat );
    
-   //: set self to 'pure' quaternion pure_quat
-   // NOTE: a pure quaternion is one with scalar component set to 0
-   vjQuat& operator=( const vjVec3& pure_quat );
-   
    //: output method
    std::ostream& outStreamRaw( std::ostream& out ) const;
    
@@ -286,13 +295,11 @@ public:
    //: quaternion data access for external function use (like quat to matrix)
    // non-const version                                           <BR>
    // use VJ_W, VJ_X, VJ_Y, or VJ_Z to access each component
-   //
    float& operator[]( int x );
    
    //: quaternion data access for external function use (like quat to matrix)
    // const version                                               <BR>
    // use VJ_W, VJ_X, VJ_Y, or VJ_Z to access each component
-   //
    const float& operator[]( int x ) const;
    
 private:
@@ -364,17 +371,6 @@ inline void vjQuat::copy( const vjQuat& quat )
    vec = quat.vec;
 }   
 
-//: Copy a pure quaternion to self
-// NOTE: a pure quaternion is one with scalar component set to 0
-//!POST: self = pure_quat
-inline void vjQuat::copy( const vjVec3& pure_quat )
-{
-   vec[VJ_X] = 0.0f;
-   vec[VJ_Y] = pure_quat[0];
-   vec[VJ_Z] = pure_quat[1];
-   vec[VJ_W] = pure_quat[2];
-}
-
 //: Construct Quat from 4 floats
 inline vjQuat::vjQuat( const float w,
         const float x,
@@ -384,19 +380,38 @@ inline vjQuat::vjQuat( const float w,
    this->copy( w, x, y, z );
 }
 
-//: an initialized (no rotation) quaternion
+//: multiplication identity 
+// So any quaternion multiplied with this identity quaternion will 
+// not be changed.
+// returns quaternion set to 0 rotation [1,0,0,0]
+// NOTE: addition identity is [0,0,0,0]
 inline const vjQuat& vjQuat::identity()
 {
-   // this is what a conversion from identity matrix to quat gives:
-   // twist == 0, vec == (0, 0, 0)
+   // [0 deg, 1, 0, 0]  or  [cos(0deg) == 1, sin(0deg)==0 * [1,0,0]]
    static const vjQuat ____identity___quaternion( 1.0f, 0.0f, 0.0f, 0.0f );
    return ____identity___quaternion;
 }
    
-//: set self to 0 rotation
+//: multiplication identity 
+// So any quaternion multiplied with this identity quaternion will 
+// not be changed.
+// sets self to 0 rotation [1,0,0,0]
+// NOTE: addition identity is [0,0,0,0]
 inline void vjQuat::makeIdent()
 {
    this->copy( vjQuat::identity() );
+}
+
+//: Copy a pure quaternion to self
+// quat = [0,w] 
+//      = [0,w0,w1,w2]
+//!POST: self = pure_quat
+inline void vjQuat::makePure( const vjVec3& pure_quat )
+{
+   vec[VJ_W] = 0.0f; // by definition of pure quat == [0,w]
+   vec[VJ_X] = pure_quat[0];
+   vec[VJ_Y] = pure_quat[1];
+   vec[VJ_Z] = pure_quat[2];
 }
 
 //: default constructor
@@ -411,15 +426,6 @@ inline vjQuat::vjQuat( const vjQuat& quat ) : vec()
 {
    this->copy( quat );
 }
-
-//: Construct Quat from a pure quaternion 
-// NOTE: a pure quaternion is one with scalar component set to 0
-//inline vjQuat::vjQuat( const vjVec3& pure_quat ) : vec()
-//{
-//   this->copy( pure_quat );
-//}
-
-
 
 //: returns the quaternion's norm (dot product)
 // defined as sum of squares of components
@@ -448,26 +454,41 @@ inline void vjQuat::conj( const vjQuat& quat )
 }
 
 //: normalize without the square root.  faster but not precise...
+//!PRE: magnitude must be > 0
 //!POST: self = self / norm()
 //       normalizeFast() makes quat.norm() == 1
 inline void vjQuat::normalizeFast()
 { 
-   float n = 1.0f / this->norm();
-   if (n >= VJ_QUAT_EPSILON)
-   {
-      vec[VJ_W] *= n; 
-      vec[VJ_X] *= n; 
-      vec[VJ_Y] *= n; 
-      vec[VJ_Z] *= n;
-   }
-   else
-   {
-      // set to something safe, since the quat's vector has no length
-      // no length implies an invalid quaternion
-      // TODO: should we at least copy over the scalar component?
-      //       one reason not to is that the quat is invalid, because of its vec
-      this->copy( 0.0f, 1.0f, 0.0f, 0.0f );
-   }
+   float n = this->norm();
+   
+   // return if no magnitude (already as normalized as possible)
+   if (n < VJ_QUAT_EPSILON) 
+      return;
+
+   float n_inv = 1.0f / n;
+   
+   vec[VJ_W] *= n_inv; 
+   vec[VJ_X] *= n_inv; 
+   vec[VJ_Y] *= n_inv; 
+   vec[VJ_Z] *= n_inv;
+}
+
+//: normalize without the square root.  faster but not precise...
+//!PRE: magnitude must be > 0
+//!POST: self = self / norm()
+//       normalizeFast() makes quat.norm() == 1
+inline void vjQuat::normalizeVec()
+{ 
+   float n = vec[VJ_X] * vec[VJ_X] + vec[VJ_Y] * vec[VJ_Y] + vec[VJ_Z] * vec[VJ_Z];
+   // return if no magnitude (already as normalized as possible)
+   if (n < VJ_QUAT_EPSILON) 
+      return;
+
+   float n_inv = 1.0f / n;
+   
+   vec[VJ_X] *= n_inv; 
+   vec[VJ_Y] *= n_inv; 
+   vec[VJ_Z] *= n_inv;
 }
 
 //: set self to the unit quaternion of quat. fast, imprecise
@@ -478,25 +499,21 @@ inline void vjQuat::normalizeFast( const vjQuat& quat )
 }
 
 //: set self to the normalized quaternion of self.
+//!PRE: magnitude must be > 0
 //!POST: self = normalize(self), where normalize makes quat.length() == 1
 inline void vjQuat::normalize()
 { 
-   float n = 1.0f / this->length();
-   if (n >= VJ_QUAT_EPSILON)
-   {
-      vec[VJ_W] *= n; 
-      vec[VJ_X] *= n; 
-      vec[VJ_Y] *= n; 
-      vec[VJ_Z] *= n;
-   }
-   else
-   {
-      // set to something safe, since the quat's vector has no length
-      // no length implies an invalid quaternion
-      // TODO: should we at least copy over the scalar component?
-      //       one reason not to is that the quat is invalid, because of its vec
-      this->copy( 0.0f, 1.0f, 0.0f, 0.0f );
-   }
+   float l = this->length();
+   
+   // return if no magnitude (already as normalized as possible)
+   if (l < VJ_QUAT_EPSILON) 
+      return;
+
+   float l_inv = 1.0f / l;
+   vec[VJ_W] *= l_inv;
+   vec[VJ_X] *= l_inv;
+   vec[VJ_Y] *= l_inv;
+   vec[VJ_Z] *= l_inv;
 }
 
 //: set self to the normalized quaternion of quat.
@@ -530,6 +547,19 @@ inline void vjQuat::mult( const vjQuat& q1, const float& s )
    vec[VJ_X] = q1.vec[VJ_X] * s;
    vec[VJ_Y] = q1.vec[VJ_Y] * s;
    vec[VJ_Z] = q1.vec[VJ_Z] * s;
+}
+
+//: scalar multiplication
+//!POST: this' = q1 * s
+// TODO: could we use a vector (pure quat) to scale a quat in a 
+//        more robust way?  pretty sure we can... rewrite scaleAngle to use this
+//        method instead....
+// NOTE: this function will probably fail in certain cases...
+inline void vjQuat::scaleAngle( const vjQuat& q1, const float& s )
+{
+   float rad, x, y, z;
+   q1.getRot( rad, x, y, z );
+   this->makeRot( rad * s, x, y, z );
 }
 
 //: quotient of two quaternions
@@ -582,28 +612,27 @@ inline vjQuat vjQuat::operator*( const vjQuat& quat ) const
    return dst;
 }
 
-//: multiply by a vector
-//  returns a vector as temporary
+//: rotate vector by quat
+//  returns a vector rotated by this.  result returned is a temporary
 //!PRE: give a vector
 //!POST: vector = self * vector 
 inline vjVec3 vjQuat::operator*( const vjVec3& vector ) const
 {
    // convert the vec3 to a pure quat
    vjQuat pure_quat;
-   pure_quat.copy( vector );
+   pure_quat.makePure( vector );
 
-   std::cout<<"ttt: "<<*this<<" . "<<pure_quat<<"\n"<<std::flush;
-   
    // get the inverse of self
    vjQuat self_inv;
    self_inv.invert( *this );
-   std::cout<<"inv: "<<self_inv<<"\n"<<std::flush;
-   
 
    // do the multiplication, and return
-   vjQuat result = self_inv * pure_quat * (*this);
    
-   std::cout<<"res: "<<result<<"\n"<<std::flush;
+   // shoemake original (left hand rule):
+   //vjQuat result = self_inv * pure_quat * (*this);
+   
+   // shoemake recent version (right hand rule):
+   vjQuat result = (*this) * pure_quat * self_inv;
    
    return vjVec3( result.vec[VJ_X], result.vec[VJ_Y], result.vec[VJ_Z] );
 }
@@ -725,21 +754,5 @@ inline vjQuat& vjQuat::operator=( const vjQuat& quat )
    this->copy( quat );
    return *this;
 }
-
-//: set self to 'pure' quaternion pure_quat
-// NOTE: a pure quaternion is one with scalar component set to 0
-inline vjQuat& vjQuat::operator=( const vjVec3& pure_quat )
-{
-   this->copy( pure_quat );
-   return *this;
-}   
-
-//: quaternion product of a pure quaternion (0,x,y,z) and a quaternion
-inline void vjQuat::mult( const vjVec3& pure_quat, const vjQuat& quat )
-{
-   vjQuat pq;
-   pq.copy( pure_quat );
-   this->mult( pq, quat );
-}   
 
 #endif

@@ -92,26 +92,22 @@ void vjQuat::makeRot( const vjMatrix& mat )
 //: make a quat from a twist (radians) about a vector (normalized)
 void vjQuat::makeRot( const float& rad, const float& x, const float& y, const float& z )
 {
-   float halfRad = rad * 0.5f;
-	float sinHalfRad = vjMath::sin( halfRad );
-	vjVec3 vecNormalized;
-
-   if (rad == 0.0f || (x == 0.0f && y == 0.0f && z == 0.0f))
+   // q = [ cos(rad/2), sin(rad/2) * [x,y,z] ]
+   vjVec3 vec_normalized( x, y, z );
+   if (vec_normalized.length() > VJ_QUAT_EPSILON)
    {
-      vecNormalized.set( 1.0f, 0.0f, 0.0f );
+      vec_normalized.normalize();
    }
-   else
-   {
-      vecNormalized.set( x, y, z );
-	   vecNormalized.normalize();
-   }
-	vec[VJ_W] = vjMath::cos( halfRad );
-	vec[VJ_X] = sinHalfRad * vecNormalized[0];
-	vec[VJ_Y] = sinHalfRad * vecNormalized[1];
-	vec[VJ_Z] = sinHalfRad * vecNormalized[2];
-
-   // rotation quats are by definition 1 unit in magnitude.
-	this->normalizeFast();
+   
+   float half_angle = rad * 0.5f;
+   float sin_half_angle = vjMath::sin( half_angle );
+   
+   vec[VJ_W] = vjMath::cos( half_angle );
+   vec[VJ_X] = sin_half_angle * vec_normalized[0];
+   vec[VJ_Y] = sin_half_angle * vec_normalized[1];
+   vec[VJ_Z] = sin_half_angle * vec_normalized[2];
+   
+   // should automagically be normalized (unit magnitude) now...
 }
 
 //: get the quat's twist (radians) and vector
@@ -123,38 +119,30 @@ void vjQuat::getRot( float& rad, float& xx, float& yy, float& zz ) const
    {
       quat.normalize();
    }
-   /*
-   if (vjMath::abs( quat.vec[VJ_W] ) > 1.0f)
-   {
-      std::cerr<<" bad: "<<quat.vec[VJ_W]<<"\n"<<std::flush;
-   }
-   */
    assert( vjMath::abs( quat.vec[VJ_W] ) <= 1.0f && "acos returns NaN when |arg| > 1" );
    
-   float halfrad = vjMath::acos( quat.vec[VJ_W] );
-   float sin_halfrad = vjMath::sin( halfrad );
    
-   // compute one/sin_halfrad
-   if (sin_halfrad >= VJ_QUAT_EPSILON || sin_halfrad <= -VJ_QUAT_EPSILON)
+   // [acos( w ) * 2.0, v / (asin( w ) * 2.0)]
+   
+   // get the rotation:
+   rad = vjMath::acos( quat.vec[VJ_W] ) * 2.0f;
+   
+   // get the axis: (use sin(rad) instead of asin(w))
+   float sin_half_angle = vjMath::sin( rad * 0.5f );
+   if (sin_half_angle >= VJ_QUAT_EPSILON)
    {
-      float oneOverSinHalfRad = 1.0f / sin_halfrad;
-      rad = halfrad * 2.0f;
-      xx = quat.vec[VJ_X] * ( oneOverSinHalfRad );
-      yy = quat.vec[VJ_Y] * ( oneOverSinHalfRad );
-	   zz = quat.vec[VJ_Z] * ( oneOverSinHalfRad );
-      return;
+      float sin_half_angle_inv = 1.0f / sin_half_angle;
+      xx = quat.vec[VJ_X] * sin_half_angle_inv;
+      yy = quat.vec[VJ_Y] * sin_half_angle_inv;
+      zz = quat.vec[VJ_Z] * sin_half_angle_inv;
    }
-
+      
    // avoid NAN
-   // if rad == 0, then the vector is undefined anyway, 
-   // avoid 0,0,0,0 when deg is 0.  make it 0,1,0,0
    else 
    {
-      rad = 0.0f;
-      xx = 1.0f;
-      yy = 0.0f;
-      zz = 0.0f;
-      return;
+      xx = 1.0f;  // one of these should be a 1,
+      yy = 0.0f;  // so we can maintain unit-ness
+      zz = 0.0f;  // in case w is 0 (which here w is 0)
    }
 }
 
@@ -162,11 +150,29 @@ void vjQuat::getRot( float& rad, float& xx, float& yy, float& zz ) const
 // From gdmag
 void vjQuat::mult( const vjQuat& q1, const vjQuat& q2 )
 {
-   // Here is the easy to understand equation:
-   // vector_component = q2.v * q1.s + q1.v * q2.s + cross(q1.v, q2.v)
+   // Here is the easy to understand equation: (grassman product)
    // scalar_component = q1.s * q2.s - dot(q1.v, q2.v)
-	
-   // Here is the same, only expanded...
+   // vector_component = q2.v * q1.s + q1.v * q2.s + cross(q1.v, q2.v)
+   
+   // Here is another version (euclidean product, just FYI)...
+   // scalar_component = q1.s * q2.s + dot(q1.v, q2.v)
+   // vector_component = q2.v * q1.s - q1.v * q2.s - cross(q1.v, q2.v)
+
+   // Here it is, implemented using vector algebra (grassman product)
+   /*
+   const float& w1( q1[VJ_W] ), w2( q2[VJ_W] );
+   vjVec3 v1( q1[VJ_X], q1[VJ_Y], q1[VJ_Z] ), v2( q2[VJ_X], q2[VJ_Y], q2[VJ_Z] );
+   
+   float w = w1 * w2 - v1.dot( v2 );
+   vjVec3 v = (w1 * v2) + (w2 * v1) + v1.cross( v2 );
+   
+   vec[VJ_W] = w;
+   vec[VJ_X] = v[0];
+   vec[VJ_Y] = v[1];
+   vec[VJ_Z] = v[2];
+   */
+         
+   // Here is the same, only expanded... (grassman product)
    vjQuat temporary; 
    temporary[VJ_X] = q1[VJ_W]*q2[VJ_X] + q1[VJ_X]*q2[VJ_W] + q1[VJ_Y]*q2[VJ_Z] - q1[VJ_Z]*q2[VJ_Y];
    temporary[VJ_Y] = q1[VJ_W]*q2[VJ_Y] + q1[VJ_Y]*q2[VJ_W] + q1[VJ_Z]*q2[VJ_X] - q1[VJ_X]*q2[VJ_Z];
@@ -179,10 +185,8 @@ void vjQuat::mult( const vjQuat& q1, const vjQuat& q2 )
    vec[VJ_Z] = temporary[VJ_Z];
    vec[VJ_W] = temporary[VJ_W];
    
-   // Make sure self is a unit quaternion 
-   // (TODO: only need unit quat for rotations, 
-   //  are we sure that we should assume this behaviour in mult???)
-   this->normalizeFast();
+   // don't normalize, because it might not be rotation arithmetic we're doing
+   // (only rotation quats have unit length)
 }
 
 // From Adv Anim and Rendering Tech. Pg 364
@@ -246,18 +250,18 @@ void vjQuat::exp( const vjQuat& quat )
 {
    float len1, len2;
 
-	len1 = vjMath::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
+   len1 = vjMath::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
                           quat.vec[VJ_Y] * quat.vec[VJ_Y] + 
                           quat.vec[VJ_Z] * quat.vec[VJ_Z] );
-	if (len1 > 0.0f)
-		len2 = vjMath::sin( len1 ) / len1;
-	else
-		len2 = 1.0f;
+   if (len1 > 0.0f)
+      len2 = vjMath::sin( len1 ) / len1;
+   else
+      len2 = 1.0f;
 
-	vec[VJ_X] = quat.vec[VJ_X] * len2;
-	vec[VJ_Y] = quat.vec[VJ_Y] * len2;
-	vec[VJ_Z] = quat.vec[VJ_Z] * len2;
-	vec[VJ_W] = vjMath::cos( len1 );
+   vec[VJ_X] = quat.vec[VJ_X] * len2;
+   vec[VJ_Y] = quat.vec[VJ_Y] * len2;
+   vec[VJ_Z] = quat.vec[VJ_Z] * len2;
+   vec[VJ_W] = vjMath::cos( len1 );
 }
 
 //: complex logarithm
@@ -266,43 +270,45 @@ void vjQuat::log( const vjQuat& quat )
 {
    float length;
 
-	length = vjMath::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
+   length = vjMath::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
                             quat.vec[VJ_Y] * quat.vec[VJ_Y] + 
                             quat.vec[VJ_Z] * quat.vec[VJ_Z] );
 
-	// avoid divide by 0
-	if (quat.vec[VJ_W] != 0.0)
-		length = vjMath::atan( length / quat.vec[VJ_W] );
-	else 
+   // avoid divide by 0
+   if (quat.vec[VJ_W] != 0.0)
+      length = vjMath::atan( length / quat.vec[VJ_W] );
+   else 
       length = VJ_PI / 2.0f; // or VJ_PI_2...
 
-	vec[VJ_W] = 0.0f;
-	vec[VJ_X] = quat.vec[VJ_X] * length;
-	vec[VJ_Y] = quat.vec[VJ_Y] * length;
-	vec[VJ_Z] = quat.vec[VJ_Z] * length;
+   vec[VJ_W] = 0.0f;
+   vec[VJ_X] = quat.vec[VJ_X] * length;
+   vec[VJ_Y] = quat.vec[VJ_Y] * length;
+   vec[VJ_Z] = quat.vec[VJ_Z] * length;
 }
 
 //: output method
 std::ostream& vjQuat::outStreamRaw( std::ostream& out ) const
 {
-	out << "w: " << vec[VJ_W] << "  x: " << vec[VJ_X] << "  y: " << vec[VJ_Y] << "  z: " << vec[VJ_Z];
-	return out;
+   //out << "w: " << vec[VJ_W] << "  x: " << vec[VJ_X] << "  y: " << vec[VJ_Y] << "  z: " << vec[VJ_Z];
+   out << vec[VJ_W] << ", " << vec[VJ_X] << ", " << vec[VJ_Y] << ", " << vec[VJ_Z];
+   return out;
 }
 
 //: output method
 std::ostream& vjQuat::outStreamReadable( std::ostream& out ) const
 {
-	float rad;
-	float x, y, z;
-	this->getRot( rad, x, y, z );
+   float rad;
+   float x, y, z;
+   this->getRot( rad, x, y, z );
 
-	out << vjMath::rad2deg( rad ) << " deg, " << x << ", " << y << ", " << z;
-	return out;
+   out << vjMath::rad2deg( rad ) << " deg, " << x << ", " << y << ", " << z;
+   return out;
 }
 
 //: output operator
 std::ostream& operator<<( std::ostream& out, const vjQuat& q )
 {
-	q.outStreamReadable( out );
-	return out;
+   q.outStreamReadable( out );
+   //q.outStreamRaw( out );
+   return out;
 }
