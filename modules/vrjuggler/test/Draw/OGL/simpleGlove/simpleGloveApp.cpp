@@ -75,8 +75,8 @@ void simpleGloveApp::myDraw()
          finger_matrix =
             mGlove->getPos((vjGloveData::vjGloveComponent)finger);
          origin.xformFull(finger_matrix, origin);     // Go to new coord system
-         drawLine(origin,
-                  origin + (0.25 * mGlove->getVector((vjGloveData::vjGloveComponent)finger)));
+         vjVec3 end = origin + (0.25 * mGlove->getVector((vjGloveData::vjGloveComponent)finger));
+         drawLine(origin, end);
       glPopMatrix();
       }
    }
