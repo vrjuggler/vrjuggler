@@ -41,8 +41,6 @@
 #include <Performer/pf/pfChannel.h>
 
 #include <vrj/Draw/DrawManager.h>
-#include <vrj/Display/Display.h>
-#include <vrj/Display/SimViewport.h>
 
 //#include <vrj/Draw/Pf/PfApp.h>
 #include <vrj/Draw/Pf/PfUtil.h>
@@ -56,8 +54,11 @@ namespace vrj
 {
 
 
+class Display;
 class PfApp;
 class Projection;
+class SimViewport;
+class Viewport;
 
     // Performer Config function called in draw proc after window is set up
 void PFconfigPWin(pfPipeWindow* pWin);
@@ -68,7 +69,7 @@ void PfAppFunc(pfChannel *chan, void* chandata);
 *
 * Responsible for all Performer rendering and windowing
 */
-class PfDrawManager : public DrawManager
+class VJ_CLASS_API PfDrawManager : public DrawManager
 {
 protected:
 
