@@ -463,25 +463,184 @@ public:
      * @post Attempts to cancel motion reporting mode and clear all unparsed data.
      */
     void            end_motion();
+
+    /**
+     * hci_wait_packet() waits for the given port to receive a complete packet and
+     * times out if it takes too long.
+     * 
+     * @pre The Ibox is connected.
+     * @post Waits for the given port to recieve a complete packet and times out if
+     *       it takes too long.
+     *
+     * @return TIMED_OUT if port timed out before a complete packet was recieved. <br>
+     *         SUCCESS otherwise.
+     */
     ibox2_result    wait_packet();
+
+    /** 
+     * check_packet() checks for a complete packet and parses it if it's ready.
+     *
+     * @pre The Ibox is connected.
+     * @post checks for a complete packet and parses it if it's ready.
+     * 
+     * @return TIMED_OUT if packet is not complete and it's been too long since the
+     *         last timeout was started. <br>
+     *         SUCCESS otherwise.
+     */
     ibox2_result    check_packet();
+
+    /**
+     * check_motion() checks for a complete packet and parses it if it's ready.
+     * But TIMED_OUT is not considered an error; we assume we're in motion-
+     * reporting mode, and packets may be few & far between.
+     *
+     * @pre The Ibox is connected.
+     * @post Checks for a complete packet and parses it if it's ready. But 
+     *       TIMED_OUT is not considered an error; we assume we're in motion-
+     *       reporting mode, and packets may be few & far between.
+     *
+     * @return BAD_PACKET if there was a problem parsing the packet. <br>
+     *         NO_PACKET_YET if there isn't a packet. <br>
+     *         TIMED_OUT if a packet hasn't been recieved yet. <br>
+     *         SUCCESS otherwise.
+     */
     ibox2_result    check_motion();
-    int             build_packet();
+    
+    /**
+     * build_packet() reads chars from serial buffer into the packet array.
+     *
+     * @pre The Ibox is connected.
+     * @post Reads chars from serial buffer into the packet array.
+     *       Sets packet.error flag if the cmd_byte is not a valid cmd byte.
+     *       Sets num_bytes_expected to -1 if the cmd is not one that the standard
+     *       parser (parse_packet()) can deal with.
+     *
+     * @return FALSE if a valid packet is not yet complete. <br>
+     *         TRUE when packet-building stops due to completion or an error.
+     */
+     int             build_packet();
 
-/* Packet parsing functions */
+    //---------------------------------------------------------------------------
+    // Packet parsing functions 
+    //---------------------------------------------------------------------------
+    
+    /**
+     * parse_packet() interprets the hci's packet and stores all HCI data.
+     * 
+     * @pre Before calling this, call build_packet() to see if packet is ready.
+     * @post parse_packet() interprets the hci's packet and stores all HCI data. 
+     *       Also marks this hci's packet as having been parsed.
+     *
+     * @return BAD_PACKET if the packet doesn't have enough bytes. <br>
+     *         NO_PACKET_YET if the packet is not complete. <br>
+     *         SUCCESS otherwise.
+     */
     ibox2_result    parse_packet();
-    ibox2_result    parse_cfg_packet();
-    int             packet_size(int cmd);
 
-/* Helper functions */
+    /**
+     * parse_cfg_packet() parses a packet for a special configuration command.
+     *
+     * @pre The packet is COMPLETE.
+     * @post parses a packet for a special configureation command.
+     *
+     * @return BAD_PACKET if the command was not parsed successfully. <br>
+     *         SUCCESS if the command was parsed successfully.
+     */
+    ibox2_result    parse_cfg_packet();
+
+    /**
+     * packet_size() returns the # of data bytes that FOLLOW a given cmd byte.
+     *
+     * @post returns the # of data bytes that FOLLOW a given cmd byte.
+     * 
+     * @param cmd is an int, not a byte, for compatibility reasons; It is the cmd 
+     *        that marks the start for counting the number of bytes. 
+     * 
+     * @return value of -1 means packet needs special handling (i.e. passwd) or has 
+     *         uncertain length; too complicated for standard parser. <br>
+     *         Otherwise returns the number of bytes following cmd
+     */ 
+    int             packet_size(int cmd);
+    
+    //------------------------------------------------------------------------
+    //Helper functions 
+    //------------------------------------------------------------------------
+
+    /**
+     * reads a null-terminated string from the serial port
+     * and stores it in memory pointed to by str.
+     *
+     * @pre The Ibox is connected.
+     * @post A null-terminated string is read into str.
+     *
+     * @param str A pointer to the character string where the data is to be stored.
+     *
+     * @return TIMED_OUT if the string could not be read from the port. <br>
+     *         SUCCESS if the read was successful.
+     */
     ibox2_result    read_string(char *str);
+
+    /**
+     * read_block() reads a block of binary data from the serial port
+     * and puts it in memory at 'block' location. 
+     * 
+     * @pre The Ibox is connected.
+     * @post Reads a block of data into memory at block.
+     *
+     * @param block Pointer to a memory location in which to stor the data. <br>
+     * @param num_block tells how many bytes to read, and it returns # bytes read.
+     *        If num_bytes is negative, the 1st byte is interp'd as # bytes to follow.
+     *
+     * @return TIMED_OUT if the read operation times out.
+     *         SUCCESS if the store to memory is successful.
+     */
     ibox2_result    read_block(byte *block, int *num_bytes);
+
+    /**
+     * invalidate_fields() sets all hci _updated fields to zero.
+     * @post invalidate_fields() sets all hci _updated fields to zero.
+     */
     void            invalidate_fields();
+
+    /** 
+     * Returns the state of the button designated by pos.
+     * 
+     * @post returns the state of the button designated by pos.
+     *
+     * @param pos the button in which to query.
+     *
+     * @return the state of the button.
+     */
     int             buttonFunc(int pos);
+   
+    /**
+     * Returns the state of the analog device desiganted by pos. 
+     * 
+     * @post returns the state of the analog device designated by pos.
+     *
+     * @param pos the position in the analog array in which to query.
+     * 
+     * @return the state of the analog device.
+     */
     int             analogFunc(int pos);
 
+    //--------------------------------------------------------------------
+    // Error handling 
+    //-------------------------------------------------------------------
 
-/* Error handling */
+    /**
+     * error() handles HCI module errors by looking for error handler that
+     * corresponds to the condition.
+     *
+     * @post error() handles HCI module errors by looking for error handler that
+     * corresponds to the condition.
+     * 
+     * @param condition To check for error handler funcitons for that condition.
+     *
+     * @return SUCCESS if condition is SUCCESS. <br>
+     *         NO_PACKET_YET if condition is NO_PACKET_YET. <br>
+     *         Else it returns a pointer to the handler funciton for a given condition.
+     */
     ibox2_result    error(ibox2_result condition);
 
 
