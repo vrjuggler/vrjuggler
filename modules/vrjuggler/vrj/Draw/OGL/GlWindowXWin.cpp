@@ -66,11 +66,17 @@ namespace vrj
 {
 
 GlWindowXWin::GlWindowXWin()
-   : GlWindow(), mXDisplay(NULL), mVisualInfo(NULL), mGlxContext(NULL),
-     mXWindow(0), mWindowName(""), mPipe(-1), mXDisplayName("")
+   : GlWindow()
+   , mXDisplay(NULL)
+   , mVisualInfo(NULL)
+   , mGlxContext(NULL)
+   , mXWindow(0)
+   , mWindowName("")
+   , mPipe(-1)
+   , mXDisplayName("")
 {
-   window_is_open = false;
-   window_width = window_height = -1;
+   mWindowIsOpen = false;
+   mWindowWidth = mWindowHeight = -1;
 }
 
 GlWindowXWin::~GlWindowXWin()
@@ -96,16 +102,19 @@ int GlWindowXWin::open()
    unsigned long event_mask(0);    // Event masks to use   
    bool ret_val(true);
 
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "glxWindow: Open window\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+      << "[vrj::GlWindowXWin::open()] Open window\n" << vprDEBUG_FLUSH;
 
-   if ( window_is_open )
+   if ( mWindowIsOpen )
+   {
       return true;
+   }
 
-   if ( window_width == -1 )
+   if ( mWindowWidth == -1 )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:")
-         << "vrj::GlWindowXWin: Window has not been configured\n"
+         << " [vrj::GlWindowXWin::open()] Window has not been configured\n"
          << vprDEBUG_FLUSH;
       return false;
    }
@@ -114,8 +123,8 @@ int GlWindowXWin::open()
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:")
-         << "vrj::GlWindowXWin: Unable to open display '" << mXDisplayName
-         << "'.\n" << vprDEBUG_FLUSH;
+         << " [vrj::GlWindowXWin::open()] Unable to open display '"
+         << mXDisplayName << "'.\n" << vprDEBUG_FLUSH;
       return false;
    }
    // Try initializing the window
@@ -127,7 +136,7 @@ int GlWindowXWin::open()
       if ( (mVisualInfo = getGlxVisInfo(mXDisplay, screen)) == NULL )
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrRED,"ERROR:") << "glXChooseVisual failed\n"
+            << clrOutNORM(clrRED,"ERROR:") << " glXChooseVisual failed\n"
             << vprDEBUG_FLUSH;
          throw glwinx_OpenFailureException();
       }
@@ -146,8 +155,8 @@ int GlWindowXWin::open()
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED,"ERROR:")
-            << "vrj::GlWindowXWin: XCreateColorMap failed on '" << mXDisplayName
-            << "'.\n" << vprDEBUG_FLUSH;
+            << " vrj::GlWindowXWin: XCreateColorMap failed on '"
+            << mXDisplayName << "'.\n" << vprDEBUG_FLUSH;
          throw glwinx_OpenFailureException();
       }
    
@@ -159,12 +168,14 @@ int GlWindowXWin::open()
    
       // get screen dimensions for translating window origin.
       ::XWindowAttributes winattrs;
-      ::XGetWindowAttributes(mXDisplay, RootWindow(mXDisplay, screen), &winattrs);
+      ::XGetWindowAttributes(mXDisplay, RootWindow(mXDisplay, screen),
+                             &winattrs);
    
       // create window
       mXWindow = ::XCreateWindow(mXDisplay, RootWindow(mXDisplay, screen),
-                                 origin_x, winattrs.height - origin_y - window_height,
-                                 window_width, window_height, 0,
+                                 mOriginX,
+                                 winattrs.height - mOriginY - mWindowHeight,
+                                 mWindowWidth, mWindowHeight, 0,
                                  mVisualInfo->depth, InputOutput,
                                  mVisualInfo->visual,
                                  CWEventMask | CWColormap | CWBorderPixel,
@@ -216,9 +227,10 @@ int GlWindowXWin::open()
        * Unfortunately, the generic X resources for communicating with a window
        * manager don't support this feature.
        */
-      if ( !border )
+      if ( ! mHasBorder )
       {
-         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL) << "attempting to make window borderless"
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
+            << "[vrj::GlWindowXWin::open()] Attempting to make window borderless"
             << std::endl << vprDEBUG_FLUSH;
          Atom MotifHints = XInternAtom(mXDisplay, "_MOTIF_WM_HINTS", 0);
          if ( MotifHints == None )
@@ -260,10 +272,10 @@ int GlWindowXWin::open()
          throw glwinx_OpenFailureException();      
       }
    
-      window_is_open = true;
+      mWindowIsOpen = true;
    
       // ----------- Event window device starting -------------- //
-      if ( true == mAreEventSource )    // Are we going to act as an event source?
+      if ( true == mIsEventSource )    // Are we going to act as an event source?
       {
          // Set the parameters that we will need to get events
          gadget::EventWindowXWin::mWindow  = mXWindow;
@@ -312,10 +324,10 @@ int GlWindowXWin::close()
    //vprASSERT( !mXfuncLock.test() && "Attempting to close a display window that is locked" );
    // Assert that we have not impllemented correct shutdown for the case that we
    // are an event window as well
-   //vprASSERT(!mAreEventSource  && "Need to implement GLX window close with gadget::EventWindow");
+   //vprASSERT(!mIsEventSource  && "Need to implement GLX window close with gadget::EventWindow");
 
    // Remove any event device from the input manager
-   if ( true == mAreEventSource )
+   if ( true == mIsEventSource )
    {
       gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
 
@@ -349,7 +361,7 @@ int GlWindowXWin::close()
       mXDisplay = NULL;
    }
 
-   window_is_open = false;    // We are closed now
+   mWindowIsOpen = false;    // We are closed now
 
    return true;
 
@@ -365,7 +377,7 @@ bool GlWindowXWin::makeCurrent()
    /* returns true for success,
     * false for failure (eg window not open or glXMakeCurrent fails)
     */
-   if ( !window_is_open )
+   if ( !mWindowIsOpen )
    {
       return false;
    }
@@ -408,10 +420,10 @@ void GlWindowXWin::configWindow(vrj::Display* disp)
       << "[vrj::GlWindowXWin::config] Display name is '" << mXDisplayName
       << "'" << std::endl << vprDEBUG_FLUSH;
 
-   mAreEventSource = display_elt->getProperty<bool>("act_as_event_source");
+   mIsEventSource = display_elt->getProperty<bool>("act_as_event_source");
 
    // If should be an event source.
-   if ( true == mAreEventSource )
+   if ( true == mIsEventSource )
    {
       // Configure event window device portion.
       jccl::ConfigElementPtr event_win_element =
@@ -424,8 +436,8 @@ void GlWindowXWin::configWindow(vrj::Display* disp)
       gadget::EventWindowXWin::config(event_win_element);
 
       // Custom configuration
-      gadget::EventWindowXWin::mWidth  = GlWindowXWin::window_width;
-      gadget::EventWindowXWin::mHeight = GlWindowXWin::window_height;
+      gadget::EventWindowXWin::mWidth  = GlWindowXWin::mWindowWidth;
+      gadget::EventWindowXWin::mHeight = GlWindowXWin::mWindowHeight;
 
       mWeOwnTheWindow = false;      // Event window device does not own window
    }
@@ -472,7 +484,7 @@ bool GlWindowXWin::createHardwareSwapGroup(std::vector<vrj::GlWindow*> wins)
 void GlWindowXWin::checkEvents()
 {
    // Node, this will call processEvent() in the final phase (see below)
-   if ( true == mAreEventSource )
+   if ( true == mIsEventSource )
    {
       gadget::EventWindowXWin::sample();    /** Sample from the xwindow (calls HandleEvents() )*/
    }
@@ -627,11 +639,11 @@ void GlWindowXWin::checkEvents()
       if ( mVrjDisplay->isStereoRequested() )
       {
          viattrib.push_back(GLX_STEREO);
-         in_stereo = true;
+         mInStereo = true;
       }
       else
       {
-         in_stereo = false;
+         mInStereo = false;
       }
 
       // Add terminator
@@ -652,7 +664,7 @@ void GlWindowXWin::checkEvents()
             << "WARNING: Display process for '" << mXDisplayName
             << "' couldn't get display in stereo - trying mono.\n"
             << vprDEBUG_FLUSH;
-         in_stereo = false;
+         mInStereo = false;
 
          // This should be a reasonable 'ignore' tag
          viattrib[viattrib.size() - 1] = GLX_USE_GL;
@@ -720,8 +732,7 @@ void GlWindowXWin::processEvent(XEvent event)
    switch ( event.type )
    {
       case ConfigureNotify:
-         //std::cout << "GlWindowXWin::processEvent: Got configure notify." << std::endl;
-         updateOriginSize(vrj::GlWindow::origin_x, vrj::GlWindow::origin_y,
+         updateOriginSize(vrj::GlWindow::mOriginX, vrj::GlWindow::mOriginY,
                           event.xconfigure.width, event.xconfigure.height);
          vrj::GlWindow::setDirtyViewport(true);
          break;
