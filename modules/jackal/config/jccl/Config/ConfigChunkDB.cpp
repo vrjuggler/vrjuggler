@@ -304,27 +304,30 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
    std::string absolute_filename = demangleFileName(filename, parentfile);
    mFileName = absolute_filename;
 
-   cppdom::DocumentPtr chunk_db_doc = ChunkFactory::instance()->createXMLDocument();
+   cppdom::DocumentPtr chunk_db_doc(ChunkFactory::instance()->createXMLDocument());
    bool status(false);
 
    try
    {
-      chunk_db_doc->loadFile( absolute_filename );
-
-      cppdom::NodePtr chunk_db_node = chunk_db_doc->getChild( jccl::chunk_db_TOKEN);
-      vprASSERT(chunk_db_node.get() != NULL);
+      chunk_db_doc->loadFile(absolute_filename);
 
       // Go through the include processing instructions
       cppdom::NodeList pi_list = chunk_db_doc->getPiList();
-      for (cppdom::NodeList::iterator itr = pi_list.begin(); itr != pi_list.end(); ++itr)
+      for ( cppdom::NodeList::iterator itr = pi_list.begin();
+            itr != pi_list.end();
+            ++itr )
       {
-         cppdom::NodePtr pi = *itr;
+         cppdom::NodePtr pi(*itr);
+
          // A desc DB has been included
          if (pi->getName() == include_desc_INSTRUCTION)
          {
             // Get the path to the included file relative to the current file
-            std::string desc_filename = pi->getAttribute(file_TOKEN).template getValue<std::string>();
-            desc_filename = demangleFileName(desc_filename, absolute_filename);
+            std::string desc_filename =
+               pi->getAttribute(file_TOKEN).template getValue<std::string>();
+
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
+               << "Including " << desc_filename << std::endl << vprDEBUG_FLUSH;
 
             // Load the file
             ChunkFactory::instance()->loadDescs(desc_filename, filename);
@@ -333,16 +336,23 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
          else if (pi->getName() == include_INSTRUCTION)
          {
             // Get the path to the included file relative to the current file
-            std::string chunk_filename = pi->getAttribute(file_TOKEN).template getValue<std::string>();
-            chunk_filename = demangleFileName(chunk_filename, absolute_filename);
+            std::string chunk_filename =
+               pi->getAttribute(file_TOKEN).template getValue<std::string>();
+
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
+               << "Including " << chunk_filename << std::endl
+               << vprDEBUG_FLUSH;
 
             // Load the file
             load(chunk_filename, filename);
          }
       }
 
+      cppdom::NodePtr chunk_db_node(chunk_db_doc->getChild(jccl::chunk_db_TOKEN));
+      vprASSERT(chunk_db_node.get() != NULL);
+
       // Load in the chunk DB in the original file
-      loadFromChunkDBNode( chunk_db_node, filename );
+      loadFromChunkDBNode(chunk_db_node, filename);
 
       status = true;
    }
