@@ -33,7 +33,7 @@
       <para>Despite the difficulty of writing JNI code, the RMI solution was effective, for the most part. In September 2001, yet another project loomed. By this time, we were fed up with RMI, and we decided to go back to CORBA solely for communicating between Java and C++. Indeed, by using CORBA, we could write network visualization software in <emphasis>any</emphasis> language and communicate through the same channels.</para>
       <para>Beyond just communicating with the C++ applications, we had high hopes for using RMI to download Java code at run time to add custom visualization panels to the Java GUI dynamically. The Java code would come in the form of JavaBeans. While PlxView was designed to be modular from the start, we had not implemented the code for downloading the JavaBeans. To begin that work, I started writing code on a flight from Dallas/Ft. Worth to London, England, the evening of October 1, 2001. While at a CAVE workshop in Stockholm, Sweden, I took advantage of down time and late nights to extend PlxView to load and use JavaBeans.</para>
       <para>When I returned to the United States after the week in Stockholm, PlxView had evolved into what could be called version 0.0.0 of the Tweek Java GUI (sans CORBA, however). Its primary purpose was still Plexus network visualization. Design discussions with other members of the Juggler Team evolved the code into what is now the Tweek Java API. The Plexus-specific parts were separated into what is now the PlxView Bean, and the remaining code was moved into the new Tweek source tree.</para>
-      <para>The only remaining piece was CORBA support. Another student, Andrew Schwantes, had been experimenting with CORBA in a smaller system, and his C++ CORBA code was used as a starting point for the Tweek C++ API. After much discussion with Allen Bierbaum, the code was re-implementing to implement the subject/observer design pattern, and the Subject Manager was added. After all of that, the Java CORBA code was relatively trivial to add. And thus, the foundation for Tweek was in place by November 2001. By this time, it was already in use by the Fall 2001 Plexus class project.</para>
+      <para>The only remaining piece was CORBA support. Another student, Andrew Schwantes, had been experimenting with CORBA in a smaller system, and his C++ CORBA code was used as a starting point for the Tweek C++ API. After much discussion with Allen Bierbaum, the code was re-implemented to make use of the Observer design pattern, and the Subject Manager was added. After all of that, the Java CORBA code was relatively trivial to add. And thus, the foundation for Tweek was in place by November 2001. By this time, it was already in use by the Fall 2001 Plexus class project.</para>
    </preface>
    <part>
       <title>Introduction</title>
@@ -41,10 +41,10 @@
          <title>Tweek</title>
          <para>Programmers using Tweek must first understand what it is and what at does, at least at a conceptual level. Tweek has two parts: a Java <glossterm linkend="gloss.api">API</glossterm> and a C++ API. The two provide very distinct functionality, but they share a common bond through the use of remote method calls on shared objects. Objects defined in the C++ programming language can be accessed by objects defined in the Java programming language. Similarly, objects defined in Java can be accessed by C++ code. The C++ objects may be visualized and manipulated using the Tweek Java <glossterm linkend="gloss.gui">graphical user interface</glossterm> (GUI), a tool written using the Tweek Java API. This cross-language functionality is achieved through the use of remote method calls.</para>
          <para>Some readers may be familiar with remote procedure calls (RPC), a remote programming system first introduced by Sun Microsystems that uses the procedural programming paradigm. Remote method calls differ primarily through the use of the object-oriented programming paradigm. Tweek is implemented in two object-oriented languages and thus lends itself very well to a system implementing remote method calls.</para>
-         <para>In the remainder of this chapter, we present a high-level description of the Tweek C++ API. The Java API design is much more complex and is not included in this revision. Most users of Tweek need to know more about the C++ side of Tweek than the Java side. This is because Tweek is designed around the philosophy of a simple Java GUI interacting with a potentially complex C++ application.</para>
+         <para>In the remainder of this chapter, we present a high-level description of the Tweek C++ API. The Java API design is much more complex and is not included in this chapter. (Refer to <xref linkend="prog.java.chapter"/> for details on using the Java API.) Most users of Tweek need to know more about the C++ side of Tweek than the Java side. This is because Tweek is designed around the philosophy of a simple Java GUI interacting with a potentially complex C++ application.</para>
          <section id="intro.design.section">
             <title>C++ API Design Overview</title>
-            <para>The heart of the Tweek software system implements a subject/observer pattern <xref linkend="Gam95"/>. This pattern is used to define the relationship between the Java GUI (observer) and the C++ application (subject). Within this section, we explain how the subject and observer are used. Moving beyond the subject/observer pattern, we also explain the <firstterm>Subject Manager</firstterm><indexterm>
+            <para>The heart of the Tweek software system implements the Observer pattern <xref linkend="Gam95"/>. This design pattern is used to define the relationship between the Java GUI (observer) and the C++ application (subject). Within this section, we explain how the subject and observer are used. Moving beyond the subject/observer pattern, we also explain the <firstterm>Subject Manager</firstterm><indexterm>
                   <primary>Subject Manager</primary>
                </indexterm> and the <firstterm>CORBA Manager</firstterm><indexterm>
                   <primary>CORBA Manager</primary>
@@ -72,17 +72,22 @@
                   <primary>observer</primary>
                   <secondary>design and use</secondary>
                </indexterm>
-               <para>The observers in Tweek are part of the Java GUI. They observe the state of the remote subjects and can provide a visual rendering of that state.</para>
-               <para>Programmers <emphasis>do not</emphasis> define interfaces for the observers. Similar to subjects, the Tweek C++ API defines a basic observer interface called <interfacename>tweek::Observer</interfacename><indexterm>
+               <para>The observers in Tweek are (traditionally) part of the Java GUI<footnote>
+                     <para>Beginning with Tweek 0.13, helper classes for writing C++ observers are included with the C++ API. Users of older versions can make use of observers written in C++ (or any other programming language with a CORBA implementation), but the application developers will have to write the CORBA client code entirely from scratch.</para>
+                  </footnote>. They observe the state of the remote subjects and can provide a visual rendering of that state.</para>
+               <para>Programmers <emphasis>do not</emphasis> define interfaces for the observers. Instead, the Tweek C++ API defines a basic observer interface called <interfacename>tweek::Observer</interfacename><indexterm>
                      <primary>interfaces</primary>
                      <secondary>tweek::Observer</secondary>
                   </indexterm>. There is no <quote>standard</quote> observer implementation that corresponds to <classname>tweek::SubjectImpl</classname><indexterm>
                      <primary>classes</primary>
                      <secondary>tweek::SubjectImpl</secondary>
-                  </indexterm>, however. By design, observers must correspond directly with subjects, but there is no need to extend the basic observer interface. Observer implementations simply inherit from the basic observer class (<classname>tweek.ObserverPOA</classname><indexterm>
+                  </indexterm>. By design, observers must correspond directly with subjects, but there is no need to extend the basic observer interface using IDL. Observer implementations simply inherit from the basic observer class (<classname>tweek.ObserverPOA</classname><indexterm>
                      <primary>classes</primary>
                      <secondary>tweek.ObserverPOA</secondary>
-                  </indexterm>) and implement the <methodname>update()</methodname> method. Other extensions can be added in the custom Java class, of course, but an implementation of <methodname>update()</methodname> is always required.</para>
+                  </indexterm> in Java or <classname>POA_tweek::Observer</classname><indexterm>
+                     <primary>classes</primary>
+                     <secondary>POA_tweek::Observer</secondary>
+                  </indexterm> in C++) and implement the <methodname>update()</methodname> method. Other extensions can be added in the custom observer class, of course, but an implementation of <methodname>update()</methodname> is always required.</para>
             </section>
             <section>
                <title>CORBA Manager</title>
@@ -129,11 +134,18 @@
                <section>
                   <title>C++</title>
                   <para>A key part of the overall Tweek design is that complex, high-performance applications will be written in C++. While this may not necessarily be the case in every situation, this is the assumption made for the design and implementation of the Tweek C++ API. As mentioned previously, support could be added for other languages so that they too may fulfill the role of C++ in Tweek.</para>
-                  <para>Using the C++ API, programmers activate a local ORB. Once an ORB is available, servants that will act as subjects can be registered with the Subject Manager. The subjects are activated within the local POA by the Subject Manager, thus alleviating some work for programmers. Once activated, the subjects may be accessed remotely through CORBA by code written in any language&mdash;including C++.</para>
+                  <section>
+                     <title>C++ Subjects</title>
+                     <para>Using the C++ API on the server side to create subjects, programmers activate a local ORB using the CORBA Manager. Once an ORB is available, servants that will act as subjects can be registered with the Subject Manager. The subjects are activated within the local POA by the Subject Manager, thus alleviating some work for programmers. Once activated, the subjects may be accessed remotely through CORBA by code written in any language&mdash;including C++.</para>
+                  </section>
+                  <section>
+                     <title>C++ Observers</title>
+                     <para>Using the C++ API on the client side to create observers, programmers again activate a local ORB using the CORBA Service. Once an ORB is available, servants that will act as observers can be registered with the local POA via the CORBA Service. Once activated, the observers can be attached to remote subjects that may be written in any langauge. C++ observer code is very similar to Java observer code.</para>
+                  </section>
                </section>
                <section>
                   <title>Java</title>
-                  <para>In the Java programming language, the Swing API provides developers with a very nice suite of classes for writing cross-platform GUIs called Swing. When developing Tweek, we took advantage of Swing and JavaBeans technology <xref linkend="Jbe02"/> to write a generalized GUI framework. Users can plug components (Beans) into this framework at runtime to extend its functionality. The Beans can get access to remote C++ objects through the CORBA services provided by the Tweek Java API. Similar to the C++ API, the use of CORBA in Java has been simplified so that programmers can use it with little effort and without a comprehensive understanding of CORBA in general.</para>
+                  <para>In the Java programming language, the Swing API provides developers with a very nice suite of classes for writing cross-platform GUIs. When developing Tweek, we took advantage of Swing and JavaBeans technology <xref linkend="Jbe02"/> to write a generalized GUI framework. Users can plug components (Beans) into this framework at runtime to extend its functionality. The Beans can get access to remote C++ objects through the CORBA services provided by the Tweek Java API. Similar to the C++ API, the use of CORBA in Java has been simplified so that programmers can use it with little effort and without a comprehensive understanding of CORBA in general.</para>
                   <para>Programmers will use Java as part of their Tweek programming to write JavaBeans. Compared to the potential complexity of the GUI code for Beans, little CORBA programming must be done in Java. Beans may be as simple or as complex as necessary to meet the needs of individual projects. More information about JavaBeans is provided in <xref linkend="intro.javabeans.chapter"/>.</para>
                </section>
             </section>
@@ -754,6 +766,14 @@ int main(int argc, char* argv[])
                   <secondary>Network</secondary>
                </indexterm>
                <para></para>
+            </section>
+            <section id="beandelivery.library.section">
+               <title>Bean Delivery Library</title>
+               <indexterm>
+                  <primary>Java libraries</primary>
+                  <secondary>Bean Delivery</secondary>
+               </indexterm>
+               <para>The Bean Delivery Library makes use of the Bean Library and the Network Library to allow JavaBeans to be transferred across the network. More specifically, a remote subject, most likely written in C++, can <quote>push</quote> JavaBeans to the Tweek GUI where they can be handled as though they were loaded from the local disk.</para>
             </section>
          </section>
       </chapter>
