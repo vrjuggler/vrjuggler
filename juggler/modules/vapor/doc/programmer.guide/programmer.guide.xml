@@ -1444,11 +1444,10 @@ thread = new vpr::Thread(my_functor);</programlisting>
           <para>As expected, <methodname>acquire()</methodname> is a blocking
           call, so if the semaphore&#39;s value is less than or equal to 0,
           the thread requesting the lock will block until the semaphore&#39;s
-          value is greater than 0. Note that the return value of
-          <methodname>acquire()</methodname> is a little different than most
-          calls. If the lock is acquired, <constant>vpr::ReturnStatus::Succeed</constant>
-          is returned. If the attempt to lock the semaphore fails for some
-          reason, <constant>vpr::ReturnStatus::Fail</constant> is returned.</para>
+          value is greater than 0. If the lock is acquired,
+          <constant>vpr::ReturnStatus::Succeed</constant> is returned. If the
+          attempt to lock the semaphore fails for some reason,
+          <constant>vpr::ReturnStatus::Fail</constant> is returned.</para>
         </section>
 
         <section>
@@ -1602,9 +1601,7 @@ thread = new vpr::Thread(my_functor);</programlisting>
           <para>As expected, <methodname>acquire()</methodname> is a blocking
           call, so if the mutex is already locked by another thread, the
           thread requesting the lock will block until the mutex is released by
-          the other thread. Note that the return value of
-          <methodname>acquire()</methodname> is a little different than most
-          calls. If the lock is acquired, <constant>vpr::ReturnStatus::Succeed</constant>
+          the other thread. If the lock is acquired, <constant>vpr::ReturnStatus::Succeed</constant>
           is returned. If the attempt to lock the semaphore fails for some
           reason, <constant>vpr::ReturnStatus::Fail</constant> is returned.</para>
         </section>
@@ -1665,7 +1662,7 @@ thread = new vpr::Thread(my_functor);</programlisting>
           mutex is released using the <methodname>release()</methodname>
           method:</para>
 
-          <programlisting>sema.release();</programlisting>
+          <programlisting>mutex.release();</programlisting>
 
           <para>If the locked mutex is released successfully,
           <constant>vpr::ReturnStatus::Succeed</constant> is returned.
@@ -1733,7 +1730,210 @@ thread = new vpr::Thread(my_functor);</programlisting>
           <primary>vpr::CondVar</primary>
         </indexterm>
 
-        <para></para>
+        <para>Condition variables are a helpful extension to mutexes. Every
+        condition variable has an associated mutex, and thus they can be used
+        to control mutually exclusive access to some resource. A condition
+        variable adds the ability to test a condition and wait for its state
+        to change in some meaningful way. Waiting threads are awakened when
+        the state of the variable changes or when a time interval expires.
+        When awoken, the relevant condition is tested. If the state has
+        changed to the desired result, the thread continues its execution. If
+        not, it goes back into the waiting state until it is awakened again to
+        repeat the process.</para>
+
+        <section>
+          <title>High-Level Description</title>
+
+          <indexterm>
+            <primary>vpr::CondVar</primary>
+
+            <secondary>description of</secondary>
+          </indexterm>
+
+          <para>The interface for <classname>vpr::CondVar</classname><indexterm><primary>classes</primary><secondary>vpr::CondVar</secondary></indexterm>
+          is very similar to that of <classname>vpr::Mutex</classname><indexterm><primary>classes</primary><secondary>vpr::Mutex</secondary></indexterm>.
+          This is because every instance of <classname>vpr::CondVar</classname>
+          contains an instance of <classname>vpr::Mutex</classname>. Thus,
+          acquiring and releasing a condition variable actually acquires and
+          releases the contained mutex. </para>
+
+          <para>The header file to include for using <classname>vpr::CondVar</classname>
+          is <filename>vpr/Sync/CondVar.h</filename>. As with other classes
+          discussed in this chapter, it is important not to include the
+          platform-specific header files.</para>
+        </section>
+
+        <section>
+          <title>Creating a Condition Variable</title>
+
+          <indexterm>
+            <primary>vpr::CondVar</primary>
+
+            <secondary>creating</secondary>
+          </indexterm>
+
+          <para>When creating a <classname>vpr::CondVar</classname> object,
+          there are no special parameters to pass or considerations to be
+          made. An example of creating a condition variable is as follows:</para>
+
+          <programlisting>vpr::CondVar cv;</programlisting>
+
+          <para>In addition to the <classname>vpr::CondVar</classname>
+          instance, there is usually some associated variable whose value will
+          be tested and modified by various threads. For our purposes, we will
+          use a boolean variable:</para>
+
+          <programlisting>bool state_var;</programlisting>
+        </section>
+
+        <section>
+          <title>Locking a Condition Variable</title>
+
+          <indexterm>
+            <primary>vpr::CondVar</primary>
+
+            <secondary>locking</secondary>
+          </indexterm>
+
+          <para>When a thread needs to acquire access to shared data, it can
+          lock a condition variable. In the <classname>vpr::CondVar</classname>
+          interface, this is accomplished using the <methodname>acquire()</methodname>
+          method:</para>
+
+          <programlisting>cv.acquire();</programlisting>
+
+          <para>As expected, <methodname>acquire()</methodname> is a blocking
+          call, so if the condition variable&#39;s mutex is already locked by
+          another thread, the thread requesting the lock will block until the
+          mutex is released by the other thread. If the lock is acquired,
+          <constant>vpr::ReturnStatus::Succeed</constant> is returned. If the
+          attempt to lock the semaphore fails for some reason,
+          <constant>vpr::ReturnStatus::Fail</constant> is returned.</para>
+        </section>
+
+        <section>
+          <title>Releasing a Locked Condition Variable</title>
+
+          <indexterm>
+            <primary>vpr::CondVar</primary>
+
+            <secondary>releasing</secondary>
+          </indexterm>
+
+          <para>When access to the critical section is complete, a locked
+          condition variable is released using the <methodname>release()</methodname>
+          method:</para>
+
+          <programlisting>cv.release();</programlisting>
+
+          <para>If the locked condition variable is released successfully,
+          <constant>vpr::ReturnStatus::Succeed</constant> is returned.
+          Otherwise, <constant>vpr::ReturnStatus::Fail</constant> is returned.</para>
+
+          <para>Prior to calling <methodname>vpr::CondVar::release()</methodname>,
+          it is almost always necessary to call <methodname>vpr::CondVar::signal()</methodname>
+          (or <methodname>vpr::CondVar::broadcast()</methodname>) to inform
+          any waiting threads that the condition on which they are waiting may
+          have changed. The next section describes this procedure in greater
+          detail.</para>
+        </section>
+
+        <section>
+          <title>Putting Condition Variables to Use</title>
+
+          <para>So far, we have seen how to lock and unlock a condition
+          variable, but we have not seen how to <emphasis>use</emphasis> a
+          condition variable. Let us say that we have two threads running
+          concurrently. One thread is performing an operation, and the other
+          thread must wait until that operation is complete. Condition
+          variables work wonderfully in such a situation. For the following
+          description, we will call the first thread the worker thread and the
+          second thread the waiting thread. For the example, we will use the
+          condition variable <varname>cv</varname> and the boolean flag
+          <varname>state_var</varname>, introduced above. Initially,
+          <varname>state_var</varname> will be set to <literal>false</literal>
+          to indicate that the worker thread has not done its job yet.</para>
+
+          <section>
+            <title>The Waiting Thread</title>
+
+            <para>While it may seem more logical to focus on the worker thread
+            first, our example will flow better if we start with the waiting
+            thread. That way, the waiting thread can be in its waiting state
+            (at least conceptually) when we talk about the worker thread. The
+            waiting thread will of course be waiting for the condition (the
+            value of <varname>state_var</varname>) to change.</para>
+
+            <para>In order for the waiting thread to be waiting, it must have
+            tested the value of <varname>state_var</varname>. Because
+            <varname>state_var</varname> is shared data, the condition
+            variable must be locked before it can read the current value of
+            <varname>state_var</varname>. Depending on the current value, the
+            waiting thread will either wait or continue its execution. The
+            usual process for doing this is shown below:</para>
+
+            <programlisting>cv.acquire();
+{
+   while ( state_var == false )
+   {
+      cv.wait();
+   }
+}
+cv.release();</programlisting>
+
+            <para>The call to <methodname>vpr::CondVar::wait()</methodname> is
+            special: the mutex associated with <varname>cv</varname> is
+            unlocked so that other threads can manipulate <varname>state_var</varname>,
+            but the waiting thread will block. When the waiting thread is
+            awakened, it will regain the lock it previously held on the
+            condition variable. The thread will test <varname>state_var</varname>
+            again, and if its value is now <literal>true</literal>, the
+            waiting thread will exit the loop and release the condition
+            variable. If the value of <varname>state_var</varname> is still
+            <literal>false</literal>, the waiting thread will go back to its
+            waiting state.</para>
+          </section>
+
+          <section>
+            <title>The Worker Thread</title>
+
+            <para>The worker thread has some task to perform that is critical
+            to the proper execution of the two active threads. In order to
+            inform the waiting thread about the current status of the task, we
+            will use the condition variable <varname>cv</varname> and the
+            boolean flag <varname>state_var</varname>, shown above. While the
+            worker thread is performing its task, it must hold the lock on the
+            condition variable, as shown below:</para>
+
+            <programlisting>cv.acquire();
+{
+   // Perform our critical task ...
+
+   state_var = true;
+   cv.signal();
+}
+cv.release();</programlisting>
+
+            <para>Once the <quote>critical task</quote> is complete, the value
+            of <varname>state_var</varname> is changed to <literal>true</literal>
+            to indicate that the job is done. Then, <methodname>vpr::CondVar::signal()</methodname>
+            is invoked. This will wake up the waiting thread, and the
+            condition variable is released. The result is that the waiting
+            thread will wake up to discover that the job has been completed,
+            and it will continue with its execution.</para>
+
+            <note>
+              <para>The method <methodname>vpr::CondVar::signal()</methodname>
+              will wake up at most one waiting thread. Which thread is
+              awakened is determined by the operating system scheduling
+              algorithms. To wake up all threads, use
+              <methodname>vpr::CondVar::broadcast()</methodname>. Of course,
+              each waiting thread will have to wait its turn to get exclusive
+              access to test the condition, but this can be useful when it is
+              known that many threads are all waiting on the same result.</para>
+            </note>
+          </section>
+        </section>
       </section>
     </chapter>
 
