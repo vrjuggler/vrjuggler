@@ -25,12 +25,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/Quat.h>
 #include <gmtl/Output.h>
 #include <gmtl-wrappers.h>
+#include <gmtl-getData-wrappers.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -45,6 +45,7 @@ void _Export_Quat_double()
         .def_readwrite("mData", &gmtl::Quat<double>::mData)
         .def("set", &gmtl::Quat<double>::set)
         .def("get", &gmtl::Quat<double>::get)
+        .def("getData", (tuple (gmtlWrappers::*)(gmtl::Quat<double>*)) &gmtlWrappers::Quat_getData)
         .def("__getitem__", (double& (gmtl::Quat<double>::*)(const int)) &gmtl::Quat<double>::operator[], return_value_policy<copy_non_const_reference>())
         .def("__setitem__", (void (*)(gmtl::Quatd*, const unsigned, double)) &gmtlWrapper::setArrayElement)
         .def(self * self)

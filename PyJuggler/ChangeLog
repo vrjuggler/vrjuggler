@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-01-2003 patrickh    Exposed the getData() method for gmtl::VecBase,
+                        gmtl::Quat, and gmtl::EulerAngle.
+                        NEW VERSION: 0.4.10
 Apr-30-2003 patrickh    Added vrj::Viewport, vrj::SimViewport, vrj::Display,
                         and vrj::Projection.
                         NEW VERSION: 0.4.9

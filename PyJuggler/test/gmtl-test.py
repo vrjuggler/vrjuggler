@@ -101,6 +101,10 @@ print "vec1: %s" % vec1
 print "vec2: %s" % vec2
 print "vec3: %s" % vec3
 
+print "vec1.getData():", vec1.getData()
+print "vec2.getData():", vec2.getData()
+print "vec3.getData():", vec3.getData()
+
 if vec1 != vec2:
    print "vec1 != vec2 pass"
 else:
@@ -175,6 +179,12 @@ else:
 
 euler1 = gmtl.EulerAngleXYZf(90.0, 0.0, 0.0)
 euler2 = gmtl.EulerAngleXYZf(0.0, 90.0, 0.0)
+
+print "euler1: %s" % euler1
+print "euler2: %s" % euler2
+
+print "euler1.getData():", euler1.getData()
+print "euler2.getData():", euler2.getData()
 
 if not gmtl.isEqual(euler1, euler2):
    print "gmtl.isEqual(euler1, euler2) pass"

@@ -25,11 +25,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/Matrix.h>
 #include <gmtl-wrappers.h>
+#include <gmtl-getData-wrappers.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -47,6 +47,7 @@ void _Export_Matrix_float_3_3()
         .def("set", (void (gmtl::Matrix<float,3,3>::*)(float, float, float, float, float, float, float, float, float, float, float, float) )&gmtl::Matrix<float,3,3>::set)
         .def("set", (void (gmtl::Matrix<float,3,3>::*)(const float *) )&gmtl::Matrix<float,3,3>::set)
         .def("setTranspose", &gmtl::Matrix<float,3,3>::setTranspose)
+        .def("getData", (tuple (gmtlWrappers::*)(gmtl::Matrix<float,3,3>*)) &gmtlWrappers::Matrix_3_3_getData)
         .def("isError", &gmtl::Matrix<float,3,3>::isError)
         .def("setError", &gmtl::Matrix<float,3,3>::setError)
         .def("__getitem__", (gmtl::Matrix<float,3,3>::RowAccessor (gmtl::Matrix<float,3,3>::*)(const unsigned) )&gmtl::Matrix<float,3,3>::operator[])
@@ -56,7 +57,7 @@ void _Export_Matrix_float_3_3()
         .def(self *= float())
         .def(self == self)
         .def(self != self)
-//        .def(str(self))
+//        .def(self_ns::str(self))
     );
 
     class_< gmtl::Matrix<float,3,3>::RowAccessor >("RowAccessor", no_init)

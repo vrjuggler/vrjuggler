@@ -25,13 +25,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/EulerAngle.h>
 #include <gmtl/EulerAngleOps.h>
 #include <gmtl/Output.h>
 #include <gmtl-wrappers.h>
+#include <gmtl-getData-wrappers.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -44,6 +44,7 @@ void _Export_EulerAngle_float_gmtl_ZYX()
         .def(init< const gmtl::EulerAngle<float,gmtl::ZYX> & >())
         .def(init< float, float, float >())
         .def("set", &gmtl::EulerAngle<float,gmtl::ZYX>::set)
+        .def("getData", (tuple (gmtlWrappers::*)(gmtl::EulerAngle<float,gmtl::ZYX>*)) &gmtlWrappers::EulerAngle_getData)
         .def("__getitem__", (float& (gmtl::EulerAngle<float,gmtl::ZYX>::*)(const unsigned) ) &gmtl::EulerAngle<float,gmtl::ZYX>::operator[], return_value_policy<copy_non_const_reference>())
         .def("__setitem__", (void (*)(gmtl::EulerAngle<float,gmtl::ZYX>*, const unsigned, float)) &gmtlWrapper::setArrayElement)
         .def(self == self)

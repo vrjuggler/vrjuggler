@@ -36,7 +36,6 @@
 
 namespace gmtlWrapper
 {
-
    template<typename DATA_TYPE>
    gmtl::Matrix<DATA_TYPE, 3, 3> makeRotMatrix33(const gmtl::Quat<DATA_TYPE>& q)
    {

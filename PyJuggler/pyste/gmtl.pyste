@@ -39,9 +39,10 @@ exclude(Matrix44f.mData)
 #set_policy(Matrix44f.operator['()'], return_internal_reference())
 exclude(Matrix44f.operator['()'])
 
+Include('gmtl-getData-wrappers.h')
 Matrix33f = Matrix('float 3 3')
 rename(Matrix33f, 'Matrix33f')
-exclude(Matrix33f.getData)
+set_wrapper(Matrix33f.getData, 'gmtlWrappers::Matrix_3_3_getData')
 exclude(Matrix33f.mData)
 #set_policy(Matrix33f.operator['()'], return_internal_reference())
 exclude(Matrix33f.operator['()'])
@@ -80,72 +81,76 @@ set_policy(Matrix_invert, return_internal_reference())
 # gmtl::Vec<> =================================================================
 VecBase = Template('gmtl::VecBase', 'gmtl/VecBase.h')
 
+Include('gmtl-getData-wrappers.h')
 VecBase2d = VecBase('double 2')
 rename(VecBase2d, 'VecBase2d')
-exclude(VecBase2d.getData)
+set_wrapper(VecBase2d.getData, 'gmtlWrappers::VecBase_2_getData')
 exclude(VecBase2d.mData)
 
+Include('gmtl-getData-wrappers.h')
 VecBase2f = VecBase('float 2')
 rename(VecBase2f, 'VecBase2f')
-exclude(VecBase2f.getData)
+set_wrapper(VecBase2f.getData, 'gmtlWrappers::VecBase_2_getData')
 exclude(VecBase2f.mData)
 
+Include('gmtl-getData-wrappers.h')
 VecBase2i = VecBase('int 2')
 rename(VecBase2i, 'VecBase2i')
-exclude(VecBase2i.getData)
+set_wrapper(VecBase2i.getData, 'gmtlWrappers::VecBase_2_getData')
 exclude(VecBase2i.mData)
 
+Include('gmtl-getData-wrappers.h')
 VecBase3d = VecBase('double 3')
 rename(VecBase3d, 'VecBase3d')
-exclude(VecBase3d.getData)
+set_wrapper(VecBase3d.getData, 'gmtlWrappers::VecBase_3_getData')
 exclude(VecBase3d.mData)
 
+Include('gmtl-getData-wrappers.h')
 VecBase3f = VecBase('float 3')
 rename(VecBase3f, 'VecBase3f')
-exclude(VecBase3f.getData)
+set_wrapper(VecBase3f.getData, 'gmtlWrappers::VecBase_3_getData')
 exclude(VecBase3f.mData)
 
+Include('gmtl-getData-wrappers.h')
 VecBase3i = VecBase('int 3')
 rename(VecBase3i, 'VecBase3i')
-exclude(VecBase3i.getData)
+set_wrapper(VecBase3i.getData, 'gmtlWrappers::VecBase_3_getData')
 exclude(VecBase3i.mData)
 
+Include('gmtl-getData-wrappers.h')
 VecBase4d = VecBase('double 4')
 rename(VecBase4d, 'VecBase4d')
-exclude(VecBase4d.getData)
+set_wrapper(VecBase4d.getData, 'gmtlWrappers::VecBase_4_getData')
 exclude(VecBase4d.mData)
 
+Include('gmtl-getData-wrappers.h')
 VecBase4f = VecBase('float 4')
 rename(VecBase4f, 'VecBase4f')
-exclude(VecBase4f.getData)
+set_wrapper(VecBase4f.getData, 'gmtlWrappers::VecBase_4_getData')
 exclude(VecBase4f.mData)
 
+Include('gmtl-getData-wrappers.h')
 VecBase4i = VecBase('int 4')
 rename(VecBase4i, 'VecBase4i')
-exclude(VecBase4i.getData)
+set_wrapper(VecBase4i.getData, 'gmtlWrappers::VecBase_4_getData')
 exclude(VecBase4i.mData)
 
 Vec = Template('gmtl::Vec', 'gmtl/Vec.h')
 
 Vec3d = Vec('double 3')
 rename(Vec3d, 'Vec3d')
-exclude(Vec3d.getData)
 
 Vec3f = Vec('float 3')
 rename(Vec3f, 'Vec3f')
-exclude(Vec3f.getData)
 
 Vec3i = Vec('int 3')
 rename(Vec3i, 'Vec3i')
-exclude(Vec3i.getData)
 
 Vec4d = Vec('double 4')
 rename(Vec4d, 'Vec4d')
-exclude(Vec4d.getData)
 
 Vec4f = Vec('float 4')
 rename(Vec4f, 'Vec4f')
-exclude(Vec4f.getData)
 
 Function('gmtl::dot', 'gmtl-functions.h')
 Function('gmtl::length', 'gmtl-functions.h')
@@ -173,16 +178,18 @@ set_policy(Function('gmtl::lerp', 'gmtl-functions.h'),
 # gmtl::Quat<> ================================================================
 Quat = Template('gmtl::Quat', 'gmtl/Quat.h')
 
+Include('gmtl-getData-wrappers.h')
 Quatf = Quat('float')
 rename(Quatf, 'Quatf')
-exclude(Quatf.getData)
+set_wrapper(Quatf.getData, 'gmtlWrappers::Quat_getData')
 
 # Similar to the above where it is necessary to expose gmtl::Matrix33f and
 # gmtl::Vec4f, we need another instance of gmtl::Quat<T> so that the function
 # overloading will work correctly.  Blah...
+Include('gmtl-getData-wrappers.h')
 Quatd = Quat('double')
 rename(Quatd, 'Quatd')
-exclude(Quatd.getData)
+set_wrapper(Quatd.getData, 'gmtlWrappers::Quat_getData')
 
 set_policy(Function('gmtl::negate', 'gmtl-functions.h'),
            return_internal_reference())
@@ -223,17 +230,20 @@ rename(Point2i, 'Point2i')
 # gmtl::EulerAngle<> ==========================================================
 EulerAngle = Template('gmtl::EulerAngle', 'gmtl/EulerAngle.h')
 
+Include('gmtl-getData-wrappers.h')
 EulerAngleXYZf = EulerAngle('float gmtl::XYZ')
 rename(EulerAngleXYZf, 'EulerAngleXYZf')
-exclude(EulerAngleXYZf.getData)
+set_wrapper(EulerAngleXYZf.getData, 'gmtlWrappers::EulerAngle_getData')
 
+Include('gmtl-getData-wrappers.h')
 EulerAngleZYXf = EulerAngle('float gmtl::ZYX')
 rename(EulerAngleZYXf, 'EulerAngleZYXf')
-exclude(EulerAngleZYXf.getData)
+set_wrapper(EulerAngleZYXf.getData, 'gmtlWrappers::EulerAngle_getData')
 
+Include('gmtl-getData-wrappers.h')
 EulerAngleZXYf = EulerAngle('float gmtl::ZXY')
 rename(EulerAngleZXYf, 'EulerAngleZXYf')
-exclude(EulerAngleZXYf.getData)
+set_wrapper(EulerAngleZXYf.getData, 'gmtlWrappers::EulerAngle_getData')
 # ========================================================== gmtl::EulerAngle<>
 
 # gmtl::AxisAngle<> ===========================================================

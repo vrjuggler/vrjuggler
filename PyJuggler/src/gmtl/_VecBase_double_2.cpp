@@ -25,12 +25,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/VecBase.h>
 #include <gmtl/Output.h>
 #include <gmtl-wrappers.h>
+#include <gmtl-getData-wrappers.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -42,13 +42,8 @@ void _Export_VecBase_double_2()
     class_< gmtl::VecBase<double,2> >("VecBase2d", init<  >())
         .def(init< const gmtl::VecBase<double,2> & >())
         .def(init< const double &, const double & >())
-        .def(init< const double &, const double &, const double & >())
-        .def(init< const double &, const double &, const double &, const double & >())
-        .def("set", (void (gmtl::VecBase<double,2>::*)(const double *) )&gmtl::VecBase<double,2>::set)
-        .def("set", (void (gmtl::VecBase<double,2>::*)(const double &) )&gmtl::VecBase<double,2>::set)
         .def("set", (void (gmtl::VecBase<double,2>::*)(const double &, const double &) )&gmtl::VecBase<double,2>::set)
-        .def("set", (void (gmtl::VecBase<double,2>::*)(const double &, const double &, const double &) )&gmtl::VecBase<double,2>::set)
-        .def("set", (void (gmtl::VecBase<double,2>::*)(const double &, const double &, const double &, const double &) )&gmtl::VecBase<double,2>::set)
+        .def("getData", (tuple (gmtlWrappers::*)(gmtl::VecBase<double,2>*)) &gmtlWrappers::VecBase_2_getData)
         .def("__getitem__", (double& (gmtl::VecBase<double,2>::*)(const unsigned) ) &gmtl::VecBase<double,2>::operator[], return_value_policy<copy_non_const_reference>())
         .def("__setitem__", (void (*)(gmtl::VecBase<double,2>*, const unsigned, double)) &gmtlWrapper::setArrayElement)
         .def(-self)
