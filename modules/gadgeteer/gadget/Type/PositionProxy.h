@@ -110,7 +110,12 @@ public:
    void setTransform( float xoff, float yoff, float zoff,    // Translate
                       float xrot, float yrot, float zrot);   // Rotate
 
-   /// Gets the data.
+   /**
+    * Gets the positional data within the device pointed to by this proxy as a
+    * matrix.
+    *
+    * @return  the position of the device as a matrix
+    */
    gmtl::Matrix44f* getData()
    {
       if(mStupified)
