@@ -148,6 +148,7 @@ def setVars():
                                     r'C:\Program Files\Silicon Graphics\OpenGL Performer'),
       'VRPN_ROOT'       : os.getenv('VRPN_ROOT', ''),
       'AUDIERE_ROOT'    : os.getenv('AUDIERE_ROOT', ''),
+      'OPENAL_ROOT'     : os.getenv('OPENAL_ROOT', ''),
       'TRACKD_API_ROOT' : os.getenv('TRACKD_API_ROOT', ''),
       'prefix'          : r'C:\vrjuggler',
       'deps-prefix'     : r'C:\vrjuggler-deps'
@@ -229,6 +230,8 @@ def setVars():
                 False)
    processInput(options, 'VRPN_ROOT', 'VRPN installation directory', False)
    processInput(options, 'AUDIERE_ROOT', 'Audiere installation directory',
+                False)
+   processInput(options, 'OPENAL_ROOT', 'OpenAL SDK installation directory',
                 False)
    processInput(options, 'TRACKD_API_ROOT', 'TrackdAPI installation directory',
                 False)
@@ -1038,6 +1041,7 @@ def doDependencyInstall(prefix):
    installBoost(prefix)
    installGMTL(prefix)
    installAudiere(prefix)
+   installOpenAL(prefix)
    installOmniORB(prefix)
 
 def simpleInstall(name, root, prefix, optional = False):
@@ -1100,6 +1104,12 @@ def installGMTL(prefix):
 def installAudiere(prefix):
    simpleInstall('Audiere headers, libraries, and executables',
                  os.getenv('AUDIERE_ROOT', ''), prefix, True)
+
+def installOpenAL(prefix):
+   print "Installing OpenAL DLL"
+   srcdir  = os.environ['OPENAL_ROOT']
+   destdir = os.path.join(prefix, 'bin')
+   shutil.copy2(os.path.join(srcdir, 'dll', 'OpenAL32.dll'), destdir)
 
 def installOmniORB(prefix):
    root = os.getenv('OMNIORB_ROOT', '')
