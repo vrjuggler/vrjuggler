@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist>
+  <viewer name="Tree Viewer">
+    <file name="${TWEEK_BASE_DIR}/bin/beans/Viewers.jar" 
+          entry="org/vrjuggler/tweek/treeviewer/BeanTreeViewer" />
+  </viewer>
+  <viewer name="Icon Viewer">
+    <file name="${TWEEK_BASE_DIR}/bin/beans/Viewers.jar" 
+          entry="org/vrjuggler/tweek/iconviewer/BeanIconViewer" />
+  </viewer>
+</beanlist>

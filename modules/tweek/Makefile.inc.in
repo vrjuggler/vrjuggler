@@ -1,0 +1,331 @@
+# **************** <Tweek heading BEGIN do not edit this line> ****************
+# Tweek
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+# **************** <Tweek heading END do not edit this line> ******************
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Specialized include file for the top-level makefile.  Targets and variables
+# needed for building the whole source tree are provided here.  This file
+# should only be included by the top-level makefile.  It is written in such a
+# way that no assumptions are made by this file about what the including file
+# provides except that it includes make.defs.mk.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+# Variables whose values are specific to this file.
+includedir	= @includedir@
+instlinks	= $(topdir)/instlinks
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+
+BUILD_JAVA	= @BUILD_JAVA@
+
+# Extra compiler and linker options needed only by this file.
+DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
+OPT_FLAGS	= -D_OPT @OPT_FLAGS@
+
+# =============================================================================
+# Build and installation directory naming and ownership information.
+# =============================================================================
+DEFAULT_DIR	= $(OPT_DIR)
+
+# If we have a name for the install group, define group-setting options for
+# UNIX commands (chown(1), chgrp(1)) and for local Perl scripts
+# (makefiles-gen.pl in particular).
+ifdef GROUP_NAME
+    _GROUP_OPT_PL	= --gname="$(GROUP_NAME)"
+endif
+
+# --------------------------------------------
+# Library build information.
+# --------------------------------------------
+
+SHLIB_MAJOR	= 1
+SHLIB_MINOR	= 0
+
+STATICLIB_EXT	= @STATICLIB_EXT@
+DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
+
+# Full list of the libraries to build.
+LIBS		= $(TWEEK_LIBRARY)
+STATIC_LIBS	= $(LIBS)
+DYNAMIC_LIBS	= $(LIBS)
+
+DYLIB_DEPS	= @DYLIB_DEPS@
+
+TWEEK_LIB_STATIC	= $(TWEEK_LIBRARY).$(STATICLIB_EXT)
+TWEEK_LIB_DYNAMIC	= $(TWEEK_LIBRARY).$(DYNAMICLIB_EXT)
+
+# Version information.
+BRANCH		= HEAD
+CANON_NAME	= Harbucks Coffee
+VER_ARGS	= -f $(TWEEKROOT_ABS)/VERSION -s @SUBSYSTEM@		\
+                  -b $(BRANCH) -o tweek/tweekParam.h -n "$(CANON_NAME)"	\
+                  -i $(TWEEKROOT_ABS)/tweek/tweekParam.h.in		\
+                  -d "`date '+%b %e, %Y %H:%M:%S'`"
+
+ifdef VERSION
+    VER_ARGS	+= -v $(VERSION)
+endif
+
+# =============================================================================
+# Library targets.
+# =============================================================================
+
+BEFOREBUILD	= beforebuild
+AFTERBUILD	= afterbuild
+
+# Things to do before the object files and library are built.
+beforebuild:
+	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
+	@$(MAKE) tweek-java
+
+# Things to do after the object files and library are built.
+afterbuild:
+	@$(MAKE) links
+
+# -----------------------------------------------
+# Construct the static version of the libraries.
+# -----------------------------------------------
+$(LIBDIR)/$(TWEEK_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+ifneq ($(OS_TYPE), Win32)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
+	$(RANLIB) $@
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+endif
+
+# ------------------------------------------------
+# Construct the dynamic version of the libraries.
+# ------------------------------------------------
+$(LIBDIR)/$(TWEEK_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+# =============================================================================
+# Tweek GUI targets.
+# =============================================================================
+EXTRA_OBJ_TARGETS	= tweek-jar
+
+# Build the Tweek GUI code base and the JAR files.
+tweek-gui:
+	@$(MAKE) tweek-java
+	@$(MAKE) tweek-jar
+
+# Build the Java-based monitor application, associated code, and the JAR files.
+tweek-java tweek-jar:
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
+	@echo "===> java"
+	@$(MAKE) -C java $@
+	@echo "<=== java"
+else
+	@echo "------------------------------------------------"
+	@echo "Tweek GUI build skipped"
+	@echo "------------------------------------------------"
+endif
+endif	# ifndef NO_JAVA
+
+# =============================================================================
+# Make links for developer use that provide the needed functionality for
+# the $TWEEK_BASE_DIR environment variable to be used when needed.
+# $TWEEK_BASE_DIR should be set to $(instlinks).
+# =============================================================================
+links:
+ifneq (@OS_TYPE@, Win32)
+	@echo "------------------------------------------------"
+	@echo "Setting up developer installation links"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/tweek
+	@$(MAKE) -C tweek instlinks="$(instlinks)" links
+	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
+          ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
+	cd $(instlinks)/include/tweek && rm -f ./*.h &&			\
+          $(LN_S) $(TWEEKROOT_ABS)/tweek/*.h ./
+	cd $(instlinks)/include/tweek && rm -f ./tweekDefines.h &&	\
+          $(LN_S) $(topdir)/tweek/tweekDefines.h ./tweekDefines.h
+	cd $(instlinks)/include/tweek && rm -f ./tweekParam.h &&	\
+          $(LN_S) $(topdir)/tweek/tweekParam.h ./tweekParam.h
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
+	@$(MAKE) -C java instlinks="$(instlinks)" tweek-gui-links
+endif
+endif
+	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
+          -t $(TWEEKROOT_ABS)/tweek-config.in -p 'use_base_dir=yes'	\
+          -v $(TWEEKROOT_ABS)/VERSION -o $(instlinks)/bin/tweek-config -x
+	@echo ""
+	@echo ""
+	@echo "---------------------------------------------------------------"
+	@echo 'You should now set $$TWEEK_BASE_DIR to:'
+	@cd $(instlinks) && echo "  `pwd`"
+	@echo "---------------------------------------------------------------"
+else
+	@echo "---------------------------------------------------------------"
+	@echo 'You must now install TWEEK and set %TWEEK_BASE_DIR% to:'
+	@echo "  $(prefix)"
+	@echo "---------------------------------------------------------------"
+endif
+
+# Remove the links in $(instlinks).
+clean-links:
+	@echo "------------------------------------------------"
+	@echo "Removing developer installation links"
+	@echo "------------------------------------------------"
+	rm -rf $(instlinks)
+
+# =============================================================================
+# Installation targets.  The default (what is done by 'install') is to install
+# the static debugging version of the libraries.  The steps taken for a full
+# installation are:
+#
+#     1) Create the full installation directory hierarchy.
+#     2) Install the libraries.
+#     3) Install the header files.
+#     4) Install the test programs.
+#     5) Install the contents of the Data directory.
+#     6) Install the Java-based config editor (if possible).
+# =============================================================================
+
+BEFOREINSTALL	= beforeinstall
+AFTERINSTALL	= afterinstall
+
+# Steps to take before beginning the installation process.  This target is
+# independent of the current ABI.
+beforeinstall:
+	@$(MAKE) hier
+
+# Make the full directory hierarchy for the installation.
+hier:
+	@echo "------------------------------------------------"
+	@echo "Making hierarchy"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.install.dist -p $(prefix)
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.include.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.lib.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.test.dist -p $(datadir)
+
+# Steps to take after the installation process is complete.  This target is
+# independent of the current ABI.
+afterinstall:
+	@echo "==============================================================="
+	@echo "Tweek installation complete"
+	@echo "==============================================================="
+
+PREINSTALL	= pre-install
+POSTINSTALL	= post-install
+
+pre-install:
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.lib.dist -p $(prefix)
+
+# Do everything needed after installing the library binaries.
+post-install:
+	@$(MAKE) install-tweek-gui
+	@$(MAKE) install-test
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/tweek-config $(bindir)
+
+PREINSTALL_HEADERS	= pre-install-headers
+POSTINSTALL_HEADERS	= post-install-headers
+
+pre-install-headers:
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.include.dist -p $(prefix)
+
+post-install-headers:
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(TWEEKROOT_ABS)/tweek/tweekConfig.h				\
+          $(includedir)/tweek/tweekConfig.h
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/tweek/tweekDefines.h $(includedir)/tweek
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/tweek/tweekParam.h $(includedir)/tweek
+
+# Install the Java-based software if possible.
+install-tweek-gui:
+ifdef NO_JAVA
+	@echo "------------------------------------------------"
+	@echo "Skipping Tweek GUI installation (not built)"
+	@echo "------------------------------------------------"
+else
+ifeq ($(BUILD_JAVA), Y)
+	@$(MAKE) -C java tweek-gui-install
+endif	# if $(BUILD_JAVA) == Y
+endif	# ifdef NO_JAVA
+
+# Install the test programs.
+install-test:
+	@echo "------------------------------------------------"
+	@echo "Installing test programs"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.test.dist -p $(datadir)
+	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/test	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/test
+	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
+          --prefix="$(datadir)/test" --vars="$(topdir)/VARS.pl"		\
+          --startdir="$(top_srcdir)/test" $(_GROUP_OPT_PL) --srcdir="."
+
+# =============================================================================
+# Clean-up targets.  '_clobber' removes the developer installation links.
+# =============================================================================
+_clobber:
+	@$(MAKE) cleandepend
+	@$(MAKE) clean-links
+
+# Define $(_LOCAL_CLOBBER) to inform the shared 'clobber' target that there is
+# a '_clobber' target to be run besides the standard targets.
+_LOCAL_CLOBBER	= 1
+
+include $(MKPATH)/dpp.libs.mk
+include $(MKPATH)/dpp.clean.mk
+
+CLEAN_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)

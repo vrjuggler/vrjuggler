@@ -1,0 +1,528 @@
+# **************** <Tweek heading BEGIN do not edit this line> ****************
+#  Tweek
+# 
+#  -----------------------------------------------------------------
+#  File:          $RCSfile$
+#  Date modified: $Date$
+#  Version:       $Revision$
+#  -----------------------------------------------------------------
+# **************** <Tweek heading END do not edit this line> ******************
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+# 
+#  VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+# 
+#  Original Authors:
+#    Allen Bierbaum, Christopher Just,
+#    Patrick Hartling, Kevin Meinert,
+#    Carolina Cruz-Neira, Albert Baker
+# 
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Library General Public
+#  License as published by the Free Software Foundation; either
+#  version 2 of the License, or (at your option) any later version.
+# 
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Library General Public License for more details.
+# 
+#  You should have received a copy of the GNU Library General Public
+#  License along with this library; if not, write to the
+#  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+#  Boston, MA 02111-1307, USA.
+# 
+# ************** <auto-copyright.pl END do not edit this line> ****************
+
+AC_REVISION($Revision$)
+AC_INIT(tweek/tweekConfig.h)
+AC_CONFIG_AUX_DIR(../../share/config)
+AC_CONFIG_HEADER(tweek/tweekDefines.h)
+DPP_PREREQ(1.4.94)
+DPP_INIT
+
+DPP_GEN_RECONFIG
+
+DPP_STD_CPP(yes)
+
+# Override the C compiler that configure would otherwise find itself.
+AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
+            _alt_cc="$withval", _alt_cc='none')
+
+# Override the C++ compiler that configure would otherwise find itself.
+AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
+            _alt_cxx="$withval", _alt_cxx='none')
+
+AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
+            JDOM_JAR="$withval", JDOM_JAR='none')
+
+AC_ARG_WITH(omniorb, [  --with-omniorb=<PATH>   Path to omniORB installation ],
+            OMNI_ROOT="$withval", OMNI_ROOT='none')
+
+AC_ARG_WITH(omnilib, [  --with-omnilib=<PATH>   Path to omniORB libraries ],
+            OMNI_LIB_DIR="$withval", OMNI_LIB_DIR='none')
+
+AC_ARG_WITH(omniver,
+            [  --with-omniver=<VER>    Major version of omniORB        [default=3]],
+            OMNI_VER="$withval", OMNI_VER='3')
+
+DPP_ABI_SETUP
+
+# -----------------------------------------------------------------------------
+# System-dependent stuff.
+# -----------------------------------------------------------------------------
+
+# Define macros and helpers useful when working in a Win32/DOS-based
+# environment.
+DPP_WIN32_SETUP
+
+# We use AC_CANONICAL SYSTEM so that we can find out information about the
+# build, target and host platforms rather than only the host.
+AC_CANONICAL_SYSTEM
+DPP_SYSTEM_SETUP
+
+# Depending on the target operating system, set various command options and
+# such.
+case $target_os in
+   # IBM RS/6000 running AIX.
+   aix4*)
+      AC_DEFINE(__aix__)
+      AC_DEFINE(__powerpc__)
+      AC_DEFINE(__OSVERSION__, 4)
+      ;;
+   # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
+   cygwin)
+      AC_DEFINE(__x86__)
+      AC_DEFINE(__WIN32__)
+
+      if test "x$PLATFORM" = "xWinNT" ; then
+         AC_DEFINE(__NT__)
+
+         _sys_name=`uname -s`
+         case "${_sys_name}" in
+            *NT-4*)
+               AC_DEFINE(__OSVERSION__, 4)
+               ;;
+            *NT-5*)
+               AC_DEFINE(__OSVERSION__, 5)
+               ;;
+         esac
+      fi
+      ;;
+   # Unkown operating system (to config.guess).
+   darwin1.*)
+      AC_DEFINE(__powerpc__)
+      AC_DEFINE(__darwin__)
+      AC_DEFINE(__OSVERSION__, 1)
+      ;;
+   # A machine running FreeBSD.
+   freebsd*)
+      case $target_cpu in
+         *86)
+            AC_DEFINE(__x86__)
+            ;;
+         alpha)
+            AC_DEFINE(__alpha__)
+            ;;
+      esac
+
+      AC_DEFINE(__freebsd__)
+
+      case $target_os in
+         # FreeBSD 3.x.
+         freebsd3*)
+            AC_DEFINE(__OSVERSION__, 3)
+         ;;
+         # FreeBSD 4.x.
+         freebsd4*)
+            AC_DEFINE(__OSVERSION__, 4)
+         ;;
+         # FreeBSD 5.x.
+         freebsd5*)
+            AC_DEFINE(__OSVERSION__, 5)
+         ;;
+      esac
+
+      ;;
+   # HP PA-RISC machine running HP-UX.20.
+   hpux*)
+      AC_DEFINE(__hppa__)
+      AC_DEFINE(__hpux__)
+
+      case $target_os in
+         # HP-UX 10.20.
+         hpux10.20)
+            AC_DEFINE(__OSVERSION__, 10)
+         ;;
+         # HP-UX 11.
+         hpux11*)
+            AC_DEFINE(__OSVERSION__, 11)
+         ;;
+      esac
+
+      ;;
+   # SGI running IRIX 6.*.
+   irix6*)
+      AC_DEFINE(__mips__)
+      AC_DEFINE(__irix__)
+      AC_DEFINE(__OSVERSION__, 6)
+      ;;
+   # A machine running Linux.
+   linux*)
+      case $target_cpu in
+         *86)
+            AC_DEFINE(__x86__)
+            ;;
+         alpha)
+            AC_DEFINE(__alpha__)
+            ;;
+         sparc)
+            AC_DEFINE(__sparc__)
+            ;;
+         mips)
+            AC_DEFINE(__mips__)
+            ;;
+      esac
+
+      AC_DEFINE(__linux__)
+      AC_DEFINE(__OSVERSION__, 2)
+      ;;
+   # DEC Alpha running Digital UNIX 4.x.
+   osf4*)
+      AC_DEFINE(__alpha__)
+      AC_DEFINE(__osf1__)
+      AC_DEFINE(__OSVERSION__, 4)
+      ;;
+   # A machine running Solaris 2.x (aka SunOS 5.x).
+   solaris2*)
+      case $target_cpu in
+         *86)
+            AC_DEFINE(__x86__)
+            ;;
+         sparc)
+            AC_DEFINE(__sparc__)
+            ;;
+      esac
+
+      AC_DEFINE(__sunos__)
+      AC_DEFINE(__OSVERSION__, 5)
+      ;;
+esac
+
+# -----------------------------------------------------------------------------
+# Checks for programs.
+# -----------------------------------------------------------------------------
+VJ_COMPILER_SETUP
+
+if test "x$DPP_USING_MSVCCC" = "xyes" ; then
+   AR='$(CXX) /link /lib'
+   LD='$(CXX) /link /dll'
+fi
+
+# Ensure that the C++ compiler we've found is capable of compiling the newer
+# newer C++ features that we need.
+DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** Tweek requires C++ namesapce support ***))
+DPP_CXX_HAVE_STD
+
+DPP_HAVE_GNU_MAKE(3.78, ,
+   AC_MSG_ERROR(*** The build system requires GNU make 3.78 or newer ***))
+DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
+
+# Check for the JDK.
+DPP_PATH_JAVA( ,
+   DPP_CHECK_JAVA_STATIC_METHOD(org.jdom.Namespace,
+      getNamespace(uri), [String uri = new String("test")], BUILD_JAVA='Y',
+      [ AC_MSG_WARN(*** JDOM required for Tweek ***)
+        BUILD_JAVA='N' ],
+      $JDOM_JAR),
+   BUILD_JAVA='N')
+
+# Ensure that a version of Perl greater than or equal to 5.004 is available.
+DPP_PERL_VER(5.004)
+
+AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \$(PERL) \$(scriptdir)/mtree.pl)
+
+# -----------------------------------------------------------------------------
+# Checks for libraries.
+# -----------------------------------------------------------------------------
+VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for Tweek ***))
+
+# Find omniORB.  This one is a beast.
+if test "x$OMNI_ROOT" != "xnone" ; then
+   tweeksave_CPPFLAGS="$CPPFLAGS"
+   tweeksave_LDFLAGS="$LDFLAGS"
+   tweeksave_LIBS="$LIBS"
+
+   if test "x$OMNI_LIB_DIR" = "xnone" ; then
+      OMNI_LIB_DIR="$OMNI_PATH/lib"
+   fi
+
+   tweek_omni_lib="omniORB$OMNI_VER"
+   tweek_extra_libs=`$VPR_CONFIG --extra-libs`
+
+   CPPFLAGS="$CPPFLAGS -I$OMNI_ROOT/include"
+
+   AC_CHECK_HEADER(omniORB$OMNI_VER/omniORB.h,
+      tweek_omni_inc="$OMNI_ROOT/include",
+      AC_MSG_ERROR(*** omniORB required for Tweek **))
+
+   LDFLAGS="$LDFLAGS -L$OMNI_LIB_DIR"
+   LIBS="$LIBS -l$tweek_omni_lib -lomnithread -lomniGK_stub $tweek_extra_libs"
+
+   DPP_LANG_SAVE
+   DPP_LANG_CPLUSPLUS
+
+   AC_CACHE_CHECK(for omniORB::MaxMessageSize in -l$tweek_omni_lib,
+      tweek_cv_omniORB__MaxMessageSize_in_omniORB,
+      AC_TRY_LINK([
+#include <omnithread.h>
+#include <omniORB$OMNI_VER/CORBA.h>
+#include <omniORB$OMNI_VER/omniORB.h>
+
+int omni_main_i(int argc, char** const argv)
+{
+   return 0;
+}],
+                  [omniORB::MaxMessageSize();],
+                  [ tweek_cv_omniORB__MaxMessageSize_in_omniORB='yes'
+                    rm -rf ./ii_files ],
+                  tweek_cv_omniORB__MaxMessageSize_in_omniORB='no'))
+
+   if test "x$tweek_cv_omniORB__MaxMessageSize_in_omniORB" = "xyes" ; then
+      OMNI_INCLUDES="-I$tweek_omni_inc"
+      OMNI_LIB="-l$tweek_omni_lib -lomnithread"
+      OMNI_LDFLAGS="-L$OMNI_LIB_DIR"
+
+      OMNI_LIB_MSVCCC="-l$tweek_omni_lib -lomnithread"
+      OMNI_LDFLAGS_MSVCCC="-L$OMNI_LIB_DIR"
+
+      OMNI_LIB_LINK_EXE="$tweek_omni_lib.lib omnithread.lib"
+      OMNI_LDFLAGS_LINK_EXE="/libpath:$OMNI_LIB_DIR"
+
+      AC_DEFINE_UNQUOTED(OMNIORB_VER, $OMNI_VER)
+   else
+      AC_MSG_ERROR(*** omniORB required for Tweek **)
+   fi
+
+   DPP_LANG_RESTORE
+
+   CPPFLAGS="$tweeksave_CPPFLAGS"
+   LDFLAGS="$tweeksave_LDFLAGS"
+   LIBS="$tweeksave_LIBS"
+else
+   AC_MSG_ERROR(*** omniORB required for Tweek **)
+fi
+
+# -----------------------------------------------------------------------------
+# Miscellaneous checks.
+# -----------------------------------------------------------------------------
+
+DPP_INSTALLER(tweek, 0644, 0755, 0755)
+
+# Add these C++ options when compiling with G++.
+if test "x$GXX" = "xyes" ; then
+#   CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
+   CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+fi
+
+# For use in linking applications.
+EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
+
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
+INCLUDES="$INCLUDES $OMNI_INCLUDES"
+tweek_cxxflags="$STDFLAGS $VPR_CXXFLAGS $INCLUDES"
+
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
+   CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
+   CXXFLAGS="$CXXFLAGS -woff 1234,3303,3322 -w2"
+   EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
+elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
+   CFLAGS="$CFLAGS /W3 /GR /GX -EHc /QIfdiv /QI0f"
+   CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+   DBG_FLAGS="$DBG_FLAGS /MDd"
+   OPT_FLAGS="$OPT_FLAGS /MD"
+   EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
+   tweek_cxxflags="$CXXFLAGS $VPR_CXXFLAGS"
+fi
+
+DPP_SYSTEM_SUBST
+
+# For makedepend(1) to work properly on HP-UX with aCC, we have to include
+# these extra paths.
+if test "x$PLATFORM" = "xHP" -a "x$USE_GCC" != "xyes" ; then
+   _aCC_ROOT="/opt/aCC"
+   DEPEND_EXTRAS="$DEPEND_EXTRAS -I${_aCC_ROOT} -I${_aCC_ROOT}/include -I${_aCC_ROOT}/include/iostream"
+elif test "x$OS_TYPE" = "xWin32" ; then
+   DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
+fi
+
+# $srcdir is the root directory of the juggler source tree.  To get a value
+# for $TWEEKROOT_ABS, we cd there and save the value of running pwd.  Then
+# return to the directory where configure is being run ($topdir).
+cd "$srcdir"
+TWEEKROOT_ABS=`pwd`
+
+cd "$TWEEKROOT_ABS/../.."
+JUGGLERROOT_ABS=`pwd`
+cd "$topdir"
+
+# Define the base path to the source directory using $TWEEKROOT_ABS as an
+# alternative to using $srcdir.
+UNIX_TWEEKROOT_ABS="$TWEEKROOT_ABS"
+UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+
+if test "x$OS_TYPE" = "xWin32" ; then
+   APP_EXTRA_LIBS="$LDFLAGS $OMNI_LDFLAGS $OMNI_LIBS $VPR_LIBS_LD $LIBS"
+else
+   APP_EXTRA_LIBS="$LDFLAGS $OMNI_LDFLAGS $OMNI_LIBS_LINK_EXE $VPR_LIBS_CC $LIBS"
+fi
+
+# Put together the basic information needed to compile VR Juggler applications.
+VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
+                TWEEK_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
+VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT,
+              TWEEK_BASE_DIR, tweek, $APP_EXTRA_LIBS)
+
+APP_BASE_DIR='$(topdir)/instlinks'
+APP_BASE_DIR_INST='$(TWEEK_BASE_DIR)'
+
+# Translate paths from UNIX-style to Win32.
+if test "x$OS_TYPE" = "xWin32" ; then
+   SAFE_TWEEKROOT_ABS=`unix2dos -p "$TWEEKROOT_ABS"`
+   SAFE_JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
+
+   if test "x$DEPEND_EXTRAS" != "x" ; then
+      DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
+   fi
+
+   if test "x$INCLUDES" != "x" ; then
+      INCLUDES=`unix2dos "$INCLUDES"`
+   fi
+
+   if test "x$LIBS" != "x" ; then
+      LIBS=`unix2dos "$LIBS"`
+   fi
+
+   MTREE_CMD=`unix2dos "$MTREE_CMD"`
+
+#   APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
+else
+   SAFE_TWEEKROOT_ABS="$TWEEKROOT_ABS"
+   SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+fi
+
+# Dependencies for dynamic/shared libraries.
+if test "x$OS_TYPE" = "xWin32" ; then
+   DYLIB_DEPS="$VPR_LIBS_LD"
+else
+   DYLIB_DEPS="$VPR_LIBS_CC"
+fi
+
+# Information needed to generate tweek-config.
+case $OS_TYPE in
+   UNIX)
+      if test "x$PLATFORM" != "xDarwin" ; then
+         if test "x$GXX" = "xyes" ; then
+            static_begin="-Wl,-Bstatic"
+            static_end="-Wl,-Bdynamic"
+         else
+            static_begin="-B static"
+            static_end="-B dynamic"
+         fi
+      fi
+
+      tweek_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
+      tweek_ldflags_linker="$tweek_ldflags_compiler"
+      tweek_libs="-ltweek $VPR_LIBS_CC"
+      ;;
+   Win32)
+      tweek_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
+      tweek_ldflags_linker="/libpath:\$prefix/lib/debug"
+      tweek_libs="tweek.lib $VPR_LIBS_LD"
+      ;;
+esac
+
+tweek_extra_cxxflags=''
+tweek_extra_include_dirs=''
+
+if test "x$PLATFORM" = "xIRIX" ; then
+   tweek_n32_flags='-n32'
+   tweek_64_flags='-64'
+fi
+
+tweek_extra_ldflags="$EXTRA_LDFLAGS"
+
+VJ_VERSION_GROK(VERSION)
+
+DPP_SUBST
+
+# Export variables defined above.
+AC_SUBST(topdir)
+AC_SUBST(UNIX_TWEEKROOT_ABS)
+AC_SUBST(UNIX_JUGGLERROOT_ABS)
+AC_SUBST(SAFE_TWEEKROOT_ABS)
+AC_SUBST(SAFE_JUGGLERROOT_ABS)
+
+AC_SUBST(EXTRA_LINK_FLAGS)
+
+AC_SUBST(BUILD_JAVA)
+AC_SUBST(JDOM_JAR)
+
+AC_SUBST(APP_BASE_DIR)
+AC_SUBST(APP_BASE_DIR_INST)
+AC_SUBST(APP_EXTRA_FLAGS)
+AC_SUBST(APP_TWEEK_LIBS_BEGIN)
+AC_SUBST(APP_TWEEK_LIBS_END)
+AC_SUBST(APP_TWEEK_LIBS_BASIC)
+AC_SUBST(APP_TWEEK_LIBS_BEGIN_INST)
+AC_SUBST(APP_LIBS_BASIC)
+AC_SUBST(APP_EXTRA_LIBS_BEGIN)
+AC_SUBST(APP_EXTRA_LIBS_END)
+AC_SUBST(APP_EXTRA_LIBS_BASIC)
+
+AC_SUBST(DYLIB_DEPS)
+
+AC_SUBST(static_begin)
+AC_SUBST(static_end)
+AC_SUBST(tweek_cxxflags)
+AC_SUBST(tweek_ldflags_compiler)
+AC_SUBST(tweek_ldflags_linker)
+AC_SUBST(tweek_libs)
+AC_SUBST(tweek_extra_cxxflags)
+AC_SUBST(tweek_extra_include_dirs)
+AC_SUBST(tweek_extra_ldflags)
+AC_SUBST(tweek_extra_libs)
+AC_SUBST(tweek_n32_flags)
+AC_SUBST(tweek_64_flags)
+
+# -----------------------------------------------------------------------------
+# Final file generation step.
+# -----------------------------------------------------------------------------
+
+VJ_MTREE_LIB_GEN(TWEEK, mtree, $PLATFORM, $ISA)
+
+AC_OUTPUT(tweek-config
+          Makefile
+          Makefile.inc
+          common.defs.mk
+          make.defs.mk
+          java/Makefile
+          java/Makefile.inc
+          tweek/Makefile
+          tweek/Makefile.inc
+          tweek/CORBA/Makefile
+          test/Makefile
+          mtree/TWEEK.include.dist
+          mtree/TWEEK.install.dist
+          mtree/TWEEK.test.dist, ,
+   [ sed -e 's/^\(%.*\)/#\1/g' tweek-config > tweek-config.tmp
+     mv tweek-config.tmp tweek-config
+     chmod a+x tweek-config ])
+
+cat <<BUILD_INFO
+
+ Remember that you need to build Tweek with GNU make.
+ GNU make is called 'gmake' on most systems.
+ See the file README for more details on compiling the Tweek distribution.
+
+BUILD_INFO
