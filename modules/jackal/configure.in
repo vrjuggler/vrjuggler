@@ -123,50 +123,36 @@ case $target_os in
     irix6*)
         DBG_FLAGS="$DBG_FLAGS -gslim"
 
-        AC_DEFINE(JCCL_OS_IRIX,)
         AC_DEFINE(_BSD_TYPES,)
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
-        AC_DEFINE(JCCL_OS_HPUX,)
         AC_DEFINE(JCCL_HPUX_VERSION, 10)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
     # HP PA-RISC machine running HP-UX 11.x.
     hpux11*)
-        AC_DEFINE(JCCL_OS_HPUX,)
         AC_DEFINE(JCCL_HPUX_VERSION, 11)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
-        ;;
-    # DEC Alpha running Digital UNIX 4.0.
-    osf4.0)
-        AC_DEFINE(JCCL_OS_DUX,)
         ;;
     # A machine running FreeBSD.  Currently only i386 is known to compile.
     freebsd*)
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
-        AC_DEFINE(JCCL_OS_FreeBSD,)
         ;;
     # A machine running Linux.  Currently only i386 is known to work.
     linux*)
         # CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
-        AC_DEFINE(JCCL_OS_Linux,)
         ;;
     # A machine running Solaris (aka SunOS).  Currently only i386 is known to
     # work.
     solaris*)
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
-        AC_DEFINE(JCCL_OS_Solaris,)
-        ;;
-    # IBM RS/6000 running AIX.
-    aix*)
-        AC_DEFINE(JCCL_OS_AIX)
         ;;
     # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
     cygwin)
@@ -176,15 +162,9 @@ case $target_os in
             _enable_perf='NONE'
         fi
 
-        AC_DEFINE(JCCL_OS_Win32,)
         ;;
     darwin1.*)
-        AC_DEFINE(JCCL_OS_Darwin,)
         AC_DEFINE(_BSD_TYPES,) 
-        ;;
-    # Unkown operating system (to config.guess).
-    unknown)
-        AC_DEFINE(JCCL_OS_GENERIC,)
         ;;
 esac
 
@@ -255,10 +235,6 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for Jackal***))
-# need SUBSYSTEM for makever in Makefile.inc.in
-#vpr_subsystem=`$VPR_CONFIG --subsystem`
-#SUBSYSTEM="$vpr_subsystem"
-
 
 # -----------
 # Xerces-c
@@ -309,7 +285,7 @@ DPP_LANG_RESTORE
 XERCES_INCLUDES="-I$XERCESROOT/include"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    XERCES_LDFLAGS="-libpath:$XERCESROOT/lib"
+    XERCES_LDFLAGS="/libpath:$XERCESROOT/lib"
 else
     XERCES_LDFLAGS="-L$XERCESROOT/lib$LIBBITSUF"
 fi
@@ -326,7 +302,7 @@ LIBS="${_vjsave_LIBS}"
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
-                 sys/time.h termios.h unistd.h sys/z8530.h		\
+                 sys/time.h termios.h unistd.h		\
                  sys/capability.h sys/stdsyms.h)
 
 # -----------------------------------------------------------------------------
@@ -432,9 +408,9 @@ UNIX_JCCLROOT_ABS="$JCCLROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $DTK_LDFLAGS -lm"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $DTK_LDFLAGS -lm"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -456,7 +432,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_DEPS_JCCL="$APP_EXTRA_LIBS"
 elif test "$OS_TYPE" = "Win32" ; then
     DYLIB_DEPS_BASIC="$APP_EXTRA_LIBS"
-#    DYLIB_DEPS_JCCL="-libpath:\$(LIBDIR) jccl.lib $DYLIB_DEPS_BASIC"
+#    DYLIB_DEPS_JCCL="/libpath:\$(LIBDIR) jccl.lib $DYLIB_DEPS_BASIC"
      DYLIB_DEPS_JCCL="$DYLIB_DEPS_BASIC"
 #    DYLIB_DEPS_UTILS="$DYLIB_DEPS_BASIC"
 
