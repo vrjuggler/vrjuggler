@@ -7,6 +7,9 @@
 #include <iostream.h>
 
 #include <Kernel/GL/vjGlApp.h>
+#include <Kernel/GL/vjGlContextData.h>
+#include <Kernel/vjDebug.h>
+
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 #include <Math/vjQuat.h>
@@ -31,17 +34,17 @@ public:
 };
 
 
-/**
- * Demonstration OpenGL application class
- *
- * This application simply renders a field of cubes.
- */
-class cubesApp : public vjGlUserApp<UserData>
+//--------------------------------------------------
+// Demonstration OpenGL application class
+//
+// This application simply renders a field of cubes.
+//---------------------------------------------------
+class cubesApp : public vjGlApp
 {
 public:
-   cubesApp(vjKernel* kern) : vjGlUserApp<UserData>(kern)
+   cubesApp(vjKernel* kern) : vjGlApp(kern)
    {
-      navMatrix.makeIdent();
+      mNavMatrix.makeIdent();
    }
 
    // Execute any initialization needed before the API is started
@@ -50,7 +53,9 @@ public:
       cout << "---------- App:init() ---------------" << endl;
          // Initialize devices
       mWand.init("VJWand");
-      mWandEnd.init("VJWandEnd");
+      mIncVelocityButton.init("VJButton0");
+      mDecVelocityButton.init("VJButton1");
+      mStopButton.init("VJButton2");
    }
 
    // Execute any initialization needed <b>after</b> API is started
@@ -67,18 +72,19 @@ public:
    virtual void draw()
    {
 
-      if(contextData().firstTime == true)  // If not inited
+
+      if(mDlData->firstTime == true)  // If not inited
       {
-         contextData().firstTime = false;
-         contextData().cubeDLIndex = glGenLists(1);
+         mDlData->firstTime = false;
+         glGenLists(rand()%25);        // Generate some random lists.  NOTE: Needed for testing only
+         mDlData->cubeDLIndex = glGenLists(1);
 
-         cerr << "Creating DL:" << contextData().cubeDLIndex << endl;
+         vjDEBUG(0) << "Creating DL:" << mDlData->cubeDLIndex << endl << vjDEBUG_FLUSH;
 
-         glNewList(contextData().cubeDLIndex, GL_COMPILE);
+         glNewList(mDlData->cubeDLIndex, GL_COMPILE);
             drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
          glEndList();
       }
-
 
       initGLState();    // This should really be in another function
       myDraw();
@@ -98,21 +104,15 @@ public:
     *
     *	      UpdateTrackers();
     *  }
-    * </pre>
+    *
     */
-
-   /// Function called before updating trackers but after the frame is drawn
-   virtual void postSync()
-   {
-      vjDEBUG(2) << "cubesApp::postSync" << endl << vjDEBUG_FLUSH;
-   }
 
    /// Function called after tracker update but before start of drawing
    virtual void preDraw()
    {
        vjDEBUG(2) << "cubesApp::preDraw()" << endl << vjDEBUG_FLUSH;
 
-       updateNavigation();       // Update the navigation matrix
+       //updateNavigation();       // Update the navigation matrix
    }
 
    /// Function called after drawing has been triggered but BEFORE it completes
@@ -121,39 +121,93 @@ public:
        vjDEBUG(2) << "cubesApp::postDraw()" << endl << vjDEBUG_FLUSH;
    }
 
+   /// Function called before updating trackers but after the frame is drawn
+   virtual void postSync()
+   {
+      vjDEBUG(2) << "cubesApp::postSync" << endl << vjDEBUG_FLUSH;
+   }
+
+
 private:
-      // Update the navigation matrix
+   // Update the navigation matrix
+   //
+   // Uses a quaternion to do rotation in the environment
    void updateNavigation()
    {
+      vjVec3 xyzAngles;
+      vjVec3 xyzTrans;
+
       // Cur*Transform = New Location
       vjMatrix    transform, transformIdent;
       vjQuat      source_rot, goal_rot, slerp_rot;
 
-      transformIdent.makeIdent();
+      transformIdent.makeIdent();            // Create an identity matrix to rotate from
       source_rot.makeQuat(transformIdent);
 
       vjMatrix* wand_matrix;
       wand_matrix = mWand->GetData();
+      wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
+
 
       vjDEBUG(1) << "===================================\n" << vjDEBUG_FLUSH;
-      vjDEBUG(1) << "Wand:\n" << *wand_matrix << endl << vjDEBUG_FLUSH;
+      vjDEBUG(2) << "Wand:\n" << *wand_matrix << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "Wand XYZ: " << xyzAngles << endl << vjDEBUG_FLUSH;
 
-      transform = *wand_matrix;
-      goal_rot.makeQuat(transform);
+      goal_rot.makeQuat(*wand_matrix);    // Create the goal rotation quaternion
 
-      if(transformIdent != transform)
+      if(transformIdent != *wand_matrix)  // If we don't have two identity matrices
       {
-         slerp_rot.slerp(0.05, source_rot, goal_rot);    // Transform 5% of the way there
-         transform.makeQuaternion(slerp_rot);
+         slerp_rot.slerp(0.05, source_rot, goal_rot);    // Transform part way there
+         transform.makeQuaternion(slerp_rot);            // Create the transform matrix to use
       }
       else
          transform.makeIdent();
 
-      vjDEBUG(1) << "Transform:\n" << transform << endl << vjDEBUG_FLUSH;
+      vjDEBUG(2) << "Transform:\n" << transform << endl << vjDEBUG_FLUSH;
+      transform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
+      vjDEBUG(1) << "Transform XYZ: " << xyzAngles << endl << vjDEBUG_FLUSH;
 
-      navMatrix.postMult(transform);
+      vjDEBUG(2) << "Nav:\n" << mNavMatrix << endl << endl << vjDEBUG_FLUSH;
 
-      vjDEBUG(1) << "Nav:\n" << navMatrix << endl << endl << vjDEBUG_FLUSH;
+      // ----- Translation ------- //
+      const float velocity_inc = 0.001f;
+
+      // Update velocity
+      if(mIncVelocityButton->GetData())
+         mCurVelocity += velocity_inc;
+      else if(mDecVelocityButton->GetData())
+         mCurVelocity -= velocity_inc;
+      else if(mStopButton->GetData())
+         mCurVelocity = 0.0f;
+
+      vjDEBUG(0) << "Velocity: " << mCurVelocity << endl << vjDEBUG_FLUSH;
+
+      // Find direction vector
+      vjVec3   forward(0.0f, 0.0f, -1.0f);
+      forward *= mCurVelocity;
+
+      vjMatrix rot_mat, local_xform;
+      rot_mat.invert(transform);
+
+      local_xform.makeTrans(0, 0, mCurVelocity);
+      local_xform.postMult(rot_mat);
+
+      mNavMatrix.preMult(local_xform);
+
+      local_xform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
+      local_xform.getTrans(xyzTrans[0], xyzTrans[1], xyzTrans[2]);
+      vjDEBUG(1) << "Transform   Rot: " << xyzAngles << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "Transform Trans: " << xyzTrans << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "-------------------------------------------" << endl << vjDEBUG_FLUSH;
+
+
+      /*
+      vjMatrix rot_mat;
+      rot_mat.makeXYZEuler(0.0, -0.05f, 0.0);
+      mNavMatrix.postMult(rot_mat);
+
+      mNavMatrix.postTrans(mNavMatrix, 0,0,0.01);
+      */
    }
 
    //----------------------------------------------
@@ -173,7 +227,7 @@ private:
 
       glPushMatrix();
             // --- Push on Navigation matrix --- //
-         glMultMatrixf(navMatrix.getFloatPtr());
+         glMultMatrixf(mNavMatrix.getFloatPtr());
 
 
 
@@ -254,7 +308,8 @@ private:
 
    void drawCube()
    {
-      glCallList(contextData().cubeDLIndex);
+      glCallList(mDlData->cubeDLIndex);
+      //drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
    }
 
 
@@ -308,10 +363,15 @@ private:
    }
 
 public:
-   vjPosInterface    mWand;      // the Wand
-   vjPosInterface    mWandEnd;   // The index to the end of the wand
+   vjPosInterface       mWand;      // the Wand
+   vjPosInterface       mWandEnd;   // The index to the end of the wand
+   vjDigitalInterface   mIncVelocityButton;   // Button for velocity
+   vjDigitalInterface   mDecVelocityButton;
+   vjDigitalInterface   mStopButton;         // Button to stop
 
-   vjMatrix    navMatrix;     // Matrix for navigation in the application
+   float                      mCurVelocity;  // The current velocity
+   vjMatrix                   mNavMatrix;    // Matrix for navigation in the application
+   vjGlContextData<UserData>  mDlData;       // Data for display lists
 
 };
 
