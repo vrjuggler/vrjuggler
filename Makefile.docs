@@ -42,7 +42,8 @@
 webroot=	$(HOME)/public_html/jugglerweb
 # ********************************
 
-SUBDIR=		doc/team.guide					\
+SUBDIR=		doc/build.system				\
+		doc/team.guide					\
 		modules/gadgeteer/doc				\
 		modules/jackal/doc				\
 		modules/jackal/doc/perf.measure.guide		\
@@ -63,11 +64,13 @@ all:
 	for dir in $(SUBDIR) ; do		\
             $(MAKE) -C $$dir docs || exit 1;	\
           done
+	$(MAKE) -C modules/tweek/java -f Makefile.docs docs
 
 install:
 	for dir in $(SUBDIR) ; do					\
             $(MAKE) -C $$dir webroot=$(webroot) install-docs || exit 1;	\
           done
+	$(MAKE) -C modules/tweek/java -f Makefile.docs install-docs
 
 clobber:
 	for dir in $(SUBDIR) ; do		\
