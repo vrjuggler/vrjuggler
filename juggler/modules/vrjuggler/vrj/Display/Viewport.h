@@ -104,8 +104,9 @@ public:
    /**
     * Updates the projection data for this display.
     * Uses the data for the head position for this window.
+    * @param positionScale - Scale value for converting from Juggler units (meters) to the display units
     */
-   virtual void updateProjections() = 0;
+   virtual void updateProjections(float positionScale) = 0;
 
 public:
    Viewport::Type getType()

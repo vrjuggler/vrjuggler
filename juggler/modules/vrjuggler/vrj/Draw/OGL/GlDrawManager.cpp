@@ -492,14 +492,16 @@ void GlDrawManager::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor)
  * Draws a simulator using OpenGL commands.
  * @note This is called internally by the library.
  */
-void GlDrawManager::drawSimulator(SimViewport* sim_vp)
+void GlDrawManager::drawSimulator(SimViewport* sim_vp, float scaleFactor)
 {
    // All units are in meters
-   const float head_radius(0.18f);      // 7.2 inches
-   const float eye_vertical(0.067f);
-   const float eye_horizontal(0.21f);
-   const float interocular(0.08f);
-   const float eye_radius(0.024f);
+   // Note: All the wand and head data in the sim viewport class
+   // has already had the scale factor applied to it
+   const float head_radius(0.18f*scaleFactor);      // 7.2 inches
+   const float eye_vertical(0.067f*scaleFactor);
+   const float eye_horizontal(0.21f*scaleFactor);
+   const float interocular(0.08f*scaleFactor);
+   const float eye_radius(0.024f*scaleFactor);
 
    glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT);
    {
@@ -536,8 +538,8 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp)
          glDisable(GL_LIGHTING);
 
       glPushMatrix();
-         gmtl::Vec3f x_axis(0.75f,0.0f,0.0f); gmtl::Vec3f y_axis(0.0f, 0.75f, 0.0f);
-         gmtl::Vec3f z_axis(0.0f, 0.0f, 0.75f); gmtl::Vec3f origin(0.0f, 0.0f, 0.0f);
+         gmtl::Vec3f x_axis(scaleFactor,0.0f,0.0f); gmtl::Vec3f y_axis(0.0f, scaleFactor, 0.0f);
+         gmtl::Vec3f z_axis(0.0f, 0.0f, scaleFactor); gmtl::Vec3f origin(0.0f, 0.0f, 0.0f);
          glBegin(GL_LINES);
             glColor3f(1.0f, 0.0f, 0.0f); glVertex3fv(origin.mData); glVertex3fv(x_axis.mData);
             glColor3f(0.0f, 1.0f, 0.0f); glVertex3fv(origin.mData); glVertex3fv(y_axis.mData);

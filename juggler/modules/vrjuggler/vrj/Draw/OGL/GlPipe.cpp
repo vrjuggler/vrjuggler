@@ -122,11 +122,11 @@ void GlPipe::completeSwap()
  */
 void GlPipe::addWindow(GlWindow* win)
 {
-   vpr::Guard<vpr::Mutex> guardNew(newWinLock);       // Protect the data
+   vpr::Guard<vpr::Mutex> guardNew(mNewWinLock);       // Protect the data
    vprDEBUG(vrjDBG_DRAW_MGR,3) << "vjGlPipe::addWindow: Pipe: " << mPipeNum
                              << " adding window (to new wins):\n" << win
                              << std::endl << vprDEBUG_FLUSH;
-   newWins.push_back(win);
+   mNewWins.push_back(win);
 }
 
 /**
@@ -168,24 +168,24 @@ void GlPipe::controlLoop(void* nullParam)
       // XXX: This may have to be here because of need to get open window event (Win32)
       // otherwise I would like to move it to being after the swap to get better performance
       {
-         for(unsigned int winId=0;winId<openWins.size();winId++)
-            openWins[winId]->checkEvents();
+         for(unsigned int winId=0;winId<mOpenWins.size();winId++)
+            mOpenWins[winId]->checkEvents();
       }
 
       // --- RENDER the windows ---- //
       {
          renderTriggerSema.acquire();
 
-         GlApp* theApp = glManager->getApp();
+         GlApp* the_app = glManager->getApp();
 
             jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/window events and render sema");
          // --- pipe PRE-draw function ---- //
-         theApp->pipePreDraw();      // Can't get a context since I may not be guaranteed a window
+         the_app->pipePreDraw();      // Can't get a context since I may not be guaranteed a window
             jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/app/pipePreDraw()");
 
          // Render the windows
-         for (unsigned int winId=0;winId < openWins.size();winId++) {
-            renderWindow(openWins[winId]);
+         for (unsigned int winId=0;winId < mOpenWins.size();winId++) {
+            renderWindow(mOpenWins[winId]);
          }
          renderCompleteSema.release();
       }
@@ -195,8 +195,8 @@ void GlPipe::controlLoop(void* nullParam)
          swapTriggerSema.acquire();
 
          // Swap all the windows
-         for(unsigned int winId=0;winId < openWins.size();winId++)
-            swapWindowBuffers(openWins[winId]);
+         for(unsigned int winId=0;winId < mOpenWins.size();winId++)
+            swapWindowBuffers(mOpenWins[winId]);
 
          swapCompleteSema.release();
       }
@@ -212,23 +212,23 @@ void GlPipe::controlLoop(void* nullParam)
  * Closes all the windows in the list of windows to close.
  *
  * @post The window to close is removed from the list of open windows
- *       and the list of newWins.
+ *       and the list of mNewWins.
  */
 void GlPipe::checkForWindowsToClose()
 {
    if(mClosingWins.size() > 0)   // If there are windows to close
    {
       vpr::Guard<vpr::Mutex> guardClosing(mClosingWinLock);
-      vpr::Guard<vpr::Mutex> guardNew(newWinLock);
-      vpr::Guard<vpr::Mutex> guardOpen(openWinLock);
+      vpr::Guard<vpr::Mutex> guardNew(mNewWinLock);
+      vpr::Guard<vpr::Mutex> guardOpen(mOpenWinLock);
 
       for(unsigned int i=0;i<mClosingWins.size();i++)
       {
          GlWindow* win = mClosingWins[i];
 
          // Call contextClose
-         GlApp* theApp = glManager->getApp();               // Get application for easy access
-         //Display* theDisplay = win->getDisplay();         // Get the display for easy access
+         GlApp* the_app = glManager->getApp();               // Get application for easy access
+         //Display* the_display = win->getDisplay();         // Get the display for easy access
          glManager->setCurrentContext(win->getId());        // Set TS data of context id
          glManager->currentUserData()->setUser(NULL);       // Set user data
          glManager->currentUserData()->setProjection(NULL);
@@ -236,14 +236,14 @@ void GlPipe::checkForWindowsToClose()
          glManager->currentUserData()->setGlWindow(win);    // Set the gl window
 
          win->makeCurrent();              // Make the context current
-         theApp->contextClose();          // Call context close function
+         the_app->contextClose();          // Call context close function
 
          // Close the window
          win->close();
 
          // Remove it from the lists
-         newWins.erase(std::remove(newWins.begin(), newWins.end(), win), newWins.end());
-         openWins.erase(std::remove(openWins.begin(), openWins.end(), win), openWins.end());
+         mNewWins.erase(std::remove(mNewWins.begin(), mNewWins.end(), win), mNewWins.end());
+         mOpenWins.erase(std::remove(mOpenWins.begin(), mOpenWins.end(), win), mOpenWins.end());
 
          // Delete the window
          delete win;
@@ -261,23 +261,23 @@ void GlPipe::checkForWindowsToClose()
  */
 void GlPipe::checkForNewWindows()
 {
-   if (newWins.size() > 0)  // If there are new windows added
+   if (mNewWins.size() > 0)  // If there are new windows added
    {
-      vpr::Guard<vpr::Mutex> guardNew(newWinLock);
-      vpr::Guard<vpr::Mutex> guardOpen(openWinLock);
+      vpr::Guard<vpr::Mutex> guardNew(mNewWinLock);
+      vpr::Guard<vpr::Mutex> guardOpen(mOpenWinLock);
 
-      for (unsigned int winNum=0; winNum<newWins.size(); winNum++)
+      for (unsigned int winNum=0; winNum<mNewWins.size(); winNum++)
       {
-          if (newWins[winNum]->open()) {
-              newWins[winNum]->makeCurrent();
+          if (mNewWins[winNum]->open()) {
+              mNewWins[winNum]->makeCurrent();
               vprDEBUG(vrjDBG_DRAW_MGR,1) << "vjGlPipe::checkForNewWindows: Just opened window: "
-                                        << newWins[winNum]->getDisplay()->getName().c_str()
+                                        << mNewWins[winNum]->getDisplay()->getName().c_str()
                                         << std::endl << vprDEBUG_FLUSH;
-              openWins.push_back(newWins[winNum]);
+              mOpenWins.push_back(mNewWins[winNum]);
           }
           else {
               vprDEBUG(vprDBG_ALL,0) << clrOutBOLD(clrRED,"ERROR:") << "vjGlPipe::checkForNewWindows: Failed to open window: "
-                                   << newWins[winNum]->getDisplay()->getName().c_str()
+                                   << mNewWins[winNum]->getDisplay()->getName().c_str()
                                    << std::endl << vprDEBUG_FLUSH;
               // BUG!!
               // should we do something to tell the current config that it
@@ -285,8 +285,8 @@ void GlPipe::checkForNewWindows()
           }
       }
 
-      newWins.erase(newWins.begin(), newWins.end());
-      vprASSERT(newWins.size() == 0);
+      mNewWins.erase(mNewWins.begin(), mNewWins.end());
+      vprASSERT(mNewWins.size() == 0);
    }
 }
 
@@ -299,10 +299,14 @@ void GlPipe::renderWindow(GlWindow* win)
    float vp_ox, vp_oy, vp_sx, vp_sy;            // Viewport origin and size
    Viewport::View  view;                      // The view for the active viewport
 
-   GlApp* theApp = glManager->getApp();       // Get application for easy access
-   Display* theDisplay = win->getDisplay();   // Get the display for easy access
-   float draw_scale_factor = 1.0f/theApp->getDrawScaleFactor();
-
+   GlApp* the_app = glManager->getApp();       // Get application for easy access
+   Display* the_display = win->getDisplay();   // Get the display for easy access
+   
+   // Update the projections for the display using the current app's scale factor
+   // NOTE: This relies upon no other thread trying to update this display at the same time
+   float scale_factor = the_app->getDrawScaleFactor();
+   the_display->updateProjections(scale_factor);
+   
    glManager->setCurrentContext(win->getId());     // Set TSS data of context id
 
    vprDEBUG(vrjDBG_DRAW_MGR,5) << "vjGlPipe::renderWindow: Set context to: "
@@ -329,7 +333,7 @@ void GlPipe::renderWindow(GlWindow* win)
       glManager->currentUserData()->setViewport(NULL);     // Set vp data
       glManager->currentUserData()->setGlWindow(win);      // Set the gl window
 
-      theApp->contextInit();              // Call context init function
+      the_app->contextInit();              // Call context init function
       win->setDirtyContext(false);        // All clean now
    }
    jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/context setup");
@@ -338,26 +342,26 @@ void GlPipe::renderWindow(GlWindow* win)
    if(win->isStereo())
    {
       win->setViewBuffer(Viewport::RIGHT_EYE);
-      theApp->bufferPreDraw();
+      the_app->bufferPreDraw();
       win->setViewBuffer(Viewport::LEFT_EYE);
-      theApp->bufferPreDraw();
+      the_app->bufferPreDraw();
    }
    else
-      theApp->bufferPreDraw();
+      the_app->bufferPreDraw();
 
    jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/bufferPreDraw");
 
-   theApp->contextPreDraw();                 // Do any context pre-drawing
+   the_app->contextPreDraw();                 // Do any context pre-drawing
 
    jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/contextPreDraw");
 
 
    // --- FOR EACH VIEWPORT -- //
    Viewport* viewport = NULL;
-   unsigned num_vps = theDisplay->getNumViewports();
+   unsigned num_vps = the_display->getNumViewports();
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
-      viewport = theDisplay->getViewport(vp_num);
+      viewport = the_display->getViewport(vp_num);
 
       // Should viewport be rendered???
       if(viewport->isActive())
@@ -396,17 +400,14 @@ void GlPipe::renderWindow(GlWindow* win)
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set left buffer and projection");
 
-               glPushMatrix();
-                  glScalef(draw_scale_factor, draw_scale_factor, draw_scale_factor);      // Scale to local app units
-                  theApp->draw();
-               glPopMatrix();
-
+               the_app->draw();
+                              
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/left draw()");
 
                glManager->drawObjects();
                if(NULL != sim_vp)
                {
-                  glManager->drawSimulator(sim_vp);
+                  glManager->drawSimulator(sim_vp, scale_factor);
                }
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/left draw objects and sim");
@@ -420,17 +421,14 @@ void GlPipe::renderWindow(GlWindow* win)
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set right buffer and projection");
 
-               glPushMatrix();
-                  glScalef(draw_scale_factor, draw_scale_factor, draw_scale_factor);      // Scale to local app units
-                  theApp->draw();
-               glPopMatrix();
-
+               the_app->draw();
+                              
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/right draw()");
 
                glManager->drawObjects();
                if(NULL != sim_vp)
                {
-                  glManager->drawSimulator(sim_vp);
+                  glManager->drawSimulator(sim_vp,scale_factor);
                }
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/right draw objects and sim");
@@ -440,7 +438,7 @@ void GlPipe::renderWindow(GlWindow* win)
    }     // for each viewport
 
    // -- Post context stuff --- //
-   theApp->contextPostDraw();
+   the_app->contextPostDraw();
 
    jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/contextPostDraw()");
 }
@@ -453,8 +451,8 @@ void GlPipe::swapWindowBuffers(GlWindow* win)
 {
    win->makeCurrent();           // Set correct context
    win->swapBuffers();           // Implicitly calls a glFlush
-//     vjDisplayWindow* theDisplay = win->getDisplay();   // Get the display for easy access
-//     theDisplay->recordLatency (2, 3);
+//     vjDisplayWindow* the_display = win->getDisplay();   // Get the display for easy access
+//     the_display->recordLatency (2, 3);
 }
 
 };

@@ -345,10 +345,10 @@ void DisplayManager::updateProjections()
 {
    // for (all displays) update the projections
    for (std::vector<Display*>::iterator i = mActiveDisplays.begin(); i != mActiveDisplays.end(); i++)
-      (*i)->updateProjections();
+      (*i)->updateProjections(1.0f);
 
    for (std::vector<Display*>::iterator j = mInactiveDisplays.begin(); j != mInactiveDisplays.end(); j++)
-      (*j)->updateProjections();
+      (*j)->updateProjections(1.0f);
 
    if(mDrawManager != NULL)
       mDrawManager->updateProjections();

@@ -191,7 +191,7 @@ public:  // Drawing functions used by library
     *
     * @note This is called internally by the library.
     */
-   void drawSimulator(SimViewport* sim);
+   void drawSimulator(SimViewport* sim, float scaleFactor);
 
    /** Set the functor used to draw the wand */
    void setDrawWandFunctor(GlDrawObjectFunctor* functor)
