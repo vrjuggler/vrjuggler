@@ -108,7 +108,7 @@ void _Export_GUID()
 {
     scope* vpr_GUID_scope = new scope(
     class_< vpr::GUID, vpr_GUID_Wrapper >("GUID", init<  >())
-        .def(init< const vpr::GUID::GenerateTag >())
+        .def(init< const vpr::GUID::GenerateTag & >())
         .def(init< const vpr::GUID::StdGUID & >())
         .def(init< const char * >())
         .def(init< const std::basic_string<char,std::char_traits<char>,std::allocator<char> > & >())
@@ -124,13 +124,13 @@ void _Export_GUID()
         .def( self != self )
         .def( self < self )
     );
-    vpr_GUID_scope->attr("generateTag") = vpr::GUID::generateTag;
-    vpr_GUID_scope->attr("NullGUID") = vpr::GUID::NullGUID;
 
     class_< vpr::GUID::GenerateTag >("GenerateTag", init<  >())
         .def(init< const vpr::GUID::GenerateTag & >())
     ;
 
+    vpr_GUID_scope->attr("generateTag") = boost::ref(vpr::GUID::generateTag);
+    vpr_GUID_scope->attr("NullGUID") = vpr::GUID::NullGUID;
 
     class_< vpr::GUID::hash >("hash", init<  >())
         .def(init< const vpr::GUID::hash & >())
