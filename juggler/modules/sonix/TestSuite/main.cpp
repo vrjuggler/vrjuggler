@@ -1,6 +1,7 @@
 #include <CppUnit/framework/TestSuite.h>
 #include <CppUnit/textui/TestRunner.h>
 
+#include <TestCases/ajMathTest.h>
 #include <TestCases/exampleTest.h>
 //#include <Utils/Debug.h>
 
@@ -21,6 +22,7 @@ int main (int ac, char **av)
 
    // add tests to the suite
    noninteractive_suite->addTest( ajTest::exampleTest::suite());
+   noninteractive_suite->addTest( ajTest::ajMathTest::suite());
 
    // Add the test suite to the runner
    runner.addTest( "noninteractive", noninteractive_suite );

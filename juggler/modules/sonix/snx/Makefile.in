@@ -2,7 +2,7 @@ default: kevin
 
 include @topdir@/make.defs.mk
 
-SRCS = main.cpp ajOpenALSoundImplementation.cpp ajSoundFactory.cpp
+SRCS = ajOpenALSoundImplementation.cpp ajSoundFactory.cpp
 
 
 # ABI            - Application Binary Interface type.  This may be used for
@@ -39,4 +39,5 @@ LIBS = @AL_LDFLAGS@ @LIBOPENAL@ -lm
 include $(MKPATH)/dpp.obj.mk
 
 kevin: ${OBJECTS}
-	${CXX} ${CXXFLAGS} ${OBJECTS} ${LIBS}
+	${AR} ${OBJECTS} -o audiojuggler.a
+#	${CXX} ${CXXFLAGS} ${OBJECTS} -o audiojuggler.a ${LIBS}
