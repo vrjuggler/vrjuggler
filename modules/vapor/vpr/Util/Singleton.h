@@ -104,7 +104,7 @@ namespace vpr
     * class myClass : public vpr::Singleton<myClass>
     */
    template< class singleClass >
-   class VPR_CLASS_API Singleton
+   class Singleton
    {
    public:
       /**
