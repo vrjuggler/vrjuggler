@@ -43,6 +43,7 @@ typedef int ssize_t;
 
 #include <vector>
 #include <string>
+#include <string.h>
 
 
 namespace vpr {
@@ -278,8 +279,11 @@ public:
            buf_len = length;
        }
 
+       // Allocate the temporary buffer, zero it, and read in the current
+       // buffer from the device.
        temp_buf = (char*) malloc(buf_len);
-       bytes    = read(temp_buf, buf_len);
+       memset(temp_buf, 0, buf_len);
+       bytes = read(temp_buf, buf_len);
 
        // If anything was read into temp_buf, copy it into buffer.
        if ( bytes > -1 ) {
@@ -325,8 +329,11 @@ public:
            buf_len = length;
        }
 
+       // Allocate the temporary buffer, zero it, and read in the current
+       // buffer from the device.
        temp_buf = (char*) malloc(buf_len);
-       bytes    = read(temp_buf, buf_len);
+       memset(temp_buf, 0, buf_len);
+       bytes = read(temp_buf, buf_len);
 
        // If anything was read into temp_buf, copy it into buffer.
        if ( bytes > -1 ) {
@@ -393,9 +400,13 @@ public:
        char* temp_buf;
        ssize_t bytes;
 
-       buf_len  = (length == 0) ? buffer.size() : length;
+       buf_len = (length == 0) ? buffer.size() : length;
+
+       // Allocate the temporary buffer, zero it, and read in the current
+       // buffer from the device.
        temp_buf = (char*) malloc(buf_len);
-       bytes    = readn(temp_buf, buf_len);
+       memset(temp_buf, 0, buf_len);
+       bytes = readn(temp_buf, buf_len);
 
        // If anything was read into temp_buf, copy it into buffer.
        if ( bytes > -1 ) {
@@ -441,8 +452,11 @@ public:
            buf_len = length;
          }
 
+         // Allocate the temporary buffer, zero it, and read in the current
+         // buffer from the device.
          temp_buf = (char*) malloc(buf_len);
-         bytes    = readn(temp_buf, buf_len);
+         memset(temp_buf, 0, buf_len);
+         bytes = readn(temp_buf, buf_len);
 
          // If anything was read into temp_buf, copy it into buffer.
          if ( bytes > -1 ) {
