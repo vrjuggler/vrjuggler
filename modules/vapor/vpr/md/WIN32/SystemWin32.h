@@ -63,7 +63,8 @@ namespace vpr {
 
 class SystemWin32 : public SystemBase {
 public:
-    static int gettimeofday(struct timeval* tp, struct timezone* tzp = NULL);
+    static VPR_API(int) gettimeofday(struct timeval* tp,
+                                     struct timezone* tzp = NULL);
 
     // ----- Host to network byte order conversions ---- //
     inline static vpr::Uint16
@@ -86,7 +87,7 @@ public:
         return htonl(conversion);
     }
 
-    static Status getenv(const std::string& name, std::string& result);
+    static VPR_API(Status) getenv(const std::string& name, std::string& result);
 };
 
 }; // End of vpr namespace
