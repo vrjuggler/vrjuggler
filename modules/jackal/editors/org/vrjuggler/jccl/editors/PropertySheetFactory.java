@@ -441,7 +441,7 @@ public class PropertySheetFactory extends PropertyComponent
       {
          String type = (String)itr.next();
          ConfigDefinition def = def_repos.get(type);
-         if(null != def)
+         if ( null != def && ! def.isAbstract() )
          {
             allowed_types.add(def);
          }
