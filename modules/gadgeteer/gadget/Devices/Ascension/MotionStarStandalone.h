@@ -472,12 +472,9 @@ public:
     *       connection attempt fails, error status is returned to the
     *       caller.
     *
-    * @return  0 - Successful startup.
-    * @return -1 - Failed to connect to server.
-    * @return -2 - The socket could not be created.
-    * @return -3 - No address has been set for the server.
-    * @return -4 - The position scaling factor was not determined from
-    *              information sent by the server.
+    * @return vpr::ReturnStatus::Success is returned if the device is
+    *         started correctly.  vpr::ReturnStatus::Fail is returned
+    *         otherwise.
     *
     * @throws mstar::NetworkException, mstar::ConnectException,
     *         mstar::ScaleFactorUnknownException
