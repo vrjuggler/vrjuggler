@@ -31,23 +31,26 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Kernel/App.h>
+#include <stdlib.h>
 #include <vrj/Kernel/Kernel.h>
+#include <vrj/Kernel/App.h>
+
 
 namespace vrj
 {
 
 App::App(Kernel* kern)
+   : mKernel(kern)
+   , mHaveFocus(true)
 {
    vprASSERT(kern != NULL);    // We don't want a NULL Kernel
-   mKernel = kern;
-   mHaveFocus = true;
 }
 
 App::App()
+   : mKernel(Kernel::instance())
+   , mHaveFocus(true)
 {
-   mKernel = Kernel::instance();
-   mHaveFocus = true;
+   /* Do nothing. */ ;
 }
 
-};
+}
