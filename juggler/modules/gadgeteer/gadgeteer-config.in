@@ -53,8 +53,6 @@ sub stripDuplicateCompilerArgs($);
 sub stripDuplicateLibraryArgs($);
 sub groupLibdirArgs($);
 
-# TODO: Do not use @prefix@ if possible.  Make use of @LOCAL_BOOST@.
-
 usage(1) if $#ARGV == -1;
 
 my $gadget_default_abi = qq(@ABI@);

@@ -55,13 +55,13 @@ DPP_GEN_RECONFIG
 # Command-line arguments (--enable-option, --with-pkg=package_name).
 # -----------------------------------------------------------------------------
 
-AC_ARG_ENABLE([xwindows],
-              [  --enable-xwindows       Use X11 for windowing code ],
-              [XWIN_UI="$enableval"], [XWIN_UI='no'])
-
 # ------------------------------------------------------ #
 # --enable-feature[=arg] and --disable-feature arguments #
 # ------------------------------------------------------ #
+
+AC_ARG_ENABLE([xwindows],
+              [  --enable-xwindows       Use X11 for windowing code ],
+              [XWIN_UI="$enableval"], [XWIN_UI='no'])
 
 DPP_STD_CPP(yes)
 
@@ -69,9 +69,7 @@ DPP_STD_CPP(yes)
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
 
-# Force the use of GCC as the compiler.
-# NOTE: This is not fully implemented yet for any platform, but it is partially
-# usable on Windows.
+# Allow forcing the use of GCC as the compiler.
 DPP_WITH_GCC(no)
 
 # Define the binary format.
@@ -272,7 +270,7 @@ if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
    X_LDFLAGS="-L$x_libraries"
 fi
 
-# $APP_EXTRA_LIBS must list all the libraries need to link a VR Juggler-based
+# $APP_EXTRA_LIBS must list all the libraries need to link a Gadgeteer-based
 # application.
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_LD_MIN $JCCL_EXTRA_LIBS_LD_MIN $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN comctl32.lib gdi32.lib user32.lib"
@@ -328,9 +326,6 @@ if test "x$OS_TYPE" = "xWin32" ; then
     MTREE_CMD=`dospath "$MTREE_CMD"`
 
 #    APP_EXTRA_LIBS=`dospath "$APP_EXTRA_LIBS"`
-    APP_EXTRA_LIBS_GL=`dospath "$APP_EXTRA_LIBS_GL"`
-    APP_EXTRA_LIBS_PF=`dospath "$APP_EXTRA_LIBS_PF"`
-    APP_EXTRA_LIBS_OSG=`dospath "$APP_EXTRA_LIBS_OSG"`
 else
     RM_LN='rm -f'
     GADGETROOT_ABS="$GADGETROOT_ABS"
