@@ -247,9 +247,10 @@ private:
    static Controller* mPrimordialInstance;
    static vpr::TSObjectProxy<ControllerTS> mInstance;
 
-   vpr::sim::Clock         mClock;
-   vpr::sim::SocketManager mSocketManager;
-   vpr::sim::NetworkGraph  mGraph;
+protected:  // --- Data members --- //   
+   vpr::sim::Clock         mClock;              /**< The global clock that we are using */
+   vpr::sim::SocketManager mSocketManager;      /**< The socket manager that we are using */
+   vpr::sim::NetworkGraph  mGraph;              /**< The network graph used for the simulation */
 
    struct EventData
    {
