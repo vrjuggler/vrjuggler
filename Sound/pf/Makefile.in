@@ -81,7 +81,12 @@ DEPEND_FILES	:= ${SOUND_SRCS:.cpp=.d}
 
 # ----------------------------------------------------------------------------- # Library targets.
 # -----------------------------------------------------------------------------
-all dbg opt dso ddso obj: ${SOUND_OBJECTS}
+all dbg opt dso ddso obj: beforebuild ${SOUND_OBJECTS}
+
+beforebuild:
+ifeq (@PERFORMER_API@, Y)
+	@${SHELL} ${scriptdir}/mkinstalldirs ${OBJDIR}
+endif
 
 # -----------------------------------------------------------------------------
 # Clean-up.
