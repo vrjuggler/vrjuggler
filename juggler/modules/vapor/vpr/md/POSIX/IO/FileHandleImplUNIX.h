@@ -45,6 +45,7 @@
 #include <vpr/vprConfig.h>
 
 #include <fcntl.h>
+#include <sys/ioctl.h>
 #include <sys/types.h>
 #include <string>
 #include <vector>
@@ -370,6 +371,23 @@ public:
     inline bool
     isReadWrite (void) {
         return (m_open_mode == O_RDWR);
+    }
+
+    /**
+     * Queries the amount of data currently in the read buffer.
+     *
+     * @pre The file descriptor is valid.
+     * @post The buffer size is returned via the by-reference parameter.
+     */
+    vpr::Status
+    getReadBufferSize (vpr::Int32& buffer) {
+        vpr::Status status;
+
+        if ( ioctl(m_fdesc, FIONREAD, &buffer) == -1 ) {
+            status.setCode(vpr::Status::Failure);
+        }
+
+        return status;
     }
 
     /**
