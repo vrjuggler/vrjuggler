@@ -230,16 +230,16 @@ endif
 	@$(MAKE) install-libs
 	@$(MAKE) do-post-install
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/ChangeLog $(prefix)
+          $(VJROOT_ABS)/ChangeLog $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/COPYING.txt $(prefix)
+          $(VJROOT_ABS)/COPYING.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/INSTALL.txt $(prefix)
+          $(VJROOT_ABS)/INSTALL.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/README.txt $(prefix)
+          $(VJROOT_ABS)/README.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/RELEASE_NOTES.txt $(prefix)
-	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
+          $(VJROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
+	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make release started on $(STARTTIME)"
 	@echo ">>> VR Juggler make release completed on `LTIME=C date`"
