@@ -35,6 +35,10 @@ import java.io.*;
 import java.util.*;
 import javax.swing.event.EventListenerList;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
+import org.vrjuggler.jccl.config.event.ConfigEvent;
+import org.vrjuggler.jccl.config.event.ConfigListener;
+import org.vrjuggler.jccl.config.event.ConfigBrokerEvent;
+import org.vrjuggler.jccl.config.event.ConfigBrokerListener;
 import org.vrjuggler.jccl.config.io.*;
 
 /**

@@ -29,55 +29,31 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.jccl.config;
+package org.vrjuggler.jccl.config.event;
 
-import java.util.EventObject;
+import java.util.EventListener;
 
 /**
- * This provides detailed information to ConfigBroker observers as to how the
- * configuration elements therein have changed.
+ * Interface for an observer to receive notifications of additions and removals
+ * of configuration elements from a ConfigBroker.
+ *
+ * @see ConfigBroker
+ * @see ConfigElement
  */
-public class ConfigEvent
-   extends EventObject
+public interface ConfigListener
+   extends EventListener
 {
    /**
-    * Constructs a new ConfigEvent fired from the given source object
-    * relating to the given resource and configuration element.
+    * Gives notification that a configuration element was added to the broker.
     *
-    * @param source     the source of the event
-    * @param resource   the resource that changed
-    * @param elt        the element affected by the change
+    * @param evt     the config event
     */
-   public ConfigEvent(Object source, String resource, ConfigElement elt)
-   {
-      super(source);
-      mResource = resource;
-      mElement = elt;
-   }
+   public void configElementAdded(ConfigEvent evt);
 
    /**
-    * Gets the resource associated with this context event.
-    */
-   public String getResource()
-   {
-      return mResource;
-   }
-
-   /**
-    * Gets the configuration element associated with this event if there was
-    * one.
+    * Gives notification that a config element was removed from the broker.
     *
-    * @return  the affected element ; null if this event does not relate to a
-    *          element
+    * @param evt     the config event
     */
-   public ConfigElement getElement()
-   {
-      return mElement;
-   }
-
-   /** The resource associated with this event. */
-   private String mResource;
-
-   /** The element associated with this event. */
-   private ConfigElement mElement;
+   public void configElementRemoved(ConfigEvent evt);
 }

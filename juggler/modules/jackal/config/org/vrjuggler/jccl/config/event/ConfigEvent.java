@@ -29,30 +29,56 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.jccl.config;
+package org.vrjuggler.jccl.config.event;
 
-import java.util.EventListener;
+import java.util.EventObject;
+import org.vrjuggler.jccl.config.ConfigElement;
 
 /**
- * Interface for an observer to receive notifications of changes to a config
- * broker.
- *
- * @see ConfigBroker
+ * This provides detailed information to ConfigBroker observers as to how the
+ * configuration elements therein have changed.
  */
-public interface ConfigBrokerListener
-   extends EventListener
+public class ConfigEvent
+   extends EventObject
 {
    /**
-    * Gives notification that a resource was added to the config broker.
+    * Constructs a new ConfigEvent fired from the given source object
+    * relating to the given resource and configuration element.
     *
-    * @param evt     the config broker event
+    * @param source     the source of the event
+    * @param resource   the resource that changed
+    * @param elt        the element affected by the change
     */
-   public void resourceAdded(ConfigBrokerEvent evt);
+   public ConfigEvent(Object source, String resource, ConfigElement elt)
+   {
+      super(source);
+      mResource = resource;
+      mElement = elt;
+   }
 
    /**
-    * Gives notification that a resource was removed from the config broker.
-    *
-    * @param evt     the config broker event
+    * Gets the resource associated with this context event.
     */
-   public void resourceRemoved(ConfigBrokerEvent evt);
+   public String getResource()
+   {
+      return mResource;
+   }
+
+   /**
+    * Gets the configuration element associated with this event if there was
+    * one.
+    *
+    * @return  the affected element ; null if this event does not relate to a
+    *          element
+    */
+   public ConfigElement getElement()
+   {
+      return mElement;
+   }
+
+   /** The resource associated with this event. */
+   private String mResource;
+
+   /** The element associated with this event. */
+   private ConfigElement mElement;
 }
