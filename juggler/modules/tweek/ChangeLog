@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-08-14 patrickh    org.vrjuggler.tweek.beans.BeanPreferences.initGUI() has
+                       been renamed to the have the more specific name
+                       org.vrjuggler.tweek.beans.BeanPreferences.initPrefsGUI() 
+                       NEW VERSION: 0.9.0
 2002-08-13 patrickh    Added the Kunststoff Mini look and feel to the
                        collection of installed code.  This is a look and feel
                        designed for use on PDAs.
