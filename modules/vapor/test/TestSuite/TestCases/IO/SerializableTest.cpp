@@ -2,10 +2,12 @@
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/IO/SerializableObject.h>
 
+#include <vpr/IO/BufferObjectReader.h>
+#include <vpr/IO/BufferObjectWriter.h>
+
 // Serializable objects to test
 //#include <plx/Router/PlxAddr.h>
 //#include <plx/Router/RouterInfo.h>
-
 #include <SerializableTest.h>
 
 
@@ -22,19 +24,21 @@ void SerializableTest::testReaderWriter()
    const double      data_double(1.2211975);
    const std::string data_string("test string");
    const bool        data_bool(true);
-   
-   std::vector<vpr::Uint8> data_buffer;
-   vpr::ObjectWriter writer(&data_buffer);
 
-   writer.writeUint8(data_uint8);
-   writer.writeUint16(data_uint16);
-   writer.writeUint32(data_uint32);
-   writer.writeUint64(data_uint64);
-   writer.writeFloat(data_float);
-   writer.writeDouble(data_double);
-   writer.writeUint8(data_string.length());
-   writer.writeString(data_string);
-   writer.writeBool(data_bool);
+   std::vector<vpr::Uint8> data_buffer;
+   vpr::ObjectWriter* writer;
+
+   writer = new vpr::BufferObjectWriter(&data_buffer);
+
+   writer->writeUint8(data_uint8);
+   writer->writeUint16(data_uint16);
+   writer->writeUint32(data_uint32);
+   writer->writeUint64(data_uint64);
+   writer->writeFloat(data_float);
+   writer->writeDouble(data_double);
+   writer->writeUint8(data_string.length());
+   writer->writeString(data_string);
+   writer->writeBool(data_bool);
 
    vpr::Uint8 read_uint8;
    vpr::Uint16 read_uint16;
@@ -46,17 +50,18 @@ void SerializableTest::testReaderWriter()
    std::string read_string;
    bool        read_bool;
 
-   vpr::ObjectReader reader(&data_buffer);
+   vpr::ObjectReader* reader;
+   reader = new vpr::BufferObjectReader(&data_buffer);
 
-   reader.readUint8(read_uint8);
-   reader.readUint16(read_uint16);
-   reader.readUint32(read_uint32);
-   reader.readUint64(read_uint64);
-   reader.readFloat(read_float);
-   reader.readDouble(read_double);
-   reader.readUint8(read_str_len);
-   reader.readString(read_string, read_str_len);
-   reader.readBool(read_bool);
+   reader->readUint8(read_uint8);
+   reader->readUint16(read_uint16);
+   reader->readUint32(read_uint32);
+   reader->readUint64(read_uint64);
+   reader->readFloat(read_float);
+   reader->readDouble(read_double);
+   reader->readUint8(read_str_len);
+   reader->readString(read_string, read_str_len);
+   reader->readBool(read_bool);
 
    CPPUNIT_ASSERT(data_uint8 == read_uint8);
    CPPUNIT_ASSERT(data_uint16 == read_uint16);
@@ -65,14 +70,14 @@ void SerializableTest::testReaderWriter()
    CPPUNIT_ASSERT(data_float == read_float);
    CPPUNIT_ASSERT(data_double == read_double);
    CPPUNIT_ASSERT(data_string == read_string);
-   CPPUNIT_ASSERT(data_bool == read_bool);   
+   CPPUNIT_ASSERT(data_bool == read_bool);
 }
 
 // Test reading and writing data from many memory offsets
 // - Loop over several different offsets and at each read and write all types
 void SerializableTest::testDataOffsets()
 {
-   
+
    const vpr::Uint8 data_uint8(0xAB);
    const vpr::Uint16 data_uint16(0xBEEF);
    const vpr::Uint32 data_uint32(0xDEADBEEF);
@@ -92,49 +97,51 @@ void SerializableTest::testDataOffsets()
    std::string read_string;
    bool        read_bool;
 
-   
+
    // For each offset size
    // - write out raw data of size offset bytes
    // - write all data types and read them
    for(unsigned offset=0; offset<16; offset++)
    {
       std::vector<vpr::Uint8> data_buffer;
-      vpr::ObjectWriter writer(&data_buffer);
-   
+      vpr::ObjectWriter* writer;
+      writer = new vpr::BufferObjectWriter(&data_buffer);
+
       for(unsigned i=0;i<offset;++i)
       {
-         writer.writeUint8(0xFF);
+         writer->writeUint8(0xFF);
       }
 
-      writer.writeUint8(data_uint8);
-      writer.writeUint16(data_uint16);
-      writer.writeUint32(data_uint32);
-      writer.writeUint64(data_uint64);
-      writer.writeFloat(data_float);
-      writer.writeDouble(data_double);
-      writer.writeUint8(data_string.length());
-      writer.writeString(data_string);
-      writer.writeBool(data_bool);
-   
-      vpr::ObjectReader reader(&data_buffer);
+      writer->writeUint8(data_uint8);
+      writer->writeUint16(data_uint16);
+      writer->writeUint32(data_uint32);
+      writer->writeUint64(data_uint64);
+      writer->writeFloat(data_float);
+      writer->writeDouble(data_double);
+      writer->writeUint8(data_string.length());
+      writer->writeString(data_string);
+      writer->writeBool(data_bool);
+
+      vpr::ObjectReader* reader;
+      reader = new vpr::BufferObjectReader(&data_buffer);
 
       for(unsigned i=0;i<offset;++i)
       {
          vpr::Uint8 ff_data(0);
-         reader.readUint8(ff_data);
+         reader->readUint8(ff_data);
          CPPUNIT_ASSERT(0xFF == ff_data);
       }
-   
-      reader.readUint8(read_uint8);
-      reader.readUint16(read_uint16);
-      reader.readUint32(read_uint32);
-      reader.readUint64(read_uint64);
-      reader.readFloat(read_float);
-      reader.readDouble(read_double);
-      reader.readUint8(read_str_len);
-      reader.readString(read_string, read_str_len);
-      reader.readBool(read_bool);
-   
+
+      reader->readUint8(read_uint8);
+      reader->readUint16(read_uint16);
+      reader->readUint32(read_uint32);
+      reader->readUint64(read_uint64);
+      reader->readFloat(read_float);
+      reader->readDouble(read_double);
+      reader->readUint8(read_str_len);
+      reader->readString(read_string, read_str_len);
+      reader->readBool(read_bool);
+
       CPPUNIT_ASSERT(data_uint8 == read_uint8);
       CPPUNIT_ASSERT(data_uint16 == read_uint16);
       CPPUNIT_ASSERT(data_uint32 == read_uint32);
@@ -142,7 +149,7 @@ void SerializableTest::testDataOffsets()
       CPPUNIT_ASSERT(data_float == read_float);
       CPPUNIT_ASSERT(data_double == read_double);
       CPPUNIT_ASSERT(data_string == read_string);
-      CPPUNIT_ASSERT(data_bool == read_bool);  
+      CPPUNIT_ASSERT(data_bool == read_bool);
    }
 }
 
@@ -161,13 +168,15 @@ void SerializableTest::testReadWriteSimple()
 
    CPPUNIT_ASSERT(obj1 == obj2);
 
-   vpr::ObjectWriter writer;     // Automagically gets data for storage
+   vpr::BufferObjectWriter* writer;     // Automagically gets data for storage
+   writer = new vpr::BufferObjectWriter;
 
-   obj1.writeObject(&writer);
+   obj1.writeObject(writer);
 
-   vpr::ObjectReader reader(writer.getData());
+   vpr::ObjectReader* reader;
+   reader = new vpr::BufferObjectReader(writer->getData());
 
-   obj3.readObject(&reader);
+   obj3.readObject(reader);
 
    CPPUNIT_ASSERT(obj2 == obj3);
 }
@@ -196,11 +205,14 @@ void SerializableTest::testReadWriteNested()
 
    CPPUNIT_ASSERT(obj1 == obj2);
 
-   vpr::ObjectWriter writer;     // Automagically gets data for storage
-   obj1.writeObject(&writer);
+   vpr::BufferObjectWriter* writer;     // Automagically gets data for storage
+   writer = new vpr::BufferObjectWriter;
 
-   vpr::ObjectReader reader(writer.getData());
-   obj3.readObject(&reader);
+   obj1.writeObject(writer);
+
+   vpr::ObjectReader* reader;
+   reader = new vpr::BufferObjectReader(writer->getData());
+   obj3.readObject(reader);
 
    CPPUNIT_ASSERT(obj2 == obj3);
 }
@@ -271,7 +283,7 @@ CppUnit::Test* SerializableTest::suite()
    test_suite->addTest( new CppUnit::TestCaller<SerializableTest>("testReadWriteNested", &SerializableTest::testReadWriteNested));
    test_suite->addTest( new CppUnit::TestCaller<SerializableTest>("testReaderWriter", &SerializableTest::testReaderWriter));
    test_suite->addTest( new CppUnit::TestCaller<SerializableTest>("testDataOffsets", &SerializableTest::testDataOffsets));
-   
+
 
 //   test_suite->addTest( new CppUnit::TestCaller<SerializableTest>("testReadWritePlxAddr", &SerializableTest::testReadWritePlxAddr));
 //   test_suite->addTest( new CppUnit::TestCaller<SerializableTest>("testReadWriteRouterInfo", &SerializableTest::testReadWriteRouterInfo));
