@@ -131,7 +131,7 @@ dnl # The default is /usr/java or what the user has defined in his or her
 dnl # $JDK_HOME environment variable.  ${_JDK_HOME_ALT_LIST} must be a
 dnl # colon-separated list of bin directories that could contain javac(1)
 dnl # and the other JDK utilities.
-if test "x$JAVA_HOME" != "x" ; then
+if test "x$JAVA_HOME" = "x" ; then
     _JDK_HOME_ALT_LIST="/usr/local/java/bin"
 else
     _JDK_HOME_ALT_LIST="${JAVA_HOME}/bin:/usr/local/java/bin"
