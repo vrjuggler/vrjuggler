@@ -18,7 +18,7 @@ typedef enum {U_Feet, U_Inches, U_Meters, U_Centimeters, U_BadUnit}
  * internally as feet.
  */
 
-//: A vjVarValue is an object that knows it's own type even if we don't.
+//: A vjVarValue is an object that knows its own type even if we don't.
 //  More seriously, it's the value storage unit and value return type
 //  for a ConfigChunk. <br>
 //  Currently, vjVarValues can be of types int, FLOAT, boolean, string
@@ -103,8 +103,8 @@ public:
 
 
   //: Creates a new vjVarValue of type t.
-  //! NOTE: Note that once a vjVarValue object has
-  // been created,the type cannot be changed.
+  //! NOTE: Note that once a vjVarValue object has been created, the type
+  //+ cannot be changed.
   vjVarValue ( VarType t ) {
     type = t;
     switch (type) {
