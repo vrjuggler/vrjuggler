@@ -716,6 +716,60 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
+  <ChunkDesc token="IntersenseAPI" name="IntersenseAPI">
+    <category>Devices</category>
+    <help>Intersense Tracking Devices</help>
+    <PropertyDesc name="Driver DSO" token="driver" type="string" variable="0">
+      <item label="DSO Path" defaultvalue="" />
+      <help>Each value is the full path to a driver DSO (.so or .dll, usually).  The path may make use of environment variables.  For example: ${VJ_BASE_DIR}/lib/gadgeteer/drivers/libPinchGlove.so.</help>
+    </PropertyDesc>
+    <PropertyDesc token="port" name="Port" type="string" variable="0">
+      <help>Serial port the Flock is attached to</help>
+      <item label="Port" defaultvalue="/dev/ttyd1" />
+    </PropertyDesc>
+    <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
+      <help>Serial port speed</help>
+      <item label="Baud Rate" defaultvalue="115200" />
+    </PropertyDesc>
+    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
+      <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
+      <item label="X" defaultvalue="0.0" />
+      <item label="Y" defaultvalue="0.0" />
+      <item label="Z" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
+      <help>(world_T_transmitter) Rotation (in degrees) of the tranmitter from the Juggler coord system.</help>
+      <item label="X Axis" defaultvalue="0.0" />
+      <item label="Y Axis" defaultvalue="0.0" />
+      <item label="Z Axis" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="stations" name="Stations" type="embeddedchunk" variable="1">
+      <help>Settings for each Station.</help>
+      <item label="Stations" />
+      <enumeration name="ISenseStation" />
+    </PropertyDesc>
+    <PropertyDesc token="verbose" name="Vebose Enabled" type="bool" variable="0">
+      <help>Enable output from the Intersense Driver</help>
+      <item label="Verbose Enabled" defaultvalue="false" />
+    </PropertyDesc>
+    <PropertyDesc token="script" name="Script File" type="string" variable="0">
+      <help>File path of script sent to the tracker on startup.</help>
+      <item label="Script File" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="min" name="min" type="float" variable="0">
+      <help>the actual analog data values range - lower bound</help>
+      <item label="Range Minimum" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="max" name="max" type="float" variable="0">
+      <help>the actual analog data values range - upper bound</help>
+      <item label="Range Maximum" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
+      <enumeration name="MachineSpecific" value="MachineSpecific" />
+    </PropertyDesc>
+  </ChunkDesc>
   <ChunkDesc token="KeyModPair" name="Key and Modifier Pair">
     <category>Devices</category>
     <help>This chunk holds a key and a modifier key.  It is for key events inside other chunks.</help>
@@ -1547,10 +1601,10 @@ The filters are applied in the order that they are specified in this configurati
   <ChunkDesc token="TweekAnalogDevice" name="Tweek Analog Device">
     <category>Desc</category>
     <category>Devices</category>
-    <PropertyDesc name="Minimum Value" token="minimumValue" type="float" variable="0">
+    <PropertyDesc name="Minimum Value" token="min" type="float" variable="0">
       <item label="Minimum value" defaultvalue="0.0" />
     </PropertyDesc>
-    <PropertyDesc name="Maximum Value" token="maximumValue" type="float" variable="0">
+    <PropertyDesc name="Maximum Value" token="max" type="float" variable="0">
       <item label="Maximum value" defaultvalue="1.0" />
     </PropertyDesc>
   </ChunkDesc>
@@ -1575,6 +1629,11 @@ The filters are applied in the order that they are specified in this configurati
     </PropertyDesc>
     <PropertyDesc name="Analog Device" token="analogDevice" type="embeddedchunk" variable="1">
       <enumeration name="TweekAnalogDevice" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
+      <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="TweekDigitalDevice" name="Tweek Digital Device">
