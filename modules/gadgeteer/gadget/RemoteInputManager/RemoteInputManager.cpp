@@ -51,8 +51,8 @@
 //#include <gadget/Type/NetDigital.h>
 #include <gadget/RemoteInputManager/NetDevice.h>
 #include <gadget/RemoteInputManager/RemoteInputManager.h>
-#include <gadget/RemoteInputManager/StreamReader.h>
-#include <gadget/RemoteInputManager/StreamWriter.h>
+//#include <gadget/RemoteInputManager/StreamReader.h>
+//#include <gadget/RemoteInputManager/StreamWriter.h>
 #include <gadget/Type/DeviceFactory.h>
 //#include <gadget/Type/DeviceInterface.h>
 
@@ -131,7 +131,7 @@ namespace gadget
       << "\nInputManager: Removing config... " << std::endl << vprDEBUG_FLUSH;
       vprASSERT(configCanHandle(chunk));
 
-      bool ret_val = false;      // Flag to return success
+      //bool ret_val = false;      // Flag to return success
       // CAN NOT REMOVE YET
       //if (recognizeClusterMachineConfig(chunk)) 
       //	{;}
@@ -364,16 +364,16 @@ namespace gadget
             remote_device_chunks.push_back(*j);
          }
       }
-      vprDEBUG(gadgetDBG_RIM,2) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
+      vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
             << " Number of local devices: " << local_device_chunks.size() << "\n"<< vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,2) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
+      vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
             << " Number of machines in cluster: " << mMachineTable.size() << "\n"<< vprDEBUG_FLUSH;
       
       //Configure local devices
       for (std::vector<jccl::ConfigChunkPtr>::iterator j = local_device_chunks.begin();
            j != local_device_chunks.end();j++)
       {
-         vprDEBUG(gadgetDBG_RIM,1) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
+         vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
             << " Configuring local device: " << (*j)->getName() << "\n"<< vprDEBUG_FLUSH;
          gadget::InputManager::instance()->configureDevice(*j);
       }
@@ -388,7 +388,7 @@ namespace gadget
       for (std::vector<jccl::ConfigChunkPtr>::iterator j = remote_device_chunks.begin();
            j != remote_device_chunks.end();)
       {
-         vprDEBUG(gadgetDBG_RIM,1) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
+         vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
             << " Configuring remote device: " << (*j)->getName() << "\n"<< vprDEBUG_FLUSH;
          if (configureDevice(*j))
          {
@@ -396,7 +396,7 @@ namespace gadget
          }
          else
          {
-            vprDEBUG(gadgetDBG_RIM,2) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
+            vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
                << " Waiting for Remote Device Server: " << (*j)->getProperty<std::string>("host_chunk") << "\n"<< vprDEBUG_FLUSH;
          }
       }
@@ -406,11 +406,11 @@ namespace gadget
       {
          while (mIncomingConnections < (mMachineTable.size()-1))
          {//{;}
-         vprDEBUG(gadgetDBG_RIM,2) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
+         vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
             << mIncomingConnections << " - " << (mMachineTable.size()-1) << "\n"<< vprDEBUG_FLUSH;
          }
       }
-      vprDEBUG(gadgetDBG_RIM,1) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
+      vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
          << " Done with configuration!!!" << "\n"<< vprDEBUG_FLUSH;
       //MAKE A DEBUG SCREEN
       debugDump();
@@ -474,6 +474,7 @@ namespace gadget
    bool RemoteInputManager::configureClusterSystem(jccl::ConfigChunkPtr chunk)
    {
       this->mNumMachines = chunk->getNum("cluster_machine");
+      return true;
    }
    bool RemoteInputManager::configureDevice(jccl::ConfigChunkPtr chunk)
    {
@@ -832,7 +833,6 @@ namespace gadget
          // if ( ! inet_addr.setAddress(connection_name).success() ) {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
                << clrOutNORM(clrRED," ERROR: Failed to set address\n")<< vprDEBUG_FLUSH;
-         delete sock_stream;
          return NULL;
       }
 
