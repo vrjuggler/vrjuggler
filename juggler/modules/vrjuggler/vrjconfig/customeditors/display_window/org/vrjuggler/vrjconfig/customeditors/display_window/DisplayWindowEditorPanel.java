@@ -242,7 +242,19 @@ public class DisplayWindowEditorPanel
       }
 
       ConfigElement elt = win.getConfiguration();
-      mContext.remove(elt.getName());
+
+      ConfigBroker broker = new ConfigBrokerProxy();
+      for ( Iterator i = broker.getResourceNames().iterator(); i.hasNext(); )
+      {
+         DataSource ds = broker.get((String) i.next());
+
+         if ( ds.contains(elt) )
+         {
+            broker.remove(mContext, elt, ds);
+            break;
+         }
+      }
+
       mAllWindows.remove(win);
    }
 
