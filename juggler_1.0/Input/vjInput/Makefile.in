@@ -15,7 +15,8 @@ VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@/Input/vjInput
 WORKDIR		= ${topdir}/Input/vjInput
 
-# Include dependency and installation targets.
+# Include source building, dependency and installation targets.
+include ${MKPATH}/vj.compile.mk
 include ${MKPATH}/vj.dep.mk
 include ${MKPATH}/vj.install.mk
 
