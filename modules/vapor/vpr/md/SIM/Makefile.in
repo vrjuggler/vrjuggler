@@ -65,6 +65,7 @@ SUBDIR		= Network	\
 
 ifeq (@SIMULATOR@, Y)
     SRCS	= Clock.cpp		\
+                  DNS.cpp		\
                   Controller.cpp	\
                   SocketManager.cpp
 endif

@@ -41,6 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <vpr/Sync/Guard.h>
 #include <vpr/md/SIM/Network/Message.h>
 #include <vpr/md/SIM/Network/MessagePtr.h>
 #include <vpr/md/SIM/Controller.h>
@@ -59,6 +60,35 @@ vpr::ReturnStatus SocketDatagramImplSIM::recvfrom (void* msg,
                                                    const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
+   vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
+
+   if ( mArrivedQueue.size() > 0 )
+   {
+      vpr::sim::MessagePtr msg_ptr = mArrivedQueue.front();
+      vpr::Uint32 msg_size, copy_len;
+
+      msg_size = msg_ptr->getSize();
+
+      // Use the smaller of length and msg_size for the actual amount of
+      // data to copy.
+      copy_len = (length > msg_size) ? msg_size : length;
+
+      // Complete the read operation.
+      memcpy(msg, msg_ptr->getBody(), copy_len);
+      bytes_read = copy_len;
+
+      from = msg_ptr->getSourceSocket()->getLocalAddr();
+
+      if ( msg_ptr->resize(copy_len) == 0 )
+      {
+         mArrivedQueue.pop();
+      }
+   }
+   else
+   {
+      status.setCode(vpr::ReturnStatus::WouldBlock);
+      bytes_read = 0;
+   }
 
    return status;
 }
