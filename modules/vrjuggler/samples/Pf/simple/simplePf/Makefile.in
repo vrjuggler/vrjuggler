@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/tutorials/simplePf.
+# Makefile.in for vrjuggler/samples/tutorials/simplePf.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -58,7 +58,7 @@ OPTIM_LFLAGS	= @APP_OPTIM_LFLAGS@
 LINK_FLAGS	= @APP_LINK_FLAGS@ $(EXTRA_LFLAGS)
 
 # Libraries needed for linking.
-BASIC_LIBS	= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ @APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@
+BASIC_LIBS	= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@ @APP_VJ_LIBS_PF@ @APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@ @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@ 
 
 # Commands to execute.
@@ -68,7 +68,7 @@ LINK		= @APP_LINK@ $(LINK_FLAGS)
 
 VPATH	= @srcdir@
 
-OBJS	= main.@OBJEXT@
+OBJS	= main.@OBJEXT@ simplePfApp.@OBJEXT@
 
 # -----------------------------------------------------------------------------
 # Application build targets.
