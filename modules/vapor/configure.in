@@ -623,9 +623,7 @@ if test "x$SUBSYSTEM" != "xSPROC" -a "x$ABI" != "x64" ; then
    threading='-mt'
 fi
 
-# We test for the fully qualified library name first since that is what is
-# generally installed by default, and it gives us a way to ensure that we are
-# getting a usable build.
+# Ensure that a compiled version of the Boost.Filesystem library is available.
 boost_fs_name="boost_filesystem-$toolset$threading"
 vprsave_CXXFLAGS="$CXXFLAGS"
 vprsave_CPPFLAGS="$CPPFLAGS"
@@ -639,37 +637,18 @@ LIBS="$LIBS -l$boost_fs_name"
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
-
 AC_CACHE_CHECK([for boost::filesystem::exists() in $boost_fs_name],
-   [ac_cv_has_fq_boost_fs_exists],
+   [ac_cv_has_boost_fs_exists],
    [AC_TRY_LINK([#include <boost/filesystem/operations.hpp> ],
                 [boost::filesystem::path p("dir"); boost::filesystem::exists(p);],
-                [ac_cv_has_fq_boost_fs_exists='yes'],
-                [ac_cv_has_fq_boost_fs_exists='no'])])
+                [ac_cv_has_boost_fs_exists='yes'],
+                [ac_cv_has_boost_fs_exists='no'])])
 rm -rf ./ii_files
-
-# If Boost.Filesystem is not available with the fully qualified library name,
-# try it without the toolset and threading information.  This is a little
-# risky, but it is necessary to deal with pre-packaged versions of Boost that
-# strip out the fully qualified library variants.
-if test "x$ac_cv_has_fq_boost_fs_exists" = "xno" ; then
-   boost_fs_name="boost_filesystem"
-   LIBS="$vprsave_LIBS -l$boost_fs_name"
-
-   AC_CACHE_CHECK([for boost::filesystem::exists() in $boost_fs_name],
-      [ac_cv_has_uq_boost_fs_exists],
-      [AC_TRY_LINK([#include <boost/filesystem/operations.hpp> ],
-                   [boost::filesystem::path p("dir"); boost::filesystem::exists(p);],
-                   [ac_cv_has_uq_boost_fs_exists='yes'],
-                   [ac_cv_has_uq_boost_fs_exists='no'])])
-   rm -rf ./ii_files
-
-   if test "x$ac_cv_has_uq_boost_fs_exists" = "xno" ; then
-      AC_MSG_ERROR([*** Boost.Filesystem required by VPR ***])
-   fi
-fi
-
 DPP_LANG_RESTORE
+
+if test "x$ac_cv_has_boost_fs_exists" = "xno" ; then
+   AC_MSG_ERROR([*** Boost.Filesystem required by VPR ***])
+fi
 
 CXXFLAGS="$vprsave_CXXFLAGS"
 CPPFLAGS="$vprsave_CPPFLAGS"
