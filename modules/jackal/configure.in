@@ -247,7 +247,7 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
 elif test "x$PLATFORM" = "xDarwin" ; then
     CFLAGS_DYNLIB="$CFLAGS_DYNLIB -fexport-coalesced"
     CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
-    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -flat_namespace -Wl,-bind_at_load"
+    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -Wl,-bind_at_load"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     vc_cflags='/QIfdiv /QI0f'
     vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'

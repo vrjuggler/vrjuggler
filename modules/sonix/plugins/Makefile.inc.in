@@ -62,15 +62,6 @@ ifdef GROUP_NAME
     _GROUP_OPT_PL=	--gname="$(GROUP_NAME)"
 endif
 
-# --------------------------------------------
-# Library build information.
-# --------------------------------------------
-
-# Add extra linking options on Darwin/OS X.
-ifeq (@PLATFORM@, Darwin)
-LDOPTS+=	-flat_namespace
-endif
-
 # =============================================================================
 # Library targets.
 # =============================================================================

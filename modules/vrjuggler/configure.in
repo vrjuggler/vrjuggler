@@ -397,7 +397,7 @@ fi
 if test "x$PLATFORM" = "xDarwin" ; then
    CFLAGS_DYNLIB="$CFLAGS_DYNLIB -fexport-coalesced"
    CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
-   BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -flat_namespace -Wl,-bind_at_load"
+   BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -Wl,-bind_at_load"
 fi
 
 INCLUDES="$INCLUDES $GMTL_INCLUDES"
@@ -485,7 +485,7 @@ if test "$OS_TYPE" = "UNIX" ; then
 
     if test "x$PLATFORM" = "xDarwin" ; then
         if test "x$GADGET_USE_X11" = "xyes" ; then
-            DYLIB_DEPS_GL="$DYLIB_DEPS_GL $X_LDFLAGS -lGLU -lGL $osx_frameworks"
+            DYLIB_DEPS_GL="$DYLIB_DEPS_GL $X_LDFLAGS -lGLU -lGL -lX11 $osx_frameworks"
         else
             DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_frameworks"
         fi

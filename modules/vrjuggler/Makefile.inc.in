@@ -90,7 +90,6 @@ DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
 ifeq (@PLATFORM@, Darwin)
 LDOPTS+=	-compatibility_version $(SHLIB_MAJOR).$(SHLIB_MINOR)
 LDOPTS+=	-current_version $(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
-LDOPTS+=	-flat_namespace
 endif
 
 # Full list of the libraries to build.
