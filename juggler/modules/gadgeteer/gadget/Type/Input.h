@@ -59,7 +59,6 @@
 #endif      /* ifndef VPR_OS_Win32 */
 
 #include <limits.h>
-#include <string.h>
 #include <sys/types.h>
 #include <fcntl.h>
 #include <signal.h>
@@ -186,8 +185,8 @@ public:
      * It hasn't been resolved as to whether these functions should be removed
      */
    //@{
-   void setPort(const char* serialPort);
-   char* getPort();
+   void setPort(const std::string& serialPort);
+   std::string getPort();
    void setBaudRate(int baud);
    int  getBaudRate() { return mBaudRate;}
    //@}
@@ -199,7 +198,9 @@ public:
    */
    const std::string getInstanceName() {
       if (mInstName.empty())
-         return "Undefined";
+      {
+         return std::string("Undefined");
+      }
       return mInstName;
    }
 
@@ -207,7 +208,7 @@ public:
    int isActive() { return mActive;}
 
 protected:
-   char*          mPort;
+   std::string    mPort;
    std::string    mInstName;
    int            mPortId;
    vpr::Thread*   mThread;       /**< The thread being used by the driver */

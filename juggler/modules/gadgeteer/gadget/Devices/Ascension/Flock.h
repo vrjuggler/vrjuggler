@@ -141,7 +141,10 @@ public:
      *  this will be a string in the form of the native OS descriptor <BR>
      *  ex: unix - "/dev/ttyd3", win32 - "COM3"
      */
-    inline const char*  getPort() const { return mFlockOfBirds.getPort(); }
+    inline const std::string& getPort() const
+    {
+       return mFlockOfBirds.getPort();
+    }
 
     /**
      *  set the baud rate

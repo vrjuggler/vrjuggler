@@ -129,14 +129,14 @@ public:
 	 *  ex: unix - "/dev/ttyd3", win32 - "COM3"
 	 *  @note flock.isActive() must be false to use this function
 	 */
-	void	    setPort( const char* const serialPort );
+	void	    setPort( const std::string& serialPort );
 	
 	/**
 	 *  get the port used
 	 *  this will be a string in the form of the native OS descriptor <BR>
 	 *  ex: unix - "/dev/ttyd3", win32 - "COM3"
 	 */
-	const char* getPort() const;
+	const std::string& getPort() const;
 	
 	
 	/**
@@ -393,7 +393,7 @@ private:
 	BIRD_FILT   _filter;
 	
 	static const int   MAXCHARSTRINGSIZE;
-	char	    _port[256];
+        std::string _port;
 	char	    _calibrationFileName[256];
 
         vpr::SerialPort* _serial_port;
