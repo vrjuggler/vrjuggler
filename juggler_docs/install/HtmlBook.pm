@@ -204,7 +204,7 @@ sub pushFont ($$$$) {
     my $any_content_inbetween = shift;
 
     $this->outputIndents();
-    $this->{'body'} .= "<font $myParams>\n";
+#    $this->{'body'} .= "<font $myParams>\n";
 }
 
 # ----------------------------------------------------------------------------
@@ -217,7 +217,7 @@ sub popFont ($$$$) {
     my $any_content_inbetween = shift;
 
     $this->outputIndents();
-    $this->{'body'} .= "</font>\n";
+#    $this->{'body'} .= "</font>\n";
 }
 
 # ----------------------------------------------------------------------------
