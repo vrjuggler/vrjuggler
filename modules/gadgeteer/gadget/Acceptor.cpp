@@ -180,173 +180,140 @@ namespace gadget
                << " Received from: " << remote_host_name
                << ":" << port << std::endl << vprDEBUG_FLUSH;
 
-            Node* remote_node = NULL;
-            // Make sure that we have a Node configured for this hostame
-            {
-               remote_node = mNetworkManager->getNodeByHostname( remote_host_name );
+            Node* remote_node = mNetworkManager->getNodeByHostname( remote_host_name );
 
-               // - If we do not already have a Node with the given hostname
-               //   AND the incoming list is empty
-               //   AND the ConfigManager does not contain and "machine_specific" elements
-               if ( NULL == remote_node )
+            if ( NULL == remote_node )
+            {
+               vprDEBUG( gadgetDBG_NET_MGR,vprDBG_VERB_LVL )
+                  << clrOutBOLD( clrMAGENTA,"[Acceptor]" )
+                  << " Nodes not configured yet."
+                  << std::endl << vprDEBUG_FLUSH;
+               
+               client_sock->close();
+               delete client_sock;
+               client_sock = new vpr::SocketStream;
+            }
+            else
+            {
+               // Get address information about local host.
+               vpr::InetAddr local;
+               std::string local_hostname;
+               vpr::InetAddr::getLocalHost( local );
+               local.getHostname( local_hostname );
+               cluster::ConnectionAck* temp = NULL;
+
+               if( remote_node->getStatus() == Node::CONNECTED || 
+                   remote_node->getStatus() == Node::NEWCONNECTION )
                {
-                  vprDEBUG( gadgetDBG_NET_MGR,vprDBG_VERB_LVL )
-                     << clrOutBOLD( clrMAGENTA,"[Acceptor]" )
-                     << " Nodes not configured yet."
+                  vprDEBUG( gadgetDBG_NET_MGR,vprDBG_STATE_LVL )
+                     << clrOutBOLD( clrMAGENTA, "[Acceptor]" )
+                     << " Node is already connected, no need to respond to request." 
+                     << std::endl << vprDEBUG_FLUSH;
+
+                  temp = new cluster::ConnectionAck( local_hostname, mListenAddr.getPort(), false );
+               }
+               else if ( Node::PENDING == remote_node->getStatus() )
+               {
+                  vprASSERT( NULL != remote_node && "Remote node must nut be equal to NULL" );
+               
+                  vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
+                     << clrOutBOLD( clrMAGENTA, "[Acceptor]")
+                     << " Pending Node exists, we must decide which"
+                     << " side should initiate the connection."
                      << std::endl << vprDEBUG_FLUSH;
                   
-                  if (mAcceptAnonymous)
+                  // Get address values to test.
+                  vpr::Uint32 remote_value = client_sock->getRemoteAddr().getAddressValue();
+                  vpr::Uint32 local_value = local.getAddressValue();
+                  
+                  vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
+                     << "Remote: " << remote_value
+                     << std::endl << vprDEBUG_FLUSH;
+                  
+                  vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
+                     << "Local: " << local_value
+                     << std::endl << vprDEBUG_FLUSH;
+
+                  // If Node has an address value less than mine
+                  if ( remote_value < local_value )
                   {
-                     vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL)
-                        << clrOutBOLD(clrMAGENTA,"[Acceptor]")
-                        << " Node does not exist in Acceptor."
-                        << " Creating new Node."
-                        << std::endl << vprDEBUG_FLUSH;
-
-                     // Create a new Node and pass it the new SocketStream
-                     remote_node = new Node(remote_host_name,
-                                                       remote_host_name,
-                                                       port,
-                                                       client_sock,
-                                                       mNetworkManager);
+                     vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
+                        << "Result: (remote address < local address)"
+                        << " Create NACK" << std::endl << vprDEBUG_FLUSH;
                      
-                     vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL)
-                        << clrOutBOLD(clrMAGENTA,"[Acceptor]")
-                        << " Adding new node to Acceptor..."
-                        << std::endl << vprDEBUG_FLUSH;
-
-                     // Add the new node to the cluster
-                     mNetworkManager->addNode(remote_node);
+                     // Create NACK
+                     temp = new cluster::ConnectionAck( local_hostname, mListenAddr.getPort(), false );
                   }
                   else
                   {
-                     //XXX: This will make sure that we do not allow a connection
-                     //     from a node that isnot configured yet.
-                     remote_node = NULL;
-                     //vprASSERT( false && "Getting a connection attempt before we are fully configured." );
-                  }
-               }
-            }
-            
-            
-            // Get address information about local host.
-            vpr::InetAddr local;
-            std::string local_hostname;
-            vpr::InetAddr::getLocalHost( local );
-            local.getHostname( local_hostname );
-            cluster::ConnectionAck* temp = NULL;
+                     vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
+                        << "Result: (remote address >= local address)"
+                        << "Create ACK" << std::endl << vprDEBUG_FLUSH;
 
-            if ( NULL == remote_node ||
-                 remote_node->getStatus() == Node::CONNECTED || 
-                 remote_node->getStatus() == Node::NEWCONNECTION )
-            {
-               vprDEBUG( gadgetDBG_NET_MGR,vprDBG_STATE_LVL )
-                  << clrOutBOLD( clrMAGENTA, "[Acceptor]" )
-                  << " Node is already connected, no need to respond to request." 
-                  << std::endl << vprDEBUG_FLUSH;
-
-               temp = new cluster::ConnectionAck( local_hostname, mListenAddr.getPort(), false );
-            }
-            else if ( Node::PENDING == remote_node->getStatus() )
-            {
-               vprASSERT( NULL != remote_node && "Remote node must nut be equal to NULL" );
-            
-               vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
-                  << clrOutBOLD( clrMAGENTA, "[Acceptor]")
-                  << " Pending Node exists, we must decide which"
-                  << " side should initiate the connection."
-                  << std::endl << vprDEBUG_FLUSH;
-               
-               // Get address values to test.
-               vpr::Uint32 remote_value = client_sock->getRemoteAddr().getAddressValue();
-               vpr::Uint32 local_value = local.getAddressValue();
-               
-               vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
-                  << "Remote: " << remote_value
-                  << std::endl << vprDEBUG_FLUSH;
-               
-               vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
-                  << "Local: " << local_value
-                  << std::endl << vprDEBUG_FLUSH;
-
-               // If Node has an address value less than mine
-               if ( remote_value < local_value )
-               {
-                  vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
-                     << "Result: (remote address < local address)"
-                     << " Create NACK" << std::endl << vprDEBUG_FLUSH;
-                  
-                  // Create NACK
-                  temp = new cluster::ConnectionAck( local_hostname, mListenAddr.getPort(), false );
+                     temp = new cluster::ConnectionAck( local_hostname, mListenAddr.getPort(), true );
+                 }
                }
                else
                {
                   vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
-                     << "Result: (remote address >= local address)"
-                     << "Create ACK" << std::endl << vprDEBUG_FLUSH;
-
+                     << clrOutBOLD( clrMAGENTA, "[Acceptor]" )
+                     << " Node is not pending, create ACK."
+                     << std::endl << vprDEBUG_FLUSH;
+                     
+                  // Create an ACK since we do not depend on it
                   temp = new cluster::ConnectionAck( local_hostname, mListenAddr.getPort(), true );
-              }
-            }
-            else
-            {
-               vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
-                  << clrOutBOLD( clrMAGENTA, "[Acceptor]" )
-                  << " Node is not pending, create ACK."
-                  << std::endl << vprDEBUG_FLUSH;
+               }
                   
-               // Create an ACK since we do not depend on it
-               temp = new cluster::ConnectionAck( local_hostname, mListenAddr.getPort(), true );
-            }
-               
-            vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
-               << clrOutBOLD( clrMAGENTA,"[Acceptor]" )
-               << " Set SockStream and send responce."
-               << std::endl << vprDEBUG_FLUSH;
-            
-            vpr::SocketStream* old_stream = remote_node->getSockStream();
-            remote_node->setSockStream( client_sock );
-            remote_node->send( temp );
-            remote_node->setSockStream( old_stream );
-
-            if ( temp->getAck() )
-            {
-               vprDEBUG( gadgetDBG_NET_MGR,vprDBG_STATE_LVL )
+               vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
                   << clrOutBOLD( clrMAGENTA,"[Acceptor]" )
-                  << " Set new Node as a NEWCONNECTION."
+                  << " Set SockStream and send responce."
                   << std::endl << vprDEBUG_FLUSH;
-
+               
+               vpr::SocketStream* old_stream = remote_node->getSockStream();
                remote_node->setSockStream( client_sock );
-               
-               // Since we have just recieved a new connection,
-               // set the connected status as so. We are not
-               // in a fully connected state until the begining
-               // of the next frame in Acceptor::updateNewConnetions()
-               // this is becuase we only want to start using a
-               // new connection at the start of a new frame.
-               remote_node->setStatus( Node::NEWCONNECTION );
-               // Print the new state information about this node.
-               remote_node->debugDump( vprDBG_CONFIG_LVL );
-               
-               // XXX: We need to fix this in the near future.
-               //ClusterDelta cluster_delta;
-               //cluster_delta.clientClusterDelta(requesting_node->getSockStream());
-            }
-            else
-            {
-               vprDEBUG( gadgetDBG_NET_MGR,vprDBG_STATE_LVL )
-                  << clrOutBOLD( clrMAGENTA,"[Acceptor]" )
-                  << " Delete unused client sock."
-                  << std::endl << vprDEBUG_FLUSH;
- 
-               remote_node->setSockStream( NULL );
-               delete client_sock;
-            }
+               remote_node->send( temp );
+               remote_node->setSockStream( old_stream );
 
-            // We need to create a new SocketStream since the to
-            // hold the value of the next recieved socketstream since
-            // the old one is now being used by the new Node
-            client_sock = new vpr::SocketStream;
+               if ( temp->getAck() )
+               {
+                  vprDEBUG( gadgetDBG_NET_MGR,vprDBG_STATE_LVL )
+                     << clrOutBOLD( clrMAGENTA,"[Acceptor]" )
+                     << " Set new Node as a NEWCONNECTION."
+                     << std::endl << vprDEBUG_FLUSH;
+
+                  remote_node->setSockStream( client_sock );
+                  
+                  // Since we have just recieved a new connection,
+                  // set the connected status as so. We are not
+                  // in a fully connected state until the begining
+                  // of the next frame in Acceptor::updateNewConnetions()
+                  // this is becuase we only want to start using a
+                  // new connection at the start of a new frame.
+                  remote_node->setStatus( Node::NEWCONNECTION );
+                  // Print the new state information about this node.
+                  remote_node->debugDump( vprDBG_CONFIG_LVL );
+                  
+                  // XXX: We need to fix this in the near future.
+                  //ClusterDelta cluster_delta;
+                  //cluster_delta.clientClusterDelta(requesting_node->getSockStream());
+               }
+               else
+               {
+                  vprDEBUG( gadgetDBG_NET_MGR,vprDBG_STATE_LVL )
+                     << clrOutBOLD( clrMAGENTA,"[Acceptor]" )
+                     << " Delete unused client sock."
+                     << std::endl << vprDEBUG_FLUSH;
+                  
+                  client_sock->close();
+                  remote_node->setSockStream( NULL );
+                  delete client_sock;
+               }
+
+               // We need to create a new SocketStream since the to
+               // hold the value of the next recieved socketstream since
+               // the old one is now being used by the new Node
+               client_sock = new vpr::SocketStream;
+            }
          }
          else if ( status == vpr::ReturnStatus::Timeout )
          {
