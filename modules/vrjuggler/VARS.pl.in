@@ -45,6 +45,7 @@
 # Compiler information.
 $VARS{'APP_CC'}           = '@APP_CC@';
 $VARS{'APP_CXX'}          = '@APP_CXX@';
+$VARS{'APP_CXX_PLUGIN'}   = '@APP_CXX_PLUGIN@';
 $VARS{'APP_CFLAGS'}       = '@APP_CFLAGS@';
 $VARS{'APP_CXXFLAGS'}     = '@APP_CXXFLAGS@';
 $VARS{'APP_DEBUG_CFLAGS'} = '@APP_DEBUG_CFLAGS@';

@@ -41,14 +41,13 @@ DZR_BASE_DIR?=		$(VJ_BASE_DIR)/share/Doozer
 CC=			@APP_CC@
 CXX=			@APP_CXX@
 LD=			@APP_LINK@
+CXX_PLUGIN=		@APP_CXX_PLUGIN@
 
-# One of these must be uncommented.
-DEBUG_APP?=             TRUE
-#OPTIM_APP?=            TRUE
+# Set to either 'dbg' or 'opt'.  We default to 'dbg'.
+BUILD_TYPE?=		dbg
 
 EXTRA_CFLAGS+=		@APP_CFLAGS@
-EXTRA_CXXFLAGS+=	@APP_CXXFLAGS@
-EXTRA_DEFS+=		@APP_DEFS@
+EXTRA_CXXFLAGS+=	@APP_CXXFLAGS@ @APP_DEFS@
 #EXTRA_INCLUDES+=		@APP_INCLUDES@
 
 EXTRA_DEBUG_FLAGS+=	@APP_DEBUG_CFLAGS@
@@ -66,3 +65,27 @@ EXTRA_LIBS+=		@APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.mk
+
+ifeq ($(HOSTTYPE), Win32)
+PLUGIN_DEFS=		-DVRJ_APP_PLUGIN="extern \"C\" _declspec(dllexport)"
+else
+PLUGIN_DEFS=		-DVRJ_APP_PLUGIN="extern \"C\""
+endif
+
+ifdef BUILD_PLUGIN
+EXTRA_CFLAGS+=		-DBUILD_AS_VRJ_PLUGIN $(PLUGIN_DEFS)
+EXTRA_CXXFLAGS+=	-DBUILD_AS_VRJ_PLUGIN $(PLUGIN_DEFS)
+endif
+
+ifeq ($(BUILD_TYPE), dbg)
+PLUGIN_TYPE_SUFFIX=	_d
+endif
+
+PLUGIN_NAME=		$(APP_NAME)$(PLUGIN_TYPE_SUFFIX)$(OS_SHLIB_EXT)
+
+$(PLUGIN_NAME): $(OBJS)
+	$(CXX_PLUGIN) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+
+plugin:
+	$(MAKE) BUILD_PLUGIN=1 $(OBJS)
+	$(MAKE) BUILD_PLUGIN=1 $(PLUGIN_NAME)
