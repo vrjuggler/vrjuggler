@@ -232,6 +232,14 @@ public:
       }
       mCondVar.release();
 
+      mCondVar.acquire();
+      {
+         while ( mState != DATA_RECEIVED ) {
+            mCondVar.wait();
+         }
+      }
+      mCondVar.release();
+
       status = client_sock.close();
       assertTestThread(status.success() &&
                        "Could not close acceptor side of client socket");
@@ -267,7 +275,7 @@ public:
 
       status = connector.connect(con_sock, remote_addr,
                                  vpr::Interval(5, vpr::Interval::Sec));
-      assertTestThread(status.success() && "Connector can't connect");
+      assertTestThread(! status.failure() && "Connector can't connect");
 
       assertTestThread(con_sock.getNonBlocking() &&
                        "Connector should be non-blocking");
@@ -281,13 +289,32 @@ public:
       mCondVar.release();
 
       status = con_sock.recv(data, mMessageLen, bytes_read);
-      assertTestThread(bytes_read == mMessageLen &&
-                       "Connector received message of wrong size");
 
-      // Make sure we got all the data, then close.
-      while ( con_sock.isReadBlocked() ) {
-         vpr::System::usleep(10);
+      if ( status == vpr::ReturnStatus::WouldBlock )
+      {
+         // Make sure we got all the data, then close.
+         while ( con_sock.isReadBlocked() ) {
+            vpr::System::usleep(10);
+            vprDEBUG(vprDBG_ALL, 0) << "Connector waiting for data\n"
+                                    << vprDEBUG_FLUSH;
+         }
       }
+      else if ( status.success() )
+      {
+         assertTestThread(bytes_read == mMessageLen &&
+                          "Connector received message of wrong size");
+      }
+      else
+      {
+         assertTestThread(false && "Connector could not receive message");
+      }
+
+      mCondVar.acquire();
+      {
+         mState = DATA_RECEIVED;
+         mCondVar.signal();
+      }
+      mCondVar.release();
 
       con_sock.close();
    }
@@ -441,6 +468,7 @@ protected:
       NOT_READY,
       CONNECTOR_CLOSED,
       DATA_SENT,
+      DATA_RECEIVED,
       DONE_READING
    };
 
