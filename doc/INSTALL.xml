@@ -58,13 +58,13 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       <para>Getting the source code takes a few steps. You have to first download or check out the Juggler Project source code and some external packages such as GMTL, CppDOM, Boost, and possibly NSPR. The steps are listed in the following subsections. The current list of <emphasis>required</emphasis> software packages is as follows:</para>
       <itemizedlist>
          <listitem>
-            <para>GMTL (<ulink url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>): A generic math library that makes use of C++ templates and STL paradigms</para>
+            <para>GMTL (<ulink url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>): A generic math library that makes use of C++ templates and STL paradigms.</para>
          </listitem>
          <listitem>
-            <para>CppDOM (<ulink url="http://www.sourceforge.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>): A lightweight, easy-to-use XML parser written in C++</para>
+            <para>CppDOM (<ulink url="http://www.sourceforge.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>): A lightweight, easy-to-use XML parser written in C++.</para>
          </listitem>
          <listitem>
-            <para>Boost (<ulink url="http://www.boost.org/">http://www.boost.org/</ulink>): A C++ library providing many powerful tools</para>
+            <para>Boost (<ulink url="http://www.boost.org/">http://www.boost.org/</ulink>): A C++ library providing many powerful tools.</para>
          </listitem>
          <listitem>
             <para>Doozer++ (<ulink url="http://www.sf.net/projects/doozer/">http://www.sf.net/projects/doozer/</ulink>): A foundation the development of complex build systems using Autoconf and GNU make. This is the basis for the entire VR Juggler build system.</para>
@@ -76,19 +76,22 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       <para>The following lists <emphasis>semi-optional</emphasis> packages:</para>
       <itemizedlist>
          <listitem>
-            <para>NSPR (<ulink url="http://www.mozilla.org/projects/nspr/">http://www.mozilla.org/projects/nspr/</ulink>): The Netscape Portable Runtime, which can be used by VPR for threading and sockets (required on Win32)</para>
+            <para>NSPR (<ulink url="http://www.mozilla.org/projects/nspr/">http://www.mozilla.org/projects/nspr/</ulink>): The Netscape Portable Runtime, which can be used by VPR for threading and sockets (required on Win32, Solaris, and Mac OS X).</para>
          </listitem>
          <listitem>
-            <para>JDOM (<ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink>): An XML parser for Java, needed for the Tweek Java GUI and for the VR Juggler configuration editor VRJConfig</para>
+            <para>Java Developer Kit (<ulink url="http://java.sun.com/">http://java.sun.com/</ulink>): The JDK is used to compile all the Java code used in the Juggler Project. Without it, none of the Java code can be built. We require version 1.3 or newer. The Java Standard Edition can be downloaded from <ulink url="http://java.sun.com/j2se/">http://java.sun.com/j2se/</ulink>.</para>
          </listitem>
          <listitem>
-            <para>OpenORB (<ulink url="http://www.jdom.org/">http://openorb.sourceforge.net/</ulink>): A pure Java implementation of CORBA 2.3, required for the Tweek Java GUI</para>
+            <para>JDOM (<ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink>): An XML parser for Java, needed for the Tweek Java GUI and for the VR Juggler configuration editor VRJConfig.</para>
          </listitem>
          <listitem>
-            <para>omniORB (<ulink url="http://www.jdom.org/">http://omniorb.sourceforge.net/</ulink>): A C++ implementation of CORBA 2.3, required for the Tweek C++ API</para>
+            <para>OpenORB (<ulink url="http://www.jdom.org/">http://openorb.sourceforge.net/</ulink>): A pure Java implementation of CORBA 2.3, required for the Tweek Java GUI.</para>
+         </listitem>
+         <listitem>
+            <para>omniORB (<ulink url="http://www.jdom.org/">http://omniorb.sourceforge.net/</ulink>): A C++ implementation of CORBA 2.3, required for the Tweek C++ API.</para>
          </listitem>
       </itemizedlist>
-      <para>The following describes how to get all of the above except JDOM, OpenORB, omniORB, and NSPR. These must be downloaded separately.</para>
+      <para>The following describes how to get all of the above except JDK, JDOM, OpenORB, omniORB, and NSPR. These must be downloaded separately.</para>
       <section>
          <title>How to get the Juggler Suite and external package dependencies from CVS</title>
          <para>You can optionally get the Juggler Project as a source code tarball from the website (<ulink url="http://www.vrjuggler.org/">http://www.vrjuggler.org/</ulink>) or you can follow these steps to get the code from our CVS repository.</para>
@@ -160,6 +163,10 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
          <section>
             <title>Netscape Portable Runtime (NSPR)</title>
             <para>Our operating system abstraction, VPR, can make use of NSPR for operating system primitives. On some platforms (IRIX, FreeBSD, Linux), the use of NSPR is strictly optional. On others (Win32, Mac OS X, and Solaris), it is required. Based on your local system you should decide whether you need NSPR. Binary versions of NSPR can be downloaded from <ulink url="ftp://ftp.mozilla.org/pub/nspr/releases/">ftp://ftp.mozilla.org/pub/nspr/releases/</ulink>. At this time, we recommend the use of version 4.2 or newer.</para>
+         </section>
+         <section>
+            <title>Java Developer Kit (JDK)</title>
+            <para>We make use of the Java programming language in addition to C++. Java is used exclusively for GUIs such as Tweek and VRJConfig (which is a JavaBean that is loaded into Tweek). To compile the Java code, a JDK is necessary. We currently require version 1.3 or newer. The Java Standard Edition can be downloaded from <ulink url="http://java.sun.com/j2se/">http://java.sun.com/j2se/</ulink>. More information can be found at <ulink url="http://java.sun.com/">http://java.sun.com/</ulink>.</para>
          </section>
          <section>
             <title>JDOM</title>
