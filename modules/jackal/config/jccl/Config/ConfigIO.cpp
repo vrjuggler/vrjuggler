@@ -37,6 +37,7 @@
 #include <jccl/Config/StandardConfigIOHandler.h>
 #include <jccl/Config/XMLConfigIOHandler.h>
 #include <jccl/Config/ParseUtil.h>
+#include <vpr/Util/Assert.h>
 
 namespace jccl {
    
