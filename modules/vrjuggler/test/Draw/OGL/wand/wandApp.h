@@ -134,6 +134,8 @@ public:
                  << " 4:" << mButton4->getData()
                  << " 5:" << mButton5->getData() << std::endl;
    }
+   
+   virtual void bufferPreDraw();
 
    // Function to draw the scene.  Put OpenGL draw functions here.
    //

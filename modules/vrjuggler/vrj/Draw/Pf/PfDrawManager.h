@@ -117,13 +117,6 @@ public:
 
    //: Initialize the drawing API (if not already running)
    //  should call pfInit()
-   virtual void initAPI();
-
-   //: Initialize the drawing state for the API based on
-   //: the data in the display manager.
-   //
-   //! PRE: API is running (initAPI has been called)
-   //! POST: API is ready do draw
    //
    // Configure process model
    // Configure multi-pipe model
@@ -131,7 +124,7 @@ public:
    // Sets up channels and pWins.
    //
    //!NOTE: Fork happens here
-   virtual void initDrawing();
+   virtual void initAPI();
 
    // Initialize the parameters of the master channel
    void initChanGroupAttribs(pfChannel* masterChan);
