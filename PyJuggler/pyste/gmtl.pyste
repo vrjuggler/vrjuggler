@@ -147,8 +147,18 @@ Function('gmtl::isEquiv', 'gmtl-functions.h')
 
 # gmtl::Point<> ===============================================================
 Point = Template('gmtl::Point', 'gmtl/Point.h')
+
 Point3f = Point('float 3')
 rename(Point3f, 'Point3f')
+
+Point3i = Point('int 3')
+rename(Point3i, 'Point3i')
+
+Point2f = Point('float 2')
+rename(Point2f, 'Point2f')
+
+Point2i = Point('int 2')
+rename(Point2i, 'Point2i')
 # =============================================================== gmtl::Point<>
 
 # General operations.
