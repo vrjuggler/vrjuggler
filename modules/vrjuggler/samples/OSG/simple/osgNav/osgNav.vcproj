@@ -46,7 +46,7 @@
 				OutputFile="$(OutDir)/osgNav.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/osgNav.pdb"
 				SubSystem="1"
@@ -106,7 +106,7 @@
 				OutputFile="$(OutDir)/osgNav.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
 				ProgramDatabaseFile="$(OutDir)/osgNav.pdb"
 				SubSystem="1"
 				TargetMachine="1"/>
