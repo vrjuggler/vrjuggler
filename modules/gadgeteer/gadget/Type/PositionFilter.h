@@ -40,12 +40,14 @@
 namespace gadget
 {
 
-//: Base class for all position filters in VR Juggler
+/** Base class for all position filters in Gadgeteer. */
 class PositionFilter
 {
 public:
-   // Get the position to use
-   // ARGS: newPos - The new postion this frame of the physical device
+   /**
+    * Gets the position to use.
+    * @param newPos The new postion this frame of the physical device.
+    */
    virtual gmtl::Matrix44f getPos(const gmtl::Matrix44f newPos) = 0;
 
 };

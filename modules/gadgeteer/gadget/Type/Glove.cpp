@@ -93,14 +93,16 @@ GloveData::GloveData(const GloveData& data)
    }
 }
 
-//: Calulate all the xform matrices
-// This is calculated based upon the angles in the data structure
-// This code will be very complex, so I will HACK it for now.
-// XXX: This hack should be fixed soon though
-//
-// I am just rotating around single axis for fingers, not taking abduct into account
-// The thumb is a complete fudge.
-// Wrist is not being done at all
+/**
+ * Calulates all the xform matrices
+ * This is calculated based upon the angles in the data structure
+ * This code will be very complex, so I will HACK it for now.
+ * XXX: This hack should be fixed soon though
+ *
+ * I am just rotating around single axis for fingers, not taking abduct into account
+ * The thumb is a complete fudge.
+ * Wrist is not being done at all
+ */
 int GloveData::calcXforms()
 {
    gmtl::Vec3f xAxis(1.0f, 0.0f, 0.0f);
@@ -212,9 +214,11 @@ float Glove::getGloveAngle(GloveData::GloveComponent component,
    return 0;
 }
 
-//: This returns a vector ponting "out" of the component
-// Can be used for selection, etc.
-// Use getGlovePos to get the transformation matrix
+/**
+ * Returns a vector ponting "out" of the component.
+ * Can be used for selection, etc.
+ * Use getGlovePos to get the transformation matrix.
+ */
 gmtl::Vec3f Glove::getGloveVector(GloveData::GloveComponent component, int devNum)
 {
    // Take a normalized ray up default (yAxis), and transform by finger tip rot matrix

@@ -44,10 +44,9 @@
 namespace gadget
 {
 
-//: Abstract base class for all glove gesture recognition
-//
-//
-//!PUBLIC_API:
+/**
+ * Abstract base class for all glove gesture recognition.
+ */
 class GloveGesture : public Gesture
 {
 public:
@@ -59,49 +58,59 @@ public:
    { return Gesture::config(c);}
 
 public:
-   //: Get a gesture name
-   //! RETURNS: Name of gesture with the given id (gestureId)
-   // NOTE: if gestureId = -1, returns name of current gesture
+   /**
+    * Gets a gesture name.
+    * @return Name of gesture with the given id (gestureId).
+    * @note if gestureId = -1, returns name of current gesture.
+    */
    virtual std::string getGestureString(int gestureId = -1);
 
-   //: Create a new gesture
-   //! ARGS: gestureName - Name of the new gesture
-   //! RETURNS: int id of the new gesture
+   /**
+    * Creates a new gesture.
+    * @param gestureName  Name of the new gesture.
+    * @return int id of the new gesture.
+    */
    virtual int createGesture(std::string gestureName);
 
-   //: Load the header of a glove data file.
-   // This is both for the samples and for the trained files.
-   //
-   // The header format is:
-   //   -Comments -- # starting
-   //   - <num gestures>
-   //   -Gesture names
-   //   -Gesture samples
-   // infile is a file that is already open and ready for reading.
-   //
-   //!POST: After running, this routines will leave the file pointer immedately after
-   // the header.
-   //!POST: mGestureNames & mGestureExamples will be filled with correct data
+   /**
+    * Loads the header of a glove data file.
+    * This is both for the samples and for the trained files.
+    *
+    * The header format is:
+    *   -Comments -- # starting
+    *   - <num gestures>
+    *   -Gesture names
+    *   -Gesture samples
+    * infile is a file that is already open and ready for reading.
+    *
+    * @post After running, this routines will leave the file pointer
+    *       immedately after the header.
+    * @post mGestureNames & mGestureExamples will be filled with correct data.
+    */
    virtual void loadFileHeader(std::ifstream& infile);
 
-   //: Save a file header
-   //! NOTE: The client of this routine may add their own initial lines to the
-   //+ header as long as they remove them before calling loadFileHeader.
+   /**
+    * Saves a file header.
+    * @note The client of this routine may add their own initial lines to the
+    *       header as long as they remove them before calling loadFileHeader.
+    */
    virtual void saveFileHeader(std::ofstream& outFile);
 
-   //: Return the identifier of the string gesture.
-   //! RETURNS: -1 if not found
+   /**
+    * Returns the identifier of the string gesture.
+    * @return -1 if not found.
+    */
    virtual int getGestureIndex(std::string gestureName);
 
-   //: Return the number of gestures in system
+   /** Return the number of gestures in system. */
    virtual int getNumGestures()
    { return mGestureNames.size(); }
 
 protected:
    // mGestureNames and mGestureExamples MUST always be same size
-   std::vector<std::string> mGestureNames;      //: List of all gesture names
-   std::vector<GloveData> mGestureExamples;   //: Examples of all gestures
-   GloveProxy*            mGloveProxy;        //: Proxy to the glove
+   std::vector<std::string> mGestureNames;    /**<  List of all gesture names */
+   std::vector<GloveData> mGestureExamples;   /**< Examples of all gestures */
+   GloveProxy*            mGloveProxy;        /**< Proxy to the glove */
 };
 
 };

@@ -58,7 +58,7 @@ namespace gadget
 *  retreiving the digital data, similar to the addition for Position and
 *  Analog.
 *
-* See also: Input
+* @see Input
 */
 class Digital
 {
@@ -66,8 +66,10 @@ public:
    typedef gadget::SampleBuffer<DigitalData> SampleBuffer_t;
 
 public:
-   //: Enum for the state of the digital buttons
-   // Used in DigitalProxy
+   /**
+    * Enum for the state of the digital buttons.
+    * Used in DigitalProxy.
+    */
    enum State
    {
       OFF=0, ON=1, TOGGLE_ON=2, TOGGLE_OFF=3
@@ -90,11 +92,14 @@ public:
       return true;
    }
 
-   //: Get the digital data for the given devNum
-   //  Returns digital 0 or 1, if devNum makes sense.<BR>
-   //  Returns -1 if function fails or if devNum is out of range.<BR>
-   //  NOTE: If devNum is out of range, function will fail, possibly issueing
-   //  an error to a log or console - but will not ASSERT.<BR>
+   /**
+    * Gets the digital data for the given devNum.
+    *
+    * @return Digital 0 or 1, if devNum makes sense.
+    *         -1 is returned if function fails or if devNum is out of range.
+    * @note If devNum is out of range, function will fail, possibly issuing
+    *       an error to a log or console - but will not ASSERT.
+    */
    const DigitalData getDigitalData(int devNum = 0)
    {
       SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
@@ -125,7 +130,7 @@ public:
 
 
 protected:
-   SampleBuffer_t    mDigitalSamples;   /**< Position samples */
+   SampleBuffer_t    mDigitalSamples; /**< Position samples */
    DigitalData       mDefaultValue;   /**< Default analog value to return */
 };
 

@@ -96,8 +96,10 @@ DeviceConstructor<DEV>::DeviceConstructor()
 }
 
 
-// Register all the devices that I know about
-//!NOTE: This should really be moved to dynamic library loading code.
+/**
+ * Registers all the devices that I know about.
+ * @note This should really be moved to dynamic library loading code.
+ */
 void DeviceFactory::hackLoadKnownDevices()
 {
    // NOTE: These will all given unused variable errors in compiling.
@@ -212,11 +214,9 @@ bool DeviceFactory::recognizeDevice(jccl::ConfigChunkPtr chunk)
       return true;
 }
 
-//: Load the specified device
-//!PRE: recognizeDevice(chunk) == true
-//!ARGS: chunk - specification of the device to load
-//!RETURNS: null - Device failed to load
-//+         other - Pointer to the loaded device
+/**
+ * Loads the specified device.
+ */
 Input* DeviceFactory::loadDevice(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(recognizeDevice(chunk));

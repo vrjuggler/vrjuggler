@@ -40,8 +40,9 @@
 namespace gadget
 {
 
-//: Proxy class to Keyboard based devices.
-//!PUBLIC_API:
+/**
+ * Proxy class to Keyboard based devices.
+ */
 class GADGET_CLASS_API KeyboardProxy : public TypedProxy<Keyboard>
 {
 public:
@@ -56,9 +57,11 @@ public:
          return mTypedDevice;
    }
 
-   //: Determine if the modifier key is pressed exclusively.
-   //! PRE: modKey is a valid modifier identifier
-   //! RETURNS: true - modKey is the only modifier pressed
+   /**
+    * Determines if the modifier key is pressed exclusively.
+    * @pre modKey is a valid modifier identifier
+    * @return true if modKey is the only modifier pressed
+    */
    bool modifierOnly(int modKey)
    {
       if(mStupified)

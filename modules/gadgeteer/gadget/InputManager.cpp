@@ -95,7 +95,7 @@ InputManager::~InputManager()
 }
 
 
-//: Add the given config chunk to the input system
+/** Adds the given config chunk to the input system. */
 bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
    vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
@@ -146,12 +146,9 @@ bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
 }
 
 
-//: Remove the chunk from the current configuration
-//! PRE: configCanHandle(chunk) == true
-//! POST: (chunk is proxy) ==> (returns == false)
-//+       (chunk is device) ==> (devices is removed && proxies are stupified)
-//+       (chunk is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
-//!RETURNS: success
+/**
+ * Removes the chunk from the current configuration.
+ */
 bool InputManager::configRemove(jccl::ConfigChunkPtr chunk)
 {
    vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
@@ -320,8 +317,9 @@ bool InputManager::configureProxy(jccl::ConfigChunkPtr chunk)
 }
 
 
-//: Remove the device associated with the given chunk
-//!RETURNS: true - Device was removed
+/**
+ * Removes the device associated with the given chunk.
+ */
 bool InputManager::removeDevice(jccl::ConfigChunkPtr chunk)
 {
    char* dev_name = chunk->getProperty("name").cstring();      // Get the name of the device
@@ -511,10 +509,12 @@ bool recognizeRemoteConnectionConfig(jccl::ConfigChunkPtr chunk)
       return (((std::string)chunk->getType()) == std::string("RemoteInputHost"));
 }
 
-// Configures proxy aliases in config database
-// PRE: none
-// POST: (alias not already in list) ==> Alias is added to proxyAlias list
-//+      (alias was already is list) ==> Alias is set to point to the new proxy instead
+/**
+ * Configures proxy aliases in config database.
+ * @pre none
+ * @post (alias not already in list) ==> Alias is added to proxyAlias list<br>
+ *       (alias was already is list) ==> Alias is set to point to the new proxy instead
+ */
 bool InputManager::configureProxyAlias(jccl::ConfigChunkPtr chunk)
 {
    vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
@@ -535,10 +535,12 @@ bool InputManager::configureProxyAlias(jccl::ConfigChunkPtr chunk)
    return true;
 }
 
-// Remove a proxy aliases in config database
-// PRE: none
-// POST: (alias not in list) ==> returns = false
-//+      (alias is in list) ==> (alias is removed from list) returns true
+/**
+ * Removes a proxy aliases in config database.
+ * @pre none
+ * @post (alias not in list) ==> returns = false<br>
+ *       (alias is in list) ==> (alias is removed from list) returns true
+ */
 bool InputManager::removeProxyAlias(jccl::ConfigChunkPtr chunk)
 {
    vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
@@ -572,9 +574,11 @@ bool InputManager::removeProxyAlias(jccl::ConfigChunkPtr chunk)
 }
 
 
-//: Adds a Proxy alias to the alias list
-// PRE: none - BUT: Preferable if proxyName is for a valid proxy
-// POST: Alias list has alias str refering to proxyName
+/**
+ * Adds a Proxy alias to the alias list.
+ * @pre none - BUT: Preferable if proxyName is for a valid proxy.
+ * @post Alias list has alias str refering to proxyName.
+ */
 void InputManager::addProxyAlias(std::string alias_name, std::string proxy_name)
 {
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
@@ -587,8 +591,9 @@ void InputManager::addProxyAlias(std::string alias_name, std::string proxy_name)
 }
 
 
-//: Add a proxy to the proxy table
-//! RETURN: true - added correctly
+/**
+ * Adds a proxy to the proxy table.
+ */
 bool InputManager::addProxy(std::string proxyName, Proxy* proxy)
 {
    // Check if already in the table
@@ -604,10 +609,9 @@ bool InputManager::addProxy(std::string proxyName, Proxy* proxy)
    return true;
 }
 
-//: Gets index to the proxy/alias named by str
-// PRE: none
-// POST: none
-// RET: NULL - Not found
+/**
+ * Gets index to the proxy/alias named by str.
+ */
 Proxy* InputManager::getProxy(std::string proxyName)
 {
    // Is it in table

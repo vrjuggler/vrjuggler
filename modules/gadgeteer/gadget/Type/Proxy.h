@@ -48,10 +48,10 @@ namespace gadget
 //class Input;
 //class Kernel;
 
-//: Base class for all input proxies
-// TODO rename to InputProxy
-//
-//!PUBLIC_API:
+/**
+ * Base class for all input proxies.
+ * @todo rename to InputProxy
+ */
 class GADGET_CLASS_API Proxy
 {
 public:
@@ -60,29 +60,36 @@ public:
 
    virtual ~Proxy() {;}
 
-   //: Configure the proxy
-   //! POST:
-   //+  Proxy is configured (it is not registered yet though)
-   //! RETURNS: success
+   /**
+    * Configures the proxy.
+    * @post Proxy is configured (it is not registered yet though).
+    * @return success.
+    */
    virtual bool config(jccl::ConfigChunkPtr chunk)
    {
       mName = (std::string)chunk->getProperty("name");
       return true;
    }
 
-   //: Refresh the proxy
-   // Checks for the device that it is supposed to point at
+   /**
+    * Refreshes the proxy.
+    * Checks for the device that it is supposed to point at.
+    */
    virtual bool refresh() = 0;
 
    virtual void updateData()
    {;}
 
-   //: Return a pointer to the base class of the devices being proxied
-   //! RETURN: NULL - No device proxied
+   /**
+    * Return a pointer to the base class of the devices being proxied
+    * @return NULL if no device is proxied.
+    */
    virtual Input* getProxiedInputDevice() = 0;
 
-   //: Returns the string rep of the chunk type used to config this device
-   // Used by input manager to find chunks that construct devices
+   /**
+    * Returns the string rep of the chunk type used to config this device.
+    * Used by the Input Manager to find chunks that construct devices.
+    */
    static std::string getChunkType() { return "Undefined"; }
 
    std::string getName()
@@ -92,8 +99,8 @@ public:
    { mStupified = newState; }
 
 protected:
-   std::string mName;         // The name of the proxy
-   bool        mStupified;    // Is the proxy current stupified (returns default data)
+   std::string mName;         /**< The name of the proxy */
+   bool        mStupified;    /**< Is the proxy current stupified (returns default data) */
 };
 
 
@@ -104,10 +111,13 @@ public:
    TypedProxy() : mDeviceName("Unknown"), mTypedDevice(NULL)
    {;}
 
-   //: Set the proxy to point to the given type specific device
-   //! PRE: devPtr must be a valid device of type DEV_TYPE
-   //! POST: The proxy now references the analog device
-   //! ARGS: anaPtr - Pointer to the device
+   /**
+    * Sets the proxy to point to the given type specific device.
+    *
+    * @pre devPtr must be a valid device of type DEV_TYPE.
+    * @post The proxy now references the analog device.
+    * @param anaPtr Pointer to the device.
+    */
    virtual void set(DEV_TYPE* devPtr)
    {
       mTypedDevice = devPtr;
@@ -152,8 +162,8 @@ public:
    }
 
 protected:
-   std::string    mDeviceName;      // Name of the device to link up with
-   DEV_TYPE*      mTypedDevice;  // The device (type specific pointer)
+   std::string    mDeviceName;   /**< Name of the device to link up with */
+   DEV_TYPE*      mTypedDevice;  /**< The device (type specific pointer) */
 };
 
 } // end namespace

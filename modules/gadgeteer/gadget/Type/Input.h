@@ -95,7 +95,6 @@ const unsigned int DEVICE_GROW2    = 128;
 namespace gadget
 {
 
-//-----------------------------------------------------------------------------
 /** Input is the abstract base class that all input objects derive from.
 *
 *  Input is the base class for all Input Devices, all the devices are
@@ -211,9 +210,9 @@ protected:
    char*          mPort;
    std::string    mInstName;
    int            mPortId;
-   vpr::Thread*   mThread;       //: The thread being used by the driver
-   int            mActive;       //: Is the driver active
-   int            mBaudRate;     //: Baud rate of the device (if it is serial device)
+   vpr::Thread*   mThread;       /**< The thread being used by the driver */
+   int            mActive;       /**< Is the driver active? */
+   int            mBaudRate;     /**< Baud rate of the device (if it is serial device) */
 
    Input (const Input& o) {;}
    void operator= (const Input& o) {;}
