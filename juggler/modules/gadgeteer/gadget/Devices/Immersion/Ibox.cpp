@@ -116,7 +116,7 @@ int vjIBox::Sample()
      struct timeval tv;
      // double start_time, stop_time;
      ibox_result result;
-     int tmp;
+     //int tmp;
      static int c = 0;
 
      result = hci_check_packet(&thingie);

@@ -70,7 +70,7 @@ public:
 // Description:
 //
 //-------------------------------------------------------------------------
-class vjGlove : public vjInput
+class vjGlove : virtual public vjInput
 {
 public:
    vjGlove();

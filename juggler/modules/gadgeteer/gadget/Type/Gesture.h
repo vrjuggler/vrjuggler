@@ -4,6 +4,7 @@
 
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
+#include <mstring.h>
 
 
 //: Base Juggler Gesture interface class

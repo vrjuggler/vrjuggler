@@ -154,7 +154,7 @@ CyberGloveBasic::vt_serial_open(char *devname, int baudrate)
 {
   struct termio temp_termio;
   int portfd;
-  Boolean first_open = FALSE;
+  //Boolean first_open = FALSE;
 
   if (num_open_ports+1 > MAX_SERIAL_PORT)
   {

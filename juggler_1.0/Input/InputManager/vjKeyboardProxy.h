@@ -26,7 +26,7 @@ public:
    bool modifierOnly(int modKey)
    { return mKeyboard->modifierOnly(modKey); }
 
-   int keyPressed(int ret_val, int keyId)
+   int keyPressed(int keyId)
    { return mKeyboard->keyPressed(keyId); }
 
 private:

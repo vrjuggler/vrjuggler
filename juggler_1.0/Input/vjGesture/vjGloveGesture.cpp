@@ -20,8 +20,10 @@ string vjGloveGesture::getGestureString(int gestureId)
 int vjGloveGesture::createGesture(string gestureName)
 {
    mGestureNames.push_back(gestureName);        // Push it back
-   mGestureExamples.push_back(vector<float>());  // Push back an empty vector of floats
+   mGestureExamples.push_back(vjGloveData());  // Push back an empty vector of floats
    vjASSERT(mGestureNames.size() == mGestureExamples.size());
+
+   return (mGestureExamples.size() -1);
 }
 
 //: Load the header of a glove data file.
@@ -83,7 +85,10 @@ void vjGloveGesture::saveFileHeader(ofstream& outFile)
       outFile << mGestureNames[i] << endl;
 
    for(i=0;i<mGestureExamples.size();i++)
-      outFile << mGestureExamples[i] << endl;
+   {
+      mGestureExamples[i].outputAngles(outFile);
+      outFile << endl;
+   }
 }
 
 //: Return the gesture identifier of the gesture.
@@ -91,7 +96,7 @@ int vjGloveGesture::getGestureIndex(string gestureName)
 {
    int i = 0;
    int found = -1;
-   while((found <0) && (i<mGestureNames.size())
+   while((found <0) && (i<mGestureNames.size()))
    {
       if(mGestureNames[i] == gestureName)
          found = i;

@@ -4,6 +4,10 @@
 
 #include <vjConfig.h>
 #include <Input/vjGesture/vjGesture.h>
+#include <Input/vjGlove/vjGlove.h>
+#include <Input/InputManager/vjGloveProxy.h>
+#include <Config/vjConfigChunk.h>
+#include <mstring.h>
 
 //: Abstract base class for all glove gesture recognition
 //
@@ -11,10 +15,10 @@
 class vjGloveGesture : public vjGesture
 {
 public:
-   vjGesture(vjConfigChunk* c) : vjGesture(c)
+   vjGloveGesture(vjConfigChunk* c) : vjGesture(c)
    {;}
 
-   vjGesture()
+   vjGloveGesture()
    {;}
 
 public:
