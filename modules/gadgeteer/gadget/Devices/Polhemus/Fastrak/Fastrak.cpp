@@ -46,6 +46,7 @@
 
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Devices/Polhemus/Fastrak/Fastrak.h>
+#include <vector>
 
 void initDevice(gadget::InputManager* inputMgr)
 {

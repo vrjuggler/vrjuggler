@@ -34,6 +34,7 @@
 #define _GADGET_INPUT_LOGGER_H_
 
 #include <gadget/gadgetConfig.h>
+#include <vector>
 
 #include <boost/smart_ptr.hpp>
 #include <cppdom/cppdom.h>

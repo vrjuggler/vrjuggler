@@ -35,6 +35,8 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
+#include <vector>
+
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Analog.h>

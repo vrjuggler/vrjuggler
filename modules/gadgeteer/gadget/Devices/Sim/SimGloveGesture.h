@@ -34,6 +34,7 @@
 #define _GADGET_SIM_GLOVE_GESTURE_H_
 
 #include <gadget/gadgetConfig.h>
+#include <vector>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/GloveGesture.h>

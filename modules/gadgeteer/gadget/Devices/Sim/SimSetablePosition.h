@@ -34,6 +34,7 @@
 #define _GADGET_SIM_SETABLE_POSITION_H
 
 #include <gadget/gadgetConfig.h>
+#include <vector>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>

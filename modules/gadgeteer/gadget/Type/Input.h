@@ -178,7 +178,7 @@ public:
    *  Returns the name identifying this instance of the device.
    * This is the name given to the device in it's config chunk (ie. "MyFlockOfBirds", "TheIbox", etc)
    */
-   const std::string getInstanceName()
+   std::string getInstanceName()
    {
       if (mInstName.empty())
       {

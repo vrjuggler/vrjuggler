@@ -55,6 +55,8 @@
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
 #include <gmtl/Vec.h>
+#include <vector>
+
 //#include <Inventor/SbLinear.h> // For the vec classes
 
 #ifndef TRUE

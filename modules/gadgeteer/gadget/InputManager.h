@@ -48,6 +48,7 @@
 #include <jccl/RTRC/ConfigChunkHandler.h>
 #include <gadget/InputLoggerPtr.h>
 #include <map>
+#include <vector>
 
 #include <boost/smart_ptr.hpp>
 
@@ -189,10 +190,10 @@ public:
 
    /**
     * Adds a proxy to the proxy table.
-    *
+    * @param proxy - The proxy to add.  It is added with name: proxy->getName()
     * @return true if the proxy was added correctly.
     */
-   bool addProxy(std::string proxyName, Proxy* proxy);
+   bool addProxy(Proxy* proxy);
 
    /**
     * Gets a proxy for the given proxy name (or alias).

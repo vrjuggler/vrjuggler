@@ -34,12 +34,11 @@
 #define _GADGET_DIGITAL_H_
 
 #include <gadget/gadgetConfig.h>
+#include <vector>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <gadget/Type/DigitalData.h>
 #include <gadget/Type/SampleBuffer.h>
 #include <vpr/Util/Debug.h>
-//#include <vpr/IO/ObjectReader.h>
-//#include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/SerializableObject.h>
 #include <gadget/Util/DeviceSerializationTokens.h>
 

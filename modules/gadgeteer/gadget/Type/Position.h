@@ -41,6 +41,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <typeinfo>
+#include <vector>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/PositionData.h>
 #include <gadget/Type/SampleBuffer.h>

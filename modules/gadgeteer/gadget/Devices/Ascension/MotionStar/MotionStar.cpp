@@ -43,6 +43,8 @@
 
 #include <gadget/Devices/Ascension/MotionStar/MotionStar.h>
 
+#include <vector>
+
 
 void initDevice(gadget::InputManager* inputMgr)
 {

@@ -370,7 +370,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    // Tell the factory to load the proxy
    // NOTE: The config for the proxy registers it with the input manager
-   new_proxy = ProxyFactory::instance()->loadProxy(chunk);
+   new_proxy = ProxyFactory::instance()->loadProxy(chunk);   
 
    // Check for success
    if(NULL == new_proxy)
@@ -378,9 +378,10 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:") << "vjInputManager::configureProxy: Proxy construction failed:" << proxy_name.c_str() << std::endl << vprDEBUG_FLUSH;
       return false;
    }
+   vprASSERT(proxy_name == new_proxy->getName());
 
    // -- Add to proxy table
-   if(false == addProxy(proxy_name, new_proxy))
+   if(false == addProxy(new_proxy))
    {
       return false;
    }
@@ -677,18 +678,21 @@ void InputManager::addProxyAlias(std::string alias_name, std::string proxy_name)
 /**
  * Adds a proxy to the proxy table.
  */
-bool InputManager::addProxy(std::string proxyName, Proxy* proxy)
+bool InputManager::addProxy(Proxy* proxy)
 {
+   std::string proxy_name = proxy->getName();
+   vprASSERT(!proxy_name.empty() && "Tried to add proxy with empty name");
+
    // Check if already in the table
-   if(mProxyTable.end() != mProxyTable.find(proxyName))     // Found it
+   if(mProxyTable.end() != mProxyTable.find(proxy_name))     // Found it
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "Trying to add proxy: " << proxyName
+         << "Trying to add proxy: " << proxy_name
          << " but it is already in the proxy table.\n" << vprDEBUG_FLUSH;
       return false;
    }
-
-   mProxyTable[proxyName] = proxy;
+   
+   mProxyTable[proxy_name] = proxy;
    return true;
 }
 

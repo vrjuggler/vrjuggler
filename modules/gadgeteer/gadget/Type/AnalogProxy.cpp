@@ -44,6 +44,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                  std::string("----------- configuring ANALOG PROXY -----------------\n"),
                                  std::string("----------- exit: configuring analog proxy -----------\n"));
    vprASSERT(chunk->getDescToken() == "AnaProxy");
+   bool base_config = Proxy::config(chunk);
+   if(!base_config)
+      return false;
 
    m_unitNum = chunk->getProperty<int>("unit");
    mDeviceName = chunk->getProperty<std::string>("device");
