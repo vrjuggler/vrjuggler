@@ -96,7 +96,6 @@ public class JugglerWindowFrame
       int cfg_size_x = ((Integer) mElement.getProperty("size", 0)).intValue();
       int cfg_size_y = ((Integer) mElement.getProperty("size", 1)).intValue();
       Point size = resolutionToDesktop(new Point(cfg_size_x, cfg_size_y));
-      System.out.println("Setting my size to " + size);
       this.setSize(size.x, size.y);
 
       int cfg_origin_x = ((Integer) mElement.getProperty("origin", 0)).intValue();
@@ -106,7 +105,6 @@ public class JugglerWindowFrame
             cfg_size_y);
       Point origin = resolutionToDesktop(new Point(cfg_origin_x,
                                                    cfg_origin_y));
-      System.out.println("Setting my origin to " + origin);
       this.setLocation(origin.x, origin.y);
    }
 
