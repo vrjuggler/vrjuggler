@@ -57,6 +57,8 @@ namespace vpr {
 //!PUBLIC_API:
 class InetAddr {
 public:
+    static const InetAddr AnyAddr;
+
     // ------------------------------------------------------------------------
     //: Default constructor.  This initializes the memory for the encapsulated
     //+ address structure.
