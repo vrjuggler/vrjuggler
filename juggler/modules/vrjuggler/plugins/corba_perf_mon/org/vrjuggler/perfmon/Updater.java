@@ -45,7 +45,7 @@ public class Updater implements Runnable
    private PerformanceMonitorObserverImpl mObserver;
 
 
-   public Updater ( TimeSeriesCollection series, SpinnerModel model, 
+   public Updater ( TimeSeriesCollection series, SpinnerModel model,
                     PerformanceMonitorObserverImpl observer )
    {
       //Will get multiple time series based on the list that comes back
@@ -64,11 +64,17 @@ public class Updater implements Runnable
       SampleTimeMap[] value_map = mObserver.getValueMap();
       int length = Array.getLength(value_map);
       System.out.println("Received a samples list of length " + length);
+      float initialValues[] = new float[length];
+      float lastValues[] = new float[length];
+      float thisSample = 0.0f;
+
       for ( int i = 1; i < length; ++i )
       {
          System.out.println("Adding a new series for " + value_map[i].mName);
          TimeSeries s = new TimeSeries(value_map[i].mName, Millisecond.class);
          mTimeSeriesCollection.addSeries(s);
+         initialValues[i] = value_map[i].mSampleTime;
+         lastValues[i] = 1234.56f;
       }
       while ( true )
       {
@@ -83,10 +89,16 @@ public class Updater implements Runnable
 
          value_map = mObserver.getValueMap();
          length = Array.getLength(value_map);
+
          // subtract one off length to account for taking out root node
          for ( int i = 0; i < length-1; ++i )
          {
-            mTimeSeriesCollection.getSeries(i).add( new Millisecond(), value_map[i].mSampleTime );
+            thisSample = value_map[i].mSampleTime;
+            if(thisSample != initialValues[i] && thisSample != lastValues[i])
+            {
+              mTimeSeriesCollection.getSeries( i ).add( new Millisecond(), thisSample );
+            }
+            lastValues[i] = thisSample;
          }
 
          Thread.yield();
