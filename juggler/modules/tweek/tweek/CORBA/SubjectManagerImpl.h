@@ -14,16 +14,22 @@
 namespace tweek
 {
 
+class CorbaManager;
+class SubjectImpl;
+
 class SubjectManagerImpl : public POA_tweek::SubjectManager,
                            public PortableServer::RefCountServantBase,
                            public vpr::Singleton<SubjectManagerImpl>
 {
 public:
-   virtual void registerSubject(Subject_ptr subject, const char* name);
+   void registerSubject(const CorbaManager& corba_mgr,
+                        SubjectImpl* subject, const char* name);
 
    virtual Subject_ptr getSubject(const char* name);
 
 protected:
+   void registerSubject(Subject_ptr subject, const char* name);
+
    friend class vpr::Singleton<SubjectManagerImpl>;
 
    /// Default constructor.
@@ -39,7 +45,8 @@ protected:
    void operator= (const SubjectManagerImpl& sm) {;}
 
 private:
-   std::map<std::string, Subject_var> m_subjects;
+   typedef std::map<std::string, Subject_ptr> subject_map_t;
+   subject_map_t m_subjects;
    vpr::Mutex m_subjects_mutex;
 };
 
