@@ -85,6 +85,7 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
    vjDeviceConstructor<vjMotionStar>* motion_star = new vjDeviceConstructor<vjMotionStar>;
    vjDeviceConstructor<vjIBox>* ibox = new vjDeviceConstructor<vjIBox>;
+   vjDeviceConstructor<vjPinchGlove>* pinch_glove = new vjDeviceConstructor<vjPinchGlove>;
    vjDeviceConstructor<vjCyberGlove>* cyber_glove = new vjDeviceConstructor<vjCyberGlove>;
    vjDeviceConstructor<vjPinchGlove>* pinch_glove = new vjDeviceConstructor<vjPinchGlove>;
    vjDeviceConstructor<vjXWinKeyboard>* xwin_key = new vjDeviceConstructor<vjXWinKeyboard>;
