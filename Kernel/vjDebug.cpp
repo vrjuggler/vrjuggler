@@ -74,9 +74,9 @@ ostream& vjDebug::getStream(int cat, int level, bool show_thread_info, bool use_
    if(indentChange < 0)                // If decreasing indent
       indentLevel += indentChange;
 
-   //cout << "VG " << level << ": ";
+   //cout << "VJ " << level << ": ";
    if(show_thread_info)
-      cout << vjDEBUG_STREAM_LOCK << setw(6) << vjThread::self() << "  VG: ";
+      cout << vjDEBUG_STREAM_LOCK << setw(6) << vjThread::self() << "  VJ: ";
    else
       cout << vjDEBUG_STREAM_LOCK;
 
