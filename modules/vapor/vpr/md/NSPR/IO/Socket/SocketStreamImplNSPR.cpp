@@ -30,12 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vprConfig.h>
+
 #include <stdio.h>
 #include <string.h>
+
+#ifdef HAVE_STRINGS_H
 #include <strings.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <errno.h>
+#endif
+
+#include <prio.h>
+#include <prinrval.h>
 
 #include <md/NSPR/SocketStreamImpNSPR.h>
 #include <md/NSPR/NSPRHelpers.h>
@@ -112,7 +117,7 @@ SocketStreamImpNSPR::accept (SocketStreamImpNSPR& sock) {
         retval.setCode(Status::Failure);
     }
     else {
-       PRFileDesc* accept_sock(NULL);
+       PRFileDesc* accept_sock = NULL;
 
        // Accept an incoming connection request.
        vprASSERT(m_handle != NULL);
