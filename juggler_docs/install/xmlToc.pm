@@ -1,8 +1,8 @@
 package xmlToc;
-@ISA = qw(Exporter);
 
 require 5.003;
-require Exporter;
+
+use strict qw(vars);
 
 
 ##############################################################################
@@ -11,6 +11,9 @@ require Exporter;
 
 
 
+# ============================================================================
+# "Private" methods.
+# ============================================================================
 
 #####################################################
 # Helper functions for internal use (not exported)
@@ -19,58 +22,46 @@ require Exporter;
 sub outputIndent($)
 {
    my $tabs = shift;
-   my $x = 0;
-   while ($x < $tabs)
+   my $x;
+   for ( $x = 0; $x < $tabs; $x++ )
    {
-      $x = $x + 1;
       print "   "; # 3 spaces == one tab
    }
 }
 
-# current indentation level
-my $indent_level=0;
-
 # increase indent by one
-sub indentLevel()
+sub indentLevel($)
 {
-   #outputIndent($indent_level);
+   my $this = shift;
+
+#   outputIndent($this->{'indent_level'});
 #   print "===>\n";
-   $indent_level = $indent_level + 1;
+   $this->{'indent_level'}++;
 }
 
 # reduce indent by one
-sub outdentLevel()
+sub outdentLevel($)
 {
-   #outputIndent($indent_level);
+   my $this = shift;
+
+#   outputIndent($this->{'indent_level'});
 #   print "<===\n";
-   $indent_level = $indent_level - 1;
+   $this->{'indent_level'}--;
 }
 
 # default function if you don't set any of your own
 sub unknown_action($$$$$)
 {
-   my $xmlToc_data_out = shift; # reference to the data
+   my $this = shift; # reference to the object
    my $whatAmI = shift;
    my $myParams = shift;
    my $any_content_inbetween = shift;
-   my $tabs = shift;
-   
-   #outputIndent( $tabs );
+
+#   $this->outputIndent();
    print "\n(xmlToc) unknown tag = $whatAmI\n";
-   #outputIndent( $tabs );
+#   $this->outputIndent();
    print "               content = $myParams\n";
 }
-
-# function pointers, initialized to unknown_action
-#my $caller = caller();
-#my $treecontrol_action = \&{"${caller}::treecontrol_action"};
-my $pushFolder_action = \&xmlToc::unknown_action;
-my $popFolder_action = \&xmlToc::unknown_action;
-my $pushFont_action = \&xmlToc::unknown_action;
-my $popFont_action = \&xmlToc::unknown_action;
-my $item_action = \&xmlToc::unknown_action;
-my $defaults_action = \&xmlToc::unknown_action;
-my $treecontrol_action = \&xmlToc::unknown_action;
 
 # Execute the action associated with the tag type
 # args: data_out              (reference to string, this is what this function returns)
@@ -80,67 +71,68 @@ my $treecontrol_action = \&xmlToc::unknown_action;
 sub exec_action($$$$)
 {
    # pick up the 4 arguments to this function...
-   my $xmlToc_data_out = shift; # reference to the data
+   my $this = shift; # reference to the object
    my $whatAmI = shift;
    my $myParams = shift;
    my $any_content_inbetween = shift;
-   
+
    my $still_need_indent = 0;
-   my $callback_action = \&xmlToc::unknown_action;
-   
+
    # pop:
    if ($whatAmI =~ m/\/rootfolder|\/folder/i)
    {
-      outdentLevel();
-      $callback_action = $popFolder_action;
+      $this->outdentLevel();
+      $this->popFolder($whatAmI, $myParams, $any_content_inbetween);
    }
    elsif ($whatAmI =~ m/\/item|\/jitfolder/i)
    {
       # no item pop func yet...
-      #$callback_action = $item_action;
+#      $this->item($whatAmI, $myParams, $any_content_inbetween);
       print "WEIRD: there shouldn't be an </item> tag\n";
    }
    elsif ($whatAmI =~ m/\/font/i)
    {
-      $callback_action = $popFont_action;
+      $this->popFont($whatAmI, $myParams, $any_content_inbetween);
    }
    elsif ($whatAmI =~ m/\/idefault/i)
    {
-      $callback_action = $defaults_action;
+      $this->defaults($whatAmI, $myParams, $any_content_inbetween);
    }
    elsif ($whatAmI =~ m/\/treecontrol/i)
    {
-      $callback_action = $treecontrol_action;
+      $this->treecontrol($whatAmI, $myParams, $any_content_inbetween);
    }
    
    # push
    elsif ($whatAmI =~ m/item|jitfolder/i)
    {
-      $callback_action = $item_action;
+      $this->item($whatAmI, $myParams, $any_content_inbetween);
    }
    elsif ($whatAmI =~ m/rootfolder|folder/i)
    {
       $still_need_indent = 1;
-      $callback_action = $pushFolder_action;
+      $this->pushFolder($whatAmI, $myParams, $any_content_inbetween);
    }
    elsif ($whatAmI =~ m/font/i)
    {
-      $callback_action = $pushFont_action;
+      $this->pushFont($whatAmI, $myParams, $any_content_inbetween);
    }
    elsif ($whatAmI =~ m/idefault/i)
    {
-      $callback_action = $defaults_action;
+      $this->defaults($whatAmI, $myParams, $any_content_inbetween);
    }
    elsif ($whatAmI =~ m/treecontrol/i)
    {
-      $callback_action = $treecontrol_action;
+      $this->treecontrol($whatAmI, $myParams, $any_content_inbetween);
    }
-
-   &$callback_action( \$$xmlToc_data_out, $whatAmI, $myParams, $any_content_inbetween, $indent_level);
+   else
+   {
+      $this->unknown_action($whatAmI, $myParams, $any_content_inbetween);
+   }
 
    if ($still_need_indent == 1)
    {
-      indentLevel();
+      $this->indentLevel();
    }
 }
 
@@ -148,30 +140,35 @@ sub exec_action($$$$)
 #####################################################
 
 
+# ============================================================================
+# "Public" methods.
+# ============================================================================
 
 #######################################################
 # Interface to xmlToc:
-@EXPORT = qw(traverse setAction load);
 
-# args: data_out (string reference, returns loaded data here)
-#       filename (string, name of xmlToc formatted file)
-sub load($$)
+# args: this (object reference, returns loaded data here)
+#       filename (string, name of xmlToc formatted file) [optional]
+sub load($;$)
 {
-   my $xmlTocData = shift;
-   my $inputFile = shift;
+   my $this = shift;
 
-   if (open(INPUT, "$inputFile"))
+   if ( @_ ) {
+       $this->{'filename'} = shift;
+   }
+
+   if (open(INPUT, "$this->{'filename'}"))
    {
     # gather each line of the source file into one string so we can do regexs across multiple lines.
     #print "Reading: $inputFile...\n";
     while (<INPUT>)
     {
-       $$xmlTocData .= $_;
+       $this->{'content'} .= $_;
     }
     close(INPUT);
 
     # eliminate newlines
-    $$xmlTocData =~ s/[\n]//gis;
+    $this->{'content'} =~ s/[\n]//gis;
     
     # success
     return 1;
@@ -179,113 +176,105 @@ sub load($$)
 
    else
    {
-     warn "WARNING: Could not open $inputFile for reading: $!\n";
+     warn "WARNING: Could not open $this->{'filename'} for reading: $!\n";
      return -1;
    }
 }
 
-# Set your call-backs with these "set" functions
-sub setAction($$)
+sub setContent ($$)
 {
-   my $whatAmI = shift;
-   my $action = shift;
-   
-   #pop (TODO: use a hash to make this more simple/generic)
-   if ($whatAmI =~ m/\/rootfolder|\/folder/i)
-   {
-      $popFolder_action = $action;
-   }
-   elsif ($whatAmI =~ m/\/item/i)
-   {
-      #$item_action = $action;
-   }
-   elsif ($whatAmI =~ m/\/font/i)
-   {
-      $popFont_action = $action;
-   }
-   elsif ($whatAmI =~ m/\/idefault/i)
-   {
-      #$defaults_action = $action;
-   }
-   elsif ($whatAmI =~ m/\/treecontrol/i)
-   {
-      #$treecontrol_action = $action;
-   }
-   
-   #push (TODO: use a hash to make this more simple/generic)
-   elsif ($whatAmI =~ m/rootfolder|folder/i)
-   {
-      $pushFolder_action = $action;
-   }
-   elsif ($whatAmI =~ m/item/i)
-   {
-      $item_action = $action;
-   }
-   elsif ($whatAmI =~ m/font/i)
-   {
-      $pushFont_action = $action;
-   }
-   elsif ($whatAmI =~ m/idefault/i)
-   {
-      $defaults_action = $action;
-   }
-   elsif ($whatAmI =~ m/treecontrol/i)
-   {
-      $treecontrol_action = $action;
-   }
-   
-   
-   
-   # assert if wrong args are given to this function
-   else
-   {
-      warn "ASSERT: Invalid action type: $whatAmI\n";
-      exit( 0 );
-   }
+   my $this = shift;
+
+   $this->{'content'} = shift;
 }
 
-# traverse the TOC stored in the data passed as parameter 2
-# return the processed TOC in parameter 1
+# traverse the TOC stored in the object passed in parameter 1
 #
 # for each entry in the toc, the appropriate callback function will be called.
 # if you don't register a callback, your entries should appear as undefined 
 # at STDOUT
-sub traverse($$)
+sub traverse($)
 {
-   my $data_out = shift; # reference to the data
-   my $xmlTocData_in = shift;  # copy of the data
+   my $this = shift;
 
+   my $any_content_inbetween = '';
 
-   # process the xml data
-   while ($xmlTocData_in =~ m/(<.*?>)/s)
+   # Process the xml data in the 'content' field of the object.  The resulting
+   # output is stored in the 'body' field.
+   while ($this->{'content'} =~ m/(<.*?>)/s)
    {
       my $params = $1;
-      $xmlTocData_in = $';
+      $this->{'content'} = $';
 
       # pick up any between-tag cruft, might as well pass it to the user... :)
-      if ($xmlTocData_in =~ m/[^<^>]?(.*?)[^<]/s)
+      if ($this->{'content'} =~ m/[^<^>]?(.*?)[^<]/s)
       {
           $any_content_inbetween = $1;
-#         $xmlTocData_in = $';
+#         $this->{'content'} = $';
       }
 
       if ($params =~ m/<[ ]*(\/rootfolder|\/folder|\/font|\/idefault|\/treecontrol)[ ]*>/s)
       {
-         exec_action( \$$data_out, $1, "", $any_content_inbetween );
+         $this->exec_action( $1, "", $any_content_inbetween );
       }
 
       elsif ($params =~ m/<[ ]*(rootfolder|folder|item|font|idefault|treecontrol|jitfolder)(.*?)>/s)
       {
-         exec_action( \$$data_out, $1, $2, $any_content_inbetween );        
+         $this->exec_action( $1, $2, $any_content_inbetween );        
       }
 
       elsif ($params =~ m/<(.*?)>/s)
       {
-         exec_action( \$$data_out, "unknown", $1, $any_content_inbetween );
+         $this->exec_action( "unknown", $1, $any_content_inbetween );
       }
    } # while
 }
+
+sub getData ($)
+{
+   my $this = shift;
+
+   return $this->{'body'};
+}
+
 # end of xmlToc module interface
 #######################################################################
+
+# ============================================================================
+# "Protected" methods.
+# ============================================================================
+
+sub allocate ($;$)
+{
+   my $class    = shift;
+   my $filename = shift || '';
+
+   return bless {
+      'filename'     => "$filename",    # XML table of contents file
+      'content'      => '',             # Original content of XML TOC file
+      'body'         => '',             # Result of processing content
+      'indent_level' => 0               # Current indentation level
+   }, $class;
+}
+
+# "Pure virutal" methods.
+sub pushFolder($$$$);
+sub popFolder($$$$);
+sub pushFont($$$$);
+sub popFont($$$$);
+sub item($$$$);
+sub defaults($$$$);
+sub treecontrol($$$$);
+
+# helper func for outputting indentations
+sub outputIndents ($)
+{
+   my $this = shift; #reference to object
+
+   my $x;
+   for ( $x = 0; $x < $this->{'indent_level'}; $x++ ) {
+      $this->{'body'} .= "   "; # 3 spaces == one tab
+   }
+}
 
 1;

@@ -9,8 +9,8 @@ use vars qw($install_prefix $cmt_begin $cmt_end $cmd_str $USE_HTTP_PATHS
 
 use Utils;
 use xmlToc;
-use xmlToc_htmlTocActions;
-use xmlToc_htmlBookActions;
+use HtmlToc;
+use HtmlBook;
 
 # ============================================================================
 # "Global" variables.  These are accessible to all packages but are intended
@@ -184,8 +184,8 @@ sub processStringIncludes ($) {
 
         # ----------- TOC include ----------- #
         if ( $include_statement =~ /${cmds{'include-toc'}}/i ) {
-            my $xml_file  = new XmlFile("$expandvars_filename");
-            my $htmltoc_data = '';
+            my $xml_file = new XmlFile("$expandvars_filename");
+            my $html_toc;
 
             print "[including TOC: \"$expandvars_filename\" ";
 
@@ -196,9 +196,12 @@ sub processStringIncludes ($) {
                 #       output
                 $xml_file->filter("", $USE_HTTP_PATHS,
                                   $USE_ABS_PATHS_WITHIN_JIT);
-                xmlToc_htmlTocActions::useme();
-                xmlToc::traverse(\$htmltoc_data, $xml_file->getBody());
+                $html_toc = new HtmlToc();
+                $html_toc->setContent($xml_file->getBody());
+                $html_toc->traverse();
             }
+
+            my $htmltoc_data = $html_toc->getData();
 
             $$string_ref =~ s/${include_statement}/${htmltoc_data}/gis;
             print "]";
@@ -208,7 +211,7 @@ sub processStringIncludes ($) {
         # ----------- BOOK include ----------- #
         elsif ( $include_statement =~ /${cmds{'include-book'}}/i ) {
             my $xml_file  = new XmlFile("$expandvars_filename");
-            my $html_data = '';
+            my $html_book;
 
             print "[including book: \"$expandvars_filename\" ";
 
@@ -219,13 +222,16 @@ sub processStringIncludes ($) {
                 #       output
                 $xml_file->filter('', $USE_ABS_PATHS,
                                   $USE_ABS_PATHS_WITHIN_JIT);
-                xmlToc_htmlBookActions::useme();
-                xmlToc_htmlBookActions::setAction('include',
-                                                  \&processStringIncludesRecursive);
-                xmlToc_htmlBookActions::setAction('tag',
-                                                  \&replaceStringTagsRecursive);
-                xmlToc::traverse(\$html_data, $xml_file->getBody());
+		$html_book = new HtmlBook();
+		$html_book->setContent($xml_file->getBody());
+                HtmlBook::setAction('include',
+                                    \&processStringIncludesRecursive);
+                HtmlBook::setAction('tag',
+                                    \&replaceStringTagsRecursive);
+		$html_book->traverse();
             }
+
+            my $html_data = $html_book->getData();
 
             $$string_ref =~ s/${include_statement}/${html_data}/gis;
             print "]";

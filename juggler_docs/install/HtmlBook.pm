@@ -1,36 +1,25 @@
-package xmlToc_htmlBookActions;
-
-use strict qw(vars);
-use vars qw(@ISA @EXPORT);
-
-@ISA = qw(Exporter);
+package HtmlBook; 
 
 require 5.003;
-require Exporter;
+
+use strict qw(vars);
+use vars qw(@ISA);
+
+@ISA = qw(xmlToc);
+
+# XXX: This module knows too much about install-web.  That really, really
+# needs to be changed.
 
 ##################################################
 # How to use this package:
 # .i.e:
 # use xmlToc;
-# use xmlToc_htmlBookActions;
-# xmlToc_htmlBookActions::useme();
-# xmlToc::load(\$xmldata, "filename.xml");
-# xmlToc::traverse(\$htmldata, $xmldata);
-# print $htmldata;
+# use HtmlBook;
+# $html_book = new HtmlBook("filename.xml");
+# $html_book->load();
+# $html_book->traverse();
+# print $html_book->getData();
 ##################################################
-
-@EXPORT = qw(useme setAction pushFolder_action popFolder_action pushFont_action
-             popFont_action item_action defaults_action treecontrol_action);
-
-# Prototypes.
-sub number($$$$);
-
-my(%book) = ();
-
-$book{'title'}      = '';
-$book{'files'}      = [];
-$book{'chapters'}   = [];
-$book{'appendices'} = [];
 
 my $new_page_str = '<!--NewPage-->';
 my $html_comment_begin = '<!--';
@@ -40,27 +29,70 @@ my $html_comment_end   = '-->';
 my $book_ignore_b = 'book-ignore-begin';
 my $book_ignore_e = 'book-ignore-end';
 
+# Prototypes for "private" methods.
+sub processFile($$);
+sub loadHTML($$$$);
+sub filterHTML($$);
+sub number($$$$);
+
+# ============================================================================
+# "Public" methods.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Constructor.
+#
+# Arguments:
+#     $class    - The name of the class for the new object (passed
+#                 automatically).
+#     $filename - The name of the XML table of contents file to be parsed and
+#                 written out in book format.  This is optional and defaults
+#                 to the empty string.
+# ----------------------------------------------------------------------------
+sub new ($;$) {
+    my $class    = shift;
+    my $filename = shift || '';
+
+    my $object = $class->allocate("$filename");
+
+    # Extend the object to include a 'book' hash table.  This hash has the
+    # book title, all the files that are processed to construct it, and the
+    # individual chapters and appendices that result from the processing.
+    $object->{'book'} = {
+        'title'      => '',
+        'files'      => [],
+        'chapters'   => [],
+        'appendices' => []
+    };
+
+    return $object;
+}
+
+# ----------------------------------------------------------------------------
+# Destructor.
+# ----------------------------------------------------------------------------
+sub DESTROY ($) {
+    my $this = shift;
+
+    return 1;
+}
+
+# ============================================================================
+# "Public" static methods..
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Simple dummy action.  This does nothing more than serve as a placeholder.
+# ----------------------------------------------------------------------------
 sub dummyAction ($) {
 }
 
-# ============================================================================
-# Public interface functions.
-# ============================================================================
-
-sub useme () {
-    xmlToc::setAction("folder", \&xmlToc_htmlBookActions::pushFolder_action);
-    xmlToc::setAction("/folder", \&xmlToc_htmlBookActions::popFolder_action);
-    xmlToc::setAction("item", \&xmlToc_htmlBookActions::item_action);
-    xmlToc::setAction("font", \&xmlToc_htmlBookActions::pushFont_action);
-    xmlToc::setAction("/font", \&xmlToc_htmlBookActions::popFont_action);
-    xmlToc::setAction("idefault", \&xmlToc_htmlBookActions::defaults_action);
-    xmlToc::setAction("treecontrol",
-                      \&xmlToc_htmlBookActions::treecontrol_action);
-}
-
+# XXX: These need to be replaced with something better...
 my $include_processor = \&dummyAction;    # Callback for processing includes
 my $tag_processor     = \&dummyAction;    # Callback for processing tags
 
+# ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 sub setAction ($$) {
     my $action_name = shift;
     my $callback    = shift;
@@ -86,104 +118,116 @@ sub setAction ($$) {
 }
 
 # ============================================================================
-# XML parsing callbacks follow.
+# "Protected" XML parsing callbacks follow.
 # ============================================================================
 
-sub pushFolder_action ($$$$$) {
-    my $xmlToc_data_out       = shift; # reference to the data
+# ----------------------------------------------------------------------------
+# Action for an opening folder tag.
+# ----------------------------------------------------------------------------
+sub pushFolder ($$$$) {
+    my $this                  = shift; # reference to the object
     my $whatAmI               = shift;
     my $myParams              = shift;
     my $any_content_inbetween = shift;
-    my $indent_level          = shift;
 
     $myParams =~ /title[ ]*=[ ]*"(.*?)"/s;
     my $title = "$1";
 
-    outputIndents($xmlToc_data_out, $indent_level);
+    $this->outputIndents();
 
     if ( $whatAmI =~ /rootfolder/ ) {
-        $book{'title'}         = "$title";
-        @{$book{'files'}}      = ();
-        @{$book{'chapters'}}   = ();
-        @{$book{'appendices'}} = ();
+        $this->{'book'}{'title'}         = "$title";
+        @{$this->{'book'}{'files'}}      = ();
+        @{$this->{'book'}{'chapters'}}   = ();
+        @{$this->{'book'}{'appendices'}} = ();
     }
 
     if ( $myParams =~ /link\s*=\s*"(.*?)"/si ) {
-        push(@{$book{'files'}}, "$1");
+        push(@{$this->{'book'}{'files'}}, "$1");
     }
 
-    outputIndents($xmlToc_data_out, $indent_level);
+    $this->outputIndents();
 }
 
-sub popFolder_action ($$$$$) {
-    my $xmlToc_data_out       = shift; # reference to the data
+# ----------------------------------------------------------------------------
+# Action for a closing folder tag.
+# ----------------------------------------------------------------------------
+sub popFolder ($$$$) {
+    my $this                  = shift; # reference to the object
     my $whatAmI               = shift;
     my $myParams              = shift;
     my $any_content_inbetween = shift;
-    my $indent_level          = shift;
 
-    outputIndents($xmlToc_data_out, $indent_level);
+    $this->outputIndents();
 
     if ( $whatAmI =~ /rootfolder/ ) {
         # Loop over all the HTML files and process each one.
-        foreach ( @{$book{'files'}} ) {
-            print "+" if processFile("$_");
+        foreach ( @{$this->{'book'}{'files'}} ) {
+            print "+" if $this->processFile("$_");
         }
 
         # If this book has any chapters, concatenate them.  The files will
         # already have been processed and stored in the book's chapters array
         # by processFile().
-        if ( $#{$book{'chapters'}} > -1 ) {
+        if ( $#{$this->{'book'}{'chapters'}} > -1 ) {
             my $chapter_count = 1;
 
-            foreach ( @{$book{'chapters'}} ) {
-                $$xmlToc_data_out .= number(\$chapter_count, "$_", 'Chapter',
-                                            'h1');
+            foreach ( @{$this->{'book'}{'chapters'}} ) {
+                $this->{'body'} .= number(\$chapter_count, "$_", 'Chapter',
+                                          'h1');
             }
         }
 
         # If this book has any appendices, make an Appendices section and
         # append them.  The files will already have been processed and
         # stored in the book's appendices array by processFile().
-        if ( $#{$book{'appendices'}} > -1 ) {
-            $$xmlToc_data_out .= "$new_page_str\n<H1>Appendices</H1>\n\n";
+        if ( $#{$this->{'book'}{'appendices'}} > -1 ) {
+            $this->{'body'} .= "$new_page_str\n<H1>Appendices</H1>\n\n";
 
             my $appendix_count = 1;
 
-            foreach ( @{$book{'appendices'}} ) {
-                $$xmlToc_data_out .= number(\$appendix_count, "$_", 'Appendix',
-                                            'h1');
+            foreach ( @{$this->{'book'}{'appendices'}} ) {
+                $this->{'body'} .= number(\$appendix_count, "$_", 'Appendix',
+                                          'h1');
             }
         }
     }
 }
 
-sub pushFont_action ($$$$$) {
-   my $xmlToc_data_out       = shift; # reference to the data
-   my $whatAmI               = shift;
-   my $myParams              = shift;
-   my $any_content_inbetween = shift;
-   my $indent_level          = shift;
-
-   outputIndents($xmlToc_data_out, $indent_level);
-}
-
-sub popFont_action ($$$$$) {
-    my $xmlToc_data_out       = shift; # reference to the data
+# ----------------------------------------------------------------------------
+# Action for handling an opening font tag.
+# ----------------------------------------------------------------------------
+sub pushFont ($$$$) {
+    my $this                  = shift; # reference to the object
     my $whatAmI               = shift;
     my $myParams              = shift;
     my $any_content_inbetween = shift;
-    my $indent_level          = shift;
 
-    outputIndents($xmlToc_data_out, $indent_level);
+    $this->outputIndents();
+    $this->{'body'} .= "<font $myParams>\n";
 }
 
-sub item_action ($$$$$) {
-    my $xmlToc_data_out       = shift; # reference to the data
+# ----------------------------------------------------------------------------
+# Action for handling a closing font tag.
+# ----------------------------------------------------------------------------
+sub popFont ($$$$) {
+    my $this                  = shift; # reference to the object
     my $whatAmI               = shift;
     my $myParams              = shift;
     my $any_content_inbetween = shift;
-    my $indent_level          = shift;
+
+    $this->outputIndents();
+    $this->{'body'} .= "</font>\n";
+}
+
+# ----------------------------------------------------------------------------
+# Action for handling an item in the table of contents.
+# ----------------------------------------------------------------------------
+sub item ($$$$) {
+    my $this                  = shift; # reference to the object
+    my $whatAmI               = shift;
+    my $myParams              = shift;
+    my $any_content_inbetween = shift;
 
     $myParams =~ /title[ ]*=[ ]*"(.*?)"/s;
     my $title = "$1";
@@ -192,42 +236,48 @@ sub item_action ($$$$$) {
 
     if ( $myParams =~ /link[ ]*=[ ]*"(.*?)"/s ) {
         $link = "$1";
-        push(@{$book{'files'}}, "$link");
+        push(@{$this->{'book'}{'files'}}, "$link");
     }
 
     if ( $myParams =~ /jit[ ]*=[ ]*"(.*?)"/s ) {
-        my $jitfolder = "";
-        xmlToc::load(\$jitfolder, $1);
-        xmlToc::traverse($xmlToc_data_out, $jitfolder);
+        my $jitfolder = new HtmlBook("$1");
+        $jitfolder->load();
+        $jitfolder->traverse();
+        $this->{'body'} .= $jitfolder->getData();
     }
 }
 
-sub defaults_action ($$$$$) {
+# ----------------------------------------------------------------------------
+# Action for handling defaults setting in the table of contents.
+# ----------------------------------------------------------------------------
+sub defaults ($$$$) {
+    my $this = shift;
 }
 
-sub treecontrol_action($$$$$) {
+# ----------------------------------------------------------------------------
+# Action for handling a treecontrol tag in the table of contents.
+# ----------------------------------------------------------------------------
+sub treecontrol ($$$$) {
+    my $this = shift;
 }
 
-# helper func for outputting indentations
-# (takes an integer for num of indentations)
-sub outputIndents ($$) {
-    my $output_ref   = shift; #reference to data
-    my $indent_level = shift;
-    my $x            = 0;
+# ============================================================================
+# "Private" static methods.
+# ============================================================================
 
-    while ( $x < $indent_level ) {
-        $x = $x + 1;
-        $$output_ref .= "   "; # 3 spaces == one tab
-    }
-}
-
-sub processFile ($) {
+# ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+sub processFile ($$) {
+    my $this = shift;
     my $file = shift;
 
-    return loadHTML("$file", 0);
+    return $this->loadHTML("$file", 0);
 }
 
-sub loadHTML ($$$) {
+# ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+sub loadHTML ($$$$) {
+    my $this         = shift;
     my $input_file   = shift;
     my $use_feedback = shift;
 
@@ -255,7 +305,7 @@ sub loadHTML ($$$) {
         # text would make a big difference in processing time.
         $body =~ s/${html_comment_begin}\s+install-web\s+${book_ignore_b}\s*${html_comment_end}.*?${html_comment_begin}\s+install-web\s+${book_ignore_e}\s*${html_comment_end}//ogis;
 
-        filterHTML(\$body);
+        $this->filterHTML(\$body);
 
         # Strip out tables of contents.  We will let the HTML -> PostScript
         # or HTML -> PDF converter make the TOC.
@@ -270,11 +320,11 @@ sub loadHTML ($$$) {
         # If this file is flagged as an appendix, move its contents to the
         # book's appendices.
         if ( $body =~ /${html_comment_begin}\s+install-web\s+appendix\s*${html_comment_end}/ois ) {
-            push(@{$book{'appendices'}}, "$body");
+            push(@{$this->{'book'}{'appendices'}}, "$body");
         }
         # Otherwise, put the file contents in the chapter array.
         else {
-            push(@{$book{'chapters'}}, "$body");
+            push(@{$this->{'book'}{'chapters'}}, "$body");
         }
     }
     else {
@@ -285,7 +335,10 @@ sub loadHTML ($$$) {
     return $status;
 }
 
-sub filterHTML ($) {
+# ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+sub filterHTML ($$) {
+    my $this          = shift;
     my $file_contents = shift;
 
     my $ignore_all_str = 'install-web ignore';
@@ -323,6 +376,8 @@ sub filterHTML ($) {
     }
 }
 
+# ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 sub number ($$$$) {
     my $count_ref    = shift;
     my $input_text   = shift;
