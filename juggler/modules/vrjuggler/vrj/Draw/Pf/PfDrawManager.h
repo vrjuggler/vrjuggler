@@ -116,7 +116,7 @@ public:
    void debugDump();
 
    friend void vjPFconfigPWin(pfPipeWindow* pWin);
-   friend void vgPfDrawFunc(pfChannel *chan, void* chandata);
+   friend void vjPfDrawFunc(pfChannel *chan, void* chandata);
 
 protected:
    //: Helper to set channel view params from a vjProjection

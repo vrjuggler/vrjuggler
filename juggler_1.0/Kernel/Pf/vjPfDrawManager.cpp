@@ -111,7 +111,7 @@ void vjPfDrawManager::initDrawing()
       vjDEBUG(0) << "vjPfDrawManager::initDrawing: Opening Pipe." << endl << vjDEBUG_FLUSH;
       vjDEBUG(0) << "\tpipe:" << pipeNum << ": " << pipeStrs[pipeNum] << endl << vjDEBUG_FLUSH;
 
-      if(pipes.size() < pipeNum)    // Make sure there is room for the pipe
+      while(pipes.size() < pipeNum)    // Make sure there is room for the pipe
          pipes.push_back(NULL);
       pipes[pipeNum] = pfGetPipe(pipeNum);
       pipes[pipeNum]->setWSConnectionName(pipeStrs[pipeNum]);
