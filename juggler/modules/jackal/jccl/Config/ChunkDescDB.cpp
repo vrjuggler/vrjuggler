@@ -1,6 +1,5 @@
 
-#include <iostream.h>
-#include <fstream.h>
+#include <vjConfig.h>
 #include <sys/types.h>
 
 #include <Kernel/vjDebug.h>
