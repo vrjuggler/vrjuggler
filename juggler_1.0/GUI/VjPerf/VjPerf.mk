@@ -11,7 +11,6 @@
 # -----------------------------------------------------------------------------
 
 VJPERF_SOURCES =   VjPerf/PerfAnalyzerPanel.java       	\
-		   VjPerf/GraphFrame.java		\
 		   VjPerf/PerfDataCollection.java	\
 		   VjPerf/PerfDataCollector.java       	\
 		   VjPerf/DataLine.java                 \
