@@ -144,7 +144,7 @@ public:
     *
     * @pre The given edge object must be in the graph.
     */
-   vpr::sim::NetworkLine getLineProperty(const net_edge_t& e) const;
+   vpr::sim::NetworkLine& getLineProperty(const net_edge_t& e);
 
    void setLineProperty(const net_edge_t& e, const vpr::sim::NetworkLine& prop);
 
@@ -172,7 +172,7 @@ public:
     *
     * @pre The given vertex object must be in the graph.
     */
-   vpr::sim::NetworkNode getNodeProperty(const net_vertex_t& e) const;
+   vpr::sim::NetworkNode& getNodeProperty(const net_vertex_t& e);
 
    /**
     * Assigns the given property to the designated node.
