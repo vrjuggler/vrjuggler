@@ -369,10 +369,10 @@ int MotionStar::sample ()
 
                m_motion_star.getMatrixAngles(i, angles);
 
-               gmtl::setRot( transmitter_T_receiver,
-                                 gmtl::Math::deg2Rad(angles[0]),
-                                 gmtl::Math::deg2Rad(angles[1]),
-                                 gmtl::Math::deg2Rad(angles[2]), gmtl::ZYX);
+               gmtl::setRot( rot_mat,
+                             gmtl::Math::deg2Rad(angles[2]),
+                             gmtl::Math::deg2Rad(angles[1]),
+                             gmtl::Math::deg2Rad(angles[0]), gmtl::ZYX);
                transmitter_T_receiver = trans_mat * rot_mat;
                break;
             case FLOCK::QUATERNION:
