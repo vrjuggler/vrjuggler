@@ -462,7 +462,26 @@ case $target_os in
         AC_DEFINE(VJ_OS_Win32,)
         ABI_LIST='WIN32'
         OS_TYPE='Win32'
-        PLATFORM=`uname -s`
+
+        _sys_name=`uname -s`
+
+        dnl # Determine the value for $PLATFORM based on what uname(1) tells
+        dnl # us.  We define our own values because Cygnus' uname(1) returns
+        dnl # somewhat annoying names.
+        case ${_sys_name} in
+            dnl # Windows NT 4.0.
+            *NT-4.0)
+                PLATFORM='WinNT'
+                ;;
+            dnl # Windows 95 and 98.
+            *WIN_9*-4.*)
+                PLATFORM='Win9x'
+                ;;
+            dnl # Unknown version of Windows that may not yet be supported.
+            *)
+                AC_MSG_ERROR(Unknown Windows type ${_sys_name}!)
+                ;;
+        esac
 
         AC_DEFINE(WIN32,)
         AC_DEFINE(_MBCS,)
