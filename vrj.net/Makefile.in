@@ -36,6 +36,7 @@ topdir=		@topdir@
 top_srcdir=	@top_srcdir@
 
 EXEC_PERMS=	@EXEC_PERMS@
+MAKEFLAGS+=	--no-print-directory
 PERL=		@PERL@
 
 SUBDIR=		vrjnet_util	\
