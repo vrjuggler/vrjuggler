@@ -66,7 +66,7 @@ public:
     */
    DWORD getNumAxes() const
    {
-      return mCapabilities.dwAxes;
+      return mCapabilities.dwAxes + mCapabilities.dwPOVs * 2;
    }
 
    /**
@@ -99,10 +99,7 @@ public:
       return mCapabilities.dwHardwareRevision;
    }
 
-   LONG getAxisValue(const unsigned int axisIndex)
-   {
-      return *(mAxisValueMap[axisIndex]);
-   }
+   LONG getAxisValue(const unsigned int axisIndex);
 
    BYTE getButtonValue(const unsigned int buttonIndex) const
    {
