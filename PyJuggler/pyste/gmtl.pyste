@@ -1,0 +1,52 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# PyJuggler is (C) Copyright 2002, 2003 by Patrick Hartling
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+Matrix = Template('gmtl::Matrix', 'gmtl/Matrix.h')
+Matrix44f = Matrix('float 4 4')
+Matrix44i = Matrix('int 4 4')
+rename(Matrix44f, 'Matrix44f')
+rename(Matrix44i, 'Matrix44i')
+set_policy(Matrix44f.getData, return_internal_reference())
+set_policy(Matrix44i.getData, return_internal_reference())
+
+#Matrix_identity = Template('gmtl::identity', 'gmtl/MatrixOps.h')
+#Matrix44f_identity = Matrix_identity('float 4 4')
+#rename(Matrix44f_identity, 'identityMatrix44f')
+
+Vec = Template('gmtl::Vec', 'gmtl/Vec.h')
+Vec3f = Vec('float 3')
+rename(Vec3f, 'Vec3f')
+set_policy(Vec3f.getData, return_internal_reference())
+
+Quat = Template('gmtl::Quat', 'gmtl/Quat.h')
+Quatf = Quat('float')
+rename(Quatf, 'Quatf')
+set_policy(Quatf.getData, return_internal_reference())
+
+Point = Template('gmtl::Point', 'gmtl/Point.h')
+Point3f = Point('float 3')
+rename(Point3f, 'Point3f')

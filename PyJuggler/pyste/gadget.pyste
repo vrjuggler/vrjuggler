@@ -1,0 +1,76 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# PyJuggler is (C) Copyright 2002, 2003 by Patrick Hartling
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# Base input data types =======================================================
+Class('gadget::AnalogData', 'gadget/Type/AnalogData.h')
+Class('gadget::DigitalData', 'gadget/Type/DigitalData.h')
+#Class('gadget::GloveData', 'gadget/Type/Glove.h')
+Class('gadget::PositionData', 'gadget/Type/PositionData.h')
+# ======================================================= Base input data types
+
+# Base input types ============================================================
+Analog = Class('gadget::Analog', 'gadget/Type/Analog.h')
+set_policy(Analog.getAnalogDataBuffer, return_internal_reference())
+
+Digital = Class('gadget::Digital', 'gadget/Type/Digital.h')
+set_policy(Digital.getDigitalDataBuffer, return_internal_reference())
+
+#Class('gadget::Glove', 'gadget/Type/Glove.h')
+
+#Class('gadget::GloveGesture', 'gadget/Type/GloveGesture.h')
+
+Position = Class('gadget::Position', 'gadget/Type/Position.h')
+set_policy(Position.getPositionDataBuffer, return_internal_reference())
+# ============================================================ Base input types
+
+# Proxy types =================================================================
+AnalogProxy = Class('gadget::AnalogProxy', 'gadget/Type/AnalogProxy.h')
+set_policy(AnalogProxy.getAnalogPtr, return_internal_reference())
+exclude(AnalogProxy.getProxiedInputDevice)
+
+DigitalProxy = Class('gadget::DigitalProxy', 'gadget/Type/DigitalProxy.h')
+set_policy(DigitalProxy.getDigitalData, return_internal_reference())
+set_policy(DigitalProxy.getDigitalPtr, return_internal_reference())
+exclude(DigitalProxy.getProxiedInputDevice)
+
+#Class('gadget::GestureProxy', 'gadget/Type/GestureProxy.h')
+
+#Class('gadget::GloveProxy', 'gadget/Type/GloveProxy.h')
+
+PositionProxy = Class('gadget::PositionProxy', 'gadget/Type/PositionProxy.h')
+set_policy(PositionProxy.getPositionData, return_internal_reference())
+set_policy(PositionProxy.getPositionPtr, return_internal_reference())
+exclude(PositionProxy.getProxiedInputDevice)
+# ================================================================= Proxy types
+
+# Smart pointers ==============================================================
+Class('gadget::AnalogInterface', 'gadget/Type/AnalogInterface.h')
+Class('gadget::DigitalInterface', 'gadget/Type/DigitalInterface.h')
+#Class('gadget::GestureInterface', 'gadget/Type/GestureInterface.h')
+#Class('gadget::GloveInterface', 'gadget/Type/GloveInterface.h')
+Class('gadget::PositionInterface', 'gadget/Type/PositionInterface.h')
+# ============================================================== Smart pointers
