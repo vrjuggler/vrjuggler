@@ -75,7 +75,7 @@
 #define M_PI_2 1.57079632679489661923
 #define M_PI_4 0.78539816339744830962
 
-//extern HINSTANCE g_hInst = NULL;
+/* extern HINSTANCE g_hInst = NULL; */
 #endif   /* WIN32 */
 
 
@@ -91,7 +91,7 @@
 #include <algorithm>
 #include <math.h>
 
-//#include <Kernel/vjDebug.h>
+/* #include <Kernel/vjDebug.h> */
 #endif   /* __cplusplus */
 
 #ifdef HAVE_UNISTD_H
