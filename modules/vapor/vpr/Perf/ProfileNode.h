@@ -44,7 +44,7 @@
 #define VPR_PROFILE_NODE_H
 
 /**
- * mostly taken from:
+ * Primarily based on
  * Real-Time Hierarchical Profiling for Game Programming Gems 3
  * by Greg Hjelstrom & Byon Garrabrant
  */
@@ -80,7 +80,7 @@ namespace vpr
 
    public:
 
-      /** 
+      /**
        * constructor for a profile node
        * Takes a static string pointer for the name and a reference to a parent
        */
@@ -88,7 +88,7 @@ namespace vpr
 
       ProfileNode( const char * name, ProfileNode * parent, const unsigned int queueSize);
 
-      /** 
+      /**
        * destructor
        */
       ~ProfileNode( void );
@@ -161,22 +161,24 @@ namespace vpr
 
    protected:
 
-      const char*    mName;
-      int            mTotalCalls;
-      float          mTotalTime;
+      const char*    mName;         /**< Pointer to the name for this node.  Must be a static string. */
+      int            mTotalCalls;   /**< Total number of times called since last reset. */
+      float          mTotalTime;    /**< Total summed time over mTotalCalls. */
 
-      std::deque<float> mHistory;
-      unsigned int      mHistorySize;
+      std::deque<float> mHistory;      /**< History of samples. */
+      unsigned int      mHistorySize;  /**< Max size allowed for history. */
 
-      vpr::Interval  mStartTime;
-      int            mRecursionCounter;
+      vpr::Interval  mStartTime;       /**< The time that this sample started. */
+      int            mRecursionCounter;/**< The number of calls without a return. tracks recursion. */
 
-      ProfileNode*   mParent;
-      ProfileNode*   mChild;
-      ProfileNode*   mSibling;
+      ProfileNode*   mParent;       /**< Parent of this node. */
+      ProfileNode*   mChild;        /**< Direct child of this node. (first node in child list) */
+      ProfileNode*   mSibling;      /**< Next node in linked list of children. */
+
+      // XXX: Do we really need to use linked list.  Why not just child vector?
 
    private:
-      vpr::Mutex     mNodeLock;
+      vpr::Mutex     mNodeLock;     /**< Lock to protect access to node data. */
    };
 
 } // end namespace vpr
