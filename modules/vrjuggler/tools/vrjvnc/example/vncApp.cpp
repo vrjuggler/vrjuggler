@@ -47,7 +47,7 @@ namespace vrjvnc
 
 bool vncApp::configCanHandle(jccl::ConfigElementPtr element)
 {
-   static const std::string my_type("vrjVncApp");
+   static const std::string my_type("vrj_vnc_app");
 
    return (my_type == element->getID());
 }
