@@ -29,15 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.UI.Widgets;
+package org.vrjuggler.jccl.vjcontrol.ui.widgets;
 
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import java.util.Vector;
-
 
 public class EasyMenuBar {
 
@@ -93,6 +90,4 @@ public class EasyMenuBar {
     public void removeMenuItem (String path) {
         System.err.println ("EasyMenuBar.removeMenuItem not implemented!");
     }
-
 }
-

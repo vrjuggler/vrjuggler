@@ -29,9 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.UI.Widgets;
+package org.vrjuggler.jccl.vjcontrol.ui.widgets;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -144,6 +142,4 @@ public class EasyMenu {
     public void removeMenuItem (String path) {
         System.err.println ("Not implemented!!!");
     }
-
-
 }

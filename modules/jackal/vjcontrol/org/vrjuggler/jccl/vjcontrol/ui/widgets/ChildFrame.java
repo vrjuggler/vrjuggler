@@ -29,29 +29,22 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol.ui.widgets;
 
+public interface ChildFrame
+{
+   /** The frame should unregister for any events and dispose() itself. */
+   public void destroy();
 
-package VjComponents.UI.Widgets;
+   /** Used to find ChildFrames that match certain criteria.
+    * A way to match the frame up with the db and object it talks about.
+    * If o is null, just matches the db.  So that, for example, we can
+    * test for all child frames that depend on some particular chunkdb.
+    * If class is non-null, will only return true if this' class matches
+    * the class name given.
+    */
+   public boolean matches(String cl, Object db, Object o);
 
-public interface ChildFrame {
-
-    /** The frame should unregister for any events and dispose() itself. */
-    public void destroy ();
-
-
-    /** Used to find ChildFrames that match certain criteria.
-     * A way to match the frame up with the db and object it talks about.
-     * If o is null, just matches the db.  So that, for example, we can
-     * test for all child frames that depend on some particular chunkdb.
-     * If class is non-null, will only return true if this' class matches
-     * the class name given.
-     */
-    public boolean matches (String cl, Object db, Object o);
-
-    /** called when various ui things happen, such as looknfeel changing. */
-    public void updateUI ();
+   /** called when various ui things happen, such as looknfeel changing. */
+   public void updateUI();
 }
-
-
-
-

@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.UI.Widgets;
+package org.vrjuggler.jccl.vjcontrol.ui.widgets;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -41,10 +38,8 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import VjControl.Core;
-import VjComponents.UI.*;
-
-
+import org.vrjuggler.jccl.vjcontrol.Core;
+import org.vrjuggler.jccl.vjcontrol.ui.*;
 
 /** Generic frame for editing something (ie it has some panel, and it
  *  has OK, Apply, Cancel, and Help buttons).
@@ -56,7 +51,6 @@ import VjComponents.UI.*;
  *                 case of OK, the Close command is sent immediately after
  *                 the Apply command.
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class GenericEditorFrame 
@@ -239,6 +233,4 @@ public class GenericEditorFrame
     public void updateUI () {
 	SwingUtilities.updateComponentTreeUI (this);
     }
-
 }
-
