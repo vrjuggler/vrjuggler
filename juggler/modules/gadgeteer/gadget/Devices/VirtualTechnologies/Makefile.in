@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 VJGLOVE_SRCS	:= vjGlove.cpp
 
@@ -45,7 +45,7 @@ VJGLOVE_SRCS	+= CyberGloveBasic.cpp		\
                    vt_virtual_hand.cpp
 endif
 
-VJGLOVE_OBJECTS := ${addprefix ${OBJDIR}/,${VJGLOVE_SRCS:.cpp=.o}}
+VJGLOVE_OBJECTS := ${addprefix ${OBJDIR}/,${VJGLOVE_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${VJGLOVE_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

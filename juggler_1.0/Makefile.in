@@ -557,12 +557,12 @@ obj:
 static-libs: ${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}
 
 ${LIBDIR}/${VJ_LIB_STATIC} ${LIBDIR}/${PF_LIB_STATIC}			\
-${LIBDIR}/${GL_LIB_STATIC}: ${OBJDIR}/*.o
+${LIBDIR}/${GL_LIB_STATIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@${SHELL} ${scriptdir}/mkinstalldirs ${LIBDIR}
-	${AR} ${AR_NAME_FLAG}$@ ${OBJDIR}/*.o
+	${AR} ${AR_NAME_FLAG}$@ ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	cd ${_LIBDIR_BASE} && ln -sf $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -574,12 +574,12 @@ ${LIBDIR}/${GL_LIB_STATIC}: ${OBJDIR}/*.o
 shared-libs: ${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}
 
 ${LIBDIR}/${VJ_LIB_DYNAMIC} ${LIBDIR}/${PF_LIB_DYNAMIC}			\
-${LIBDIR}/${GL_LIB_DYNAMIC}: ${OBJDIR}/*.o
+${LIBDIR}/${GL_LIB_DYNAMIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@${SHELL} ${scriptdir}/mkinstalldirs ${LIBDIR}
-	${LD} ${LDOPTS} -o $@ ${OBJDIR}/*.o
+	${LD} ${LDOPTS} -o $@ ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	cd ${_LIBDIR_BASE} && ln -sf $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"

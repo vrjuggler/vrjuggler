@@ -34,7 +34,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 OGL_API		:= @OPENGL_API@
 
@@ -48,7 +48,7 @@ else
     GL_SRCS	+= vjGlxWindow.cpp
 endif
 
-GL_OBJECTS	:= ${addprefix ${OBJDIR}/,${GL_SRCS:.cpp=.o}}
+GL_OBJECTS	:= ${addprefix ${OBJDIR}/,${GL_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${GL_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

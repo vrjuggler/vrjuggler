@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 ENVIRONTMENT_SRCS	:= vjTimedUpdate.cpp
 
@@ -37,7 +37,7 @@ ENVIRONTMENT_SRCS	+= vjEnvironmentManager.cpp	\
                            vjCommand.cpp
 endif
 
-ENVIRONMENT_OBJECTS	:= ${addprefix ${OBJDIR}/,${ENVIRONTMENT_SRCS:.cpp=.o}}
+ENVIRONMENT_OBJECTS	:= ${addprefix ${OBJDIR}/,${ENVIRONTMENT_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES		:= ${ENVIRONTMENT_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 VJSIM_SRCS	:= vjSimAnalog.cpp		\
                    vjSimDigital.cpp		\
@@ -36,7 +36,7 @@ VJSIM_SRCS	:= vjSimAnalog.cpp		\
                    vjSimPosition.cpp            \
 		   vjSimRelativePosition.cpp
 
-VJSIM_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJSIM_SRCS:.cpp=.o}}
+VJSIM_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJSIM_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${VJSIM_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 MATH_SRCS	:= vjCoord.cpp  \
                    vjMatrix.cpp	\
@@ -36,7 +36,7 @@ MATH_SRCS	:= vjCoord.cpp  \
                    vjVec3.cpp	\
                    vjVec4.cpp
 
-MATH_OBJECTS	:= ${addprefix ${OBJDIR}/,${MATH_SRCS:.cpp=.o}}
+MATH_OBJECTS	:= ${addprefix ${OBJDIR}/,${MATH_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${MATH_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

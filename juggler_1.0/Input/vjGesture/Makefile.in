@@ -27,11 +27,11 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 VJGESTURE_SRCS		:= vjGloveGesture.cpp
 
-VJGESTURE_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJGESTURE_SRCS:.cpp=.o}}
+VJGESTURE_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJGESTURE_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES		:= ${VJGESTURE_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

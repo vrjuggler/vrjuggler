@@ -5,7 +5,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
 
 srcdir		= @srcdir@
 
@@ -40,51 +40,52 @@ all: $(PROGS)
 # ----------------
 # aFlock test driver
 # ----------------
-aFlockTest: aFlockTest.o aFlock.o
-	$(LINK) -o $@ aFlockTest.o aFlock.o 
+aFlockTest: aFlockTest.@OBJ_FILE_SUFFIX@ aFlock.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ aFlockTest.@OBJ_FILE_SUFFIX@ aFlock.@OBJ_FILE_SUFFIX@ 
 
 # ----------------
 # vjFlock test driver
 # ----------------
-vjFlockTest: vjFlockTest.o
-	$(LINK) -o $@ vjFlockTest.o $(VJ_LIBS) $(EXTRA_LIBS)
+vjFlockTest: vjFlockTest.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ vjFlockTest.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # new
 # ----------------
-new: new.o
-	$(LINK) -o $@ new.o $(VJ_LIBS) $(EXTRA_LIBS)
+new: new.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ new.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go
 # ----------------
-go: main.o
-	$(LINK) -o $@ main.o $(VJ_LIBS) $(EXTRA_LIBS)
+go: main.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ main.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-ibox
 # ----------------
-go-ibox: main-ibox.o
-	$(LINK) -o $@ main-ibox.o $(VJ_LIBS) $(EXTRA_LIBS)
+go-ibox: main-ibox.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ main-ibox.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-inputgroup
 # ----------------
-go-inputgroup: main-inputgroup.o
-	$(LINK) -o $@ main-inputgroup.o $(VJ_LIBS) $(EXTRA_LIBS)
+go-inputgroup: main-inputgroup.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ main-inputgroup.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-logiclass
 # ----------------
-go-logiclass: main-logiclass.o
-	$(LINK) -o $@ main-logiclass.o $(VJ_LIBS) $(EXTRA_LIBS)
+go-logiclass: main-logiclass.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ main-logiclass.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-.cpp.o:
+.cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(PROGS) *.exe *.ilk *.o *core *.?db so_locations
+	rm -f Makedepend $(PROGS) *.exe *.ilk *.@OBJ_FILE_SUFFIX@ *core	\
+          *.?db so_locations
 	rm -rf ./ii_files

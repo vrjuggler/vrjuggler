@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 INPUT_MGR_SRCS	:= vjAnalogProxy.cpp		\
                    vjDeviceFactory.cpp		\
@@ -41,7 +41,7 @@ INPUT_MGR_SRCS	:= vjAnalogProxy.cpp		\
                    vjPosProxy.cpp		\
                    vjProxyFactory.cpp
 
-INPUT_MGR_OBJECTS	:= ${addprefix ${OBJDIR}/,${INPUT_MGR_SRCS:.cpp=.o}}
+INPUT_MGR_OBJECTS	:= ${addprefix ${OBJDIR}/,${INPUT_MGR_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES		:= ${INPUT_MGR_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

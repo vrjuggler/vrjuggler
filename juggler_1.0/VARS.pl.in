@@ -18,6 +18,7 @@ $VARS{'CXXFLAGS'}              = '@CXXFLAGS@ @DBG_FLAGS@';
 $VARS{'DEFS'}                  = '@DEFS@';
 $VARS{'EXTRA_LINK_FLAGS'}      = '@EXTRA_LINK_FLAGS@';
 $VARS{'INCLUDES'}              = '@INCLUDES@';
+$VARS{'OBJ_FILE_SUFFIX'}       = '@OBJ_FILE_SUFFIX@';
 $VARS{'OBJ_NAME_FLAG'}         = '@OBJ_NAME_FLAG@';
 $VARS{'PLATFORM'}              = '@PLATFORM@';
 $VARS{'TEST_VJ_LIBS_BASIC'}    = '@TEST_VJ_LIBS_BASIC@';

@@ -5,7 +5,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
 
 srcdir		= @srcdir@
 
@@ -14,7 +14,7 @@ LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
 VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
 VPATH		= @srcdir@
 
-OBJECTS		= main.o
+OBJECTS		= main.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -26,7 +26,7 @@ all: run
 run: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS)
 
-.cpp.o:
+.cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------

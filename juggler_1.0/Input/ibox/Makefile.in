@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.C @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 ifneq (@OS_TYPE@, Win32)
 IBOX_SRCS	:= drivers.c	\
@@ -36,7 +36,7 @@ IBOX_SRCS	:= drivers.c	\
                    ibox.c
 endif
 
-IBOX_OBJECTS	:= ${addprefix ${OBJDIR}/,${IBOX_SRCS:.c=.o}}
+IBOX_OBJECTS	:= ${addprefix ${OBJDIR}/,${IBOX_SRCS:.c=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${IBOX_SRCS:.c=.d}
 
 # -----------------------------------------------------------------------------

@@ -259,6 +259,7 @@ LD=''			dnl # Shared library command (usually ld(1))
 LDOPTS=''		dnl # More options for shared library generator
 LDOPTS_DBG=''		dnl # Debugging options for shared library generator
 LDOPTS_OPT=''		dnl # Optimization options for shared library generator
+OBJ_FILE_SUFFIX='o'	dnl # Suffix for object file names
 OBJ_NAME_FLAG='-o $@'	dnl # Flag used for naming a compiled object file
 
 LIB_PREFIX='lib'	dnl # Prefix for library name
@@ -478,6 +479,7 @@ case $target_os in
             LDOPTS="$LDOPTS -nologo -out:\"${OBJDIR}/Juggler.lib\""
             LDOPTS_DBG='-LDd -MDd'
             LDOPTS_OPT='-LD -MD'
+            OBJ_FILE_SUFFIX='obj'
             OBJ_NAME_FLAG='-Fo$@'
         fi
 
@@ -1193,6 +1195,7 @@ AC_SUBST(LIBS)
 AC_SUBST(LDOPTS)
 AC_SUBST(LDOPTS_DBG)
 AC_SUBST(LDOPTS_OPT)
+AC_SUBST(OBJ_FILE_SUFFIX)
 AC_SUBST(OBJ_NAME_FLAG)
 AC_SUBST(DBG_FLAGS)
 AC_SUBST(OPT_FLAGS)

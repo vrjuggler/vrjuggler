@@ -45,7 +45,7 @@ endif
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 KERNEL_SRCS	:= vjAPI.cpp				\
                    vjConfigManager.cpp			\
@@ -69,7 +69,7 @@ else
     KERNEL_SRCS	+= vjSGISystemFactory.cpp
 endif
 
-KERNEL_OBJECTS	:= ${addprefix ${OBJDIR}/,${KERNEL_SRCS:.cpp=.o}}
+KERNEL_OBJECTS	:= ${addprefix ${OBJDIR}/,${KERNEL_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${KERNEL_SRCS:.cpp=.d}
 
 # Include source building, recursive, dependency and installation targets.

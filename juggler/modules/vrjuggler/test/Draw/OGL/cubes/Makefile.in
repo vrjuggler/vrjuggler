@@ -5,7 +5,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
 
 srcdir		= @srcdir@
 
@@ -28,7 +28,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= cubes.o cubesApp.o
+OBJECTS		= cubes.@OBJ_FILE_SUFFIX@ cubesApp.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -40,9 +40,9 @@ all: cubes
 cubes: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-cubes.o cubesApp.o: cubesApp.h
+cubes.@OBJ_FILE_SUFFIX@ cubesApp.@OBJ_FILE_SUFFIX@: cubesApp.h
 
-.cpp.o:
+.cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------

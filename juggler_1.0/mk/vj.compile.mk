@@ -10,15 +10,16 @@
 #                   options).
 # CXX_COMPILE     - The C++ compiler command line (without -c or -o <outfile>
 #                   options).
+# OBJ_FILE_SUFFIX - Suffix for object file names (e.g., "o" or "obj").
 # OBJ_NAME_FLAG   - Flag (with any extra options) used for naming the object
 #                   file being compiled here.
 # -----------------------------------------------------------------------------
 
-${OBJDIR}/%.o : %.c
+${OBJDIR}/%.${OBJ_FILE_SUFFIX}: %.c
 	${C_COMPILE} -c ${OBJ_NAME_FLAG} $<
 
-${OBJDIR}/%.o : %.cpp
+${OBJDIR}/%.${OBJ_FILE_SUFFIX}: %.cpp
 	${CXX_COMPILE} -c ${OBJ_NAME_FLAG} $<
 
-${OBJDIR}/%.o : %.C
+${OBJDIR}/%.${OBJ_FILE_SUFFIX}: %.C
 	${CXX_COMPILE} -c ${OBJ_NAME_FLAG} $<

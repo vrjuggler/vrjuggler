@@ -5,7 +5,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
 
 srcdir		= @srcdir@
 
@@ -24,7 +24,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@
 
-OBJECTS		= matrix.o
+OBJECTS		= matrix.@OBJ_FILE_SUFFIX@
 MATRIX_PROGS	= test
 
 # -----------------------------------------------------------------------------
@@ -37,15 +37,15 @@ all: $(MATRIX_PROGS)
 test: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-matrix.o: matrix.cpp
+matrix.@OBJ_FILE_SUFFIX@: matrix.cpp
 
-.cpp.o:
+.cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(MATRIX_PROGS) *.exe *.ilk *.o *core *.?db	\
-          so_locations
+	rm -f Makedepend $(MATRIX_PROGS) *.exe *.ilk *core *.?db	\
+          *.@OBJ_FILE_SUFFIX@ so_locations
 	rm -rf ./ii_files

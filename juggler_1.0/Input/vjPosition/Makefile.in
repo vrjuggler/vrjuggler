@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 VJPOS_SRCS	:= vjDummyPosition.cpp	\
                    vjPosition.cpp
@@ -41,7 +41,7 @@ VJPOS_SRCS	+= logiclass.cpp	\
 		   aMotionStar.cpp
 endif
 
-VJPOS_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJPOS_SRCS:.cpp=.o}}
+VJPOS_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJPOS_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${VJPOS_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

@@ -34,14 +34,14 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 PF_API		:= @PERFORMER_API@
 
 PF_SRCS 	:= vjPfDrawManager.cpp	\
                    vjPfUtil.cpp
 
-PF_OBJECTS	:= ${addprefix ${OBJDIR}/,${PF_SRCS:.cpp=.o}}
+PF_OBJECTS	:= ${addprefix ${OBJDIR}/,${PF_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${PF_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

@@ -13,6 +13,7 @@
 # DEP_GEN_FLAG    - The flag passed to the compiler to generate dependencies.
 # DEPEND_FILES    - The list of dependency makefiles to be generated.
 # OBJDIR          - The directory to which the object file(s) will be written.
+# OBJ_FILE_SUFFIX - Suffix for object file names (e.g., "o" or "obj").
 #
 # Example:
 #         srcdir = /usr/src/proj1
@@ -39,7 +40,7 @@ endif
 #     ${OBJDIR}/file1.o file1.d : ...
 #
 # where file1 is the value in $* and file1.d is $@.
-_SED_EXP	= '\''s/\($*\)\.o[ :]*/$${OBJDIR}\/\1.o $@ : /g'\''
+_SED_EXP	= '\''s/\($*\)\.${OBJ_FILE_SUFFIX}[ :]*/$${OBJDIR}\/\1.${OBJ_FILE_SUFFIX} $@ : /g'\''
 
 %.d: %.c
 	@echo "Updating dependency file $@ ..."

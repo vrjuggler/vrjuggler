@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 VJINPUT_SRCS	:= vjInput.cpp
 
@@ -35,7 +35,7 @@ ifneq (@OS_TYPE@, Win32)
 VJINPUT_SRCS	+= vjIbox.cpp
 endif
 
-VJINPUT_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJINPUT_SRCS:.cpp=.o}}
+VJINPUT_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJINPUT_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${VJINPUT_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

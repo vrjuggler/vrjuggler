@@ -5,7 +5,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
 
 srcdir		= @srcdir@
 
@@ -33,19 +33,19 @@ default: all
 
 all: $(MATH_PROGS)
 
-testPlane: testPlane.o
-	$(LINK) -o $@ testPlane.o $(VJ_LIBS) $(EXTRA_LIBS)
+testPlane: testPlane.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ testPlane.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-testSeg: testSeg.o
-	$(LINK) -o $@ testSeg.o $(VJ_LIBS) $(EXTRA_LIBS)
+testSeg: testSeg.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ testSeg.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-.cpp.o:
+.cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(MATH_PROGS) *.exe *.ilk *.o *core *.?db	\
-          so_locations
+	rm -f Makedepend $(MATH_PROGS) *.exe *.ilk *.@OBJ_FILE_SUFFIX@	\
+          *core *.?db so_locations
 	rm -rf ./ii_files

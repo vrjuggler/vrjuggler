@@ -65,6 +65,7 @@
 # LIBS            - Extra external libraries needed at link time.
 # MKPATH          - Path to shared vj.*.mk file directory.
 # MTREE_CMD       - Path to a BSD-compatible mtree.
+# OBJ_FILE_SUFFIX - Suffix for object file names (e.g., "o" or "obj").
 # OBJ_NAME_FLAG   - Flag passed to the compiler to name an object file.
 # OBJDIR          - Path to the directory where the object files will be
 #                   built.
@@ -140,6 +141,7 @@ LIBS		= @LIBS@
 MAKEFLAGS	+= --no-print-directory
 MKPATH		= ${VJROOT_ABS}/mk
 MTREE_CMD	= @MTREE_CMD@
+OBJ_FILE_SUFFIX	= @OBJ_FILE_SUFFIX@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 PERL		= @PERL@
 

@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 CONFIG_SRCS	:= vjChunkDesc.cpp	\
                    vjChunkDescDB.cpp	\
@@ -40,7 +40,7 @@ CONFIG_SRCS	:= vjChunkDesc.cpp	\
                    vjProperty.cpp	\
                    vjPropertyDesc.cpp
 
-CONFIG_OBJECTS	:= ${addprefix ${OBJDIR}/,${CONFIG_SRCS:.cpp=.o}}
+CONFIG_OBJECTS	:= ${addprefix ${OBJDIR}/,${CONFIG_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${CONFIG_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------
