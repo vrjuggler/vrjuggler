@@ -169,14 +169,16 @@ ifneq (@OS_TYPE@, Win32)
           done
 	cd $(instlinks)/include && rm -f ./boost &&			\
           $(LN_S) $(JUGGLERROOT_ABS)/external/boost/boost ./
-	cd $(instlinks)/$(LIBDIR_NAME) && rm -f ./* &&			\
-          $(LN_S) $(LIBDIR_BASE)/* ./
+	for lib in $(LIBS) ; do 					\
+            cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
+              $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
+          done
 	cd $(instlinks)/include/vpr && rm -f ./*.h &&			\
           $(LN_S) $(VPRROOT_ABS)/vpr/*.h ./
 	cd $(instlinks)/include/vpr && rm -f ./vprDefines.h &&		\
-	  $(LN_S) $(topdir)/vpr/vprDefines.h ./vprDefines.h
+         $(LN_S) $(topdir)/vpr/vprDefines.h ./vprDefines.h
 	cd $(instlinks)/include/vpr && rm -f ./vprParam.h &&		\
-	  $(LN_S) $(topdir)/vpr/vprParam.h ./vprParam.h
+          $(LN_S) $(topdir)/vpr/vprParam.h ./vprParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(VPRROOT_ABS)/vpr-config.in -p 'use_base_dir=yes'	\

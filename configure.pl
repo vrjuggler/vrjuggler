@@ -1,5 +1,37 @@
 #!/usr/bin/perl -w
 
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
 require 5.004;
 
 use strict 'vars';
@@ -16,7 +48,9 @@ use Pod::Usage;
 # Subroutine prototypes.
 sub parseConfigFile($);
 sub configureModule($);
-sub generateMakefile();
+sub regenModuleInfo($);
+sub generateMakefile(;$);
+sub generateReconfig($@);
 sub printHelp();
 sub getConfigureHelp($$);
 sub parseOutput($$);
@@ -28,6 +62,8 @@ my $help        = 0;
 my $cfg         = "juggler.cfg";
 $module         = '';
 my $script_help = 0;
+my $manual      = 0;
+my $regen       = 0;
 
 $CONFIG_ARGS    = 0;
 $PATH_ARGS      = 1;
@@ -40,39 +76,69 @@ my @save_argv = @ARGV;
 
 Getopt::Long::Configure('pass_through');
 GetOptions('help|?' => \$help, 'cfg=s' => \$cfg, 'module=s' => \$module,
-           'script-help' => \$script_help)
+           'script-help' => \$script_help, 'manual' => \$manual,
+           'regen' => \$regen)
    or pod2usage(2);
+
+# Print the help output and exit if --help was on the command line.
 pod2usage(1) if $script_help;
+pod2usage(-exitstatus => 0, -verbose => 2) if $manual;
 
 die "ERROR: No configuration given\n" unless $cfg;
 
 $base_dir = (fileparse("$0"))[1];
 
-open(RECONFIG, "> reconfig");
-print RECONFIG "$0 ", "@save_argv\n";
-close(RECONFIG);
-
 parseConfigFile("$cfg");
 
 printHelp() && exit(0) if $help;
 
-if ( $module )
+if ( $regen )
 {
-   configureModule("$module");
-}
-elsif ( $DEFAULT_MODULE && defined($MODULES{"$DEFAULT_MODULE"}) )
-{
-   configureModule("$DEFAULT_MODULE");
+   if ( $module )
+   {
+      regenModuleInfo("$module");
+      generateMakefile("$module");
+   }
+   elsif ( $DEFAULT_MODULE && defined($MODULES{"$DEFAULT_MODULE"}) )
+   {
+      regenModuleInfo("$DEFAULT_MODULE");
+      generateMakefile("$DEFAULT_MODULE");
+   }
+   else
+   {
+      foreach ( keys(%MODULES) )
+      {
+         regenModuleInfo("$_");
+      }
+
+      generateMakefile();
+   }
 }
 else
 {
-   foreach ( keys(%MODULES) )
+   if ( $module )
    {
-      configureModule("$_");
+      configureModule("$module");
+      generateMakefile("$module");
+      generateReconfig("$module", @save_argv);
+   }
+   elsif ( $DEFAULT_MODULE && defined($MODULES{"$DEFAULT_MODULE"}) )
+   {
+      configureModule("$DEFAULT_MODULE");
+      generateMakefile("$DEFAULT_MODULE");
+      generateReconfig("$DEFAULT_MODULE", @save_argv);
+   }
+   else
+   {
+      foreach ( keys(%MODULES) )
+      {
+         configureModule("$_");
+      }
+
+      generateMakefile();
+      generateReconfig('', @save_argv);
    }
 }
-
-generateMakefile();
 
 exit(0);
 
@@ -186,8 +252,32 @@ sub configureModule ($)
    }
 }
 
-sub generateMakefile ()
+sub regenModuleInfo ($)
 {
+   my $module_name = shift;
+
+   my $cwd = getcwd();
+
+   die "ERROR: No module $module_name defined\n"
+      unless defined($MODULES{"$module_name"});
+
+   my $modref;
+   foreach $modref ( @{$MODULES{"$module_name"}} )
+   {
+      my $mod_path = $$modref{'path'};
+
+      chdir("$mod_path")
+         or die "WARNING: Could not chdir to $mod_path\n";
+      system("./config.status 2>&1") == 0
+         or die "Regeneration for $module_name in $ENV{'PWD'} failed\n";
+      chdir("$cwd");
+   }
+}
+
+sub generateMakefile (;$)
+{
+   my $gen_module = shift || '';
+
    open(INPUT, "$base_dir/Makefile.in")
       or die "ERROR: Could not read from $base_dir/Makefile.in: $!\n";
 
@@ -202,9 +292,9 @@ sub generateMakefile ()
    my $modules;
    my @module_array;
 
-   if ( $module )
+   if ( $gen_module )
    {
-      foreach ( @{$MODULES{"$module"}} )
+      foreach ( @{$MODULES{"$gen_module"}} )
       {
          $modules .= "${$_}{'path'} ";
       }
@@ -214,9 +304,10 @@ sub generateMakefile ()
       my $mod_name;
       foreach $mod_name ( keys(%MODULES) )
       {
-         foreach ( @{$MODULES{"$module"}} )
+         my $temp_mod;
+         foreach $temp_mod ( @{$MODULES{"$mod_name"}} )
          {
-            $modules .= "${$_}{'path'} ";
+            $modules .= "${$temp_mod}{'path'} ";
          }
       }
    }
@@ -232,6 +323,41 @@ sub generateMakefile ()
    open(OUTPUT, "> Makefile") or die "ERROR: Could not create Makefile: $!\n";
    print OUTPUT "$input_file";
    close(OUTPUT) or warn "WARNING: Failed to save Makefile: $!\n";
+}
+
+sub generateReconfig ($@)
+{
+   my $gen_module = shift;
+   my @save_argv  = @_;
+
+   my $modules;
+
+   open(RECONFIG, "> reconfig");
+
+   if ( $gen_module )
+   {
+      foreach ( @{$MODULES{"$gen_module"}} )
+      {
+         print RECONFIG "(cd ${$_}{'path'} && rm -f config.status " .
+                        "config.cache config.log)\n"
+      }
+   }
+   else
+   {
+      my $mod_name;
+      foreach $mod_name ( keys(%MODULES) )
+      {
+         foreach ( @{$MODULES{"$mod_name"}} )
+         {
+            print RECONFIG "(cd ${$_}{'path'} && rm -f config.status " .
+                           "config.cache config.log)\n"
+         }
+      }
+   }
+
+   print RECONFIG "$0 ", "@save_argv\n";
+   close(RECONFIG);
+   chmod(0755, "reconfig");
 }
 
 sub printHelp ()
@@ -427,6 +553,10 @@ Print usage information for all the known configure scripts.  The
 knowledge of configure scripts comes from the configuration file.  The
 output may be limited using the --module argument, described below.
 
+=item B<--manual>
+
+Print usage information of this script alone in UNIX manpage format and exit.
+
 =item B<--cfg>=file
 
 Name the configuration file to be used by this script.  If not specified,
@@ -439,6 +569,11 @@ Limit the work done by this script to what is required by the named
 module.  The given name must correspond to one listed in the aforementioned
 configuration file.  This can be specified in conjunction with B<--help>
 to limit the output to only what is appropriate for the named module.
+
+=item B<--regen>
+
+Just regenerate the files previously generated without running the
+configure script(s) again.
 
 =back
 
