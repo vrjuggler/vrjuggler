@@ -12,7 +12,7 @@
 //! NOTE: The init function should be called in the init function of the user
 //+         application
 
-#include <mstring.h>
+#include <vjConfig.h>
 
 class vjDeviceInterface
 {
