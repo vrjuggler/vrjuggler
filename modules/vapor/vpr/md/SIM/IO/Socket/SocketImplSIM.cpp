@@ -56,7 +56,7 @@ namespace vpr
 
 static const vpr::Uint32 SOCK_MAX_BUFFER_SIZE = 65536;
 
-SocketImplSIM::~SocketImplSIM ()
+SocketImplSIM::~SocketImplSIM()
 {
 vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
                                  std::string("SocketImplSIM destructor: Deleting socket\n"),
@@ -64,14 +64,15 @@ vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
    close();
 }
 
-vpr::ReturnStatus SocketImplSIM::close ()
+vpr::ReturnStatus SocketImplSIM::close()
 {
 vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
                                  std::string("SocketImplSIM::close(): Closing socket ...\n"),
                                  std::string("Done closing socket.\n"));
    vpr::ReturnStatus status;
 
-   vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_STATE_LVL) << "SocketImplSIM::close: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_STATE_LVL)
+      << "SocketImplSIM::close: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
 
    if ( mPeer != NULL )
    {
@@ -85,7 +86,9 @@ vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
 
    if ( mBound )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "SocketImplSIM::close: Unbinding: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "SocketImplSIM::close: Unbinding: " << mLocalAddr << std::endl
+         << vprDEBUG_FLUSH;
       // Release the node to which we were bound.
       status = vpr::sim::Controller::instance()->getSocketManager().unbind(this);
       mBound = false;
@@ -98,7 +101,7 @@ vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
    return status;
 }
 
-vpr::ReturnStatus SocketImplSIM::bind ()
+vpr::ReturnStatus SocketImplSIM::bind()
 {
    vpr::ReturnStatus status;
    vpr::sim::SocketManager& sock_mgr =
@@ -110,7 +113,7 @@ vpr::ReturnStatus SocketImplSIM::bind ()
    return status;
 }
 
-vpr::ReturnStatus SocketImplSIM::connect (vpr::Interval timeout)
+vpr::ReturnStatus SocketImplSIM::connect(vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
    vprASSERT(mOpen && "An unopened socket cannot connect");
@@ -134,7 +137,7 @@ vpr::ReturnStatus SocketImplSIM::connect (vpr::Interval timeout)
 // Complete the connection
 // - Set the peer address and ptr
 // - Set to connected state.
-vpr::ReturnStatus SocketImplSIM::completeConnection( SocketImplSIM* connectedPeer)
+vpr::ReturnStatus SocketImplSIM::completeConnection(SocketImplSIM* connectedPeer)
 {
    mPeer = connectedPeer;
    mRemoteAddr = connectedPeer->getLocalAddr();
@@ -183,7 +186,7 @@ vpr::ReturnStatus SocketImplSIM::setRemoteAddr(const vpr::InetAddr& addr)
    return status;
 }
 
-vpr::Uint32 SocketImplSIM::availableBytes ()
+vpr::Uint32 SocketImplSIM::availableBytes()
 {
    vprASSERT(mBound && "We must be bound first");
 
@@ -198,10 +201,10 @@ vpr::Uint32 SocketImplSIM::availableBytes ()
    return bytes;
 }
 
-vpr::ReturnStatus SocketImplSIM::read_i (void* buffer,
-                                         const vpr::Uint32 length,
-                                         vpr::Uint32& data_read,
-                                         vpr::Interval timeout )
+vpr::ReturnStatus SocketImplSIM::read_i(void* buffer,
+                                        const vpr::Uint32 length,
+                                        vpr::Uint32& data_read,
+                                        vpr::Interval timeout )
 {
    vpr:: ReturnStatus status;
    vprASSERT(mOpen && "Cannot read on an unopened socket");
@@ -251,9 +254,9 @@ vpr::ReturnStatus SocketImplSIM::read_i (void* buffer,
 /** Exactly like read_i except takes MessageDataPtr directly for zero copy networking
 * Updates msgData to point at the new message data.
 */
-vpr::ReturnStatus SocketImplSIM::read_i (vpr::sim::Message::MessageDataPtr& msgData,
-                                         vpr::Uint32& data_read,
-                                         vpr::Interval timeout)
+vpr::ReturnStatus SocketImplSIM::read_i(vpr::sim::Message::MessageDataPtr& msgData,
+                                        vpr::Uint32& data_read,
+                                        vpr::Interval timeout)
 {
    vpr:: ReturnStatus status;
    vprASSERT(mOpen && "Cannot read on an unopened socket");
@@ -283,16 +286,14 @@ vpr::ReturnStatus SocketImplSIM::read_i (vpr::sim::Message::MessageDataPtr& msgD
    return status;
 }
 
-
-vpr::ReturnStatus SocketImplSIM::write_i (const void* buffer,
-                                          const vpr::Uint32 length,
-                                          vpr::Uint32& data_written,
-                                          vpr::Interval timeout)
+vpr::ReturnStatus SocketImplSIM::write_i(const void* buffer,
+                                         const vpr::Uint32 length,
+                                         vpr::Uint32& data_written,
+                                         vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
    vprASSERT(mBound && "We must be bound first");
    vprASSERT(mOpen && "We must be open first");
-
 
    if ( mPeer == NULL )
    {
@@ -348,9 +349,9 @@ vpr::ReturnStatus SocketImplSIM::write_i (const void* buffer,
 }
 
 /** Exactly like write_i except takes MessageDataPtr directly for zero copy networking */
-vpr::ReturnStatus SocketImplSIM::write_i (vpr::sim::Message::MessageDataPtr msgData,
-                                          vpr::Uint32& data_written,
-                                          vpr::Interval timeout)
+vpr::ReturnStatus SocketImplSIM::write_i(vpr::sim::Message::MessageDataPtr msgData,
+                                         vpr::Uint32& data_written,
+                                         vpr::Interval timeout)
 {
    vprASSERT(mBound && "We must be bound first");
    vprASSERT(mOpen && "We must be open first");
@@ -376,8 +377,8 @@ vpr::ReturnStatus SocketImplSIM::write_i (vpr::sim::Message::MessageDataPtr msgD
 }
 
 
-vpr::ReturnStatus SocketImplSIM::getOption (const vpr::SocketOptions::Types option,
-                                            struct vpr::SocketOptions::Data& data)
+vpr::ReturnStatus SocketImplSIM::getOption(const vpr::SocketOptions::Types option,
+                                           struct vpr::SocketOptions::Data& data)
 {
    vpr::ReturnStatus status;
 
@@ -435,8 +436,8 @@ vpr::ReturnStatus SocketImplSIM::getOption (const vpr::SocketOptions::Types opti
    return status;
 }
 
-vpr::ReturnStatus SocketImplSIM::setOption (const vpr::SocketOptions::Types option,
-                                            const struct vpr::SocketOptions::Data& data)
+vpr::ReturnStatus SocketImplSIM::setOption(const vpr::SocketOptions::Types option,
+                                           const struct vpr::SocketOptions::Data& data)
 {
    vpr::ReturnStatus status;
 
@@ -494,7 +495,7 @@ vpr::ReturnStatus SocketImplSIM::setOption (const vpr::SocketOptions::Types opti
    return status;
 }
 
-vpr::ReturnStatus SocketImplSIM::inExceptState ()
+vpr::ReturnStatus SocketImplSIM::inExceptState()
 {
    // XXX: For now, we never go into an exceptional state.
    return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
@@ -504,16 +505,16 @@ vpr::ReturnStatus SocketImplSIM::inExceptState ()
 // Protected methods.
 // ============================================================================
 
-SocketImplSIM::SocketImplSIM (const vpr::SocketTypes::Type sock_type)
+SocketImplSIM::SocketImplSIM(const vpr::SocketTypes::Type sock_type)
    : mOpen(false), mBound(false), mConnected(false), mOpenBlocking(false),
      mBlocking(false), mType(sock_type), mReuseAddr(false), mPeer(NULL)
 {
    /* Do nothing. */ ;
 }
 
-SocketImplSIM::SocketImplSIM (const vpr::InetAddr& local_addr,
-                              const vpr::InetAddr& remote_addr,
-                              const vpr::SocketTypes::Type sock_type)
+SocketImplSIM::SocketImplSIM(const vpr::InetAddr& local_addr,
+                             const vpr::InetAddr& remote_addr,
+                             const vpr::SocketTypes::Type sock_type)
    : mOpen(false), mBound(false), mConnected(false), mOpenBlocking(false),
      mBlocking(false), mLocalAddr(local_addr), mRemoteAddr(remote_addr),
      mType(sock_type), mPeer(NULL)
@@ -521,7 +522,7 @@ SocketImplSIM::SocketImplSIM (const vpr::InetAddr& local_addr,
    /* Do nothing. */ ;
 }
 
-void SocketImplSIM::disconnect ()
+void SocketImplSIM::disconnect()
 {
    // XXX: This is potentially not the best way to disconnect, but it's the
    // best I have come up with so far.
