@@ -90,7 +90,7 @@ public:
 
     //: returns time of last update...
     jccl::TimeStamp getTimeStamp () {
-        return mPositionData.getTimeStamp();
+        return mPositionData.getTime();
     }
 
 
@@ -111,6 +111,12 @@ public:
 
       return mPositionData.getPositionData();
    }
+
+    /** Get the actual PositionData. */
+    PositionData* getPositionData() {
+        return &mPositionData;
+    }
+
 
    //: Return this device's subunit number
    int getUnit()

@@ -59,29 +59,37 @@ public:
 
 
     /** Record the current time using the jccl::TimeStamp. */
-    void setTimeStamp () {
+    void setTime () {
         mTimeStamp.set();
     }
 
     /** Record the given time. */
-    void setTimeStamp (const jccl::TimeStamp& ts) {
+    void setTime (const jccl::TimeStamp& ts) {
         mTimeStamp = ts;
     }
 
     /** Return the last marked time using the jccl::TimeStamp. */
-    jccl::TimeStamp getTimeStamp () {
+    jccl::TimeStamp getTime () {
         return mTimeStamp;
     }
 
-    /** Record the current time using the vpr::Interval. */
-    void setTime () {
-        mInterval.setNow();
-    }
+    // uncomment these & comment out the above to switch from 
+    // jccl::TimeStamp to vpr::Interval.
 
-    /** Return the last marked time using the vpr::Interval. */
-    vpr::Interval getTime () {
-        return mInterval;
-    }
+//     /** Record the current time using the vpr::Interval. */
+//     void setTime () {
+//         mInterval.setNow();
+//     }
+
+//     /** Record the given time. */
+//     void setTime (const vpr::Interval& iv) {
+//         mInterval = iv;
+//     }
+
+//     /** Return the last marked time using the vpr::Interval. */
+//     vpr::Interval getTime () {
+//         return mInterval;
+//     }
 
 protected:
 

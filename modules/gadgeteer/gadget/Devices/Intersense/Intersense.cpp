@@ -223,11 +223,17 @@ int Intersense::sample()
         return 0;
 
     int i,  j;
-    jccl::TimeStamp sampletime;
 
 
     mTracker.updateData();
-    sampletime.set();
+
+    // get an initial timestamp for this entire sample. we'll copy it into
+    // each PositionData for this sample.
+    int firstindex;
+    if (mTracker.NumStations() > 0) {
+        firstindex = getStationIndex (0, progress);
+        mData[firstindex].setTime();
+    }
 
 
     int k;
@@ -257,7 +263,8 @@ int Intersense::sample()
                                 mTracker.wQuat( stationIndex ));
             mData[index].getPositionData()->makeQuaternion(quatValue);
         }
-        mData[index].setTimeStamp (sampletime);
+
+         mData[index].setTime (mData[firstindex].getTime());
         
 // We start at the index of the first digital item (set in the config files)
 // and we copy the digital data from this station to the Intersense device for range (min -> min+count-1)

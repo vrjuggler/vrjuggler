@@ -78,7 +78,7 @@ bool SimPosition::config(jccl::ConfigChunkPtr chunk)
       mPos.getPositionData()->makeTrans(x_pos, y_pos, z_pos);
    if((x_rot != 0.0f) || (y_rot != 0.0f) || (z_rot != 0.0f))
       mPos.getPositionData()->postXYZEuler(*(mPos.getPositionData()), x_rot, y_rot, z_rot);
-   mPos.setTimeStamp();
+   mPos.setTime();
 
    return true;
 }
@@ -90,8 +90,8 @@ void SimPosition::updateData()
                      // Used to keep from calling checkKey twice on success
       // NOTE: Could have implemented using side effects of assignment
       //       and used less lines, but this is more explicit
-   //mUpdateTime.set();
-   mPos.setTimeStamp();
+
+   mPos.setTime();
 
    amt = checkKeyPair(mSimKeys[FORWARD]);
    if(amt)
