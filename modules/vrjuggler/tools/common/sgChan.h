@@ -32,12 +32,11 @@
 
 #ifndef _SG_CHAN_H_
 #define _SG_CHAN_H_
-#pragma once
 
 #include <sgInput.h>
 #include <sgDrawFunctor.h>
-#include <Math/vjMatrix.h>
-#include <Math/vjVec3.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Math/Vec3.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 
@@ -111,18 +110,18 @@ public:
 		 * Sets the eye position and the eye euler xyz rotation.
 		 *
 		 */
-    void setView(vjVec3 eyePos, vjVec3 eyeRot)
+    void setView(vrj::Vec3 eyePos, vrj::Vec3 eyeRot)
     {		
       // Build T*R
-      vjMatrix rot_mat;
+      vrj::Matrix rot_mat;
       rot_mat.makeXYZEuler(eyeRot[0], eyeRot[1], eyeRot[2]);
-      vjMatrix mat;
+      vrj::Matrix mat;
       mat.makeTrans(eyePos[0], eyePos[1], eyePos[2]);
       mat.postMult(rot_mat);
       setViewMatrix(mat);
     }
 
-    void setViewMatrix(const vjMatrix& mat)
+    void setViewMatrix(const vrj::Matrix& mat)
     {
 		viewMatrix = mat;
     }
@@ -156,7 +155,7 @@ public:
 		if(mDrawFunc != NULL)
          mDrawFunc->draw(this);
       else
-         cerr << "Channel does not have drawFunc set.\n";
+         std::cerr << "Channel does not have drawFunc set.\n";
     }
 
 private:
@@ -173,7 +172,7 @@ private:
     GLdouble orthoLeft, orthoRight, orthoBottom, orthoTop;
     GLdouble Near;
 	 GLdouble Far;
-    vjMatrix viewMatrix;
+    vrj::Matrix viewMatrix;
 
     sgInput* inputObject;
 };

@@ -34,7 +34,7 @@
 #define _SG_INPUT_H_
 
 
-#include <Math/vjVec3.h>
+#include <vrj/Math/Vec3.h>
 //#include <sgSeg.h>
 //#include <sgPlane.h>
 #include <GL/gl.h>

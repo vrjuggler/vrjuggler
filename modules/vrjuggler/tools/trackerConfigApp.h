@@ -71,7 +71,7 @@ public:
 		win[winHndl]->getChan()->setDrawFunc(this);        // We are the draw function
       win[winHndl]->chan.setFov(60.0f);
 		win[winHndl]->chan.setNearFar(0.1, 1000.0f);
-      win[winHndl]->chan.setView(vjVec3(0.0f, -5.0f, -20.0f), vjVec3(0.0f, -45.0f, 0.0f));
+      win[winHndl]->chan.setView(vrj::Vec3(0.0f, -5.0f, -20.0f), vrj::Vec3(0.0f, -45.0f, 0.0f));
 		//**//win[winHndl]->chan.setView(sgVec3(0.0, 0.0, 20.0), sgVec3(0.0, 0.0, 0.0));
 		
 			// Set the trackballs input
@@ -90,7 +90,7 @@ public:
    {
       // Set base model matrix
       glPushMatrix();
-         vjMatrix model_dcs; model_dcs = getModelMatrix();
+         vrj::Matrix model_dcs; model_dcs = getModelMatrix();
          glMultMatrixf(model_dcs.getFloatPtr());
 
          // Draw a base system XXX: In future this should come from a config file or something
@@ -99,7 +99,7 @@ public:
          glPopMatrix();
 
          // ----- TRANSMITTER ------ //
-         const vjVec3 TmtCubeColor(0.0,1.0,1.0f);
+         const vrj::Vec3 TmtCubeColor(0.0,1.0,1.0f);
          const float TmtCubeSize(1.0f);
          glPushMatrix();
             glMultMatrixf(mTransmitterPos.getFloatPtr());
@@ -109,7 +109,7 @@ public:
          glPopMatrix();
 
          // ----- TRACKER ------ //
-         const vjVec3 TrkCubeColor(1.0,1.0,0.0f);
+         const vrj::Vec3 TrkCubeColor(1.0,1.0,0.0f);
          const float TrkCubeSize(0.20f);
          glPushMatrix();
             glMultMatrixf(mTrackerPos.getFloatPtr());
@@ -118,7 +118,7 @@ public:
             drawAxis(2.0f,0.6f,1.5f);
 
              // ----- PROXY ------ //
-            const vjVec3 PxyCubeColor(1.0,0.0,1.0f);
+            const vrj::Vec3 PxyCubeColor(1.0,0.0,1.0f);
             const float PxyCubeSize(0.20f);
             glPushMatrix();
                glMultMatrixf(mProxyPos.getFloatPtr());
@@ -135,7 +135,7 @@ public:
    void drawBaseSystem()
    {
       const float CubeSize(10.0f);     // Size of the system to draw
-      const vjVec3 CubeColor(0.8f,0.8f,0.8f);
+      const vrj::Vec3 CubeColor(0.8f,0.8f,0.8f);
 
       drawAxis(1.0f, 0.5, 1.5f);
       glPushMatrix();
@@ -181,38 +181,38 @@ public:	// State interface //
 	void setWireframeMode(bool mode)
 	{ mDrawWireFrame = mode; }
 
-   vjMatrix getTransmitterPos()
+   vrj::Matrix getTransmitterPos()
    { return mTransmitterPos; }
-   void setTransmitterPos(vjMatrix mat)
+   void setTransmitterPos(vrj::Matrix mat)
    { mTransmitterPos = mat; }
 
    // Used to get a to the correct model view
-   vjMatrix getModelMatrix()
+   vrj::Matrix getModelMatrix()
    { return mModelRotation; }
-   void setModelMatrix(vjMatrix mat)
+   void setModelMatrix(vrj::Matrix mat)
    { mModelRotation = mat; }
 
-   vjMatrix getTrackerPos()
+   vrj::Matrix getTrackerPos()
    { return mTrackerPos; }
-   void setTrackerPos(vjMatrix mat)
+   void setTrackerPos(vrj::Matrix mat)
    { mTrackerPos = mat; }
 
-   vjMatrix getProxyPos()
+   vrj::Matrix getProxyPos()
    { return mProxyPos; }
-   void setProxyPos(vjMatrix mat)
+   void setProxyPos(vrj::Matrix mat)
    { mProxyPos = mat; }
 
 
 private: // State vars //
 	bool        mDrawWireFrame;
-   vjMatrix    mModelRotation;      // Updated by menu system
-   vjMatrix    mTransmitterPos;     // Position of transmitter
-   vjMatrix    mTrackerPos;         // Position of a tracker
-   vjMatrix    mProxyPos;           // Tracker proxy relative to tracker
+   vrj::Matrix    mModelRotation;      // Updated by menu system
+   vrj::Matrix    mTransmitterPos;     // Position of transmitter
+   vrj::Matrix    mTrackerPos;         // Position of a tracker
+   vrj::Matrix    mProxyPos;           // Tracker proxy relative to tracker
 
 protected:     // --- Geom helpers --- //
    void initQuadObj();
-   void drawLine(vjVec3& start, vjVec3& end);
+   void drawLine(vrj::Vec3& start, vrj::Vec3& end);
    void drawSphere(float radius, int slices, int stacks);
    void drawCone(float base, float height, int slices, int stacks);
    void drawCube(float size, GLenum type);
@@ -247,10 +247,10 @@ public:
 // Draw a set of axis
 void trackerConfigApp::drawAxis(float lineWidth, float brightness, float scale)
 {
-   vjVec3 x_axis(scale,0.0f,0.0f);
-   vjVec3 y_axis(0.0f, scale, 0.0f);
-   vjVec3 z_axis(0.0f, 0.0f, scale);
-   vjVec3 origin(0.0f, 0.0f, 0.0f);
+   vrj::Vec3 x_axis(scale,0.0f,0.0f);
+   vrj::Vec3 y_axis(0.0f, scale, 0.0f);
+   vrj::Vec3 z_axis(0.0f, 0.0f, scale);
+   vrj::Vec3 origin(0.0f, 0.0f, 0.0f);
 
    glPushAttrib(GL_LIGHTING_BIT | GL_ENABLE_BIT | GL_LINE_BIT);
    glDisable(GL_LIGHTING);
@@ -280,7 +280,7 @@ void trackerConfigApp::initQuadObj()
       mQuadObj = gluNewQuadric();
 }
 
-void trackerConfigApp::drawLine(vjVec3& start, vjVec3& end)
+void trackerConfigApp::drawLine(vrj::Vec3& start, vrj::Vec3& end)
 {
    glBegin(GL_LINES);
       glVertex3fv(start.vec);
