@@ -216,6 +216,9 @@ public:
    {
       origin_x = o_x; origin_y = o_y;
       window_width = width; window_height = height;
+
+      // Update the display configuration
+      mVrjDisplay->setOriginAndSize(o_x, o_y, width, height);
    }
 
    /** Return the origin and size of the current window */
