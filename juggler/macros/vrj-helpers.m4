@@ -361,6 +361,9 @@ AC_DEFUN(VJ_APP_LINKER,
         APP_EXTRA_LIBS="$7"
 
         if test "$PLATFORM" = "IRIX" ; then
+            APP_LINKALL_ON='-all'
+            APP_LINKALL_OFF=''
+
             APP_BASIC_LIBS_BEGIN="-B static -L\$($5)/lib$LIBBITSUF"
             APP_BASIC_LIBS_END='-B dynamic'
             APP_BASIC_LIBS_BEGIN_INST="-B dynamic -L\$($5)/lib$LIBBITSUF"
@@ -369,6 +372,9 @@ AC_DEFUN(VJ_APP_LINKER,
             APP_EXTRA_LIBS_BEGIN='-B dynamic'
             APP_EXTRA_LIBS_END=''
         elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
+            APP_LINKALL_ON='-Wl,--whole-archive'
+            APP_LINKALL_OFF='-Wl,--no-whole-archive'
+
             APP_BASIC_LIBS_BEGIN="-Wl,-Bstatic -L\$($5)/lib$LIBBITSUF"
             APP_BASIC_LIBS_END="-Wl,-Bdynamic"
             APP_BASIC_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$($5)/lib$LIBBITSUF"
@@ -384,6 +390,9 @@ AC_DEFUN(VJ_APP_LINKER,
             APP_BASIC_LIBS_BEGIN_INST="$APP_BASIC_LIBS_BEGIN"
         fi
     elif test "$OS_TYPE" = "Win32" ; then
+        APP_LINKALL_ON=''
+        APP_LINKALL_OFF=''
+
         if test "x$DPP_USING_MSVCCC" = "xyes" ; then
             APP_LINK='link'
         else
@@ -410,6 +419,8 @@ AC_DEFUN(VJ_APP_LINKER,
     AC_SUBST(APP_OPTIM_LFLAGS)
     AC_SUBST(APP_EXTRA_LFLAGS)
     AC_SUBST(APP_LINK_FLAGS)
+    AC_SUBST(APP_LINKALL_ON)
+    AC_SUBST(APP_LINKALL_OFF)
     AC_SUBST(APP_BASIC_LIBS_BEGIN)
     AC_SUBST(APP_BASIC_LIBS_END)
     AC_SUBST(APP_BASIC_LIBS_BEGIN_INST)
