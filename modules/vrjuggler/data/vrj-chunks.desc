@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?org-vrjuggler-jccl-settings desc.db.version="2.1"?>
+<?org-vrjuggler-jccl-settings desc.db.version="2.2"?>
 <ChunkDescDB>
   <ChunkDesc token="ThreeDMouse" name="3D Mouse">
     <category>Devices</category>
-    <help>Configuration for Logitech 3d mouse</help>
+    <help>Configuration for Logitech 3D mouse</help>
     <PropertyDesc token="port" name="Port" type="string" variable="0">
       <help>Serial port this device is connected to</help>
       <item label="Port" defaultvalue="/dev/ttyd1" />
@@ -15,10 +15,10 @@
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
-      <enumeration name="PosXformFilter" />
+      <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
 The filters are applied in the order that they are specified in this configuration.</help>
@@ -30,12 +30,12 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="device" name="Device" type="chunk" variable="0">
       <help>The device this proxy attaches to</help>
       <item label="Analog Proxy" defaultvalue="" />
-      <enumeration name="SimAnalog" />
-      <enumeration name="IBox" />
-      <enumeration name="TrackdController" />
-      <enumeration name="Intersense" />
-      <enumeration name="TrackdAPIController" value="" />
-      <enumeration name="TweekGadget" />
+      <allowedtype>SimAnalog</allowedtype>
+      <allowedtype>IBox</allowedtype>
+      <allowedtype>TrackdController</allowedtype>
+      <allowedtype>Intersense</allowedtype>
+      <allowedtype>TrackdAPIController</allowedtype>
+      <allowedtype>TweekGadget</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="unit" name="Unit" type="int" variable="0">
       <help>The unit in the device this proxy attaches to</help>
@@ -48,17 +48,17 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
       <help>The keyboard to use for event input.</help>
       <item label="Keyboard Proxy" defaultvalue="" />
-      <enumeration name="KeyboardProxy" />
+      <allowedtype>KeyboardProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="keyPairsInc" name="Increment Keypress" type="embeddedchunk" variable="1">
       <help>Keys for moving value up</help>
       <item label="Increment Key" />
-      <enumeration name="KeyModPair" />
+      <allowedtype>KeyModPair</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="keyPairsDec" name="Decrement Keypress" type="embeddedchunk" variable="1">
       <help>Keys for moving value down</help>
       <item label="Decrement Key" />
-      <enumeration name="KeyModPair" />
+      <allowedtype>KeyModPair</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="anastep" name="Delta" type="float" variable="0">
       <help>The amount that the analog data changes per keypress</help>
@@ -98,13 +98,13 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
       <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
       <item label="Glove Position" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="PosProxy" />
+      <allowedtype>proxyAlias</allowedtype>
+      <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DTK" name="DTK">
@@ -121,10 +121,10 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="segments" name="Segments" type="embeddedchunk" variable="1">
       <help>Configuration for a shared memory segment.</help>
       <item label="Segments" />
-      <enumeration name="DTKsegment" />
+      <allowedtype>DTKsegment</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
-      <enumeration name="PosXformFilter" />
+      <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
 The filters are applied in the order that they are specified in this configuration.</help>
@@ -176,13 +176,13 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
       <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
       <item label="Glove Position" defaultvalue="" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="PosProxy" />
+      <allowedtype>proxyAlias</allowedtype>
+      <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DigProxy" name="Digital Proxy">
@@ -191,16 +191,16 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="device" name="Device" type="chunk" variable="0">
       <help>The device this proxy attaches to</help>
       <item label="Device" defaultvalue="" />
-      <enumeration name="SimDigital" />
-      <enumeration name="IBox" />
-      <enumeration name="PinchGlove" />
-      <enumeration name="DataGlove" />
-      <enumeration name="ThreeDMouse" />
-      <enumeration name="SimDigitalGlove" />
-      <enumeration name="TrackdController" />
-      <enumeration name="Intersense" />
-      <enumeration name="TrackdAPIController" value="" />
-      <enumeration name="TweekGadget" />
+      <allowedtype>SimDigital</allowedtype>
+      <allowedtype>IBox</allowedtype>
+      <allowedtype>PinchGlove</allowedtype>
+      <allowedtype>DataGlove</allowedtype>
+      <allowedtype>ThreeDMouse</allowedtype>
+      <allowedtype>SimDigitalGlove</allowedtype>
+      <allowedtype>TrackdController</allowedtype>
+      <allowedtype>Intersense</allowedtype>
+      <allowedtype>TrackdAPIController</allowedtype>
+      <allowedtype>TweekGadget</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="unit" name="Unit" type="int" variable="0">
       <help>The unit in the device this proxy attaches to</help>
@@ -213,12 +213,12 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
       <help>The keyboard to use for event input.</help>
       <item label="Keyboard Proxy" defaultvalue="" />
-      <enumeration name="KeyboardProxy" />
+      <allowedtype>KeyboardProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="keyPairs" name="Digital button keys" type="embeddedchunk" variable="1">
       <help>Keypresses to trigger multiple digital inputs.  The number of the digital input corresponds to the index of the key press entry.</help>
       <item label="Digital Button Key" />
-      <enumeration name="KeyModPair" />
+      <allowedtype>KeyModPair</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="displaySystem" name="Display System">
@@ -252,7 +252,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Frame Buffer Configuration" token="frameBufferConfig" type="embeddedchunk" variable="0">
       <help>Configuration of this display's frame buffer.</help>
       <item label="Frame Buffer Configuration" />
-      <enumeration name="OpenGLFBConfig" />
+      <allowedtype>OpenGLFBConfig</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="stereo" name="In stereo" type="bool" variable="0">
       <item label="In Stereo" defaultvalue="0" />
@@ -268,7 +268,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="keyboard_device_chunk" name="Keyboard configuration" type="embeddedchunk" variable="0">
       <help>Configuration of this keyboard device.</help>
       <item label="Keyboard Configuration" />
-      <enumeration name="Keyboard" />
+      <allowedtype>Keyboard</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="active" name="Is Active" type="bool" variable="0">
       <help>Is the window supposed to be active?</help>
@@ -277,12 +277,12 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="sim_viewports" name="Contained Sim Viewports" type="embeddedchunk" variable="1">
       <help>The simulator viewports to put in this window.</help>
       <item label="Contained Sim Viewport" />
-      <enumeration name="simViewport" />
+      <allowedtype>simViewport</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="surface_viewports" name="Contained Surface Viewports" type="embeddedchunk" variable="1">
       <help>The surface viewports to put in this window.</help>
       <item label="Contained Surface Viewport" />
-      <enumeration name="surfaceViewport" />
+      <allowedtype>surfaceViewport</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DummyPosition" name="Dummy Position">
@@ -507,7 +507,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Flock" name="Flock of Birds">
@@ -526,7 +526,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Number of Birds" defaultvalue="2" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
-      <enumeration name="PosXformFilter" />
+      <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
 The filters are applied in the order that they are specified in this configuration.</help>
@@ -582,20 +582,20 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="gadget_logger" name="Gadgeteer Logger">
     <category>Gadgeteer/Logger</category>
     <PropertyDesc name="Start Logging" token="start_digital" type="chunk" variable="0">
-      <enumeration name="DigProxy" value="" />
-      <enumeration name="proxyAlias" value="" />
+      <allowedtype>DigProxy</allowedtype>
+      <allowedtype>proxyAlias</allowedtype>
       <help>This is the digital device that when triggered causes the logging to start.</help>
       <item label="Start Logging" defaultvalue="" />
     </PropertyDesc>
     <PropertyDesc name="Stamp Log" token="stamp_digital" type="chunk" variable="0">
-      <enumeration name="DigProxy" value="" />
-      <enumeration name="proxyAlias" value="" />
+      <allowedtype>DigProxy</allowedtype>
+      <allowedtype>proxyAlias</allowedtype>
       <item label="Stamp Log" defaultvalue="" />
     </PropertyDesc>
   </ChunkDesc>
@@ -605,7 +605,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="device" name="Device" type="chunk" variable="0">
       <help>The gesture device to hook the proxy to.</help>
       <item label="Device" defaultvalue="" />
-      <enumeration name="SimGloveGesture" />
+      <allowedtype>SimGloveGesture</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimGloveGesture" name="Glove Gesture Simulator">
@@ -614,11 +614,11 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
       <help>The keyboard to use.</help>
       <item label="Keyboard Proxy" defaultvalue="" />
-      <enumeration name="KeyboardProxy" />
+      <allowedtype>KeyboardProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="keyPairs" name="Key Presses" type="embeddedchunk" variable="1">
       <item label="Key Presses" />
-      <enumeration name="KeyModPair" />
+      <allowedtype>KeyModPair</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="trainedFilename" name="Trained File Name" type="string" variable="0">
       <help>The name of the trained gesture file.  Used to get simulated values.</help>
@@ -627,7 +627,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
       <help>The position proxy for the glove position.</help>
       <item label="Glove Position" defaultvalue="" />
-      <enumeration name="PosProxy" />
+      <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="GloveProxy" name="Glove Proxy">
@@ -636,11 +636,11 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="device" name="Device" type="chunk" variable="0">
       <help>The glove device the proxy connects to.</help>
       <item label="Device" defaultvalue="" />
-      <enumeration name="CyberGlove" />
-      <enumeration name="SimGloveGesture" />
-      <enumeration name="DataGlove" />
-      <enumeration name="PinchGlove" />
-      <enumeration name="SimDigitalGlove" />
+      <allowedtype>CyberGlove</allowedtype>
+      <allowedtype>SimGloveGesture</allowedtype>
+      <allowedtype>DataGlove</allowedtype>
+      <allowedtype>PinchGlove</allowedtype>
+      <allowedtype>SimDigitalGlove</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="unit" name="Unit" type="int" variable="0">
       <help>The unit number in the device to hook to.</help>
@@ -673,7 +673,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="InputManager" name="Input Manager">
@@ -703,7 +703,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Baud Rate" defaultvalue="115200" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
-      <enumeration name="PosXformFilter" />
+      <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
 The filters are applied in the order that they are specified in this configuration.</help>
@@ -711,7 +711,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="stations" name="Stations" type="embeddedchunk" variable="1">
       <help>Settings for each Station.</help>
       <item label="Stations" />
-      <enumeration name="ISenseStation" />
+      <allowedtype>ISenseStation</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="verbose" name="Vebose Enabled" type="bool" variable="0">
       <help>Enable output from the Intersense Driver</help>
@@ -732,7 +732,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="IntersenseAPI" name="IntersenseAPI">
@@ -765,7 +765,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="stations" name="Stations" type="embeddedchunk" variable="1">
       <help>Settings for each Station.</help>
       <item label="Stations" />
-      <enumeration name="ISenseStation" />
+      <allowedtype>ISenseStation</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="verbose" name="Vebose Enabled" type="bool" variable="0">
       <help>Enable output from the Intersense Driver</help>
@@ -786,7 +786,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="KeyModPair" name="Key and Modifier Pair">
@@ -949,7 +949,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="KeyboardProxy" name="Keyboard Proxy">
@@ -958,8 +958,8 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="device" name="Device" type="chunk" variable="0">
       <help>The keyboard device to hook the proxy to.</help>
       <item label="Device" defaultvalue="" />
-      <enumeration name="Keyboard" />
-      <enumeration name="simKeyboardDigital" />
+      <allowedtype>Keyboard</allowedtype>
+      <allowedtype>simKeyboardDigital</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="MachineSpecific" name="Machine Specific">
@@ -968,12 +968,12 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Display System" token="display_system" type="embeddedchunk" variable="0">
       <help>Embedded display system for this specific machine.</help>
       <item label="Display System" />
-      <enumeration name="displaySystem" />
+      <allowedtype>displaySystem</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Display Windows" token="display_windows" type="embeddedchunk" variable="1">
       <help>Embedded display windows for this specifc machine. </help>
       <item label="Display Window" />
-      <enumeration name="displayWindow" />
+      <allowedtype>displayWindow</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Listen Port" token="listen_port" type="int" variable="0">
       <help>Port on which the Remote Input Manager listens for incoming cluster connections.</help>
@@ -1026,7 +1026,7 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="Right" value="5" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
-      <enumeration name="PosXformFilter" />
+      <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
 The filters are applied in the order that they are specified in this configuration.</help>
@@ -1064,7 +1064,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="OpenGLFBConfig" name="OpenGL Frame Buffer Configuration">
@@ -1118,18 +1118,18 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="PerformanceTarget" name="Performance Target" type="chunk" variable="0">
       <help>File or network connection that performance data should be sent to.</help>
       <item label="Performance Target" defaultvalue="" />
-      <enumeration name="FileConnect" />
-      <enumeration name="NetworkConnect" />
+      <allowedtype>FileConnect</allowedtype>
+      <allowedtype>NetworkConnect</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="TimingTests" name="Timing Tests" type="embeddedchunk" variable="1">
       <help>Turn on/off Juggler internal timing tests</help>
       <item label="Timing Tests" />
-      <enumeration name="PerfTestActive" />
+      <allowedtype>PerfTestActive</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="PerfCategories" name="Performance Measurement Categories" type="embeddedchunk" variable="1">
       <help>Turn on/off Juggler timing measurements by category name</help>
       <item label="Performance Measurement Categories" />
-      <enumeration name="PerfTestActive" />
+      <allowedtype>PerfTestActive</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="apiPerformer" name="Performer API">
@@ -1158,13 +1158,13 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
       <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
       <item label="Glove Position" defaultvalue="" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="PosProxy" />
+      <allowedtype>proxyAlias</allowedtype>
+      <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="PosXformFilter" name="Pos Xform Filter">
@@ -1214,16 +1214,16 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="device" name="device" type="chunk" variable="0">
       <help>The device the proxy points to</help>
       <item label="Device" defaultvalue="" />
-      <enumeration name="Flock" />
-      <enumeration name="SimPosition" />
-      <enumeration name="DummyPosition" />
-      <enumeration name="MotionStar" />
-      <enumeration name="TrackdSensor" />
-      <enumeration name="SimRelativePosition" />
-      <enumeration name="SimSetablePosition" />
-      <enumeration name="Intersense" />
-      <enumeration name="TrackdAPISensor" value="" />
-      <enumeration name="TweekGadget" />
+      <allowedtype>Flock</allowedtype>
+      <allowedtype>SimPosition</allowedtype>
+      <allowedtype>DummyPosition</allowedtype>
+      <allowedtype>MotionStar</allowedtype>
+      <allowedtype>TrackdSensor</allowedtype>
+      <allowedtype>SimRelativePosition</allowedtype>
+      <allowedtype>SimSetablePosition</allowedtype>
+      <allowedtype>Intersense</allowedtype>
+      <allowedtype>TrackdAPISensor</allowedtype>
+      <allowedtype>TweekGadget</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="unit" name="unit" type="int" variable="0">
       <help>The unit in the device this proxy attaches to</help>
@@ -1234,7 +1234,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Enable Transformation" defaultvalue="0" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
-      <enumeration name="PosXformFilter" />
+      <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
 The filters are applied in the order that they are specified in this configuration.</help>
@@ -1242,7 +1242,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="sigmoidParams" name="sigmoidParams" type="embeddedchunk" variable="0">
       <help>TODO: Insert help here!</help>
       <item label="Sigmoid Parameters" />
-      <enumeration name="sigmoid_linear_pos_filter" />
+      <allowedtype>sigmoid_linear_pos_filter</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimPosition" name="Position Simulator">
@@ -1251,7 +1251,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
       <help>The keyboard to use for event input.</help>
       <item label="Keyboard Proxy" defaultvalue="" />
-      <enumeration name="KeyboardProxy" />
+      <allowedtype>KeyboardProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="keyPairs" name="keyPairs" type="embeddedchunk" variable="0">
       <help>Keys for moving and rotating the simulated device.</help>
@@ -1267,7 +1267,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Rot Down" />
       <item label="Rot CCW" />
       <item label="Rot CW" />
-      <enumeration name="KeyModPair" />
+      <allowedtype>KeyModPair</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="initialPos" name="Initial Position" type="float" variable="0">
       <help>Initial position</help>
@@ -1302,7 +1302,7 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="Global" value="1" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
-      <enumeration name="PosXformFilter" />
+      <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
 The filters are applied in the order that they are specified in this configuration.</help>
@@ -1318,12 +1318,12 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="proxyPtr" name="Proxy Pointer" type="chunk" variable="0">
       <help>The proxy this alias refers to</help>
       <item label="Proxy Pointer" defaultvalue="" />
-      <enumeration name="PosProxy" />
-      <enumeration name="DigProxy" />
-      <enumeration name="AnaProxy" />
-      <enumeration name="GloveProxy" />
-      <enumeration name="KeyboardProxy" />
-      <enumeration name="GestureProxy" />
+      <allowedtype>PosProxy</allowedtype>
+      <allowedtype>DigProxy</allowedtype>
+      <allowedtype>AnaProxy</allowedtype>
+      <allowedtype>GloveProxy</allowedtype>
+      <allowedtype>KeyboardProxy</allowedtype>
+      <allowedtype>GestureProxy</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="RIMChunk" name="Remote Input Manager Chunk">
@@ -1332,12 +1332,12 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Cluster Nodes" token="cluster_nodes" type="chunk" variable="1">
       <help>List of all active Cluster nodes and their Machine Specific settings</help>
       <item label="Machine" defaultvalue="" />
-      <enumeration name="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Sync Machine" token="sync_machine" type="chunk" variable="0">
       <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
       <item label="Machine" defaultvalue="" />
-      <enumeration name="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="sync_method" name="Sync Method" type="int" variable="0">
       <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
@@ -1368,22 +1368,22 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
       <help>The Keyboard to use for event input</help>
       <item label="Keyboard Proxy" defaultvalue="" />
-      <enumeration name="KeyboardProxy" />
+      <allowedtype>KeyboardProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="keyPairs" name="KeyPresses" type="embeddedchunk" variable="1">
       <help>Keypresses to trigger multiple digital inputs</help>
       <item label="Key Presses" />
-      <enumeration name="KeyModPair" />
+      <allowedtype>KeyModPair</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="glovePos" name="Left Glove Position" type="chunk" variable="0">
       <help>The position proxy for the left hand glove position.</help>
       <item label="Left Glove Position" defaultvalue="" />
-      <enumeration name="PosProxy" />
+      <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="rightGlovePos" name="Right Glove Position" type="chunk" variable="0">
       <help>The position proxy for the right hand glove position.</help>
       <item label="Right Glove Position" defaultvalue="" />
-      <enumeration name="PosProxy" />
+      <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimRelativePosition" name="SimRelativePosition">
@@ -1392,12 +1392,12 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="base_frame_proxy" name="base_frame_proxy" type="chunk" variable="0">
       <help>Pos proxy that devices the base frame of reference</help>
       <item label="Base Frame Proxy" defaultvalue="" />
-      <enumeration name="PosProxy" />
+      <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="relative_proxy" name="relative_proxy" type="chunk" variable="0">
       <help>device that is relative to the base frame</help>
       <item label="Relative Proxy" defaultvalue="" />
-      <enumeration name="PosProxy" />
+      <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimSetablePosition" name="SimSetablePosition">
@@ -1426,19 +1426,19 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="cameraPos" name="cameraPos" type="chunk" variable="0">
       <help>This is the pos proxy that controls the sim view</help>
       <item label="Camera Position" defaultvalue="" />
-      <enumeration name="PosProxy" />
-      <enumeration name="proxyAlias" />
+      <allowedtype>PosProxy</allowedtype>
+      <allowedtype>proxyAlias</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="user" name="user" type="chunk" variable="0">
       <help>This is the user that the window is drawing for.</help>
       <item label="User" defaultvalue="" />
-      <enumeration name="JugglerUser" />
+      <allowedtype>JugglerUser</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="wandPos" name="wandPos" type="chunk" variable="0">
       <help>The wand pos proxy to use in the simulator.</help>
       <item label="Wand Position" defaultvalue="" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="PosProxy" />
+      <allowedtype>proxyAlias</allowedtype>
+      <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="active" name="active" type="bool" variable="0">
       <help>Is the window active?</help>
@@ -1554,11 +1554,11 @@ The filters are applied in the order that they are specified in this configurati
       <item label="lower right" />
       <item label="upper right" />
       <item label="upper left" />
-      <enumeration name="Vec3" />
+      <allowedtype>Vec3</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="user" name="user" type="chunk" variable="0">
       <item label="User" defaultvalue="" />
-      <enumeration name="JugglerUser" />
+      <allowedtype>JugglerUser</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="active" name="active" type="bool" variable="0">
       <help>Is the window active?</help>
@@ -1571,7 +1571,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="trackerproxy" name="trackerproxy" type="chunk" variable="0">
       <help>The tracker proxy that tracks the screen's reference frame.</help>
       <item label="Tracker Proxy" defaultvalue="" />
-      <enumeration name="PosProxy" />
+      <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="TrackdAPIController" name="TrackdAPIController">
@@ -1592,7 +1592,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="TrackdAPISensor" name="TrackdAPISensor">
@@ -1603,7 +1603,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Shared Memory Key" defaultvalue="4126" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
-      <enumeration name="PosXformFilter" />
+      <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
 The filters are applied in the order that they are specified in this configuration.</help>
@@ -1627,7 +1627,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="TrackdSensor" name="TrackdSensor">
@@ -1638,7 +1638,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Shared Memory Key" defaultvalue="4126" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
-      <enumeration name="PosXformFilter" />
+      <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
 The filters are applied in the order that they are specified in this configuration.</help>
@@ -1668,18 +1668,18 @@ The filters are applied in the order that they are specified in this configurati
       <help>The version of the Internet Inter-ORB Protocol (IIOP) used to communicate with the Naming Service.  Common values are 1.0 and 1.2. Not all ORBs support 1.2, so 1.0 is the default.</help>
     </PropertyDesc>
     <PropertyDesc name="Positional Device" token="positionDevice" type="embeddedchunk" variable="1">
-      <enumeration name="TweekPositionDevice" />
+      <allowedtype>TweekPositionDevice</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Digital Device" token="digitalDevice" type="embeddedchunk" variable="1">
-      <enumeration name="TweekDigitalDevice" />
+      <allowedtype>TweekDigitalDevice</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Analog Device" token="analogDevice" type="embeddedchunk" variable="1">
-      <enumeration name="TweekAnalogDevice" />
+      <allowedtype>TweekAnalogDevice</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="TweekDigitalDevice" name="Tweek Digital Device">
@@ -1694,15 +1694,15 @@ The filters are applied in the order that they are specified in this configurati
   <ChunkDesc token="TweekGadgetGUI" name="TweekGadget GUI">
     <category>Devices</category>
     <PropertyDesc name="Position Device Reference" token="posDevice" type="chunk" variable="1">
-      <enumeration name="TweekPositionDevice" value="" />
+      <allowedtype>TweekPositionDevice</allowedtype>
       <item label="Device name" defaultvalue="" />
     </PropertyDesc>
     <PropertyDesc name="Digital Device Reference" token="digitalDevice" type="chunk" variable="1">
-      <enumeration name="TweekDigitalDevice" value="" />
+      <allowedtype>TweekDigitalDevice</allowedtype>
       <item label="Device name" defaultvalue="" />
     </PropertyDesc>
     <PropertyDesc name="Analog Device Reference" token="analogDevice" type="chunk" variable="1">
-      <enumeration name="TweekAnalogDevice" value="" />
+      <allowedtype>TweekAnalogDevice</allowedtype>
       <item label="Device name" defaultvalue="" />
     </PropertyDesc>
   </ChunkDesc>
@@ -1725,7 +1725,7 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="Sounds" name="Sound Objects" type="embeddedchunk" variable="1">
       <help>Specify a list of sounds here.</help>
       <item label="Sound Object" />
-      <enumeration name="Sound" />
+      <allowedtype>Sound</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="JugglerUser" name="VR Juggler User">
@@ -1734,8 +1734,8 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="headPos" name="Head Position" type="chunk" variable="0">
       <help>This is the source of head position information.</help>
       <item label="Head Position" defaultvalue="" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="PosProxy" />
+      <allowedtype>proxyAlias</allowedtype>
+      <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="interocular_distance" name="Eye Separation" type="float" variable="0">
       <help>Interocular distance.  NOTE: In same units as displays settings.</help>
@@ -1819,19 +1819,19 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="pressed" name="pressed" type="chunk" variable="1">
       <help>Digitals that must be pressed</help>
       <item label="Pressed" defaultvalue="" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="DigProxy" />
+      <allowedtype>proxyAlias</allowedtype>
+      <allowedtype>DigProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="notPressed" name="notPressed" type="chunk" variable="1">
       <help>Digitals that should not be pressed</help>
       <item label="Not Pressed" defaultvalue="" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="DigProxy" />
+      <allowedtype>proxyAlias</allowedtype>
+      <allowedtype>DigProxy</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="simKeyboardDigital" name="simKeyboardDigital">
@@ -1839,12 +1839,12 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="simKeys" name="simKeys" type="embeddedchunk" variable="1">
       <help>The keys we are simulating</help>
       <item label="Sim Keys" />
-      <enumeration name="simKeyDigital" />
+      <allowedtype>simKeyDigital</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
 </ChunkDescDB>

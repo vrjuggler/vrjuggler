@@ -49,11 +49,12 @@ public class DescEnum
    }
 
    /**
-    * Creates a new enumeration with the given name and no value.
+    * Creates a new enumeration with the given name and type with a default
+    * value.
     */
    public DescEnum(String name, ValType type)
    {
-      this(name, type, null);
+      this(name, type, ConfigUtilities.makeProperty("", type));
    }
 
    /**
@@ -73,6 +74,12 @@ public class DescEnum
     */
    public DescEnum(Element element, ValType type)
    {
+      // Make sure we don't try to set a value for an embedded chunk
+      if (type == ValType.EMBEDDEDCHUNK || type == ValType.CHUNK)
+      {
+         throw new IllegalArgumentException("Embedded chunks and chunk pointers may not have enums.");
+      }
+
       mDomElement = element;
       changeSupport = new PropertyChangeSupport(this);
       mValType = type;
@@ -124,13 +131,9 @@ public class DescEnum
     */
    public void setValue(Object value)
    {
-      // Make sure we don't try to set a value for an embedded chunk
-      if (getValType() != ValType.EMBEDDEDCHUNK)
-      {
-         Object old = getValue();
-         mDomElement.setAttribute("value", value.toString());
-         changeSupport.firePropertyChange("value", old, value);
-      }
+      Object old = getValue();
+      mDomElement.setAttribute("value", value.toString());
+      changeSupport.firePropertyChange("value", old, value);
    }
 
    /**

@@ -48,7 +48,7 @@ public class ChunkDescDB
             , PropertyChangeListener
             , ChunkDescListener
 {
-   public static final double DESC_VERSION_VALUE = 2.1;
+   public static final double DESC_VERSION_VALUE = 2.2;
 
    private static final String DESC_VERSION_ATTR = "desc.db.version";
 
