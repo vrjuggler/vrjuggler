@@ -116,7 +116,8 @@ bool vjPfDrawManager::configPerformerAPI(vjConfigChunk* chunk)
 {
    vjASSERT((std::string)chunk->getType() == std::string("apiPerformer"));
 
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::configPerformerAPI: Configuring Performer\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << clrOutNORM(clrRED,"vjPfDrawManager::configPerformerAPI:")
+                                            << " Configuring Performer\n" << vjDEBUG_FLUSH;
 
    // --- Get simulator model info --- //
    char* head_file = chunk->getProperty("simHeadModel").cstring();
@@ -459,14 +460,16 @@ void vjPfDrawManager::initSimulator()
 
    if(!mHeadModel.empty())
    {
-      pfNode* head_node = pfdLoadFile(mHeadModel.c_str());     // Load head model
+      head_node = pfdLoadFile(mHeadModel.c_str());     // Load head model
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded head model: " << mHeadModel.c_str() << endl << vjDEBUG_FLUSH;
    } else {
       vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: No wand head specified.\n" << vjDEBUG_FLUSH;
    }
 
    if(!mWandModel.empty())
    {
-      pfdLoadFile(mWandModel.c_str());     // Load wand model
+      wand_node = pfdLoadFile(mWandModel.c_str());     // Load wand model
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded wand model: " << mWandModel.c_str() << endl << vjDEBUG_FLUSH;
    } else {
       vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: No wand model specified.\n" << vjDEBUG_FLUSH;
    }
@@ -494,9 +497,11 @@ void vjPfDrawManager::initSimulator()
 
 void vjPfDrawManager::updateSimulator(vjSimDisplay* sim)
 {
-   pfMatrix head_mat = vjGetPfMatrix(sim->getHeadPos());
-   pfMatrix wand_mat = vjGetPfMatrix(sim->getWandPos());
-   mHeadDCS->setMat(head_mat);
+   vjMatrix vj_head_mat = sim->getHeadPos();          // Get Juggler matrices
+   vjMatrix vj_wand_mat = sim->getWandPos();
+   pfMatrix head_mat = vjGetPfMatrix(vj_head_mat);    // Convert to Performer
+   pfMatrix wand_mat = vjGetPfMatrix(vj_wand_mat);
+   mHeadDCS->setMat(head_mat);                        // Set the DCS nodes
    mWandDCS->setMat(wand_mat);
 }
 
