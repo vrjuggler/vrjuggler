@@ -1570,11 +1570,11 @@ class Win32SetupFrontEnd:
          sys.exit(3)
 
 def main():
-   disable_tk = True
+   disable_tk = False
 
    # If the user passed in -c on the command line, disable use of the GUI.
    if '-c' in sys.argv[1:]:
-      disable_tk = False
+      disable_tk = True
 
    # If Tkinter is not available or the user disabled the Tk frontend, use
    # the text-based interface.
