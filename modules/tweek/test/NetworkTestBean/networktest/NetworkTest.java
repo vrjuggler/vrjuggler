@@ -22,29 +22,26 @@ public class NetworkTest extends JPanel implements CommunicationListener
       {
          e.printStackTrace();
       }
-
-      m_slider_observer.setSlider(m_data_slider);
-      m_whiteboard_observer.setWhiteboard(m_whiteboard);
    }
 
    public void communication (CommunicationEvent e)
    {
       CorbaService corba_service = e.getCorbaService();
-      corba_service.registerObject(m_slider_observer, "SliderObserver");
-      corba_service.registerObject(m_whiteboard_observer, "WhiteboardObserver");
-
-      SubjectManager mgr = corba_service.getSubjectManager();
+      SubjectManager mgr         = corba_service.getSubjectManager();
 
       Subject subject = mgr.getSubject("SliderSubject");
       SliderSubject slider_subject = SliderSubjectHelper.narrow(subject);
-      m_slider_observer.setSliderSubject(slider_subject);
+      m_slider_observer = new SliderObserverImpl(m_data_slider, slider_subject);
+      corba_service.registerObject(m_slider_observer, "SliderObserver");
       slider_subject.attach(m_slider_observer._this());
       m_data_slider.setValue(slider_subject.getValue());
       m_data_slider.addChangeListener(new SliderChangeListener(slider_subject));
 
       subject = mgr.getSubject("WhiteboardSubject");
       WhiteboardSubject whiteboard_subject = WhiteboardSubjectHelper.narrow(subject);
-      m_whiteboard_observer.setWhiteboardSubject(whiteboard_subject);
+      m_whiteboard_observer = new WhiteboardObserverImpl(m_whiteboard,
+                                                         whiteboard_subject);
+      corba_service.registerObject(m_whiteboard_observer, "WhiteboardObserver");
       whiteboard_subject.attach(m_whiteboard_observer._this());
    }
 
@@ -80,7 +77,9 @@ public class NetworkTest extends JPanel implements CommunicationListener
 
          if ( ! source.getValueIsAdjusting() )
          {
+            System.out.println("Informing subject of new value ...");
             slider_subject.setValue(source.getValue());
+            System.out.println("Done informing subject");
          }
       }
 
@@ -95,6 +94,6 @@ public class NetworkTest extends JPanel implements CommunicationListener
    private BorderLayout m_bean_layout = new BorderLayout();
    private JLabel m_whiteboard_label = new JLabel();
 
-   private SliderObserverImpl m_slider_observer = new SliderObserverImpl();
-   private WhiteboardObserverImpl m_whiteboard_observer = new WhiteboardObserverImpl();
+   private SliderObserverImpl m_slider_observer = null;
+   private WhiteboardObserverImpl m_whiteboard_observer = null;
 }

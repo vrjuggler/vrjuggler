@@ -1,32 +1,32 @@
 package networktest;
 
+import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JSlider;
 import tweek.*;
 
 
 public class SliderObserverImpl extends ObserverPOA
 {
-   public SliderObserverImpl ()
+   public SliderObserverImpl (JSlider _slider, SliderSubject _subject)
    {
-   }
-
-   public void setSliderSubject (SliderSubject _subject)
-   {
+      slider         = _slider;
       slider_subject = _subject;
-      update();
-   }
-
-   public void setSlider (JSlider _slider)
-   {
-      slider = _slider;
    }
 
    public void update ()
    {
+      System.out.println("Updated from our subject!");
+
       if ( slider != null )
       {
-         slider.setValue(slider_subject.getValue());
+         DefaultBoundedRangeModel model = (DefaultBoundedRangeModel) slider.getModel();
+         System.out.println("Got slider model, setting value");
+         model.setValue(slider_subject.getValue());
+         System.out.println("Set value, repainting slider");
+         slider.repaint();
       }
+
+      System.out.println("Update processed");
    }
 
    private SliderSubject slider_subject = null;
