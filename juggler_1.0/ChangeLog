@@ -1,15 +1,17 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
-Apr-03-2001 allenb    Refactored the vjDisplayManager to support viewports within
-                      display windows. This removes the old surface and simulator
-                      display classes and replaces them with new viewport based
-                      equivalents.
-                      This change also updates the vjGlDrawManager
-                      to support the new viewport abilities.  The pfDrawManager
+Apr-12-2001 patrick   The MotionStar driver now supports setting the
+                      measurement rate
+Apr-03-2001 allenb    Refactored the vjDisplayManager to support viewports
+                      within display windows. This removes the old surface and
+                      simulator display classes and replaces them with new
+                      viewport based equivalents.
+                      This change also updates the vjGlDrawManager to
+                      support the new viewport abilities.  The pfDrawManager
                       however does not work yet.
                       This also changes the display configuration chunks and
-                      (unfortunately) completely breaks backwards compatibility
-                      with display configuration chunks.
+                      (unfortunately) completely breaks backwards
+                      compatibility with display configuration chunks.
 Apr-03-2001 allenb    Added vjGlApp::bufferPreDraw method to the vjGlApp
                       interface.  This was needed because of the new viewport
                       rendering abilities.  All applications must now execute
