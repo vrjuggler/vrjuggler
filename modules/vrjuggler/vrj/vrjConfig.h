@@ -90,13 +90,10 @@
 
 /* --- Macros ---- */
 
-/*
- * Define this macro to replace calls to sginap(2) if sginap(2) is not
- * avialable.
- */
-//#ifndef HAVE_SGINAP
-//#   define sginap(x) (usleep(x * 333333))
-//#endif
+/* Define this macro to replace calls to usleep(3) if it is not avialable. */
+#ifndef HAVE_USLEEP
+#   define usleep(x) (Sleep(x / 1000))       /* Win32-specific */
+#endif
 
 #ifndef HAVE_SINF
 #   define sinf(x) ((float) sin(x))
