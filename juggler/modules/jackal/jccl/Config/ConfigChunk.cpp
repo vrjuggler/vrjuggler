@@ -9,10 +9,11 @@
 #include <Config/vjChunkFactory.h>
 
 
-vjConfigChunk::vjConfigChunk (vjChunkDesc *d, vjChunkDescDB *_descdb) :props() {
+vjConfigChunk::vjConfigChunk (vjChunkDesc *d, vjChunkDescDB *_descdb) :props(), type_as_varvalue(T_STRING) {
 
     desc = d;
     descdb = _descdb;
+    type_as_varvalue = desc->getToken();
     for (int i = 0; i < desc->plist.size(); i++)
 	props.push_back (new vjProperty(desc->plist[i]));
 }
@@ -26,7 +27,7 @@ vjConfigChunk::~vjConfigChunk () {
 
 
 
-vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props() {
+vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props(), type_as_varvalue(T_STRING) {
     *this = c;
 }
 
@@ -35,6 +36,7 @@ vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props() {
 vjConfigChunk& vjConfigChunk::operator = (vjConfigChunk& c) {
     int i;
     desc = c.desc;
+    type_as_varvalue = c.type_as_varvalue;
     descdb = c.descdb;
     for (i = 0; i < props.size(); i++)
         delete (props[i]);
@@ -342,25 +344,19 @@ int vjConfigChunk::getNum (char *property) {
 
 
 vjVarValue& vjConfigChunk::getType () {
-
-    vjVarValue v(T_STRING);
-    v = desc->token;
-    return v;
+    return type_as_varvalue;
 }
 
 
 
 vjVarValue& vjConfigChunk::getProperty (char *property, int ind) {
     if (!strcasecmp(property,"type")) {
-	vjVarValue v(T_STRING);
-	v = desc->token;
-	return v;
+	return type_as_varvalue;
     }
     
     vjProperty *p = getPropertyPtr (property);
     if (!p) {
-	vjVarValue v(T_INVALID);
-	return v;
+	return vjVarValue::getInvalidInstance();
     }
     return p->getValue (ind);
 }

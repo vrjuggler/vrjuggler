@@ -91,64 +91,62 @@ ostream& operator << (ostream& out, vjPropertyDesc& self) {
 
 istream& operator >> (istream& in, vjPropertyDesc& self) {
 
-    char str[512];
-    int size;
+    const int size = 512;
+    char str[size];
 
     /* format of line is: name type size { enums/chunktypes } token. */
 
-    readString (in, str, 512);
+    readString (in, str, size);
     //cout << "read propertydesc token " << str << endl;
     if (self.token)
 	delete self.token;
-    if (!(self.token = new char[strlen(str)+1]))
-	vjDEBUG(1) << "Unable to allocate ram" << endl << vjDEBUG_FLUSH;
-    strcpy (self.token, str);
+    self.token = strdup (str);
     if (!strcasecmp (self.token, "end"))
 	return in;
 
     self.type = readType(in);
     in >> self.num;
-    readString (in,str,512);
+    readString (in,str,size);
 
     if (self.name)
 	delete self.name;
     self.name = strdup (str);
 
-    readString (in, str, 512);
+    readString (in, str, size);
     
     /* parsing value labels, if there are any */
     if (!strcasecmp (str, "vj_valuelabels")) {
 	//cout << "reading valuelabels" << endl;
-	readString (in,str,512);
+	readString (in,str,size);
 	if (strcasecmp (str, "{"))
 	    vjDEBUG(1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
 	
 	vjEnumEntry *e;
-	readString (in, str, 512);
+	readString (in, str, size);
 	while (strcasecmp (str, "}") && !in.eof()) {
 	    e = new vjEnumEntry (str, 0);
 	    self.valuelabels.push_back (e);
-	    readString (in, str, 512);
+	    readString (in, str, size);
 	}
-	readString (in, str, 512);
+	readString (in, str, size);
     }
     
     /* parsing enumerations, if there are any */
     if (!strcasecmp (str, "vj_enumeration"))
-	readString (in, str, 512);
+	readString (in, str, size);
     if (!strcasecmp (str, "{")) {
 	//cout << "parsing enumerations" << endl;
 	if (self.type == T_BOOL) {
 	    vjDEBUG(1) << "ERROR: " << self.name << ": Enumerations not supported for "
 		"boolean types.\n" << vjDEBUG_FLUSH;
 	    do {
-		readString (in, str, 512);
+		readString (in, str, size);
 	    } while (!strcasecmp (str, "}") && !in.eof());
 	}
 	else {
 	    int j, i = 0;
 	    vjEnumEntry *e;
-	    readString (in, str, 512);
+	    readString (in, str, size);
 	    while (strcasecmp (str, "}") && !in.eof()) {
 		//cout << "reading enumentry: " << str << endl;
 		if (self.type == T_INT)
@@ -161,14 +159,13 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 		    }
 		e = new vjEnumEntry (str, i++);
 		self.enumv.push_back (e);
-		readString (in, str, 512);
+		readString (in, str, size);
 	    }
 	}
-	readString (in, str, 512);
+	readString (in, str, size);
     }
 
-    self.help = new char [strlen(str) +1];
-    strcpy (self.help, str);
+    self.help = strdup (str);
 
     return in;
 }

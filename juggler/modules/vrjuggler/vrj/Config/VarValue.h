@@ -33,7 +33,7 @@ class vjConfigChunk;
 //       without having to cast to the right value. <br>
 //  Note that it's generally incumbent upon the client to know what
 //  kind of vjVarValue he's getting and what it can do.  Hey, you're
-//  the one who queryed the ConfigChunk, not me. <br>
+//  the one who queried the ConfigChunk, not me. <br>
 //
 //!PUBLIC_API:
 class vjVarValue {
@@ -62,7 +62,15 @@ private:
 	vjConfigChunk *embeddedchunkval;
     } val;
 
+    static vjVarValue* invalid_instance;
+
 public:
+
+    static vjVarValue& getInvalidInstance () {
+	if (invalid_instance == NULL)
+	    invalid_instance = new vjVarValue (T_INVALID);
+	return *invalid_instance;
+    }
 
     //: Copy constructor.
     vjVarValue (vjVarValue &v);

@@ -96,6 +96,11 @@ public:
 
 
 
+    char* getName();
+    char* getToken();
+    char* getHelp();
+
+
     //:Adds a vjPropertyDesc to self.
     //!NOTE: Any vjPropertyDesc previously in self with the
     //+      same token as pd is removed.
