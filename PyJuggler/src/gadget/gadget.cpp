@@ -86,11 +86,4 @@ BOOST_PYTHON_MODULE(gadget)
     _Export_KeyEvent();
     _Export_MouseEvent();
     _Export_PositionUnitConversion();
-
-/*
-    scope().attr("gadget::PositionUnitConversion::ConvertToCentimeters") = gadget::PositionUnitConversion::ConvertToCentimeters;
-    scope().attr("gadget::PositionUnitConversion::ConvertToMeters") = gadget::PositionUnitConversion::ConvertToMeters;
-    scope().attr("gadget::PositionUnitConversion::ConvertToFeet") = gadget::PositionUnitConversion::ConvertToFeet;
-    scope().attr("gadget::PositionUnitConversion::ConvertToInches") = gadget::PositionUnitConversion::ConvertToInches;
-*/
 }
