@@ -204,6 +204,7 @@
         <enumeration name="MotionStar"/>
         <enumeration name="TrackdSensor"/>
         <enumeration name="SimRelativePosition"/>
+        <enumeration name="SimSetablePosition"/>
     </PropertyDesc>
     <PropertyDesc token="unit" name="unit" type="Int" num="1">
         <help>The unit in the device this proxy attaches to</help>
@@ -939,6 +940,12 @@
     <PropertyDesc token="relative_proxy" name="relative_proxy" type="Chunk" num="1">
         <help>device that is relative to the base frame</help>
         <enumeration name="PosProxy"/>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="SimSetablePosition" name="SimSetablePosition">
+    <help>A positional device simulator for one device relative to another.</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="sigmoid_linear_pos_filter" name="SigmoidLinearPosFilter">
