@@ -102,7 +102,7 @@ float NetClockSync::iterationLoopAsResponder(SyncConnection& sconn, const float&
    bool other_clock_is_synced;
    jccl::TimeStamp clock2_stamp;
    clock2 = clock2_stamp.usecs();
-  
+   
    // send msg
    msg.createClockSync(clock1, clock2, clock_is_synced);
    sconn.connection->sendMsg(msg);
@@ -224,25 +224,37 @@ void NetClockSync::respondExchange(SyncConnection& sconn){
 
    // loop until threshold is met ---------------------------------------------------
 
-   float test_threshold = 100000; // large initial value to enter while loop
-   float error_threshold = mErrorThreshold;
-   const float usecs_to_secs = 0.000001;  // changes usecs to secs
-   const int retries = 3;
+   float test_threshold_usecs = 1000000;           // large initial value (secs) to enter while loop
+   const float secs_to_usecs = 100000;    // changes usecs to secs
+
+   float error_threshold_usecs = mErrorThreshold * secs_to_usecs;
+   const int retries = 4;                   // number of retries per precision
    int try_count = 0;
-   while(test_threshold > error_threshold){
+   float last_test_threshold_usecs = 0;           // help track error in clock setting
+
+   while(fabsf(test_threshold_usecs) > error_threshold_usecs){
       clock1 = returned_clock1;
       delta = iterationLoopAsResponder(sconn, clock1, clock2, returned_clock1, returned_clock2, clock_is_synced);
-      test_threshold = usecs_to_secs * fabs(returned_clock2 - clock2); 
-      vprDEBUG(vrjDBG_INPUT_MGR, 3) << "respond sync: test_threshold secs: " << test_threshold << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vrjDBG_INPUT_MGR, 3) << "respond sync: acceptable_threshold secs: " << error_threshold << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vrjDBG_INPUT_MGR, 3) << "respond sync: delta in secs: " << delta * usecs_to_secs << std::endl << std::endl << vprDEBUG_FLUSH;
-      if(test_threshold <= error_threshold){
-         jccl::TimeStamp::resync(returned_clock1 + delta);  // resync not implemented in SPROC yet
+      jccl::TimeStamp estimate_stamp;
+      // calculate difference between clocks, with help of delta (latency)
+      test_threshold_usecs = ( estimate_stamp.usecs() - (returned_clock1 + delta) );   // positive means our stamp value is larger
+
+      // resync if not synced well yet.
+      if(fabsf(test_threshold_usecs) > error_threshold_usecs){  
+         // Take into account error from last setting by adding last_test_threshold
+         jccl::TimeStamp::resync(returned_clock1 + delta - last_test_threshold_usecs);  // no resync in sproc
+         last_test_threshold_usecs += test_threshold_usecs;
       }
+
+      vprDEBUG(vrjDBG_INPUT_MGR, 3) << "respond sync: clock difference in usecs: " << fabsf(test_threshold_usecs) << " (" << test_threshold_usecs << ")" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR, 3) << "respond sync: acceptable clock difference in usecs: " << error_threshold_usecs << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR, 3) << "respond sync: latency in usecs: " << delta << std::endl << vprDEBUG_FLUSH;
+
       try_count++;
       if(try_count >= retries){
          try_count = 0;
-         error_threshold *= 2;
+         error_threshold_usecs *= 2;
+         last_test_threshold_usecs = 0;
       }
    }
 
