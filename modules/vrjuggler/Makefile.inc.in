@@ -141,10 +141,6 @@ AFTERBUILD	= afterbuild
 # Things to do before the object files and library are built.
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
-	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(VJROOT_ABS)/vrjuggler-config.in			\
-            -v $(VJROOT_ABS)/VERSION -o $(topdir)/vrjuggler-config
-	@chmod +x $(topdir)/vrjuggler-config
 
 # Things to do after the object files and library are built.
 afterbuild:
@@ -164,7 +160,7 @@ ifneq (@OS_TYPE@, Win32)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
 	$(RANLIB) $@
-	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -180,7 +176,7 @@ $(LIBDIR)/$(VJ_LIB_DYNAMIC) $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJE
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_VJ)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && $(RM_LN) $(VJ_LIB_STATIC) &&		\
             $(LN_S) $(LIBDIR)/$(VJ_LIB_STATIC) ./
@@ -198,7 +194,7 @@ $(LIBDIR)/$(UTILS_LIB_DYNAMIC) $(LIBDIR)/$(UTILS_PROF_LIB_DYNAMIC): $(OBJDIR)/*.
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_UTILS)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && $(RM_LN) $(UTILS_LIB_STATIC) &&		\
             $(LN_S) $(LIBDIR)/$(UTILS_LIB_STATIC) ./
@@ -216,7 +212,7 @@ $(LIBDIR)/$(GL_LIB_DYNAMIC) $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJE
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_GL)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && $(RM_LN) $(GL_LIB_STATIC) &&		\
             $(LN_S) $(LIBDIR)/$(GL_LIB_STATIC) ./
@@ -234,7 +230,7 @@ $(LIBDIR)/$(PF_LIB_DYNAMIC) $(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJE
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_PF)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"

@@ -551,6 +551,8 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     vrj_64_flags='-64'
 fi
 
+VJ_VERSION_GROK(VERSION)
+
 DPP_SUBST
 
 AC_SUBST(topdir)
@@ -669,7 +671,10 @@ AC_OUTPUT(Makefile
           mtree/VJ.samples.dist
           mtree/VJ.test.dist
           mtree/VJ.tools.dist
-          VARS.pl)
+          VARS.pl,
+    [ sed -e 's/^\(%.*\)/#\1/g' vrjuggler-config > vrjuggler-config.tmp
+      mv vrjuggler-config.tmp vrjuggler-config
+      chmod a+x vrjuggler-config ])
 
 cat <<BUILD_INFO
 
