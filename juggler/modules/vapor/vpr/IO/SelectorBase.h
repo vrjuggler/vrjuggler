@@ -45,7 +45,7 @@ public:
         ACCEPT = 1,        //  Accept - Same as READ 
         WRITE = 2,          // Write -
         EXCEPT = 4,         // Exception -
-        ERR = 8,            // Error -
+        ERROR = 8,            // Error -
         INVALID = 16         // Invalid - Invalid handle
       };
 };
