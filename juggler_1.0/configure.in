@@ -97,32 +97,31 @@ fi
 
 # Set default values for these before checking $abi_type.  Currently, these
 # are for non-SGI platforms.
-OBJECT_STYLE='32'
-LIBBITSUF=''
 ABI='32'
+LIBBITSUF=''
 
-# Based on the value of $abi_type, set the internal variable $OBJECT_STYLE
-# for later use and the Makefile substitution variables $LIBBITSUF and $ABI.
+# Based on the value of $abi_type, set $ABI for later use and the Makefile
+# substitution variables $LIBBITSUF and $ABI.
 if test "x$abi_type" = "x64_M3" ; then
-    OBJECT_STYLE='64_M3'
+    ABI='64_M3'
     LIBBITSUF='64'
-    ABI='64'
+    _EXTRA_FLAGS='-64 -mips3'
 elif test "x$abi_type" = "x64_M4" ; then
-    OBJECT_STYLE='64_M4'
+    ABI='64_M4'
     LIBBITSUF='64'
-    ABI='64'
+    _EXTRA_FLAGS='-64 -mips4'
 elif test "x$abi_type" = "xN32_M3" ; then
-    OBJECT_STYLE='N32_M3'
+    ABI='N32_M3'
     LIBBITSUF='32'
-    ABI='N32'
+    _EXTRA_FLAGS='-n32 -mips3'
 elif test "x$abi_type" = "xN32_M4" ; then
-    OBJECT_STYLE='N32_M4'
+    ABI='N32_M4'
     LIBBITSUF='32'
-    ABI='N32'
+    _EXTRA_FLAGS='-n32 -mips4'
 elif test "x$abi_type" = "xO32" ; then
-    OBJECT_STYLE='O32'
-    LIBBITSUF=''
     ABI='O32'
+    LIBBITSUF=''
+    _EXTRA_FLAGS='-o32 -mips2'
 fi
 
 # -----------------------------------------------------------------------------
@@ -133,6 +132,7 @@ AC_CANONICAL_HOST
 RELEASE=`uname -r`	# Operating system version number
 
 AR=''			# Archive library command (generally ar(1))
+ARFLAGS=''		# Flags for $AR
 LD=''			# Shared library command (usually ld(1))
 LDOPTS=''		# More options for shared library generator
 SHAREDLIB_EXT=''	# Extension for shared libraries (usually 'so')
@@ -155,46 +155,33 @@ case $host in
         fi
 
         # Set compiler flags and the location of $DSOREGFILE depending on
-        # $OBJECT_STYLE.
-        if test "$OBJECT_STYLE" = "64_M3" ; then
+        # $ABI.
+        if test "$ABI" = "64_M3" ; then
             DSOREGFILE='/usr/lib64/so_locations'
-            CFLAGS="$CFLAGS -mips3 -64"
-            CXXFLAGS="$CXXFLAGS -mips3 -64"
-            LDOPTS="-mips3 -64"
             OPT_FLAGS='-OPT:Olimit=2000'
-        elif test "$OBJECT_STYLE" = "64_M4" ; then
+        elif test "$ABI" = "64_M4" ; then
             DSOREGFILE='/usr/lib64/so_locations'
-            CFLAGS="$CFLAGS -mips4 -64"
-            CXXFLAGS="$CXXFLAGS -mips4 -64"
-            LDOPTS="-mips4 -64"
             OPT_FLAGS='-OPT:Olimit=2000'
-        elif test "$OBJECT_STYLE" = "N32_M3" ; then
+        elif test "$ABI" = "N32_M3" ; then
             DSOREGFILE='/usr/lib32/so_locations'
-            CFLAGS="$CFLAGS -mips3 -n32"
-            CXXFLAGS="$CXXFLAGS -mips3 -n32"
-            LDOPTS="-mips3 -n32"
             OPT_FLAGS='-OPT:Olimit=2000'
-        elif test "$OBJECT_STYLE" = "N32_M4" ; then
+        elif test "$ABI" = "N32_M4" ; then
             DSOREGFILE='/usr/lib32/so_locations'
-            CFLAGS="$CFLAGS -mips4 -n32"
-            CXXFLAGS="$CXXFLAGS -mips4 -n32"
-            LDOPTS="-mips4 -n32"
             OPT_FLAGS='-OPT:Olimit=2000'
-        elif test "$OBJECT_STYLE" = "O32" ; then
+        elif test "$ABI" = "O32" ; then
             DSOREGFILE='/usr/lib/so_locations'
-            CFLAGS="$CFLAGS -mips2 -o32"
-            CXXFLAGS="$CXXFLAGS -mips2 -o32"
-            LDOPTS="-mips2 -o32"
             OPT_FLAGS='-Olimit 2000'
         fi
 
-        AR='${CXX} -ar -WR,-v -o'
-        CFLAGS="-ptv $CFLAGS"
+        AR='${CXX}'
+        ARFLAGS='-ar -WR,-v -o'
+        CFLAGS="$CFLAGS"
         CXXFLAGS="-ptv $CXXFLAGS"
         INCLUDES="$INCLUDES -I/usr/include/CC -I/usr/include"
-        LD='${CXX} -shared -check_registry'
+        LD='${CXX} -shared'
         LDFLAGS="$LDFLAGS"
-        LDOPTS="$LDOPTS -all"
+        _LD_REGOPTS='-check_registry ${DSOREGFILE}'
+        LDOPTS="$LDOPTS -all $_LD_REGOPTS"
         SHAREDLIB_EXT='so'
 
         DSOVERSION='sgi4.0'
@@ -207,7 +194,8 @@ case $host in
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hppa*hpux10.20)
-        AR='ar r'
+        AR='ar'
+        ARFLAGS='r'
         CFLAGS="-Aa $CFLAGS"
         CXXFLAGS="+p $CXXFLAGS"
         LD='ld'
@@ -251,6 +239,9 @@ esac
 # Checks for programs.
 # -----------------------------------------------------------------------------
 
+vjsave_CFLAGS="$CFLAGS"
+vjsave_CXXFLAGS="$CXXFLAGS"
+
 # On HP-UX, we have to use the aCC C++ compiler.
 if test "$PLATFORM" = "HP" ; then
     AC_CHECK_PROG(CXX, aCC, aCC,
@@ -263,10 +254,16 @@ elif test "$PLATFORM" = "SGI" ; then
         AC_MSG_ERROR(*** The library requires the IRIX CC C++ compiler ***))
 fi
 
+CFLAGS="$CFLAGS $_EXTRA_FLAGS"
+CXXFLAGS="$CXXFLAGS $_EXTRA_FLAGS"
+
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_CXXCPP
+
+CFLAGS="$vjsave_CFLAGS"
+CXXFLAGS="$vjsave_CXXFLAGS"
 
 # Check for the JDK (specifically try to find javac(1) in $JDK_HOME).
 JAVAC=''
@@ -427,16 +424,19 @@ if test "x$enable_opengl" = "xyes" ; then
     # Ensure that /usr/include and /usr/lib are not included multiple times
     # if $OGLROOT is "/usr".
     if test "x${OGLROOT}" != "x/usr" ; then
-        INCLUDES="$INCLUDES -I${OGLROOT}/include"
+        _tmp='-I${OGLROOT}/include'
+        INCLUDES="$INCLUDES $_tmp"
 
         if test "$PLATFORM" = "SGI" ; then
-            LDFLAGS="-L${OGLROOT}/lib${LIBBITSUF} $LDFLAGS"
+            _tmp='-L${OGLROOT}/lib${LIBBITSUF}'
+            LDFLAGS="$_tmp $LDFLAGS"
         else
-            LDFLAGS="-L${OGLROOT}/lib $LDFLAGS"
+            _tmp='-L${OGLROOT}/lib'
+            LDFLAGS="$_tmp $LDFLAGS"
         fi
     fi
 
-    CFLAGS="$CFLAGS $INCLUDES"
+    CFLAGS="$CFLAGS $INCLUDES $_EXTRA_FLAGS"
 
     # On HP-UX, we have to compile the test code with aCC (which is required
     # by an above test) because the HP-UX OpenGL 1.1 implementation mandates
@@ -487,12 +487,11 @@ if test "x$enable_opengl" = "xyes" ; then
         if test "$PLATFORM" = "HP" ; then
             SYSTEM_OPENGL="$LIBOPENGL -lX11 -lm -lC"
         else
-            if test "$OBJECT_STYLE" = "64" ; then
+            if test "$ABI" = "64_M3" -o "$ABI" = "64_M4" ; then
                 SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
-            elif test "$OBJECT_STYLE" = "N32_M3" -o \
-                      "$OBJECT_STYLE" = "N32_M4" ; then
+            elif test "$ABI" = "N32_M3" -o "$ABI" = "N32_M4" ; then
                 SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
-            elif test "$OBJECT_STYLE" = "O32" ; then
+            elif test "$ABI" = "O32" ; then
                 SYSTEM_OPENGL="-lmpc -limage -lGLw $LIBOPENGL -lfpe -lXm -lXt -lXmu -lX11 -lm -lmalloc -lC"
             fi
         fi
@@ -518,11 +517,13 @@ if test "x$enable_perf" = "xyes" ; then
     # Ensure that /usr/include and /usr/lib are not included multiple times
     # if $PFROOT is "/usr".
     if test "x${PFROOT}" != "x/usr" ; then
-        INCLUDES="$INCLUDES -I${PFROOT}/include"
-        LDFLAGS="-L${PFROOT}/lib${LIBBITSUF} $LDFLAGS"
+        _tmp='-I${PFROOT}/include'
+        INCLUDES="$INCLUDES $_tmp"
+        _tmp='-L${PFROOT}/lib${LIBBITSUF}'
+        LDFLAGS="$_tmp $LDFLAGS"
     fi
 
-    CFLAGS="$CFLAGS $INCLUDES"
+    CFLAGS="$CFLAGS $INCLUDES $_EXTRA_FLAGS"
 
     # If the Performer library was found, add the API object files to the
     # files to be compiled and enable the Performer API compile-time option.
@@ -623,6 +624,7 @@ AC_SUBST(VJROOT_ABS)
 AC_SUBST(VJ_SRCDIR)
 
 AC_SUBST(AR)
+AC_SUBST(ARFLAGS)
 AC_SUBST(CFLAGS)
 AC_SUBST(CXXFLAGS)
 AC_SUBST(DEPENDFLAGS)
@@ -646,8 +648,8 @@ AC_SUBST(JAVAC)
 AC_SUBST(JAR)
 AC_SUBST(BUILD_GUI)
 
-#AC_SUBST(OGLROOT)
-#AC_SUBST(PFROOT)
+AC_SUBST(OGLROOT)
+AC_SUBST(PFROOT)
 
 AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)

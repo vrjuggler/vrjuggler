@@ -37,6 +37,7 @@
 #                  tree.
 #
 # AR             - Path to ar(1) (or equivalent program).
+# ARFLAGS        - Flags for ${AR}.
 # CC             - Path to C compiler.
 # CXX            - Path to C++ compiler.
 # CPP            - Command for invoking the C preprocessor.
@@ -98,7 +99,8 @@ scriptdir	= ${releasedir}/scripts
 sysconfdir	= @sysconfdir@
 VJROOT_ABS	= @VJROOT_ABS@
 
-AR		= @AR@
+AR		= @AR@ ${ARFLAGS}
+ARFLAGS		= @ARFLAGS@
 CC		= @CC@
 CXX		= @CXX@
 CPP		= @CPP@
@@ -125,11 +127,59 @@ C_COMPILE	= ${CC} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CFLAGS}
 CXX_COMPILE	= ${CXX} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CXXFLAGS}
 
 # -----------------------------------------------------------------------------
-# Platform- and binary-specific options.
+# Platform- and binary-specific options.  The assignments preceding the
+# ifeq ... endif blocks are the default values.  Depending on the value of
+# ${ABI}, further settings may be made to allow for building with multiple
+# ABIs.
 # -----------------------------------------------------------------------------
 ABI		= @ABI@
 LIBBITSUF	= @LIBBITSUF@
 PLATFORM	= @PLATFORM@
+
+# C and C++ compiler flags used for compiling a specific ABI.
+_O32_FLAGS	= -o32 -mips2
+_N32_M3_FLAGS	= -n32 -mips3
+_N32_M4_FLAGS	= -n32 -mips4
+_64_M3_FLAGS	= -64 -mips3
+_64_M4_FLAGS	= -64 -mips4
+
+# Depending on the value of ${ABI}, modify variables such as ${CFLAGS} and
+# ${LDOPTS} as necessary to build with the desired ABI.
+ifeq (${ABI}, O32)
+    ARFLAGS	:= ${_O32_FLAGS} ${ARFLAGS}
+    CFLAGS	+= ${_O32_FLAGS}
+    CXXFLAGS	+= ${_O32_FLAGS}
+    LDOPTS	+= ${_O32_FLAGS}
+    LIBBITSUF	=
+endif
+ifeq (${ABI}, N32_M3)
+    ARFLAGS	:= ${_N32_M3_FLAGS} ${ARFLAGS}
+    CFLAGS	+= ${_N32_M3_FLAGS}
+    CXXFLAGS	+= ${_N32_M3_FLAGS}
+    LDOPTS	+= ${_N32_M3_FLAGS}
+    LIBBITSUF	= 32
+endif
+ifeq (${ABI}, N32_M4)
+    ARFLAGS	:= ${_N32_M4_FLAGS} ${ARFLAGS}
+    CFLAGS	+= ${_N32_M4_FLAGS}
+    CXXFLAGS	+= ${_N32_M4_FLAGS}
+    LDOPTS	+= ${_N32_M4_FLAGS}
+    LIBBITSUF	= 32
+endif
+ifeq (${ABI}, 64_M3)
+    ARFLAGS	:= ${_64_M3_FLAGS} ${ARFLAGS}
+    CFLAGS	+= ${_64_M3_FLAGS}
+    CXXFLAGS	+= ${_64_M3_FLAGS}
+    LDOPTS	+= ${_64_M3_FLAGS}
+    LIBBITSUF	= 64
+endif
+ifeq (${ABI}, 64_M4)
+    ARFLAGS	:= ${_64_M4_FLAGS} ${ARFLAGS}
+    CFLAGS	+= ${_64_M4_FLAGS}
+    CXXFLAGS	+= ${_64_M4_FLAGS}
+    LDOPTS	+= ${_64_M4_FLAGS}
+    LIBBITSUF	= 64
+endif
 
 # -----------------------------------------------------------------------------
 # Library name.
