@@ -109,8 +109,8 @@ namespace vpr
       while ( !iter.isDone() )
       {
          out << iter.getCurrentName() << " total calls: " << iter.getCurrentTotalCalls()
-         << " total time: " << iter.getCurrentTotalTime() << " ave: " 
-            << iter.getCurrentTotalCalls() /iter.getCurrentTotalTime() << " history: ";
+         << " total time: " << iter.getCurrentTotalTime().msecf() << " ave: " 
+            << iter.getCurrentTotalTime().msecf() / iter.getCurrentTotalCalls() << " history: ";
 
          ProfileNode::NodeHistoryRange p = iter.getNodeHistoryRange();
          for ( ; p.first != p.second; p.first++ )
