@@ -59,6 +59,7 @@ DIRPRFX=	vpr/
 
 SUBDIR=		DynLoad		\
 		IO		\
+		Perf		\
 		Sync		\
 		Thread		\
 		Util		\
