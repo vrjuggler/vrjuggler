@@ -67,9 +67,6 @@ void applicationDataApp::init()
    vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
    std::string hostname = "gfxn1";
    mMyData.init(new_guid, hostname);
-  
-   cluster::ApplicationData* hack = dynamic_cast<cluster::ApplicationData*>(&(*mMyData));
-   hack->setIsLocal(hostname == cluster::ClusterNetwork::instance()->getLocalHostname());
 }
 
 void applicationDataApp::contextInit()
