@@ -1,0 +1,94 @@
+Builder: JExplorerBuilder V 1. 0. 7   
+< treecontrol linkurl="" imageurl="../../images/Icons/W98_Images/" >
+	< font face="Helvetica" style="Plain" size="${TREE_FONTSIZE}">
+		< idefault title="Item" image="Book_Closed.gif" imagetwo="" info="VR Juggler" target="Body" link="" rlink="">
+
+			< rootfolder title="Developer Guide" 
+				expand 
+				link="index.html"
+				info="In depth documentation for the VR Juggler project.  Intended to be a resource for the Juggle Development Team (JDT)"
+				image="Book_Closed.gif" 
+				imagetwo="Book_Open.gif">
+
+			< item title="Contribute!" link="${DOCUMENTATION}/why.html"  info="Why you should contribute to the Juggler documentation project. (A compelling argument)" image="Chat.gif" >
+
+			< item title="Introduction" 
+				link="${MISC}/juggler.mission.html" 
+				info="What is juggler?  What does it solve?  Why do I need it? How does it compare to others?" 
+				image="Leaf.gif" >
+			
+			< item title="Getting Started" 
+				link="getting.started/index.html" 
+				info="Where do I begin?" 
+				image="Leaf_Script2.gif" >
+						
+			< folder title="Architecture" 
+				link="architecture/design.html" 
+				info="Understanding the Juggler Architecture" 
+				image="Leaf.gif" >
+				
+				< item title="Introduction"
+					link="architecture/design.html"
+					info="Introduction to the Juggler Architecture"
+					image="Leaf.gif" >
+					
+				< folder title="Input Manager" 
+						link="architecture/inputmanager.introduction.html" 
+						info="Manages input devices"
+						image="Leaf.gif" >
+					< item title="Introduction"
+					link="architecture/inputmanager.introduction.html"
+					info="Introduction to the Input Manager"
+					image="Leaf.gif" >
+				</folder>
+				< folder title="Draw Manager" 
+						link="architecture/drawmanager.introduction.html" 
+						info="Interface to graphics API's" 
+						image="Leaf.gif" >
+					< item title="Introduction" 
+					link="architecture/drawmanager.introduction.html" 
+					info="Introduction to the Draw Manager" 
+					image="Leaf.gif" >
+				</folder>
+				< folder title="Display Managers" 
+						link="architecture/displaymanagers.introduction.html" 
+						info="Windowing information" 
+						image="Leaf.gif" >
+					< item title="Introduction" 
+					link="architecture/displaymanagers.introduction.html" 
+					info="Introduction to the Display Managers" 
+					image="Leaf.gif" >
+				</folder>
+				< folder title="Configuration Manager" 
+						link="architecture/configurationmanager.introduction.html" 
+						info="Configuration information " 
+						image="Leaf.gif" >
+					< item title="Introduction" 
+					link="architecture/configurationmanager.introduction.html" 
+					info="Introduction to the Configuration Manager" 
+					image="Leaf.gif" >
+				</folder>
+				< folder title="Kernel" 
+						link="architecture/kernel.introduction.html" 
+						info="Controller" 
+						image="Leaf.gif" >
+					< item title="Introduction" 
+					link="architecture/kernel.introduction.html" 
+					info="Introduction to the Kernel"
+					image="Leaf.gif" >
+				</folder>
+				< folder title="Application Classes" 
+						link="architecture/applicationclasses.introduction.html" 
+						info="Interface to application" 
+						image="Leaf.gif" >
+					< item title="Introduction" 
+					link="architecture/applicationclasses.introduction.html" 
+					info="Introduction to the Application Classes" 
+					image="Leaf.gif" >
+				</folder>
+			</folder>
+			
+		</idefault>
+	</font>
+</treecontrol>
+
