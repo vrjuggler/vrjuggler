@@ -86,12 +86,12 @@ public class BeanIconPanel extends JPanel
       return name;
    }
 
-   public void addIcon (JLabel icon)
+   public void addIcon (JButton icon)
    {
+      icon.setBackground(Color.white);
       icon.setVerticalTextPosition(JLabel.BOTTOM);
       icon.setHorizontalTextPosition(JLabel.CENTER);
       icon.setHorizontalAlignment(JLabel.CENTER);
-      icon.setBorder(BorderFactory.createEtchedBorder());
       icon.setMinimumSize(new Dimension(64, 64));
       icon.setPreferredSize(new Dimension(64, 64));
       icon.setMaximumSize(new Dimension(96, 96));
