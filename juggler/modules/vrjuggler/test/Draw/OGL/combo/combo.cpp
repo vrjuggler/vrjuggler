@@ -37,16 +37,13 @@ int main(int argc, char* argv[])
    while(1)
    {
 
-      //sginap(1);
       sleep(5);
       kernel->setApplication(wand_app);
-      //sginap(1);
       sleep(5);
       kernel->setApplication(cubes_app);
-      //sginap(1);
       sleep(5);
       kernel->setApplication(torus_app);
 
-      sched_yield();
+      usleep(250000);
    }
 }
