@@ -40,6 +40,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vpr/vprConfig.h>
+
+#include <iomanip>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/prctl.h>
