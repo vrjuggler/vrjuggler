@@ -2,7 +2,7 @@ package test;
 
 import java.util.ArrayList;
 import junit.framework.*;
-import VjConfig.*;
+import org.vrjuggler.jccl.config.*;
 
 /**
  * Test the PropertyDesc class.

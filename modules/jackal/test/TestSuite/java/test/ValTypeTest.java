@@ -1,7 +1,7 @@
 package test;
 
 import junit.framework.*;
-import VjConfig.*;
+import org.vrjuggler.jccl.config.*;
 
 /**
  * Tests the ValType class.
