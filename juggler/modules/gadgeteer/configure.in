@@ -190,11 +190,14 @@ AC_PATH_X
 DPP_LANG_SAVE
 DPP_LANG_C
 
+TRACKD_API_LIB_FLAGS=" -ltrackdAPI"
+
 gadget_save_CFLAGS="$CFLAGS"
 gadget_save_CPPFLAGS="$CPPFLAGS"
 
 if test "x$trackdapi_root" != "x/usr" ; then
    TRACKD_API_INCLUDES="-I$trackdapi_root/include"
+   TRACKD_API_LIB_FLAGS="-L$trackdapi_root/lib -ltrackdAPI"
 fi
 
 CFLAGS="$CFLAGS $TRACKD_API_INCLUDES"
@@ -521,6 +524,8 @@ AC_SUBST(DYLIB_PROF_DEPS)
 AC_SUBST(DSO_DRIVER_DEPS)
 
 AC_SUBST(APP_EXTRA_LIBS_X11)
+
+AC_SUBST(TRACKD_API_LIB_FLAGS)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)

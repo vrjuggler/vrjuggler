@@ -49,6 +49,7 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 INSTALL_FILES=	@INSTALL@
 SUBOBJDIR=	$(DRIVER_NAME)
+C_AFTERBUILD=	driver-dso
 
 SRCS=		TrackdAPIController.cpp	\
 		TrackdAPISensor.cpp
@@ -56,7 +57,7 @@ SRCS=		TrackdAPIController.cpp	\
 include $(MKPATH)/dpp.obj.mk
 
 DRIVER_DSO=	@LIB_PREFIX@$(DRIVER_NAME).$(DYNAMICLIB_EXT)
-DYLIB_DEPS=	@DSO_DRIVER_DEPS@
+DYLIB_DEPS=	@DSO_DRIVER_DEPS@ @TRACKD_API_LIB_FLAGS@
 
 driver-dso: $(DSO_DRIVER_DIR)/$(DRIVER_DSO)
 
