@@ -59,7 +59,7 @@ public class GlobalPreferencesService
    extends ServiceBean
    implements BeanRegistrationListener
 {
-   public static final double PREFS_VERSION_VALUE = 1.1;
+   public static final double PREFS_VERSION_VALUE = 1.2;
 
    private static final String PREFS_INSTRUCTION  = "org-vrjuggler-tweek-settings";
    private static final String PREFS_VERSION_ATTR = "global.cfg.version";
@@ -186,6 +186,46 @@ public class GlobalPreferencesService
    public String getBeanViewer ()
    {
       return beanViewer;
+   }
+
+   public void setWindowWidth(int width)
+   {
+      windowWidth = width;
+      Element e = mPrefsDocRoot.getChild("windowsize");
+
+      if ( null == e )
+      {
+         e = new Element("windowsize");
+         mPrefsDocRoot.addContent(e);
+         e.setAttribute("height", String.valueOf(windowHeight));
+      }
+
+      e.setAttribute("width", String.valueOf(width));
+   }
+
+   public int getWindowWidth()
+   {
+      return windowWidth;
+   }
+
+   public void setWindowHeight(int height)
+   {
+      windowHeight = height;
+      Element e = mPrefsDocRoot.getChild("windowsize");
+
+      if ( null == e )
+      {
+         e = new Element("windowsize");
+         mPrefsDocRoot.addContent(e);
+         e.setAttribute("width", String.valueOf(windowWidth));
+      }
+
+      e.setAttribute("height", String.valueOf(height));
+   }
+
+   public int getWindowHeight()
+   {
+      return windowHeight;
    }
 
    /**
@@ -371,6 +411,16 @@ public class GlobalPreferencesService
                userLevel = Integer.parseInt(user_element.getAttribute("level").getValue());
             }
 
+            Element win_size_element = mPrefsDocRoot.getChild("windowsize");
+
+            if ( win_size_element != null )
+            {
+               windowWidth =
+                  Integer.parseInt(win_size_element.getAttributeValue("width"));
+               windowHeight =
+                  Integer.parseInt(win_size_element.getAttributeValue("height"));
+            }
+
             Element chooser_element = mPrefsDocRoot.getChild("chooser");
 
             if ( chooser_element != null )
@@ -445,6 +495,10 @@ public class GlobalPreferencesService
          Element user_element = new Element("user");
          user_element.setAttribute("level", String.valueOf(userLevel));
          mPrefsDocRoot.addContent(user_element);
+
+         Element win_size_element = new Element("windowsize");
+         win_size_element.setAttribute("width", String.valueOf(windowWidth));
+         win_size_element.setAttribute("height", String.valueOf(windowHeight));
 
          Element chooser_element = new Element("chooser");
          chooser_element.setAttribute("start", chooserStartDir);
@@ -602,6 +656,8 @@ public class GlobalPreferencesService
    private int     userLevel        = 1;
    private String  lookAndFeel      = javax.swing.UIManager.getSystemLookAndFeelClassName();
    private String  beanViewer       = null;
+   private int     windowWidth      = 1024;
+   private int     windowHeight     = 768;
    private String  chooserStartDir  = CWD_START;
    private int     chooserOpenStyle = WINDOWS_CHOOSER;
    private boolean lazyPanelBeanInstantiation = true;
