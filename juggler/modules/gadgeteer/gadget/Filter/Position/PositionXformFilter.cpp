@@ -51,7 +51,7 @@ GADGET_REGISTER_POSFILTER_CREATOR( PositionXformFilter );
 
 bool PositionXformFilter::config(jccl::ConfigChunkPtr c)
 {
-   vprDEBUG_OutputGuard(vprDBG_ALL, 0, 
+   vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_VERB_LVL, 
                         std::string("PositionXformFilter::config: ") +
                            c->getFullName() + std::string(":") +
                            c->getDescToken() + std::string("\n"),
@@ -124,14 +124,16 @@ bool PositionXformFilter::config(jccl::ConfigChunkPtr c)
    mPostXform = post_trans_mat;
    gmtl::postMult(mPostXform, post_rot_mat);         // xformMat = T*R
          
-   vprDEBUG(vprDBG_ALL,0) << "m:preXform [T*R]: \n" << mPreXform
-                          << "\npre_trans_mat:\n" << pre_trans_mat
-                          << "\npre_rot_mat:\n" << pre_rot_mat 
-                          << "\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,0) << "m:postXform [T*R]: \n" << mPostXform
-                          << "\npost_trans_mat:\n" << post_trans_mat
-                          << "\npost_rot_mat:\n" << post_rot_mat 
-                          << "\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "m:preXform [T*R]: \n" << mPreXform
+         << "\npre_trans_mat:\n" << pre_trans_mat
+         << "\npre_rot_mat:\n" << pre_rot_mat 
+         << "\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "m:postXform [T*R]: \n" << mPostXform
+         << "\npost_trans_mat:\n" << post_trans_mat
+         << "\npost_rot_mat:\n" << post_rot_mat 
+         << "\n" << vprDEBUG_FLUSH;
                                 
    return true;
 }
