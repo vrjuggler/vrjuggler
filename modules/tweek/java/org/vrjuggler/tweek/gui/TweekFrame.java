@@ -90,8 +90,17 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          else
          {
             MessagePanel.instance().printWarning("WARNING: Unknown viewer type: '" + viewer + "'\n");
-            ViewerBean defaultBean = (ViewerBean)registry.getBeansOfType( ViewerBean.class.getName() ).get( 0 );
-            mBeanContainer.replaceViewer((BeanModelViewer)defaultBean.getViewer() );
+            List viewers = registry.getBeansOfType(ViewerBean.class.getName());
+
+            if ( viewers.size() > 0 )
+            {
+               ViewerBean defaultBean = (ViewerBean) viewers.get(0);
+               mBeanContainer.replaceViewer((BeanModelViewer)defaultBean.getViewer() );
+            }
+            else
+            {
+               MessagePanel.instance().printWarning("WARNING: No Viewer Beans loaded");
+            }
          }
       }
       else
@@ -108,6 +117,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
     */
    public void initGUI ()
    {
+      // This needs to be done as early as possible so that we receive events
+      // that happen during initialization.
       MessagePanel.instance().addMessageAdditionListener(this);
 
       try
