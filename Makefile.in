@@ -637,24 +637,29 @@ _build_dbg_lib_static:
 	@echo "Building static debugging libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
-          ${_DBG_LIBDIR}/${VJ_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_DBG}" ${_DBG_LIBDIR}/${VJ_LIB_STATIC}
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Utils"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${UTILS_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_DBG}" LIBDIR="${_DBG_LIBDIR}"		\
+          ${_DBG_LIBDIR}/${UTILS_LIB_STATIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${GL_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_DBG}" LIBDIR="${_DBG_LIBDIR}"		\
+          ${_DBG_LIBDIR}/${GL_LIB_STATIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${PF_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_DBG}" LIBDIR="${_DBG_LIBDIR}"		\
+          ${_DBG_LIBDIR}/${PF_LIB_STATIC}
 endif
 ifeq (${AUDIO_WORKS}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/aw"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${AW_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_DBG}" LIBDIR="${_DBG_LIBDIR}"		\
+          ${_DBG_LIBDIR}/${AW_LIB_STATIC}
 endif
 ifeq (${SL}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/sl"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${SL_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_DBG}" LIBDIR="${_DBG_LIBDIR}"		\
+          ${_DBG_LIBDIR}/${SL_LIB_STATIC}
 endif
 
 # Build the shared libraries with the debugging flags enabled.
@@ -664,25 +669,29 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "Building shared debugging libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
-          ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_DBG}" ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC}
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Utils"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${UTILS_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_DBG}" LIBDIR="${_DBG_LIBDIR}"		\
+          ${_DBG_LIBDIR}/${UTILS_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_DBG}" LIBDIR="${_DBG_LIBDIR}"		\
+          ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
-          EXTRA_LDOPTS="${_PF_EXTRA_LDOPTS}" LIBDIR="${_DBG_LIBDIR}"	\
-          ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_DBG} ${_PF_EXTRA_LDOPTS}"		\
+          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}
 endif
 ifeq (${AUDIO_WORKS}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/aw"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${AW_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_DBG}" LIBDIR="${_DBG_LIBDIR}"		\
+          ${_DBG_LIBDIR}/${AW_LIB_DYNAMIC}
 endif
 ifeq (${SL}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/sl"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${SL_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_DBG}" LIBDIR="${_DBG_LIBDIR}"		\
+          ${_DBG_LIBDIR}/${SL_LIB_DYNAMIC}
 endif
 else
 	@echo "================================================"
@@ -696,24 +705,29 @@ _build_opt_lib_static:
 	@echo "Building static optmized libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}"	LIBDIR=${_OPT_LIBDIR}	\
-          ${_OPT_LIBDIR}/${VJ_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_OPT}" ${_OPT_LIBDIR}/${VJ_LIB_STATIC}
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Utils"			\
-          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${UTILS_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_OPT}" LIBDIR=${_OPT_LIBDIR}		\
+          ${_OPT_LIBDIR}/${UTILS_LIB_STATIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
-          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${GL_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_OPT}" LIBDIR=${_OPT_LIBDIR}		\
+          ${_OPT_LIBDIR}/${GL_LIB_STATIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
-          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${PF_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_OPT}" LIBDIR=${_OPT_LIBDIR}		\
+          ${_OPT_LIBDIR}/${PF_LIB_STATIC}
 endif
 ifeq (${AUDIO_WORKS}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/aw"			\
-          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${AW_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_OPT}" LIBDIR=${_OPT_LIBDIR}		\
+          ${_OPT_LIBDIR}/${AW_LIB_STATIC}
 endif
 ifeq (${SL}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/sl"			\
-          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${SL_LIB_STATIC}
+          EXTRA_ARFLAGS="${LDOPTS_OPT}" LIBDIR=${_OPT_LIBDIR}		\
+          ${_OPT_LIBDIR}/${SL_LIB_STATIC}
 endif
 
 # Build the shared libraries with the optimization flags enabled.
@@ -723,24 +737,29 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "Building shared optmized libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
-          ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_OPT}" ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC}
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Utils"			\
-          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${UTILS_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_OPT}" LIBDIR="${_OPT_LIBDIR}"		\
+          ${_OPT_LIBDIR}/${UTILS_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
-          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_OPT}" LIBDIR="${_OPT_LIBDIR}"		\
+          ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
-          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_OPT}" LIBDIR="${_OPT_LIBDIR}"		\
+          ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}
 endif
 ifeq (${AUDIO_WORKS}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/aw"			\
-          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${AW_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_OPT}" LIBDIR="${_OPT_LIBDIR}"		\
+          ${_OPT_LIBDIR}/${AW_LIB_DYNAMIC}
 endif
 ifeq (${SL}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/sl"			\
-          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${SL_LIB_DYNAMIC}
+          EXTRA_LDOPTS="${LDOPTS_OPT}" LIBDIR="${_OPT_LIBDIR}"		\
+          ${_OPT_LIBDIR}/${SL_LIB_DYNAMIC}
 endif
 else
 	@echo "================================================"
