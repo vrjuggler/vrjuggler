@@ -59,4 +59,7 @@ build:
 install:
 	$(MAKE) RECTARGET="installworld" recursive
 
+clean cleandepend clobber:
+	$(MAKE) RECTARGET="$@" recursive
+
 include $(MKPATH)/dpp.subdir.mk
