@@ -10,14 +10,26 @@
 # -----------------------------------------------------------------------------
 default: TestSuite
 
-all: TestSuite old
+SUBDIRS	= TestSuite	\
+          CfgTest	\
+          Math		\
+          Matrix	\
+          Performance	\
+          Quat		\
+          Sync		\
+          input		\
+          threads
 
-testSuite old::
+all: $(SUBDIRS)
+
+$(SUBDIRS)::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	-cd TestSuite && $(MAKE) clean
-	-cd old       && $(MAKE) clean
+	@for dir in $(SUBDIRS) ; do			\
+            echo "==> Cleaning in $$dir"       ;	\
+            cd $$dir && $(MAKE) clean && cd .. ;	\
+        done
