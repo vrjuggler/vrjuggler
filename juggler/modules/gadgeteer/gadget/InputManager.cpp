@@ -373,7 +373,8 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    if(ret_val)
    {
-      updateAllData();                             // Update all the input data
+      updateAllDevices();                             // Update all the input data
+      updateAllProxies();                             // Update all the input data
       BaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
          << "Updated all devices" << std::endl << vprDEBUG_FLUSH;
@@ -428,7 +429,8 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    if(ret_val)
    {
-      updateAllData();                             // Update all the input data
+      updateAllDevices();                             // Update all the input data
+      updateAllProxies();                             // Update all the input data
       BaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL)
          << "InputManager::configRemove(): Updated all data" << std::endl
@@ -645,10 +647,22 @@ bool InputManager::addRemoteDevice(Input* devPtr, const std::string& device_name
    return true;
 }
 
+void InputManager::updateAllProxies()
+{
+   // Update proxies MIGHT NOT NEED
+   for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
+        i_p != mProxyTable.end();
+        ++i_p)
+   {
+      (*i_p).second->updateData();
+   }
+}
+
+
 /**
  * Call UpdateData() on all the devices and transform proxies.
  */
-void InputManager::updateAllData()
+void InputManager::updateAllDevices()
 {
    for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); ++i)      // all DEVICES
    {
@@ -663,14 +677,6 @@ void InputManager::updateAllData()
    if(mInputLogger.get() != NULL)
    {
       mInputLogger->process();
-   }
-
-   // Update proxies MIGHT NOT NEED
-   for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
-        i_p != mProxyTable.end();
-        ++i_p)
-   {
-      (*i_p).second->updateData();
    }
 }
 
