@@ -98,6 +98,8 @@ public:
    void stupify(bool newState = true)
    { mStupified = newState; }
 
+   bool isStupified() { return mStupified; }
+
 protected:
    std::string mName;         /**< The name of the proxy */
    bool        mStupified;    /**< Is the proxy current stupified (returns default data) */
