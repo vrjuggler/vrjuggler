@@ -189,8 +189,9 @@ ifeq (@PLATFORM@, Darwin)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(TWEEK_BEAN_DIR)/*.jar $(TWEEK_BEAN_DIR)/*.xml		\
           $(bundle_tweek_beandir)
-	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-          $(JCCL_DATA_DIR)/*.xsd $(bundle_jccl_datadir)
+	$(PERL) $(scriptdir)/install-dir.pl -i $(JCCL_DATA_DIR)		\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(bundle_jccl_datadir)	\
+          -v "$(topdir)/VARS.pl" $(EXTRA_INSTALL_ARGS)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(JCCL_JAR_DIR)/*.jar $(bundle_jccl_javadir)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
