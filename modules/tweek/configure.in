@@ -206,7 +206,7 @@ case $target_os in
    # Darwin (aka MacOS X).
    darwin*)
       AC_DEFINE(__darwin__, 1, [Define to 1 if building on Darwin/Mac OS X.])
-      EXTRA_DEFS="$EXTRA_DEFS -D__darwin__"
+      EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=1 -D__darwin__"
 
       case $target_cpu in
          powerpc)
@@ -216,17 +216,6 @@ case $target_os in
          *86)
             AC_DEFINE(__x86__)
             EXTRA_DEFS="$EXTRA_DEFS -D__x86__"
-            ;;
-      esac
-
-      case $target_os in
-         darwin1*)
-            AC_DEFINE(__OSVERSION__, 1)
-            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=1"
-            ;;
-         darwin6*)
-            AC_DEFINE(__OSVERSION__, 6)
-            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=6"
             ;;
       esac
       ;;
