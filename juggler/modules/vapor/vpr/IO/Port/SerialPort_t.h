@@ -73,6 +73,20 @@ public:
     // ========================================================================
 
     // ------------------------------------------------------------------------
+    //: Get the name of this serial port.
+    //
+    //! PRE: None.
+    //! POST: A constant reference to the m_name object is returned to the
+    //+       caller.
+    //
+    //! RETURNS: An object containing the name of this serial port.
+    // ------------------------------------------------------------------------
+    virtual const std::string&
+    getName (void) {
+        return m_sio_imp.getName();
+    }
+
+    // ------------------------------------------------------------------------
     //: Set the open flags so that the serial port is opened in read-only
     //+ mode.
     //
@@ -194,6 +208,41 @@ public:
     inline virtual vpr::Status
     enableNonBlocking (void) {
         return m_sio_imp.enableNonBlocking();
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the current blocking state for the serial port.
+    //
+    //! PRE: m_blocking is set correctly
+    //! POST:
+    //
+    //! RETURNS: true  - The port is in blocking mode.
+    //! RETURNS: false - The port is in non-blocking mode.
+    // ------------------------------------------------------------------------
+    inline bool
+    getBlocking (void) const {
+        return m_sio_imp.getBlocking();
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the current non-blocking state for the serial port.
+    //
+    //! PRE: m_blocking is set correctly
+    //! POST:
+    //
+    //! RETURNS: true  - The port is in non-blocking mode.
+    //! RETURNS: false - The port is in blocking mode.
+    // ------------------------------------------------------------------------
+    inline bool
+    getNonBlocking (void) const {
+        return m_sio_imp.getNonBlocking();
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    inline virtual IOSys::Handle
+    getHandle (void) {
+        return m_sio_imp.getHandle();
     }
 
     // ========================================================================

@@ -61,6 +61,20 @@ public:
     // ========================================================================
 
     // ------------------------------------------------------------------------
+    //: Get the "name" of this socket.  It is typically the address of the
+    //+ peer host.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! RETURNS: An object containing the "name" of this socket.
+    // ------------------------------------------------------------------------
+    virtual const std::string&
+    getName (void) {
+        return m_socket_imp->getName();
+    }
+
+    // ------------------------------------------------------------------------
     //: Set the open flags so that the socket is opened in read-only mode.
     //
     //! PRE: None.
@@ -219,6 +233,34 @@ public:
     inline vpr::Status
     enableNonBlocking (void) {
         return m_socket_imp->enableNonBlocking();
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the current blocking state for the socket.
+    //
+    //! PRE: m_blocking is set correctly
+    //! POST:
+    //
+    //! RETURNS: true  - The socket is in blocking mode.
+    //! RETURNS: false - The socket is in non-blocking mode.
+    // ------------------------------------------------------------------------
+    inline bool
+    getBlocking (void) const {
+        return m_socket_imp->getBlocking();
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the current non-blocking state for the socket.
+    //
+    //! PRE: m_blocking is set correctly
+    //! POST:
+    //
+    //! RETURNS: true  - The socket is in non-blocking mode.
+    //! RETURNS: false - The socket is in blocking mode.
+    // ------------------------------------------------------------------------
+    inline bool
+    getNonBlocking (void) const {
+        return m_socket_imp->getNonBlocking();
     }
 
     // ------------------------------------------------------------------------

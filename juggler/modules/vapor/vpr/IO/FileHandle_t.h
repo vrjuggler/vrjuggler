@@ -80,6 +80,20 @@ public:
     }
 
     // ------------------------------------------------------------------------
+    //: Get the name of this file.
+    //
+    //! PRE: None.
+    //! POST: A constant reference to the m_name object is returned to the
+    //+       caller.
+    //
+    //! RETURNS: An object containing the name of this file.
+    // ------------------------------------------------------------------------
+    virtual const std::string&
+    getName (void) {
+        return m_handle_impl.getName();
+    }
+
+    // ------------------------------------------------------------------------
     //: Open the file handle.
     //
     //! PRE: The file handle is not already open.
@@ -143,6 +157,34 @@ public:
     virtual Status
     enableNonBlocking (void) {
         return m_handle_impl.enableNonBlocking();
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the current blocking state for the file.
+    //
+    //! PRE: m_blocking is set correctly
+    //! POST:
+    //
+    //! RETURNS: true  - The file is in blocking mode.
+    //! RETURNS: false - The file is in non-blocking mode.
+    // ------------------------------------------------------------------------
+    inline bool
+    getBlocking (void) const {
+        return m_handle_impl.getBlocking();
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the current non-blocking state for the file.
+    //
+    //! PRE: m_blocking is set correctly
+    //! POST:
+    //
+    //! RETURNS: true  - The file is in non-blocking mode.
+    //! RETURNS: false - The file is in blocking mode.
+    // ------------------------------------------------------------------------
+    inline bool
+    getNonBlocking (void) const {
+        return m_handle_impl.getNonBlocking();
     }
 
     // ========================================================================
