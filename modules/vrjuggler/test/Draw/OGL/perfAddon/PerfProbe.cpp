@@ -30,8 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vrjConfig.h>
+
 #include <GL/gl.h>
+#ifndef WIN32
 #include <GL/glext.h>
+#endif
 #include <PerfProbe.h>
 #include <gmtl/Output.h>
 #include <Text.h>
