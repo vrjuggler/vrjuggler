@@ -193,12 +193,13 @@ private:
 
        
             // --- Draw corner boxes --- //
-         for(float x=0;x<=1;x++)
-            for(float y=0;y<=1;y++)
-               for(float z=0;z<=1;z++)
+         for(float x=0;x<=1.0;x++)
+            for(float y=0.0;y<=1.0;y++)
+               for(float z=0.0;z<=1.0;z++)
                {
-                  glColor3f(x,y,z);    // Set the color
-                  glPushMatrix();
+                  //glColor3f(x,y,z);    // Set the color
+                  glColor3f(1.0, 0.0,  0.0f);
+		  glPushMatrix();
                   {
                      glTranslatef( (x-0.5)*SCALE, (y-0.0)*SCALE, (z-0.5)*SCALE);
                      glScalef(2.0f, 2.0f, 2.0f);
