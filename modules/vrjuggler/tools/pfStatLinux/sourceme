@@ -1,0 +1,2 @@
+setenv LD_PRELOAD `pwd`/libpfstat.so
+echo $LD_PRELOAD
