@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 #
 # $FreeBSD: CVSROOT/log_accum.pl,v 1.44 2000/08/30 08:08:47 joe Exp $
 #
