@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Dec-29-2001 cjust     VjControl doesn't open multiple unsynchronized
+                      copies of the same file anymore, and asks if the
+                      user wants to revert to the saved copy.
 Nov-30-2001 cjust     ConfigIO's API now uses const ints to explicitly
                       give the file format for reading/writing.  Most
         	      callers of these APIs just use the default argument
