@@ -9,6 +9,7 @@
 
 #include <vpr/Util/ReturnStatus.h>
 #include <boost/smart_ptr.hpp>
+#include <boost/function.hpp>
 
 
 /*****************************************************************
@@ -109,12 +110,44 @@ public:
    }
 
 
+   struct retstat_int_float_functor {
+      vpr::ReturnStatus operator()(int intVal, float floatVal) const
+      {
+         if(intVal > (int)floatVal)
+            return vpr::ReturnStatus::Succeed;
+         else
+            return vpr::ReturnStatus::Fail;
+      }
+   };
+   bool doSomethingWithFunc( boost::function< vpr::ReturnStatus, int, float > f)
+   {
+      vpr::ReturnStatus ret = f(50,21.1f);
+      return ( ret == vpr::ReturnStatus::Succeed);
+   }
+   void testFunctionBasic()
+   {
+      boost::function< vpr::ReturnStatus, int, float > func;
+
+      func = retstat_int_float_functor();    // Make a new one
+
+      assertTest( func(10, 50.0f) == vpr::ReturnStatus::Fail);
+
+      retstat_int_float_functor functor;
+      func = functor;
+
+      assertTest( func(10, 50.0f) == vpr::ReturnStatus::Fail );
+
+      bool ret_val = doSomethingWithFunc( func );
+      assertTest( ret_val == true );
+   }
+
    static Test* suite()
    {
       TestSuite *test_suite = new TestSuite ("BoostTest");
 
       test_suite->addTest( new TestCaller<BoostTest>("shared_ptr_basic", &BoostTest::shared_ptr_basic));
       test_suite->addTest( new TestCaller<BoostTest>("shared_ptr_upcast", &BoostTest::shared_ptr_upcast));
+      test_suite->addTest( new TestCaller<BoostTest>("testFunctionBasic", &BoostTest::testFunctionBasic));
       
       return test_suite;
    }
