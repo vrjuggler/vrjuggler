@@ -231,8 +231,8 @@ public:
 };
 
 
-vjVec3 operator *(float _s, const vjVec3& _v);
-vjVec3 operator *(const vjVec3& _v, float _s);
-vjVec3 operator /(const vjVec3& _v, float _s);
+VJ_API(vjVec3) operator *(float _s, const vjVec3& _v);
+VJ_API(vjVec3) operator *(const vjVec3& _v, float _s);
+VJ_API(vjVec3) operator /(const vjVec3& _v, float _s);
 
 #endif

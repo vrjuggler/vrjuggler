@@ -135,6 +135,6 @@ protected:
    std::vector<vjViewport*>   mViewports;    //: Contained viewports
 };
 
-std::ostream& operator<<(std::ostream& out, vjDisplay& disp);
+VJ_API(std::ostream&) operator<<(std::ostream& out, vjDisplay& disp);
 
 #endif

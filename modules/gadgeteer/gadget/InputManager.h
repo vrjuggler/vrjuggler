@@ -185,6 +185,6 @@ private:
 };
 
 // Write out the status of the input manager
-std::ostream& operator<<(std::ostream& out, vjInputManager& iMgr);
+VJ_API(std::ostream&) operator<<(std::ostream& out, vjInputManager& iMgr);
 
 #endif
