@@ -33,8 +33,6 @@
 
 #include <sax/SAXParseException.hpp>
 #include <jccl/XMLUtil/XercesXMLError.h>
-#include <stdlib.h>
-#include <string.h>
 #include <dom/DOMString.hpp>
 
 //based on Xerces DOMPrint source code
