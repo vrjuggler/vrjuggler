@@ -1,5 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jul-24-2001 cjust     Fixed a redraw bug in VjControl that happened when
+                      updating the Active chunkdb from a network connection.
+                      This could cause the status bar label or the chunkdb's
+                      JTree to be shifted to the upper-left corner of the
+                      VjControl window.
 Jul-05-2001 patrick   Fixed the TrackdSensor and TrackdController chunk
                       descriptions so that min and max are correctly listed
                       with TrackdController.
