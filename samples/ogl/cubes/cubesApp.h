@@ -65,27 +65,29 @@ public:
       ;
    }
 
+   // Called immediately upon opening a new OpenGL context
+   virtual void contextInit()
+   {
+      // Create display list
+      vjASSERT(mDlData->firstTime == true);   // We should not have been here yet
+      mDlData->firstTime = false;
+
+      glGenLists(rand()%25);        // Generate some random lists.  NOTE: Needed for testing only
+      mDlData->cubeDLIndex = glGenLists(1);
+
+      vjDEBUG(0) << "Creating DL:" << mDlData->cubeDLIndex << endl << vjDEBUG_FLUSH;
+
+      glNewList(mDlData->cubeDLIndex, GL_COMPILE);
+         drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
+      glEndList();
+   }
+
    /** Function to draw the scene
     * PRE: OpenGL state has correct transformation and buffer selected
     * POST: The current scene has been drawn
     */
    virtual void draw()
    {
-
-
-      if(mDlData->firstTime == true)  // If not inited
-      {
-         mDlData->firstTime = false;
-         glGenLists(rand()%25);        // Generate some random lists.  NOTE: Needed for testing only
-         mDlData->cubeDLIndex = glGenLists(1);
-
-         vjDEBUG(0) << "Creating DL:" << mDlData->cubeDLIndex << endl << vjDEBUG_FLUSH;
-
-         glNewList(mDlData->cubeDLIndex, GL_COMPILE);
-            drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
-         glEndList();
-      }
-
       initGLState();    // This should really be in another function
       myDraw();
    }
