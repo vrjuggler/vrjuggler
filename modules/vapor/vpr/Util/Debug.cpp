@@ -41,11 +41,8 @@
 
 #include <vpr/vprConfig.h>
 
-#include <iosfwd>
 #include <iostream>
 #include <fstream>
-#include <sstream>
-#include <streambuf>
 #include <boost/concept_check.hpp>
 
 #include <vpr/Sync/Mutex.h>
