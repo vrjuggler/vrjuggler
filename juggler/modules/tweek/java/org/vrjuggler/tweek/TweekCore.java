@@ -53,6 +53,8 @@ import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.beans.loader.BeanInstantiationException;
 import org.vrjuggler.tweek.event.FileActionGenerator;
 import org.vrjuggler.tweek.event.FileActionListener;
+import org.vrjuggler.tweek.event.UndoActionGenerator;
+import org.vrjuggler.tweek.event.UndoActionListener;
 import org.vrjuggler.tweek.gui.TweekFrame;
 import org.vrjuggler.tweek.services.*;
 import org.vrjuggler.tweek.text.MessageDocument;
@@ -405,7 +407,6 @@ public class TweekCore
     *
     * @see org.vrjuggler.tweek.beans.FileLoader
     *
-    *
     * @since 0.92.3
     */
    public void unregisterFileActionGenerator(FileActionGenerator gen)
@@ -424,9 +425,51 @@ public class TweekCore
    }
 
    /**
+    * Registers all the objects interested in undo action events with the
+    * given undo action generator.
+    *
+    * @param gen        the undo action generator associated with a Tweek
+    *                   Bean that implements the UndoHandler interface.
+    *
+    * @see org.vrjuggler.tweek.beans.UndoHandler
+    *
+    * @since 0.92.4
+    */
+   public void registerUndoActionGenerator(UndoActionGenerator gen)
+   {
+     gen.addUndoActionListener(m_gui);
+   }
+
+   /**
+    * Un-registers all the objects interested in undo action events with the
+    * given undo action generator.
+    *
+    * @param gen        the undo action generator associated with a Tweek
+    *                   Bean that implements the UndoHandler interface.
+    *
+    * @see org.vrjuggler.tweek.beans.UndoHandler
+    *
+    * @since 0.92.4
+    */
+   public void unregisterUndoActionGenerator(UndoActionGenerator gen)
+   {
+     gen.removeUndoActionListener(m_gui);
+   }
+
+   /**
+    * Returns all the UndoActionListener objects known to the Tweek Java GUI.
+    *
+    * @since 0.92.4
+    */
+   public UndoActionListener[] getUndoActionListeners()
+   {
+      return new UndoActionListener[]{m_gui};
+   }
+
+   /**
     * Default constructor.
     */
-   protected TweekCore ()
+   protected TweekCore()
    {
       BeanInstantiationCommunicator.instance().addBeanInstantiationListener( this );
    }

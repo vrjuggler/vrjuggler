@@ -45,6 +45,7 @@ import javax.swing.event.EventListenerList;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.undo.UndoManager;
 import org.vrjuggler.tweek.TweekCore;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
@@ -75,6 +76,7 @@ public class TweekFrame
             , WindowListener
             , RegistrationListener
             , FileActionListener
+            , UndoActionListener
 {
    public TweekFrame(MessageDocument msgDocument)
    {
@@ -306,6 +308,40 @@ public class TweekFrame
          else
          {
             disableFileHandlingItems();
+         }
+
+         if ( panel_bean instanceof ClipboardUser )
+         {
+            mMenuEditCut.setEnabled(true);
+            mMenuEditCopy.setEnabled(true);
+            mMenuEditPaste.setEnabled(true);
+
+            mClipboardUser = (ClipboardUser) panel_bean;
+         }
+         else
+         {
+            disableClipboardItems();
+         }
+
+         if ( panel_bean instanceof UndoHandler )
+         {
+            mUndoHandler = (UndoHandler) panel_bean;
+            UndoManager mgr = mUndoHandler.getUndoManager();
+
+            if ( null == mgr )
+            {
+               mMenuEditUndo.setEnabled(false);
+               mMenuEditRedo.setEnabled(false);
+            }
+            else
+            {
+               mMenuEditUndo.setEnabled(mgr.canUndo());
+               mMenuEditRedo.setEnabled(mgr.canRedo());
+            }
+         }
+         else
+         {
+            disableUndoHandlerItems();
          }
 
          if ( panel_bean instanceof HelpProvider )
@@ -605,6 +641,22 @@ public class TweekFrame
          mMenuFileSaveAs.setEnabled(false);
          mMenuFileSaveAll.setEnabled(false);
          mMenuFileClose.setEnabled(false);
+      }
+   }
+
+   public void undoActionPerformed(UndoActionEvent e)
+   {
+      UndoManager mgr = e.getUndoHandler().getUndoManager();
+
+      if ( null == mgr )
+      {
+         mMenuEditUndo.setEnabled(false);
+         mMenuEditRedo.setEnabled(false);
+      }
+      else
+      {
+         mMenuEditUndo.setEnabled(mgr.canUndo());
+         mMenuEditRedo.setEnabled(mgr.canRedo());
       }
    }
 
@@ -1265,6 +1317,19 @@ public class TweekFrame
     */
    private void editUndoAction(ActionEvent e)
    {
+      mUndoHandler.undoRequested();
+      UndoManager mgr = mUndoHandler.getUndoManager();
+
+      if ( null == mgr )
+      {
+         mMenuEditUndo.setEnabled(false);
+         mMenuEditRedo.setEnabled(false);
+      }
+      else
+      {
+         mMenuEditUndo.setEnabled(mgr.canUndo());
+         mMenuEditRedo.setEnabled(mgr.canRedo());
+      }
    }
 
    /**
@@ -1272,6 +1337,19 @@ public class TweekFrame
     */
    private void editRedoAction(ActionEvent e)
    {
+      mUndoHandler.redoRequested();
+      UndoManager mgr = mUndoHandler.getUndoManager();
+
+      if ( null == mgr )
+      {
+         mMenuEditUndo.setEnabled(false);
+         mMenuEditRedo.setEnabled(false);
+      }
+      else
+      {
+         mMenuEditUndo.setEnabled(mgr.canUndo());
+         mMenuEditRedo.setEnabled(mgr.canRedo());
+      }
    }
 
    /**
@@ -1279,6 +1357,7 @@ public class TweekFrame
     */
    private void editCutAction(ActionEvent e)
    {
+      mClipboardUser.cutRequested();
    }
 
    /**
@@ -1286,6 +1365,7 @@ public class TweekFrame
     */
    private void editCopyAction(ActionEvent e)
    {
+      mClipboardUser.copyRequested();
    }
 
    /**
@@ -1293,6 +1373,7 @@ public class TweekFrame
     */
    private void editPasteAction(ActionEvent e)
    {
+      mClipboardUser.pasteRequested();
    }
 
    /**
@@ -1503,6 +1584,21 @@ public class TweekFrame
       mMenuFileClose.setEnabled(false);
    }
 
+   private void disableClipboardItems()
+   {
+      mClipboardUser = null;
+      mMenuEditCut.setEnabled(false);
+      mMenuEditCopy.setEnabled(false);
+      mMenuEditPaste.setEnabled(false);
+   }
+
+   private void disableUndoHandlerItems()
+   {
+      mUndoHandler = null;
+      mMenuEditUndo.setEnabled(false);
+      mMenuEditRedo.setEnabled(false);
+   }
+
    /**
     * Disables the Bean-specific menu items in the Help menu related to
     * providing Bean-specific help.  This effectively resets the menu items to
@@ -1572,7 +1668,9 @@ public class TweekFrame
    private MessagePanel    mMessagePanel    = null;
    private MessageDocument mMsgDocument     = null;
    private FileLoader      mFileLoader      = null;
+   private ClipboardUser   mClipboardUser   = null;
    private HelpProvider    mHelpProvider    = null;
+   private UndoHandler     mUndoHandler     = null;
    private BeanPrefsDialog mBeanPrefsDialog = null;
 
    private static boolean mMacOS =
