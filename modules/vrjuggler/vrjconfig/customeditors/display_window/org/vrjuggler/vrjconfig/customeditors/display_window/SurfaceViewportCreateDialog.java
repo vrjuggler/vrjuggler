@@ -46,12 +46,13 @@ import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 public class SurfaceViewportCreateDialog
    extends ViewportCreateDialog
 {
-   public SurfaceViewportCreateDialog()
+   public SurfaceViewportCreateDialog(Container parent)
    {
-      this(null, null);
+      this(parent, null, null);
    }
 
-   public SurfaceViewportCreateDialog(ConfigContext ctx, ConfigElement elt)
+   public SurfaceViewportCreateDialog(Container parent, ConfigContext ctx,
+                                      ConfigElement elt)
    {
       super("Basic Surface Viewport Parameters", ctx, elt,
             EditorConstants.surfaceViewportType);
@@ -158,6 +159,7 @@ public class SurfaceViewportCreateDialog
 
       validateUserInput();
       this.pack();
+      this.setLocationRelativeTo(parent);
    }
 
    public Boolean isTracked()

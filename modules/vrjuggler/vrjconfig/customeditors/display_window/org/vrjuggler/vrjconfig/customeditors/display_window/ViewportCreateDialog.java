@@ -47,7 +47,7 @@ public abstract class ViewportCreateDialog
 {
    private static int VP_ELT_COUNT = 0;
 
-   public ViewportCreateDialog(String title, ConfigContext ctx, 
+   public ViewportCreateDialog(String title, ConfigContext ctx,
                                ConfigElement elt, String elementType)
    {
       super();
@@ -93,8 +93,9 @@ public abstract class ViewportCreateDialog
    public static final int CANCEL_OPTION = JOptionPane.CANCEL_OPTION;
    public static final int CLOSED_OPTION = JOptionPane.CLOSED_OPTION;
 
-   public int getStatus()
+   public int showDialog()
    {
+      setVisible(true);
       return status;
    }
 
