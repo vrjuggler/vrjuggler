@@ -132,11 +132,24 @@ public class ConfigToolbar
       return ctx;
    }
 
+   /**
+    * Programmatically does a new action in a new ConfigContext.
+    */
    public boolean doNew()
    {
-      // Create a new context
-      ConfigContext ctx = createDefaultConfigContext();
+      boolean result = doNew(createDefaultConfigContext());
+      if (result)
+      {
+         fireAction("New");
+      }
+      return result;
+   }
 
+   /**
+    * Programmatically does a new action in the given ConfigContext.
+    */
+   public boolean doNew(ConfigContext ctx)
+   {
       // Create a new data source and add it to the broker
       try
       {
@@ -155,7 +168,6 @@ public class ConfigToolbar
          ctx.add(filename);
          setConfigContext(ctx);
 
-         fireAction("New");
          return true;
       }
       catch (IOException ioe)
@@ -167,13 +179,23 @@ public class ConfigToolbar
    }
 
    /**
-    * Programmatically does an open action.
+    * Programmatically does an open action into a new context.
     */
    public boolean doOpen()
    {
-      // Create a new context
-      ConfigContext ctx = createDefaultConfigContext();
+      boolean result = doOpen(createDefaultConfigContext());
+      if (result)
+      {
+         fireAction("Open");
+      }
+      return result;
+   }
 
+   /**
+    * Programmatically executes an open action into the given context.
+    */
+   public boolean doOpen(ConfigContext ctx)
+   {
       int result = fileChooser.showOpenDialog(this);
       if (result == JFileChooser.APPROVE_OPTION)
       {
@@ -190,7 +212,6 @@ public class ConfigToolbar
             ctx.add(res_name);
             setConfigContext(ctx);
 
-            fireAction("Open");
             return true;
          }
          catch (IOException ioe)
@@ -273,6 +294,21 @@ public class ConfigToolbar
       if (contextEditor == null)
       {
          contextEditor = new EditContextPopup();
+         contextEditor.addActionListener(new ActionListener()
+         {
+            public void actionPerformed(ActionEvent evt)
+            {
+               String cmd = evt.getActionCommand();
+               if (cmd.equals("New"))
+               {
+                  doNew(getConfigContext());
+               }
+               else if (cmd.equals("Open"))
+               {
+                  doOpen(getConfigContext());
+               }
+            }
+         });
       }
       return contextEditor;
    }

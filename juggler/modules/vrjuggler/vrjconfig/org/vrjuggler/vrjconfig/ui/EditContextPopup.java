@@ -28,10 +28,8 @@ package org.vrjuggler.vrjconfig.ui;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Window;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
@@ -130,6 +128,43 @@ public class EditContextPopup
       return model.getConfigContext();
    }
 
+   private void doAddNew()
+   {
+      fireAction("New");
+   }
+
+   private void doAddExisting()
+   {
+      fireAction("Open");
+   }
+
+   public void addActionListener(ActionListener listener)
+   {
+      listenerList.add(ActionListener.class, listener);
+   }
+
+   public void removeActionListener(ActionListener listener)
+   {
+      listenerList.remove(ActionListener.class, listener);
+   }
+
+   protected void fireAction(String command)
+   {
+      ActionEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ActionListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ActionEvent(this, 0, command);
+            }
+            ((ActionListener)listeners[i+1]).actionPerformed(evt);
+         }
+      }
+   }
+
    /**
     * JBuilder auto-generated GUI code.
     */
@@ -143,13 +178,38 @@ public class EditContextPopup
       lblTitle.setText("Please pick the files in your configuration.");
       lblTitle.setOpaque(false);
       titlePnl.setOpaque(false);
+      buttonPnl.setLayout(new BoxLayout(buttonPnl, BoxLayout.X_AXIS));
+      buttonPnl.setOpaque(false);
+      newBtn.setText("New");
+      openBtn.setText("Open");
+      newBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            doAddNew();
+         }
+      });
+      openBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            doAddExisting();
+         }
+      });
       this.add(titlePnl, BorderLayout.NORTH);
       titlePnl.add(lblTitle, null);
       this.add(contextTableScrollPane, BorderLayout.CENTER);
       contextTableScrollPane.getViewport().setView(contextTable);
+      this.add(buttonPnl, BorderLayout.SOUTH);
+      buttonPnl.add(Box.createHorizontalGlue(), null);
+      buttonPnl.add(newBtn, null);
+      buttonPnl.add(Box.createHorizontalStrut(8), null);
+      buttonPnl.add(openBtn, null);
    }
 
    // JBuilder GUI variables
+   private JPanel titlePnl = new JPanel();
+   private JLabel lblTitle = new JLabel();
    private JScrollPane contextTableScrollPane = new JScrollPane();
    private JTable contextTable = new JTable()
    {
@@ -160,10 +220,11 @@ public class EditContextPopup
          return pref_size;
       }
    };
-   private JPanel titlePnl = new JPanel();
+   private JPanel buttonPnl = new JPanel();
+   private JButton newBtn = new JButton();
+   private JButton openBtn = new JButton();
 
    private ContextTableModel model = new ContextTableModel();
-   private JLabel lblTitle = new JLabel();
 
    /**
     * Table model for the context table.
