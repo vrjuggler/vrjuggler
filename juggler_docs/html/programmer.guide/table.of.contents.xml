@@ -96,9 +96,12 @@ Builder: JExplorerBuilder V 1. 0. 7
 		<item title="Context Data"
 			link="${PROGRAMMERGUIDE}/app.construction/opengl/opengl_apps-context_data.html"
 			info="What is Context Data?">
-		<item title="Initializing context data"
-			link="${PROGRAMMERGUIDE}/app.construction/opengl/opengl_apps-context_data-contextInit.html"
-			info="How do I initialize OpenGL context data?">
+		<item title="Using context data"
+			link="${PROGRAMMERGUIDE}/app.construction/opengl/opengl_apps-context_data-rules.html"
+			info="How do I use context data?">
+		<item title="Context data details"
+			link="${PROGRAMMERGUIDE}/app.construction/opengl/opengl_apps-context_data-details.html"
+			info="Details of OpenGL context data.">		
 		<item title="How does context data work?"
 			link="${PROGRAMMERGUIDE}/app.construction/opengl/opengl_apps-context_data-how_works.html"
 			info="How does context data work?">

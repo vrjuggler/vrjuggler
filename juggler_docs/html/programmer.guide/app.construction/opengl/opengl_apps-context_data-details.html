@@ -6,19 +6,33 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<title>OpenGL App Interface</title>
-<!-- <link rel="stylesheet" type="text/css" href="../../../../style/base_style.css"> -->
+<title>OpenGL Context Data details</title>
+<!-- install-web block-ignore-begin -->
+<link rel="stylesheet" type="text/css" href="../../../../style/base_style.css"> 
+<!-- install-web block-ignore-end -->
 </head>
-
 <body>
 
-<h3>How do applications allocate context data?</h3>
+<p><b><font size="7">[Under construction]</font></b></p>
+
+<h2>Using context specific data</h2>
+<p>The VR Juggler OpenGL graphics system is a complex multi-headed beast.&nbsp;
+Luckily developers do not have to understand how the system is working to use it
+correct.&nbsp; As long as you subscribe to several simple rules for allocating
+and using context data, everything should work fine in you application.</p>
+<p>This section describes these allocation and usage rules, but does not
+describe the rationale behind the rules. If you would like the details of why
+these rules should be followed, please read the next section that goes into much
+more (excruciating) detail.</p>
 <p>Now you know how to make a context specific data member and how to use it in
 a draw function (you just treat it like a pointer), but how and where should you
-allocate context specific data.</p>
-
-<p>For example, if I want to create display list where should I allocate the
+allocate context specific data.&nbsp; For example, if I want to create display list where should I allocate the
 display list and store it to the context specific data variable.</p>
+
+<!-- install-web block-ignore-begin -->
+<p><img border="0" src="../../images/JugglerOGLSystemChart.gif" width="657" height="266"></p>
+<!-- install-web block-ignore-begin -->
+<p><img border="0" src="${PROGRAMMERGUIDE}/images/JugglerOGLSystemChart.gif" width="657" height="266"></p>
 
 <h3>Don't allocate context data in draw()</h3>
 
