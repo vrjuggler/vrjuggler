@@ -46,9 +46,11 @@ package org.vrjuggler.tweek.beans;
 public interface BeanPreferences
 {
    /**
+    * Returns the editor component for the Bean's preferences.
+    *
     * @pre The object to be returned must be non-null.
     */
-   public javax.swing.JPanel getEditor();
+   public javax.swing.JComponent getEditor();
 
    /**
     * Allows full GUI initialization to be delayed until the editor panel is
