@@ -123,7 +123,7 @@ public class ConfigContextEditor
                mElementTypeLabel.setText(def.getName() + " <" +
                                          def.getToken() + ">");
                mElementPropSheet =
-                  PropertySheetFactory.instance().makeSheet(elt, start_color);
+                  PropertySheetFactory.instance().makeSheet(getContext(), elt, start_color);
                mElementPropSheetScrollPane.getViewport().removeAll();
                mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
                
@@ -163,7 +163,7 @@ public class ConfigContextEditor
             mElementPropSheet.finalize();
          }
          mElementPropSheet =
-            PropertySheetFactory.instance().makeSheet(elt, start_color);
+            PropertySheetFactory.instance().makeSheet(getContext(), elt, start_color);
                
          selectConfigElement(elt);
       }

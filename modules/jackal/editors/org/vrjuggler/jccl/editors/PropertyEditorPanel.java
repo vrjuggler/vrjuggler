@@ -90,9 +90,10 @@ public class PropertyEditorPanel extends PropertyComponent
       super.finalize();
    }
 
-   public PropertyEditorPanel(Object value, PropertyDefinition prop_def, ConfigElement elm, 
-                              int prop_num, Color color)
+   public PropertyEditorPanel(ConfigContext ctx, Object value, PropertyDefinition prop_def,
+                              ConfigElement elm, int prop_num, Color color)
    {
+      mConfigContext = ctx;
       mPropName = prop_def.getToken();
       mPropDef = prop_def;
       mConfigElement = elm;
@@ -193,7 +194,7 @@ public class PropertyEditorPanel extends PropertyComponent
             
             mConfigElement.setProperty(mPropName, mPropIndex, mEditor.getValue());
             System.out.println("Adding: " + new_edit);
-            ConfigUndoManager.instance().addEdit(new_edit);
+            mConfigContext.postEdit(new_edit);
          }
          
       
@@ -448,6 +449,7 @@ public class PropertyEditorPanel extends PropertyComponent
    }
 
    protected PropertyDefinition mPropDef = null;
+   protected ConfigContext      mConfigContext = null;
    protected ConfigElement      mConfigElement = null;
    protected int                mPropIndex = 0;
    protected PropertyEditor     mEditor = null;
