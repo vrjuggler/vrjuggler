@@ -47,16 +47,17 @@
 namespace gadget
 {
 
-//: Fakespace Pinchglove Device
-//!PUBLIC_API:
+/**
+ * Fakespace Pinchglove Device.
+ */
 class PinchGlove : virtual public Input, public Glove, public Digital
 {
 public:
-   //: Construct
+   /** Default constructor. */
    PinchGlove() : mGlove( NULL ), mDigitalData(10)
    {;}
 
-   //: Destroy the glove
+   /** Shuts down the glove device. */
    virtual ~PinchGlove();
 
    virtual bool config( jccl::ConfigChunkPtr c );
@@ -68,15 +69,9 @@ public:
    virtual int sample();
    virtual void updateData ();
 
-   //: Get the digital data for the given devNum
-   //  Returns digital 0 or 1, if devNum makes sense.<BR>
-   //  Returns -1 if function fails or if devNum is out of range.<BR>
-   //  NOTE: If devNum is out of range, function will fail, possibly issueing
-   //  an error to a log or console - but will not ASSERT.<BR><BR>
-   //  0 == open, 1 == contact.
-   //
-   //  Use one of these indices to get the glove's digital data<BR>
-   //  EX: int result = mGlove.getDigitalData( PinchGlove::LTHUMB );
+   /**
+    * Finger values.
+    */
    enum Finger
    {
       LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4,
@@ -85,19 +80,19 @@ public:
 
    
 protected:
-   //: The main control loop for the object
+   /** The main control loop for this device. */
    void controlLoop( void* nullParam );
 
    void copyDataFromGlove();
    void updateFingerAngles();
 
 protected:
-   //vjThread*         mControlThread;      // The thread of control for the object
-   PinchGloveStandalone* mGlove;              // The actual glove
+   //vjThread*         mControlThread; /**< The thread of control for the object */
+   PinchGloveStandalone* mGlove;           /**< The actual glove */
 
    Hand left, right;
-   std::vector<DigitalData> mDigitalData;   // digitals for each finger.
-                                            // doesn't store time correctly :(
+   std::vector<DigitalData> mDigitalData;  /**< Digitals for each finger.
+                                                Doesn't store time correctly */
 };
 
 

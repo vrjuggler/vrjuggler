@@ -49,15 +49,13 @@
 namespace gadget
 {
 
-//----------------------------------------------------------------------------
-//: The Immersion Box input class.
-//
-//  The Immersion Box is a 4 Digital, 4 Analog input device, the Ibox class
-//  therefore must inherit from both Digital and Analog.  The class uses
-//  the HCI library for a simple interface to the IBox.
-//
-//-----------------------------------------------------------------------------
-//!PUBLIC_API:
+/**
+ * The Immersion Box input class.
+ *
+ * The Immersion Box is a 4 Digital, 4 Analog input device, the Ibox class
+ * therefore must inherit from both Digital and Analog.  The class uses
+ * the HCI library for a simple interface to the IBox.
+ */
 class IBox : public Input, public Digital, public Analog
 {
 protected:
@@ -88,7 +86,7 @@ protected:
    };
 
 public:
-   //: Construction/Destruction
+   /** Construction/Destruction */
    IBox() : Input(), Digital(), Analog()
    {
       // re-set Analog min/max values to ibox defaults.
