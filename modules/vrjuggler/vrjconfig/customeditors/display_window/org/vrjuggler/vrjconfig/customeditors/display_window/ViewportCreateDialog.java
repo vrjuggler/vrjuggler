@@ -36,8 +36,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import info.clearthought.layout.*;
-import org.vrjuggler.jccl.config.ConfigElement;
-import org.vrjuggler.jccl.config.ConfigElementPointer;
+import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.config.event.ConfigElementListener;
 
@@ -46,14 +45,30 @@ public abstract class ViewportCreateDialog
    extends JDialog
    implements ConfigElementListener
 {
-   public ViewportCreateDialog(String title, ConfigElement elt)
+   private static int VP_ELT_COUNT = 0;
+
+   public ViewportCreateDialog(String title, ConfigElement elt,
+                               String elementType)
    {
       super();
       this.setTitle(title);
       this.setModal(true);
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
+
+      if ( elt == null )
+      {
+         ConfigBrokerProxy broker = new ConfigBrokerProxy();
+         ConfigDefinition vp_def = broker.getRepository().get(elementType);
+         ConfigElementFactory factory =
+            new ConfigElementFactory(broker.getRepository().getAllLatest());
+         elt = factory.create("ViewportCreateDialog Element " + VP_ELT_COUNT,
+                              vp_def);
+      }
+
+      mViewportElement = elt;
+      mViewportElement.addConfigElementListener(this);
       mBoundsPanel = new ViewportBoundsEditorPanel(elt);
-      mUserPanel = new ViewportUserEditorPanel(this, elt);
+      mUserPanel = new ViewportUserEditorPanel(elt);
       this.setResizable(false);
    }
 
@@ -63,11 +78,7 @@ public abstract class ViewportCreateDialog
 
    public void propertyValueChanged(ConfigElementEvent e)
    {
-      if ( e.getProperty().equals("user") )
-      {
-         mUserName = ((ConfigElementPointer) e.getValue()).getTarget();
-         validateUserInput();
-      }
+      validateUserInput();
    }
 
    public void propertyValueAdded(ConfigElementEvent e)
@@ -102,6 +113,8 @@ public abstract class ViewportCreateDialog
       return mUserPanel.getViewpoint();
    }
 
+   protected ConfigElement mViewportElement = null;
+
    protected void processWindowEvent(WindowEvent e)
    {
       if (e.getID() == WindowEvent.WINDOW_CLOSING)
@@ -120,7 +133,7 @@ public abstract class ViewportCreateDialog
 
       Rectangle bounds = mBoundsPanel.getViewportBounds();
 
-      user_set = ! mUserName.equals("");
+      user_set = (((ConfigElementPointer) mUserPanel.getUser()).getTarget() != null);
       size_set = bounds.width > 0 && bounds.height > 0;
       custom_valid = validateCustomInput();
 
@@ -153,7 +166,6 @@ public abstract class ViewportCreateDialog
    }
 
    private int status = CANCEL_OPTION;
-   private String mUserName = "";
 
    protected JPanel mMainPanel = new JPanel();
    protected TableLayout mMainPanelLayout = null;

@@ -37,44 +37,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import info.clearthought.layout.*;
 
-import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.jccl.config.event.ConfigElementListener;
+import org.vrjuggler.jccl.config.ConfigDefinition;
+import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
 
 public class ViewportUserEditorPanel extends JPanel
 {
-   public ViewportUserEditorPanel()
+   public ViewportUserEditorPanel(ConfigElement elt)
    {
-      this(null, null);
-   }
+      mElt = elt;
 
-   public ViewportUserEditorPanel(ConfigElementListener externalListener)
-   {
-      this(externalListener, null);
-   }
-
-   public ViewportUserEditorPanel(ConfigElementListener externalListener,
-                                  ConfigElement elt)
-   {
-      ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      ConfigDefinition vp_def = broker.getRepository().get("surface_viewport");
-
-      if ( elt == null )
-      {
-         ConfigElementFactory factory =
-            new ConfigElementFactory(broker.getRepository().getAllLatest());
-         mElt = factory.create("ViewportUserEditorPanel Junk", vp_def);
-      }
-      else
-      {
-         mElt = elt;
-      }
-
-      if ( externalListener != null )
-      {
-         mElt.addConfigElementListener(externalListener);
-      }
+      ConfigDefinition vp_def = elt.getDefinition();
 
       mViewpointEditor =
          new PropertyEditorPanel(mElt.getProperty("view", 0),
