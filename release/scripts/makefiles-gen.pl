@@ -165,7 +165,12 @@ sub recurseAction {
 
 	# Move $workfile to its final destination.
 	copy("$workfile", "$outfile");
-	chown($uid, $gid, "$outfile") or die "chown: $!\n";
+
+        if ( ! $Win32 )
+        {
+	   chown($uid, $gid, "$outfile") or die "chown: $!\n";
+        }
+
 	chmod(oct($mode_bits), "$outfile") or die "chmod: $!\n";
 	unlink("$workfile");
     }
