@@ -629,8 +629,8 @@ dnl # All of the above function checks may not be necessary ...
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
 if test "$PLATFORM" = "SGI" ; then
-    CFLAGS="$CFLAGS -nostdinc -woff 1685,515,608,658,799,803,852,1048,1233,1499 -MDupdate Makedepend"
-    CXXFLAGS="$CXXFLAGS -nostdinc -woff 3322 -w2 -MDupdate Makedepend"
+    CFLAGS="$CFLAGS -nostdinc -woff 1685,515,608,658,799,803,852,1048,1233,1499"
+    CXXFLAGS="$CXXFLAGS -nostdinc -woff 3322 -w2"
 fi
 
 DEPENDFLAGS=""
