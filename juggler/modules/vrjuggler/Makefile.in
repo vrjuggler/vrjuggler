@@ -743,6 +743,8 @@ links:
 	cd ${instlinks}/include && rm -f ./vjParam.h &&			\
 	  ${LN_S} ${topdir}/vjParam.h ./vjParam.h
 	${SHELL} ${scriptdir}/mkinstalldirs ${instlinks}/bin
+	cd ${instlinks}/bin && rm -f ./catadf.pl &&			\
+          ${LN_S} ${VJROOT_ABS}/tools/catadf.pl ./catadf.pl
 ifndef NO_JAVA_GUI
 	cd ${instlinks}/bin && rm -f ./VjControl.jar &&			\
           ${LN_S} ${topdir}/GUI/VjControl.jar ./
@@ -750,8 +752,6 @@ ifndef NO_JAVA_GUI
           ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
 	cd ${instlinks}/bin && rm -f ./vjcontrol1.1 &&			\
           ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol1.1 ./vjcontrol1.1
-	cd ${instlinks}/bin && rm -f ./catadf.pl &&			\
-          ${LN_S} ${VJROOT_ABS}/tools/catadf.pl ./catadf.pl
 endif
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
@@ -1161,9 +1161,9 @@ install-tools:
 	${PERL} ${scriptdir}/makefiles-gen.pl				\
           --prefix="${prefix}/tools" --vars="${topdir}/VARS.pl"		\
           --startdir="${top_srcdir}/tools" --mode="${FILE_PERMS}"	\
-          ${_GROUP_OPT_PL} --srcdir="." ${INSTALL} -m ${EXEC_PERMS}	\
-          ${_GROUP_OPT_UNIX} ${VJROOT_ABS}/tools/catadf.pl		\
-          ${bindir}/catadf.pl
+          ${_GROUP_OPT_PL} --srcdir="."
+	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/tools/catadf.pl ${bindir}/catadf.pl
 
 # Install the standard data files.
 install-data:
