@@ -74,15 +74,6 @@ public:
    CondVar barrierFinished; //! True if this generation of the barrier is done
 
    int runningThreads;  //! Number of threads that are still running
-
-   /**
-    * Dumps the state of this object.
-    */
-   void dump (void)
-   {
-      std::cerr << "vpr::SubBarrier::dump" << std::endl;
-      this->barrierFinished.dump();
-   }
 };
 
 /**
@@ -135,13 +126,6 @@ public:
    {
       std::cerr << "vpr::Barrier::removeProcess: Not implemented yet."
                 << std::endl;
-   }
-
-   /**
-    * Dumps the state of this object.
-    */
-   void dump (void) const
-   {
    }
 
 private:
