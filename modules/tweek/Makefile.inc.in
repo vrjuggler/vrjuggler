@@ -193,9 +193,10 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/tweek
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C tweek instlinks="$(instlinks)" links
-	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
-          ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
+	cd $(instlinks)/$(LIBDIR_NAME) && rm -f ./* &&			\
+          ln -s $(LIBDIR_BASE)/* ./
 	cd $(instlinks)/include/tweek && rm -f ./*.h &&			\
           $(LN_S) $(TWEEKROOT_ABS)/tweek/*.h ./
 	cd $(instlinks)/include/tweek && rm -f ./tweekDefines.h &&	\

@@ -161,6 +161,7 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/vpr
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	cd $(instlinks)/include &&					\
           for dir in $(SUBDIR) ; do					\
               rm -f ./$$dir ;						\
@@ -168,8 +169,8 @@ ifneq (@OS_TYPE@, Win32)
           done
 	cd $(instlinks)/include && rm -f ./boost &&			\
           $(LN_S) $(JUGGLERROOT_ABS)/external/boost/boost ./
-	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
-          $(LN_S) $(LIBDIR_BASE) ./$(LIBDIR_NAME)
+	cd $(instlinks)/$(LIBDIR_NAME) && rm -f ./* &&			\
+          $(LN_S) $(LIBDIR_BASE)/* ./
 	cd $(instlinks)/include/vpr && rm -f ./*.h &&			\
           $(LN_S) $(VPRROOT_ABS)/vpr/*.h ./
 	cd $(instlinks)/include/vpr && rm -f ./vprDefines.h &&		\
