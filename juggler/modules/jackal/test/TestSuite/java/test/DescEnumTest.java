@@ -19,7 +19,7 @@ public class DescEnumTest
     */
    public void testClone()
    {
-      DescEnum orig = new DescEnum( "Display", new VarValue(455) );
+      DescEnum orig = new DescEnum( "Display", ValType.INT, new Integer(455) );
       DescEnum clone = null;
       try
       {
@@ -40,8 +40,8 @@ public class DescEnumTest
     */
    public void testEquals()
    {
-      DescEnum de1 = new DescEnum( "Pipe", new VarValue(1) );
-      DescEnum de2 = new DescEnum( "Pipe", new VarValue(1) );
+      DescEnum de1 = new DescEnum( "Pipe", ValType.INT, new Integer(1) );
+      DescEnum de2 = new DescEnum( "Pipe", ValType.INT, new Integer(1) );
       assertTrue(de1.equals(de1));
       assertTrue(de2.equals(de2));
       assertTrue(! de1.equals(de2));

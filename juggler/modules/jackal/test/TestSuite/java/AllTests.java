@@ -20,7 +20,6 @@ public class AllTests
       TestSuite suite = new TestSuite( "All VjControl JUnit Tests" );
 
       suite.addTestSuite( ValTypeTest.class );
-      suite.addTestSuite( VarValueTest.class );
       suite.addTestSuite( DescEnumTest.class );
       suite.addTestSuite( PropertyDescTest.class );
       suite.addTestSuite( ChunkDescTest.class );
