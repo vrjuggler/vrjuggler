@@ -89,8 +89,9 @@ CosNaming::NamingContext_var getRootNamingContextByURI(CORBA::ORB_ptr orb,
    CORBA::Object_var name_obj;
    CosNaming::NamingContext_var root_context;
 
-   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Requesting Name Service\n"
-                                              << vprDEBUG_FLUSH;
+   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
+      << "Requesting Name Service (" << nameServiceURI << ")\n"
+      << vprDEBUG_FLUSH;
    name_obj     = orb->string_to_object(nameServiceURI.c_str());
    root_context = CosNaming::NamingContext::_narrow(name_obj);
 
