@@ -898,6 +898,8 @@ install-sample:
 	${PERL} ${scriptdir}/makefiles-gen.pl --CXX="${CXX}"		\
           --DEFS="${DEFS}" --CPPFLAGS="${CPPFLAGS}"			\
           --CXXFLAGS="${CXXFLAGS}" --INCLUDES="@INCLUDES@"		\
+          --DBG_FLAGS="${DBG_FLAGS}"					\
+          --OBJ_NAME_FLAG='@OBJ_NAME_FLAG_SUBST@'			\
           --startdir="${top_srcdir}/samples"				\
           --SUBDIRS="${SAMPLE_SUBDIRS}"	--mode="${_FILE_PERMS}"		\
           --gname="${_GROUP_NAME}" --srcdir="."				\
@@ -921,8 +923,9 @@ install-test:
 	${PERL} ${scriptdir}/makefiles-gen.pl --CXX="${CXX}"		\
           --DEFS="${DEFS}" --CPPFLAGS="${CPPFLAGS}"			\
           --CXXFLAGS="${CXXFLAGS}" --INCLUDES="@INCLUDES@"		\
-          --startdir="${top_srcdir}/test"  --SUBDIRS="${TEST_SUBDIRS}"	\
-          --mode="${_FILE_PERMS}" --gname="${_GROUP_NAME}" --srcdir="."	\
+          --DBG_FLAGS="${DBG_FLAGS}" --startdir="${top_srcdir}/test"	\
+          --SUBDIRS="${TEST_SUBDIRS}" --mode="${_FILE_PERMS}"		\
+          --gname="${_GROUP_NAME}" --srcdir="."				\
           --prefix="${prefix}/test"					\
           --TEST_VJ_LIBS_BASIC='@TEST_VJ_LIBS_BASIC_SUBST@'		\
           --TEST_VJ_LIBS_GL='@TEST_VJ_LIBS_GL@'				\

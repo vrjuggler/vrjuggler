@@ -236,6 +236,7 @@ LDOPTS=''		dnl # More options for shared library generator
 LDOPTS_DBG=''		dnl # Debugging options for shared library generator
 LDOPTS_OPT=''		dnl # Optimization options for shared library generator
 OBJ_NAME_FLAG='-o $@'	dnl # Flag used for naming a compiled object file
+OBJ_NAME_FLAG_SUBST='-o $$@'	dnl # Same as above but safe for shell use
 
 LIB_PREFIX='lib'	dnl # Prefix for library name
 STATICLIB_EXT='a'	dnl # Extension for shared library names (usually 'a')
@@ -470,6 +471,7 @@ case $target_os in
             LDOPTS_DBG='-LDd -MDd'
             LDOPTS_OPT='-LD -MD'
             OBJ_NAME_FLAG='-Fo$@'
+            OBJ_NAME_FLAG_SUBST='-Fo$$@'
         fi
 
         LIB_PREFIX=''
@@ -1144,6 +1146,7 @@ AC_SUBST(LDOPTS)
 AC_SUBST(LDOPTS_DBG)
 AC_SUBST(LDOPTS_OPT)
 AC_SUBST(OBJ_NAME_FLAG)
+AC_SUBST(OBJ_NAME_FLAG_SUBST)
 AC_SUBST(DBG_FLAGS)
 AC_SUBST(OPT_FLAGS)
 AC_SUBST(PERL)
