@@ -125,6 +125,7 @@ public:
 
 protected:
    vjGlContextData< osgUtil::SceneView* > sceneViewer;
+   vjGlContextData< bool > first;
 };
 
 inline void vjOsgApp::contextInit()
@@ -136,6 +137,7 @@ inline void vjOsgApp::contextInit()
    this->configSceneView(new_sv);            // Configure the new viewer
    new_sv->getState()->setContextID(unique_context_id);
    (*sceneViewer) = new_sv;
+   *first = true;
 }
 
 inline void vjOsgApp::draw()
@@ -144,14 +146,20 @@ inline void vjOsgApp::draw()
    sv = (*sceneViewer);    // Get context specific scene viewer
    vjASSERT( sv != NULL);   
 
-   // Add the tree to the scene viewer
-   sv->setSceneData(getScene());
-   sv->setCalcNearFar(false);
+   // XXX: The following is a hack to deal with a bug in OSG 0.8.45 that
+   // causes problems with stereo rendering.
+   if ( true == *first )
+   {
+      // Add the tree to the scene viewer
+      sv->setSceneData(getScene());
+      sv->setCalcNearFar(false);
 
-   //Take care of the view port (this does not work)
-   GLint view[4];
-   glGetIntegerv(GL_VIEWPORT, view);      //Get the view port that juggler sets
-   sv->setViewport(view[0],view[1],view[2],view[3]);
+      //Take care of the view port (this does not work)
+      GLint view[4];
+      glGetIntegerv(GL_VIEWPORT, view);   //Get the view port that juggler sets
+      sv->setViewport(view[0],view[1],view[2],view[3]);
+      *first = false;
+   }
 
    //Get the view matrix and the frustrum form the draw manager
    vjGlDrawManager* drawMan = dynamic_cast<vjGlDrawManager*> ( this->getDrawManager() );
