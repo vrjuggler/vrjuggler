@@ -32,7 +32,7 @@ void vjPfDrawManager::configInitial(vjConfigChunkDB*  chunkDB)
    vjDEBUG(0) << "NumPipes: " << numPipes << endl << vjDEBUG_FLUSH;
    for (int i=0;i<numPipes;i++)
    {
-      pipeStrs.push_back(sgiChunk->getProperty("xpipes", i));
+      pipeStrs.push_back(sgiChunk->getProperty("xpipes", i).cstring());
       if(strcmp(pipeStrs[i], "-1") == 0)    // Use display env
       {
          char* display_env = getenv("DISPLAY");
@@ -51,8 +51,8 @@ void vjPfDrawManager::configInitial(vjConfigChunkDB*  chunkDB)
    {
       vjConfigChunk* perf_chunk = (*perf_chunks)[0];
 
-      char* head_file = perf_chunk->getProperty("simHeadModel");
-      char* wand_file = perf_chunk->getProperty("simWandModel");
+      char* head_file = perf_chunk->getProperty("simHeadModel").cstring();
+      char* wand_file = perf_chunk->getProperty("simWandModel").cstring();
       if(head_file == NULL)
          vjDEBUG(0) << "vjPfDrawManager::config: simHeadModel not set." << endl << vjDEBUG_FLUSH;
       if(wand_file == NULL)
