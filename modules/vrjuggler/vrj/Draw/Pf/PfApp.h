@@ -41,6 +41,7 @@
 #include <vrj/Kernel/App.h>
 #include <vrj/Draw/Pf/PfDrawManager.h>
 #include <vrj/Draw/Pf/PfUtil.h>
+#include <vrj/Util/Debug.h>
 
 
 namespace vrj
