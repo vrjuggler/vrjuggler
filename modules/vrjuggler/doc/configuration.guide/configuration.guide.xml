@@ -33,7 +33,7 @@
     systems are unique, or at least highly customized.</para>
 
     <para>VR Juggler attempts to make the configuration process as simple as
-    possible. It includes a GUI application called VRJControl to edit config
+    possible. It includes a GUI application called VRJConfig to edit config
     files. Use of the GUI has many advantages: it can provide an organized
     view of the configuration information, with help information or suggested
     values readily available. It can prevent many simple mistakes (such as
@@ -46,30 +46,31 @@
     <section>
       <title>An Overview of VR Juggler Configuration</title>
 
-      <para>VR Juggler&#39;s configuration files are composed of units called
-      ConfigChunks. A ConfigChunk contains the configuration information for a
-      single element of VR Juggler. These elements might be display windows,
-      or device drivers, or even applications. Naturally, the ConfigChunk for
-      a display window contains very different information from that of a
-      device driver.</para>
+      <para>VR Juggler&#39;s configuration files are composed of a collection
+      of &#34;configuration elements.&#34; Each configuration element contains
+      the information to configure a single component of VR Juggler. These
+      components might be display windows, device drivers, or even
+      applications. Naturally, each configuration element contains vastly
+      customized information for the component it represents. It is the
+      combination of a set of configuration elements and the way they work
+      together that makes up each unique VR Juggler configuration.</para>
 
-      <para>All ConfigChunks have individual names, so that multiple chunks
-      for the same kind of element can be distinguished. This means, for
-      example, that a VR Juggler configuration can include several display
-      windows with separate screen coordinates and viewing parameters, each
-      with a unique name. It also means that VR Juggler can use an arbitrary
-      number and variety of displays or devices at any time, limited only by
-      the capabilities of the underlying hardware.</para>
+      <para>All configuration elements have individual names, so that multiple
+      elements for the same kind of component can be distinguished. This
+      means, for example, that a VR Juggler configuration can include several
+      display windows with separate screen coordinates and viewing parameters,
+      each with a unique name. It also means that VR Juggler can use an
+      arbitrary number and variety of displays or devices at any time, limited
+      only by the capabilities of the underlying hardware.</para>
 
-      <para>VjControl represents configuration files as a tree of
-      ConfigChunks, as seen in <xref linkend="VjControlMainPanel" />. The tree
-      structure exists to help organize the contents of the file, and is
-      user-customizable. VjControl also allows users to view multiple
-      configuration files side-by-side, making it easy to copy ConfigChunks
-      from one to another.</para>
+      <para>VRJConfig represents configuration files as a set of categorized
+      configuration elements as seen in <xref linkend="VRJConfigMain" />.
+      VRJConfig allows you to view multiple configurations side-by-side making
+      it easy to copy configuration elements from one configuration to
+      another.</para>
 
-      <figure id="VjControlMainPanel">
-        <title>VjControl&#39;s config file editing panel.</title>
+      <figure id="VRJConfigMain">
+        <title>Editing configurations with VRJConfig.</title>
 
         <mediaobject>
           <imageobject>
@@ -109,45 +110,52 @@
 
       <itemizedlist>
         <listitem>
-          <para>Display Information. This includes knowing where your displays
-          are in space. In projection-based VR systems, this will include the
+          <para><subscript><emphasis>Display Information.</emphasis></subscript></para>
+
+          <para><subscript>This includes knowing where your displays are in
+          space. In projection-based VR systems, this will include the
           positions of each screen. For a head-mounted display, it would be
           the positions and sizes of the display surfaces relative to the
           positions of the users&#39; eyes. This also includes knowing how the
           displays of the host computer map to the displays of the VR system -
           for example, the position and size of a graphics window needed to
-          drive a given VR display.</para>
+          drive a given VR display.</subscript></para>
         </listitem>
 
         <listitem>
-          <para>Input Device information. This includes knowing what input
-          devices you intend to use and how they are connected to the host
-          computer. For some devices, this will be a serial port name and baud
-          rate, for others it might be a network address and port number.
-          Tracking systems, in particular, tend to have a large number of
-          device-specific configuration options. For any tracking system, you
-          will need to know the coordinate system its data uses.</para>
+          <para><emphasis>Input Device Information:</emphasis></para>
+
+          <para>This includes knowing what input devices you intend to use and
+          how they are connected to the host computer. For some devices, this
+          will be a serial port name and baud rate, for others it might be a
+          network address and port number. Tracking systems, in particular,
+          tend to have a large number of device-specific configuration
+          options. For any tracking system, you will need to know the
+          coordinate system its data uses.</para>
         </listitem>
 
         <listitem>
-          <para>Alternate configurations. Some VR systems can be used in a
-          variety of ways. For example, you might have a desk with a movable
-          display surface, or you may need to choose between mono and stereo
-          display modes, or you may have a head-mounted display that supports
-          multiple video aspect ratios. Since VR Juggler applications can load
-          multiple configuration files, it may be helpful to create a
-          &#34;base&#34; config file with the information that never changes,
-          as well as several additional helper files that describe the
-          components of the system that may be reconfigurable.</para>
+          <para><emphasis>Alternate configurations:</emphasis></para>
+
+          <para>Some VR systems can be used in a variety of ways. For example,
+          you might have a desk with a movable display surface, or you may
+          need to choose between mono and stereo display modes, or you may
+          have a head-mounted display that supports multiple video aspect
+          ratios. Since VR Juggler applications can load multiple
+          configuration files, it may be helpful to create a &#34;base&#34;
+          config file with the information that never changes, as well as
+          several additional helper files that describe the components of the
+          system that may be reconfigurable.</para>
         </listitem>
 
         <listitem>
-          <para>VjControl usage information. The VjControl program used to
-          edit configuration files has many powerful capabilities. While it is
-          designed to be easy to learn and use, it may be helpful to browse
-          the <citetitle>VjControl User&#39;s Guide</citetitle>. The
-          information in the Guide is also available via VjControl&#39;s
-          <guimenu>help</guimenu> menu.</para>
+          <para><emphasis>VRJConfig usage information.</emphasis></para>
+
+          <para>The VRJConfig program used to edit configuration files has
+          many powerful capabilities. While it is designed to be easy to learn
+          and use, it may be helpful to browse the <citetitle>VRJConfig
+          User&#39;s Guide</citetitle>. The information in the Guide is also
+          available via VRJConfig&#39;s <guimenu>help</guimenu> menu.</para>
         </listitem>
       </itemizedlist>
     </section>
@@ -161,11 +169,10 @@
       VR system. To simplify this example, we&#39;ll put all of our
       configuration information into a single file.</para>
 
-      <para>First, start VjControl and click on the <guibutton>Configuration</guibutton>
-      tab. The configuration panel is split into two side-by-side panels. We
-      will only be using one side for this tutorial. Click on
-      <guibutton>New</guibutton> to create a new file. If you want, click
-      <guibutton>Save</guibutton> to give your file a name.</para>
+      <para>First, start VRJConfig and click on the <guibutton>New</guibutton>
+      button to create a new file. Choose a name and directory for the file
+      you want to create. For this tutorial, you can ignore the included files
+      list.</para>
     </section>
 
     <section>
@@ -176,9 +183,10 @@
       inside or around the VR System. Before we configure anything else, we
       have to decide where that point will be.</para>
 
-      <para>For a Surround-Screen VR (SSVR) system, we decided that the origin
-      point would be the center of the floor, equidistant from each wall. This
-      is a common convention and is usually very convenient.</para>
+      <para>For a Surround-Screen VR (<acronym>SSVR</acronym>) system, we
+      decided that the origin point would be the center of the floor,
+      equidistant from each wall. This is a common convention and is usually
+      very convenient.</para>
 
       <para>We also need to define the orientation of our origin. Again there
       is a common convention which we recommend. We use a right-handed
@@ -187,38 +195,33 @@
       rear of the system (away from the front screen).</para>
 
       <para>Note that in the sample VR Juggler configuration files, all
-      positions related to displays or input devices are given in feet.</para>
+      positions related to displays or input devices are given in meters.</para>
     </section>
 
     <section id="BasicTrackerConfig">
       <title>Configure Trackers</title>
 
-      <para>The easiest place to start is at the bottom, with out input
-      hardware. Open up the <guilabel>Input</guilabel> folder, and then
-      <guilabel>Input Devices</guilabel>. You will see a list of all the
-      device drivers we can create configurations for. For this example, we
-      will use an Ascension MotionStar for our tracking system. Right-click on
-      the <guilabel>MotionStar</guilabel> label in the tree, and select
-      <guimenu>Insert</guimenu> from the menu. An empty ConfigChunk describing
-      the MotionStar driver is created.</para>
+      <para>The easiest place to start is at the bottom, with input hardware.
+      Click the <guibutton>New Config Element</guibutton> button and you will
+      be presented with a list of all the possible configuration elements you
+      can make. For this example, we will use an Ascension MotionStar for our
+      tracking system. Choose the <guibutton>MotionStar</guibutton> element in
+      the list and click <guibutton>OK</guibutton>. A new configuration
+      element for a MotionStar device is added to your configuration.</para>
 
       <para>Now we need to edit the MotionStar configuration to describe the
-      details of our system. Double-clicking on the newly-created MotionStar
-      ConfigChunk will open an editor window. This window shows the complete
-      set of configuration options for VR Juggler&#39;s MotionStar driver.</para>
+      details of our system. Selecting the newly-created MotionStar
+      configuration element will bring up an editor for your MotionStar device
+      as seen in <xref linkend="MotionStarEditor" />.</para>
 
-      <figure id="motionstarchunkfigure">
-        <title>Editor window for MotionStar input driver.</title>
+      <figure id="MotionStarEditor">
+        <title>Editing the MotionStar input driver.</title>
 
         <mediaobject>
           <imageobject>
             <imagedata fileref="figures/motionstar_chunk.png" format="PNG"
             scale="45" width="4in" />
           </imageobject>
-
-          <textobject>
-            <para>Image of MotionStar configuration window.</para>
-          </textobject>
         </mediaobject>
       </figure>
 
@@ -230,6 +233,11 @@
       as a serial connection. In that case, the configuration for that device
       would include port name and baud rate settings instead of the networking
       settings.</para>
+
+      <note>
+        <para>The following paragraph is no longer valid since addition of the
+        postiton transform filters were added to VR Juggler.</para>
+      </note>
 
       <para>The <property>Translation</property> and <property>Rotation</property>
       properties are common to all positional devices. They describe the
@@ -268,10 +276,9 @@
         hardware.</para>
 
         <figure id="vjheadchunkfigure">
-          <title>The editor window for a Position Proxy called
-          &#34;VJHead&#34;. The proxy attaches to a device named
-          &#34;MotionStar&#34;, and applies a transformation and rotation to
-          the device data.</title>
+          <title>Editing a Position Proxy called &#34;VJHead&#34;. The proxy
+          attaches to a device named &#34;MotionStar&#34; and applies a
+          transformation and rotation to the device data.</title>
 
           <mediaobject>
             <imageobject>
@@ -282,22 +289,19 @@
         </figure>
 
         <para>As mentioned previously, the MotionStar in our example setup has
-        two sensors, so we will need to create two Position Proxies. Expand
-        the <guilabel>Proxies and Aliases</guilabel> subtree under
-        <guilabel>Input</guilabel> in the configuration panel. Right click on
-        <guilabel>Position Proxy</guilabel> and insert a new instance (and
-        repeat to create the second proxy).</para>
+        two sensors, so we will need to create two Position Proxies. Add two
+        new Position Proxy configuration elements to your configuration.</para>
 
         <para>Now it is time to fill in the particular information for each
         Proxy. We can start with the instance names, calling one proxy
         &#34;VJHead&#34; and the other &#34;VJWand&#34;. VR Juggler
-        applications use these proxy names to access input devices, and these
+        applications use these proxy names to access input devices. These
         particular choices of names are a convention used by most VR Juggler
-        applications.</para>
+        applications. However, this naming convention is not a requirement.</para>
 
         <para>Each proxy has a pulldown menu where we can select the physical
         device it maps to - these will both refer to the MotionStar driver
-        instance we&#39;ve already configured. There is also a
+        instance we have already configured. There is also a
         <property>Unit</property> option, which tells us which of the
         individual position inputs of the device to use. Our driver is
         configured for two sensors, so one of our proxies will be unit 0 and
@@ -320,12 +324,12 @@
         <para>Proxy Aliases provide a way to introduce multiple names for a
         single Proxy. A <property>Proxy Alias</property> ConfigChunk contains
         only two properties: its name and the name of the Proxy it points at.<footnote><para>In
-        VR Juggler 1.0, the <property>Proxy Alias</property> chunk actually
-        contains an <property>AliasName</property> property in addition to the
-        actual chunk name. This redundancy is likely to be removed in the
-        future. For now, it is recommended that users always put the same
-        string in the Alias chunk&#39;s <property>Name</property> and
-        <property>AliasName</property>.</para></footnote></para>
+        VR Juggler 1.1 DR4, the <property>Proxy Alias</property> element
+        actually contains an <property>AliasName</property> property in
+        addition to the actual element name. This redundancy is likely to be
+        removed in the future. For now, it is recommended that users always
+        put the same string in the Alias element&#39;s <property>Name</property>
+        and <property>AliasName</property>.</para></footnote></para>
 
         <para>The Proxy Alias provides a convenient way to reassign a
         commonly-used name like &#34;VJHead&#34; or &#34;VJButton0&#34; from
