@@ -171,6 +171,52 @@ vpr::ReturnStatus NetworkNode::removeSocket (const vpr::SocketImplSIM* sock)
    return status;
 }
 
+/** Get an unused TCP port number */
+vpr::Uint32 NetworkNode::getUnassignedTcpPortNumber()
+{
+   vpr::Uint32 ret_val(1);
+   bool        found_one(false);
+   for(socket_map_t::iterator i = mStreamSocketMap.begin(); 
+       (!found_one) && (i != mStreamSocketMap.end()); ++i)
+   {
+      socket_map_t::iterator next = i; ++next;
+      if(next != mStreamSocketMap.end())
+      {
+         if((*next).first != ((*i).first + 1))     // If not sequential
+         {
+            ret_val = (*i).first + 1;
+            found_one = true;
+         }
+      }
+   }
+
+   vprASSERT( mStreamSocketMap.find(ret_val) == mStreamSocketMap.end() && "Returned a value that already exists");
+   return ret_val;
+}
+
+/** Get an unused TCP port number */
+vpr::Uint32 NetworkNode::getUnassignedUdpPortNumber()
+{
+   vpr::Uint32 ret_val(1);
+   bool        found_one(false);
+   for(socket_map_t::iterator i = mDgramSocketMap.begin(); 
+       (!found_one) && (i != mDgramSocketMap.end()); ++i)
+   {
+      socket_map_t::iterator next = i; ++next;
+      if(next != mDgramSocketMap.end())
+      {
+         if((*next).first != ((*i).first + 1))     // If not sequential
+         {
+            ret_val = (*i).first + 1;
+            found_one = true;
+         }
+      }
+   }
+
+   vprASSERT( mDgramSocketMap.find(ret_val) == mDgramSocketMap.end() && "Returned a value that already exists");
+   return ret_val;
+}
+
 } // End of sim namespace
 
 } // End of vpr namespace
