@@ -3,6 +3,8 @@
 # $Id$
 # -----------------------------------------------------------------------------
 
+.SUFFIXES: .cpp
+
 srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
@@ -19,33 +21,31 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@
 
-OBJECTS		= testPlane.o
+MATH_PROGS	= testPlane testSeg
 
 # -----------------------------------------------------------------------------
 # Targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: testPlane testSeg
+all: ${MATH_PROGS}
 
 testPlane: testPlane.o
 	${COMPILE} -o $@ testPlane.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-testPlane.o:
-	${COMPILE} -c -o $@ ${srcdir}/testPlane.cpp
+testPlane.o: testPlane.cpp
 
 testSeg: testSeg.o
 	${COMPILE} -o $@ testSeg.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-testSeg.o:
-	${COMPILE} -c -o $@ ${srcdir}/testSeg.cpp
+testSeg.o: testSeg.cpp
 
 .cpp.o:
-	${COMPILE} -c -o $@ $<
+	${COMPILE} -c ${srcdir}/$<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend cubes ${OBJECTS} core so_locations
+	rm -f Makedepend ${MATH_PROGS} *.o core so_locations
 	rm -rf ./ii_files
