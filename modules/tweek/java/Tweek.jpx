@@ -54,6 +54,8 @@
   <file path="org/vrjuggler/tweek/beans/loader/BeanLoader.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanModelViewer.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanPathException.java"/>
+  <file path="org/vrjuggler/tweek/beans/BeanPreferences.java"/>
+  <file path="org/vrjuggler/tweek/gui/BeanPrefsDialog.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanRegistrationEvent.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanRegistrationListener.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanRegistry.java"/>
@@ -68,6 +70,7 @@
   <file path="org/vrjuggler/tweek/services/EnvironmentService.java"/>
   <file path="org/vrjuggler/tweek/services/ExtensionFileFilter.java"/>
   <file path="org/vrjuggler/tweek/beans/FileFinder.java"/>
+  <file path="org/vrjuggler/tweek/beans/FileLoader.java"/>
   <file path="org/vrjuggler/tweek/beans/GenericBean.java"/>
   <file path="org/vrjuggler/tweek/services/GlobalPreferencesService.java"/>
   <file path="org/vrjuggler/tweek/gui/MessageAdditionEvent.java"/>
