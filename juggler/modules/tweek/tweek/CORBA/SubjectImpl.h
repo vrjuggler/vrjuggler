@@ -73,10 +73,7 @@ public:
    virtual void notify();
 
 protected:
-   SubjectImpl(const SubjectImpl& s)
-      : POA_tweek::Subject(s), PortableServer::RefCountServantBase(s)
-   {
-   }
+   SubjectImpl(const SubjectImpl& s);
 
    SubjectImpl& operator=(const SubjectImpl& subj)
    {
