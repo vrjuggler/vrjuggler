@@ -91,6 +91,7 @@ sub wanted {
         ||
         -d _
     ) &&
+    (-M _ > 0.01389) &&  # The lock file/dir is older than 20 minutes
     handle();
 }
 
