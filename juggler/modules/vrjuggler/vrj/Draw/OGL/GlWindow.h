@@ -194,7 +194,15 @@ public:
    {
       origin_x = o_x; origin_y = o_y;
       window_width = width; window_height = height;
+   }
 
+   /** Return the origin and size of the current window */
+   void getOriginSize(unsigned& o_x, unsigned& o_y, unsigned& width, unsigned& height) const
+   {
+      o_x = origin_x;  
+      o_y = origin_y;
+      width = window_width; 
+      height = window_height;
    }
 
    friend std::ostream& operator<<(std::ostream& out, GlWindow* win);
