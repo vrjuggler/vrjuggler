@@ -90,6 +90,11 @@ public:
 
    virtual void preFrame();
 
+   virtual float getDrawScaleFactor()
+   {
+      return 1.0f;
+   }
+
    void setModelFileName(std::string filename)
    {
       std::cout << "OpenSGNav::setModelFileName: Set filename: ["
