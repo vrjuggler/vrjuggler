@@ -73,7 +73,7 @@ public:
    };
 public:
    vjSimPosition() {;}
-   ~vjSimPosition() {;}
+   virtual ~vjSimPosition() {;}
 
    virtual bool config(vjConfigChunk* chunk);
 

@@ -32,12 +32,12 @@
  */
 
 
-#ifndef _VJ_SIM_DIGITAL_H
-#define _VJ_SIM_DIGITAL_H
+#ifndef _VJ_SIM_DIGITALGLOVE_H
+#define _VJ_SIM_DIGITALGLOVE_H
 //#pragma once
 
 #include <vjConfig.h>
-#include <Input/vjInput/vjDigital.h>
+#include <Input/vjGlove/vjPinchGlove.h>
 #include <Input/vjSim/vjSimInput.h>
 
 //: Simulated digital device
@@ -49,19 +49,42 @@
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimDigital : virtual public vjDigital, public vjSimInput
+class vjSimPinchGlove : virtual public vjDigital, public vjGlove, public vjSimInput
 {
 public:
-   vjSimDigital() {;}
-   virtual ~vjSimDigital() {;}
-
-   virtual bool config(vjConfigChunk* chunk);
-
-   //: Return analog data
-   virtual int getDigitalData(int devNum=0)
+   //: Default Constructor
+   vjSimPinchGlove()
    {
-      vjASSERT(devNum < (int)mDigitalData.size());    // Make sure we have enough space
-      return mDigitalData[devNum];
+   }
+   
+   //: Destructor
+   virtual ~vjSimPinchGlove() 
+   {
+   }
+
+   //: Takes a config chunk
+   //  The Juggler API calls this
+   virtual bool config( vjConfigChunk* chunk );
+
+   //: Get the digital data for the given "finger"
+   //  Returns digital 0 or 1, if "finger" makes sense.<BR>
+   //  Returns -1 if function fails or if devNum is out of range.<BR>
+   //  NOTE: If devNum is out of range, function will fail, possibly issueing 
+   //  an error to a log or console - but will not ASSERT.<BR><BR>
+   //  Return Value: 0 == open, 1 == contact.
+   //
+   //  Use one of these indices to get the glove's digital data<BR>
+   //  EX: int result = mGlove.getDigitalData( vjSimPinchGlove::LTHUMB );
+   //  NOTE: These should be the same integers as vjPinchGlove's
+   enum finger 
+   {
+	   LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4, 
+	   RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
+   };
+   virtual int getDigitalData( int finger = 0 )
+   {
+      vjASSERT(finger < (int)mDigitalData.size());    // Make sure we have enough space
+      return mDigitalData[finger];
    }
 
    /* These functions don't do anything */
@@ -73,8 +96,8 @@ public:
    virtual void updateData();
 
    //: Get the name of the digital device
-   char* getDeviceName() { return "vjSimDigital";}
-   static std::string getChunkType() { return std::string("SimDigital");}
+   char* getDeviceName() { return "vjSimPinchGlove";}
+   static std::string getChunkType() { return std::string("SimPinchGlove");}
 
 private:
    std::vector<int>          mDigitalData;   //: The digital data that we have
