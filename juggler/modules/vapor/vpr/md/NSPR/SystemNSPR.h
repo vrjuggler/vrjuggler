@@ -45,8 +45,10 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <string>
 #include <prtime.h>
 #include <prnetdb.h>
+#include <prenv.h>
 
 #include <SystemBase.h>
 
@@ -91,6 +93,22 @@ public:
     static vpr::Uint32 Htonl(vpr::Uint32 conversion)
     { return PR_htonl(conversion); }
 
+    inline static Status
+    getenv (const std::string& name, std::string& result) {
+        char* val;
+        Status status;
+
+        val = PR_GetEnv(name.c_str());
+
+        if ( val != NULL ) {
+            result = val;
+        }
+        else {
+            status.setCode(Status::Failure);
+        }
+
+        return status;
+    }
 };
 
 }; // End of vpr namespace

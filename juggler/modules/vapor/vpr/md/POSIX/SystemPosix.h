@@ -44,6 +44,7 @@
 #include <vprConfig.h>
 
 #include <stdlib.h>
+#include <string>
 #include <sys/time.h>
 #include <netinet/in.h>
 #include <sys/param.h>
@@ -79,9 +80,26 @@ public:
     Htonl (vpr::Uint32 conversion) {
         return htonl(conversion);
     }
+
+    inline static Status
+    getenv (const std::string& name, std::string& result) {
+        char* val;
+        Status status;
+
+        val = getenv(name.c_str());
+
+        if ( val != NULL ) {
+            result = val;
+        }
+        else {
+            status.setCode(Status::Failure);
+        }
+
+        return status;
+    }
 };
 
 };
 
 
-#endif   /* _VPR_SYSTEM_H_ */
+#endif   /* _VPR_SYSTEM_POSIX_H_ */
