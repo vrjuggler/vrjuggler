@@ -40,7 +40,7 @@
 # extension) are copied.  No CVS subdirectories are installed.
 #
 # Usage:
-#     install-dir.pl -i <source directory> -o <destination directory>
+#     install-src.pl -i <source directory> -o <destination directory>
 #                   [-u <user name> -g <group name> -m <mode>]
 #
 #     <source directory> - The source directory to be installed
