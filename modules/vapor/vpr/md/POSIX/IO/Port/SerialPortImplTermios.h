@@ -427,6 +427,38 @@ public:
     Status setCharacterSize(const SerialTypes::CharacterSizeOption bpb);
 
     // ------------------------------------------------------------------------
+    //: Get the current read state for the port.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The read state (either enabled or disabled) is returne to the 
+    //+       caller.
+    //
+    //! RETURNS: true  - Bytes can be read from the device.
+    //! RETURNS: false - Bytes cannot be read from the device.
+    // ------------------------------------------------------------------------
+    bool getReadState(void);
+
+    // ------------------------------------------------------------------------
+    //: Enable the receiver so that bytes can be read from the port.
+    //
+    //! PRE: The serial port is open.
+    //! POST: An attempt is made to make the device readable.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
+    // ------------------------------------------------------------------------
+    Status enableRead(void);
+
+    // ------------------------------------------------------------------------
+    //: Disable the receiver so that bytes cannot be read from the port.
+    //
+    //! PRE: The serial port is open.
+    //! POST: An attempt is made to make the device unreadable.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
+    // ------------------------------------------------------------------------
+    Status disableRead(void);
+
+    // ------------------------------------------------------------------------
     //: Get the number of stop bits in use.  This will be either 1 or 2.
     //
     //! PRE: The serial port is open.
