@@ -66,10 +66,39 @@ public:
     //+ address structure.
     //
     //! PRE: None.
-    //! POST: The m_addr structure has its memory zeroed.
+    //! POST: The m_addr structure has its memory zeroed, and the port and
+    //+       internet address are set to INADDR_ANY.
     // ------------------------------------------------------------------------
     InetAddr (void) {
         memset(&m_addr, 0, sizeof(m_addr));
+        m_addr.sin_port        = INADDR_ANY;
+        m_addr.sin_addr.s_addr = INADDR_ANY;
+        setFamily(SocketTypes::INET);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    InetAddr (const std::string& address) {
+        std::string::size_type pos;
+        std::string host_addr, host_port;
+        Uint16 port;
+
+        pos       = address.find(":");
+        host_addr = address.substr(0, pos);
+        host_port = address.substr(pos + 1);
+        port      = (Uint16) atoi(host_port.c_str());
+
+        setAddress(host_addr);
+        setPort(port);
+        setFamily(SocketTypes::INET);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    InetAddr (const std::string& address, const Uint16 port) {
+        setAddress(address);
+        setPort(port);
+        setFamily(SocketTypes::INET);
     }
 
     // ------------------------------------------------------------------------
@@ -80,7 +109,7 @@ public:
     //
     //! ARGS: addr - A pointer to a sockaddr struct
     // ------------------------------------------------------------------------
-    InetAddr (struct sockaddr* addr) {
+    InetAddr (const struct sockaddr* addr) {
         memcpy((void*) &m_addr, (void*) addr, sizeof(m_addr));
     }
 
@@ -250,6 +279,18 @@ public:
     std::string getAddressString(void) const;
 
     // ------------------------------------------------------------------------
+    //
+    // Returns:
+    //     true  - The address lookup was successful.
+    //     false - The address could not be looked up.  An error message is
+    //             printed to stderr explaining what went wrong.
+    // ------------------------------------------------------------------------
+    inline bool
+    setAddress (const std::string& addr) {
+        return lookupAddress(addr);
+    }
+
+    // ------------------------------------------------------------------------
     //: Get the size of this object's encapsulated address structure.
     //
     //! PRE: None.
@@ -324,6 +365,21 @@ protected:
     copy (const InetAddr& addr) {
         memcpy((void*) &m_addr, (void*) &addr.m_addr, sizeof(m_addr));
     }
+
+    // ------------------------------------------------------------------------
+    // Look up the given address string and store the resulting address value
+    // in the m_addr structure's address field.
+    //
+    // PRE: None.
+    // POST: The given address string is converted into a 32-bit INET address.
+    //       the m_addr structure is populated accordingly.
+    //
+    // Returns:
+    //     true  - The address lookup was successful.
+    //     false - The address could not be looked up.  An error message is
+    //             printed to stderr explaining what went wrong.
+    // ------------------------------------------------------------------------
+    bool lookupAddress(const std::string& addr);
 };
 
 }; // End of vpr namespace
