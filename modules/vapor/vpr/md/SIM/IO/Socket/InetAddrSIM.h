@@ -70,6 +70,16 @@ public:
    typedef vpr::InetAddrHash hash;
 
    /**
+    * Returns the local host's address via the given object reference.
+    *
+    * @param host_addr Storage for the returned address object.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the local host has an
+    *         an address.  Otherwise, vpr::ReturnStatus::Fail is returned.
+    */
+   static vpr::ReturnStatus getLocalHost(vpr::InetAddrSIM& host_addr);
+
+   /**
     * Constructs an address object using the given address.  It must be of
     * the form <address>:<port> where <address> can be a hostname or a
     * dotted-decimal IP address.

@@ -42,8 +42,10 @@
 #include <vpr/vprConfig.h>
 
 #include <stdio.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -60,6 +62,23 @@ namespace vpr
 {
 
 const InetAddrBSD InetAddrBSD::AnyAddr;      // Default constructor defaults to ANY addr
+
+vpr::ReturnStatus InetAddrBSD::getLocalHost (vpr::InetAddrBSD& host_addr)
+{
+   char local_host_name[MAXHOSTNAMELEN + 1];
+   vpr::ReturnStatus status;
+
+   if ( gethostname(local_host_name, MAXHOSTNAMELEN) == 0 )
+   {
+      host_addr.setAddress(std::string(local_host_name), 0);
+   }
+   else
+   {
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+
+   return status;
+}
 
 /**
  * Constructs an address object using the given address.  It must be of the
