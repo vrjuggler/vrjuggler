@@ -66,7 +66,7 @@ public:
       oss << getFileName() << ": line:";
       oss << getLineNumber() << ": ";
       oss << getMessage().shortDesc();
-      oss << " -- " << getMessage().details();
+      oss << "\n" << getMessage().details();
       return oss.str();
    }
 
