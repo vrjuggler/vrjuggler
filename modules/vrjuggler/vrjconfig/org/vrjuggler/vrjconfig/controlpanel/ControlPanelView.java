@@ -355,82 +355,99 @@ public class ControlPanelView
 
    private void showEditorPanel(EditorNode root)
    {
+      // Make sure that we have a valid (i.e., complete) node before we try
+      // to use it.
+      if ( root.getClassName() == null || root.getClassName().equals("") )
+      {
+         throw new IllegalArgumentException("Invalid class name for node " +
+                                            "with label '" + root.getLabel() +
+                                            "'");
+      }
+
       System.out.println("Editor Node: " + root.getClassName());
-      
+
+      // Do this once here since every path through this method needs our
+      // parent frame.
+      Frame parent = (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
+                                                               this);
+
+      // Attempt to load the class identified by the given EditorNode object.
       try
       {
-         ClassLoader loader = getClass().getClassLoader();
+         ClassLoader loader  = getClass().getClassLoader();
+         Class editor_class  = loader.loadClass(root.getClassName());
 
-         final Class jogl_editor_class = loader.loadClass( root.getClassName() );
-         
+         // Now that we have the class loaded, try to instantiate it.  If
+         // that succeeds, we can open a dialog box and present the editor to
+         // the user.
          try
          {
-            CustomEditor pos_editor = (CustomEditor)jogl_editor_class.newInstance();
-            JDialog dlg = new JDialog(
-               (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
-               "Positional Device Editor",
-               true);
-            
-            // This editor actually edits a context, so pass null for the ConfigElement.
-            pos_editor.setConfig(mContext, null);
+            CustomEditor editor = (CustomEditor) editor_class.newInstance();
 
-            dlg.getContentPane().add( pos_editor.getPanel() );
-            dlg.setTitle( pos_editor.getTitle() );
-            dlg.pack();
-            dlg.setVisible( true );
-            //frame.setSize(750, 750);
-            //frame.show();
+            // This editor actually edits a context, so pass null for the
+            // ConfigElement.
+            editor.setConfig(mContext, null);
+
+            CustomEditorDialog dlg = new CustomEditorDialog(parent, editor);
+            int status = dlg.showDialog();
+
+            if ( status == CustomEditorDialog.CANCEL_OPTION )
+            {
+               // XXX: How do we undo all of the changes that the user
+               // made?
+            }
+            else
+            {
+               // This handles informing the ConfigUndoManager of a
+               // successful save operation.
+               mToolbar.doSave();
+            }
+         }
+         // This is here not because Class.newInstance() throws it but because
+         // someone may have screwed up the ControlPanel.xml file.
+         catch(ClassCastException e)
+         {
+            JOptionPane.showMessageDialog(
+               parent,
+               "Editor associated with '" + root.getLabel() +
+                  "' is not a custom editor!\n" +
+                  "Given type: " + root.getClassName(),
+               "VRJConfig Control Panel Editor Instantiation Failure",
+               JOptionPane.ERROR_MESSAGE
+            );
          }
          catch(InstantiationException e)
          {
-            System.out.println(e);
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+               parent,
+               "Failed to create the editor plug-in of type\n" +
+                  root.getClassName() + "\nReason: " + e.getMessage(),
+               "VRJConfig Control Panel Editor Instantiation Failure",
+               JOptionPane.ERROR_MESSAGE
+            );
          }
          catch(IllegalAccessException e)
          {
-            System.out.println(e);
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+               parent,
+               "Failed to create the editor plug-in of type\n" +
+                  root.getClassName() + "\nReason: " + e.getMessage(),
+               "VRJConfig Control Panel Editor Instantiation Failure",
+               JOptionPane.ERROR_MESSAGE
+            );
          }
-         
-         /*
-         mTopSectionPanel.add(mVisualizeBtn);
-
-         mVisualizeBtn.addActionListener(new ActionListener()
-            {
-               public void actionPerformed(ActionEvent evt)
-               {
-                  try
-                  {
-                     CustomEditor pos_editor = (CustomEditor)jogl_editor_class.newInstance();
-                     JDialog dlg = new JDialog(
-                        (Frame)SwingUtilities.getAncestorOfClass(Frame.class, IntersensePanel.this),
-                        "3D Visualization", true);
-
-                     pos_editor.setConfig(mConfigContext, mConfigElement);
-
-                     dlg.getContentPane().add((JPanel)pos_editor);
-                     dlg.pack();
-                     dlg.setVisible(true);
-                     //frame.setSize(750, 750);
-                     //frame.show();
-                  }
-                  catch(InstantiationException e)
-                  {
-                     System.out.println(e);
-                     e.printStackTrace();
-                  }
-                  catch(IllegalAccessException e)
-                  {
-                     System.out.println(e);
-                     e.printStackTrace();
-                  }
-               }
-            });
-         */
       }
+      // Class loading failed, so there is no way we can instantiate the
+      // custom editor.
       catch(ClassNotFoundException e)
       {
-         System.out.println("*** Could not find the PositionalDeviceEditor, JOGL must not be availible. ***");
+         JOptionPane.showMessageDialog(
+            parent,
+            "Failed to look up the editor plug-in of type\n" +
+               root.getClassName() + "\nReason: " + e.getMessage(),
+            "VRJConfig Control Panel Editor Lookup Failure",
+            JOptionPane.ERROR_MESSAGE
+         );
       }
    }
 
