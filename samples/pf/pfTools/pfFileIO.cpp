@@ -89,8 +89,6 @@ void pfFileIO::writeOptimizedFile( pfNode* node, std::string optimizedName )
 bool pfFileIO::isOptimized( const std::string& fileName )
 {
    int size = fileName.find( ".pfb" );
-
-   cout<<"OP: "<<size<<"\n"<<flush;
    
    if (size > 0)
       return true;
