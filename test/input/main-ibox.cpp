@@ -1,14 +1,14 @@
 #include <iostream.h>
 #include <iomanip.h>
 
-#include <SharedMem/MemPool.h>
-#include <SharedMem/SharedType.h>
+#include <SharedMem/vjMemPool.h>
+//#include <SharedMem/vjSharedType.h>
 //#include <Input/C2Position/Birdy.h>
 #include <Input/ibox/ibox.h>
 
 int main()
 {
-  MemPool* anSgiPool = new C2SharedPool(1024*1024);
+  vjMemPool* anSgiPool = new vjSharedPool(1024*1024);
   
   IBox* t1 = new(anSgiPool) IBox;
  

@@ -1,13 +1,13 @@
 #include <iostream.h>
 #include <iomanip.h>
-#include <SharedMem/MemPool.h>
-#include <SharedMem/SharedType.h>
-#include <Input/C2Position/logiclass.h>
+#include <SharedMem/vjMemPool.h>
+//#include <SharedMem/vjSharedType.h>
+#include <Input/vjPosition/logiclass.h>
 //#include <Input/ibox/ibox.h>
 
 int main()
 {
-  MemPool* anSgiPool = new MemPoolSGI(1024*1024);
+  vjMemPool* anSgiPool = new MemPoolSGI(1024*1024);
   
   ThreeDMouse* t1 = new(anSgiPool) ThreeDMouse;
 
