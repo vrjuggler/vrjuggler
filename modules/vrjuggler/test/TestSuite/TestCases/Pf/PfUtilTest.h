@@ -19,30 +19,31 @@
 namespace vrjTest
 {
 
-class PfUtilTests : public CppUnit::TestCase, public JugglerTest
+class PfUtilTest : public CppUnit::TestCase, public JugglerTest
 {
 public:
-   PfUtilTests() : CppUnit::TestCase ()
+   PfUtilTest() : CppUnit::TestCase ()
    {
    }
    
    
-   virtual ~PfUtilTests()
+   virtual ~PfUtilTest()
    {
    }
    void testMatrixConversion()
    {
-         vjMatrix mat;
+         vrj::Matrix mat;
          mat.postTrans( mat, 1, 2, 3 );
-         mat.postRot( mat, 90, vjVec3( 0, 1, 0 ) );
+         mat.postRot( mat, 90, vrj::Vec3( 0, 1, 0 ) );
 
-         pfMatrix pf_mat = vjGetPfMatrix( mat );
-         vjMatrix vj_mat = vjGetVjMatrix( pf_mat );
+         pfMatrix pf_mat = vrj::GetPfMatrix( mat );
+         vrj::Matrix vj_mat = vrj::GetVjMatrix( pf_mat );
 
+         /*
          std::cout << pf_mat << "\n\n" << std::flush;
-            std::cout << vj_mat << "\n\n" << std::flush;
-            std::cout << mat << "\n===============\n" << std::flush;
-         if (!vrj::isEqual( vj_mat, mat ))
+         std::cout << vj_mat << "\n\n" << std::flush;
+         std::cout << mat << "\n===============\n" << std::flush;
+         if (!vj_mat.isEqual( mat ))
          {
             std::cout << "BAD!!!\n" << std::flush;
          }  
@@ -50,11 +51,12 @@ public:
          {
             std::cout << "GOOD!!!\n" << std::flush;
          }                
-         assert( vrj::isEqual( vj_mat, mat ) && "bug in juggler" );
+         */
+         assertTest( vj_mat.isEqual( mat ) && "test pf --> vj matrix conversion failed" );
    }     
    void registerTests( CppUnit::TestSuite* suite )
    {
-      suite->addTest( new CppUnit::TestCaller<PfUtilTests>( "test pf --> vj matrix conversion", &PfUtilTests::testMatrixConversion));
+      suite->addTest( new CppUnit::TestCaller<PfUtilTest>( "test pf --> vj matrix conversion", &PfUtilTest::testMatrixConversion));
    }
 };
 
