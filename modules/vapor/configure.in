@@ -492,6 +492,11 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 
 vpr_cxxflags="$STDFLAGS"
 
+# If the user has a local copy of Boost, add its path to the C++ flags.
+if test "x$LOCAL_BOOST" = "xY" ; then
+   vpr_cxxflags="$vpr_cxxflags $BOOST_INCLUDES"
+fi
+
 # Add these C++ options when compiling with G++.
 if test "x$GXX" = "xyes" ; then
 #   CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
