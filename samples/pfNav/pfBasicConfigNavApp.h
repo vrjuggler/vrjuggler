@@ -60,7 +60,7 @@ public:     // RECONFIG STUFF
    //    retval == true, application will be allowed to enter the system
    virtual bool depSatisfied()
    { return true; }
-        
+
 protected:
    //! NOTE: Inherited from vjConfigChunkHandler
    virtual bool configAdd(vjConfigChunk* chunk)
@@ -93,18 +93,17 @@ void pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
                    (float)chunk->getProperty("start_location",1),
                    (float)chunk->getProperty("start_location",2));
 
-   vjDEBUG(vjDBG_ALL,0) << "=========================================== " << app_name << " ============\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,0) << "pfBasicConfigNav::configApp:  ========= configuration application =========\n" << vjDEBUG_FLUSH;
-   
+   vjDEBUG_BEGIN(vjDBG_ALL,0) << "pfBasicConfigNav::configApp: " << app_name << "===========================\n" << vjDEBUG_FLUSH;
+
    // models
    mModelList.clear();//start out clean
    for (int x = 0; x < chunk->getNum( "Model" ); ++x)
    {
       vjConfigChunk* model_chunk = chunk->getProperty( "Model", x );
-      model m;
+      Model m;
       m.description = (std::string)model_chunk->getProperty( "Name" );
       m.filename = (std::string)model_chunk->getProperty( "filename" );
-      cout<<"Reading "<<m.filename<<" model from the config file\n"<<flush;
+      vjDEBUG_NEXT(vjDBG_ALL,0) << "Reading " <<m.filename<<" model from the config file\n"<< vjDEBUG_FLUSH;;
       m.scale = (float)model_chunk->getProperty( "Scale" );
       m.pos.set( (float)model_chunk->getProperty( "x" ),
             (float)model_chunk->getProperty( "y" ),
@@ -113,32 +112,31 @@ void pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
             (float)model_chunk->getProperty( "roty" ),
             (float)model_chunk->getProperty( "rotz" ) );
       m.isCollidable = (bool)model_chunk->getProperty( "collidable" );
-      mModelList.push_back( m );
+      addModel( m );
    }
-   
+
    // sounds
    mSoundList.clear();//start out clean
    for (x = 0; x < chunk->getNum( "Sound" ); ++x)
    {
       vjConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
-      sound s;
+      Sound s;
       s.name = (std::string)sound_chunk->getProperty( "Name" );
       s.alias = (std::string)sound_chunk->getProperty( "soundAlias" );
-      cout<<"Reading "<<s.alias<<" sound from the config file\n"<<flush;
+      vjDEBUG_NEXT(vjDBG_ALL,0) <<"Reading "<<s.alias<<" sound from the config file\n"<< vjDEBUG_FLUSH;
       s.positional = (bool)sound_chunk->getProperty( "positional" );
       s.pos.set( (float)sound_chunk->getProperty( "x" ),
             (float)sound_chunk->getProperty( "y" ),
             (float)sound_chunk->getProperty( "z" ) );
       mSoundList.push_back( s );
    }
-   
-   
-   
+
    setFilePath(file_path);
    setInitialNavPos(initial_pos);
 
-   vjDEBUG_CONT(vjDBG_ALL,0) << "filepath: " << file_path << endl << vjDEBUG_FLUSH;
-   vjDEBUG_CONT(vjDBG_ALL,0) << "initial pos: " << initial_pos << endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_ALL,0) << "filepath: " << file_path << endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_ALL,0) << "initial pos: " << initial_pos << endl << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_ALL,0) << "========================================\n" << vjDEBUG_FLUSH;
 
    // Initialize the models and sounds
    initializeModels();
