@@ -296,6 +296,8 @@ DPP_PROG_INSTALL
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 
+DPP_HAVE_CPPUNIT
+
 # We do this first so that we can pass the $DL_LOAD_LIB in as a dependency of
 # NSPR.
 _vpr_save_LIBS="$LIBS"
