@@ -199,7 +199,7 @@ endif
 	-$(RM_LN) $(instlinks)/include/omnithread
 	-$(RM_LN) $(instlinks)/include/omnithread.h
 	@for c in $(OMNIORB_CMDS) ; do					\
-            $(RM_LN) $(instlinks)/$(CXX_ORB_BIN_PATH)/$$c ;		\
+            $(RM_LN) $(instlinks)/bin/$$c ;				\
             $(LN_S) $(CXX_ORB_BIN_DIR)/$$c $(instlinks)/bin/$$c || exit 1; \
           done
 	$(LN_S) $(CXX_ORB_ROOT)/include/$(CXX_ORB_NAME)			\
