@@ -100,6 +100,7 @@ sub popFolder_action ($$$$$) {
         $$$xmlToc_data_out =~ s/<link(.*?)\"stylesheet\"(.*?)href(.*?)\"/$&$html_install_prefix/gis;
 
         foreach ( @{$book{'chapters'}} ) {
+            print "+";
             printChapter($xmlToc_data_out, "$_");
         }
 
