@@ -68,9 +68,9 @@ AC_DEFUN(PLEXUS_PATH,
                           installed (optional)            [No default]],
                 plexus_config_exec_prefix="$withval",
                 plexus_config_exec_prefix="")
-    AC_ARG_ENABLE(plexustest,
-                  [  --disable-plexustest    Do not try to compile and run a
-                          test Plexus program], , enable_plexustest=yes)
+dnl    AC_ARG_ENABLE(plexustest,
+dnl                  [  --disable-plexustest    Do not try to compile and run a
+dnl                          test Plexus program], , enable_plexustest=yes)
 
     if test "x$plexus_config_exec_prefix" != "x" ; then
         plexus_config_args="$plexus_config_args --exec-prefix=$plexus_config_exec_prefix"
