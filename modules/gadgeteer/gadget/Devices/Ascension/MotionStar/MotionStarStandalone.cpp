@@ -42,6 +42,7 @@
 #include <vpr/System.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
 #include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/Util/Debug.h>
 
 #include <gadget/Devices/Ascension/MotionStarStandalone.h>
 
@@ -285,8 +286,9 @@ int MotionStarStandalone::start()
 {
    int retval = 0;
 
-   fprintf(stderr, "\n[MotionStarStandalone] Connecting to %s ...\n",
-           m_address.getAddressString().c_str());
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      << "\n[MotionStarStandalone] Connecting to " << m_address << " ..."
+      << std::endl << vprDEBUG_FLUSH;
 
    // Create the socket based on the protocol in use.
    switch (m_proto)
@@ -302,57 +304,68 @@ int MotionStarStandalone::start()
    // If the socket could not be opened, we are in trouble.
    if ( ! m_socket->open().success() )
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] Could not open %s socket\n",
-              ((m_proto == BIRDNET::UDP) ? "datagram" : "stream"));
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] Could not open "
+         << ((m_proto == BIRDNET::UDP) ? "datagram" : "stream") << " socket"
+         << std::endl << vprDEBUG_FLUSH;
       retval = -2;
    }
    // Otherwise, keep on truckin'.
    else
    {
-      fprintf(stderr, "[MotionStarStandalone] %s socket open\n",
-              ((m_proto == BIRDNET::UDP) ? "Datagram" : "Stream"));
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "[MotionStarStandalone] "
+         << ((m_proto == BIRDNET::UDP) ? "Datagram" : "Stream")
+         << " socket open" << std::endl << vprDEBUG_FLUSH;
 
       // Connect to the server.  If this is a datagram socket, it will
       // set the default recipient of all future packets, so this is a
       // valid, safe operation regardless of the protocol being used.
       if ( ! m_socket->connect().success() )
       {
+         // XXX: Use VPR's error message stuff for this one...
          perror("[MotionStarStandalone] Cannot connect to server");
          retval = -1;
       }
       else
       {
-         fprintf(stderr, "[MotionStarStandalone] Connected to server\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "[MotionStarStandalone] Connected to server" << std::endl
+            << vprDEBUG_FLUSH;
 
          // Now that we are connected, send a wake-up call to the
          // server.
          if ( ! sendWakeUp().success() )
          {
-            fprintf(stderr,
-                    "[MotionStarStandalone] Could not wake up server\n");
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << "[MotionStarStandalone] Could not wake up server"
+               << std::endl << vprDEBUG_FLUSH;
             retval = -1;
          }
          else
          {
             BIRDNET::SYSTEM_STATUS* sys_status;
 
-            fprintf(stderr,
-                    "[MotionStarStandalone] The Sleeper has awakened!\n");
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << "[MotionStarStandalone] The Sleeper has awakened!"
+               << std::endl << vprDEBUG_FLUSH;
 
             // Get the general system status and save it for later.
             sys_status = getSystemStatus();
 
             if ( sys_status == NULL )
             {
-               fprintf(stderr, "[MotionStarStandalone] WARNING: Failed to "
-                       "read system status\n");
+               vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+                  << "[MotionStarStandalone] WARNING: Failed to read system status"
+                  << std::endl << vprDEBUG_FLUSH;
             }
             // We only try to set the system status if we got a valid
             // copy of the current system status.
             else
             {
-               fprintf(stderr, "[MotionStarStandalone] Got system status\n");
+               vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+                  << "[MotionStarStandalone] Got system status"
+                  << std::endl << vprDEBUG_FLUSH;
 
                // As long as a positive, non-zero measurement rate is
                // given, send it to the MotionStar chassis as a system
@@ -379,17 +392,15 @@ int MotionStarStandalone::start()
 
                   if ( ! status.success() )
                   {
-                     fprintf(stderr, "[MotionStarStandalone] WARNING: Failed "
-                             "to set system status\n");
+                     vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+                        << "[MotionStarStandalone] WARNING: Failed to set system status"
+                        << std::endl << vprDEBUG_FLUSH;
                   }
                   else
                   {
-                     // I use std::cerr here so that I don't have
-                     // to deal with fprintf(3)'s float vs. double
-                     // formatting.
-                     std::cerr << "[MotionStarStandalone] Set measurement "
-                               << "rate to " << m_measurement_rate
-                               << std::endl;
+                     vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+                        << "[MotionStarStandalone] Set measurement rate to "
+                        << m_measurement_rate << std::endl << vprDEBUG_FLUSH;
                   }
                }
             }
@@ -404,14 +415,15 @@ int MotionStarStandalone::start()
             {
                if ( setContinuous() != 0 )
                {
-                  fprintf(stderr,
-                          "[MotionStarStandalone] WARNING: Continuous data "
-                          "request failed!\n");
+                  vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+                     << "[MotionStarStandalone] WARNING: Continuous data request failed!"
+                     << std::endl << vprDEBUG_FLUSH;
                }
                else
                {
-                  fprintf(stderr,
-                          "[MotionStarStandalone] Continuous data requested\n");
+                  vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+                     << "[MotionStarStandalone] Continuous data requested"
+                     << std::endl << vprDEBUG_FLUSH;
                }
             }
 
@@ -421,14 +433,16 @@ int MotionStarStandalone::start()
             // the server's data packets.
             if ( m_xmtr_pos_scale == -1.0 )
             {
-               fprintf(stderr,
-                       "[MotionStarStandalone] FATAL ERROR: Position scaling "
-                       "factor unknown!\n");
+               vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                  << "[MotionStarStandalone] FATAL ERROR: Position scaling factor unknown!"
+                  << std::endl << vprDEBUG_FLUSH;
                retval = -4;
             }
             else
             {
-               fprintf(stderr, "[MotionStarStandalone] Driver setup done\n\n");
+               vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+                  << "[MotionStarStandalone] Driver setup done\n"
+                  << std::endl << vprDEBUG_FLUSH;
 
                if ( sys_status != NULL )
                {
@@ -539,6 +553,7 @@ void MotionStarStandalone::sample()
 
             if ( rec_data_words != m_birds[bird]->data_words )
             {
+               // XXX: Figure out how to print this out neatly using vprDEBUG.
                fprintf(stderr,
                        "[MotionStarStandalone] WARNING: Expecting %u data words from bird %u, got %u\n"
                        "                       You may have requested more birds than you\n"
@@ -558,10 +573,11 @@ void MotionStarStandalone::sample()
 
             if ( format_code != m_birds[bird]->format )
             {
-               fprintf(stderr,
-                       "[MotionStarStandalone] WARNING: Expecting format %u "
-                       "from bird %u, got %u\n", m_birds[bird]->format, bird,
-                       format_code);
+               vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+                  << "[MotionStarStandalone] WARNING: Expecting format "
+                  << (unsigned int) m_birds[bird]->format << " from bird "
+                  << (unsigned int) bird << ", got "
+                  << (unsigned int) format_code << std::endl << vprDEBUG_FLUSH;
             }
 
             // If the format code is 15, an error occurred in sampling the
@@ -569,8 +585,9 @@ void MotionStarStandalone::sample()
             // ignored.
             if ( format_code == 15 )
             {
-               fprintf(stderr,
-                       "[MotionStarStandalone] An error occurred in sampling\n");
+               vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+                  << "[MotionStarStandalone] An error occurred in sampling"
+                  << std::endl << vprDEBUG_FLUSH;
             }
             // Now that we have the size of the data block in the current
             // record, we can read it into the current bird's data block.
@@ -603,9 +620,10 @@ void MotionStarStandalone::sample()
       // this point, but this message will warn us if we did.
       else
       {
-         fprintf(stderr,
-                 "[MotionStarStandalone] WARNING: Got unexpected packet type "
-                 "%u in sample()!\n", recv_pkt.header.type);
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            <<  "[MotionStarStandalone] WARNING: Got unexpected packet type "
+            << (unsigned int) recv_pkt.header.type << " in sample()!"
+            << std::endl << vprDEBUG_FLUSH;
       }
    }
 }
@@ -631,9 +649,9 @@ vpr::ReturnStatus MotionStarStandalone::stopData()
 
       if ( ! status.success() )
       {
-         fprintf(stderr,
-                 "[MotionStarStandalone] WARNING: Could not send message to stop "
-                 "continuous data\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "[MotionStarStandalone] WARNING: Could not send message to stop "
+            << "continuous data" << std::endl << vprDEBUG_FLUSH;
       }
       else
       {
@@ -644,14 +662,17 @@ vpr::ReturnStatus MotionStarStandalone::stopData()
          // that the data flow could not be stopped.
          if ( ! status.success() )
          {
-            fprintf(stderr,
-                    "[MotionStarStandalone] WARNING: Could not stop continuous data\n");
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "[MotionStarStandalone] WARNING: Could not stop continuous data"
+               << std::endl << vprDEBUG_FLUSH;
          }
          // Otherwise, the data flow has been stopped and we can return
          // success to the caller.
          else
          {
-            fprintf(stderr, "[MotionStarStandalone] Continuous data stopped\n");
+            vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+               << "[MotionStarStandalone] Continuous data stopped"
+               << std::endl << vprDEBUG_FLUSH;
          }
       }
    }
@@ -675,8 +696,9 @@ vpr::ReturnStatus MotionStarStandalone::shutdown()
 
    if ( ! status.success() )
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] WARNING: Could not send shutdown request\n");
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "[MotionStarStandalone] WARNING: Could not send shutdown request"
+         << std::endl << vprDEBUG_FLUSH;
    }
    else {
       // Get the server's response to the MSG_SHUT_DOWN packet.
@@ -685,13 +707,16 @@ vpr::ReturnStatus MotionStarStandalone::shutdown()
        // If one could not be read, print a warning message.
       if ( ! status.success() )
       {
-         fprintf(stderr,
-                 "[MotionStarStandalone] WARNING: Could not shutdown server chassis\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "[MotionStarStandalone] WARNING: Could not shutdown server chassis"
+            << std::endl << vprDEBUG_FLUSH;
       }
       // Otherwise, the server is now shut down, so the driver is inactive.
       else
       {
-         fprintf(stderr, "[MotionStarStandalone] Server chassis shut down\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "[MotionStarStandalone] Server chassis shut down" << std::endl
+            << vprDEBUG_FLUSH;
          m_active = false;
       }
    }
@@ -720,14 +745,17 @@ void MotionStarStandalone::setRunMode(const BIRDNET::run_mode mode)
 
          if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)).success() )
          {
-            fprintf(stderr, "[MotionStarStandalone] Continuous data stopped\n");
+            vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+               << "[MotionStarStandalone] Continuous data stopped" << std::endl
+               << vprDEBUG_FLUSH;
             getRsp(&rsp, sizeof(BIRDNET::HEADER));
          }
          else
          {
-            fprintf(stderr,
-                    "[MotionStarStandalone] WARNING: Could not stop continuous "
-                    "data before changing run modes!\n");
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "[MotionStarStandalone] WARNING: Could not stop continuous "
+               << "data before changing run modes!" << std::endl
+               << vprDEBUG_FLUSH;
          }
       }
       // If the run mode was BIRDNET::SINGLE_SHOT and the new mode is
@@ -743,15 +771,16 @@ void MotionStarStandalone::setRunMode(const BIRDNET::run_mode mode)
 
          if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)).success() )
          {
-            fprintf(stderr,
-                    "[MotionStarStandalone] Continuous data requested\n");
+            vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+               << "[MotionStarStandalone] Continuous data requested"
+               << std::endl << vprDEBUG_FLUSH;
             getRsp(&rsp, sizeof(BIRDNET::HEADER));
          }
          else
          {
-            fprintf(stderr,
-                    "[MotionStarStandalone] WARNING: Could not request "
-                    "continuous data flow!\n");
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "[MotionStarStandalone] WARNING: Could not request "
+               << "continuous data flow!" << std::endl << vprDEBUG_FLUSH;
          }
       }
    }
@@ -780,9 +809,10 @@ float MotionStarStandalone::getXPos(const unsigned int i) const
    }
    else
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] getXPos() for bird %u does not support "
-              "data format %d\n", i, format);
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] getXPos() for bird " << i
+         << " does not support data format " << FLOCK::getFormatName(format)
+         << std::endl << vprDEBUG_FLUSH;
       x_pos = 0.0;
    }
 
@@ -810,9 +840,10 @@ float MotionStarStandalone::getYPos(const unsigned int i) const
    }
    else
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] getYPos() for bird %u does not support "
-              "data format %s\n", i, FLOCK::getFormatName(format).c_str());
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] getYPos() for bird " << i
+         << " does not support data format " << FLOCK::getFormatName(format)
+         << std::endl << vprDEBUG_FLUSH;
       y_pos = 0.0;
    }
 
@@ -840,9 +871,10 @@ float MotionStarStandalone::getZPos(const unsigned int i) const
    }
    else
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] getZPos() for bird %u does not support "
-              "data format %s\n", i, FLOCK::getFormatName(format).c_str());
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] getZPos() for bird " << i
+         << " does not support data format " << FLOCK::getFormatName(format)
+         << std::endl << vprDEBUG_FLUSH;
       z_pos = 0.0;
    }
 
@@ -869,9 +901,10 @@ float MotionStarStandalone::getZRot(const unsigned int i) const
    }
    else
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] getZRot() for bird %u does not support "
-              "data format %s\n", i, FLOCK::getFormatName(format).c_str());
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] getZRot() for bird " << i
+         << " does not support data format " << FLOCK::getFormatName(format)
+         << std::endl << vprDEBUG_FLUSH;
       z_rot = 0.0;
    }
 
@@ -898,9 +931,10 @@ float MotionStarStandalone::getYRot(const unsigned int i) const
    }
    else
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] getYRot() for bird %u does not support "
-              "data format %d\n", i, format);
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] getYRot() for bird " << i
+         << " does not support data format " << FLOCK::getFormatName(format)
+         << std::endl << vprDEBUG_FLUSH;
       y_rot = 0.0;
    }
 
@@ -927,9 +961,10 @@ float MotionStarStandalone::getXRot(const unsigned int i) const
    }
    else
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] getXRot() for bird %u does not support "
-              "data format %d\n", i, format);
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] getXRot() for bird " << i
+         << " does not support data format " << FLOCK::getFormatName(format)
+         << std::endl << vprDEBUG_FLUSH;
       x_rot = 0.0;
    }
 
@@ -1009,9 +1044,10 @@ void MotionStarStandalone::getMatrixAngles(const unsigned int bird,
    }
    else
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] getMatrixAngles() for bird %u does not "
-              "support data format %d\n", bird, format);
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] getMatrixAngles() for bird " << bird
+         << " does not support data format " << FLOCK::getFormatName(format)
+         << std::endl << vprDEBUG_FLUSH;
       angles[0] = angles[1] = angles[2] = 0.0;
    }
 }
@@ -1051,9 +1087,10 @@ void MotionStarStandalone::getQuaternion(const unsigned int bird, float quat[4])
    }
    else
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] getQuaternion() for bird %u does not "
-              "support data format %d\n", bird, format);
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] getQuaternion() for bird " << bird
+         << " does not support data format " << FLOCK::getFormatName(format)
+         << std::endl << vprDEBUG_FLUSH;
       quat[0] = quat[1] = quat[2] = quat[3] = 0.0;
    }
 }
@@ -1079,9 +1116,9 @@ vpr::ReturnStatus MotionStarStandalone::sendWakeUp()
    // warning message.
    if ( ! status.success() )
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] WARNING: Could not send wake-up message "
-              "to server!\n");
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "[MotionStarStandalone] WARNING: Could not send wake-up message "
+         << "to server!" << std::endl << vprDEBUG_FLUSH;
    }
    else
    {
@@ -1094,9 +1131,9 @@ vpr::ReturnStatus MotionStarStandalone::sendWakeUp()
       {
          BIRDNET::HEADER shutdown_msg(BIRDNET::MSG_SHUT_DOWN);
 
-         fprintf(stderr,
-                 "[MotionStarStandalone] Reinitializing server and sending "
-                 "wake-up call again\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "[MotionStarStandalone] Reinitializing server and sending "
+            << "wake-up call again" << std::endl << vprDEBUG_FLUSH;
 
          shutdown_msg.sequence = vpr::System::Htons(m_seq_num);
          m_seq_num++;
@@ -1192,10 +1229,11 @@ BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus()
          // the number of birds we want to sample, we have a problem.
          if ( flock_number < m_birds_requested )
          {
-            fprintf(stderr,
-                    "[MotionStarStandalone] WARNING: Needed %u birds, but the "
-                    "server only has %u\n", m_birds_requested,
-                    flock_number);
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "[MotionStarStandalone] WARNING: Needed "
+               << (unsigned int) m_birds_requested
+               << " birds, but the server only has "
+               << (unsigned int) flock_number << std::endl << vprDEBUG_FLUSH;
          }
 //      }
    }
@@ -1213,9 +1251,9 @@ vpr::ReturnStatus MotionStarStandalone::setSystemStatus(BIRDNET::SYSTEM_STATUS* 
    if ( sysStatus->transmitterNumber != xmtrNum )
    {
       sysStatus->transmitterNumber = xmtrNum;
-      fprintf(stderr,
-              "[MotionStarStandalone] Settting active transmitter to %u\n",
-              xmtrNum);
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "[MotionStarStandalone] Settting active transmitter to "
+         << (unsigned int) xmtrNum << std::endl << vprDEBUG_FLUSH;
    }
 
    // Copy the contents of data_rate into the measuermentRate block.
@@ -1252,9 +1290,9 @@ unsigned int MotionStarStandalone::configureBirds()
 
       if ( bird_status == NULL )
       {
-         fprintf(stderr,
-                 "[MotionStarStandalone] Could not get status for bird %u\n",
-                 bird);
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "[MotionStarStandalone] Could not get status for bird "
+            << bird << std::endl << vprDEBUG_FLUSH;
       }
       // If we got the status for bird, parse it and send a new
       // configuration based on the bird's current configuration and our
@@ -1371,10 +1409,12 @@ unsigned int MotionStarStandalone::configureBirds()
       }
    }
 
-   fprintf(stderr,
-           "[MotionStarStandalone] Configured %d birds (%u requested, %u "
-           "active, %u disabled)\n", bird_count, m_birds_requested,
-           m_birds_active, bird_count - m_birds_active);
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "[MotionStarStandalone] Configured " << bird_count << " birds ("
+      << (unsigned int) m_birds_requested << " requested, "
+      << (unsigned int) m_birds_active << " active, "
+      << (unsigned int) bird_count - m_birds_active << " disabled)"
+      << std::endl << vprDEBUG_FLUSH;
 
    return bird_count;
 }
@@ -1430,9 +1470,10 @@ BIRDNET::SINGLE_BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned 
             m_birds[bird]->format = FLOCK::POSITION_MATRIX;
             break;
          case 6:
-            fprintf(stderr,
-                    "[MotionStarStandalone] WARNING: Got INVALID data format "
-                    "for bird %u\n", bird);
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "[MotionStarStandalone] WARNING: Got INVALID data format "
+               << "for bird " << (unsigned int) bird << std::endl
+               << vprDEBUG_FLUSH;
             m_birds[bird]->format = FLOCK::INVALID;
             break;
          case 7:
@@ -1442,9 +1483,11 @@ BIRDNET::SINGLE_BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned 
             m_birds[bird]->format = FLOCK::POSITION_QUATERNION;
             break;
          default:
-            fprintf(stderr,
-                    "[MotionStarStandalone] WARNING: Got unknown data format "
-                    "%u for bird %u\n", bird_status->dataFormat & 0x0f, bird);
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "[MotionStarStandalone] WARNING: Got unknown data format "
+               << (unsigned int) (bird_status->dataFormat & 0x0f)
+               << " for bird " << (unsigned int) bird << std::endl
+               << vprDEBUG_FLUSH;
             break;
       }
 
@@ -1469,10 +1512,10 @@ BIRDNET::SINGLE_BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned 
             m_birds[bird]->hemisphere = FLOCK::RIGHT_HEMISPHERE;
             break;
          default:
-            fprintf(stderr,
-                    "[MotionStarStandalone] WARNING: Got unknown data "
-                    "hemisphere %u for bird %u\n", bird_status->dataFormat,
-                    bird);
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "[MotionStarStandalone] WARNING: Got unknown hemisphere "
+               << (unsigned int) bird_status->hemisphere << " for bird "
+               << (unsigned int) bird << std::endl << vprDEBUG_FLUSH;
             break;
       }
 
@@ -1515,9 +1558,9 @@ BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char 
 
    if ( ! status.success() )
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] ERROR: Could not request status for "
-              "device %u\n", device);
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] ERROR: Could not request status for device "
+         << (unsigned int) device << std::endl << vprDEBUG_FLUSH;
    }
    else
    {
@@ -1531,9 +1574,10 @@ BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char 
 
       if ( ! status.success() )
       {
-         fprintf(stderr,
-                 "[MotionStarStandalone] ERROR: Could not read status header "
-                 "for device %u from server\n", device);
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "[MotionStarStandalone] ERROR: Could not read status header for device "
+            << (unsigned int) device << " from server" << std::endl
+            << vprDEBUG_FLUSH;
       }
       // If that succeeded, read the rest of the response using the size
       // in the header's number_bytes field.
@@ -1543,9 +1587,10 @@ BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char 
 
          if ( ! status.success() )
          {
-            fprintf(stderr,
-                    "[MotionStarStandalone] ERROR: Could not read status "
-                    "data buffer for device %u from server\n", device);
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << "[MotionStarStandalone] ERROR: Could not read status data buffer for device "
+               << (unsigned int) device << " from server" << std::endl
+               << vprDEBUG_FLUSH;
          }
       }
    }
@@ -1585,9 +1630,9 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char devi
 
    if ( ! status.success() )
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] WARNING: Could not set device status for "
-              "device %u\n", device);
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "[MotionStarStandalone] WARNING: Could not set device status for device "
+         << (unsigned int) device << std::endl << vprDEBUG_FLUSH;
    }
    else
    {
@@ -1595,9 +1640,10 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char devi
 
       if ( ! status.success() )
       {
-         fprintf(stderr,
-                 "[MotionStarStandalone] WARNING: Could not read server "
-                 "response to device %u setup\n", device);
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "[MotionStarStandalone] WARNING: Could not read server response to device "
+            << (unsigned int) device << " setup" << std::endl
+            << vprDEBUG_FLUSH;
       }
    }
 
@@ -1773,9 +1819,10 @@ void MotionStarStandalone::getUnitInfo(const unsigned int bird,
       m_unit_conv = 12.0;
    }
    else {
-      fprintf(stderr,
-              "[MotionStarStandalone] WARNING: Unknown units value %u read "
-              "from scaling factor on bird %u\n", units, bird);
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "[MotionStarStandalone] WARNING: Unknown units value "
+         << (unsigned int) units << " read from scaling factor on bird "
+         << bird << std::endl << vprDEBUG_FLUSH;
    }
 
    // Mask out the most significant four bits of the high byte because they
@@ -1800,15 +1847,16 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg(const void* packet,
    // An error occurred while trying to send the packet.
    if ( status.failure() )
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] Could not send message to %s\n",
-              m_address.getAddressString().c_str());
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] Could not send message to "
+         << m_address << std::endl << vprDEBUG_FLUSH;
    }
    // Nothing was sent.
    else if ( bytes == 0 )
    {
-      fprintf(stderr, "[MotionStarStandalone] Sent 0 bytes to %s\n",
-             m_address.getAddressString().c_str());
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] Sent 0 bytes to " << m_address << std::endl
+         << vprDEBUG_FLUSH;
    }
 
    return status;
@@ -1829,17 +1877,17 @@ vpr::ReturnStatus MotionStarStandalone::getRsp(void* packet,
    // An error occurred while trying to receive the packet.
    if ( status.failure() )
    {
-      fprintf(stderr,
-              "[MotionStarStandalone] Could not read message from %s\n",
-              m_address.getAddressString().c_str());
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] Could not read message from "
+         << m_address << std::endl << vprDEBUG_FLUSH;
    }
    // Nothing was read.
    else if ( bytes == 0 )
    {
-      fprintf(stderr, "[MotionStarStandalone] Read 0 bytes from %s\n",
-              m_address.getAddressString().c_str());
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[MotionStarStandalone] Read 0 bytes from " << m_address
+         << std::endl << vprDEBUG_FLUSH;
    }
-
 
    return status;
 }
@@ -1869,6 +1917,7 @@ void MotionStarStandalone::printSystemStatus(const BIRDNET::SYSTEM_STATUS* statu
    // Set left justification so that everything will be formatted properly.
    std::cout.setf(std::ios::left);
 
+   // XXX: This should use vprDEBUG somehow...
    // Print a short heading.
    std::cout << std::setw(pad_width_full) << std::setfill('=') << "" << "\n";
    std::cout << "Ascension MotionStar General System Status ("
@@ -1927,6 +1976,7 @@ void MotionStarStandalone::printDeviceStatus()
    // Set left justification so that everything will be formatted properly.
    std::cout.setf(std::ios::left);
 
+   // XXX: This should use vprDEBUG somehow...
    // Print a short heading.
    std::cout << std::endl;
    std::cout << std::setw(pad_width_full) << std::setfill('=') << "" << "\n";
@@ -1979,36 +2029,59 @@ void MotionStarStandalone::printError(const unsigned char errCode)
    switch (errCode)
    {
       case 1:
-         fprintf(stderr, "WARNING: Single packet missing (error 1)\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Single packet missing (error 1)" << std::endl
+            << vprDEBUG_FLUSH;
          break;
       case 2:
-         fprintf(stderr, "WARNING: Two or more packets missing (error 2)\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Two or more packets missing (error 2)" << std::endl
+            << vprDEBUG_FLUSH;
          break;
       case 3:
-         fprintf(stderr, "WARNING: Many, many packets missing (error 3)\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Many, many packets missing (error 3)" << std::endl
+            << vprDEBUG_FLUSH;
          break;
       case 4:
-         fprintf(stderr, "WARNING: Packet sequence number repeated (error 4)\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Packet sequence number repeated (error 4)" << std::endl
+            << vprDEBUG_FLUSH;
          break;
       case 6:
-         fprintf(stderr, "WARNING: Unexpected packet type received (error 6)\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Unexpected packet type received (error 6)\n"
+            << "Re-syncing may be necessary!" << std::endl << vprDEBUG_FLUSH;
 //         fprintf(stderr, "         Illegal packet sequence number: %hu\n",
 //                 error_code_extension);
-         fprintf(stderr, "         Re-syncing may be necessary!\n");
          break;
       case 7:
-         fprintf(stderr,
-                 "WARNING: Packet contents could not be determined (error 7)\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Packet contents could not be determined (error 7)"
+            << std::endl << vprDEBUG_FLUSH;
          break;
       case 8:
-         fprintf(stderr, "WARNING: Status requested for non-existant FBB "
-                 "device (error 8)\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Status requested for non-existent FBB device (error 8)"
+            << std::endl << vprDEBUG_FLUSH;
          break;
       case 9:
-         fprintf(stderr, "WARNING: Illegal setup data sent (error 9)\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Illegal setup data sent (error 9)" << std::endl
+            << vprDEBUG_FLUSH;
          break;
       case 100:
-         fprintf(stderr, "WARNING: System not ready (error 100)\n");
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " System not ready (error 100)" << std::endl << vprDEBUG_FLUSH;
          break;
    }
 }
