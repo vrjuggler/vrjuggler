@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChunkDescDB>
+  <ChunkDesc token="juggler_audio_manager" name="VR Juggler Sonix Sound Manager">
+    <category>Audio</category>
+    <PropertyDesc token="Name" name="Name" type="string" variable="1">
+       <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="api" name="API" type="string" variable="1">
+       <help>What Sound API to use? (Stub is default)</help>
+    </PropertyDesc>
+    <PropertyDesc token="listener_position" name="Start Location" type="float" variable="0">
+      <help>Position of the listener (that's you!) in world coordinate space.  Usually 0,0,0...</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="file_search_path" name="File Search Paths"  type="string" variable="1">
+       <help>Paths to search for files</help>
+    </PropertyDesc>
+    <PropertyDesc token="Sounds" name="Sounds" type="EmbeddedChunk" variable="variable"> 
+       <help>Specify a sound here.  usually used </help>
+       <enumeration name="Sound"/>
+    </PropertyDesc>
+  </ChunkDesc>
+   <ChunkDesc token="Sound" name="Sound">
+    <PropertyDesc token="Name" name="Name"  type="string" variable="1">
+       <help>Sound Alias - name that your application references</help>
+    </PropertyDesc>
+    <PropertyDesc token="filename" name="File Name" type="string" variable="1">
+    </PropertyDesc>
+    <PropertyDesc token="ambient" name="Ambient" type="Bool" variable="1">
+       <help>Is it position based sound (vol changes with movement)? Or is it just ambient.</help>
+    </PropertyDesc>
+    <PropertyDesc token="retriggerable" name="Retriggerable" type="Bool" variable="1">
+       <help>can the sound retrigger during play?</help>
+    </PropertyDesc>
+    <PropertyDesc token="loop" name="Loop" type="Int" variable="1">
+       <help>How many times does the sound loop? (-1 infinite)</help>
+    </PropertyDesc>
+    <PropertyDesc token="position" name="sound position" type="float" variable="0">
+      <help>Position of the sound in world coordinate space</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>
