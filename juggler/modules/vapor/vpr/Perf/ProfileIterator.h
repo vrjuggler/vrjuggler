@@ -44,7 +44,7 @@
 #define VPR_PROFILE_ITERATOR_H
 
 /**
- * mostly taken from:
+ * Primarily based on:
  * Real-Time Hierarchical Profiling for Game Programming Gems 3
  * by Greg Hjelstrom & Byon Garrabrant
  */
@@ -102,7 +102,7 @@ namespace vpr
       /**
        * Make the current parent's parent the new parent.
        */
-      void           enterParent( void ); 
+      void           enterParent( void );
 
       /**
        * @return Current childs name is returned.
