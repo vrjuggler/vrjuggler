@@ -110,8 +110,8 @@ public:
     */
    virtual bool sample()
    {
-      HandleEvents();
-      return 1;
+      handleEvents();
+      return true;
    }
 
    /** Update the keys and event queue data structures with current data. */
@@ -119,16 +119,6 @@ public:
 
    /** Return the element type associated with this device type. */
    static std::string getElementType();
-
-   /**
-    * Returns the number of times the key was pressed during the last frame.
-    * You can put this in an if to check if was pressed at all, or if you are
-    * doing processing based on this catch the actual number.
-    */
-   int isKeyPressed(int Key)
-   {
-      return mCurKeys[Key];
-   }
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -156,18 +146,13 @@ protected:
    }
 
 private:
-   /** @name Private functions for processing input data. */
-   //@{
-   int onlyModifier(int);
-   //@}
-
    /** @name Event handling utility methods. */
    //@{
    /**
     * Handles any events in the system.
     * Copies mKeys to mCurKeys.
     */
-   void HandleEvents();
+   void handleEvents();
 
    /**
     * Adds a new key press/release event to the event queue for this window.

@@ -104,17 +104,6 @@ public:
    static std::string getElementType();
 
    /**
-    * Returns the number of times the key was pressed during the
-    * last frame, so you can put this in an if to check if was
-    * pressed at all, or if you are doing processing based on this
-    * catch the actual number..
-    */
-   int isKeyPressed(int Key)
-   {
-      return mCurKeys[Key];
-   }
-
-   /**
     * Called by callback function.
     * Processes the event.
     */
@@ -144,11 +133,6 @@ protected:
    int attachEvents(WindowRef aWindow);
 
 private:
-   /** @name Private functions for processing input data */
-   //@{
-   int onlyModifier(int);
-   //@}
-
    /** @name Event handling utility methods. */
    //@{
    /**

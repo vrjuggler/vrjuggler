@@ -206,7 +206,7 @@ bool EventWindowXWin::startSampling()
          << vprDEBUG_FLUSH;
       vprASSERT(false);
    }
-   
+
    mExitFlag =false;
    // Create a new thread to handle the control
    vpr::ThreadMemberFunctor<EventWindowXWin>* memberFunctor =
@@ -225,23 +225,6 @@ bool EventWindowXWin::startSampling()
    }
 }
 
-int EventWindowXWin::onlyModifier(int mod)
-{
-   switch (mod)
-   {
-      case gadget::KEY_NONE:
-         return (!mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
-      case gadget::KEY_SHIFT:
-         return (mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
-      case gadget::KEY_CTRL:
-         return (!mCurKeys[gadget::KEY_SHIFT] && mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
-      case gadget::KEY_ALT:
-         return (!mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && mCurKeys[gadget::KEY_ALT]);
-      default:
-        vprASSERT(false);
-        return 0;
-   }
-}
 
 void EventWindowXWin::updateData()
 {
@@ -281,7 +264,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array
    updateEventQueue();
 }
 
-void EventWindowXWin::HandleEvents()
+void EventWindowXWin::handleEvents()
 {
    XEvent event;
    KeySym key;
