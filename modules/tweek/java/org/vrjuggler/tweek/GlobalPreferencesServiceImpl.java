@@ -36,8 +36,7 @@
 
 package org.vrjuggler.tweek;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -68,9 +67,28 @@ class GlobalPreferencesServiceImpl
     * Creates a new global preferences service.
     */
    public GlobalPreferencesServiceImpl(BeanAttributes attr)
+      throws IOException
    {
       super(attr);
-      mPrefsFile = new File(getUserHome() + File.separator + ".tweekrc");
+
+      String data_dir_name = getAppDataDir();
+      String prefs_file;
+
+      // Mac OS X and Windows preferences location.
+      if ( System.getProperty("mrj.version") != null ||
+           System.getProperty("os.name").indexOf("Windows") != -1 )
+      {
+         data_dir_name = data_dir_name + File.separator + "Tweek";
+         verifyPrefsDirExistence(data_dir_name);
+         prefs_file = data_dir_name + File.separator + "tweekrc";
+      }
+      // UNIX.
+      else
+      {
+         prefs_file = data_dir_name + File.separator + ".tweekrc";
+      }
+
+      mPrefsFile = new File(prefs_file);
       BeanRegistry.instance().addBeanRegistrationListener(this);
    }
 
@@ -565,6 +583,22 @@ class GlobalPreferencesServiceImpl
    // Private methods
    // =========================================================================
 
+   private void verifyPrefsDirExistence(String prefsDirName)
+      throws IOException
+   {
+      File prefs_dir = new File(prefsDirName);
+
+      if ( prefs_dir.exists() && ! prefs_dir.isDirectory() )
+      {
+         throw new IOException(prefsDirName +
+                               " exists as a file, not a directory");
+      }
+      else if ( ! prefs_dir.exists() )
+      {
+         prefs_dir.mkdir();
+      }
+   }
+
    private String getUserHome()
    {
       String path = null;
@@ -578,6 +612,23 @@ class GlobalPreferencesServiceImpl
       {
          ex.printStackTrace();
          path = System.getProperty("user.home");
+      }
+
+      return path;
+   }
+
+   private String getAppDataDir()
+   {
+      String path = null;
+
+      try
+      {
+         EnvironmentServiceProxy env_service = new EnvironmentServiceProxy();
+         path = env_service.getAppDataDir();
+      }
+      catch(RuntimeException ex)
+      {
+         path = getUserHome();
       }
 
       return path;

@@ -93,6 +93,11 @@ public class EnvironmentServiceProxy
       return mEnvService.getUserHome();
    }
 
+   public String getAppDataDir()
+   {
+      return mEnvService.getAppDataDir();
+   }
+
    /** The EnvironmentService instance to which this object is proxy. */
    private EnvironmentService mEnvService = null;
 }
