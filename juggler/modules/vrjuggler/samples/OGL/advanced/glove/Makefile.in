@@ -23,7 +23,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= main.o
+OBJECTS		= main.o navigation.o
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -37,6 +37,9 @@ glove: ${OBJECTS}
 
 main.o: main.cpp application.h
 	${COMPILE} -c -o $@ ${srcdir}/main.cpp
+
+navigation.o: navigation.cxx navigation.h
+	${COMPILE} -c -o $@ ${srcdir}/navigation.cxx
 
 # -----------------------------------------------------------------------------
 # Clean-up.
