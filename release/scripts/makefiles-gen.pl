@@ -55,6 +55,7 @@
 
 require 5.004;
 
+use Cwd;
 use File::Basename;
 use File::Copy;
 use Getopt::Long;
@@ -117,7 +118,7 @@ umask(002);
 chdir("$startdir") or die "ERROR: Cannot chdir to $startdir: $!\n";
 
 my ($basedir, $dir);
-chop($basedir = `pwd`);
+$basedir = cwd();
 
 # Defaults.
 my($uid, $gid, $mode_bits) = ($<, (getpwuid($<))[3], "0644") unless $Win32;

@@ -34,6 +34,7 @@
 
 require 5.004;
 
+use Cwd;
 use File::Basename;
 use File::Path;
 use Getopt::Std;
@@ -81,7 +82,7 @@ $mode = "$opt_m" if $opt_m;
 umask(002);
 mkpath("$dest_dir", 0, 0755);	# Make sure that $dest_dir exists
 
-chop($start_dir = `pwd`) unless $dest_dir =~ /^\//;	# Save this for later
+$start_dir = cwd() unless $dest_dir =~ /^\//;		# Save this for later
 
 # Push the source directory onto the InstallOps module's internal directory
 # stack.  This is used for recursion through the source directory.
