@@ -57,13 +57,11 @@ public class VrjConfig
          e.printStackTrace();
       }
 
-      // Add the default frame _after_ VRJConfig is visible
-      this.addComponentListener(new ComponentAdapter()
+      SwingUtilities.invokeLater(new Runnable()
       {
-         public void componentResized(ComponentEvent evt)
+         public void run()
          {
             addDefaultFrame();
-            VrjConfig.this.removeComponentListener(this);
          }
       });
    }
