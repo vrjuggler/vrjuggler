@@ -34,11 +34,14 @@
 #ifndef _VJ_SOCKET_H_
 #define _VJ_SOCKET_H_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 #include <iostream>
 #include <vpr/IO/Socket/Socket.h>
+
+
 #ifndef VJ_OS_Win32
 
+namespace jccl {
 
 typedef int vjSocketIDPosix;
 extern const int vjSOCKID_INVALID;
@@ -87,13 +90,15 @@ public:
 typedef vjSocketPosix vjSocket;
 typedef vjSocketIDPosix vjSocketID;
 
+};
 
 #else
 
 /******************************* Winsock2 version ************************/
 
 #include <winsock2.h>
-//#include <Environment/sockstream.h>
+
+namespace jccl {
 
 typedef SOCKET vjSocketIDWin32;
 extern const int vjSOCKID_INVALID;
@@ -140,6 +145,7 @@ public:
 typedef vjSocketWin32 vjSocket;
 typedef vjSocketIDWin32 vjSocketID;
 
+};
 
 #endif //ifndef VJ_OS_Win32
 

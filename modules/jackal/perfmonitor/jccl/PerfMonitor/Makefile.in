@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Performance.  It requires GNU make.
+# Makefile.in for jccl/Performance.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,11 +41,11 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Performance
+includedir	= @includedir@/jccl/Performance
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VJ_LIBRARY)
+SUBOBJDIR	= $(JCCL_LIBRARY)
 
 SRCS		= vjPerfDataBuffer.cpp	\
                   vjTimeStamp.cpp

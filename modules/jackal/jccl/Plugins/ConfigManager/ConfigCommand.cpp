@@ -32,11 +32,13 @@
 
 
 
-#include <Environment/vjCommand.h>
-#include <Environment/vjTimedUpdate.h>
-#include <Config/vjConfigChunkDB.h>
-#include <Config/vjChunkDescDB.h>
-#include <Config/vjConfigIO.h>
+#include <jccl/JackalServer/vjCommand.h>
+#include <jccl/JackalServer/vjTimedUpdate.h>
+#include <jccl/Config/vjConfigChunkDB.h>
+#include <jccl/Config/vjChunkDescDB.h>
+#include <jccl/Config/vjConfigIO.h>
+
+namespace jccl {
 
 // generic vjCommand
 
@@ -82,7 +84,7 @@ vjCommandRefresh::vjCommandRefresh() {
 /*static*/ const std::string vjCommandSendChunkDB::command_name ("Send ChunkDB Command");
 
 
-vjCommandSendChunkDB::vjCommandSendChunkDB (vjConfigChunkDB* _db, bool _all) {
+vjCommandSendChunkDB::vjCommandSendChunkDB (ConfigChunkDB* _db, bool _all) {
     db = _db;
     all = _all;
 }
@@ -94,7 +96,7 @@ vjCommandSendChunkDB::vjCommandSendChunkDB (vjConfigChunkDB* _db, bool _all) {
         out << "<apply_chunks all=\"true\">\n";
     else
         out << "<apply_chunks>\n";
-    vjConfigIO::instance()->writeConfigChunkDB (out, *db, "xml_config");
+    ConfigIO::instance()->writeConfigChunkDB (out, *db, "xml_config");
     out << "</apply_chunks>\n</protocol>\n" << std::flush;
 }
 
@@ -110,7 +112,7 @@ vjCommandSendChunkDB::vjCommandSendChunkDB (vjConfigChunkDB* _db, bool _all) {
 /*static*/ const std::string vjCommandSendDescDB::command_name ("Send DescDB Command");
 
 
-vjCommandSendDescDB::vjCommandSendDescDB (vjChunkDescDB* _db, bool _all) {
+vjCommandSendDescDB::vjCommandSendDescDB (ChunkDescDB* _db, bool _all) {
     db = _db;
     all = _all;
 }
@@ -123,7 +125,7 @@ vjCommandSendDescDB::vjCommandSendDescDB (vjChunkDescDB* _db, bool _all) {
         out << "<apply_descs all=\"true\">\n";
     else
         out << "<apply_descs>\n";
-    vjConfigIO::instance()->writeChunkDescDB (out, *db, "xml_config");
+    ConfigIO::instance()->writeChunkDescDB (out, *db, "xml_config");
     out << "</apply_descs>\n</protocol>\n" << std::flush;
 }
 
@@ -158,3 +160,4 @@ vjCommandTimedUpdate::vjCommandTimedUpdate (vjTimedUpdate* _tu, float _refresh_t
     return command_name;
 }
 
+};

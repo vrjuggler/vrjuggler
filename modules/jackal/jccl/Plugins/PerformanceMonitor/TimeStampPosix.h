@@ -35,26 +35,28 @@
 #ifndef _VJ_TIMESTAMP_POSIX_
 #define _VJ_TIMESTAMP_POSIX_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 #include <sys/time.h>
+
+namespace jccl {
 
 //-----------------------------------------
 //:Portable time recorder for Unix/Linux systems
 //
-//     This version of vjTimeStamp uses the gettimeofday()
+//     This version of TimeStamp uses the gettimeofday()
 //     system call to collect timing information.  While
 //     it is probably not as high resolution as 
-//     vjTimeStampSGI, it should be portable accross all
+//     TimeStampSGI, it should be portable accross all
 //     Unix and Unix-like OSes
 //
-//     vjTimeStampPosix should never be instantiated directly.
-//     Instead, use vjTimeStamp, which will be typedefed to
+//     TimeStampPosix should never be instantiated directly.
+//     Instead, use TimeStamp, which will be typedefed to
 //     the correct implementation.
 //
 // @author  Christopher Just
 //-----------------------------------------
 
-class vjTimeStampPosix {
+class TimeStampPosix {
 
 public:
 
@@ -66,13 +68,13 @@ public:
 
 
 
-    vjTimeStampPosix() {
+    TimeStampPosix() {
 	set();
     }
 
 
 
-    vjTimeStampPosix& operator= (const vjTimeStampPosix& t2);
+    TimeStampPosix& operator= (const TimeStampPosix& t2);
 
 
 
@@ -93,18 +95,18 @@ public:
     //: returns number of microseconds between self and t2
     //! PRE: t2 is stamped with an earlier time than self
     //! 
-    float operator - (const vjTimeStampPosix& t2) const {
+    float operator - (const TimeStampPosix& t2) const {
 	return (usecs() - t2.usecs());
     }
 
 
-    float diff (vjTimeStampPosix& ts) {
+    float diff (TimeStampPosix& ts) {
 	return ts.val - val;
     }
 
 
 
-    friend std::ostream& operator << (std::ostream& out, vjTimeStampPosix& ts) {
+    friend std::ostream& operator << (std::ostream& out, TimeStampPosix& ts) {
 	out << ts.usecs();
 	return out;
     }
@@ -117,5 +119,6 @@ private:
     float val;
 };
 
+}; // namespace jccl
 
 #endif

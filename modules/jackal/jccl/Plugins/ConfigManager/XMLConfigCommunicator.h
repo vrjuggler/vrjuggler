@@ -33,14 +33,13 @@
 #ifndef _VJXMLCONFIGCOMMUNICATOR_H_
 #define _VJXMLCONFIGCOMMUNICATOR_H_
 
-#include <vjConfig.h>
-//#include <Environment/vjConnect.h>
-#include <Environment/vjNetCommunicator.h>
-//#include <Config/vjXMLConfigIOHandler.h>
-#include <Utils/vjXercesXMLParser.h>
+#include <jccl/jcclConfig.h>
+#include <jccl/JackalServer/vjNetCommunicator.h>
+#include <jccl/XMLUtil/vjXercesXMLParser.h>
+
+namespace jccl {
 
 class vjConnect;
-//class vjXercesXMLParser;
 class vjXMLConfigIOHandler;
 
 //---------------------------------------------------------------
@@ -114,5 +113,6 @@ public:
 
 };
 
+};
 
 #endif

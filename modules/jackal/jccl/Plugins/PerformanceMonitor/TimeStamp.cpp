@@ -32,13 +32,13 @@
 
 
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 
 // these should all be in separate .cpp files.  fix later
 
 #if VJ_PERFORMANCE == VJ_PERF_SGI
 
-#include <Performance/vjTimeStampSGI.h>
+#include <jccl/Performance/TimeStampSGI.h>
 
 /*
  * SGI cyclecounter timing
@@ -57,9 +57,11 @@
 
 #include <sys/syssgi.h>
 #include <sys/errno.h>
-#include <Utils/vjDebug.h>
+#include <vpr/Util/Debug.h>
 
-void vjTimeStampSGI::initialize() {
+namespace jccl {
+
+void TimeStampSGI::initialize() {
     int cyclevalue;
     static unsigned long long enodev_dummy_address = 0;
 
@@ -69,8 +71,8 @@ void vjTimeStampSGI::initialize() {
     poffmask = getpagesize() - 1;
     phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cyclevalue);
     if (phys_addr == ENODEV) {
-	vjDEBUG (vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " vjTimeStamp: Cycle Counter not "
-	    "supported by this machine.\n" << vjDEBUG_FLUSH;
+	vprDEBUG (vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " TimeStamp: Cycle Counter not "
+	    "supported by this machine.\n" << vprDEBUG_FLUSH;
 	iotimer_addr = &enodev_dummy_address;
     }
     else {
@@ -91,37 +93,37 @@ void vjTimeStampSGI::initialize() {
     else
 	initval = *(unsigned int*)iotimer_addr;
 
-    vjDEBUG(vjDBG_PERFORMANCE,3) << "vjTimeStamp system initialized.\n"
-	       << vjDEBUG_FLUSH;
+    vprDEBUG(vprDBG_PERFORMANCE,3) << "TimeStamp system initialized.\n"
+	       << vprDEBUG_FLUSH;
 }
 
 
 
-float vjTimeStampSGI::usecs () {
+float TimeStampSGI::usecs () {
     /* returns timestamp value in usecs from intialize() */
     return val*resolution;
 }
 
 
-vjTimeStampSGI::vjTimeStampSGI() {
+TimeStampSGI::TimeStampSGI() {
     set();
 }
 
 
-float vjTimeStampSGI::operator - (const vjTimeStampSGI& t2) const {
+float TimeStampSGI::operator - (const TimeStampSGI& t2) const {
     /* returns self - t2, in usecs */
     return (val - t2.val)*resolution;
 }
 
 
-std::ostream& operator << (std::ostream& out, vjTimeStampSGI& ts) {
+std::ostream& operator << (std::ostream& out, TimeStampSGI& ts) {
     out << ts.usecs();
     return out;
 }
 
 
 
-float vjTimeStampSGI::getResolution() {
+float TimeStampSGI::getResolution() {
     return resolution;
 }
 
@@ -129,32 +131,37 @@ float vjTimeStampSGI::getResolution() {
 /* these need to be here to avoid "Unresolved data symbols"
  * problem w/ linker.
  */
-__psunsigned_t vjTimeStampSGI::phys_addr = 0;
-__psunsigned_t vjTimeStampSGI::raddr = 0;
-volatile void* vjTimeStampSGI::iotimer_addr;
-volatile unsigned long long vjTimeStampSGI::longcount;
-int vjTimeStampSGI::fd,
-    vjTimeStampSGI::poffmask;
-float vjTimeStampSGI::resolution; // in usecs.
-int vjTimeStampSGI::cyclecntrsize;  // either 32 or 64 bits. depends on hardware
-long long vjTimeStampSGI::initval;
-long long vjTimeStampSGI::maxval;
+__psunsigned_t TimeStampSGI::phys_addr = 0;
+__psunsigned_t TimeStampSGI::raddr = 0;
+volatile void* TimeStampSGI::iotimer_addr;
+volatile unsigned long long TimeStampSGI::longcount;
+int TimeStampSGI::fd,
+    TimeStampSGI::poffmask;
+float TimeStampSGI::resolution; // in usecs.
+int TimeStampSGI::cyclecntrsize;  // either 32 or 64 bits. depends on hardware
+long long TimeStampSGI::initval;
+long long TimeStampSGI::maxval;
 
+}; // namespace jccl
 
 #elif VJ_PERFORMANCE == VJ_PERF_POSIX
 
 /*
  * gettimeofday version
  */
-#include <Performance/vjTimeStampPosix.h>
+#include <jccl/Performance/TimeStampPosix.h>
 
-vjTimeStampPosix& vjTimeStampPosix::operator= (const vjTimeStampPosix& t2) {
+namespace jccl {
+
+TimeStampPosix& TimeStampPosix::operator= (const TimeStampPosix& t2) {
     val = t2.val;
     return *this;
 }
 
 
-float vjTimeStampPosix::initval = 0.0;
+float TimeStampPosix::initval = 0.0;
+
+}; // namespace jccl
 
 #elif VJ_PERFORMANCE == VJ_PERF_NONE
 // nothing to do here

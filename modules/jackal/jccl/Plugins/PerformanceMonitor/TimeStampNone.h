@@ -35,26 +35,28 @@
 #ifndef _VJ_TIMESTAMP_NONE_
 #define _VJ_TIMESTAMP_NONE_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
+
+namespace jccl {
 
 //-----------------------------------------
 //:Dummy time recorder
 //
-//     This version of vjTimeStamp is simply a dummy,
+//     This version of TimeStamp is simply a dummy,
 //     meant for use on systems where neither the SGI
 //     or Posix versions will work, or where absolutely
 //     no performance-measurement overhead is acceptable.
 //     All functions are empty and inlined, and should
 //     be completely eliminated by any decent compiler.
 //
-//     vjTimeStampPosix should never be instantiated directly.
-//     Instead, use vjTimeStamp, which will be typedefed to
+//     TimeStampPosix should never be instantiated directly.
+//     Instead, use TimeStamp, which will be typedefed to
 //     the correct implementation.
 //
 // @author  Christopher Just
 //-----------------------------------------
 
-class VJ_CLASS_API vjTimeStampNone {
+class _CLASS_API TimeStampNone {
 
 public:
 
@@ -63,7 +65,7 @@ public:
 
 
     //: Constructor
-    inline vjTimeStampNone() {;}
+    inline TimeStampNone() {;}
 
 
     //: does nothing - this is the null performance monitor, remember?
@@ -71,7 +73,7 @@ public:
 
 
     //: returns 0.0
-    inline float operator - (const vjTimeStampNone& t2) const {
+    inline float operator - (const TimeStampNone& t2) const {
 	return 0.0;
     }
 
@@ -83,13 +85,13 @@ public:
 
 
     //: assignment operator
-    inline vjTimeStampNone& operator= (vjTimeStampNone& t2) {
+    inline TimeStampNone& operator= (TimeStampNone& t2) {
 	return *this;
     }
 
 
     inline friend std::ostream& operator << (std::ostream& out,
-                                             vjTimeStampNone& ts)
+                                             TimeStampNone& ts)
     {
 	return out;
     }
@@ -101,5 +103,7 @@ public:
     }
 
 };
+
+}; // namespace jccl
 
 #endif

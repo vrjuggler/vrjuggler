@@ -31,14 +31,16 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#ifndef _VJ_ENVIRONMENT_MANAGER_H_
-#define _VJ_ENVIRONMENT_MANAGER_H_
+#ifndef _JCCL_JACKAL_SERVER_H_
+#define _JCCL_JACKAL_SERVER_H_
 
-#include <vjConfig.h>
-#include <Kernel/vjConfigChunkHandler.h>
+#include <jccl/jcclConfig.h>
+//#include <Kernel/vjConfigChunkHandler.h>
 #include <vpr/Thread/Thread.h>
-#include <Environment/vjSocket.h>
+#include <jccl/JackalServer/vjSocket.h>
 #include <vpr/Sync/Mutex.h>
+
+namespace jccl {
 
 class vjConnect;
 class vjPerfDataBuffer;
@@ -67,18 +69,18 @@ class vjConfigChunkDB;
 // Date 2-27-98
 //---------------------------------------
 
-class VJ_CLASS_API vjEnvironmentManager: public vjConfigChunkHandler {
+class VJ_CLASS_API JackalServer: public vjConfigChunkHandler {
 
 public:
 
     //: constructor
     //! PRE: None
     //! POST: Object is constructed
-    vjEnvironmentManager();
+    JackalServer();
 
 
 
-    virtual ~vjEnvironmentManager();
+    virtual ~JackalServer();
 
 
 
@@ -174,11 +176,11 @@ private:
     void killConnections();
 
     // These are needed to appease Visual C++ in its creation of DLLs.
-    vjEnvironmentManager(const vjEnvironmentManager&) {;}
-    void operator=(const vjEnvironmentManager&) {;}
+    JackalServer(const JackalServer&) {;}
+    void operator=(const JackalServer&) {;}
 
-}; // end vjEnvironmentManager
+}; // end JackalServer
 
-
+};
 
 #endif

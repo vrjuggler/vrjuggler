@@ -33,11 +33,9 @@
 #ifndef _VJNETCOMMUNICATOR_H_
 #define _VJNETCOMMUNICATOR_H_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 
-//#include <Environment/vjConnect.h>
-//#include <iostream.h>
-//#include <string>
+namespace jccl {
 
 class vjConnect;
 
@@ -109,5 +107,6 @@ public:
 
 };
 
+};
 
 #endif

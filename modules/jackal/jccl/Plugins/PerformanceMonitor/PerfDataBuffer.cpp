@@ -31,15 +31,16 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <Performance/vjPerfDataBuffer.h>
-#include <Utils/vjDebug.h>
-#include <Math/vjMath.h>
+#include <jccl/Performance/PerfDataBuffer.h>
+#include <vpr/Util/Debug.h>
+//#include <Math/Math.h>
 
+namespace jccl {
 
-void vjPerfDataBuffer::init (const char* _name, int _numbufs,
+void PerfDataBuffer::init (const char* _name, int _numbufs,
 				    int _nindex) {
     name = _name;
-    handler_name = "vjc_performance";
+    handler_name = "c_performance";
     numbufs = _numbufs;
     buffer = new buf_entry[numbufs];
     read_begin = 0;
@@ -53,7 +54,7 @@ void vjPerfDataBuffer::init (const char* _name, int _numbufs,
 
 //: destructor
 //: POST: all memory & buffers have been freed.
-vjPerfDataBuffer::~vjPerfDataBuffer () {
+PerfDataBuffer::~PerfDataBuffer () {
     active = 0;
     delete buffer;
     //delete name;
@@ -65,10 +66,10 @@ vjPerfDataBuffer::~vjPerfDataBuffer () {
 //! POST: once this call is made, the buffer will start
 //+       storing data whenever a set() is made and
 //+       writing available data when requested.
-void vjPerfDataBuffer::activate() {
+void PerfDataBuffer::activate() {
     active = 1;
-    vjDEBUG(vjDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
-	" activated.\n" << vjDEBUG_FLUSH;
+    vprDEBUG(vprDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
+	" activated.\n" << vprDEBUG_FLUSH;
 }
 
 
@@ -78,7 +79,7 @@ void vjPerfDataBuffer::activate() {
 //+       essentially, do nothing.  set() will not store
 //+       any information and the write calls won't
 //+       write anything.
-void vjPerfDataBuffer::deactivate() {
+void PerfDataBuffer::deactivate() {
     active = 0;
     /* deactivate maybe should reset the buffer so it's reactivated
      * with a clean slate, thusly:
@@ -86,14 +87,14 @@ void vjPerfDataBuffer::deactivate() {
     read_begin = 0;
     write_pos = 1;
     lost = 0;
-    vjDEBUG(vjDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
-	" deactivated.\n" << vjDEBUG_FLUSH;
+    vprDEBUG(vprDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
+	" deactivated.\n" << vprDEBUG_FLUSH;
 
 }
 
 
 
-bool vjPerfDataBuffer::isActive() {
+bool PerfDataBuffer::isActive() {
     return active;
 }
 
@@ -108,7 +109,7 @@ bool vjPerfDataBuffer::isActive() {
 //+       that calls set. e.g. 1 = point right before
 //+       entering some big computation, and 2 = point
 //+       right after.
-void vjPerfDataBuffer::set(int _phase) {
+void PerfDataBuffer::set(int _phase) {
     int tw;
 
     if (!active)
@@ -120,8 +121,8 @@ void vjPerfDataBuffer::set(int _phase) {
 	    lost_lock.release();
 	}
 	else
-	    vjDEBUG(vjDBG_ALL,2) << "vjPerfDataBuffer: lock acquire "
-		       << "failed\n" << vjDEBUG_FLUSH;
+	    vprDEBUG(vprDBG_ALL,2) << "PerfDataBuffer: lock acquire "
+		       << "failed\n" << vprDEBUG_FLUSH;
 	tw = (write_pos + numbufs - 1) % numbufs;
 	buffer[tw].phase = _phase;
 	buffer[tw].ts.set();
@@ -134,7 +135,7 @@ void vjPerfDataBuffer::set(int _phase) {
 }
 
 
-void vjPerfDataBuffer::set (int _phase, vjTimeStamp& _value) {
+void PerfDataBuffer::set (int _phase, TimeStamp& _value) {
     int tw;
 
     if (!active)
@@ -171,7 +172,7 @@ void vjPerfDataBuffer::set (int _phase, vjTimeStamp& _value) {
     //+       <br>2 25
     //+       <br>3 27
     //+       <br>1 42
-void vjPerfDataBuffer::write (std::ostream& out) {
+void PerfDataBuffer::write (std::ostream& out) {
     // the only tricky part of this is that the region we
     // want to print out might wrap back around to the
     // beginning of the list.  That's what the 2nd big
@@ -224,7 +225,7 @@ void vjPerfDataBuffer::write (std::ostream& out) {
 
 
 // this probably isn't safe in a multitasking environment
-void vjPerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, float discrep) {
+void PerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, float discrep) {
     int begin = read_begin;
     int end = (write_pos - 1 + numbufs)%numbufs;
     int last = (end + numbufs-1) %numbufs;
@@ -259,7 +260,7 @@ void vjPerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, 
 	else if (begin < end) {
 	    for (i = begin+1; i < end; i++) {
 		diff = buffer[i].ts - buffer[i-1].ts;
-		if (vjMath::abs(diff - avg) > avg * discrep) {
+		if (Math::abs(diff - avg) > avg * discrep) {
 		    out << "    " << diff << " us at time "
 			<< buffer[i-1].ts << " us\n";
 		}
@@ -268,20 +269,20 @@ void vjPerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, 
 	else { /* wraparound */
 	    for (i = begin+1; i < numbufs; i++) {
 		diff = buffer[i].ts - buffer[i-1].ts;
-		if (vjMath::abs(diff - avg) > avg * discrep) {
+		if (Math::abs(diff - avg) > avg * discrep) {
 		    out << "    " << diff << " us at time "
 			<< buffer[i-1].ts << " us\n";
 
 		}
 	    }
 	    diff = buffer[0].ts - buffer[numbufs].ts;
-	    if (vjMath::abs(diff - avg) > avg * discrep) {
+	    if (Math::abs(diff - avg) > avg * discrep) {
 		out << "    " << diff << " us at time "
 		    << buffer[numbufs].ts << " us\n";
 	    }
 	    for (i = 1; i < end; i++) {
 		diff = buffer[i].ts - buffer[i-1].ts;
-		if (vjMath::abs(diff - avg) > avg * discrep) {
+		if (Math::abs(diff - avg) > avg * discrep) {
 		    out << "    " << diff << " us at time "
 			<< buffer[i-1].ts << " us\n";
 		}
@@ -298,7 +299,7 @@ void vjPerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, 
 }
 
 
-void vjPerfDataBuffer::dumpData() {
+void PerfDataBuffer::dumpData() {
 
     lost_lock.acquire();
     read_begin = 0;
@@ -307,3 +308,5 @@ void vjPerfDataBuffer::dumpData() {
     lost_lock.release();
 
 }
+
+};
