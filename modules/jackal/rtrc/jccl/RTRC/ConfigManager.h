@@ -30,16 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _JCCL_CONFIG_MANGER_H_
 #define _JCCL_CONFIG_MANGER_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Net/JackalControl.h>
+//#include <jccl/Net/JackalControl.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunk.h>
-#include <jccl/RTRC/XMLConfigCommunicator.h>
+//#include <jccl/RTRC/XMLConfigCommunicator.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 #include <jccl/Util/Debug.h>
@@ -89,7 +88,7 @@ class ConfigChunkHandler;
  *  Created: Jan-13-2000
  */
 
-class JCCL_CLASS_API ConfigManager: public JackalControl
+class JCCL_CLASS_API ConfigManager //: public JackalControl
 {
 public:
    struct PendingChunk
@@ -356,13 +355,14 @@ public:
    int attemptReconfiguration ();
    //int attemptHandlerReconfiguration (ConfigChunkHandler* h);
 
+/*
    //------------------ JackalControl Stuff --------------------------------
 
 public:
 
    virtual void addConnect (Connect *c);
    virtual void removeConnect (Connect* c);
-
+*/
 
 private:
    ConfigChunkDB           mActiveConfig;   /**< Current configuration.     */
@@ -384,7 +384,7 @@ private:
    int                     mLastPendingSize;
 
    /** Network communications object for reconfiguration control. */
-   XMLConfigCommunicator*   mConfigCommunicator;
+//   XMLConfigCommunicator*   mConfigCommunicator;
 
    std::string              mCachedLocalHostName;  /**< A cached copy of the local host name */
 protected:
@@ -394,7 +394,7 @@ protected:
 
    // needed for windows:
    ConfigManager(const ConfigManager&)
-      : JackalControl()
+//      : JackalControl()
    {;}
    void operator= (const ConfigManager&) {;}
 

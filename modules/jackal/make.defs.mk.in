@@ -129,7 +129,6 @@ endif
 JCCL_LIBRARY	            = @LIB_PREFIX@jccl
 JCCL_COMMON_LIBRARY        = @LIB_PREFIX@jccl_common
 JCCL_CONFIG_LIBRARY        = @LIB_PREFIX@jccl_config
-JCCL_NET_LIBRARY           = @LIB_PREFIX@jccl_net
 JCCL_PERFMONITOR_LIBRARY   = @LIB_PREFIX@jccl_perfmonitor
 JCCL_RTRC_LIBRARY          = @LIB_PREFIX@jccl_rtrc
 

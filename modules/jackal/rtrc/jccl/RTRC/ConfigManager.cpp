@@ -31,13 +31,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <jccl/jcclConfig.h>
+
+#include <vpr/IO/Socket/InetAddr.h>
+
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/RTRC/DependencyManager.h>
 #include <jccl/RTRC/ConfigChunkHandler.h>
+/*
 #include <jccl/Net/JackalServer.h>
 #include <jccl/Net/Connect.h>
+*/
 #include <jccl/Util/Debug.h>
 
 
@@ -52,7 +57,7 @@ ConfigManager::ConfigManager()
 {
    mPendingCheckCount = 0;
    mLastPendingSize = 0;
-   mConfigCommunicator = new XMLConfigCommunicator(this);
+//   mConfigCommunicator = new XMLConfigCommunicator(this);
 }
 
 ConfigManager::~ConfigManager()
@@ -469,10 +474,12 @@ int ConfigManager::attemptReconfiguration()
       unlockPending();
    }
 
+/*
    if ( chunks_processed > 0 )
    {
       mConfigCommunicator->configChanged();
    }
+*/
 
    return chunks_processed;
 }
@@ -482,7 +489,7 @@ enum PendItemResult
    SUCCESS, FAILED, NEED_DEPS
 };
 
-
+/*
 //------------------ JackalControl Stuff --------------------------------
 
 void ConfigManager::addConnect(Connect *c)
@@ -496,5 +503,6 @@ void ConfigManager::removeConnect(Connect* c)
 {
    removeActive(c->getConfiguration()->getName());
 }
+*/
 
 } // namespace jccl

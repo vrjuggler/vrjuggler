@@ -566,10 +566,6 @@ AC_OUTPUT(jccl-config
           editors/build.xml
           editors/Makefile
           editors/Makefile.inc
-          net/Makefile
-          net/Makefile.inc
-          net/jccl/Makefile
-          net/jccl/Net/Makefile
           rtrc/Makefile
           rtrc/Makefile.inc
           rtrc/jccl/Makefile
