@@ -48,13 +48,15 @@ namespace vpr {
 };
 #endif
 
-#ifdef HAVE_HASH_MAP_H
-#    include <hash_map.h>
+#if defined(HAVE_HASH_MAP)
+#   include <hash_map>
+#elif defined HAVE_HASH_MAP_H
+#   include <hash_map.h>
 #endif
 
 namespace std {
 
-#ifdef HAVE_HASH_MAP_H
+#if defined(HAVE_HASH_MAP) || defined(HAVE_HASH_MAP_H)
 /// Nice little helper class for hashing a <code>vpr::InetAddr</code>
 template<>
 struct hash<vpr::InetAddr> {

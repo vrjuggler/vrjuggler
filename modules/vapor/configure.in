@@ -445,7 +445,7 @@ AC_CHECK_HEADERS(bstring.h fcntl.h limits.h signal.h strings.h sys/file.h \
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
-AC_CHECK_HEADERS(hash_map.h)
+AC_CHECK_HEADERS(hash_map hash_map.h)
 DPP_LANG_RESTORE
 
 # -----------------------------------------------------------------------------
