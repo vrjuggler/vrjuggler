@@ -43,7 +43,6 @@
 #include <jccl/Config/ConfigTokens.h>
 #include <vpr/System.h>
 
-#include <jccl/JackalServer/XMLConfigCommunicator.h>
 
 namespace jccl {
 
@@ -60,9 +59,6 @@ Connect::Connect(Socket* s, const std::string& _name,
     read_connect_thread = NULL;
     write_connect_thread = NULL;
     read_die = write_die = false;
-
-//      // populate communicators vector here.
-//      communicators.push_back (new XMLConfigCommunicator());
 
     outstream = sock->getOutputStream();
     instream = sock->getInputStream();
