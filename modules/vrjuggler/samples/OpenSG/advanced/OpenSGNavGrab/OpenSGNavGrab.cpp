@@ -480,22 +480,6 @@ void OpenSGNavGrab::updateGrabbing(const gmtl::Matrix44f& wandMatrix)
    // by mGrabbedObj.
    if ( mGrabbedObj != NULL )
    {
-/*
-      osg::Matrix model_pos;
-      model_pos.setTranslate(wand_point);
-
-      // Set up a single-value field container to hold the new matrix.
-      osg::SFMatrix xform_field;
-      xform_field.setValue(model_pos);
-
-      // Update the node core for xform_core to use the new matrix in
-      // the single-value field container xform_field.
-      osg::beginEditCP(mGrabbedObj->xformNode->getCore(),
-                       osg::Transform::MatrixFieldMask);
-         mGrabbedObj->xformNode->getCore()->getField("matrix")->setAbstrValue(xform_field);
-      osg::endEditCP(mGrabbedObj->xformNode->getCore(),
-                     osg::Transform::MatrixFieldMask);
-*/
       osg::beginEditCP(mGrabbedObj->xformCore, osg::Transform::MatrixFieldMask);
          mGrabbedObj->xformCore->getMatrix().setTranslate(wand_point);
       osg::endEditCP(mGrabbedObj->xformCore, osg::Transform::MatrixFieldMask);
