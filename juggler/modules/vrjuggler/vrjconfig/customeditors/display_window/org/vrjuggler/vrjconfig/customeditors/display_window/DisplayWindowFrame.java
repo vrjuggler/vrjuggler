@@ -453,7 +453,7 @@ public class DisplayWindowFrame
       DisplayWindowStartDialog dlg =
          new DisplayWindowStartDialog(mElement, mDesktopSize);
       positionDialog(dlg, (Container) SwingUtilities.getRoot(this));
-      dlg.show();
+      dlg.setVisible(true);
 
       if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
       {
@@ -520,7 +520,7 @@ public class DisplayWindowFrame
          SurfaceViewportCreateDialog dlg =
             new SurfaceViewportCreateDialog(mContext, mSelectedViewport);
          positionDialog(dlg, owner);
-         dlg.show();
+         dlg.setVisible(true);
 
          status = dlg.getStatus();
          if ( status == DisplayWindowStartDialog.OK_OPTION )
@@ -578,7 +578,7 @@ public class DisplayWindowFrame
          SimulatorViewportCreateDialog dlg =
             new SimulatorViewportCreateDialog(mContext, mSelectedViewport);
          positionDialog(dlg, owner);
-         dlg.show();
+         dlg.setVisible(true);
 
          status = dlg.getStatus();
          if ( status == DisplayWindowStartDialog.OK_OPTION )

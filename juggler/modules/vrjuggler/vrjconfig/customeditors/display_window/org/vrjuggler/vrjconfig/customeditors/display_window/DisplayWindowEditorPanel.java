@@ -57,7 +57,7 @@ public class DisplayWindowEditorPanel
       JFrame frame = new JFrame();
       frame.getContentPane().add(new DisplayWindowEditorPanel());
       frame.pack();
-      frame.show();
+      frame.setVisible(true);
    }
 
    public DisplayWindowEditorPanel()
@@ -406,7 +406,7 @@ public class DisplayWindowEditorPanel
       DisplayWindowStartDialog dlg =
          new DisplayWindowStartDialog(mCurrentResolution);
       positionDialog(dlg, owner);
-      dlg.show();
+      dlg.setVisible(true);
 
       if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
       {
@@ -512,7 +512,7 @@ public class DisplayWindowEditorPanel
       Container owner = getOwner();
       SurfaceViewportCreateDialog dlg = new SurfaceViewportCreateDialog();
       positionDialog(dlg, owner);
-      dlg.show();
+      dlg.setVisible(true);
 
       if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
       {
@@ -576,7 +576,7 @@ public class DisplayWindowEditorPanel
       Container owner = getOwner();
       SimulatorViewportCreateDialog dlg = new SimulatorViewportCreateDialog();
       positionDialog(dlg, owner);
-      dlg.show();
+      dlg.setVisible(true);
 
       if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
       {
