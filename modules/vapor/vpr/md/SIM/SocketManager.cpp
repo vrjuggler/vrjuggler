@@ -62,44 +62,6 @@ namespace vpr
 
 namespace sim
 {
-
-#if 0
-   void SocketManager::step (vpr::Uint32 step_size)
-   {
-      if ( step_size == 0 )
-      {
-         step_size = 1;
-      }
-
-      mSimulatorTimeMutex.acquire();
-      {
-         mSimulatorTime += vpr::Interval(step_size, vpr::Interval::Usec);
-      }
-      mSimulatorTimeMutex.release();
-
-      mBindListSockMutex.acquire();
-      {
-         std::map<const vpr::SocketImplSIM*, vpr::InetAddrSIM>::iterator i;
-         vpr::SocketImplSIM* sock;
-
-         // Loop over all the registered sockets and handle any pending
-         // messages they have that may be delivered.
-         for ( i = mBindListSock.begin(); i != mBindListSock.end(); i++ )
-         {
-            sock = const_cast<vpr::SocketImplSIM*>((*i).first);
-
-/*
-            if ( sock->hasReadyPendingMessage(mSimulatorTime) )
-            {
-               sock->dequeuePendingMessage(mSimulatorTime);
-            }
-*/
-         }
-      }
-      mBindListSockMutex.release();
-   }
-#endif
-
    bool SocketManager::hasActiveSockets ()
    {
       bool status;
