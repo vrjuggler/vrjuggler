@@ -161,7 +161,8 @@ public class InputWindowFrame
    void windowPropsEditSelected(ActionEvent e)
    {
       Container parent =
-         (Container) SwingUtilities.getAncestorOfClass(Container.class, this);
+         (Container) SwingUtilities.getAncestorOfClass(Container.class,
+                                                       getDesktopPane());
       InputWindowStartDialog dlg =
          new InputWindowStartDialog(parent, mContext, mElement, mDesktopSize);
 

@@ -308,7 +308,8 @@ public class DisplayWindowFrame
    void windowPropsEditSelected(ActionEvent e)
    {
       Container parent =
-         (Container) SwingUtilities.getAncestorOfClass(Container.class, this);
+         (Container) SwingUtilities.getAncestorOfClass(Container.class,
+                                                       getDesktopPane());
       DisplayWindowStartDialog dlg =
          new DisplayWindowStartDialog(parent, mContext, mElement,
                                       mDesktopSize);
@@ -389,7 +390,7 @@ public class DisplayWindowFrame
       {
          Container parent =
             (Container) SwingUtilities.getAncestorOfClass(Container.class,
-                                                          this);
+                                                          getDesktopPane());
          SurfaceViewportCreateDialog dlg =
             new SurfaceViewportCreateDialog(parent, mContext, mSelectedViewport);
 
@@ -454,7 +455,7 @@ public class DisplayWindowFrame
       {
          Container parent =
             (Container) SwingUtilities.getAncestorOfClass(Container.class,
-                                                          this);
+                                                          getDesktopPane());
          SimulatorViewportCreateDialog dlg =
             new SimulatorViewportCreateDialog(parent, mContext,
                                               mSelectedViewport);
