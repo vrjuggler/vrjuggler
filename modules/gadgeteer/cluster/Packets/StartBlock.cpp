@@ -30,26 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_RIM_START_BLOCK_H
-#define _GADGET_RIM_START_BLOCK_H
-
 #include <gadget/gadgetConfig.h>
 
-#include <vpr/vprTypes.h>
-#include <vpr/IO/BufferObjectReader.h>
-
-#include <gadget/Util/Debug.h>
-#include <cluster/Packets/Header.h>                                                       
-#include <cluster/Packets/Packet.h>
+#include <cluster/Packets/PacketFactory.h>
+#include <cluster/Packets/StartBlock.h>
 
 namespace cluster
 {
-
-class GADGET_CLASS_API StartBlock : public Packet
-{
-public:
-   StartBlock()
-   {;}
+CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(StartBlock);
 
    /**
     * Create a StartBlock packet to signal that the local node is ready to start.
@@ -57,34 +45,66 @@ public:
     * @param plugin_guid -GUID of the ClusterPlugin that should handle this packet.
     * @param frame_number -The current number of frames that have been drawn.
     */
-   StartBlock(const vpr::GUID& plugin_id, const vpr::Uint32& frame_number);
+   StartBlock::StartBlock(const vpr::GUID& plugin_id, const vpr::Uint32& frame_number)
+   {
+      // Set the local member variables using the given values.
+      mPluginId = plugin_id;
+   
+      // Create a Header for this packet with the correect type and size.
+      mHeader = new Header(Header::RIM_PACKET,
+                                       Header::RIM_START_BLOCK,
+                                       Header::RIM_PACKET_HEAD_SIZE
+                                       +16/*Plugin GUID*/
+                                       ,frame_number);
+      // Serialize the given data.
+      serialize();
+   }
+
    
    /**
     * Serializes member variables into a data stream.
     */
-   void serialize();
-   
+   void StartBlock::serialize()
+   {
+      // Clear the data stream.
+      mPacketWriter->getData()->clear();
+      mPacketWriter->setCurPos(0);
+
+      // Serialize the header.
+      mHeader->serializeHeader();
+      
+      // Serialize the Plugin ID
+      mPluginId.writeObject(mPacketWriter);
+   }
+
    /**
     * Parses the data stream into the local member variables.
     */
-   virtual void parse(vpr::BufferObjectReader* reader);
+   void StartBlock::parse(vpr::BufferObjectReader* reader)
+   {
+      // De-Serialize the Plugin ID
+      mPluginId.readObject(reader);
+   }
    
    /**
     * Print the data to the screen in a readable form.
     */
-   virtual void printData(int debug_level);
-   
-   /**
-    * Return the type of this packet.
-    */
-   static vpr::Uint16 getPacketFactoryType()
+   void StartBlock::printData(int debug_level)
    {
-       return(Header::RIM_START_BLOCK);
-   }
-};
-}
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+         <<  clrOutBOLD(clrYELLOW,"====== Start BLOCK ======\n") << vprDEBUG_FLUSH;
+      
+      Packet::printData(debug_level);
+      
+      vprDEBUG(gadgetDBG_RIM,debug_level) 
+         << clrOutBOLD(clrYELLOW, "Plugin ID:    ") << mPluginId.toString()
+         << std::endl << vprDEBUG_FLUSH;
 
-#endif
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+         <<  clrOutBOLD(clrYELLOW,"=======================\n") << vprDEBUG_FLUSH;
+         
+   }
+} // end namespace cluster
 
 
 
