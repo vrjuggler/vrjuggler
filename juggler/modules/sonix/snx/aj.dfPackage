@@ -7,66 +7,51 @@ package id2iypwcngob3p6cni5b8ia;
 */
 class diagram {
 /**
-@__ref <oiref:cpp#Class#IAudioJuggler:oiref><oihard>
+@__ref <oiref:cpp#Class#snx::StubSoundImplementation:oiref><oihard>
 @__modelType reference 
 */
 class reference {
 }/**
-@__ref <oiref:cpp#Class#AudioJuggler:oiref><oihard>
-@__modelType reference 
+@__ref <oiref:design#Class#ids2rlctocl3lictocmfni.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#snx.plugins:oiref> 
 */
 class reference1 {
 }/**
-@__ref <oiref:cpp#Class#aj::StubSoundImplementation:oiref><oihard>
+@__ref <oiref:cpp#Class#snx::SoundFactoryReg:oiref><oihard>
 @__modelType reference 
 */
 class reference2 {
 }/**
-@__ref <oiref:cpp#Class#aj::SoundAPIInfo:oiref><oihard>
+@__ref <oiref:cpp#Class#Isonix:oiref><oihard>
 @__modelType reference 
 */
 class reference3 {
 }/**
-@__ref <oiref:cpp#Class#aj::Matrix44:oiref><oihard>
+@__ref <oiref:cpp#Class#snx::SoundInfo:oiref><oihard>
 @__modelType reference 
 */
 class reference4 {
 }/**
-@__ref <oiref:cpp#Class#aj::SoundFactory:oiref><oihard>
+@__ref <oiref:cpp#Class#snx::SoundAPIInfo:oiref><oihard>
 @__modelType reference 
 */
 class reference5 {
 }/**
-@__ref <oiref:design#Class#idoibpco7g9jbhco7gbk64.diagram:oiref><oihard>
-@__modelType reference
-@__fqn <oiref:#Package#aj.plugins:oiref> 
+@__ref <oiref:cpp#Class#sonix:oiref><oihard>
+@__modelType reference 
 */
 class reference6 {
 }/**
-@__ref <oiref:cpp#Class#aj::SoundInfo:oiref><oihard>
+@__ref <oiref:cpp#Class#snx::SoundImplementation:oiref><oihard>
 @__modelType reference 
 */
 class reference7 {
 }/**
-@__ref <oiref:cpp#Class#aj::Vec3:oiref><oihard>
+@__ref <oiref:cpp#Class#snx::SoundFactory:oiref><oihard>
 @__modelType reference 
 */
 class reference8 {
-}/**
-@__ref <oiref:cpp#Class#aj::Singleton:oiref><oihard>
-@__modelType reference 
-*/
-class reference9 {
-}/**
-@__ref <oiref:cpp#Class#aj::SoundImplementation:oiref><oihard>
-@__modelType reference 
-*/
-class reference10 {
-}/**
-@__ref <oiref:cpp#Class#aj::SoundFactoryReg:oiref><oihard>
-@__modelType reference 
-*/
-class reference11 {
 }}/**
 @__tags
 @shapeType ClassDiagram 
@@ -77,24 +62,26 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:cpp#Class#aj::SoundInfo:oiref>=366,565,177,184,1:oigroup>
+@__positions <oigroup:MemberLink#<oiref:cpp#Member#snx::SoundImplementation#mSoundAPIInfo:oiref>=450,562,207,562:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajSoundFactory#lnkSoundImplementation:oiref>=1080,850,529,502:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajOpenALSoundImplementation#lnkSoundInfo:oiref>=889,576,889,323:oigroup>
 <oigroup:<oiref:cpp#Member#ajOpenALSoundImplementation#configure#(#const std::string&#const ajSoundInfo&#)#:oiref>=759,873,0,0,1:oigroup>
 <oigroup:<oiref:cpp#Member#ajOpenALSoundImplementation#$$constructor$$#(#int#)#:oiref>=750,533,0,0,1:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#AudioJuggler#mImplementation:oiref>=607,284,14,15,0:oigroup>
 <oigroup:<oiref:cpp#Member#ajStubSoundImplementation#configure#(#const std::string&#const ajSoundInfo&#)#:oiref>=300,803,0,0,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#sonix#SoundAPIInfo:oiref>=395,434,126,520:oigroup>
 <oigroup:<oiref:cpp#Member#ajOpenALSoundImplementation#step#(#const float&#)#:oiref>=777,947,0,0,1:oigroup>
 <oigroup:<oiref:cpp#Member#ajOpenALSoundImplementation#configure#(#const ajSoundAPIInfo&#)#:oiref>=777,889,0,0,1:oigroup>
 <oigroup:<oiref:cpp#Member#ajSoundImplementation#mSoundAPIInfo:oiref>=550,39,0,0,1:oigroup>
 <oigroup:<oiref:cpp#Class#vjSoundManager:oiref>=1185,540,104,59,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::StubSoundImplementation#lnkSoundAPIInfo:oiref>=110,760,110,646:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#aj::StubSoundImplementation#lnkSoundInfo:oiref>=1075,363,493,565:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajStubSoundImplementation#lnkSoundInfo:oiref>=371,584,795,438,795,325,795,323:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#AudioJuggler#lnkSoundInfo:oiref>=444,360,444,565:oigroup>
 <oigroup:<oiref:cpp#Member#ajAudioWorksSoundImplementation#configure#(#const std::string&#const ajSoundInfo&#)#:oiref>=506,963,0,0,1:oigroup>
 <oigroup:<oiref:cpp#Extends#aj::StubSoundImplementation#aj::SoundImplementation:oiref>=921,304,844,304:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajStubSoundImplementation#lnkajSoundAPIInfo:oiref>=261,584,788,108:oigroup>
-<oigroup:<oiref:cpp#Class#AudioJuggler:oiref>=294,12,203,348,1:oigroup>
+<oigroup:<oiref:cpp#Class#sonix:oiref>=370,20,200,414,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#Isonix#SoundAPIInfo:oiref>=45,409,45,520:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#AudioJuggler#lnkSoundFactory:oiref>=497,184,581,184:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#aj::StubSoundImplementation#lnkSoundAPIInfo:oiref>=1011,363,207,492:oigroup>
 <oigroup:<oiref:cpp#Member#ajSoundImplementation#configure#(#const std::string&#const ajSoundInfo&#)#:oiref>=559,341,0,0,1:oigroup>
@@ -103,21 +90,21 @@ class __options {
 <oigroup:MemberLink#<oiref:cpp#Member#IAudioJuggler#lnkSoundInfo:oiref>=174,352,405,565:oigroup>
 <oigroup:<oiref:cpp#Member#AudioJuggler#configure#(#const std::string&#const ajSoundInfo&#)#:oiref>=1093,537,0,0,1:oigroup>
 <oigroup:<oiref:cpp#Extends#AudioJuggler#IAudioJuggler:oiref>=294,183,243,183:oigroup>
-<oigroup:<oiref:cpp#Class#aj::Singleton:oiref>=579,9,203,98,1:oigroup>
-<oigroup:<oiref:cpp#Class#aj::Vec3:oiref>=645,853,203,378,1:oigroup>
-<oigroup:<oiref:cpp#Class#aj::StubSoundImplementation:oiref>=921,20,219,343,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#aj::SoundFactory#StubSoundImplementation:oiref>=784,184,921,184:oigroup>
+<oigroup:<oiref:cpp#Class#snx::StubSoundImplementation:oiref>=0,760,200,421,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#aj#lnkSoundFactory:oiref>=1123,512,1123,559:oigroup>
 <oigroup:<oiref:cpp#Member#AudioJuggler#step#(#const float&#)#:oiref>=1080,728,0,0,1:oigroup>
 <oigroup:<oiref:cpp#Member#ajAudioWorksSoundImplementation#setAmbient#(#const std::string&#bool#)#:oiref>=561,779,0,0,1:oigroup>
-<oigroup:<oiref:cpp#Class#aj::SoundImplementation:oiref>=625,246,219,558,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#AudioJuggler#SoundAPIInfo:oiref>=334,360,173,492:oigroup>
-<oigroup:<oiref:design#Class#idoibpco7g9jbhco7gbk64.diagram:oiref>=118,804,203,83,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#sonix#lnkSoundFactory:oiref>=443,434,443,1170:oigroup>
 <oigroup:<oiref:cpp#Member#ajStubSoundImplementation#step#(#const float&#)#:oiref>=322,880,0,0,1:oigroup>
 <oigroup:<oiref:cpp#Member#ajSoundImplementation#setRetriggerable#(#const std::string&#bool#)#:oiref>=543,141,0,0,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#aj::SoundImplementation#mSoundAPIInfo:oiref>=625,515,241,515:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::StubSoundImplementation#lnkSoundInfo:oiref>=200,802,230,802:oigroup>
 <oigroup:<oiref:cpp#Member#ajStubSoundImplementation#remove#(#const std::string#)#:oiref>=307,819,0,0,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#IAudioJuggler#SoundAPIInfo:oiref>=105,352,105,492:oigroup>
+<oigroup:Composite#clientCardinality#MemberLink#<oiref:cpp#Member#sonix#mImplementation:oiref>=491,434,15,16,0:oigroup>
+<oigroup:<oiref:cpp#Class#snx::SoundAPIInfo:oiref>=20,520,187,126,1:oigroup>
 <oigroup:<oiref:cpp#Member#ajAudioWorksSoundImplementation#remove#(#const std::string#)#:oiref>=509,967,0,0,1:oigroup>
 <oigroup:<oiref:cpp#Member#ajAudioWorksSoundImplementation#isStarted#(##)#:oiref>=537,928,0,0,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#vjSoundManager#lnkIAudioJuggler:oiref>=1218,540,1218,261:oigroup>
@@ -125,33 +112,41 @@ class __options {
 <oigroup:MemberLink#<oiref:cpp#Member#aj::SoundImplementation#mListenerPos:oiref>=734,804,490,848:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#AudioJuggler#lnkajSoundAPIInfo:oiref>=1135,417,883,108:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#aj#lnkSoundInfo:oiref>=1098,269,877,183:oigroup>
-<oigroup:<oiref:cpp#Class#IAudioJuggler:oiref>=24,14,219,338,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajSoundFactory#lnkajStubSoundImplementation:oiref>=1030,879,444,879:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajSoundFactory#lnkajOpenALSoundImplementation:oiref>=1030,864,902,864:oigroup>
-<oigroup:Composite#clientCardinality#MemberLink#<oiref:cpp#Member#AudioJuggler#mImplementation:oiref>=501,284,14,15,0:oigroup>
-<oigroup:<oiref:cpp#Class#aj::SoundAPIInfo:oiref>=38,492,203,94,1:oigroup>
 <oigroup:<oiref:cpp#Member#ajStubSoundImplementation#isStarted#(##)#:oiref>=306,786,0,0,1:oigroup>
+<oigroup:<oiref:design#Class#ids2rlctocl3lictocmfni.diagram:oiref>=10,1250,200,84,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#StubSoundImplementation:oiref>=380,1180,200,1171:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajSoundFactory#lnkajAudioWorksSoundImplementation:oiref>=1030,894,670,894:oigroup>
-<oigroup:<oiref:cpp#Class#aj::SoundFactoryReg:oiref>=117,682,203,103,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajAudioWorksSoundImplementation#lnkajSoundAPIInfo:oiref>=557,582,813,108:oigroup>
-<oigroup:<oiref:cpp#Class#aj::Matrix44:oiref>=389,848,203,468,1:oigroup>
+<oigroup:<oiref:cpp#Class#snx::SoundFactory:oiref>=380,1170,200,126,1:oigroup>
 <oigroup:<oiref:cpp#Member#ajSoundImplementation#remove#(#const std::string#)#:oiref>=562,355,0,0,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#AudioJuggler#mImplementation:oiref>=497,303,625,303:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajOpenALSoundImplementation#lnkajSoundAPIInfo:oiref>=826,576,826,108:oigroup>
+<oigroup:<oiref:cpp#Extends#sonix#Isonix:oiref>=370,214,172,214:oigroup>
+<oigroup:<oiref:cpp#Class#snx::SoundInfo:oiref>=230,590,200,254,1:oigroup>
 <oigroup:<oiref:cpp#Extends#ajOpenALSoundImplementation#ajSoundImplementation:oiref>=754,576,555,502:oigroup>
+<oigroup:<oiref:cpp#Class#snx::SoundFactoryReg:oiref>=220,1200,153,142,1:oigroup>
 <oigroup:<oiref:cpp#Member#ajOpenALSoundImplementation#isStarted#(##)#:oiref>=776,890,0,0,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#sonix#lnkSoundInfo:oiref>=412,434,412,590:oigroup>
 <oigroup:<oiref:cpp#Member#AudioJuggler#remove#(#const std::string#)#:oiref>=1091,538,0,0,1:oigroup>
 <oigroup:<oiref:cpp#Extends#ajStubSoundImplementation#ajSoundImplementation:oiref>=316,584,472,502:oigroup>
-<oigroup:<oiref:cpp#Class#aj::SoundFactory:oiref>=581,145,203,78,1:oigroup>
+<oigroup:<oiref:cpp#Class#snx::SoundImplementation:oiref>=450,490,200,638,1:oigroup>
+<oigroup:<oiref:cpp#Class#Isonix:oiref>=20,20,152,389,1:oigroup>
 <oigroup:<oiref:cpp#Extends#aj::SoundFactory#aj::Singleton:oiref>=681,145,681,107:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#aj#mImplementation:oiref>=1031,315,638,315:oigroup>
 <oigroup:<oiref:cpp#Extends#ajAudioWorksSoundImplementation#ajSoundImplementation:oiref>=504,582,504,502:oigroup>
 <oigroup:<oiref:cpp#Extends#AudioJuggler#aj::Singleton:oiref>=497,35,579,35:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#aj::SoundFactory#lnkSoundImplementation:oiref>=704,223,704,246:oigroup>
+<oigroup:<oiref:cpp#Extends#snx::StubSoundImplementation#snx::SoundImplementation:oiref>=200,944,450,944:oigroup>
 <oigroup:<oiref:cpp#Member#ajOpenALSoundImplementation#remove#(#const std::string#)#:oiref>=756,892,0,0,1:oigroup>
 <oigroup:<oiref:cpp#Extends#aj#IAudioJuggler:oiref>=1166,269,1166,246:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#lnkSoundImplementation:oiref>=515,1170,515,1128:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajSoundImplementation#lnkSoundInfo_not_used_see_one_above:oiref>=638,70,759,70:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajSoundImplementation#mSoundAPIInfo:oiref>=659,61,738,61:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#Isonix#lnkSoundInfo:oiref>=108,409,321,590:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#sonix#mImplementation:oiref>=510,434,510,490:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#sonix#mImplementation:oiref>=491,470,15,16,0:oigroup>
 */
 class __positions {
 }
