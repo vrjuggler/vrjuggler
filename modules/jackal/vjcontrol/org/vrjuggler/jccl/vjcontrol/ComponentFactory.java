@@ -41,7 +41,7 @@ import VjConfig.*;
 import VjControl.VjComponent;
 import VjControl.VjClassLoader;
 
-/** Factory object to create VjComponents and manage classloaders for jars.
+/** Factory object to create VjComponents and manage loading of .jars.
  *  Extensions to VjControl can be added in the form of external .jar
  *  archives, which can be loaded via the ComponentFactory.  Each
  *  extension .jar should contain at least one class that implements
@@ -51,8 +51,8 @@ import VjControl.VjClassLoader;
  *  The .jar archive must have a contents.config file in its base directory.
  *  contents.config is a standard VR Juggler-style config file.  It should
  *  contain a VjComponent ConfigChunk for every class that implements
- *  VjComponent.  It should also ConfigChunks that define instances of those
- *  classes.  For example:
+ *  VjComponent.  It should also contain ConfigChunks that define instances 
+ *  of those classes.  For example:
  *  <pre>
  *              vjc_genericinstance
  *                 Name "Connection"
@@ -62,7 +62,10 @@ import VjControl.VjClassLoader;
  *                 end
  *  </pre>
  *  The vjc_genericinstance and vjc_component ConfigChunks are defined in
- *  juggler/GUI/VjFiles/vjcontrol.dsc.  Once all the dependencies listed
+ *  juggler/GUI/VjFiles/vjcontrol.dsc.  Additional component chunkdescs can
+ *  be included in a contents.desc file in the root or the extension .jar.
+ *  <p>
+ *   Once all the dependencies listed
  *  in the chunk are satisfied, the chunk is passed to the component listed
  *  as ParentComp, which is responsible for deciding what to do with it.
  *  The obvious choice is to immediately instantiate a copy of ClassName
@@ -81,13 +84,12 @@ import VjControl.VjClassLoader;
  *  any ConfigChunks in contents.config that aren't vjc_component as
  *  requests to instantiate a new instance of a component.
  *  <p>
- *  <b>NOTE:</b> The current implementation creates a new ClassLoader
- *  instance for each .jar file/url.  An class defined in a .jar file
- *  can directly instantiate any class in its .jar file or in vjcontrol.jar.
- *  In order to instantiate a component defined elsewhere, it must use
- *  ComponentFactory.createComponent.  A class defined in vjcontrol.jar
- *  must use createComponent to instantiate classes defined in <i>any</i>
- *  extension .jar file.
+ *  ComponentFactory uses a single ClassLoader to load all extension .jars.
+ *  A VjComponent (or any other class in an extension .jar) can directly
+ *  instantiate any other class in any other extension .jar.  In contrast,
+ *  classes defined in the base VjControl .jar file (loaded at application
+ *  start) cannot directly instantiate any class in an extension .jar and
+ *  would need to use ComponentFactory's createComponentMethod instead.
  *  <p>
  *  Objects whose classes were defined in separate .jar files should still
  *  be able to access each other (e.g. by getting references via 
@@ -96,6 +98,7 @@ import VjControl.VjClassLoader;
  *
  *  @author Christopher Just
  *  @version $Revision$
+ *  @see VjControl.VjComponent
  */
 public class ComponentFactory {
 
@@ -321,6 +324,7 @@ public class ComponentFactory {
     /** Adds a listener for ComponentFactoryEvents.
      *  The listener will receive an event notification whenever a new
      *  VjComponent class is registered.
+     *  @deprecated
      */
     public void addComponentFactoryListener (ComponentFactoryListener l) {
 	synchronized (component_factory_targets) {
@@ -330,7 +334,9 @@ public class ComponentFactory {
 
 
 
-    /** Removes a listener for ComponentFactoryEvents. */
+    /** Removes a listener for ComponentFactoryEvents.
+     *  @deprecated
+     */
     public void removeComponentFactoryListener (ComponentFactoryListener l) {
 	synchronized (component_factory_targets) {
 	    component_factory_targets.removeElement (l);
