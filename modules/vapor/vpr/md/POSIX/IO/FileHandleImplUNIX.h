@@ -77,7 +77,7 @@ public:
     *
     * @post All member variables are initialized except mName.
     */
-   FileHandleImplUNIX (void)
+   FileHandleImplUNIX()
       : mOpen(false), mOpenBlocking(true), mBlocking(true), mFdesc(-1),
         mOpen_mode(O_RDWR)
    {
@@ -100,7 +100,7 @@ public:
     *
     * @post If the file handle is still open, it is closed.
     */
-   ~FileHandleImplUNIX(void);
+   ~FileHandleImplUNIX();
 
    // ========================================================================
    // vpr::BlockIO basics.
@@ -113,7 +113,7 @@ public:
     *
     * @return An object containing the name of this file.
     */
-   const std::string& getName (void)
+   const std::string& getName()
    {
       return mName;
    }
@@ -126,7 +126,7 @@ public:
     *       is opened in blocking mode.  If the socket is already open, this
     *       has no effect.
     */
-   void setOpenBlocking (void)
+   void setOpenBlocking()
    {
       mOpenBlocking = true;
    }
@@ -140,7 +140,7 @@ public:
     *       is opened in non-blocking mode.  If the socket is already open,
     *       this has no effect.
     */
-   void setOpenNonBlocking (void)
+   void setOpenNonBlocking()
    {
       mOpenBlocking = false;
    }
@@ -157,7 +157,7 @@ public:
     *         opened successfully.  vpr::ReturnStatus::Fail is returned
     *         otherwise.
     */
-   vpr::ReturnStatus open(void);
+   vpr::ReturnStatus open();
 
    /**
     * Closes the file handle.
@@ -172,7 +172,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the file handle could not
     *         be closed for some reason.
     */
-   vpr::ReturnStatus close(void);
+   vpr::ReturnStatus close();
 
   /**
     * Gets the open state of this file handle.
@@ -183,7 +183,7 @@ public:
     *
     * @return true is returned if this file handle is open; false otherwise.
     */
-   bool isOpen (void)
+   bool isOpen()
    {
       return mOpen;
    }
@@ -197,7 +197,7 @@ public:
     * @return vpr::ReturnStatus;:Succeed is returned if the blocking mode was
     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   ReturnStatus enableBlocking(void);
+   ReturnStatus enableBlocking();
 
    /**
     * Reconfigures the file handle so that it is in non-blocking mode.
@@ -208,12 +208,12 @@ public:
     * @return vpr::ReturnStatus;:Succeed is returned if the blocking mode was
     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   ReturnStatus enableNonBlocking(void);
+   ReturnStatus enableNonBlocking();
 
    /**
     * Returns the contained handle.
     */
-   vpr::IOSys::Handle getHandle (void)
+   vpr::IOSys::Handle getHandle()
    {
 #ifdef VPR_USE_NSPR
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
@@ -233,7 +233,7 @@ public:
     * @return true is returned if the file handle is in blocking mode.
     *         Otherwise, false is returned.
     */
-   bool getBlocking (void) const
+   bool getBlocking() const
    {
       return mBlocking;
    }
@@ -247,7 +247,7 @@ public:
     * @return true is returned if the file handle is in non-blocking mode.
     *         Otherwise, false is returned.
     */
-   bool getNonBlocking (void) const
+   bool getNonBlocking() const
    {
       return ! mBlocking;
    }
@@ -264,7 +264,7 @@ public:
     *       it is opened in read-only mode.  If the device is already open,
     *       this has no effect.
     */
-   void setOpenReadOnly (void)
+   void setOpenReadOnly()
    {
       mOpen_mode = O_RDONLY;
    }
@@ -277,7 +277,7 @@ public:
     *       is opened in write-only mode.  If the device is already open,
     *       this has no effect.
     */
-   void setOpenWriteOnly (void)
+   void setOpenWriteOnly()
    {
       mOpen_mode = O_WRONLY;
    }
@@ -290,7 +290,7 @@ public:
     *       is opened in read/write mode.  If the device is already open,
     *       this has no effect.
     */
-   void setOpenReadWrite (void)
+   void setOpenReadWrite()
    {
       mOpen_mode = O_RDWR;
    }
@@ -306,7 +306,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the write mode could not
     *         be changed for some reason.
     */
-   vpr::ReturnStatus enableAppend(void);
+   vpr::ReturnStatus enableAppend();
 
    /**
     * Reconfigures the file handle so that it is not in append mode.
@@ -319,7 +319,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the write mode could not
     *         be changed for some reason.
     */
-   vpr::ReturnStatus disableAppend(void);
+   vpr::ReturnStatus disableAppend();
 
    /**
     * Reconfigures the file handle so that writes are synchronous.
@@ -332,7 +332,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the write mode could not
     *         be changed for some reason.
     */
-   vpr::ReturnStatus enableSynchronousWrite(void);
+   vpr::ReturnStatus enableSynchronousWrite();
 
    /**
     * Reconfigure the file handle so that writes are asynchronous.
@@ -345,7 +345,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the write mode could not
     *         be changed for some reason.
     */
-   vpr::ReturnStatus enableAsynchronousWrite(void);
+   vpr::ReturnStatus enableAsynchronousWrite();
 
    /**
     * Tests if the I/O device is read-only.
@@ -357,7 +357,7 @@ public:
     * @return true is returned if the device is in read-only mode; false
     *         otherwise.
     */
-   bool isReadOnly (void)
+   bool isReadOnly()
    {
       return (mOpen_mode == O_RDONLY);
    }
@@ -372,7 +372,7 @@ public:
     * @return true is returned if the device is in write-only mode; false
     *         otherwise.
     */
-   bool isWriteOnly (void)
+   bool isWriteOnly()
    {
       return (mOpen_mode == O_WRONLY);
    }
@@ -387,7 +387,7 @@ public:
     * @return true is returned if the device is in read/write mode; false
     *         otherwise.
     */
-   bool isReadWrite (void)
+   bool isReadWrite()
    {
       return (mOpen_mode == O_RDWR);
    }
@@ -398,7 +398,7 @@ public:
     * @pre The file descriptor is valid.
     * @post The buffer size is returned via the by-reference parameter.
     */
-   vpr::ReturnStatus getReadBufferSize (vpr::Int32& buffer)
+   vpr::ReturnStatus getReadBufferSize(vpr::Int32& buffer)
    {
       vpr::ReturnStatus status;
 
@@ -437,8 +437,8 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
    vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
-                      vpr::Uint32& bytes_read,
-                      const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                            vpr::Uint32& bytes_read,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the readn template method.  This reads exactly the
@@ -467,7 +467,7 @@ public:
     */
    vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
                              vpr::Uint32& bytes_read,
-                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the write template method.  This writes the buffer to
@@ -507,7 +507,7 @@ public:
     *         read.  If there is nothing to read or an error occurred, 0 is
     *         returned.
     */
-   vpr::Uint32 availableBytes (void)
+   vpr::Uint32 availableBytes()
    {
       int result;
 
@@ -536,7 +536,7 @@ protected:
     *         the file handle.<br>
     *         -1 is returned if the current flags could not be requested.
     */
-   int getFlags(void);
+   int getFlags();
 
    /**
     * Overwrites the current file handle flags with the given value.

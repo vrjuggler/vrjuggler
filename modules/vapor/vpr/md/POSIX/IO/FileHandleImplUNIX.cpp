@@ -68,7 +68,7 @@ namespace vpr
 // Constructor.  This initializes the member variables to reasonable defaults
 // and stores the given file name for later use.
 // ----------------------------------------------------------------------------
-FileHandleImplUNIX::FileHandleImplUNIX (const std::string& file_name)
+FileHandleImplUNIX::FileHandleImplUNIX(const std::string& file_name)
    : mName(file_name), mOpen(false), mOpenBlocking(true), mBlocking(true),
      mFdesc(-1), mOpen_mode(O_RDWR)
 {
@@ -78,7 +78,7 @@ FileHandleImplUNIX::FileHandleImplUNIX (const std::string& file_name)
 // ----------------------------------------------------------------------------
 // Destructor.  If the file handle is in an open state, it is closed.
 // ----------------------------------------------------------------------------
-FileHandleImplUNIX::~FileHandleImplUNIX ()
+FileHandleImplUNIX::~FileHandleImplUNIX()
 {
    if ( mOpen )
    {
@@ -89,7 +89,7 @@ FileHandleImplUNIX::~FileHandleImplUNIX ()
 // ----------------------------------------------------------------------------
 // Open the file handle.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::open ()
+vpr::ReturnStatus FileHandleImplUNIX::open()
 {
    int open_flags;
    vpr::ReturnStatus status;
@@ -136,7 +136,7 @@ vpr::ReturnStatus FileHandleImplUNIX::open ()
 // ----------------------------------------------------------------------------
 // Close the file handle.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::close ()
+vpr::ReturnStatus FileHandleImplUNIX::close()
 {
    vpr::ReturnStatus status;
 
@@ -159,7 +159,7 @@ vpr::ReturnStatus FileHandleImplUNIX::close ()
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle so that it is in blocking mode.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::enableBlocking ()
+vpr::ReturnStatus FileHandleImplUNIX::enableBlocking()
 {
    int cur_flags, new_flags;
    vpr::ReturnStatus retval;
@@ -196,7 +196,7 @@ vpr::ReturnStatus FileHandleImplUNIX::enableBlocking ()
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle so that it is in non-blocking mode.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::enableNonBlocking ()
+vpr::ReturnStatus FileHandleImplUNIX::enableNonBlocking()
 {
    int cur_flags, new_flags;
    vpr::ReturnStatus retval;
@@ -233,7 +233,7 @@ vpr::ReturnStatus FileHandleImplUNIX::enableNonBlocking ()
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle to be in append mode.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::enableAppend ()
+vpr::ReturnStatus FileHandleImplUNIX::enableAppend()
 {
    int cur_flags, new_flags, retval;
    vpr::ReturnStatus status;
@@ -259,7 +259,7 @@ vpr::ReturnStatus FileHandleImplUNIX::enableAppend ()
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle so that it is not in append mode.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::disableAppend ()
+vpr::ReturnStatus FileHandleImplUNIX::disableAppend()
 {
    int cur_flags, new_flags, retval;
    vpr::ReturnStatus status;
@@ -285,7 +285,7 @@ vpr::ReturnStatus FileHandleImplUNIX::disableAppend ()
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle so that writes are synchronous.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::enableSynchronousWrite ()
+vpr::ReturnStatus FileHandleImplUNIX::enableSynchronousWrite()
 {
    vpr::ReturnStatus status;
 #if ! defined(_POSIX_SOURCE) && defined(O_SYNC)
@@ -318,7 +318,7 @@ vpr::ReturnStatus FileHandleImplUNIX::enableSynchronousWrite ()
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle so that writes are asynchronous.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::enableAsynchronousWrite ()
+vpr::ReturnStatus FileHandleImplUNIX::enableAsynchronousWrite()
 {
    vpr::ReturnStatus status;
 #if ! defined(_POSIX_SOURCE) && defined(O_ASYNC)
@@ -356,10 +356,10 @@ vpr::ReturnStatus FileHandleImplUNIX::enableAsynchronousWrite ()
 // Read the specified number of bytes from the file handle into the given
 // bufer.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::read_i (void* buffer,
-                                              const vpr::Uint32 length,
-                                              vpr::Uint32& bytes_read,
-                                              const vpr::Interval timeout)
+vpr::ReturnStatus FileHandleImplUNIX::read_i(void* buffer,
+                                             const vpr::Uint32 length,
+                                             vpr::Uint32& bytes_read,
+                                             const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
 
@@ -420,18 +420,20 @@ vpr::ReturnStatus FileHandleImplUNIX::read_i (void* buffer,
 // given buffer.  This is baesd on the readn() function given on pages 51-2 of
 // _Effective TCP/IP Programming_ by Jon D. Snader.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::readn_i (void* buffer,
-                                               const vpr::Uint32 length,
-                                               vpr::Uint32& bytes_read,
-                                               const vpr::Interval timeout)
+vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
+                                              const vpr::Uint32 length,
+                                              vpr::Uint32& bytes_read,
+                                              const vpr::Interval timeout)
 {
    size_t count;
    ssize_t bytes;
    vpr::ReturnStatus status;
 
    if ( vpr::Interval::NoTimeout != timeout )
+   {
       vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL) << "Timeout not supported\n"
                                               << vprDEBUG_FLUSH;
+   }
 
    count = length;
    bytes = 0;
@@ -475,10 +477,10 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i (void* buffer,
 // ----------------------------------------------------------------------------
 // Write the buffer to the file handle.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::write_i (const void* buffer,
-                                               const vpr::Uint32 length,
-                                               vpr::Uint32& bytes_written,
-                                               const vpr::Interval timeout)
+vpr::ReturnStatus FileHandleImplUNIX::write_i(const void* buffer,
+                                              const vpr::Uint32 length,
+                                              vpr::Uint32& bytes_written,
+                                              const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
 
@@ -518,7 +520,7 @@ vpr::ReturnStatus FileHandleImplUNIX::write_i (const void* buffer,
 // ----------------------------------------------------------------------------
 // Get the current file handle flags.
 // ----------------------------------------------------------------------------
-int FileHandleImplUNIX::getFlags ()
+int FileHandleImplUNIX::getFlags()
 {
    return fcntl(mFdesc, F_GETFL, 0);
 }
@@ -526,14 +528,14 @@ int FileHandleImplUNIX::getFlags ()
 // ----------------------------------------------------------------------------
 // Overwrite the current file handle flags with the given value.
 // ----------------------------------------------------------------------------
-int FileHandleImplUNIX::setFlags (const int flags)
+int FileHandleImplUNIX::setFlags(const int flags)
 {
    return fcntl(mFdesc, F_SETFL, flags);
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::isReadable (const vpr::Interval timeout)
+vpr::ReturnStatus FileHandleImplUNIX::isReadable(const vpr::Interval timeout)
 {
    vpr::ReturnStatus ready;
    fd_set read_set;
@@ -590,7 +592,7 @@ vpr::ReturnStatus FileHandleImplUNIX::isReadable (const vpr::Interval timeout)
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus FileHandleImplUNIX::isWriteable (const vpr::Interval timeout)
+vpr::ReturnStatus FileHandleImplUNIX::isWriteable(const vpr::Interval timeout)
 {
    vpr::ReturnStatus ready;
    fd_set write_set;
