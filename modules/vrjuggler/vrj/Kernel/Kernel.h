@@ -40,7 +40,6 @@
 #include <vpr/Util/Singleton.h>
 #include <vpr/Sync/CondVar.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
-
 #include <gadget/Type/DigitalInterface.h>
 
 namespace gadget

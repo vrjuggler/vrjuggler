@@ -118,7 +118,7 @@ int GlWindowXWin::open()
          << "'.\n" << vprDEBUG_FLUSH;
       return false;
    }
-
+   // Try initializing the window
    try
    {
       screen = DefaultScreen(mXDisplay);
@@ -343,17 +343,17 @@ int GlWindowXWin::close()
       mXDisplay = NULL;
    }
 
-   window_is_open = false;
+   window_is_open = false;    // We are closed now
 
    return true;
 
 } /* close() */
-
+// Buffer swapping method
 void GlWindowXWin::swapBuffers()
 {
    glXSwapBuffers(mXDisplay, mXWindow);
 }
-
+// Make context current
 bool GlWindowXWin::makeCurrent()
 {
    /* returns true for success,

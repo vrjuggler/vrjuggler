@@ -45,7 +45,6 @@
 namespace vrj
 {
    class GlDrawManager;
-
 /**
  * Handles the rendering on multiple GLWindows in a single process.
  *
@@ -215,7 +214,6 @@ private:
    vpr::Semaphore    renderCompleteSema; /**< signals render completed */
    vpr::Semaphore    swapTriggerSema;    /**< Signals a swap to happen */
    vpr::Semaphore    swapCompleteSema;   /**< Signals a swap has been completed */
-
 };
 
 }

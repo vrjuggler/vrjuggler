@@ -35,7 +35,6 @@
 #include <vrj/vrjParam.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
-//#include <vrj/Kernel/ConfigManager.h>
 #include <vrj/Draw/DrawManager.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Kernel/App.h>
@@ -132,8 +131,8 @@ void Kernel::controlLoop(void* nullParam)
    boost::ignore_unused_variable_warning(nullParam);
    vprDEBUG(vrjDBG_KERNEL, vprDBG_CONFIG_LVL)
       << "vrj::Kernel::controlLoop: Started.\n" << vprDEBUG_FLUSH;
-
    vprASSERT (NULL != vpr::Thread::self());
+
    mControlThread = vpr::Thread::self();
 
    // Do any initial configuration
@@ -192,9 +191,8 @@ void Kernel::controlLoop(void* nullParam)
       // --- Stop for reconfiguration -- //
       checkForReconfig();        // Check for any reconfiguration that needs done (system or application)
       checkSignalButtons();      // Check for any pending control requests
-
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
-      getInputManager()->updateAllData();    // Update the trackers
+      getInputManager()->updateAllData();    // Update the input manager
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: Update ClusterManager\n" << vprDEBUG_FLUSH;
       mClusterManager->postPostFrame();   // Can I move to before pre-frame to allow future config barrier
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
@@ -230,8 +228,6 @@ void Kernel::setApplication(App* newApp)
 void Kernel::checkForReconfig()
 {
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
-
-
    // ---- RECONFIGURATION --- //
    jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
    unsigned num_processed(0);
@@ -241,7 +237,6 @@ void Kernel::checkForReconfig()
       num_processed = cfg_mgr->attemptReconfiguration();
    }
    while (num_processed > 0);
-
    // ---- APP SWITCH ---- //
    // check for a new applications
    if(mNewAppSet)
@@ -276,16 +271,14 @@ void Kernel::changeApplication(App* newApp)
       << vprDEBUG_FLUSH;
 
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
-
    jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
-
    // EXIT Previous application
    if(mApp != NULL)
    {
       cfg_mgr->removeConfigElementHandler(mApp);
       mApp->exit();
       mApp = NULL;      // ASSERT: We have no handles to the application any more (ie. the app could be deleted)
-   }
+   }  // Done with old app
 
    // SET NEW APPLICATION
    if(newApp != NULL)        // We were given an app
@@ -309,7 +302,7 @@ void Kernel::changeApplication(App* newApp)
       {
          startDrawManager(false);                     // Start new app
       }
-
+      // Now handle configuration
       cfg_mgr->addConfigElementHandler(mApp);
       cfg_mgr->refreshPendingList();                  // New managers, so we may be able to handle config requests now
    }
@@ -360,12 +353,12 @@ void Kernel::initConfig()
 
    //??// processPending() // Should I do this here
 
-   // hook dynamically-reconfigurable managers up to config manager...
+   // hook dynamically-reconfigurable managers up to config manager
+   // XXX: Should replace with dynamic support in future
    jccl::ConfigManager::instance()->addConfigElementHandler(this);
    jccl::ConfigManager::instance()->addConfigElementHandler(mInputManager);
    jccl::ConfigManager::instance()->addConfigElementHandler(mClusterManager);
    jccl::ConfigManager::instance()->addConfigElementHandler(mDisplayManager);
-
    vprDEBUG_END(vrjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vprDEBUG_FLUSH;
 }
 
@@ -424,14 +417,14 @@ bool Kernel::addUser(jccl::ConfigElementPtr element)
 
    if(!success)
    {
-      vprDEBUG(vrjDBG_KERNEL,vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:") << "Failed to add new User: "
-         << element->getName() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_KERNEL, vprDBG_CRITICAL_LVL)
+          << clrOutNORM(clrRED,"ERROR:") << "Failed to add new User: "
+          << element->getName() << std::endl << vprDEBUG_FLUSH;
       delete new_user;
    }
    else
    {
-      vprDEBUG(vrjDBG_KERNEL,vprDBG_STATE_LVL)
+      vprDEBUG(vrjDBG_KERNEL, vprDBG_STATE_LVL)
                              << "vjKernel: Added new User: "
                              << new_user->getName().c_str() << std::endl
                              << vprDEBUG_FLUSH;
@@ -566,7 +559,6 @@ Kernel::Kernel()
                                              << clrRESET << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << std::string(strlen(VJ_VERSION) + 12, '=')
                                              << std::endl << vprDEBUG_FLUSH;
-
    // Load in the configuration definitions
    std::string def_path;
    if (vpr::System::getenv("JCCL_DEFINITION_PATH", def_path) != vpr::ReturnStatus::Succeed)

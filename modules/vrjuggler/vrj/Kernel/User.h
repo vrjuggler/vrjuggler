@@ -92,14 +92,10 @@ public:
    }
 
    vpr::Interval getHeadUpdateTime()
-   {
-      return mHead->getTimeStamp();
-   }
-
+   { return mHead->getTimeStamp(); }
+   // Get eye separation
    float getInterocularDistance()
-   {
-      return mInterocularDist;
-   }
+   { return mInterocularDist;}
 
 private:
    int               mUserId;           /**< The ID of the user. */

@@ -64,7 +64,7 @@ int GlPipe::start()
 {
     vprASSERT(mThreadRunning == false);        // We should not be running yet
 
-    // Create a new thread to handle the control loop
+    // Create a new thread to call the control loop
     vpr::ThreadMemberFunctor<GlPipe>* memberFunctor =
          new vpr::ThreadMemberFunctor<GlPipe>(this, &GlPipe::controlLoop, NULL);
 
@@ -73,7 +73,7 @@ int GlPipe::start()
     vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
        << "vjGlPipe::start: Started control loop. " << mActiveThread
        << std::endl << vprDEBUG_FLUSH;
-    return 1;
+    return 1;        // XXX: Is this always true?
 }
 
 /**
@@ -161,7 +161,7 @@ void GlPipe::controlLoop(void* nullParam)
 {
    boost::ignore_unused_variable_warning(nullParam);
    mThreadRunning = true;     // We are running so set flag
-
+   // Loop until flag set
    while (!controlExit)
    {
       checkForWindowsToClose();  // Checks for closing windows
@@ -206,7 +206,6 @@ void GlPipe::controlLoop(void* nullParam)
    }
 
    mThreadRunning = false;     // We are not running
-
 }
 
 /**
@@ -278,17 +277,13 @@ void GlPipe::checkForNewWindows()
                  << *(mNewWins[winNum]) << std::endl << vprDEBUG_FLUSH;
               mNewWins[winNum]->finishSetup();        // Complete any window open stuff
               mOpenWins.push_back(mNewWins[winNum]);
-          }
-          else
-          {
+          } else {
               vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                  << clrOutBOLD(clrRED,"ERROR:") << "vjGlPipe::checkForNewWindows: Failed to open window: "
                  << mNewWins[winNum]->getDisplay()->getName().c_str()
                  << std::endl << vprDEBUG_FLUSH;
-              // BUG!!
-              // should we do something to tell the current config that it
-              // didn't get enabled properly?
-          }
+              // XXX: We should handle this error more gracefully
+          }   // Done
       }
 
       mNewWins.erase(mNewWins.begin(), mNewWins.end());
