@@ -39,6 +39,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <errno.h>
 
 
 //: Mutex wrapper for POSIX-compliant systems using pthreads mutex variables
@@ -81,7 +82,7 @@ public:
             pthread_mutex_destroy(mMutex);
         }
 
-	free(mMutex);
+        free(mMutex);
     }
 
     // -----------------------------------------------------------------------
@@ -95,7 +96,30 @@ public:
     //! RETURNS:  1 - Lock acquired
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    int acquire(void) const;
+    inline int
+    acquire (void) const {
+        int retval;
+
+        retval = pthread_mutex_lock(mMutex) ;
+
+        // Locking succeeded.
+        if ( retval == 0 ) {
+            return 1;
+        }
+#ifdef _DEBUG
+        // This thread tried to lock the mutex twice and a deadlock condition
+        // was reported.
+        else if ( retval == EDEADLK ) {
+            perror("Tried to lock mutex twice (vjMutexPosix.cpp:52)");
+
+            return -1;
+        }
+#endif
+        // Some other error occurred.
+        else {
+            return -1;
+        }
+    }
 
     // -----------------------------------------------------------------------
     //: Acquire a read mutex lock.
@@ -237,7 +261,7 @@ public:
 friend class  vjCondPosix;
 
 protected:
-    pthread_mutex_t* mMutex;	//: Mutex variable for the class.
+    pthread_mutex_t* mMutex;    //: Mutex variable for the class.
 
     // = Prevent assignment and initialization.
     void operator= (const vjMutexPosix &) {}
@@ -245,4 +269,4 @@ protected:
 };
 
 
-#endif	/* ifdef _VJ_MUTEX_POSIX_H_ */
+#endif  /* ifdef _VJ_MUTEX_POSIX_H_ */
