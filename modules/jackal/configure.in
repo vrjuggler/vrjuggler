@@ -126,7 +126,9 @@ DPP_SYSTEM_SETUP
 case $target_os in
     # SGI running IRIX 6.*.
     irix6*)
-        DBG_FLAGS="$DBG_FLAGS -gslim"
+        if test "x$USE_GCC" != "xyes" ; then
+            DBG_FLAGS="$DBG_FLAGS -gslim"
+        fi
 
         AC_DEFINE(_BSD_TYPES,)
         ;;
@@ -492,7 +494,7 @@ esac
 jccl_extra_cxxflags=''
 jccl_extra_include_dirs=''
 
-if test "x$PLATFORM" = "xIRIX" ; then
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     jccl_n32_flags='-n32'
     jccl_64_flags='-64'
 fi
