@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "vjXMLConfigIOHandler.h"
+#include <vjConfig.h>
 
 //#include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
@@ -45,6 +45,8 @@
 #include <Config/vjParseUtil.h>
 #include <Utils/vjXercesXMLParserPool.h>
 #include <Utils/vjDebug.h>
+
+#include <Config/vjXMLConfigIOHandler.h>
 
 
 // Used for doing character conversions when writing out XML.  The idea is
@@ -256,13 +258,21 @@ bool vjXMLConfigIOHandler::parseTextValues (vjProperty* p, int& startval, char* 
     case T_BOOL:
         // these 3 we need to cut text apart on whitespace to get 
         // individual values.
+#ifdef HAVE_STRTOK_R
         ch = strtok_r (text, " \t\n", &ptr);
+#else
+        ch = strtok (text, " \t\n");
+#endif
         for (;retval;) {
             if (!ch)
                 break;
             ch = stripQuotes(ch);
             retval = p->tryAssign(startval++, ch);
+#ifdef HAVE_STRTOK_R
             ch = strtok_r (0, " \t\n", &ptr);
+#else
+            ch = strtok (0, " \t\n");
+#endif
         }
         break;
     case T_EMBEDDEDCHUNK:
@@ -455,7 +465,7 @@ bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& do
         retval = buildChunkDB (db, child);
         break;
     case DOM_Node::ELEMENT_NODE:
-        if (!strcasecmp (name, "ConfigChunkDB")) {
+        if (!vjstrcasecmp (name, "ConfigChunkDB")) {
             child = doc.getFirstChild();
             while (child != 0) {
                 if (child.getNodeType() == DOM_Node::ELEMENT_NODE) {
@@ -688,7 +698,7 @@ bool vjXMLConfigIOHandler::buildChunkDescDB (vjChunkDescDB& db, const DOM_Node& 
         retval = buildChunkDescDB (db, child);
         break;
     case DOM_Node::ELEMENT_NODE:
-        if (!strcasecmp (name, "ChunkDescDB")) {
+        if (!vjstrcasecmp (name, "ChunkDescDB")) {
             child = doc.getFirstChild();
             while (child != 0) {
                 if (child.getNodeType() == DOM_Node::ELEMENT_NODE) {
@@ -740,7 +750,7 @@ vjChunkDesc* vjXMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
         desc = buildChunkDesc (child);
         break;
     case DOM_Node::ELEMENT_NODE:
-        if (!strcasecmp(name, "ChunkDesc")) {
+        if (!vjstrcasecmp(name, "ChunkDesc")) {
             desc = new vjChunkDesc ();
             // parse attributes
             attributes = doc.getAttributes();
@@ -749,9 +759,9 @@ vjChunkDesc* vjXMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
                 child = attributes.item(i);
                 child_name = child.getNodeName().transcode();
                 child_value = child.getNodeValue().transcode();
-                if (!strcasecmp (child_name, "token"))
+                if (!vjstrcasecmp (child_name, "token"))
                     desc->setToken (child_value);
-                else if (!strcasecmp (child_name, "name"))
+                else if (!vjstrcasecmp (child_name, "name"))
                     desc->setName (child_value);
                 delete[] child_name;
                 delete[] child_value;
@@ -817,7 +827,7 @@ bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_No
 
     switch (doc.getNodeType()) {
     case DOM_Node::ELEMENT_NODE:
-        if (!strcasecmp (name, "PropertyDesc")) {
+        if (!vjstrcasecmp (name, "PropertyDesc")) {
             p = new vjPropertyDesc();
             // parse attributes
             attributes = doc.getAttributes();
@@ -826,15 +836,15 @@ bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_No
                 child = attributes.item(i);
                 child_name = child.getNodeName().transcode();
                 child_value = child.getNodeValue().transcode();
-                if (!strcasecmp (child_name, "token"))
+                if (!vjstrcasecmp (child_name, "token"))
                     p->setToken(child_value);
-                else if (!strcasecmp (child_name, "name"))
+                else if (!vjstrcasecmp (child_name, "name"))
                     p->setName (child_value);
-                else if (!strcasecmp (child_name, "type")) {
+                else if (!vjstrcasecmp (child_name, "type")) {
                     p->setVarType (stringToVarType (child_value));
                 }
-                else if (!strcasecmp (child_name, "num")) {
-                    if (!strncasecmp (child_value, "var", 3))
+                else if (!vjstrcasecmp (child_name, "num")) {
+                    if (!vjstrncasecmp (child_value, "var", 3))
                         p->setNumAllowed (-1);
                     else
                         p->setNumAllowed (atoi(child_value));
@@ -873,7 +883,7 @@ bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_No
             }
         }
 
-        else if (!strcasecmp (name, "help")) {
+        else if (!vjstrcasecmp (name, "help")) {
             std::string h = "";
             child = doc.getFirstChild();
             while (child != 0) {
@@ -896,7 +906,7 @@ bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_No
             }
             desc.setHelp (h);
         }
-        else if (!strcasecmp (name, "Defaults")) {
+        else if (!vjstrcasecmp (name, "Defaults")) {
             child = doc.getFirstChild();
             while (child != 0) {
                 switch (child.getNodeType()) {
@@ -967,14 +977,14 @@ bool vjXMLConfigIOHandler::parsePropertyDescChildElement (vjPropertyDesc &p, DOM
     switch (doc.getNodeType()) {
     case DOM_Node::ELEMENT_NODE:
 
-        if (!strcasecmp (name, "label")) {
+        if (!vjstrcasecmp (name, "label")) {
             attributes = doc.getAttributes();
             attr_count = attributes.getLength();
             for (int i = 0; i < attr_count; i++) {
                 child = attributes.item(i);
                 child_name = child.getNodeName().transcode();
                 child_value = child.getNodeValue().transcode();
-                if (!strcasecmp (child_name, "name"))
+                if (!vjstrcasecmp (child_name, "name"))
                     p.appendValueLabel (child_value);
                 else {
                     vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler"
@@ -986,7 +996,7 @@ bool vjXMLConfigIOHandler::parsePropertyDescChildElement (vjPropertyDesc &p, DOM
                 delete[] child_value;
             }
         }
-        else if (!strcasecmp (name, "enumeration")) {
+        else if (!vjstrcasecmp (name, "enumeration")) {
             // parse attributes
             
             attributes = doc.getAttributes();
@@ -994,9 +1004,9 @@ bool vjXMLConfigIOHandler::parsePropertyDescChildElement (vjPropertyDesc &p, DOM
             for (int i = 0; i < attr_count; i++) {
                 child = attributes.item(i);
                 child_name = child.getNodeName().transcode();
-                if (!strcasecmp (child_name, "name"))
+                if (!vjstrcasecmp (child_name, "name"))
                     enum_name = child.getNodeValue().transcode();
-                else if (!strcasecmp (child_name, "value"))
+                else if (!vjstrcasecmp (child_name, "value"))
                     enum_value = child.getNodeValue().transcode();
                 else {
                     vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler"
@@ -1016,7 +1026,7 @@ bool vjXMLConfigIOHandler::parsePropertyDescChildElement (vjPropertyDesc &p, DOM
             if (enum_value)
                 delete[] enum_value;
         }
-        else if (!strcasecmp (name, "help")) {
+        else if (!vjstrcasecmp (name, "help")) {
             std::string h = "";
             child = doc.getFirstChild();
             while (child != 0) {
