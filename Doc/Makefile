@@ -1,14 +1,12 @@
+include subdirs.mk
+
+top_srcdir = ..
+
 PERCEPS_DIR = .
 PERCEPS= $(PERCEPS_DIR)/bin/perceps
 FILTERS = ./filters
 TEMPLATES_INT = ./templates/internal
 TEMPLATES_PUB = ./templates/public
-SRCDIR = ..
-SRC = $(SRCDIR)/Sync $(SRCDIR)/Config $(SRCDIR)/Input $(SRCDIR)/Sound \
-      $(SRCDIR)/Kernel $(SRCDIR)/SharedMem $(SRCDIR)/Threads \
-      $(SRCDIR)/Environment $(SRCDIR)/Math $(SRCDIR)/Performance \
-      $(SRCDIR)/Utils
-#SRC = $(SRCDIR)/Config $(SRCDIR)/Math
 
 SRC_EX = ExampleClass.h ExampleClass.C
 OUT_INT = ./internal_doc
@@ -20,12 +18,12 @@ docs: doc-internal doc-public
 
 doc-internal:
 	$(PERCEPS) -a -b -c -h -f -d $(OUT_INT) -F $(FILTERS)		\
-          -t $(TEMPLATES_INT) $(SRC)
+          -t $(TEMPLATES_INT) $(SUBDIRS)
 	cp $(JAVA_CLASS)/*.class $(OUT_INT)
 
 doc-public:
 	$(PERCEPS) -a -b -c -h -f -d $(OUT_PUB) -F $(FILTERS)		\
-          -t $(TEMPLATES_PUB) $(SRC)
+          -t $(TEMPLATES_PUB) $(SUBDIRS)
 	cp $(JAVA_CLASS)/*.class $(OUT_PUB)
 
 example:
