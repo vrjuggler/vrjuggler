@@ -825,6 +825,10 @@
         <help>Turn on/off Juggler internal timing tests</help>
         <enumeration name="PerfTestActive"/>
     </PropertyDesc>
+    <PropertyDesc token="PerfCategories" name="Performance Measurement Categories" type="EmbeddedChunk" num="variable">
+        <help>Turn on/off Juggler timing measurements by category name</help>
+        <enumeration name="PerfTestActive"/>
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="PerfTestActive" name="PerfTestActive">
     <help>inner chunk for Performance Testing</help>
