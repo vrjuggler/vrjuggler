@@ -386,14 +386,14 @@ private:
    /** Network communications object for reconfiguration control. */
    XMLConfigCommunicator*   mConfigCommunicator;
 
-
+   std::string              mCachedLocalHostName;  /**< A cached copy of the local host name */
 protected:
 
    ConfigManager();
    virtual ~ConfigManager ();
 
    // needed for windows:
-   ConfigManager(const ConfigManager&) 
+   ConfigManager(const ConfigManager&)
       : JackalControl()
    {;}
    void operator= (const ConfigManager&) {;}
