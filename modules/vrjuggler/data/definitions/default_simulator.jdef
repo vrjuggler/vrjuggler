@@ -18,6 +18,8 @@
       <property valuetype="configelementpointer" variable="false" name="wand_pos">
          <help>This is the position proxy for the wand to use in the simulator.</help>
          <value label="Wand Position"  />
+         <allowed_type>position_proxy</allowed_type>
+         <allowed_type>alias</allowed_type>
       </property>
       <property valuetype="boolean" variable="false" name="draw_projections">
          <help>Should projections be drawn in the simulator?</help>
