@@ -42,9 +42,6 @@
 // Date: 4-22-99
 //===============================================================
 #include <vjConfig.h>
-#include <sys/file.h>
-#include <sys/ioctl.h>
-#include <sys/time.h>
 #include <Input/vjPosition/vjIsense.h>
 #include <Math/vjCoord.h>
 #include <Math/vjQuat.h>
