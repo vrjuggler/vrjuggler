@@ -1,6 +1,10 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
-2003-01-12 allenb   Fix NSPR Thread registration race condition.
+2003-01-13 patrickh Removed vpr::Thread::usleep(), vpr::Thread::msleep(), and
+                    vpr::Thread::sleep() in favor of having them exist only in
+                    vpr::System.
+                    NEW VERSION: 0.26.0
+2003-01-13 allenb   Fix NSPR Thread registration race condition.
                     Fix some include dependency issues.
                     NEW VERSION: 0.25.0
 2003-01-12 patrickh CppDOM is now built into VPR.

@@ -56,7 +56,6 @@
 
 #include <prthread.h>
 #include <prtypes.h>
-#include <prinrval.h>
 
 #include <vpr/Thread/BaseThread.h>
 #include <vpr/Thread/ThreadFunctor.h>
@@ -274,21 +273,6 @@ public:
    static void yield (void)
    {
       PR_Sleep(PR_INTERVAL_NO_WAIT);
-   }
-
-   static int usleep (PRUint32 micro)
-   {
-      return PR_Sleep(PR_MicrosecondsToInterval(micro));
-   }
-
-   static int msleep (PRUint32 milli)
-   {
-      return PR_Sleep(PR_MillisecondsToInterval(milli));
-   }
-
-   static int sleep (PRUint32 seconds)
-   {
-      return PR_Sleep(PR_SecondsToInterval(seconds));
    }
 
    /**

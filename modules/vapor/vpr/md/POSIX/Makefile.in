@@ -66,7 +66,7 @@ SUBDIR		= DynLoad	\
                   Util
 
 ifeq (@SUBSYSTEM@, POSIX)
-#SRCS		=
+SRCS		= SystemPosix.cpp
 endif
 
 include $(MKPATH)/dpp.obj-subdir.mk
@@ -74,8 +74,8 @@ include $(MKPATH)/dpp.obj-subdir.mk
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
-#ifndef DO_CLEANDEPEND
-#ifndef DO_BEFOREBUILD
-#    -include $(DEPEND_FILES)
-#endif
-#endif
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+   -include $(DEPEND_FILES)
+endif
+endif

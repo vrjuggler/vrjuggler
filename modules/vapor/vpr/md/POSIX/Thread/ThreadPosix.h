@@ -55,11 +55,10 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <sys/types.h>
-#include <unistd.h>
 #include <signal.h>
 #include <sched.h>
 
-// To get the posix key stuff for storing self.
+// To get the POSIX key stuff for storing self.
 #include <vpr/md/POSIX/Thread/ThreadKeyPosix.h>
 
 namespace vpr
@@ -315,34 +314,6 @@ public:  // ----- Various other thread functions ------
     * @param micro The number of microseconds to sleep.
     */
    static int usleep(vpr::Uint32 micro);
-
-   /**
-    * Causes the calling thread to sleep for the given number of milliseconds.
-    *
-    * @param milli The number of milliseconds to sleep.
-    */
-   static int msleep(Uint32 milli)
-   {
-      // usleep() cannot sleep for more than 1 second, so we have to work
-      // around that here.  First, we sleep for N seconds.
-      if ( milli >= 1000 )
-      {
-         ThreadPosix::sleep(milli / 1000);
-      }
-
-      // Then we finish off by sleeping for (N mod 1000) milliseconds.
-      return ThreadPosix::usleep((milli % 1000) * 1000);
-   }
-
-   /**
-    * Causes the calling thread to sleep for the given number of seconds.
-    *
-    * @param seconds The number of seconds to sleep.
-    */
-   static int sleep (Uint32 seconds)
-   {
-      return ::sleep(seconds);
-   }
 
    /**
     * Sends the specified signal to this thread (not necessarily SIGKILL).
