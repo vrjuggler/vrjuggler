@@ -12,12 +12,7 @@
       <property valuetype="configelementpointer" variable="false" name="proxy">
          <help>The proxy to which this alias refers.</help>
          <value label="Proxy Pointer"/>
-         <allowed_type>analog_proxy</allowed_type>
-         <allowed_type>digital_proxy</allowed_type>
-         <allowed_type>event_window_proxy</allowed_type>
-         <allowed_type>gesture_proxy</allowed_type>
-         <allowed_type>glove_proxy</allowed_type>
-         <allowed_type>position_proxy</allowed_type>
+         <allowed_type>proxy</allowed_type>
       </property>
       <upgrade_transform/>
    </definition_version>

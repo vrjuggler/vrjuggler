@@ -8,7 +8,7 @@
    <definition_version version="1" label="Logitech 3D Mouse">
       <help>Configuration for a Logitech 3D Mouse</help>
       <parent>positional_device</parent>
-<!--      <parent>digital_device</parent> -->
+      <parent>digital_device</parent>
       <category>/Devices/Digital</category>
       <category>/Devices/Positional</category>
       <property valuetype="string" variable="false" name="port">

@@ -7,23 +7,12 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="Position Proxy">
       <help>Used to access a single positional input source</help>
-      <parent/>
+      <parent>proxy</parent>
       <category>/Proxies</category>
       <property valuetype="configelementpointer" variable="false" name="device">
          <help>The device the proxy points to</help>
          <value label="Device"/>
-         <allowed_type>fastrak</allowed_type>
-         <allowed_type>flock</allowed_type>
-         <allowed_type>intersense</allowed_type>
-         <allowed_type>intersense_api</allowed_type>
-         <allowed_type>motion_star</allowed_type>
-         <allowed_type>simulated_positional_device</allowed_type>
-         <allowed_type>simulated_relative_position</allowed_type>
-         <allowed_type>simulated_setable_position</allowed_type>
-         <allowed_type>trackd_sensor</allowed_type>
-         <allowed_type>trackd_api_sensor</allowed_type>
-         <allowed_type>tweek_gadget</allowed_type>
-         <allowed_type>vrpn</allowed_type>
+         <allowed_type>positional_device</allowed_type>
       </property>
       <property valuetype="integer" variable="false" name="unit">
          <help>The unit in the device this proxy attaches to</help>
