@@ -31,42 +31,23 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <jccl/jcclConfig.h>
+#include <jccl/Util/Debug.h>
 #include <jccl/Config/ChunkFactory.h>
 
 
 namespace jccl
 {
 
-ChunkFactory::ChunkFactory () : mLoadedDefaultDescs(false)
+ChunkFactory::ChunkFactory()
 {
    // Create global context
    mGlobalContext = cppdom::ContextPtr(new cppdom::Context);
 }
 
-void ChunkFactory::loadDefaultDescs()
-{
-   // try to load a defaul "jccl-chunks.desc" file, but don't complain if it's not there.
-   std::string file_name = "${JCCL_BASE_DIR}/";
-   file_name += JCCL_SHARE_DIR;
-   file_name += "/data/jccl-chunks.desc";
-   bool retval = mDescDB.load(file_name.c_str());
-   if ( retval )
-   {
-      vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL)
-         << "Loaded ChunkDesc file: '" << file_name.c_str() << "'.\n"
-         << vprDEBUG_FLUSH;
-   }
-
-   mLoadedDefaultDescs = true;
-}
-
 //: Adds descriptions in file 'file_name' to the factory
-bool ChunkFactory::loadDescs (const std::string& file_name,
-                              const std::string& parentFile)
+bool ChunkFactory::loadDescs(const std::string& file_name,
+                             const std::string& parentFile)
 {
-   if(!mLoadedDefaultDescs)
-   {  loadDefaultDescs(); }
-
    bool retval = mDescDB.load(demangleFileName(file_name, parentFile));
    if ( retval )
    {
@@ -84,22 +65,17 @@ bool ChunkFactory::loadDescs (const std::string& file_name,
 }
 
 //: Creates a Chunk using the given description
-ConfigChunkPtr ChunkFactory::createChunk (ChunkDescPtr d)
+ConfigChunkPtr ChunkFactory::createChunk(ChunkDescPtr d)
 {
-   if(!mLoadedDefaultDescs)
-   {  loadDefaultDescs(); }
-
    if ( d.get() != NULL )
    {
       d->assertValid();
-      return ConfigChunkPtr(new ConfigChunk (d));
+      return ConfigChunkPtr(new ConfigChunk(d));
    }
    else
    {
       return ConfigChunkPtr();
    }
 }
-
-vprSingletonImp(ChunkFactory);
 
 } // namespace jccl
