@@ -3,16 +3,57 @@
 namespace vpr
 {
 
+double BandwidthIOStatsStrategy::getAverageSendBW()
+{ 
+   if(0 == mSentBytes)
+      return 0.0f;
+   
+   vpr::DateTime cur_date_time, diff_date_time;
+   double av_sent_bw, diff_secs;
+
+   cur_date_time.setNow();
+   diff_date_time = cur_date_time - mInitialSendTime;
+   diff_secs = diff_date_time.getSecondsf();
+
+   std::cout << "-- send bw --" << std::endl;
+   std::cout << "diff secs: " << diff_secs << std::endl;
+   std::cout << "bytes sent: " << mSentBytes << std::endl;
+
+   av_sent_bw = double(mSentBytes)/diff_secs;
+   
+   return av_sent_bw;
+}
+
+double BandwidthIOStatsStrategy::getAverageReadBW()
+{ 
+   if(0 == mReadBytes)
+      return 0.0f;
+   
+   vpr::DateTime cur_date_time, diff_date_time;
+   double av_read_bw, diff_secs;
+   
+   cur_date_time.setNow();
+   diff_date_time = cur_date_time - mInitialReadTime;
+   diff_secs = diff_date_time.getSecondsf();
+
+   std::cout << " -- read bw -- " << std::endl;
+   std::cout << "diff secs: " << diff_secs << std::endl;
+   std::cout << "bytes sent: " << mReadBytes << std::endl;
+
+   av_read_bw = double(mReadBytes)/diff_secs;
+   
+   return av_read_bw;
+}
+
+
 void BandwidthIOStatsStrategy::incrementBytesRead(vpr::Uint32 bytes)
 {
    mReadBytes += bytes;
    mReadCount += 1;
    
    vpr::Interval cur_time, diff_time;
-   vpr::DateTime cur_date_time, diff_date_time;
    double diff_sec;                       // Num secs different in send times
    cur_time.setNow();                     // Set current time
-   cur_date_time.setNow();
    
    // Compute inst read bandwitdth
    if(mReadCount == 1)              // First send -- INIT TIMES
@@ -22,17 +63,13 @@ void BandwidthIOStatsStrategy::incrementBytesRead(vpr::Uint32 bytes)
    else
    {
       // Compute -- INST BANDWIDTH
-      diff_time = mPrevReadTime - cur_time;
+      diff_time = cur_time - mPrevReadTime;
       diff_sec = diff_time.secf();
       if(diff_sec > 0)
       {
         mInstReadBW = double(bytes)/diff_sec;
       }
-      
-      // Compute -- AVERAGE BANDWIDTH
-      diff_date_time = mInitialReadTime - cur_date_time;
-      mAvReadBW = double(mReadBytes)/diff_date_time.getSecondsf();
-      
+            
       // Compute -- STA BANDWIDTH
       double bw_sum(0.0f);
       
@@ -58,11 +95,9 @@ void BandwidthIOStatsStrategy::incrementBytesSent(vpr::Uint32 bytes)
    mSendCount += 1;
 
    vpr::Interval cur_time, diff_time;
-   vpr::DateTime cur_date_time, diff_date_time;
    double diff_sec;                       // Num secs different in send times
    cur_time.setNow();                     // Set current time
-   cur_date_time.setNow();
-
+      
    // Compute inst send bandwitdth
    if(mSendCount == 1)     // First send -- INIT TIMES
    {
@@ -71,16 +106,12 @@ void BandwidthIOStatsStrategy::incrementBytesSent(vpr::Uint32 bytes)
    else
    {
       // Compute -- INST BANDWIDTH
-      diff_time = mPrevSendTime - cur_time;
+      diff_time = cur_time - mPrevSendTime;
       diff_sec = diff_time.secf();
       if(diff_sec > 0)
       {
          mInstSendBW = double(bytes)/diff_sec;
       }
-
-      // Compute -- AVERAGE BANDWIDTH
-      diff_date_time = mInitialSendTime-cur_date_time;
-      mAvSendBW = double(mSentBytes)/diff_date_time.getSecondsf();
 
       // Compute -- STA BANDWIDTH
       double bw_sum(0.0f);
