@@ -1,6 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
-Jan-13-2003 alleng    Input logger now saves data to a file.
+Jan-15-2003 allenb    Refactored DeviceInterface class to be constructued
+                      with the internal proxy starting pointing to the
+                      internal dummy.
+Jan-13-2003 allenb    Input logger now saves data to a file.
 Jan-13-2003 allenb    Add initial version of input logger.  This version
                       can record input data but can not yet play it back.
 Jan-09-2003 allenb    Removed delta value hack for remote input manager.
