@@ -89,7 +89,7 @@ Options:
                                 making an executable
         [--linker]              Print libraries as direct arguments to the
                                 linker rather than to the compiler
-        [--subsystem]           Print the OS abstraction layer being used
+        [--subsystem]           Print the VPR OS abstraction layer being used
 EOF
 
     exit $1
