@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 
 #include <boost/concept_check.hpp>
 
 #include <jccl/Config/ConfigElement.h>
-#include <cluster/Plugins/StartBarrierPlugin/StartBarrierPlugin.h> // my header...
+#include <plugins/StartBarrierPlugin/StartBarrierPlugin.h> // my header...
 
 #include <gadget/Util/Debug.h>
 #include <cluster/ClusterDepChecker.h>
