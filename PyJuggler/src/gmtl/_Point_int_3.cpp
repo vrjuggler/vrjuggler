@@ -10,7 +10,7 @@ using namespace boost::python;
 void _Export_Point_int_3()
 {
     scope* gmtl_Point_int_3_scope = new scope(
-    class_< gmtl::Point<int,3>, bases< gmtl::Point<int,3> > >("Point3i", init<  >())
+    class_< gmtl::Point<int,3>, bases< gmtl::VecBase<int,3> > >("Point3i", init<  >())
         .def(init< const gmtl::Point<int,3> & >())
         .def(init< const gmtl::VecBase<int,3> & >())
         .def(init< const int &, const int & >())
