@@ -35,7 +35,7 @@ from OpenGL.GL import *
 from PyJuggler import *
 
 
-class SimplGlApp(vrj.GlApp):
+class SimpleGlApp(vrj.GlApp):
    mButton0 = gadget.DigitalInterface()
    mButton1 = gadget.DigitalInterface()
    mButton2 = gadget.DigitalInterface()
@@ -161,7 +161,7 @@ class SimplGlApp(vrj.GlApp):
 #      glEnable(GL_COLOR_MATERIAL)
       glShadeModel(GL_SMOOTH)
 
-app    = SimplGlApp()
+app    = SimpleGlApp()
 kernel = vrj.Kernel.instance()
 
 for arg in sys.argv[1:]:
