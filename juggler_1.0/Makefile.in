@@ -317,6 +317,7 @@ endif
           ${VJROOT_ABS}/ChangeLog ${VJROOT_ABS}/COPYING	 		\
           ${VJROOT_ABS}/README ${VJROOT_ABS}/RELEASE_NOTES 		\
           ${prefix}
+	@echo "Build time: `LTIME=C date`" > ${prefix}/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make release completed on `LTIME=C date`"
 	@echo "==============================================================="
