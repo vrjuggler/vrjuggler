@@ -849,6 +849,7 @@ public class ConfigModule extends DefaultCoreModule {
         if (f == null)
             return null;
 
+        String retval;
         ConfigChunkDB chunkdb;
         boolean is_new_db = true;
 
@@ -888,34 +889,37 @@ public class ConfigModule extends DefaultCoreModule {
 
 
 	Core.consoleInfoMessage (component_name, "Loading ChunkDB: " + f);
-        try {
-            chunkdb.setName(f.getName());
-            chunkdb.setFile(f);
-            ConfigIO.readConfigChunkDB (f, chunkdb, ConfigIO.GUESS);
-            if (is_new_db) 
-                addChunkDB (chunkdb);
 
+        chunkdb.setName(f.getName());
+        chunkdb.setFile(f);
+        ConfigIOStatus iostatus;
+        iostatus = ConfigIO.readConfigChunkDB (f, chunkdb, ConfigIO.GUESS);
+
+        if (iostatus.getStatus() != iostatus.FAILURE) {
+            if (is_new_db)
+                addChunkDB (chunkdb);
             chunkdb.need_to_save = false;
-	    
+            
             // load included files...
             List v = chunkdb.getOfDescToken("vjIncludeFile");
             for (int i = 0; i < v.size(); i++)
                 loadNewChunkDBFile(((ConfigChunk)v.get(i)).getName());
+                        
+            retval = chunkdb.name;
+        }
+        else
+            retval = null;
 
-            return chunkdb.name;
-	}
-	catch (FileNotFoundException e) {
-	    Core.consoleErrorMessage (component_name, e.getMessage());
-	    return null;
-	}
-        catch (IOException e) {
-            Core.consoleErrorMessage (component_name, "Parsing error: " + e);
-            return null;
-        }
-        catch (ConfigParserException e) {
-            Core.consoleErrorMessage (component_name, "Parsing error: " + e.getMessage());
-            return null;
-        }
+        // write out errors to UI
+        for (int i = 0; i < iostatus.size(); i++)
+            Core.consoleInfoMessage (component_name, iostatus.get(i).toString());
+        if (iostatus.getStatus() >= iostatus.ERRORS)
+            Core.consoleErrorMessage (component_name, iostatus.getSummary());
+        else
+            Core.consoleInfoMessage (component_name, iostatus.getSummary());
+
+        return retval;
+
     }
 
 
@@ -976,6 +980,7 @@ public class ConfigModule extends DefaultCoreModule {
         if (f == null)
             return null;
 
+        String retval;
         ChunkDescDB descdb;
         boolean is_new_db = true;
 
@@ -1016,27 +1021,31 @@ public class ConfigModule extends DefaultCoreModule {
 
 	Core.consoleInfoMessage (component_name, 
 				 "Loading Descriptions file: " + f);
- 	try {
-	    descdb.setName(f.getName());
-	    descdb.setFile (f);
-            ConfigIO.readChunkDescDB (f, descdb, ConfigIO.GUESS);
+
+        descdb.setName(f.getName());
+        descdb.setFile (f);
+        ConfigIOStatus iostatus;
+        iostatus = ConfigIO.readChunkDescDB (f, descdb, ConfigIO.GUESS);
+
+        if (iostatus.getStatus() != iostatus.FAILURE) {
             descdb.need_to_save = false;
             if (is_new_db)
                 addDescDB (descdb);
-            return descdb.name;
-	}
-	catch (FileNotFoundException e) {
-	    Core.consoleErrorMessage (component_name, e.getMessage());
-	    return null;
-	}
-        catch (IOException e) {
-            Core.consoleErrorMessage (component_name, "Parsing error: " + e);
-            return null;
+            retval = descdb.name;
         }
-        catch (ConfigParserException e) {
-            Core.consoleErrorMessage (component_name, "Parsing error: " + e.getMessage());
-            return null;
-        }
+        else
+            retval = null;
+
+        // write out errors to UI
+        for (int i = 0; i < iostatus.size(); i++)
+            Core.consoleInfoMessage (component_name, iostatus.get(i).toString());
+        if (iostatus.getStatus() >= iostatus.ERRORS)
+            Core.consoleErrorMessage (component_name, iostatus.getSummary());
+        else
+            Core.consoleInfoMessage (component_name, iostatus.getSummary());
+
+        return retval;
+
     }
 
 

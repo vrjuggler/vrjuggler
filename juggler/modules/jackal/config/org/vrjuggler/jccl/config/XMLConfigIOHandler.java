@@ -106,9 +106,8 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
     }
 
 
-    public void readConfigChunkDB (File file, ConfigChunkDB db) throws IOException, ConfigParserException {
-
-        ConfigIOStatus iostatus = new ConfigIOStatus();
+    public void readConfigChunkDB (File file, ConfigChunkDB db,
+                                   ConfigIOStatus iostatus) {
 
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -125,20 +124,15 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         catch (org.xml.sax.SAXException e2) {
             iostatus.addFailure (e2);
         }
-
-        // temporary
-        System.out.println (iostatus.toString());
-
-        if (iostatus.getStatus() == iostatus.FAILURE)
-            throw new ConfigParserException (iostatus.toString());
+        catch (IOException e3) {
+            iostatus.addFailure (e3);
+        }
     }
 
 
-    public void readConfigChunkDB (InputStream in, ConfigChunkDB db) throws IOException, ConfigParserException {
+    public void readConfigChunkDB (InputStream in, ConfigChunkDB db,
+                                   ConfigIOStatus iostatus) {
 
-        ConfigIOStatus iostatus = new ConfigIOStatus();
-
-        boolean retval = false;
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -154,12 +148,9 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         catch (org.xml.sax.SAXException e2) {
             iostatus.addFailure (e2);
         }
-
-        // temporary
-        System.out.println (iostatus.toString());
-
-        if (iostatus.getStatus() == iostatus.FAILURE)
-            throw new ConfigParserException (iostatus.toString());
+        catch (IOException e3) {
+            iostatus.addFailure (e3);
+        }
     }
     
 
@@ -457,9 +448,9 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
 
     //------------------------ ChunkDescDB Methods --------------------------
     
-    public void readChunkDescDB (File file, ChunkDescDB db) throws IOException, ConfigParserException {
+    public void readChunkDescDB (File file, ChunkDescDB db,
+                                 ConfigIOStatus iostatus) {
 
-        ConfigIOStatus iostatus = new ConfigIOStatus();
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         
@@ -475,18 +466,14 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         catch (org.xml.sax.SAXException e2) {
             iostatus.addFailure (e2);
         }
-
-        // temporary
-        System.out.println (iostatus.toString());
-
-        if (iostatus.getStatus() == iostatus.FAILURE)
-            throw new ConfigParserException (iostatus.toString());
+        catch (IOException e3) {
+            iostatus.addFailure (e3);
+        }
     }
 
 
-    public void readChunkDescDB (InputStream in, ChunkDescDB db) throws IOException, ConfigParserException {
-
-        ConfigIOStatus iostatus = new ConfigIOStatus();
+    public void readChunkDescDB (InputStream in, ChunkDescDB db,
+                                 ConfigIOStatus iostatus) {
 
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -503,12 +490,9 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         catch (org.xml.sax.SAXException e2) {
             iostatus.addFailure (e2);
         }
-
-        // temporary
-        System.out.println (iostatus.toString());
-
-        if (iostatus.getStatus() == iostatus.FAILURE)
-            throw new ConfigParserException (iostatus.toString());
+        catch (IOException e3) {
+            iostatus.addFailure (e3);
+        }
     }
     
 
