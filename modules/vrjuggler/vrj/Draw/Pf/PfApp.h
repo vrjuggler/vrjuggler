@@ -78,6 +78,10 @@ public:
    //! POST: Channel should be drawn
    virtual void drawChan(pfChannel* chan, void* chandata)
    {
+      //pfEnable(PFEN_LIGHTING);
+      //int cur_light_state = pfGetEnable(PFEN_LIGHTING);
+      //vjDEBUG(vjDBG_DRAW_MGR,1) << "initScene: Current lighting state: " << cur_light_state << endl << vjDEBUG_FLUSH;
+
       chan->clear();       // Clear the channel
       pfDraw();            // Draw the channel
    }

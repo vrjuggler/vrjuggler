@@ -121,7 +121,8 @@ public:
    vjUser*  getUser()
    { return mUser;}
 
-   friend ostream& operator<<(ostream& out, vjDisplay* disp);
+   virtual ostream& outStream(ostream& out);
+   friend ostream& operator<<(ostream& out, vjDisplay& disp);
 
 protected:
    vjUser*           mUser;         //: The user being rendered by this window
