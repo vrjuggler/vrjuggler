@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="A configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <pf_basic_nav_app name="pfNavApp" version="1">
+         <start_location>0.0</start_location>
+         <start_location>6.0</start_location>
+         <start_location>0.0</start_location>
+         <file_path>.</file_path>
+         <sounds>
+            <pf_config_sound name="Sounds 0" version="1">
+               <sound_alias>Wind</sound_alias>
+               <positional>false</positional>
+               <start_pos>0.0</start_pos>
+               <start_pos>0.0</start_pos>
+               <start_pos>0.0</start_pos>
+            </pf_config_sound>
+         </sounds>
+         <models>
+            <pf_config_model name="Models 0" version="1">
+               <filename>terrain.flt</filename>
+               <scale>3.8</scale>
+               <start_pos>0.0</start_pos>
+               <start_pos>0.0</start_pos>
+               <start_pos>0.0</start_pos>
+               <start_rot>0.0</start_rot>
+               <start_rot>0.0</start_rot>
+               <start_rot>0.0</start_rot>
+               <collidable>true</collidable>
+            </pf_config_model>
+         </models>
+         <bounding_size>0.0</bounding_size>
+         <icon_view_offset>0.0</icon_view_offset>
+         <icon_view_offset>0.0</icon_view_offset>
+         <icon_view_offset>0.0</icon_view_offset>
+         <enable_nav>true</enable_nav>
+         <animation_play>false</animation_play>
+         <animation_loops>-1</animation_loops>
+         <animation_filename>KeyFrames.txt</animation_filename>
+      </pf_basic_nav_app>
+   </elements>
+</configuration>
+

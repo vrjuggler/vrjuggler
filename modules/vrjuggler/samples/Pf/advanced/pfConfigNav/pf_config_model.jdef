@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="pf_config_model" icon_path="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="pfConfigNav Model">
+      <abstract>false</abstract>
+      <help>A model to be loaded by the pfConfigNav application.</help>
+      <parent />
+      <category>/Application/</category>
+      <property valuetype="string" variable="false" name="filename">
+         <help />
+         <value label="Filename" defaultvalue="" />
+      </property>
+      <property valuetype="float" variable="false" name="scale">
+         <help>Amount to scale the model.</help>
+         <value label="Scale" defaultvalue="0.0" />
+      </property>
+      <property valuetype="float" variable="false" name="start_pos">
+         <help>Starting position of the model.</help>
+         <value label="X Position" defaultvalue="0.0" />
+         <value label="Y Position" defaultvalue="0.0" />
+         <value label="Z Position" defaultvalue="0.0" />
+      </property>
+      <property valuetype="float" variable="false" name="start_rot">
+         <help>Model starting rotation.</help>
+         <value label="Rotation on X-Axis" defaultvalue="0.0" />
+         <value label="Rotation on Y-Axis" defaultvalue="0.0" />
+         <value label="Rotation on Z-Axis" defaultvalue="0.0" />
+      </property>
+      <property valuetype="boolean" variable="false" name="collidable">
+         <help>Use collision detection on this model or not.</help>
+         <value label="Is collidable?" defaultvalue="true" />
+      </property>
+      <upgrade_transform />
+   </definition_version>
+</definition>
+
