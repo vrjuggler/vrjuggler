@@ -104,7 +104,7 @@ sub handle {
     }
 }
 
-sub doexec {
+sub doexec ($@) {
     my $ok = shift;
     my(@cmd) = @_;
     for my $word (@cmd)
