@@ -77,7 +77,7 @@ public:
     *
     * @return An object containing the "name" of this socket.
     */
-   const std::string& getName()
+   const std::string& getName() const
    {
       return mName;
    }
@@ -118,7 +118,7 @@ public:
     *
     * @return true is returned if this socket is open; false otherwise.
     */
-   bool isOpen()
+   bool isOpen() const
    {
       return mOpen;
    }
@@ -145,7 +145,7 @@ public:
    /**
     *  Return the contained handle
     */
-   vpr::IOSys::Handle getHandle()
+   vpr::IOSys::Handle getHandle() const
    {
       return mHandle;
    }
@@ -154,7 +154,7 @@ public:
     * Queries if the blocking state for this socket is fixed and can no
     * longer be changed.
     */
-   bool isBlockingFixed()
+   bool isBlockingFixed() const
    {
       return mBlockingFixed;
    }
@@ -203,7 +203,7 @@ public:
     * @return false if the socket is not currently connect (the other side
     *         may have disconnected).
     */
-   bool isConnected()
+   bool isConnected() const
    {
       if ( mConnected )        // If it is not open, then it can't be connected
       {
@@ -216,13 +216,17 @@ public:
 
             PR_Poll(&poll_desc, 1, PR_INTERVAL_NO_WAIT);
             if ( poll_desc.out_flags & PR_POLL_READ )
-               return false;                           // Opened, but not connected
+            {
+               return false;             // Opened, but not connected
+            }
          }
 
          return true;        // Either have data, or are waiting for it
       }
       else
+      {
          return false;           // Not open --> not connected
+      }
    }
 
    /**
@@ -293,9 +297,9 @@ public:
                              vpr::Uint32& bytes_written,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   vpr::Uint32 availableBytes()
+   vpr::Uint32 availableBytes() const
    {
-      return PR_Available( mHandle );
+      return PR_Available(mHandle);
    }
 
    /**
@@ -310,7 +314,7 @@ public:
     *         vpr::ReturnStatus;:Fail is returned otherwise.
     */
    vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                               struct vpr::SocketOptions::Data& data);
+                               struct vpr::SocketOptions::Data& data) const;
 
    /**
     * Sets a value for the given option on the socket using the given data

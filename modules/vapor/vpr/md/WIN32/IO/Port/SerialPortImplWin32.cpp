@@ -156,18 +156,13 @@ vpr::ReturnStatus SerialPortImplWin32::setBlocking(bool blocking)
    }
 }
 
-vpr::SerialTypes::UpdateActionOption SerialPortImplWin32::getUpdateAction()
+vpr::SerialTypes::UpdateActionOption SerialPortImplWin32::getUpdateAction() const
 {
    std::cout << "Update Action is always NOW in Win32" << std::endl;
    vpr::SerialTypes::UpdateActionOption update;
    update = SerialTypes::NOW;
    return update;
 }
-
-// ----------------------------------------------------------------------------
-// Clear all flags by setting them to 0. This is mainly needed by Linux
-// because IRIX does this automatically.
-// ----------------------------------------------------------------------------
 
 vpr::ReturnStatus SerialPortImplWin32::clearAll ()
 {
@@ -182,10 +177,8 @@ void SerialPortImplWin32::setUpdateAction (SerialTypes::UpdateActionOption actio
    std::cout << "Update action always NOW in Win32" << std::endl;
 }
 
-// ----------------------------------------------------------------------------
 // Query the serial port for the maximum buffer size.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplWin32::getMinInputSize(vpr::Uint16 &size)
+vpr::ReturnStatus SerialPortImplWin32::getMinInputSize(vpr::Uint16 &size) const
 {
    vpr::ReturnStatus s;
    COMMPROP lpCommProp;
@@ -202,9 +195,7 @@ vpr::ReturnStatus SerialPortImplWin32::getMinInputSize(vpr::Uint16 &size)
    return s;
 }
 
-// ----------------------------------------------------------------------------
 // Attempt to change the buffer size to the given argument.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplWin32::setMinInputSize(const vpr::Uint8 size)
 {
    ReturnStatus s;
@@ -216,11 +207,9 @@ vpr::ReturnStatus SerialPortImplWin32::setMinInputSize(const vpr::Uint8 size)
    return s;
 }
 
-// ----------------------------------------------------------------------------
 // Get the value of the timeout (in tenths of a second) to wait for data to
 // arrive.  This is only applicable in non-canonical mode.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplWin32::getTimeout (vpr::Uint8& timeout)
+vpr::ReturnStatus SerialPortImplWin32::getTimeout(vpr::Uint8& timeout) const
 {
    COMMTIMEOUTS t;
    vpr::ReturnStatus retval;
@@ -233,12 +222,10 @@ vpr::ReturnStatus SerialPortImplWin32::getTimeout (vpr::Uint8& timeout)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Set the value of the timeout to wait for data to arrive.  The value given
 // must be in tenths of a second.  This is only applicable in non-canonical
 // mode.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplWin32::setTimeout (const vpr::Uint8 timeout)
+vpr::ReturnStatus SerialPortImplWin32::setTimeout(const vpr::Uint8 timeout)
 {
    COMMTIMEOUTS t;
    vpr::ReturnStatus retval;
@@ -257,10 +244,8 @@ vpr::ReturnStatus SerialPortImplWin32::setTimeout (const vpr::Uint8 timeout)
 }
 
 
-// ----------------------------------------------------------------------------
 // Get the character size (the bits per byte).
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplWin32::getCharacterSize (vpr::SerialTypes::CharacterSizeOption& size)
+vpr::ReturnStatus SerialPortImplWin32::getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const
 {
    vpr::ReturnStatus retval;
    DCB dcb;
@@ -290,12 +275,10 @@ vpr::ReturnStatus SerialPortImplWin32::getCharacterSize (vpr::SerialTypes::Chara
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Set the current character size (the bits per byte) to the size in the given
 // value.  This is used for both reding and writing, and the size does not
 // include the parity bit (if any).
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplWin32::setCharacterSize (const vpr::SerialTypes::CharacterSizeOption bpb)
+vpr::ReturnStatus SerialPortImplWin32::setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb)
 {
    vpr::ReturnStatus retval;
    DCB dcb;
@@ -324,7 +307,7 @@ vpr::ReturnStatus SerialPortImplWin32::setCharacterSize (const vpr::SerialTypes:
    return retval;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::getStopBits (vpr::Uint8& num_bits)
+vpr::ReturnStatus SerialPortImplWin32::getStopBits(vpr::Uint8& num_bits) const
 {
    DCB dcb;
 
@@ -351,10 +334,8 @@ vpr::ReturnStatus SerialPortImplWin32::getStopBits (vpr::Uint8& num_bits)
 }
 
 
-// ----------------------------------------------------------------------------
 // Set the number of stop bits to use.  The value must be either 1 or 2.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplWin32::setStopBits (const vpr::Uint8 num_bits)
+vpr::ReturnStatus SerialPortImplWin32::setStopBits(const vpr::Uint8 num_bits)
 {
    DCB dcb;
 
@@ -379,7 +360,7 @@ vpr::ReturnStatus SerialPortImplWin32::setStopBits (const vpr::Uint8 num_bits)
 }
 
 // Get the state of parity checking for input.
-bool SerialPortImplWin32::getInputParityCheckState()
+bool SerialPortImplWin32::getInputParityCheckState() const
 {
    DCB dcb;
    bool b;
@@ -419,7 +400,7 @@ vpr::ReturnStatus SerialPortImplWin32::setInputParityCheck(bool flag)
 }
 
 // Get the current CLOCAL state, if the device is locally attached.
-bool SerialPortImplWin32::getLocalAttachState()
+bool SerialPortImplWin32::getLocalAttachState() const
 {
    // Not implemented yet...
    return false;
@@ -433,7 +414,7 @@ vpr::ReturnStatus SerialPortImplWin32::setLocalAttach(bool flag)
 }
 
 // Get the current state of ignoring BREAK bytes.
-bool SerialPortImplWin32::getBreakByteIgnoreState()
+bool SerialPortImplWin32::getBreakByteIgnoreState() const
 {
    // Not implemented yet...
    return false;
@@ -447,7 +428,7 @@ vpr::ReturnStatus SerialPortImplWin32::setBreakByteIgnore(bool flag)
 }
 
 // Get the current parity checking type (either odd or even).
-vpr::SerialTypes::ParityType SerialPortImplWin32::getParity()
+vpr::SerialTypes::ParityType SerialPortImplWin32::getParity() const
 {
    DCB dcb;
    GetCommState(mHandle, &dcb);
@@ -558,7 +539,7 @@ vpr::ReturnStatus SerialPortImplWin32::readn_i(void* buffer, const vpr::Uint32 l
 
 // Get the current state of ignoring bytes with framing errors (other than a
 // BREAK) or parity errors.
-bool SerialPortImplWin32::getBadByteIgnoreState()
+bool SerialPortImplWin32::getBadByteIgnoreState() const
 {
    DCB dcb;
    GetCommState(mHandle, &dcb);
@@ -582,7 +563,7 @@ vpr::ReturnStatus SerialPortImplWin32::setBadByteIgnore(bool flag)
 
 // Get the current state of parity generation for outgoing bytes and parity
 // checking for incoming bytes.
-bool SerialPortImplWin32::getParityGenerationState()
+bool SerialPortImplWin32::getParityGenerationState() const
 {
    DCB dcb;
    GetCommState(mHandle, &dcb);
@@ -642,7 +623,7 @@ vpr::ReturnStatus SerialPortImplWin32::setParityGeneration(bool enableParity)
 // is the three-byte sequence \377 \0 X where X is the byte received in error.
 // If bit stripping is enabled, a valid \377 byte is passed as the two-byte
 // sequence \377 \377.
-bool SerialPortImplWin32::getParityErrorMarkingState()
+bool SerialPortImplWin32::getParityErrorMarkingState() const
 {
    return mParityMark;
 }
@@ -663,7 +644,7 @@ vpr::ReturnStatus SerialPortImplWin32::setParityErrorMarking(bool flag)
 }
 
 // Get the current input baud rate.
-vpr::ReturnStatus SerialPortImplWin32::getInputBaudRate(vpr::Uint32& rate)
+vpr::ReturnStatus SerialPortImplWin32::getInputBaudRate(vpr::Uint32& rate) const
 {
    vpr::ReturnStatus s;
    DCB dcb;
@@ -688,7 +669,7 @@ vpr::ReturnStatus SerialPortImplWin32::setInputBaudRate(const vpr::Uint32& baud)
 }
 
 // Get the current output baud rate.
-vpr::ReturnStatus SerialPortImplWin32::getOutputBaudRate(vpr::Uint32& rate)
+vpr::ReturnStatus SerialPortImplWin32::getOutputBaudRate(vpr::Uint32& rate) const
 {
    vpr::ReturnStatus s;
    DCB dcb;
@@ -710,7 +691,6 @@ vpr::ReturnStatus SerialPortImplWin32::setOutputBaudRate(const vpr::Uint32& baud
    }
    return s;
 }
-
 
 // Transmit a continuous stream of zero bits for the given duration.  If the
 // argument is 0, the transmission will last between 0.25 and 0.5 seconds.
@@ -745,7 +725,7 @@ vpr::ReturnStatus SerialPortImplWin32::controlFlow(SerialTypes::FlowActionOption
    return s;
 }
 
-bool SerialPortImplWin32::getHardwareFlowControlState()
+bool SerialPortImplWin32::getHardwareFlowControlState() const
 {
    DCB dcb;
    GetCommState(mHandle, &dcb);
@@ -785,19 +765,21 @@ vpr::ReturnStatus SerialPortImplWin32::flushQueue(vpr::SerialTypes::FlushQueueOp
 {
    vpr::ReturnStatus s;
 
-   if(queue==vpr::SerialTypes::INPUT_QUEUE || queue==vpr::SerialTypes::IO_QUEUES){
-		PurgeComm(mHandle, PURGE_RXCLEAR);
+   if(queue==vpr::SerialTypes::INPUT_QUEUE || queue==vpr::SerialTypes::IO_QUEUES)
+   {
+      PurgeComm(mHandle, PURGE_RXCLEAR);
    }
 
-   if(queue==vpr::SerialTypes::OUTPUT_QUEUE || queue==vpr::SerialTypes::IO_QUEUES){
-		PurgeComm(mHandle, PURGE_TXCLEAR);
+   if(queue==vpr::SerialTypes::OUTPUT_QUEUE || queue==vpr::SerialTypes::IO_QUEUES)
+   {
+      PurgeComm(mHandle, PURGE_TXCLEAR);
    }
 
    return s;
 }
 
 
-bool SerialPortImplWin32::getCanonicalState()
+bool SerialPortImplWin32::getCanonicalState() const
 {
    std::cout << "Canonical State not yet implemented, EOF is enabled."
              << std::endl;
@@ -811,7 +793,7 @@ vpr::ReturnStatus SerialPortImplWin32::setCanonicalInput(bool flag)
    return vpr::ReturnStatus::Fail;
 }
 
-bool SerialPortImplWin32::getBitStripState()
+bool SerialPortImplWin32::getBitStripState() const
 {
    std::cout << "Bit Stripping is not yet implemented on Win32." << std::endl;
    return false;
@@ -823,14 +805,14 @@ vpr::ReturnStatus SerialPortImplWin32::setBitStripping(bool flag)
    return vpr::ReturnStatus::Fail;
 }
 
-bool SerialPortImplWin32::getStartStopInputState()
+bool SerialPortImplWin32::getStartStopInputState() const
 {
    std::cout << "Start/Stop Input is not yet implemented on Win32."
              << std::endl;
    return false;
 }
 
-bool SerialPortImplWin32::getStartStopOutputState()
+bool SerialPortImplWin32::getStartStopOutputState() const
 {
    std::cout << "Start/Stop Output is not yet implemented on Win32."
              << std::endl;

@@ -97,7 +97,7 @@ public:
     *
     * @return An object containing the "name" of this socket.
     */
-   virtual const std::string& getName()
+   virtual const std::string& getName() const
    {
       return mSocketImpl->getName();
    }
@@ -146,7 +146,7 @@ public:
     * @return true is returned if this socket is open;
     *         false otherwise.
     */
-   bool isOpen()
+   bool isOpen() const
    {
       return mSocketImpl->isOpen();
    }
@@ -160,28 +160,26 @@ public:
     * @return true is returned if this socket is bound;
     *         false otherwise.
     */
-   bool isBound()
+   bool isBound() const
    {
       return mSocketImpl->isBound();
    }
 
    /**
-    * Gets the status of a possibly connected socket
-    *
-    * @pre None
+    * Gets the status of a possibly connected socket.
     *
     * @return true is returned if this socket is connected to a
     *         remote address.<br>
     *         false is returned if this socket is not currently
     *         connected (the other wise may have disconnected).
     */
-   bool isConnected()
+   bool isConnected() const
    {
       return mSocketImpl->isConnected();
    }
 
-   /// Gets the handle to this socket
-   vpr::IOSys::Handle getHandle()
+   /// Gets the handle to this socket.
+   vpr::IOSys::Handle getHandle() const
    {
       return mSocketImpl->getHandle();
    }
@@ -190,7 +188,7 @@ public:
     * Queries if the blocking state for this socket is fixed and can no
     * longer be changed.
     */
-   bool isBlockingFixed()
+   bool isBlockingFixed() const
    {
       return mSocketImpl->isBlockingFixed();
    }
@@ -482,8 +480,8 @@ public:
       return readn(buffer, length, bytes_read, timeout);
    }
 
-   /** Return the number of avaiable bytes for reading */
-   virtual vpr::Uint32 availableBytes()
+   /** Returns the number of avaiable bytes for reading. */
+   virtual vpr::Uint32 availableBytes() const
    {
       return mSocketImpl->availableBytes();
    }
@@ -798,6 +796,7 @@ protected:
 
    virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
                                        struct vpr::SocketOptions::Data& data)
+      const
    {
       return mSocketImpl->getOption(option, data);
    }

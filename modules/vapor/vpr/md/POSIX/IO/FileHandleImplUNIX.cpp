@@ -538,7 +538,7 @@ vpr::Uint32 FileHandleImplUNIX::availableBytes() const
 }
 
 // Get the current file handle flags.
-int FileHandleImplUNIX::getFlags()
+int FileHandleImplUNIX::getFlags() const
 {
    return fcntl(mFdesc, F_GETFL, 0);
 }
@@ -549,7 +549,7 @@ int FileHandleImplUNIX::setFlags(const int flags)
    return fcntl(mFdesc, F_SETFL, flags);
 }
 
-vpr::ReturnStatus FileHandleImplUNIX::isReadable(const vpr::Interval timeout)
+vpr::ReturnStatus FileHandleImplUNIX::isReadable(const vpr::Interval timeout) const
 {
    vpr::ReturnStatus ready;
    fd_set read_set;
@@ -604,7 +604,7 @@ vpr::ReturnStatus FileHandleImplUNIX::isReadable(const vpr::Interval timeout)
    return ready;
 }
 
-vpr::ReturnStatus FileHandleImplUNIX::isWriteable(const vpr::Interval timeout)
+vpr::ReturnStatus FileHandleImplUNIX::isWriteable(const vpr::Interval timeout) const
 {
    vpr::ReturnStatus ready;
    fd_set write_set;

@@ -75,7 +75,7 @@ public:
     *
     * @return An object containing the "name" of this socket.
     */
-   const std::string& getName();
+   const std::string& getName() const;
 
    /**
     * Opens the socket.  This creates a new socket using the domain and type
@@ -113,7 +113,7 @@ public:
     *
     * @return true is returned if this socket is open; false otherwise.
     */
-   bool isOpen()
+   bool isOpen() const
    {
       return mHandle->isOpen();
    }
@@ -137,7 +137,7 @@ public:
    vpr::ReturnStatus bind();
 
    /** Returns the contained handle. */
-   vpr::IOSys::Handle getHandle()
+   vpr::IOSys::Handle getHandle() const
    {
       return mHandle->getHandle();
    }
@@ -146,7 +146,7 @@ public:
     * Queries if the blocking state for this socket is fixed and can no
     * longer be changed.
     */
-   bool isBlockingFixed()
+   bool isBlockingFixed() const
    {
       return mBlockingFixed;
    }
@@ -214,7 +214,7 @@ public:
     * @return true is returned if this socket is still connected.<br>
     *         false is returned if this socket is not currently connected.
     */
-   bool isConnected();
+   bool isConnected() const;
 
    /**
     * Gets the type of this socket (e.g., vpr::SocketTypes::STREAM).
@@ -363,7 +363,7 @@ public:
                              vpr::Uint32& bytes_written,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   vpr::Uint32 availableBytes()
+   vpr::Uint32 availableBytes() const
    {
       return mHandle->availableBytes();
    }
@@ -380,7 +380,7 @@ public:
     *         vpr::ReturnStatus;:Fail is returned otherwise.
     */
    vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                               struct vpr::SocketOptions::Data& data);
+                               struct vpr::SocketOptions::Data& data) const;
 
    /**
     * Sets a value for the given option on the socket using the given data

@@ -503,7 +503,7 @@ vpr::ReturnStatus SocketImplNSPR::write_i(const void* buffer,
 }
 
 vpr::ReturnStatus SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
-                                            struct vpr::SocketOptions::Data& data)
+                                            struct vpr::SocketOptions::Data& data) const
 {
    vpr::ReturnStatus retval;
    PRSocketOptionData opt_data;

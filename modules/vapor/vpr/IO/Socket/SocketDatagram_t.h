@@ -209,7 +209,7 @@ public:
 
 protected:
    virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                                       struct vpr::SocketOptions::Data& data)
+                                       struct vpr::SocketOptions::Data& data) const
    {
       return mSocketDgramImpl->getOption(option, data);
    }
