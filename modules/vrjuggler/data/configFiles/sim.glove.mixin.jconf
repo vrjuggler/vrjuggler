@@ -97,7 +97,7 @@
          <key_pair>
             <key_modifier_pair name="Rot Right" version="1">
                <modifier_key>SHIFT</modifier_key>
-               <key>MOUS_NEGX</key>
+               <key>MOUSE_NEGX</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
