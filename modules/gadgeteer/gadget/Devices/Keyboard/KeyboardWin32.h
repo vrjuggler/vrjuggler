@@ -45,7 +45,7 @@
 #ifndef _VRJ_KEYBOARD_WIN32_H_
 #define _VRJ_KEYBOARD_WIN32_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 
 // Get windows stuff
@@ -58,7 +58,7 @@
 
 namespace vrj
 {
-   
+
 class KeyboardWin32 : public Input, public Keyboard
 {
 public:

@@ -33,13 +33,13 @@
 #ifndef _VJ_POS_FILTER_H_
 #define _VJ_POS_FILTER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Math/Matrix.h>
 
 namespace vrj
 {
-   
+
 //: Base class for all position filters in VR Juggler
 class PosFilter
 {

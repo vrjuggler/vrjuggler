@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/DeviceFactory.h>
 
 // Sims
@@ -74,7 +74,7 @@
 
 namespace vrj
 {
-   
+
 // Initialize the singleton ptr
 //vjDeviceFactory* DeviceFactory::mInstance = NULL;
 //vjSingletonImp( DeviceFactory ); //kevin
@@ -140,7 +140,7 @@ void DeviceFactory::hackLoadKnownDevices()
    {
       vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
    }
-   
+
 #endif
    DeviceConstructor<Flock>* flock = new DeviceConstructor<Flock>;
    DeviceConstructor<Intersense>* intersense = new DeviceConstructor<Intersense>;

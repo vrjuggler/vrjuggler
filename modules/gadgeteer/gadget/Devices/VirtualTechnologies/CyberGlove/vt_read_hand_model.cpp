@@ -9,7 +9,7 @@
 /*  --    Author: Larry Edwards                                 --  */
 /*  ==============================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -56,11 +56,11 @@ read_model_geom(char infilename[], vec3d geom[5][4], vec3d thumb_roll_vecs[2])
     while (sscanf(fgets(input_line, 81, inputfp), "%[#]", dummy));
     if (!feof(inputfp))
       sscanf(input_line,"%f %f %f",&axis_seg[0][VX],&axis_seg[0][VY],
-	     &axis_seg[0][VZ]);
+         &axis_seg[0][VZ]);
     while (sscanf(fgets(input_line, 81, inputfp), "%[#]", dummy));
     if (!feof(inputfp))
       sscanf(input_line,"%f %f %f",&axis_seg[1][VX],&axis_seg[1][VY],
-	     &axis_seg[1][VZ]);
+         &axis_seg[1][VZ]);
     /* inside edge minus outside edge of thumb */
     vt_vec_diff3(axis_seg[0],axis_seg[1],thumb_roll_vecs[i]);
     vt_transform3(thumb_roll_vecs[i],rotmatrix,thumb_roll_vecs[i]);
@@ -73,9 +73,9 @@ read_model_geom(char infilename[], vec3d geom[5][4], vec3d thumb_roll_vecs[2])
       /* skip comments */
       while (sscanf(fgets(input_line, 81, inputfp), "%[#]", dummy));
       if (feof(inputfp))
-	break;
+    break;
       sscanf(input_line,"%f %f %f",&geom[finger][joint][VX],
-	     &geom[finger][joint][VY],&geom[finger][joint][VZ]);
+         &geom[finger][joint][VY],&geom[finger][joint][VZ]);
       vt_transform3(geom[finger][joint],rotmatrix,geom[finger][joint]);
     }
     if (feof(inputfp))
@@ -124,7 +124,7 @@ translation_fudge_factors(int finger, int joint, vec3d transvec)
 
 static void
 adjust_hand_model_geometry(vec3d geom[5][4], vec3d thumb_roll_vecs[2],
-			   VirtualHand hand)
+               VirtualHand hand)
 {
   UserGeometry user = hand->private_data->user;
   vec3d angles,scalevec,segvec,jointpos,handmodelpos,tempvec;
@@ -156,17 +156,17 @@ adjust_hand_model_geometry(vec3d geom[5][4], vec3d thumb_roll_vecs[2],
       vt_mult_rot_matrix(angles[VX],'x',Postmult,rotmatrix);
       if ((finger == THUMB) && (joint != MCP)) /* we also roll */
       {
-	vt_copy_vec3(thumb_roll_vecs[joint-1],tempvec);
-	vt_transform3(thumb_roll_vecs[joint-1],rotmatrix,
-		      thumb_roll_vecs[joint-1]);
-	/* after being transformed the roll vec should be perpendicular      */
-	/* to the y-axis we assume roll vec is pointing to the inside of the */
-	/* thumb. NOTE: below we do not negate the value returned by atan2   */
-	/* this is because for the x-z plane the angle returned by atan2     */
-	/* is the negative of the actual angle                               */
-	angles[VY] += atan2(thumb_roll_vecs[joint-1][VZ],
-			    thumb_roll_vecs[joint-1][VX]);
-	vt_mult_rot_matrix(angles[VY],'y',Premult,rotmatrix);
+    vt_copy_vec3(thumb_roll_vecs[joint-1],tempvec);
+    vt_transform3(thumb_roll_vecs[joint-1],rotmatrix,
+              thumb_roll_vecs[joint-1]);
+    /* after being transformed the roll vec should be perpendicular      */
+    /* to the y-axis we assume roll vec is pointing to the inside of the */
+    /* thumb. NOTE: below we do not negate the value returned by atan2   */
+    /* this is because for the x-z plane the angle returned by atan2     */
+    /* is the negative of the actual angle                               */
+    angles[VY] += atan2(thumb_roll_vecs[joint-1][VZ],
+                thumb_roll_vecs[joint-1][VX]);
+    vt_mult_rot_matrix(angles[VY],'y',Premult,rotmatrix);
       }
 
       /* finally we scale it */
@@ -177,7 +177,7 @@ adjust_hand_model_geometry(vec3d geom[5][4], vec3d thumb_roll_vecs[2],
       scalevec[VX] *= 1.8;
       scalevec[VZ] *= 1.8;
       if (user->right_hand != TRUE)
-	scalevec[VX] = -scalevec[VX];
+    scalevec[VX] = -scalevec[VX];
       vt_scale_matrix(scalevec,scalematrix);
 
       vt_mult_matrix(transmatrix,rotmatrix,totmatrix);
@@ -197,11 +197,11 @@ adjust_hand_model_geometry(vec3d geom[5][4], vec3d thumb_roll_vecs[2],
   if ((jointpos[VX] != 0.0) && (user->geom[INDEX][MCP][VX] != 0.0))
     scalevec[VX] = fabs(user->geom[INDEX][MCP][VX]/jointpos[VX]);
   else
-    scalevec[VX] = 1.0;		/* can't get there by scaling! */
+    scalevec[VX] = 1.0;     /* can't get there by scaling! */
   if ((jointpos[VY] != 0.0) && (user->geom[INDEX][MCP][VY] != 0.0))
     scalevec[VY] = fabs(user->geom[INDEX][MCP][VY]/jointpos[VY]);
   else
-    scalevec[VY] = 1.0;		/* can't get there by scaling! */
+    scalevec[VY] = 1.0;     /* can't get there by scaling! */
   scalevec[VX] *= 1.1;
   scalevec[VZ] = 1.9;
 
@@ -277,12 +277,12 @@ CyberGloveBasic::vt_read_hand_model(char infilename[], VirtualHand hand, char *g
     {
       vt_read_object(inputfp,&(hand->surface->digit[finger][joint]));
       if ((finger == THUMB) && (joint == MCP))
-	transform_object(&(hand->surface->digit[finger][joint]),totmatrix);
+    transform_object(&(hand->surface->digit[finger][joint]),totmatrix);
       else
-	transform_object(&(hand->surface->digit[finger][joint]),rotmatrix);
+    transform_object(&(hand->surface->digit[finger][joint]),rotmatrix);
 
       vt_calculate_face_normals(&(hand->surface->digit[finger][joint]),
-				right_handed);
+                right_handed);
       vt_calculate_dihedral_angles(&(hand->surface->digit[finger][joint]));
       vt_calculate_vertex_normals(&(hand->surface->digit[finger][joint]));
     }
@@ -303,7 +303,7 @@ CyberGloveBasic::vt_read_hand_model(char infilename[], VirtualHand hand, char *g
     for (joint=MCP; joint < ABDUCT; joint++)
     {
       vt_calculate_face_normals(&(hand->surface->digit[finger][joint]),
-				right_handed);
+                right_handed);
       vt_calculate_dihedral_angles(&(hand->surface->digit[finger][joint]));
       vt_calculate_vertex_normals(&(hand->surface->digit[finger][joint]));
     }
@@ -360,16 +360,16 @@ CyberGloveBasic::vt_read_lowres_hand_model(char infilename[], VirtualHand hand)
     {
       vt_read_object(inputfp,&(hand->surface->digit[finger][joint]));
       vt_vec_sub3(hand->geom[finger][joint],hand->geom[finger][joint+1],
-		  digitvec);
+          digitvec);
       vt_set_vec3(1.0,vt_vec_length3(digitvec)/5.0,1.0,scalevec);
 
       if (!right_handed)
-	scalevec[VX] = -scalevec[VX];
+    scalevec[VX] = -scalevec[VX];
 
       vt_scale_matrix(scalevec,totmatrix);
       transform_object(&(hand->surface->digit[finger][joint]),totmatrix);
       vt_calculate_face_normals(&(hand->surface->digit[finger][joint]),
-				right_handed);
+                right_handed);
       vt_calculate_dihedral_angles(&(hand->surface->digit[finger][joint]));
       vt_calculate_vertex_normals(&(hand->surface->digit[finger][joint]));
     }

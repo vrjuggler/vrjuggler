@@ -33,7 +33,7 @@
 #ifndef _VRJ_OSG_APP_H_
 #define _VRJ_OSG_APP_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Draw/OGL/GlApp.h>
 
@@ -47,7 +47,7 @@
 
 namespace vrj
 {
-   
+
 //-----------------------------------------------------------
 //: OsgApp: Encapulates an open scene graph application.
 //
@@ -79,8 +79,8 @@ public:
    virtual void init()
    {
       //Create the scene
-   	sceneView = new osgUtil::SceneView;
-	   sceneView->setDefaults();
+    sceneView = new osgUtil::SceneView;
+       sceneView->setDefaults();
 
       initScene();
    }
@@ -134,19 +134,19 @@ protected:
 inline void OsgApp::draw()
 {
    // Add the tree to the scene viewer
-	sceneView->setSceneData(getScene());
-	sceneView->setCalcNearFar(false);
+    sceneView->setSceneData(getScene());
+    sceneView->setCalcNearFar(false);
 
    //Take care of the view port (this does not work)
-	GLint view[4];
-	glGetIntegerv(GL_VIEWPORT, view);      //Get the view port that juggler sets
-	sceneView->setViewport(view[0],view[1],view[2],view[3]);
-   
+    GLint view[4];
+    glGetIntegerv(GL_VIEWPORT, view);      //Get the view port that juggler sets
+    sceneView->setViewport(view[0],view[1],view[2],view[3]);
+
    //Get the view matrix and the frustrum form the draw manager
-	GlDrawManager* drawMan = dynamic_cast<GlDrawManager*> ( this->getDrawManager() );
+    GlDrawManager* drawMan = dynamic_cast<GlDrawManager*> ( this->getDrawManager() );
    vprASSERT(drawMan != NULL);
-	GlUserData* userData = drawMan->currentUserData();
-	   
+    GlUserData* userData = drawMan->currentUserData();
+
    // Configure the viewport information
    //vjViewport* cur_vp = userData->getViewport();
    //float xo, yo, xs, ys;
@@ -154,31 +154,31 @@ inline void OsgApp::draw()
    //sceneView->setViewport(xo, yo, xs, ys);
 
    // Copy the matrix
-	Projection* project = userData->getProjection();
-	float* vj_proj_view_mat = project->mViewMat.getFloatPtr();
+    Projection* project = userData->getProjection();
+    float* vj_proj_view_mat = project->mViewMat.getFloatPtr();
    osg::Matrix osgMat;
-	osgMat.set(	vj_proj_view_mat );
+    osgMat.set( vj_proj_view_mat );
 
-	//Get the frustrum
-	Frustum frustum = project->mFrustum;
-	
-	//Reset the camera
+    //Get the frustrum
+    Frustum frustum = project->mFrustum;
+
+    //Reset the camera
    osg::Camera* the_cam = sceneView->getCamera();
-	the_cam->home();
+    the_cam->home();
 
-	//Set the frustrum (this is set with the matrix below)
+    //Set the frustrum (this is set with the matrix below)
    float near_val = frustum[Frustum::VJ_NEAR];
-	the_cam->setFrustum(frustum[Frustum::VJ_LEFT]*near_val,   frustum[Frustum::VJ_RIGHT]*near_val, 
-                      frustum[Frustum::VJ_BOTTOM]*near_val,  frustum[Frustum::VJ_TOP]*near_val, 
+    the_cam->setFrustum(frustum[Frustum::VJ_LEFT]*near_val,   frustum[Frustum::VJ_RIGHT]*near_val,
+                      frustum[Frustum::VJ_BOTTOM]*near_val,  frustum[Frustum::VJ_TOP]*near_val,
                       frustum[Frustum::VJ_NEAR],             frustum[Frustum::VJ_FAR]);
-	
-	//Set the look at
-	the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, &osgMat);
-		
+
+    //Set the look at
+    the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, &osgMat);
+
    //Draw the scene
-	sceneView->app();
-	sceneView->cull();
-	sceneView->draw();
+    sceneView->app();
+    sceneView->cull();
+    sceneView->draw();
 }
 
 

@@ -7,12 +7,12 @@
  * IBOX.C   |   Rev 2.0   |   March 1994
  *
  * Immersion Corp. Developer's Programming Library Module
- * 	Functions for abstraction of an Immersion Interface Box
+ *  Functions for abstraction of an Immersion Interface Box
  *        This abstract module is built upon the lower-level HCI module
  *      Requires HCI firmware version 2.0 or later
  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <stdio.h>
 #include <vrj/Input/Devices/Immersion/hci.h>
 #include <vrj/Input/Devices/Immersion/iboxStandalone.h>
@@ -32,15 +32,15 @@
  */
 ibox_result ibox_connect(ibox_rec *ibox, int port, long int baud)
 {
-	ibox_result result;
+    ibox_result result;
 
-	hci_init(ibox, port, baud);
-	result = hci_connect(ibox);
-	if (result == SUCCESS) result = hci_get_strings(ibox);
-	if (result == SUCCESS) result = hci_get_maxes(ibox);
-	if (result == SUCCESS) result = hci_get_home_ref(ibox);
+    hci_init(ibox, port, baud);
+    result = hci_connect(ibox);
+    if (result == SUCCESS) result = hci_get_strings(ibox);
+    if (result == SUCCESS) result = hci_get_maxes(ibox);
+    if (result == SUCCESS) result = hci_get_home_ref(ibox);
 
-	return result;
+    return result;
 }
 
 
@@ -53,16 +53,16 @@ ibox_result ibox_connect(ibox_rec *ibox, int port, long int baud)
  *     void installer_fun(ibox_rec *ibox)
  */
 ibox_result ibox_fancy_connect(ibox_rec *ibox, int port, long int baud,
-				void (*installer_fun)())
+                void (*installer_fun)())
 {
-	ibox_result result;
+    ibox_result result;
 
-	hci_init(ibox, port, baud);
+    hci_init(ibox, port, baud);
         (*installer_fun)(ibox);
-	result = hci_connect(ibox);
-	if (result == SUCCESS) hci_get_strings(ibox);
+    result = hci_connect(ibox);
+    if (result == SUCCESS) hci_get_strings(ibox);
 
-	return result;
+    return result;
 }
 
 
@@ -77,11 +77,11 @@ ibox_result ibox_fancy_connect(ibox_rec *ibox, int port, long int baud,
  */
 float ibox_version_num(ibox_rec *ibox)
 {
-	float vers;
+    float vers;
 
-	sscanf(ibox->version, "HCI %f", &vers);
+    sscanf(ibox->version, "HCI %f", &vers);
 
-	return vers;
+    return vers;
 }
 
 
@@ -94,13 +94,13 @@ float ibox_version_num(ibox_rec *ibox)
 /* ibox_wait_update() updates ibox data.  Waits for packet before going on.
  *   timer_flag = whether or not to report the timer (0 or non-zero).
  *   num_analogs = # of analog fields to report (0, 2, 4, or 8)
- *   num_encoders = # of encoder fields to report (0, 2, 3, or 6) 
+ *   num_encoders = # of encoder fields to report (0, 2, 3, or 6)
  */
 ibox_result ibox_wait_update(ibox_rec *ibox, int timer_flag, int num_analogs,
-				int num_encoders)
+                int num_encoders)
 {
-	hci_std_cmd(ibox, timer_flag, num_analogs, num_encoders);
-	return hci_wait_packet(ibox);
+    hci_std_cmd(ibox, timer_flag, num_analogs, num_encoders);
+    return hci_wait_packet(ibox);
 }
 
 

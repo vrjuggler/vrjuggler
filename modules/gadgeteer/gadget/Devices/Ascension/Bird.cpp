@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <sys/file.h>
 #include <sys/ioctl.h>
@@ -61,7 +61,7 @@ static void set_autoconfig(int port, int transmitter);
 static void set_group(int port);
 
 
-   
+
 Bird::Bird()
 {
    syncStyle = 1;

@@ -33,14 +33,14 @@
 #ifndef _VRJ_USER_H_
 #define _VRJ_USER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 //#include <vrj/Config/ConfigChunk.h>
 #include <vrj/Input/Type/PosInterface.h>
 
 
 namespace vrj
 {
-   
+
 class ConfigChunk;
 
 //-----------------------------------------

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 //#include <string>
 
@@ -38,7 +38,7 @@
 
 namespace vrj
 {
-   
+
 //class Connect;
 
 //: Constructor
@@ -77,7 +77,7 @@ NetCommunicator::NetCommunicator () {
 
 //: True if the identifier represents a stream we can read.
 //  The id is the token in the handler attribute of a
-//  protocol tag in the EM/VjC command stream.  A given 
+//  protocol tag in the EM/VjC command stream.  A given
 //  NetCommunicator can theoretically serve several handlers;
 //  this is useful for backwards compatibility.
 //! RETURNS: True - if self knows how to parse this stream.

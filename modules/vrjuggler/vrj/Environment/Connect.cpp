@@ -34,7 +34,7 @@
 //
 // author: Christopher Just
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vpr/System.h>
 
@@ -52,7 +52,7 @@
 
 namespace vrj
 {
-   
+
 Connect::Connect(Socket* s, const std::string& _name,
            ConnectMode _mode): name(""), filename(""), commands_mutex(), communicators() {
     vjDEBUG(vjDBG_ENV_MGR,4) << "EM: Creating Connect to file or socket\n"
@@ -387,7 +387,7 @@ bool Connect::readCommand(std::istream& fin) {
 
 //      protocol_name = strtok_r (buf+protocol_start_string_len, "\"", &c);
 //      cout << "using protocol " << protocol_name << std::endl;
-        
+
     // find a communicator for this protocol.
     std::vector<NetCommunicator*>::iterator i;
     for (i = communicators.begin(); i != communicators.end(); i++) {

@@ -33,7 +33,7 @@
 #ifndef _VRJ_TRACKD_CONTROLLER_H_
 #define _VRJ_TRACKD_CONTROLLER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vector>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Input/Type/Digital.h>
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
 
 //-----------------------------------------------------------------------------
 //: Class interfacing with trackd sensor data

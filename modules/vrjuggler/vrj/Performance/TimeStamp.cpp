@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 // these should all be in separate .cpp files.  fix later
 
@@ -59,7 +59,7 @@
 
 namespace vrj
 {
-   
+
 void TimeStampSGI::initialize() {
     int cyclevalue;
     static unsigned long long enodev_dummy_address = 0;
@@ -70,30 +70,30 @@ void TimeStampSGI::initialize() {
     poffmask = getpagesize() - 1;
     phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cyclevalue);
     if (phys_addr == ENODEV) {
-	vjDEBUG (vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " TimeStamp: Cycle Counter not "
-	    "supported by this machine.\n" << vjDEBUG_FLUSH;
-	iotimer_addr = &enodev_dummy_address;
+    vjDEBUG (vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " TimeStamp: Cycle Counter not "
+        "supported by this machine.\n" << vjDEBUG_FLUSH;
+    iotimer_addr = &enodev_dummy_address;
     }
     else {
-	resolution = (float)cyclevalue/1000000.0;
-	raddr = phys_addr & ~poffmask;
-	fd = open("/dev/mmem", O_RDONLY);
+    resolution = (float)cyclevalue/1000000.0;
+    raddr = phys_addr & ~poffmask;
+    fd = open("/dev/mmem", O_RDONLY);
 
-	iotimer_addr =
-	    (volatile void *)mmap(0, poffmask, PROT_READ,
-				  MAP_PRIVATE, fd, (off_t)raddr);
-	iotimer_addr =
-	    (volatile void *)((__psunsigned_t)iotimer_addr +
-			      (phys_addr & poffmask));
+    iotimer_addr =
+        (volatile void *)mmap(0, poffmask, PROT_READ,
+                  MAP_PRIVATE, fd, (off_t)raddr);
+    iotimer_addr =
+        (volatile void *)((__psunsigned_t)iotimer_addr +
+                  (phys_addr & poffmask));
     }
 
     if (cyclecntrsize == 64)
-	initval = *(unsigned long long*)iotimer_addr;
+    initval = *(unsigned long long*)iotimer_addr;
     else
-	initval = *(unsigned int*)iotimer_addr;
+    initval = *(unsigned int*)iotimer_addr;
 
     vjDEBUG(vjDBG_PERFORMANCE,3) << "vjTimeStamp system initialized.\n"
-	       << vjDEBUG_FLUSH;
+           << vjDEBUG_FLUSH;
 }
 
 

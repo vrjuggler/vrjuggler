@@ -34,13 +34,13 @@
 #define _VRJ_SIM_INPUT_H
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/KeyboardInterface.h>
 #include <vrj/Config/VarValue.h>
 
 namespace vrj
 {
-   
+
 class ConfigChunk;
 
 //: Base class for all simulated input devices

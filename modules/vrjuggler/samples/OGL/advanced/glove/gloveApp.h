@@ -33,7 +33,7 @@
 #ifndef _GLOVE_APP_
 #define _GLOVE_APP_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Math/Matrix.h>
@@ -69,7 +69,7 @@
 //
 // NOTE: this application has a really BAD example of navigation.
 // the nav is a hack, and well, it works for this silly little app.
-// be warned, it (navigation.h) won't be fun to extend 
+// be warned, it (navigation.h) won't be fun to extend
 
 class gloveApp : public vrj::GlApp
 {
@@ -94,7 +94,7 @@ public:
    {
       // for the glove position
       mGlove.init("VJGlove");
-      
+
       // for the glove fingers.
       mPinchLeftThumb.init( "LeftThumb" );
       mPinchLeftIndex.init( "LeftIndex" );
@@ -148,7 +148,7 @@ public:
    virtual void preFrame()
    {
       // Do nothing
-   }   
+   }
 
    // Function to draw the scene.  Put OpenGL draw functions here.
    //
@@ -189,8 +189,8 @@ protected:
    vrj::DigitalInterface  mPinchRightMiddle;
    vrj::DigitalInterface  mPinchRightRing;
    vrj::DigitalInterface  mPinchRightPinky;
-   
-   
+
+
    //: Object selection
    bool                mCubeSelected;
    bool                mSphereSelected;

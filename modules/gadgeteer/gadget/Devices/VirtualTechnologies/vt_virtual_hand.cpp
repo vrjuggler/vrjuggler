@@ -11,7 +11,7 @@
 /*  --    Author:  Larry Edwards                            --  */
 /*  ==========================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -77,8 +77,8 @@ allocate_VirtualHand(void)
 
 void
 CyberGloveBasic::init_VirtualHand(VirtualHand hand, int glove_index,
-		 char calfile[],
-		 Boolean visible)
+         char calfile[],
+         Boolean visible)
 {
   VirtualHandPrivate hand_private = hand->private_data;
 
@@ -114,14 +114,14 @@ CyberGloveBasic::vt_create_VirtualHand( char *port, int baud, AppDataStruct &app
 
   glove_index = 0;
   init_VirtualHand(thehand,glove_index,
-		   app.glove[glove_index].incalfile,
-		   app.hand_visible[glove_index]);
+           app.glove[glove_index].incalfile,
+           app.hand_visible[glove_index]);
 
   thehand->read_glove = app.glove[glove_index].on;
   if (thehand->read_glove)
   {
     if (vt_open_glove_port(port,
-			   baud) < Ok)
+               baud) < Ok)
     {
       vt_print_error("vt_create_VirtualHand");
       thehand->read_glove = FALSE;
@@ -130,9 +130,9 @@ CyberGloveBasic::vt_create_VirtualHand( char *port, int baud, AppDataStruct &app
     {
       vt_send_glove_query(CG_RIGHT_HAND_QUERY,&right_hand_glove);
       if (thehand->right_hand != NULL)
-	if (right_hand_glove != *(thehand->right_hand))
-	  fprintf(stderr,"\nWARNING in vt_create_VirtualHand:\n\thandedness of"
-		  " calibration file does not match CbGlove.");
+    if (right_hand_glove != *(thehand->right_hand))
+      fprintf(stderr,"\nWARNING in vt_create_VirtualHand:\n\thandedness of"
+          " calibration file does not match CbGlove.");
     }
   }
 
@@ -226,16 +226,16 @@ CyberGloveBasic::vt_build_hand_matrices(VirtualHand hand)
     if (finger != THUMB)
     {
       digit[VX] = user->geom[finger][joint+1][VX] -
-	                                user->geom[finger][joint][VX];
+                                    user->geom[finger][joint][VX];
       digit[VY] = user->geom[finger][joint+1][VY] -
                                         user->geom[finger][joint][VY];
       theta = atan2(digit[VY], digit[VX]) - M_PI/2.0;
     }
-    else			/* for thumb we skew in x-y and y-z planes */
+    else            /* for thumb we skew in x-y and y-z planes */
     {
       vt_normalize3(user->thumb_mcp_axis,thumb_mcp);
       if ((hand->right_hand != NULL) && *(hand->right_hand) != TRUE)
-	vt_vec_neg3(thumb_mcp,thumb_mcp);
+    vt_vec_neg3(thumb_mcp,thumb_mcp);
 
       /* determine the transformation to the unabducted MCP coordinate frame */
       vt_zero_matrix_fill(rotmatrix);
@@ -243,7 +243,7 @@ CyberGloveBasic::vt_build_hand_matrices(VirtualHand hand)
       vt_normalize3(thumb_mcp,rotmatrix[0]); /* the thumb x-axis */
       vt_cross_prod3(z_axis,rotmatrix[0],normal); /* the thumb y-axis */
       vt_normalize3(normal,rotmatrix[1]);
-      vt_cross_prod3(rotmatrix[0],rotmatrix[1],normal);	
+      vt_cross_prod3(rotmatrix[0],rotmatrix[1],normal);
       vt_normalize3(normal,rotmatrix[2]); /* the z-axis */
 
       /* determine the unflexed abduction angle ... we can't include this */
@@ -260,7 +260,7 @@ CyberGloveBasic::vt_build_hand_matrices(VirtualHand hand)
       vt_mult_rot_matrix(theta,'z',Premult,hand->digit_xform[finger][joint]);
     else
       vt_mult_matrix(rotmatrix,hand->digit_xform[finger][joint],
-		     hand->digit_xform[finger][joint]);
+             hand->digit_xform[finger][joint]);
   }
 
   /* for thumb we just assume that the PIP and DIP axes are parallel since */
@@ -292,9 +292,9 @@ CyberGloveBasic::vt_build_hand_matrices(VirtualHand hand)
       digit[VX] = user->geom[finger][joint][VX] -
                                             user->geom[finger][joint-1][VX];
       digit[VY] = user->geom[finger][joint][VY] -
-	                                    user->geom[finger][joint-1][VY];
+                                        user->geom[finger][joint-1][VY];
       digit[VZ] = user->geom[finger][joint][VZ] -
-	                                    user->geom[finger][joint-1][VZ];
+                                        user->geom[finger][joint-1][VZ];
       length = vt_vec_length3(digit);
       digit[VX] = 0.0;
       digit[VY] = length;
@@ -302,12 +302,12 @@ CyberGloveBasic::vt_build_hand_matrices(VirtualHand hand)
       vt_trans_matrix(digit,hand->digit_xform[finger][joint]);
 
       digit[VX] = user->geom[finger][joint+1][VX] -
-	                                     user->geom[finger][joint][VX];
+                                         user->geom[finger][joint][VX];
       digit[VY] = user->geom[finger][joint+1][VY] -
-	                                     user->geom[finger][joint][VY];
+                                         user->geom[finger][joint][VY];
       theta = atan2(digit[VY],digit[VX]);
       vt_mult_rot_matrix(theta-oldtheta,'z',Premult,
-			 hand->digit_xform[finger][joint]);
+             hand->digit_xform[finger][joint]);
       oldtheta = theta;
     }
   }
@@ -328,7 +328,7 @@ CyberGloveBasic::vt_update_hand_state(VirtualHand hand)
  if (hand->read_glove)
    vt_read_processed_glove_data();
  else
-   vt_process_glove_data();	/* reflect changes due to sliders */
+   vt_process_glove_data(); /* reflect changes due to sliders */
 }
 
 
@@ -350,9 +350,9 @@ CyberGloveBasic::vt_calc_thumb_roll(VirtualHand hand)
 
   vt_copy_matrix(hand->digit_xform[THUMB][MCP],thumb_mcp_matrix);
   vt_mult_rot_matrix(hand->joint_angle[THUMB][MCP],
-		     'x',Premult,thumb_mcp_matrix);
+             'x',Premult,thumb_mcp_matrix);
   vt_mult_rot_matrix(hand->joint_angle[THUMB][ABDUCT] +
-		     hand->unflexed_abduction,'z',Premult,thumb_mcp_matrix);
+             hand->unflexed_abduction,'z',Premult,thumb_mcp_matrix);
 
   /* the roll vector is the axis around which the thumb rolls as the thumb */
   /* abducts and pivots */

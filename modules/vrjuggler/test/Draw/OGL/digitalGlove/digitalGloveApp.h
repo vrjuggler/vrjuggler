@@ -33,7 +33,7 @@
 #ifndef _DIGITAL_GLOVE_APP_
 #define _DIGITAL_GLOVE_APP_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <math.h>
 #include <GL/gl.h>
@@ -79,7 +79,7 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      //std::cout<<"digitalGloveApp::apiInit()\n"<<std::flush; 
+      //std::cout<<"digitalGloveApp::apiInit()\n"<<std::flush;
    }
 
    // Function called after tracker update but before start of drawing.  Do
@@ -108,8 +108,8 @@ public:
    //! POST: The current scene has been drawn
    virtual void draw()
    {
-      //std::cout<<"digitalGloveApp::draw()\n"<<std::flush; 
-      
+      //std::cout<<"digitalGloveApp::draw()\n"<<std::flush;
+
       initGLState();    // This should really be in another function
       myDraw();
    }

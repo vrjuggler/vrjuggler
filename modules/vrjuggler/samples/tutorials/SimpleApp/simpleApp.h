@@ -33,7 +33,7 @@
 #ifndef _SIMPLE_APP
 #define _SIMPLE_APP
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <iostream>
 #include <iomanip>

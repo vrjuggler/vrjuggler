@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Input/Type/AnalogProxy.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj
 {
-   
+
 bool AnalogProxy::config(ConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "----------- configuring ANALOG PROXY -----------------\n" << vjDEBUG_FLUSH;

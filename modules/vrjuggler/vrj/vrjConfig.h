@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_CONFIG_H_
-#define _VJ_CONFIG_H_
+#ifndef _VRJ_CONFIG_H_
+#define _VRJ_CONFIG_H_
 /* #pragma once */
 
 /*
@@ -151,4 +151,4 @@
 #   define VJ_DATA_API(__type)	VJ_IMPORT_DATA(__type)
 #endif
 
-#endif   /* _VJ_CONFIG_H_ */
+#endif   /* _VRJ_CONFIG_H_ */

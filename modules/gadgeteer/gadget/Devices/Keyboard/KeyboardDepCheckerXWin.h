@@ -33,7 +33,7 @@
 #ifndef _VRJ_KEYBOARD_DEP_CHECKER_XWIN_H_
 #define _VRJ_KEYBOARD_DEP_CHECKER_XWIN_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 // Dependency checker includes
 #include <vrj/Kernel/DependencyManager.h>

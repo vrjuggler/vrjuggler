@@ -33,11 +33,11 @@
 #ifndef _VRJ_SYSTEM_DATA_H_
 #define _VRJ_SYSTEM_DATA_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 namespace vrj
 {
-   
+
 class InputManager;
 
 /**

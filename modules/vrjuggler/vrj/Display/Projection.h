@@ -33,7 +33,7 @@
 #ifndef _VRJ_PROJECTION_H_
 #define _VRJ_PROJECTION_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Math/Matrix.h>
 #include <vrj/Display/Frustum.h>
 #include <vrj/Util/Debug.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 //------------------------------------------------------------------
 //: Pure virtual base class for viewport definitions.
 //

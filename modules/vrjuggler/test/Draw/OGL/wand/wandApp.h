@@ -33,7 +33,7 @@
 #ifndef _WAND_APP_
 #define _WAND_APP_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <iostream>
 #include <iomanip.h>
@@ -132,7 +132,7 @@ public:
                  << " 4:" << mButton4->getData()
                  << " 5:" << mButton5->getData() << std::endl;
    }
-   
+
    virtual void bufferPreDraw();
 
    // Function to draw the scene.  Put OpenGL draw functions here.

@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Display/TrackedWallProjection.h>
 
 
 namespace vrj
 {
-   
+
 void TrackedWallProjection::updateWallParams()
 {
    // Compute the correct rotation matrix
@@ -45,9 +45,9 @@ void TrackedWallProjection::updateWallParams()
    // tracker_mat ==> baseMtracker
    // We want surfMbase <=== surfMbase*trackerMbase
    // NOTE: wallRotMat's base is the base of the tracking system
-   
+
    Matrix tracker_mat = *(mTracker->getData());     // baseMtracker
-   
+
    // Method 1:
    // baseMsurf = baseMtracker*baseMsurf
    // surfMbase = inv(baseMsurf)
@@ -67,7 +67,7 @@ void TrackedWallProjection::updateWallParams()
    Matrix tracker_mat_inv;                 // trackerMbase
    tracker_mat_inv.invert(tracker_mat);
    mWallRotationMatrix.mult(mWallRotationMatrix_bak,tracker_mat_inv);
-#endif  
+#endif
 }
 
 std::ostream& TrackedWallProjection::outStream(std::ostream& out)

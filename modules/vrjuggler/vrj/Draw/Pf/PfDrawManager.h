@@ -33,7 +33,7 @@
 #ifndef _VRJ_PF_DRAW_MANAGER_
 #define _VRJ_PF_DRAW_MANAGER_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <functional>
 #include <algorithm>
@@ -50,7 +50,7 @@
 
 namespace vrj
 {
-   
+
 
 class PfApp;
 class Projection;

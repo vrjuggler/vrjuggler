@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/ConfigChunkDB.h>
 #include <vrj/Config/ChunkDescDB.h>
 
@@ -39,7 +39,7 @@
 
 #include <vrj/Config/StandardConfigIOHandler.h>
 
-//      StandardConfigIOHandler () { 
+//      StandardConfigIOHandler () {
 //          ;
 //      }
 
@@ -49,7 +49,7 @@
 
 namespace vrj
 {
-   
+
 /*virtual*/ bool StandardConfigIOHandler::readConfigChunkDB (const std::string& filename, ConfigChunkDB& db) {
     std::ifstream in(filename.c_str());
     if (!in)

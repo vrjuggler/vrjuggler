@@ -33,7 +33,7 @@
 #ifndef _VRJ_SURFACE_DISPLAY_H_
 #define _VRJ_SURFACE_DISPLAY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Viewport.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 class ConfigChunk;
 
 //: Defines a display surface an associated projections

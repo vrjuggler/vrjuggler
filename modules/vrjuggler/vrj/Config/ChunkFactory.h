@@ -33,7 +33,7 @@
 #ifndef _VRJ_CHUNKFACTORY_H_
 #define _VRJ_CHUNKFACTORY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vrj/Config/ChunkDescDB.h>
 #include <vrj/Util/Debug.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 
 //------------------------------------------------------------------
 //: Generator of ConfigChunks...  (singleton)

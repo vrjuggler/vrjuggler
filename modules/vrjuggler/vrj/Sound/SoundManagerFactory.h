@@ -1,7 +1,7 @@
 #ifndef _VRJ_SOUNDMANAGER_FACTORY_H_
 #define _VRJ_SOUNDMANAGER_FACTORY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Sound/SoundManager.h>
 

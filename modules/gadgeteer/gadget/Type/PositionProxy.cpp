@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/PosProxy.h>
 #include <vrj/Config/ConfigChunk.h>
 
@@ -39,7 +39,7 @@
 
 namespace vrj
 {
-   
+
 //: Set the transform for this PosProxy
 // Sets the transformation matrix to
 //    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)

@@ -33,11 +33,11 @@
 #ifndef _VRJ_SPEECH_H_
 #define _VRJ_SPEECH_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 namespace vrj
 {
-   
+
 class Speech
 {
 public:

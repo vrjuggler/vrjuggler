@@ -33,12 +33,12 @@
 #ifndef _VJ_HAND_H_
 #define _VJ_HAND_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Finger.h>
 
 namespace vrj
 {
-   
+
 //  DIJ = Distal Interphalangeal Joint  --- Finger tip
 //  PIJ = Proximal "              "     --- Middle joint
 //  MPJ = Metacarpo "             "     --- closest to Hand
@@ -48,17 +48,17 @@ namespace vrj
 class Hand
 {
 public:
-   Hand( const float& yaw = 0, const float& pitch = 0 ) : 
-         mPinky( -15, -45, -45, 0 ), 
-         mRing( -15, -45, -45, 0 ), 
-         mMiddle( -15, -45, -45, 0 ), 
-         mIndex( -15, -45, -45, 0 ), 
+   Hand( const float& yaw = 0, const float& pitch = 0 ) :
+         mPinky( -15, -45, -45, 0 ),
+         mRing( -15, -45, -45, 0 ),
+         mMiddle( -15, -45, -45, 0 ),
+         mIndex( -15, -45, -45, 0 ),
          mThumb( -15, -45, -45, 0 ),
-         mYaw( yaw ), 
+         mYaw( yaw ),
          mPitch( pitch )
    {
-   }   
-   
+   }
+
    inline Finger& pinky() { return mPinky; }
    inline Finger& ring() { return mRing; }
    inline Finger& middle() { return mMiddle; }
@@ -66,40 +66,40 @@ public:
    inline Finger& thumb() { return mThumb; }
    inline const float& pitch() const { return mPitch; }
    inline const float& yaw() const { return mYaw; }
-   
+
    inline void setPitch( const float& pitch ) { mPitch = pitch; }
    inline void setYaw( const float& yaw ) { mYaw = yaw; }
-   
+
    // set Fingers based on digital information.
    void setFingers( const bool& pinky, const bool& ring, const bool& middle, const bool& index, const bool& thumb )
    {
-      if (pinky) 
+      if (pinky)
          mPinky.set( -15, -45, -45, 0 );
       else
          mPinky.set( -15, -0, -45, 0 );
-      
-      if (ring) 
+
+      if (ring)
          mRing.set( -15, -45, -45, 0 );
       else
          mRing.set( -15, -0, -45, 0 );
-      
-      if (middle) 
+
+      if (middle)
          mMiddle.set( -15, -45, -45, 0 );
       else
          mMiddle.set( -15, -0, -45, 0 );
-      
-      if (index) 
+
+      if (index)
          mIndex.set( -15, -45, -45, 0 );
       else
          mIndex.set( -15, -0, -45, 0 );
-      
-      if (thumb) 
+
+      if (thumb)
          mThumb.set( -15, -45, -45, 0 );
       else
          mThumb.set( -15, -0, -45, 0 );
    }
 
-private:  
+private:
    Finger mPinky, mRing, mMiddle, mIndex, mThumb;
    float mYaw, mPitch;
 };

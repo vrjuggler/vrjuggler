@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Performance/PerfDataBuffer.h>
 #include <vrj/Util/Debug.h>
@@ -38,10 +38,10 @@
 
 namespace vrj
 {
-   
+
 
 void PerfDataBuffer::init (const char* _name, int _numbufs,
-				    int _nindex) {
+                    int _nindex) {
     name = _name;
     handler_name = "vjc_performance";
     numbufs = _numbufs;
@@ -71,8 +71,8 @@ PerfDataBuffer::~PerfDataBuffer () {
 //+       writing available data when requested.
 void PerfDataBuffer::activate() {
     active = 1;
-    vjDEBUG(vjDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
-	" activated.\n" << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_PERFORMANCE,1) << "Performance Buffer " << name <<
+    " activated.\n" << vjDEBUG_FLUSH;
 }
 
 
@@ -90,8 +90,8 @@ void PerfDataBuffer::deactivate() {
     read_begin = 0;
     write_pos = 1;
     lost = 0;
-    vjDEBUG(vjDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
-	" deactivated.\n" << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_PERFORMANCE,1) << "Performance Buffer " << name <<
+    " deactivated.\n" << vjDEBUG_FLUSH;
 
 }
 
@@ -116,24 +116,24 @@ void PerfDataBuffer::set(int _phase) {
     int tw;
 
     if (!active)
-	return;
+    return;
 
     if (write_pos == read_begin) {
-	if (lost_lock.acquire() != -1) {
-	    lost++;
-	    lost_lock.release();
-	}
-	else
-	    vjDEBUG(vjDBG_ALL,2) << "vjPerfDataBuffer: lock acquire "
-		       << "failed\n" << vjDEBUG_FLUSH;
-	tw = (write_pos + numbufs - 1) % numbufs;
-	buffer[tw].phase = _phase;
-	buffer[tw].ts.set();
+    if (lost_lock.acquire() != -1) {
+        lost++;
+        lost_lock.release();
+    }
+    else
+        vjDEBUG(vjDBG_ALL,2) << "vjPerfDataBuffer: lock acquire "
+               << "failed\n" << vjDEBUG_FLUSH;
+    tw = (write_pos + numbufs - 1) % numbufs;
+    buffer[tw].phase = _phase;
+    buffer[tw].ts.set();
     }
     else {
-	buffer[write_pos].phase = _phase;
-	buffer[write_pos].ts.set();
-	write_pos = (write_pos+1)%numbufs;
+    buffer[write_pos].phase = _phase;
+    buffer[write_pos].ts.set();
+    write_pos = (write_pos+1)%numbufs;
     }
 }
 
@@ -142,22 +142,22 @@ void PerfDataBuffer::set (int _phase, TimeStamp& _value) {
     int tw;
 
     if (!active)
-	return;
+    return;
 
     if (write_pos == read_begin) {
-	lost_lock.acquire();
+    lost_lock.acquire();
         lost++;
         lost_lock.release();
 
         // overwrite last buffer pos with most recent
-	tw = (write_pos + numbufs - 1) % numbufs;
-	buffer[tw].phase = _phase;
-	buffer[tw].ts = _value;
+    tw = (write_pos + numbufs - 1) % numbufs;
+    buffer[tw].phase = _phase;
+    buffer[tw].ts = _value;
     }
     else {
-	buffer[write_pos].phase = _phase;
-	buffer[write_pos].ts = _value;
-	write_pos = (write_pos+1)%numbufs;
+    buffer[write_pos].phase = _phase;
+    buffer[write_pos].ts = _value;
+    write_pos = (write_pos+1)%numbufs;
     }
 }
 
@@ -186,35 +186,35 @@ void PerfDataBuffer::write (std::ostream& out) {
     //out.width(13);
 
     if (!active)
-	return;
+    return;
 
     //out << "PerfData " << name << "\n";
     begin = read_begin;
     end = (write_pos - 1 + numbufs)%numbufs;
     //cout << "begin/end are " << begin <<' '<< end << endl;
     if (begin == end)
-	return;
+    return;
     out << "PerfData1 \"" << name << "\" " << nindex << std::endl;
     if (begin < end) {
-	for (i = begin; i < end; i++) {
-	    b = &(buffer[i]);
-	    out << b->phase << ' '
-		<< std::setiosflags(std::ios::fixed) << b->ts << '\n';
-	}
+    for (i = begin; i < end; i++) {
+        b = &(buffer[i]);
+        out << b->phase << ' '
+        << std::setiosflags(std::ios::fixed) << b->ts << '\n';
+    }
     }
     else { /* wraparound */
-	for (i = begin; i < numbufs; i++) {
-	    b = &(buffer[i]);
-	    out << b->phase << ' ' << std::setiosflags(std::ios::fixed)
-		<< b->ts << '\n';
-	}
-	for (i = 0; i < end; i++) {
-	    b = &(buffer[i]);
-	    out << b->phase << ' ' << std::setiosflags(std::ios::fixed)
-		<< b->ts << '\n';
-	}
+    for (i = begin; i < numbufs; i++) {
+        b = &(buffer[i]);
+        out << b->phase << ' ' << std::setiosflags(std::ios::fixed)
+        << b->ts << '\n';
     }
-	
+    for (i = 0; i < end; i++) {
+        b = &(buffer[i]);
+        out << b->phase << ' ' << std::setiosflags(std::ios::fixed)
+        << b->ts << '\n';
+    }
+    }
+
     lost_lock.acquire();
     tlost = lost;
     lost = 0;
@@ -240,58 +240,58 @@ void PerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, fl
     retval = buffer[(end-postskip)%numbufs].ts - buffer[(begin+preskip)%numbufs].ts;
     /*
     cout << "begin is " << begin
-	 << "\nend is " << end
-	 << "\nlast is " << last << endl;
+     << "\nend is " << end
+     << "\nlast is " << last << endl;
     */
     if (last > begin)
-	nump = last - begin;
+    nump = last - begin;
     else
-	nump = last + (numbufs - begin);
+    nump = last + (numbufs - begin);
 
     avg = retval/(nump - preskip - postskip);
 
     out << "Dumping buffer: " << nump << " samples, total: "
-	<< retval << " us, avg: " << avg << "us\n";
+    << retval << " us, avg: " << avg << "us\n";
     if (discrep > 0) {
-	out << "Reporting Discrepencies:\n";
+    out << "Reporting Discrepencies:\n";
     }
     end = (end-postskip)%numbufs;
     begin = (begin + preskip)%numbufs;
 
-	if (begin == end)
-	    return;
-	else if (begin < end) {
-	    for (i = begin+1; i < end; i++) {
-		diff = buffer[i].ts - buffer[i-1].ts;
-		if (Math::abs(diff - avg) > avg * discrep) {
-		    out << "    " << diff << " us at time "
-			<< buffer[i-1].ts << " us\n";
-		}
-	    }
-	}
-	else { /* wraparound */
-	    for (i = begin+1; i < numbufs; i++) {
-		diff = buffer[i].ts - buffer[i-1].ts;
-		if (Math::abs(diff - avg) > avg * discrep) {
-		    out << "    " << diff << " us at time "
-			<< buffer[i-1].ts << " us\n";
+    if (begin == end)
+        return;
+    else if (begin < end) {
+        for (i = begin+1; i < end; i++) {
+        diff = buffer[i].ts - buffer[i-1].ts;
+        if (Math::abs(diff - avg) > avg * discrep) {
+            out << "    " << diff << " us at time "
+            << buffer[i-1].ts << " us\n";
+        }
+        }
+    }
+    else { /* wraparound */
+        for (i = begin+1; i < numbufs; i++) {
+        diff = buffer[i].ts - buffer[i-1].ts;
+        if (Math::abs(diff - avg) > avg * discrep) {
+            out << "    " << diff << " us at time "
+            << buffer[i-1].ts << " us\n";
 
-		}
-	    }
-	    diff = buffer[0].ts - buffer[numbufs].ts;
-	    if (Math::abs(diff - avg) > avg * discrep) {
-		out << "    " << diff << " us at time "
-		    << buffer[numbufs].ts << " us\n";
-	    }
-	    for (i = 1; i < end; i++) {
-		diff = buffer[i].ts - buffer[i-1].ts;
-		if (Math::abs(diff - avg) > avg * discrep) {
-		    out << "    " << diff << " us at time "
-			<< buffer[i-1].ts << " us\n";
-		}
-	    }
-	
-	}
+        }
+        }
+        diff = buffer[0].ts - buffer[numbufs].ts;
+        if (Math::abs(diff - avg) > avg * discrep) {
+        out << "    " << diff << " us at time "
+            << buffer[numbufs].ts << " us\n";
+        }
+        for (i = 1; i < end; i++) {
+        diff = buffer[i].ts - buffer[i-1].ts;
+        if (Math::abs(diff - avg) > avg * discrep) {
+            out << "    " << diff << " us at time "
+            << buffer[i-1].ts << " us\n";
+        }
+        }
+
+    }
 
 
     lost_lock.acquire();

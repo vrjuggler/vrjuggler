@@ -33,12 +33,12 @@
 #ifndef _VRJ_DEVICE_INTERFACE_H_
 #define _VRJ_DEVICE_INTERFACE_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Util/Debug.h>
 
 namespace vrj
 {
-   
+
 class Proxy;
 class AnalogProxy;
 class DigitalProxy;

@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/ChunkFactory.h>
 
 namespace vrj
 {
-   
+
 //: Creates a Chunk using the given description
 ConfigChunk* ChunkFactory::createChunk (ChunkDesc* d, bool use_defaults) {
     if (d) {
@@ -58,14 +58,14 @@ void ChunkFactory::setupInitialEnvironment() {
         vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  "Env var VJ_BASE_DIR not defined." << std::endl << vjDEBUG_FLUSH;
         exit(1);
     }
-    
+
     std::string chunk_desc_file = vj_base_dir;
     chunk_desc_file += "/";
     chunk_desc_file += VJ_SHARE_DIR;
     chunk_desc_file += "/Data/vrj-chunks.desc";
     vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "Loading chunk desc file: ["
                                         << chunk_desc_file << "]\n" << vjDEBUG_FLUSH;
-    
+
     this->loadDescs(chunk_desc_file);
 
 //       ChunkDescDB* cfg_desc = new ChunkDescDB;

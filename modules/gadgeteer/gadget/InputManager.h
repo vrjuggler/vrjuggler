@@ -39,7 +39,7 @@
 #ifndef VRJ_INPUT_MANAGER_H
 #define VRJ_INPUT_MANAGER_H
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <map>
 
@@ -47,7 +47,7 @@
 
 namespace vrj
 {
-   
+
 // Proxies
 class Proxy;
 class Input;

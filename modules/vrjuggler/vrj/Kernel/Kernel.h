@@ -34,7 +34,7 @@
 #define _VRJ_KERNEL_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vpr/Util/Singleton.h>
 
@@ -211,7 +211,7 @@ protected:
    SoundManager*      mSoundManager;          //: The Audio Manager we are currently using
    DisplayManager*       mDisplayManager;        //: The Display Manager we are currently using
    EnvironmentManager*   environmentManager;     //: The Environment Manager object
-   
+
    /// Performance information
    PerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
    bool              performanceEnabled;

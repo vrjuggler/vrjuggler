@@ -33,7 +33,7 @@
 #ifndef _VRJ_ENVIRONMENT_MANAGER_H_
 #define _VRJ_ENVIRONMENT_MANAGER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
 #include <vrj/Kernel/ConfigChunkHandler.h>
@@ -41,7 +41,7 @@
 
 namespace vrj
 {
-   
+
 class Connect;
 class PerfDataBuffer;
 class ConfigChunkDB;
@@ -54,12 +54,12 @@ class ConfigChunkDB;
 //      Juggler and UI elements.  This includes data logging and
 //      interactive connections to the VR Juggler control program,
 //      Control.
-//      The EM's most important function is to communicate 
+//      The EM's most important function is to communicate
 //      configuration information and changes between the GUI and
 //      the Kernel.  It is also the owner and manager of Juggler
 //      Performance measurement code.
 //      A near-future addition will be device status/data monitoring.
-// 
+//
 //      Which means that its main duties are:
 //         - handle file and socket connections
 //         - handle PerfDataBuffers
@@ -91,7 +91,7 @@ public:
 
 
 
-    //: registers a buffer containing perf data... 
+    //: registers a buffer containing perf data...
     void addPerfDataBuffer (PerfDataBuffer *v);
 
 
@@ -122,7 +122,7 @@ public:
     virtual bool configRemove(ConfigChunk* chunk);
 
 
-    
+
     //: Can the handler handle the given chunk?
     //! RETURNS: true - Can handle it
     //+          false - Can't handle it
@@ -164,7 +164,7 @@ private:
     bool acceptConnections();
 
 
-  
+
     //: stop listening for client connections
     //! PRE:  True
     //! POST: no new connections are accepted. open connections

@@ -33,12 +33,12 @@
 #ifndef _VRJ_TIMESTAMP_SGI_H_
 #define _VRJ_TIMESTAMP_SGI_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <sys/types.h>
 
 namespace vrj
 {
- 
+
 //-----------------------------------------
 //:Time recorder for SGI systems
 //
@@ -80,27 +80,27 @@ public:
     //! PRE: true
     //! POST: self's value is the current time
     inline void set() {
-	val = (cyclecntrsize == 64)
-	    ? *(unsigned long long*) iotimer_addr
-	    : *(unsigned int*) iotimer_addr;
-	val = (val >= initval)
-	    ? val - initval
-	    : val + (maxval - initval);
+    val = (cyclecntrsize == 64)
+        ? *(unsigned long long*) iotimer_addr
+        : *(unsigned int*) iotimer_addr;
+    val = (val >= initval)
+        ? val - initval
+        : val + (maxval - initval);
     }
 
 
 
     //: assignment operator
     TimeStampSGI& operator= (const TimeStampSGI& t2) {
-	val = t2.val;
-	return *this;
+    val = t2.val;
+    return *this;
     }
 
 
 
     //: returns number of microseconds between self and t2
     //! PRE: t2 is stamped with an earlier time than self
-    //! 
+    //!
     float operator - (const TimeStampSGI& t2) const;
 
 

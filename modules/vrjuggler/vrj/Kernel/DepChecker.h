@@ -34,14 +34,14 @@
 #define _VRJ_DEP_CHECKER_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Input.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vrj/Kernel/ConfigManager.h>
 
 namespace vrj
 {
-   
+
 //: Base class for dependency checkers
 //
 // A dependency checker is responsible for figuring out

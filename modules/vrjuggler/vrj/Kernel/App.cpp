@@ -28,13 +28,13 @@
  * -----------------------------------------------------------------
  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/App.h>
 #include <vrj/Kernel/Kernel.h>
 
 namespace vrj
 {
-   
+
 App::App(Kernel* kern)
 {
    vprASSERT(kern != NULL);    // We don't want a NULL Kernel

@@ -9,7 +9,7 @@
 /*  --    Modified by Larry Edwards                         --  */
 /*  ==========================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <stdio.h>
 
 #include <X11/Intrinsic.h>
@@ -162,11 +162,11 @@ CyberGloveBasic::vt_geom_in(FILE *inputfp, UserGeometry user)
   vec3d tempvec[5];
   Boolean found_geom = FALSE;
 
-  rewind(inputfp);		/* make sure we're at beginning of file */
+  rewind(inputfp);      /* make sure we're at beginning of file */
 
   while (fgets(input_line, 81, inputfp))
     if ((found_geom =
-	 (strncmp(input_line,geom_header,sizeof(geom_header)-1) == 0)))
+     (strncmp(input_line,geom_header,sizeof(geom_header)-1) == 0)))
       break;
   if (!found_geom)
     return (vt_set_error("vt_read_calibration",CAL_ERROR1));
@@ -178,13 +178,13 @@ CyberGloveBasic::vt_geom_in(FILE *inputfp, UserGeometry user)
   skip_comments(inputfp,input_line);
   /* read wrist offset */
   sscanf(input_line, "%f %f %f", &user->wrist_offset[VX],
-	 &user->wrist_offset[VY],&user->wrist_offset[VZ]);
+     &user->wrist_offset[VY],&user->wrist_offset[VZ]);
 
   skip_comments(inputfp,input_line);
   sscanf(input_line, "%d %d %f %f", &user->fingers, &user->joints,
-	 &user->thumb_roll, &user->hand_roll);
-  user->thumb_roll *= DEG2RAD;	/*  conversion to radians  */
-  user->hand_roll *= DEG2RAD;	/*  conversion to radians  */
+     &user->thumb_roll, &user->hand_roll);
+  user->thumb_roll *= DEG2RAD;  /*  conversion to radians  */
+  user->hand_roll *= DEG2RAD;   /*  conversion to radians  */
 
   for (finger = THUMB; finger < user->fingers; finger++)
   {
@@ -194,15 +194,15 @@ CyberGloveBasic::vt_geom_in(FILE *inputfp, UserGeometry user)
     {
       fgets(input_line, 81, inputfp);
       sscanf(input_line, "%f %f %f %f",
-	     &user->geom[finger][joint][VX], &user->geom[finger][joint][VY],
-	     &user->geom[finger][joint][VZ],
-	     &user->knuckle_radius[finger][joint]);
+         &user->geom[finger][joint][VX], &user->geom[finger][joint][VY],
+         &user->geom[finger][joint][VZ],
+         &user->knuckle_radius[finger][joint]);
     }
   }
 
   skip_comments(inputfp,input_line);
   sscanf(input_line, "%f %f %f",
-	 &user->pisiform[VX], &user->pisiform[VY], &user->pisiform[VZ]);
+     &user->pisiform[VX], &user->pisiform[VY], &user->pisiform[VZ]);
 
   /*  The following kludge just goes to show you that the geometry */
   /*  file format is due to be upgraded.                           */
@@ -210,7 +210,7 @@ CyberGloveBasic::vt_geom_in(FILE *inputfp, UserGeometry user)
   {
     skip_comments(inputfp,input_line);
     sscanf(input_line, "%f %f %f",
-	   &tempvec[i][VX], &tempvec[i][VY], &tempvec[i][VZ]);
+       &tempvec[i][VX], &tempvec[i][VY], &tempvec[i][VZ]);
   }
   vt_copy_vec3(tempvec[0],user->radi_ulna[0]);
   user->radi_ulna[0][VZ] -= 1.0;
@@ -230,10 +230,10 @@ CyberGloveBasic::vt_geom_in(FILE *inputfp, UserGeometry user)
   /* read thumb roll and mcp vectors */
   skip_comments(inputfp,input_line);
   sscanf(input_line, "%f %f %f",&user->thumb_roll_axis[VX],
-	 &user->thumb_roll_axis[VY], &user->thumb_roll_axis[VZ]);
+     &user->thumb_roll_axis[VY], &user->thumb_roll_axis[VZ]);
   skip_comments(inputfp,input_line);
   sscanf(input_line, "%f %f %f", &user->thumb_mcp_axis[VX],
-	 &user->thumb_mcp_axis[VY], &user->thumb_mcp_axis[VZ]);
+     &user->thumb_mcp_axis[VY], &user->thumb_mcp_axis[VZ]);
 
   return (Ok);
 }
@@ -251,12 +251,12 @@ CyberGloveBasic::vt_geom_out( FILE *outputfp, UserGeometry user)
 
   print_list(outputfp, sensor_header);
   fprintf(outputfp, "%6.2f %6.2f %6.2f\n",user->wrist_offset[VX],
-	  user->wrist_offset[VY], user->wrist_offset[VZ]);
+      user->wrist_offset[VY], user->wrist_offset[VZ]);
 
   print_list(outputfp, hand_header);
   fprintf(outputfp, "%6d %6d %6.2f %6.2f\n",
-	  user->fingers, user->joints,
-	  user->thumb_roll*RAD2DEG, user->hand_roll*RAD2DEG);
+      user->fingers, user->joints,
+      user->thumb_roll*RAD2DEG, user->hand_roll*RAD2DEG);
 
   print_list(outputfp, finger_header);
   for (finger = THUMB; finger < user->fingers ; finger++)
@@ -266,16 +266,16 @@ CyberGloveBasic::vt_geom_out( FILE *outputfp, UserGeometry user)
     for (joint = MCP; joint < user->joints ; joint++)
     {
       fprintf(outputfp, "%6.2f %6.2f %6.2f %6.2f\n",
-	      user->geom[finger][joint][VX],
-	      user->geom[finger][joint][VY],
-	      user->geom[finger][joint][VZ],
-	      user->knuckle_radius[finger][joint]);
+          user->geom[finger][joint][VX],
+          user->geom[finger][joint][VY],
+          user->geom[finger][joint][VZ],
+          user->knuckle_radius[finger][joint]);
     }
   }
 
   print_list(outputfp, carp_header);
   fprintf(outputfp, "%6.2f %6.2f %6.2f\n",user->pisiform[VX],
-	  user->pisiform[VY], user->pisiform[VZ]);
+      user->pisiform[VY], user->pisiform[VZ]);
 
   print_list(outputfp, forearm_header);
   vt_copy_vec3(user->radi_ulna[0],tempvec[0]);
@@ -288,16 +288,16 @@ CyberGloveBasic::vt_geom_out( FILE *outputfp, UserGeometry user)
   for ( i = 0 ; i < 5 ; i++)
   {
     fprintf(outputfp, "%6.2f %6.2f %6.2f\n",
-	    tempvec[i][VX], tempvec[i][VY], tempvec[i][VZ]);
+        tempvec[i][VX], tempvec[i][VY], tempvec[i][VZ]);
   }
 
   print_list(outputfp, thumb_roll_axis_header);
   fprintf(outputfp, "%6.2f %6.2f %6.2f\n",user->thumb_roll_axis[VX],
-	  user->thumb_roll_axis[VY], user->thumb_roll_axis[VZ]);
+      user->thumb_roll_axis[VY], user->thumb_roll_axis[VZ]);
 
   print_list(outputfp, thumb_mcp_axis_header);
   fprintf(outputfp, "%6.2f %6.2f %6.2f\n",user->thumb_mcp_axis[VX],
-	  user->thumb_mcp_axis[VY], user->thumb_mcp_axis[VZ]);
+      user->thumb_mcp_axis[VY], user->thumb_mcp_axis[VZ]);
 
   fprintf(outputfp, "! E_O_GEO\n!\n");
   fflush(outputfp);
@@ -321,7 +321,7 @@ CyberGloveBasic::vt_read_glove_calibration(FILE *inputfp, CbGlove glove)
   float version,gain;
   Boolean found_cal;
 
-  rewind(inputfp);	/* make sure we're at beginning of file */
+  rewind(inputfp);  /* make sure we're at beginning of file */
 
   fgets(input_line,81,inputfp);
   if (sscanf(input_line,"VHv%f.%*d",&version) < 1)
@@ -330,38 +330,38 @@ CyberGloveBasic::vt_read_glove_calibration(FILE *inputfp, CbGlove glove)
   /* look for the beginning of the hand calibration data */
   while (fgets(input_line,81,inputfp))
     if ((found_cal = (strncmp(input_line,glove_cal_header,
-			     sizeof(glove_cal_header)-1) == 0)))
+                 sizeof(glove_cal_header)-1) == 0)))
       break;
   if (!found_cal)
     return (vt_set_error("vt_read_calibration",CAL_ERROR1));
-	
+
   /* read the calibration data */
   while (fgets(input_line,81,inputfp))
   {
-    if (input_line[0] != '!')	/* skip comments */
+    if (input_line[0] != '!')   /* skip comments */
     {
       while (sscanf(input_line,"FINGER %d:",&finger))
       {
-	for (joint = 0; joint < JOINTS; joint++)
-	{
-	  if (fgets(input_line,81,inputfp) == NULL)
-	  {
-	    return (vt_set_error("vt_read_calibration",CAL_ERROR1));
-	  }
+    for (joint = 0; joint < JOINTS; joint++)
+    {
+      if (fgets(input_line,81,inputfp) == NULL)
+      {
+        return (vt_set_error("vt_read_calibration",CAL_ERROR1));
+      }
 
-	  sscanf(input_line,"%d",&temp);
-	  if (temp == joint)
-	  {
-	    sscanf(input_line,"%*d%d%f", &offset,&gain);
+      sscanf(input_line,"%d",&temp);
+      if (temp == joint)
+      {
+        sscanf(input_line,"%*d%d%f", &offset,&gain);
             offset &= 0xFF;
             glove->private_data->mapping[finger][joint].offset = offset;
             glove->private_data->mapping[finger][joint].gain = gain;
-	  }
-	  else
-	  {
-	    return (vt_set_error("vt_read_calibration",CAL_ERROR1));
-	  }
-	}
+      }
+      else
+      {
+        return (vt_set_error("vt_read_calibration",CAL_ERROR1));
+      }
+    }
       }
     }
   }
@@ -371,13 +371,13 @@ CyberGloveBasic::vt_read_glove_calibration(FILE *inputfp, CbGlove glove)
 
 void
 CyberGloveBasic::vt_write_glove_calibration(FILE *outputfp, CbGlove glove,
-			   char *version_string)
+               char *version_string)
 {
   int finger,joint;
 
   fprintf(outputfp,"VHv%s\n",version_string);
   fprintf(outputfp,
-	  "! Virtex CbGlove (TM) -> Virtual Hand calibration file\n");
+      "! Virtex CbGlove (TM) -> Virtual Hand calibration file\n");
   fprintf(outputfp,"! == Virtual Hand Software %s ==\n!\n",version_string);
   fprintf(outputfp,"GLOVE CALIBRATION follows:\n");
   fprintf(outputfp,"! joint, offset, gain, gesture\n");
@@ -389,7 +389,7 @@ CyberGloveBasic::vt_write_glove_calibration(FILE *outputfp, CbGlove glove,
       fprintf(outputfp,"%3d %6d %10.5f %5d\n", joint,
               glove->private_data->mapping[finger][joint].offset,
               glove->private_data->mapping[finger][joint].gain,
-	      0);
+          0);
   }
 
   fprintf(outputfp,"! E_O_CAL\n!\n");
@@ -441,7 +441,7 @@ CyberGloveBasic::vt_hand_write(VirtualHand hand, char *filename, char *version_s
   }
 
   vt_write_glove_calibration(outputfp, hand->private_data->glove,
-			     version_string);
+                 version_string);
 
   vt_geom_out(outputfp,hand->private_data->user);
   fclose(outputfp);

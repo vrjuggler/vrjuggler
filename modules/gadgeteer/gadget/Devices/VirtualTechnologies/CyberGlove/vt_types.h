@@ -9,7 +9,7 @@
 /*  --  Copyright (C) 1991,92,93 Virtual Technologies       --  */
 /*  ==========================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #ifndef FALSE
 #define FALSE 0
@@ -29,7 +29,7 @@
 
 #if !defined(_XtIntrinsic_h) && !defined(__GL_GL_H__)
 
-typedef char Boolean;		/* this is what we like and it matches X's def */
+typedef char Boolean;       /* this is what we like and it matches X's def */
 
 #elif defined(_XtIntrinsic_h)
 
@@ -40,8 +40,8 @@ typedef char Boolean;		/* this is what we like and it matches X's def */
 /* if we are here the GL has already defined Booleans as longs */
 typedef char VT_Boolean;
 typedef long GL_Boolean;
-#define Boolean VT_Boolean	/* we assume we normally want our Boolean def! */
+#define Boolean VT_Boolean  /* we assume we normally want our Boolean def! */
 
 #endif
 
-#endif				/* VT_TYPES_H */
+#endif              /* VT_TYPES_H */

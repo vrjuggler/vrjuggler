@@ -8,10 +8,10 @@
 /*  --       Copyright (C) 1993 Virtual Technologies        --  */
 /*  ==========================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Devices/VirtualTechnologies/vt_init.h>
 
 extern char version_string[];
 extern int vt_error_code;
 extern int vt_error_level;
-#endif				/* VT_GLOBALS_H */
+#endif              /* VT_GLOBALS_H */

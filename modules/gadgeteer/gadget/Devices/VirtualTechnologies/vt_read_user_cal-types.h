@@ -11,7 +11,7 @@
 #ifndef VT_READ_USER_CAL_TYPES_H
 #define VT_READ_USER_CAL_TYPES_H
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Devices/VirtualTechnologies/vt_math3d.h>
 #include <vrj/Input/Devices/VirtualTechnologies/vt_glove-types.h>
 
@@ -27,7 +27,7 @@ typedef struct
   vec3d thumb_mcp_axis;
   float thumb_roll;
   float hand_roll;
-  vec3d wrist_offset;		/* offset of wrist from tracker receiver */
+  vec3d wrist_offset;       /* offset of wrist from tracker receiver */
 } UserGeometryStruct,*UserGeometry;
 
 #endif /* VT_READ_USER_CAL_TYPES_H */

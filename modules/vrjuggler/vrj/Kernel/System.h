@@ -33,12 +33,12 @@
 #ifndef _VRJ_SYSTEM_H_
 #define _VRJ_SYSTEM_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vpr/Sync/Mutex.h>
 
 namespace vrj
 {
-   
+
 //------------------------------------------------------
 //:  This class holds the state of the library system
 //

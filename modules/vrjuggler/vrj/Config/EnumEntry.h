@@ -34,16 +34,16 @@
 #define _VRJ_ENUMENTRY_H_
 
 /* Tiny little data structure used to store an entry of enumeration
- * or valuelabel data 
+ * or valuelabel data
  */
 
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Config/VarValue.h>
 
 namespace vrj
 {
-   
+
 class EnumEntry {
 private:
     std::string entry;
@@ -51,39 +51,39 @@ private:
 
 public:
     EnumEntry (const std::string& _entry, VarValue _val): val(T_INT) {
-	entry = _entry;
-	val = _val;
+    entry = _entry;
+    val = _val;
     }
 
 
     EnumEntry (const EnumEntry& e):val(e.val) {
-	entry = e.entry;
+    entry = e.entry;
     }
 
 
     const std::string& getName () const {
-	return entry;
+    return entry;
     }
 
     const VarValue& getValue () const {
-	return val;
+    return val;
     }
 
     friend std::ostream& operator << (std::ostream& out, const EnumEntry& e) {
-	switch (e.val.getType()) {
-	case T_INT:
-	case T_FLOAT:
-	case T_BOOL:
-	    out << '"' << e.entry.c_str() << '=' << e.val << '"';
-	    break;
-	default:
-	    if ((std::string)e.val == "" || (std::string)e.val == e.entry)
-		out << '"' << e.entry.c_str() << '"';
-	    else
-		out << '"' << e.entry.c_str() << '=' << e.val << '"';
-	    break;
-	}
-	return out;
+    switch (e.val.getType()) {
+    case T_INT:
+    case T_FLOAT:
+    case T_BOOL:
+        out << '"' << e.entry.c_str() << '=' << e.val << '"';
+        break;
+    default:
+        if ((std::string)e.val == "" || (std::string)e.val == e.entry)
+        out << '"' << e.entry.c_str() << '"';
+        else
+        out << '"' << e.entry.c_str() << '=' << e.val << '"';
+        break;
+    }
+    return out;
     }
 };
 

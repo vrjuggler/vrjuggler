@@ -2,7 +2,7 @@
 #define __gluquat__
 
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -13,7 +13,7 @@
    where: w       - scalar part
           x, y, z - vector part
 */
-typedef struct tag_GL_QUAT { 
+typedef struct tag_GL_QUAT {
   GLfloat w, x, y, z;
 } GL_QUAT;
 
@@ -40,8 +40,8 @@ extern void APIENTRY gluQuatGetValue_EXT(GL_QUAT*, GLfloat*, GLfloat*, GLfloat*,
 extern void APIENTRY gluQuatSetValue_EXT(GL_QUAT *, GLfloat, GLfloat, GLfloat, GLfloat);
 extern void APIENTRY gluQuatScaleAngle_EXT(GL_QUAT *, GLfloat);
 extern void APIENTRY gluQuatInverse_EXT(GL_QUAT *);
-extern void APIENTRY gluQuatSetFromAx_EXT(GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, 
-										  GLfloat, GL_QUAT *);
+extern void APIENTRY gluQuatSetFromAx_EXT(GLfloat, GLfloat, GLfloat, GLfloat, GLfloat,
+                                          GLfloat, GL_QUAT *);
 extern void APIENTRY gluQuatMul_EXT(GL_QUAT*, GL_QUAT*, GL_QUAT*);
 extern void APIENTRY gluQuatAdd_EXT(GL_QUAT*, GL_QUAT*, GL_QUAT*);
 extern void APIENTRY gluQuatSub_EXT(GL_QUAT*, GL_QUAT*, GL_QUAT*);

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <sys/time.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
@@ -41,7 +41,7 @@
 
 namespace vrj
 {
-   
+
 //: Config function
 // Configures the ibox
 bool IBox::config(ConfigChunk *c)
@@ -166,7 +166,7 @@ int IBox::sample()
    result = hci_check_packet(&thingie);
    if (result == NO_PACKET_YET)
    {
-   }     
+   }
    else if (result == SUCCESS)
    {
       hci_std_cmd( &thingie, 0,0,0 );

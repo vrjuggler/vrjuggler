@@ -11,7 +11,7 @@
 /*  --  Copyright (C) 1987,88,89,90,91,92 Larry Edwards         --  */
 /*  ==============================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Devices/VirtualTechnologies/vt_math3d.h>
 
 #ifndef NULL

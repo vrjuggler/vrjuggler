@@ -34,7 +34,7 @@
 #define _VRJ_DEP_MGR_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/DepChecker.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <typeinfo>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 //: Object used for creating devices
 //!NOTE: Singleton
 class DependencyManager

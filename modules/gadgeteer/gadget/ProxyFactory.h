@@ -34,7 +34,7 @@
 #define _VRJ_PROXY_FACTORY_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Input/Type/Proxy.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vpr/Util/Singleton.h>
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
 //: Base class for virtual construction of proxies
 // Implementations of this class are registered with the proxy factory
 // for each proxy tyep in the system

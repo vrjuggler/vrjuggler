@@ -8,7 +8,7 @@
 /*  --    Author: Larry Edwards                             --  */
 /*  ==========================================================  */
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -89,7 +89,7 @@ vt_print_error(char *calling_routine)
       fprintf(errorfp,"\n\nERROR in %s:\n",routine_with_error);
       fprintf(errorfp,"     %s\n",error_messages[vt_error_code]);
       if (vt_error_level > 1)
-	fprintf(errorfp,"=>\tcalled by: %s\n",calling_routine);
+    fprintf(errorfp,"=>\tcalled by: %s\n",calling_routine);
       fflush(errorfp);
     }
   }

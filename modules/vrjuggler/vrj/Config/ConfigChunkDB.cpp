@@ -34,7 +34,7 @@
 //
 // Author: Christopher Just
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <sys/types.h>
 
@@ -47,7 +47,7 @@
 
 namespace vrj
 {
-   
+
 ConfigChunkDB::ConfigChunkDB (): chunks() {
     ;
 }
@@ -264,8 +264,8 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
     }
     vjDEBUG_END(vjDBG_CONFIG,4) << "-----------------------------\n" << vjDEBUG_FLUSH;
 #endif
-    
-    
+
+
     // --- THE SORT --- //
     // Create new src list to work from
     // Targetting the local data
@@ -279,14 +279,14 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
     bool dep_pass(true);             // Flag for Pass dependency check
     std::vector<std::string> deps;   // Dependencies of current item
     std::vector<ConfigChunk*>::iterator cur_item = src_chunks.begin();          // The current src item to look at
-    
+
     while (cur_item != src_chunks.end()) {          // While not at end of src list
         vjDEBUG(vjDBG_CONFIG,4) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vjDEBUG_FLUSH;
-        
+
         dep_pass = true;
         deps = (*cur_item)->getChunkPtrDependencies();             // Get src dependencies
         for (unsigned int dep_num=0; (dep_num < deps.size()) && dep_pass; dep_num++) {  // For each dependency
-            
+
             if (ConfigChunk::hasSeparator (deps[dep_num])) {
                 std::string chunkname = ConfigChunk::getFirstNameComponent(deps[dep_num]);
                 ConfigChunk* ch;
@@ -300,9 +300,9 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
                 dep_pass = dep_pass && found;
             }
             else {
-                dep_pass = dep_pass && (getChunk(deps[dep_num]) || 
+                dep_pass = dep_pass && (getChunk(deps[dep_num]) ||
                                         (auxChunks && auxChunks->getChunk(deps[dep_num])));
-                
+
             }
         }
 
@@ -336,12 +336,12 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
             vjDEBUG(vjDBG_ERROR,0) << "Check for undefined devices that others depend upon.\n" << vjDEBUG_FLUSH;
         }
         chunks.insert(chunks.end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest anyway
-        
+
         return -1;
     } else {
         // Print out sorted dependancies
 #ifdef VJ_DEBUG
-        
+
         vjDEBUG_BEGIN(vjDBG_CONFIG,4) << "---- After sort ----" << std::endl << vjDEBUG_FLUSH;
         for (unsigned int i=0;i<chunks.size();i++) {
             vjDEBUG(vjDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name") << std::endl
@@ -356,7 +356,7 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
         }
         vjDEBUG_END(vjDBG_CONFIG,4) << "-----------------\n" << vjDEBUG_FLUSH;
 #endif
-        
+
         return 0;      // Success
     }
 }
@@ -446,7 +446,7 @@ bool ConfigChunkDB::load (const std::string& filename, const std::string& parent
     vjDEBUG(vjDBG_CONFIG,3) << "vjConfigChunkDB::load(): opening file " << file_name.c_str() << " -- " << vjDEBUG_FLUSH;
     bool retval = ConfigIO::instance()->readConfigChunkDB (file_name, *this);
 
-    vjDEBUG(vjDBG_CONFIG,3) << " finished.. read " << chunks.size() 
+    vjDEBUG(vjDBG_CONFIG,3) << " finished.. read " << chunks.size()
                             << " chunks\n" << vjDEBUG_FLUSH;
     return retval;
 }

@@ -34,12 +34,12 @@
 #define _VRJ_COORD_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Math/Vec3.h>
 
 namespace vrj
 {
-   
+
 class Matrix;
 
 //---------------------------------------------------

@@ -34,7 +34,7 @@
 #define _VRJ_GL_USER_DATA_H_
 //#pragma once
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Kernel/User.h>
 #include <vrj/Display/Projection.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 //---------------------------------------------------
 //: Holds data about gl users for draw process
 //

@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Matrix.h>
 #include <vrj/Math/Vec4.h>
 
 namespace vrj
 {
-   
+
 void Vec3::xformFull(const Matrix& _m, const Vec3& _v)
 {
     Vec4 tempVec(_v[0], _v[1], _v[2], 1.0f);
@@ -83,9 +83,9 @@ VJ_IMPLEMENT(std::ostream&) operator<<( std::ostream& out, const Vec3& _v )
 {
     for(int j=0;j<3;j++)
     {
-    	out << _v.vec[j] << (j < 2 ? ", " : "");
+        out << _v.vec[j] << (j < 2 ? ", " : "");
     }
 
-    return out;	
+    return out;
 }
 };

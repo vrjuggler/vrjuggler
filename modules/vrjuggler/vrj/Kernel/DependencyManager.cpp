@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Kernel/DependencyManager.h>
 
 namespace vrj
 {
-   
+
 // Initialize the singleton ptr
 //vjDependencyManager* DependencyManager::mInstance = NULL;
 vprSingletonImp(DependencyManager);

@@ -33,7 +33,7 @@
 #ifndef _VRJ_PINCH_GLOVE_H_
 #define _VRJ_PINCH_GLOVE_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <string>
 
 #include <vrj/Input/Type/Input.h>
@@ -46,7 +46,7 @@
 
 namespace vrj
 {
-   
+
 //: Fakespace Pinchglove Device
 //!PUBLIC_API:
 class PinchGlove : virtual public Input, public Glove, public Digital

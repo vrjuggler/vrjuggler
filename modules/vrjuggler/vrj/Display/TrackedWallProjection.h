@@ -33,14 +33,14 @@
 #ifndef _VRJ_TRACKED_WALL_PROJECTION_H_
 #define _VRJ_TRACKED_WALL_PROJECTION_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Display/WallProjection.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Input/Type/PosInterface.h>
 
 namespace vrj
 {
-   
+
 class Matrix;
 
 //-----------------------------------------------------------------

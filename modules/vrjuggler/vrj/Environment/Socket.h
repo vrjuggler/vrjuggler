@@ -33,7 +33,7 @@
 #ifndef _VRJ_SOCKET_H_
 #define _VRJ_SOCKET_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <iostream>
 #include <vpr/IO/Socket/Socket.h>
 
@@ -57,7 +57,7 @@ private:
 public:
 
     SocketPosix();
-    
+
     SocketPosix(SocketIDPosix id);
 
     ~SocketPosix ();
@@ -121,9 +121,9 @@ public:
 
     ~SocketWin32 ();
 
-	int getID () {
-		return (int)sockid;
-	}
+    int getID () {
+        return (int)sockid;
+    }
 
     void close();
 

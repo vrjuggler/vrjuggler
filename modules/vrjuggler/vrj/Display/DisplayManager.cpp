@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/SurfaceViewport.h>
@@ -43,7 +43,7 @@
 
 namespace vrj
 {
-   
+
 //vjDisplayManager* DisplayManager::_instance = NULL;
 vprSingletonImp(DisplayManager);
 

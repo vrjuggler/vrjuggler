@@ -39,7 +39,7 @@
 #ifndef _VRJ_POSPROXY_H_
 #define _VRJ_POSPROXY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <math.h>
 
 #include <vrj/Input/Type/Position.h>
@@ -50,7 +50,7 @@
 
 namespace vrj
 {
-   
+
 //-----------------------------------------------------------------------
 //: A proxy class to positional devices, used by the InputManager.
 //

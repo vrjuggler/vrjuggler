@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 #include <ctype.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vrj/Util/Debug.h>
@@ -40,7 +40,7 @@
 
 namespace vrj
 {
-   
+
 VarValue* VarValue::invalid_instance = NULL;
 const std::string VarValue::using_invalid_msg = "Casting from VJ_T_INVALID VarValue - this may mean we're confused";
 
@@ -308,7 +308,7 @@ VarValue::operator std::string () const {
             sprintf (buf, "%i", intval);
             return std::string (buf);
         }
-    case T_FLOAT: 
+    case T_FLOAT:
         {
             char buf[256];
             sprintf (buf, "%f", floatval);

@@ -33,7 +33,7 @@
 #ifndef _VRJ_XERCESXMLPARSER_H_
 #define _VRJ_XERCESXMLPARSER_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <dom/DOM.hpp>
 
@@ -42,7 +42,7 @@ class ErrorHandler;
 
 namespace vrj
 {
-   
+
 //: Wrapper for libxerces-c parsers.
 //  This class should never be instantiated by itself; only thru the
 //  XercesXMLParserPool object.

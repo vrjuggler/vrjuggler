@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <vrj/Input/Type/AnalogProxy.h>
 #include <vrj/Input/Type/DigitalProxy.h>
@@ -42,7 +42,7 @@
 
 namespace vrj
 {
-   
+
 bool ProxyDepChecker::canHandle(ConfigChunk* chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();

@@ -33,15 +33,15 @@
 #ifndef _VRJ_SYSTEM_FACTORY_H_
 #define _VRJ_SYSTEM_FACTORY_H_
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 namespace vrj
 {
-   
+
 //------------------------------------------------------------
 //: Abstract base class for system specific Factory.
 //
-//	In order to create System specific Factories, Concrete
+//  In order to create System specific Factories, Concrete
 //  derived classes must be created.
 //
 // @author Allen Bierbaum
@@ -50,7 +50,7 @@ namespace vrj
 class SystemFactory
 {
 public:
-	
+
 };
 
 };

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <sys/types.h>
 
@@ -48,7 +48,7 @@
 
 namespace vrj
 {
-   
+
 // The message loop
 void samplem_keys(void*);
 
@@ -553,8 +553,8 @@ void KeyboardWin32::createWindowWin32 ()
    root_height = GetSystemMetrics(SM_CYSCREEN);
 
    /* Create the app. window */
-   m_hWnd = CreateWindow(("Juggler Keyboard"), instName.c_str(), 
-                         WS_OVERLAPPEDWINDOW, m_x, 
+   m_hWnd = CreateWindow(("Juggler Keyboard"), instName.c_str(),
+                         WS_OVERLAPPEDWINDOW, m_x,
                          root_height - m_y - m_height, m_width, m_height,
                          (HWND) NULL, NULL, m_hInst, (LPSTR) NULL);
    ShowWindow(m_hWnd,SW_SHOW);
