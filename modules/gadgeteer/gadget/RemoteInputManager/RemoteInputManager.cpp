@@ -209,7 +209,6 @@ namespace gadget
       // this->initNetwork(); // needed for windows
       vpr::ReturnStatus status;
       vpr::SocketStream* client_sock = new vpr::SocketStream;
-      bool sync;
       
          // Create an acceptor socket that listens on port.
       vpr::SocketStream sock(mListenAddr, vpr::InetAddr::AnyAddr);
@@ -242,22 +241,23 @@ namespace gadget
                // If we receive a handshake successfully
             if ( mAcceptMsgPackage.receiveHandshake(streamHostname,streamPort, streamManagerId, client_sock, sync) )
             {  
-              if (sync)
+               if (sync)
                {
                   // We have a sync request.
-                if (mIsMaster)
-                {
-                 std::cout << "SYNC, accepted: " << streamHostname << std::endl;
-                  mClientSyncs.push_back(client_sock);
-                  client_sock = new vpr::SocketStream;
-                }
-                else
-                {
-                    vprASSERT(false && "Tried to conneted to a client machine!");
-                }
+                  if (mIsMaster)
+                  {
+                     vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL) << "SYNC Sync client accepted: " << streamHostname 
+                           << std::endl << vprDEBUG_FLUSH;
+                     mClientSyncs.push_back(client_sock);
+                     client_sock = new vpr::SocketStream;
+                  }
+                  else
+                  {
+                     vprASSERT(false && "Tried to conneted to a client machine!");
+                  }
                }
                if (getTransmittingConnectionByManagerId(streamManagerId) == NULL)   // If the transmitting NetConnection does not exist yet
-                                 {
+               {
                   NetConnection* connection = new NetConnection(vpr::Interval(0,vpr::Interval::Base),streamHostname, streamPort, streamManagerId, client_sock);
                   this->mTransmittingConnections.push_back(connection);
                   
@@ -349,32 +349,65 @@ namespace gadget
       }
       
 
+      // Temporary variables to hold SyncServer information
       jccl::ConfigChunkPtr sync_server_chunk = mMachineTable[mSyncMasterChunkName];
       std::string sync_server_hostname = sync_server_chunk->getProperty<std::string>("host_name");
-      
+      int sync_server_listen_port = sync_server_chunk->getProperty<int>("listen_port");
+
+
+      // Have all clients connect to sync server
+      //   If master 
+      //   - Set master true
+      //   Else
+      //   - connect to sync Master server  
+
       if (sync_server_hostname == getLocalHostName())
       {
           mIsMaster = true;
+          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "GGG This machine is sync server!" << std::endl << vprDEBUG_FLUSH;
       }
       else
       {
-              // Sync setup loop
-          for(std::map<std::string, jccl::ConfigChunkPtr>::iterator i=mMachineTable.begin();
-              i!=mMachineTable.end();i++)
-          {
-             if ((*i).second->getProperty<std::string>("host_name") != getLocalHostName())
-             {
-                // mLocalMachineChunkName = (*i).first;
-                ///////////////////////////////////////////////////////////////////////
+         // Sync setup loop
+         ///////////////////////////////////////////////////////////////////////
 
 
+                   //NOTE: BLOCKS WHEN WAITING FOR RETURN HANDSHAKE
+         vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_STATE_LVL) << "SYNC Attempting to connect to SyncServer:  " 
+               << sync_server_hostname <<":"<< sync_server_listen_port << "\n"<< vprDEBUG_FLUSH;
+      
+         vpr::SocketStream* sock_stream;
+         vpr::InetAddr inet_addr;
+         //bool sync;
 
+            // Set the address that we want to connect to
+         if ( !inet_addr.setAddress(sync_server_hostname, sync_server_listen_port).success() )
+         {
+            vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED,"SYNC ERROR: Failed to set address\n") << vprDEBUG_FLUSH;
+            return false;
+         }
+            // Create a new socket stream to this address
+         sock_stream = new vpr::SocketStream(vpr::InetAddr::AnyAddr, inet_addr);
 
-
-                ///////////////////////////////////////////////////////////////////////
-             }
-          }
+            // If we can successfully open the socket and connect to the server
+         if ( sock_stream->open().success() && sock_stream->connect().success() )
+         {
+            vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << "SYNC Successfully connected to sync server: " 
+               << sync_server_hostname <<":"<< sync_server_listen_port << "\n"<< vprDEBUG_FLUSH;
+   
+               // Send a handshake to initalize communication with remote computer
+            mMsgPackage.createHandshake(true,mShortHostname,mListenPort,mManagerId.toString(),true);
+            mMsgPackage.sendAndClear(sock_stream);
+         }
+         else
+         {
+            delete sock_stream;
+            vprDEBUG_END(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrSetNORM(clrRED) << "SYNC ERROR: Could not connect to sync server: " 
+               << sync_server_hostname <<" : "<< sync_server_listen_port << "\n" << clrRESET << vprDEBUG_FLUSH;
+            return false;
+         }
       }
+      ///////////////////////////////////////////////////////////////////////
 
          // Seperate devices from local and remote
       for (std::vector<jccl::ConfigChunkPtr>::iterator j = mDeviceChunks.begin();
@@ -1094,7 +1127,7 @@ namespace gadget
       }
    }
    
-   vpr::SocketStream* RemoteInputManager::makeSyncConnection(const std::string& connection_hostname, const int connection_port)
+   /*vpr::SocketStream* RemoteInputManager::makeSyncConnection(const std::string& connection_hostname, const int connection_port)
    {
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_STATE_LVL) << "[RIM::makeConnection] " 
          << connection_hostname <<":"<< connection_port << "\n"<< vprDEBUG_FLUSH;
@@ -1145,7 +1178,7 @@ namespace gadget
             return NULL;
          }
       
-   }
+   } */
 
    Input* RemoteInputManager::getDevice(const std::string device_name)
    {
