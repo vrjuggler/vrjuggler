@@ -140,8 +140,7 @@ public class VjcPrefsModule
         else if (o == saveprefs_mi) {
             try {
                 ConfigIO.writeConfigChunkDB (Core.vjcontrol_chunkdb.file,
-                                             Core.vjcontrol_chunkdb,
-                                             ConfigIO.DEFAULT);
+                                             Core.vjcontrol_chunkdb);
 //                 DataOutputStream out = new DataOutputStream(new FileOutputStream(Core.vjcontrol_chunkdb.file));
 //                 out.writeBytes(Core.vjcontrol_chunkdb.fileRep());
                 Core.consoleInfoMessage (component_name, "Saved VjControl preferences: " + Core.vjcontrol_chunkdb.file);

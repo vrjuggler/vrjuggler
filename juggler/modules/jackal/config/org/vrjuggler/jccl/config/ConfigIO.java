@@ -49,11 +49,6 @@ import VjConfig.*;
  *  used.  ConfigIO is also capable of analyzing a file and determining 
  *  which IO handler to use to load it.
  *  <p>
- *  All of the reader/writer methods in ConfigIO take a handler_type argument,
- *  which is either DEFAULT, XML, or STANDARD (see declarations below).  The
- *  file reader methods also take a GUESS method (instead of DEFAULT) which
- *  tells them to use heuristics to determine the file format.
- *  <p>
  *  Any application that wishes to read or write a ConfigChunkDB or ChunkDescDB
  *  should do so through the ConfigIO methods.  Using the read() and fileRep()
  *  methods of those classes is strongly discouraged.
@@ -66,14 +61,7 @@ import VjConfig.*;
  */
 public class ConfigIO {
 
-    public final static int DEFAULT = 0;
-    public final static int XML = 1;
-    public final static int STANDARD = 2;
-    public final static int GUESS = 0;
-
     private ConfigIOHandler xml_handler;
-    private ConfigIOHandler standard_handler;
-    private ConfigIOHandler default_handler;
 
     private static ConfigIO inst = null;
 
@@ -85,8 +73,6 @@ public class ConfigIO {
      */
     private ConfigIO () {
         xml_handler = new XMLConfigIOHandler();
-        standard_handler = new StandardConfigIOHandler();
-        default_handler = xml_handler;
     }
 
 
@@ -121,15 +107,8 @@ public class ConfigIO {
      *  This is public so that e.g. the XMLConfigCommunicator can grab
      *  a XMLConfigIOHandler from us for parsing network communications.
      */
-    public static ConfigIOHandler getHandler (int handler_type) {
-        switch (handler_type) {
-        case XML:
-            return instance().xml_handler;
-        case STANDARD:
-            return instance().standard_handler;
-        default:
-            return instance().default_handler;
-        }
+    public static ConfigIOHandler getHandler () {
+        return instance().xml_handler;
     }
 
 
@@ -155,31 +134,31 @@ public class ConfigIO {
      *  @return A ConfigIOStatus object with information about errors
      *          encountered during the read.
      */
-    public static ConfigIOStatus readConfigChunkDB (File file, ConfigChunkDB db, int handler_type) {
+    public static ConfigIOStatus readConfigChunkDB (File file, 
+                                                    ConfigChunkDB db) 
+    {
         ConfigIOStatus iostatus = new ConfigIOStatus();
         ConfigIOHandler handler = null;
-        if (handler_type == DEFAULT || handler_type == GUESS) {
-            try {
-                FileInputStream f = new FileInputStream (file);
-                int ch = f.read();
-                if (ch == '<')
-                    handler = getHandler (XML);
-                else
-                    handler = getHandler (STANDARD);
-            }
-            catch (FileNotFoundException e) {
-                iostatus.addFailure (e);
-                return iostatus;
-            }
-            catch (IOException e) {
-                iostatus.addFailure ("Couldn't determine file format.");
-                iostatus.addFailure (e);
-                return iostatus;
-            }
 
+        try {
+            FileInputStream f = new FileInputStream (file);
+            int ch = f.read();
+            if (ch != '<') {
+                iostatus.addFailure ("This file uses the obsolete (non-XML) config file format.");
+                return iostatus;
+            }
         }
-        else
-            handler = getHandler (handler_type);
+        catch (FileNotFoundException e) {
+            iostatus.addFailure (e);
+            return iostatus;
+        }
+        catch (IOException e) {
+            iostatus.addFailure ("Couldn't read from file.");
+            iostatus.addFailure (e);
+            return iostatus;
+        }
+
+        handler = getHandler();
 
         if (handler == null)
             iostatus.addFailure ("Can't get protocol handler for ConfigIO.");
@@ -195,29 +174,29 @@ public class ConfigIO {
      *  @return A ConfigIOStatus object with information about errors
      *          encountered during the read.
      */
-    public static ConfigIOStatus readConfigChunkDB (InputStream input, ConfigChunkDB db, int handler_type) {
+    public static ConfigIOStatus readConfigChunkDB (InputStream input, ConfigChunkDB db) {
         ConfigIOStatus iostatus = new ConfigIOStatus();
         ConfigIOHandler handler = null;
-        if (handler_type == GUESS) {
-            if (!input.markSupported())
-                input = new BufferedInputStream (input, 20);
-            try {
-                input.mark(10);
-                int ch = input.read();
-                if (ch == '<')
-                    handler = getHandler (XML);
-                else
-                    handler = getHandler (STANDARD);
-                input.reset();
-            }
-            catch (IOException e) {
-                iostatus.addFailure ("Couldn't determine file format.");
-                iostatus.addFailure (e);
+
+        // verify that it's the new file format
+        if (!input.markSupported())
+            input = new BufferedInputStream (input, 20);
+        try {
+            input.mark(10);
+            int ch = input.read();
+            if (ch != '<') {
+                iostatus.addFailure ("This file uses the obsolete (non-XML) config file format.");
                 return iostatus;
             }
+            input.reset();
         }
-        else
-            handler = getHandler (handler_type);
+        catch (IOException e) {
+            iostatus.addFailure ("Couldn't read input stream.");
+            iostatus.addFailure (e);
+            return iostatus;
+        }
+
+        handler = getHandler ();
 
         if (handler == null)
             iostatus.addFailure ("Can't get protocol handler for ConfigIO.");
@@ -229,8 +208,10 @@ public class ConfigIO {
 
 
 
-    public static void writeConfigChunkDB (File file, ConfigChunkDB db, int handler_type) throws IOException {
-        ConfigIOHandler handler = getHandler (XML);
+    public static void writeConfigChunkDB (File file, ConfigChunkDB db) 
+        throws IOException 
+    {
+        ConfigIOHandler handler = getHandler ();
         if (handler == null)
             throw new IOException ("Couldn't find file format handler.");
 
@@ -239,8 +220,10 @@ public class ConfigIO {
 
 
 
-    public static void writeConfigChunkDB (DataOutputStream output, ConfigChunkDB db, int handler_type) throws IOException {
-        ConfigIOHandler handler = getHandler (XML);
+    public static void writeConfigChunkDB (DataOutputStream output, ConfigChunkDB db) 
+        throws IOException 
+    {
+        ConfigIOHandler handler = getHandler ();
         if (handler == null)
             throw new IOException ("Couldn't find file format handler.");
 
@@ -258,30 +241,29 @@ public class ConfigIO {
      *  @return A ConfigIOStatus object with information about errors
      *          encountered during the read.
      */
-    public static ConfigIOStatus readChunkDescDB (File file, ChunkDescDB db, int handler_type) {
+    public static ConfigIOStatus readChunkDescDB (File file, ChunkDescDB db) {
         ConfigIOStatus iostatus = new ConfigIOStatus();
         ConfigIOHandler handler = null;
-        if (handler_type == DEFAULT || handler_type == GUESS) {
-            try {
-                FileInputStream f = new FileInputStream (file);
-                int ch = f.read();
-                if (ch == '<')
-                    handler = getHandler (XML);
-                else
-                    handler = getHandler (STANDARD);
-            }
-            catch (FileNotFoundException e) {
-                iostatus.addFailure (e);
-                return iostatus;
-            }
-            catch (IOException e) {
-                iostatus.addFailure ("Couldn't determine file format.");
-                iostatus.addFailure (e);
+
+        try {
+            FileInputStream f = new FileInputStream (file);
+            int ch = f.read();
+            if (ch != '<') {
+                iostatus.addFailure ("This file uses the obsolete (non-XML) config file format.");
                 return iostatus;
             }
         }
-        else
-            handler = getHandler (handler_type);
+        catch (FileNotFoundException e) {
+            iostatus.addFailure (e);
+            return iostatus;
+        }
+        catch (IOException e) {
+            iostatus.addFailure ("Couldn't read from file.");
+            iostatus.addFailure (e);
+            return iostatus;
+        }
+
+        handler = getHandler ();
         if (handler == null)
             iostatus.addFailure ("Couldn't get protocol handler.");
         else
@@ -296,29 +278,29 @@ public class ConfigIO {
      *  @return A ConfigIOStatus object with information about errors
      *          encountered during the read.
      */
-    public static ConfigIOStatus readChunkDescDB (InputStream input, ChunkDescDB db, int handler_type) {
+    public static ConfigIOStatus readChunkDescDB (InputStream input, ChunkDescDB db) 
+    {
         ConfigIOStatus iostatus = new ConfigIOStatus();
         ConfigIOHandler handler = null;
-        if (handler_type == GUESS) {
-            if (!input.markSupported())
-                input = new BufferedInputStream (input, 20);
-            try {
-                input.mark(10);
-                int ch = input.read();
-                if (ch == '<')
-                    handler = getHandler (XML);
-                else
-                    handler = getHandler (STANDARD);
-                input.reset();
-            }
-            catch (IOException e) {
-                iostatus.addFailure ("Couldn't determine file format.");
-                iostatus.addFailure (e);
+
+        if (!input.markSupported())
+            input = new BufferedInputStream (input, 20);
+        try {
+            input.mark(10);
+            int ch = input.read();
+            if (ch != '<') {
+                iostatus.addFailure ("This file uses the obsolete (non-XML) config file format.");
                 return iostatus;
             }
+            input.reset();
         }
-        else
-            handler = getHandler (handler_type);
+        catch (IOException e) {
+            iostatus.addFailure ("Couldn't determine file format.");
+            iostatus.addFailure (e);
+            return iostatus;
+        }
+
+        handler = getHandler ();
 
         if (handler == null)
             iostatus.addFailure ("Couldn't get protocol handler.");
@@ -330,8 +312,10 @@ public class ConfigIO {
 
 
 
-    public static void writeChunkDescDB (File file, ChunkDescDB db, int handler_type) throws IOException {
-        ConfigIOHandler handler = getHandler (XML);
+    public static void writeChunkDescDB (File file, ChunkDescDB db) 
+        throws IOException 
+    {
+        ConfigIOHandler handler = getHandler ();
         if (handler == null)
             throw new IOException ("Couldn't find file format handler.");
 
@@ -340,8 +324,10 @@ public class ConfigIO {
 
 
 
-    public static void writeChunkDescDB (DataOutputStream output, ChunkDescDB db, int handler_type) throws IOException {
-        ConfigIOHandler handler = getHandler (XML);
+    public static void writeChunkDescDB (DataOutputStream output, ChunkDescDB db) 
+        throws IOException 
+    {
+        ConfigIOHandler handler = getHandler ();
         if (handler == null)
             throw new IOException ("Couldn't find file format handler.");
 

@@ -199,7 +199,7 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
             try {
                 URL init_url = ClassLoader.getSystemResource ("VjWizards/data/SimWizardDB.config");
                 ConfigIO.readConfigChunkDB (init_url.openStream(), 
-                                            initial_chunkdb, ConfigIO.GUESS);  
+                                            initial_chunkdb);  
             }
             catch (IOException e) {
                 return false;
