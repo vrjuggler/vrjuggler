@@ -76,7 +76,7 @@ public class PerfTreeNodeInfo implements ActionListener
 
       mComponent = new JPanel();
       mComponent.setLayout (new BoxLayout (mComponent, BoxLayout.X_AXIS));
-      mComponent.setBackground (Color.WHITE);
+      mComponent.setBackground (Color.white);
 
       mPad = Box.createHorizontalStrut(150);
         
