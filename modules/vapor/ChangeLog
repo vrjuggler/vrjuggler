@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-09-19 patrickh Fixed a bug where vpr::Thread::msleep() could not sleep
+                    for more than 1000 milliseconds.  The fix was submitted by
+                    Chad Austin (aegisk@iastate.edu).
+                    NEW VERSION: 0.18.1
 2002-09-07 patrickh Added an abstraction for loading code at runtime.
                     NEW VERSION: 0.18.0
 2002-08-19 allenb   Introduced indentation debugging output in Debug.cpp.
