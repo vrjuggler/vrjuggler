@@ -209,6 +209,14 @@ void InputLogger::stopRecording()
       out_file.flush();
       out_file.close();
    }
+#if defined(__GNUC__) && __GNUC__ == 2 && __GNUC_MINOR__ == 96
+   catch(...)
+   {
+      std::cerr << "Unknown error saving file." << std::endl;
+      if(out_file.is_open())
+      {  out_file.close(); }
+   }
+#else
    catch(std::ofstream::failure& se)
    {
       std::cerr << "IOS failure saving file: desc:" << se.what() << std::endl;
@@ -219,6 +227,7 @@ void InputLogger::stopRecording()
    {
       std::cerr << "Unknown error saving file." << std::endl;
    }
+#endif
 
    mCurState = Inactive;
    mSleepFramesLeft = 10;     // Wait 10 frames until we start processing anything again
@@ -264,6 +273,14 @@ void InputLogger::load(std::string logFilename)
       mRootNode->load(in_file, ctx);
       in_file.close();
    }
+#if defined(__GNUC__) && __GNUC__ == 2 && __GNUC_MINOR__ == 96
+   catch(...)
+   {
+      std::cerr << "Unknown error loading file." << std::endl;
+      if(in_file.is_open())
+      {  in_file.close(); }
+   }
+#else
    catch(std::ifstream::failure& se)
    {
       std::cerr << "IOS failure saving file: desc:" << se.what() << std::endl;
@@ -274,6 +291,7 @@ void InputLogger::load(std::string logFilename)
    {
       std::cerr << "Unknown error loading file." << std::endl;
    }
+#endif
 
    vprDEBUG(vprDBG_ALL,0) << "InputLogger: Loaded file: num_samples:" << mRootNode->getChildren().size() << std::endl << vprDEBUG_FLUSH;
 }
