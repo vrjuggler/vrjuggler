@@ -46,8 +46,8 @@ namespace jccl
    ConfigDefinitionRepository::~ConfigDefinitionRepository()
    {}
 
-   ConfigDefinitionPtr ConfigDefinitionRepository::get(const std::string token,
-                                                       unsigned int version)
+   ConfigDefinitionPtr ConfigDefinitionRepository::get(const std::string& token)
+      const
    {
       // Fail if no version of the definition is in the repository
       DefinitionMap::const_iterator def_itr = mDefs.find(token);
@@ -55,39 +55,38 @@ namespace jccl
       {
          return ConfigDefinitionPtr();
       }
-
-      const VersionMap& version_map = def_itr->second;
-
-      // Fail if the version of the definition is not in the repository
-      VersionMap::const_iterator ver_itr = version_map.find(version);
-      if (ver_itr == version_map.end())
+      else
       {
-         return ConfigDefinitionPtr();
+         return def_itr->second;
       }
-
-      // Return the matching config definition
-      return ver_itr->second;
    }
 
    void ConfigDefinitionRepository::add(ConfigDefinitionPtr def)
    {
-      mDefs[def->getToken()][def->getVersion()] = def;
+      ConfigDefinitionPtr old_def = this->get(def->getToken());
+
+      // If there is an existing definition in the repository with the same
+      // ID as def, compare the versions of the two definitions.
+      if ( old_def.get() != NULL )
+      {
+         // If the existing definition has an older version than the new
+         // definition, add it to the repository.  Otherwise, discard the new
+         // definition.
+         if ( old_def->getVersion() < def->getVersion() )
+         {
+            mDefs[def->getToken()] = def;
+         }
+      }
+      // If there is no existing definition matching the ID of def, add def
+      // to the repository.
+      else
+      {
+         mDefs[def->getToken()] = def;
+      }
    }
 
    void ConfigDefinitionRepository::remove(ConfigDefinitionPtr def)
    {
-      // Check if any version of the definition is in the repository
-      DefinitionMap::iterator def_itr = mDefs.find(def->getToken());
-      if (def_itr != mDefs.end())
-      {
-         VersionMap& version_map = def_itr->second;
-
-         // Check if the specific version of the definition is in the repository
-         VersionMap::const_iterator ver_itr = version_map.find(def->getVersion());
-         if (ver_itr != version_map.end())
-         {
-            version_map.erase(def->getVersion());
-         }
-      }
+      mDefs.erase(def->getToken());
    }
 } // namespace jccl

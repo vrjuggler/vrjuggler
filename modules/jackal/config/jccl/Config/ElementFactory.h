@@ -71,10 +71,11 @@ namespace jccl
          return &mRepository;
       }
 
-      ConfigDefinitionPtr getConfigDefinition(const std::string& token, unsigned int version);
+      /** Returns the newest version of the named configuration definition. */
+      ConfigDefinitionPtr getConfigDefinition(const std::string& token);
 
       /** Creates an Element using the named definition. */
-      ConfigElementPtr createElement(const std::string& defToken, unsigned int version);
+      ConfigElementPtr createElement(const std::string& defToken);
 
       /** Creates an element using the given definition. */
       ConfigElementPtr createElement(ConfigDefinitionPtr d);
