@@ -12,7 +12,15 @@ For all versions:
 Released: <month> <day>, 2001
 
  Version: 0.3.0
-Released: July <day>, 2001
+Released: July 23, 2001
+    New features:
+        * The Boost C++ library is now integrated with VPR.
+
+    Required changes when upgrading from 0.2.x:
+        * vpr::Status has been renamed to vpr::ReturnStatus to work around a
+          problem with the X Window System using Status as a #define symbol.
+          Similarly, the header vpr/Util/Status.h is now named
+          vpr/Util/ReturnStatus.h.
 
  Version: 0.2.5
 Released: July 20, 2001
