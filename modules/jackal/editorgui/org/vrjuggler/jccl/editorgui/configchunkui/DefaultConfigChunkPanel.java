@@ -282,9 +282,9 @@ public class DefaultConfigChunkPanel extends JPanel
 
 
     //------------------- ChunkDBListener stuff ----------------------
-    public void addChunk (ChunkDBEvent e) {;}
-    public void removeChunk (ChunkDBEvent e) {;}
-    public void replaceChunk (ChunkDBEvent e) {
+    public void configChunkAdded (ChunkDBEvent e) {;}
+    public void configChunkRemoved (ChunkDBEvent e) {;}
+    public void configChunkReplaced (ChunkDBEvent e) {
         // basically we're checking for when an apply comes across, so we
         // can correct exactly which chunk we're supposed to be editing.
         // at some point, we should add the ability to completely update the
@@ -296,7 +296,7 @@ public class DefaultConfigChunkPanel extends JPanel
         if (e.getOldChunk() == chunk)
             chunk = e.getNewChunk();
     }
-    public void removeAllChunks (ChunkDBEvent e) {;}
+    public void configChunksCleared (ChunkDBEvent e) {;}
 
 
 }

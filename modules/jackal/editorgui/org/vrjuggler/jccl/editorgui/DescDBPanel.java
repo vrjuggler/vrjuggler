@@ -259,22 +259,22 @@ public class DescDBPanel
 
     //---------------------- ConfigModuleListener Stuff ----------------------
 
-    public void addDescDB (ConfigModuleEvent e) {
+    public void descDBAdded (ConfigModuleEvent e) {
         // add new DescDB to our drop-down list.
 	db_combobox.addItem (e.getDescDB().getName());
     }
 
-    public void removeDescDB (ConfigModuleEvent e) {
+    public void descDBRemoved (ConfigModuleEvent e) {
         // remove removed descdb from our drop-down list.
 	if (currdb == e.getDescDB())
 	    selectDB ("No Selection");
 	db_combobox.removeItem (e.getDescDB().getName());
     }
 
-    public void addChunkDB (ConfigModuleEvent e) {
+    public void chunkDBAdded (ConfigModuleEvent e) {
     }
 
-    public void removeChunkDB (ConfigModuleEvent e) {
+    public void chunkDBRemoved (ConfigModuleEvent e) {
     }
 
 
@@ -282,7 +282,7 @@ public class DescDBPanel
     //---------------------- DescDBListener Stuff ----------------------------
 
 
-    public void addDesc (DescDBEvent e) {
+    public void chunkDescAdded (DescDBEvent e) {
 	// need to update the tree model too <sigh>
 	DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
 	DefaultMutableTreeNode n = new DefaultMutableTreeNode(e.getNewDesc().name);
@@ -292,7 +292,7 @@ public class DescDBPanel
 
 
 
-    public void removeDesc (DescDBEvent e) {
+    public void chunkDescRemoved (DescDBEvent e) {
 	DefaultMutableTreeNode n;
 	DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
 	Enumeration en = root.children();
@@ -308,7 +308,7 @@ public class DescDBPanel
 
 
 
-    public void replaceDesc (DescDBEvent e) {
+    public void chunkDescReplaced (DescDBEvent e) {
         System.out.println ("replacedesc event received");
 	DefaultMutableTreeNode n;
 	DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
@@ -326,7 +326,7 @@ public class DescDBPanel
 
 
 
-    public void removeAllDescs (DescDBEvent e) {
+    public void chunkDescsCleared (DescDBEvent e) {
 	DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
 	root.removeAllChildren();
 	model.reload(root);

@@ -49,10 +49,10 @@ import VjConfig.ChunkDBEvent;
  */
 public interface ChunkDBListener extends java.util.EventListener {
 
-    public abstract void addChunk (ChunkDBEvent e);
-    public abstract void removeChunk (ChunkDBEvent e);
-    public abstract void replaceChunk (ChunkDBEvent e);
-    public abstract void removeAllChunks (ChunkDBEvent e);
+    public abstract void configChunkAdded (ChunkDBEvent e);
+    public abstract void configChunkRemoved (ChunkDBEvent e);
+    public abstract void configChunkReplaced (ChunkDBEvent e);
+    public abstract void configChunksCleared (ChunkDBEvent e);
 }
 
 

@@ -600,13 +600,13 @@ public class ConfigChunkDB implements Cloneable {
         int a = e.getAction();
 	for (int i = 0; (i < l.length) && (l[i] != null); i++) {
 	    if (a == e.INSERT)
-		l[i].addChunk (e);
+		l[i].configChunkAdded (e);
 	    else if (a == e.REMOVE)
-		l[i].removeChunk (e);
+		l[i].configChunkRemoved (e);
 	    else if (a == e.REPLACE)
-		l[i].replaceChunk (e);
+		l[i].configChunkReplaced (e);
 	    else if (a == e.REMOVEALL)
-		l[i].removeAllChunks (e);
+		l[i].configChunksCleared (e);
 	}
     }
 

@@ -642,16 +642,16 @@ public class ConfigModule extends DefaultCoreModule {
 	    ConfigModuleListener lis = (ConfigModuleListener)l.elementAt (i);
 	    switch (msgtype) {
 	    case ADD_CHUNKDB:
-		lis.addChunkDB (e);
+		lis.chunkDBAdded (e);
 		break;
 	    case REMOVE_CHUNKDB:
-		lis.removeChunkDB (e);
+		lis.chunkDBRemoved (e);
 		break;
 	    case ADD_DESCDB:
-		lis.addDescDB (e);
+		lis.descDBAdded (e);
 		break;
 	    case REMOVE_DESCDB:
-		lis.removeDescDB (e);
+		lis.descDBRemoved (e);
 		break;
 	    }
 	}

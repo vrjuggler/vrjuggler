@@ -453,14 +453,14 @@ public class ConfigUIHelper
 
     // These are mostly in here so we can close child frames when an 
     // associated db is unloaded.
-    public void addChunkDB (ConfigModuleEvent e) {
+    public void chunkDBAdded (ConfigModuleEvent e) {
     }
-    public void removeChunkDB (ConfigModuleEvent e) {
+    public void chunkDBRemoved (ConfigModuleEvent e) {
 	removeChildFramesMatching (null, e.getChunkDB(), null);
     }
-    public void addDescDB (ConfigModuleEvent e) {
+    public void descDBAdded (ConfigModuleEvent e) {
     }
-    public void removeDescDB (ConfigModuleEvent e) {
+    public void descDBRemoved (ConfigModuleEvent e) {
 	removeChildFramesMatching (null, e.getDescDB(), null);
     }
 
@@ -471,7 +471,7 @@ public class ConfigUIHelper
     /** Monitor changes to the global descdb so we can maintain the 
      *  chunk-specific help menu.
      */
-    public void addDesc (DescDBEvent e) { 
+    public void chunkDescAdded (DescDBEvent e) { 
 	EasyMenuBar menubar = ui_module.getEasyMenuBar();
 	ChunkDesc d = e.getNewDesc();
         JMenuItem newmenu =
@@ -480,8 +480,8 @@ public class ConfigUIHelper
 
     }
 
-    public void removeDesc (DescDBEvent e) {}
-    public void replaceDesc (DescDBEvent e) {}
-    public void removeAllDescs (DescDBEvent e) {}
+    public void chunkDescRemoved (DescDBEvent e) {}
+    public void chunkDescReplaced (DescDBEvent e) {}
+    public void chunkDescsCleared (DescDBEvent e) {}
 
 }
