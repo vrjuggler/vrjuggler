@@ -95,7 +95,7 @@ private:
 
    CORBA::ORB_var orb;
 
-   CosNaming::NamingContext_var testContext;
+   CosNaming::NamingContext_var m_naming_context;
 };
 
 } // End of tweek namespace
