@@ -237,19 +237,26 @@ public class LabeledSummaryGraphPanel
 
     // -------------- end child class
 
+    Color[] graph_colors = {Color.red, Color.yellow, Color.blue, Color.orange,
+                            Color.green};
+
     protected class IndexVis {
 	public JCheckBox checkbox;
 	public LabeledPerfDataCollector.IndexInfo index_info;
-	
-	public IndexVis (LabeledPerfDataCollector.IndexInfo _ii, boolean _active) {
+	public Color color;
+
+	public IndexVis (LabeledPerfDataCollector.IndexInfo _ii, 
+			 boolean _active,
+			 Color _color) {
 	    index_info = _ii;
+	    color = _color;
 	    checkbox = new JCheckBox (index_info.index, _active);
 	}
 	public JCheckBox getCheckBox () {
 	    return checkbox;
 	}
 	public Color getColor () {
-	    return Color.red;
+	    return color;
 	}
 	public boolean isActive () {
 	    return checkbox.isSelected();
@@ -288,14 +295,15 @@ public class LabeledSummaryGraphPanel
 	JPanel checkboxpanel = new JPanel();
 	checkboxpanel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder(), "Display Indices", TitledBorder.LEFT, TitledBorder.TOP));
 	Iterator it = col.indexIterator();
+	i = 0;
 	while (it.hasNext()) {
 	    LabeledPerfDataCollector.IndexInfo ii = (LabeledPerfDataCollector.IndexInfo)it.next();
-	    //if (ii.getAverage() > 0.0) {
-		IndexVis iv = new IndexVis (ii, (requested_ii == null) || 
-					    (ii == requested_ii));
-		indices.add (iv);
-		checkboxpanel.add (iv.getCheckBox());
-	    //}
+	    IndexVis iv = new IndexVis (ii, (requested_ii == null) || 
+					(ii == requested_ii),
+					graph_colors[i%graph_colors.length]);
+	    indices.add (iv);
+	    checkboxpanel.add (iv.getCheckBox());
+	    i++;
 	}
 
 //  	for (i = 0, j = 0; i < num; i++) {
