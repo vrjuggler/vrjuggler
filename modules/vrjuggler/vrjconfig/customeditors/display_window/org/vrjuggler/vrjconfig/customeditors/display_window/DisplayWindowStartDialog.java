@@ -285,15 +285,7 @@ public class DisplayWindowStartDialog
       mNameField.setMinimumSize(new Dimension(60, 21));
       mNameField.setPreferredSize(new Dimension(60, 21));
       mNameField.setText("Display Window");
-/*
-      mNameField.addFocusListener(new FocusAdapter() {
-         public void focusLost(FocusEvent e)
-         {
-            validateUserInput();
-         }
-      });
-*/
-      mSizeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      SizeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mSizeLabel.setLabelFor(mSizePanel);
       mSizeLabel.setText("Size");
       mPositionLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -303,51 +295,19 @@ public class DisplayWindowStartDialog
       mWidthField.setPreferredSize(new Dimension(40, 21));
       mWidthField.setValue(new Integer(200));
       mWidthField.setHorizontalAlignment(SwingConstants.TRAILING);
-/*
-      mWidthField.addFocusListener(new FocusAdapter() {
-         public void focusLost(FocusEvent e)
-         {
-            validateUserInput();
-         }
-      });
-*/
       mSizeXLabel.setText("\u00D7");
       mHeightField.setMinimumSize(new Dimension(40, 21));
       mHeightField.setPreferredSize(new Dimension(40, 21));
       mHeightField.setValue(new Integer(200));
-/*
-      mHeightField.addFocusListener(new FocusAdapter() {
-         public void focusLost(FocusEvent e)
-         {
-            validateUserInput();
-         }
-      });
-*/
       mPositionXField.setMinimumSize(new Dimension(40, 21));
       mPositionXField.setPreferredSize(new Dimension(40, 21));
       mPositionXField.setValue(new Integer(0));
       mPositionXField.setHorizontalAlignment(SwingConstants.TRAILING);
-/*
-      mPositionXField.addFocusListener(new FocusAdapter() {
-         public void focusLost(FocusEvent e)
-         {
-            validateUserInput();
-         }
-      });
-*/
       mPositionXLabel.setText(",");
       mPositionYField.setMinimumSize(new Dimension(40, 21));
       mPositionYField.setPreferredSize(new Dimension(40, 21));
       mPositionYField.setValue(new Integer(0));
       mPositionYField.setHorizontalAlignment(SwingConstants.TRAILING);
-/*
-      mPositionYField.addFocusListener(new FocusAdapter() {
-         public void focusLost(FocusEvent e)
-         {
-            validateUserInput();
-         }
-      });
-*/
       mFBSettingsLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mFBSettingsLabel.setLabelFor(mFBSettingsPanel);
       mFBSettingsLabel.setText("OpenGL Frame Buffer Settings");
@@ -367,8 +327,6 @@ public class DisplayWindowStartDialog
       mDepthBufferLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mDepthBufferLabel.setLabelFor(mDepthBufferSpinner);
       mDepthBufferLabel.setText("Depth Buffer Size");
-//      mMainPanel.setMinimumSize(new Dimension(435, 350));
-//      mMainPanel.setPreferredSize(new Dimension(435, 350));
       mBorderCheckbox.setSelected(true);
       mBorderCheckbox.setText("Has border");
       mStereoCheckbox.setText("Render in stereo");
@@ -437,8 +395,6 @@ public class DisplayWindowStartDialog
       mSizePanel.add(mHeightField, null);
       mFrameBufferPanel.setMinimumSize(new Dimension(450, 180));
       mFrameBufferPanel.setPreferredSize(new Dimension(450, 180));
-//      mFBSettingsPanel.setMinimumSize(new Dimension(400, 100));
-//      mFBSettingsPanel.setPreferredSize(new Dimension(400, 100));
       mMainPanel.add(mFrameBufferPanel,
                      new TableLayoutConstraints(0, 2, 2, 2,
                                                 TableLayout.FULL,
