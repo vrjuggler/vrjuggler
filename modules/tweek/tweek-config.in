@@ -103,6 +103,8 @@ Options:
         [--idlgendir cxx|java]  Print flag passed to IDL compiler to specify
                                 where the generated files (either C++ or Java
                                 based on the given parameter) are written
+        [--jars]                Print JAR files making up the Tweek Java API
+                                libraries
         [--subsystem]           Print the VPR OS abstraction layer being used
 EOF
 
@@ -235,6 +237,9 @@ while test $# -gt 0; do
         --static)
             echo_static='yes'
             ;;
+        --jars)
+            echo_jars='yes'
+            ;;
         *)
             usage 1 $1 1>&2
             ;;
@@ -338,4 +343,8 @@ if test "x$echo_idlgendir" != "x" ; then
        echo "ERROR: Unrecognized IDL flag type '$echo_idlgendir'!"
        usage 1 1>&2
     fi
+fi
+
+if test "x$echo_jars" = "xyes" ; then
+   echo @tweek_java_api_jars@
 fi

@@ -556,6 +556,12 @@ fi
 
 tweek_extra_ldflags="$EXTRA_LDFLAGS"
 
+jars='TweekBeans.jar TweekComm.jar'
+
+changequote(<<, >>)
+tweek_java_api_jars=`echo "$jars" | sed -e 's/\(Tweek[A-Za-z]*\.jar\)/${prefix}\/bin\/\1/g' -e "s/ /$JCPS/g"`
+changequote([, ])
+
 VJ_VERSION_GROK(VERSION)
 
 DPP_SUBST
@@ -613,6 +619,7 @@ AC_SUBST(tweek_idlflags_cxx)
 AC_SUBST(tweek_idlflags_java)
 AC_SUBST(tweek_idlgendir_cxx)
 AC_SUBST(tweek_idlgendir_java)
+AC_SUBST(tweek_java_api_jars)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
