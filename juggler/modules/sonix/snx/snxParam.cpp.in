@@ -39,25 +39,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _SNX_PARAM_H_
-#define _SNX_PARAM_H_
+#include <snx/snxConfig.h>
+#include <snx/snxParam.h>
 
-
-/*
- * Define to the 9-digit Sonix version integer.  This is the "internal
- * version number" that is intended for internal feature checks by VR Sonix
- * itself.
- */
-#define __SNX_version @VER_NUMBER@
-
-/*
- * This is the "human-readable" Sonix version _string_.  It is of the
- * form <major>.<minor>.<days since last major release>.
- */
 namespace snx
 {
-   extern SNX_DATA_API(const char*) SNX_VERSION;
+   const char* SNX_VERSION = @VER_STRING@;
 }
-
-
-#endif	/* _SNX_PARAM_H_ */

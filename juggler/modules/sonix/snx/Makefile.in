@@ -52,6 +52,7 @@ SUBOBJDIR=	$(SNX_LIBRARY)
 SRCS=		FileIO.cpp			\
 		SoundFactory.cpp		\
 		SoundImplementation.cpp 	\
+		snxParam.cpp			\
 		sonix.cpp
 
 SUBDIR=		Util
