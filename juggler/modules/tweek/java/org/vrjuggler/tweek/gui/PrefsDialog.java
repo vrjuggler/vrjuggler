@@ -391,37 +391,22 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
       // ----------------------------------------------------------------------
       // Handle the Look-and-Feel box.
-      mLafBox.addItem("Metal");
-      mLafBox.addItem("Motif");
-      mLafBox.addItem("Windows");
-      mLafBox.addItem("Mac");
-      mLafBox.addItem("System");
+      UIManager.LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
+
+      // Add the available look-and-feel objects to the combo box.
+      for ( int i = 0; i < lafs.length; ++i )
+      {
+         mLafBox.addItem(lafs[i]);
+      }
+
+      mLafBox.setRenderer(new LAFBoxRenderer());
       mLafBox.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
             {
-               String val = (String) mLafBox.getSelectedItem();
-
-               if ( val.equals("Metal") )
-               {
-                  lookAndFeel = "javax.swing.plaf.metal.MetalLookAndFeel";
-               }
-               else if ( val.equals("Motif") )
-               {
-                  lookAndFeel = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
-               }
-               else if ( val.equals("Windows") )
-               {
-                  lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-               }
-               else if ( val.equals("Macintosh") )
-               {
-                  lookAndFeel = "com.sun.java.swing.plaf.mac.MacLookAndFeel";
-               }
-               else
-               {
-                  lookAndFeel = UIManager.getSystemLookAndFeelClassName();
-               }
+               UIManager.LookAndFeelInfo val =
+                  (UIManager.LookAndFeelInfo) mLafBox.getSelectedItem();
+               lookAndFeel = val.getClassName();
             }
          });
       // ----------------------------------------------------------------------
@@ -590,6 +575,36 @@ public class PrefsDialog extends JDialog implements TableModelListener
 
       private Integer width;
       private Integer height;
+   }
+
+   private static class LAFBoxRenderer extends JLabel
+                                       implements ListCellRenderer
+   {
+      public LAFBoxRenderer()
+      {
+         setOpaque(true);
+      }
+
+      public Component getListCellRendererComponent(JList list, Object value,
+                                                    int index,
+                                                    boolean isSelected,
+                                                    boolean cellHasFocus)
+      {
+         if ( isSelected )
+         {
+            setBackground(list.getSelectionBackground());
+            setForeground(list.getSelectionForeground());
+         }
+         else
+         {
+            setBackground(list.getBackground());
+            setForeground(list.getForeground());
+         }
+
+         UIManager.LookAndFeelInfo laf = (UIManager.LookAndFeelInfo) value;
+         setText(laf.getName());
+         return this;
+      }
    }
 
    // =========================================================================

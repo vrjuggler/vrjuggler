@@ -128,16 +128,17 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
     *
     * @pre The JavaBean search has been performed.
     */
-   public void initGUI ()
+   public void initGUI()
    {
       mMessagePanel = new MessagePanel(mMsgDocument);
 
       try
       {
+         jbInit();
          GlobalPreferencesService prefs =
             (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
-         UIManager.setLookAndFeel( prefs.getLookAndFeel() );
-         jbInit();
+         UIManager.setLookAndFeel(prefs.getLookAndFeel());
+         SwingUtilities.updateComponentTreeUI(this);
          mBeanPrefsDialog =
             new BeanPrefsDialog(this, "Bean-Specific Preferences Editor");
       }
@@ -675,7 +676,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          mBeanContainer.replaceViewer( bean.getViewer() );
 
          String new_laf = prefs.getLookAndFeel();
-         String old_laf = UIManager.getCrossPlatformLookAndFeelClassName();
+         String old_laf = UIManager.getLookAndFeel().getName();
 
          if ( ! old_laf.equals(new_laf) )
          {
@@ -683,13 +684,30 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
             {
                UIManager.setLookAndFeel(new_laf);
                SwingUtilities.updateComponentTreeUI(this);
-               mContentPane.updateUI();
+
+               // Update all the loaded Beans.
+               List beans = BeanRegistry.instance().getBeansOfType(PanelBean.class.getName());
+               Iterator i = beans.iterator();
+               PanelBean cur_bean;
+
+               while ( i.hasNext() )
+               {
+                  cur_bean = (PanelBean) i.next();
+
+                  if ( null != cur_bean.getComponent() )
+                  {
+                     SwingUtilities.updateComponentTreeUI(cur_bean.getComponent());
+                  }
+               }
             }
             catch (Exception laf_e)
             {
+               // Set the look and feel back to the old value because the
+               // newly chosen setting isn't valid.
                prefs.setLookAndFeel(old_laf);
-               JOptionPane.showMessageDialog(null, "Invalid look and feel '" +
-                                             new_laf + "'",
+               prefs.save();
+               JOptionPane.showMessageDialog(null,
+                                             "Invalid look and feel '" + new_laf + "'",
                                              "Bad Look and Feel Setting",
                                              JOptionPane.ERROR_MESSAGE);
             }
@@ -699,7 +717,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          if ( old_level != prefs.getUserLevel() )
          {
             mBeanContainer.fireUserLevelChange(old_level,
-                                                 prefs.getUserLevel());
+                                               prefs.getUserLevel());
          }
       }
    }
