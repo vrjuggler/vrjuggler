@@ -45,7 +45,7 @@
 #include <gad/Type/Position.h>
 #include <gad/Type/Proxy.h>
 #include <vrj/Math/Matrix.h>
-#include <gad/Type/PosFilter.h>
+#include <gad/Type/PositionFilter.h>
 
 
 namespace vrj
@@ -54,7 +54,7 @@ namespace vrj
 //-----------------------------------------------------------------------
 //: A proxy class to positional devices, used by the InputManager.
 //
-//  A PosProxy always points to a positional device and subUnit number,
+//  A PositionProxy always points to a positional device and subUnit number,
 //  the inputgroup can therefore keep an array of these around and
 //  treat them as positional devices which only return a single
 //  subDevice's amount of data.  (one POS_DATA)
@@ -62,13 +62,13 @@ namespace vrj
 // See also: Position
 //------------------------------------------------------------------------
 //!PUBLIC_API:
-class GAD_CLASS_API PosProxy : public TypedProxy<Position>
+class GAD_CLASS_API PositionProxy : public TypedProxy<Position>
 {
 public:
-   PosProxy() :  mUnitNum(-1), mETrans(false), mFilter(NULL)
+   PositionProxy() :  mUnitNum(-1), mETrans(false), mFilter(NULL)
    {;}
 
-   virtual ~PosProxy() {}
+   virtual ~PositionProxy() {}
 
    //: Update the proxy's copy of the data
    // Copy the device data to local storage, and transform it if necessary
@@ -95,7 +95,7 @@ public:
     }
 
 
-   //: Set the transform for this PosProxy
+   //: Set the transform for this PositionProxy
    // Sets the transformation matrix to
    //    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)
    //! NOTE: This means that to set transform, you specific the translation
@@ -139,7 +139,7 @@ public:
    void transformData()
    { mPosData.postMult(mMatrixTransform); }
 
-   static std::string getChunkType() { return "PosProxy"; }
+   static std::string getChunkType() { return "PositionProxy"; }
 
    bool config(ConfigChunk* chunk);
 
@@ -159,7 +159,7 @@ private:
    Matrix       mMatrixTransform;        // reciever_t_modifiedReciever
    int            mUnitNum;
    bool           mETrans;                // Are transformation enabled;
-   PosFilter*   mFilter;                // A possible position filter to use
+   PositionFilter* mFilter;               // A possible position filter to use
 };
 
 };
