@@ -220,15 +220,13 @@ public:
     */
    const NetworkGraph::net_vertex_t& getNextHop (void) const
    {
+      vprASSERT(mMsgPath->end() != mNextHop && "Requesting hop past end of path");
       return *mNextHop;
    }
 
    /**
     * Increment the pointer to the next hop in this message's path as it moves
     * towards its destination.
-    *
-    * @post The pointer to the next hop in the path is incremented if
-    *       increment_next_hop is true.
     */
    void incNextHop (bool& end_of_path)
    {
