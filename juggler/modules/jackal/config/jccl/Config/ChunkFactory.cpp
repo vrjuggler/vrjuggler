@@ -35,10 +35,10 @@
 
 
 //: Creates a Chunk using the given description
-vjConfigChunk* vjChunkFactory::createChunk (vjChunkDesc* d) {
+vjConfigChunk* vjChunkFactory::createChunk (vjChunkDesc* d, bool use_defaults) {
     if (d) {
         d->assertValid();
-        return new vjConfigChunk (d);
+        return new vjConfigChunk (d, use_defaults);
     }
     else
         return 0;

@@ -94,59 +94,90 @@ public:
 
 
     //: returns the token string for
-    inline std::string& getToken () {
+    inline const std::string& getToken () const {
         return token;
     }
 
+    inline void setToken (const std::string& tok) {
+        token = tok;
+    }
 
-    inline std::string& getName () {
+    inline const std::string& getName () const {
         return name;
     }
 
+    inline void setName (const std::string& _name) {
+        name = _name;
+    }
 
+    inline const std::string& getHelp () const {
+        return help;
+    }
 
-    inline VarType getType () {
+    inline void setHelp (const std::string& _help) {
+        help = _help;
+    }
+
+    // get rid of this soon
+    inline VarType getType () const {
         return type;
     }
 
+    inline VarType getVarType () const {
+        return type;
+    }
 
-    inline int getNumAllowed () {
+    inline void setVarType (VarType _type) {
+        type = _type;
+    }
+
+    inline int getNumAllowed () const {
         return num;
     }
 
+    // -1 for variable
+    inline void setNumAllowed (int _num) {
+        num = _num;
+    }
 
     //: Returns the number of individual value labels
-    inline int getValueLabelsSize () {
+    inline int getValueLabelsSize () const {
         return valuelabels.size();
     }
 
+    void appendValueLabel (const std::string& _label);
 
     //: Returns the ith value label
-    std::string getValueLabel (unsigned int index);
+    const std::string& getValueLabel (unsigned int index) const;
 
 
+    inline int getEnumerationsSize() const {
+        return enumv.size();
+    }
+
+    void appendEnumeration (const std::string& _label, const std::string& _val);
 
     //: Returns the enumeration entry at index ind
     //! ARGS: index - index of EnumEntry to retrieve (0-base)
     //! RETURNS: NULL - if index is < 0 or out of range
     //! RETURNS: enumentry* - otherwise
-    vjEnumEntry* getEnumEntryAtIndex (unsigned int index);
+    vjEnumEntry* getEnumEntryAtIndex (unsigned int index) const;
 
 
     //: Returns an enumentry with val matching val...
-    vjEnumEntry* getEnumEntryWithValue (vjVarValue& val);
+    vjEnumEntry* getEnumEntryWithValue (const vjVarValue& val) const;
 
 
     //: Returns the enumentry named _name
     //! RETURNS: NULL - if no match if found
     //! RETURNS: vjEnumEntry* - otherwise
-    vjEnumEntry* getEnumEntry (const std::string& _name);
+    vjEnumEntry* getEnumEntry (const std::string& _name) const;
 
 
     //: Writes a vjPropertyDesc to the given ostream
     //!NOTE: output format is:
     //+      name typename num token { enum1 enum2=42 } "help string"
-    friend std::ostream& operator << (std::ostream& out, vjPropertyDesc& self);
+    friend std::ostream& operator << (std::ostream& out, const vjPropertyDesc& self);
 
 
 
@@ -159,10 +190,10 @@ public:
 
     //: Equality Operator
     // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
-    bool operator== (const vjPropertyDesc& pd);
+    bool operator== (const vjPropertyDesc& pd) const;
 
     //: Inequality Operator
-    inline bool operator!= (const vjPropertyDesc& pd) {
+    inline bool operator!= (const vjPropertyDesc& pd) const {
         return !(*this == pd);
     }
 
@@ -196,6 +227,8 @@ private:
     //  types for T_CHUNK.  Note that in the T_CHUNK case, an empty enumv
     //  means _all_ chunk types are accepted
     std::vector<vjEnumEntry*> enumv;
+
+    int enum_val;
 
     unsigned int validation;
 

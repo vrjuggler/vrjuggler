@@ -38,6 +38,7 @@
 #include <Config/vjPropertyDesc.h>
 #include <Config/vjEnumEntry.h>
 #include <Config/vjParseUtil.h>
+#include <Config/vjConfigTokens.h>
 #include <Utils/vjDebug.h>
 
 vjProperty::vjProperty (vjPropertyDesc *pd): value() {
@@ -236,7 +237,7 @@ std::ostream& operator << (std::ostream &out, vjProperty& p) {
 
 
 
-vjVarValue& vjProperty::getValue (unsigned int ind) {
+const vjVarValue& vjProperty::getValue (unsigned int ind) const {
     assertValid();
 
     if (ind >= value.size()) {
@@ -337,11 +338,83 @@ bool vjProperty::setValue (vjConfigChunk* val, int ind) {
 
 
 
-bool vjProperty::setValue (vjVarValue& val, int ind) {
+bool vjProperty::setValue (const vjVarValue& val, int ind) {
     assertValid();
 
     if (!preSet (ind))
         return false;
     *(value[ind]) = val;
     return true;
+}
+
+
+
+bool vjProperty::tryAssign (int index, const char* val) {
+    assertValid();
+
+    /* This does some type-checking and translating before just
+     * doing an assign into the right value entry of p. Some of
+     * this functionality ought to just be subsumed by vjVarValue
+     * itself, but this way we get back some feedback about
+     * wether a type mismatch occurred (ie we return false if
+     * a type mismatch occurs ).
+     *
+     * Incidentally, this is also where string values get
+     * mangled into enumeration entries when assigning strings
+     * to T_INTs.
+     */
+    char* endval;
+    int i;
+    float f;
+    bool b;
+
+    if (type != T_CHUNK) {          // T_CHUNKS have enumeration, but they are really strings (or something)
+        vjEnumEntry* e = getEnumEntry (val);
+        if (e) {
+            setValue (e->getValue());
+            return true;
+        }
+    }
+
+    switch (type) {
+    case T_INT:
+        i = strtol (val, &endval, 0);
+        if (*endval != '\0')
+            vjDEBUG (vjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected int, got '"
+                  << val << "'\n" << vjDEBUG_FLUSH;
+        setValue (i, index);
+        return true;
+    case T_FLOAT:
+        f = (float)strtod (val, &endval);
+        if (*endval != '\0')
+            vjDEBUG (vjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected float, got '"
+                                      << val << "'\n" << vjDEBUG_FLUSH;
+        setValue (f, index);
+        return true;
+    case T_BOOL:
+        b = false;
+        if (!strcasecmp (val, true_TOKEN))
+            b = true;
+        else if (!strcasecmp (val, false_TOKEN))
+            b = false;
+        else { // we'll try to accept a numeric value
+            b = strtol (val, &endval, 0);
+            if (endval != '\0') {
+                b = false;
+                vjDEBUG (vjDBG_CONFIG,0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected bool, got '"
+                                         << val << "'\n" << vjDEBUG_FLUSH;
+            }
+        }
+        setValue (b, index);
+        return true;
+    case T_STRING:
+    case T_CHUNK:
+        setValue (val, index);
+        return true;
+    case T_EMBEDDEDCHUNK:
+        std::cout << "NOT HANDLED HERE!" << std::endl;
+        return false;
+    default:
+        return false;
+    }
 }

@@ -54,7 +54,8 @@ SRCS		= vjCommand.cpp			\
                   vjEnvironmentManager.cpp	\
                   vjSocket.cpp			\
                   vjSockStream.cpp		\
-                  vjTimedUpdate.cpp
+		  vjNetCommunicator.cpp		\
+		  vjXMLConfigCommunicator.cpp	
 
 include $(MKPATH)/dpp.obj.mk
 

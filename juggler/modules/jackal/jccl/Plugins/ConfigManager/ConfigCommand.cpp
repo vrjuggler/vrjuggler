@@ -36,87 +36,125 @@
 #include <Environment/vjTimedUpdate.h>
 #include <Config/vjConfigChunkDB.h>
 #include <Config/vjChunkDescDB.h>
+#include <Config/vjConfigIO.h>
+
+// generic vjCommand
 
 void vjCommand::resetFireTime (vjTimeStamp& ts) {
     next_fire_time = ts.usecs()/1000 + refresh_time;
 }
 
-int vjCommand::operator < (const vjCommand& cmd2) {
+
+int vjCommand::operator < (const vjCommand& cmd2) const {
     // used in priority queue
     // true if self should be called _after_ cmd2
     return (next_fire_time < cmd2.next_fire_time);
 }
     
-std::string vjCommand::getName () {
-    return (std::string)"generic vjCommand";
-}
 
 
 
 // vjCommandRefresh
+
+/*static*/ const std::string vjCommandRefresh::command_name ("Refresh Command");
+
+
 vjCommandRefresh::vjCommandRefresh() {
     next_fire_time = refresh_time = 0.0;
 }
+
     
-void vjCommandRefresh::call (std::ostream& out) {
-    out << "Refresh all" << std::endl;
+/*virtual*/ void vjCommandRefresh::call (std::ostream& out) const {
+    out << "<protocol handler=\"xml_config\">\n"
+        "<refresh_all/>\n"
+        "</protocol>\n" << std::flush;
+}
+
+
+/*virtual*/ const std::string& vjCommandRefresh::getName () const {
+    return command_name;
 }
 
 
 
 // vjCommandSendChunkDB
 
+/*static*/ const std::string vjCommandSendChunkDB::command_name ("Send ChunkDB Command");
+
+
 vjCommandSendChunkDB::vjCommandSendChunkDB (vjConfigChunkDB* _db, bool _all) {
     db = _db;
     all = _all;
 }
 
-void vjCommandSendChunkDB::call (std::ostream& out) {
+
+/*virtual*/ void vjCommandSendChunkDB::call (std::ostream& out) const {
+    out << "<protocol handler=\"xml_config\">\n";
     if (all)
-	out << "chunks all\n";
+        out << "<apply_chunks all=\"true\">\n";
     else
-	out << "chunks\n";
-    out << *db << std::flush;
+        out << "<apply_chunks>\n";
+    vjConfigIO::instance()->writeConfigChunkDB (out, *db, "xml_config");
+    out << "</apply_chunks>\n</protocol>\n" << std::flush;
 }
 
-std::string vjCommandSendChunkDB::getName () {
-    return (std::string)"Send ChunkDB command";
+
+/*virtual*/ const std::string& vjCommandSendChunkDB::getName () const {
+    return command_name;
 }
+
 
 
 //vjCommandSendDescDB
+
+/*static*/ const std::string vjCommandSendDescDB::command_name ("Send DescDB Command");
+
 
 vjCommandSendDescDB::vjCommandSendDescDB (vjChunkDescDB* _db, bool _all) {
     db = _db;
     all = _all;
 }
+
     
-void vjCommandSendDescDB::call (std::ostream& out) {
+/*virtual*/ void vjCommandSendDescDB::call (std::ostream& out) const {
+
+    out << "<protocol handler=\"xml_config\">\n";
     if (all)
-	out << "descriptions all\n" << std::flush;
+        out << "<apply_descs all=\"true\">\n";
     else
-	out << "descriptions\n" << std::flush;
-    out << *db << std::flush;
+        out << "<apply_descs>\n";
+    vjConfigIO::instance()->writeChunkDescDB (out, *db, "xml_config");
+    out << "</apply_descs>\n</protocol>\n" << std::flush;
 }
 
-std::string vjCommandSendDescDB::getName () {
-    return (std::string)"Send DescDB command";
+
+/*virtual*/ const std::string& vjCommandSendDescDB::getName () const {
+    return command_name;
 }
+
 
 
 // vjCommandTimedUpdate
+
+/*static*/ const std::string vjCommandTimedUpdate::command_name ("Timed Update Command");
+
 
 vjCommandTimedUpdate::vjCommandTimedUpdate (vjTimedUpdate* _tu, float _refresh_time) {
     timed_update = _tu;
     refresh_time = _refresh_time;
     next_fire_time = 0;
 }
+
     
-void vjCommandTimedUpdate::call (std::ostream& out) {
+/*virtual*/ void vjCommandTimedUpdate::call (std::ostream& out) const {
+    out << "<protocol handler=\"" << timed_update->getProtocolHandlerName()
+        << "\">\n";
     timed_update->write (out);
+    out << "</protocol>\n" << std::flush;
 }
 
-std::string vjCommandTimedUpdate::getName () {
-    return (std::string)"Timed Update Command; tu obj is " + timed_update->getName();
+
+/*virtual*/ const std::string& vjCommandTimedUpdate::getName () const {
+    return command_name;
 }
 

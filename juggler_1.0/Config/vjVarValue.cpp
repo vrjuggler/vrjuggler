@@ -63,7 +63,7 @@ vjVarValue::vjVarValue (const vjVarValue &v)
 }
 
 
-vjVarValue::vjVarValue (vjConfigChunk* ch)
+vjVarValue::vjVarValue (const vjConfigChunk* ch)
 {
     validation = 1;
 
@@ -266,11 +266,20 @@ vjVarValue::operator float () const {
 
 char* vjVarValue::cstring () const {
     assertValid();
+    char buf[256];
 
     switch (type) {
     case T_STRING:
     case T_CHUNK:
         return strdup (strval.c_str());
+    case T_INT:
+        sprintf (buf, "%i", intval);
+        return strdup (buf);
+    case T_FLOAT:
+        sprintf (buf, "%f", floatval);
+        return strdup (buf);
+    case T_BOOL:
+        return strdup (boolval?"true":"false");
     case VJ_T_INVALID:
         vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5
                                 << std::endl << vjDEBUG_FLUSH;
@@ -285,11 +294,39 @@ char* vjVarValue::cstring () const {
 
 vjVarValue::operator std::string () const {
     assertValid();
-
+    //std::string s;
+    //char* c;
     switch (type) {
     case T_STRING:
     case T_CHUNK:
         return strval;
+    case T_INT:
+        {
+            char buf[256];
+            sprintf (buf, "%i", intval);
+            return std::string (buf);
+        }
+    case T_FLOAT: 
+        {
+            char buf[256];
+            sprintf (buf, "%f", floatval);
+            return std::string (buf);
+        }
+//          c = cstring();
+//          s = c;
+//          delete[] c;
+//          return s;
+//      case T_INT:
+//          //return std::string(intval);
+//          //std::string s = intval;
+//          s = intval;
+//          return s;
+//      case T_FLOAT:
+//          //return std::string(floatval);
+//          s = floatval;
+//          return s;
+    case T_BOOL:
+        return boolval?"true":"false";
     case VJ_T_INVALID:
         vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6
                                 << std::endl << vjDEBUG_FLUSH;
@@ -421,7 +458,7 @@ vjVarValue &vjVarValue::operator = (const char *val) {
 }
 
 
-vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
+vjVarValue &vjVarValue::operator = (const vjConfigChunk *s) {
    assertValid();
 
    switch (type)

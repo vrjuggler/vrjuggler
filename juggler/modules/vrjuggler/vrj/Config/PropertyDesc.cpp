@@ -45,6 +45,7 @@ vjPropertyDesc::vjPropertyDesc () : valuelabels(), enumv() {
     num = 0;
     type = VJ_T_INVALID;
     help = "";
+    enum_val = 0;
 }
 
 
@@ -63,6 +64,7 @@ vjPropertyDesc::vjPropertyDesc (const std::string& n, int i, VarType t,
     help = h;
     num = i;
     type = t;
+    enum_val = 0;
 }
 
 
@@ -88,18 +90,50 @@ void vjPropertyDesc::assertValid () const {
 
 
 
-std::string vjPropertyDesc::getValueLabel (unsigned int i) {
+void vjPropertyDesc::appendValueLabel (const std::string& _label) {
+    valuelabels.push_back (new vjEnumEntry (_label, T_STRING));
+}
+
+// used as a possible return value below.
+static const std::string vjPropertyDesc_empty_string ("");
+
+const std::string& vjPropertyDesc::getValueLabel (unsigned int i) const {
     assertValid();
 
     if (i < valuelabels.size())
         return valuelabels[i]->getName();
     else
-        return (std::string)"";
+        return vjPropertyDesc_empty_string;
 }
 
 
+void vjPropertyDesc::appendEnumeration (const std::string& _label, 
+                                        const std::string& _value) {
+    vjVarValue *v;
+    // this is slightly kludgey.  We make a varvalue to store the enumeration
+    // value... except for T_CHUNK and T_EMBEDDEDCHUNK where we store a chunk
+    // name type...
+    if ((type == T_CHUNK) || (type == T_EMBEDDEDCHUNK))
+        v = new vjVarValue (T_STRING);
+    else
+        v = new vjVarValue (type);
 
-vjEnumEntry* vjPropertyDesc::getEnumEntry (const std::string& s) {
+    if (type == T_STRING || type == T_CHUNK ||
+        type == T_EMBEDDEDCHUNK) {
+        *v = (_value == "")?_label : _value;
+    }
+    else {
+        if (_value == "")
+            *v = enum_val;
+        else 
+            *v = _value;
+        //*v = (_value == "")?enum_val:_value;
+    }
+    enum_val++;
+    enumv.push_back (new vjEnumEntry (_label, *v));
+}
+
+vjEnumEntry* vjPropertyDesc::getEnumEntry (const std::string& s) const {
     assertValid();
 
     for (unsigned int i = 0; i < enumv.size(); i++) {
@@ -110,7 +144,7 @@ vjEnumEntry* vjPropertyDesc::getEnumEntry (const std::string& s) {
 }
 
 
-vjEnumEntry* vjPropertyDesc::getEnumEntryAtIndex (unsigned int index) {
+vjEnumEntry* vjPropertyDesc::getEnumEntryAtIndex (unsigned int index) const {
     assertValid();
 
     if (enumv.size() > index)
@@ -120,7 +154,7 @@ vjEnumEntry* vjPropertyDesc::getEnumEntryAtIndex (unsigned int index) {
 }
 
 
-vjEnumEntry* vjPropertyDesc::getEnumEntryWithValue (vjVarValue& val) {
+vjEnumEntry* vjPropertyDesc::getEnumEntryWithValue (const vjVarValue& val) const {
     assertValid();
 
     for (unsigned int i = 0; i < enumv.size(); i++) {
@@ -131,7 +165,7 @@ vjEnumEntry* vjPropertyDesc::getEnumEntryWithValue (vjVarValue& val) {
 }
 
 
-std::ostream& operator << (std::ostream& out, vjPropertyDesc& self) {
+std::ostream& operator << (std::ostream& out, const vjPropertyDesc& self) {
     self.assertValid();
 
     out << self.token.c_str() << " " << typeString(self.type) << " "
@@ -277,7 +311,7 @@ vjPropertyDesc& vjPropertyDesc::operator= (const vjPropertyDesc& pd) {
 
 //: Equality Operator
 // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
-bool vjPropertyDesc::operator== (const vjPropertyDesc& pd) {
+bool vjPropertyDesc::operator== (const vjPropertyDesc& pd) const {
     assertValid();
 
     if (vjstrcasecmp (name, pd.name))

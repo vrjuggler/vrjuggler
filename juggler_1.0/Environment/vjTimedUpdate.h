@@ -50,13 +50,18 @@
 
 class vjTimedUpdate {
 
-public:
+    public:
 
     //: writes the current contents of this vjTimedUpdate to out
-    virtual void write (std::ostream& out);
-
+    virtual void write (std::ostream& out) = 0;
+    
     //: gets a name associated with this object
-    virtual std::string getName ();
+    virtual const std::string& getName () const = 0;
+    
+    //: gets a name of a protocol handler associated with this object
+    //  This is used by the network communication system.
+    virtual const std::string& getProtocolHandlerName() const = 0;
+
 };
 
 

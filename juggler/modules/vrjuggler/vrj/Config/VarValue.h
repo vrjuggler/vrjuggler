@@ -128,7 +128,7 @@ public:
     //+      this constructor instead of using the vjVarValue copy constructor
     //+      becuase getProperty returns a const vjVarValue and the copy const
     //+      didn't expect a const (since fixed).
-    explicit vjVarValue (vjConfigChunk* ch);
+    explicit vjVarValue (const vjConfigChunk* ch);
 
 
     //: Creates a new vjVarValue of type t.
@@ -217,7 +217,7 @@ public:
     //+      the original as you please.
     vjVarValue &operator = (const char *s);
 
-    vjVarValue &operator = (vjConfigChunk *s);
+    vjVarValue &operator = (const vjConfigChunk *s);
 
 
 

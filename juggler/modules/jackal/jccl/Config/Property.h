@@ -38,6 +38,7 @@
 #include <vjConfig.h>
 #include <Config/vjVarValue.h>
 #include <Config/vjPropertyDesc.h>
+
 class vjChunkDesc;
 
 
@@ -84,7 +85,6 @@ public:
 
     //: ChunkDesc for embedded chunk (if valtype is T_EMBEDDEDCHUNK)
     vjChunkDesc *embeddesc;
-
 
 
 
@@ -155,7 +155,7 @@ public:
     //! ARGS: ind - integer index of value to return (default 0)
     //! RETURNS: v - indth element of value, or a T_INVALID VarValue
     //+          if ind is out of bounds
-    vjVarValue& getValue (unsigned int ind = 0);
+    const vjVarValue& getValue (unsigned int ind = 0) const;
 
 
 
@@ -178,7 +178,12 @@ public:
     bool setValue (float val, int ind = 0);
     bool setValue (const std::string&  val, int ind = 0);
     bool setValue (vjConfigChunk* val, int ind = 0);
-    bool setValue (vjVarValue& val, int ind = 0);
+    bool setValue (const vjVarValue& val, int ind = 0);
+
+    //: Attempts to assign a value (in tok) to the vjProperty's ith value.
+    //!NOTE:  This function does a certain amount of type-mangling, and also
+    //+        handles enumeration lookups.  Return value is success/failure.
+    bool tryAssign (int index, const char* val);
 
 
     inline vjEnumEntry* getEnumEntry (const std::string& n) const {

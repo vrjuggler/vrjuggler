@@ -39,6 +39,8 @@
 #include <Config/vjVarValue.h>
 
 bool readString (std::istream& in, char* buffer, int size, bool *quoted = NULL);
+
+VarType stringToVarType (const char* str);
 VarType readType (std::istream &ip);
 char *typeString (VarType t);
 char *unitString (CfgUnit t);
@@ -63,5 +65,7 @@ bool vjstrncmp (const std::string& a, const std::string& b, int _n = -1);
 //: mangles a filename n in several ways: replacing env variables & appending
 //+ the parentfile's directory if n is a relative pathname
 std::string demangleFileName (const std::string& n, std::string parentfile);
+
+const std::string findFileUsingPathVar (std::ifstream& in, const std::string& file_name, const std::string& env_name);
 
 #endif

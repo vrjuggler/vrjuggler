@@ -46,22 +46,31 @@ class vjChunkDescDB;
 
 class vjCommand {
 public:
-    virtual void call (std::ostream& out) = 0;
-    void resetFireTime (vjTimeStamp& ts);
-
-    int operator < (const vjCommand& cmd2);
-    
-    virtual std::string getName ();
-
     float next_fire_time; // milliseconds
     float refresh_time;      // millisecs
+
+public:
+    virtual void call (std::ostream& out) const = 0;
+
+    void resetFireTime (vjTimeStamp& ts);
+
+    int operator < (const vjCommand& cmd2) const;
+    
+    virtual const std::string& getName () const = 0;
 };
 
+
+
 class vjCommandRefresh: public vjCommand {
+private:
+    static const std::string command_name;
+
 public:
     vjCommandRefresh();
     
-    virtual void call (std::ostream& out);
+    virtual void call (std::ostream& out) const;
+
+    virtual const std::string& getName() const;
 };
 
 
@@ -70,13 +79,14 @@ class vjCommandSendChunkDB: public vjCommand {
 private:
     vjConfigChunkDB* db;
     bool all;
+    static const std::string command_name;
     
 public:
     vjCommandSendChunkDB (vjConfigChunkDB* _db, bool _all = false);
 
-    virtual void call (std::ostream& out);
+    virtual void call (std::ostream& out) const;
 
-    virtual std::string getName();
+    virtual const std::string& getName() const;
 };
 
 
@@ -85,13 +95,14 @@ class vjCommandSendDescDB: public vjCommand {
 private:
     vjChunkDescDB* db;
     bool all;
+    static const std::string command_name;
 
 public:
     vjCommandSendDescDB (vjChunkDescDB* _db, bool _all = false);
     
-    virtual void call (std::ostream& out);
+    virtual void call (std::ostream& out) const;
 
-    virtual std::string getName();
+    virtual const std::string& getName() const;
 };
 
 
@@ -99,12 +110,13 @@ public:
 class vjCommandTimedUpdate: public vjCommand {
 public:
     vjTimedUpdate* timed_update;
+    static const std::string command_name;
     
     vjCommandTimedUpdate (vjTimedUpdate* _tu, float _refresh_time);
     
-    virtual void call (std::ostream& out);
+    virtual void call (std::ostream& out) const;
 
-    virtual std::string getName ();
+    virtual const std::string& getName () const;
 };
 
 

@@ -30,17 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <Utils/vjXercesStreamInputSource.h>
+#include <Utils/vjXercesStreamInputStream.h>
 
+vjXercesStreamInputSource::vjXercesStreamInputSource (std::istream& _in, char const * _terminator) {
+    in = &_in;
+    terminator = strdup (_terminator);
+}
 
-#include <Environment/vjTimedUpdate.h>
+/*virtual*/ vjXercesStreamInputSource::~vjXercesStreamInputSource () {
+    free (terminator);
+}
 
-
-
-void vjTimedUpdate::write (std::ostream& out) {
-    ;
+/*virtual*/ BinInputStream* vjXercesStreamInputSource::makeStream() const {
+    return new vjXercesStreamInputStream (*in, terminator);
 }
 
 
-std::string vjTimedUpdate::getName () {
-    return (std::string)"Unnamed TimedUpdate";
-}

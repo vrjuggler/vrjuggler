@@ -52,11 +52,16 @@ vjConfigChunk::vjConfigChunk (): props(), type_as_varvalue(T_STRING) {
 
 
 
-vjConfigChunk::vjConfigChunk (vjChunkDesc *d) :props(), type_as_varvalue(T_STRING) {
+vjConfigChunk::vjConfigChunk (vjChunkDesc *d, bool use_defaults) :props(), type_as_varvalue(T_STRING) {
     validation = 1;
-    associateDesc (d);
+    associateDesc (d, use_defaults);
 }
 
+
+vjConfigChunk::vjConfigChunk (const vjConfigChunk& c):props(), type_as_varvalue(T_STRING) {
+    validation = 1;
+    *this = c;
+}
 
 
 vjConfigChunk::~vjConfigChunk () {
@@ -71,13 +76,6 @@ vjConfigChunk::~vjConfigChunk () {
 
 
 
-vjConfigChunk::vjConfigChunk (const vjConfigChunk& c):props(), type_as_varvalue(T_STRING) {
-    validation = 1;
-    *this = c;
-}
-
-
-
 #ifdef VJ_DEBUG
 void vjConfigChunk::assertValid () const {
     assert (validation == 1 && "Trying to use deleted config chunk");
@@ -88,24 +86,31 @@ void vjConfigChunk::assertValid () const {
 
 
 
-void vjConfigChunk::associateDesc (vjChunkDesc* d) {
+void vjConfigChunk::associateDesc (vjChunkDesc* d, bool use_defaults) {
     assertValid();
+    vjConfigChunk* ch = 0;
+    if (use_defaults)
+        ch = d->getDefaultChunk();
+    if (ch)
+        *this = *ch;
+    else {
 
-    unsigned int i;
+        unsigned int i;
 
-    desc = d;
-    type_as_varvalue = desc->getToken();
+        desc = d;
+        type_as_varvalue = desc->getToken();
 
-    /* XXX:
-    for (i = 0; i < props.size(); i++)
-        delete (props[i]);
-    */
-    props.clear();
-
-    for (i = 0; i < desc->plist.size(); i++) {
-        vjPropertyDesc* pd = desc->plist[i];
-        vjProperty* pr = new vjProperty (pd);
-        props.push_back (pr);
+        /* XXX:
+           for (i = 0; i < props.size(); i++)
+           delete (props[i]);
+        */
+        props.clear();
+        
+        for (i = 0; i < desc->plist.size(); i++) {
+            vjPropertyDesc* pd = desc->plist[i];
+            vjProperty* pr = new vjProperty (pd);
+            props.push_back (pr);
+        }
     }
 }
 
@@ -292,15 +297,18 @@ vjProperty* vjConfigChunk::getPropertyPtrFromToken (const std::string& token) co
 // This is just a simple helper function
 //! NOTE: The vector has COPIES of the var values.
 // cj - this is bad implementation... bad...
-std::vector<vjVarValue*> vjConfigChunk::getAllProperties(const std::string& property)
+std::vector<vjVarValue*> vjConfigChunk::getAllProperties(const std::string& prop_name) const
 {
     assertValid();
 
-    int num_properties = getNum(property);
     std::vector<vjVarValue*> ret_val;
-    for(int i=0;i<num_properties;i++) {
-        vjVarValue* new_var_val = new vjVarValue(getProperty(property,i));
-        ret_val.push_back(new_var_val);
+    vjProperty* p = getPropertyPtrFromToken(prop_name);
+    if (p) {
+        int num_properties = p->getNum();
+        for(int i=0;i<num_properties;i++) {
+            vjVarValue* new_var_val = new vjVarValue(p->getValue(i));
+            ret_val.push_back(new_var_val);
+        }
     }
 
     return ret_val;
@@ -308,7 +316,7 @@ std::vector<vjVarValue*> vjConfigChunk::getAllProperties(const std::string& prop
 
 
 
-std::ostream& operator << (std::ostream& out, vjConfigChunk& self) {
+std::ostream& operator << (std::ostream& out, const vjConfigChunk& self) {
     self.assertValid();
 
     // outputting an uninitialized chunk would be a mistake...
@@ -321,79 +329,6 @@ std::ostream& operator << (std::ostream& out, vjConfigChunk& self) {
     }
     return out;
 }
-
-
-
-bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
-    assertValid();
-
-    /* This does some type-checking and translating before just
-     * doing an assign into the right value entry of p. Some of
-     * this functionality ought to just be subsumed by vjVarValue
-     * itself, but this way we get back some feedback about
-     * wether a type mismatch occurred (ie we return false if
-     * a type mismatch occurs ).
-     *
-     * Incidentally, this is also where string values get
-     * mangled into enumeration entries when assigning strings
-     * to T_INTs.
-     */
-    char* endval;
-    int i;
-    float f;
-    bool b;
-
-    if(p->getType() != T_CHUNK) {          // T_CHUNKS have enumeration, but they are really strings (or something)
-        vjEnumEntry* e = p->getEnumEntry (val);
-        if (e) {
-            p->setValue (e->getValue());
-            return true;
-        }
-    }
-
-    switch (p->getType()) {
-    case T_INT:
-        i = strtol (val, &endval, 0);
-        if (*endval != '\0')
-            vjDEBUG (vjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected int, got '"
-                  << val << "'\n" << vjDEBUG_FLUSH;
-        p->setValue (i, index);
-        return true;
-    case T_FLOAT:
-        f = (float)strtod (val, &endval);
-        if (*endval != '\0')
-            vjDEBUG (vjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected float, got '"
-                                      << val << "'\n" << vjDEBUG_FLUSH;
-        p->setValue (f, index);
-        return true;
-    case T_BOOL:
-        b = false;
-        if (!strcasecmp (val, true_TOKEN))
-            b = true;
-        else if (!strcasecmp (val, false_TOKEN))
-            b = false;
-        else { // we'll try to accept a numeric value
-            b = strtol (val, &endval, 0);
-            if (endval != '\0') {
-                b = false;
-                vjDEBUG (vjDBG_CONFIG,0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected bool, got '"
-                                         << val << "'\n" << vjDEBUG_FLUSH;
-            }
-        }
-        p->setValue (b, index);
-        return true;
-    case T_STRING:
-    case T_CHUNK:
-        p->setValue (val, index);
-        return true;
-    case T_EMBEDDEDCHUNK:
-        std::cout << "NOT HANDLED HERE!" << std::endl;
-        return false;
-    default:
-        return false;
-    }
-}
-
 
 
 
@@ -447,7 +382,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
                 //           p->applyUnits (tok.unitval);
                 //       }
                 else {
-                    if (!self.tryassign (p, i++, buf))
+                    if (!p->tryAssign (i++, buf))
                         vjDEBUG(vjDBG_ERROR,2) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
                                                << p->getName().c_str() << std::endl << vjDEBUG_FLUSH;
                 }
@@ -459,7 +394,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
         }
         else {
             // we're just doing one value.
-            if (!self.tryassign (p, 0, buf))
+            if (!p->tryAssign (0, buf))
                 vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
                                        << p->getName().c_str() << std::endl << vjDEBUG_FLUSH;
             //        self.getVJCFGToken (in,tok);
