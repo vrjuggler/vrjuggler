@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-01-07 patrickh When a sim socket closes, undelivered messages are flushed
+                    from the network.
 2002-01-03 patrickh Added support for connection initiation events, connection
                     completion events, and localhost message delivery events
                     to the socket simulator code.
