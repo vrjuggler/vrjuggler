@@ -312,12 +312,7 @@ void SoundFactory::reg(const std::string& apiName,
    }
 }
 
-/**
- * @input name of api to create
- * @output an implementation is returned for you to use
- * @postconditions if apiName is not known, then a stub implementation is returned
- * @semantics factory function used to create an implementation of a sound API
- */
+// Factory function used to create an implementation of a sound API.
 void SoundFactory::createImplementation( const std::string& apiName,
                            snx::ISoundImplementation* &mImplementation )
 {

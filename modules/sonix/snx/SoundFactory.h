@@ -69,10 +69,12 @@ public:
    void unloadPlugins();
 
    /**
-    * @input name of api to create
-    * @output an implementation is returned for you to use (new memory, you delete)
-    * @postconditions if apiName is not known, then a stub implementation is returned
-    * @semantics factory function used to create an implementation of a sound API
+    * Factory function used to create an implementation of a sound API.
+    *
+    * @post If apiName is not known, then a stub implementation is returned.
+    *
+    * @param apiName         Name of API to create.
+    * @param mImplementation An implementation is returned for you to use.
     */
    void createImplementation( const std::string& apiName,
                               snx::ISoundImplementation* &mImplementation );
