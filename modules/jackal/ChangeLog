@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-30-2002 nonchocoboy Removed outdated ConfigService and ConfigManagerService
+                        since they have now been superceded by the
+                        ConfigBroker. Made compilation of the C++ remote
+                        reconfiguration code enabled by default.
+                        NEW VERSION: 0.8.5
 Aug-25-2002 nonchocoboy ConfigChunk property sheet now pays attention to
                         external changes to the chunk being edited. This
                         completes functionality necessary for adding/removing
