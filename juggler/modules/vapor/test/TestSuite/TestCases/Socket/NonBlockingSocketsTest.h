@@ -232,6 +232,9 @@ public:
       status = client_sock.close();
       assertTestThread(status.success() &&
                        "Could not close acceptor side of client socket");
+
+      status = acceptor.close();
+      assertTestThread(status.success() && "Could not close acceptor");
    }
 
    void testNonBlockingTransfer_connector (void* arg) {
