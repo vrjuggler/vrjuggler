@@ -76,6 +76,27 @@ Introduction
  Perl 5.005 required--this is only version 5.00404, stopped at ./configure.pl line 35.
  BEGIN failed--compilation aborted at ./configure.pl line 35.
 
+   Furthermore, it is highly recommended that the --with-perl argument be
+   passed to configure.pl. This argument gives all the Autoconf-based
+   configure scripts a hint about where the preferred version of Perl lives.
+   If using /usr/freeware/bin/perl to run configure.pl, we recommend that the
+   configure.pl command line appear similar to the following:
+
+ /usr/freeware/bin/perl configure.pl --with-perl=/usr/freeware/bin
+
+   Note that the value given to --with-perl is the directory where the perl
+   executable can be found. The configure scripts will add this directory to
+   the front of the search path when trying to find a suitable perl
+   executable. Once it is found, all the Perl scripts used for configuration,
+   compilation, and installation will use that executable.
+
+   To simplify command execution somewhat, it can help to have
+   /usr/freeware/bin (or whatever path is appropriate) in your path before
+   /bin or /usr/bin or any of the other myriad directories where Perl might
+   exist on IRIX. In such a situation, none of the above extra steps should
+   be necessary. The correct version of Perl will be found simply by virtue
+   of it being early in your path.
+
     MIPSpro Compiler Version
 
    Reports have been made on the VR Juggler mailing list regarding compile
