@@ -525,7 +525,8 @@ void GlWindowWin32::sizeChanged(long width, long height)
       window_height = 1;
    }
 
-   // XXX: Should reset viewport here
+   updateOriginSize(origin_x, origin_y, window_width, window_height);
+   setDirtyViewport(true);
 }
 
 /**
