@@ -11,7 +11,27 @@ Builder: JExplorerBuilder V 1. 0. 7
 				image="BlackBook_Closed.gif" 
 				imagetwo="BlackBook_Open.gif">
 
-			< item title="Contribute!" link="${DOCUMENTATION}/why.html"  info="Why you should contribute to the Juggler documentation project. (A compelling argument)" image="Chat.gif" >
+			< folder title="Contribute!"
+				link="${TEAMGUIDE}/contribute/index.html"
+				info="Why you should contribute to the VR Juggler project. (A compelling argument)"
+				image="Chat.gif" >
+				< item title="Rules"
+					link="${TEAMGUIDE}/contribute/rules.html"
+					info="Rules for making submissions"
+					image="Leaf.gif" >
+				< item title="How to Create and Submit Patches"
+					link="${TEAMGUIDE}/contribute/submit.html"
+					info="Instructions on how to make source patches and contribute them"
+					image="Leaf.gif" >
+				< item title="How to Get Commit Access"
+					link="${TEAMGUIDE}/contribute/commit_access.html"
+					info="A brief description of how to become a member of the VR Juggler team"
+					image="Leaf.gif" >
+				< item title="Writing Documentation"
+					link="${DOCUMENTATION}/why.html"
+					info="Information about contributing documentation"
+					image="Leaf.gif" >
+			</folder>
 
 			< item title="Our Mission" 
 				link="${MISC}/mission.statement.html" 
