@@ -271,12 +271,13 @@ unsigned int ConfigElement::getVersion() const
 
 bool ConfigElement::getProperty_bool(const std::string& prop, int ind) const
 {
-   std::string prop_string = getPropertyString(prop,ind);
-   if ("false" == prop_string || "0" == prop_string)
+   const std::string prop_string = getPropertyString(prop, ind);
+   if ( std::string("false") == prop_string || std::string("0") == prop_string )
    {
       return false;
    }
-   else if ("true" == prop_string || "1" == prop_string)
+   else if ( std::string("true") == prop_string ||
+             std::string("1") == prop_string )
    {
       return true;
    }
@@ -285,7 +286,7 @@ bool ConfigElement::getProperty_bool(const std::string& prop, int ind) const
       vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
          << "Expecting boolean string for property '" << prop
          << "' in config element '" << getName() << "'. Got '"
-         << prop_string << '" instead. Assuming value of true.\n"
+         << prop_string << "' instead. Assuming value of true.\n"
          << vprDEBUG_FLUSH;
       return true;
    }
