@@ -1215,5 +1215,177 @@
       <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
+  <ChunkDesc token="Fastrack" name="Fastrack">
+    <help>Polhemus Fastrack 3D</help>
+    <PropertyDesc token="port" name="Device" type="string" num="1">
+      <help>Serial port the fastrack is associated to</help>
+      <item label="Port number" defaultvalue="/dev/ttyd0" />
+    </PropertyDesc>
+    <PropertyDesc token="baud" name="Baud Rate" type="int" num="1">
+      <help>Serial port speed</help>
+      <item label="Baud rate" defaultvalue="38400" />
+    </PropertyDesc>
+    <PropertyDesc token="button" name="Button Mode" type="int" num="1">
+        <help>Stylus mode: CONT = continuous with start/stop on button, ONCE = button action -&gt; send info, MOUSE = continuous, MONCE = when asked</help>
+        <item label="Button mode" defaultvalue="0" />
+        <enumeration name="CONT" value="0"/>
+        <enumeration name="ONCE" value="1"/>
+        <enumeration name="MOUSE" value="2"/>
+        <enumeration name="MONCE" value="3"/>
+    </PropertyDesc>
+    <PropertyDesc token="Rec1" name="st 1 Record Tune" type="bool" num="3">
+        <item label="Pos" defaultvalue="0"/>
+        <item label="Ang" defaultvalue="0"/>
+        <item label="But" defaultvalue="0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Rec2" name="st 2 Record Tune" type="bool" num="2">
+        <item label="Pos" defaultvalue="0"/>
+        <item label="Ang" defaultvalue="0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Rec3" name="st 3 Record Tune" type="bool" num="2">
+        <item label="Pos" defaultvalue="0"/>
+        <item label="Ang" defaultvalue="0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Rec4" name="st 4 Record Tune" type="bool" num="2">
+        <item label="Pos" defaultvalue="0"/>
+        <item label="Ang" defaultvalue="0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Tip1" name="st 1 Tip offset" type="float" num="3">
+        <help>Tip-Offsets: FT manual p. 140</help>
+        <item label="x" defaultvalue="0.0"/>
+        <item label="y" defaultvalue="0.0"/>
+        <item label="z" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Tip2" name="st 2 Tip offset" type="float" num="3">
+        <help>Tip-Offsets: FT manual p. 140</help>
+        <item label="x" defaultvalue="0.0"/>
+        <item label="y" defaultvalue="0.0"/>
+        <item label="z" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Tip3" name="st 3 Tip offset" type="float" num="3">
+        <help>Tip-Offsets: FT manual p. 140</help>
+        <item label="x" defaultvalue="0.0"/>
+        <item label="y" defaultvalue="0.0"/>
+        <item label="z" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Tip4" name="st 4 Tip offset" type="float" num="3">
+        <help>Tip-Offsets: FT manual p. 140</help>
+        <item label="x" defaultvalue="0.0"/>
+        <item label="y" defaultvalue="0.0"/>
+        <item label="z" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Inc1" name="st 1 Increment" type="float" num="1">
+        <help>Increments: FT manual p. 93</help>
+        <item label="st 1 Increment" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Inc2" name="st 2 Increment" type="float" num="1">
+        <help>Increments: FT manual p. 93</help>
+        <item label="st 2 Increment" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Inc3" name="st 3 Increment" type="float" num="1">
+        <help>Increments: FT manual p. 93</help>
+        <item label="st 3 Increment" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Inc4" name="st 4 Increment" type="float" num="1">
+        <help>Increments: FT manual p. 93</help>
+        <item label="st 4 Increment" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Hem1" name="st 1 Hemisphere" type="float" num="3">
+        <help>Hemisphere of Operation: FT manual p. 88</help>
+        <item label="x" defaultvalue="0.0"/>
+        <item label="y" defaultvalue="0.0"/>
+        <item label="z" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Hem2" name="st 2 Hemisphere" type="float" num="3">
+        <help>Hemisphere of Operation: FT manual p. 88</help>
+        <item label="x" defaultvalue="0.0"/>
+        <item label="y" defaultvalue="0.0"/>
+        <item label="z" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Hem3" name="st 3 Hemisphere" type="float" num="3">
+        <help>Hemisphere of Operation: FT manual p. 88</help>
+        <item label="x" defaultvalue="0.0"/>
+        <item label="y" defaultvalue="0.0"/>
+        <item label="z" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="Hem4" name="st 4 Hemisphere" type="float" num="3">
+        <help>Hemisphere of Operation: FT manual p. 88</help>
+        <item label="x" defaultvalue="0.0"/>
+        <item label="y" defaultvalue="0.0"/>
+        <item label="z" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="ARF1" name="st 1 ARF" type="float" num="9">
+        <help>Alignment Reference Frame: FT manual p. 47</help>
+        <item label="Ox" defaultvalue="0.0"/>
+        <item label="Oy" defaultvalue="0.0"/>
+        <item label="Oz" defaultvalue="0.0"/>
+        <item label="Xx" defaultvalue="0.0"/>
+        <item label="Xy" defaultvalue="0.0"/>
+        <item label="Xz" defaultvalue="0.0"/>
+        <item label="Yx" defaultvalue="0.0"/>
+        <item label="Yy" defaultvalue="0.0"/>
+        <item label="Yz" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="ARF2" name="st 2 ARF" type="float" num="9">
+        <help>Alignment Reference Frame: FT manual p. 47</help>
+        <item label="Ox" defaultvalue="0.0"/>
+        <item label="Oy" defaultvalue="0.0"/>
+        <item label="Oz" defaultvalue="0.0"/>
+        <item label="Xx" defaultvalue="0.0"/>
+        <item label="Xy" defaultvalue="0.0"/>
+        <item label="Xz" defaultvalue="0.0"/>
+        <item label="Yx" defaultvalue="0.0"/>
+        <item label="Yy" defaultvalue="0.0"/>
+        <item label="Yz" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="ARF3" name="st 3 ARF" type="float" num="9">
+        <help>Alignment Reference Frame: FT manual p. 47</help>
+        <item label="Ox" defaultvalue="0.0"/>
+        <item label="Oy" defaultvalue="0.0"/>
+        <item label="Oz" defaultvalue="0.0"/>
+        <item label="Xx" defaultvalue="0.0"/>
+        <item label="Xy" defaultvalue="0.0"/>
+        <item label="Xz" defaultvalue="0.0"/>
+        <item label="Yx" defaultvalue="0.0"/>
+        <item label="Yy" defaultvalue="0.0"/>
+        <item label="Yz" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="ARF4" name="st 4 ARF" type="float" num="9">
+        <help>Alignment Reference Frame: FT manual p. 47</help>
+        <item label="Ox" defaultvalue="0.0"/>
+        <item label="Oy" defaultvalue="0.0"/>
+        <item label="Oz" defaultvalue="0.0"/>
+        <item label="Xx" defaultvalue="0.0"/>
+        <item label="Xy" defaultvalue="0.0"/>
+        <item label="Xz" defaultvalue="0.0"/>
+        <item label="Yx" defaultvalue="0.0"/>
+        <item label="Yy" defaultvalue="0.0"/>
+        <item label="Yz" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="TMF1" name="st 1 TMF" type="float" num="3">
+        <help>Transmitter Mounting Frame: FT manual p. 59</help>
+        <item label="head" defaultvalue="0.0"/>
+        <item label="pitch" defaultvalue="0.0"/>
+        <item label="roll" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="TMF2" name="st 2 TMF" type="float" num="3">
+        <help>Transmitter Mounting Frame: FT manual p. 59</help>
+        <item label="head" defaultvalue="0.0"/>
+        <item label="pitch" defaultvalue="0.0"/>
+        <item label="roll" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="TMF3" name="st 3 TMF" type="float" num="3">
+        <help>Transmitter Mounting Frame: FT manual p. 59</help>
+        <item label="head" defaultvalue="0.0"/>
+        <item label="pitch" defaultvalue="0.0"/>
+        <item label="roll" defaultvalue="0.0"/>
+    </PropertyDesc>
+    <PropertyDesc token="TMF4" name="st 4 TMF" type="float" num="3">
+        <help>Transmitter Mounting Frame: FT manual p. 59</help>
+        <item label="head" defaultvalue="0.0"/>
+        <item label="pitch" defaultvalue="0.0"/>
+        <item label="roll" defaultvalue="0.0"/>
+    </PropertyDesc>
+  </ChunkDesc>
 </ChunkDescDB>
 
