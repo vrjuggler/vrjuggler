@@ -35,6 +35,7 @@
 
 /* ---- Feature list ----------
 
+- Viewplatform
 - Pointing grabbing
 - Grabbing using pinch gloves
 - Slicing using cubic mouse interfacing
@@ -59,6 +60,9 @@
 #include <gadget/Type/DigitalInterface.h>
 
 #include <vrj/Draw/OGL/GlContextData.h>
+
+// Common viewer helper classes
+#include <User.h>
 
 /*-----------------------------OpenSG includes--------------------------------*/
 #include <OpenSG/OSGNode.h>
@@ -91,8 +95,6 @@ public:
     virtual OSG::NodePtr getSceneRoot()
     { return mSceneRoot; }
 
-    void initRenderer();
-
     virtual void draw();
 
     virtual void contextInit();
@@ -111,6 +113,8 @@ public:
   private:
     std::string         mFileToLoad;      /**< Filename of the file to load */
 
+    User                mUser;            /**< The user that this is a viewer for */
+
     //   mSceneRoot:[mSceneTransform]
     //         |
     //   mLightNode:[DirectionalLight]
@@ -122,8 +126,8 @@ public:
     OSG::TransformPtr   mSceneTransform;  /**< Transform core */
     OSG::NodePtr        mModelRoot;       /**< Root of the loaded model */
 
-    OSG::NodePtr  mLightNode;       /**< Light node to use */
-    OSG::NodePtr  mLightBeacon;     /**< A beacon for the light */
+    OSG::NodePtr        mLightNode;       /**< Light node to use */
+    OSG::NodePtr        mLightBeacon;     /**< A beacon for the light */
 
   public:
     gadget::PositionInterface  mWandPos;     /**< The position of the wand */
