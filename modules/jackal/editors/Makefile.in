@@ -72,7 +72,8 @@ INSTALL_FILES=
 # -----------------------------------------------------------------------------
 JDOM_JAR=	@JDOM_JAR@
 TWEEK_JARS=	@TWEEK_JARS@
-CLASSPATH=	$(JDOM_JAR)$(JCPS)$(TWEEK_JARS)$(JCPS)$(topdir)/config
+TWEEK_EXT_JARS=	@TWEEK_EXT_JARS@
+CLASSPATH=	$(JDOM_JAR)$(JCPS)$(TWEEK_JARS)$(JCPS)$(TWEEK_EXT_JARS)$(JCPS)$(topdir)/config
 JAVA_SRC_PATH=	
 
 EDITORS_PKG=		org.vrjuggler.jccl.editors

@@ -37,14 +37,17 @@ import java.beans.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
+import javax.swing.tree.*;
 import org.vrjuggler.jccl.config.ConfigChunk;
 import org.vrjuggler.jccl.config.PropertyDesc;
+import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.tweek.ui.JTreeTable;
 
 /**
  * A property sheet for a config chunk object.
  */
 public class ConfigChunkPropertySheet
-   extends JTable
+   extends JTreeTable
 {
    public ConfigChunkPropertySheet()
    {
@@ -57,17 +60,23 @@ public class ConfigChunkPropertySheet
       // Make resizing work intuitively
       setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-      // Setup the table
-      tableModel = new ConfigChunkTableModel();
-      setModel(tableModel);
-      getColumnModel().getColumn(1).setCellEditor(
-                                    new PropertyValueEditor());
+      // Setup the table defaults
+      setShowGrid(true);
+      setIntercellSpacing(new Dimension(1,1));
       setBackground(UIManager.getColor("Menu"));
       setRowHeight(getRowHeight()+4);
-      getColumnModel().getColumn(0).setCellRenderer(
-                           new PropertyNameRenderer());
-      getColumnModel().getColumn(1).setCellRenderer(
-                           new PropertyValueRenderer());
+
+      // Setup the tree
+      getTree().setCellRenderer(new ChunkTreeCellRenderer());
+      getTree().putClientProperty("JTree.lineStyle", "Angled");
+      getTree().getSelectionModel().setSelectionMode(
+                     TreeSelectionModel.SINGLE_TREE_SELECTION);
+      getTree().setRootVisible(false);
+      getTree().setToggleClickCount(1);
+
+      // Setup the table model
+      tableModel = new ConfigChunkTreeTableModel();
+      setModel(tableModel);
 
       // Make sure we know when the selection changes
       ListSelectionModel rowSM = getSelectionModel();
@@ -81,6 +90,96 @@ public class ConfigChunkPropertySheet
             }
          }
       });
+   }
+
+   /**
+    * Gets the cell renderer for the cell at (col, row). This is overridden such
+    * that parent nodes (that print the summary value list) for multi-valued
+    * properties do not render the summary when they have been expanded.
+    */
+   public TableCellRenderer getCellRenderer(int row, int col)
+   {
+      if (col == 1)
+      {
+         TreePath path = getTree().getPathForRow(row);
+         DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+         Object value = node.getUserObject();
+
+         if (value instanceof PropertyDesc)
+         {
+            if (getTree().isExpanded(path))
+            {
+               return new DefaultTableCellRenderer()
+               {
+                  public Component getTableCellRendererComponent(JTable table,
+                                                                 Object value,
+                                                                 boolean selected,
+                                                                 boolean focused,
+                                                                 int row, int col)
+                  {
+                     super.getTableCellRendererComponent(table, value, selected,
+                                                         focused, row, col);
+                     setText("");
+                     return this;
+                  }
+               };
+            }
+         }
+      }
+
+      return super.getCellRenderer(row, col);
+   }
+
+   /**
+    * Gets the cell editor for the cell at (col, row).
+    */
+   public TableCellEditor getCellEditor(int row, int col)
+   {
+      // The first column is the tree; use the default editor
+      if (col == 0)
+      {
+         return super.getCellEditor(row, col);
+      }
+
+      // Get the property desc for the row in question
+      PropertyDesc prop_desc = getPropertyDescForRow(row);
+      if (prop_desc == null)
+      {
+         return super.getCellEditor(row, col);
+      }
+
+      chunkCellEditor.setPropertyDesc(prop_desc);
+
+      return chunkCellEditor;
+   }
+
+   /**
+    * Tests if the cell at (col, row) is editable. This is overridden such that
+    * parent nodes (that print the summary value list) for multi-valued
+    * properties are not editable when they have been expanded.
+    */
+   public boolean isCellEditable(int row, int col)
+   {
+      // The first column is the tree; let the parent class decide
+      if (col == 0)
+      {
+         return super.isCellEditable(row, col);
+      }
+
+      // Get the value stored in the node for the row in question
+      TreePath path = getTree().getPathForRow(row);
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+      Object value = node.getUserObject();
+
+      if (value instanceof PropertyDesc)
+      {
+         // Property descs are only editable if they are not expanded
+         return ! getTree().isExpanded(path);
+      }
+      else
+      {
+         return super.isCellEditable(row, col);
+      }
    }
 
    public void addActionListener(ActionListener listener)
@@ -116,13 +215,60 @@ public class ConfigChunkPropertySheet
       else
       {
          int row = lsm.getMinSelectionIndex();
-         return tableModel.getPropertyDesc(row);
+         return getPropertyDescForRow(row);
+      }
+   }
+
+   private PropertyDesc getPropertyDescForRow(int row)
+   {
+      TreePath path = getTree().getPathForRow(row);
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+      Object value = node.getUserObject();
+
+      // If the node contains the property desc, return it
+      if (value instanceof PropertyDesc)
+      {
+         return (PropertyDesc)value;
+      }
+      // If the node contains a config chunk, return the parent
+      if (value instanceof ConfigChunk)
+      {
+         DefaultMutableTreeNode parent_node = (DefaultMutableTreeNode)node.getParent();
+         // If the node doesn't have a parent, there is no property desc
+         if (parent_node == null)
+         {
+            return null;
+         }
+         else
+         {
+            System.out.println("ConfigChunk: "+((ConfigChunk)value).getName());
+            System.out.println("\tParent: "+parent_node.getUserObject());
+            return (PropertyDesc)parent_node.getUserObject();
+         }
+      }
+      // Otherwise it's a property value
+      else
+      {
+         DefaultMutableTreeNode parent_node = (DefaultMutableTreeNode)node.getParent();
+         Object parent = parent_node.getUserObject();
+         if (parent instanceof PropertyDesc)
+         {
+            return (PropertyDesc)parent;
+         }
+         else if (parent instanceof ConfigChunk)
+         {
+            ConfigChunk parent_chunk = (ConfigChunk)parent;
+            int idx = parent_node.getIndex(node);
+            return parent_chunk.getDesc().getPropertyDesc(idx);
+         }
+         return null;
       }
    }
 
    public void setConfigChunk(ConfigChunk chunk)
    {
       tableModel.setConfigChunk(chunk);
+      getTree().expandPath(new TreePath(tableModel.getRoot()));
    }
 
    public ConfigChunk getConfigChunk()
@@ -169,10 +315,112 @@ public class ConfigChunkPropertySheet
    /**
     * The table model for the property sheet.
     */
-   private ConfigChunkTableModel tableModel;
+   private ConfigChunkTreeTableModel tableModel;
 
    /**
     * All listeners interested in this model.
     */
    private EventListenerList listenerList = new EventListenerList();
+
+   /**
+    * The cell editor that is reused each time a value cell is edited.
+    */
+   private ConfigChunkCellEditor chunkCellEditor = new ConfigChunkCellEditor();
+
+   /**
+    * Specialized renderer for a ConfigChunk tree.
+    */
+   class ChunkTreeCellRenderer
+      extends DefaultTreeCellRenderer
+   {
+      public ChunkTreeCellRenderer()
+      {
+         ClassLoader loader = BeanJarClassLoader.instance();
+         mExpandIcon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/expand_property.gif"));
+         mCollapseIcon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/collapse_property.gif"));
+      }
+
+      public Component getTreeCellRendererComponent(
+                           JTree tree, Object node, boolean selected,
+                           boolean expanded, boolean leaf, int row,
+                           boolean focused)
+      {
+         // Get the default settings from the UI LAF
+         super.getTreeCellRendererComponent(tree, node, selected,
+                                            expanded, leaf, row, focused);
+
+         setBackgroundNonSelectionColor(tree.getBackground());
+
+         // Pull out the data from the tree node
+         DefaultMutableTreeNode tree_node = (DefaultMutableTreeNode)node;
+         DefaultMutableTreeNode parent_node = (DefaultMutableTreeNode)tree_node.getParent();
+         Object value = ((DefaultMutableTreeNode)node).getUserObject();
+
+         // Display the name of ConfigChunks
+         if (value instanceof ConfigChunk)
+         {
+            setText(((ConfigChunk)value).getName());
+            setHorizontalTextPosition(JLabel.LEFT);
+            if (expanded)
+            {
+               setIcon(mCollapseIcon);
+            }
+            else
+            {
+               setIcon(mExpandIcon);
+            }
+         }
+         // Display the name of PropertyDescs
+         else if (value instanceof PropertyDesc)
+         {
+            setText(((PropertyDesc)value).getName());
+            setHorizontalTextPosition(JLabel.LEFT);
+            if (expanded)
+            {
+               setIcon(mCollapseIcon);
+            }
+            else
+            {
+               setIcon(mExpandIcon);
+            }
+         }
+         else
+         {
+            setIcon(null);
+            if (parent_node != null)
+            {
+               Object parent = parent_node.getUserObject();
+               int idx = parent_node.getIndex(tree_node);
+               if (parent instanceof ConfigChunk)
+               {
+                  String name = ((ConfigChunk)parent).getDesc().getPropertyDesc(idx).getName();
+                  setText(name);
+               }
+               else if (parent instanceof PropertyDesc)
+               {
+                  PropertyDesc prop_desc = (PropertyDesc)parent;
+
+                  if (prop_desc.hasVariableNumberOfValues() &&
+                     (idx >= prop_desc.getItemsSize()))
+                  {
+                     // We're looking at a value past the number of defined
+                     // items. Just use the last defined one by default.
+                     idx = prop_desc.getItemsSize() - 1;
+                  }
+
+                  PropertyDesc.Item item = (PropertyDesc.Item)prop_desc.getItems().get(idx);
+                  setText(item.getLabel());
+               }
+               else
+               {
+                  setText(value.toString());
+               }
+            }
+         }
+         return this;
+      }
+
+      private Icon mExpandIcon;
+      private Icon mCollapseIcon;
+   }
 }
