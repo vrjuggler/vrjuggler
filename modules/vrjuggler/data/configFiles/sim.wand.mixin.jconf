@@ -94,7 +94,7 @@
          <lock_key>29</lock_key>
          <start_locked>0</start_locked>
          <sleep_time>75</sleep_time>
-         <deviceHost/>
+         <device_host/>
       </event_window>
       <simulated_positional_device name="SimWandPos" version="2">
          <event_window_proxy>Wandevent_window_proxy</event_window_proxy>
