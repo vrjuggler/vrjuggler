@@ -1,0 +1,150 @@
+# Jamfile for compiling the PyJuggler Python extension module.  This
+# depends on working installations of Python, Boost.Python, VR Juggler,
+# and NSPR.  Relevant websites are the following:
+#
+#    http://www.python.org/
+#    http://www.boost.org/libs/python/
+#    http://www.vrjuggler.org/
+#    http://www.mozilla.org/projects/nspr/
+#
+# $Id$
+
+# Specify our location in the boost project hierarchy
+subproject libs/python/pyjuggler ;
+
+# Declares the following targets:
+#    
+#  1. an extension module called "PyJuggler", which is
+#     built from many .cpp files. Built by default
+#
+
+# Include definitions needed for Python modules
+SEARCH on python.jam = $(BOOST_BUILD_PATH) ;
+include python.jam ;
+
+# ----- vpr -------
+
+# Declare a Python extension called vpr
+extension vpr
+:  # sources
+   src/vpr/_GUID.cpp
+   src/vpr/_Interval.cpp
+   src/vpr/_ReturnStatus.cpp
+   src/vpr/vpr.cpp
+  
+   # dependencies
+   <dll>../build/boost_python
+
+:  # VPR dependencies
+   <include>$(VJ_BASE_DIR)/include
+   <include>$(NSPR_ROOT)/include/nspr
+
+   <debug><library-path>$(VJ_BASE_DIR)/lib/debug
+   <debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
+   <release><library-path>$(VJ_BASE_DIR)/lib/opt
+
+   <find-library>vpr
+  ;
+
+# ----- jccl -------
+
+# Declare a Python extension called jccl
+extension jccl
+:  # sources
+   src/jccl/_ConfigElement.cpp
+   src/jccl/_ConfigElementHandler.cpp
+   src/jccl/jccl.cpp
+  
+   # dependencies
+   <dll>../build/boost_python
+
+:  # JCCL dependencies
+   <include>$(VJ_BASE_DIR)/include
+   <include>$(NSPR_ROOT)/include/nspr
+
+   <debug><library-path>$(VJ_BASE_DIR)/lib/debug
+   <debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
+   <release><library-path>$(VJ_BASE_DIR)/lib/opt
+
+   <find-library>vpr
+   <find-library>jccl
+  ;
+
+# ----- gadget -------
+
+# Declare a Python extension called gadget
+extension gadget
+:  # sources
+   src/gadget/_Analog.cpp
+   src/gadget/_AnalogData.cpp
+   src/gadget/_AnalogInterface.cpp
+   src/gadget/_AnalogProxy.cpp
+   src/gadget/_BaseDeviceInterface.cpp
+   src/gadget/_Digital.cpp
+   src/gadget/_DigitalData.cpp
+   src/gadget/_DigitalInterface.cpp
+   src/gadget/_DigitalProxy.cpp
+   src/gadget/_Event.cpp
+   src/gadget/_KeyEvent.cpp
+   src/gadget/_MouseEvent.cpp
+   src/gadget/_Position.cpp
+   src/gadget/_PositionData.cpp
+   src/gadget/_PositionInterface.cpp
+   src/gadget/_PositionProxy.cpp
+   src/gadget/_gadget_Type_EventWindow_Event_h.cpp
+   src/gadget/_gadget_Type_EventWindow_Keys_h.cpp
+   src/gadget/gadget.cpp
+  
+   # dependencies
+   <dll>../build/boost_python
+
+:  # Gadgeteer dependencies
+   <include>src
+   <include>$(VJ_BASE_DIR)/include
+   <include>$(NSPR_ROOT)/include/nspr
+
+   <debug><library-path>$(VJ_BASE_DIR)/lib/debug
+   <debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
+   <release><library-path>$(VJ_BASE_DIR)/lib/opt
+
+   <find-library>vpr
+   <find-library>jccl
+   <find-library>gadget
+  ;
+
+# ----- vrj -------
+
+# Declare a Python extension called vrj
+extension vrj
+:  # sources
+   pyjutil/InterpreterGuard.cpp
+   src/vrj/_App.cpp
+   src/vrj/_CameraProjection.cpp
+   src/vrj/_Display.cpp
+   src/vrj/_Frustum.cpp
+   src/vrj/_GlApp.cpp
+   src/vrj/_Kernel.cpp
+   src/vrj/_Projection.cpp
+   src/vrj/_SimViewport.cpp
+   src/vrj/_User.cpp
+   src/vrj/_Viewport.cpp
+   src/vrj/vrj.cpp
+  
+   # dependencies
+   <dll>../build/boost_python
+
+:  # VR Juggler dependencies
+   <include>src
+   <include>$(VJ_BASE_DIR)/include
+   <include>$(NSPR_ROOT)/include/nspr
+
+   <debug><library-path>$(VJ_BASE_DIR)/lib/debug
+   <debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
+   <release><library-path>$(VJ_BASE_DIR)/lib/opt
+
+   <find-library>vpr
+   <find-library>jccl
+   <find-library>gadget
+   <find-library>Juggler
+   <find-library>Juggler_ogl
+  ;
