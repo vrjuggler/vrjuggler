@@ -457,6 +457,15 @@ public:
     vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
                           const struct vpr::SocketOptions::Data& data);
 
+     /**
+     * Destructor.  This releases the memory allocated for m_handle (if it is
+     * non-NULL).
+     *
+     * @pre If m_handle is NULL, its memory has already been deleted.
+     * @post The memory for m_handle is deleted.
+     */
+    ~SocketImplBSD(void);
+
 protected:
     /**
      * Default constructor.  This just initializes member variables to
@@ -493,15 +502,6 @@ protected:
     {
         m_handle = new FileHandleImplUNIX(remote_addr.getAddressString());
     }
-
-    /**
-     * Destructor.  This releases the memory allocated for m_handle (if it is
-     * non-NULL).
-     *
-     * @pre If m_handle is NULL, its memory has already been deleted.
-     * @post The memory for m_handle is deleted.
-     */
-    ~SocketImplBSD(void);
 
 protected:
     // XXX: This class should not need m_open and should instead use the one
