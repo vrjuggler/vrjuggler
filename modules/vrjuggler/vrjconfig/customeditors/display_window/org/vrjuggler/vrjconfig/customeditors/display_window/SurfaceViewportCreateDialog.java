@@ -53,7 +53,8 @@ public class SurfaceViewportCreateDialog
 
    public SurfaceViewportCreateDialog(ConfigElement elt)
    {
-      super("Basic Surface Viewport Parameters", elt, "surface_viewport");
+      super("Basic Surface Viewport Parameters", elt,
+            EditorConstants.surfaceViewportType);
 
       mCorners[Plane.LL_CORNER] = "Lower Left Corner";
       mCorners[Plane.LR_CORNER] = "Lower Right Corner";
@@ -61,7 +62,8 @@ public class SurfaceViewportCreateDialog
       mCorners[Plane.UL_CORNER] = "Upper Left Corner";
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      ConfigDefinition vp_def = broker.getRepository().get("surface_viewport");
+      ConfigDefinition vp_def =
+         broker.getRepository().get(EditorConstants.surfaceViewportType);
 
       mTrackerProxyEditor =
          new PropertyEditorPanel(mViewportElement.getProperty("tracker_proxy", 0),

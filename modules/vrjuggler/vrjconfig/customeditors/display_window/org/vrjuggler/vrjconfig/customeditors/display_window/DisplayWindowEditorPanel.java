@@ -63,7 +63,7 @@ public class DisplayWindowEditorPanel
    public DisplayWindowEditorPanel()
    {
       // Register ourselves with the CustomEditorRegistry.
-      CustomEditorRegistry.registerEditor("display_window",
+      CustomEditorRegistry.registerEditor(EditorConstants.displayWindowType,
                                           DisplayWindowEditorPanel.class);
 
       try
@@ -165,7 +165,7 @@ public class DisplayWindowEditorPanel
          for ( Iterator i = all_elts.iterator(); i.hasNext(); )
          {
             ConfigElement cur_elt = (ConfigElement) i.next();
-            if ( cur_elt.getDefinition().getName().equals("display_window") )
+            if ( cur_elt.getDefinition().getName().equals(EditorConstants.displayWindowType) )
             {
                addDisplay(cur_elt);
             }
@@ -419,7 +419,8 @@ public class DisplayWindowEditorPanel
       if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
-         ConfigDefinition window_def = broker.getRepository().get("display_window");
+         ConfigDefinition window_def =
+            broker.getRepository().get(EditorConstants.displayWindowType);
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
 
@@ -526,7 +527,7 @@ public class DisplayWindowEditorPanel
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition vp_def =
-            broker.getRepository().get("surface_viewport");
+            broker.getRepository().get(EditorConstants.surfaceViewportType);
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
 
@@ -590,7 +591,7 @@ public class DisplayWindowEditorPanel
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition vp_def =
-            broker.getRepository().get("simulator_viewport");
+            broker.getRepository().get(EditorConstants.simulatorViewportType);
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
 
