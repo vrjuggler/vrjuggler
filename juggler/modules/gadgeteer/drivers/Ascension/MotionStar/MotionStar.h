@@ -1,3 +1,23 @@
+/*
+ *  File:	    $RCSfile$
+ *  Date modified:  $Date$
+ *  Version:	    $Revision$
+ *
+ *
+ *                                VR Juggler
+ *                                    by
+ *                              Allen Bierbaum
+ *                             Christopher Just
+ *                             Patrick Hartling
+ *                            Carolina Cruz-Neira
+ *                               Albert Baker
+ *
+ *                         Copyright - 1997,1998,1999
+ *                Iowa State University Research Foundation, Inc.
+ *                            All Rights Reserved
+ */
+
+ 
 #ifndef _VJ_ASCENSION_MOTION_STAR_H_
 #define _VJ_ASCENSION_MOTION_STAR_H_
  
