@@ -59,10 +59,7 @@ class SimpleGlApp(vrj.GlApp):
       self.initGLState()
 
    def preFrame(self):
-      if self.mButton0.getData() == gadget.Digital.State.ON:
-         print "Button 0 is pressed!"
-      elif self.mButton0.getData() == gadget.Digital.State.TOGGLE_ON:
-         print "Grabbing box ..."
+      if self.mButton0.getData():
          self.mGrabbed = 1
       else:
          self.mGrabbed = 0
