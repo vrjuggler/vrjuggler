@@ -118,7 +118,7 @@ public:
    virtual vpr::ReturnStatus writeBool(bool val);
 
    /* Write raw data of length len */
-   vpr::ReturnStatus writeRaw(vpr::Uint8* data, unsigned len=1);
+   inline vpr::ReturnStatus writeRaw(vpr::Uint8* data, unsigned len=1);
 
 public:
    std::vector<vpr::Uint8>*   mData;
