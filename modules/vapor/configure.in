@@ -545,7 +545,7 @@ if test "$OS_TYPE" = "UNIX" ; then
 
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
         APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
-    elif test "x$GXX" = "xyes" ; then
+    elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xMacOSX" ; then
         APP_VPR_LIBS_BEGIN="-Wl,-Bstatic -L\$(VPR_BASE_DIR)/lib${LIBBITSUF}"
         APP_VPR_LIBS_END=''
         APP_VPR_LIBS_BASIC='-lvpr'
@@ -627,12 +627,14 @@ case $SUBSYSTEM in
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 
-        if test "x$USE_GCC" = "xyes" ; then
-            static_begin="-Wl,-Bstatic"
-            static_end="-Wl,-Bdynamic"
-        else
-            static_begin="-B static"
-            static_end="-B dynamic"
+        if test "x$PLATFORM" != "xMacOX" ; then
+            if test "x$USE_GCC" = "xyes" ; then
+                static_begin="-Wl,-Bstatic"
+                static_end="-Wl,-Bdynamic"
+            else
+                static_begin="-B static"
+                static_end="-B dynamic"
+            fi
         fi
 
         vpr_ldflags="$EXTRA_LDFLAGS -L\$prefix/lib$LIBBITSUF"
@@ -643,12 +645,14 @@ case $SUBSYSTEM in
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 
-        if test "x$USE_GCC" = "xyes" ; then
-            static_begin="-Wl,-Bstatic"
-            static_end="-Wl,-Bdynamic"
-        else
-            static_begin="-B static"
-            static_end="-B dynamic"
+        if test "x$PLATFORM" != "xMacOX" ; then
+            if test "x$USE_GCC" = "xyes" ; then
+                static_begin="-Wl,-Bstatic"
+                static_end="-Wl,-Bdynamic"
+            else
+                static_begin="-B static"
+                static_end="-B dynamic"
+            fi
         fi
 
         vpr_ldflags="$EXTRA_LDFLAGS -L\$prefix/lib$LIBBITSUF"
