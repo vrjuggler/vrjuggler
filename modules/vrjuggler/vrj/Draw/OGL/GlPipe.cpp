@@ -68,6 +68,7 @@ int GlPipe::start()
          new vpr::ThreadMemberFunctor<GlPipe>(this, &GlPipe::controlLoop, NULL);
 
     mActiveThread = new vpr::Thread(memberFunctor);
+    mActiveThread->start();
 
     vprDEBUG(vrjDBG_DRAW_MGR,1) << "vjGlPipe::start: Started control loop. "
                               << mActiveThread << std::endl << vprDEBUG_FLUSH;
