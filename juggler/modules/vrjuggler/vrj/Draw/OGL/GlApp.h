@@ -41,7 +41,8 @@
 
 #include <Kernel/GL/vjGlDrawManager.h>
 
-#include <Kernel/vjKernel.h>
+//#include <Kernel/vjKernel.h>
+class vjKernel;
 #include <Kernel/vjUser.h>
 #include <Kernel/vjProjection.h>
 
@@ -68,6 +69,8 @@ public:
    {
       //api.setOpenGL();     // Tell everyone that we are OpenGL
    }
+
+   vjGlApp() {;}
 
    //: Function to draw the scene
    // Override this function with the user draw routine
