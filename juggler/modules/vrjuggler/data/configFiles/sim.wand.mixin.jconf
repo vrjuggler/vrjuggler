@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-<configuration name="Wand Mixin for sim.base.config"
-               xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Wand Mixin for sim.base.config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
       <alias name="VJWand" version="1">
          <proxy>Wand Proxy</proxy>
@@ -92,9 +89,9 @@
          <mouse_sensitivity>2.0</mouse_sensitivity>
          <display_number>-1</display_number>
          <lock_key>29</lock_key>
-         <start_locked>0</start_locked>
+         <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
-         <device_host/>
+         <device_host />
       </event_window>
       <simulated_positional_device name="SimWandPos" version="2">
          <event_window_proxy>Wandevent_window_proxy</event_window_proxy>
@@ -176,7 +173,7 @@
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
-         <translation_delta>0.006</translation_delta>
+         <translation_delta>0.0060</translation_delta>
          <rotation_delta>0.1</rotation_delta>
          <translation_coordinate_system>1</translation_coordinate_system>
          <rotation_coordinate_system>0</rotation_coordinate_system>
@@ -261,3 +258,4 @@
       </simulated_digital_device>
    </elements>
 </configuration>
+
