@@ -227,7 +227,8 @@ ARFLAGS=''		dnl # Flags for $AR
 DEP_GEN_FLAG='-M'	dnl # Flag for the compiler to generate dependencies
 LD=''			dnl # Shared library command (usually ld(1))
 LDOPTS=''		dnl # More options for shared library generator
-SHAREDLIB_EXT=''	dnl # Extension for shared libraries (usually 'so')
+STATICLIB_EXT='a'	dnl # Extension for shared library names (usually 'a')
+SHAREDLIB_EXT=''	dnl # Extension for shared library names (usually 'so')
 
 DBG_FLAGS=''		dnl # Compiler debugging flags
 OPT_FLAGS=''		dnl # Compiler optimization flags
@@ -426,6 +427,8 @@ case $target_os in
         CFLAGS="-nologo"
         CXXFLAGS="-nologo"
         DBG_FLAGS='-Od -GZ'
+        STATICLIB_EXT='lib'
+        SHAREDLIB_EXT='dll'
 
         dnl # Use optimization flags based on the type of CPU.
         case $target_cpu in
@@ -1028,6 +1031,7 @@ AC_SUBST(LDOPTS)
 AC_SUBST(DBG_FLAGS)
 AC_SUBST(OPT_FLAGS)
 AC_SUBST(PERL)
+AC_SUBST(STATICLIB_EXT)
 AC_SUBST(SHAREDLIB_EXT)
 
 AC_SUBST(ABI)
