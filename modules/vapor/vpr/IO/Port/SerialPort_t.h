@@ -426,6 +426,47 @@ public:
         return m_sio_imp.setCharacterSize(bpb);
     }
 
+    // ------------------------------------------------------------------------
+    //: Get the current read state for the port.
+    //
+    //! PRE: The serial port is open.
+    //! POST: The read state (either enabled or disabled) is returne to the 
+    //+       caller.
+    //
+    //! RETURNS: true  - Bytes can be read from the device.
+    //! RETURNS: false - Bytes cannot be read from the device.
+    // ------------------------------------------------------------------------
+    inline bool
+    getReadState (void) {
+        return m_sio_imp.getReadState();
+    }
+
+    // ------------------------------------------------------------------------
+    //: Enable the receiver so that bytes can be read from the port.
+    //
+    //! PRE: The serial port is open.
+    //! POST: An attempt is made to make the device readable.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
+    // ------------------------------------------------------------------------
+    inline vpr::Status
+    enableRead (void) {
+        return m_sio_imp.enableRead();
+    }
+
+    // ------------------------------------------------------------------------
+    //: Disable the receiver so that bytes cannot be read from the port.
+    //
+    //! PRE: The serial port is open.
+    //! POST: An attempt is made to make the device unreadable.
+    //
+    //! RETURNS: A vpr::Status object describing the results of the operation.
+    // ------------------------------------------------------------------------
+    inline vpr::Status
+    disableRead (void) {
+        return m_sio_imp.disableRead();
+    }
+
     /**
      * Gets the number of stop bits in use.  This will be either 1 or 2.
      *
