@@ -48,7 +48,6 @@ SUBDIR=		doc/build.system				\
 		modules/gadgeteer/doc/device.driver.guide	\
 		modules/jackal/doc				\
 		modules/sonix/doc				\
-		modules/sonix/doc/programmer.guide		\
 		modules/tweek/doc				\
 		modules/tweek/doc/programmer.guide		\
 		modules/vapor/doc				\
