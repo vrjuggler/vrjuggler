@@ -57,10 +57,11 @@ extern "C" {
 #  include <global.h>
 #  include <md5.h>
 }
-#endif
+#endif  /* VPR_USE_LEACH_UUID */
 
-// Too bad there isn't a standard location for uuid.h ...
-#if defined(HAVE_UUID_H)
+#if defined(VPR_OS_Win32)
+#  include <rpc.h>
+#elif defined(HAVE_UUID_H)
 #  include <uuid.h>
 #elif defined(HAVE_UUID_UUID_H) || defined(VPR_USE_LEACH_UUID)
 #  include <uuid/uuid.h>
@@ -69,11 +70,11 @@ extern "C" {
 // XXX: On IRIX, sys/uuid.h is not a C++-safe header.  Blah...
 #  ifdef VPR_OS_IRIX
 extern "C" {
-#  endif
+#  endif  /* VPR_OS_IRIX */
 #  include <sys/uuid.h>
 #  ifdef VPR_OS_IRIX
 }
-#  endif
+#  endif  /* VPR_OS_IRIX */
 #endif
 
 #include <boost/concept_check.hpp>  // for ignore_unused_variable_warning
@@ -159,8 +160,11 @@ GUID::GUID(const GUID& ns_guid, const std::string& name)
 
 void GUID::generate()
 {
+// Windows DCE UUID.
+#if defined(VPR_OS_Win32)
+   UuidCreate((UUID*) &mGuid.standard);
 // DCE 1.1 UUID.
-#if defined(VPR_USE_DCE_1_1_UUID)
+#elif defined(VPR_USE_DCE_1_1_UUID)
    uint32_t status(0);
    uuid_create((uuid_t*) &mGuid.standard, &status);
 // Linux e2fsprogs libuuid.
