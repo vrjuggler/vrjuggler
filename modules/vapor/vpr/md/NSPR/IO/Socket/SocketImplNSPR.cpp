@@ -289,7 +289,7 @@ SocketImplNSPR::read_i (void* buffer, const vpr::Uint32 length,
    bytes = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
 
    // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
-   if ( bytes_read == -1 ) {
+   if ( bytes == -1 ) {
       PRErrorCode err_code = PR_GetError();
 
       bytes_read = 0;
