@@ -402,7 +402,7 @@ post-install-headers:
 install-headers-deprecated:
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h -o $(includedir)/deprecated		\
-          -i $(VJROOT_ABS)/deprecated
+          -i $(VJROOT_ABS)/deprecated $(EXTRA_INSTALL_ARGS)
 
 install-java:
 ifndef NO_JAVA
@@ -419,7 +419,8 @@ install-samples:
 	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(projdatadir)
 	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/samples	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/samples
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/samples	\
+          $(EXTRA_INSTALL_ARGS)
 	$(PERL) $(scriptdir)/makefiles-gen.pl				\
           --vars="$(topdir)/VARS.pl" --startdir="$(top_srcdir)/samples"	\
           --mode="$(FILE_PERMS)" $(_GROUP_OPT_PL) --srcdir="."		\
@@ -433,7 +434,8 @@ install-test:
 	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(projdatadir)
 	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/test	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/test
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/test	\
+          $(EXTRA_INSTALL_ARGS)
 	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
           --prefix="$(projdatadir)/test" --vars="$(topdir)/VARS.pl"	\
           --startdir="$(top_srcdir)/test" $(_GROUP_OPT_PL) --srcdir="."
@@ -446,7 +448,8 @@ install-tools:
 	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(projdatadir)
 	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/tools	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/tools
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/tools	\
+          $(EXTRA_INSTALL_ARGS)
 	$(PERL) $(scriptdir)/makefiles-gen.pl				\
           --prefix="$(projdatadir)/tools" --vars="$(topdir)/VARS.pl"	\
           --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
@@ -461,7 +464,7 @@ install-data:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(projdatadir)
 	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
           -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/data	\
-          -v "$(topdir)/VARS.pl"
+          -v "$(topdir)/VARS.pl" $(EXTRA_INSTALL_ARGS)
 	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
           --prefix="$(projdatadir)" --vars="$(topdir)/VARS.pl"		\
           --files="$(top_srcdir)/vrj.appdefs.mk.in" $(_GROUP_OPT_PL)	\
