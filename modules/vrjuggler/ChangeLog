@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jul-05-2002 subatomic Enabled GlWindowWin32 to get window events.
+                      This change allows window events such as keyboard
+                      and mouse to be recieved in graphics windows while
+                      running with the Win32 build of vrjuggler.
 Jul-01-2002 allenb    Removed OSG hack and replaced with a much better
                       (and less trusting) solution using new glUserData.
 Jul-01-2002 allenb    Temporary hack added to GlPipe.cpp to set viewport
@@ -70,7 +74,7 @@ Jan-30-2002 allenb    Changed order that oglApp functions are called.  Now
 Jan-29-2002 allenb    Added new interface function oglApp::contextPostDraw()
 Nov-14-2001 allenb    Fixed OsgApp to allow for multi-window/multi-pipe apps.
                       Added method for configuring new osgUtil::SceneViewers.
-Oct-17-2001 kevn      Fixed bug where vjGetVjMatrix returns the wrong 
+Oct-17-2001 subatomic Fixed bug where vjGetVjMatrix returns the wrong 
                       conversion.
 Oct-17-2001 patrick   Renamed the "Data" directory to "data".
 Oct-15-2001 patrick   Renamed the juggler-config script to vrjuggler-config.
@@ -86,9 +90,9 @@ Sep-21-2001 patrick   Complete restructuring of the VR Juggler source tree.
                       updating after this change.
 Sep-20-2001 patrick   The default chunk description file for VR Juggler is now
                       vrj-chunks.desc.
-Sep-19-2001 kevn      Added compatibility include files put 
+Sep-19-2001 subatomic Added compatibility include files put 
                       -I$(VJ_BASE_DIR)/include/deprecated in your makefile.
-Sep-19-2001 kevn      Now using the vrj namespace instead of the prefix "vj"
+Sep-19-2001 subatomic Now using the vrj namespace instead of the prefix "vj"
                       on classes.
 Aug-27-2001 patrick   We build DLLs on Win32 now.
 Aug-24-2001 allenb    Moved glWindow factory function to glDrawManager.
@@ -161,7 +165,7 @@ Apr-03-2001 allenb    Added vjGlApp::bufferPreDraw method to the vjGlApp
                       interface.  This was needed because of the new viewport
                       rendering abilities.  All applications must now execute
                       glClear's ONLY within bufferPreDraw().
-Mar-28-2001 kevn      vjQuat interface is more fully featured, and now 
+Mar-28-2001 subatomic vjQuat interface is more fully featured, and now 
                       contains documentation.  Added tan and atan to vjSystem
 Mar-01-2001 patrick   Added support for a new environment variable $VJ_CFG_PATH
                       that allows users to specify a colon-separated path (or
@@ -261,10 +265,10 @@ Jun-23-2000 patrick   Set the stereo bit in an OpenGL window on Win32 if
                       Added the new utility library Juggler_utils which is
                       required by most, if not all, applications after this
                       date.
-Jun-17-2000 kevn      SoundManager added, juggler sound engine for audioworks 
+Jun-17-2000 subatomic SoundManager added, juggler sound engine for audioworks 
                       is available.
 Jun-08-2000 allenb    vjApp no longer needs to be passed a vjKernel instance
-Jun-06-2000 kevn      vjGetVJMatrix() has been renamed to vjGetVjMatrix()
+Jun-06-2000 subatomic vjGetVJMatrix() has been renamed to vjGetVjMatrix()
 
 [ Version 0.1.96 - 3.10.2000 ]=================================================
                       Bug fixes for OpenGL
