@@ -73,7 +73,15 @@ public:
       vec[VJ_Z] = z;
       vec[VJ_W] = w;
    }
-
+   
+   void scale( float value )
+   {
+      vec[VJ_W] *= value;
+      vec[VJ_X] *= value;
+      vec[VJ_Y] *= value;
+      vec[VJ_Z] *= value;
+   }
+   
    //: Construct quat from matrix
    void makeQuat(const vjMatrix& mat);
 
