@@ -445,13 +445,13 @@ install-ddso: ddso
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
-	${INSTALL} -m 644 ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC}		\
+	${INSTALL} -m 755 ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC}		\
           ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m 644 ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}		\
+	${INSTALL} -m 755 ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}		\
           ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${PF_LIB_DYNAMIC} ./
@@ -489,13 +489,13 @@ install-dso: dso
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
-	${INSTALL} -m 644 ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC}		\
+	${INSTALL} -m 755 ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC}		\
           ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m 644 ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}		\
+	${INSTALL} -m 755 ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}		\
           ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${PF_LIB_DYNAMIC} ./
