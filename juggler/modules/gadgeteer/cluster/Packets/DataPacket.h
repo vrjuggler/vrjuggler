@@ -48,29 +48,14 @@ namespace cluster
 class GADGET_CLASS_API DataPacket : public Packet
 {
 public:
-   /**
-    * packet_head: Given a packet that has been parsed, and found to be a device request
-    * stream: A socket that the connection is on
-    * 
-    * Create a deviceRequest packet
-    */
-   DataPacket(Header* packet_head, vpr::SocketStream* stream);
+   DataPacket();
 
-   /**
-    * Given a sender ID(self) and a requested device name
-    *
-    * Create a device request to be sent
-    */
-   DataPacket(/*vpr::Uint16 virtual_id, std::string& device_name*//*Device name is not needed here*//*, std::vector<vpr::Uint8>* device_data*/);
+   DataPacket(const vpr::GUID& plugin_id, const vpr::GUID& device_id, std::vector<vpr::Uint8>* data);
    
    virtual ~DataPacket()
    {
       ;
    }
-
-   virtual vpr::ReturnStatus send(vpr::SocketStream* socket);
-
-   void send(vpr::SocketStream* socket, const vpr::GUID& plugin_id, const vpr::GUID& device_id, std::vector<vpr::Uint8>* device_data);
 
    /**
     * Helper for the above creation of a device request to be sent
@@ -80,19 +65,22 @@ public:
    /**
     * After reading in the remaining bytes from the socket, create a new parse the data
     */
-   void parse();
+   virtual void parse(vpr::BufferObjectReader* reader);
    
    virtual void printData(int debug_level);
-   static vpr::Uint16 getBaseType()
+   
+   static vpr::Uint16 getPacketFactoryType()
    {
        return(Header::RIM_DATA_PACKET);
    }
-   vpr::GUID getId() { return mId; }
-//   std::string getDeviceName() { return mDeviceName; }
+   vpr::GUID getId() { return mDeviceId; }
+   
+   std::vector<vpr::Uint8>* getDeviceData() { return mDeviceData; }
+   
+   void setDeviceData(std::vector<vpr::Uint8>* data){ mDeviceData = data; }
 private:
-   vpr::GUID mId;
-   //std::string mDeviceName;
-   //std::vector<vpr::Uint8>* mDeviceData;
+   vpr::GUID mDeviceId;
+   std::vector<vpr::Uint8>*   mDeviceData;
 };
 }
 

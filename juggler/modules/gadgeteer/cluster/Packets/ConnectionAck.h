@@ -48,14 +48,8 @@ namespace cluster
    class GADGET_CLASS_API ConnectionAck : public Packet
    {
    public:
-      /**
-       * Create a ConnectionAck packet
-       *   
-       * @param packet_head -Header which has already been received and 
-       *                     determined to be for a ConnectionAck.
-       * @param stream -A SocketStream that we will use to receive the packet data.
-       */
-      ConnectionAck(Header* packet_head, vpr::SocketStream* stream);
+      ConnectionAck()
+      {;}
 
       /**
        * Create a ConnectionAck packet to acknowledge a ConnectionRequest.
@@ -74,7 +68,7 @@ namespace cluster
       /**
        * Parses the data stream into the local member variables.
        */
-      void parse();
+      virtual void parse(vpr::BufferObjectReader* reader);
 
       /**
        * Print the data to the screen in a readable form.
@@ -84,7 +78,7 @@ namespace cluster
       /**
        * Return the type of this packet.
        */
-      static vpr::Uint16 getBaseType()
+      static vpr::Uint16 getPacketFactoryType()
       {
          return(Header::RIM_CONNECTION_ACK);
       }

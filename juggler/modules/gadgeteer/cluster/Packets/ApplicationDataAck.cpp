@@ -34,17 +34,12 @@
 
 #include <gadget/Util/Debug.h>
 #include <cluster/Packets/ApplicationDataAck.h>
+#include <cluster/Packets/PacketFactory.h>
 
 namespace cluster
 {
-   ApplicationDataAck::ApplicationDataAck(Header* packet_head, vpr::SocketStream* stream)
-   {
-      // Receive the data needed for this packet from the given SocketStream.
-      recv(packet_head,stream);
-      
-      // Parse the new data into member variables.
-      parse();
-   }
+   CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(ApplicationDataAck);
+   
    ApplicationDataAck::ApplicationDataAck(const vpr::GUID& plugin_guid, 
                                           const vpr::GUID& id, 
                                           const bool ack)
@@ -83,16 +78,17 @@ namespace cluster
       // Serialize the Ack boolean
       mPacketWriter->writeBool(mAck);
    }
-   void ApplicationDataAck::parse()
+
+   void ApplicationDataAck::parse(vpr::BufferObjectReader* reader)
    {
       // De-Serialize plugin GUID
-      mPluginId.readObject(mPacketReader);
+      mPluginId.readObject(reader);
       
       // De-Serialize ApplicationData object GUID
-      mId.readObject(mPacketReader);
+      mId.readObject(reader);
 
       // De-Serialize the Ack boolean
-      mAck = mPacketReader->readBool();
+      mAck = reader->readBool();
    }
 
    void ApplicationDataAck::printData(int debug_level)

@@ -49,14 +49,8 @@ namespace cluster
 class GADGET_CLASS_API SyncAck : public Packet
 {
 public:
-   /**
-    * Create a AyncAck packet
-    *   
-    * @param packet_head -Header which has already been received and 
-    *                     determined to be for a SyncAck.
-    * @param stream -A SocketStream that we will use to receive the packet data.
-    */
-   SyncAck(Header* packet_head, vpr::SocketStream* stream);
+   SyncAck()
+   {;}
 
    /**
     * Create a ApplicationDataAck packet to acknowledge a ApplicationDataRequest.
@@ -75,7 +69,7 @@ public:
    /**
     * Parses the data stream into the local member variables.
     */
-   void parse();
+   virtual void parse(vpr::BufferObjectReader* reader);
    
    /**
     * Print the data to the screen in a readable form.
@@ -85,7 +79,7 @@ public:
    /**
     * Return the type of this packet.
     */
-   static vpr::Uint16 getBaseType()
+   static vpr::Uint16 getPacketFactoryType()
    {
        return(Header::RIM_SYNC_ACK);
    }

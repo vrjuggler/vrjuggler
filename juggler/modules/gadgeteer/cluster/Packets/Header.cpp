@@ -34,6 +34,8 @@
 #include <cluster/Packets/Header.h>
 #include <gadget/Util/Debug.h>
 
+#include <vpr/IO/Socket/SocketStream.h>
+
 namespace cluster
 {  
    Header::Header(vpr::Uint16 RIM_code, vpr::Uint16 packet_type, 
@@ -50,6 +52,8 @@ namespace cluster
    }
    Header::Header(vpr::SocketStream* stream) throw(cluster::ClusterException)
    {
+      vprASSERT(NULL != stream && "Can not create a Header using a NULL SocketStream");
+
       // -Is stream is a valid SocketStream?
       //  -Read in the packet from the socket
       //  -Set the BufferObjectReader and BufferObjectWriter to use mData  <====We only need BufferObjectReader
@@ -165,10 +169,14 @@ namespace cluster
    }
    vpr::ReturnStatus Header::send(vpr::SocketStream* socket)
    {
-      // -Send the data in this packet
+      vprASSERT(NULL != socket && "Socket is NULL");
 
+      // -Send the data in this packet
       vpr::Uint32 bytes_written;
-      return(socket->send(mData,RIM_PACKET_HEAD_SIZE,bytes_written));   
+      vpr::Interval test = vpr::Interval::NoTimeout;
+      
+      vpr::ReturnStatus status = socket->send(mData,RIM_PACKET_HEAD_SIZE,bytes_written);
+      return(status);   
 
       //if (bytes_written != mPacketLength)
       //{

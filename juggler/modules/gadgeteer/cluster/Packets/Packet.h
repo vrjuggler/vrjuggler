@@ -69,7 +69,7 @@ public:
    /**
     * Construct a packet using the given packet header and socketstream.
     */
-   void recv(Header* packet_head, vpr::SocketStream* stream) throw(cluster::ClusterException);
+   void recv(Header* packet_head, ClusterNode* node) throw(cluster::ClusterException);
    
    /**
     * Dump all internal data to the screen.
@@ -114,6 +114,13 @@ public:
    {
       return &mData;
    }
+
+   void setHeader(Header* head)
+   {
+      mHeader = head;
+   }
+
+   virtual void parse(vpr::BufferObjectReader* reader) = 0;
 protected:
    Header* mHeader;                          /**< Header used to specify the type/size of this packet.*/
    vpr::BufferObjectReader* mPacketReader;	 /**< ObjectReader that is used to parse all data. */

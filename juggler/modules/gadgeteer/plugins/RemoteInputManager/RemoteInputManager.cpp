@@ -210,11 +210,15 @@ namespace cluster
             {
                DataPacket* temp_data_packet = dynamic_cast<DataPacket*>(packet);
                vprASSERT(NULL != temp_data_packet && "Dynamic cast failed!");
+               
+               //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "RIM::handlePacket()..." << std::endl <<  vprDEBUG_FLUSH;
+               //temp_data_packet->printData(1);
+
                gadget::Input* virtual_device = getVirtualDevice(temp_data_packet->getId());
                if ( virtual_device != NULL )
-               {
-                  // Get the ObjectReader from the data packet.
-                  vpr::ObjectReader* temp_reader = temp_data_packet->getPacketReader();
+               {                  
+                  vpr::BufferObjectReader* temp_reader = new vpr::BufferObjectReader(temp_data_packet->getDeviceData());
+
                   temp_reader->setAttrib("rim.timestamp.delta", node->getDelta());
                   virtual_device->readObject(temp_reader);
                }
