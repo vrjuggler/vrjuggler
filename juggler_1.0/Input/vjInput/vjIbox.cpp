@@ -115,11 +115,11 @@ void SampleBox(void* pointer)
 *********************************************** ahimberg */
 int vjIBox::Sample()
 {
-     struct timeval tv;
+     //struct timeval tv;
      // double start_time, stop_time;
      ibox_result result;
      //int tmp;
-     static int c = 0;
+     //static int c = 0;
 
      result = hci_check_packet(&thingie);
      if (result == NO_PACKET_YET)
@@ -148,7 +148,7 @@ int vjIBox::Sample()
 	theData[progress].analog[1] = thingie.analog[1];
 	theData[progress].analog[2] = thingie.analog[2];
 	theData[progress].analog[3] = thingie.analog[3];
- 
+
 	swapValidIndexes();     // Swap the buffers since we just read in a complete value
      }
      return 1;

@@ -84,7 +84,7 @@ class vjFlock : public vjPosition {
 	void UpdateData();
 	
 	//: get the device name
-	const char* const GetDeviceName() { return "vjFlock"; }
+	char* GetDeviceName() { return "vjFlock"; }
 	
 	//: return what chunk type is associated with this class.
 	static std::string getChunkType() { return std::string("Flock");}
@@ -109,7 +109,7 @@ class vjFlock : public vjPosition {
 	//: get the port used
 	//  this will be a string in the form of the native OS descriptor <BR>
 	//  ex: unix - "/dev/ttyd3", win32 - "COM3"
-	inline const char* const getPort() const { return mFlockOfBirds.getPort(); }
+	inline const char*  getPort() const { return mFlockOfBirds.getPort(); }
 	
 	
 	//: set the baud rate
@@ -157,7 +157,7 @@ class vjFlock : public vjPosition {
 	//  this option allows the Flock to syncronize its pulses with
 	//  your video display.  This will eliminate most flicker caused
 	//  by the magnetic distortion. <BR>
-	//! POST: returns the sync type 
+	//! POST: returns the sync type
 	//! NOTE: Refer to your flock manual for what the return number means
 	inline const int&  getSync() const {return mFlockOfBirds.getSync(); }
 
@@ -217,11 +217,11 @@ class vjFlock : public vjPosition {
 
 
 
-     private:
+private:
 	void Position_Correct(float&x,float&y,float&z);
 	void InitCorrectionTable(const char*);
 
-   int vjFlock::getBirdIndex(int birdNum, int bufferIndex);
+   int getBirdIndex(int birdNum, int bufferIndex);
 
 	vjThread*   myThread;      // The thread doing the flock sampling
 	

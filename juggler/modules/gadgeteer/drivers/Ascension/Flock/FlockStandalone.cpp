@@ -4,7 +4,7 @@
 	tcflag_t    c_iflag;     // input modes
 	tcflag_t    c_oflag;     // output modes
 	tcflag_t    c_cflag;     // control modes
-	tcflag_t    c_lflag;     // local modes 
+	tcflag_t    c_lflag;     // local modes
 	speed_t     c_ospeed;    // output speed
 	speed_t     c_ispeed;    // input speed; not supported
 	char        c_line;      // line discipline
@@ -47,18 +47,18 @@ const int aFlock::MAXCHARSTRINGSIZE = 256;
 //   report -                                            <BR>
 //   calfile - a calibration file, if "", then use none. <BR>
 //                                                       <BR>
-// Result: configures internal data members, 
+// Result: configures internal data members,
 //         doesn't actually talk to the FOB yet.
-aFlock::aFlock(const char* const port, 
-		const int& baud, 
-		const int& sync, 
-		const int& block, 
-		const int& numBrds, 
-		const int& transmit, 
-		const BIRD_HEMI& hemi, 
-		const BIRD_FILT& filt, 
-		const char& report, 
-		const char* const calfile) : 
+aFlock::aFlock(const char* const port,
+		const int& baud,
+		const int& sync,
+		const int& block,
+		const int& numBrds,
+		const int& transmit,
+		const BIRD_HEMI& hemi,
+		const BIRD_FILT& filt,
+		const char& report,
+		const char* const calfile) :
 		  _portId(-1),
 		  _active(false),
 		  _baud(baud),
@@ -73,7 +73,7 @@ aFlock::aFlock(const char* const port,
 {
   if (port != NULL)
   	strncpy( _port, port, aFlock::MAXCHARSTRINGSIZE );
-  
+
   // fix the report rate if it makes no sense.
   if ((_reportRate != 'Q') && (_reportRate != 'R') &&
       (_reportRate != 'S') && (_reportRate != 'T'))
@@ -109,7 +109,7 @@ const bool& aFlock::isActive() const
 //  NOTE: flock.isActive() must be false to use this function
 void aFlock::setPort(const char* const serialPort)
 {
-    if (_active) 
+    if (_active)
     {
 	cout << "Flock: Cannot change the serial Port while active\n";
 	return;
@@ -121,7 +121,7 @@ void aFlock::setPort(const char* const serialPort)
 //: get the port used
 //  this will be a string in the form of the native OS descriptor <BR>
 //  ex: unix - "/dev/ttyd3", win32 - "COM3"
-const char* const aFlock::getPort() const
+const char* aFlock::getPort() const
 {
     return _port;
 }
@@ -131,7 +131,7 @@ const char* const aFlock::getPort() const
 //  NOTE: flock.isActive() must be false to use this function
 void aFlock::setBaudRate(const int& baud)
 {
-    if (_active) 
+    if (_active)
     {
 	cerr << "Flock: Cannot change the baud rate while active\n";
 	return;
@@ -150,9 +150,9 @@ int aFlock::start()
 	
 	cout<<"aFlock: Opening port\n"<<flush;
 	aFlock::open_port( _port, _baud, _portId );
-	if (_portId == -1) 
+	if (_portId == -1)
 	    return 0;
-	    
+	
 	cout<<"aFlock: Setting blocking\n"<<flush;
 	aFlock::set_blocking( _portId, _blocking );
 	
@@ -190,7 +190,7 @@ int aFlock::start()
 	
 	// return success
 	return 1;
-    } else 
+    } else
 	return 0; // already sampling
 }
 
@@ -201,9 +201,9 @@ int aFlock::sample()
 {
      // can't sample when not active.
      assert( _active == true );
-     
+
      int i;
-    
+
      // for [1..n] birds, get their reading:
      for (i=1; i < (_numBirds+1) && i < MAX_SENSORS; i++)
      {
@@ -212,7 +212,7 @@ int aFlock::sample()
 	
 	// you can never go above the maximum number of sensors.
 	assert( i < MAX_SENSORS );
-	aFlock::getReading(i, _portId, 
+	aFlock::getReading(i, _portId,
 		this->xPos(i),
 		this->yPos(i),
 		this->zPos(i),
@@ -235,35 +235,35 @@ int aFlock::sample()
 int aFlock::stop()
 {
     char   bird_command[4];
-    
+
     cout << "Flock: Stopping the flock..." << flush;
-    
+
     bird_command[0] = 'B';
     write( _portId, bird_command, 1 );
-    
+
     // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue; 
-    // TCFLSH = 2, flush both the input and output queues. 
+    // TCFLSH = 1, flush the output queue;
+    // TCFLSH = 2, flush both the input and output queues.
     ioctl( _portId, TCFLSH, 2 );
-    
+
     sginap( 5 );
     bird_command[0] = 'G';
     write( _portId, bird_command, 1 );
-    
+
     // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue; 
-    // TCFLSH = 2, flush both the input and output queues. 
+    // TCFLSH = 1, flush the output queue;
+    // TCFLSH = 2, flush both the input and output queues.
     ioctl( _portId, TCFLSH, 2 );
-    
+
     sleep( 2 );
     close( _portId );
     _portId = -1;
-    
+
     // flock is not active now.
     _active = false;
-    
+
     cout << "stopped." << endl << flush;
-    
+
     return 1;
 }
 
@@ -271,7 +271,7 @@ int aFlock::stop()
 //  NOTE: flock.isActive() must be false to use this function
 void aFlock::setHemisphere( const BIRD_HEMI& h )
 {
-    if (_active) 
+    if (_active)
     {
 	cout << "Flock: Cannot change the hemisphere\n" << flush;
 	return;
@@ -285,7 +285,7 @@ void aFlock::setHemisphere( const BIRD_HEMI& h )
 //  NOTE: flock.isActive() must be false to use this function
 void aFlock::setFilterType( const BIRD_FILT& f )
 {
-    if (_active) 
+    if (_active)
     {
 	cout << "Flock: Cannot change filter type while active\n" << flush;
 	return;
@@ -299,7 +299,7 @@ void aFlock::setFilterType( const BIRD_FILT& f )
 //  NOTE: flock.isActive() must be false to use this function
 void aFlock::setReportRate( const char& rRate )
 {
-    if (_active) 
+    if (_active)
     {
 	cout << "Flock: Cannot change report rate while active\n" << flush;
 	return;
@@ -310,12 +310,12 @@ void aFlock::setReportRate( const char& rRate )
 }
 
 //: Set the unit number of the transmitter
-//  give - an integer that is the same as the dip switch 
+//  give - an integer that is the same as the dip switch
 //         setting on the transmitter box (for the unit number) <BR>
 //  NOTE: flock.isActive() must be false to use this function
 void aFlock::setTransmitter( const int& Transmit )
 {
-  if (_active) 
+  if (_active)
   {
       cout << "Flock: Cannot change transmitter while active\n" << flush;
       return;
@@ -326,12 +326,12 @@ void aFlock::setTransmitter( const int& Transmit )
 }
 
 //: Set the number of birds to use in the flock.
-//  give - an integer number not more than the number of 
+//  give - an integer number not more than the number of
 //         birds attached to the system <BR>
 //  NOTE: flock.isActive() must be false to use this function
 void aFlock::setNumBirds( const int& n )
 {
-    if (_active) 
+    if (_active)
     {
 	cout << "Flock: Cannot change num birds while active\n" << flush;
 	return;
@@ -342,14 +342,14 @@ void aFlock::setNumBirds( const int& n )
 }
 
 //: set the video sync type
-//  this option allows the Flock to syncronize its pulses with 
-//  your video display.  This will eliminate most flicker caused 
+//  this option allows the Flock to syncronize its pulses with
+//  your video display.  This will eliminate most flicker caused
 //  by the magnetic distortion. <BR>
 //  - Refer to your flock manual for what number to use.
 //  NOTE: flock.isActive() must be false to use this function
 void aFlock::setSync(const int& sync)
 {
-  if (_active) 
+  if (_active)
   {
       cout << "Flock: Cannot change report rate while active\n" << flush;
       return;
@@ -364,7 +364,7 @@ void aFlock::setSync(const int& sync)
 //  NOTE: flock.isActive() must be false to use this function
 void aFlock::setBlocking( const int& blVal )
 {
-  if (_active) 
+  if (_active)
   {
       cout << "Flock: Cannot change blocking while active\n" << flush;
       return;
@@ -377,7 +377,7 @@ void aFlock::setBlocking( const int& blVal )
 //: with the calibration table info, correct a given position
 //  give - a position in x, y, z euclidian coordinates
 //  returns - a corrected position in x, y, z euclidian coordinates
-void aFlock::positionCorrect( float& x, float& y, float& z ) 
+void aFlock::positionCorrect( float& x, float& y, float& z )
 {
     int xlo,ylo,zlo,xhi,yhi,zhi;
     float a,b,c,a1,b1,c1;
@@ -477,13 +477,13 @@ void aFlock::initCorrectionTable( const char* const fName )
 //  give - port: the flock port number <BR>
 //  give - xyz positions               <BR>
 //  give - zyx rotations
-int aFlock::getReading( const int& n, const int& port, 
-    float& xPos, float& yPos, float& zPos, 
+int aFlock::getReading( const int& n, const int& port,
+    float& xPos, float& yPos, float& zPos,
     float& zRot, float& yRot, float& xRot )
 {
     char buff[12], group;
     int  c,i, addr;
-    
+
     do
     {
 	c=i = 0;
@@ -510,26 +510,26 @@ int aFlock::getReading( const int& n, const int& port,
 	
 	addr = group;
     } while (addr != n);
-    
+
     //cout << "addr: " << addr << endl;
-    
+
     // Position
     xPos = rawToFloat(buff[1],buff[0])   * POSITION_RANGE;
     yPos = rawToFloat(buff[3],buff[2])   * POSITION_RANGE;
     zPos = rawToFloat(buff[5],buff[4])   * POSITION_RANGE;
-    
+
     // Orientation
     zRot = rawToFloat(buff[7],buff[6])   * ANGLE_RANGE;
     yRot = rawToFloat(buff[9],buff[8])   * ANGLE_RANGE;
     xRot = rawToFloat(buff[11],buff[10]) * ANGLE_RANGE;
-    
+
     return addr;
 }
 
 float aFlock::rawToFloat( char& r1, char& r2 )
 {
    // return ((float) (((r1 & 0x7f) << 9) | (r2 & 0x7f) << 2) / 0x7fff);
-   
+
    short int ival1,ival2,val;
    ival1 = r1 & 0x7f;
    ival2 = r2 & 0x7f;
@@ -541,23 +541,23 @@ void  aFlock::pickBird( const int& birdID, const int& port )
 {
     char buff = 0xF0 + birdID;
     write( port, &buff, 1 );
-    
+
     // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue; 
-    // TCFLSH = 2, flush both the input and output queues. 
+    // TCFLSH = 1, flush the output queue;
+    // TCFLSH = 2, flush both the input and output queues.
     ioctl( port, TCFLSH, 2 );
-    
+
     sginap( 1 );
 }
 
 //: Open the port.
-//  give - a serial port 
+//  give - a serial port
 //  give - a baud rate
 //  returns portId twice (created by the open function)
 //  NOTE: portId is returned from both ends of this function.
 //  if portId == -1 then function failed to open the port.
-int aFlock::open_port( const char* const serialPort, 
-			const int& baud, 
+int aFlock::open_port( const char* const serialPort,
+			const int& baud,
 			int& portId )
 {
     // A visual flag to tell if _OLD_TERMIOS was used.
@@ -565,7 +565,7 @@ int aFlock::open_port( const char* const serialPort,
     // without - 40
     // ... of course these may change in the future ...
     cout<<"  ** termio struct size = "<<sizeof(termio)<<"\n"<<flush;
-    
+
     ///////////////////////////////////////////////////////////////////
     // Open and close the port to reset the tracker, then
     // Open the port
@@ -580,9 +580,9 @@ int aFlock::open_port( const char* const serialPort,
 	close( portId );
 	cout << "  port reset successfully (port was opened then closed)\n" << flush;
     }
-    
+
     portId = open( serialPort, O_RDWR | O_NDELAY);
-    
+
     if (portId == -1)
     {
 	cout << "  port open failed\n" << flush;
@@ -590,21 +590,21 @@ int aFlock::open_port( const char* const serialPort,
     } else {
 	cout << "  port open successfully\n" << flush;
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Setup the port, current setting is 38400 baud
     //
     //////////////////////////////////////////////////////////////////
-    
+
     cout << "  Getting current term setting\n" << flush;
     termio termIoPort;
     ioctl( portId, TCGETA, &termIoPort );
-    
+
     // set the flags to 0.  why???
-    termIoPort.c_iflag = 
-	termIoPort.c_oflag = 
+    termIoPort.c_iflag =
+	termIoPort.c_oflag =
 	termIoPort.c_lflag = 0;
-    
+
     // get the B* format baud rate
     // i.e.: B38400 is baud = 38400
     int magicBaudRate = 0;
@@ -628,56 +628,56 @@ int aFlock::open_port( const char* const serialPort,
 	case 115200: magicBaudRate = B115200; break;
 	#endif
     }
-    
+
     // set the baud rate flag
     termIoPort.c_cflag = (magicBaudRate | CS8 | CLOCAL | CREAD);
-    
+
     #ifndef _OLD_TERMIOS
 	// new items in the new "termio" structure:
 	termIoPort.c_ospeed = baud;
 	termIoPort.c_ispeed = baud;
 	termIoPort.c_line = LDISC1; // or LDISC0 ???
     #endif
-    
-    
-    // why are we setting the  "control-character array"  
-    //  to 0's and 1's ??? 
+
+
+    // why are we setting the  "control-character array"
+    //  to 0's and 1's ???
     // shouldn't this array be set already by default?
     // NOTE: with c_line=LDISC1, we get 7-15 also.
     //       with c_line=LDISC0, we only get 0-6 (like below)
-    
+
     // make sure we're not going off the end
     assert( NCCS >= 16 );
-    
+
     // set the control-character array to 0's and 1's
     /*
-    termIoPort.c_cc[0] = 
-	termIoPort.c_cc[1] = 
-	termIoPort.c_cc[2] = 
+    termIoPort.c_cc[0] =
+	termIoPort.c_cc[1] =
+	termIoPort.c_cc[2] =
 	termIoPort.c_cc[3] = 0;
 	
-    termIoPort.c_cc[4] = 
+    termIoPort.c_cc[4] =
 	termIoPort.c_cc[5] = 1;
     */
-    
+
     // Set the new attributes
     int result = 0;
     cout << "  Setting new term setting: "<<baud<<" baud..." << flush;
     result = ioctl( portId, TCSETA, &termIoPort );
-    
+
     // did it succeed?
     if (result == 0)
 	cout<<" success\n"<<flush;
-    else 
+    else
 	cout<<" failed\n"<<flush;
-    
+
     cout << "  Disconnect calling process from terminal and session (TIOCNOTTY)..." << flush;
     result = ioctl( portId, TIOCNOTTY );
-    
+
     // did it succeed?
     if (result == 0)
 	cout<<" success\n"<<flush;
-    else 
+    else
 	cout<<" failed\n"<<flush;
 	
     // return the portID
@@ -691,30 +691,30 @@ void aFlock::set_blocking( const int& port, const int& blocking )
     //////////////////////////////////////////////////////////////////
     static int blockf,nonblock;
     int flags;
-    
+
     flags = fcntl( port,F_GETFL,0 );
-    
+
     // Turn blocking on
-    blockf   = flags & ~FNDELAY;  
-    
+    blockf   = flags & ~FNDELAY;
+
     // Turn blocking off
-    nonblock = flags | FNDELAY; 
-    
+    nonblock = flags | FNDELAY;
+
     // 0 Non Blocked
     // 1 Blocked
-    fcntl( port, F_SETFL, blocking ? blockf : nonblock ); 
-    
+    fcntl( port, F_SETFL, blocking ? blockf : nonblock );
+
     // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue; 
-    // TCFLSH = 2, flush both the input and output queues. 
+    // TCFLSH = 1, flush the output queue;
+    // TCFLSH = 2, flush both the input and output queues.
     ioctl( port, TCFLSH, 2 );
-    
+
     sginap( 10 );
-    
+
     // read 1kb of junk
     char junk[1024];
     read( port, junk, 1024 );
-    
+
     sleep( 1 );
 }
 
@@ -730,17 +730,17 @@ void aFlock::set_sync( const int& port, const int& sync )
     unsigned char buff[4] = {'A', 1};
     buff[1] = sync;
     write( port,buff,2 );
-    
+
     // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue; 
-    // TCFLSH = 2, flush both the input and output queues. 
+    // TCFLSH = 1, flush the output queue;
+    // TCFLSH = 2, flush both the input and output queues.
     ioctl( port, TCFLSH, 2 );
 }
 
 
-void aFlock::set_hemisphere( const int& port, 
-			const BIRD_HEMI& hem, 
-			const int& transmitter, 
+void aFlock::set_hemisphere( const int& port,
+			const BIRD_HEMI& hem,
+			const int& transmitter,
 			const int& numbirds )
 {
     /////////////////////////////////////////////////////////////////
@@ -761,7 +761,7 @@ void aFlock::set_hemisphere( const int& port,
 	if (i == transmitter)
 		continue;
 	pickBird( i,port );
-	switch (hem) 
+	switch (hem)
 	{
 	case FRONT_HEM:
 	    buff[1] = 0x00;
@@ -791,10 +791,10 @@ void aFlock::set_hemisphere( const int& port,
 	write( port, buff, 3 );
 	
 	// TCFLSH = 0, flush the input
-	// TCFLSH = 1, flush the output queue; 
-	// TCFLSH = 2, flush both the input and output queues. 
+	// TCFLSH = 1, flush the output queue;
+	// TCFLSH = 2, flush both the input and output queues.
 	ioctl( port, TCFLSH, 2 );
-    
+
 	sginap( 5 );
     }
 }
@@ -811,25 +811,25 @@ void aFlock::set_rep_and_stream(const int& port, const char& reportRate)
     /////////////////////////////////////////////////////////////////
     buff[0] = reportRate;
     write( port, buff, 1 );
-    
+
     // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue; 
-    // TCFLSH = 2, flush both the input and output queues. 
+    // TCFLSH = 1, flush the output queue;
+    // TCFLSH = 2, flush both the input and output queues.
     ioctl( port, TCFLSH, 2 );
-    
+
     sginap( 20 );
-    
+
     ////////////////////////////////////////////////////////////////
     // set stream mode
     ////////////////////////////////////////////////////////////////
     buff[0] = '@';
     write( port, buff, 1 );
-    
+
     // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue; 
-    // TCFLSH = 2, flush both the input and output queues. 
+    // TCFLSH = 1, flush the output queue;
+    // TCFLSH = 2, flush both the input and output queues.
     ioctl( port, TCFLSH, 2 );
-    
+
     sginap( 5 );
 }
 
@@ -848,10 +848,10 @@ void aFlock::set_pos_angles(const int& port, const int& transmitter, const int& 
 	write( port, buff, 1 );
 	
 	// TCFLSH = 0, flush the input
-	// TCFLSH = 1, flush the output queue; 
-	// TCFLSH = 2, flush both the input and output queues. 
+	// TCFLSH = 1, flush the output queue;
+	// TCFLSH = 2, flush both the input and output queues.
 	ioctl( port, TCFLSH, 2 );
-    
+
 	sginap( 5 );
     }
 }
@@ -870,12 +870,12 @@ void aFlock::set_filter(const int& port, const BIRD_FILT& filter)
     buff[2] = 0x00;
     buff[3] = 0;
     write(port, buff, 4);
-    
+
     // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue; 
-    // TCFLSH = 2, flush both the input and output queues. 
+    // TCFLSH = 1, flush the output queue;
+    // TCFLSH = 2, flush both the input and output queues.
     ioctl( port, TCFLSH, 2 );
-    
+
     //TODO: Do I need to sleep here?
     sginap(120);
 }
@@ -890,12 +890,12 @@ void aFlock::set_transmitter(const int& port, const int& transmitter)
     buff[0] = (unsigned char) (0x30);
     buff[1] = (unsigned char) transmitter  << 4;
     write(port, buff, 2);
-    
+
     // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue; 
-    // TCFLSH = 2, flush both the input and output queues. 
+    // TCFLSH = 1, flush the output queue;
+    // TCFLSH = 2, flush both the input and output queues.
     ioctl( port, TCFLSH, 2 );
-    
+
     sginap(120);
 }
 
@@ -912,12 +912,12 @@ void aFlock::set_autoconfig(const int& port, const int& numbirds)
     buff[1] = 0x32;
     buff[2] = numbirds+1;  //number of input devices + 1 for transmitter
     write(port, buff,3);
-    
+
     // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue; 
-    // TCFLSH = 2, flush both the input and output queues. 
+    // TCFLSH = 1, flush the output queue;
+    // TCFLSH = 2, flush both the input and output queues.
     ioctl( port, TCFLSH, 2 );
-    
+
     sleep(2);
 }
 
@@ -934,11 +934,11 @@ void aFlock::set_group(const int& port)
     buff[1] = 0x23;
     buff[2] = 0x01;
     write(port, buff, 3);
-    
+
     // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue; 
-    // TCFLSH = 2, flush both the input and output queues. 
+    // TCFLSH = 1, flush the output queue;
+    // TCFLSH = 2, flush both the input and output queues.
     ioctl( port, TCFLSH, 2 );
-    
+
     sleep(2);
 }
