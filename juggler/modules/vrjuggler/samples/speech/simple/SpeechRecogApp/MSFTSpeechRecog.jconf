@@ -3,7 +3,6 @@
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Wand Mixin for sim.base.config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
       <input_manager name="Input Manager" version="2">
-         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
          <driver>MSFTSpeechRecog_drv</driver>
       </input_manager>
       <alias name="MSFTSpeechRecogString" version="1">
@@ -15,8 +14,8 @@
       </string_proxy>
       <msft_speech_recog_string name="MSFTSpeechRecogSringDevice" version="1">
          <grammar_file>Grammar1.xml</grammar_file>
+         <device_host />
       </msft_speech_recog_string>
-
       <alias name="MSFTSpeechRecogDigital" version="1">
          <proxy>MSFTSpeechRecogDigitalProxy</proxy>
       </alias>
@@ -26,6 +25,7 @@
       </command_proxy>
       <msft_speech_recog_digital name="MSFTSpeechRecogDigitalDevice" version="1">
          <grammar_file>Grammar2.xml</grammar_file>
+         <device_host />
       </msft_speech_recog_digital>
    </elements>
 </configuration>
