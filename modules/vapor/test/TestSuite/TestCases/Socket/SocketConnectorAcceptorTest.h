@@ -15,7 +15,7 @@
 #include <IO/Socket/SocketAcceptor.h>
 #include <IO/Socket/SocketConnector.h>
 
-#include <include/System.h>
+#include <System.h>
 
 #include <Threads/Thread.h>
 #include <Threads/ThreadFunctor.h>

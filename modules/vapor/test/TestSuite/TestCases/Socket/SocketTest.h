@@ -12,7 +12,7 @@
 #include <IO/Socket/Socket.h>
 #include <IO/Socket/SocketStream.h>
 #include <IO/Socket/InetAddr.h>
-#include <include/System.h>
+#include <System.h>
 
 #include <Threads/Thread.h>
 #include <Threads/ThreadFunctor.h>
@@ -50,20 +50,6 @@ public:
       mReadnFlag=false;
    }
 
-   // use this within your threads (CppUnit doesn't catch the assertTest there)
-   // then test mThreadAssertTest with assertTest in your parent func.
-   // then reset it to true.
-   /*
-   #define threadAssertTest( testcase )          \
-   {                                          \
-      if (testcase == false)                 \
-      {                                        \
-         mThreadAssertTest = false;           \
-      }                                      \
-      assertTest( testcase );                   \
-   }
-   */
-
    void threadAssertTest( bool testcase, std::string text=std::string("none") )
    {
       if (testcase == false)
@@ -82,7 +68,8 @@ public:
 
 
    // =========================================================================
-   // open-close-open test
+   // open-close * n test
+   // start two threads, cli/serv... both opening and closing many many times.
    // =========================================================================
    void testOpenCloseOpen_connector( void* data )
    {
@@ -209,6 +196,7 @@ public:
 
    // =========================================================================
    // send-recv test
+   // same as open/close * n test, but do send/recv of data.  do many times.
    // =========================================================================
    const std::string testSendRecv_buffer;
    void testSendRecv_connector( void* data )
@@ -348,7 +336,8 @@ public:
 
 
    // =========================================================================
-   // open-close test
+   // open-bind-close test
+   // open, then bind, then close, fail if any of them fail...
    // =========================================================================
    void testOpenClose()
    {
@@ -380,6 +369,7 @@ public:
 
    // =========================================================================
    // bind again should fail test
+   // open, then bind, then bind again.  this should fail.
    // =========================================================================
    void bindAgainFailTest()
    {
@@ -412,6 +402,7 @@ public:
    }
    // =========================================================================
    // same-address-open-bind-close test
+   // open, then bind, then close, repeat many times on the same address..
    // =========================================================================
    void sameAddressOpenBindCloseTest()
    {
@@ -443,7 +434,7 @@ public:
    }
    // =========================================================================
    // different-address-open-bind-close test
-   // - Try to open, close, and bind on a large range of ports
+   // - Try to open, then close, then bind, repeat*n for a range of ports
    // =========================================================================
    void differentAddressOpenBindCloseTest()
    {
@@ -477,6 +468,7 @@ public:
    }
    // =========================================================================
    // reuse address simple test
+   // try to reuse the address... broken...
    // =========================================================================
 
    void reuseAddrSimpleTest()
@@ -517,6 +509,7 @@ public:
 
    // =========================================================================
    // reuse address client/server test
+   // try to reuse the address with serv/cli threads...
    // =========================================================================
    void reuseAddrTest_connector( void* data )
    {
@@ -604,6 +597,7 @@ public:
 
    // =========================================================================
    // Blocking/Nonblocking test
+   // does this work?  what's it do?
    // =========================================================================
    void testBlocking_connector(void* arg)
    {
@@ -768,7 +762,6 @@ public:
       result = acceptor_socket.close().success();
       threadAssertTest( result != false && "Socket::close() failed" );
    }
-
    void testBlocking()
    {
       //std::cout<<"]==================================================\n"<<std::flush;
@@ -990,14 +983,14 @@ public:
       test_suite->addTest( new TestCaller<SocketTest>("same-Address-Open-Bind-Close Test", &SocketTest::sameAddressOpenBindCloseTest));
       test_suite->addTest( new TestCaller<SocketTest>("different-Address-Open-Bind-Close Test", &SocketTest::differentAddressOpenBindCloseTest));
 
-      test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (simple) Test", &SocketTest::reuseAddrSimpleTest));
-      test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
+      //test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (simple) Test", &SocketTest::reuseAddrSimpleTest));
+      //test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
 
-      test_suite->addTest( new TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
-      test_suite->addTest( new TestCaller<SocketTest>("testSendRecv", &SocketTest::testSendRecv));
+      //test_suite->addTest( new TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
+      //test_suite->addTest( new TestCaller<SocketTest>("testSendRecv", &SocketTest::testSendRecv));
 
-      test_suite->addTest( new TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
-      test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
+      //test_suite->addTest( new TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
+      //test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
       test_suite->addTest( new TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
       return test_suite;
    }

@@ -13,7 +13,7 @@
 #include <IO/Socket/SocketStream.h>
 #include <IO/Socket/InetAddr.h>
 
-#include <include/System.h>
+#include <System.h>
 
 #include <Threads/Thread.h>
 #include <Threads/ThreadFunctor.h>

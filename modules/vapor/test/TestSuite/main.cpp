@@ -28,7 +28,7 @@ int main (int ac, char **av)
    //suite_1->addTest( /* put your test here */ );
    noninteractive_suite->addTest(vprTest::StatusTest::suite());
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
-   //noninteractive_suite->addTest(vprTest::SocketTest::suite());
+   noninteractive_suite->addTest(vprTest::SocketTest::suite());
 //   noninteractive_suite->addTest(vprTest::SocketCopyConstructorTest::suite());
    noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
    noninteractive_suite->addTest(vprTest::SelectorTest::suite());
