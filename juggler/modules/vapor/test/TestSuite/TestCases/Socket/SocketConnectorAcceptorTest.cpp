@@ -41,7 +41,7 @@ void SocketConnectorAcceptorTest::testAcceptorConstruction ()
    delete(test_acceptor);
 
    // Test address in constructor (with backlog)
-   test_acceptor = new vpr::SocketAcceptor(local_addr,7);
+   test_acceptor = new vpr::SocketAcceptor(local_addr, true, 7);
    CPPUNIT_ASSERT(test_acceptor != NULL);
    CPPUNIT_ASSERT(test_acceptor->getSocket().isOpen());
    test_acceptor->close();
@@ -58,7 +58,7 @@ void SocketConnectorAcceptorTest::testAcceptorConstruction ()
    // Test default constructor (with backlog)
    test_acceptor = new vpr::SocketAcceptor();
    CPPUNIT_ASSERT(test_acceptor != NULL);
-   test_acceptor->open(local_addr,7);
+   test_acceptor->open(local_addr, true, 7);
    CPPUNIT_ASSERT(test_acceptor->getSocket().isOpen());
    test_acceptor->close();
    delete(test_acceptor);
