@@ -421,7 +421,7 @@ ifdef NO_JAVA
 	@echo "------------------------------------------------"
 else
 ifeq ($(BUILD_JAVA), Y)
-	$(MAKE) MAKEFLAGS="$(MAKEFLAGS) -j 1" RECTARGET=java recursive
+	$(MAKE) -j 1 RECTARGET=java recursive
 endif
 endif #ifdef NO_JAVA
 
