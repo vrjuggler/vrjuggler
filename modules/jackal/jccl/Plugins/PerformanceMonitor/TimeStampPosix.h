@@ -32,20 +32,30 @@ public:
 
 
 
-    vjTimeStampPosix& operator= (const vjTimeStamp& t2);
+    vjTimeStampPosix& operator= (const vjTimeStampPosix& t2);
+
 
 
     void set() {
+	struct timeval tp;
 	gettimeofday (&tp, 0);
         val = tp.tv_sec * 1000000 + tp.tv_usec;
     }
 
 
 
-    float usecs() {
+    float usecs() const {
 	return val - initval;
     }
 
+
+
+    //: returns number of microseconds between self and t2
+    //! PRE: t2 is stamped with an earlier time than self
+    //! 
+    float operator - (const vjTimeStampPosix& t2) const {
+	return (usecs() - t2.usecs());
+    }
 
 
     float diff (vjTimeStampPosix& ts) {
@@ -64,7 +74,6 @@ public:
 private:
 
     static float initval;
-    struct timeval tp;
     float val;
 };
 

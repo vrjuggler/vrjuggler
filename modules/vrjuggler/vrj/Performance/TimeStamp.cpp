@@ -1,4 +1,6 @@
 
+#include <vjDefines.h>
+
 // these should all be in separate .cpp files.  fix later
 
 #if VJ_PERFORMANCE == VJ_PERF_SGI
@@ -108,7 +110,7 @@ long long vjTimeStampSGI::maxval;
  */
 #include "Performance/vjTimeStampPosix.h"
 
-vjTimeStampPosix& vjTimeStampPosix::operator= (const vjTimeStamp& t2) {
+vjTimeStampPosix& vjTimeStampPosix::operator= (const vjTimeStampPosix& t2) {
     val = t2.val;
     return *this;
 }
