@@ -113,15 +113,6 @@
 /* Definte if DTK is installed. */
 #undef VJ_HAVE_DTK
 
-/*
- * Define to the sizeof a memory address if the type caddr_t is not available.
- * char* is most likely going to be a safe substitute.
- */
-#undef caddr_t
-
-/* Define if you have the sched_yield function.  */
-#undef HAVE_SCHED_YIELD
-
 /* Define if you have the sinf function.  */
 #undef HAVE_SINF
 
