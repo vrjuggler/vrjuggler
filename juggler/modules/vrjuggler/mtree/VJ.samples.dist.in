@@ -22,9 +22,17 @@
 	    glove
 	    ..
 	..
-	pfNav
+	pf
+	    pfConfigNav
+	    ..
+	    pfNav
+	    ..
+	    pfSwitcher
+	    ..
+	    pfTools
+	    ..
 	..
-	pfTools
+	tools
 	..
     ..
 ..
