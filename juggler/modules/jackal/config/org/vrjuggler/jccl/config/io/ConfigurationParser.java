@@ -98,6 +98,7 @@ public class ConfigurationParser
       }
 
       // Get the configuration definition lookup path
+/*
       List path = parseDefinitionPath(root.getChild(DEFINITION_PATH, CFG_NS));
       for (Iterator itr = path.iterator(); itr.hasNext(); )
       {
@@ -105,6 +106,7 @@ public class ConfigurationParser
          String dir = (String)itr.next();
          config.addDefinitionPath(dir);
       }
+*/
 
       // Get the list of elements in this configuration
       List config_elts = parseElements(root.getChild(ELEMENTS, CFG_NS)/*, path*/);
