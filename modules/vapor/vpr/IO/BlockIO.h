@@ -248,7 +248,31 @@ public:
     //+                device.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual ssize_t read(std::string& buffer, const size_t length = 0) = 0;
+    virtual ssize_t read(std::string& buffer, const size_t length = 0)
+    {
+       ssize_t bytes;
+       char* temp_buf;
+       size_t buf_len;
+
+       if ( length == 0 ) {
+           buf_len = buffer.size();
+       }
+       else {
+           buf_len = length;
+       }
+
+       temp_buf = (char*) malloc(buf_len);
+       bytes    = read(temp_buf, buf_len);
+
+       // If anything was read into temp_buf, copy it into buffer.
+       if ( bytes > -1 ) {
+           buffer = temp_buf;
+       }
+
+       free(temp_buf);
+
+       return bytes;
+    }
 
     // ------------------------------------------------------------------------
     //: Read at most the specified number of bytes from the I/O device into
@@ -271,7 +295,36 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual ssize_t read(std::vector<char>& buffer,
-                         const size_t length = 0) = 0;
+                         const size_t length = 0)
+    {
+       ssize_t bytes;
+       char* temp_buf;
+       size_t buf_len;
+
+       if ( length == 0 ) {
+           buf_len = buffer.size();
+       }
+       else {
+           buf_len = length;
+       }
+
+       temp_buf = (char*) malloc(buf_len);
+       bytes    = read(temp_buf, buf_len);
+
+       // If anything was read into temp_buf, copy it into buffer.
+       if ( bytes > -1 ) {
+          if(bytes > buffer.size());      // Check to make sure we have enough space
+            buffer.resize(bytes);
+
+          for ( ssize_t i = 0; i < bytes; i++ ) {
+               buffer[i] = temp_buf[i];
+           }
+       }
+
+       free(temp_buf);
+
+       return bytes;
+    }
 
     // ------------------------------------------------------------------------
     //: Read exactly the specified number of bytes from the I/O device into
@@ -313,7 +366,26 @@ public:
     //+                device.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual ssize_t readn(std::string& buffer, const size_t length = 0) = 0;
+    virtual ssize_t readn(std::string& buffer, const size_t length = 0)
+    {
+        //return m_socket_imp->readn(buffer, length);
+        size_t buf_len;
+       char* temp_buf;
+       ssize_t bytes;
+
+       buf_len  = (length == 0) ? buffer.size() : length;
+       temp_buf = (char*) malloc(buf_len);
+       bytes    = readn(temp_buf, buf_len);
+
+       // If anything was read into temp_buf, copy it into buffer.
+       if ( bytes > -1 ) {
+           buffer = temp_buf;
+       }
+
+       free(temp_buf);
+
+       return bytes;
+    }
 
     // ------------------------------------------------------------------------
     //: Read exactly the specified number of bytes from the I/O device into
@@ -336,7 +408,35 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual ssize_t readn(std::vector<char>& buffer,
-                          const size_t length = 0) = 0;
+                          const size_t length = 0)
+    {
+        ssize_t bytes;
+         char* temp_buf;
+         size_t buf_len;
+
+         if ( length == 0 ) {
+           buf_len = buffer.size();
+         }
+         else {
+           buf_len = length;
+         }
+
+         temp_buf = (char*) malloc(buf_len);
+         bytes    = readn(temp_buf, buf_len);
+
+         // If anything was read into temp_buf, copy it into buffer.
+         if ( bytes > -1 ) {
+            if(bytes > buffer.size())
+               buffer.resize(bytes);
+            for ( ssize_t i = 0; i < bytes; i++ ) {
+               buffer[i] = temp_buf[i];
+           }
+         }
+
+         free(temp_buf);
+
+         return bytes;
+    }
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the I/O device.
@@ -372,7 +472,11 @@ public:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     virtual ssize_t write(const std::string& buffer,
-                          const size_t length = 0) = 0;
+                          const size_t length = 0)
+    {
+       size_t buf_len = ( ((length == 0) || (length > buffer.size())) ? buffer.size() : length);
+       return write(buffer.c_str(), buf_len);
+    }
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the I/O device.
@@ -392,7 +496,11 @@ public:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     virtual ssize_t write(const std::vector<char>& buffer,
-                          const size_t length = 0) = 0;
+                          const size_t length = 0)
+    {
+        size_t buf_len = ( ((length == 0) || (length > buffer.size())) ? buffer.size() : length);
+        return write(&buffer[0],buf_len);
+    }
 
     // ------------------------------------------------------------------------
     //: Test if the I/O device is read-only.
@@ -445,7 +553,7 @@ protected:
     //
     //! PRE: None.
     //! POST: The name object is copied into m_name; the open mode is set to
-    //+       read/write and blocking; the open state is set to false; and 
+    //+       read/write and blocking; the open state is set to false; and
     //+       the blocking mode for reads and writes is set to true.
     //
     //! ARGS: name - The name for this device.
@@ -470,13 +578,13 @@ protected:
     std::string m_name;          //: The name of the I/O device
     _open_mode  m_open_mode;     //: The open mode of the device
     bool        m_open_blocking; //: Flag telling if blocking is enabled when
-				 //+ opening the device
+             //+ opening the device
     bool        m_open;          //: Flag telling if the device is open
     bool        m_blocking;      //: Flag telling if blocking for reads and
-				 //+ writes is enabled
+             //+ writes is enabled
 };
 
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_BLOCK_IO_H_ */
+#endif   /* _VPR_BLOCK_IO_H_ */
