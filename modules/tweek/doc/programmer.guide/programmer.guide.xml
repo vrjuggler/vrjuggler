@@ -2560,7 +2560,7 @@ id="NetworkTest.java.disconnect" linkends="NetworkTest.java.shutdown.co" />
 {
    if ( mSliderObserver != null )
    {
-      mSliderObserver.detach();                              <co
+      mSliderObserver.detach();                                           <co
 id="NetworkTest.java.observer.detach" linkends="NetworkTest.java.shutdown.co" />
       mSliderObserver = null;
    }
