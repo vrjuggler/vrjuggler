@@ -100,7 +100,7 @@ JAVA_TARGETS	= VjControl.jar
 # step.  This is incredibly stupid...
 VjControl.jar: $(JAVA_SRCS) VjFiles
 	$(JAVAC_CMD) $(srcdir)/*/*.java $(srcdir)/*/*/*.java
-	$(JAR) cvf VjControl.jar $(CLASSES) VjFiles
+	$(JAR) cvf VjControl.jar */*.class */*/*.class VjFiles
 
 VjFiles:
 	$(PERL) $(scriptdir)/install-dir.pl -i $(srcdir)/VjFiles	\
