@@ -92,7 +92,8 @@ void _Export_ConfigElement()
              "Returns:\n"
              "A ConfigElement pointing to the child element.  This may be\n"
              "a NULL ConfigElement if the child element name was not found.\n"
-             "Check before use.")
+             "Check before use."
+         )
         .def("getNum", &jccl::ConfigElement::getNum,
              "getNum(property) -> int\n"
              "Returns the number of values for the specified property.\n"
@@ -100,10 +101,12 @@ void _Export_ConfigElement()
              "property -- The token of a property in this element.\n"
              "Returns:\n"
              "The number of values that exist for the given property which\n"
-             "may be zero.")
+             "may be zero."
+         )
         .def("getName", &jccl::ConfigElement::getName,
              "getName() -> string\n"
-             "Returns the instance name of this ConfigElement.")
+             "Returns the instance name of this ConfigElement."
+         )
         .def("getFullName", &jccl::ConfigElement::getFullName,
              "getFullName() -> string\n"
              "Returns the fully qualified, unique name of this element.\n"
@@ -111,7 +114,8 @@ void _Export_ConfigElement()
              "child of another element.  In that case, the name will be\n"
              "based on the element hierarchy and the property token.  The\n"
              "format in that case will be\n"
-             "\"element name 0/proeprty_token_0/element name 1/property_token_1/...\"")
+             "\"element name 0/proeprty_token_0/element name 1/property_token_1/...\""
+         )
         .def("getVersion", &jccl::ConfigElement::getVersion,
              "getVersion() -> int\n"
              "Returns the version number of the definition used by this\n"
@@ -195,13 +199,23 @@ void _Export_ConfigElement()
              "Pointer\" proeprty of self (or any element embedded in self).\n"
              "Returns:\n"
              "A list of the names of all config elements referenced by self,\n"
-             "which can be used for dependency checking.")
+             "which can be used for dependency checking."
+         )
         .def("getChildElements", &jccl::ConfigElement::getChildElements,
              "getChildElements() -> ConfigElement list\n"
              "Returns a list of self's child (embedded) elements.\n"
              "Returns:\n"
              "A list of ConfigElement objects that are the config elements\n"
-             "embedded in self.")
+             "embedded in self."
+         )
+        .def("setDefinition", &jccl::ConfigElement::setDefinition,
+             "setDefinition(def)\n"
+             "Associates the given definition with this element."
+         )
+        .def("getConfigDefinition", &jccl::ConfigElement::getConfigDefinition,
+             "getDefinition() -> ConfigDefinition\n"
+             "Returns the ConfigDefinition for this config element."
+         )
         .def(self_ns::str(self))
         .def( self == self )
         .def( self != self )

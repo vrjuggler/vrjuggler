@@ -10,12 +10,20 @@
 #include <boost/python.hpp>
 
 // Exports =====================================================================
+void _Export_ConfigDefinition();
 void _Export_ConfigElement();
 void _Export_ConfigElementHandler();
+void _Export_ConfigManager();
+void _Export_PropertyDefinition();
+void _Export_VarType();
 
 // Module ======================================================================
 BOOST_PYTHON_MODULE(jccl)
 {
+    _Export_ConfigDefinition();
     _Export_ConfigElement();
     _Export_ConfigElementHandler();
+    _Export_ConfigManager();
+    _Export_PropertyDefinition();
+    _Export_VarType();
 }

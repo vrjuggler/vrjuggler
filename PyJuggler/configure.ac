@@ -6,7 +6,7 @@
 # Date modified: $Date$
 # Version:       $Revision$
 
-AC_INIT([PyJuggler], [0.12], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([PyJuggler], [0.13], [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([PyJuggler is (C) Copyright 2002-2004 by Patrick Hartling])
 AC_REVISION([$Revision$])
