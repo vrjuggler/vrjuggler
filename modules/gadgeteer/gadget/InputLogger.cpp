@@ -30,22 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/InputLogger.h>
-
 #include <gadget/gadgetConfig.h>
-#include <vpr/vpr.h>
-#include <jccl/Config/ConfigChunk.h>
 
+#include <fstream>
+#include <stdio.h>
+#include <boost/progress.hpp>
+#include <cppdom/cppdom.h>
+
+#include <vpr/vpr.h>
 #include <vpr/IO/XMLObjectWriter.h>
 #include <vpr/IO/XMLObjectReader.h>
 #include <vpr/System.h>
+#include <jccl/Config/ConfigChunk.h>
 
-#include <fstream>
-
-#include <cppdom/cppdom.h>
-#include <stdio.h>
-
-#include <boost/progress.hpp>
+#include <gadget/InputLogger.h>
 
 /*
 

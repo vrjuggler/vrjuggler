@@ -34,22 +34,23 @@
 #define _GADGET_INPUT_LOGGER_H_
 
 #include <gadget/gadgetConfig.h>
+
+#include <boost/smart_ptr.hpp>
+#include <cppdom/cppdom.h>
+
 #include <vpr/vpr.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
 #include <gadget/Type/DigitalInterface.h>
-#include <cppdom/cppdom.h>
-
-#include <boost/smart_ptr.hpp>
 #include <gadget/InputLoggerPtr.h>
 
 
 namespace gadget
 {
 
-/** Input data logger
+/** Input data logger.
 */
-class InputLogger
+class GADGET_CLASS_API InputLogger
 {
 public:
    InputLogger()
@@ -172,4 +173,3 @@ private:
 
 
 #endif
-
