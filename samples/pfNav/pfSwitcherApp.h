@@ -76,6 +76,7 @@ public:
 class pfSwitcherApp : public vjPfApp
 {
 public:
+   // Enums used for the state machine in the program
    enum SwitcherState
    {
       RUN_SWITCHER,        // We are just running the switcher right now
@@ -83,7 +84,7 @@ public:
       SWITCH_IN,           // We are Switching into an app
       SWITCH_OUT,          // We are Switching out of an app
       CHANGE_APP,          // Changing the application
-      CHANGE_APP_OUT,      // We are changing displayed application
+      CHANGE_APP_OUT,      // We are changing the active application
       CHANGE_APP_IN
    };
 
@@ -95,6 +96,9 @@ public:
    void constructSceneGraphSkeleton();
 
 protected:  // --- HELPERS --- //
+   void switchConstructOn();
+   void switchConstructOff();
+
    void addAppGraph(pfAppHandle& handle);
    void removeAppGraph(pfAppHandle& handle);
 
@@ -120,7 +124,14 @@ protected:  // --- HELPERS --- //
    // NOTE: If we are already in newState, then just ignore it
    void setState(SwitcherState newState);
 
-         // --- TRANSITION HELPERS --- //
+protected: // --- TRANSITION HELPERS --- //
+   /*
+    * The switch transition is for switching from the witcher to running
+    * another application in full
+    * The change transition is used when changing which application
+    * is active and is displayed to the user for selection.
+    */
+
    // Update transition for switching apps in
    // POST: Scene graph is modified for transition
    //       If transition is complete ==> RUN_APP state
@@ -160,7 +171,8 @@ private:
 
    // Transition members objects
    StopWatch   mClock;           // Clock to keep track of time passage
-   float       mTransLength;     // Length of the transitions (in seconds)
+   float       mChangeTransLength;     // Length of the transitions (in seconds)
+   float       mSwitchTransLength;     // Length of transition to switch to an application
 
                                  // These values run from 0..1 as a percentage of trans completed
    float       mTransIn;         // How much have we transitioned in (NOTE: Shared by both trans types)
@@ -168,11 +180,12 @@ private:
 
    // ---- SCENE GRAPH ---- //
    //           /--- mSun
-   //          /--- mConstructDCS - mConstructModel
+   //          /--- mConstructSwitch -- mConstructDCS - mConstructModel
    //  mRootNode
    //          \---- mAppRoot(s) --- switch -- sclaeDCS -- model
    //
    pfGroup*       mRootNode;              // Root node of the scene graph
+   pfSwitch*      mConstructSwitch;       // Switch for turning on and off the construct
    pfDCS*         mConstructDCS;          // DCS to transform the construct model
    pfNode*        mConstructModel;
    pfDCS*         mAppScalerDCS;          // DCS to scale active application
@@ -292,7 +305,8 @@ protected:
        mCurState = RUN_SWITCHER;
        mActiveApp = -1;
        mAppToMakeActive = -1;
-       mTransLength = 3.0f;
+       mChangeTransLength = 0.5f;
+       mSwitchTransLength = 3.0f;
        mTransIn = mTransOut = 0.0f;
    }
 

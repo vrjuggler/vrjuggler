@@ -87,6 +87,7 @@ void registerSomeApps(pfSwitcherApp* switcher)
    app1->setFilePath( file_path1 );
    app1->setInitialNavPos( initial_pos1 );
    app1->setUseDriveMode(drive_mode1);
+   app1->disableStats();
 
    // APPLICATION 2
    simplePfNavApp* app2 = new simplePfNavApp();
@@ -104,6 +105,7 @@ void registerSomeApps(pfSwitcherApp* switcher)
    app2->setFilePath( file_path2 );
    app2->setInitialNavPos( initial_pos2 );
    app2->setUseDriveMode(drive_mode2);
+   app2->disableStats();
 
    // APPLICATION 3
    simplePfNavApp* app3 = new simplePfNavApp();
@@ -121,6 +123,7 @@ void registerSomeApps(pfSwitcherApp* switcher)
    app3->setFilePath( file_path3 );
    app3->setInitialNavPos( initial_pos3 );
    app3->setUseDriveMode(drive_mode3);
+   app3->disableStats();
 
    switcher->registerApp(pfAppHandle(app1,std::string("app1")));
    switcher->registerApp(pfAppHandle(app2,std::string("app2")));
