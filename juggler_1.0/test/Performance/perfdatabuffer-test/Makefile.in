@@ -37,7 +37,7 @@ all: PerfDataBufferTest
 PerfDataBufferTest: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-PerfDataBufferTest.o: PerfDataBufferTest.cpp nullApp.h
+PerfDataBufferTest.o: nullApp.h
 
 .cpp.o:
 	${COMPILE} -c $<

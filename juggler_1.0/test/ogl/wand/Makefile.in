@@ -37,7 +37,7 @@ all: wand
 wand: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-main.o: main.cpp wandApp.h
+main.o: wandApp.h
 
 .cpp.o:
 	${COMPILE} -c $<

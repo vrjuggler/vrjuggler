@@ -37,7 +37,7 @@ all: simpleGlove
 simpleGlove: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-main.o: main.cpp simpleGloveApp.h
+main.o: simpleGloveApp.h
 
 .cpp.o:
 	${COMPILE} -c $<

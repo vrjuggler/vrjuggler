@@ -37,8 +37,8 @@ all: torus
 torus: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-torus.o: torus.cpp torusApp.h
-torusApp.o: torusApp.cpp torusApp.h
+torus.o: torusApp.h
+torusApp.o: torusApp.h
 
 .cpp.o:
 	${COMPILE} -c $<
