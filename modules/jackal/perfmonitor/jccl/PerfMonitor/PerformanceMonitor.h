@@ -47,22 +47,17 @@ namespace jccl {
     class JackalServer;
     class PeriodicCommand;
 
-//-------------------------------------
-//: Jackal performance-monitoring agent.
-//
-//
-// @author  Christopher Just
-//
-// Date 9-12-01
-//---------------------------------------
 
+    /** Jackal Performance-monitoring agent.
+     *
+     *  @author Christopher Just
+     *  9-12-01
+     */
 class JCCL_CLASS_API PerformanceMonitor: public JackalControl, public ConfigChunkHandler {
 
 public:
 
-    //: constructor
-    //! PRE: None
-    //! POST: Object is constructed
+    /** Constructor. */
     PerformanceMonitor();
 
 
@@ -71,13 +66,17 @@ public:
 
 
 
-    //: creates a buffer containing perf data... 
+    /** Allocates a buffer for collecting performance data.
+     *  @param name - Name of the buffer.
+     *  @param numbufs - Number of samples to store.
+     *  @param nindex - Number of unique indices (from 0 to n-1).
+     */
     PerfDataBuffer*  getPerfDataBuffer (const std::string& _name, 
                                         int _numbufs, 
                                         int _nindex);
 
 
-    //: destroys a buffer of perf data
+    /** Unregisters and destroys a PerfDataBuffer. */
     void releasePerfDataBuffer (PerfDataBuffer *v);
 
 
@@ -85,28 +84,16 @@ public:
     //--------------- JackalControl Stuff -----------------------
 
     virtual void addConnect (Connect *c);
+
     virtual void removeConnect (Connect* c);
 
 
     //---------------- ConfigChunkHandler Stuff -----------------
 
-    //: ConfigChunkHandler stuff
-    //! PRE: configCanHandle(chunk) == true
-    //! RETURNS: success
     virtual bool configAdd(ConfigChunk* chunk);
 
-
-
-    //: Remove the chunk from the current configuration
-    //! PRE: configCanHandle(chunk) == true
-    //!RETURNS: success
     virtual bool configRemove(ConfigChunk* chunk);
 
-
-    
-    //: Can the handler handle the given chunk?
-    //! RETURNS: true - Can handle it
-    //+          false - Can't handle it
     virtual bool configCanHandle(ConfigChunk* chunk);
 
 
@@ -121,26 +108,14 @@ private:
     Connect*                  perf_target;
     std::vector<buffer_element> perf_buffers;
     float                     perf_refresh_time;  // in milliseconds
-    ConfigChunk*            current_perf_config;
-    vpr::Mutex                   perf_buffers_mutex;
+    ConfigChunk*              current_perf_config;
+    vpr::Mutex                perf_buffers_mutex;
 
-    vpr::Mutex                connections_mutex;
-    std::vector<Connect*>     connections;
-
-    // PRIVATE utility functions
-
-//      void controlLoop (void* nullParam);
 
     void activatePerfBuffers();
     void deactivatePerfBuffers();
 
     void setPerformanceTarget (Connect* con);
-
-    /* connections needs to be locked */
-    Connect* getConnect (const std::string&);
-
-
-
 
 
     // These are needed to appease Visual C++ in its creation of DLLs.
