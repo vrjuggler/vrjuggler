@@ -42,7 +42,7 @@ public interface ConfigIOConstants
    public static final String CFG_VERSION = "3.0";
 
    /** The current version of the definition file format. */
-   public static final String DEF_VERSION = "3.0";
+   public static final String DEF_VERSION = "3.1";
 
    /** The string representation of the configuration namespace. */
    public static final String CFG_NS_str = "http://www.vrjuggler.org/jccl/xsd/"+CFG_VERSION+"/configuration";

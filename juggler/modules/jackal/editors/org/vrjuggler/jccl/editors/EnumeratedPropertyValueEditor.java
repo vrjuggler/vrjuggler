@@ -56,6 +56,16 @@ public class EnumeratedPropertyValueEditor
             return label;
          }
       }
+
+      // If execution reached this point, mValue is not in the enumerated
+      // values.  If the enumeration for this property is editable, however,
+      // then mValue is not required to be in that list, so we can just
+      // return it as-is.
+      if ( mPropertyDef.enumIsEditable() )
+      {
+         return (String) mValue;
+      }
+
       return null;
    }
 
@@ -77,13 +87,24 @@ public class EnumeratedPropertyValueEditor
       }
       else
       {
-         Map enums = mPropertyDef.getEnums();
-         if (!enums.containsKey(text))
+         // If the enumeration is not editable, then we have to verify that
+         // the given value is allowed.
+         if ( ! mPropertyDef.enumIsEditable() )
          {
-            // If we got here, we didn't get a valid string value
-            throw new IllegalArgumentException(text);
+            Map enums = mPropertyDef.getEnums();
+
+            if ( ! enums.containsKey(text) )
+            {
+               // If we got here, we didn't get a valid string value
+               throw new IllegalArgumentException(text);
+            }
+
+            setValue(enums.get(text));
          }
-         setValue(enums.get(text));
+         else
+         {
+            setValue(text);
+         }
       }
    }
 

@@ -65,7 +65,7 @@ namespace jccl
    namespace definition_tokens
    {
       /** The current version of the configuration definition file format. */
-      const std::string DEF_VERSION("3.0");
+      const std::string DEF_VERSION("3.1");
 
       // Processing instructions
       const std::string SETTINGS_INSTRUCTION("org-vrjuggler-jccl-settings");
@@ -85,7 +85,8 @@ namespace jccl
       const std::string DEFINITION("definition");
       const std::string DEFINITION_VERSION("definition_version");
       const std::string PARENT("parent");
-      const std::string ENUM("enum");
+      const std::string ENUMERATION("enumeration");
+      const std::string ENUM_VALUE("enum");
       const std::string HELP("help");
       const std::string LABEL("label");
       const std::string NAME("name");

@@ -423,6 +423,7 @@ public class ConfigDefinitionRepositoryEditor
                                                               String.class,
                                                               "",
                                                               new ArrayList(),
+                                                              false,
                                                               new TreeMap(),
                                                               new ArrayList(),
                                                               false);

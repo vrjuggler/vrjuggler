@@ -252,12 +252,29 @@ public class ConfigDefinitionParser
 
       // Get the enumeration list.
       Map enum_map = new TreeMap();
-      for (Iterator itr = root.getChildren(ENUM, DEF_NS).iterator(); itr.hasNext(); )
+      Element enumeration = root.getChild(ENUMERATION, DEF_NS);
+      boolean editable_enum = false;
+
+      if ( null != enumeration )
       {
-         Element elt = (Element) itr.next();
-         String value_str = elt.getAttributeValue(VALUE);
-         Object value = convertTo(value_str, valuetype);
-         enum_map.put(elt.getAttributeValue(LABEL), value);
+         try
+         {
+            editable_enum =
+               enumeration.getAttribute(EDITABLE).getBooleanValue();
+         }
+         catch(DataConversionException ex)
+         {
+            editable_enum = false;
+         }
+
+         for ( Iterator itr = enumeration.getChildren(ENUM_VALUE, DEF_NS).iterator();
+               itr.hasNext(); )
+         {
+            Element elt = (Element) itr.next();
+            String value_str = elt.getAttributeValue(VALUE);
+            Object value = convertTo(value_str, valuetype);
+            enum_map.put(elt.getAttributeValue(LABEL), value);
+         }
       }
 
       // Create the new property definition
@@ -266,6 +283,7 @@ public class ConfigDefinitionParser
                                     valuetype,
                                     help,
                                     values,
+                                    editable_enum,
                                     enum_map,
                                     allowed_types,
                                     variable);
@@ -389,14 +407,16 @@ public class ConfigDefinitionParser
       }
    }
 
-   private static final Namespace DEF_NS = Namespace.getNamespace("http://www.vrjuggler.org/jccl/xsd/3.0/definition");
+   private static final Namespace DEF_NS = Namespace.getNamespace("http://www.vrjuggler.org/jccl/xsd/3.1/definition");
 
    private static final String ALLOWED_TYPE           = "allowed_type";
    private static final String CATEGORY               = "category";
    private static final String DEFAULTVALUE           = "defaultvalue";
    private static final String DEFINITION             = "definition";
    private static final String DEFINITION_VERSION     = "definition_version";
-   private static final String ENUM                   = "enum";
+   private static final String ENUMERATION            = "enumeration";
+   private static final String EDITABLE               = "editable";
+   private static final String ENUM_VALUE             = "enum";
    private static final String HELP                   = "help";
    private static final String LABEL                  = "label";
    private static final String NAME                   = "name";

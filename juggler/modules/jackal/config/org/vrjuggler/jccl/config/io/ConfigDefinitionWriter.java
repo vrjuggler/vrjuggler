@@ -240,13 +240,20 @@ public class ConfigDefinitionWriter
 
       // Create the enumeration elements
       Map enums = propDef.getEnums();
-      for (Iterator itr = enums.keySet().iterator(); itr.hasNext();)
+      if ( enums.keySet().size() > 0 )
       {
-         String enum_name = (String)itr.next();
-         Element enum_elt = new Element(ENUM, DEF_NS);
-         enum_elt.setAttribute(LABEL, enum_name);
-         enum_elt.setAttribute(VALUE, enums.get(enum_name).toString());
-         property_elt.addContent(enum_elt);
+         Element enum_parent = new Element(ENUMERATION, DEF_NS);
+
+         for (Iterator itr = enums.keySet().iterator(); itr.hasNext();)
+         {
+            String enum_name = (String)itr.next();
+            Element enum_elt = new Element(ENUM_VALUE, DEF_NS);
+            enum_elt.setAttribute(LABEL, enum_name);
+            enum_elt.setAttribute(VALUE, enums.get(enum_name).toString());
+            enum_parent.addContent(enum_elt);
+         }
+
+         property_elt.addContent(enum_parent);
       }
 
       return property_elt;
@@ -291,7 +298,8 @@ public class ConfigDefinitionWriter
    private static final String DEFAULTVALUE           = "defaultvalue";
    private static final String DEFINITION             = "definition";
    private static final String DEFINITION_VERSION     = "definition_version";
-   private static final String ENUM                   = "enum";
+   private static final String ENUMERATION            = "enumeration";
+   private static final String ENUM_VALUE             = "enum";
    private static final String HELP                   = "help";
    private static final String LABEL                  = "label";
    private static final String NAME                   = "name";
