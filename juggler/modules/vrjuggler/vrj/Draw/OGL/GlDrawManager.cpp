@@ -195,16 +195,20 @@ void GlDrawManager::drawAllPipes()
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL)
       << "vjGLDrawManager::drawAllPipes: " << std::endl << std::flush
       << vprDEBUG_FLUSH;
-   unsigned int pipeNum;
+   unsigned int pipe_num;
 
    // RENDER
       // Start rendering all the pipes
-   for(pipeNum=0; pipeNum<pipes.size(); pipeNum++)
-      pipes[pipeNum]->triggerRender();
+   for(pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   {
+      pipes[pipe_num]->triggerRender();
+   }
 
       // Wait for rendering to finish on all the pipes
-   for(pipeNum=0; pipeNum<pipes.size(); pipeNum++)
-      pipes[pipeNum]->completeRender();
+   for(pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   {
+      pipes[pipe_num]->completeRender();
+   }
 
    // Barrier for Cluster
    //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
@@ -214,13 +218,16 @@ void GlDrawManager::drawAllPipes()
 
    // SWAP
       // Start swapping all the pipes
-   for(pipeNum=0; pipeNum<pipes.size(); pipeNum++)
-      pipes[pipeNum]->triggerSwap();
+   for(pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   {
+      pipes[pipe_num]->triggerSwap();
+   }
 
       // Wait for swapping to finish on all the pipes
-   for(pipeNum=0; pipeNum<pipes.size(); pipeNum++)
-      pipes[pipeNum]->completeSwap();
-
+   for(pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   {
+      pipes[pipe_num]->completeSwap();
+   }
 
    vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL)
       << "vjGLDrawManager::drawAllPipes: Done" << std::endl << std::flush
