@@ -201,6 +201,9 @@ TWEEK_PATH_JAVA([0.4.0], ,
                  BUILD_JAVA='N'
                 ])
 
+# TODO: Make it possible to build just the java components of JCCL
+BUILD_CXX='Y'
+
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 
 # -----------
@@ -415,7 +418,7 @@ fi
 JCCL_SHARE_DIR=`echo "$datadir/jccl" | sed -e 's|^${prefix}/||'`
 JCCL_SHARE_DIR=`echo "$JCCL_SHARE_DIR" | sed -e "${_prefix_exp}"`
 
-# Information needed to generate juggler-config.
+# Information needed to generate jccl-config.
 case $OS_TYPE in
     UNIX)
         if test "x$GXX" = "xyes" ; then
@@ -449,6 +452,16 @@ fi
 
 jccl_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
+jars='jccl_config.jar jccl_editors.jar'
+
+if test "x$JDOM_JAR" != "xnone" ; then
+   jars="$jars $JDOM_JAR"
+fi
+
+changequote(<<, >>)
+jccl_java_api_jars=`echo "$jars" | sed -e 's/\(jccl_[A-Za-z]*\.jar\)/${prefix}\/bin\/\1/g' -e "s/ /$JCPS/g"`
+changequote([, ])
+
 VJ_VERSION_GROK(VERSION)
 
 DPP_SUBST
@@ -461,6 +474,7 @@ AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(JCCL_SHARE_DIR)
 AC_SUBST(VPR_SUBSYSTEM)
 
+AC_SUBST(BUILD_CXX)
 AC_SUBST(RM_LN)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
@@ -498,6 +512,7 @@ AC_SUBST(jccl_extra_ldflags)
 AC_SUBST(jccl_extra_libs)
 AC_SUBST(jccl_n32_flags)
 AC_SUBST(jccl_64_flags)
+AC_SUBST(jccl_java_api_jars)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
