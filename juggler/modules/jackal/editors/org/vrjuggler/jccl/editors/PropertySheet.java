@@ -164,8 +164,8 @@ public class PropertySheet extends PropertyComponent
       }
       // Insert Add Icon
       ClassLoader loader = getClass().getClassLoader();
-      mAddIcon = new ImageIcon(loader.getResource("images/New16.gif"));
-      mRemoveIcon = new ImageIcon(loader.getResource("images/Delete16.gif"));
+      mAddIcon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/New16.gif"));
+      mRemoveIcon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Delete16.gif"));
  
       if(prop_def.isVariable())
       {
