@@ -119,9 +119,7 @@ public class Core
     static public int    screenWidth;
     static public int    screenHeight;
     static public boolean window_pos_kludge;
-    //static public int    user_level;
-    //static final public int USER_BEGINNER = 0;
-    //static final public int USER_EXPERT = 1;
+
     static public UserProfile user_profile;
 
     static public FileControl file;
@@ -221,11 +219,14 @@ public class Core
     // as well as adding components.  in-place reconfiguration is also a 
     // good thing before the spec solidifies in juggler 1.2.0
 
-    /** Adds an instantiation ConfigChunk to the queue of pending component
-     *  instantiation chunks.  The ConfigChunk will be used to create an
-     *  instance of a component as soon as its dependencies are met; this
-     *  could happen immediately, or after the creation of some other 
-     *  (dependency-satisfying) chunk.
+    /** Adds a component creation ConfigChunk to the queue of pending adds.
+     *  Once the ConfigChunk's dependencies are met, it will be forwarded
+     *  to its parent component (via VjComponent.configAdd()).
+     *  In most cases, the parent will immediately insantiate the new 
+     *  component, but there are cases where the parent will instead
+     *  create the new component "on demand".  A good example is the
+     *  ConfigUIHelper Module's use of ChunkEditorPanels.  For more
+     *  details, check the parent class' documentation.
      */
     static public void addPendingChunk (ConfigChunk ch) {
         pending_chunks.add (ch);
@@ -235,7 +236,11 @@ public class Core
     }
 
 
-    /** Processes the pending ConfigChunk list.  Util for addPendingChunk(). */
+    /** Processes the pending ConfigChunk list.  Util for addPendingChunk(). 
+     *  Searches for Chunks in the pending list whose dependencies are met
+     *  and calls addComponentConfig.
+     *  @return True if any Components were created (or attempted).
+     */
     static protected boolean configProcessPending () {
         boolean retval = false;
         boolean add_success;
@@ -264,7 +269,9 @@ public class Core
     /** Finds which component is ch's parent and calls addConfig for it.
      *  This shouldn't be confused with Core.addConfig, which just creates
      *  components that are children of Core directly.  addComponentConfig
-     *  calls Core.addConfig when necessary.
+     *  calls Core.addConfig if ch's parent is actually "VjControl Core".
+     *
+     *  @return true if the component was succesfully added.
      */
     static protected boolean addComponentConfig (ConfigChunk ch) {
         try {
@@ -290,7 +297,13 @@ public class Core
 
 
 
-    /** true if dependencies are satisfied */
+    /** Checks if this component chunk's dependencies are met.
+     *  This checks the chunk's "ParentComp" and "Dependencies"
+     *  properties and makes sure all the components listed there 
+     *  have already been added to VjControl.
+     *
+     *  @return true if all dependencies were met.
+     */
     static protected boolean checkDependencies (ConfigChunk ch) {
 
         String cn = ch.getValueFromToken ("classname", 0).getString();
@@ -308,11 +321,20 @@ public class Core
     }
 
 
+    /** Adds vjc to a list of components that are part of VjControl.
+     *  When addConfig is called on a component chunk's "parent"
+     *  component, the parent should generally call Core.registerComponent()
+     *  to make the new child visible.
+     *  Components must be registered with this method if they are 
+     *  to be parents or dependencies of other components.
+     */
     static public void registerComponent (VjComponent vjc) {
         registered_components.add (vjc);
     }
 
 
+    /** Finds a component that has been added with registerComponent().
+     */
     static public VjComponent getComponentFromRegistry (String name) {
         VjComponent vjc;
         int i, n = registered_components.size();
@@ -331,6 +353,12 @@ public class Core
         command_line = args;
     }
 
+    /** Gets the command line that VjControl was started with.
+     *  Components can search this command line for options they recognize.
+     *  For example, the ConfigModule searches the command line for the
+     *  -c and -d options, and for words ending with ".config" or ".desc".
+     *  Components MUST NOT modify the returned String array in any way.
+     */
     static public String[] getCommandLine () {
         return command_line;
     }
