@@ -601,12 +601,27 @@ if test "$PLATFORM" = "FreeBSD" ; then
 
     dnl # If the $CC binary is not egcs 1.1.2 or newer, check for egcc.  If
     dnl # it exists, we will assume that it is new enough.
-    if test $ac_cv_CC_is_egcs = 'no' ; then
+    if test "$ac_cv_CC_is_egcs" = "no" ; then
         AC_CHECK_PROG(CC, egcc, egcc,
             AC_MSG_ERROR(*** The library requires the egcc C compiler ***))
         AC_CHECK_PROG(CXX, eg++, eg++,
             AC_MSG_ERROR(*** The library requires the eg++ C++ compiler ***))
     fi
+fi
+
+dnl # At this point, we know what threading package we will be using and what
+dnl # C compiler we have available.  Now check to see if the compiler accepts
+dnl # the -pthread option.
+if test "x${_thread_pkg}" = "xPOSIX" ; then
+    _vjsave_CFLAGS="$CFLAGS"
+    CFLAGS="$CFLAGS -pthread"
+
+    AC_CACHE_CHECK(whether $CC accepts -pthread,
+        ac_cv_CC_accepts_pthread,
+        AC_TRY_COMPILE([], [ void f(){} ],
+            ac_cv_CC_accepts_pthread='yes', ac_cv_CC_accepts_pthread='no'))
+
+    CFLAGS="${_vjsave_CFLAGS}"
 fi
 
 dnl # Ensure that the C++ compiler we've found is capable of compiling the
@@ -720,6 +735,14 @@ dnl # If the library is found, check for pthread_kill().  If it is present,
 dnl # Draft 10 (the "final" draft) of the POSIX threads standard is in place.
 dnl # If not, Draft 4 is available.
 if test "x${_thread_pkg}" = "xPOSIX" ; then
+    _vjsave_CFLAGS="$CFLAGS"
+    _vjsave_CXXFLAGS="$CXXFLAGS"
+
+    if test "$ac_cv_CC_accepts_pthread" = "yes" ; then
+        CFLAGS="$CFLAGS -pthread"
+        CXXFLAGS="$CXXFLAGS -pthread"
+    fi
+
     AC_CHECK_LIB(pthread, pthread_create,
         AC_CHECK_HEADER(pthread.h,
             [ THREADS='POSIX'; LIBS="$LIBS -lpthread"; ],
@@ -736,18 +759,10 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
 
     dnl # On FreeBSD, the pthreads stuff is in libc_r.
     if test "x$THREADS" = "x" ; then
-        _vjsave_CFLAGS="$CFLAGS"
-        CFLAGS="$CFLAGS -pthread"
-
         AC_CHECK_LIB(c_r, pthread_create,
             AC_CHECK_HEADER(pthread.h,
-                [ THREADS='POSIX';
-                  CXXFLAGS="$CXXFLAGS -pthread" ;
-                  LIBS="$LIBS -lc_r";
-                ],
-                [ CFLAGS="$_vjsave_CFLAGS" ;
-                  AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)
-                ]))
+                [ THREADS='POSIX'; LIBS="$LIBS -lc_r" ],
+                AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
     fi
 
     dnl # If $THREADS is equal to "POSIX" at this point, then the pthread
@@ -789,6 +804,9 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
         AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***)
     fi
 
+    dnl # Restore these in case any changes were made above.
+    CFLAGS="${_vjsave_CFLAGS}"
+    CXXFLAGS="${_vjsave_CXXFLAGS}"
 dnl #
 elif test "x${_thread_pkg}" = "xWIN32" ; then
     THREADS='WIN32'
@@ -1099,6 +1117,11 @@ elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
     CFLAGS="$CFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
     CXXFLAGS="$CXXFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -MTd"
+fi
+
+if test "$ac_cv_CC_accepts_pthread" = "yes" ; then
+    CFLAGS="$CFLAGS -pthread"
+    CXXFLAGS="$CXXFLAGS -pthread"
 fi
 
 DEPENDFLAGS=""
