@@ -34,6 +34,7 @@
 #define _VRJ_PF_APP_H_
 
 #include <vrj/vrjConfig.h>
+#include <vector>
 #include <Performer/pf/pfGroup.h>
 #include <Performer/pf/pfChannel.h>
 

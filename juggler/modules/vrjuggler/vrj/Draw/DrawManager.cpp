@@ -40,6 +40,11 @@ namespace vrj
 void DrawManager::setDisplayManager(DisplayManager* _dispMgr)
 { mDisplayManager = _dispMgr; }
 
+DisplayManager* DrawManager::getDisplayManager()
+{
+   return mDisplayManager;
+}
+
 
 VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out,
                                        DrawManager& drawMgr)
