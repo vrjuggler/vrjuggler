@@ -697,10 +697,17 @@ protected:
      * its memory is released.
      *
      * @pre None.
-     * @post If m_socket_imp is non-NULL, its memory is released.
+     * @post internal socket_impl* == NULL
      */
-    virtual ~Socket_t (void) {
-        ;
+    virtual ~Socket_t (void)
+    {
+        /*
+        if(m_socket_imp != NULL)
+           delete m_socket_imp;
+        */
+
+        m_socket_imp = NULL;  // Don't destory because it is a member of the child class
+                              // it will get destroyed on it's own
     }
 
     /**
