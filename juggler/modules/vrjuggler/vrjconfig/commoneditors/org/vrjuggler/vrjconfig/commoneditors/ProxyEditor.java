@@ -267,7 +267,7 @@ public class ProxyEditor
             new ConfigElementFactory(broker.getRepository().getAllLatest());
 
          ConfigElement proxy = factory.create(proxy_name, mProxyDef);
-         proxy.setProperty("device", 0, mDeviceElt.getName());
+         proxy.setProperty("device", 0, mDeviceElt.getName(), mContext);
 
          // If we are working with a position proxy, we have to fill in a
          // default position transform filter.  It's too bad that this has to
@@ -288,7 +288,7 @@ public class ProxyEditor
 
          ConfigDefinition alias_def = broker.getRepository().get("alias");
          ConfigElement alias = factory.create(alias_name, alias_def);
-         alias.setProperty("proxy", 0, proxy_name);
+         alias.setProperty("proxy", 0, proxy_name, mContext);
          broker.add(mContext, alias);
 
          try
@@ -345,7 +345,7 @@ public class ProxyEditor
    {
       ProxyElement proxy = (ProxyElement) mProxyList.getSelectedValue();
       ConfigElement elt = proxy.getProxyElt();
-      elt.setProperty("unit", 0, mInputSourceField.getValue());
+      elt.setProperty("unit", 0, mInputSourceField.getValue(), mContext);
    }
 }
 
