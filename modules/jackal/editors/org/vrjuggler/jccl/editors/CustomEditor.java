@@ -40,18 +40,24 @@ import org.vrjuggler.jccl.config.ConfigElement;
 
 /**
  * Defines an interface for objects who are custom editors.  Custom editors
- * operate within a single configuration context.  Initially, they are given
- * a single config element to edit, but they can access all elements within
- * their context.
+ * operate within a single configuration context.  They may be given a single
+ * config element to edit, but they can access all elements within their
+ * context.
  */
 public interface CustomEditor
 {
    /**
     * Sets the config context and ocnfig element that will be used by the
-    * editor.
+    * editor.  A null value for <code>elm</code> should be interpreted as an
+    * indication that the editor should pull all the config elements it needs
+    * from the context.  The context reference will never be null.  Custom
+    * editors should be implemented such that this method is invoked once per
+    * object lifetime.
     *
     * @param ctx The configuration context in which this editor will operate.
     * @param elm The config element that will be edited by thiis editor.
+    *
+    * @since 0.91.1
     */
    public void setConfig(ConfigContext ctx, ConfigElement elm);
 
@@ -69,6 +75,18 @@ public interface CustomEditor
     * Returns the java.awt.event.ActionListener object that will be used to
     * handle requests for help by the user.  The editor may return null to
     * indicate that it does not respond to help requests.
+    *
+    * @since 0.92.2
     */
    public ActionListener getHelpActionListener();
+
+   /**
+    * Indicates to the editor that it is being closedd.  This offers the
+    * custom editor the opportunity to clean up after itself.  The editor
+    * implementation should expect that this method will be invoked no more
+    * than once per object lifetime, though it may not be invoked at all.
+    *
+    * @since 0.92.10
+    */
+   public void editorClosing();
 }
