@@ -36,6 +36,7 @@ exclude(App.getSoundManager)
 
 GlApp = Class('vrj::GlApp', 'vrj/Draw/OGL/GlApp.h')
 exclude(GlApp.getDrawManager)
+exclude(GlApp.getSoundManager)
 
 # XXX: Cannot expose vrj::OsgApp or vrj::OpenSGApp without OSG and OpenSG
 # installed (respectively).
