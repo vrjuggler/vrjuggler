@@ -27,9 +27,11 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 
-VJGLOVE_SRCS	:= CyberGloveBasic.cpp		\
+VJGLOVE_SRCS	:= vjGlove.cpp
+
+ifneq (@OS_TYPE@, Win32)
+VJGLOVE_SRCS	+= CyberGloveBasic.cpp		\
                    vjCyberGlove.cpp		\
-                   vjGlove.cpp			\
                    vt_glove.cpp			\
         	   vt_error.cpp			\
                    vt_init.cpp			\
@@ -39,6 +41,7 @@ VJGLOVE_SRCS	:= CyberGloveBasic.cpp		\
                    vt_read_user_cal.cpp		\
                    vt_serial_io.cpp		\
                    vt_virtual_hand.cpp
+endif
 
 VJGLOVE_OBJECTS := ${addprefix ${OBJDIR}/,${VJGLOVE_SRCS:.cpp=.o}}
 DEPEND_FILES	:= ${VJGLOVE_SRCS:.cpp=.d}
