@@ -14,16 +14,16 @@ namespace vrj
    public:
       //: Add the chunk to the configuration
       //! PRE: configCanHandle(chunk) == true
-      virtual bool configAdd( jccl::ConfigChunk* chunk ) { return false; }
+      virtual bool configAdd( jccl::ConfigChunkPtr chunk ) { return false; }
 
       //: Remove the chunk from the current configuration
       //! PRE: configCanHandle(chunk) == true
-      virtual bool configRemove( jccl::ConfigChunk* chunk ) { return false; }
+      virtual bool configRemove( jccl::ConfigChunkPtr chunk ) { return false; }
 
       //: Can the handler handle the given chunk?
       //! RETURNS: true - Can handle it
       //+          false - Can't handle it
-      virtual bool configCanHandle( jccl::ConfigChunk* chunk ) { return false; }
+      virtual bool configCanHandle( jccl::ConfigChunkPtr chunk ) { return false; }
 
    public:
       //: Enable a frame to be drawn

@@ -43,7 +43,7 @@
 #include <gadget/Type/PositionInterface.h>
 
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 
 namespace vrj
 {
@@ -57,9 +57,9 @@ public:
 
 public:
    //: Configure the simulator
-   virtual void config(jccl::ConfigChunk* chunk)
+   virtual void config(jccl::ConfigChunkPtr chunk)
    {
-      vprASSERT(chunk != NULL);
+      vprASSERT(chunk.get() != NULL);
       vprASSERT((std::string)chunk->getType() == std::string("simViewport"));
 
       Viewport::config(chunk);

@@ -71,7 +71,7 @@ public:
    }
 
    //: Configure the projection using the chunk given
-   virtual void config(jccl::ConfigChunk* chunk);
+   virtual void config(jccl::ConfigChunkPtr chunk);
 
    //: Recalculate the projection matrix
    //! PRE: WallRotation matrix must be set correctly

@@ -6,9 +6,9 @@
 namespace vrj
 {
 
-void Viewport::config(jccl::ConfigChunk* chunk)
+void Viewport::config(jccl::ConfigChunkPtr chunk)
 {
-   vprASSERT(chunk != NULL);
+   vprASSERT(chunk.get() != NULL);
 
    // -- Get config info from chunk -- //
     float originX = chunk->getProperty("origin", 0);

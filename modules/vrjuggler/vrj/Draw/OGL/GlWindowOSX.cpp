@@ -166,8 +166,8 @@ void GlWindowOSX::config(Display* _display)
    GlWindow::config(_display);
 
     // Get the vector of display chunks
-   jccl::ConfigChunk* dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
-   jccl::ConfigChunk* displayChunk = _display->getConfigChunk();
+   jccl::ConfigChunkPtr dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
+   jccl::ConfigChunkPtr displayChunk = _display->getConfigChunk();
 
    mPipe = _display->getPipe();
    vprASSERT(mPipe >= 0);
