@@ -133,8 +133,8 @@ protected:
       if (mQuadObj == NULL)
          mQuadObj = gluNewQuadric();
 
-      gluQuadricDrawStyle(mQuadObj, GLU_FILL);
-      gluQuadricNormals(mQuadObj, GLU_SMOOTH);
+      gluQuadricDrawStyle(mQuadObj, (enum GLenum) GLU_FILL);
+      gluQuadricNormals(mQuadObj, (enum GLenum) GLU_SMOOTH);
       gluSphere(mQuadObj, radius, slices, stacks);
    }
 
