@@ -191,19 +191,15 @@ endif
 		$(RM_LN) ./data && $(LN_S) $(JCCLROOT_ABS)/data ./data
 	cd $(instlinks)/$(JCCL_SHARE_DIR) && \
 		$(RM_LN) ./samples && $(LN_S) $(JCCLROOT_ABS)/samples ./samples
-#ifndef NO_JAVA_GUI
-#ifeq ($(BUILD_VJCONTROL), Y)
-#	cd $(instlinks)/bin && $(RM_LN) ./ConfigUpdater.jar &&		\
-#          $(LN_S) $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar ./
-#	cd $(instlinks)/bin && $(RM_LN) ./cfgupdater &&			\
-#          sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
-#            $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh > cfgupdater && \
-#          chmod $(EXEC_PERMS) cfgupdater
-#endif
-#endif
-#	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-#            -t $(JCCLROOT_ABS)/jccl-config.in -p 'use_base_dir=yes'	\
-#            -v $(JCCLROOT_ABS)/VERSION -o $(instlinks)/bin/jccl-config -x
+	cd $(instlinks)/bin && $(RM_LN) ./ConfigUpdater.jar &&		\
+          $(LN_S) $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar ./
+	cd $(instlinks)/bin && $(RM_LN) ./cfgupdater &&			\
+          sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
+            $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh > cfgupdater && \
+          chmod $(EXEC_PERMS) cfgupdater
+	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
+            -t $(JCCLROOT_ABS)/jccl-config.in -p 'use_base_dir=yes'	\
+            -v $(JCCLROOT_ABS)/VERSION -o $(instlinks)/bin/jccl-config -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$JCCL_BASE_DIR to:'
