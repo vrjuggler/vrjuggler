@@ -119,7 +119,7 @@ public:
     //---------------------------------------------------------
     //: Release the mutex.
     //
-    //! RETURNS:  0 - Success
+    //! RETURNS:  0 - Succeed
     //! RETURNS: -1 - Error
     //---------------------------------------------------------
     inline int
