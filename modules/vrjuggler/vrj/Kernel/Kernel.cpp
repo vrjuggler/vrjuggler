@@ -68,8 +68,8 @@ int vjKernel::start()
    vjThread* new_thread;   // I set mControlThread in vjKernel::controlLoop
    new_thread = new vjThread(memberFunctor, 0);
 
-   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::start: Just started control loop.  "
-                           << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,vjDBG_STATE_LVL) << "vjKernel::start: Just started control loop.  "
+                                         << std::endl << vjDEBUG_FLUSH;
 
    return 1;
 }
@@ -324,8 +324,8 @@ int vjKernel::configProcessPending(bool lockIt)
       if(NULL != mApp)
          chunks_processed += mApp->configProcessPending(lockIt);
 
-      vjDEBUG_ENDlg(vjDBG_ALL,vjDBG_CONFIG_LVL,false,false) << std::endl
-                                                            << vjDEBUG_FLUSH;
+      vjDEBUG_CONT_END(vjDBG_ALL,vjDBG_CONFIG_LVL) << std::endl
+                                                   << vjDEBUG_FLUSH;
    }
    return chunks_processed;
 }
@@ -406,7 +406,7 @@ bool vjKernel::removeUser(vjConfigChunk* chunk)
 // --- STARTUP ROUTINES --- //
 void vjKernel::loadConfigFile(std::string filename)
 {
-   vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::loadConfigFile: "
+   vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "Loading config file: "
                            << filename << std::endl << vjDEBUG_FLUSH;
 
    vjConfigChunkDB* chunk_db = new vjConfigChunkDB;
@@ -418,8 +418,8 @@ void vjKernel::loadConfigFile(std::string filename)
    bool chunk_db_load_success = chunk_db->load(filename);
    if (!chunk_db_load_success)
    {
-     vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:")
-        << "vjConfigManager::loadConfigFile: DB Load failed to load file: "
+     vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+        << "vjKernel::loadConfigFile: DB Load failed to load file: "
         << filename.c_str() << std::endl << vjDEBUG_FLUSH;
      exit(1);
    }

@@ -159,10 +159,10 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
       vjDisplay* newDisp = new vjSurfaceDisplay();    // Create display
       newDisp->config(chunk);                         // Config it
       addDisplay(newDisp, true);                            // Add it
-      vjDEBUG(vjDBG_DISP_MGR,vjDBG_WARNING_LVL) << "Adding display: "
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "Adding display: "
                                                 << newDisp->getName().c_str()
                                                 << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DISP_MGR,vjDBG_VERB_LVL) << "Display: "  << newDisp
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "Display: "  << newDisp
                                              << std::endl << vjDEBUG_FLUSH;
    }
 
