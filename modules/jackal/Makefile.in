@@ -213,15 +213,15 @@ endif
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N install-libs
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N do-post-install
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/ChangeLog $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(JCCLROOT_ABS)/ChangeLog $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/COPYING.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(JCCLROOT_ABS)/COPYING.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/README.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(JCCLROOT_ABS)/README.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/INSTALL.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(JCCLROOT_ABS)/INSTALL.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(JCCLROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
 	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> JCCL make release started on $(STARTTIME)"

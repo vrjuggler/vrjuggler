@@ -48,4 +48,3 @@ SUBDIR=		RTRC
 $(RECTARGET): recursive
 
 include $(MKPATH)/dpp.subdir.mk
-include Makefile.inc

@@ -193,7 +193,7 @@ $(LIBDIR)/$(JCCL_PERFMONITOR_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_PERFMONITOR_PROF_LIB_
 #	for jar in $(JARS) ; \
 #          do \
 #              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-#                $(topdir)/perfmonitor/$$jar $(bindir) ; \
+#                $(EXTRA_INSTALL_ARGS) $(topdir)/perfmonitor/$$jar $(bindir) ; \
 #          done
 #
 #install-docs:

@@ -177,32 +177,9 @@ links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share/sonix
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
-	cd $(instlinks)/include &&                                      \
-          for dir in $(SUBDIR) ; do                                     \
-              $(RM_LN) ./$$dir ;					\
-              $(LN_S) $(ROOT_ABS)/$$dir ./$$dir ;			\
-          done
-ifeq (@OS_TYPE@, Win32)
-	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
-else
-	for lib in $(LIBS) ; do 					\
-            cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
-              $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
-          done
-endif
-	cd $(instlinks)/share/sonix &&					\
-           $(RM_LN) ./data && $(LN_S) $(ROOT_ABS)/data ./
-	cd $(instlinks)/share/sonix &&					\
-           $(RM_LN) ./src && $(LN_S) $(ROOT_ABS)/samples ./src
-	cd $(instlinks)/share/sonix &&                          \
-           $(RM_LN) ./README.txt && $(LN_S) $(ROOT_ABS)/README.txt ./
-	cd $(instlinks)/bin && cp -p $(topdir)/sonix-config .
-	@echo "\n\n"
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)"		\
+          DEFAULT_DIR="$(DBG_DIR)" installworld
+	@echo ""
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$SNX_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
@@ -273,7 +250,7 @@ post-install:
 	@$(MAKE) install-share
 	@$(MAKE) install-test
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/sonix-config $(bindir)
+          $(EXTRA_INSTALL_ARGS) $(topdir)/sonix-config $(bindir)
 
 install-share:
 	cp -r $(ROOT_ABS)/data/*.wav $(projdatadir)/data
@@ -324,13 +301,13 @@ endif
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N install-libs
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N do-post-install
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(ROOT_ABS)/CHANGELOG $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/CHANGELOG $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(ROOT_ABS)/COPYING.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/COPYING.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(ROOT_ABS)/README.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/README.txt $(projdatadir)
 #	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-#          $(ROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
+#          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
 	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> Sonix make release started on $(STARTTIME)"
