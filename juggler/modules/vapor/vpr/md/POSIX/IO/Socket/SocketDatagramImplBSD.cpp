@@ -63,23 +63,24 @@ SocketDatagramImplBSD::recvfrom (void* msg, const size_t length,
     socklen_t fromlen;
     Status retval;
 
-    if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+    retval = m_handle->isReadable(timeout);
 
-    fromlen    = from.size();
-    bytes_read = ::recvfrom(m_handle->m_fdesc, msg, length, flags,
-                            (struct sockaddr*) &from.m_addr, &fromlen);
+    if ( retval.success() ) {
+        fromlen    = from.size();
+        bytes_read = ::recvfrom(m_handle->m_fdesc, msg, length, flags,
+                                (struct sockaddr*) &from.m_addr, &fromlen);
 
-    if ( bytes_read == -1 ) {
-        if ( errno == EAGAIN && ! m_blocking ) {
-            retval.setCode(Status::InProgress);
-        }
-        else {
-            fprintf(stderr,
-                    "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
-                    m_remote_addr.getAddressString().c_str(),
-                    m_remote_addr.getPort(), strerror(errno));
-            retval.setCode(Status::Failure);
+        if ( bytes_read == -1 ) {
+            if ( errno == EAGAIN && ! m_blocking ) {
+                retval.setCode(Status::InProgress);
+            }
+            else {
+                fprintf(stderr,
+                        "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
+                        m_remote_addr.getAddressString().c_str(),
+                        m_remote_addr.getPort(), strerror(errno));
+                retval.setCode(Status::Failure);
+            }
         }
     }
 
@@ -95,23 +96,24 @@ SocketDatagramImplBSD::sendto (const void* msg, const size_t length,
 {
     Status retval;
 
-    if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+    retval = m_handle->isWriteable(timeout);
 
-    bytes_sent = ::sendto(m_handle->m_fdesc, msg, length, flags,
-                          (struct sockaddr*) &to.m_addr, to.size());
+    if ( retval.success() ) {
+        bytes_sent = ::sendto(m_handle->m_fdesc, msg, length, flags,
+                              (struct sockaddr*) &to.m_addr, to.size());
 
-    if ( bytes_sent == -1 ) {
-        if ( errno == EAGAIN && ! m_blocking ) {
-            retval.setCode(Status::InProgress);
-        }
-        else {
-            fprintf(stderr,
-                    "[vpr::SocketDatagramImplBSD] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
-                    to.getAddressString().c_str(), to.getPort(),
-                    m_remote_addr.getAddressString().c_str(),
-                    m_remote_addr.getPort(), strerror(errno));
-            retval.setCode(Status::Failure);
+        if ( bytes_sent == -1 ) {
+            if ( errno == EAGAIN && ! m_blocking ) {
+                retval.setCode(Status::InProgress);
+            }
+            else {
+                fprintf(stderr,
+                        "[vpr::SocketDatagramImplBSD] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
+                        to.getAddressString().c_str(), to.getPort(),
+                        m_remote_addr.getAddressString().c_str(),
+                        m_remote_addr.getPort(), strerror(errno));
+                retval.setCode(Status::Failure);
+            }
         }
     }
 
