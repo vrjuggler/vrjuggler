@@ -640,14 +640,14 @@ sub processIncludes($)
    my $installweb = 'install-web';
    my $include_command = 'include';
    my $include_toc_command = 'include-toc';
-   my $include_tocdocs_command = 'include-tocdocs';
+   my $include_book_command = 'include-book';
   
    my $contents_ref = shift;
    
    my $includes_existed = 0;
    
    # While we have some more includes to deal with
-   while ($$contents_ref =~ m/($html_comment_begin\s*?$installweb\s*?include(-toc|-tocdocs)?\s*?(\S*?)\s*?$html_comment_end)/is)
+   while ($$contents_ref =~ m/($html_comment_begin\s*?$installweb\s*?include(-toc|-book)?\s*?(\S*?)\s*?$html_comment_end)/is)
    {
       my $include_statement = $1; # what was that match?
       my $orig_filename = $3;     # Get filename from the match
@@ -684,8 +684,8 @@ sub processIncludes($)
          $includes_existed = 1;
       }
       
-      # ----------- TOC-DOCS include ----------- #
-      elsif ($include_statement =~ m/$include_tocdocs_command/)
+      # ----------- BOOK include ----------- #
+      elsif ($include_statement =~ m/$include_book_command/)
       {
          # TODO:
          print "==========================\n======================\nImplementME!\n\n====================\n";
