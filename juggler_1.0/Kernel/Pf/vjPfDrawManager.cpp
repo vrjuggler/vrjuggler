@@ -44,55 +44,79 @@ void vjPfDrawFuncSimulator(pfChannel* chan, void* chandata);
 
 vjPfDrawManager* vjPfDrawManager::_instance = NULL;
 
-void vjPfDrawManager::configInitial(vjConfigChunkDB*  chunkDB)
+//: Can the handler handle the given chunk?
+//! RETURNS: true - Can handle it
+//+          false - Can't handle it
+bool vjPfDrawManager::configCanHandle(vjConfigChunk* chunk)
 {
-   std::vector<vjConfigChunk*>* disp_chunks;
-   disp_chunks = vjDisplayManager::instance()->getDisplaySystemChunk();       // Get the chunk to config system
+   std::string chunk_type = chunk->getType();
+   return ( chunk_type == std::string("apiPerformer"));
+}
 
-   if (disp_chunks->size() <= 0)
-      cerr << "vjPfDrawManager::config: ERROR: Chunks not found. " << endl;
+//: Add the chunk to the configuration
+//! PRE: configCanHandle(chunk) == true
+//! RETURNS: success
+bool vjPfDrawManager::configAdd(vjConfigChunk* chunk)
+{
+   vjASSERT(configCanHandle(chunk));
 
-   vjConfigChunk* disp_chunk = (*disp_chunks)[0];
+   std::string chunk_type = chunk->getType();
 
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "------------- vjPfDrawManager::config ----------------" << endl << vjDEBUG_FLUSH;
-   numPipes = disp_chunk->getProperty("numpipes");
-
-   vjDEBUG(vjDBG_DRAW_MGR,0) << "NumPipes: " << numPipes << endl << vjDEBUG_FLUSH;
-   for (int i=0;i<numPipes;i++)
+   if(chunk_type == std::string("apiPerformer"))
    {
-      pipeStrs.push_back(disp_chunk->getProperty("xpipes", i).cstring());
-      if(strcmp(pipeStrs[i], "-1") == 0)    // Use display env
+      return configPerformerAPI(chunk);
+   }
+
+   return false;
+}
+
+
+bool vjPfDrawManager::configDisplaySystem(vjConfigChunk* chunk)
+{   
+   vjASSERT((std::string)chunk->getType() == std::string("displaySystem"));
+   
+   // ---- SETUP PipeStr's ---- //          
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "------------- vjPfDrawManager::config ----------------" << endl << vjDEBUG_FLUSH;
+   mNumPipes = (unsigned int)(int)chunk->getProperty("numpipes");
+
+   vjDEBUG(vjDBG_DRAW_MGR,0) << "NumPipes: " << mNumPipes << endl << vjDEBUG_FLUSH;
+   for (unsigned int i=0;i<mNumPipes;i++)
+   {
+      mPipeStrs.push_back(chunk->getProperty("xpipes", i).cstring());
+      if(strcmp(mPipeStrs[i], "-1") == 0)    // Use display env
       {
          char* display_env = getenv("DISPLAY");
          char* xpipe_name  = new char[strlen(display_env)+1];
          strcpy(xpipe_name, display_env);
-         pipeStrs[i] = xpipe_name;
+         mPipeStrs[i] = xpipe_name;
       }
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "Pipe:" << i << ": " << pipeStrs[i] << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,0) << "Pipe:" << i << ": " << mPipeStrs[i] << endl << vjDEBUG_FLUSH;
    }
+   return true;
+}
 
-      // --- Get simulator model info --- //
-   std::vector<vjConfigChunk*>* perf_chunks;
-   perf_chunks = chunkDB->getMatching("apiPerformer");      // Get the performer API chunks
+//: Configure the performer api stuff
+bool vjPfDrawManager::configPerformerAPI(vjConfigChunk* chunk)
+{  
+   vjASSERT((std::string)chunk->getType() == std::string("apiPerformer"));
 
-   if(perf_chunks->size() > 0)
-   {
-      vjConfigChunk* perf_chunk = (*perf_chunks)[0];
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::configPerformerAPI: Configuring Performer\n" << vjDEBUG_FLUSH;
+   
+   // --- Get simulator model info --- //
+   char* head_file = chunk->getProperty("simHeadModel").cstring();
+   char* wand_file = chunk->getProperty("simWandModel").cstring();
+   if(head_file == NULL)
+      vjDEBUG(vjDBG_ALL,0) << "vjPfDrawManager::config: simHeadModel not set." << endl << vjDEBUG_FLUSH;
+   if(wand_file == NULL)
+      vjDEBUG(vjDBG_ALL,0) << "vjPfDrawManager::config: simWandModel not set." << endl << vjDEBUG_FLUSH;
 
-      char* head_file = perf_chunk->getProperty("simHeadModel").cstring();
-      char* wand_file = perf_chunk->getProperty("simWandModel").cstring();
-      if(head_file == NULL)
-         vjDEBUG(vjDBG_ALL,0) << "vjPfDrawManager::config: simHeadModel not set." << endl << vjDEBUG_FLUSH;
-      if(wand_file == NULL)
-         vjDEBUG(vjDBG_ALL,0) << "vjPfDrawManager::config: simWandModel not set." << endl << vjDEBUG_FLUSH;
-
-      mHeadModel = std::string(head_file);
-      mWandModel = std::string(wand_file);
-   }
-
-   vjDEBUG(vjDBG_DRAW_MGR,0) << "Head Model: " << mHeadModel << endl
-                             << "Wand Model: " << mWandModel << endl << vjDEBUG_FLUSH;
-   vjDEBUG_END(vjDBG_DRAW_MGR,0) << "-----------------------------------------------------" << endl << vjDEBUG_FLUSH;
+   mHeadModel = std::string(head_file);
+   mWandModel = std::string(wand_file);
+   
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "Head Model: " << mHeadModel << endl
+                                            << "Wand Model: " << mWandModel << endl << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "-----------------------------------------------------" << endl << vjDEBUG_FLUSH;
+   return true;
 }
 
 
@@ -138,7 +162,12 @@ void vjPfDrawManager::initAPI()
 {
    pfInit();
 
+   // XXX: This call should really be triggered by a change in draw manager or something
+   vjASSERT(mDisplayManager != NULL);
+   configDisplaySystem(mDisplayManager->getDisplaySystemChunk());    // Configure all the display system stuff
+   
    app->preForkInit();
+
    initDrawing();
 }
 
@@ -147,7 +176,7 @@ void vjPfDrawManager::initDrawing()
    vjDEBUG_BEGIN(vjDBG_DRAW_MGR,1) << "vjPfDrawManager::initDrawing: Entering." << endl << vjDEBUG_FLUSH;
 
    // Set params for Multi-pipe and Multiprocess
-   pfMultipipe(numPipes);
+   pfMultipipe(mNumPipes);
    pfMultiprocess(PFMP_APP_CULL_DRAW);
    //pfMultiprocess(PFMP_APPCULLDRAW);
 
@@ -160,10 +189,10 @@ void vjPfDrawManager::initDrawing()
    initPerformerApp();
 
    // ------ OPEN/ALLOCATE Pipes ------- //
-   for (unsigned int pipeNum = 0; pipeNum < numPipes; pipeNum++)
+   for (unsigned int pipeNum = 0; pipeNum < mNumPipes; pipeNum++)
    {
       vjDEBUG(vjDBG_DRAW_MGR,1) << "vjPfDrawManager::initDrawing: Opening Pipe." << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DRAW_MGR,1) << "\tpipe:" << pipeNum << ": " << pipeStrs[pipeNum] << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,1) << "\tpipe:" << pipeNum << ": " << mPipeStrs[pipeNum] << endl << vjDEBUG_FLUSH;
 
       // Make sure there is room for the pipe.  The check must be made using
       // less than or equal because pipe numbering may start from 0, and an
@@ -172,7 +201,7 @@ void vjPfDrawManager::initDrawing()
          pipes.push_back(NULL);
 
       pipes[pipeNum] = pfGetPipe(pipeNum);
-      pipes[pipeNum]->setWSConnectionName(pipeStrs[pipeNum]);
+      pipes[pipeNum]->setWSConnectionName(mPipeStrs[pipeNum]);
       pipes[pipeNum]->setScreen(pipeNum);
    }
 
@@ -190,7 +219,7 @@ void vjPfDrawManager::initDrawing()
    //  For each display:
    //     -Create a pWin for it
    //     -Create the channels to put it the pWin
-   std::vector<vjDisplay*> displays = displayManager->getActiveDisplays();
+   std::vector<vjDisplay*> displays = mDisplayManager->getActiveDisplays();
    for (std::vector<vjDisplay*>::iterator dispIter = displays.begin();
        dispIter != displays.end(); dispIter++)
    {

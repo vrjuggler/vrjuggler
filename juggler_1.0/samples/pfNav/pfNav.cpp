@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <gl/device.h>
+//#include <gl/device.h>
 #include <Performer/pf/pfChannel.h>
 #include <Performer/pf/pfEarthSky.h>
 #include <Performer/pf/pfLightSource.h>

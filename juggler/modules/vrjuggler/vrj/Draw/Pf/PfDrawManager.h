@@ -140,23 +140,37 @@ public:
    friend void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
 
 public: // Chunk handlers
+   //: Can the handler handle the given chunk?
+   //! RETURNS: true - Can handle it
+   //+          false - Can't handle it
+   virtual bool configCanHandle(vjConfigChunk* chunk);
+
+protected:     // --- Config handling functions --- //   
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   virtual bool configAdd(vjConfigChunk* chunk)
-   { return false; }
+   virtual bool configAdd(vjConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
    virtual bool configRemove(vjConfigChunk* chunk)
-   { return false; }
+   { 
+      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) << "vjPfDrawManager::configRemove: configRemove is not supported.\n" << vjDEBUG_FLUSH;
+      return false;
+   }
 
-   //: Can the handler handle the given chunk?
-   //! RETURNS: true - Can handle it
-   //+          false - Can't handle it
-   virtual bool configCanHandle(vjConfigChunk* chunk)
-   { return false; }
+   //: Setup display system related attributes
+   //! PRE: chunk is a chunks of the "dispaySystem" type
+   //! NOTE: MUST be called before initDrawing
+   //! NOTE: This must be called by the draw manager
+   //        because the chunk must be gotten from the draw manager
+   bool configDisplaySystem(vjConfigChunk* chunk);
+
+   //: Configure pfAPI stuff
+   //! PRE: chunk.type == "apiPerformer"
+   //! NOTE: MUST be called before initDrawing
+   bool configPerformerAPI(vjConfigChunk* chunk);
 
 protected:
    //: Call all the application channel callbacks
@@ -168,7 +182,7 @@ protected:
    //: Helper function to bind Performer to the pfApp
    void initPerformerApp();
 
-   //: Helper to initialize the Performer simulator
+   //: Helper to initialize the Performer simulato
    void initSimulator();
    void initLoaders();
    void updateSimulator(vjSimDisplay* sim);
@@ -189,13 +203,13 @@ protected:
    // correctly.
 
    // --- Config Data --- //
-   unsigned int numPipes;    // The number of Performer pipes
+   unsigned int mNumPipes;    // The number of Performer pipes
 
    // --- Performer State --- //
    vjPfApp*             app;        // There User applications
    std::vector<pfDisp>  disps;      // List of displays with Performer data
    std::vector<pfPipe*> pipes;      // Performer pipes we have opened
-   std::vector<char*> pipeStrs;     // The X-Strs of the pipes
+   std::vector<char*> mPipeStrs;     // The X-Strs of the pipes
    pfScene*          sceneRoot;     // Root of Performer tree to render
    pfGroup*          mSceneGroup;   // The group node with only sceneRoot under it
 
@@ -212,7 +226,9 @@ public:
    static vjPfDrawManager* instance()
    {
       if (_instance == NULL)
+      {
          _instance = new vjPfDrawManager();
+      }
       return _instance;
    }
 protected:
