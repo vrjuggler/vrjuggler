@@ -192,7 +192,11 @@ AC_DEFUN(VJ_COMPILER_SETUP,
 
 dnl ---------------------------------------------------------------------------
 dnl This defines a handy little macro that will remove all duplicate strings
-dnl from arg-list and assign the result to variable.
+dnl from arg-list and assign the result to variable.  The given argument list
+dnl is searched from beginning to end.  The first instance of a given argument
+dnl is saved, and any subsequent duplicates are removed.  This macro is
+dnl suitable for use with compiler arguments where the precendence of arguments
+dnl is usually based on the first instance.
 dnl
 dnl Usage:
 dnl     VJ_STRIP_DUPLICATE_ARGS(variable, arg-list)
@@ -227,6 +231,57 @@ AC_DEFUN([VJ_STRIP_DUPLICATE_ARGS],
    # Now, build result as a space-separated string of everything in arg_list.
    result = arg_list[0]
    for ( i = 1; i < j; i++ )
+      result = sprintf("%s %s", result, arg_list[i]);
+
+   # This gives the final argument string that will be assigned to the sh
+   # variable.
+   print result
+}' -`>>
+
+   changequote([, ])
+])
+
+dnl ---------------------------------------------------------------------------
+dnl This defines a handy little macro that will remove all duplicate strings
+dnl from arg-list and assign the result to variable.  The given argument list
+dnl is searched from the end to the beginning.  The first instance of a given
+dnl argument is saved, and any subsequent duplicates are removed.  This macro
+dnl is suitable for use with linker flags where flags that appear at the end
+dnl usually satisfy dependencies of preceding flags.
+dnl
+dnl Usage:
+dnl     VJ_STRIP_DUPLICATE_ARGS_REVERSE(variable, arg-list)
+dnl
+dnl Arguments:
+dnl     variable - The name of the variable that will contain the resulting
+dnl                stripped list of arguments.  This should NOT begin with a $
+dnl                (dollar sign) character.
+dnl     arg-list - The list of arguments from which duplicates will be removd.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([VJ_STRIP_DUPLICATE_ARGS_REVERSE],
+[
+   changequote(<<, >>)
+
+   $1=<<`echo $2 | awk '{
+   j = 0;
+   for ( i = NF; i >= 1; i-- )
+   {
+      # Here, valid_list acts like a string-based dictionary of all the
+      # command-line arguments passwed to awk(1).  These come in as $1, $2,
+      # etc.  That is the reason for the $i expressions.
+      # On the other hand, arg_list acts as an ordered list and will contain
+      # only those arguments not previously added.
+      if ( ! valid_list[$i] )
+      {
+         valid_list[$i] = 1;
+         arg_list[j] = $i;
+         j++;
+      }
+   }
+
+   # Now, build result as a space-separated string of everything in arg_list.
+   result = arg_list[j - 1]
+   for ( i = j - 2; i >= 0; i-- )
       result = sprintf("%s %s", result, arg_list[i]);
 
    # This gives the final argument string that will be assigned to the sh
