@@ -300,6 +300,7 @@ public class VrjConfig
                }
                public void internalFrameClosed(InternalFrameEvent evt)
                {
+                  mToolbar.removeActionListener(ConfigIFrame.this);
                   mToolbar.setConfigContext(new ConfigContext());
                }
             });
