@@ -100,12 +100,6 @@ void Interval::setNowReal()
       mMicroSeconds = low + (high << 32);
       mMicroSeconds /= counts_per_sec64;
       mMicroSeconds *= microseconds_per_sec;
-
-//      vpr::Int32 top = count.HighPart & _nt_highMask;
-//      top = top << (32 - _nt_bitShift);
-//      count.LowPart = count.LowPart >> _nt_bitShift;   
-//      count.LowPart = count.LowPart + top; 
-//      mMicroSeconds = count.LowPart;
    }
 /*
    else
