@@ -40,18 +40,43 @@ import VjConfig.ConfigChunk;
  *  VjControl.  They can provide extensions, such as new databases or
  *  communications methods, or even new GUI components.
  *  <p>
- *  The main vjcontrol classes (ie those in vjcontrol.jar) understand
- *  a certain set of interfaces, all defined in the VjGUI.interfaces
- *  package.  In addition, extension components can declare their
- *  own interfaces for extensions that they support (but this runs
- *  into classloader problems in the current implementation; see
- *  the VjGUI.ComponentFactory for details).
+ *  The core VjControl classes understand a small set of interfaces -
+ *  VjComponent, CoreModule, etc.
+ *  In addition, extension components can declare their
+ *  own interfaces for extensions that they support.  For example,
+ *  the VjComponents.UI package includes the ControlUIModule (the
+ *  main VjControl GUI window) as well as the PlugPanel interface,
+ *  which defines components that can be added to the UI window.
  *  <p>
- *  In addition to implementing VjComponent (or a child thereof), the
- *  extension component must have a constructor that takes no arguments.
- *  The individual interfaces may declare additional requirements.  For
- *  example, several of the GUI components require anything implementing
- *  their interfaces to also inherit from javax.swing.JComponent.
+ *  VjComponents are JavaBeans; this means that in addition to
+ *  implementing a VjComponent interface, they must have a 0-argument
+ *  constructor (JavaBeans should support serialization, tho VjControl
+ *  does not require this).
+ *  <p>
+ *  Every component instance has a unique string name, and a parent
+ *  component.  The parent is responsible for instantiating and 
+ *  destroying its children.
+ *  <p>
+ *  VjControl uses Jackal-style configuration files to determine
+ *  which instances of components to create.  The ConfigChunk for a
+ *  component instance specifies its name, parent, and any other
+ *  components it needs to perform its duties.
+ *  <p>
+ *  Note that, while components are usually created when VjControl
+ *  processes their ConfigChunks, this is not always the case.
+ *  The parent component may instead create its children on demand.
+ *  The primary example of this behavior is with ConfigChunkPanel
+ *  components.  These are created on-demand by the ConfigUIHelper
+ *  module whenever the user wants to edit a ConfigChunk.
+ *  <p>
+ *  Creation of a VjComponent is a three-step process.  First, the
+ *  constructor is called.  The the component is configured.  This
+ *  is usually done with the VjComponent.configure() method, although
+ *  the component may also provide get/set methods to configure itself
+ *  (see VjComponents.ConfigEditor.ConfigurePane's usage of
+ *  ChunkDBPanel for an example of where this is useful).  Finally,
+ *  initialize() is called.  At this point the component should be
+ *  considered "live".
  *
  *  @see VjControl.ComponentFactory
  *  @author Christopher Just
@@ -59,27 +84,59 @@ import VjConfig.ConfigChunk;
  */
 public interface VjComponent {
 
+    /** Sets the unique name of an instance of this component. */
+    public void setComponentName (String _name);
+
     /** Returns the unique name of an instance of this component. */
     public String getComponentName ();
 
 
     /** Configures the component.
      *  The ConfigChunk will usually contain information like the 
-     *  instance's proper name, and names of components that it will
-     *  need to access.  Generally, once a component has been configured
-     *  it's live - for example, configuring the ControlUIModule causes
-     *  its window to be displayed; configuring the NetworkModule causes
-     *  it to start accepting connections, etc.
+     *  instance's proper name, the component responsible for
+     *  instantiating it, and names of components that it will
+     *  need to access.
+     *  @throws VjComponentException, if the component can't process the
+     *          chunk.
      */
-    public boolean configure (ConfigChunk ch);
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException;
+
+
+    /** Makes a component active.
+     *  This method performs whatever tasks are necessary for the 
+     *  component to begin performing its duties.  For example,
+     *  initialize() causes the ControlUIModule to display its
+     *  window and the NetworkModule to start accepting
+     *  connections.  Other typical actions in initialize include
+     *  registering for event messages.
+     *  <p>
+     *  The component must be configured (e.g. by configure()) 
+     *  before calling initialize().
+     *
+     *  @throws VjComoponentException if initialization fails.
+     */
+    public void initialize () throws VjComponentException;
 
 
     /** Returns the ConfigChunk used to configure this component. */
     public ConfigChunk getConfiguration ();
 
 
-    /** add a component that expects to be attached to this chunk.
-     *  @returns True if the component was succesfully created and added.
+    /** Creates and adds a child component.
+     *  Self tries to create a new child component using the data in ch.
+     *  Ch is then passed to the new child via its configure() method.
+     *  Note that some parent components will simply store ch in order
+     *  to create components on-demand - the parent component should
+     *  specify what its behavior is.
+     *  @param  A non-null ConfigChunk.  Typically this will use the
+     *          vjc_genericinstance ChunkDesc, but the only absolute 
+     *          requirements are that it have a "ClassName" field
+     *          with the name of the child component's class, and that
+     *          the child component can configure() itself with the 
+     *          chunk.  See VjFiles/vjcontrol.dsc for examples.
+     *  @return True if the component was succesfully created and added.
+     *          False typically means that the parent doesn't know
+     *          what to do with this chunk, and is a configuration error.
      */
     public boolean addConfig (ConfigChunk ch);
 
@@ -88,7 +145,7 @@ public interface VjComponent {
      *  @param name Name of the component to remove (should be the
      *              same as the name of the ConfigChunk used to create
      *              it).
-     *  @returns True if the component was found and removed.  False
+     *  @return True if the component was found and removed.  False
      *           indicates that the removeConfig couldn't find any
      *           such component to remove.
      */

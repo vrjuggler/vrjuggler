@@ -37,13 +37,11 @@ package VjComponents.PerfMonitor;
 import java.awt.event.*;
 import VjComponents.PerfMonitor.PerfDataCollector;
 import java.io.*;
-import java.util.Vector;
+import java.util.*;
 
 import VjConfig.ConfigStreamTokenizer;
 import VjConfig.ConfigChunk;
-import VjControl.Core;
-import VjControl.FileControl;
-import VjControl.DefaultCoreModule;
+import VjControl.*;
 
 
 /** Core Module for storing VR Juggler performance data
@@ -60,31 +58,34 @@ public class PerformanceModule extends DefaultCoreModule {
     public File file;
 
 
-    public boolean configure (ConfigChunk ch) {
-        int i;
-        Vector perfdatanames = new Vector();
-        String lastfname;
-
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_name = ch.getName();
+        component_chunk = ch;
+    }
+
+
+    public void initialize () throws VjComponentException {
+        int i;
+        List perfdatanames = new ArrayList();
+        String lastfname;
 
         // check command-line arguments stored in Core
         String[] args = Core.getCommandLine();
 	for (i = 0; i < args.length; i++) {
 	    if (args[i].startsWith ("-p")) {
                 if (args[i].length() == 2)
-                    perfdatanames.addElement (args[++i]);
+                    perfdatanames.add (args[++i]);
                 else
-                    perfdatanames.addElement (args[i].substring(2));
+                    perfdatanames.add (args[i].substring(2));
 	    }
         }
 
 	for (i = 0; i < perfdatanames.size(); i++) {
-	    lastfname = (String)perfdatanames.elementAt(i);
+	    lastfname = (String)perfdatanames.get(i);
 	    loadNewPerfDataFile (lastfname);
 	}
-
-        return true;
     }
+
 
     public File getFile () {
         return file;

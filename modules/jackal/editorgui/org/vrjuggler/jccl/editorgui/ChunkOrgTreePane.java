@@ -333,12 +333,22 @@ public class ChunkOrgTreePane
     }
 
 
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
+
+
     public ImageIcon getComponentIcon () {
         return null;
     }
 
 
-    public boolean configure (ConfigChunk ch) {
+    public ConfigChunk getConfiguration () {
+        return component_chunk;
+    }
+
+
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
 
@@ -362,27 +372,16 @@ public class ChunkOrgTreePane
                 }
             }
         }
-        if (ui_module == null)
-            ui_module = (ControlUIModule)Core.getComponentFromRegistry ("ControlUI Module");
-        if (config_module == null)
-            config_module = (ConfigModule)Core.getComponentFromRegistry ("Config Module");
-        if (orgtree_module == null)
-            orgtree_module = (ChunkOrgTreeModule)Core.getComponentFromRegistry ("ChunkOrgTree Module");
-        if ((ui_module == null) || (config_module == null) || (orgtree_module == null)) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
+    }
+
+
+    public void initialize () throws VjComponentException {
+        if (ui_module == null || config_module == null || orgtree_module == null)
+            throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");
 
         // add our filter to the UI module
         orgtree_filter = new SuffixFilter ("Chunk Org Tree Files (*.org)", ".org");
         ui_module.getEasyFileDialog().addFilter (orgtree_filter, "ConfigOrgTree");
-
-        return true;
-    }
-
-
-    public ConfigChunk getConfiguration () {
-        return component_chunk;
     }
 
 

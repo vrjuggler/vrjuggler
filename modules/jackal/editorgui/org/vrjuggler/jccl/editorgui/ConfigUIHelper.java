@@ -47,11 +47,8 @@ import VjComponents.UI.Widgets.ChildFrameParent;
 import VjComponents.UI.Widgets.GenericEditorFrame;
 import VjComponents.UI.Widgets.EasyMenuBar;
 import VjComponents.ConfigEditor.ChunkDescUI.ChunkDescPanel;
-import VjControl.Core;
-import VjControl.CoreModule;
-import VjControl.VjComponent;
+import VjControl.*;
 import VjComponents.ConfigEditor.ConfigChunkPanel;
-import VjControl.DefaultCoreModule;
 import VjComponents.UI.EditorPanel;
 import VjComponents.ConfigEditor.ConfigModule;
 import VjComponents.ConfigEditor.ConfigModuleEvent;
@@ -134,7 +131,8 @@ public class ConfigUIHelper
 //                  if (cn == null)
 //                      cn = "VjComponents.ConfigEditor.ConfigChunkUI.DefaultConfigChunkPanel";
                 p = (ConfigChunkPanel)Core.component_factory.createComponent(cn);
-                p.configure (ch);
+                p.setConfiguration (ch);
+                p.initialize ();
                 return p;
             }
             catch (Exception e) {
@@ -179,7 +177,7 @@ public class ConfigUIHelper
 
 
 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
 
@@ -203,10 +201,12 @@ public class ConfigUIHelper
                 }
             }
         }
-        if ((ui_module == null) || (config_module == null) || (orgtree_module == null)) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
+    }
+
+
+    public void initialize () throws VjComponentException {
+        if ((ui_module == null) || (config_module == null) || (orgtree_module == null))
+            throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");
 
         config_module.addConfigModuleListener (this);
  	config_module.descdb.addDescDBListener (this);
@@ -228,8 +228,6 @@ public class ConfigUIHelper
             newmenu = menubar.addMenuItem ("Help/Chunk-Specific Help/" + d.getName());
             newmenu.addActionListener(this);
         }
-
-        return true;
     }
 
 

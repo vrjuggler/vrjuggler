@@ -45,8 +45,8 @@ import VjConfig.*;
 import VjComponents.UI.*;
 import VjComponents.ConfigEditor.ConfigModule;
 import VjComponents.ConfigEditor.ConfigUIHelper;
-import VjControl.Core;
-import VjControl.VjComponent;
+import VjControl.*;
+
 
 public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
 
@@ -103,35 +103,6 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
     }
 
 
-    public boolean configure (ConfigChunk ch) {
-        component_chunk = ch;
-        component_name = ch.getName();
-
-        // get pointers to the modules we need.
-        Property p = ch.getPropertyFromToken ("Dependencies");
-        if (p != null) {
-            int i;
-            int n = p.getNum();
-            String s;
-            VjComponent c;
-            for (i = 0; i < n; i++) {
-                s = p.getValue(i).toString();
-                c = Core.getComponentFromRegistry(s);
-                if (c != null) {
-                    if (c instanceof ConfigUIHelper)
-                        uihelper_module = (ConfigUIHelper)c;
-                }
-            }
-        }
-        if (uihelper_module == null) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
-
-        return true;
-    }
-
-
     public void setButtonStates () {
         if (current_subpanel_index == -1) {
             help_button.setEnabled(false);
@@ -155,20 +126,47 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
     }
 
 
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
+
+
     public ImageIcon getComponentIcon () {
         return null;
     }
 
-
-//      public boolean configure (ConfigChunk ch) {
-//          component_chunk = ch;
-//          component_name = ch.getName();
-//          return true;
-//      }
-
     
     public ConfigChunk getConfiguration () {
         return component_chunk;
+    }
+
+
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
+        component_chunk = ch;
+        component_name = ch.getName();
+
+        // get pointers to the modules we need.
+        Property p = ch.getPropertyFromToken ("Dependencies");
+        if (p != null) {
+            int i;
+            int n = p.getNum();
+            String s;
+            VjComponent c;
+            for (i = 0; i < n; i++) {
+                s = p.getValue(i).toString();
+                c = Core.getComponentFromRegistry(s);
+                if (c != null) {
+                    if (c instanceof ConfigUIHelper)
+                        uihelper_module = (ConfigUIHelper)c;
+                }
+            }
+        }
+    }
+
+
+    public void initialize () throws VjComponentException {
+        if (uihelper_module == null)
+            throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");
     }
 
 

@@ -486,13 +486,18 @@ public class ChunkDBPanel
         return component_name;
     }
 
+
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
+
     
     public ImageIcon getComponentIcon () {
         return null;
     }
 
 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
         
@@ -516,25 +521,9 @@ public class ChunkDBPanel
                 }
             }
         }
-        if (ui_module == null)
-            ui_module = (ControlUIModule)Core.getComponentFromRegistry ("ControlUI Module");
-        if (config_module == null)
-            config_module = (ConfigModule)Core.getComponentFromRegistry ("Config Module");
-        if (confighelper_module == null)
-            confighelper_module = (ConfigUIHelper)Core.getComponentFromRegistry ("ConfigUIHelper Module");
-        if ((ui_module == null) || (config_module == null) || (confighelper_module == null)) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
-        
-        initialize();
-        
-        return true;
     }
 
-    public void setComponentName(String s) {
-        component_name = s;
-    }
+
     public void setConfigModule(ConfigModule m) {
         config_module = m;
     }
@@ -545,7 +534,11 @@ public class ChunkDBPanel
         confighelper_module = m;
     }
 
-    public void initialize () {
+
+    public void initialize () throws VjComponentException {
+        if (ui_module == null || config_module == null || confighelper_module == null)
+            throw new VjComponentException (component_name + ": Initialize called with unmet dependences.");
+
         chunkdb_filter = new SuffixFilter ("Config Files (*.config, *.cfg)", ".config");
         chunkdb_filter.addSuffix(".cfg");
         chunkdb_filter = (SuffixFilter)ui_module.getEasyFileDialog().addFilter (chunkdb_filter, "ConfigChunkDB");

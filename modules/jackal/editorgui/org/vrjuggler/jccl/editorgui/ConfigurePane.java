@@ -38,7 +38,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import VjControl.Core;
+import VjControl.*;
 import VjControl.VjComponent;
 import VjConfig.*;
 import VjComponents.UI.*;
@@ -123,6 +123,11 @@ public class ConfigurePane extends JSplitPane
     }
 
 
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
+
+
     public ImageIcon getComponentIcon () {
 //          if (ui_module != null) {
 //              return ui_module.getIcon ("open file", 0);
@@ -132,7 +137,7 @@ public class ConfigurePane extends JSplitPane
     }
 
 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
 
@@ -156,18 +161,13 @@ public class ConfigurePane extends JSplitPane
                 }
             }
         }
-        if (ui_module == null)
-            ui_module = (ControlUIModule)Core.getComponentFromRegistry ("ControlUI Module");
-        if (config_module == null)
-            config_module = (ConfigModule)Core.getComponentFromRegistry ("Config Module");
-        if (confighelper_module == null)
-            confighelper_module = (ConfigUIHelper)Core.getComponentFromRegistry ("ConfigUIHelper Module");
-        if ((ui_module == null) || (config_module == null) || (confighelper_module == null)) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
+    }
 
-        return true;
+
+    public void initialize () throws VjComponentException {
+        if (ui_module == null || config_module == null || confighelper_module == null)
+            throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");
+
     }
 
 
@@ -193,38 +193,42 @@ public class ConfigurePane extends JSplitPane
 
     public boolean initUIComponent () {
         if (!ui_initialized) {
-            leftpanel = new ChunkDBPanel(0);
-            rightpanel = new ChunkDBPanel(1);
+            try {
+                leftpanel = new ChunkDBPanel(0);
+                rightpanel = new ChunkDBPanel(1);
 
-            leftpanel.setComponentName ("Left ConfigurePane");
-            leftpanel.setControlUIModule (ui_module);
-            leftpanel.setConfigModule (config_module);
-            leftpanel.setConfigUIHelper (confighelper_module);
-            leftpanel.setSendAcrossTarget (rightpanel);
-            leftpanel.initialize();
-            
-            rightpanel.setComponentName ("Right ConfigurePane");
-            rightpanel.setControlUIModule (ui_module);
-            rightpanel.setConfigModule (config_module);
-            rightpanel.setConfigUIHelper (confighelper_module);
-            rightpanel.setSendAcrossTarget (leftpanel);
-            rightpanel.initialize();
-            
-            leftpanel.setMinimumSize (new Dimension (0, 0));
-            rightpanel.setMinimumSize (new Dimension (0, 0));
-            setDividerLocation (0.5d);
-            setOneTouchExpandable (true);
+                leftpanel.setComponentName ("Left ConfigurePane");
+                leftpanel.setControlUIModule (ui_module);
+                leftpanel.setConfigModule (config_module);
+                leftpanel.setConfigUIHelper (confighelper_module);
+                leftpanel.setSendAcrossTarget (rightpanel);
+                leftpanel.initialize();
+                
+                rightpanel.setComponentName ("Right ConfigurePane");
+                rightpanel.setControlUIModule (ui_module);
+                rightpanel.setConfigModule (config_module);
+                rightpanel.setConfigUIHelper (confighelper_module);
+                rightpanel.setSendAcrossTarget (leftpanel);
+                rightpanel.initialize();
+                
+                leftpanel.setMinimumSize (new Dimension (0, 0));
+                rightpanel.setMinimumSize (new Dimension (0, 0));
+                setDividerLocation (0.5d);
+                setOneTouchExpandable (true);
             
 //              leftpanel.addMouseListener (this);
 //              rightpanel.addMouseListener (this);
 
-            leftpanel.initUIComponent();
-            rightpanel.initUIComponent();
+                leftpanel.initUIComponent();
+                rightpanel.initUIComponent();
 
-            setLeftComponent (leftpanel.getUIComponent());
-            setRightComponent (rightpanel.getUIComponent());
-
-            ui_initialized = true;
+                setLeftComponent (leftpanel.getUIComponent());
+                setRightComponent (rightpanel.getUIComponent());
+                ui_initialized = true;
+            }
+            catch (VjComponentException e) {
+                ;
+            }
         }
         return ui_initialized;
     }

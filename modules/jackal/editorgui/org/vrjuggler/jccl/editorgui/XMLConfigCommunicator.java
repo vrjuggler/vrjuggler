@@ -41,8 +41,7 @@ import org.w3c.dom.*;
 
 import VjConfig.*;
 import VjComponents.Network.DefaultNetCommunicator;
-import VjControl.Core;
-import VjControl.VjComponent;
+import VjControl.*;
 import VjComponents.ConfigEditor.ConfigModule;
 import VjComponents.Network.NetworkModule;
 
@@ -83,7 +82,7 @@ public class XMLConfigCommunicator
 
 
 
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_name = ch.getName();
 
         // get pointers to the modules we need.
@@ -102,20 +101,16 @@ public class XMLConfigCommunicator
                 }
             }
         }
+    }
+
+
+    public void initialize () throws VjComponentException {
         if (config_module == null)
-            config_module = (ConfigModule)Core.getComponentFromRegistry ("Config Module");
-        if (config_module == null) {
-            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
-            return false;
-        }
+            throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");
 
         config_handler = (XMLConfigIOHandler)ConfigIO.getHandler (ConfigIO.XML);
-        if (config_handler == null) {
-            Core.consoleErrorMessage (component_name, "Couldn't get XML IO Handler.");
-            return false;
-        }
-
-        return true;
+        if (config_handler == null)
+            throw new VjComponentException (component_name + ": Couldn't get XML IO Handler.");
     }
 
 

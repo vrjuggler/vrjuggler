@@ -45,7 +45,7 @@ import VjConfig.ConfigChunk;
  *  @author Christopher Just
  *  @version $Revision$
  */
-public class DefaultVjComponent
+public abstract class DefaultVjComponent
     implements VjComponent {
 
     /** Unique identifier for an instance of this component. */
@@ -63,6 +63,11 @@ public class DefaultVjComponent
     }
 
 
+    public void setComponentName (String _name) {
+        component_name = _name;
+    }
+
+
     /** Returns the unique name of this instance. */
     public String getComponentName () {
         return component_name;
@@ -70,10 +75,9 @@ public class DefaultVjComponent
 
 
     /** Configure the component.  Returns success (or not). */
-    public boolean configure (ConfigChunk ch) {
+    public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_chunk = ch;
         component_name = ch.getName();
-        return true;
     }
 
 
@@ -83,6 +87,9 @@ public class DefaultVjComponent
         return component_chunk;
     }
 
+
+    public void initialize () throws VjComponentException {
+    }
 
 
     /** add a component that expects to be attached to this chunk.
