@@ -63,8 +63,8 @@ bool vjSimAnalog::config(vjConfigChunk* chunk)
 
    int num_pairs = mSimKeysUp.size();
 
-   mAnaData = std::vector<int>(num_pairs,0); // Initialize to all zeros
-   mAnaStep = chunk->getProperty("anastep");
+   mAnaData = std::vector<float>( num_pairs, 0.0f ); // Initialize to all zeros
+   mAnaStep = chunk->getProperty( "anastep" );
 
    return true;
 }
@@ -76,10 +76,10 @@ void vjSimAnalog::updateData()
    // -- Update analog data --- //
    for (unsigned int i = 0; i < mSimKeysUp.size(); i++)
    {
-      mAnaData[i] += checkKeyPair(mSimKeysUp[i]) * mAnaStep;
-      mAnaData[i] -= checkKeyPair(mSimKeysDown[i]) * mAnaStep;
+      mAnaData[i] += (float)checkKeyPair(mSimKeysUp[i]) * mAnaStep;
+      mAnaData[i] -= (float)checkKeyPair(mSimKeysDown[i]) * mAnaStep;
 
-      if (mAnaData[i] < 0) mAnaData[i] = 0;
-      if (mAnaData[i] > 255) mAnaData[i] = 255;
+      if (mAnaData[i] < 0.0f) mAnaData[i] = 0.0f;
+      if (mAnaData[i] > 255.0f) mAnaData[i] = 255.0f;
    }
 }

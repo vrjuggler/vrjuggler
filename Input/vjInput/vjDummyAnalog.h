@@ -69,7 +69,7 @@ class vjDummyAnalog : public vjAnalog {
 	char* getDeviceName() { return "vjDummyAnalog"; }
 	
 	//: Get the analog data
-   int getAnalogData (int d) { return 0; }
+   float getAnalogData (int d) { return 0; }
 };
 
 #endif

@@ -34,7 +34,7 @@
 
 #include <vjConfig.h>
 
-#include <Kernel/vjDebug.h>
+#include <Kernel/vjAssert.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 #include <Math/vjCoord.h>

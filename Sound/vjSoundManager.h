@@ -63,7 +63,7 @@ public:
    virtual void update();
 
    //: Blocks until the end of the frame
-   //! POST: The frame has been drawn
+   //! POST: The frame has been rendered
    virtual void sync();
 
    // given an alias, return the sound.
@@ -102,19 +102,6 @@ protected:
    vjSoundManager();
 
 vjSingletonHeader(vjSoundManager);
-/*
-   //: Get instance of singleton object
-   static vjSoundManager* instance()
-   {
-      if (_instance == NULL)
-         _instance = new vjSoundManager;
-      return _instance;
-   }
-
-private:
-   static vjSoundManager* _instance;   //: The instance
-   */
-
 };
 
 #endif   /* _VJ_SOUND_MANAGER_H_ */

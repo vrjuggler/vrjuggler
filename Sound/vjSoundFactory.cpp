@@ -87,20 +87,13 @@ int vjSoundFactory::findConstructor(vjConfigChunk* chunk)
 {
    std::string chunk_type;
    chunk_type = (std::string)chunk->getType();
-   //const char* const stupid_cvd = chunk_type.c_str();
-
-   //cout<<stupid_cvd<<"  does===? "<<mConstructors.size()<<"\n"<<flush;
-
-
+   
    for (unsigned int i = 0; i < mConstructors.size(); i++)
    {
       // Get next constructor
       vjSoundEngineConstructorBase* construct = mConstructors[i];
       vjASSERT(construct != NULL);
 
-      //const char* const stupid_cvd2 = construct->getChunkType().c_str();
-
-      //cout<<stupid_cvd<<"  does===?  "<<stupid_cvd2<<"\n"<<flush;
       if(construct->getChunkType() == chunk_type)
          return i;
    }
