@@ -37,6 +37,8 @@ Table of contents:
       Writting custom sound API plugins (sound driver backends) for sonix
 
 
+   7. Some Sonix design Philosophy
+   
 ==============================================================================
 0. Introduction
 ==============================================================================
@@ -255,3 +257,58 @@ Table of contents:
   and is probably outside the scope of sonix.  In any case, run it by us
   we'd be interested to hear any ideas, and definatly we want to know 
   what types of tools/features you need for sound.
+
+
+  7. Some Sonix design Philosophy
+  
+  Order of function calls:
+  sonix is defined to be order independant.  To support 
+  this order independance, each sonix audio plugin MUST support order 
+  independance!  if they don't support this, then undefined behaviour can 
+  result.  A general rule to note when writting an audio plugin for sonix
+  is that the plugin should support the ability to configure some sounds, then
+  start the API, then configure some more sounds, then switch APIs
+  and expect that all sounds configured previously will still work under the 
+  newly started API.
+  
+  Think of sonix as a database of conifigured sounds.  These may be configured
+  at absolutely any time.  When ever an API changes/starts/stops, then 
+  it must look at the current database and load everything there.
+
+  Of course it is up to the driver to do lazy loading or smart paging if it
+  wants, of course this isn't nessesary as long as the sound is available
+  when calling operations such as trigger.
+  
+  The sonix audio plugin should also listen for newly configured sounds
+  after the API has been started.  When a new sound comes in after the API is
+  started, the audio plugin can simply load it like it did the other sounds
+  it loaded upon startup (remember our example has sounds configured before
+  the API starts?).
+  
+  To support this order independance, the audio plugins have 4 methods:
+ 
+     o  startAPI
+     o  shutdownAPI
+     o  bind
+     o  unbind
+     
+  Where bind loads the sound and makes it ready for use by functions such as 
+  trigger, setVolume, etc... If you implement all of these correctly, then 
+  your driver should be able to support this order independance.
+  
+
+  Configuration:
+  sonix has no built in config loaders.  if you make one you like, feel free
+  to submit it.  We may want to discuss possible methods before you get too
+  far though (send your ideas to the mailing list).  one thing we've done 
+  before is to write a small xml loader (non-jccl) using the xmlpp project 
+  (a very lightweight xml parser/tree).  We could see something like this 
+  being included with sonix.  Other ideas are a module that uses jccl config 
+  features - another thing that could be included with sonix.
+
+  The design philosophy is that config should not be part of the core, since
+  not everyone wants the same methods for configuration.  since it would be
+  convenient, I agree it would be cool to include 1 or 2 usable config 
+  loaders in an auxilliery directory under sonix, and have them compile 
+  to separate library files.
+
