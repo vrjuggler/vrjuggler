@@ -178,9 +178,12 @@ public:
     * Adds an event scheduled to occur at the given time to the queue of
     * upcoming events.
     */
-   void addEvent(const vpr::Interval& event_time,
-                 const NetworkGraph::net_edge_t edge,
-                 const NetworkLine::LineDirection dir);
+   void addMessageEvent(const vpr::Interval& event_time,
+                        const NetworkGraph::net_edge_t edge,
+                        const NetworkLine::LineDirection dir);
+
+   void addConnectionEvent(const vpr::Interval& event_time,
+                           vpr::SocketImplSIM* acceptor_sock);
 
    /**
     * Processes the next event in the event queue no matter how far into the
@@ -188,7 +191,7 @@ public:
     * be processed by this method.
     * @param recvSocket The socket that recv'ed the event (NULL if none)
     */
-   void processNextEvent(vpr::SocketImplSIM** recvSocket);
+   void processNextEvent(vpr::SocketImplSIM** recvSocket = NULL);
 
    /**
     * Limits the time frame for the occurrence of the next events to the given
@@ -257,15 +260,29 @@ protected:  // --- Data members --- //
 
    struct EventData
    {
+      enum EventType
+      {
+         MESSAGE,       /**< Message arrival event */
+         CONNECTION     /**< Connection event */
+      };
+
       EventData (const NetworkGraph::net_edge_t _edge,
                  const NetworkLine::LineDirection _dir)
-         : edge(_edge), direction(_dir)
+         : type(MESSAGE), edge(_edge), direction(_dir)
       {
          ;
       }
 
+      EventData (vpr::SocketImplSIM* acceptor_sock)
+         : type(CONNECTION), socket(acceptor_sock)
+      {
+         ;
+      }
+
+      EventType                  type;
       NetworkGraph::net_edge_t   edge;
       NetworkLine::LineDirection direction;
+      vpr::SocketImplSIM*        socket;
    };
 
    // This map of intervals to events is always sorted so that we can

@@ -90,30 +90,38 @@ vpr::ReturnStatus Controller::constructNetwork (const std::string& graph_file)
    return status;
 }
 
-void Controller::addEvent (const vpr::Interval& event_time,
-                           const NetworkGraph::net_edge_t edge,
-                           const NetworkLine::LineDirection dir)
+void Controller::addMessageEvent (const vpr::Interval& event_time,
+                                  const NetworkGraph::net_edge_t edge,
+                                  const NetworkLine::LineDirection dir)
 {
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-      << "Controller::addEvent(): Adding event scheduled for time "
+      << "Controller::addMessageEvent(): Adding message event scheduled for time "
       << event_time.getBaseVal() << " on edge " << edge << "\n"
       << vprDEBUG_FLUSH;
    mEvents.insert(std::pair<vpr::Interval, EventData>(event_time, EventData(edge, dir)));
 }
 
+void Controller::addConnectionEvent (const vpr::Interval& event_time,
+                                     vpr::SocketImplSIM* acceptor_sock)
+{
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+      << "Controller::addConnectionEvent(): Adding connection event scheduled for time "
+      << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+   mEvents.insert(std::pair<vpr::Interval, EventData>(event_time, EventData(acceptor_sock)));
+}
+
 void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
 {
-   (*recvSocket) = NULL;
+   if ( recvSocket != NULL )
+   {
+      (*recvSocket) = NULL;
+   }
+
    event_map_t::iterator cur_event = mEvents.begin();
 
    if ( cur_event != mEvents.end() )
    {
       vpr::Interval event_time            = (*cur_event).first;
-      NetworkGraph::net_edge_t event_edge = (*cur_event).second.edge;
-      NetworkLine::LineDirection dir      = (*cur_event).second.direction;
-      vpr::sim::NetworkLine& line         = mGraph.getLineProperty(event_edge);
-      vpr::sim::MessagePtr msg;
-      vpr::ReturnStatus status;
 
       vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
          << "Controller::processNextEvent() [time = "
@@ -121,20 +129,47 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
          << "]: Processing event scheduled to occur at time "
          << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
 
-      // ----------------------------------------------------------------------
-      // Process event in the line's transmission queue.
-      // ----------------------------------------------------------------------
+      // XXX: The current time is set at the end of the if block and the else
+      // block.  It may be possible to move it to occur before this point or
+      // after the if block.
+      if ( (*cur_event).second.type == EventData::MESSAGE )
+      {
+         NetworkGraph::net_edge_t event_edge = (*cur_event).second.edge;
+         NetworkLine::LineDirection dir      = (*cur_event).second.direction;
+         vpr::sim::NetworkLine& line         = mGraph.getLineProperty(event_edge);
+         vpr::sim::MessagePtr msg;
+         vpr::ReturnStatus status;
 
-      status = line.getArrivedMessage(event_time, msg, dir);
-      vprASSERT(status.success() && "No arrived message at this time");
+         // -------------------------------------------------------------------
+         // Process event in the line's transmission queue.
+         // -------------------------------------------------------------------
 
-      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-         << "Controller::processNextEvent(): Event is an arrived message on "
-         << ((dir == vpr::sim::NetworkLine::FORWARD) ? "forward" : "reverse")
-         << " queue of line " << line.getNetworkAddressString() << "\n"
-         << vprDEBUG_FLUSH;
-      mClock.setCurrentTime(event_time);
-      moveMessage(msg, event_time, recvSocket);
+         status = line.getArrivedMessage(event_time, msg, dir);
+         vprASSERT(status.success() && "No arrived message at this time");
+
+         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+            << "Controller::processNextEvent(): Event is an arrived message on "
+            << ((dir == vpr::sim::NetworkLine::FORWARD) ? "forward" : "reverse")
+            << " queue of line " << line.getNetworkAddressString() << "\n"
+            << vprDEBUG_FLUSH;
+
+         mClock.setCurrentTime(event_time);
+         moveMessage(msg, event_time, recvSocket);
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+            << "Controller::processNextEvent(): Event is a connection request to "
+            << (*cur_event).second.socket->getLocalAddr() << "\n"
+            << vprDEBUG_FLUSH;
+
+         mClock.setCurrentTime(event_time);
+
+         if ( recvSocket != NULL )
+         {
+            *recvSocket = (*cur_event).second.socket;
+         }
+      }
 
       mEvents.erase(cur_event);
 
@@ -171,7 +206,6 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
                               const vpr::Interval& cur_time,
                               vpr::SocketImplSIM** recvSocket)
 {
-   (*recvSocket) = NULL;
    NetworkGraph::net_vertex_t next_hop = msg->getNextHop();
 
    bool end_of_path;
@@ -207,7 +241,7 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
          << std::endl << vprDEBUG_FLUSH;
 
       next_line_prop.addMessage(msg, dir);
-      addEvent(msg->whenArrivesFully(), next_line, dir);
+      addMessageEvent(msg->whenArrivesFully(), next_line, dir);
    }
    // End of the path--we have reached our destination.
    else
@@ -220,7 +254,11 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
          << vprDEBUG_FLUSH;
 
       msg->getDestinationSocket()->addArrivedMessage(msg);
-      (*recvSocket) = msg->getDestinationSocket();             // Return the socket that now has the event
+
+      if ( recvSocket != NULL)
+      {
+         (*recvSocket) = msg->getDestinationSocket();  // Return the socket that now has the event
+      }
 
       // The above should be the last use of the memory held by msg, so the
       // should get deleted when the value of msg changes.
