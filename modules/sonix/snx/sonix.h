@@ -54,16 +54,16 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
 
-#include "snx/Singleton.h"
+#include <vpr/Util/Singleton.h>
 #include "snx/SoundInfo.h"
 #include "snx/SoundFactory.h"
 #include "snx/SoundImplementation.h"
 #include "snx/SoundAPIInfo.h"
 
-class sonix : public snx::Singleton<sonix>
+class sonix : public vpr::Singleton<sonix>
 {
 protected:
-   friend class snx::Singleton<sonix>;
+   friend class vpr::Singleton<sonix>;
 
    //: default constructor
    sonix() : mImplementation( NULL )
