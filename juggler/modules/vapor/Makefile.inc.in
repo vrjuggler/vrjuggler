@@ -142,7 +142,9 @@ $(PARAM_SOURCE): $(PARAM_HEADER) $(VPRROOT_ABS)/$(PARAM_SOURCE).in
 
 # Things to do after the object files and library are built.
 afterbuild:
+ifdef GLOBAL_BUILD
 	@$(MAKE) links
+endif
 
 # -----------------------------------------------
 # Construct the static version of the libraries.
