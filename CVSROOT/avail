@@ -14,5 +14,5 @@ avail||juggler_docs
 avail||juggler
 
 unavail||juggler/modules
-avail|nonchocoboy|juggler/modules
+avail|nonchocoboy,aronb,patrickh|juggler/modules
 avail||juggler/modules/dso,juggler/modules/plexus
