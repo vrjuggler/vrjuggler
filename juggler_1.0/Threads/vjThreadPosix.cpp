@@ -165,7 +165,7 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
     // If thread priority scheduling is available, set the thread's priority
     // if it is set to be higher than 0.
 #   ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
-#   ifdef HAVE_SYS_CAPABILITY_H
+#   if defined(HAVE_SYS_CAPABILITY_H) && ! defined(VJ_OS_FreeBSD)
         cap_t capabilities = cap_get_proc();
 
         // If we have the capability to do so, set the scope of the threads
