@@ -84,7 +84,7 @@ AbstractProduct* CreateProduct()
  *                           For example, functions, functors, and classes are
  *                           valid types to use for this parameter.  The
  *                           default type is a simple function.
- * @paarm FactoryErrorPolicy The handler for failed lookups.  It must support
+ * @param FactoryErrorPolicy The handler for failed lookups.  It must support
  *                           the following:
  * \code
  * FactoryErrorImpl<IdentifierType, AbstractProduct> fErrorImpl;
