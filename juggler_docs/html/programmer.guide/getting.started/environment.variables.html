@@ -11,41 +11,104 @@
 <h3>Introduction</h3>
 
 <blockquote>
-  <p>The environment variable VJ_BASE_DIR must be set to the base directory of the installed
-  Juggler library.&nbsp; This tells the kernel and the config editor where to find data
-  files needed to run the system.</p>
-  <p>Ex. setenv VJ_BASE_DIR /home/software/Juggler/beta-0.1</p>
-  <p>In order to run the Java based config editor, the environment variable JDK_HOME must be
-  set to tell the system where Java is located.</p>
-  <p>Ex. setenv JDK_HOME /user/java</p>
+<p>A number of environment variables affect the way VR Juggler works.  Some 
+of these are required to compile and run applications, while others are 
+optional.  This page lists all of these environment variables.
+<p>The syntax for setting or changing an environment variable varies with 
+operating systems and/or shell interpreters.  This page assumes the syntax
+used by the popular csh shell.
+<p><strong>Note for WinNT users:</strong> The typical syntax for setting an 
+environment variable under Windows is: <tt>set VARIABLE_NAME=value</tt>
 </blockquote>
 
-
-<h3>List of All Juggler Environment Variables:</h3>
-
+<h3>Required Environment Variables</h3>
 
 <h4>VJ_BASE_DIR</h4>
 
 <blockquote>
-  <p>Set this variable to the directory where VR Juggler is installed.&nbsp; This is used to
-  find global data files.&nbsp; Some makefiles also use this to find the library</p>
+  <p>The environment variable VJ_BASE_DIR tells a VR Juggler application 
+where to find important data files, and is required to compile or run any
+Juggler app.  It should be set to the base directory of the 
+installed juggler library.
+<p>For example, if you downloaded a Juggler tar file and extracted it to
+the directory /home/software/, you would set VJ_BASE_DIR with this command:
+<p>ex. <tt>setenv VJ_BASE_DIR /home/software/vrjuggler-0.1.95</tt>
+<p>The last component of the above example depends on the particular version
+of Juggler you've downloaded.
+<p>If you downloaded and built VR Juggler from the source code, the 
+compilation creates a directory called <tt>instlinks</tt> which can be used
+as a Juggler base:
+<p>ex. <tt>setenv VJ_BASE_DIR ~/my_build_dir/instlinks</tt>
+</blockquote>
+
+<h4>JDK_HOME</h4>
+<blockquote>
+<p>The JDK_HOME environment variable is required by the script that starts 
+vjcontrol, the VR Juggler configuration program.  If Java is installed on your
+system, JDK_HOME may already be set.  If not, it needs to be set to the base
+of the Java installation.
+
+<p>Ex. <tt>setenv JDK_HOME /usr/java</tt>
+</blockquote>
+
+<h4>LD_LIBRARY_PATH  (UNIX/Linux only)<br>
+LD_LIBRARYN32_PATH  (IRIX only)<br>
+LD_LIBRARY64_PATH  (IRIX only)</h4>
+
+<blockquote>
+<p>Unix/Linux systems use these environment variables to find dynamically-loaded
+libraries, such as libJuggler.so.  Unless you're building everything with
+static libraries, you will need to set these to include the Juggler library
+directory (under $VJ_BASE_DIR).
+<p><strong>NOTE:</strong> if the LD_LIBRARY_PATH is already defined, you do
+not want to destroy the current value, just append the new path to it.  
+Otherwise something else could stop working.
+
+<p>ex. <tt>setenv LD_LIBRARY_PATH $VJ_BASE_DIR/lib</tt>
+<p>ex. <tt>setenv LD_LIBRARY_PATH $VJ_BASE_DIR/lib:$LD_LIBRARY_PATH</tt>
+
+<p>Irix supports several Application Binary Interfaces (ABIs).  VR Juggler
+supports the N32 and 64 formats.  There are different library path variables 
+for each:
+<p>ex. <tt>setenv LD_LIBRARYN32_PATH $VJ_BASE_DIR/lib32</tt>
+<p>ex. <tt>setenv LD_LIBRARY64_PATH $VJ_BASE_DIR/lib64</tt>
+
+</blockquote>
+
+<h3>Optional VR Juggler-related Environment Variables</h3>
+
+<h4>PATH</h4>
+<blockquote>
+<p>If you intend to use the vjcontrol program, you may want to add the 
+$VJ_BASE_DIR/bin directory to your $PATH:
+<p>ex. setenv PATH $VJ_BASE_DIR/bin:$PATH
 </blockquote>
 
 <h4>VJ_DEBUG_NFY_LEVEL</h4>
-
 <blockquote>
-  <p>This variable sets a filter on the amount of debug information for the library to
-  print.&nbsp; 0 - Little or no debug output&nbsp; 7 - Full debug output</p>
+<p>This variable can be used to control the amount of diagnostic information
+a VR Juggler application outputs.  Its value is a number between 0
+(only very important messages are printed) and 7 (vast amounts of data).
+Nonhackers are advised to use levels 0 through 3, as higher debug levels
+become increasingly cryptic and can severely impact application performance.
+The default is level 0 - only errors and critical information is output.
+<p>ex. <tt>setenv VJ_DEBUG_NFY_LEVEL 2</tt>
 </blockquote>
 
+<h4>VJ_DEBUG_CATEGORIES</h4>
 <blockquote>
-  <p><strong>Warning</strong>: Setting this variable to a high value can cause a HUGE amount
-  of text output.</p>
+<p>This variable can be used to control which components of VR Juggler are
+allowed to output diagnostic data.  If for some reason you set 
+VJ_DEBUG_NFY_LEVEL to 5 or higher, this variable can be used to filter the
+output.
+<p>The value of VJ_DEBUG_CATEGORIES is a space-separated list of Juggler
+debug component names (defined in $VJ_BASE_DIR/include/Kernel/vjDebug.h).
+The default value is "DBG_ALL", which performs no filtering whatsoever.
+<p>ex. <tt>setenv VJ_DEBUG_CATEGORIES DBG_ERROR</tt>
+<p>ex. <tt>setenv VJ_DEBUG_CATEGORIES "DBG_KERNEL DBG_INPUT"</tt>
+<p>ex. <tt>setenv VJ_DEBUG_CATEGORIES "DBG_CONFIGDB DBG_ENV_MGR"</tt>
 </blockquote>
-<h4>VJ_DEBUG_CATS</h4>
 
-<h4>LD_LIBRARYxx_PATH (UNIX systems only)</H4>
-<!-- install-web include ld.paths.html -->
 
 &nbsp;</body>
 </html>
