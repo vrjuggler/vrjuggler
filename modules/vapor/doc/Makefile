@@ -1,5 +1,10 @@
 # $Id$
 
+default: html
+
+docs: html pdf
+install-docs: install-html install-ps install-pdf
+
 DOXYGEN_FILE=		VPR.doxy
 HTML_DOXYGEN_FILE=	$(DOXYGEN_FILE)
 LATEX_DOXYGEN_FILE=	VPR_latex.doxy
