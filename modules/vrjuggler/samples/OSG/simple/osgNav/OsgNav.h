@@ -187,8 +187,8 @@ private:
 
    float speed;
    float inc;
-   //OsgNavigater mNavigater;
-   cluster::UserData< OsgNavigater >  mNavigater;
+   OsgNavigater* mNavigater;
+   //cluster::UserData< OsgNavigater >  mNavigater;
 
    std::string mFileToLoad;
 
