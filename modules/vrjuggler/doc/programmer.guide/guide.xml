@@ -3366,7 +3366,7 @@ thread-&gt;join();
                      <programlisting>int prio;
 
 thread-&gt;getPrio(&amp;prio);</programlisting>
-                     <para>The thread's priority is stored in <varname>prio</varname> and returned via the pointer passed to the <methodname>getPrio()</methodname> method. Setting that thread's priority is also easy:<varname></varname></para>
+                     <para>The thread's priority is stored in <varname>prio</varname> and returned via the pointer passed to the <methodname>getPrio()</methodname> method. Setting that thread's priority is also easy:</para>
                      <programlisting>int prio;
 
 // Assign some priority value to prio ...
@@ -3381,8 +3381,8 @@ thread-&gt;setPrio(prio);</programlisting>
                         <secondary>sending signals</secondary>
                      </indexterm>
                      <para>On UNIX-based systems, a signal is sent to a process using the <function>kill(2)</function> system call. With POSIX threads, signals are sent using <function>pthread_kill(3)</function>. VR Juggler's thread interface implements these ideas using a <methodname>kill()</methodname><methodname></methodname> method. There are two ways to call this method: with an argument naming the signal to be delivered to the thread or without an argument which cancels the thread's execution. The first of these is described in this section, and the second is described in the next section.</para>
-                     <para>A problem does arise here, unfortunately. Signals are not supported on all operating systems (notably, Win32). The interface is consistent, but code written on IRIX will not compile on Win32 if, for example, it sends a <varname>SIGHUP</varname> to a thread. An improved thread interface is being designed to overcome problems such as this one. For now, we describe this part of the interface as though it is supported completely on all platforms.</para>
-                     <para>As usual, assume there is a running thread, a pointer to which is stored in <varname>thread</varname>. To send it a signal (<varname>SIGINT</varname>, for example), use the following:</para>
+                     <para>A problem does arise here, unfortunately. Signals are not supported on all operating systems (notably, Win32). The interface is consistent, but code written on IRIX will not compile on Win32 if, for example, it sends a <constant>SIGHUP</constant> to a thread. An improved thread interface is being designed to overcome problems such as this one. For now, we describe this part of the interface as though it is supported completely on all platforms.</para>
+                     <para>As usual, assume there is a running thread, a pointer to which is stored in <varname>thread</varname>. To send it a signal (<constant>SIGINT</constant>, for example), use the following:</para>
                      <programlisting>thread-&gt;kill(SIGINT);</programlisting>
                      <para>The signal will be delivered to the thread by the operating system, and the thread is expected to handle it properly. This version of the <methodname>kill()</methodname> method returns 0 if the signal is sent successfully. Otherwise, -1 is returned to indicate that an error occurred.</para>
                   </section>
@@ -3392,7 +3392,7 @@ thread-&gt;setPrio(prio);</programlisting>
                         <primary>vjThread</primary>
                         <secondary>canceling</secondary>
                      </indexterm>
-                     <para>As described in the previous section, using the <methodname>kill()</methodname> method with no argument cancels the execution of the thread. When using POSIX threads, this is actually implemented using <methodname>pthread_cancel(3)</methodname>. On IRIX with SPROC threads, a <varname>SIGKILL</varname> is sent to the thread to end its execution forcibly. The syntax for using this method is basically the same as in the previous section, but it is repeated to make that clear. Again assuming that there is a running thread with a pointer to its <classname>vjThread</classname> object stored in <varname>thread</varname>, use the following:</para>
+                     <para>As described in the previous section, using the <methodname>kill()</methodname> method with no argument cancels the execution of the thread. When using POSIX threads, this is actually implemented using <methodname>pthread_cancel(3)</methodname>. On IRIX with SPROC threads, a <constant>SIGKILL</constant> is sent to the thread to end its execution forcibly. The syntax for using this method is basically the same as in the previous section, but it is repeated to make that clear. Again assuming that there is a running thread with a pointer to its <classname>vjThread</classname> object stored in <varname>thread</varname>, use the following:</para>
                      <programlisting>thread-&gt;kill();</programlisting>
                      <para>Unlike the syntax used to send a signal to a thread, this version of <methodname>kill()</methodname> does not have a return value.</para>
                      <para>Users of POSIX threads may be wondering if the <classname>vjThread</classname> API provides a way to set cancellation points in the code. Unfortunately, it does not at this time. Extending the interface in this way is being considered, but cancellation points do not have meaning with all thread implementations.</para>
@@ -3491,13 +3491,13 @@ thread = new vjThread(my_functor);</programlisting>
                      <para>The <classname>vjBaseThreadFunctor</classname> interface defines an extra method <methodname>setArg()</methodname><indexterm>
                            <primary>vjBaseThreadFunctor</primary>
                            <secondary>setArg() method</secondary>
-                        </indexterm> that allows the function's argument to be set after the functor object is created. The argument to the constructor providing the function's argument is optional and will default to <varname>NULL</varname> if not specified. At a later time, should there be an argument to provide, the following can be used:</para>
+                        </indexterm> that allows the function's argument to be set after the functor object is created. The argument to the constructor providing the function's argument is optional and will default to <constant>NULL</constant> if not specified. At a later time, should there be an argument to provide, the following can be used:</para>
                      <programlisting>thread_args_t* args = new thread_args_t();
 
 // Fill in args ...
 
 my_functor-&gt;setArg(args);</programlisting>
-                     <para>This assumes that there is already a functor object instantiated called <varname>my_functor</varname>. Alternatively, <methodname>setArg()</methodname> could be used to remove a previously defined argument by passing <varname>NULL</varname>.</para>
+                     <para>This assumes that there is already a functor object instantiated called <varname>my_functor</varname>. Alternatively, <methodname>setArg()</methodname> could be used to remove a previously defined argument by passing <constant>NULL</constant>.</para>
                      <para>The last thing to note is that a lot of memory is being allocated dynamically in the example code. Be careful to deallocate the memory when it is no longer needed.</para>
                   </section>
                   <section>
@@ -3610,7 +3610,7 @@ thread = new vjThread(my_functor);</programlisting>
                         </listitem>
                      </itemizedlist>
                      <para>Unlike <classname>vjThread</classname>, however, there is no base interface from which these implementations inherit. Performance decreases caused by virtual functions are avoided this way.</para>
-                     <para>The semaphore implementation used is chosen when VR Juggler is compiled and will always match the thread implementation being used. When the VR Juggler build is configured, preprocessor <varname>#define</varname> statements are made in <filename>vjDefines.h</filename> that describe the threading system and thus the semaphores to use. Based on that, the header file <filename>Sync/vjSemaphore.h</filename> makes several <type>typedef</type>s that set up one of the platform-specific implementations to act as the <classname>vjSemaphore</classname> interface. For example, if compiling on Linux, the class <classname>vjSempahorePosix</classname> is <type>typedef</type>'d to <classname>vjSemaphore</classname>. Since the interface is consistent among all the wrappers, everything works as though that was the way it was written to behave.</para>
+                     <para>The semaphore implementation used is chosen when VR Juggler is compiled and will always match the thread implementation being used. When the VR Juggler build is configured, preprocessor <symbol>#define</symbol> statements are made in <filename>vjDefines.h</filename> that describe the threading system and thus the semaphores to use. Based on that, the header file <filename>Sync/vjSemaphore.h</filename> makes several <type>typedef</type>s that set up one of the platform-specific implementations to act as the <classname>vjSemaphore</classname> interface. For example, if compiling on Linux, the class <classname>vjSempahorePosix</classname> is <type>typedef</type>'d to <classname>vjSemaphore</classname>. Since the interface is consistent among all the wrappers, everything works as though that was the way it was written to behave.</para>
                   </section>
                </section>
                <section id="using-vjMutex-sect">
@@ -3701,7 +3701,7 @@ thread = new vjThread(my_functor);</programlisting>
                         </listitem>
                      </itemizedlist>
                      <para>Similar to <classname>vjSemaphore</classname>, there is no base interface from which these implementations inherit. Performance issues caused by virtual functions are avoided by doing this.</para>
-                     <para><varname></varname>The mutex implementation used is chosen when VR Juggler is compiled and will always match the thread implementation being used. When the VR Juggler build is configured, preprocessor #define statements are made in <filename>vjDefines.h</filename> that describe the threading system and thus the mutexes to use. Based on that, the header file <filename>Sync/vjMutex.h</filename> makes several <type>typedef</type>s that set up one of the platform-specific implementations to act as the <classname>vjMutex</classname> interface. For example, if compiling on Solaris, the class <classname>vjMutexPosix</classname> is <type>typedef</type>'d to be <classname>vjMutex</classname>. Since the interface is consistent among all the wrappers, everything works as though that was the way it was written to behave.</para>
+                     <para>The mutex implementation used is chosen when VR Juggler is compiled and will always match the thread implementation being used. When the VR Juggler build is configured, preprocessor <symbol>#define</symbol> statements are made in <filename>vjDefines.h</filename> that describe the threading system and thus the mutexes to use. Based on that, the header file <filename>Sync/vjMutex.h</filename> makes several <type>typedef</type>s that set up one of the platform-specific implementations to act as the <classname>vjMutex</classname> interface. For example, if compiling on Solaris, the class <classname>vjMutexPosix</classname> is <type>typedef</type>'d to be <classname>vjMutex</classname>. Since the interface is consistent among all the wrappers, everything works as though that was the way it was written to behave.</para>
                   </section>
                </section>
             </section>
