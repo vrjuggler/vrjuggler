@@ -90,19 +90,22 @@ public class PerfDataCollector {
 	for (i = 0; i < num; i++)
 	    dl.linetotal += dl.diffs[i];
 
-	while (datalines.size() > maxdatalines) {
-	    DataLine tmp = (DataLine)datalines.removeFirst();
-	    for (i = 0; i < num; i++) {
-		if (!Double.isNaN (tmp.diffs[i])) {
-		    sums[i] -= tmp.diffs[i];
-		    numsamps[i]--;
-		}
-	    }
-	    if (!Double.isNaN(tmp.linetotal)) {
-		totalsum -= tmp.linetotal;
-		totalsamps--;
-	    }
-	}
+        if (maxdatalines >= 0) {
+            while (datalines.size() > maxdatalines) {
+                DataLine tmp = (DataLine)datalines.removeFirst();
+                for (i = 0; i < num; i++) {
+                    if (!Double.isNaN (tmp.diffs[i])) {
+                        sums[i] -= tmp.diffs[i];
+                        numsamps[i]--;
+                    }
+                }
+                if (!Double.isNaN(tmp.linetotal)) {
+                    totalsum -= tmp.linetotal;
+                    totalsamps--;
+                }
+            }
+        }
+
 	for (i = 0; i < num; i++) {
 	    if (!Double.isNaN (dl.diffs[i])) {
 		sums[i] += dl.diffs[i];

@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Feb-18-2002 cjust     VjControl fix - would fail to open performance data files
+                      if the max # of samples to store was set to 'infinite'.
 Feb-07-2002 allenb    Fixed major problems with OSG application class backport.
                       This fix allows OSG applications to run in simulator
                       and across multi-pipe setups.
