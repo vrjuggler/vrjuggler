@@ -318,9 +318,8 @@
          </section>
          <section>
             <title>Description</title>
-            <para>Tweek is a portable GUI for applications. The Tweek GUI can be run in virtual environments, external on a palm top, or on the desktop next to a running application. Each of these methods gives a familier 2D widget set that can control applications flexibly.</para>
-            <para>Tweek is a cross-platform, cross-language library consisting of a C++ API and a Java API. Its purpose is to provide a convenient mechanism for a Java-based GUI to interact with a complex C++ library or application. To provide this capability, it uses CORBA.</para>
-            <para>The Java code in Tweek includes the Tweek Java API and the Tweek JavaBean Loader application. The Java API is provided to make the use of JavaBeans and CORBA simpler for programmers who want to write JavaBeans that can communicate with a C++ application. The JavaBean Loader application is a generalized application used to display and manage those Beans. It simply loads the Beans it finds and presents them to the user in some sort of structured manner (for example, a collection of icons with web-style navigation).</para>
+            <para>Tweek is a cross-platform, cross-language library consisting of a C++ API and a Java API. Its purpose is to provide a convenient mechanism for a Java-based GUI to interact with a complex C++ library or application. The Tweek GUI can be run in virtual environments, external on a palm top, or on the desktop next to a running application. Each of these methods gives a familier 2D widget set that can control applications flexibly. To provide this capability, it uses CORBA.</para>
+            <para>The Java code in Tweek includes the Tweek Java API and the Tweek JavaBean loader application. The Java API is provided to make the use of JavaBeans and CORBA simpler for programmers. The JavaBean loader application simply loads the Beans it finds and presents them to the user in some sort of structured manner (for example, a collection of icons with web-style navigation).</para>
          </section>
       </section>
       <section>
