@@ -81,18 +81,29 @@ public:
 public:
    /// gadget::Input pure virtual functions
    virtual bool config( jccl::ConfigChunkPtr fastrackChunk);
-   virtual int startSampling();                 // start a new thread
-   virtual int sample();                        // read data from the fastrack
-   virtual void updateData();                   // swap the data and vjInput::tri-buffered indicies
-   virtual int stopSampling();                  // kills off the sample thread
+
+   /** Starts a new thread. */
+   virtual int startSampling();
+
+   /** Reads data from the Fastrack. */
+   virtual int sample();
+
+   /** Swaps the data and gadget::Input tri-buffered indicies. */
+   virtual void updateData();
+
+   /** Kills the sample thread. */
+   virtual int stopSampling();
+
+   /** Device's configchunk name (match .desc file). */
    virtual char* getDeviceName()
    {
       return "vjFastrack";
-   };// device's configchunk name (match .desc file)
+   };
+
 public:
-   //:vjDigital pure virtual function
+   /** gadget::Digital pure virtual function. */
    virtual int getDigitalData(int station = 0);
-   //:vjPosition pure virtual function
+   /** gadget::Position pure virtual function. */
    virtual gmtl::Matrix44f getPosData(int station = 0);
 
    /**

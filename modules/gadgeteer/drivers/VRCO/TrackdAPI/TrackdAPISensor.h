@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          TrackdSensor.h,v
- * Date modified: 2002/07/12 16:39:26
- * Version:       1.16
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -47,95 +47,97 @@
 namespace gadget
 {
 
-/** Position-derived class for interfacing with trackdAPI sensor data
-*
-* @NOTE: A note on reciever access:
-*   Clients of Juggler should access tracker recievers as [0-n].  For
-*  example, if you have recievers 1,2, and 4 with transmitter on 3, then
-*  you can access the data, in order, as 0, 1, 2.
-*
-* See also: Position
-*/
+/**
+ * Position-derived class for interfacing with TrackdAPI sensor data.
+ *
+ * @note A note on reciever access:
+ *   Clients of Gadgeteer should access tracker recievers as [0-n].  For
+ *   example, if you have recievers 1,2, and 4 with transmitter on 3, then
+ *   you can access the data, in order, as 0, 1, 2.
+ *
+ * @see gadget::Position
+ */
 class TrackdAPISensor : public InputMixer<Input,Position>
 {
 public:
 
-    /** Constructor */
-    TrackdAPISensor();
+   /** Constructor. */
+   TrackdAPISensor();
 
-    // ------------------------------------------------------------------------
-    //: Destructor.
-    //
-    //! PRE: None.
-    //! POST: Shared memory is released
-    // ------------------------------------------------------------------------
-    ~TrackdAPISensor();
+   /**
+    * Destructor.
+    *
+    * @pre None.
+    * @post Shared memory is released.
+    */
+   ~TrackdAPISensor();
 
-    // ------------------------------------------------------------------------
-    //: Configure the trackd sensor with the given config chunk.
-    //
-    //! PRE: c must be a chunk that has trackd sensor config information
-    //! POST: If c is a valid config chunk, the device is configured using its
-    //+       contents.  Otherwise, configuration fails and false is returned
-    //+       to the caller.
-    //
-    //! ARGS: c - A pointer to a TrackdSensor config chunk.
-    //
-    //! RETURNS: true - The device was configured succesfully.
-    //! RETURNS: false - The config chunk is invalid.
-    // ------------------------------------------------------------------------
-    virtual bool config(jccl::ConfigChunkPtr c);
+   /**
+    * Configures the trackd sensor with the given config chunk.
+    *
+    * @pre c must be a chunk that has trackd sensor config information
+    * @post If c is a valid config chunk, the device is configured using its
+    *        contents.  Otherwise, configuration fails and false is returned
+    *        to the caller.
+    *
+    * @param c  A pointer to a TrackdSensor config chunk.
+    *
+    * @return true if the device was configured succesfully, fales if the
+    *              config chunk is invalid.
+    */
+   virtual bool config(jccl::ConfigChunkPtr c);
 
-   //: Begin sampling
+   /** Begins sampling. */
    int startSampling() { return 1; }
 
-   //: Stop sampling
+   /** Stops sampling. */
    int stopSampling() { return 1; }
 
-   //: Sample a value
+   /** Samples a value. */
    int sample() { return 1; }
 
-    // ------------------------------------------------------------------------
-    //: Update to the sampled data.
-    //
-    //! PRE: None.
-    //! POST: Most recent value is copied over to temp area
-    // ------------------------------------------------------------------------
-    void updateData();
+   /**
+    * Update to the sampled data.
+    *
+    * @pre None.
+    * @post Most recent value is copied over to temp area.
+    */
+   void updateData();
 
-    /** Returns the current position of the given sensor number */
-    gmtl::Matrix44f getSensorPos(int sensorNum);
+   /** Returns the current position of the given sensor number. */
+   gmtl::Matrix44f getSensorPos(int sensorNum);
 
-    //: Return what chunk type is associated with this class.
-    static std::string
-    getChunkType () 
-    { return std::string("TrackdAPISensor"); }
+   /** Returns what chunk type is associated with this class. */
+   static std::string getChunkType()
+   {
+      return std::string("TrackdAPISensor");
+   }
 
-    /**
-     * Invokes the global scope delete operator.  This is required for proper
-     * releasing of memory in DLLs on Win32.
-     */
-    void operator delete(void* p)
-    {
-       ::operator delete(p);
-    }
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
 
- protected:
-    /**
-     * Deletes this object.  This is an implementation of the pure virtual
-     * gadget::Input::destroy() method.
-     */
-    virtual void destroy()
-    {
-       delete this;
-    }
+protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
 
 private:
-    TrackerReader*              mTrackerReader;    /**< The tracker sensor to read data from */
-    std::vector<PositionData>   mCurSensorValues; // The current (up-to-date) values    
+   TrackerReader*              mTrackerReader;   /**< The tracker sensor to read data from */
+   std::vector<PositionData>   mCurSensorValues; /**< The current (up-to-date) values */
 };
 
-};
+} // End of gadget namespace
+
 
 #endif
-

@@ -42,29 +42,36 @@
 
 namespace gadget{
 
-//: Dependency checker for Remote Input Manager 
-// Implement the basic stuff plus a check for whether
-// the system knows about Remote Input Manager yet
+/**
+ * Dependency checker for Remote Input Manager.
+ * Implement the basic stuff plus a check for whether
+ * the system knows about Remote Input Manager yet.
+ */
 class GADGET_CLASS_API RmtMgrDepChecker : public jccl::DepChecker
 {
 public:
    RmtMgrDepChecker()
    {;}
 
-   //: Return a string name of the checker
-   // Used to output messages in checker listings
+   /**
+    * Returns a string name of the checker.
+    * Used to output messages in checker listings.
+    */
    virtual std::string getCheckerName()
    { return std::string("RemoteInput Checker"); }
 
-   // We can handle only remote device configuration information
+   /** We can handle only remote device configuration information. */
    virtual bool canHandle(jccl::ConfigChunkPtr chunk);
 
-   //: Are the dependencies satisfied?
-   //! RETURNS: true - default dependencies are satisfied && input manager has remote input manager chunk
-   // Check whether the display system chunk is in the active config
+   /**
+    * Are the dependencies satisfied?
+    * Check whether the display system chunk is in the active config.
+    * @return true if default dependencies are satisfied and the Input Manager
+    *         has Remote Input Manager chunk.
+    */
    virtual bool depSatisfied(jccl::ConfigChunkPtr chunk);
 
-   // Write out the dependencies to the vjDEBUG macro
+   /** Write out the dependencies to the vprDEBUG macro. */
    virtual void debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_lvl=vprDBG_WARNING_LVL);
 
 };
