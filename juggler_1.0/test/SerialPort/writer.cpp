@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string.h>
 
-#include <Utils/Port/vjSerialPort.h>
-#include <Utils/Port/vjSerialTypes.h>
+#include <VPR/IO/Port/vjSerialPort.h>
+#include <VPR/IO/Port/vjSerialTypes.h>
 
 
 int

@@ -1,6 +1,6 @@
 #include <iostream>
-#include <Utils/Socket/vjSocketDatagram.h>
-#include <Utils/Socket/vjInetAddr.h>
+#include <VPR/IO/Socket/vjSocketDatagram.h>
+#include <VPR/IO/Socket/vjInetAddr.h>
 
 
 int

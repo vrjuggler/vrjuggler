@@ -1260,9 +1260,10 @@ AC_OUTPUT(Makefile
           Sync/Makefile
           Threads/Makefile
           Utils/Makefile
-          Utils/Port/Makefile
-          Utils/Socket/Makefile
           VPR/Makefile
+          VPR/IO/Makefile
+          VPR/IO/Port/Makefile
+          VPR/IO/Socket/Makefile
           VPR/SharedMem/Makefile
           VPR/Sync/Makefile
           VPR/Threads/Makefile

@@ -1,10 +1,11 @@
+#include <stdio.h>
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
 
-#include <Utils/Port/vjSerialPort.h>
-#include <Utils/Port/vjSerialTypes.h>
+#include <VPR/IO/Port/vjSerialPort.h>
+#include <VPR/IO/Port/vjSerialTypes.h>
 
 
 int

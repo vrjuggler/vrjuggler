@@ -50,7 +50,10 @@ VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/VPR/md/WIN32
 
 ifeq (@SUBSYSTEM@, WIN32)
-SRCS		= vjMemPoolWin32.cpp	\
+SRCS		= vjMemPoolWin32.cpp			\
+                  vjSocketDatagramImpWinSock.cpp	\
+                  vjSocketImpWinSock.cpp		\
+                  vjSocketStreamImpWinSock.cpp		\
                   vjThreadWin32.cpp
 endif
 

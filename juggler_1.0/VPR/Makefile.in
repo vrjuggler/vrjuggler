@@ -47,7 +47,8 @@ SUBOBJDIR	= $(UTILS_LIBRARY)
 # Prefix for recursive stuff.
 DIRPRFX		= VPR/
 
-SUBDIR		= SharedMem	\
+SUBDIR		= IO		\
+                  SharedMem	\
                   Sync		\
                   Threads	\
                   md

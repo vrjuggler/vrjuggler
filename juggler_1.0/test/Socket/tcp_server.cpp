@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <Utils/Socket/vjSocketStream.h>
+#include <VPR/IO/Socket/vjSocketStream.h>
 
 
 int
