@@ -2,6 +2,7 @@
 #include <Input/vjKeyboard/vjXWinKeyboard.h>
 #include <Kernel/vjDebug.h>
 
+//: Constructor
 vjXWinKeyboard::vjXWinKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
 				vjAnalog(c), vjInput(c), vjKeyboard(c)
 {

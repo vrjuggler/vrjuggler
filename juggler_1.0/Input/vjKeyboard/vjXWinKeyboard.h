@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// vjKeyboard.h
+// vjXWinKeyboard.h
 //
 // Keyboard input device, simulates 2 positional, 4 digital, and 4 analog
 //          devices.
