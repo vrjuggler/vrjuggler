@@ -45,12 +45,9 @@
 #include <vpr/vprConfig.h>
 
 #include <vector>
-#include <map>
-#include <string>
 
 #include <vpr/IO/SelectorBase.h>
 #include <vpr/IO/IOSys.h>
-#include <vpr/Util/Debug.h>
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Interval.h>
 
