@@ -17,13 +17,13 @@ class SerialPortTest : public CppUnit::ThreadTestCase
 {
 public:
    SerialPortTest (std::string name)
-      : CppUnit::ThreadTestCase(name), mDataBuffer("This is a test...\n")
+      : CppUnit::ThreadTestCase(name), mDataBuffer("This is a test...")
    {
       /* Do nothing. */ ;
    }
 
    SerialPortTest (void)
-      : CppUnit::ThreadTestCase(), mDataBuffer("This is a test...\n")
+      : CppUnit::ThreadTestCase(), mDataBuffer("This is a test...")
    {
       /* Do nothing. */ ;
    }
