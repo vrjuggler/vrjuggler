@@ -16,6 +16,20 @@
 
    <property name="tweek.classpath" refid="tweek.classpath" />
 
+   <!-- Compile all java sources generated from IDL -->
+   <target name="compile_idl">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="${srcdir}" />
+         <include name="tweek/**" />
+         <classpath>
+            <pathelement path="@JAVA_ORB_JAR@" />
+         </classpath>
+      </javac>
+   </target>
+
    <!-- Compile all java sources -->
    <target name="compile">
       <javac destdir="."
@@ -38,7 +52,7 @@
    </target>
 
    <!-- Create the distribution jar -->
-   <target name="dist" depends="compile">
+   <target name="dist" depends="compile_idl,compile">
       <jar destfile="Tweek.jar" basedir=".">
          <include name="org/vrjuggler/tweek/*.class" />
          <include name="org/vrjuggler/tweek/gui/**" />

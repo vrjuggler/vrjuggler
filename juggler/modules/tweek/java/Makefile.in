@@ -78,16 +78,6 @@ IDL_JAVA_FILES=	SubjectManager.java	\
 		Subject.java		\
 		Observer.java
 
-TWEEK_AUTO_SRCS=							\
-	tweek/SubjectManagerHolder.java					\
-	tweek/SubjectHolder.java					\
-	tweek/ObserverHolder.java					\
-	tweek/ObserverPOA.java						\
-	tweek/SubjectManagerPackage/RegisteredSubjectHolder.java	\
-	tweek/SubjectManagerPackage/SubjectListHolder.java
-
-JAVA_SRCS=	$(TWEEK_AUTO_SRCS)
-
 JARS=		Tweek.jar		\
 		TweekBeans.jar		\
 		TweekEvents.jar		\
