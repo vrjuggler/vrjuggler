@@ -56,10 +56,7 @@ bool SimDigital::config(jccl::ConfigChunkPtr chunk)
       return false;
 
    std::vector<jccl::VarValue*> key_list = chunk->getAllProperties("keyPairs");
-   mSimKeys = readKeyList(key_list);
-
-   int num_pairs = mSimKeys.size();
-   mDigitalData = std::vector<DigitalData>(num_pairs); //std::vector<int>(num_pairs,0);      // Initialize to all zeros
+   mSimKeys = readKeyList(key_list);   
 
    return true;
 }
@@ -71,15 +68,24 @@ bool SimDigital::config(jccl::ConfigChunkPtr chunk)
 void SimDigital::updateData()
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::updateData()\n"<< vprDEBUG_FLUSH;
+   std::vector<DigitalData>  digital_data_sample(mSimKeys.size());   // The digital data that makes up the sample
 
    // -- Update digital data --- //
    for (unsigned int i = 0; i < mSimKeys.size(); i++)
    {
+      digital_data_sample[i].setTime();
       if(checkKeyPair(mSimKeys[i]))             // If keys pressed
-         mDigitalData[i] = 1;
+         digital_data_sample[i] = 1;
       else
-         mDigitalData[i] = 0;
+         digital_data_sample[i] = 0;
    }
+
+   // Add a sample
+   mDigitalSamples.lock();
+   mDigitalSamples.addSample(digital_data_sample);
+   mDigitalSamples.unlock();
+
+   mDigitalSamples.swapBuffers();
 }
 
 };
