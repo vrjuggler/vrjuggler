@@ -419,7 +419,7 @@ case $OS_TYPE in
             static_end="-B dynamic"
         fi
 
-        jccl_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
+        jccl_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
 	jccl_ldflags_linker="$jccl_ldflags_compiler"
         jccl_libs='-ljccl'
         jccl_lib='-ljccl'
