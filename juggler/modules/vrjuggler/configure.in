@@ -223,6 +223,55 @@ if test "x${_enable_gl_api}" = "xyes" ; then
         [AC_MSG_ERROR(*** OpenGL API will not be used (GL files not found) ***)])
 fi
 
+# The following determines whether we have to link against libXxf86vm
+# explicitly.  This is a little tricky because the Mesa libGL is always
+# linked against it (either statically or implicitly), but the NVidia libGL
+# implementation is not.
+# We only need to worry about this on non-Darwin UNIX-based platforms.
+if test "x$OS_TYPE" = "xUNIX" -a "x$PLATFORM" != "xDarwin" ; then
+   DPP_LANG_SAVE
+   DPP_LANG_C
+
+   vjsave_CFLAGS="$CFLAGS"
+   vjsave_LIBS="$LIBS"
+   vjsave_LDFLAGS="$LDFLAGS"
+
+   CFLAGS="$CFLAGS $X_INCLUDES"
+   LDFLAGS="$LDFLAGS $X_LDFLAGS"
+
+   # First, make sure that libXxf86vm even exists and that the function that
+   # we'll use for testing below is available.  If this test fails, we assume
+   # that we are not using XFree86 or X.org.
+   AC_CHECK_LIB([Xxf86vm], [XF86VidModeQueryExtension], [using_xf86='yes'],
+                [using_xf86='no'])
+
+   if test "x$using_xf86" = "xyes" ; then
+      CFLAGS="$vjsave_CFLAGS $OGL_INCLUDES"
+      LIBS="$GL_LIB $vjsave_LIBS"
+      LDFLAGS="$vjsave_LDFLAGS $OGL_LDFLAGS"
+
+      AC_CACHE_CHECK([if we need to link against libXxf86vm],
+                     [vj_cv_need_libXxf86vm],
+                     [AC_TRY_LINK([#include <stdlib.h>
+#include <X11/Xlib.h>],
+                        [XF86VidModeQueryExtension(NULL, NULL, NULL);],
+                        [vj_cv_need_libXxf86vm='no'],
+                        [vj_cv_need_libXxf86vm='yes'])])
+
+      # If we have to link against libXxf86vm, we can do that most easily by
+      # adding it to the list of existing OpenGL libraries we'll be using.
+      if test "x$vj_cv_need_libXxf86vm" = "xyes" ; then
+         LIBOPENGL="$LIBOPENGL -lXxf86vm"
+      fi
+   fi
+
+   CFLAGS="$vjsave_CFLAGS"
+   LIBS="$vjsave_LIBS"
+   LDFLAGS="$vjsave_LDFLAGS"
+
+   DPP_LANG_RESTORE
+fi
+
 # --------------------
 # IRIS Performer API.
 # --------------------
