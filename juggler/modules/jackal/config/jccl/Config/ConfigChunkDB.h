@@ -51,21 +51,21 @@ class JCCL_CLASS_API ConfigChunkDB
 public:
 
    /** Constructor.  Creates an empty ChunkDB. */
-   ConfigChunkDB ()
+   ConfigChunkDB()
    {;}
 
    /** Copy Constructor.
     *  This performs a shallow copy - this & db contain the same
     *  instances of ConfigChunk.
     */
-   ConfigChunkDB (ConfigChunkDB& db);
+   ConfigChunkDB(ConfigChunkDB& db);
 
    /** Destructor.
     *  Note that since we use ConfigChunkPtrs for memory management,
     *  the Chunks contained in self are only deleted if there are no
     *  other references to them.
     */
-   ~ConfigChunkDB ()
+   ~ConfigChunkDB()
    {;}
 
    /** Returns the filename that this DB was last loaded from.
@@ -99,7 +99,7 @@ public:
     *  @return True if a matching ConfigChunk was found and removed,
     *          false otherwise.
     */
-   bool remove (const std::string& name);
+   bool remove(const std::string& name);
 
    /** Sorts the ConfigChunks in self based on dependencies.
     *  The chunks are sorted so that for all elements i (0..n) can only
@@ -114,7 +114,7 @@ public:
    /* IO functions: */
 
    /** Write contents of self to out. */
-   friend std::ostream& operator << (std::ostream& out, const ConfigChunkDB& self);
+   friend std::ostream& operator<<(std::ostream& out, const ConfigChunkDB& self);
 
    /** Reads contents of self from in.
     *  Note that the previous contents of self are not removed (although
@@ -124,7 +124,7 @@ public:
     *  @param self - a ConfigChunkDB.
     *  @return in.
     */
-   friend std::istream& operator >> (std::istream& in, ConfigChunkDB& self);
+   friend std::istream& operator>>(std::istream& in, ConfigChunkDB& self);
 
    /** Loads ConfigChunks from the given file.
     *  @param filename - name of the file to load.
@@ -136,7 +136,7 @@ public:
     *          false if the file was not found or there was a fatal
     *          error while parsing.
     */
-   bool load (const std::string& fname, const std::string& parentfile = "");
+   bool load(const std::string& fname, const std::string& parentfile = "");
 
    /** Writes ConfigChunks to the given file.
     *  This uses ConfigIO to handle writing, and uses the "default"
@@ -144,7 +144,7 @@ public:
     *  @param filename - name of file to create & write.
     *  @return true if succesful, false if unable to create the file.
     */
-   bool save (const std::string& fname) const;
+   bool save(const std::string& fname) const;
 
    /**
     * Returns a reference to the internal collection of chunk pointers.
