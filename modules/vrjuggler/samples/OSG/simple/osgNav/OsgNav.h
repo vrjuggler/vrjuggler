@@ -37,6 +37,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <math.h>
 
 #include <vrj/Draw/OGL/GlApp.h>
 
@@ -45,20 +46,11 @@
 #include <gadget/Type/DigitalInterface.h>
 
 //OSG  includes
-#include <osg/Math>
-#include <osg/Geode>
-//#include <osg/GeoSet>
-#include <osg/Material>
-#include <osg/Vec3>
 #include <osg/Matrix>
 #include <osg/Transform>
 #include <osg/MatrixTransform>
 
 #include <osgUtil/SceneView>
-#include <osgUtil/Optimizer>
-
-#include <osgDB/ReadFile>
-#include <math.h>
 
 #ifdef TWEEK_HAVE_CXX
 #include <tweek/CORBA/CorbaManager.h>
@@ -123,7 +115,7 @@ public:
    virtual void configSceneView(osgUtil::SceneView* newSceneViewer)
    {
       newSceneViewer->setDefaults();
-      newSceneViewer->setCleargroundColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
+      newSceneViewer->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
       newSceneViewer->getLight()->setAmbient(osg::Vec4(0.3f,0.3f,0.3f,1.0f));
       newSceneViewer->getLight()->setDiffuse(osg::Vec4(0.9f,0.9f,0.9f,1.0f));
       newSceneViewer->getLight()->setSpecular(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
