@@ -614,7 +614,7 @@ void simplePfNavApp::initScene()
    vel_nav_drive->addCollider( correction_collide );
    vel_nav_fly->addCollider( correction_collide );
 
-   // -- ADD NAVERS to list --- //
+   // -- ADD NAVIGATORS to list --- //
    mNavigators.push_back(vel_nav_drive);
    mNavigators.push_back(vel_nav_fly);
 
