@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -39,9 +39,6 @@
 #include <gadget/Type/SampleBuffer.h>
 
 #include <jccl/Config/ConfigChunk.h>
-#include <vpr/Util/Debug.h>
-//#include <vpr/IO/ObjectReader.h>
-//#include <vpr/IO/ObjectWriter.h>
 #include <gadget/RemoteInputManager/SerializableDevice.h>
 
 
@@ -82,99 +79,17 @@ public:
    {
    }
 
-   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
-   {
-      //std::cout << "[Remote Input Manager] In Analog write" << std::endl;
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
-      ////////////////////////////////////////////////////
-      SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
-      writer->writeUint16(MSG_DATA_ANALOG);                                           // Write out the data type so that we can assert if reading in wrong place
-
-      if ( !stable_buffer.empty() )
-      {
-         mAnalogSamples.lock();
-         writer->writeUint16(stable_buffer.size());                                          // Write the # of vectors in the stable buffer
-         for ( unsigned j=0;j<stable_buffer.size();j++ )                                            // For each vector in the stable buffer
-         {
-            writer->writeUint16(stable_buffer[j].size());                                   // Write the # of AnalogDatas in the vector
-            //std::cout << "Analog Data Size: "  << stable_buffer.back().size() << std::endl;
-            //std::cout << "ME: ";
-            for ( unsigned i=0;i<stable_buffer[j].size();i++ )                                 // For each AnalogData in the vector
-            {
-               writer->writeFloat(stable_buffer[j][i].getAnalog());    // Write Analog Data(int)
-               //std::cout << stable_buffer[j][i].getAnalog();
-               writer->writeUint64(stable_buffer[j][i].getTime().usec());              // Write Time Stamp vpr::Uint64
-            }
-            //std::cout << std::endl;
-         }
-         mAnalogSamples.unlock();
-      }
-      else        // No data or request out of range, return default value
-      {
-         writer->writeUint16(0);
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "Warning: Analog::writeObject: Stable buffer is empty. If this is not the first write, then this is a problem.\n"
-            << vprDEBUG_FLUSH;
-      }
-
-      return vpr::ReturnStatus::Succeed;
-      ////////////////////////////////////////////////////
-   }
-
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
-   {
-      vpr::Uint16 temp = reader->readUint16();
-      vprASSERT(temp==MSG_DATA_ANALOG && "[Remote Input Manager]Not Analog Data");                          // ASSERT if this data is really not Analog Data
-      std::vector<AnalogData> dataSample;
-
-      unsigned numAnalogDatas;
-      float value;
-      vpr::Uint64 timeStamp;
-      AnalogData temp_analog_data;
-
-      unsigned numVectors = reader->readUint16();
-      //std::cout << "Stable Analog Buffer Size: "  << numVectors << std::endl;
-      mAnalogSamples.lock();
-      for ( unsigned i=0;i<numVectors;i++ )
-      {
-         numAnalogDatas = reader->readUint16();
-         //std::cout << "Analog Data Size: "    << numAnalogDatas << std::endl;
-         dataSample.clear();
-         //std::cout << "ME: ";
-         for ( unsigned j=0;j<numAnalogDatas;j++ )
-         {
-            value = reader->readFloat();            //Write Analog Data(int)
-            //std::cout << value;
-            timeStamp = reader->readUint64();                       //Write Time Stamp vpr::Uint64
-            temp_analog_data.setAnalog(value);
-            temp_analog_data.setTime(vpr::Interval(timeStamp + *delta,vpr::Interval::Usec));
-            dataSample.push_back(temp_analog_data);
-         }
-         //std::cout << std::endl;
-         mAnalogSamples.addSample(dataSample);
-      }
-      mAnalogSamples.unlock();
-      swapAnalogBuffers();
-      return vpr::ReturnStatus::Succeed;
-   }
-
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader,
+                                        vpr::Uint64* delta);
 
    /**
     * Just call base class config.
     * @note Let constructor set device abilities.
     */
-   virtual bool config(jccl::ConfigChunkPtr c)
-   {
-      mMin = c->template getProperty<float>("min");
-      mMax = c->template getProperty<float>("max");
+   virtual bool config(jccl::ConfigChunkPtr c);
 
-      vprDEBUG(vprDBG_ALL,4) << " SimAnalog::config() min:" << mMin
-                             << " max:" << mMax << "\n" << vprDEBUG_FLUSH;
-
-      return true;
-   }
-
-   /* new pure virtual functions */
    /**
     * Returns "analog data".
     * Gee, that's ambiguous especially on a discrete system such as a digital
@@ -196,34 +111,7 @@ public:
     * @note TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your
     *       data using Analog::normalizeMinToMax().
     */
-   // XXX: Add a "sample" filter that does the normalization in here instead
-   // of in the driver.
-   AnalogData getAnalogData(int devNum = 0)
-   {
-      SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
-
-      if ( (!stable_buffer.empty()) &&
-           (stable_buffer.back().size() > (unsigned)devNum) )  // If Have entry && devNum in range
-      {
-         return stable_buffer.back()[devNum];
-      }
-      else        // No data or request out of range, return default value
-      {
-         if ( stable_buffer.empty() )
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-               << "Warning: Analog::getAnalogData: Stable buffer is empty. If this is not the first read, then this is a problem.\n"
-               << vprDEBUG_FLUSH;
-         }
-         else
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
-               << "Warning: Analog::getAnalogData: Requested devNum is not in the range available.  May have configuration error\n"
-               << vprDEBUG_FLUSH;
-         }
-         return mDefaultValue;
-      }
-   }
+   AnalogData getAnalogData(int devNum = 0);
 
    /** Helper method to add a sample to the sample buffers.
    * This MUST be called by all analog devices to add a new sample.
@@ -237,7 +125,7 @@ public:
       mAnalogSamples.addSample(anaSample);
       mAnalogSamples.unlock();
    }
-   
+
    /** Swap the analog data buffers.
     * @post If ready has values, then copy values from ready to stable
     *        if not, then stable keeps its old values
@@ -264,23 +152,8 @@ protected:
     * This returns a value that is normalized to the range of mMin <= n <= mMax
     * if n < mMin or n > mMax, then result = mMin or mMax respectively.
     */
-   void normalizeMinToMax( const float& plainJaneValue, float& normedFromMinToMax )
-   {
-      float value = plainJaneValue;
-
-      // first clamp the value so that min<=value<=max
-      if ( value < mMin ) value = mMin;
-      if ( value > mMax ) value = mMax;
-
-      // slide everything to 0.0 (subtract all by mMin)
-      // Then divide by max to get normalized value
-      float tmax( mMax - mMin),
-         tvalue(value - mMin);
-
-      // since [tmin/tmax...tmax/tmax] == [0.0f...1.0f], the normalized value will be value/tmax
-      normedFromMinToMax = tvalue / tmax;
-   }
-
+   void normalizeMinToMax(const float& plainJaneValue,
+                          float& normedFromMinToMax);
 
 protected:
    /**
