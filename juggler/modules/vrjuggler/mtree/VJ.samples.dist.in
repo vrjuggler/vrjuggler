@@ -86,13 +86,5 @@
             simplePfApp
             ..
         ..
-        vjcontrol
-            AudioPlayer
-                src
-                    AudioPlayer
-                    ..
-                ..
-            ..
-        ..
     ..
 ..
