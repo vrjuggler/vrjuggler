@@ -752,7 +752,15 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          String viewer = prefs.getBeanViewer();
 
          ViewerBean bean = (ViewerBean)BeanRegistry.instance().getBean( viewer );
-         mBeanContainer.replaceViewer( bean.getViewer() );
+
+         // Verify that the viewer lookup did not fail.
+         // XXX: There should be a check here to compare the existing viewer
+         // with the selected viewer.  If they are the same, do not do the
+         // replacement.
+         if ( null != bean )
+         {
+            mBeanContainer.replaceViewer(bean.getViewer());
+         }
 
          String new_laf = prefs.getLookAndFeel();
          String old_laf = UIManager.getLookAndFeel().getName();
