@@ -259,6 +259,14 @@ fi
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
 
+# Ensure that the C++ compiler we've found is capable of compiling the newer
+# newer C++ features that we need.
+DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** The library requires C++ namesapce support ***))
+DPP_CXX_HAVE_STD
+DPP_CXX_INLINE(AC_MSG_ERROR(*** The library requires C++ inline support ***))
+DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
+DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***))
+
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
 
