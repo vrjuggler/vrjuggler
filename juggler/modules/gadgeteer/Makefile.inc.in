@@ -135,11 +135,6 @@ $(PARAM_SOURCE): $(PARAM_HEADER) $(GADGETROOT_ABS)/$(PARAM_SOURCE).in
 
 # Things to do after the object files and library are built.
 afterbuild:
-ifdef BUILD_PROF_LIBS
-ifeq ($(CALLER), world)
-	@$(MAKE) links-prof-libs
-endif
-endif
 	@$(MAKE) links
 	@echo ""
 	@echo "---------------------------------------------------------------"
