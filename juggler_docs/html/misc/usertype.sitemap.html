@@ -25,8 +25,7 @@
          <li><a href="${GETTINGSTARTED}/install.html">Learn how to unpack the
           software (tar -xvf, winzip, etc...)</a>
          <li><a href="${GETTINGSTARTED}/app.compiling.html#compiling">Learn how
-           to compile (simple instructions, with a reference to a page on
-           advanced topics for compiling)</a>
+           to compile (simple instructions, plus advanced topics)</a>
          <li><a href="${GETTINGSTARTED}/environment.variables.html">Learn how
            to set up the user environment to run and develop juggler
            applications</a>
@@ -46,10 +45,10 @@
               <li><a href="${OVERVIEWGUIDE}/index.html">Learn how to describe Juggler to others </a>
               <li><a href="${OVERVIEWGUIDE}/comparison.html">Compare Juggler to other VR tools </a>
               <li><a href="${OVERVIEWGUIDE}/detailed.desc.html">Find out where to go to learn more detailed description of Juggler</a>
-              <li><a href="${OVERVIEWGUIDE}/design.html">Read our design docs</a>
+              <li><a href="${SPECIFICATION}/index.html">Read our design docs</a>
               <li><a href="${PUBLICATIONS}/index.html">Read our papers and publications to technical journals and conferences</a>
-              <li><a href="${OVERVIEWGUIDE}/who.uses.juggler.html">What projects use VR Juggler (examples) </a>
-              <li><a href="${OVERVIEWGUIDE}/why.opensource.html">Why would I want to use open source software? </a>
+              <li><a href="${GALLERY}/index.html">What projects use VR Juggler (examples) </a>
+              <li><a href="http://www.opensource.org">Why would I want to use open source software? </a>
               <li><a href="${OVERVIEWGUIDE}/why.no.scenegraph.html">Why is there no scene-graph, etc?</a>
            </ul>
 
@@ -73,40 +72,43 @@
          <li>Find out what is a simulator and why do we need one? 
          <li><a href="${GETTINGSTARTED}/app.running.html#simulator">Learn how
            to control the simulator</a>
-         <li>Learn how to configure an application
+         <li><a href="${VJCONTROL}/index.html">Learn how to configure an application</a>
          (simple description, refer to vjcontrol guide for more info) 
          <li>Learn what do I need to know to write an application 
          <ul>
-         <li>     What is an app object (and why is it "good")? 
-         <li>     How does Juggler use app objects? 
-         <li>     Learn how the app object gets invoked (show a simple main()). 
-         <li>     How do I put my application into an app object? 
-         <li>     <a href="${PROGRAMMERGUIDE}/helper.classes/index.html">What
-         are common classes used in app development?</a>
-         <li>     How do these classes work? 
+            <li>     What is an app object (and why is it "good")? 
+            <li>     How does Juggler use app objects? 
+            <li>     Learn how the app object gets invoked (show a simple main()). 
+            <li>     How do I put my application into an app object? 
+            <li>     <a href="${PROGRAMMERGUIDE}/helper.classes/index.html">What
+            are common classes used in app development?</a>
+            <li>     How do these classes work?
          </ul>
          <li>Learn how to write a simple application 
          <li>Learn how to write an app that uses context data 
-         <li>Learn about VR Juggler architecture 
+         <li><a href="${SPECIFICATION}/index.html">Learn about VR Juggler architecture </a>
        </ul>
 
 
      <h3> Developer new to Juggler, but with previous VR experience </h3>
        <ul>
+         <li>How do I port from my old VR system? 
+             (<a href="${PROGRAMMERGUIDE}/app.construction/cave-to-juggler.html">CAVElib</a>(tm), 
+              <a href="${PROGRAMMERGUIDE}/app.construction/glut-to-juggler.html">GLUT</a>)
          <li>Learn what about Juggler I really need to know to become an immediatly effective application developer? 
          (remember I just want to put my content into VR, 
          so don't bore me with a lot of basic details we already know.
          Plus I already know VR, so go fast) 
-         <li>Learn what a Juggler app look like? 
+         <li>Learn what a Juggler application looks like (in code, and <a href="${GALLERY}/index.html">running</a>)? 
          <li>Learn about application objects? 
          <li>Learn how to get input: The vjDeviceInterface 
          <li>Learn how to draw graphics 
          (mention that they should get familier with OpenGL? or OpenGL?-Performer, and point to good references) 
-        <li> Learn how to make sound 
+        <li> Learn how to make sound (for now check out <a href="http://www.openal.org">OpenAL</a>)
          <li>Learn about application objects, why? 
-         <li>Learn how does the system start? 
+         <li>Learn how the VR system starts? 
          <li>Learn where main() goes. (show example of the main()) 
-         <li>Learn about the VR Juggler architecture 
+         <li><a href="${SPECIFICATION}/index.html">Learn about the VR Juggler architecture </a>
        </ul>
 
 
@@ -127,6 +129,9 @@
          <li>How does it compare to other stuff 
          <li>What is unique about this research 
          <li>What projects use VR Juggler (examples) 
+         <li>How do I port from my old VR system? 
+             (<a href="${PROGRAMMERGUIDE}/app.construction/cave-to-juggler.html">CAVElib</a>(tm), 
+              <a href="${PROGRAMMERGUIDE}/app.construction/glut-to-juggler.html">GLUT</a>)
        </ul>
 
 
@@ -165,6 +170,7 @@
          <li>What does the environment have to be like? 
          <li>What libraries do we need? 
          <li>What new archs are being designed 
+         <li><a href="${TEAMGUIDE}/tutorials/add.device.driver.html"> How do I write a new driver for Juggler? </a>
        </ul>
 
 
@@ -177,8 +183,8 @@
          <li><a href="${TEAMGUIDE}/contribute/submit.html">How do I contribute
            if I wanted to?</a>
          <li>What needs are there? 
-         <li>What is the Juggler architecture details (what I need to know) 
-         <li>What is good about open source software? 
+         <li><a href="${SPECIFICATION}/index.html">What is the Juggler architecture details (what I need to know) </a>
+         <li><a href="http://www.opensource.org">What is good about open source software? </a>
        </ul>
 
 
@@ -193,28 +199,32 @@
 
 
      <h3> Low End Vr User </h3>
-         How can I write VR apps on the desktop 
-         Why would I want to do this 
-         Can I write a game on top of juggler (what issue would I encounter) 
-         can I use glut with juggler? (primitives, text) 
-         Can Juggler be used as a game engine? (what is stopping it from being one?) 
-
+       <ul>
+         <li>How can I write VR apps on the desktop 
+         <li>Why would I want to do this 
+         <li>Can I write a game on top of juggler (what issue would I encounter) 
+         <li>can I use glut with juggler? (primitives, text) 
+         <li>Can Juggler be used as a game engine? (what is stopping it from being one?) 
+       </ul>
 
 
      <h3> Spectator (CasualObserver?, Reporter, OurMoms) </h3>
-         (those wanting quick easily digestible info on vrjuggler) 
-         (those writing about juggler so that other people can easily digest it) 
-         Get a press kit (simple juggler explanation) 
-         Get Project Status 
-         Learn what is the license 
-         What projects use VR Juggler (examples) 
+     <ul>
+       <li>(those wanting quick easily digestible info on vrjuggler)
+       <li>(those writing about juggler so that other people can easily digest it)
+       <li>Get a press kit (<a href="${MISC}/about.html">simple juggler explanation</a>)
+       <li><a href="${MISC}/milestones.html">Get Project Status</a>
+       <li><a href="${LEGAL}/index.html">Learn what is the license</a>
+       <li><a href="${GALLERY}/index.html">What projects use VR Juggler</a> (examples)
+     </ul> 
 
 
 
      <h3> "So Tell Me Whats New" User</h3>
-         Read some recent news items 
-         Read the overall history of the juggler project 
-         Access the mail list archives 
+      <ul>
+        <li> <a href="${NEWS}/index.html">Read some recent news items </a>
+        <li> <a href="${MISC}/history.html">Read the overall history of the juggler project </a>
+        <li> Access the mail list archives [<a href="${JUGGLER_MAILING_LIST}">general info</a> | <a href="${JUGGLER_DEV_MAILING_LIST}">developer</a>]
          
 </body>
 </html>
