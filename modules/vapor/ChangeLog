@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-20 allenb   Complete rewrite of sim::SocketManager and many of the
+                    associated sim classes.
 2001-12-27 allenb   Added setNowReal() method to vpr::Interval.
 					NEW VERSION: 0.8.4
 2001-12-20 patrickh vpr::InetAddr now has getHostname() and getHostnames() that
