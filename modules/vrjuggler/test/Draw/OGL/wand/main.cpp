@@ -35,6 +35,8 @@
 //
 // main.cpp
 //----------------------------------------
+#include <iostream>
+#include <stdlib.h>
 #include <wandApp.h>
 
       // --- Lib Stuff --- //
@@ -49,27 +51,29 @@ int main(int argc, char* argv[])
    if (argc <= 1)
    {
       // display some usage info (holding the user by the hand stuff)
-      //  this will probably go away once the kernel becomes separate 
+      //  this will probably go away once the kernel becomes separate
       //  and can load application plugins.
-      cout<<"\n"<<flush;
-      cout<<"\n"<<flush;
-      cout<<"Usage: "<<argv[0]<<" vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"<<flush;
-      cout<<"\n"<<flush;
-      cout<<"\n"<<flush;
+      std::cout << "\n\n" << std::flush;
+      std::cout << "Usage: " << argv[0]
+                << " vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"
+                << std::flush;
+      std::cout << "\n\n" << std::flush;
       exit(1);
    }
-   
+
    // Load any config files specified on the command line
-   for(int i=1;i<argc;i++)
+   for ( int i = 1; i < argc; ++i )
+   {
       kernel->loadConfigFile(argv[i]);
+   }
 
    kernel->start();
 
    /*
-   for(int i=0;i<20;i++)
+   for ( int i = 0; i < 20; ++i )
    {
       vpr::System::usleep(50000);
-      cout << i << "." << flush;
+      std::cout << i << "." << std::flush;
    }
    */
 
