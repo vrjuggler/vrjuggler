@@ -41,7 +41,7 @@
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Singleton.h>
-#include <vpr/DynLoad/LibraryLoader.h>
+#include <vpr/DynLoad/Library.h>
 
 #include <jccl/Config/Configuration.h>
 #include <jccl/Config/ConfigDefinitionRepository.h>
@@ -470,7 +470,7 @@ private:
    std::list<PendingElement>::size_type mLastPendingSize;
    //@}
 
-   vpr::LibraryLoader mPluginLoader;
+   vpr::LibraryPtr mRemoteRtrcPlugin;
 
    /** Network communications object for reconfiguration control. */
    RemoteReconfig* mReconfigIf;
