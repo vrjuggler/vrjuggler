@@ -399,9 +399,28 @@ configure.pl
 
 =over 8
 
+=item B<--script-help>
+
+Print usage information of this script alone and exit.
+
 =item B<--help>
 
+Print usage information for all the known configure scripts.  The
+knowledge of configure scripts comes from the configuration file.  The
+output may be limited using the --module argument, described below.
+
 =item B<--cfg>=file
+
+Name the configuration file to be used by this script.  If not specified,
+it defaults to juggler.cfg which must exist in the current working
+directory.
+
+=item B<--module>=name
+
+Limit the work done by this script to what is required by the named
+module.  The given name must correspond to one listed in the aforementioned
+configuration file.  This can be specified in conjunction with B<--help>
+to limit the output to only what is appropriate for the named module.
 
 =back
 
