@@ -105,7 +105,7 @@ void digitalGloveApp::myDraw()
       {
          glPushMatrix();
             finger_matrix =
-               mGlove->getPos((gadget::GloveData::GloveComponent) finger);
+               mGlove->getTipTransform((gadget::GloveData::GloveComponent) finger);
             glMultMatrixf(finger_matrix.mData);
             drawSphere((0.1f*(1.0f/12.0f)), 4, 4);
          glPopMatrix();
@@ -126,9 +126,9 @@ void digitalGloveApp::myDraw()
          glPushMatrix();
             gmtl::Point3f origin(0,0,0);    // Base of the vector
             finger_matrix =
-               mGlove->getPos((gadget::GloveData::GloveComponent) finger);
+               mGlove->getTipTransform((gadget::GloveData::GloveComponent) finger);
             origin = finger_matrix * origin;     // Go to new coord system
-            gmtl::Point3f end = origin + (0.25 * mGlove->getVector((gadget::GloveData::GloveComponent) finger));
+            gmtl::Point3f end = origin + (0.25 * mGlove->getTipVector((gadget::GloveData::GloveComponent) finger));
             drawLine(origin, end);
          glPopMatrix();
       }
