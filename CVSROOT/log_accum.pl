@@ -270,7 +270,7 @@ sub build_header {
 sub mlist_map {
     local($dir) = @_;		# perl warns about this....
    
-    return 'patrick@vrac.iastate.edu,kevn@vrjuggler.org,allenb@vrac.iastate.edu';
+    return 'kevn@vrjuggler.org,patrick@vrac.iastate.edu,allenb@vrac.iastate.edu';
 }    
 
 sub do_changes_file {
