@@ -49,11 +49,13 @@ SUBOBJDIR	= $(GAD_LIBRARY)
 
 ifneq (@OS_TYPE@, Win32)
 ifneq (@PLATFORM@, Darwin)
-SRCS		= drivers.c		\
-                  driveunx.c 		\
-                  hci.c 		\
-                  iboxStandalone.c	\
-                  Ibox.cpp
+SRCS		= ibox2.cpp
+
+#                  drivers.c		\
+#                  driveunx.c 		\
+#                  hci.c 		\
+#                  iboxStandalone.c	\
+#                  Ibox.cpp
 endif
 endif
 
