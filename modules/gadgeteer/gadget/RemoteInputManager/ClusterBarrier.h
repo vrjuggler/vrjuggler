@@ -131,7 +131,7 @@ public:
    }
    virtual ~ClusterBarrierTCP()
    {
-
+      
    }
 
    virtual vpr::ReturnStatus Init()
