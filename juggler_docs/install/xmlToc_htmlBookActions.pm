@@ -223,12 +223,16 @@ sub loadHTML ($$$) {
         $input =~ /<\s*body.*?>(.*?)<\s*\/body\s*>/is;
         my $body = "$1";
 
+        my $html_comment_begin = $InstallWeb::html_comment_begin;
+        my $html_comment_end   = $InstallWeb::html_comment_end;
+
+        # Strip out tables of contents.  We will let the HTML -> PostScript
+        # or HTML -> PDF converted make the TOC.
+        $body =~ s/${html_comment_begin}\s+install-web\s+toc-begin\s*${html_comment_end}.*?${html_comment_begin}\s+install-web\s+toc-end\s*${html_comment_end}//ogis;
+
         filterHTML(\$body);
 
         # At this point, the HTML is suitable for appending.
-
-        my $html_comment_begin = $InstallWeb::html_comment_begin;
-        my $html_comment_end   = $InstallWeb::html_comment_end;
 
         # If this file is flagged as an appendix, move its contents to the
         # book's appendices.
