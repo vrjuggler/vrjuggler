@@ -5,9 +5,9 @@ Builder: JExplorerBuilder V 1. 0. 7
     >
 < font face="Arial" style="Plain" size="${TREE_FONTSIZE}">
 < idefault title="Item" image="Folder_Closed.gif" target="Body" rtarget="NewWindow" imagetwo="" info="VR Juggler" link="" rlink="">
-< rootfolder selectID="2" selectURL="${NEWS}/index.html" title="VR Juggler" link="../index.html" info="Juggler Virtual Reality Platform" target="_top" image="Home.gif" imagetwo="Home.gif" >
+< rootfolder selectID="2" selectURL="${NEWS}/index.html" title="VR Juggler Web Site" link="../index.html" info="Welcome to the Juggler Virtual Reality Platform project" target="_top" image="Home.gif" imagetwo="Home.gif" >
 
-    < item title="Mission Statement" link="${MISC}/mission.statement.html"  info="VR Juggler Mission Statement: What is juggler's intent, how will it be used in the future." image="Speaker.gif" >
+    < item title="StartPage" link="${ROOT}/frontpage.html"  info="Introduction to the VR Juggler website: What is juggler?  How do I get it?  How do I learn more???  Direct me to something useful..." image="Speaker.gif" >
     
     < item title="News" link="${NEWS}/index.html"  info="The latest Juggler news" image="Newspaper.gif" >
     < item title="FAQ" link="${MISC}/faq.html"  info="Frequently Asked Questions" image="Leaf.gif" >
@@ -41,7 +41,7 @@ Builder: JExplorerBuilder V 1. 0. 7
                 < item title="Juggler License (LGPL)" link="${LEGAL}/LGPL.html"  info="The LGPL license used for VR Juggler." image="Leaf.gif" >
                 < item title="Documentation License (GPL)" link="${LEGAL}/GPL.html" info="The GPL license used for VR Juggler documentation." image ="Leaf.gif" >
     </folder>
-    < item title="SiteMap" link="${SITEMAP}" target="NewWindow" rtarget="Body" info="Check out the Juggler page at sourceforge" image="sourceforge.icon.gif" >
+    < item title="SiteMap" link="${SITEMAP}" target="Body" rtarget="NewWindow" info="SiteMap of entire Juggler site" image="sitemap.gif" >
     < item title="--SourceForge" link="${JUGGLER_SOURCEFORGE}" target="NewWindow" rtarget="Body" info="Check out the Juggler page at sourceforge" image="sourceforge.icon.gif" >
     </font>
     

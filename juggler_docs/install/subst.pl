@@ -49,6 +49,7 @@ $path_subst{"VJCONTROL"} = 'html/vjcontrol';
 $path_subst{"TEAMGUIDE"} = 'html/juggler.team.guide';
 
 $path_subst{"DOWNLOAD"} = 'html/download';
+$path_subst{"GLOSSARY"} = 'html/misc/glossary.html';
 $path_subst{"LAYOUT"} = 'html/layout';
 $path_subst{"LEGAL"} = 'html/legal';
 $path_subst{"MISC"} = 'html/misc';
