@@ -130,7 +130,7 @@ void vjGlPipe::controlLoop(void* nullParam)
       // XXX: This may have to be here because of need to get open window event (Win32)
       // otherwise I would like to move it to being after the swap to get better performance
       {
-         for(int winId=0;winId<openWins.size();winId++)
+         for(unsigned int winId=0;winId<openWins.size();winId++)
             openWins[winId]->checkEvents();
       }
 
@@ -146,7 +146,7 @@ void vjGlPipe::controlLoop(void* nullParam)
             mPerfBuffer->set(++mPerfPhase);
 
          // Render the windows
-         for (int winId=0;winId < openWins.size();winId++)
+         for (unsigned int winId=0;winId < openWins.size();winId++)
             renderWindow(openWins[winId]);
 
          renderCompleteSema.release();
@@ -158,7 +158,7 @@ void vjGlPipe::controlLoop(void* nullParam)
          swapTriggerSema.acquire();
 
          // Swap all the windows
-         for(int winId=0;winId < openWins.size();winId++)
+         for(unsigned int winId=0;winId < openWins.size();winId++)
             swapWindowBuffers(openWins[winId]);
 
          swapCompleteSema.release();
@@ -179,7 +179,7 @@ void vjGlPipe::checkForWindowsToClose()
       vjGuard<vjMutex> guardNew(newWinLock);
       vjGuard<vjMutex> guardOpen(openWinLock);
 
-      for(int i=0;i<mClosingWins.size();i++)
+      for(unsigned int i=0;i<mClosingWins.size();i++)
       {
          vjGlWindow* win = mClosingWins[i];
 
@@ -220,7 +220,7 @@ void vjGlPipe::checkForNewWindows()
       vjGuard<vjMutex> guardNew(newWinLock);
       vjGuard<vjMutex> guardOpen(openWinLock);
 
-      for (int winNum=0; winNum<newWins.size(); winNum++)
+      for (unsigned int winNum=0; winNum<newWins.size(); winNum++)
       {
          newWins[winNum]->open();
          newWins[winNum]->makeCurrent();

@@ -50,9 +50,8 @@ public:
       //!ARGS: _num - The id number of the pipe.
       //!NOTE: All contained windows SHOULD have the same pipe number
    vjGlPipe(int num, vjGlDrawManager* glMgr)
-      : controlExit(0), glManager(glMgr),
-        renderTriggerSema(0), renderCompleteSema(0), swapTriggerSema(0), swapCompleteSema(0),
-        mActiveThread(NULL), mPipeNum(num)
+      : mActiveThread(NULL), mPipeNum(num), controlExit(0), glManager(glMgr),
+        renderTriggerSema(0), renderCompleteSema(0), swapTriggerSema(0), swapCompleteSema(0)
    {
       mThreadRunning = false;
       char* namebuf = new char[42];
@@ -141,6 +140,9 @@ private:
    void swapWindowBuffers(vjGlWindow* win);
 
 private:
+   vjThread*   mActiveThread;      //: The thread running this object
+   bool        mThreadRunning;      //: Do we have a running thread?
+   
    int   mPipeNum;                     //: The id of the pipe
 
    std::vector<vjGlWindow*> newWins;  //: List of windows still to be opened on current pipe
@@ -152,18 +154,15 @@ private:
    std::vector<vjGlWindow*> mClosingWins; //: List of windows to close
    vjMutex mClosingWinLock;               //: Lock for access the windows to close
 
+   int         controlExit;         //: Flag for when to exit the control loop
+
    vjGlDrawManager*    glManager;    //: The openlGL manager that we are rendering for
                                      //: Needed to get app, etc.
 
-   vjSemaphore    renderCompleteSema;  //: signals render completed
    vjSemaphore    renderTriggerSema;   //: Signals render trigger
+   vjSemaphore    renderCompleteSema;  //: signals render completed
    vjSemaphore    swapTriggerSema;     //: Signals a swap to happen
    vjSemaphore    swapCompleteSema;    //: Signals a swap has been completed
-
-   int         controlExit;         //: Flag for when to exit the control loop
-
-   vjThread*   mActiveThread;      //: The thread running this object
-   bool        mThreadRunning;      //: Do we have a running thread?
 
     vjPerfDataBuffer* mPerfBuffer;  //: Performance data for this pipe
     int mPerfPhase;                 //: utility var for perf measurement

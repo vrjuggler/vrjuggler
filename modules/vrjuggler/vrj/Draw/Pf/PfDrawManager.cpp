@@ -47,7 +47,7 @@ vjPfDrawManager* vjPfDrawManager::_instance = NULL;
 void vjPfDrawManager::configInitial(vjConfigChunkDB*  chunkDB)
 {
    std::vector<vjConfigChunk*>* disp_chunks;
-   disp_chunks = chunkDB->getMatching("displaySystem");       // Get the chunk to config system
+   disp_chunks = vjDisplayManager::instance()->getDisplaySystemChunk();       // Get the chunk to config system
 
    if (disp_chunks->size() <= 0)
       cerr << "vjPfDrawManager::config: ERROR: Chunks not found. " << endl;
@@ -188,8 +188,8 @@ void vjPfDrawManager::initDrawing()
       vjDEBUG(vjDBG_DRAW_MGR,1) << "  " << mono_fb_config[i] << endl << vjDEBUG_FLUSH;
 
    //  For each display:
-   //	    -Create a pWin for it
-   //	    -Create the channels to put it the pWin
+   //     -Create a pWin for it
+   //     -Create the channels to put it the pWin
    std::vector<vjDisplay*> displays = displayManager->getActiveDisplays();
    for (std::vector<vjDisplay*>::iterator dispIter = displays.begin();
        dispIter != displays.end(); dispIter++)
@@ -303,7 +303,7 @@ void vjPfDrawManager::initDrawing()
       if (dispIndex != 0)                    // Assumes that all displays will have a valid left channel
          masterChan->attach(left_ch);
       if(right_ch != NULL)
-      	masterChan->attach(right_ch);
+         masterChan->attach(right_ch);
    }
 
    // --- Setup channel's scene --- //

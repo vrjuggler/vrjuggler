@@ -42,7 +42,7 @@ bool vjSimDigital::config(vjConfigChunk* chunk)
 void vjSimDigital::updateData()
 {
    // -- Update digital data --- //
-   for (int i = 0; i < mSimKeys.size(); i++)
+   for (unsigned int i = 0; i < mSimKeys.size(); i++)
    {
       if(checkKeyPair(mSimKeys[i]))             // If keys pressed
          mDigitalData[i] = 1;

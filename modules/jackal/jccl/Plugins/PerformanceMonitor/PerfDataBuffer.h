@@ -61,15 +61,15 @@ class vjPerfDataBuffer: public vjTimedUpdate {
 
     struct buf_entry {
 
-	//: an index for the point in the proc. that we're at
-	int              phase;
+   //: an index for the point in the proc. that we're at
+   int              phase;
 
-	//: time stamp associated with this point.
-	vjTimeStamp      ts;
+   //: time stamp associated with this point.
+   vjTimeStamp      ts;
 
-	buf_entry() {
-	    phase = 0;
-	}
+   buf_entry() {
+       phase = 0;
+   }
     };
 
 
@@ -102,12 +102,12 @@ public:
 
     //: destructor
     //: POST: all memory & buffers have been freed.
-    ~vjPerfDataBuffer ();
+    virtual ~vjPerfDataBuffer ();
 
 
 
     virtual std::string getName() {
-	return (std::string)name;
+   return (std::string)name;
     }
 
     //: activates the buffer
@@ -173,7 +173,7 @@ public:
 
     //: just empties out the buffer & throws away the data.
     void dumpData();
-	
+   
 };
 
 

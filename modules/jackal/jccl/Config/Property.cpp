@@ -39,9 +39,9 @@ vjProperty::vjProperty (vjPropertyDesc *pd) {
     embeddesc = NULL;
 
     if (type == T_EMBEDDEDCHUNK) {
-	vjEnumEntry *e = description->getEnumEntryAtIndex (0);
-	if (e) 
-	    embeddesc = vjChunkFactory::getChunkDesc (e->getName());
+   vjEnumEntry *e = description->getEnumEntryAtIndex (0);
+   if (e) 
+       embeddesc = vjChunkFactory::instance()->getChunkDesc (e->getName());
     }
 
     /* the idea here is that if num == -1 we can add values to 
@@ -49,12 +49,12 @@ vjProperty::vjProperty (vjPropertyDesc *pd) {
      * otherwise we can just set the extant values.
      */
     if (num != -1) {
-	/* we're filling the vector with num copies of a 
-	 * default vjVarValue */
-	for (j = 0; j < num; j++ ) {
-	    v = createVarValue (j);
-	    value.push_back(v);
-	}
+   /* we're filling the vector with num copies of a 
+    * default vjVarValue */
+   for (j = 0; j < num; j++ ) {
+       v = createVarValue (j);
+       value.push_back(v);
+   }
     }
 }
 
@@ -63,18 +63,18 @@ vjProperty::vjProperty (vjPropertyDesc *pd) {
 vjVarValue *vjProperty::createVarValue (int i) {
     // if i == -1, we're just tacking onto the end
     if (i == -1)
-	i = value.size();
+   i = value.size();
     if (type == T_EMBEDDEDCHUNK) {
-	vjConfigChunk *ch = vjChunkFactory::createChunk (embeddesc);
-	if (description->getValueLabelsSize() > i)
-	    ch->setProperty ("Name", description->getValueLabel(i));
-	else {
-	    ch->setProperty ("Name", description->getName());
-	}
-	return new vjVarValue (ch);
+   vjConfigChunk *ch = vjChunkFactory::instance()->createChunk (embeddesc);
+   if (description->getValueLabelsSize() > i)
+       ch->setProperty ("Name", description->getValueLabel(i));
+   else {
+       ch->setProperty ("Name", description->getName());
+   }
+   return new vjVarValue (ch);
     }
     else
-	return new vjVarValue (type);
+   return new vjVarValue (type);
 }
  
 
@@ -83,7 +83,7 @@ vjProperty::~vjProperty () {
     int i;
 
     for (i = 0; i < value.size(); i++)
-	delete (value)[i];
+   delete (value)[i];
 }
 
 
@@ -98,7 +98,7 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
     int i;
 
     if (&p == this)
-	return *this;
+   return *this;
 
     description = p.description;
     type = p.type;
@@ -117,12 +117,12 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
 
 bool vjProperty::operator== (const vjProperty& p) const {
     if (description != p.description)
-	return false;
+   return false;
     if (value.size() != p.value.size())
-	return false;
+   return false;
     for (int i = 0; i < value.size(); i++)
-	if (*(value[i]) != *(p.value[i]))
-	    return false;
+   if (*(value[i]) != *(p.value[i]))
+       return false;
     return true;
 }
 
@@ -131,13 +131,13 @@ bool vjProperty::operator== (const vjProperty& p) const {
 bool vjProperty::applyUnits (CfgUnit u) {
 
     if (type == T_DISTANCE) {
-	for (int j = 0; j < value.size(); j++)
-	    setValue( toFeet (getValue(j), u), j);
-	return true;
+   for (int j = 0; j < value.size(); j++)
+       setValue( toFeet (getValue(j), u), j);
+   return true;
     }
     else {
-	//cerr << "Units may only be applied to Distance values." <<endl;
-	return false;
+   //cerr << "Units may only be applied to Distance values." <<endl;
+   return false;
     }
 }
 
@@ -156,28 +156,28 @@ vjEnumEntry* vjProperty::getEnumEntryWithValue (int val) const {
 ostream& operator << (ostream &out, vjProperty& p) {
     out << p.getToken().c_str() << " { ";
     for (int i = 0; i < p.value.size(); i++) {
-	vjVarValue *v = ((p.value))[i];
-	
-	if ((p.type == T_STRING) || (p.type == T_CHUNK)) {
-	    out << '"' << *v << '"';
-	}
-	else if (p.type == T_EMBEDDEDCHUNK) {
-	    out << "\n" << *v;
-	}
-	else if ((p.type == T_FLOAT) || (p.type == T_BOOL)) {
-	    out << *v;
-	}
-	else {
-	    vjEnumEntry *e = p.getEnumEntryWithValue((int)(*v));
-	    if (e)
-		out << '"' << e->getName().c_str() << '"';
-	    else
-		out << *v;
-	}
-	out << " ";
+   vjVarValue *v = ((p.value))[i];
+   
+   if ((p.type == T_STRING) || (p.type == T_CHUNK)) {
+       out << '"' << *v << '"';
+   }
+   else if (p.type == T_EMBEDDEDCHUNK) {
+       out << "\n" << *v;
+   }
+   else if ((p.type == T_FLOAT) || (p.type == T_BOOL)) {
+       out << *v;
+   }
+   else {
+       vjEnumEntry *e = p.getEnumEntryWithValue((int)(*v));
+       if (e)
+      out << '"' << e->getName().c_str() << '"';
+       else
+      out << *v;
+   }
+   out << " ";
     }
     if (p.type == T_DISTANCE)
-	out << " " << unitString (p.units);
+   out << " " << unitString (p.units);
     out << " } ";
     return out;
 }
@@ -186,7 +186,7 @@ ostream& operator << (ostream &out, vjProperty& p) {
 
 vjVarValue& vjProperty::getValue (int ind) {
     if ((ind < 0) || (ind >= value.size())) {
-	return vjVarValue::getInvalidInstance();
+   return vjVarValue::getInvalidInstance();
     }
     return *((value)[ind]);
 }
@@ -214,17 +214,17 @@ bool vjProperty::preSet (int ind) {
     vjVarValue *v;
 
     if (ind < 0)
-	return false;
+   return false;
     if (ind >= value.size()) {
-	if (num == -1) {
-	    for (i = value.size(); i <= ind; i++) {
-		v = createVarValue();
-		value.push_back(v);
-	    }
-	    return true;
-	}
-	else
-	    return false;
+   if (num == -1) {
+       for (i = value.size(); i <= ind; i++) {
+      v = createVarValue();
+      value.push_back(v);
+       }
+       return true;
+   }
+   else
+       return false;
     }
     return true;
 }
@@ -233,7 +233,7 @@ bool vjProperty::preSet (int ind) {
 
 bool vjProperty::setValue (int val, int ind ) {
     if (!preSet(ind))
-	return false;
+   return false;
     *((value)[ind]) = val;
     return true;
 }
@@ -242,7 +242,7 @@ bool vjProperty::setValue (int val, int ind ) {
 
 bool vjProperty::setValue (float val, int ind ) {
     if (!preSet(ind))
-	return false;
+   return false;
     *((value)[ind]) = val;
     return true;
 }
@@ -251,7 +251,7 @@ bool vjProperty::setValue (float val, int ind ) {
 
 bool vjProperty::setValue (const std::string& val, int ind) {
     if (!preSet(ind))
-	return false;
+   return false;
     *((value)[ind]) = val;
     return true;
 }
@@ -260,8 +260,8 @@ bool vjProperty::setValue (const std::string& val, int ind) {
 
 bool vjProperty::setValue (vjConfigChunk* val, int ind) {
     if (!preSet(ind)) {
-	vjDEBUG(vjDBG_ERROR, 1) << "vjProperty::Preset failed!\n" << vjDEBUG_FLUSH;
-	return false;
+   vjDEBUG(vjDBG_ERROR, 1) << "vjProperty::Preset failed!\n" << vjDEBUG_FLUSH;
+   return false;
     }
     *(value[ind]) = val;
     return true;
@@ -270,7 +270,7 @@ bool vjProperty::setValue (vjConfigChunk* val, int ind) {
 
 bool vjProperty::setValue (vjVarValue& val, int ind) {
     if (!preSet (ind))
-	return false;
+   return false;
     *(value[ind]) = val;
     return true;
 }

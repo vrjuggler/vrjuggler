@@ -51,7 +51,7 @@ public:
    vjPosProxy() : m_posPtr(NULL), m_unitNum(-1), etrans(false)
    {;}
 
-   ~vjPosProxy() {}
+   virtual ~vjPosProxy() {}
 
 
    //: Update the proxy's copy of the data
@@ -66,7 +66,7 @@ public:
 
     //: returns time of last update...
     vjTimeStamp* getUpdateTime () {
-	return &m_posUpdateTime;
+   return &m_posUpdateTime;
     }
 
 

@@ -21,7 +21,10 @@
 #include <vjConfig.h>
 #include <string.h>
 #include <Kernel/vjKernel.h>
+#include <Kernel/vjDebug.h>
 #include <Config/vjChunkFactory.h>
+#include <Kernel/vjConfigManager.h>
+#include <Threads/vjThread.h>
 
 // Get the system factory we need
 #if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_Solaris)
@@ -47,8 +50,9 @@ int vjKernel::start()
    // Create a new thread to handle the control
    vjThreadMemberFunctor<vjKernel>* memberFunctor =
    new vjThreadMemberFunctor<vjKernel>(this, &vjKernel::controlLoop, NULL);
-
-   mControlThread = new vjThread(memberFunctor, 0);
+   
+   vjThread* new_thread;   // I set mControlThread in vjKernel::controlLoop
+   new_thread = new vjThread(memberFunctor, 0);
 
    vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::start: Just started control loop.  " << mControlThread << endl << vjDEBUG_FLUSH;
 
@@ -59,6 +63,9 @@ int vjKernel::start()
 void vjKernel::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::controlLoop: Started.\n" << vjDEBUG_FLUSH;
+   
+   mControlThread = vjThread::self();     // Set the id of my thread
+
    vjTimeStamp::initialize();
    // Do any initial configuration
    initConfig();
@@ -93,6 +100,7 @@ void vjKernel::controlLoop(void* nullParam)
       else
       {
          // ??? Should we do this, or just grind up the CPU as fast as possible
+         vjASSERT(NULL != mControlThread);      // If control thread is not set correctly, it will seg fault here
          mControlThread->yield();   // Give up CPU
       }
 
@@ -128,7 +136,7 @@ void vjKernel::checkForReconfig()
    vjASSERT(vjThread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
    // ---- RECONFIGURATION --- //
-   checkConfigQueues();
+   configProcessPending();             // Process pending config
 
    // ---- APP SWITCH ---- //
    // check for a new applications
@@ -199,18 +207,13 @@ void vjKernel::initConfig()
 
    // --- CREATE SHARED MEMORY --- //
    vjSharedPool::init();         // Try to init the pool stuff
-   sharedMemPool = new vjSharedPool(1024*1024);      // XXX: should not be system specific
-
-
-   // Setup initial environments.
-   if(mInitialChunkDB == NULL)            // We don't have a database.  Still need to init the sys though
-      loadConfigFile(std::string(""));
-
+   sharedMemPool = new vjSharedPool(1024*1024);      // Create shared memory pool
+   
    initialSetupInputManager();
    initialSetupDisplayManager();
    setupEnvironmentManager();
 
-   configAddDB(mInitialChunkDB);       // Add the initial configuration to the config queue
+   //??// processPending() // Should I do this here   
 
 #ifdef VJ_OS_IRIX
    mSysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
@@ -242,6 +245,7 @@ void vjKernel::updateFrameData()
 // ----------------------------------------------------------------- //
 //: Take care of adding a single chunk
 //! RETVAL: true - Chunk has been added
+/*
 bool vjKernel::processChunkAdd(vjConfigChunk* chunk)
 {
    bool added_chunk = false;        // Flag: true - chunk was added
@@ -258,8 +262,8 @@ bool vjKernel::processChunkAdd(vjConfigChunk* chunk)
       added_chunk = mDisplayManager->configAdd(chunk);
    if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunk)))   // drawMgr
       added_chunk = mDrawManager->configAdd(chunk);
-//**//         if(environmentManager->configCanHandle(sorted_chunks[i]))         // envMgr
-//**//            added_chunk = environmentManager->configAdd(sorted_chunks[i]);
+////         if(environmentManager->configCanHandle(sorted_chunks[i]))         // envMgr
+////            added_chunk = environmentManager->configAdd(sorted_chunks[i]);
    if((mApp != NULL) && (mApp->configCanHandle(chunk)))   // App
       added_chunk = mApp->configAdd(chunk);
 
@@ -281,19 +285,39 @@ bool vjKernel::processChunkRemove(vjConfigChunk* chunk)
       removed_chunk = mDisplayManager->configRemove(chunk);
    if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunk)))   // drawMgr
       removed_chunk = mDrawManager->configRemove(chunk);
-//**//         if(environmentManager->configCanHandle(chunks[i]))                      // envMgr
-//**//            removed_chunk = environmentManager->configRemove(chunks[i]);
+////         if(environmentManager->configCanHandle(chunks[i]))                      // envMgr
+////            removed_chunk = environmentManager->configRemove(chunks[i]);
    if((mApp != NULL) && (mApp->configCanHandle(chunk)))                // App
       removed_chunk = mApp->configRemove(chunk);
 
    return removed_chunk;
 }
+*/
 
 
 // -------------------------------
-// Config chunks local to kernel
+// CHUNK Handler
 // -------------------------------
-bool vjKernel::configKernelHandle(vjConfigChunk* chunk)
+//: Process any pending reconfiguration that we can deal with
+//  
+//  For all dependant managers, call process pending.
+//  and call it on our selves
+void vjKernel::configProcessPending(bool lockIt)
+{
+   if(vjConfigManager::instance()->pendingNeedsChecked())
+   {
+      vjConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks   
+      getInputManager()->configProcessPending(lockIt);
+      mDisplayManager->configProcessPending(lockIt);
+      if(NULL != mDrawManager)
+         mDrawManager->configProcessPending(lockIt);              // XXX: We should not necessarily do this for all draw mgrs
+      if(NULL != mApp)
+         mApp->configProcessPending(lockIt);
+   }
+}
+
+
+bool vjKernel::configCanHandle(vjConfigChunk* chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
@@ -303,11 +327,11 @@ bool vjKernel::configKernelHandle(vjConfigChunk* chunk)
       return false;
 }
 
-bool vjKernel::configKernelAdd(vjConfigChunk* chunk)
+bool vjKernel::configAdd(vjConfigChunk* chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
-   vjASSERT(configKernelHandle(chunk));
+   vjASSERT(configCanHandle(chunk));
 
    if(std::string("JugglerUser") == chunk_type)
    {
@@ -324,8 +348,9 @@ bool vjKernel::configKernelAdd(vjConfigChunk* chunk)
       return false;
 }
 
-bool vjKernel::configKernelRemove(vjConfigChunk* chunk)
+bool vjKernel::configRemove(vjConfigChunk* chunk)
 {
+   vjASSERT(configCanHandle(chunk));
    return false;
 }
 
@@ -335,47 +360,30 @@ void vjKernel::loadConfigFile(std::string filename)
 {
    vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::loadConfigFile: " << filename.c_str() << endl << vjDEBUG_FLUSH;
 
-   // ------ OPEN chunksDesc file ----- //
-   char* vj_base_dir = getenv("VJ_BASE_DIR");
-   if(vj_base_dir == NULL)
-   {
-      vjDEBUG(vjDBG_ERROR,0) << "vjKernel::loadConfig: Env var VJ_BASE_DIR not defined." << endl << vjDEBUG_FLUSH;
-      exit(1);
-   }
-
-   char chunk_desc_file[250];
-   strcpy(chunk_desc_file, vj_base_dir);
-   strcat(chunk_desc_file, "/Data/chunksDesc");
-   vjChunkFactory::loadDescs (chunk_desc_file);
-
-   // Create chunk Data bases
-   if(NULL == mInitialChunkDB)
-      mInitialChunkDB = new vjConfigChunkDB();      // Create config database
-
-   if(NULL == mChunkDB)
-      mChunkDB = new vjConfigChunkDB();      // Create config database
-
-
+   vjConfigChunkDB chunk_db;
 
    // ------- OPEN Program specified Config file ------ //
-   if(!filename.empty())   // We have a filename
+   if(filename.empty())   // We have a filename
+     return;
+   
+   if (!chunk_db.load(filename.c_str()))
    {
-      if (!mInitialChunkDB->load(filename.c_str()))
-      {
-         vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjKernel::loadConfig: DB Load failed to load file: " << filename.c_str() << endl << vjDEBUG_FLUSH;
-         exit(1);
-      }
+     vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjConfigManager::loadConfigFile: DB Load failed to load file: " << filename.c_str() << endl << vjDEBUG_FLUSH;
+     exit(1);
    }
+   
+   // Put them all in pending
+   vjConfigManager::instance()->addChunkDB(&chunk_db);
 
-   vjDEBUG(vjDBG_KERNEL,5) << "------------  Loaded Config Chunks ----------" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_KERNEL,5) << (*mInitialChunkDB) << vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_KERNEL,5) << "------------  Loaded Config Chunks ----------" << vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_KERNEL,5) << (*mInitialChunkDB) << vjDEBUG_FLUSH;
 }
 
 
 void vjKernel::initialSetupInputManager()
 {
    mInputManager = new (sharedMemPool) vjInputManager;
-   mInputManager->configureInitial(mInitialChunkDB);
+   //**//mInputManager->configureInitial(mInitialChunkDB);
 }
 
 
@@ -394,7 +402,7 @@ void vjKernel::startDrawManager(bool newMgr)
 
    if(newMgr)
    {
-      mDrawManager->configInitial(mInitialChunkDB);     // Give it the chunk DB to extract API specific info
+      //mDrawManager->configInitial(mInitialChunkDB);     // Give it the chunk DB to extract API specific info
       mDrawManager->setDisplayManager(mDisplayManager);
    }
    mDrawManager->setApp(mApp);
@@ -431,7 +439,7 @@ void vjKernel::setupEnvironmentManager()
 
 vjUser* vjKernel::getUser(std::string userName)
 {
-   for(int i=0;i<mUsers.size();i++)
+   for(unsigned int i=0;i<mUsers.size();i++)
       if(userName == mUsers[i]->getName())
          return mUsers[i];
 

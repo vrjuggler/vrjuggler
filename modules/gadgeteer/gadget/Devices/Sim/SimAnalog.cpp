@@ -43,7 +43,7 @@ bool vjSimAnalog::config(vjConfigChunk* chunk)
 void vjSimAnalog::updateData()
 {
    // -- Update analog data --- //
-   for (int i = 0; i < mSimKeysUp.size(); i++)
+   for (unsigned int i = 0; i < mSimKeysUp.size(); i++)
    {
       mAnaData[i] += checkKeyPair(mSimKeysUp[i]) * mAnaStep;
       mAnaData[i] -= checkKeyPair(mSimKeysDown[i]) * mAnaStep;

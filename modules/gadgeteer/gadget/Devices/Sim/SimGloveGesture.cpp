@@ -41,7 +41,7 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
    loadTrainedFile(sample_file);
 
    // Trim the lengths
-   int num_gestures = getNumGestures();
+   unsigned int num_gestures = getNumGestures();
    while(num_gestures < mSimKeys.size())     // If we have to many keys
    {
       mSimKeys.pop_back();
@@ -79,7 +79,7 @@ int vjSimGloveGesture::getGesture()
 void vjSimGloveGesture::updateData()
 {
    // Get the current gesture
-   for(int i=0;i<mSimKeys.size();i++)
+   for(unsigned int i=0;i<mSimKeys.size();i++)
    {
       if(checkKeyPair(mSimKeys[i]) > 0)
       {
