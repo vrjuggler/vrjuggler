@@ -79,7 +79,7 @@ namespace gadget
     mTrackdSensors = new TrackdSensorStandalone(shm_key);
 
     // set to active
-    active = 1;
+    mActive = true;
 
     // grow vector
     mCurSensorValues.resize(mTrackdSensors->numSensors());

@@ -51,16 +51,16 @@ bool IBox::config(jccl::ConfigChunkPtr c)
 
   vprDEBUG(vrjDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
                              << vprDEBUG_FLUSH;
-  port_id = static_cast<std::string>(c->getProperty( "portNum" ));
+  mPortStr = static_cast<std::string>(c->getProperty( "portNum" ));
 
   // Done in Input
   //active = 0;
-  baudRate = (long) static_cast<int>(c->getProperty("baud"));
+  mBaudRate = (long) static_cast<int>(c->getProperty("baud"));
 
   vprDEBUG(vrjDBG_INPUT_MGR,1) << "   Creating an IBox.. params: " << std::endl
-             << "    portnum: " << port_id << std::endl
-             << "        baud   : " << baudRate << std::endl
-             << "   instanceName: " << instName << std::endl << std::endl
+             << "    portnum: " << mPortStr << std::endl
+             << "        baud   : " << mBaudRate << std::endl
+             << "   instanceName: " << mInstName << std::endl << std::endl
              << vprDEBUG_FLUSH;
 
   return true;
@@ -89,45 +89,44 @@ IBox::~IBox()
 *********************************************** ahimberg */
 int IBox::startSampling()
 {
-  ibox2_result result;
+   ibox2_result result;
 
-  if (myThread == NULL)
-  {
+   if (mThread == NULL)
+   {
       resetIndexes();      // Reset the indexes for triple buffering
 
-      result = thingie.connect(port_id, baudRate);
+      result = thingie.connect(mPortStr, mBaudRate);
       if (result == thingie.SUCCESS)
       {
-       active = 1;
-       vprDEBUG(vrjDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
-                                  << std::flush << vprDEBUG_FLUSH;
-      }
-      else
+         mActive = true;
+         vprDEBUG(vrjDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
+         << std::flush << vprDEBUG_FLUSH;
+      } else
       {
-       active = 0;
-       vprDEBUG(vrjDBG_INPUT_MGR,0)
-          << "   FAILED TO CONNECT to the Ibox named " << instName
-          << std::endl << "     Ibox settings were: " << std::endl
-          << "      port : " << port_id << std::endl
-          << "   baudRate: " << baudRate << std::endl << std::endl
-          << vprDEBUG_FLUSH;
-       return 0;
+         mActive = false;
+         vprDEBUG(vrjDBG_INPUT_MGR,0)
+         << "   FAILED TO CONNECT to the Ibox named " << mInstName
+         << std::endl << "     Ibox settings were: " << std::endl
+         << "      port : " << mPortStr << std::endl
+         << "   mBaudRate: " << mBaudRate << std::endl << std::endl
+         << vprDEBUG_FLUSH;
+         return 0;
       }
       thingie.std_cmd(0,0,0);
 
 
       IBox* devicePtr = this;
       void sampleBox(void*);
-      myThread = new vpr::Thread(sampleBox, (void*)devicePtr);
-      if (!myThread->valid())
+      mThread = new vpr::Thread(sampleBox, (void*)devicePtr);
+      if (!mThread->valid())
          return 0; //fail
       else
       {
          return 1;
       }
-  }
-  else return 0; // already sampling
-
+   } 
+   else 
+      return 0; // already sampling
 }
 
 /**********************************************************
@@ -214,11 +213,11 @@ int IBox::sample()
 *********************************************** ahimberg */
 int IBox::stopSampling()
 {
-  if (myThread != NULL)
+  if (mThread != NULL)
   {
-    myThread->kill();
-    delete(myThread);
-    myThread = NULL;
+    mThread->kill();
+    delete(mThread);
+    mThread = NULL;
 
     vpr::System::usleep(100);        // 100 uSec pause
 

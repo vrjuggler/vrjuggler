@@ -200,7 +200,7 @@ int DTK::startSampling()
     }
 
 // Has the thread actually started already
-    if(myThread != NULL)
+    if(mThread != NULL)
     {
     vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
                         << "vjIsense: startSampling called, when already sampling.\n"
@@ -220,10 +220,10 @@ int DTK::startSampling()
         new vpr::ThreadMemberFunctor<DTK>(this, &DTK::controlLoop, NULL);
     vpr::Thread* new_thread;
     new_thread = new vpr::Thread(memberFunctor);
-    myThread = new_thread;
+    mThread = new_thread;
 
 
-    if ( myThread == NULL )
+    if ( mThread == NULL )
     {
         return 0;  // Fail
     } else {
@@ -323,14 +323,14 @@ int DTK::stopSampling()
     if (this->isActive() == false)
     return 0;
 
-    if (myThread != NULL)
+    if (mThread != NULL)
     {
     vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjDTK::stopSampling(): Stopping the DTK thread... "
                    << vprDEBUG_FLUSH;
 
-    myThread->kill();
-    delete myThread;
-    myThread = NULL;
+    mThread->kill();
+    delete mThread;
+    mThread = NULL;
 
     this->stopDTK();
 
@@ -413,7 +413,7 @@ bool DTK::startDTK()
         _dtkSegments[i]->connectSegment(_client);
     }
 
-    active = true;
+    mActive = true;
 
     return true;
 }
@@ -422,7 +422,7 @@ bool DTK::stopDTK()
 {
     if( !active || _client == NULL) return false;
     delete _client;
-    active = false;
+    mActive = false;
 
     return true;
 }

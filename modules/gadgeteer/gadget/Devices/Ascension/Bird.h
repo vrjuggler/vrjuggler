@@ -115,7 +115,7 @@ public:
 private:
    void positionCorrect(float&x,float&y,float&z);
    void initCorrectionTable();
-   vpr::Thread*   myThread;      // ptr to our thread object
+   vpr::Thread*   mThread;      // ptr to our thread object
    CalStruct   caltable;
    int  syncStyle, blocking;
    char repRate;

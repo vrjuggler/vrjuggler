@@ -49,7 +49,7 @@ namespace gadget
 
 int getReading(vrj::Matrix* data, int port);
 float rawToFloat(char& r1, char& r2);
-void  pickBird(int sensor, int port_id);
+void  pickBird(int sensor, int port);
 static int open_port(char* serialPort, int baud);
 static void set_blocking(int port, int blocking);
 static void set_sync(int port, int sync);
@@ -70,8 +70,8 @@ Bird::Bird()
   //theTransmitter = 3;
   hemisphere = LOWER_HEM;
   repRate = 'Q';
-  baudRate = 38400;
-  myThread = NULL;
+  mBaudRate = 38400;
+  mThread = NULL;
 }
 
 bool Bird::config(jccl::ConfigChunkPtr c)
@@ -79,7 +79,7 @@ bool Bird::config(jccl::ConfigChunkPtr c)
    if(! (Input::config(c) && Position::config(c)))
       return false;
 
-  strncpy(sPort,"/dev/ttyd3", 30);
+  strncpy(mPort,"/dev/ttyd3", 30);
   initCorrectionTable();
   mData = new PositionData[3];
 
@@ -118,7 +118,7 @@ static void sampleBirds(void* pointer)
 
 int Bird::startSampling()
 {
-   if (myThread == NULL) {
+   if (mThread == NULL) {
       //int processID;
       //int i;
 
@@ -126,28 +126,28 @@ int Bird::startSampling()
   valid = 1;
   progress = 2;
 
-  port_id = open_port(sPort, baudRate);
-  set_blocking(port_id, blocking);
-  set_sync(port_id,syncStyle);
-  set_group(port_id);
-  //set_autoconfig(port_id, theTransmitter);
-  //set_transmitter(port_id, theTransmitter);
-  set_filter(port_id, filter);
-  set_hemisphere(port_id, hemisphere); //, theTransmitter);
-  set_pos_angles(port_id); //, theTransmitter);
-  //pickBird(theTransmitter,port_id);
-  set_rep_and_stream(port_id, repRate);
+  mPortId = open_port(mPort, mBaudRate);
+  set_blocking(mPortId, blocking);
+  set_sync(mPortId,syncStyle);
+  set_group(mPortId);
+  //set_autoconfig(mPortId, theTransmitter);
+  //set_transmitter(mPortId, theTransmitter);
+  set_filter(mPortId, filter);
+  set_hemisphere(mPortId, hemisphere); //, theTransmitter);
+  set_pos_angles(mPortId); //, theTransmitter);
+  //pickBird(theTransmitter,mPortId);
+  set_rep_and_stream(mPortId, repRate);
 
-//  std::cout << "port_id:" << port_id << std::endl;
+//  std::cout << "mPortId:" << mPortId << std::endl;
 
 
   std::cout << "vjBird ready to go.." << std::endl;
 
   Bird* devicePtr = this;
 
-  myThread = new vpr::Thread(sampleBirds,(void*)devicePtr);
+  mThread = new vpr::Thread(sampleBirds,(void*)devicePtr);
 
-  if ( !myThread->valid() ) {
+  if ( !mThread->valid() ) {
      return -1; //fail
   }
   else {
@@ -166,7 +166,7 @@ int Bird::sample()
      //for(i=1; i < theTransmitter; i++)
      {
    //int subNum;
-        getReading(mData[progress].getPositionData(), port_id);
+        getReading(mData[progress].getPositionData(), mPortId);
         mData[progress].setTime();
    /* XXX:
    positionCorrect(theData[progress].pos[0],
@@ -186,11 +186,11 @@ int Bird::sample()
 
 int Bird::stopSampling()
 {
-   if (myThread != NULL)
+   if (mThread != NULL)
    {
-      myThread->kill();
-      delete(myThread);
-      myThread = NULL;
+      mThread->kill();
+      delete(mThread);
+      mThread = NULL;
 
       vpr::System::usleep(100);
       char   bird_command[4];
@@ -198,15 +198,15 @@ int Bird::stopSampling()
       std::cout << "stopping the flock.." << std::endl;
 
       bird_command[0] = 'B';
-      write(port_id, bird_command, 1);
-      tcflush(port_id, TCIFLUSH);
+      write(mPortId, bird_command, 1);
+      tcflush(mPortId, TCIFLUSH);
       vpr::System::usleep(500);
       bird_command[0] = 'G';
-      write(port_id, bird_command, 1);
-      tcflush(port_id, TCIFLUSH);
+      write(mPortId, bird_command, 1);
+      tcflush(mPortId, TCIFLUSH);
       vpr::System::sleep(2);
-      close(port_id);
-      port_id = -1;
+      close(mPortId);
+      mPortId = -1;
 
    }
    return 1;
@@ -237,7 +237,7 @@ void Bird::updateData()
 
 void Bird::setHemisphere(BIRD_HEMI h)
 {
-  if (active) {
+  if (isActive()) {
       std::cerr << "Cannot change the hemisphere\n";
       return;
    }
@@ -246,7 +246,7 @@ void Bird::setHemisphere(BIRD_HEMI h)
 
 void Bird::setFilters(BIRD_FILT f)
 {
-  if (active) {
+  if (isActive()) {
       std::cerr << "Cannot change filters while active\n";
       return;
   }
@@ -255,7 +255,7 @@ void Bird::setFilters(BIRD_FILT f)
 
 void Bird::setReportRate(char rRate)
 {
-  if (active) {
+  if (isActive()) {
       std::cerr << "Cannot change report rate while active\n";
       return;
   }
@@ -264,7 +264,7 @@ void Bird::setReportRate(char rRate)
 
 void Bird::setSync(int sync)
 {
-  if (active) {
+  if (isActive()) {
       std::cerr << "Cannot change report rate while active\n";
       return;
   }
@@ -273,7 +273,7 @@ void Bird::setSync(int sync)
 
 void Bird::setBlocking(int blVal)
 {
-  if (active) {
+  if (isActive()) {
       std::cerr << "Cannot change report rate while active\n";
       return;
   }
@@ -440,17 +440,17 @@ static int open_port(char* serialPort, int baud)
  // Open and close the port to reset the tracker, then
  // Open the port
  ///////////////////////////////////////////////////////////////////
-  int port_id = open(serialPort, O_RDWR | O_NDELAY);
-  if (port_id == -1)
+  int port_num = open(serialPort, O_RDWR | O_NDELAY);
+  if (port_num == -1)
    { std::cerr << "tracker port open failed\n";
-    return port_id;
+    return port_num;
    }
   vpr::System::sleep(2);
-  close(port_id);
-  port_id = open(serialPort,O_RDWR | O_NDELAY);
-  if (port_id == -1)
+  close(port_num);
+  port_num = open(serialPort,O_RDWR | O_NDELAY);
+  if (port_num == -1)
    { std::cerr << "tracker port open failed\n";
-    return port_id;
+    return port_num;
    }
 
  //////////////////////////////////////////////////////////////////
@@ -458,7 +458,7 @@ static int open_port(char* serialPort, int baud)
  //
  //////////////////////////////////////////////////////////////////
     termios port_a;
-    tcgetattr(port_id, &port_a);
+    tcgetattr(port_num, &port_a);
 
     port_a.c_iflag = port_a.c_oflag = port_a.c_lflag = 0;
 
@@ -478,11 +478,11 @@ static int open_port(char* serialPort, int baud)
     port_a.c_cc[4] = port_a.c_cc[5] = 1;
 
    // Set the new attributes
-    tcsetattr(port_id, TCSANOW, &port_a);
+    tcsetattr(port_num, TCSANOW, &port_a);
 #ifndef VPR_OS_HPUX /* HP:HACK - HP didn't like this. */
-    ioctl(port_id,TIOCNOTTY);
+    ioctl(port_num,TIOCNOTTY);
 #endif
-    return port_id;
+    return port_num;
   }
 
   void set_blocking(int port, int blocking)

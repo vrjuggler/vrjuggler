@@ -54,7 +54,7 @@ bool CyberGlove::config(jccl::ConfigChunkPtr c)
       return false;
 
 
-   vprASSERT(myThread == NULL);      // This should have been set by Input(c)
+   vprASSERT(mThread == NULL);      // This should have been set by Input(c)
 
     char* home_dir = c->getProperty("calDir").cstring();
     if (home_dir != NULL)
@@ -82,7 +82,7 @@ bool CyberGlove::config(jccl::ConfigChunkPtr c)
           << std::endl << std::endl << vprDEBUG_FLUSH;
     */
 
-    mGlove = new CyberGloveBasic( mCalDir, sPort, baudRate );
+    mGlove = new CyberGloveBasic( mCalDir, mPort, mBaudRate );
 
     return true;
 };
@@ -90,7 +90,7 @@ bool CyberGlove::config(jccl::ConfigChunkPtr c)
 int
 CyberGlove::startSampling()
 {
-   if (myThread == NULL)
+   if (mThread == NULL)
    {
       resetIndexes();
 
@@ -98,16 +98,16 @@ CyberGlove::startSampling()
       vpr::ThreadMemberFunctor<CyberGlove>* memberFunctor =
          new vpr::ThreadMemberFunctor<CyberGlove>(this, &CyberGlove::controlLoop, NULL);
 
-      myThread = new vpr::Thread(memberFunctor);
+      mThread = new vpr::Thread(memberFunctor);
 
-      if (!myThread->valid())
+      if (!mThread->valid())
       {
          return 0;
       }
       else
       {
          vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjCyberGlove is active " << std::endl << vprDEBUG_FLUSH;
-         active = 1;
+         mActive = true;
          return 1;
       }
   }
@@ -158,11 +158,11 @@ vpr::Guard<vpr::Mutex> updateGuard(lock);
 
 int CyberGlove::stopSampling()
 {
-   if (myThread != NULL)
+   if (mThread != NULL)
    {
-      myThread->kill();
-      delete myThread;
-      myThread = NULL;
+      mThread->kill();
+      delete mThread;
+      mThread = NULL;
       vpr::System::usleep(100);
 
       mGlove->close();

@@ -80,7 +80,7 @@ public:
    {
       m_visual = NULL;
       m_display = NULL;
-      //myThread = NULL; -- Should be done in base constructor
+      //mThread = NULL; -- Should be done in base constructor
 
       mPrevX = 0; mPrevY = 0;
       mLockState = Unlocked;     // Initialize to unlocked.

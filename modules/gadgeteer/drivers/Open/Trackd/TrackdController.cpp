@@ -79,7 +79,7 @@ bool TrackdController::config(jccl::ConfigChunkPtr c)
    mTrackdController = new TrackdControllerStandalone(shm_key);
 
    // set to active
-   active = 1;
+   mActive = true;
 
    // grow vector
    mCurValuators.resize(mTrackdController->numValuators());

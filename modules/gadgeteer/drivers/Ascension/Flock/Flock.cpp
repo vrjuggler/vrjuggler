@@ -107,13 +107,13 @@ Flock::Flock(const char* const port,
                       report,
                       calfile)
 {
-   myThread = NULL;
+   mThread = NULL;
    mData = NULL;
 }
 
 bool Flock::config(jccl::ConfigChunkPtr c)
 {
-   port_id = -1;
+   mPortId = -1;
 
    vprDEBUG(vrjDBG_INPUT_MGR,3) << "   Flock::Flock(jccl::ConfigChunk*)"
                               << std::endl << vprDEBUG_FLUSH;
@@ -155,7 +155,7 @@ bool Flock::config(jccl::ConfigChunkPtr c)
       << "          FlockStandalone::getNumBirds(): " << mFlockOfBirds.getNumBirds() << std::endl
       << "          FlockStandalone::getBaudRate(): " << mFlockOfBirds.getBaudRate() << std::endl
       << "          FlockStandalone::getPort(): " << mFlockOfBirds.getPort() << std::endl
-      << "     instance name : " << instName << std::endl
+      << "     instance name : " << mInstName << std::endl
       << std::endl << vprDEBUG_FLUSH;
 
    // init the correction table with the calibration file.
@@ -193,7 +193,7 @@ int Flock::startSampling()
       return 0;
    }
 
-   if (myThread == NULL)
+   if (mThread == NULL)
    {
       if (mData != NULL)
          delete[] mData;
@@ -226,9 +226,9 @@ int Flock::startSampling()
           new vpr::ThreadMemberFunctor<Flock>(this, &Flock::controlLoop, NULL);
       vpr::Thread* new_thread;
       new_thread = new vpr::Thread(memberFunctor);
-      myThread = new_thread;
+      mThread = new_thread;
 
-      if ( myThread == NULL )
+      if ( mThread == NULL )
       {
          return 0;  // Fail
       }
@@ -309,13 +309,13 @@ int Flock::stopSampling()
    if (this->isActive() == false)
       return 0;
 
-   if (myThread != NULL)
+   if (mThread != NULL)
    {
       vprDEBUG(vrjDBG_INPUT_MGR,1) << "Stopping the flock thread..." << vprDEBUG_FLUSH;
 
-      myThread->kill();
-      delete myThread;
-      myThread = NULL;
+      mThread->kill();
+      delete mThread;
+      mThread = NULL;
 
       vprDEBUG(vrjDBG_INPUT_MGR,1) << "  Stopping the flock..." << vprDEBUG_FLUSH;
 

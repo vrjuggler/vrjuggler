@@ -42,7 +42,7 @@ static void errorMessage(char *message)
 }
 
 /********************** rs232InitCommunications ********************/
-int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate)
+int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD mBaudRate)
 {
     COMMTIMEOUTS timeout;
     DCB dcb;
@@ -94,7 +94,7 @@ int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate
 
     BuildCommDCB((const char *) openString, &dcb);
     dcb.DCBlength = sizeof(dcb);
-    dcb.BaudRate = baudRate;
+    dcb.BaudRate = mBaudRate;
     dcb.fNull = FALSE;
     dcb.fBinary = TRUE;
     dcb.fAbortOnError = FALSE;   
@@ -181,10 +181,10 @@ static BOOL setCommStateDWORD(COMM_PORT *port, DCB *dcb, DWORD *target, DWORD va
 
 
 /************************** rs232SetSpeed ****************************/
-int rs232SetSpeed(COMM_PORT *port, DWORD baudRate)
+int rs232SetSpeed(COMM_PORT *port, DWORD mBaudRate)
 {
     DCB dcb;
-    return( setCommStateDWORD(port, &dcb, &(dcb.BaudRate), baudRate));
+    return( setCommStateDWORD(port, &dcb, &(dcb.BaudRate), mBaudRate));
 }
 
 
@@ -402,7 +402,7 @@ BOOL rs232SetRTSState(COMM_PORT *port, DWORD value)
 #include "timer.h"
 
 /****************************************************************************/
-int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate)
+int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD mBaudRate)
 {
     struct termios terminfo;
     int magicBaudRate = 0;
@@ -419,7 +419,7 @@ int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate
 
     if ( port->desc > 0)
     {
-        printf("Port %s open. Baud rate %lu\n", comPort, baudRate);
+        printf("Port %s open. Baud rate %lu\n", comPort, mBaudRate);
     }
     else
     {
@@ -432,7 +432,7 @@ int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate
     terminfo.c_cc[4] = 0;
     terminfo.c_cc[5] = 5;
 
-    switch (baudRate)
+    switch (mBaudRate)
     {
 	    case 150: magicBaudRate = B150; break;
 	    case 200: magicBaudRate = B200; break;
@@ -487,7 +487,7 @@ int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate
 
 
 /****************************************************************************/
-int rs232SetSpeed(COMM_PORT *port, DWORD baudRate)
+int rs232SetSpeed(COMM_PORT *port, DWORD mBaudRate)
 {
     struct termios terminfo;
     int magicBaudRate = 0;
@@ -498,7 +498,7 @@ int rs232SetSpeed(COMM_PORT *port, DWORD baudRate)
     terminfo.c_cc[4] = 0;
     terminfo.c_cc[5] = 5;
 
-    switch (baudRate)
+    switch (mBaudRate)
     {
 	    case 150: magicBaudRate = B150; break;
 	    case 200: magicBaudRate = B200; break;
