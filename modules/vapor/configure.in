@@ -427,8 +427,8 @@ fi
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS(bstring.h fcntl.h limits.h signal.h strings.h sys/file.h \
-                 sys/filio.h sys/ioctl.h sys/time.h termios.h unistd.h \
-                 sys/capability.h sys/stdsyms.h)
+                 sys/filio.h sys/ioctl.h sys/sysinfo.h sys/time.h \
+                 termios.h unistd.h sys/capability.h sys/stdsyms.h)
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
@@ -465,6 +465,10 @@ EXTRA_LINK_FLAGS=''
 
 vpr_cxxflags="$STDFLAGS"
 
+if test "x$ac_cv_header_sys_sysinfo_h" = "xyes" ; then
+    UUID_DEFS='-DHAVE_SYS_SYSINFO_H'
+fi
+
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
@@ -475,7 +479,7 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     DBG_FLAGS="$DBG_FLAGS /MTd"
     OPT_FLAGS="$OPT_FLAGS /MT"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
-    UUID_DEFS='-DWININC'
+    UUID_DEFS="$UUID_DEFS -DWININC"
     vpr_cxxflags="$CXXFLAGS"
 fi
 
