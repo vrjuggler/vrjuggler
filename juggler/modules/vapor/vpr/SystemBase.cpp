@@ -58,7 +58,7 @@ namespace vpr
 
 std::string SystemBase::getCallStack()
 {
-   std::string ret_stack("Stack trace:\n   <Call stack not supported>");
+   std::string ret_stack("Stack trace:\n   <Call stack not supported>\n");
 
 #if defined(HAVE_BACKTRACE)
    void* trace_syms[100];
