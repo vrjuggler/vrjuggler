@@ -3,42 +3,80 @@
 
 <body>
 
-<h1>Converting from CAVElib(TM) to VR Juggler</h1>
+<h2>Converting from CAVElib(TM) to VR Juggler</h2>
 
 
-
+<li>Contents:
+<ul>
+       <li><a href="#idf">Init, Draw, and Frame routines</a>
+       <ul>
+          <li><a href="#comparison">Detailed Comparison</a>
+       </ul>
+       <li><a href="#context">OpenGL Context Data</a>
+       <li><a href="#memory">Memory</a>
+</ul>
 
 <p>
-<h2>How draw, frame, and init routines differ between CAVElib and VR Juggler:</h2>
+<h3>Draw, frame, and init routines</h3>
 <li>In CAVElib(TM) these routines are "called-back" using function pointers (C-style).
 <li>In VR Juggler, these routines are "called-back" using an application object, a C++ class which defines these
 methods to encapsulate the functionality of the application within one C++ class object.<BR>
 </p>
 
-<p>
-<h3>Detail Comparison:</h3>
-<li>In CAVElib(TM)
 <ul>
-  <li>- An application's display callback function is defined by passing a function pointer to CAVEDisplay(). 
-  <li>- The frame function is defined with CAVEFrameFunction(). 
-  <li>- The initialization callback is defined using CAVEInitApplication(). 
-</ul>
+  <p>
+  <h4>Detail Comparison</h4>
+  <li>In CAVElib(TM)
+  <ul>
+    <li>- An application's display callback function is defined by passing a function pointer to CAVEDisplay(). 
+    <li>- The frame function is defined with CAVEFrameFunction(). 
+    <li>- The initialization callback is defined using CAVEInitApplication(). 
+  </ul>
+</ul
 
-<li>In VR Juggler, you derive a new application class from vjGlApp (for OpenGL, vjPfApp for Performer) <BR>
-  NOTE that no C-style function pointers are nessesary.
+<li>In VR Juggler (OpenGL), you derive a new application class from vjGlApp <BR>
+  NOTE that no C-style function pointers are nessesary, you only pass Juggler a pointer to your application class.
 <ul>
-  <li>- an application's display callback function is defined by simply writing a method of your derived
-    class called draw().
-  <li>- The frame function is split across 3 functions 
+  <li>- an application's display callback function is defined by simply defining a new method/function draw() in
+your derived class.<BR>
+        (This is where you put OpenGL rendering commands such as glBegin, glVertex, glWhatever...)
+  <li>- The frame function is split across 3 functions<BR>
+       (This is where you put your calculations such as navigation, collision, physics, AI, nurbs surface
+sampling, etc...)
   <ul>
     <li>  - yourDerivedApp::preFrame (called before draw)
     <li>  - yourDerivedApp::intraFrame (called during draw)
     <li>  - yourDerivedApp::postFrame (called after draw)
   </ul>
-  <li>- The initialization callback is defined with yourDerivedApp::init()
+  <li>- The initialization callback is also split across 2 functions:<BR>
+        (one for data initialization.  and one for <a href="${GLOSSARY}#display context">OpenGL context</a>
+         initialization where you put things like displaylist and texture object creation)
+  <li>- yourDerivedApp::init()        (called once on application startup)
+  <li>- yourDerivedApp::contextInit()  (called once per window)
 </ul>
 </p>
 
 
+<p>
+<h3>Context Data</h3>
 
-In VR Juggler
+VR Juggler, unlike the CAVElib, can handle drawing multiple displays in one process, so it's nessesary to
+manage "context data".  A <a href="${GLOSSARY}#display context">display context</a> is the OpenGL state
+information that goes with a GL graphics window.  Compiled OpenGL commands such as displaylists do not get shared
+across muiltiple contexts (or windows), so you will need to initialize them once per window.  vjGlApp::contextInit
+is the place to put these OpenGL initializations since it is called once per window/context after each has become
+valid.
+</p>
+
+<p>
+<h3> Memory </h3>
+
+VR Juggler, unlike the CAVElib, has no need to manage <a href="${GLOSSARY}#shared memory">shared memory</a> with
+other Juggler instances.  Instead, running other Juggler instances and syncing them together does not work at this
+time.  So all you need to do is create your memory as you normally would in a C or C++ application using new or
+malloc (we would suggest new).
+</p>
+
+
+
+</body>
