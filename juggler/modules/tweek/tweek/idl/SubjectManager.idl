@@ -51,7 +51,14 @@ interface SubjectManager
       Subject subject_ref;
    };
 
+   struct SubjectMgrInfoItem
+   {
+      string key;
+      string value;
+   };
+
    typedef sequence<RegisteredSubject> SubjectList;
+   typedef sequence<SubjectMgrInfoItem> SubjectManagerInfoList;
 
    /**
     * Returns the named Tweek Subject reference to the caller if the Subject
@@ -66,23 +73,10 @@ interface SubjectManager
    SubjectList getAllSubjects();
 
    /**
-    * Returns the name of the host on which the Subject Manager servant
-    * resides.
+    * Returns a sequence of key/value pairs that provide site-specific
+    * information about a given Subject Manager servant.
     */
-   string getHostName();
-
-   /**
-    * Returns the name of the application within which the Subject Manager
-    * servant exists.
-    */
-   string getApplicationName();
-
-   /**
-    * Returns the name/ID of the user running the application.
-    *
-    * XXX: Is this feasible?
-    */
-   string getUserName();
+   SubjectManagerInfoList getInfo();
 };
 
 };

@@ -36,6 +36,8 @@
 
 #include <tweek/tweekConfig.h>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/IO/Socket/InetAddr.h>
@@ -48,6 +50,9 @@
 
 namespace tweek
 {
+
+const std::string SubjectManagerImpl::USERNAME_KEY("Username");
+const std::string SubjectManagerImpl::APPNAME_KEY("Application");
 
 void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
                                          const char* name)
@@ -151,7 +156,7 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects()
       << "Sequence size: " << subjects->length() << std::endl
       << vprDEBUG_FLUSH;
 
-   for ( i = mSubjects.begin(), j = 0; i != mSubjects.end(); i++, j++ )
+   for ( i = mSubjects.begin(), j = 0; i != mSubjects.end(); ++i, ++j )
    {
       tweek::SubjectManager::RegisteredSubject rs;
       rs.subject_name = CORBA::string_dup((*i).first.c_str());
@@ -170,22 +175,65 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects()
    return subjects;
 }
 
-char* SubjectManagerImpl::getHostName()
+SubjectManager::SubjectManagerInfoList* SubjectManagerImpl::getInfo()
+{
+   std::map<std::string, std::string>::iterator i;
+   CORBA::ULong j;
+
+   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
+      << "Constructing sequence of info items to return to caller ...\n"
+      << vprDEBUG_FLUSH;
+
+   // Use a guard here so that the lock is exception safe.
+   vpr::Guard<vpr::Mutex> lock(mInfoMapMutex);
+
+   // Create the sequence and size it.
+   tweek::SubjectManager::SubjectManagerInfoList* info_items =
+      new tweek::SubjectManager::SubjectManagerInfoList();
+   info_items->length(mInfoMap.size());
+
+   vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
+      << "Sequence size: " << info_items->length() << std::endl
+      << vprDEBUG_FLUSH;
+
+   for ( i = mInfoMap.begin(), j = 0; i != mInfoMap.end(); ++i, ++j )
+   {
+      tweek::SubjectManager::SubjectMgrInfoItem item;
+      item.key   = CORBA::string_dup((*i).first.c_str());
+      item.value = CORBA::string_dup((*i).second.c_str());
+
+      vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
+         << "Adding item[" << j << "]: " << item.key << " => " << item.value
+         << std::endl << vprDEBUG_FLUSH;
+
+      (*info_items)[j] = item;
+   }
+
+   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
+      << "Returning all info items to caller\n" << vprDEBUG_FLUSH;
+
+   return info_items;
+}
+
+void SubjectManagerImpl::initInfoMap()
 {
    vpr::InetAddr local_addr;
    vpr::InetAddr::getLocalHost(local_addr);
-   return CORBA::string_dup(local_addr.getHostname().c_str());
-}
 
-char* SubjectManagerImpl::getApplicationName()
-{
-   return CORBA::string_dup(mAppName.c_str());
-}
+   mInfoMap["Hostname"] = local_addr.getHostname();
 
-char* SubjectManagerImpl::getUserName()
-{
-   std::string user_name("unknown");
-   return CORBA::string_dup(user_name.c_str());
+   std::string user_name;
+
+   if ( vpr::System::getenv("USER", user_name).success() )
+   {
+      mInfoMap[USERNAME_KEY] = user_name;
+   }
+   else
+   {
+      mInfoMap[USERNAME_KEY] = "unknown";
+   }
+
+   mInfoMap[APPNAME_KEY] = "unknown";
 }
 
 } // End of tweek namespace
