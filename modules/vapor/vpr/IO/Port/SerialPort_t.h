@@ -220,6 +220,47 @@ public:
     // ========================================================================
 
     /**
+     * Sets the open flags so that the serial port is opened in read-only mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it
+     *       it is opened in read-only mode.  If the port is already open,
+     *       this has no effect.
+     */
+    void
+    setOpenReadOnly (void) {
+        m_sio_imp.setOpenReadOnly();
+    }
+
+    /**
+     * Sets the open flags so that the serial port is opened in write-only
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it
+     *       is opened in write-only mode.  If the port is already open,
+     *       this has no effect.
+     */
+    void
+    setOpenWriteOnly (void) {
+        m_sio_imp.setOpenWriteOnly();
+    }
+
+    /**
+     * Sets the open flags so that the serial port is opened in read/write
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it
+     *       is opened in read/write mode.  If the port is already open,
+     *       this has no effect.
+     */
+    void
+    setOpenReadWrite (void) {
+        m_sio_imp.setOpenReadWrite();
+    }
+
+    /**
      * Gets the current update action.  This tells when updates to the serial
      * device take effect.
      *
@@ -1048,8 +1089,9 @@ protected:
      *         vpr::Status::Failure is returned if the write operation failed.
      */
     virtual vpr::Status
-    write_i (const void* buffer, const size_t length,
-             ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+    write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
         return m_sio_imp.write(buffer, length, bytes_written, timeout);
     }
 
