@@ -1381,11 +1381,6 @@
       <help>The number of analog inputs that will be stored into the Intersense device</help>
       <item label="Analog Count" defaultvalue="0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
-    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="surfaceViewport" name="Surface Viewport">
     <category>Display</category>
