@@ -57,7 +57,9 @@ class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockTCPPlugin
 {
 public:
    SwapLockTCPPlugin()
-      : mHandlerGUID("5edfc033-1b3e-4741-b0e0-6ebb47967644")
+      : mAcceptThread(NULL)
+      , mSyncServerSocket(NULL)
+      , mHandlerGUID("5edfc033-1b3e-4741-b0e0-6ebb47967644")
       , SYNC_SIGNAL('G')
       , read_timeout(1000, vpr::Interval::Msec)
       , mIsMaster(false)
@@ -66,7 +68,10 @@ public:
 
    virtual ~SwapLockTCPPlugin()
    {
-      delete mSyncServerSocket;
+      if ( NULL != mSyncServerSocket )
+      {
+         delete mSyncServerSocket;
+      }
    }
    
    /**
