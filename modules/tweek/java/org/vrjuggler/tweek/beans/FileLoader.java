@@ -102,6 +102,16 @@ public interface FileLoader
 
    /**
     * Informs an instance of the implementing class that the user has requested
+    * the saving of a file with a different name.  It is up to the implementing
+    * class to take appropriate actions.
+    *
+    * @return true is returned if a file was saved successfully.<br>
+    *         false is returned if the file saving failed.
+    */
+   public boolean saveAsRequested();
+
+   /**
+    * Informs an instance of the implementing class that the user has requested
     * to close a file.  It is up to the implementing class to take appropriate
     * actions.
     *
