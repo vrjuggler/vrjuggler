@@ -4,17 +4,18 @@ import java.io.File;
 import junit.framework.*;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.BeanAttributes;
+import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
 import org.vrjuggler.tweek.services.GlobalPreferencesService;
 
 
 public class GlobalPreferencesServiceTest extends TestCase
 {
-   public GlobalPreferencesServiceTest (String name)
+   public GlobalPreferencesServiceTest(String name)
    {
       super(name);
    }
 
-   public static Test suite ()
+   public static Test suite()
    {
       return new TestSuite(GlobalPreferencesServiceTest.class);
    }
@@ -22,7 +23,7 @@ public class GlobalPreferencesServiceTest extends TestCase
    /**
     * Tests creation of a new Tweek RC file.
     */
-   public void testCreation ()
+   public void testCreation()
    {
       mPrefs.setFile(mTestTweekrc);      // Specify an alternate file to load
       mPrefs.load();                     // Load it--this creates it first
@@ -32,7 +33,7 @@ public class GlobalPreferencesServiceTest extends TestCase
    /**
     * Tests modification of the default settings in a fresh Tweek RC file.
     */
-   public void testModification ()
+   public void testModification()
    {
       mPrefs.setFile(mTestTweekrc);
       mPrefs.load();
@@ -58,16 +59,6 @@ public class GlobalPreferencesServiceTest extends TestCase
       mPrefs.load();
       assertTrue(mPrefs.getChooserStartDir().equals(chooser_start));;
 
-      int chooser_open =
-         (mPrefs.getChooserOpenStyle() == GlobalPreferencesService.EMACS_CHOOSER
-            ? GlobalPreferencesService.EMACS_CHOOSER
-            : GlobalPreferencesService.WINDOWS_CHOOSER);
-      mPrefs.setChooserOpenStyle(chooser_open);
-      mPrefs.save();
-
-      mPrefs.load();
-      assertTrue(mPrefs.getChooserOpenStyle() == chooser_open);
-
       boolean lazyinst = ! mPrefs.getLazyPanelBeanInstantiation();
       mPrefs.setLazyPanelBeanInstantiation(lazyinst);
       mPrefs.save();
@@ -80,9 +71,9 @@ public class GlobalPreferencesServiceTest extends TestCase
     * Ensures that a fresh GlobalPreferencesService object is available for
     * each test and that the test Tweek RC file does not exist.
     */
-   protected void setUp ()
+   protected void setUp()
    {
-      mPrefs = new GlobalPreferencesService(new BeanAttributes("GlobalPreferences"));
+      mPrefs = new GlobalPreferencesServiceProxy();
 
       if ( mTestTweekrc.exists() )
       {
