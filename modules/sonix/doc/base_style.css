@@ -1,16 +1,16 @@
 a:link
 {
-   color: #aa88dd; 
+   color: #8866aa; 
 }
 
 a:visited
 {
-   color: #aa88dd; 
+   color: #8866aa; 
 } 
 
 a:active, a:hover
 {
-   color: #FFFF33;
+   color: #aaaa33;
 }
 
 a:hover
