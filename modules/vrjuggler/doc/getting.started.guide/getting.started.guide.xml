@@ -921,14 +921,6 @@ value</screen>
         opening the folder containing the source code and double-clicking on
         <filename>MPApp.vcproj</filename>.</para>
 
-        <tip>
-          <para>We strongly recommend that users set an environment variable
-          called <envar>NSPR_ROOT</envar> to point to the root directory of
-          their NSPR installation. This environment variable will be
-          referenced below to simplify our examples and to reduce the amount
-          of typing required.</para>
-        </tip>
-
         <figure>
           <title>Selecting the Visual C++ Project File</title>
 
@@ -1004,11 +996,13 @@ value</screen>
         in this case, but doing it this way maintains consistency with other
         examples.</para>
 
-        <para>Also under the MPApp project settings, the path to the NSPR
-        headers and libraries may need to be filled in. All the Visual C++
-        project files shipped with VR Juggler refer to the NSPR installation
-        via the <envar>NSPR_ROOT</envar> environment variable. If this is not
-        set or cannot be used, the paths must be filled in manually.</para>
+        <para>Also under the MPApp project settings, the path(s) to the VR
+        Juggler C++ dependencies must be filled in. This means setting paths
+        to find headers and libraries. All the Visual C++ project files
+        shipped with VR Juggler refer to the VR Juggler C++ dependency
+        installation via the <envar>VJ_DEPS_DIR</envar> environment variable.
+        If this is not set or cannot be used, the paths must be filled in
+        manually.</para>
 
         <para>Once the program arguments are set up, compile the application.
         Under the <guimenu>Build</guimenu> menu, choose the
