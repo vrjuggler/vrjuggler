@@ -61,19 +61,27 @@ JAVADOC_SUBDIR=	modules/tweek/java		\
 		modules/vrjuggler/vrjconfig
 
 all:
-	for dir in $(SUBDIR) ; do				\
+	@for dir in $(SUBDIR) ; do				\
+            echo "===> $$dir" ;					\
             $(MAKE) -C $$dir docs || exit 1;			\
+            echo "<=== $$dir" ;					\
           done
-	for dir in $(JAVADOC_SUBDIR) ; do			\
+	@for dir in $(JAVADOC_SUBDIR) ; do			\
+            echo "===> $$dir" ;					\
             $(MAKE) -C $$dir -f Makefile.docs docs || exit 1;	\
+            echo "<=== $$dir" ;					\
           done
 
 install:
-	for dir in $(SUBDIR) ; do					\
+	@for dir in $(SUBDIR) ; do					\
+            echo "===> $$dir" ;						\
             $(MAKE) -C $$dir webroot=$(webroot) install-docs || exit 1;	\
+            echo "<=== $$dir" ;						\
           done
-	for dir in $(JAVADOC_SUBDIR) ; do				\
+	@for dir in $(JAVADOC_SUBDIR) ; do				\
+            echo "===> $$dir" ;						\
             $(MAKE) -C $$dir -f Makefile.docs install-docs || exit 1;	\
+            echo "<=== $$dir" ;						\
           done
 
 .PHONY: release
@@ -85,9 +93,13 @@ release:
 	$(MAKE) -f Makefile.docs webroot="$(distroot)" install
 
 clobber:
-	for dir in $(SUBDIR) ; do					\
+	@for dir in $(SUBDIR) ; do					\
+            echo "===> $$dir" ;						\
             $(MAKE) -C $$dir clobber || exit 1;				\
+            echo "<=== $$dir" ;						\
           done
 	for dir in $(JAVADOC_SUBDIR) ; do				\
+            echo "===> $$dir" ;						\
             $(MAKE) -C $$dir -f Makefile.docs clobber || exit 1;	\
+            echo "<=== $$dir" ;						\
           done
