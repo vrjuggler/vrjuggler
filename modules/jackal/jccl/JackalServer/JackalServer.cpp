@@ -42,8 +42,9 @@
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ParseUtil.h>
+#include <jccl/Util/Debug.h>
 
-#include <jccl/Plugins/ConfigManager/ConfigManager.h>
+//#include <jccl/Plugins/ConfigManager/ConfigManager.h>
 
 namespace jccl {
 
@@ -113,13 +114,15 @@ void JackalServer::removeJackalControl (JackalControl* jc) {
 void JackalServer::connectHasDied (Connect* con) {
     std::string s = con->getName();
 
+    jackal_controls_mutex.acquire();
+    unsigned int i = 0, n = jackal_controls.size();
+    for (; i < n; i++)
+        jackal_controls[i]->removeConnect (con);
+    jackal_controls_mutex.release();
+
     connections_mutex.acquire();
-    removeConnect(con);
+    removeConnection(con);
     connections_mutex.release();
-    ConfigManager::instance()->lockActive();
-    ConfigManager::instance()->getActiveConfig()->removeNamed(s);
-    ConfigManager::instance()->unlockActive();
-    sendRefresh();
 }
 
 
@@ -151,13 +154,8 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
             newport = Port;
         if ((newport != Port) || (configured_to_accept != isAccepting()))
             networkingchanged = true;
-//         perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
+
         connections_mutex.acquire();
-
-//          Connect* new_perf_target = getConnect(perf_target_name);
-//          if (new_perf_target != perf_target)
-//              setPerformanceTarget (NULL);
-
         if (networkingchanged) {
             Port = newport;
             if (isAccepting())
@@ -167,8 +165,6 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
             else
                 killConnections();
         }
-//          if (new_perf_target)
-//              setPerformanceTarget(new_perf_target);
         connections_mutex.release();
 
         return true;
@@ -188,8 +184,6 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
             connections_mutex.acquire();
             connections.push_back (vn);
             vn->startProcess();
-//              if (!vjstrcasecmp (vn->getName(), perf_target_name))
-//                  setPerformanceTarget (vn);
             connections_mutex.release();
         }
         return true;
@@ -217,9 +211,9 @@ bool JackalServer::configRemove(ConfigChunk* chunk) {
         vprDEBUG (jcclDBG_SERVER,1) << "EM Removing connection: "
                                   << chunk->getProperty ("Name") << '\n' << vprDEBUG_FLUSH;
         connections_mutex.acquire();
-        Connect* c = getConnect (chunk->getProperty ("Name"));
+        Connect* c = getConnection (chunk->getProperty ("Name"));
         if (c) {
-            removeConnect (c);
+            removeConnection (c);
         }
         connections_mutex.release();
         vprDEBUG (jcclDBG_SERVER,4) << "EM completed connection removal\n" << vprDEBUG_FLUSH;
@@ -246,7 +240,7 @@ bool JackalServer::configCanHandle(ConfigChunk* chunk) {
 //-------------------- PRIVATE MEMBER FUNCTIONS -------------------------
 
 // should only be called when we own connections_mutex
-void JackalServer::removeConnect (Connect* con) {
+void JackalServer::removeConnection (Connect* con) {
     vprASSERT (con != 0);
 
     std::vector<Connect*>::iterator i;
@@ -262,7 +256,7 @@ void JackalServer::removeConnect (Connect* con) {
 
 
 // should only be called when we own connections_mutex
-Connect* JackalServer::getConnect (const std::string& s) {
+Connect* JackalServer::getConnection (const std::string& s) {
     for (unsigned int i = 0; i < connections.size(); i++)
         if (s == connections[i]->getName())
             return connections[i];
@@ -275,7 +269,6 @@ void JackalServer::controlLoop (void* nullParam) {
     // Child process used to listen for new network connections
     //struct sockaddr_in servaddr;
     Socket* servsock;
-    //int len;
     Connect* connection;
 
     vprDEBUG(jcclDBG_SERVER,4) << "JackalServer started control loop.\n"
@@ -284,17 +277,29 @@ void JackalServer::controlLoop (void* nullParam) {
     for (;;) {
         servsock = listen_socket->accept();
         char name[128];
-        //sprintf (name, "Network Connect %d", servsock->getID());
-        vprDEBUG(jcclDBG_SERVER,vprDBG_CONFIG_LVL) << "JackalServer: Accepted connection: id: "
-                                                << servsock->getID() << " on port: N/A\n" << vprDEBUG_FLUSH;
+        sprintf (name, "Network Connect %d", servsock->getID());
+        vprDEBUG(jcclDBG_SERVER,vprDBG_CONFIG_LVL) 
+            << "JackalServer: Accepted connection: id: "
+            << servsock->getID() << " on port: N/A\n" << vprDEBUG_FLUSH;
         connection = new Connect (servsock, (std::string)name);
-        connections_mutex.acquire();
-        connections.push_back( connection );
-        connection->startProcess();
-        connections_mutex.release();
+        addConnection (connection);
     }
 }
 
+
+    void JackalServer::addConnection (Connect* c) {
+        connections_mutex.acquire();
+        connections.push_back (c);
+        connections_mutex.release();
+
+        jackal_controls_mutex.acquire();
+        unsigned int i = 0, n = jackal_controls.size();
+        for (; i < n; i++)
+            jackal_controls[i]->addConnect (c);
+        jackal_controls_mutex.release();
+
+        c->startProcess();
+    }
 
 
 bool JackalServer::acceptConnections() {
