@@ -34,10 +34,28 @@
 #define _VJ_SYSTEM_H_
 
 #include <vjConfig.h>
-
 #include <math.h>
-
 #include <VPR/Threads/vjThread.h>
+
+
+//: Linear Interpolation
+// use double or float only...
+template <class dataType>
+inline void VJ_LERP( dataType& result, const dataType& lerp, const dataType& a,
+                  const dataType& b )
+{
+    dataType size = b - a;
+    result = a + (size * lerp);
+}
+/* #include <Utils/vjDebug.h> */
+
+//: Is almost equal?
+// test for equality with tolerance...
+template <class dataType>
+inline bool VJ_ISEQUAL( const dataType& a, const dataType& b, const dataType& tolerance )
+{
+   return vjSystem::abs( a - b ) <= tolerance;
+}
 
 
 class vjSystemBase {
@@ -131,17 +149,17 @@ public:
         return (float) ::atan2(x, y);
 #endif
     }
-    
+
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
-    inline static double atan( const double x ) 
+    inline static double atan( const double x )
     {
         return ::atan( x );
     }
 
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
-    inline static float atan( const float x ) 
+    inline static float atan( const float x )
     {
 #ifdef HAVE_ATAN2F
         return ::atanf( x );
@@ -149,17 +167,17 @@ public:
         return (float) ::atan( x );
 #endif
     }
-    
+
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
-    inline static double tan( const double x ) 
+    inline static double tan( const double x )
     {
         return ::tan( x );
     }
 
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
-    inline static float tan( const float x ) 
+    inline static float tan( const float x )
     {
 #ifdef HAVE_ATAN2F
         return ::tanf( x );
@@ -269,7 +287,7 @@ public:
     isBigEndian (void) {
         return (getEndian() == 1);
     }
-    
+
     // -----------------------------------------------------------------------
     //: return a random number between 0.0f and 1.0f
     //
@@ -292,6 +310,7 @@ public:
        float size = x2 - x1;
        return r * size + x1;
     }
+
 };
 
 
