@@ -130,21 +130,16 @@ class SimpleGlApp(vrj.GlApp):
          glEnd()
 
    def initGLState(self):
-      light0_ambient  = [ 0.1, 0.1, 0.1, 1.0 ]
-      light0_diffuse  = [ 0.8, 0.8, 0.8, 1.0 ]
-      light0_specular = [ 1.0, 1.0, 1.0, 1.0 ]
-      light0_position = [ 0.0, 0.75, 0.75, 0.0 ]
-
 #      mat_ambient   = [ 0.7, 0.7, 0.7, 1.0 ]
 #      mat_diffuse   = [ 1.0, 0.5, 0.8, 1.0 ]
 #      mat_specualr  = [ 1.0, 1.0, 1.0, 1.0 ]
 #      mat_shininess = [ 50.0 ]
 #      no_mat        = [ 0.0, 0.0, 0.0, 1.0 ]
 
-      glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient)
-      glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse)
-      glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular)
-      glLightfv(GL_LIGHT0, GL_POSITION, light0_position)
+      glLight(GL_LIGHT0, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
+      glLight(GL_LIGHT0, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+      glLight(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+      glLight(GL_LIGHT0, GL_POSITION, [0.0, 0.75, 0.75, 0.0])
 
 #      glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient)
 #      glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse)
