@@ -138,7 +138,7 @@ case $target_os in
     cygwin)
         # There is no performance testing/monitoring code for Win32 (yet).
         if test "x${_enable_perf}" != "xNONE" ; then
-            AC_MSG_WARN(*** Disabling performance testing on $host ***)
+            AC_MSG_WARN([*** Disabling performance testing on $host ***])
             _enable_perf='NONE'
         fi
 
@@ -183,12 +183,12 @@ VJ_PROG_CXX_PROF_FLAG(yes)
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
-DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** The library requires C++ namespace support ***))
+DPP_CXX_NAMESPACE([AC_MSG_ERROR([*** The library requires C++ namespace support ***])])
 DPP_CXX_HAVE_STD
-DPP_CXX_INLINE(AC_MSG_ERROR(*** The library requires C++ inline support ***))
-DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
-DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***))
-DPP_CXX_DYNAMIC_CAST(AC_MSG_ERROR(*** The library requires C++ dynamic_cast<> ***))
+DPP_CXX_INLINE([AC_MSG_ERROR([*** The library requires C++ inline support ***])])
+DPP_CXX_RTTI([AC_MSG_ERROR([*** The library requires C++ RTTI support ***])])
+DPP_CXX_STATIC_CAST([AC_MSG_ERROR([*** The library requires C++ static_cast<> ***])])
+DPP_CXX_DYNAMIC_CAST([AC_MSG_ERROR([*** The library requires C++ dynamic_cast<> ***])])
 
 # Check for the JDK.
 DPP_PATH_JAVA
@@ -196,42 +196,42 @@ DPP_PATH_JAVA
 # If there is still no value in $JAVAC, then warn that the GUI will not be
 # built.
 if test "x$JAVAC" = "xno" ; then
-    AC_MSG_WARN(*** VjControl requires javac -- it will not be built ***)
+    AC_MSG_WARN([*** VjControl requires javac -- it will not be built ***])
     BUILD_VJCONTROL='N'
 else
     # Check for JAXP extensions to JDK
-    DPP_CHECK_JAVA_STATIC_METHOD(javax.xml.parsers.DocumentBuilderFactory,
-        newInstance(), ,
-        BUILD_VJCONTROL='Y',
+    DPP_CHECK_JAVA_STATIC_METHOD([javax.xml.parsers.DocumentBuilderFactory],
+        [newInstance()], ,
+        [BUILD_VJCONTROL='Y'],
         [ BUILD_VJCONTROL='N' ;
           AC_MSG_WARN(*** VjControl requires JAXP extensions for java -- it will not be built ***)
         ],
-        $JAXP_JAR)
+        [$JAXP_JAR])
 fi
 
 # If we're building VjControl, we should build the test cases too.
 if test "x$BUILD_VJCONTROL" = "xY" ; then
     # Check for the JUnit library
-    DPP_CHECK_JAVA_STATIC_METHOD(junit.framework.Assert,
-        assertTrue(true), ,
-        BUILD_JAVA_TEST_SUITE='Y',
+    DPP_CHECK_JAVA_STATIC_METHOD([junit.framework.Assert],
+        [assertTrue(true)], ,
+        [BUILD_JAVA_TEST_SUITE='Y'],
         [ BUILD_JAVA_TEST_SUITE='N' ;
           AC_MSG_WARN(*** JUnit required for VjControl Java test suite ***)
         ],
-        $JUNIT_JAR)
+        [$JUNIT_JAR])
 fi
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
-DPP_PERL_VER(5.004)
+DPP_PERL_VER([5.004])
 
-AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \$(PERL) \$(scriptdir)/mtree.pl)
+AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 
-DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
+DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH(0.13.0, , AC_MSG_ERROR(*** VPR required for Jackal***))
+VPR_PATH([0.13.0], , [AC_MSG_ERROR([*** VPR required for Jackal***])])
 
 # -----------
 # Xerces-c
@@ -257,11 +257,11 @@ LIBS="$LIBS -l$XERCES_LIB `$VPR_CONFIG --extra-libs`"
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 
-AC_CHECK_HEADER(util/XercesDefs.hpp, xerces_include="$XERCESROOT/include",
+AC_CHECK_HEADER([util/XercesDefs.hpp], [xerces_include="$XERCESROOT/include"],
     [ CPPFLAGS="-I$XERCESROOT/include/xercesc $CPPFLAGS"
-      AC_CHECK_HEADER(xercesc/util/XercesDefs.hpp,
-          xerces_include="$XERCESROOT/include/xercesc",
-          AC_MSG_ERROR(*** Xerces-C headers not found ***))
+      AC_CHECK_HEADER([xercesc/util/XercesDefs.hpp],
+          [xerces_include="$XERCESROOT/include/xercesc"],
+          [AC_MSG_ERROR([*** Xerces-C headers not found ***])])
     ])
 
 # Extract the full Xerces version number and transform it into the form x.y.z.
@@ -269,17 +269,17 @@ changequote(<<, >>)
 xerces_ver_str=`grep gXercesFullVersionStr $xerces_include/util/XercesDefs.hpp | sed -e 's/.*"\([1-9][0-9_]*\)".*/\1/' | sed -e 's/_/./g'`
 changequote([, ])
 
-DPP_VERSION_CHECK_MSG(Xerces C++, $xerces_ver_str, 1.5.1,
-                      acp_cv_xerces_c_version_okay, ,
-                      AC_MSG_ERROR(*** Xerces-C version too old ***))
+DPP_VERSION_CHECK_MSG([Xerces C++], [$xerces_ver_str], [1.5.1],
+                      [acp_cv_xerces_c_version_okay], ,
+                      [AC_MSG_ERROR([*** Xerces-C version too old ***])])
 
 # Finally, check that the library actually exists where we expect it to be.
-AC_CACHE_CHECK(for XMLPlatformUtils::Initialize in $XERCES_LIB,
-    ac_cv_initialize_in_xerces_c,
-    AC_TRY_LINK([#include <util/PlatformUtils.hpp> ],
-                [ XMLPlatformUtils::Initialize(); ],
-                [ ac_cv_initialize_in_xerces_c='yes' ; rm -rf ./ii_files ],
-                AC_MSG_ERROR(*** Xerces-C library not found ***)))
+AC_CACHE_CHECK([for XMLPlatformUtils::Initialize in $XERCES_LIB],
+    [ac_cv_initialize_in_xerces_c],
+    [AC_TRY_LINK([#include <util/PlatformUtils.hpp> ],
+                 [ XMLPlatformUtils::Initialize(); ],
+                 [ ac_cv_initialize_in_xerces_c='yes' ; rm -rf ./ii_files ],
+                 [AC_MSG_ERROR([*** Xerces-C library not found ***])])])
 
 DPP_LANG_RESTORE
 
@@ -319,8 +319,8 @@ AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod strtok_r)
 ## All of the above function checks may not be necessary ...
 
 _vjsave_LIBS="$LIBS"
-AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',
-    AC_CHECK_LIB(socket, gethostbyname, SOCKET_LIB='-lsocket'))
+AC_CHECK_FUNC([gethostbyname], [SOCKET_LIB=''],
+    [AC_CHECK_LIB([socket], [gethostbyname], [SOCKET_LIB='-lsocket'])])
 LIBS="${_vjsave_LIBS}"
 
 # -----------------------------------------------------------------------------
@@ -407,10 +407,11 @@ fi
 #     * APP_VJ_LIBS_UTILS: The VR Juggler general utilities library.
 
 # Put together the basic information needed to compile Jackal applications.
-VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
-                JCCL_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
-VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, JCCL_BASE_DIR,
-              jccl, $APP_EXTRA_LIBS)
+VJ_APP_COMPILER([$CC], [$CFLAGS], [$CXX], [$CXXFLAGS], [$DBG_FLAGS],
+                [$OPT_FLAGS], [JCCL_BASE_DIR], [$DEFS], [$INCLUDES],
+                [${_EXTRA_FLAGS}])
+VJ_APP_LINKER([$CXX], [$EXTRA_LINK_FLAGS], [$LDOPTS_DBG], [$LDOPTS_OPT],
+              [JCCL_BASE_DIR], [jccl], [$APP_EXTRA_LIBS])
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(JCCL_BASE_DIR)'
@@ -547,7 +548,7 @@ AC_SUBST(jccl_64_flags)
 # Final file generation step.
 # -----------------------------------------------------------------------------
 
-VJ_MTREE_LIB_GEN(JCCL, mtree, $PLATFORM, $ISA)
+VJ_MTREE_LIB_GEN([JCCL], [mtree], [$PLATFORM], [$ISA])
 
 AC_OUTPUT(jccl-config
           Makefile
