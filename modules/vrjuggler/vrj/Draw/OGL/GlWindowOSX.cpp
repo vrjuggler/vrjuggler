@@ -191,13 +191,13 @@ bool GlWindowOSX::makeCurrent() {
     return true;
 }
 
-void GlWindowOSX::config(vrj::Display* _display)
+void GlWindowOSX::configWindow(vrj::Display* _display)
 {
 
    std::cout << "YYY Start config in GLwindow" << std::endl;
    vprDEBUG(vrjDBG_DRAW_MGR,0) << "vjGlWindowOSX::config(Display* _display)" << std::endl << vprDEBUG_FLUSH;
 
-   GlWindow::config(_display);
+   GlWindow::configWindow(_display);
 
     // Get the vector of display chunks
    jccl::ConfigChunkPtr dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();

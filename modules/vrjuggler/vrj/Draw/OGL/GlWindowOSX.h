@@ -103,7 +103,7 @@ public:
     int startSampling();
     //int stopSampling();
 
-   void config(Display* _display);
+   void configWindow(Display* _display);
 
 public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<GlWindow*> wins);
