@@ -75,18 +75,40 @@ public class TweekCore
 
       // This needs to be the first step to ensure that all the basic services
       // and viewers get loaded.
-      String defaultPath = System.getProperty("TWEEK_BASE_DIR")
-                     + File.separator + "bin" + File.separator + "beans";
+      String default_path = System.getProperty("TWEEK_BASE_DIR") +
+                            File.separator + "bin" + File.separator + "beans";
 
-      try {
-         findAndLoadBeans( defaultPath );
-      }
-      catch ( BeanPathException e )
-      {
-         System.out.println("WARNING: Invalid path " + defaultPath);
-      }
+      mBeanDirs.add(default_path);
 
+      // As a side effect, the following may add more paths to mBeanDirs.
       String[] new_args = parseTweekArgs(args);
+
+      // Explicitly load the global preferences now.  The
+      // GlobalPreferencesService class does not load them automatically.  This
+      // must happen after the command line arguments have been parsed so that
+      // the user can specify an alternate preferences file.
+      GlobalPreferencesService global_prefs =
+         (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
+      global_prefs.load();
+
+      // Loop over all the known Bean directories to search for and load any
+      // Beans that are found.  This must occur after the global preferences
+      // have been loaded so that the user can enable or disable lazy Panel
+      // Bean instantiation.
+      Iterator i = mBeanDirs.iterator();
+      while ( i.hasNext() )
+      {
+         String path = (String) i.next();
+
+         try
+         {
+            findAndLoadBeans(path);
+         }
+         catch (BeanPathException e)
+         {
+            System.out.println("WARNING: Invalid path " + path);
+         }
+      }
 
       // Register the command-line arguments with the Environment Service (if
       // it is available).
@@ -104,12 +126,6 @@ public class TweekCore
       {
          System.err.println("WARNING: Failed to register command-line arguments");
       }
-
-      // Explicitly load the global preferences now.  The
-      // GlobalPreferencesService class does not load them automatically.
-      GlobalPreferencesService global_prefs =
-         (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
-      global_prefs.load();
 
       m_gui = new TweekFrame();
 
@@ -170,17 +186,33 @@ public class TweekCore
    {
       BeanRegistry registry = BeanRegistry.instance();
 
+      // This service is loaded statically, so we do not have to worry about
+      // finding the Bean first.
+      GlobalPreferencesService prefs =
+         (GlobalPreferencesService) registry.getBean("GlobalPreferences");
+
       // Get the beans in the given path
       XMLBeanFinder finder = new XMLBeanFinder();
       List beans = finder.find( path );
-      for ( Iterator itr = beans.iterator(); itr.hasNext(); ) {
+      for ( Iterator itr = beans.iterator(); itr.hasNext(); )
+      {
          TweekBean bean = (TweekBean)itr.next();
 
-         // try to instantiate the bean
-         try {
-            bean.instantiate();
-            registry.registerBean( bean );
-         } catch( BeanInstantiationException e ) {
+         // Try to instantiate the Bean.
+         try
+         {
+            // If the current Bean is not a Panel Bean or the user has disabled
+            // lazy Panel Bean instantiation, we can instantiate the Bean.
+            if ( ! (bean instanceof org.vrjuggler.tweek.beans.PanelBean) ||
+                 ! prefs.getLazyPanelBeanInstantiation() )
+            {
+               bean.instantiate();
+            }
+
+            registry.registerBean(bean);
+         }
+         catch (BeanInstantiationException e)
+         {
             System.err.println("WARNING: Failed to instantiate bean'" +
                                bean.getName() + "': " +
                                e.getMessage());
@@ -220,13 +252,7 @@ public class TweekCore
          {
             int start = args[i].indexOf('=') + 1;
             String path = args[i].substring(start);
-            try {
-               findAndLoadBeans( path );
-            }
-            catch ( BeanPathException e )
-            {
-               System.out.println("WARNING: Invalid path " + path);
-            }
+            mBeanDirs.add(path);
          }
          else if ( args[i].startsWith("--prefs=") )
          {
@@ -266,6 +292,8 @@ public class TweekCore
    // ========================================================================
    // Private data members.
    // ========================================================================
+
+   private List mBeanDirs = new ArrayList();
 
    private TweekFrame m_gui = null;
 
