@@ -65,27 +65,6 @@
 /* Define to `int' if the socklen_t type is not available.  */
 #undef socklen_t
 
-/* Define if you have the sinf function.  */
-#undef HAVE_SINF
-
-/* Define if you have the cosf function.  */
-#undef HAVE_COSF
-
-/* Define if you have the sqrtf function.  */
-#undef HAVE_SQRTF
-
-/* Define if you have the asinf function.  */
-#undef HAVE_ASINF
-
-/* Define if you have the acosf function.  */
-#undef HAVE_ACOSF
-
-/* Define if you have the atan2f function.  */
-#undef HAVE_ATAN2F
-
-/* Define if you have the atan2f function.  */
-#undef HAVE_FABSF
-
 @BOTTOM@
 
 #endif	/* _JCCL_DEFINES_H_ */
