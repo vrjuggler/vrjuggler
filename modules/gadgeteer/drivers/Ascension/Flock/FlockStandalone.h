@@ -78,7 +78,9 @@ public:
 	//  NOTE: flock.isActive() must be true to use this function
 	int	    sample();
 		
-		
+	//: see if the flock is active or not
+	const bool& isActive() const;
+
 	//: set the port to use
 	//  this will be a string in the form of the native OS descriptor <BR>
 	//  ex: unix - "/dev/ttyd3", win32 - "COM3" <BR>
@@ -88,7 +90,7 @@ public:
 	//: get the port used
 	//  this will be a string in the form of the native OS descriptor <BR>
 	//  ex: unix - "/dev/ttyd3", win32 - "COM3"
-	const char* const getPort();
+	const char* const getPort() const;
 	
 	
 	//: set the baud rate
@@ -98,7 +100,7 @@ public:
 	
 	//: get the baud rate
 	//  this is generally 38400, consult flock manual for other rates. <BR>
-	inline int  getBaudRate() { return _baud;}
+	inline const int&  getBaudRate()  const { return _baud;}
    
 	//: Set the unit number of the transmitter
 	//  give - an integer that is the same as the dip switch 
@@ -109,7 +111,7 @@ public:
 	//: Get the unit number of the transmitter
 	//  returns - an integer that is the same as the dip switch 
 	//         setting on the transmitter box (for the unit number) <BR>
-	inline int  getTransmitter() { return _xmitterUnitNumber; }
+	inline const int&  getTransmitter() const { return _xmitterUnitNumber; }
 
 
 	//: Set the number of birds to use in the flock.
@@ -121,7 +123,7 @@ public:
 	//: Get the number of birds to use in the flock.
 	//  returns - an integer number not more than the number of 
 	//         birds attached to the system <BR>
-	inline int  getNumBirds() { return _numBirds; }
+	inline const int&  getNumBirds() const { return _numBirds; }
 
 
 	//: set the video sync type
@@ -137,7 +139,7 @@ public:
 	//  your video display.  This will eliminate most flicker caused 
 	//  by the magnetic distortion. <BR>
 	//  - Refer to your flock manual for what the return number means
-	inline int  getSync() {return _syncStyle; }
+	inline const int&  getSync() const {return _syncStyle; }
 
 
 	//: Set blocking of flock
@@ -147,15 +149,15 @@ public:
 	
 	//: Get blocking flock's blocking type
 	//  see flock manual for details.
-	inline int  getBlocking() { return _blocking; }
+	inline const int&  getBlocking() const { return _blocking; }
 
 
 	//: Set the type of filtering that the flock uses
 	//  NOTE: flock.isActive() must be false to use this function
-	void	    setFilters( const BIRD_FILT& f );
+	void	    setFilterType( const BIRD_FILT& f );
 	
 	//: Set the type of filtering that the flock uses
-	inline int  getFilters() { return _filter; }
+	inline const BIRD_FILT&  getFilterType() const { return _filter; }
 
 
 	//: Set the hemisphere that the transmitter transmits from.
@@ -163,7 +165,7 @@ public:
 	void	    setHemisphere( const BIRD_HEMI& h );
 	
 	//: Set the hemisphere that the transmitter transmits from.
-	inline int  getHemisphere() {return _hemisphere; }
+	inline const BIRD_HEMI&  getHemisphere() const {return _hemisphere; }
 
 
 	//: Set the report rate that the flock uses
@@ -171,18 +173,29 @@ public:
 	void	    setReportRate( const char& rRate );
         
 	//: Set the report rate that the flock uses
-	inline char getReportRate() {return _reportRate; }
+	inline const char& getReportRate() const {return _reportRate; }
 
 
+	//: get the x position of the i'th reciever
 	float&	    xPos( const int& i );
+	
+	//: get the y position of the i'th reciever
 	float&	    yPos( const int& i );
+	
+	//: get the z position of the i'th reciever
 	float&	    zPos( const int& i );
+	
+	//: get the z rotation of the i'th reciever
 	float&	    zRot( const int& i );
+	
+	//: get the y rotation of the i'th reciever
 	float&	    yRot( const int& i );
+	
+	//: get the x rotation of the i'th reciever
 	float&	    xRot( const int& i );
 
-// Private methods
-private:
+// public methods
+public:
 	//: with the calibration table info, correct a given position
 	//  give - a position in x, y, z euclidian coordinates
 	//  returns - a corrected position in x, y, z euclidian coordinates
