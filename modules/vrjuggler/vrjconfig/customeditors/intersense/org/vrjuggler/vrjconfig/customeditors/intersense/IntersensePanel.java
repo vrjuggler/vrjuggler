@@ -44,8 +44,6 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.*;
 import org.jdom.*;
 
-import org.vrjuggler.vrjconfig.commoneditors.*;
-
 public class IntersensePanel extends JPanel implements CustomEditor
 {
    /** Panel which contains all general Intersense information. */
@@ -268,36 +266,51 @@ public class IntersensePanel extends JPanel implements CustomEditor
       mDeviceInfoPanel.add(mBaudLbl, null);
       mDeviceInfoPanel.add(mBaudText, null);
 
-      mVisualizeBtn.addActionListener(new ActionListener()
-            {
-               public void actionPerformed(ActionEvent evt)
-               {
-                  JDialog dlg = new JDialog(
-                     (Frame)SwingUtilities.getAncestorOfClass(Frame.class, IntersensePanel.this),
-                     "3D Visualization", true);
-            
-
-               
-                  PositionalDeviceEditor pos_editor = new PositionalDeviceEditor();
-                  ConfigElement pos_filter = (ConfigElement)mConfigElement.getProperty("position_filters", 0);
-                  
-                  // Make sure to set the context first.
-                  pos_editor.setContext(mConfigContext);
-                  pos_editor.setConfigElement(pos_filter);
-                  
-                  dlg.getContentPane().add(pos_editor, BorderLayout.CENTER);
-                  dlg.pack();
-                  dlg.setVisible(true);
-                  //frame.setSize(750, 750);
-                  //frame.show();                  
-               }
-            });
-            
       mTopSectionPanel.setLayout(new BoxLayout(mTopSectionPanel, BoxLayout.X_AXIS));
       mTopSectionPanel.add(mISenseIconLbl);
       mTopSectionPanel.add(Box.createHorizontalGlue());
       mTopSectionPanel.add(mDeviceInfoPanel);
-      mTopSectionPanel.add(mVisualizeBtn);
+
+   ClassLoader loader = getClass().getClassLoader();
+
+   String class_name = "org.vrjuggler.vrjconfig.commoneditors.positionaldeviceeditor.PositionalDeviceEditor";
+   final Class jogl_editor_class = loader.loadClass(class_name);
+
+   mTopSectionPanel.add(mVisualizeBtn);
+
+   mVisualizeBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            try
+            {
+               CustomEditor pos_editor = (CustomEditor)jogl_editor_class.newInstance();
+               ConfigElement pos_filter = (ConfigElement)mConfigElement.getProperty("position_filters", 0);
+               JDialog dlg = new JDialog(
+                  (Frame)SwingUtilities.getAncestorOfClass(Frame.class, IntersensePanel.this),
+                  "3D Visualization", true);
+               // Make sure to set the context first.
+               pos_editor.setContext(mConfigContext);
+               pos_editor.setConfigElement(pos_filter);
+
+               dlg.getContentPane().add((JPanel)pos_editor);
+               dlg.pack();
+               dlg.setVisible(true);
+               //frame.setSize(750, 750);
+               //frame.show();
+            }
+            catch(InstantiationException e)
+            {
+               System.out.println(e);
+               e.printStackTrace();
+            }
+            catch(IllegalAccessException e)
+            {
+               System.out.println(e);
+               e.printStackTrace();
+            }
+         }
+      });
       
       this.add(mTopSectionPanel, BorderLayout.NORTH);
 
