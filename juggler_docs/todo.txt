@@ -30,3 +30,7 @@ Kevin:
 ------------
 logo
 compressed xml files - does JExplorer support it?
+
+Allen:
+------------
+Add vj Arch book
