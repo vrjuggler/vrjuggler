@@ -34,13 +34,14 @@
 #include <vjConfig.h>
 #include <Kernel/vjKernel.h>
 #include <Input/InputManager/vjKeyboardProxy.h>
+#include <Config/vjConfigChunk.h>
 
 bool vjKeyboardProxy::config(vjConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ KEYBOARD PROXY config()-----------------\n" << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "KeyboardProxy");
 
-   mDeviceName = chunk->getProperty("device");
+   mDeviceName = (std::string)chunk->getProperty("device");
 
    refresh();
 

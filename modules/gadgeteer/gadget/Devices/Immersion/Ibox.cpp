@@ -37,6 +37,7 @@
 #include <Input/vjInput/vjIbox.h>
 #include <Threads/vjThread.h>
 #include <Kernel/vjDebug.h>
+#include <Config/vjConfigChunk.h>
 
 //: Config function
 // Configures the ibox

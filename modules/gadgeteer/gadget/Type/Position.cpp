@@ -35,6 +35,7 @@
 #include <float.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Kernel/vjDebug.h>
+#include <Config/vjConfigChunk.h>
 
 // Set up the transformation information
 bool vjPosition::config(vjConfigChunk *c)
@@ -65,6 +66,12 @@ bool vjPosition::config(vjConfigChunk *c)
   }
 
   return true;
+}
+
+vjTimeStamp* vjPosition::getPosUpdateTime (int devNum)
+{
+      vjDEBUG(vjDBG_PERFORMANCE,2) << "vjPosition::getPosUpdateTime: Get update time function not implemented for this class: " << typeid(this).name() << std::endl << vjDEBUG_FLUSH;
+   return NULL;
 }
 
 vjPosition::vjPosition()

@@ -34,6 +34,7 @@
 #include <vjConfig.h>
 #include <Kernel/vjKernel.h>
 #include <Input/InputManager/vjAnalogProxy.h>
+#include <Config/vjConfigChunk.h>
 
 bool vjAnalogProxy::config(vjConfigChunk* chunk)
 {
@@ -41,7 +42,7 @@ bool vjAnalogProxy::config(vjConfigChunk* chunk)
    vjASSERT(((std::string)chunk->getType()) == "AnaProxy");
 
    m_unitNum = chunk->getProperty("unit");
-   mDeviceName = chunk->getProperty("device");
+   mDeviceName = (std::string)chunk->getProperty("device");
 
    refresh();     // Refresh the device now that we have something to point at
 

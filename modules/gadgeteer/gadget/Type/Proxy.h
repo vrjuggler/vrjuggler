@@ -35,12 +35,14 @@
 #define _VJ_PROXY_H_
 
 #include <vjConfig.h>
+#include <Kernel/vjKernel.h>
+#include <Input/InputManager/vjInputManager.h>
 #include <Input/vjInput/vjInput.h>
 #include <Config/vjConfigChunk.h>
 #include <typeinfo>
 
-class vjInput;
-class vjKernel;
+//class vjInput;
+//class vjKernel;
 
 //: Base class for all input proxies
 // TODO rename to vjInputProxy

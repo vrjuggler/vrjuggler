@@ -34,28 +34,13 @@
 #include <vjConfig.h>
 
 #include <Input/InputManager/vjInputManager.h>
+#include <Input/InputManager/vjProxy.h>
 #include <Kernel/vjDebug.h>
-
-// Sims
-//#include <Input/vjSim/vjSimAnalog.h>
-//#include <Input/vjSim/vjSimDigital.h>
-//#include <Input/vjSim/vjSimPosition.h>
-//#include <Input/vjSim/vjSimGloveGesture.h>
-
-// Physical devices
-#ifndef WIN32
-//#include <Input/vjPosition/vjFlock.h>
-//#include <Input/vjInput/vjIbox.h>
-//#include <Input/vjGlove/vjCyberGlove.h>
-//#include <Input/vjKeyboard/vjXWinKeyboard.h>
-//#include <Input/vjPosition/logiclass.h>
-#else
-//#include <Input/vjKeyboard/vjKeyboardWin32.h>
-#endif
 
 #include <Input/InputManager/vjDeviceFactory.h>
 #include <Input/InputManager/vjProxyFactory.h>
 #include <Input/InputManager/vjDeviceInterface.h>
+#include <Config/vjConfigChunk.h>
 
 // Local helpers
 bool recognizeProxyAlias(vjConfigChunk* chunk);

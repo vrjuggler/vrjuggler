@@ -34,6 +34,7 @@
 #include <vjConfig.h>
 #include <Kernel/vjKernel.h>
 #include <Input/InputManager/vjDigitalProxy.h>
+#include <Config/vjConfigChunk.h>
 
 bool vjDigitalProxy::config(vjConfigChunk* chunk)
 {
@@ -41,7 +42,7 @@ bool vjDigitalProxy::config(vjConfigChunk* chunk)
    vjASSERT(((std::string)chunk->getType()) == "DigProxy");
 
    m_unitNum = chunk->getProperty("unit");
-   mDeviceName = chunk->getProperty("device");
+   mDeviceName = (std::string)chunk->getProperty("device");
 
    refresh();
    return true;

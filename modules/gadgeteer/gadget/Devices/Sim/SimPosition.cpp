@@ -38,6 +38,7 @@
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjDisplay.h>
 #include <Kernel/vjSurfaceDisplay.h>
+#include <Config/vjConfigChunk.h>
 
 bool vjSimPosition::config(vjConfigChunk* chunk)
 {

@@ -46,6 +46,7 @@
 #include <errno.h>
 
 #include <Input/vjPosition/aMotionStar.h>
+#include <Config/vjConfigChunk.h>
 
 #define RAD2DEG(x) ((x) * 180.0 / M_PI)
 
@@ -216,8 +217,8 @@ aMotionStar::aMotionStar(const char* address, const unsigned short port,
       m_birds_active(0), m_unit_conv(1.0)
 {
     union {
-        char	c[sizeof(short)];
-        short	value;
+        char   c[sizeof(short)];
+        short  value;
     } endian;
 
     // Initialize member variables using passed parameters.
@@ -1514,8 +1515,8 @@ aMotionStar::setContinuous () {
 short
 aMotionStar::toShort (const char high_byte, const char low_byte) const {
     union {
-        char	c[sizeof(short)];
-        short	value;
+        char   c[sizeof(short)];
+        short  value;
     } result;
 
     // If this is a big-endian host, put the high byte in the first byte of

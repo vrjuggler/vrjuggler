@@ -42,16 +42,11 @@
 #include <vjConfig.h>
 #include <map>
 
-#include <Kernel/vjDebug.h>
 #include <Kernel/vjConfigChunkHandler.h>
 
 // Proxies
-#include <Input/InputManager/vjPosProxy.h>
-#include <Input/InputManager/vjAnalogProxy.h>
-#include <Input/InputManager/vjDigitalProxy.h>
-#include <Input/InputManager/vjGloveProxy.h>
-#include <Input/InputManager/vjKeyboardProxy.h>
-#include <Input/InputManager/vjGestureProxy.h>
+class vjProxy;
+class vjInput;
 
 //: The InputManager holds an manages all vj Input devices.
 //

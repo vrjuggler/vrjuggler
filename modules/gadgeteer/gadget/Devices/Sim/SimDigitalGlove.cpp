@@ -33,6 +33,7 @@
 
 #include <vjConfig.h>
 #include <Input/vjSim/vjSimDigitalGlove.h>
+#include <Config/vjConfigChunk.h>
 
 //: Default Constructor
 vjSimDigitalGlove::vjSimDigitalGlove() : vjDigital(), vjSimInput(), vjGlove()

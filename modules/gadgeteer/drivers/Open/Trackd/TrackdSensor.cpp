@@ -34,6 +34,7 @@
 #include <vjConfig.h>
 #include <Input/Multi/aTrackdSensor.h>
 #include <Input/Multi/vjTrackdSensor.h>
+#include <Config/vjConfigChunk.h>
 
 #include <Kernel/vjDebug.h>
 

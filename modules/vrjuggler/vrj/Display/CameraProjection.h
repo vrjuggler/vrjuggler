@@ -36,6 +36,7 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjProjection.h>
+#include <Config/vjConfigChunk.h>
 class vjMatrix;
 
 //: Projection class that simply takes a matrix for the camera position

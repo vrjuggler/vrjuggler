@@ -33,6 +33,7 @@
 
 #include <vjConfig.h>
 #include <Input/vjSim/vjSimDigital.h>
+#include <Config/vjConfigChunk.h>
 
 
 //: Default Constructor

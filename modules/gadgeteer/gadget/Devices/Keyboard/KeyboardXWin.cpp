@@ -34,6 +34,7 @@
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Threads/vjThread.h>
+#include <Config/vjConfigChunk.h>
 
 
 //: Constructor
