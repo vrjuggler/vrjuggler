@@ -10,6 +10,35 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.1 DR4 (1.1.129)
+Released: October 11, 2002
+
+    Please refer to the following to get started with VR Juggler 1.1 DR4:
+
+       http://www.vrjuggler.org/vrjuggler/1.1-DR4/migration.guide/
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1 DR3):
+        * Gadgeteer loads device drivers on demand now.  An InputManager
+          chunk must be added to tell the Input Manager what driver(s) to
+          load at runtime.  For example, to load the Flock of Birds driver
+          and the Immersion IBox driver on a UNIX system, add the following:
+
+             <InputManager name="Input Manager">
+               <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/libFlock.so</driver>
+               <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/libIBox.so</driver>
+             </InputManager>
+
+          On Win32, it would appear as:
+
+             <InputManager name="Input Manager">
+               <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/Flock.dll</driver>
+               <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/IBox.dll</driver>
+             </InputManager>
+
+          All drivers except simulator devices and keyboards must be loaded
+          this way on all platforms.
+
  Version: 1.1 DR3 (1.1.128)
 Released: September 29, 2002
 
