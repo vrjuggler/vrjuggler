@@ -45,7 +45,7 @@
 
 // This variable determines which matrix stack we put the viewing transformation
 // If it is on the proj matrix, then lighting and env maps work but fog breaks.
-#define USE_PROJECTION_MATRIX 1	/* Should we put the camera transforms on the
+#define USE_PROJECTION_MATRIX 1  /* Should we put the camera transforms on the
                                    Projection or modelview matrix */
 
 
@@ -156,10 +156,12 @@ void vjGlWindow::setCameraProjection()
    if (!window_is_open)
       return;
 
-   float* frust = sim_display->getCameraProj()->mFrustum.frust;
+   vjCameraProjection* cam_proj = dynamic_cast<vjCameraProjection*>(sim_display->getCameraProj());
+   vjASSERT(cam_proj != NULL && "Trying to use a non-camera projection with a sim view");
+   float* frust = cam_proj->mFrustum.frust;
 
    vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Camera Frustrum ----\n"
-               << sim_display->getCameraProj()->mFrustum.frust << std::endl
+               << cam_proj->mFrustum.frust << std::endl
                << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
@@ -175,7 +177,7 @@ void vjGlWindow::setCameraProjection()
                  frust[vjFrustum::NEAR],frust[vjFrustum::FAR]);
       */
 
-      gluPerspective(80.0f, float(window_width)/float(window_height),
+      gluPerspective(cam_proj->mVertFOV, cam_proj->mAspectRatio*((window_width)/float(window_height)),
                      frust[vjFrustum::VJ_NEAR], frust[vjFrustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
        // Set camera rotation and position
