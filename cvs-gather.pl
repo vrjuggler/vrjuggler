@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# cvs-gather.pl,v 1.14 2002/04/02 22:03:47 patrickh Exp
+# cvs-gather.pl,v 1.15 2002/04/11 17:39:45 patrickh Exp
 
 require 5.004;
 
@@ -60,7 +60,7 @@ sub nextSpinnerFrame($);
 # *********************************************************************
 # Here is the version for this script!
 
-my $VERSION = '0.1.1';
+my $VERSION = '0.1.2';
 # *********************************************************************
 
 my $cfg_file      = '';
@@ -824,8 +824,12 @@ sub checkoutModule ($$$$$$$)
          my $orig_module_name = '';
 
          # Save the current working directory.  It is the directory where
-         # the module was checked out.
-         my $co_dir = getcwd();
+         # the module will be installed.
+         my $target_dir = getcwd();
+
+         # Now we must go into the checkout directory to do the renaming.
+         chdir("$temp_checkout_dir")
+            or die "ERROR: Could not chdir to $temp_checkout_dir: $!\n";
 
          # If the checked out module contained a path, we have to deal with
          # that.
@@ -833,7 +837,9 @@ sub checkoutModule ($$$$$$$)
          {
             my ($module_dir, $ext);
             ($orig_module_name, $module_dir, $ext) = fileparse("$cvs_module");
-            chdir("$temp_checkout_dir/$module_dir")
+
+            # Go to the subdirectory containing the actual module.
+            chdir("$module_dir")
                or die "ERROR: Could not chdir to $temp_checkout_dir/$module_dir: $!\n";
          }
          # Otherwise, we can just use the module name as it was originally
@@ -843,23 +849,23 @@ sub checkoutModule ($$$$$$$)
             $orig_module_name = "$cvs_module";
          }
 
-         printDebug $VERB_LVL, "$orig_module_name --> $co_dir/$install_name\n";
+         printDebug $VERB_LVL, "$orig_module_name --> $target_dir/$install_name\n";
 
-         if ( -d "$co_dir/$install_name" && ! $force_install )
+         if ( -d "$target_dir/$install_name" && ! $force_install )
          {
             warn "    WARNING: Module renaming failed--target directory already exists!\n";
          }
          else
          {
-            rmtree("$co_dir/$install_name") if $force_install;
+            rmtree("$target_dir/$install_name") if $force_install;
             printDebug $STATE_LVL, "Moving $orig_module_name to " .
-                                   "$co_dir/$install_name\n";
-            rename("$orig_module_name", "$co_dir/$install_name")
+                                   "$target_dir/$install_name\n";
+            rename("$orig_module_name", "$target_dir/$install_name")
                or warn "    WARNING: Module renaming failed: $!\n";
 
             # If the user requested to do so, modify $dest_dir/CVS/Entries to
             # include $dir.
-            modifyCvsEntries("$co_dir", "$install_name") if $entry_mod;
+            modifyCvsEntries("$target_dir", "$install_name") if $entry_mod;
          }
       }
       # We are going to use the default module name, but we have to get it
