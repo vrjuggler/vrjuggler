@@ -175,16 +175,14 @@ public:
     * @note This user data is valid ONLY in draw().  It is not valid anywhere
     *       else.
     */
-   GlUserData* currentUserData()
-   { return &(*mUserData); }
+   GlUserData* currentUserData();
 
    /**
     * Returns a unique identifier for the current context.
     *
     * @note This id is ONLY valid in contextInit() and draw().
     */
-   int getCurrentContext()
-   { return (*mContextId); }
+   int getCurrentContext();
 
 protected:
    /**
@@ -194,8 +192,7 @@ protected:
     */
    GlWindow* getGLWindow();
 
-   void setCurrentContext(int val)
-   { (*mContextId) = val; }
+   void setCurrentContext(int val);
 
    /** Sets the dirty bits off all the GL windows. */
    void dirtyAllWindows();
