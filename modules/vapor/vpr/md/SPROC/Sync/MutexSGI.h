@@ -280,7 +280,7 @@ public:
     * @param message Message printed out before the output is dumped.
     */
    void dump(FILE* dest = stdout,
-             const char* message = "\n------ Mutex Dump -----\n") const
+             const char* message = "\n------ Mutex Status -----\n") const
    {
       usdumplock(mMutex, dest, message);
    }

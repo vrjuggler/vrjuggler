@@ -301,8 +301,8 @@ public:
     *                It defaults to stderr if no descriptor is specified.
     * @param message Message printed out before the output is dumped.
     */
-   void dump (FILE* dest = stderr,
-              const char* message = "\n------ Semaphore Dump -----\n") const
+   void dump(FILE* dest = stderr,
+             const char* message = "\n------ Semaphore Status -----\n") const
    {
       usdumpsema(sema, dest, message);
    }
