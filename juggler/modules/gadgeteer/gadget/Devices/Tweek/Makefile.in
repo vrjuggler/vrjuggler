@@ -49,12 +49,14 @@ top_srcdir=		@top_srcdir@
 EXTRA_INCLUDES+=	-I$(srcdir)
 EXTRA_SRCS_PATH=	$(srcdir)/idl gadget
 INSTALL=		@INSTALL@
+INSTALL_FILES=
 
 HAVE_TWEEK_CXX=		@HAVE_TWEEK_CXX@
 HAVE_TWEEK_JAVA=	@HAVE_TWEEK_JAVA@
 
 ifeq ($(HAVE_TWEEK_CXX), Y)
    EXTRA_CXXFLAGS+=	@TWEEK_CXXFLAGS@
+   INSTALL_FILES=	$(IDL_GENDIR)/*.h
 
    IDL_CXX_FILES=	TweekAnalogSubject.cpp TweekAnalogSubject.h	\
 			TweekDigitalSubject.cpp TweekDigitalSubject.h	\
@@ -112,10 +114,6 @@ include @topdir@/gadget/Devices/driver.defs.mk
 PRE_DSO_DRIVER_DEPS=	@TWEEK_DRIVER_DEPS@
 
 ifeq ($(HAVE_TWEEK_CXX), Y)
-   ifneq ($(srcdir), $(IDL_GENDIR))
-      INSTALL_FILES+=	$(IDL_GENDIR)/*.h
-   endif
-
    CLEAN_FILES+=	$(IDL_CXX_FILES)
 endif
 
