@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- ---------------------------------------------------------
+Feb-17-2003 nonchocoboy Fixed bug in the Analog Simulator device where the
+                        analog inputs would get normalized to zero every sample.
 Jan-26-2003 patrickh    Renamed the Polhemus Fastrak driver to use the correct
                         spelling of "Fastrak."
                         NEW VERSION: 0.7.1
