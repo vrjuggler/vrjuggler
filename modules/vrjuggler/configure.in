@@ -484,14 +484,14 @@ if test "x$enable_opengl" = "xyes" ; then
         LIBOPENGL="-L${OGLROOT} -lGLU -lGL -lXext"
 
         if test "$PLATFORM" = "HP" ; then
-            _SYSTEM_OPENGL="$LIBOPENGL -lX11 -lm -lC"
+            _SYSTEM_OPENGL="$LIBOPENGL -lX11"
         else
             if test "$ABI" = "64" ; then
-                _SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
+                _SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11"
             elif test "$ABI" = "N32" ; then
-                _SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
+                _SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11"
             elif test "$ABI" = "O32" ; then
-                _SYSTEM_OPENGL="-lmpc -limage -lGLw $LIBOPENGL -lfpe -lXm -lXt -lXmu -lX11 -lm -lmalloc -lC"
+                _SYSTEM_OPENGL="-lmpc -limage -lGLw $LIBOPENGL -lfpe -lXm -lXt -lXmu -lX11 -lmalloc"
             fi
         fi
     # No OpenGL API files were added, so restore $INCLUDES and $LDFLAGS so
@@ -637,8 +637,8 @@ VJ_SRCDIR='${VJROOT_ABS}'
 #     * TEST_VJ_LIBS_PF: The Performer libraries needed for compiling with the
 #       Performer API.
 #
-TEST_VJ_LIBS_BASIC="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
-TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
+TEST_VJ_LIBS_BASIC="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler -lm -lC"
+TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler -lm -lC"
 TEST_VJ_LIBS_GL="-lJuggler_ogl"
 TEST_VJ_LIBS_PF="-lJuggler_pf"
 TEST_EXTRA_LIBS_BASIC="$LDFLAGS -B dynamic $LIBS"
