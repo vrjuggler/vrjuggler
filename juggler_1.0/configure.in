@@ -1923,6 +1923,8 @@ AC_OUTPUT(Makefile
           Sync/Makefile
           Threads/Makefile
           Utils/Makefile
+          Utils/Port/Makefile
+          Utils/Socket/Makefile
           samples/Makefile
           samples/ogl/Makefile
           samples/ogl/combo/Makefile
