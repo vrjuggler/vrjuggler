@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# cvs-gather.pl,v 1.30 2003/06/06 16:30:07 patrickh Exp
+# cvs-gather.pl,v 1.31 2003/07/03 16:54:54 patrickh Exp
 
 use 5.005;
 
@@ -35,7 +35,8 @@ use Getopt::Long;
 use Pod::Usage;
 
 use strict 'vars';
-use vars qw($indent $log_file $full_path $debug_level $override $max_cvs_tries);
+use vars qw($indent $log_file $full_path $debug_level $override $max_cvs_tries
+            $cvs_wait_length $cvs_wait_multiplier $cvs_wait_unit);
 use vars qw($CRITICAL_LVL $WARNING_LVL $CONFIG_LVL $STATE_LVL $VERB_LVL
             $HVERB_LVL $HEX_LVL);
 
@@ -60,7 +61,7 @@ sub nextSpinnerFrame($);
 # *********************************************************************
 # Here is the version for this script!
 
-my $VERSION = '0.1.9';
+my $VERSION = '0.1.10';
 # *********************************************************************
 
 my $cfg_file         = '';
@@ -77,6 +78,7 @@ my (@overrides)     = ();
 my (%cmd_overrides) = ();
 
 $max_cvs_tries = 10;
+my $cvs_wait   = "1s";
 
 $CRITICAL_LVL = 0;
 $WARNING_LVL  = 1;
@@ -93,7 +95,7 @@ GetOptions('cfg=s' => \$cfg_file, 'help' => \$help, 'override=s' => \@overrides,
            'version' => \$print_version, 'verbose' => \$verbose,
            'entry-mod' => \$entry_mod, 'force-install' => \$force_install,
            'target=s' => \@limit_modules, 'manual' => \$manual,
-           'cvs-tries=i' => \$max_cvs_tries)
+           'cvs-tries=i' => \$max_cvs_tries, 'cvs-wait=s' => \$cvs_wait)
    or pod2usage(2);
 
 # Print the help output and exit if --help was on the command line.
@@ -106,6 +108,21 @@ printVersion() && exit(0) if $print_version;
 # If we are doing verbose output and the user did not change the debug level,
 # then we push the debug level up to the max.
 $debug_level = $HVERB_LVL if $verbose && $debug_level <= $CRITICAL_LVL;
+
+$cvs_wait =~ /^(\d+)(\w?)$/;
+$cvs_wait_length = $1;
+my $wait_unit    = "$2";
+
+if ( "$wait_unit" == "s" )
+{
+   $cvs_wait_multiplier = 1;
+   $cvs_wait_unit       = "second";
+}
+elsif ( "$wait_unit" == "m" )
+{
+   $cvs_wait_multiplier = 60;
+   $cvs_wait_unit       = "minute";
+}
 
 if ( ! $cfg_file )
 {
@@ -1021,10 +1038,11 @@ sub runCvsCommand ($)
       if ( $? )
       {
          print "CVS returned error status.\n" .
-               "Trying again after sleeping 1 second ...\n";
+               "Trying again after sleeping $cvs_wait_length $cvs_wait_unit" .
+               ($cvs_wait_length == 1 ? "" : "s") . "...\n";
          $try++;
          $have_error = 1;
-         sleep(1);
+         sleep($cvs_wait_length * $cvs_wait_multiplier);
       }
       else
       {
@@ -1172,6 +1190,20 @@ Set the debug output level (0-5).
 
 Set the maximum number of times to retry a failed CVS command.  The default
 is 10.
+
+=item B<--cvs-wait=<interval>>
+
+Set the amount of time to wait between retrying a failed CVS command.  The
+interval must be of the following form:
+
+=over 4
+
+XXs or XXm
+
+=back
+
+Here "XX" is an integer value, and "s" or "m" specifies the units, either
+seconds or minutes respectively.  The default is 1s.
 
 =item B<--entry-mod>
 
