@@ -10,7 +10,8 @@
 # VJCONFIG_OBJS    - The list of .class files that will be created.
 # -----------------------------------------------------------------------------
 
-VJCONFIG_SOURCES = VjConfig/ConfigChunkDB.java		\
+VJCONFIG_SOURCES = VjConfig/ChunkDependEntry.java       \
+		   VjConfig/ConfigChunkDB.java		\
                    VjConfig/ConfigChunk.java		\
                    VjConfig/Property.java		\
                    VjConfig/Property.java		\
@@ -21,7 +22,6 @@ VJCONFIG_SOURCES = VjConfig/ConfigChunkDB.java		\
                    VjConfig/ValType.java		\
                    VjConfig/VarValue.java		\
                    VjConfig/VarValueException.java	\
-                   VjConfig/ConfigStreamTokenizer.java  \
-		   VjConfig/ChunkDependEntry.java
+                   VjConfig/ConfigStreamTokenizer.java  
 
 VJCONFIG_OBJS = ${VJCONFIG_SOURCES:.java=.class}
