@@ -46,7 +46,7 @@ use Getopt::Long;
 sub usage($);
 sub make_CXXFLAGS($;$);
 sub make_INCLUDES($);
-sub make_LDFLAGS($;$$);
+sub make_LDFLAGS($;$$$);
 sub make_EXTRA_LDFLAGS($;$$);
 sub handleOptArg($$);
 sub stripDuplicateArgs($);
@@ -132,6 +132,7 @@ my $echo_includes  = 0;
 my $echo_subsystem = 0;
 my $echo_version   = 0;
 my $echo_static    = 0;
+my $echo_profiled  = 0;
 my $use_linker     = 0;
 
 my $cxxflags_arg   = '';
@@ -143,14 +144,16 @@ GetOptions('help|?' => \$script_help, 'min' => \$print_min,
            'prefix:s' => \&handleOptArg, 'exec-prefix:s' => \&handleOptArg,
            'cxxflags:s' => \&handleOptArg, 'includes' => \$echo_includes,
            'libs:s' => \&handleOptArg, 'extra-libs:s' => \&handleOptArg,
-           'linker' => \$use_linker, 'static' => \$echo_static);
+           'linker' => \$use_linker, 'static' => \$echo_static,
+           'profiled' => \$echo_profiled);
 
 usage(0) if $script_help;
 
 # Construct the (potentially complex) strings that may be printed.
 my $cxxflags      = make_CXXFLAGS("$cxxflags_arg", $print_min);
 my $includes      = make_INCLUDES("$cxxflags");
-my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $use_linker);
+my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $echo_profiled,
+                                 $use_linker);
 my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker,
                                        $print_min);
 
@@ -258,11 +261,12 @@ sub make_INCLUDES ($)
    return join(" ", grep(/^-I/, @compiler_flags));
 }
 
-sub make_LDFLAGS ($;$$)
+sub make_LDFLAGS ($;$$$)
 {
-   my $libs_arg     = shift;
-   my $echo_static  = shift || 0;  # Echo static linking flags
-   my $use_linker   = shift || 0;  # Use flags for direct use of the linker
+   my $libs_arg      = shift;
+   my $echo_static   = shift || 0;  # Echo static linking flags
+   my $echo_profiled = shift || 0;  # Echo profiled libraries
+   my $use_linker    = shift || 0;  # Use flags for direct use of the linker
 
    my $static_begin = '';
    my $static_end   = '';
@@ -293,7 +297,8 @@ sub make_LDFLAGS ($;$$)
    $ldflags .= ($use_linker ? qq( @jccl_ldflags_linker@)
                             : qq( @jccl_ldflags_compiler@));
 
-   my $full_ldflags = qq($ldflags $static_begin @jccl_libs@ $static_end);
+   my $jccl_libs    = ($echo_profiled ? qq(@jccl_prof_libs@) : qq(@jccl_libs@));
+   my $full_ldflags = qq($ldflags $static_begin $jccl_libs $static_end);
    $full_ldflags    =~ s/\s{2,}/ /g;
 
    return "$full_ldflags";
