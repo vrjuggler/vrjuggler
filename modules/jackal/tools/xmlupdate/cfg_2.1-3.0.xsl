@@ -92,6 +92,7 @@
             <xsl:value-of select="$configuration_schema" />
             <xsl:text> </xsl:text>
             <xsl:value-of select="$configuration_schema" />
+            <xsl:text>.xsd</xsl:text>
          </xsl:attribute>
          <xsl:attribute name="name"><xsl:text>A configuration</xsl:text></xsl:attribute>
          <xsl:value-of select="$newline" />
