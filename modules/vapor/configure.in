@@ -49,7 +49,7 @@
 AC_REVISION($Revision$)
 AC_INIT(vpr/vprConfig.h)
 AC_CONFIG_HEADER(vpr/vprDefines.h)
-DPP_PREREQ(1.4.91)
+DPP_PREREQ(1.4.92)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -225,11 +225,6 @@ esac
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
 DPP_PROG_CC_NOSTDINC
-
-if test "x$DPP_USING_MSVCCC" = "xyes" ; then
-    AR='$(CXX) /link /lib'
-    LD='$(CXX) /link /dll'
-fi
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
@@ -532,7 +527,7 @@ UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 # Put together the basic information needed to compile VPR applications.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LIB comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
     APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 fi
@@ -573,7 +568,7 @@ fi
 
 # Dependencies for dynamic/shared libraries.
 if test "x$OS_TYPE" = "xWin32" ; then
-    DYLIB_DEPS="$NSPR_LDFLAGS $NSPR_LIB ws2_32.lib"
+    DYLIB_DEPS="$NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE ws2_32.lib"
 else
     DYLIB_DEPS="$NSPR_LDFLAGS $NSPR_LIB"
 fi
@@ -608,8 +603,8 @@ case $SUBSYSTEM in
     NSPR)
         if test "x$OS_TYPE" = "xWin32" ; then
             subsystem_cxxflags="$INCLUDES"
-            subsystem_libs="$NSPR_LIB comctl32.lib user32.lib gdi32.lib ws2_32.lib"
-            vpr_ldflags="/link /libpath:\$prefix/lib/debug $NSPR_LDFLAGS"
+            subsystem_libs="$NSPR_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+            vpr_ldflags="/link /libpath:\$prefix/lib/debug $NSPR_LDFLAGS_LINK_EXE"
             vpr_libs='vpr.lib'
         else
             subsystem_cxxflags="$INCLUDES"
