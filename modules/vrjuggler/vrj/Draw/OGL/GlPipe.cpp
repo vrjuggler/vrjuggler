@@ -427,6 +427,9 @@ void GlPipe::renderWindow(GlWindow* win)
       }  // should viewport be rendered
    }     // for each viewport
 
+   // -- Post context stuff --- //
+   theApp->contextPostDraw();
+
 }
 
 //: Swaps the buffers of the given window
