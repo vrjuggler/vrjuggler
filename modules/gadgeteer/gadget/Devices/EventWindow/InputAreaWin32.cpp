@@ -53,17 +53,21 @@ namespace gadget
 vprSingletonImp(InputAreaWin32::InputAreaRegistry);
 
 /** Add the given window to the registry. */
-bool InputAreaWin32::InputAreaRegistry::addInputArea(std::string name, InputAreaInfo winInfo)
+bool InputAreaWin32::InputAreaRegistry::addInputArea(std::string name,
+                                                     InputAreaInfo winInfo)
 {
    input_area_map_t::iterator found_input_area = mInputAreaMap.find(name);
    if(found_input_area != mInputAreaMap.end())
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL) << "Warning: Attempted to add x event source twice. named: [" << name << "]. Ignoring second.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "Warning: Attempted to add x event source twice. named '"
+         << name << "'. Ignoring second.\n" << vprDEBUG_FLUSH;
       return false;
    }
    else
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Adding X window: " << name << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "Adding Win32 window: " << name << std::endl << vprDEBUG_FLUSH;
       mInputAreaMap[name] = winInfo;
       return true;
    }
@@ -75,9 +79,10 @@ void InputAreaWin32::InputAreaRegistry::removeInputArea(std::string name)
    unsigned num_erased = mInputAreaMap.erase(name);
    if(0 == num_erased)
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL) << "Warning: Attempted to remove x event source not found. named: [" << name << "]. \n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "Warning: Attempted to remove Win32 event source not found. named '"
+         << name << "'. \n" << vprDEBUG_FLUSH;
    }
-
 }
 
 bool InputAreaWin32::InputAreaRegistry::getInputArea(std::string name, InputAreaInfo& inputAreaInfo)
@@ -89,16 +94,19 @@ bool InputAreaWin32::InputAreaRegistry::getInputArea(std::string name, InputArea
       return true;
    }
    else
-   { return false; }
+   {
+      return false;
+   }
 }
 
-InputAreaWin32::InputAreaWin32() :
-	mWinHandle(NULL),
-	mLockState(Unlocked),
-   mUseOwnDisplay(true),
-	mPrevX(0),
-   mPrevY(0)   
+InputAreaWin32::InputAreaWin32()
+   : mWinHandle(NULL)
+   , mLockState(Unlocked)
+   , mUseOwnDisplay(true)
+   , mPrevX(0)
+   , mPrevY(0)
 {;}
+
 InputAreaWin32::~InputAreaWin32()
 {;}
 
@@ -188,8 +196,8 @@ void InputAreaWin32::updKeys(const MSG& message)
          {
             InvalidateRect(mWinHandle, NULL, TRUE);
          }
-			InputAreaWin32::resize(LOWORD(message.lParam), HIWORD(message.lParam));
-			break;
+         InputAreaWin32::resize(LOWORD(message.lParam), HIWORD(message.lParam));
+         break;
       case WM_ACTIVATE:
          // if was activated, and not minimized
          if ( (WA_ACTIVE == LOWORD(message.wParam) ||
@@ -210,7 +218,8 @@ void InputAreaWin32::updKeys(const MSG& message)
             // and was locked...
             if ( Unlocked != mLockState )
             {
-               // we will leave mLockState in the locked state so ACTIVATE puts it back.
+               // we will leave mLockState in the locked state so ACTIVATE
+               // puts it back.
                this->unlockMouse();
             }
          }
@@ -221,7 +230,8 @@ void InputAreaWin32::updKeys(const MSG& message)
          // if locked, unlock it
          if ( Unlocked != mLockState )
          {
-            // we will leave mLockState in the locked state so ACTIVATE puts it back.
+            // we will leave mLockState in the locked state so ACTIVATE puts
+            // it back.
             this->unlockMouse();
          }
          break;
@@ -229,8 +239,8 @@ void InputAreaWin32::updKeys(const MSG& message)
          // keys and buttons
          // When we hit a key (or button), then set the mKey and mRealkey
          // When release, only set real so that we don't lose a press of the
-         // button then when the updateData happens, the framekeys will be set to
-         // non-pressed from real_keys
+         // button then when the updateData happens, the framekeys will be set
+         // to non-pressed from real_keys
 
          // press
       case WM_SYSKEYDOWN:  //Need WM_SYSKEYDOWN to capture ALT key
@@ -252,7 +262,7 @@ void InputAreaWin32::updKeys(const MSG& message)
             {
                break;
             }
-				
+
             // process the keypress.
             mEventDelegate->mKeys[key] += repeat_count;
             mEventDelegate->mRealkeys[key] += 1;
@@ -272,7 +282,8 @@ void InputAreaWin32::updKeys(const MSG& message)
             else if ( mLockState == Unlocked )
             {
                if ( (key != mLockToggleKey) &&
-                    ((gadget::KEY_ALT == key) || (gadget::KEY_CTRL == key) || (gadget::KEY_SHIFT == key)) )
+                    ((gadget::KEY_ALT == key) || (gadget::KEY_CTRL == key) ||
+                     (gadget::KEY_SHIFT == key)) )
                {
                   mLockState = Lock_KeyDown;       // Switch state
                   mLockStoredKey = key;         // Store the VJ key that is down
@@ -301,14 +312,14 @@ void InputAreaWin32::updKeys(const MSG& message)
       case WM_SYSKEYUP:  //Need WM_SYSKEYUP to capture ALT key
       case WM_KEYUP:
          key = VKKeyToKey(message.wParam);
-			
+
          mEventDelegate->mRealkeys[key] = 0;
-			
-			/*
+
+         /*
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << mInstName << ": WM_KEYUP: " << key << std::endl
             << vprDEBUG_FLUSH;
-			*/
+         */
 
          addKeyEvent(key, gadget::KeyReleaseEvent, message);
 
@@ -411,7 +422,6 @@ void InputAreaWin32::updKeys(const MSG& message)
                mPrevY = win_center_y;
 
                // Warp back to center, IF we are not there already
-               // This prevents us from sending an event based on our XWarp event
                if ( (dx != 0) || (dy != 0) )
                {
                   vprDEBUG(vprDBG_ALL,vprDBG_HVERB_LVL) << "CORRECTING: x:"
@@ -427,7 +437,7 @@ void InputAreaWin32::updKeys(const MSG& message)
                   ::SetCursorPos(pt.x, pt.y);
                }
             }
-				
+
             // Update mKeys based on key pressed and store in the key array
             if ( dx > 0 )
             {
@@ -620,36 +630,33 @@ void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
 
 void InputAreaWin32::doInternalError( const std::string& msg )
 {
-	// Get the last error code.
-	DWORD dwErr = GetLastError();
-	LPTSTR	lpMsgBuf;
+   // Get the last error code.
+   DWORD dwErr = GetLastError();
+   LPTSTR lpMsgBuf;
 
-	// Get the string representation of the error code.
-	FormatMessage( FORMAT_MESSAGE_ALLOCATE_BUFFER |
-						FORMAT_MESSAGE_FROM_SYSTEM |
-						FORMAT_MESSAGE_IGNORE_INSERTS,
-						NULL,
-						dwErr,
-						MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-						(LPTSTR) &lpMsgBuf,
-						0,NULL 
-					  );
-	
-	// Create a stringstream to format the output.
-	std::stringstream error_output;
-	error_output << msg << std::endl 
-		<< "Failed with error: " << dwErr << ": "
-		<< lpMsgBuf << std::flush;
+   // Get the string representation of the error code.
+   FormatMessage( FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                  FORMAT_MESSAGE_FROM_SYSTEM |
+                  FORMAT_MESSAGE_IGNORE_INSERTS,
+                  NULL, dwErr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+                  (LPTSTR) &lpMsgBuf, 0,NULL );
 
-	vprDEBUG( vprDBG_ERROR, vprDBG_CRITICAL_LVL )
-		<< clrOutNORM( clrRED,"ERROR: " )
-		<< error_output.str() << std::endl
-		<< vprDEBUG_FLUSH;
-	
-	// Display a message box to inform the user of the error.
-	MessageBox( NULL, error_output.str().c_str(), "VR Juggler Error", MB_OK | MB_ICONINFORMATION );
+   // Create a stringstream to format the output.
+   std::stringstream error_output;
+   error_output << msg << std::endl
+                << "Failed with error: " << dwErr << ": "
+                << lpMsgBuf << std::flush;
 
-	// Free memory allocated by FormatMessage.
-	LocalFree( lpMsgBuf );
+   vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+      << clrOutNORM(clrRED,"ERROR") << ": " << error_output.str() << std::endl
+      << vprDEBUG_FLUSH;
+
+   // Display a message box to inform the user of the error.
+   MessageBox(NULL, error_output.str().c_str(), "VR Juggler Error",
+              MB_OK | MB_ICONINFORMATION);
+
+   // Free memory allocated by FormatMessage.
+   LocalFree(lpMsgBuf);
 }
+
 } // end namespace
