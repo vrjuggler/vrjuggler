@@ -61,6 +61,7 @@ fi
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 exec_prefix_set=no
+use_linker='no'
 
 usage()
 {
@@ -77,7 +78,7 @@ Options:
         [--libs [N32|64]]       Print the basic Gadgeteer libraries
         [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
-
+        [--subsystem]           Print the OS abstraction layer being used
 Libraries (prints the linker options for one or more of these libraries):
         gadget
 EOF
@@ -187,6 +188,9 @@ while test $# -gt 0; do
                     ;;
             esac
             ;;
+        --linker)
+            use_linker=yes
+            ;;
         --static)
             echo_static=yes
             ;;
@@ -237,7 +241,11 @@ if test "$echo_libs" = "yes"; then
     if test "$use_base_dir" = "yes"; then
         ldflags="$ldflags -L$GADGET_BASE_DIR/lib$LIBBITSUF"
     else
-        ldflags="$ldflags @gad_ldflags@"
+        if test "$use_linker" = "yes" ; then
+            ldflags="$ldflags @gadget_ldflags_linker@"
+        else
+            ldflags="$ldflags @gadget_ldflags_compiler@"
+        fi
     fi
 
     if test "x$lib_gad_all" = "xyes" ; then

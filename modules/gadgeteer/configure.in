@@ -385,18 +385,25 @@ case $OS_TYPE in
             static_end="-B dynamic"
         fi
 
-        gad_ldflags="-L\$prefix/lib$LIBBITSUF"
+        gadget_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
+        gadget_ldflags_linker="$gadget_ldflags_compiler"
         gad_libs='-lgadget'
 
         Gadgeteer_lib='-lgadget'
         ;;
     WIN32)
-        gad_ldflags="/link /libpath:\$prefix/lib/debug "
+        gadget_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
+        gadget_ldflags_linker="/libpath:\$prefix/lib/debug "
         gad_libs='gadget.lib'
 
         Gadgeteer_lib='gadget.lib'
         ;;
 esac
+
+if test "x$PLATFORM" = "xIRIX" ; then
+    gadget_n32_flags='-n32'
+    gadget_64_flags='-64'
+fi
 
 gad_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 gad_extra_libs="$APP_EXTRA_LIBS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_END"
@@ -425,11 +432,14 @@ AC_SUBST(APP_EXTRA_LIBS_X11)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
-AC_SUBST(gad_ldflags)
+AC_SUBST(gadget_ldflags_compiler)
+AC_SUBST(gadget_ldflags_linker)
 AC_SUBST(gad_libs)
 AC_SUBST(Gadgeteer_lib)
 AC_SUBST(gad_extra_ldflags)
 AC_SUBST(gad_extra_libs)
+AC_SUBST(gadget_n32_flags)
+AC_SUBST(gadget_64_flags)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
