@@ -19,8 +19,12 @@
 #include <gadget/Devices/Immersion/IboxStandalone.h>
 
 
-char SIGNON_STR[5] = "IMMC";
-char BEGIN_STR[6] = "BEGIN";
+// Global variables for local file only
+namespace
+{
+   const char SIGNON_STR[5] = "IMMC";
+   const char BEGIN_STR[6] = "BEGIN";
+}
 
 
 // ----------------------------------------------------------------------------
@@ -227,7 +231,8 @@ void IboxStandalone::insert_marker(byte marker){
         port->write( buffer, 1, written);
 }
 
-ibox_result IboxStandalone::get_params(byte *block, int *block_size){
+ibox_result IboxStandalone::get_params(byte *block, int *block_size)
+{
         char ch[2];
         vpr::Uint16 size;
         vpr::Uint32 written;
@@ -236,9 +241,12 @@ ibox_result IboxStandalone::get_params(byte *block, int *block_size){
         port->write(send, sizeof(GET_PARAMS), written);
         port->setTimeout(fast_timeout);
         port->read(ch, 1, written);
-        while(ch[0]!=GET_PARAMS){
-                if(ch!=0) port->setTimeout(fast_timeout);
-                if(port->getBufferSize(size).failure()) break;
+        while(ch[0]!=GET_PARAMS)
+        {
+                if(ch!=0)
+                   port->setTimeout(fast_timeout);
+                if(port->getBufferSize(size).failure())
+                   break;
                 port->read(ch, 1, written);
         }
         if(ch[0]!= GET_PARAMS) return error(TIMED_OUT);
@@ -703,7 +711,7 @@ int IboxStandalone::autosynch(){
         vpr::Uint32 written;
         int signed_on=0;
         //int timed_out=0;
-        char *sign_ch = SIGNON_STR;
+        const char* sign_ch = SIGNON_STR;
 //        char temp[sizeof(SIGNON_STR) - 1];
         char temp;
         vpr::ReturnStatus status;
