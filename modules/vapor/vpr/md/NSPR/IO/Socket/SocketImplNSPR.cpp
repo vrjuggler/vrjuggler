@@ -615,7 +615,8 @@ SocketImplNSPR::setOption (const vpr::SocketOptions::Types option,
 // ----------------------------------------------------------------------------
 SocketImplNSPR::SocketImplNSPR (const vpr::SocketTypes::Type sock_type)
     : m_name("INADDR_ANY"), m_handle(NULL), m_type(sock_type), m_open(false),
-      m_bound(false), m_blocking_fixed(false)
+      m_open_blocking(true), m_bound(false), m_blocking(true),
+      m_blocking_fixed(false)
 {
     /* Do nothing. */ ;
 }
@@ -630,7 +631,8 @@ SocketImplNSPR::SocketImplNSPR (const vpr::InetAddr& local_addr,
                                 const vpr::InetAddr& remote_addr,
                                 const vpr::SocketTypes::Type sock_type)
     : m_handle(NULL), m_local_addr(local_addr), m_remote_addr(remote_addr),
-      m_type(sock_type), m_open(false), m_bound(false), m_blocking_fixed(false)
+      m_type(sock_type), m_open(false), m_open_blocking(true), m_bound(false),
+      m_blocking(true), m_blocking_fixed(false)
 {
     m_name = m_local_addr.getAddressString();
 }
