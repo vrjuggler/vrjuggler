@@ -1,4 +1,3 @@
-
 /****************** <SNX heading BEGIN do not edit this line> *****************
  *
  * sonix
@@ -228,6 +227,25 @@ public:
     * @input time elapsed since last frame
     */
    virtual void step( const float & timeElapsed );
+
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
+protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * snx::ISoundImplementation::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
 
     /** @link dependency */
     /*#  snx::SoundInfo lnkSoundInfo; */
