@@ -139,6 +139,7 @@ def setVars():
       'CPPDOM_ROOT'    : os.getenv('CPPDOM_ROOT', ''),
 
       # Default values for optional settings.
+      'JAVA_HOME'       : os.getenv('JAVA_HOME', r'C:\java'),
       'OMNIORB_ROOT'    : os.getenv('OMNIORB_ROOT', ''),
       'PFROOT'          : os.getenv('PFROOT',
                                     r'C:\Program Files\Silicon Graphics\OpenGL Performer'),
@@ -172,6 +173,15 @@ def setVars():
    processInput(options, 'CPPDOM_ROOT', 'CppDOM installation directory')
 
    print "+++ Optional Settings"
+   processInput(options, 'JAVA_HOME', 'Java installation directory', False)
+
+   # If the %JAVA_HOME% setting is a valid directory, add its bin subdirectory
+   # to the path.
+   if os.environ['JAVA_HOME'] != '' and os.path.exists(os.environ['JAVA_HOME']):
+      jdk_path = os.path.join(os.environ['JAVA_HOME'], 'bin')
+      os.environ['PATH'] = jdk_path + os.pathsep + os.environ['PATH']
+      os.environ['JACORB_PATH'] = os.path.join(juggler_dir, r'external\JacORB')
+
    processInput(options, 'OMNIORB_ROOT', 'omniORB installation directory',
                 False)
    processInput(options, 'PFROOT', 'OpenGL Performer installation directory',
@@ -300,19 +310,150 @@ def generateVersionHeaders():
    for m in mods:
       m.generateParamHeader()
 
+def generateAntBuildFiles():
+   class AntTarget:
+      def __init__(self, srcdir, moduleName, outputFile = 'build.xml'):
+         self.srcdir      = os.path.join(juggler_dir, srcdir)
+         self.module_name = os.path.join(juggler_dir, r'vc7', moduleName)
+         self.output_file = os.path.join(self.module_name, outputFile)
+
+      # This form of regular expressions appears to be necessary because
+      # the sub() method does not handle backslashes in the replacement string
+      # the way I would like.
+      srcdir_re         = re.compile(r'^(.*)@srcdir@(.*)$')
+      topdir_re         = re.compile(r'^(.*)@topdir@(.*)$')
+      juggler_root_re   = re.compile(r'^(.*)@JUGGLERROOT_ABS@(.*)$')
+      jdom_jar_re       = re.compile(r'^(.*)@JDOM_JAR@(.*)$')
+      tweek_jars_re     = re.compile(r'^(.*)@TWEEK_JARS@(.*)$')
+      tweek_ext_jars_re = re.compile(r'^(.*)@TWEEK_EXT_JARS@(.*)$')
+      jccl_jars_re      = re.compile(r'^(.*)@JCCL_JARS@(.*)$')
+      java_orb_jar_re   = re.compile(r'^(.*)@JAVA_ORB_JAR@(.*)$')
+
+      jdom_jars = [
+         os.path.join(juggler_dir, r'external\jdom\jaxen-core.jar'),
+         os.path.join(juggler_dir, r'external\jdom\xalan.jar'),
+         os.path.join(juggler_dir, r'external\jdom\jaxen-jdom.jar'),
+         os.path.join(juggler_dir, r'external\jdom\xerces.jar'),
+         os.path.join(juggler_dir, r'external\jdom\jdom.jar'),
+         os.path.join(juggler_dir, r'external\jdom\xml-apis.jar'),
+         os.path.join(juggler_dir, r'external\jdom\saxpath.jar')
+      ]
+
+      tweek_jars = [
+         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'Tweek.jar'),
+         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'TweekBeans.jar'),
+         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'TweekEvents.jar'),
+         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'TweekNet.jar'),
+         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'TweekBeanDelivery.jar'),
+         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'TweekServices.jar'),
+         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'Viewers.jar'),
+         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'kunststoff-mod.jar')
+      ]
+
+      tweek_ext_jars = [
+         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'ui.jar'),
+         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'wizard.jar'),
+         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'WizardBuilder.jar')
+      ]
+
+      jccl_jars = [
+         os.path.join(juggler_dir, r'vc7\JCCL_Java', 'jccl_config.jar'),
+         os.path.join(juggler_dir, r'vc7\JCCL_Java', 'jccl_editors.jar')
+      ]
+
+      jccl_rtrc_jars = [
+         os.path.join(juggler_dir, r'vc7\JCCL_Java\RTRC_Plugin_Java',
+                      'jccl_rtrc.jar')
+      ]
+
+      def generateBuildFile(self):
+         input_file = open(os.path.join(self.srcdir, 'build.xml.in'), 'r')
+         input = input_file.readlines()
+         input_file.close()
+
+         for i in xrange(len(input)):
+            line = input[i]
+
+            if self.srcdir_re.search(line):
+               match = self.srcdir_re.search(line)
+               input[i] = '%s%s%s\n' % (match.groups()[0], self.srcdir,
+                                        match.groups()[1])
+            elif self.topdir_re.search(line):
+               match = self.topdir_re.search(line)
+               input[i] = '%s%s%s\n' % (match.groups()[0], self.module_name,
+                                        match.groups()[1])
+            elif self.juggler_root_re.search(line):
+               match = self.juggler_root_re.search(line)
+               input[i] = '%s%s%s\n' % (match.groups()[0], juggler_dir,
+                                        match.groups()[1])
+            elif self.java_orb_jar_re.search(line):
+               match = self.java_orb_jar_re.search(line)
+               input[i] = '%s%s%s\n' % (match.groups()[0], "",
+                                        match.groups()[1])
+            elif self.jdom_jar_re.search(line):
+               jars = os.pathsep.join(self.jdom_jars)
+               match = self.jdom_jar_re.search(line)
+               input[i] = '%s%s%s\n' % (match.groups()[0], jars,
+                                        match.groups()[1])
+            elif self.tweek_jars_re.search(line):
+               jars = os.pathsep.join(self.tweek_jars + self.jdom_jars)
+               match = self.tweek_jars_re.search(line)
+               input[i] = '%s%s%s\n' % (match.groups()[0], jars,
+                                        match.groups()[1])
+            elif self.tweek_ext_jars_re.search(line):
+               jars = os.pathsep.join(self.tweek_ext_jars)
+               match = self.tweek_ext_jars_re.search(line)
+               input[i] = '%s%s%s\n' % (match.groups()[0], jars,
+                                        match.groups()[1])
+            elif self.jccl_jars_re.search(line):
+               jars = os.pathsep.join(self.jccl_jars + self.jccl_rtrc_jars)
+               match = self.jccl_jars_re.search(line)
+               input[i] = '%s%s%s\n' % (match.groups()[0], jars,
+                                        match.groups()[1])
+
+         build_file = open(self.output_file, 'w')
+         build_file.writelines(input)
+         build_file.close()
+
+   mods = []
+   mods.append(AntTarget(r'modules\tweek\java', 'Tweek_Java'))
+   mods.append(AntTarget(r'modules\tweek\extensions\java', 'Tweek_Java',
+                         'build-ext.xml'))
+   mods.append(AntTarget(r'modules\jackal\config', 'JCCL_Java',
+                         'build-config.xml'))
+   mods.append(AntTarget(r'modules\jackal\editors', 'JCCL_Java',
+                         'build-editors.xml'))
+   mods.append(AntTarget(r'modules\jackal\plugins\corba_rtrc',
+                         r'JCCL_Java\RTRC_Plugin_Java', 'build.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig', 'VRJConfig',
+                         'build.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\intersense',
+                         'VRJConfig', 'build-intersense.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\proxyeditor',
+                         'VRJConfig', 'build-proxyeditor.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\surfacedisplayeditor',
+                         'VRJConfig', 'build-surfacedisplayeditor.xml'))
+
+   for m in mods:
+      m.generateBuildFile()
+
 def doInstall(prefix):
    makeTree(prefix)
    installExternal(prefix)
    installVPR(prefix)
    installTweek(prefix)
+   installTweekJava(prefix)
    installJCCL(prefix)
+   installJCCLJava(prefix)
    installJCCLPlugins(prefix)
+   installJCCLPluginsJava(prefix)
    installSonix(prefix)
    installSonixPlugins(prefix)
    installGadgeteer(prefix)
    installGadgeteerDrivers(prefix)
    installGadgeteerPlugins(prefix)
    installVRJuggler(prefix)
+   installVRJConfig(prefix)
    installWin32Deps(prefix)
 
 def mkinstalldirs(dir):
@@ -328,7 +469,8 @@ def makeTree(prefix):
    mkinstalldirs(os.path.join(prefix, 'lib'))
    mkinstalldirs(os.path.join(prefix, 'share'))
 
-def installDir(startDir, destDir, allowedExts = None, disallowedExts = None):
+def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
+               disallowedFiles = None):
    cwd = os.getcwd()
    mkinstalldirs(destDir)
 
@@ -337,6 +479,9 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None):
 
    if disallowedExts is None:
       disallowedExts = []
+
+   if disallowedFiles is None:
+      disallowedFiles = []
 
    # Add some extensions that should always be disallowed.  This relieves the
    # caller from having to add these repeatedly.
@@ -360,7 +505,9 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None):
             if f_ext not in disallowedExts:
                shutil.copy2(f, destDir)
          elif f_ext in allowedExts:
-            shutil.copy2(f, destDir)
+            (head, tail) = os.path.split(f)
+            if f not in disallowedFiles:
+               shutil.copy2(f, destDir)
 
    os.chdir(cwd)
 
@@ -411,7 +558,7 @@ def installVPR(prefix):
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
 def installTweek(prefix):
-   print "Installing Tweek headers, libraries, and data files ..."
+   print "Installing Tweek C++ headers, libraries, and data files ..."
 
    destdir = os.path.join(prefix, 'include', 'tweek')
    srcdir  = os.path.join(juggler_dir, 'modules', 'tweek', 'tweek')
@@ -439,8 +586,80 @@ def installTweek(prefix):
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
+def installTweekJava(prefix):
+   srcdir = os.path.join(juggler_dir, 'vc7', 'Tweek_Java')
+
+   if os.path.exists(os.path.join(srcdir, 'Tweek.jar')):
+      print "Installing Tweek Java libraries and data files ..."
+
+      jars = [
+         'Tweek.jar',
+         'TweekBeanDelivery.jar',
+         'TweekBeans.jar',
+         'TweekEvents.jar',
+         'TweekNet.jar',
+         'TweekServices.jar',
+         'kunststoff-mod.jar',
+         'ui.jar',
+         'wizard.jar'
+      ]
+
+      beans     = ['Viewers']
+      ext_beans = ['WizardBuilder']
+
+      destdir = os.path.join(prefix, 'bin')
+      mkinstalldirs(destdir)
+
+      # Install the base JAR files that make up the Tweek Java API.
+      for j in jars:
+         shutil.copy2(os.path.join(srcdir, j), destdir)
+
+      destdir = os.path.join(prefix, 'bin', 'beans')
+      mkinstalldirs(destdir)
+
+      bean_srcdir = srcdir
+      xml_srcdir  = os.path.join(juggler_dir, 'modules', 'tweek', 'java')
+
+      # Install the standard Tweek Beans.
+      for b in beans:
+         jar = b + '.jar'
+         xml = b + '.xml'
+         shutil.copy2(os.path.join(bean_srcdir, jar), destdir)
+         shutil.copy2(os.path.join(xml_srcdir, xml), destdir)
+
+      xml_srcdir  = os.path.join(juggler_dir, 'modules', 'tweek', 'extensions',
+                                 'java')
+
+      # Install the extension Tweek Beans.
+      for b in ext_beans:
+         jar = b + '.jar'
+         xml = b + '.xml'
+         shutil.copy2(os.path.join(bean_srcdir, jar), destdir)
+         shutil.copy2(os.path.join(xml_srcdir, xml), destdir)
+
+      # Install tweek.bat.
+      srcdir = os.path.join(juggler_dir, 'modules', 'tweek', 'java')
+      destdir = os.path.join(prefix, 'bin')
+      shutil.copy2(os.path.join(srcdir, 'tweek.bat'), destdir)
+
+      # Install JDOM.
+      srcdir = os.path.join(juggler_dir, 'external', 'jdom')
+      installDir(srcdir, destdir, ['.jar'])
+
+      # Install various look and feel implementations.
+      laf_jars = [
+         r'jgoodies-looks\looks.jar',
+         r'metouia\metouia.jar'
+      ]
+
+      srcroot = os.path.join(juggler_dir, 'external', 'swing-laf')
+      for j in laf_jars:
+         shutil.copy2(os.path.join(srcroot, j), destdir)
+   else:
+      print "Tweek Java API not built.  Skipping."
+
 def installJCCL(prefix):
-   print "Installing JCCL headers, libraries, and tools ..."
+   print "Installing JCCL C++ headers, libraries, and tools ..."
 
    destdir = os.path.join(prefix, 'include', 'jccl')
    srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'common', 'jccl')
@@ -479,11 +698,42 @@ def installJCCL(prefix):
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
 def installJCCLPlugins(prefix):
-   print "Installing JCCL plug-ins ..."
+   print "Installing JCCL C++ plug-ins ..."
 
    destdir = os.path.join(prefix, 'lib', 'jccl', 'plugins')
    srcroot = os.path.join(juggler_dir, 'vc7', 'JCCL', 'RTRC_Plugin_CXX')
    installLibs(srcroot, destdir, extensions = ['.dll'])
+
+def installJCCLJava(prefix):
+   srcdir = os.path.join(juggler_dir, 'vc7', 'JCCL_Java')
+
+   if os.path.exists(os.path.join(srcdir, 'jccl_config.jar')):
+      print "Installing JCCL Java libraries and data files ..."
+
+      destdir = os.path.join(prefix, 'bin', 'beans')
+
+      for f in ['jccl_config.jar', 'jccl_editors.jar']:
+         shutil.copy2(os.path.join(srcdir, f), destdir)
+
+      srcdir = os.path.join(juggler_dir, 'modules', 'jackal', 'config')
+      shutil.copy2(os.path.join(srcdir, 'jccl_config.xml'), destdir)
+   else:
+      print "JCCL Java API not built.  Skipping."
+
+def installJCCLPluginsJava(prefix):
+   srcdir = os.path.join(juggler_dir, 'vc7', 'JCCL_Java', 'RTRC_Plugin_Java')
+
+   if os.path.exists(os.path.join(srcdir, 'jccl_rtrc.jar')):
+      print "Installing JCCL Java plug-ins ..."
+
+      destdir = os.path.join(prefix, 'bin', 'beans')
+      shutil.copy2(os.path.join(srcdir, 'jccl_rtrc.jar'), destdir)
+
+      srcdir = os.path.join(juggler_dir, 'modules', 'jackal', 'plugins',
+                            'corba_rtrc')
+      shutil.copy2(os.path.join(srcdir, 'jccl_rtrc.xml'), destdir)
+   else:
+      print "JCCL Java plug-ins not built.  Skipping."
 
 def installSonix(prefix):
    print "Installing Sonix headers, libraries, and samples ..."
@@ -643,16 +893,57 @@ def installVRJuggler(prefix):
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
+def installVRJConfig(prefix):
+   srcdir = os.path.join(juggler_dir, 'vc7', 'VRJConfig')
+
+   if os.path.exists(os.path.join(srcdir, 'VRJConfig.jar')):
+      print "Installing VRJConfig ..."
+
+      destdir = os.path.join(prefix, 'bin', 'beans')
+      jars = [
+         'VRJConfig.jar',
+         'Devices.jar',
+         'ClusterWizard.jar',
+         'IntersenseEditor.jar',
+         'ProxyEditor.jar',
+         'SurfaceDisplayEditor.jar'
+      ]
+
+      for j in jars:
+         jar_file = os.path.join(srcdir, j)
+         if os.path.exists(jar_file):
+            shutil.copy2(jar_file, destdir)
+
+      srcdir = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'vrjconfig')
+      shutil.copy2(os.path.join(srcdir, 'VRJConfig.xml'), destdir)
+
+      # Install vrjconfig.bat.
+      destdir = os.path.join(prefix, 'bin')
+      shutil.copy2(os.path.join(srcdir, 'vrjconfig.bat'), destdir)
+
+      # Install dependencies.
+      dep_jars = [
+         r'jgraph\jgraphpad.jar',
+         r'TableLayout\TableLayout.jar'
+      ]
+
+      srcroot = os.path.join(juggler_dir, 'external')
+      for j in dep_jars:
+         shutil.copy2(os.path.join(srcroot, j), destdir)
+   else:
+      print "VRJConfig not build.  Skipping."
+
 def installWin32Deps(prefix):
    pass
 
 def main():
    options = setVars()
    generateVersionHeaders()
+   generateAntBuildFiles()
 
    devenv_cmd = None
    for p in str.split(os.getenv('PATH', ''), os.pathsep):
-      print "Searching in", p
+#      print "Searching in", p
       if os.path.exists(os.path.join(p, 'devenv.exe')):
          devenv_cmd = os.path.join(p, 'devenv.exe')
          break
