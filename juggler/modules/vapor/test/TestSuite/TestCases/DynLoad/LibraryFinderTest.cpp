@@ -26,7 +26,7 @@ static const std::string CXX_MOD("libcxxmod.so");
 static const std::string DSO_SUFFIX(".so");
 #endif
 
-static const unsigned int MOD_COUNT(4);
+static const unsigned int MOD_COUNT(7);
 
 LibraryFinderTest::LibraryFinderTest()
    :  mModuleDir(MODULE_DIR)
