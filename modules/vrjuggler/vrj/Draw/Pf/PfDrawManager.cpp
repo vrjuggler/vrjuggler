@@ -1,4 +1,10 @@
 #include <vjConfig.h>
+
+#include <Performer/pfdu.h>
+#include <Performer/pf/pfDCS.h>
+#include <Performer/pf/pfScene.h>
+#include <Performer/pf/pfChannel.h>
+
 #include <Kernel/Pf/vjPfDrawManager.h>
 #include <Kernel/Pf/vjPfApp.h>
 #include <Kernel/vjDebug.h>
@@ -6,11 +12,6 @@
 #include <Kernel/vjProjection.h>
 #include <Config/vjConfigChunk.h>
 #include <Kernel/vjSimulator.h>
-
-#include <Performer/pfdu.h>
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pf/pfScene.h>
-#include <Performer/pf/pfChannel.h>
 
 vjPfDrawManager* vjPfDrawManager::_instance = NULL;
 
@@ -111,8 +112,12 @@ void vjPfDrawManager::initDrawing()
       vjDEBUG(0) << "vjPfDrawManager::initDrawing: Opening Pipe." << endl << vjDEBUG_FLUSH;
       vjDEBUG(0) << "\tpipe:" << pipeNum << ": " << pipeStrs[pipeNum] << endl << vjDEBUG_FLUSH;
 
-      while(pipes.size() < pipeNum)    // Make sure there is room for the pipe
+      // Make sure there is room for the pipe.  The check must be made using
+      // less than or equal because pipe numbering may start from 0, and an
+      // empty vector has size 0 but still needs room for a pipe entry.
+      while(pipes.size() <= pipeNum)
          pipes.push_back(NULL);
+
       pipes[pipeNum] = pfGetPipe(pipeNum);
       pipes[pipeNum]->setWSConnectionName(pipeStrs[pipeNum]);
       pipes[pipeNum]->setScreen(pipeNum);
