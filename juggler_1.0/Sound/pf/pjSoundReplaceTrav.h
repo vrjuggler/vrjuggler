@@ -70,13 +70,14 @@ public:
    // preForkInit() member function.  Your app is likely to crash otherwise!!
    static void preForkInit()
    {
+      vjDEBUG(vjDBG_ALL,1)<<"[pjSoundReplaceTrav] pjSoundReplaceTrav::preForkInit()\n"<<vjDEBUG_FLUSH;
       pjSoundNode::init();
    }
    
    static void traverse( pfNode* node, const std::string& keyName = "_Sound_" )
    {
       //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
-      vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrMAGENTA,"[SoundReplacer] ")<< clrOutNORM(clrRED,"[ ")<<clrOutNORM(clrYELLOW,"* ")<<clrOutNORM(clrGREEN,"] ")<<"Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,1)<<clrOutNORM(clrMAGENTA,"[SoundReplacer] ")<< clrOutNORM(clrRED,"[ ")<<clrOutNORM(clrYELLOW,"* ")<<clrOutNORM(clrGREEN,"] ")<<"Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<vjDEBUG_FLUSH;
    
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -87,9 +88,73 @@ public:
 
        pfuTraverse( node, &trav );
    }
+   
+   static void on( pfNode* node )
+   {
+      //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
+      vjDEBUG(vjDBG_ALL,1)<<clrOutNORM(clrMAGENTA,"[SoundOn] ")<< clrOutNORM(clrRED,"[ ")<<clrOutNORM(clrYELLOW,"* ")<<clrOutNORM(clrGREEN,"] ")<<" Turning sounds on in subgraph.\n"<<vjDEBUG_FLUSH;
+   
+      // use the performer traversal mechanism
+       pfuTraverser trav;
+       pfuInitTraverser( &trav );
+
+       trav.preFunc = pjSoundReplaceTrav::turnSoundNodesOn;
+       trav.data = NULL;
+
+       pfuTraverse( node, &trav );
+   }
+   
+   static void off( pfNode* node )
+   {
+      //vjSoundManager::instance().engine()->setPosition( 0.0f, 0.0f, 0.0f );
+      vjDEBUG(vjDBG_ALL,1)<<clrOutNORM(clrMAGENTA,"[SoundOff] ")<< clrOutNORM(clrRED,"[ ")<<clrOutNORM(clrYELLOW,"* ")<<clrOutNORM(clrGREEN,"] ")<<" Turning sounds off in subgraph.\n"<<vjDEBUG_FLUSH;
+   
+      // use the performer traversal mechanism
+       pfuTraverser trav;
+       pfuInitTraverser( &trav );
+
+       trav.preFunc = pjSoundReplaceTrav::turnSoundNodesOff;
+       trav.data = NULL;
+
+       pfuTraverse( node, &trav );
+   }
 
    
 protected:
+   static int turnSoundNodesOn( pfuTraverser* trav )
+   {
+      pfNode* currentNode = trav->node;
+      if (currentNode->isOfType( pjSoundNode::getClassType() ))
+      {
+         pjSoundNode* soundNode = static_cast<pjSoundNode*>( currentNode );
+         soundNode->sound().trigger();
+         vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrYELLOW,"[SoundOn] ")<<"Setting the "<<soundNode->sound().getName()<<" sound node to on\n"<<vjDEBUG_FLUSH;
+      }      
+      else
+      {
+         cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pjSoundNode::getClassType()<<"\n"<<flush;
+      }
+      
+      return PFTRAV_CONT;	    // Return continue 
+   }
+
+   static int turnSoundNodesOff( pfuTraverser* trav )
+   {
+      pfNode* currentNode = trav->node;
+      if (currentNode->isOfType( pjSoundNode::getClassType() ))
+      {
+         pjSoundNode* soundNode = static_cast<pjSoundNode*>( currentNode );
+         soundNode->sound().stop();
+         vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrYELLOW,"[SoundOff] ")<<"Setting the "<<soundNode->sound().getName()<<" sound node to off\n"<<vjDEBUG_FLUSH;
+      }
+      else
+      {
+         cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pjSoundNode::getClassType()<<"\n"<<flush;
+      }
+      
+      return PFTRAV_CONT;	    // Return continue   
+   }
+   
    // used to traverse - don't call
    static int processNode( pfuTraverser* trav )
    {
@@ -136,9 +201,17 @@ protected:
             {
                parent->removeChild( currentNode );
                bool positional_sound_true( true );
-               parent->addChild( new pjSoundNode( sound, positional_sound_true ) );
+               pjSoundNode* sn = new pjSoundNode( sound, positional_sound_true );
+               int resuln = sn->setName( nodeName.c_str() );
+               if (resuln == 0)
+               {
+                  std::string newName = nodeName;
+                  newName += "__sound";
+                  sn->setName( newName.c_str() );
+               }
+               parent->addChild( sn );
                sound->trigger();
-               vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrGREEN,"[SoundReplacer]     ")<<"Replaced "<<clrOutNORM(clrGREEN, nodeName)<<" node with a pjSoundNode referencing the "<<soundName<<" sound."<<vjDEBUG_FLUSH;
+               vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrGREEN,"[SoundReplacer]     ")<<"Replaced "<<clrOutNORM(clrGREEN, sn->getName())<<" node with a pjSoundNode referencing the "<<soundName<<" sound."<<vjDEBUG_FLUSH;
             }
             else
             {

@@ -71,6 +71,12 @@ public:
       mX = x; mY = y; mZ = z;
    }
 
+   vjSound& sound()
+   {
+      vjASSERT( mSound != NULL );
+      return *mSound;
+   }
+   
    void setSound( vjSound* sound )
    {
       mSound = sound;
@@ -79,8 +85,10 @@ public:
    void setPositional( bool isPositional)
    {
       mIsPositional = isPositional;
-   }   
-
+   }
+   
+   
+   
 public:  // APP traversal
    virtual int app( pfTraverser* );
    virtual int needsApp( void )
@@ -183,6 +191,8 @@ pfType *pjSoundNode::classType = NULL;
 
 void pjSoundNode::init(void)
 {
+   vjDEBUG(vjDBG_ALL,1)<<"[pjSoundNode] Registering sound node with performer.\n"<<vjDEBUG_FLUSH;
+      
    if (classType == NULL)
    {
         pfDCS::init();           // Initialize my parent
