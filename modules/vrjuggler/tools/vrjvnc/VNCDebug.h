@@ -33,6 +33,6 @@
 
 #include <vpr/Util/Debug.h>
 
-const vpr::DebugCategory vrjDBG_VNC("7cd94398-9b25-4a74-b682-16c3301dbc98", "DBG_VNC", "vjVNC:");
+const vpr::DebugCategory vrjDBG_VNC(vpr::GUID("7cd94398-9b25-4a74-b682-16c3301dbc98"), "DBG_VNC", "vjVNC:");
 
 #endif /* _VRJVNC_DEBUG_H_ */
