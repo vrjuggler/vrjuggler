@@ -113,7 +113,7 @@ public class PerfAnalyzerPanel
     public class DataPanelElem 
         implements ActionListener {
 
-	public PerfDataCollector col;
+	public NumberedPerfDataCollector col;
 	public JLabel sep_label;
 	public JLabel colname_label;
 	public CollectorSummaryButton colsummary_button;
@@ -124,7 +124,7 @@ public class PerfAnalyzerPanel
 	public AnomaliesButton[] anomalies_buttons;
 	public int num;
 
-        public DataPanelElem (PerfDataCollector _col) {
+        public DataPanelElem (NumberedPerfDataCollector _col) {
             col = _col;
         }
 
@@ -303,10 +303,12 @@ public class PerfAnalyzerPanel
 
 
     public void addDataPanelElem (PerfDataCollector col) {
-	DataPanelElem dpe = new DataPanelElem (col);
-	datapanel_elems.add(dpe);
-        if (ui_initialized)
-            dpe.initialize (data_panel, gblayout, gbc);
+        if (col instanceof NumberedPerfDataCollector) {
+            DataPanelElem dpe = new DataPanelElem ((NumberedPerfDataCollector)col);
+            datapanel_elems.add(dpe);
+            if (ui_initialized)
+                dpe.initialize (data_panel, gblayout, gbc);
+        }
     }
 
 
@@ -324,22 +326,26 @@ public class PerfAnalyzerPanel
 	}
 	else if (source instanceof GraphButton) {
 	    GraphButton b = (GraphButton)e.getSource();
-	    GenericGraphPanel gp = new SummaryGraphPanel (b.collector, b.phase);
-	    GenericGraphFrame gf = new GenericGraphFrame (gp, "Graph of " + b.collector.getName() + " phase " + b.phase);
-            gf.addActionListener (this);
-
-	    child_frames.addElement(gf);
-	    gf.show();
+            if (b.collector instanceof NumberedPerfDataCollector) {
+                GenericGraphPanel gp = new SummaryGraphPanel ((NumberedPerfDataCollector)b.collector, b.phase);
+                GenericGraphFrame gf = new GenericGraphFrame (gp, "Graph of " + b.collector.getName() + " phase " + b.phase);
+                gf.addActionListener (this);
+                
+                child_frames.addElement(gf);
+                gf.show();
+            }
 
 	}
 	else if (source instanceof CollectorSummaryButton) {
 	    PerfDataCollector col = ((CollectorSummaryButton)e.getSource()).collector;
-	    GenericGraphPanel gp = new SummaryGraphPanel (col);
-	    GenericGraphFrame gf = new GenericGraphFrame (gp, "Summary Graph of " + col.getName());
-            gf.addActionListener (this);
+            if (col instanceof NumberedPerfDataCollector) {
+                GenericGraphPanel gp = new SummaryGraphPanel ((NumberedPerfDataCollector)col);
+                GenericGraphFrame gf = new GenericGraphFrame (gp, "Summary Graph of " + col.getName());
+                gf.addActionListener (this);
 
-	    child_frames.addElement(gf);
-	    gf.show();
+                child_frames.addElement(gf);
+                gf.show();
+            }
 	}
 	else if (source == max_samples_box) {
 	    int numsamps;

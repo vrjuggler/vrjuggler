@@ -214,7 +214,7 @@ public class LabeledPerfDataCollector {
 	return name;
     }
 
-    public void addDataElem (String label, String category, double time) {
+    protected void addDataElem (String label, String category, double time) {
 
     }
 
