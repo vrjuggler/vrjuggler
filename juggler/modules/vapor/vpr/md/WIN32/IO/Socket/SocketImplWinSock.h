@@ -195,6 +195,34 @@ public:
     // ------------------------------------------------------------------------
     virtual bool connect(void);
 
+    // ------------------------------------------------------------------------
+    //: Get the type of this socket (e.g., vpr::SocketTypes::STREAM).
+    //
+    //! PRE: The socket implementation pointer is valid.
+    //! POST: The socket type for m_socket_imp is returned to the caller.
+    //
+    //! RETURNS: A vpr::SocketTypes::Type value giving the socket type for
+    //+          this socket.
+    // ------------------------------------------------------------------------
+    inline const SocketTypes::Type&
+    getType (void) const {
+        return m_type;
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    inline const InetAddr&
+    getLocalAddr (void) const {
+        return m_local_addr;
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    inline const InetAddr&
+    getRemoteAddr (void) const {
+        return m_remote_addr;
+    }
+
 protected:
     // ------------------------------------------------------------------------
     // Default constructor.  This just initializes member variables to
