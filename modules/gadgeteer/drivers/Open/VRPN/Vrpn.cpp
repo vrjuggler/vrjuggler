@@ -44,8 +44,8 @@
 //
 // ToDo:
 //   Should we fetch the room->tracker_base and tracker->hand transforms
-//    from the VRPN config system, or always set them in VRJuggler. Or just
-//    set room->juggler in VRJuggler?
+//    from the VRPN config system, or always set them in VR Juggler. Or just
+//    set room->juggler in VR Juggler?
 //
 //   Analog and other VRPN devices.
 //

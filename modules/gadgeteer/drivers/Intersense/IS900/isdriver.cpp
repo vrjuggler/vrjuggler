@@ -195,7 +195,7 @@ BOOL ISD_detectTracker(InterSenseTrackerType *tracker, std::string com_port, int
 
 
 
-    ///////////////This Code needs to be readded before VRJuggler v1.1 DR3///////
+    ///////////////This Code needs to be readded before VR Juggler v1.1 DR3///////
     /*
 
     port = commPort;
