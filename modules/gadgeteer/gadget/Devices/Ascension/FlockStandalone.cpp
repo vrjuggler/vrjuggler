@@ -98,17 +98,17 @@ aFlock::aFlock(const char* const port,
 		const BIRD_FILT& filt,
 		const char& report,
 		const char* const calfile) :
+		  _reportRate(report),
+		  _hemisphere(hemi),
+		  _filter( filt ),
 		  _portId(-1),
-		  _active(false),
 		  _baud(baud),
 		  _syncStyle(sync),
 		  _blocking(block),
 		  _numBirds(numBrds),
 		  _xmitterUnitNumber(transmit),
-		  _hemisphere(hemi),
-		  _filter( filt ),
-		  _reportRate(report),
-		  _usingCorrectionTable(false)
+		  _usingCorrectionTable(false),
+		  _active(false)
 {
   if (port != NULL)
   	strncpy( _port, port, aFlock::MAXCHARSTRINGSIZE );

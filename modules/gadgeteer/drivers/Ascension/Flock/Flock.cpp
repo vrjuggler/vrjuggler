@@ -330,8 +330,6 @@ vjTimeStamp* vjFlock::getPosUpdateTime (int d) {
 
 void vjFlock::updateData()
 {
-   int new_index, old_index, tmp;
-
    if (this->isActive() == false)
       return;
 

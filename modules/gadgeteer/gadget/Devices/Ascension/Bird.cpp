@@ -346,9 +346,9 @@ void vjBird::initCorrectionTable()
          >> caltable.ymin >> caltable.ymax
          >> caltable.zmin >> caltable.zmax;
 
-  xsize = caltable.xmax - caltable.xmin + 1;
-  ysize = caltable.ymax - caltable.ymin + 1;
-  zsize = caltable.zmax - caltable.zmin + 1;
+  xsize = (float) (caltable.xmax - caltable.xmin) + 1.0;
+  ysize = (float) (caltable.ymax - caltable.ymin) + 1.0;
+  zsize = (float) (caltable.zmax - caltable.zmin) + 1.0;
 
   for (i = 0; i < xsize; i++)
     for (j = 0; j < ysize; j++)
