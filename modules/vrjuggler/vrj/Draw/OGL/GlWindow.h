@@ -74,11 +74,11 @@ public:
       mDirtyContext = true;      // Always dirty when window first created
       mDirtyViewport = true;
 
-      mDisplay = NULL;
+      mVrjDisplay = NULL;
 
       window_width = window_height = 0;
       origin_x = origin_y = 0;
-      mAreKeyboardDevice = false;
+      mAreEventSource = false;
    }
 
    // Cirtual destructor
@@ -190,11 +190,15 @@ public:
    bool isStereo()
    { return in_stereo;}
 
-   bool isKeyboardDevice()
-   { return mAreKeyboardDevice; }
+   bool isEventSource() const
+   {
+      return mAreEventSource;
+   }
 
    vrj::Display* getDisplay()
-   { return mDisplay;}
+   {
+      return mVrjDisplay;
+   }
 
    /**
     * @return A unique window id.
@@ -232,7 +236,7 @@ protected:
      // we store a pointer to the display that we're
      // created from, to config & to get the viewing
      // transforms from.
-   vrj::Display* mDisplay;
+   vrj::Display* mVrjDisplay;
 
    bool mDirtyContext;  /**<  The context is dirty.  We need to (re)initialize it next draw */
    bool mDirtyViewport; /**  The GL window setup (viewport, etc) is dirty and needs to be reinited. */
@@ -248,7 +252,7 @@ protected:
    int  window_width, window_height;
    int  origin_x, origin_y;         /**< lower-left corner of window */
    int  mWindowId;                  /**< A unique window id to identify us */
-   bool  mAreKeyboardDevice;  /**< Should we act as a keyboard device too? */
+   bool mAreEventSource;  /**< Should we act as an event source too? */
 
 private:
    static vpr::Mutex mWinIdMutex;

@@ -140,11 +140,11 @@ private:
    vpr::ThreadRunFunctor<VNCInterface>* mVncThreadFunctor;
    vpr::Thread*                         mVncThread;
 
-   gadget::PositionInterface mWand;
-   gadget::DigitalInterface  mLeftButton;
-   gadget::DigitalInterface  mMiddleButton;
-   gadget::DigitalInterface  mRightButton;
-   gadget::KeyboardInterface mKeyboard;
+   gadget::PositionInterface    mWand;
+   gadget::DigitalInterface     mLeftButton;
+   gadget::DigitalInterface     mMiddleButton;
+   gadget::DigitalInterface     mRightButton;
+   gadget::EventWindowInterface mKeyboard;
 
    bool mHaveKeyboard;
 
