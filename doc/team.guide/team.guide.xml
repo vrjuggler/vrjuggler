@@ -564,10 +564,10 @@
                      <para>A <quote>modern</quote> C++ compiler was not found. <emphasis>This is a fatal error.</emphasis> VR Juggler uses many features of the latest C++ standard, and a C++ compiler supporting these features is absolutely required. To use an alternate C++ compiler, specify a value for the environment variable <varname>CXX</varname>. Refer to <xref linkend="required.tools.sect"/> for compiler requirements.</para>
                   </listitem>
                   <listitem>
-                     <para>The OpenGL libraries and/or header files were not found. <emphasis>This is a fatal error.</emphasis> To remedy this problem, use the <option>--with-oglroot</option> option to <command>configure</command> to specify the root directory containing the OpenGL installation.</para>
+                     <para>The OpenGL libraries and/or header files were not found. <emphasis>This is a fatal error.</emphasis> To remedy this problem, use the <option>--with-opengl</option> option to <command>configure</command> to specify the root directory containing the OpenGL installation.</para>
                   </listitem>
                   <listitem>
-                     <para>The OpenGL Performer libraries and/or header files were not found. This is not a fatal error and simply causes the Performer API to be disabled for that build. If Performer is available, use the <option>--with-pfroot</option> option to <command>configure</command> to specify the root directory containing the Performer installation. It may also be necessary to use the <option>--with-pfver</option> option if OpenGL Performer 2.4 is not the version installed.</para>
+                     <para>The OpenGL Performer libraries and/or header files were not found. This is not a fatal error and simply causes the Performer API to be disabled for that build. If Performer is available, use the <option>--with-performer</option> option to <command>configure</command> to specify the root directory containing the Performer installation. It may also be necessary to use the <option>--with-pfver</option> option if OpenGL Performer 2.4 is not the version installed.</para>
                   </listitem>
                   <listitem>
                      <para>A version of Perl greater than or equal to 5.004 was not found. <emphasis>This will cause installations to fail.</emphasis> To provide a valid Perl binary for use by the makefiles, use the <option>--with-perl</option> option to <command>configure</command>. The path given should be the full path up to but <emphasis>not</emphasis> including the <command>perl</command> binary itself. For example, if a <command>perl5</command> binary were in <filename>/usr/unsupported/bin</filename>, give this directory as the argument to <option>--with-perl</option>. In a Win32 environment, use <filename>/</filename>'s as the path separator rather than <filename>\</filename>'s.</para>
@@ -732,7 +732,7 @@
                      </listitem>
                   </varlistentry>
                   <varlistentry>
-                     <term>--with-pfroot=PATH</term>
+                     <term>--with-performer=PATH</term>
                      <listitem>
                         <para>Give the OpenGL Performer installation directory. This is the base directory containing an include subdirectory that in turn has a Performer subdirectory and at least a lib directory with the Performer libraries. On IRIX, there may also be a lib32 subdirectory and a lib64 subdirectory. They will be used appropriately depending on the ABI chosen (see above). The default path is <filename>/usr</filename>.</para>
                      </listitem>
@@ -744,7 +744,7 @@
                      </listitem>
                   </varlistentry>
                   <varlistentry>
-                     <term>--with-oglroot=PATH</term>
+                     <term>--with-opengl=PATH</term>
                      <listitem>
                         <para>Give the OpenGL installation directory. This is the base directory containing an <filename>include</filename> subdirectory that in turn has a <filename>GL</filename> subdirectory and at least a <filename>lib</filename> directory with the OpenGL libraries. On IRIX, there may also be a <filename>lib32</filename> subdirectory and a <filename>lib64</filename> subdirectory. They will be used appropriately depending on the ABI chosen (see above). This option is particularly useful (i.e., necessary) on platforms such as Linux, FreeBSD and HP-UX where OpenGL is not distributed as part of the base operating system. Common values are <filename>/usr/local</filename>, <filename>/usr/X11R6</filename> and <filename>/opt/graphics/OpenGL</filename> (HP-UX 10.20). In VR Juggler 1.0, this option is not supported in a Win32 environment. The default path is <filename>/usr</filename>.</para>
                      </listitem>

@@ -651,7 +651,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           version downloaded into <filename>juggler/external</filename>, run
           <command>configure.pl</command> as follows:</para>
 
-          <screen>../configure.pl --with-boostroot=/usr/local</screen>
+          <screen>../configure.pl --with-boost=/usr/local</screen>
 
           <para>This option could of course be mixed in with those shown in
           the previous section. In this situation, all paths for the Boost
@@ -741,9 +741,9 @@ cd build.sonix</screen></para>
 
           <listitem>
             <para>Choose one of the following depending on which subsystem (or
-            both) you want to enable in sonix...</para>
+            both) you want to enable in Sonix:</para>
 
-            <para><screen>../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
+            <para><screen>../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-openal=/usr/local
 ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks</screen></para>
           </listitem>
 
