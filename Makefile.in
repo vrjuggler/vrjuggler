@@ -52,7 +52,7 @@ JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
 
 SUBDIR		= @JUGGLER_PROJECTS@
 
-debug dbg dbg-dso optim opt opt-dso profiled prof prof-dso:
+debug dbg dbg-dso optim opt opt-dso profiled prof prof-dso release:
 	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@"				\
           instlinks="$(topdir)/instlinks" recursive
 
