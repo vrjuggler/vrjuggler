@@ -12,6 +12,7 @@
 #include <jccl/Util/Debug.h>
 #include <vpr/Thread/TSObjectProxy.h>
 #include <vpr/Thread/Thread.h>
+#include <vpr/Sync/Barrier.h>
 // #include <jccl/Config/VarValue.h>
 // #include <jccl/Config/ConfigChunk.h>
 // #include <jccl/Config/ChunkDesc.h>
@@ -80,6 +81,71 @@ public:
         std::cout << "jccl::LabeledPerfDataBuffer::set() (Thread-specific)\n";
         std::cout << "\tOverhead = " << average << " us per call" << std::endl;
 
+
+    }
+
+
+    // test for set overhead with multithread contention
+    struct SetContentionTestLoopData {
+        vpr::Barrier* barrier;
+        int thread_num;
+        vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer>* tsbuffer;
+        SetContentionTestLoopData (vpr::Barrier* _barrier, 
+                                   int _thread_num,
+                                   vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer>* _tsbuffer) {
+            barrier = _barrier;
+            thread_num = _thread_num;
+            tsbuffer = _tsbuffer;
+        }
+    };
+
+    void setContentionTestLoop (void* d) {
+        SetContentionTestLoopData* data = (SetContentionTestLoopData*)d;
+        char names[64];
+        sprintf (names, "thread %d", data->thread_num);
+        std::string name (names);
+        int i = 100000;
+        data->barrier->wait();
+        while (i--) {
+            (*(data->tsbuffer))->set(jcclDBG_PERFORMANCE, name);
+        }
+        data->barrier->wait();
+    }
+        
+
+    void testSetContentionOverhead () {
+        jccl::LabeledPerfDataBuffer::activate();
+
+        vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer> tsbuffer;
+        jccl::TimeStamp ts1, ts2;
+
+        int num_threads = 6;
+        int n = 100000;
+        vpr::Barrier b(num_threads+1);
+
+        for (int i = 0; i < num_threads; i++) {
+            
+            vpr::ThreadMemberFunctor<LabeledPerfDataBufferTest>* memberFunctor =
+            new vpr::ThreadMemberFunctor<LabeledPerfDataBufferTest>
+                (this,
+                 &LabeledPerfDataBufferTest::setContentionTestLoop,
+                 new SetContentionTestLoopData (&b, i, &tsbuffer));
+            new vpr::Thread(memberFunctor);
+        }
+
+        ts1.set();
+        // trigger;
+        b.wait();
+        // wait for finish;
+        b.wait();
+        ts2.set();
+
+
+        float average = (ts2.usecs() - ts1.usecs())/n;
+
+        std::cout << "jccl::LabeledPerfDataBuffer::set() (6 thread contention)\n";
+        std::cout << "\tOverhead = " << average << " us per call" << std::endl;
+
     }
 
         
@@ -94,6 +160,8 @@ public:
         CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("LabeledPerfDataBufferTest_metric");
 
         test_suite->addTest( new CppUnit::TestCaller<LabeledPerfDataBufferTest>("testSetOverhead", &LabeledPerfDataBufferTest::testSetOverhead));
+
+        test_suite->addTest( new CppUnit::TestCaller<LabeledPerfDataBufferTest>("testSetContentionOverhead", &LabeledPerfDataBufferTest::testSetContentionOverhead));
         
         return test_suite;
    }
