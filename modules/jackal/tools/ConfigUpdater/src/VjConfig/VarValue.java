@@ -143,7 +143,7 @@ public final class VarValue
       String s = null;
       if (valtype == ValType.BOOL)
       {
-         s = (boolval)?"true":"false";
+         s = boolval ? "1" : "0";
       }
       else if (valtype == ValType.STRING)
       {
@@ -186,7 +186,9 @@ public final class VarValue
          }
          else if (valtype == ValType.BOOL)
          {
-            boolval = s.equalsIgnoreCase("true") ? true : false;
+            // This will handle the case when s is "true" or "false"
+            // (ignoring case.
+            boolval = Boolean.valueOf(s).booleanValue();
          }
          else if (valtype == ValType.INT)
          {
