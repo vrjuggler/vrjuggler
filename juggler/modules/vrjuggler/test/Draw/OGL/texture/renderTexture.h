@@ -92,7 +92,7 @@ public:
       if( image.height() == 1 || image.width() == 1 )
       {
          // handle one dimensional images...
-         int length = defines::max( image.width(), image.height() );
+         int length = kev::max( image.width(), image.height() );
          if (texture.filtering != Texture::NEAREST ||
              texture.filtering != Texture::LINEAR)
          {
