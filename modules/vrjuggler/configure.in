@@ -147,9 +147,9 @@ AC_ARG_WITH(xercesroot,
             XERCESROOT="$withval", XERCESROOT="/usr")
 
 AC_ARG_WITH(xerceslib,
-            [  --with-xerceslib=<LIBNAME>
-                          Xerces-c library name           [default=-lxerces-c]],
-            XERCES_LIB="$withval", XERCES_LIB="-lxerces-c")
+            [  --with-xerceslib=<NAME>
+                          Xerces-c base library name      [default=xerces-c]],
+            XERCES_LIB="$withval", XERCES_LIB='xerces-c')
 
 # Define the binary format.
 DPP_ABI_SETUP
@@ -763,7 +763,7 @@ fi
 
 CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
 LDFLAGS="$LDFLAGS $X_LDFLAGS"
-LIBS="$LIBS $XERCES_LIB"
+LIBS="$LIBS -l$XERCES_LIB"
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
@@ -781,7 +781,12 @@ AC_CACHE_CHECK(for XMLPlatformUtils::Initialize in $XERCES_LIB,
 DPP_LANG_RESTORE
 
 XERCES_INCLUDES="-I$XERCESROOT/include"
-XERCES_LDFLAGS="-L${XERCESROOT}/lib${LIBBITSUF}"
+
+if test "x$OS_TYPE" = "xWin32" ; then
+    XERCES_LDFLAGS="-libpath:$XERCESROOT/lib"
+else
+    XERCES_LDFLAGS="-L$XERCESROOT/lib$LIBBITSUF"
+fi
 
 CFLAGS="${_vjsave_CFLAGS}"
 CPPFLAGS="${_vjsave_CPPFLAGS}"
@@ -936,9 +941,9 @@ VJ_SRCDIR='$(VJROOT_ABS)'
 UNIX_VJROOT_ABS="$VJROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $LIBS comctl32.lib user32.lib gdi32.lib ws2_32.lib $XERCES_LDFLAGS $XERCES_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $DTK_LDFLAGS $NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $XERCES_LDFLAGS $XERCES_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $DTK_LDFLAGS $NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
