@@ -141,7 +141,7 @@
 
 #endif	/* VJ_OS_Win32 */
 
-#ifdef _VRJ_BUILD_
+#ifdef _JCCL_BUILD_
 #   define VJ_API(__type)	VJ_EXPORT(__type)
 #   define VJ_CLASS_API		VJ_EXPORT_CLASS
 #   define VJ_DATA_API(__type)	VJ_EXPORT_DATA(__type)
