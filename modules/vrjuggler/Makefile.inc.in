@@ -124,10 +124,11 @@ PF_PROF_LIB_DYNAMIC	= $(PF_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 #endif
 
 # Version information.
+PARAM_HEADER	= vrj/vrjParam.h
 BRANCH		= HEAD
 CANON_NAME	= Kenny
 VER_ARGS	= -f $(VJROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
-                  -b $(BRANCH) -n "$(CANON_NAME)" -o vrj/vrjParam.h	\
+                  -b $(BRANCH) -n "$(CANON_NAME)" -o $(PARAM_HEADER)	\
                   -i $(VJROOT_ABS)/vrj/vrjParam.h.in			\
                   -d "`date '+%b %e, %Y %H:%M:%S'`"
 
@@ -143,7 +144,9 @@ BEFOREBUILD	= beforebuild
 AFTERBUILD	= afterbuild
 
 # Things to do before the object files and library are built.
-beforebuild:
+beforebuild: $(PARAM_HEADER)
+
+$(PARAM_HEADER):
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 
 # Things to do after the object files and library are built.
@@ -446,5 +449,6 @@ _LOCAL_CLOBBER	= 1
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
 
+CLEAN_FILES	+= $(PARAM_HEADER)
 CLEAN_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
 CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
