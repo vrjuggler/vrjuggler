@@ -71,23 +71,10 @@ public class ControlPanelView
 
          // Using the global user preferences from Tweek, set the start
          // directory for fileChooser.
-         String start_dir = prefs.getChooserStartDir();
-         System.out.println("Opening in " + start_dir);
-
-         File f;
-
-         if ( start_dir.equals(GlobalPreferencesService.CWD_START) )
-         {
-            f = new File(System.getProperty("user.dir"));
-         }
-         else
-         {
-            f = new File(System.getProperty("user.home"));
-         }
-
+         File f = new File(prefs.getChooserStartDir());
          fileChooser.setCurrentDirectory(f);
       }
-      catch(RuntimeException ex)
+      catch(Exception ex)
       {
          System.err.println("ControlPanelView(): WARNING: Failed to set file chooser start directory: " +
                             ex.getMessage());
