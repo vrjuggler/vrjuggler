@@ -47,11 +47,6 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.vrjconfig.customeditors.display_window.placer.*;
 
-/*
-import org.vrjuggler.tweek.beans.BeanAttributes;
-import org.vrjuggler.tweek.beans.BeanRegistry;
-import org.vrjuggler.tweek.beans.ServiceBean;
-*/
 
 /**
  * A component suitable for placing viewports within a display window.  This
@@ -61,86 +56,6 @@ import org.vrjuggler.tweek.beans.ServiceBean;
 public class ViewportPlacer
    extends JPanel
 {
-/*
-   public static void main(String[] args)
-   {
-      JFrame frame = new JFrame();
-      BeanRegistry reg = BeanRegistry.instance();
-      ServiceBean broker_bean =
-         new ServiceBean(new BeanAttributes("ConfigBroker",
-                                            "file:/home/patrick/src/Juggler/main/juggler/build.linux.posix.gcc33/instlinks/bin/beans/jccl_config.jar",
-                                            "org.vrjuggler.jccl.config.ConfigBrokerImpl", null, null));
-      try
-      {
-         broker_bean.instantiate();
-         reg.registerBean(broker_bean);
-      }
-      catch (Exception ex)
-      {
-         return;
-      }
-
-      ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      ConfigDefinition window_def = broker.getRepository().get("display_window");
-      ConfigElementFactory factory =
-         new ConfigElementFactory(broker.getRepository().getAllLatest());
-
-      // Create a new config element based on the initial information we have.
-      ConfigElement disp_elt = factory.create("Test Window", window_def);
-
-      disp_elt.setProperty("origin", 0, new Integer(0));
-      disp_elt.setProperty("origin", 1, new Integer(0));
-      disp_elt.setProperty("size", 0, new Integer(200));
-      disp_elt.setProperty("size", 1, new Integer(200));
-
-      ConfigDefinition fb_def = broker.getRepository().get("opengl_frame_buffer_config");
-      ConfigElement fb_cfg = factory.create("OpenGL Frame Buffer Configuration",
-                                            fb_def);
-      fb_cfg.setProperty("visual_id", 0, new Integer(-1));
-      fb_cfg.setProperty("red_size", 0, new Integer(1));
-      fb_cfg.setProperty("green_size", 0, new Integer(1));
-      fb_cfg.setProperty("blue_size", 0, new Integer(1));
-      fb_cfg.setProperty("alpha_size", 0, new Integer(1));
-      fb_cfg.setProperty("depth_buffer_size", 0, new Integer(1));
-      fb_cfg.setProperty("fsaa_enable", 0, Boolean.FALSE);
-      disp_elt.setProperty("frame_buffer_config", 0, fb_cfg);
-
-      disp_elt.setProperty("stereo", 0, Boolean.FALSE);
-      disp_elt.setProperty("border", 0, Boolean.TRUE);
-      disp_elt.setProperty("act_as_event_source", 0, Boolean.TRUE);
-
-      int sim_vps = disp_elt.getPropertyValueCount("simulator_viewports");
-      String title = "Simulator Viewport " + sim_vps;
-
-      // Create a new config element based on the initial information we have.
-      ConfigDefinition vp_def =
-         broker.getRepository().get("simulator_viewport");
-      ConfigElement vp_elt = factory.create(title, vp_def);
-
-      float origin_x = 0.0f;
-      float origin_y = 0.0f;
-      float width    = 1.0f;
-      float height   = 1.0f;
-
-      vp_elt.setProperty("origin", 0, new Float(origin_x));
-      vp_elt.setProperty("origin", 1, new Float(origin_y));
-      vp_elt.setProperty("size", 0, new Float(width));
-      vp_elt.setProperty("size", 1, new Float(height));
-      vp_elt.setProperty("user", 0, new ConfigElementPointer("user1"));
-
-      ConfigElement sim_elt =
-         (ConfigElement) vp_elt.getProperty("simulator_plugin", 0);
-      sim_elt.setProperty("camera_pos", 0, new ConfigElementPointer("Blah"));
-      sim_elt.setProperty("wand_pos", 0, new ConfigElementPointer("Blah2"));
-
-      disp_elt.addProperty("simulator_viewports", sim_elt);
-
-      frame.getContentPane().add(new ViewportPlacer(new Dimension(frame.getSize()), disp_elt));
-      frame.pack();
-      frame.show();
-   }
-*/
-
    public ViewportPlacer(Dimension desktopSize, ConfigElement elt)
    {
       model = new ViewportPlacerModel(desktopSize, elt);
