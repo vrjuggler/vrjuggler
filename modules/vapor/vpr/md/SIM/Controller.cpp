@@ -120,6 +120,16 @@ void Controller::addConnectionCompletionEvent (const vpr::Interval& event_time,
    mEvents.insert(std::pair<vpr::Interval, EventData>(event_time, EventData(connector_sock, EventData::CONNECTION_COMPLETE)));
 }
 
+void Controller::addLocalhostDeliveryEvent (const vpr::Interval& event_time,
+                                            vpr::SocketImplSIM* connector_sock)
+{
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+      << "Controller::addConnectionCompletionEvent(): Adding localhost "
+      << "delivery event scheduled for time " << event_time.getBaseVal()
+      << "\n" << vprDEBUG_FLUSH;
+   mEvents.insert(std::pair<vpr::Interval, EventData>(event_time, EventData(connector_sock, EventData::LOCALHOST_DELIVERY)));
+}
+
 void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
 {
    if ( recvSocket != NULL )
@@ -176,10 +186,22 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
             *recvSocket = (*cur_event).second.socket;
          }
       }
-      else
+      else if ( (*cur_event).second.type == EventData::CONNECTION_INIT )
       {
          vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
             << "Controller::processNextEvent(): Event is a connection request to "
+            << (*cur_event).second.socket->getLocalAddr() << "\n"
+            << vprDEBUG_FLUSH;
+
+         if ( recvSocket != NULL )
+         {
+            *recvSocket = (*cur_event).second.socket;
+         }
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+            << "Controller::processNextEvent(): Event is a localhost message delivery to "
             << (*cur_event).second.socket->getLocalAddr() << "\n"
             << vprDEBUG_FLUSH;
 

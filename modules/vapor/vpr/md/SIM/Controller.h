@@ -188,6 +188,9 @@ public:
    void addConnectionCompletionEvent(const vpr::Interval& event_time,
                                      vpr::SocketImplSIM* connector_sock);
 
+   void addLocalhostDeliveryEvent(const vpr::Interval& event_time,
+                                  vpr::SocketImplSIM* connector_sock);
+
    /**
     * Processes the next event in the event queue no matter how far into the
     * (simulated) future it occurs.  If there is an event in the queue, it will
@@ -267,7 +270,8 @@ protected:  // --- Data members --- //
       {
          MESSAGE,             /**< Message arrival event */
          CONNECTION_INIT,     /**< Connection request event */
-         CONNECTION_COMPLETE  /**< Connection completion event */
+         CONNECTION_COMPLETE, /**< Connection completion event */
+         LOCALHOST_DELIVERY   /**< Immediate localhost-delivery-of-crap event */
       };
 
       EventData (const NetworkGraph::net_edge_t _edge,
