@@ -49,8 +49,9 @@ JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 #JCCL_JARS	= @JCCL_JARS@
 TWEEK_JARS	= $(shell $(TWEEK_BASE_DIR)/bin/tweek-config --jars)
 WIZARD_JARS	= $(TWEEK_BASE_DIR)/bin/wizard.jar
+UI_JARS		= $(TWEEK_BASE_DIR)/bin/ui.jar
 JCCL_JARS	= $(JCCL_BASE_DIR)/bin/beans/jccl_config.jar$(JCPS)$(JCCL_BASE_DIR)/bin/beans/jccl_editors.jar
-CLASSPATH	= $(JCCL_JARS)$(JCPS)$(WIZARD_JARS)$(JCPS)$(TWEEK_JARS)
+CLASSPATH	= $(JCCL_JARS)$(JCPS)$(UI_JARS)$(JCPS)$(WIZARD_JARS)$(JCPS)$(TWEEK_JARS)
 
 VRJCONFIG_PKG		= org.vrjuggler.vrjconfig
 VRJCONFIG_DIR		= $(subst .,/,$(VRJCONFIG_PKG))

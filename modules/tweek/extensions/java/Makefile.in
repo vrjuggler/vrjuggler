@@ -56,6 +56,12 @@ CLASSPATH	= $(topdir)/java
 # For each package, we need the four lines to automatically add found sources
 # to the build process. This allows us to not have to modify the build
 # whenever new sources are added.
+
+UI_PKG			= org.vrjuggler.tweek.ui
+UI_DIR			= $(subst .,/,$(UI_PKG))
+UI_SRCS			= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(UI_DIR)/*.java))
+UI_CLASSES		= $(UI_SRCS:.java=.class)
+
 WIZARD_PKG		= org.vrjuggler.tweek.wizard
 WIZARD_DIR		= $(subst .,/,$(WIZARD_PKG))
 WIZARD_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_DIR)/*.java))
@@ -73,6 +79,7 @@ WIZARD_PANES_CLASSES	= $(WIZARD_PANES_SRCS:.java=.class)
 
 
 JAVA_SRCS = \
+	$(UI_SRCS) \
 	$(WIZARD_SRCS) \
 	$(WIZARD_BUILDER_SRCS) \
 	$(WIZARD_PANES_SRCS)
@@ -80,11 +87,11 @@ JAVA_SRCS = \
 JAVA_CLASSES = $(JAVA_SRCS:.java=.class)
 
 # Java targets
-JARS		= wizard.jar
+JARS		= wizard.jar ui.jar
 BEANS		= WizardBuilder
 
 # List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS	= $(WIZARD_PKG) $(WIZARD_BUILDER_PKG) $(WIZARD_PANES_PKG)
+DOC_PKGS	= $(UI_PKG) $(WIZARD_PKG) $(WIZARD_BUILDER_PKG) $(WIZARD_PANES_PKG)
 webroot		= $(HOME)/public_html/jugglerweb
 instdir		= tweek/wizard/1.0
 doc_prefix	= $(webroot)/$(instdir)
@@ -106,6 +113,10 @@ ifneq ($(BEANS), )
 	cp $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin/beans
 endif
 endif
+
+ui.jar: $(UI_CLASSES)
+	$(JAR) cvf $@ \
+		$(UI_DIR)/*.class \
 
 wizard.jar: $(WIZARD_CLASSES) $(WIZARD_PANES)
 	$(JAR) cvf $@ \
@@ -180,8 +191,10 @@ install-docs:
 
 CLEAN_FILES	+= \
 	$(JARS) \
+	$(UI_CLASSES) \
 	$(WIZARD_CLASSES) \
-	$(WIZARD_BUILDER_CLASSES)
+	$(WIZARD_BUILDER_CLASSES) \
+	$(WIZARD_PANES_CLASSES)
 
 ifdef GLOBAL_BUILD
     CLEAN_DIRS	+= $(top_srcdir)/bin

@@ -39,6 +39,7 @@ import java.util.*;
 import javax.swing.*;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.wizard.*;
+import org.vrjuggler.tweek.ui.PropertySheet;
 import org.vrjuggler.vrjconfig.ui.Placer;
 import org.vrjuggler.vrjconfig.ui.placer.*;
 
@@ -109,7 +110,7 @@ class SimDisplayPanePanel
    JPanel placerPanel = new JPanel();
    BorderLayout placerLayout = new BorderLayout();
    JToolBar placerToolbar = new JToolBar();
-//   PropertySheet wndPropSheet = new PropertySheet();
+   PropertySheet wndPropSheet = new PropertySheet();
    JButton addBtn = new JButton();
 
    /**
@@ -146,7 +147,7 @@ class SimDisplayPanePanel
          {
             System.out.println("Selected: "+wndPlacer.getSelectedIndex());
             // show the object's properties
-//            wndPropSheet.setBean(wndPlacer.getSelectedValue());
+            wndPropSheet.setBean(wndPlacer.getSelectedValue());
          }
       });
    }
@@ -158,7 +159,7 @@ class SimDisplayPanePanel
       placerPanel.setBorder(BorderFactory.createEtchedBorder());
       wndPlacer.setBorder(BorderFactory.createEtchedBorder());
       placerToolbar.setFloatable(false);
-//      wndPropSheet.setPreferredSize(new Dimension(150, 300));
+      wndPropSheet.setPreferredSize(new Dimension(150, 300));
       addBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -171,7 +172,7 @@ class SimDisplayPanePanel
       placerPanel.add(wndPlacer, BorderLayout.CENTER);
       placerPanel.add(placerToolbar,  BorderLayout.SOUTH);
       placerToolbar.add(addBtn, null);
-//      this.add(wndPropSheet,  BorderLayout.EAST);
+      this.add(wndPropSheet,  BorderLayout.EAST);
    }
 }
 
