@@ -633,7 +633,7 @@ namespace gadget
          //Read in the known length of the packet header
       vpr::ReturnStatus status = socket_stream->recvn(packet_head,RIM_HEAD_LENGTH,bytes_read);
          // If the read was not successful 
-      if (!status.success() || bytes_read < 0)
+      if (!status.success() || bytes_read == 0)
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrRED) << "[RIM::receiveNetworkPacket] ERROR: Connection lost" << vprDEBUG_FLUSH;
             // Print the low level error
