@@ -48,4 +48,15 @@ void SystemTest::LongLongConversions ()
    CPPUNIT_ASSERT(0xADB0BD0DEC211975 == vpr::System::Ntohll(vpr::System::Htonll(0xADB0BD0DEC211975)));
 }
 
+void SystemTest::GetSetEnvTest()
+{
+   const std::string env_name("VPR_ENV_TEST_PROP");
+   const std::string set_value("Set");
+   std::string result_value;
+
+   vpr::System::setenv(env_name, set_value);
+   vpr::System::getenv(env_name, result_value);
+   CPPUNIT_ASSERT(set_value == result_value);
+}
+
 } // End of vprTest namespace
