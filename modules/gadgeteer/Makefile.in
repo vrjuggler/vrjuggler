@@ -160,7 +160,7 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs
-	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
+	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Gadgeteer installation process"
 	@echo "---------------------------------------------------------------"
@@ -189,7 +189,7 @@ endif
             echo "------------------------------------------------" ;	\
             $(MAKE) gadgetABI=$$abi libs ;				\
           done
-	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
+	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Gadgeteer installation process"
 	@echo "---------------------------------------------------------------"
