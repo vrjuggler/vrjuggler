@@ -36,8 +36,6 @@
 #define _VJ_APP_
 
 #include <vjConfig.h>
-//#include <Kernel/vjAPI.h>
-#include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjConfigChunkHandler.h>
 class vjDrawManager;
@@ -87,6 +85,8 @@ public:
       kernel = kern;
    }
 
+   vjApp();
+
 public:
    //: Application init function
    // Execute any initialization needed before the API is started
@@ -114,19 +114,51 @@ public:
    virtual void postFrame()
    {;}
 
+
+   //: Reset the application
+   // This is used when the system (or applications) would like the application
+   // to reset to the initial state that it started in.
+   virtual void reset() {;}
+
+   //: Does the application currently have focus
+   // If an application has focus:
+   // - The user may be attempting to interact with it, so the app should process input
+   // If not,
+   // - The user is not interating with it, so ignore all input
+   // - BUT, the user may still be viewing it, so render and update any animations, etc.
+   //
+   // This is akin to the way a user can only interact with a GUI window that has focus
+   // (ie.The mouse is over the window)
+   bool haveFocus() { return mHaveFocus;}
+
+   //: Called when the focus state changes
+   virtual void focusChanged()
+   {;}
+
+   //: Sets the focus state
+   // POST: If state has changed, then calls focusChanged
+   void setFocus(bool newState)
+   {
+      if(newState != mHaveFocus)
+      {
+         mHaveFocus = newState;
+         this->focusChanged();
+      }
+   }
+
 public:  // --- DEfault config handlers: (inherited from vjConfigChunkHandler) --- //
    // Default to not handling anything
    virtual bool configCanHandle(vjConfigChunk* chunk)
    { return false; }
 
    //: Are any application dependencies satisfied
-   // If the application requires anything special of the system for successful 
+   // If the application requires anything special of the system for successful
    // initialization, check it here.
    // If retval == false, then the application will not be started yet
    //    retval == true, application will be allowed to enter the system
    virtual bool depSatisfied()
    { return true; }
-   
+
 protected:
    //! NOTE: Inherited from vjConfigChunkHandler
    virtual bool configAdd(vjConfigChunk* chunk)
@@ -138,6 +170,7 @@ protected:
 public:
    //vjAPI       api;        // Used to signal which API this application works with
    vjKernel*   kernel;     // The library kernel (here for convienence)
+   bool        mHaveFocus;
 
 public:  // --- Factory functions --- //
    //: Get the DrawManager to use

@@ -48,6 +48,7 @@ vpath %.cpp @srcdir@
 vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 KERNEL_SRCS	:= vjAPI.cpp			\
+		   vjApp.cpp			\
                    vjConfigManager.cpp		\
                    vjConfigChunkHandler.cpp	\
                    vjDebug.cpp			\
