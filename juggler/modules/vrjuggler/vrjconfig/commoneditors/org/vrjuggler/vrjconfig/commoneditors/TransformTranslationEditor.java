@@ -74,12 +74,10 @@ public class TransformTranslationEditor
       // Initially set up the conversion factors to convert from meters to
       // other units.
       mTranslationUnits              = new MeasurementUnit[4];
-      mTranslationUnits[METERS]      = new MeasurementUnit("Meters", 1.0f);
-      mTranslationUnits[CENTIMETERS] = new MeasurementUnit("Centimeters",
-                                                           10.0f);
-      mTranslationUnits[FEET]        = new MeasurementUnit("Feet", 3.28084f);
-      mTranslationUnits[INCHES]      = new MeasurementUnit("Inches",
-                                                           39.37008f);
+      mTranslationUnits[METERS]      = new MeasurementUnit("Meters", 1.0);
+      mTranslationUnits[CENTIMETERS] = new MeasurementUnit("Centimeters", 10.0);
+      mTranslationUnits[FEET]        = new MeasurementUnit("Feet", 3.28084);
+      mTranslationUnits[INCHES]      = new MeasurementUnit("Inches", 39.37008);
 
       for ( int i = 0; i < mTranslationUnits.length; ++i )
       {
@@ -108,9 +106,16 @@ public class TransformTranslationEditor
 
       mElement = elt;
 
-      mTrackerXPosField.setValue(elt.getProperty(mTranslateProp, 0));
-      mTrackerYPosField.setValue(elt.getProperty(mTranslateProp, 1));
-      mTrackerZPosField.setValue(elt.getProperty(mTranslateProp, 2));
+      double x_pos =
+         ((Number) elt.getProperty(mTranslateProp, 0)).doubleValue();
+      double y_pos =
+         ((Number) elt.getProperty(mTranslateProp, 1)).doubleValue();
+      double z_pos =
+         ((Number) elt.getProperty(mTranslateProp, 2)).doubleValue();
+
+      mTrackerXPosField.setValue(new Double(x_pos));
+      mTrackerYPosField.setValue(new Double(y_pos));
+      mTrackerZPosField.setValue(new Double(z_pos));
 
       mTrackerXPosField.addPropertyChangeListener(new
          TransformTranslationEditor_mTrackerXPosField_propertyChangeAdapter(this));
@@ -225,63 +230,63 @@ public class TransformTranslationEditor
    void mTrackerPosUnitsChooser_actionPerformed(ActionEvent actionEvent)
    {
       int units = mTrackerPosUnitsChooser.getSelectedIndex();
-      float conv_factor = mTranslationUnits[units].convFactor;
-      float x_pos =
-         ((Number) mTrackerXPosField.getValue()).floatValue() * conv_factor;
-      float y_pos =
-         ((Number) mTrackerYPosField.getValue()).floatValue() * conv_factor;
-      float z_pos =
-         ((Number) mTrackerZPosField.getValue()).floatValue() * conv_factor;
+      double conv_factor = mTranslationUnits[units].convFactor;
+      double x_pos =
+         ((Number) mTrackerXPosField.getValue()).doubleValue() * conv_factor;
+      double y_pos =
+         ((Number) mTrackerYPosField.getValue()).doubleValue() * conv_factor;
+      double z_pos =
+         ((Number) mTrackerZPosField.getValue()).doubleValue() * conv_factor;
 
-      mTrackerXPosField.setValue(new Float(x_pos));
-      mTrackerYPosField.setValue(new Float(y_pos));
-      mTrackerZPosField.setValue(new Float(z_pos));
+      mTrackerXPosField.setValue(new Double(x_pos));
+      mTrackerYPosField.setValue(new Double(y_pos));
+      mTrackerZPosField.setValue(new Double(z_pos));
 
       if ( units == METERS )
       {
-         mTranslationUnits[METERS].convFactor      = 1.0f;
-         mTranslationUnits[CENTIMETERS].convFactor = 10.0f;
-         mTranslationUnits[FEET].convFactor        = 3.28084f;
-         mTranslationUnits[INCHES].convFactor      = 39.37008f;
+         mTranslationUnits[METERS].convFactor      = 1.0;
+         mTranslationUnits[CENTIMETERS].convFactor = 10.0;
+         mTranslationUnits[FEET].convFactor        = 3.28084;
+         mTranslationUnits[INCHES].convFactor      = 39.37008;
       }
       else if ( units == CENTIMETERS )
       {
-         mTranslationUnits[METERS].convFactor      = 0.1f;
-         mTranslationUnits[CENTIMETERS].convFactor = 1.0f;
-         mTranslationUnits[FEET].convFactor        = 0.328084f;
-         mTranslationUnits[INCHES].convFactor      = 3.937008f;
+         mTranslationUnits[METERS].convFactor      = 0.1;
+         mTranslationUnits[CENTIMETERS].convFactor = 1.0;
+         mTranslationUnits[FEET].convFactor        = 0.328084;
+         mTranslationUnits[INCHES].convFactor      = 3.937008;
       }
       else if ( units == FEET )
       {
-         mTranslationUnits[METERS].convFactor      = 0.3048f;
-         mTranslationUnits[CENTIMETERS].convFactor = 3.048f;
-         mTranslationUnits[FEET].convFactor        = 1.0f;
-         mTranslationUnits[INCHES].convFactor      = 12.0f;
+         mTranslationUnits[METERS].convFactor      = 0.3048;
+         mTranslationUnits[CENTIMETERS].convFactor = 3.048;
+         mTranslationUnits[FEET].convFactor        = 1.0;
+         mTranslationUnits[INCHES].convFactor      = 12.0;
       }
       else if ( units == INCHES )
       {
-         mTranslationUnits[METERS].convFactor      = 0.0254f;
-         mTranslationUnits[CENTIMETERS].convFactor = 0.254f;
-         mTranslationUnits[FEET].convFactor        = 0.0833f;
-         mTranslationUnits[INCHES].convFactor      = 1.0f;
+         mTranslationUnits[METERS].convFactor      = 0.0254;
+         mTranslationUnits[CENTIMETERS].convFactor = 0.254;
+         mTranslationUnits[FEET].convFactor        = 0.0833;
+         mTranslationUnits[INCHES].convFactor      = 1.0;
       }
    }
 
-   private float toMeters(float value, int units)
+   private double toMeters(double value, int units)
    {
-      float val_in_meters;
+      double val_in_meters;
 
       if ( units == CENTIMETERS )
       {
-         val_in_meters = value * 0.1f;
+         val_in_meters = value * 0.1;
       }
       else if ( units == FEET )
       {
-         val_in_meters = value * 0.3048f;
+         val_in_meters = value * 0.3048;
       }
       else if ( units == INCHES )
       {
-         val_in_meters = value * 0.0254f;
+         val_in_meters = value * 0.0254;
       }
       else
       {
@@ -291,19 +296,20 @@ public class TransformTranslationEditor
       return val_in_meters;
    }
 
-   private void setTranslateProperty(Float value, int index)
+   private void setTranslateProperty(Double value, int index)
    {
       int units = mTrackerPosUnitsChooser.getSelectedIndex();
 
       mElement.setProperty(mTranslateProp, index,
-                           new Float(toMeters(value.floatValue(), units)));
+                           new Float((float) toMeters(value.doubleValue(),
+                                     units)));
    }
 
    void mTrackerXPosField_propertyChange(PropertyChangeEvent propertyChangeEvent)
    {
       if ( propertyChangeEvent.getPropertyName().equals("value") )
       {
-         setTranslateProperty((Float) mTrackerXPosField.getValue(), 0);
+         setTranslateProperty((Double) mTrackerXPosField.getValue(), 0);
       }
    }
 
@@ -311,7 +317,7 @@ public class TransformTranslationEditor
    {
       if ( propertyChangeEvent.getPropertyName().equals("value") )
       {
-         setTranslateProperty((Float) mTrackerYPosField.getValue(), 1);
+         setTranslateProperty((Double) mTrackerYPosField.getValue(), 1);
       }
    }
 
@@ -319,7 +325,7 @@ public class TransformTranslationEditor
    {
       if ( propertyChangeEvent.getPropertyName().equals("value") )
       {
-         setTranslateProperty((Float) mTrackerZPosField.getValue(), 2);
+         setTranslateProperty((Double) mTrackerZPosField.getValue(), 2);
       }
    }
 }
@@ -386,12 +392,12 @@ class TransformTranslationEditor_mTrackerPosUnitsChooser_actionAdapter
 
 class MeasurementUnit
 {
-   public MeasurementUnit(String name, float convFactor)
+   public MeasurementUnit(String name, double convFactor)
    {
       this.name       = name;
       this.convFactor = convFactor;
    }
 
    public String name;
-   public float convFactor;
+   public double convFactor;
 }
