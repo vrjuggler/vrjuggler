@@ -87,6 +87,6 @@ namespace vrj
        */
       virtual void sync() {}
    };
-}; // end namespace
+} // end namespace
 
 #endif   /* _VRJUGGLER_SOUND_MANAGER_ */
