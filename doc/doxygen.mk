@@ -36,6 +36,8 @@ LATEX_OUTPUT_DIR?=	latex
 MAN_OUTPUT_DIR?=	man
 RTF_OUTPUT_DIR?=	rtf
 
+RM=		rm -f
+
 html: $(HTML_OUTPUT_DIR)
 	$(DOXYGEN) $(HTML_DOXYGEN_FILE)
 
@@ -65,3 +67,19 @@ install-ps:
 install-pdf:
 	if [ ! -d $(prefix) ]; then mkdir -p $(prefix); fi
 	cp $(LATEX_OUTPUT_DIR)/refman.pdf $(prefix)
+
+clean:
+ifneq ($(CLEAN_FILES), )
+	$(RM) $(CLEAN_FILES)
+endif
+ifneq ($(CLEAN_DIRS), )
+	$(RM) -r $(CLEAN_DIRS)
+endif
+
+clobber:
+	@$(MAKE) clean
+ifneq ($(CLOBBER_FILES), )
+	$(RM) $(CLOBBER_FILES)
+endif
+	$(RM) -r $(HTML_OUTPUT_DIR) $(MAN_OUTPUT_DIR)                   \
+          $(LATEX_OUTPUT_DIR) $(RTF_OUTPUT_DIR) $(CLOBBER_DIRS)
