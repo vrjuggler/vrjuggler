@@ -374,6 +374,7 @@ namespace Flock
       else if(EveryOther == rate) return "EveryOther";
       else if(Every8 == rate) return "Every8";
       else if(Every32 == rate) return "Every32";
+      else return "Unknown";
    }
 
    /** Mode the flock is executing in.
@@ -453,7 +454,7 @@ public:
     *          doesn't actually talk to the FOB yet.
     */
    FlockStandalone(std::string port,
-                   const int& numBrds = 3,
+                   const unsigned& numBrds = 3,
                    const int& transmit = 3,
                    const int& baud = 38400,
                    const int& sync = 1,
@@ -549,12 +550,12 @@ public:
     * @param n An integer number not more than the number of
     *          birds attached to the system.    
     */
-   void setNumSensors( const int& n );
+   void setNumSensors( const unsigned& n );
 
    /**
     * Gets the number of birds to use in the Flock.
     */
-   inline const int& getNumSensors() const
+   inline unsigned getNumSensors() const
    { return mNumSensors; }
 
    /**
@@ -759,7 +760,7 @@ private:  // --- Data members --- //
    std::string           mModelId;        /**< Model id for the system we are connected to */
    unsigned              mMasterAddr;     /**< Address of the master */
 
-   int                  mNumSensors;      /**< Number of sensorts in the flock */
+   unsigned              mNumSensors;     /**< Number of sensorts in the flock */
    int               mXmitterUnitNumber;  /**< Unit number of the transmitter */
 
    Flock::Output::Format mOutputFormat;   /**< The output format to configure the flock to use */

@@ -102,12 +102,14 @@ namespace Flock
             break;
       }
    #undef F_ERR
+   
+      return ret_val;
    }
 }  // end namespace flock
 
 
 /** Configure constructor. */
-FlockStandalone::FlockStandalone(std::string port, const int& numBrds,
+FlockStandalone::FlockStandalone(std::string port, const unsigned& numBrds,
                                  const int& transmit, const int& baud,
                                  const int& sync, const BIRD_HEMI& hemi,
                                  const BIRD_FILT& filt, Flock::ReportRate report)
@@ -434,6 +436,8 @@ vpr::ReturnStatus FlockStandalone::startStreaming()
 
    // flock is streaming now
    mStatus = FlockStandalone::STREAMING;
+
+   return vpr::ReturnStatus::Succeed;
 }
 
 /** Stop the streaming */
@@ -445,6 +449,8 @@ vpr::ReturnStatus FlockStandalone::stopStreaming()
                                           << vprDEBUG_FLUSH;
    sendStreamStopCommand();
    mStatus = FlockStandalone::RUNNING;
+   
+   return vpr::ReturnStatus::Succeed;
 }
 
 
@@ -537,7 +543,7 @@ void FlockStandalone::setTransmitter( const int& Transmit )
 }
 
 /** Sets the number of birds to use in the Flock. */
-void FlockStandalone::setNumSensors( const int& n )
+void FlockStandalone::setNumSensors( const unsigned& n )
 {
    if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
    {
@@ -1027,7 +1033,6 @@ void FlockStandalone::sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data )
 
 void FlockStandalone::pickBird (const vpr::Uint8 birdID)
 {
-   vpr::Uint32 written;
    vpr::Uint8 cmd;
    std::vector<vpr::Uint8> cmd_data(0);      // Default to no data
 
