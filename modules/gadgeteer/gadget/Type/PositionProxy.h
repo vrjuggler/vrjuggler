@@ -77,8 +77,8 @@ public:
     */
    virtual void updateData();
 
-   /// Returns time of last update.
-   vpr::Interval getTimeStamp() const
+   /** Returns time of last update. */
+   virtual vpr::Interval getTimeStamp() const
    {
       return mPositionData.getTime();
    }
