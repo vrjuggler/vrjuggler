@@ -208,12 +208,6 @@ case $target_os in
         fi
 
         AC_DEFINE(VPR_OS_FreeBSD, , [Define if building on FreeBSD.])
-
-        # XXX: This should not be necessary!  boost/integer_traits.hpp does
-        # boost/integer_traits.hpp does not compile without these defined on
-        # FreeBSD for some reason.
-dnl        AC_DEFINE(WCHAR_MIN, INT_MIN)
-dnl        AC_DEFINE(WCHAR_MAX, INT_MAX)
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
