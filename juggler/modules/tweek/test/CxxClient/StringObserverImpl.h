@@ -37,7 +37,7 @@
 #ifndef _STRING_OBSERVER_IMPL_H_
 #define _STRING_OBSERVER_IMPL_H_
 
-#include <tweek/CORBA/Observer.h>
+#include <tweek/idl/Observer.h>
 
 #include <StringSubject.h>
 

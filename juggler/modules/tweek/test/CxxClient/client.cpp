@@ -40,7 +40,7 @@
 #include <vpr/vpr.h>
 #include <vpr/Util/Debug.h>
 #include <tweek/Client/CorbaService.h>
-#include <tweek/CORBA/SubjectManager.h>
+#include <tweek/idl/SubjectManager.h>
 
 #include <StringObserverImpl.h>
 
