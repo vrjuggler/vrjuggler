@@ -15,7 +15,7 @@ VJ_SRCDIR	= @VJ_SRCDIR@/Config
 WORKDIR		= ${topdir}/Config
 
 # Include common definitions.
-include @topdir@/Makefile.base
+include ${topdir}/Makefile.base
 include ${MKPATH}/vj.dep.mk
 include ${MKPATH}/vj.install.mk
 
