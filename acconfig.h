@@ -119,7 +119,7 @@
 
 /* 
  * On Windows when using Visual C++, define to __int32 and __int64
- * respectively if these two are not available..
+ * respectively if these two are not available.
  */
 #undef int32_t
 #undef int64_t
