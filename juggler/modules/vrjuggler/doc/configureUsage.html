@@ -20,11 +20,11 @@ The following example illustrates the typical way to use the <I>configure</I>
 script:
 
 <OL>
-  <LI><B><TT>cd <I>path/to/source/juggler/lib</I></TT></B></LI>
-  <LI><B><TT>mkdir <I>build</I></TT></B></LI>
-  <LI><B><TT>cd <I>build</I></TT></B></LI>
-  <LI><B><TT>../../configure <I>--your-options-here</I></TT></B></LI>
-  <LI><B><TT>make</TT></B></LI>
+  <LI><B><TT>cd <I>path/to/source/juggler/lib</I></TT></B>
+  <LI><B><TT>mkdir <I>build</I></TT></B>
+  <LI><B><TT>cd <I>build</I></TT></B>
+  <LI><B><TT>../../configure <I>--your-options-here</I></TT></B>
+  <LI><B><TT>make</TT></B>
 </OL>
 
 Doing this results in the library object files and the library itself being
@@ -83,46 +83,32 @@ generated copies. I will address this later.
 <I>configure</I> currently has the following run-time options:
 <DL>
   <DT><B>--with-threads=[SGI_IPC|POSIX]</B></DT>
-    <DD>
-      Define the type of threading model to use. The default is SGI IPC, but
-      POSIX is used if compiling on HP-UX.
-    </DD>
+    <DD>Define the type of threading model to use. The default is SGI IPC, but
+        POSIX is used if compiling on HP-UX.
   <DT><B>--with-pfroot=[PATH]</B></DT>
-    <DD>
-      Define the root of the Performer installation. The default is
-      <TT>/usr</TT>.
-    </DD>
+    <DD>Define the root of the Performer installation. The default is
+        <TT>/usr</TT>.
   <DT><B>--with-oglroot=[PATH]</B></DT>
-    <DD>
-      Define the root of the OpenGL installation. The default is <TT>/usr</TT>.
-      This is particularly useful on HP-UX where the OpenGL libraries and
-      header files are in <TT>/opt/graphics/OpenGL</TT>.
-    </DD>
+    <DD>Define the root of the OpenGL installation. The default is
+        <TT>/usr</TT>.  This is particularly useful on HP-UX where the OpenGL
+        libraries and header files are in <TT>/opt/graphics/OpenGL</TT>.
   <DT><B>--enable-c2style=[N32|32|64]</B></DT>
-    <DD>
-      Define the binary type. This really only applies on SGIs (for now) where
-      it sets -64 or -n32 or whatever, but it can be used on other platforms
-      to provide part of the name of the library's build directory. The default
-      is N32.
-    </DD>
+    <DD>Define the binary type. This really only applies on SGIs (for now)
+        where it sets -64 or -n32 or whatever, but it can be used on other
+        platforms to provide part of the name of the library's build directory.
+        The default is N32.
   <DT><B>--enable-opengl</B></DT>
-    <DD>
-      Enable the OpenGL API. This is on by default. If this is enabled and the
-      libraries and header files are found, the OpenGL API code in the
-      <TT>Kernel</TT> directory is compiled in. This also defines
-      <B><TT>VJ_API_OPENGL</TT></B> in <TT>config.h</TT>.
-    </DD>
+    <DD>Enable the OpenGL API. This is on by default. If this is enabled and
+        the libraries and header files are found, the OpenGL API code in the
+        <TT>Kernel</TT> directory is compiled in. This also defines
+        <B><TT>VJ_API_OPENGL</TT></B> in <TT>config.h</TT>.
   <DT><B>--enable-perf</B></DT>
-    <DD>
-      Enable the Performer API. This is on by default. The same stuff holds
-      true here as with the OpenGL API. It defines
-      <B><TT>VJ_API_PERFORMER</TT></B> in <TT>config.h</TT>.
-    </DD>
+    <DD>Enable the Performer API. This is on by default. The same stuff holds
+        true here as with the OpenGL API. It defines
+        <B><TT>VJ_API_PERFORMER</TT></B> in <TT>config.h</TT>.
   <DT><B>--with-builddir=[PATH]</B></DT>
-    <DD>
-      Define the directory where the library will be built. This is not
-      currently in use. However, it could prove to be useful later.
-    </DD>
+    <DD>Define the directory where the library will be built. This is not
+        currently in use. However, it could prove to be useful later.
 </DL>
 
 <H3>What <I>configure</I> Actually Does</H3>
