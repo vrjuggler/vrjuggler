@@ -149,9 +149,10 @@ void navigator::navTranslate(vjVec3 trans, bool& didCollide, vjVec3& totalCorrec
    vjVec3 trans_in_modelspace;
    trans_in_modelspace.xformFull( cur_rotation, trans );
 
-   // Do correction for collision detection
-   // Will return corrected trans value
-   navCollideTransCorrect(trans_in_modelspace, didCollide, totalCorrection);
+   // Get correction for collision detection
+   // This func returns the totalCorrection
+   // NOTE: this func returns 3 values.
+   navCollideTransCorrect( trans_in_modelspace, didCollide, totalCorrection );
 
    // Convert back to trans_in_modelspace back into local space
    vjMatrix inv_cur_rotation;

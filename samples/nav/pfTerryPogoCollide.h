@@ -51,17 +51,24 @@
 class pfTerryPogoCollide : public pfTerryCollide
 {
 public:
-   //: For collisions with the ground, use collide(
-   //: displacement vector, the whole world, mask, your position
-   //: length of collision vector).  
+   // posAboveYourFeet: either foot position or head position is generally computed from a navigation
+   //  routine.  you need foot position, which is the same as headposition + downVector * yourHeight
+   //  Once you have your foot position, choose a step height heightAboveYourFeet (generally at your waist)
+   //  posAboveYourFeet is going to be at heightAboveYourFeet above your feet, 
+   //  this causes a ray to be cast from this stepHeight down to your feet.
+   // i.e. to calculate:
+   // float heightAboveYourFeet( 3.0f ); // about as high as humans usually step.
+   // pfVec3 up( 0.0f, 0.0f, 1.0f );
+   // pfVec3 posAboveYourFeet = feetPosition + up * heightAboveYourFeet;
    //
-   // The world and mask will
-   // probably be the same ones you used in nodeSetup.
-   // Make sure that the length of the vector is longer than
-   // the rate at which you are falling or you might fall right
-   // through the ground.
-   bool collide( pfVec3 &bounce, pfNode *objNode, int mask, pfVec3 pos, float length );
-   
+   // correction is returned as a vector to correct your position if collision occured.
+   // objNode is your graph
+   // mask is whatever...
+   // posAboveYourFeet is set to a place inbetween your feet and head, 
+   //                  that would normally be comfortable height for a human to step.
+   // heightAboveYourFeet is the length from posAboveYourFeet to your feet
+   bool collide( pfVec3& correction, pfNode *objNode, int mask, pfVec3 posAboveYourFeet, float heightAboveYourFeet );
+
    //: collideRide(displacement vector, position
    //: offset, rotation offset, the whole world, mask, your
    //: position) 

@@ -33,16 +33,32 @@
 
 #include "pfTerryPogoCollide.h"
 
-bool pfTerryPogoCollide::collide( pfVec3 &bounce, pfNode *objNode, int mask, pfVec3 pos, float length )
+// posAboveYourFeet: either foot position or head position is generally computed from a navigation
+//  routine.  you need foot position, which is the same as headposition + downVector * yourHeight
+//  Once you have your foot position, choose a step height heightAboveYourFeet (generally at your waist)
+//  posAboveYourFeet is going to be at heightAboveYourFeet above your feet, 
+//  this causes a ray to be cast from this stepHeight down to your feet.
+// i.e. to calculate:
+// float heightAboveYourFeet( 3.0f ); // about as high as humans usually step.
+// pfVec3 up( 0.0f, 0.0f, 1.0f );
+// pfVec3 posAboveYourFeet = feetPosition + up * heightAboveYourFeet;
+//
+// correction is returned as a vector to correct your position if collision occured.
+// objNode is your graph
+// mask is whatever...
+// posAboveYourFeet is set to a place inbetween your feet and head, 
+//                  that would normally be comfortable height for a human to step.
+// heightAboveYourFeet is the length from posAboveYourFeet to your feet
+bool pfTerryPogoCollide::collide( pfVec3& correction, pfNode *objNode, int mask, pfVec3 posAboveYourFeet, float heightAboveYourFeet )
 {
     pfHit **hit[1];
     pfSegSet segset;
     pfMatrix collidemat;
     
     // Make a ray looking "down" at terrain
-    segset.segs[0].pos = pos;
+    segset.segs[0].pos = posAboveYourFeet;
     segset.segs[0].dir = pfVec3(0.0, 0.0, -1.0);
-    segset.segs[0].length = length;
+    segset.segs[0].length = heightAboveYourFeet;
 
     segset.mode = PFTRAV_IS_PRIM|PFTRAV_IS_NORM|PFTRAV_IS_CULL_BACK;
     segset.userData = NULL;
@@ -66,8 +82,8 @@ bool pfTerryPogoCollide::collide( pfVec3 &bounce, pfNode *objNode, int mask, pfV
 	      hit[0][0]->query( PFQHIT_XFORM, &collidemat );
 	      isectResult.point.xformPt( isectResult.point, collidemat );
 	   }
-	   pos.sub( isectResult.point, pos );
-	   bounce.add( pos, pfVec3(0.0, 0.0, length) );
+      pfVec3 delta = isectResult.point - posAboveYourFeet;
+	   correction = delta + pfVec3(0.0, 0.0, heightAboveYourFeet);
 	   return true;
    }
    return false;

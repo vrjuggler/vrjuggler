@@ -68,32 +68,36 @@ public:
 };
 
 
-bool pfBoxCollider::testMove(vjVec3 whereYouAre, vjVec3 delta, vjVec3& correction, bool whereYouAreWithDelta)
+bool pfBoxCollider::testMove( vjVec3 feetPosition, vjVec3 feetDelta, vjVec3& correction, bool whereYouAreWithDelta)
 {
-   //cout<<"Pos["<<whereYouAre<<"] :|: Vel["<<delta<<"]\n"<<flush;
-   pfVec3 pf_cur_pos = vjGetPfVec(whereYouAre);
-   pfVec3 pf_delta = vjGetPfVec(delta);
-   pfVec3 pf_correction( 0.0f, 0.0f, 0.0f );
+   pfVec3 pf_feet_position = vjGetPfVec(feetPosition);
+   pfVec3 pf_feet_delta = vjGetPfVec(feetDelta);
+   pfVec3 pf_feet_destination = (pf_feet_position + pf_feet_delta);
+   pfVec3 pf_correction;         // Needs to be set
    
-   pfVec3 pf_new_pos;
-   if(whereYouAreWithDelta)
-      pf_new_pos = pf_cur_pos;
-   else
-      pf_new_pos = (pf_cur_pos + pf_delta);
-
-   // get the speed.
-   float speed = pf_delta.length();
+   // whats the maximum step height?
+   float step_height( 5.0f ); // value picked out of my ass.
+   pfVec3 up( 0.0f, 0.0f, 1.0f );
+   // whats the ray start position that would test for that step height?
+   pfVec3 pf_step_destination = pf_feet_destination + up * step_height;
+   
+         
+   // get the speed, can only be positive bye definition of .length()
+   /*
+   float speed = pf_feet_delta.length();
    
    // get the radius..       // Terry hack
-   float vol_radius = fabs( speed ); //* 2.0f;
+   float vol_radius = speed * 2.0f;
   
    // constrain value to always have unit length or greater
    if(vol_radius < 1.0f)
       vol_radius = 1.0f;
-      
+   */
+         
    terryCollide.setRadius( vol_radius );    // Setup collision volume
-
-   if (terryCollide.collide( pf_correction, mWorldNode, pf_new_pos) )
+   //terryCollide.setVelocity( pf_feet_delta );
+   
+   if (terryCollide.collide( pf_correction, mWorldNode, pf_step_destination) )
    {
       correction = vjGetVjVec(pf_correction);
 
