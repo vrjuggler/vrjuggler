@@ -42,6 +42,7 @@ import VjWizards.*;
 import VjConfig.*;
 import VjControl.Core;
 import VjComponents.UI.Widgets.*;
+import VjComponents.ConfigEditor.ConfigUIHelper;
 
 /**
  * Title:        VjControl Sim Wizard GUI
@@ -172,6 +173,9 @@ public class DisplayWindowPanel extends JPanel implements WizardSubPanel, FocusL
         jPanel4.add(jLabel6, null);
         jPanel4.add(height_field, null);
         left_panel.add(jPanel1, null);
+    }
+
+    public void setConfigUIHelper (ConfigUIHelper _uihelper_module) {
     }
 
     /** Sets the state of the UI components to reflect the resultsDB. 

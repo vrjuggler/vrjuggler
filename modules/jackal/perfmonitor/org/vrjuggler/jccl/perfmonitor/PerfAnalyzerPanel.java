@@ -42,11 +42,10 @@ import java.util.Vector;
 import java.io.File;
 
 import VjComponents.PerfMonitor.*;
-import VjControl.Core;
-import VjControl.SuffixFilter;
+import VjControl.*;
 import VjComponents.UI.*;
 import VjComponents.UI.Widgets.*;
-import VjConfig.ConfigChunk;
+import VjConfig.*;
 
 
 /** PlugPanel for displaying data from PerformanceModule
@@ -214,7 +213,7 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
     JTextArea text_area;
 
     PerfDataCollector current_collector;
-    PerformanceModule collection;
+    PerformanceModule perf_module;
     protected String component_name;
     protected ConfigChunk component_chunk;
 
@@ -232,16 +231,15 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
     public PerfAnalyzerPanel () {
 	super();
 
-        component_name = "Performance";
+        component_name = "Unconfigured PerfAnalyzerPanel";
         component_chunk = null;
 
 	child_frames = new Vector();
 	datapanel_elems = new Vector();
-	collection = (PerformanceModule)Core.getModule ("Performance Module");
+	perf_module = null;
+        ui_module = null;
 	current_collector = null;
 	text_area = null;
-
-	collection.addActionListener (this);
 
 	preskip = 20;
 	postskip = 20;
@@ -249,58 +247,6 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 	anomalycutoff = 1.0f;
 
         initialized = false;
-
-//  	setLayout (new BorderLayout (5, 5));
-//  	setBorder (new EmptyBorder (5,5,5,5));
-
-//  	data_panel = new JPanel();
-//  	data_panel.setLayout (gblayout = new GridBagLayout());
-//  	gbc = new GridBagConstraints();
-//  	gbc.insets = new Insets (0, 4, 0, 4);
-//  	gbc.fill = gbc.HORIZONTAL;
-
-//  	JPanel epanel = new JPanel ();
-//  	epanel.setLayout (new GridLayout (10, 1, 2, 0));
-//  	add (epanel, "East");
-
-//  	load_button = new JButton ("Load");
-//  	epanel.add (load_button);
-//  	load_button.addActionListener (this);
-
-//  	epanel.add (savecontents_button = new JButton ("Save Data"));
-//  	savecontents_button.addActionListener (this);
-
-//  //  	print_button = new JButton ("Print");
-//  //  	print_button.addActionListener (this);
-//  //  	epanel.add (print_button);
-
-//  	print_all_button = new JButton ("Print");
-//  	print_all_button.addActionListener (this);
-//  	epanel.add (print_all_button);
-       
-
-//  	JPanel npanel = new JPanel ();
-//  	npanel.setLayout (new BoxLayout (npanel, BoxLayout.Y_AXIS));
-//  	add (npanel, "North");
-//  	JPanel ntoppanel = new JPanel();
-//  	ntoppanel.setLayout (new BoxLayout (ntoppanel, BoxLayout.X_AXIS));
-//  	npanel.add (ntoppanel);
-
-//  	ntoppanel.add (new JLabel ("Maximum stored samples"));
-//  	ntoppanel.add (max_samples_box = new JComboBox());
-//  	max_samples_box.addItem ("100");
-//  	max_samples_box.addItem ("500");
-//  	max_samples_box.addItem ("1000");
-//  	max_samples_box.addItem ("5000");
-//  	max_samples_box.addItem ("<Infinite>");
-//  	max_samples_box.setSelectedIndex(1);
-//  	max_samples_box.addActionListener (this);
-
-//  	display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-//  	//setCurrentCollector (null);
-
-//  	add (display_pane, "Center");
 
     }
 
@@ -330,8 +276,8 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 	//data_panel.removeAll();
 	DataPanelElem dpe;
 
-	for (i = 0; i < collection.getSize(); i++) {
-	    col = collection.getCollector(i);
+	for (i = 0; i < perf_module.getSize(); i++) {
+	    col = perf_module.getCollector(i);
 	    dpe = getDataPanelElem (col);
 	    if (dpe == null) {
 		addDataPanelElem (col);
@@ -389,7 +335,7 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 	    else
 		numsamps = Integer.parseInt(s);
 	    //System.out.println ("setting max samples to " + numsamps);
-	    collection.setMaxSamples(numsamps);
+	    perf_module.setMaxSamples(numsamps);
 	}
 	else if (e.getSource() == display_choice)
 	    refreshDisplay();
@@ -412,13 +358,13 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 	}
 	else if (e.getSource() == savecontents_button) {
 	    //collection.savePerfDataFile ();
-            File f = ui_module.getEasyFileDialog().requestSaveFile(collection.getFile(), ui_module, perf_filter);
-            collection.savePerfDataFile (f);
+            File f = ui_module.getEasyFileDialog().requestSaveFile(perf_module.getFile(), ui_module, perf_filter);
+            perf_module.savePerfDataFile (f);
 	}
 	else if (e.getSource() == load_button) {
-            File f = ui_module.getEasyFileDialog().requestOpenFile (collection.getFile().getParentFile(), ui_module, perf_filter);
+            File f = ui_module.getEasyFileDialog().requestOpenFile (perf_module.getFile().getParentFile(), ui_module, perf_filter);
             if (f != null) {
-                String name = collection.loadNewPerfDataFile (f);
+                String name = perf_module.loadNewPerfDataFile (f);
                 if (name != null)
                     refreshDisplay();
             }
@@ -430,13 +376,13 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 	else if (e.getSource() == print_all_button) {
 	    String s = "";
 	    PerfDataCollector col;
-	    for (int i = 0; i < collection.getSize(); i++) {
-		col = collection.getCollector(i);
+	    for (int i = 0; i < perf_module.getSize(); i++) {
+		col = perf_module.getCollector(i);
 		s += col.dumpAverages (preskip, postskip, false, anomalycutoff);
 	    }
 	    System.out.println (s);
 	}
-	else if (e.getSource() == collection) {
+	else if (e.getSource() == perf_module) {
 	    String s = e.getActionCommand();
 	    if (s.equalsIgnoreCase ("update"))
 		refreshDisplay();
@@ -504,14 +450,33 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
         component_chunk = ch;
         component_name = ch.getName();
 
-        ui_module = (ControlUIModule)Core.getModule ("ControlUI Module");
-        if (ui_module == null) {
-            Core.consoleErrorMessage (component_name, "Expected ControlUI Module to exist.");
+        // get pointers to the modules we need.
+        Property p = ch.getPropertyFromToken ("Dependencies");
+        if (p != null) {
+            int i;
+            int n = p.getNum();
+            String s;
+            VjComponent c;
+            for (i = 0; i < n; i++) {
+                s = p.getValue(i).toString();
+                c = Core.getComponentFromRegistry(s);
+                if (c != null) {
+                    if (c instanceof ControlUIModule)
+                        ui_module = (ControlUIModule)c;
+                    if (c instanceof PerformanceModule)
+                        perf_module = (PerformanceModule)c;
+                }
+            }
+        }
+        if ((perf_module == null) || (ui_module == null)) {
+            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
             return false;
         }
+
+	perf_module.addActionListener (this);
+
         perf_filter = new SuffixFilter ("Perf Data Files (*.perf)", ".perf");
         ui_module.getEasyFileDialog().addFilter (perf_filter, "PerfData");
-
 
         refreshDisplay();
 

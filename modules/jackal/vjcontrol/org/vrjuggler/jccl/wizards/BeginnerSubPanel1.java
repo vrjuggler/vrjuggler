@@ -37,6 +37,7 @@ package VjWizards;
 import java.io.*;
 import javax.swing.*;
 import VjConfig.*;
+import VjComponents.ConfigEditor.ConfigUIHelper;
 
 public class BeginnerSubPanel1 extends JPanel implements WizardSubPanel {
 
@@ -45,6 +46,9 @@ public class BeginnerSubPanel1 extends JPanel implements WizardSubPanel {
     }
 
     //----------------------- WizardSubPanel Stuff --------------------------
+
+    public void setConfigUIHelper (ConfigUIHelper _uihelper_module) {
+    }
 
     public JComponent getUIComponent () {
         return this;

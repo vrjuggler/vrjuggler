@@ -34,6 +34,7 @@
 package VjComponents.ConfigEditor;
 
 import java.util.Vector;
+import java.util.List;
 
 import VjComponents.ConfigEditor.ChunkDBTreeModel;
 import VjConfig.ConfigChunkDB;
@@ -48,29 +49,34 @@ import VjComponents.ConfigEditor.ChunkOrgTreeModule;
  */
 public class ChunkDBTreeModelFactory {
 
-    Vector models;
+    private List models;
+
+    private ChunkOrgTreeModule orgtree_module;
 
     public ChunkDBTreeModelFactory () {
 	models = new Vector();
+        orgtree_module = null;
     }
+
+
+    public void setChunkOrgTreeModule (ChunkOrgTreeModule _orgtree_module) {
+        orgtree_module = _orgtree_module;
+    }
+
 
     public ChunkDBTreeModel getTreeModel (ConfigChunkDB db) {
 	ChunkDBTreeModel dbt;
 	for (int i = 0; i < models.size(); i++) {
-	    dbt = (ChunkDBTreeModel)models.elementAt(i);
+	    dbt = (ChunkDBTreeModel)models.get(i);
 	    if ((dbt.chunkdb == db) && (!dbt.inuse)) {
 		dbt.inuse = true;
 		return dbt;
 	    }
 	}
-        ChunkOrgTreeModule orgtree_module= 
-            (ChunkOrgTreeModule)Core.getModule ("ChunkOrgTree Module");
-        if (orgtree_module == null)
-            Core.consoleErrorMessage ("UI", "Expected ChunkOrgTree Module to exist");
 
 	dbt = new ChunkDBTreeModel (db, orgtree_module.getOrgTree());
 	dbt.inuse = true;
-	models.addElement (dbt);
+	models.add (dbt);
 	return dbt;
     }
 
@@ -79,6 +85,6 @@ public class ChunkDBTreeModelFactory {
     }
 
     public void removeAllElements () {
-        models.removeAllElements();
+        models.clear();
     }
 }

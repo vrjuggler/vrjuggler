@@ -70,9 +70,11 @@ public class VarValueBigChunkPanel
     JButton           removebutton;
     JButton           editbutton;
     GenericEditorFrame chunkframe;
-    ConfigUIHelper confighelper_module;
+    ConfigUIHelper uihelper_module;
 
-    public VarValueBigChunkPanel(VarValuePanelParent par, Property _prop, ConfigChunk _chunk) {
+    public VarValueBigChunkPanel(VarValuePanelParent par, Property _prop, 
+                                 ConfigChunk _chunk, 
+                                 ConfigUIHelper _uihelper_module) {
 	super();
 	parent = par;
 	prop = _prop;
@@ -125,14 +127,7 @@ public class VarValueBigChunkPanel
 	    parent.removePanel(this);
 	else if (e.getSource() == editbutton) {
 	    if (chunkframe == null) {
-                // BUG!!! It's totally inappropriate to use a fixed string to
-                // try to get a component like this!
-                if (confighelper_module == null) {
-                    confighelper_module = (ConfigUIHelper)Core.getModule ("ConfigUIHelper Module");
-                    if (confighelper_module == null)
-                        Core.consoleErrorMessage ("UI", "ChunkDBPanel expected ConfigUIHelper Module to exist.");
-                }
-                ConfigChunkPanel p = confighelper_module.configchunkpanel_factory.createConfigChunkPanel (chunk.getDescToken());
+                ConfigChunkPanel p = uihelper_module.configchunkpanel_factory.createConfigChunkPanel (chunk.getDescToken());
                 p.setChunk (chunk, null);
                 chunkframe = new GenericEditorFrame (this, p);
                 //ui_module.addChildFrame (f);

@@ -43,6 +43,7 @@ import VjConfig.*;
 import VjComponents.ConfigEditor.*;
 import VjComponents.UI.Widgets.*;
 import VjControl.Core;
+import VjControl.VjComponent;
 
 
 /** Default implementation of ConfigChunkPanel.
@@ -68,13 +69,16 @@ public class DefaultConfigChunkPanel extends JPanel
     GridBagConstraints pconstraints;
 
     protected ConfigChunk component_chunk;
+    protected String component_name;
 
+    ConfigUIHelper uihelper_module;
 
     public DefaultConfigChunkPanel () {
         super();
 
-        //component_name = "Unconfigured DefaultConfigChunkPanel";
+        component_name = "Unconfigured DefaultConfigChunkPanel";
         component_chunk = null;
+        uihelper_module = null;
 
 	JPanel northpanel, centerpanel;
 
@@ -145,7 +149,7 @@ public class DefaultConfigChunkPanel extends JPanel
                 p = chunk.getProperty (i);
                 if (Core.user_profile.accepts (p.getDesc().getUserLevel())) {
                     t = new PropertyPanel (chunk.getProperty(i), 
-                                           this);
+                                           this, uihelper_module);
                     proppanels.add(t);
                     properties_panel.add(t);
                 }
@@ -167,9 +171,35 @@ public class DefaultConfigChunkPanel extends JPanel
     }
 
 
+//      public void setConfigUIHelper (ConfigUIHelper h) {
+//          uihelper_module = h;
+//      }
+
     public boolean configure (ConfigChunk ch) {
         component_chunk = ch;
-        //component_name = ch.getValueFromToken("Name", 0).getString();
+        component_name = ch.getName();
+
+        // get pointers to the modules we need.
+        Property p = ch.getPropertyFromToken ("Dependencies");
+        if (p != null) {
+            int i;
+            int n = p.getNum();
+            String s;
+            VjComponent c;
+            for (i = 0; i < n; i++) {
+                s = p.getValue(i).toString();
+                c = Core.getComponentFromRegistry(s);
+                if (c != null) {
+                    if (c instanceof ConfigUIHelper)
+                        uihelper_module = (ConfigUIHelper)c;
+                }
+            }
+        }
+        if (uihelper_module == null) {
+            Core.consoleErrorMessage (component_name, "Instantiated with unmet VjComponent Dependencies. Fatal Configuration Error!");
+            return false;
+        }
+
         return true;
     }
 
@@ -243,12 +273,7 @@ public class DefaultConfigChunkPanel extends JPanel
 
 
     public void showHelp () {
-        ConfigUIHelper uihelper_module = (ConfigUIHelper)Core.getModule ("ConfigUIHelper Module");
-        if (uihelper_module != null) 
-            uihelper_module.loadDescHelp (chunk.getDescToken());
-        else
-            Core.consoleErrorMessage ("DefaultConfigChunkPanel",
-                                      "Couldn't load help: ConfigUI Helper doesn't exist.");
+        uihelper_module.loadDescHelp (chunk.getDescToken());
     }
 
 
